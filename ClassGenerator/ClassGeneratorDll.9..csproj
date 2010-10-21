@@ -1,0 +1,454 @@
+﻿<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="3.5">
+  <PropertyGroup>
+    <ProjectType>Local</ProjectType>
+    <ProductVersion>9.0.21022</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{74781FF5-7C67-44FE-8AB6-999AD0F9F6D4}</ProjectGuid>
+    <SccProjectName>
+    </SccProjectName>
+    <SccLocalPath>
+    </SccLocalPath>
+    <SccAuxPath>
+    </SccAuxPath>
+    <SccProvider>
+    </SccProvider>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ApplicationIcon>App.ico</ApplicationIcon>
+    <AssemblyKeyContainerName>
+    </AssemblyKeyContainerName>
+    <AssemblyName>ClassGeneratorDll</AssemblyName>
+    <AssemblyOriginatorKeyFile>
+    </AssemblyOriginatorKeyFile>
+    <DefaultClientScript>JScript</DefaultClientScript>
+    <DefaultHTMLPageLayout>Grid</DefaultHTMLPageLayout>
+    <DefaultTargetSchema>IE50</DefaultTargetSchema>
+    <DelaySign>false</DelaySign>
+    <OutputType>Library</OutputType>
+    <RootNamespace>ClassGenerator</RootNamespace>
+    <RunPostBuildEvent>OnBuildSuccess</RunPostBuildEvent>
+    <StartupObject>
+    </StartupObject>
+    <FileUpgradeFlags>
+    </FileUpgradeFlags>
+    <UpgradeBackupLocation>
+    </UpgradeBackupLocation>
+    <OldToolsVersion>2.0</OldToolsVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <OutputPath>bindll\Debug\</OutputPath>
+    <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
+    <BaseAddress>285212672</BaseAddress>
+    <CheckForOverflowUnderflow>false</CheckForOverflowUnderflow>
+    <ConfigurationOverrideFile>
+    </ConfigurationOverrideFile>
+    <DefineConstants>TRACE;DEBUG;NDO20;NET20</DefineConstants>
+    <DocumentationFile>
+    </DocumentationFile>
+    <DebugSymbols>true</DebugSymbols>
+    <FileAlignment>4096</FileAlignment>
+    <NoStdLib>false</NoStdLib>
+    <NoWarn>
+    </NoWarn>
+    <Optimize>false</Optimize>
+    <RegisterForComInterop>false</RegisterForComInterop>
+    <RemoveIntegerChecks>false</RemoveIntegerChecks>
+    <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
+    <WarningLevel>4</WarningLevel>
+    <DebugType>full</DebugType>
+    <ErrorReport>prompt</ErrorReport>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <OutputPath>bin\Release\</OutputPath>
+    <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
+    <BaseAddress>285212672</BaseAddress>
+    <CheckForOverflowUnderflow>false</CheckForOverflowUnderflow>
+    <ConfigurationOverrideFile>
+    </ConfigurationOverrideFile>
+    <DefineConstants>NDO20;NET20</DefineConstants>
+    <DocumentationFile>
+    </DocumentationFile>
+    <DebugSymbols>false</DebugSymbols>
+    <FileAlignment>4096</FileAlignment>
+    <NoStdLib>false</NoStdLib>
+    <NoWarn>
+    </NoWarn>
+    <Optimize>true</Optimize>
+    <RegisterForComInterop>false</RegisterForComInterop>
+    <RemoveIntegerChecks>false</RemoveIntegerChecks>
+    <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
+    <WarningLevel>4</WarningLevel>
+    <DebugType>none</DebugType>
+    <ErrorReport>prompt</ErrorReport>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="NDO, Version=2.0.0.0, Culture=neutral, PublicKeyToken=37bfdffa92a0cd24, processorArchitecture=MSIL" />
+    <Reference Include="NDOInterfaces">
+      <Name>NDOInterfaces</Name>
+      <HintPath>..\..\..\Programme\\NDO 2.0 Enterprise Edition\NDOInterfaces.dll</HintPath>
+      <AssemblyFolderKey>hklm\dn\ndo</AssemblyFolderKey>
+    </Reference>
+    <Reference Include="System">
+      <Name>System</Name>
+    </Reference>
+    <Reference Include="System.Data">
+      <Name>System.Data</Name>
+    </Reference>
+    <Reference Include="System.Drawing">
+      <Name>System.Drawing</Name>
+    </Reference>
+    <Reference Include="System.Runtime.Serialization.Formatters.Soap">
+      <Name>System.Runtime.Serialization.Formatters.Soap</Name>
+    </Reference>
+    <Reference Include="System.Windows.Forms">
+      <Name>System.Windows.Forms</Name>
+    </Reference>
+    <Reference Include="System.Xml">
+      <Name>System.XML</Name>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="App.ico" />
+    <Compile Include="AddPrimaryKeyWizard\AddPrimaryKeyWiz.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="AddPrimaryKeyWizard\AddPrimaryKeyWiz.Designer.cs">
+      <DependentUpon>AddPrimaryKeyWiz.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ApplicationController.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="AssemblyInfo.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="AssemblyWizard\AssemblyWiz1.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="AssemblyWizard\AssemblyWiz2.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="AssemblyWizard\AssemblyWiz3.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="AssemblyWizard\AssemblyWiz4.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="AssemblyWizard\AssemblyWiz5.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="AssemblyWizard\AssemblyWizModel.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="AssemblyWizard\ConnectionStringDialog.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="FixupEntry.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="ForeignKeyWizard\ForeignKeyWiz1.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="ForeignKeyWizard\ForeignKeyWiz2.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="ForeignKeyWizard\ForeignKeyWiz3.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="ForeignKeyWizard\ForeignKeyWiz4.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="ForeignKeyWizard\ForeignKeyWizController.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="ForeignKeyWizard\ForeignKeyWizModel.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Generator\AssemblyGenerator.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Generator\ClassGenerator.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Generator\CodeAssignAsExpression.cs" />
+    <Compile Include="Generator\CodeCheckForNullExpression.cs" />
+    <Compile Include="Generator\CsProject.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Generator\Diff.cs" />
+    <Compile Include="Generator\MappingGenerator.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Generator\Merge.cs" />
+    <Compile Include="Generator\MergeableFile.cs" />
+    <Compile Include="Generator\NamespaceManagerGenerator.cs" />
+    <Compile Include="Generator\NdoProject.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Generator\PropertyGenerator.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Generator\RelationGenerator.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Generator\VisualStudioProject.DomainClasses\Compile.cs" />
+    <Compile Include="Generator\VisualStudioProject.DomainClasses\Configuration.cs" />
+    <Compile Include="Generator\VisualStudioProject.DomainClasses\Content.cs" />
+    <Compile Include="Generator\VisualStudioProject.DomainClasses\EmbeddedResource.cs" />
+    <Compile Include="Generator\VisualStudioProject.DomainClasses\Import.cs" />
+    <Compile Include="Generator\VisualStudioProject.DomainClasses\ItemGroup.cs" />
+    <Compile Include="Generator\VisualStudioProject.DomainClasses\Platform.cs" />
+    <Compile Include="Generator\VisualStudioProject.DomainClasses\Project.cs" />
+    <Compile Include="Generator\VisualStudioProject.DomainClasses\PropertyGroup.cs" />
+    <Compile Include="Generator\VisualStudioProject.DomainClasses\Reference.cs" />
+    <Compile Include="Generator\VisualStudioProject.DomainClasses\UserProperties.cs" />
+    <Compile Include="IntermediateClassWizard\IntClassWiz1.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="IntermediateClassWizard\IntClassWiz2.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="IntermediateClassWizard\IntClassWiz3.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="IntermediateClassWizard\IntermediateClassWizardModel.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="IntermediateClassWizard\IntermediateClassWizController.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="IntermediateTableWizard\IntermediateTableWizardModel.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="IntermediateTableWizard\IntermediateTableWizController.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="IntermediateTableWizard\IntTblWiz1.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="IntermediateTableWizard\IntTblWiz2.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="IntermediateTableWizard\IntTblWiz3.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="IntermediateTableWizard\IntTblWiz4.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="MainForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="MapClassWizard\MapClassWizard.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="NodeEntities\Assembly.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="NodeEntities\Class.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="NodeEntities\Column.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="NodeEntities\Database.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="NodeEntities\FkRelation.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="NodeEntities\ForeignFkRelation.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="NodeEntities\ForeignIntermediateTableRelation.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="NodeEntities\IntermediateClassInfo.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="NodeEntities\IntermediateTable.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="NodeEntities\IXmlStorable.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="NodeEntities\MappingTable.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="NodeEntities\Relation.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="NodeEntities\RelationCardinality.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="NodeEntities\Table.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="NodeEntities\TargetLanguage.cs" />
+    <Compile Include="Nodes\AssemblyNode.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Nodes\ClassNode.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Nodes\ColumnNode.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Nodes\DatabaseNode.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Nodes\IntermediateTableNode.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Nodes\NDOTreeNode.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Nodes\RelationNode.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Nodes\TableNode.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="SchemaAnalyzer\ElementWrapper.cs" />
+    <Compile Include="SchemaAnalyzer\NamespaceWrapper.cs" />
+    <Compile Include="SchemaAnalyzer\RelationEntry.cs" />
+    <Compile Include="SchemaAnalyzer\XmlSchemaSummary.cs" />
+    <Compile Include="SchemaAnalyzer\XsdAnalyzer.cs" />
+    <Compile Include="Serializer.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="ShowWarningsDlg.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ShowWarningsDlg.Designer.cs">
+      <DependentUpon>ShowWarningsDlg.cs</DependentUpon>
+    </Compile>
+    <Compile Include="WizardBase\Class1.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="WizardBase\DisplayNameAttribute.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="WizardBase\GenericController.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="WizardBase\GenericFactory.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="WizardBase\IModel.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="WizardBase\IWizardController.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="WizardBase\ViewBase.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="WizardBase\WizardControllerFactory.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="WizardBase\WizardFrame.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="WizardBase\WizardState.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <EmbeddedResource Include="AddPrimaryKeyWizard\AddPrimaryKeyWiz.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>AddPrimaryKeyWiz.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="AssemblyWizard\AssemblyWiz1.resx">
+      <DependentUpon>AssemblyWiz1.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="AssemblyWizard\AssemblyWiz2.resx">
+      <DependentUpon>AssemblyWiz2.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="AssemblyWizard\AssemblyWiz3.resx">
+      <DependentUpon>AssemblyWiz3.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="AssemblyWizard\AssemblyWiz4.resx">
+      <DependentUpon>AssemblyWiz4.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="AssemblyWizard\AssemblyWiz5.resx">
+      <DependentUpon>AssemblyWiz5.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ForeignKeyWizard\ForeignKeyWiz1.resx">
+      <DependentUpon>ForeignKeyWiz1.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ForeignKeyWizard\ForeignKeyWiz2.resx">
+      <DependentUpon>ForeignKeyWiz2.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ForeignKeyWizard\ForeignKeyWiz3.resx">
+      <DependentUpon>ForeignKeyWiz3.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ForeignKeyWizard\ForeignKeyWiz4.resx">
+      <DependentUpon>ForeignKeyWiz4.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="IntermediateClassWizard\IntClassWiz1.resx">
+      <DependentUpon>IntClassWiz1.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="IntermediateClassWizard\IntClassWiz2.resx">
+      <DependentUpon>IntClassWiz2.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="IntermediateClassWizard\IntClassWiz3.resx">
+      <DependentUpon>IntClassWiz3.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="IntermediateTableWizard\IntTblWiz1.resx">
+      <DependentUpon>IntTblWiz1.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="IntermediateTableWizard\IntTblWiz2.resx">
+      <DependentUpon>IntTblWiz2.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="IntermediateTableWizard\IntTblWiz3.resx">
+      <DependentUpon>IntTblWiz3.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="IntermediateTableWizard\IntTblWiz4.resx">
+      <DependentUpon>IntTblWiz4.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="MainForm.resx">
+      <DependentUpon>MainForm.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="MapClassWizard\MapClassWizard.resx">
+      <DependentUpon>MapClassWizard.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ShowWarningsDlg.resx">
+      <DependentUpon>ShowWarningsDlg.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="WizardBase\ViewBase.resx">
+      <DependentUpon>ViewBase.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="WizardBase\WizardFrame.resx">
+      <DependentUpon>WizardFrame.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ProjectExtensions>
+    <VisualStudio>
+    </VisualStudio>
+  </ProjectExtensions>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PreBuildEvent>
+    </PreBuildEvent>
+    <PostBuildEvent>
+    </PostBuildEvent>
+  </PropertyGroup>
+</Project>

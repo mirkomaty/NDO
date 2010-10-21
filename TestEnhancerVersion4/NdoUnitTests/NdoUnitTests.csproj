@@ -1,0 +1,275 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="4.0">
+  <PropertyGroup>
+    <ProjectType>Local</ProjectType>
+    <ProductVersion>9.0.30729</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{3CEF344E-1479-426D-979D-C17E41AF6772}</ProjectGuid>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ApplicationIcon>App.ico</ApplicationIcon>
+    <AssemblyKeyContainerName>
+    </AssemblyKeyContainerName>
+    <AssemblyName>NdoUnitTests</AssemblyName>
+    <AssemblyOriginatorKeyFile>
+    </AssemblyOriginatorKeyFile>
+    <DefaultClientScript>JScript</DefaultClientScript>
+    <DefaultHTMLPageLayout>Grid</DefaultHTMLPageLayout>
+    <DefaultTargetSchema>IE50</DefaultTargetSchema>
+    <DelaySign>false</DelaySign>
+    <OutputType>Library</OutputType>
+    <RootNamespace>NdoUnitTests</RootNamespace>
+    <RunPostBuildEvent>OnBuildSuccess</RunPostBuildEvent>
+    <StartupObject>
+    </StartupObject>
+    <FileUpgradeFlags>
+    </FileUpgradeFlags>
+    <UpgradeBackupLocation>
+    </UpgradeBackupLocation>
+    <OldToolsVersion>3.5</OldToolsVersion>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <PublishUrl>publish\</PublishUrl>
+    <Install>true</Install>
+    <InstallFrom>Disk</InstallFrom>
+    <UpdateEnabled>false</UpdateEnabled>
+    <UpdateMode>Foreground</UpdateMode>
+    <UpdateInterval>7</UpdateInterval>
+    <UpdateIntervalUnits>Days</UpdateIntervalUnits>
+    <UpdatePeriodically>false</UpdatePeriodically>
+    <UpdateRequired>false</UpdateRequired>
+    <MapFileExtensions>true</MapFileExtensions>
+    <ApplicationRevision>0</ApplicationRevision>
+    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
+    <IsWebBootstrapper>false</IsWebBootstrapper>
+    <UseApplicationTrust>false</UseApplicationTrust>
+    <BootstrapperEnabled>true</BootstrapperEnabled>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <OutputPath>bin\Debug\</OutputPath>
+    <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
+    <BaseAddress>285212672</BaseAddress>
+    <CheckForOverflowUnderflow>false</CheckForOverflowUnderflow>
+    <ConfigurationOverrideFile>
+    </ConfigurationOverrideFile>
+    <DefineConstants>DEBUG;TRACE;SQLSERVER</DefineConstants>
+    <DocumentationFile>
+    </DocumentationFile>
+    <DebugSymbols>true</DebugSymbols>
+    <FileAlignment>4096</FileAlignment>
+    <NoStdLib>false</NoStdLib>
+    <NoWarn>618</NoWarn>
+    <Optimize>false</Optimize>
+    <RegisterForComInterop>false</RegisterForComInterop>
+    <RemoveIntegerChecks>false</RemoveIntegerChecks>
+    <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
+    <WarningLevel>4</WarningLevel>
+    <DebugType>full</DebugType>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <OutputPath>bin\Release\</OutputPath>
+    <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
+    <BaseAddress>285212672</BaseAddress>
+    <CheckForOverflowUnderflow>false</CheckForOverflowUnderflow>
+    <ConfigurationOverrideFile>
+    </ConfigurationOverrideFile>
+    <DefineConstants>TRACE;SQLSERVER</DefineConstants>
+    <DocumentationFile>
+    </DocumentationFile>
+    <DebugSymbols>false</DebugSymbols>
+    <FileAlignment>4096</FileAlignment>
+    <NoStdLib>false</NoStdLib>
+    <NoWarn>
+    </NoWarn>
+    <Optimize>true</Optimize>
+    <RegisterForComInterop>false</RegisterForComInterop>
+    <RemoveIntegerChecks>false</RemoveIntegerChecks>
+    <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
+    <WarningLevel>4</WarningLevel>
+    <DebugType>none</DebugType>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="NDO, Version=2.1.0.0, Culture=neutral, PublicKeyToken=37bfdffa92a0cd24, processorArchitecture=MSIL" />
+    <Reference Include="NDOInterfaces, Version=2.1.0.0, Culture=neutral, PublicKeyToken=ff5e453a099b8326" />
+    <Reference Include="nunit.framework">
+      <Name>nunit.framework</Name>
+      <HintPath>..\..\..\..\..\Programme\NUnit V2.1\\bin\nunit.framework.dll</HintPath>
+      <AssemblyFolderKey>hklm\dn\nunit.framework</AssemblyFolderKey>
+    </Reference>
+    <Reference Include="System">
+      <Name>System</Name>
+    </Reference>
+    <Reference Include="System.Data">
+      <Name>System.Data</Name>
+    </Reference>
+    <Reference Include="System.Data.OracleClient">
+      <Name>System.Data.OracleClient</Name>
+    </Reference>
+    <Reference Include="System.Drawing">
+      <Name>System.Drawing</Name>
+    </Reference>
+    <Reference Include="System.Xml">
+      <Name>System.XML</Name>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="AbstractBaseTests.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="ArrayListTests.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="AssemblyInfo.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="CompositePartListTests.cs" />
+    <Compile Include="ConnectionGenerator.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="DataTypeTest.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="DateTest.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="DeleteForeignRelationTests.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="DoubleRelationTests.cs" />
+    <Compile Include="ForeignObjectTests.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="IdGenerator.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="IntermediateClassTest.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="KeyTests.cs" />
+    <Compile Include="LandFlughafenTests.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="NDOMitarbeiterReiseTests.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="NDOMitarbeiterTests.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="NDOObjectIdTests.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="NDOPerformanceTests.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="NDOReiseLänderTests.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="NDOReiseTests.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Objektbäume.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="PersistenceManagerFactory.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="PmFactoryTests.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="PolymorphicWTable.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Rel1to1Bidirectional.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Rel1to1BidirectionalWTable.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Rel1to1Directed.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Rel1ToNBidirectional.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Rel1toNDirectedWTable.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Rel1toNDirectedWTableComposition.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="RelationLockTest.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="SelfReference.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="TestDerivedState.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="TestEmbedded.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="TestHashCode.cs" />
+    <Compile Include="TestMappingSchema.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="TestWithBlock.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="TimeStampTest.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Content Include="App.ico" />
+    <Content Include="bin\Debug\NdoUnitTests.ndo.sql" />
+    <Content Include="bin\Release\NdoUnitTests.ndo.sql" />
+    <Content Include="NDOMapping.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\PureBusinessClasses\PureBusinessClasses.csproj">
+      <Project>{45909E1A-974B-413C-8F36-52383F3A62CC}</Project>
+      <Name>PureBusinessClasses</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="bin\Debug\NdoUnitTests.ndo.xsc">
+      <DependentUpon>NdoUnitTests.ndo.xsd</DependentUpon>
+    </None>
+    <None Include="bin\Debug\NdoUnitTests.ndo.xss">
+      <DependentUpon>NdoUnitTests.ndo.xsd</DependentUpon>
+    </None>
+    <None Include="bin\Debug\NdoUnitTests.ndodiff..sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1 Client Profile</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Windows.Installer.3.1">
+      <Visible>False</Visible>
+      <ProductName>Windows Installer 3.1</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+  </ItemGroup>
+  <ProjectExtensions>
+    <VisualStudio>
+      <UserProperties NDOUtf8Encoding="true" DatabaseOwner="" NDOSQLScriptLanguage="Firebird" NDOUseTimeStamps="false" NDOGenerateChangeEvents="false" NDOGenerateSQL="true" NDOMergeSchema="true" NDOMergeMapping="true" NDONewMapping="false" NDOGenerateSchema="true" NDOGenerateMapping="true" NDOEnableEnhancer="false" NDOEnableAddIn="true" NDOTypeListFile="C:\Projekte\NDO\TestEnhancerVersion4\NdoUnitTests\BIN\Debug\NDOTypes.xml" NDODefaultConnection="Password=masterkey;Database=C:\Projekte\NDO\TestEnhancerVersion4\NdoUnitTests\FirebirdTest.FDB;Dialect=3;User Id=SYSDBA;Data Source=localhost" NDOUsePolymorphy="true" />
+    </VisualStudio>
+  </ProjectExtensions>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PreBuildEvent>
+    </PreBuildEvent>
+    <PostBuildEvent>
+    </PostBuildEvent>
+  </PropertyGroup>
+</Project>

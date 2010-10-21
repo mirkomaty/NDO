@@ -1,0 +1,9 @@
+
+- Replace the string YourAddInPath in the file NDOEnhancer.AddIn 
+  with the path the NDOEnhancer.dll resides in.
+- Determine the value of the environment variable ALLUSERSPROFILE. 
+- Copy the NDOEnhancer.AddIn into the folder
+
+  %ALLUSERSPROFILE%\Application Data\Microsoft\MSEnvShared\Addins
+
+  If the folder doesn't exist, just create it.

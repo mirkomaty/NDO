@@ -1,0 +1,203 @@
+NETVERSION=NET20
+NDOVERSION=NDO20
+VERSION=20
+EnhDateString=V. 2.1
+
+EDITION = Enterprise
+DEFINES = /d:STD /d:PRO /d:ENT /d:$(NETVERSION) /d:$(NDOVERSION)
+
+##### Adjust these directories #######
+PERS_DIR = C:\Projekte\NDO
+VSDIR = C:\Program Files (x86)\Microsoft Visual Studio 10.0
+SVNREV=C:\Program Files\TortoiseSVN\bin\subwcrev.exe
+########################################
+
+MAKE_DIR = $(PERS_DIR)\Make
+NDO_DIR = $(PERS_DIR)\ndodll
+NDO_DLL = $(NDO_DIR)\bin\Release\$(EDITION)\NDO.dll
+NDO_KEY = $(NDO_DIR)\NDO_$(V).SNK
+CL = $(VSDIR)\VC\bin\cl
+MAP_DIR = $(PERS_DIR)\SimpleMappingTool
+GEN_DIR = $(PERS_DIR)\ClassGenerator
+DEPLOY_DIR = $(PERS_DIR)\Deploy\$(EDITION)
+
+INTERF_DLL = $(PERS_DIR)\NDOInterfaces\bin\release\NDOInterfaces.dll
+DEVENVEXE = "$(VSDIR)\Common7\IDE\devenv"
+
+
+all: Hello Ndo Enh Mapping EnhStdAlone Generator ndoc pack
+
+Enh: AddIn
+
+Ndo: interfaces NdoCsc 
+
+Hello:
+	@echo ------------------ $(EDITION) Build ------------------
+
+
+#
+# NDO Dll
+#
+NDO_REFS = /r:System.dll /r:System.Data.dll /r:System.XML.dll /r:System.EnterpriseServices.dll /r:System.Windows.Forms.dll /r:System.Data.OracleClient.dll /r:System.Runtime.Serialization.Formatters.Soap.dll /r:$(INTERF_DLL)
+
+NDO_CSFILES = multikey.cs dependentkey.cs adox\AccessCreateDbDlg.cs adox\ObjectTypeEnum.cs adox\_Catalog.cs ClassHashView.cs InternalException.cs RelationCollector.cs RelationInfo.cs KeyValueList.cs LoadState.cs NDOAddInPath.cs MyRand.cs NDOParameterCollection.cs IPersistenceHandlerBase.cs Logging\ILogAdapter.cs Logging\LogFileAdapter.cs Logging\ConsoleLogAdapter.cs BaseClassReflector.cs _NDOContainerStack.cs NDOOidTypeAttribute.cs NDOTypeDescriptor.cs PropertyTypeHash.cs NumberStrings.cs StorableTypes.cs AssemblyInfo.cs Cache.cs FieldMap.cs IDeleteNotifiable.cs IMappingTableHandler.cs IMetaClass.cs Int32Key.cs IPersistenceCapable.cs IPersistenceHandler.cs IPersistenceManager.cs IPersistenceNotifiable.cs IProvider.cs IStateManager.cs Key.cs Mappings.cs Metaclasses.cs NDOAbstractProvider.cs NDOApplicationPath.cs NDOArrayList.cs NDODataSet.cs NDOMapping.cs NDOMappingTableHandler.cs NDOObjectIdAttribute.cs NDOAccessProvider.cs NDOOracleProvider.cs NDOPersistenceHandler.cs NDOPersistentAttribute.cs NDOPropertyDescriptor.cs NDOProviderFactory.cs NDOQueryHelperBase.cs NDOReadOnlyGenericList.cs NDOReadOnlyArrayList.cs NDORelationAttribute.cs NDOSqlProvider.cs NDOTransientAttribute.cs ObjectHelper.cs ObjectId.cs QueryContextGenerator.cs PersistenceManagerFactory.cs PM.cs QualifiedTableName.cs Query.cs Scanner.cs SelectPartGenerator.cs StateManager.cs TransactionMode.cs TypeManager.cs TypeMapping.cs WherePartGenerator.cs PeTool\COFFHeader.cs PeTool\DataDir.cs PeTool\DOSHeader.cs PeTool\PEHeader.cs PeTool\PeTool.cs PeTool\RVA.cs SqlDumper.cs ObjectLock.cs SchemaGenerator.cs enterprise\ChangeSetContainer.cs enterprise\ISerializationIterator.cs enterprise\ObjectContainer.cs enterprise\ObjectContainerBase.cs enterprise\OfflinePersistenceManager.cs enterprise\OnlineMergeIterator.cs enterprise\RelationChangeRecord.cs enterprise\SerializationFlags.cs enterprise\SerializationIterator.cs enterprise\Serializer.cs IPersistenceManagerBase.cs PersistenceManagerBase.cs ListCloner.cs enterprise\NDODeserializationBinder.cs enterprise\OfflineMergeIterator.cs logging\debuglogadapter.cs INDOTypedList.cs GenericListReflector.cs NDOProperty.cs SqlServerGenerator.cs OracleGenerator.cs AccessGenerator.cs GenericFieldConverter.cs ForeignKeyIterator.cs IEnhancerSupport.cs IFieldInitializer.cs ObjectIdFactory.cs OidColumnIterator.cs Mapping.Attributes\ChildForeignKeyColumnAttribute.cs Mapping.Attributes\ClassAttribute.cs Mapping.Attributes\PropertyAttribute.cs Mapping.Attributes\RelationAttribute.cs Mapping.Attributes\OidColumnAttribute.cs Mapping.Attributes\ForeignKeyColumnAttribute.cs  Mapping.Attributes\ColumnAttribute.cs Xml\XmlHelper.cs
+
+NDO_CSC_CMD = /t:library $(NDO_REFS) $(NDO_CSFILES)
+
+NdoCsc:
+	@echo NDO DLL
+	@cd $(NDO_DIR)
+	@csc /out:$(NDO_DLL) /doc:bin\release\$(EDITION)\NDO.xml $(NDO_CSC_CMD) /nowarn:1591 $(DEFINES)
+	@gacutil /i $(NDO_DLL) /f
+	@sn -T $(NDO_DLL)
+	@cd $(MAKE_DIR)
+
+
+#
+# Visual Studio Add-in
+#
+
+ADDIN_DIR = $(PERS_DIR)\Add-in
+
+
+AddIn:
+	@echo VS Add-In $(EDITION)
+	@cd $(ADDIN_DIR)
+	@..\MakeEnhancerDate\bin\Debug\MakeEnhancerDate.exe "$(EnhDateString)" "$(SVNREV)" > EnhDate.cs
+	@msbuild /p:Configuration=$(EDITION) $(ADDIN_DIR)\NDOAddIn.proj
+#	The resources are identical for all cultures. They differ only in the culture info. Just add your own culture, if it is not in the list.
+	@cd Resources
+	@resgen Resource1.resx Resource1.resources
+	@Al.exe /v:2.1.0.0 /embed:Resource1.resources /culture:en /out:$(DEPLOY_DIR)\en\NDOEnhancerLight.resources.dll
+	@Al.exe /v:2.1.0.0 /embed:Resource1.resources /culture:de /out:$(DEPLOY_DIR)\de\NDOEnhancerLight.resources.dll
+	@Al.exe /v:2.1.0.0 /embed:Resource1.resources /culture:fr /out:$(DEPLOY_DIR)\fr\NDOEnhancerLight.resources.dll
+	@Al.exe /v:2.1.0.0 /embed:Resource1.resources /culture:es /out:$(DEPLOY_DIR)\es\NDOEnhancerLight.resources.dll
+	@Al.exe /v:2.1.0.0 /embed:Resource1.resources /culture:it /out:$(DEPLOY_DIR)\it\NDOEnhancerLight.resources.dll
+	@cd ..\bin/$(EDITION)
+	@move /Y NDOEnhancerLight.dll NDOEnhancer.dll
+	@cd $(MAKE_DIR)
+	
+
+ENH_RELEASE_DIR = $(PERS_DIR)\Deploy
+
+
+#
+# Mapping Tool
+#
+
+MAP_REFS = /r:System.dll /r:System.Drawing.dll /r:System.Windows.Forms.dll /r:$(NDO_DLL)
+
+MAP_CSFILES = AssemblyInfo.cs ClassNode.cs ColumnNode.cs ConnectionNode.cs FieldNode.cs MainForm.cs MappingTableNode.cs  NDOTreeNode.cs OidNode.cs RelationNode.cs PropertyNode.cs AddPropertyDialog.cs NDOMappingNode.cs
+
+MAP_CSC_CMD = /target:winexe $(MAP_REFS) $(MAP_CSFILES) /res:SimpleMappingTool.AddPropertyDialog.resources /res:SimpleMappingTool.MainForm.resources /win32icon:app.ico
+
+Mapping:
+	@echo Mapping Tool
+	@cd $(MAP_DIR)
+	@resgen MainForm.resx SimpleMappingTool.MainForm.resources
+	@resgen AddPropertyDialog.resx SimpleMappingTool.AddPropertyDialog.resources
+	@csc /out:bin\release\$(EDITION)\Mapping.exe $(MAP_CSC_CMD)
+	@del /Q *.resources
+	@cd $(MAKE_DIR)
+
+
+#
+# Class Generator
+#
+
+GEN_REFS = /r:System.dll /r:System.Data.dll /r:System.Drawing.dll /r:System.Windows.Forms.dll /r:System.XML.dll /r:$(INTERF_DLL) /r:$(NDO_DLL)
+
+GEN_CSFILES = ShowWarningsDlg.cs ShowWarningsDlg.Designer.cs AddPrimaryKeyWizard\AddPrimaryKeyWiz.cs AddPrimaryKeyWizard\AddPrimaryKeyWiz.Designer.cs ApplicationController.cs AssemblyInfo.cs AssemblyWizard\AssemblyWiz1.cs AssemblyWizard\AssemblyWiz2.cs AssemblyWizard\AssemblyWiz3.cs AssemblyWizard\AssemblyWiz4.cs AssemblyWizard\AssemblyWiz5.cs AssemblyWizard\AssemblyWizModel.cs AssemblyWizard\ConnectionStringDialog.cs FixupEntry.cs ForeignKeyWizard\ForeignKeyWiz1.cs ForeignKeyWizard\ForeignKeyWiz2.cs ForeignKeyWizard\ForeignKeyWiz3.cs ForeignKeyWizard\ForeignKeyWiz4.cs ForeignKeyWizard\ForeignKeyWizController.cs ForeignKeyWizard\ForeignKeyWizModel.cs Generator\AssemblyGenerator.cs Generator\NamespaceManagerGenerator.cs Generator\ClassGenerator.cs Generator\CodeAssignAsExpression.cs Generator\CodeCheckForNullExpression.cs Generator\CsProject.cs Generator\Diff.cs Generator\MappingGenerator.cs Generator\Merge.cs Generator\MergeableFile.cs Generator\NdoProject.cs Generator\PropertyGenerator.cs Generator\RelationGenerator.cs Generator\VisualStudioProject.DomainClasses\Compile.cs Generator\VisualStudioProject.DomainClasses\Configuration.cs Generator\VisualStudioProject.DomainClasses\Content.cs Generator\VisualStudioProject.DomainClasses\EmbeddedResource.cs Generator\VisualStudioProject.DomainClasses\Import.cs Generator\VisualStudioProject.DomainClasses\ItemGroup.cs Generator\VisualStudioProject.DomainClasses\Platform.cs Generator\VisualStudioProject.DomainClasses\Project.cs Generator\VisualStudioProject.DomainClasses\PropertyGroup.cs Generator\VisualStudioProject.DomainClasses\Reference.cs Generator\VisualStudioProject.DomainClasses\UserProperties.cs IntermediateClassWizard\IntClassWiz1.cs IntermediateClassWizard\IntClassWiz2.cs IntermediateClassWizard\IntClassWiz3.cs IntermediateClassWizard\IntermediateClassWizardModel.cs IntermediateClassWizard\IntermediateClassWizController.cs IntermediateTableWizard\IntermediateTableWizardModel.cs IntermediateTableWizard\IntermediateTableWizController.cs IntermediateTableWizard\IntTblWiz1.cs IntermediateTableWizard\IntTblWiz2.cs IntermediateTableWizard\IntTblWiz3.cs IntermediateTableWizard\IntTblWiz4.cs MainForm.cs MapClassWizard\MapClassWizard.cs NodeEntities\Assembly.cs NodeEntities\Class.cs NodeEntities\Column.cs NodeEntities\Database.cs NodeEntities\FkRelation.cs NodeEntities\ForeignFkRelation.cs NodeEntities\ForeignIntermediateTableRelation.cs NodeEntities\IntermediateClassInfo.cs NodeEntities\IntermediateTable.cs NodeEntities\IXmlStorable.cs NodeEntities\MappingTable.cs NodeEntities\Relation.cs NodeEntities\RelationCardinality.cs NodeEntities\Table.cs NodeEntities\TargetLanguage.cs Nodes\AssemblyNode.cs Nodes\ClassNode.cs Nodes\ColumnNode.cs Nodes\DatabaseNode.cs Nodes\IntermediateTableNode.cs Nodes\NDOTreeNode.cs Nodes\RelationNode.cs Nodes\TableNode.cs SchemaAnalyzer\ElementWrapper.cs SchemaAnalyzer\XmlSchemaSummary.cs SchemaAnalyzer\RelationEntry.cs SchemaAnalyzer\XsdAnalyzer.cs SchemaAnalyzer\NamespaceWrapper.cs Serializer.cs WizardBase\Class1.cs WizardBase\DisplayNameAttribute.cs WizardBase\GenericController.cs WizardBase\GenericFactory.cs WizardBase\IModel.cs WizardBase\IWizardController.cs WizardBase\ViewBase.cs WizardBase\WizardControllerFactory.cs WizardBase\WizardFrame.cs WizardBase\WizardState.cs 
+
+GEN_RESFILES = /res:ClassGenerator.MainForm.resources /res:ClassGenerator.ShowWarningsDlg.resources /res:ClassGenerator.AssemblyWizard.AssemblyWiz1.resources /res:ClassGenerator.AssemblyWizard.AssemblyWiz2.resources /res:ClassGenerator.AssemblyWizard.AssemblyWiz3.resources /res:ClassGenerator.AssemblyWizard.AssemblyWiz4.resources /res:ClassGenerator.AssemblyWizard.AssemblyWiz5.resources /res:ClassGenerator.ForeignKeyWizard.ForeignKeyWiz1.resources /res:ClassGenerator.ForeignKeyWizard.ForeignKeyWiz2.resources /res:ClassGenerator.ForeignKeyWizard.ForeignKeyWiz3.resources /res:ClassGenerator.ForeignKeyWizard.ForeignKeyWiz4.resources /res:ClassGenerator.IntermediateClassWizard.IntClassWiz1.resources /res:ClassGenerator.IntermediateClassWizard.IntClassWiz2.resources /res:ClassGenerator.IntermediateClassWizard.IntClassWiz3.resources /res:ClassGenerator.IntermediateTableWizard.IntTblWiz1.resources /res:ClassGenerator.IntermediateTableWizard.IntTblWiz2.resources /res:ClassGenerator.IntermediateTableWizard.IntTblWiz3.resources /res:ClassGenerator.IntermediateTableWizard.IntTblWiz4.resources /res:ClassGenerator.MapClassWizard.MapClassWizard.resources /res:WizardBase.ViewBase.resources /res:WizardBase.WizardFrame.resources 
+
+GEN_CSC_CMD = /t:library $(GEN_REFS) $(GEN_CSFILES) $(GEN_RESFILES) /win32icon:app.ico /d:$(NDOVERSION)
+
+Generator:
+	@cd $(GEN_DIR)
+	@resgen MainForm.resx ClassGenerator.MainForm.resources
+	@resgen ShowWarningsDlg.resx ClassGenerator.ShowWarningsDlg.resources
+	@resgen AssemblyWizard\AssemblyWiz1.resx ClassGenerator.AssemblyWizard.AssemblyWiz1.resources
+	@resgen AssemblyWizard\AssemblyWiz2.resx ClassGenerator.AssemblyWizard.AssemblyWiz2.resources
+	@resgen AssemblyWizard\AssemblyWiz3.resx ClassGenerator.AssemblyWizard.AssemblyWiz3.resources
+	@resgen AssemblyWizard\AssemblyWiz4.resx ClassGenerator.AssemblyWizard.AssemblyWiz4.resources
+	@resgen AssemblyWizard\AssemblyWiz5.resx ClassGenerator.AssemblyWizard.AssemblyWiz5.resources
+	@resgen ForeignKeyWizard\ForeignKeyWiz1.resx ClassGenerator.ForeignKeyWizard.ForeignKeyWiz1.resources
+	@resgen ForeignKeyWizard\ForeignKeyWiz2.resx ClassGenerator.ForeignKeyWizard.ForeignKeyWiz2.resources
+	@resgen ForeignKeyWizard\ForeignKeyWiz3.resx ClassGenerator.ForeignKeyWizard.ForeignKeyWiz3.resources
+	@resgen ForeignKeyWizard\ForeignKeyWiz4.resx ClassGenerator.ForeignKeyWizard.ForeignKeyWiz4.resources
+	@resgen IntermediateClassWizard\IntClassWiz1.resx ClassGenerator.IntermediateClassWizard.IntClassWiz1.resources
+	@resgen IntermediateClassWizard\IntClassWiz2.resx ClassGenerator.IntermediateClassWizard.IntClassWiz2.resources
+	@resgen IntermediateClassWizard\IntClassWiz3.resx ClassGenerator.IntermediateClassWizard.IntClassWiz3.resources
+	@resgen IntermediateTableWizard\IntTblWiz1.resx ClassGenerator.IntermediateTableWizard.IntTblWiz1.resources
+	@resgen IntermediateTableWizard\IntTblWiz2.resx ClassGenerator.IntermediateTableWizard.IntTblWiz2.resources
+	@resgen IntermediateTableWizard\IntTblWiz3.resx ClassGenerator.IntermediateTableWizard.IntTblWiz3.resources
+	@resgen IntermediateTableWizard\IntTblWiz4.resx ClassGenerator.IntermediateTableWizard.IntTblWiz4.resources
+	@resgen MapClassWizard\MapClassWizard.resx ClassGenerator.MapClassWizard.MapClassWizard.resources
+	@resgen WizardBase\ViewBase.resx WizardBase.ViewBase.resources
+	@resgen WizardBase\WizardFrame.resx WizardBase.WizardFrame.resources
+	@csc /out:bin\release\$(EDITION)\ClassGeneratorDll.dll $(GEN_CSC_CMD) 
+	@del /Q *.resources
+	@csc /out:bin\release\$(EDITION)\ClassGenerator.exe /t:winexe /r:bin\release\$(EDITION)\ClassGeneratorDll.dll ClassGenerator\ClassGenerator.cs ClassGenerator\AssemblyInfo.cs /win32icon:app.ico 
+	@cd $(MAKE_DIR)
+
+
+#
+# NDO Assembly Enhancer
+#
+
+ENHANCER_REFS = /r:System.dll /r:System.Data.dll /r:System.XML.dll /r:$(NDO_DLL) /r:System.Data.OracleClient.dll /r:$(INTERF_DLL)
+
+ENHANCER_CSFILES = AllBranches.cs Asm.cs BigInteger.cs Class.cs ConsoleMessageAdapter.cs ConsoleProcess.cs Dasm.cs EnhancerAssemblyInfo.cs EnhancerTest.cs EnhDate.cs TestConfigurationOptions.cs UmlautName.cs ValueTypes.cs XmlHelper.cs Enhancer\ClassHashtable.cs Enhancer\Decryptor.cs Enhancer\Enhancer.cs Enhancer\InternalException.cs Enhancer\NDOAssemblyName.cs Enhancer\NDOErrors.cs Enhancer\ProjectDescription.cs Enhancer\QualifiedTableName.cs Enhancer\ReferenceArrayList.cs Enhancer\TypeManager.cs Enhancer\Generator\AccessGenerator.cs Enhancer\Generator\FirebirdGenerator.cs Enhancer\Generator\GenericDiffGenerator.cs Enhancer\Generator\GenericSqlGenerator.cs Enhancer\Generator\GenericSqlGeneratorBase.cs Enhancer\Generator\MySqlProvider.cs Enhancer\Generator\OracleGenerator.cs Enhancer\Generator\SQLDiffGenerator.cs Enhancer\Generator\SQLGenerator.cs Enhancer\Generator\SqlServerGenerator.cs Enhancer\Generator\StandardSqlGenerator.cs Enhancer\ReflectedType.cs Enhancer\Nodes\ClassNode.cs Enhancer\Nodes\Valuetypenode.cs Enhancer\Nodes\AssemblyNode.cs Enhancer\Nodes\EmbeddedTypeNode.cs Enhancer\ListReflectors\GenericIListReflector.cs Enhancer\TypeHashGenerator.cs Enhancer\ListReflectors\GenericListReflector.cs Enhancer\ListReflectors\IListReflector.cs Enhancer\ListReflectors\ListAccessManipulator.cs Enhancer\ListReflectors\ListReflectorFactory.cs Enhancer\ListReflectors\StandardListReflector.cs Enhancer\Nodes\FieldNode.cs Enhancer\Nodes\RelationNode.cs ILCode\ILAssemblyElement.cs ILCode\ILBlankElement.cs ILCode\ILCatchElement.cs ILCode\ILClassElement.cs ILCode\ILCommentElement.cs ILCode\ILCounter.cs ILCode\ILCustomElement.cs ILCode\ILElement.cs ILCode\ILElementIterator.cs ILCode\ILElementType.cs ILCode\ILFieldElement.cs ILCode\ILFile.cs ILCode\ILGetElement.cs ILCode\ILLineElement.cs ILCode\ILLocalsElement.cs ILCode\ILMaxstackElement.cs ILCode\ILMethodElement.cs ILCode\ILModuleElement.cs ILCode\ILNamespaceElement.cs ILCode\ILPropertyElement.cs ILCode\ILPublickeyElement.cs ILCode\ILPublickeytokenElement.cs ILCode\ILSetElement.cs ILCode\ILStatementElement.cs ILCode\ILString.cs ILCode\ILTryElement.cs ILCode\ILUnknownElement.cs ILCode\PackedLength.cs Enhancer\ExtendedPath.cs Enhancer\Ecma335\EcmaArrayIndex.cs Enhancer\Ecma335\EcmaCallConv.cs Enhancer\Ecma335\EcmaDottedName.cs Enhancer\Ecma335\EcmaGenericParameter.cs Enhancer\Ecma335\EcmaILParserException.cs Enhancer\Ecma335\EcmaKeywordListParser.cs Enhancer\Ecma335\EcmaMethodAttr.cs Enhancer\Ecma335\EcmaMethodHeader.cs Enhancer\Ecma335\EcmaMethodName.cs Enhancer\Ecma335\EcmaParameterList.cs Enhancer\Ecma335\EcmaTypeReferenceName.cs Enhancer\Ecma335\IEcmaDefinition.cs Enhancer\Ecma335\EcmaType.cs Enhancer\Ecma335\EcmaTypeRef.cs Enhancer\Ecma335\EcmaImplAttr.cs 
+
+ENHANCER_CSC_CMD = $(ENHANCER_REFS) $(ENHANCER_CSFILES) /nowarn:0659 /win32icon:app.ico
+
+ENH_DIR = $(PERS_DIR)\NDOEnhancer
+
+EnhStdAlone:
+	@echo NDO Enhancer
+	@cd $(ENH_DIR)
+	@..\MakeEnhancerDate\bin\Debug\MakeEnhancerDate.exe "$(EnhDateString)" "$(SVNREV)" > EnhDate.cs
+	@csc /out:bin\$(EDITION)\NDOEnhancer.exe $(ENHANCER_CSC_CMD) /r:$(NDO_DLL) $(DEFINES) /d:STANDALONE
+	@cd $(MAKE_DIR)
+
+ndoc:
+# TODO: Invoke of NDOC 2.0 alpha.
+#	@$(PERS_DIR)\MakeHxTFlat\MakeHxTFlat\bin\Debug\MakeHxTFlat.exe $(PERS_DIR)\UsersGuide\Output\COL_NDO_Help.hxt
+	@echo Warning: Documentation must be built with the NDoc 2.0 alpha GUI
+
+
+#
+# Producing the .msi file
+#
+
+pack:
+	@echo DEPLOY_DIR: $(DEPLOY_DIR) 
+	@copy /Y $(NDO_DLL) $(DEPLOY_DIR)
+	@copy /Y $(ENH_DIR)\bin\$(EDITION)\NDOEnhancer.exe $(DEPLOY_DIR)
+	@copy /Y $(ADDIN_DIR)\bin\$(EDITION)\NDOEnhancer.dll $(DEPLOY_DIR)
+	@copy /Y $(ENH_DIR)\Enhancerparameters.xsd $(DEPLOY_DIR)
+	@copy /Y $(ADDIN_DIR)\NDO21.AddIn $(DEPLOY_DIR)
+	@copy /Y $(MAP_DIR)\bin\release\$(EDITION)\Mapping.exe $(DEPLOY_DIR)
+	@copy /Y $(GEN_DIR)\bin\release\$(EDITION)\ClassGenerator.exe $(DEPLOY_DIR)
+	@copy /Y $(GEN_DIR)\bin\release\$(EDITION)\ClassGeneratorDll.dll $(DEPLOY_DIR)
+	@copy /Y $(PERS_DIR)\NDOInterfaces\bin\release\NDOInterfaces.dll $(DEPLOY_DIR)
+	@copy /Y $(PERS_DIR)\NDODLL\NDOMapping.xsd $(DEPLOY_DIR)
+#	@$(PERS_DIR)\CopyDeploymentFile\CopyDeploymentFile\bin\Debug\CopyDeploymentFile.exe $(ENH_RELEASE_DIR)\Enterprise\NDOEnhancerEnterpriseSetup.vdproj $(EDITION)
+#	@$(DEVENVEXE) $(DEPLOY_DIR)\NDOEnhancer$(EDITION)Setup.vdproj /rebuild release
+#	@$(PERS_DIR)\PatchMsi\PatchMsi\bin\Debug\PatchMsi.exe $(DEPLOY_DIR)\NDOEnhancer$(EDITION)$(VERSION).msi
+	
+
+#
+# NDO interfaces dll
+#
+
+interfaces:
+	@cd $(PERS_DIR)\NDOInterfaces
+	@$(DEVENVEXE) NDOInterfaces.sln /rebuild Release /project NDOInterfaces
+	@cd $(MAKE_DIR)
+
+Installhelper:
+	@cd $(PERS_DIR)\InstallHelper
+	@$(DEVENVEXE) InstallHelper.sln /rebuild Release
+

@@ -1,0 +1,143 @@
+//
+// Copyright (C) 2002-2008 HoT - House of Tools Development GmbH 
+// (www.netdataobjects.com)
+//
+// Author: Mirko Matytschak
+//
+// This program is free software; you can redistribute it and/or modify
+// it under the terms of the GNU General Public License (v3) as published by
+// the Free Software Foundation.
+//
+// If you distribute copies of this program, whether gratis or for 
+// a fee, you must pass on to the recipients the same freedoms that 
+// you received.
+//
+// Commercial Licence:
+// For those, who want to develop software with help of this program 
+// and need to distribute their work with a more restrictive licence, 
+// there is a commercial licence available at www.netdataobjects.com.
+// 
+// The above copyright notice and this permission notice shall be
+// included in all copies or substantial portions of the Software.
+// 
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+// EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+// MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+// NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
+// LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
+// OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
+// WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+//
+
+
+using System;
+using System.Reflection;
+using System.Collections;
+using ILCode;
+
+namespace NDOEnhancer
+{
+	/// <summary>
+	/// Zusammenfassung für ListAccessManipulator.
+	/// </summary>
+	internal class ListAccessManipulator
+	{
+		static Hashtable functions;
+		string ownAssemblyName;
+
+		public ListAccessManipulator(string ownAssemblyName)
+		{
+			this.ownAssemblyName = ownAssemblyName;
+		}
+
+		static ListAccessManipulator()
+		{
+			functions = new Hashtable(11);
+			functions.Add("AddRange", "AddRange(object,class [mscorlib]System.Collections.IEnumerable,class [mscorlib]System.Collections.Hashtable)");
+			functions.Add("InsertRange", "InsertRange(object,int32,class [mscorlib]System.Collections.IEnumerable,class [mscorlib]System.Collections.Hashtable)");
+			functions.Add("RemoveRange", "RemoveRange(object,int32,int32,class [mscorlib]System.Collections.Hashtable)");
+			functions.Add("SetRange", "SetRange(object,int32,class [mscorlib]System.Collections.ICollection,class [mscorlib]System.Collections.Hashtable)");
+			functions.Add("Add", "Add(object,object,class [mscorlib]System.Collections.Hashtable)");
+			functions.Add("Clear", "Clear(object,class [mscorlib]System.Collections.Hashtable)");
+			functions.Add("Insert", "Insert(object,int32,object,class [mscorlib]System.Collections.Hashtable)");
+			functions.Add("RemoveAt", "RemoveAt(object,int32,class [mscorlib]System.Collections.Hashtable)");
+			functions.Add("Remove", "Remove(object,object,class [mscorlib]System.Collections.Hashtable)");
+			functions.Add("set_Item", "SetItem(object,int32,object,class [mscorlib]System.Collections.Hashtable)");
+            functions.Add("RemoveAll", "RemoveAll(object,class [mscorlib]System.Delegate,class [mscorlib]System.Collections.Hashtable)");
+		}
+
+		public bool Manipulate(Hashtable reflectors, ILStatementElement statementElement)
+		{
+			string line = ILElement.stripLabel(statementElement.getAllLines());
+            string callvirtInstance = "callvirt   instance ";
+            if (line.StartsWith(callvirtInstance))
+                line = line.Substring(callvirtInstance.Length);
+            else
+                line = line.Substring(4).Trim();  // strip "call        "
+			MethodInfo foundMethod = null;
+			
+			foreach (DictionaryEntry de in reflectors)
+			{
+				IListReflector reflector = de.Value as IListReflector;
+				foreach(MethodInfo mi in reflector.GetMethods())
+				{
+#if NET11
+					string toCompare = new ReflectedType(mi.ReturnType, ownAssemblyName).ILName + " " + new ReflectedType(mi.ReflectedType, ownAssemblyName).ILNameWithoutPrefix + "::" + mi.Name + "(";
+#else
+                    string toCompare = null;
+                    if (reflector.CallvirtNeedsClassPrefix)
+                        toCompare = new ReflectedType(mi.ReturnType, ownAssemblyName).ILName + " " + new ReflectedType(mi.ReflectedType, ownAssemblyName).QuotedILName + "::" + mi.Name + "("; //RL 6-3-2008  QuotedIlName instead of ILName(Fix 'Relations with Umlaut')
+                    else
+                        toCompare = new ReflectedType(mi.ReturnType, ownAssemblyName).ILName + " " + new ReflectedType(mi.ReflectedType, ownAssemblyName).QuotedILNameWithoutPrefix + "::" + mi.Name + "(";  //RL 6-3-2008  QuotedIlNameWithoutPrefix instead of IlNameWithoutPrefix (Fix 'Relations mit Umlaut')
+#endif
+					if (line.StartsWith(toCompare))
+					{
+						foundMethod = mi;
+						break;
+					}
+				}
+			}
+			if (foundMethod == null)
+				return false;
+
+            Type reflectedType = foundMethod.ReflectedType;
+            string foundName = foundMethod.Name;
+
+			string stackMethod = (string) functions[foundName];
+			if (stackMethod == null)
+				return false;
+            // All list manipulation functions are void, with 3 Exceptions:
+            // - IList.Add (non generic only)
+            // - IList<T>.Remove (generic only)
+            // - List<T>.RemoveAll (generic only)
+            string retval = "void";
+
+            if (foundName == "Add")
+                retval = "int32";  // we use a return value anyway and pop it from the stack by generic containers
+#if !NET11
+            else if (foundName == "Remove")
+                retval = "bool";   // we use a return value anyway and pop it from the stack by non generic containers        
+#endif
+            else if (foundName == "RemoveAll")
+                retval = "int32";
+		
+			statementElement.insertBefore(new ILStatementElement("ldloc __ndocontainertable"));
+			statementElement.insertBefore(new ILStatementElement("call       " + retval + " [NDO]NDO._NDOContainerStack::" 
+				+ stackMethod));
+#if !NET11
+            // The non generic IList.Add function has an int32 result.
+            // The generic IList<T>.Add function has a void result.
+            // To give the result of the non generic function back, our Add function has also an int32 result.
+            // If the call was to a generic version, we have to eliminate the result value with a pop instruction.
+            if (foundName == "Add" && foundMethod.ReflectedType.IsGenericType)
+                statementElement.insertBefore(new ILStatementElement("pop"));
+            if (foundName == "Remove" && !foundMethod.ReflectedType.IsGenericType)
+                statementElement.insertBefore(new ILStatementElement("pop"));
+
+#endif
+			statementElement.remove();
+			return true;
+		}
+
+	}
+}

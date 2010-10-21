@@ -1,0 +1,35 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 10.00
+# Visual Studio 2008
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NDOAddIn", "NDOAddIn.9.csproj", "{B9CA5B05-07BD-4BF9-B6DD-35DB819988D0}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Beta|Any CPU = Beta|Any CPU
+		Community|Any CPU = Community|Any CPU
+		Debug|Any CPU = Debug|Any CPU
+		Enterprise|Any CPU = Enterprise|Any CPU
+		Professional|Any CPU = Professional|Any CPU
+		Standard|Any CPU = Standard|Any CPU
+		Trial|Any CPU = Trial|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{B9CA5B05-07BD-4BF9-B6DD-35DB819988D0}.Beta|Any CPU.ActiveCfg = Beta|Any CPU
+		{B9CA5B05-07BD-4BF9-B6DD-35DB819988D0}.Beta|Any CPU.Build.0 = Beta|Any CPU
+		{B9CA5B05-07BD-4BF9-B6DD-35DB819988D0}.Community|Any CPU.ActiveCfg = Community|Any CPU
+		{B9CA5B05-07BD-4BF9-B6DD-35DB819988D0}.Community|Any CPU.Build.0 = Community|Any CPU
+		{B9CA5B05-07BD-4BF9-B6DD-35DB819988D0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B9CA5B05-07BD-4BF9-B6DD-35DB819988D0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B9CA5B05-07BD-4BF9-B6DD-35DB819988D0}.Enterprise|Any CPU.ActiveCfg = Enterprise|Any CPU
+		{B9CA5B05-07BD-4BF9-B6DD-35DB819988D0}.Enterprise|Any CPU.Build.0 = Enterprise|Any CPU
+		{B9CA5B05-07BD-4BF9-B6DD-35DB819988D0}.Professional|Any CPU.ActiveCfg = Professional|Any CPU
+		{B9CA5B05-07BD-4BF9-B6DD-35DB819988D0}.Professional|Any CPU.Build.0 = Professional|Any CPU
+		{B9CA5B05-07BD-4BF9-B6DD-35DB819988D0}.Standard|Any CPU.ActiveCfg = Standard|Any CPU
+		{B9CA5B05-07BD-4BF9-B6DD-35DB819988D0}.Standard|Any CPU.Build.0 = Standard|Any CPU
+		{B9CA5B05-07BD-4BF9-B6DD-35DB819988D0}.Trial|Any CPU.ActiveCfg = Trial|Any CPU
+		{B9CA5B05-07BD-4BF9-B6DD-35DB819988D0}.Trial|Any CPU.Build.0 = Trial|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

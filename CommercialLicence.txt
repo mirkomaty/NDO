@@ -1,0 +1,8 @@
+.NET Dataobjects (NDO) is released in a dual licence concept.
+
+If you use NDO for developing free software according to the GPL v3, just use NDO. 
+
+If you are developing software which doesn't apply to the GPL, ask for a commercial licence 
+from the Copyright Owner (HoT - House of Tools Development GmbH) allowing you to use NDO.
+
+See www.netdataobjects.com for more details.

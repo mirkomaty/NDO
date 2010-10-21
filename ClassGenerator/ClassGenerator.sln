@@ -1,0 +1,33 @@
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual Studio 2010
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestApp", "TestApp\TestApp.csproj", "{423FDD88-50C4-4996-9688-EE1CF1804FC4}"
+	ProjectSection(ProjectDependencies) = postProject
+		{74781FF5-7C67-44FE-8AB6-999AD0F9F6D4} = {74781FF5-7C67-44FE-8AB6-999AD0F9F6D4}
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClassGeneratorDll", "ClassGeneratorDll.csproj", "{74781FF5-7C67-44FE-8AB6-999AD0F9F6D4}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClassGenerator", "ClassGenerator\ClassGenerator.csproj", "{B91FE4B4-E85F-4063-89D1-B64FA97E2ECF}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{423FDD88-50C4-4996-9688-EE1CF1804FC4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{423FDD88-50C4-4996-9688-EE1CF1804FC4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{423FDD88-50C4-4996-9688-EE1CF1804FC4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{74781FF5-7C67-44FE-8AB6-999AD0F9F6D4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{74781FF5-7C67-44FE-8AB6-999AD0F9F6D4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{74781FF5-7C67-44FE-8AB6-999AD0F9F6D4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{74781FF5-7C67-44FE-8AB6-999AD0F9F6D4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B91FE4B4-E85F-4063-89D1-B64FA97E2ECF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B91FE4B4-E85F-4063-89D1-B64FA97E2ECF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B91FE4B4-E85F-4063-89D1-B64FA97E2ECF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B91FE4B4-E85F-4063-89D1-B64FA97E2ECF}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

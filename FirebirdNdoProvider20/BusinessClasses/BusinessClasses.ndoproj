@@ -1,0 +1,38 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<Enhancer>
+  <Options>
+    <EnableAddIn>True</EnableAddIn>
+    <EnableEnhancer>True</EnableEnhancer>
+    <GenerateMapping>True</GenerateMapping>
+    <GenerateSchema>True</GenerateSchema>
+    <NewMapping>False</NewMapping>
+    <MergeMapping>True</MergeMapping>
+    <MergeSchema>True</MergeSchema>
+    <GenerateSQL>False</GenerateSQL>
+    <TypeListFile>
+    </TypeListFile>
+    <DefaultConnection>
+    </DefaultConnection>
+    <UsePolymorphy>False</UsePolymorphy>
+    <GenerateChangeEvents>False</GenerateChangeEvents>
+    <UseTimeStamps>False</UseTimeStamps>
+    <Utf8Encoding>True</Utf8Encoding>
+    <SQLScriptLanguage>Firebird</SQLScriptLanguage>
+    <SchemaVersion>
+    </SchemaVersion>
+    <DatabaseOwner>
+    </DatabaseOwner>
+  </Options>
+  <ProjectDescription>
+    <BinPath>bin\Release\BusinessClasses.dll</BinPath>
+    <ObjPath>obj\Release\</ObjPath>
+    <ProjPath>C:\Projekte\NDO\FirebirdNdoProvider20\BusinessClasses\</ProjPath>
+    <AssemblyName />
+    <Debug>False</Debug>
+    <IsWebProject>False</IsWebProject>
+    <KeyFile>
+    </KeyFile>
+    <References>
+    </References>
+  </ProjectDescription>
+</Enhancer>

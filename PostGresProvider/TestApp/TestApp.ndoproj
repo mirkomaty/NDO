@@ -1,0 +1,43 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<Enhancer>
+  <Options>
+    <EnableAddIn>True</EnableAddIn>
+    <EnableEnhancer>False</EnableEnhancer>
+    <GenerateMapping>True</GenerateMapping>
+    <GenerateSchema>True</GenerateSchema>
+    <NewMapping>False</NewMapping>
+    <MergeMapping>True</MergeMapping>
+    <MergeSchema>True</MergeSchema>
+    <GenerateSQL>False</GenerateSQL>
+    <TypeListFile>
+    </TypeListFile>
+    <DefaultConnection>SERVER=localhost;DATABASE=postgres;USER ID=postgres;PASSWORD=abundance;</DefaultConnection>
+    <UsePolymorphy>False</UsePolymorphy>
+    <GenerateChangeEvents>False</GenerateChangeEvents>
+    <UseTimeStamps>False</UseTimeStamps>
+    <Utf8Encoding>True</Utf8Encoding>
+    <SQLScriptLanguage>Postgre</SQLScriptLanguage>
+    <SchemaVersion>
+    </SchemaVersion>
+    <DatabaseOwner>
+    </DatabaseOwner>
+  </Options>
+  <ProjectDescription>
+    <BinPath>bin\Debug\TestApp.exe</BinPath>
+    <ObjPath>obj\Debug\</ObjPath>
+    <ProjPath>C:\Projekte\NDO\PostGresProvider\TestApp\</ProjPath>
+    <AssemblyName />
+    <Debug>True</Debug>
+    <IsWebProject>False</IsWebProject>
+    <KeyFile>
+    </KeyFile>
+    <References>
+      <Reference AssemblyName="BusinessClasses" AssemblyPath="..\BusinessClasses\bin\Debug\BusinessClasses.dll">
+      </Reference>
+      <Reference AssemblyName="PostGresProvider" AssemblyPath="..\PostgreProvider\bin\Debug\PostGreProvider.dll">
+      </Reference>
+      <Reference AssemblyName="NDOInterfaces" AssemblyPath="..\..\NDOInterfaces\bin\release\NDOInterfaces.dll">
+      </Reference>
+    </References>
+  </ProjectDescription>
+</Enhancer>

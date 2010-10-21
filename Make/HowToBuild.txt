@@ -1,0 +1,28 @@
+Adjust the directories marked in the MakefileEnt.txt and in the MakeEnt.bat.
+
+Then run the MakeEnt.bat.
+
+If you run the build under Vista run it as Administrator (right click on the MakeEnt.bat 
+and choose "Run As Adminstrator"). Since Vista changes the current directory in that case, 
+add a line 
+
+@cd c:\blah\NDO\Make
+
+to force the change to your make directory.
+
+After a successful build the NDO distribution files reside in the Deploy directory.
+
+Then do the following:
+
+- Replace the string YourAddInPath in the file NDOEnhancer.AddIn 
+  with the path the NDOEnhancer.dll resides in.
+- Determine the value of the environment variable ALLUSERSPROFILE. 
+- Copy the NDOEnhancer.AddIn into the folder
+
+  %ALLUSERSPROFILE%\Application Data\Microsoft\MSEnvShared\Addins
+
+  If the folder doesn't exist, just create it.
+
+- After this, VS 2005 will detect the NDO Add-in.
+
+

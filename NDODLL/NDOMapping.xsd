@@ -1,0 +1,271 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" attributeFormDefault="unqualified">
+  <xs:element name="NDOMapping">
+    <xs:annotation>
+      <xs:documentation>NDO mapping information</xs:documentation>
+    </xs:annotation>
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="Connections">
+          <xs:complexType>
+            <xs:sequence maxOccurs="unbounded">
+              <xs:element name="Connection" type="Connection">
+                <xs:annotation>
+                  <xs:documentation>Database connection information</xs:documentation>
+                </xs:annotation>
+              </xs:element>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="Classes">
+          <xs:complexType>
+            <xs:sequence maxOccurs="unbounded">
+              <xs:element name="Class" type="Class" minOccurs="0">
+                <xs:annotation>
+                  <xs:documentation>Persistent class information</xs:documentation>
+                </xs:annotation>
+              </xs:element>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="Property" type="Property" minOccurs="0" maxOccurs="100">
+          <xs:annotation>
+            <xs:documentation>Optional user property.</xs:documentation>
+          </xs:annotation>
+        </xs:element>
+      </xs:sequence>
+      <xs:attribute name="SchemaVersion" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>Version of the mapped schema.</xs:documentation>
+        </xs:annotation>
+      </xs:attribute>
+    </xs:complexType>
+  </xs:element>
+  <xs:complexType name="Class">
+    <xs:annotation>
+      <xs:documentation>Describes one class</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element name="Oid">
+        <xs:annotation>
+          <xs:documentation>Object identifier of the class.</xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="Property" type="Property" minOccurs="0">
+              <xs:annotation>
+                <xs:documentation>Optional user property.</xs:documentation>
+              </xs:annotation>
+            </xs:element>
+            <xs:element name="OidColumn" type="OidColumn" minOccurs="1" maxOccurs="unbounded" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="Fields">
+        <xs:complexType>
+          <xs:sequence maxOccurs="unbounded">
+            <xs:element name="Field" type="Field" minOccurs="0">
+              <xs:annotation>
+                <xs:documentation>Persistent field information</xs:documentation>
+              </xs:annotation>
+            </xs:element>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="Relations">
+        <xs:complexType>
+          <xs:sequence maxOccurs="unbounded">
+            <xs:element name="Relation" type="Relation" minOccurs="0">
+              <xs:annotation>
+                <xs:documentation>Class relation information</xs:documentation>
+              </xs:annotation>
+            </xs:element>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="Property" type="Property" minOccurs="0" maxOccurs="100">
+        <xs:annotation>
+          <xs:documentation>Optional user property.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+    <xs:attribute name="AssemblyName" type="xs:string" use="required" />
+    <xs:attribute name="FullName" type="xs:string" use="required">
+      <xs:annotation>
+        <xs:documentation>Full type name of class.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="TableName" type="xs:string" use="required">
+      <xs:annotation>
+        <xs:documentation>The database table where objects of the class are stored.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="ConnectionId" type="xs:IDREF" use="required">
+      <xs:annotation>
+        <xs:documentation>A reference to the connection that should be used to access the database.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+  </xs:complexType>
+  <xs:complexType name="Connection">
+    <xs:annotation>
+      <xs:documentation>DB Connection</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element name="Property" type="Property" minOccurs="0" maxOccurs="100">
+        <xs:annotation>
+          <xs:documentation>Optional user property.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+    <xs:attribute name="ID" type="xs:ID" use="required">
+      <xs:annotation>
+        <xs:documentation>ID is a unique key that is used within the mapping document to reference the connection.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="Name" type="xs:string" use="required">
+      <xs:annotation>
+        <xs:documentation>This is the connection string.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="Type" type="xs:string" use="required">
+      <xs:annotation>
+        <xs:documentation>This is the connection type. Currently, Sql and OleDb are supported.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+  </xs:complexType>
+  <xs:complexType name="Field">
+    <xs:annotation>
+      <xs:documentation>Field Description</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element name="Property" type="Property" minOccurs="0" maxOccurs="100">
+        <xs:annotation>
+          <xs:documentation>Optional user property.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="Column" type="Column" minOccurs="1" maxOccurs="1" />
+    </xs:sequence>
+    <xs:attribute name="Name" type="xs:string" use="required">
+      <xs:annotation>
+        <xs:documentation>Field name of the class attribute.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+  </xs:complexType>
+  <xs:complexType name="Relation">
+    <xs:annotation>
+      <xs:documentation>Relation</xs:documentation>
+    </xs:annotation>
+    <xs:sequence minOccurs="0">
+      <xs:element name="MappingTable" type="MappingTable" />
+      <xs:element name="Property" type="Property" minOccurs="0" maxOccurs="100">
+        <xs:annotation>
+          <xs:documentation>Optional user property.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="ForeignKeyColumn" type="ForeignKeyColumn" minOccurs="1" maxOccurs="unbounded">
+        <xs:annotation>
+          <xs:documentation>Column name of the foreign key in the relation.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+    <xs:attribute name="FieldName" type="xs:string" use="required">
+      <xs:annotation>
+        <xs:documentation>Name of the relation field of the class.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="ForeignKeyTypeColumnName" type="xs:string" use="optional">
+      <xs:annotation>
+        <xs:documentation>Name of the column which holds the type code in polymorphic scenarios.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="RelationName" type="xs:string" use="optional">
+      <xs:annotation>
+        <xs:documentation>Name to distinguish Relations to the same type.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="ReferencedTypeName" type="xs:string" use="required">
+      <xs:annotation>
+        <xs:documentation>(.NET) Type of the related class.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+  </xs:complexType>
+  <xs:complexType name="MappingTable">
+    <xs:sequence>
+      <xs:element name="Property" type="Property" minOccurs="0" maxOccurs="100">
+        <xs:annotation>
+          <xs:documentation>Optional user property.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+    <xs:attribute name="TableName" type="xs:string" use="required">
+      <xs:annotation>
+        <xs:documentation>Name of the mapping table.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="ChildForeignKeyColumnName" type="xs:string" use="required">
+      <xs:annotation>
+        <xs:documentation>Column name of the related field.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="ChildForeignKeyTypeColumnName" type="xs:string" use="optional">
+      <xs:annotation>
+        <xs:documentation>Name of the column which holds the type code in polymorphic scenarios.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+  </xs:complexType>
+  <xs:complexType name="Property">
+    <xs:attribute name="Name" type="xs:string" use="required">
+      <xs:annotation>
+        <xs:documentation>Name of the property.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="Value" type="xs:string" use="required">
+      <xs:annotation>
+        <xs:documentation>Property value.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="DotNetType" type="xs:string" use="optional">
+      <xs:annotation>
+        <xs:documentation>Name of a .NET type. The type must be convertible to a string and vice versa.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+  </xs:complexType>
+  <xs:complexType name="OidColumn">
+    <xs:sequence>
+    </xs:sequence>
+    <xs:attribute name="FieldName" type="xs:string" use="optional" />
+    <xs:attribute name="RelationName" type="xs:string" use="optional" />
+    <xs:attribute name="AutoIncremented" type="xs:boolean" use="optional" />
+    <xs:attribute name="AutoIncrementStart" type="xs:int" />
+    <xs:attribute name="AutoIncrementStep" type="xs:int" />
+    <xs:attribute name="Name" type="xs:string" use="required" />
+    <xs:attribute name="NetType" type="xs:string" use="optional" />
+    <xs:attribute name="DbType" type="xs:string" use="optional" />
+    <xs:attribute name="Size" type="xs:int" use="optional" />
+    <xs:attribute name="Precision" type="xs:int" use="optional" />
+    <xs:attribute name="IgnoreColumnSizeInDDL" type="xs:boolean" use="optional" />
+    <xs:attribute name="AllowDbNull" type="xs:boolean" use="optional" />
+  </xs:complexType>
+  <xs:complexType name="Column">
+    <xs:sequence>
+    </xs:sequence>
+    <xs:attribute name="Name" type="xs:string" use="required" />
+    <xs:attribute name="NetType" type="xs:string" use="optional" />
+    <xs:attribute name="DbType" type="xs:string" use="optional" />
+    <xs:attribute name="Size" type="xs:int" use="optional" />
+    <xs:attribute name="Precision" type="xs:int" use="optional" />
+    <xs:attribute name="IgnoreColumnSizeInDDL" type="xs:boolean" use="optional" />
+    <xs:attribute name="AllowDbNull" type="xs:boolean" use="optional" />
+  </xs:complexType>
+  <xs:complexType name="ForeignKeyColumn">
+    <xs:sequence>
+    </xs:sequence>
+    <xs:attribute name="Name" type="xs:string" use="required" />
+    <xs:attribute name="NetType" type="xs:string" use="optional" />
+    <xs:attribute name="DbType" type="xs:string" use="optional" />
+    <xs:attribute name="Size" type="xs:int" use="optional" />
+    <xs:attribute name="Precision" type="xs:int" use="optional" />
+    <xs:attribute name="IgnoreColumnSizeInDDL" type="xs:boolean" use="optional" />
+    <xs:attribute name="AllowDbNull" type="xs:boolean" use="optional" />
+  </xs:complexType>
+</xs:schema>

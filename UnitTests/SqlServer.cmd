@@ -1,0 +1,1 @@
+call conf.bat SQLSERVER

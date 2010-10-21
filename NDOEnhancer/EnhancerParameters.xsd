@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema id="EnhancerParameters" targetNamespace="http://tempuri.org/EnhancerParameters.xsd" elementFormDefault="qualified" xmlns="http://tempuri.org/EnhancerParameters.xsd" xmlns:mstns="http://tempuri.org/EnhancerParameters.xsd" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:element name="Enhancer">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="ProjectDescription" maxOccurs="1" minOccurs="1">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="BinPath" type="xs:string" />
+              <xs:element name="ObjPath" type="xs:string" />
+              <xs:element name="AssemblyName" type="xs:string" />
+              <xs:element name="Debug" type="xs:boolean" />
+              <xs:element name="IsWebProject" type="xs:boolean" />
+              <xs:element name="KeyFile" type="xs:string" />
+              <xs:element name="References" maxOccurs="1" minOccurs="1">
+                <xs:complexType>
+                  <xs:sequence>
+                    <xs:element name="Reference" minOccurs="1">
+                      <xs:complexType>
+                        <xs:sequence>
+                        </xs:sequence>
+                        <xs:attribute name="AssemblyName" type="xs:string" />
+                        <xs:attribute name="AssemblyPath" type="xs:string" />
+                      </xs:complexType>
+                    </xs:element>
+                  </xs:sequence>
+                </xs:complexType>
+              </xs:element>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="Options" minOccurs="1" maxOccurs="1">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="EnableAddIn" type="xs:boolean" />
+              <xs:element name="EnableEnhancer" type="xs:boolean" />
+              <xs:element name="VerboseMode" type="xs:boolean" />
+              <xs:element name="NewMapping" type="xs:boolean" />
+              <xs:element name="GenerateSQL" type="xs:boolean" />
+              <xs:element name="DefaultConnection" type="xs:string" />
+              <xs:element name="GenerateChangeEvents" type="xs:boolean" />
+              <xs:element name="UseTimeStamps" type="xs:boolean" />
+              <xs:element name="Utf8Encoding" type="xs:boolean" />
+              <xs:element name="SQLScriptLanguage" type="xs:string" />
+              <xs:element name="SchemaVersion" type="xs:string" />
+              <xs:element name="IncludeTypecodes" type="xs:boolean" />
+              <xs:element name="DatabaseOwner" type="xs:string" />
+              <xs:element name="GenerateConstraints" type="xs:boolean" />
+              <xs:element name="DropExistingElements" type="xs:boolean" />
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+</xs:schema>

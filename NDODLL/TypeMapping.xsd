@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- edited with XMLSPY v5 rel. 3 U (http://www.xmlspy.com)  -->
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" attributeFormDefault="unqualified">
+	<xs:element name="NDOTypeMapping">
+		<xs:annotation>
+			<xs:documentation>Mapping from type to integer</xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="TypeDescriptor" type="NDOTypeDescriptor" minOccurs="0" maxOccurs="unbounded"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:complexType name="NDOTypeDescriptor">
+		<xs:attribute name="TypeName" type="xs:string" use="required"/>
+		<xs:attribute name="AssemblyName" type="xs:string" use="required"/>
+		<xs:attribute name="TypeId" type="xs:int" use="required"/>
+	</xs:complexType>
+</xs:schema>

@@ -1,0 +1,55 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<NDOMapping SchemaVersion="">
+  <Connections>
+    <Connection ID="C0" Name="Dialect=3;User Id=SYSDBA;Database=localhost:C:\Projekte\NDO\FirebirdNdoProvider20\TEST.FBD;Data Source=localhost;Password=masterkey" Type="Firebird" />
+  </Connections>
+  <Classes>
+    <Class AssemblyName="BusinessClasses" FullName="BusinessClasses.DataContainer" TableName="DataContainer" ConnectionId="C0">
+      <Oid>
+        <OidColumn Name="ID" Autoincremented="True" />
+      </Oid>
+      <Fields>
+        <Field Name="boolVar">
+          <Column Name="BoolVar" />
+        </Field>
+        <Field Name="byteVar">
+          <Column Name="ByteVar" />
+        </Field>
+        <Field Name="dateTimeVar">
+          <Column Name="DateTimeVar" />
+        </Field>
+        <Field Name="decVar">
+          <Column Name="DecVar" />
+        </Field>
+        <Field Name="doubleVar">
+          <Column Name="DoubleVar" />
+        </Field>
+        <Field Name="floatVar">
+          <Column Name="FloatVar" />
+        </Field>
+        <Field Name="guidVar">
+          <Column Name="GuidVar" />
+        </Field>
+        <Field Name="int16Var">
+          <Column Name="Int16Var" />
+        </Field>
+        <Field Name="int64Var">
+          <Column Name="Int64Var" />
+        </Field>
+        <Field Name="stringVar">
+          <Column Name="StringVar" />
+        </Field>
+        <Field Name="uint16Var">
+          <Column Name="Uint16Var" />
+        </Field>
+        <Field Name="uint32Var">
+          <Column Name="Uint32Var" />
+        </Field>
+        <Field Name="uint64Var">
+          <Column Name="Uint64Var" />
+        </Field>
+      </Fields>
+      <Relations />
+    </Class>
+  </Classes>
+</NDOMapping>

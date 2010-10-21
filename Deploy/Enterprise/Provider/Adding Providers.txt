@@ -1,0 +1,9 @@
+Run the UserSetup.msi and enter this directory in it. Copy the Provider DLLs into this directory. 
+After that, NDO finds the providers during development.
+
+The UserSetup just creates a Registry Key 
+
+HKEY_LOCAL_MACHINE\SOFTWARE\HoT - House of Tools Development GmbH\NDO\1.1
+
+This Key contains a value "AddInPath". The value contains the directory, where NDO tries 
+to find the Providers.

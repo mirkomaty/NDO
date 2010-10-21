@@ -1,0 +1,352 @@
+﻿<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <ProjectType>Local</ProjectType>
+    <ProductVersion>8.0.50727</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{3A0A82CF-F913-4701-B482-FF8709031777}</ProjectGuid>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ApplicationIcon>App.ico</ApplicationIcon>
+    <AssemblyKeyContainerName>
+    </AssemblyKeyContainerName>
+    <AssemblyName>Enhancer</AssemblyName>
+    <AssemblyOriginatorKeyFile>
+    </AssemblyOriginatorKeyFile>
+    <DefaultClientScript>JScript</DefaultClientScript>
+    <DefaultHTMLPageLayout>Grid</DefaultHTMLPageLayout>
+    <DefaultTargetSchema>IE50</DefaultTargetSchema>
+    <DelaySign>false</DelaySign>
+    <OutputType>Exe</OutputType>
+    <RootNamespace>Enhancer</RootNamespace>
+    <RunPostBuildEvent>OnBuildSuccess</RunPostBuildEvent>
+    <StartupObject>
+    </StartupObject>
+    <FileUpgradeFlags>
+    </FileUpgradeFlags>
+    <UpgradeBackupLocation>
+    </UpgradeBackupLocation>
+    <SccProjectName>
+    </SccProjectName>
+    <SccLocalPath>
+    </SccLocalPath>
+    <SccAuxPath>
+    </SccAuxPath>
+    <SccProvider>
+    </SccProvider>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <OutputPath>enh_bin\Debug\</OutputPath>
+    <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
+    <BaseAddress>285212672</BaseAddress>
+    <CheckForOverflowUnderflow>false</CheckForOverflowUnderflow>
+    <ConfigurationOverrideFile>
+    </ConfigurationOverrideFile>
+    <DefineConstants>DEBUG;STANDALONE;STD;PRO;ENT;NET20;NDO20</DefineConstants>
+    <DocumentationFile>
+    </DocumentationFile>
+    <DebugSymbols>true</DebugSymbols>
+    <FileAlignment>4096</FileAlignment>
+    <NoStdLib>false</NoStdLib>
+    <NoWarn>
+    </NoWarn>
+    <Optimize>false</Optimize>
+    <RegisterForComInterop>false</RegisterForComInterop>
+    <RemoveIntegerChecks>false</RemoveIntegerChecks>
+    <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
+    <WarningLevel>4</WarningLevel>
+    <DebugType>full</DebugType>
+    <ErrorReport>prompt</ErrorReport>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <OutputPath>enh_bin\Release\</OutputPath>
+    <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
+    <BaseAddress>285212672</BaseAddress>
+    <CheckForOverflowUnderflow>false</CheckForOverflowUnderflow>
+    <ConfigurationOverrideFile>
+    </ConfigurationOverrideFile>
+    <DefineConstants>EXE;STD;PRO;ENT;BETA;NET20;NDO20;STANDALONE</DefineConstants>
+    <DocumentationFile>
+    </DocumentationFile>
+    <DebugSymbols>false</DebugSymbols>
+    <FileAlignment>4096</FileAlignment>
+    <NoStdLib>false</NoStdLib>
+    <NoWarn>
+    </NoWarn>
+    <Optimize>true</Optimize>
+    <RegisterForComInterop>false</RegisterForComInterop>
+    <RemoveIntegerChecks>false</RemoveIntegerChecks>
+    <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
+    <WarningLevel>4</WarningLevel>
+    <DebugType>none</DebugType>
+    <ErrorReport>prompt</ErrorReport>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Enterprise|AnyCPU' ">
+    <OutputPath>bin\Enterprise\</OutputPath>
+    <DefineConstants>EXE;STD;PRO;ENT;NET20;STANDALONE</DefineConstants>
+    <BaseAddress>285212672</BaseAddress>
+    <Optimize>true</Optimize>
+    <DebugType>
+    </DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Beta|AnyCPU' ">
+    <OutputPath>bin\Beta\</OutputPath>
+    <DefineConstants>EXE;STD;PRO;ENT;BETA;NET20;STANDALONE</DefineConstants>
+    <BaseAddress>285212672</BaseAddress>
+    <Optimize>true</Optimize>
+    <DebugType>
+    </DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="NDO, Version=2.0.0.0, Culture=neutral, PublicKeyToken=37bfdffa92a0cd24, processorArchitecture=MSIL" />
+    <Reference Include="NDOInterfaces, Version=2.0.0.0, Culture=neutral, PublicKeyToken=ff5e453a099b8326, processorArchitecture=MSIL" />
+    <Reference Include="System">
+      <Name>System</Name>
+    </Reference>
+    <Reference Include="System.Data">
+      <Name>System.Data</Name>
+    </Reference>
+    <Reference Include="System.Data.OracleClient">
+      <Name>System.Data.OracleClient</Name>
+    </Reference>
+    <Reference Include="System.Xml">
+      <Name>System.XML</Name>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="AllBranches.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Asm.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="BigInteger.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Class.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="ConsoleMessageAdapter.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="ConsoleProcess.cs" />
+    <Compile Include="Dasm.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Enhancer\ClassHashtable.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Enhancer\Decryptor.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Enhancer\Ecma335\EcmaArrayIndex.cs" />
+    <Compile Include="Enhancer\Ecma335\EcmaCallConv.cs" />
+    <Compile Include="Enhancer\Ecma335\EcmaDottedName.cs" />
+    <Compile Include="Enhancer\Ecma335\EcmaGenericParameter.cs" />
+    <Compile Include="Enhancer\Ecma335\EcmaILParserException.cs" />
+    <Compile Include="Enhancer\Ecma335\EcmaKeywordListParser.cs" />
+    <Compile Include="Enhancer\Ecma335\EcmaMethodAttr.cs" />
+    <Compile Include="Enhancer\Ecma335\EcmaMethodHeader.cs" />
+    <Compile Include="Enhancer\Ecma335\EcmaMethodName.cs" />
+    <Compile Include="Enhancer\Ecma335\EcmaParameterList.cs" />
+    <Compile Include="Enhancer\Ecma335\EcmaTypeReferenceName.cs" />
+    <Compile Include="Enhancer\Ecma335\IEcmaDefinition.cs" />
+    <Compile Include="Enhancer\Ecma335\EcmaType.cs" />
+    <Compile Include="Enhancer\Ecma335\EcmaTypeRef.cs" />
+    <Compile Include="Enhancer\Ecma335\EcmaImplAttr.cs" />
+    <Compile Include="Enhancer\Enhancer.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Enhancer\ExtendedPath.cs" />
+    <Compile Include="Enhancer\Generator\AccessGenerator.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Enhancer\Generator\FirebirdGenerator.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Enhancer\Generator\GeneratorFactory.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Enhancer\Generator\GenericDiffGenerator.cs" />
+    <Compile Include="Enhancer\Generator\GenericSqlGenerator.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Enhancer\Generator\GenericSqlGeneratorBase.cs" />
+    <Compile Include="Enhancer\Generator\MySqlGenerator.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Enhancer\Generator\MySqlProvider.cs" />
+    <Compile Include="Enhancer\Generator\OracleGenerator.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Enhancer\Generator\SQLDiffGenerator.cs" />
+    <Compile Include="Enhancer\Generator\SQLGenerator.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Enhancer\Generator\SqlServerGenerator.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Enhancer\Generator\StandardSqlGenerator.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Enhancer\InternalException.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Enhancer\ListReflectors\GenericIListReflector.cs" />
+    <Compile Include="Enhancer\ListReflectors\GenericListReflector.cs" />
+    <Compile Include="Enhancer\ListReflectors\IListReflector.cs" />
+    <Compile Include="Enhancer\ListReflectors\ListAccessManipulator.cs" />
+    <Compile Include="Enhancer\ListReflectors\ListReflectorFactory.cs" />
+    <Compile Include="Enhancer\Nodes\AssemblyNode.cs" />
+    <Compile Include="Enhancer\Nodes\EmbeddedTypeNode.cs" />
+    <Compile Include="Enhancer\Nodes\ValueTypeNode.cs" />
+    <Compile Include="Enhancer\ReflectedType.cs" />
+    <Compile Include="Enhancer\ListReflectors\StandardListReflector.cs" />
+    <Compile Include="Enhancer\NDOAssemblyName.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Enhancer\NDOErrors.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Enhancer\Nodes\ClassNode.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Enhancer\Nodes\FieldNode.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Enhancer\Nodes\RelationNode.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Enhancer\ProjectDescription.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Enhancer\QualifiedTableName.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Enhancer\ReferenceArrayList.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Enhancer\SchemaGenerator.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Enhancer\TypeHashGenerator.cs" />
+    <Compile Include="Enhancer\TypeManager.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="EnhancerAssemblyInfo.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="EnhancerTest.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="EnhDate.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="ILCode\ILAssemblyElement.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="ILCode\ILBlankElement.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="ILCode\ILCatchElement.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="ILCode\ILClassElement.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="ILCode\ILCommentElement.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="ILCode\ILCounter.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="ILCode\ILCustomElement.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="ILCode\ILElement.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="ILCode\ILElementIterator.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="ILCode\ILElementType.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="ILCode\ILFieldElement.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="ILCode\ILFile.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="ILCode\ILGetElement.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="ILCode\ILLineElement.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="ILCode\ILLocalsElement.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="ILCode\ILMaxstackElement.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="ILCode\ILMethodElement.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="ILCode\ILModuleElement.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="ILCode\ILNamespaceElement.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="ILCode\ILPropertyElement.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="ILCode\ILPublickeyElement.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="ILCode\ILPublickeytokenElement.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="ILCode\ILSetElement.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="ILCode\ILStatementElement.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="ILCode\ILString.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="ILCode\ILTryElement.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="ILCode\ILUnknownElement.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="ILCode\PackedLength.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="TestConfigurationOptions.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="UmlautName.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="ValueTypes.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="XmlHelper.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Content Include="App.ico" />
+  </ItemGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PreBuildEvent>
+    </PreBuildEvent>
+    <PostBuildEvent>copy "$(TargetPath)" "C:\Programme\NDO 2.0 Enterprise Edition\NDOEnhancer.exe"</PostBuildEvent>
+  </PropertyGroup>
+</Project>

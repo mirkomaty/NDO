@@ -1,0 +1,46 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<Enhancer>
+  <Options>
+    <EnableAddIn>True</EnableAddIn>
+    <EnableEnhancer>False</EnableEnhancer>
+    <GenerateMapping>True</GenerateMapping>
+    <GenerateSchema>True</GenerateSchema>
+    <NewMapping>False</NewMapping>
+    <MergeMapping>True</MergeMapping>
+    <MergeSchema>True</MergeSchema>
+    <GenerateSQL>True</GenerateSQL>
+    <TypeListFile>
+    </TypeListFile>
+    <DefaultConnection>
+    </DefaultConnection>
+    <UsePolymorphy>False</UsePolymorphy>
+    <GenerateChangeEvents>False</GenerateChangeEvents>
+    <UseTimeStamps>False</UseTimeStamps>
+    <Utf8Encoding>True</Utf8Encoding>
+    <SQLScriptLanguage>Firebird</SQLScriptLanguage>
+    <SchemaVersion>
+    </SchemaVersion>
+    <DatabaseOwner>
+    </DatabaseOwner>
+  </Options>
+  <ProjectDescription>
+    <BinPath>bin\Release\TestApp.exe</BinPath>
+    <ObjPath>obj\Release\</ObjPath>
+    <ProjPath>C:\Projekte\NDO\FirebirdNdoProvider20\TestApp\</ProjPath>
+    <AssemblyName />
+    <Debug>False</Debug>
+    <IsWebProject>False</IsWebProject>
+    <KeyFile>
+    </KeyFile>
+    <References>
+      <Reference AssemblyName="FirebirdSql.Data.FirebirdClient" AssemblyPath="..\..\..\..\WINDOWS\assembly\GAC_MSIL\FirebirdSql.Data.FirebirdClient\2.0.0.0__3750abcc3150b00c\FirebirdSql.Data.FirebirdClient.dll">
+      </Reference>
+      <Reference AssemblyName="BusinessClasses" AssemblyPath="..\BusinessClasses\bin\Release\BusinessClasses.dll">
+      </Reference>
+      <Reference AssemblyName="FirebirdProvider" AssemblyPath="..\FirebirdProvider\bin\Release\FirebirdProvider.dll">
+      </Reference>
+      <Reference AssemblyName="NDOInterfaces" AssemblyPath="..\..\NDOInterfaces\bin\Release\NDOInterfaces.dll">
+      </Reference>
+    </References>
+  </ProjectDescription>
+</Enhancer>
