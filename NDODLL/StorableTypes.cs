@@ -46,6 +46,8 @@ namespace NDO
 		/// <returns>True, if the type is storable.</returns>
 		public static bool Contains(Type t)
 		{
+            if (t == null)
+                return false;
 			if (t == typeof(System.IntPtr))
 				return false;
 #if !NET11
