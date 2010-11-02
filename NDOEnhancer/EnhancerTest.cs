@@ -43,42 +43,7 @@ namespace EnhancerTest
 	public class EnhancerTest
 	{
 	
-		string arg;
         bool verboseMode;
-
-		/// <summary>
-		/// This function will be called by the host application NDOEnhancer.exe 
-		/// via Assembly::raw_Invoke_3()
-		/// </summary>
-		/// <param name="arg"></param>
-		public static void DoIt(string extarg)
-		{
-			try
-			{
-				new EnhancerTest(extarg).InternalStart();
-			}
-			catch (Exception ex)
-			{
-                bool verboseMode = false;
-                try
-                {
-                    ProjectDescription pd = new ProjectDescription(extarg);
-                    verboseMode = pd.ConfigurationOptions.VerboseMode;
-                }
-                catch    // The outer exception might have been caused
-                {                                   // by a project description load error.
-                }                                   // So this will be the second failure. We just ignore it.
-                if (verboseMode)
-				    Console.Error.WriteLine("Error: " + ex.ToString());
-                else
-				    Console.Error.WriteLine("Error: " + ex.Message);
-			}
-		}
-
-		EnhancerTest(string extarg)
-		{
-			this.arg = extarg;
-		}
 
         void CopyFile(string source, string dest)
         {
@@ -88,7 +53,7 @@ namespace EnhancerTest
             File.Copy(source, dest, true);
         }
 
-		int DomainLaunch()
+		int DomainLaunch(string arg)
 		{
 			ProjectDescription pd;
 			ConfigurationOptions options;
@@ -102,8 +67,9 @@ namespace EnhancerTest
 			this.verboseMode = options.VerboseMode;
 			string appDomainDir = Path.GetDirectoryName(pd.BinFile);
 			AppDomain cd = AppDomain.CurrentDomain;
-			AppDomain ad = AppDomain.CreateDomain("new Domain", cd.Evidence, appDomainDir, "", false);
-			string loadPath = this.GetType().Assembly.Location; //Path.Combine(cd.BaseDirectory, "Enhancer.exe");
+			AppDomain ad = AppDomain.CreateDomain("NDOEnhancerDomain", cd.Evidence, appDomainDir, "", false);
+			ad.SetData("arg", arg);
+			string loadPath = this.GetType().Assembly.Location;
 			if (!File.Exists(loadPath))
 				throw new Exception("File not found: " + loadPath);
 			int result = ad.ExecuteAssembly(loadPath);
@@ -146,11 +112,8 @@ namespace EnhancerTest
 			return result;
 		}
 
-		public void InternalStart()
+		public void InternalStart(string arg)
 		{
-#if DEBUG
-			Console.WriteLine("Domain base directory is: " + AppDomain.CurrentDomain.BaseDirectory);
-#endif
 			ProjectDescription pd;
 			ConfigurationOptions options;
 
@@ -168,7 +131,7 @@ namespace EnhancerTest
 #else
             this.verboseMode = options.VerboseMode;
 
-            // In Debug Mode the base directory is printed at the beginning of InternalStart
+            // In Debug Mode the base directory is printed in the Main method
             if (this.verboseMode)
                 Console.WriteLine("Domain base directory is: " + AppDomain.CurrentDomain.BaseDirectory);
 #endif
@@ -188,7 +151,6 @@ namespace EnhancerTest
 
 		public static int Main(string[] args)
 		{
-			string tempArgFile;
 			int result = 0;
 
             try
@@ -198,8 +160,6 @@ namespace EnhancerTest
 				if (appDomainDir.EndsWith("\\"))
 					appDomainDir = appDomainDir.Substring(0, appDomainDir.Length - 1);
 
-				tempArgFile = Path.Combine(Path.GetTempPath(), "ndoarg.txt");
-				
 				if (string.Compare(appDomainDir, locationDir, true) == 0)
 				{
 					if (args.Length < 1)
@@ -207,18 +167,15 @@ namespace EnhancerTest
 					string arg = args[0];
 					arg = Path.GetFullPath(arg);
 
-					StreamWriter sw = new StreamWriter(tempArgFile);
-					sw.Write(arg);
-					sw.Close();
-					result = new EnhancerTest(arg).DomainLaunch();
+					result = new EnhancerTest().DomainLaunch(arg);
 				}
 				else
 				{
-					StreamReader sr = new StreamReader(tempArgFile);
-					string newarg = sr.ReadToEnd();
-					sr.Close();
-					File.Delete(tempArgFile);
-					new EnhancerTest(newarg).InternalStart();
+#if DEBUG
+					Console.WriteLine( "Domain base directory is: " + AppDomain.CurrentDomain.BaseDirectory );
+#endif
+					string newarg = (string) AppDomain.CurrentDomain.GetData("arg");
+					new EnhancerTest().InternalStart(newarg);
 				}
             }
             catch(Exception ex)

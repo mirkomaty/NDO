@@ -60,11 +60,8 @@ namespace NDO
 					int i1;
 					int i2;
 					int i3;
-					MyRand rand = new MyRand(pc.NDOGetObjectHashCode());
-					i1 = rand.Next();
-					rand = new MyRand(child.NDOGetObjectHashCode());
-					i2 = rand.Next();
-					rand = new MyRand(r.GetHashCode());
+					i1 = pc.NDOGetObjectHashCode();
+					i2 = child.NDOGetObjectHashCode();
 					i3 = r.GetHashCode();
 					hash = (i1 ^ i2) ^ i3;
 				}
@@ -113,7 +110,7 @@ namespace NDO
 		{
 //			Debug.WriteLine("Lock: " + pc.GetType().Name + " " + r.FieldName + " " + child.GetType().Name);
 			Triple t = new Triple(pc, r, child);
-			int hash = this.GetHashCode();
+			//int hash = this.GetHashCode(); seems to be debug code
 			if (this.IsLocked(t))
 				return false;
 			relobjects.Add(t, null);
@@ -171,7 +168,7 @@ namespace NDO
 
 			public override bool Equals( object obj )
 			{
-				return Object.Equals( (IPersistenceCapable) pc, this.pc );
+				return Object.ReferenceEquals( (IPersistenceCapable) pc, this.pc );
 			}
 
 			public override int GetHashCode()

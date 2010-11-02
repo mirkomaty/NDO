@@ -2038,10 +2038,11 @@ namespace NDO.Mapping
             // we just return the hash code of System.Object.
             if (definingClass == null || definingClass.SystemType == null)
                 return base.GetHashCode();
+
             if (this.hashCode == 0)
             {
-                int v1 = new MyRand(definingClass.SystemType.GetHashCode()).Next();
-                int v2 = new MyRand(this.referencedType.GetHashCode()).Next();
+                int v1 = definingClass.SystemType.GetHashCode();
+                int v2 = this.referencedType.GetHashCode();
                 hashCode = (v1 ^ v2) ^ this.relationName.GetHashCode();
             }
             return hashCode;

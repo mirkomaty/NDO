@@ -219,16 +219,7 @@ namespace NDOEnhancer
 		onBuildProjConfigDone( string projectName, string projectConfig, string platform, string solutionConfig, bool success )
 		{
 			if (messages == null)
-				messages = new MessageAdapter(); 
-
-#if TRIAL || BETA
-            //expired = !NDOKey.CheckDate(new LicenceKey().TheKey, DateTime.Now);
-            //if (expired)
-            //{
-            //    messages.ShowError("NDO licence expired.");
-            //    return;
-            //}
-#endif
+				messages = new MessageAdapter();
 
 
 			if ( ! success )
@@ -277,8 +268,14 @@ namespace NDOEnhancer
                 string projFileName = options.FileName;
                 CheckProjectDescription(options, projectDescription, projFileName);
 
+				string appName = "NDOEnhancer.exe";
+				if ( platform == "x86" && OperatingSystem.Is64Bit )
+				{
+					appName = "Enhancerx86Stub.exe";
+					messages.WriteLine("NDO-Addin: Using x86 Stub");
+				}
 				ConsoleProcess cp = new ConsoleProcess(false);
-				int result = cp.Execute("\"" + Path.Combine(ApplicationObject.AssemblyPath, "NDOEnhancer.exe") + "\"",
+				int result = cp.Execute("\"" + Path.Combine(ApplicationObject.AssemblyPath, appName) + "\"",
 					"\"" + projFileName + "\"");
 
                 if (cp.Stdout != String.Empty)

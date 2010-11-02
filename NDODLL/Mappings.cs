@@ -45,20 +45,22 @@ namespace NDO
 	/// <summary>
 	/// Summary description for Mappings.
 	/// </summary>
-	internal class Mappings : NDOMapping {
+	internal class Mappings : NDOMapping
+	{
 		private Hashtable persistenceHandler = new Hashtable();
 		private ArrayList updateList = new ArrayList();
+		private ArrayList clientGeneratedList = new ArrayList();
 		private ArrayList updateSearchedFor = new ArrayList();
 		private Hashtable updateOrder = new Hashtable();
 		private DataSet ds;
 		ILogAdapter logAdapter;
 		private bool verboseMode;
 		private Type defaultHandlerType;
-        public Type DefaultHandlerType
-        {
-            get { return defaultHandlerType; }
-            set { defaultHandlerType = value; }
-        }
+		public Type DefaultHandlerType
+		{
+			get { return defaultHandlerType; }
+			set { defaultHandlerType = value; }
+		}
 
 
 		// Must be set after the schema is generated
@@ -69,7 +71,9 @@ namespace NDO
 		}
 
 
-		internal Mappings(string mappingFile, Type defaultHandlerType) : base (mappingFile) {
+		internal Mappings( string mappingFile, Type defaultHandlerType )
+			: base( mappingFile )
+		{
 			this.defaultHandlerType = defaultHandlerType;
 			InitClassFields();
 			BuildUpdateDependencies();
@@ -77,21 +81,21 @@ namespace NDO
 
 		private void InitClassFields()
 		{
-			foreach(Class c in Classes) 
+			foreach ( Class c in Classes )
 			{
-				((IFieldInitializer)c).InitFields();
+				((IFieldInitializer) c).InitFields();
 			}
 			// New loop, because we need the SystemType entries of all classes
-			foreach(Class c in Classes) 
+			foreach ( Class c in Classes )
 			{
 				c.ComputeRelationOrdinalBase();
-				foreach(Relation r in c.Relations) 
+				foreach ( Relation r in c.Relations )
 				{
-					((IFieldInitializer)r).InitFields();
+					((IFieldInitializer) r).InitFields();
 				}
 			}
 			// New loop, we need all relations initialized
-			foreach(Class c in Classes)
+			foreach ( Class c in Classes )
 			{
 				c.CollectForeignKeyNames();
 			}
@@ -101,15 +105,15 @@ namespace NDO
 		/// <summary>
 		/// Gets or sets a value which determines, if database operations will be logged in a logging file.
 		/// </summary>
-		internal bool VerboseMode 
+		internal bool VerboseMode
 		{
-			get { return this.verboseMode; } 
-			set 
+			get { return this.verboseMode; }
+			set
 			{
 				this.verboseMode = value;
-				foreach(DictionaryEntry de in persistenceHandler)
+				foreach ( DictionaryEntry de in persistenceHandler )
 				{
-					((IPersistenceHandler)de.Value).VerboseMode = value;
+					((IPersistenceHandler) de.Value).VerboseMode = value;
 				}
 			}
 		}
@@ -119,12 +123,12 @@ namespace NDO
 		/// </summary>
 		internal ILogAdapter LogAdapter
 		{
-			set 
+			set
 			{
 				this.logAdapter = value;
-				foreach(DictionaryEntry de in persistenceHandler)
+				foreach ( DictionaryEntry de in persistenceHandler )
 				{
-					((IPersistenceHandler)de.Value).LogAdapter = value;
+					((IPersistenceHandler) de.Value).LogAdapter = value;
 				}
 			}
 		}
@@ -135,9 +139,9 @@ namespace NDO
 		/// </summary>
 		/// <param name="pc">the persistent object of the class</param>
 		/// <returns>mapping info about the class</returns>
-		public Class FindClass(IPersistenceCapable pc) 
+		public Class FindClass( IPersistenceCapable pc )
 		{
-			return FindClass(pc.GetType().FullName);
+			return FindClass( pc.GetType().FullName );
 		}
 
 
@@ -147,9 +151,10 @@ namespace NDO
 		/// <param name="pc">the persistent object with the relation</param>
 		/// <param name="fieldName">the field name of the relation</param>
 		/// <returns>mapping info about the relation.</returns>
-		public Relation FindRelation(IPersistenceCapable pc, string fieldName) {
-			Class c = FindClass(pc);
-			return c.FindRelation(fieldName);
+		public Relation FindRelation( IPersistenceCapable pc, string fieldName )
+		{
+			Class c = FindClass( pc );
+			return c.FindRelation( fieldName );
 		}
 
 		/// <summary>
@@ -158,13 +163,13 @@ namespace NDO
 		/// <param name="pc">Object to search the FieldInfo</param>
 		/// <param name="name">Name of the field</param>
 		/// <returns>The FieldInfo of the given field; An exception will be thrown, if the field can't be found.</returns>
-		private FieldInfo GetFieldInfo(IPersistenceCapable pc, string name)
+		private FieldInfo GetFieldInfo( IPersistenceCapable pc, string name )
 		{
-            Type t = pc.GetType();
-			FieldInfo fi = new BaseClassReflector(t).GetField(name, BindingFlags.Instance | BindingFlags.NonPublic);
-			if(fi == null) 
+			Type t = pc.GetType();
+			FieldInfo fi = new BaseClassReflector( t ).GetField( name, BindingFlags.Instance | BindingFlags.NonPublic );
+			if ( fi == null )
 			{
-				throw new NDOException(9, "Invalid mapping: unknown field name " + name + " in type " + t);
+				throw new NDOException( 9, "Invalid mapping: unknown field name " + name + " in type " + t );
 			}
 			return fi;
 		}
@@ -175,9 +180,10 @@ namespace NDO
 		/// <param name="pc">the parent object</param>
 		/// <param name="r">the relation mapping info</param>
 		/// <returns>the content of the relation</returns>
-		public IList GetRelationContainer(IPersistenceCapable pc, Relation r) {			
-			FieldInfo fi = GetFieldInfo(pc, r.FieldName);
-			return (IList) fi.GetValue(pc);
+		public IList GetRelationContainer( IPersistenceCapable pc, Relation r )
+		{
+			FieldInfo fi = GetFieldInfo( pc, r.FieldName );
+			return (IList) fi.GetValue( pc );
 		}
 
 		/// <summary>
@@ -186,9 +192,10 @@ namespace NDO
 		/// <param name="pc">the parent object</param>
 		/// <param name="r">the relation mapping info</param>
 		/// <param name="list">the new content of the relation</param>
-		public void SetRelationContainer(IPersistenceCapable pc, Relation r, IList list) {
-			FieldInfo fi = GetFieldInfo(pc, r.FieldName);
-			fi.SetValue(pc, list);
+		public void SetRelationContainer( IPersistenceCapable pc, Relation r, IList list )
+		{
+			FieldInfo fi = GetFieldInfo( pc, r.FieldName );
+			fi.SetValue( pc, list );
 		}
 
 		/// <summary>
@@ -196,10 +203,10 @@ namespace NDO
 		/// </summary>
 		/// <param name="pc">the parent object</param>
 		/// <param name="r">the relation mapping info</param>
-		public IList CreateRelationContainer(IPersistenceCapable pc, Relation r) 
+		public IList CreateRelationContainer( IPersistenceCapable pc, Relation r )
 		{
-			FieldInfo fi = GetFieldInfo(pc, r.FieldName);
-            return (IList)ListCloner.CreateList(fi.FieldType);
+			FieldInfo fi = GetFieldInfo( pc, r.FieldName );
+			return (IList) ListCloner.CreateList( fi.FieldType );
 		}
 
 
@@ -209,22 +216,22 @@ namespace NDO
 		/// <param name="pc">the parent</param>
 		/// <param name="fieldName">the name of the relation field</param>
 		/// <param name="theObj">the related object</param>
-		public void SetRelationField(IPersistenceCapable pc, string fieldName, object theObj) 
+		public void SetRelationField( IPersistenceCapable pc, string fieldName, object theObj )
 		{
-			FieldInfo fi = GetFieldInfo(pc, fieldName);
-			fi.SetValue(pc, theObj);
+			FieldInfo fi = GetFieldInfo( pc, fieldName );
+			fi.SetValue( pc, theObj );
 		}
 
-        /// <summary>
-        /// Determine the type of a relation field.
-        /// </summary>
-        /// <param name="r"></param>
-        /// <returns></returns>
-        public Type GetRelationFieldType(Relation r)
-        {
-            FieldInfo fi = new BaseClassReflector(r.Parent.SystemType).GetField(r.FieldName, BindingFlags.NonPublic | BindingFlags.Instance);
-            return fi.FieldType;
-        }
+		/// <summary>
+		/// Determine the type of a relation field.
+		/// </summary>
+		/// <param name="r"></param>
+		/// <returns></returns>
+		public Type GetRelationFieldType( Relation r )
+		{
+			FieldInfo fi = new BaseClassReflector( r.Parent.SystemType ).GetField( r.FieldName, BindingFlags.NonPublic | BindingFlags.Instance );
+			return fi.FieldType;
+		}
 
 		/// <summary>
 		/// Return the related object.
@@ -232,9 +239,10 @@ namespace NDO
 		/// <param name="pc">the parent object</param>
 		/// <param name="fieldName">the name of the relation field</param>
 		/// <returns>the related object</returns>
-		public object GetRelationField(IPersistenceCapable pc, string fieldName) {
-			FieldInfo fi = GetFieldInfo(pc, fieldName);
-			return fi.GetValue(pc);
+		public object GetRelationField( IPersistenceCapable pc, string fieldName )
+		{
+			FieldInfo fi = GetFieldInfo( pc, fieldName );
+			return fi.GetValue( pc );
 		}
 
 
@@ -244,62 +252,65 @@ namespace NDO
 		/// <param name="pc"></param>
 		/// <param name="useSelfGeneratedIds"></param>
 		/// <returns></returns>
-		public IPersistenceHandler GetPersistenceHandler(IPersistenceCapable pc, bool useSelfGeneratedIds) 
+		public IPersistenceHandler GetPersistenceHandler( IPersistenceCapable pc, bool useSelfGeneratedIds )
 		{
 			Type t = pc.GetType();
 #if !NDO11
-            if(t.IsGenericType)
-                t = t.GetGenericTypeDefinition();
+			if ( t.IsGenericType )
+				t = t.GetGenericTypeDefinition();
 #endif
 			IPersistenceHandler handler;
-			if ((handler = (IPersistenceHandler) persistenceHandler[t]) != null)
+			if ( (handler = (IPersistenceHandler) persistenceHandler[t]) != null )
 				return handler;
 			// 1. Handler des Objekts versuchen
 			handler = pc.NDOHandler;
 			// 2. Standard-Handler des pm versuchen
-			if (handler == null)
+			if ( handler == null )
 			{
-				if (defaultHandlerType != null)
-					handler = Activator.CreateInstance(defaultHandlerType) 
+				if ( defaultHandlerType != null )
+					handler = Activator.CreateInstance( defaultHandlerType )
 						as IPersistenceHandler;
 			}
 			// 3. NDOPersistenceHandler versuchen
-			if (handler == null)
+			if ( handler == null )
 				handler = new NDOPersistenceHandler();
 
-			handler.Initialize(this, t, ds);
+			handler.Initialize( this, t, ds );
 			handler.VerboseMode = this.verboseMode;
 			handler.LogAdapter = this.logAdapter;
-			persistenceHandler.Add(t, handler);
+			persistenceHandler.Add( t, handler );
 			return handler;
 		}
 
-		public IPersistenceHandler GetPersistenceHandler(Type t, bool useSelfGeneratedIds) 
+		public IPersistenceHandler GetPersistenceHandler( Type t, bool useSelfGeneratedIds )
 		{
 			IPersistenceHandler handler;
-			if ((handler = (IPersistenceHandler) persistenceHandler[t]) != null)
+			if ( (handler = (IPersistenceHandler) persistenceHandler[t]) != null )
 				return handler;
-            //Assembly ass = Assembly.GetAssembly(t);
-            //if (null == ass)
-            //    throw new NDOException(10, "Assembly for Type " + t.FullName + " not found.");
+			//Assembly ass = Assembly.GetAssembly(t);
+			//if (null == ass)
+			//    throw new NDOException(10, "Assembly for Type " + t.FullName + " not found.");
 #if !NDO11
-            if (t.IsGenericTypeDefinition)
-                t = t.MakeGenericType(typeof(int));
+			if ( t.IsGenericTypeDefinition )
+				t = t.MakeGenericType( typeof( int ) );
 #endif
-            IPersistenceCapable pc = (IPersistenceCapable)Activator.CreateInstance(t);//ass.CreateInstance(t.FullName);
-			return GetPersistenceHandler(pc, useSelfGeneratedIds);
+			IPersistenceCapable pc = (IPersistenceCapable) Activator.CreateInstance( t );//ass.CreateInstance(t.FullName);
+			return GetPersistenceHandler( pc, useSelfGeneratedIds );
 		}
 
-		internal ICollection Get1to1Relations(Type t) {
+		internal ICollection Get1to1Relations( Type t )
+		{
 			// this will be optimized later:
 			// we can cache the list of 1:1-relations for each type
-            Type t2 = t;
-            if (t.IsGenericType)
-                t2 = t.GetGenericTypeDefinition();
+			Type t2 = t;
+			if ( t.IsGenericType )
+				t2 = t.GetGenericTypeDefinition();
 			ArrayList relations = new ArrayList();
-			foreach(Relation r in FindClass(t2.FullName).Relations) {
-				if(r.Multiplicity == RelationMultiplicity.Element && r.MappingTable == null) {
-					relations.Add(r);
+			foreach ( Relation r in FindClass( t2.FullName ).Relations )
+			{
+				if ( r.Multiplicity == RelationMultiplicity.Element && r.MappingTable == null )
+				{
+					relations.Add( r );
 				}
 			}
 			return relations;
@@ -310,32 +321,37 @@ namespace NDO
 		/// updated first. Note that the order is reversed for creation and deletion of objects.
 		/// This is handled transparently by the PM.
 		/// </summary>
-		private void BuildUpdateDependencies() {
-			foreach(Class c in Classes) {
-				BuildUpdateDependency(c);
-/*				Console.WriteLine("Class {0} Subclasses:", c.FullName);
-				foreach(Class s in c.Subclasses) {
-					Console.WriteLine("  - Class {0}", s.FullName);					
-				}*/
+		private void BuildUpdateDependencies()
+		{
+			foreach ( Class c in Classes )
+			{
+				BuildUpdateDependency( c );
+				/*				Console.WriteLine("Class {0} Subclasses:", c.FullName);
+								foreach(Class s in c.Subclasses) {
+									Console.WriteLine("  - Class {0}", s.FullName);					
+								}*/
 			}
 
 			//Console.WriteLine("Dependencies:");
-            int end = updateList.Count - 1;
-            for (int i = 0; i <= end; i++)
-            {
-                updateOrder.Add((Type)updateList[i], end - i);
-            }
-            //Reverse: All code commented with "Reverse" was changed to avoid inserting
-            //into the updateList which is much more expensive than adding.
-            //We preserved the name minIndex, because it's the minimal allowed index.
+			// The list will copied into a hashtable together with the
+			// rank of the type in the list. The rank is reverted.
+			// Lower rank values have more priority in the update order.
+			int end = updateList.Count - 1;
+			int i;
+			for ( i = 0; i <= end; i++ )
+			{
+				updateOrder.Add( (Type) updateList[i], end - i );
+			}
 
-            //Reverse
-            //int i = 0;
-            //foreach(Type t in updateList) {
-            //    //Debug.WriteLine(string.Format("{0,2} {1}", i, t.FullName));
-            //    updateOrder.Add(t, i);
-            //    i++;
-            //}
+			int rank = i;
+
+			// Now add the types using client generated oids. These don't need a 
+			// high rank.
+			int end2 = clientGeneratedList.Count - 1;
+			for ( i = 0; i <= end2; i++ )
+			{
+				updateOrder.Add( (Type) clientGeneratedList[i], rank++ );
+			}
 		}
 
 		/// <summary>
@@ -344,11 +360,11 @@ namespace NDO
 		/// </summary>
 		/// <param name="t">the type for which the update order is requested</param>
 		/// <returns>the update order of the specified class</returns>
-		public int GetUpdateOrder(Type t) 
-        {
-            if (t.IsGenericType && !t.IsGenericTypeDefinition)
-                t = t.GetGenericTypeDefinition();
-			return (int)updateOrder[t];
+		public int GetUpdateOrder( Type t )
+		{
+			if ( t.IsGenericType && !t.IsGenericTypeDefinition )
+				t = t.GetGenericTypeDefinition();
+			return (int) updateOrder[t];
 		}
 
 
@@ -356,75 +372,97 @@ namespace NDO
 		/// Used internally to build the list of update dependencies.
 		/// </summary>
 		/// <param name="c">the class that should be inserted in the update list</param>
-		private void BuildUpdateDependency(Class c) {
+		private void BuildUpdateDependency( Class c )
+		{
 			//Console.WriteLine("Build dependency for " + c.FullName);
-			if (c.SystemType == null) {
-				throw new NDOException(11, "Type.GetType for the type name " + c.FullName + " failed; check your mapping File.");
+			if ( c.SystemType == null )
+			{
+				throw new NDOException( 11, "Type.GetType for the type name " + c.FullName + " failed; check your mapping File." );
 			}
 
 			//Debug.WriteLine("BuildUpdateDependency " + c.FullName);
 
 			// Avoid endless recursion
-			if (updateSearchedFor.Contains(c))
+			if ( updateSearchedFor.Contains( c ) )
 				return;
-			updateSearchedFor.Add(c);
-            // Can be stored at last, because the key is client generated
-            if (!c.Oid.HasAutoincrementedColumn)
-            {
-                updateList.Add(c.SystemType);  //Reverse updateList.Insert(0, c.SystemType);
-                return;
-            }
-            int minIndex = int.MinValue;  //Reverse int minIndex = int.MaxValue;
-			foreach(Relation r in c.Relations) 
+			updateSearchedFor.Add( c );
+			// Can be stored at last, because the key is client generated
+			if ( !c.Oid.HasAutoincrementedColumn )
 			{
-				if(r.MappingTable != null)  // Foreign Keys will be managed by NDO
-					continue;
-				if (r.Multiplicity == RelationMultiplicity.Element) 
-					continue;
-				if (c.FullName == r.ReferencedTypeName)
-					continue;
-				foreach(Class sc in r.ReferencedSubClasses)
-					BuildUpdateDependency(sc);
-				// Reverse minIndex = Math.Min(minIndex, updateList.IndexOf(r.ReferencedType));
-                minIndex = Math.Max(minIndex, updateList.IndexOf(r.ReferencedType));
+				clientGeneratedList.Add( c.SystemType );
+				//updateList.Add( c.SystemType );
+				return;
 			}
-			
-			foreach (Class c2 in Classes) 
+			int minIndex = int.MinValue;
+			foreach ( Relation r in c.Relations )
 			{
-				if (c2.FullName == c.FullName)
+				if ( r.MappingTable != null )  // Foreign Keys will be managed by NDO
+					continue;
+				if ( r.Multiplicity == RelationMultiplicity.Element )
+				{
+					// Here we have two keys in each table. There is some probability, that the owner in a composite is yet saved.
+					if ( !(r.Bidirectional && r.ForeignRelation.Multiplicity == RelationMultiplicity.Element && r.Composition) )
+						continue;
+				}
+				if ( c.FullName == r.ReferencedTypeName )
+					continue;
+				foreach ( Class sc in r.ReferencedSubClasses )
+				{
+					// The foreign key is in the table of the referenced class.
+					// So the type has to be placed first in the update list.
+					// This will result in a higher rank value, which means, that 
+					// the type will be updated later than the current type.
+					BuildUpdateDependency( sc );
+					// This is used for sanity check. The current type cannot be
+					// placed above the referenced type. This may happen in certain scenarios 
+					// of circular references.
+					minIndex = Math.Max( minIndex, updateList.IndexOf( sc.SystemType ) );
+				}
+			}
+
+			foreach ( Class c2 in Classes )
+			{
+				if ( c2.FullName == c.FullName )
 					continue;
 
-				foreach(Relation r in c2.Relations) 
+				foreach ( Relation r in c2.Relations )
 				{
 					// Suche alle Relationen, die sich auf unsere Klasse beziehen
 					bool found = false;
-					foreach(Class cl in r.ReferencedSubClasses)
+					foreach ( Class cl in r.ReferencedSubClasses )
 					{
-						if (cl.FullName == c.FullName)
+						if ( cl.FullName == c.FullName )
 						{
 							found = true;
 							break;
 						}
 					}
-					if (!found)
+					if ( !found )
 						continue;
-					if (r.Multiplicity != RelationMultiplicity.Element) 
+					if ( r.Multiplicity != RelationMultiplicity.Element )
 						continue;
-					BuildUpdateDependency(c2);
-					//Reverse minIndex = Math.Min(minIndex, updateList.IndexOf(c2.SystemType));
-                    minIndex = Math.Max(minIndex, updateList.IndexOf(c2.SystemType));
+					// c2 has an element relation to c. This means, that c2 holds the foreign key
+					// and thus must appear first in the updateList.
+					// This will result in a higher rank value, which means, that 
+					// the type will be updated later than the current type.
+					BuildUpdateDependency( c2 );
+					// This is used for sanity check. The current type cannot be
+					// placed above the referenced type. This may happen in certain scenarios 
+					// of circular references.
+					minIndex = Math.Max( minIndex, updateList.IndexOf( c2.SystemType ) );
 					break;
 				}
 			}
 
-            int ix = updateList.IndexOf(c.SystemType);
-            if (ix >= 0 && ix < minIndex) // Reverse: ix > minIndex
-            {
-				throw new NDOException(12, "Cannot construct update dependencies for class " + c.SystemType + ". Try to use client generated primary keys for this type or for the related types.");
-			} else if (!updateList.Contains(c.SystemType)) {
-				//updateList.Insert(0, c.SystemType);
-                updateList.Add(c.SystemType);
-			}			
+			int ix = updateList.IndexOf( c.SystemType );
+			if ( ix >= 0 && ix < minIndex )
+			{
+				throw new NDOException( 12, "Cannot construct update dependencies for class " + c.SystemType + ". Try to use client generated primary keys for this type or for the related types." );
+			}
+			else if ( !updateList.Contains( c.SystemType ) && !clientGeneratedList.Contains(c.SystemType) )
+			{
+				updateList.Add( c.SystemType );
+			}
 			//Console.WriteLine("End build dependency for " + c.FullName);
 		}
 	}

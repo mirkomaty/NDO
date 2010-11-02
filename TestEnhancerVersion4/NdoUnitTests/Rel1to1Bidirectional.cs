@@ -88,7 +88,9 @@ namespace NdoUnitTests {
 			IList zListe = pm.GetClassExtent( typeof( Zertifikat ) );
 			pm.Delete( zListe );
 			pm.Save();
-			pm.BuildDatabase( @"C:\Projekte\NDO\TestEnhancerVersion4\NdoUnitTests\bin\Debug\NDOUnitTests.ndo.sql" );
+			string path = Path.GetDirectoryName(pm.NDOMapping.FileName);
+			path = Path.Combine(path, "NDOUnitTests.ndo.sql");
+			pm.BuildDatabase(path);
 
 			pm.Close();
 			pm = null;
@@ -134,7 +136,7 @@ namespace NdoUnitTests {
 			pm.Save();
 			pm.UnloadCache();
 			l = pm.GetClassExtent(typeof(Sozialversicherungsnummer));
-			Assert.That(l.Count == 0, "Sozialversicherungsnummer sollte gel�scht sein");
+			Assert.That(l.Count == 0, "Sozialversicherungsnummer sollte gelöscht sein");
 		}
 
 		[Test]

@@ -185,7 +185,7 @@ namespace NDO
         /// <returns>Hash code</returns>
         public override int GetHashCode()
         {
-            int hashcode = new MyRand(base.GetHashCode()).Next(); // Code of the type t
+            int hashcode = base.GetHashCode(); // Code of the type t
             for (int i = 0; i < pm_keydata.Length; i++)
             {
                 hashcode = hashcode ^ pm_keydata[i].GetHashCode();

@@ -380,7 +380,7 @@ namespace NDO
 						IList l = mappings.GetRelationContainer(parent, r);
 						try
 						{
-							l.Remove(child);
+							ObjectListManipulator.Remove(l, child);
 						}
 						catch
 						{
@@ -651,7 +651,7 @@ namespace NDO
 				}
 				// Hack: Es sollte erst gar nicht zu diesem Aufruf kommen.
 				// Zusätzlicher Funktions-Parameter addObjectToList oder so.
-				if (!l.Contains(pc))
+				if (!ObjectListManipulator.Contains(l, pc))
 					l.Add(pc);
 			}
 			//AddRelatedObject(relObj, r.ForeignRelation, pc);
@@ -2507,7 +2507,7 @@ namespace NDO
 			switch (pc.NDOObjectState)
 			{
 				case NDOObjectState.PersistentDirty:
-					createdDirectObjects.Remove(pc);
+					ObjectListManipulator.Remove(createdDirectObjects, pc);
 					foreach(Relation r in cl.Relations)
 					{
 						if (r.Multiplicity == RelationMultiplicity.Element)
@@ -2799,7 +2799,7 @@ namespace NDO
                         if ((object)cdo == (object)pc)
                             cdosToDelete.Add(cdo);
                     foreach (object o in cdosToDelete)
-                        createdDirectObjects.Remove(o);
+                        ObjectListManipulator.Remove(createdDirectObjects, o);
                     MakeObjectTransient(pc, true);
                     break;
 				case NDOObjectState.Persistent:
@@ -2880,7 +2880,7 @@ namespace NDO
 				IList l = mappings.GetRelationContainer(child, r.ForeignRelation);
 				if (l == null)
 					throw new NDOException(67, "Can't remove object from the list " + child.GetType().FullName + "." + r.ForeignRelation.FieldName + ". The list is null.");
-				l.Remove(pc);
+				ObjectListManipulator.Remove(l, pc);
 				// Don't need to delete the mapping table entry, because that was done
 				// through the parent.
 			}
@@ -2905,7 +2905,7 @@ namespace NDO
 			// If composition, delete the child 2,4,6,8
 
 			// If the relObj is newly created
-			createdDirectObjects.Remove(child);
+			ObjectListManipulator.Remove(createdDirectObjects, child);
 			Class childClass = GetClass(child);
 
 			if (r.MappingTable != null)  // 3,7

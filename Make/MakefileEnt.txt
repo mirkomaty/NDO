@@ -159,6 +159,8 @@ EnhStdAlone:
 	@cd $(ENH_DIR)
 	@..\MakeEnhancerDate\bin\Debug\MakeEnhancerDate.exe "$(EnhDateString)" "$(SVNREV)" > EnhDate.cs
 	@csc /out:bin\$(EDITION)\NDOEnhancer.exe $(ENHANCER_CSC_CMD) /r:$(NDO_DLL) $(DEFINES) /d:STANDALONE
+	@cd ..\EnhancerX86Stub\EnhancerX86Stub
+	@msbuild EnhancerX86Stub.csproj
 	@cd $(MAKE_DIR)
 
 ndoc:

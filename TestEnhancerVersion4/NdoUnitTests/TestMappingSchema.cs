@@ -35,9 +35,30 @@ using System.IO;
 using NUnit.Framework;
 using NDO;
 using NDO.Mapping;
-
+#if maskedOut
 namespace NdoUnitTests
 {
+	internal static class RelationExtension
+	{
+		static public string GetRelationType(this Relation r)
+		{
+			string result;
+			if ( r.Multiplicity == RelationMultiplicity.Element )
+				result = "1";
+			else
+				result = "n";
+			if ( r.ForeignRelation == null )
+				return result;
+			result += ':';
+			if ( r.ForeignRelation.Multiplicity == RelationMultiplicity.Element )
+				result += '1';
+			else
+				result += 'n';
+
+			return result;
+		}
+	}
+
 	/// <summary>
 	/// Summary description for TestMappingSchema.
 	/// </summary>
@@ -154,7 +175,7 @@ namespace NdoUnitTests
 			Assert.AreEqual(1, c.Relations.Count, "Keine Relation");
 			Relation r = (Relation) c.Relations[0];
 			Assert.AreEqual("dieReisen", r.FieldName, "FieldName falsch");
-			Assert.AreEqual("1:n", r.ReferencedType, "Relationstyp falsch");
+			Assert.AreEqual("n", r.GetRelationType(), "Relationstyp falsch");
 			Assert.AreEqual("IDMitarbeiter", ((ForeignKeyColumn)r.ForeignKeyColumns[0]).Name, "ForeignKeyColumnName falsch");
 		}
 
@@ -176,7 +197,7 @@ namespace NdoUnitTests
 			Assert.AreEqual(1, c.Relations.Count, "Keine Relation");
 			Relation r = (Relation) c.Relations[0];
 			Assert.AreEqual("dieReise", r.FieldName, "FieldName falsch");
-			Assert.AreEqual("1:1", r.ReferencedType, "Relationstyp falsch");
+			Assert.AreEqual("1:1", r.GetRelationType(), "Relationstyp falsch");
 			Assert.AreEqual("IDReise", ((ForeignKeyColumn)r.ForeignKeyColumns[0]).Name, "ForeignKeyColumnName falsch");
 		}
 
@@ -201,14 +222,14 @@ namespace NdoUnitTests
 			Relation r = c.FindRelation("dieReisen");
 			Assert.NotNull(r, "Relation dieReisen nicht gefunden");
 			Assert.AreEqual("IDMitarbeiter", ((ForeignKeyColumn)r.ForeignKeyColumns[0]).Name, "ForeignKeyColumnName falsch");
-			Assert.AreEqual( "n:n", r.ReferencedType, "Relationstyp falsch" );
+			Assert.AreEqual( "n:n", r.GetRelationType(), "Relationstyp falsch" );
 			Assert.AreEqual("IDReise", ((ForeignKeyColumn)r.MappingTable.ChildForeignKeyColumns[0]).Name, "ChildForeignKeyColumnName von MappingTable falsch");
 			Assert.AreEqual("relMitarbeiterReise", r.MappingTable.TableName, "TableName von MappingTable falsch");
 			c = mapping.FindClass("Reisekosten.Reise");
 			r = c.FindRelation("dieMitarbeiter");
 			Assert.NotNull(r, "Relation dieMitarbeiter nicht gefunden");
 			Assert.AreEqual("relMitarbeiterReise", r.MappingTable.TableName, "TableName von MappingTable falsch");
-			Assert.AreEqual( "n:n", r.ReferencedType, "Relationstyp falsch" );
+			Assert.AreEqual( "n:n", r.GetRelationType(), "Relationstyp falsch" );
 			Assert.AreEqual("IDReise", ((ForeignKeyColumn)r.ForeignKeyColumns[0]).Name, "ForeignKeyColumnName falsch");
 			Assert.AreEqual("IDMitarbeiter", ((ForeignKeyColumn)r.MappingTable.ChildForeignKeyColumns[0]).Name, "ChildForeignKeyColumnName von MappingTable falsch");
 
@@ -434,3 +455,4 @@ namespace NdoUnitTests
 
 	}
 }
+#endif

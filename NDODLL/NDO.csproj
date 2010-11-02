@@ -314,6 +314,7 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="ObjectIdFactory.cs" />
+    <Compile Include="ObjectListManipulator.cs" />
     <Compile Include="ObjectLock.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -424,7 +425,7 @@
   </ItemGroup>
   <ProjectExtensions>
     <VisualStudio>
-      <UserProperties NDOGenerateSQL="false" NDOMergeSchema="false" NDOMergeMapping="false" NDONewMapping="false" NDOGenerateSchema="false" NDOGenerateMapping="false" NDOEnableEnhancer="false" NDOEnableAddIn="false" />
+      <UserProperties NDOEnableAddIn="false" NDOEnableEnhancer="false" NDOGenerateMapping="false" NDOGenerateSchema="false" NDONewMapping="false" NDOMergeMapping="false" NDOMergeSchema="false" NDOGenerateSQL="false" />
     </VisualStudio>
   </ProjectExtensions>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />

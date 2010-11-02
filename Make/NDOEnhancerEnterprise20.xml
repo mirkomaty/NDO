@@ -23,6 +23,9 @@
         <File Source="..\Deploy\Enterprise\Mapping.exe" Id="_6E2470873889439390E4BFC3F4C73D0E" Name="Mapping.exe" Vital="yes" KeyPath="yes" AssemblyManifest="_6E2470873889439390E4BFC3F4C73D0E" AssemblyApplication="_6E2470873889439390E4BFC3F4C73D0E" Assembly=".net" DiskId="1" />
         <Shortcut Id="_41BD85CBC0DD4E8CBEB9953F38E453C8" Directory="_340D08D311974DD68616F63FF2389F23" Name="Mapping Tool" Target="DefaultFeature" Icon="_1F54BB26CEBB3D27FCA052.exe" IconIndex="0" Show="normal" WorkingDirectory="TARGETDIR" />
       </Component>
+      <Component Id="C__2B3F8114B20544179322F9D05F61FDA2" Guid="D192477C-3550-4353-9079-B8C5C4162AA4">
+        <File Source="..\Deploy\Enterprise\EnhancerX86Stub.exe" Id="_2B3F8114B20544179322F9D05F61FDA2" Name="EnhancerX86Stub.exe" Vital="yes" KeyPath="yes" AssemblyManifest="_2B3F8114B20544179322F9D05F61FDA2" AssemblyApplication="_2B3F8114B20544179322F9D05F61FDA2" Assembly=".net" DiskId="1" />
+      </Component>
       <Component Id="C__9A47C73D4A5E42CEAF0E14B64C9497AF" Guid="8BFDE439-86C8-CAF5-9331-FF7C56B5513A">
         <File Source="..\InstallHelper\bin\release\InstallHelper.dll" Id="_9A47C73D4A5E42CEAF0E14B64C9497AF" Name="InstallHelper.dll" Vital="yes" KeyPath="yes" AssemblyManifest="_9A47C73D4A5E42CEAF0E14B64C9497AF" AssemblyApplication="_9A47C73D4A5E42CEAF0E14B64C9497AF" Assembly=".net" DiskId="1" />
       </Component>
@@ -998,6 +1001,7 @@
       <ComponentRef Id="C__6B84FBBD208B445C9E22406B5443A167" />
       <ComponentRef Id="C__6C55D13750744C35BA456E8E11CA525B" />
       <ComponentRef Id="C__6E2470873889439390E4BFC3F4C73D0E" />
+      <ComponentRef Id="C__2B3F8114B20544179322F9D05F61FDA2" />
       <ComponentRef Id="C__6F58C1D182904993B5DB1796614C70E4" />
       <ComponentRef Id="C__6FAFEF90DB154C86BBB055D0A8608D29" />
       <ComponentRef Id="C__6FC663AF31D0445AB0C37354CC5C49A6" />
