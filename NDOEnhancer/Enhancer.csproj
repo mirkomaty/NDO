@@ -357,8 +357,7 @@
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PreBuildEvent>..\MakeEnhancerDate\bin\Debug\MakeEnhancerDate.exe
-</PreBuildEvent>
+    <PreBuildEvent>..\..\..\MakeEnhancerDate\bin\Debug\MakeEnhancerDate.exe "V. 2.1" "C:\Program Files\TortoiseSVN\bin\subwcrev.exe" &gt; $(ProjectDir)\EnhDate.cs</PreBuildEvent>
     <PostBuildEvent>copy /Y "$(TargetPath)" "D:\Program Files\NDO 2.1 Enterprise Edition\NDOEnhancer.exe"</PostBuildEvent>
   </PropertyGroup>
 </Project>
