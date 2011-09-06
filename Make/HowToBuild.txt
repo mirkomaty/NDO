@@ -2,11 +2,11 @@ Adjust the directories marked in the MakefileEnt.txt and in the MakeEnt.bat.
 
 Then run the MakeEnt.bat.
 
-If you run the build under Vista run it as Administrator (right click on the MakeEnt.bat 
-and choose "Run As Adminstrator"). Since Vista changes the current directory in that case, 
+If you run the build under Vista / Win 7 run it as Administrator (right click on the MakeEnt.bat 
+and choose "Run As Adminstrator"). Since Vista / Win 7 changes the current directory in that case, 
 add a line 
 
-@cd c:\blah\NDO\Make
+@cd c:\...\NDO\Make
 
 to force the change to your make directory.
 
@@ -23,6 +23,6 @@ Then do the following:
 
   If the folder doesn't exist, just create it.
 
-- After this, VS 2005 will detect the NDO Add-in.
+- After this, VS will detect the NDO Add-in.
 
 

@@ -972,14 +972,14 @@ namespace NDO
 		/// Polymorphy: StDev and Var only return the aggregate for the given class. All others return the aggregate for all subclasses.
 		/// Transactions: Please note, that the aggregate functions always work against the database.
 		/// Unsaved changes in your objects are not recognized.</remarks>
-		public decimal ExecuteAggregate(string field, AggregateType aggregateType)
+		public object ExecuteAggregate(string field, AggregateType aggregateType)
 		{
 			if (aggregateType == AggregateType.StDev || aggregateType == AggregateType.Var)
 				allowSubclasses = false;
 			if (subQueries.Count == 0)
 				GenerateQuery();
 
-			decimal[] partResults = new decimal[subQueries.Count];
+			object[] partResults = new object[subQueries.Count];
 
 			AggregateFunction func = new AggregateFunction(aggregateType);
 
@@ -1019,27 +1019,10 @@ namespace NDO
 				// the subqueries could be executed against different connections.
 				IList l = persistenceHandler.ExecuteBatch(new string[]{query}, this.parameters);
 				if (l.Count == 0)
-					partResults[i] = 0;
+					partResults[i] = null;
 				else
 				{
-					object o = ((Hashtable)l[0])["AggrResult"];
-					if (o is Int32)
-					{
-						int i32val = (int) o;
-						partResults[i] = (decimal) i32val;
-					}
-					else if (o is double)
-					{
-						double dval = (double) o;
-						partResults[i] = (decimal) dval;
-					}
-					else if (o is long)
-					{
-						long dval = (long) o;
-						partResults[i] = (decimal) dval;
-					}
-					else
-						partResults[i] = (decimal) o;
+                    partResults[i] = ((Hashtable)l[0])["AggrResult"];
 				}
 				i++;					
 			}
@@ -1323,7 +1306,7 @@ namespace NDO
 				}
 			}
 
-			public decimal ComputeResult(decimal[] parts)
+			public object ComputeResult(object[] parts)
 			{
 				if (parts.Length == 0)
 					return 0m;
@@ -1338,22 +1321,22 @@ namespace NDO
 							throw new NotImplementedException("Average over more than one table is not yet implemented");
 						return parts[0];
 					case AggregateType.Min:
-						decimal minVal = parts[0];
+						IComparable minVal = parts[0] as IComparable;
 						for (int i = 1; i < parts.Length; i++)
-							if (parts[i] < minVal)
-								minVal = parts[i];
+							if (((IComparable)parts[i]).CompareTo(minVal) < 0)
+								minVal = (IComparable)parts[i];
 						return minVal;
 					case AggregateType.Max:
-						decimal maxVal = parts[0];
-						for (int i = 1; i < parts.Length; i++)
-							if (parts[i] > maxVal)
-								maxVal = parts[i];
-						return maxVal;
-					case AggregateType.Count:
+                        IComparable maxVal = parts[0] as IComparable;
+                        for (int i = 1; i < parts.Length; i++)
+                            if (((IComparable)parts[i]).CompareTo(maxVal) > 0)
+                                maxVal = (IComparable)parts[i];
+                        return maxVal;
+                    case AggregateType.Count:
 					case AggregateType.Sum:
 						decimal sum = 0m;
 						for (int i = 0; i < parts.Length; i++)
-							sum += parts[i];
+							sum += (decimal)parts[i];
 						return sum;
 					default:
 						return 0m;
