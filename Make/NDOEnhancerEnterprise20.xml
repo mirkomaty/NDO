@@ -93,10 +93,10 @@
         <Registry Id="_45989892DD8F4F24800DA2A112E02F4C" Root="HKLM" Key="Software\[Manufacturer]\NDO" Action="createKeyAndRemoveKeyOnUninstall" />
       </Component>
       <Component Id="C__30298BAC9F1041688F727F99CE11A849" Guid="A120904A-7FF9-BB70-A876-AA7A6417551C">
-        <Registry Id="_30298BAC9F1041688F727F99CE11A849" Root="HKLM" Key="Software\[Manufacturer]\NDO\2.0" Action="createKeyAndRemoveKeyOnUninstall" />
+        <Registry Id="_30298BAC9F1041688F727F99CE11A849" Root="HKLM" Key="Software\[Manufacturer]\NDO\2.1" Action="createKeyAndRemoveKeyOnUninstall" />
       </Component>
       <Component Id="C__9CBFF243EB594A8A8C808BE132C6872E" Guid="75F58687-9F15-E7F1-A3F5-0E0A9BDEA3A2">
-        <Registry Id="_9CBFF243EB594A8A8C808BE132C6872E" Root="HKLM" Key="Software\[Manufacturer]\NDO\2.0" Name="AddInPath" Type="string" KeyPath="yes" Value="[TARGETDIR]Provider" />
+        <Registry Id="_9CBFF243EB594A8A8C808BE132C6872E" Root="HKLM" Key="Software\[Manufacturer]\NDO\2.1" Name="AddInPath" Type="string" KeyPath="yes" Value="[TARGETDIR]Provider" />
       </Component>
       <Directory Id="_A7C2746BC30F4C9A93632055FABC923C" Name="UserSetup">
         <Component Id="C__01A5C536E6474F648EB381D896BEE625" Guid="235BBEE3-D0F5-9B49-15D8-32F910CD57DE">

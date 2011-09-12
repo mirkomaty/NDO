@@ -31,40 +31,44 @@
 
 
 using System;
-using System.IO;
-using Microsoft.Win32;
-using System.Reflection;
+using System.Data;
+using System.Data.SQLite;
+using System.Windows.Forms;
 
-namespace NDO
+namespace CheckCommandBuilder
 {
 	/// <summary>
-	/// Singleton class for the NDO application directory.
+	/// Zusammenfassung für Class1.
 	/// </summary>
-	public class NDOAddInPath
+	class Class1
 	{
-		static string instance;
-		static NDOAddInPath()
-		{
-            RegistryKey key = Registry.LocalMachine.OpenSubKey(@"SOFTWARE\HoT - House of Tools Development GmbH\NDO\2.1");
-			if (key == null)
-			{
-                instance = null;
-                return;
-			}
-			string result = (string) key.GetValue("AddInPath");
-			if (result == null || !Directory.Exists(result))
-			{
-				instance = null;
-				return;
-			}
-			instance = result;
-		}
 		/// <summary>
-		/// Gets the application directory, where NDO is installed.
+		/// Der Haupteinstiegspunkt für die Anwendung.
 		/// </summary>
-		public static string Instance
+		[STAThread]
+		static void Main(string[] args)
 		{
-			get { return instance; }
+			// For this code to work you have to create a SQLite database and adjust the 
+			// table and column names below.
+			SQLiteConnection conn = new SQLiteConnection("Data Source=test.db");
+			SQLiteDataAdapter a = new SQLiteDataAdapter( "Select * from TestTable", conn );
+			SQLiteCommandBuilder cb = new SQLiteCommandBuilder( a );
+			conn.Open();
+			DataSet ds = new DataSet();
+			ds.Tables.Add( "Test" );
+			DataTable dt = ds.Tables["Test"];
+			dt.Columns.Add( "intCol", typeof( int ) );
+			dt.Columns.Add( "stringCol", typeof( string ) );
+			dt.Columns.Add( "boolCol", typeof( bool ) );
+			DataRow row = dt.NewRow();
+			SQLiteCommand cmd = cb.GetInsertCommand();
+			string s = cmd.CommandText;// cb.GetInsertCommand(row).CommandText;
+			foreach ( SQLiteParameter par in cmd.Parameters )
+				Console.WriteLine( "   " + par.DbType + " " + par.Size );
+			//Clipboard.SetDataObject(s);
+			Console.WriteLine( s );
+			conn.Close();
+			Console.ReadLine();
 		}
 	}
 }
