@@ -37,6 +37,7 @@ using System.Collections;
 using NDO;
 using NDO.Mapping;
 using NDOInterfaces;
+using System.Diagnostics;
 
 namespace NDO
 {
@@ -70,6 +71,8 @@ namespace NDO
 
 			foreach(Relation r in c.Relations)
 			{
+				try
+				{
 				//TODO: Checken, ob man hier nicht abbrechen muss
 //				if ((r.AllowSubclasses) != 0)
 //					continue;
@@ -144,16 +147,49 @@ namespace NDO
                     }
                     if (null == dsSchema.Relations[relName])
                     {
-                        DataRelation dr = new DataRelation(relName, parentCol, childCol, true);
-                        dsSchema.Relations.Add(dr);
-                        ForeignKeyConstraint fkc = dr.ChildKeyConstraint;
-                        fkc.UpdateRule = Rule.Cascade;
-                        fkc.DeleteRule = Rule.None;
-                        fkc.AcceptRejectRule = AcceptRejectRule.None;
+						bool parentFound = false;
+						bool childFound = false;
+						foreach ( DataRelation existingDr in dsSchema.Relations )
+						{
+							foreach ( DataColumn pcol in existingDr.ParentColumns )
+							{
+								if ( pcol == parentCol )
+								{
+									parentFound = true;
+									break;
+								}
+							}
+							foreach ( DataColumn ccol in existingDr.ChildColumns )
+							{
+								if ( ccol == childCol )
+								{
+									childFound = true;
+									break;
+								}
+							}
+							if ( parentFound && childFound )
+							{
+								Trace.WriteLine( "Relation with this columns exists. New Relation: " +  relName + ". Existing Relation: " + existingDr.RelationName);
+							}
+						}
+						if ( !parentFound || !childFound )
+						{
+							DataRelation dr = new DataRelation( relName, parentCol, childCol, true );
+							dsSchema.Relations.Add( dr );
+							ForeignKeyConstraint fkc = dr.ChildKeyConstraint;
+							fkc.UpdateRule = Rule.Cascade;
+							fkc.DeleteRule = Rule.None;
+							fkc.AcceptRejectRule = AcceptRejectRule.None;
+						}
                     }
                     colIndex++;
                 });  // End delegate
 
+				}
+				catch(Exception ex)
+				{
+					throw new InvalidConstraintException("Can't build relation '" + r.ToString() + "'. " + ex.Message, ex);
+				}
 			}
 		}
 

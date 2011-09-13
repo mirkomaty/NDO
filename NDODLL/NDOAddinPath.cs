@@ -34,6 +34,8 @@ using System;
 using System.IO;
 using Microsoft.Win32;
 using System.Reflection;
+using System.Xml;
+using System.Text;
 
 namespace NDO
 {
@@ -45,19 +47,20 @@ namespace NDO
 		static string instance;
 		static NDOAddInPath()
 		{
-            RegistryKey key = Registry.LocalMachine.OpenSubKey(@"SOFTWARE\HoT - House of Tools Development GmbH\NDO\2.1");
-			if (key == null)
-			{
-                instance = null;
-                return;
-			}
-			string result = (string) key.GetValue("AddInPath");
-			if (result == null || !Directory.Exists(result))
-			{
-				instance = null;
+			string path = Path.Combine( Environment.GetFolderPath( Environment.SpecialFolder.CommonApplicationData ), @"Microsoft\MSEnvShared\Addins\NDO21.Addin" );
+
+			if ( !File.Exists( path ) )
 				return;
-			}
-			instance = result;
+
+			XmlDocument doc = new XmlDocument();
+			doc.Load( path );
+
+			XmlNamespaceManager nsm = new XmlNamespaceManager( doc.NameTable );
+			nsm.AddNamespace( "ae", "http://schemas.microsoft.com/AutomationExtensibility" );
+			XmlNode node = doc.SelectSingleNode( "//ae:Extensibility/ae:Addin/ae:Assembly", nsm );
+			string ndoPath = node.InnerText;
+			ndoPath = Path.GetDirectoryName( ndoPath );
+			instance = Path.Combine( ndoPath, "Provider" );
 		}
 		/// <summary>
 		/// Gets the application directory, where NDO is installed.

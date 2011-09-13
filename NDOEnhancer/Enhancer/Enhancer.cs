@@ -166,7 +166,7 @@ namespace NDOEnhancer
             if (refAn == null)
                 return;
             NDOAssemblyName ndoAn = new NDOAssemblyName(typeof(NDOPersistentAttribute).Assembly.FullName);
-            if (refAn.PublicKeyToken != ndoAn.PublicKeyToken)
+            if (refAn.PublicKeyToken != ndoAn.PublicKeyToken || refAn.Version != ndoAn.Version)
             {
                 throw new Exception("Assembly " + ass.FullName + " references a wrong NDO.dll. Expected: " + ndoAn.FullName + ". Found: " + refAn.FullName + ".");
             }

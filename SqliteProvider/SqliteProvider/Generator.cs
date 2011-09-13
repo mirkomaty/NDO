@@ -103,7 +103,7 @@ namespace NDO.SqliteProvider
 
 		public override string AutoIncrementColumn(string columnName, Type dataType, string columnType, string width)
 		{
-			return this.Provider.GetQuotedName( columnName ) + " Integer PIMARY KEY AUTOINCREMENT";
+			return columnName + " Integer PRIMARY KEY AUTOINCREMENT";
 		}
 
 		public override bool HasSpecialAutoIncrementColumnFormat

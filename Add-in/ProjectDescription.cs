@@ -91,6 +91,9 @@ namespace NDOEnhancer
 		ConfigurationOptions options;
         bool isWebProject;
         string keyFile = string.Empty;
+		string platformTarget;
+		string targetFramework;
+
 #if DEBUG
         IMessageAdapter messageAdapter;
         public IMessageAdapter MessageAdapter
@@ -99,6 +102,16 @@ namespace NDOEnhancer
             set { messageAdapter = value; }
         }
 #endif
+
+		public string TargetFramework
+		{
+			get { return this.targetFramework; }
+		}
+
+		public string PlatformTarget
+		{
+			get { return this.platformTarget; }
+		}
 
         public string KeyFile
         {
@@ -240,6 +253,13 @@ namespace NDOEnhancer
 			this.project = project;
 
 			Configuration		 conf = project.ConfigurationManager.ActiveConfiguration;
+
+			try
+			{
+				this.platformTarget = (string) conf.Properties.Item( "PlatformTarget" ).Value;
+				this.targetFramework = (string) project.Properties.Item( "TargetFrameworkMoniker" ).Value;
+			}
+			catch { }
 
             // Web Projects don't have an assembly name.
             // Since NDO computes some information from the 

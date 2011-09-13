@@ -384,6 +384,7 @@ namespace NDO
 				sql = "INSERT INTO {0} ({1}) VALUES ({2}); SELECT {3} FROM {0} WHERE ({4} = " + provider.GetLastInsertedId + ")";
 #endif
                 sql = string.Format(sql, qualifiedTableName, fieldList, namedParamList, selectFieldList, this.autoIncrementColumn.Name);
+				this.insertCommand.UpdatedRowSource = UpdateRowSource.FirstReturnedRecord;
 			}
 			else
 			{

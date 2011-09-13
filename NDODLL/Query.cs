@@ -1335,8 +1335,13 @@ namespace NDO
                     case AggregateType.Count:
 					case AggregateType.Sum:
 						decimal sum = 0m;
-						for (int i = 0; i < parts.Length; i++)
-							sum += (decimal)parts[i];
+						for ( int i = 0; i < parts.Length; i++ )
+						{
+							if ( parts[i] == null )
+								continue;
+							IConvertible ic = (IConvertible) parts[i];
+							sum += ic.ToDecimal( null );
+						}
 						return sum;
 					default:
 						return 0m;

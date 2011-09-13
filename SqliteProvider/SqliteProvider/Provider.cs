@@ -38,6 +38,7 @@
 
 using System;
 using System.Text;
+using System.Reflection;
 using System.Text.RegularExpressions;
 using System.Data;
 using System.Data.Common;
@@ -72,6 +73,27 @@ namespace NDO.SqliteProvider
 	/// </summary>
 	public class Provider : NDOAbstractProvider
 	{
+		public Provider()
+		{
+			AppDomain.CurrentDomain.AssemblyResolve += new ResolveEventHandler( OnAssemblyResolve );
+		}
+
+		Assembly OnAssemblyResolve( object sender, ResolveEventArgs args )
+		{
+			if (args.Name.StartsWith("System.Data.SQLite"))
+			{
+				string path = Path.GetDirectoryName( Assembly.GetExecutingAssembly().Location );
+				if ( IntPtr.Size == 8 )
+					path = Path.Combine( path, "x64" );
+				else
+					path = Path.Combine( path, "x86" );
+				path = Path.Combine( path, "System.Data.SQLite.dll" );				
+				return Assembly.LoadFrom( path );
+			}
+			return null;
+		}
+
+
 		// The following methods provide objects of provider classes 
 		// which implement common interfaces in .NET:
 		// IDbConnection, IDbCommand, DbDataAdapter and the Parameter objects
@@ -347,7 +369,7 @@ namespace NDO.SqliteProvider
 		/// </summary>
 		public override string GetLastInsertedId(string tableName, string columnName)
 		{
-            return "ROWID";
+			return "(SELECT last_insert_rowid())";
 		}
 
 		/// <summary>
@@ -417,7 +439,7 @@ namespace NDO.SqliteProvider
 			get { return false; } 
 		}
 
-		public override System.Windows.Forms.DialogResult ShowConnectionDialog(ref string connectionString)
+		public override DialogResult ShowConnectionDialog(ref string connectionString)
 		{
 			OpenFileDialog ofd = new OpenFileDialog();
 			if (!string.IsNullOrEmpty(connectionString))
@@ -440,20 +462,35 @@ namespace NDO.SqliteProvider
 			return result;
 		}
 
+		public override DialogResult ShowCreateDbDialog( ref object necessaryData )
+		{
+			string connectionString = string.Empty;
+			DialogResult result = ShowConnectionDialog( ref connectionString );
+			if ( result == DialogResult.OK )
+			{
+				necessaryData = connectionString;
+			}
+
+			return result;
+		}
+
 		public override string CreateDatabase(object necessaryData)
 		{
 			string s = necessaryData as string;
 			if ( s == null )
 				throw new ArgumentException( "NDO.SqliteProvider.Provider.CreateDatabase: wrong parameter type for 'necessaryData'. Expected: string." );
 
-			/*
-			string fileName = s.Substring( s.IndexOf( '=' ) + 1 );
+			string path = s.Substring( s.IndexOf( '=' ) + 1 );
+			path = path.Trim();
 
-			fileName = fileName.Trim();
-			*/
-			SQLiteConnection conn = new SQLiteConnection( s );
-			conn.Open();
-			conn.Close();
+			StreamWriter sw = new StreamWriter( path );
+			sw.Close();
+
+			//SQLiteConnection conn = new SQLiteConnection( s );
+			//conn.Open();
+			//conn.Close();
+
+			//AppDomain.CurrentDomain.AssemblyResolve -= new ResolveEventHandler( OnAssemblyResolve );
 
 			return s;
 		}

@@ -50,10 +50,11 @@ namespace CheckCommandBuilder
 		{
 			// For this code to work you have to create a SQLite database and adjust the 
 			// table and column names below.
-			SQLiteConnection conn = new SQLiteConnection("Data Source=test.db");
-			SQLiteDataAdapter a = new SQLiteDataAdapter( "Select * from TestTable", conn );
+			SQLiteConnection conn = new SQLiteConnection(@"Data Source=D:\Projekte\NDO\SqliteProvider\NDOUnitTests.db");
+			SQLiteDataAdapter a = new SQLiteDataAdapter( "Select * from Mitarbeiter", conn );
 			SQLiteCommandBuilder cb = new SQLiteCommandBuilder( a );
 			conn.Open();
+			/*
 			DataSet ds = new DataSet();
 			ds.Tables.Add( "Test" );
 			DataTable dt = ds.Tables["Test"];
@@ -61,8 +62,9 @@ namespace CheckCommandBuilder
 			dt.Columns.Add( "stringCol", typeof( string ) );
 			dt.Columns.Add( "boolCol", typeof( bool ) );
 			DataRow row = dt.NewRow();
+			 */
 			SQLiteCommand cmd = cb.GetInsertCommand();
-			string s = cmd.CommandText;// cb.GetInsertCommand(row).CommandText;
+			string s = cmd.CommandText;
 			foreach ( SQLiteParameter par in cmd.Parameters )
 				Console.WriteLine( "   " + par.DbType + " " + par.Size );
 			//Clipboard.SetDataObject(s);

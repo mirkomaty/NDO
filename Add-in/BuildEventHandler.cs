@@ -66,20 +66,11 @@ namespace NDOEnhancer
 		public void
 		onBuildBegin( vsBuildScope scope, vsBuildAction action )
 		{
-			messages.Success = true;
-#if TRIAL || BETA
-//			expired = !NDOKey.CheckDate(new LicenceKey().TheKey, DateTime.Now);
-#endif
             if (messages == null)
 			{
 				messages = new MessageAdapter(); 
 			}
-
-            //if (expired)
-            //{
-            //    messages.ShowError("NDO version expired");
-            //}
-            //messages.Success = !expired;			
+			messages.Success = true;
 		}
 
 		public void
@@ -267,6 +258,21 @@ namespace NDOEnhancer
 				ProjectDescription projectDescription = new ProjectDescription(solution, project);
                 string projFileName = options.FileName;
                 CheckProjectDescription(options, projectDescription, projFileName);
+
+				string targetFramework = projectDescription.TargetFramework;
+				if ( !string.IsNullOrEmpty( targetFramework ) && targetFramework != ".NETFramework,Version=v4.0" )
+				{
+					messages.ShowError( "Project " + project.Name + " has been built with " + targetFramework + ". NDO requires .NETFramework 4.0 full profile. You need to reconfigure your project." );
+					project.DTE.ExecuteCommand( "Build.Cancel", "" );
+					messages.ActivateErrorList(); 
+					return;
+				}
+
+				// The platform target is the more correct platform description.
+				// If it is available, let's use it.
+				string platform2 = projectDescription.PlatformTarget;
+				if ( !string.IsNullOrEmpty( platform2 ) )
+					platform = platform2;
 
 				string appName = "NDOEnhancer.exe";
 				if ( platform == "x86" && OperatingSystem.Is64Bit )

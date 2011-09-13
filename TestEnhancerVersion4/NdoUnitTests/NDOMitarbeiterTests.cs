@@ -501,9 +501,9 @@ namespace NdoUnitTests
 			}
 			Query q = pm.NewQuery(typeof(Mitarbeiter), null);
 			Mitarbeiter.QueryHelper qh = new Mitarbeiter.QueryHelper();
-			decimal newsum = q.ExecuteAggregate(qh.position.Y, Query.AggregateType.Sum);
+			decimal newsum = (decimal)q.ExecuteAggregate(qh.position.Y, Query.AggregateType.Sum);
 			Assert.AreEqual(sum, newsum, "Summe stimmt nicht");
-			decimal count = q.ExecuteAggregate(qh.position.X, Query.AggregateType.Count);
+			decimal count = (decimal)q.ExecuteAggregate(qh.position.X, Query.AggregateType.Count);
 			Assert.AreEqual(20, count, "Count stimmt nicht");
 		}
 

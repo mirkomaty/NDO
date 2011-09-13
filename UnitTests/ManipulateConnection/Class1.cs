@@ -68,7 +68,7 @@ namespace ManipulateConnection
 					type = "Oracle";
 					break;
 				case "SqlServer":
-					connName = @"Integrated Security=SSPI;Persist Security Info=False;Initial Catalog=NDOTest;Data Source=.\sqlexpress";
+					connName = @"Integrated Security=SSPI;Persist Security Info=False;Initial Catalog=NDOTest;Data Source=localhost";
 					type = "SqlServer";
 					break;
 				case "Access":
@@ -93,9 +93,9 @@ namespace ManipulateConnection
                     connName = "SERVER=localhost;ENCODING=UNICODE;DATABASE=prio;USER ID=postgres;PASSWORD=abundance;";
                     type = "Postgre";
                     break;
-                case "TurboDB":
-                    connName = @"C:\Projekte\NDO\TurboDbProvider\TestDb.tdbd";
-                    type = "TurboDB";
+                case "Sqlite":
+                    connName = @"Data Source=D:\Projekte\NDO\SqliteProvider\NdoUnitTests.db";
+                    type = "Sqlite";
                     break;
 				default:
 					Console.WriteLine("ManipulateConnection: can't find connection type " + args[1]);

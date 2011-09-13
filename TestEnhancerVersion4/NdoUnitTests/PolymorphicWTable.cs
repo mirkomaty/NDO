@@ -189,9 +189,9 @@ namespace NdoUnitTests {
 				}
 
 				Query q = pm.NewQuery(typeof(Kostenpunkt), null);
-				decimal newsum = q.ExecuteAggregate("oid", Query.AggregateType.Sum);
+				decimal newsum = (decimal)q.ExecuteAggregate("oid", Query.AggregateType.Sum);
 				Assert.AreEqual(sum, newsum, "Summe stimmt nicht: ");
-				decimal newcount = q.ExecuteAggregate("oid", Query.AggregateType.Count);
+				decimal newcount = (decimal)q.ExecuteAggregate("oid", Query.AggregateType.Count);
 				Assert.AreEqual(3, newcount, "Summe stimmt nicht: ");
 			}
 		}
