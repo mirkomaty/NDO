@@ -1,0 +1,44 @@
+﻿<html dir="ltr">
+	<head>
+		<title>Mapping</title><META http-equiv="Content-Type" content="text/html; charset=utf-8"><meta name="vs_targetSchema" content="http://schemas.microsoft.com/intellisense/ie5"><xml></xml><link rel="stylesheet" type="text/css" href="adc.css"><script language="javascript" type="text/javascript" src="../scroll.js"></script>
+        <base target="_self">
+    </head><body id="bodyID" class="dtBODY">
+		<h1>UserSetup</h1>    
+        <P>If you install NDO at your development machine, NDO is able to find 
+        the NDO Provider plug-ins – it simply looks at the NDO installation 
+        folder. If you install your NDO application at the users computer, the NDO 
+            installation folder doesn't exist. This setup enables 
+        you to define a folder, which gets registered as NDO folder. That way you can define 
+            a place, where NDO finds your Provider dlls. The setup writes a dummy AddIn file 
+            to the following location:</P>
+        <P>&nbsp;</P>
+        <P>%ALLUSERSPROFILE%\Microsoft\MSEnvShared\AddIns\NDOUser.AddIn</P>
+        <P>&nbsp;</P>
+        <P>In the AddIn file is an entry that defines a folder path, where NDO looks for 
+            Providers. For example, if the entry looks like that:</P>
+        <P>&nbsp;</P>
+        <P>&lt;Assembly&gt;C:\Program Files(x86)\NDO 2.1 Dev Edition\Provider&lt;/Assembly&gt;</P>
+        <P>&nbsp;</P>
+        <P>This is the path, where NDO searches the providers.</P>
+        <P>&nbsp;</P>
+        <h2>How to use the UserSetup</h2>
+        <P>You can use it as part of your installation. It has two operation modes, 
+            unattended and with UI. We recommend to use the unattended mode with your 
+            installations. Suppose, your application is installed at the following path:</P>
+        <P>C:\Program Files(x86)\YourCorporation\YourApplicationPath</P>
+        <P>&nbsp;</P>
+        <P>Then call UserSetup.exe with this path as parameters. UserSetup will write an 
+            .AddIn file with the following entry:</P>
+        <P>&lt;Assembly&gt;C:\Program 
+            Files(x86)\YourCorporation\YourApplicationPathl\Provider&lt;/Assembly&gt;</P>
+        <P>&nbsp;</P>
+        <P>That means, that NDO will search for providers in the directory</P>
+        <P>C:\Program Files(x86)\YourCorporation\YourApplicationPath\Provider</P>
+        <P>&nbsp;</P>
+        <P>If you don&#39;t provide a parameter to UserSetup, UserSetup will ask for the NDO 
+            installation folder. The user has to select your appllication folder in the 
+            folder browser dialog in order to install the correct &lt;Assembly&gt; entry into the 
+            .AddIn file.</P>
+        <P>&nbsp;</P>
+	</body>
+</html>
