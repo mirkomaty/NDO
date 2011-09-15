@@ -1,0 +1,60 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<NDOMapping SchemaVersion="">
+  <Connections>
+    <Connection ID="C0" Name="Substitute this string with your connection string" Type="" />
+  </Connections>
+  <Classes>
+    <Class AssemblyName="BusinessClasses" FullName="BusinessClasses.Address" TableName="Address" ConnectionId="C0">
+      <Oid>
+        <OidColumn AutoIncremented="True" Name="ID" AllowDbNull="False" />
+      </Oid>
+      <Fields>
+        <Field Name="city">
+          <Column Name="City" />
+        </Field>
+        <Field Name="countryCode">
+          <Column Name="CountryCode" />
+        </Field>
+        <Field Name="street">
+          <Column Name="Street" />
+        </Field>
+        <Field Name="zip">
+          <Column Name="Zip" />
+        </Field>
+      </Fields>
+      <Relations />
+    </Class>
+    <Class AssemblyName="BusinessClasses" FullName="BusinessClasses.Employee" TableName="Employee" ConnectionId="C0">
+      <Oid>
+        <OidColumn AutoIncremented="True" Name="ID" AllowDbNull="False" />
+      </Oid>
+      <Fields>
+        <Field Name="firstName">
+          <Column Name="FirstName" />
+        </Field>
+        <Field Name="lastName">
+          <Column Name="LastName" />
+        </Field>
+      </Fields>
+      <Relations>
+        <Relation FieldName="address" ReferencedTypeName="BusinessClasses.Address" RelationName="">
+          <ForeignKeyColumn Name="IDAddress" />
+        </Relation>
+        <Relation FieldName="travels" ReferencedTypeName="BusinessClasses.Travel" RelationName="">
+          <ForeignKeyColumn Name="IDEmployee" />
+        </Relation>
+      </Relations>
+    </Class>
+    <Class AssemblyName="BusinessClasses" FullName="BusinessClasses.Travel" TableName="Travel" ConnectionId="C0">
+      <Oid>
+        <OidColumn AutoIncremented="True" Name="ID" AllowDbNull="False" />
+      </Oid>
+      <Fields>
+        <Field Name="purpose">
+          <Column Name="Purpose" />
+        </Field>
+      </Fields>
+      <Relations />
+    </Class>
+  </Classes>
+</NDOMapping>

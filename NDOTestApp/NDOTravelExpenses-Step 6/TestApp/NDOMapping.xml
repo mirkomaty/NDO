@@ -1,0 +1,181 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<NDOMapping SchemaVersion="1.0">
+  <Connections>
+    <Connection ID="C0" Name="Data Source=..\..\..\NDOTestDb.db" Type="Sqlite" />
+  </Connections>
+  <Classes>
+    <Class AssemblyName="BusinessClasses" FullName="BusinessClasses.Address" TableName="Address" ConnectionId="C0">
+      <Oid>
+        <OidColumn AutoIncremented="True" Name="ID" AllowDbNull="False" />
+      </Oid>
+      <Fields>
+        <Field Name="city">
+          <Column Name="City" />
+        </Field>
+        <Field Name="countryCode">
+          <Column Name="CountryCode" />
+        </Field>
+        <Field Name="street">
+          <Column Name="Street" />
+        </Field>
+        <Field Name="zip">
+          <Column Name="Zip" />
+        </Field>
+      </Fields>
+      <Relations />
+    </Class>
+    <Class AssemblyName="BusinessClasses" FullName="BusinessClasses.Country" TableName="Country" ConnectionId="C0">
+      <Oid>
+        <OidColumn AutoIncremented="True" Name="ID" AllowDbNull="False" />
+      </Oid>
+      <Fields>
+        <Field Name="name">
+          <Column Name="Name" />
+        </Field>
+      </Fields>
+      <Relations>
+        <Relation FieldName="travels" ReferencedTypeName="BusinessClasses.Travel" RelationName="">
+          <ForeignKeyColumn Name="IDCountry" />
+          <MappingTable TableName="relCountryTravel" ConnectionId="C0">
+            <ForeignKeyColumn Name="IDTravel" />
+          </MappingTable>
+        </Relation>
+      </Relations>
+    </Class>
+    <Class AssemblyName="BusinessClasses" FullName="BusinessClasses.Employee" TableName="Employee" ConnectionId="C0">
+      <Oid>
+        <OidColumn AutoIncremented="True" Name="ID" AllowDbNull="False" />
+      </Oid>
+      <Fields>
+        <Field Name="firstName">
+          <Column Name="FirstName" />
+        </Field>
+        <Field Name="lastName">
+          <Column Name="LastName" />
+        </Field>
+      </Fields>
+      <Relations>
+        <Relation FieldName="address" ReferencedTypeName="BusinessClasses.Address" RelationName="">
+          <ForeignKeyColumn Name="IDAddress" />
+        </Relation>
+        <Relation FieldName="travels" ReferencedTypeName="BusinessClasses.Travel" RelationName="">
+          <ForeignKeyColumn Name="IDEmployee" />
+        </Relation>
+      </Relations>
+    </Class>
+    <Class AssemblyName="BusinessClasses" FullName="BusinessClasses.Expense" TableName="Unused" ConnectionId="C0">
+      <Oid>
+        <OidColumn AutoIncremented="True" Name="Unused" AllowDbNull="False" />
+      </Oid>
+      <Fields>
+        <Field Name="date">
+          <Column Name="Unused" />
+        </Field>
+      </Fields>
+      <Relations />
+    </Class>
+    <Class AssemblyName="BusinessClasses" FullName="BusinessClasses.ExpenseVoucher" TableName="ExpenseVoucher" ConnectionId="C0">
+      <Oid>
+        <OidColumn AutoIncremented="True" Name="ID" AllowDbNull="False" />
+      </Oid>
+      <Fields>
+        <Field Name="date">
+          <Column Name="Date" />
+        </Field>
+        <Field Name="sum">
+          <Column Name="Sum" />
+        </Field>
+        <Field Name="text">
+          <Column Name="Text" />
+        </Field>
+      </Fields>
+      <Relations />
+    </Class>
+    <Class AssemblyName="BusinessClasses" FullName="BusinessClasses.MileageAllowance" TableName="MileageAllowance" ConnectionId="C0">
+      <Oid>
+        <OidColumn AutoIncremented="True" Name="ID" AllowDbNull="False" />
+      </Oid>
+      <Fields>
+        <Field Name="date">
+          <Column Name="Date" />
+        </Field>
+        <Field Name="milesDriven">
+          <Column Name="MilesDriven" />
+        </Field>
+      </Fields>
+      <Relations />
+    </Class>
+    <Class AssemblyName="BusinessClasses" FullName="BusinessClasses.PerDiemAllowance" TableName="PerDiemAllowance" ConnectionId="C0">
+      <Oid>
+        <OidColumn AutoIncremented="True" Name="ID" AllowDbNull="False" />
+      </Oid>
+      <Fields>
+        <Field Name="date">
+          <Column Name="Date" />
+        </Field>
+        <Field Name="hours">
+          <Column Name="Hours" />
+        </Field>
+      </Fields>
+      <Relations />
+    </Class>
+    <Class AssemblyName="BusinessClasses" FullName="BusinessClasses.Picture" TableName="Picture" ConnectionId="C0">
+      <Oid>
+        <OidColumn AutoIncremented="True" Name="ID" AllowDbNull="False" />
+      </Oid>
+      <Fields>
+        <Field Name="creationDate">
+          <Column Name="CreationDate" />
+        </Field>
+        <Field Name="name">
+          <Column Name="Name" />
+        </Field>
+        <Field Name="rawbytes">
+          <Column Name="Rawbytes" />
+        </Field>
+      </Fields>
+      <Relations />
+    </Class>
+    <Class AssemblyName="BusinessClasses" FullName="BusinessClasses.PictureHeader" TableName="Picture" ConnectionId="C0">
+      <Oid>
+        <OidColumn AutoIncremented="True" Name="ID" AllowDbNull="False" />
+      </Oid>
+      <Fields>
+        <Field Name="creationDate">
+          <Column Name="CreationDate" />
+        </Field>
+        <Field Name="name">
+          <Column Name="Name" />
+        </Field>
+      </Fields>
+      <Relations />
+    </Class>
+    <Class AssemblyName="BusinessClasses" FullName="BusinessClasses.Travel" TableName="Travel" ConnectionId="C0">
+      <Oid>
+        <OidColumn AutoIncremented="True" Name="ID" AllowDbNull="False" />
+      </Oid>
+      <Fields>
+        <Field Name="purpose">
+          <Column Name="Purpose" />
+        </Field>
+      </Fields>
+      <Relations>
+        <Relation FieldName="countries" ReferencedTypeName="BusinessClasses.Country" RelationName="">
+          <ForeignKeyColumn Name="IDTravel" />
+          <MappingTable TableName="relCountryTravel" ConnectionId="C0">
+            <ForeignKeyColumn Name="IDCountry" />
+          </MappingTable>
+        </Relation>
+        <Relation FieldName="employee" ReferencedTypeName="BusinessClasses.Employee" RelationName="">
+          <ForeignKeyColumn Name="IDEmployee" />
+        </Relation>
+        <Relation FieldName="expenses" ReferencedTypeName="BusinessClasses.Expense" RelationName="">
+          <ForeignKeyColumn Name="IDTravel" />
+          <MappingTable TableName="relExpenseTravel" ChildForeignKeyTypeColumnName="TCExpense" ConnectionId="C0">
+            <ForeignKeyColumn Name="IDExpense" />
+          </MappingTable>
+        </Relation>
+      </Relations>
+    </Class>
+  </Classes>
+</NDOMapping>

@@ -1,0 +1,50 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<Enhancer>
+  <Options>
+    <EnableAddIn>True</EnableAddIn>
+    <EnableEnhancer>False</EnableEnhancer>
+    <VerboseMode>False</VerboseMode>
+    <NewMapping>False</NewMapping>
+    <GenerateSQL>True</GenerateSQL>
+    <DefaultConnection>Data Source=..\..\..\NDOTestDb.db</DefaultConnection>
+    <GenerateChangeEvents>False</GenerateChangeEvents>
+    <UseTimeStamps>False</UseTimeStamps>
+    <Utf8Encoding>False</Utf8Encoding>
+    <SQLScriptLanguage>Sqlite</SQLScriptLanguage>
+    <SchemaVersion>1.0</SchemaVersion>
+    <IncludeTypecodes>False</IncludeTypecodes>
+    <DatabaseOwner>
+    </DatabaseOwner>
+    <GenerateConstraints>False</GenerateConstraints>
+    <DropExistingElements>True</DropExistingElements>
+  </Options>
+  <ProjectDescription>
+    <BinPath>bin\Debug\TestApp.exe</BinPath>
+    <ObjPath>obj\Debug\</ObjPath>
+    <AssemblyName />
+    <Debug>True</Debug>
+    <IsWebProject>False</IsWebProject>
+    <KeyFile>
+    </KeyFile>
+    <References>
+      <Reference AssemblyName="System" AssemblyPath="C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.0\System.dll">
+      </Reference>
+      <Reference AssemblyName="System.Data" AssemblyPath="C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.0\System.Data.dll">
+      </Reference>
+      <Reference AssemblyName="System.Deployment" AssemblyPath="C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.0\System.Deployment.dll">
+      </Reference>
+      <Reference AssemblyName="System.Drawing" AssemblyPath="C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.0\System.Drawing.dll">
+      </Reference>
+      <Reference AssemblyName="System.Xml" AssemblyPath="C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.0\System.Xml.dll">
+      </Reference>
+      <Reference AssemblyName="BusinessClasses" AssemblyPath="..\BusinessClasses\bin\Debug\BusinessClasses.dll">
+      </Reference>
+      <Reference AssemblyName="System.Core" AssemblyPath="c:\program files (x86)\reference assemblies\microsoft\framework\.netframework\v4.0\system.core.dll">
+      </Reference>
+      <Reference AssemblyName="mscorlib" AssemblyPath="C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.0\mscorlib.dll">
+      </Reference>
+      <Reference AssemblyName="Microsoft.VisualBasic" AssemblyPath="C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.0\microsoft.visualbasic.dll">
+      </Reference>
+    </References>
+  </ProjectDescription>
+</Enhancer>

@@ -1,0 +1,38 @@
+using System;
+using NDO;
+namespace BusinessClasses
+{
+    [NDOPersistent]
+    public class PerDiemAllowance : Expense
+    {
+        decimal hours;
+        public decimal Hours
+        {
+            get { return hours; }
+            set { hours = value; }
+        }
+        public PerDiemAllowance()
+        {
+        }
+
+        public override decimal Amount
+        {
+            get
+            {
+                //TODO: call accountant once more  ;-) 
+                if (hours <= 8)
+                    return 0;
+                if (hours <= 10)
+                    return 5;
+                if (hours <= 12)
+                    return 10;
+                return 20;
+            }
+        }
+
+        public override string Text
+        {
+            get { return "Per Diem Allowance"; }
+        }
+    }
+}
