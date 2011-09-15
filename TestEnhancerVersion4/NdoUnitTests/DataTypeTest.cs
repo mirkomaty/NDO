@@ -205,6 +205,17 @@ namespace NdoUnitTests
 			AssertDataContainer(dcd);
 		}
 
+		bool CheckDouble( double d1, double d2 )
+		{
+			double eps = Math.Abs(d1 * 1E-6);
+			return (d1 - eps) <= d2 && d2 <= (d1 + eps);
+		}
+
+		bool CheckFloat( float d1, float d2 )
+		{
+			double eps = Math.Abs( d1 * 1E-6 );
+			return (d1 - eps) <= d2 && d2 <= (d1 + eps);
+		}
 
 		void AssertDataContainer(DataContainer dc)
 		{
@@ -216,8 +227,13 @@ namespace NdoUnitTests
 			Assert.AreEqual(1231.12m, dc.DecVar, "DecVar falsch");
 			Assert.AreEqual(int.MaxValue, dc.Int32Var, "Int32Var falsch");
 			Assert.AreEqual((uint) int.MaxValue, dc.Uint32Var, "UInt32Var falsch");
+#if SQLITE
+			Assert.That(CheckDouble(1E28, dc.DoubleVar), "DoubleVar falsch");
+			Assert.That(CheckFloat(1E14F, dc.FloatVar), "FloatVar falsch");
+#else
 			Assert.AreEqual(1E28, dc.DoubleVar, "DoubleVar falsch");
 			Assert.AreEqual(1E14F, dc.FloatVar, "FloatVar falsch");
+#endif
 			Assert.AreEqual(0x1ffffffff, dc.Int64Var, "Int64Var falsch");
 			Assert.AreEqual(short.MaxValue, dc.Int16Var, "Int16Var falsch");
 			Assert.AreEqual((ushort) short.MaxValue, dc.Uint16Var, "UInt16Var falsch");
@@ -238,9 +254,14 @@ namespace NdoUnitTests
             Assert.AreEqual(1231.12m, dc.DecVar, "DecVar falsch");
             Assert.AreEqual(int.MaxValue, dc.Int32Var, "Int32Var falsch");
             Assert.AreEqual((uint)int.MaxValue, dc.Uint32Var, "UInt32Var falsch");
-            Assert.AreEqual(1E28, dc.DoubleVar, "DoubleVar falsch");
-            Assert.AreEqual(1E14F, dc.FloatVar, "FloatVar falsch");
-            Assert.AreEqual(0x1ffffffff, dc.Int64Var, "Int64Var falsch");
+#if SQLITE
+            Assert.That(CheckDouble(1E28, dc.DoubleVar.Value), "DoubleVar falsch");
+            Assert.That(CheckFloat(1E14F, dc.FloatVar.Value), "FloatVar falsch");
+#else
+            Assert.AreEqual(1E28, dc.DoubleVar.Value, "DoubleVar falsch");
+            Assert.AreEqual(1E14F, dc.FloatVar.Value, "FloatVar falsch");
+#endif
+			Assert.AreEqual(0x1ffffffff, dc.Int64Var, "Int64Var falsch");
             Assert.AreEqual(short.MaxValue, dc.Int16Var, "Int16Var falsch");
             Assert.AreEqual((ushort)short.MaxValue, dc.Uint16Var, "UInt16Var falsch");
             Assert.AreEqual(0x1ffffffff, dc.Uint64Var, "UInt64Var falsch");
@@ -514,8 +535,13 @@ namespace NdoUnitTests
 #else
 			Assert.AreEqual(new DateTime(2002, 12, 1, 0, 0, 0), cont.PropValType.DateTimeVar, "DateTimeVar falsch #1");
 #endif
+#if SQLITE
+			Assert.That( CheckDouble( 12345.123456, cont.PropValType.DoubleVar ), "DoubleVar falsch #1" );
+			Assert.That( CheckFloat( 12345.1f, cont.PropValType.FloatVar ), "FloatVar falsch #1" );
+#else
 			Assert.AreEqual(12345.123456, cont.PropValType.DoubleVar, "DoubleVar falsch #1");
 			Assert.AreEqual(12345.1f, cont.PropValType.FloatVar, "FloatVar falsch #1");
+#endif
 			Assert.AreEqual(new Guid("12341234-1234-1234-1234-123412341234"), cont.PropValType.GuidVar, "GuidVar falsch #1");
 			Assert.AreEqual(0x1234, cont.PropValType.Int16Var, "Int16Var falsch #1");
 			Assert.AreEqual(0x12341234, cont.PropValType.Int32Var, "Int32Var falsch #1");
@@ -537,8 +563,13 @@ namespace NdoUnitTests
 #else
 			Assert.AreEqual(new DateTime(2002, 12, 1, 0, 0, 0), cont.PubValType.DateTimeVar, "DateTimeVar falsch #2");
 #endif
+#if SQLITE
+			Assert.That( CheckDouble( 12345.123456, cont.PropValType.DoubleVar ), "DoubleVar falsch #1" );
+			Assert.That( CheckFloat( 12345.1f, cont.PropValType.FloatVar ), "FloatVar falsch #1" );
+#else
 			Assert.AreEqual(12345.123456, cont.PubValType.DoubleVar, "DoubleVar falsch #2");
 			Assert.AreEqual(12345.1f, cont.PubValType.FloatVar, "FloatVar falsch #2");
+#endif
 			Assert.AreEqual(new Guid("12341234-1234-1234-1234-123412341234"), cont.PubValType.GuidVar, "GuidVar falsch #2");
 			Assert.AreEqual(0x1234, cont.PubValType.Int16Var, "Int16Var falsch #2");
 			Assert.AreEqual(0x12341234, cont.PubValType.Int32Var, "Int32Var falsch #2");
@@ -560,8 +591,13 @@ namespace NdoUnitTests
 #else
 			Assert.AreEqual(new DateTime(2002, 12, 1, 0, 0, 0), cont.EmbeddedType.DateTimeVar, "DateTimeVar falsch #2");
 #endif
+#if SQLITE
+			Assert.That( CheckDouble( 12345.123456, cont.PropValType.DoubleVar ), "DoubleVar falsch #1" );
+			Assert.That( CheckFloat( 12345.1f, cont.PropValType.FloatVar ), "FloatVar falsch #1" );
+#else
 			Assert.AreEqual(12345.123456, cont.EmbeddedType.DoubleVar, "DoubleVar falsch #3");
 			Assert.AreEqual(12345.1f, cont.EmbeddedType.FloatVar, "FloatVar falsch #3");
+#endif
 			Assert.AreEqual(new Guid("12341234-1234-1234-1234-123412341234"), cont.EmbeddedType.GuidVar, "GuidVar falsch #3");
 			Assert.AreEqual(0x1234, cont.EmbeddedType.Int16Var, "Int16Var falsch #3");
 			Assert.AreEqual(0x12341234, cont.EmbeddedType.Int32Var, "Int32Var falsch #3");

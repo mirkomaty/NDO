@@ -90,9 +90,9 @@ namespace NdoUnitTests
             pm.Save();
 
             NDOQuery<Device> q = new NDOQuery<Device>(pm);
-            int c = (int) q.ExecuteAggregate("name", Query.AggregateType.Count);
+            decimal c = (decimal)q.ExecuteAggregate("name", Query.AggregateType.Count);
 
-            Assert.AreEqual(7, c, "Count wrong: ");
+            Assert.AreEqual(7m, c, "Count wrong: ");
 
             q = new NDOQuery<Device>(pm, "name = {0}");
             q.Parameters.Add("root");
@@ -110,8 +110,8 @@ namespace NdoUnitTests
             pm.UnloadCache();
 
             q = new NDOQuery<Device>(pm);
-            c = (int)q.ExecuteAggregate("name", Query.AggregateType.Count);
-            Assert.AreEqual(0, c, "Count wrong: ");
+            c = (decimal)q.ExecuteAggregate("name", Query.AggregateType.Count);
+            Assert.AreEqual(0m, c, "Count wrong: ");
 
         }
 
@@ -147,9 +147,9 @@ namespace NdoUnitTests
             pm.Save();
 
             NDOQuery<Device> q = new NDOQuery<Device>(pm);
-            int c = (int)q.ExecuteAggregate("name", Query.AggregateType.Count);
+            decimal c = (decimal)q.ExecuteAggregate("name", Query.AggregateType.Count);
 
-            Assert.AreEqual(7, c, "Count wrong: ");
+            Assert.AreEqual(7m, c, "Count wrong: ");
 
             q = new NDOQuery<Device>(pm, "name = {0}");
             q.Parameters.Add("root");
@@ -167,7 +167,7 @@ namespace NdoUnitTests
             pm.UnloadCache();
 
             q = new NDOQuery<Device>(pm);
-            c = (int)q.ExecuteAggregate("name", Query.AggregateType.Count);
+            c = (decimal)q.ExecuteAggregate("name", Query.AggregateType.Count);
             Assert.AreEqual(0, c, "Count wrong: ");
         }
 
@@ -203,9 +203,9 @@ namespace NdoUnitTests
             pm.Save();
 
             NDOQuery<Device> q = new NDOQuery<Device>(pm);
-            int c = (int)q.ExecuteAggregate("name", Query.AggregateType.Count);
+            decimal c = (decimal)q.ExecuteAggregate("name", Query.AggregateType.Count);
 
-            Assert.AreEqual(7, c, "Count wrong: ");
+            Assert.AreEqual(7m, c, "Count wrong: ");
 
             q = new NDOQuery<Device>(pm, "name = {0}");
             q.Parameters.Add("root");
@@ -223,8 +223,8 @@ namespace NdoUnitTests
             pm.UnloadCache();
 
             q = new NDOQuery<Device>(pm);
-            c = (int)q.ExecuteAggregate("name", Query.AggregateType.Count);
-            Assert.AreEqual(0, c, "Count wrong: ");
+            c = (decimal)q.ExecuteAggregate("name", Query.AggregateType.Count);
+            Assert.AreEqual(0m, c, "Count wrong: ");
         }
 
 

@@ -646,7 +646,7 @@ namespace DataTypeTestClasses
         bool boolVar = false;
         double doubleVar = 1.0;
         string stringVar = "test";
-        DateTime dtVar = DateTime.Now;
+		DateTime dtVar = new DateTime( 2008, 10, 30, 11, 3, 33, 123 );
 
         public int IntTest(PrimitiveTypeMethodCaller obj)
         {

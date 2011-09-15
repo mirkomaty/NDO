@@ -226,7 +226,9 @@
     <Content Include="App.ico" />
     <Content Include="bin\Debug\NdoUnitTests.ndo.sql" />
     <Content Include="bin\Release\NdoUnitTests.ndo.sql" />
-    <Content Include="NDOMapping.xml" />
+    <Content Include="NDOMapping.xml">
+      <SubType>Designer</SubType>
+    </Content>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\PureBusinessClasses\PureBusinessClasses.csproj">
@@ -262,7 +264,7 @@
   </ItemGroup>
   <ProjectExtensions>
     <VisualStudio>
-      <UserProperties NDOUtf8Encoding="true" DatabaseOwner="" NDOSQLScriptLanguage="Firebird" NDOUseTimeStamps="false" NDOGenerateChangeEvents="false" NDOGenerateSQL="true" NDOMergeSchema="true" NDOMergeMapping="true" NDONewMapping="false" NDOGenerateSchema="true" NDOGenerateMapping="true" NDOEnableEnhancer="false" NDOEnableAddIn="true" NDOTypeListFile="C:\Projekte\NDO\TestEnhancerVersion4\NdoUnitTests\BIN\Debug\NDOTypes.xml" NDODefaultConnection="Password=masterkey;Database=C:\Projekte\NDO\TestEnhancerVersion4\NdoUnitTests\FirebirdTest.FDB;Dialect=3;User Id=SYSDBA;Data Source=localhost" NDOUsePolymorphy="true" />
+      <UserProperties NDOUsePolymorphy="true" NDODefaultConnection="Password=masterkey;Database=C:\Projekte\NDO\TestEnhancerVersion4\NdoUnitTests\FirebirdTest.FDB;Dialect=3;User Id=SYSDBA;Data Source=localhost" NDOTypeListFile="C:\Projekte\NDO\TestEnhancerVersion4\NdoUnitTests\BIN\Debug\NDOTypes.xml" NDOEnableAddIn="true" NDOEnableEnhancer="false" NDOGenerateMapping="true" NDOGenerateSchema="true" NDONewMapping="false" NDOMergeMapping="true" NDOMergeSchema="true" NDOGenerateSQL="true" NDOGenerateChangeEvents="false" NDOUseTimeStamps="false" NDOSQLScriptLanguage="Firebird" DatabaseOwner="" NDOUtf8Encoding="true" />
     </VisualStudio>
   </ProjectExtensions>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />

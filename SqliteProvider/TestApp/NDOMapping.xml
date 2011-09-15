@@ -22,7 +22,7 @@
           <Column Name="DateTimeVar" />
         </Field>
         <Field Name="decVar">
-          <Column Name="DecVar" />
+          <Column Name="DecVar" Size="8" Precision="4" />
         </Field>
         <Field Name="doubleVar">
           <Column Name="DoubleVar" />

@@ -57,11 +57,12 @@ namespace System.Data.SQLite
 		Text,
 		Numeric,
 		Integer,
-//		Int8,
+		Decimal,
 		Int2,
 		Real,
 		Datetime,
-		Blob
+		Blob,
+		Guid
 	}
 }
 
@@ -157,14 +158,16 @@ namespace NDO.SqliteProvider
 					return DbType.Int32;
 				case SQLiteDbType.Int2:
 					return DbType.Int16;
-				//case SQLiteDbType.Int8:
-				//    return DbType.VarNumeric;
+				case SQLiteDbType.Decimal:
+				    return DbType.Decimal;
 				case SQLiteDbType.Real:
 					return DbType.Double;
 				case SQLiteDbType.Datetime:
 					return DbType.DateTime;
 				case SQLiteDbType.Blob:
 					return DbType.Binary;
+				case SQLiteDbType.Guid:
+					return DbType.String;
 			}
 			return DbType.String;
 		}
@@ -178,13 +181,18 @@ namespace NDO.SqliteProvider
 		public override object GetDbType(Type t) 
 		{
             t = base.ConvertNullableType(t);
-            if (t == typeof(bool))
+			return GetInternalDbType( t );
+		}
+
+		internal static SQLiteDbType GetInternalDbType( Type t )
+		{
+			if ( t == typeof( bool ) )
 				return SQLiteDbType.Int2;
-			else if ( t == typeof(byte) )
+			else if ( t == typeof( byte ) )
 				return SQLiteDbType.Int2;
-			else if ( t == typeof(sbyte) )
+			else if ( t == typeof( sbyte ) )
 				return SQLiteDbType.Int2;
-			else if ( t == typeof(char) )
+			else if ( t == typeof( char ) )
 				return SQLiteDbType.Int2;
 			else if ( t == typeof( short ) )
 				return SQLiteDbType.Int2;
@@ -192,30 +200,30 @@ namespace NDO.SqliteProvider
 				return SQLiteDbType.Int2;
 			else if ( t == typeof( int ) )
 				return SQLiteDbType.Integer;
-			else if ( t == typeof(uint))
+			else if ( t == typeof( uint ) )
 				return SQLiteDbType.Integer;
-			else if ( t == typeof(long))
+			else if ( t == typeof( long ) )
 				return SQLiteDbType.Numeric;
 			else if ( t == typeof( System.Guid ) )
-				return SQLiteDbType.Text;
+				return SQLiteDbType.Guid;
 			else if ( t == typeof( ulong ) )
 				return SQLiteDbType.Numeric;
 			else if ( t == typeof( float ) )
 				return SQLiteDbType.Real;
 			else if ( t == typeof( double ) )
 				return SQLiteDbType.Real;
-			else if ( t == typeof(string))
+			else if ( t == typeof( string ) )
 				return SQLiteDbType.Text;
-			else if ( t == typeof(byte[]))
+			else if ( t == typeof( byte[] ) )
 				return SQLiteDbType.Blob;
-			else if ( t == typeof(decimal))
-				return SQLiteDbType.Numeric;
-			else if ( t == typeof(System.DateTime))
+			else if ( t == typeof( decimal ) )
+				return SQLiteDbType.Decimal;
+			else if ( t == typeof( System.DateTime ) )
 				return SQLiteDbType.Datetime;
-			else if ( t.IsSubclassOf(typeof(System.Enum)))
+			else if ( t.IsSubclassOf( typeof( System.Enum ) ) )
 				return SQLiteDbType.Integer;
 			else
-				throw new NDOException(27, "NDO.SQLiteProvider.GetDbType: Typ " + t.Name + " can't be converted into SQLiteDbType.");
+				throw new NDOException( 27, "NDO.SQLiteProvider.GetDbType: Type " + t.Name + " can't be converted into SQLiteDbType." );
 		}
 
 		// The following method converts string representations of SQLiteDbType-Members
@@ -250,12 +258,14 @@ namespace NDO.SqliteProvider
 					return 4;
 				case SQLiteDbType.Int2:
 					return 2;
-				//case SQLiteDbType.Int8:
-				//    return 8;
+				case SQLiteDbType.Decimal:
+				    return 10;
 				case SQLiteDbType.Real:
 					return 10;
 				case SQLiteDbType.Blob:
-					return 255;
+					return 0;
+				case SQLiteDbType.Guid:
+					return 36;
 				default:
 					break;
 			}
@@ -298,7 +308,7 @@ namespace NDO.SqliteProvider
 			else if ( t == typeof(byte[]))
 				return 255;
 			else if ( t == typeof(decimal))
-				return 18;
+				return 10;
 			else if ( t == typeof(System.DateTime))
 				return 0;
 			else if ( t.IsSubclassOf(typeof(System.Enum)))
@@ -436,7 +446,7 @@ namespace NDO.SqliteProvider
 
 		public override bool SupportsNativeGuidType 
 		{ 
-			get { return false; } 
+			get { return true; } 
 		}
 
 		public override DialogResult ShowConnectionDialog(ref string connectionString)
@@ -483,14 +493,8 @@ namespace NDO.SqliteProvider
 			string path = s.Substring( s.IndexOf( '=' ) + 1 );
 			path = path.Trim();
 
-			StreamWriter sw = new StreamWriter( path );
-			sw.Close();
-
-			//SQLiteConnection conn = new SQLiteConnection( s );
-			//conn.Open();
-			//conn.Close();
-
-			//AppDomain.CurrentDomain.AssemblyResolve -= new ResolveEventHandler( OnAssemblyResolve );
+			FileStream fs = new FileStream( path, FileMode.OpenOrCreate );
+			fs.Close();
 
 			return s;
 		}

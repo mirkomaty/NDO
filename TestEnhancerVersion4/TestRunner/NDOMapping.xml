@@ -1,14 +1,14 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
 <NDOMapping SchemaVersion="1.0">
   <Connections>
-    <Connection ID="C0" Name="Integrated Security=SSPI;Persist Security Info=False;Initial Catalog=NDOTest;Data Source=localhost" Type="SqlServer" />
-    <Connection ID="C1" Name="C:\Projekte\NDO\TurboDbProvider\TestDb.tdbd" Type="TurboDB" />
-    <Connection ID="C2" Name="SERVER=localhost;DATABASE=prio;USER ID=postgres;PASSWORD=abundance;" Type="SqlServer" />
+    <Connection ID="C0" Name="Data Source=D:\Projekte\NDO\SqliteProvider\NDOUnitTests.db" Type="Sqlite" />
+    <Connection ID="C1" Name="Data Source=D:\Projekte\NDO\SqliteProvider\NdoUnitTests.db" Type="Sqlite" />
+    <Connection ID="C2" Name="Integrated Security=SSPI;Persist Security Info=False;Initial Catalog=NDOTest;Data Source=localhost" Type="SqlServer" />
   </Connections>
   <Classes>
-    <Class AssemblyName="PureBusinessClasses" FullName="AbstractBaseTestClasses.ABA" TableName="ABA" ConnectionId="C0">
+    <Class AssemblyName="PureBusinessClasses" FullName="AbstractBaseTestClasses.ABA" TableName="ABA" ConnectionId="C2">
       <Oid>
-        <OidColumn AutoIncremented="True" Name="ID" />
+        <OidColumn Name="ID" NetType="System.Guid,mscorlib" />
       </Oid>
       <Fields>
         <Field Name="myString">
@@ -17,9 +17,9 @@
       </Fields>
       <Relations />
     </Class>
-    <Class AssemblyName="PureBusinessClasses" FullName="AbstractBaseTestClasses.ABB" TableName="ABB" ConnectionId="C0">
+    <Class AssemblyName="PureBusinessClasses" FullName="AbstractBaseTestClasses.ABB" TableName="ABB" ConnectionId="C2">
       <Oid>
-        <OidColumn AutoIncremented="True" Name="ID" />
+        <OidColumn Name="ID" NetType="System.Guid,mscorlib" />
       </Oid>
       <Fields>
         <Field Name="myString">
@@ -32,9 +32,9 @@
         </Relation>
       </Relations>
     </Class>
-    <Class AssemblyName="PureBusinessClasses" FullName="AbstractBaseTestClasses.ABBase" TableName="Unused" ConnectionId="C0">
+    <Class AssemblyName="PureBusinessClasses" FullName="AbstractBaseTestClasses.ABBase" TableName="Unused" ConnectionId="C2">
       <Oid>
-        <OidColumn AutoIncremented="True" Name="Unused" />
+        <OidColumn Name="Unused" NetType="System.Guid,mscorlib" />
       </Oid>
       <Fields>
         <Field Name="myString">
@@ -43,9 +43,9 @@
       </Fields>
       <Relations />
     </Class>
-    <Class AssemblyName="PureBusinessClasses" FullName="AbstractBaseTestClasses.AbstractRelLeft" TableName="AbstractRelLeft" ConnectionId="C0">
+    <Class AssemblyName="PureBusinessClasses" FullName="AbstractBaseTestClasses.AbstractRelLeft" TableName="AbstractRelLeft" ConnectionId="C2">
       <Oid>
-        <OidColumn AutoIncremented="True" Name="ID" />
+        <OidColumn Name="ID" NetType="System.Guid,mscorlib" />
       </Oid>
       <Fields>
         <Field Name="myString">
@@ -61,9 +61,9 @@
         </Relation>
       </Relations>
     </Class>
-    <Class AssemblyName="PureBusinessClasses" FullName="DataTypeTestClasses.DataContainer" TableName="DataContainer" ConnectionId="C0">
+    <Class AssemblyName="PureBusinessClasses" FullName="DataTypeTestClasses.DataContainer" TableName="DataContainer" ConnectionId="C2">
       <Oid>
-        <OidColumn AutoIncremented="True" Name="ID" />
+        <OidColumn Name="ID" NetType="System.Guid,mscorlib" />
       </Oid>
       <Fields>
         <Field Name="boolVar">
@@ -126,9 +126,9 @@
       </Fields>
       <Relations />
     </Class>
-    <Class AssemblyName="PureBusinessClasses" FullName="DataTypeTestClasses.DataContainerDerived" TableName="DataContainerDerived" ConnectionId="C0">
+    <Class AssemblyName="PureBusinessClasses" FullName="DataTypeTestClasses.DataContainerDerived" TableName="DataContainerDerived" ConnectionId="C2">
       <Oid>
-        <OidColumn AutoIncremented="True" Name="ID" />
+        <OidColumn Name="ID" NetType="System.Guid,mscorlib" />
       </Oid>
       <Fields>
         <Field Name="boolVar">
@@ -191,9 +191,9 @@
       </Fields>
       <Relations />
     </Class>
-    <Class AssemblyName="PureBusinessClasses" FullName="DataTypeTestClasses.NullableDataContainer" TableName="NullableDataContainer" ConnectionId="C0">
+    <Class AssemblyName="PureBusinessClasses" FullName="DataTypeTestClasses.NullableDataContainer" TableName="NullableDataContainer" ConnectionId="C2">
       <Oid>
-        <OidColumn AutoIncremented="True" Name="ID" />
+        <OidColumn Name="ID" NetType="System.Guid,mscorlib" />
       </Oid>
       <Fields>
         <Field Name="boolEmptyVar">
@@ -283,9 +283,9 @@
       </Fields>
       <Relations />
     </Class>
-    <Class AssemblyName="PureBusinessClasses" FullName="DataTypeTestClasses.NullableDataContainerDerived" TableName="NullableDCDerived" ConnectionId="C0">
+    <Class AssemblyName="PureBusinessClasses" FullName="DataTypeTestClasses.NullableDataContainerDerived" TableName="NullableDCDerived" ConnectionId="C2">
       <Oid>
-        <OidColumn AutoIncremented="True" Name="ID" />
+        <OidColumn Name="ID" NetType="System.Guid,mscorlib" />
       </Oid>
       <Fields>
         <Field Name="boolEmptyVar">
@@ -375,9 +375,9 @@
       </Fields>
       <Relations />
     </Class>
-    <Class AssemblyName="PureBusinessClasses" FullName="DataTypeTestClasses.ParentWithEmbedded" TableName="ParentWithEmbedded" ConnectionId="C0">
+    <Class AssemblyName="PureBusinessClasses" FullName="DataTypeTestClasses.ParentWithEmbedded" TableName="ParentWithEmbedded" ConnectionId="C2">
       <Oid>
-        <OidColumn AutoIncremented="True" Name="ID" />
+        <OidColumn Name="ID" NetType="System.Guid,mscorlib" />
       </Oid>
       <Fields>
         <Field Name="ewom.member">
@@ -389,9 +389,9 @@
       </Fields>
       <Relations />
     </Class>
-    <Class AssemblyName="PureBusinessClasses" FullName="DataTypeTestClasses.PrimitiveTypeMethodCaller" TableName="PrimitiveTypeMethodCaller" ConnectionId="C0">
+    <Class AssemblyName="PureBusinessClasses" FullName="DataTypeTestClasses.PrimitiveTypeMethodCaller" TableName="PrimitiveTypeMethodCaller" ConnectionId="C2">
       <Oid>
-        <OidColumn AutoIncremented="True" Name="ID" />
+        <OidColumn Name="ID" NetType="System.Guid,mscorlib" />
       </Oid>
       <Fields>
         <Field Name="boolVar">
@@ -412,9 +412,9 @@
       </Fields>
       <Relations />
     </Class>
-    <Class AssemblyName="PureBusinessClasses" FullName="DataTypeTestClasses.VtAndEtContainer" TableName="VtAndEtContainer" ConnectionId="C0">
+    <Class AssemblyName="PureBusinessClasses" FullName="DataTypeTestClasses.VtAndEtContainer" TableName="VtAndEtContainer" ConnectionId="C2">
       <Oid>
-        <OidColumn AutoIncremented="True" Name="ID" />
+        <OidColumn Name="ID" NetType="System.Guid,mscorlib" />
       </Oid>
       <Fields>
         <Field Name="embeddedType.boolVar">
@@ -582,9 +582,9 @@
       </Fields>
       <Relations />
     </Class>
-    <Class AssemblyName="PureBusinessClasses" FullName="DataTypeTestClasses.VtAndEtContainerDerived" TableName="VtAndEtContainerDerived" ConnectionId="C0">
+    <Class AssemblyName="PureBusinessClasses" FullName="DataTypeTestClasses.VtAndEtContainerDerived" TableName="VtAndEtContainerDerived" ConnectionId="C2">
       <Oid>
-        <OidColumn AutoIncremented="True" Name="ID" />
+        <OidColumn Name="ID" NetType="System.Guid,mscorlib" />
       </Oid>
       <Fields>
         <Field Name="embeddedType.boolVar">
@@ -752,9 +752,9 @@
       </Fields>
       <Relations />
     </Class>
-    <Class AssemblyName="PureBusinessClasses" FullName="DateTest.DateTestClass" TableName="DateTestClass" ConnectionId="C0">
+    <Class AssemblyName="PureBusinessClasses" FullName="DateTest.DateTestClass" TableName="DateTestClass" ConnectionId="C2">
       <Oid>
-        <OidColumn AutoIncremented="True" Name="ID" />
+        <OidColumn Name="ID" NetType="System.Guid,mscorlib" />
       </Oid>
       <Fields>
         <Field Name="name">
@@ -767,9 +767,9 @@
         </Relation>
       </Relations>
     </Class>
-    <Class AssemblyName="PureBusinessClasses" FullName="DateTest.InnerDate" TableName="InnerDate" ConnectionId="C0">
+    <Class AssemblyName="PureBusinessClasses" FullName="DateTest.InnerDate" TableName="InnerDate" ConnectionId="C2">
       <Oid>
-        <OidColumn AutoIncremented="True" Name="ID" />
+        <OidColumn Name="ID" NetType="System.Guid,mscorlib" />
       </Oid>
       <Fields>
         <Field Name="dt">
@@ -781,9 +781,9 @@
       </Fields>
       <Relations />
     </Class>
-    <Class AssemblyName="PureBusinessClasses" FullName="DeleteForeignRelation.DfrAddress" TableName="DfrAddress" ConnectionId="C0">
+    <Class AssemblyName="PureBusinessClasses" FullName="DeleteForeignRelation.DfrAddress" TableName="DfrAddress" ConnectionId="C2">
       <Oid>
-        <OidColumn AutoIncremented="True" Name="ID" />
+        <OidColumn Name="ID" NetType="System.Guid,mscorlib" />
       </Oid>
       <Fields>
         <Field Name="ort">
@@ -799,9 +799,9 @@
         </Relation>
       </Relations>
     </Class>
-    <Class AssemblyName="PureBusinessClasses" FullName="DeleteForeignRelation.DfrAddressDescriptor" TableName="DfrAddressDescriptor" ConnectionId="C0">
+    <Class AssemblyName="PureBusinessClasses" FullName="DeleteForeignRelation.DfrAddressDescriptor" TableName="DfrAddressDescriptor" ConnectionId="C2">
       <Oid>
-        <OidColumn AutoIncremented="True" Name="ID" />
+        <OidColumn Name="ID" NetType="System.Guid,mscorlib" />
       </Oid>
       <Fields>
         <Field Name="isAdopted">
@@ -817,9 +817,9 @@
         </Relation>
       </Relations>
     </Class>
-    <Class AssemblyName="PureBusinessClasses" FullName="DeleteForeignRelation.DfrContact" TableName="DfrContact" ConnectionId="C0">
+    <Class AssemblyName="PureBusinessClasses" FullName="DeleteForeignRelation.DfrContact" TableName="DfrContact" ConnectionId="C2">
       <Oid>
-        <OidColumn AutoIncremented="True" Name="ID" />
+        <OidColumn Name="ID" NetType="System.Guid,mscorlib" />
       </Oid>
       <Fields>
         <Field Name="name">
@@ -832,9 +832,9 @@
         </Relation>
       </Relations>
     </Class>
-    <Class AssemblyName="PureBusinessClasses" FullName="DerivedStateTestClasses.Base" TableName="Base" ConnectionId="C0">
+    <Class AssemblyName="PureBusinessClasses" FullName="DerivedStateTestClasses.Base" TableName="Base" ConnectionId="C2">
       <Oid>
-        <OidColumn AutoIncremented="True" Name="ID" />
+        <OidColumn Name="ID" NetType="System.Guid,mscorlib" />
       </Oid>
       <Fields>
         <Field Name="theField">
@@ -843,9 +843,9 @@
       </Fields>
       <Relations />
     </Class>
-    <Class AssemblyName="PureBusinessClasses" FullName="DerivedStateTestClasses.Derived" TableName="Derived" ConnectionId="C0">
+    <Class AssemblyName="PureBusinessClasses" FullName="DerivedStateTestClasses.Derived" TableName="Derived" ConnectionId="C2">
       <Oid>
-        <OidColumn AutoIncremented="True" Name="ID" />
+        <OidColumn Name="ID" NetType="System.Guid,mscorlib" />
       </Oid>
       <Fields>
         <Field Name="theField">
@@ -854,9 +854,9 @@
       </Fields>
       <Relations />
     </Class>
-    <Class AssemblyName="PureBusinessClasses" FullName="DoubleRelationClasses.DRAddress" TableName="DRAddress" ConnectionId="C0">
+    <Class AssemblyName="PureBusinessClasses" FullName="DoubleRelationClasses.DRAddress" TableName="DRAddress" ConnectionId="C2">
       <Oid>
-        <OidColumn AutoIncremented="True" Name="ID" AllowDbNull="False" />
+        <OidColumn Name="ID" NetType="System.Guid,mscorlib" AllowDbNull="False" />
       </Oid>
       <Fields>
         <Field Name="street">
@@ -869,9 +869,9 @@
         </Relation>
       </Relations>
     </Class>
-    <Class AssemblyName="PureBusinessClasses" FullName="DoubleRelationClasses.DRPerson" TableName="DRPerson" ConnectionId="C0">
+    <Class AssemblyName="PureBusinessClasses" FullName="DoubleRelationClasses.DRPerson" TableName="DRPerson" ConnectionId="C2">
       <Oid>
-        <OidColumn AutoIncremented="True" Name="ID" AllowDbNull="False" />
+        <OidColumn Name="ID" NetType="System.Guid,mscorlib" AllowDbNull="False" />
       </Oid>
       <Fields>
         <Field Name="lastName">
@@ -890,23 +890,23 @@
         </Relation>
       </Relations>
     </Class>
-    <Class AssemblyName="PureBusinessClasses" FullName="ForeignObjectManipulationClasses.ChildElement" TableName="ChildElement" ConnectionId="C0">
+    <Class AssemblyName="PureBusinessClasses" FullName="ForeignObjectManipulationClasses.ChildElement" TableName="ChildElement" ConnectionId="C2">
       <Oid>
-        <OidColumn AutoIncremented="True" Name="ID" />
+        <OidColumn Name="ID" NetType="System.Guid,mscorlib" />
       </Oid>
       <Fields />
       <Relations />
     </Class>
-    <Class AssemblyName="PureBusinessClasses" FullName="ForeignObjectManipulationClasses.ChildList" TableName="ChildList" ConnectionId="C0">
+    <Class AssemblyName="PureBusinessClasses" FullName="ForeignObjectManipulationClasses.ChildList" TableName="ChildList" ConnectionId="C2">
       <Oid>
-        <OidColumn AutoIncremented="True" Name="ID" />
+        <OidColumn Name="ID" NetType="System.Guid,mscorlib" />
       </Oid>
       <Fields />
       <Relations />
     </Class>
-    <Class AssemblyName="PureBusinessClasses" FullName="ForeignObjectManipulationClasses.Parent" TableName="Parent" ConnectionId="C0">
+    <Class AssemblyName="PureBusinessClasses" FullName="ForeignObjectManipulationClasses.Parent" TableName="Parent" ConnectionId="C2">
       <Oid>
-        <OidColumn AutoIncremented="True" Name="ID" />
+        <OidColumn Name="ID" NetType="System.Guid,mscorlib" />
       </Oid>
       <Fields>
         <Field Name="childEmbedded.childField">
@@ -1003,9 +1003,9 @@
         </Relation>
       </Relations>
     </Class>
-    <Class AssemblyName="PureBusinessClasses" FullName="PureBusinessClasses.Contact" TableName="Unused" ConnectionId="C0">
+    <Class AssemblyName="PureBusinessClasses" FullName="PureBusinessClasses.Contact" TableName="Unused" ConnectionId="C2">
       <Oid>
-        <OidColumn AutoIncremented="True" Name="Unused" />
+        <OidColumn Name="Unused" NetType="System.Guid,mscorlib" />
       </Oid>
       <Fields>
         <Field Name="firstName">
@@ -1024,9 +1024,9 @@
         </Relation>
       </Relations>
     </Class>
-    <Class AssemblyName="PureBusinessClasses" FullName="PureBusinessClasses.Device" TableName="Device" ConnectionId="C0">
+    <Class AssemblyName="PureBusinessClasses" FullName="PureBusinessClasses.Device" TableName="Device" ConnectionId="C2">
       <Oid>
-        <OidColumn AutoIncremented="True" Name="ID" />
+        <OidColumn Name="ID" NetType="System.Guid,mscorlib" />
       </Oid>
       <Fields>
         <Field Name="name">
@@ -1042,9 +1042,9 @@
         </Relation>
       </Relations>
     </Class>
-    <Class AssemblyName="PureBusinessClasses" FullName="PureBusinessClasses.Institution" TableName="Institution" ConnectionId="C0">
+    <Class AssemblyName="PureBusinessClasses" FullName="PureBusinessClasses.Institution" TableName="Institution" ConnectionId="C2">
       <Oid>
-        <OidColumn AutoIncremented="True" Name="ID" />
+        <OidColumn Name="ID" NetType="System.Guid,mscorlib" />
       </Oid>
       <Fields>
         <Field Name="firstName">
@@ -1066,9 +1066,9 @@
         </Relation>
       </Relations>
     </Class>
-    <Class AssemblyName="PureBusinessClasses" FullName="PureBusinessClasses.Order" TableName="Order" ConnectionId="C0">
+    <Class AssemblyName="PureBusinessClasses" FullName="PureBusinessClasses.Order" TableName="Order" ConnectionId="C2">
       <Oid>
-        <OidColumn AutoIncremented="True" Name="ID" />
+        <OidColumn Name="ID" NetType="System.Guid,mscorlib" />
       </Oid>
       <Fields>
         <Field Name="date">
@@ -1100,9 +1100,9 @@
         </Relation>
       </Relations>
     </Class>
-    <Class AssemblyName="PureBusinessClasses" FullName="PureBusinessClasses.OwnHashcodeClient" TableName="OwnHashcodeClient" ConnectionId="C0">
+    <Class AssemblyName="PureBusinessClasses" FullName="PureBusinessClasses.OwnHashcodeClient" TableName="OwnHashcodeClient" ConnectionId="C2">
       <Oid>
-        <OidColumn AutoIncremented="True" Name="ID" AllowDbNull="False" />
+        <OidColumn Name="ID" NetType="System.Guid,mscorlib" AllowDbNull="False" />
       </Oid>
       <Fields>
         <Field Name="dummy">
@@ -1115,9 +1115,9 @@
         </Relation>
       </Relations>
     </Class>
-    <Class AssemblyName="PureBusinessClasses" FullName="PureBusinessClasses.OwnHashcodeParent" TableName="OwnHashcodeParent" ConnectionId="C0">
+    <Class AssemblyName="PureBusinessClasses" FullName="PureBusinessClasses.OwnHashcodeParent" TableName="OwnHashcodeParent" ConnectionId="C2">
       <Oid>
-        <OidColumn AutoIncremented="True" Name="ID" AllowDbNull="False" />
+        <OidColumn Name="ID" NetType="System.Guid,mscorlib" AllowDbNull="False" />
       </Oid>
       <Fields />
       <Relations>
@@ -1126,9 +1126,9 @@
         </Relation>
       </Relations>
     </Class>
-    <Class AssemblyName="PureBusinessClasses" FullName="PureBusinessClasses.Peer" TableName="Peer" ConnectionId="C0">
+    <Class AssemblyName="PureBusinessClasses" FullName="PureBusinessClasses.Peer" TableName="Peer" ConnectionId="C2">
       <Oid>
-        <OidColumn AutoIncremented="True" Name="ID" />
+        <OidColumn Name="ID" NetType="System.Guid,mscorlib" />
       </Oid>
       <Fields>
         <Field Name="name">
@@ -1141,9 +1141,9 @@
         </Relation>
       </Relations>
     </Class>
-    <Class AssemblyName="PureBusinessClasses" FullName="PureBusinessClasses.Person" TableName="Person" ConnectionId="C0">
+    <Class AssemblyName="PureBusinessClasses" FullName="PureBusinessClasses.Person" TableName="Person" ConnectionId="C2">
       <Oid>
-        <OidColumn AutoIncremented="True" Name="ID" />
+        <OidColumn Name="ID" NetType="System.Guid,mscorlib" />
       </Oid>
       <Fields>
         <Field Name="firstName">
@@ -1165,9 +1165,9 @@
         </Relation>
       </Relations>
     </Class>
-    <Class AssemblyName="PureBusinessClasses" FullName="PureBusinessClasses.Product" TableName="Product" ConnectionId="C0">
+    <Class AssemblyName="PureBusinessClasses" FullName="PureBusinessClasses.Product" TableName="Product" ConnectionId="C2">
       <Oid>
-        <OidColumn AutoIncremented="True" Name="ID" />
+        <OidColumn Name="ID" NetType="System.Guid,mscorlib" />
       </Oid>
       <Fields>
         <Field Name="name">
@@ -1176,9 +1176,9 @@
       </Fields>
       <Relations />
     </Class>
-    <Class AssemblyName="PureBusinessClasses" FullName="PureBusinessClasses.SequenceValue" TableName="SequenceValue" ConnectionId="C0">
+    <Class AssemblyName="PureBusinessClasses" FullName="PureBusinessClasses.SequenceValue" TableName="SequenceValue" ConnectionId="C2">
       <Oid>
-        <OidColumn AutoIncremented="True" Name="ID" />
+        <OidColumn Name="ID" NetType="System.Guid,mscorlib" />
       </Oid>
       <Fields>
         <Field Name="_value">
@@ -1187,9 +1187,9 @@
       </Fields>
       <Relations />
     </Class>
-    <Class AssemblyName="PureBusinessClasses" FullName="PureBusinessClasses.SnmpDevice" TableName="SnmpDevice" ConnectionId="C0">
+    <Class AssemblyName="PureBusinessClasses" FullName="PureBusinessClasses.SnmpDevice" TableName="SnmpDevice" ConnectionId="C2">
       <Oid>
-        <OidColumn AutoIncremented="True" Name="ID" />
+        <OidColumn Name="ID" NetType="System.Guid,mscorlib" />
       </Oid>
       <Fields>
         <Field Name="name">
@@ -1208,9 +1208,9 @@
         </Relation>
       </Relations>
     </Class>
-    <Class AssemblyName="PureBusinessClasses" FullName="PureBusinessClasses.Topic" TableName="Topic" ConnectionId="C0">
+    <Class AssemblyName="PureBusinessClasses" FullName="PureBusinessClasses.Topic" TableName="Topic" ConnectionId="C2">
       <Oid>
-        <OidColumn AutoIncremented="True" Name="ID" />
+        <OidColumn Name="ID" NetType="System.Guid,mscorlib" />
       </Oid>
       <Fields>
         <Field Name="text">
@@ -1226,9 +1226,9 @@
         </Relation>
       </Relations>
     </Class>
-    <Class AssemblyName="PureBusinessClasses" FullName="PureBusinessClasses.Track" TableName="Track" ConnectionId="C0">
+    <Class AssemblyName="PureBusinessClasses" FullName="PureBusinessClasses.Track" TableName="Track" ConnectionId="C2">
       <Oid>
-        <OidColumn AutoIncremented="True" Name="ID" />
+        <OidColumn Name="ID" NetType="System.Guid,mscorlib" />
       </Oid>
       <Fields>
         <Field Name="name">
@@ -1241,9 +1241,9 @@
         </Relation>
       </Relations>
     </Class>
-    <Class AssemblyName="PureBusinessClasses" FullName="Reisekosten.Beleg" TableName="Beleg" ConnectionId="C0">
+    <Class AssemblyName="PureBusinessClasses" FullName="Reisekosten.Beleg" TableName="Beleg" ConnectionId="C2">
       <Oid>
-        <OidColumn AutoIncremented="True" Name="ID" />
+        <OidColumn Name="ID" NetType="System.Guid,mscorlib" />
       </Oid>
       <Fields>
         <Field Name="belegart">
@@ -1262,9 +1262,9 @@
         </Relation>
       </Relations>
     </Class>
-    <Class AssemblyName="PureBusinessClasses" FullName="Reisekosten.Email" TableName="Email" ConnectionId="C0">
+    <Class AssemblyName="PureBusinessClasses" FullName="Reisekosten.Email" TableName="Email" ConnectionId="C2">
       <Oid>
-        <OidColumn AutoIncremented="True" Name="ID" />
+        <OidColumn Name="ID" NetType="System.Guid,mscorlib" />
       </Oid>
       <Fields>
         <Field Name="adresse">
@@ -1280,9 +1280,9 @@
         </Relation>
       </Relations>
     </Class>
-    <Class AssemblyName="PureBusinessClasses" FullName="Reisekosten.Flughafen" TableName="Flughafen" ConnectionId="C0">
+    <Class AssemblyName="PureBusinessClasses" FullName="Reisekosten.Flughafen" TableName="Flughafen" ConnectionId="C2">
       <Oid>
-        <OidColumn AutoIncremented="True" Name="ID" />
+        <OidColumn Name="ID" NetType="System.Guid,mscorlib" />
       </Oid>
       <Fields>
         <Field Name="kürzel">
@@ -1291,9 +1291,9 @@
       </Fields>
       <Relations />
     </Class>
-    <Class AssemblyName="PureBusinessClasses" FullName="Reisekosten.Kostenpunkt" TableName="Unused" ConnectionId="C0">
+    <Class AssemblyName="PureBusinessClasses" FullName="Reisekosten.Kostenpunkt" TableName="Unused" ConnectionId="C2">
       <Oid>
-        <OidColumn AutoIncremented="True" Name="Unused" />
+        <OidColumn Name="Unused" NetType="System.Guid,mscorlib" />
       </Oid>
       <Fields>
         <Field Name="datum">
@@ -1306,9 +1306,9 @@
         </Relation>
       </Relations>
     </Class>
-    <Class AssemblyName="PureBusinessClasses" FullName="Reisekosten.Land" TableName="Land" ConnectionId="C0">
+    <Class AssemblyName="PureBusinessClasses" FullName="Reisekosten.Land" TableName="Land" ConnectionId="C2">
       <Oid>
-        <OidColumn AutoIncremented="True" Name="ID" />
+        <OidColumn Name="ID" NetType="System.Guid,mscorlib" />
       </Oid>
       <Fields>
         <Field Name="name">
@@ -1327,9 +1327,9 @@
         </Relation>
       </Relations>
     </Class>
-    <Class AssemblyName="PureBusinessClasses" FullName="Reisekosten.Personal.Adresse" TableName="Adresse" ConnectionId="C0">
+    <Class AssemblyName="PureBusinessClasses" FullName="Reisekosten.Personal.Adresse" TableName="Adresse" ConnectionId="C2">
       <Oid>
-        <OidColumn AutoIncremented="True" Name="ID" />
+        <OidColumn Name="ID" NetType="System.Guid,mscorlib" />
       </Oid>
       <Fields>
         <Field Name="lkz">
@@ -1347,9 +1347,9 @@
       </Fields>
       <Relations />
     </Class>
-    <Class AssemblyName="PureBusinessClasses" FullName="Reisekosten.Personal.Buero" TableName="Buero" ConnectionId="C0">
+    <Class AssemblyName="PureBusinessClasses" FullName="Reisekosten.Personal.Buero" TableName="Buero" ConnectionId="C2">
       <Oid>
-        <OidColumn AutoIncremented="True" Name="ID" />
+        <OidColumn Name="ID" NetType="System.Guid,mscorlib" />
       </Oid>
       <Fields>
         <Field Name="zimmer">
@@ -1358,9 +1358,9 @@
       </Fields>
       <Relations />
     </Class>
-    <Class AssemblyName="PureBusinessClasses" FullName="Reisekosten.Personal.Manager" TableName="Mitarbeiter" ConnectionId="C0">
+    <Class AssemblyName="PureBusinessClasses" FullName="Reisekosten.Personal.Manager" TableName="Mitarbeiter" ConnectionId="C2">
       <Oid>
-        <OidColumn AutoIncremented="True" Name="ID" />
+        <OidColumn Name="ID" NetType="System.Guid,mscorlib" />
       </Oid>
       <Fields>
         <Field Name="nachname">
@@ -1412,9 +1412,9 @@
         </Relation>
       </Relations>
     </Class>
-    <Class AssemblyName="PureBusinessClasses" FullName="Reisekosten.Personal.Mitarbeiter" TableName="Mitarbeiter" ConnectionId="C0">
+    <Class AssemblyName="PureBusinessClasses" FullName="Reisekosten.Personal.Mitarbeiter" TableName="Mitarbeiter" ConnectionId="C2">
       <Oid>
-        <OidColumn AutoIncremented="True" Name="ID" />
+        <OidColumn Name="ID" NetType="System.Guid,mscorlib" />
       </Oid>
       <Fields>
         <Field Name="nachname">
@@ -1463,9 +1463,9 @@
         </Relation>
       </Relations>
     </Class>
-    <Class AssemblyName="PureBusinessClasses" FullName="Reisekosten.Personal.Signatur" TableName="Signatur" ConnectionId="C0">
+    <Class AssemblyName="PureBusinessClasses" FullName="Reisekosten.Personal.Signatur" TableName="Signatur" ConnectionId="C2">
       <Oid>
-        <OidColumn AutoIncremented="True" Name="ID" />
+        <OidColumn Name="ID" NetType="System.Guid,mscorlib" />
       </Oid>
       <Fields>
         <Field Name="signature">
@@ -1481,9 +1481,9 @@
         </Relation>
       </Relations>
     </Class>
-    <Class AssemblyName="PureBusinessClasses" FullName="Reisekosten.Personal.Sozialversicherungsnummer" TableName="Sozialversicherungsnummer" ConnectionId="C0">
+    <Class AssemblyName="PureBusinessClasses" FullName="Reisekosten.Personal.Sozialversicherungsnummer" TableName="Sozialversicherungsnummer" ConnectionId="C2">
       <Oid>
-        <OidColumn AutoIncremented="True" Name="ID" />
+        <OidColumn Name="ID" NetType="System.Guid,mscorlib" />
       </Oid>
       <Fields>
         <Field Name="nummer">
@@ -1492,13 +1492,13 @@
       </Fields>
       <Relations>
         <Relation FieldName="arbeiter" ReferencedTypeName="Reisekosten.Personal.Mitarbeiter" RelationName="Versicherung">
-          <ForeignKeyColumn Name="IDMitarbeiter_Versicherung" />
+          <ForeignKeyColumn Name="IDSozial" />
         </Relation>
       </Relations>
     </Class>
-    <Class AssemblyName="PureBusinessClasses" FullName="Reisekosten.Personal.Zertifikat" TableName="Zertifikat" ConnectionId="C0">
+    <Class AssemblyName="PureBusinessClasses" FullName="Reisekosten.Personal.Zertifikat" TableName="Zertifikat" ConnectionId="C2">
       <Oid>
-        <OidColumn AutoIncremented="True" Name="ID" />
+        <OidColumn Name="ID" NetType="System.Guid,mscorlib" />
       </Oid>
       <Fields>
         <Field Name="schlüssel">
@@ -1517,9 +1517,9 @@
         </Relation>
       </Relations>
     </Class>
-    <Class AssemblyName="PureBusinessClasses" FullName="Reisekosten.PKWFahrt" TableName="PKWFahrt" ConnectionId="C0">
+    <Class AssemblyName="PureBusinessClasses" FullName="Reisekosten.PKWFahrt" TableName="PKWFahrt" ConnectionId="C2">
       <Oid>
-        <OidColumn AutoIncremented="True" Name="ID" />
+        <OidColumn Name="ID" NetType="System.Guid,mscorlib" />
       </Oid>
       <Fields>
         <Field Name="datum">
@@ -1535,9 +1535,9 @@
         </Relation>
       </Relations>
     </Class>
-    <Class AssemblyName="PureBusinessClasses" FullName="Reisekosten.Projekt" TableName="Projekt" ConnectionId="C0">
+    <Class AssemblyName="PureBusinessClasses" FullName="Reisekosten.Projekt" TableName="Projekt" ConnectionId="C2">
       <Oid>
-        <OidColumn AutoIncremented="True" Name="ID" />
+        <OidColumn Name="ID" NetType="System.Guid,mscorlib" />
       </Oid>
       <Fields>
         <Field Name="name">
@@ -1546,9 +1546,9 @@
       </Fields>
       <Relations />
     </Class>
-    <Class AssemblyName="PureBusinessClasses" FullName="Reisekosten.Reise" TableName="Reise" ConnectionId="C0">
+    <Class AssemblyName="PureBusinessClasses" FullName="Reisekosten.Reise" TableName="Reise" ConnectionId="C2">
       <Oid>
-        <OidColumn AutoIncremented="True" Name="ID" />
+        <OidColumn Name="ID" NetType="System.Guid,mscorlib" />
       </Oid>
       <Fields>
         <Field Name="zweck">
@@ -1570,9 +1570,9 @@
         </Relation>
       </Relations>
     </Class>
-    <Class AssemblyName="PureBusinessClasses" FullName="Reisekosten.Reisebüro" TableName="Reisebuero" ConnectionId="C0">
+    <Class AssemblyName="PureBusinessClasses" FullName="Reisekosten.Reisebüro" TableName="Reisebuero" ConnectionId="C2">
       <Oid>
-        <OidColumn AutoIncremented="True" Name="ID" />
+        <OidColumn Name="ID" NetType="System.Guid,mscorlib" />
       </Oid>
       <Fields>
         <Field Name="name">
@@ -1581,9 +1581,9 @@
       </Fields>
       <Relations />
     </Class>
-    <Class AssemblyName="PureBusinessClasses" FullName="Reisekosten.Subject" TableName="Subject" ConnectionId="C0">
+    <Class AssemblyName="PureBusinessClasses" FullName="Reisekosten.Subject" TableName="Subject" ConnectionId="C2">
       <Oid>
-        <OidColumn AutoIncremented="True" Name="ID" />
+        <OidColumn Name="ID" NetType="System.Guid,mscorlib" />
       </Oid>
       <Fields>
         <Field Name="text">
@@ -1592,9 +1592,9 @@
       </Fields>
       <Relations />
     </Class>
-    <Class AssemblyName="PureBusinessClasses" FullName="TestBlocks.ClassWithBlock" TableName="ClassWithBlock" ConnectionId="C0">
+    <Class AssemblyName="PureBusinessClasses" FullName="TestBlocks.ClassWithBlock" TableName="ClassWithBlock" ConnectionId="C2">
       <Oid>
-        <OidColumn AutoIncremented="True" Name="ID" />
+        <OidColumn Name="ID" NetType="System.Guid,mscorlib" />
       </Oid>
       <Fields>
         <Field Name="testfeld">
@@ -1603,9 +1603,9 @@
       </Fields>
       <Relations />
     </Class>
-    <Class AssemblyName="PureBusinessClasses" FullName="TimeStampTestClasses.TimeStampContainer" TableName="TimeStampContainer" ConnectionId="C0" TimeStampColumn="NDOTimeStamp">
+    <Class AssemblyName="PureBusinessClasses" FullName="TimeStampTestClasses.TimeStampContainer" TableName="TimeStampContainer" ConnectionId="C2" TimeStampColumn="NDOTimeStamp">
       <Oid>
-        <OidColumn AutoIncremented="True" Name="ID" />
+        <OidColumn Name="ID" NetType="System.Guid,mscorlib" />
       </Oid>
       <Fields>
         <Field Name="name">
@@ -1614,9 +1614,9 @@
       </Fields>
       <Relations />
     </Class>
-    <Class AssemblyName="PureBusinessClasses" FullName="Zirkulär.Intermediate" TableName="Intermediate" ConnectionId="C0">
+    <Class AssemblyName="PureBusinessClasses" FullName="Zirkulär.Intermediate" TableName="Intermediate" ConnectionId="C2">
       <Oid>
-        <OidColumn AutoIncremented="True" Name="ID" />
+        <OidColumn Name="ID" NetType="System.Guid,mscorlib" />
       </Oid>
       <Fields />
       <Relations>
@@ -1625,9 +1625,9 @@
         </Relation>
       </Relations>
     </Class>
-    <Class AssemblyName="PureBusinessClasses" FullName="Zirkulär.IntermediateSingle" TableName="IntermediateSingle" ConnectionId="C0">
+    <Class AssemblyName="PureBusinessClasses" FullName="Zirkulär.IntermediateSingle" TableName="IntermediateSingle" ConnectionId="C2">
       <Oid>
-        <OidColumn AutoIncremented="True" Name="ID" />
+        <OidColumn Name="ID" NetType="System.Guid,mscorlib" />
       </Oid>
       <Fields />
       <Relations>
@@ -1636,9 +1636,9 @@
         </Relation>
       </Relations>
     </Class>
-    <Class AssemblyName="PureBusinessClasses" FullName="Zirkulär.TopicIndirect" TableName="TopicIndirect" ConnectionId="C0">
+    <Class AssemblyName="PureBusinessClasses" FullName="Zirkulär.TopicIndirect" TableName="TopicIndirect" ConnectionId="C2">
       <Oid>
-        <OidColumn AutoIncremented="True" Name="ID" />
+        <OidColumn Name="ID" NetType="System.Guid,mscorlib" />
       </Oid>
       <Fields />
       <Relations>

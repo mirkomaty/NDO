@@ -41,7 +41,7 @@ namespace BusinessClasses
 	/// <summary>
 	/// Summary description for DataContainer.
 	/// </summary>
-	[NDOPersistent]
+	[NDOPersistent, NDOOidType(typeof(Guid))]
 	public class DataContainer
 	{
 

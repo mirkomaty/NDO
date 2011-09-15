@@ -67,11 +67,13 @@ namespace NDO.SqliteProvider
 
 		public override bool LengthAllowed(string dbType)
 		{
-            return true;
+			return true;
 		}
 
 		public override string DbTypeFromType(Type t)
 		{
+			return NDO.SqliteProvider.Provider.GetInternalDbType( t ).ToString();
+#if MaskedOut
             if (t == typeof(bool))
                 return("Int2");
             else if (t == typeof(Byte))
@@ -81,7 +83,7 @@ namespace NDO.SqliteProvider
             else if (t == typeof(DateTime))
 				return "Datetime";
 			else if (t == typeof(decimal))
-				return "Numeric";
+				return "Decimal";
 			else if (t == typeof(double))
 				return "Real";
 			else if (t.IsEnum)
@@ -99,6 +101,7 @@ namespace NDO.SqliteProvider
 			else if ( t == typeof( string ) )
 				return "Text";
 			throw new Exception("Can't resolve type " + t.FullName + " as storable.");
+#endif
 		}
 
 		public override string AutoIncrementColumn(string columnName, Type dataType, string columnType, string width)
@@ -119,7 +122,7 @@ namespace NDO.SqliteProvider
         public override string PrimaryKeyColumn(string columnName, Type dataType, string columnType, string width)
         {
 			string coldef = columnName + " " + columnType;
-            if (dataType == typeof(string) || dataType == typeof(Guid))
+            if (dataType == typeof(string))
                 coldef += '(' + width + ')'; 
             return coldef + " PRIMARY KEY";
         }

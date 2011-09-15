@@ -72,6 +72,7 @@ namespace NdoUnitTests {
 		public void TearDown() {
 			pm.Abort();
 			pm.UnloadCache();
+			/*
 			IList mitarbeiterListe = pm.GetClassExtent( typeof( Mitarbeiter ), true );
 			pm.Delete( mitarbeiterListe );
 			pm.Save();
@@ -88,6 +89,7 @@ namespace NdoUnitTests {
 			IList zListe = pm.GetClassExtent( typeof( Zertifikat ) );
 			pm.Delete( zListe );
 			pm.Save();
+			 */
 			string path = Path.GetDirectoryName(pm.NDOMapping.FileName);
 			path = Path.Combine(path, "NDOUnitTests.ndo.sql");
 			pm.BuildDatabase(path);

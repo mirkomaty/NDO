@@ -109,6 +109,7 @@
     <Reference Include="System.Data">
       <Name>System.Data</Name>
     </Reference>
+    <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="System.EnterpriseServices">
       <Name>System.EnterpriseServices</Name>
     </Reference>
@@ -123,6 +124,8 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="App.ico" />
+    <Content Include="bin\Debug\TestApp.ndo.sql" />
+    <Content Include="bin\Debug\TestApp.ndodiff.1.0.sql" />
     <Content Include="NDOMapping.xml" />
     <Compile Include="AssemblyInfo.cs">
       <SubType>Code</SubType>
@@ -151,9 +154,10 @@
       <Install>true</Install>
     </BootstrapperPackage>
   </ItemGroup>
+  <ItemGroup />
   <ProjectExtensions>
     <VisualStudio>
-      <UserProperties NDOGenerateSQL="false" NDOMergeSchema="true" NDOMergeMapping="true" NDONewMapping="false" NDOGenerateSchema="true" NDOGenerateMapping="true" NDOEnableEnhancer="false" NDOEnableAddIn="true" NDODefaultConnection="Provider=Microsoft.Jet.OLEDB.4.0;Data Source=D:\Persistenz\TestDataTypes\DataTest.mdb;Persist Security Info=False" />
+      <UserProperties NDODefaultConnection="Provider=Microsoft.Jet.OLEDB.4.0;Data Source=D:\Persistenz\TestDataTypes\DataTest.mdb;Persist Security Info=False" NDOEnableAddIn="true" NDOEnableEnhancer="false" NDOGenerateMapping="true" NDOGenerateSchema="true" NDONewMapping="false" NDOMergeMapping="true" NDOMergeSchema="true" NDOGenerateSQL="false" />
     </VisualStudio>
   </ProjectExtensions>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />

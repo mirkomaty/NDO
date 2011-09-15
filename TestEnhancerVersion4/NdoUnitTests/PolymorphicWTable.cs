@@ -670,7 +670,8 @@ namespace NdoUnitTests {
 			q.Parameters.Add(new Query.Parameter(DateTime.Now.Date));
 			r = (Reise)q.ExecuteSingle(true);
 			Assert.NotNull(r, "Reise not found");
-			Assert.NotNull(r.Kostenpunkte[0], "Beleg not found");
+			Assert.That(r.Kostenpunkte.Count > 0, "No Beleg" );
+			Assert.NotNull( r.Kostenpunkte[0], "Beleg not found" );
 		}
 
 		[Test]

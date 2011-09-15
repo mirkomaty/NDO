@@ -161,15 +161,15 @@ namespace NdoUnitTests {
 			Reise.QueryHelper qh = new Reise.QueryHelper();
 			Query q = pm.NewQuery(typeof(Reise), qh.dieLaender.oid + Query.Op.Eq + Query.Placeholder(0));
 			q.Parameters.Add(new Query.Parameter(oid.Id[0]));
-			int count = (int) q.ExecuteAggregate(qh.zweck, Query.AggregateType.Count);
-			Assert.That(count > 0, "Count should be > 0");
+			decimal count = (decimal) q.ExecuteAggregate(qh.zweck, Query.AggregateType.Count);
+			Assert.That(count > 0m, "Count should be > 0");
 			usa = (Land) pm.FindObject(oid);
 			Assert.NotNull(usa, "USA nicht gefunden");
 			r.LandLöschen(usa.Name);
 			pm.Save();
 			pm.UnloadCache();
-			count = (int) q.ExecuteAggregate(qh.zweck, Query.AggregateType.Count);
-			Assert.AreEqual(0, count, "Count should be 0");
+			count = (decimal) q.ExecuteAggregate(qh.zweck, Query.AggregateType.Count);
+			Assert.AreEqual(0m, count, "Count should be 0");
 		}
 
 		[Test]

@@ -40,6 +40,8 @@ using NDO;
 using NDO.Mapping;
 using NDOInterfaces;
 using BusinessClasses;
+using System.Threading;
+using System.Globalization;
 
 namespace TestApp
 {
@@ -59,9 +61,11 @@ namespace TestApp
             pm.LogAdapter = new NDO.Logging.ConsoleLogAdapter();
             pm.VerboseMode = true;
 
+			//Thread.CurrentThread.CurrentCulture = CultureInfo.InvariantCulture;
+
 			// Make this true to store the test instance. 
 			// Make it false if you want to retrieve data.
-#if true
+#if false
             GenerateDatabase();
 
             DataContainer dc = new DataContainer();
@@ -98,6 +102,9 @@ namespace TestApp
 //			Query q = pm.NewQuery(typeof (DataContainer), qh.stringVar + " LIKE 'T%'", false);
 //			Query q = pm.NewQuery(typeof (DataContainer), "SELECT * FROM \"DataContainer\" WHERE \"StringVar\" LIKE 'T%'", false, Query.Language.Sql);
 
+			
+			pm.VerboseMode = true;
+			pm.LogAdapter = new NDO.Logging.ConsoleLogAdapter();
 			IList l = q.Execute();
 			if (l.Count == 0)
 			{
@@ -106,7 +113,10 @@ namespace TestApp
 			else
 			{
 				DataContainer dc = (DataContainer) l[0];
-				Console.WriteLine(dc.BoolVar);
+				Console.WriteLine(dc.DecVar);
+				Console.WriteLine( dc.GuidVar );
+				Console.WriteLine(dc.NDOObjectId.Id.Value);
+				/*
 				Console.WriteLine(dc.Uint64Var);
 				//Console.WriteLine(dc.ByteVar);
 				foreach ( Byte b in dc.ByteArrVar )
@@ -114,6 +124,7 @@ namespace TestApp
                 Console.WriteLine("");
 				Console.WriteLine(dc.GuidVar);
 				//Console.WriteLine(dc.DecVar.ToString());
+				 */
 			}
 			Console.WriteLine("Fertig");
 			
@@ -125,9 +136,10 @@ namespace TestApp
         {
             // This code is used to generate a database while the generator is not available.
             // If the generator is available, NDO will generate the DDL code using the generator.
+            PersistenceManager pm = new PersistenceManager();
+#if maskedout
             IProvider p = NDOProviderFactory.Instance["Sqlite"];
             ISqlGenerator gen = (ISqlGenerator)NDOProviderFactory.Instance.Generators[p.Name];
-            PersistenceManager pm = new PersistenceManager();
             Type t = typeof(DataContainer);
             string myPath = typeof(Class1).Assembly.Location;
             myPath = Path.ChangeExtension(myPath, ".ndo.sql");
@@ -161,7 +173,11 @@ namespace TestApp
             }
             if (sw != Console.Out)
                 sw.Close();
-            pm.BuildDatabase();
+#endif
+			foreach ( string s in pm.BuildDatabase())
+			{
+				Console.WriteLine(s);
+			} 
         }
 	}
 }

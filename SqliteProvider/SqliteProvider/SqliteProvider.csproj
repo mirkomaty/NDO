@@ -148,6 +148,8 @@
   <PropertyGroup>
     <PreBuildEvent>
     </PreBuildEvent>
-    <PostBuildEvent>copy /Y $(TargetPath) ..\..\..</PostBuildEvent>
+    <PostBuildEvent>copy /Y $(TargetPath) ..\..\..
+copy /Y $(TargetPath) "D:\Program Files\NDO 2.1 Enterprise Edition\Provider"
+</PostBuildEvent>
   </PropertyGroup>
 </Project>

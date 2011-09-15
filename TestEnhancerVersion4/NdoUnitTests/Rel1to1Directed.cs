@@ -396,13 +396,13 @@ namespace NdoUnitTests {
 			Mitarbeiter.QueryHelper qh = new Mitarbeiter.QueryHelper();
 			Query q = pm.NewQuery(typeof(Mitarbeiter), qh.meinBuero.oid + Query.Op.Eq + Query.Placeholder(0));
 			q.Parameters.Add(new Query.Parameter(oid.Id[0]));
-			int count = (int) q.ExecuteAggregate(qh.nachname, Query.AggregateType.Count);
-			Assert.That(count > 0, "Count should be > 0");
+			decimal count = (decimal) q.ExecuteAggregate(qh.nachname, Query.AggregateType.Count);
+			Assert.That(count > 0m, "Count should be > 0");
 			m.Zimmer = null;
 			pm.Save();
 			pm.UnloadCache();
-			count = (int) q.ExecuteAggregate(qh.nachname, Query.AggregateType.Count);
-			Assert.AreEqual(0, count, "Count should be 0");
+			count = (decimal) q.ExecuteAggregate(qh.nachname, Query.AggregateType.Count);
+			Assert.AreEqual(0m, count, "Count should be 0");
 		}
 			
 		[Test]
