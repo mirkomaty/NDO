@@ -1,0 +1,381 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<NDOMapping SchemaVersion="1.0">
+  <Connections>
+    <Connection ID="C0" Name="Integrated Security=SSPI;Persist Security Info=False;Initial Catalog=Northwind;Data Source=localhost" Type="SqlServer" />
+  </Connections>
+  <Classes>
+    <Class AssemblyName="Northwind" FullName="Northwind.Category" TableName="Categories" ConnectionId="C0">
+      <Oid>
+        <OidColumn AutoIncremented="True" Name="CategoryID" AllowDbNull="False" />
+      </Oid>
+      <Fields>
+        <Field Name="categoryName">
+          <Column Name="CategoryName" />
+        </Field>
+        <Field Name="description">
+          <Column Name="Description" />
+        </Field>
+        <Field Name="picture">
+          <Column Name="Picture" />
+        </Field>
+      </Fields>
+      <Relations>
+        <Relation FieldName="products" ReferencedTypeName="Northwind.Product" RelationName="">
+          <ForeignKeyColumn Name="CategoryID" />
+        </Relation>
+      </Relations>
+    </Class>
+    <Class AssemblyName="Northwind" FullName="Northwind.Customer" TableName="Customers" ConnectionId="C0">
+      <Oid>
+        <OidColumn FieldName="customerId" AllowDbNull="False" />
+      </Oid>
+      <Fields>
+        <Field Name="address">
+          <Column Name="Address" />
+        </Field>
+        <Field Name="city">
+          <Column Name="City" />
+        </Field>
+        <Field Name="companyName">
+          <Column Name="CompanyName" />
+        </Field>
+        <Field Name="contactName">
+          <Column Name="ContactName" />
+        </Field>
+        <Field Name="contactTitle">
+          <Column Name="ContactTitle" />
+        </Field>
+        <Field Name="country">
+          <Column Name="Country" />
+        </Field>
+        <Field Name="customerId">
+          <Column Name="CustomerId" />
+        </Field>
+        <Field Name="fax">
+          <Column Name="Fax" />
+        </Field>
+        <Field Name="phone">
+          <Column Name="Phone" />
+        </Field>
+        <Field Name="postalCode">
+          <Column Name="PostalCode" />
+        </Field>
+        <Field Name="region">
+          <Column Name="Region" />
+        </Field>
+      </Fields>
+      <Relations>
+        <Relation FieldName="customerDemographics" ReferencedTypeName="Northwind.CustomerDemographics" RelationName="">
+          <ForeignKeyColumn Name="CustomerID" />
+          <MappingTable TableName="CustomerCustomerDemo" ConnectionId="C0">
+            <ForeignKeyColumn Name="CustomerTypeID" />
+          </MappingTable>
+        </Relation>
+        <Relation FieldName="orders" ReferencedTypeName="Northwind.Order" RelationName="">
+          <ForeignKeyColumn Name="CustomerID" />
+        </Relation>
+      </Relations>
+    </Class>
+    <Class AssemblyName="Northwind" FullName="Northwind.CustomerDemographics" TableName="CustomerDemographics" ConnectionId="C0">
+      <Oid>
+        <OidColumn AutoIncremented="True" Name="CustomerTypeID" AllowDbNull="False" />
+      </Oid>
+      <Fields>
+        <Field Name="customerDesc">
+          <Column Name="CustomerDesc" />
+        </Field>
+      </Fields>
+      <Relations>
+        <Relation FieldName="customers" ReferencedTypeName="Northwind.Customer" RelationName="">
+          <ForeignKeyColumn Name="IDCustomerDemographics" />
+          <MappingTable TableName="relCustomerCustomerDemographics" ConnectionId="C0">
+            <ForeignKeyColumn Name="IDCustomer" />
+          </MappingTable>
+        </Relation>
+      </Relations>
+    </Class>
+    <Class AssemblyName="Northwind" FullName="Northwind.Employee" TableName="Employees" ConnectionId="C0">
+      <Oid>
+        <OidColumn AutoIncremented="True" Name="EmployeeID" AllowDbNull="False" />
+      </Oid>
+      <Fields>
+        <Field Name="address">
+          <Column Name="Address" />
+        </Field>
+        <Field Name="birthDate">
+          <Column Name="BirthDate" />
+        </Field>
+        <Field Name="city">
+          <Column Name="City" />
+        </Field>
+        <Field Name="country">
+          <Column Name="Country" />
+        </Field>
+        <Field Name="extension">
+          <Column Name="Extension" />
+        </Field>
+        <Field Name="firstName">
+          <Column Name="FirstName" />
+        </Field>
+        <Field Name="hireDate">
+          <Column Name="HireDate" />
+        </Field>
+        <Field Name="homePhone">
+          <Column Name="HomePhone" />
+        </Field>
+        <Field Name="lastName">
+          <Column Name="LastName" />
+        </Field>
+        <Field Name="notes">
+          <Column Name="Notes" />
+        </Field>
+        <Field Name="photo">
+          <Column Name="Photo" />
+        </Field>
+        <Field Name="photoPath">
+          <Column Name="PhotoPath" />
+        </Field>
+        <Field Name="postalCode">
+          <Column Name="PostalCode" />
+        </Field>
+        <Field Name="region">
+          <Column Name="Region" />
+        </Field>
+        <Field Name="reportsTo">
+          <Column Name="ReportsTo" />
+        </Field>
+        <Field Name="title">
+          <Column Name="Title" />
+        </Field>
+        <Field Name="titleOfCourtesy">
+          <Column Name="TitleOfCourtesy" />
+        </Field>
+      </Fields>
+      <Relations>
+        <Relation FieldName="orders" ReferencedTypeName="Northwind.Order" RelationName="">
+          <ForeignKeyColumn Name="EmployeeID" />
+        </Relation>
+        <Relation FieldName="territories" ReferencedTypeName="Northwind.Territory" RelationName="">
+          <ForeignKeyColumn Name="EmployeeID" />
+          <MappingTable TableName="EmployeeTerritories" ConnectionId="C0">
+            <ForeignKeyColumn Name="TerritoryID" />
+          </MappingTable>
+        </Relation>
+      </Relations>
+    </Class>
+    <Class AssemblyName="Northwind" FullName="Northwind.Order" TableName="Orders" ConnectionId="C0">
+      <Oid>
+        <OidColumn AutoIncremented="True" Name="OrderID" AllowDbNull="False" />
+      </Oid>
+      <Fields>
+        <Field Name="freight">
+          <Column Name="Freight" />
+        </Field>
+        <Field Name="orderDate">
+          <Column Name="OrderDate" />
+        </Field>
+        <Field Name="requiredDate">
+          <Column Name="RequiredDate" />
+        </Field>
+        <Field Name="shipAddress">
+          <Column Name="ShipAddress" />
+        </Field>
+        <Field Name="shipCity">
+          <Column Name="ShipCity" />
+        </Field>
+        <Field Name="shipCountry">
+          <Column Name="ShipCountry" />
+        </Field>
+        <Field Name="shipName">
+          <Column Name="ShipName" />
+        </Field>
+        <Field Name="shipPostalCode">
+          <Column Name="ShipPostalCode" />
+        </Field>
+        <Field Name="shipRegion">
+          <Column Name="ShipRegion" />
+        </Field>
+        <Field Name="shippedDate">
+          <Column Name="ShippedDate" />
+        </Field>
+      </Fields>
+      <Relations>
+        <Relation FieldName="customer" ReferencedTypeName="Northwind.Customer" RelationName="">
+          <ForeignKeyColumn Name="CustomerID" />
+        </Relation>
+        <Relation FieldName="employee" ReferencedTypeName="Northwind.Employee" RelationName="">
+          <ForeignKeyColumn Name="EmployeeID" />
+        </Relation>
+        <Relation FieldName="orderDetails" ReferencedTypeName="Northwind.OrderDetail" RelationName="">
+          <ForeignKeyColumn Name="OrderID" />
+        </Relation>
+        <Relation FieldName="shipper" ReferencedTypeName="Northwind.Shipper" RelationName="">
+          <ForeignKeyColumn Name="ShipVia" />
+        </Relation>
+      </Relations>
+    </Class>
+    <Class AssemblyName="Northwind" FullName="Northwind.OrderDetail" TableName="[Order Details]" ConnectionId="C0">
+      <Oid>
+        <OidColumn RelationName="product" AllowDbNull="False" />
+        <OidColumn RelationName="order" AllowDbNull="False" />
+      </Oid>
+      <Fields>
+        <Field Name="discount">
+          <Column Name="Discount" />
+        </Field>
+        <Field Name="quantity">
+          <Column Name="Quantity" />
+        </Field>
+        <Field Name="unitPrice">
+          <Column Name="UnitPrice" />
+        </Field>
+      </Fields>
+      <Relations>
+        <Relation FieldName="order" ReferencedTypeName="Northwind.Order" RelationName="">
+          <ForeignKeyColumn Name="OrderID" />
+        </Relation>
+        <Relation FieldName="product" ReferencedTypeName="Northwind.Product" RelationName="">
+          <ForeignKeyColumn Name="ProductID" />
+        </Relation>
+      </Relations>
+    </Class>
+    <Class AssemblyName="Northwind" FullName="Northwind.Product" TableName="Products" ConnectionId="C0">
+      <Oid>
+        <OidColumn AutoIncremented="True" Name="ProductID" AllowDbNull="False" />
+      </Oid>
+      <Fields>
+        <Field Name="discontinued">
+          <Column Name="Discontinued" />
+        </Field>
+        <Field Name="productName">
+          <Column Name="ProductName" />
+        </Field>
+        <Field Name="quantityPerUnit">
+          <Column Name="QuantityPerUnit" />
+        </Field>
+        <Field Name="reorderLevel">
+          <Column Name="ReorderLevel" />
+        </Field>
+        <Field Name="unitPrice">
+          <Column Name="UnitPrice" />
+        </Field>
+        <Field Name="unitsInStock">
+          <Column Name="UnitsInStock" />
+        </Field>
+        <Field Name="unitsOnOrder">
+          <Column Name="UnitsOnOrder" />
+        </Field>
+      </Fields>
+      <Relations>
+        <Relation FieldName="category" ReferencedTypeName="Northwind.Category" RelationName="">
+          <ForeignKeyColumn Name="CategoryID" />
+        </Relation>
+        <Relation FieldName="supplier" ReferencedTypeName="Northwind.Supplier" RelationName="">
+          <ForeignKeyColumn Name="SupplierID" />
+        </Relation>
+      </Relations>
+    </Class>
+    <Class AssemblyName="Northwind" FullName="Northwind.Region" TableName="Region" ConnectionId="C0">
+      <Oid>
+        <OidColumn AutoIncremented="True" Name="RegionID" AllowDbNull="False" />
+      </Oid>
+      <Fields>
+        <Field Name="regionDescription">
+          <Column Name="RegionDescription" />
+        </Field>
+      </Fields>
+      <Relations>
+        <Relation FieldName="suppliers" ReferencedTypeName="Northwind.Supplier" RelationName="">
+          <ForeignKeyColumn Name="Region" />
+        </Relation>
+        <Relation FieldName="territories" ReferencedTypeName="Northwind.Territory" RelationName="">
+          <ForeignKeyColumn Name="RegionID" />
+        </Relation>
+      </Relations>
+    </Class>
+    <Class AssemblyName="Northwind" FullName="Northwind.Shipper" TableName="Shippers" ConnectionId="C0">
+      <Oid>
+        <OidColumn AutoIncremented="True" Name="ShipperID" AllowDbNull="False" />
+      </Oid>
+      <Fields>
+        <Field Name="companyName">
+          <Column Name="CompanyName" />
+        </Field>
+        <Field Name="phone">
+          <Column Name="Phone" />
+        </Field>
+      </Fields>
+      <Relations>
+        <Relation FieldName="orders" ReferencedTypeName="Northwind.Order" RelationName="">
+          <ForeignKeyColumn Name="ShipVia" />
+        </Relation>
+      </Relations>
+    </Class>
+    <Class AssemblyName="Northwind" FullName="Northwind.Supplier" TableName="Suppliers" ConnectionId="C0">
+      <Oid>
+        <OidColumn AutoIncremented="True" Name="SupplierID" AllowDbNull="False" />
+      </Oid>
+      <Fields>
+        <Field Name="address">
+          <Column Name="Address" />
+        </Field>
+        <Field Name="city">
+          <Column Name="City" />
+        </Field>
+        <Field Name="companyName">
+          <Column Name="CompanyName" />
+        </Field>
+        <Field Name="contactName">
+          <Column Name="ContactName" />
+        </Field>
+        <Field Name="contactTitle">
+          <Column Name="ContactTitle" />
+        </Field>
+        <Field Name="country">
+          <Column Name="Country" />
+        </Field>
+        <Field Name="fax">
+          <Column Name="Fax" />
+        </Field>
+        <Field Name="homePage">
+          <Column Name="HomePage" />
+        </Field>
+        <Field Name="phone">
+          <Column Name="Phone" />
+        </Field>
+        <Field Name="postalCode">
+          <Column Name="PostalCode" />
+        </Field>
+      </Fields>
+      <Relations>
+        <Relation FieldName="products" ReferencedTypeName="Northwind.Product" RelationName="">
+          <ForeignKeyColumn Name="SupplierID" />
+        </Relation>
+        <Relation FieldName="region" ReferencedTypeName="Northwind.Region" RelationName="">
+          <ForeignKeyColumn Name="Region" />
+        </Relation>
+      </Relations>
+    </Class>
+    <Class AssemblyName="Northwind" FullName="Northwind.Territory" TableName="Territories" ConnectionId="C0">
+      <Oid>
+        <OidColumn AutoIncremented="True" Name="TerritoryID" AllowDbNull="False" />
+      </Oid>
+      <Fields>
+        <Field Name="territoryDescription">
+          <Column Name="TerritoryDescription" />
+        </Field>
+      </Fields>
+      <Relations>
+        <Relation FieldName="employees" ReferencedTypeName="Northwind.Employee" RelationName="">
+          <ForeignKeyColumn Name="IDTerritory" />
+          <MappingTable TableName="relEmployeeTerritory" ConnectionId="C0">
+            <ForeignKeyColumn Name="IDEmployee" />
+          </MappingTable>
+        </Relation>
+        <Relation FieldName="region" ReferencedTypeName="Northwind.Region" RelationName="">
+          <ForeignKeyColumn Name="RegionID" />
+        </Relation>
+      </Relations>
+    </Class>
+  </Classes>
+</NDOMapping>

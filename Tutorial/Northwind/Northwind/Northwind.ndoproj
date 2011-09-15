@@ -1,0 +1,39 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<Enhancer>
+  <Options>
+    <EnableAddIn>True</EnableAddIn>
+    <EnableEnhancer>True</EnableEnhancer>
+    <VerboseMode>False</VerboseMode>
+    <NewMapping>False</NewMapping>
+    <GenerateSQL>False</GenerateSQL>
+    <DefaultConnection>
+    </DefaultConnection>
+    <GenerateChangeEvents>False</GenerateChangeEvents>
+    <UseTimeStamps>False</UseTimeStamps>
+    <Utf8Encoding>True</Utf8Encoding>
+    <SQLScriptLanguage>SqlServer</SQLScriptLanguage>
+    <SchemaVersion>1.0</SchemaVersion>
+    <IncludeTypecodes>False</IncludeTypecodes>
+    <DatabaseOwner>
+    </DatabaseOwner>
+    <GenerateConstraints>False</GenerateConstraints>
+    <DropExistingElements>True</DropExistingElements>
+  </Options>
+  <ProjectDescription>
+    <BinPath>bin\Debug\Northwind.dll</BinPath>
+    <ObjPath>obj\Debug\</ObjPath>
+    <AssemblyName />
+    <Debug>True</Debug>
+    <IsWebProject>False</IsWebProject>
+    <KeyFile>
+    </KeyFile>
+    <References>
+      <Reference AssemblyName="System" AssemblyPath="C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.0\System.dll">
+      </Reference>
+      <Reference AssemblyName="System.Core" AssemblyPath="c:\program files (x86)\reference assemblies\microsoft\framework\.netframework\v4.0\system.core.dll">
+      </Reference>
+      <Reference AssemblyName="mscorlib" AssemblyPath="C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.0\mscorlib.dll">
+      </Reference>
+    </References>
+  </ProjectDescription>
+</Enhancer>
