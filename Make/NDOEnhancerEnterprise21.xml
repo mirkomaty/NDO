@@ -286,9 +286,6 @@
               <Component Id="C__15399D5D38024E76BA971AE1A12A025C" Guid="0359531A-E19F-3C6F-1662-0D9E42D80094">
                 <File Id="_15399D5D38024E76BA971AE1A12A025C" Name="BusinessClasses.ndoproj" Vital="yes" KeyPath="yes" DiskId="1" />
               </Component>
-              <Component Id="C__18F240FE2A714BE3B3BB63A36B780489" Guid="6EF47080-F5DC-886F-8975-4DE0BF004FE3">
-                <File Id="_18F240FE2A714BE3B3BB63A36B780489" Name="BusinessClasses.vbproj.user" Vital="yes" KeyPath="yes" DiskId="1" />
-              </Component>
               <Component Id="C__24C9FE3A0EFB450FBCBCC3270F74856A" Guid="930C3736-6830-402E-A2BF-4074528790D0">
                 <File Id="_24C9FE3A0EFB450FBCBCC3270F74856A" Name="Picture.vb" Vital="yes" KeyPath="yes" DiskId="1" />
               </Component>
@@ -352,9 +349,6 @@
               </Component>
               <Component Id="C__0FF820FD42D14B6FB315D38595A03EFF" Guid="69D1FCF8-8CE8-9C7E-C86E-08A4B7ABE38B">
                 <File Id="_0FF820FD42D14B6FB315D38595A03EFF" Name="TestApp.vbproj" Vital="yes" KeyPath="yes" DiskId="1" />
-              </Component>
-              <Component Id="C__9396ADF8131644D3B18ADCD15E686525" Guid="B54A4541-93E9-64CD-4776-40B4873ADFCA">
-                <File Id="_9396ADF8131644D3B18ADCD15E686525" Name="TestApp.vbproj.user" Vital="yes" KeyPath="yes" DiskId="1" />
               </Component>
               <Component Id="C__A3D1C3B9AF4143D7B00995C7182F396D" Guid="10520CDF-FA5A-B48A-5CA9-715CE99F8CBA">
                 <File Id="_A3D1C3B9AF4143D7B00995C7182F396D" Name="NDOMapping.xml" Vital="yes" KeyPath="yes" DiskId="1" />
@@ -733,9 +727,6 @@
             <Component Id="C__0FAC23F40A2F42CF9EF4E8A879790345" Guid="DD333AA6-749A-A097-947B-E559CCAE86C9">
               <File Id="_0FAC23F40A2F42CF9EF4E8A879790345" Name="NDOMapping.xml" Vital="yes" KeyPath="yes" DiskId="1" />
             </Component>
-            <Component Id="C__33B63EFAE4C6463CBC485940C6C889E5" Guid="82C0D5CA-6494-7C2B-AE1F-C9F5ABC3FE58">
-              <File Id="_33B63EFAE4C6463CBC485940C6C889E5" Name="TestApp.csproj.user" Vital="yes" KeyPath="yes" DiskId="1" />
-            </Component>
             <Component Id="C__3685F176411E43469A947D78D0263E0F" Guid="57FAF407-79B9-3C41-8724-6046C0CE8882">
               <File Id="_3685F176411E43469A947D78D0263E0F" Name="TestApp.csproj" Vital="yes" KeyPath="yes" DiskId="1" />
             </Component>
@@ -967,7 +958,6 @@
       <ComponentRef Id="C__15399D5D38024E76BA971AE1A12A025C" />
       <ComponentRef Id="C__169EDD0B353848CC9D752616C05DC804" />
       <ComponentRef Id="C__175543F2B0CC4E7699AF3EB8E6552C84" />
-      <ComponentRef Id="C__18F240FE2A714BE3B3BB63A36B780489" />
       <ComponentRef Id="C__19DE981F764D452C83E430CA8E3B31E2" />
       <ComponentRef Id="C__1A5E7FFF0B4F48AA97BA7E120BA533DF" />
       <ComponentRef Id="C__1ADD2E7C6B9F46489A9E24164B382D86" />
@@ -984,7 +974,6 @@
       <ComponentRef Id="C__2DDB2BCAFC074791BEEB67ED2B292705" />
       <ComponentRef Id="C__2E5D32D3A1A9427BBF61F1B5CB127F65" />
       <ComponentRef Id="C__2FA45E37B24A45019AA716CC7AA78CD0" />
-      <ComponentRef Id="C__33B63EFAE4C6463CBC485940C6C889E5" />
       <ComponentRef Id="C__343C4B3B8416449DBF0B29E97DC52A4C" />
       <ComponentRef Id="C__3633B017ECA34CADBBF183A32E0EC9E4" />
       <ComponentRef Id="C__3685F176411E43469A947D78D0263E0F" />
@@ -1069,7 +1058,6 @@
       <ComponentRef Id="C__8F5EC6A4E536430898D8EFA052012F92" />
       <ComponentRef Id="C__92FC504F85154D3EBB47F65F567C06D6" />
       <ComponentRef Id="C__9384711A51024DF0B3F9B3F537A2FADA" />
-      <ComponentRef Id="C__9396ADF8131644D3B18ADCD15E686525" />
       <ComponentRef Id="C__93D7A1C2B94D4DAAA02A831D44179CDB" />
       <ComponentRef Id="C__94CD1FF84DBE4AAF85F9DFB658FF6127" />
       <ComponentRef Id="C__97CCF4F5A4C340CCBF65C4FE12EE9B47" />
