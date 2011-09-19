@@ -1,9 +1,28 @@
-Run the UserSetup.msi and enter this directory in it. Copy the Provider DLLs into this directory. 
-After that, NDO finds the providers during development.
+After installation check, if you can find the .AddIn file 
+at the right place:
 
-The UserSetup just creates a Registry Key 
+%ALLUSERSPROFILE%\Microsoft\Microsoft\MSEnvShared\Addins
 
-HKEY_LOCAL_MACHINE\SOFTWARE\HoT - House of Tools Development GmbH\NDO\1.1
+The .addin file should be something like NDOxy.AddIn, 
+where x is the major version and y the minor version of NDO.
 
-This Key contains a value "AddInPath". The value contains the directory, where NDO tries 
-to find the Providers.
+On Windows 7 the ALLUSERSPROFILE variable resolves to 
+C:/ProgramData, where C: is your system drive.
+
+If the file isn't there, copy the .addin file from your 
+installation directory to the Addins folder. 
+Create the directories, if they don't exist.
+
+Edit the .AddIn file. In the <Assembly> section enter 
+the path to the NDOEnhancer.dll, so that it looks like that:
+
+<Assembly>D:\Program Files\NDO 2.1 Dev Edition\NDOEnhancer.dll</Assembly>
+
+The path should be your NDO installation directory.
+
+In order to find the provider path, NDO reads this path, and adds the 
+"Provider" directory to it. In the above example, NDO searches the 
+providers in the following folder:
+
+D:\Program Files\NDO 2.1 Dev Edition\Providers 
+

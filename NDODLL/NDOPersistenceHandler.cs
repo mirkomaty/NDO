@@ -73,10 +73,18 @@ namespace NDO
 		IList columns = new ArrayList();
 		string tableName;
 		bool useTableName = true;
+		bool generateAliasNames = false;
+
+		public bool GenerateAliasNames
+		{
+			get { return this.generateAliasNames; }
+			set { this.generateAliasNames = value; }
+		}
+
 		public bool UseTableName
 		{
-			get { return useTableName; }
-			set { useTableName = value; }
+			get { return this.useTableName; }
+			set { this.useTableName = value; }
 		}
 
 		public ColumnListGenerator(IProvider provider, string tableName)
@@ -104,13 +112,17 @@ namespace NDO
 				for (int i = 0; i < columns.Count; i++)
 				{
 					string f = (string) columns[i];
-					if (useTableName)
+					if (this.useTableName)
 					{
 						result.Append(QualifiedTableName.Get(tableName, p));
 						result.Append('.');
 					}
 					result.Append(p.GetQuotedName(f));
-					//result.Append(p.GetQuotedName((string)columns[i]));
+					if (this.generateAliasNames)
+					{
+						result.Append( " AS " );
+						result.Append( p.GetQuotedName( f ) );
+					}
 					if (i < ende)
 					{
 						result.Append(", ");
@@ -236,6 +248,7 @@ namespace NDO
 		private System.Data.Common.DbDataAdapter dataAdapter;
 		private Class classMapping;
 		private string selectFieldList;
+		private string selectFieldListWithAlias;
 		private string tableName;
 		private string qualifiedTableName;
 		private DataSet ds;
@@ -255,7 +268,8 @@ namespace NDO
 		private Type type;
 		private int guidlength;
 		private string hollowFields;
-        private bool hasGuidOid;
+		private string hollowFieldsWithAlias;
+		private bool hasGuidOid;
 
 		
 		private void GenerateSelectCommand()
@@ -368,8 +382,9 @@ namespace NDO
                     columnListGenerator.Insert(oidColumn.Name);
             }
 			columnListGenerator.UseTableName = true;
-			selectFieldList = columnListGenerator.Result;
-
+			this.selectFieldList = columnListGenerator.Result;
+			columnListGenerator.GenerateAliasNames = true;
+			this.selectFieldListWithAlias = columnListGenerator.Result;
 			string sql;
 			//{0} = TableName: Mitarbeiter			
 			//{1} = FieldList: vorname, nachname
@@ -683,32 +698,25 @@ namespace NDO
                 if (r != null && r.ForeignKeyTypeColumnName != null)
                     generator.Add(r.ForeignKeyTypeColumnName);
             }
+
+#if MaskedOut
             hollowFields = generator.Result;
-
-#if nix
-			if (!this.classMapping.Oid.IsMulti)
-			{
-				this.hollowFields = (this.qualifiedTableName + "." + provider.GetQuotedName(oidColumnName));
-			}
-			else
-			{
-				MultiKeyHandler dkh = new MultiKeyHandler(this.classMapping);
-				ColumnListGenerator generator = new ColumnListGenerator(this.provider, this.classMapping.TableName);
-				for (int i = 0; i <= 1; i++)
-				{
-					generator.Add(dkh.ForeignKeyColumnName(i));
-					if (dkh.ForeignKeyTypeColumnName(i) != null)
-						generator.Add(dkh.ForeignKeyTypeColumnName(i));
-				}
-				hollowFields = generator.Result;
-			}
-#endif
-
 			if (this.timeStampColumn != null)
 				this.hollowFields += ", " + (this.qualifiedTableName + "." + provider.GetQuotedName(this.timeStampColumn));
 
             if (this.typeNameColumn != null)
                 this.hollowFields += ", " + (this.qualifiedTableName + "." + provider.GetQuotedName(this.typeNameColumn.Name));
+#else
+			if ( this.timeStampColumn != null )
+				generator.Add( this.timeStampColumn );
+
+			if ( this.typeNameColumn != null )
+				generator.Add( this.typeNameColumn.Name );
+
+#endif
+			this.hollowFields = generator.Result;
+			generator.GenerateAliasNames = true;
+			this.hollowFieldsWithAlias = generator.Result;
 
 			this.guidlength = provider.GetDefaultLength(typeof(Guid));
             if (this.guidlength == 0)
@@ -1110,23 +1118,17 @@ namespace NDO
 			if (expression.IndexOf(Query.FieldMarker) > -1) // Abfragesprache ist SQL
 			{
 				string fields = hollow ? this.hollowFields : this.selectFieldList;
-				sql = expression.Replace(Query.FieldMarker, fields);
-#if nix
-				Regex regex = new Regex(@"(\s*SELECT)\s+(DISTINCT|)\s*(.+\.\*|\*)");
-				Match match = regex.Match(expression);
-				int selectLen = match.Groups[1].Length;
-				if (match.Success && match.Index == 0)
+				if ( provider.GetType().FullName.IndexOf( "Sqlite" ) > -1 )
 				{
-					string fields = hollow ? this.hollowFields : this.selectFieldList;
-
-					int p = match.Groups[3].Index;
-					int q = p + match.Groups[3].Length;
-
-					sql = expression.Substring(0, p) + fields + expression.Substring(q);
+					// We have to hack around a special behavior of SQLite, generating
+					// new columns with fully specified column names, if the query
+					// is a UNION
+					if ( expression.IndexOf( " UNION ", StringComparison.InvariantCultureIgnoreCase ) > 0 )
+					{
+						fields = hollow ? this.hollowFieldsWithAlias : this.selectFieldListWithAlias;
+					}
 				}
-				else 
-					sql = expression;
-#endif
+				sql = expression.Replace(Query.FieldMarker, fields);
 			}
 			else
 				sql = expression;

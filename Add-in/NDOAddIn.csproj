@@ -9,8 +9,6 @@
     </SccProjectName>
     <SccLocalPath>
     </SccLocalPath>
-    <SccAuxPath>
-    </SccAuxPath>
     <SccProvider>
     </SccProvider>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -19,7 +17,7 @@
     </ApplicationIcon>
     <AssemblyKeyContainerName>
     </AssemblyKeyContainerName>
-    <AssemblyName>NDOEnhancerLight</AssemblyName>
+    <AssemblyName>NDOEnhancer</AssemblyName>
     <AssemblyOriginatorKeyFile>
     </AssemblyOriginatorKeyFile>
     <DefaultClientScript>JScript</DefaultClientScript>
@@ -85,7 +83,7 @@
     <CheckForOverflowUnderflow>false</CheckForOverflowUnderflow>
     <ConfigurationOverrideFile>
     </ConfigurationOverrideFile>
-    <DefineConstants>TRACE;NET20;PRO;ENT;STD;BETA</DefineConstants>
+    <DefineConstants>TRACE;STD;PRO;ENT;NET20;NDO20</DefineConstants>
     <DocumentationFile>
     </DocumentationFile>
     <DebugSymbols>false</DebugSymbols>
@@ -99,66 +97,6 @@
     <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
     <WarningLevel>4</WarningLevel>
     <DebugType>none</DebugType>
-    <ErrorReport>prompt</ErrorReport>
-    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Beta|AnyCPU' ">
-    <OutputPath>bin\Beta\</OutputPath>
-    <DefineConstants>TRACE;NET20;PRO;ENT;STD;BETA;NDO20</DefineConstants>
-    <BaseAddress>285212672</BaseAddress>
-    <Optimize>true</Optimize>
-    <DebugType>
-    </DebugType>
-    <PlatformTarget>AnyCPU</PlatformTarget>
-    <ErrorReport>prompt</ErrorReport>
-    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Community|AnyCPU' ">
-    <OutputPath>bin\Community\</OutputPath>
-    <DefineConstants>NET20;NDO20</DefineConstants>
-    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Enterprise|AnyCPU' ">
-    <OutputPath>bin\Enterprise\</OutputPath>
-    <DefineConstants>TRACE;NET20;PRO;ENT;STD;NDO20</DefineConstants>
-    <BaseAddress>285212672</BaseAddress>
-    <Optimize>true</Optimize>
-    <DebugType>
-    </DebugType>
-    <PlatformTarget>AnyCPU</PlatformTarget>
-    <ErrorReport>prompt</ErrorReport>
-    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Standard|AnyCPU' ">
-    <OutputPath>bin\Standard\</OutputPath>
-    <DefineConstants>TRACE;NET20;STD;NDO20</DefineConstants>
-    <BaseAddress>285212672</BaseAddress>
-    <Optimize>true</Optimize>
-    <DebugType>
-    </DebugType>
-    <PlatformTarget>AnyCPU</PlatformTarget>
-    <ErrorReport>prompt</ErrorReport>
-    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Professional|AnyCPU' ">
-    <OutputPath>bin\Professional\</OutputPath>
-    <DefineConstants>TRACE;NET20;PRO;STD;NDO20</DefineConstants>
-    <BaseAddress>285212672</BaseAddress>
-    <Optimize>true</Optimize>
-    <DebugType>
-    </DebugType>
-    <PlatformTarget>AnyCPU</PlatformTarget>
-    <ErrorReport>prompt</ErrorReport>
-    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Trial|AnyCPU' ">
-    <OutputPath>bin\Trial\</OutputPath>
-    <DefineConstants>TRACE;NET20;PRO;ENT;STD;TRIAL;NDO20</DefineConstants>
-    <BaseAddress>285212672</BaseAddress>
-    <Optimize>true</Optimize>
-    <DebugType>
-    </DebugType>
-    <PlatformTarget>AnyCPU</PlatformTarget>
     <ErrorReport>prompt</ErrorReport>
     <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
@@ -297,32 +235,15 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <BootstrapperPackage Include="Microsoft.Net.Framework.2.0">
-      <Visible>False</Visible>
-      <ProductName>.NET Framework 2.0 %28x86%29</ProductName>
-      <Install>true</Install>
-    </BootstrapperPackage>
-    <BootstrapperPackage Include="Microsoft.Net.Framework.3.0">
-      <Visible>False</Visible>
-      <ProductName>.NET Framework 3.0 %28x86%29</ProductName>
-      <Install>false</Install>
-    </BootstrapperPackage>
-    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5">
-      <Visible>False</Visible>
-      <ProductName>.NET Framework 3.5</ProductName>
-      <Install>false</Install>
-    </BootstrapperPackage>
-  </ItemGroup>
-  <ItemGroup>
     <Folder Include="Resources\" />
   </ItemGroup>
   <ProjectExtensions>
     <VisualStudio>
-      <UserProperties DatabaseOwner="" NDOSQLScriptLanguage="SqlServer" NDOUseTimeStamps="false" NDOGenerateChangeEvents="false" NDOUsePolymorphy="false" NDODefaultConnection="Provider=SQLOLEDB.1;Integrated Security=SSPI;Persist Security Info=False;Initial Catalog=NDOTest;Data Source=NOTEBOOKZERO" NDOTypeListFile="" NDOGenerateSQL="false" NDOMergeSchema="false" NDOMergeMapping="false" NDONewMapping="false" NDOGenerateSchema="false" NDOGenerateMapping="false" NDOEnableEnhancer="false" NDOEnableAddIn="false" />
+      <UserProperties NDOEnableAddIn="false" NDOEnableEnhancer="false" NDOGenerateMapping="false" NDOGenerateSchema="false" NDONewMapping="false" NDOMergeMapping="false" NDOMergeSchema="false" NDOGenerateSQL="false" NDOTypeListFile="" NDODefaultConnection="Provider=SQLOLEDB.1;Integrated Security=SSPI;Persist Security Info=False;Initial Catalog=NDOTest;Data Source=NOTEBOOKZERO" NDOUsePolymorphy="false" NDOGenerateChangeEvents="false" NDOUseTimeStamps="false" NDOSQLScriptLanguage="SqlServer" DatabaseOwner="" />
     </VisualStudio>
   </ProjectExtensions>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
-  <PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PreBuildEvent>
     </PreBuildEvent>
     <PostBuildEvent>copy $(TargetFileName) "D:\Program Files\NDO 2.1 Enterprise Edition\NDOEnhancer.dll"

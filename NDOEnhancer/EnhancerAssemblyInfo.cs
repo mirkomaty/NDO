@@ -62,7 +62,7 @@ using System.Runtime.CompilerServices;
 [assembly: AssemblyVersion("1.2.0.0")]
 #endif
 #if NDO20
-[assembly: AssemblyVersion("2.0.0.0")]
+[assembly: AssemblyVersion("2.1.0.0")]
 #endif
 //
 // Um die Assembly zu signieren, müssen Sie einen Schlüssel angeben. Weitere Informationen 

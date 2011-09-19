@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
 <Wix xmlns="http://schemas.microsoft.com/wix/2006/wi" xmlns:netfx="http://schemas.microsoft.com/wix/NetFxExtension" >
   <Product UpgradeCode="D1C9BBC7-5D68-4240-ABFB-2D705B6DC471" Name="NDO 2.1 Dev Edition" Id="6A1BC4A3-A6B9-4EF1-A881-1AE6923FD320" Version="2.1.0" Manufacturer="Mirko Matytschak" Language="1033">
-    <Package Id="23A3301B-B06F-4CD0-95A6-EDAC27FF3181" Manufacturer="Mirko Matytschak" InstallerVersion="200" Platform ="intel" Languages="1033" Compressed="yes" SummaryCodepage="1252" />
+    <Package Id="23A3301B-B06F-4CD0-95A6-EDAC27FF3181" Manufacturer="Mirko Matytschak" InstallerVersion="200" Languages="1033" Compressed="yes" SummaryCodepage="1252" />
     <Directory Id="TARGETDIR" Name="SourceDir">
       <Component Id="C_file_NDOEnhancer.dll" Guid="7E486264-14EC-F5F2-3DCC-C0D932464E21">
         <File Source="..\Deploy\Enterprise\NDOEnhancer.dll" Id="file_NDOEnhancer.dll" Name="NDOEnhancer.dll" Vital="yes" KeyPath="yes" AssemblyManifest="file_NDOEnhancer.dll" AssemblyApplication="file_NDOEnhancer.dll" Assembly=".net" DiskId="1" />
@@ -9,8 +9,16 @@
       <Component Id="C_file_NDO20.Addin" Guid="138C00B5-4ACE-290E-6884-F7C7808FE5F5">
         <File Source="..\Deploy\Enterprise\NDO21.Addin" Id="file_NDO20.Addin" Name="NDO21.AddIn" Vital="yes" KeyPath="yes" DiskId="1" />
       </Component>
+      <Directory Id="GAC" Name="GAC">
+        <Component Id="C__C2FC061855BB40F187055ED21EDAFC33" Guid="A218BEC0-8C33-97BF-2F22-C45EE53F5502">
+          <File Source="..\Deploy\Enterprise\NDO.dll" Id="_C2FC061855BB40F187055ED21EDAFC33" Name="NDO.dll" Vital="yes" KeyPath="yes" Assembly=".net" DiskId="1" />
+        </Component>
+        <Component Id="C__B21ACC3738E64278A16379A149590F91" Guid="71CEE105-4C31-9AE6-C180-0CB1B67DEE1E">
+          <File Source="..\Deploy\Enterprise\NDOInterfaces.dll" Id="_B21ACC3738E64278A16379A149590F91" Name="NDOInterfaces.dll" Vital="yes" KeyPath="yes" Assembly=".net" DiskId="1" />
+        </Component>
+      </Directory>
       <Component Id="C__2E5D32D3A1A9427BBF61F1B5CB127F65" Guid="3FCF3BA5-772C-AC90-32BA-C0B01CEC6242">
-	    <File Id="_2E5D32D3A1A9427BBF61F1B5CB127F65" Name="NDO.dll" KeyPath="yes" Assembly=".net" AssemblyManifest="_2E5D32D3A1A9427BBF61F1B5CB127F65" AssemblyApplication="_2E5D32D3A1A9427BBF61F1B5CB127F65" DiskId="1" Source="..\Deploy\Enterprise\NDO.dll" />
+  	    <File Id="_2E5D32D3A1A9427BBF61F1B5CB127F65" Name="NDO.dll" Vital="yes" KeyPath="yes" DiskId="1" Source="..\Deploy\Enterprise\NDO.dll" />
       </Component>
       <Component Id="C__578B91E03CDD4D09AC99528AF0D63B44" Guid="15BF03A7-3A67-A12E-8398-278CEECFF81B">
         <File Source="..\Deploy\Enterprise\ClassGenerator.exe" Id="_578B91E03CDD4D09AC99528AF0D63B44" Name="ClassGenerator.exe" Vital="yes" KeyPath="yes" AssemblyManifest="_578B91E03CDD4D09AC99528AF0D63B44" AssemblyApplication="_578B91E03CDD4D09AC99528AF0D63B44" Assembly=".net" DiskId="1" />
@@ -33,7 +41,7 @@
         <File Source="Tutorial-Videos.url" Id="_AF363D81A3AE4FDAADBF4E50A4F5B6DA" Name="Tutorial-Videos.url" Vital="yes" KeyPath="yes" DiskId="1" />
       </Component>
       <Component Id="C__C9D3EAA0A4CE4A39A6D81604E09FC3F5" Guid="B1263EAA-6481-F7A6-93A5-59DB1837CF1F">
-        <File Source="..\Deploy\Enterprise\NDOInterfaces.dll" Id="_C9D3EAA0A4CE4A39A6D81604E09FC3F5" Name="NDOInterfaces.dll" Vital="yes" KeyPath="yes" AssemblyManifest="_C9D3EAA0A4CE4A39A6D81604E09FC3F5" AssemblyApplication="_C9D3EAA0A4CE4A39A6D81604E09FC3F5" Assembly=".net" DiskId="1" />
+        <File Source="..\Deploy\Enterprise\NDOInterfaces.dll" Id="_C9D3EAA0A4CE4A39A6D81604E09FC3F5" Name="NDOInterfaces.dll" Vital="yes" KeyPath="yes" DiskId="1" />
       </Component>
       <Component Id="C__E2155118706E4925BC13754D8147A21A" Guid="5AF93C6C-4FE8-5CB6-96D5-2F67049C5AB3">
         <File Source="..\Deploy\Enterprise\NDOMapping.xsd" Id="_E2155118706E4925BC13754D8147A21A" Name="NDOMapping.xsd" Vital="yes" KeyPath="yes" DiskId="1" />
@@ -48,46 +56,46 @@
         <RemoveFolder Id="_54ED68AD1DF54030A86984D8C95D9BAC" Directory="_340D08D311974DD68616F63FF2389F23" On="uninstall" />
       </Component>
       <Component Id="C__1885AE69A40E4FF68F9DA4C88772D899" Guid="E3330C30-B01A-AC87-1528-C11C08EF8496">
-        <Registry Id="_1885AE69A40E4FF68F9DA4C88772D899" Root="HKCR" Key="CLSID\{D861E693-1993-4C4E-B9A7-5657D7F4F33A}" Action="createKeyAndRemoveKeyOnUninstall" />
+        <RegistryKey Id="_1885AE69A40E4FF68F9DA4C88772D899" Root="HKCR" Key="CLSID\{D861E693-1993-4C4E-B9A7-5657D7F4F33A}" Action="createAndRemoveOnUninstall" />
       </Component>
       <Component Id="C__15AA7A7918A743079C8447E6E387A98B" Guid="659BB3EA-F91E-5EF6-DD7D-A665C2F116E6">
-        <Registry Id="_15AA7A7918A743079C8447E6E387A98B" Root="HKCR" Key="CLSID\{D861E693-1993-4C4E-B9A7-5657D7F4F33A}\ProgId" Action="createKeyAndRemoveKeyOnUninstall" />
+        <RegistryKey Id="_15AA7A7918A743079C8447E6E387A98B" Root="HKCR" Key="CLSID\{D861E693-1993-4C4E-B9A7-5657D7F4F33A}\ProgId" Action="createAndRemoveOnUninstall" />
       </Component>
       <Component Id="C__4A26375EB8E74D7D86BF85B9A6745F67" Guid="5B315AF0-7A18-CCCF-53AD-A2CE5FA175FF">
-        <Registry Id="_4A26375EB8E74D7D86BF85B9A6745F67" Root="HKCR" Key="CLSID\{D861E693-1993-4C4E-B9A7-5657D7F4F33A}\ProgId" Type="string" KeyPath="yes" Value="NDOEnhancer.Connect" />
+        <RegistryValue Id="_4A26375EB8E74D7D86BF85B9A6745F67" Root="HKCR" Key="CLSID\{D861E693-1993-4C4E-B9A7-5657D7F4F33A}\ProgId" Type="string" KeyPath="yes" Value="NDOEnhancer.Connect" />
       </Component>
       <Component Id="C__4E933E52D6094FD681FF327E9372E02C" Guid="4AD45BB9-FE6B-6F37-FEB1-E1EE7BC4647C">
-        <Registry Id="_4E933E52D6094FD681FF327E9372E02C" Root="HKCR" Key="CLSID\{D861E693-1993-4C4E-B9A7-5657D7F4F33A}\InprocServer32" Action="createKeyAndRemoveKeyOnUninstall" />
+        <RegistryKey Id="_4E933E52D6094FD681FF327E9372E02C" Root="HKCR" Key="CLSID\{D861E693-1993-4C4E-B9A7-5657D7F4F33A}\InprocServer32" Action="createAndRemoveOnUninstall" />
       </Component>
       <Component Id="C__8D02AD1331274D2897D5BE8D14378225" Guid="FB0BE266-6114-B5F8-1C95-E567F0F7070E">
-        <Registry Id="_8D02AD1331274D2897D5BE8D14378225" Root="HKCR" Key="CLSID\{D861E693-1993-4C4E-B9A7-5657D7F4F33A}\InprocServer32" Type="string" KeyPath="yes" Value="[TARGETDIR]NDOEnhancer.dll" />
+        <RegistryValue Id="_8D02AD1331274D2897D5BE8D14378225" Root="HKCR" Key="CLSID\{D861E693-1993-4C4E-B9A7-5657D7F4F33A}\InprocServer32" Type="string" KeyPath="yes" Value="[TARGETDIR]NDOEnhancer.dll" />
       </Component>
       <Component Id="C__D3106BCB4C0441AEB596B169C8B07A02" Guid="DDAF6618-6498-0B8E-2C57-25C70A9C11E1">
-        <Registry Id="_D3106BCB4C0441AEB596B169C8B07A02" Root="HKCR" Key="CLSID\{D861E693-1993-4C4E-B9A7-5657D7F4F33A}\InprocServer32" Name="ThreadingModel" Type="string" KeyPath="yes" Value="Apartment" />
+        <RegistryValue Id="_D3106BCB4C0441AEB596B169C8B07A02" Root="HKCR" Key="CLSID\{D861E693-1993-4C4E-B9A7-5657D7F4F33A}\InprocServer32" Name="ThreadingModel" Type="string" KeyPath="yes" Value="Apartment" />
       </Component>
       <Component Id="C__B248DBB24CC94353BA0A34806B8B3CFD" Guid="347ED761-8963-E3BB-FE9D-69A83AD72335">
-        <Registry Id="_B248DBB24CC94353BA0A34806B8B3CFD" Root="HKCR" Key="CLSID\{D861E693-1993-4C4E-B9A7-5657D7F4F33A}" Type="string" KeyPath="yes" Value="NDOEnhancer.Connect" />
+        <RegistryValue Id="_B248DBB24CC94353BA0A34806B8B3CFD" Root="HKCR" Key="CLSID\{D861E693-1993-4C4E-B9A7-5657D7F4F33A}" Type="string" KeyPath="yes" Value="NDOEnhancer.Connect" />
       </Component>
       <Component Id="C__E119208989A14E85990E577C7A3B06F1" Guid="944E909D-D7EB-6FB6-8E78-4B419335EA88">
-        <Registry Id="_E119208989A14E85990E577C7A3B06F1" Root="HKCR" Key="CLSID\{D861E693-1993-4C4E-B9A7-5657D7F4F33A}" Name="Key" Type="string" KeyPath="yes" Value="[LICKEY]" />
+        <RegistryValue Id="_E119208989A14E85990E577C7A3B06F1" Root="HKCR" Key="CLSID\{D861E693-1993-4C4E-B9A7-5657D7F4F33A}" Name="Key" Type="string" KeyPath="yes" Value="[LICKEY]" />
       </Component>
       <Component Id="C__66198B77B0224CBC8081251CD9E8A323" Guid="99A25EE1-B3A7-C20D-4D01-D674ADFA1F9B">
-        <Registry Id="_66198B77B0224CBC8081251CD9E8A323" Root="HKCR" Key="NDOEnhancer.Connect" Action="createKeyAndRemoveKeyOnUninstall" />
+        <RegistryKey Id="_66198B77B0224CBC8081251CD9E8A323" Root="HKCR" Key="NDOEnhancer.Connect" Action="createAndRemoveOnUninstall" />
       </Component>
       <Component Id="C__9BEE0E59AEE94A89B8605348D4D3F09B" Guid="AB5BA4EF-04BF-BC7B-F9CD-26EE4415B5E8">
-        <Registry Id="_9BEE0E59AEE94A89B8605348D4D3F09B" Root="HKCR" Key="NDOEnhancer.Connect\CLSID" Action="createKeyAndRemoveKeyOnUninstall" />
+        <RegistryKey Id="_9BEE0E59AEE94A89B8605348D4D3F09B" Root="HKCR" Key="NDOEnhancer.Connect\CLSID" Action="createAndRemoveOnUninstall" />
       </Component>
       <Component Id="C__CDBC76278E8840EF853C47ED03B9053C" Guid="36D82A22-F11A-7B2D-39EB-01895393C034">
-        <Registry Id="_CDBC76278E8840EF853C47ED03B9053C" Root="HKCR" Key="NDOEnhancer.Connect\CLSID" Type="string" KeyPath="yes" Value="{D861E693-1993-4C4E-B9A7-5657D7F4F33A}" />
+        <RegistryValue Id="_CDBC76278E8840EF853C47ED03B9053C" Root="HKCR" Key="NDOEnhancer.Connect\CLSID" Type="string" KeyPath="yes" Value="{D861E693-1993-4C4E-B9A7-5657D7F4F33A}" />
       </Component>
       <Component Id="C__47214260E8B4460891E4DA8D4E1ACEC7" Guid="C7B9DEC4-058F-4490-2599-E7E6595CBC32">
-        <Registry Id="_47214260E8B4460891E4DA8D4E1ACEC7" Root="HKLM" Key="Software\Microsoft" Action="createKey" />
+        <RegistryKey Id="_47214260E8B4460891E4DA8D4E1ACEC7" Root="HKLM" Key="Software\Microsoft" Action="create" />
       </Component>
       <Component Id="C__DE7AFABFEDFB458BB901276A8017F0F8" Guid="F3DE9686-814D-6327-1AE3-2F22FD4FBEE2">
-        <Registry Id="_DE7AFABFEDFB458BB901276A8017F0F8" Root="HKLM" Key="Software\Microsoft\.NETFramework\AssemblyFolders\NDO" Action="createKeyAndRemoveKeyOnUninstall" />
+        <RegistryKey Id="_DE7AFABFEDFB458BB901276A8017F0F8" Root="HKLM" Key="Software\Microsoft\.NETFramework\AssemblyFolders\NDO" Action="createAndRemoveOnUninstall" />
       </Component>
       <Component Id="C__FA7B504CB7BA430F88F9107EAEDB4280" Guid="7078700C-9C39-1A82-B811-DD031304B53A">
-        <Registry Id="_FA7B504CB7BA430F88F9107EAEDB4280" Root="HKLM" Key="Software\Microsoft\.NETFramework\AssemblyFolders\NDO" Type="string" KeyPath="yes" Value="[TARGETDIR]" />
+        <RegistryValue Id="_FA7B504CB7BA430F88F9107EAEDB4280" Root="HKLM" Key="Software\Microsoft\.NETFramework\AssemblyFolders\NDO" Type="string" KeyPath="yes" Value="[TARGETDIR]" />
       </Component>
       <Directory Id="_A7C2746BC30F4C9A93632055FABC923C" Name="UserSetup">
         <Component Id="C__01A5C536E6474F648EB381D896BEE626" Guid="235BBEE3-D0F5-9B49-15D8-32F910CD57DF">
@@ -142,12 +150,12 @@
         </Component>
         <Directory Id="_8AD1DA0744CB4D1FB5C628DD83DC1C4F" Name="x86">
           <Component Id="C__496555D714864E65B96CA7CA829209FE" Guid="496555D7-1486-4E65-B96C-A7CA829209FE">
-            <File Source="..\SQLiteProvider\x86\System.Data.SQLite.dll" Id="_496555D714864E65B96CA7CA829209FE" Name="SQLiteProvider.dll" Vital="yes" KeyPath="yes" AssemblyManifest="_496555D714864E65B96CA7CA829209FE" AssemblyApplication="_496555D714864E65B96CA7CA829209FE" Assembly=".net" DiskId="1" />
+            <File Source="..\SQLiteProvider\x86\System.Data.SQLite.dll" Id="_496555D714864E65B96CA7CA829209FE" Name="System.Data.SQLite.dll" Vital="yes" KeyPath="yes" AssemblyManifest="_496555D714864E65B96CA7CA829209FE" AssemblyApplication="_496555D714864E65B96CA7CA829209FE" Assembly=".net" DiskId="1" />
           </Component>
         </Directory>
         <Directory Id="_34B5F2945BC3437C94AC0D022FDECB75" Name="x64">
           <Component Id="C__8A7F07DBF9284040A7D8B69082368199" Guid="8A7F07DB-F928-4040-A7D8-B69082368199">
-            <File Source="..\SQLiteProvider\x64\System.Data.SQLite.dll" Id="_8A7F07DBF9284040A7D8B69082368199" Name="SQLiteProvider.dll" Vital="yes" KeyPath="yes" AssemblyManifest="_8A7F07DBF9284040A7D8B69082368199" AssemblyApplication="_8A7F07DBF9284040A7D8B69082368199" Assembly=".net" DiskId="1" />
+            <File Source="..\SQLiteProvider\x64\System.Data.SQLite.dll" Id="_8A7F07DBF9284040A7D8B69082368199" Name="System.Data.SQLite.dll" Vital="yes" KeyPath="yes" AssemblyManifest="_8A7F07DBF9284040A7D8B69082368199" AssemblyApplication="_8A7F07DBF9284040A7D8B69082368199" Assembly=".net" DiskId="1" />
           </Component>
         </Directory>
       </Directory>
@@ -183,6 +191,11 @@
         </Component>
       </Directory>
       <Directory Id="_B4C06AE7D61247B482B3F8E880D91607" Name="Tutorial" FileSource="..\Tutorial">
+        <Component Id="C_SharedFolderComponent01" Guid="B1BF39BC-DA69-4E7A-A59E-0A2F9095C2F9">
+          <CreateFolder Directory="_B4C06AE7D61247B482B3F8E880D91607">
+            <Permission User="Everyone" GenericAll="yes" />
+          </CreateFolder>
+        </Component>
         <Component Id="C__175543F2B0CC4E7699AF3EB8E6552C84" Guid="BE9AFAEA-5932-708A-78CB-84E7525E53C9">
           <File Source="Tutorial-Videos.url" Id="_175543F2B0CC4E7699AF3EB8E6552C84" Name="Tutorial-Videos.url" Vital="yes" KeyPath="yes" DiskId="1" />
           <Shortcut Id="_50DD793C547C4CC5BBBFC08275D0807E" Directory="_340D08D311974DD68616F63FF2389F23" Name="Tutorial-Videos" Target="DefaultFeature" Icon="_9BAA9F65F209A04091E76D.exe" IconIndex="0" Show="normal" WorkingDirectory="_B4C06AE7D61247B482B3F8E880D91607" />
@@ -867,7 +880,7 @@
           </Directory>
         </Directory>
       </Directory>
-      <Directory Id="GAC" SourceName="Global Assembly Cache">
+      <!--Directory Id="GAC" SourceName="Global Assembly Cache">
         <Directory Id="_0A7793F9DE7D460486B95618150BD857" SourceName="NDOInterfaces">
           <Directory Id="_ACDB19C2EAB1439AB2EACF43C67DC1CB" SourceName="2.1.0.0_FF5E453A099B8326">
             <Component Id="C__B21ACC3738E64278A16379A149590F91" Guid="71CEE105-4C31-9AE6-C180-0CB1B67DEE1E">
@@ -882,7 +895,7 @@
             </Component>
           </Directory>
         </Directory>
-      </Directory>
+      </Directory-->
       <Directory Id="_3D72B61774ED46D881FD40880BF901E9" Name="es">
         <Component Id="C__82489A3B19A947109BF2781B2A04B6EC" Guid="93EB4F4E-6AE8-94FB-789A-4272E4C60F91">
           <File Source="..\Deploy\Enterprise\es\NDOEnhancerLight.resources.dll" Id="_82489A3B19A947109BF2781B2A04B6EC" Name="NDOEnhancerLight.resources.dll" Vital="yes" KeyPath="yes" AssemblyManifest="_82489A3B19A947109BF2781B2A04B6EC" AssemblyApplication="_82489A3B19A947109BF2781B2A04B6EC" Assembly=".net" DiskId="1" />
@@ -913,6 +926,9 @@
         <Directory Id="_340D08D311974DD68616F63FF2389F23" Name=".NET Data Objects" />
       </Directory>
     </Directory>
+    <Feature Id="FolderPermissions" Title="InstallerDirectoryPermissions" Level="1">
+      <ComponentRef Id="C_SharedFolderComponent01" />
+    </Feature>
     <Feature Id="DefaultFeature" Level="1" ConfigurableDirectory="TARGETDIR">
       <ComponentRef Id="C__01A5C536E6474F648EB381D896BEE626" />
       <ComponentRef Id="C__0205C95461B04CCF8F1B12C0B3EBA446" />

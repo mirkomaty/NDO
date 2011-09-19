@@ -51,15 +51,8 @@ namespace NDOEnhancer
 	{
 		private static NDOCommandBar instance = null;
 
-#if NDO11
-		public string Name = ".NET Data Objects AddIn, 1.1";
-#endif
-#if NDO12
-		public string Name = ".NET Data Objects AddIn, 1.2";
-#endif
-#if NDO20
-		public string Name = ".NET Data Objects AddIn, 2.0";
-#endif
+		public string Name = ".NET Data Objects AddIn, 2.1";
+		public string OldName = ".NET Data Objects AddIn, 2.0";
 
         _DTE applicationObject;
 		private CommandBar commandBar = null;
@@ -92,7 +85,7 @@ namespace NDOEnhancer
 
                 foreach (CommandBar bar in (CommandBars)applicationObject.CommandBars)
 				{
-					if ( bar.Name.Equals( Name ) )
+					if ( bar.Name.Equals( Name ) || bar.Name.Equals( OldName ) )
 					{
 						if (this.commandBar != null) // remove multiple instances
 						{

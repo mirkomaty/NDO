@@ -3779,7 +3779,7 @@ namespace NDO
 					}
 					catch (Exception ex)
 					{
-						throw new NDOException(89, "Can't construct a connection object: " + ex.Message + ". Check your connection string.");
+						throw new NDOException(89, "Can't construct a connection object: " + ex.Message + ". Check your connection string.", ex);
 					}
 
 					result.Transaction = null;

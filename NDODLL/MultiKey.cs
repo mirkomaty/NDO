@@ -98,7 +98,13 @@ namespace NDO
             int i = 0;
             new OidColumnIterator(cl).Iterate(delegate(OidColumn oidColumn, bool isLastElement)
             {
-                pm_keydata[i++] = row[oidColumn.Name];
+				// If we have a db without native Guid type, the oidColumn system type is Guid and the 
+				// column type is String. We definitely want to have a Guid in the Oid, so we have 
+				// to convert it.
+				object o = row[oidColumn.Name];
+				if ( oidColumn.SystemType == typeof( Guid ) && o is string )
+					o = new Guid( (string) o );
+                pm_keydata[i++] = o;
             });
         }
 

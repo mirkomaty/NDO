@@ -70,15 +70,20 @@ namespace NDO
             new ForeignKeyIterator(mt).Iterate(delegate(ForeignKeyColumn fkColumn, bool isLastElement)
             {
                 object o = row[fkColumn.Name];
-                if (((OidColumn)cl.Oid.OidColumns[i]).SystemType == typeof(Guid) && o is string)
-                    key[i] = new Guid((string)o);
-                else
-                    key[i] = o;
+				AssignKeyValue( cl, key, i, o );
                 i++;
             });
 
             return result;
         }
+
+		private static void AssignKeyValue( Class cl, Key key, int i, object o )
+		{
+			if ( o is string && ((OidColumn) cl.Oid.OidColumns[i]).SystemType == typeof( Guid ) )
+				key[i] = new Guid( (string) o );
+			else
+				key[i] = o;
+		}
 
         public static ObjectId NewObjectId(Type t, Class cl, object keydata)
         {
@@ -91,12 +96,15 @@ namespace NDO
             object[] arr = keydata as object[]; 
             if (arr != null)
             {
-                for (int i = 0; i < arr.Length; i++)
-                    key[i] = arr[i];
+				for ( int i = 0; i < arr.Length; i++ )
+				{
+					object o = arr[i];
+					AssignKeyValue( cl, key, i, o );
+				}
             }
             else
             {
-                key[0] = keydata;
+				AssignKeyValue( cl, key, 0, keydata );
             }
             return result;
         }

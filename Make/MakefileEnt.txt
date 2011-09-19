@@ -7,14 +7,14 @@ EDITION = Enterprise
 DEFINES = /d:STD /d:PRO /d:ENT /d:$(NETVERSION) /d:$(NDOVERSION)
 
 ##### Adjust these directories #######
-PERS_DIR = C:\Projekte\NDO
-VSDIR = C:\Program Files (x86)\Microsoft Visual Studio 10.0
-SVNREV=C:\Program Files\TortoiseSVN\bin\subwcrev.exe
+PERS_DIR = D:\Projekte\NDO
+VSDIR = D:\Programme Win7\Microsoft Visual Studio 2010
+SVNREV=D:\Program Files\TortoiseSVN\bin\subwcrev.exe
 ########################################
 
 MAKE_DIR = $(PERS_DIR)\Make
 NDO_DIR = $(PERS_DIR)\ndodll
-NDO_DLL = $(NDO_DIR)\bin\Release\$(EDITION)\NDO.dll
+NDO_DLL = $(NDO_DIR)\bin\Release\NDO.dll
 NDO_KEY = $(NDO_DIR)\NDO_$(V).SNK
 CL = $(VSDIR)\VC\bin\cl
 MAP_DIR = $(PERS_DIR)\SimpleMappingTool
@@ -24,12 +24,12 @@ DEPLOY_DIR = $(PERS_DIR)\Deploy\$(EDITION)
 INTERF_DLL = $(PERS_DIR)\NDOInterfaces\bin\release\NDOInterfaces.dll
 DEVENVEXE = "$(VSDIR)\Common7\IDE\devenv"
 
-
-all: Hello Ndo Enh Mapping EnhStdAlone Generator ndoc pack
+all: EnhStdAlone pack
+#all: Hello Ndo Enh Mapping EnhStdAlone Generator ndoc installhelper pack
 
 Enh: AddIn
 
-Ndo: interfaces NdoCsc 
+Ndo: interfaces ndodll 
 
 Hello:
 	@echo ------------------ $(EDITION) Build ------------------
@@ -38,18 +38,13 @@ Hello:
 #
 # NDO Dll
 #
-NDO_REFS = /r:System.dll /r:System.Data.dll /r:System.XML.dll /r:System.EnterpriseServices.dll /r:System.Windows.Forms.dll /r:System.Data.OracleClient.dll /r:System.Runtime.Serialization.Formatters.Soap.dll /r:$(INTERF_DLL)
 
-NDO_CSFILES = multikey.cs dependentkey.cs ObjectListManipulator.cs adox\AccessCreateDbDlg.cs adox\ObjectTypeEnum.cs adox\_Catalog.cs ClassHashView.cs InternalException.cs RelationCollector.cs RelationInfo.cs KeyValueList.cs LoadState.cs NDOAddInPath.cs MyRand.cs NDOParameterCollection.cs IPersistenceHandlerBase.cs Logging\ILogAdapter.cs Logging\LogFileAdapter.cs Logging\ConsoleLogAdapter.cs BaseClassReflector.cs _NDOContainerStack.cs NDOOidTypeAttribute.cs NDOTypeDescriptor.cs PropertyTypeHash.cs NumberStrings.cs StorableTypes.cs AssemblyInfo.cs Cache.cs FieldMap.cs IDeleteNotifiable.cs IMappingTableHandler.cs IMetaClass.cs Int32Key.cs IPersistenceCapable.cs IPersistenceHandler.cs IPersistenceManager.cs IPersistenceNotifiable.cs IProvider.cs IStateManager.cs Key.cs Mappings.cs Metaclasses.cs NDOAbstractProvider.cs NDOApplicationPath.cs NDOArrayList.cs NDODataSet.cs NDOMapping.cs NDOMappingTableHandler.cs NDOObjectIdAttribute.cs NDOAccessProvider.cs NDOOracleProvider.cs NDOPersistenceHandler.cs NDOPersistentAttribute.cs NDOPropertyDescriptor.cs NDOProviderFactory.cs NDOQueryHelperBase.cs NDOReadOnlyGenericList.cs NDOReadOnlyArrayList.cs NDORelationAttribute.cs NDOSqlProvider.cs NDOTransientAttribute.cs ObjectHelper.cs ObjectId.cs QueryContextGenerator.cs PersistenceManagerFactory.cs PM.cs QualifiedTableName.cs Query.cs Scanner.cs SelectPartGenerator.cs StateManager.cs TransactionMode.cs TypeManager.cs TypeMapping.cs WherePartGenerator.cs PeTool\COFFHeader.cs PeTool\DataDir.cs PeTool\DOSHeader.cs PeTool\PEHeader.cs PeTool\PeTool.cs PeTool\RVA.cs SqlDumper.cs ObjectLock.cs SchemaGenerator.cs enterprise\ChangeSetContainer.cs enterprise\ISerializationIterator.cs enterprise\ObjectContainer.cs enterprise\ObjectContainerBase.cs enterprise\OfflinePersistenceManager.cs enterprise\OnlineMergeIterator.cs enterprise\RelationChangeRecord.cs enterprise\SerializationFlags.cs enterprise\SerializationIterator.cs enterprise\Serializer.cs IPersistenceManagerBase.cs PersistenceManagerBase.cs ListCloner.cs enterprise\NDODeserializationBinder.cs enterprise\OfflineMergeIterator.cs logging\debuglogadapter.cs INDOTypedList.cs GenericListReflector.cs NDOProperty.cs SqlServerGenerator.cs OracleGenerator.cs AccessGenerator.cs GenericFieldConverter.cs ForeignKeyIterator.cs IEnhancerSupport.cs IFieldInitializer.cs ObjectIdFactory.cs OidColumnIterator.cs Mapping.Attributes\ChildForeignKeyColumnAttribute.cs Mapping.Attributes\ClassAttribute.cs Mapping.Attributes\PropertyAttribute.cs Mapping.Attributes\RelationAttribute.cs Mapping.Attributes\OidColumnAttribute.cs Mapping.Attributes\ForeignKeyColumnAttribute.cs  Mapping.Attributes\ColumnAttribute.cs Xml\XmlHelper.cs
-
-NDO_CSC_CMD = /t:library $(NDO_REFS) $(NDO_CSFILES)
-
-NdoCsc:
+ndodll:
 	@echo NDO DLL
 	@cd $(NDO_DIR)
-	@csc /out:$(NDO_DLL) /doc:bin\release\$(EDITION)\NDO.xml $(NDO_CSC_CMD) /nowarn:1591 $(DEFINES)
+#	@csc /out:$(NDO_DLL) /doc:bin\release\$(EDITION)\NDO.xml $(NDO_CSC_CMD) /nowarn:1591 $(DEFINES)
+	@msbuild /p:Configuration=Release /p:Platform=AnyCPU /t:rebuild ndo.csproj
 	@gacutil /i $(NDO_DLL) /f
-	@sn -T $(NDO_DLL)
 	@cd $(MAKE_DIR)
 
 
@@ -64,7 +59,7 @@ AddIn:
 	@echo VS Add-In $(EDITION)
 	@cd $(ADDIN_DIR)
 	@..\MakeEnhancerDate\bin\Debug\MakeEnhancerDate.exe "$(EnhDateString)" "$(SVNREV)" > EnhDate.cs
-	@msbuild /p:Configuration=$(EDITION) $(ADDIN_DIR)\NDOAddIn.proj
+	@msbuild /p:Configuration=Release /p:Platform=AnyCPU /t:rebuild NDOAddIn.csproj
 #	The resources are identical for all cultures. They differ only in the culture info. Just add your own culture, if it is not in the list.
 	@cd Resources
 	@resgen Resource1.resx Resource1.resources
@@ -73,8 +68,6 @@ AddIn:
 	@Al.exe /v:2.1.0.0 /embed:Resource1.resources /culture:fr /out:$(DEPLOY_DIR)\fr\NDOEnhancerLight.resources.dll
 	@Al.exe /v:2.1.0.0 /embed:Resource1.resources /culture:es /out:$(DEPLOY_DIR)\es\NDOEnhancerLight.resources.dll
 	@Al.exe /v:2.1.0.0 /embed:Resource1.resources /culture:it /out:$(DEPLOY_DIR)\it\NDOEnhancerLight.resources.dll
-	@cd ..\bin/$(EDITION)
-	@move /Y NDOEnhancerLight.dll NDOEnhancer.dll
 	@cd $(MAKE_DIR)
 	
 
@@ -158,9 +151,9 @@ EnhStdAlone:
 	@echo NDO Enhancer
 	@cd $(ENH_DIR)
 	@..\MakeEnhancerDate\bin\Debug\MakeEnhancerDate.exe "$(EnhDateString)" "$(SVNREV)" > EnhDate.cs
-	@csc /out:bin\$(EDITION)\NDOEnhancer.exe $(ENHANCER_CSC_CMD) /r:$(NDO_DLL) $(DEFINES) /d:STANDALONE
+	@msbuild /p:Configuration=Release /p:Platform=AnyCPU /t:rebuild enhancer.csproj
 	@cd ..\EnhancerX86Stub\EnhancerX86Stub
-	@msbuild EnhancerX86Stub.csproj
+	@msbuild /p:Configuration=Release /p:Platform=x86 /t:rebuild EnhancerX86Stub.csproj
 	@cd $(MAKE_DIR)
 
 ndoc:
@@ -176,8 +169,8 @@ ndoc:
 pack:
 	@echo DEPLOY_DIR: $(DEPLOY_DIR) 
 	@copy /Y $(NDO_DLL) $(DEPLOY_DIR)
-	@copy /Y $(ENH_DIR)\bin\$(EDITION)\NDOEnhancer.exe $(DEPLOY_DIR)
-	@copy /Y $(ADDIN_DIR)\bin\$(EDITION)\NDOEnhancer.dll $(DEPLOY_DIR)
+	@copy /Y $(ENH_DIR)\bin\Release\NDOEnhancer.exe $(DEPLOY_DIR)
+	@copy /Y $(ADDIN_DIR)\bin\NDOEnhancer.dll $(DEPLOY_DIR)
 	@copy /Y $(ENH_DIR)\Enhancerparameters.xsd $(DEPLOY_DIR)
 	@copy /Y $(ADDIN_DIR)\NDO21.AddIn $(DEPLOY_DIR)
 	@copy /Y $(MAP_DIR)\bin\release\$(EDITION)\Mapping.exe $(DEPLOY_DIR)
@@ -196,10 +189,11 @@ pack:
 
 interfaces:
 	@cd $(PERS_DIR)\NDOInterfaces
-	@$(DEVENVEXE) NDOInterfaces.sln /rebuild Release /project NDOInterfaces
+	@msbuild /p:Configuration=Release /p:Platform=AnyCPU /t:rebuild NDOInterfaces.csproj
 	@cd $(MAKE_DIR)
 
 Installhelper:
 	@cd $(PERS_DIR)\InstallHelper
-	@$(DEVENVEXE) InstallHelper.sln /rebuild Release
+	@msbuild /p:Configuration=Release /p:Platform=AnyCPU /t:rebuild InstallHelper.csproj
+	@cd $(MAKE_DIR)
 

@@ -50,6 +50,9 @@ namespace NDO
 			string path = Path.Combine( Environment.GetFolderPath( Environment.SpecialFolder.CommonApplicationData ), @"Microsoft\MSEnvShared\Addins\NDO21.Addin" );
 
 			if ( !File.Exists( path ) )
+				path = Path.Combine( Environment.GetFolderPath( Environment.SpecialFolder.CommonApplicationData ), @"Microsoft\MSEnvShared\Addins\NDOUser.Addin" );
+
+			if ( !File.Exists( path ) )
 				return;
 
 			XmlDocument doc = new XmlDocument();
@@ -59,8 +62,15 @@ namespace NDO
 			nsm.AddNamespace( "ae", "http://schemas.microsoft.com/AutomationExtensibility" );
 			XmlNode node = doc.SelectSingleNode( "//ae:Extensibility/ae:Addin/ae:Assembly", nsm );
 			string ndoPath = node.InnerText;
-			ndoPath = Path.GetDirectoryName( ndoPath );
-			instance = Path.Combine( ndoPath, "Provider" );
+			if ( ndoPath.EndsWith( "Provider" ) )
+			{
+				instance = ndoPath;
+			}
+			else
+			{
+				ndoPath = Path.GetDirectoryName( ndoPath );
+				instance = Path.Combine( ndoPath, "Provider" );
+			}
 		}
 		/// <summary>
 		/// Gets the application directory, where NDO is installed.
