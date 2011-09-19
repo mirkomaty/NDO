@@ -1,0 +1,23 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<NDOMapping SchemaVersion="">
+  <Connections>
+    <Connection ID="C0" Name="Substitute this string with your connection string" Type="" />
+  </Connections>
+  <Classes>
+    <Class AssemblyName="BusinessClasses" FullName="BusinessClasses.GenericProperty`1" TableName="GenericProperty" ConnectionId="C0">
+      <Oid>
+        <OidColumn AutoIncremented="True" Name="ID" AllowDbNull="False" />
+      </Oid>
+      <TypeNameColumn Name="NDOTypeName" NetType="System.String,mscorlib" />
+      <Fields>
+        <Field Name="name">
+          <Column Name="Name" />
+        </Field>
+        <Field Name="value">
+          <Column Name="Value" />
+        </Field>
+      </Fields>
+      <Relations />
+    </Class>
+  </Classes>
+</NDOMapping>
