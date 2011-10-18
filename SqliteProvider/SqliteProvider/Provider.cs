@@ -84,6 +84,8 @@ namespace NDO.SqliteProvider
 			if (args.Name.StartsWith("System.Data.SQLite"))
 			{
 				string path = Path.GetDirectoryName( Assembly.GetExecutingAssembly().Location );
+				if ( path.IndexOf( "Temporary ASP.NET Files" ) > -1 )
+					path = Path.Combine( AppDomain.CurrentDomain.BaseDirectory, "bin" );
 				if ( IntPtr.Size == 8 )
 					path = Path.Combine( path, "x64" );
 				else

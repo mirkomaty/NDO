@@ -38,6 +38,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Reflection;
 using System.Collections;
+using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
 using System.Data.SqlClient;
@@ -1040,14 +1041,28 @@ namespace NDO
 		{
 			string sql = commandText;
 			int nr;
-			Regex regex = new Regex(@"\{(\d+)\}");
-			//regex.
+			Regex regex = new Regex(@"\{(tc:|)(\d+)\}");
+			
 			MatchCollection matches = regex.Matches(sql);
+			Dictionary<string, int> tcValues = new Dictionary<string, int>();
 			foreach(Match match in matches)
 			{
-				nr = int.Parse(match.Groups[1].Value) + offset;
+				nr = int.Parse(match.Groups[2].Value) + offset;
+				string tc = match.Groups[1].Value.Replace( ":", string.Empty );
+				if ( tc != string.Empty )
+				{
+					object p = parameters[nr];
+					if (p is Query.Parameter)
+						p = ((Query.Parameter)p).Value;
+					ObjectId oid = p as ObjectId;
+					if ( oid == null )
+						throw new QueryException( 10002, "Parameter " + nr + " was expected to be an ObjectId." );
+					string key = "ptc" + nr;
+					if ( !tcValues.ContainsKey( key ) )
+						tcValues.Add( key, oid.Id.TypeId );
+				}
 				sql = sql.Replace(match.Value, 
-					this.provider.GetNamedParameter("p" + nr.ToString()));
+					this.provider.GetNamedParameter("p" + tc + nr.ToString()));
 			}
 			commandText = sql;
 
@@ -1070,6 +1085,12 @@ namespace NDO
 				Type type = p.Value.GetType();
                 if (type.FullName.StartsWith("System.Nullable`1"))
                     type = type.GetGenericArguments()[0];
+				if ( type == typeof( ObjectId ) )
+				{
+					//TODO: We need support for oid(n) here.
+					type = ( (ObjectId) p.Value ).Id.Value.GetType();
+					p.Value = ( (ObjectId) p.Value ).Id.Value;
+				}
                 if (type.IsEnum)
                 {
                     type = Enum.GetUnderlyingType(type);
@@ -1104,9 +1125,23 @@ namespace NDO
 				par.Value = p.Value;
 				par.Direction = ParameterDirection.Input;					
 			}
+
+			foreach ( string key in tcValues.Keys )
+			{
+				string name = this.provider.GetNamedParameter( key );
+				Type type = typeof(int);
+				IDataParameter par = provider.AddParameter(
+					command,
+					name,
+					this.provider.GetDbType( type ),
+					this.provider.GetDefaultLength( type ),
+					key );
+				par.Value = tcValues[key];
+				par.Direction = ParameterDirection.Input;
+			}
 		}
 
-		public DataTable SqlQuery(string expression, bool hollow, bool dontTouch, IList parameters)
+		public DataTable SqlQuery( string expression, bool hollow, bool dontTouch, IList parameters )
 		{
 			if (expression.Trim().IndexOf(" ") == -1)
 				this.selectCommand.CommandType = CommandType.StoredProcedure;

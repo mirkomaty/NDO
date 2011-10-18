@@ -34,6 +34,7 @@ using System;
 using System.Text.RegularExpressions;
 using System.Diagnostics;
 using System.Collections;
+using System.Collections.Generic;
 using NDO.Mapping;
 using NDOInterfaces;
 
@@ -78,6 +79,8 @@ namespace NDO
 				return string.Empty;
 
 			Hashtable columnNames = new Hashtable();
+			Dictionary<string, string> tcParameters = new Dictionary<string,string>();
+			int tcParameterIndex = 0;
 
 			// Join - Part
 			string join = string.Empty;
@@ -165,8 +168,9 @@ namespace NDO
 								{
 									if (parentClass == resultClass)
 									{
+										string tcCode = provider.GetSqlLiteral(TypeManager.Instance[resultClass.SystemType]);
 										join += QualifiedTableName.Get(rel.MappingTable.TableName, provider) + "." + provider.GetQuotedName(rel.ForeignKeyTypeColumnName) + " = " 
-											+ provider.GetSqlLiteral(TypeManager.Instance[resultClass.SystemType]);
+											+ tcCode;
 									}
 									else
 									{
@@ -190,9 +194,22 @@ namespace NDO
 								// MappingTable.TCOtherClass = x
 								if (rel.MappingTable.ChildForeignKeyTypeColumnName != null)
 								{
-										join += " AND ";
-										join += QualifiedTableName.Get(rel.MappingTable.TableName, provider) + "." + provider.GetQuotedName(rel.MappingTable.ChildForeignKeyTypeColumnName) + " = " 
-											+ provider.GetSqlLiteral(TypeManager.Instance[relClass.SystemType]);
+									string tcCode = provider.GetSqlLiteral( TypeManager.Instance[relClass.SystemType] );
+
+									if ( string.Compare( namearr[i + 1], "oid", true ) == 0 )
+									{
+										if ( tcParameters.ContainsKey( name ) )
+											tcCode = tcParameters[name];
+										else
+										{
+											tcCode = "{tc:" + tcParameterIndex + "}";
+											tcParameters.Add( name, tcCode );
+										}
+										tcParameterIndex++;
+									} 
+									join += " AND ";
+									join += QualifiedTableName.Get(rel.MappingTable.TableName, provider) + "." + provider.GetQuotedName(rel.MappingTable.ChildForeignKeyTypeColumnName) + " = " 
+										+ tcCode;
 								}
 #endif
 							}
@@ -307,32 +324,45 @@ namespace NDO
 			// where bzw. Filter-Part
 
 			string newfilter = "";
+			string lastUsedName = null;
 			foreach (Token t in tokens)
 			{
 				if (t.TokenType == Token.Type.Name)
 				{
 					newfilter += columnNames[t.Value];
+					lastUsedName = (string) t.Value;
 				}
-				else if (t.TokenType == Token.Type.StringLiteral)
+				else if ( t.TokenType == Token.Type.Parameter )
+				{
+					if ( tcParameters.ContainsKey( lastUsedName ) )
+					{
+						string parStr = tcParameters[lastUsedName];
+						string newParStr = "{tc:" + ( (ScParameter) t ).Index + "}";
+						if (parStr != newParStr)
+							join = join.Replace( parStr, newParStr );
+					}
+					newfilter += t.Value;
+				}
+				else if ( t.TokenType == Token.Type.StringLiteral )
 				{
 					string lit = (string) t.Value;
-					if (wildcard != "%")
-						lit = lit.Replace("%", wildcard);
-					if (wildcard != "*")
-						lit = lit.Replace("*", wildcard);
+					if ( wildcard != "%" )
+						lit = lit.Replace( "%", wildcard );
+					if ( wildcard != "*" )
+						lit = lit.Replace( "*", wildcard );
 					newfilter += lit;
 				}
-				else if (t.TokenType == Token.Type.FileTime)
+				else if ( t.TokenType == Token.Type.FileTime )
 				{
 					DateTime dt;
-					dt = DateTime.FromFileTime((long) t.Value);
-					newfilter += provider.GetSqlLiteral(dt);
+					dt = DateTime.FromFileTime( (long) t.Value );
+					newfilter += provider.GetSqlLiteral( dt );
 				}
-				else if (t.TokenType == Token.Type.FileTimeUtc)
+				else if ( t.TokenType == Token.Type.FileTimeUtc )
 				{
 					DateTime dt;
-					dt = DateTime.FromFileTimeUtc((long) t.Value);
-					newfilter += provider.GetSqlLiteral(dt);
+					dt = DateTime.FromFileTimeUtc( (long) t.Value );
+					newfilter += provider.GetSqlLiteral( dt );
 				}
 				else
 					newfilter += t.Value.ToString();

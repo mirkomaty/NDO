@@ -191,8 +191,9 @@ namespace NDO
 
 		internal static StringLiteral Get (string content, ref int position)
 		{
-			Regex re = new Regex(@"'[^']*'|""[^""]*""|#[^#]+#|\{[^\{^\}]+\}", RegexOptions.Singleline);
-			Match match = re.Match(content);
+//			Regex re = new Regex(@"'[^']*'|""[^""]*""|#[^#]+#|\{[^\{^\}]+\}", RegexOptions.Singleline);
+			Regex re = new Regex( @"'[^']*'|""[^""]*""|#[^#]+#", RegexOptions.Singleline );
+			Match match = re.Match( content );
 			if (match.Success && match.Index == 0)
 			{
 				return new StringLiteral(match, content, ref position);
@@ -241,11 +242,19 @@ namespace NDO
 	/// </summary>
 	internal class ScParameter : Token
 	{
+		int index;
+		public int Index
+		{
+			get { return index; }
+		}
 		private ScParameter (Match match, string content, ref int position)
 		{
-			_value = match.ToString();
+			this._value = match.ToString();
+			string strIndex = match.ToString().Replace( "{", string.Empty ).Replace( "}", string.Empty );
+			this.index = -1;
+			int.TryParse( strIndex, out this.index );
 			position += ((string)_value).Length;
-			type = Token.Type.Parameter;
+			this.type = Token.Type.Parameter;
 		}
 
 		internal static ScParameter Get (string content, ref int position)

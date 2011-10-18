@@ -51,8 +51,9 @@ namespace NDO
     /// will be scanned for implementations of the IProvider interface.
     /// Sql Server, Oracle and Access providers are built into the NDO.Dll. 
     /// All other providers reside in additional dlls. NDO finds the NDO provider directory using the
-    /// registry key HKEY_LOCAL_MACHINE\SOFTWARE\HoT - House of Tools Development GmbH\NDO\x.y where 
-    /// x.y is the NDO version, i.e. 2.0.
+	/// file %ALLUSERSPROFILE%\Microsoft\MSEnvShared\Addins\NDOxy.AddIn where 
+    /// xy is the NDO version x.y, i.e. 2.1 -> NDO21.AddIn. See also the documentation in the UserSetup directory
+	/// of your NDO installation.
     /// </remarks>
     public class NDOProviderFactory
     {
@@ -179,6 +180,9 @@ namespace NDO
                 {
                     path = AppDomain.CurrentDomain.BaseDirectory;
                     AddProviderPlugIns(path);
+					string binPath = Path.Combine( path, "bin" );
+					if ( Directory.Exists( binPath ) )
+						AddProviderPlugIns( binPath );
                 }
             }
             catch
