@@ -247,6 +247,27 @@ namespace NDO
                                         if (i < rel.ForeignKeyColumns.Count - 1)
                                             join += " AND ";
                                     }
+									if ( rel.ForeignKeyTypeColumnName != null )
+									{
+										string tcCode = provider.GetSqlLiteral( TypeManager.Instance[relClass.SystemType] );
+
+										if ( string.Compare( namearr[i + 1], "oid", true ) == 0 )
+										{
+											if ( tcParameters.ContainsKey( name ) )
+											{
+												tcCode = tcParameters[name];
+											}
+											else
+											{
+												tcCode = "{tc:" + tcParameterIndex + "}";
+												tcParameters.Add( name, tcCode );
+											}
+											tcParameterIndex++;
+										}
+										join += " AND ";
+										join += QualifiedTableName.Get( parentClass.TableName, provider ) + "." + provider.GetQuotedName( rel.ForeignKeyTypeColumnName ) + " = "
+											+ tcCode;
+									}
                                 }
 							}
 						}
