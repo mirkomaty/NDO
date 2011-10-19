@@ -1,10 +1,10 @@
-Microsoft Visual Studio Solution File, Format Version 9.00
-# Visual Studio 2005
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual Studio 2010
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestApp", "TestApp\TestApp.csproj", "{1BBF17E3-D321-4823-9E96-DDCD1FA54B08}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BusinessClasses", "BusinessClasses\BusinessClasses.csproj", "{96E72A69-AAF6-48F7-8541-57F516414969}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PostGreProvider", "PostgreProvider\PostgreProvider.csproj", "{273BB4ED-74C4-482F-ACE2-E1564ACBA210}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PostgreProvider", "PostgreProvider\PostgreProvider.csproj", "{273BB4ED-74C4-482F-ACE2-E1564ACBA210}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CheckCommandBuilder", "CheckCommandBuilder\CheckCommandBuilder.csproj", "{B3DB4428-BECB-4C23-8F18-B18B448BE24B}"
 EndProject

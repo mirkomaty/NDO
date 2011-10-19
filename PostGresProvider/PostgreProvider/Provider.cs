@@ -421,7 +421,7 @@ namespace NDO.PostGreProvider
 			get { return false; } 
 		}
 
-		public override System.Windows.Forms.DialogResult ShowConnectionDialog(ref string connectionString)
+		public override DialogResult ShowConnectionDialog(ref string connectionString)
 		{
             Npgsql.Design.ConnectionStringEditorForm csef = new Npgsql.Design.ConnectionStringEditorForm(connectionString);
             if (csef.ShowDialog() == DialogResult.Cancel)
