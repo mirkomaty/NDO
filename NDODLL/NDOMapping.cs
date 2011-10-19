@@ -2604,11 +2604,13 @@ namespace NDO.Mapping
             {
                 if (oidType != null)
                     return oidType;
-                object[] attrs = Parent.SystemType.GetCustomAttributes(typeof(NDOOidTypeAttribute), true);
+#pragma warning disable 618
+				object[] attrs = Parent.SystemType.GetCustomAttributes(typeof(NDOOidTypeAttribute), true);
                 if (attrs.Length == 0)
                     return null;
                 return oidType = ((NDOOidTypeAttribute)attrs[0]).OidType;
-            }
+#pragma warning restore 618
+			}
         }
 
 

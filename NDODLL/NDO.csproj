@@ -20,8 +20,7 @@
     <AssemblyKeyContainerName>
     </AssemblyKeyContainerName>
     <AssemblyName>NDO</AssemblyName>
-    <AssemblyOriginatorKeyFile>
-    </AssemblyOriginatorKeyFile>
+    <AssemblyOriginatorKeyFile>ndo_ent.snk</AssemblyOriginatorKeyFile>
     <DefaultClientScript>JScript</DefaultClientScript>
     <DefaultHTMLPageLayout>Grid</DefaultHTMLPageLayout>
     <DefaultTargetSchema>IE50</DefaultTargetSchema>
@@ -84,6 +83,9 @@
     <DebugType>none</DebugType>
     <ErrorReport>prompt</ErrorReport>
     <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup>
+    <SignAssembly>true</SignAssembly>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="NDOInterfaces, Version=2.1.0.0, Culture=neutral, PublicKeyToken=ff5e453a099b8326, processorArchitecture=MSIL" />
@@ -423,9 +425,12 @@
       </SubType>
     </Content>
   </ItemGroup>
+  <ItemGroup>
+    <None Include="ndo_ent.snk" />
+  </ItemGroup>
   <ProjectExtensions>
     <VisualStudio>
-      <UserProperties NDOEnableAddIn="false" NDOEnableEnhancer="false" NDOGenerateMapping="false" NDOGenerateSchema="false" NDONewMapping="false" NDOMergeMapping="false" NDOMergeSchema="false" NDOGenerateSQL="false" />
+      <UserProperties NDOGenerateSQL="false" NDOMergeSchema="false" NDOMergeMapping="false" NDONewMapping="false" NDOGenerateSchema="false" NDOGenerateMapping="false" NDOEnableEnhancer="false" NDOEnableAddIn="false" />
     </VisualStudio>
   </ProjectExtensions>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />

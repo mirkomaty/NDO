@@ -51,6 +51,8 @@ using System.Text.RegularExpressions;
 using NDOInterfaces;
 using System.Windows.Forms;
 
+#pragma warning disable 618
+
 namespace NDO
 {
 	/// <summary>

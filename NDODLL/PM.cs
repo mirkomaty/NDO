@@ -1397,13 +1397,14 @@ namespace NDO
                 LoadData(o);
         }
 
-
+#pragma warning disable 419
 		/// <summary>
 		/// Load the data of a persistent object. This forces the transition of the object state from hollow to persistent.
 		/// </summary>
 		/// <param name="o">The hollow object.</param>
 		/// <remarks>Note, that the relations won't be resolved with this function, with one Exception: 1:1 relations without mapping table will be resolved during LoadData. In all other cases, use <see cref="LoadRelation">LoadRelation</see>, to force resolving a relation.<seealso cref="NDOObjectState"/></remarks>
-		public virtual void LoadData(object o) 
+#pragma warning restore 419
+		public virtual void LoadData( object o ) 
 		{
 			IPersistenceCapable pc = CheckPc(o);
 			Debug.Assert(pc.NDOObjectState == NDOObjectState.Hollow, "Can only load hollow objects");
@@ -1716,9 +1717,7 @@ namespace NDO
 			}
 		}
 
-#if DEBUG
-        int warningCount = 0;
-#endif
+
 		/// <summary>
 		/// Generates a query for related objects without mapping table.
 		/// Note: this function can't be called in polymorphic scenarios,

@@ -47,9 +47,9 @@ using System.Security;
 #else 
 [assembly: AssemblyConfiguration("Release")]
 #endif
-[assembly: AssemblyCompany("HoT - House of Tools Development GmbH")]
+[assembly: AssemblyCompany("Mirko Matytschak")]
 [assembly: AssemblyProduct("")]
-[assembly: AssemblyCopyright("(c) 2002 - 2010, Mirko Matytschak, Miesbach, Germany")]
+[assembly: AssemblyCopyright("(c) 2002 - 2011, Mirko Matytschak, Miesbach, Germany")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 [assembly: CLSCompliant(true)]
@@ -102,27 +102,6 @@ using System.Security;
 //
 //[assembly: AssemblyDelaySign(true)]
 
-#if BETA
-[assembly: AssemblyKeyFile(@"..\..\ndo_beta.snk")]
-#else
-#if TRIAL
-[assembly: AssemblyKeyFile(@"..\..\ndo_trial.snk")]
-#else
-#if !STD
-[assembly: AssemblyKeyFile(@"..\..\ndo_com.snk")]
-#else
-#if !PRO
-[assembly: AssemblyKeyFile(@"..\..\ndo_std.snk")]
-#else
-#if !ENT
-[assembly: AssemblyKeyFile(@"..\..\ndo_pro.snk")]
-#else
-[assembly: AssemblyKeyFile(@"..\..\ndo_ent.snk")]
-#endif
-#endif
-#endif
-#endif
-#endif
 
 [assembly: AssemblyKeyName("")]
 [assembly: AllowPartiallyTrustedCallers]
