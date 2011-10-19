@@ -26,8 +26,8 @@ framework (NDO) to work with a Firebird Database in the backend.
 NDO is available as a free Community Version and in several commercial 
 versions. See www.netdataobjects.com.
 
-This provider is based on the Firebird Provider 2.1.0.0b 
-which you can download at http://firebird.sourceforge.net.
+This provider is based on the Firebird Provider 2.6.5.0 
+which you can download at http://www.firebirdsql.org.
 
 Please read their licence texts before you deploy products on base of 
 Firebird and the provider.
@@ -47,9 +47,9 @@ Der Provider verbindet das kommerzielle NDO-Framework
 NDO ist als freie Community Version und in verschiedenen 
 kostenpflichtigen Versionen erhältlich.
 
-Der Provider basiert auf dem Firebird ADO.NET-Provider 2.1.0.0b, 
+Der Provider basiert auf dem Firebird ADO.NET-Provider 2.6.5.0, 
 den Sie getrennt herunter laden müssen 
-(http://firebird.sourceforge.net). 
+(http://www.firebirdsql.org). 
 
 
 Bitte beachten Sie die entsprechenden Lizenzbestimmungen, bevor 
