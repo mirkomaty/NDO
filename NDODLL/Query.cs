@@ -589,8 +589,12 @@ namespace NDO
 					while ((t = sc.NextToken()) != null)
 					{
 						tokens.Add(t);
-						if (t.TokenType == Token.Type.Name && !names.Contains(t.Value))
-							names.Add(t.Value);
+						if ( t.TokenType == Token.Type.Name && !names.Contains( t.Value ) )
+						{
+							names.Add( t.Value );
+							if ( string.Compare( "oid", t.Value.ToString(), true ) == 0 )
+								this.allowSubclasses = false;
+						}
 						//Console.WriteLine(t.ToString());
 					}
 				}

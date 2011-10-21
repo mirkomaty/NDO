@@ -84,6 +84,14 @@ namespace NDO
 			Eof
 		}
 
+		public bool IsOperator
+		{
+			get
+			{
+				return type >= Type.OpNot && type <= Type.OpIn;
+			}
+		}
+
 
 		protected object _value;
 

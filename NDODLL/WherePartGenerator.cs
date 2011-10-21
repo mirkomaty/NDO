@@ -81,6 +81,7 @@ namespace NDO
 			Hashtable columnNames = new Hashtable();
 			Dictionary<string, string> tcParameters = new Dictionary<string,string>();
 			int tcParameterIndex = 0;
+			int oidParameterIndex = 0;
 
 			// Join - Part
 			string join = string.Empty;
@@ -326,8 +327,11 @@ namespace NDO
                         {
                             if (resultClass.Oid.OidColumns.Count < index + 1)
                                 throw new NDOException(114, "Wrong oid index in query: '" + name + "'. Size of Oid column array of type " + resultClass.FullName + " is " + resultClass.Oid.OidColumns.Count + '.');
-                            OidColumn oidColumn = (OidColumn)resultClass.Oid.OidColumns[index];
-                            columnNames.Add(name, QualifiedTableName.Get(resultClass.TableName, provider) + "." + provider.GetQuotedName(oidColumn.Name));
+							if ( match.Success )
+							{
+								OidColumn oidColumn = (OidColumn) resultClass.Oid.OidColumns[index];
+								columnNames.Add( name, QualifiedTableName.Get( resultClass.TableName, provider ) + "." + provider.GetQuotedName( oidColumn.Name ) );
+							}
                         }
 						
 					}
@@ -346,23 +350,57 @@ namespace NDO
 
 			string newfilter = "";
 			string lastUsedName = null;
+			Token lastOperator = null;
+
 			foreach (Token t in tokens)
 			{
 				if (t.TokenType == Token.Type.Name)
 				{
+					if ( string.Compare( lastUsedName, "oid", true ) == 0 )
+					{
+						newfilter += "oid";
+					}
 					newfilter += columnNames[t.Value];
 					lastUsedName = (string) t.Value;
 				}
+				else if ( t.IsOperator )
+				{
+					if ( string.Compare( lastUsedName, "oid", true ) == 0 )
+						lastOperator = t;
+					else
+						newfilter += t.Value;
+				}
 				else if ( t.TokenType == Token.Type.Parameter )
 				{
+					int parIndex = ( (ScParameter) t ).Index;
 					if ( tcParameters.ContainsKey( lastUsedName ) )
 					{
 						string parStr = tcParameters[lastUsedName];
-						string newParStr = "{tc:" + ( (ScParameter) t ).Index + "}";
-						if (parStr != newParStr)
+						string newParStr = "{tc:" + parIndex + "}";
+						if ( parStr != newParStr )
 							join = join.Replace( parStr, newParStr );
 					}
-					newfilter += t.Value;
+					if ( string.Compare( lastUsedName, "oid", true ) == 0 )
+					{
+						int i = 0;
+						int loopEnd = resultClass.Oid.OidColumns.Count - 1;
+						foreach ( OidColumn oidColumn in resultClass.Oid.OidColumns )
+						{
+							string col = QualifiedTableName.Get( resultClass.TableName, provider ) + "." + provider.GetQuotedName( oidColumn.Name );
+							newfilter += col;
+							newfilter += " ";
+							newfilter += lastOperator.Value;
+							newfilter += " ";
+							newfilter += "{oid:" + parIndex + ":" + i + "}";
+							if ( i < loopEnd )
+								newfilter += " AND ";
+							i++;
+						}
+					}
+					else
+					{
+						newfilter += t.Value;
+					}
 				}
 				else if ( t.TokenType == Token.Type.StringLiteral )
 				{

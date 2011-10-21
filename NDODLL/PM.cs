@@ -1440,16 +1440,18 @@ namespace NDO
         private Query CreateIndependentOidQuery(IPersistenceCapable pc, Class cl)
         {
             ArrayList parameters = new ArrayList();
-			string oql = string.Empty;
-			for ( int i = 0; i < cl.Oid.OidColumns.Count; i++ )
-			{
-				OidColumn oidColumn = (OidColumn) cl.Oid.OidColumns[i];
-				oql += "oid(" + i + ") = {" + i + "}";
-				parameters.Add( pc.NDOObjectId.Id[i] );
-			}
+			string oql = "oid = {0}";
+			//string oql = string.Empty;
+			//for ( int i = 0; i < cl.Oid.OidColumns.Count; i++ )
+			//{
+			//    OidColumn oidColumn = (OidColumn) cl.Oid.OidColumns[i];
+			//    oql += "oid(" + i + ") = {" + i + "}";
+			//    parameters.Add( pc.NDOObjectId.Id[i] );
+			//}
 			Query q = this.NewQuery(pc.GetType(), oql, false);
-			foreach ( object o in parameters )
-				q.Parameters.Add( o );
+			//foreach ( object o in parameters )
+			//    q.Parameters.Add( o );
+			q.Parameters.Add( pc.NDOObjectId );
 			q.AllowSubclasses = false;
             return q;
         }

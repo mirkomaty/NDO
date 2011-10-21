@@ -1044,7 +1044,7 @@ namespace NDO
 			Regex regex = new Regex(@"\{(tc:|)(\d+)\}");
 			
 			MatchCollection matches = regex.Matches(sql);
-			Dictionary<string, int> tcValues = new Dictionary<string, int>();
+			Dictionary<string, object> tcValues = new Dictionary<string, object>();
 			foreach(Match match in matches)
 			{
 				nr = int.Parse(match.Groups[2].Value) + offset;
@@ -1056,7 +1056,7 @@ namespace NDO
 						p = ((Query.Parameter)p).Value;
 					ObjectId oid = p as ObjectId;
 					if ( oid == null )
-						throw new QueryException( 10002, "Parameter " + nr + " was expected to be an ObjectId." );
+						throw new QueryException( 10005, "Parameter {" + nr + "} was expected to be an ObjectId." );
 					string key = "ptc" + nr;
 					if ( !tcValues.ContainsKey( key ) )
 						tcValues.Add( key, oid.Id.TypeId );
@@ -1064,6 +1064,45 @@ namespace NDO
 				sql = sql.Replace(match.Value, 
 					this.provider.GetNamedParameter("p" + tc + nr.ToString()));
 			}
+
+			Dictionary<string, object> oidParameters = new Dictionary<string, object>();
+			regex = new Regex( @"\{oid:(\d+):(\d+)\}" );
+			matches = regex.Matches( sql );
+			if ( matches.Count > 0 )
+			{
+				foreach ( Match match in matches )
+				{
+					int parIndex = int.Parse( match.Groups[1].Value ) + offset; ;
+					int oidIndex = int.Parse( match.Groups[2].Value ) + offset;
+					object p = parameters[parIndex];
+					if ( p is Query.Parameter )
+						p = ( (Query.Parameter) p ).Value;
+					ObjectId oid = p as ObjectId;
+
+					if ( oid == null && oidIndex > 0 )
+						throw new QueryException( 10005, "Parameter {" + parIndex + "} was expected to be an ObjectId." );
+
+					if (oid != null && this.type != oid.Id.Type)
+						throw new QueryException( 10006, "Oid-Parameter {" + parIndex + "} has the wrong type: '" + oid.Id.Type.Name +"'");
+
+
+					string key = null;
+
+					if ( oidIndex > 0 )  // need to add additional parameters for the 2nd, 3rd etc. column
+					{
+						key = "poid" + oidIndex;
+						if ( !tcValues.ContainsKey( key ) )
+							tcValues.Add( key, oid.Id[oidIndex] );
+					}
+					else
+					{
+						key = "p" + parIndex;
+					}
+					sql = sql.Replace( match.Value,
+						this.provider.GetNamedParameter( key ) );
+				}
+			}
+
 			commandText = sql;
 
 			if (parameters == null || parameters.Count == 0)
@@ -1087,7 +1126,6 @@ namespace NDO
                     type = type.GetGenericArguments()[0];
 				if ( type == typeof( ObjectId ) )
 				{
-					//TODO: We need support for oid(n) here.
 					type = ( (ObjectId) p.Value ).Id.Value.GetType();
 					p.Value = ( (ObjectId) p.Value ).Id.Value;
 				}
@@ -1129,7 +1167,8 @@ namespace NDO
 			foreach ( string key in tcValues.Keys )
 			{
 				string name = this.provider.GetNamedParameter( key );
-				Type type = typeof(int);
+				object o = tcValues[key];
+				Type type = o.GetType();
 				IDataParameter par = provider.AddParameter(
 					command,
 					name,
