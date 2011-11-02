@@ -115,6 +115,18 @@ namespace NdoUnitTests
 		}
 
 		[Test]
+		public void CheckBits()
+		{
+			Console.WriteLine( "Running as " + (IntPtr.Size * 8) + " bit app." );
+		}
+
+		[Test]
+		public void CheckPath()
+		{
+			Console.WriteLine( Environment.GetEnvironmentVariable( "PATH" ) );
+		}
+
+		[Test]
 		public void TestObjectCreationSave() 
 		{
 			pm.MakePersistent(m);
@@ -145,7 +157,7 @@ namespace NdoUnitTests
 		public void TestObjectCreationAbortChanged() 
 		{
 			pm.MakePersistent(m);
-			m.Nachname = "M�ller";
+			m.Nachname = "Müller";
 			pm.Abort();
 			Assert.AreEqual("Kocher", m.Nachname, "Nachname wrong");
 		}
