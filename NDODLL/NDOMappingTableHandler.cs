@@ -228,7 +228,10 @@ namespace NDO
                 string parName = "p" + i;
                 sql += provider.GetQuotedName(fkColumn.Name) + " = " + provider.GetNamedParameter(parName);
                 IDataParameter dataParameter = provider.AddParameter(selectCommand, provider.GetNamedParameter(parName), provider.GetDbType(fkColumn.SystemType), fkColumn.Size, parName);
-                dataParameter.Value = oid.Id[i];
+				object o = oid.Id[i];
+				if ( o is Guid && !provider.SupportsNativeGuidType )
+					o = ((Guid) o).ToString();
+                dataParameter.Value = o;
                 dataParameter.Direction = ParameterDirection.Input;
                 if (!isLastEntry)
                     sql += " AND ";
