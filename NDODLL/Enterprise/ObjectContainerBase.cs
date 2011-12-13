@@ -256,24 +256,26 @@ namespace NDO
 		/// </remarks>
 		public virtual string Serialize()
 		{
-			MemoryStream ms = new MemoryStream();
-			Serialize(ms);
-
-			ms.Seek(0, SeekOrigin.Begin);
 			string s;
-			if (!BinaryFormat)
+			using ( MemoryStream ms = new MemoryStream() )
 			{
-				StreamReader sr = new StreamReader(ms);
-				s = sr.ReadToEnd();
-				sr.Close();
+				InnerSerialize( ms );
+
+				ms.Seek( 0, SeekOrigin.Begin );
+				if ( !BinaryFormat )
+				{
+					StreamReader sr = new StreamReader( ms );
+					s = sr.ReadToEnd();
+					sr.Close();
+				}
+				else
+				{
+					byte[] buffer = new byte[ms.Length];
+					ms.Read( buffer, 0, (int) ms.Length );
+					s = Convert.ToBase64String( buffer );
+				}
+				ms.Close();
 			}
-			else
-			{
-				byte[] buffer = new byte[ms.Length];
-				ms.Read(buffer, 0, (int) ms.Length);
-				s = Convert.ToBase64String(buffer);
-			}
-			ms.Close();
 			return s;
 		}
 
@@ -284,12 +286,21 @@ namespace NDO
 		/// <param name="stream">A stream instance.</param>
 		public virtual void Serialize(Stream stream)
 		{
+			InnerSerialize(stream);
+		}
+
+		/// <summary>
+		/// Non overridable version of Serialize
+		/// </summary>
+		/// <param name="stream"></param>
+		void InnerSerialize( Stream stream )
+		{
 			IRemotingFormatter formatter;
-			if (this.BinaryFormat)
+			if ( this.BinaryFormat )
 				formatter = new BinaryFormatter();
 			else
 				formatter = new SoapFormatter();
-			formatter.Serialize(stream, this.objects);
+			formatter.Serialize( stream, this.objects );
 			stream.Flush();
 		}
 

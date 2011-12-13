@@ -230,7 +230,7 @@ namespace NDO
 
 		internal static Name Get (string content, ref int position)
 		{
-			Regex re = new Regex(@"[A-Za-z_öäüßÖÄÜ\[\]][A-Za-z0-9öäüÖÄÜß_\.\[\]]+", RegexOptions.Singleline);
+			Regex re = new Regex(@"[A-Za-z_öäüßÖÄÜ\[\]][A-Za-z0-9öäüÖÄÜß_\.\[\]]*", RegexOptions.Singleline);
 			Match match = re.Match(content);
 			if (match.Success && match.Index == 0)
 			{

@@ -107,11 +107,30 @@ namespace NDO
 		/// </remarks>
 		public override string Serialize()
 		{
-			if (this.iterator == null)
-				this.iterator = new SerializationIterator(this.SerFlags);
-			foreach(IPersistenceCapable pc in this.RootObjects)
-				this.iterator.Iterate(pc);
+			Iterate();
 			return base.Serialize();
+		}
+
+		private void Iterate()
+		{
+			if ( this.iterator == null )
+				this.iterator = new SerializationIterator( this.SerFlags );
+			foreach ( IPersistenceCapable pc in this.RootObjects )
+				this.iterator.Iterate( pc );
+		}
+
+		/// <summary>
+		/// Serializes the objects collection to a string.
+		/// </summary>
+		/// <returns>The serialized string.</returns>
+		/// <remarks>
+		/// If binaryFormat is true, the BinaryFormatter will be used and the results will be
+		/// converted into a Base64 string. Otherwise the SoapFormatter will be used.
+		/// </remarks>
+		public override void Serialize( Stream stream )
+		{
+			Iterate();
+			base.Serialize( stream );
 		}
 
 

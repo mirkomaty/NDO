@@ -1072,7 +1072,7 @@ namespace NDO
 			{
 				foreach ( Match match in matches )
 				{
-					int parIndex = int.Parse( match.Groups[1].Value ) + offset; ;
+					int parIndex = int.Parse( match.Groups[1].Value ) + offset;
 					int oidIndex = int.Parse( match.Groups[2].Value ) + offset;
 					object p = parameters[parIndex];
 					if ( p is Query.Parameter )

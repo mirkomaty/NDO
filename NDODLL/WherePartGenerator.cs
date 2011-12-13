@@ -81,7 +81,6 @@ namespace NDO
 			Hashtable columnNames = new Hashtable();
 			Dictionary<string, string> tcParameters = new Dictionary<string,string>();
 			int tcParameterIndex = 0;
-			int oidParameterIndex = 0;
 
 			// Join - Part
 			string join = string.Empty;
