@@ -400,6 +400,7 @@ namespace NDO
 					{
 						newfilter += t.Value;
 					}
+					lastUsedName = null;
 				}
 				else if ( t.TokenType == Token.Type.StringLiteral )
 				{
