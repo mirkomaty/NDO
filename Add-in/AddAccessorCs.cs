@@ -163,7 +163,7 @@ namespace NDOEnhancer
 							result += bl + "public " + elementTyp + " New" + relationName + "()\n";
 							result += bl + "{\n";
 							result += bl + "\t" + elementTyp + " " + parameter + " = new " + elementTyp + "();\n";
-							result += bl + "\t" + name + ".Add(" + parameter + ");\n";
+							result += bl + "\tthis." + name + ".Add(" + parameter + ");\n";
 							result += bl + "\t" + "return " + parameter + ";\n";
 							result += bl + "}\n";
 						}
@@ -171,13 +171,13 @@ namespace NDOEnhancer
 						{
 							result += bl + "public void Add" + relationName + "(" + elementTyp + " " + parameter + ")\n";
 							result += bl + "{\n";
-							result += bl + "\t" + name + ".Add(" + parameter + ");\n";
+							result += bl + "\tthis." + name + ".Add(" + parameter + ");\n";
 							result += bl + "}\n";
 						}
 						result += bl + "public void Remove" + relationName + "(" + elementTyp + " " + parameter + ")\n";
 						result += bl + "{\n";
-						result += bl + "\tif (" + name + ".Contains(" + parameter + "))\n";
-						result += bl + "\t\t" + name + ".Remove(" + parameter + ");\n";
+						result += bl + "\tif (this." + name + ".Contains(" + parameter + "))\n";
+						result += bl + "\t\tthis." + name + ".Remove(" + parameter + ");\n";
 						result += bl + "}\n";
 						textDoc.Selection.Insert(result, (int)vsInsertFlags.vsInsertFlagsInsertAtStart);
 					}
@@ -209,17 +209,17 @@ namespace NDOEnhancer
 					result += bl + "public " + typeStr + " " + bigname + '\n';
 				result += bl + "{\n";
 				if (isContainer)
-					result += bl + "\tget { return " + readOnly + "(" + name + "); }\n";
+					result += bl + "\tget { return " + readOnly + "(this." + name + "); }\n";
 				else
-					result += bl + "\tget { return " + name + "; }\n";
+					result += bl + "\tget { return this." + name + "; }\n";
 				if (genChangeEvent)  // Set Accessor in mehreren Zeilen
 				{
 					result += bl + "\tset\n";
 					result += bl + "\t{\n";
 					if (isContainer && !isIList)
-						result += bl + "\t\t" + name + " = (" + typeStr + ") value;\n";
+						result += bl + "\t\tthis." + name + " = (" + typeStr + ") value;\n";
 					else
-						result += bl + "\t\t" + name + " = value;\n";
+						result += bl + "\t\tthis." + name + " = value;\n";
 					result += bl + "\t\tif (" + bigname + "Changed != null)\n";
 					result += bl + "\t\t\t" + bigname + "Changed(this, EventArgs.Empty);\n";
 					result += bl +"\t}\n";
@@ -227,9 +227,9 @@ namespace NDOEnhancer
 				else  // Accessor in einer Zeile
 				{
 					if (isContainer && !isIList)
-						result += bl + "\tset { " + name + " = (" + typeStr + ")value; }\n";
+						result += bl + "\tset { this." + name + " = (" + typeStr + ")value; }\n";
 					else
-						result += bl + "\tset { " + name + " = value; }\n";
+						result += bl + "\tset { this." + name + " = value; }\n";
 				}
 
 				result += bl + "}\n";

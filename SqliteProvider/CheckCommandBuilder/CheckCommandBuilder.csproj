@@ -99,7 +99,7 @@
       <Name>System.Data</Name>
     </Reference>
     <Reference Include="System.Data.SQLite">
-      <HintPath>..\SqliteProvider\System.Data.SQLite.dll</HintPath>
+      <HintPath>..\x64\System.Data.SQLite.dll</HintPath>
     </Reference>
     <Reference Include="System.Windows.Forms">
       <Name>System.Windows.Forms</Name>

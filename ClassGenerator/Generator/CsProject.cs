@@ -106,7 +106,7 @@ namespace Generator
 					if ( reference.Include == "NDO" )  // This is a marker
 					{
 						reference.Include = typeof( NDO.PersistenceManager ).Assembly.FullName;
-						reference.HintPath = NDO.NDOApplicationPath.Instance + @"\NDO.dll";
+						//reference.HintPath = NDO.NDOApplicationPath.Instance + @"\NDO.dll";
 						break;
 					}
 				}

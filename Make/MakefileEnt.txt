@@ -7,9 +7,9 @@ EDITION = Enterprise
 DEFINES = /d:STD /d:PRO /d:ENT /d:$(NETVERSION) /d:$(NDOVERSION)
 
 ##### Adjust these directories #######
-PERS_DIR = D:\Projekte\NDO
-VSDIR = D:\Programme Win7\Microsoft Visual Studio 2010
-SVNREV=D:\Program Files\TortoiseSVN\bin\subwcrev.exe
+PERS_DIR = C:\Projekte\NDO
+VSDIR = C:\Program Files (x86)\Microsoft Visual Studio 2010
+SVNREV=C:\Program Files\TortoiseSVN\bin\subwcrev.exe
 ########################################
 
 MAKE_DIR = $(PERS_DIR)\Make
@@ -24,8 +24,7 @@ DEPLOY_DIR = $(PERS_DIR)\Deploy\$(EDITION)
 INTERF_DLL = $(PERS_DIR)\NDOInterfaces\bin\release\NDOInterfaces.dll
 DEVENVEXE = "$(VSDIR)\Common7\IDE\devenv"
 
-all: EnhStdAlone pack
-#all: Hello Ndo Enh Mapping EnhStdAlone Generator ndoc installhelper pack
+all: Hello Ndo Enh Mapping EnhStdAlone Generator ndoc installhelper pack
 
 Enh: AddIn
 

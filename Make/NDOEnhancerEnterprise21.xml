@@ -131,13 +131,13 @@
           <File Source="..\SQLiteProvider\SqliteProvider.zip" Id="_DD10A5C9C2E24F388ACE78C5E6F3B7EC" Name="SqliteProvider.zip" Vital="yes" KeyPath="yes" DiskId="1" />
         </Component>
         <Component Id="C__050C870F5EB74FEF9DF091E02823B7D5" Guid="EF74B706-E285-9635-7A4F-5F5D91D9BB40">
-          <File Source="..\FirebirdNdoProvider20\FirebirdNdoProvider20.zip" Id="_050C870F5EB74FEF9DF091E02823B7D5" Name="FirebirdNdoProvider20.zip" Vital="yes" KeyPath="yes" DiskId="1" />
+          <File Source="..\FirebirdNdoProvider\FirebirdNdoProvider20.zip" Id="_050C870F5EB74FEF9DF091E02823B7D5" Name="FirebirdNdoProvider20.zip" Vital="yes" KeyPath="yes" DiskId="1" />
         </Component>
         <Component Id="C__343C4B3B8416449DBF0B29E97DC52A4C" Guid="E3743E54-1745-D20A-BA15-9EF8E41C4001">
-          <File Source="..\FirebirdNdoProvider20\FirebirdProvider.dll" Id="_343C4B3B8416449DBF0B29E97DC52A4C" Name="FirebirdProvider.dll" Vital="yes" KeyPath="yes" AssemblyManifest="_343C4B3B8416449DBF0B29E97DC52A4C" AssemblyApplication="_343C4B3B8416449DBF0B29E97DC52A4C" Assembly=".net" DiskId="1" />
+          <File Source="..\FirebirdNdoProvider\FirebirdProvider.dll" Id="_343C4B3B8416449DBF0B29E97DC52A4C" Name="FirebirdProvider.dll" Vital="yes" KeyPath="yes" AssemblyManifest="_343C4B3B8416449DBF0B29E97DC52A4C" AssemblyApplication="_343C4B3B8416449DBF0B29E97DC52A4C" Assembly=".net" DiskId="1" />
         </Component>
         <Component Id="C__B1E137B25E6346C480F070762EEB32F5" Guid="9025C0BD-BE5F-7E85-4D95-A3E1719A304C">
-          <File Source="..\FirebirdNdoProvider20\!!! Firebird Provider Readme !!!.txt" Id="_B1E137B25E6346C480F070762EEB32F5" Name="!!! Firebird Provider Readme !!!.txt" Vital="yes" KeyPath="yes" DiskId="1" />
+          <File Source="..\FirebirdNdoProvider\!!! Firebird Provider Readme !!!.txt" Id="_B1E137B25E6346C480F070762EEB32F5" Name="!!! Firebird Provider Readme !!!.txt" Vital="yes" KeyPath="yes" DiskId="1" />
         </Component>
         <Component Id="C__B936DA4BB32743BB954F8AC7B76A8101" Guid="3D87D4FB-47B6-31C4-8A2C-34D597067581">
           <File Source="..\MySqlNdoProvider\MySqlNdoProvider.zip" Id="_B936DA4BB32743BB954F8AC7B76A8101" Name="MySqlNdoProvider.zip" Vital="yes" KeyPath="yes" DiskId="1" />

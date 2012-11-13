@@ -71,6 +71,11 @@ namespace NDOEnhancer
 
 			return ndoRef.Name == this.Name;
 		}
+
+		public override int GetHashCode()
+		{
+			return this.Name.GetHashCode();
+		}
 	}
 
 	/// <summary>

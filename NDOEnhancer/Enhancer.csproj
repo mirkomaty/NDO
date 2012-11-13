@@ -336,6 +336,7 @@
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PreBuildEvent>..\..\..\MakeEnhancerDate\bin\Debug\MakeEnhancerDate.exe "V. 2.1" "C:\Program Files\TortoiseSVN\bin\subwcrev.exe" &gt; $(ProjectDir)\EnhDate.cs</PreBuildEvent>
-    <PostBuildEvent>copy /Y "$(TargetPath)" "D:\Program Files\NDO 2.1 Enterprise Edition\NDOEnhancer.exe"</PostBuildEvent>
+    <PostBuildEvent>copy /Y "$(TargetPath)" "C:\Program Files (x86)\NDO 2.1 Dev Edition\NDOEnhancer.exe"
+</PostBuildEvent>
   </PropertyGroup>
 </Project>
