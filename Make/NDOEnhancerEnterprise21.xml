@@ -889,27 +889,27 @@
       </Directory-->
       <Directory Id="_3D72B61774ED46D881FD40880BF901E9" Name="es">
         <Component Id="C__82489A3B19A947109BF2781B2A04B6EC" Guid="93EB4F4E-6AE8-94FB-789A-4272E4C60F91">
-          <File Source="..\Deploy\Enterprise\es\NDOEnhancerLight.resources.dll" Id="_82489A3B19A947109BF2781B2A04B6EC" Name="NDOEnhancerLight.resources.dll" Vital="yes" KeyPath="yes" AssemblyManifest="_82489A3B19A947109BF2781B2A04B6EC" AssemblyApplication="_82489A3B19A947109BF2781B2A04B6EC" Assembly=".net" DiskId="1" />
+          <File Source="..\Deploy\Enterprise\es\NDOEnhancer.resources.dll" Id="_82489A3B19A947109BF2781B2A04B6EC" Name="NDOEnhancer.resources.dll" Vital="yes" KeyPath="yes" AssemblyManifest="_82489A3B19A947109BF2781B2A04B6EC" AssemblyApplication="_82489A3B19A947109BF2781B2A04B6EC" Assembly=".net" DiskId="1" />
         </Component>
       </Directory>
       <Directory Id="_A598B4ED0A5246CCB4F4BB9D782A0F5F" Name="de">
         <Component Id="C__AD43407E9E294EA7BD298E3B214CA248" Guid="28B3460D-AD3E-5D32-6311-2BF8046E548B">
-          <File Source="..\Deploy\Enterprise\de\NDOEnhancerLight.resources.dll" Id="_AD43407E9E294EA7BD298E3B214CA248" Name="NDOEnhancerLight.resources.dll" Vital="yes" KeyPath="yes" AssemblyManifest="_AD43407E9E294EA7BD298E3B214CA248" AssemblyApplication="_AD43407E9E294EA7BD298E3B214CA248" Assembly=".net" DiskId="1" />
+          <File Source="..\Deploy\Enterprise\de\NDOEnhancer.resources.dll" Id="_AD43407E9E294EA7BD298E3B214CA248" Name="NDOEnhancer.resources.dll" Vital="yes" KeyPath="yes" AssemblyManifest="_AD43407E9E294EA7BD298E3B214CA248" AssemblyApplication="_AD43407E9E294EA7BD298E3B214CA248" Assembly=".net" DiskId="1" />
         </Component>
       </Directory>
       <Directory Id="_7CEC1CE1EFBC4A7FB204E13D04B3DC12" Name="en">
         <Component Id="C__EAC8D43FC62F4604AAC95C0BD322EB9B" Guid="5EFF8BBF-80B0-4214-68AD-40705D80A8DC">
-          <File Source="..\Deploy\Enterprise\en\NDOEnhancerLight.resources.dll" Id="_EAC8D43FC62F4604AAC95C0BD322EB9B" Name="NDOEnhancerLight.resources.dll" Vital="yes" KeyPath="yes" AssemblyManifest="_EAC8D43FC62F4604AAC95C0BD322EB9B" AssemblyApplication="_EAC8D43FC62F4604AAC95C0BD322EB9B" Assembly=".net" DiskId="1" />
+          <File Source="..\Deploy\Enterprise\en\NDOEnhancer.resources.dll" Id="_EAC8D43FC62F4604AAC95C0BD322EB9B" Name="NDOEnhancer.resources.dll" Vital="yes" KeyPath="yes" AssemblyManifest="_EAC8D43FC62F4604AAC95C0BD322EB9B" AssemblyApplication="_EAC8D43FC62F4604AAC95C0BD322EB9B" Assembly=".net" DiskId="1" />
         </Component>
       </Directory>
       <Directory Id="_A598B4ED0A5246CCB4F4BB9D782A0F5E" Name="fr">
         <Component Id="C__EAC8D43FC62F4604AAC95C0BD322EB9C" Guid="FB24C772-FAAB-F9B4-C4EE-7B5522295E6F">
-          <File Source="..\Deploy\Enterprise\fr\NDOEnhancerLight.resources.dll" Id="_EAC8D43FC62F4604AAC95C0BD322EB9C" Name="NDOEnhancerLight.resources.dll" Vital="yes" KeyPath="yes" AssemblyManifest="_EAC8D43FC62F4604AAC95C0BD322EB9C" AssemblyApplication="_EAC8D43FC62F4604AAC95C0BD322EB9C" Assembly=".net" DiskId="1" />
+          <File Source="..\Deploy\Enterprise\fr\NDOEnhancer.resources.dll" Id="_EAC8D43FC62F4604AAC95C0BD322EB9C" Name="NDOEnhancer.resources.dll" Vital="yes" KeyPath="yes" AssemblyManifest="_EAC8D43FC62F4604AAC95C0BD322EB9C" AssemblyApplication="_EAC8D43FC62F4604AAC95C0BD322EB9C" Assembly=".net" DiskId="1" />
         </Component>
       </Directory>
       <Directory Id="_FE58872377054D5D9D1E2E82A61417BA" Name="it">
         <Component Id="C__F040D7E03DF14580B57B73D4EC45DB0F" Guid="C1A1779F-6D6D-6035-E3AC-666C0CA6666C">
-          <File Source="..\Deploy\Enterprise\it\NDOEnhancerLight.resources.dll" Id="_F040D7E03DF14580B57B73D4EC45DB0F" Name="NDOEnhancerLight.resources.dll" Vital="yes" KeyPath="yes" AssemblyManifest="_F040D7E03DF14580B57B73D4EC45DB0F" AssemblyApplication="_F040D7E03DF14580B57B73D4EC45DB0F" Assembly=".net" DiskId="1" />
+          <File Source="..\Deploy\Enterprise\it\NDOEnhancer.resources.dll" Id="_F040D7E03DF14580B57B73D4EC45DB0F" Name="NDOEnhancer.resources.dll" Vital="yes" KeyPath="yes" AssemblyManifest="_F040D7E03DF14580B57B73D4EC45DB0F" AssemblyApplication="_F040D7E03DF14580B57B73D4EC45DB0F" Assembly=".net" DiskId="1" />
         </Component>
       </Directory>
       <Directory Id="DesktopFolder" SourceName="Desktop des Benutzers" />

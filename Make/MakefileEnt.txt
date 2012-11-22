@@ -62,11 +62,11 @@ AddIn:
 #	The resources are identical for all cultures. They differ only in the culture info. Just add your own culture, if it is not in the list.
 	@cd Resources
 	@resgen Resource1.resx Resource1.resources
-	@Al.exe /v:2.1.0.0 /embed:Resource1.resources /culture:en /out:$(DEPLOY_DIR)\en\NDOEnhancerLight.resources.dll
-	@Al.exe /v:2.1.0.0 /embed:Resource1.resources /culture:de /out:$(DEPLOY_DIR)\de\NDOEnhancerLight.resources.dll
-	@Al.exe /v:2.1.0.0 /embed:Resource1.resources /culture:fr /out:$(DEPLOY_DIR)\fr\NDOEnhancerLight.resources.dll
-	@Al.exe /v:2.1.0.0 /embed:Resource1.resources /culture:es /out:$(DEPLOY_DIR)\es\NDOEnhancerLight.resources.dll
-	@Al.exe /v:2.1.0.0 /embed:Resource1.resources /culture:it /out:$(DEPLOY_DIR)\it\NDOEnhancerLight.resources.dll
+	@Al.exe /v:2.1.0.0 /embed:Resource1.resources /culture:en /out:$(DEPLOY_DIR)\en\NDOEnhancer.resources.dll
+	@Al.exe /v:2.1.0.0 /embed:Resource1.resources /culture:de /out:$(DEPLOY_DIR)\de\NDOEnhancer.resources.dll
+	@Al.exe /v:2.1.0.0 /embed:Resource1.resources /culture:fr /out:$(DEPLOY_DIR)\fr\NDOEnhancer.resources.dll
+	@Al.exe /v:2.1.0.0 /embed:Resource1.resources /culture:es /out:$(DEPLOY_DIR)\es\NDOEnhancer.resources.dll
+	@Al.exe /v:2.1.0.0 /embed:Resource1.resources /culture:it /out:$(DEPLOY_DIR)\it\NDOEnhancer.resources.dll
 	@cd $(MAKE_DIR)
 	
 
