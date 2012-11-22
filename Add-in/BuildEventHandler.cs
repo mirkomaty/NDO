@@ -260,11 +260,12 @@ namespace NDOEnhancer
                 CheckProjectDescription(options, projectDescription, projFileName);
 
 				string targetFramework = projectDescription.TargetFramework;
-				if ( !string.IsNullOrEmpty( targetFramework ) && targetFramework != ".NETFramework,Version=v4.0" )
+				if ( !string.IsNullOrEmpty( targetFramework ) && !targetFramework.StartsWith( ".NETFramework,Version=v4" ) )
 				{
 					messages.ShowError( "Project " + project.Name + " has been built with " + targetFramework + ". NDO requires .NETFramework 4.0 full profile. You need to reconfigure your project." );
+					messages.WriteInsertedLine( targetFramework );
 					project.DTE.ExecuteCommand( "Build.Cancel", "" );
-					messages.ActivateErrorList(); 
+					messages.ActivateErrorList();
 					return;
 				}
 
