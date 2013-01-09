@@ -56,53 +56,26 @@ namespace NDOEnhancer
         }
 
 
+		string GetILDasmPath()
+		{
+			string path = Path.Combine( Environment.GetFolderPath( Environment.SpecialFolder.ProgramFilesX86 ), @"Microsoft SDKs\Windows\v8.0A\Bin\NETFX 4.0 Tools" );
+			if ( Directory.Exists( path ) )
+				return path ;
+
+			path = Path.Combine( Environment.GetFolderPath( Environment.SpecialFolder.ProgramFilesX86 ), @"Microsoft SDKs\Windows\v7.0A\Bin\NETFX 4.0 Tools" );
+			if ( Directory.Exists( path ) )
+				return path ;
+
+			return string.Empty;
+		}
+
 		public Dasm(MessageAdapter messages, bool verboseMode)
 		{
 			this.messages = messages;
             this.verboseMode = verboseMode;
 
-#if NET20
-            RegistryKey sdkKey = Registry.LocalMachine.OpenSubKey(@"SOFTWARE\Microsoft\Microsoft SDKs\.NETFramework\v2.0");
-            if (sdkKey != null)
-            {
-                string installDir = (string) sdkKey.GetValue("InstallationFolder");
-                if (installDir != null)
-                {
-                    ilDasmPath = Path.Combine(installDir, @"bin\ildasm.exe");
-                }
-                CheckVersion("SDKRegistry");
-            }
-            if (!File.Exists(ilDasmPath))
-            {
-#endif
-			RegistryKey vsKey = Registry.ClassesRoot.OpenSubKey(@"VisualStudio.Solution\CLSID");
-			if (vsKey != null)
-			{
-				string vsClsid = (string) vsKey.GetValue("");
-				if (vsClsid != null)
-				{
-					RegistryKey dasmKey = Registry.ClassesRoot.OpenSubKey(@"CLSID\" + vsClsid + @"\LocalServer32");
-
-					if (dasmKey != null)
-					{
-						ilDasmPath = (string)dasmKey.GetValue(null);
-						ilDasmPath = ilDasmPath.Replace("\"", string.Empty);
-						ilDasmPath = Path.GetDirectoryName(ilDasmPath);
-						ilDasmPath = Directory.GetParent(ilDasmPath).ToString();
-						ilDasmPath = Directory.GetParent(ilDasmPath).ToString();
-#if NET11
-						ilDasmPath = Path.Combine(ilDasmPath, @"SDK\v1.1\Bin");
-#else
-                        ilDasmPath = Path.Combine(ilDasmPath, @"SDK\v2.0\Bin");
-#endif
-						ilDasmPath = Path.Combine(ilDasmPath, "ILDasm.exe");
-                        CheckVersion("VSClsId");
-					}
-				}
-			}
-#if NET20
-            }// !File.Exists
-#endif
+			this.ilDasmPath = Path.Combine( GetILDasmPath(), "ildasm.exe" );
+			CheckVersion( "GetFolderPath" );
 
 			//----Path
 			if (!File.Exists(ilDasmPath))
@@ -129,7 +102,7 @@ namespace NDOEnhancer
 
 			if (!File.Exists(ilDasmPath))
 			{
-				throw new Exception("Path for ILDasm not found; set PATH environment variable");
+				throw new Exception("Path for ILDasm not found. Add the path to ildasm.exe to the PATH environment variable.");
 			}
 
 		}

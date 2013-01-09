@@ -1,6 +1,6 @@
 //
-// Copyright (C) 2002-2008 HoT - House of Tools Development GmbH 
-// (www.netdataobjects.com)
+// Copyright (C) 2002-2013 Mirko Matytschak 
+// (www.netdataobjects.de)
 //
 // Author: Mirko Matytschak
 //
@@ -34,6 +34,7 @@ using System;
 using System.Diagnostics;
 using System.IO;
 using Microsoft.Win32;
+using System.Globalization;
 
 namespace NDOEnhancer
 {
@@ -52,22 +53,39 @@ namespace NDOEnhancer
                 FileVersionInfo fvi = FileVersionInfo.GetVersionInfo(ilAsmPath);
                 if (string.Compare(fvi.CompanyName, "Microsoft Corporation", true) != 0)
                 {
-                    messages.WriteLine("Wrong ILAsm version in file: " + ilAsmPath + ". CompanyName='" + fvi.CompanyName + "'; Version='" + fvi.FileVersion + "' Method used='" + method + "'. Trying to find ILDasm with other methods.");
+                    messages.WriteLine("Wrong ILAsm version in file: " + ilAsmPath + ". CompanyName='" + fvi.CompanyName + "'; Version='" + fvi.FileVersion + "' Method used='" + method + "'. Trying to find ILAsm with other methods.");
                     ilAsmPath = string.Empty;
                 }
             }
         }
 
+		string GetIlAsmPath()
+		{
+			string path = Path.Combine( Environment.GetFolderPath( Environment.SpecialFolder.Windows ), @"Microsoft.NET\Framework" );
+			foreach ( string dir in Directory.GetDirectories( path ) )
+			{
+				if ( Path.GetFileName( dir ).StartsWith( "v4.0", true, CultureInfo.InvariantCulture ) )
+				{
+					return dir;
+				}
+			}
+
+			return string.Empty;
+		}
 
 		public Asm(MessageAdapter messages, bool verboseMode) : base(verboseMode)
 		{
             this.messages = messages;
 
-            ilAsmPath = typeof(string).Assembly.Location;
-			ilAsmPath = Path.GetDirectoryName(ilAsmPath) + "\\ILAsm.exe";
+            this.ilAsmPath = typeof(string).Assembly.Location;
+			this.ilAsmPath = Path.Combine( Path.GetDirectoryName( ilAsmPath ), "ilasm.exe" );
             CheckVersion("AssemblyLocation");
-			
-			if (!File.Exists(ilAsmPath))
+			if ( !File.Exists( this.ilAsmPath ) )
+			{
+				this.ilAsmPath = Path.Combine( GetIlAsmPath(), "ilasm.exe" );
+				// Don't need a version check here.
+			}
+			if (!File.Exists(this.ilAsmPath))
 			{
                 string pathVar = Environment.GetEnvironmentVariable("PATH");
                 string[] thePaths = pathVar.Split(';');
@@ -78,7 +96,7 @@ namespace NDOEnhancer
                 }
                 foreach (string p in thePaths)
 				{
-					string pn = p + "ILAsm.exe";
+					string pn = p + "ilasm.exe";
 					if (File.Exists(pn))
 					{
 						ilAsmPath = pn;
@@ -89,7 +107,7 @@ namespace NDOEnhancer
 			}
 			if (!File.Exists(ilAsmPath))
 			{
-				throw new Exception("Path for ILAsm not found.\n  Set the PATH environment variable.");
+				throw new Exception("Path for ILAsm not found.\n  Add the path to ilasm.exe to the PATH environment variable.");
 			}
 		}
 
@@ -133,16 +151,6 @@ namespace NDOEnhancer
 					errorMessage += '\n';
 				errorMessage += Stdout.Substring(p + 7);
 			}
-//			p = 0;
-//			int q; 
-//			while ((q = stdout.IndexOf("error --", p)) > -1)
-//			{
-//				int r = stdout.IndexOf('\n', q);
-//				if (r == -1)
-//					r = stdout.Length - 1;
-//				errorMessage += stdout.Substring(q, r - 1 + 1);
-//				p = q;
-//			}
 			if (errorMessage != string.Empty)
 				throw new Exception("ILAsm: " + errorMessage);
 		}

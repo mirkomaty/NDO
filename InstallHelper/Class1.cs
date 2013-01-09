@@ -54,16 +54,12 @@ namespace InstallHelper
 		/// Required designer variable.
 		/// </summary>
 		private Container		components = null;
-        string path;
-        string docPath;
-        string hxregPath;
-        const string addInFileName = "NDO21.AddIn";
+        string installPath;
+        string[] addInFileNames = {"NDO21-VS2010.AddIn", "NDO21-VS2012.AddIn"};
 
 		public CustomizeInstaller()
 		{
-            path = Path.GetDirectoryName(this.GetType().Assembly.Location);
-            docPath = Path.Combine(path, "doc");
-            hxregPath = "\"" + Path.Combine(docPath, "InnovaHxReg.exe") + "\"";
+            this.installPath = Path.GetDirectoryName(this.GetType().Assembly.Location);
             // This call is required by the Designer.
 			InitializeComponent();
 		}
@@ -92,89 +88,44 @@ namespace InstallHelper
 			}
 		}
 
-/*
-		string GetVSVersion()
-		{
-            try
-            {
-                RegistryKey regKey = Registry.ClassesRoot.OpenSubKey(@"VisualStudio.DTE\CurVer");
-                string vsCurVersion = (string) regKey.GetValue("");
-                Regex regex = new Regex(@"VisualStudio\.DTE\.(\d+\.\d+)");
-                Match match = regex.Match(vsCurVersion);
-                if (!match.Success)
-                    Log("Wrong vsCurVersion format: " + vsCurVersion);
-                else
-                    return match.Groups[1].Value;
-            }
-            catch(Exception ex)
-            {
-                Log("GetVSVersion: " + ex.Message);
-            }
-            return "10.0";  // try to somehow accomplish the 
-
-            //Type t = Type.GetTypeFromProgID("VisualStudio.DTE");
-            //object o = Activator.CreateInstance(t);
-            //return (string) o.GetType().InvokeMember("Version", System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.GetProperty, null, o, new object[]{});
-		}
-*/		
 
 		protected override void OnCommitted(IDictionary savedState)
 		{
 			base.OnCommitted (savedState);
 
-			string enhPath = Path.Combine(path, "NDOEnhancer.dll");
-            string addInPath = Path.Combine(path, addInFileName);
-            try
-            {
-                StreamReader sr = new StreamReader(addInPath, System.Text.Encoding.Unicode);
-                string addInText = sr.ReadToEnd();
-                sr.Close();
-				//
-				//string vsVersion = "9.0";
-				//try
-				//{
-				//    vsVersion = GetVSVersion();
-				//}
-				//catch { }
-				//if (vsVersion != "8.0")
-				//    addInText = addInText.Replace("8.0", vsVersion);
-                addInText = addInText.Replace(@"YourAddInPath", enhPath);
-                string addInTargetPath = Path.Combine(GetAddInTargetPath(true), addInFileName);
-                StreamWriter sw = new StreamWriter(addInTargetPath, false, System.Text.Encoding.Unicode);
-                sw.Write(addInText);
-                sw.Close();
-            }
-            catch { }
+			string enhPath = Path.Combine(this.installPath, "NDOEnhancer.dll");
+			string addInPath = Path.Combine( this.installPath, "NDO21.AddIn" );
+			string addInText = null; ;
+			using ( StreamReader sr = new StreamReader( addInPath, System.Text.Encoding.Unicode ) )
+			{
+				addInText = sr.ReadToEnd();
+				sr.Close();
+			}
+			for ( int i = 0; i < this.addInFileNames.Length; i++ )
+			{
+				string addInFileName = this.addInFileNames[i];
+				try
+				{
+					addInText = addInText.Replace( @"YourAddInPath", enhPath );
 
-#if NoReference
-            string hxcPath = "\"" + Path.Combine(docPath, "NDOReferenceCollection.HxC") + "\"";
-            string hxsPath = "\"" + Path.Combine(docPath, "NDOReference.HxS") + "\"";
-            
-            this.Execute(hxregPath, @"/R /N /Namespace:HoT.NDOReference /Description:"".NET Data Objects (NDO) Reference"" /Collection:" + hxcPath);
-            this.Execute(hxregPath, @"/R /T /Namespace:HoT.NDOReference /Id:NDOReference /LangId:1033 /Helpfile:" + hxsPath);
-            this.Execute(hxregPath, @"/R /F /Filtername:""NDO Reference"" /Filterquery:\""DocSet\""=\""NDOReference\"" /Namespace:HoT.NDOReference");
-            if (GetVSVersion() == "9.0")
-                this.Execute(hxregPath, @"/R /P /productnamespace:MS.VSIPCC.v90 /producthxt:_DEFAULT /namespace:HoT.NDOReference /hxt:_DEFAULT");
-            else
-                this.Execute(hxregPath, @"/R /P /productnamespace:MS.VSIPCC.v80 /producthxt:_DEFAULT /namespace:HoT.NDOReference /hxt:_DEFAULT");
+					if ( i == 1 )
+						addInText = addInText.Replace( "<Version>10.0", "<Version>11.0" );
 
-            hxcPath = "\"" + Path.Combine(docPath, "COL_NDO_Help.HxC") + "\"";
-            hxsPath = "\"" + Path.Combine(docPath, "NDOUsersGuide.hxs") + "\"";
-
-            this.Execute(hxregPath, @"/R /N /Namespace:HoT.NDOUsersGuide /Description:"".NET Data Objects (NDO) Users Guide"" /Collection:" + hxcPath);
-            this.Execute(hxregPath, @"/R /T /Namespace:HoT.NDOUsersGuide /Id:NDOUsersGuide /LangId:1033 /Helpfile:" + hxsPath);
-            this.Execute(hxregPath, @"/R /F /Filtername:""NDO UsersGuide"" /Filterquery:\""DocSet\""=\""HoT.NDOUsersGuide\"" /Namespace:HoT.NDOUsersGuide");
-            if (GetVSVersion() == "9.0")
-                this.Execute(hxregPath, @"/R /P /productnamespace:MS.VSIPCC.v90 /producthxt:_DEFAULT /namespace:HoT.NDOUsersGuide /hxt:_DEFAULT");
-            else
-                this.Execute(hxregPath, @"/R /P /productnamespace:MS.VSIPCC.v80 /producthxt:_DEFAULT /namespace:HoT.NDOUsersGuide /hxt:_DEFAULT");
-            this.Execute(hxregPath, @"/R /F /Filtername:""(no filter)"" /Filterquery: /Namespace:HoT.NDOReference");
-#endif
+					string addInTargetPath = Path.Combine( GetAddInTargetPath( true ), addInFileName );
+					StreamWriter sw = new StreamWriter( addInTargetPath, false, System.Text.Encoding.Unicode );
+					sw.Write( addInText );
+					sw.Close();
+				}
+				catch (Exception ex)
+				{
+					Log( ex.Message );
+				}
+			}
         }
 
         void Log(string msg)
         {
-            using (StreamWriter sw = new StreamWriter(Path.Combine(docPath, "InstLog.txt"), true))
+            using (StreamWriter sw = new StreamWriter(Path.Combine(this.installPath, "InstLog.txt"), true))
             {
                 sw.WriteLine(msg);
             }
@@ -202,20 +153,12 @@ namespace InstallHelper
             string subPath = null;
             try
             {
-                if (root == null)
-                {
-                    root = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
-                    subPath = @"Visual Studio 2010\Addins";
-                }
-                else
-                {
-					Regex regex = new Regex( @"\d\.\d" );
-					Match match = regex.Match( Environment.OSVersion.ToString() );
-					if ( match.Value == "6.1" )
-						subPath = @"Microsoft\MSEnvShared\Addins";
-					else
-						subPath = @"Application Data\Microsoft\MSEnvShared\Addins";
-                }
+				Regex regex = new Regex( @"\d\.\d" );
+				Match match = regex.Match( Environment.OSVersion.ToString() );
+				if ( match.Value == "6.1" || match.Value == "6.2")  // Windows 7 / Windows 8
+					subPath = @"Microsoft\MSEnvShared\Addins";
+				else  // Windows Vista
+					subPath = @"Application Data\Microsoft\MSEnvShared\Addins";
 
                 if (createIfNotExists)
                 {
@@ -230,31 +173,14 @@ namespace InstallHelper
 
         public override void Uninstall(IDictionary savedState)
         {
-#if NoReference
             try
             {
-                ConsoleProcess cp = new ConsoleProcess();
-
-                if (GetVSVersion() == "9.0")
-                {
-                    cp.Execute(hxregPath, @"/U /P /productnamespace:MS.VSIPCC.v90 /producthxt:_DEFAULT /namespace:HoT.NDOReference /hxt:_DEFAULT");
-                    cp.Execute(hxregPath, @"/U /P /productnamespace:MS.VSIPCC.v90 /producthxt:_DEFAULT /namespace:HoT.NDOUsersGuide /hxt:_DEFAULT");
-                }
-                else
-                {
-                    cp.Execute(hxregPath, @"/U /P /productnamespace:MS.VSIPCC.v80 /producthxt:_DEFAULT /namespace:HoT.NDOReference /hxt:_DEFAULT");
-                    cp.Execute(hxregPath, @"/U /P /productnamespace:MS.VSIPCC.v80 /producthxt:_DEFAULT /namespace:HoT.NDOUsersGuide /hxt:_DEFAULT");
-                }
-
-                cp.Execute(hxregPath, @"InnovaHxReg /U /N /Namespace:HoT.NDOReference");
-            }
-            catch { }
-#endif
-            try
-            {
-				string addInTargetPath = Path.Combine(GetAddInTargetPath(false), addInFileName);
-				if (File.Exists(addInTargetPath))
-					File.Delete(addInTargetPath);
+				foreach ( string addInFileName in this.addInFileNames )
+				{
+					string addInTargetPath = Path.Combine( GetAddInTargetPath( false ), addInFileName );
+					if ( File.Exists( addInTargetPath ) )
+						File.Delete( addInTargetPath );
+				}
             }
             catch { }
 
