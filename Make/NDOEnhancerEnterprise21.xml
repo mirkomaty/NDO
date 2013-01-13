@@ -7,7 +7,7 @@
         <File Source="..\Deploy\Enterprise\NDOEnhancer.dll" Id="file_NDOEnhancer.dll" Name="NDOEnhancer.dll" Vital="yes" KeyPath="yes" AssemblyManifest="file_NDOEnhancer.dll" AssemblyApplication="file_NDOEnhancer.dll" Assembly=".net" DiskId="1" />
       </Component>
       <Component Id="C_file_NDO20.Addin" Guid="138C00B5-4ACE-290E-6884-F7C7808FE5F5">
-        <File Source="..\Deploy\Enterprise\NDO21.Addin" Id="file_NDO20.Addin" Name="NDO21.AddIn" Vital="yes" KeyPath="yes" DiskId="1" />
+        <File Source="..\Deploy\Enterprise\NDO21.Addin" Id="file_NDO21.Addin" Name="NDO21.AddIn" Vital="yes" KeyPath="yes" DiskId="1" />
       </Component>
       <Directory Id="GAC" Name="GAC">
         <Component Id="C__C2FC061855BB40F187055ED21EDAFC33" Guid="A218BEC0-8C33-97BF-2F22-C45EE53F5502">
@@ -34,9 +34,9 @@
       <Component Id="C__2B3F8114B20544179322F9D05F61FDA2" Guid="D192477C-3550-4353-9079-B8C5C4162AA4">
         <File Source="..\Deploy\Enterprise\EnhancerX86Stub.exe" Id="_2B3F8114B20544179322F9D05F61FDA2" Name="EnhancerX86Stub.exe" Vital="yes" KeyPath="yes" AssemblyManifest="_2B3F8114B20544179322F9D05F61FDA2" AssemblyApplication="_2B3F8114B20544179322F9D05F61FDA2" Assembly=".net" DiskId="1" />
       </Component>
-      <Component Id="C__9A47C73D4A5E42CEAF0E14B64C9497AF" Guid="8BFDE439-86C8-CAF5-9331-FF7C56B5513A">
+      <!--Component Id="C__9A47C73D4A5E42CEAF0E14B64C9497AF" Guid="8BFDE439-86C8-CAF5-9331-FF7C56B5513A">
         <File Source="..\InstallHelper\bin\release\InstallHelper.dll" Id="_9A47C73D4A5E42CEAF0E14B64C9497AF" Name="InstallHelper.dll" Vital="yes" KeyPath="yes" AssemblyManifest="_9A47C73D4A5E42CEAF0E14B64C9497AF" AssemblyApplication="_9A47C73D4A5E42CEAF0E14B64C9497AF" Assembly=".net" DiskId="1" />
-      </Component>
+      </Component-->
       <Component Id="C__AF363D81A3AE4FDAADBF4E50A4F5B6DA" Guid="7E8EA3DD-2FE9-937C-F1F8-E58BBFAA1952">
         <File Source="Tutorial-Videos.url" Id="_AF363D81A3AE4FDAADBF4E50A4F5B6DA" Name="Tutorial-Videos.url" Vital="yes" KeyPath="yes" DiskId="1" />
       </Component>
@@ -1041,7 +1041,7 @@
       <ComponentRef Id="C__98D50CF892CF4B2B90701632DFA67146" />
       <ComponentRef Id="C__990B1326C0064E8C8CA9FC7480910F8C" />
       <ComponentRef Id="C__995BE0B6CB5A4E79A347B9765840A8FE" />
-      <ComponentRef Id="C__9A47C73D4A5E42CEAF0E14B64C9497AF" />
+      <!--ComponentRef Id="C__9A47C73D4A5E42CEAF0E14B64C9497AF" /-->
       <ComponentRef Id="C__9AD8088E30A545B5B96F5F1C4A3A58FD" />
       <ComponentRef Id="C__9ADC441BB8BA40ECB0BC2C99DF092BDD" />
       <ComponentRef Id="C__9B4A850F8CF547E694DA178EB611FBCC" />
@@ -1150,12 +1150,15 @@
       <ComponentRef Id="C__FA7B504CB7BA430F88F9107EAEDB4280" />
     </Feature>
     <Media Id="1" EmbedCab="yes" Cabinet="_B33123046F49A47848280648AB605665" />
-    <CustomAction Id="_87AAF93F_4965_4FB2_A252_28A8F8E5A29D.uninstall" Return="check" Execute="deferred" Impersonate="no" BinaryKey="InstallUtil" DllEntry="ManagedInstall" />
+    <!--CustomAction Id="_87AAF93F_4965_4FB2_A252_28A8F8E5A29D.uninstall" Return="check" Execute="deferred" Impersonate="no" BinaryKey="InstallUtil" DllEntry="ManagedInstall" />
     <CustomAction Id="_87AAF93F_4965_4FB2_A252_28A8F8E5A29D.uninstall.SetProperty" Return="check" Property="_87AAF93F_4965_4FB2_A252_28A8F8E5A29D.uninstall" Value="/installtype=notransaction /action=uninstall /LogFile= &quot;[#_9A47C73D4A5E42CEAF0E14B64C9497AF]&quot; &quot;[VSDFxConfigFile]&quot;" />
     <CustomAction Id="_67BE2428_D480_4CCA_80A8_4D7071100624.install" Return="check" Execute="deferred" Impersonate="no" BinaryKey="InstallUtil" DllEntry="ManagedInstall" />
     <CustomAction Id="_67BE2428_D480_4CCA_80A8_4D7071100624.install.SetProperty" Return="check" Property="_67BE2428_D480_4CCA_80A8_4D7071100624.install" Value="/installtype=notransaction /action=install /LogFile= &quot;[#_9A47C73D4A5E42CEAF0E14B64C9497AF]&quot; &quot;[VSDFxConfigFile]&quot;" />
     <CustomAction Id="_64D18B25_4765_482F_8E3B_908BB5C55C83.commit" Return="check" Execute="commit" Impersonate="no" BinaryKey="InstallUtil" DllEntry="ManagedInstall" />
-    <CustomAction Id="_64D18B25_4765_482F_8E3B_908BB5C55C83.commit.SetProperty" Return="check" Property="_64D18B25_4765_482F_8E3B_908BB5C55C83.commit" Value="/installtype=notransaction /action=commit /LogFile= &quot;[#_9A47C73D4A5E42CEAF0E14B64C9497AF]&quot; &quot;[VSDFxConfigFile]&quot;" />
+    <CustomAction Id="_64D18B25_4765_482F_8E3B_908BB5C55C83.commit.SetProperty" Return="check" Property="_64D18B25_4765_482F_8E3B_908BB5C55C83.commit" Value="/installtype=notransaction /action=commit /LogFile= &quot;[#_9A47C73D4A5E42CEAF0E14B64C9497AF]&quot; &quot;[VSDFxConfigFile]&quot;" /-->
+    <CustomAction Id ="NDOInstallAction" BinaryKey="NDOInstallHelper" DllEntry="NDOInstall" Execute="deferred" Return="check" />
+    <CustomAction Id ="NDOUnInstallAction" BinaryKey="NDOInstallHelper" DllEntry="NDOUninstall" Execute="deferred" Return="check" />
+    <CustomAction Id="NDOInstallAction.SetValues" Return="check" Property="NDOInstallAction" Value="INSTALLLOCATION=[TARGETDIR]" />
     <CustomAction Id="DIRCA_TARGETDIR" Return="check" Execute="firstSequence" Property="TARGETDIR" Value="[ProgramFilesFolder][ProductName]" />
     <CustomAction Id="DIRCA_CheckFX" Return="check" BinaryKey="MSVBDPCADLL" DllEntry="CheckFX" />
     <CustomAction Id="VSDCA_VsdLaunchConditions" Return="check" BinaryKey="MSVBDPCADLL" DllEntry="VsdLaunchConditions" />
@@ -2435,22 +2438,25 @@ To create an image in this folder, click "Next". To use a different folder, ente
       <Custom Action="DIRCA_TARGETDIR" Before="CostInitialize"><![CDATA[TARGETDIR=""]]></Custom>
     </AdminExecuteSequence>
     <InstallExecuteSequence>
-      <Custom Action="_87AAF93F_4965_4FB2_A252_28A8F8E5A29D.uninstall" After="_87AAF93F_4965_4FB2_A252_28A8F8E5A29D.uninstall.SetProperty"><![CDATA[$C__9A47C73D4A5E42CEAF0E14B64C9497AF=2]]></Custom>
+      <!--Custom Action="_87AAF93F_4965_4FB2_A252_28A8F8E5A29D.uninstall" After="_87AAF93F_4965_4FB2_A252_28A8F8E5A29D.uninstall.SetProperty"><![CDATA[$C__9A47C73D4A5E42CEAF0E14B64C9497AF=2]]></Custom-->
       <Custom Action="CustomTextA_SetProperty_EDIT2" After="CustomTextA_SetProperty_EDIT1" />
       <Custom Action="CustomTextA_SetProperty_EDIT1" After="ValidateProductID" />
       <Custom Action="CustomTextA_SetProperty_EDIT3" After="CustomTextA_SetProperty_EDIT2" />
       <Custom Action="DIRCA_TARGETDIR" After="CustomTextA_SetProperty_EDIT4"><![CDATA[TARGETDIR=""]]></Custom>
       <Custom Action="CustomTextA_SetProperty_EDIT4" After="CustomTextA_SetProperty_EDIT3" />
-      <Custom Action="_67BE2428_D480_4CCA_80A8_4D7071100624.install" After="_67BE2428_D480_4CCA_80A8_4D7071100624.install.SetProperty"><![CDATA[$C__9A47C73D4A5E42CEAF0E14B64C9497AF>2]]></Custom>
+      <!--Custom Action="_67BE2428_D480_4CCA_80A8_4D7071100624.install" After="_67BE2428_D480_4CCA_80A8_4D7071100624.install.SetProperty"><![CDATA[$C__9A47C73D4A5E42CEAF0E14B64C9497AF>2]]></Custom-->
       <Custom Action="VSDCA_VsdLaunchConditions" After="FindRelatedProducts"><![CDATA[NOT Installed]]></Custom>
-      <Custom Action="_67BE2428_D480_4CCA_80A8_4D7071100624.install.SetProperty" After="_64D18B25_4765_482F_8E3B_908BB5C55C83.commit"><![CDATA[$C__9A47C73D4A5E42CEAF0E14B64C9497AF>2]]></Custom>
+      <Custom Action="NDOInstallAction.SetValues" Before="NDOInstallAction">NOT Installed</Custom>
+      <Custom Action="NDOInstallAction" Before="InstallFinalize">NOT Installed</Custom>
+      <Custom Action="NDOUnInstallAction" Before="InstallFinalize">Installed</Custom>
+      <!--Custom Action="_67BE2428_D480_4CCA_80A8_4D7071100624.install.SetProperty" After="_64D18B25_4765_482F_8E3B_908BB5C55C83.commit"><![CDATA[$C__9A47C73D4A5E42CEAF0E14B64C9497AF>2]]></Custom>
       <Custom Action="_64D18B25_4765_482F_8E3B_908BB5C55C83.commit" After="_64D18B25_4765_482F_8E3B_908BB5C55C83.commit.SetProperty"><![CDATA[$C__9A47C73D4A5E42CEAF0E14B64C9497AF>2]]></Custom>
-      <Custom Action="_87AAF93F_4965_4FB2_A252_28A8F8E5A29D.uninstall.SetProperty" After="MsiUnpublishAssemblies"><![CDATA[$C__9A47C73D4A5E42CEAF0E14B64C9497AF=2]]></Custom>
+      <Custom Action="_87AAF93F_4965_4FB2_A252_28A8F8E5A29D.uninstall.SetProperty" After="MsiUnpublishAssemblies"><![CDATA[$C__9A47C73D4A5E42CEAF0E14B64C9497AF=2]]></Custom-->
       <RemoveExistingProducts After="InstallInitialize" />
-      <Custom Action="_64D18B25_4765_482F_8E3B_908BB5C55C83.commit.SetProperty" After="StartServices"><![CDATA[$C__9A47C73D4A5E42CEAF0E14B64C9497AF>2]]></Custom>
+      <!--Custom Action="_64D18B25_4765_482F_8E3B_908BB5C55C83.commit.SetProperty" After="StartServices"><![CDATA[$C__9A47C73D4A5E42CEAF0E14B64C9497AF>2]]></Custom-->
       <Custom Action="DIRCA_CheckFX" Before="AppSearch" />
     </InstallExecuteSequence>
-    <Binary Id="InstallUtil" SourceFile="Binary\InstallUtilLib.dll" />
+    <Binary Id="NDOInstallHelper" SourceFile="..\NDOInstallHelper\NDOInstallHelper\bin\release\NDOInstallHelper.CA.dll" />
     <Binary Id="MSVBDPCADLL" SourceFile="Binary\MSVBDPCADLL.ibd" />
     <Binary Id="VSDNETCFG" SourceFile="Binary\VSDNETCFG.ibd" />
     <Binary Id="_410258F15D369106F31FEBDF5456909D" SourceFile="NDOSetup.bmp" />

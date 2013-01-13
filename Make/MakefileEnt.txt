@@ -191,8 +191,8 @@ interfaces:
 	@msbuild /p:Configuration=Release /p:Platform=AnyCPU /t:rebuild NDOInterfaces.csproj
 	@cd $(MAKE_DIR)
 
-Installhelper:
-	@cd $(PERS_DIR)\InstallHelper
-	@msbuild /p:Configuration=Release /p:Platform=AnyCPU /t:rebuild InstallHelper.csproj
+installhelper:
+	@cd $(PERS_DIR)\NDOInstallHelper\NDOInstallHelper
+	@msbuild /p:Configuration=Release /p:Platform=AnyCPU /t:rebuild NDOInstallHelper.csproj
 	@cd $(MAKE_DIR)
 
