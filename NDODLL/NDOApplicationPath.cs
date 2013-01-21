@@ -46,15 +46,7 @@ namespace NDO
 			{
 				if (null == assemblyPath)
 				{
-#if NDO11
-					RegistryKey key = Registry.ClassesRoot.OpenSubKey(@"CLSID\{D861E693-1993-4C4E-B9A7-5657D7F4F338}\InprocServer32");
-#endif
-#if NDO12
-					RegistryKey key = Registry.ClassesRoot.OpenSubKey(@"CLSID\{D861E693-1993-4C4E-B9A7-5657D7F4F339}\InprocServer32");
-#endif
-#if NDO20
 					RegistryKey key = Registry.ClassesRoot.OpenSubKey(@"CLSID\{D861E693-1993-4C4E-B9A7-5657D7F4F33A}\InprocServer32");
-#endif
                     if (key == null)
 						throw new NDOException(15, "Can't find NDO dll in the registry. Please install NDO again");
 					assemblyPath = Path.GetDirectoryName((string) key.GetValue(string.Empty));

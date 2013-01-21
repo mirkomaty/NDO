@@ -269,6 +269,10 @@ namespace NDOEnhancer
 					return;
 				}
 
+				// ------------------ MsBuild Support -----------------------
+				if ( options.UseMsBuild )
+					return;
+
 				// The platform target is the more correct platform description.
 				// If it is available, let's use it.
 				string platform2 = projectDescription.PlatformTarget;
@@ -350,11 +354,6 @@ namespace NDOEnhancer
                     messages.WriteLine("");
                     messages.WriteLine("This is possibly a follow-up error. Look at error messages above this line.");
                 }				
-            }
-            finally
-            {
-                //ValueTypes.ClearInstance();
-                System.GC.Collect();
             }
 		}
 

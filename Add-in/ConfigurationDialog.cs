@@ -35,6 +35,9 @@ using System.Drawing;
 using System.Collections;
 using System.ComponentModel;
 using System.Windows.Forms;
+using System.Xml.Linq;
+using System.Linq;
+using System.Collections.Generic;
 using EnvDTE;
 #if NET20
 using EnvDTE80;
@@ -43,6 +46,7 @@ using VSLangProj;
 //using VSLangProj80;
 using NDO.Mapping;
 using NDOInterfaces;
+using Microsoft.VisualStudio.Shell.Interop;
 
 
 namespace NDOEnhancer
@@ -633,12 +637,85 @@ namespace NDOEnhancer
                     }
                 }
 
-				options.Save(this.projectDescription);
+				if ( options.EnableAddIn && ChangeProjectFileIfNecessary() )
+				{
+					options.UseMsBuild = true;
+					MessageBox.Show( "Your project file was updated. Please confirm the reload of the project, if Visual Studio asks for it.", "NDO Add-in" );
+				}
+
+				options.Save( this.projectDescription );
 			}
 			catch (Exception ex)
 			{
 				MessageBox.Show("The following error occured while saving your options: " + ex.Message, "NDO Add-in");
 			}
+		}
+
+		bool ChangeProjectFileIfNecessary()
+		{
+			string fileName = this.project.FullName;
+
+			XElement projectElement = XElement.Load( File.OpenRead( fileName ) );
+			XNamespace ns = "http://schemas.microsoft.com/developer/msbuild/2003";
+
+			bool hasChanges = false;
+
+			IEnumerable<XElement> afterBuildElements = projectElement.Descendants( ns + "Target" ).Where( t => t.Attribute( "Name" ).Value == "AfterBuild" );
+			XElement afterBuildElement;
+			if ( afterBuildElements.Count() == 0 )
+			{
+				hasChanges = true;
+				afterBuildElement = new XElement( ns + "Target" );
+				afterBuildElement.Add( new XAttribute( "Name", "AfterBuild" ) );
+				projectElement.Add( afterBuildElement );
+			}
+			else
+			{
+				afterBuildElement = afterBuildElements.First();
+			}
+			IEnumerable<XElement> ndoEnhancerElements = afterBuildElement.Descendants( ns + "NDOEnhancer" );
+			if ( ndoEnhancerElements.Count() == 0 )
+			{
+				hasChanges = true;
+				XElement ndoEnhancerElement = new XElement( ns + "NDOEnhancer" );
+				ndoEnhancerElement.Add( new XAttribute( "NdoProjectFile", "$(ProjectName).ndoproj" ) );
+				afterBuildElement.Add( ndoEnhancerElement );
+			}
+			IEnumerable<XElement> ndoInstallPathElements = projectElement.Descendants( ns + "NDOInstallPath" );
+			if ( ndoInstallPathElements.Count() == 0 )
+			{
+				hasChanges = true;
+				XElement propertyGroupElement = new XElement( ns + "PropertyGroup" );
+				XElement ndoInstallPathElement = new XElement( ns + "NDOInstallPath" );
+				ndoInstallPathElement.Add( new XAttribute( "Condition", " '$(NDOInstallPath)' == ''" ) );
+				ndoInstallPathElement.Value = @"$(Registry:HKEY_LOCAL_MACHINE\SOFTWARE\NDO@InstallDir)";
+				propertyGroupElement.Add( ndoInstallPathElement );
+				projectElement.Add( propertyGroupElement );
+			}
+			IEnumerable<XElement> importElements = projectElement.Descendants( ns + "Import" ).Where( t => t.Attribute( "Project" ).Value == @"$(NDOInstallPath)\NDOEnhancer.Targets" );
+			if ( importElements.Count() == 0 )
+			{
+				hasChanges = true;
+				XElement importElement = new XElement( ns + "Import" );
+				projectElement.Add( importElement );
+				importElement.Add( new XAttribute( "Project", @"$(NDOInstallPath)\NDOEnhancer.Targets" ) );
+			}
+
+			if ( hasChanges )
+			{
+				UIHierarchy uiHierarchy = (UIHierarchy)( (DTE2) project.DTE ).Windows.Item( EnvDTE.Constants.vsWindowKindSolutionExplorer ).Object;
+				UIHierarchyItem uiItem = uiHierarchy.GetItem(project.
+				solutionService.GetProjectOfUniqueName(this.project.UniqueName, out selectedHierarchy);
+
+				if ( selectedHierarchy != null )
+				{
+					selectedHierarchy.
+					solutionService.CloseSolutionElement( (uint) __VSSLNCLOSEOPTIONS.SLNCLOSEOPT_UnloadProject, selectedHierarchy, 0 );
+					projectElement.Save( File.OpenWrite( fileName ) );
+					( (DTE2) this.project.DTE ).ExecuteCommand( "Project.ReloadProject" );
+				}
+			}
+			return hasChanges;
 		}
 
 		void ShowError(Exception ex)

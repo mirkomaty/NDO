@@ -1,6 +1,6 @@
 //
-// Copyright (C) 2002-2008 HoT - House of Tools Development GmbH 
-// (www.netdataobjects.com)
+// Copyright (C) 2002-2013 Mirko Matytschak 
+// (www.netdataobjects.de)
 //
 // Author: Mirko Matytschak
 //
@@ -106,6 +106,7 @@ namespace NDOEnhancer
                 MakeNode("IncludeTypecodes", this.IncludeTypecodes, optionsNode);
                 MakeNode("DatabaseOwner", this.DatabaseOwner, optionsNode);
 				MakeNode("GenerateConstraints", this.GenerateConstraints, optionsNode);
+				MakeNode("UseMsBuild", this.GenerateConstraints, optionsNode);
 				MakeNode("DropExistingElements", this.DropExistingElements, optionsNode);
 
                 projectDescription.ToXml(docNode);
@@ -169,7 +170,8 @@ namespace NDOEnhancer
             this.Utf8Encoding = (bool)XmlHelper.GetNode(node, pns + "Utf8Encoding", true);
 			this.DropExistingElements = (bool)XmlHelper.GetNode(node, pns + "DropExistingElements", true);
 			this.GenerateConstraints = (bool)XmlHelper.GetNode(node, pns + "GenerateConstraints", false);
-        }
+			this.UseMsBuild = (bool) XmlHelper.GetNode(node, pns + "UseMsBuild", false);
+		}
 
 
         private void SetBoolValue(string fieldName, bool val)
@@ -322,6 +324,18 @@ namespace NDOEnhancer
                 SetBoolValue("NDODropExistingElements", value);
             }
         }
+
+		public bool UseMsBuild
+		{
+			get
+			{
+				return GetBoolValue( "UseMsBuild" );
+			}
+			set
+			{
+				SetBoolValue( "UseMsBuild", value );
+			}
+		}
 
 
         public bool NewMapping
