@@ -106,7 +106,7 @@ namespace NDOEnhancer
                 MakeNode("IncludeTypecodes", this.IncludeTypecodes, optionsNode);
                 MakeNode("DatabaseOwner", this.DatabaseOwner, optionsNode);
 				MakeNode("GenerateConstraints", this.GenerateConstraints, optionsNode);
-				MakeNode("UseMsBuild", this.GenerateConstraints, optionsNode);
+				MakeNode("UseMsBuild", this.UseMsBuild, optionsNode);
 				MakeNode("DropExistingElements", this.DropExistingElements, optionsNode);
 
                 projectDescription.ToXml(docNode);

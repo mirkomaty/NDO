@@ -2,11 +2,13 @@
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
 	<NDOInstallPath Condition=" '$(NDOInstallPath)' == ''">$(Registry:HKEY_LOCAL_MACHINE\SOFTWARE\NDO@InstallDir)</NDOInstallPath>
+	<NDOInstallPath Condition=" '$(NDOInstallPath)' == ''">$(Registry:HKEY_LOCAL_MACHINE\SOFTWARE\Wow6432Node\NDO@InstallDir)</NDOInstallPath>
     <NDOEnhancerLib>$(NDOInstallPath)\NDOEnhancer.BuildTask.dll</NDOEnhancerLib>
   </PropertyGroup>
 
-  <UsingTask AssemblyFile="$(NDOEnhancerLib)" TaskName="NDOEnhancer.BuildTask.NDOEnhancer" />
-  <UsingTask AssemblyFile="$(NDOEnhancerLib)" TaskName="NDOEnhancer.BuildTask.CopyFile" />
-  <UsingTask AssemblyFile="$(NDOEnhancerLib)" TaskName="NDOEnhancer.BuildTask.SetProperty" />
+  <UsingTask AssemblyFile="$(NDOEnhancerLib)" TaskName="NDO.BuildTask.NDOEnhancer" />
+  <UsingTask AssemblyFile="$(NDOEnhancerLib)" TaskName="NDO.BuildTask.NDOEnhancer32" />
+  <UsingTask AssemblyFile="$(NDOEnhancerLib)" TaskName="NDO.BuildTask.CopyFile" />
+  <UsingTask AssemblyFile="$(NDOEnhancerLib)" TaskName="NDO.BuildTask.SetProperty" />
 
 </Project>

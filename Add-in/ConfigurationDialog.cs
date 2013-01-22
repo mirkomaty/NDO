@@ -48,6 +48,9 @@ using NDO.Mapping;
 using NDOInterfaces;
 using Microsoft.VisualStudio.Shell.Interop;
 
+using SD = System.Diagnostics;
+using MBE = Microsoft.Build.Evaluation;
+using MB = Microsoft.Build.Execution;
 
 namespace NDOEnhancer
 {
@@ -637,10 +640,17 @@ namespace NDOEnhancer
                     }
                 }
 
-				if ( options.EnableAddIn && ChangeProjectFileIfNecessary() )
+				bool doSave = true;
+
+				if ( options.EnableAddIn )
 				{
-					options.UseMsBuild = true;
-					MessageBox.Show( "Your project file was updated. Please confirm the reload of the project, if Visual Studio asks for it.", "NDO Add-in" );
+					if ( !options.UseMsBuild )
+					{
+						options.UseMsBuild = true;
+						doSave = false;
+						options.Save( this.projectDescription );
+						ChangeProjectFile();
+					}
 				}
 
 				options.Save( this.projectDescription );
@@ -651,14 +661,24 @@ namespace NDOEnhancer
 			}
 		}
 
-		bool ChangeProjectFileIfNecessary()
+
+		void ChangeProjectFile()
 		{
+			MessageBox.Show( "Your project file will be changed. Please confirm the project reload, if Visual Studio asks for it.", "NDO Add-in" );
 			string fileName = this.project.FullName;
 
-			XElement projectElement = XElement.Load( File.OpenRead( fileName ) );
-			XNamespace ns = "http://schemas.microsoft.com/developer/msbuild/2003";
+			string logFileName = Path.Combine( Path.GetDirectoryName( fileName ), "NDOUpdater.log" );
 
 			bool hasChanges = false;
+
+			System.Threading.Thread.Sleep( 1000 );
+
+			XElement projectElement;
+			using ( FileStream fs = File.OpenRead( fileName ) )
+			{
+				projectElement = XElement.Load( fs );
+			}
+			XNamespace ns = "http://schemas.microsoft.com/developer/msbuild/2003";
 
 			IEnumerable<XElement> afterBuildElements = projectElement.Descendants( ns + "Target" ).Where( t => t.Attribute( "Name" ).Value == "AfterBuild" );
 			XElement afterBuildElement;
@@ -699,23 +719,35 @@ namespace NDOEnhancer
 				XElement importElement = new XElement( ns + "Import" );
 				projectElement.Add( importElement );
 				importElement.Add( new XAttribute( "Project", @"$(NDOInstallPath)\NDOEnhancer.Targets" ) );
+				importElement.Add( new XAttribute( "PlatformTarget", "$(Platform)" ) );
 			}
 
 			if ( hasChanges )
 			{
-				UIHierarchy uiHierarchy = (UIHierarchy)( (DTE2) project.DTE ).Windows.Item( EnvDTE.Constants.vsWindowKindSolutionExplorer ).Object;
-				UIHierarchyItem uiItem = uiHierarchy.GetItem(project.
-				solutionService.GetProjectOfUniqueName(this.project.UniqueName, out selectedHierarchy);
-
-				if ( selectedHierarchy != null )
-				{
-					selectedHierarchy.
-					solutionService.CloseSolutionElement( (uint) __VSSLNCLOSEOPTIONS.SLNCLOSEOPT_UnloadProject, selectedHierarchy, 0 );
-					projectElement.Save( File.OpenWrite( fileName ) );
-					( (DTE2) this.project.DTE ).ExecuteCommand( "Project.ReloadProject" );
-				}
+				projectElement.Save( File.OpenWrite( fileName ) );
+				//File.Copy( fileName + ".new", fileName, true );
+				//File.Delete( fileName + ".new" );
 			}
-			return hasChanges;
+		}
+
+		void ChangeProjectFilexxx()
+		{
+			string fileName = this.project.FullName;
+			this.project = null;
+			ApplicationObject.VisualStudioApplication.ExecuteCommand( "File.CloseSolution" );
+			MessageBox.Show( "NDO needs to close your solution. Just reload it after changing your project file." );
+			System.Timers.Timer t = new System.Timers.Timer( 1000 );
+			t.Enabled = true;
+			string exeFile = Path.Combine( NDO.NDOApplicationPath.Instance, "NDOProjectUpdater" );
+			string parameter = "\"" + fileName + "\"";
+			t.Elapsed += ( s, e ) =>
+			{
+				( (System.Timers.Timer) s ).Enabled = false;
+				SD.ProcessStartInfo psi = new SD.ProcessStartInfo( exeFile, parameter );
+				psi.CreateNoWindow = true;
+				psi.UseShellExecute = false;
+				SD.Process.Start( psi );
+			};
 		}
 
 		void ShowError(Exception ex)

@@ -251,4 +251,9 @@
 copy $(TargetName).pdb "D:\Program Files\NDO 2.1 Enterprise Edition\NDOEnhancer.pdb"
 </PostBuildEvent>
   </PropertyGroup>
+  <PropertyGroup>
+    <PostBuildEvent>copy $(TargetFileName) "C:\Program Files (x86)\NDO 2.1 Dev Edition"
+copy $(TargetName).pdb "C:\Program Files (x86)\NDO 2.1 Dev Edition"
+</PostBuildEvent>
+  </PropertyGroup>
 </Project>

@@ -24,7 +24,7 @@ DEPLOY_DIR = $(PERS_DIR)\Deploy\$(EDITION)
 INTERF_DLL = $(PERS_DIR)\NDOInterfaces\bin\release\NDOInterfaces.dll
 DEVENVEXE = "$(VSDIR)\Common7\IDE\devenv"
 
-all: Hello Ndo Enh Mapping EnhStdAlone Generator ndoc installhelper pack
+all: Hello Ndo Enh Mapping EnhStdAlone Generator ndoc buildtask installhelper pack
 
 Enh: AddIn
 
@@ -196,3 +196,8 @@ installhelper:
 	@msbuild /p:Configuration=Release /p:Platform=AnyCPU /t:rebuild NDOInstallHelper.csproj
 	@cd $(MAKE_DIR)
 
+buildtask:
+	@cd $(PERS_DIR)\NDOEnhancer.BuildTask\NDOEnhancer.BuildTask
+	@msbuild /p:Configuration=Release /p:Platform=AnyCPU /t:rebuild NDOEnhancer.BuildTask.csproj
+	@cd $(MAKE_DIR)
+	
