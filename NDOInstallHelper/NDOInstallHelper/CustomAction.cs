@@ -20,7 +20,10 @@ namespace NDOInstallHelper
 		[CustomAction]
 		public static ActionResult NDOUninstall( Session session )
 		{
-			new ActionPerformer( session.CustomActionData["INSTALLLOCATION"] ).Uninstall();
+			string location = null;
+			if ( session.CustomActionData.ContainsKey( "INSTALLLOCATION" ) )
+				location = session.CustomActionData["INSTALLLOCATION"];
+			new ActionPerformer( location ).Uninstall();
 
 			return ActionResult.Success;
 		}
@@ -48,14 +51,14 @@ namespace NDOInstallHelper
 			{
 
 				string enhPath = Path.Combine( this.installPath, "NDOEnhancer.dll" );
-				string addInPath = Path.Combine( this.installPath, "NDO21.AddIn" );
+				string addInPath = Path.Combine( this.installPath, "NDO21-VS2010.AddIn" );
 				string addInText = null;
 				using ( StreamReader sr = new StreamReader( addInPath, System.Text.Encoding.Unicode ) )
 				{
 					addInText = sr.ReadToEnd();
 					sr.Close();
 				}
-				string addInTargetDir = GetAddInTargetPath( true );
+				string addInTargetDir = enhPath;
 				for ( int i = 0; i < this.addInFileNames.Length; i++ )
 				{
 					string addInFileName = this.addInFileNames[i];
@@ -67,6 +70,7 @@ namespace NDOInstallHelper
 							addInText = addInText.Replace( "<Version>10.0", "<Version>11.0" );
 
 						string addInTargetPath = Path.Combine( addInTargetDir, addInFileName );
+						Log( "Schreibe: " + addInTargetPath, false );
 						StreamWriter sw = new StreamWriter( addInTargetPath, false, System.Text.Encoding.Unicode );
 						sw.Write( addInText );
 						sw.Close();
@@ -83,31 +87,31 @@ namespace NDOInstallHelper
 			}
 		}
 
-		string GetAddInTargetPath( bool createIfNotExists )
-		{
-			string root = Environment.GetFolderPath( Environment.SpecialFolder.ApplicationData );
+		//string GetAddInTargetPath( bool createIfNotExists )
+		//{
+		//    string root = Environment.GetFolderPath( Environment.SpecialFolder.ApplicationData );
 
-			string subPath = null;
-			string returnPath = null;
-			try
-			{
-				subPath = @"Microsoft\MSEnvShared\Addins";
+		//    string subPath = null;
+		//    string returnPath = null;
+		//    try
+		//    {
+		//        subPath = @"Microsoft\MSEnvShared\Addins";
 
-				returnPath = Path.Combine( root, subPath );
+		//        returnPath = Path.Combine( root, subPath );
 
-				if ( createIfNotExists )
-				{
-					Log( "Create AddInTargetPath = " + returnPath, false );
-					DirectoryInfo di = new DirectoryInfo( root );
-					di.CreateSubdirectory( subPath );
-				}
-			}
-			catch(Exception ex) 
-			{
-				Log( ex.ToString(), true );
-			}
-			return returnPath;
-		}
+		//        if ( createIfNotExists )
+		//        {
+		//            Log( "Create AddInTargetPath = " + returnPath, false );
+		//            DirectoryInfo di = new DirectoryInfo( root );
+		//            di.CreateSubdirectory( subPath );
+		//        }
+		//    }
+		//    catch(Exception ex) 
+		//    {
+		//        Log( ex.ToString(), true );
+		//    }
+		//    return returnPath;
+		//}
 
 		void Log( string msg, bool isError )
 		{
@@ -120,17 +124,6 @@ Please install or uninstall the NDO .addin files manually from the folder %ALLUS
 
 		public void Uninstall()
 		{
-			try
-			{
-				foreach ( string addInFileName in this.addInFileNames )
-				{
-					string addInTargetPath = Path.Combine( GetAddInTargetPath( false ), addInFileName );
-					if ( File.Exists( addInTargetPath ) )
-						File.Delete( addInTargetPath );
-				}
-			}
-			catch { }
-
 			try
 			{
 				Type t = Type.GetTypeFromProgID( "VisualStudio.DTE" );
