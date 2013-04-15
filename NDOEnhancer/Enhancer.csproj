@@ -70,7 +70,7 @@
     <CheckForOverflowUnderflow>false</CheckForOverflowUnderflow>
     <ConfigurationOverrideFile>
     </ConfigurationOverrideFile>
-    <DefineConstants>DEBUG;STD;PRO;ENT;NET20;NDO20;STANDALONE</DefineConstants>
+    <DefineConstants>STD;PRO;ENT;NET20;NDO20;STANDALONE</DefineConstants>
     <DocumentationFile>
     </DocumentationFile>
     <DebugSymbols>true</DebugSymbols>

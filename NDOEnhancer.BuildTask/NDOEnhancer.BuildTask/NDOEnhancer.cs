@@ -4,6 +4,7 @@ using Microsoft.Win32;
 using System;
 using System.IO;
 using System.Diagnostics;
+using System.Text.RegularExpressions;
 
 namespace NDO.BuildTask
 {
@@ -25,6 +26,43 @@ namespace NDO.BuildTask
 					return "EnhancerX86Stub.exe";
 				return "NDOEnhancer.exe";
 			}
+		}
+
+		protected override int ExecuteTool( string pathToTool, string responseFileCommands, string commandLineCommands )
+		{
+			ConsoleProcess cp = new ConsoleProcess( false );
+
+			int result = cp.Execute( "\"" + pathToTool + "\"",
+				"\"" + commandLineCommands.Trim() + "\"" );
+
+			if (cp.Stdout != String.Empty)
+				base.Log.LogMessageFromText( cp.Stdout, MessageImportance.High );
+
+			string stderr = cp.Stderr;
+			if (stderr != string.Empty)
+			{
+				Regex regex = new Regex( @"Error:" );
+				MatchCollection mc = regex.Matches( stderr );
+				int lastmatch = mc.Count - 1;
+				for (int i = 0; i < mc.Count; i++)
+				{
+					int endindex;
+					if (i == lastmatch)
+						endindex = stderr.Length;
+					else
+						endindex = mc[i + 1].Index;
+					int startindex = mc[i].Index;
+					//						messages.WriteLine("[" + i + "]:" + startindex + ',' + endindex);
+					// The substring always ends with a '\n', which should be removed.
+					string outString = stderr.Substring( startindex, endindex - startindex );
+					if (outString.EndsWith( "\r\n" ))
+						outString = outString.Substring( 0, outString.Length - 2 );
+					//						messages.ShowError("|" + out String + "|");
+					base.Log.LogError( outString );
+				}
+			}
+
+			return result;
 		}
 
 		protected override MessageImportance StandardOutputLoggingImportance

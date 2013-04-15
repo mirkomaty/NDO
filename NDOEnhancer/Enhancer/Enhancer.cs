@@ -1260,9 +1260,9 @@ namespace NDOEnhancer
 			catch (Exception ex)
 			{
 				if (null != ex.Message)
-					throw new Exception("Can't find Mapping File " + mappingFile + ".\n" + ex.ToString());
+					throw new Exception("Can't load Mapping File " + mappingFile + ".\n" + ex.ToString());
 				else
-                    throw new Exception("Can't find Mapping File " + mappingFile);
+                    throw new Exception("Can't load Mapping File " + mappingFile);
             }
 
 			if (wrongDll != null)
@@ -1348,7 +1348,8 @@ namespace NDOEnhancer
 				analyzeAndEnhance(ilfile);
 
 				messages.Unindent();
-				messages.WriteLine( "Generating Binary" );
+				if (this.verboseMode)
+					messages.WriteLine( "Generating Binary" );
 					
 				// Hier wird der enhanced Elementbaum als IL-Datei geschrieben
 				ilfile.write( ilEnhFile );
@@ -1359,20 +1360,23 @@ namespace NDOEnhancer
 
 
 			// Store the mapping information
-			messages.WriteLine("Saving mapping file");
+			if (this.verboseMode)
+				messages.WriteLine( "Saving mapping file" );
 			mappings.Save();
             if (verboseMode)
 			    Console.WriteLine("Copying mapping file to '" + mappingDestFile + "'");
 			File.Copy(mappingFile, mappingDestFile, true);
 
-			messages.WriteLine("Generating schema file");
+			if (this.verboseMode)
+				messages.WriteLine( "Generating schema file" );
 			if (File.Exists(schemaFile))
 				File.Copy(schemaFile, schemaFile.Replace(".ndo.xsd", ".ndo.xsd.bak"), true);
 			dsSchema.WriteXmlSchema(schemaFile);
 
 			if (options.GenerateSQL)
 			{
-				messages.WriteLine("Generating sql file");
+				if (this.verboseMode)
+					messages.WriteLine( "Generating sql file" );
 				string sqlFileName = schemaFile.Replace(".xsd", ".sql");
                 TypeManager tm = null;
                 if (options.IncludeTypecodes)

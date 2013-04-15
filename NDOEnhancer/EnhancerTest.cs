@@ -121,13 +121,16 @@ namespace EnhancerTest
 			{
 				throw new Exception("Can't find file '" + arg + "'");
 			}
+#if DEBUG
             Console.WriteLine("Loading Project Description...");
+#endif
 			pd = new ProjectDescription(arg);
             options = pd.ConfigurationOptions;
 
+#if DEBUG
             Console.WriteLine("Loading Project Description ready.");
-#if DEBUG   
-            this.verboseMode = true;
+
+			this.verboseMode = true;
 #else
             this.verboseMode = options.VerboseMode;
 
@@ -135,8 +138,7 @@ namespace EnhancerTest
             if (this.verboseMode)
                 Console.WriteLine("Domain base directory is: " + AppDomain.CurrentDomain.BaseDirectory);
 #endif
-            if (this.verboseMode)
-                Console.WriteLine(EnhDate.String.Replace("NDO", "Enhancer"));
+            Console.WriteLine(EnhDate.String.Replace("NDO", "NDO Enhancer"));
 
             if (!pd.IsWebProject)
 			    pd.References.Add(pd.AssemblyName, new NDOReference(pd.AssemblyName, pd.BinFile, true));

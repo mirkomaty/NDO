@@ -121,35 +121,35 @@ namespace NDOEnhancer
             {
                 messages.WriteLine("Warning: Can't extract schema version from the mapping file. Error message: " + ex.Message);
             }
-            if (options.GenerateSQL)
-            {
-                string sqlFileName = string.Empty;
-#if DEBUG
-                messages.WriteLine("  main sql script...");
-#endif
-                try
-                {
-                    sqlFileName = Path.ChangeExtension(projectDescription.BinFile, ".ndo.sql");
-                    projectDescription.AddFileToProject(sqlFileName);
-                }
-                catch (Exception ex)
-                {
-                    messages.WriteLine("Warning: Can't add schema file '" + sqlFileName + "' to the project. " + ex.Message);
-                }
+//            if (options.GenerateSQL)
+//            {
+//                string sqlFileName = string.Empty;
+//#if DEBUG
+//                messages.WriteLine( "  main sql script..." );
+//#endif
+//                try
+//                {
+//                    sqlFileName = Path.ChangeExtension( projectDescription.BinFile, ".ndo.sql" );
+//                    projectDescription.AddFileToProject( sqlFileName );
+//                }
+//                catch (Exception ex)
+//                {
+//                    messages.WriteLine( "Warning: Can't add schema file '" + sqlFileName + "' to the project. " + ex.Message );
+//                }
 
-#if DEBUG
-                messages.WriteLine("  diff sql script...");
-#endif
-                try
-                {
-                    sqlFileName = Path.ChangeExtension(projectDescription.BinFile, ".ndodiff." + schemaVersion + ".sql");
-				    projectDescription.AddFileToProject(sqlFileName);
-                }
-                catch (Exception ex)
-                {
-                    messages.WriteLine("Warning: Can't add schema diff file '" + sqlFileName + "' to the project. " + ex.Message);
-                }
-        }
+//#if DEBUG
+//                messages.WriteLine( "  diff sql script..." );
+//#endif
+//                try
+//                {
+//                    sqlFileName = Path.ChangeExtension( projectDescription.BinFile, ".ndodiff." + schemaVersion + ".sql" );
+//                    projectDescription.AddFileToProject( sqlFileName );
+//                }
+//                catch (Exception ex)
+//                {
+//                    messages.WriteLine( "Warning: Can't add schema diff file '" + sqlFileName + "' to the project. " + ex.Message );
+//                }
+//            }
 #if DEBUG
             messages.WriteLine("...ready");
 #endif
@@ -270,61 +270,63 @@ namespace NDOEnhancer
 				}
 
 				// ------------------ MsBuild Support -----------------------
-				if ( options.UseMsBuild )
-					return;
-
-				// The platform target is the more correct platform description.
-				// If it is available, let's use it.
-				string platform2 = projectDescription.PlatformTarget;
-				if ( !string.IsNullOrEmpty( platform2 ) )
-					platform = platform2;
-
-				string appName = "NDOEnhancer.exe";
-				if ( platform == "x86" && OperatingSystem.Is64Bit )
+				if (!options.UseMsBuild)
 				{
-					appName = "Enhancerx86Stub.exe";
-					messages.WriteLine("NDO-Addin: Using x86 Stub");
-				}
-				ConsoleProcess cp = new ConsoleProcess(false);
-				int result = cp.Execute("\"" + Path.Combine(ApplicationObject.AssemblyPath, appName) + "\"",
-					"\"" + projFileName + "\"");
 
-                if (cp.Stdout != String.Empty)
-					messages.WriteLine(cp.Stdout);
+					// The platform target is the more correct platform description.
+					// If it is available, let's use it.
+					string platform2 = projectDescription.PlatformTarget;
+					if (!string.IsNullOrEmpty( platform2 ))
+						platform = platform2;
 
-				string stderr = cp.Stderr;
-				if(stderr != string.Empty)
-				{
-					Regex regex = new Regex(@"Error:");
-					MatchCollection mc = regex.Matches(stderr);
-					int lastmatch = mc.Count - 1;
-					for(int i = 0; i < mc.Count; i++)
+					string appName = "NDOEnhancer.exe";
+					if (platform == "x86" && OperatingSystem.Is64Bit)
 					{
-						int endindex;
-						if (i == lastmatch)
-							endindex = stderr.Length;
-						else
-							endindex = mc[i + 1].Index;
-						int startindex = mc[i].Index;
-//						messages.WriteLine("[" + i + "]:" + startindex + ',' + endindex);
-						// The substring always ends with a '\n', which should be removed.
-						string outString = stderr.Substring(startindex, endindex - startindex);
-						if (outString.EndsWith("\r\n"))
-							outString = outString.Substring(0, outString.Length - 2);
-//						messages.ShowError("|" + outString + "|");
-						messages.ShowError(outString);
+						appName = "Enhancerx86Stub.exe";
+						messages.WriteLine( "NDO-Addin: Using x86 Stub" );
+					}
+					ConsoleProcess cp = new ConsoleProcess( false );
+					int result = cp.Execute( "\"" + Path.Combine( ApplicationObject.AssemblyPath, appName ) + "\"",
+						"\"" + projFileName + "\"" );
+
+					if (cp.Stdout != String.Empty)
+						messages.WriteLine( cp.Stdout );
+
+					string stderr = cp.Stderr;
+					if (stderr != string.Empty)
+					{
+						Regex regex = new Regex( @"Error:" );
+						MatchCollection mc = regex.Matches( stderr );
+						int lastmatch = mc.Count - 1;
+						for (int i = 0; i < mc.Count; i++)
+						{
+							int endindex;
+							if (i == lastmatch)
+								endindex = stderr.Length;
+							else
+								endindex = mc[i + 1].Index;
+							int startindex = mc[i].Index;
+							//						messages.WriteLine("[" + i + "]:" + startindex + ',' + endindex);
+							// The substring always ends with a '\n', which should be removed.
+							string outString = stderr.Substring( startindex, endindex - startindex );
+							if (outString.EndsWith( "\r\n" ))
+								outString = outString.Substring( 0, outString.Length - 2 );
+							//						messages.ShowError("|" + outString + "|");
+							messages.ShowError( outString );
+						}
+					}
+
+					//if ( projectDescription.ConfigurationOptions.EnableEnhancer )
+					//    PostProcess( projectDescription );
+
+					if (result != 0)
+					{
+						if (messages.Success)
+							messages.ShowError( "An unknown error occured in the NDO Enhancer" );
+						// Now messages.Success is false
 					}
 				}
-				//if ( projectDescription.ConfigurationOptions.EnableEnhancer )
-				//    PostProcess( projectDescription );
-
-                if (result != 0)
-				{
-					if (messages.Success)
-						messages.ShowError("An unknown error occured in the NDO Enhancer");
-					// Now messages.Success is false
-				}
-				if (messages.Success)
+				if (messages.Success || options.UseMsBuild)
 				{
 					IncludeFiles(options, project, projectDescription);
 				}

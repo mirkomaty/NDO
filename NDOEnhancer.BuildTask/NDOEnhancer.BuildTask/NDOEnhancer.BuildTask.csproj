@@ -36,6 +36,7 @@
     <Reference Include="System" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ConsoleProcess.cs" />
     <Compile Include="CopyFile.cs" />
     <Compile Include="NDOEnhancer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
