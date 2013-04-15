@@ -372,7 +372,7 @@ namespace NDO
 				else if ( t.TokenType == Token.Type.Parameter )
 				{
 					int parIndex = ( (ScParameter) t ).Index;
-					if ( tcParameters.ContainsKey( lastUsedName ) )
+					if (lastUsedName != null && tcParameters.ContainsKey( lastUsedName ) )
 					{
 						string parStr = tcParameters[lastUsedName];
 						string newParStr = "{tc:" + parIndex + "}";
