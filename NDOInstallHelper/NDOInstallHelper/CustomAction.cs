@@ -20,11 +20,15 @@ namespace NDOInstallHelper
 		[CustomAction]
 		public static ActionResult NDOUninstall( Session session )
 		{
-			string location = null;
-			if ( session.CustomActionData.ContainsKey( "INSTALLLOCATION" ) )
-				location = session.CustomActionData["INSTALLLOCATION"];
-			new ActionPerformer( location ).Uninstall();
+			try
+			{
+				string location = null;
+				if (session.CustomActionData.ContainsKey( "INSTALLLOCATION" ))
+					location = session.CustomActionData["INSTALLLOCATION"];
+				new ActionPerformer( location ).Uninstall();
 
+			}
+			catch {}
 			return ActionResult.Success;
 		}
 	}
@@ -32,24 +36,18 @@ namespace NDOInstallHelper
 	class ActionPerformer
 	{
 		string installPath;
-		string logPath;
 		string[] addInFileNames = { "NDO21-VS2010.AddIn", "NDO21-VS2012.AddIn" };
 
 		public ActionPerformer(string installPath)
 		{
 			this.installPath = installPath;
-			this.logPath = Path.Combine( Environment.GetFolderPath( Environment.SpecialFolder.ApplicationData ), "NDO" );
-			if ( !Directory.Exists( logPath ) )
-			{
-				new DirectoryInfo( Environment.GetFolderPath( Environment.SpecialFolder.ApplicationData ) ).CreateSubdirectory( "NDO" );
-			}			
 		}
 
 		public void Install()
 		{
 			try
 			{
-
+/*
 				string enhPath = Path.Combine( this.installPath, "NDOEnhancer.dll" );
 				string addInPath = Path.Combine( this.installPath, "NDO21-VS2010.AddIn" );
 				string addInText = null;
@@ -80,6 +78,7 @@ namespace NDOInstallHelper
 						Log( ex.Message, true );
 					}
 				}
+ */
 			}
 			catch ( Exception ex )
 			{
@@ -115,11 +114,14 @@ namespace NDOInstallHelper
 
 		void Log( string msg, bool isError )
 		{
-			if (isError)
-				msg += @"
-Please install or uninstall the NDO .addin files manually from the folder %ALLUSERSPROFILE%\Microsoft\MSEnvShared\addins";
+			string logPath = Path.Combine( Environment.GetFolderPath( Environment.SpecialFolder.ApplicationData ), "NDO" );
 
-			File.AppendAllText(Path.Combine( this.logPath, "InstLog.txt" ), msg );
+			if (!Directory.Exists( logPath ))
+			{
+				new DirectoryInfo( Environment.GetFolderPath( Environment.SpecialFolder.ApplicationData ) ).CreateSubdirectory( "NDO" );
+			}
+
+			File.AppendAllText( Path.Combine( logPath, "InstLog.txt" ), msg );
 		}
 
 		public void Uninstall()
@@ -136,7 +138,10 @@ Please install or uninstall the NDO .addin files manually from the folder %ALLUS
 						cmds.RemoveCommandBar( cb );
 				}
 			}
-			catch { }
+			catch (Exception ex)
+			{
+				Log( ex.ToString(), true );
+			}
 		}
 	}
 }

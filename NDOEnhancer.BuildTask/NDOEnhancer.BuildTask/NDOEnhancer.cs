@@ -3,6 +3,7 @@ using Microsoft.Build.Utilities;
 using Microsoft.Win32;
 using System;
 using System.IO;
+using System.Diagnostics;
 
 namespace NDO.BuildTask
 {
@@ -12,7 +13,7 @@ namespace NDO.BuildTask
 		public string NdoProjectFile {get; set;}
 
 		[Required]
-		public string PlatformTarget {get; set;}
+		public string NdoPlatformTarget {get; set;}
 
 		private string ndoPath;
 
@@ -20,7 +21,7 @@ namespace NDO.BuildTask
 		{
 			get
 			{
-				if ( PlatformTarget == "x86" )
+				if ( NdoPlatformTarget == "x86" )
 					return "EnhancerX86Stub.exe";
 				return "NDOEnhancer.exe";
 			}
@@ -50,6 +51,7 @@ namespace NDO.BuildTask
 					throw new Exception( @"NDO seems not to be installed -- can't run the enhancer. Registry Key HKLM\SOFTWARE\NDO is missing." );
 				this.ndoPath = (string) registryKey.GetValue( "InstallDir" );
 			}
+			Trace.WriteLine( "Enhancer: " + Path.Combine( this.ndoPath, this.ToolName ) );
 			return Path.Combine( this.ndoPath, this.ToolName );
 		}
 	}

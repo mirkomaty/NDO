@@ -49,8 +49,8 @@ using NDOInterfaces;
 using Microsoft.VisualStudio.Shell.Interop;
 
 using SD = System.Diagnostics;
-using MBE = Microsoft.Build.Evaluation;
-using MB = Microsoft.Build.Execution;
+//using MBE = Microsoft.Build.Evaluation;
+//using MB = Microsoft.Build.Execution;
 
 namespace NDOEnhancer
 {
@@ -597,6 +597,7 @@ namespace NDOEnhancer
 						{
 							VSLangProj.References refs = ((VSProject)project.Object).References;
 							refs.Add(ndoPath.Replace("\\ndo", "\\NDO"));
+							project.Save();
 						}
 					}
 				}
@@ -640,14 +641,11 @@ namespace NDOEnhancer
                     }
                 }
 
-				bool doSave = true;
-
 				if ( options.EnableAddIn )
 				{
 					if ( !options.UseMsBuild )
 					{
 						options.UseMsBuild = true;
-						doSave = false;
 						options.Save( this.projectDescription );
 						ChangeProjectFile();
 					}
@@ -677,6 +675,7 @@ namespace NDOEnhancer
 			using ( FileStream fs = File.OpenRead( fileName ) )
 			{
 				projectElement = XElement.Load( fs );
+				fs.Close();
 			}
 			XNamespace ns = "http://schemas.microsoft.com/developer/msbuild/2003";
 
@@ -699,6 +698,7 @@ namespace NDOEnhancer
 				hasChanges = true;
 				XElement ndoEnhancerElement = new XElement( ns + "NDOEnhancer" );
 				ndoEnhancerElement.Add( new XAttribute( "NdoProjectFile", "$(ProjectName).ndoproj" ) );
+				ndoEnhancerElement.Add( new XAttribute( "NdoPlatformTarget", "$(Platform)" ) );
 				afterBuildElement.Add( ndoEnhancerElement );
 			}
 			IEnumerable<XElement> ndoInstallPathElements = projectElement.Descendants( ns + "NDOInstallPath" );
@@ -719,14 +719,14 @@ namespace NDOEnhancer
 				XElement importElement = new XElement( ns + "Import" );
 				projectElement.Add( importElement );
 				importElement.Add( new XAttribute( "Project", @"$(NDOInstallPath)\NDOEnhancer.Targets" ) );
-				importElement.Add( new XAttribute( "PlatformTarget", "$(Platform)" ) );
 			}
 
 			if ( hasChanges )
 			{
-				projectElement.Save( File.OpenWrite( fileName ) );
-				//File.Copy( fileName + ".new", fileName, true );
-				//File.Delete( fileName + ".new" );
+				using ( Stream fs = File.OpenWrite( fileName ) )
+				{
+					projectElement.Save( fs );
+				}
 			}
 		}
 

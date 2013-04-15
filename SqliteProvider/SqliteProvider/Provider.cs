@@ -87,7 +87,7 @@ namespace NDO.SqliteProvider
 				if ( path.IndexOf( "Temporary ASP.NET Files" ) > -1 )
 					path = Path.Combine( AppDomain.CurrentDomain.BaseDirectory, "bin" );
 				if ( IntPtr.Size == 8 )
-					path = Path.Combine( path, "x64" );
+					path = Path.Combine( path, "amd64" );
 				else
 					path = Path.Combine( path, "x86" );
 				path = Path.Combine( path, "System.Data.SQLite.dll" );				
