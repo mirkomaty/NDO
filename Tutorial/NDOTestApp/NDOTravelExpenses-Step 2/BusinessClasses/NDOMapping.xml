@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
-<NDOMapping SchemaVersion="">
+<NDOMapping SchemaVersion="1.0">
   <Connections>
     <Connection ID="C0" Name="Substitute this string with your connection string" Type="" />
   </Connections>

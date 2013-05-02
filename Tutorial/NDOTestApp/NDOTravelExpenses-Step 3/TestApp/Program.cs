@@ -31,20 +31,23 @@ namespace TestApp
             e.Address = a;
             pm.MakePersistent(e);
             pm.Save();
-            
-            /* Query code
-            PersistenceManager pm = new PersistenceManager();
-            Query q = pm.NewQuery(typeof(Employee));
-            IList l = q.Execute();
-            foreach (Employee e in l)
-            {
-                Console.WriteLine(e.FirstName + " " + e.LastName + ", " + e.Address.City);
-                foreach (Travel t in e.Travels)
-                    Console.WriteLine(" Travel: " + t.Purpose);
-            }
-            */
+
+			Read();
             
         }
+
+		static void Read()
+		{
+			PersistenceManager pm = new PersistenceManager();
+			Query q = pm.NewQuery( typeof( Employee ) );
+			IList l = q.Execute();
+			foreach (Employee e in l)
+			{
+				Console.WriteLine( e.FirstName + " " + e.LastName + ", " + e.Address.City );
+				foreach (Travel t in e.Travels)
+					Console.WriteLine( " Travel: " + t.Purpose );
+			}
+		}
 
 		static void CheckBits()
 		{

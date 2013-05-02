@@ -26,18 +26,22 @@ namespace TestApp
             pm.BuildDatabase();
             pm.MakePersistent(e);
             pm.Save();
-             
-            /* Query Code
-            PersistenceManager pm = new PersistenceManager();
-            NDOQuery<Employee> q = new NDOQuery<Employee>(pm);
-            List<Employee> lstEmployee = q.Execute();
-            Employee e = lstEmployee[0];
-            Console.WriteLine(e.FirstName + " " + e.LastName);
-            Console.WriteLine(e.Address.Street);
-            Console.WriteLine(e.Address.City + ", " + e.Address.Zip);
-            Console.WriteLine(e.Address.CountryCode);
-            */
+
+			Read();
         }
+
+		static void Read()
+		{
+			Console.WriteLine("Reading Data");
+			PersistenceManager pm = new PersistenceManager();
+			NDOQuery<Employee> q = new NDOQuery<Employee>( pm );
+			List<Employee> lstEmployee = q.Execute();
+			Employee e = lstEmployee[0];
+			Console.WriteLine( e.FirstName + " " + e.LastName );
+			Console.WriteLine( e.Address.Street );
+			Console.WriteLine( e.Address.City + ", " + e.Address.Zip );
+			Console.WriteLine( e.Address.CountryCode );
+		}
 
 		static void CheckBits()
 		{
