@@ -46,8 +46,10 @@ namespace NDO
 			{
 				if (null == assemblyPath)
 				{
-					RegistryKey key = Registry.LocalMachine.OpenSubKey( @"SOFTWARE\NDO" );
+					RegistryKey key = Registry.LocalMachine.OpenSubKey( @"SOFTWARE\Wow6432Node\NDO" );
 					if ( key == null )
+						key = Registry.LocalMachine.OpenSubKey( @"SOFTWARE\NDO" );
+					if (key == null)
 						throw new Exception( @"Can't find NDO in the registry at HKLM\SOFTWARE\NDO. Please reinstall NDO." );
 					assemblyPath = (string) key.GetValue( "InstallDir" );
 					if ( assemblyPath == null )

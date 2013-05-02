@@ -1,6 +1,6 @@
 //
-// Copyright (C) 2002-2008 HoT - House of Tools Development GmbH 
-// (www.netdataobjects.com)
+// Copyright (C) 2002-2013 Mirko Matytschak 
+// (www.netdataobjects.de)
 //
 // Author: Mirko Matytschak
 //
@@ -15,7 +15,7 @@
 // Commercial Licence:
 // For those, who want to develop software with help of this program 
 // and need to distribute their work with a more restrictive licence, 
-// there is a commercial licence available at www.netdataobjects.com.
+// there is a commercial licence available at www.netdataobjects.de.
 // 
 // The above copyright notice and this permission notice shall be
 // included in all copies or substantial portions of the Software.
@@ -33,10 +33,9 @@
 using System;
 using System.Reflection;
 using System.IO;
-using System.Collections;
-using System.Collections.Specialized;
 using System.Data;
 using System.Data.Common;
+using System.Collections.Generic;
 using Cli;
 using NDOInterfaces;
 
@@ -58,12 +57,12 @@ namespace NDO
     public class NDOProviderFactory
     {
         private static NDOProviderFactory factory = new NDOProviderFactory();
-        private ListDictionary providers = null; // Marks the providers as not loaded
-        private ListDictionary generators = new ListDictionary();
+        private Dictionary<string,IProvider> providers = null; // Marks the providers as not loaded
+		private Dictionary<string,ISqlGenerator> generators = new Dictionary<string,ISqlGenerator>();
         private bool skipPrivatePath;
 
 
-        public ListDictionary Generators
+		public IDictionary<string, ISqlGenerator> Generators
         {
             get 
             {
@@ -76,7 +75,7 @@ namespace NDO
         {
             if (this.providers != null)
                 return;
-            this.providers = new ListDictionary();
+            this.providers = new Dictionary<string,IProvider>();
             this["SqlServer"] = new NDOSqlProvider();
             this["Access"] = new NDOAccessProvider();
             this["Oracle"] = new NDOOracleProvider();
@@ -145,7 +144,7 @@ namespace NDO
                         if (t.IsClass && !t.IsAbstract && typeof(IProvider).IsAssignableFrom(t))
                         {
                             provider = (IProvider)Activator.CreateInstance(t);
-                            if (this[provider.Name] == null)
+                            if (!this.providers.ContainsKey(provider.Name))
                                 this[provider.Name] = provider;
                         }
                     }
@@ -154,7 +153,7 @@ namespace NDO
                         if (t.IsClass && !t.IsAbstract && typeof(ISqlGenerator).IsAssignableFrom(t))
                         {
                             generator = Activator.CreateInstance(t) as ISqlGenerator;
-                            if (!generators.Contains(generator.ProviderName))
+                            if (!generators.ContainsKey(generator.ProviderName))
                             {
                                 this.generators.Add(generator.ProviderName, generator);
                                 generator.Provider = this[generator.ProviderName];
@@ -201,9 +200,9 @@ namespace NDO
                 LoadProviders();
                 string[] result = new string[this.providers.Count];
                 int i = 0;
-                foreach (DictionaryEntry de in this.providers)
+                foreach (string key in this.providers.Keys)
                 {
-                    result[i++] = (string)de.Key;
+                    result[i++] = key;
                 }
                 return result;
             }

@@ -64,6 +64,10 @@ namespace EnhancerTest
 			}
 			pd = new ProjectDescription(arg);
 			options = pd.ConfigurationOptions;
+
+			if (!options.EnableAddIn)
+				return 0;
+
 			this.verboseMode = options.VerboseMode;
 			string appDomainDir = Path.GetDirectoryName(pd.BinFile);
 			AppDomain cd = AppDomain.CurrentDomain;
@@ -126,6 +130,9 @@ namespace EnhancerTest
 #endif
 			pd = new ProjectDescription(arg);
             options = pd.ConfigurationOptions;
+
+			if (!options.EnableAddIn)
+				return;
 
 #if DEBUG
             Console.WriteLine("Loading Project Description ready.");

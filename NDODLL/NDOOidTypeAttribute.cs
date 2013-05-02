@@ -59,8 +59,8 @@ namespace NDO
     /// <seealso cref="PersistenceManagerBase.IdGenerationEvent"/>
 	/// <seealso cref="NDOObjectIdAttribute"/>
 	/// </remarks>
-	[AttributeUsage(AttributeTargets.Class | AttributeTargets.Assembly, AllowMultiple = false)]	
-    [Obsolete("Use the OidColumnAttribute instead.")]
+	//[Obsolete("Use the OidColumnAttribute instead.")]
+	[AttributeUsage( AttributeTargets.Class | AttributeTargets.Assembly, AllowMultiple = false )]	
 	public class NDOOidTypeAttribute : Attribute
 	{
 		Type oidType;
