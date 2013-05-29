@@ -124,7 +124,7 @@ namespace NDOEnhancer
 		private NDODataSet			dsSchema;
 		private ConfigurationOptions options;
 		private string				assemblyKeyFile = null;
-		
+		private bool				mapProperties = false;
 
 		
 
@@ -565,9 +565,15 @@ namespace NDOEnhancer
 		private void
 		determineOidTypes()
 		{
-            foreach (Class cl in mappings.Classes)
+			ArrayList al = new ArrayList( mappings.Classes );
+            foreach (Class cl in al)
             {
                 ClassNode classNode = (ClassNode)allPersistentClasses[cl.FullName];
+				if (classNode == null)
+				{
+					mappings.RemoveClass( cl );
+					continue;
+				}
                 cl.IsAbstract = classNode.IsAbstract;  // usually this is set in Class.InitFields, which isn't called by the Enhancer.
                 cl.SystemType = classNode.ClassType;
             }
@@ -1337,6 +1343,11 @@ namespace NDOEnhancer
 									break;
 								}
 							}
+							if (ai.Name == "NDO.NDOMapPropertiesAttribute")
+							{
+								this.mapProperties = true;
+							}
+
 						}
 						if (this.assemblyKeyFile != null)
 							break;
@@ -1464,8 +1475,13 @@ namespace NDOEnhancer
 #if NDO20
                             if (assElem.Major != 2 && assElem.Minor != 0)
                             {
+								string version = EnhDate.String;
+								Regex regex = new Regex( @"V\. (\d+\.\d+)" );
+								Match match = regex.Match( version );
+								if (match.Success)
+									version = match.Groups[1].Value;
                                 throw new Exception("This assembly is built with NDO.dll Version " + assElem.VersionString.Replace(':', '.')
-                                    + ". This NDO enhancer only works with NDO.dll version 2.0. Please correct your assembly reference and rebuild the assembly.");
+                                    + ". This NDO enhancer only works with NDO.dll version " + version + ". Please correct your assembly reference and rebuild the assembly.");
                             }
 #endif
 #if NDO12
