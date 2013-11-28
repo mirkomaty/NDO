@@ -360,6 +360,8 @@ namespace NDOEnhancer
 		{
 			if ( path.IndexOf( @"Microsoft.NET\Framework" ) > -1 )
 				return;
+			if ( path.IndexOf( @"Reference Assemblies\Microsoft" ) > -1 )
+				return;
 			if ( name.ToUpper() == "NDO" )
 				return;
 			if ( name.ToUpper() == "NDOInterfaces" )
