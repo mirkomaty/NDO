@@ -196,7 +196,8 @@ namespace NDOEnhancer
 					continue;
 
 				string dllPath = reference.Path;
-				if (dllPath.IndexOf(@"Microsoft.NET\Framework") != -1 
+				if (dllPath.IndexOf(@"Microsoft.NET\Framework") != -1
+                    || dllPath.IndexOf(@"Reference Assemblies\Microsoft") != -1
 					|| String.Compare(Path.GetFileName(dllPath), "NDO.dll") == 0
                     || String.Compare(Path.GetFileName(dllPath), "NDOInterfaces.dll") == 0)
 					continue;
