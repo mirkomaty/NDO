@@ -1869,10 +1869,12 @@ namespace NDO
 
 			Relation r = cl.FindRelation(relationName);
 
-			if (pc.NDOGetLoadState(r.Ordinal))
+			if ( r == null )
+				throw new NDOException( 76, String.Format( "Error while loading related objects: Can't find relation mapping for the field {0}.{1}. Check your mapping file.", pc.GetType().FullName, relationName ) );
+
+			if ( pc.NDOGetLoadState( r.Ordinal ) )
 				return null;
-			if (r == null)
-				throw new NDOException(76, String.Format("Error while loading related objects: Can't find relation mapping for the field {0}.{1}. Check your mapping file.", pc.GetType().FullName, relationName));
+
 			return LoadRelation(pc, r, hollow);
 		}
 
