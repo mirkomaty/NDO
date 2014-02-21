@@ -91,6 +91,8 @@ namespace NDOEnhancer
         private CheckBox chkIncludeTypecodes;
 		private CheckBox chkDropExistingElements;
 		private CheckBox chkGenerateFkConstraints;
+		private TextBox txtTargetMappingFileName;
+		private Label label1;
 		private ProjectDescription projectDescription;
 
 		public ConfigurationDialog(Project project, ProjectDescription projectDescription)
@@ -123,7 +125,7 @@ namespace NDOEnhancer
 		private void InitializeComponent()
 		{
 			this.components = new System.ComponentModel.Container();
-			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager( typeof( ConfigurationDialog ) );
+			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ConfigurationDialog));
 			this.chkActivateAddIn = new System.Windows.Forms.CheckBox();
 			this.chkActivateEnhancer = new System.Windows.Forms.CheckBox();
 			this.chkMappingNew = new System.Windows.Forms.CheckBox();
@@ -136,6 +138,8 @@ namespace NDOEnhancer
 			this.chkChangeEvents = new System.Windows.Forms.CheckBox();
 			this.chkUseTimeStamps = new System.Windows.Forms.CheckBox();
 			this.groupBox1 = new System.Windows.Forms.GroupBox();
+			this.chkDropExistingElements = new System.Windows.Forms.CheckBox();
+			this.chkGenerateFkConstraints = new System.Windows.Forms.CheckBox();
 			this.chkIncludeTypecodes = new System.Windows.Forms.CheckBox();
 			this.radioDefaultEncoding = new System.Windows.Forms.RadioButton();
 			this.radioUtf8Encoding = new System.Windows.Forms.RadioButton();
@@ -147,320 +151,337 @@ namespace NDOEnhancer
 			this.btnPresetApp = new System.Windows.Forms.Button();
 			this.btnSaveAs = new System.Windows.Forms.Button();
 			this.btnNewDatabase = new System.Windows.Forms.Button();
-			this.toolTip1 = new System.Windows.Forms.ToolTip( this.components );
+			this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
 			this.chkVerboseMode = new System.Windows.Forms.CheckBox();
 			this.label5 = new System.Windows.Forms.Label();
 			this.txtSchemaVersion = new System.Windows.Forms.TextBox();
-			this.chkGenerateFkConstraints = new System.Windows.Forms.CheckBox();
-			this.chkDropExistingElements = new System.Windows.Forms.CheckBox();
+			this.txtTargetMappingFileName = new System.Windows.Forms.TextBox();
+			this.label1 = new System.Windows.Forms.Label();
 			this.groupBox1.SuspendLayout();
 			this.SuspendLayout();
 			// 
 			// chkActivateAddIn
 			// 
-			this.chkActivateAddIn.Location = new System.Drawing.Point( 20, 10 );
+			this.chkActivateAddIn.Location = new System.Drawing.Point(20, 10);
 			this.chkActivateAddIn.Name = "chkActivateAddIn";
-			this.chkActivateAddIn.Size = new System.Drawing.Size( 188, 21 );
+			this.chkActivateAddIn.Size = new System.Drawing.Size(188, 21);
 			this.chkActivateAddIn.TabIndex = 0;
 			this.chkActivateAddIn.Text = "Activate NDO AddIn";
-			this.toolTip1.SetToolTip( this.chkActivateAddIn, "Choose this options, if your project contains or references persistent types." );
-			this.chkActivateAddIn.Click += new System.EventHandler( this.chkActivateAddIn_CheckedChanged );
+			this.toolTip1.SetToolTip(this.chkActivateAddIn, "Choose this options, if your project contains or references persistent types.");
+			this.chkActivateAddIn.Click += new System.EventHandler(this.chkActivateAddIn_CheckedChanged);
 			// 
 			// chkActivateEnhancer
 			// 
-			this.chkActivateEnhancer.Location = new System.Drawing.Point( 20, 37 );
+			this.chkActivateEnhancer.Location = new System.Drawing.Point(20, 37);
 			this.chkActivateEnhancer.Name = "chkActivateEnhancer";
-			this.chkActivateEnhancer.Size = new System.Drawing.Size( 188, 20 );
+			this.chkActivateEnhancer.Size = new System.Drawing.Size(188, 20);
 			this.chkActivateEnhancer.TabIndex = 1;
 			this.chkActivateEnhancer.Text = "Activate enhancer";
-			this.toolTip1.SetToolTip( this.chkActivateEnhancer, "Choose this option, if your project contains persistent types." );
-			this.chkActivateEnhancer.CheckedChanged += new System.EventHandler( this.chkActivateEnhancer_CheckedChanged );
+			this.toolTip1.SetToolTip(this.chkActivateEnhancer, "Choose this option, if your project contains persistent types.");
+			this.chkActivateEnhancer.CheckedChanged += new System.EventHandler(this.chkActivateEnhancer_CheckedChanged);
 			// 
 			// chkMappingNew
 			// 
-			this.chkMappingNew.Location = new System.Drawing.Point( 20, 90 );
+			this.chkMappingNew.Location = new System.Drawing.Point(20, 90);
 			this.chkMappingNew.Name = "chkMappingNew";
-			this.chkMappingNew.Size = new System.Drawing.Size( 272, 21 );
+			this.chkMappingNew.Size = new System.Drawing.Size(272, 21);
 			this.chkMappingNew.TabIndex = 4;
 			this.chkMappingNew.Text = "Always Generate a new mapping File";
-			this.toolTip1.SetToolTip( this.chkMappingNew, "Choose this options, if NDO should discard and rebuild all mapping information." );
+			this.toolTip1.SetToolTip(this.chkMappingNew, "Choose this options, if NDO should discard and rebuild all mapping information.");
 			// 
 			// btnCancel
 			// 
 			this.btnCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-			this.btnCancel.Location = new System.Drawing.Point( 473, 310 );
+			this.btnCancel.Location = new System.Drawing.Point(473, 341);
 			this.btnCancel.Name = "btnCancel";
-			this.btnCancel.Size = new System.Drawing.Size( 100, 39 );
+			this.btnCancel.Size = new System.Drawing.Size(100, 39);
 			this.btnCancel.TabIndex = 8;
 			this.btnCancel.Text = "Cancel";
 			// 
 			// btnPresetLibrary
 			// 
-			this.btnPresetLibrary.Location = new System.Drawing.Point( 17, 310 );
+			this.btnPresetLibrary.Location = new System.Drawing.Point(17, 341);
 			this.btnPresetLibrary.Name = "btnPresetLibrary";
-			this.btnPresetLibrary.Size = new System.Drawing.Size( 100, 39 );
+			this.btnPresetLibrary.Size = new System.Drawing.Size(100, 39);
 			this.btnPresetLibrary.TabIndex = 9;
 			this.btnPresetLibrary.Text = "Preset for Library";
-			this.toolTip1.SetToolTip( this.btnPresetLibrary, "Selects all settings necessary for projects containing persistent types." );
-			this.btnPresetLibrary.Click += new System.EventHandler( this.btnPresetLibrary_Click );
+			this.toolTip1.SetToolTip(this.btnPresetLibrary, "Selects all settings necessary for projects containing persistent types.");
+			this.btnPresetLibrary.Click += new System.EventHandler(this.btnPresetLibrary_Click);
 			// 
 			// btnOK
 			// 
 			this.btnOK.DialogResult = System.Windows.Forms.DialogResult.OK;
-			this.btnOK.Location = new System.Drawing.Point( 359, 310 );
+			this.btnOK.Location = new System.Drawing.Point(359, 341);
 			this.btnOK.Name = "btnOK";
-			this.btnOK.Size = new System.Drawing.Size( 100, 39 );
+			this.btnOK.Size = new System.Drawing.Size(100, 39);
 			this.btnOK.TabIndex = 10;
 			this.btnOK.Text = "OK";
-			this.btnOK.Click += new System.EventHandler( this.btnOK_Click );
+			this.btnOK.Click += new System.EventHandler(this.btnOK_Click);
 			// 
 			// btnConnString
 			// 
-			this.btnConnString.Location = new System.Drawing.Point( 537, 276 );
+			this.btnConnString.Location = new System.Drawing.Point(537, 304);
 			this.btnConnString.Name = "btnConnString";
-			this.btnConnString.Size = new System.Drawing.Size( 42, 21 );
+			this.btnConnString.Size = new System.Drawing.Size(42, 21);
 			this.btnConnString.TabIndex = 11;
 			this.btnConnString.Text = "...";
-			this.toolTip1.SetToolTip( this.btnConnString, "Enter existing database connection" );
-			this.btnConnString.Click += new System.EventHandler( this.btnConnString_Click );
+			this.toolTip1.SetToolTip(this.btnConnString, "Enter existing database connection");
+			this.btnConnString.Click += new System.EventHandler(this.btnConnString_Click);
 			// 
 			// txtConnectionString
 			// 
-			this.txtConnectionString.Location = new System.Drawing.Point( 17, 276 );
+			this.txtConnectionString.Location = new System.Drawing.Point(17, 304);
 			this.txtConnectionString.Name = "txtConnectionString";
-			this.txtConnectionString.Size = new System.Drawing.Size( 514, 20 );
+			this.txtConnectionString.Size = new System.Drawing.Size(514, 20);
 			this.txtConnectionString.TabIndex = 16;
-			this.toolTip1.SetToolTip( this.txtConnectionString, "This string will be copied into the mapping file, if there doesn\'t exist a valid " +
-        "connection string. Otherwise it will be ignored." );
+			this.toolTip1.SetToolTip(this.txtConnectionString, "This string will be copied into the mapping file, if there doesn\'t exist a valid " +
+        "connection string. Otherwise it will be ignored.");
 			// 
 			// label2
 			// 
-			this.label2.Location = new System.Drawing.Point( 17, 255 );
+			this.label2.Location = new System.Drawing.Point(17, 283);
 			this.label2.Name = "label2";
-			this.label2.Size = new System.Drawing.Size( 360, 21 );
+			this.label2.Size = new System.Drawing.Size(360, 21);
 			this.label2.TabIndex = 17;
 			this.label2.Text = "Default Connection String";
 			// 
 			// chkChangeEvents
 			// 
-			this.chkChangeEvents.Location = new System.Drawing.Point( 20, 170 );
+			this.chkChangeEvents.Location = new System.Drawing.Point(20, 170);
 			this.chkChangeEvents.Name = "chkChangeEvents";
-			this.chkChangeEvents.Size = new System.Drawing.Size( 302, 21 );
+			this.chkChangeEvents.Size = new System.Drawing.Size(302, 21);
 			this.chkChangeEvents.TabIndex = 19;
 			this.chkChangeEvents.Text = "Generate change events with Add Accessor";
-			this.toolTip1.SetToolTip( this.chkChangeEvents, "Check this option, if you intend to bind the UI directly to the accessor properti" +
-        "es of your persistent classes." );
+			this.toolTip1.SetToolTip(this.chkChangeEvents, "Check this option, if you intend to bind the UI directly to the accessor properti" +
+        "es of your persistent classes.");
 			// 
 			// chkUseTimeStamps
 			// 
-			this.chkUseTimeStamps.Location = new System.Drawing.Point( 20, 144 );
+			this.chkUseTimeStamps.Location = new System.Drawing.Point(20, 144);
 			this.chkUseTimeStamps.Name = "chkUseTimeStamps";
-			this.chkUseTimeStamps.Size = new System.Drawing.Size( 302, 20 );
+			this.chkUseTimeStamps.Size = new System.Drawing.Size(302, 20);
 			this.chkUseTimeStamps.TabIndex = 20;
 			this.chkUseTimeStamps.Text = "Generate Time Stamp Columns for each class";
-			this.toolTip1.SetToolTip( this.chkUseTimeStamps, "Check this option, if all tables should be protected by collistion detection." );
+			this.toolTip1.SetToolTip(this.chkUseTimeStamps, "Check this option, if all tables should be protected by collistion detection.");
 			// 
 			// groupBox1
 			// 
-			this.groupBox1.Controls.Add( this.chkDropExistingElements );
-			this.groupBox1.Controls.Add( this.chkGenerateFkConstraints );
-			this.groupBox1.Controls.Add( this.chkIncludeTypecodes );
-			this.groupBox1.Controls.Add( this.radioDefaultEncoding );
-			this.groupBox1.Controls.Add( this.radioUtf8Encoding );
-			this.groupBox1.Controls.Add( this.label4 );
-			this.groupBox1.Controls.Add( this.cbSqlDialect );
-			this.groupBox1.Controls.Add( this.chkGenerateSQLScript );
-			this.groupBox1.Location = new System.Drawing.Point( 342, 12 );
+			this.groupBox1.Controls.Add(this.chkDropExistingElements);
+			this.groupBox1.Controls.Add(this.chkGenerateFkConstraints);
+			this.groupBox1.Controls.Add(this.chkIncludeTypecodes);
+			this.groupBox1.Controls.Add(this.radioDefaultEncoding);
+			this.groupBox1.Controls.Add(this.radioUtf8Encoding);
+			this.groupBox1.Controls.Add(this.label4);
+			this.groupBox1.Controls.Add(this.cbSqlDialect);
+			this.groupBox1.Controls.Add(this.chkGenerateSQLScript);
+			this.groupBox1.Location = new System.Drawing.Point(342, 12);
 			this.groupBox1.Name = "groupBox1";
-			this.groupBox1.Size = new System.Drawing.Size( 265, 230 );
+			this.groupBox1.Size = new System.Drawing.Size(265, 244);
 			this.groupBox1.TabIndex = 21;
 			this.groupBox1.TabStop = false;
 			this.groupBox1.Text = " SQL ";
 			// 
+			// chkDropExistingElements
+			// 
+			this.chkDropExistingElements.Location = new System.Drawing.Point(13, 202);
+			this.chkDropExistingElements.Name = "chkDropExistingElements";
+			this.chkDropExistingElements.Size = new System.Drawing.Size(235, 21);
+			this.chkDropExistingElements.TabIndex = 24;
+			this.chkDropExistingElements.Text = "Insert Drop Statements in the Script";
+			this.toolTip1.SetToolTip(this.chkDropExistingElements, "If checked, NDO generates instructions to remove existing tables and constraints." +
+        "");
+			// 
+			// chkGenerateFkConstraints
+			// 
+			this.chkGenerateFkConstraints.Location = new System.Drawing.Point(13, 152);
+			this.chkGenerateFkConstraints.Name = "chkGenerateFkConstraints";
+			this.chkGenerateFkConstraints.Size = new System.Drawing.Size(235, 21);
+			this.chkGenerateFkConstraints.TabIndex = 23;
+			this.chkGenerateFkConstraints.Text = "Generate Foreign Key Constraints";
+			this.toolTip1.SetToolTip(this.chkGenerateFkConstraints, "If checked, NDO generates foreign key constraints for the relations in the databa" +
+        "se.");
+			// 
 			// chkIncludeTypecodes
 			// 
-			this.chkIncludeTypecodes.Location = new System.Drawing.Point( 13, 173 );
+			this.chkIncludeTypecodes.Location = new System.Drawing.Point(13, 177);
 			this.chkIncludeTypecodes.Name = "chkIncludeTypecodes";
-			this.chkIncludeTypecodes.Size = new System.Drawing.Size( 235, 21 );
+			this.chkIncludeTypecodes.Size = new System.Drawing.Size(235, 21);
 			this.chkIncludeTypecodes.TabIndex = 22;
 			this.chkIncludeTypecodes.Text = "Include Typecodes in the Script";
-			this.toolTip1.SetToolTip( this.chkIncludeTypecodes, "If checked, NDO generates instructions to build an additional table with the type" +
-        " code information." );
+			this.toolTip1.SetToolTip(this.chkIncludeTypecodes, "If checked, NDO generates instructions to build an additional table with the type" +
+        " code information.");
 			// 
 			// radioDefaultEncoding
 			// 
-			this.radioDefaultEncoding.Location = new System.Drawing.Point( 13, 120 );
+			this.radioDefaultEncoding.Location = new System.Drawing.Point(13, 121);
 			this.radioDefaultEncoding.Name = "radioDefaultEncoding";
-			this.radioDefaultEncoding.Size = new System.Drawing.Size( 140, 20 );
+			this.radioDefaultEncoding.Size = new System.Drawing.Size(140, 20);
 			this.radioDefaultEncoding.TabIndex = 21;
 			this.radioDefaultEncoding.Text = "Default Encoding";
-			this.toolTip1.SetToolTip( this.radioDefaultEncoding, "Check this option, if the script files should use windows encoding." );
+			this.toolTip1.SetToolTip(this.radioDefaultEncoding, "Check this option, if the script files should use windows encoding.");
 			// 
 			// radioUtf8Encoding
 			// 
 			this.radioUtf8Encoding.Checked = true;
-			this.radioUtf8Encoding.Location = new System.Drawing.Point( 13, 99 );
+			this.radioUtf8Encoding.Location = new System.Drawing.Point(13, 99);
 			this.radioUtf8Encoding.Name = "radioUtf8Encoding";
-			this.radioUtf8Encoding.Size = new System.Drawing.Size( 140, 21 );
+			this.radioUtf8Encoding.Size = new System.Drawing.Size(140, 21);
 			this.radioUtf8Encoding.TabIndex = 20;
 			this.radioUtf8Encoding.TabStop = true;
 			this.radioUtf8Encoding.Text = "UTF-8 Encoding";
-			this.toolTip1.SetToolTip( this.radioUtf8Encoding, "Check this option, if the script files should be UTF-8 encoded." );
+			this.toolTip1.SetToolTip(this.radioUtf8Encoding, "Check this option, if the script files should be UTF-8 encoded.");
 			// 
 			// label4
 			// 
-			this.label4.Location = new System.Drawing.Point( 13, 50 );
+			this.label4.Location = new System.Drawing.Point(13, 50);
 			this.label4.Name = "label4";
-			this.label4.Size = new System.Drawing.Size( 200, 17 );
+			this.label4.Size = new System.Drawing.Size(200, 17);
 			this.label4.TabIndex = 19;
 			this.label4.Text = "SQL Dialect";
 			// 
 			// cbSqlDialect
 			// 
-			this.cbSqlDialect.Location = new System.Drawing.Point( 13, 70 );
+			this.cbSqlDialect.Location = new System.Drawing.Point(13, 70);
 			this.cbSqlDialect.Name = "cbSqlDialect";
-			this.cbSqlDialect.Size = new System.Drawing.Size( 220, 21 );
+			this.cbSqlDialect.Size = new System.Drawing.Size(220, 21);
 			this.cbSqlDialect.TabIndex = 18;
-			this.toolTip1.SetToolTip( this.cbSqlDialect, "Choose an available NDO provider." );
-			this.cbSqlDialect.SelectedIndexChanged += new System.EventHandler( this.cbSqlDialect_SelectedIndexChanged );
+			this.toolTip1.SetToolTip(this.cbSqlDialect, "Choose an available NDO provider.");
+			this.cbSqlDialect.SelectedIndexChanged += new System.EventHandler(this.cbSqlDialect_SelectedIndexChanged);
 			// 
 			// chkGenerateSQLScript
 			// 
-			this.chkGenerateSQLScript.Location = new System.Drawing.Point( 13, 21 );
+			this.chkGenerateSQLScript.Location = new System.Drawing.Point(13, 21);
 			this.chkGenerateSQLScript.Name = "chkGenerateSQLScript";
-			this.chkGenerateSQLScript.Size = new System.Drawing.Size( 187, 21 );
+			this.chkGenerateSQLScript.Size = new System.Drawing.Size(187, 21);
 			this.chkGenerateSQLScript.TabIndex = 13;
 			this.chkGenerateSQLScript.Text = "Generate SQL Script";
-			this.toolTip1.SetToolTip( this.chkGenerateSQLScript, "If checked, NDO will create a script with DDL code, which can be used to construc" +
-        "t a database structure." );
-			this.chkGenerateSQLScript.CheckedChanged += new System.EventHandler( this.chkGenerateSQLScript_CheckedChanged );
+			this.toolTip1.SetToolTip(this.chkGenerateSQLScript, "If checked, NDO will create a script with DDL code, which can be used to construc" +
+        "t a database structure.");
+			this.chkGenerateSQLScript.CheckedChanged += new System.EventHandler(this.chkGenerateSQLScript_CheckedChanged);
 			// 
 			// label3
 			// 
-			this.label3.Location = new System.Drawing.Point( 17, 119 );
+			this.label3.Location = new System.Drawing.Point(17, 119);
 			this.label3.Name = "label3";
-			this.label3.Size = new System.Drawing.Size( 127, 21 );
+			this.label3.Size = new System.Drawing.Size(127, 21);
 			this.label3.TabIndex = 22;
 			this.label3.Text = "Owner / Schema Name";
 			// 
 			// txtDbOwner
 			// 
-			this.txtDbOwner.Location = new System.Drawing.Point( 144, 117 );
+			this.txtDbOwner.Location = new System.Drawing.Point(144, 117);
 			this.txtDbOwner.Name = "txtDbOwner";
-			this.txtDbOwner.Size = new System.Drawing.Size( 160, 20 );
+			this.txtDbOwner.Size = new System.Drawing.Size(160, 20);
 			this.txtDbOwner.TabIndex = 23;
-			this.toolTip1.SetToolTip( this.txtDbOwner, "Enter an owner name, if you like your tables to be written like owner.tablename. " +
-        "Mandatory for Oracle databases (enter SCOTT ;-) )." );
+			this.toolTip1.SetToolTip(this.txtDbOwner, "Enter an owner name, if you like your tables to be written like owner.tablename. " +
+        "Mandatory for Oracle databases (enter SCOTT ;-) ).");
 			// 
 			// btnPresetApp
 			// 
-			this.btnPresetApp.Location = new System.Drawing.Point( 131, 310 );
+			this.btnPresetApp.Location = new System.Drawing.Point(131, 341);
 			this.btnPresetApp.Name = "btnPresetApp";
-			this.btnPresetApp.Size = new System.Drawing.Size( 100, 39 );
+			this.btnPresetApp.Size = new System.Drawing.Size(100, 39);
 			this.btnPresetApp.TabIndex = 24;
 			this.btnPresetApp.Text = "Preset for Application";
-			this.toolTip1.SetToolTip( this.btnPresetApp, "Selects all settings used for applications which don\'t contain but reference pers" +
-        "istent types." );
-			this.btnPresetApp.Click += new System.EventHandler( this.btnPresetApp_Click );
+			this.toolTip1.SetToolTip(this.btnPresetApp, "Selects all settings used for applications which don\'t contain but reference pers" +
+        "istent types.");
+			this.btnPresetApp.Click += new System.EventHandler(this.btnPresetApp_Click);
 			// 
 			// btnSaveAs
 			// 
 			this.btnSaveAs.DialogResult = System.Windows.Forms.DialogResult.OK;
-			this.btnSaveAs.Location = new System.Drawing.Point( 245, 310 );
+			this.btnSaveAs.Location = new System.Drawing.Point(245, 341);
 			this.btnSaveAs.Name = "btnSaveAs";
-			this.btnSaveAs.Size = new System.Drawing.Size( 100, 39 );
+			this.btnSaveAs.Size = new System.Drawing.Size(100, 39);
 			this.btnSaveAs.TabIndex = 25;
 			this.btnSaveAs.Text = "Save as...";
-			this.toolTip1.SetToolTip( this.btnSaveAs, "Save the options to be used in unattended builds with the stand-alone enhancer." );
-			this.btnSaveAs.Click += new System.EventHandler( this.btnSaveAs_Click );
+			this.toolTip1.SetToolTip(this.btnSaveAs, "Save the options to be used in unattended builds with the stand-alone enhancer.");
+			this.btnSaveAs.Click += new System.EventHandler(this.btnSaveAs_Click);
 			// 
 			// btnNewDatabase
 			// 
-			this.btnNewDatabase.Location = new System.Drawing.Point( 582, 276 );
+			this.btnNewDatabase.Location = new System.Drawing.Point(582, 304);
 			this.btnNewDatabase.Name = "btnNewDatabase";
-			this.btnNewDatabase.Size = new System.Drawing.Size( 42, 21 );
+			this.btnNewDatabase.Size = new System.Drawing.Size(42, 21);
 			this.btnNewDatabase.TabIndex = 26;
 			this.btnNewDatabase.Text = "New";
-			this.toolTip1.SetToolTip( this.btnNewDatabase, "Create new database" );
-			this.btnNewDatabase.Click += new System.EventHandler( this.btnNewDatabase_Click );
+			this.toolTip1.SetToolTip(this.btnNewDatabase, "Create new database");
+			this.btnNewDatabase.Click += new System.EventHandler(this.btnNewDatabase_Click);
 			// 
 			// chkVerboseMode
 			// 
-			this.chkVerboseMode.Location = new System.Drawing.Point( 20, 63 );
+			this.chkVerboseMode.Location = new System.Drawing.Point(20, 63);
 			this.chkVerboseMode.Name = "chkVerboseMode";
-			this.chkVerboseMode.Size = new System.Drawing.Size( 238, 21 );
+			this.chkVerboseMode.Size = new System.Drawing.Size(238, 21);
 			this.chkVerboseMode.TabIndex = 29;
 			this.chkVerboseMode.Text = "Add-in Verbose Mode";
-			this.toolTip1.SetToolTip( this.chkVerboseMode, "Causes the Add-in and the Enhancer to show more information for debugging purpose" +
-        "s." );
+			this.toolTip1.SetToolTip(this.chkVerboseMode, "Causes the Add-in and the Enhancer to show more information for debugging purpose" +
+        "s.");
 			// 
 			// label5
 			// 
-			this.label5.Location = new System.Drawing.Point( 17, 211 );
+			this.label5.Location = new System.Drawing.Point(17, 211);
 			this.label5.Name = "label5";
-			this.label5.Size = new System.Drawing.Size( 121, 21 );
+			this.label5.Size = new System.Drawing.Size(121, 21);
 			this.label5.TabIndex = 27;
 			this.label5.Text = "Schema Version";
 			// 
 			// txtSchemaVersion
 			// 
-			this.txtSchemaVersion.Location = new System.Drawing.Point( 144, 210 );
+			this.txtSchemaVersion.Location = new System.Drawing.Point(144, 210);
 			this.txtSchemaVersion.Name = "txtSchemaVersion";
-			this.txtSchemaVersion.Size = new System.Drawing.Size( 160, 20 );
+			this.txtSchemaVersion.Size = new System.Drawing.Size(160, 20);
 			this.txtSchemaVersion.TabIndex = 28;
 			// 
-			// chkGenerateFkConstraints
+			// txtTargetMappingFileName
 			// 
-			this.chkGenerateFkConstraints.Location = new System.Drawing.Point( 13, 151 );
-			this.chkGenerateFkConstraints.Name = "chkGenerateFkConstraints";
-			this.chkGenerateFkConstraints.Size = new System.Drawing.Size( 235, 21 );
-			this.chkGenerateFkConstraints.TabIndex = 23;
-			this.chkGenerateFkConstraints.Text = "Generate Foreign Key Constraints";
-			this.toolTip1.SetToolTip( this.chkGenerateFkConstraints, "If checked, NDO generates foreign key constraints for the relations in the databa" +
-        "se." );
+			this.txtTargetMappingFileName.Location = new System.Drawing.Point(144, 236);
+			this.txtTargetMappingFileName.Name = "txtTargetMappingFileName";
+			this.txtTargetMappingFileName.Size = new System.Drawing.Size(160, 20);
+			this.txtTargetMappingFileName.TabIndex = 31;
 			// 
-			// chkDropExistingElements
+			// label1
 			// 
-			this.chkDropExistingElements.Location = new System.Drawing.Point( 13, 195 );
-			this.chkDropExistingElements.Name = "chkDropExistingElements";
-			this.chkDropExistingElements.Size = new System.Drawing.Size( 235, 21 );
-			this.chkDropExistingElements.TabIndex = 24;
-			this.chkDropExistingElements.Text = "Insert Drop Statements in the Script";
-			this.toolTip1.SetToolTip( this.chkDropExistingElements, "If checked, NDO generates instructions to remove existing tables and constraints." +
-        "" );
+			this.label1.Location = new System.Drawing.Point(17, 237);
+			this.label1.Name = "label1";
+			this.label1.Size = new System.Drawing.Size(121, 21);
+			this.label1.TabIndex = 30;
+			this.label1.Text = "Mapping File Name";
 			// 
 			// ConfigurationDialog
 			// 
 			this.AcceptButton = this.btnOK;
-			this.AutoScaleBaseSize = new System.Drawing.Size( 5, 13 );
+			this.AutoScaleBaseSize = new System.Drawing.Size(5, 13);
 			this.CancelButton = this.btnCancel;
-			this.ClientSize = new System.Drawing.Size( 682, 394 );
-			this.Controls.Add( this.chkVerboseMode );
-			this.Controls.Add( this.txtSchemaVersion );
-			this.Controls.Add( this.label5 );
-			this.Controls.Add( this.btnNewDatabase );
-			this.Controls.Add( this.btnSaveAs );
-			this.Controls.Add( this.btnPresetApp );
-			this.Controls.Add( this.txtDbOwner );
-			this.Controls.Add( this.txtConnectionString );
-			this.Controls.Add( this.label3 );
-			this.Controls.Add( this.groupBox1 );
-			this.Controls.Add( this.chkUseTimeStamps );
-			this.Controls.Add( this.chkChangeEvents );
-			this.Controls.Add( this.label2 );
-			this.Controls.Add( this.btnConnString );
-			this.Controls.Add( this.btnOK );
-			this.Controls.Add( this.btnPresetLibrary );
-			this.Controls.Add( this.btnCancel );
-			this.Controls.Add( this.chkMappingNew );
-			this.Controls.Add( this.chkActivateEnhancer );
-			this.Controls.Add( this.chkActivateAddIn );
-			this.Icon = ((System.Drawing.Icon) (resources.GetObject( "$this.Icon" )));
+			this.ClientSize = new System.Drawing.Size(665, 399);
+			this.Controls.Add(this.txtTargetMappingFileName);
+			this.Controls.Add(this.label1);
+			this.Controls.Add(this.chkVerboseMode);
+			this.Controls.Add(this.txtSchemaVersion);
+			this.Controls.Add(this.label5);
+			this.Controls.Add(this.btnNewDatabase);
+			this.Controls.Add(this.btnSaveAs);
+			this.Controls.Add(this.btnPresetApp);
+			this.Controls.Add(this.txtDbOwner);
+			this.Controls.Add(this.txtConnectionString);
+			this.Controls.Add(this.label3);
+			this.Controls.Add(this.groupBox1);
+			this.Controls.Add(this.chkUseTimeStamps);
+			this.Controls.Add(this.chkChangeEvents);
+			this.Controls.Add(this.label2);
+			this.Controls.Add(this.btnConnString);
+			this.Controls.Add(this.btnOK);
+			this.Controls.Add(this.btnPresetLibrary);
+			this.Controls.Add(this.btnCancel);
+			this.Controls.Add(this.chkMappingNew);
+			this.Controls.Add(this.chkActivateEnhancer);
+			this.Controls.Add(this.chkActivateAddIn);
+			this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
 			this.Name = "ConfigurationDialog";
 			this.Text = "NDO Configuration";
-			this.Load += new System.EventHandler( this.ConfigurationDialog_Load );
-			this.groupBox1.ResumeLayout( false );
-			this.ResumeLayout( false );
+			this.Load += new System.EventHandler(this.ConfigurationDialog_Load);
+			this.groupBox1.ResumeLayout(false);
+			this.ResumeLayout(false);
 			this.PerformLayout();
 
 		}
@@ -523,6 +544,7 @@ namespace NDOEnhancer
 
                 // Must be initialized after changing the cbSqlDialect index
                 txtConnectionString.Text = options.DefaultConnection;
+				txtTargetMappingFileName.Text = options.TargetMappingFileName;
                 txtDbOwner.Text = options.DatabaseOwner;
                 chkActivateAddIn_CheckedChanged(null, EventArgs.Empty);
                 chkActivateEnhancer_CheckedChanged(null, EventArgs.Empty);
@@ -852,6 +874,7 @@ namespace NDOEnhancer
             options.NewMapping = chkMappingNew.Checked;
 			options.GenerateSQL = chkGenerateSQLScript.Checked;
 			options.DefaultConnection = txtConnectionString.Text;
+			options.TargetMappingFileName = txtTargetMappingFileName.Text;
 			options.GenerateChangeEvents = chkChangeEvents.Checked;
 			options.UseTimeStamps = chkUseTimeStamps.Checked;
 			options.SQLScriptLanguage = this.cbSqlDialect.Text;

@@ -1,5 +1,5 @@
 //
-// Copyright (C) 2002-2013 Mirko Matytschak 
+// Copyright (C) 2002-2014 Mirko Matytschak 
 // (www.netdataobjects.de)
 //
 // Author: Mirko Matytschak
@@ -47,7 +47,6 @@ namespace NDOEnhancer
     /// </summary>
     internal class ConfigurationOptions
     {
-        private Hashtable m_globals = null;
         string fileName = null;
 
         //void Anlegen() { }
@@ -55,8 +54,8 @@ namespace NDOEnhancer
 		// This is called to check the options in the Add-in
         public ConfigurationOptions(Project project)
         {
-            m_globals = new Hashtable();
             this.fileName = GetNdoProjFileName(project);
+			this.TargetMappingFileName = "NDOMapping.xml"; // Set the default name. Can be overridden by the configuration.
             if (File.Exists(this.fileName))
             {
                 XmlDocument doc = new XmlDocument();
@@ -91,13 +90,14 @@ namespace NDOEnhancer
                 doc.AppendChild(docNode);
                 XmlElement optionsNode = doc.CreateElement("Options");
                 docNode.AppendChild(optionsNode);
-
+				
                 MakeNode("EnableAddIn", this.EnableAddIn, optionsNode);
                 MakeNode("EnableEnhancer", this.EnableEnhancer, optionsNode);
                 MakeNode("VerboseMode", this.VerboseMode, optionsNode);
                 MakeNode("NewMapping", this.NewMapping, optionsNode);
                 MakeNode("GenerateSQL", this.GenerateSQL, optionsNode);
                 MakeNode("DefaultConnection", this.DefaultConnection, optionsNode);
+				MakeNode("TargetMappingFileName", this.TargetMappingFileName, optionsNode);
                 MakeNode("GenerateChangeEvents", this.GenerateChangeEvents, optionsNode);
                 MakeNode("UseTimeStamps", this.UseTimeStamps, optionsNode);
                 MakeNode("Utf8Encoding", this.Utf8Encoding, optionsNode);
@@ -148,8 +148,6 @@ namespace NDOEnhancer
 
         private void Init(XmlDocument doc)
         {
-            m_globals = new Hashtable();
-
             string pns = XmlHelper.Pns(doc);
             XmlNode node = doc.SelectSingleNode("//" + pns + "Enhancer/" + pns + "Options", XmlHelper.Nsmgr);
             if (node == null)
@@ -163,7 +161,8 @@ namespace NDOEnhancer
             this.DatabaseOwner = (string)XmlHelper.GetNode(node, pns + "DatabaseOwner", string.Empty);
             this.DefaultConnection = (string)XmlHelper.GetNode(node, pns + "DefaultConnection", string.Empty);
             this.EnableAddIn = (bool)XmlHelper.GetNode(node, pns + "EnableAddIn", true);
-            this.EnableEnhancer = (bool)XmlHelper.GetNode(node, pns + "EnableEnhancer", true);
+			this.TargetMappingFileName = (string) XmlHelper.GetNode( node, pns + "TargetMappingFileName", "NDOMapping.xml" );
+			this.EnableEnhancer = (bool) XmlHelper.GetNode( node, pns + "EnableEnhancer", true );
             this.IncludeTypecodes = (bool)XmlHelper.GetNode(node, pns + "IncludeTypecodes", false);
             this.VerboseMode = (bool)XmlHelper.GetNode(node, pns + "VerboseMode", false);
             this.GenerateChangeEvents = (bool)XmlHelper.GetNode(node, pns + "GenerateChangeEvents", false);
@@ -174,234 +173,23 @@ namespace NDOEnhancer
 		}
 
 
-        private void SetBoolValue(string fieldName, bool val)
-        {
-            if (m_globals.Contains(fieldName))
-                m_globals.Remove(fieldName);
-
-            m_globals[fieldName] = val;
-        }
-
-        private bool GetBoolValue(string fieldName)
-        {
-            if (!m_globals.Contains(fieldName))
-                return false;
-            return (bool)m_globals[fieldName];
-        }
-
-
-        private void SetStringValue(string fieldName, string val)
-        {
-            if (null == m_globals) return;
-
-            if (m_globals.Contains(fieldName))
-                m_globals.Remove(fieldName);
-
-            m_globals[fieldName] = val;
-        }
-
-        private String GetStringValue(string fieldName)
-        {
-            if (!m_globals.Contains(fieldName))
-                return string.Empty;
-            return (string)m_globals[fieldName];
-        }
-
-
-        public bool EnableAddIn
-        {
-            get
-            {
-                return GetBoolValue("NDOEnableAddIn");
-            }
-            set
-            {
-                SetBoolValue("NDOEnableAddIn", value);
-            }
-        }
-
-        public bool IncludeTypecodes
-        {
-            get
-            {
-                return GetBoolValue("IncludeTypecodes");
-            }
-            set
-            {
-                SetBoolValue("IncludeTypecodes", value);
-            }
-        }
-
-        
-        public bool UseTimeStamps
-        {
-            get
-            {
-                return GetBoolValue("NDOUseTimeStamps");
-            }
-            set
-            {
-                SetBoolValue("NDOUseTimeStamps", value);
-            }
-        }
-
-        public bool GenerateChangeEvents
-        {
-            get
-            {
-                return GetBoolValue("NDOGenerateChangeEvents");
-            }
-            set
-            {
-                SetBoolValue("NDOGenerateChangeEvents", value);
-            }
-        }
-
-        public bool EnableEnhancer
-        {
-            get
-            {
-                return GetBoolValue("NDOEnableEnhancer");
-            }
-            set
-            {
-                SetBoolValue("NDOEnableEnhancer", value);
-            }
-        }
-
-        public bool VerboseMode
-        {
-            get
-            {
-                return GetBoolValue("NDOVerboseMode");
-            }
-            set
-            {
-                SetBoolValue("NDOVerboseMode", value);
-            }
-        }
-
-
-        public bool Utf8Encoding
-        {
-            get { return GetBoolValue("NDOUtf8Encoding"); }
-            set { SetBoolValue("NDOUtf8Encoding", value); }
-        }
-
-        public bool GenerateSQL
-        {
-            get
-            {
-                return GetBoolValue("NDOGenerateSQL");
-            }
-            set
-            {
-                SetBoolValue("NDOGenerateSQL", value);
-            }
-        }
-
-
-        public bool GenerateConstraints
-        {
-            get
-            {
-                return GetBoolValue("NDOGenerateConstraints");
-            }
-            set
-            {
-                SetBoolValue("NDOGenerateConstraints", value);
-            }
-        }
-
-        public bool DropExistingElements
-        {
-            get
-            {
-                return GetBoolValue("NDODropExistingElements");
-            }
-            set
-            {
-                SetBoolValue("NDODropExistingElements", value);
-            }
-        }
-
-		public bool UseMsBuild
-		{
-			get
-			{
-				return GetBoolValue( "UseMsBuild" );
-			}
-			set
-			{
-				SetBoolValue( "UseMsBuild", value );
-			}
-		}
-
-
-        public bool NewMapping
-        {
-            get
-            {
-                return GetBoolValue("NDONewMapping");
-            }
-            set
-            {
-                SetBoolValue("NDONewMapping", value);
-            }
-        }
-
-        public string DefaultConnection
-        {
-            get
-            {
-                return GetStringValue("NDODefaultConnection");
-            }
-            set
-            {
-                SetStringValue("NDODefaultConnection", value);
-            }
-        }
-
-        public string SQLScriptLanguage
-        {
-            get
-            {
-                string s = GetStringValue("NDOSQLScriptLanguage");
-                if (s == string.Empty)
-                    return "SqlServer";
-                return s;
-            }
-            set
-            {
-                SetStringValue("NDOSQLScriptLanguage", value);
-            }
-        }
-
-		public string SchemaVersion
-		{
-			get
-			{
-				return GetStringValue("SchemaVersion");
-			}
-			set
-			{
-				SetStringValue("SchemaVersion", value);
-			}
-		}
-
-
-        public string DatabaseOwner
-        {
-            get
-            {
-                return GetStringValue("DatabaseOwner");
-            }
-            set
-            {
-                SetStringValue("DatabaseOwner", value);
-            }
-        }
-
+		public bool EnableAddIn { get; set; }
+		public bool IncludeTypecodes { get; set; }
+		public bool UseTimeStamps { get; set; }
+		public bool GenerateChangeEvents { get; set; }
+		public bool EnableEnhancer { get; set; }
+		public bool VerboseMode { get; set; }
+		public bool Utf8Encoding { get; set; }
+		public bool GenerateSQL { get; set; }
+		public bool GenerateConstraints { get; set; }
+		public bool DropExistingElements { get; set; }
+		public bool UseMsBuild { get; set; }
+		public bool NewMapping { get; set; }
+		public string DefaultConnection { get; set; }
+		public string TargetMappingFileName { get; set; }
+		public string SQLScriptLanguage { get; set; }
+		public string SchemaVersion { get; set; }
+		public string DatabaseOwner { get; set; }
     }
 }
 

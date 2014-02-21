@@ -78,9 +78,9 @@ namespace NDOEnhancer
             enhPdbFile = Path.Combine(tempDir, fileWithoutExtension + ".pdb");
 			projPath = projectDescription.ProjPath;
             schemaFile = Path.Combine(Path.GetDirectoryName(binFile), fileWithoutExtension + ".ndo.xsd");
-			mappingDestFile = Path.Combine(Path.GetDirectoryName( binFile ), "NDOMapping.Xml");
+			mappingDestFile = Path.Combine(Path.GetDirectoryName( binFile ), projectDescription.ConfigurationOptions.TargetMappingFileName);
 			mappingFile = projectDescription.DefaultMappingFileName;
-			options = projectDescription.NewConfigurationOptions();
+			options = projectDescription.ConfigurationOptions;
 
 			//			foreach (EnvDTE.Property p in project.Properties)
 			//				messages.WriteLine("  " + p.Name + " " + p.Value.ToString());
