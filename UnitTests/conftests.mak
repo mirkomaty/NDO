@@ -22,13 +22,15 @@ DIALECT = Firebird
 DIALECT = Postgre
 !ELSEIF ("$(V)" == "SQLITE")
 DIALECT = Sqlite
+!ELSEIF ("$(V)" == "SQLCE")
+DIALECT = SqlCe
 !ENDIF
 
-NUNIT_DIR = C:\Program Files (x86)\NUnit 2.5.10\bin\net-2.0\framework
+NUNIT_DIR = D:\Program Files (x86)\NUnit 2.6.3\bin\net-2.0\framework
 PERS_DIR = D:\Projekte\NDO
-NDO_INST_DIR = D:\Program Files\NDO 2.1 Enterprise Edition
+NDO_INST_DIR = D:\Program Files (x86)\NDO 2.1 Dev Edition
 TEST_DIR = $(PERS_DIR)\UnitTests
-VSDIR = D:\Programme Win7\Microsoft Visual Studio 2010
+VSDIR = D:\Program Files (x86)\Microsoft Visual Studio 12.0
 DEVENV = "$(VSDIR)\Common7\IDE\devenv"
 
 

@@ -57,7 +57,7 @@ namespace NDO
 #endif
             DateTime startTime = DateTime.Now;
 
-#if false
+#if true
             NDOMitarbeiterTests t = new NDOMitarbeiterTests();
             try
             {
@@ -67,7 +67,7 @@ namespace NDO
             {
                 Debug.WriteLine(ex.ToString());
             }
-            t.TestClassExtent();
+            t.TestObjectCreationSave();
             //try
             //{
                 t.TearDown();

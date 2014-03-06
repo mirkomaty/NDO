@@ -97,7 +97,11 @@ namespace ManipulateConnection
                     connName = @"Data Source=D:\Projekte\NDO\SqliteProvider\NdoUnitTests.db";
                     type = "Sqlite";
                     break;
-				default:
+                case "SqlCe":
+                    connName = @"Data Source=""D:\Projekte\NDO\SqlCeProvider\NDOUnitTests.sdf"";Password='ndo'";
+                    type = "SqlCe";
+                    break;
+                default:
 					Console.WriteLine("ManipulateConnection: can't find connection type " + args[1]);
 					return -1;
 			}

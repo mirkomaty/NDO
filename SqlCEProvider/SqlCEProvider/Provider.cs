@@ -278,7 +278,7 @@ namespace NDO.SqlCeProvider
 		/// </summary>
 		public override bool SupportsBulkCommands 
 		{
-			get { return true; }
+			get { return false; }
 		}
 		
 
@@ -341,7 +341,7 @@ namespace NDO.SqlCeProvider
 		{
 			get
 			{
-				return true;
+				return false;
 			}
 		}
 
