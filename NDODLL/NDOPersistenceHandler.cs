@@ -424,7 +424,7 @@ namespace NDO
 				return;
 			if (!hasAutoincrementedColumn)
 				return;
-			string oidColumnName = autoIncrementColumn.Name;
+			string oidColumnName = this.autoIncrementColumn.Name;
 			Type t = row[oidColumnName].GetType();
 			if (t != typeof(int))
 				return;

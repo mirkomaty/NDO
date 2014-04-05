@@ -8,16 +8,18 @@
     <GenerateSQL>True</GenerateSQL>
     <DefaultConnection>
     </DefaultConnection>
+    <TargetMappingFileName>NDOMapping.xml</TargetMappingFileName>
     <GenerateChangeEvents>False</GenerateChangeEvents>
     <UseTimeStamps>False</UseTimeStamps>
     <Utf8Encoding>False</Utf8Encoding>
-    <SQLScriptLanguage>SqlServer</SQLScriptLanguage>
+    <SQLScriptLanguage>SqlCe</SQLScriptLanguage>
     <SchemaVersion>
     </SchemaVersion>
     <IncludeTypecodes>False</IncludeTypecodes>
     <DatabaseOwner>
     </DatabaseOwner>
     <GenerateConstraints>False</GenerateConstraints>
+    <UseMsBuild>False</UseMsBuild>
     <DropExistingElements>True</DropExistingElements>
   </Options>
   <ProjectDescription>
@@ -29,25 +31,13 @@
     <KeyFile>
     </KeyFile>
     <References>
-      <Reference AssemblyName="NDOInterfaces" AssemblyPath="..\..\..\..\Program Files\NDO 2.1 Enterprise Edition\NDOInterfaces.dll">
+      <Reference AssemblyName="NDOInterfaces" AssemblyPath="D:\Program Files (x86)\NDO 2.1 Dev Edition\NDOInterfaces.dll">
       </Reference>
-      <Reference AssemblyName="nunit.framework" AssemblyPath="C:\Program Files (x86)\NUnit 2.5.10\bin\net-2.0\framework\nunit.framework.dll">
-      </Reference>
-      <Reference AssemblyName="System" AssemblyPath="C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.0\System.dll">
-      </Reference>
-      <Reference AssemblyName="System.Data" AssemblyPath="C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.0\System.Data.dll">
-      </Reference>
-      <Reference AssemblyName="System.Data.OracleClient" AssemblyPath="C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.0\System.Data.OracleClient.dll">
-      </Reference>
-      <Reference AssemblyName="System.Drawing" AssemblyPath="C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.0\System.Drawing.dll">
-      </Reference>
-      <Reference AssemblyName="System.Xml" AssemblyPath="C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.0\System.Xml.dll">
+      <Reference AssemblyName="nunit.framework" AssemblyPath="D:\Program Files (x86)\NUnit 2.6.3\bin\framework\nunit.framework.dll">
       </Reference>
       <Reference AssemblyName="PureBusinessClasses" AssemblyPath="..\PureBusinessClasses\bin\Debug\PureBusinessClasses.dll">
       </Reference>
-      <Reference AssemblyName="System.Core" AssemblyPath="c:\program files (x86)\reference assemblies\microsoft\framework\.netframework\v4.0\system.core.dll">
-      </Reference>
-      <Reference AssemblyName="mscorlib" AssemblyPath="C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.0\mscorlib.dll">
+      <Reference AssemblyName="System.Core" AssemblyPath="d:\program files (x86)\reference assemblies\microsoft\framework\.netframework\v4.0\system.core.dll">
       </Reference>
     </References>
   </ProjectDescription>

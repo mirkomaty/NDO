@@ -263,6 +263,13 @@ namespace NDO.SqlCeProvider
 			get { return true; }
 		}
 
+        public override bool SupportsInsertBatch
+        {
+            get
+            {
+                return false;
+            }
+        }
 
 		/// <summary>
 		/// Gets an expression in the SQL dialect of the database, which retrieves the ID of the last
@@ -270,8 +277,34 @@ namespace NDO.SqlCeProvider
 		/// </summary>
 		public override string GetLastInsertedId(string tableName, string columnName)
 		{
-            return "@@IDENTITY";
+            return "SELECT @@IDENTITY";
 		}
+
+        Dictionary<DbDataAdapter, IRowUpdateListener> updateHandlers = new Dictionary<DbDataAdapter, IRowUpdateListener>();
+
+        /// <summary>
+        /// See <see cref="IProvider"> IProvider interface </see>
+        /// </summary>
+        public override void RegisterRowUpdateHandler(IRowUpdateListener handler)
+        {
+            if (!updateHandlers.ContainsKey(handler.DataAdapter))
+            {
+                SqlCeDataAdapter da = handler.DataAdapter as SqlCeDataAdapter;
+                if (da == null)
+                    throw new NDOException(29, "Can't register SqlCe update handler for data adapter of type " + handler.DataAdapter.GetType().FullName + ".");
+                updateHandlers.Add(da, handler);
+                da.RowUpdated += new SqlCeRowUpdatedEventHandler(this.OnRowUpdated);
+            }
+        }
+
+        private void OnRowUpdated(object sender, SqlCeRowUpdatedEventArgs args)
+        {
+            DbDataAdapter da = (DbDataAdapter)sender;
+            if (!updateHandlers.ContainsKey(da))
+                throw new NDOException(314, "OnRowUpdated event can't be scheduled to a DataAdapter.");
+            IRowUpdateListener handler = updateHandlers[da];
+            handler.OnRowUpdate(args.Row);
+        }
 
 		/// <summary>
 		/// Determines whether a database supports bulk command strings.
@@ -336,14 +369,6 @@ namespace NDO.SqlCeProvider
 		}
 
 		public override string Name { get { return "SqlCe"; }  }
-
-		public override bool SupportsInsertBatch
-		{
-			get
-			{
-				return false;
-			}
-		}
 
 		public override bool SupportsNativeGuidType 
 		{ 
