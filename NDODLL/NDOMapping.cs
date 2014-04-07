@@ -3791,6 +3791,13 @@ namespace NDO.Mapping
         /// <returns>A string representing a column name.</returns>
         public string ColumnNameFromFieldName(string theFieldName, bool isOidField)
         {
+			if ( theFieldName[0] == '<' )
+			{
+				int q = theFieldName.IndexOf( '>' );
+				if ( q > -1 )
+					return theFieldName.Substring( 1, q - 1 );
+			}
+
             string[] strarr = theFieldName.Split('.');
             for (int i = 0; i < strarr.Length; i++)
             {
