@@ -56,6 +56,7 @@ namespace NDOEnhancer
         {
             this.fileName = GetNdoProjFileName(project);
 			this.TargetMappingFileName = "NDOMapping.xml"; // Set the default name. Can be overridden by the configuration.
+			this.Utf8Encoding = true;
             if (File.Exists(this.fileName))
             {
                 XmlDocument doc = new XmlDocument();
