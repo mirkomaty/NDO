@@ -1,0 +1,69 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+	<EnhDateString>V. 2.1</EnhDateString>
+	<SVNREV>C:\Program Files\TortoiseSVN\bin\subwcrev.exe</SVNREV>
+	
+	<PERS_DIR>..</PERS_DIR>
+	<MAKE_DIR>$(PERS_DIR)\Make</MAKE_DIR>
+	<NDO_DIR>$(PERS_DIR)\ndodll</NDO_DIR>
+	<ENH_DIR>$(PERS_DIR)\NDOEnhancer</ENH_DIR>
+	<ADDIN_DIR>$(PERS_DIR)\Add-in</ADDIN_DIR>
+	<NDO_DLL>$(NDO_DIR)\bin\Release\NDO.dll</NDO_DLL>
+	<MAP_DIR>$(PERS_DIR)\SimpleMappingTool</MAP_DIR>
+	<GEN_DIR>$(PERS_DIR)\ClassGenerator</GEN_DIR>
+	<DEPLOY_DIR>$(PERS_DIR)\Deploy\Enterprise</DEPLOY_DIR>
+	<INTERF_DLL>$(PERS_DIR)\NDOInterfaces\bin\release\NDOInterfaces.dll</INTERF_DLL>
+  </PropertyGroup>
+
+  <PropertyGroup>
+	<Configuration>Release</Configuration>
+	<Platform>AnyCPU</Platform>
+  </PropertyGroup>
+  
+  <ItemGroup>
+    <Project Include="..\NDOInterfaces\NDOInterfaces.csproj" />
+    <Project Include="..\NDODLL\NDO.csproj" />
+    <Project Include="..\Add-in\NDOAddIn.csproj" />
+    <Project Include="..\SimpleMappingTool\Mapping.csproj" />
+    <Project Include="..\ClassGenerator\ClassGeneratorDll.csproj" />
+    <Project Include="..\ClassGenerator\ClassGenerator\ClassGenerator.csproj" />	
+    <Project Include="..\NDOEnhancer\Enhancer.csproj" />
+    <Project Include="..\NDOEnhancer.BuildTask\NDOEnhancer.BuildTask\NDOEnhancer.BuildTask.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <Projectx86 Include="..\EnhancerX86Stub\EnhancerX86Stub\EnhancerX86Stub.csproj" />
+  </ItemGroup>
+  
+  <ItemGroup>
+    <InstProject Include="..\NDOInstaller\NDOInstaller.wixproj" />
+  </ItemGroup>
+  
+  <ItemGroup>
+    <DeployFiles Include="$(NDO_DLL)"/>
+    <DeployFiles Include="$(ENH_DIR)\bin\Release\NDOEnhancer.exe"/>
+    <DeployFiles Include="$(ADDIN_DIR)\bin\NDOEnhancer.dll"/>
+    <DeployFiles Include="$(ENH_DIR)\Enhancerparameters.xsd"/>
+    <DeployFiles Include="$(ADDIN_DIR)\NDO21.AddIn"/>
+    <DeployFiles Include="$(MAP_DIR)\bin\release\Mapping.exe"/>
+    <DeployFiles Include="$(GEN_DIR)\bin\release\ClassGeneratorDll.dll"/>
+    <DeployFiles Include="$(GEN_DIR)\ClassGenerator\bin\release\ClassGenerator.exe"/>
+    <DeployFiles Include="$(PERS_DIR)\NDOInterfaces\bin\release\NDOInterfaces.dll"/>
+    <DeployFiles Include="$(PERS_DIR)\NDODLL\NDOMapping.xsd"/>
+  </ItemGroup>
+
+  <Target Name="Build">
+	<Exec Command="..\MakeEnhancerDate\bin\Debug\MakeEnhancerDate.exe &quot;$(EnhDateString)&quot; &quot;$(SVNREV)&quot; &gt; ..\Add-in\EnhDate.cs"/>
+	<Copy SourceFiles="..\Add-in\EnhDate.cs" DestinationFolder="..\NDOEnhancer" />
+	<Exec Command="resgen Resource1.resx Resource1.resources" WorkingDirectory="..\Add-in\Resources"/>
+	<Exec Command="Al.exe /v:2.1.0.0 /embed:..\Add-in\Resources\Resource1.resources /culture:en /out:$(DEPLOY_DIR)\en\NDOEnhancer.resources.dll"/>
+	<Exec Command="Al.exe /v:2.1.0.0 /embed:..\Add-in\Resources\Resource1.resources /culture:de /out:$(DEPLOY_DIR)\en\NDOEnhancer.resources.dll"/>
+	<Exec Command="Al.exe /v:2.1.0.0 /embed:..\Add-in\Resources\Resource1.resources /culture:fr /out:$(DEPLOY_DIR)\en\NDOEnhancer.resources.dll"/>
+	<Exec Command="Al.exe /v:2.1.0.0 /embed:..\Add-in\Resources\Resource1.resources /culture:es /out:$(DEPLOY_DIR)\en\NDOEnhancer.resources.dll"/>
+	<Exec Command="Al.exe /v:2.1.0.0 /embed:..\Add-in\Resources\Resource1.resources /culture:it /out:$(DEPLOY_DIR)\en\NDOEnhancer.resources.dll"/>
+	<MSBuild Projects="@(Project)" Targets="Rebuild" Properties="Configuration=$(Configuration);Platform=$(Platform)" />
+	<MSBuild Projects="@(Projectx86)" Targets="Rebuild" Properties="Configuration=$(Configuration);Platform=x86" />
+	<Copy SourceFiles="@(DeployFiles)" DestinationFolder="$(DEPLOY_DIR)" />
+	<MSBuild Projects="@(InstProject)" Targets="Rebuild" Properties="Configuration=$(Configuration);Platform=x86" />
+  </Target>
+</Project>
