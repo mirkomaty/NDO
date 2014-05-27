@@ -56,7 +56,6 @@ namespace NDOEnhancer
 		/// Map from type to id.
 		/// </summary>
 		private Hashtable ids = new Hashtable();
-		private int lastId;
 
 		private string filename;
 		private bool modified;
@@ -147,7 +146,6 @@ namespace NDOEnhancer
 						{
 							types[d.TypeId] = d;
 							ids[d.TypeName] = d.TypeId;
-							lastId = Math.Max(lastId, d.TypeId);
 						}
 					}
 				}
