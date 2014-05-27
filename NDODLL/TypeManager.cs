@@ -112,7 +112,7 @@ namespace NDO.Mapping {
                 {
                     XmlSerializer xs = new XmlSerializer(typeof(NDOTypeMapping));
                     using (FileStream fs =
-                               fi.Open(FileMode.Open, FileAccess.Read))
+                               fi.Open(FileMode.Open, FileAccess.Read, FileShare.Read))
                     {
                         NDOTypeMapping mapping = (NDOTypeMapping)xs.Deserialize(fs);
                         if (mapping.TypeDescriptor != null)
