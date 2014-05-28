@@ -53,7 +53,8 @@ namespace NDO.Mapping {
 		/// </summary>
 		private Hashtable ids;
 
-		private string filename;
+		private string filename;  // backwards compatibility
+        NDOMapping mapping;
 		private bool modified;
 
 		static TypeManager instance = null;
@@ -65,8 +66,9 @@ namespace NDO.Mapping {
 
 
 
-		public TypeManager(string filename) {
+		public TypeManager(string filename, NDOMapping mapping) {
 			this.filename = filename;
+            this.mapping = mapping;
 			instance = this;
 		}
 
@@ -91,7 +93,7 @@ namespace NDO.Mapping {
                     t = t.GetGenericTypeDefinition();
 
 				if(!ids.Contains(t)) {
-					throw new NDOException(94, "No Type Code for " + t.FullName + ". Check NDOTypes.xml");
+					throw new NDOException(94, "No Type Code for " + t.FullName + ". Check your Type Codes in the Mapping File");
 				}
 				return (int)ids[t];
 			}
@@ -105,6 +107,28 @@ namespace NDO.Mapping {
 			types = new Hashtable();
 			ids = new Hashtable();
 
+            foreach (Class cls in this.mapping.Classes)
+            {
+                if (cls.TypeCode != 0)
+                {
+                    Type t = cls.SystemType;
+                    if (t == null)
+                    {
+                        t = Type.GetType(cls.FullName + "," + cls.AssemblyName);
+                    }
+                    if (t == null)
+                        continue;
+                    types[cls.TypeCode] = t;
+                    ids[t] = cls.TypeCode;
+                }
+            }
+
+            if (types.Count > 0)
+                return;
+
+            // If the mapping file doesn't contain Type Codes, maybe
+            // there exists a NDOTypes.xml file describing the types.
+            // Recompile your project to make sure to have the Type Codes in the mapping file.
 			FileInfo fi = new FileInfo(filename);
             if (fi.Exists)
             {
@@ -114,10 +138,10 @@ namespace NDO.Mapping {
                     using (FileStream fs =
                                fi.Open(FileMode.Open, FileAccess.Read, FileShare.Read))
                     {
-                        NDOTypeMapping mapping = (NDOTypeMapping)xs.Deserialize(fs);
-                        if (mapping.TypeDescriptor != null)
+                        NDOTypeMapping typeMapping = (NDOTypeMapping)xs.Deserialize(fs);
+                        if (typeMapping.TypeDescriptor != null)
                         {
-                            foreach (NDOTypeDescriptor d in mapping.TypeDescriptor)
+                            foreach (NDOTypeDescriptor d in typeMapping.TypeDescriptor)
                             {
                                 Type t = Type.GetType(d.TypeName + ", " + d.AssemblyName);
                                 if (t == null)
@@ -131,10 +155,6 @@ namespace NDO.Mapping {
                 catch (Exception)
                 {
                 }
-            }
-            else
-            {
-                System.Diagnostics.Trace.WriteLine("NDO: No types file at " + filename);
             }
 		}
 

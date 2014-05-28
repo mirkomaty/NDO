@@ -3507,6 +3507,18 @@ namespace NDO.Mapping
             get { return typeNameColumn; }
         }
 
+        private int typeCode;
+        /// <summary>
+        /// If the class is part of an inheritance chain, this property contains the unique type code of the class.
+        /// </summary>
+        /// <remarks>Note, that this information is part of the foreign keys and thus is stored in the database.</remarks>
+        [ReadOnly(true)]
+        public int TypeCode
+        {
+            get { return this.typeCode; }
+            set { this.typeCode = value; }
+        }
+
         #endregion
 
         #region FieldMap stuff
@@ -3578,8 +3590,15 @@ namespace NDO.Mapping
             fullName = classNode.Attributes["FullName"].Value;
             tableName = classNode.Attributes["TableName"].Value;
             connectionId = classNode.Attributes["ConnectionId"].Value;
-            if (classNode.Attributes["TimeStampColumn"] != null)
-                this.timeStampColumn = classNode.Attributes["TimeStampColumn"].Value;
+            this.typeCode = 0;  // undefined
+            XmlAttribute attr = classNode.Attributes["TypeCode"];
+            if (attr != null)
+            {
+                int.TryParse(attr.Value, out this.typeCode);
+            }
+            attr = classNode.Attributes["TimeStampColumn"];
+            if (attr != null)
+                this.timeStampColumn = attr.Value;
 
             XmlNodeList nl = classNode.SelectNodes(Parent.selectRelation, Parent.nsmgr);
             foreach (XmlNode relNode in nl)
@@ -3614,6 +3633,9 @@ namespace NDO.Mapping
             classNode.SetAttribute("ConnectionId", ConnectionId);
             if (this.TimeStampColumn != null)
                 classNode.SetAttribute("TimeStampColumn", this.TimeStampColumn);
+
+            if (this.typeCode != 0)
+                classNode.SetAttribute("TypeCode", this.typeCode.ToString());
 
             this.oid.Save(classNode);
 

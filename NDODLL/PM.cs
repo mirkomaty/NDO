@@ -112,7 +112,7 @@ namespace NDO
 				string dir = Path.GetDirectoryName(mappingFileName);
 #if PRO
 				string typesFile = Path.Combine(dir, "NDOTypes.xml");
-				typeManager = new TypeManager(typesFile);
+				typeManager = new TypeManager(typesFile, this.mappings);
 				typeManager.Load();  // Can be called even if the file doesn't exist
 
 				Key.SetTypeManager(typeManager);

@@ -108,21 +108,18 @@ namespace NDOEnhancer
                 typeTable.PrimaryKey = new DataColumn[] { pkColumn };
                 stream.Write(CreateTable(typeTable));
 
-                NDOTypeDescriptor[] descriptors = typeManager.Entries;
+                Class[] descriptors = typeManager.Entries;
                 int l = descriptors.Length;
 		        for (int i = 0; i < l; i++)
                 {
-                    NDOTypeDescriptor td = descriptors[i];
+                    Class cl = descriptors[i];
                     stream.Write("INSERT INTO NDOTypeCodes (TypeCode, TypeName, AssemblyName, TableName) VALUES (");
-                    stream.Write(td.TypeId);
+                    stream.Write(cl.TypeCode);
                     stream.Write(",");
-                    stream.Write(provider.GetSqlLiteral(td.TypeName));
+                    stream.Write(provider.GetSqlLiteral(cl.FullName));
                     stream.Write(",");
-                    stream.Write(provider.GetSqlLiteral(td.AssemblyName));
+                    stream.Write(provider.GetSqlLiteral(cl.AssemblyName));
                     stream.Write(",");
-                    Class cl = mappings.FindClass(td.TypeName);
-                    if (cl == null)
-                        throw new Exception("Can't find class mapping for type " + td.TypeName);
                     stream.Write(provider.GetSqlLiteral(cl.TableName));
                     stream.WriteLine(");");
                 }

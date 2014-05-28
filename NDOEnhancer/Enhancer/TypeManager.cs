@@ -55,20 +55,16 @@ namespace NDOEnhancer
 		/// <summary>
 		/// Map from type to id.
 		/// </summary>
-		private Hashtable ids = new Hashtable();
+        private Hashtable ids = new Hashtable();
 
 		private string filename;
-		private bool modified;
+        private NDOMapping mapping;
 
-		public bool IsModified
+		public TypeManager(string filename, NDOMapping mapping) 
 		{
-		    get { return modified; }
-		}
-
-		public TypeManager(string filename) 
-		{
-			this.filename = filename;
-			this.Load();
+            this.mapping = mapping;
+            this.filename = filename;
+            this.Load();
 		}
 
 
@@ -93,92 +89,91 @@ namespace NDOEnhancer
 					CheckAndAddType(classNode.Name, classNode.AssemblyName);
 
 				baseNode.IsPoly = true;
-				//classNode.IsPoly = true;
 			}
+            this.Store();
 		}
 
 
 		private void CheckAndAddType(string typeFullName, string assName)
 		{
-			if(!ids.Contains(typeFullName)) 
+            Class cls = this.mapping.FindClass(typeFullName);
+            if (ids.Contains(cls))  // we have already a type code.
+                return;
+			if(cls != null) 
 			{
-				modified = true;
                 // We make sure, that a type of a given name has always the same id.
                 // Therefore we compute a Hash Code from the type name.
                 // In the rare case, that two types have the same HashCode, we must decline from
                 // this rule.
-				NDOTypeDescriptor td = new NDOTypeDescriptor();
                 int newId = TypeHashGenerator.GetHash(typeFullName);
-                while (types.Contains(newId))
+                while (0 == newId || types.Contains(newId))
                     newId++;
-				ids[typeFullName] = td.TypeId = newId;
-				types[newId] = td;
-				td.TypeName = typeFullName;
-				td.AssemblyName = assName;
+                cls.TypeCode = newId;
+				types[newId] = cls;
+                ids[cls] = newId;
 			}
 		}
 
-        public NDOTypeDescriptor[] Entries
+        public Class[] Entries
         {
             get
             {
-                NDOTypeDescriptor[] arr = new NDOTypeDescriptor[types.Count];
+                Class[] arr = new Class[types.Count];
                 int i = 0;
                 foreach (DictionaryEntry de in types)
-                    arr[i++] = (NDOTypeDescriptor)de.Value;
+                    arr[i++] = (Class)de.Value;
                 return arr;
             }
         }
 
 		public void Load() 
 		{
-			FileInfo fi = new FileInfo(filename);
-			if(fi.Exists) 
-			{
-				XmlSerializer xs = new XmlSerializer(typeof(NDOTypeMapping));
-				using (FileStream fs = 
-						   fi.Open(FileMode.Open, FileAccess.Read)) 
-				{
-					NDOTypeMapping mapping = (NDOTypeMapping)xs.Deserialize(fs);
-					if(mapping.TypeDescriptor != null) 
-					{
-						foreach(NDOTypeDescriptor d in mapping.TypeDescriptor) 
-						{
-							types[d.TypeId] = d;
-							ids[d.TypeName] = d.TypeId;
-						}
-					}
-				}
-			}
+            foreach (Class cls in mapping.Classes)
+            {
+                if (cls.TypeCode != 0)
+                {
+                    this.types[cls.TypeCode] = cls;
+                    ids[cls] = cls.TypeCode;
+                }
+            }
+            if (this.types.Count == 0)
+            {
+                FileInfo fi = new FileInfo(filename);
+                if (fi.Exists)
+                {
+                    XmlSerializer xs = new XmlSerializer(typeof(NDOTypeMapping));
+                    using (FileStream fs =
+                               fi.Open(FileMode.Open, FileAccess.Read, FileShare.Read))
+                    {
+                        NDOTypeMapping typeMapping = (NDOTypeMapping)xs.Deserialize(fs);
+                        if (typeMapping.TypeDescriptor != null)
+                        {
+                            foreach (NDOTypeDescriptor d in typeMapping.TypeDescriptor)
+                            {
+                                Class cls = this.mapping.FindClass(d.TypeName);
+                                if (cls == null)  // NDOTypes.xml describes types which don't exist in this context
+                                    continue;
+                                cls.TypeCode = d.TypeId;
+                                types[d.TypeId] = cls;
+                                ids[cls] = d.TypeId;
+                            }
+                        }
+                    }
+                }
+            }
 		}
 
 		public void Store() 
 		{
-			//FileInfo fi = new FileInfo(filename);
-			XmlSerializer xs = new XmlSerializer(typeof(NDOTypeMapping));
-
-			NDOTypeMapping m = new NDOTypeMapping();
-			m.TypeDescriptor = new NDOTypeDescriptor[types.Count];
-			int index = 0;
-			foreach(DictionaryEntry entry in types) 
-			{
-				NDOTypeDescriptor d = (NDOTypeDescriptor)entry.Value;
-				m.TypeDescriptor[index++] = d;
-			}
-			using (FileStream fs = new FileStream(filename, FileMode.Create, FileAccess.Write))
-			{
-				xs.Serialize(fs, m);
-				fs.Close();
-			}
+            if (File.Exists(this.filename))
+            {
+                File.Move(this.filename, this.filename + ".deprecated");
+            }
 		}
 
 		public void Update() 
 		{
-			if(modified) 
-			{
-				Store();
-				modified = false;
-			}
+			Store();
 		}
 	}
 }

@@ -299,11 +299,9 @@ namespace NDOEnhancer
                 if (ownClassList == null)
                     throw new Exception("A reference to the assembly " + binFile + " is needed. Check your parameter file.");
             }
-#if PRO
-			checkTypeList();
-#endif
 
 			checkClassMappings(ownClassList);
+            checkTypeList();
             checkOidColumnMappings(); // Incorporates the Attributes and NDOOidType.
 			checkAllRelationMappings(ownClassList); // Makes sure, that a mapping entry for each relation exists
             determineOidTypes(); // needs the relation mappings, calls InitFields
@@ -470,14 +468,8 @@ namespace NDOEnhancer
 		private void checkTypeList()
 		{
 			string typeFile = Path.Combine(Path.GetDirectoryName(binFile), "NDOTypes.Xml");
-			TypeManager tm = new TypeManager(typeFile);
+			TypeManager tm = new TypeManager(typeFile, this.mappings);
 			tm.CheckTypeList(allPersistentClasses);
-			if (!File.Exists(typeFile))
-				this.messages.WriteLine("Generating type list file " + typeFile);
-			else if (tm.IsModified)
-				this.messages.WriteLine("Updating type list file");
-					
-			tm.Update();			
 		}
 #endif
 
@@ -1394,7 +1386,7 @@ namespace NDOEnhancer
                 if (options.IncludeTypecodes)
                 {
                     string typeFile = Path.Combine(Path.GetDirectoryName(binFile), "NDOTypes.Xml");
-                    tm = new TypeManager(typeFile);
+                    tm = new TypeManager(typeFile, this.mappings);
                 }
 				string oldSchemaFile = schemaFile.Replace(".ndo.xsd", ".ndo.xsd.bak");
 				NDODataSet dsOld = null;
