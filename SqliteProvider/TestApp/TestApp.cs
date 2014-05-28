@@ -54,7 +54,7 @@ namespace TestApp
 		static void Main(string[] args)
 		{
             NDOProviderFactory.Instance["Sqlite"] = new NDO.SqliteProvider.Provider();
-            if (!NDOProviderFactory.Instance.Generators.Contains("Sqlite"))
+            if (!NDOProviderFactory.Instance.Generators.ContainsKey("Sqlite"))
 				NDOProviderFactory.Instance.Generators.Add( "Sqlite", new NDO.SqliteProvider.SqliteGenerator() );
 			PersistenceManager pm = new PersistenceManager();
 
