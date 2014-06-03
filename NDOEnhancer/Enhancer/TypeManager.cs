@@ -167,7 +167,10 @@ namespace NDOEnhancer
 		{
             if (File.Exists(this.filename))
             {
-                File.Move(this.filename, this.filename + ".deprecated");
+                if (!File.Exists(this.filename + ".deprecated"))
+                    File.Move(this.filename, this.filename + ".deprecated");
+                else
+                    File.Delete(this.filename);
             }
 		}
 
