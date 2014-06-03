@@ -46,7 +46,7 @@ namespace NDO
         static void Main(string[] args)
         {
             PersistenceManager pm = new PersistenceManager(@"..\..\..\NdoUnitTests\bin\Debug\NDOMapping.xml");
-            //pm.BuildDatabase(@"..\..\..\NdoUnitTests\bin\Debug\NdoUnitTests.ndo.sql");
+            pm.BuildDatabase(@"..\..\..\NdoUnitTests\bin\Debug\NdoUnitTests.ndo.sql");
 #if buildDatabase
             //return;
             //PersistenceManager pm = new PersistenceManager();
@@ -57,7 +57,7 @@ namespace NDO
 #endif
             DateTime startTime = DateTime.Now;
 
-#if true
+#if false
             NDOMitarbeiterTests t = new NDOMitarbeiterTests();
             try
             {
