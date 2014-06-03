@@ -806,9 +806,10 @@ namespace NDO
 				}
 				if(r.Bidirectional)
 				{
-					if ( r.Multiplicity == RelationMultiplicity.List && mappings.GetRelationField( relObj, r.ForeignRelation.FieldName ) == null )
+                    if (r.Multiplicity == RelationMultiplicity.List && mappings.GetRelationField(relObj, r.ForeignRelation.FieldName) == null)
 					{
-						mappings.SetRelationField(relObj, r.ForeignRelation.FieldName, pc);
+                        if ( r.ForeignRelation.Multiplicity == RelationMultiplicity.Element )
+                            mappings.SetRelationField(relObj, r.ForeignRelation.FieldName, pc);
 					}
 					else if ( !addLock.IsLocked( pc ) )
 					{
