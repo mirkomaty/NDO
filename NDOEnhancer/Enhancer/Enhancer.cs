@@ -166,7 +166,11 @@ namespace NDOEnhancer
             }
         }
 
-
+        //Assembly OnAssemblyResolve(object sender, ResolveEventArgs args)
+        //{
+        //    this.messages.WriteLine("AssemblyResolve: " + args.Name);
+        //    return null;
+        //}
 
 
 		private void 
@@ -189,6 +193,8 @@ namespace NDOEnhancer
                 }
             }
 
+            // AppDomain.CurrentDomain.AssemblyResolve += OnAssemblyResolve;
+
 			// Durchsuche alle referenzierten Assemblies
 			foreach (NDOReference reference in references.Values)
 			{
@@ -206,13 +212,13 @@ namespace NDOEnhancer
 				Assembly ass = null; 
 				try
 				{
-					assToLoad = AssemblyName.GetAssemblyName(dllPath);
-					NDOAssemblyName ndoAn = new NDOAssemblyName(assToLoad.FullName);
-					// Don't need to analyze Microsofts assemblies.
-					if ( ndoAn.PublicKeyToken == "b03f5f7f11d50a3a" || ndoAn.PublicKeyToken == "b77a5c561934e089" )  
-						continue;
-					ass = Assembly.Load(assToLoad);
-				}
+                    assToLoad = AssemblyName.GetAssemblyName(dllPath);
+                    NDOAssemblyName ndoAn = new NDOAssemblyName(assToLoad.FullName);
+                    // Don't need to analyze Microsofts assemblies.
+                    if (ndoAn.PublicKeyToken == "b03f5f7f11d50a3a" || ndoAn.PublicKeyToken == "b77a5c561934e089")
+                        continue;
+                    ass = Assembly.Load(assToLoad);
+                }
 				catch (Exception ex)
 				{
 					if (assToLoad != null && (binaryAssemblyName == null || string.Compare(binaryAssemblyName.FullName, assToLoad.FullName, true) != 0))
@@ -289,6 +295,8 @@ namespace NDOEnhancer
 //				XmlNodeList vtnl = pcDoc.SelectNodes(@"/PersistentClasses/ValueType");
 //				ValueTypes.Instance.Merge(vtnl);
 			}
+
+            // AppDomain.CurrentDomain.AssemblyResolve -= OnAssemblyResolve;
 
             if (projectDescription.IsWebProject)
             {
