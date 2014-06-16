@@ -1299,7 +1299,11 @@ namespace NDO
 				throw new NDOException(48, "Script file " + scriptFile + " doesn't exist.");
 			if (this.mappings.Connections.Count < 1)
 				throw new NDOException(48, "Mapping file doesn't define a connection.");
-			Connection conn = (Connection) this.mappings.Connections[0];
+			Connection conn = new Connection( this.mappings );
+			Connection originalConnection = (Connection)this.mappings.Connections[0];
+			conn.Name = OnNewConnection( originalConnection );
+			conn.Type = originalConnection.Type;
+			//Connection conn = (Connection) this.mappings.Connections[0];
 			return BuildDatabase(scriptFile, conn);
 		}
 
