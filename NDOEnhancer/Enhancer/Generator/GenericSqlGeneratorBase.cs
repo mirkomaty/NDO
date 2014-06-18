@@ -177,7 +177,13 @@ namespace NDOEnhancer
 					if (null != field.Column.DbType)
 						columnType = field.Column.DbType;
 					if (0 != field.Column.Size && !field.Column.IgnoreColumnSizeInDDL)
-						width = field.Column.Size.ToString();
+					{
+						int dl = field.Column.Size;
+						if (dl == -1 && dc.DataType == typeof( string ))
+							width = "max";
+						else
+							width = dl.ToString();
+					}
                     if (0 != field.Column.Precision && !field.Column.IgnoreColumnSizeInDDL)
 						precision = field.Column.Precision.ToString();
                     allowNull = field.Column.AllowDbNull;
@@ -208,7 +214,12 @@ namespace NDOEnhancer
 			{								
 				int dl = provider.GetDefaultLength(dc.DataType);
 				if (dl != 0)
-					width = dl.ToString();
+				{
+					if (dl == -1 && dc.DataType == typeof( string ))
+						width = "max";
+					else
+						width = dl.ToString();
+				}
 			}
 			
 			// Because there is no GetDefaultPrecision in the provider...
