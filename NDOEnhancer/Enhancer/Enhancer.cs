@@ -600,8 +600,9 @@ namespace NDOEnhancer
 		}
 
 
-		private void checkMappingForField(string prefix, Patcher.ILField field, ArrayList sortedFields, Class classMapping, bool isOnlyChild, bool isOidField)
+		private void checkMappingForField(string prefix, Patcher.ILField field, ArrayList sortedFields, Class classMapping, bool isOnlyChild, FieldNode fieldNode)
 		{
+			bool isOidField = fieldNode.IsOid;
 			if (field.CleanName.StartsWith("_ndo"))
 			{
                 if (this.verboseMode)
@@ -614,7 +615,7 @@ namespace NDOEnhancer
 				bool oneChildOnly = field.Fields.Count == 1;
 				foreach(Patcher.ILField newf in field.Fields)
 				{
-					checkMappingForField(field.CleanName + ".", newf, sortedFields, classMapping, oneChildOnly, false);
+					checkMappingForField(field.CleanName + ".", newf, sortedFields, classMapping, oneChildOnly, fieldNode);
 				}
 				return;
 			}
@@ -633,21 +634,18 @@ namespace NDOEnhancer
 			if (classMapping != null)
 			{
 				Field f = classMapping.FindField(fname);
-				try
+				if (null == f)
 				{
-					if (null == f)
-					{
-						f = classMapping.AddStandardField(fname, isOidField);
-						if (isOnlyChild)
-							f.Column.Name = classMapping.ColumnNameFromFieldName(field.Parent.CleanName, false);
-						messages.WriteLine("Generating field mapping: " + classMapping.FullName + "." + fname + " -> " + f.Column.Name);
-						if (classMapping.IsAbstract)
-							f.Column.Name = "Unused";
-					}
+					f = classMapping.AddStandardField(fname, isOidField);
+					if (isOnlyChild)
+						f.Column.Name = classMapping.ColumnNameFromFieldName(field.Parent.CleanName, false);
+					messages.WriteLine("Generating field mapping: " + classMapping.FullName + "." + fname + " -> " + f.Column.Name);
+					if (classMapping.IsAbstract)
+						f.Column.Name = "Unused";
 				}
-				catch(ArgumentOutOfRangeException) 
+				if (fieldNode.ColumnAttribute != null)
 				{
-					throw new Exception("NDO Communitiy version: Too much fields in class " + classMapping.FullName);
+					fieldNode.ColumnAttribute.SetColumnValues( f.Column );
 				}
 			}
 		}
@@ -698,7 +696,7 @@ namespace NDOEnhancer
 				field.IsInherited = isInherited;
 				System.Diagnostics.Debug.Assert (field.Valid, "field.Valid is false");
 				if (classMapping != null)
-					checkMappingForField("", field, sortedFields, classMapping, false, fieldNode.IsOid);
+					checkMappingForField("", field, sortedFields, classMapping, false, fieldNode);
 			}
 		}
 			 

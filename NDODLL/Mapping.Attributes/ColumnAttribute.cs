@@ -76,40 +76,40 @@ namespace NDO.Mapping.Attributes
             set { dbType = value; }
         }
 
-        int size;
+        int? size;
         /// <summary>
         /// Gets or sets the size of the column.
         /// </summary>
         [Description("Size of the column.")]
         public int Size
         {
-            get { return size; }
+            get { return size.HasValue ? this.size.Value : 0; }
             set { size = value; }
         }
 
-        int precision;
+        int? precision;
         /// <summary>
         /// Precision of the column. This appears in the DDL as (Size, Precision) tupel.
         /// </summary>
         [Description("Precision of the column. This appears in the DDL as (Size, Precision) tupel.")]
         public int Precision
         {
-            get { return precision; }
+            get { return precision.HasValue ? precision.Value : 0; }
             set { precision = value; }
         }
 
-        private bool ignoreColumnSizeInDDL;
+        private bool? ignoreColumnSizeInDDL;
         /// <summary>
         /// True, if the DDL generator should not generate Size and Precision values for the given column.
         /// </summary>
         [Description("True, if the DDL generator should not generate Size and Precision values for the given column.")]
         public bool IgnoreColumnSizeInDDL
         {
-            get { return ignoreColumnSizeInDDL; }
+            get { return ignoreColumnSizeInDDL.HasValue ? ignoreColumnSizeInDDL.Value : false; }
             set { ignoreColumnSizeInDDL = value; }
         }
 
-        bool allowDbNull = true;
+        bool? allowDbNull = true;
 
         /// <summary>
         /// Determines, if the column may contain NULL values.
@@ -124,7 +124,7 @@ namespace NDO.Mapping.Attributes
         [Description("Determines, if the column may contain NULL values.")]
         public bool AllowDbNull
         {
-            get { return allowDbNull; }
+            get { return allowDbNull.HasValue ? allowDbNull.Value : true; }
             set { allowDbNull = value; }
         }
 
@@ -158,18 +158,20 @@ namespace NDO.Mapping.Attributes
         /// <param name="column">The column to be initialized.</param>
         public void SetColumnValues(Column column)
         {
-            column.AllowDbNull = this.allowDbNull;
+			if (this.allowDbNull.HasValue)
+				column.AllowDbNull = this.allowDbNull.Value;
             if (this.dbType != null)
                 column.DbType = this.dbType;
-            else
-                column.DbType = null;
-            column.IgnoreColumnSizeInDDL = this.ignoreColumnSizeInDDL;
+			if (this.ignoreColumnSizeInDDL.HasValue)
+				column.IgnoreColumnSizeInDDL = this.ignoreColumnSizeInDDL.Value;
             if (this.name != null) 
                 column.Name = this.name;
             if (this.netType != null)
                 column.NetType = this.netType.FullName + "," + this.netType.Assembly.GetName().Name;
-            column.Precision = this.precision;
-            column.Size = this.size;
+			if (this.precision.HasValue)
+				column.Precision = this.precision.Value;
+			if (this.size.HasValue)
+				column.Size = this.size.Value;
         }
 
         /// <summary>

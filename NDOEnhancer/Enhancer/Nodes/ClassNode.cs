@@ -35,6 +35,7 @@ using System.Diagnostics;
 using System.Reflection;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using NDO;
 using NDO.Mapping;
 using NDO.Mapping.Attributes;
@@ -47,9 +48,9 @@ namespace NDOEnhancer
 	internal class ClassNode
 	{
 		string name = null;
-		IList fields = new ArrayList();
-		IList relations = new ArrayList();
-		IList embeddedTypes = new ArrayList();
+		List<FieldNode> fields = new List<FieldNode>();
+		List<RelationNode> relations = new List<RelationNode>();
+		List<EmbeddedTypeNode> embeddedTypes = new List<EmbeddedTypeNode>();
 		Class myClass = null;
 		Type classType;
 		NDOMapping mappings;
