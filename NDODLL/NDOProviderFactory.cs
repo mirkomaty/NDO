@@ -56,6 +56,7 @@ namespace NDO
     /// </remarks>
     public class NDOProviderFactory
     {
+		static object lockObject = new object();
         private static NDOProviderFactory factory = new NDOProviderFactory();
         private Dictionary<string,IProvider> providers = null; // Marks the providers as not loaded
 		private Dictionary<string,ISqlGenerator> generators = new Dictionary<string,ISqlGenerator>();
@@ -73,22 +74,29 @@ namespace NDO
 
         private void LoadProviders()
         {
-            if (this.providers != null)
-                return;
-            this.providers = new Dictionary<string,IProvider>();
-            this["SqlServer"] = new NDOSqlProvider();
-            this["Access"] = new NDOAccessProvider();
-            this["Oracle"] = new NDOOracleProvider();
-            SqlServerGenerator sqlGen = new SqlServerGenerator();
-            sqlGen.Provider = this["SqlServer"];
-            this.generators.Add("SqlServer", sqlGen);
-            AccessGenerator accGen = new AccessGenerator();
-            accGen.Provider = this["Access"];
-            this.generators.Add("Access", accGen);
-            OracleGenerator oraGen = new OracleGenerator();
-            oraGen.Provider = this["Oracle"];
-            this.generators.Add("Oracle", oraGen);
-            SearchProviderPlugIns();
+			lock (lockObject)
+			{
+				if (this.providers == null)
+				{
+					this.providers = new Dictionary<string, IProvider>();
+					if (!this.providers.ContainsKey( "SqlServer" ))
+						this["SqlServer"] = new NDOSqlProvider();
+					if (!this.providers.ContainsKey( "Access" ))
+						this["Access"] = new NDOAccessProvider();
+					if (!this.providers.ContainsKey( "Oracle" ))
+						this["Oracle"] = new NDOOracleProvider();
+					SqlServerGenerator sqlGen = new SqlServerGenerator();
+					sqlGen.Provider = this["SqlServer"];
+					this.generators.Add( "SqlServer", sqlGen );
+					AccessGenerator accGen = new AccessGenerator();
+					accGen.Provider = this["Access"];
+					this.generators.Add( "Access", accGen );
+					OracleGenerator oraGen = new OracleGenerator();
+					oraGen.Provider = this["Oracle"];
+					this.generators.Add( "Oracle", oraGen );
+					SearchProviderPlugIns();
+				}
+			}
         }
 
         private NDOProviderFactory()
@@ -239,11 +247,14 @@ namespace NDO
             get
             {
                 LoadProviders();
+				if (!providers.ContainsKey(name))
+				{
+					throw new Exception( String.Format( "There is no provider defined with name '{0}'. Check your mapping file.", name ) );
+				}
                 return (IProvider)providers[name];
             }
             set 
             {
-                LoadProviders();
                 providers[name] = value; 
             }
         }

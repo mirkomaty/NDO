@@ -1803,7 +1803,7 @@ namespace NDO.Mapping
                     t = t.BaseType;
             }
             if (fi == null)
-                throw new NDOException(20, "Can't find field " + t.Name + "." + FieldName);
+                throw new NDOException(20, "Can't find field " + Parent.SystemType.Name + "." + FieldName);
 
             FieldType = fi.FieldType;
 
