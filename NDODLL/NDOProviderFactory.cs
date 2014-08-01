@@ -56,27 +56,31 @@ namespace NDO
     /// </remarks>
     public class NDOProviderFactory
     {
-		static object lockObject = new object();
+		private static readonly object lockObject = new object();
         private static NDOProviderFactory factory = new NDOProviderFactory();
         private Dictionary<string,IProvider> providers = null; // Marks the providers as not loaded
 		private Dictionary<string,ISqlGenerator> generators = new Dictionary<string,ISqlGenerator>();
         private bool skipPrivatePath;
 
-
-		public IDictionary<string, ISqlGenerator> Generators
+		/// <summary>
+		/// Private constructor makes sure, that only one object can be instantiated.
+		/// </summary>
+		private NDOProviderFactory()
         {
-            get 
-            {
-                LoadProviders();
-                return generators; 
-            }
         }
 
+		/// <summary>
+		/// Actual initialization of the factory.
+		/// This allows lazy instantiation.
+		/// </summary>
         private void LoadProviders()
         {
+			if (this.providers != null)   // already initialized
+				return;
+
 			lock (lockObject)
-			{
-				if (this.providers == null)
+			{				
+				if (this.providers == null)  // Multithreading DoubleCheck
 				{
 					this.providers = new Dictionary<string, IProvider>();
 					if (!this.providers.ContainsKey( "SqlServer" ))
@@ -98,10 +102,15 @@ namespace NDO
 				}
 			}
         }
-
-        private NDOProviderFactory()
+		public IDictionary<string, ISqlGenerator> Generators
         {
+            get 
+            {
+                LoadProviders();
+                return generators; 
+            }
         }
+
 
         private void AddProviderPlugIns(string path)
         {
