@@ -28,6 +28,9 @@ namespace NDO.DataExtensions
 			if (fi == null)
 				throw new Exception( String.Format( "PersistenceManager of type {0} doesn't provide a field 'cache'", pm.GetType().FullName ) );
 
+			if (!object.ReferenceEquals( pc.NDOStateManager.PersistenceManager, pm ))
+				pm = (PersistenceManager)pc.NDOStateManager.PersistenceManager;
+
 			object cache = fi.GetValue( pm );
 
 			MethodInfo mi = cache.GetType().GetMethod( "GetDataRow" );
