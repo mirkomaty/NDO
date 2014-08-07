@@ -1,0 +1,28 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<NDOMapping SchemaVersion="1.0">
+  <Connections>
+    <Connection ID="C0" Name="Integrated Security=SSPI;Persist Security Info=False;Data Source=localhost;Initial Catalog=Travel" Type="SqlServer" />
+  </Connections>
+  <Classes>
+    <Class AssemblyName="BusinessClasses" FullName="BusinessClasses.Employee" TableName="Employee" ConnectionId="C0">
+      <Oid>
+        <OidColumn AutoIncremented="True" Name="ID" AllowDbNull="False" />
+      </Oid>
+      <Fields>
+        <Field Name="firstName">
+          <Column Name="FirstName" Size="-1" />
+        </Field>
+        <Field Name="lastName">
+          <Column Name="LastName" />
+        </Field>
+        <Field Name="position.X">
+          <Column Name="Position_X" />
+        </Field>
+        <Field Name="position.Y">
+          <Column Name="Position_Y" />
+        </Field>
+      </Fields>
+      <Relations />
+    </Class>
+  </Classes>
+</NDOMapping>

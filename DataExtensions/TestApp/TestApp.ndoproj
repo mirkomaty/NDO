@@ -1,0 +1,42 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<Enhancer>
+  <Options>
+    <EnableAddIn>True</EnableAddIn>
+    <EnableEnhancer>False</EnableEnhancer>
+    <VerboseMode>False</VerboseMode>
+    <NewMapping>False</NewMapping>
+    <GenerateSQL>True</GenerateSQL>
+    <DefaultConnection>Integrated Security=SSPI;Persist Security Info=False;Data Source=localhost;Initial Catalog=Travel</DefaultConnection>
+    <TargetMappingFileName>NDOMapping.xml</TargetMappingFileName>
+    <GenerateChangeEvents>False</GenerateChangeEvents>
+    <UseTimeStamps>False</UseTimeStamps>
+    <Utf8Encoding>True</Utf8Encoding>
+    <SQLScriptLanguage>SqlServer</SQLScriptLanguage>
+    <SchemaVersion>1.0</SchemaVersion>
+    <IncludeTypecodes>False</IncludeTypecodes>
+    <DatabaseOwner>
+    </DatabaseOwner>
+    <GenerateConstraints>False</GenerateConstraints>
+    <UseMsBuild>True</UseMsBuild>
+    <DropExistingElements>True</DropExistingElements>
+  </Options>
+  <ProjectDescription>
+    <BinPath>bin\Debug\TestApp.exe</BinPath>
+    <ObjPath>obj\Debug\</ObjPath>
+    <AssemblyName />
+    <Debug>True</Debug>
+    <IsWebProject>False</IsWebProject>
+    <KeyFile>
+    </KeyFile>
+    <References>
+      <Reference AssemblyName="Newtonsoft.Json" AssemblyPath="..\..\..\ProjekteSchnell\AliudShop\UmbracoSite\bin\Newtonsoft.Json.dll">
+      </Reference>
+      <Reference AssemblyName="BusinessClasses" AssemblyPath="..\BusinessClasses\bin\Debug\BusinessClasses.dll">
+      </Reference>
+      <Reference AssemblyName="NDOData" AssemblyPath="..\NDOData\bin\Debug\NDOData.dll">
+      </Reference>
+      <Reference AssemblyName="System.Core" AssemblyPath="d:\program files (x86)\reference assemblies\microsoft\framework\.netframework\v4.5.1\system.core.dll">
+      </Reference>
+    </References>
+  </ProjectDescription>
+</Enhancer>
