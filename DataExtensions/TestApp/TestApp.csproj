@@ -58,9 +58,9 @@
       <Project>{8F9AAE25-95A3-4720-B397-8097E839A5C2}</Project>
       <Name>BusinessClasses</Name>
     </ProjectReference>
-    <ProjectReference Include="..\NDOData\NDOData.csproj">
+    <ProjectReference Include="..\NDO.DataExtensions\NDO.DataExtensions.csproj">
       <Project>{407f99f0-f853-465c-a6cd-275644bcaf52}</Project>
-      <Name>NDOData</Name>
+      <Name>NDO.DataExtensions</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

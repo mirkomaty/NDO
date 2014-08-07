@@ -7,8 +7,8 @@
     <ProjectGuid>{407F99F0-F853-465C-A6CD-275644BCAF52}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>NDOData</RootNamespace>
-    <AssemblyName>NDOData</AssemblyName>
+    <RootNamespace>NDO.DataExtensions</RootNamespace>
+    <AssemblyName>NDO.DataExtensions</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />

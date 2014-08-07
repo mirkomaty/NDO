@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using BusinessClasses;
 using NDO;
-using NDOData;
+using NDO.DataExtensions;
 using Newtonsoft.Json;
 
 namespace Client

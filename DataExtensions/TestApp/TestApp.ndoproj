@@ -29,13 +29,11 @@
     <KeyFile>
     </KeyFile>
     <References>
-      <Reference AssemblyName="Newtonsoft.Json" AssemblyPath="..\..\..\ProjekteSchnell\AliudShop\UmbracoSite\bin\Newtonsoft.Json.dll">
+      <Reference AssemblyName="Newtonsoft.Json" AssemblyPath="..\..\..\ProjekteSchnell\AliudShop\UmbracoSite\bin\Newtonsoft.Json.dll" CheckThisDll="False">
       </Reference>
-      <Reference AssemblyName="BusinessClasses" AssemblyPath="..\BusinessClasses\bin\Debug\BusinessClasses.dll">
+      <Reference AssemblyName="BusinessClasses" AssemblyPath="..\BusinessClasses\bin\Debug\BusinessClasses.dll" CheckThisDll="False">
       </Reference>
-      <Reference AssemblyName="NDOData" AssemblyPath="..\NDOData\bin\Debug\NDOData.dll">
-      </Reference>
-      <Reference AssemblyName="System.Core" AssemblyPath="d:\program files (x86)\reference assemblies\microsoft\framework\.netframework\v4.5.1\system.core.dll">
+      <Reference AssemblyName="System.Core" AssemblyPath="d:\program files (x86)\reference assemblies\microsoft\framework\.netframework\v4.5.1\system.core.dll" CheckThisDll="False">
       </Reference>
     </References>
   </ProjectDescription>
