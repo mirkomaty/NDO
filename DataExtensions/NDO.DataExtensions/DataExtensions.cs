@@ -7,7 +7,7 @@ using System.Dynamic;
 
 using NDO;
 
-namespace NDOData
+namespace NDO.DataExtensions
 {
     public static class DataExtensions
     {
