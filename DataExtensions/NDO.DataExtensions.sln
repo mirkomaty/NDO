@@ -7,7 +7,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BusinessClasses", "Business
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestApp", "TestApp\TestApp.csproj", "{44FD4DC4-4F8E-44C3-A4EC-FD062F54A70A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NDOData", "NDOData\NDOData.csproj", "{407F99F0-F853-465C-A6CD-275644BCAF52}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NDO.DataExtensions", "NDO.DataExtensions\NDO.DataExtensions.csproj", "{407F99F0-F853-465C-A6CD-275644BCAF52}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
