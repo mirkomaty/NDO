@@ -75,9 +75,6 @@ namespace NDO
 		/// </summary>
         private void LoadProviders()
         {
-			if (this.providers != null)   // already initialized
-				return;
-
 			lock (lockObject)
 			{				
 				if (this.providers == null)  // Multithreading DoubleCheck

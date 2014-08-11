@@ -35,6 +35,7 @@ using System.Text;
 using System.IO;
 using System.EnterpriseServices;
 using System.Collections;
+using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Data;
 using System.Diagnostics;
@@ -43,6 +44,7 @@ using System.Reflection;
 using NDO.Mapping;
 using NDO.Logging;
 using NDOInterfaces;
+using System.Dynamic;
 
 namespace NDO 
 {
@@ -62,13 +64,18 @@ namespace NDO
 	/// Delegate type of an handler, which can be registered by the OnSaving event of the PersistenceManager.
 	/// </summary>
 	public delegate void OnSavingHandler(ICollection l);
+	/// <summary>
+	/// Delegate type for the OnSavedEvent.
+	/// </summary>
+	/// <param name="auditSet"></param>
+	public delegate void OnSavedHandler(AuditSet auditSet);
 
 
 	/// <summary>
 	/// Standard implementation of the IPersistenceManager interface. Provides transaction like manipulation of data sets.
 	/// This is the main class you'll work with in your application code. For more information see the topic "Persistence Manager" in the NDO Documentation.
 	/// </summary>
-	public class PersistenceManager : PersistenceManagerBase, IPersistenceManager 
+	public class PersistenceManager : PersistenceManagerBase, IPersistenceManager
 	{		
 		private bool hollowMode = false;
 		private IDictionary mappingHandler = new ListDictionary(); // currently used handlers
@@ -99,6 +106,10 @@ namespace NDO
 		/// during the transaction and are to be saved or deleted.
 		/// </summary>
 		public event OnSavingHandler OnSavingEvent;
+		/// <summary>
+		/// This event is fired at the very end of the Save() method. It provides lists of the added, changed, and deleted objects.
+		/// </summary>
+		public event OnSavedHandler OnSavedEvent;
 		
 		private const string hollowMarker = "Hollow";
 
@@ -2239,17 +2250,18 @@ namespace NDO
 
 			if (this.OnSavingEvent != null)
 			{
-				IList changedObjects = new ArrayList(cache.LockedObjects.Count);
+				IList onSavingObjects = new ArrayList(cache.LockedObjects.Count);
 				foreach(Cache.Entry e in cache.LockedObjects)
-					changedObjects.Add(e.pc);
-				OnSavingEvent(changedObjects);
+					onSavingObjects.Add(e.pc);
+				OnSavingEvent(onSavingObjects);
 			}
 
 			ArrayList types = new ArrayList();
-			ArrayList addedObjects = new ArrayList();
-			ArrayList deletedObjects = new ArrayList();
-			ArrayList hollowModeObjects = hollowMode ? new ArrayList() : null;
-
+			List<IPersistenceCapable> deletedObjects = new List<IPersistenceCapable>();
+			List<IPersistenceCapable> hollowModeObjects = hollowMode ? new List<IPersistenceCapable>() : null;
+			List<IPersistenceCapable> changedObjects = new List<IPersistenceCapable>();
+			List<IPersistenceCapable> addedObjects = new List<IPersistenceCapable>();
+			List<Cache.Entry> addedCacheEntries = new List<Cache.Entry>();
 
 			// Save current state in DataSet
 			foreach (Cache.Entry e in cache.LockedObjects) 
@@ -2266,11 +2278,12 @@ namespace NDO
 					//Debug.WriteLine("Added  type " + objType.Name);
 					types.Add(objType);
 				}
-				if(e.pc.NDOObjectState == NDOObjectState.Deleted) 
+				NDOObjectState objectState = e.pc.NDOObjectState;
+				if(objectState == NDOObjectState.Deleted) 
 				{
 					deletedObjects.Add(e.pc);
 				} 
-				else if(e.pc.NDOObjectState == NDOObjectState.Created) 
+				else if(objectState == NDOObjectState.Created) 
 				{
 					WriteObject(e.pc, e.row, cl.FieldNames);                    
 					WriteIdFieldsToRow(e.pc, e.row);  // If fields are mapped to Oid, write them into the row
@@ -2285,16 +2298,18 @@ namespace NDO
 					//					System.Data.SqlClient.SqlCommand cmd = new System.Data.SqlClient.SqlCommand("testCommand");
 					//					new SqlDumper(new DebugLogAdapter(), NDOProviderFactory.Instance["Sql"], cmd, cmd, cmd, cmd).Dump(rows);
 
-					addedObjects.Add(e);
-					//					e.pc.NDOObjectState = NDOObjectState.Persistent;
+					addedCacheEntries.Add(e);
+					addedObjects.Add( e.pc );
+					//					objectState = NDOObjectState.Persistent;
 				} 
 				else 
 				{
+					if (e.pc.NDOObjectState == NDOObjectState.PersistentDirty)
+						changedObjects.Add( e.pc );
 					WriteObject(e.pc, e.row, cl.FieldNames);
-					WriteForeignKeysToRow(e.pc, e.row); 
-					//					e.pc.NDOObjectState = NDOObjectState.Persistent;
+					WriteForeignKeysToRow(e.pc, e.row); 					
 				}
-				if(hollowMode && (e.pc.NDOObjectState == NDOObjectState.Persistent || e.pc.NDOObjectState == NDOObjectState.Created || e.pc.NDOObjectState == NDOObjectState.PersistentDirty) ) 
+				if(hollowMode && (objectState == NDOObjectState.Persistent || objectState == NDOObjectState.Created || objectState == NDOObjectState.PersistentDirty) ) 
 				{
 					hollowModeObjects.Add(e.pc);
 				}
@@ -2337,7 +2352,7 @@ namespace NDO
 				}
 
 				// Because object id might have changed during DB insertion, re-register newly created objects in the cache.
-				foreach(Cache.Entry e in addedObjects) 
+				foreach(Cache.Entry e in addedCacheEntries) 
 				{
 					cache.DeregisterLockedObject(e.pc);
 					ReadId(e);
@@ -2368,7 +2383,6 @@ namespace NDO
 
 			EndSave();
 
-
 			foreach(IPersistenceCapable pc in deletedObjects) 
 			{
 				MakeObjectTransient(pc, true);
@@ -2383,6 +2397,16 @@ namespace NDO
 				MakeHollow(hollowModeObjects);
 			}
 
+			if (this.OnSavedEvent != null)
+			{
+				AuditSet auditSet = new AuditSet()
+				{
+					ChangedObjects = changedObjects,
+					CreatedObjects = addedObjects,
+					DeletedObjects = deletedObjects
+				};
+				this.OnSavedEvent( auditSet );
+			}
 		}
 
 
@@ -3702,7 +3726,69 @@ namespace NDO
 				}
 			}
 		}
-	}
+
+		public DataRow GetDataRow( object o )
+		{
+			IPersistenceCapable pc = CheckPc( o );
+
+			if (pc.NDOObjectState == NDOObjectState.Deleted || pc.NDOObjectState == NDOObjectState.Transient)
+				throw new Exception( "GetDataRow: State of the object must not be Deleted or Transient." );
+
+			DataRow row = cache.GetDataRow( pc );
+			DataTable newTable = row.Table.Clone();
+			newTable.ImportRow( row );
+			row = newTable.Rows[0];
+
+			Class cls = mappings.FindClass(o.GetType());
+			WriteObject( pc, row, cls.FieldNames );
+			WriteForeignKeysToRow( pc, row );
+
+			return row;
+		}
+
+		public ExpandoObject GetChangeSet( object o )
+		{
+			IPersistenceCapable pc = CheckPc( o );
+
+			ExpandoObject result = new ExpandoObject();
+			IDictionary<string, object> values = (IDictionary<string, object>)result;
+
+			// No changes
+			if (pc.NDOObjectState == NDOObjectState.Hollow || pc.NDOObjectState == NDOObjectState.Persistent)
+			{
+				return result;
+			}
+
+			DataRow row = GetDataRow( o );
+
+			NDO.Mapping.Class cls = mappings.FindClass(o.GetType());
+
+			foreach (NDO.Mapping.Field field in cls.Fields)
+			{
+				string colName = field.Column.Name;
+				object currentVal = row[colName, DataRowVersion.Current];
+				object originalVal = row[colName, DataRowVersion.Original];
+
+				if (!currentVal.Equals( originalVal ))
+					values.Add( field.Name, originalVal );
+			}
+
+			foreach (NDO.Mapping.Relation relation in cls.Relations)
+			{
+				if (relation.Multiplicity != RelationMultiplicity.Element || relation.MappingTable != null)
+					continue;
+				if (relation.ForeignKeyColumns.Count > 1)
+					throw new Exception( String.Format( "GetChangeSet does not support relations with multiple ForeignKeyColumns ({0}).", relation.ToString() ) );
+				string colName = ((Column)relation.ForeignKeyColumns[0]).Name;
+				object currentVal = row[colName, DataRowVersion.Current];
+				object originalVal = row[colName, DataRowVersion.Original];
+
+				if (!currentVal.Equals( originalVal ))
+					values.Add( relation.FieldName, originalVal );
+			}
+
+			return result;		}
+		}
 
 
 	internal class TransactionInfo
