@@ -259,7 +259,6 @@
     <Compile Include="NDODataSet.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="NDOGenericList.cs" />
     <Compile Include="NDOIntermediateAttribute.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -288,9 +287,6 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="NDOProperty.cs" />
-    <Compile Include="NDOPropertyDescriptor.cs">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="NDOProviderFactory.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -308,9 +304,6 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="NDOTransientAttribute.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="NDOTypeDescriptor.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="ObjectHelper.cs">
@@ -349,9 +342,6 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="PM.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="PropertyTypeHash.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="QualifiedTableName.cs">
@@ -434,7 +424,7 @@
   </ItemGroup>
   <ProjectExtensions>
     <VisualStudio>
-      <UserProperties NDOGenerateSQL="false" NDOMergeSchema="false" NDOMergeMapping="false" NDONewMapping="false" NDOGenerateSchema="false" NDOGenerateMapping="false" NDOEnableEnhancer="false" NDOEnableAddIn="false" />
+      <UserProperties NDOEnableAddIn="false" NDOEnableEnhancer="false" NDOGenerateMapping="false" NDOGenerateSchema="false" NDONewMapping="false" NDOMergeMapping="false" NDOMergeSchema="false" NDOGenerateSQL="false" />
     </VisualStudio>
   </ProjectExtensions>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />

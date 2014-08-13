@@ -1821,7 +1821,7 @@ namespace NDO
 				DataTable dt = handler.FindRelatedObjects(pc.NDOObjectId);
 				IList relatedObjects;
 				if(r.Multiplicity == RelationMultiplicity.Element)
-					relatedObjects = new NDOArrayList(r.ReferencedType, dt.Rows.Count);
+					relatedObjects = GenericListReflector.CreateList(r.ReferencedType, dt.Rows.Count);
 				else
 				{
 					relatedObjects = mappings.GetRelationContainer(pc, r);
@@ -3518,7 +3518,7 @@ namespace NDO
 		/// </summary>
 		internal IList DataTableToIList(Type t, ICollection rows, bool hollow) 
 		{
-			IList queryResult = new NDOArrayList(t, rows.Count);
+			IList queryResult = GenericListReflector.CreateList(t, rows.Count);
             if (rows.Count == 0)
                 return queryResult;
 

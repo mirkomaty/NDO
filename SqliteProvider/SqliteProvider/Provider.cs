@@ -451,6 +451,11 @@ namespace NDO.SqliteProvider
 			get { return true; } 
 		}
 
+		public override string FetchLimit( int skip, int take )
+		{
+			return "LIMIT " + skip + "," + take;
+		}
+
 		public override DialogResult ShowConnectionDialog(ref string connectionString)
 		{
 			OpenFileDialog ofd = new OpenFileDialog();

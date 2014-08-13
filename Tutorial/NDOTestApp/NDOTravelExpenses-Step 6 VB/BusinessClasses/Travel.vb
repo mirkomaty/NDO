@@ -1,5 +1,6 @@
 Imports NDO
 Imports System
+Imports System.Linq
 Imports System.Collections
 
 
@@ -7,38 +8,10 @@ Imports System.Collections
 Public Class Travel
     ' Methods
     Public Sub New()
-        _expenses = New ArrayList
-        _countries = New ArrayList
+        _expenses = New List(Of Expense)
+        _countries = New List(Of Country)
     End Sub
 
-    Public Sub AddCountry(ByVal c As Country)
-        _countries.Add(c)
-    End Sub
-
-    Public Sub AddExpense(ByVal ex As Expense)
-        _expenses.Add(ex)
-    End Sub
-
-    Public Sub RemoveCountry(ByVal c As Country)
-        _countries.Remove(c)
-    End Sub
-
-    Public Sub RemoveExpense(ByVal ex As Expense)
-        If _expenses.Contains(ex) Then
-            _expenses.Remove(ex)
-        End If
-    End Sub
-
-
-    ' Properties
-    Public Property Countries() As IList
-        Get
-            Return ArrayList.ReadOnly(_countries)
-        End Get
-        Set(ByVal value As IList)
-            _countries = value
-        End Set
-    End Property
 
     Public Property Employee() As Employee
         Get
@@ -46,15 +19,6 @@ Public Class Travel
         End Get
         Set(ByVal value As Employee)
             _employee = value
-        End Set
-    End Property
-
-    Public Property Expenses() As IList
-        Get
-            Return ArrayList.ReadOnly(_expenses)
-        End Get
-        Set(ByVal value As IList)
-            _expenses = value
         End Set
     End Property
 
@@ -69,13 +33,51 @@ Public Class Travel
 
 
     ' Fields
-    <NDORelation(GetType(Country))> _
-    Private _countries As IList
+    <NDORelation> _
+    Private _countries As IList(Of Country)
     <NDORelation()> _
     Private _employee As Employee
-    <NDORelation(GetType(Expense), RelationInfo.Composite)> _
-    Private _expenses As IList
+    <NDORelation(RelationInfo.Composite)> _
+    Private _expenses As IList(Of Expense)
+
+    ' Accessor Properties
+
+    Public Property Expenses() As IEnumerable(Of Expense)
+        Get
+            Return _expenses
+        End Get
+        Set(ByVal Value As IEnumerable(Of Expense))
+            _expenses = Value.ToList()
+        End Set
+    End Property
+    Public Sub RemoveExpense(e As Expense)
+        If _expenses.Contains(e) Then
+            _expenses.Remove(e)
+        End If
+    End Sub
+    Public Sub AddExpense(ByVal ex As Expense)
+        _expenses.Add(ex)
+    End Sub
+
     Private _purpose As String
+
+    Public Property Countries() As IEnumerable(Of Country)
+        Get
+            Return _countries
+        End Get
+        Set(ByVal Value As IEnumerable(Of Country))
+            _countries = Value.ToList()
+        End Set
+    End Property
+    Public Sub AddCountry(c As Country)
+        _countries.Add(c)
+    End Sub
+    Public Sub RemoveCountry(c As Country)
+        If _countries.Contains(c) Then
+            _countries.Remove(c)
+        End If
+    End Sub
+
 End Class
 
 

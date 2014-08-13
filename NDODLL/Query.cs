@@ -31,6 +31,7 @@
 
 
 using System;
+using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Data;
@@ -351,7 +352,8 @@ namespace NDO
 		Language queryLanguage;
 		bool allowSubclasses = true;
 		int subclassCount; // temporary var, to check, if manual ordering is necessary
-
+		int skip;
+		int take;
 
 		/// <summary>
 		/// Type of object to be retrieved
@@ -542,6 +544,9 @@ namespace NDO
 			}
 
 			sql = sql.Substring(0, sql.Length - 1);
+
+			if ((this.skip != 0 || this.take != 0) && cl.Provider.SupportsFetchLimit)
+				sql += " " + cl.Provider.FetchLimit( skip, take );
 
 			return sql;
 		}
@@ -916,12 +921,11 @@ namespace NDO
 
 		private IList GetResultList()
 		{
-			NDOArrayList resultList = new NDOArrayList(resultType);
+			IList result = GenericListReflector.CreateList( resultType );
 
 			if (subQueries.Count == 0) // Query is not yet built
 				GenerateQuery();
 
-			IList result;
 #if PRO
 			bool isPro = true;
 #else
@@ -935,11 +939,21 @@ namespace NDO
 			else
 			{
 				foreach (QueryInfo qi in subQueries)
-					resultList.AddRange(ExecuteSubQuery(qi.ResultType, qi.QueryString));
-				result = resultList;
+				{
+					foreach (var item in ExecuteSubQuery( qi.ResultType, qi.QueryString ))
+					{
+						result.Add( item );
+					}
+				}
 			}
 			GetPrefetches(result);
 			this.pm.CheckEndTransaction(false);
+			if (! this.pm.GetClass(resultType).Provider.SupportsFetchLimit)
+			{
+				IList fetchResult = GenericListReflector.CreateList( resultType );
+				for (int i = this.skip; i < Math.Min( result.Count, i + take ); i++ )
+					fetchResult.Add( result[i] );
+			}
 			return result;
 		}
 
@@ -1278,6 +1292,33 @@ namespace NDO
 			set { prefetches = value; }
 		}
 
+		/// <summary>
+		/// This count of rows will be skipped.
+		/// </summary>
+		/// <remarks>If the database supports paging, this operation will be performed by the database.</remarks>
+		public int Skip
+		{
+			get { return this.skip; }
+			set 
+			{ 
+				this.skip = value;
+				this.subQueries.Clear(); 
+			}
+		}
+
+		/// <summary>
+		/// This maximum count of rows will be taken from the result.
+		/// </summary>
+		/// <remarks>If the database supports paging, this operation will be performed by the database.</remarks>
+		public int Take
+		{
+			get { return this.take; }
+			set 
+			{ 
+				this.take = value; 
+				this.subQueries.Clear(); 
+			}
+		}
 
 		private class AggregateFunction
 		{

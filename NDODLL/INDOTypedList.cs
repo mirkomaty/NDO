@@ -1,3 +1,4 @@
+#if nix
 //
 // Copyright (C) 2002-2008 HoT - House of Tools Development GmbH 
 // (www.netdataobjects.com)
@@ -40,3 +41,4 @@ namespace NDO
 		Type MemberType { get; }
 	}
 }
+#endif

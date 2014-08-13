@@ -132,17 +132,12 @@ namespace NDOEnhancer
 				else
 					bigname = bigname.Substring(0, 1).ToUpper() + bigname.Substring(1);
 
-                bool isContainer = (typeStr == "IList" || typeStr == "ArrayList" || typeStr == "NDOArrayList" || typeStr == "List" || typeStr == "NDOGenericList");
+                bool isContainer = (typeStr == "IList" || typeStr == "List" || typeStr == "ArrayList" || typeStr == "NDOArrayList" || typeStr == "NDOGenericList");
                 isContainer = hasAttribute && isContainer;
-				bool isIList = (typeStr == "IList");
+				
                 bool isGenericList = genericParameter != string.Empty && genericArgumentType != string.Empty;
                 if (isGenericList)
                     typeStr += genericParameter;
-				string readOnly = null;
-                if (!isGenericList)
-                    readOnly = (typeStr == "NDOArrayList") ? "NDOArrayList.ReadOnly" : "ArrayList.ReadOnly";
-                else
-                    readOnly = "New NDOReadOnlyGenericList" + genericParameter;
 
 				if (isContainer)
 				{
@@ -195,9 +190,7 @@ namespace NDOEnhancer
 					}
 				}
 
-                string ilistType = "IList";
-                if (isGenericList)
-                    ilistType += genericParameter;
+                string ilistType = isGenericList ? "IEnumerable " + genericParameter : "IEnumerable" ;                                    
 
 				result = string.Empty;
 				if (isContainer)
@@ -205,19 +198,19 @@ namespace NDOEnhancer
 				else
 					result += bl + "Public Property " + bigname + "() As " + typeStr + "\n";
 				result += bl + "\tGet\n";
-				if (isContainer)
-					result += bl + "\t\tReturn " + readOnly + "(" + name + ")\n";
-				else
-					result += bl + "\t\tReturn " + name + '\n';
+				result += bl + "\t\tReturn " + name + "\n";
 				result += bl + "\tEnd Get\n";
 				if (isContainer)
 					result += bl + "\tSet(ByVal Value As " + ilistType +")\n";
 				else
 					result += bl + "\tSet(ByVal Value As " + typeStr + ")\n";
-				if (!isContainer || isIList)
-					result += bl + "\t\t" + name + " = Value\n";
+				if (isContainer)
+					if (!isGenericList)
+						result += bl + "\t\t" + name + " = New ArrayList(CType(Value, ICollection))\n";
+					else
+						result += bl + "\t\t" + name + " = Value.ToList()\n";
 				else
-					result += bl + "\t\t" + name + " = CType(Value, " + typeStr + ")\n";
+					result += bl + "\t\t" + name + " = Value\n";
 				if (genChangeEvent)
 					result += bl + "\t\tRaiseEvent " + bigname + "Changed(Me, EventArgs.Empty)\n";
 				result += bl + "\tEnd Set\n";

@@ -1,6 +1,6 @@
 //
-// Copyright (C) 2002-2008 HoT - House of Tools Development GmbH 
-// (www.netdataobjects.com)
+// Copyright (C) 2002-2014 HoT - Mirko Matytschak 
+// (www.netdataobjects.de)
 //
 // Author: Mirko Matytschak
 //
@@ -448,6 +448,11 @@ namespace NDO.MySqlProvider
 		public override bool SupportsNativeGuidType 
 		{ 
 			get { return false; } 
+		}
+
+		public override string FetchLimit( int skip, int take )
+		{
+			return "LIMIT " + take + " OFFSET " + skip;
 		}
 
 		public override System.Windows.Forms.DialogResult ShowConnectionDialog(ref string connectionString)

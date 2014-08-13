@@ -468,6 +468,11 @@ namespace NDO
 
 		}
 
+		public override bool SupportsFetchLimit
+		{
+			get { return false; }
+		}
+
 		public override DialogResult ShowCreateDbDialog(ref object necessaryData)
 		{
 			AccessCreateDbDlg dlg = new AccessCreateDbDlg();

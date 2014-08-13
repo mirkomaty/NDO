@@ -423,6 +423,29 @@ namespace NDOInterfaces
 		/// </summary>
 		public abstract bool SupportsNativeGuidType { get; }
 
+		/// <summary>
+		/// Fetch limits are used for paging. If the database supports paging, it provides an addition to OrderBy which
+		/// allows to specify a count of rows to skip and a maximum count of rows to take.
+		/// </summary>
+		public virtual bool SupportsFetchLimit
+		{
+			get { return true; }
+		}
+
+		/// <summary>
+		/// Fetch limits are used for paging. If the database supports paging, it provides an addition to OrderBy which
+		/// allows to specify a count of rows to skip and a maximum count of rows to take.
+		/// </summary>
+		/// <param name="skip"></param>
+		/// <param name="take"></param>
+		/// <returns>A string, which is concatenated to the OrderBy clause</returns>
+		public virtual string FetchLimit( int skip, int take )
+		{
+			if (skip == 0 && take == 0)
+				return string.Empty;
+			// Standard Sql implementation
+			return String.Format("OFFSET {0} ROWS FETCH NEXT {1} ROWS ONLY", skip, take);
+		}
 
 		/// <summary>
 		/// See <see cref="IProvider">IProvider interface</see>.

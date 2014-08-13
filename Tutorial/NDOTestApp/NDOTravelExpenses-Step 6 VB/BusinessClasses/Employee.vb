@@ -1,5 +1,6 @@
 Imports NDO
 Imports System
+Imports System.Linq
 Imports System.Collections
 
 
@@ -7,20 +8,9 @@ Imports System.Collections
 Public Class Employee
     ' Methods
     Public Sub New()
-        _travels = New ArrayList
+        _travels = New List(Of Travel)
     End Sub
 
-    Public Function NewTravel() As Travel
-        Dim travel1 As New Travel
-        _travels.Add(travel1)
-        Return travel1
-    End Function
-
-    Public Sub RemoveTravel(ByVal t As Travel)
-        If _travels.Contains(t) Then
-            _travels.Remove(t)
-        End If
-    End Sub
 
 
     ' Properties
@@ -51,14 +41,24 @@ Public Class Employee
         End Set
     End Property
 
-    Public Property Travels() As IList
+    Public Property Travels() As IEnumerable(Of Travel)
         Get
-            Return ArrayList.ReadOnly(_travels)
+            Return _travels
         End Get
-        Set(ByVal value As IList)
-            _travels = value
+        Set(ByVal Value As IEnumerable(Of Travel))
+            _travels = value.ToList()
         End Set
     End Property
+    Public Function NewTravel() As Travel
+        Dim t As Travel = New Travel
+        _travels.Add(t)
+        Return t
+    End Function
+    Public Sub RemoveTravel(t As Travel)
+        If _travels.Contains(t) Then
+            _travels.Remove(t)
+        End If
+    End Sub
 
 
     ' Fields
@@ -67,7 +67,7 @@ Public Class Employee
     Private _firstName As String
     Private _lastName As String
     <NDORelation(GetType(Travel), RelationInfo.Composite)> _
-    Private _travels As IList
+    Private _travels As List(Of Travel)
 End Class
 
 

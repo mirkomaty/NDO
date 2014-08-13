@@ -6,7 +6,7 @@
   <Classes>
     <Class AssemblyName="BusinessClasses" FullName="BusinessClasses.DataContainer" TableName="DataContainer" ConnectionId="C0">
       <Oid>
-        <OidColumn Name="ID" Autoincremented="True" />
+        <OidColumn AutoIncremented="True" Name="ID" />
       </Oid>
       <Fields>
         <Field Name="boolVar">

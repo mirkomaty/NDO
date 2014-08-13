@@ -134,15 +134,12 @@ namespace NDOEnhancer
 				{
 					switch (dlg.ListType)
 					{
-						case ListType.ArrayList:
-							listLeft = listRight = "ArrayList";
-							break;
 						case ListType.IList:
 							listLeft = "IList";
 							listRight = "ArrayList";
 							break;
 						default:
-							listLeft = listRight = "NDOArrayList";
+							listLeft = listRight = "ArrayList";
 							break;
 					}
 				}
@@ -150,15 +147,12 @@ namespace NDOEnhancer
 				{
 					switch (dlg.ListType)
 					{
-						case ListType.ArrayList:
-							listLeft = listRight = "List" + startGeneric + dlg.Type + endGeneric;
-							break;
 						case ListType.IList:
 							listLeft = "IList" + startGeneric + dlg.Type + endGeneric;
 							listRight = "List" + startGeneric + dlg.Type + endGeneric;
 							break;
 						default:
-							listLeft = listRight = "NDOGenericList" + startGeneric + dlg.Type + endGeneric;
+							listLeft = listRight = "List" + startGeneric + dlg.Type + endGeneric;
 							break;
 					}
 				}
@@ -205,10 +199,7 @@ namespace NDOEnhancer
 					if (dlg.List)
 					{
 						Write(" = new " + listRight);
-						if (dlg.ListType == ListType.NDOArrayList && !dlg.UseGenerics)
-							Write("(typeof(" + dlg.Type + "))");
-						else
-							Write("()");
+						Write("()");
 					}
 					
 					Write(";\n");
@@ -225,10 +216,7 @@ namespace NDOEnhancer
 					if (dlg.List)
 					{
 						Write(" = new " + listRight);
-						if (dlg.ListType == ListType.NDOArrayList && !dlg.UseGenerics)
-							Write("(GetType(" + dlg.Type + "))");
-						else
-							Write("()");
+						Write("()");
 					}
 					Write("\n");
 				}

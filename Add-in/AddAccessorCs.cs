@@ -114,7 +114,7 @@ namespace NDOEnhancer
                     genericParameter = "<" + genericArgumentType + '>';
 				}
 
-				bool isContainer = 	(typeStr == "IList" || typeStr == "ArrayList" || typeStr == "NDOArrayList");
+				bool isContainer = 	(typeStr == "IList" || typeStr == "ArrayList");
 				if (genericTypeStr != string.Empty)
 				{
 					isContainer = isContainer || (genericTypeStr == "IList" || genericTypeStr == "List");
@@ -122,14 +122,7 @@ namespace NDOEnhancer
 
 				bool isGenericList = genericTypeStr != string.Empty && isContainer;
 
-					
-				string readOnly = null;
-
-				bool isIList = (typeStr == "IList" || genericTypeStr == "IList");
-				if (!isGenericList)
-					readOnly = (typeStr == "NDOArrayList") ? "NDOArrayList.ReadOnly" : "ArrayList.ReadOnly";
-				else
-					readOnly = "new NDOReadOnlyGenericList" + genericParameter;
+//				bool isIList = (typeStr == "IList" || genericTypeStr == "IList");
 
 				if (isContainer)
 				{
@@ -198,36 +191,45 @@ namespace NDOEnhancer
                 string ilistType = null;
                 if (isGenericList)
                 {
-                    ilistType = genericTypeStr + genericParameter;
+                    ilistType = "IEnumerable" + genericParameter;
                 }
                 else
-                    ilistType = "IList"; 
+                    ilistType = "IEnumerable"; 
 
 				if (isContainer)
 					result += bl + "public " + ilistType + " " + bigname + '\n';
 				else
 					result += bl + "public " + typeStr + " " + bigname + '\n';
 				result += bl + "{\n";
-				if (isContainer)
-					result += bl + "\tget { return " + readOnly + "(this." + name + "); }\n";
-				else
-					result += bl + "\tget { return this." + name + "; }\n";
+
+				result += bl + "\tget { return this." + name + "; }\n";
+
 				if (genChangeEvent)  // Set Accessor in mehreren Zeilen
 				{
 					result += bl + "\tset\n";
 					result += bl + "\t{\n";
-					if (isContainer && !isIList)
-						result += bl + "\t\tthis." + name + " = (" + typeStr + ") value;\n";
+					if (isContainer)
+					{
+						if (!isGenericList)
+							result += bl + "\t\tthis." + name + " = new ArrayList( (ICollection)value );\n";
+						else
+							result += bl + "\t\tthis." + name + " = value.ToList();\n";
+					}
 					else
+					{
 						result += bl + "\t\tthis." + name + " = value;\n";
+					}
 					result += bl + "\t\tif (" + bigname + "Changed != null)\n";
 					result += bl + "\t\t\t" + bigname + "Changed(this, EventArgs.Empty);\n";
 					result += bl +"\t}\n";
 				}
 				else  // Accessor in einer Zeile
 				{
-					if (isContainer && !isIList)
-						result += bl + "\tset { this." + name + " = (" + typeStr + ")value; }\n";
+					if (isContainer)
+						if (!isGenericList)
+							result += bl + "\tset { this." + name + " = new ArrayList( (ICollection)value ); }\n";
+						else
+							result += bl + "\tset { this." + name + " = value.ToList(); }\n";
 					else
 						result += bl + "\tset { this." + name + " = value; }\n";
 				}

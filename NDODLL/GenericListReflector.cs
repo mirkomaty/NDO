@@ -34,6 +34,7 @@
 
 using System;
 using System.Reflection;
+using System.Collections;
 using System.Collections.Generic;
 using System.Text;
 
@@ -41,11 +42,18 @@ namespace NDO
 {
 	class GenericListReflector
 	{
-		public static object CreateList(Type elementType)
+		public static IList CreateList(Type elementType)
 		{
 			Type template = typeof(List<object>).GetGenericTypeDefinition();
 			Type listType = template.MakeGenericType(new Type[] { elementType });
-			return Activator.CreateInstance(listType);
+			return (IList)Activator.CreateInstance(listType);
+		}
+
+		public static IList CreateList(Type elementType, int size)
+		{
+			Type template = typeof(List<object>).GetGenericTypeDefinition();
+			Type listType = template.MakeGenericType(new Type[] { elementType });
+			return (IList)Activator.CreateInstance(listType, size);
 		}
 
 		public static bool IsGenericList(Type t)

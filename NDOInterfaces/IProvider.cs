@@ -284,6 +284,21 @@ namespace NDOInterfaces
 		bool SupportsNativeGuidType { get; }
 
 		/// <summary>
+		/// Fetch limits are used for paging. If the database supports paging, it provides an addition to OrderBy which
+		/// allows to specify a count of rows to skip and a maximum count of rows to take.
+		/// </summary>
+		bool SupportsFetchLimit { get; }
+
+		/// <summary>
+		/// Fetch limits are used for paging. If the database supports paging, it provides an addition to OrderBy which
+		/// allows to specify a count of rows to skip and a maximum count of rows to take.
+		/// </summary>
+		/// <param name="skip"></param>
+		/// <param name="take"></param>
+		/// <returns>A string, which is concatenated to the OrderBy clause</returns>
+		string FetchLimit( int skip, int take );
+
+		/// <summary>
 		/// Creates a database. 
 		/// </summary>
 		/// <param name="necessaryData">All data, necessary to perform the creation.</param>

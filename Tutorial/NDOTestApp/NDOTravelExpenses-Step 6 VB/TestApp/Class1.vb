@@ -1,6 +1,7 @@
 Imports BusinessClasses
 Imports NDO
 Imports System
+Imports System.Linq
 Imports System.Drawing
 
 Namespace TestApp
@@ -61,7 +62,7 @@ Namespace TestApp
             Dim pm As New PersistenceManager
             Dim query1 As Query = pm.NewQuery(GetType(Employee))
             Dim employee1 As Employee = DirectCast(query1.ExecuteSingle, Employee)
-            Dim travel1 As Travel = DirectCast(employee1.Travels.Item(0), Travel)
+            Dim travel1 As Travel = employee1.Travels.FirstOrDefault ' Linq
             Console.WriteLine(("Costs of the travel with the purpose " & travel1.Purpose & ":"))
             Dim expense1 As Expense
             For Each expense1 In travel1.Expenses
