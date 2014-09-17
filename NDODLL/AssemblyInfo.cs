@@ -48,8 +48,8 @@ using System.Security;
 [assembly: AssemblyConfiguration("Release")]
 #endif
 [assembly: AssemblyCompany("Mirko Matytschak")]
-[assembly: AssemblyProduct("")]
-[assembly: AssemblyCopyright("(c) 2002 - 2011, Mirko Matytschak, Miesbach, Germany")]
+[assembly: AssemblyProduct("NDO 2.1 r.187")]
+[assembly: AssemblyCopyright("(c) 2002 - 2014, Mirko Matytschak, Marzling, Germany")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 [assembly: CLSCompliant(true)]

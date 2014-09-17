@@ -323,7 +323,7 @@ namespace NDO
 
 		void InternalMergeObjectContainer(ObjectContainer oc)
 		{
-			// TODO: Check, if other states are usefull. Find use scenarios.
+			// TODO: Check, if other states are useful. Find use scenarios.
 			foreach(IPersistenceCapable pc in oc.RootObjects)
 			{
 				if (pc.NDOObjectState == NDOObjectState.Transient)
@@ -350,7 +350,7 @@ namespace NDO
 			{
 				IPersistenceCapable pc2 = FindObject(pc.NDOObjectId);
 				Class pcClass = GetClass(pc);
-				// Make shure, the object is loaded.
+				// Make sure, the object is loaded.
 				if (pc2.NDOObjectState == NDOObjectState.Hollow)
 					LoadData(pc2); 
 				DataRow row = GetTable(pc).NewRow();
