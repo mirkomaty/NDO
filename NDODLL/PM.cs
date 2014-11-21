@@ -124,9 +124,6 @@ namespace NDO
 #if PRO
 				string typesFile = Path.Combine(dir, "NDOTypes.xml");
 				typeManager = new TypeManager(typesFile, this.mappings);
-				typeManager.Load();  // Can be called even if the file doesn't exist
-
-				Key.SetTypeManager(typeManager);
 #endif
 				sm = new StateManager(this);
 
@@ -469,7 +466,7 @@ namespace NDO
 
             if ((object)pc.NDOObjectId == null)
             {
-                pc.NDOObjectId = ObjectIdFactory.NewObjectId(pcType, pcClass, row);
+                pc.NDOObjectId = ObjectIdFactory.NewObjectId(pcType, pcClass, row, this.typeManager);
             }
 
 			if (!pcClass.Oid.IsDependent) // Dependent keys can't be filled with user defined data
@@ -600,7 +597,7 @@ namespace NDO
 			if (!makeRelObjPersistent)
 				MarkDirty(relObj);
 			// Because we just marked the object as dirty, we know it's in the cache, so we don't supply the idColumn
-			DataRow relObjRow = GetDataRow(relObj);
+			DataRow relObjRow = this.cache.GetDataRow(relObj);
 
             if (relObjRow == null)
                 throw new InternalException(537, "CreateAddedObjectRow: relObjRow == null");
@@ -1851,7 +1848,7 @@ namespace NDO
                     //TODO: Generic Types: Exctract the type description from the type name column
                     if (relType.IsGenericTypeDefinition)
                         throw new NotImplementedException("NDO doesn't support relations to generic types via mapping tables.");
-					ObjectId id = ObjectIdFactory.NewObjectId(relType, GetClass(relType), objRow, r.MappingTable);
+					ObjectId id = ObjectIdFactory.NewObjectId(relType, GetClass(relType), objRow, r.MappingTable, this.typeManager);
 					IPersistenceCapable relObj = FindObject(id);
 					relatedObjects.Add(relObj);
 				}	
@@ -1959,7 +1956,7 @@ namespace NDO
                             if (oidType.IsGenericTypeDefinition)
                                 oidType = mappings.GetRelationFieldType(r);
 
-							ObjectId childOid = ObjectIdFactory.NewObjectId(oidType, GetClass(relType), keydata);
+							ObjectId childOid = ObjectIdFactory.NewObjectId(oidType, GetClass(relType), keydata, this.typeManager);
 							if(childOid.IsValid()) 
 								mappings.SetRelationField(pc, r.FieldName, FindObject(childOid));
 							else
@@ -2342,7 +2339,7 @@ namespace NDO
 					foreach(IPersistenceCapable pc in createdDirectObjects) 
 					{
 						Class cl = GetClass(pc);
-						DataRow r = GetDataRow(pc);
+						DataRow r = this.cache.GetDataRow(pc);
 						string fakeColumnName = GetFakeRowOidColumnName(cl);
 						object o = r[fakeColumnName];
 						r[fakeColumnName] = o;
@@ -2376,9 +2373,6 @@ namespace NDO
 				}
 
 				ds.AcceptChanges();
-#if PRO
-				typeManager.Update();
-#endif
 			}
 
 			EndSave();
@@ -2408,8 +2402,6 @@ namespace NDO
 				this.OnSavedEvent( auditSet );
 			}
 		}
-
-
 
 		private void EndSave()
 		{
@@ -2940,7 +2932,7 @@ namespace NDO
 				&& !r.Composition && !childClass.Oid.IsDependent) // 5
 			{				
 				LoadAndMarkDirty(child);
-				DataRow row = GetDataRow(child);
+				DataRow row = this.cache.GetDataRow(child);
                 foreach (ForeignKeyColumn fkColumnn in r.ForeignKeyColumns)
                 {
                     row[fkColumnn.Name] = DBNull.Value;
@@ -3277,7 +3269,7 @@ namespace NDO
 		/// <remarks>If the key value is of a wrong type, an exception will be thrown, if the object state changes from hollow to persistent.</remarks>
 		public IPersistenceCapable FindObject(Type t, object keyData) 
 		{
-            ObjectId oid = ObjectIdFactory.NewObjectId(t, GetClass(t), keyData);
+            ObjectId oid = ObjectIdFactory.NewObjectId(t, GetClass(t), keyData, this.typeManager);
 			return FindObject(oid);
 		}
 
@@ -3543,7 +3535,7 @@ namespace NDO
                 {
                     if (row[cl.TypeNameColumn.Name] == DBNull.Value)
                     {
-                        ObjectId tempid = ObjectIdFactory.NewObjectId(t, cl, row);
+                        ObjectId tempid = ObjectIdFactory.NewObjectId(t, cl, row, this.typeManager);
                         throw new NDOException(105, "Null entry in the TypeNameColumn of the type '" + t.FullName + "'. Oid = " + tempid.ToString());
                     }
                     string typeStr = (string)row[cl.TypeNameColumn.Name];
@@ -3551,7 +3543,7 @@ namespace NDO
                     if (concreteType == null)
                         throw new NDOException(106, "Can't load generic type " + typeStr);
                 }
-				ObjectId id = ObjectIdFactory.NewObjectId(concreteType, cl, row);
+				ObjectId id = ObjectIdFactory.NewObjectId(concreteType, cl, row, this.typeManager);
 				IPersistenceCapable pc = cache.GetObject(id);                
 				if(pc == null) 
 				{
@@ -3628,7 +3620,6 @@ namespace NDO
 		internal TypeManager TypeManager
 		{
 			get { return typeManager; }
-			set { typeManager = value; }
 		}
 #endif
 
@@ -3727,7 +3718,7 @@ namespace NDO
 			}
 		}
 
-		public DataRow GetDataRow( object o )
+		public DataRow GetClonedDataRow( object o )
 		{
 			IPersistenceCapable pc = CheckPc( o );
 
@@ -3751,7 +3742,11 @@ namespace NDO
 			IPersistenceCapable pc = CheckPc( o );
 
 			ExpandoObject result = new ExpandoObject();
-			IDictionary<string, object> values = (IDictionary<string, object>)result;
+			ExpandoObject current = new ExpandoObject();
+			ExpandoObject original = new ExpandoObject();
+			IDictionary<string, object> originalValues = (IDictionary<string, object>)original;
+			IDictionary<string, object> currentValues = (IDictionary<string, object>)current;
+			IDictionary<string, object> resultValues = (IDictionary<string, object>)result;
 
 			// No changes
 			if (pc.NDOObjectState == NDOObjectState.Hollow || pc.NDOObjectState == NDOObjectState.Persistent)
@@ -3759,7 +3754,7 @@ namespace NDO
 				return result;
 			}
 
-			DataRow row = GetDataRow( o );
+			DataRow row = GetClonedDataRow( o );
 
 			NDO.Mapping.Class cls = mappings.FindClass(o.GetType());
 
@@ -3770,7 +3765,10 @@ namespace NDO
 				object originalVal = row[colName, DataRowVersion.Original];
 
 				if (!currentVal.Equals( originalVal ))
-					values.Add( field.Name, originalVal );
+				{
+					originalValues.Add( field.Name, originalVal );
+					currentValues.Add( field.Name, currentVal );
+				}
 			}
 
 			foreach (NDO.Mapping.Relation relation in cls.Relations)
@@ -3784,11 +3782,19 @@ namespace NDO
 				object originalVal = row[colName, DataRowVersion.Original];
 
 				if (!currentVal.Equals( originalVal ))
-					values.Add( relation.FieldName, originalVal );
+				{
+					originalValues.Add( relation.FieldName, originalVal );
+					currentValues.Add( relation.FieldName, currentVal );
+				}
 			}
 
-			return result;		}
+			resultValues.Add( "original", original );
+			resultValues.Add( "current", current );
+			return result;		
 		}
+
+		public int Revision { get { return 190; } }
+	}
 
 
 	internal class TransactionInfo

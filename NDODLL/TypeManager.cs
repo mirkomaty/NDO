@@ -55,27 +55,23 @@ namespace NDO.Mapping {
 
 		private string filename;  // backwards compatibility
         NDOMapping mapping;
-		private bool modified;
 
-		static TypeManager instance = null;
-
-		public static TypeManager Instance
+		public TypeManager(string filename, NDOMapping mapping) 
 		{
-			get { return instance; }
-		}
-
-
-
-		public TypeManager(string filename, NDOMapping mapping) {
 			this.filename = filename;
             this.mapping = mapping;
-			instance = this;
 		}
 
 		public bool Contains(Type t)
 		{
+			if(t == null) 
+				throw new InternalException(55, "TypeManager: Null-Argument in this[Type]");
+
+			Load();
+
             if (t.IsGenericType && !t.IsGenericTypeDefinition)
                 t = t.GetGenericTypeDefinition();
+
             return ids.Contains(t);
 		}
 
@@ -85,25 +81,36 @@ namespace NDO.Mapping {
 		}
 
 		public int this[Type t] {
-			get { 
-				if(t == null) {
+			get 
+			{ 
+				if(t == null)
 					throw new InternalException(55, "TypeManager: Null-Argument in this[Type]");
-				}
+
+				Load();
+
                 if (t.IsGenericType && !t.IsGenericTypeDefinition)
                     t = t.GetGenericTypeDefinition();
 
-				if(!ids.Contains(t)) {
+				if(!ids.Contains(t)) 
 					throw new NDOException(94, "No Type Code for " + t.FullName + ". Check your Type Codes in the Mapping File");
-				}
+
 				return (int)ids[t];
 			}
 		}
 
 		public Type this[int id] {
-			get { return (Type)types[id]; }
+			get 
+			{
+				Load();
+				return (Type)types[id]; 
+			}
 		}
 
-		public void Load() {
+		void Load() 
+		{
+			if (ids != null)
+				return;
+
 			types = new Hashtable();
 			ids = new Hashtable();
 
@@ -158,42 +165,38 @@ namespace NDO.Mapping {
             }
 		}
 
-		private string GetAssemblyName(string fullName)
-		{
-			int p = fullName.IndexOf(',');
-			if (p == -1)
-				throw new NDOException(95, String.Format("Invalid Assembly Fullname: {0}", fullName));
-			return fullName.Substring(0, p);
-		}
+		//private string GetAssemblyName(string fullName)
+		//{
+		//	int p = fullName.IndexOf(',');
+		//	if (p == -1)
+		//		throw new NDOException(95, String.Format("Invalid Assembly Fullname: {0}", fullName));
+		//	return fullName.Substring(0, p);
+		//}
 
+		///// <summary>
+		///// 
+		///// </summary>
+		//public void Store() {
+		//	FileInfo fi = new FileInfo(filename);
+		//	XmlSerializer xs = new XmlSerializer(typeof(NDOTypeMapping));
 
-		public void Store() {
-			FileInfo fi = new FileInfo(filename);
-			XmlSerializer xs = new XmlSerializer(typeof(NDOTypeMapping));
+		//	NDOTypeMapping m = new NDOTypeMapping();
+		//	m.TypeDescriptor = new NDOTypeDescriptor[types.Count];
+		//	int index = 0;
+		//	foreach(DictionaryEntry entry in types) {
+		//		Type t = (Type)entry.Value;
+		//		NDOTypeDescriptor d = new NDOTypeDescriptor();
+		//		d.AssemblyName = GetAssemblyName(t.Assembly.FullName);
+		//		d.TypeName = t.FullName;
+		//		d.TypeId = (int)entry.Key;
+		//		m.TypeDescriptor[index++] = d;
+		//	}
+		//	using (FileStream fs =
+		//			   fi.Open(FileMode.Create, FileAccess.Write)) {
+		//		xs.Serialize(fs, m);
+		//	}
+		//}
 
-			NDOTypeMapping m = new NDOTypeMapping();
-			m.TypeDescriptor = new NDOTypeDescriptor[types.Count];
-			int index = 0;
-			foreach(DictionaryEntry entry in types) {
-				Type t = (Type)entry.Value;
-				NDOTypeDescriptor d = new NDOTypeDescriptor();
-				d.AssemblyName = GetAssemblyName(t.Assembly.FullName);
-				d.TypeName = t.FullName;
-				d.TypeId = (int)entry.Key;
-				m.TypeDescriptor[index++] = d;
-			}
-			using (FileStream fs =
-					   fi.Open(FileMode.Create, FileAccess.Write)) {
-				xs.Serialize(fs, m);
-			}
-		}
-
-		public void Update() {
-			if(modified) {
-				Store();
-				modified = false;
-			}
-		}
 	}
 }
 #endif

@@ -49,7 +49,7 @@ namespace NDO
         /// Note: In case of generic types t is not equal to cl.SystemType. That's why
         /// we need the extra parameter t.
         /// </remarks>
-        public DependentKey(Type t, Class cl) : base (t)
+        internal DependentKey(Type t, Class cl, TypeManager tm) : base (t, tm)
         {
             // Dependent keys have some additional values in it's keyvalues array.
             // At the beginning of the array there are the values as defined by
@@ -90,7 +90,7 @@ namespace NDO
         /// Note: In case of generic types t is not equal to cl.SystemType. That's why
         /// we need the extra parameter t.
         /// </remarks>
-        public DependentKey(Type t, Class cl, DataRow row) : base (t)
+        internal DependentKey(Type t, Class cl, DataRow row, TypeManager tm) : base (t, tm)
         {
             // Dependent keys have some additional values in it's keyvalues array.
             // At the beginning of the array there are the values as defined by

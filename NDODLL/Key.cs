@@ -43,20 +43,23 @@ namespace NDO
 	public abstract class Key
 	{
 		protected Type t;
-#if PRO
-		private static TypeManager typeMgr;
+		private TypeManager typeManager;
 
-		internal static void SetTypeManager(TypeManager m) {
-			typeMgr = m;
+		/// <summary>
+		/// Gets the TypeManager of the key which originates in the pm
+		/// </summary>
+		internal TypeManager TypeManager
+		{
+			get { return this.typeManager; }
 		}
-#endif
 
 		/// <summary>
 		/// Constructor
 		/// </summary>
 		/// <param name="t">Persistent class type</param>
-		public Key(Type t)
+		internal Key(Type t, TypeManager typeManager)
 		{
+			this.typeManager = typeManager;
 			this.t = t;
 		}
 
@@ -105,7 +108,7 @@ namespace NDO
 		/// Retrieve the unique type identifier of the persistent object.
 		/// </summary>
 		public int TypeId {
-			get { return typeMgr[t]; }
+			get { return typeManager[t]; }
 		}
 #endif
 		/// <summary>

@@ -52,6 +52,7 @@ namespace NDO
 		Mappings mappings;
 		IList tokens;
 		Hashtable queryContext;
+		TypeManager typeManager;
 
 		public override string ToString()
 		{
@@ -59,7 +60,7 @@ namespace NDO
 		}
 
 		public WherePartGenerator(IProvider provider,
-			Class resultClass, IList names, IList tokens, Mappings mappings, Hashtable queryContext)
+			Class resultClass, IList names, IList tokens, Mappings mappings, Hashtable queryContext, TypeManager typeManager)
 		{
 			this.provider = provider;
 			this.wildcard = provider.Wildcard;
@@ -68,6 +69,7 @@ namespace NDO
 			this.mappings = mappings;
 			this.tokens = tokens;
 			this.queryContext = queryContext;
+			this.typeManager = typeManager;
 		}
 		/// <summary>
 		/// Get the where clause of the SQL string
@@ -168,7 +170,7 @@ namespace NDO
 								{
 									if (parentClass == resultClass)
 									{
-										string tcCode = provider.GetSqlLiteral(TypeManager.Instance[resultClass.SystemType]);
+										string tcCode = provider.GetSqlLiteral(this.typeManager[resultClass.SystemType]);
 										join += QualifiedTableName.Get(rel.MappingTable.TableName, provider) + "." + provider.GetQuotedName(rel.ForeignKeyTypeColumnName) + " = " 
 											+ tcCode;
 									}
@@ -194,7 +196,7 @@ namespace NDO
 								// MappingTable.TCOtherClass = x
 								if (rel.MappingTable.ChildForeignKeyTypeColumnName != null)
 								{
-									string tcCode = provider.GetSqlLiteral( TypeManager.Instance[relClass.SystemType] );
+									string tcCode = provider.GetSqlLiteral( this.typeManager[relClass.SystemType] );
 
 									if ( string.Compare( namearr[i + 1], "oid", true ) == 0 )
 									{
@@ -249,7 +251,7 @@ namespace NDO
                                     }
 									if ( rel.ForeignKeyTypeColumnName != null )
 									{
-										string tcCode = provider.GetSqlLiteral( TypeManager.Instance[relClass.SystemType] );
+										string tcCode = provider.GetSqlLiteral( this.typeManager[relClass.SystemType] );
 
 										if ( string.Compare( namearr[i + 1], "oid", true ) == 0 )
 										{

@@ -61,7 +61,7 @@ namespace NDO
         /// We have an extra parameter t, because in case of generic types
         /// cl.SystemType is the GenericTypeDefinition.
         /// </remarks>
-        public MultiKey(Type t, Class cl, DataRow row) : base(t)
+        internal MultiKey(Type t, Class cl, DataRow row, TypeManager tm) : base(t, tm)
         {
             pm_keydata = new object[cl.Oid.OidColumns.Count];
             FromRow(cl, row);
@@ -71,12 +71,12 @@ namespace NDO
         /// This is used for the constructors of classes, which are derived from MultiKey
         /// </summary>
         /// <param name="t"></param>
-        protected MultiKey(Type t)
-            : base(t)
+        internal MultiKey(Type t, TypeManager tm)
+            : base(t, tm)
         {
         }
 
-        public MultiKey(Type t, Class cl) : base(t)
+        internal MultiKey(Type t, Class cl, TypeManager tm) : base(t, tm)
         {
             pm_keydata = new object[cl.Oid.OidColumns.Count];
         }
@@ -84,7 +84,7 @@ namespace NDO
         /// <summary>
         /// This constructor is used for deserialisation.
         /// </summary>
-        public MultiKey() : base(null)
+        public MultiKey() : base(null, null)
         {
         }
 
@@ -261,7 +261,7 @@ namespace NDO
             string idType = info.GetString("IdType");
             string key = (string)info.GetValue("Key", typeof(string));
             Type t = (Type)info.GetValue("Type", typeof(System.Type));
-            MultiKey newKey = new MultiKey(t);
+            MultiKey newKey = new MultiKey(t, null);
             object[] keydata = new object[1];
             switch (idType)
             {
@@ -297,7 +297,7 @@ namespace NDO
 
         public override Key Clone()
         {
-            MultiKey newKey = new MultiKey(this.t);
+            MultiKey newKey = new MultiKey(this.t, this.TypeManager);
             newKey.pm_keydata = this.pm_keydata;
             return newKey;
         }

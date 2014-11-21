@@ -558,7 +558,7 @@ namespace NDO
 			Class resultClass = pm.GetClass(t);
 
 			string select = new SelectPartGenerator(provider, resultClass, names, mappings, queryContext).ToString() + " " 
-				+ new WherePartGenerator(provider, resultClass, names, tokens, mappings, queryContext).ToString() + " " 
+				+ new WherePartGenerator(provider, resultClass, names, tokens, mappings, queryContext, this.pm.TypeManager).ToString() + " " 
 				+ GetOrderPart(resultClass); 
 			// Generate the column names, if there are orderings
 			if (this.hollowMode && this.orderings.Count > 0 && this.subclassCount > 1)
@@ -883,7 +883,7 @@ namespace NDO
 				WherePartGenerator gen = new WherePartGenerator(this.mappings.GetProvider(resultType), 
 					pm.GetClass(resultType),
 					pfNames, this.tokens,
-					this.mappings, new Hashtable());
+					this.mappings, new Hashtable(), this.pm.TypeManager);
 				string condition = gen.ToString();
 				Type t = GetPrefetchResultType(this.resultType, o.ToString());
 				IProvider provider = this.mappings.GetProvider(t);

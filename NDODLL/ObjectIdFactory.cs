@@ -44,27 +44,27 @@ namespace NDO
     /// </summary>
     public class ObjectIdFactory
     {
-        public static ObjectId NewObjectId(Type t, Class cl, DataRow row)
+        internal static ObjectId NewObjectId(Type t, Class cl, DataRow row, TypeManager tm)
         {
             if (cl.SystemType == null)
                 throw new InternalException(16, "ObjectIdFactory.NewObjectId: cl.SystemType is null.");
             Key key;
             if (cl.Oid.IsDependent)
-                key = new DependentKey(t, cl, row);
+                key = new DependentKey(t, cl, row, tm);
             else
-                key = new MultiKey(t, cl, row);
+                key = new MultiKey(t, cl, row, tm);
             return new ObjectId(key);
         }
 
-        public static ObjectId NewObjectId(Type t, Class cl, DataRow row, MappingTable mt)
+        internal static ObjectId NewObjectId(Type t, Class cl, DataRow row, MappingTable mt, TypeManager tm)
         {
             if (cl.SystemType == null)
                 throw new InternalException(16, "ObjectIdFactory.NewObjectId: cl.SystemType is null.");
             ObjectId result;
             if (cl.Oid.IsDependent)
-                result = new ObjectId(new DependentKey(t, cl));
+                result = new ObjectId(new DependentKey(t, cl, tm));
             else
-                result = new ObjectId(new MultiKey(t, cl));
+                result = new ObjectId(new MultiKey(t, cl, tm));
             Key key = result.Id;
             int i = 0;
             new ForeignKeyIterator(mt).Iterate(delegate(ForeignKeyColumn fkColumn, bool isLastElement)
@@ -85,13 +85,13 @@ namespace NDO
 				key[i] = o;
 		}
 
-        public static ObjectId NewObjectId(Type t, Class cl, object keydata)
+        internal static ObjectId NewObjectId(Type t, Class cl, object keydata, TypeManager tm)
         {
             ObjectId result;
             if (cl.Oid.IsDependent)
-                result = new ObjectId(new DependentKey(t, cl));
+                result = new ObjectId(new DependentKey(t, cl, tm));
             else
-                result = new ObjectId(new MultiKey(t, cl));
+                result = new ObjectId(new MultiKey(t, cl, tm));
             Key key = result.Id;
             object[] arr = keydata as object[]; 
             if (arr != null)
