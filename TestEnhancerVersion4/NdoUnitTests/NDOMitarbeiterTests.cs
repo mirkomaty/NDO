@@ -135,6 +135,19 @@ namespace NdoUnitTests
 		}
 
 		[Test]
+		public void TestRequery() 
+		{
+			pm.MakePersistent(m);
+			pm.Save();
+			Mitarbeiter m1 = new NDOQuery<Mitarbeiter>( pm ).ExecuteSingle();
+			m1.Nachname = "Matytschak";
+			Mitarbeiter m2 = new NDOQuery<Mitarbeiter>( pm ).ExecuteSingle();
+			Assert.AreEqual( "Matytschak", m2.Nachname, "Objekt nicht wiederverwendet" );
+			m2.Vorname = "Mirko";
+		}
+
+
+		[Test]
 		public void TestObjectCreationSaveChanged() 
 		{
 			pm.MakePersistent(m);

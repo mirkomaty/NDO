@@ -3564,7 +3564,7 @@ namespace NDO
 				{
 					ReadTimeStamp(cl, pc, row);
 				}
-				if(!hollow) 
+				if(!hollow && pc.NDOObjectState != NDOObjectState.PersistentDirty) 
 				{
 					Row2Object(cl, pc, row);
 					if ((pc as IPersistenceNotifiable) != null)
