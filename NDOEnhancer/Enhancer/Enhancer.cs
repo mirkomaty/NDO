@@ -1400,6 +1400,11 @@ namespace NDOEnhancer
 				{
                     dsOld = new NDODataSet(oldSchemaFile);
 					new SQLDiffGenerator().Generate(options.SQLScriptLanguage, options.Utf8Encoding, dsSchema, dsOld, sqlFileName, mappings, messages);
+					new NdoTransDiffGenerator().Generate(dsSchema, dsOld, sqlFileName, mappings, messages);
+				}
+				else
+				{
+					new NdoTransDiffGenerator().Generate( dsSchema, new DataSet(), sqlFileName, mappings, messages );
 				}
 				if (!this.options.DropExistingElements)
 					dsOld = null;  // causes, that no drop statements will be generated.

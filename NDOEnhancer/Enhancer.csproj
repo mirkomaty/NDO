@@ -111,6 +111,7 @@
     <Reference Include="System.Xml">
       <Name>System.XML</Name>
     </Reference>
+    <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AllBranches.cs">
@@ -178,6 +179,7 @@
     <Compile Include="Enhancer\Generator\OracleGenerator.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Enhancer\Generator\NdoTransDiffGenerator.cs" />
     <Compile Include="Enhancer\Generator\SQLDiffGenerator.cs" />
     <Compile Include="Enhancer\Generator\SQLGenerator.cs">
       <SubType>Code</SubType>
