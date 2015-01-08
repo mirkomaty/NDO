@@ -1,0 +1,44 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<Enhancer>
+  <Options>
+    <EnableAddIn>True</EnableAddIn>
+    <EnableEnhancer>False</EnableEnhancer>
+    <GenerateMapping>True</GenerateMapping>
+    <GenerateSchema>True</GenerateSchema>
+    <NewMapping>False</NewMapping>
+    <MergeMapping>True</MergeMapping>
+    <MergeSchema>True</MergeSchema>
+    <GenerateSQL>True</GenerateSQL>
+    <TypeListFile>bin\Debug\NDOTypes.xml</TypeListFile>
+    <DefaultConnection>
+    </DefaultConnection>
+    <UsePolymorphy>True</UsePolymorphy>
+    <GenerateChangeEvents>False</GenerateChangeEvents>
+    <UseTimeStamps>False</UseTimeStamps>
+    <Utf8Encoding>True</Utf8Encoding>
+    <SQLScriptLanguage>SqlServer</SQLScriptLanguage>
+    <SchemaVersion>
+    </SchemaVersion>
+    <DatabaseOwner>
+    </DatabaseOwner>
+  </Options>
+  <ProjectDescription>
+    <BinPath>bin\Debug\UnitTests.exe</BinPath>
+    <ObjPath>obj\Debug\</ObjPath>
+    <ProjPath>C:\Projekte\NDO\UnitTestGenerator\UnitTests\</ProjPath>
+    <AssemblyName />
+    <Debug>True</Debug>
+    <IsWebProject>False</IsWebProject>
+    <VerboseMode>False</VerboseMode>
+    <KeyFile>
+    </KeyFile>
+    <References>
+      <Reference AssemblyName="nunit.framework" AssemblyPath="..\..\..\..\WINDOWS\assembly\GAC_MSIL\nunit.framework\2.2.6.0__96d09a1eb7f44a77\nunit.framework.dll">
+      </Reference>
+      <Reference AssemblyName="PersistentClasses" AssemblyPath="..\PersistentClasses\bin\Debug\PersistentClasses.dll">
+      </Reference>
+      <Reference AssemblyName="NDOInterfaces" AssemblyPath="..\..\..\..\Programme\NDO 1.2 Enterprise Edition\NDOInterfaces.dll">
+      </Reference>
+    </References>
+  </ProjectDescription>
+</Enhancer>

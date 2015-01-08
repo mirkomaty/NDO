@@ -1,0 +1,37 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<Enhancer>
+  <Options>
+    <EnableAddIn>True</EnableAddIn>
+    <EnableEnhancer>True</EnableEnhancer>
+    <GenerateMapping>True</GenerateMapping>
+    <GenerateSchema>True</GenerateSchema>
+    <NewMapping>False</NewMapping>
+    <MergeMapping>False</MergeMapping>
+    <MergeSchema>False</MergeSchema>
+    <GenerateSQL>False</GenerateSQL>
+    <TypeListFile>..\UnitTests\bin\Debug\NDOTypes.xml</TypeListFile>
+    <DefaultConnection>Provider=SQLOLEDB.1;Integrated Security=SSPI;Persist Security Info=False;Initial Catalog=NDOTest;Data Source=NOTEBOOKZERO</DefaultConnection>
+    <UsePolymorphy>True</UsePolymorphy>
+    <GenerateChangeEvents>False</GenerateChangeEvents>
+    <UseTimeStamps>False</UseTimeStamps>
+    <Utf8Encoding>True</Utf8Encoding>
+    <SQLScriptLanguage>SqlServer</SQLScriptLanguage>
+    <SchemaVersion>
+    </SchemaVersion>
+    <DatabaseOwner>
+    </DatabaseOwner>
+  </Options>
+  <ProjectDescription>
+    <BinPath>bin\Debug\PersistentClasses.dll</BinPath>
+    <ObjPath>obj\Debug\</ObjPath>
+    <ProjPath>C:\Projekte\NDO\UnitTestGenerator\PersistentClasses\</ProjPath>
+    <AssemblyName />
+    <Debug>True</Debug>
+    <IsWebProject>False</IsWebProject>
+    <VerboseMode>False</VerboseMode>
+    <KeyFile>
+    </KeyFile>
+    <References>
+    </References>
+  </ProjectDescription>
+</Enhancer>
