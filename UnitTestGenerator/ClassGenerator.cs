@@ -1,6 +1,6 @@
 //
-// Copyright (C) 2002-2008 HoT - House of Tools Development GmbH 
-// (www.netdataobjects.com)
+// Copyright (C) 2002-2014 Mirko Matytschak 
+// (www.netdataobjects.de)
 //
 // Author: Mirko Matytschak
 //
@@ -15,7 +15,7 @@
 // Commercial Licence:
 // For those, who want to develop software with help of this program 
 // and need to distribute their work with a more restrictive licence, 
-// there is a commercial licence available at www.netdataobjects.com.
+// there is a commercial licence available at www.netdataobjects.de.
 // 
 // The above copyright notice and this permission notice shall be
 // included in all copies or substantial portions of the Software.
@@ -39,7 +39,7 @@ using CodeGenerator;
 namespace TestGenerator
 {
 	/// <summary>
-	/// Zusammenfassung f�r ClassGenerator.
+	/// Summary for ClassGenerator.
 	/// </summary>
 	public class ClassGenerator
 	{
@@ -56,10 +56,7 @@ namespace TestGenerator
 
 		void AddRelationAccessor(Class ownBaseClass, Class otherBaseClass, RelInfo ri)
 		{
-            string otherName = otherBaseClass.Name;
-            if (otherBaseClass.GenericParameters.Count > 0)
-                otherName += "<int>";
-			Function func = ownBaseClass.NewFunction("void", "AssignRelation", new string[]{otherName}, new string[]{"relObj"});
+			Function func = ownBaseClass.NewFunction("void", "AssignRelation", new string[]{otherBaseClass.Name}, new string[]{"relObj"});
 			func.AccessModifier = "public";
 			if (ri.IsList)
 				func.Statements.Add("relField.Add(relObj);");

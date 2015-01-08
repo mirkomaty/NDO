@@ -3,41 +3,41 @@
   <Options>
     <EnableAddIn>True</EnableAddIn>
     <EnableEnhancer>False</EnableEnhancer>
-    <GenerateMapping>True</GenerateMapping>
-    <GenerateSchema>True</GenerateSchema>
+    <VerboseMode>False</VerboseMode>
     <NewMapping>False</NewMapping>
-    <MergeMapping>True</MergeMapping>
-    <MergeSchema>True</MergeSchema>
     <GenerateSQL>True</GenerateSQL>
-    <TypeListFile>bin\Debug\NDOTypes.xml</TypeListFile>
     <DefaultConnection>
     </DefaultConnection>
-    <UsePolymorphy>True</UsePolymorphy>
+    <TargetMappingFileName>NDOMapping.xml</TargetMappingFileName>
     <GenerateChangeEvents>False</GenerateChangeEvents>
     <UseTimeStamps>False</UseTimeStamps>
     <Utf8Encoding>True</Utf8Encoding>
     <SQLScriptLanguage>SqlServer</SQLScriptLanguage>
     <SchemaVersion>
     </SchemaVersion>
+    <IncludeTypecodes>False</IncludeTypecodes>
     <DatabaseOwner>
     </DatabaseOwner>
+    <GenerateConstraints>False</GenerateConstraints>
+    <UseMsBuild>False</UseMsBuild>
+    <DropExistingElements>True</DropExistingElements>
   </Options>
   <ProjectDescription>
     <BinPath>bin\Debug\UnitTests.exe</BinPath>
     <ObjPath>obj\Debug\</ObjPath>
-    <ProjPath>C:\Projekte\NDO\UnitTestGenerator\UnitTests\</ProjPath>
     <AssemblyName />
     <Debug>True</Debug>
     <IsWebProject>False</IsWebProject>
-    <VerboseMode>False</VerboseMode>
     <KeyFile>
     </KeyFile>
     <References>
-      <Reference AssemblyName="nunit.framework" AssemblyPath="..\..\..\..\WINDOWS\assembly\GAC_MSIL\nunit.framework\2.2.6.0__96d09a1eb7f44a77\nunit.framework.dll">
+      <Reference AssemblyName="nunit.framework" AssemblyPath="D:\Program Files (x86)\NUnit 2.6.3\bin\framework\nunit.framework.dll">
       </Reference>
       <Reference AssemblyName="PersistentClasses" AssemblyPath="..\PersistentClasses\bin\Debug\PersistentClasses.dll">
       </Reference>
-      <Reference AssemblyName="NDOInterfaces" AssemblyPath="..\..\..\..\Programme\NDO 1.2 Enterprise Edition\NDOInterfaces.dll">
+      <Reference AssemblyName="NDOInterfaces" AssemblyPath="D:\Program Files (x86)\NDO 2.1 Dev Edition\NDOInterfaces.dll">
+      </Reference>
+      <Reference AssemblyName="System.Core" AssemblyPath="d:\program files (x86)\reference assemblies\microsoft\framework\.netframework\v4.0\system.core.dll">
       </Reference>
     </References>
   </ProjectDescription>

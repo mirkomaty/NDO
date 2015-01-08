@@ -1,6 +1,6 @@
 //
-// Copyright (C) 2002-2008 HoT - House of Tools Development GmbH 
-// (www.netdataobjects.com)
+// Copyright (C) 2002-2014 Mirko Matytschak 
+// (www.netdataobjects.de)
 //
 // Author: Mirko Matytschak
 //
@@ -15,7 +15,7 @@
 // Commercial Licence:
 // For those, who want to develop software with help of this program 
 // and need to distribute their work with a more restrictive licence, 
-// there is a commercial licence available at www.netdataobjects.com.
+// there is a commercial licence available at www.netdataobjects.de.
 // 
 // The above copyright notice and this permission notice shall be
 // included in all copies or substantial portions of the Software.
@@ -35,7 +35,7 @@ using System;
 namespace TestGenerator
 {
 	/// <summary>
-	/// Zusammenfassung f�r RelInfo.
+	/// Summary for RelInfo.
 	/// </summary>
 	public class RelInfo
 	{
@@ -94,21 +94,7 @@ namespace TestGenerator
 			set { useGuid = value; }
 		}
 
-        bool ownIsGeneric;
-        public bool OwnIsGeneric
-        {
-            get { return ownIsGeneric; }
-            set { ownIsGeneric = value; }
-        }
-
-        bool otherIsGeneric;
-        public bool OtherIsGeneric
-        {
-            get { return otherIsGeneric; }
-            set { otherIsGeneric = value; }
-        }
-
-		public RelInfo(bool isbi, bool islist, bool fislist, bool iscomp, bool ownpoly, bool othpoly, bool useguid, bool ownGen, bool otherGen)
+		public RelInfo(bool isbi, bool islist, bool fislist, bool iscomp, bool ownpoly, bool othpoly, bool useguid)
 		{
 			this.isBi = isbi;
 			this.isList = islist;
@@ -124,8 +110,6 @@ namespace TestGenerator
 				this.hasTable = true;
 			if (isBi && ownPoly && foreignIsList)
 				this.hasTable = true;
-            this.ownIsGeneric = ownGen;
-            this.otherIsGeneric = otherGen;
 		}
 
 		public override string ToString()
@@ -162,29 +146,19 @@ namespace TestGenerator
 				else
 					result += "con";
 			}
-            if (hasTable)
+			if (hasTable)
 				result += "Tbl";
 			else
 				result += "NoTbl";
-            if (this.ownIsGeneric)
-                result += "OwGn";
-            else
-                result += "OwNgn";
-            if (this.otherIsGeneric)
-                result += "OtGn";
-            else
-                result += "OtNgn";
-
 			if (useGuid)
 				result += "Guid";
 			else
 				result += "Auto";
 			return result;
 		}
-
 		public RelInfo Clone()
 		{
-			RelInfo ri = new RelInfo(this.isBi, this.isList,this.foreignIsList, this.isComposite, this.ownPoly, this.otherPoly, this.useGuid, this.ownIsGeneric, this.otherIsGeneric);
+			RelInfo ri = new RelInfo(this.isBi, this.isList,this.foreignIsList, this.isComposite, this.ownPoly, this.otherPoly, this.useGuid);
 			ri.hasTable = this.hasTable;
 			ri.isAbstract = this.isAbstract;
 			return ri;
@@ -192,7 +166,7 @@ namespace TestGenerator
 
 		public RelInfo GetReverse()
 		{
-			RelInfo ri = new RelInfo(this.isBi, this.foreignIsList, this.IsList, false, this.otherPoly, this.ownPoly, this.useGuid, this.otherIsGeneric, this.ownIsGeneric);
+			RelInfo ri = new RelInfo(this.isBi, this.foreignIsList, this.IsList, false, this.otherPoly, this.ownPoly, this.useGuid);
 			ri.hasTable = this.hasTable;
 			ri.isAbstract = this.isAbstract;
 			return ri;

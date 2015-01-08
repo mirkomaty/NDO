@@ -26,8 +26,9 @@
     </FileUpgradeFlags>
     <UpgradeBackupLocation>
     </UpgradeBackupLocation>
-    <TargetFrameworkVersion>v2.0</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <OldToolsVersion>2.0</OldToolsVersion>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <OutputPath>bin\Debug\</OutputPath>
@@ -77,9 +78,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="NDO">
-      <Name>NDO</Name>
-      <HintPath>..\..\..\Programme\text &amp; talk GmbH\NDO Enterprise Version\NDO.Dll</HintPath>
-      <AssemblyFolderKey>hklm\dn\ndo</AssemblyFolderKey>
+      <HintPath>D:\Program Files (x86)\NDO 2.1 Dev Edition\NDO.dll</HintPath>
     </Reference>
     <Reference Include="System">
       <Name>System</Name>
@@ -129,6 +128,9 @@
       <Project>{9BCB091D-EE82-4AD2-8F6E-F83296500C7D}</Project>
       <Name>CodeGenerator</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="app.config" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

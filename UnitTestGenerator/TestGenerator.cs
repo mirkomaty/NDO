@@ -1,6 +1,6 @@
 //
-// Copyright (C) 2002-2008 HoT - House of Tools Development GmbH 
-// (www.netdataobjects.com)
+// Copyright (C) 2002-2014 Mirko Matytschak 
+// (www.netdataobjects.de)
 //
 // Author: Mirko Matytschak
 //
@@ -15,7 +15,7 @@
 // Commercial Licence:
 // For those, who want to develop software with help of this program 
 // and need to distribute their work with a more restrictive licence, 
-// there is a commercial licence available at www.netdataobjects.com.
+// there is a commercial licence available at www.netdataobjects.de.
 // 
 // The above copyright notice and this permission notice shall be
 // included in all copies or substantial portions of the Software.
@@ -38,7 +38,7 @@ using CodeGenerator;
 namespace TestGenerator
 {
 	/// <summary>
-	/// Zusammenfassung f�r TestGenerator.
+	/// Summary for TestGenerator.
 	/// </summary>
 	public class TestGenerator
 	{
@@ -75,20 +75,20 @@ namespace TestGenerator
 
 		string AssertEquals(string text, object o2, object o3)
 		{
-			return "Assertion.AssertEquals(\"" + text + "\", " + o2 + ", " + o3 + ");";
+			return "Assert.AreEqual(" + o2 + ", " + o3 + ", \"" + text + "\");";
 		}
 		string AssertNotNull(string text, object o)
 		{
-			return "Assertion.AssertNotNull(\"" + text + "\", " + o + ");";
+			return "Assert.NotNull(" + o + ", \"" + text + "\");";
 		}
 		string AssertNull(string text, object o)
 		{
-			return "Assertion.AssertNull(\"" + text + "\", " + o + ");";
+			return "Assert.Null(" + o + ", \"" + text + "\");";
 		}
 
 		string Assert(string text, object o)
 		{
-			return "Assertion.Assert(\"" + text + "\", " + o + ");";
+			return "Assert.That(" + o + ", \"" + text + "\");";
 		}
 
 		string QualifiedClassName(string className)
@@ -107,25 +107,25 @@ namespace TestGenerator
 			func.Statements.Add("Relation relbaseLeft = clbaseLeft.FindRelation(\"relField\");");
 			func.Statements.Add("Class clbaseRight = pm.NDOMapping.FindClass(typeof(" + test.OtherClass.Name + "));");
 			func.Statements.Add("Relation relbaseRight = clbaseRight.FindRelation(\"relField\");");
-			func.Statements.Add("Assertion.Assert(\"Relation should be equal #1\", relbaseRight.Equals(relbaseLeft));");
-			func.Statements.Add("Assertion.Assert(\"Relation should be equal #2\", relbaseLeft.Equals(relbaseRight));");
+			func.Statements.Add( Assert( "Relation should be equal #1", "relbaseRight.Equals(relbaseLeft)" ) );
+			func.Statements.Add( Assert( "Relation should be equal #2", "relbaseLeft.Equals(relbaseRight)" ) );
 			if (ri.OwnPoly)
 			{
 				func.Statements.Add("Class clderLeft = pm.NDOMapping.FindClass(typeof("+ test.OwnDerivedClass.Name + "));");
 				func.Statements.Add("Relation relderLeft = clderLeft.FindRelation(\"relField\");");
-				func.Statements.Add("Assertion.Assert(\"Relation should be equal #3\", relderLeft.Equals(relbaseRight));");
-				func.Statements.Add("Assertion.Assert(\"Relation should be equal #4\", relbaseRight.Equals(relderLeft));");
+				func.Statements.Add( Assert( "Relation should be equal #3", "relderLeft.Equals(relbaseRight)" ) );
+				func.Statements.Add( Assert( "Relation should be equal #4", "relbaseRight.Equals(relderLeft)" ) );
 			}
 			if (ri.OtherPoly)
 			{
 				func.Statements.Add("Class clderRight = pm.NDOMapping.FindClass(typeof(" + test.OtherDerivedClass.Name + "));");
 				func.Statements.Add("Relation relderRight = clderRight.FindRelation(\"relField\");");
-				func.Statements.Add("Assertion.Assert(\"Relation should be equal #5\", relbaseLeft.Equals(relderRight));");
-				func.Statements.Add("Assertion.Assert(\"Relation should be equal #6\", relderRight.Equals(relbaseLeft));");
+				func.Statements.Add( Assert( "Relation should be equal #5", "relbaseLeft.Equals(relderRight)" ) );
+				func.Statements.Add( Assert( "Relation should be equal #6", "relderRight.Equals(relbaseLeft)" ) );
 				if (ri.OwnPoly)
 				{
-					func.Statements.Add("Assertion.Assert(\"Relation should be equal #7\", relderLeft.Equals(relderRight));");
-					func.Statements.Add("Assertion.Assert(\"Relation should be equal #8\", relderRight.Equals(relderLeft));");
+					func.Statements.Add( Assert( "Relation should be equal #7", "relderLeft.Equals(relderRight)" ) );
+					func.Statements.Add( Assert( "Relation should be equal #8", "relderRight.Equals(relderLeft)" ) );
 				}
 			}
 		}
@@ -188,12 +188,12 @@ namespace TestGenerator
 		void CreateTestSaveReloadRemove(RelInfo ri)
 		{
 			Function func = fixture.NewFunction("void", "TestSaveReloadRemove");
+			func.AccessModifier = "public";
 			func.Attributes.Add("Test");
 			if (!ri.IsList)
 				return;
 			if (IsForbiddenCase(ri))
 				func.Attributes.Add("ExpectedException(typeof(NDOException))");
-			func.AccessModifier = "public";
 
 			func.Statements.Add("CreateObjects();");
 			func.Statements.Add("QueryOwn();");
@@ -391,10 +391,10 @@ namespace TestGenerator
 				func.Statements.Add("pm.UnloadCache();");
 			}
 			func.Statements.Add("decimal count;");
-			func.Statements.Add("count = pm.NewQuery(typeof(" + test.OwnClass.Name + ")).ExecuteAggregate(\"dummy\", Query.AggregateType.Count);");
-			func.Statements.Add("Assertion.AssertEquals(\"Count wrong #1\", 0, count);");
-			func.Statements.Add("count = pm.NewQuery(typeof(" + test.OtherClass.Name + ")).ExecuteAggregate(\"dummy\", Query.AggregateType.Count);");
-			func.Statements.Add("Assertion.AssertEquals(\"Count wrong #2\", 0, count);");
+			func.Statements.Add("count = (decimal) pm.NewQuery(typeof(" + test.OwnClass.Name + ")).ExecuteAggregate(\"dummy\", Query.AggregateType.Count);");
+			func.Statements.Add("Assert.AreEqual(0, count, \"Count wrong #1\");");
+			func.Statements.Add("count = (decimal) pm.NewQuery(typeof(" + test.OtherClass.Name + ")).ExecuteAggregate(\"dummy\", Query.AggregateType.Count);");
+			func.Statements.Add("Assert.AreEqual(0, count, \"Count wrong #2\");");
 		}
 
 		void GenerateTestGroup(RelInfo ri)

@@ -3,35 +3,34 @@
   <Options>
     <EnableAddIn>True</EnableAddIn>
     <EnableEnhancer>True</EnableEnhancer>
-    <GenerateMapping>True</GenerateMapping>
-    <GenerateSchema>True</GenerateSchema>
+    <VerboseMode>False</VerboseMode>
     <NewMapping>False</NewMapping>
-    <MergeMapping>False</MergeMapping>
-    <MergeSchema>False</MergeSchema>
     <GenerateSQL>False</GenerateSQL>
-    <TypeListFile>..\UnitTests\bin\Debug\NDOTypes.xml</TypeListFile>
-    <DefaultConnection>Provider=SQLOLEDB.1;Integrated Security=SSPI;Persist Security Info=False;Initial Catalog=NDOTest;Data Source=NOTEBOOKZERO</DefaultConnection>
-    <UsePolymorphy>True</UsePolymorphy>
+    <DefaultConnection>Integrated Security=SSPI;Persist Security Info=False;Initial Catalog=NDOTest;Data Source=localhost</DefaultConnection>
+    <TargetMappingFileName>NDOMapping.xml</TargetMappingFileName>
     <GenerateChangeEvents>False</GenerateChangeEvents>
     <UseTimeStamps>False</UseTimeStamps>
     <Utf8Encoding>True</Utf8Encoding>
     <SQLScriptLanguage>SqlServer</SQLScriptLanguage>
-    <SchemaVersion>
-    </SchemaVersion>
+    <SchemaVersion>1.0</SchemaVersion>
+    <IncludeTypecodes>False</IncludeTypecodes>
     <DatabaseOwner>
     </DatabaseOwner>
+    <GenerateConstraints>False</GenerateConstraints>
+    <UseMsBuild>True</UseMsBuild>
+    <DropExistingElements>True</DropExistingElements>
   </Options>
   <ProjectDescription>
     <BinPath>bin\Debug\PersistentClasses.dll</BinPath>
     <ObjPath>obj\Debug\</ObjPath>
-    <ProjPath>C:\Projekte\NDO\UnitTestGenerator\PersistentClasses\</ProjPath>
     <AssemblyName />
     <Debug>True</Debug>
     <IsWebProject>False</IsWebProject>
-    <VerboseMode>False</VerboseMode>
     <KeyFile>
     </KeyFile>
     <References>
+      <Reference AssemblyName="System.Core" AssemblyPath="d:\program files (x86)\reference assemblies\microsoft\framework\.netframework\v4.0\system.core.dll">
+      </Reference>
     </References>
   </ProjectDescription>
 </Enhancer>

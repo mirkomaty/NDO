@@ -1,6 +1,6 @@
 //
-// Copyright (C) 2002-2008 HoT - House of Tools Development GmbH 
-// (www.netdataobjects.com)
+// Copyright (C) 2002-2014 Mirko Matytschak 
+// (www.netdataobjects.de)
 //
 // Author: Mirko Matytschak
 //
@@ -15,7 +15,7 @@
 // Commercial Licence:
 // For those, who want to develop software with help of this program 
 // and need to distribute their work with a more restrictive licence, 
-// there is a commercial licence available at www.netdataobjects.com.
+// there is a commercial licence available at www.netdataobjects.de.
 // 
 // The above copyright notice and this permission notice shall be
 // included in all copies or substantial portions of the Software.
@@ -35,7 +35,7 @@ using System;
 namespace TestGenerator
 {
 	/// <summary>
-	/// Zusammenfassung f�r Test.
+	/// Summary for Test.
 	/// </summary>
 	public class Test
 	{
@@ -90,13 +90,6 @@ namespace TestGenerator
 					otherClassName += "Base";
 
 				ownClass = new PersistentClass(ri.OwnPoly && ri.IsAbstract, ownClassName, null);
-
-                if (ri.OwnIsGeneric)
-                {
-                    ownClass.GenericParameters.Add("T");
-                    ownClass.AddVarAndProperty("T", "genericField");
-                }
-
 				if (ri.UseGuid)
 					ownClass.Attributes.Add("NDOOidType(typeof(Guid))");
 
@@ -105,8 +98,6 @@ namespace TestGenerator
 					string ownDerivedName = ri.ToString() + "LeftDerived";
 					ownDerivedClass = new PersistentClass(false, ownDerivedName, ownClass);
 
-                    if (ri.OwnIsGeneric)
-                        ownDerivedClass.GenericParameters.Add("T");
 
 					if (ri.UseGuid)
 						ownDerivedClass.Attributes.Add("NDOOidType(typeof(Guid))");
@@ -117,18 +108,13 @@ namespace TestGenerator
 				otherClass = new PersistentClass(ri.OtherPoly && ri.IsAbstract, otherClassName, null);
 				if (ri.UseGuid)
 					otherClass.Attributes.Add("NDOOidType(typeof(Guid))");
-                if (ri.OtherIsGeneric)
-                    otherClass.GenericParameters.Add("T");
-
 				if (ri.OtherPoly)
 				{
 					string otherDerivedName = ri.ToString() + "RightDerived";
 					otherDerivedClass = new PersistentClass(false, otherDerivedName, otherClass);
 					if (ri.UseGuid)
 						otherDerivedClass.Attributes.Add("NDOOidType(typeof(Guid))");
-                    if (ri.OtherIsGeneric)
-                        otherDerivedClass.GenericParameters.Add("T");
-                }
+				}
 			}
 		}
 
