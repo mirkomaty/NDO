@@ -70,6 +70,17 @@ namespace NDO.Logging
 		}
 
 		/// <summary>
+		/// This function is called by the framework, to dump Sql statements and 
+		/// transaction start/stop statements.
+		/// </summary>
+		/// <param name="message">Dump information.</param>
+		/// <remarks>Note, that dump information can consist of numerous lines.</remarks>
+		public void Debug(string message)
+		{
+			Console.WriteLine(message);
+		}
+
+		/// <summary>
 		/// This function is called by the framework, if something doesn't work as expected, 
 		/// but no exception was thrown.
 		/// </summary>

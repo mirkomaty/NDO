@@ -63,6 +63,13 @@ namespace NDO.Logging
 		/// <remarks>Note, that the warning message can consist of numerous lines.</remarks>
 		void Warn(string message);
 
+		/// <summary>
+		/// This function is called by the framework, to provide some information for debugging purposes.
+		/// </summary>
+		/// <param name="message">Dump information.</param>
+		/// <remarks>Note, that dump information can consist of numerous lines.</remarks>
+		void Debug(string message);
+
 
 		/// <summary>
 		/// If the log sink supports clearing all entries, this function clears all entries.

@@ -40,11 +40,14 @@ using System.Collections.Specialized;
 using System.Data;
 using System.Diagnostics;
 using System.Reflection;
+using System.Dynamic;
+using System.Text.RegularExpressions;
+using System.Linq;
+using System.Xml.Linq;
 
 using NDO.Mapping;
 using NDO.Logging;
 using NDOInterfaces;
-using System.Dynamic;
 
 namespace NDO 
 {
@@ -1344,6 +1347,212 @@ namespace NDO
 			string file = Path.ChangeExtension(ass.Location, ".ndo.sql");
 			return BuildDatabase(file);
 		}
+
+		/// <summary>
+		/// Executes a xml script to generate the database tables. 
+		/// The function will generate and execute sql statements to perform 
+		/// the changes described by the xml.
+		/// </summary>
+		/// <returns></returns>
+		/// <remarks>
+		/// The script file is the first file found with the search string [AssemblyNameWithoutExtension].ndodiff.[SchemaVersion].xml.
+		/// If several files match the search string biggest file name in the default sort order will be executed.
+		/// This function takes the first Connection object in the Connections list
+		/// of the Mapping file und executes the script using that connection.
+		/// If no default connection exists, a NDOException with ErrorNumber 44 will be thrown.
+		/// Any exceptions thrown while executing a statement in the script, will be caught.
+		/// Their message property will appear in the result string array.
+		/// If no script file exists, a NDOException with ErrorNumber 48 will be thrown.
+		/// Note that an additional command is executed, which will update the NDOSchemaVersion entry.
+		/// </remarks>
+		public string[] PerformSchemaTransitions()
+		{
+			Assembly ass = Assembly.GetEntryAssembly();
+			if (ass == null)
+				throw new NDOException(49, "Can't determine the path of the entry assembly - please pass a sql script path as argument to PerformSchemaTransitions.");
+			string mask = Path.GetFileNameWithoutExtension( ass.Location ) + ".ndodiff.*.xml";
+			List<string> fileNames = Directory.GetFiles( Path.GetDirectoryName( ass.Location ), mask ).ToList();
+			if (fileNames.Count == 0)
+				return new String[] { String.Format( "No xml script file with a name like {0} found.", mask ) };
+			if (fileNames.Count > 1)
+				fileNames.Sort( ( fn1, fn2 ) => CompareFileName( fn1, fn2 ) );
+			return PerformSchemaTransitions( fileNames[0] );
+		}
+
+
+		/// <summary>
+		/// Executes a xml script to generate the database tables. 
+		/// The function will generate and execute sql statements to perform 
+		/// the changes described by the xml.
+		/// </summary>
+		/// <param name="scriptFile">The script file to execute.</param>
+		/// <returns></returns>
+		/// <remarks>
+		/// This function takes the first Connection object in the Connections list
+		/// of the Mapping file und executes the script using that connection.
+		/// If no default connection exists, a NDOException with ErrorNumber 44 will be thrown.
+		/// Any exceptions thrown while executing a statement in the script, will be caught.
+		/// Their message property will appear in the result string array.
+		/// If the script file doesn't exist, a NDOException with ErrorNumber 48 will be thrown.
+		/// Note that an additional command is executed, which will update the NDOSchemaVersion entry.
+		/// </remarks>
+		public string[] PerformSchemaTransitions(string scriptFile)
+		{
+			if (!File.Exists(scriptFile))
+				throw new NDOException(48, "Script file " + scriptFile + " doesn't exist.");
+
+			if (this.mappings.Connections.Count < 1)
+				throw new NDOException(48, "Mapping file doesn't define any connection.");
+			Connection conn = new Connection( mappings );
+			Connection originalConnection = (Connection)mappings.Connections[0];
+			conn.Name = OnNewConnection( originalConnection );
+			conn.Type = originalConnection.Type;
+			return PerformSchemaTransitions(scriptFile, conn);
+		}
+
+
+		int CompareFileName( string fn1, string fn2)
+		{
+			Regex regex = new Regex( @"ndodiff\.(.+)\.xml" );
+			Match match = regex.Match( fn1 );
+			string v1 = match.Groups[1].Value;
+			match = regex.Match( fn2 );
+			string v2 = match.Groups[1].Value;
+			return new Version( v2 ).CompareTo( new Version( v1 ) );
+		}
+
+		string GetSchemaVersion(Connection ndoConn, string schemaName)
+		{
+			IProvider provider = this.mappings.GetProvider( ndoConn );
+			TransactionInfo ti = transactionTable[ndoConn];
+			IDbConnection connection = ti.Connection;
+			string version = "0";  // Initial value
+			connection.Open();
+			using (connection)
+			{
+				string[] TableNames = provider.GetTableNames( connection );
+				if (TableNames.Any(t=>t=="NDOSchemaVersion"))
+				{
+					string sql = "SELECT Version from NDOSchemaVersion WHERE SchemaName ";
+					if (schemaName == null)
+						sql += "IS NULL;";
+					else
+						sql += "LIKE '" + schemaName + "'";
+					IDbCommand cmd = provider.NewSqlCommand( connection );
+					cmd.CommandText = sql;
+					using(IDataReader dr = cmd.ExecuteReader())
+					{
+						if (dr.Read())
+							version = dr.GetString( 0 );
+					}
+				}
+				else
+				{
+					SchemaTransitionGenerator schemaTransitionGenerator = new SchemaTransitionGenerator( NDOProviderFactory.Instance.Generators[ndoConn.Type], this.mappings );
+					string transition = @"<NdoSchemaTransition>
+    <CreateTable name=""NDOSchemaVersion"">
+      <CreateColumn name=""SchemaName"" type=""System.String,mscorlib"" allowNull=""True"" />
+      <CreateColumn name=""Version"" type=""System.String,mscorlib"" size=""50"" />
+    </CreateTable>
+</NdoSchemaTransition>";
+					XElement transitionElement = XElement.Parse(transition);
+
+					string sql = schemaTransitionGenerator.Generate( transitionElement );
+					IDbCommand cmd = provider.NewSqlCommand( connection );
+					cmd.CommandText = sql;
+					cmd.ExecuteNonQuery();
+					cmd.CommandText = String.Format( "INSERT INTO NDOSchemaVersion([SchemaName],[Version]) VALUES({0},'0')", schemaName == null ? "NULL" : provider.GetSqlLiteral( schemaName ) );
+					cmd.ExecuteNonQuery();
+				}
+			}
+
+			return version;
+		}
+
+		/// <summary>
+		/// Executes a xml script to generate the database tables. 
+		/// The function will generate and execute sql statements to perform 
+		/// the changes described by the xml. 
+		/// </summary>
+		/// <param name="scriptFile">The xml script file.</param>
+		/// <param name="ndoConn">The connection to be used to perform the schema changes.</param>
+		/// <returns>A list of strings about the states of the different schema change commands.</returns>
+		/// <remarks>Note that an additional command is executed, which will update the NDOSchemaVersion entry.</remarks>
+		public string[] PerformSchemaTransitions(string scriptFile, Connection ndoConn)
+		{
+			string schemaName = null;
+			// Gespeicherte Version ermitteln.
+			XElement transitionElements = XElement.Load( scriptFile );
+			if (transitionElements.Attribute( "schemaName" ) != null)
+				schemaName = transitionElements.Attribute( "schemaName" ).Value;
+			Version version = new Version( GetSchemaVersion( ndoConn, schemaName ) );
+			SchemaTransitionGenerator schemaTransitionGenerator = new SchemaTransitionGenerator( NDOProviderFactory.Instance.Generators[ndoConn.Type], this.mappings );
+			MemoryStream ms = new MemoryStream();
+			StreamWriter sw = new StreamWriter(ms, System.Text.Encoding.UTF8);
+			bool hasChanges = false;
+
+			foreach (XElement transitionElement in transitionElements.Elements("NdoSchemaTransition").Where(e=>new Version(e.Attribute("schemaVersion").Value).CompareTo(version) > 0))
+			{
+				hasChanges = true;
+				sw.Write( schemaTransitionGenerator.Generate( transitionElement ) );
+			}
+
+			if (!hasChanges)
+				return new string[] { };
+
+			sw.Write( "UPDATE NDOSchemaVersion SET Version = '" );
+			sw.Write( transitionElements.Attribute( "schemaVersion" ).Value );
+			sw.Write( "' WHERE SchemaName " );
+			if (schemaName == null)
+				sw.WriteLine( "IS NULL;" );
+			else
+				sw.WriteLine( "LIKE '" + schemaName + "'" );			
+
+			sw.Flush();
+			ms.Position = 0L;
+
+			StreamReader sr = new StreamReader(ms, System.Text.Encoding.UTF8);
+			string s = sr.ReadToEnd();
+			sr.Close();
+
+			return InternalPerformSchemaTransitions( ndoConn, s );
+		}
+
+		private string[] InternalPerformSchemaTransitions( Connection ndoConn, string sql )
+		{
+			string[] arr = sql.Split( ';' );
+			string last = arr[arr.Length - 1];
+			bool lastInvalid = (last == null || last.Trim() == string.Empty);
+			string[] result = new string[arr.Length - (lastInvalid ? 1 : 0)];
+			IProvider provider = this.mappings.GetProvider( ndoConn );
+			//TransactionInfo ti = transactionTable[conn];
+			//IDbConnection cn = ti.Connection;
+			IDbConnection cn = provider.NewConnection( ndoConn.Name );
+			cn.Open();
+			IDbCommand cmd = provider.NewSqlCommand( cn );
+			int i = 0;
+			string ok = "OK";
+			foreach (string statement in arr)
+			{
+				if (statement != null && statement.Trim() != string.Empty)
+				{
+					try
+					{
+						cmd.CommandText = statement;
+						cmd.ExecuteNonQuery();
+						result[i] = ok;
+					}
+					catch (Exception ex)
+					{
+						result[i] = ex.Message;
+					}
+				}
+				i++;
+			}
+			cn.Close();
+			return result;
+		}
+
 
 		protected virtual void WriteObject(IPersistenceCapable pc, DataRow row, string[] fieldNames, int startIndex)
 		{

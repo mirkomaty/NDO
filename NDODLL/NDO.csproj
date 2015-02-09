@@ -115,6 +115,7 @@
     <Reference Include="System.Xml">
       <Name>System.XML</Name>
     </Reference>
+    <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AccessGenerator.cs" />
@@ -371,6 +372,7 @@
     <Compile Include="SchemaGenerator.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="SchemaTransitionGenerator.cs" />
     <Compile Include="SelectPartGenerator.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -424,7 +426,7 @@
   </ItemGroup>
   <ProjectExtensions>
     <VisualStudio>
-      <UserProperties NDOEnableAddIn="false" NDOEnableEnhancer="false" NDOGenerateMapping="false" NDOGenerateSchema="false" NDONewMapping="false" NDOMergeMapping="false" NDOMergeSchema="false" NDOGenerateSQL="false" />
+      <UserProperties NDOGenerateSQL="false" NDOMergeSchema="false" NDOMergeMapping="false" NDONewMapping="false" NDOGenerateSchema="false" NDOGenerateMapping="false" NDOEnableEnhancer="false" NDOEnableAddIn="false" />
     </VisualStudio>
   </ProjectExtensions>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
