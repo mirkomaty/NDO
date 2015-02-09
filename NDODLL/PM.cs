@@ -2588,7 +2588,7 @@ namespace NDO
 
 			foreach(IPersistenceCapable pc in deletedObjects) 
 			{
-				MakeObjectTransient(pc, true);
+				MakeObjectTransient(pc, false);
 			}
 
 			ds.Clear();
@@ -2924,8 +2924,8 @@ namespace NDO
 			if(invalidateId) 
 			{
 				pc.NDOObjectId.Invalidate();
+				pc.NDOObjectId = null;
 			}
-			pc.NDOObjectId = null;
 			pc.NDOObjectState = NDOObjectState.Transient;
 			pc.NDOStateManager = null;
 		}
@@ -4002,7 +4002,7 @@ namespace NDO
 			return result;		
 		}
 
-		public int Revision { get { return 190; } }
+		public int Revision { get { return 197; } }
 	}
 
 
