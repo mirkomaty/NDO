@@ -268,6 +268,8 @@ namespace NDOInterfaces
 		/// </summary>
 		public virtual string GetSqlLiteral(object o)
 		{
+			if (o == null)
+				return "NULL";
 			if (o is string || o.GetType().IsSubclassOf(typeof(string)) || o is Guid)
 				return "'" + o.ToString() + "'";
 			if (o is byte[])
