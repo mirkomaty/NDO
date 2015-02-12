@@ -169,8 +169,14 @@
     <Compile Include="IDeleteNotifiable.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="IEnhancerSupport.cs" />
-    <Compile Include="IFieldInitializer.cs" />
+    <Compile Include="Mapping\Class.cs" />
+    <Compile Include="Mapping\ClassOid.cs" />
+    <Compile Include="Mapping\Column.cs" />
+    <Compile Include="Mapping\Connection.cs" />
+    <Compile Include="Mapping\Field.cs" />
+    <Compile Include="Mapping\ForeignKeyColumn.cs" />
+    <Compile Include="Mapping\IEnhancerSupport.cs" />
+    <Compile Include="Mapping\IFieldInitializer.cs" />
     <Compile Include="IMappingTableHandler.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -225,16 +231,23 @@
     <Compile Include="Logging\LogFileAdapter.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Mapping.Attributes\ChildForeignKeyColumnAttribute.cs" />
-    <Compile Include="Mapping.Attributes\ClassAttribute.cs" />
-    <Compile Include="Mapping.Attributes\ColumnAttribute.cs" />
-    <Compile Include="Mapping.Attributes\ForeignKeyColumnAttribute.cs" />
-    <Compile Include="Mapping.Attributes\OidColumnAttribute.cs" />
-    <Compile Include="Mapping.Attributes\PropertyAttribute.cs" />
-    <Compile Include="Mapping.Attributes\RelationAttribute.cs" />
+    <Compile Include="Mapping\Attributes\ChildForeignKeyColumnAttribute.cs" />
+    <Compile Include="Mapping\Attributes\ClassAttribute.cs" />
+    <Compile Include="Mapping\Attributes\ColumnAttribute.cs" />
+    <Compile Include="Mapping\Attributes\ForeignKeyColumnAttribute.cs" />
+    <Compile Include="Mapping\Attributes\OidColumnAttribute.cs" />
+    <Compile Include="Mapping\Attributes\PropertyAttribute.cs" />
+    <Compile Include="Mapping\Attributes\RelationAttribute.cs" />
     <Compile Include="Mappings.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Mapping\MappingNode.cs" />
+    <Compile Include="Mapping\MappingTable.cs" />
+    <Compile Include="Mapping\NDOMapping.cs" />
+    <Compile Include="Mapping\OidColumn.cs" />
+    <Compile Include="Mapping\Property.cs" />
+    <Compile Include="Mapping\Relation.cs" />
+    <Compile Include="Mapping\RelationMultiplicity.cs" />
     <Compile Include="Metaclasses.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -261,9 +274,6 @@
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="NDOIntermediateAttribute.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="NDOMapping.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="NDOMappingTableHandler.cs">
@@ -424,9 +434,12 @@
   <ItemGroup>
     <None Include="ndo_ent.snk" />
   </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Mapping.Attributes\" />
+  </ItemGroup>
   <ProjectExtensions>
     <VisualStudio>
-      <UserProperties NDOGenerateSQL="false" NDOMergeSchema="false" NDOMergeMapping="false" NDONewMapping="false" NDOGenerateSchema="false" NDOGenerateMapping="false" NDOEnableEnhancer="false" NDOEnableAddIn="false" />
+      <UserProperties NDOEnableAddIn="false" NDOEnableEnhancer="false" NDOGenerateMapping="false" NDOGenerateSchema="false" NDONewMapping="false" NDOMergeMapping="false" NDOMergeSchema="false" NDOGenerateSQL="false" />
     </VisualStudio>
   </ProjectExtensions>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
