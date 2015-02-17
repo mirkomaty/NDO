@@ -33,6 +33,8 @@
 using System;
 using System.Diagnostics;
 using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
 using System.IO;
 using System.Data;
@@ -164,13 +166,14 @@ namespace NDO
 		}
 
 
-		Hashtable myClassesName;
-		Hashtable myClassesType;
+		Dictionary<string,Class> myClassesName;
+        Dictionary<Type, Class> myClassesType;
 
 		protected void InitClasses()
 		{
-			myClassesName = new Hashtable(mappings.Classes.Count);
-			myClassesType = new Hashtable(mappings.Classes.Count);
+            int cnt = mappings.Classes.Count();
+            myClassesName = new Dictionary<string, Class>(cnt);
+            myClassesType = new Dictionary<Type, Class>(cnt);
 			foreach(Class cl in mappings.Classes)
 			{
 				myClassesName.Add(cl.FullName, cl);

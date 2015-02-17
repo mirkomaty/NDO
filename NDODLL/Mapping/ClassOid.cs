@@ -19,10 +19,11 @@ namespace NDO.Mapping
         /// The column descriptions for the oid
         /// </summary>
         [Browsable(false)]
-        public IEnumerable<OidColumn> OidColumns
+        public IList<OidColumn> OidColumns
         {
             get { return oidColumns; }
         }
+
 
         /// <summary>
         /// Creates a new OidColumn and adds it to the OidColumns list.
@@ -289,14 +290,10 @@ namespace NDO.Mapping
                     {
                         relationsReady.Add(column.RelationName);
                         // find all oid columns with the same RelationName
-                        IEnumerable<OidColumn> allOidColumns = this.oidColumns.Where(oidc => oidc.RelationName == column.RelationName);
+                        List<OidColumn> allOidColumns = this.oidColumns.Where(oidc => oidc.RelationName == column.RelationName).ToList();
 
                         // find all FkColumns of the relation
-                        ArrayList fkColumns = new ArrayList();
-                        foreach (ForeignKeyColumn fkc in r.ForeignKeyColumns)
-                        {
-                            fkColumns.Add(fkc);
-                        }
+                        List<ForeignKeyColumn> fkColumns = r.ForeignKeyColumns.ToList();
 
                         // Both lists must have the same count
                         if (allOidColumns.Count != fkColumns.Count)
@@ -306,18 +303,19 @@ namespace NDO.Mapping
                         Class relClass = Parent.Parent.FindClass(r.ReferencedTypeName);
 
                         // Resolve the Oid types of the related type. Endless recursion is not possible because of the test at the beginning of this method. 
-                        if (allOidColumns.Count != relClass.Oid.OidColumns.Count)
+                        if (allOidColumns.Count != relClass.Oid.OidColumns.Count())
                             throw new NDOException(110, "Count of Oid columns with relation name " + column.RelationName + " is different from count of oid columns of the related type. Expected: " + fkColumns.Count + ". Count of OidColumns was: " + allOidColumns.Count + '.' + " Type = " + Parent.FullName + '.');
                         ((IFieldInitializer)relClass).InitFields();  // Must initialize the system type and oid of the related class first.
-                        for (int i = 0; i < relClass.Oid.OidColumns.Count; i++)
+                        int i = 0;
+                        foreach (OidColumn relOidColumn in relClass.Oid.OidColumns)
                         {
-                            OidColumn relOidColumn = (OidColumn)relClass.Oid.OidColumns[i];
                             // The column has the same type as the oid column of the related type
                             ((OidColumn)allOidColumns[i]).SystemType = relOidColumn.SystemType;
                             // The column has the same name as the foreign key column of the relation defined 
                             // by RelationName.
                             // The enhancer will remove the name assigned here after generating the schema.
                             ((OidColumn)allOidColumns[i]).Name = ((Column)fkColumns[i]).Name;
+                            i++;
                         }
                     }
                 }

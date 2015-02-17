@@ -32,7 +32,8 @@
 
 using System;
 using System.Data;
-using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using NDO.Mapping;
 
@@ -98,7 +99,7 @@ namespace NDO
             // for each relation, having a ForeignKeyTypeColumnName.
             string relationName = string.Empty;
             int relCount = 0;
-            ArrayList relations = new ArrayList();
+            List<Relation> relations = new List<Relation>();
             foreach (OidColumn oidc in cl.Oid.OidColumns)
             {
                 if (oidc.RelationName != relationName)

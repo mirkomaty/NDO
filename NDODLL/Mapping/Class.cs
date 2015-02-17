@@ -337,17 +337,17 @@ namespace NDO.Mapping
 
             newNode = doc.CreateElement("Fields");
             classNode.AppendChild(newNode);
-#if STD
-            ((ArrayList)Fields).Sort();
-#endif
+
+            this.fields.Sort();
+
             foreach (Field f in Fields)
                 f.Save(newNode);
 
             newNode = doc.CreateElement("Relations");
             classNode.AppendChild(newNode);
-#if STD
-            ((ArrayList)Relations).Sort();
-#endif
+
+            this.relations.Sort();
+
             foreach (Relation f in Relations)
                 f.Save(newNode);
         }
@@ -362,7 +362,7 @@ namespace NDO.Mapping
             Class cl;
             while ((cl = Parent.FindClass(baseType)) != null)
             {
-                this.RelationOrdinalBase += cl.Relations.Count;
+                this.RelationOrdinalBase += cl.Relations.Count();
                 baseType = cl.SystemType.BaseType;
             }
         }
@@ -389,6 +389,7 @@ namespace NDO.Mapping
             {
                 string relationName = string.Empty;
                 int j = 0;
+                IEnumerator<ForeignKeyColumn> fkcEnumerator = null; ;
                 new OidColumnIterator(this.oid).Iterate(delegate(OidColumn oidColumn, bool isLastElement)
                 {
                     Relation rel = null;
@@ -397,11 +398,18 @@ namespace NDO.Mapping
                         relationName = oidColumn.RelationName;
                         rel = oidColumn.Relation;
                         j = 0;
+                        fkcEnumerator = rel.ForeignKeyColumns.GetEnumerator();
+                        fkcEnumerator.MoveNext();  // index 0
                     }
                     oidColumn.SystemType = ((OidColumn)Parent.FindClass(rel.ReferencedType).Oid.OidColumns[j]).SystemType;
                     oidColumn.Size = this.Provider.GetDefaultLength(oidColumn.SystemType);
-                    oidColumn.Name = ((ForeignKeyColumn)rel.ForeignKeyColumns[j]).Name;
+                    //TODO: This code needs desperately a review.
+                    //The enumerator might be null at this point.
+                    //It seems as if the condition oidColumn.RelationName != relationName always applies in the first iteration.
+                    //Otherwise this code would give us a lot of trouble...
+                    oidColumn.Name = fkcEnumerator.Current.Name;
                     j++;
+                    fkcEnumerator.MoveNext();
                 });
 
 

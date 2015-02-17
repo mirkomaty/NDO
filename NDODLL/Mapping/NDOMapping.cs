@@ -302,7 +302,7 @@ namespace NDO.Mapping
             while (!tableNameIsFree)
             {
                 tableNameIsFree = true;
-                foreach (Class c2 in classes)
+                foreach (Class c2 in classes.Values)
                 {
                     if (c2.TableName == tableName)
                     {
@@ -455,6 +455,16 @@ namespace NDO.Mapping
         {
             this.Changed = true;
             this.connections.Add(c);
+        }
+
+        /// <summary>
+        /// Removes a connection from the Connections list.
+        /// </summary>
+        /// <param name="c"></param>
+        public void RemoveConnection(Connection c)
+        {
+            this.Changed = true;
+            this.connections.Remove(c);
         }
 
 

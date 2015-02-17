@@ -116,9 +116,9 @@ namespace NDO
                 int colIndex = 0;
 #if DEBUG
                 if (r.Multiplicity == RelationMultiplicity.Element)
-                    System.Diagnostics.Debug.Assert(refClass.Oid.OidColumns.Count == r.ForeignKeyColumns.Count);
+                    System.Diagnostics.Debug.Assert(refClass.Oid.OidColumns.Count == r.ForeignKeyColumns.Count());
                 else
-                    System.Diagnostics.Debug.Assert(c.Oid.OidColumns.Count == r.ForeignKeyColumns.Count);
+                    System.Diagnostics.Debug.Assert(c.Oid.OidColumns.Count == r.ForeignKeyColumns.Count());
 #endif
                 new ForeignKeyIterator(r).Iterate(delegate(ForeignKeyColumn fkColumn, bool isLastElement)
                 {
@@ -228,7 +228,7 @@ namespace NDO
 			
 			if (!c.Oid.IsDependent)  // Columns will be built as foreign key columns of the relations
 			{
-                ArrayList primaryKeyColumns = new ArrayList();
+                List<DataColumn> primaryKeyColumns = new List<DataColumn>();
                 new OidColumnIterator(c).Iterate(delegate(OidColumn oidColumnMapping, bool isLastElement)
                 {
                     //MM 3 Oid-Spalte anlegen

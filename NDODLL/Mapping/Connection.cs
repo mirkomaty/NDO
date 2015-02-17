@@ -123,7 +123,7 @@ namespace NDO.Mapping
         /// </summary>
         public override void Remove()
         {
-            Parent.Connections.Remove(this);
+            Parent.RemoveConnection(this);
         }
 
         //private const string sqlString = "Provider=SQLOLEDB.1;";

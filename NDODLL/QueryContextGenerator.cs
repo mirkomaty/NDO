@@ -33,6 +33,7 @@
 using System;
 using System.Diagnostics;
 using System.Collections;
+using System.Linq;
 using NDO.Mapping;
 using NDOInterfaces;
 
@@ -130,7 +131,7 @@ namespace NDO
 				if (null == relClass)
 					throw new NDOException(17, "Can't find mapping information for class " + rel.ReferencedTypeName);
 
-				if (relClass.Subclasses.Count > 0)
+				if (relClass.Subclasses.Count() > 0)
 				{
 					if (!allRelations.Contains(resultRelation))
 						allRelations.Add(resultRelation, null);
