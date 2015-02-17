@@ -51,7 +51,7 @@ namespace NDO.Mapping
         /// </summary>
         public override void Remove()
         {
-            Parent.Fields.Remove(this);
+            Parent.RemoveField(this);
         }
 
         int ordinal;

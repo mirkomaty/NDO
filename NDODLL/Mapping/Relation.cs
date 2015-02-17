@@ -1,6 +1,7 @@
 ﻿using NDO.Mapping.Attributes;
 using System;
-using System.Collections;
+using System.Linq;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Reflection;
@@ -29,7 +30,7 @@ namespace NDO.Mapping
         /// </summary>
         public override void Remove()
         {
-            Parent.Relations.Remove(this);
+            Parent.RemoveRelation(this);
         }
 
         /// <summary>
@@ -77,7 +78,7 @@ namespace NDO.Mapping
         }
         private Type referencedType;
 
-        ArrayList foreignKeyColumns = new ArrayList();
+        List<ForeignKeyColumn> foreignKeyColumns = new List<ForeignKeyColumn>();
         /// <summary>
         /// The foreign key columns of the relation.
         /// </summary>
@@ -89,7 +90,7 @@ namespace NDO.Mapping
         /// the order of the according Oid colums in the related class.
         /// </remarks>
         [Browsable(false)]
-        public IList ForeignKeyColumns
+        public IEnumerable<ForeignKeyColumn> ForeignKeyColumns
         {
             get { return this.foreignKeyColumns; }
         }
@@ -106,6 +107,15 @@ namespace NDO.Mapping
             ForeignKeyColumn fkColumn = new ForeignKeyColumn(this);
             this.foreignKeyColumns.Add(fkColumn);
             return fkColumn;
+        }
+
+        /// <summary>
+        /// Removes a foreign key column from the relation.
+        /// </summary>
+        /// <param name="fkc"></param>
+        public void RemoveForeignKeyColumn(ForeignKeyColumn fkc)
+        {
+            this.foreignKeyColumns.Remove(fkc);
         }
 
         /// <summary>
@@ -213,11 +223,11 @@ namespace NDO.Mapping
         /// Returns a list of the target class and all subclasses of the target class of the relation. This field is initialized by the NDO Framework.
         /// </summary>
         [Browsable(false)]
-        public IList ReferencedSubClasses
+        public IEnumerable<Class> ReferencedSubClasses
         {
             get
             {
-                ArrayList result = new ArrayList();
+                List<Class> result = new List<Class>();
                 Class cl;
                 result.Add(cl = this.RelatedClass);
                 result.AddRange(cl.Subclasses);
@@ -406,7 +416,7 @@ namespace NDO.Mapping
                 && this.ForeignKeyTypeColumnName != null;
             bool cond2 = this.Multiplicity == RelationMultiplicity.List
                 && this.MappingTable != null && this.MappingTable.ChildForeignKeyTypeColumnName != null;
-            hasSubclasses = (relatedClass.Subclasses.Count > 0)
+            hasSubclasses = (relatedClass.HasSubclasses)
                 && (cond1 || cond2);
 #else
             hasSubclasses = false;

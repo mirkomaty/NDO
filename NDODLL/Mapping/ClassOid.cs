@@ -1,6 +1,7 @@
 ﻿using NDO.Mapping.Attributes;
 using System;
-using System.Collections;
+using System.Linq;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Reflection;
 using System.Xml;
@@ -13,12 +14,12 @@ namespace NDO.Mapping
     /// <remarks>This class is equivalent to the Oid element of the mapping file schema.</remarks>
     public class ClassOid : MappingNode, IFieldInitializer
     {
-        ArrayList oidColumns = new ArrayList();
+        List<OidColumn> oidColumns = new List<OidColumn>();
         /// <summary>
         /// The column descriptions for the oid
         /// </summary>
         [Browsable(false)]
-        public ArrayList OidColumns
+        public IEnumerable<OidColumn> OidColumns
         {
             get { return oidColumns; }
         }
@@ -175,11 +176,11 @@ namespace NDO.Mapping
         /// class is dependent from.
         /// </summary>
         [Browsable(false)]
-        public IList Relations
+        public IList<Relation> Relations
         {
             get
             {
-                ArrayList result = new ArrayList();
+                List<Relation> result = new List<Relation>();
                 if (!IsDependent) return result;
                 string relationName = string.Empty;
                 foreach (OidColumn oidc in this.oidColumns)
@@ -241,8 +242,8 @@ namespace NDO.Mapping
 
             Type oidTypeHint = this.OidTypeHint;
             FieldMap fieldMap = new FieldMap(Parent);
-            Hashtable myPersistentFields = fieldMap.PersistentFields;
-            ArrayList relationsReady = new ArrayList();
+            Dictionary<string,MemberInfo> myPersistentFields = fieldMap.PersistentFields;
+            List<string> relationsReady = new List<string>();
 
             bool isDependent = ((OidColumn)oidColumns[0]).RelationName != null;
             foreach (OidColumn column in this.oidColumns)
@@ -288,12 +289,7 @@ namespace NDO.Mapping
                     {
                         relationsReady.Add(column.RelationName);
                         // find all oid columns with the same RelationName
-                        ArrayList allOidColumns = new ArrayList();
-                        foreach (OidColumn oidc in this.oidColumns)
-                        {
-                            if (oidc.RelationName == column.RelationName)
-                                allOidColumns.Add(oidc);
-                        }
+                        IEnumerable<OidColumn> allOidColumns = this.oidColumns.Where(oidc => oidc.RelationName == column.RelationName);
 
                         // find all FkColumns of the relation
                         ArrayList fkColumns = new ArrayList();

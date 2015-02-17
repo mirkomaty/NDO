@@ -1,12 +1,10 @@
 ﻿using NDO.Mapping.Attributes;
 using NDOInterfaces;
 using System;
-using System.Collections;
+using System.Linq;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
-using System.Linq;
-using System.Text;
 using System.Text.RegularExpressions;
 using System.Xml;
 
@@ -64,32 +62,28 @@ namespace NDO.Mapping
         /// Collection of all connections defined in the mapping file.
         /// </summary>
         [Browsable(false)]
-        public IList Connections
+        public IEnumerable<Connection> Connections
         {
             get { return connections; }
-            set { connections = value; }
+            set { connections = value.ToList(); }
         }
-        private IList connections = new ArrayList();
+        private IList<Connection> connections = new List<Connection>();
         /// <summary>
         /// Collection of all class mappings in the mapping file.
         /// </summary>
         [Browsable(false)]
-        public IList Classes
+        public IEnumerable<Class> Classes
         {
-            get { return ArrayList.ReadOnly(classes); }
+            get { return classes.Values; }
         }
-#if !PRO
-        private IList classes = AlCreator.Create(NumberStrings.v10);
-#else
-        private ClassHashView classes = new ClassHashView();
-#endif
+
+        private Dictionary<string,Class> classes = new Dictionary<string,Class>();
 
 
         /// <summary>
         /// For NDO internal use.
         /// </summary>
         const string NDONamespace = "http://www.netdataobjects.de/NDOMapping";
-        const string OldNamespace = "http://www.advanced-developers.de/NDOMapping";
         private string NDOShort = "ndo:"; // Not const to avoid overhead for internalizing
         private string unused = "Unused";
         internal string selectNdoMapping = "//ndo:NDOMapping";
@@ -125,10 +119,6 @@ namespace NDO.Mapping
             XmlDocument doc = new XmlDocument();
             doc.Load(mappingFile);
             string ns = doc.DocumentElement.GetAttribute("xmlns");
-            if (null != ns && ns == OldNamespace)
-            {
-                throw new Exception("Obsolete namespace in NDO mapping file. Please use the namespace " + NDONamespace + ".");
-            }
             if (null != ns && ns == NDONamespace)
             {
                 nsmgr = new XmlNamespaceManager(doc.NameTable);
@@ -164,7 +154,7 @@ namespace NDO.Mapping
             nl = doc.SelectNodes(selectClass, nsmgr);
             foreach (XmlNode classNode in nl)
             {
-                classes.Add(new Class(classNode, this));
+                AddClass(new Class(classNode, this));
             }
             changed = false;
         }
@@ -230,12 +220,7 @@ namespace NDO.Mapping
             node = doc.CreateElement("Classes");
             docNode.AppendChild(node);
 
-            // !STD uses an own ArrayList class and > PRO uses a ClassHashView
-            // which isn't sortable
-            ArrayList al = new ArrayList(classes);
-            al.Sort();
-
-            foreach (Class cl in al)
+            foreach (Class cl in Classes.OrderBy(c=>c.FullName))
             {
                 cl.Save(node);
             }
@@ -256,13 +241,13 @@ namespace NDO.Mapping
         /// </summary>
         private void AddStandardConnection()
         {
-            if (Connections.Count > 0)
+            if (this.connections.Count > 0)
                 return;
 
             Connection c = new Connection(this);
             c.ID = "C0";
             c.FromStandardConnection();
-            Connections.Add(c);
+            this.connections.Add(c);
         }
 
         /// <summary>
@@ -334,9 +319,9 @@ namespace NDO.Mapping
 
             c.TableName = tableName;
 
-            if (Connections.Count == 0)
+            if (connections.Count == 0)
                 AddStandardConnection();
-            c.ConnectionId = ((Connection)Connections[0]).ID;
+            c.ConnectionId = this.connections[0].ID;
             ClassOid oid = c.NewOid();
             if (columnAttributes == null)
             {
@@ -448,15 +433,15 @@ namespace NDO.Mapping
         {
             c.SetParent(this);
             this.Changed = true;
-            classes.Add(c);
+            this.classes.Add(c.FullName,c);
         }
 
 
         public void RemoveClass(Class c)
         {
-            if (classes.Contains(c))
+            if (this.classes.ContainsKey(c.FullName))
             {
-                classes.Remove(c);
+                this.classes.Remove(c.FullName);
                 this.Changed = true;
             }
         }
@@ -469,7 +454,7 @@ namespace NDO.Mapping
         public void AddConnection(Connection c)
         {
             this.Changed = true;
-            Connections.Add(c);
+            this.connections.Add(c);
         }
 
 
@@ -502,16 +487,9 @@ namespace NDO.Mapping
         /// </summary>
         /// <param name="c">The Class object to search for</param>
         /// <returns>The Class object or null, if the class doesn't exist</returns>
-        public virtual Class FindClass(Class c)
+        public virtual Class FindClass(Class cls)
         {
-#if PRO
-            return classes[c];
-#else
-            foreach (Class cl in classes)
-                if (cl.FullName == c.FullName)
-                    return cl;
-            return null;
-#endif
+            return this.classes[cls.FullName];
         }
 
         /// <summary>
@@ -521,14 +499,7 @@ namespace NDO.Mapping
         /// <returns>mapping info about the class</returns>
         public virtual Class FindClass(string fullName)
         {
-#if PRO
-            return classes[fullName];
-#else
-            foreach (Class cl in classes)
-                if (cl.FullName == fullName)
-                    return cl;
-            return null;
-#endif
+            return this.classes[fullName];
         }
 
 
@@ -719,10 +690,10 @@ namespace NDO.Mapping
              * alle Klassen der Conn. kopieren, markieren
              */
 
-            if (this.Connections.Count > 0 && mergeMapping.Connections.Count > 0)
+            if (this.connections.Count > 0 && mergeMapping.connections.Count > 0)
             {
-                Connection std1 = this.Connections[0] as Connection;
-                Connection std2 = mergeMapping.Connections[0] as Connection;
+                Connection std1 = this.connections[0] as Connection;
+                Connection std2 = mergeMapping.connections[0] as Connection;
                 if (std1.Name == Connection.DummyConnectionString && std2.Name != Connection.DummyConnectionString)
                 {
                     std1.Name = std2.Name;
@@ -736,15 +707,15 @@ namespace NDO.Mapping
             }
             else
             {
-                if (this.Connections.Count == 1 && ((Connection)this.Connections[0]).Name == Connection.DummyConnectionString)
+                if (this.connections.Count == 1 && ((Connection)this.connections[0]).Name == Connection.DummyConnectionString)
                 {
-                    ((Connection)this.Connections[0]).Name = Connection.StandardConnection.Name;
-                    ((Connection)this.Connections[0]).Type = Connection.StandardConnection.Type;
+                    ((Connection)this.connections[0]).Name = Connection.StandardConnection.Name;
+                    ((Connection)this.connections[0]).Type = Connection.StandardConnection.Type;
                 }
-                if (mergeMapping.Connections.Count == 1 && ((Connection)mergeMapping.Connections[0]).Name == Connection.DummyConnectionString)
+                if (mergeMapping.connections.Count == 1 && ((Connection)mergeMapping.connections[0]).Name == Connection.DummyConnectionString)
                 {
-                    ((Connection)mergeMapping.Connections[0]).Name = Connection.StandardConnection.Name;
-                    ((Connection)mergeMapping.Connections[0]).Type = Connection.StandardConnection.Type;
+                    ((Connection)mergeMapping.connections[0]).Name = Connection.StandardConnection.Name;
+                    ((Connection)mergeMapping.connections[0]).Type = Connection.StandardConnection.Type;
                 }
             }
 
@@ -756,12 +727,8 @@ namespace NDO.Mapping
                     co.Name = Connection.StandardConnection.Name;
                     co.Type = Connection.StandardConnection.Type;
                 }
-                IList classesToCopy = new ArrayList();
-                foreach (Class cl in mergeMapping.classes)
-                {
-                    if (cl.ConnectionId == co.ID)
-                        classesToCopy.Add(cl);
-                }
+
+                IEnumerable<Class> classesToCopy =  mergeMapping.Classes.Where(c=>c.ConnectionId == co.ID);
 
                 // IDs werden umbenannt und könnten dann gleich einer vorhandenen
                 // ID in mergeMapping.Connections werden.
@@ -807,7 +774,7 @@ namespace NDO.Mapping
                 {
                     Class classToRemove = null;
                     bool classFound = false;
-                    foreach (Class cl in classes)
+                    foreach (Class cl in Classes)
                     {
                         if (cl.FullName == cl3.FullName)
                         {
@@ -817,21 +784,12 @@ namespace NDO.Mapping
                             break;
                         }
                     }
-                    //					for (int i = 0; i < classes.Count; i++) {
-                    //						if ( ((Class) classes[i]).FullName == cl3.FullName) {
-                    //							if (ClassesAreDifferent( (Class) classes[i], cl3)) {
-                    //								classes[i] = cl3; // Neue Informationen zur Klasse übernehmen
-                    //								this.Changed = true;
-                    //							}
-                    //							classFound = true;
-                    //							break;
-                    //						}
-                    //					}
+
                     if (classFound)
                     {
                         if (classToRemove != null)
                         {
-                            classes.Remove(classToRemove);
+                            RemoveClass(classToRemove);
                             AddClass(cl3);
                         }
                     }

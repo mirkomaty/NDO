@@ -32,7 +32,8 @@
 
 using System;
 using System.Reflection;
-using System.Collections;
+using System.Linq;
+using System.Collections.Generic;
 
 namespace NDO.Mapping
 {
@@ -43,19 +44,19 @@ namespace NDO.Mapping
 	{
 		Class cl;
         Type type;
-		ArrayList myFields;
-		ArrayList myEmbeddedTypes;
-		ArrayList myRelations;
+        List<string>    myFields;
+		List<string>    myEmbeddedTypes;
+        List<FieldInfo> myRelations;
 
 		bool checkIfMappingsExist = true;
 
 		// used by NDOPersistenceHandler
-		Hashtable myPersistentFields;
+        Dictionary<string, MemberInfo> myPersistentFields;
 
         /// <summary>
         /// Gets all persistent fields.
         /// </summary>
-		public Hashtable PersistentFields
+		public Dictionary<string,MemberInfo> PersistentFields
 		{
 			get 
 			{ 
@@ -67,7 +68,7 @@ namespace NDO.Mapping
         /// <summary>
         /// Gets all Embedded Types.
         /// </summary>
-		public ArrayList EmbeddedTypes
+		public IEnumerable<string> EmbeddedTypes
 		{
 			get { return myEmbeddedTypes; }
 		}
@@ -111,15 +112,15 @@ namespace NDO.Mapping
 			if (t.FullName.IndexOf("+QueryHelper+") > -1)
 				return;
 
-			ArrayList publicFields = new ArrayList();
-			ArrayList publicProps = new ArrayList();
+			List<FieldInfo> publicFields = new List<FieldInfo>();
+			List<PropertyInfo> publicProps = new List<PropertyInfo>();
 
-			PropertyInfo[] mis = t.GetProperties(BindingFlags.Public | BindingFlags.Instance);
-			foreach(PropertyInfo mi in mis)
+			PropertyInfo[] pis = t.GetProperties(BindingFlags.Public | BindingFlags.Instance);
+			foreach(PropertyInfo pi in pis)
 			{
-				if (mi.CanRead && mi.CanWrite && StorableTypes.Contains(mi.PropertyType))
+				if (pi.CanRead && pi.CanWrite && StorableTypes.Contains(pi.PropertyType))
 				{
-					publicProps.Add(mi);
+					publicProps.Add(pi);
 				}
 			}
 			FieldInfo[] fis = t.GetFields(BindingFlags.Public | BindingFlags.Instance);
@@ -135,13 +136,13 @@ namespace NDO.Mapping
 				foreach (PropertyInfo pi in publicProps)
 				{
 					myFields.Add (parent.Name + "." + pi.Name);
-                    if (!myPersistentFields.Contains(parent.Name + "." + pi.Name))
+                    if (!myPersistentFields.ContainsKey(parent.Name + "." + pi.Name))
 					    myPersistentFields.Add(parent.Name + "." + pi.Name, pi);
 				}
 				foreach (FieldInfo fi in publicFields)
 				{
 					myFields.Add (parent.Name + "." + fi.Name);
-                    if (!myPersistentFields.Contains(parent.Name + "." + fi.Name))
+                    if (!myPersistentFields.ContainsKey(parent.Name + "." + fi.Name))
                         myPersistentFields.Add(parent.Name + "." + fi.Name, fi);
 				}
 			}
@@ -150,8 +151,6 @@ namespace NDO.Mapping
 
 		private void AddEmbeddedType(FieldInfo parent)
 		{
-			ArrayList publicFields = new ArrayList();
-			
 			FieldInfo[] fis = parent.FieldType.GetFields(BindingFlags.NonPublic | BindingFlags.Instance);
 			foreach(FieldInfo fi in fis)
 			{
@@ -165,7 +164,7 @@ namespace NDO.Mapping
 				{
 					string name = parent.Name + "." + fi.Name;
 					myEmbeddedTypes.Add(name);
-                    if (!myPersistentFields.Contains(name))
+                    if (!myPersistentFields.ContainsKey(name))
 					    myPersistentFields.Add(name, fi);
 				}
 			}
@@ -213,7 +212,7 @@ namespace NDO.Mapping
 				if (StorableTypes.Contains(ft))
 				{
 					this.myFields.Add(fname);
-                    if (!myPersistentFields.Contains(fname))
+                    if (!myPersistentFields.ContainsKey(fname))
                         myPersistentFields.Add(fname, fi);
 				}
 				else if (ft.IsValueType)
@@ -234,21 +233,19 @@ namespace NDO.Mapping
 			}
 		}
 
-		private class FieldSorter : IComparer
+		private class FieldSorter : IComparer<string>
 		{
-			public int Compare(object x, object y)
+			public int Compare(string x, string y)
 			{
-				if (!(x is string) || !(y is string))
-					throw new ArgumentException("FieldSorter.Compare: String parameter expected");
 				return String.CompareOrdinal((string) x, (string) y);
 			}
 		}		
 
 		private void GenerateFields()
 		{
-			myPersistentFields = new Hashtable();
-			myFields = new ArrayList();
-			this.myEmbeddedTypes = new ArrayList();
+			myPersistentFields = new Dictionary<string,MemberInfo>();
+			myFields = new List<string>();
+			this.myEmbeddedTypes = new List<string>();
 			AddFields(this.type);
 			Type t = this.type.BaseType;
             int persCount = t.GetCustomAttributes(typeof(NDOPersistentAttribute), false).Length;
@@ -305,7 +302,7 @@ namespace NDO.Mapping
 
 		private void GenerateRelations()
 		{
-			myRelations = new ArrayList();
+			myRelations = new List<FieldInfo>();
 			AddRelations(this.type);
 			Type t = this.type.BaseType;
             int persCount = t.GetCustomAttributes(typeof(NDOPersistentAttribute), false).Length;
@@ -332,7 +329,7 @@ namespace NDO.Mapping
 		/// <summary>
 		/// Gets all Relations of a class and its persistent subclasses.
 		/// </summary>
-		public IList Relations
+		public IEnumerable<FieldInfo> Relations
 		{
 			get 
 			{ 

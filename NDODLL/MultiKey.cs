@@ -31,6 +31,7 @@
 
 
 using System;
+using System.Linq;
 using System.Runtime.Serialization;
 using System.Data;
 using NDO.Mapping;
@@ -63,7 +64,7 @@ namespace NDO
         /// </remarks>
         internal MultiKey(Type t, Class cl, DataRow row, TypeManager tm) : base(t, tm)
         {
-            pm_keydata = new object[cl.Oid.OidColumns.Count];
+            pm_keydata = new object[cl.Oid.OidColumns.Count()];
             FromRow(cl, row);
         }
 
@@ -78,7 +79,7 @@ namespace NDO
 
         internal MultiKey(Type t, Class cl, TypeManager tm) : base(t, tm)
         {
-            pm_keydata = new object[cl.Oid.OidColumns.Count];
+            pm_keydata = new object[cl.Oid.OidColumns.Count()];
         }
 
         /// <summary>
@@ -238,13 +239,12 @@ namespace NDO
         {
             // The order of the ForeignKeyColumns is identical to the order
             // of the OidColumns.
-            if (pm_keydata.Length < relation.ForeignKeyColumns.Count)
+            if (pm_keydata.Length < relation.ForeignKeyColumns.Count())
                 throw new InternalException(175, "MultiKey.ToForeignKey: keydata array too short");
-            for (int i = 0; i < relation.ForeignKeyColumns.Count; i++)
+            int i = 0;
+            foreach (ForeignKeyColumn fkColumn in relation.ForeignKeyColumns)
             {
-                ForeignKeyColumn fkColumn = (ForeignKeyColumn)relation.ForeignKeyColumns[i];
-                //relObjRow[fkColumn.Name] =
-                row[fkColumn.Name] = pm_keydata[i];
+                row[fkColumn.Name] = pm_keydata[i++];
             }
 
             // This is not to be confused with the type id's stored in DependentKeys

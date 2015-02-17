@@ -31,7 +31,8 @@
 
 
 using System;
-using System.Collections;
+using System.Linq;
+using System.Collections.Generic;
 using System.Text;
 
 namespace NDO.Mapping
@@ -57,14 +58,14 @@ namespace NDO.Mapping
     /// </remarks>
     public class ForeignKeyIterator
     {
-        IList columns;
+        List<ForeignKeyColumn> columns;
         /// <summary>
         /// Constructs a ForeignKeyIterator object, which iterates over all foreign key columns of the given relation.
         /// </summary>
         /// <param name="r">The relaion.</param>
         public ForeignKeyIterator(Relation r)
         {
-            this.columns = r.ForeignKeyColumns;
+            this.columns = r.ForeignKeyColumns.ToList();
         }
 
         /// <summary>
@@ -73,7 +74,7 @@ namespace NDO.Mapping
         /// <param name="mt"></param>
         public ForeignKeyIterator(MappingTable mt)
         {
-            this.columns = mt.ChildForeignKeyColumns;
+            this.columns = mt.ChildForeignKeyColumns.ToList();
         }
 
         /// <summary>

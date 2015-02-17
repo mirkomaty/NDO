@@ -33,7 +33,8 @@
 using System;
 using System.Reflection;
 using System.Data;
-using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
 using NDO;
 using NDO.Mapping;
 using NDOInterfaces;
@@ -56,7 +57,7 @@ namespace NDO
 			this.persistentFields = fieldMap.PersistentFields;
 			this.supportsGuidType = CheckGuidType();
 		}
-		Hashtable persistentFields;
+		Dictionary<string, MemberInfo> persistentFields;
 		NDOMapping mappings;
 		DataSet dsSchema;
 		Class c;

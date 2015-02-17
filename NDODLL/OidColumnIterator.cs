@@ -31,7 +31,8 @@
 
 
 using System;
-using System.Collections;
+using System.Linq;
+using System.Collections.Generic;
 using System.Text;
 
 namespace NDO.Mapping
@@ -57,14 +58,14 @@ namespace NDO.Mapping
     /// </remarks>
     public class OidColumnIterator
     {
-        IList columns;
+        List<OidColumn> columns;
         /// <summary>
         /// Constructs the OidColumnIterator for a given oid mapping.
         /// </summary>
         /// <param name="oid"></param>
         public OidColumnIterator(ClassOid oid)
         {
-            this.columns = oid.OidColumns;
+            this.columns = oid.OidColumns.ToList();
         }
 
         /// <summary>
@@ -73,7 +74,7 @@ namespace NDO.Mapping
         /// <param name="cl"></param>
         public OidColumnIterator(Class cl)
         {
-            this.columns = cl.Oid.OidColumns;
+            this.columns = cl.Oid.OidColumns.ToList();
         }
 
         /// <summary>

@@ -1,8 +1,10 @@
 ﻿using NDOInterfaces;
 using System;
-using System.Collections;
+using System.Linq;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Xml;
+using System.Reflection;
 
 namespace NDO.Mapping
 {
@@ -38,30 +40,39 @@ namespace NDO.Mapping
         /// All field mappings of the class. See <see cref="NDO.Mapping.Field"/>
         /// </summary>
         [Browsable(false)]
-        public IList Fields
+        public IEnumerable<Field> Fields
         {
             get { return fields; }
         }
-        private IList fields = new ArrayList();
+        private List<Field> fields = new List<Field>();
         /// <summary>
         /// All relation mappings of the class. See <see cref="NDO.Mapping.Relation"/>
         /// </summary>
         [Browsable(false)]
-        public IList Relations
+        public IEnumerable<Relation> Relations
         {
             get { return relations; }
         }
-        private IList relations = new ArrayList();
+        private List<Relation> relations = new List<Relation>();
 
         /// <summary>
         /// A list of <code>Class</code> objects for all subclasses of this class.
         /// This is for use of the NDO framework only. It will be initialized, if passed to an IPersistenceHandler.
         /// </summary>
-        private IList subclasses = new ArrayList();
+        private List<Class> subclasses = new List<Class>();
         [Browsable(false)]
-        public IList Subclasses
+        public IEnumerable<Class> Subclasses
         {
-            get { return subclasses; }
+            get { return this.subclasses; }
+        }
+
+        /// <summary>
+        /// Determines, whether the class has subclasses.
+        /// </summary>
+        [Browsable(false)]
+        public bool HasSubclasses
+        {
+            get { return this.subclasses.Count > 0; }
         }
 
         /// <summary>
@@ -170,10 +181,10 @@ namespace NDO.Mapping
         /// </summary>
         public bool IsAbstract = false;  // true for abstract classes and interfaces
 
-        private string[] myFields;  // wird in InitFields angelegt
-        private ArrayList myEmbeddedTypes; // wird in InitFields angelegt
-        internal int RelationOrdinalBase = -1;  // wird in InitFields angelegt
-        internal IList FKColumnNames;  // InitFields - collects all foreign key column names used in LoadState
+        private string[]            myFields;                   // wird in InitFields angelegt
+        private IEnumerable<string> myEmbeddedTypes;            // wird in InitFields angelegt
+        internal int                RelationOrdinalBase = -1;   // wird in InitFields angelegt
+        internal IEnumerable<string>FKColumnNames;              // InitFields - collects all foreign key column names used in LoadState
 
 
         private Column typeNameColumn = null;
@@ -211,16 +222,16 @@ namespace NDO.Mapping
         /// For use by the NDO framework only. The list be initialized if the Class object is passed to the IPersistenceHandler.
         /// </summary>
         [Browsable(false)]
-        public ArrayList EmbeddedTypes
+        public IEnumerable<string> EmbeddedTypes
         {
             get { return myEmbeddedTypes; }
         }
 
         /// <summary>
-        /// Gets a hashtable, which contains all mappable fields. The key is the field name, the value is the FieldInfo structure.
+        /// Gets a dictionary, which contains all mappable fields. The key is the field name, the value is the MemberInfo structure.
         /// </summary>
         [Browsable(false)]
-        public Hashtable PersistentFields
+        public Dictionary<string,MemberInfo> PersistentFields
         {
             get { return new FieldMap(this, false).PersistentFields; }
         }
@@ -229,7 +240,7 @@ namespace NDO.Mapping
         /// Gets a list of FieldInfo entries, which reflects all relations of a class and its subclasses.
         /// </summary>
         [Browsable(false)]
-        public IList RelationInfos
+        public IEnumerable<FieldInfo> RelationInfos
         {
             get { return new FieldMap(this, false).Relations; }
         }
@@ -397,10 +408,8 @@ namespace NDO.Mapping
             }
             RelationCollector rc = new RelationCollector(this);
             rc.CollectRelations();
-            IList fkc = rc.ForeignKeyColumns;
-            if (fkc.Count > 0)
-                this.FKColumnNames = fkc;
-            else
+            this.FKColumnNames = rc.ForeignKeyColumns;
+            if (this.FKColumnNames.Count() == 0)
                 this.FKColumnNames = null;
         }
 
@@ -410,7 +419,7 @@ namespace NDO.Mapping
         {
             if (!Subclasses.Contains(c))
             {
-                Subclasses.Add(c);
+                this.subclasses.Add(c);
             }
             AddToSuperClass(c);
         }
@@ -543,7 +552,7 @@ namespace NDO.Mapping
             Field f = new Field(this);
             f.Column.Name = ColumnNameFromFieldName(fieldName, isOidField);
             f.Name = fieldName;
-            Fields.Add(f);
+            this.fields.Add(f);
 
             return f;
         }
@@ -657,7 +666,7 @@ namespace NDO.Mapping
                 else r.MappingTable = null;
             }
 
-            Relations.Add(r);
+            this.relations.Add(r);
 
             return r;
         }
@@ -681,7 +690,7 @@ namespace NDO.Mapping
                 r.MappingTable.TableName = "rel" + typeShortName1 + typeShortName2;
             else
                 r.MappingTable.TableName = "rel" + typeShortName2 + typeShortName1;
-            r.MappingTable.ConnectionId = ((Connection)Parent.Connections[0]).ID;
+            r.MappingTable.ConnectionId = ((Connection)Parent.Connections.First()).ID;
         }
         #endregion
 
@@ -710,6 +719,24 @@ namespace NDO.Mapping
         }
 
         /// <summary>
+        /// Removes a relation from the Class object.
+        /// </summary>
+        /// <param name="r"></param>
+        public void RemoveRelation(Relation r)
+        {
+            this.relations.Remove(r);
+        }
+
+        /// <summary>
+        /// Removes a field from the Class object.
+        /// </summary>
+        /// <param name="f"></param>
+        public void RemoveField(Field f)
+        {
+            this.fields.Remove(f);
+        }
+
+        /// <summary>
         /// String representation of the Class object
         /// </summary>
         /// <returns>FullName of the class</returns>
@@ -723,7 +750,7 @@ namespace NDO.Mapping
         /// </summary>
         public override void Remove()
         {
-            Parent.Classes.Remove(this);
+            Parent.RemoveClass(this);
         }
 
     }

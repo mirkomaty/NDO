@@ -42,13 +42,13 @@ namespace NDO.Mapping
             Relation r = Parent as Relation;
             if (r != null)
             {
-                r.ForeignKeyColumns.Remove(this);
+                r.RemoveForeignKeyColumn(this);
                 return;
             }
             MappingTable mt = Parent as MappingTable;
             if (mt != null)
             {
-                mt.ChildForeignKeyColumns.Remove(this);
+                mt.RemoveChildForeignKeyColumn(this);
             }
         }
     }

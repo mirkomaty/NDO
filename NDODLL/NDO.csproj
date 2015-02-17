@@ -160,7 +160,7 @@
     <Compile Include="Enterprise\SerializationFlags.cs" />
     <Compile Include="Enterprise\SerializationIterator.cs" />
     <Compile Include="Enterprise\Serializer.cs" />
-    <Compile Include="FieldMap.cs">
+    <Compile Include="Mapping\FieldMap.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="ForeignKeyIterator.cs" />

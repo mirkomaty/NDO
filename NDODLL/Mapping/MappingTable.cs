@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
@@ -26,7 +25,7 @@ namespace NDO.Mapping
             get { return tableName; }
             set { tableName = value; this.Changed = true; }
         }
-        private ArrayList childForeignKeyColumns = new ArrayList();
+        private List<ForeignKeyColumn> childForeignKeyColumns = new List<ForeignKeyColumn>();
         /// <summary>
         /// Contains the description of the ForeignKeyColumns pointing to 
         /// the related type. Under normal circumstances this list contains exactly
@@ -35,9 +34,18 @@ namespace NDO.Mapping
         /// the order of the oid columns in the related type.
         /// </summary>
         [Browsable(false)]
-        public IList ChildForeignKeyColumns
+        public IEnumerable<ForeignKeyColumn> ChildForeignKeyColumns
         {
             get { return this.childForeignKeyColumns; }
+        }
+
+        /// <summary>
+        /// Removes a ChildForeignKeyColumn fromthe mapping table.
+        /// </summary>
+        /// <param name="fkc"></param>
+        public void  RemoveChildForeignKeyColumn(ForeignKeyColumn fkc)
+        {
+            this.childForeignKeyColumns.Remove(fkc);
         }
 
         /// <summary>
@@ -158,11 +166,6 @@ namespace NDO.Mapping
                 fkColumn.Save(mtNode);
 
             mtNode.SetAttribute("ConnectionId", connectionId);
-
-#if nix
-			if (null != childForeignKeyColumnName)
-				mtNode.SetAttribute("ChildForeignKeyColumnName", childForeignKeyColumnName);
-#endif
         }
     }
 }

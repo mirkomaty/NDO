@@ -36,6 +36,7 @@ using System.Data;
 using NDO;
 using NDO.Mapping;
 using NDOInterfaces;
+using System.Collections.Generic;
 
 namespace NDO
 {
@@ -48,10 +49,10 @@ namespace NDO
 		Class classMapping;
 		NDOMapping mappings;
 		IProvider provider;
-		IList fkColums;
+		List<string> fkColums;
         Hashtable collectedRelations;
 
-		public IList ForeignKeyColumns
+		public IEnumerable<string> ForeignKeyColumns
 		{
 			get { return fkColums; }
 		}
@@ -63,7 +64,7 @@ namespace NDO
 			this.provider = classMapping.Provider;
 		}
 
-        void AddInfos(Relation r, IList relationInfos)
+        void AddInfos(Relation r, List<RelationFieldInfo> relationInfos)
         {
             foreach (ForeignKeyColumn fkColumn in r.ForeignKeyColumns)
             {
@@ -83,11 +84,11 @@ namespace NDO
         }
 
 
-		public IList CollectRelations()
+		public IEnumerable<RelationFieldInfo> CollectRelations()
 		{
-            collectedRelations = new Hashtable();
-			IList relationInfos = new ArrayList();
-			fkColums = new ArrayList();
+            this.collectedRelations = new Hashtable();
+			List<RelationFieldInfo> relationInfos = new List<RelationFieldInfo>();
+			this.fkColums = new List<string>();
 
 			// Collect all element relations of the own class
 			foreach (Relation r in classMapping.Relations)
