@@ -1,6 +1,6 @@
 //
-// Copyright (C) 2002-2008 HoT - House of Tools Development GmbH 
-// (www.netdataobjects.com)
+// Copyright (C) 2002-2014 Mirko Matytschak 
+// (www.netdataobjects.de)
 //
 // Author: Mirko Matytschak
 //
@@ -15,7 +15,7 @@
 // Commercial Licence:
 // For those, who want to develop software with help of this program 
 // and need to distribute their work with a more restrictive licence, 
-// there is a commercial licence available at www.netdataobjects.com.
+// there is a commercial licence available at www.netdataobjects.de.
 // 
 // The above copyright notice and this permission notice shall be
 // included in all copies or substantial portions of the Software.
@@ -39,6 +39,7 @@ using System.IO;
 using System.Reflection;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using System.Data;
 using System.Data.Common;
 using System.Data.SqlClient;
@@ -262,8 +263,8 @@ namespace NDO
         private Column typeNameColumn = null;
         private bool hasAutoincrementedColumn;
         private OidColumn autoIncrementColumn;
-        private Hashtable persistentFields;
-		private IList relationInfos;
+        private Dictionary<string,MemberInfo> persistentFields;
+		private List<RelationFieldInfo> relationInfos;
 //		private string where;
 //		private string whereTS;
 		private Type type;
@@ -312,7 +313,7 @@ namespace NDO
                 }
             }
 
-			foreach (DictionaryEntry e in persistentFields)
+			foreach (var e in this.persistentFields)
 			{
 				Type memberType;
 				if (e.Value is FieldInfo)
@@ -476,7 +477,7 @@ namespace NDO
 			//{3} = Feldliste mit Id: id, vorname, nachname 
 			//{4} = Where-Bedingung ohne Timestamp
 			ZuweisungsGenerator zuwGenerator = new ZuweisungsGenerator(this.provider);
-			foreach (DictionaryEntry e in persistentFields)
+			foreach (var e in this.persistentFields)
 			{
 				Type memberType;
 				if (e.Value is FieldInfo)
@@ -735,7 +736,7 @@ namespace NDO
 			// determine the relations, which have a foreign key
 			// column in the table of the given class
 			relationInfos = new RelationCollector(this.classMapping)
-				.CollectRelations(); 
+				.CollectRelations().ToList(); 
 
 
 			GenerateSelectCommand();

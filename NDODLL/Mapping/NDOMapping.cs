@@ -591,13 +591,15 @@ namespace NDO.Mapping
 
         private bool ForeignKeyColumnsAreDifferent(Relation r1, Relation r2)
         {
-            if (r1.ForeignKeyColumns.Count != r2.ForeignKeyColumns.Count)
+			var r1ForeignKeyColumns = r1.ForeignKeyColumns.ToList();
+			var r2ForeignKeyColumns = r2.ForeignKeyColumns.ToList();
+            if (r1ForeignKeyColumns.Count != r2ForeignKeyColumns.Count)
                 return true;
 
-            for (int i = 0; i < r1.ForeignKeyColumns.Count; i++)
+            for (int i = 0; i < r1ForeignKeyColumns.Count; i++)
             {
-                ForeignKeyColumn fkc1 = (ForeignKeyColumn)r1.ForeignKeyColumns[i];
-                ForeignKeyColumn fkc2 = (ForeignKeyColumn)r2.ForeignKeyColumns[i];
+                ForeignKeyColumn fkc1 = (ForeignKeyColumn)r1ForeignKeyColumns[i];
+                ForeignKeyColumn fkc2 = (ForeignKeyColumn)r2ForeignKeyColumns[i];
                 if (ColumnsAreDifferent(fkc1, fkc2)) return true;
             }
             return false;
@@ -605,13 +607,15 @@ namespace NDO.Mapping
 
         private bool ForeignKeyColumnsAreDifferent(MappingTable t1, MappingTable t2)
         {
-            if (t1.ChildForeignKeyColumns.Count != t2.ChildForeignKeyColumns.Count)
+			var t1ChildForeignKeyColumns = t1.ChildForeignKeyColumns.ToList();
+			var t2ChildForeignKeyColumns = t2.ChildForeignKeyColumns.ToList();
+            if (t1ChildForeignKeyColumns.Count != t2ChildForeignKeyColumns.Count)
                 return true;
 
-            for (int i = 0; i < t1.ChildForeignKeyColumns.Count; i++)
+            for (int i = 0; i < t1ChildForeignKeyColumns.Count; i++)
             {
-                ForeignKeyColumn fkc1 = (ForeignKeyColumn)t1.ChildForeignKeyColumns[i];
-                ForeignKeyColumn fkc2 = (ForeignKeyColumn)t2.ChildForeignKeyColumns[i];
+                ForeignKeyColumn fkc1 = t1ChildForeignKeyColumns[i];
+                ForeignKeyColumn fkc2 = t2ChildForeignKeyColumns[i];
                 if (ColumnsAreDifferent(fkc1, fkc2)) return true;
             }
             return false;
@@ -660,19 +664,24 @@ namespace NDO.Mapping
         /// <returns></returns>
         private bool ClassesAreDifferent(Class c1, Class c2)
         {
-            if (c1.Fields.Count != c2.Fields.Count) return true;
-            if (c1.Relations.Count != c2.Relations.Count) return true;
+			var c1Fields = c1.Fields.ToList();
+			var c2Fields = c2.Fields.ToList();
+			var c1Relations = c1.Relations.ToList();
+			var c2Relations = c2.Relations.ToList();
+
+            if (c1Fields.Count != c2Fields.Count) return true;
+            if (c1Relations.Count != c2Relations.Count) return true;
             if (c1.AssemblyName != c2.AssemblyName) return true;
             if (c1.TableName != c2.TableName) return true;
             if (OidsAreDifferent(c1.Oid, c2.Oid)) return true;
 
-            foreach (Field f1 in c1.Fields)
+            foreach (Field f1 in c1Fields)
             {
                 Field f2 = c2.FindField(f1.Name);
                 if (null == f2) return true;
                 if (FieldsAreDifferent(f1, f2)) return true;
             }
-            foreach (Relation r1 in c1.Relations)
+            foreach (Relation r1 in c1Relations)
             {
                 Relation r2 = c1.FindRelation(r1.FieldName);
                 if (null == r2) return true;
@@ -818,8 +827,5 @@ namespace NDO.Mapping
             get { return this.isEnhancing; }
             set { this.isEnhancing = value; }
         }
-
     }
-
-
 }

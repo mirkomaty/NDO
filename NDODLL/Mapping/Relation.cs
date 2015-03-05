@@ -395,7 +395,7 @@ namespace NDO.Mapping
 
             this.composition = ra != null && (ra.Info & RelationInfo.Composite) != 0;
 
-            if (fi.FieldType == typeof(IList) || fi.FieldType.GetInterface("IList") != null || fi.FieldType.FullName.StartsWith("System.Collections.Generic.IList`1"))
+            if (fi.FieldType == typeof(System.Collections.IList) || fi.FieldType.GetInterface("IList") != null || fi.FieldType.FullName.StartsWith("System.Collections.Generic.IList`1"))
             {
                 this.multiplicity = RelationMultiplicity.List;
             }
@@ -479,8 +479,8 @@ namespace NDO.Mapping
                 );
 
                 // r.MappingTable.ChildForeignKeyColumns points to the table of the related class.
-                if (relatedClass.Oid.OidColumns.Count != this.mappingTable.ChildForeignKeyColumns.Count)
-                    throw new NDOException(115, "Column count between relation and Oid doesn't match. Type " + relatedClass.FullName + " has an oid column count of " + relatedClass.Oid.OidColumns.Count + ". The Relation " + this.Parent.FullName + "." + this.fieldName + " has a foreign key column count of " + this.mappingTable.ChildForeignKeyColumns.Count + '.');
+                if (relatedClass.Oid.OidColumns.Count != this.mappingTable.ChildForeignKeyColumns.Count())
+                    throw new NDOException(115, "Column count between relation and Oid doesn't match. Type " + relatedClass.FullName + " has an oid column count of " + relatedClass.Oid.OidColumns.Count + ". The Relation " + this.Parent.FullName + "." + this.fieldName + " has a foreign key column count of " + this.mappingTable.ChildForeignKeyColumns.Count() + '.');
                 i = 0;
                 new ForeignKeyIterator(this.mappingTable).Iterate(delegate(ForeignKeyColumn fkColumn, bool isLastIndex)
                 {

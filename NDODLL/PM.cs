@@ -1,6 +1,6 @@
 //
-// Copyright (C) 2002-2008 HoT - House of Tools Development GmbH 
-// (www.netdataobjects.com)
+// Copyright (C) 2002-2014 Mirko Matytschak 
+// (www.netdataobjects.de)
 //
 // Author: Mirko Matytschak
 //
@@ -15,7 +15,7 @@
 // Commercial Licence:
 // For those, who want to develop software with help of this program 
 // and need to distribute their work with a more restrictive licence, 
-// there is a commercial licence available at www.netdataobjects.com.
+// there is a commercial licence available at www.netdataobjects.de.
 // 
 // The above copyright notice and this permission notice shall be
 // included in all copies or substantial portions of the Software.
@@ -1136,9 +1136,9 @@ namespace NDO
 		private void ReadObject(IPersistenceCapable pc, DataRow row, string[] fieldNames, int startIndex)
 		{
 			Class cl = GetClass(pc);
-			ArrayList etypes = cl.EmbeddedTypes;
-			Hashtable persistentFields = null;
-			if (etypes.Count > 0)
+			string[] etypes = cl.EmbeddedTypes.ToArray();
+			Dictionary<string,MemberInfo> persistentFields = null;
+			if (etypes.Length > 0)
 			{
 				FieldMap fm = new FieldMap(cl);
 				persistentFields = fm.PersistentFields;
@@ -1308,10 +1308,10 @@ namespace NDO
 		{
 			if (!File.Exists(scriptFile))
 				throw new NDOException(48, "Script file " + scriptFile + " doesn't exist.");
-			if (this.mappings.Connections.Count < 1)
+			if (!this.mappings.Connections.Any())
 				throw new NDOException(48, "Mapping file doesn't define a connection.");
 			Connection conn = new Connection( this.mappings );
-			Connection originalConnection = (Connection)this.mappings.Connections[0];
+			Connection originalConnection = (Connection)this.mappings.Connections.First();
 			conn.Name = OnNewConnection( originalConnection );
 			conn.Type = originalConnection.Type;
 			//Connection conn = (Connection) this.mappings.Connections[0];
@@ -1401,10 +1401,10 @@ namespace NDO
 			if (!File.Exists(scriptFile))
 				throw new NDOException(48, "Script file " + scriptFile + " doesn't exist.");
 
-			if (this.mappings.Connections.Count < 1)
+			if (!this.mappings.Connections.Any())
 				throw new NDOException(48, "Mapping file doesn't define any connection.");
 			Connection conn = new Connection( mappings );
-			Connection originalConnection = (Connection)mappings.Connections[0];
+			Connection originalConnection = mappings.Connections.First();
 			conn.Name = OnNewConnection( originalConnection );
 			conn.Type = originalConnection.Type;
 			return PerformSchemaTransitions(scriptFile, conn);
@@ -1574,7 +1574,7 @@ namespace NDO
                 row[cl.TypeNameColumn.Name] = t.FullName + "," + t.Assembly.GetName().Name;
             }
 
-			ArrayList etypes = cl.EmbeddedTypes;
+			var etypes = cl.EmbeddedTypes;
 			foreach(string s in etypes)
 			{
 				try
@@ -1874,10 +1874,9 @@ namespace NDO
 		protected virtual IList CollectRelationStates(IPersistenceCapable pc, DataRow row) 
 		{
 			// Save state of relations
-			IList relations = null;
 			Class c = GetClass(pc);
-			relations = new ArrayList(c.Relations.Count);
-			foreach(Relation r in c.Relations) 
+			IList relations = new ArrayList(c.Relations.Count());
+			foreach(Relation r in c.Relations)
 			{
 				if (r.Multiplicity == RelationMultiplicity.Element) 
 				{
@@ -2153,13 +2152,13 @@ namespace NDO
 #else
 						Type relType = r.ReferencedType;
 #endif
-                            int count = r.ForeignKeyColumns.Count;
+                            int count = r.ForeignKeyColumns.Count();
                             object[] keydata = new object[count];
                             int i = 0;
-                            new ForeignKeyIterator(r).Iterate(delegate(ForeignKeyColumn fkColumn, bool isLastElement)
+                            foreach(ForeignKeyColumn fkColumn in r.ForeignKeyColumns)
                             {
                                 keydata[i++] = row[fkColumn.Name];
-                            });
+                            }
 
                             Type oidType = relType;
                             if (oidType.IsGenericTypeDefinition)
@@ -2638,15 +2637,12 @@ namespace NDO
                 IPersistenceCapable relObj = (IPersistenceCapable)mappings.GetRelationField(pc, r.FieldName);
                 bool isDependent = GetClass(pc).Oid.IsDependent;
 
-                //if (isDependent && relObj.NDOObjectState == NDOObjectState.Transient)
-                //    throw new NDOException(59, "Can only add persistent objects in Assoziation " + pc.GetType().FullName + "." + r.FieldName + ". Make the object of type " + relObj.GetType().FullName + " persistent.");
-
 				if ( relObj != null )
 				{
-					for ( int i = 0; i < r.ForeignKeyColumns.Count; i++ )
+					int i = 0;
+					foreach ( ForeignKeyColumn fkColumn in r.ForeignKeyColumns )
 					{
-						ForeignKeyColumn fkColumn = (ForeignKeyColumn) r.ForeignKeyColumns[i];
-						pcRow[fkColumn.Name] = relObj.NDOObjectId.Id[i];
+						pcRow[fkColumn.Name] = relObj.NDOObjectId.Id[i++];
 					}
 					if ( r.ForeignKeyTypeColumnName != null )
 					{
@@ -2655,9 +2651,8 @@ namespace NDO
 				}
 				else
 				{
-					for ( int i = 0; i < r.ForeignKeyColumns.Count; i++ )
+					foreach ( ForeignKeyColumn fkColumn in r.ForeignKeyColumns )
 					{
-						ForeignKeyColumn fkColumn = (ForeignKeyColumn) r.ForeignKeyColumns[i];
 						pcRow[fkColumn.Name] = DBNull.Value;
 					}
 					if ( r.ForeignKeyTypeColumnName != null )
@@ -2681,15 +2676,15 @@ namespace NDO
 			Relation r = e.Relation;
 			DataTable dt = GetTable(r.MappingTable.TableName);
 			DataRow row = dt.NewRow();
-            for (int i = 0; i < r.ForeignKeyColumns.Count; i++)
+			int i = 0;
+            foreach (ForeignKeyColumn fkColumn in r.ForeignKeyColumns )
             {
-                ForeignKeyColumn fkColumn = (ForeignKeyColumn)r.ForeignKeyColumns[i];
-                row[fkColumn.Name] = pc.NDOObjectId.Id[i];
+                row[fkColumn.Name] = pc.NDOObjectId.Id[i++];
             }
-            for (int i = 0; i < r.MappingTable.ChildForeignKeyColumns.Count; i++)
+			i = 0;
+            foreach (ForeignKeyColumn fkColumn in r.MappingTable.ChildForeignKeyColumns)
             {
-                ForeignKeyColumn fkColumn = (ForeignKeyColumn)r.MappingTable.ChildForeignKeyColumns[i];
-                row[fkColumn.Name] = relObj.NDOObjectId.Id[i];
+                row[fkColumn.Name] = relObj.NDOObjectId.Id[i++];
             }
 #if PRO
 			if (r.ForeignKeyTypeColumnName != null)
@@ -3684,7 +3679,7 @@ namespace NDO
 			if (cl.FKColumnNames != null)
 			{
                 //				Debug.WriteLine("GetLostForeignKeysFromRow " + pc.NDOObjectId.Dump());
-				KeyValueList kvl = new KeyValueList(cl.FKColumnNames.Count);
+				KeyValueList kvl = new KeyValueList(cl.FKColumnNames.Count());
 				foreach(string colName in cl.FKColumnNames)
 					kvl.Add(new KeyValuePair(colName, row[colName]));
 				pc.NDOLoadState.LostRowInfo = kvl;				
@@ -3984,9 +3979,9 @@ namespace NDO
 			{
 				if (relation.Multiplicity != RelationMultiplicity.Element || relation.MappingTable != null)
 					continue;
-				if (relation.ForeignKeyColumns.Count > 1)
+				if (relation.ForeignKeyColumns.Count() > 1)
 					throw new Exception( String.Format( "GetChangeSet does not support relations with multiple ForeignKeyColumns ({0}).", relation.ToString() ) );
-				string colName = ((Column)relation.ForeignKeyColumns[0]).Name;
+				string colName = relation.ForeignKeyColumns.First().Name;
 				object currentVal = row[colName, DataRowVersion.Current];
 				object originalVal = row[colName, DataRowVersion.Original];
 

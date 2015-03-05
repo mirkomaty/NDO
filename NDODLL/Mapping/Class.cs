@@ -666,7 +666,7 @@ namespace NDO.Mapping
                             if (otherTypeIsPoly)
                                 frFtcName += "_" + relationName;
                         }
-                        ForeignKeyColumn forFkColumn = (ForeignKeyColumn)foreignRelation.ForeignKeyColumns[0];
+                        ForeignKeyColumn forFkColumn = foreignRelation.ForeignKeyColumns.FirstOrDefault();
                         forFkColumn.Name = frFkcName;
                         foreignRelation.MappingTable.ChildForeignKeyTypeColumnName = frFtcName;
                     }

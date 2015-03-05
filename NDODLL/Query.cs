@@ -1,6 +1,6 @@
 //
-// Copyright (C) 2002-2008 HoT - House of Tools Development GmbH 
-// (www.netdataobjects.com)
+// Copyright (C) 2002-2014 Mirko Matytschak 
+// (www.netdataobjects.de)
 //
 // Author: Mirko Matytschak
 //
@@ -15,7 +15,7 @@
 // Commercial Licence:
 // For those, who want to develop software with help of this program 
 // and need to distribute their work with a more restrictive licence, 
-// there is a commercial licence available at www.netdataobjects.com.
+// there is a commercial licence available at www.netdataobjects.de.
 // 
 // The above copyright notice and this permission notice shall be
 // included in all copies or substantial portions of the Software.
@@ -822,13 +822,13 @@ namespace NDO
 			Relation r = cl.FindRelation(relationName);
 			RelationCollector rc = new RelationCollector(cl);
 			rc.CollectRelations();
-			IList parentColumns = rc.ForeignKeyColumns;
+			string[] parentColumns = rc.ForeignKeyColumns.ToArray();
 			cl = pm.GetClass(r.ReferencedType);
 			rc = new RelationCollector(cl);
 			rc.CollectRelations();
-			IList childColumns = rc.ForeignKeyColumns;
+			string[] childColumns = rc.ForeignKeyColumns.ToArray();
             // Used to determine, if the relation has been collected
-            string testColumnName = ((ForeignKeyColumn)r.ForeignKeyColumns[0]).Name;
+            string testColumnName = r.ForeignKeyColumns.First().Name;
             if (r.Multiplicity == RelationMultiplicity.Element && parentColumns.Contains(testColumnName))
 			{
 				foreach(IPersistenceCapable parent in parents)
