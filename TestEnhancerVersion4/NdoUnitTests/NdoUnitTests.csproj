@@ -213,6 +213,7 @@
     <Compile Include="SelfReference.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="ShortIdTests.cs" />
     <Compile Include="TestDerivedState.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -270,7 +271,7 @@
   </ItemGroup>
   <ProjectExtensions>
     <VisualStudio>
-      <UserProperties NDOUtf8Encoding="true" DatabaseOwner="" NDOSQLScriptLanguage="Firebird" NDOUseTimeStamps="false" NDOGenerateChangeEvents="false" NDOGenerateSQL="true" NDOMergeSchema="true" NDOMergeMapping="true" NDONewMapping="false" NDOGenerateSchema="true" NDOGenerateMapping="true" NDOEnableEnhancer="false" NDOEnableAddIn="true" NDOTypeListFile="C:\Projekte\NDO\TestEnhancerVersion4\NdoUnitTests\BIN\Debug\NDOTypes.xml" NDODefaultConnection="Password=masterkey;Database=C:\Projekte\NDO\TestEnhancerVersion4\NdoUnitTests\FirebirdTest.FDB;Dialect=3;User Id=SYSDBA;Data Source=localhost" NDOUsePolymorphy="true" />
+      <UserProperties NDOUsePolymorphy="true" NDODefaultConnection="Password=masterkey;Database=C:\Projekte\NDO\TestEnhancerVersion4\NdoUnitTests\FirebirdTest.FDB;Dialect=3;User Id=SYSDBA;Data Source=localhost" NDOTypeListFile="C:\Projekte\NDO\TestEnhancerVersion4\NdoUnitTests\BIN\Debug\NDOTypes.xml" NDOEnableAddIn="true" NDOEnableEnhancer="false" NDOGenerateMapping="true" NDOGenerateSchema="true" NDONewMapping="false" NDOMergeMapping="true" NDOMergeSchema="true" NDOGenerateSQL="true" NDOGenerateChangeEvents="false" NDOUseTimeStamps="false" NDOSQLScriptLanguage="Firebird" DatabaseOwner="" NDOUtf8Encoding="true" />
     </VisualStudio>
   </ProjectExtensions>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />

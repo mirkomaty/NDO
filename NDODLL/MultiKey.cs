@@ -295,6 +295,21 @@ namespace NDO
             }
         }
 
+        /// <summary>
+        /// Gets a copy of the Key values.
+        /// </summary>
+        public override object[] Values
+        {
+            get
+            {
+                return pm_keydata.ToArray();
+            }
+        }
+
+		/// <summary>
+		/// Gets a clone of the Key.
+		/// </summary>
+		/// <returns></returns>
         public override Key Clone()
         {
             MultiKey newKey = new MultiKey(this.t, this.TypeManager);

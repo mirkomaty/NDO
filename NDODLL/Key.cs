@@ -181,5 +181,12 @@ namespace NDO
             set;
         }
 
+        /// <summary>
+        /// Gets a copy of the Key values.
+        /// </summary>
+        public abstract object[] Values
+        {
+            get;
+        }
 	}
 }

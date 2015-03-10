@@ -48,6 +48,7 @@ using System.Xml.Linq;
 using NDO.Mapping;
 using NDO.Logging;
 using NDOInterfaces;
+using NDO.ShortId;
 
 namespace NDO 
 {
@@ -3474,6 +3475,52 @@ namespace NDO
 		{
             ObjectId oid = ObjectIdFactory.NewObjectId(t, GetClass(t), keyData, this.typeManager);
 			return FindObject(oid);
+		}
+
+		/// <summary>
+		/// Finds an object using a short id.
+		/// </summary>
+		/// <param name="shortId"></param>
+		/// <returns></returns>
+		public IPersistenceCapable FindObject(string shortId)
+		{
+			string[] arr = shortId.Split( '~' );
+			if (arr.Length != 3)
+				throw new ArgumentException( "The format of the string is not valid", "shortId" );
+			Type t = shortId.GetObjectType();
+			if (t == null)
+				throw new ArgumentException( "The string doesn't represent a loadable type", "shortId" );
+			Class cls = GetClass( t );
+			if (cls == null)
+				throw new ArgumentException( "The type identified by the string is not persistent or is not managed by the given mapping file", "shortId" );
+			if (cls.Oid.OidColumns.Count > 1)
+				throw new ArgumentException( "The type identified by the string has multiple oid columns and can't be loaded by a ShortId", "shortId" );
+			object keydata;
+			Type oidType = cls.Oid.OidColumns[0].SystemType;
+			if (oidType == typeof(int))
+			{
+				int key;
+				if (!int.TryParse( arr[2], out key ))
+					throw new ArgumentException( "The ShortId doesn't contain an int value", "shortId" );
+				keydata = key;
+			}
+			else if (oidType == typeof(Guid))
+			{
+				Guid key;
+				if (!Guid.TryParse( arr[2], out key ))
+					throw new ArgumentException( "The ShortId doesn't contain a guid value", "shortId" );
+				keydata = key;
+			}
+			else if (oidType == typeof(string))
+			{
+				keydata = arr[2];
+			}
+			else
+			{
+				throw new ArgumentException( "The oid type of the persistent type can't be used by a ShortId: " + oidType.FullName, "shortId" );
+			}
+
+			return FindObject( t, keydata );			
 		}
 
 		/// <summary>
