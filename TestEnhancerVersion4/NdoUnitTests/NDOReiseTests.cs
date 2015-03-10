@@ -179,11 +179,6 @@ namespace NdoUnitTests {
 			Assert.Null(r.NDOObjectId, "Transient object shouldn't have ID");
 			Assert.Null(r.NDOStateManager, "Transient object shouldn't have state manager");
 			Assert.AreEqual(NDOObjectState.Transient, r.NDOObjectState, "Status wrong");
-
-			try {
-				pm.FindObject(id);
-				Assert.Fail("Should not find a valid object");
-			} catch (NDOException) {}
 		}
 
 		[Test]
@@ -340,7 +335,6 @@ namespace NdoUnitTests {
 			r = (Reise)pm.FindObject(id);
 			pm.Delete(r);
 			pm.Save();
-			Assert.That(!id.IsValid(), "Id shouldn't be valid");
 			pm.MakeHollow(m);  // Reread during TearDown will not load Reise anymore.
 		}
 

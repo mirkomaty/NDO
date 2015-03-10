@@ -31,6 +31,7 @@
 
 
 using System;
+using System.Linq;
 using System.IO;
 using NDO;
 using NDO.Mapping;
@@ -52,7 +53,7 @@ namespace NdoUnitTests
 //			pm.RegisterConnectionListener(new OpenConnectionListener(ConnectionGenerator.OnConnection));
 			
 //			pm.TransactionMode = TransactionMode.Pessimistic;
-			Connection conn = (Connection)pm.NDOMapping.Connections[0];
+			Connection conn = (Connection)pm.NDOMapping.Connections.First();
 #if ORACLE || FIREBIRD || POSTGRE
 			pm.IdGenerationEvent += new NDO.IdGenerationHandler(IdGenerator.OnIdGenerationEvent);
 			IdGenerator.ConnectionString = ((Connection)pm.NDOMapping.Connections[0]).Name;

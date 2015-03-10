@@ -87,18 +87,15 @@
     <ErrorReport>prompt</ErrorReport>
     <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
-  <ItemGroup Condition=" '$(Configuration)' == 'Release' ">
-    <Reference Include="NDOInterfaces">
-      <HintPath>..\NDOInterfaces\bin\Release\NDOInterfaces.dll</HintPath>
-    </Reference>
-  </ItemGroup>
-  <ItemGroup Condition=" '$(Configuration)' == 'Debug' ">
-    <Reference Include="NDOInterfaces">
-      <HintPath>..\..\..\Program Files (x86)\NDO 2.1 Dev Edition\NDOInterfaces.dll</HintPath>
-    </Reference>
-  </ItemGroup>
   <ItemGroup>
-    <Reference Include="NDO, Version=2.1.0.0, Culture=neutral, PublicKeyToken=37bfdffa92a0cd24, processorArchitecture=MSIL" />
+    <Reference Include="NDO, Version=2.2.0.0, Culture=neutral, PublicKeyToken=37bfdffa92a0cd24, processorArchitecture=MSIL">
+      <SpecificVersion>True</SpecificVersion>
+      <HintPath>..\NDODLL\bin\$(Configuration)\NDO.dll</HintPath>
+    </Reference>
+    <Reference Include="NDOInterfaces, Version=2.2.0.0, Culture=neutral, PublicKeyToken=ff5e453a099b8326, processorArchitecture=MSIL">
+      <SpecificVersion>True</SpecificVersion>
+      <HintPath>..\NDOInterfaces\bin\$(Configuration)\NDOInterfaces.dll</HintPath>
+    </Reference>
     <Reference Include="System">
       <Name>System</Name>
     </Reference>
@@ -349,5 +346,8 @@
     <PreBuildEvent>..\..\..\MakeEnhancerDate\bin\Debug\MakeEnhancerDate.exe "V. 2.1" "C:\Program Files\TortoiseSVN\bin\subwcrev.exe" &gt; $(ProjectDir)\EnhDate.cs</PreBuildEvent>
     <PostBuildEvent>copy /Y "$(TargetPath)" "C:\Program Files (x86)\NDO 2.1 Dev Edition\NDOEnhancer.exe"
 </PostBuildEvent>
+  </PropertyGroup>
+  <PropertyGroup>
+    <PreBuildEvent>..\..\..\MakeEnhancerDate\bin\Debug\MakeEnhancerDate.exe "V. 2.2" "C:\Program Files\TortoiseSVN\bin\subwcrev.exe" &gt; $(ProjectDir)\EnhDate.cs</PreBuildEvent>
   </PropertyGroup>
 </Project>

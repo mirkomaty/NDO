@@ -733,7 +733,20 @@ namespace NDO.Mapping
         public void RemoveRelation(Relation r)
         {
             this.relations.Remove(r);
+			this.Changed = true;
         }
+
+        /// <summary>
+        /// Removes a relation from the Class object.
+        /// </summary>
+        /// <param name="r"></param>
+        public void AddRelation(Relation r)
+        {
+			r.SetParent( this );
+            this.relations.Add(r);
+			this.Changed = true;
+        }
+
 
         /// <summary>
         /// Removes a field from the Class object.
@@ -742,6 +755,7 @@ namespace NDO.Mapping
         public void RemoveField(Field f)
         {
             this.fields.Remove(f);
+			this.Changed = true;
         }
 
         /// <summary>

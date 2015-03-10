@@ -127,6 +127,7 @@ namespace NDO
                                         catch (TargetInvocationException ex)
                                         {
                                             Console.WriteLine("\n===Setup Failure===\n" + testName + "\n" + ex.InnerException.ToString());
+											Debug.WriteLine( ex.ToString() );
                                             //Console.Write('-');
                                         }
                                     }
@@ -148,6 +149,7 @@ namespace NDO
                                             //Console.Write('-');
                                             failed++;
                                             Console.WriteLine("\n===Test Failure===\n" + testName + "\n" + ex.InnerException.ToString());
+											Debug.WriteLine("\n===Test Failure===\n" + testName + "\n" + ex.InnerException.ToString());
                                         }
                                     }
                                     if (tearDown != null)
@@ -159,7 +161,9 @@ namespace NDO
                                         catch (TargetInvocationException ex)
                                         {
                                             Console.WriteLine("\n===Tear Down Failure===\n" + testName + "\n" + ex.InnerException.ToString());
+                                            Debug.WriteLine("\n===Tear Down Failure===\n" + testName + "\n" + ex.InnerException.ToString());
                                             Console.Write("Trying to call BuildDatabase");
+											Debug.Write("Trying to call BuildDatabase");
                                             try
                                             {
                                                 pm.BuildDatabase();
@@ -167,7 +171,10 @@ namespace NDO
                                             catch (Exception ex2)
                                             {
                                                 Console.WriteLine("\n===BuildDatabase Failure===\n" + testName + "\n" + ex2.ToString());
+												Debug.WriteLine("\n===BuildDatabase Failure===\n" + testName + "\n" + ex2.ToString());
                                             }
+											Debug.WriteLine("");
+											Console.WriteLine();
                                         }
                                     }
 

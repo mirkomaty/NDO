@@ -12,7 +12,7 @@
     <GenerateChangeEvents>False</GenerateChangeEvents>
     <UseTimeStamps>False</UseTimeStamps>
     <Utf8Encoding>False</Utf8Encoding>
-    <SQLScriptLanguage>SqlCe</SQLScriptLanguage>
+    <SQLScriptLanguage>SqlServer</SQLScriptLanguage>
     <SchemaVersion>
     </SchemaVersion>
     <IncludeTypecodes>False</IncludeTypecodes>
@@ -31,7 +31,7 @@
     <KeyFile>
     </KeyFile>
     <References>
-      <Reference AssemblyName="NDOInterfaces" AssemblyPath="D:\Program Files (x86)\NDO 2.1 Dev Edition\NDOInterfaces.dll">
+      <Reference AssemblyName="NDOInterfaces" AssemblyPath="..\..\NDOInterfaces\bin\Debug\NDOInterfaces.dll">
       </Reference>
       <Reference AssemblyName="nunit.framework" AssemblyPath="D:\Program Files (x86)\NUnit 2.6.3\bin\framework\nunit.framework.dll">
       </Reference>

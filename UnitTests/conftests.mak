@@ -1,5 +1,5 @@
 !IFNDEF V
-V = MYSQL
+V = SQLSERVER
 !ENDIF
 
 !IF ("$(V)" == "ORACLE")
@@ -26,8 +26,8 @@ DIALECT = Sqlite
 DIALECT = SqlCe
 !ENDIF
 
-NUNIT_DIR = D:\Program Files (x86)\NUnit 2.6.3\bin\net-2.0\framework
-PERS_DIR = D:\Projekte\NDO
+NUNIT_DIR = D:\Program Files (x86)\NUnit 2.6.3\bin\framework
+PERS_DIR = D:\Projekte\NDO22
 NDO_INST_DIR = D:\Program Files (x86)\NDO 2.1 Dev Edition
 TEST_DIR = $(PERS_DIR)\UnitTests
 VSDIR = D:\Program Files (x86)\Microsoft Visual Studio 12.0

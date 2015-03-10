@@ -93,8 +93,14 @@
     <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="NDO, Version=2.1.0.0, Culture=neutral, PublicKeyToken=37bfdffa92a0cd24, processorArchitecture=MSIL" />
-    <Reference Include="NDOInterfaces, Version=2.1.0.0, Culture=neutral, PublicKeyToken=ff5e453a099b8326" />
+    <Reference Include="NDO, Version=2.1.0.0, Culture=neutral, PublicKeyToken=37bfdffa92a0cd24, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\NDODLL\bin\Debug\NDO.dll</HintPath>
+    </Reference>
+    <Reference Include="NDOInterfaces, Version=2.1.0.0, Culture=neutral, PublicKeyToken=ff5e453a099b8326, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\NDOInterfaces\bin\Debug\NDOInterfaces.dll</HintPath>
+    </Reference>
     <Reference Include="nunit.framework">
       <Name>nunit.framework</Name>
       <HintPath>..\..\..\..\..\Programme\NUnit V2.1\\bin\nunit.framework.dll</HintPath>
@@ -264,7 +270,7 @@
   </ItemGroup>
   <ProjectExtensions>
     <VisualStudio>
-      <UserProperties NDOUsePolymorphy="true" NDODefaultConnection="Password=masterkey;Database=C:\Projekte\NDO\TestEnhancerVersion4\NdoUnitTests\FirebirdTest.FDB;Dialect=3;User Id=SYSDBA;Data Source=localhost" NDOTypeListFile="C:\Projekte\NDO\TestEnhancerVersion4\NdoUnitTests\BIN\Debug\NDOTypes.xml" NDOEnableAddIn="true" NDOEnableEnhancer="false" NDOGenerateMapping="true" NDOGenerateSchema="true" NDONewMapping="false" NDOMergeMapping="true" NDOMergeSchema="true" NDOGenerateSQL="true" NDOGenerateChangeEvents="false" NDOUseTimeStamps="false" NDOSQLScriptLanguage="Firebird" DatabaseOwner="" NDOUtf8Encoding="true" />
+      <UserProperties NDOUtf8Encoding="true" DatabaseOwner="" NDOSQLScriptLanguage="Firebird" NDOUseTimeStamps="false" NDOGenerateChangeEvents="false" NDOGenerateSQL="true" NDOMergeSchema="true" NDOMergeMapping="true" NDONewMapping="false" NDOGenerateSchema="true" NDOGenerateMapping="true" NDOEnableEnhancer="false" NDOEnableAddIn="true" NDOTypeListFile="C:\Projekte\NDO\TestEnhancerVersion4\NdoUnitTests\BIN\Debug\NDOTypes.xml" NDODefaultConnection="Password=masterkey;Database=C:\Projekte\NDO\TestEnhancerVersion4\NdoUnitTests\FirebirdTest.FDB;Dialect=3;User Id=SYSDBA;Data Source=localhost" NDOUsePolymorphy="true" />
     </VisualStudio>
   </ProjectExtensions>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />

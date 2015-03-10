@@ -58,8 +58,10 @@ namespace NdoUnitTests
         {
             PersistenceManager pm = PmFactory.NewPersistenceManager();
             Class cl = pm.NDOMapping.FindClass(typeof(OrderDetail));
-            ObjectId oid1 = ObjectIdFactory.NewObjectId(typeof(OrderDetail), cl, new object[] { new Guid(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11), new Guid(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11) });
-            ObjectId oid2 = ObjectIdFactory.NewObjectId(typeof(OrderDetail), cl, new object[] { new Guid(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11), new Guid(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11) });
+			IPersistenceCapable testObj1 = pm.FindObject( typeof( OrderDetail ), new object[] { new Guid( 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11 ), new Guid( 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11 ) } );
+			IPersistenceCapable testObj2 = pm.FindObject( typeof( OrderDetail ), new object[] { new Guid( 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11 ), new Guid( 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11 ) } );
+            ObjectId oid1 = testObj1.NDOObjectId;
+            ObjectId oid2 = testObj2.NDOObjectId;
 
             Assert.That(oid1.GetHashCode() == oid2.GetHashCode(), "HashCodes should be equal");
             Assert.That(oid1 == oid2, "Keys should be equal #1");
@@ -98,8 +100,10 @@ namespace NdoUnitTests
         {
             PersistenceManager pm = PmFactory.NewPersistenceManager();
             Class cl = pm.NDOMapping.FindClass(typeof(OrderDetail));
-            ObjectId oid1 = ObjectIdFactory.NewObjectId(typeof(OrderDetail), cl, new object[] { 4711, 4712 });
-            ObjectId oid2 = ObjectIdFactory.NewObjectId(typeof(OrderDetail), cl, new object[] { 4711, 4712 });
+			IPersistenceCapable testObj1 = pm.FindObject( typeof( OrderDetail ), new object[] { 4711,4712 });
+			IPersistenceCapable testObj2 = pm.FindObject( typeof( OrderDetail ), new object[] { 4711,4712 });
+            ObjectId oid1 = testObj1.NDOObjectId;
+            ObjectId oid2 = testObj2.NDOObjectId;
 
             Assert.That(oid1.GetHashCode() == oid2.GetHashCode(), "HashCodes should be equal");
             Assert.That(oid1 == oid2, "Keys should be equal #1");
@@ -129,8 +133,5 @@ namespace NdoUnitTests
             Assert.That(oid1.Equals(oid2), "Keys should be equal #8");
             Assert.That(oid2.Equals(oid1), "Keys should be equal #9");
         }
-
-
-
     }
 }

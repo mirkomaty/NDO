@@ -216,12 +216,9 @@ namespace NdoUnitTests
 			Assert.Null(m.NDOObjectId, "Transient object shouldn't have ID");
 			Assert.Null(m.NDOStateManager, "Transient object shouldn't have state manager");
 			Assert.AreEqual(NDOObjectState.Transient, m.NDOObjectState, "Status wrong");
-			try 
-			{
-				pm.FindObject(id);
-				Assert.Fail("Should not find a valid object");
-			} 
-			catch (NDOException) {}
+			IPersistenceCapable pc = pm.FindObject(id);
+			Assert.NotNull( pc, "There should be a hollow object." );
+			Assert.AreEqual(NDOObjectState.Hollow, pc.NDOObjectState, "Status wrong");
 		}
 
 		[Test]
@@ -425,7 +422,7 @@ namespace NdoUnitTests
 			m = (Mitarbeiter)pm.FindObject(id);
 			pm.Delete(m);
 			pm.Save();
-			Assert.That(!id.IsValid(), "Id shouldn't be valid");
+			Assert.That(id.IsValid(), "Id should be valid");
 		}
 
 		[Test]

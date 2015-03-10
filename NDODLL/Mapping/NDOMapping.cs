@@ -499,7 +499,7 @@ namespace NDO.Mapping
         /// <returns>The Class object or null, if the class doesn't exist</returns>
         public virtual Class FindClass(Class cls)
         {
-            return this.classes[cls.FullName];
+			return FindClass( cls.FullName );
         }
 
         /// <summary>
@@ -509,6 +509,8 @@ namespace NDO.Mapping
         /// <returns>mapping info about the class</returns>
         public virtual Class FindClass(string fullName)
         {
+			if (!this.classes.ContainsKey( fullName ))
+				return null;
             return this.classes[fullName];
         }
 
@@ -747,7 +749,7 @@ namespace NDO.Mapping
                     co.Type = Connection.StandardConnection.Type;
                 }
 
-                IEnumerable<Class> classesToCopy =  mergeMapping.Classes.Where(c=>c.ConnectionId == co.ID);
+                List<Class> classesToCopy =  mergeMapping.Classes.Where(c=>c.ConnectionId == co.ID).ToList();
 
                 // IDs werden umbenannt und könnten dann gleich einer vorhandenen
                 // ID in mergeMapping.Connections werden.

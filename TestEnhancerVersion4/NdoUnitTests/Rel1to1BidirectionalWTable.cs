@@ -228,7 +228,6 @@ namespace NdoUnitTests {
 			z.SGN = sgn;
 			pm.Save();
 			Assert.NotNull(z.SGN, "1. SGN not found");
-			ObjectId aoid = sgn.NDOObjectId;
 			z.SGN = null;
 			Assert.AreEqual(NDOObjectState.Deleted, sgn.NDOObjectState, "1. Wrong state");
 			Assert.Null(z.SGN, "1. SGN should be null");
@@ -237,7 +236,6 @@ namespace NdoUnitTests {
 			Assert.Null(z.SGN, "2. SGN should be null");
 			Assert.AreEqual(NDOObjectState.Transient, sgn.NDOObjectState, "2. Wrong state");
 			ObjectId moid = z.NDOObjectId;
-			Assert.That(!aoid.IsValid());
 			pm.UnloadCache();
 			z = (Zertifikat)pm.FindObject(moid);
 			Assert.NotNull(z, "3. Zertifikat not found");

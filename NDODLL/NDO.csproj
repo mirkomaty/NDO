@@ -88,9 +88,9 @@
     <SignAssembly>true</SignAssembly>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="NDOInterfaces, Version=1.2.0.0, Culture=neutral, PublicKeyToken=ff5e453a099b8326, processorArchitecture=MSIL">
+    <Reference Include="NDOInterfaces, Version=2.1.0.0, Culture=neutral, PublicKeyToken=ff5e453a099b8326, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\NDOInterfaces\bin\release\NDOInterfaces.dll</HintPath>
+      <HintPath>..\NDOInterfaces\bin\Debug\NDOInterfaces.dll</HintPath>
     </Reference>
     <Reference Include="System">
       <Name>System</Name>
@@ -439,7 +439,7 @@
   </ItemGroup>
   <ProjectExtensions>
     <VisualStudio>
-      <UserProperties NDOEnableAddIn="false" NDOEnableEnhancer="false" NDOGenerateMapping="false" NDOGenerateSchema="false" NDONewMapping="false" NDOMergeMapping="false" NDOMergeSchema="false" NDOGenerateSQL="false" />
+      <UserProperties NDOGenerateSQL="false" NDOMergeSchema="false" NDOMergeMapping="false" NDONewMapping="false" NDOGenerateSchema="false" NDOGenerateMapping="false" NDOEnableEnhancer="false" NDOEnableAddIn="false" />
     </VisualStudio>
   </ProjectExtensions>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />

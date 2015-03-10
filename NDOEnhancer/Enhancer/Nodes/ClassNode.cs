@@ -98,7 +98,7 @@ namespace NDOEnhancer
             }
         
             FieldMap fieldMap = new FieldMap(this.classType);
-            foreach (DictionaryEntry de in fieldMap.PersistentFields)
+            foreach (var de in fieldMap.PersistentFields)
             {
                 FieldInfo fi = de.Value as FieldInfo;
                 if (fi == null)
