@@ -1,0 +1,38 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<Enhancer>
+  <Options>
+    <EnableAddIn>True</EnableAddIn>
+    <EnableEnhancer>True</EnableEnhancer>
+    <GenerateMapping>True</GenerateMapping>
+    <GenerateSchema>True</GenerateSchema>
+    <NewMapping>False</NewMapping>
+    <MergeMapping>False</MergeMapping>
+    <MergeSchema>False</MergeSchema>
+    <GenerateSQL>False</GenerateSQL>
+    <TypeListFile>
+    </TypeListFile>
+    <DefaultConnection>
+    </DefaultConnection>
+    <UsePolymorphy>False</UsePolymorphy>
+    <GenerateChangeEvents>False</GenerateChangeEvents>
+    <UseTimeStamps>False</UseTimeStamps>
+    <Utf8Encoding>True</Utf8Encoding>
+    <SQLScriptLanguage>Access</SQLScriptLanguage>
+    <SchemaVersion>
+    </SchemaVersion>
+    <DatabaseOwner>
+    </DatabaseOwner>
+  </Options>
+  <ProjectDescription>
+    <BinPath>bin\Debug\BusinessClasses.dll</BinPath>
+    <ObjPath>obj\Debug\</ObjPath>
+    <ProjPath>C:\LinqSamples\NDOTravelExpensesLinq\BusinessClasses\</ProjPath>
+    <AssemblyName />
+    <Debug>True</Debug>
+    <IsWebProject>False</IsWebProject>
+    <KeyFile>
+    </KeyFile>
+    <References>
+    </References>
+  </ProjectDescription>
+</Enhancer>

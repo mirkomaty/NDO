@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?><?xml-stylesheet type='text/xsl' href='_UpgradeReport_Files/UpgradeReport.xslt'?><UpgradeLog>
+<Properties><Property Name="Solution" Value="NDOTravelExpenses">
+</Property><Property Name="Solution File" Value="C:\Projekte\NDO\LinqStudie18-10-06\NDOTravelExpenses.sln">
+</Property><Property Name="Date" Value="Mittwoch, 7. März 2012">
+</Property><Property Name="Time" Value="14:41">
+</Property></Properties><Event ErrorLevel="1" Project="BusinessClasses" Source="BusinessClasses\BusinessClasses.csproj" Description="Your project is targeting .NET Framework 2.0 or 3.0. If your project uses assemblies requiring a newer .NET Framework, your project will fail to build. You can change the .NET Framework version by clicking Properties on the project menu and then selecting a new version in the '.NET Framework' dropdown box. (In Visual Basic, this is located on the Compile tab by clicking the 'Advanced Compiler Options...' button.)">
+</Event><Event ErrorLevel="0" Project="BusinessClasses" Source="BusinessClasses\BusinessClasses.csproj" Description="Project converted successfully">
+</Event><Event ErrorLevel="3" Project="BusinessClasses" Source="BusinessClasses\BusinessClasses.csproj" Description="Converted">
+</Event><Event ErrorLevel="0" Project="NewTestApp" Source="NewTestApp\NewTestApp.csproj" Description="Project converted successfully">
+</Event><Event ErrorLevel="3" Project="NewTestApp" Source="NewTestApp\NewTestApp.csproj" Description="Converted">
+</Event><Event ErrorLevel="0" Project="" Source="NDOTravelExpenses.sln" Description="Solution converted successfully">
+</Event><Event ErrorLevel="3" Project="" Source="NDOTravelExpenses.sln" Description="Converted">
+</Event><Event ErrorLevel="0" Project="BusinessClasses" Source="BusinessClasses\BusinessClasses.csproj" Description="Scan complete: Upgrade not required for project files.">
+</Event><Event ErrorLevel="0" Project="NewTestApp" Source="NewTestApp\NewTestApp.csproj" Description="Scan complete: Upgrade not required for project files.">
+</Event></UpgradeLog>

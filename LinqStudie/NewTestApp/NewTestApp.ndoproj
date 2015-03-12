@@ -1,0 +1,42 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<Enhancer>
+  <Options>
+    <EnableAddIn>True</EnableAddIn>
+    <EnableEnhancer>False</EnableEnhancer>
+    <VerboseMode>False</VerboseMode>
+    <NewMapping>False</NewMapping>
+    <GenerateSQL>True</GenerateSQL>
+    <DefaultConnection>Provider=Microsoft.Jet.OLEDB.4.0;Data Source=..\..\..\NDOTestDb.mdb;Persist Security Info=False</DefaultConnection>
+    <GenerateChangeEvents>False</GenerateChangeEvents>
+    <UseTimeStamps>False</UseTimeStamps>
+    <Utf8Encoding>True</Utf8Encoding>
+    <SQLScriptLanguage>Access</SQLScriptLanguage>
+    <SchemaVersion>1.0</SchemaVersion>
+    <IncludeTypecodes>False</IncludeTypecodes>
+    <DatabaseOwner>
+    </DatabaseOwner>
+    <GenerateConstraints>False</GenerateConstraints>
+    <DropExistingElements>False</DropExistingElements>
+  </Options>
+  <ProjectDescription>
+    <BinPath>bin\Debug\NewTestApp.exe</BinPath>
+    <ObjPath>obj\Debug\</ObjPath>
+    <AssemblyName />
+    <Debug>True</Debug>
+    <IsWebProject>False</IsWebProject>
+    <KeyFile>
+    </KeyFile>
+    <References>
+      <Reference AssemblyName="System.Core" AssemblyPath="..\..\..\..\Program Files\Reference Assemblies\Microsoft\Framework\v3.5\System.Core.dll">
+      </Reference>
+      <Reference AssemblyName="System.Xml.Linq" AssemblyPath="..\..\..\..\Program Files\Reference Assemblies\Microsoft\Framework\v3.5\System.Xml.Linq.dll">
+      </Reference>
+      <Reference AssemblyName="BusinessClasses" AssemblyPath="..\BusinessClasses\bin\Debug\BusinessClasses.dll">
+      </Reference>
+      <Reference AssemblyName="System.Data.DataSetExtensions" AssemblyPath="..\..\..\..\Program Files\Reference Assemblies\Microsoft\Framework\v3.5\System.Data.DataSetExtensions.dll">
+      </Reference>
+      <Reference AssemblyName="NDOInterfaces" AssemblyPath="..\..\..\..\Program Files\NDO 2.0 Enterprise Edition\NDOInterfaces.dll">
+      </Reference>
+    </References>
+  </ProjectDescription>
+</Enhancer>
