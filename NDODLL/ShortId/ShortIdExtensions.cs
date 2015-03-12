@@ -52,22 +52,7 @@ namespace NDO.ShortId
 		/// <returns></returns>
 		public static string ShortId(this IPersistentObject pc)
 		{
-			if (pc.NDOObjectState == NDOObjectState.Transient)
-				throw new Exception("Object is transient.");
-			ObjectId oid = pc.NDOObjectId;
-			if (oid == null)
-				throw new NullReferenceException( "NDOObjectId is null." );
-			if (!oid.IsValid())
-				throw new NDOException(86, "ObjectId is not valid.");
-			if (oid.Id.Values.Length > 1)
-				throw new Exception( "Can't construct a ShortId because the object has multiple key values." );
-			Type oidType = oid.Id.Value.GetType();
-			if (oidType != typeof(int) && oidType != typeof(Guid) && oidType != typeof(string))
-			{
-				throw new Exception( "The oid type of the object does not allow the indication by a ShortId: " + oidType.FullName );
-			}
-			Type t = pc.GetType();
-			return (t.FullName + "~" + new AssemblyName( t.Assembly.FullName ).Name + "~" + pc.NDOObjectId.Id[0]).Encode();
+			return pc.NDOObjectId.ToShortId();
 		}
 
 		/// <summary>

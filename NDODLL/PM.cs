@@ -49,6 +49,7 @@ using NDO.Mapping;
 using NDO.Logging;
 using NDOInterfaces;
 using NDO.ShortId;
+using System.Globalization;
 
 namespace NDO 
 {
@@ -3482,14 +3483,22 @@ namespace NDO
 		/// </summary>
 		/// <param name="shortId"></param>
 		/// <returns></returns>
-		public IPersistenceCapable FindObject(string shortId)
+		public IPersistenceCapable FindObject(string encodedShortId)
 		{
+			string shortId = encodedShortId.Decode();
 			string[] arr = shortId.Split( '~' );
 			if (arr.Length != 3)
 				throw new ArgumentException( "The format of the string is not valid", "shortId" );
-			Type t = shortId.GetObjectType();
+			Type t = shortId.GetObjectType();  // try readable format
 			if (t == null)
-				throw new ArgumentException( "The string doesn't represent a loadable type", "shortId" );
+			{
+				int typeCode = 0;
+				if (!int.TryParse( arr[2], NumberStyles.HexNumber, CultureInfo.InvariantCulture, out typeCode )) 
+					throw new ArgumentException( "The string doesn't represent a loadable type", "shortId" );
+				t = this.typeManager[typeCode];
+				if (t == null) 
+					throw new ArgumentException( "The string doesn't represent a loadable type", "shortId" );
+			}
 			Class cls = GetClass( t );
 			if (cls == null)
 				throw new ArgumentException( "The type identified by the string is not persistent or is not managed by the given mapping file", "shortId" );

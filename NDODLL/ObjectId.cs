@@ -179,6 +179,16 @@ namespace NDO
             return id.ToString();
         }
 
+		/// <summary>
+		/// Serializes the ObjectId to a ShortId, which can be used to identify an object of any type.
+		/// </summary>
+		/// <returns>A string consisting of the type information and the oid of the object.</returns>
+		internal string ToShortId()
+		{
+			if (!IsValid())
+				throw new NDOException(86, "ObjectId is not valid.");
+			return id.ToShortId();
+		}
 
         public void GetObjectData(SerializationInfo info, StreamingContext context)
         {
@@ -210,18 +220,5 @@ namespace NDO
                 this.id = MultiKey.OldDeserialization(info, context);
             }
         }
-
-
-
-        //#region IComparable Member
-
-        //public int CompareTo(object obj)
-        //{
-        //    if (!(obj is ObjectId))
-        //        throw new NDOException(43, "ObjectId.CompareTo: Can't compare with an object of type " + obj.GetType().FullName);
-        //    return ((IComparable) this.id.Value).CompareTo(((ObjectId)obj).id.Value);
-        //}
-
-        //#endregion
     }
 }
