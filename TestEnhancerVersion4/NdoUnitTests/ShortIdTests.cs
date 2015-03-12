@@ -41,6 +41,7 @@ namespace NdoUnitTests
 		public void TestConversionOhneUmlaute()
 		{
 			string shortId = ((IPersistenceCapable)m).ShortId();
+			Console.WriteLine(shortId);
 			string decodedShortId = shortId.Decode();
 			Assert.AreEqual( decodedShortId, shortId, "Die ShortIds sollten gleich sein. #1" );
 			string encodedShortId = decodedShortId.Encode();
@@ -53,6 +54,7 @@ namespace NdoUnitTests
 		public void TestConversionMitUmlauten()
 		{
 			string shortId = ((IPersistenceCapable)this.reiseBüro).ShortId();
+			Console.WriteLine(shortId);
 			string decodedShortId = shortId.Decode();
 			Assert.AreNotEqual( decodedShortId, shortId, "Die ShortIds sollten ungleich sein. #1" );
 			string encodedShortId = decodedShortId.Encode();
