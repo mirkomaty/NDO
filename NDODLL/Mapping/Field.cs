@@ -25,7 +25,7 @@ namespace NDO.Mapping
         /// <summary>
         /// Accessor name 
         /// </summary>
-        [ReadOnly(true), Description("Accessor name")]
+        [Description("Accessor name")]
         public string AccessorName
         {
             get { return accessorName; }
