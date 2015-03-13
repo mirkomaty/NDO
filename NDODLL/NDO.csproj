@@ -160,6 +160,9 @@
     <Compile Include="Enterprise\SerializationFlags.cs" />
     <Compile Include="Enterprise\SerializationIterator.cs" />
     <Compile Include="Enterprise\Serializer.cs" />
+    <Compile Include="Linq\VirtualTable.cs" />
+    <Compile Include="Linq\ExpressionTreeTransformer.cs" />
+    <Compile Include="Linq\PmExtensions.cs" />
     <Compile Include="Mapping\FieldMap.cs">
       <SubType>Code</SubType>
     </Compile>
