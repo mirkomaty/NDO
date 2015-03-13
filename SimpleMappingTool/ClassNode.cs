@@ -31,7 +31,8 @@
 
 
 using System;
-using System.Collections;
+using System.Linq;
+using System.Collections.Generic;
 using System.Windows.Forms;
 using NDO.Mapping;
 
@@ -53,7 +54,7 @@ namespace SimpleMappingTool
 			{
 				this.Nodes.Add(new RelationNode(r));
 			}
-            ArrayList sortedFields = new ArrayList(cl.Fields);
+            List<Field> sortedFields = cl.Fields.ToList();
             sortedFields.Sort();
 			foreach(Field f in sortedFields)
 			{
