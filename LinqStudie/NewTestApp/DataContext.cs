@@ -1,6 +1,6 @@
 //
-// Copyright (C) 2002-2008 HoT - House of Tools Development GmbH 
-// (www.netdataobjects.com)
+// Copyright (C) 2002-2015 Mirko Matytschak
+// (www.netdataobjects.de)
 //
 // Author: Mirko Matytschak
 //
@@ -35,45 +35,13 @@ using System.Collections.Generic;
 using System.Text;
 using NDO;
 
-namespace NDO.Linq
+namespace NDODev.Linq
 {
-    public class DataContext
-    {
-        protected PersistenceManager pm;
-        public PersistenceManager PersistenceManager
-        {
-            get { return pm; }
-            set { pm = value; }
-        }
-        public DataContext()
-        {
-            this.pm = new PersistenceManager();
-        }
-        public DataContext(string s)
-        {
-            this.pm = new PersistenceManager(s);
-        }
-
-        public bool VerboseMode
-        {
-            get { return pm.VerboseMode; }
-            set { pm.VerboseMode = value; }
-        }
-
-        public NDO.Logging.ILogAdapter LogAdapter
-        {
-            get { return pm.LogAdapter; }
-            set { pm.LogAdapter = value; }
-        }
-
-        public Table<T> GetTable<T>() where T : LinqHelperBase
-        {
-            return new Table<T>(pm);
-        }
-
-        public void SubmitChanges()
-        {
-            pm.Save();
-        }
-    }
+	static public class PmExtensions
+	{
+		public static VirtualTable<T> Objects<T>(this PersistenceManager pm) 
+		{
+			return new VirtualTable<T>(pm);
+		}
+	}
 }

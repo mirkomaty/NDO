@@ -6,11 +6,12 @@ using System.Threading.Tasks;
 
 namespace NDODev.Linq
 {
-	public static class LinqStringExtension
+	public class Index
 	{
-		public static bool Like(this object s, object parameter)
-		{
-			return true;
-		}
+		public static readonly int Any = 0;
+	}
+	public class Any
+	{
+		public static readonly int Index = 0;
 	}
 }

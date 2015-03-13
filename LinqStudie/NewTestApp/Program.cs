@@ -31,13 +31,13 @@
 
 
 using System;
+using System.Linq;
 using System.Collections;
 using System.Collections.Generic;
 using BusinessClasses;
-using BusinessClasses.Linq;
 using NDO;
 using NDO.Logging;
-using NDO.Linq;
+using NDODev.Linq;
 using NDOInterfaces;
 
 namespace TestApp
@@ -70,54 +70,23 @@ namespace TestApp
             pm.Save();
 #endif
 
-#if NonTypeSafe
-            DataContext dc = new DataContext();
-            Table<EmployeeLinqHelper> employees = dc.GetTable<EmployeeLinqHelper>();
+
+            PersistenceManager pm = new PersistenceManager();
             int year = 1957;
-            Table<EmployeeLinqHelper> hl = 
-                from e in employees where 
-                  (e.firstName == "Mirko" || e.geburtsJahr > year) 
-                  && e.travels.purpose == "ADC 2006" 
+            List<Employee> l = 
+                from e in pm.Objects<Employee>() where 
+                  (e.FirstName == "Mirko" && e.GeburtsJahr > year) 
+                  && e.Travels[Any.Index].Purpose.Like( "ADC 2006" )
+				  && e.Position=="Manager"
+				orderby e.GeburtsJahr descending
                 select e;
  
-            List<Employee> l = (List<Employee>) hl.ResultTable;
             foreach (Employee e in l)
             {
                 Console.WriteLine(e.FirstName + " " + e.LastName + ", " + e.Address.City);
                 foreach (Travel t in e.Travels)
                     Console.WriteLine(" Travel: " + t.Purpose);
             }
-#else
-            BusinessClassesDataContext dc = new BusinessClassesDataContext();
-            Console.WriteLine(dc.PersistenceManager.NDOMapping.GetProvider(typeof(Employee)).Name);
-            //EmployeeTable employees = dc.EmployeeTable;
-        
-            dc.VerboseMode = true;
-            dc.LogAdapter = new ConsoleLogAdapter();
-            EmployeeTable employees = dc.EmployeeTable;
-            //dc.EmployeeTable.Prefetches.Add("travels");
-            //dc.EmployeeTable.Prefetches.Add("address");
-            dc.EmployeeTable.UseLikeOperator = false;
-
-            int year = 1957;
-
-            List<Employee> l = 
-                from e in dc.EmployeeTable where 
-                  e.firstName == "Mirko" || e.geburtsJahr > year
-                  && e.travels.purpose.Like("ADC*")
-                orderby e.lastName, e.firstName descending
-                select new FetchGroup(e.firstName, e.lastName);//new EmployeeLinqHelper(new {e.firstName});
-
-            dc.VerboseMode = false;
-
-            foreach (Employee e in l)
-            {
-                Console.WriteLine(e.FirstName + " " + e.LastName + ", " + e.Address.City);
-                foreach (Travel t in e.Travels)
-                    Console.WriteLine(" Travel: " + t.Purpose);
-            }
-#endif
-
         }
     }
 }

@@ -1,6 +1,6 @@
 //
-// Copyright (C) 2002-2008 HoT - House of Tools Development GmbH 
-// (www.netdataobjects.com)
+// Copyright (C) 2002-2015 Mirko Matytschak
+// (www.netdataobjects.de)
 //
 // Author: Mirko Matytschak
 //
@@ -36,7 +36,7 @@ using System.Collections;
 using System.Text;
 using System.Linq.Expressions;
 
-namespace NDO.Linq
+namespace NDODev.Linq
 {
     public class ExpressionTreeTransformer
     {
@@ -161,6 +161,8 @@ namespace NDO.Linq
                 Transform(binex.Right);
                 if (rightbracket)
                     sb.Append(')');
+				return;
+			  //-------
             }
             MethodCallExpression mcex = ex as MethodCallExpression;
             if (mcex !=  null)
@@ -183,32 +185,38 @@ namespace NDO.Linq
 				}
                 else
                     throw new Exception("Method call not supported: " + mname);
+				return;
+			  //-------
             }
             if (ex.NodeType == ExpressionType.MemberAccess)
             {
                 MemberExpression memberex = (MemberExpression) ex;
 				if ((memberex.Expression as ConstantExpression) == null)
 				{
-					sb.Append( memberex.ToString().Substring( baseParameterLength ) );
+					string exprString = memberex.ToString().Substring( baseParameterLength).Replace(".get_Item(Index.Any).", ".").Replace(".get_Item(Any.Index).", ".");
+					sb.Append( exprString );
 				}
 				else
 				{
 					object o = Expression.Lambda( memberex ).Compile().DynamicInvoke();
 					AddParameter( o );
 				}
+				return;
+			  //-------
             }
-            else if (ex.NodeType == ExpressionType.Constant)
+			if (ex.NodeType == ExpressionType.Constant)
             {
                 ConstantExpression constEx = (ConstantExpression) ex;
                 AddParameter(constEx.Value);
+				return;
+			  //-------
             }
+			if (ex.NodeType == ExpressionType.Convert)
+			{
+				Transform( ((UnaryExpression)ex).Operand );
+				return;
+			  //-------
+			}
         }
-
-        public bool UseLikeOperator
-        {
-            get { return useLikeOperator; }
-            set { useLikeOperator = value; }
-        }
-
     }
 }

@@ -49,8 +49,8 @@ namespace BusinessClasses
 		List<Travel> travels = new List<Travel>();
         public List<Travel> Travels
         {
-            get { return new NDOReadOnlyGenericList<Travel>(travels); }
-            set { travels = (List<Travel>)value; }
+            get { return travels; }
+            set { travels = value; }
         }
         public Travel NewTravel()
         {
@@ -93,6 +93,7 @@ namespace BusinessClasses
             set { geburtsJahr = value; }
         }
 
+		public string Position { get; set; }
 
         public Employee()
         {
