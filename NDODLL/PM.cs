@@ -356,8 +356,8 @@ namespace NDO
 				if (pc2.NDOObjectState == NDOObjectState.Hollow)
 					LoadData(pc2); 
 				DataRow row = GetTable(pc).NewRow();
-				pc.NDOWrite(row, pcClass.FieldNames, 0);
-				pc2.NDORead(row, pcClass.FieldNames, 0);
+				pc.NDOWrite(row, pcClass.ColumnNames, 0);
+				pc2.NDORead(row, pcClass.ColumnNames, 0);
 				MarkDirty(pc2);
 			}
 			foreach(RelationChangeRecord rcr in cs.RelationChanges)
@@ -442,7 +442,7 @@ namespace NDO
                 }
             }
 
-			WriteObject(pc, row, pcClass.FieldNames, 0); // save current state in DS
+			WriteObject(pc, row, pcClass.ColumnNames, 0); // save current state in DS
 
 			// If the object is merged from an ObjectContainer, the id should be reused,
 			// if the id is client generated (not Autoincremented).
@@ -1809,7 +1809,7 @@ namespace NDO
 			DataTable table = GetTable(pc);
 			DataRow row = table.NewRow();
 			Class cl = GetClass(pc);
-			WriteObject(pc, row, cl.FieldNames, 0);
+			WriteObject(pc, row, cl.ColumnNames, 0);
 			WriteIdToRow(pc, row);
 			WriteLostForeignKeysToRow(cl, pc, row);
 			table.Rows.Add(row);
@@ -2492,7 +2492,7 @@ namespace NDO
 				} 
 				else if(objectState == NDOObjectState.Created) 
 				{
-					WriteObject(e.pc, e.row, cl.FieldNames);                    
+					WriteObject(e.pc, e.row, cl.ColumnNames);                    
 					WriteIdFieldsToRow(e.pc, e.row);  // If fields are mapped to Oid, write them into the row
 					WriteForeignKeysToRow(e.pc, e.row);
 					//					Debug.WriteLine(e.pc.GetType().FullName);
@@ -2513,7 +2513,7 @@ namespace NDO
 				{
 					if (e.pc.NDOObjectState == NDOObjectState.PersistentDirty)
 						changedObjects.Add( e.pc );
-					WriteObject(e.pc, e.row, cl.FieldNames);
+					WriteObject(e.pc, e.row, cl.ColumnNames);
 					WriteForeignKeysToRow(e.pc, e.row); 					
 				}
 				if(hollowMode && (objectState == NDOObjectState.Persistent || objectState == NDOObjectState.Created || objectState == NDOObjectState.PersistentDirty) ) 
@@ -2755,12 +2755,12 @@ namespace NDO
 					}
 					RestoreRelatedObjects(pc, e.relations);
 					e.row.RejectChanges();
-					ReadObject(pc, e.row, cl.FieldNames, 0);
+					ReadObject(pc, e.row, cl.ColumnNames, 0);
 					cache.Unlock(pc);
 					pc.NDOObjectState = NDOObjectState.Persistent;
 					break;
 				case NDOObjectState.Created:
-					ReadObject(pc, e.row, cl.FieldNames, 0);
+					ReadObject(pc, e.row, cl.ColumnNames, 0);
 					cache.Unlock(pc);
 					MakeObjectTransient(pc, true);
 					break;
@@ -2768,7 +2768,7 @@ namespace NDO
                     if (!this.IsFakeRow(cl, e.row))
                     {
                         e.row.RejectChanges();
-                        ReadObject(e.pc, e.row, cl.FieldNames, 0);
+                        ReadObject(e.pc, e.row, cl.ColumnNames, 0);
                         e.pc.NDOObjectState = NDOObjectState.Persistent;
                     }
                     else
@@ -2857,13 +2857,13 @@ namespace NDO
 				switch(e.pc.NDOObjectState) 
 				{
 					case NDOObjectState.Created:
-						ReadObject(e.pc, e.row, cl.FieldNames, 0);
+						ReadObject(e.pc, e.row, cl.ColumnNames, 0);
 						deletedObjects.Add(e.pc);
 						break;
 
 					case NDOObjectState.PersistentDirty:
 						e.row.RejectChanges();
-						ReadObject(e.pc, e.row, cl.FieldNames, 0);
+						ReadObject(e.pc, e.row, cl.ColumnNames, 0);
 						e.pc.NDOObjectState = NDOObjectState.Persistent;
 						break;
 
@@ -2871,7 +2871,7 @@ namespace NDO
 						if (!isFakeRow)
 						{
 							e.row.RejectChanges();
-							ReadObject(e.pc, e.row, cl.FieldNames, 0);
+							ReadObject(e.pc, e.row, cl.ColumnNames, 0);
 							e.pc.NDOObjectState = NDOObjectState.Persistent;
 						}
 						else
@@ -3756,7 +3756,7 @@ namespace NDO
 
 		void Row2Object(Class cl, IPersistenceCapable pc, DataRow row)
 		{
-			ReadObject(pc, row, cl.FieldNames, 0);
+			ReadObject(pc, row, cl.ColumnNames, 0);
 			ReadTimeStamp(cl, pc, row);
 			ReadLostForeignKeysFromRow(cl, pc, row);
 			LoadRelated1To1Objects(pc, row);
@@ -3990,7 +3990,7 @@ namespace NDO
 			row = newTable.Rows[0];
 
 			Class cls = mappings.FindClass(o.GetType());
-			WriteObject( pc, row, cls.FieldNames );
+			WriteObject( pc, row, cls.ColumnNames );
 			WriteForeignKeysToRow( pc, row );
 
 			return row;
