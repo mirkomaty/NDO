@@ -181,7 +181,7 @@ namespace NDO.Mapping
         /// </summary>
         public bool IsAbstract = false;  // true for abstract classes and interfaces
 
-        private string[]            myFields;                   // wird in InitFields angelegt
+        private string[]            myColumns;                   // wird in InitFields angelegt
         private IEnumerable<string> myEmbeddedTypes;            // wird in InitFields angelegt
         internal int                RelationOrdinalBase = -1;   // wird in InitFields angelegt
         internal IEnumerable<string>FKColumnNames;              // InitFields - collects all foreign key column names used in LoadState
@@ -213,9 +213,9 @@ namespace NDO.Mapping
         /// For use by the NDO framework only. It will be initialized if the Class object is passed to the IPersistenceHandler.
         /// </summary>
         [Browsable(false)]
-        public string[] FieldNames
+        public string[] ColumnNames
         {
-            get { return myFields; }
+            get { return myColumns; }
         }
 
         /// <summary>
@@ -378,7 +378,7 @@ namespace NDO.Mapping
                 AddToSuperClass(this);
 #endif
             FieldMap fieldMap = new FieldMap(this);
-            myFields = fieldMap.Fields;
+            myColumns = fieldMap.Fields;
             myEmbeddedTypes = fieldMap.EmbeddedTypes;
             ((IFieldInitializer)this.oid).InitFields();
         }
@@ -458,13 +458,13 @@ namespace NDO.Mapping
         /// <summary>
         /// Find a field mapping.
         /// </summary>
-        /// <param name="fieldName">The name of the field</param>
+        /// <param name="fieldName">The name of the field or the accessor property for the field.</param>
         /// <returns>A <code>Field</code> object</returns>
         public Field FindField(string fieldName)
         {
             foreach (Field f in Fields)
             {
-                if (f.Name == fieldName)
+                if (f.Name == fieldName || f.AccessorName == fieldName)
                     return f;
             }
             return null;
@@ -495,7 +495,7 @@ namespace NDO.Mapping
         {
             foreach (Relation r in Relations)
             {
-                if (r.FieldName == fieldName)
+                if (r.FieldName == fieldName || r.AccessorName == fieldName)
                     return r;
             }
             return null;

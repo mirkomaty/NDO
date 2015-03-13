@@ -45,6 +45,17 @@ namespace NDO.Mapping
         private string fieldName;
 
         /// <summary>
+        /// Field name of relation.
+        /// </summary>
+        [Description("Field name of relation.")]
+        public string AccessorName
+        {
+            get { return accessorName; }
+            set { accessorName = value; this.Changed = true; }
+        }
+        private string accessorName;
+
+        /// <summary>
         /// Field type of relation.
         /// </summary>
         [Browsable(false)]
@@ -283,6 +294,8 @@ namespace NDO.Mapping
         {
             fieldName = relNode.Attributes["FieldName"].Value;
             referencedTypeName = relNode.Attributes["ReferencedTypeName"].Value;
+			if (relNode.Attributes["AccessorName"] != null)
+				this.accessorName = relNode.Attributes["AccessorName"].Value;
 
             if (relNode.Attributes["ForeignKeyTypeColumnName"] != null && relNode.Attributes["ForeignKeyTypeColumnName"].Value != string.Empty)
                 this.foreignKeyTypeColumnName = relNode.Attributes["ForeignKeyTypeColumnName"].Value;
@@ -314,7 +327,9 @@ namespace NDO.Mapping
             XmlElement relNode = parentNode.OwnerDocument.CreateElement("Relation");
             parentNode.AppendChild(relNode);
             base.SaveProperties(relNode);
-            relNode.SetAttribute("FieldName", fieldName);
+            relNode.SetAttribute("FieldName", this.fieldName);
+			if (this.accessorName != null)
+				relNode.SetAttribute("AccessorName", this.accessorName);
 
             if (!string.IsNullOrEmpty(foreignKeyTypeColumnName))
                 relNode.SetAttribute("ForeignKeyTypeColumnName", foreignKeyTypeColumnName);

@@ -261,8 +261,9 @@ namespace NDO.Mapping
 			{
 				for (int i = 0; i < myFields.Count; i++)
 				{
+					string fieldName = myFields[i];
 					NDO.Mapping.Field field;
-					if ((field = cl.FindField((string)myFields[i])) != null)
+					if ((field = cl.FindField(fieldName)) != null)
 						myFields[i] = field.Column.Name;
 					else
 						throw new NDOException(7, "Can't find mapping information for field " + cl.FullName + "." + myFields[i]);

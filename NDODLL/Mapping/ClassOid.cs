@@ -258,9 +258,9 @@ namespace NDO.Mapping
             {
                 if (column.FieldName != null)
                 {
+					if (!myPersistentFields.ContainsKey(column.FieldName))
+						throw new NDOException(20, "Can't find field " + Parent.FullName + "." + column.FieldName + '.');
                     FieldInfo fi = (FieldInfo)myPersistentFields[column.FieldName];
-                    if (fi == null)
-                        throw new NDOException(20, "Can't find field " + Parent.FullName + "." + column.FieldName + '.');
                     column.SystemType = fi.FieldType;
                     Field fieldMapping = Parent.FindField(fi.Name);
                     if (fieldMapping == null)

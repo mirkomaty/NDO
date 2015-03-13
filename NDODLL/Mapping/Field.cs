@@ -12,15 +12,27 @@ namespace NDO.Mapping
     {
         #region State variables and accessors
         /// <summary>
-        /// Field name of the class
+        /// Field name 
         /// </summary>
-        [ReadOnly(true), Description("Field name of the class")]
+        [ReadOnly(true), Description("Field name")]
         public string Name
         {
             get { return name; }
             set { name = value; this.Changed = true; }
         }
         private string name;
+
+        /// <summary>
+        /// Accessor name 
+        /// </summary>
+        [ReadOnly(true), Description("Accessor name")]
+        public string AccessorName
+        {
+            get { return accessorName; }
+            set { accessorName = value; this.Changed = true; }
+        }
+        private string accessorName;
+
 
         /// <summary>
         ///  This is used only by the NDOPersistenceHander class. Don't use this member - it will only be initialized in rare situations.
@@ -83,7 +95,11 @@ namespace NDO.Mapping
             : base(fieldNode, parent)
         {
             Name = fieldNode.Attributes["Name"].Value;
-            if (fieldNode.Attributes["ColumnName"] != null)
+			if (null != fieldNode.Attributes["AccessorName"])
+			{
+				this.accessorName = fieldNode.Attributes["AccessorName"].Value;
+			}
+            if (fieldNode.Attributes["ColumnName"] != null)  // Legacy mapping files
             {
                 this.column = new Column(this);
                 this.column.Name = fieldNode.Attributes["ColumnName"].Value;
@@ -122,6 +138,8 @@ namespace NDO.Mapping
             parentNode.AppendChild(fieldNode);
             base.SaveProperties(fieldNode);
             fieldNode.SetAttribute("Name", name);
+			if (this.accessorName != null)
+				fieldNode.SetAttribute( "AccessorName", accessorName );
             this.column.Save(fieldNode);
         }
         #endregion
