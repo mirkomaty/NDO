@@ -46,8 +46,9 @@ namespace NdoUnitTests
 			Assert.AreEqual( decodedShortId, shortId, "Die ShortIds sollten gleich sein. #1" );
 			string encodedShortId = decodedShortId.Encode();
 			Assert.AreEqual( encodedShortId, decodedShortId, "Die ShortIds sollten gleich sein. #2" );
-			Type t = shortId.GetObjectType();
+			Type t = shortId.GetObjectType(pm);
 			Assert.AreEqual( t, typeof( Mitarbeiter ), "Der Typ der ShortId sollte Mitarbeiter sein." );
+			Assert.AreEqual( shortId.GetEntityName(), "Mitarbeiter", "Der Entity-Name der ShortId sollte Mitarbeiter sein." );
 		}
 
 		[Test]
@@ -60,8 +61,39 @@ namespace NdoUnitTests
 			string encodedShortId = decodedShortId.Encode();
 			Assert.AreNotEqual( encodedShortId, decodedShortId, "Die ShortIds sollten ungleich sein. #2" );
 			Assert.AreEqual( encodedShortId, shortId, "Die ShortId sollte gleich sein." );
-			Type t = shortId.GetObjectType();
+			Type t = shortId.GetObjectType(pm);
 			Assert.AreEqual( t, typeof( Reisebüro ), "Der Typ der ShortId sollte Reisebüro sein." );
+			Assert.AreEqual( shortId.GetEntityName(), "Reisebüro", "Der Entity-Name der ShortId sollte Reisebüro sein." );
+		}
+
+		[Test]
+		public void TestReadableShortIdMitUmlauten()
+		{
+			string shortId = ((IPersistenceCapable)this.reiseBüro).ShortId();
+			Assert.That( shortId.IsShortId() );
+			string[] arr = shortId.Split( '~' );
+			arr[0] = typeof( Reisebüro ).FullName;
+			arr[1] = typeof( Reisebüro ).Assembly.GetName().Name;
+			shortId = string.Join( "~", arr );
+			Assert.That( shortId.GetEntityName() == "Reisebüro" );
+			Assert.That( shortId.GetObjectType( pm ) == typeof( Reisebüro ) );
+			Reisebüro rb = (Reisebüro)pm.FindObject( shortId );
+			Assert.NotNull( rb );
+		}
+
+		[Test]
+		public void TestReadableShortIdOhneUmlaute()
+		{
+			string shortId = ((IPersistenceCapable)this.m).ShortId();
+			Assert.That( shortId.IsShortId() );
+			string[] arr = shortId.Split( '~' );
+			arr[0] = typeof( Mitarbeiter ).FullName;
+			arr[1] = typeof( Mitarbeiter ).Assembly.GetName().Name;
+			shortId = string.Join( "~", arr );
+			Assert.That( shortId.GetEntityName() == "Mitarbeiter" );
+			Assert.That( shortId.GetObjectType( pm ) == typeof( Mitarbeiter ) );
+			Mitarbeiter rb = (Mitarbeiter)pm.FindObject( shortId );
+			Assert.NotNull( rb );
 		}
 
 		[Test]

@@ -376,7 +376,7 @@ namespace Reisekosten.Personal
             dieReisen = rl;
 		}
 
-		public IList Reisen 
+		public List<Reise> Reisen 
 		{
 			get 
 			{

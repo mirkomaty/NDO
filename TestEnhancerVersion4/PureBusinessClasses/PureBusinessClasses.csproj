@@ -251,7 +251,9 @@
       <SubType>Code</SubType>
     </Compile>
     <Content Include="bin\Release\PureBusinessClasses.ndo.sql" />
-    <Content Include="NDOMapping.xml" />
+    <Content Include="NDOMapping.xml">
+      <SubType>Designer</SubType>
+    </Content>
   </ItemGroup>
   <ItemGroup>
     <None Include="bin\Debug\PureBusinessClasses.ndo.sql" />
@@ -282,7 +284,7 @@
   </ItemGroup>
   <ProjectExtensions>
     <VisualStudio>
-      <UserProperties DatabaseOwner="" NDOSQLScriptLanguage="Access" NDOUseTimeStamps="false" NDOGenerateChangeEvents="false" NDOGenerateSQL="false" NDODefaultConnection="Provider=SQLOLEDB.1;Integrated Security=SSPI;Persist Security Info=False;Initial Catalog=NDOTest;Data Source=NOTEBOOKZERO" NDOMergeSchema="true" NDOMergeMapping="true" NDOOverwriteSchema="true" NDOOverwriteMapping="true" NDOGenerateSchema="true" NDOGenerateMapping="true" NDOEnableEnhancer="true" NDOEnableAddIn="true" NDONewMapping="false" NDOTypeListFile="C:\Projekte\Persistenz\V4\TestEnhancerVersion4\NdoUnitTests\BIN\Debug\NDOTypes.xml" NDOUsePolymorphy="true" NDOUtf8Encoding="true" />
+      <UserProperties NDOUtf8Encoding="true" NDOUsePolymorphy="true" NDOTypeListFile="C:\Projekte\Persistenz\V4\TestEnhancerVersion4\NdoUnitTests\BIN\Debug\NDOTypes.xml" NDONewMapping="false" NDOEnableAddIn="true" NDOEnableEnhancer="true" NDOGenerateMapping="true" NDOGenerateSchema="true" NDOOverwriteMapping="true" NDOOverwriteSchema="true" NDOMergeMapping="true" NDOMergeSchema="true" NDODefaultConnection="Provider=SQLOLEDB.1;Integrated Security=SSPI;Persist Security Info=False;Initial Catalog=NDOTest;Data Source=NOTEBOOKZERO" NDOGenerateSQL="false" NDOGenerateChangeEvents="false" NDOUseTimeStamps="false" NDOSQLScriptLanguage="Access" DatabaseOwner="" />
     </VisualStudio>
   </ProjectExtensions>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />

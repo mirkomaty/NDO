@@ -29,7 +29,8 @@ namespace NdoUnitTests
 		{
 			foreach (Class cls in pm.NDOMapping.Classes)
 			{
-				Assert.That( cls.TypeCode != 0, cls.FullName + " does not have a TypeCode" );
+				if (!cls.IsAbstract)
+					Assert.That( cls.TypeCode != 0, cls.FullName + " does not have a TypeCode" );
 			}
 		}
 	}

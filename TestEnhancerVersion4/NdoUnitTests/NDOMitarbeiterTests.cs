@@ -31,11 +31,13 @@
 
 
 using System;
+using System.Linq;
 using System.Reflection;
 using System.Diagnostics;
 using System.IO;
 using System.Collections;
 using NUnit.Framework;
+using System.Collections.Generic;
 using NDO;
 using Reisekosten.Personal;
 
@@ -332,6 +334,34 @@ namespace NdoUnitTests
 			//System.Diagnostics.Debug.WriteLine(q.GeneratedQuery);
 			mitarbeiterListe = q.Execute();
 			Assert.AreEqual(100/3, mitarbeiterListe.Count, "Number of read objects is wrong");
+		}
+
+		[Test]
+		public void TestLinqQuery() 
+		{
+			ArrayList  mliste = new ArrayList();
+			for(int i = 1; i <= 100; i++) 
+			{
+				Mitarbeiter mm = CreateMitarbeiter("Hartmut", (i % 3)  == 0 ? "Test" : "xxx");
+				pm.MakePersistent(mm);
+				mliste.Add(mm);
+			}
+			pm.Save();		
+			
+			List<Mitarbeiter> mitarbeiterListe = from m in pm.Objects<Mitarbeiter>() select m;
+
+			Assert.AreEqual(100, mitarbeiterListe.Count, "Number of read objects is wrong #1");
+
+			mitarbeiterListe = from m in pm.Objects<Mitarbeiter>() where m.Nachname == "Test" select m;
+			Assert.AreEqual(100/3, mitarbeiterListe.Count, "Number of read objects is wrong #2");
+
+			// Partial select
+			List<string> nameList = from m in pm.Objects<Mitarbeiter>() select m.Vorname;
+
+			Assert.AreEqual(100, nameList.Count, "Number of read objects is wrong #3");
+
+			nameList = from m in pm.Objects<Mitarbeiter>() where m.Nachname == "Test" select m.Vorname;
+			Assert.AreEqual(100/3, mitarbeiterListe.Count, "Number of read objects is wrong #4");
 		}
 
 		[Test]

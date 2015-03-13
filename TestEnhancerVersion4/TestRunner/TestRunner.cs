@@ -45,29 +45,29 @@ namespace NDO
     {
         static void Main(string[] args)
         {
+
+#if true
             PersistenceManager pm = new PersistenceManager(@"..\..\..\NdoUnitTests\bin\Debug\NDOMapping.xml");
-            pm.BuildDatabase(@"..\..\..\NdoUnitTests\bin\Debug\NdoUnitTests.ndo.sql");
-#if buildDatabase
-            //return;
-            //PersistenceManager pm = new PersistenceManager();
-            foreach (string s in pm.BuildDatabase())
-            {
-                Console.WriteLine(s);
-            }
+            foreach(string s in pm.BuildDatabase(@"..\..\..\NdoUnitTests\bin\Debug\NdoUnitTests.ndo.sql"))
+			{
+				Console.WriteLine(s);
+			}
 #endif
-            DateTime startTime = DateTime.Now;
+			DateTime startTime = DateTime.Now;
 
 #if false
-            NDOMitarbeiterTests t = new NDOMitarbeiterTests();
+			TypeCodeTest t = new TypeCodeTest();
             try
             {
                 t.Setup();
+				t.TestIfAllPersistentTypesHaveATypeCode();
             }
             catch (Exception ex)
             {
+				Console.WriteLine(ex.ToString());
                 Debug.WriteLine(ex.ToString());
             }
-            t.TestObjectCreationSave();
+            
             //try
             //{
                 t.TearDown();
