@@ -50,6 +50,7 @@ using NDO.Logging;
 using NDOInterfaces;
 using NDO.ShortId;
 using System.Globalization;
+using NDO.Linq;
 
 namespace NDO 
 {
@@ -92,9 +93,7 @@ namespace NDO
 		// List of created objects that use mapping table and need to be stored in mapping table 
 		// after they have been stored to the database to update foreign keys.
 		private ArrayList createdMappingTableObjects = new ArrayList();  
-#if PRO
 		private TypeManager typeManager;
-#endif
 		private TransactionMode transactionMode = TransactionMode.None;
 		private IsolationLevel isolationLevel = IsolationLevel.ReadCommitted;
 		private TransactionTable transactionTable;
@@ -3489,7 +3488,7 @@ namespace NDO
 			string[] arr = shortId.Split( '~' );
 			if (arr.Length != 3)
 				throw new ArgumentException( "The format of the string is not valid", "shortId" );
-			Type t = shortId.GetObjectType();  // try readable format
+			Type t = shortId.GetObjectType(this);  // try readable format
 			if (t == null)
 			{
 				int typeCode = 0;
@@ -3685,6 +3684,16 @@ namespace NDO
 		}
 
 		/// <summary>
+		/// Returns a virtual table for Linq queries.
+		/// </summary>
+		/// <typeparam name="T"></typeparam>
+		/// <returns></returns>
+		public VirtualTable<T> Objects<T>()
+		{
+			return new VirtualTable<T>( this );
+		}
+
+		/// <summary>
 		/// Create a new Query object. The query will return objects of the given type, selected by the 
 		/// expression.
 		/// </summary>
@@ -3875,13 +3884,10 @@ namespace NDO
 			set { hollowMode = value; }
 		}
 
-#if PRO
 		internal TypeManager TypeManager
 		{
 			get { return typeManager; }
 		}
-#endif
-
 
 		/// <summary>
 		/// Sets or gets transaction mode. Uses TransactionMode enum.
@@ -3889,11 +3895,7 @@ namespace NDO
 		public TransactionMode TransactionMode
 		{
 			get { return transactionMode; }
-#if PRO
-			set { transactionMode = value; }
-#else
-			set { transactionMode = TransactionMode.None; }
-#endif
+			set { transactionMode = value; }			
 		}
 
 		/// <summary>

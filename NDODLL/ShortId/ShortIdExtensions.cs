@@ -39,10 +39,40 @@ namespace NDO.ShortId
 		/// </summary>
 		/// <param name="shortId"></param>
 		/// <returns></returns>
-		public static Type GetObjectType(this string shortId)
+		public static Type GetObjectType(this string shortId, PersistenceManager pm)
 		{
 			string[] arr = shortId.Decode().Split('~');
-			return Type.GetType( arr[0] + "," + arr[1] );
+			int typeCode = 0;
+			if (int.TryParse(arr[1],System.Globalization.NumberStyles.HexNumber, System.Globalization.CultureInfo.InvariantCulture, out typeCode))
+			{
+				return pm.TypeManager[typeCode];
+			}
+			else
+			{
+				return Type.GetType( arr[0] + "," + arr[1] );  // Try the readable format
+			}			
+		}
+
+		/// <summary>
+		/// Gets the entity name of the ShortId
+		/// </summary>
+		/// <param name="shortId"></param>
+		/// <returns></returns>
+		public static string GetEntityName(this string shortId)
+		{
+			string[] arr = shortId.Decode().Split('~');
+			int typeCode = 0;
+			if (int.TryParse(arr[1],System.Globalization.NumberStyles.HexNumber, System.Globalization.CultureInfo.InvariantCulture, out typeCode))
+			{
+				return arr[0];
+			}
+			else
+			{
+				Type t = Type.GetType( arr[0] + "," + arr[1] );  // Try the readable format
+				if (t != null)
+					return t.Name;
+			}
+			return null;
 		}
 
 		/// <summary>

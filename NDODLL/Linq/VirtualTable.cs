@@ -67,9 +67,9 @@ namespace NDO.Linq
 		/// <typeparam name="S"></typeparam>
 		/// <param name="selector"></param>
 		/// <returns></returns>
-        public IEnumerable<S> Select<S>(Func<T, S> selector)
+        public List<S> Select<S>(Func<T, S> selector)
         {
-			return this.ResultTable.Select( selector );
+			return this.ResultTable.Select( selector ).ToList();
         }
 
 		/// <summary>
@@ -157,7 +157,9 @@ namespace NDO.Linq
         public List<T> ResultTable
         {
             get 
-            { 
+            {
+				if (this.ndoquery == null)
+					this.ndoquery = new NDOQuery<T>( pm );
                 return this.ndoquery.Execute();
             }
         }
@@ -180,5 +182,13 @@ namespace NDO.Linq
         {
             return table.ResultTable;
         }
-    }
+
+		public T FirstOrDefault()
+		{
+			List<T> result = ResultTable;
+			if (result.Count == 0)
+				return default(T);
+			return result[0];
+		}
+	}
 }
