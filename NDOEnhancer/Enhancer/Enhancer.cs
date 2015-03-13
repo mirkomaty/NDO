@@ -863,6 +863,12 @@ namespace NDOEnhancer
 									throw new Exception(String.Format("Schwerwiegender interner Fehler: Ererbte Relation {0} in Basisklasse {1} nicht gefunden.", rname, baseClassMapping.FullName));								
 								classMapping.AddRelation(r);
 							}
+							else
+							{
+								Relation orgRel = baseClassMapping.FindRelation( rname );
+								if (r.AccessorName == null && r.AccessorName != orgRel.AccessorName)
+									r.AccessorName = orgRel.AccessorName;
+							}
 							if (is1To1)
 								r.Multiplicity = RelationMultiplicity.Element;
 							else
@@ -1648,14 +1654,32 @@ namespace NDOEnhancer
 					
 				}
 
-			} // !enhanced
-
+			} // !enhanced			
 
 			// Jetzt alle Klassen durchlaufen und ggf. Enhancen
 			foreach ( ILClassElement classElement in  classes )
 			{
 				if (classElement.isPersistent(typeof (NDOPersistentAttribute)))
 				{
+					Dictionary<string, string> accessors = classElement.findAccessorProperties();
+					Class classMapping = mappings.FindClass( classElement.getMappingName() );
+					if (classMapping != null && accessors.Count > 0)
+					{
+						foreach (var item in accessors)
+						{
+							Field field = classMapping.FindField( item.Key );
+							if (field != null)
+							{
+								field.AccessorName = item.Value;
+							}
+							else
+							{
+								Relation rel = classMapping.FindRelation( item.Key );
+								if (rel != null)
+									rel.AccessorName = item.Value;
+							}
+						}
+					}
 					string mappingName = classElement.getMappingName();
 					IList sortedFields = (IList) allSortedFields[mappingName];
 					IList references = (IList) allReferences[mappingName];
