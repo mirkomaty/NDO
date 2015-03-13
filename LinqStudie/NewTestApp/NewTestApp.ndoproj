@@ -6,16 +6,18 @@
     <VerboseMode>False</VerboseMode>
     <NewMapping>False</NewMapping>
     <GenerateSQL>True</GenerateSQL>
-    <DefaultConnection>Provider=Microsoft.Jet.OLEDB.4.0;Data Source=..\..\..\NDOTestDb.mdb;Persist Security Info=False</DefaultConnection>
+    <DefaultConnection>Integrated Security=SSPI;Persist Security Info=False;Data Source=localhost;Initial Catalog=LinqTest</DefaultConnection>
+    <TargetMappingFileName>NDOMapping.xml</TargetMappingFileName>
     <GenerateChangeEvents>False</GenerateChangeEvents>
     <UseTimeStamps>False</UseTimeStamps>
     <Utf8Encoding>True</Utf8Encoding>
-    <SQLScriptLanguage>Access</SQLScriptLanguage>
+    <SQLScriptLanguage>SqlServer</SQLScriptLanguage>
     <SchemaVersion>1.0</SchemaVersion>
     <IncludeTypecodes>False</IncludeTypecodes>
     <DatabaseOwner>
     </DatabaseOwner>
     <GenerateConstraints>False</GenerateConstraints>
+    <UseMsBuild>True</UseMsBuild>
     <DropExistingElements>False</DropExistingElements>
   </Options>
   <ProjectDescription>
@@ -27,15 +29,9 @@
     <KeyFile>
     </KeyFile>
     <References>
-      <Reference AssemblyName="System.Core" AssemblyPath="..\..\..\..\Program Files\Reference Assemblies\Microsoft\Framework\v3.5\System.Core.dll">
-      </Reference>
-      <Reference AssemblyName="System.Xml.Linq" AssemblyPath="..\..\..\..\Program Files\Reference Assemblies\Microsoft\Framework\v3.5\System.Xml.Linq.dll">
-      </Reference>
       <Reference AssemblyName="BusinessClasses" AssemblyPath="..\BusinessClasses\bin\Debug\BusinessClasses.dll">
       </Reference>
-      <Reference AssemblyName="System.Data.DataSetExtensions" AssemblyPath="..\..\..\..\Program Files\Reference Assemblies\Microsoft\Framework\v3.5\System.Data.DataSetExtensions.dll">
-      </Reference>
-      <Reference AssemblyName="NDOInterfaces" AssemblyPath="..\..\..\..\Program Files\NDO 2.0 Enterprise Edition\NDOInterfaces.dll">
+      <Reference AssemblyName="NDOInterfaces" AssemblyPath="D:\Projekte\NDO22\NDOInterfaces\bin\Debug\NDOInterfaces.dll">
       </Reference>
     </References>
   </ProjectDescription>

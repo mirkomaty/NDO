@@ -97,14 +97,14 @@ namespace TestApp
             EmployeeTable employees = dc.EmployeeTable;
             //dc.EmployeeTable.Prefetches.Add("travels");
             //dc.EmployeeTable.Prefetches.Add("address");
-            dc.EmployeeTable.UseLikeOperator = true;
+            dc.EmployeeTable.UseLikeOperator = false;
 
             int year = 1957;
 
             List<Employee> l = 
                 from e in dc.EmployeeTable where 
-                  e.firstName == "Mirko" || e.geburtsJahr % 1900 > 58
-                  && e.travels.purpose == "ADC*" 
+                  e.firstName == "Mirko" || e.geburtsJahr > year
+                  && e.travels.purpose.Like("ADC*")
                 orderby e.lastName, e.firstName descending
                 select new FetchGroup(e.firstName, e.lastName);//new EmployeeLinqHelper(new {e.firstName});
 

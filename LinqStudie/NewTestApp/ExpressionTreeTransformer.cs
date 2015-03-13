@@ -56,7 +56,7 @@ namespace NDO.Linq
         }
         static OperatorEntry[] operators =
         {
-            new OperatorEntry(ExpressionType.Modulo, "MOD", 0),
+            new OperatorEntry(ExpressionType.Modulo, "%", 0),
             new OperatorEntry(ExpressionType.Multiply, "*", 0),
             new OperatorEntry(ExpressionType.Divide, "/", 0),
             new OperatorEntry(ExpressionType.Add, "+", 1),
@@ -175,13 +175,27 @@ namespace NDO.Linq
                         sb.Append(" = ");
                     Transform(mcex.Arguments[1]);
                 }
+				else if (mname == "Like")
+				{
+					Transform(mcex.Arguments[0]);
+					sb.Append(" LIKE ");
+					Transform(mcex.Arguments[1]);
+				}
                 else
                     throw new Exception("Method call not supported: " + mname);
             }
             if (ex.NodeType == ExpressionType.MemberAccess)
             {
                 MemberExpression memberex = (MemberExpression) ex;
-                sb.Append(memberex.ToString().Substring(baseParameterLength));
+				if ((memberex.Expression as ConstantExpression) == null)
+				{
+					sb.Append( memberex.ToString().Substring( baseParameterLength ) );
+				}
+				else
+				{
+					object o = Expression.Lambda( memberex ).Compile().DynamicInvoke();
+					AddParameter( o );
+				}
             }
             else if (ex.NodeType == ExpressionType.Constant)
             {

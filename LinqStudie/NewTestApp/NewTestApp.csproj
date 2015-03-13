@@ -10,12 +10,13 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>NewTestApp</RootNamespace>
     <AssemblyName>NewTestApp</AssemblyName>
-    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <FileUpgradeFlags>
     </FileUpgradeFlags>
     <OldToolsVersion>3.5</OldToolsVersion>
     <UpgradeBackupLocation />
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -25,6 +26,8 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -33,13 +36,15 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="NDO, Version=2.0.0.0, Culture=neutral, PublicKeyToken=37bfdffa92a0cd24, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\..\Windows\assembly\GAC_MSIL\NDO\2.0.0.0__37bfdffa92a0cd24\NDO.dll</HintPath>
+    <Reference Include="NDO">
+      <HintPath>D:\Projekte\NDO22\NDODLL\bin\Debug\NDO.dll</HintPath>
     </Reference>
-    <Reference Include="NDOInterfaces, Version=2.0.0.0, Culture=neutral, PublicKeyToken=ff5e453a099b8326, processorArchitecture=MSIL" />
+    <Reference Include="NDOInterfaces">
+      <HintPath>D:\Projekte\NDO22\NDOInterfaces\bin\Debug\NDOInterfaces.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
@@ -56,6 +61,7 @@
   <ItemGroup>
     <Compile Include="DataContext.cs" />
     <Compile Include="ExpressionTreeTransformer.cs" />
+    <Compile Include="LinqStringExtension.cs" />
     <Compile Include="LinqDb.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -70,6 +76,9 @@
       <Name>BusinessClasses</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup>
+    <None Include="app.config" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
@@ -78,4 +87,11 @@
   <Target Name="AfterBuild">
   </Target>
   -->
+  <Target Name="AfterBuild">
+    <NDOEnhancer NdoProjectFile="$(ProjectName).ndoproj" NdoPlatformTarget="$(Platform)" />
+  </Target>
+  <PropertyGroup>
+    <NDOInstallPath Condition=" '$(NDOInstallPath)' == ''">$(Registry:HKEY_LOCAL_MACHINE\SOFTWARE\NDO@InstallDir)</NDOInstallPath>
+  </PropertyGroup>
+  <Import Project="$(NDOInstallPath)\NDOEnhancer.Targets" />
 </Project>

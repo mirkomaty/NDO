@@ -1,10 +1,10 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
 <NDOMapping SchemaVersion="1.0">
   <Connections>
-    <Connection ID="C0" Name="Provider=Microsoft.Jet.OLEDB.4.0;Data Source=..\..\..\NDOTestDb.mdb;Persist Security Info=False" Type="Access" />
+    <Connection ID="C0" Name="Integrated Security=SSPI;Persist Security Info=False;Data Source=localhost;Initial Catalog=LinqTest" Type="SqlServer" />
   </Connections>
   <Classes>
-    <Class AssemblyName="BusinessClasses" FullName="BusinessClasses.Address" TableName="Address" ConnectionId="C0">
+    <Class AssemblyName="BusinessClasses" FullName="BusinessClasses.Address" TableName="Address" ConnectionId="C0" TypeCode="297910061">
       <Oid>
         <OidColumn AutoIncremented="True" Name="ID" AllowDbNull="False" />
       </Oid>
@@ -24,7 +24,7 @@
       </Fields>
       <Relations />
     </Class>
-    <Class AssemblyName="BusinessClasses" FullName="BusinessClasses.Employee" TableName="Employee" ConnectionId="C0">
+    <Class AssemblyName="BusinessClasses" FullName="BusinessClasses.Employee" TableName="Employee" ConnectionId="C0" TypeCode="-1237505387">
       <Oid>
         <OidColumn AutoIncremented="True" Name="ID" AllowDbNull="False" />
       </Oid>
@@ -48,7 +48,7 @@
         </Relation>
       </Relations>
     </Class>
-    <Class AssemblyName="BusinessClasses" FullName="BusinessClasses.Travel" TableName="Travel" ConnectionId="C0">
+    <Class AssemblyName="BusinessClasses" FullName="BusinessClasses.Travel" TableName="Travel" ConnectionId="C0" TypeCode="289312961">
       <Oid>
         <OidColumn AutoIncremented="True" Name="ID" AllowDbNull="False" />
       </Oid>

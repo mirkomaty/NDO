@@ -4,7 +4,7 @@
     <Connection ID="C0" Name="Substitute this string with your connection string" Type="" />
   </Connections>
   <Classes>
-    <Class AssemblyName="BusinessClasses" FullName="BusinessClasses.Address" TableName="Address" ConnectionId="C0">
+    <Class AssemblyName="BusinessClasses" FullName="BusinessClasses.Address" TableName="Address" ConnectionId="C0" TypeCode="297910061">
       <Oid>
         <OidColumn AutoIncremented="True" Name="ID" AllowDbNull="False" />
       </Oid>
@@ -24,7 +24,7 @@
       </Fields>
       <Relations />
     </Class>
-    <Class AssemblyName="BusinessClasses" FullName="BusinessClasses.Employee" TableName="Employee" ConnectionId="C0">
+    <Class AssemblyName="BusinessClasses" FullName="BusinessClasses.Employee" TableName="Employee" ConnectionId="C0" TypeCode="-1237505387">
       <Oid>
         <OidColumn AutoIncremented="True" Name="ID" AllowDbNull="False" />
       </Oid>
@@ -48,7 +48,7 @@
         </Relation>
       </Relations>
     </Class>
-    <Class AssemblyName="BusinessClasses" FullName="BusinessClasses.Travel" TableName="Travel" ConnectionId="C0">
+    <Class AssemblyName="BusinessClasses" FullName="BusinessClasses.Travel" TableName="Travel" ConnectionId="C0" TypeCode="289312961">
       <Oid>
         <OidColumn AutoIncremented="True" Name="ID" AllowDbNull="False" />
       </Oid>

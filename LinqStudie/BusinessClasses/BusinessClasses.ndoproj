@@ -3,36 +3,36 @@
   <Options>
     <EnableAddIn>True</EnableAddIn>
     <EnableEnhancer>True</EnableEnhancer>
-    <GenerateMapping>True</GenerateMapping>
-    <GenerateSchema>True</GenerateSchema>
+    <VerboseMode>False</VerboseMode>
     <NewMapping>False</NewMapping>
-    <MergeMapping>False</MergeMapping>
-    <MergeSchema>False</MergeSchema>
     <GenerateSQL>False</GenerateSQL>
-    <TypeListFile>
-    </TypeListFile>
     <DefaultConnection>
     </DefaultConnection>
-    <UsePolymorphy>False</UsePolymorphy>
+    <TargetMappingFileName>NDOMapping.xml</TargetMappingFileName>
     <GenerateChangeEvents>False</GenerateChangeEvents>
     <UseTimeStamps>False</UseTimeStamps>
     <Utf8Encoding>True</Utf8Encoding>
     <SQLScriptLanguage>Access</SQLScriptLanguage>
     <SchemaVersion>
     </SchemaVersion>
+    <IncludeTypecodes>False</IncludeTypecodes>
     <DatabaseOwner>
     </DatabaseOwner>
+    <GenerateConstraints>False</GenerateConstraints>
+    <UseMsBuild>False</UseMsBuild>
+    <DropExistingElements>True</DropExistingElements>
   </Options>
   <ProjectDescription>
     <BinPath>bin\Debug\BusinessClasses.dll</BinPath>
     <ObjPath>obj\Debug\</ObjPath>
-    <ProjPath>C:\LinqSamples\NDOTravelExpensesLinq\BusinessClasses\</ProjPath>
     <AssemblyName />
     <Debug>True</Debug>
     <IsWebProject>False</IsWebProject>
     <KeyFile>
     </KeyFile>
     <References>
+      <Reference AssemblyName="System.Core" AssemblyPath="d:\program files (x86)\reference assemblies\microsoft\framework\.netframework\v4.5\system.core.dll">
+      </Reference>
     </References>
   </ProjectDescription>
 </Enhancer>
