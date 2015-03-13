@@ -138,7 +138,7 @@ namespace NDO.Mapping
             parentNode.AppendChild(fieldNode);
             base.SaveProperties(fieldNode);
             fieldNode.SetAttribute("Name", name);
-			if (this.accessorName != null)
+			if (!String.IsNullOrEmpty( this.accessorName ))
 				fieldNode.SetAttribute( "AccessorName", accessorName );
             this.column.Save(fieldNode);
         }

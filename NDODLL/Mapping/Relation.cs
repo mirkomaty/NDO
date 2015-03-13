@@ -328,7 +328,7 @@ namespace NDO.Mapping
             parentNode.AppendChild(relNode);
             base.SaveProperties(relNode);
             relNode.SetAttribute("FieldName", this.fieldName);
-			if (this.accessorName != null)
+			if (!String.IsNullOrEmpty( this.accessorName ))
 				relNode.SetAttribute("AccessorName", this.accessorName);
 
             if (!string.IsNullOrEmpty(foreignKeyTypeColumnName))
