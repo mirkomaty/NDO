@@ -44,7 +44,7 @@ using Microsoft.Office.Core;
 using Microsoft.VisualStudio.CommandBars;
 #endif
 
-namespace NDOEnhancer
+namespace NDOAddIn
 {
 	/// <summary>
 	/// Zusammenfassung für AddPersistentClassVb.

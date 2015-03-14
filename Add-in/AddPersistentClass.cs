@@ -47,7 +47,7 @@ using System.Collections;
 #endif
 //using System.Text.RegularExpressions;
 
-namespace NDOEnhancer
+namespace NDOAddIn
 {
 	/// <summary>
 	/// Zusammenfassung für AddPersistentClass.
@@ -57,7 +57,7 @@ namespace NDOEnhancer
 
 		public AddPersistentClass()
 		{
-//            this.MyCommandName = "NDOEnhancer.Connect.AddPersistentClass";
+//            this.MyCommandName = "NDOAddIn.Connect.AddPersistentClass";
             this.CommandBarButtonToolTip = "Adds a persistent class for NDO";
             this.CommandBarButtonText = "Add Persistent Class";
 		}

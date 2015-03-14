@@ -37,7 +37,7 @@ using System.IO;
 using System.Threading;
 using System.Diagnostics;
 
-namespace NDOEnhancer
+namespace NDOAddIn
 {
 	/// <summary>
 	/// Zusammenfassung für ConsoleProcess.

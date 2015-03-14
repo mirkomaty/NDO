@@ -5,7 +5,7 @@ using EnvDTE;
 using Extensibility;
 using EnvDTE80;
 
-namespace NDOEnhancer
+namespace NDOAddIn
 {
     internal abstract class AbstractCommand : IDTExtensibility2, IDTCommandTarget
     {
@@ -24,7 +24,7 @@ namespace NDOEnhancer
         {
             get 
             { 
-                return "NDOEnhancer.Connect." + this.commandBarButtonText.Replace(" ", string.Empty); 
+                return "NDOAddIn.Connect." + this.commandBarButtonText.Replace(" ", string.Empty); 
             }
         }
 

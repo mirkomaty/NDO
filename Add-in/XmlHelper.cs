@@ -33,7 +33,7 @@
 using System;
 using System.Xml;
 
-namespace NDOEnhancer
+namespace NDOAddIn
 {
 	/// <summary>
 	/// Zusammenfassung für XmlHelper.

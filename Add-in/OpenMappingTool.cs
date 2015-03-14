@@ -47,7 +47,7 @@ using Microsoft.VisualStudio.CommandBars;
 #endif
 using System.Windows.Forms;
 
-namespace NDOEnhancer
+namespace NDOAddIn
 {
 	/// <summary>
 	/// Zusammenfassung für Configure.
@@ -59,7 +59,7 @@ namespace NDOEnhancer
 		{
 		    this.CommandBarButtonText	= "Open Mapping Tool";
 		    this.CommandBarButtonToolTip	= "Opens the NDO mapping tool";
-//            this.MyCommandName = "NDOEnhancer.Connect.OpenMappingTool";
+//            this.MyCommandName = "NDOAddIn.Connect.OpenMappingTool";
 		}
 
 

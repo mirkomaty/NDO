@@ -36,7 +36,7 @@ using System.Collections;
 using System.ComponentModel;
 using System.Windows.Forms;
 
-namespace NDOEnhancer
+namespace NDOAddIn
 {
 	internal enum ListType
 	{

@@ -47,7 +47,7 @@ using Microsoft.VisualStudio.CommandBars;
 #endif
 using System.Windows.Forms;
 
-namespace NDOEnhancer
+namespace NDOAddIn
 {
 	/// <summary>
 	/// Zusammenfassung für Configure.
@@ -59,7 +59,7 @@ namespace NDOEnhancer
 		{
 		    this.CommandBarButtonText	= "Open Class Generator";
 		    this.CommandBarButtonToolTip	= "Opens the NDO class generator";
-//            this.MyCommandName = "NDOEnhancer.Connect.OpenClassGenerator";
+//            this.MyCommandName = "NDOAddIn.Connect.OpenClassGenerator";
 		}
 
 

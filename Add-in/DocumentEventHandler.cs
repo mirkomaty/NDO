@@ -1,6 +1,6 @@
 //
-// Copyright (C) 2002-2008 HoT - House of Tools Development GmbH 
-// (www.netdataobjects.com)
+// Copyright (C) 2002-2015 Mirko Matytschak 
+// (www.netdataobjects.de)
 //
 // Author: Mirko Matytschak
 //
@@ -31,16 +31,43 @@
 
 
 using System;
+using System.Globalization;
+using System.Text.RegularExpressions;
+using System.Xml;
+using System.Collections;
+using System.Windows.Forms;
+using System.IO;
+using System.Runtime.InteropServices;
+using EnvDTE;
+#if NET20
+using EnvDTE80;
+#endif
+using VSLangProj;
+using VSLangProj2;
+using System.Collections.Generic;
 
 namespace NDOAddIn
 {
 	/// <summary>
-	/// Zusammenfassung für EnhancerEmptyException.
+	/// Summary description for BuildEventHandler.
 	/// </summary>
-	public class EnhancerEmptyException : Exception
+	internal class DocumentEventHandler
 	{
-		public EnhancerEmptyException()
+		MessageAdapter	messages = null;
+		private _DTE	m_applicationObject;
+
+		public DocumentEventHandler( _DTE applicationObject )
 		{
+			m_applicationObject = applicationObject;
+			ApplicationObject.VisualStudioApplication = applicationObject;
 		}
+
+		public void OnDocumentSaved(Document document)
+		{
+			string fullName = document.FullName;
+			if (!fullName.EndsWith( ".cs" ))
+				return;
+		}
+
 	}
 }

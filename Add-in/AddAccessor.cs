@@ -46,7 +46,7 @@ using Microsoft.VisualStudio.CommandBars;
 #endif
 using System.Text.RegularExpressions;
 
-namespace NDOEnhancer
+namespace NDOAddIn
 {
 	/// <summary>
 	/// Zusammenfassung für AddAccessor.
@@ -55,7 +55,7 @@ namespace NDOEnhancer
 	{
 		public AddAccessor()
 		{
-//            MyCommandName = "NDOEnhancer.Connect.AddAccessor";
+//            MyCommandName = "NDOAddIn.Connect.AddAccessor";
             this.CommandBarButtonText = "Add Accessor";
             this.CommandBarButtonToolTip = "Adds an accessor property";
         }

@@ -33,7 +33,7 @@
 using System;
 using EnvDTE;
 
-namespace NDOEnhancer
+namespace NDOAddIn
 {
 	internal class TabProperty
 	{

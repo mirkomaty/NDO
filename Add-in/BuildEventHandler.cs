@@ -46,7 +46,7 @@ using VSLangProj;
 using VSLangProj2;
 using System.Collections.Generic;
 
-namespace NDOEnhancer
+namespace NDOAddIn
 {
 	/// <summary>
 	/// Summary description for BuildEventHandler.

@@ -45,7 +45,7 @@ using Microsoft.VisualStudio.CommandBars;
 #endif
 using System.Text.RegularExpressions;
 
-namespace NDOEnhancer
+namespace NDOAddIn
 {
 	/// <summary>
 	/// Zusammenfassung für AddAccessorCs.

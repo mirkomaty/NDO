@@ -50,24 +50,19 @@ using EnvDTE;
 using EnvDTE80;
 #endif
 
-#if NET11
-using NDOEnhancer;
-
-namespace NDOEnhancerKern
-#else
-namespace NDOEnhancer
-#endif
+namespace NDOAddIn
 {
 	/// <summary>
 	///   The object for implementing an Add-in.
 	/// </summary>
 	/// <seealso class='IDTExtensibility2' />
-	//[GuidAttribute("D861E693-1993-4C4E-B9A7-5657D7F4F33A"), ProgId("NDOEnhancer.Connect")]
+	//[GuidAttribute("D861E693-1993-4C4E-B9A7-5657D7F4F33A"), ProgId("NDOAddIn.Connect")]
 	public class Connect : Extensibility.IDTExtensibility2, IDTCommandTarget
 	{
 		private _DTE					applicationObject;
 		private BuildEvents				buildEvents;
 		private BuildEventHandler		buildEventHandler;
+		private DocumentEventHandler	documentEventHandler;
 #if NET11
 		private static ArrayList allCommands;
 #else
@@ -225,18 +220,25 @@ namespace NDOEnhancer
             {
                 NDOCommandBar.CreateInstance(applicationObject);  // Makes sure, the command bar exists
 
+                Events events = applicationObject.Events;
+
                 if (null == buildEventHandler)
                 {
-                    buildEventHandler = new BuildEventHandler(applicationObject);
+                    this.buildEventHandler = new BuildEventHandler(applicationObject);
 
-                    Events events = applicationObject.Events;
                     buildEvents = events.BuildEvents;
 
-                    buildEvents.OnBuildBegin += new _dispBuildEvents_OnBuildBeginEventHandler(buildEventHandler.onBuildBegin);
-                    buildEvents.OnBuildDone += new _dispBuildEvents_OnBuildDoneEventHandler(buildEventHandler.onBuildDone);
-                    buildEvents.OnBuildProjConfigBegin += new _dispBuildEvents_OnBuildProjConfigBeginEventHandler(buildEventHandler.onBuildProjConfigBegin);
-                    buildEvents.OnBuildProjConfigDone += new _dispBuildEvents_OnBuildProjConfigDoneEventHandler(buildEventHandler.onBuildProjConfigDone);
+                    buildEvents.OnBuildBegin			+= buildEventHandler.onBuildBegin;
+                    buildEvents.OnBuildDone				+= buildEventHandler.onBuildDone;
+                    buildEvents.OnBuildProjConfigBegin	+= buildEventHandler.onBuildProjConfigBegin;
+                    buildEvents.OnBuildProjConfigDone	+= buildEventHandler.onBuildProjConfigDone;					
                 }
+
+				if (null == documentEventHandler)
+				{
+					this.documentEventHandler = new DocumentEventHandler( applicationObject );
+					events.DocumentEvents.DocumentSaved += documentEventHandler.OnDocumentSaved;
+				}
             }
             catch (System.Exception ex)
             {

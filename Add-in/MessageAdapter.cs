@@ -37,7 +37,7 @@ using EnvDTE80;
 #endif
 using NDOInterfaces;
 
-namespace NDOEnhancer
+namespace NDOAddIn
 {
 	/// <summary>
 	/// Summary description for MessageAdapter.

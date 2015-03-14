@@ -38,7 +38,7 @@ using System.Text;
 using EnvDTE;
 using VSLangProj;
 
-namespace NDOEnhancer
+namespace NDOAddIn
 {
     internal class ProjectIterator
     {

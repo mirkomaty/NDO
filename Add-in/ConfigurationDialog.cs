@@ -52,7 +52,7 @@ using SD = System.Diagnostics;
 //using MBE = Microsoft.Build.Evaluation;
 //using MB = Microsoft.Build.Execution;
 
-namespace NDOEnhancer
+namespace NDOAddIn
 {
 	/// <summary>
 	/// Summary description for ConfigurationDialog.
@@ -646,9 +646,9 @@ namespace NDOEnhancer
                             if (MessageBox.Show("The database connection settings have been changed. Should NDO change the connection settings in the mapping file " + Path.GetFileName(mappingFileName) + " too?", "NDO Configuration", MessageBoxButtons.YesNo) == DialogResult.Yes)
                             {
                                 Connection conn = null;
-                                if (mapping.Connections.Count == 1)
+                                if (mapping.Connections.Count() > 0)
                                 {
-                                    conn = (Connection)mapping.Connections[0];
+                                    conn = (Connection)mapping.Connections.First();
                                 }
                                 else
                                 {

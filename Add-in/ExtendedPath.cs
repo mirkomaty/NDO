@@ -33,7 +33,7 @@
 using System;
 using System.IO;
 
-namespace NDOEnhancer
+namespace NDOAddIn
 {
 	/// <summary>
 	/// Zusammenfassung für ExtendedPath.

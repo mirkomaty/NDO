@@ -37,7 +37,7 @@ using EnvDTE;
 using EnvDTE80;
 #endif
 using Microsoft.Win32;
-namespace NDOEnhancer
+namespace NDOAddIn
 {
 	/// <summary>
 	/// Zusammenfassung für ApplicationObject.

@@ -45,7 +45,7 @@ using Microsoft.VisualStudio.CommandBars;
 #endif
 using VSLangProj;
 
-namespace NDOEnhancer
+namespace NDOAddIn
 {
 
 	internal class CodeGenHelper

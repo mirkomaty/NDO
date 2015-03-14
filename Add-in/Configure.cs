@@ -44,7 +44,7 @@ using Microsoft.VisualStudio.CommandBars;
 #endif
 using System.Windows.Forms;
 
-namespace NDOEnhancer
+namespace NDOAddIn
 {
 	/// <summary>
 	/// Zusammenfassung für Configure.
@@ -56,7 +56,7 @@ namespace NDOEnhancer
 		{
             this.CommandBarButtonText = "NDO Configuration";
             this.CommandBarButtonToolTip = ".NET Data Objects Configuration";
-//            this.MyCommandName = "NDOEnhancer.Connect.Configuration";
+//            this.MyCommandName = "NDOAddIn.Connect.Configuration";
         }
 
 	

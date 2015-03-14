@@ -44,7 +44,7 @@ using VsWebSite;
 using NDOInterfaces; // for IMessageAdapter
 #endif
 
-namespace NDOEnhancer
+namespace NDOAddIn
 {
 
 	/// <summary>

@@ -47,7 +47,7 @@ using Microsoft.VisualStudio.CommandBars;
 #endif
 using System.Text.RegularExpressions;
 
-namespace NDOEnhancer
+namespace NDOAddIn
 {
 	/// <summary>
 	/// Zusammenfassung für AddRelation.
@@ -58,7 +58,7 @@ namespace NDOEnhancer
 		{
 			this.CommandBarButtonText = "Add Relation";
             this.CommandBarButtonToolTip = "Adds a relation";
-//            this.MyCommandName = "NDOEnhancer.Connect.AddRelation";
+//            this.MyCommandName = "NDOAddIn.Connect.AddRelation";
 		}
 
 		TextDocument textDoc;
