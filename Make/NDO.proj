@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
-	<EnhDateString>V. 2.1</EnhDateString>
+	<EnhDateString>V. 3.0</EnhDateString>
 	<SVNREV>C:\Program Files\TortoiseSVN\bin\subwcrev.exe</SVNREV>
 	
 	<PERS_DIR>..</PERS_DIR>
@@ -56,11 +56,11 @@
 	<Exec Command="..\MakeEnhancerDate\bin\Debug\MakeEnhancerDate.exe &quot;$(EnhDateString)&quot; &quot;$(SVNREV)&quot; &gt; ..\Add-in\EnhDate.cs"/>
 	<Copy SourceFiles="..\Add-in\EnhDate.cs" DestinationFolder="..\NDOEnhancer" />
 	<Exec Command="resgen Resource1.resx Resource1.resources" WorkingDirectory="..\Add-in\Resources"/>
-	<Exec Command="Al.exe /v:2.1.0.0 /embed:..\Add-in\Resources\Resource1.resources /culture:en /out:$(DEPLOY_DIR)\en\NDOEnhancer.resources.dll"/>
-	<Exec Command="Al.exe /v:2.1.0.0 /embed:..\Add-in\Resources\Resource1.resources /culture:de /out:$(DEPLOY_DIR)\en\NDOEnhancer.resources.dll"/>
-	<Exec Command="Al.exe /v:2.1.0.0 /embed:..\Add-in\Resources\Resource1.resources /culture:fr /out:$(DEPLOY_DIR)\en\NDOEnhancer.resources.dll"/>
-	<Exec Command="Al.exe /v:2.1.0.0 /embed:..\Add-in\Resources\Resource1.resources /culture:es /out:$(DEPLOY_DIR)\en\NDOEnhancer.resources.dll"/>
-	<Exec Command="Al.exe /v:2.1.0.0 /embed:..\Add-in\Resources\Resource1.resources /culture:it /out:$(DEPLOY_DIR)\en\NDOEnhancer.resources.dll"/>
+	<Exec Command="Al.exe /v:3.0.0.0 /embed:..\Add-in\Resources\Resource1.resources /culture:en /out:$(DEPLOY_DIR)\en-US\NDOEnhancer.resources.dll"/>
+	<Exec Command="Al.exe /v:3.0.0.0 /embed:..\Add-in\Resources\Resource1.resources /culture:de /out:$(DEPLOY_DIR)\de\NDOEnhancer.resources.dll"/>
+	<Exec Command="Al.exe /v:3.0.0.0 /embed:..\Add-in\Resources\Resource1.resources /culture:fr /out:$(DEPLOY_DIR)\fr\NDOEnhancer.resources.dll"/>
+	<Exec Command="Al.exe /v:3.0.0.0 /embed:..\Add-in\Resources\Resource1.resources /culture:es /out:$(DEPLOY_DIR)\es\NDOEnhancer.resources.dll"/>
+	<Exec Command="Al.exe /v:3.0.0.0 /embed:..\Add-in\Resources\Resource1.resources /culture:it /out:$(DEPLOY_DIR)\it\NDOEnhancer.resources.dll"/>
 	<MSBuild Projects="@(Project)" Targets="Rebuild" Properties="Configuration=$(Configuration);Platform=$(Platform)" />
 	<MSBuild Projects="@(Projectx86)" Targets="Rebuild" Properties="Configuration=$(Configuration);Platform=x86" />
 	<Copy SourceFiles="@(DeployFiles)" DestinationFolder="$(DEPLOY_DIR)" />

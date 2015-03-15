@@ -8,6 +8,7 @@ using System.Text;
 using System.Windows.Forms;
 using Northwind;
 using NDO;
+using NDO.Linq;
 
 namespace NorthwindGUI
 {
@@ -41,11 +42,12 @@ namespace NorthwindGUI
         #region Grid View Synchronizing
         void CustomerPositionChanged(object sender, EventArgs e)
         {
-            Order.QueryHelper qh = new Order.QueryHelper();
+            
             NDOQuery<Order> q = new NDOQuery<Order>(pm, qh.customer.oid + Query.Op.Eq + Query.Placeholder(0));
             IPersistenceCapable pc = SelectedCustomer;
             if (pc != null)
             {
+				this.orderList = from o in this.pm.Objects<Order>() where o.Oid<object>() == pc.NDOObjectId.Id.Value select o;
                 q.Parameters.Add(pc.NDOObjectId.Id.Value);
                 this.orderList = q.Execute();
                 orderBindingSource.DataSource = this.orderList;

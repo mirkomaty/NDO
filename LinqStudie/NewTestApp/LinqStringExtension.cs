@@ -12,5 +12,9 @@ namespace NDODev.Linq
 		{
 			return true;
 		}
+		public static T Oid<T>(this object s)
+		{
+			return default(T);
+		}
 	}
 }

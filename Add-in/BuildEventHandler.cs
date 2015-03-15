@@ -45,6 +45,7 @@ using EnvDTE80;
 using VSLangProj;
 using VSLangProj2;
 using System.Collections.Generic;
+using NDOEnhancer;
 
 namespace NDOAddIn
 {

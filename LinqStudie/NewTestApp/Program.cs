@@ -75,6 +75,7 @@ namespace TestApp
             int year = 1957;
             List<Employee> l = 
                 from e in pm.Objects<Employee>() where 
+				e.Oid<int>() != 0 &&
                   (e.FirstName == "Mirko" && e.GeburtsJahr > year) 
                   && e.Travels[Any.Index].Purpose.Like( "ADC 2006" )
 				  && e.Position=="Manager"

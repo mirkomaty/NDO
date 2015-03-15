@@ -40,8 +40,6 @@ namespace NDO.Linq
 {
     public class ExpressionTreeTransformer
     {
-        bool useLikeOperator;
-
         class OperatorEntry
         {
             public OperatorEntry(ExpressionType exprType, string replacement, int prec)
@@ -171,10 +169,7 @@ namespace NDO.Linq
                 if (mname == "op_Equality")
                 {
                     Transform(mcex.Arguments[0]);
-                    if (useLikeOperator)
-                        sb.Append(" LIKE ");
-                    else
-                        sb.Append(" = ");
+                    sb.Append(" = ");
                     Transform(mcex.Arguments[1]);
                 }
 				else if (mname == "Like")
@@ -183,7 +178,17 @@ namespace NDO.Linq
 					sb.Append(" LIKE ");
 					Transform(mcex.Arguments[1]);
 				}
-                else
+				else if (mname == "Oid")
+				{
+					string exStr = ex.ToString();
+					exStr = exStr.Substring( baseParameterLength, exStr.Length - 5 - baseParameterLength );
+					if (exStr.Length > 0)
+					{
+						sb.Append( exStr );
+					}
+					sb.Append("oid ");
+				}
+				else
                     throw new Exception("Method call not supported: " + mname);
 				return;
 			  //-------

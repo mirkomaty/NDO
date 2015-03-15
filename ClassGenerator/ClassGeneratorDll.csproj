@@ -102,11 +102,13 @@
     <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="NDO, Version=2.1.0.0, Culture=neutral, PublicKeyToken=37bfdffa92a0cd24" />
-    <Reference Include="NDOInterfaces">
-      <Name>NDOInterfaces</Name>
-      <HintPath>..\..\..\Programme\\NDO 2.0 Enterprise Edition\NDOInterfaces.dll</HintPath>
-      <AssemblyFolderKey>hklm\dn\ndo</AssemblyFolderKey>
+    <Reference Include="NDO, Version=3.0.0.0, Culture=neutral, PublicKeyToken=37bfdffa92a0cd24, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\NDODLL\bin\$(Configuration)\NDO.dll</HintPath>
+    </Reference>
+    <Reference Include="NDOInterfaces, Version=3.0.0.0, Culture=neutral, PublicKeyToken=ff5e453a099b8326, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\NDOInterfaces\bin\$(Configuration)\NDOInterfaces.dll</HintPath>
     </Reference>
     <Reference Include="System">
       <Name>System</Name>

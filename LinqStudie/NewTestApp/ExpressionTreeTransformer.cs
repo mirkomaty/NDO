@@ -171,10 +171,7 @@ namespace NDODev.Linq
                 if (mname == "op_Equality")
                 {
                     Transform(mcex.Arguments[0]);
-                    if (useLikeOperator)
-                        sb.Append(" LIKE ");
-                    else
-                        sb.Append(" = ");
+                    sb.Append(" = ");
                     Transform(mcex.Arguments[1]);
                 }
 				else if (mname == "Like")
@@ -182,6 +179,16 @@ namespace NDODev.Linq
 					Transform(mcex.Arguments[0]);
 					sb.Append(" LIKE ");
 					Transform(mcex.Arguments[1]);
+				}
+				else if (mname == "Oid")
+				{
+					string exStr = ex.ToString();
+					exStr = exStr.Substring( baseParameterLength, exStr.Length - 5 - baseParameterLength );
+					if (exStr.Length > 0)
+					{
+						sb.Append( exStr );
+					}
+					sb.Append("oid ");
 				}
                 else
                     throw new Exception("Method call not supported: " + mname);

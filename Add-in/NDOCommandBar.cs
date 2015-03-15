@@ -51,7 +51,7 @@ namespace NDOAddIn
 	{
 		private static NDOCommandBar instance = null;
 
-		public string Name = ".NET Data Objects AddIn, 2.2";
+		public string Name = ".NET Data Objects AddIn, 3.0";
 		public string OldName = ".NET Data Objects AddIn, 2.1";
 
         _DTE applicationObject;

@@ -48,8 +48,8 @@ using System.Security;
 [assembly: AssemblyConfiguration("Release")]
 #endif
 [assembly: AssemblyCompany("Mirko Matytschak")]
-[assembly: AssemblyProduct("NDO 2.2 r.200")]
-[assembly: AssemblyCopyright("(c) 2002 - 2014, Mirko Matytschak, Marzling, Germany")]
+[assembly: AssemblyProduct("NDO 3.0 r.222")]
+[assembly: AssemblyCopyright("(c) 2002 - 2015, Mirko Matytschak, Marzling, Germany")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 [assembly: CLSCompliant(true)]
@@ -66,7 +66,7 @@ using System.Security;
 // by using the '*' as shown below:
 
 #if NDO20
-[assembly: AssemblyVersion("2.2.0.0")]
+[assembly: AssemblyVersion("3.0.0.0")]
 #endif
 
 [assembly: AssemblyKeyName("")]
