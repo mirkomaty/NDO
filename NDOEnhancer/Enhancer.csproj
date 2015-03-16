@@ -348,6 +348,6 @@
 </PostBuildEvent>
   </PropertyGroup>
   <PropertyGroup>
-    <PreBuildEvent>..\..\..\MakeEnhancerDate\bin\Debug\MakeEnhancerDate.exe "V. 2.2" "C:\Program Files\TortoiseSVN\bin\subwcrev.exe" &gt; $(ProjectDir)\EnhDate.cs</PreBuildEvent>
+    <PreBuildEvent>..\..\..\MakeEnhancerDate\bin\Debug\MakeEnhancerDate.exe "V. 3.0" "C:\Program Files\TortoiseSVN\bin\subwcrev.exe" &gt; $(ProjectDir)\EnhDate.cs</PreBuildEvent>
   </PropertyGroup>
 </Project>
