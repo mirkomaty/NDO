@@ -1,9 +1,10 @@
-using System;
+﻿using System;
 using NDO;
+
 namespace BusinessClasses
 {
     [NDOPersistent]
-    public class ExpenseVoucher : Expense
+    public partial class ExpenseVoucher : Expense
     {
         string text;
         public string VoucherText

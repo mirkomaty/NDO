@@ -1,9 +1,10 @@
-using System;
+﻿using System;
 using NDO;
+
 namespace BusinessClasses
 {
     [NDOPersistent]
-    public class PerDiemAllowance : Expense
+    public partial class PerDiemAllowance : Expense
     {
         decimal hours;
         public decimal Hours

@@ -1,9 +1,10 @@
-using System;
+﻿using System;
 using NDO;
+
 namespace BusinessClasses
 {
     [NDOPersistent]
-    public class MileageAllowance : Expense
+    public partial class MileageAllowance : Expense
     {
         int milesDriven;
         public int MilesDriven

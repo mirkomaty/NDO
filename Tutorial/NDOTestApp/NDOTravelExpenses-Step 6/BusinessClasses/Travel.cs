@@ -1,10 +1,11 @@
 ﻿using System;
 using System.Collections;
 using NDO;
+
 namespace BusinessClasses
 {
     [NDOPersistent]
-    public class Travel
+    public partial class Travel
     {
         [NDORelation(typeof(Expense), RelationInfo.Composite)]
         IList expenses = new ArrayList();

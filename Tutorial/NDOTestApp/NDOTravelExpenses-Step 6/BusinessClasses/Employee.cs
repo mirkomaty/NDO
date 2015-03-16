@@ -10,7 +10,7 @@ namespace BusinessClasses
     /// Summary for Employee
     /// </summary>
     [NDOPersistent]
-    public class Employee
+    public partial class Employee
     {
         [NDORelation(typeof(Travel), RelationInfo.Composite)]
         IList travels = new ArrayList();

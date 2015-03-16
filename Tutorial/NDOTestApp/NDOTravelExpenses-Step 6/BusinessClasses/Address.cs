@@ -3,7 +3,7 @@ using NDO;
 namespace BusinessClasses
 {
     [NDOPersistent]
-    public class Address
+    public partial class Address
     {
         private string countryCode;
         private string zip;

@@ -1,12 +1,13 @@
-using System;
+﻿using System;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
 using NDO;
+
 namespace BusinessClasses
 {
     [NDOPersistent]
-    public class Picture : PictureHeader
+    public partial class Picture : PictureHeader
     {
         byte[] rawbytes = null;
         [NDOTransient]

@@ -4,7 +4,7 @@ using NDO;
 namespace BusinessClasses
 {
     [NDOPersistent]
-    public class Country
+    public partial class Country
     {
 
         string name;
@@ -35,5 +35,3 @@ namespace BusinessClasses
         }
     }
 }
-// Note: you can use the generic list 
-// classes as well, if you wish.
