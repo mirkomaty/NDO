@@ -51,6 +51,8 @@ namespace NDO.Linq
         List<string> prefetches = new List<string>();
         NDOQuery<T> ndoquery = null;
         ArrayList parameters = new ArrayList();
+		int skip = -1;
+		int take = -1;
 
 		/// <summary>
 		/// Constructs a virtual table object
@@ -83,7 +85,7 @@ namespace NDO.Linq
             ExpressionTreeTransformer transformer = 
                 new ExpressionTreeTransformer((LambdaExpression)keySelector);
             string field = transformer.Transform();
-            ndoquery.Orderings.Add(new Query.AscendingOrder(field));
+            Ndoquery.Orderings.Add(new Query.AscendingOrder(field));
             return this;
         }
 
@@ -98,7 +100,7 @@ namespace NDO.Linq
             ExpressionTreeTransformer transformer = 
                 new ExpressionTreeTransformer((LambdaExpression)keySelector);
             string field = transformer.Transform();
-            ndoquery.Orderings.Add(new Query.DescendingOrder(field));
+            Ndoquery.Orderings.Add(new Query.DescendingOrder(field));
             return this;
         }
 
@@ -146,7 +148,14 @@ namespace NDO.Linq
             foreach(object o in transformer.Parameters)
                 this.ndoquery.Parameters.Add(o);
 
-            // Add the prefetch definitions
+			// If we have a paged view
+			// define the take and skip parameters
+			if (this.take > -1)
+				ndoquery.Take = take;
+			if (this.skip > -1)
+				ndoquery.Skip = skip;
+			
+			// Add the prefetch definitions
 			this.ndoquery.Prefetches = new ArrayList( this.prefetches );
             return this;
         }
@@ -158,9 +167,7 @@ namespace NDO.Linq
         {
             get 
             {
-				if (this.ndoquery == null)
-					this.ndoquery = new NDOQuery<T>( pm );
-                return this.ndoquery.Execute();
+                return Ndoquery.Execute();
             }
         }
 
@@ -173,6 +180,47 @@ namespace NDO.Linq
         }
 
 		/// <summary>
+		/// Gets the Query String of the generated query.
+		/// </summary>
+		public string QueryString
+		{
+			get
+			{
+				return Ndoquery.GeneratedQuery;
+			}
+		}
+
+		private NDOQuery<T> Ndoquery
+		{
+			get
+			{
+				if (this.ndoquery == null)
+				{
+					this.ndoquery = new NDOQuery<T>( pm );
+					if (this.take > -1)
+						ndoquery.Take = take;
+					if (this.skip > -1)
+						ndoquery.Skip = skip;
+					this.ndoquery.Prefetches = new ArrayList( this.prefetches );
+				}
+                return this.ndoquery;
+			}
+		}
+
+		/// <summary>
+		/// Supports getting a paged view with Linq
+		/// </summary>
+		/// <param name="skip"></param>
+		/// <param name="take"></param>
+		/// <returns></returns>
+		public VirtualTable<T> PagedView(int skip, int take)
+		{
+			this.skip = skip;
+			this.take = take;
+			return this;
+		}
+
+		/// <summary>
 		/// Converts the VirtualTable to a List.
 		/// </summary>
 		/// <remarks>This operator makes sure that the results of the Linq query are usable as List classes.</remarks>
@@ -183,6 +231,10 @@ namespace NDO.Linq
             return table.ResultTable;
         }
 
+		/// <summary>
+		/// Gets a single object with the query
+		/// </summary>
+		/// <returns></returns>
 		public T FirstOrDefault()
 		{
 			List<T> result = ResultTable;

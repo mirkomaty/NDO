@@ -184,10 +184,10 @@ namespace NDO
 
 		internal Class GetClass(string name) 
 		{
-			Class cl = (Class) myClassesName[name];
-			if (cl == null)
+			if (!myClassesName.ContainsKey(name))
 				throw new NDOException(17, "Can't find mapping information for class " + name);
-			return cl;
+
+			return myClassesName[name];
 		}
 
 		internal Class GetClass(IPersistenceCapable pc) 
@@ -195,17 +195,17 @@ namespace NDO
 			return GetClass(pc.GetType());
 		}
 
-		internal Class GetClass(Type t) 
+		internal Class GetClass(Type type) 
 		{
-			Class cl;
-            if (t.IsGenericType)
-    			cl = (Class) myClassesType[t.GetGenericTypeDefinition()];
-            else
-                cl = (Class)myClassesType[t];
+			Type t = type;
 
-			if (cl == null)
+			if (type.IsGenericType)
+    			t = type.GetGenericTypeDefinition();
+
+			if (! myClassesType.ContainsKey(t))
 				throw new NDOException(17, "Can't find mapping information for class " + t.FullName);
-			return cl;
+
+			return myClassesType[t];
 
 		}
 

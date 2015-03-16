@@ -1137,14 +1137,23 @@ namespace NDO
 			public string ToString(Class cl)
 			{
 				IProvider provider = cl.Provider;
-
-				Field field = cl.FindField(fieldName);
-				if (field == null)
-					throw new NDOException(7, "Can't find mapping information for field " + cl.FullName + "." + fieldName);
-				if (provider == null)
-					return cl.TableName + "." + field.Column.Name + " " + orderType;
+				Column column = null;
+				if (string.Compare( fieldName, "oid", true ) == 0)
+				{
+					//TODO: support multiple columns
+					column = cl.Oid.OidColumns[0];
+				}
 				else
-					return QualifiedTableName.Get(cl.TableName, provider) + "." + provider.GetQuotedName(field.Column.Name) + " " + orderType;
+				{
+					Field field = cl.FindField( fieldName );
+					if (field == null)
+						throw new NDOException( 7, "Can't find mapping information for field " + cl.FullName + "." + fieldName );
+					column = field.Column;
+				}
+				if (provider == null)
+					return cl.TableName + "." + column.Name + " " + orderType;
+				else
+					return QualifiedTableName.Get(cl.TableName, provider) + "." + provider.GetQuotedName(column.Name) + " " + orderType;
 
 			}
 		}

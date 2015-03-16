@@ -565,7 +565,8 @@ namespace NDO.Mapping
         /// <returns></returns>
         private bool FieldsAreDifferent(Field f1, Field f2)
         {
-            // The FieldName is the same
+			if (f1.AccessorName != f2.AccessorName)
+				return true;
             return ColumnsAreDifferent(f1.Column, f2.Column);
         }
 
@@ -632,6 +633,7 @@ namespace NDO.Mapping
         /// <returns></returns>
         private bool RelationsAreDifferent(Relation r1, Relation r2)
         {
+			if (r1.AccessorName != r2.AccessorName) return true;
             if (r1.ForeignKeyTypeColumnName != r2.ForeignKeyTypeColumnName) return true;
             if (ForeignKeyColumnsAreDifferent(r1, r2)) return true;
             if (r1.MappingTable == null && r2.MappingTable != null) return true;

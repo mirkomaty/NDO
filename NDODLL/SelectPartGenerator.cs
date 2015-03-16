@@ -79,7 +79,7 @@ namespace NDO
 				}
 			}
 			if (null == fieldInfo)
-				throw new NDOException(8, "Can't find mapping information for relation " + parentClass.FullName + "." + name);
+				throw new NDOException(8, "Can't find mapping information for relation " + parentClass.FullName + "." + fieldName);
 			// Es liegt ein Value Type vor. Dies muss der vorletzte Eintrag im namearr sein
 			if (!vorletzter)
 				throw new QueryException(10003, "Wrong ValueType or embedded type member name: " + parentClass.FullName + "." + name);
@@ -154,7 +154,7 @@ namespace NDO
 						{
 							// Wenns der vorletzte Index ist, dann kann es ein ValueType sein, der verglichen werden soll
 							// In dem Fall tun wir nichts, da hier nur Relations interessieren.
-							CheckForValueType(parentClass, name, fieldName, i == namearr.Length - 2);
+							CheckForValueType( parentClass, name, fieldName, i == namearr.Length - 2 );
 							break;
 						}
 

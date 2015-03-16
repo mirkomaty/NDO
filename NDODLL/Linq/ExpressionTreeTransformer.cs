@@ -51,6 +51,11 @@ namespace NDO.Linq
             public ExpressionType ExpressionType;
             public string Replacement;
             public int Precedence;
+
+			public static bool IsComparison(ExpressionType expType)
+			{
+				return expType == ExpressionType.GreaterThanOrEqual || expType == ExpressionType.GreaterThan || expType == ExpressionType.LessThan || expType == ExpressionType.LessThanOrEqual || expType == ExpressionType.Equal || expType == ExpressionType.NotEqual;
+			}
         }
         static OperatorEntry[] operators =
         {
@@ -92,16 +97,31 @@ namespace NDO.Linq
             baseParameterLength = baseParameterName.Length + 1;
             sb = new StringBuilder();
             parameters = new ArrayList();
-            Transform(baseExpression.Body);
+            Transform(baseExpression.Body, false);
             return sb.ToString();
         }
 
 
-        void TransformBinaryOperator(ExpressionType exprType)
+        void TransformBinaryOperator(ExpressionType exprType, bool rightIsNull)
         {
             sb.Append(' ');
-            OperatorEntry oe = FindOperator(exprType);
-            sb.Append(oe.Replacement);
+			if (rightIsNull)
+			{
+				if (exprType == ExpressionType.NotEqual)
+					sb.Append( "IS NOT" );
+				else if (exprType == ExpressionType.Equal)
+					sb.Append( "IS" );
+				else
+				{
+					OperatorEntry oe = FindOperator( exprType );
+					sb.Append( oe.Replacement );
+				}
+			}
+			else
+			{
+				OperatorEntry oe = FindOperator( exprType );
+				sb.Append( oe.Replacement );
+			}
             sb.Append(' ');
         }
 
@@ -127,8 +147,21 @@ namespace NDO.Linq
             parameters.Add(value);
         }
 
-        void Transform(Expression ex)
+        void Transform(Expression ex, bool isRightSide)
         {
+			if (ex.ToString() == "null")
+			{
+				sb.Append( "NULL" );
+				return;
+			  //-------
+			}
+			if (isRightSide)
+			{
+				object o = Expression.Lambda( ex ).Compile().DynamicInvoke();
+				AddParameter( o );
+				return;
+			  //-------
+			}
             BinaryExpression binex = ex as BinaryExpression;
             if (binex !=  null)
             {
@@ -150,13 +183,13 @@ namespace NDO.Linq
                 }
                 if (leftbracket)
                     sb.Append('(');
-                Transform(binex.Left);
+                Transform(binex.Left, false);
                 if (leftbracket)
                     sb.Append(')');
-                TransformBinaryOperator(ex.NodeType);
+				TransformBinaryOperator( ex.NodeType, binex.Right.ToString() == "null" );
                 if (rightbracket)
                     sb.Append('(');
-                Transform(binex.Right);
+				Transform( binex.Right, OperatorEntry.IsComparison( ex.NodeType ) );
                 if (rightbracket)
                     sb.Append(')');
 				return;
@@ -168,15 +201,26 @@ namespace NDO.Linq
                 string mname = mcex.Method.Name;
                 if (mname == "op_Equality")
                 {
-                    Transform(mcex.Arguments[0]);
+                    Transform(mcex.Arguments[0], false);
                     sb.Append(" = ");
-                    Transform(mcex.Arguments[1]);
+                    Transform(mcex.Arguments[1], true);
                 }
 				else if (mname == "Like")
 				{
-					Transform(mcex.Arguments[0]);
+					Transform(mcex.Arguments[0], false);
 					sb.Append(" LIKE ");
-					Transform(mcex.Arguments[1]);
+					Transform(mcex.Arguments[1], true);
+				}
+				else if (mname == "get_Item")
+				{
+					string argStr = mcex.Arguments[0].ToString();
+					if (argStr == "Any.Index" || "Index.Any" == argStr)
+					{
+						Transform( mcex.Object, false );
+						return;
+					  //-------
+					}
+					throw new Exception( "Indexer must habe Any.Index or Index.Any parameter." );
 				}
 				else if (mname == "Oid")
 				{
@@ -196,16 +240,18 @@ namespace NDO.Linq
             if (ex.NodeType == ExpressionType.MemberAccess)
             {
                 MemberExpression memberex = (MemberExpression) ex;
-				if ((memberex.Expression as ConstantExpression) == null)
+				if (memberex.Member.Name == "NDOObjectId")
 				{
-					string exprString = memberex.ToString().Substring( baseParameterLength).Replace(".get_Item(Index.Any).", ".").Replace(".get_Item(Any.Index).", ".");
-					sb.Append( exprString );
+					if (memberex.Expression.ToString() != this.baseParameterName)
+					{
+						Transform( memberex.Expression, false );
+						sb.Append( '.' );
+					}
+					sb.Append( "oid" );
+					return;
 				}
-				else
-				{
-					object o = Expression.Lambda( memberex ).Compile().DynamicInvoke();
-					AddParameter( o );
-				}
+				string exprString = memberex.ToString().Substring( baseParameterLength);
+				sb.Append( exprString );
 				return;
 			  //-------
             }
@@ -218,7 +264,7 @@ namespace NDO.Linq
             }
 			if (ex.NodeType == ExpressionType.Convert)
 			{
-				Transform( ((UnaryExpression)ex).Operand );
+				Transform( ((UnaryExpression)ex).Operand, isRightSide );
 				return;
 			  //-------
 			}
