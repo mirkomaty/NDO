@@ -2,7 +2,7 @@ using System;
 
 namespace BusinessClasses
 {
-    public class ExpenseFactory
+    public partial class ExpenseFactory
     {
         string[] theTypes = new string[] { "Expense Voucher", "Milage Allowance", "Per Diem Allowance" };
         public string[] Types

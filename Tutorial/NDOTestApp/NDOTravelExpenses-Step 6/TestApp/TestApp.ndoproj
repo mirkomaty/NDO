@@ -7,6 +7,7 @@
     <NewMapping>False</NewMapping>
     <GenerateSQL>True</GenerateSQL>
     <DefaultConnection>Data Source=..\..\..\NDOTestDb.db</DefaultConnection>
+    <TargetMappingFileName>NDOMapping.xml</TargetMappingFileName>
     <GenerateChangeEvents>False</GenerateChangeEvents>
     <UseTimeStamps>False</UseTimeStamps>
     <Utf8Encoding>False</Utf8Encoding>
@@ -16,6 +17,7 @@
     <DatabaseOwner>
     </DatabaseOwner>
     <GenerateConstraints>False</GenerateConstraints>
+    <UseMsBuild>False</UseMsBuild>
     <DropExistingElements>True</DropExistingElements>
   </Options>
   <ProjectDescription>
@@ -27,19 +29,9 @@
     <KeyFile>
     </KeyFile>
     <References>
-      <Reference AssemblyName="System" AssemblyPath="C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.0\System.dll">
-      </Reference>
-      <Reference AssemblyName="System.Data" AssemblyPath="C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.0\System.Data.dll">
-      </Reference>
-      <Reference AssemblyName="System.Drawing" AssemblyPath="C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.0\System.Drawing.dll">
-      </Reference>
-      <Reference AssemblyName="System.Xml" AssemblyPath="C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.0\System.Xml.dll">
-      </Reference>
       <Reference AssemblyName="BusinessClasses" AssemblyPath="..\BusinessClasses\bin\Debug\BusinessClasses.dll">
       </Reference>
-      <Reference AssemblyName="System.Core" AssemblyPath="c:\program files (x86)\reference assemblies\microsoft\framework\.netframework\v4.0\system.core.dll">
-      </Reference>
-      <Reference AssemblyName="mscorlib" AssemblyPath="C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.0\mscorlib.dll">
+      <Reference AssemblyName="System.Core" AssemblyPath="..\..\..\..\..\..\program files (x86)\reference assemblies\microsoft\framework\.netframework\v4.0\system.core.dll">
       </Reference>
     </References>
   </ProjectDescription>
