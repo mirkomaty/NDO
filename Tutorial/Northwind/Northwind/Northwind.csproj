@@ -83,4 +83,11 @@
   <ItemGroup>
     <Content Include="NDOMapping.xml" />
   </ItemGroup>
+  <Target Name="AfterBuild">
+    <NDOEnhancer NdoProjectFile="$(ProjectName).ndoproj" NdoPlatformTarget="$(Platform)" />
+  </Target>
+  <PropertyGroup>
+    <NDOInstallPath Condition=" '$(NDOInstallPath)' == ''">$(Registry:HKEY_LOCAL_MACHINE\SOFTWARE\NDO@InstallDir)</NDOInstallPath>
+  </PropertyGroup>
+  <Import Project="$(NDOInstallPath)\NDOEnhancer.Targets" />
 </Project>

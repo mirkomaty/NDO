@@ -4,18 +4,18 @@
     <Connection ID="C0" Name="Integrated Security=SSPI;Persist Security Info=False;Initial Catalog=Northwind;Data Source=localhost" Type="SqlServer" />
   </Connections>
   <Classes>
-    <Class AssemblyName="Northwind" FullName="Northwind.Category" TableName="Categories" ConnectionId="C0">
+    <Class AssemblyName="Northwind" FullName="Northwind.Category" TableName="Categories" ConnectionId="C0" TypeCode="365792702">
       <Oid>
         <OidColumn AutoIncremented="True" Name="CategoryID" AllowDbNull="False" />
       </Oid>
       <Fields>
-        <Field Name="categoryName">
+        <Field Name="categoryName" AccessorName="CategoryName">
           <Column Name="CategoryName" />
         </Field>
-        <Field Name="description">
+        <Field Name="description" AccessorName="Description">
           <Column Name="Description" />
         </Field>
-        <Field Name="picture">
+        <Field Name="picture" AccessorName="Picture">
           <Column Name="Picture" />
         </Field>
       </Fields>
@@ -25,42 +25,42 @@
         </Relation>
       </Relations>
     </Class>
-    <Class AssemblyName="Northwind" FullName="Northwind.Customer" TableName="Customers" ConnectionId="C0">
+    <Class AssemblyName="Northwind" FullName="Northwind.Customer" TableName="Customers" ConnectionId="C0" TypeCode="921456798">
       <Oid>
         <OidColumn FieldName="customerId" AllowDbNull="False" />
       </Oid>
       <Fields>
-        <Field Name="address">
+        <Field Name="address" AccessorName="Address">
           <Column Name="Address" />
         </Field>
-        <Field Name="city">
+        <Field Name="city" AccessorName="City">
           <Column Name="City" />
         </Field>
-        <Field Name="companyName">
+        <Field Name="companyName" AccessorName="CompanyName">
           <Column Name="CompanyName" />
         </Field>
-        <Field Name="contactName">
+        <Field Name="contactName" AccessorName="ContactName">
           <Column Name="ContactName" />
         </Field>
-        <Field Name="contactTitle">
+        <Field Name="contactTitle" AccessorName="ContactTitle">
           <Column Name="ContactTitle" />
         </Field>
-        <Field Name="country">
+        <Field Name="country" AccessorName="Country">
           <Column Name="Country" />
         </Field>
-        <Field Name="customerId">
+        <Field Name="customerId" AccessorName="CustomerId">
           <Column Name="CustomerId" />
         </Field>
-        <Field Name="fax">
+        <Field Name="fax" AccessorName="Fax">
           <Column Name="Fax" />
         </Field>
-        <Field Name="phone">
+        <Field Name="phone" AccessorName="Phone">
           <Column Name="Phone" />
         </Field>
-        <Field Name="postalCode">
+        <Field Name="postalCode" AccessorName="PostalCode">
           <Column Name="PostalCode" />
         </Field>
-        <Field Name="region">
+        <Field Name="region" AccessorName="Region">
           <Column Name="Region" />
         </Field>
       </Fields>
@@ -76,12 +76,12 @@
         </Relation>
       </Relations>
     </Class>
-    <Class AssemblyName="Northwind" FullName="Northwind.CustomerDemographics" TableName="CustomerDemographics" ConnectionId="C0">
+    <Class AssemblyName="Northwind" FullName="Northwind.CustomerDemographics" TableName="CustomerDemographics" ConnectionId="C0" TypeCode="2016329004">
       <Oid>
         <OidColumn AutoIncremented="True" Name="CustomerTypeID" AllowDbNull="False" />
       </Oid>
       <Fields>
-        <Field Name="customerDesc">
+        <Field Name="customerDesc" AccessorName="CustomerDesc">
           <Column Name="CustomerDesc" />
         </Field>
       </Fields>
@@ -94,60 +94,60 @@
         </Relation>
       </Relations>
     </Class>
-    <Class AssemblyName="Northwind" FullName="Northwind.Employee" TableName="Employees" ConnectionId="C0">
+    <Class AssemblyName="Northwind" FullName="Northwind.Employee" TableName="Employees" ConnectionId="C0" TypeCode="1508751214">
       <Oid>
         <OidColumn AutoIncremented="True" Name="EmployeeID" AllowDbNull="False" />
       </Oid>
       <Fields>
-        <Field Name="address">
+        <Field Name="address" AccessorName="Address">
           <Column Name="Address" />
         </Field>
-        <Field Name="birthDate">
+        <Field Name="birthDate" AccessorName="BirthDate">
           <Column Name="BirthDate" />
         </Field>
-        <Field Name="city">
+        <Field Name="city" AccessorName="City">
           <Column Name="City" />
         </Field>
-        <Field Name="country">
+        <Field Name="country" AccessorName="Country">
           <Column Name="Country" />
         </Field>
-        <Field Name="extension">
+        <Field Name="extension" AccessorName="Extension">
           <Column Name="Extension" />
         </Field>
-        <Field Name="firstName">
+        <Field Name="firstName" AccessorName="FirstName">
           <Column Name="FirstName" />
         </Field>
-        <Field Name="hireDate">
+        <Field Name="hireDate" AccessorName="HireDate">
           <Column Name="HireDate" />
         </Field>
-        <Field Name="homePhone">
+        <Field Name="homePhone" AccessorName="HomePhone">
           <Column Name="HomePhone" />
         </Field>
-        <Field Name="lastName">
+        <Field Name="lastName" AccessorName="LastName">
           <Column Name="LastName" />
         </Field>
-        <Field Name="notes">
+        <Field Name="notes" AccessorName="Notes">
           <Column Name="Notes" />
         </Field>
-        <Field Name="photo">
+        <Field Name="photo" AccessorName="Photo">
           <Column Name="Photo" />
         </Field>
-        <Field Name="photoPath">
+        <Field Name="photoPath" AccessorName="PhotoPath">
           <Column Name="PhotoPath" />
         </Field>
-        <Field Name="postalCode">
+        <Field Name="postalCode" AccessorName="PostalCode">
           <Column Name="PostalCode" />
         </Field>
-        <Field Name="region">
+        <Field Name="region" AccessorName="Region">
           <Column Name="Region" />
         </Field>
-        <Field Name="reportsTo">
+        <Field Name="reportsTo" AccessorName="ReportsTo">
           <Column Name="ReportsTo" />
         </Field>
-        <Field Name="title">
+        <Field Name="title" AccessorName="Title">
           <Column Name="Title" />
         </Field>
-        <Field Name="titleOfCourtesy">
+        <Field Name="titleOfCourtesy" AccessorName="TitleOfCourtesy">
           <Column Name="TitleOfCourtesy" />
         </Field>
       </Fields>
@@ -163,124 +163,124 @@
         </Relation>
       </Relations>
     </Class>
-    <Class AssemblyName="Northwind" FullName="Northwind.Order" TableName="Orders" ConnectionId="C0">
+    <Class AssemblyName="Northwind" FullName="Northwind.Order" TableName="Orders" ConnectionId="C0" TypeCode="-1675202930">
       <Oid>
         <OidColumn AutoIncremented="True" Name="OrderID" AllowDbNull="False" />
       </Oid>
       <Fields>
-        <Field Name="freight">
+        <Field Name="freight" AccessorName="Freight">
           <Column Name="Freight" />
         </Field>
-        <Field Name="orderDate">
+        <Field Name="orderDate" AccessorName="OrderDate">
           <Column Name="OrderDate" />
         </Field>
-        <Field Name="requiredDate">
+        <Field Name="requiredDate" AccessorName="RequiredDate">
           <Column Name="RequiredDate" />
         </Field>
-        <Field Name="shipAddress">
+        <Field Name="shipAddress" AccessorName="ShipAddress">
           <Column Name="ShipAddress" />
         </Field>
-        <Field Name="shipCity">
+        <Field Name="shipCity" AccessorName="ShipCity">
           <Column Name="ShipCity" />
         </Field>
-        <Field Name="shipCountry">
+        <Field Name="shipCountry" AccessorName="ShipCountry">
           <Column Name="ShipCountry" />
         </Field>
-        <Field Name="shipName">
+        <Field Name="shipName" AccessorName="ShipName">
           <Column Name="ShipName" />
         </Field>
-        <Field Name="shipPostalCode">
+        <Field Name="shipPostalCode" AccessorName="ShipPostalCode">
           <Column Name="ShipPostalCode" />
         </Field>
-        <Field Name="shipRegion">
+        <Field Name="shipRegion" AccessorName="ShipRegion">
           <Column Name="ShipRegion" />
         </Field>
-        <Field Name="shippedDate">
+        <Field Name="shippedDate" AccessorName="ShippedDate">
           <Column Name="ShippedDate" />
         </Field>
       </Fields>
       <Relations>
-        <Relation FieldName="customer" ReferencedTypeName="Northwind.Customer" RelationName="">
+        <Relation FieldName="customer" AccessorName="Customer" ReferencedTypeName="Northwind.Customer" RelationName="">
           <ForeignKeyColumn Name="CustomerID" />
         </Relation>
-        <Relation FieldName="employee" ReferencedTypeName="Northwind.Employee" RelationName="">
+        <Relation FieldName="employee" AccessorName="Employee" ReferencedTypeName="Northwind.Employee" RelationName="">
           <ForeignKeyColumn Name="EmployeeID" />
         </Relation>
         <Relation FieldName="orderDetails" ReferencedTypeName="Northwind.OrderDetail" RelationName="">
           <ForeignKeyColumn Name="OrderID" />
         </Relation>
-        <Relation FieldName="shipper" ReferencedTypeName="Northwind.Shipper" RelationName="">
+        <Relation FieldName="shipper" AccessorName="Shipper" ReferencedTypeName="Northwind.Shipper" RelationName="">
           <ForeignKeyColumn Name="ShipVia" />
         </Relation>
       </Relations>
     </Class>
-    <Class AssemblyName="Northwind" FullName="Northwind.OrderDetail" TableName="[Order Details]" ConnectionId="C0">
+    <Class AssemblyName="Northwind" FullName="Northwind.OrderDetail" TableName="[Order Details]" ConnectionId="C0" TypeCode="648007807">
       <Oid>
         <OidColumn RelationName="product" AllowDbNull="False" />
         <OidColumn RelationName="order" AllowDbNull="False" />
       </Oid>
       <Fields>
-        <Field Name="discount">
+        <Field Name="discount" AccessorName="Discount">
           <Column Name="Discount" />
         </Field>
-        <Field Name="quantity">
+        <Field Name="quantity" AccessorName="Quantity">
           <Column Name="Quantity" />
         </Field>
-        <Field Name="unitPrice">
+        <Field Name="unitPrice" AccessorName="UnitPrice">
           <Column Name="UnitPrice" />
         </Field>
       </Fields>
       <Relations>
-        <Relation FieldName="order" ReferencedTypeName="Northwind.Order" RelationName="">
+        <Relation FieldName="order" AccessorName="Order" ReferencedTypeName="Northwind.Order" RelationName="">
           <ForeignKeyColumn Name="OrderID" />
         </Relation>
-        <Relation FieldName="product" ReferencedTypeName="Northwind.Product" RelationName="">
+        <Relation FieldName="product" AccessorName="Product" ReferencedTypeName="Northwind.Product" RelationName="">
           <ForeignKeyColumn Name="ProductID" />
         </Relation>
       </Relations>
     </Class>
-    <Class AssemblyName="Northwind" FullName="Northwind.Product" TableName="Products" ConnectionId="C0">
+    <Class AssemblyName="Northwind" FullName="Northwind.Product" TableName="Products" ConnectionId="C0" TypeCode="1640358959">
       <Oid>
         <OidColumn AutoIncremented="True" Name="ProductID" AllowDbNull="False" />
       </Oid>
       <Fields>
-        <Field Name="discontinued">
+        <Field Name="discontinued" AccessorName="Discontinued">
           <Column Name="Discontinued" />
         </Field>
-        <Field Name="productName">
+        <Field Name="productName" AccessorName="ProductName">
           <Column Name="ProductName" />
         </Field>
-        <Field Name="quantityPerUnit">
+        <Field Name="quantityPerUnit" AccessorName="QuantityPerUnit">
           <Column Name="QuantityPerUnit" />
         </Field>
-        <Field Name="reorderLevel">
+        <Field Name="reorderLevel" AccessorName="ReorderLevel">
           <Column Name="ReorderLevel" />
         </Field>
-        <Field Name="unitPrice">
+        <Field Name="unitPrice" AccessorName="UnitPrice">
           <Column Name="UnitPrice" />
         </Field>
-        <Field Name="unitsInStock">
+        <Field Name="unitsInStock" AccessorName="UnitsInStock">
           <Column Name="UnitsInStock" />
         </Field>
-        <Field Name="unitsOnOrder">
+        <Field Name="unitsOnOrder" AccessorName="UnitsOnOrder">
           <Column Name="UnitsOnOrder" />
         </Field>
       </Fields>
       <Relations>
-        <Relation FieldName="category" ReferencedTypeName="Northwind.Category" RelationName="">
+        <Relation FieldName="category" AccessorName="Category" ReferencedTypeName="Northwind.Category" RelationName="">
           <ForeignKeyColumn Name="CategoryID" />
         </Relation>
-        <Relation FieldName="supplier" ReferencedTypeName="Northwind.Supplier" RelationName="">
+        <Relation FieldName="supplier" AccessorName="Supplier" ReferencedTypeName="Northwind.Supplier" RelationName="">
           <ForeignKeyColumn Name="SupplierID" />
         </Relation>
       </Relations>
     </Class>
-    <Class AssemblyName="Northwind" FullName="Northwind.Region" TableName="Region" ConnectionId="C0">
+    <Class AssemblyName="Northwind" FullName="Northwind.Region" TableName="Region" ConnectionId="C0" TypeCode="-317708364">
       <Oid>
         <OidColumn AutoIncremented="True" Name="RegionID" AllowDbNull="False" />
       </Oid>
       <Fields>
-        <Field Name="regionDescription">
+        <Field Name="regionDescription" AccessorName="RegionDescription">
           <Column Name="RegionDescription" />
         </Field>
       </Fields>
@@ -293,15 +293,15 @@
         </Relation>
       </Relations>
     </Class>
-    <Class AssemblyName="Northwind" FullName="Northwind.Shipper" TableName="Shippers" ConnectionId="C0">
+    <Class AssemblyName="Northwind" FullName="Northwind.Shipper" TableName="Shippers" ConnectionId="C0" TypeCode="-283577183">
       <Oid>
         <OidColumn AutoIncremented="True" Name="ShipperID" AllowDbNull="False" />
       </Oid>
       <Fields>
-        <Field Name="companyName">
+        <Field Name="companyName" AccessorName="CompanyName">
           <Column Name="CompanyName" />
         </Field>
-        <Field Name="phone">
+        <Field Name="phone" AccessorName="Phone">
           <Column Name="Phone" />
         </Field>
       </Fields>
@@ -311,39 +311,39 @@
         </Relation>
       </Relations>
     </Class>
-    <Class AssemblyName="Northwind" FullName="Northwind.Supplier" TableName="Suppliers" ConnectionId="C0">
+    <Class AssemblyName="Northwind" FullName="Northwind.Supplier" TableName="Suppliers" ConnectionId="C0" TypeCode="-1348023668">
       <Oid>
         <OidColumn AutoIncremented="True" Name="SupplierID" AllowDbNull="False" />
       </Oid>
       <Fields>
-        <Field Name="address">
+        <Field Name="address" AccessorName="Address">
           <Column Name="Address" />
         </Field>
-        <Field Name="city">
+        <Field Name="city" AccessorName="City">
           <Column Name="City" />
         </Field>
-        <Field Name="companyName">
+        <Field Name="companyName" AccessorName="CompanyName">
           <Column Name="CompanyName" />
         </Field>
-        <Field Name="contactName">
+        <Field Name="contactName" AccessorName="ContactName">
           <Column Name="ContactName" />
         </Field>
-        <Field Name="contactTitle">
+        <Field Name="contactTitle" AccessorName="ContactTitle">
           <Column Name="ContactTitle" />
         </Field>
-        <Field Name="country">
+        <Field Name="country" AccessorName="Country">
           <Column Name="Country" />
         </Field>
-        <Field Name="fax">
+        <Field Name="fax" AccessorName="Fax">
           <Column Name="Fax" />
         </Field>
-        <Field Name="homePage">
+        <Field Name="homePage" AccessorName="HomePage">
           <Column Name="HomePage" />
         </Field>
-        <Field Name="phone">
+        <Field Name="phone" AccessorName="Phone">
           <Column Name="Phone" />
         </Field>
-        <Field Name="postalCode">
+        <Field Name="postalCode" AccessorName="PostalCode">
           <Column Name="PostalCode" />
         </Field>
       </Fields>
@@ -351,17 +351,17 @@
         <Relation FieldName="products" ReferencedTypeName="Northwind.Product" RelationName="">
           <ForeignKeyColumn Name="SupplierID" />
         </Relation>
-        <Relation FieldName="region" ReferencedTypeName="Northwind.Region" RelationName="">
+        <Relation FieldName="region" AccessorName="Region" ReferencedTypeName="Northwind.Region" RelationName="">
           <ForeignKeyColumn Name="Region" />
         </Relation>
       </Relations>
     </Class>
-    <Class AssemblyName="Northwind" FullName="Northwind.Territory" TableName="Territories" ConnectionId="C0">
+    <Class AssemblyName="Northwind" FullName="Northwind.Territory" TableName="Territories" ConnectionId="C0" TypeCode="-931844262">
       <Oid>
         <OidColumn AutoIncremented="True" Name="TerritoryID" AllowDbNull="False" />
       </Oid>
       <Fields>
-        <Field Name="territoryDescription">
+        <Field Name="territoryDescription" AccessorName="TerritoryDescription">
           <Column Name="TerritoryDescription" />
         </Field>
       </Fields>
@@ -372,7 +372,7 @@
             <ForeignKeyColumn Name="IDEmployee" />
           </MappingTable>
         </Relation>
-        <Relation FieldName="region" ReferencedTypeName="Northwind.Region" RelationName="">
+        <Relation FieldName="region" AccessorName="Region" ReferencedTypeName="Northwind.Region" RelationName="">
           <ForeignKeyColumn Name="RegionID" />
         </Relation>
       </Relations>
