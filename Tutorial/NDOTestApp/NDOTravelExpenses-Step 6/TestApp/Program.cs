@@ -1,5 +1,5 @@
 using System;
-using System.Collections;
+using System.Linq;
 using System.Collections.Generic;
 using BusinessClasses;
 using NDO;
@@ -68,9 +68,9 @@ namespace TestApp
         {
             Console.WriteLine("-------- Querying the objects ------------");
             PersistenceManager pm = new PersistenceManager();
-            Query q = pm.NewQuery(typeof(Employee));
-            Employee e = (Employee)q.ExecuteSingle();
-            Travel t = (Travel)e.Travels[0];
+            Employee e = (from em in pm.Objects<Employee>() select em).FirstOrDefault();
+            
+            Travel t = (Travel)e.Travels.FirstOrDefault();
             Console.WriteLine("Costs of the travel with the purpose " + t.Purpose + ":");
             foreach (Expense ex in t.Expenses)
                 Console.WriteLine(ex.Date.ToShortDateString() + " " + ex.Text + " " + ex.Amount.ToString());

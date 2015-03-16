@@ -18,7 +18,7 @@
     <DatabaseOwner>
     </DatabaseOwner>
     <GenerateConstraints>False</GenerateConstraints>
-    <UseMsBuild>False</UseMsBuild>
+    <UseMsBuild>True</UseMsBuild>
     <DropExistingElements>False</DropExistingElements>
   </Options>
   <ProjectDescription>

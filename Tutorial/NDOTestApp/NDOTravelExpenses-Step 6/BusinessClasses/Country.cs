@@ -1,6 +1,8 @@
 ﻿using System;
-using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
 using NDO;
+
 namespace BusinessClasses
 {
     [NDOPersistent]
@@ -14,22 +16,23 @@ namespace BusinessClasses
             set { name = value; }
         }
 
-        [NDORelation(typeof(Travel))]
-        IList travels = new ArrayList();
+        [NDORelation]
+        List<Travel> travels = new List<Travel>();
+        public IEnumerable<Travel> Travels
+        {
+        	get { return this.travels; }
+        	set { this.travels = value.ToList(); }
+        }
         public void AddTravel(Travel t)
         {
-            travels.Add(t);
+        	this.travels.Add(t);
         }
         public void RemoveTravel(Travel t)
         {
-            if (travels.Contains(t))
-                travels.Remove(t);
+        	if (this.travels.Contains(t))
+        		this.travels.Remove(t);
         }
-        public IList Travels
-        {
-            get { return ArrayList.ReadOnly(travels); }
-            set { travels = value; }
-        }
+
         public Country()
         {
         }

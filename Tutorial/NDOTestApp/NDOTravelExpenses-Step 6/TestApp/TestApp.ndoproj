@@ -6,18 +6,18 @@
     <VerboseMode>False</VerboseMode>
     <NewMapping>False</NewMapping>
     <GenerateSQL>True</GenerateSQL>
-    <DefaultConnection>Data Source=..\..\..\NDOTestDb.db</DefaultConnection>
+    <DefaultConnection>Integrated Security=SSPI;Persist Security Info=False;Data Source=localhost;Initial Catalog=NDOTravels</DefaultConnection>
     <TargetMappingFileName>NDOMapping.xml</TargetMappingFileName>
     <GenerateChangeEvents>False</GenerateChangeEvents>
     <UseTimeStamps>False</UseTimeStamps>
     <Utf8Encoding>False</Utf8Encoding>
-    <SQLScriptLanguage>Sqlite</SQLScriptLanguage>
+    <SQLScriptLanguage>SqlServer</SQLScriptLanguage>
     <SchemaVersion>1.0</SchemaVersion>
     <IncludeTypecodes>False</IncludeTypecodes>
     <DatabaseOwner>
     </DatabaseOwner>
     <GenerateConstraints>False</GenerateConstraints>
-    <UseMsBuild>False</UseMsBuild>
+    <UseMsBuild>True</UseMsBuild>
     <DropExistingElements>True</DropExistingElements>
   </Options>
   <ProjectDescription>

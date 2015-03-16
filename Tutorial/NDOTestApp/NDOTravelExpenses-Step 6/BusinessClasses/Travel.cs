@@ -1,5 +1,6 @@
 ﻿using System;
-using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
 using NDO;
 
 namespace BusinessClasses
@@ -7,22 +8,23 @@ namespace BusinessClasses
     [NDOPersistent]
     public partial class Travel
     {
-        [NDORelation(typeof(Expense), RelationInfo.Composite)]
-        IList expenses = new ArrayList();
-        public IList Expenses
+        [NDORelation(RelationInfo.Composite)]
+        List<Expense> expenses = new List<Expense>();
+        public IEnumerable<Expense> Expenses
         {
-            get { return ArrayList.ReadOnly(expenses); }
-            set { expenses = value; }
-        }
-        public void RemoveExpense(Expense ex)
-        {
-            if (expenses.Contains(ex))
-                expenses.Remove(ex);
+        	get { return this.expenses; }
+        	set { this.expenses = value.ToList(); }
         }
         public void AddExpense(Expense ex)
         {
             expenses.Add(ex);
         }
+        public void RemoveExpense(Expense e)
+        {
+        	if (this.expenses.Contains(e))
+        		this.expenses.Remove(e);
+        }
+
 
         [NDORelation]
         Employee employee;
@@ -32,21 +34,21 @@ namespace BusinessClasses
             set { employee = value; }
         }
 
-        [NDORelation(typeof(Country))]
-        IList countries = new ArrayList();
-
-        public void AddCountry(Country l)
+        [NDORelation]
+        List<Country> countries = new List<Country>();
+        public IEnumerable<Country> Countries
         {
-            countries.Add(l);
+        	get { return this.countries; }
+        	set { this.countries = value.ToList(); }
         }
-        public void RemoveCountry(Country l)
+        public void AddCountry(Country c)
         {
-            countries.Remove(l);
+        	this.countries.Add(c);
         }
-        public IList Countries
+        public void RemoveCountry(Country c)
         {
-            get { return ArrayList.ReadOnly(countries); }
-            set { countries = value; }
+        	if (this.countries.Contains(c))
+        		this.countries.Remove(c);
         }
 
         string purpose;

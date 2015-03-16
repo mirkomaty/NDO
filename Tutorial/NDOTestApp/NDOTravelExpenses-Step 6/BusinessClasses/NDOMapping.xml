@@ -34,7 +34,7 @@
         </Field>
       </Fields>
       <Relations>
-        <Relation FieldName="travels" ReferencedTypeName="BusinessClasses.Travel" RelationName="">
+        <Relation FieldName="travels" AccessorName="Travels" ReferencedTypeName="BusinessClasses.Travel" RelationName="">
           <ForeignKeyColumn Name="IDCountry" />
           <MappingTable TableName="relCountryTravel" ConnectionId="C0">
             <ForeignKeyColumn Name="IDTravel" />
@@ -58,7 +58,7 @@
         <Relation FieldName="address" AccessorName="Address" ReferencedTypeName="BusinessClasses.Address" RelationName="">
           <ForeignKeyColumn Name="IDAddress" />
         </Relation>
-        <Relation FieldName="travels" ReferencedTypeName="BusinessClasses.Travel" RelationName="">
+        <Relation FieldName="travels" AccessorName="Travels" ReferencedTypeName="BusinessClasses.Travel" RelationName="">
           <ForeignKeyColumn Name="IDEmployee" />
         </Relation>
       </Relations>
@@ -160,7 +160,7 @@
         </Field>
       </Fields>
       <Relations>
-        <Relation FieldName="countries" ReferencedTypeName="BusinessClasses.Country" RelationName="">
+        <Relation FieldName="countries" AccessorName="Countries" ReferencedTypeName="BusinessClasses.Country" RelationName="">
           <ForeignKeyColumn Name="IDTravel" />
           <MappingTable TableName="relCountryTravel" ConnectionId="C0">
             <ForeignKeyColumn Name="IDCountry" />
@@ -169,7 +169,7 @@
         <Relation FieldName="employee" AccessorName="Employee" ReferencedTypeName="BusinessClasses.Employee" RelationName="">
           <ForeignKeyColumn Name="IDEmployee" />
         </Relation>
-        <Relation FieldName="expenses" ReferencedTypeName="BusinessClasses.Expense" RelationName="">
+        <Relation FieldName="expenses" AccessorName="Expenses" ReferencedTypeName="BusinessClasses.Expense" RelationName="">
           <ForeignKeyColumn Name="IDTravel" />
           <MappingTable TableName="relExpenseTravel" ChildForeignKeyTypeColumnName="TCExpense" ConnectionId="C0">
             <ForeignKeyColumn Name="IDExpense" />

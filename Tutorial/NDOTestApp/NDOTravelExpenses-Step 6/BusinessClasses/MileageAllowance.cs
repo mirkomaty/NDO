@@ -1,9 +1,10 @@
 ﻿using System;
 using NDO;
+using System.ComponentModel;
 
 namespace BusinessClasses
 {
-    [NDOPersistent]
+    [NDOPersistent, DisplayName("Milage Allowance")]
     public partial class MileageAllowance : Expense
     {
         int milesDriven;
