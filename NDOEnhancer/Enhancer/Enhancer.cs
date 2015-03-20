@@ -157,11 +157,13 @@ namespace NDOEnhancer
             {
                 if (an.Name == "NDO")
                     refAn = new NDOAssemblyName(an.FullName);
-        }
+			}
             if (refAn == null)
                 return;
             NDOAssemblyName ndoAn = new NDOAssemblyName(typeof(NDOPersistentAttribute).Assembly.FullName);
-            if (refAn.PublicKeyToken != ndoAn.PublicKeyToken || refAn.Version != ndoAn.Version)
+			Version assVersion = refAn.AssemblyVersion;
+			bool rightVersion = assVersion.Major == 3 || assVersion.Major == 2 && assVersion.Minor >= 1;
+            if (refAn.PublicKeyToken != ndoAn.PublicKeyToken || !rightVersion)
             {
                 throw new Exception("Assembly " + ass.FullName + " references a wrong NDO.dll. Expected: " + ndoAn.FullName + ". Found: " + refAn.FullName + ".");
             }
