@@ -79,7 +79,7 @@ namespace NDOAddIn
 				StringBuilder sb = new StringBuilder();
                 
 				sb.Append("using System;\n");
-				sb.Append("using System.Collections;\n");
+				sb.Append("using System.Linq;\n");
 #if !NDO11
                 sb.Append("using System.Collections.Generic;\n");
 #endif

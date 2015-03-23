@@ -147,6 +147,19 @@ namespace NDO.Linq
             parameters.Add(value);
         }
 
+		BinaryExpression FlipExpression(BinaryExpression binex)
+		{
+			if (binex.NodeType == ExpressionType.GreaterThan)
+				return BinaryExpression.LessThan( binex.Right, binex.Left );
+			if (binex.NodeType == ExpressionType.GreaterThanOrEqual)
+				return BinaryExpression.LessThanOrEqual( binex.Right, binex.Left );
+			if (binex.NodeType == ExpressionType.LessThan)
+				return BinaryExpression.GreaterThan( binex.Right, binex.Left );
+			if (binex.NodeType == ExpressionType.LessThanOrEqual)
+				return BinaryExpression.GreaterThanOrEqual( binex.Right, binex.Left );
+			return Expression.MakeBinary( binex.NodeType, binex.Right, binex.Left );
+		}
+
         void Transform(Expression ex, bool isRightSide)
         {
 			if (ex.ToString() == "null")
@@ -154,7 +167,7 @@ namespace NDO.Linq
 				sb.Append( "NULL" );
 				return;
 			  //-------
-			}
+			}			
 			if (isRightSide)
 			{
 				object o = Expression.Lambda( ex ).Compile().DynamicInvoke();
@@ -165,6 +178,20 @@ namespace NDO.Linq
             BinaryExpression binex = ex as BinaryExpression;
             if (binex !=  null)
             {
+				Expression left = binex.Left;
+				Expression right = binex.Right;
+				if (left.NodeType == ExpressionType.Convert)
+					left = ((UnaryExpression)left).Operand;
+				if (right.NodeType == ExpressionType.Convert)
+					right = ((UnaryExpression)right).Operand;
+				string leftStr = left.ToString();
+				string rightStr = right.ToString();
+				if (!leftStr.StartsWith(baseParameterName + '.' ) && rightStr.StartsWith(baseParameterName + '.'))
+				{
+					Transform( FlipExpression( binex ), isRightSide );
+					return;
+				  //-------
+				}
                 int ownPrecedence = GetPrecedence(binex.NodeType);
                 int childPrecedence = 0;
                 BinaryExpression childBinex = binex.Left as BinaryExpression;
@@ -183,13 +210,13 @@ namespace NDO.Linq
                 }
                 if (leftbracket)
                     sb.Append('(');
-                Transform(binex.Left, false);
+                Transform(left, false);
                 if (leftbracket)
                     sb.Append(')');
-				TransformBinaryOperator( ex.NodeType, binex.Right.ToString() == "null" );
+				TransformBinaryOperator( ex.NodeType, rightStr == "null" );
                 if (rightbracket)
                     sb.Append('(');
-				Transform( binex.Right, OperatorEntry.IsComparison( ex.NodeType ) );
+				Transform( right, OperatorEntry.IsComparison( ex.NodeType ) );
                 if (rightbracket)
                     sb.Append(')');
 				return;

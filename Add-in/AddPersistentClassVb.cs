@@ -75,7 +75,7 @@ namespace NDOAddIn
 				partialFileName += ".ndo.vb";
 				sw = new StreamWriter(fileName, false, System.Text.Encoding.UTF8);
 
-				sw.WriteLine("Imports System.Collections");
+				sw.WriteLine("Imports System.Linq");
 #if !NDO11
                 sw.WriteLine("Imports System.Collections.Generic");
 #endif

@@ -50,7 +50,7 @@ namespace NDO
 					if ( key == null )
 						key = Registry.LocalMachine.OpenSubKey( @"SOFTWARE\NDO" );
 					if (key == null)
-						throw new Exception( @"Can't find NDO in the registry at HKLM\SOFTWARE\NDO. Please reinstall NDO." );
+						return AppDomain.CurrentDomain.BaseDirectory;
 					assemblyPath = (string) key.GetValue( "InstallDir" );
 					if ( assemblyPath == null )
 						throw new Exception( @"Can't find InstallDir value in the registry at HKLM\SOFTWARE\NDO. Please reinstall NDO." );

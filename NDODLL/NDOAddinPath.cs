@@ -47,6 +47,7 @@ namespace NDO
 		static string instance;
 		static NDOAddInPath()
 		{
+			string ndoPath = NDOApplicationPath.Instance;
 			instance = Path.Combine( NDOApplicationPath.Instance, "Provider" );
 		}
 		/// <summary>
