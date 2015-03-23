@@ -134,9 +134,8 @@ namespace TestApp
                 sw.WriteLine("DROP TABLE IF EXISTS" + p.GetQuotedName(cl.TableName) + ";");
                 sw.WriteLine("CREATE TABLE " + p.GetQuotedName(cl.TableName) + " (");
                 sw.Write("`ID` Int AUTO_INCREMENT NOT NULL,");
-                for (int i = 0; i < cl.Fields.Count; i++)
+                foreach (Field f in cl.Fields)
                 {
-                    Field f = (Field)cl.Fields[i];
                     FieldInfo fi = t.GetField(f.Name, BindingFlags.Instance | BindingFlags.NonPublic);
                     sw.Write(p.GetQuotedName(f.Column.Name) + " " + gen.DbTypeFromType(fi.FieldType));
                     if (fi.FieldType == typeof(string))
