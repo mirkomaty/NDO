@@ -261,6 +261,8 @@ namespace NDO
             }
             set 
             {
+				if (providers.ContainsKey( name ))
+					providers.Remove( name );
                 providers[name] = value; 
             }
         }
