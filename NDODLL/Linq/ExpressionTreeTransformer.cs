@@ -162,6 +162,10 @@ namespace NDO.Linq
 
         void Transform(Expression ex, bool isRightSide)
         {
+			if (ex.ToString() == baseParameterName)
+				return;
+			  //-------
+
 			if (ex.ToString() == "null")
 			{
 				sb.Append( "NULL" );
@@ -277,8 +281,11 @@ namespace NDO.Linq
 					sb.Append( "oid" );
 					return;
 				}
-				string exprString = memberex.ToString().Substring( baseParameterLength);
-				sb.Append( exprString );
+				int l = sb.Length;
+				Transform( memberex.Expression, false );
+				if (l != sb.Length)
+					sb.Append( '.' );
+				sb.Append( memberex.Member.Name );
 				return;
 			  //-------
             }
