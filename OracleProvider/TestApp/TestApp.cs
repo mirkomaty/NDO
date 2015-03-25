@@ -40,6 +40,8 @@ using System.Collections;
 using NDO.Mapping;
 using NDOInterfaces;
 using BusinessClasses;
+using System.Collections.Generic;
+using NDO.Linq;
 
 namespace TestApp
 {
@@ -51,110 +53,81 @@ namespace TestApp
 		[STAThread]
 		static void Main(string[] args)
 		{
+			Console.WriteLine("!!! Adjust your connection first. User Name and Password etc. !!!");
+
 			PersistenceManager pm = new PersistenceManager();
+			pm.IdGenerationEvent += pm_IdGenerationEvent;
 
 			IProvider p = NDO.NDOProviderFactory.Instance["Oracle"];
 
 			NDO.NDOProviderFactory.Instance["Oracle"] = new OracleProvider.Provider();
-						
+			Console.WriteLine(NDO.NDOProviderFactory.Instance["Oracle"].GetType().FullName);
 			pm.VerboseMode = true;
 
 			// Make this true to store the test instance. 
 			// Make it false to retrieve the test instance from the database.
-#if true
-            GenerateDatabase();
+#if false 
+			// You have to create the database first and
+			// execute the BusinessClasses.ndo.sql to create the DataContainer table.
 			DataContainer dc = new DataContainer();
 			pm.MakePersistent(dc);
 			pm.Save();
 			Console.WriteLine("Fertig");
 #else			
 
+			// Uncomment the following two lines to view the generated queries.
+			// VirtualTable<DataContainer> vt = pm.Objects<DataContainer>().Where( dc => dc.StringVar.Like( "T%" ) );
+			// Console.WriteLine(vt.QueryString);
+
 			// uncomment the queries you like to test
 
-			DataContainer.QueryHelper qh = new DataContainer.QueryHelper();
-			Query q = pm.NewQuery(typeof (DataContainer), null);
-//			Query q = pm.NewQuery(typeof (DataContainer), qh.boolVar + " = true");
-//          Query q = pm.NewQuery(typeof(DataContainer), qh.boolVar + " = 1");
-//			Query q = pm.NewQuery(typeof (DataContainer), qh.byteVar + " = " + (0x55).ToString());
-//          Query q = pm.NewQuery(typeof (DataContainer), qh.byteArrVar + " = {0}");
-//          q.Parameters.Add(new byte[] { 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16});
+			List<DataContainer> list = pm.Objects<DataContainer>();
+
+//			List<DataContainer> list = from dc in pm.Objects<DataContainer>() where dc.BoolVar == true select dc;
+//			List<DataContainer> list = from dc in pm.Objects<DataContainer>() where dc.ByteVar == 0x55 select dc;
 			
-//			Query q = pm.NewQuery(typeof (DataContainer), qh.dateTimeVar + " = {0}");
-//          q.Parameters.Add(DateTime.Now.Date);
-//			Query q = pm.NewQuery(typeof (DataContainer), qh.dateTimeVar + " BETWEEN {0} AND {1}");
-//          q.Parameters.Add(DateTime.Now.Date - TimeSpan.FromDays(1));
-//          q.Parameters.Add(DateTime.Now.Date + TimeSpan.FromDays(1));
+			//DateTime dt = DateTime.Today;
+			//List<DataContainer> list = from dc in pm.Objects<DataContainer>() where dc.DateTimeVar == dt select dc;
 
-//			Query q = pm.NewQuery(typeof (DataContainer), qh.decVar + " > 0.34");
-//			Query q = pm.NewQuery(typeof (DataContainer), qh.doubleVar + " < 6.54");
-//			Query q = pm.NewQuery(typeof (DataContainer), qh.floatVar + " <= 10");
-//			Query q = pm.NewQuery(typeof (DataContainer), qh.int64Var + " = " + (0x123456781234567).ToString());
-//			Query q = pm.NewQuery(typeof (DataContainer), qh.stringVar + " = \"Test\"");
-//			Query q = pm.NewQuery(typeof (DataContainer), qh.stringVar + " = \'Test\'");
-//			Query q = pm.NewQuery(typeof (DataContainer), qh.stringVar + " LIKE 'T*'", false);
-//			Query q = pm.NewQuery(typeof (DataContainer), "SELECT * FROM `DataContainer` WHERE `StringVar` LIKE 'T%'", false, Query.Language.Sql);
+            //DateTime dt1 = DateTime.Today - TimeSpan.FromDays(1);
+            //DateTime dt2 = DateTime.Today + TimeSpan.FromDays(1);
+            //Query q = pm.NewQuery(typeof (DataContainer), qh.dateTimeVar + " BETWEEN {0} AND {1}");
+            //q.Parameters.Add(dt1);
+            //q.Parameters.Add(dt2);
+//			List<DataContainer> list = from dc in pm.Objects<DataContainer>() where dc.DecVar > 0.34m select dc;
+//			List<DataContainer> list = from dc in pm.Objects<DataContainer>() where dc.DoubleVar < 6.54 select dc;
+//			List<DataContainer> list = from dc in pm.Objects<DataContainer>() where dc.FloatVar <= 10 select dc;
+//			List<DataContainer> list = from dc in pm.Objects<DataContainer>() where 10 >= dc.FloatVar select dc;
+//			List<DataContainer> list = from dc in pm.Objects<DataContainer>() where dc.Int64Var == 0x123456781234567 select dc;
 
-			Console.WriteLine(q.GeneratedQuery);
-			IList l = q.Execute();
-			if (l.Count == 0)
+//			List<DataContainer> list = from dc in pm.Objects<DataContainer>() where dc.StringVar == "Test" select dc;
+
+//			List<DataContainer> list = from dc in pm.Objects<DataContainer>() where dc.StringVar.Like( "T%" ) select dc;
+
+//			List<DataContainer> list = new NDOQuery<DataContainer>( pm, "stringVar LIKE 'T%' ESCAPE '\\'" ).Execute();
+//			List<DataContainer> list = new NDOQuery<DataContainer>( pm, "SELECT * FROM \"DataContainer\" WHERE \"StringVar\" LIKE 'T%'", false, Query.Language.Sql).Execute();
+
+			if (list.Count == 0)
 			{
-				Console.WriteLine("Nichts gefunden");
+				Console.WriteLine("Nothing found");
 			}
 			else
 			{
-				DataContainer dc = (DataContainer) l[0];
+				DataContainer dc = (DataContainer) list[0];
 				//Console.WriteLine(dc.DoubleVar);
 				Console.WriteLine(dc.ByteVar);
-                foreach (Byte b in dc.ByteArrVar)
-                    Console.Write(b.ToString() + " ");
-                Console.WriteLine("");
 				Console.WriteLine(dc.GuidVar);
 				//Console.WriteLine(dc.DecVar.ToString());
 			}
-			Console.WriteLine("Fertig");
-			
+			Console.WriteLine("Ready");			
 #endif			
 		}
 
-        public static void GenerateDatabase()
-        {
-            // This code is used to generate a database during development of a provider.
-            // Once the generator is available, NDO generates the DDL code using the generator.
-            IProvider p = NDOProviderFactory.Instance["Oracle"];
-            ISqlGenerator gen = new OracleProvider.OracleGenerator();
-            PersistenceManager pm = new PersistenceManager();
-            Type t = typeof(DataContainer);
-            string myPath = typeof(Class1).Assembly.Location;
-            myPath = Path.ChangeExtension(myPath, ".ndo.sql");
-            TextWriter sw = new StreamWriter(myPath, false, Encoding.UTF8);
-            //TextWriter sw = Console.Out;
-            Type oidType = typeof(int);
-            foreach (Class cl in pm.NDOMapping.Classes)
-            {
-                sw.WriteLine("DROP TABLE IF EXISTS" + p.GetQuotedName(cl.TableName) + ";");
-                sw.WriteLine("CREATE TABLE " + p.GetQuotedName(cl.TableName) + " (");
-                sw.Write("`ID` Int AUTO_INCREMENT NOT NULL,");
-                foreach (Field f in cl.Fields)
-                {
-                    FieldInfo fi = t.GetField(f.Name, BindingFlags.Instance | BindingFlags.NonPublic);
-                    sw.Write(p.GetQuotedName(f.Column.Name) + " " + gen.DbTypeFromType(fi.FieldType));
-                    if (fi.FieldType == typeof(string))
-                        sw.Write("(255)");
-                    if (fi.FieldType == typeof(Guid))
-                        sw.Write("(36)");
-                    sw.Write(" NULL");
-                    sw.WriteLine(",");
-                }
-                sw.WriteLine("CONSTRAINT `PK_DataContainer` PRIMARY KEY (`ID`)");
-                sw.WriteLine(");");
-            }
-            if (sw != Console.Out)
-                sw.Close();
-            string[] arr = pm.BuildDatabase();
-            //foreach(string s in arr)
-            //    Console.WriteLine(s); ;
+		static void pm_IdGenerationEvent( Type t, ObjectId oid )
+		{
+			oid.Id[0] = 1;
+		}
 
-        }
 	}
 }
 

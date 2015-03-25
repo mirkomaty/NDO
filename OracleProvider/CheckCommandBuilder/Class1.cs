@@ -47,8 +47,8 @@ namespace CheckCommandBuilder
 		[STAThread]
 		static void Main(string[] args)
 		{
-			OracleConnection conn = new OracleConnection("Database=NDOTest;Data Source=localhost;User Id=root;");
-			OracleDataAdapter a = new OracleDataAdapter("Select * from datacontainer", conn);
+			OracleConnection conn = new OracleConnection("Password=abundance;User ID=Mirko;Data Source=(DESCRIPTION=(ADDRESS=(PROTOCOL=TCP)(HOST=192.168.178.29)(PORT=1521)) (CONNECT_DATA=(SERVER=DEDICATED)(SERVICE_NAME=XE)));");
+			OracleDataAdapter a = new OracleDataAdapter(@"Select * from ""DataContainer""", conn);
 			OracleCommandBuilder cb = new OracleCommandBuilder(a);
 			conn.Open();
 			string s = cb.GetInsertCommand().CommandText;
