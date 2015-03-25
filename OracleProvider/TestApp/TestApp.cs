@@ -67,12 +67,14 @@ namespace TestApp
 			// Make this true to store the test instance. 
 			// Make it false to retrieve the test instance from the database.
 #if false 
-			// You have to create the database first and
-			// execute the BusinessClasses.ndo.sql to create the DataContainer table.
+			// You have to create the database first 
+			foreach(string s in pm.BuildDatabase())
+				Console.WriteLine(s);
 			DataContainer dc = new DataContainer();
 			pm.MakePersistent(dc);
 			pm.Save();
 			Console.WriteLine("Fertig");
+			Console.ReadLine();
 #else			
 
 			// Uncomment the following two lines to view the generated queries.

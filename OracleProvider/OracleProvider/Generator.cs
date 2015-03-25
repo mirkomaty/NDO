@@ -89,8 +89,15 @@ namespace OracleProvider
         {
             // The Oracle ADO.NET provider gives us an OracleType.DateTime instead
             // of an OracleType.Date
+			t = ((NDOAbstractProvider)this.Provider).ConvertNullableType(t);
+			
             if (t == typeof(DateTime))
                 return "Date";
+			OracleDbType dbType = (OracleDbType)Provider.GetDbType(t);
+
+			if ( t == typeof(bool) || t == typeof(byte) || t == typeof(sbyte) || t == typeof(ushort) || t == typeof(int) || t == typeof(short) || t == typeof(uint) || t == typeof(long) || t == typeof(ulong) || t == typeof(float) || t == typeof(double) || t == typeof(decimal) )
+				return "Number";
+
             return ((OracleDbType)Provider.GetDbType(t)).ToString();
         }
 
