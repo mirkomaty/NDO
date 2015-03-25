@@ -84,17 +84,12 @@ namespace NDO
 						this["SqlServer"] = new NDOSqlProvider();
 					if (!this.providers.ContainsKey( "Access" ))
 						this["Access"] = new NDOAccessProvider();
-					if (!this.providers.ContainsKey( "Oracle" ))
-						this["Oracle"] = new NDOOracleProvider();
 					SqlServerGenerator sqlGen = new SqlServerGenerator();
 					sqlGen.Provider = this["SqlServer"];
 					this.generators.Add( "SqlServer", sqlGen );
 					AccessGenerator accGen = new AccessGenerator();
 					accGen.Provider = this["Access"];
 					this.generators.Add( "Access", accGen );
-					OracleGenerator oraGen = new OracleGenerator();
-					oraGen.Provider = this["Oracle"];
-					this.generators.Add( "Oracle", oraGen );
 					SearchProviderPlugIns();
 				}
 			}

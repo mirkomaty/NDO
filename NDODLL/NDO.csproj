@@ -289,9 +289,6 @@
     <Compile Include="NDOOidTypeAttribute.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="NDOOracleProvider.cs">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="NDOParameterCollection.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -333,7 +330,6 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="OidColumnIterator.cs" />
-    <Compile Include="OracleGenerator.cs" />
     <Compile Include="PersistenceManagerBase.cs" />
     <Compile Include="PersistenceManagerFactory.cs">
       <SubType>Code</SubType>
@@ -444,7 +440,7 @@
   </ItemGroup>
   <ProjectExtensions>
     <VisualStudio>
-      <UserProperties NDOEnableAddIn="false" NDOEnableEnhancer="false" NDOGenerateMapping="false" NDOGenerateSchema="false" NDONewMapping="false" NDOMergeMapping="false" NDOMergeSchema="false" NDOGenerateSQL="false" />
+      <UserProperties NDOGenerateSQL="false" NDOMergeSchema="false" NDOMergeMapping="false" NDONewMapping="false" NDOGenerateSchema="false" NDOGenerateMapping="false" NDOEnableEnhancer="false" NDOEnableAddIn="false" />
     </VisualStudio>
   </ProjectExtensions>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
