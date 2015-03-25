@@ -349,11 +349,20 @@ namespace NDO
 					}
 					else
 					{
+						Column column = null;
 						Field f = resultClass.FindField(name);
-						if (null == f)
+						if (null != f)
+							column = f.Column;
+						else
+						{
+							Relation r = resultClass.FindRelation( name );
+							if (r.Multiplicity == RelationMultiplicity.Element && r.ForeignKeyColumns.Count() == 1)
+								column = r.ForeignKeyColumns.First();
+						}
+						if (column == null)
 							throw new NDOException(7, "Can't find mapping information for field " + resultClass.FullName + "." + name);
 						if (!columnNames.Contains(name))
-							columnNames.Add(name, QualifiedTableName.Get(resultClass.TableName, provider) + "." + provider.GetQuotedName(f.Column.Name));
+							columnNames.Add(name, QualifiedTableName.Get(resultClass.TableName, provider) + "." + provider.GetQuotedName(column.Name));
 					}
 				}
 			}
