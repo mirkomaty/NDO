@@ -95,8 +95,9 @@
     <Reference Include="FirebirdSql.Data.FirebirdClient">
       <HintPath>..\packages\FirebirdSql.Data.FirebirdClient.4.6.1.0\lib\net40-client\FirebirdSql.Data.FirebirdClient.dll</HintPath>
     </Reference>
-    <Reference Include="NDO, Version=2.0.0.0, Culture=neutral, PublicKeyToken=37bfdffa92a0cd24, processorArchitecture=MSIL">
+    <Reference Include="NDO, Version=2.1.0.0, Culture=neutral, PublicKeyToken=37bfdffa92a0cd24, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\NDODLL\bin\Debug\NDO.dll</HintPath>
     </Reference>
     <Reference Include="NDOInterfaces">
       <Name>NDOInterfaces</Name>
@@ -163,7 +164,7 @@
   </ItemGroup>
   <ProjectExtensions>
     <VisualStudio>
-      <UserProperties DatabaseOwner="" NDOSQLScriptLanguage="Oracle" NDOUseTimeStamps="false" NDOGenerateChangeEvents="false" NDOUsePolymorphy="false" NDOTypeListFile="" NDOGenerateSQL="true" NDOMergeSchema="true" NDOMergeMapping="true" NDONewMapping="false" NDOGenerateSchema="true" NDOGenerateMapping="true" NDOEnableEnhancer="false" NDOEnableAddIn="true" NDODefaultConnection="Provider=Microsoft.Jet.OLEDB.4.0;Data Source=D:\Persistenz\TestDataTypes\DataTest.mdb;Persist Security Info=False" />
+      <UserProperties NDODefaultConnection="Provider=Microsoft.Jet.OLEDB.4.0;Data Source=D:\Persistenz\TestDataTypes\DataTest.mdb;Persist Security Info=False" NDOEnableAddIn="true" NDOEnableEnhancer="false" NDOGenerateMapping="true" NDOGenerateSchema="true" NDONewMapping="false" NDOMergeMapping="true" NDOMergeSchema="true" NDOGenerateSQL="true" NDOTypeListFile="" NDOUsePolymorphy="false" NDOGenerateChangeEvents="false" NDOUseTimeStamps="false" NDOSQLScriptLanguage="Oracle" DatabaseOwner="" />
     </VisualStudio>
   </ProjectExtensions>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />

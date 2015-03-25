@@ -35,8 +35,9 @@ using System.Reflection;
 using System.Text;
 using System.IO;
 using System.Data;
-using System.Collections;
+using System.Collections.Generic;
 using NDO;
+using NDO.Linq;
 using NDO.Mapping;
 using BusinessClasses;
 using NDOInterfaces;
@@ -61,7 +62,7 @@ namespace TestApp
 
 			// Make this true to store the test instance. 
 			// Make it false if you want to retrieve data.
-#if true
+#if false
             GenerateDatabase();
 			DataContainer dc = new DataContainer();
 			pm.MakePersistent(dc);
@@ -71,47 +72,48 @@ namespace TestApp
 
 			// uncomment the queries you like to test
 
-			DataContainer.QueryHelper qh = new DataContainer.QueryHelper();
-			Query q = pm.NewQuery(typeof (DataContainer), null);
-//			Query q = pm.NewQuery(typeof (DataContainer), qh.boolVar + " = 1");
-//			Query q = pm.NewQuery(typeof (DataContainer), qh.byteVar + " = " + (0x55).ToString());
+			List<DataContainer> list = pm.Objects<DataContainer>();
+
+			//VirtualTable<DataContainer> vt = pm.Objects<DataContainer>().Where( dc => dc.StringVar.Like( "T%" ) );
+			//Console.WriteLine(vt.QueryString);
+
+//			List<DataContainer> list = from dc in pm.Objects<DataContainer>() where dc.BoolVar == true select dc;
+//			List<DataContainer> list = from dc in pm.Objects<DataContainer>() where dc.ByteVar == 0x55 select dc;
 			
-            //DateTime dt = DateTime.Today;
-            //Query q = pm.NewQuery(typeof (DataContainer), qh.dateTimeVar + " = {0}");
-            //q.Parameters.Add(dt);
+			//DateTime dt = DateTime.Today;
+			//List<DataContainer> list = from dc in pm.Objects<DataContainer>() where dc.DateTimeVar == dt select dc;
 
             //DateTime dt1 = DateTime.Today - TimeSpan.FromDays(1);
             //DateTime dt2 = DateTime.Today + TimeSpan.FromDays(1);
             //Query q = pm.NewQuery(typeof (DataContainer), qh.dateTimeVar + " BETWEEN {0} AND {1}");
             //q.Parameters.Add(dt1);
             //q.Parameters.Add(dt2);
+//			List<DataContainer> list = from dc in pm.Objects<DataContainer>() where dc.DecVar > 0.34m select dc;
+//			List<DataContainer> list = from dc in pm.Objects<DataContainer>() where dc.DoubleVar < 6.54 select dc;
+//			List<DataContainer> list = from dc in pm.Objects<DataContainer>() where dc.FloatVar <= 10 select dc;
+//			List<DataContainer> list = from dc in pm.Objects<DataContainer>() where 10 >= dc.FloatVar select dc;
+//			List<DataContainer> list = from dc in pm.Objects<DataContainer>() where dc.Int64Var == 0x123456781234567 select dc;
 
-//			Query q = pm.NewQuery(typeof (DataContainer), qh.decVar + " > 0.34");
-//			Query q = pm.NewQuery(typeof (DataContainer), qh.doubleVar + " < 6.54");
-//			Query q = pm.NewQuery(typeof (DataContainer), qh.floatVar + " <= 10");
-//			Query q = pm.NewQuery(typeof (DataContainer), qh.int64Var + " = " + (0x123456781234567).ToString());
-//			The following line throws an exception. Only single quotes are allowed.
-//			Query q = pm.NewQuery(typeof (DataContainer), qh.stringVar + " = \"Test\"");
-//			Query q = pm.NewQuery(typeof (DataContainer), qh.stringVar + " = \'Test\'");
-//			Query q = pm.NewQuery(typeof (DataContainer), qh.stringVar + " LIKE 'T*'", false);
-//			Query q = pm.NewQuery(typeof (DataContainer), qh.stringVar + " LIKE 'T%' ESCAPE '\\'");
-//			Query q = pm.NewQuery(typeof (DataContainer), "SELECT * FROM \"DataContainer\" WHERE \"StringVar\" LIKE 'T%'", false, Query.Language.Sql);
+//			List<DataContainer> list = from dc in pm.Objects<DataContainer>() where dc.StringVar == "Test" select dc;
 
-			Console.WriteLine(q.GeneratedQuery);
-			IList l = q.Execute();
-			if (l.Count == 0)
+//			List<DataContainer> list = from dc in pm.Objects<DataContainer>() where dc.StringVar.Like( "T%" ) select dc;
+
+//			List<DataContainer> list = new NDOQuery<DataContainer>( pm, "stringVar LIKE 'T%' ESCAPE '\\'" ).Execute();
+//			List<DataContainer> list = new NDOQuery<DataContainer>( pm, "SELECT * FROM \"DataContainer\" WHERE \"StringVar\" LIKE 'T%'", false, Query.Language.Sql).Execute();
+
+			if (list.Count == 0)
 			{
 				Console.WriteLine("Nothing found");
 			}
 			else
 			{
-				DataContainer dc = (DataContainer) l[0];
+				DataContainer dc = (DataContainer) list[0];
 				//Console.WriteLine(dc.DoubleVar);
 				Console.WriteLine(dc.ByteVar);
 				Console.WriteLine(dc.GuidVar);
 				//Console.WriteLine(dc.DecVar.ToString());
 			}
-			Console.WriteLine("Ready");
+			Console.WriteLine("Ready");		
 			
 #endif			
 		}
@@ -134,9 +136,8 @@ namespace TestApp
                 sw.WriteLine("DROP TABLE " + p.GetQuotedName(cl.TableName) + ";");
                 sw.WriteLine("CREATE TABLE " + p.GetQuotedName(cl.TableName) + " (");
                 sw.Write("\"ID\" INTEGER NOT NULL,");
-                for (int i = 0; i < cl.Fields.Count; i++)
+                foreach (Field f in cl.Fields)
                 {
-                    Field f = (Field)cl.Fields[i];
                     FieldInfo fi = t.GetField(f.Name, BindingFlags.Instance | BindingFlags.NonPublic);
                     sw.Write(p.GetQuotedName(f.Column.Name) + " " + gen.DbTypeFromType(fi.FieldType));
                     if (fi.FieldType == typeof(string))
