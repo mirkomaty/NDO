@@ -1029,11 +1029,18 @@ namespace NDO
 		private void CreateQueryParameters(IDbCommand command, IList parameters)
 		{
 			command.Parameters.Clear();
+            string sql = command.CommandText;
 
-			if (parameters == null || parameters.Count == 0)
-				return;
+            if (parameters == null || parameters.Count == 0)
+            {
+                Regex regex = new Regex(@"\{(tc:|)(\d+)\}");
+                Match match = regex.Match(sql);
+                if (match.Success)
+                {
+                    throw new QueryException(10009, "Parameter-Reference " + match.Value + " has no matching parameter.");
+                }
+            }
 
-			string sql = command.CommandText;
 			CreateQueryParameters(ref sql, command, parameters, 0);
 			command.CommandText = sql;
 		}
@@ -1046,9 +1053,12 @@ namespace NDO
 			
 			MatchCollection matches = regex.Matches(sql);
 			Dictionary<string, object> tcValues = new Dictionary<string, object>();
+            int endIndex = parameters.Count - 1;
 			foreach(Match match in matches)
 			{
 				nr = int.Parse(match.Groups[2].Value) + offset;
+                if (nr > endIndex)
+                    throw new QueryException(10009, "Parameter-Reference " + match.Value + " has no matching parameter.");
 				string tc = match.Groups[1].Value.Replace( ":", string.Empty );
 				if ( tc != string.Empty )
 				{
@@ -1075,6 +1085,8 @@ namespace NDO
 				{
 					int parIndex = int.Parse( match.Groups[1].Value ) + offset;
 					int oidIndex = int.Parse( match.Groups[2].Value ) + offset;
+                    if (parIndex > endIndex)
+                        throw new QueryException(10009, "Parameter-Reference {" + parIndex + "} has no matching parameter.");
 					object p = parameters[parIndex];
 					if ( p is Query.Parameter )
 						p = ( (Query.Parameter) p ).Value;
