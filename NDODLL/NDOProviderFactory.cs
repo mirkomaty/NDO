@@ -256,6 +256,7 @@ namespace NDO
             }
             set 
             {
+				LoadProviders();
 				if (providers.ContainsKey( name ))
 					providers.Remove( name );
                 providers[name] = value; 
