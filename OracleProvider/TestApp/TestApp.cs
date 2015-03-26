@@ -78,36 +78,35 @@ namespace TestApp
 #else			
 
 			// Uncomment the following two lines to view the generated queries.
-			// VirtualTable<DataContainer> vt = pm.Objects<DataContainer>().Where( dc => dc.StringVar.Like( "T%" ) );
-			// Console.WriteLine(vt.QueryString);
+			 //VirtualTable<DataContainer> vt = pm.Objects<DataContainer>().Where( dc => dc.DateTimeVar.Between(dt1, dt2) );
+			 //Console.WriteLine(vt.QueryString);
 
 			// uncomment the queries you like to test
 
 			List<DataContainer> list = pm.Objects<DataContainer>();
 
-//			List<DataContainer> list = from dc in pm.Objects<DataContainer>() where dc.BoolVar == true select dc;
-//			List<DataContainer> list = from dc in pm.Objects<DataContainer>() where dc.ByteVar == 0x55 select dc;
+			//List<DataContainer> list = from dc in pm.Objects<DataContainer>() where dc.BoolVar == true select dc;
+			//List<DataContainer> list = from dc in pm.Objects<DataContainer>() where dc.ByteVar == 0x55 select dc;
 			
 			//DateTime dt = DateTime.Today;
 			//List<DataContainer> list = from dc in pm.Objects<DataContainer>() where dc.DateTimeVar == dt select dc;
 
-            //DateTime dt1 = DateTime.Today - TimeSpan.FromDays(1);
-            //DateTime dt2 = DateTime.Today + TimeSpan.FromDays(1);
-            //Query q = pm.NewQuery(typeof (DataContainer), qh.dateTimeVar + " BETWEEN {0} AND {1}");
-            //q.Parameters.Add(dt1);
-            //q.Parameters.Add(dt2);
-//			List<DataContainer> list = from dc in pm.Objects<DataContainer>() where dc.DecVar > 0.34m select dc;
-//			List<DataContainer> list = from dc in pm.Objects<DataContainer>() where dc.DoubleVar < 6.54 select dc;
-//			List<DataContainer> list = from dc in pm.Objects<DataContainer>() where dc.FloatVar <= 10 select dc;
-//			List<DataContainer> list = from dc in pm.Objects<DataContainer>() where 10 >= dc.FloatVar select dc;
-//			List<DataContainer> list = from dc in pm.Objects<DataContainer>() where dc.Int64Var == 0x123456781234567 select dc;
+			//DateTime dt1 = DateTime.Today.AddDays(-10);
+			//DateTime dt2 = DateTime.Today.AddDays(1);
+			//List<DataContainer> list = from dc in pm.Objects<DataContainer>() where dc.DateTimeVar.Between(dt1, dt2) select dc;
 
-//			List<DataContainer> list = from dc in pm.Objects<DataContainer>() where dc.StringVar == "Test" select dc;
+			//List<DataContainer> list = from dc in pm.Objects<DataContainer>() where dc.DecVar > 0.34m select dc;
+			//List<DataContainer> list = from dc in pm.Objects<DataContainer>() where dc.DoubleVar < 6.54 select dc;
+			//List<DataContainer> list = from dc in pm.Objects<DataContainer>() where dc.FloatVar <= 10 select dc;
+			//List<DataContainer> list = from dc in pm.Objects<DataContainer>() where 10 >= dc.FloatVar select dc;
+			//List<DataContainer> list = from dc in pm.Objects<DataContainer>() where dc.Int64Var == 0x123456781234567 select dc;
 
-//			List<DataContainer> list = from dc in pm.Objects<DataContainer>() where dc.StringVar.Like( "T%" ) select dc;
+			//List<DataContainer> list = from dc in pm.Objects<DataContainer>() where dc.StringVar == "Test" select dc;
 
-//			List<DataContainer> list = new NDOQuery<DataContainer>( pm, "stringVar LIKE 'T%' ESCAPE '\\'" ).Execute();
-//			List<DataContainer> list = new NDOQuery<DataContainer>( pm, "SELECT * FROM \"DataContainer\" WHERE \"StringVar\" LIKE 'T%'", false, Query.Language.Sql).Execute();
+			//List<DataContainer> list = from dc in pm.Objects<DataContainer>() where dc.StringVar.Like( "T%" ) select dc;
+
+			//List<DataContainer> list = new NDOQuery<DataContainer>( pm, "stringVar LIKE 'T%' ESCAPE '\\'" ).Execute();
+			//List<DataContainer> list = new NDOQuery<DataContainer>( pm, "SELECT * FROM \"DataContainer\" WHERE \"StringVar\" LIKE 'T%'", false, Query.Language.Sql).Execute();
 
 			if (list.Count == 0)
 			{
