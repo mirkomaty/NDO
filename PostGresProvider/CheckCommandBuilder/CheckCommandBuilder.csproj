@@ -92,9 +92,8 @@
     <ErrorReport>prompt</ErrorReport>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Npgsql, Version=0.7.0.0, Culture=neutral, PublicKeyToken=5d8b90d52f46fda7">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\..\..\Programme\PostgreSQL\8.1\Npgsql\MS1.1\Npgsql.dll</HintPath>
+    <Reference Include="Npgsql">
+      <HintPath>..\packages\Npgsql.2.2.5\lib\net40\Npgsql.dll</HintPath>
     </Reference>
     <Reference Include="System">
       <Name>System</Name>
