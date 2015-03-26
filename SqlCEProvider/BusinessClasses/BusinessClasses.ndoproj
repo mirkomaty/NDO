@@ -12,7 +12,7 @@
     <GenerateChangeEvents>False</GenerateChangeEvents>
     <UseTimeStamps>False</UseTimeStamps>
     <Utf8Encoding>True</Utf8Encoding>
-    <SQLScriptLanguage>SqlServer</SQLScriptLanguage>
+    <SQLScriptLanguage>SqlCe</SQLScriptLanguage>
     <SchemaVersion>1.0</SchemaVersion>
     <IncludeTypecodes>False</IncludeTypecodes>
     <DatabaseOwner>

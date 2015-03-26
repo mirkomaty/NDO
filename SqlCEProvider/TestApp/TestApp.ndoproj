@@ -5,19 +5,19 @@
     <EnableEnhancer>False</EnableEnhancer>
     <VerboseMode>False</VerboseMode>
     <NewMapping>False</NewMapping>
-    <GenerateSQL>False</GenerateSQL>
-    <DefaultConnection>Data Source=test.db</DefaultConnection>
+    <GenerateSQL>True</GenerateSQL>
+    <DefaultConnection>DataSource="C:\Projekte\NDO22\SqlCEProvider\NDOTest.sdf"; Password='NDOTester'</DefaultConnection>
     <TargetMappingFileName>NDOMapping.xml</TargetMappingFileName>
     <GenerateChangeEvents>False</GenerateChangeEvents>
     <UseTimeStamps>False</UseTimeStamps>
     <Utf8Encoding>True</Utf8Encoding>
-    <SQLScriptLanguage>SqlServer</SQLScriptLanguage>
+    <SQLScriptLanguage>SqlCe</SQLScriptLanguage>
     <SchemaVersion>1.0</SchemaVersion>
     <IncludeTypecodes>False</IncludeTypecodes>
     <DatabaseOwner>
     </DatabaseOwner>
     <GenerateConstraints>False</GenerateConstraints>
-    <UseMsBuild>False</UseMsBuild>
+    <UseMsBuild>True</UseMsBuild>
     <DropExistingElements>True</DropExistingElements>
   </Options>
   <ProjectDescription>
@@ -29,11 +29,11 @@
     <KeyFile>
     </KeyFile>
     <References>
-      <Reference AssemblyName="NDOInterfaces" AssemblyPath="..\..\NDOInterfaces\bin\release\NDOInterfaces.dll">
-      </Reference>
-      <Reference AssemblyName="BusinessClasses" AssemblyPath="..\BusinessClasses\bin\Debug\BusinessClasses.dll">
+      <Reference AssemblyName="NDOInterfaces" AssemblyPath="..\..\NDOInterfaces\bin\Debug\NDOInterfaces.dll">
       </Reference>
       <Reference AssemblyName="SqlCEProvider" AssemblyPath="..\SqlCEProvider\bin\Debug\SqlCeProvider.dll">
+      </Reference>
+      <Reference AssemblyName="BusinessClasses" AssemblyPath="..\BusinessClasses\bin\Debug\BusinessClasses.dll">
       </Reference>
       <Reference AssemblyName="System.Core" AssemblyPath="d:\program files (x86)\reference assemblies\microsoft\framework\.netframework\v4.0\system.core.dll">
       </Reference>
