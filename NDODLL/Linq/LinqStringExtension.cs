@@ -8,7 +8,25 @@ namespace NDO.Linq
 {
 	public static class LinqStringExtension
 	{
+		/// <summary>
+		/// Helper Method for creating the LIKE statement
+		/// </summary>
+		/// <param name="s"></param>
+		/// <param name="parameter"></param>
+		/// <returns></returns>
 		public static bool Like(this object s, object parameter)
+		{
+			return true;
+		}
+
+		/// <summary>
+		/// Helper Method for creating BETWEEN statements
+		/// </summary>
+		/// <param name="s"></param>
+		/// <param name="firstParameter"></param>
+		/// <param name="secondParameter"></param>
+		/// <returns></returns>
+		public static bool Between(this object s, object firstParameter, object secondParameter)
 		{
 			return true;
 		}
