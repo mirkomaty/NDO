@@ -199,43 +199,6 @@ namespace NDO.PostGreProvider
 			//'9999-12-31 23:59:59'
 			return "'" + dt.ToString("yyyy-MM-dd HH:mm:ss") + "'";
 		}
-
-		public override int GetDefaultLength(string typeName)
-		{
-            if (String.Compare(typeName, "bool", true) == 0)
-				return 1;
-			if (String.Compare(typeName, "int8", true) == 0)
-				return 8;
-			if (String.Compare(typeName, "bytea", true) == 0)
-				return 1024;
-			if (String.Compare(typeName, "date", true) == 0)
-				return 16;
-			if (String.Compare(typeName, "float8", true) == 0)
-				return 8;
-			if (String.Compare(typeName, "int4", true) == 0)
-				return 4;
-			if (String.Compare(typeName, "money", true) == 0)
-				return 10;
-			if (String.Compare(typeName, "numeric", true) == 0)
-				return 10;
-			if (String.Compare(typeName, "float4", true) == 0)
-				return 4;
-			if (String.Compare(typeName, "int2", true) == 0)
-				return 2;
-			if (String.Compare(typeName, "text", true) == 0)
-				return 255;
-			if (String.Compare(typeName, "time", true) == 0)
-				return 16;
-			if (String.Compare(typeName, "timestamp", true) == 0)
-				return 16;
-            if (String.Compare(typeName, "timetz", true) == 0)
-                return 16;
-            if (String.Compare(typeName, "timestamptz", true) == 0)
-                return 16;
-            if (String.Compare(typeName, "varchar", true) == 0)
-				return 255;
-			return 0;		
-		}
 	
 
 		public override int GetDefaultLength(System.Type t)
@@ -278,13 +241,7 @@ namespace NDO.PostGreProvider
 			else if ( t.IsSubclassOf(typeof(System.Enum)))
 				return 4;
 			else
-				return 0;		}
-
-        [Obsolete]
-		public override Type GetSystemType(string s)
-		{
-			System.Diagnostics.StackFrame sf = new System.Diagnostics.StackFrame();
-			throw new Exception("Obsolete method GetSystemType " + s + " called.\n" + sf.ToString());
+				return 0;		
 		}
 
 

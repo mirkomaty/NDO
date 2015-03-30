@@ -197,42 +197,6 @@ namespace OracleProvider
 			return base.GetSqlLiteral(o);
 		}
 
-		/// <summary>
-		/// See <see cref="IProvider"> IProvider interface </see>
-		/// </summary>
-		public override int GetDefaultLength(string typeName)
-		{
-			if (typeName == "BFile") return 0;
-			if (typeName == "Blob") return 0;
-			if (typeName == "Byte") return 3;
-			if (typeName == "Char") return 5;
-			if (typeName == "Clob") return 0;
-			if (typeName == "Cursor") return 0;
-			if (typeName == "DateTime") return 0;
-			if (typeName == "Double") return 30;
-			if (typeName == "Float") return 30;
-			if (typeName == "Int16") return 5;
-			if (typeName == "Int32") return 10;
-			if (typeName == "IntervalDayToSecond") return 0;
-			if (typeName == "IntervalYearToMonth") return 0;
-			if (typeName == "LongRaw") return 0;
-			if (typeName == "LongVarChar") return 255;
-			if (typeName == "NChar") return 255;
-			if (typeName == "NClob") return 1000;
-			if (typeName == "Number") return 20;
-			if (typeName == "NVarChar") return 255;
-			if (typeName == "Raw") return 255;
-			if (typeName == "RowId") return 0;
-			if (typeName == "SByte") return 3;
-			if (typeName == "Timestamp") return 16;
-			if (typeName == "TimestampLocal") return 16;
-			if (typeName == "TimestampWithTZ") return 16;
-			if (typeName == "UInt16") return 5;
-			if (typeName == "UInt32") return 10;
-			if (typeName == "VarChar") return 255;
-			return 0;		
-		}
-	
 
 		/// <summary>
 		/// See <see cref="IProvider"> IProvider interface </see>
@@ -276,12 +240,7 @@ namespace OracleProvider
 			else if ( t.IsSubclassOf(typeof(System.Enum)))
 				return 10;
 			else
-				return 0;		}
-
-		public override Type GetSystemType(string s)
-		{
-			System.Diagnostics.StackFrame sf = new System.Diagnostics.StackFrame();
-			throw new Exception("GetSystemType " + s + " aufgerufen. " + sf.ToString());
+				return 0;		
 		}
 
 

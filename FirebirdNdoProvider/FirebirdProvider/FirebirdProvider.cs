@@ -208,93 +208,6 @@ namespace NDO.FirebirdProvider
 			return result;
 		}
 
-		public override int GetDefaultLength(string typeName)
-		{
-			if (typeName == "Array")
-				return 0;
-			if (typeName == "BigInt")
-				return 0;
-			if (typeName == "Binary")
-				return 0;
-			if (typeName == "Char")
-				return 0;
-			if (typeName == "Date")
-				return 0;
-			if (typeName == "Decimal")
-				return 0;
-			if (typeName == "Double")
-				return 0;
-			if (typeName == "Float")
-				return 0;
-			if (typeName == "Guid")
-				return 0;
-			if (typeName == "Integer")
-				return 0;
-			if (typeName == "Numeric")
-				return 0;
-			if (typeName == "SmallInt")
-				return 0;
-			if (typeName == "Text")
-				return 0;
-			if (typeName == "Time")
-				return 0;
-			if (typeName == "TimeStamp")
-				return 0;
-			if (typeName == "VarChar")
-				return 0;
-			return 0;		
-		}
-	
-
-		public override int GetDefaultLength(System.Type t)
-		{
-			if ( t == typeof(bool) )
-				return 0;
-			else if ( t == typeof(byte) )
-				return 0;
-			else if ( t == typeof(sbyte) )
-				return 0;
-			else if ( t == typeof(char) )
-				return 0;
-			else if ( t == typeof(short))
-				return 0;
-			else if ( t == typeof(ushort))
-				return 0;
-			else if ( t == typeof(int))
-				return 0;
-			else if ( t == typeof(uint))
-				return 0;
-			else if ( t == typeof(long))
-				return 0;
-			else if ( t == typeof(System.Guid))
-				return 36;
-			else if ( t == typeof(ulong))
-				return 0;
-			else if ( t == typeof(float))
-				return 0;
-			else if ( t == typeof(double))
-				return 0;
-			else if ( t == typeof(string))
-				return 255;
-			else if ( t == typeof(byte[]))
-				return 255;
-			else if ( t == typeof(decimal))
-				return 0;
-			else if ( t == typeof(System.DateTime))
-				return 0;
-			else if ( t.IsSubclassOf(typeof(System.Enum)))
-				return 0;
-			else
-				return 0;		
-		}
-
-		public override Type GetSystemType(string s)
-		{
-			System.Diagnostics.StackFrame sf = new System.Diagnostics.StackFrame();
-			throw new Exception("GetSystemType " + s + " aufgerufen. " + sf.ToString());
-		}
-
-
 		public override string Wildcard
 		{
 			get { return "%"; }
@@ -305,12 +218,6 @@ namespace NDO.FirebirdProvider
 			get { return true; }
 		}
 
-/*
-	    public override bool UseStoredProcedure
-		{
-			get { return false; }
-		}
-*/
 		#endregion
 		
 		//private Hashtable namedParameters = new Hashtable();
