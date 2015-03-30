@@ -56,7 +56,7 @@ namespace NdoUnitTests
 			Connection conn = (Connection)pm.NDOMapping.Connections.First();
 #if ORACLE || FIREBIRD || POSTGRE
 			pm.IdGenerationEvent += new NDO.IdGenerationHandler(IdGenerator.OnIdGenerationEvent);
-			IdGenerator.ConnectionString = ((Connection)pm.NDOMapping.Connections[0]).Name;
+			IdGenerator.ConnectionString = ((Connection)pm.NDOMapping.Connections.First()).Name;
 #endif
 			pm.VerboseMode = false;
 			return pm;

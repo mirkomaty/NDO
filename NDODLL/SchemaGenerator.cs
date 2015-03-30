@@ -299,9 +299,11 @@ namespace NDO
 //				if (fi == null)
 //					throw new Exception("Field Type not found");
 					//continue;
+				if (!this.persistentFields.ContainsKey( fname ))
+					continue;	// protected inherited field
+
 				object memberInfo = this.persistentFields[fname];
-				if (memberInfo == null)  // protected inherited field
-					continue;
+
 				Type t;
 				if (memberInfo is FieldInfo)
 					t = ((FieldInfo)memberInfo).FieldType;
@@ -424,9 +426,11 @@ namespace NDO
 			//MM 6 ggf. Tabelle anlegen
 			//    Gibt's die Table schon in dsSchema?
 			//    Nein: Anlegen
-			DataTable dtMap = dsSchema.Tables[r.MappingTable.TableName];
-			if (null == dtMap)
+			DataTable dtMap;
+			if (!dsSchema.Tables.Contains(r.MappingTable.TableName))
 				dsSchema.Tables.Add(dtMap = new DataTable(r.MappingTable.TableName));
+			else
+				dtMap = dsSchema.Tables[r.MappingTable.TableName];
 
 			//MM 7 ForeignKey-Spalten für eigene und Fremdklasse anlegen
 			//MM 7 Wenn nötig auch die TypeColumns anlegen

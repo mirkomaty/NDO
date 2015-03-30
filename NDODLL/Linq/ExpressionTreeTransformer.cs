@@ -242,6 +242,14 @@ namespace NDO.Linq
 					sb.Append(" LIKE ");
 					Transform(mcex.Arguments[1], true);
 				}
+				else if (mname == "Between")
+				{
+					Transform(mcex.Arguments[0], false);
+					sb.Append(" BETWEEN ");
+					Transform(mcex.Arguments[1], true);
+					sb.Append(" AND ");
+					Transform(mcex.Arguments[2], true);
+				}
 				else if (mname == "get_Item")
 				{
 					string argStr = mcex.Arguments[0].ToString();

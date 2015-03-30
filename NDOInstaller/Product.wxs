@@ -217,29 +217,17 @@
 			<Component Directory="ProviderDir" Id="C__7CD6D5E15EDC4E31A47A8348EB36A9B1" Guid="4627B21B-0A6A-26A4-CA4A-B493FF3E1668">
 				<File Source="..\PostgresProvider\PostGreProvider.dll" Id="_7CD6D5E15EDC4E31A47A8348EB36A9B1" Name="PostGreProvider.dll" Vital="yes" KeyPath="yes" AssemblyManifest="_7CD6D5E15EDC4E31A47A8348EB36A9B1" AssemblyApplication="_7CD6D5E15EDC4E31A47A8348EB36A9B1" Assembly=".net" DiskId="1" />
 			</Component>
-			<Component Directory="ProviderDir" Id="C__A2D9ED50996D4A2294A5FA2EB9F4DB32" Guid="F544F7E1-9E36-99B3-A7F8-0BD6C48484BB">
-				<File Source="..\PostgresProvider\PostGreProvider.zip" Id="_A2D9ED50996D4A2294A5FA2EB9F4DB32" Name="PostGreProvider.zip" Vital="yes" KeyPath="yes" DiskId="1" />
-			</Component>
 			<Component Directory="ProviderDir" Id="C__06E831C870344C34BB2D689F4E9286D1" Guid="06E831C8-7034-4C34-BB2D-689F4E9286D1">
 				<File Source="..\SQLiteProvider\!!! SqliteProvider !!!.txt" Id="_06E831C870344C34BB2D689F4E9286D1" Name="!!! SqliteProvider !!!.txt" Vital="yes" KeyPath="yes" DiskId="1" />
 			</Component>
 			<Component Directory="ProviderDir" Id="C__11099173B8964B37B3BAD7718F86E0A3" Guid="11099173-B896-4B37-B3BA-D7718F86E0A3">
 				<File Source="..\SQLiteProvider\SQLiteProvider.dll" Id="_11099173B8964B37B3BAD7718F86E0A3" Name="SQLiteProvider.dll" Vital="yes" KeyPath="yes" AssemblyManifest="_11099173B8964B37B3BAD7718F86E0A3" AssemblyApplication="_11099173B8964B37B3BAD7718F86E0A3" Assembly=".net" DiskId="1" />
 			</Component>
-			<Component Directory="ProviderDir" Id="C__DD10A5C9C2E24F388ACE78C5E6F3B7EC" Guid="DD10A5C9-C2E2-4F38-8ACE-78C5E6F3B7EC">
-				<File Source="..\SQLiteProvider\SqliteProvider.zip" Id="_DD10A5C9C2E24F388ACE78C5E6F3B7EC" Name="SqliteProvider.zip" Vital="yes" KeyPath="yes" DiskId="1" />
-			</Component>
-			<Component Directory="ProviderDir" Id="C__050C870F5EB74FEF9DF091E02823B7D5" Guid="EF74B706-E285-9635-7A4F-5F5D91D9BB40">
-				<File Source="..\FirebirdNdoProvider\FirebirdNdoProvider20.zip" Id="_050C870F5EB74FEF9DF091E02823B7D5" Name="FirebirdNdoProvider20.zip" Vital="yes" KeyPath="yes" DiskId="1" />
-			</Component>
 			<Component Directory="ProviderDir" Id="C__343C4B3B8416449DBF0B29E97DC52A4C" Guid="E3743E54-1745-D20A-BA15-9EF8E41C4001">
 				<File Source="..\FirebirdNdoProvider\FirebirdProvider.dll" Id="_343C4B3B8416449DBF0B29E97DC52A4C" Name="FirebirdProvider.dll" Vital="yes" KeyPath="yes" AssemblyManifest="_343C4B3B8416449DBF0B29E97DC52A4C" AssemblyApplication="_343C4B3B8416449DBF0B29E97DC52A4C" Assembly=".net" DiskId="1" />
 			</Component>
 			<Component Directory="ProviderDir" Id="C__B1E137B25E6346C480F070762EEB32F5" Guid="9025C0BD-BE5F-7E85-4D95-A3E1719A304C">
 				<File Source="..\FirebirdNdoProvider\!!! Firebird Provider Readme !!!.txt" Id="_B1E137B25E6346C480F070762EEB32F5" Name="!!! Firebird Provider Readme !!!.txt" Vital="yes" KeyPath="yes" DiskId="1" />
-			</Component>
-			<Component Directory="ProviderDir" Id="C__B936DA4BB32743BB954F8AC7B76A8101" Guid="3D87D4FB-47B6-31C4-8A2C-34D597067581">
-				<File Source="..\MySqlNdoProvider\MySqlNdoProvider.zip" Id="_B936DA4BB32743BB954F8AC7B76A8101" Name="MySqlNdoProvider.zip" Vital="yes" KeyPath="yes" DiskId="1" />
 			</Component>
 			<Component Directory="ProviderDir" Id="C__CE4DBE4C3A0B402E97551AE4908CCAED" Guid="2CEB7342-CFFD-DCF9-24CB-E0FFDEE9EC5B">
 				<File Source="..\MySqlNdoProvider\!!! MySqlProvider Readme !!!.txt" Id="_CE4DBE4C3A0B402E97551AE4908CCAED" Name="!!! MySqlProvider Readme !!!.txt" Vital="yes" KeyPath="yes" DiskId="1" />
@@ -722,7 +710,7 @@
 				<File Id="_72620E1347AD49FCBD7D3444CF1C87D5" Name="Northwind.sln" Vital="yes" KeyPath="yes" DiskId="1" Source="..\Tutorial\Northwind\Northwind.sln" />
 			</Component>
 			<Component Directory="_9998DBB7E9D44739970E4E32D219E24F" Id="C__859F1558C4214E2FAA5764BDF36FD516" Guid="7E1DE4FF-CE0C-CDD5-ECC3-FC3D60ED2C28">
-				<File Id="_859F1558C4214E2FAA5764BDF36FD516" Name="Northwind.suo" Vital="yes" KeyPath="yes" DiskId="1" Source="..\Tutorial\Northwind\Northwind.suo" />
+				<File Id="_859F1558C4214E2FAA5764BDF36FD516" Name="Northwind.v12.suo" Vital="yes" KeyPath="yes" DiskId="1" Source="..\Tutorial\Northwind\Northwind.v12.suo" />
 			</Component>
 			<Component Directory="_5B64D1E19D3445148F1623CE7CB28F58" Id="C__02D2C776DC6C4506B08949EBD7AACC7B" Guid="B2884035-F548-7BC3-1626-55037755A8F1">
 				<File Id="_02D2C776DC6C4506B08949EBD7AACC7B" Name="Supplier.cs" Vital="yes" KeyPath="yes" DiskId="1" Source="..\Tutorial\Northwind\Northwind\Supplier.cs" />
