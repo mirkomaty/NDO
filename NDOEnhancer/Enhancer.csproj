@@ -158,9 +158,6 @@
     <Compile Include="Enhancer\Generator\AccessGenerator.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Enhancer\Generator\FirebirdGenerator.cs">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="Enhancer\Generator\GeneratorFactory.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -169,19 +166,9 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Enhancer\Generator\GenericSqlGeneratorBase.cs" />
-    <Compile Include="Enhancer\Generator\MySqlGenerator.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Enhancer\Generator\MySqlProvider.cs" />
-    <Compile Include="Enhancer\Generator\OracleGenerator.cs">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="Enhancer\Generator\NdoTransDiffGenerator.cs" />
     <Compile Include="Enhancer\Generator\SQLDiffGenerator.cs" />
     <Compile Include="Enhancer\Generator\SQLGenerator.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Enhancer\Generator\SqlServerGenerator.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Enhancer\Generator\StandardSqlGenerator.cs">
