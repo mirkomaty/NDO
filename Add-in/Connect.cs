@@ -48,6 +48,7 @@ using Extensibility;
 using EnvDTE;
 #if NET20
 using EnvDTE80;
+using System.Diagnostics;
 #endif
 
 namespace NDOAddIn
@@ -76,18 +77,23 @@ namespace NDOAddIn
 		{
             if (allCommands == null)
             {
-                allCommands = new ArrayList();
-                // Die Reihenfolge ist wichtig, wegen der Positionen im Menü
-                allCommands.Add(new Configure());
-                allCommands.Add(new MergeConflictUseYourCode());
-                allCommands.Add(new MergeConflictUseCGCode());
-                allCommands.Add(new AddAccessor());
-                allCommands.Add(new AddPersistentClass());
-                allCommands.Add(new AddRelation());
-                allCommands.Add(new OpenMappingTool());
-#if PRO
-                allCommands.Add(new OpenClassGenerator());
-#endif
+				try
+				{
+					allCommands = new ArrayList();
+					// Die Reihenfolge ist wichtig, wegen der Positionen im Menü
+					allCommands.Add(new Configure());
+					allCommands.Add(new MergeConflictUseYourCode());
+					allCommands.Add(new MergeConflictUseCGCode());
+					allCommands.Add(new AddAccessor());
+					allCommands.Add(new AddPersistentClass());
+					allCommands.Add(new AddRelation());
+					allCommands.Add(new OpenMappingTool());
+					allCommands.Add(new OpenClassGenerator());
+				}
+				catch (Exception ex)
+				{
+					Debug.WriteLine( ex.ToString() );
+				}
             }
 		}
 
@@ -107,52 +113,60 @@ namespace NDOAddIn
 		/// <seealso class='IDTExtensibility2' />
 		public void OnConnection(object application, Extensibility.ext_ConnectMode connectMode, object addInInstance, ref System.Array custom)
 		{
-            applicationObject = (_DTE)application;
-            ApplicationObject.VisualStudioApplication = applicationObject;
+			try
+			{
+				applicationObject = (_DTE)application;
+				ApplicationObject.VisualStudioApplication = applicationObject;
 
-            AppDomain.CurrentDomain.AssemblyResolve += new ResolveEventHandler(CurrentDomain_AssemblyResolve);
+				AppDomain.CurrentDomain.AssemblyResolve += new ResolveEventHandler(CurrentDomain_AssemblyResolve);
 
 #if needsCmdBarsFile
-        int i = 0;
-        try
-        {
-            i = 1;
-            StreamWriter sw = new StreamWriter("c:\\cmdbars.txt");
-            object o = applicationObject.CommandBars;
-            if (o == null)
-                throw new Exception("CommandBars is null");
-            foreach (CommandBar cb in (CommandBars) applicationObject.CommandBars)
-            {
-                i = 2;
-                if (cb != null)
-                {
-                    i = 3;
-                    if (cb.Name != null)
-                    {
-                        i = 4;
-                        sw.WriteLine(cb.Name);
-                    }
-                }
-            }
-            i = 5;
-            sw.Close();
-        }
-        catch (Exception ex)
-        {
-            MessageBox.Show(i.ToString() + " " + ex.Message);
-        }
+				int i = 0;
+				try
+				{
+					i = 1;
+					StreamWriter sw = new StreamWriter("c:\\cmdbars.txt");
+					object o = applicationObject.CommandBars;
+					if (o == null)
+						throw new Exception("CommandBars is null");
+					foreach (CommandBar cb in (CommandBars) applicationObject.CommandBars)
+					{
+						i = 2;
+						if (cb != null)
+						{
+							i = 3;
+							if (cb.Name != null)
+							{
+								i = 4;
+								sw.WriteLine(cb.Name);
+							}
+						}
+					}
+					i = 5;
+					sw.Close();
+				}
+				catch (Exception ex)
+				{
+					MessageBox.Show(i.ToString() + " " + ex.Message);
+				}
 #endif
-            NDOCommandBar.CreateInstance(applicationObject);
+				NDOCommandBar.CreateInstance(applicationObject);
 
-            System.Array arr = null;
+				System.Array arr = null;
 
-            foreach (IDTExtensibility2 cmd in allCommands)
-                cmd.OnConnection(application, connectMode, addInInstance, ref custom);
+				foreach (IDTExtensibility2 cmd in allCommands)
+					cmd.OnConnection(application, connectMode, addInInstance, ref custom);
 
-            if (connectMode == Extensibility.ext_ConnectMode.ext_cm_AfterStartup)
-                OnStartupComplete(ref arr);  // Makes sure the commands and command bars exist
+				if (connectMode == Extensibility.ext_ConnectMode.ext_cm_AfterStartup)
+					OnStartupComplete(ref arr);  // Makes sure the commands and command bars exist
 
-            AppDomain.CurrentDomain.AssemblyResolve -= CurrentDomain_AssemblyResolve;
+				AppDomain.CurrentDomain.AssemblyResolve -= CurrentDomain_AssemblyResolve;
+
+			}
+			catch (Exception ex)
+			{
+				Debug.WriteLine( ex.ToString() );
+			}
 		}
 
         System.Reflection.Assembly CurrentDomain_AssemblyResolve(object sender, ResolveEventArgs args)
@@ -162,9 +176,9 @@ namespace NDOAddIn
             //args.Name	"NDOEnhancerLight.resources, Version=2.0.0.0, Culture=en-US, PublicKeyToken=null"	string
             //args.Name	"C:\\\\Program Files\\\\NDO 2.0 Enterprise Edition\\\\en\\\\NDOEnhancerLight.resources.dll"	string
 
-            if (args.Name.StartsWith("NDOEnhancerLight.resources,") || args.Name.IndexOf("NDOEnhancerLight.resources.dll") > -1)
+            if (args.Name.StartsWith("NDOEnhancer.resources,") || args.Name.IndexOf("NDOEnhancer.resources.dll") > -1)
             {
-                Assembly ass = Assembly.LoadFrom(Path.Combine(Path.GetDirectoryName(this.GetType().Assembly.Location), "en\\NDOEnhancerLight.resources.dll"));
+                Assembly ass = Assembly.LoadFrom(Path.Combine(Path.GetDirectoryName(this.GetType().Assembly.Location), "en\\NDOEnhancer.resources.dll"));
                 return ass;
             }
             return null;
@@ -242,11 +256,19 @@ namespace NDOAddIn
             }
             catch (System.Exception ex)
             {
+				Debug.WriteLine( ex.ToString() );
                 System.Windows.Forms.MessageBox.Show(ex.ToString(), "NDO Enhancer Startup");
             }
 
-			foreach (IDTExtensibility2 cmd in allCommands)
-				cmd.OnStartupComplete(ref custom);
+			try
+			{
+				foreach (IDTExtensibility2 cmd in allCommands)
+					cmd.OnStartupComplete(ref custom);
+			}
+			catch (Exception ex)
+			{
+				Debug.WriteLine( ex.ToString() );				
+			}
 		}
 
 		/// <summary>

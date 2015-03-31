@@ -244,7 +244,7 @@
   </ItemGroup>
   <ProjectExtensions>
     <VisualStudio>
-      <UserProperties NDOEnableAddIn="false" NDOEnableEnhancer="false" NDOGenerateMapping="false" NDOGenerateSchema="false" NDONewMapping="false" NDOMergeMapping="false" NDOMergeSchema="false" NDOGenerateSQL="false" NDOTypeListFile="" NDODefaultConnection="Provider=SQLOLEDB.1;Integrated Security=SSPI;Persist Security Info=False;Initial Catalog=NDOTest;Data Source=NOTEBOOKZERO" NDOUsePolymorphy="false" NDOGenerateChangeEvents="false" NDOUseTimeStamps="false" NDOSQLScriptLanguage="SqlServer" DatabaseOwner="" />
+      <UserProperties DatabaseOwner="" NDOSQLScriptLanguage="SqlServer" NDOUseTimeStamps="false" NDOGenerateChangeEvents="false" NDOUsePolymorphy="false" NDODefaultConnection="Provider=SQLOLEDB.1;Integrated Security=SSPI;Persist Security Info=False;Initial Catalog=NDOTest;Data Source=NOTEBOOKZERO" NDOTypeListFile="" NDOGenerateSQL="false" NDOMergeSchema="false" NDOMergeMapping="false" NDONewMapping="false" NDOGenerateSchema="false" NDOGenerateMapping="false" NDOEnableEnhancer="false" NDOEnableAddIn="false" />
     </VisualStudio>
   </ProjectExtensions>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
@@ -256,8 +256,8 @@ copy $(TargetName).pdb "D:\Program Files\NDO 2.1 Enterprise Edition\NDOEnhancer.
 </PostBuildEvent>
   </PropertyGroup>
   <PropertyGroup>
-    <PostBuildEvent>copy $(TargetFileName) "C:\Program Files (x86)\NDO 2.1 Dev Edition"
-copy $(TargetName).pdb "C:\Program Files (x86)\NDO 2.1 Dev Edition"
+    <PostBuildEvent>copy $(TargetFileName) "C:\Program Files (x86)\NDO 3.0 Dev Edition"
+copy $(TargetName).pdb "C:\Program Files (x86)\NDO 3.0 Dev Edition"
 </PostBuildEvent>
   </PropertyGroup>
 </Project>

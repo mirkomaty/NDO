@@ -223,6 +223,12 @@
 			<Component Directory="ProviderDir" Id="C__11099173B8964B37B3BAD7718F86E0A3" Guid="11099173-B896-4B37-B3BA-D7718F86E0A3">
 				<File Source="..\SQLiteProvider\SQLiteProvider.dll" Id="_11099173B8964B37B3BAD7718F86E0A3" Name="SQLiteProvider.dll" Vital="yes" KeyPath="yes" AssemblyManifest="_11099173B8964B37B3BAD7718F86E0A3" AssemblyApplication="_11099173B8964B37B3BAD7718F86E0A3" Assembly=".net" DiskId="1" />
 			</Component>
+			<Component Directory="ProviderDir" Id="C__636250AE09B840B3AE5ECEE320A41184" Guid="636250AE-09B8-40B3-AE5E-CEE320A41184">
+				<File Source="..\SqlCeProvider\!!! SqlCeProvider !!!.txt" Id="_636250AE09B840B3AE5ECEE320A41184" Name="!!! SqlCeProvider !!!.txt" Vital="yes" KeyPath="yes" DiskId="1" />
+			</Component>
+			<Component Directory="ProviderDir" Id="C__FC5956C575984B52B621BF00870F9F5C" Guid="FC5956C5-7598-4B52-B621-BF00870F9F5C">
+				<File Source="..\SqlCeProvider\SqlCeProvider.dll" Id="_FC5956C575984B52B621BF00870F9F5C" Name="SqlCeProvider.dll" Vital="yes" KeyPath="yes" AssemblyManifest="_FC5956C575984B52B621BF00870F9F5C" AssemblyApplication="_FC5956C575984B52B621BF00870F9F5C" Assembly=".net" DiskId="1" />
+			</Component>
 			<Component Directory="ProviderDir" Id="C__343C4B3B8416449DBF0B29E97DC52A4C" Guid="E3743E54-1745-D20A-BA15-9EF8E41C4001">
 				<File Source="..\FirebirdNdoProvider\FirebirdProvider.dll" Id="_343C4B3B8416449DBF0B29E97DC52A4C" Name="FirebirdProvider.dll" Vital="yes" KeyPath="yes" AssemblyManifest="_343C4B3B8416449DBF0B29E97DC52A4C" AssemblyApplication="_343C4B3B8416449DBF0B29E97DC52A4C" Assembly=".net" DiskId="1" />
 			</Component>
