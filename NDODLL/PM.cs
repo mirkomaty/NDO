@@ -1415,8 +1415,12 @@ namespace NDO
 		{
 			Regex regex = new Regex( @"ndodiff\.(.+)\.xml" );
 			Match match = regex.Match( fn1 );
+			if (!match.Success)
+				return fn1.CompareTo( fn2 );
 			string v1 = match.Groups[1].Value;
 			match = regex.Match( fn2 );
+			if (!match.Success)
+				return fn1.CompareTo( fn2 );
 			string v2 = match.Groups[1].Value;
 			return new Version( v2 ).CompareTo( new Version( v1 ) );
 		}
@@ -1426,7 +1430,7 @@ namespace NDO
 			IProvider provider = this.mappings.GetProvider( ndoConn );
 			TransactionInfo ti = transactionTable[ndoConn];
 			IDbConnection connection = ti.Connection;
-			string version = "0";  // Initial value
+			string version = "0.0";  // Initial value - must have at least 1 period
 			connection.Open();
 			using (connection)
 			{
@@ -1485,7 +1489,17 @@ namespace NDO
 			XElement transitionElements = XElement.Load( scriptFile );
 			if (transitionElements.Attribute( "schemaName" ) != null)
 				schemaName = transitionElements.Attribute( "schemaName" ).Value;
-			Version version = new Version( GetSchemaVersion( ndoConn, schemaName ) );
+			Version version = new Version();
+			string schemaVersion = GetSchemaVersion( ndoConn, schemaName );
+			try
+			{
+				version = new Version( schemaVersion );
+			}
+			catch (Exception ex)
+			{
+				throw new Exception( ex.Message + " '" + schemaVersion + "'" );
+			}
+			
 			SchemaTransitionGenerator schemaTransitionGenerator = new SchemaTransitionGenerator( NDOProviderFactory.Instance.Generators[ndoConn.Type], this.mappings );
 			MemoryStream ms = new MemoryStream();
 			StreamWriter sw = new StreamWriter(ms, System.Text.Encoding.UTF8);
@@ -4002,7 +4016,7 @@ namespace NDO
 			return result;		
 		}
 
-		public int Revision { get { return 197; } }
+		public int Revision { get { return 269; } }
 	}
 
 
