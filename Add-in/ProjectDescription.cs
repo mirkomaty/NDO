@@ -34,8 +34,8 @@ using System.IO;
 using VSLangProj;
 using EnvDTE;
 #if !NDO11
-using VSLangProj80;
-using VSLangProj2;
+//using VSLangProj80;
+//using VSLangProj2;
 using VsWebSite;
 #endif
 #endif
@@ -411,7 +411,7 @@ namespace NDOEnhancer
             }
         }
 
-#if !STANDALONE
+
 		private void BuildReferences()
 		{
 			if (references != null)
@@ -440,7 +440,7 @@ namespace NDOEnhancer
 			}
             if (project.Kind == "{E24C65DC-7377-472b-9ABA-BC803B73C61A}")
             {
-#if !NDO11
+
                 VSWebSite ws = project.Object as VSWebSite;
                 if (ws != null)
                 {
@@ -466,7 +466,7 @@ namespace NDOEnhancer
                         }
                     }
                 }
-#endif
+
             }
 
             else if (project.Object is VSProject)
@@ -494,7 +494,7 @@ namespace NDOEnhancer
 
 		}
 
-#if !NDO11
+
         ProjectItems GetItemCollection(string fileName)
         {
             string relPath = ExtendedPath.GetRelativePath(this.projPath, fileName);
@@ -513,7 +513,7 @@ namespace NDOEnhancer
             }
             return result;
         }
-#endif
+
 
 		public void AddFileToProject(string fileName)
 		{
@@ -523,12 +523,10 @@ namespace NDOEnhancer
 			if (!File.Exists(fileName))
 				return;
 			bool found = false;
-#if !NDO11
+
             ProjectItems itemCollection = GetItemCollection(fileName);
-#else
-            ProjectItems itemCollection = project.ProjectItems;
-#endif
-            foreach (ProjectItem pi in itemCollection)
+
+			foreach (ProjectItem pi in itemCollection)
 			{
 				if (string.Compare(Path.GetFileName(pi.Name), Path.GetFileName(fileName), true) == 0)
 				{
@@ -544,7 +542,7 @@ namespace NDOEnhancer
 				this.project.ProjectItems.AddFromFile(fileName);
             }
 		}
-#endif
+
 
 		public Dictionary<string, NDOReference> References
 		{
