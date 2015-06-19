@@ -30,21 +30,15 @@ using System.Xml;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
-#if !STANDALONE
 using VSLangProj;
 using EnvDTE;
-#if !NDO11
-//using VSLangProj80;
-//using VSLangProj2;
 using VsWebSite;
-#endif
-#endif
 
 #if DEBUG
 using NDOInterfaces; // for IMessageAdapter
 #endif
 
-namespace NDOEnhancer
+namespace NETDataObjects.NDOVSPackage
 {
 
 	/// <summary>

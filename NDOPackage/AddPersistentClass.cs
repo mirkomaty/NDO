@@ -1,5 +1,5 @@
-//
-// Copyright (C) 2002-2010 Mirko Matytschak 
+ï»¿//
+// Copyright (C) 2002-2015 Mirko Matytschak 
 // (www.netdataobjects.de)
 //
 // Author: Mirko Matytschak
@@ -11,11 +11,6 @@
 // If you distribute copies of this program, whether gratis or for 
 // a fee, you must pass on to the recipients the same freedoms that 
 // you received.
-//
-// Commercial Licence:
-// For those, who want to develop software with help of this program 
-// and need to distribute their work with a more restrictive licence, 
-// there is a commercial licence available at www.netdataobjects.com.
 // 
 // The above copyright notice and this permission notice shall be
 // included in all copies or substantial portions of the Software.
@@ -27,159 +22,89 @@
 // LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
 // OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-//
 
-
+using EnvDTE;
+using Microsoft.VisualStudio.Shell;
 using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.ComponentModel.Design;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 using System.Windows.Forms;
-using Extensibility;
-using EnvDTE;
-#if NET20
-using EnvDTE80;
-#endif
-#if NET11
-using Microsoft.Office.Core;
-#else
-using Microsoft.VisualStudio.CommandBars;
-using System.Collections;
-#endif
-//using System.Text.RegularExpressions;
 
-namespace NDOEnhancer
+namespace NETDataObjects.NDOVSPackage
 {
-	/// <summary>
-	/// Zusammenfassung für AddPersistentClass.
-	/// </summary>
-	internal class AddPersistentClass : AbstractCommand
+	class AddPersistentClass : AbstractCommand
 	{
 
-		public AddPersistentClass()
+		public AddPersistentClass( _DTE dte, CommandID commandId )
+			: base( dte, commandId )
 		{
-//            this.MyCommandName = "NDOEnhancer.Connect.AddPersistentClass";
-            this.CommandBarButtonToolTip = "Adds a persistent class for NDO";
-            this.CommandBarButtonText = "Add Persistent Class";
 		}
 
-		public void DoIt()
+		protected override void DoIt( object sender, EventArgs e )
 		{
-			System.Array solObjects = (Array) this.VisualStudioApplication.ActiveSolutionProjects;
-			if (solObjects.Length < 1)
-				return;
-
-			Project project = (Project) solObjects.GetValue(0);
-
-			if (!(CodeGenHelper.IsVbProject(project) || CodeGenHelper.IsCsProject(project)))
-				return;
-
-			PersistentClassDialog pcd = new PersistentClassDialog();
-			pcd.ShowDialog();
-			if (pcd.Result == DialogResult.Cancel)
-				return;
-
-			SelectedItems selItems = VisualStudioApplication.SelectedItems;
-			ProjectItem parentItem = null;
-			if ( selItems.Count == 1 )
-			{
-				IEnumerator ienum = selItems.GetEnumerator();
-				ienum.MoveNext();
-				SelectedItem si = (SelectedItem) ienum.Current;
-				if ( si.ProjectItem != null && si.ProjectItem.Kind == "{6BB5F8EF-4483-11D3-8BCF-00C04F8EC28C}" ) // Folder
-					parentItem = si.ProjectItem;
-			}
-
-			if (CodeGenHelper.IsVbProject(project))
-				new AddPersistentClassVb(project, pcd.ClassName, pcd.Serializable, parentItem).DoIt();
-			else if (CodeGenHelper.IsCsProject(project))
-				new AddPersistentClassCs(project, pcd.ClassName, pcd.Serializable, parentItem).DoIt();
-		}
-
-	
-		#region IDTExtensibility2 Member
-
-		public override void OnConnection(object application, ext_ConnectMode connectMode, object addInInstance, ref Array custom)
-		{
-			this.VisualStudioApplication = (_DTE) application;
-            this.AddInInstance = (AddIn)addInInstance;
-            Debug.WriteLine("AddPersistentClass.OnConnection with connectMode " + connectMode.ToString());
-
-            if (connectMode != ext_ConnectMode.ext_cm_UISetup && connectMode != ext_ConnectMode.ext_cm_AfterStartup)
-                return;
-
-            if (this.CommandExists)
-            {
-                Debug.WriteLine("AddPersistentClass.OnConnection: command already exists");
-                return;
-              //----------------
-            }
-
-            Debug.WriteLine("AddPersistentClass.OnConnection: creating command");
-
 			try
 			{
-				Command command = this.AddNamedCommand( 104 );
+				System.Array solObjects = (Array)this.VisualStudioApplication.ActiveSolutionProjects;
+				if (solObjects.Length < 1)
+					return;
 
-                CommandBar commandBar = (CommandBar)((CommandBars)VisualStudioApplication.CommandBars)["Code Window"];
+				Project project = (Project)solObjects.GetValue( 0 );
 
-				CommandBarButton cbb = (CommandBarButton) command.AddControl(commandBar, 2);
-				// Use default style (context menu)
+				if (!(CodeGenHelper.IsVbProject( project ) || CodeGenHelper.IsCsProject( project )))
+					return;
 
-				commandBar = NDOCommandBar.Instance.CommandBar;
-				cbb = (CommandBarButton) command.AddControl( commandBar, 3 );
-				cbb.Style = MsoButtonStyle.msoButtonIcon;
+				PersistentClassDialog pcd = new PersistentClassDialog();
+				pcd.ShowDialog();
+				if (pcd.Result == DialogResult.Cancel)
+					return;
 
-                commandBar = (CommandBar)((CommandBars)VisualStudioApplication.CommandBars)["Project"];
-				cbb = (CommandBarButton) command.AddControl( commandBar, 2 );
-				cbb.Style = MsoButtonStyle.msoButtonIconAndCaption;
+				SelectedItems selItems = VisualStudioApplication.SelectedItems;
+				ProjectItem parentItem = null;
+				if (selItems.Count == 1)
+				{
+					IEnumerator ienum = selItems.GetEnumerator();
+					ienum.MoveNext();
+					SelectedItem si = (SelectedItem)ienum.Current;
+					if (si.ProjectItem != null && si.ProjectItem.Kind == "{6BB5F8EF-4483-11D3-8BCF-00C04F8EC28C}") // Folder
+						parentItem = si.ProjectItem;
+				}
 
+				if (CodeGenHelper.IsVbProject( project ))
+					new AddPersistentClassVb( project, pcd.ClassName, pcd.Serializable, parentItem ).DoIt();
+				else if (CodeGenHelper.IsCsProject( project ))
+					new AddPersistentClassCs( project, pcd.ClassName, pcd.Serializable, parentItem ).DoIt();
 			}
-			catch (Exception e)
+			catch (Exception ex)
 			{
-#if DEBUG
-                MessageBox.Show(e.ToString(), "NDO AddPersistentClass");
-#else
-				MessageBox.Show(e.Message, "NDO AddPersistentClass");
-#endif
+				Debug.WriteLine( ex.ToString() );
+				MessageBox.Show( ex.Message, "Configure" );
 			}
 		}
 
-
-		#endregion
-	
-		#region IDTCommandTarget Member
-
-		public override void Exec(string commandName, vsCommandExecOption executeOption, ref object variantIn, ref object variantOut, ref bool handled)
+		protected override void OnBeforeQueryStatus( object sender, EventArgs e )
 		{
-			if ( commandName == this.MyCommandName )
-			{
-				DoIt();
-				handled = true;
-			}
-		}
+			OleMenuCommand item = sender as OleMenuCommand;
 
-		public override void QueryStatus(string commandName, vsCommandStatusTextWanted neededText, ref vsCommandStatus status, ref object commandText)
-		{
-			if ( commandName != this.MyCommandName )
-				return;
-			
 			Array projects = VisualStudioApplication.ActiveSolutionProjects as Array;
-			if ( projects.Length >= 1 )
+			bool enabled = false;
+			if (projects.Length >= 1)
 			{
-				Project project = (Project) projects.GetValue(0);
-				if (CodeGenHelper.IsVbProject(project) || CodeGenHelper.IsCsProject(project))
-					status = (vsCommandStatus) vsCommandStatus.vsCommandStatusSupported 
-							| vsCommandStatus.vsCommandStatusEnabled;
-				return;
+				Project project = (Project)projects.GetValue( 0 );
+				enabled = CodeGenHelper.IsVbProject( project ) || CodeGenHelper.IsCsProject( project );
 			}
-				
-			status = (vsCommandStatus) vsCommandStatus.vsCommandStatusSupported;
-			
+
+			item.Enabled = enabled;
 		}
 
-		#endregion
-
-
+		public static implicit operator OleMenuCommand( AddPersistentClass abstractCommand )
+		{
+			return abstractCommand.command;
+		}
 	}
-
 }

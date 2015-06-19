@@ -1,6 +1,6 @@
-//
-// Copyright (C) 2002-2008 HoT - House of Tools Development GmbH 
-// (www.netdataobjects.com)
+﻿//
+// Copyright (C) 2002-2015 Mirko Matytschak 
+// (www.netdataobjects.de)
 //
 // Author: Mirko Matytschak
 //
@@ -11,11 +11,6 @@
 // If you distribute copies of this program, whether gratis or for 
 // a fee, you must pass on to the recipients the same freedoms that 
 // you received.
-//
-// Commercial Licence:
-// For those, who want to develop software with help of this program 
-// and need to distribute their work with a more restrictive licence, 
-// there is a commercial licence available at www.netdataobjects.com.
 // 
 // The above copyright notice and this permission notice shall be
 // included in all copies or substantial portions of the Software.
@@ -27,8 +22,6 @@
 // LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
 // OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-//
-
 
 using System;
 using System.Globalization;
@@ -39,32 +32,36 @@ using System.Windows.Forms;
 using System.IO;
 using System.Runtime.InteropServices;
 using EnvDTE;
-#if NET20
 using EnvDTE80;
-#endif
 using VSLangProj;
-using VSLangProj2;
 using System.Collections.Generic;
 
-namespace NDOEnhancer
+namespace NETDataObjects.NDOVSPackage
 {
 	/// <summary>
 	/// Summary description for BuildEventHandler.
 	/// </summary>
 	internal class BuildEventHandler
 	{
-		MessageAdapter messages = null;
-//		internal static bool expired;
+		private MessageAdapter			messages = null;
+		private BuildEvents				buildEvents;
+		private _DTE					m_applicationObject;
 
-		public
-		BuildEventHandler( _DTE applicationObject )
+		public BuildEventHandler( _DTE applicationObject )
 		{
 			m_applicationObject = applicationObject;
 			ApplicationObject.VisualStudioApplication = applicationObject;
+
+            Events events = applicationObject.Events;
+            buildEvents = events.BuildEvents;
+
+            buildEvents.OnBuildBegin			+= OnBuildBegin;
+            buildEvents.OnBuildDone				+= OnBuildDone;
+            buildEvents.OnBuildProjConfigDone	+= OnBuildProjConfigDone;
+//            buildEvents.OnBuildProjConfigBegin	+= OnBuildProjConfigBegin;  // If needed, activate this line and the according method
 		}
 
-		public void
-		onBuildBegin( vsBuildScope scope, vsBuildAction action )
+		public void OnBuildBegin( vsBuildScope scope, vsBuildAction action )
 		{
             if (messages == null)
 			{
@@ -73,22 +70,13 @@ namespace NDOEnhancer
 			messages.Success = true;
 		}
 
-		public void
-		onBuildDone( vsBuildScope scope, vsBuildAction action )
+		public void OnBuildDone( vsBuildScope scope, vsBuildAction action )
 		{
 			if (!messages.Success)
 			{
 				messages.WriteLine("    Build failed");
 			}
 		}
-
-
-
-		public void
-		onBuildProjConfigBegin( string projectName, string projectConfig, string platform, string solutionConfig )
-		{
-		}
-
 
         void IncludeFiles(ConfigurationOptions options, Project project, ProjectDescription projectDescription)
         {
@@ -206,12 +194,10 @@ namespace NDOEnhancer
 		{
 		}
 
-		public void
-		onBuildProjConfigDone( string projectName, string projectConfig, string platform, string solutionConfig, bool success )
+		public void OnBuildProjConfigDone( string projectName, string projectConfig, string platform, string solutionConfig, bool success )
 		{
 			if (messages == null)
 				messages = new MessageAdapter();
-
 
 			if ( ! success )
 			{
@@ -226,21 +212,14 @@ namespace NDOEnhancer
                 // projectName can be like 'path\path\abc.def, where abc.def is the project name in the 
                 // solution explorer
                 Project  project = null;
-#if !NDO11
                 try
                 {
                     project = new ProjectIterator(solution)[projectName];
                 }
-                catch (Exception ex) { messages.WriteLine(ex.ToString()); } // project remains null, exception will be thrown later
-#else
-				try
+                catch (Exception ex) 
 				{
-					project = solution.Projects.Item(projectName);
-				}
-				catch (Exception ex) { messages.WriteLine(ex.ToString()); } // project remains null, exception will be thrown later
-
-#endif
-
+					messages.WriteLine(ex.ToString()); 
+				} // project remains null, exception will be thrown later
                 if (project == null)
                 {
                     messages.WriteLine("NDO: Project " + projectName + " skipped.");
@@ -359,6 +338,9 @@ namespace NDOEnhancer
             }
 		}
 
-		private _DTE					m_applicationObject;
+		//public void OnBuildProjConfigBegin( string projectName, string projectConfig, string platform, string solutionConfig )
+		//{
+		//}
+
 	}
 }

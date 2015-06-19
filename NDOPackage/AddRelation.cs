@@ -1,6 +1,6 @@
-//
-// Copyright (C) 2002-2008 HoT - House of Tools Development GmbH 
-// (www.netdataobjects.com)
+ï»¿//
+// Copyright (C) 2002-2015 Mirko Matytschak 
+// (www.netdataobjects.de)
 //
 // Author: Mirko Matytschak
 //
@@ -11,11 +11,6 @@
 // If you distribute copies of this program, whether gratis or for 
 // a fee, you must pass on to the recipients the same freedoms that 
 // you received.
-//
-// Commercial Licence:
-// For those, who want to develop software with help of this program 
-// and need to distribute their work with a more restrictive licence, 
-// there is a commercial licence available at www.netdataobjects.com.
 // 
 // The above copyright notice and this permission notice shall be
 // included in all copies or substantial portions of the Software.
@@ -27,67 +22,62 @@
 // LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
 // OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-//
 
-
-using System;
-using System.Diagnostics;
-using System.Collections;
-using System.IO;
-using System.Windows.Forms;
-using Extensibility;
 using EnvDTE;
-#if NET20
-using EnvDTE80;
-#endif
-#if NET11
-using Microsoft.Office.Core;
-#else
-using Microsoft.VisualStudio.CommandBars;
-#endif
-using System.Text.RegularExpressions;
+using Microsoft.VisualStudio.Shell;
+using System;
+using System.Collections.Generic;
+using System.ComponentModel.Design;
+using System.IO;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Windows.Forms;
 
-namespace NDOEnhancer
+namespace NETDataObjects.NDOVSPackage
 {
-	/// <summary>
-	/// Zusammenfassung für AddRelation.
-	/// </summary>
-	internal class AddRelation : AbstractCommand
+	class AddRelation : AbstractCommand
 	{
-		public AddRelation()
+
+		public AddRelation( _DTE dte, CommandID commandId )
+			: base( dte, commandId )
 		{
-			this.CommandBarButtonText = "Add Relation";
-            this.CommandBarButtonToolTip = "Adds a relation";
-//            this.MyCommandName = "NDOEnhancer.Connect.AddRelation";
 		}
 
-		TextDocument textDoc;
-		System.Text.StringBuilder sbResult;
-
-		private void Write(string text)
+		protected override void OnBeforeQueryStatus( object sender, EventArgs e )
 		{
-			sbResult.Append(text);
+			OleMenuCommand item = (OleMenuCommand)sender;
+
+			bool enabled = false;
+			Document document = base.dte.ActiveDocument;
+			if (document != null)
+			{
+				TextDocument textDoc = (TextDocument)document.Object( "TextDocument" );
+				if (textDoc != null)
+				{
+					string ext = Path.GetExtension( document.FullName ).ToLower();
+					if (ext == ".cs" || ext == ".vb")
+						enabled = true;
+				}
+			}
+
+			item.Enabled = (enabled);
 		}
 
-		private void WriteDoc()
+		protected override void DoIt( object sender, EventArgs e )
 		{
-			textDoc.Selection.Insert(sbResult.ToString(), (int)vsInsertFlags.vsInsertFlagsInsertAtStart);
-		}
-
-
-		public void DoIt()
-		{
+			OleMenuCommand item = sender as OleMenuCommand;
 			Document document;
 
-			document = this.VisualStudioApplication.ActiveDocument;
-			if (document == null) 
-				return;
-			
-			textDoc = (TextDocument) document.Object("TextDocument");
-			if (textDoc == null) 
+			document = base.dte.ActiveDocument;
+			if (document == null)
 				return;
 
-			this.sbResult = new System.Text.StringBuilder(500);
+			TextDocument textDoc = (TextDocument)document.Object( "TextDocument" );
+			if (textDoc == null)
+				return;
+
+			StringBuilder sbResult = new System.Text.StringBuilder( 500 );
 
 			RelationDialog dlg = new RelationDialog();
 			DialogResult result = dlg.ShowDialog();
@@ -98,7 +88,7 @@ namespace NDOEnhancer
 			string closeBracket;
 			string typeOf;
 
-			textDoc.Selection.StartOfLine(vsStartOfLineOptions.vsStartOfLineOptionsFirstColumn, false);
+			textDoc.Selection.StartOfLine( vsStartOfLineOptions.vsStartOfLineOptionsFirstColumn, false );
 
 
 			string listLeft = null;
@@ -108,7 +98,7 @@ namespace NDOEnhancer
 			string spc = null;
 
 			bool isVC;
-			if (isVC = (Path.GetExtension(document.FullName).ToLower() == ".cs"))
+			if (isVC = (Path.GetExtension( document.FullName ).ToLower() == ".cs"))
 			{
 				openBracket = "[";
 				closeBracket = "]";
@@ -159,165 +149,79 @@ namespace NDOEnhancer
 			}
 
 
-			try 
+			try
 			{
-				Write(spc + openBracket + "NDORelation");
+				sbResult.Append( spc + openBracket + "NDORelation" );
 				if ((dlg.List && !dlg.UseGenerics) || dlg.Composite || dlg.RelationName.Trim() != string.Empty)
 				{
 					bool needsComma = false;
-					Write("(");
+					sbResult.Append( "(" );
 					if (dlg.List && !dlg.UseGenerics)
 					{
-						Write(typeOf + '(' + dlg.Type + ')');
+						sbResult.Append( typeOf + '(' + dlg.Type + ')' );
 						needsComma = true;
 					}
 					if (dlg.Composite)
 					{
 						if (needsComma)
-							Write(", ");
-						Write("RelationInfo.Composite");
+							sbResult.Append( ", " );
+						sbResult.Append( "RelationInfo.Composite" );
 						needsComma = true;
 					}
 					if (dlg.RelationName.Trim() != string.Empty)
 					{
 						if (needsComma)
-							Write(", ");
-						Write("\"" + dlg.RelationName + "\"");						
+							sbResult.Append( ", " );
+						sbResult.Append( "\"" + dlg.RelationName + "\"" );
 					}
-					Write(")");
-					
+					sbResult.Append( ")" );
+
 				}
-				Write(closeBracket + '\n');
+				sbResult.Append( closeBracket + '\n' );
 
 				if (isVC)
 				{
 					if (dlg.List)
-						Write(spc + listLeft + " ");
-					else 
-						Write(spc + dlg.Type + " ");
-					Write(dlg.FieldName);
+						sbResult.Append( spc + listLeft + " " );
+					else
+						sbResult.Append( spc + dlg.Type + " " );
+					sbResult.Append( dlg.FieldName );
 					if (dlg.List)
 					{
-						Write(" = new " + listRight);
-						Write("()");
+						sbResult.Append( " = new " + listRight );
+						sbResult.Append( "()" );
 					}
-					
-					Write(";\n");
+
+					sbResult.Append( ";\n" );
 				}
 				else
 				{
-					Write (spc + "Dim ");
-					Write(dlg.FieldName);
-					Write (" As ");
+					sbResult.Append( spc + "Dim " );
+					sbResult.Append( dlg.FieldName );
+					sbResult.Append( " As " );
 					if (dlg.List)
-						Write(listLeft);
-					else 
-						Write(dlg.Type);
+						sbResult.Append( listLeft );
+					else
+						sbResult.Append( dlg.Type );
 					if (dlg.List)
 					{
-						Write(" = new " + listRight);
-						Write("()");
+						sbResult.Append( " = new " + listRight );
+						sbResult.Append( "()" );
 					}
-					Write("\n");
+					sbResult.Append( "\n" );
 				}
 
-				WriteDoc();
-			}				
-			catch (Exception e) 
+				textDoc.Selection.Insert( sbResult.ToString(), (int)vsInsertFlags.vsInsertFlagsInsertAtStart );
+			}
+			catch (Exception ex)
 			{
-				MessageBox.Show(e.Message, "Add Relation Add-in");
+				MessageBox.Show( ex.Message, "Add Relation Add-in" );
 			}
 		}
-	
-		#region IDTCommandTarget Member
 
-		public override void Exec(string commandName, vsCommandExecOption executeOption, ref object variantIn, ref object variantOut, ref bool handled)
+		public static implicit operator OleMenuCommand( AddRelation addRelation )
 		{
-			if ( commandName == MyCommandName )
-			{
-				DoIt();
-				handled = true;
-			}
+			return addRelation.command;
 		}
-
-		public override void QueryStatus(string commandName, vsCommandStatusTextWanted neededText, ref vsCommandStatus status, ref object commandText)
-		{
-			if ( commandName == MyCommandName )
-			{
-				bool enabled = false;
-				Document document = this.VisualStudioApplication.ActiveDocument;
-				if (document != null) 
-				{
-			
-					TextDocument textDoc = (TextDocument) document.Object("TextDocument");
-					if (textDoc != null) 
-					{
-						string ext = Path.GetExtension(document.FullName).ToLower();
-						if (ext == ".cs" || ext == ".vb")
-							enabled = true;
-					}						
-				}
-
-				if (enabled)
-					status = (vsCommandStatus) vsCommandStatus.vsCommandStatusSupported | vsCommandStatus.vsCommandStatusEnabled;
-				else
-					status = (vsCommandStatus) vsCommandStatus.vsCommandStatusSupported;
-
-			}
-		}
-
-		#endregion
-
-
-		#region IDTExtensibility2 Member
-
-		public override void OnConnection(object application, ext_ConnectMode connectMode, object addInInstance, ref Array custom)
-		{
-            this.VisualStudioApplication = (_DTE)application;
-            this.AddInInstance = (AddIn)addInInstance;
-
-            Debug.WriteLine("AddRelation.OnConnection with connectMode " + connectMode.ToString());
-
-            if (connectMode != ext_ConnectMode.ext_cm_UISetup && connectMode != ext_ConnectMode.ext_cm_AfterStartup)
-                return;
-
-            if (this.CommandExists)
-            {
-                Debug.WriteLine("AddRelation.OnConnection: command already exists");
-                return;
-                //----------------
-            }
-
-            Debug.WriteLine("AddRelation.OnConnection: creating command");
-
-			try
-			{
-
-				// AddRelation-Kommando
-				Command command = this.AddNamedCommand( 105 );
-
-                CommandBar commandBar = (CommandBar)((CommandBars)this.VisualStudioApplication.CommandBars)["Code Window"];
-				CommandBarButton cbb = (CommandBarButton) command.AddControl(commandBar, 1);
-				// use default for cbb.Style (context menu)
-
-				commandBar = NDOCommandBar.Instance.CommandBar;
-				cbb = (CommandBarButton) command.AddControl( commandBar, 2 );
-				cbb.Style = MsoButtonStyle.msoButtonIcon;
-			}
-			catch (Exception e)
-			{
-#if DEBUG
-				MessageBox.Show(e.ToString(), "NDO Add Relation");
-#else
-				MessageBox.Show(e.Message, "NDO Add Relation");
-#endif
-            }
-		}
-
-
-		#endregion
 	}
 }
-	
-
-

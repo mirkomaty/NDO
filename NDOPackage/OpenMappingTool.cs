@@ -1,6 +1,6 @@
-//
-// Copyright (C) 2002-2008 HoT - House of Tools Development GmbH 
-// (www.netdataobjects.com)
+ï»¿//
+// Copyright (C) 2002-2015 Mirko Matytschak 
+// (www.netdataobjects.de)
 //
 // Author: Mirko Matytschak
 //
@@ -11,11 +11,6 @@
 // If you distribute copies of this program, whether gratis or for 
 // a fee, you must pass on to the recipients the same freedoms that 
 // you received.
-//
-// Commercial Licence:
-// For those, who want to develop software with help of this program 
-// and need to distribute their work with a more restrictive licence, 
-// there is a commercial licence available at www.netdataobjects.com.
 // 
 // The above copyright notice and this permission notice shall be
 // included in all copies or substantial portions of the Software.
@@ -27,224 +22,94 @@
 // LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
 // OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-//
 
-
-using System;
-using System.Globalization;
-using System.Diagnostics;
-using System.Collections;
-using System.IO;
 using EnvDTE;
-#if NET20
-using EnvDTE80;
-#endif
-using Extensibility;
-#if NET11
-using Microsoft.Office.Core;
-#else
-using Microsoft.VisualStudio.CommandBars;
-#endif
+using Microsoft.VisualStudio.Shell;
+using System;
+using System.Collections.Generic;
+using System.ComponentModel.Design;
+using System.Diagnostics;
+using System.IO;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace NDOEnhancer
+namespace NETDataObjects.NDOVSPackage
 {
-	/// <summary>
-	/// Zusammenfassung für Configure.
-	/// </summary>
-	internal class OpenMappingTool : AbstractCommand
+	class OpenMappingTool : AbstractCommand
 	{
 
-		public OpenMappingTool()
+		public OpenMappingTool( _DTE dte, CommandID commandId )
+			: base( dte, commandId )
 		{
-		    this.CommandBarButtonText	= "Open Mapping Tool";
-		    this.CommandBarButtonToolTip	= "Opens the NDO mapping tool";
-//            this.MyCommandName = "NDOEnhancer.Connect.OpenMappingTool";
 		}
 
-
-		#region IDTExtensibility2 Member
-
-		public override void OnConnection(object application, Extensibility.ext_ConnectMode connectMode, object addInInstance, ref Array custom)
+		protected override void DoIt( object sender, EventArgs e )
 		{
-            this.VisualStudioApplication = (_DTE)application;
-            this.AddInInstance = (AddIn)addInInstance;
-
-            Debug.WriteLine("OpenMappingTool.OnConnection with connectMode " + connectMode.ToString());
-
-            if (connectMode != ext_ConnectMode.ext_cm_UISetup && connectMode != ext_ConnectMode.ext_cm_AfterStartup)
-                return;
-
-            if (this.CommandExists)
-            {
-                Debug.WriteLine("OpenMappingTool.OnConnection: command already exists");
-                return;
-                //----------------
-            }
-
-            CreateCommand();
-		}
-
-        private void CreateCommand()
-        {
-            object[] contextGUIDS = new object[] { };
-            Commands commands = this.VisualStudioApplication.Commands;
-            Debug.WriteLine("OpenMappingTool.OnConnection: creating command");
-
-            try
-            {
-                Command command = this.AddNamedCommand( 106 );
-
-                CommandBar commandBar = NDOCommandBar.Instance.CommandBar;
-                CommandBarButton commandBarButton;
-
-                if (commandBar != null)
-                {
-                    commandBarButton = (CommandBarButton)command.AddControl(commandBar, 5);
-                    commandBarButton.Style = MsoButtonStyle.msoButtonIcon;
-                }
-
-                commandBar = (CommandBar)((CommandBars)this.VisualStudioApplication.CommandBars)["Project"];
-                if (commandBar != null)
-                {
-                    commandBarButton = (CommandBarButton)command.AddControl(commandBar, 2);
-                    commandBarButton.Style = MsoButtonStyle.msoButtonIconAndCaption;
-                }
-
-#if !NDO11
-                commandBar = (CommandBar)((CommandBars)this.VisualStudioApplication.CommandBars)["Web Project Folder"];
-                if (commandBar != null)
-                {
-                    commandBarButton = (CommandBarButton)command.AddControl(commandBar, 2);
-                    commandBarButton.Style = MsoButtonStyle.msoButtonIconAndCaption;
-                }
-#endif
-
-            }
-            catch (System.Exception ex)
-            {
-#if DEBUG
-                System.Windows.Forms.MessageBox.Show(ex.ToString(), "NDO Open Mapping Tool");
-#else
-				System.Windows.Forms.MessageBox.Show(ex.Message, "NDO Open Mapping Tool");
-#endif
-            }
-        }
-
-
-		#endregion
-	
-		#region IDTCommandTarget Member
-
-		public override void Exec(string commandName, vsCommandExecOption executeOption, ref object variantIn, ref object variantOut, ref bool handled)
-		{
-			if ( commandName == this.MyCommandName )
+			try
 			{
-				System.Array solObjects = (Array) this.VisualStudioApplication.ActiveSolutionProjects;
+				System.Array solObjects = (Array)this.VisualStudioApplication.ActiveSolutionProjects;
 				if (solObjects.Length < 1)
 					return;
 
-				Project project = (Project) solObjects.GetValue(0);
-//				string s = "";
-//				foreach(EnvDTE.Property p in project.ConfigurationManager.ActiveConfiguration.Properties)
-//					s += p.Name + " ";
-//				MessageBox.Show(s);
+				Project project = (Project)solObjects.GetValue( 0 );
+				//				string s = "";
+				//				foreach(EnvDTE.Property p in project.ConfigurationManager.ActiveConfiguration.Properties)
+				//					s += p.Name + " ";
+				//				MessageBox.Show(s);
 
-                //string assName = project.Properties.Item("AssemblyName").Value.ToString().ToLower();
-                //string projPath = Path.GetDirectoryName(project.FileName) + "\\";
-
-#if nix
-				Configuration conf = project.ConfigurationManager.ActiveConfiguration;
-				string binPath = projPath 
-					+ conf.Properties.Item("OutputPath").Value 
-					+ project.Properties.Item("OutputFileName").Value;
-
-
-
-				
-				MessageBox.Show(exeFile + " " + "-a:" + binPath + " -m:" + mappingFile);
-#endif
-				ProjectDescription pd = new ProjectDescription(this.VisualStudioApplication.Solution, project);
-                if (!pd.MappingFileExists)
-                {
-                    MessageBox.Show("No Mapping File", "Open Mapping File");
-                    goto exit;
-                }
-				string exeFile = Path.Combine(ApplicationObject.AssemblyPath, "Mapping.exe");
-                string mappingFile = pd.CheckedMappingFileName;
-                //string mappingFile = null;
-                //string mapFile = assName + ".ndo.xml";
-                //foreach(ProjectItem item in project.ProjectItems)
-                //{
-                //    if (string.Compare(item.Name, "ndomapping.xml", true) == 0 
-                //        || string.Compare(item.Name, mapFile, true) == 0)
-						
-                //        mappingFile = item.Name;
-                //}
-
-                //if (mappingFile == null)
-                //{
-                //    MessageBox.Show("No Mapping File", "Open Mapping File");
-                //    goto exit;
-                //}
-
-                //mappingFile = Path.Combine(projPath, mappingFile);
-                //if (mappingFile.IndexOf(' ') > -1)
-                mappingFile = "\"" + mappingFile + '"';
+				ProjectDescription pd = new ProjectDescription( this.VisualStudioApplication.Solution, project );
+				if (!pd.MappingFileExists)
+				{
+					MessageBox.Show( "No Mapping File", "Open Mapping File" );
+					return;
+				}
+				string exeFile = Path.Combine( ApplicationObject.AssemblyPath, "Mapping.exe" );
+				string mappingFile = pd.CheckedMappingFileName;
+				mappingFile = "\"" + mappingFile + '"';
 				string s = "-m:" + mappingFile;
-				ProcessStartInfo psi = new ProcessStartInfo( exeFile, s);
-				psi.CreateNoWindow		   = false;
-				psi.UseShellExecute		   = false;
-				psi.RedirectStandardError  = false;
+				ProcessStartInfo psi = new ProcessStartInfo( exeFile, s );
+				psi.CreateNoWindow = false;
+				psi.UseShellExecute = false;
+				psi.RedirectStandardError = false;
 				psi.RedirectStandardOutput = false;
 
 				System.Diagnostics.Process proc = System.Diagnostics.Process.Start( psi );
-				
-
-			exit:
-				handled = true;
-				return;
 			}
-		}
-
-		public override void QueryStatus(string commandName, vsCommandStatusTextWanted neededText, ref vsCommandStatus status, ref object commandText)
-		{
-			if ( commandName == this.MyCommandName )
+			catch (Exception ex)
 			{
-                bool hasMapping = false;
-                Array projects = this.VisualStudioApplication.ActiveSolutionProjects as Array;
-				if ( 1 == projects.Length )
-				{
-                    System.Array solObjects = (Array)this.VisualStudioApplication.ActiveSolutionProjects;
-					if (solObjects.Length < 1)
-						return;
-
-					Project project = (Project) solObjects.GetValue(0);
-
-
-                    ConfigurationOptions options = new ConfigurationOptions(project);
-                    ProjectDescription pd = new ProjectDescription(this.VisualStudioApplication.Solution, project);
-                    if (options.EnableAddIn)
-                    {
-                        //string assName = project.Properties.Item("AssemblyName").Value.ToString().ToLower();
-                        //string assName = pd.AssemblyName;
-                        //string mapFile = assName + ".ndo.xml";
-                        //foreach (ProjectItem item in project.ProjectItems)
-                        //{
-                        //    string itemName = item.Name.ToLower();
-                        //    if (itemName == "ndomapping.xml" || itemName == mapFile)
-                        //        hasMapping = true;
-                        //}
-                        hasMapping = pd.MappingFileExists;
-                    }
-				}
-                if (hasMapping)
-                    status = (vsCommandStatus)vsCommandStatus.vsCommandStatusSupported | vsCommandStatus.vsCommandStatusEnabled;
-                else
-                    status = (vsCommandStatus)vsCommandStatus.vsCommandStatusSupported;
+				Debug.WriteLine( ex.ToString() );
+				MessageBox.Show( ex.Message, "Configure" );
 			}
 		}
 
-		#endregion
+		protected override void OnBeforeQueryStatus( object sender, EventArgs e )
+		{
+			OleMenuCommand item = sender as OleMenuCommand;
+			bool hasMapping = false;
+			Array projects = this.VisualStudioApplication.ActiveSolutionProjects as Array;
+			if (1 == projects.Length)
+			{
+				System.Array solObjects = (Array)this.VisualStudioApplication.ActiveSolutionProjects;
+				if (solObjects.Length < 1)
+					return;
+
+				Project project = (Project)solObjects.GetValue( 0 );
+
+				ConfigurationOptions options = new ConfigurationOptions( project );
+				ProjectDescription pd = new ProjectDescription( this.VisualStudioApplication.Solution, project );
+				if (options.EnableAddIn)
+				{
+					hasMapping = pd.MappingFileExists;
+				}
+			}
+			item.Enabled = hasMapping;
+		}
+
+		public static implicit operator OleMenuCommand( OpenMappingTool abstractCommand )
+		{
+			return abstractCommand.command;
+		}
 	}
 }

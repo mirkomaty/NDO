@@ -36,7 +36,7 @@ using System.Collections;
 using System.Xml;
 using EnvDTE;
 
-namespace NDOEnhancer
+namespace NETDataObjects.NDOVSPackage
 {
     /// <summary>
     /// Attention!!!!! This code is essentially the same as in TestConfigurationOptions.cs 
