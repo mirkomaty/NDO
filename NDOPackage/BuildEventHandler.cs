@@ -35,6 +35,7 @@ using EnvDTE;
 using EnvDTE80;
 using VSLangProj;
 using System.Collections.Generic;
+using NDOEnhancer;
 
 namespace NETDataObjects.NDOVSPackage
 {

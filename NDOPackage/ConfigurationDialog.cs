@@ -710,9 +710,9 @@ namespace NETDataObjects.NDOVSPackage
                             if (MessageBox.Show("The database connection settings have been changed. Should NDO change the connection settings in the mapping file " + Path.GetFileName(mappingFileName) + " too?", "NDO Configuration", MessageBoxButtons.YesNo) == DialogResult.Yes)
                             {
                                 Connection conn = null;
-                                if (mapping.Connections.Count == 1)
+                                if (mapping.Connections.Count() == 1)
                                 {
-                                    conn = (Connection)mapping.Connections[0];
+                                    conn = (Connection)mapping.Connections.FirstOrDefault();
                                 }
                                 else
                                 {

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi" xmlns:netfx="http://schemas.microsoft.com/wix/NetFxExtension" xmlns:util="http://schemas.microsoft.com/wix/UtilExtension">
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi" xmlns:netfx="http://schemas.microsoft.com/wix/NetFxExtension" xmlns:util="http://schemas.microsoft.com/wix/UtilExtension" xmlns:VSExtension="http://schemas.microsoft.com/wix/VSExtension">
 	<Product Id="*" Name="NDO 2.1 Dev Edition" Language="1033" Version="1.0.0.0" Manufacturer="Mirko Matytschak" UpgradeCode="33e115c9-4d88-4479-bcf6-394602e687fa">
 		<Package InstallerVersion="200" Compressed="yes" InstallScope="perMachine" />
 
@@ -24,13 +24,7 @@
 
 	<Fragment>
 		<Directory Id="TARGETDIR" Name="SourceDir">
-			<Directory Id="CommonAppDataFolder">
-				<Directory Id="Dir_Microsoft" Name="Microsoft">
-					<Directory Id="Dir_MSEnvShared" Name="MSEnvShared">
-						<Directory Id="AddinsDir" Name="Addins" />
-					</Directory>
-				</Directory>
-			</Directory>
+
 			<Directory Id="GAC" Name="GAC" />
 			<Directory Id="ProgramMenuFolder" Name="Programs">
 				<Directory Id="ProgramMenuDir" Name="NDO 2.1 Dev Edition" />
@@ -120,11 +114,6 @@
 							</Directory>
 						</Directory>
 					</Directory>
-					<Directory Id="DirEs" Name="es" />
-					<Directory Id="DirDe" Name="de" />
-					<Directory Id="DirEn" Name="en" />
-					<Directory Id="DirFr" Name="fr" />
-					<Directory Id="DirIt" Name="it" />
 				</Directory>
 			</Directory>
 		</Directory>
@@ -132,18 +121,21 @@
 
 	<Fragment>
 		<ComponentGroup Id="ProductComponents">
-			<!-- Addin-Files -->
-			<Component Directory="AddinsDir" Id="C_file_NDO21_VS2010.Addin" Guid="2138CEE9-A7B4-4E9D-AFD5-585FA7F23D3D">
-				<File Source="..\Deploy\Enterprise\NDO21.Addin" Id="file_NDO21_VS2010.Addin" Name="NDO21-VS2010.AddIn" Vital="yes" KeyPath="yes" DiskId="1" />
-				<util:XmlFile Id="SetAssembly_NDO21_VS2010.Addin" Action="setValue" File="[#file_NDO21_VS2010.Addin]" ElementPath="/Extensibility/Addin/Assembly" 
-											Value="[#file_NDOEnhancer.dll]" Sequence="1" />
+      <!-- VSPackage -->
+			<Component Id="C_NDOPackage" Guid="B93F32FC-4B97-4BA7-BAA0-1670D22EC094" Directory="INSTALLFOLDER">
+				<VSExtension:VsixPackage File="NDOPackageFile" PackageId="9a3bfde0-3b01-4a99-9ddc-1544345635fc" Target="professional" TargetVersion="10.0" Vital="no" Permanent="no" />
+				<VSExtension:VsixPackage File="NDOPackageFile" PackageId="9a3bfde0-3b01-4a99-9ddc-1544345635fc" Target="vswinExpress" TargetVersion="10.0" Vital="no" Permanent="no" />
+				<VSExtension:VsixPackage File="NDOPackageFile" PackageId="9a3bfde0-3b01-4a99-9ddc-1544345635fc" Target="professional" TargetVersion="11.0" Vital="no" Permanent="no" />
+				<VSExtension:VsixPackage File="NDOPackageFile" PackageId="9a3bfde0-3b01-4a99-9ddc-1544345635fc" Target="vswinExpress" TargetVersion="11.0" Vital="no" Permanent="no" />
+				<VSExtension:VsixPackage File="NDOPackageFile" PackageId="9a3bfde0-3b01-4a99-9ddc-1544345635fc" Target="professional" TargetVersion="12.0" Vital="no" Permanent="no" />
+				<VSExtension:VsixPackage File="NDOPackageFile" PackageId="9a3bfde0-3b01-4a99-9ddc-1544345635fc" Target="vswinExpress" TargetVersion="12.0" Vital="no" Permanent="no" />
+				<VSExtension:VsixPackage File="NDOPackageFile" PackageId="9a3bfde0-3b01-4a99-9ddc-1544345635fc" Target="professional" TargetVersion="14.0" Vital="no" Permanent="no" />
+				<VSExtension:VsixPackage File="NDOPackageFile" PackageId="9a3bfde0-3b01-4a99-9ddc-1544345635fc" Target="vswinExpress" TargetVersion="14.0" Vital="no" Permanent="no" />
+				<File Id="NDOPackageFile" Name="NDOPackage.vsix" Source="..\NDOPackage\bin\Release\NDOPackage.vsix" />
 			</Component>
-			<Component Directory="AddinsDir" Id="C_file_NDO21_VS2012.Addin" Guid="0C99C4BE-431F-41D9-BFD2-36CA619D7435">
-				<File Source="..\Deploy\Enterprise\NDO21.Addin" Id="file_NDO21_VS2012.Addin" Name="NDO21-VS2012.AddIn" Vital="yes" KeyPath="yes" DiskId="1" />
-				<util:XmlFile Id="SetAssembly_NDO21_VS2012.Addin" Action="setValue" File="[#file_NDO21_VS2012.Addin]" ElementPath="/Extensibility/Addin/Assembly" 
-											Value="[#file_NDOEnhancer.dll]" Sequence="1" />
-				<util:XmlFile Id="SetVersion_NDO21_VS2012.Addin" Action="setValue" ElementPath="/Extensibility/HostApplication/Version" 
-											Value="11.0" File="[#file_NDO21_VS2012.Addin]" Sequence="1" />
+			<!-- Registry Keys -->
+
+			<Component Id="C_Regkeys" Guid="3149440E-2F1A-4AFA-A00B-0415CE1D10FD" Directory="INSTALLFOLDER">
 				<RegistryKey Root="HKLM" Key="SOFTWARE\NDO">
 					<RegistryValue Id="RV_RegValue_BuildTask" Name="InstallDir" Value="[INSTALLFOLDER]" Type="string" />
 				</RegistryKey>
@@ -151,23 +143,16 @@
 					<RegistryValue Id="_FA7B504CB7BA430F88F9107EAEDB4280" Type="string" Value="[INSTALLFOLDER]" />
 				</RegistryKey>
 			</Component>
-      <Component Directory="AddinsDir" Id="C_file_NDO21_VS2013.Addin" Guid="76058BC1-6BF0-4C71-8F8D-E6A895001474">
-        <File Source="..\Deploy\Enterprise\NDO21.Addin" Id="file_NDO21_VS2013.Addin" Name="NDO21-VS2013.AddIn" Vital="yes" KeyPath="yes" DiskId="1" />
-        <util:XmlFile Id="SetAssembly_NDO21_VS2013.Addin" Action="setValue" File="[#file_NDO21_VS2013.Addin]" ElementPath="/Extensibility/Addin/Assembly"
-											Value="[#file_NDOEnhancer.dll]" Sequence="1" />
-        <util:XmlFile Id="SetVersion_NDO21_VS2013.Addin" Action="setValue" ElementPath="/Extensibility/HostApplication/Version"
-											Value="12.0" File="[#file_NDO21_VS2013.Addin]" Sequence="1" />
-      </Component>
-      <!-- GAC -->
+			
+			<!-- GAC -->
 			<Component Directory="GAC" Id="NdoDllGac" Guid="A218BEC0-8C33-97BF-2F22-C45EE53F5502">
 				<File Source="..\Deploy\Enterprise\NDO.dll" Id="_C2FC061855BB40F187055ED21EDAFC33" Name="NDO.dll" Vital="yes" KeyPath="yes" Assembly=".net" DiskId="1" />
 			</Component>
 			<Component Directory="GAC" Id="NdoInterfacesGac" Guid="71CEE105-4C31-9AE6-C180-0CB1B67DEE1E">
 				<File Source="..\Deploy\Enterprise\NDOInterfaces.dll" Id="_B21ACC3738E64278A16379A149590F91" Name="NDOInterfaces.dll" Vital="yes" KeyPath="yes" Assembly=".net" DiskId="1" />
 			</Component>
-			<Component Directory="INSTALLFOLDER" Id="C_file_NDOEnhancer.dll" Guid="7E486264-14EC-F5F2-3DCC-C0D932464E21">
-				<File Source="..\Deploy\Enterprise\NDOEnhancer.dll" Id="file_NDOEnhancer.dll" Name="NDOEnhancer.dll" Vital="yes" KeyPath="yes" AssemblyManifest="file_NDOEnhancer.dll" AssemblyApplication="file_NDOEnhancer.dll" Assembly=".net" DiskId="1" />
-			</Component>
+			
+			<!-- Files -->
 			<Component Directory="UserSetupDir" Id="C__01A5C536E6474F648EB381D896BEE626" Guid="235BBEE3-D0F5-9B49-15D8-32F910CD57DF">
 				<File Source="..\UserSetup\UserSetup\bin\Release\UserSetup.exe" Id="_01A5C536E6474F648EB381D896BEE626" Name="UserSetup.exe" Vital="no" KeyPath="yes" AssemblyManifest="_01A5C536E6474F648EB381D896BEE626" AssemblyApplication="_01A5C536E6474F648EB381D896BEE626" Assembly=".net" DiskId="1" />
 			</Component>
@@ -176,9 +161,6 @@
 			</Component>
 			<Component Directory="UserSetupDir" Id="C__65D120E80F3B4B0CADE476A1ACDE8EF4" Guid="65D120E8-0F3B-4B0C-ADE4-76A1ACDE8EF4">
 				<File Source="..\UserSetup\NDO.css" Id="_65D120E80F3B4B0CADE476A1ACDE8EF4" Name="NDO.css" Vital="no" KeyPath="yes" DiskId="1" />
-			</Component>
-			<Component Directory="UserSetupDir" Id="C__C78B90483AE848E7A4544EDA4E745003" Guid="C78B9048-3AE8-48E7-A454-4EDA4E745003">
-				<File Source="..\UserSetup\NDOUser.AddIn" Id="_C78B90483AE848E7A4544EDA4E745003" Name="NDOUser.AddIn" Vital="no" KeyPath="yes" DiskId="1" />
 			</Component>
 			<!-- NDO Installation Folder -->
 			<Component Directory="INSTALLFOLDER" Id="C__2E5D32D3A1A9427BBF61F1B5CB127F65" Guid="3FCF3BA5-772C-AC90-32BA-C0B01CEC6242">
@@ -269,22 +251,6 @@
 			<!-- Doc -->
 			<Component Directory="DirDoc" Id="C__49AE39BB30D44D528BE8087E8103EA20" Guid="B7852678-E688-9219-7E4F-BB4CE88C610A">
 				<File Source="InstLog.txt" Id="_49AE39BB30D44D528BE8087E8103EA20" Name="InstLog.txt" KeyPath="yes" DiskId="1" />
-			</Component>
-			<!-- Languages -->
-			<Component Directory="DirEs" Id="C__82489A3B19A947109BF2781B2A04B6EC" Guid="93EB4F4E-6AE8-94FB-789A-4272E4C60F91">
-				<File Source="..\Deploy\Enterprise\es\NDOEnhancer.resources.dll" Id="_82489A3B19A947109BF2781B2A04B6EC" Name="NDOEnhancer.resources.dll" Vital="yes" KeyPath="yes" AssemblyManifest="_82489A3B19A947109BF2781B2A04B6EC" AssemblyApplication="_82489A3B19A947109BF2781B2A04B6EC" Assembly=".net" DiskId="1" />
-			</Component>
-			<Component Directory="DirDe" Id="C__AD43407E9E294EA7BD298E3B214CA248" Guid="28B3460D-AD3E-5D32-6311-2BF8046E548B">
-				<File Source="..\Deploy\Enterprise\de\NDOEnhancer.resources.dll" Id="_AD43407E9E294EA7BD298E3B214CA248" Name="NDOEnhancer.resources.dll" Vital="yes" KeyPath="yes" AssemblyManifest="_AD43407E9E294EA7BD298E3B214CA248" AssemblyApplication="_AD43407E9E294EA7BD298E3B214CA248" Assembly=".net" DiskId="1" />
-			</Component>
-			<Component Directory="DirEn" Id="C__EAC8D43FC62F4604AAC95C0BD322EB9B" Guid="5EFF8BBF-80B0-4214-68AD-40705D80A8DC">
-				<File Source="..\Deploy\Enterprise\en\NDOEnhancer.resources.dll" Id="_EAC8D43FC62F4604AAC95C0BD322EB9B" Name="NDOEnhancer.resources.dll" Vital="yes" KeyPath="yes" AssemblyManifest="_EAC8D43FC62F4604AAC95C0BD322EB9B" AssemblyApplication="_EAC8D43FC62F4604AAC95C0BD322EB9B" Assembly=".net" DiskId="1" />
-			</Component>
-			<Component Directory="DirFr" Id="C__EAC8D43FC62F4604AAC95C0BD322EB9C" Guid="FB24C772-FAAB-F9B4-C4EE-7B5522295E6F">
-				<File Source="..\Deploy\Enterprise\fr\NDOEnhancer.resources.dll" Id="_EAC8D43FC62F4604AAC95C0BD322EB9C" Name="NDOEnhancer.resources.dll" Vital="yes" KeyPath="yes" AssemblyManifest="_EAC8D43FC62F4604AAC95C0BD322EB9C" AssemblyApplication="_EAC8D43FC62F4604AAC95C0BD322EB9C" Assembly=".net" DiskId="1" />
-			</Component>
-			<Component Directory="DirIt" Id="C__F040D7E03DF14580B57B73D4EC45DB0F" Guid="C1A1779F-6D6D-6035-E3AC-666C0CA6666C">
-				<File Source="..\Deploy\Enterprise\it\NDOEnhancer.resources.dll" Id="_F040D7E03DF14580B57B73D4EC45DB0F" Name="NDOEnhancer.resources.dll" Vital="yes" KeyPath="yes" AssemblyManifest="_F040D7E03DF14580B57B73D4EC45DB0F" AssemblyApplication="_F040D7E03DF14580B57B73D4EC45DB0F" Assembly=".net" DiskId="1" />
 			</Component>
 			<!-- Tutorial -->
 			<Component Directory="NdoTravelExpensesStep6VbDir" Id="C__10825A98A283400CA61B24DDB6391C23" Guid="F8E8911B-0F42-06A2-1415-DFF09A0DCA7B">
