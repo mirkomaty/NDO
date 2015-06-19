@@ -57,7 +57,7 @@ namespace NdoUnitTests {
 		public void Setup() {
 			pm = PmFactory.NewPersistenceManager();
 			m = CreateMitarbeiter("Mirko", "Matytschak");
-			a = CreateAdresse("D", "83646", "Nockhergasse 7", "Bad T�lz");
+			a = CreateAdresse("D", "83646", "Nockhergasse 7", "Bad Tölz");
 			b = CreateBuero("3-0815");
 		}
 
