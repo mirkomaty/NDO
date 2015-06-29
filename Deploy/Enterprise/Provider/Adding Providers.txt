@@ -1,28 +1,13 @@
-After installation check, if you can find the .AddIn file 
-at the right place:
+NDO installs a Registry Value InstallDir under the following key:
 
-%ALLUSERSPROFILE%\Microsoft\Microsoft\MSEnvShared\Addins
+HKEY_LOCAL_MACHINE\SOFTWARE\Wow6432Node\NDO
 
-The .addin file should be something like NDOxy.AddIn, 
-where x is the major version and y the minor version of NDO.
+NDO is considered a 32 bit application by the installer. That's the reason, why the installer places NDO in the Wow6432Node key. If you run NDO on a 32 bit system (which is not recommended) the key is
 
-On Windows 7 the ALLUSERSPROFILE variable resolves to 
-C:/ProgramData, where C: is your system drive.
+HKEY_LOCAL_MACHINE\SOFTWARE\NDO
 
-If the file isn't there, copy the .addin file from your 
-installation directory to the Addins folder. 
-Create the directories, if they don't exist.
+NDO searches the providers in this directory. If you run NDO on a computer without NDO installed, providers will be searched for in the Location-Directory of the AppDomain. But you have always the possibility to make the providers available system wide, if you place the InstallDir value in the registry. The following lines are an example for a .reg file which can be installed with a double click:
 
-Edit the .AddIn file. In the <Assembly> section enter 
-the path to the NDOEnhancer.dll, so that it looks like that:
-
-<Assembly>D:\Program Files\NDO 2.1 Dev Edition\NDOEnhancer.dll</Assembly>
-
-The path should be your NDO installation directory.
-
-In order to find the provider path, NDO reads this path, and adds the 
-"Provider" directory to it. In the above example, NDO searches the 
-providers in the following folder:
-
-D:\Program Files\NDO 2.1 Dev Edition\Providers 
+[HKEY_LOCAL_MACHINE\SOFTWARE\Wow6432Node\NDO]
+"InstallDir"="C:\\Program Files (x86)\\NDO 2.1 Dev Edition\\"
 
