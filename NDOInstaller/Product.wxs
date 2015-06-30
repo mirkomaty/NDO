@@ -11,7 +11,9 @@
 		</Feature>
 
 		<Property Id="WIXUI_INSTALLDIR" Value="INSTALLFOLDER" />
-		<UIRef Id="WixUI_InstallDir" />
+		<UI>
+			<UIRef Id="WixUI_InstallDir" />
+		</UI>
 		<WixVariable Id="WixUILicenseRtf" Value="LicenceAgreement.rtf" />
 		<WixVariable Id="WixUIBannerBmp" Value="NDOSetup.jpg" />
 		<WixVariable Id="WixUIDialogBmp" Value="UIDialog.jpg" />
@@ -24,7 +26,6 @@
 
 	<Fragment>
 		<Directory Id="TARGETDIR" Name="SourceDir">
-
 			<Directory Id="GAC" Name="GAC" />
 			<Directory Id="ProgramMenuFolder" Name="Programs">
 				<Directory Id="ProgramMenuDir" Name="NDO 2.1 Dev Edition" />
@@ -121,19 +122,9 @@
 
 	<Fragment>
 		<ComponentGroup Id="ProductComponents">
-      <!-- VSPackage -->
+		    <!-- VSPackage -->
 			<Component Id="C_NDOPackage" Guid="B93F32FC-4B97-4BA7-BAA0-1670D22EC094" Directory="INSTALLFOLDER">
-				<VSExtension:VsixPackage File="NDOPackageFile" PackageId="9a3bfde0-3b01-4a99-9ddc-1544345635fc" Target="professional" TargetVersion="10.0" Vital="no" Permanent="no" />
-				<VSExtension:VsixPackage File="NDOPackageFile" PackageId="9a3bfde0-3b01-4a99-9ddc-1544345635fc" Target="vswinExpress" TargetVersion="10.0" Vital="no" Permanent="no" />
-				<VSExtension:VsixPackage File="NDOPackageFile" PackageId="9a3bfde0-3b01-4a99-9ddc-1544345635fc" Target="professional" TargetVersion="11.0" Vital="no" Permanent="no" />
-				<VSExtension:VsixPackage File="NDOPackageFile" PackageId="9a3bfde0-3b01-4a99-9ddc-1544345635fc" Target="vswinExpress" TargetVersion="11.0" Vital="no" Permanent="no" />
-				<VSExtension:VsixPackage File="NDOPackageFile" PackageId="9a3bfde0-3b01-4a99-9ddc-1544345635fc" Target="vwdExpress" TargetVersion="11.0" Vital="no" Permanent="no" />
-				<VSExtension:VsixPackage File="NDOPackageFile" PackageId="9a3bfde0-3b01-4a99-9ddc-1544345635fc" Target="professional" TargetVersion="12.0" Vital="no" Permanent="no" />
-				<VSExtension:VsixPackage File="NDOPackageFile" PackageId="9a3bfde0-3b01-4a99-9ddc-1544345635fc" Target="vswinExpress" TargetVersion="12.0" Vital="no" Permanent="no" />
-				<VSExtension:VsixPackage File="NDOPackageFile" PackageId="9a3bfde0-3b01-4a99-9ddc-1544345635fc" Target="vwdExpress" TargetVersion="12.0" Vital="no" Permanent="no" />
-				<VSExtension:VsixPackage File="NDOPackageFile" PackageId="9a3bfde0-3b01-4a99-9ddc-1544345635fc" Target="professional" TargetVersion="14.0" Vital="no" Permanent="no" />
-				<VSExtension:VsixPackage File="NDOPackageFile" PackageId="9a3bfde0-3b01-4a99-9ddc-1544345635fc" Target="vswinExpress" TargetVersion="14.0" Vital="no" Permanent="no" />
-				<VSExtension:VsixPackage File="NDOPackageFile" PackageId="9a3bfde0-3b01-4a99-9ddc-1544345635fc" Target="vwdExpress" TargetVersion="14.0" Vital="no" Permanent="no" />
+				<VSExtension:VsixPackage File="NDOPackageFile" PackageId="9a3bfde0-3b01-4a99-9ddc-1544345635fc" Vital="no" Permanent="no" />
 				<File Id="NDOPackageFile" Name="NDOPackage.vsix" Source="..\NDOPackage\bin\Release\NDOPackage.vsix" />
 			</Component>
 			<!-- Registry Keys -->
