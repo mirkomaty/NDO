@@ -191,7 +191,7 @@ namespace NDO.Mapping
             name = connNode.Attributes["Name"].Value;
             iD = connNode.Attributes["ID"].Value;
             type = connNode.Attributes["Type"].Value;
-            if (name == null || name == string.Empty || name == Connection.DummyConnectionString)
+            if (name == null || name == string.Empty)
             {
                 FromStandardConnection();
             }
