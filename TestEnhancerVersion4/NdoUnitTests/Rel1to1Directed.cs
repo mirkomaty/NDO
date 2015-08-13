@@ -158,7 +158,6 @@ namespace NdoUnitTests {
 			m.Adresse = a;
 			pm.Save();
 			Assert.NotNull(m.Adresse, "1. Adress not found");
-			ObjectId aoid = a.NDOObjectId;
 			m.Adresse = null;
 			Assert.AreEqual(NDOObjectState.Deleted, a.NDOObjectState, "1. Wrong state");
 			Assert.Null(m.Adresse, "1. Adress should be null");
@@ -166,7 +165,6 @@ namespace NdoUnitTests {
 			Assert.Null(m.Adresse, "2. Adress should be null");
 			Assert.AreEqual(NDOObjectState.Transient, a.NDOObjectState, "2. Wrong state");
 			ObjectId moid = m.NDOObjectId;
-			Assert.That(!aoid.IsValid());
 			pm.UnloadCache();
 			m = (Mitarbeiter)pm.FindObject(moid);
 			Assert.NotNull(m, "3. Mitarbeiter not found");
@@ -687,7 +685,7 @@ namespace NdoUnitTests {
 			m.Adresse = a;
 			pm.MakePersistent(m);
 			pm.Save();
-			ObjectId aoid = a.NDOObjectId;
+			Adresse adr = a;
 			m.Zimmer = b;
 			m.Adresse = null;
 			pm.Save();
@@ -701,7 +699,7 @@ namespace NdoUnitTests {
 			Assert.NotNull(m, "Mitarbeiter not found");
 			Assert.NotNull(m.Zimmer, "Büro not found");
 			Assert.Null(m.Adresse, "Unexpected Adresse");
-			Assert.That(!aoid.IsValid(), "Adresse should be deleted");
+			Assert.That(adr.NDOObjectState == NDOObjectState.Transient, "Adresse should be deleted");
 		}
 
 		[Test]

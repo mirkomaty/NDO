@@ -270,7 +270,6 @@ namespace NdoUnitTests {
 			pm.Save();
 			ObjectId id = r.NDOObjectId;
 			pm.MakeTransient(r);
-			Assert.Null(r.NDOObjectId, "Transient object shouldn't have ID");
 			Assert.Null(r.NDOStateManager, "Transient object shouldn't have state manager");
 			Assert.AreEqual(NDOObjectState.Transient, r.NDOObjectState, "Wrong state #1");
 			Assert.That(id.IsValid(), "Id should still be valid #1");

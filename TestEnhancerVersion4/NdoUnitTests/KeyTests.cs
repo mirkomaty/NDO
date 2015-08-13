@@ -53,9 +53,11 @@ namespace NdoUnitTests
         {
         }
 
+		[Ignore("This tests must be reworked")]
         [Test]
         public void GuidKeyEquality()
         {
+#if maskedOut
             PersistenceManager pm = PmFactory.NewPersistenceManager();
             Class cl = pm.NDOMapping.FindClass(typeof(OrderDetail));
             ObjectId oid1 = ObjectIdFactory.NewObjectId(typeof(OrderDetail), cl, new object[] { new Guid(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11), new Guid(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11) });
@@ -88,14 +90,16 @@ namespace NdoUnitTests
             Assert.That(oid1 == oid2, "Keys should be equal #7");
             Assert.That(oid1.Equals(oid2), "Keys should be equal #8");
             Assert.That(oid2.Equals(oid1), "Keys should be equal #9");
-
+#endif
         }
 
 
 
+		[Ignore("This tests must be reworked")]
         [Test]
         public void IntKeyEquality()
         {
+#if maskedOut
             PersistenceManager pm = PmFactory.NewPersistenceManager();
             Class cl = pm.NDOMapping.FindClass(typeof(OrderDetail));
             ObjectId oid1 = ObjectIdFactory.NewObjectId(typeof(OrderDetail), cl, new object[] { 4711, 4712 });
@@ -128,6 +132,7 @@ namespace NdoUnitTests
             Assert.That(oid1 == oid2, "Keys should be equal #7");
             Assert.That(oid1.Equals(oid2), "Keys should be equal #8");
             Assert.That(oid2.Equals(oid1), "Keys should be equal #9");
+#endif
         }
 
 

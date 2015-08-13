@@ -411,21 +411,20 @@ namespace NdoUnitTests
 			pm.Save();
 			ObjectId id = m.NDOObjectId;
 			pm.MakeTransient(m);
-			Assert.Null(m.NDOObjectId, "Transient object shouldn't have ID");
+			Assert.NotNull(m.NDOObjectId, "MakeTransient doesn't remove the ID");			
 			Assert.Null(m.NDOStateManager, "Transient object shouldn't have state manager");
 			Assert.AreEqual(NDOObjectState.Transient, m.NDOObjectState, "Wrong state #1");
 			Assert.That(id.IsValid(), "Id should still be valid #1");
 			m = (Mitarbeiter)pm.FindObject(id);
 			Assert.AreEqual(NDOObjectState.Hollow, m.NDOObjectState, "Wrong state #2");
 			pm.MakeTransient(m);
-			Assert.Null(m.NDOObjectId, "Transient object shouldn't have ID");
 			Assert.Null(m.NDOStateManager, "Transient object shouldn't have state manager");
 			Assert.AreEqual(NDOObjectState.Transient, m.NDOObjectState, "Wrong state #3");
 			Assert.That(id.IsValid(), "Id should still be valid #2");
 			m = (Mitarbeiter)pm.FindObject(id);
 			pm.Delete(m);
 			pm.Save();
-			Assert.That(!id.IsValid(), "Id shouldn't be valid");
+			Assert.That(id.IsValid(), "Id should be valid for the ChangeLog");
 		}
 
 		[Test]
