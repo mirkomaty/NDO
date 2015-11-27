@@ -19,35 +19,23 @@ GNU LESSER GENERAL PUBLIC LICENSE (see below) and can be linked
 both to free and proprietary software.
 
 The provider enables the commercial .NET Data Objects 
-framework (NDO) to work with a MySQL Database in the backend.
+framework (NDO) to work with an Oracle Database in the backend.
 
-NDO is available as a free Community Edition and in several commercial 
-editions. See www.netdataobjects.com.
+NDO is available as a free Developer Edition. See www.netdataobjects.de.
 
-This provider is based on the ADO.NET Provider "MySQL Connector/Net" 
-which you can download at http://dev.MySQL.com/downloads/connector/net.
+This provider is based on the nuget package Oracle.ManagedDataAccess. 
 
 Please read their licence texts before you deploy products on base of 
-MySQL and DataConnector.
-
-At the publishing time of this provider the MySQL Database 
-and the "MySQL Connector/Net" are available under the terms of the 
-ordinary GPL licence. A commercial license for proprietary software
-is also available.
-
-
+Oracle databases and the named package.
 
 --- German: 
 
-Der Provider basiert auf dem ADO.NET-Provider "MySQL Connector/Net" 
-von MySQL, den Sie getrennt herunter laden müssen 
-(http://dev.MySQL.com/downloads/connector/net). 
+Der Provider basiert auf dem Package Oracle.ManagedDataAccess 
 
 Der Provider verbindet das kommerzielle NDO-Framework 
-(".NET Data Objects") mit einer MySQL-Datenbank im Back-End.
+(".NET Data Objects") mit einer Oracle-Datenbank im Back-End.
 
-NDO ist als freie Community Edition und in verschiedenen 
-kostenpflichtigen Editionen erhältlich.
+NDO ist als freie Developers Edition erhältlich.
 
 Dieser Provider versteht sich als freie Bibliothek im Sinne der 
 GNU LESSER GENERAL PUBLIC LICENSE (siehe unten).
@@ -55,14 +43,7 @@ und kann daher sowohl in freier als auch in proprietärer Software
 verwendet werden.
 
 Bitte beachten Sie die entsprechenden Lizenzbestimmungen, bevor 
-Sie Produkte auf Basis von MySQL und "MySQL Connector/Net" 
-ausliefern.
-
-Zum Zeitpunkt dieser Veröffentlichung ist die MySQL-Datenbank 
-und der "MySQL Connector/Net" unter der normalen GPL-Lizenz 
-erhältlich. Eine kommerzielle Lizenz ist ebenfalls erhältlich.
-
-
+Sie Produkte auf Basis von Oracle ausliefern.
 
 
 		  GNU LESSER GENERAL PUBLIC LICENSE

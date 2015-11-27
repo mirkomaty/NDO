@@ -48,7 +48,7 @@ using System.Security;
 [assembly: AssemblyConfiguration("Release")]
 #endif
 [assembly: AssemblyCompany("Mirko Matytschak")]
-[assembly: AssemblyProduct("NDO 3.0 r.222")]
+[assembly: AssemblyProduct("NDO 3.0 r. d9a66d8")]
 [assembly: AssemblyCopyright("(c) 2002 - 2015, Mirko Matytschak, Marzling, Germany")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
@@ -65,9 +65,7 @@ using System.Security;
 // You can specify all the values or you can default the Revision and Build Numbers 
 // by using the '*' as shown below:
 
-#if NDO20
 [assembly: AssemblyVersion("3.0.0.0")]
-#endif
 
 [assembly: AssemblyKeyName("")]
 [assembly: AllowPartiallyTrustedCallers]

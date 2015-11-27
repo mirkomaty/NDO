@@ -58,15 +58,7 @@ using System.Runtime.CompilerServices;
 // Sie können alle Werte oder die standardmäßige Revision und Buildnummer 
 // mit '*' angeben:
 
-#if NDO11
-[assembly: AssemblyVersion("1.1.0.0")]
-#endif
-#if NDO12
-[assembly: AssemblyVersion("1.2.0.0")]
-#endif
-#if NDO20
-[assembly: AssemblyVersion("2.0.0.0")]
-#endif
+[assembly: AssemblyVersion("3.0.0.0")]
 
 //
 // Um die Assembly zu signieren, müssen Sie einen Schlüssel angeben. Weitere Informationen 
