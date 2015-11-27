@@ -31,6 +31,7 @@
 
 
 using System;
+using System.Linq;
 using System.IO;
 using NDO;
 using NDO.Mapping;
@@ -45,17 +46,17 @@ namespace NdoUnitTests
 	{
 		public static PersistenceManager NewPersistenceManager()
 		{
-            string path = @"C:\Projekte\NDO\TestEnhancerVersion4\NDOUnitTests\bin\Debug\NDOMapping.xml";
+            string path = @"D:\Projekte\NDO22\TestEnhancerVersion4\NDOUnitTests\bin\Debug\NDOMapping.xml";
             PersistenceManager pm = new PersistenceManager(path);
             //PersistenceManager pm = new PersistenceManager();
 //			pm.LogPath = Path.GetDirectoryName(path);
 //			pm.RegisterConnectionListener(new OpenConnectionListener(ConnectionGenerator.OnConnection));
 			
 //			pm.TransactionMode = TransactionMode.Pessimistic;
-			Connection conn = (Connection)pm.NDOMapping.Connections[0];
+			Connection conn = (Connection)pm.NDOMapping.Connections.First();
 #if ORACLE || FIREBIRD || POSTGRE
 			pm.IdGenerationEvent += new NDO.IdGenerationHandler(IdGenerator.OnIdGenerationEvent);
-			IdGenerator.ConnectionString = ((Connection)pm.NDOMapping.Connections[0]).Name;
+			IdGenerator.ConnectionString = ((Connection)pm.NDOMapping.Connections.First()).Name;
 #endif
 			pm.VerboseMode = false;
 			return pm;

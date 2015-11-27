@@ -31,6 +31,7 @@
 
 
 using System;
+using System.Linq;
 using System.IO;
 using NDO.Mapping;
 using System.Data;
@@ -63,12 +64,12 @@ namespace ExecuteSqlBatch
 				return -2;
 			}
 			NDOMapping mapping = new NDOMapping(args[1]);
-			if (mapping.Connections.Count != 1)
+			if (mapping.Connections.Count() != 1)
 			{
-				Console.WriteLine(String.Format("ExecuteSqlBatch: Wrong count of connections: {0} in mapping file {1}", mapping.Connections.Count, args[1]));
+				Console.WriteLine(String.Format("ExecuteSqlBatch: Wrong count of connections: {0} in mapping file {1}", mapping.Connections.Count(), args[1]));
 				return -3;
 			}
-			Connection conn = (Connection)mapping.Connections[0];
+			Connection conn = (Connection)mapping.Connections.First();
 			IProvider provider = NDOProviderFactory.Instance[conn.Type];
 			if (provider == null)
 			{

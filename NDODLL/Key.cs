@@ -1,6 +1,6 @@
 //
-// Copyright (C) 2002-2008 HoT - House of Tools Development GmbH 
-// (www.netdataobjects.com)
+// Copyright (C) 2002-2014 Mirko Matytschak 
+// (www.netdataobjects.de)
 //
 // Author: Mirko Matytschak
 //
@@ -15,7 +15,7 @@
 // Commercial Licence:
 // For those, who want to develop software with help of this program 
 // and need to distribute their work with a more restrictive licence, 
-// there is a commercial licence available at www.netdataobjects.com.
+// there is a commercial licence available at www.netdataobjects.de.
 // 
 // The above copyright notice and this permission notice shall be
 // included in all copies or substantial portions of the Software.
@@ -34,6 +34,9 @@ using System;
 using System.Runtime.Serialization;
 using System.Data;
 using NDO.Mapping;
+using System.Reflection;
+using System.Text;
+using NDO.ShortId;
 
 namespace NDO
 {
@@ -181,5 +184,58 @@ namespace NDO
             set;
         }
 
+        /// <summary>
+        /// Gets a copy of the Key values.
+        /// </summary>
+        public abstract object[] Values
+        {
+            get;
+        }
+
+		/// <summary>
+		/// Returns a string representation of the Key object.
+		/// </summary>
+		/// <returns>A Json-String</returns>
+		public override string ToString()
+		{
+			StringBuilder sb = new StringBuilder("[");
+			foreach (object v in Values)
+			{
+				if (v is string || v is Guid)
+					sb.Append( '"' );
+				sb.Append( v.ToString() );
+				if (v is string || v is Guid)
+					sb.Append( '"' );
+				sb.Append( "," );
+			}
+			sb.Length -= 1;
+			sb.Append( ']' );
+
+			StringBuilder sb2 = new StringBuilder();
+			sb2.Append( "{\"Type\":\"" );
+			sb2.Append( Type.FullName );
+			sb2.Append( "," );
+			sb2.Append( new AssemblyName( Type.Assembly.FullName ).Name );
+			sb2.Append( "\",\"Values\":" );
+			sb2.Append( sb.ToString() );
+			sb2.Append( "}" );
+			return sb2.ToString();
+		}
+
+		/// <summary>
+		/// Serializes the ObjectId to a ShortId, which can be used to identify an object of any type.
+		/// </summary>
+		/// <returns>A string consisting of the type information and the oid of the object.</returns>
+		internal virtual string ToShortId()
+		{
+			if (Values.Length > 1)
+				throw new Exception( "Can't construct a ShortId because the object has multiple key values." );
+			Type oidType = Value.GetType();
+			if (oidType != typeof(int) && oidType != typeof(Guid) && oidType != typeof(string))
+			{
+				throw new Exception( "The oid type of the object does not allow the indication by a ShortId: " + oidType.FullName );
+			}
+			return (Type.Name + "~" + this.typeManager[Type].ToString("X8") + "~" + Value).Encode();
+		}
 	}
 }

@@ -41,11 +41,23 @@ namespace SimpleMappingTool
 	/// </summary>
 	internal class FieldNode : NDOTreeNode
 	{
-		public FieldNode(Field field) : base (field.Name, field)
+		public FieldNode(Field field) : base (ConvertFieldName(field.Name), field)
 		{
 			this.ImageIndex = 2;
 			this.SelectedImageIndex = 2;
             this.Nodes.Add(new ColumnNode(this, field.Column));
+		}
+
+		static string ConvertFieldName(string s)
+		{
+			//Automatic fields have names like that: <Position>k__BackingField
+			if (s[0]=='<')
+			{
+				int p = s.IndexOf( '>' );
+				if (p > -1)
+					return s.Substring( 1, p - 1 );
+			}
+			return s;
 		}
 	}
 }

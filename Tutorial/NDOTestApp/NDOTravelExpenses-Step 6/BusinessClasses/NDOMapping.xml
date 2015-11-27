@@ -4,37 +4,37 @@
     <Connection ID="C0" Name="Substitute this string with your connection string" Type="" />
   </Connections>
   <Classes>
-    <Class AssemblyName="BusinessClasses" FullName="BusinessClasses.Address" TableName="Address" ConnectionId="C0">
+    <Class AssemblyName="BusinessClasses" FullName="BusinessClasses.Address" TableName="Address" ConnectionId="C0" TypeCode="297910061">
       <Oid>
         <OidColumn AutoIncremented="True" Name="ID" AllowDbNull="False" />
       </Oid>
       <Fields>
-        <Field Name="city">
+        <Field Name="city" AccessorName="City">
           <Column Name="City" />
         </Field>
-        <Field Name="countryCode">
+        <Field Name="countryCode" AccessorName="CountryCode">
           <Column Name="CountryCode" />
         </Field>
-        <Field Name="street">
+        <Field Name="street" AccessorName="Street">
           <Column Name="Street" />
         </Field>
-        <Field Name="zip">
+        <Field Name="zip" AccessorName="Zip">
           <Column Name="Zip" />
         </Field>
       </Fields>
       <Relations />
     </Class>
-    <Class AssemblyName="BusinessClasses" FullName="BusinessClasses.Country" TableName="Country" ConnectionId="C0">
+    <Class AssemblyName="BusinessClasses" FullName="BusinessClasses.Country" TableName="Country" ConnectionId="C0" TypeCode="-1891534129">
       <Oid>
         <OidColumn AutoIncremented="True" Name="ID" AllowDbNull="False" />
       </Oid>
       <Fields>
-        <Field Name="name">
+        <Field Name="name" AccessorName="Name">
           <Column Name="Name" />
         </Field>
       </Fields>
       <Relations>
-        <Relation FieldName="travels" ReferencedTypeName="BusinessClasses.Travel" RelationName="">
+        <Relation FieldName="travels" AccessorName="Travels" ReferencedTypeName="BusinessClasses.Travel" RelationName="">
           <ForeignKeyColumn Name="IDCountry" />
           <MappingTable TableName="relCountryTravel" ConnectionId="C0">
             <ForeignKeyColumn Name="IDTravel" />
@@ -42,23 +42,23 @@
         </Relation>
       </Relations>
     </Class>
-    <Class AssemblyName="BusinessClasses" FullName="BusinessClasses.Employee" TableName="Employee" ConnectionId="C0">
+    <Class AssemblyName="BusinessClasses" FullName="BusinessClasses.Employee" TableName="Employee" ConnectionId="C0" TypeCode="-1237505387">
       <Oid>
         <OidColumn AutoIncremented="True" Name="ID" AllowDbNull="False" />
       </Oid>
       <Fields>
-        <Field Name="firstName">
+        <Field Name="firstName" AccessorName="FirstName">
           <Column Name="FirstName" />
         </Field>
-        <Field Name="lastName">
+        <Field Name="lastName" AccessorName="LastName">
           <Column Name="LastName" />
         </Field>
       </Fields>
       <Relations>
-        <Relation FieldName="address" ReferencedTypeName="BusinessClasses.Address" RelationName="">
+        <Relation FieldName="address" AccessorName="Address" ReferencedTypeName="BusinessClasses.Address" RelationName="">
           <ForeignKeyColumn Name="IDAddress" />
         </Relation>
-        <Relation FieldName="travels" ReferencedTypeName="BusinessClasses.Travel" RelationName="">
+        <Relation FieldName="travels" AccessorName="Travels" ReferencedTypeName="BusinessClasses.Travel" RelationName="">
           <ForeignKeyColumn Name="IDEmployee" />
         </Relation>
       </Relations>
@@ -68,13 +68,13 @@
         <OidColumn AutoIncremented="True" Name="Unused" AllowDbNull="False" />
       </Oid>
       <Fields>
-        <Field Name="date">
+        <Field Name="date" AccessorName="Date">
           <Column Name="Unused" />
         </Field>
       </Fields>
       <Relations />
     </Class>
-    <Class AssemblyName="BusinessClasses" FullName="BusinessClasses.ExpenseVoucher" TableName="ExpenseVoucher" ConnectionId="C0">
+    <Class AssemblyName="BusinessClasses" FullName="BusinessClasses.ExpenseVoucher" TableName="ExpenseVoucher" ConnectionId="C0" TypeCode="1312703965">
       <Oid>
         <OidColumn AutoIncremented="True" Name="ID" AllowDbNull="False" />
       </Oid>
@@ -82,16 +82,16 @@
         <Field Name="date">
           <Column Name="Date" />
         </Field>
-        <Field Name="sum">
+        <Field Name="sum" AccessorName="Sum">
           <Column Name="Sum" />
         </Field>
-        <Field Name="text">
+        <Field Name="text" AccessorName="VoucherText">
           <Column Name="Text" />
         </Field>
       </Fields>
       <Relations />
     </Class>
-    <Class AssemblyName="BusinessClasses" FullName="BusinessClasses.MileageAllowance" TableName="MileageAllowance" ConnectionId="C0">
+    <Class AssemblyName="BusinessClasses" FullName="BusinessClasses.MileageAllowance" TableName="MileageAllowance" ConnectionId="C0" TypeCode="1916143445">
       <Oid>
         <OidColumn AutoIncremented="True" Name="ID" AllowDbNull="False" />
       </Oid>
@@ -99,13 +99,13 @@
         <Field Name="date">
           <Column Name="Date" />
         </Field>
-        <Field Name="milesDriven">
+        <Field Name="milesDriven" AccessorName="MilesDriven">
           <Column Name="MilesDriven" />
         </Field>
       </Fields>
       <Relations />
     </Class>
-    <Class AssemblyName="BusinessClasses" FullName="BusinessClasses.PerDiemAllowance" TableName="PerDiemAllowance" ConnectionId="C0">
+    <Class AssemblyName="BusinessClasses" FullName="BusinessClasses.PerDiemAllowance" TableName="PerDiemAllowance" ConnectionId="C0" TypeCode="-237229707">
       <Oid>
         <OidColumn AutoIncremented="True" Name="ID" AllowDbNull="False" />
       </Oid>
@@ -113,13 +113,13 @@
         <Field Name="date">
           <Column Name="Date" />
         </Field>
-        <Field Name="hours">
+        <Field Name="hours" AccessorName="Hours">
           <Column Name="Hours" />
         </Field>
       </Fields>
       <Relations />
     </Class>
-    <Class AssemblyName="BusinessClasses" FullName="BusinessClasses.Picture" TableName="Picture" ConnectionId="C0">
+    <Class AssemblyName="BusinessClasses" FullName="BusinessClasses.Picture" TableName="Picture" ConnectionId="C0" TypeCode="867860535">
       <Oid>
         <OidColumn AutoIncremented="True" Name="ID" AllowDbNull="False" />
       </Oid>
@@ -136,40 +136,40 @@
       </Fields>
       <Relations />
     </Class>
-    <Class AssemblyName="BusinessClasses" FullName="BusinessClasses.PictureHeader" TableName="Picture" ConnectionId="C0">
+    <Class AssemblyName="BusinessClasses" FullName="BusinessClasses.PictureHeader" TableName="Picture" ConnectionId="C0" TypeCode="-68482652">
       <Oid>
         <OidColumn AutoIncremented="True" Name="ID" AllowDbNull="False" />
       </Oid>
       <Fields>
-        <Field Name="creationDate">
+        <Field Name="creationDate" AccessorName="CreationDate">
           <Column Name="CreationDate" />
         </Field>
-        <Field Name="name">
+        <Field Name="name" AccessorName="Name">
           <Column Name="Name" />
         </Field>
       </Fields>
       <Relations />
     </Class>
-    <Class AssemblyName="BusinessClasses" FullName="BusinessClasses.Travel" TableName="Travel" ConnectionId="C0">
+    <Class AssemblyName="BusinessClasses" FullName="BusinessClasses.Travel" TableName="Travel" ConnectionId="C0" TypeCode="289312961">
       <Oid>
         <OidColumn AutoIncremented="True" Name="ID" AllowDbNull="False" />
       </Oid>
       <Fields>
-        <Field Name="purpose">
+        <Field Name="purpose" AccessorName="Purpose">
           <Column Name="Purpose" />
         </Field>
       </Fields>
       <Relations>
-        <Relation FieldName="countries" ReferencedTypeName="BusinessClasses.Country" RelationName="">
+        <Relation FieldName="countries" AccessorName="Countries" ReferencedTypeName="BusinessClasses.Country" RelationName="">
           <ForeignKeyColumn Name="IDTravel" />
           <MappingTable TableName="relCountryTravel" ConnectionId="C0">
             <ForeignKeyColumn Name="IDCountry" />
           </MappingTable>
         </Relation>
-        <Relation FieldName="employee" ReferencedTypeName="BusinessClasses.Employee" RelationName="">
+        <Relation FieldName="employee" AccessorName="Employee" ReferencedTypeName="BusinessClasses.Employee" RelationName="">
           <ForeignKeyColumn Name="IDEmployee" />
         </Relation>
-        <Relation FieldName="expenses" ReferencedTypeName="BusinessClasses.Expense" RelationName="">
+        <Relation FieldName="expenses" AccessorName="Expenses" ReferencedTypeName="BusinessClasses.Expense" RelationName="">
           <ForeignKeyColumn Name="IDTravel" />
           <MappingTable TableName="relExpenseTravel" ChildForeignKeyTypeColumnName="TCExpense" ConnectionId="C0">
             <ForeignKeyColumn Name="IDExpense" />

@@ -31,7 +31,8 @@
 
 
 using System;
-using System.Collections;
+using System.Linq;
+using System.Collections.Generic;
 using System.Windows.Forms;
 using System.Text;
 using NDO.Mapping;
@@ -54,7 +55,7 @@ namespace SimpleMappingTool
             classesNode.ImageIndex = 0;
             classesNode.SelectedImageIndex = 0;
             this.Nodes.Add(classesNode);
-            ArrayList sortedClasses = new ArrayList(mapping.Classes);
+            List<Class> sortedClasses = mapping.Classes.ToList();
             sortedClasses.Sort();
             foreach (Class cl in sortedClasses)
                 classesNode.Nodes.Add(new ClassNode(cl));
@@ -62,8 +63,8 @@ namespace SimpleMappingTool
             foreach (Connection conn in mapping.Connections)
                 connectionsNode.Nodes.Add(new ConnectionNode(conn));
 
-            classesNode.Expand(); // RL 07-03-2008
-            this.Expand(); // RL 07-03-2008
+            classesNode.Expand();
+            this.Expand();
         
         }
     }

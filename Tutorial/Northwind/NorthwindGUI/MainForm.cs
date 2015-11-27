@@ -8,6 +8,7 @@ using System.Text;
 using System.Windows.Forms;
 using Northwind;
 using NDO;
+using NDO.Linq;
 
 namespace NorthwindGUI
 {
@@ -29,11 +30,16 @@ namespace NorthwindGUI
             this.customerBindingSource.PositionChanged += new EventHandler(CustomerPositionChanged);
             this.employeeBindingSource.PositionChanged += new EventHandler(EmployeePositionChanged);
             this.orderBindingSource.PositionChanged += new EventHandler(OrderPositionChanged);
-            this.customerBindingSource.DataSource = customerList;
+
             this.employeeBindingSource.DataSource = employeeList;
             this.orderBindingSource.DataSource = orderList;
             this.orderDetailBindingSource.DataSource = orderDetailList;
             this.productBindingSource.DataSource = productList;
+            this.customerBindingSource.DataSource = customerList;
+
+			// Query the customer list to have some data available
+			customerBindingSource.DataSource = (List<Customer>) from c in this.pm.Objects<Customer>() select c;
+
             Application.Idle += new EventHandler(OnIdle);
         }
 
@@ -41,37 +47,31 @@ namespace NorthwindGUI
         #region Grid View Synchronizing
         void CustomerPositionChanged(object sender, EventArgs e)
         {
-            Order.QueryHelper qh = new Order.QueryHelper();
-            NDOQuery<Order> q = new NDOQuery<Order>(pm, qh.customer.oid + Query.Op.Eq + Query.Placeholder(0));
-            IPersistenceCapable pc = SelectedCustomer;
+            IPersistentObject pc = SelectedCustomer;
             if (pc != null)
             {
-                q.Parameters.Add(pc.NDOObjectId.Id.Value);
-                this.orderList = q.Execute();
+				this.orderList = SelectedCustomer.Orders;
                 orderBindingSource.DataSource = this.orderList;
             }
         }
 
         void EmployeePositionChanged(object sender, EventArgs e)
         {
-            Order.QueryHelper qh = new Order.QueryHelper();
-            NDOQuery<Order> q = new NDOQuery<Order>(pm, qh.employee.oid + Query.Op.Eq + Query.Placeholder(0));
-            IPersistenceCapable pc = SelectedEmployee;
+            IPersistentObject pc = SelectedEmployee as IPersistentObject;
             if (pc != null)
             {
-                q.Parameters.Add(pc.NDOObjectId.Id.Value);
-                orderBindingSource.DataSource = this.orderList = q.Execute();
+				this.orderList = SelectedEmployee.Orders;
+                orderBindingSource.DataSource = this.orderList;
             }
         }
 
         void OrderPositionChanged(object sender, EventArgs e)
         {
-            NDOQuery<OrderDetail> q = new NDOQuery<OrderDetail>(pm, "order.oid" + Query.Op.Eq + Query.Placeholder(0));
-            IPersistenceCapable pc = SelectedOrder;
+            IPersistentObject pc = SelectedOrder as IPersistentObject;
             if (pc != null)
             {
-                q.Parameters.Add(SelectedOrder.NDOObjectId.Id.Value);
-                orderDetailBindingSource.DataSource = this.orderDetailList = q.Execute();
+				this.orderDetailList = SelectedOrder.OrderDetails;
+                orderDetailBindingSource.DataSource = this.orderDetailList;
             }
         }
         #endregion
@@ -307,9 +307,7 @@ namespace NorthwindGUI
             {
                 try
                 {
-                    NDOQuery<Shipper> q = new NDOQuery<Shipper>(pm, "oid = {0}");
-                    q.Parameters.Add(1);
-                    return q.ExecuteSingle();
+					return (from sh in pm.Objects<Shipper>() orderby sh.Oid() select sh).FirstOrDefault();
                 }
                 catch (Exception ex)
                 {

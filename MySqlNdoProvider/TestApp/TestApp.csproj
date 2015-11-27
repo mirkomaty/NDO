@@ -92,12 +92,13 @@
     <ErrorReport>prompt</ErrorReport>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="NDO, Version=2.0.0.0, Culture=neutral, PublicKeyToken=37bfdffa92a0cd24, processorArchitecture=MSIL">
+    <Reference Include="NDO, Version=2.1.0.0, Culture=neutral, PublicKeyToken=37bfdffa92a0cd24, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
+      <HintPath>D:\Program Files (x86)\NDO 3.0 Dev Edition\NDO.dll</HintPath>
     </Reference>
-    <Reference Include="NDOInterfaces, Version=2.0.0.0, Culture=neutral, PublicKeyToken=ff5e453a099b8326, processorArchitecture=MSIL">
+    <Reference Include="NDOInterfaces, Version=2.1.0.0, Culture=neutral, PublicKeyToken=ff5e453a099b8326, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\NDOInterfaces\bin\release\NDOInterfaces.dll</HintPath>
+      <HintPath>D:\Program Files (x86)\NDO 3.0 Dev Edition\NDOInterfaces.dll</HintPath>
     </Reference>
     <Reference Include="System">
       <Name>System</Name>
@@ -154,7 +155,7 @@
   </ItemGroup>
   <ProjectExtensions>
     <VisualStudio>
-      <UserProperties NDODefaultConnection="Provider=Microsoft.Jet.OLEDB.4.0;Data Source=D:\Persistenz\TestDataTypes\DataTest.mdb;Persist Security Info=False" NDOEnableAddIn="true" NDOEnableEnhancer="false" NDOGenerateMapping="true" NDOGenerateSchema="true" NDONewMapping="false" NDOMergeMapping="true" NDOMergeSchema="true" NDOGenerateSQL="false" />
+      <UserProperties NDOGenerateSQL="false" NDOMergeSchema="true" NDOMergeMapping="true" NDONewMapping="false" NDOGenerateSchema="true" NDOGenerateMapping="true" NDOEnableEnhancer="false" NDOEnableAddIn="true" NDODefaultConnection="Provider=Microsoft.Jet.OLEDB.4.0;Data Source=D:\Persistenz\TestDataTypes\DataTest.mdb;Persist Security Info=False" />
     </VisualStudio>
   </ProjectExtensions>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />

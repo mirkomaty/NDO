@@ -1,9 +1,9 @@
-using System;
+﻿using System;
 using NDO;
 namespace BusinessClasses
 {
     [NDOPersistent]
-    public abstract class Expense
+    public abstract partial class Expense
     {
         DateTime date;
         public DateTime Date

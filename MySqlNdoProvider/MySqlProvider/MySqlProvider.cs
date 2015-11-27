@@ -146,7 +146,7 @@ namespace NDO.MySqlProvider
 			else if ( t == typeof(decimal))
 				return MySql.Data.MySqlClient.MySqlDbType.Decimal;
 			else if ( t == typeof(System.DateTime))
-				return MySql.Data.MySqlClient.MySqlDbType.Datetime;
+				return MySql.Data.MySqlClient.MySqlDbType.DateTime;
 			else if ( t.IsSubclassOf(typeof(System.Enum)))
 				return MySql.Data.MySqlClient.MySqlDbType.Int32;
 			else
@@ -168,7 +168,7 @@ namespace NDO.MySqlProvider
 			if (typeName == "Date")
 				return MySql.Data.MySqlClient.MySqlDbType.Date;
 			if (typeName == "Datetime")
-				return MySql.Data.MySqlClient.MySqlDbType.Datetime;
+				return MySql.Data.MySqlClient.MySqlDbType.DateTime;
 			if (typeName == "Decimal")
 				return MySql.Data.MySqlClient.MySqlDbType.Decimal;
 			if (typeName == "Double")
@@ -215,61 +215,6 @@ namespace NDO.MySqlProvider
 			//'9999-12-31 23:59:59'
 			return "'" + dt.ToString("yyyy-MM-dd HH:mm:ss") + "'";
 		}
-
-		public override int GetDefaultLength(string typeName)
-		{
-			if (typeName == "BigInt")
-				return 8;
-			if (typeName == "Blob")
-				return 1024;
-			if (typeName == "Byte")
-				return 0;
-			if (typeName == "Date")
-				return 0;
-			if (typeName == "Datetime")
-				return 16;
-			if (typeName == "Decimal")
-				return 18;
-			if (typeName == "Double")
-				return 8;
-			if (typeName == "Enum")
-				return 0;
-			if (typeName == "Float")
-				return 4;
-			if (typeName == "Int")
-				return 4;
-			if (typeName == "Int24")
-				return 3;
-			if (typeName == "Long")
-				return 8;
-			if (typeName == "LongBlob")
-				return 2048;
-			if (typeName == "LongLong")
-				return 1000000;
-			if (typeName == "MediumBlob")
-				return 100000;
-			if (typeName == "Newdate")
-				return 0;
-			if (typeName == "Null")
-				return 0;
-			if (typeName == "Set")
-				return 0;
-			if (typeName == "Short")
-				return 2;
-			if (typeName == "String")
-				return 255;
-			if (typeName == "Time")
-				return 0;
-			if (typeName == "Timestamp")
-				return 0;
-			if (typeName == "TinyBlob")
-				return 1024;
-			if (typeName == "VarChar")
-				return 255;
-			if (typeName == "Year")
-				return 0;
-			return 0;		
-		}
 	
 
 		public override int GetDefaultLength(System.Type t)
@@ -312,12 +257,7 @@ namespace NDO.MySqlProvider
 			else if ( t.IsSubclassOf(typeof(System.Enum)))
 				return 4;
 			else
-				return 0;		}
-
-		public override Type GetSystemType(string s)
-		{
-			System.Diagnostics.StackFrame sf = new System.Diagnostics.StackFrame();
-			throw new Exception("GetSystemType " + s + " aufgerufen. " + sf.ToString());
+				return 0;		
 		}
 
 
@@ -331,12 +271,7 @@ namespace NDO.MySqlProvider
 			get { return true; }
 		}
 
-/*
-	    public override bool UseStoredProcedure
-		{
-			get { return false; }
-		}
-*/
+
 		#endregion
 		
 		//private Hashtable namedParameters = new Hashtable();

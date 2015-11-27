@@ -5,7 +5,7 @@ using NDO;
 namespace Northwind
 {
 	[NDOPersistent]
-	public class Customer
+	public partial class Customer
 	{
 		public Customer()
 		{

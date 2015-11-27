@@ -1,6 +1,6 @@
 //
-// Copyright (C) 2002-2008 HoT - House of Tools Development GmbH 
-// (www.netdataobjects.com)
+// Copyright (C) 2002-2014 Mirko Matytschak 
+// (www.netdataobjects.de)
 //
 // Author: Mirko Matytschak
 //
@@ -15,7 +15,7 @@
 // Commercial Licence:
 // For those, who want to develop software with help of this program 
 // and need to distribute their work with a more restrictive licence, 
-// there is a commercial licence available at www.netdataobjects.com.
+// there is a commercial licence available at www.netdataobjects.de.
 // 
 // The above copyright notice and this permission notice shall be
 // included in all copies or substantial portions of the Software.
@@ -822,13 +822,13 @@ namespace NDO
 			Relation r = cl.FindRelation(relationName);
 			RelationCollector rc = new RelationCollector(cl);
 			rc.CollectRelations();
-			IList parentColumns = rc.ForeignKeyColumns;
+			string[] parentColumns = rc.ForeignKeyColumns.ToArray();
 			cl = pm.GetClass(r.ReferencedType);
 			rc = new RelationCollector(cl);
 			rc.CollectRelations();
-			IList childColumns = rc.ForeignKeyColumns;
+			string[] childColumns = rc.ForeignKeyColumns.ToArray();
             // Used to determine, if the relation has been collected
-            string testColumnName = ((ForeignKeyColumn)r.ForeignKeyColumns[0]).Name;
+            string testColumnName = r.ForeignKeyColumns.First().Name;
             if (r.Multiplicity == RelationMultiplicity.Element && parentColumns.Contains(testColumnName))
 			{
 				foreach(IPersistenceCapable parent in parents)
@@ -1137,14 +1137,23 @@ namespace NDO
 			public string ToString(Class cl)
 			{
 				IProvider provider = cl.Provider;
-
-				Field field = cl.FindField(fieldName);
-				if (field == null)
-					throw new NDOException(7, "Can't find mapping information for field " + cl.FullName + "." + fieldName);
-				if (provider == null)
-					return cl.TableName + "." + field.Column.Name + " " + orderType;
+				Column column = null;
+				if (string.Compare( fieldName, "oid", true ) == 0)
+				{
+					//TODO: support multiple columns
+					column = cl.Oid.OidColumns[0];
+				}
 				else
-					return QualifiedTableName.Get(cl.TableName, provider) + "." + provider.GetQuotedName(field.Column.Name) + " " + orderType;
+				{
+					Field field = cl.FindField( fieldName );
+					if (field == null)
+						throw new NDOException( 7, "Can't find mapping information for field " + cl.FullName + "." + fieldName );
+					column = field.Column;
+				}
+				if (provider == null)
+					return cl.TableName + "." + column.Name + " " + orderType;
+				else
+					return QualifiedTableName.Get(cl.TableName, provider) + "." + provider.GetQuotedName(column.Name) + " " + orderType;
 
 			}
 		}

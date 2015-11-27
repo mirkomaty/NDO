@@ -261,6 +261,7 @@ namespace NdoUnitTests {
 			pm.MakePersistent(m);
 			m.SVN = svn;
 			pm.Save();
+			ObjectId moid = m.NDOObjectId;
 			Assert.NotNull(m.SVN, "1. SVN not found");
 			m.SVN = null;
 			Assert.AreEqual(NDOObjectState.Deleted, svn.NDOObjectState, "1. Wrong state");

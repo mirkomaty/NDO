@@ -1,0 +1,36 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<Enhancer>
+  <Options>
+    <EnableAddIn>True</EnableAddIn>
+    <EnableEnhancer>True</EnableEnhancer>
+    <VerboseMode>False</VerboseMode>
+    <NewMapping>False</NewMapping>
+    <GenerateSQL>True</GenerateSQL>
+    <DefaultConnection>Password=abundance;User ID=Mirko;Data Source=(DESCRIPTION=(ADDRESS=(PROTOCOL=TCP)(HOST=192.168.178.29)(PORT=1521)) (CONNECT_DATA=(SERVER=DEDICATED)(SERVICE_NAME=XE)));</DefaultConnection>
+    <TargetMappingFileName>NDOMapping.xml</TargetMappingFileName>
+    <GenerateChangeEvents>False</GenerateChangeEvents>
+    <UseTimeStamps>False</UseTimeStamps>
+    <Utf8Encoding>True</Utf8Encoding>
+    <SQLScriptLanguage>Oracle</SQLScriptLanguage>
+    <SchemaVersion>1.0</SchemaVersion>
+    <IncludeTypecodes>False</IncludeTypecodes>
+    <DatabaseOwner>
+    </DatabaseOwner>
+    <GenerateConstraints>False</GenerateConstraints>
+    <UseMsBuild>True</UseMsBuild>
+    <DropExistingElements>False</DropExistingElements>
+  </Options>
+  <ProjectDescription>
+    <BinPath>bin\Debug\BusinessClasses.dll</BinPath>
+    <ObjPath>obj\Debug\</ObjPath>
+    <AssemblyName />
+    <Debug>True</Debug>
+    <IsWebProject>False</IsWebProject>
+    <KeyFile>
+    </KeyFile>
+    <References>
+      <Reference AssemblyName="System.Core" AssemblyPath="d:\program files (x86)\reference assemblies\microsoft\framework\.netframework\v4.0\system.core.dll">
+      </Reference>
+    </References>
+  </ProjectDescription>
+</Enhancer>

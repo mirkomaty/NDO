@@ -31,6 +31,7 @@
 
 
 using System;
+using System.Linq;
 using System.IO;
 using NDO.Mapping;
 
@@ -64,7 +65,7 @@ namespace ManipulateConnection
 			switch(args[1])
 			{
 				case "Oracle":
-					connName = @"Password=abundance;User ID=SYSTEM;Data Source=maty;Persist Security Info=True";
+					connName = @"Password=NDOTester;User ID=NDOTester;Data Source=(DESCRIPTION=(ADDRESS=(PROTOCOL=TCP)(HOST=192.168.178.29)(PORT=1521)) (CONNECT_DATA=(SERVER=DEDICATED)(SERVICE_NAME=XE)));";
 					type = "Oracle";
 					break;
 				case "SqlServer":
@@ -109,13 +110,13 @@ namespace ManipulateConnection
 			try
 			{
 				NDOMapping mapping = new NDOMapping(Path.GetFullPath(args[0]));
-				if (mapping.Connections.Count != 1)
+				if (mapping.Connections.Count() != 1)
 				{
-					Console.WriteLine("Wrong connection count: " + mapping.Connections.Count.ToString());
+					Console.WriteLine("Wrong connection count: " + mapping.Connections.Count().ToString());
 					return -1;
 				}
-				((Connection)mapping.Connections[0]).Name = connName;
-				((Connection)mapping.Connections[0]).Type = type;
+				((Connection)mapping.Connections.First()).Name = connName;
+				((Connection)mapping.Connections.First()).Type = type;
 				mapping.Save();
 			}
 			catch(Exception ex)

@@ -76,6 +76,10 @@ namespace NDOEnhancer
                 if (classNode.IsAbstractOrInterface)
                     classNode.IsPoly = true;    // Must be polymorphic
 
+				// Make sure, all types get a type code
+				if (!classNode.IsAbstractOrInterface)
+					CheckAndAddType(classNode.Name, classNode.AssemblyName);
+
 				if (classNode.BaseName == null) // Keine Basisklasse angegeben
 					continue;					// sollte eigentlich nicht vorkommen
 				ClassNode baseNode = (ClassNode)allTypes[classNode.BaseName];
@@ -84,9 +88,6 @@ namespace NDOEnhancer
 				
 				if (!baseNode.IsAbstractOrInterface)
 					CheckAndAddType(baseNode.Name, baseNode.AssemblyName);
-
-				if (!classNode.IsAbstractOrInterface)
-					CheckAndAddType(classNode.Name, classNode.AssemblyName);
 
 				baseNode.IsPoly = true;
 			}

@@ -1,6 +1,6 @@
 //
-// Copyright (C) 2002-2008 HoT - House of Tools Development GmbH 
-// (www.netdataobjects.com)
+// Copyright (C) 2002-2014 Mirko Matytschak 
+// (www.netdataobjects.de)
 //
 // Author: Mirko Matytschak
 //
@@ -15,7 +15,7 @@
 // Commercial Licence:
 // For those, who want to develop software with help of this program 
 // and need to distribute their work with a more restrictive licence, 
-// there is a commercial licence available at www.netdataobjects.com.
+// there is a commercial licence available at www.netdataobjects.de.
 // 
 // The above copyright notice and this permission notice shall be
 // included in all copies or substantial portions of the Software.
@@ -33,6 +33,7 @@
 using System;
 using System.Text.RegularExpressions;
 using System.Diagnostics;
+using System.Linq;
 using System.Collections;
 using System.Collections.Generic;
 using NDO.Mapping;
@@ -152,15 +153,16 @@ namespace NDO
 								if (join != string.Empty)
 									join += " AND ";
 								// OwnClassTable.id = MappingTable.IDOwnClass
-                                System.Diagnostics.Debug.Assert(rel.ForeignKeyColumns.Count == parentClass.Oid.OidColumns.Count);
-                                for (int fkix = 0; fkix < rel.ForeignKeyColumns.Count; fkix++)
-                                {
-                                    ForeignKeyColumn fkColumn = (ForeignKeyColumn)rel.ForeignKeyColumns[fkix];
+                                System.Diagnostics.Debug.Assert(rel.ForeignKeyColumns.Count() == parentClass.Oid.OidColumns.Count);
+                                int fkix = 0;
+                                foreach (ForeignKeyColumn fkColumn in rel.ForeignKeyColumns)
+                                {                                    
                                     OidColumn oidColumn = (OidColumn)parentClass.Oid.OidColumns[fkix];
                                     join += QualifiedTableName.Get(rel.MappingTable.TableName, provider) + "." + provider.GetQuotedName(fkColumn.Name) + " = "
                                         + QualifiedTableName.Get(parentClass.TableName, provider) + "." + provider.GetQuotedName(oidColumn.Name);
-                                    if (fkix < rel.ForeignKeyColumns.Count - 1)
+                                    if (fkix < rel.ForeignKeyColumns.Count() - 1)
                                         join += " AND ";
+                                    fkix++;
                                 }
 								join += " AND ";
 #if PRO
@@ -181,16 +183,17 @@ namespace NDO
 									join += " AND ";
 								}
 #endif
-                                System.Diagnostics.Debug.Assert(rel.MappingTable.ChildForeignKeyColumns.Count == relClass.Oid.OidColumns.Count);
+                                System.Diagnostics.Debug.Assert(rel.MappingTable.ChildForeignKeyColumns.Count() == relClass.Oid.OidColumns.Count);
 								// OtherClass.id = MappingTable.IDOtherClass
-                                for (int colIndex = 0; colIndex < relClass.Oid.OidColumns.Count; colIndex++)
+                                int colIndex = 0;
+                                foreach (ForeignKeyColumn fkColumn in rel.MappingTable.ChildForeignKeyColumns)
                                 {
-                                    ForeignKeyColumn fkColumn = (ForeignKeyColumn)rel.MappingTable.ChildForeignKeyColumns[colIndex];
                                     OidColumn oidColumn = (OidColumn)relClass.Oid.OidColumns[colIndex];
                                     join += QualifiedTableName.Get(rel.MappingTable.TableName, provider) + "." + provider.GetQuotedName(fkColumn.Name) + " = "
                                         + QualifiedTableName.Get(relClass.TableName, provider) + "." + provider.GetQuotedName(oidColumn.Name);
                                     if (colIndex < relClass.Oid.OidColumns.Count - 1)
                                         join += " AND ";
+                                    colIndex++;
                                 }
 #if PRO
 								// MappingTable.TCOtherClass = x
@@ -224,31 +227,39 @@ namespace NDO
 								{
 									if (parentClass.Oid.IsDependent)
 										throw new NDOException(36, String.Format("Wrong Relation '{0}.{1}'. Relations to intermediate classes are not allowed.", parentClass.FullName, rel.FieldName));
-                                    Debug.Assert(rel.ForeignKeyColumns.Count == parentClass.Oid.OidColumns.Count);
-                                    for (int colIndex = 0; colIndex < rel.ForeignKeyColumns.Count; colIndex++)
+                                    Debug.Assert(rel.ForeignKeyColumns.Count() == parentClass.Oid.OidColumns.Count);
+
+                                    ForeignKeyIterator fkiter = new ForeignKeyIterator(rel);
+                                    IEnumerator<OidColumn> oidEnumerator = parentClass.Oid.OidColumns.GetEnumerator();
+                                    fkiter.Iterate((fkColumn, isLastEntry) =>
                                     {
-                                        ForeignKeyColumn fkColumn = (ForeignKeyColumn)rel.ForeignKeyColumns[colIndex];
-                                        OidColumn oidColumn = (OidColumn)parentClass.Oid.OidColumns[colIndex];
+                                        oidEnumerator.MoveNext();
+                                        OidColumn oidColumn = oidEnumerator.Current;
                                         join += QualifiedTableName.Get(relClass.TableName, provider) + "." + provider.GetQuotedName(fkColumn.Name) + " = "
                                             + QualifiedTableName.Get(parentClass.TableName, provider) + "." + provider.GetQuotedName(oidColumn.Name);
-                                        if (i < rel.ForeignKeyColumns.Count - 1)
+                                        if (!isLastEntry)
                                             join += " AND ";
-                                    }
+                                    });
 								}
 								else // 1:1
 								{
 									if (relClass.Oid.IsDependent)
 										throw new NDOException(36, String.Format("Wrong Relation '{0}.{1}'. Relations to intermediate classes are not allowed.", relClass.FullName, rel.FieldName));
-                                    Debug.Assert(rel.ForeignKeyColumns.Count == relClass.Oid.OidColumns.Count);
-                                    for (int colIndex = 0; colIndex < rel.ForeignKeyColumns.Count; colIndex++)
+                                    Debug.Assert(rel.ForeignKeyColumns.Count() == relClass.Oid.OidColumns.Count);
+
+                                    ForeignKeyIterator fkiter = new ForeignKeyIterator(rel);
+                                    IEnumerator<OidColumn> oidEnumerator = relClass.Oid.OidColumns.GetEnumerator();
+                                    fkiter.Iterate((fkColumn, isLastEntry) =>
                                     {
-                                        ForeignKeyColumn fkColumn = (ForeignKeyColumn)rel.ForeignKeyColumns[colIndex];
-                                        OidColumn oidColumn = (OidColumn)relClass.Oid.OidColumns[colIndex];
+                                        oidEnumerator.MoveNext();
+                                        OidColumn oidColumn = oidEnumerator.Current;
                                         join += QualifiedTableName.Get(parentClass.TableName, provider) + "." + provider.GetQuotedName(fkColumn.Name) + " = "
                                             + QualifiedTableName.Get(relClass.TableName, provider) + "." + provider.GetQuotedName(oidColumn.Name);
-                                        if (i < rel.ForeignKeyColumns.Count - 1)
+                                        if (!isLastEntry)
                                             join += " AND ";
-                                    }
+                                    });
+
+
 									if ( rel.ForeignKeyTypeColumnName != null )
 									{
 										string tcCode = provider.GetSqlLiteral( this.typeManager[relClass.SystemType] );
@@ -338,11 +349,20 @@ namespace NDO
 					}
 					else
 					{
+						Column column = null;
 						Field f = resultClass.FindField(name);
-						if (null == f)
+						if (null != f)
+							column = f.Column;
+						else
+						{
+							Relation r = resultClass.FindRelation( name );
+							if (r.Multiplicity == RelationMultiplicity.Element && r.ForeignKeyColumns.Count() == 1)
+								column = r.ForeignKeyColumns.First();
+						}
+						if (column == null)
 							throw new NDOException(7, "Can't find mapping information for field " + resultClass.FullName + "." + name);
 						if (!columnNames.Contains(name))
-							columnNames.Add(name, QualifiedTableName.Get(resultClass.TableName, provider) + "." + provider.GetQuotedName(f.Column.Name));
+							columnNames.Add(name, QualifiedTableName.Get(resultClass.TableName, provider) + "." + provider.GetQuotedName(column.Name));
 					}
 				}
 			}

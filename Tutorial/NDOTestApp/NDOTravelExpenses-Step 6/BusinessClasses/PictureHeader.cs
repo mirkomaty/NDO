@@ -1,9 +1,10 @@
 ﻿using System;
 using NDO;
+
 namespace BusinessClasses
 {
     [NDOPersistent]
-    public class PictureHeader
+    public partial class PictureHeader
     {
         string name;
         public string Name

@@ -31,6 +31,7 @@
 
 
 using System;
+using System.Linq;
 using System.IO;
 using System.Text.RegularExpressions;
 using ClassGenerator;
@@ -154,7 +155,7 @@ namespace Generator
 				NDO.Mapping.Relation r = cl.AddStandardRelation(rel.FieldName, rn.RelatedTableNode.Table.Namespace + "." + rn.RelatedTableNode.Table.ClassName, rel.IsElement, string.Empty, false, false);
 				r.RelationName = rel.RelationName;
 				ForeignIntermediateTableRelation fitr = rel as ForeignIntermediateTableRelation;
-                NDO.Mapping.ForeignKeyColumn fkColumn = (NDO.Mapping.ForeignKeyColumn) r.ForeignKeyColumns[0];
+                NDO.Mapping.ForeignKeyColumn fkColumn = (NDO.Mapping.ForeignKeyColumn) r.ForeignKeyColumns.First();
                 if (fitr == null)
 				{
 					fkColumn.Name = rn.Text;

@@ -78,6 +78,10 @@ namespace NDOEnhancer.Patcher
 			m_name					= classElement.getClassFullName();
             m_refName               = makeRefName();
             m_nonGenericRefName     = m_name;
+			m_references			= references;
+
+			if (references == null)
+				throw new ArgumentNullException( "references" );
 
             int p = m_nonGenericRefName.IndexOf('<');
             if (p > -1)
@@ -100,7 +104,6 @@ namespace NDOEnhancer.Patcher
 
 			this.messages			= messages;
 			this.sortedFields = sortedFields;
-			this.m_references = references;
 			this.oidTypeName = oidTypeName;
 
 			for (int i = 0; i < m_references.Count; i++)

@@ -89,7 +89,7 @@ namespace NdoUnitTests
 		{
 #if persistentIds
 #if ORACLE
-			string seq = "\"" + schemaName + "\".\"" + sequenceName + "\"";
+			string seq = /* "\"" + schemaName + "\".*/  \"" + sequenceName + "\"";
 			string sql = "select " + seq + ".Nextval from dual";
 			OracleConnection conn = new OracleConnection(connectionString);
 			OracleCommand cmd = new OracleCommand(sql, conn);

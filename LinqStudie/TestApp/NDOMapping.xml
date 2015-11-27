@@ -1,0 +1,36 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<NDOMapping SchemaVersion="1.0">
+  <Connections>
+    <Connection ID="C0" Name="Provider=Microsoft.Jet.OLEDB.4.0;Data Source=..\..\..\NDOTestDb.mdb;Persist Security Info=False" Type="Access" />
+  </Connections>
+  <Classes>
+    <Class AssemblyName="BusinessClasses" FullName="BusinessClasses.Address" TableName="Address" ConnectionId="C0">
+      <Oid ColumnName="ID" />
+      <Fields>
+        <Field Name="city" ColumnName="City" />
+        <Field Name="countryCode" ColumnName="CountryCode" />
+        <Field Name="street" ColumnName="Street" />
+        <Field Name="zip" ColumnName="Zip" />
+      </Fields>
+      <Relations />
+    </Class>
+    <Class AssemblyName="BusinessClasses" FullName="BusinessClasses.Employee" TableName="Employee" ConnectionId="C0">
+      <Oid ColumnName="ID" />
+      <Fields>
+        <Field Name="firstName" ColumnName="FirstName" />
+        <Field Name="lastName" ColumnName="LastName" />
+      </Fields>
+      <Relations>
+        <Relation FieldName="address" ForeignKeyColumnName="IDAddress" ReferencedTypeName="BusinessClasses.Address" RelationName="" />
+        <Relation FieldName="travels" ForeignKeyColumnName="IDEmployee" ReferencedTypeName="BusinessClasses.Travel" RelationName="" />
+      </Relations>
+    </Class>
+    <Class AssemblyName="BusinessClasses" FullName="BusinessClasses.Travel" TableName="Travel" ConnectionId="C0">
+      <Oid ColumnName="ID" />
+      <Fields>
+        <Field Name="purpose" ColumnName="Purpose" />
+      </Fields>
+      <Relations />
+    </Class>
+  </Classes>
+</NDOMapping>

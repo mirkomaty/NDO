@@ -88,6 +88,29 @@
     <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="NDO, Version=3.0.0.0, Culture=neutral, PublicKeyToken=37bfdffa92a0cd24, processorArchitecture=MSIL">
+      <SpecificVersion>True</SpecificVersion>
+      <HintPath>..\NDODLL\bin\$(Configuration)\NDO.dll</HintPath>
+    </Reference>
+    <Reference Include="NDOInterfaces, Version=3.0.0.0, Culture=neutral, PublicKeyToken=ff5e453a099b8326, processorArchitecture=MSIL">
+      <SpecificVersion>True</SpecificVersion>
+      <HintPath>..\NDOInterfaces\bin\$(Configuration)\NDOInterfaces.dll</HintPath>
+    </Reference>
+    <Reference Include="System">
+      <Name>System</Name>
+    </Reference>
+    <Reference Include="System.Data">
+      <Name>System.Data</Name>
+    </Reference>
+    <Reference Include="System.Data.OracleClient">
+      <Name>System.Data.OracleClient</Name>
+    </Reference>
+    <Reference Include="System.Xml">
+      <Name>System.XML</Name>
+    </Reference>
+    <Reference Include="System.Xml.Linq" />
+  </ItemGroup>
+  <ItemGroup>
     <Compile Include="AllBranches.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -135,9 +158,6 @@
     <Compile Include="Enhancer\Generator\AccessGenerator.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Enhancer\Generator\FirebirdGenerator.cs">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="Enhancer\Generator\GeneratorFactory.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -146,19 +166,9 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Enhancer\Generator\GenericSqlGeneratorBase.cs" />
-    <Compile Include="Enhancer\Generator\MySqlGenerator.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Enhancer\Generator\MySqlProvider.cs" />
-    <Compile Include="Enhancer\Generator\OracleGenerator.cs">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="Enhancer\Generator\NdoTransDiffGenerator.cs" />
     <Compile Include="Enhancer\Generator\SQLDiffGenerator.cs" />
     <Compile Include="Enhancer\Generator\SQLGenerator.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Enhancer\Generator\SqlServerGenerator.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Enhancer\Generator\StandardSqlGenerator.cs">
@@ -318,24 +328,17 @@
   <ItemGroup>
     <None Include="app.config" />
   </ItemGroup>
-  <ItemGroup>
-    <Reference Include="NDO, Version=2.1.0.0, Culture=neutral, PublicKeyToken=37bfdffa92a0cd24, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\NDODLL\bin\Release\NDO.dll</HintPath>
-    </Reference>
-    <Reference Include="NDOInterfaces, Version=2.1.0.0, Culture=neutral, PublicKeyToken=ff5e453a099b8326, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\NDOInterfaces\bin\release\NDOInterfaces.dll</HintPath>
-    </Reference>
-    <Reference Include="System" />
-    <Reference Include="System.Data" />
-    <Reference Include="System.XML" />
-    <Reference Include="System.Xml.Linq" />
-  </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PreBuildEvent>..\..\..\MakeEnhancerDate\bin\Debug\MakeEnhancerDate.exe "V. 2.1" "C:\Program Files\TortoiseSVN\bin\subwcrev.exe" &gt; $(ProjectDir)\EnhDate.cs</PreBuildEvent>
     <PostBuildEvent>copy /Y "$(TargetPath)" "C:\Program Files (x86)\NDO 2.1 Dev Edition\NDOEnhancer.exe"
+</PostBuildEvent>
+  </PropertyGroup>
+  <PropertyGroup>
+    <PreBuildEvent>..\..\..\MakeEnhancerDate\bin\Debug\MakeEnhancerDate.exe "V. 3.0" "C:\Program Files\TortoiseSVN\bin\subwcrev.exe" &gt; $(ProjectDir)\EnhDate.cs</PreBuildEvent>
+  </PropertyGroup>
+  <PropertyGroup>
+    <PostBuildEvent>copy /Y "$(TargetPath)" "C:\Program Files (x86)\NDO 3.0 Dev Edition\NDOEnhancer.exe"
 </PostBuildEvent>
   </PropertyGroup>
 </Project>

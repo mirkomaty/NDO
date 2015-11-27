@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
-	<EnhDateString>V. 2.1</EnhDateString>
+	<EnhDateString>V. 3.0</EnhDateString>
 	<SVNREV>C:\Program Files\TortoiseSVN\bin\subwcrev.exe</SVNREV>
 	
 	<PERS_DIR>..</PERS_DIR>
@@ -33,6 +33,12 @@
     <Project Include="..\ClassGenerator\ClassGenerator\ClassGenerator.csproj" />	
     <Project Include="..\NDOEnhancer\Enhancer.csproj" />
     <Project Include="..\NDOEnhancer.BuildTask\NDOEnhancer.BuildTask\NDOEnhancer.BuildTask.csproj" />
+    <Project Include="..\MySqlNdoProvider\MySqlProvider\MySqlProvider.csproj" />
+    <Project Include="..\OracleProvider\OracleProvider\OracleProvider.csproj" />
+    <Project Include="..\FirebirdNdoProvider\FirebirdProvider\FirebirdProvider.csproj" />
+    <Project Include="..\SqlCeProvider\SqlCeProvider\SqlCeProvider.csproj" />
+    <Project Include="..\SqliteProvider\SqliteProvider\SqliteProvider.csproj" />	
+    <Project Include="..\PostgresProvider\PostgreProvider\PostgreProvider.csproj" />
   </ItemGroup>
   <ItemGroup>
     <Projectx86 Include="..\EnhancerX86Stub\EnhancerX86Stub\EnhancerX86Stub.csproj" />

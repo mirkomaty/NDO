@@ -1,6 +1,6 @@
 //
-// Copyright (C) 2002-2008 HoT - House of Tools Development GmbH 
-// (www.netdataobjects.com)
+// Copyright (C) 2002-2014 Mirko Matytschak 
+// (www.netdataobjects.de)
 //
 // Author: Mirko Matytschak
 //
@@ -15,7 +15,7 @@
 // Commercial Licence:
 // For those, who want to develop software with help of this program 
 // and need to distribute their work with a more restrictive licence, 
-// there is a commercial licence available at www.netdataobjects.com.
+// there is a commercial licence available at www.netdataobjects.de.
 // 
 // The above copyright notice and this permission notice shall be
 // included in all copies or substantial portions of the Software.
@@ -33,6 +33,8 @@
 using System;
 using System.Diagnostics;
 using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
 using System.IO;
 using System.Data;
@@ -164,13 +166,14 @@ namespace NDO
 		}
 
 
-		Hashtable myClassesName;
-		Hashtable myClassesType;
+		Dictionary<string,Class> myClassesName;
+        Dictionary<Type, Class> myClassesType;
 
 		protected void InitClasses()
 		{
-			myClassesName = new Hashtable(mappings.Classes.Count);
-			myClassesType = new Hashtable(mappings.Classes.Count);
+            int cnt = mappings.Classes.Count();
+            myClassesName = new Dictionary<string, Class>(cnt);
+            myClassesType = new Dictionary<Type, Class>(cnt);
 			foreach(Class cl in mappings.Classes)
 			{
 				myClassesName.Add(cl.FullName, cl);
@@ -181,10 +184,10 @@ namespace NDO
 
 		internal Class GetClass(string name) 
 		{
-			Class cl = (Class) myClassesName[name];
-			if (cl == null)
+			if (!myClassesName.ContainsKey(name))
 				throw new NDOException(17, "Can't find mapping information for class " + name);
-			return cl;
+
+			return myClassesName[name];
 		}
 
 		internal Class GetClass(IPersistenceCapable pc) 
@@ -192,17 +195,17 @@ namespace NDO
 			return GetClass(pc.GetType());
 		}
 
-		internal Class GetClass(Type t) 
+		internal Class GetClass(Type type) 
 		{
-			Class cl;
-            if (t.IsGenericType)
-    			cl = (Class) myClassesType[t.GetGenericTypeDefinition()];
-            else
-                cl = (Class)myClassesType[t];
+			Type t = type;
 
-			if (cl == null)
+			if (type.IsGenericType)
+    			t = type.GetGenericTypeDefinition();
+
+			if (! myClassesType.ContainsKey(t))
 				throw new NDOException(17, "Can't find mapping information for class " + t.FullName);
-			return cl;
+
+			return myClassesType[t];
 
 		}
 

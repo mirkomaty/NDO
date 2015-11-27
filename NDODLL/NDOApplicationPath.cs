@@ -1,6 +1,6 @@
 //
-// Copyright (C) 2002-2008 HoT - House of Tools Development GmbH 
-// (www.netdataobjects.com)
+// Copyright (C) 2002-2014 Mirko Matytschak 
+// (www.netdataobjects.de)
 //
 // Author: Mirko Matytschak
 //
@@ -15,7 +15,7 @@
 // Commercial Licence:
 // For those, who want to develop software with help of this program 
 // and need to distribute their work with a more restrictive licence, 
-// there is a commercial licence available at www.netdataobjects.com.
+// there is a commercial licence available at www.netdataobjects.de.
 // 
 // The above copyright notice and this permission notice shall be
 // included in all copies or substantial portions of the Software.
@@ -50,7 +50,7 @@ namespace NDO
 					if ( key == null )
 						key = Registry.LocalMachine.OpenSubKey( @"SOFTWARE\NDO" );
 					if (key == null)
-						throw new Exception( @"Can't find NDO in the registry at HKLM\SOFTWARE\NDO. Please reinstall NDO." );
+						return AppDomain.CurrentDomain.BaseDirectory;
 					assemblyPath = (string) key.GetValue( "InstallDir" );
 					if ( assemblyPath == null )
 						throw new Exception( @"Can't find InstallDir value in the registry at HKLM\SOFTWARE\NDO. Please reinstall NDO." );

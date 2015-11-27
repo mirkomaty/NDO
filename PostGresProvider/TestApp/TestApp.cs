@@ -33,11 +33,13 @@
 using System;
 using System.Reflection;
 using System.IO;
+using System.Linq;
 using System.Data;
-using System.Collections;
+using System.Collections.Generic;
 using System.Text;
 using NDO;
 using NDO.Mapping;
+using NDO.Linq;
 using NDOInterfaces;
 using BusinessClasses;
 
@@ -52,8 +54,6 @@ namespace TestApp
 		static void Main(string[] args)
 		{
             NDOProviderFactory.Instance["Postgre"] = new NDO.PostGreProvider.Provider();
-            if (!NDOProviderFactory.Instance.Generators.Contains("Postgre"))
-                NDOProviderFactory.Instance.Generators.Add("Postgre", new NDO.PostGreProvider.PostGreGenerator());
 			PersistenceManager pm = new PersistenceManager();
 
             pm.LogAdapter = new NDO.Logging.ConsoleLogAdapter();
@@ -61,7 +61,7 @@ namespace TestApp
 
 			// Make this true to store the test instance. 
 			// Make it false if you want to retrieve data.
-#if true
+#if false
             GenerateDatabase();
 
             DataContainer dc = new DataContainer();
@@ -72,48 +72,47 @@ namespace TestApp
 
 			// uncomment the queries you like to test
 
-			DataContainer.QueryHelper qh = new DataContainer.QueryHelper();
-			Query q = pm.NewQuery(typeof (DataContainer), null);
-//			Query q = pm.NewQuery(typeof (DataContainer), qh.boolVar + " = true");
-//			Query q = pm.NewQuery(typeof (DataContainer), qh.byteVar + " = " + (0x55).ToString());
-//          Query q = pm.NewQuery(typeof(DataContainer), qh.byteVar + " = {0}");
-//          q.Parameters.Add(0x55);
+			//List<DataContainer> list = pm.Objects<DataContainer>();
+
+			//VirtualTable<DataContainer> vt = pm.Objects<DataContainer>().Where( dc => dc.StringVar.Like( "T%" ) );
+			//Console.WriteLine(vt.QueryString);
+
+//			List<DataContainer> list = from dc in pm.Objects<DataContainer>() where dc.BoolVar == true select dc;
+//			List<DataContainer> list = from dc in pm.Objects<DataContainer>() where dc.ByteVar == 0x55 select dc;
 			
-//          DateTime dt = new DataContainer().DateTimeVar;
-//          Query q = pm.NewQuery(typeof (DataContainer), qh.dateTimeVar + " = {0}");
-//          q.Parameters.Add(dt);
-//          DateTime dt1 = new DateTime(2006, 12, 6, 0, 0, 0);
-//          DateTime dt2 = new DateTime(2006, 12, 8, 23, 0, 0);
-//          Query q = pm.NewQuery(typeof (DataContainer), qh.dateTimeVar + " BETWEEN {0} AND {1}");
-//          q.Parameters.Add(dt1);
-//          q.Parameters.Add(dt2);
+			//DateTime dt = DateTime.Today;
+			//List<DataContainer> list = from dc in pm.Objects<DataContainer>() where dc.DateTimeVar == dt select dc;
 
-//          Query q = pm.NewQuery(typeof (DataContainer), qh.decVar + " > 0.34");
-//			Query q = pm.NewQuery(typeof (DataContainer), qh.doubleVar + " < 6.54");
-//			Query q = pm.NewQuery(typeof (DataContainer), qh.floatVar + " <= 10");
-//			Query q = pm.NewQuery(typeof (DataContainer), qh.int64Var + " = " + (0x123456781234567).ToString());
-//			Query q = pm.NewQuery(typeof (DataContainer), qh.stringVar + " = \'Test\'");
-//			Query q = pm.NewQuery(typeof (DataContainer), qh.stringVar + " LIKE 'T*'", false);
-//			Query q = pm.NewQuery(typeof (DataContainer), qh.stringVar + " LIKE 'T%'", false);
-//			Query q = pm.NewQuery(typeof (DataContainer), "SELECT * FROM \"DataContainer\" WHERE \"StringVar\" LIKE 'T%'", false, Query.Language.Sql);
+            DateTime dt1 = DateTime.Today.AddDays(-1);
+            DateTime dt2 = DateTime.Today.AddDays(1);
+			List<DataContainer> list = from dc in pm.Objects<DataContainer>() where dc.DateTimeVar.Between(dt1, dt2) select dc;
 
-			IList l = q.Execute();
-			if (l.Count == 0)
+//			List<DataContainer> list = from dc in pm.Objects<DataContainer>() where dc.DecVar > 0.34m select dc;
+//			List<DataContainer> list = from dc in pm.Objects<DataContainer>() where dc.DoubleVar < 6.54 select dc;
+//			List<DataContainer> list = from dc in pm.Objects<DataContainer>() where dc.FloatVar <= 10 select dc;
+//			List<DataContainer> list = from dc in pm.Objects<DataContainer>() where 10 >= dc.FloatVar select dc;
+//			List<DataContainer> list = from dc in pm.Objects<DataContainer>() where dc.Int64Var == 0x123456781234567 select dc;
+
+//			List<DataContainer> list = from dc in pm.Objects<DataContainer>() where dc.StringVar == "Test" select dc;
+
+//			List<DataContainer> list = from dc in pm.Objects<DataContainer>() where dc.StringVar.Like( "T%" ) select dc;
+
+//			List<DataContainer> list = new NDOQuery<DataContainer>( pm, "stringVar LIKE 'T%' ESCAPE '\\'" ).Execute();
+//			List<DataContainer> list = new NDOQuery<DataContainer>( pm, "SELECT * FROM \"DataContainer\" WHERE \"StringVar\" LIKE 'T%'", false, Query.Language.Sql).Execute();
+
+			if (list.Count == 0)
 			{
-				Console.WriteLine("Nichts gefunden");
+				Console.WriteLine("Nothing found");
 			}
 			else
 			{
-				DataContainer dc = (DataContainer) l[0];
+				DataContainer dc = (DataContainer) list[0];
 				//Console.WriteLine(dc.DoubleVar);
 				Console.WriteLine(dc.ByteVar);
-                foreach (Byte b in dc.ByteArrVar)
-                    Console.Write(b.ToString() + " ");
-                Console.WriteLine("");
 				Console.WriteLine(dc.GuidVar);
 				//Console.WriteLine(dc.DecVar.ToString());
 			}
-			Console.WriteLine("Fertig");
+			Console.WriteLine("Ready");		
 			
 #endif			
 		}
@@ -137,11 +136,11 @@ namespace TestApp
                 OidColumn oidColumn = (OidColumn)cl.Oid.OidColumns[0];
                 sw.Write(gen.PrimaryKeyColumn(p.GetQuotedName(oidColumn.Name), typeof(Guid), gen.DbTypeFromType(typeof(Guid)), p.GetDefaultLength(typeof(Guid)).ToString()));
                 sw.Write(" NOT NULL");
-                if (cl.Fields.Count > 0)
+                if (cl.Fields.Count() > 0)
                     sw.WriteLine(",");
-                for (int i = 0; i < cl.Fields.Count; i++)
+				int i = 0;
+                foreach (Field f in cl.Fields)
                 {
-                    Field f = (Field)cl.Fields[i];
                     FieldInfo fi = t.GetField(f.Name, BindingFlags.Instance | BindingFlags.NonPublic);
                     sw.Write(p.GetQuotedName(f.Column.Name) + " " + gen.DbTypeFromType(fi.FieldType));
                     if (fi.FieldType == typeof(string))
@@ -149,10 +148,11 @@ namespace TestApp
                     if (fi.FieldType == typeof(Guid))
                         sw.Write("(36)");
                     sw.Write(" NULL");
-                    if (i < cl.Fields.Count - 1)
+                    if (i < cl.Fields.Count() - 1)
                         sw.WriteLine(",");
                     else
                         sw.WriteLine();
+					i++;
                 }
                 sw.WriteLine(");");
             }

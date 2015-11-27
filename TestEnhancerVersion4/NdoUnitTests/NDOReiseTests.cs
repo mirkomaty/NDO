@@ -179,11 +179,6 @@ namespace NdoUnitTests {
 			Assert.Null(r.NDOObjectId, "Transient object shouldn't have ID");
 			Assert.Null(r.NDOStateManager, "Transient object shouldn't have state manager");
 			Assert.AreEqual(NDOObjectState.Transient, r.NDOObjectState, "Status wrong");
-
-			try {
-				pm.FindObject(id);
-				Assert.Fail("Should not find a valid object");
-			} catch (NDOException) {}
 		}
 
 		[Test]

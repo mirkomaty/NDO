@@ -31,6 +31,7 @@
 
 
 using System;
+using System.Linq;
 using System.Data;
 using System.Reflection;
 using System.Collections;
@@ -142,7 +143,7 @@ namespace NdoUnitTests
 		public void HintEnhancerTest()
 		{
 			Class cl = pm.NDOMapping.FindClass(typeof(ClassWithHint));
-			IProvider provider = NDOProviderFactory.Instance[((Connection)pm.NDOMapping.Connections[0]).Type];
+			IProvider provider = NDOProviderFactory.Instance[((Connection)pm.NDOMapping.Connections.First()).Type];
 			Assert.NotNull(cl, "Class not found");
 			Assert.AreEqual(typeof(Guid), ((OidColumn)cl.Oid.OidColumns[0]).SystemType, "Wrong type");
 			Type t = pm.GetType();

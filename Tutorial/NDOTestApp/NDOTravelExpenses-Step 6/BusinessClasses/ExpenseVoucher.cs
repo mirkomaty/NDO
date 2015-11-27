@@ -1,9 +1,11 @@
-using System;
+﻿using System;
 using NDO;
+using System.ComponentModel;
+
 namespace BusinessClasses
 {
-    [NDOPersistent]
-    public class ExpenseVoucher : Expense
+    [NDOPersistent, DisplayName("Expense Voucher")]
+    public partial class ExpenseVoucher : Expense
     {
         string text;
         public string VoucherText

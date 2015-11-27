@@ -488,5 +488,60 @@ namespace ILCode
 
 			return field;
 		}
+
+		public Dictionary<string,string>
+		findAccessorProperties()
+		{
+			ILMethodElement.Iterator iter = getMethodIterator();
+			Dictionary<string, string> result = new Dictionary<string, string>();
+			for ( ILMethodElement meth = iter.getFirst(); meth != null; meth = iter.getNext() )
+			{
+				string methodName = meth.getName();
+				if ( methodName.StartsWith ("get_") && !methodName.StartsWith ("get_NDO"))
+				{					
+					List<ILStatementElement> filteredStatements = new List<ILStatementElement>();
+					ILStatementElement.Iterator statementIter = meth.getStatementIterator(true);
+					for ( ILStatementElement statementElement = statementIter.getNext(); null != statementElement; statementElement = statementIter.getNext() )
+					{
+						string line = statementElement.getLine( 0 );
+						if (line.IndexOf( " nop" ) > -1)
+							continue;
+						if (line.IndexOf( " ldarg.0" ) > -1)
+							continue;
+						if (line.IndexOf( " stloc.0" ) > -1)
+							continue;
+						if (line.IndexOf( " ldloc.0" ) > -1)
+							continue;
+						if (line.IndexOf( " br.s" ) > -1)
+							continue;
+						if (line.IndexOf( " ret" ) > -1)
+							continue;
+						if (line.IndexOf( "ldfld" ) == -1)  // The only remaining line should be the ldfld line
+						{
+							filteredStatements.Clear();
+							break;
+						}
+						filteredStatements.Add(statementElement);
+					}
+					if (filteredStatements.Count == 1)
+					{
+						string line = filteredStatements[0].getLine(0);
+						int p = line.LastIndexOf( "::" );
+						if (p > -1)
+						{
+							p += 2;
+							string key = line.Substring( p );
+							if (key[0] == '\'' )
+								key = key.Substring( 1, key.Length - 2 );
+							if (!result.ContainsKey( key ))
+								result.Add( key, methodName.Substring( 4 ) );
+							else
+								Console.WriteLine( key + " " + methodName.Substring( 4 ) );
+						}
+					}
+				}
+			}
+			return result;
+		}
 	}
 }

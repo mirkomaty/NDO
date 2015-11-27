@@ -1,6 +1,6 @@
 //
-// Copyright (C) 2002-2008 HoT - House of Tools Development GmbH 
-// (www.netdataobjects.com)
+// Copyright (C) 2002-2014 Mirko Matytschak 
+// (www.netdataobjects.de)
 //
 // Author: Mirko Matytschak
 //
@@ -15,7 +15,7 @@
 // Commercial Licence:
 // For those, who want to develop software with help of this program 
 // and need to distribute their work with a more restrictive licence, 
-// there is a commercial licence available at www.netdataobjects.com.
+// there is a commercial licence available at www.netdataobjects.de.
 // 
 // The above copyright notice and this permission notice shall be
 // included in all copies or substantial portions of the Software.
@@ -33,6 +33,7 @@
 using System;
 using System.Diagnostics;
 using System.Collections;
+using System.Linq;
 using NDO.Mapping;
 using NDOInterfaces;
 
@@ -130,7 +131,7 @@ namespace NDO
 				if (null == relClass)
 					throw new NDOException(17, "Can't find mapping information for class " + rel.ReferencedTypeName);
 
-				if (relClass.Subclasses.Count > 0)
+				if (relClass.Subclasses.Count() > 0)
 				{
 					if (!allRelations.Contains(resultRelation))
 						allRelations.Add(resultRelation, null);

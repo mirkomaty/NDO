@@ -150,6 +150,11 @@
         <xs:documentation>Field name of the class attribute.</xs:documentation>
       </xs:annotation>
     </xs:attribute>
+    <xs:attribute name="AccessorName" type="xs:string" minOccurs="0" maxOccurs="1">
+      <xs:annotation>
+        <xs:documentation>Name of the Accessor Property.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
   </xs:complexType>
   <xs:complexType name="Relation">
     <xs:annotation>
@@ -171,6 +176,11 @@
     <xs:attribute name="FieldName" type="xs:string" use="required">
       <xs:annotation>
         <xs:documentation>Name of the relation field of the class.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="AccessorName" type="xs:string" minOccurs="0" maxOccurs="1">
+      <xs:annotation>
+        <xs:documentation>Name of the Accessor Property.</xs:documentation>
       </xs:annotation>
     </xs:attribute>
     <xs:attribute name="ForeignKeyTypeColumnName" type="xs:string" use="optional">

@@ -1,6 +1,6 @@
 //
-// Copyright (C) 2002-2008 HoT - House of Tools Development GmbH 
-// (www.netdataobjects.com)
+// Copyright (C) 2002-2014 Mirko Matytschak 
+// (www.netdataobjects.de)
 //
 // Author: Mirko Matytschak
 //
@@ -15,7 +15,7 @@
 // Commercial Licence:
 // For those, who want to develop software with help of this program 
 // and need to distribute their work with a more restrictive licence, 
-// there is a commercial licence available at www.netdataobjects.com.
+// there is a commercial licence available at www.netdataobjects.de.
 // 
 // The above copyright notice and this permission notice shall be
 // included in all copies or substantial portions of the Software.
@@ -159,9 +159,7 @@ namespace NDO
 			foreach(System.Data.IDbDataParameter dp in cmd.Parameters)
 			{
 				string parType;
-				if (provider is NDOOracleProvider)
-					parType = (((System.Data.OracleClient.OracleParameter)dp).OracleType).ToString();
-				else if (provider is NDOSqlProvider)
+				if (provider is NDOSqlProvider)
 					parType = (((System.Data.SqlClient.SqlParameter)dp).SqlDbType).ToString();
 				else if (provider is NDOAccessProvider)
 					parType = (((System.Data.OleDb.OleDbParameter)dp).OleDbType).ToString();

@@ -1,6 +1,6 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using NDO;
 using System.Drawing;
 
@@ -10,38 +10,26 @@ namespace BusinessClasses
     /// Summary for Employee
     /// </summary>
     [NDOPersistent]
-    public class Employee
+    public partial class Employee
     {
-        [NDORelation(typeof(Travel), RelationInfo.Composite)]
-        IList travels = new ArrayList();
-
-        public IList Travels
+        [NDORelation(RelationInfo.Composite)]
+        List<Travel> travels = new List<Travel>();
+        public IEnumerable<Travel> Travels
         {
-            get { return ArrayList.ReadOnly(travels); }
-            set { travels = value; }
+        	get { return this.travels; }
+        	set { this.travels = value.ToList(); }
         }
         public Travel NewTravel()
         {
         	Travel t = new Travel();
-        	travels.Add(t);
+        	this.travels.Add(t);
         	return t;
         }
-
         public void RemoveTravel(Travel t)
         {
-        	if (travels.Contains(t))
-        		travels.Remove(t);
+        	if (this.travels.Contains(t))
+        		this.travels.Remove(t);
         }
-
-#if UseGenerics
-		[NDORelation(RelationInfo.Composite)]
-		List<Travel> travels = new List<Travel>();
-        public List<Travel> Travels
-        {
-            get { return new NDOReadOnlyGenericList<Travel>(travels); }
-            set { travels = (List<Travel>)value; }
-        }
-#endif
 
         [NDORelation(RelationInfo.Composite)]
         Address address; 

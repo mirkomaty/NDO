@@ -246,34 +246,6 @@ namespace NDO.SqliteProvider
 			//'9999-12-31 23:59:59'
 			return "'" + dt.ToString("yyyy-MM-dd HH:mm:ss") + "." + dt.Millisecond + "'";
 		}
-
-		public override int GetDefaultLength(string typeName)
-		{
-			SQLiteDbType dbType = (SQLiteDbType) GetDbType( typeName );
-			switch ( dbType )
-			{
-				case SQLiteDbType.Text:
-					return 255;
-				case SQLiteDbType.Numeric:
-					return 10;
-				case SQLiteDbType.Integer:
-					return 4;
-				case SQLiteDbType.Int2:
-					return 2;
-				case SQLiteDbType.Decimal:
-				    return 10;
-				case SQLiteDbType.Real:
-					return 10;
-				case SQLiteDbType.Blob:
-					return 0;
-				case SQLiteDbType.Guid:
-					return 36;
-				default:
-					break;
-			}
-
-			return 0;		
-		}
 	
 
 		public override int GetDefaultLength(System.Type t)
@@ -317,13 +289,6 @@ namespace NDO.SqliteProvider
 				return 4;
 			else
 				return 0;		
-		}
-
-        [Obsolete]
-		public override Type GetSystemType(string s)
-		{
-			System.Diagnostics.StackFrame sf = new System.Diagnostics.StackFrame();
-			throw new Exception("Obsolete method GetSystemType " + s + " called.\n" + sf.ToString());
 		}
 
 

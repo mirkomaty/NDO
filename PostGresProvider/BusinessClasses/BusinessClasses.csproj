@@ -93,7 +93,10 @@
     <ErrorReport>prompt</ErrorReport>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="NDO, Version=2.0.0.0, Culture=neutral, PublicKeyToken=37bfdffa92a0cd24, processorArchitecture=MSIL" />
+    <Reference Include="NDO, Version=2.1.0.0, Culture=neutral, PublicKeyToken=37bfdffa92a0cd24, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\NDODLL\bin\Debug\NDO.dll</HintPath>
+    </Reference>
     <Reference Include="System">
       <Name>System</Name>
     </Reference>
@@ -144,4 +147,11 @@
     <PostBuildEvent>
     </PostBuildEvent>
   </PropertyGroup>
+  <Target Name="AfterBuild">
+    <NDOEnhancer NdoProjectFile="$(ProjectName).ndoproj" NdoPlatformTarget="$(Platform)" />
+  </Target>
+  <PropertyGroup>
+    <NDOInstallPath Condition=" '$(NDOInstallPath)' == ''">$(Registry:HKEY_LOCAL_MACHINE\SOFTWARE\NDO@InstallDir)</NDOInstallPath>
+  </PropertyGroup>
+  <Import Project="$(NDOInstallPath)\NDOEnhancer.Targets" />
 </Project>

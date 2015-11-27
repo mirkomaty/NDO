@@ -31,7 +31,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="NDO, Version=2.1.0.0, Culture=neutral, PublicKeyToken=37bfdffa92a0cd24, processorArchitecture=MSIL" />
+    <Reference Include="NDO, Version=3.0.0.0, Culture=neutral, PublicKeyToken=37bfdffa92a0cd24, processorArchitecture=MSIL" />
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
@@ -39,17 +39,47 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Address.cs" />
+    <Compile Include="Address.ndo.cs">
+      <DependentUpon>Address.cs</DependentUpon>
+    </Compile>
     <Compile Include="Country.cs" />
+    <Compile Include="Country.ndo.cs">
+      <DependentUpon>Country.cs</DependentUpon>
+    </Compile>
     <Compile Include="Employee.cs" />
+    <Compile Include="Employee.ndo.cs">
+      <DependentUpon>Employee.cs</DependentUpon>
+    </Compile>
     <Compile Include="Expense.cs" />
+    <Compile Include="Expense.ndo.cs">
+      <DependentUpon>Expense.cs</DependentUpon>
+    </Compile>
     <Compile Include="ExpenseFactory.cs" />
     <Compile Include="ExpenseVoucher.cs" />
+    <Compile Include="ExpenseVoucher.ndo.cs">
+      <DependentUpon>ExpenseVoucher.cs</DependentUpon>
+    </Compile>
     <Compile Include="MileageAllowance.cs" />
+    <Compile Include="MileageAllowance.ndo.cs">
+      <DependentUpon>MileageAllowance.cs</DependentUpon>
+    </Compile>
     <Compile Include="PerDiemAllowance.cs" />
+    <Compile Include="PerDiemAllowance.ndo.cs">
+      <DependentUpon>PerDiemAllowance.cs</DependentUpon>
+    </Compile>
     <Compile Include="Picture.cs" />
+    <Compile Include="Picture.ndo.cs">
+      <DependentUpon>Picture.cs</DependentUpon>
+    </Compile>
     <Compile Include="PictureHeader.cs" />
+    <Compile Include="PictureHeader.ndo.cs">
+      <DependentUpon>PictureHeader.cs</DependentUpon>
+    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Travel.cs" />
+    <Compile Include="Travel.ndo.cs">
+      <DependentUpon>Travel.cs</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <Content Include="NDOMapping.xml" />
@@ -62,4 +92,11 @@
   <Target Name="AfterBuild">
   </Target>
   -->
+  <Target Name="AfterBuild">
+    <NDOEnhancer NdoProjectFile="$(ProjectName).ndoproj" NdoPlatformTarget="$(Platform)" />
+  </Target>
+  <PropertyGroup>
+    <NDOInstallPath Condition=" '$(NDOInstallPath)' == ''">$(Registry:HKEY_LOCAL_MACHINE\SOFTWARE\NDO@InstallDir)</NDOInstallPath>
+  </PropertyGroup>
+  <Import Project="$(NDOInstallPath)\NDOEnhancer.Targets" />
 </Project>

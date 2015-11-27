@@ -1,6 +1,6 @@
 //
-// Copyright (C) 2002-2008 HoT - House of Tools Development GmbH 
-// (www.netdataobjects.com)
+// Copyright (C) 2002-2014 Mirko Matytschak 
+// (www.netdataobjects.de)
 //
 // Author: Mirko Matytschak
 //
@@ -15,7 +15,7 @@
 // Commercial Licence:
 // For those, who want to develop software with help of this program 
 // and need to distribute their work with a more restrictive licence, 
-// there is a commercial licence available at www.netdataobjects.com.
+// there is a commercial licence available at www.netdataobjects.de.
 // 
 // The above copyright notice and this permission notice shall be
 // included in all copies or substantial portions of the Software.
@@ -32,7 +32,8 @@
 
 using System;
 using System.Data;
-using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using NDO.Mapping;
 
@@ -98,7 +99,7 @@ namespace NDO
             // for each relation, having a ForeignKeyTypeColumnName.
             string relationName = string.Empty;
             int relCount = 0;
-            ArrayList relations = new ArrayList();
+            List<Relation> relations = new List<Relation>();
             foreach (OidColumn oidc in cl.Oid.OidColumns)
             {
                 if (oidc.RelationName != relationName)

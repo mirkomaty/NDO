@@ -33,10 +33,12 @@
 using System;
 using System.Reflection;
 using System.Collections;
+using System.Collections.Generic;
 using NUnit.Framework;
 using NDO;
 using Reisekosten;
 using Reisekosten.Personal;
+using NDO.Linq;
 
 namespace NdoUnitTests
 {
@@ -628,6 +630,18 @@ namespace NdoUnitTests
 			pm.UnloadCache();
 			Query q = pm.NewQuery(typeof(Mitarbeiter), null);
 			m = (Mitarbeiter) q.ExecuteSingle(true);
+			Assert.AreEqual(1, m.Reisen.Count, "Count should be 1");
+		}
+
+		[Test]
+		public void TestLinqQuery()
+		{
+			m.Hinzufuegen(r);
+			pm.MakePersistent(m);
+			pm.Save();
+			pm.UnloadCache();
+			m = (from mi in pm.Objects<Mitarbeiter>() where mi.Reisen[Any.Index].Zweck == "ADC" select mi).FirstOrDefault();
+			Assert.NotNull(m, "There should be 1 object");
 			Assert.AreEqual(1, m.Reisen.Count, "Count should be 1");
 		}
 

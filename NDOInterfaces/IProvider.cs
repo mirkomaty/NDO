@@ -122,18 +122,11 @@ namespace NDOInterfaces
 		object GetDbType(string dbTypeName);
 
 		/// <summary>
-		/// Gets a usefull length for a given type, i.e. the value 4 for the type code name "Integer".
-		/// </summary>
-		/// <param name="dbTypeName">Type code name</param>
-		/// <returns>The default lengt for a given type.</returns>
-		int GetDefaultLength(string dbTypeName);
-		/// <summary>
 		/// Gets a usefull length for a given type, i.e. the value 4 for the type System.Int32.
 		/// </summary>
 		/// <param name="t">A Type object</param>
 		/// <returns></returns>
 		int GetDefaultLength(Type t);
-
 
 		/// <summary>
 		/// Gets the wildcard character, i.e. '%' for SqlServer or '*' for Microsoft Access.

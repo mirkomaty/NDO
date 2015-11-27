@@ -93,12 +93,15 @@
     <ErrorReport>prompt</ErrorReport>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Mono.Security">
+      <HintPath>..\packages\Npgsql.2.2.5\lib\net40\Mono.Security.dll</HintPath>
+    </Reference>
     <Reference Include="NDOInterfaces, Version=2.0.0.0, Culture=neutral, PublicKeyToken=ff5e453a099b8326, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\NDOInterfaces\bin\release\NDOInterfaces.dll</HintPath>
     </Reference>
     <Reference Include="Npgsql">
-      <HintPath>..\Npgsql.dll</HintPath>
+      <HintPath>..\packages\Npgsql.2.2.5\lib\net40\Npgsql.dll</HintPath>
     </Reference>
     <Reference Include="System">
       <Name>System</Name>
@@ -154,6 +157,9 @@
     <EmbeddedResource Include="ConnectionStringEditorForm.resx">
       <DependentUpon>ConnectionStringEditorForm.cs</DependentUpon>
     </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

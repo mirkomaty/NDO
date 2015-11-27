@@ -52,7 +52,7 @@
     <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="NDO, Version=2.1.0.0, Culture=neutral, PublicKeyToken=37bfdffa92a0cd24, processorArchitecture=MSIL" />
+    <Reference Include="NDO, Version=3.0.0.0, Culture=neutral, PublicKeyToken=37bfdffa92a0cd24, processorArchitecture=MSIL" />
     <Reference Include="System" />
   </ItemGroup>
   <ItemGroup>
@@ -83,4 +83,11 @@
   <ItemGroup>
     <Content Include="NDOMapping.xml" />
   </ItemGroup>
+  <Target Name="AfterBuild">
+    <NDOEnhancer NdoProjectFile="$(ProjectName).ndoproj" NdoPlatformTarget="$(Platform)" />
+  </Target>
+  <PropertyGroup>
+    <NDOInstallPath Condition=" '$(NDOInstallPath)' == ''">$(Registry:HKEY_LOCAL_MACHINE\SOFTWARE\NDO@InstallDir)</NDOInstallPath>
+  </PropertyGroup>
+  <Import Project="$(NDOInstallPath)\NDOEnhancer.Targets" />
 </Project>

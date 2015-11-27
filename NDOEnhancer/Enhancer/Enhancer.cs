@@ -36,6 +36,7 @@ using System.IO;
 using System.Diagnostics;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using System.Xml;
 using System.Data;
 using Microsoft.Win32;
@@ -156,11 +157,13 @@ namespace NDOEnhancer
             {
                 if (an.Name == "NDO")
                     refAn = new NDOAssemblyName(an.FullName);
-            }
+			}
             if (refAn == null)
                 return;
-            NDOAssemblyName ndoAn = new NDOAssemblyName(typeof(NDOPersistentAttribute).Assembly.FullName);
-            if (refAn.PublicKeyToken != ndoAn.PublicKeyToken || refAn.Version != ndoAn.Version)
+            NDOAssemblyName ndoAn = new NDOAssemblyName(typeof(NDOPersistentAttribute).Assembly.FullName);  // give us the NDO version the enhancer belongs to
+			Version refVersion = refAn.AssemblyVersion;
+			bool isRightVersion = refVersion.Major > 2 || refVersion.Major == 2 && refVersion.Minor >= 1;
+            if (refAn.PublicKeyToken != ndoAn.PublicKeyToken || !isRightVersion)
             {
                 throw new Exception("Assembly " + ass.FullName + " references a wrong NDO.dll. Expected: " + ndoAn.FullName + ". Found: " + refAn.FullName + ".");
             }
@@ -566,8 +569,7 @@ namespace NDOEnhancer
 		private void
 		determineOidTypes()
 		{
-			ArrayList al = new ArrayList( mappings.Classes );
-            foreach (Class cl in al)
+            foreach (Class cl in mappings.Classes)
             {
                 ClassNode classNode = (ClassNode)allPersistentClasses[cl.FullName];
 				if (classNode == null)
@@ -772,7 +774,7 @@ namespace NDOEnhancer
 
 
 			// Und nun die überflüssigen entfernen
-			ArrayList fieldsToRemove = new ArrayList();
+			List<Field> fieldsToRemove = new List<Field>();
 			foreach(Field f in classMapping.Fields)
 			{
 				bool isExistent = false;
@@ -787,22 +789,15 @@ namespace NDOEnhancer
 				if (!isExistent)
 					fieldsToRemove.Add(f);
 			}
-			foreach(object o in fieldsToRemove)
-				classMapping.Fields.Remove(o);
+			foreach(Field field in fieldsToRemove)
+				classMapping.RemoveField(field);
 
-            ArrayList fieldMappings = new ArrayList(classMapping.Fields);
-            fieldMappings.Sort(new FieldMappingSorter());
-            for (int i = 0; i < fieldMappings.Count; i++)
-                ((Field)fieldMappings[i]).Ordinal = i;
+            List<Field> sortedFieldMappings = classMapping.Fields.ToList();
+			sortedFieldMappings.Sort( ( f1, f2 ) => string.CompareOrdinal( ((Field)f1).Name, ((Field)f2).Name ) );
+            for (int i = 0; i < sortedFieldMappings.Count; i++)
+                ((Field)sortedFieldMappings[i]).Ordinal = i;
 		}
 
-        private class FieldMappingSorter : IComparer
-        {
-            public int Compare(object x, object y)
-            {
-                return string.CompareOrdinal(((Field)x).Name, ((Field)y).Name);
-            }
-        }
 
 		private void SetDefiningClass(Relation r, Class parent)
 		{
@@ -867,8 +862,14 @@ namespace NDOEnhancer
 									throw new Exception(String.Format("Kann die Mapping-Information für die Basisklasse {0} nicht finden", baseClassNode.Name));
 								r = baseClassMapping.FindRelation(rname);
 								if (r == null)
-									throw new Exception(String.Format("Schwerwiegender interner Fehler: Ererbte Relation {0} in Basisklasse {1} nicht gefunden.", rname, baseClassMapping.FullName));
-								classMapping.Relations.Add(r);
+									throw new Exception(String.Format("Schwerwiegender interner Fehler: Ererbte Relation {0} in Basisklasse {1} nicht gefunden.", rname, baseClassMapping.FullName));								
+								classMapping.AddRelation(r);
+							}
+							else
+							{
+								Relation orgRel = baseClassMapping.FindRelation( rname );
+								if (r.AccessorName == null && r.AccessorName != orgRel.AccessorName)
+									r.AccessorName = orgRel.AccessorName;
 							}
 							if (is1To1)
 								r.Multiplicity = RelationMultiplicity.Element;
@@ -1046,7 +1047,7 @@ namespace NDOEnhancer
 			foreach (Relation r in relationsToDelete)
 			{
 				messages.WriteLine(String.Format("Delete unused Relation Mapping {0}", classMapping.FullName + "." + r.FieldName));
-				classMapping.Relations.Remove(r);
+				classMapping.RemoveRelation(r);
 			}
 		}
 
@@ -1655,14 +1656,32 @@ namespace NDOEnhancer
 					
 				}
 
-			} // !enhanced
-
+			} // !enhanced			
 
 			// Jetzt alle Klassen durchlaufen und ggf. Enhancen
 			foreach ( ILClassElement classElement in  classes )
 			{
 				if (classElement.isPersistent(typeof (NDOPersistentAttribute)))
 				{
+					Dictionary<string, string> accessors = classElement.findAccessorProperties();
+					Class classMapping = mappings.FindClass( classElement.getMappingName() );
+					if (classMapping != null && accessors.Count > 0)
+					{
+						foreach (var item in accessors)
+						{
+							Field field = classMapping.FindField( item.Key );
+							if (field != null)
+							{
+								field.AccessorName = item.Value;
+							}
+							else
+							{
+								Relation rel = classMapping.FindRelation( item.Key );
+								if (rel != null)
+									rel.AccessorName = item.Value;
+							}
+						}
+					}
 					string mappingName = classElement.getMappingName();
 					IList sortedFields = (IList) allSortedFields[mappingName];
 					IList references = (IList) allReferences[mappingName];

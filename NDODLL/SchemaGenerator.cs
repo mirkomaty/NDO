@@ -1,6 +1,6 @@
 //
-// Copyright (C) 2002-2008 HoT - House of Tools Development GmbH 
-// (www.netdataobjects.com)
+// Copyright (C) 2002-2014 Mirko Matytschak 
+// (www.netdataobjects.de)
 //
 // Author: Mirko Matytschak
 //
@@ -15,7 +15,7 @@
 // Commercial Licence:
 // For those, who want to develop software with help of this program 
 // and need to distribute their work with a more restrictive licence, 
-// there is a commercial licence available at www.netdataobjects.com.
+// there is a commercial licence available at www.netdataobjects.de.
 // 
 // The above copyright notice and this permission notice shall be
 // included in all copies or substantial portions of the Software.
@@ -33,7 +33,8 @@
 using System;
 using System.Reflection;
 using System.Data;
-using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
 using NDO;
 using NDO.Mapping;
 using NDOInterfaces;
@@ -56,7 +57,7 @@ namespace NDO
 			this.persistentFields = fieldMap.PersistentFields;
 			this.supportsGuidType = CheckGuidType();
 		}
-		Hashtable persistentFields;
+		Dictionary<string, MemberInfo> persistentFields;
 		NDOMapping mappings;
 		DataSet dsSchema;
 		Class c;
@@ -115,9 +116,9 @@ namespace NDO
                 int colIndex = 0;
 #if DEBUG
                 if (r.Multiplicity == RelationMultiplicity.Element)
-                    System.Diagnostics.Debug.Assert(refClass.Oid.OidColumns.Count == r.ForeignKeyColumns.Count);
+                    System.Diagnostics.Debug.Assert(refClass.Oid.OidColumns.Count == r.ForeignKeyColumns.Count());
                 else
-                    System.Diagnostics.Debug.Assert(c.Oid.OidColumns.Count == r.ForeignKeyColumns.Count);
+                    System.Diagnostics.Debug.Assert(c.Oid.OidColumns.Count == r.ForeignKeyColumns.Count());
 #endif
                 new ForeignKeyIterator(r).Iterate(delegate(ForeignKeyColumn fkColumn, bool isLastElement)
                 {
@@ -227,7 +228,7 @@ namespace NDO
 			
 			if (!c.Oid.IsDependent)  // Columns will be built as foreign key columns of the relations
 			{
-                ArrayList primaryKeyColumns = new ArrayList();
+                List<DataColumn> primaryKeyColumns = new List<DataColumn>();
                 new OidColumnIterator(c).Iterate(delegate(OidColumn oidColumnMapping, bool isLastElement)
                 {
                     //MM 3 Oid-Spalte anlegen
@@ -298,9 +299,11 @@ namespace NDO
 //				if (fi == null)
 //					throw new Exception("Field Type not found");
 					//continue;
+				if (!this.persistentFields.ContainsKey( fname ))
+					continue;	// protected inherited field
+
 				object memberInfo = this.persistentFields[fname];
-				if (memberInfo == null)  // protected inherited field
-					continue;
+
 				Type t;
 				if (memberInfo is FieldInfo)
 					t = ((FieldInfo)memberInfo).FieldType;
@@ -423,9 +426,11 @@ namespace NDO
 			//MM 6 ggf. Tabelle anlegen
 			//    Gibt's die Table schon in dsSchema?
 			//    Nein: Anlegen
-			DataTable dtMap = dsSchema.Tables[r.MappingTable.TableName];
-			if (null == dtMap)
+			DataTable dtMap;
+			if (!dsSchema.Tables.Contains(r.MappingTable.TableName))
 				dsSchema.Tables.Add(dtMap = new DataTable(r.MappingTable.TableName));
+			else
+				dtMap = dsSchema.Tables[r.MappingTable.TableName];
 
 			//MM 7 ForeignKey-Spalten für eigene und Fremdklasse anlegen
 			//MM 7 Wenn nötig auch die TypeColumns anlegen

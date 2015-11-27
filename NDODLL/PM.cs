@@ -1,6 +1,6 @@
 //
-// Copyright (C) 2002-2008 HoT - House of Tools Development GmbH 
-// (www.netdataobjects.com)
+// Copyright (C) 2002-2014 Mirko Matytschak 
+// (www.netdataobjects.de)
 //
 // Author: Mirko Matytschak
 //
@@ -15,7 +15,7 @@
 // Commercial Licence:
 // For those, who want to develop software with help of this program 
 // and need to distribute their work with a more restrictive licence, 
-// there is a commercial licence available at www.netdataobjects.com.
+// there is a commercial licence available at www.netdataobjects.de.
 // 
 // The above copyright notice and this permission notice shall be
 // included in all copies or substantial portions of the Software.
@@ -48,6 +48,9 @@ using System.Xml.Linq;
 using NDO.Mapping;
 using NDO.Logging;
 using NDOInterfaces;
+using NDO.ShortId;
+using System.Globalization;
+using NDO.Linq;
 
 namespace NDO 
 {
@@ -90,9 +93,7 @@ namespace NDO
 		// List of created objects that use mapping table and need to be stored in mapping table 
 		// after they have been stored to the database to update foreign keys.
 		private ArrayList createdMappingTableObjects = new ArrayList();  
-#if PRO
 		private TypeManager typeManager;
-#endif
 		private TransactionMode transactionMode = TransactionMode.None;
 		private IsolationLevel isolationLevel = IsolationLevel.ReadCommitted;
 		private TransactionTable transactionTable;
@@ -354,8 +355,8 @@ namespace NDO
 				if (pc2.NDOObjectState == NDOObjectState.Hollow)
 					LoadData(pc2); 
 				DataRow row = GetTable(pc).NewRow();
-				pc.NDOWrite(row, pcClass.FieldNames, 0);
-				pc2.NDORead(row, pcClass.FieldNames, 0);
+				pc.NDOWrite(row, pcClass.ColumnNames, 0);
+				pc2.NDORead(row, pcClass.ColumnNames, 0);
 				MarkDirty(pc2);
 			}
 			foreach(RelationChangeRecord rcr in cs.RelationChanges)
@@ -440,7 +441,7 @@ namespace NDO
                 }
             }
 
-			WriteObject(pc, row, pcClass.FieldNames, 0); // save current state in DS
+			WriteObject(pc, row, pcClass.ColumnNames, 0); // save current state in DS
 
 			// If the object is merged from an ObjectContainer, the id should be reused,
 			// if the id is client generated (not Autoincremented).
@@ -1136,9 +1137,9 @@ namespace NDO
 		private void ReadObject(IPersistenceCapable pc, DataRow row, string[] fieldNames, int startIndex)
 		{
 			Class cl = GetClass(pc);
-			ArrayList etypes = cl.EmbeddedTypes;
-			Hashtable persistentFields = null;
-			if (etypes.Count > 0)
+			string[] etypes = cl.EmbeddedTypes.ToArray();
+			Dictionary<string,MemberInfo> persistentFields = null;
+			if (etypes.Length > 0)
 			{
 				FieldMap fm = new FieldMap(cl);
 				persistentFields = fm.PersistentFields;
@@ -1308,10 +1309,10 @@ namespace NDO
 		{
 			if (!File.Exists(scriptFile))
 				throw new NDOException(48, "Script file " + scriptFile + " doesn't exist.");
-			if (this.mappings.Connections.Count < 1)
+			if (!this.mappings.Connections.Any())
 				throw new NDOException(48, "Mapping file doesn't define a connection.");
 			Connection conn = new Connection( this.mappings );
-			Connection originalConnection = (Connection)this.mappings.Connections[0];
+			Connection originalConnection = (Connection)this.mappings.Connections.First();
 			conn.Name = OnNewConnection( originalConnection );
 			conn.Type = originalConnection.Type;
 			//Connection conn = (Connection) this.mappings.Connections[0];
@@ -1401,10 +1402,10 @@ namespace NDO
 			if (!File.Exists(scriptFile))
 				throw new NDOException(48, "Script file " + scriptFile + " doesn't exist.");
 
-			if (this.mappings.Connections.Count < 1)
+			if (!this.mappings.Connections.Any())
 				throw new NDOException(48, "Mapping file doesn't define any connection.");
 			Connection conn = new Connection( mappings );
-			Connection originalConnection = (Connection)mappings.Connections[0];
+			Connection originalConnection = mappings.Connections.First();
 			conn.Name = OnNewConnection( originalConnection );
 			conn.Type = originalConnection.Type;
 			return PerformSchemaTransitions(scriptFile, conn);
@@ -1588,7 +1589,7 @@ namespace NDO
                 row[cl.TypeNameColumn.Name] = t.FullName + "," + t.Assembly.GetName().Name;
             }
 
-			ArrayList etypes = cl.EmbeddedTypes;
+			var etypes = cl.EmbeddedTypes;
 			foreach(string s in etypes)
 			{
 				try
@@ -1821,7 +1822,7 @@ namespace NDO
 			DataTable table = GetTable(pc);
 			DataRow row = table.NewRow();
 			Class cl = GetClass(pc);
-			WriteObject(pc, row, cl.FieldNames, 0);
+			WriteObject(pc, row, cl.ColumnNames, 0);
 			WriteIdToRow(pc, row);
 			WriteLostForeignKeysToRow(cl, pc, row);
 			table.Rows.Add(row);
@@ -1888,10 +1889,9 @@ namespace NDO
 		protected virtual IList CollectRelationStates(IPersistenceCapable pc, DataRow row) 
 		{
 			// Save state of relations
-			IList relations = null;
 			Class c = GetClass(pc);
-			relations = new ArrayList(c.Relations.Count);
-			foreach(Relation r in c.Relations) 
+			IList relations = new ArrayList(c.Relations.Count());
+			foreach(Relation r in c.Relations)
 			{
 				if (r.Multiplicity == RelationMultiplicity.Element) 
 				{
@@ -2167,13 +2167,13 @@ namespace NDO
 #else
 						Type relType = r.ReferencedType;
 #endif
-                            int count = r.ForeignKeyColumns.Count;
+                            int count = r.ForeignKeyColumns.Count();
                             object[] keydata = new object[count];
                             int i = 0;
-                            new ForeignKeyIterator(r).Iterate(delegate(ForeignKeyColumn fkColumn, bool isLastElement)
+                            foreach(ForeignKeyColumn fkColumn in r.ForeignKeyColumns)
                             {
                                 keydata[i++] = row[fkColumn.Name];
-                            });
+                            }
 
                             Type oidType = relType;
                             if (oidType.IsGenericTypeDefinition)
@@ -2505,7 +2505,7 @@ namespace NDO
 				} 
 				else if(objectState == NDOObjectState.Created) 
 				{
-					WriteObject(e.pc, e.row, cl.FieldNames);                    
+					WriteObject(e.pc, e.row, cl.ColumnNames);                    
 					WriteIdFieldsToRow(e.pc, e.row);  // If fields are mapped to Oid, write them into the row
 					WriteForeignKeysToRow(e.pc, e.row);
 					//					Debug.WriteLine(e.pc.GetType().FullName);
@@ -2526,7 +2526,7 @@ namespace NDO
 				{
 					if (e.pc.NDOObjectState == NDOObjectState.PersistentDirty)
 						changedObjects.Add( e.pc );
-					WriteObject(e.pc, e.row, cl.FieldNames);
+					WriteObject(e.pc, e.row, cl.ColumnNames);
 					WriteForeignKeysToRow(e.pc, e.row); 					
 				}
 				if(hollowMode && (objectState == NDOObjectState.Persistent || objectState == NDOObjectState.Created || objectState == NDOObjectState.PersistentDirty) ) 
@@ -2652,15 +2652,12 @@ namespace NDO
                 IPersistenceCapable relObj = (IPersistenceCapable)mappings.GetRelationField(pc, r.FieldName);
                 bool isDependent = GetClass(pc).Oid.IsDependent;
 
-                //if (isDependent && relObj.NDOObjectState == NDOObjectState.Transient)
-                //    throw new NDOException(59, "Can only add persistent objects in Assoziation " + pc.GetType().FullName + "." + r.FieldName + ". Make the object of type " + relObj.GetType().FullName + " persistent.");
-
 				if ( relObj != null )
 				{
-					for ( int i = 0; i < r.ForeignKeyColumns.Count; i++ )
+					int i = 0;
+					foreach ( ForeignKeyColumn fkColumn in r.ForeignKeyColumns )
 					{
-						ForeignKeyColumn fkColumn = (ForeignKeyColumn) r.ForeignKeyColumns[i];
-						pcRow[fkColumn.Name] = relObj.NDOObjectId.Id[i];
+						pcRow[fkColumn.Name] = relObj.NDOObjectId.Id[i++];
 					}
 					if ( r.ForeignKeyTypeColumnName != null )
 					{
@@ -2669,9 +2666,8 @@ namespace NDO
 				}
 				else
 				{
-					for ( int i = 0; i < r.ForeignKeyColumns.Count; i++ )
+					foreach ( ForeignKeyColumn fkColumn in r.ForeignKeyColumns )
 					{
-						ForeignKeyColumn fkColumn = (ForeignKeyColumn) r.ForeignKeyColumns[i];
 						pcRow[fkColumn.Name] = DBNull.Value;
 					}
 					if ( r.ForeignKeyTypeColumnName != null )
@@ -2695,15 +2691,15 @@ namespace NDO
 			Relation r = e.Relation;
 			DataTable dt = GetTable(r.MappingTable.TableName);
 			DataRow row = dt.NewRow();
-            for (int i = 0; i < r.ForeignKeyColumns.Count; i++)
+			int i = 0;
+            foreach (ForeignKeyColumn fkColumn in r.ForeignKeyColumns )
             {
-                ForeignKeyColumn fkColumn = (ForeignKeyColumn)r.ForeignKeyColumns[i];
-                row[fkColumn.Name] = pc.NDOObjectId.Id[i];
+                row[fkColumn.Name] = pc.NDOObjectId.Id[i++];
             }
-            for (int i = 0; i < r.MappingTable.ChildForeignKeyColumns.Count; i++)
+			i = 0;
+            foreach (ForeignKeyColumn fkColumn in r.MappingTable.ChildForeignKeyColumns)
             {
-                ForeignKeyColumn fkColumn = (ForeignKeyColumn)r.MappingTable.ChildForeignKeyColumns[i];
-                row[fkColumn.Name] = relObj.NDOObjectId.Id[i];
+                row[fkColumn.Name] = relObj.NDOObjectId.Id[i++];
             }
 #if PRO
 			if (r.ForeignKeyTypeColumnName != null)
@@ -2772,12 +2768,12 @@ namespace NDO
 					}
 					RestoreRelatedObjects(pc, e.relations);
 					e.row.RejectChanges();
-					ReadObject(pc, e.row, cl.FieldNames, 0);
+					ReadObject(pc, e.row, cl.ColumnNames, 0);
 					cache.Unlock(pc);
 					pc.NDOObjectState = NDOObjectState.Persistent;
 					break;
 				case NDOObjectState.Created:
-					ReadObject(pc, e.row, cl.FieldNames, 0);
+					ReadObject(pc, e.row, cl.ColumnNames, 0);
 					cache.Unlock(pc);
 					MakeObjectTransient(pc, true);
 					break;
@@ -2785,7 +2781,7 @@ namespace NDO
                     if (!this.IsFakeRow(cl, e.row))
                     {
                         e.row.RejectChanges();
-                        ReadObject(e.pc, e.row, cl.FieldNames, 0);
+                        ReadObject(e.pc, e.row, cl.ColumnNames, 0);
                         e.pc.NDOObjectState = NDOObjectState.Persistent;
                     }
                     else
@@ -2874,13 +2870,13 @@ namespace NDO
 				switch(e.pc.NDOObjectState) 
 				{
 					case NDOObjectState.Created:
-						ReadObject(e.pc, e.row, cl.FieldNames, 0);
+						ReadObject(e.pc, e.row, cl.ColumnNames, 0);
 						deletedObjects.Add(e.pc);
 						break;
 
 					case NDOObjectState.PersistentDirty:
 						e.row.RejectChanges();
-						ReadObject(e.pc, e.row, cl.FieldNames, 0);
+						ReadObject(e.pc, e.row, cl.ColumnNames, 0);
 						e.pc.NDOObjectState = NDOObjectState.Persistent;
 						break;
 
@@ -2888,7 +2884,7 @@ namespace NDO
 						if (!isFakeRow)
 						{
 							e.row.RejectChanges();
-							ReadObject(e.pc, e.row, cl.FieldNames, 0);
+							ReadObject(e.pc, e.row, cl.ColumnNames, 0);
 							e.pc.NDOObjectState = NDOObjectState.Persistent;
 						}
 						else
@@ -2927,17 +2923,16 @@ namespace NDO
 
 
 		/// <summary>
-		/// Reset object to its transient state and remove it from the cache. Optinally, invalidate object id to
-		/// suppress future access.
+		/// Reset object to its transient state and remove it from the cache. Optinally, remove the object id to
+		/// disable future access.
 		/// </summary>
 		/// <param name="pc"></param>
-		/// <param name="invalidateId">true if object id should be invalidated</param>
-		private void MakeObjectTransient(IPersistenceCapable pc, bool invalidateId) 
+		/// <param name="removeId">Indicates if the object id should be nulled</param>
+		private void MakeObjectTransient(IPersistenceCapable pc, bool removeId) 
 		{
 			cache.Deregister(pc);
-			if(invalidateId) 
+			if(removeId) 
 			{
-				pc.NDOObjectId.Invalidate();
 				pc.NDOObjectId = null;
 			}
 			pc.NDOObjectState = NDOObjectState.Transient;
@@ -2964,7 +2959,7 @@ namespace NDO
 			{
 				LoadData(pc);
 			}
-			MakeObjectTransient(pc, false);
+			MakeObjectTransient(pc, true);
 		}
 
 
@@ -3497,6 +3492,60 @@ namespace NDO
 		}
 
 		/// <summary>
+		/// Finds an object using a short id.
+		/// </summary>
+		/// <param name="shortId"></param>
+		/// <returns></returns>
+		public IPersistenceCapable FindObject(string encodedShortId)
+		{
+			string shortId = encodedShortId.Decode();
+			string[] arr = shortId.Split( '~' );
+			if (arr.Length != 3)
+				throw new ArgumentException( "The format of the string is not valid", "shortId" );
+			Type t = shortId.GetObjectType(this);  // try readable format
+			if (t == null)
+			{
+				int typeCode = 0;
+				if (!int.TryParse( arr[2], NumberStyles.HexNumber, CultureInfo.InvariantCulture, out typeCode )) 
+					throw new ArgumentException( "The string doesn't represent a loadable type", "shortId" );
+				t = this.typeManager[typeCode];
+				if (t == null) 
+					throw new ArgumentException( "The string doesn't represent a loadable type", "shortId" );
+			}
+			Class cls = GetClass( t );
+			if (cls == null)
+				throw new ArgumentException( "The type identified by the string is not persistent or is not managed by the given mapping file", "shortId" );
+			if (cls.Oid.OidColumns.Count > 1)
+				throw new ArgumentException( "The type identified by the string has multiple oid columns and can't be loaded by a ShortId", "shortId" );
+			object keydata;
+			Type oidType = cls.Oid.OidColumns[0].SystemType;
+			if (oidType == typeof(int))
+			{
+				int key;
+				if (!int.TryParse( arr[2], out key ))
+					throw new ArgumentException( "The ShortId doesn't contain an int value", "shortId" );
+				keydata = key;
+			}
+			else if (oidType == typeof(Guid))
+			{
+				Guid key;
+				if (!Guid.TryParse( arr[2], out key ))
+					throw new ArgumentException( "The ShortId doesn't contain a guid value", "shortId" );
+				keydata = key;
+			}
+			else if (oidType == typeof(string))
+			{
+				keydata = arr[2];
+			}
+			else
+			{
+				throw new ArgumentException( "The oid type of the persistent type can't be used by a ShortId: " + oidType.FullName, "shortId" );
+			}
+
+			return FindObject( t, keydata );			
+		}
+
+		/// <summary>
 		/// Gets the requested object. If it is in the cache, the cached object is returned, otherwise, a new (hollow)
 		/// instance of the object is returned. In either case, the DB is not accessed!
 		/// </summary>
@@ -3649,6 +3698,16 @@ namespace NDO
 		}
 
 		/// <summary>
+		/// Returns a virtual table for Linq queries.
+		/// </summary>
+		/// <typeparam name="T"></typeparam>
+		/// <returns></returns>
+		public VirtualTable<T> Objects<T>()
+		{
+			return new VirtualTable<T>( this );
+		}
+
+		/// <summary>
 		/// Create a new Query object. The query will return objects of the given type, selected by the 
 		/// expression.
 		/// </summary>
@@ -3698,7 +3757,7 @@ namespace NDO
 			if (cl.FKColumnNames != null)
 			{
                 //				Debug.WriteLine("GetLostForeignKeysFromRow " + pc.NDOObjectId.Dump());
-				KeyValueList kvl = new KeyValueList(cl.FKColumnNames.Count);
+				KeyValueList kvl = new KeyValueList(cl.FKColumnNames.Count());
 				foreach(string colName in cl.FKColumnNames)
 					kvl.Add(new KeyValuePair(colName, row[colName]));
 				pc.NDOLoadState.LostRowInfo = kvl;				
@@ -3720,7 +3779,7 @@ namespace NDO
 
 		void Row2Object(Class cl, IPersistenceCapable pc, DataRow row)
 		{
-			ReadObject(pc, row, cl.FieldNames, 0);
+			ReadObject(pc, row, cl.ColumnNames, 0);
 			ReadTimeStamp(cl, pc, row);
 			ReadLostForeignKeysFromRow(cl, pc, row);
 			LoadRelated1To1Objects(pc, row);
@@ -3839,13 +3898,10 @@ namespace NDO
 			set { hollowMode = value; }
 		}
 
-#if PRO
 		internal TypeManager TypeManager
 		{
 			get { return typeManager; }
 		}
-#endif
-
 
 		/// <summary>
 		/// Sets or gets transaction mode. Uses TransactionMode enum.
@@ -3853,11 +3909,7 @@ namespace NDO
 		public TransactionMode TransactionMode
 		{
 			get { return transactionMode; }
-#if PRO
-			set { transactionMode = value; }
-#else
-			set { transactionMode = TransactionMode.None; }
-#endif
+			set { transactionMode = value; }			
 		}
 
 		/// <summary>
@@ -3954,7 +4006,7 @@ namespace NDO
 			row = newTable.Rows[0];
 
 			Class cls = mappings.FindClass(o.GetType());
-			WriteObject( pc, row, cls.FieldNames );
+			WriteObject( pc, row, cls.ColumnNames );
 			WriteForeignKeysToRow( pc, row );
 
 			return row;
@@ -3998,9 +4050,9 @@ namespace NDO
 			{
 				if (relation.Multiplicity != RelationMultiplicity.Element || relation.MappingTable != null)
 					continue;
-				if (relation.ForeignKeyColumns.Count > 1)
+				if (relation.ForeignKeyColumns.Count() > 1)
 					throw new Exception( String.Format( "GetChangeSet does not support relations with multiple ForeignKeyColumns ({0}).", relation.ToString() ) );
-				string colName = ((Column)relation.ForeignKeyColumns[0]).Name;
+				string colName = relation.ForeignKeyColumns.First().Name;
 				object currentVal = row[colName, DataRowVersion.Current];
 				object originalVal = row[colName, DataRowVersion.Original];
 
