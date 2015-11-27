@@ -29,17 +29,17 @@
     <KeyFile>
     </KeyFile>
     <References>
-      <Reference AssemblyName="System" AssemblyPath="C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.0\System.dll">
+      <Reference AssemblyName="System" AssemblyPath="C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.0\System.dll" CheckThisDLL="False">
       </Reference>
-      <Reference AssemblyName="System.Data" AssemblyPath="C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.0\System.Data.dll">
+      <Reference AssemblyName="System.Data" AssemblyPath="C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.0\System.Data.dll" CheckThisDLL="False">
       </Reference>
-      <Reference AssemblyName="System.Drawing" AssemblyPath="C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.0\System.Drawing.dll">
+      <Reference AssemblyName="System.Drawing" AssemblyPath="C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.0\System.Drawing.dll" CheckThisDLL="False">
       </Reference>
-      <Reference AssemblyName="System.Xml" AssemblyPath="C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.0\System.Xml.dll">
+      <Reference AssemblyName="System.Xml" AssemblyPath="C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.0\System.Xml.dll" CheckThisDLL="False">
       </Reference>
-      <Reference AssemblyName="System.Core" AssemblyPath="c:\program files (x86)\reference assemblies\microsoft\framework\.netframework\v4.0\system.core.dll">
+      <Reference AssemblyName="System.Core" AssemblyPath="c:\program files (x86)\reference assemblies\microsoft\framework\.netframework\v4.0\system.core.dll" CheckThisDLL="False">
       </Reference>
-      <Reference AssemblyName="mscorlib" AssemblyPath="C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.0\mscorlib.dll">
+      <Reference AssemblyName="mscorlib" AssemblyPath="C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.0\mscorlib.dll" CheckThisDLL="False">
       </Reference>
     </References>
   </ProjectDescription>

@@ -333,7 +333,7 @@
     <PreBuildEvent>..\..\..\MakeEnhancerDate\bin\$(Configuration)\MakeEnhancerDate.exe "V. 3.0" "C:\Program Files (x86)\PortableGit\bin\git.exe" &gt; $(ProjectDir)\EnhDate.cs</PreBuildEvent>
   </PropertyGroup>
   <PropertyGroup>
-    <PostBuildEvent>copy /Y "$(TargetPath)" "C:\Program Files (x86)\NDO 3.0 Dev Edition\NDOEnhancer.exe"
+    <PostBuildEvent>
 </PostBuildEvent>
   </PropertyGroup>
 </Project>

@@ -530,7 +530,7 @@
 				<File Id="_9EB9F2E9EB8840579B00CEF1FF7161CB" Name="NDOMapping.xml" Vital="yes" KeyPath="yes" DiskId="1" Source="..\Tutorial\NDOTestApp\NDOTravelExpenses-Step 4\BusinessClasses\NDOMapping.xml" />
 			</Component>
 			<Component Directory="_294AD9CD40DE43D685A0A84637D2C9E9" Id="C__720928C0E2FE48D7B7F373ADB651DE81" Guid="08F1D3EC-FB68-6AE2-39A4-DBCDDBB8517A">
-				<File Id="_720928C0E2FE48D7B7F373ADB651DE81" Name="NDOTravelExpenses.suo" Vital="yes" KeyPath="yes" DiskId="1" Source="..\Tutorial\NDOTestApp\NDOTravelExpenses-Step 1\NDOTravelExpenses.suo" />
+				<File Id="_720928C0E2FE48D7B7F373ADB651DE81" Name="NDOTravelExpenses.v12.suo" Vital="yes" KeyPath="yes" DiskId="1" Source="..\Tutorial\NDOTestApp\NDOTravelExpenses-Step 1\NDOTravelExpenses.v12.suo" />
 			</Component>
 			<Component Directory="_294AD9CD40DE43D685A0A84637D2C9E9" Id="C__DF869DBD73BB4EF3A9F8B832901D0A45" Guid="769423A8-DC67-C06F-2FA4-2686E9E2D0D8">
 				<File Id="_DF869DBD73BB4EF3A9F8B832901D0A45" Name="NDOTestDb.db" Vital="yes" KeyPath="yes" DiskId="1" Source="..\Tutorial\NDOTestApp\NDOTravelExpenses-Step 1\NDOTestDb.db" />
