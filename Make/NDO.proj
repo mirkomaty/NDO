@@ -2,7 +2,7 @@
 <Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
 	<EnhDateString>V. 3.0</EnhDateString>
-	<SVNREV>C:\Program Files\TortoiseSVN\bin\subwcrev.exe</SVNREV>
+	<GIT>C:\Program Files (x86)\PortableGit\bin\Git.exe</GIT>
 	
 	<PERS_DIR>..</PERS_DIR>
 	<MAKE_DIR>$(PERS_DIR)\Make</MAKE_DIR>
@@ -61,7 +61,7 @@
 
   <Target Name="Build">
 	<MSBuild Projects="@(Tools)" Targets="Rebuild" Properties="Configuration=$(Configuration);Platform=$(Platform)" />
-	<Exec Command="..\MakeEnhancerDate\bin\Release\MakeEnhancerDate.exe &quot;$(EnhDateString)&quot; &quot;$(SVNREV)&quot; &gt; ..\NDOPackage\EnhDate.cs"/>
+	<Exec Command="..\MakeEnhancerDate\bin\Release\MakeEnhancerDate.exe &quot;$(EnhDateString)&quot; &quot;$(GIT)&quot; &gt; ..\NDOPackage\EnhDate.cs"/>
 	<Copy SourceFiles="..\NDOPackage\EnhDate.cs" DestinationFolder="..\NDOEnhancer" />
 	<MSBuild Projects="@(Project)" Targets="Rebuild" Properties="Configuration=$(Configuration);Platform=$(Platform)" />
 	<MSBuild Projects="@(Projectx86)" Targets="Rebuild" Properties="Configuration=$(Configuration);Platform=x86" />

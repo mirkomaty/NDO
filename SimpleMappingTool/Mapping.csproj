@@ -103,7 +103,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="NDO">
-      <HintPath>D:\Projekte\NDO22\NDODLL\bin\Debug\NDO.dll</HintPath>
+      <HintPath>..\NDODLL\bin\$(Configuration)\NDO.dll</HintPath>
     </Reference>
     <Reference Include="System">
       <Name>System</Name>

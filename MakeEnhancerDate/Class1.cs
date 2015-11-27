@@ -51,9 +51,10 @@ namespace MakeEnhancerDate
 			ConsoleProcess cp = new ConsoleProcess(false);
 			string path = AppDomain.CurrentDomain.BaseDirectory;
 			path = Path.GetFullPath(Path.Combine(path, @"..\..\.."));
-			cp.Execute(args[1], "\"" + path + "\"");
+			//Console.Error.WriteLine("Path: " + path);
+			cp.Execute(args[1], "log -1", path);
 			string response = cp.Stdout;
-			Regex regex = new Regex(@"Last\scommitted\sat\srevision\s(\d+)");
+			Regex regex = new Regex( @"commit ([a-f0-9]{7})" );
 			Match match = regex.Match(response);
 			string rev = string.Empty;
 			if (match.Success)

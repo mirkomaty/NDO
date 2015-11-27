@@ -3,43 +3,41 @@
   <Options>
     <EnableAddIn>True</EnableAddIn>
     <EnableEnhancer>False</EnableEnhancer>
-    <GenerateMapping>True</GenerateMapping>
-    <GenerateSchema>True</GenerateSchema>
+    <VerboseMode>False</VerboseMode>
     <NewMapping>False</NewMapping>
-    <MergeMapping>True</MergeMapping>
-    <MergeSchema>True</MergeSchema>
     <GenerateSQL>True</GenerateSQL>
-    <TypeListFile>
-    </TypeListFile>
     <DefaultConnection>
     </DefaultConnection>
-    <UsePolymorphy>False</UsePolymorphy>
+    <TargetMappingFileName>NDOMapping.xml</TargetMappingFileName>
     <GenerateChangeEvents>False</GenerateChangeEvents>
     <UseTimeStamps>False</UseTimeStamps>
     <Utf8Encoding>True</Utf8Encoding>
     <SQLScriptLanguage>Firebird</SQLScriptLanguage>
     <SchemaVersion>
     </SchemaVersion>
+    <IncludeTypecodes>False</IncludeTypecodes>
     <DatabaseOwner>
     </DatabaseOwner>
+    <GenerateConstraints>False</GenerateConstraints>
+    <UseMsBuild>False</UseMsBuild>
+    <DropExistingElements>True</DropExistingElements>
   </Options>
   <ProjectDescription>
     <BinPath>bin\Release\TestApp.exe</BinPath>
     <ObjPath>obj\Release\</ObjPath>
-    <ProjPath>C:\Projekte\NDO\FirebirdNdoProvider20\TestApp\</ProjPath>
     <AssemblyName />
     <Debug>False</Debug>
     <IsWebProject>False</IsWebProject>
     <KeyFile>
     </KeyFile>
     <References>
-      <Reference AssemblyName="FirebirdSql.Data.FirebirdClient" AssemblyPath="..\..\..\..\WINDOWS\assembly\GAC_MSIL\FirebirdSql.Data.FirebirdClient\2.0.0.0__3750abcc3150b00c\FirebirdSql.Data.FirebirdClient.dll">
+      <Reference AssemblyName="NDOInterfaces" AssemblyPath="..\..\NDOInterfaces\bin\Release\NDOInterfaces.dll">
       </Reference>
       <Reference AssemblyName="BusinessClasses" AssemblyPath="..\BusinessClasses\bin\Release\BusinessClasses.dll">
       </Reference>
       <Reference AssemblyName="FirebirdProvider" AssemblyPath="..\FirebirdProvider\bin\Release\FirebirdProvider.dll">
       </Reference>
-      <Reference AssemblyName="NDOInterfaces" AssemblyPath="..\..\NDOInterfaces\bin\Release\NDOInterfaces.dll">
+      <Reference AssemblyName="System.Core" AssemblyPath="..\..\..\..\program files (x86)\reference assemblies\microsoft\framework\.netframework\v4.0\system.core.dll">
       </Reference>
     </References>
   </ProjectDescription>

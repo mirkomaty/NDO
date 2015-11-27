@@ -32,7 +32,7 @@
 			</Directory>
 			<Directory Id="ProgramFilesFolder">
 				<Directory Id="INSTALLFOLDER" Name="NDO 2.1 Dev Edition">
-					<Directory Id="UserSetupDir" Name="UserSetup" />
+					<!--Directory Id="UserSetupDir" Name="UserSetup" /-->
 					<Directory Id="ProviderDir" Name="Provider">
 						<Directory Id="ProviderX86Dir" Name="x86" />
 						<Directory Id="ProviderAmd64Dir" Name="amd64" />
@@ -147,7 +147,7 @@
 			</Component>
 			
 			<!-- Files -->
-			<Component Directory="UserSetupDir" Id="C__01A5C536E6474F648EB381D896BEE626" Guid="235BBEE3-D0F5-9B49-15D8-32F910CD57DF">
+			<!--Component Directory="UserSetupDir" Id="C__01A5C536E6474F648EB381D896BEE626" Guid="235BBEE3-D0F5-9B49-15D8-32F910CD57DF">
 				<File Source="..\UserSetup\UserSetup\bin\Release\UserSetup.exe" Id="_01A5C536E6474F648EB381D896BEE626" Name="UserSetup.exe" Vital="no" KeyPath="yes" AssemblyManifest="_01A5C536E6474F648EB381D896BEE626" AssemblyApplication="_01A5C536E6474F648EB381D896BEE626" Assembly=".net" DiskId="1" />
 			</Component>
 			<Component Directory="UserSetupDir" Id="C__D3C13D28C7E94784926D52954E21005B" Guid="A5F7E11A-26F5-5D26-7718-B43FD4DB6B77">
@@ -155,7 +155,7 @@
 			</Component>
 			<Component Directory="UserSetupDir" Id="C__65D120E80F3B4B0CADE476A1ACDE8EF4" Guid="65D120E8-0F3B-4B0C-ADE4-76A1ACDE8EF4">
 				<File Source="..\UserSetup\NDO.css" Id="_65D120E80F3B4B0CADE476A1ACDE8EF4" Name="NDO.css" Vital="no" KeyPath="yes" DiskId="1" />
-			</Component>
+			</Component-->
 			<!-- NDO Installation Folder -->
 			<Component Directory="INSTALLFOLDER" Id="C__2E5D32D3A1A9427BBF61F1B5CB127F65" Guid="3FCF3BA5-772C-AC90-32BA-C0B01CEC6242">
 				<File Id="_2E5D32D3A1A9427BBF61F1B5CB127F65" Name="NDO.dll" Vital="yes" KeyPath="yes" DiskId="1" Source="..\Deploy\Enterprise\NDO.dll" />
@@ -684,9 +684,6 @@
 			</Component>
 			<Component Directory="_9998DBB7E9D44739970E4E32D219E24F" Id="C__72620E1347AD49FCBD7D3444CF1C87D5" Guid="0400CFD0-6251-03BC-9CBB-103D03EE0E2F">
 				<File Id="_72620E1347AD49FCBD7D3444CF1C87D5" Name="Northwind.sln" Vital="yes" KeyPath="yes" DiskId="1" Source="..\Tutorial\Northwind\Northwind.sln" />
-			</Component>
-			<Component Directory="_9998DBB7E9D44739970E4E32D219E24F" Id="C__859F1558C4214E2FAA5764BDF36FD516" Guid="7E1DE4FF-CE0C-CDD5-ECC3-FC3D60ED2C28">
-				<File Id="_859F1558C4214E2FAA5764BDF36FD516" Name="Northwind.suo" Vital="yes" KeyPath="yes" DiskId="1" Source="..\Tutorial\Northwind\Northwind.suo" />
 			</Component>
 			<Component Directory="_5B64D1E19D3445148F1623CE7CB28F58" Id="C__02D2C776DC6C4506B08949EBD7AACC7B" Guid="B2884035-F548-7BC3-1626-55037755A8F1">
 				<File Id="_02D2C776DC6C4506B08949EBD7AACC7B" Name="Supplier.cs" Vital="yes" KeyPath="yes" DiskId="1" Source="..\Tutorial\Northwind\Northwind\Supplier.cs" />
