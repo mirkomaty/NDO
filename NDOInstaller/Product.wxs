@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Wix xmlns="http://schemas.microsoft.com/wix/2006/wi" xmlns:netfx="http://schemas.microsoft.com/wix/NetFxExtension" xmlns:util="http://schemas.microsoft.com/wix/UtilExtension" xmlns:VSExtension="http://schemas.microsoft.com/wix/VSExtension">
-	<Product Id="*" Name="NDO 2.1 Dev Edition" Language="1033" Version="1.0.0.0" Manufacturer="Mirko Matytschak" UpgradeCode="33e115c9-4d88-4479-bcf6-394602e687fa">
+	<Product Id="*" Name="NDO 3.0 Dev Edition" Language="1033" Version="1.0.0.0" Manufacturer="Mirko Matytschak" UpgradeCode="33e115c9-4d88-4479-bcf6-394602e687fa">
 		<Package InstallerVersion="200" Compressed="yes" InstallScope="perMachine" />
 
 		<MajorUpgrade DowngradeErrorMessage="A newer version of [ProductName] is already installed." />
 		<MediaTemplate EmbedCab="yes" />
 
-		<Feature Id="ProductFeature" Title="NDO 2.1 Dev Edition" Level="1">
+		<Feature Id="ProductFeature" Title="NDO 3.0 Dev Edition" Level="1">
 			<ComponentGroupRef Id="ProductComponents" />
 		</Feature>
 
@@ -28,10 +28,10 @@
 		<Directory Id="TARGETDIR" Name="SourceDir">
 			<Directory Id="GAC" Name="GAC" />
 			<Directory Id="ProgramMenuFolder" Name="Programs">
-				<Directory Id="ProgramMenuDir" Name="NDO 2.1 Dev Edition" />
+				<Directory Id="ProgramMenuDir" Name="NDO 3.0 Dev Edition" />
 			</Directory>
 			<Directory Id="ProgramFilesFolder">
-				<Directory Id="INSTALLFOLDER" Name="NDO 2.1 Dev Edition">
+				<Directory Id="INSTALLFOLDER" Name="NDO 3.0 Dev Edition">
 					<!--Directory Id="UserSetupDir" Name="UserSetup" /-->
 					<Directory Id="ProviderDir" Name="Provider">
 						<Directory Id="ProviderX86Dir" Name="x86" />
