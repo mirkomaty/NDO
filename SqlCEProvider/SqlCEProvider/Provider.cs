@@ -216,14 +216,6 @@ namespace NDO.SqlCeProvider
         }
 
 
-        [Obsolete]
-		public override Type GetSystemType(string s)
-		{
-			System.Diagnostics.StackFrame sf = new System.Diagnostics.StackFrame();
-			throw new Exception("Obsolete method GetSystemType " + s + " called.\n" + sf.ToString());
-		}
-
-
 		public override string Wildcard
 		{
 			get { return "%"; }
