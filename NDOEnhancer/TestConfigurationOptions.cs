@@ -61,7 +61,7 @@ namespace NDOEnhancer
 			this.UseTimeStamps = (bool) XmlHelper.GetNode(node, pns + "UseTimeStamps", false);
 			this.DatabaseOwner = (string) XmlHelper.GetNode(node, pns + "DatabaseOwner", string.Empty);
 			this.DefaultConnection = (string) XmlHelper.GetNode(node, pns + "DefaultConnection", string.Empty);
-			this.TargetMappingFileName = (string) XmlHelper.GetNode( node, pns + "TargetMappingFileName", "NDOMapping.xml" );
+			this.targetMappingFileName = (string) XmlHelper.GetNode( node, pns + "TargetMappingFileName", "NDOMapping.xml" );
 			this.EnableAddIn = (bool) XmlHelper.GetNode( node, pns + "EnableAddIn", true );
 			this.EnableEnhancer = (bool) XmlHelper.GetNode(node, pns + "EnableEnhancer", true);
             this.IncludeTypecodes = (bool)XmlHelper.GetNode(node, pns + "IncludeTypecodes", false);
@@ -83,7 +83,17 @@ namespace NDOEnhancer
 		public bool GenerateConstraints { get; set; }
 		public bool DropExistingElements { get; set; }
 		public bool NewMapping { get; set; }
-		public string TargetMappingFileName { get; set; }
+
+		string targetMappingFileName;
+		public string TargetMappingFileName 
+		{
+			get 
+			{ 
+				if (string.IsNullOrEmpty( this.targetMappingFileName) )
+					return "NDOMapping.xml"; 
+				return this.targetMappingFileName;
+			} 
+		}
 		public string DefaultConnection { get; set; }
 		public string SchemaVersion { get; set; }
 		public string SQLScriptLanguage { get; set; }

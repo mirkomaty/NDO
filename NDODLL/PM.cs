@@ -3494,7 +3494,7 @@ namespace NDO
 		/// <summary>
 		/// Finds an object using a short id.
 		/// </summary>
-		/// <param name="shortId"></param>
+		/// <param name="encodedShortId"></param>
 		/// <returns></returns>
 		public IPersistenceCapable FindObject(string encodedShortId)
 		{

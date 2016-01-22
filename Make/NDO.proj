@@ -67,5 +67,6 @@
 	<MSBuild Projects="@(Projectx86)" Targets="Rebuild" Properties="Configuration=$(Configuration);Platform=x86" />
 	<Copy SourceFiles="@(DeployFiles)" DestinationFolder="$(DEPLOY_DIR)" />
 	<MSBuild Projects="@(InstProject)" Targets="Rebuild" Properties="Configuration=$(Configuration);Platform=x86" />
+  <Exec Command="..\nuget\nuget.exe pack ndo.dll.nuspec" WorkingDirectory="..\nuget" />
   </Target>
 </Project>
