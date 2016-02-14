@@ -2931,6 +2931,7 @@ namespace NDO
 		private void MakeObjectTransient(IPersistenceCapable pc, bool removeId) 
 		{
 			cache.Deregister(pc);
+			// MakeTransient doesn't remove the ID, because delete makes objects transient and we need the id for the ChangeLog			
 			if(removeId) 
 			{
 				pc.NDOObjectId = null;
