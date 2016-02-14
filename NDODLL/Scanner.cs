@@ -1,3 +1,4 @@
+#if nix
 //
 // Copyright (C) 2002-2014 Mirko Matytschak 
 // (www.netdataobjects.de)
@@ -359,37 +360,31 @@ namespace NDO
 	{
 		static ArrayList tokens = null;
 		static ArrayList strings = null;
-		static object lockObject = new object();
 		private static void InitTokens()
 		{
-			lock (lockObject)
-			{
-				if (tokens != null)
-					return;
-				tokens = new ArrayList();
-				strings = new ArrayList();
-				tokens.Add( Token.Type.OpGe ); strings.Add( ">=" );
-				tokens.Add( Token.Type.OpGe ); strings.Add( "!<" );
-				tokens.Add( Token.Type.OpLe ); strings.Add( "<=" );
-				tokens.Add( Token.Type.OpLe ); strings.Add( "!>" );
-				tokens.Add( Token.Type.OpNe ); strings.Add( "<>" );
-				tokens.Add( Token.Type.OpGt ); strings.Add( ">" );
-				tokens.Add( Token.Type.OpLt ); strings.Add( "<" );
-				tokens.Add( Token.Type.OpEquals ); strings.Add( "=" );
-				tokens.Add( Token.Type.OpNe ); strings.Add( "!=" );
-				tokens.Add( Token.Type.OpLBracket ); strings.Add( "(" );
-				tokens.Add( Token.Type.OpRBracket ); strings.Add( ")" );
-				tokens.Add( Token.Type.OpMult ); strings.Add( "*" );
-				tokens.Add( Token.Type.OpDiv ); strings.Add( "/" );
-				tokens.Add( Token.Type.OpAdd ); strings.Add( "+" );
-				tokens.Add( Token.Type.OpSub ); strings.Add( "-" );
-				tokens.Add( Token.Type.OpBitOr ); strings.Add( "|" );
-				tokens.Add( Token.Type.OpBitAnd ); strings.Add( "&" );
-				tokens.Add( Token.Type.OpBitXor ); strings.Add( "^" );
-				tokens.Add( Token.Type.OpBitNot ); strings.Add( "~" );
-				tokens.Add( Token.Type.OpMod ); strings.Add( "%" );
-				tokens.Add( Token.Type.OpMod ); strings.Add( "MOD" );
-			}
+			tokens = new ArrayList();
+			strings = new ArrayList();
+			tokens.Add(Token.Type.OpGe);		strings.Add(">=");
+			tokens.Add(Token.Type.OpGe);		strings.Add("!<");
+			tokens.Add(Token.Type.OpLe);		strings.Add("<=");
+			tokens.Add(Token.Type.OpLe);		strings.Add("!>");
+			tokens.Add(Token.Type.OpNe);		strings.Add("<>");
+			tokens.Add(Token.Type.OpGt);		strings.Add(">");
+			tokens.Add(Token.Type.OpLt);		strings.Add("<");
+			tokens.Add(Token.Type.OpEquals);	strings.Add("=");
+			tokens.Add(Token.Type.OpNe);		strings.Add("!=");
+			tokens.Add(Token.Type.OpLBracket);	strings.Add("(");
+			tokens.Add(Token.Type.OpRBracket);	strings.Add(")");
+			tokens.Add(Token.Type.OpMult);		strings.Add("*");
+			tokens.Add(Token.Type.OpDiv);		strings.Add("/");
+			tokens.Add(Token.Type.OpAdd);		strings.Add("+");
+			tokens.Add(Token.Type.OpSub);		strings.Add("-");
+			tokens.Add(Token.Type.OpBitOr);		strings.Add("|");
+			tokens.Add(Token.Type.OpBitAnd);	strings.Add("&");
+			tokens.Add(Token.Type.OpBitXor);	strings.Add("^");
+			tokens.Add(Token.Type.OpBitNot);	strings.Add("~");
+			tokens.Add(Token.Type.OpMod);		strings.Add("%");
+            tokens.Add(Token.Type.OpMod);       strings.Add("MOD");
         }
 
 		private Operator (string content, ref int position)
@@ -466,3 +461,5 @@ namespace NDO
 		}
 	}
 }
+
+#endif

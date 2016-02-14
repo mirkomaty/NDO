@@ -55,7 +55,7 @@ namespace NDO.Mapping
         [Browsable(false)]
         public Class Parent
         {
-            get { return nodeParent as Class; }
+            get { return NodeParent as Class; }
         }
 
         /// <summary>

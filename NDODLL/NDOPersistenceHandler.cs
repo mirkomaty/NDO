@@ -48,6 +48,7 @@ using NDO;
 using NDO.Mapping;
 using NDO.Logging;
 using NDOInterfaces;
+using NDO.Query;
 using System.Globalization;
 
 namespace NDO
@@ -939,23 +940,13 @@ namespace NDO
 					IDbCommand cmd = this.provider.NewSqlCommand(conn);
 					if (parameters != null && parameters.Count > 0)
 					{
-						if (parameters is NDOParameterCollection)
-						{
 							// Only the first command gets parameters
-							for (i = 0; i < statements.Length; i++)
-							{
-								if (i == 0)
-									CreateQueryParameters(ref statements[i], cmd, parameters, 0);
-								else
-									CreateQueryParameters(ref statements[i], null, null, 0);
-							}
-						}
-						else
+						for (i = 0; i < statements.Length; i++)
 						{
-							for (i = 0; i < statements.Length; i++)
-							{
-								CreateQueryParameters(ref statements[i], cmd, (NDOParameterCollection) parameters[i], cmd.Parameters.Count);
-							}
+							if (i == 0)
+								CreateQueryParameters(ref statements[i], cmd, parameters, 0);
+							else
+								CreateQueryParameters(ref statements[i], null, null, 0);
 						}
 					}
 					sql = this.provider.GenerateBulkCommand(statements);
@@ -992,14 +983,7 @@ namespace NDO
                             cmd.Transaction = this.Transaction;
 						if (parameters != null && parameters.Count > 0)
 						{
-							if (parameters is NDOParameterCollection)
-							{
-								CreateQueryParameters(ref s, cmd, parameters, 0);
-							}
-							else
-							{
-								CreateQueryParameters(ref s, cmd, (NDOParameterCollection) parameters[i], 0);
-							}
+							CreateQueryParameters(ref s, cmd, parameters, 0);
 						}
 						cmd.CommandText = s;
 						dr = cmd.ExecuteReader();
@@ -1063,8 +1047,6 @@ namespace NDO
 				if ( tc != string.Empty )
 				{
 					object p = parameters[nr];
-					if (p is Query.Parameter)
-						p = ((Query.Parameter)p).Value;
 					ObjectId oid = p as ObjectId;
 					if ( oid == null )
 						throw new QueryException( 10005, "Parameter {" + nr + "} was expected to be an ObjectId." );
@@ -1077,6 +1059,7 @@ namespace NDO
 			}
 
 			Dictionary<string, object> oidParameters = new Dictionary<string, object>();
+#warning !!!! Hier kommt die Oid-Parameter-Schose  !!!!
 			regex = new Regex( @"\{oid:(\d+):(\d+)\}" );
 			matches = regex.Matches( sql );
 			if ( matches.Count > 0 )
@@ -1088,8 +1071,6 @@ namespace NDO
                     if (parIndex > endIndex)
                         throw new QueryException(10009, "Parameter-Reference {" + parIndex + "} has no matching parameter.");
 					object p = parameters[parIndex];
-					if ( p is Query.Parameter )
-						p = ( (Query.Parameter) p ).Value;
 					ObjectId oid = p as ObjectId;
 
 					if ( oid == null && oidIndex > 0 )
@@ -1124,39 +1105,31 @@ namespace NDO
 			for (int i = 0; i < parameters.Count; i++)
 			{
 				nr = offset + i;
-				object val = parameters[i];
-				Query.Parameter p;
-                if (val is Query.Parameter)
-                {
-                    p = (Query.Parameter)val;
-                }
-                else
-                {
-                    p = new Query.Parameter(val);
-                }
-				Type type = p.Value.GetType();
+				object p = parameters[i];
+				Type type = p.GetType();
                 if (type.FullName.StartsWith("System.Nullable`1"))
                     type = type.GetGenericArguments()[0];
 				if ( type == typeof( ObjectId ) )
 				{
-					type = ( (ObjectId) p.Value ).Id.Value.GetType();
-					p.Value = ( (ObjectId) p.Value ).Id.Value;
+					type = ( (ObjectId) p ).Id.Value.GetType();
+					p = ( (ObjectId) p ).Id.Value;
+#warning !!!! Das muss geändert werden. !!!!
 				}
                 if (type.IsEnum)
                 {
                     type = Enum.GetUnderlyingType(type);
-                    p.Value = ((IConvertible)p.Value).ToType(type, CultureInfo.CurrentCulture);
+                    p = ((IConvertible)p ).ToType(type, CultureInfo.CurrentCulture);
                 }
 				else if (type == typeof(Guid) && !provider.SupportsNativeGuidType)
 				{
 					type = typeof(string);
-					p.Value = p.Value.ToString();
+					p = p.ToString();
 				}
 				string name = "p" + nr.ToString();
 				int length = this.provider.GetDefaultLength(type);
 				if (type == typeof(string))
 				{
-					length = ((string)p.Value).Length;
+					length = ((string)p).Length;
 					if (provider.GetType().Name.IndexOf("Oracle") > -1)
 					{
 						if (length == 0)
@@ -1165,7 +1138,7 @@ namespace NDO
 				}
 				else if (type == typeof(byte[]))
 				{
-					length = ((byte[])p.Value).Length;
+					length = ((byte[])p).Length;
 				}
 				IDataParameter par = provider.AddParameter(
 					command, 
@@ -1173,7 +1146,7 @@ namespace NDO
 					this.provider.GetDbType(type), 
 					length, 
 					this.provider.GetQuotedName(name)); 
-				par.Value = p.Value;
+				par.Value = p;
 				par.Direction = ParameterDirection.Input;					
 			}
 
@@ -1202,7 +1175,7 @@ namespace NDO
 
 			DataTable table = GetTable(this.tableName).Clone();
 			string sql;
-			if (expression.IndexOf(Query.FieldMarker) > -1) // Abfragesprache ist SQL
+			if (expression.IndexOf(FieldMarker.Instance) > -1) // Abfragesprache ist SQL
 			{
 				string fields = hollow ? this.hollowFields : this.selectFieldList;
 				if ( provider.GetType().FullName.IndexOf( "Sqlite" ) > -1 )
@@ -1215,7 +1188,7 @@ namespace NDO
 						fields = hollow ? this.hollowFieldsWithAlias : this.selectFieldListWithAlias;
 					}
 				}
-				sql = expression.Replace(Query.FieldMarker, fields);
+				sql = expression.Replace(FieldMarker.Instance, fields);
 			}
 			else
 				sql = expression;

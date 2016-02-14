@@ -1,3 +1,4 @@
+#if nix
 //
 // Copyright (C) 2002-2014 Mirko Matytschak 
 // (www.netdataobjects.de)
@@ -468,3 +469,5 @@ namespace NDO
 
 	}
 }
+
+#endif

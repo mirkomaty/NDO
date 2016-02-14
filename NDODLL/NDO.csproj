@@ -283,9 +283,6 @@
     <Compile Include="NDOOidTypeAttribute.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="NDOParameterCollection.cs">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="NDOPersistenceHandler.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -296,6 +293,19 @@
     <Compile Include="NDOProviderFactory.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="NDOql\Expressions\ExpressionType.cs" />
+    <Compile Include="NDOql\Expressions\IdentifierExpression.cs" />
+    <Compile Include="NDOql\Expressions\NamedConstantExpression.cs" />
+    <Compile Include="NDOql\Expressions\NumberExpression.cs" />
+    <Compile Include="NDOql\Expressions\Operator.cs" />
+    <Compile Include="NDOql\Expressions\OqlExpression.cs" />
+    <Compile Include="NDOql\Expressions\OqlExpressionException.cs" />
+    <Compile Include="NDOql\Expressions\ParameterExpression.cs" />
+    <Compile Include="NDOql\Expressions\RawIdentifierExpression.cs" />
+    <Compile Include="NDOql\Expressions\StringLiteralExpression.cs" />
+    <Compile Include="NDOql\OqlParser.cs" />
+    <Compile Include="NDOql\Parser.cs" />
+    <Compile Include="NDOql\Scanner.cs" />
     <Compile Include="NDOQueryHelperBase.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -349,6 +359,7 @@
     <Compile Include="PM.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="QualifiedColumnName.cs" />
     <Compile Include="QualifiedTableName.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -358,6 +369,26 @@
     <Compile Include="QueryContextGenerator.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Query\AggregateFunction.cs" />
+    <Compile Include="Query\AggregateType.cs" />
+    <Compile Include="Query\AscendingOrder.cs" />
+    <Compile Include="Query\DescendingOrder.cs" />
+    <Compile Include="Query\FetchGroup.cs" />
+    <Compile Include="Query\ColumnListGenerator.cs" />
+    <Compile Include="Query\FromGenerator.cs" />
+    <Compile Include="Query\IQuery.cs" />
+    <Compile Include="Query\JoinExpressions\ChildTableExpression.cs" />
+    <Compile Include="Query\JoinExpressions\InnerJoinExpression.cs" />
+    <Compile Include="Query\JoinExpressions\OnCompareExpression.cs" />
+    <Compile Include="Query\JoinExpressions\OnExpression.cs" />
+    <Compile Include="Query\NDOQuery.cs" />
+    <Compile Include="Query\ObjectRowPair.cs" />
+    <Compile Include="Query\Order.cs" />
+    <Compile Include="Query\QueryException.cs" />
+    <Compile Include="Query\QueryLanguage.cs" />
+    <Compile Include="Query\QueryInfo.cs" />
+    <Compile Include="Query\RelationContextGenerator.cs" />
+    <Compile Include="Query\WhereGenerator.cs" />
     <Compile Include="RelationCollector.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -434,7 +465,7 @@
   </ItemGroup>
   <ProjectExtensions>
     <VisualStudio>
-      <UserProperties NDOEnableAddIn="false" NDOEnableEnhancer="false" NDOGenerateMapping="false" NDOGenerateSchema="false" NDONewMapping="false" NDOMergeMapping="false" NDOMergeSchema="false" NDOGenerateSQL="false" />
+      <UserProperties NDOGenerateSQL="false" NDOMergeSchema="false" NDOMergeMapping="false" NDONewMapping="false" NDOGenerateSchema="false" NDOGenerateMapping="false" NDOEnableEnhancer="false" NDOEnableAddIn="false" />
     </VisualStudio>
   </ProjectExtensions>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />

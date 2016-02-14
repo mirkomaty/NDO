@@ -368,45 +368,6 @@ namespace NDO
 			throw new NotImplementedException("This function isn't supported in offline mode");
 		}
 
-		/// <summary>
-		/// The function is not implemented. 
-		/// A NotImplementedException will be thrown after calling that function.
-		/// </summary>
-		/// <param name="t"></param>
-		/// <param name="expression"></param>
-		/// <returns></returns>
-		public override Query NewQuery(Type t, string expression)
-		{
-			throw new NotImplementedException("This function isn't supported in offline mode");
-		}
-
-		/// <summary>
-		/// The function is not implemented. 
-		/// A NotImplementedException will be thrown after calling that function.
-		/// </summary>
-		/// <param name="t"></param>
-		/// <param name="expression"></param>
-		/// <param name="hollow"></param>
-		/// <returns></returns>
-		public override Query NewQuery(Type t, string expression, bool hollow)
-		{
-			throw new NotImplementedException("This function isn't supported in offline mode");
-		}
-
-		/// <summary>
-		/// The function is not implemented. 
-		/// A NotImplementedException will be thrown after calling that function.
-		/// </summary>
-		/// <param name="t"></param>
-		/// <param name="expression"></param>
-		/// <param name="hollow"></param>
-		/// <param name="queryLanguage"></param>
-		/// <returns></returns>
-		public override Query NewQuery(Type t, string expression, bool hollow, NDO.Query.Language queryLanguage)
-		{
-			throw new NotImplementedException("This function isn't supported in offline mode");
-		}
-
 		#endregion
 
 

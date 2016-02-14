@@ -37,6 +37,7 @@ using System.Collections;
 using System.Text;
 using System.Text.RegularExpressions;
 using NDO;
+using NDO.Query;
 using System.Linq.Expressions;
 
 namespace NDO.Linq
@@ -45,7 +46,7 @@ namespace NDO.Linq
 	/// This class represents a virtual table which allows for Linq queries against the NDO data store.
 	/// </summary>
 	/// <typeparam name="T">The type of the result element class.</typeparam>
-    public class VirtualTable<T>
+    public class VirtualTable<T> where T: IPersistenceCapable
     {
         PersistenceManager pm;
         List<string> prefetches = new List<string>();
@@ -156,7 +157,7 @@ namespace NDO.Linq
 				ndoquery.Skip = skip;
 			
 			// Add the prefetch definitions
-			this.ndoquery.Prefetches = new ArrayList( this.prefetches );
+			this.ndoquery.Prefetches = this.prefetches;
             return this;
         }
 
@@ -201,7 +202,7 @@ namespace NDO.Linq
 						ndoquery.Take = take;
 					if (this.skip > -1)
 						ndoquery.Skip = skip;
-					this.ndoquery.Prefetches = new ArrayList( this.prefetches );
+					this.ndoquery.Prefetches = this.prefetches;
 				}
                 return this.ndoquery;
 			}

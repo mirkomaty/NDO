@@ -74,7 +74,7 @@ namespace NDO.Mapping
         [Browsable(false)]
         public new ClassOid Parent
         {
-            get { return nodeParent as ClassOid; }
+            get { return NodeParent as ClassOid; }
         }
 
         /// <summary>

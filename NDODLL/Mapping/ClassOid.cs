@@ -98,7 +98,7 @@ namespace NDO.Mapping
 
         public Class Parent
         {
-            get { return base.nodeParent as Class; }
+            get { return base.NodeParent as Class; }
         }
 
 

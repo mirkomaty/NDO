@@ -54,21 +54,7 @@ using System.Security;
 [assembly: AssemblyCulture("")]
 [assembly: CLSCompliant(true)]
 
-//
-// Version information for an assembly consists of the following four values:
-//
-//      Major Version
-//      Minor Version 
-//      Build Number
-//      Revision
-//
-// You can specify all the values or you can default the Revision and Build Numbers 
-// by using the '*' as shown below:
-
-#if NDO20
 [assembly: AssemblyVersion("3.0.0.0")]
-#endif
-
 [assembly: AssemblyKeyName("")]
 [assembly: AllowPartiallyTrustedCallers]
 [assembly: System.Security.SecurityRules( System.Security.SecurityRuleSet.Level1 )]

@@ -156,7 +156,7 @@ namespace NDO.Mapping
         [Browsable(false)]
         public NDOMapping Parent
         {
-            get { return nodeParent as NDOMapping; }
+            get { return NodeParent as NDOMapping; }
         }
 
         /// <summary>
@@ -173,7 +173,7 @@ namespace NDO.Mapping
         /// <param name="parent">An object of type NDOMapping.</param>
         internal void SetParent(NDOMapping parent)
         {
-            this.nodeParent = parent;
+            this.NodeParent = parent;
         }
 
         /// <summary>

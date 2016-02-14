@@ -1,0 +1,36 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<Enhancer>
+  <Options>
+    <EnableAddIn>False</EnableAddIn>
+    <EnableEnhancer>False</EnableEnhancer>
+    <VerboseMode>False</VerboseMode>
+    <NewMapping>False</NewMapping>
+    <GenerateSQL>True</GenerateSQL>
+    <DefaultConnection>
+    </DefaultConnection>
+    <TargetMappingFileName>NDOMapping.xml</TargetMappingFileName>
+    <GenerateChangeEvents>False</GenerateChangeEvents>
+    <UseTimeStamps>False</UseTimeStamps>
+    <Utf8Encoding>False</Utf8Encoding>
+    <SQLScriptLanguage>SqlCe</SQLScriptLanguage>
+    <SchemaVersion>
+    </SchemaVersion>
+    <IncludeTypecodes>False</IncludeTypecodes>
+    <DatabaseOwner>
+    </DatabaseOwner>
+    <GenerateConstraints>False</GenerateConstraints>
+    <UseMsBuild>False</UseMsBuild>
+    <DropExistingElements>True</DropExistingElements>
+  </Options>
+  <ProjectDescription>
+    <BinPath>bin\Debug\QueryTests.dll</BinPath>
+    <ObjPath>obj\Debug\</ObjPath>
+    <AssemblyName />
+    <Debug>True</Debug>
+    <IsWebProject>False</IsWebProject>
+    <KeyFile>
+    </KeyFile>
+    <References>
+    </References>
+  </ProjectDescription>
+</Enhancer>

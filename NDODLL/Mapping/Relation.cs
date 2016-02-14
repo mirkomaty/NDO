@@ -22,7 +22,7 @@ namespace NDO.Mapping
         [Browsable(false)]
         public Class Parent
         {
-            get { return nodeParent as Class; }
+            get { return NodeParent as Class; }
         }
 
         /// <summary>
@@ -585,7 +585,7 @@ namespace NDO.Mapping
                             }
                             status = 4;
                             // now check, if a relation targets our base class
-                            if (foreignRelation == null && definingClass != nodeParent)
+                            if (foreignRelation == null && definingClass != NodeParent)
                             {
                                 foreach (Relation fr in referencedClass.Relations)
                                 {

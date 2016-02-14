@@ -1,3 +1,5 @@
+/*
+
 //
 // Copyright (C) 2002-2014 Mirko Matytschak 
 // (www.netdataobjects.de)
@@ -43,6 +45,7 @@ using System.Reflection;
 using NDO.Mapping;
 using NDOInterfaces;
 
+
 namespace NDO
 {
 
@@ -63,18 +66,6 @@ namespace NDO
 		public QueryException(int errorNr, string msg) : base (errorNr, "Query Exception: " + msg)
 		{
 		}
-	}
-
-	internal class QueryInfo
-	{
-		public QueryInfo(Type resultType, string queryString)
-		{
-			this.QueryString = queryString;
-			this.ResultType = resultType;
-		}
-
-		public string QueryString;
-		public Type ResultType;
 	}
 
 
@@ -429,19 +420,6 @@ namespace NDO
 		}
 
 		
-		/*
-			SELECT Teilnehmer.* FROM Teilnehmer, Buchungen where Teilnehmer.Nummer = Buchungen.IDTeilnehmer and Buchungen.EarlyBird = true;			
-			SELECT Buchungen.* FROM Teilnehmer, Buchungen where Teilnehmer.Nummer = Buchungen.IDTeilnehmer and Teilnehmer.TNachname='Zech';
-			SELECT Reise.* FROM Mitarbeiter, Reise where Mitarbeiter.ID = Reise.IDMitarbeiter and Mitarbeiter.Nachname='Heege';
-
-		SELECT Teilnehmer.*
-		FROM Teilnehmer, refTeilnehmerHauptveranstaltungen, Hauptveranstaltungen
-		WHERE (((refTeilnehmerHauptveranstaltungen.IDTeilnehmer)=[Teilnehmer].[Nummer]) AND ((Hauptveranstaltungen.Name)="ADC 2002") AND ((refTeilnehmerHauptveranstaltungen.IDVeranstaltung)=[Hauptveranstaltungen].[IDVeranstaltung]));			
-		*/
-
-
-
-
 		private void CreateQueryContexts(Type t)
 		{
 			ArrayList queryContexts = new QueryContextGenerator(this.pm.GetClass(t), this.names, this.mappings).GetContexts();
@@ -752,22 +730,7 @@ namespace NDO
 				result.Add(orp.Obj);
 			return result;
 		}
-/*
-		void FindPrefetch(Type t, Hashtable prefetches, string name, Stack relations)
-		{
-			string[] parts = name.Split('.');
-			Class cl = this.pm.GetClass(this.resultType);
-			Relation r = cl.FindRelation(parts[0]);
-			relations.Push(r);
-			if (!prefetches.Contains(name))
-				prefetches.Add(name, relations.Clone());			
-			if (parts.Length > 1)
-			{
-				int p = name.IndexOf('.');
-				FindPrefetch(r.ReferencedType, prefetches, name.Substring(p + 1), relations);
-			}
-		}
-*/
+
 
 		Type GetPrefetchResultType(Type t, string relation)
 		{
@@ -899,23 +862,6 @@ namespace NDO
 				MatchRelations(parents, result, o.ToString());
 			}
 			
-
-/*
-			Hashtable serializedPrefetches = new Hashtable();
-			Stack relations = new Stack();
-			foreach(string prefetch in this.prefetches)
-			{
-				FindPrefetch(this.resultType, serializedPrefetches, prefetch, relations);
-			}
-			foreach(DictionaryEntry de in serializedPrefetches)
-			{
-				Stack stack = (Stack) de.Value;
-				for (int i = 0; i < stack.Count; i++)
-				{
-					Relation r = (Relation) stack.Pop();
-				}
-			}
-			*/
 		}
 
 
@@ -1407,3 +1353,4 @@ namespace NDO
 
 	}
 }
+*/
