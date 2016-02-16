@@ -1,6 +1,6 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 11.00
-# Visual Studio 2010
+# Visual Studio 2013
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NDO", "NDO.csproj", "{EF666155-B2DF-4A2F-9DE5-839B1B9DF98C}"
 EndProject
 Global
