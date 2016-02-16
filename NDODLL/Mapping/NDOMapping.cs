@@ -495,7 +495,7 @@ namespace NDO.Mapping
         /// <summary>
         /// Lookup for a Class object in the Classes list.
         /// </summary>
-        /// <param name="c">The Class object to search for</param>
+        /// <param name="cls">The Class object to search for</param>
         /// <returns>The Class object or null, if the class doesn't exist</returns>
         public virtual Class FindClass(Class cls)
         {
