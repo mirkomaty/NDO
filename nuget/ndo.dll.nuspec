@@ -21,6 +21,7 @@
 		<file src="..\NDOEnhancer.BuildTask\NDOEnhancer.BuildTask\bin\Release\NDOEnhancer.BuildTask.dll" target="/build" />
 		<file src="ndo.dll.targets" target="/build" />
     <file src="..\NDOEnhancer\bin\Release\NDOEnhancer.exe" target="build" />
+    <file src="..\NDOEnhancer\bin\Release\NDOEnhancer.exe.config" target="build" />
     <file src="..\EnhancerX86Stub\EnhancerX86Stub\bin\Release\EnhancerX86Stub.exe" target="build" />
   </files>  
 </package>
