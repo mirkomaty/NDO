@@ -93,13 +93,13 @@
     <ErrorReport>prompt</ErrorReport>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="NDO, Version=2.1.0.0, Culture=neutral, PublicKeyToken=37bfdffa92a0cd24, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\NDODLL\bin\Debug\NDO.dll</HintPath>
+    <Reference Include="NDO, Version=3.0.0.0, Culture=neutral, PublicKeyToken=37bfdffa92a0cd24, processorArchitecture=MSIL">
+      <SpecificVersion>True</SpecificVersion>
+      <HintPath>..\..\NDODLL\bin\$(Configuration)\NDO.dll</HintPath>
     </Reference>
-    <Reference Include="NDOInterfaces, Version=2.1.0.0, Culture=neutral, PublicKeyToken=ff5e453a099b8326, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>D:\Program Files (x86)\NDO 3.0 Dev Edition\NDOInterfaces.dll</HintPath>
+    <Reference Include="NDOInterfaces, Version=3.0.0.0, Culture=neutral, PublicKeyToken=ff5e453a099b8326, processorArchitecture=MSIL">
+      <SpecificVersion>True</SpecificVersion>
+      <HintPath>..\..\NDOInterfaces\bin\$(Configuration)\NDO.dll</HintPath>
     </Reference>
     <Reference Include="Oracle.ManagedDataAccess">
       <HintPath>..\packages\Oracle.ManagedDataAccess.12.1.021\lib\net40\Oracle.ManagedDataAccess.dll</HintPath>
