@@ -1130,8 +1130,15 @@ namespace NDOEnhancer.Patcher
 			ILMethodElement methodElement = new ILMethodElement();
 			methodElement.addLine(".method public hidebysig specialname rtspecialname instance void  .ctor() cil managed");
 			methodElement.addStatement(".maxstack 2");
-			methodElement.addStatement(ldarg_0);
-			methodElement.addStatement("call       instance void [mscorlib]System.Object::.ctor()");
+			methodElement.addStatement( ldarg_0 );  // this-Parameter for Constructor
+			if (!m_hasPersistentBase)
+			{
+				methodElement.addStatement( "call       instance void [mscorlib]System.Object::.ctor()" );  // System.Object
+			}
+			else
+			{
+				methodElement.addStatement( "call       instance void " + m_persistentBase + "::.ctor()" );  // Base class
+			}
 			methodElement.addStatement("ret");
 			this.m_classElement.addElement(methodElement);
 			return methodElement;
