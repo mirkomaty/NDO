@@ -363,7 +363,7 @@ namespace NDO
 		/// The function is not implemented. 
 		/// A NotImplementedException will be thrown after calling that function.
 		/// </summary>
-		public override void Save()
+		public override void Save(bool deferCommit = false)
 		{
 			throw new NotImplementedException("This function isn't supported in offline mode");
 		}

@@ -164,7 +164,8 @@ namespace NDO
 		/// <summary>
 		/// Save all changes made to the objects.
 		/// </summary>
-		void Save();
+		/// <param name="deferCommit">Determines, if the commit should be immediately or if it should be deferred to a later call to Save().</param>
+		void Save( bool deferCommit = false );
 
 		/// <summary>
 		/// Discard all changes and restore the state of all objects.

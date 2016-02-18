@@ -1033,8 +1033,7 @@ namespace NDO
 #if PRO
 			if (transactionMode != TransactionMode.None)
 			{
-				if (this.transactionMode == TransactionMode.Optimistic 
-					|| forceCommit)
+				if (forceCommit)
 				{
 					foreach(TransactionInfo ti in transactionTable)
 					{
@@ -2442,7 +2441,7 @@ namespace NDO
 		/// When a newly created object is written to DB, the key might change. Therefore,
 		/// the id is updated and the object is removed and re-inserted into the cache.
 		/// </summary>
-		public virtual void Save() 
+		public virtual void Save(bool deferCommit = false) 
 		{
 			Hashtable htOnSaving = new Hashtable(cache.LockedObjects.Count * 2);
 			for(;;)
@@ -2598,7 +2597,7 @@ namespace NDO
 				ds.AcceptChanges();
 			}
 
-			EndSave();
+			EndSave(!deferCommit);
 
 			foreach(IPersistenceCapable pc in deletedObjects) 
 			{
@@ -2626,7 +2625,7 @@ namespace NDO
 			}
 		}
 
-		private void EndSave()
+		private void EndSave(bool forceCommit)
 		{
 			foreach(Cache.Entry e in cache.LockedObjects)
 			{
@@ -2637,7 +2636,7 @@ namespace NDO
 
 			cache.UnlockAll();
 
-			CheckEndTransaction(true);
+			CheckEndTransaction(forceCommit);
 		}
 
 		/// <summary>
