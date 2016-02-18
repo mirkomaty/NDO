@@ -65,7 +65,7 @@ namespace NETDataObjects.NDOVSPackage
 				StringBuilder sb = new StringBuilder();
                 
 				sb.Append("using System;\n");
-				sb.Append("using System.Collections;\n");
+				sb.Append("using System.Linq;\n");
                 sb.Append("using System.Collections.Generic;\n");
 				sb.Append("using NDO;\n\n");
 				string namespc = (string) project.Properties.Item("RootNamespace").Value;
