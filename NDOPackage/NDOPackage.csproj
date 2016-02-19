@@ -43,7 +43,10 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Microsoft.CSharp" />
-    <Reference Include="Microsoft.VisualStudio.ComponentModelHost, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
+    <Reference Include="Microsoft.VisualStudio.ComponentModelHost, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>Dlls\Microsoft.VisualStudio.ComponentModelHost</HintPath>
+    </Reference>
     <Reference Include="Microsoft.VisualStudio.OLE.Interop" />
     <Reference Include="Microsoft.VisualStudio.Shell.10.0, Version=12.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -61,7 +64,7 @@
     </Reference>
     <Reference Include="NDOInterfaces, Version=3.0.0.0, Culture=neutral, PublicKeyToken=ff5e453a099b8326, processorArchitecture=MSIL">
       <SpecificVersion>false</SpecificVersion>
-      <HintPath>..\NDOInterfaces\bin\Release\NDOInterfaces.dll</HintPath>
+      <HintPath>..\NDOInterfaces\bin\$(Configuration)\NDOInterfaces.dll</HintPath>
     </Reference>
     <Reference Include="NuGet.VisualStudio">
       <HintPath>packages\NuGet.VisualStudio.2.7.2\lib\net40\NuGet.VisualStudio.dll</HintPath>
