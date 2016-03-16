@@ -106,6 +106,7 @@ namespace Generator
 					if ( reference.Include == "NDO" )  // This is a marker
 					{
 						reference.Include = typeof( NDO.PersistenceManager ).Assembly.FullName;
+#warning We must define the hint path relative to the solution .\packages\ndo.dll.v.0.0\lib\net4.x\NDO.dll
 						//reference.HintPath = NDO.NDOApplicationPath.Instance + @"\NDO.dll";
 						break;
 					}
@@ -128,8 +129,8 @@ namespace Generator
             pnode.InnerText = defaultNamespace;
             pnode = doc.SelectSingleNode("/Project/ItemGroup/Reference[@Include='NDO']");
             ((XmlElement)pnode).SetAttribute("Include", typeof(NDO.PersistenceManager).Assembly.FullName);
-            pnode = pnode.SelectSingleNode("HintPath");
-            pnode.InnerText = NDO.NDOApplicationPath.Instance + @"\NDO.dll";
+            //pnode = pnode.SelectSingleNode("HintPath");
+            //pnode.InnerText = NDO.NDOApplicationPath.Instance + @"\NDO.dll";
 
             pnode = doc.SelectSingleNode("/Project/ItemGroup/Compile[@Include='###Marker###']");
             this.filesElement = (XmlElement)pnode.ParentNode;

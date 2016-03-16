@@ -42,7 +42,7 @@ namespace NDO
 	/// <summary>
 	/// Singleton class for the NDO application directory.
 	/// </summary>
-	public class NDOAddInPath
+	internal class NDOAddInPath
 	{
 		static string instance;
 		static NDOAddInPath()
