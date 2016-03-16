@@ -36,7 +36,7 @@ using Microsoft.Win32;
 
 namespace NDO
 {
-	public class NDOApplicationPath
+	internal class NDOApplicationPath
 	{
 		private static string assemblyPath = null;
 
@@ -59,5 +59,4 @@ namespace NDO
 			}
 		}
 	}
-
 }
