@@ -80,15 +80,17 @@ namespace NDO
 				if (this.providers == null)  // Multithreading DoubleCheck
 				{
 					this.providers = new Dictionary<string, IProvider>();
-					if (!this.providers.ContainsKey( "SqlServer" ))
-						this["SqlServer"] = new NDOSqlProvider();
-					if (!this.providers.ContainsKey( "Access" ))
-						this["Access"] = new NDOAccessProvider();
+                    IProvider provider = new NDOSqlProvider();
+                    if (!this.providers.ContainsKey("SqlServer"))
+                        this.providers.Add("SqlServer", provider);
 					SqlServerGenerator sqlGen = new SqlServerGenerator();
-					sqlGen.Provider = this["SqlServer"];
+					sqlGen.Provider = provider;
 					this.generators.Add( "SqlServer", sqlGen );
-					AccessGenerator accGen = new AccessGenerator();
-					accGen.Provider = this["Access"];
+                    provider = new NDOAccessProvider();
+                    if (!this.providers.ContainsKey("Access"))
+                        this.providers.Add("Access", provider);
+                    AccessGenerator accGen = new AccessGenerator();
+					accGen.Provider = provider;
 					this.generators.Add( "Access", accGen );
 					SearchProviderPlugIns();
 				}
@@ -207,13 +209,16 @@ namespace NDO
             get
             {
                 LoadProviders();
-                string[] result = new string[this.providers.Count];
-                int i = 0;
-                foreach (string key in this.providers.Keys)
+                lock(lockObject)
                 {
-                    result[i++] = key;
+                    string[] result = new string[this.providers.Count];
+                    int i = 0;
+                    foreach (string key in this.providers.Keys)
+                    {
+                        result[i++] = key;
+                    }
+                    return result;
                 }
-                return result;
             }
         }
 
@@ -257,9 +262,24 @@ namespace NDO
             set 
             {
 				LoadProviders();
-				if (providers.ContainsKey( name ))
-					providers.Remove( name );
-                providers[name] = value; 
+                lock(lockObject)
+                {
+                    if (providers.ContainsKey(name))
+                        providers.Remove(name);
+                    providers[name] = value;
+                    foreach (Type t in value.GetType().Assembly.GetExportedTypes())
+                    {
+                        if (t.IsClass && !t.IsAbstract && typeof(ISqlGenerator).IsAssignableFrom(t))
+                        {
+                            var generator = Activator.CreateInstance(t) as ISqlGenerator;
+                            if (!generators.ContainsKey(generator.ProviderName))
+                            {
+                                this.generators.Add(generator.ProviderName, generator);
+                                generator.Provider = value;
+                            }
+                        }
+                    }
+                }
             }
         }
 
