@@ -41,7 +41,6 @@ using System.Collections.Generic;
 using EnvDTE;
 using EnvDTE80;
 using VSLangProj;
-using NDO.Mapping;
 using NDOInterfaces;
 using Microsoft.VisualStudio.Shell.Interop;
 
@@ -595,6 +594,7 @@ namespace NETDataObjects.NDOVSPackage
                 this.cbSqlDialect.Items.Clear();
                 int currentDialectIndex = -1;
                 NDO.NDOProviderFactory.Instance.SkipPrivatePath = true;
+                ProviderLoader.AddProviderDlls();
                 foreach (string s in NDO.NDOProviderFactory.Instance.ProviderNames) //GeneratorFactory.Instance.ProviderNames)
                 {
                     if (NDO.NDOProviderFactory.Instance.Generators.ContainsKey(s))
@@ -664,31 +664,32 @@ namespace NETDataObjects.NDOVSPackage
 			try
 			{
 				ConfigurationOptions options = new ConfigurationOptions( project );
-		
+
+                // NDO.dll will be installed during the package install
 				// Add the NDO dll to the project references
-				if (chkActivateAddIn.Checked && !options.EnableAddIn)
-				{
-					string ndoPath = typeof(NDO.PersistenceManager).Assembly.Location;
-					bool found = false;
-					VSProject vsProject = project.Object as VSProject;
-					if (vsProject != null)
-					{
-						foreach (VSLangProj.Reference r in vsProject.References)
-						{
-							if (r.Name.ToUpper() == "NDO" || string.Compare(r.Path, ndoPath, true) == 0)
-							{
-								found = true;
-								break;
-							}
-						}
-						if (!found)
-						{
-							VSLangProj.References refs = ((VSProject)project.Object).References;
-							refs.Add(ndoPath.Replace("\\ndo", "\\NDO"));
-							project.Save();
-						}
-					}
-				}
+				//if (chkActivateAddIn.Checked && !options.EnableAddIn)
+				//{
+				//	string ndoPath = typeof(NDO.PersistenceManager).Assembly.Location;
+				//	bool found = false;
+				//	VSProject vsProject = project.Object as VSProject;
+				//	if (vsProject != null)
+				//	{
+				//		foreach (VSLangProj.Reference r in vsProject.References)
+				//		{
+				//			if (r.Name.ToUpper() == "NDO" || string.Compare(r.Path, ndoPath, true) == 0)
+				//			{
+				//				found = true;
+				//				break;
+				//			}
+				//		}
+				//		if (!found)
+				//		{
+				//			VSLangProj.References refs = ((VSProject)project.Object).References;
+				//			refs.Add(ndoPath.Replace("\\ndo", "\\NDO"));
+				//			project.Save();
+				//		}
+				//	}
+				//}
                 string connType = options.SQLScriptLanguage;
                 string connName = options.DefaultConnection;
 				WriteBack(options);
@@ -750,7 +751,7 @@ namespace NETDataObjects.NDOVSPackage
 
 		void GeneratePackageReference()
 		{
-			string versionString = new AssemblyName( typeof( NDO.PersistenceManager ).Assembly.FullName ).Version.ToString();
+			string versionString = new AssemblyName( GetType().Assembly.FullName ).Version.ToString();
 			if (versionString.EndsWith( ".0" ))
 				versionString = versionString.Substring( 0, versionString.Length - 2 );
 
@@ -762,7 +763,7 @@ namespace NETDataObjects.NDOVSPackage
 				if (!installerServices.IsPackageInstalled( this.project, "ndo.dll" ))
 				{
 					var installer = componentModel.GetService<IVsPackageInstaller>();
-					installer.InstallPackage( "All", this.project, "ndo.dll", versionString, false );
+					installer.InstallPackage(@"C:\Projekte\NDO\nuget", this.project, "ndo.dll", versionString, false );
 				}
 			}
 

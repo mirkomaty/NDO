@@ -99,7 +99,7 @@
     </Reference>
     <Reference Include="NDOInterfaces, Version=2.1.0.0, Culture=neutral, PublicKeyToken=ff5e453a099b8326, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>D:\Program Files (x86)\NDO 3.0 Dev Edition\NDOInterfaces.dll</HintPath>
+      <HintPath>..\..\NDOInterfaces\bin\$(Configuration)\NDOInterfaces.dll</HintPath>
     </Reference>
     <Reference Include="System">
       <Name>System</Name>

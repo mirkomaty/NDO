@@ -17,6 +17,12 @@
   </metadata>
 	<files>
 		<file src="..\NDODLL\bin\release\NDO.dll" target="/lib/net40" />
+		<file src="..\PostgresProvider\PostGreProvider.dll" target="/lib/net40" />
+		<file src="..\SqliteProvider\SqliteProvider.dll" target="/lib/net40" />
+		<file src="..\SqlCeProvider\SqlCeProvider.dll" target="/lib/net40" />
+		<file src="..\FirebirdNdoProvider\FirebirdProvider.dll" target="/lib/net40" />
+		<file src="..\OracleProvider\OracleProvider.dll" target="/lib/net40" />
+		<file src="..\MySqlNdoProvider\MySqlProvider.dll" target="/lib/net40" />
 		<file src="..\NDOInterfaces\bin\release\NDOInterfaces.dll" target="/lib/net40" />
 		<file src="..\NDOEnhancer.BuildTask\NDOEnhancer.BuildTask\bin\Release\NDOEnhancer.BuildTask.dll" target="/build" />
 		<file src="ndo.dll.targets" target="/build" />

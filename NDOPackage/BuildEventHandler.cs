@@ -103,7 +103,7 @@ namespace NETDataObjects.NDOVSPackage
             }
             try
             {
-                NDO.Mapping.NDOMapping mapping = new NDO.Mapping.NDOMapping(mappingFile);
+                NDOMapping mapping = new NDOMapping(mappingFile);
                 schemaVersion = mapping.SchemaVersion;
             }
             catch (Exception ex)

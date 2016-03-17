@@ -1,14 +1,46 @@
 ﻿using System;
 using EnvDTE;
 using EnvDTE80;
-using NDOInterfaces;
 
 namespace NETDataObjects.NDOVSPackage
 {
-	/// <summary>
-	/// Summary description for MessageAdapter.
-	/// </summary>
-	internal class MessageAdapter : IMessageAdapter
+    /// <summary>
+    /// Use this interface to output messages, while generating DDL code.
+    /// </summary>
+    public interface IMessageAdapter
+    {
+        /// <summary>
+        /// Increases the current indent level.
+        /// </summary>
+        void Indent();
+        /// <summary>
+        /// Decreases the current indent level.
+        /// </summary>
+        void Unindent();
+        /// <summary>
+        /// Writes the given text to the output device.
+        /// </summary>
+        /// <param name="text">A message to write.</param>
+        /// <remarks>
+        /// The text will be written to the Visual Studio Output pane, if the enhancer runs in visual studio.
+        /// The stand-alone enhancer writes to the console.
+        /// </remarks>
+        void Write(String text);
+        /// <summary>
+        /// Writes the given text to the output device.
+        /// </summary>
+        /// <param name="text">A message to write.</param>
+        /// <remarks>
+        /// The text will be written to the Visual Studio Output pane, if the enhancer runs in visual studio.
+        /// The stand-alone enhancer writes to the console.
+        /// </remarks>
+        void WriteLine(String text);
+    }
+
+    /// <summary>
+    /// Summary description for MessageAdapter.
+    /// </summary>
+    internal class MessageAdapter : IMessageAdapter
 	{
 		int indent = 0;
 		bool success = true;
