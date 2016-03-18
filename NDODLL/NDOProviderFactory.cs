@@ -106,38 +106,26 @@ namespace NDO
         }
 
 
-        private void AddProviderPlugIns(string path)
+        public void AddProviderPlugIns(string path)
         {
             if (path == null || !Directory.Exists(path))
                 return;
             string[] dlls = new string[] { };
-            dlls = Directory.GetFiles(path, "*.dll");
+            dlls = Directory.GetFiles(path, "*Provider.dll");
             foreach (string dll in dlls)
             {
                 try
                 {
-                    string dlllower = Path.GetFileName(dll.ToLower());
-                    if (dlllower == "ndoenhancer.dll")
-                        continue;
-                    if (dlllower == "ndo.dll")
-                        continue;
-                    if (dlllower == "ndointerfaces.dll")
-                        continue;
-                    if (dlllower == "microsoft.visualstudio.vsip.helper.dll")
-                        continue;
                     bool success = false;
                     Assembly ass = null;
-                    if (PeTool.IsAssembly(dll))
+                    try
                     {
-                        try
-                        {
-                            ass = Assembly.LoadFrom(dll);
-                            success = true;
-                        }
-                        catch
-                        {
-                            // Wrong assembly format, ignore it
-                        }
+                        ass = Assembly.LoadFrom(dll);
+                        success = true;
+                    }
+                    catch
+                    {
+                        // Wrong assembly format, ignore it
                     }
                     if (!success)
                         continue;
@@ -155,8 +143,8 @@ namespace NDO
                         if (t.IsClass && !t.IsAbstract && typeof(IProvider).IsAssignableFrom(t))
                         {
                             provider = (IProvider)Activator.CreateInstance(t);
-                            if (!this.providers.ContainsKey(provider.Name))
-                                this[provider.Name] = provider;
+							if (!this.providers.ContainsKey( provider.Name ))
+								this.providers.Add( provider.Name, provider );
                         }
                     }
                     foreach (Type t in types)

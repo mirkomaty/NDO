@@ -52,50 +52,46 @@ namespace NETDataObjects.NDOVSPackage
 
 		public void DoIt()
 		{
-			StreamWriter sw = null;
-
 			try
 			{
-				string fileName = Path.GetDirectoryName(project.FileName) + "\\" + className + ".vb";
+				StreamWriter sw;
+				string fileName = Path.GetDirectoryName( project.FileName ) + "\\" + className + ".vb";
 				string partialFileName = fileName.Substring( 0, fileName.Length - 3 );
 				partialFileName += ".ndo.vb";
-				sw = new StreamWriter(fileName, false, System.Text.Encoding.UTF8);
+				using (sw = new StreamWriter( fileName, false, System.Text.Encoding.UTF8 ))
+				{
 
-				sw.WriteLine("Imports System.Linq");
-                sw.WriteLine("Imports System.Collections.Generic");
-                sw.WriteLine("Imports NDO\n");
+					sw.WriteLine( "Imports System.Linq" );
+					sw.WriteLine( "Imports System.Collections.Generic" );
+					sw.WriteLine( "Imports NDO\n" );
 
-				sw.WriteLine("''' <summary>");
-				sw.WriteLine("'''");
-				sw.WriteLine("''' </summary>");
-				sw.WriteLine("''' <remarks></remarks>");
-                sw.Write("<NDOPersistent");
-                if (isSerializable)
-                    sw.Write(", Serializable");
-                sw.WriteLine("> _");
-				sw.WriteLine("Partial Public Class " + className);
-				sw.WriteLine("End Class");
-				sw.Close();
+					sw.WriteLine( "''' <summary>" );
+					sw.WriteLine( "'''" );
+					sw.WriteLine( "''' </summary>" );
+					sw.WriteLine( "''' <remarks></remarks>" );
+					sw.Write( "<NDOPersistent" );
+					if (isSerializable)
+						sw.Write( ", Serializable" );
+					sw.WriteLine( "> _" );
+					sw.WriteLine( "Partial Public Class " + className );
+					sw.WriteLine( "End Class" );
+				}
 				ProjectItem pi = null;
 				if ( parentItem == null )
 					pi = project.ProjectItems.AddFromFile( fileName );
 				else
 					pi = parentItem.ProjectItems.AddFromFile( fileName );
-				sw = new StreamWriter( partialFileName );
-				string newPartial = partialTemplate.Replace( "#cl#", className );
-				sw.Write( newPartial );
-				sw.Close();
+				using (sw = new StreamWriter( partialFileName ))
+				{
+					string newPartial = partialTemplate.Replace( "#cl#", className );
+					sw.Write( newPartial );
+				}
 				pi.ProjectItems.AddFromFile( partialFileName );
 				CodeGenHelper.ActivateAndGetTextDocument(project, Path.GetFileName(fileName));
 			}
 			catch(Exception ex)
 			{
 				MessageBox.Show(ex.Message);
-			}
-			finally
-			{
-				if (sw != null)
-					sw.Close();
 			}
 		}
 

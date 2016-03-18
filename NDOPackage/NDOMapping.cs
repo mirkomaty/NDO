@@ -13,7 +13,7 @@ namespace NETDataObjects.NDOVSPackage
     {
         XElement ndoMappingElement;
         string schemaVersion = string.Empty;
-        List<Connection> connections;
+        List<Connection> connections = new List<Connection>();
         string fileName;
 
         public NDOMapping(string fileName)

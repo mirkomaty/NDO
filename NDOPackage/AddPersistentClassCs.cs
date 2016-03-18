@@ -53,68 +53,64 @@ namespace NETDataObjects.NDOVSPackage
 
 		public void DoIt()
 		{
-			StreamWriter sw = null;
-
 			try
 			{
+				StreamWriter sw;
 				string fileName = Path.GetDirectoryName(project.FileName) + "\\" + className + ".cs";
 				string partialFileName = fileName.Substring( 0, fileName.Length - 3 );
 				partialFileName += ".ndo.cs";
-				sw = new StreamWriter(fileName, false, System.Text.Encoding.UTF8);
+				string namespc = (string) project.Properties.Item( "RootNamespace" ).Value;
+				using (sw = new StreamWriter( fileName, false, System.Text.Encoding.UTF8 ))
+				{
+					StringBuilder sb = new StringBuilder();
 
-				StringBuilder sb = new StringBuilder();
-                
-				sb.Append("using System;\n");
-				sb.Append("using System.Linq;\n");
-                sb.Append("using System.Collections.Generic;\n");
-				sb.Append("using NDO;\n\n");
-				string namespc = (string) project.Properties.Item("RootNamespace").Value;
-				sb.Append("namespace " + namespc + "\n");
-				sb.Append("{\n");
+					sb.Append( "using System;\n" );
+					sb.Append( "using System.Linq;\n" );
+					sb.Append( "using System.Collections.Generic;\n" );
+					sb.Append( "using NDO;\n\n" );					
+					sb.Append( "namespace " + namespc + "\n" );
+					sb.Append( "{\n" );
 
-				sb.Append("\t/// <summary>\n");
-				sb.Append("\t/// Summary for " + className + "\n");
-				sb.Append("\t/// </summary>\n");
-				sb.Append("\t[NDOPersistent");
-                if (this.isSerializable)
-                    sb.Append(", Serializable");
-                sb.Append("]\n");
-                sb.Append("\tpublic partial class " + className + "\n");
-				sb.Append("\t{\n");
-				sb.Append("\t\tpublic " + className + "()\n");
-				sb.Append("\t\t{\n");
-				sb.Append("\t\t}\n");
-				sb.Append("\t}\n");
-				sb.Append("}\n");			
-				string result = sb.ToString();
-				TabProperty tp = TabProperties.Instance.CSharp;
-				if (tp.UseSpaces)
-					sw.Write(result.Replace("\t", tp.Indent));
-				else
-					sw.Write(result);
-				sw.Close();
+					sb.Append( "\t/// <summary>\n" );
+					sb.Append( "\t/// Summary for " + className + "\n" );
+					sb.Append( "\t/// </summary>\n" );
+					sb.Append( "\t[NDOPersistent" );
+					if (this.isSerializable)
+						sb.Append( ", Serializable" );
+					sb.Append( "]\n" );
+					sb.Append( "\tpublic partial class " + className + "\n" );
+					sb.Append( "\t{\n" );
+					sb.Append( "\t\tpublic " + className + "()\n" );
+					sb.Append( "\t\t{\n" );
+					sb.Append( "\t\t}\n" );
+					sb.Append( "\t}\n" );
+					sb.Append( "}\n" );
+					string result = sb.ToString();
+					TabProperty tp = TabProperties.Instance.CSharp;
+					if (tp.UseSpaces)
+						sw.Write( result.Replace( "\t", tp.Indent ) );
+					else
+						sw.Write( result );
+				}
 				ProjectItem pi = null;
 				if ( parentItem == null )
 					pi = project.ProjectItems.AddFromFile( fileName );
 				else
 					pi = parentItem.ProjectItems.AddFromFile( fileName );
 
-				sw = new StreamWriter( partialFileName );
-				string newPartial = partialTemplate.Replace( "#ns#", namespc );
-				newPartial = newPartial.Replace( "#cl#", className );
-				sw.Write( newPartial );
-				sw.Close();
+				using (sw = new StreamWriter( partialFileName ))
+				{
+					string newPartial = partialTemplate.Replace( "#ns#", namespc );
+					newPartial = newPartial.Replace( "#cl#", className );
+					sw.Write( newPartial );
+				}
+
 				pi.ProjectItems.AddFromFile( partialFileName );
 				CodeGenHelper.ActivateAndGetTextDocument(project, Path.GetFileName(fileName));
 			}
 			catch(Exception ex)
 			{
 				MessageBox.Show(ex.Message);
-			}
-			finally
-			{
-				if (sw != null)
-					sw.Close();
 			}
 		}
 

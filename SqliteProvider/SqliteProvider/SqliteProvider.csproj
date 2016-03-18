@@ -148,7 +148,7 @@
   <PropertyGroup>
     <PreBuildEvent>
     </PreBuildEvent>
-    <PostBuildEvent>copy /Y $(TargetPath) ..\..\..
+    <PostBuildEvent>copy /Y $(TargetFileName) ..\..\..
 </PostBuildEvent>
   </PropertyGroup>
 </Project>

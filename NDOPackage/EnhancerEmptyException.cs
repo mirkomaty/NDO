@@ -30,6 +30,7 @@ namespace NETDataObjects.NDOVSPackage
 	/// <summary>
 	/// Zusammenfassung für EnhancerEmptyException.
 	/// </summary>
+	[Serializable]
 	public class EnhancerEmptyException : Exception
 	{
 		public EnhancerEmptyException()

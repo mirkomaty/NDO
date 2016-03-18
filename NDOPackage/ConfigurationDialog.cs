@@ -665,31 +665,6 @@ namespace NETDataObjects.NDOVSPackage
 			{
 				ConfigurationOptions options = new ConfigurationOptions( project );
 
-                // NDO.dll will be installed during the package install
-				// Add the NDO dll to the project references
-				//if (chkActivateAddIn.Checked && !options.EnableAddIn)
-				//{
-				//	string ndoPath = typeof(NDO.PersistenceManager).Assembly.Location;
-				//	bool found = false;
-				//	VSProject vsProject = project.Object as VSProject;
-				//	if (vsProject != null)
-				//	{
-				//		foreach (VSLangProj.Reference r in vsProject.References)
-				//		{
-				//			if (r.Name.ToUpper() == "NDO" || string.Compare(r.Path, ndoPath, true) == 0)
-				//			{
-				//				found = true;
-				//				break;
-				//			}
-				//		}
-				//		if (!found)
-				//		{
-				//			VSLangProj.References refs = ((VSProject)project.Object).References;
-				//			refs.Add(ndoPath.Replace("\\ndo", "\\NDO"));
-				//			project.Save();
-				//		}
-				//	}
-				//}
                 string connType = options.SQLScriptLanguage;
                 string connName = options.DefaultConnection;
 				WriteBack(options);
@@ -719,7 +694,7 @@ namespace NETDataObjects.NDOVSPackage
                                 }
                                 else
                                 {
-                                    conn = mapping.NewConnection(null, null);
+                                    conn = mapping.NewConnection(String.Empty, String.Empty);
                                     MessageBox.Show("Added a connection with the ID " + conn.ID, "NDO Configuration");
                                 }
                                 conn.Type = options.SQLScriptLanguage;
@@ -744,7 +719,11 @@ namespace NETDataObjects.NDOVSPackage
 			}
 			catch (Exception ex)
 			{
+#if DEBUG
+				MessageBox.Show( "The following error occured while saving your options: " + ex.ToString(), "NDO Add-in" );
+#else
 				MessageBox.Show("The following error occured while saving your options: " + ex.Message, "NDO Add-in");
+#endif
 			}
 		}
 
