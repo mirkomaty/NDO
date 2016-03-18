@@ -43,7 +43,10 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Microsoft.CSharp" />
-    <Reference Include="Microsoft.VisualStudio.ComponentModelHost, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
+    <Reference Include="Microsoft.VisualStudio.ComponentModelHost, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>Dlls\Microsoft.VisualStudio.ComponentModelHost</HintPath>
+    </Reference>
     <Reference Include="Microsoft.VisualStudio.OLE.Interop" />
     <Reference Include="Microsoft.VisualStudio.Shell.10.0, Version=12.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -55,17 +58,33 @@
     <Reference Include="Microsoft.VisualStudio.Shell.Interop.10.0" />
     <Reference Include="Microsoft.VisualStudio.TextManager.Interop" />
     <Reference Include="Microsoft.VisualStudio.Shell.Immutable.10.0" />
+    <Reference Include="MySqlProvider">
+      <HintPath>..\MySqlNdoProvider\MySqlProvider.dll</HintPath>
+    </Reference>
     <Reference Include="NDO, Version=3.0.0.0, Culture=neutral, PublicKeyToken=37bfdffa92a0cd24, processorArchitecture=MSIL">
       <SpecificVersion>false</SpecificVersion>
       <HintPath>..\NDODLL\bin\$(Configuration)\NDO.dll</HintPath>
     </Reference>
     <Reference Include="NDOInterfaces, Version=3.0.0.0, Culture=neutral, PublicKeyToken=ff5e453a099b8326, processorArchitecture=MSIL">
       <SpecificVersion>false</SpecificVersion>
-      <HintPath>..\NDOInterfaces\bin\Release\NDOInterfaces.dll</HintPath>
+      <HintPath>..\NDOInterfaces\bin\$(Configuration)\NDOInterfaces.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="NuGet.VisualStudio">
       <HintPath>packages\NuGet.VisualStudio.2.7.2\lib\net40\NuGet.VisualStudio.dll</HintPath>
       <EmbedInteropTypes>True</EmbedInteropTypes>
+    </Reference>
+    <Reference Include="OracleProvider">
+      <HintPath>..\OracleProvider\OracleProvider.dll</HintPath>
+    </Reference>
+    <Reference Include="PostGreProvider">
+      <HintPath>..\PostGresProvider\PostGreProvider.dll</HintPath>
+    </Reference>
+    <Reference Include="SqlCeProvider">
+      <HintPath>..\SqlCEProvider\SqlCeProvider.dll</HintPath>
+    </Reference>
+    <Reference Include="SqliteProvider">
+      <HintPath>..\SqliteProvider\SqliteProvider.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -143,9 +162,12 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AbstractCommand.cs" />
+    <Compile Include="Connection.cs" />
+    <Compile Include="IMessageAdapter.cs" />
     <Compile Include="MergeConflictBase.cs" />
     <Compile Include="MergeConflictUseCGCode.cs" />
     <Compile Include="MergeConflictUseYourCode.cs" />
+    <Compile Include="NDOMapping.cs" />
     <Compile Include="OpenClassGenerator.cs" />
     <Compile Include="OpenMappingTool.cs" />
     <Compile Include="AddPersistentClass.cs" />
@@ -176,6 +198,7 @@
     <Compile Include="ProjectDescription.cs" />
     <Compile Include="ProjectIterator.cs" />
     <Compile Include="ProjectKind.cs" />
+    <Compile Include="ProviderLoader.cs" />
     <Compile Include="RelationDialog.cs">
       <SubType>Form</SubType>
     </Compile>

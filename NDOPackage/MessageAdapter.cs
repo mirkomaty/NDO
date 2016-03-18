@@ -1,14 +1,13 @@
 ﻿using System;
 using EnvDTE;
 using EnvDTE80;
-using NDOInterfaces;
 
 namespace NETDataObjects.NDOVSPackage
 {
-	/// <summary>
-	/// Summary description for MessageAdapter.
-	/// </summary>
-	internal class MessageAdapter : IMessageAdapter
+    /// <summary>
+    /// Summary description for MessageAdapter.
+    /// </summary>
+    internal class MessageAdapter : IMessageAdapter
 	{
 		int indent = 0;
 		bool success = true;

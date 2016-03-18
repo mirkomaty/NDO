@@ -34,9 +34,6 @@ using VSLangProj;
 using EnvDTE;
 using VsWebSite;
 
-#if DEBUG
-using NDOInterfaces; // for IMessageAdapter
-#endif
 
 namespace NETDataObjects.NDOVSPackage
 {

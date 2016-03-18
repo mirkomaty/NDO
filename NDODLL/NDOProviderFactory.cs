@@ -80,15 +80,17 @@ namespace NDO
 				if (this.providers == null)  // Multithreading DoubleCheck
 				{
 					this.providers = new Dictionary<string, IProvider>();
-					if (!this.providers.ContainsKey( "SqlServer" ))
-						this["SqlServer"] = new NDOSqlProvider();
-					if (!this.providers.ContainsKey( "Access" ))
-						this["Access"] = new NDOAccessProvider();
+                    IProvider provider = new NDOSqlProvider();
+                    if (!this.providers.ContainsKey("SqlServer"))
+                        this.providers.Add("SqlServer", provider);
 					SqlServerGenerator sqlGen = new SqlServerGenerator();
-					sqlGen.Provider = this["SqlServer"];
+					sqlGen.Provider = provider;
 					this.generators.Add( "SqlServer", sqlGen );
-					AccessGenerator accGen = new AccessGenerator();
-					accGen.Provider = this["Access"];
+                    provider = new NDOAccessProvider();
+                    if (!this.providers.ContainsKey("Access"))
+                        this.providers.Add("Access", provider);
+                    AccessGenerator accGen = new AccessGenerator();
+					accGen.Provider = provider;
 					this.generators.Add( "Access", accGen );
 					SearchProviderPlugIns();
 				}
@@ -104,38 +106,26 @@ namespace NDO
         }
 
 
-        private void AddProviderPlugIns(string path)
+        public void AddProviderPlugIns(string path)
         {
             if (path == null || !Directory.Exists(path))
                 return;
             string[] dlls = new string[] { };
-            dlls = Directory.GetFiles(path, "*.dll");
+            dlls = Directory.GetFiles(path, "*Provider.dll");
             foreach (string dll in dlls)
             {
                 try
                 {
-                    string dlllower = Path.GetFileName(dll.ToLower());
-                    if (dlllower == "ndoenhancer.dll")
-                        continue;
-                    if (dlllower == "ndo.dll")
-                        continue;
-                    if (dlllower == "ndointerfaces.dll")
-                        continue;
-                    if (dlllower == "microsoft.visualstudio.vsip.helper.dll")
-                        continue;
                     bool success = false;
                     Assembly ass = null;
-                    if (PeTool.IsAssembly(dll))
+                    try
                     {
-                        try
-                        {
-                            ass = Assembly.LoadFrom(dll);
-                            success = true;
-                        }
-                        catch
-                        {
-                            // Wrong assembly format, ignore it
-                        }
+                        ass = Assembly.LoadFrom(dll);
+                        success = true;
+                    }
+                    catch
+                    {
+                        // Wrong assembly format, ignore it
                     }
                     if (!success)
                         continue;
@@ -153,8 +143,8 @@ namespace NDO
                         if (t.IsClass && !t.IsAbstract && typeof(IProvider).IsAssignableFrom(t))
                         {
                             provider = (IProvider)Activator.CreateInstance(t);
-                            if (!this.providers.ContainsKey(provider.Name))
-                                this[provider.Name] = provider;
+							if (!this.providers.ContainsKey( provider.Name ))
+								this.providers.Add( provider.Name, provider );
                         }
                     }
                     foreach (Type t in types)
@@ -207,13 +197,16 @@ namespace NDO
             get
             {
                 LoadProviders();
-                string[] result = new string[this.providers.Count];
-                int i = 0;
-                foreach (string key in this.providers.Keys)
+                lock(lockObject)
                 {
-                    result[i++] = key;
+                    string[] result = new string[this.providers.Count];
+                    int i = 0;
+                    foreach (string key in this.providers.Keys)
+                    {
+                        result[i++] = key;
+                    }
+                    return result;
                 }
-                return result;
             }
         }
 
@@ -257,9 +250,24 @@ namespace NDO
             set 
             {
 				LoadProviders();
-				if (providers.ContainsKey( name ))
-					providers.Remove( name );
-                providers[name] = value; 
+                lock(lockObject)
+                {
+                    if (providers.ContainsKey(name))
+                        providers.Remove(name);
+                    providers[name] = value;
+                    foreach (Type t in value.GetType().Assembly.GetExportedTypes())
+                    {
+                        if (t.IsClass && !t.IsAbstract && typeof(ISqlGenerator).IsAssignableFrom(t))
+                        {
+                            var generator = Activator.CreateInstance(t) as ISqlGenerator;
+                            if (!generators.ContainsKey(generator.ProviderName))
+                            {
+                                this.generators.Add(generator.ProviderName, generator);
+                                generator.Provider = value;
+                            }
+                        }
+                    }
+                }
             }
         }
 

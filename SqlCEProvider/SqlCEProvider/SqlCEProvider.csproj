@@ -162,7 +162,7 @@
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PreBuildEvent>..\..\..\..\nuget\nuget.exe restore "..\..\..\SqlCEProvider.sln"</PreBuildEvent>
-    <PostBuildEvent>copy /Y $(TargetPath) ..\..\..
+    <PostBuildEvent>copy /Y $(TargetFileName) ..\..\..
 </PostBuildEvent>
   </PropertyGroup>
 </Project>

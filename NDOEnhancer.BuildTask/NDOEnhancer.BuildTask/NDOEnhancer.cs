@@ -58,7 +58,7 @@ namespace NDO.BuildTask
     <DropExistingElements>False</DropExistingElements>
   </Options>
   <ProjectDescription>
-    <BinPath>bin\Debug\ConsoleApplication3.exe</BinPath>
+    <BinPath>bin\Debug\YourAssemblyGoesHere.dll</BinPath>
     <ObjPath>obj\Debug\</ObjPath>
     <AssemblyName />
     <Debug>True</Debug>
