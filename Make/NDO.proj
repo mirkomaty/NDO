@@ -44,9 +44,6 @@
     <Projectx86 Include="..\EnhancerX86Stub\EnhancerX86Stub\EnhancerX86Stub.csproj" />
   </ItemGroup>
   
-  <ItemGroup>
-    <InstProject Include="..\NDOInstaller\NDOInstaller.wixproj" />
-  </ItemGroup>
   
   <ItemGroup>
     <DeployFiles Include="$(NDO_DLL)"/>
@@ -66,6 +63,6 @@
 	<MSBuild Projects="@(Project)" Targets="Rebuild" Properties="Configuration=$(Configuration);Platform=$(Platform)" />
 	<MSBuild Projects="@(Projectx86)" Targets="Rebuild" Properties="Configuration=$(Configuration);Platform=x86" />
 	<Copy SourceFiles="@(DeployFiles)" DestinationFolder="$(DEPLOY_DIR)" />
-	<MSBuild Projects="@(InstProject)" Targets="Rebuild" Properties="Configuration=$(Configuration);Platform=x86" />
+  <Exec Command="..\nuget\nuget.exe pack ndo.dll.nuspec" WorkingDirectory="..\nuget" />
   </Target>
 </Project>

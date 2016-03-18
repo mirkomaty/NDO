@@ -37,7 +37,6 @@ using System.Collections;
 using System.ComponentModel;
 using System.Windows.Forms;
 using System.Xml.Linq;
-using System.Linq;
 using System.Collections.Generic;
 using EnvDTE;
 using EnvDTE80;
@@ -48,8 +47,10 @@ using Microsoft.VisualStudio.Shell.Interop;
 
 using SD = System.Diagnostics;
 using System.Diagnostics;
-//using MBE = Microsoft.Build.Evaluation;
-//using MB = Microsoft.Build.Execution;
+using System.Text.RegularExpressions;
+using Microsoft.VisualStudio.Shell;
+using Microsoft.VisualStudio.ComponentModelHost;
+using NuGet.VisualStudio;
 
 namespace NETDataObjects.NDOVSPackage
 {
@@ -596,7 +597,7 @@ namespace NETDataObjects.NDOVSPackage
                 NDO.NDOProviderFactory.Instance.SkipPrivatePath = true;
                 foreach (string s in NDO.NDOProviderFactory.Instance.ProviderNames) //GeneratorFactory.Instance.ProviderNames)
                 {
-                    if (NDO.NDOProviderFactory.Instance.Generators[s] != null)
+                    if (NDO.NDOProviderFactory.Instance.Generators.ContainsKey(s))
                     {
                         this.cbSqlDialect.Items.Add(s);
                         if (options.SQLScriptLanguage == s)
@@ -734,7 +735,7 @@ namespace NETDataObjects.NDOVSPackage
 					{
 						options.UseMsBuild = true;
 						options.Save( this.projectDescription );
-						ChangeProjectFile();
+						GeneratePackageReference();
 					}
 				}
 
@@ -747,95 +748,30 @@ namespace NETDataObjects.NDOVSPackage
 		}
 
 
-		void ChangeProjectFile()
+		void GeneratePackageReference()
 		{
-			MessageBox.Show( "Your project file will be changed. Please confirm the project reload, if Visual Studio asks for it.", "NDO Add-in" );
-			string fileName = this.project.FullName;
+			string versionString = new AssemblyName( typeof( NDO.PersistenceManager ).Assembly.FullName ).Version.ToString();
+			if (versionString.EndsWith( ".0" ))
+				versionString = versionString.Substring( 0, versionString.Length - 2 );
 
-			string logFileName = Path.Combine( Path.GetDirectoryName( fileName ), "NDOUpdater.log" );
+			try
+			{
+				var componentModel = (IComponentModel) Package.GetGlobalService( typeof( SComponentModel ) );
+				IVsPackageInstallerServices installerServices = componentModel.GetService<IVsPackageInstallerServices>();
 
-			bool hasChanges = false;
-
-			System.Threading.Thread.Sleep( 1000 );
-
-			XElement projectElement;
-			using ( FileStream fs = File.OpenRead( fileName ) )
-			{
-				projectElement = XElement.Load( fs );
-				fs.Close();
-			}
-			XNamespace ns = "http://schemas.microsoft.com/developer/msbuild/2003";
-
-			IEnumerable<XElement> afterBuildElements = projectElement.Descendants( ns + "Target" ).Where( t => t.Attribute( "Name" ).Value == "AfterBuild" );
-			XElement afterBuildElement;
-			if ( afterBuildElements.Count() == 0 )
-			{
-				hasChanges = true;
-				afterBuildElement = new XElement( ns + "Target" );
-				afterBuildElement.Add( new XAttribute( "Name", "AfterBuild" ) );
-				projectElement.Add( afterBuildElement );
-			}
-			else
-			{
-				afterBuildElement = afterBuildElements.First();
-			}
-			IEnumerable<XElement> ndoEnhancerElements = afterBuildElement.Descendants( ns + "NDOEnhancer" );
-			if ( ndoEnhancerElements.Count() == 0 )
-			{
-				hasChanges = true;
-				XElement ndoEnhancerElement = new XElement( ns + "NDOEnhancer" );
-				ndoEnhancerElement.Add( new XAttribute( "NdoProjectFile", "$(ProjectName).ndoproj" ) );
-				ndoEnhancerElement.Add( new XAttribute( "NdoPlatformTarget", "$(Platform)" ) );
-				afterBuildElement.Add( ndoEnhancerElement );
-			}
-			IEnumerable<XElement> ndoInstallPathElements = projectElement.Descendants( ns + "NDOInstallPath" );
-			if ( ndoInstallPathElements.Count() == 0 )
-			{
-				hasChanges = true;
-				XElement propertyGroupElement = new XElement( ns + "PropertyGroup" );
-				XElement ndoInstallPathElement = new XElement( ns + "NDOInstallPath" );
-				ndoInstallPathElement.Add( new XAttribute( "Condition", " '$(NDOInstallPath)' == ''" ) );
-				ndoInstallPathElement.Value = @"$(Registry:HKEY_LOCAL_MACHINE\SOFTWARE\NDO@InstallDir)";
-				propertyGroupElement.Add( ndoInstallPathElement );
-				projectElement.Add( propertyGroupElement );
-			}
-			IEnumerable<XElement> importElements = projectElement.Descendants( ns + "Import" ).Where( t => t.Attribute( "Project" ).Value == @"$(NDOInstallPath)\NDOEnhancer.Targets" );
-			if ( importElements.Count() == 0 )
-			{
-				hasChanges = true;
-				XElement importElement = new XElement( ns + "Import" );
-				projectElement.Add( importElement );
-				importElement.Add( new XAttribute( "Project", @"$(NDOInstallPath)\NDOEnhancer.Targets" ) );
-			}
-
-			if ( hasChanges )
-			{
-				using ( Stream fs = File.OpenWrite( fileName ) )
+				if (!installerServices.IsPackageInstalled( this.project, "ndo.dll" ))
 				{
-					projectElement.Save( fs );
+					var installer = componentModel.GetService<IVsPackageInstaller>();
+					installer.InstallPackage( "All", this.project, "ndo.dll", versionString, false );
 				}
 			}
+
+			catch (Exception ex)
+			{
+				MessageBox.Show( "Error while installing the ndo.dll package: " + ex.ToString() );
+			}
 		}
 
-		void ChangeProjectFilexxx()
-		{
-			string fileName = this.project.FullName;
-			this.project = null;
-			ApplicationObject.VisualStudioApplication.ExecuteCommand( "File.CloseSolution" );
-			MessageBox.Show( "NDO needs to close your solution. Just reload it after changing your project file." );
-			System.Timers.Timer t = new System.Timers.Timer( 1000 );
-			t.Enabled = true;
-			string exeFile = Path.Combine( NDO.NDOApplicationPath.Instance, "NDOProjectUpdater" );
-			string parameter = "\"" + fileName + "\"";
-			t.Elapsed += ( s, e ) =>
-			{
-				( (System.Timers.Timer) s ).Enabled = false;
-				SD.ProcessStartInfo psi = new SD.ProcessStartInfo( exeFile, parameter );
-				psi.CreateNoWindow = true;
-				psi.UseShellExecute = false;
-				SD.Process.Start( psi );
-			};
-		}
 
 		void ShowError(Exception ex)
 		{

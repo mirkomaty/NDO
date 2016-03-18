@@ -182,6 +182,7 @@ namespace EnhancerTest
 				{
 #if DEBUG
 					Console.WriteLine( "Domain base directory is: " + AppDomain.CurrentDomain.BaseDirectory );
+					Console.WriteLine( "Running as " + (IntPtr.Size * 8) + " bit app." );
 #endif
 					string newarg = (string) AppDomain.CurrentDomain.GetData("arg");
 					new EnhancerTest().InternalStart(newarg);

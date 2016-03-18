@@ -12,7 +12,6 @@ namespace NETDataObjects.NDOVSPackage
 	internal abstract class AbstractCommand
 	{
 		protected OleMenuCommand command;
-		protected Package package;
 		protected _DTE dte;
 
 		public AbstractCommand(_DTE dte, CommandID commandId)			
