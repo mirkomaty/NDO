@@ -161,6 +161,7 @@
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PreBuildEvent>..\..\..\..\nuget\nuget.exe restore "..\..\..\OracleProvider.sln"</PreBuildEvent>
-    <PostBuildEvent>copy /Y $(TargetFileName) ..\..\..</PostBuildEvent>
+    <PostBuildEvent>copy /Y $(TargetFileName) ..\..\..
+..\..\..\..\nuget\nuget.exe pack ..\..\..\ndo.oracle.nuspec</PostBuildEvent>
   </PropertyGroup>
 </Project>

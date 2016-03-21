@@ -1,5 +1,5 @@
 //
-// Copyright (C) 2002-2014 Mirko Matytschak 
+// Copyright (C) 2002-2016 Mirko Matytschak 
 // (www.netdataobjects.de)
 //
 // Author: Mirko Matytschak
@@ -48,24 +48,14 @@ using System.Security;
 [assembly: AssemblyConfiguration("Release")]
 #endif
 [assembly: AssemblyCompany("Mirko Matytschak")]
-[assembly: AssemblyProduct("NDO 3.0 r. d9a66d8")]
-[assembly: AssemblyCopyright("(c) 2002 - 2015, Mirko Matytschak, Marzling, Germany")]
+[assembly: AssemblyProduct("NDO 3.0")]
+[assembly: AssemblyCopyright("(c) 2002 - 2016, Mirko Matytschak, Marzling, Germany")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 [assembly: CLSCompliant(true)]
 
-//
-// Version information for an assembly consists of the following four values:
-//
-//      Major Version
-//      Minor Version 
-//      Build Number
-//      Revision
-//
-// You can specify all the values or you can default the Revision and Build Numbers 
-// by using the '*' as shown below:
-
-[assembly: AssemblyVersion("3.0.0.2")]
+// Assembly Version
+[assembly: AssemblyVersion("3.0.0.3")]
 
 [assembly: AssemblyKeyName("")]
 [assembly: AllowPartiallyTrustedCallers]

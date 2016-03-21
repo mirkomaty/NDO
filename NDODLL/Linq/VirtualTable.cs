@@ -45,7 +45,7 @@ namespace NDO.Linq
 	/// This class represents a virtual table which allows for Linq queries against the NDO data store.
 	/// </summary>
 	/// <typeparam name="T">The type of the result element class.</typeparam>
-    public class VirtualTable<T>
+    public class VirtualTable<T> : IEnumerable<T>
     {
         PersistenceManager pm;
         List<string> prefetches = new List<string>();
@@ -220,6 +220,8 @@ namespace NDO.Linq
 			return this;
 		}
 
+		
+
 		/// <summary>
 		/// Converts the VirtualTable to a List.
 		/// </summary>
@@ -241,6 +243,24 @@ namespace NDO.Linq
 			if (result.Count == 0)
 				return default(T);
 			return result[0];
+		}
+
+		/// <summary>
+		/// Gets an Enumerable for iterating over a VirtualTable with foreach
+		/// </summary>
+		/// <returns></returns>
+		public IEnumerator<T> GetEnumerator()
+		{
+			return ResultTable.GetEnumerator();
+		}
+
+		/// <summary>
+		/// Gets an untyped Enumerable for iterating over a VirtualTable with foreach
+		/// </summary>
+		/// <returns></returns>
+		IEnumerator IEnumerable.GetEnumerator()
+		{
+			return ResultTable.GetEnumerator();
 		}
 	}
 }

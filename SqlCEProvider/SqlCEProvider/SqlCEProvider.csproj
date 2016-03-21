@@ -163,6 +163,6 @@
   <PropertyGroup>
     <PreBuildEvent>..\..\..\..\nuget\nuget.exe restore "..\..\..\SqlCEProvider.sln"</PreBuildEvent>
     <PostBuildEvent>copy /Y $(TargetFileName) ..\..\..
-</PostBuildEvent>
+..\..\..\..\nuget\nuget.exe pack ..\..\..\ndo.sqlce.nuspec</PostBuildEvent>
   </PropertyGroup>
 </Project>

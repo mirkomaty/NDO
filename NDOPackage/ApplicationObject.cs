@@ -1,5 +1,5 @@
 ﻿//
-// Copyright (C) 2002-2015 Mirko Matytschak 
+// Copyright (C) 2002-2016 Mirko Matytschak 
 // (www.netdataobjects.de)
 //
 // Author: Mirko Matytschak
@@ -49,16 +49,7 @@ namespace NETDataObjects.NDOVSPackage
         {
             get
             {
-                if (null == assemblyPath)
-                {
-					RegistryKey key = Registry.LocalMachine.OpenSubKey( @"SOFTWARE\NDO" );
-                    if (key == null)
-                        throw new Exception(@"Can't find NDO in the registry at HKLM\SOFTWARE\NDO. Please reinstall NDO.");
-                    assemblyPath = (string)key.GetValue("InstallDir");
-					if ( assemblyPath == null )
-						throw new Exception( @"Can't find InstallDir value in the registry at HKLM\SOFTWARE\NDO. Please reinstall NDO." );
-				}
-                return assemblyPath;
+				return Path.GetDirectoryName( typeof( ApplicationObject ).Assembly.Location );
             }
         }
 

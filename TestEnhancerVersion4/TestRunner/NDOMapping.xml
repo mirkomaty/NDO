@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="UTF-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <NDOMapping SchemaVersion="1.0">
   <Connections>
     <Connection ID="C0" Name="Data Source=D:\Projekte\NDO\SqliteProvider\NDOUnitTests.db" Type="Sqlite" />

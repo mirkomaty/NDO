@@ -1,5 +1,7 @@
-Microsoft Visual Studio Solution File, Format Version 11.00
-# Visual Studio 2010
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2013
+VisualStudioVersion = 12.0.30723.0
+MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NdoUnitTests", "NdoUnitTests\NdoUnitTests.csproj", "{3CEF344E-1479-426D-979D-C17E41AF6772}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestSTD", "TestSTD\TestSTD.csproj", "{D6F97986-8B3C-4000-BAF0-15D4BA077128}"

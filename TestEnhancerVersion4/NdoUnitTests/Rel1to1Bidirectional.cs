@@ -270,7 +270,7 @@ namespace NdoUnitTests {
 			pm.Save();
 			Assert.Null(m.SVN, "2. SVN should be null");
 			Assert.AreEqual(NDOObjectState.Transient, svn.NDOObjectState, "2. Wrong state");
-			ObjectId moid = m.NDOObjectId;
+			moid = m.NDOObjectId;
 			pm.UnloadCache();
 			m = (Mitarbeiter)pm.FindObject(moid);
 			Assert.NotNull(m, "3. Mitarbeiter not found");

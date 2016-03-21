@@ -113,15 +113,15 @@
 					<ButtonText>Open Mapping Tool</ButtonText>
 				</Strings>
 			</Button>
-				
-			<Button guid="guidNDOPackageCmdSet" id="cmdidOpenClassGenerator" priority="0x0100" type="Button">
+
+      <!--Button guid="guidNDOPackageCmdSet" id="cmdidOpenClassGenerator" priority="0x0100" type="Button">
 				<Parent guid="guidNDOPackageCmdSet" id="NDOMenuGroup" />
 				<Icon guid="guidImages" id="bmpOpenClassGenerator" />
 				<CommandFlag>DefaultDisabled</CommandFlag>
 				<Strings>
 					<ButtonText>Open Class Generator</ButtonText>
 				</Strings>
-			</Button>				
+			</Button-->				
 
 		</Buttons>
 

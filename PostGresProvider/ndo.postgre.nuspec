@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+<package >
+	<metadata>
+		<id>ndo.postgre</id>
+		<version>3.0.0.0</version>
+		<authors>Mirko Matytschak</authors>
+		<owners>Mirko Matytschak</owners>
+		<licenseUrl>http://opensource.org/licenses/MIT</licenseUrl>
+		<projectUrl>http://www.netdataobjects.de</projectUrl>
+		<requireLicenseAcceptance>false</requireLicenseAcceptance>
+		<description>NDO Provider dll for PostgreSql databases</description>
+		<releaseNotes>Initial package.</releaseNotes>
+		<copyright>Copyright 2016 (c) Mirko Matytschak</copyright>
+		<tags>NDO .NET Data Objects Persistence</tags>
+		<dependencies>
+			<dependency id="Npgsql" version="2.2.5" />
+		</dependencies>
+	</metadata>
+	<files>
+		<file src="PostgreProvider.dll" target="/lib/net40" />
+	</files>  
+</package>

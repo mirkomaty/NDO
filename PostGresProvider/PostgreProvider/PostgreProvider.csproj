@@ -165,6 +165,7 @@
   <PropertyGroup>
     <PreBuildEvent>..\..\..\..\nuget\nuget.exe restore "..\..\..\PostgreSqlProvider.sln"
 </PreBuildEvent>
-    <PostBuildEvent>copy /Y $(TargetFileName) ..\..\..</PostBuildEvent>
+    <PostBuildEvent>copy /Y $(TargetFileName) ..\..\..
+..\..\..\..\nuget\nuget.exe pack ..\..\..\ndo.postgre.nuspec</PostBuildEvent>
   </PropertyGroup>
 </Project>

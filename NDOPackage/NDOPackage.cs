@@ -93,14 +93,23 @@ namespace NETDataObjects.NDOVSPackage
 				menuItem = new OpenMappingTool( dte, menuCommandID );
 				mcs.AddCommand( menuItem );
 
-				menuCommandID = new CommandID( GuidList.guidNDOPackageCmdSet, (int)PkgCmdIDList.cmdidOpenClassGenerator );
-				menuItem = new OpenClassGenerator( dte, menuCommandID );
-				mcs.AddCommand( menuItem );
+				//menuCommandID = new CommandID( GuidList.guidNDOPackageCmdSet, (int)PkgCmdIDList.cmdidOpenClassGenerator );
+				//menuItem = new OpenClassGenerator( dte, menuCommandID );
+				//mcs.AddCommand( menuItem );
 			}
 
 			this.buildEventHandler = new BuildEventHandler( dte );
 		}
         #endregion
 
+		private void dummy()
+		{
+			SimpleMappingTool.AddPropertyDialog dlg = null;
+			dummy2( dlg );
+		}
+		private void dummy2(object o)
+		{
+			Console.WriteLine( o.ToString() );
+		}
     }
 }

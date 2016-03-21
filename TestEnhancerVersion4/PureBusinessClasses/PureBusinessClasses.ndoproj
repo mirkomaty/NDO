@@ -19,7 +19,7 @@
     <DatabaseOwner>
     </DatabaseOwner>
     <GenerateConstraints>False</GenerateConstraints>
-    <UseMsBuild>False</UseMsBuild>
+    <UseMsBuild>True</UseMsBuild>
     <DropExistingElements>True</DropExistingElements>
   </Options>
   <ProjectDescription>
@@ -31,7 +31,7 @@
     <KeyFile>
     </KeyFile>
     <References>
-      <Reference AssemblyName="System.Core" AssemblyPath="d:\program files (x86)\reference assemblies\microsoft\framework\.netframework\v4.0\system.core.dll">
+      <Reference AssemblyName="System.Core" AssemblyPath="..\..\..\..\program files (x86)\reference assemblies\microsoft\framework\.netframework\v4.0\system.core.dll" CheckThisDLL="False">
       </Reference>
     </References>
   </ProjectDescription>

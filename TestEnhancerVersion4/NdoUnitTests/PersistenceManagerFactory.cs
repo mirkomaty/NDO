@@ -46,7 +46,7 @@ namespace NdoUnitTests
 	{
 		public static PersistenceManager NewPersistenceManager()
 		{
-            string path = @"D:\Projekte\NDO22\TestEnhancerVersion4\NDOUnitTests\bin\Debug\NDOMapping.xml";
+            string path = @"C:\Projekte\NDO\TestEnhancerVersion4\NDOUnitTests\bin\Debug\NDOMapping.xml";
             PersistenceManager pm = new PersistenceManager(path);
             //PersistenceManager pm = new PersistenceManager();
 //			pm.LogPath = Path.GetDirectoryName(path);

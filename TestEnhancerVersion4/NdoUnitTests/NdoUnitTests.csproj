@@ -44,6 +44,7 @@
     <UseApplicationTrust>false</UseApplicationTrust>
     <BootstrapperEnabled>true</BootstrapperEnabled>
     <TargetFrameworkProfile />
+    <NuGetPackageImportStamp>274908c7</NuGetPackageImportStamp>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <OutputPath>bin\Debug\</OutputPath>
@@ -93,13 +94,13 @@
     <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="NDO, Version=3.0.0.0, Culture=neutral, PublicKeyToken=37bfdffa92a0cd24, processorArchitecture=MSIL">
+    <Reference Include="NDO, Version=3.0.0.2, Culture=neutral, PublicKeyToken=37bfdffa92a0cd24, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\NDODLL\bin\Debug\NDO.dll</HintPath>
+      <HintPath>..\packages\ndo.dll.3.0.0.2\lib\net40\NDO.dll</HintPath>
     </Reference>
     <Reference Include="NDOInterfaces, Version=3.0.0.0, Culture=neutral, PublicKeyToken=ff5e453a099b8326, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\NDOInterfaces\bin\Debug\NDOInterfaces.dll</HintPath>
+      <Private>True</Private>
+      <HintPath>..\packages\ndo.dll.3.0.0.2\lib\net40\NDOInterfaces.dll</HintPath>
     </Reference>
     <Reference Include="nunit.framework">
       <Name>nunit.framework</Name>
@@ -252,6 +253,7 @@
       <DependentUpon>NdoUnitTests.ndo.xsd</DependentUpon>
     </None>
     <None Include="bin\Debug\NdoUnitTests.ndodiff..sql" />
+    <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
@@ -271,9 +273,6 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ProjectExtensions>
-    <VisualStudio>
-      <UserProperties NDOUtf8Encoding="true" DatabaseOwner="" NDOSQLScriptLanguage="Firebird" NDOUseTimeStamps="false" NDOGenerateChangeEvents="false" NDOGenerateSQL="true" NDOMergeSchema="true" NDOMergeMapping="true" NDONewMapping="false" NDOGenerateSchema="true" NDOGenerateMapping="true" NDOEnableEnhancer="false" NDOEnableAddIn="true" NDOTypeListFile="C:\Projekte\NDO\TestEnhancerVersion4\NdoUnitTests\BIN\Debug\NDOTypes.xml" NDODefaultConnection="Password=masterkey;Database=C:\Projekte\NDO\TestEnhancerVersion4\NdoUnitTests\FirebirdTest.FDB;Dialect=3;User Id=SYSDBA;Data Source=localhost" NDOUsePolymorphy="true" />
-    </VisualStudio>
   </ProjectExtensions>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
@@ -282,4 +281,11 @@
     <PostBuildEvent>
     </PostBuildEvent>
   </PropertyGroup>
+  <Import Project="..\packages\ndo.dll.3.0.0.2\build\ndo.dll.targets" Condition="Exists('..\packages\ndo.dll.3.0.0.2\build\ndo.dll.targets')" />
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>This project references NuGet package(s) that are missing on this computer. Enable NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('..\packages\ndo.dll.3.0.0.2\build\ndo.dll.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\ndo.dll.3.0.0.2\build\ndo.dll.targets'))" />
+  </Target>
 </Project>

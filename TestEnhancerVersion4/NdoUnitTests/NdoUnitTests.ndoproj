@@ -11,15 +11,14 @@
     <TargetMappingFileName>NDOMapping.xml</TargetMappingFileName>
     <GenerateChangeEvents>False</GenerateChangeEvents>
     <UseTimeStamps>False</UseTimeStamps>
-    <Utf8Encoding>False</Utf8Encoding>
-    <SQLScriptLanguage>SqlServer</SQLScriptLanguage>
-    <SchemaVersion>
-    </SchemaVersion>
+    <Utf8Encoding>True</Utf8Encoding>
+    <SQLScriptLanguage>SqlCe</SQLScriptLanguage>
+    <SchemaVersion>1.0</SchemaVersion>
     <IncludeTypecodes>False</IncludeTypecodes>
     <DatabaseOwner>
     </DatabaseOwner>
     <GenerateConstraints>False</GenerateConstraints>
-    <UseMsBuild>False</UseMsBuild>
+    <UseMsBuild>True</UseMsBuild>
     <DropExistingElements>True</DropExistingElements>
   </Options>
   <ProjectDescription>
@@ -31,13 +30,13 @@
     <KeyFile>
     </KeyFile>
     <References>
-      <Reference AssemblyName="NDOInterfaces" AssemblyPath="..\..\NDOInterfaces\bin\Debug\NDOInterfaces.dll">
-      </Reference>
-      <Reference AssemblyName="nunit.framework" AssemblyPath="D:\Program Files (x86)\NUnit 2.6.3\bin\framework\nunit.framework.dll">
+      <Reference AssemblyName="nunit.framework" AssemblyPath="..\..\..\..\Program Files (x86)\NUnit 2.6.3\bin\framework\nunit.framework.dll" CheckThisDLL="False" >
       </Reference>
       <Reference AssemblyName="PureBusinessClasses" AssemblyPath="..\PureBusinessClasses\bin\Debug\PureBusinessClasses.dll">
       </Reference>
-      <Reference AssemblyName="System.Core" AssemblyPath="d:\program files (x86)\reference assemblies\microsoft\framework\.netframework\v4.0\system.core.dll">
+      <Reference AssemblyName="NDOInterfaces" AssemblyPath="..\packages\ndo.dll.3.0.0.2\lib\net40\NDOInterfaces.dll" CheckThisDLL="False" >
+      </Reference>
+      <Reference AssemblyName="System.Core" AssemblyPath="..\..\..\..\program files (x86)\reference assemblies\microsoft\framework\.netframework\v4.0\system.core.dll" CheckThisDLL="False" >
       </Reference>
     </References>
   </ProjectDescription>

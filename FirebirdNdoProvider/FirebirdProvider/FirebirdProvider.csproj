@@ -153,10 +153,14 @@
       <Install>true</Install>
     </BootstrapperPackage>
   </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
+  </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PreBuildEvent>
     </PreBuildEvent>
-    <PostBuildEvent>copy $(TargetFileName) ..\..\..</PostBuildEvent>
+    <PostBuildEvent>copy $(TargetFileName) ..\..\..
+..\..\..\..\nuget\nuget.exe pack ..\..\..\ndo.firebird.nuspec</PostBuildEvent>
   </PropertyGroup>
 </Project>

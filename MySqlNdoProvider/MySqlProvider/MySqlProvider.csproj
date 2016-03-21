@@ -159,6 +159,7 @@
   <PropertyGroup>
     <PreBuildEvent>..\..\..\..\nuget\nuget.exe restore "..\..\..\MySqlNdoProvider.sln"
 </PreBuildEvent>
-    <PostBuildEvent>copy /Y $(TargetFileName) ..\..\..</PostBuildEvent>
+    <PostBuildEvent>copy /Y $(TargetFileName) ..\..\..
+..\..\..\..\nuget\nuget.exe pack ..\..\..\ndo.mysql.nuspec</PostBuildEvent>
   </PropertyGroup>
 </Project>
