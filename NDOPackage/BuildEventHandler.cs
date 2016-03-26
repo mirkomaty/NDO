@@ -321,11 +321,7 @@ namespace NETDataObjects.NDOVSPackage
                 messages.WriteLine( "*** Enhancer Add-in Error: ***" );
                 if (!(ex is EnhancerEmptyException))
                 {
-#if DEBUG
                     messages.ShowError( ex.ToString());
-#else
-                    messages.ShowError( ex.Message);
-#endif
                 }
                 if (ex is System.Runtime.InteropServices.COMException)
                 {

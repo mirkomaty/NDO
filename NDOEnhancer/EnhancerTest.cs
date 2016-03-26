@@ -176,6 +176,8 @@ namespace EnhancerTest
 					string arg = args[0];
 					arg = Path.GetFullPath(arg);
 
+					Console.WriteLine( "Enhancer executable: " + typeof(EnhancerTest).Assembly.Location );
+
 					result = new EnhancerTest().DomainLaunch(arg);
 				}
 				else
