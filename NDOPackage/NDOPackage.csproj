@@ -42,6 +42,9 @@
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="FirebirdProvider">
+      <HintPath>..\FirebirdNdoProvider\FirebirdProvider.dll</HintPath>
+    </Reference>
     <Reference Include="Mapping, Version=1.0.5490.31731, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\SimpleMappingTool\bin\Release\Mapping.exe</HintPath>
