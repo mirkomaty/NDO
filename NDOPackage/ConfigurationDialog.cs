@@ -730,9 +730,6 @@ namespace NETDataObjects.NDOVSPackage
 
 		void GeneratePackageReference()
 		{
-			string versionString = new AssemblyName( GetType().Assembly.FullName ).Version.ToString();
-			if (versionString.EndsWith( ".0" ))
-				versionString = versionString.Substring( 0, versionString.Length - 2 );
 
 			try
 			{
@@ -742,7 +739,7 @@ namespace NETDataObjects.NDOVSPackage
 				if (!installerServices.IsPackageInstalled( this.project, "ndo.dll" ))
 				{
 					var installer = componentModel.GetService<IVsPackageInstaller>();
-					installer.InstallPackage(null, this.project, "ndo.dll", versionString, false );
+					installer.InstallPackage(null, this.project, "ndo.dll", (string)null, false );
 				}
 			}
 
