@@ -2,7 +2,7 @@
 <package >
   <metadata>
     <id>ndo.dll</id>
-    <version>3.0.0.3</version>
+    <version>3.0.0.4</version>
     <authors>Mirko Matytschak</authors>
     <owners>Mirko Matytschak</owners>
     <licenseUrl>http://opensource.org/licenses/MIT</licenseUrl>
