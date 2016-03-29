@@ -36,6 +36,7 @@ using System.Collections;
 using NDOEnhancer;
 using System.IO;
 using System.Xml;
+using System.Reflection;
 
 namespace EnhancerTest
 {
@@ -145,7 +146,7 @@ namespace EnhancerTest
             if (this.verboseMode)
                 Console.WriteLine("Domain base directory is: " + AppDomain.CurrentDomain.BaseDirectory);
 #endif
-            Console.WriteLine(EnhDate.String.Replace("NDO", "NDO Enhancer"));
+			Console.WriteLine( EnhDate.String, "NDO Enhancer", new AssemblyName( GetType().Assembly.FullName ).Version.ToString() );
 
             if (!pd.IsWebProject)
 			    pd.References.Add(pd.AssemblyName, new NDOReference(pd.AssemblyName, pd.BinFile, true));
@@ -186,6 +187,8 @@ namespace EnhancerTest
 					Console.WriteLine( "Domain base directory is: " + AppDomain.CurrentDomain.BaseDirectory );
 					Console.WriteLine( "Running as " + (IntPtr.Size * 8) + " bit app." );
 #endif
+                    AppDomain.CurrentDomain.AssemblyResolve += OnAssemblyResolve;
+
 					string newarg = (string) AppDomain.CurrentDomain.GetData("arg");
 					new EnhancerTest().InternalStart(newarg);
 				}
@@ -201,6 +204,21 @@ namespace EnhancerTest
             }
 			return result;
 		}
+
+        static Assembly OnAssemblyResolve(object sender, ResolveEventArgs args)
+        {
+            if (args.Name.ToUpper().StartsWith("NDO,"))
+            {
+                string path = AppDomain.CurrentDomain.BaseDirectory;
+                string fileName = Path.Combine(path, "NDO.dll");
+                if (File.Exists(fileName))
+                    return Assembly.LoadFrom(fileName);
+                return null;
+            }
+            Console.WriteLine("Warning: Can't resolve assembly: " + args.Name);
+            return null;
+        }
+
 
 		public EnhancerTest()
 		{

@@ -36,6 +36,7 @@ using EnvDTE80;
 using VSLangProj;
 using System.Collections.Generic;
 using NDOEnhancer;
+using System.Reflection;
 
 namespace NETDataObjects.NDOVSPackage
 {
@@ -233,7 +234,7 @@ namespace NETDataObjects.NDOVSPackage
 					return;
 				}
 
-                messages.WriteLine(EnhDate.String);
+				messages.WriteLine(String.Format(EnhDate.String, "NDO Extension", new AssemblyName(GetType().Assembly.FullName).Version.ToString()));
 
 				ProjectDescription projectDescription = new ProjectDescription(solution, project);
                 string projFileName = options.FileName;

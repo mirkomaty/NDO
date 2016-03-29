@@ -64,7 +64,7 @@ namespace MakeEnhancerDate
 {
 	public class EnhDate
 	{
-		public const string String = ""NDO: " + DateTime.Now.ToShortDateString() + " (" + args[0] + " " + rev + @")"";
+		public const string String = ""{0} " + DateTime.Now.ToShortDateString() + " (V. {1} " + rev + @")"";
 	}
 }
 ");

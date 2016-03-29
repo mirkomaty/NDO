@@ -37,7 +37,6 @@ namespace NETDataObjects.NDOVSPackage
 	internal class ApplicationObject
 	{
 		static _DTE applicationObject;
-        static string assemblyPath;
 
 		public static _DTE VisualStudioApplication
 		{

@@ -113,8 +113,6 @@ namespace NDOEnhancer
 		private string				ownAssemblyName = null; 
 		private StreamWriter		sortedFieldsFile;
 
-
-		
 		private ClassHashtable		allPersistentClasses = new ClassHashtable();
 		private Hashtable			allSortedFields = new ClassHashtable();
 		private Hashtable			allReferences = new ClassHashtable();
@@ -125,9 +123,6 @@ namespace NDOEnhancer
 		private NDODataSet			dsSchema;
 		private ConfigurationOptions options;
 		private string				assemblyKeyFile = null;
-		private bool				mapProperties = false;
-
-		
 
 		private static string assemblyPath = null;
 
@@ -169,12 +164,6 @@ namespace NDOEnhancer
             }
         }
 
-        //Assembly OnAssemblyResolve(object sender, ResolveEventArgs args)
-        //{
-        //    this.messages.WriteLine("AssemblyResolve: " + args.Name);
-        //    return null;
-        //}
-
 
 		private void 
 			searchPersistentBases()
@@ -195,8 +184,6 @@ namespace NDOEnhancer
                     throw new Exception("Can't load referenced Assembly '" + projectDescription.BinFile + ". " + ex.Message);
                 }
             }
-
-            // AppDomain.CurrentDomain.AssemblyResolve += OnAssemblyResolve;
 
 			// Durchsuche alle referenzierten Assemblies
 			foreach (NDOReference reference in references.Values)
@@ -298,8 +285,6 @@ namespace NDOEnhancer
 //				XmlNodeList vtnl = pcDoc.SelectNodes(@"/PersistentClasses/ValueType");
 //				ValueTypes.Instance.Merge(vtnl);
 			}
-
-            // AppDomain.CurrentDomain.AssemblyResolve -= OnAssemblyResolve;
 
             if (projectDescription.IsWebProject)
             {
@@ -1343,11 +1328,6 @@ namespace NDOEnhancer
 									break;
 								}
 							}
-							if (ai.Name == "NDO.NDOMapPropertiesAttribute")
-							{
-								this.mapProperties = true;
-							}
-
 						}
 						if (this.assemblyKeyFile != null)
 							break;
@@ -1477,7 +1457,8 @@ namespace NDOEnhancer
                                     messages.WriteInsertedLine(subEl.getAllLines());
                             }
 							insertNdo = false;
-#if NDO20
+
+							/* We don't need a version check anymore. This might be necessary again, if it comes to .NET Version 5
                             if (assElem.Major != 2 && assElem.Minor != 0)
                             {
 								string version = EnhDate.String;
@@ -1488,7 +1469,7 @@ namespace NDOEnhancer
                                 throw new Exception("This assembly is built with NDO.dll Version " + assElem.VersionString.Replace(':', '.')
                                     + ". This NDO enhancer only works with NDO.dll version " + version + ". Please correct your assembly reference and rebuild the assembly.");
                             }
-#endif
+							*/
 #if NDO12
                             if (assElem.Major != 1 && assElem.Minor != 2)
                             {
