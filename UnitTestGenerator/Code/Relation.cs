@@ -87,7 +87,10 @@ namespace TestGenerator
 					sb.Append(')');
 					
 				}
+				if (!this.ri.MustHaveTable && this.ri.HasTable)
+					sb.Append( ", MappingTable" );
 				sb.Append("]");
+				
 				result.Add(sb.ToString());
 				sb.Length = 0;
 

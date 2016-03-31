@@ -50,7 +50,7 @@ namespace TestGenerator
 					relInfos.Add(ri);
 					if (!ri.HasTable)
 					{
-						ri = new RelInfo((i & 1) != 0, (i & 2) != 0, (i & 4) != 0, (i & 8) != 0, (i & 16) != 0, (i & 32) != 0, (i & 64) != 0);
+						ri =     new RelInfo((i & 1) != 0, (i & 2) != 0, (i & 4) != 0, (i & 8) != 0, (i & 16) != 0, (i & 32) != 0, (i & 64) != 0);
 						ri.HasTable = true;
 						relInfos.Add(ri);
 					}
@@ -73,7 +73,6 @@ namespace TestGenerator
 
 			new ClassGenerator(relInfos).Generate();
 			new TestGenerator(relInfos).Generate();
-			new MappingGenerator(relInfos).Generate();
 			Console.WriteLine(relInfos.Count);
 //			for (int i = 0; i < relInfos.Count; i++)
 //			{

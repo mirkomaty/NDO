@@ -102,14 +102,19 @@ namespace TestGenerator
 			this.isComposite = iscomp;
 			this.ownPoly = ownpoly;
 			this.otherPoly = othpoly;
-			this.hasTable = false;
+			this.hasTable = MustHaveTable;
 			this.useGuid = useguid;
-			if (isBi && isList && foreignIsList)
-				this.hasTable = true;
-			if (otherPoly && isList)
-				this.hasTable = true;
-			if (isBi && ownPoly && foreignIsList)
-				this.hasTable = true;
+		}
+
+		public bool MustHaveTable
+		{
+			get
+			{
+				return
+				   (isBi && isList && foreignIsList)					
+				|| (otherPoly && isList)					
+				|| (isBi && ownPoly && foreignIsList);
+			}
 		}
 
 		public override string ToString()

@@ -2,6 +2,8 @@
 using System.Collections;
 using NDO;
 
+using NDO.Mapping.Attributes;
+
 namespace RelationTestClasses
 {
 
@@ -45,7 +47,7 @@ public class AgrDir1NoTblAutoRight
 public class AgrDir1TblAutoLeft
 {
 	int dummy;
-	[NDORelation]
+	[NDORelation, MappingTable]
 	AgrDir1TblAutoRight relField;
 
 	public int Dummy
@@ -125,7 +127,7 @@ public class AgrBi11NoTblAutoRight
 public class AgrBi11TblAutoLeft
 {
 	int dummy;
-	[NDORelation]
+	[NDORelation, MappingTable]
 	AgrBi11TblAutoRight relField;
 
 	public int Dummy
@@ -149,7 +151,7 @@ public class AgrBi11TblAutoLeft
 public class AgrBi11TblAutoRight
 {
 	int dummy;
-	[NDORelation]
+	[NDORelation, MappingTable]
 	AgrBi11TblAutoLeft relField;
 
 	public int Dummy
@@ -209,7 +211,7 @@ public class AgrDirnNoTblAutoRight
 public class AgrDirnTblAutoLeft
 {
 	int dummy;
-	[NDORelation(typeof(AgrDirnTblAutoRight))]
+	[NDORelation(typeof(AgrDirnTblAutoRight)), MappingTable]
 	IList relField = new ArrayList();
 
 	public int Dummy
@@ -297,7 +299,7 @@ public class AgrBin1NoTblAutoRight
 public class AgrBin1TblAutoLeft
 {
 	int dummy;
-	[NDORelation(typeof(AgrBin1TblAutoRight))]
+	[NDORelation(typeof(AgrBin1TblAutoRight)), MappingTable]
 	IList relField = new ArrayList();
 
 	public int Dummy
@@ -325,7 +327,7 @@ public class AgrBin1TblAutoLeft
 public class AgrBin1TblAutoRight
 {
 	int dummy;
-	[NDORelation]
+	[NDORelation, MappingTable]
 	AgrBin1TblAutoLeft relField;
 
 	public int Dummy
@@ -389,7 +391,7 @@ public class AgrBi1nNoTblAutoRight
 public class AgrBi1nTblAutoLeft
 {
 	int dummy;
-	[NDORelation]
+	[NDORelation, MappingTable]
 	AgrBi1nTblAutoRight relField;
 
 	public int Dummy
@@ -413,7 +415,7 @@ public class AgrBi1nTblAutoLeft
 public class AgrBi1nTblAutoRight
 {
 	int dummy;
-	[NDORelation(typeof(AgrBi1nTblAutoLeft))]
+	[NDORelation(typeof(AgrBi1nTblAutoLeft)), MappingTable]
 	IList relField = new ArrayList();
 
 	public int Dummy
@@ -517,7 +519,7 @@ public class CmpDir1NoTblAutoRight
 public class CmpDir1TblAutoLeft
 {
 	int dummy;
-	[NDORelation(RelationInfo.Composite)]
+	[NDORelation(RelationInfo.Composite), MappingTable]
 	CmpDir1TblAutoRight relField;
 
 	public int Dummy
@@ -597,7 +599,7 @@ public class CmpBi11NoTblAutoRight
 public class CmpBi11TblAutoLeft
 {
 	int dummy;
-	[NDORelation(RelationInfo.Composite)]
+	[NDORelation(RelationInfo.Composite), MappingTable]
 	CmpBi11TblAutoRight relField;
 
 	public int Dummy
@@ -621,7 +623,7 @@ public class CmpBi11TblAutoLeft
 public class CmpBi11TblAutoRight
 {
 	int dummy;
-	[NDORelation]
+	[NDORelation, MappingTable]
 	CmpBi11TblAutoLeft relField;
 
 	public int Dummy
@@ -681,7 +683,7 @@ public class CmpDirnNoTblAutoRight
 public class CmpDirnTblAutoLeft
 {
 	int dummy;
-	[NDORelation(typeof(CmpDirnTblAutoRight), RelationInfo.Composite)]
+	[NDORelation(typeof(CmpDirnTblAutoRight), RelationInfo.Composite), MappingTable]
 	IList relField = new ArrayList();
 
 	public int Dummy
@@ -769,7 +771,7 @@ public class CmpBin1NoTblAutoRight
 public class CmpBin1TblAutoLeft
 {
 	int dummy;
-	[NDORelation(typeof(CmpBin1TblAutoRight), RelationInfo.Composite)]
+	[NDORelation(typeof(CmpBin1TblAutoRight), RelationInfo.Composite), MappingTable]
 	IList relField = new ArrayList();
 
 	public int Dummy
@@ -797,7 +799,7 @@ public class CmpBin1TblAutoLeft
 public class CmpBin1TblAutoRight
 {
 	int dummy;
-	[NDORelation]
+	[NDORelation, MappingTable]
 	CmpBin1TblAutoLeft relField;
 
 	public int Dummy
@@ -861,7 +863,7 @@ public class CmpBi1nNoTblAutoRight
 public class CmpBi1nTblAutoLeft
 {
 	int dummy;
-	[NDORelation(RelationInfo.Composite)]
+	[NDORelation(RelationInfo.Composite), MappingTable]
 	CmpBi1nTblAutoRight relField;
 
 	public int Dummy
@@ -885,7 +887,7 @@ public class CmpBi1nTblAutoLeft
 public class CmpBi1nTblAutoRight
 {
 	int dummy;
-	[NDORelation(typeof(CmpBi1nTblAutoLeft))]
+	[NDORelation(typeof(CmpBi1nTblAutoLeft)), MappingTable]
 	IList relField = new ArrayList();
 
 	public int Dummy
@@ -995,7 +997,7 @@ public class AgrDir1OwnpconNoTblAutoRight
 public class AgrDir1OwnpconTblAutoLeftBase
 {
 	int dummy;
-	[NDORelation]
+	[NDORelation, MappingTable]
 	AgrDir1OwnpconTblAutoRight relField;
 
 	public int Dummy
@@ -1087,7 +1089,7 @@ public class AgrBi11OwnpconNoTblAutoRight
 public class AgrBi11OwnpconTblAutoLeftBase
 {
 	int dummy;
-	[NDORelation]
+	[NDORelation, MappingTable]
 	AgrBi11OwnpconTblAutoRight relField;
 
 	public int Dummy
@@ -1117,7 +1119,7 @@ public class AgrBi11OwnpconTblAutoLeftDerived : AgrBi11OwnpconTblAutoLeftBase
 public class AgrBi11OwnpconTblAutoRight
 {
 	int dummy;
-	[NDORelation]
+	[NDORelation, MappingTable]
 	AgrBi11OwnpconTblAutoLeftBase relField;
 
 	public int Dummy
@@ -1183,7 +1185,7 @@ public class AgrDirnOwnpconNoTblAutoRight
 public class AgrDirnOwnpconTblAutoLeftBase
 {
 	int dummy;
-	[NDORelation(typeof(AgrDirnOwnpconTblAutoRight))]
+	[NDORelation(typeof(AgrDirnOwnpconTblAutoRight)), MappingTable]
 	IList relField = new ArrayList();
 
 	public int Dummy
@@ -1283,7 +1285,7 @@ public class AgrBin1OwnpconNoTblAutoRight
 public class AgrBin1OwnpconTblAutoLeftBase
 {
 	int dummy;
-	[NDORelation(typeof(AgrBin1OwnpconTblAutoRight))]
+	[NDORelation(typeof(AgrBin1OwnpconTblAutoRight)), MappingTable]
 	IList relField = new ArrayList();
 
 	public int Dummy
@@ -1317,7 +1319,7 @@ public class AgrBin1OwnpconTblAutoLeftDerived : AgrBin1OwnpconTblAutoLeftBase
 public class AgrBin1OwnpconTblAutoRight
 {
 	int dummy;
-	[NDORelation]
+	[NDORelation, MappingTable]
 	AgrBin1OwnpconTblAutoLeftBase relField;
 
 	public int Dummy
@@ -1483,7 +1485,7 @@ public class CmpDir1OwnpconNoTblAutoRight
 public class CmpDir1OwnpconTblAutoLeftBase
 {
 	int dummy;
-	[NDORelation(RelationInfo.Composite)]
+	[NDORelation(RelationInfo.Composite), MappingTable]
 	CmpDir1OwnpconTblAutoRight relField;
 
 	public int Dummy
@@ -1575,7 +1577,7 @@ public class CmpBi11OwnpconNoTblAutoRight
 public class CmpBi11OwnpconTblAutoLeftBase
 {
 	int dummy;
-	[NDORelation(RelationInfo.Composite)]
+	[NDORelation(RelationInfo.Composite), MappingTable]
 	CmpBi11OwnpconTblAutoRight relField;
 
 	public int Dummy
@@ -1605,7 +1607,7 @@ public class CmpBi11OwnpconTblAutoLeftDerived : CmpBi11OwnpconTblAutoLeftBase
 public class CmpBi11OwnpconTblAutoRight
 {
 	int dummy;
-	[NDORelation]
+	[NDORelation, MappingTable]
 	CmpBi11OwnpconTblAutoLeftBase relField;
 
 	public int Dummy
@@ -1671,7 +1673,7 @@ public class CmpDirnOwnpconNoTblAutoRight
 public class CmpDirnOwnpconTblAutoLeftBase
 {
 	int dummy;
-	[NDORelation(typeof(CmpDirnOwnpconTblAutoRight), RelationInfo.Composite)]
+	[NDORelation(typeof(CmpDirnOwnpconTblAutoRight), RelationInfo.Composite), MappingTable]
 	IList relField = new ArrayList();
 
 	public int Dummy
@@ -1771,7 +1773,7 @@ public class CmpBin1OwnpconNoTblAutoRight
 public class CmpBin1OwnpconTblAutoLeftBase
 {
 	int dummy;
-	[NDORelation(typeof(CmpBin1OwnpconTblAutoRight), RelationInfo.Composite)]
+	[NDORelation(typeof(CmpBin1OwnpconTblAutoRight), RelationInfo.Composite), MappingTable]
 	IList relField = new ArrayList();
 
 	public int Dummy
@@ -1805,7 +1807,7 @@ public class CmpBin1OwnpconTblAutoLeftDerived : CmpBin1OwnpconTblAutoLeftBase
 public class CmpBin1OwnpconTblAutoRight
 {
 	int dummy;
-	[NDORelation]
+	[NDORelation, MappingTable]
 	CmpBin1OwnpconTblAutoLeftBase relField;
 
 	public int Dummy
@@ -1971,7 +1973,7 @@ public class AgrDir1OthpconNoTblAutoRightDerived : AgrDir1OthpconNoTblAutoRightB
 public class AgrDir1OthpconTblAutoLeft
 {
 	int dummy;
-	[NDORelation]
+	[NDORelation, MappingTable]
 	AgrDir1OthpconTblAutoRightBase relField;
 
 	public int Dummy
@@ -2063,7 +2065,7 @@ public class AgrBi11OthpconNoTblAutoRightDerived : AgrBi11OthpconNoTblAutoRightB
 public class AgrBi11OthpconTblAutoLeft
 {
 	int dummy;
-	[NDORelation]
+	[NDORelation, MappingTable]
 	AgrBi11OthpconTblAutoRightBase relField;
 
 	public int Dummy
@@ -2087,7 +2089,7 @@ public class AgrBi11OthpconTblAutoLeft
 public class AgrBi11OthpconTblAutoRightBase
 {
 	int dummy;
-	[NDORelation]
+	[NDORelation, MappingTable]
 	AgrBi11OthpconTblAutoLeft relField;
 
 	public int Dummy
@@ -2263,7 +2265,7 @@ public class AgrBi1nOthpconNoTblAutoRightDerived : AgrBi1nOthpconNoTblAutoRightB
 public class AgrBi1nOthpconTblAutoLeft
 {
 	int dummy;
-	[NDORelation]
+	[NDORelation, MappingTable]
 	AgrBi1nOthpconTblAutoRightBase relField;
 
 	public int Dummy
@@ -2287,7 +2289,7 @@ public class AgrBi1nOthpconTblAutoLeft
 public class AgrBi1nOthpconTblAutoRightBase
 {
 	int dummy;
-	[NDORelation(typeof(AgrBi1nOthpconTblAutoLeft))]
+	[NDORelation(typeof(AgrBi1nOthpconTblAutoLeft)), MappingTable]
 	IList relField = new ArrayList();
 
 	public int Dummy
@@ -2409,7 +2411,7 @@ public class CmpDir1OthpconNoTblAutoRightDerived : CmpDir1OthpconNoTblAutoRightB
 public class CmpDir1OthpconTblAutoLeft
 {
 	int dummy;
-	[NDORelation(RelationInfo.Composite)]
+	[NDORelation(RelationInfo.Composite), MappingTable]
 	CmpDir1OthpconTblAutoRightBase relField;
 
 	public int Dummy
@@ -2501,7 +2503,7 @@ public class CmpBi11OthpconNoTblAutoRightDerived : CmpBi11OthpconNoTblAutoRightB
 public class CmpBi11OthpconTblAutoLeft
 {
 	int dummy;
-	[NDORelation(RelationInfo.Composite)]
+	[NDORelation(RelationInfo.Composite), MappingTable]
 	CmpBi11OthpconTblAutoRightBase relField;
 
 	public int Dummy
@@ -2525,7 +2527,7 @@ public class CmpBi11OthpconTblAutoLeft
 public class CmpBi11OthpconTblAutoRightBase
 {
 	int dummy;
-	[NDORelation]
+	[NDORelation, MappingTable]
 	CmpBi11OthpconTblAutoLeft relField;
 
 	public int Dummy
@@ -2701,7 +2703,7 @@ public class CmpBi1nOthpconNoTblAutoRightDerived : CmpBi1nOthpconNoTblAutoRightB
 public class CmpBi1nOthpconTblAutoLeft
 {
 	int dummy;
-	[NDORelation(RelationInfo.Composite)]
+	[NDORelation(RelationInfo.Composite), MappingTable]
 	CmpBi1nOthpconTblAutoRightBase relField;
 
 	public int Dummy
@@ -2725,7 +2727,7 @@ public class CmpBi1nOthpconTblAutoLeft
 public class CmpBi1nOthpconTblAutoRightBase
 {
 	int dummy;
-	[NDORelation(typeof(CmpBi1nOthpconTblAutoLeft))]
+	[NDORelation(typeof(CmpBi1nOthpconTblAutoLeft)), MappingTable]
 	IList relField = new ArrayList();
 
 	public int Dummy
@@ -2853,7 +2855,7 @@ public class AgrDir1OwnpconOthpconNoTblAutoRightDerived : AgrDir1OwnpconOthpconN
 public class AgrDir1OwnpconOthpconTblAutoLeftBase
 {
 	int dummy;
-	[NDORelation]
+	[NDORelation, MappingTable]
 	AgrDir1OwnpconOthpconTblAutoRightBase relField;
 
 	public int Dummy
@@ -2957,7 +2959,7 @@ public class AgrBi11OwnpconOthpconNoTblAutoRightDerived : AgrBi11OwnpconOthpconN
 public class AgrBi11OwnpconOthpconTblAutoLeftBase
 {
 	int dummy;
-	[NDORelation]
+	[NDORelation, MappingTable]
 	AgrBi11OwnpconOthpconTblAutoRightBase relField;
 
 	public int Dummy
@@ -2987,7 +2989,7 @@ public class AgrBi11OwnpconOthpconTblAutoLeftDerived : AgrBi11OwnpconOthpconTblA
 public class AgrBi11OwnpconOthpconTblAutoRightBase
 {
 	int dummy;
-	[NDORelation]
+	[NDORelation, MappingTable]
 	AgrBi11OwnpconOthpconTblAutoLeftBase relField;
 
 	public int Dummy
@@ -3289,7 +3291,7 @@ public class CmpDir1OwnpconOthpconNoTblAutoRightDerived : CmpDir1OwnpconOthpconN
 public class CmpDir1OwnpconOthpconTblAutoLeftBase
 {
 	int dummy;
-	[NDORelation(RelationInfo.Composite)]
+	[NDORelation(RelationInfo.Composite), MappingTable]
 	CmpDir1OwnpconOthpconTblAutoRightBase relField;
 
 	public int Dummy
@@ -3393,7 +3395,7 @@ public class CmpBi11OwnpconOthpconNoTblAutoRightDerived : CmpBi11OwnpconOthpconN
 public class CmpBi11OwnpconOthpconTblAutoLeftBase
 {
 	int dummy;
-	[NDORelation(RelationInfo.Composite)]
+	[NDORelation(RelationInfo.Composite), MappingTable]
 	CmpBi11OwnpconOthpconTblAutoRightBase relField;
 
 	public int Dummy
@@ -3423,7 +3425,7 @@ public class CmpBi11OwnpconOthpconTblAutoLeftDerived : CmpBi11OwnpconOthpconTblA
 public class CmpBi11OwnpconOthpconTblAutoRightBase
 {
 	int dummy;
-	[NDORelation]
+	[NDORelation, MappingTable]
 	CmpBi11OwnpconOthpconTblAutoLeftBase relField;
 
 	public int Dummy
@@ -3713,7 +3715,7 @@ public class AgrDir1NoTblGuidRight
 public class AgrDir1TblGuidLeft
 {
 	int dummy;
-	[NDORelation]
+	[NDORelation, MappingTable]
 	AgrDir1TblGuidRight relField;
 
 	public int Dummy
@@ -3793,7 +3795,7 @@ public class AgrBi11NoTblGuidRight
 public class AgrBi11TblGuidLeft
 {
 	int dummy;
-	[NDORelation]
+	[NDORelation, MappingTable]
 	AgrBi11TblGuidRight relField;
 
 	public int Dummy
@@ -3817,7 +3819,7 @@ public class AgrBi11TblGuidLeft
 public class AgrBi11TblGuidRight
 {
 	int dummy;
-	[NDORelation]
+	[NDORelation, MappingTable]
 	AgrBi11TblGuidLeft relField;
 
 	public int Dummy
@@ -3877,7 +3879,7 @@ public class AgrDirnNoTblGuidRight
 public class AgrDirnTblGuidLeft
 {
 	int dummy;
-	[NDORelation(typeof(AgrDirnTblGuidRight))]
+	[NDORelation(typeof(AgrDirnTblGuidRight)), MappingTable]
 	IList relField = new ArrayList();
 
 	public int Dummy
@@ -3965,7 +3967,7 @@ public class AgrBin1NoTblGuidRight
 public class AgrBin1TblGuidLeft
 {
 	int dummy;
-	[NDORelation(typeof(AgrBin1TblGuidRight))]
+	[NDORelation(typeof(AgrBin1TblGuidRight)), MappingTable]
 	IList relField = new ArrayList();
 
 	public int Dummy
@@ -3993,7 +3995,7 @@ public class AgrBin1TblGuidLeft
 public class AgrBin1TblGuidRight
 {
 	int dummy;
-	[NDORelation]
+	[NDORelation, MappingTable]
 	AgrBin1TblGuidLeft relField;
 
 	public int Dummy
@@ -4057,7 +4059,7 @@ public class AgrBi1nNoTblGuidRight
 public class AgrBi1nTblGuidLeft
 {
 	int dummy;
-	[NDORelation]
+	[NDORelation, MappingTable]
 	AgrBi1nTblGuidRight relField;
 
 	public int Dummy
@@ -4081,7 +4083,7 @@ public class AgrBi1nTblGuidLeft
 public class AgrBi1nTblGuidRight
 {
 	int dummy;
-	[NDORelation(typeof(AgrBi1nTblGuidLeft))]
+	[NDORelation(typeof(AgrBi1nTblGuidLeft)), MappingTable]
 	IList relField = new ArrayList();
 
 	public int Dummy
@@ -4185,7 +4187,7 @@ public class CmpDir1NoTblGuidRight
 public class CmpDir1TblGuidLeft
 {
 	int dummy;
-	[NDORelation(RelationInfo.Composite)]
+	[NDORelation(RelationInfo.Composite), MappingTable]
 	CmpDir1TblGuidRight relField;
 
 	public int Dummy
@@ -4265,7 +4267,7 @@ public class CmpBi11NoTblGuidRight
 public class CmpBi11TblGuidLeft
 {
 	int dummy;
-	[NDORelation(RelationInfo.Composite)]
+	[NDORelation(RelationInfo.Composite), MappingTable]
 	CmpBi11TblGuidRight relField;
 
 	public int Dummy
@@ -4289,7 +4291,7 @@ public class CmpBi11TblGuidLeft
 public class CmpBi11TblGuidRight
 {
 	int dummy;
-	[NDORelation]
+	[NDORelation, MappingTable]
 	CmpBi11TblGuidLeft relField;
 
 	public int Dummy
@@ -4349,7 +4351,7 @@ public class CmpDirnNoTblGuidRight
 public class CmpDirnTblGuidLeft
 {
 	int dummy;
-	[NDORelation(typeof(CmpDirnTblGuidRight), RelationInfo.Composite)]
+	[NDORelation(typeof(CmpDirnTblGuidRight), RelationInfo.Composite), MappingTable]
 	IList relField = new ArrayList();
 
 	public int Dummy
@@ -4437,7 +4439,7 @@ public class CmpBin1NoTblGuidRight
 public class CmpBin1TblGuidLeft
 {
 	int dummy;
-	[NDORelation(typeof(CmpBin1TblGuidRight), RelationInfo.Composite)]
+	[NDORelation(typeof(CmpBin1TblGuidRight), RelationInfo.Composite), MappingTable]
 	IList relField = new ArrayList();
 
 	public int Dummy
@@ -4465,7 +4467,7 @@ public class CmpBin1TblGuidLeft
 public class CmpBin1TblGuidRight
 {
 	int dummy;
-	[NDORelation]
+	[NDORelation, MappingTable]
 	CmpBin1TblGuidLeft relField;
 
 	public int Dummy
@@ -4529,7 +4531,7 @@ public class CmpBi1nNoTblGuidRight
 public class CmpBi1nTblGuidLeft
 {
 	int dummy;
-	[NDORelation(RelationInfo.Composite)]
+	[NDORelation(RelationInfo.Composite), MappingTable]
 	CmpBi1nTblGuidRight relField;
 
 	public int Dummy
@@ -4553,7 +4555,7 @@ public class CmpBi1nTblGuidLeft
 public class CmpBi1nTblGuidRight
 {
 	int dummy;
-	[NDORelation(typeof(CmpBi1nTblGuidLeft))]
+	[NDORelation(typeof(CmpBi1nTblGuidLeft)), MappingTable]
 	IList relField = new ArrayList();
 
 	public int Dummy
@@ -4663,7 +4665,7 @@ public class AgrDir1OwnpconNoTblGuidRight
 public class AgrDir1OwnpconTblGuidLeftBase
 {
 	int dummy;
-	[NDORelation]
+	[NDORelation, MappingTable]
 	AgrDir1OwnpconTblGuidRight relField;
 
 	public int Dummy
@@ -4755,7 +4757,7 @@ public class AgrBi11OwnpconNoTblGuidRight
 public class AgrBi11OwnpconTblGuidLeftBase
 {
 	int dummy;
-	[NDORelation]
+	[NDORelation, MappingTable]
 	AgrBi11OwnpconTblGuidRight relField;
 
 	public int Dummy
@@ -4785,7 +4787,7 @@ public class AgrBi11OwnpconTblGuidLeftDerived : AgrBi11OwnpconTblGuidLeftBase
 public class AgrBi11OwnpconTblGuidRight
 {
 	int dummy;
-	[NDORelation]
+	[NDORelation, MappingTable]
 	AgrBi11OwnpconTblGuidLeftBase relField;
 
 	public int Dummy
@@ -4851,7 +4853,7 @@ public class AgrDirnOwnpconNoTblGuidRight
 public class AgrDirnOwnpconTblGuidLeftBase
 {
 	int dummy;
-	[NDORelation(typeof(AgrDirnOwnpconTblGuidRight))]
+	[NDORelation(typeof(AgrDirnOwnpconTblGuidRight)), MappingTable]
 	IList relField = new ArrayList();
 
 	public int Dummy
@@ -4951,7 +4953,7 @@ public class AgrBin1OwnpconNoTblGuidRight
 public class AgrBin1OwnpconTblGuidLeftBase
 {
 	int dummy;
-	[NDORelation(typeof(AgrBin1OwnpconTblGuidRight))]
+	[NDORelation(typeof(AgrBin1OwnpconTblGuidRight)), MappingTable]
 	IList relField = new ArrayList();
 
 	public int Dummy
@@ -4985,7 +4987,7 @@ public class AgrBin1OwnpconTblGuidLeftDerived : AgrBin1OwnpconTblGuidLeftBase
 public class AgrBin1OwnpconTblGuidRight
 {
 	int dummy;
-	[NDORelation]
+	[NDORelation, MappingTable]
 	AgrBin1OwnpconTblGuidLeftBase relField;
 
 	public int Dummy
@@ -5151,7 +5153,7 @@ public class CmpDir1OwnpconNoTblGuidRight
 public class CmpDir1OwnpconTblGuidLeftBase
 {
 	int dummy;
-	[NDORelation(RelationInfo.Composite)]
+	[NDORelation(RelationInfo.Composite), MappingTable]
 	CmpDir1OwnpconTblGuidRight relField;
 
 	public int Dummy
@@ -5243,7 +5245,7 @@ public class CmpBi11OwnpconNoTblGuidRight
 public class CmpBi11OwnpconTblGuidLeftBase
 {
 	int dummy;
-	[NDORelation(RelationInfo.Composite)]
+	[NDORelation(RelationInfo.Composite), MappingTable]
 	CmpBi11OwnpconTblGuidRight relField;
 
 	public int Dummy
@@ -5273,7 +5275,7 @@ public class CmpBi11OwnpconTblGuidLeftDerived : CmpBi11OwnpconTblGuidLeftBase
 public class CmpBi11OwnpconTblGuidRight
 {
 	int dummy;
-	[NDORelation]
+	[NDORelation, MappingTable]
 	CmpBi11OwnpconTblGuidLeftBase relField;
 
 	public int Dummy
@@ -5339,7 +5341,7 @@ public class CmpDirnOwnpconNoTblGuidRight
 public class CmpDirnOwnpconTblGuidLeftBase
 {
 	int dummy;
-	[NDORelation(typeof(CmpDirnOwnpconTblGuidRight), RelationInfo.Composite)]
+	[NDORelation(typeof(CmpDirnOwnpconTblGuidRight), RelationInfo.Composite), MappingTable]
 	IList relField = new ArrayList();
 
 	public int Dummy
@@ -5439,7 +5441,7 @@ public class CmpBin1OwnpconNoTblGuidRight
 public class CmpBin1OwnpconTblGuidLeftBase
 {
 	int dummy;
-	[NDORelation(typeof(CmpBin1OwnpconTblGuidRight), RelationInfo.Composite)]
+	[NDORelation(typeof(CmpBin1OwnpconTblGuidRight), RelationInfo.Composite), MappingTable]
 	IList relField = new ArrayList();
 
 	public int Dummy
@@ -5473,7 +5475,7 @@ public class CmpBin1OwnpconTblGuidLeftDerived : CmpBin1OwnpconTblGuidLeftBase
 public class CmpBin1OwnpconTblGuidRight
 {
 	int dummy;
-	[NDORelation]
+	[NDORelation, MappingTable]
 	CmpBin1OwnpconTblGuidLeftBase relField;
 
 	public int Dummy
@@ -5639,7 +5641,7 @@ public class AgrDir1OthpconNoTblGuidRightDerived : AgrDir1OthpconNoTblGuidRightB
 public class AgrDir1OthpconTblGuidLeft
 {
 	int dummy;
-	[NDORelation]
+	[NDORelation, MappingTable]
 	AgrDir1OthpconTblGuidRightBase relField;
 
 	public int Dummy
@@ -5731,7 +5733,7 @@ public class AgrBi11OthpconNoTblGuidRightDerived : AgrBi11OthpconNoTblGuidRightB
 public class AgrBi11OthpconTblGuidLeft
 {
 	int dummy;
-	[NDORelation]
+	[NDORelation, MappingTable]
 	AgrBi11OthpconTblGuidRightBase relField;
 
 	public int Dummy
@@ -5755,7 +5757,7 @@ public class AgrBi11OthpconTblGuidLeft
 public class AgrBi11OthpconTblGuidRightBase
 {
 	int dummy;
-	[NDORelation]
+	[NDORelation, MappingTable]
 	AgrBi11OthpconTblGuidLeft relField;
 
 	public int Dummy
@@ -5931,7 +5933,7 @@ public class AgrBi1nOthpconNoTblGuidRightDerived : AgrBi1nOthpconNoTblGuidRightB
 public class AgrBi1nOthpconTblGuidLeft
 {
 	int dummy;
-	[NDORelation]
+	[NDORelation, MappingTable]
 	AgrBi1nOthpconTblGuidRightBase relField;
 
 	public int Dummy
@@ -5955,7 +5957,7 @@ public class AgrBi1nOthpconTblGuidLeft
 public class AgrBi1nOthpconTblGuidRightBase
 {
 	int dummy;
-	[NDORelation(typeof(AgrBi1nOthpconTblGuidLeft))]
+	[NDORelation(typeof(AgrBi1nOthpconTblGuidLeft)), MappingTable]
 	IList relField = new ArrayList();
 
 	public int Dummy
@@ -6077,7 +6079,7 @@ public class CmpDir1OthpconNoTblGuidRightDerived : CmpDir1OthpconNoTblGuidRightB
 public class CmpDir1OthpconTblGuidLeft
 {
 	int dummy;
-	[NDORelation(RelationInfo.Composite)]
+	[NDORelation(RelationInfo.Composite), MappingTable]
 	CmpDir1OthpconTblGuidRightBase relField;
 
 	public int Dummy
@@ -6169,7 +6171,7 @@ public class CmpBi11OthpconNoTblGuidRightDerived : CmpBi11OthpconNoTblGuidRightB
 public class CmpBi11OthpconTblGuidLeft
 {
 	int dummy;
-	[NDORelation(RelationInfo.Composite)]
+	[NDORelation(RelationInfo.Composite), MappingTable]
 	CmpBi11OthpconTblGuidRightBase relField;
 
 	public int Dummy
@@ -6193,7 +6195,7 @@ public class CmpBi11OthpconTblGuidLeft
 public class CmpBi11OthpconTblGuidRightBase
 {
 	int dummy;
-	[NDORelation]
+	[NDORelation, MappingTable]
 	CmpBi11OthpconTblGuidLeft relField;
 
 	public int Dummy
@@ -6369,7 +6371,7 @@ public class CmpBi1nOthpconNoTblGuidRightDerived : CmpBi1nOthpconNoTblGuidRightB
 public class CmpBi1nOthpconTblGuidLeft
 {
 	int dummy;
-	[NDORelation(RelationInfo.Composite)]
+	[NDORelation(RelationInfo.Composite), MappingTable]
 	CmpBi1nOthpconTblGuidRightBase relField;
 
 	public int Dummy
@@ -6393,7 +6395,7 @@ public class CmpBi1nOthpconTblGuidLeft
 public class CmpBi1nOthpconTblGuidRightBase
 {
 	int dummy;
-	[NDORelation(typeof(CmpBi1nOthpconTblGuidLeft))]
+	[NDORelation(typeof(CmpBi1nOthpconTblGuidLeft)), MappingTable]
 	IList relField = new ArrayList();
 
 	public int Dummy
@@ -6521,7 +6523,7 @@ public class AgrDir1OwnpconOthpconNoTblGuidRightDerived : AgrDir1OwnpconOthpconN
 public class AgrDir1OwnpconOthpconTblGuidLeftBase
 {
 	int dummy;
-	[NDORelation]
+	[NDORelation, MappingTable]
 	AgrDir1OwnpconOthpconTblGuidRightBase relField;
 
 	public int Dummy
@@ -6625,7 +6627,7 @@ public class AgrBi11OwnpconOthpconNoTblGuidRightDerived : AgrBi11OwnpconOthpconN
 public class AgrBi11OwnpconOthpconTblGuidLeftBase
 {
 	int dummy;
-	[NDORelation]
+	[NDORelation, MappingTable]
 	AgrBi11OwnpconOthpconTblGuidRightBase relField;
 
 	public int Dummy
@@ -6655,7 +6657,7 @@ public class AgrBi11OwnpconOthpconTblGuidLeftDerived : AgrBi11OwnpconOthpconTblG
 public class AgrBi11OwnpconOthpconTblGuidRightBase
 {
 	int dummy;
-	[NDORelation]
+	[NDORelation, MappingTable]
 	AgrBi11OwnpconOthpconTblGuidLeftBase relField;
 
 	public int Dummy
@@ -6957,7 +6959,7 @@ public class CmpDir1OwnpconOthpconNoTblGuidRightDerived : CmpDir1OwnpconOthpconN
 public class CmpDir1OwnpconOthpconTblGuidLeftBase
 {
 	int dummy;
-	[NDORelation(RelationInfo.Composite)]
+	[NDORelation(RelationInfo.Composite), MappingTable]
 	CmpDir1OwnpconOthpconTblGuidRightBase relField;
 
 	public int Dummy
@@ -7061,7 +7063,7 @@ public class CmpBi11OwnpconOthpconNoTblGuidRightDerived : CmpBi11OwnpconOthpconN
 public class CmpBi11OwnpconOthpconTblGuidLeftBase
 {
 	int dummy;
-	[NDORelation(RelationInfo.Composite)]
+	[NDORelation(RelationInfo.Composite), MappingTable]
 	CmpBi11OwnpconOthpconTblGuidRightBase relField;
 
 	public int Dummy
@@ -7091,7 +7093,7 @@ public class CmpBi11OwnpconOthpconTblGuidLeftDerived : CmpBi11OwnpconOthpconTblG
 public class CmpBi11OwnpconOthpconTblGuidRightBase
 {
 	int dummy;
-	[NDORelation]
+	[NDORelation, MappingTable]
 	CmpBi11OwnpconOthpconTblGuidLeftBase relField;
 
 	public int Dummy
@@ -7387,7 +7389,7 @@ public class AgrDir1OwnpabsNoTblAutoRight
 public abstract class AgrDir1OwnpabsTblAutoLeftBase
 {
 	int dummy;
-	[NDORelation]
+	[NDORelation, MappingTable]
 	AgrDir1OwnpabsTblAutoRight relField;
 
 	public int Dummy
@@ -7479,7 +7481,7 @@ public class AgrBi11OwnpabsNoTblAutoRight
 public abstract class AgrBi11OwnpabsTblAutoLeftBase
 {
 	int dummy;
-	[NDORelation]
+	[NDORelation, MappingTable]
 	AgrBi11OwnpabsTblAutoRight relField;
 
 	public int Dummy
@@ -7509,7 +7511,7 @@ public class AgrBi11OwnpabsTblAutoLeftDerived : AgrBi11OwnpabsTblAutoLeftBase
 public class AgrBi11OwnpabsTblAutoRight
 {
 	int dummy;
-	[NDORelation]
+	[NDORelation, MappingTable]
 	AgrBi11OwnpabsTblAutoLeftBase relField;
 
 	public int Dummy
@@ -7575,7 +7577,7 @@ public class AgrDirnOwnpabsNoTblAutoRight
 public abstract class AgrDirnOwnpabsTblAutoLeftBase
 {
 	int dummy;
-	[NDORelation(typeof(AgrDirnOwnpabsTblAutoRight))]
+	[NDORelation(typeof(AgrDirnOwnpabsTblAutoRight)), MappingTable]
 	IList relField = new ArrayList();
 
 	public int Dummy
@@ -7675,7 +7677,7 @@ public class AgrBin1OwnpabsNoTblAutoRight
 public abstract class AgrBin1OwnpabsTblAutoLeftBase
 {
 	int dummy;
-	[NDORelation(typeof(AgrBin1OwnpabsTblAutoRight))]
+	[NDORelation(typeof(AgrBin1OwnpabsTblAutoRight)), MappingTable]
 	IList relField = new ArrayList();
 
 	public int Dummy
@@ -7709,7 +7711,7 @@ public class AgrBin1OwnpabsTblAutoLeftDerived : AgrBin1OwnpabsTblAutoLeftBase
 public class AgrBin1OwnpabsTblAutoRight
 {
 	int dummy;
-	[NDORelation]
+	[NDORelation, MappingTable]
 	AgrBin1OwnpabsTblAutoLeftBase relField;
 
 	public int Dummy
@@ -7875,7 +7877,7 @@ public class CmpDir1OwnpabsNoTblAutoRight
 public abstract class CmpDir1OwnpabsTblAutoLeftBase
 {
 	int dummy;
-	[NDORelation(RelationInfo.Composite)]
+	[NDORelation(RelationInfo.Composite), MappingTable]
 	CmpDir1OwnpabsTblAutoRight relField;
 
 	public int Dummy
@@ -7967,7 +7969,7 @@ public class CmpBi11OwnpabsNoTblAutoRight
 public abstract class CmpBi11OwnpabsTblAutoLeftBase
 {
 	int dummy;
-	[NDORelation(RelationInfo.Composite)]
+	[NDORelation(RelationInfo.Composite), MappingTable]
 	CmpBi11OwnpabsTblAutoRight relField;
 
 	public int Dummy
@@ -7997,7 +7999,7 @@ public class CmpBi11OwnpabsTblAutoLeftDerived : CmpBi11OwnpabsTblAutoLeftBase
 public class CmpBi11OwnpabsTblAutoRight
 {
 	int dummy;
-	[NDORelation]
+	[NDORelation, MappingTable]
 	CmpBi11OwnpabsTblAutoLeftBase relField;
 
 	public int Dummy
@@ -8063,7 +8065,7 @@ public class CmpDirnOwnpabsNoTblAutoRight
 public abstract class CmpDirnOwnpabsTblAutoLeftBase
 {
 	int dummy;
-	[NDORelation(typeof(CmpDirnOwnpabsTblAutoRight), RelationInfo.Composite)]
+	[NDORelation(typeof(CmpDirnOwnpabsTblAutoRight), RelationInfo.Composite), MappingTable]
 	IList relField = new ArrayList();
 
 	public int Dummy
@@ -8163,7 +8165,7 @@ public class CmpBin1OwnpabsNoTblAutoRight
 public abstract class CmpBin1OwnpabsTblAutoLeftBase
 {
 	int dummy;
-	[NDORelation(typeof(CmpBin1OwnpabsTblAutoRight), RelationInfo.Composite)]
+	[NDORelation(typeof(CmpBin1OwnpabsTblAutoRight), RelationInfo.Composite), MappingTable]
 	IList relField = new ArrayList();
 
 	public int Dummy
@@ -8197,7 +8199,7 @@ public class CmpBin1OwnpabsTblAutoLeftDerived : CmpBin1OwnpabsTblAutoLeftBase
 public class CmpBin1OwnpabsTblAutoRight
 {
 	int dummy;
-	[NDORelation]
+	[NDORelation, MappingTable]
 	CmpBin1OwnpabsTblAutoLeftBase relField;
 
 	public int Dummy
@@ -8363,7 +8365,7 @@ public class AgrDir1OthpabsNoTblAutoRightDerived : AgrDir1OthpabsNoTblAutoRightB
 public class AgrDir1OthpabsTblAutoLeft
 {
 	int dummy;
-	[NDORelation]
+	[NDORelation, MappingTable]
 	AgrDir1OthpabsTblAutoRightBase relField;
 
 	public int Dummy
@@ -8455,7 +8457,7 @@ public class AgrBi11OthpabsNoTblAutoRightDerived : AgrBi11OthpabsNoTblAutoRightB
 public class AgrBi11OthpabsTblAutoLeft
 {
 	int dummy;
-	[NDORelation]
+	[NDORelation, MappingTable]
 	AgrBi11OthpabsTblAutoRightBase relField;
 
 	public int Dummy
@@ -8479,7 +8481,7 @@ public class AgrBi11OthpabsTblAutoLeft
 public abstract class AgrBi11OthpabsTblAutoRightBase
 {
 	int dummy;
-	[NDORelation]
+	[NDORelation, MappingTable]
 	AgrBi11OthpabsTblAutoLeft relField;
 
 	public int Dummy
@@ -8655,7 +8657,7 @@ public class AgrBi1nOthpabsNoTblAutoRightDerived : AgrBi1nOthpabsNoTblAutoRightB
 public class AgrBi1nOthpabsTblAutoLeft
 {
 	int dummy;
-	[NDORelation]
+	[NDORelation, MappingTable]
 	AgrBi1nOthpabsTblAutoRightBase relField;
 
 	public int Dummy
@@ -8679,7 +8681,7 @@ public class AgrBi1nOthpabsTblAutoLeft
 public abstract class AgrBi1nOthpabsTblAutoRightBase
 {
 	int dummy;
-	[NDORelation(typeof(AgrBi1nOthpabsTblAutoLeft))]
+	[NDORelation(typeof(AgrBi1nOthpabsTblAutoLeft)), MappingTable]
 	IList relField = new ArrayList();
 
 	public int Dummy
@@ -8801,7 +8803,7 @@ public class CmpDir1OthpabsNoTblAutoRightDerived : CmpDir1OthpabsNoTblAutoRightB
 public class CmpDir1OthpabsTblAutoLeft
 {
 	int dummy;
-	[NDORelation(RelationInfo.Composite)]
+	[NDORelation(RelationInfo.Composite), MappingTable]
 	CmpDir1OthpabsTblAutoRightBase relField;
 
 	public int Dummy
@@ -8893,7 +8895,7 @@ public class CmpBi11OthpabsNoTblAutoRightDerived : CmpBi11OthpabsNoTblAutoRightB
 public class CmpBi11OthpabsTblAutoLeft
 {
 	int dummy;
-	[NDORelation(RelationInfo.Composite)]
+	[NDORelation(RelationInfo.Composite), MappingTable]
 	CmpBi11OthpabsTblAutoRightBase relField;
 
 	public int Dummy
@@ -8917,7 +8919,7 @@ public class CmpBi11OthpabsTblAutoLeft
 public abstract class CmpBi11OthpabsTblAutoRightBase
 {
 	int dummy;
-	[NDORelation]
+	[NDORelation, MappingTable]
 	CmpBi11OthpabsTblAutoLeft relField;
 
 	public int Dummy
@@ -9093,7 +9095,7 @@ public class CmpBi1nOthpabsNoTblAutoRightDerived : CmpBi1nOthpabsNoTblAutoRightB
 public class CmpBi1nOthpabsTblAutoLeft
 {
 	int dummy;
-	[NDORelation(RelationInfo.Composite)]
+	[NDORelation(RelationInfo.Composite), MappingTable]
 	CmpBi1nOthpabsTblAutoRightBase relField;
 
 	public int Dummy
@@ -9117,7 +9119,7 @@ public class CmpBi1nOthpabsTblAutoLeft
 public abstract class CmpBi1nOthpabsTblAutoRightBase
 {
 	int dummy;
-	[NDORelation(typeof(CmpBi1nOthpabsTblAutoLeft))]
+	[NDORelation(typeof(CmpBi1nOthpabsTblAutoLeft)), MappingTable]
 	IList relField = new ArrayList();
 
 	public int Dummy
@@ -9245,7 +9247,7 @@ public class AgrDir1OwnpabsOthpabsNoTblAutoRightDerived : AgrDir1OwnpabsOthpabsN
 public abstract class AgrDir1OwnpabsOthpabsTblAutoLeftBase
 {
 	int dummy;
-	[NDORelation]
+	[NDORelation, MappingTable]
 	AgrDir1OwnpabsOthpabsTblAutoRightBase relField;
 
 	public int Dummy
@@ -9349,7 +9351,7 @@ public class AgrBi11OwnpabsOthpabsNoTblAutoRightDerived : AgrBi11OwnpabsOthpabsN
 public abstract class AgrBi11OwnpabsOthpabsTblAutoLeftBase
 {
 	int dummy;
-	[NDORelation]
+	[NDORelation, MappingTable]
 	AgrBi11OwnpabsOthpabsTblAutoRightBase relField;
 
 	public int Dummy
@@ -9379,7 +9381,7 @@ public class AgrBi11OwnpabsOthpabsTblAutoLeftDerived : AgrBi11OwnpabsOthpabsTblA
 public abstract class AgrBi11OwnpabsOthpabsTblAutoRightBase
 {
 	int dummy;
-	[NDORelation]
+	[NDORelation, MappingTable]
 	AgrBi11OwnpabsOthpabsTblAutoLeftBase relField;
 
 	public int Dummy
@@ -9681,7 +9683,7 @@ public class CmpDir1OwnpabsOthpabsNoTblAutoRightDerived : CmpDir1OwnpabsOthpabsN
 public abstract class CmpDir1OwnpabsOthpabsTblAutoLeftBase
 {
 	int dummy;
-	[NDORelation(RelationInfo.Composite)]
+	[NDORelation(RelationInfo.Composite), MappingTable]
 	CmpDir1OwnpabsOthpabsTblAutoRightBase relField;
 
 	public int Dummy
@@ -9785,7 +9787,7 @@ public class CmpBi11OwnpabsOthpabsNoTblAutoRightDerived : CmpBi11OwnpabsOthpabsN
 public abstract class CmpBi11OwnpabsOthpabsTblAutoLeftBase
 {
 	int dummy;
-	[NDORelation(RelationInfo.Composite)]
+	[NDORelation(RelationInfo.Composite), MappingTable]
 	CmpBi11OwnpabsOthpabsTblAutoRightBase relField;
 
 	public int Dummy
@@ -9815,7 +9817,7 @@ public class CmpBi11OwnpabsOthpabsTblAutoLeftDerived : CmpBi11OwnpabsOthpabsTblA
 public abstract class CmpBi11OwnpabsOthpabsTblAutoRightBase
 {
 	int dummy;
-	[NDORelation]
+	[NDORelation, MappingTable]
 	CmpBi11OwnpabsOthpabsTblAutoLeftBase relField;
 
 	public int Dummy
@@ -10111,7 +10113,7 @@ public class AgrDir1OwnpabsNoTblGuidRight
 public abstract class AgrDir1OwnpabsTblGuidLeftBase
 {
 	int dummy;
-	[NDORelation]
+	[NDORelation, MappingTable]
 	AgrDir1OwnpabsTblGuidRight relField;
 
 	public int Dummy
@@ -10203,7 +10205,7 @@ public class AgrBi11OwnpabsNoTblGuidRight
 public abstract class AgrBi11OwnpabsTblGuidLeftBase
 {
 	int dummy;
-	[NDORelation]
+	[NDORelation, MappingTable]
 	AgrBi11OwnpabsTblGuidRight relField;
 
 	public int Dummy
@@ -10233,7 +10235,7 @@ public class AgrBi11OwnpabsTblGuidLeftDerived : AgrBi11OwnpabsTblGuidLeftBase
 public class AgrBi11OwnpabsTblGuidRight
 {
 	int dummy;
-	[NDORelation]
+	[NDORelation, MappingTable]
 	AgrBi11OwnpabsTblGuidLeftBase relField;
 
 	public int Dummy
@@ -10299,7 +10301,7 @@ public class AgrDirnOwnpabsNoTblGuidRight
 public abstract class AgrDirnOwnpabsTblGuidLeftBase
 {
 	int dummy;
-	[NDORelation(typeof(AgrDirnOwnpabsTblGuidRight))]
+	[NDORelation(typeof(AgrDirnOwnpabsTblGuidRight)), MappingTable]
 	IList relField = new ArrayList();
 
 	public int Dummy
@@ -10399,7 +10401,7 @@ public class AgrBin1OwnpabsNoTblGuidRight
 public abstract class AgrBin1OwnpabsTblGuidLeftBase
 {
 	int dummy;
-	[NDORelation(typeof(AgrBin1OwnpabsTblGuidRight))]
+	[NDORelation(typeof(AgrBin1OwnpabsTblGuidRight)), MappingTable]
 	IList relField = new ArrayList();
 
 	public int Dummy
@@ -10433,7 +10435,7 @@ public class AgrBin1OwnpabsTblGuidLeftDerived : AgrBin1OwnpabsTblGuidLeftBase
 public class AgrBin1OwnpabsTblGuidRight
 {
 	int dummy;
-	[NDORelation]
+	[NDORelation, MappingTable]
 	AgrBin1OwnpabsTblGuidLeftBase relField;
 
 	public int Dummy
@@ -10599,7 +10601,7 @@ public class CmpDir1OwnpabsNoTblGuidRight
 public abstract class CmpDir1OwnpabsTblGuidLeftBase
 {
 	int dummy;
-	[NDORelation(RelationInfo.Composite)]
+	[NDORelation(RelationInfo.Composite), MappingTable]
 	CmpDir1OwnpabsTblGuidRight relField;
 
 	public int Dummy
@@ -10691,7 +10693,7 @@ public class CmpBi11OwnpabsNoTblGuidRight
 public abstract class CmpBi11OwnpabsTblGuidLeftBase
 {
 	int dummy;
-	[NDORelation(RelationInfo.Composite)]
+	[NDORelation(RelationInfo.Composite), MappingTable]
 	CmpBi11OwnpabsTblGuidRight relField;
 
 	public int Dummy
@@ -10721,7 +10723,7 @@ public class CmpBi11OwnpabsTblGuidLeftDerived : CmpBi11OwnpabsTblGuidLeftBase
 public class CmpBi11OwnpabsTblGuidRight
 {
 	int dummy;
-	[NDORelation]
+	[NDORelation, MappingTable]
 	CmpBi11OwnpabsTblGuidLeftBase relField;
 
 	public int Dummy
@@ -10787,7 +10789,7 @@ public class CmpDirnOwnpabsNoTblGuidRight
 public abstract class CmpDirnOwnpabsTblGuidLeftBase
 {
 	int dummy;
-	[NDORelation(typeof(CmpDirnOwnpabsTblGuidRight), RelationInfo.Composite)]
+	[NDORelation(typeof(CmpDirnOwnpabsTblGuidRight), RelationInfo.Composite), MappingTable]
 	IList relField = new ArrayList();
 
 	public int Dummy
@@ -10887,7 +10889,7 @@ public class CmpBin1OwnpabsNoTblGuidRight
 public abstract class CmpBin1OwnpabsTblGuidLeftBase
 {
 	int dummy;
-	[NDORelation(typeof(CmpBin1OwnpabsTblGuidRight), RelationInfo.Composite)]
+	[NDORelation(typeof(CmpBin1OwnpabsTblGuidRight), RelationInfo.Composite), MappingTable]
 	IList relField = new ArrayList();
 
 	public int Dummy
@@ -10921,7 +10923,7 @@ public class CmpBin1OwnpabsTblGuidLeftDerived : CmpBin1OwnpabsTblGuidLeftBase
 public class CmpBin1OwnpabsTblGuidRight
 {
 	int dummy;
-	[NDORelation]
+	[NDORelation, MappingTable]
 	CmpBin1OwnpabsTblGuidLeftBase relField;
 
 	public int Dummy
@@ -11087,7 +11089,7 @@ public class AgrDir1OthpabsNoTblGuidRightDerived : AgrDir1OthpabsNoTblGuidRightB
 public class AgrDir1OthpabsTblGuidLeft
 {
 	int dummy;
-	[NDORelation]
+	[NDORelation, MappingTable]
 	AgrDir1OthpabsTblGuidRightBase relField;
 
 	public int Dummy
@@ -11179,7 +11181,7 @@ public class AgrBi11OthpabsNoTblGuidRightDerived : AgrBi11OthpabsNoTblGuidRightB
 public class AgrBi11OthpabsTblGuidLeft
 {
 	int dummy;
-	[NDORelation]
+	[NDORelation, MappingTable]
 	AgrBi11OthpabsTblGuidRightBase relField;
 
 	public int Dummy
@@ -11203,7 +11205,7 @@ public class AgrBi11OthpabsTblGuidLeft
 public abstract class AgrBi11OthpabsTblGuidRightBase
 {
 	int dummy;
-	[NDORelation]
+	[NDORelation, MappingTable]
 	AgrBi11OthpabsTblGuidLeft relField;
 
 	public int Dummy
@@ -11379,7 +11381,7 @@ public class AgrBi1nOthpabsNoTblGuidRightDerived : AgrBi1nOthpabsNoTblGuidRightB
 public class AgrBi1nOthpabsTblGuidLeft
 {
 	int dummy;
-	[NDORelation]
+	[NDORelation, MappingTable]
 	AgrBi1nOthpabsTblGuidRightBase relField;
 
 	public int Dummy
@@ -11403,7 +11405,7 @@ public class AgrBi1nOthpabsTblGuidLeft
 public abstract class AgrBi1nOthpabsTblGuidRightBase
 {
 	int dummy;
-	[NDORelation(typeof(AgrBi1nOthpabsTblGuidLeft))]
+	[NDORelation(typeof(AgrBi1nOthpabsTblGuidLeft)), MappingTable]
 	IList relField = new ArrayList();
 
 	public int Dummy
@@ -11525,7 +11527,7 @@ public class CmpDir1OthpabsNoTblGuidRightDerived : CmpDir1OthpabsNoTblGuidRightB
 public class CmpDir1OthpabsTblGuidLeft
 {
 	int dummy;
-	[NDORelation(RelationInfo.Composite)]
+	[NDORelation(RelationInfo.Composite), MappingTable]
 	CmpDir1OthpabsTblGuidRightBase relField;
 
 	public int Dummy
@@ -11617,7 +11619,7 @@ public class CmpBi11OthpabsNoTblGuidRightDerived : CmpBi11OthpabsNoTblGuidRightB
 public class CmpBi11OthpabsTblGuidLeft
 {
 	int dummy;
-	[NDORelation(RelationInfo.Composite)]
+	[NDORelation(RelationInfo.Composite), MappingTable]
 	CmpBi11OthpabsTblGuidRightBase relField;
 
 	public int Dummy
@@ -11641,7 +11643,7 @@ public class CmpBi11OthpabsTblGuidLeft
 public abstract class CmpBi11OthpabsTblGuidRightBase
 {
 	int dummy;
-	[NDORelation]
+	[NDORelation, MappingTable]
 	CmpBi11OthpabsTblGuidLeft relField;
 
 	public int Dummy
@@ -11817,7 +11819,7 @@ public class CmpBi1nOthpabsNoTblGuidRightDerived : CmpBi1nOthpabsNoTblGuidRightB
 public class CmpBi1nOthpabsTblGuidLeft
 {
 	int dummy;
-	[NDORelation(RelationInfo.Composite)]
+	[NDORelation(RelationInfo.Composite), MappingTable]
 	CmpBi1nOthpabsTblGuidRightBase relField;
 
 	public int Dummy
@@ -11841,7 +11843,7 @@ public class CmpBi1nOthpabsTblGuidLeft
 public abstract class CmpBi1nOthpabsTblGuidRightBase
 {
 	int dummy;
-	[NDORelation(typeof(CmpBi1nOthpabsTblGuidLeft))]
+	[NDORelation(typeof(CmpBi1nOthpabsTblGuidLeft)), MappingTable]
 	IList relField = new ArrayList();
 
 	public int Dummy
@@ -11969,7 +11971,7 @@ public class AgrDir1OwnpabsOthpabsNoTblGuidRightDerived : AgrDir1OwnpabsOthpabsN
 public abstract class AgrDir1OwnpabsOthpabsTblGuidLeftBase
 {
 	int dummy;
-	[NDORelation]
+	[NDORelation, MappingTable]
 	AgrDir1OwnpabsOthpabsTblGuidRightBase relField;
 
 	public int Dummy
@@ -12073,7 +12075,7 @@ public class AgrBi11OwnpabsOthpabsNoTblGuidRightDerived : AgrBi11OwnpabsOthpabsN
 public abstract class AgrBi11OwnpabsOthpabsTblGuidLeftBase
 {
 	int dummy;
-	[NDORelation]
+	[NDORelation, MappingTable]
 	AgrBi11OwnpabsOthpabsTblGuidRightBase relField;
 
 	public int Dummy
@@ -12103,7 +12105,7 @@ public class AgrBi11OwnpabsOthpabsTblGuidLeftDerived : AgrBi11OwnpabsOthpabsTblG
 public abstract class AgrBi11OwnpabsOthpabsTblGuidRightBase
 {
 	int dummy;
-	[NDORelation]
+	[NDORelation, MappingTable]
 	AgrBi11OwnpabsOthpabsTblGuidLeftBase relField;
 
 	public int Dummy
@@ -12405,7 +12407,7 @@ public class CmpDir1OwnpabsOthpabsNoTblGuidRightDerived : CmpDir1OwnpabsOthpabsN
 public abstract class CmpDir1OwnpabsOthpabsTblGuidLeftBase
 {
 	int dummy;
-	[NDORelation(RelationInfo.Composite)]
+	[NDORelation(RelationInfo.Composite), MappingTable]
 	CmpDir1OwnpabsOthpabsTblGuidRightBase relField;
 
 	public int Dummy
@@ -12509,7 +12511,7 @@ public class CmpBi11OwnpabsOthpabsNoTblGuidRightDerived : CmpBi11OwnpabsOthpabsN
 public abstract class CmpBi11OwnpabsOthpabsTblGuidLeftBase
 {
 	int dummy;
-	[NDORelation(RelationInfo.Composite)]
+	[NDORelation(RelationInfo.Composite), MappingTable]
 	CmpBi11OwnpabsOthpabsTblGuidRightBase relField;
 
 	public int Dummy
@@ -12539,7 +12541,7 @@ public class CmpBi11OwnpabsOthpabsTblGuidLeftDerived : CmpBi11OwnpabsOthpabsTblG
 public abstract class CmpBi11OwnpabsOthpabsTblGuidRightBase
 {
 	int dummy;
-	[NDORelation]
+	[NDORelation, MappingTable]
 	CmpBi11OwnpabsOthpabsTblGuidLeftBase relField;
 
 	public int Dummy

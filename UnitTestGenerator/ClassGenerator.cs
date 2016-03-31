@@ -118,7 +118,8 @@ namespace TestGenerator
 			sw.WriteLine("using System;");
 			sw.WriteLine("using System.Collections;");
 			sw.WriteLine("using NDO;\n");
-			sw.WriteLine("namespace RelationTestClasses");
+			sw.WriteLine( "using NDO.Mapping.Attributes;\n" );
+			sw.WriteLine( "namespace RelationTestClasses" );
 			sw.WriteLine("{\n");
 			foreach(RelInfo ri in relInfos)
 				GenerateClassGroup(ri);

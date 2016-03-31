@@ -78,7 +78,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="NDO">
-      <HintPath>D:\Program Files (x86)\NDO 2.1 Dev Edition\NDO.dll</HintPath>
+      <HintPath>..\NDODLL\bin\Debug\NDO.dll</HintPath>
     </Reference>
     <Reference Include="System">
       <Name>System</Name>
@@ -124,7 +124,7 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\CodeGenerator\CodeGenerator.csproj">
+    <ProjectReference Include="CodeGenerator\CodeGenerator.csproj">
       <Project>{9BCB091D-EE82-4AD2-8F6E-F83296500C7D}</Project>
       <Name>CodeGenerator</Name>
     </ProjectReference>

@@ -36,6 +36,7 @@ using System.Collections;
 using System.Text;
 using System.IO;
 using NDO.Mapping;
+using System.Linq;
 
 namespace TestGenerator
 {
@@ -62,7 +63,7 @@ namespace TestGenerator
 			
 			if (clMapping == null)
 				return;
-			NDO.Mapping.Relation rel = (NDO.Mapping.Relation) clMapping.Relations[0];
+			NDO.Mapping.Relation rel = (NDO.Mapping.Relation) clMapping.Relations.FirstOrDefault();
 			Debug.Assert(rel != null, "Relation mapping not found");
 			if (rel == null)
 				throw new Exception("Cant find relation 0 of" + test.OwnClass.Name);
@@ -75,7 +76,7 @@ namespace TestGenerator
 				derivedMapping = mapping.FindClass("RelationTestClasses." + test.OwnDerivedClass.Name);
 				if (derivedMapping == null)
 					return;
-				derivedRel = (NDO.Mapping.Relation) derivedMapping.Relations[0];
+				derivedRel = (NDO.Mapping.Relation) derivedMapping.Relations.FirstOrDefault();
 				if (rel == null)
 					throw new Exception("Cant find relation 0 of" + test.OwnDerivedClass.Name);
 			}
@@ -105,8 +106,8 @@ namespace TestGenerator
 
 				if (ri.OwnPoly)
 				{
-                    ForeignKeyColumn dfkColumn = (ForeignKeyColumn)derivedRel.ForeignKeyColumns[0];
-					dfkColumn.Name = ((ForeignKeyColumn)rel.ForeignKeyColumns[0]).Name;
+					ForeignKeyColumn dfkColumn = (ForeignKeyColumn) derivedRel.ForeignKeyColumns.FirstOrDefault();
+					dfkColumn.Name = ((ForeignKeyColumn) rel.ForeignKeyColumns.FirstOrDefault()).Name;
 					derivedRel.ForeignKeyTypeColumnName = rel.ForeignKeyTypeColumnName;
 					derivedRel.MappingTable = rel.MappingTable;
 				}

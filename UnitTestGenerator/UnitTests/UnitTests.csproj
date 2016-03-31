@@ -77,13 +77,11 @@
     <ErrorReport>prompt</ErrorReport>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="NDO, Version=3.0.0.0, Culture=neutral, PublicKeyToken=37bfdffa92a0cd24, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>D:\Program Files (x86)\NDO 2.1 Dev Edition\NDO.dll</HintPath>
+    <Reference Include="NDO">
+      <HintPath>..\..\NDODLL\bin\Debug\NDO.dll</HintPath>
     </Reference>
-    <Reference Include="NDOInterfaces, Version=3.0.0.0, Culture=neutral, PublicKeyToken=ff5e453a099b8326, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>D:\Program Files (x86)\NDO 2.1 Dev Edition\NDOInterfaces.dll</HintPath>
+    <Reference Include="NDOInterfaces">
+      <HintPath>..\..\NDOInterfaces\bin\Debug\NDOInterfaces.dll</HintPath>
     </Reference>
     <Reference Include="nunit.framework">
       <Name>nunit.framework</Name>
@@ -121,11 +119,6 @@
     <None Include="app.config" />
     <None Include="bin\Debug\UnitTests.ndo.xsx" />
   </ItemGroup>
-  <ProjectExtensions>
-    <VisualStudio>
-      <UserProperties DatabaseOwner="" NDOSQLScriptLanguage="SqlServer" NDOUseTimeStamps="false" NDOGenerateChangeEvents="false" NDOUsePolymorphy="true" NDODefaultConnection="" NDOTypeListFile="C:\Projekte\Persistenz\UnitTestGenerator\UnitTests\bin\Debug\NDOTypes.xml" NDOGenerateSQL="true" NDOMergeSchema="true" NDOMergeMapping="true" NDONewMapping="false" NDOGenerateSchema="true" NDOGenerateMapping="true" NDOEnableEnhancer="false" NDOEnableAddIn="true" />
-    </VisualStudio>
-  </ProjectExtensions>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PreBuildEvent>
@@ -133,4 +126,11 @@
     <PostBuildEvent>
     </PostBuildEvent>
   </PropertyGroup>
+  <Import Project="..\packages\ndo.dll\build\ndo.dll.targets" Condition="Exists('..\packages\ndo.dll\build\ndo.dll.targets')" />
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>This project references NuGet package(s) that are missing on this computer. Enable NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('..\packages\ndo.dll\build\ndo.dll.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\ndo.dll\build\ndo.dll.targets'))" />
+  </Target>
 </Project>
