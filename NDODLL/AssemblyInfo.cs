@@ -11,11 +11,6 @@
 // If you distribute copies of this program, whether gratis or for 
 // a fee, you must pass on to the recipients the same freedoms that 
 // you received.
-//
-// Commercial Licence:
-// For those, who want to develop software with help of this program 
-// and need to distribute their work with a more restrictive licence, 
-// there is a commercial licence available at www.netdataobjects.de.
 // 
 // The above copyright notice and this permission notice shall be
 // included in all copies or substantial portions of the Software.
@@ -41,7 +36,7 @@ using System.Security;
 // associated with an assembly.
 //
 [assembly: AssemblyTitle("NDO")]
-[assembly: AssemblyDescription(".NET Data Objects Framework")]
+[assembly: AssemblyDescription(".NET Data Objects Library")]
 #if DEBUG
 [assembly: AssemblyConfiguration("Debug")]
 #else 
