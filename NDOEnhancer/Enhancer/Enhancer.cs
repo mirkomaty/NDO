@@ -227,7 +227,7 @@ namespace NDOEnhancer
 				string assName = assToLoad.Name;
 				if (this.assemblyFullNames.Contains(assName))
 				{
-					messages.WriteLine("Assembly '" + assName + "' analyzed twice. Check your enhancer parameter file.");
+					messages.WriteLine("Assembly '" + assName + "' analyzed twice. Check your .ndoproj file.");
 					continue;
 				}
 				this.assemblyFullNames.Add(assName, assToLoad.FullName);
@@ -893,19 +893,20 @@ namespace NDOEnhancer
 					if (classMapping == null)
 						continue;
 					Relation r = classMapping.FindRelation(fieldName);
+					ClassNode relClassNode = allPersistentClasses[relTypeName];
                     if (null == r)
                     {
                         //TODO: ForeignKeyColumnAttributes...
-                        string relTypeFullName = relTypeName.Substring(relTypeName.IndexOf("]") + 1);
-                        ClassNode relClassNode = allPersistentClasses[relTypeName];
+                        string relTypeFullName = relTypeName.Substring(relTypeName.IndexOf("]") + 1);                        
                         if (relClassNode == null)
                             throw new Exception(String.Format("Class '{1}' has a relation to a non persistent type '{0}'.", relTypeFullName, classNode.Name));
                         messages.WriteLine("Creating standard relation " + classNode.Name + "." + fieldName);
-                        r = classMapping.AddStandardRelation(fieldName, relTypeFullName, is1To1, relName, classNode.IsPoly, relClassNode.IsPoly || relClassNode.IsAbstract);
+                        r = classMapping.AddStandardRelation(fieldName, relTypeFullName, is1To1, relName, classNode.IsPoly, relClassNode.IsPoly || relClassNode.IsAbstract, relationNode.MappingTableAttribute);
                     }
                     else
                     {
-                        //TODO: Do remapping here
+						r.RemapMappingTable( classNode.IsPoly, relClassNode.IsPoly || relClassNode.IsAbstract, relationNode.MappingTableAttribute );
+						r.RemapForeignKeyColumns( relationNode.ForeignKeyColumnAttributes, relationNode.ChildForeignKeyColumnAttributes );  // currently nothing happens there.
                     }
 					SetDefiningClass(r, classMapping);
 					if (is1To1)
@@ -995,7 +996,7 @@ namespace NDOEnhancer
 				Class classMapping = classNode.Class;
 				checkRelationMappings(classNode, classMapping);
 			}
-#if PRO
+
 			foreach(ClassNode classNode in classList)
 			{
 				if (!classNode.IsPersistent) // non persistent classes derived from persistent classes
@@ -1003,7 +1004,6 @@ namespace NDOEnhancer
 				Class classMapping = classNode.Class;
 				checkInheritedRelationMappings(classNode, classMapping);
 			}
-#endif
 
 			foreach(ClassNode classNode in classList)
 			{

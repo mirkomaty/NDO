@@ -274,6 +274,83 @@ namespace NDO.Mapping
 #endif
         }
 
+		public void RemapMappingTable(bool ownTypeIsPoly, bool otherTypeIsPoly, MappingTableAttribute mappingTableAttribute )
+		{
+			if (mappingTableAttribute == null && (foreignRelation == null || foreignRelation.mappingTable == null))
+				return;
+
+			int pos = referencedTypeName.LastIndexOf( '.' );
+			string refShortName = this.referencedTypeName.Substring( pos + 1 );
+			refShortName = refShortName.Replace( "`", string.Empty );
+			string fullName = Parent.FullName;
+			pos = fullName.LastIndexOf( '.' );
+			string myShortName = fullName.Substring( pos + 1 );
+			myShortName = myShortName.Replace( "`", string.Empty );
+
+			if (MappingTable == null)
+			{
+				AddMappingTable( refShortName, myShortName, otherTypeIsPoly, mappingTableAttribute );
+			}
+			if (mappingTableAttribute != null && mappingTableAttribute.TableName != null)
+			{
+				MappingTable.TableName = mappingTableAttribute.TableName;
+			}
+			RemapForeignMappingTable( myShortName, refShortName, ownTypeIsPoly, otherTypeIsPoly, mappingTableAttribute );
+		}
+
+		internal void RemapForeignMappingTable( string myShortName, string refShortName, bool ownTypeIsPoly, bool otherTypeIsPoly, MappingTableAttribute mappingTableAttribute )
+		{
+			if (this.foreignRelation == null)
+				return;
+
+			if (foreignRelation.MappingTable == null)
+			{
+				foreignRelation.AddMappingTable( myShortName, refShortName, ownTypeIsPoly, mappingTableAttribute );
+			}
+			string frFkcName = "ID" + refShortName;  // This is going to be the r.ForeignKeyColumnName of the foreign relation
+			string frFtcName = null;
+			if (otherTypeIsPoly)
+				frFtcName = "TC" + myShortName;   // This is going to be the r.MappingTable.ChildForeignKeyColumnName of the foreign relation
+			if (relationName != string.Empty)
+			{
+				frFkcName += "_" + relationName;
+				if (otherTypeIsPoly)
+					frFtcName += "_" + relationName;
+			}
+			ForeignKeyColumn forFkColumn = foreignRelation.ForeignKeyColumns.FirstOrDefault();
+			forFkColumn.Name = frFkcName;
+			foreignRelation.MappingTable.ChildForeignKeyTypeColumnName = frFtcName;
+		}
+
+		internal void AddMappingTable( string typeShortName1, string typeShortName2, bool otherTypeIsPoly, MappingTableAttribute mappingTableAttribute )
+		{
+			this.MappingTable = new MappingTable( this );
+			ForeignKeyColumn fkColumn = this.MappingTable.NewForeignKeyColumn();
+			fkColumn.Name = "ID" + typeShortName1;
+			if (otherTypeIsPoly)
+				this.MappingTable.ChildForeignKeyTypeColumnName = "TC" + typeShortName1;
+			if (this.RelationName != null && this.RelationName != string.Empty)
+			{
+				fkColumn.Name += "_" + this.RelationName;
+				if (otherTypeIsPoly)
+					this.MappingTable.ChildForeignKeyTypeColumnName += "_" + this.RelationName;
+			}
+
+			if (mappingTableAttribute != null && mappingTableAttribute.TableName != null)
+			{
+				this.MappingTable.TableName = mappingTableAttribute.TableName;
+			}
+			else
+			{
+				if (typeShortName1.CompareTo( typeShortName2 ) < 0)
+					this.MappingTable.TableName = "rel" + typeShortName1 + typeShortName2;
+				else
+					this.MappingTable.TableName = "rel" + typeShortName2 + typeShortName1;
+			}
+			this.MappingTable.ConnectionId = ((Connection) Parent.Parent.Connections.First()).ID;
+		}
+
+
         #region Constructors and Save function
         /// <summary>
         /// Constructs a new Relation object

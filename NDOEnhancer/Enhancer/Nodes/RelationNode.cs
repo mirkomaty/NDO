@@ -69,30 +69,32 @@ namespace NDOEnhancer
             get { return childForeignKeyColumnAttributes; }
         }
 
+		public MappingTableAttribute MappingTableAttribute { get; set; }
 
-		public RelationNode(FieldInfo fi, NDORelationAttribute attr, ClassNode parent)
+
+		public RelationNode(FieldInfo relationFieldInfo, NDORelationAttribute attr, ClassNode parent)
 		{
 			this.parent = parent;
-			this.fieldType = fi.FieldType;
-			Type parentType = fi.ReflectedType;
+			this.fieldType = relationFieldInfo.FieldType;
+			Type parentType = relationFieldInfo.ReflectedType;
 			NDOAssemblyName an = new NDOAssemblyName(parentType.Assembly.FullName);
 			string assShortName = an.Name;
 #if NDO11
 			this.isElement = !(fi.FieldType == typeof(IList) || fi.FieldType.GetInterface("IList") != null);
 #else
-			this.isElement = !(fi.FieldType == typeof(IList) 
-				|| fi.FieldType.GetInterface("IList") != null 
-				|| GenericIListReflector.IsGenericIList(fi.FieldType));
+			this.isElement = !(relationFieldInfo.FieldType == typeof(IList) 
+				|| relationFieldInfo.FieldType.GetInterface("IList") != null 
+				|| GenericIListReflector.IsGenericIList(relationFieldInfo.FieldType));
 #endif
 			// dataType & declaringType haben
 			// - immer ein class/valutype prefix
 			// - immer ein [AssName] prefix
-			this.dataType = new ReflectedType(fi.FieldType).ILName;
-			if (fi.DeclaringType != fi.ReflectedType)
-				this.declaringType = new ReflectedType(fi.DeclaringType).ILName;
+			this.dataType = new ReflectedType(relationFieldInfo.FieldType).ILName;
+			if (relationFieldInfo.DeclaringType != relationFieldInfo.ReflectedType)
+				this.declaringType = new ReflectedType(relationFieldInfo.DeclaringType).ILName;
 			else
 				this.declaringType = null;
-			this.name = fi.Name;
+			this.name = relationFieldInfo.Name;
 
 			Type attrType = attr.GetType();
 			this.relationName = attr.RelationName;
@@ -100,13 +102,13 @@ namespace NDOEnhancer
 			Type relType;
             if (isElement)
             {
-                relType = fi.FieldType;
+                relType = relationFieldInfo.FieldType;
             }
             else
             {
 #if !NET11
-                if (attr.RelationType == null && fi.FieldType.IsGenericType)
-                    relType = fi.FieldType.GetGenericArguments()[0];
+                if (attr.RelationType == null && relationFieldInfo.FieldType.IsGenericType)
+                    relType = relationFieldInfo.FieldType.GetGenericArguments()[0];
                 else
                     relType = attr.RelationType;
 #else
@@ -125,19 +127,22 @@ namespace NDOEnhancer
             if (relType.IsGenericType)
                 this.relatedType = this.relatedType.Substring(0, this.relatedType.IndexOf('<'));
 
-            object[] attrs = fi.GetCustomAttributes(typeof(ForeignKeyColumnAttribute), true);
+            object[] attrs = relationFieldInfo.GetCustomAttributes(typeof(ForeignKeyColumnAttribute), true);
             if (attrs.Length > 0)
             {
                 this.foreignKeyColumnAttributes = new ForeignKeyColumnAttribute[attrs.Length];
                 attrs.CopyTo(this.foreignKeyColumnAttributes, 0);
             }
-            attrs = fi.GetCustomAttributes(typeof(ChildForeignKeyColumnAttribute), true);
+            attrs = relationFieldInfo.GetCustomAttributes(typeof(ChildForeignKeyColumnAttribute), true);
             if (attrs.Length > 0)
             {
                 this.childForeignKeyColumnAttributes = new ChildForeignKeyColumnAttribute[attrs.Length];
                 attrs.CopyTo(this.childForeignKeyColumnAttributes, 0);
             }
-        }
+			attrs = relationFieldInfo.GetCustomAttributes( typeof( MappingTableAttribute ), true );
+			if (attrs.Length > 0)
+				MappingTableAttribute = (MappingTableAttribute) attrs[0];
+		}
 
 		string relationName;
 		public string RelationName

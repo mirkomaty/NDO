@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Xml;
 using System.Reflection;
+using NDO.Mapping.Attributes;
 
 namespace NDO.Mapping
 {
@@ -581,26 +582,26 @@ namespace NDO.Mapping
         /// Adds a default relation mapping.
         /// </summary>
         /// <param name="fieldName">Name of the field</param>
-        /// <param name="ReferencedTypeName">Type name of the referenced class</param>
+        /// <param name="referencedTypeName">Type name of the referenced class</param>
         /// <param name="is1to1">True, if multiplicity is 1</param>
         /// <param name="relationName">Optional relation name</param>
         /// <param name="ownTypeIsPoly">True, if the class, containing the field, has a persistent base class</param>
         /// <param name="otherTypeIsPoly">True, if the related type has a persistent base class</param>
         /// <returns>A new constructed <code>Relation</code> object</returns>
-        public Relation AddStandardRelation(string fieldName, string ReferencedTypeName, bool is1to1, string relationName, bool ownTypeIsPoly, bool otherTypeIsPoly)
+        public Relation AddStandardRelation(string fieldName, string referencedTypeName, bool is1to1, string relationName, bool ownTypeIsPoly, bool otherTypeIsPoly, MappingTableAttribute mappingTableAttribute)
         {
             //			if (null != Parent)
             //				Parent.this.Changed = true;
 
             Relation r = new Relation(this);
             r.FieldName = fieldName;
-            r.ReferencedTypeName = ReferencedTypeName;
+            r.ReferencedTypeName = referencedTypeName;
             //r.parent = this;
             r.RelationName = relationName;
             r.Multiplicity = is1to1 ? RelationMultiplicity.Element : RelationMultiplicity.List;
 
-            int pos = ReferencedTypeName.LastIndexOf('.');
-            string refShortName = ReferencedTypeName.Substring(pos + 1);
+            int pos = referencedTypeName.LastIndexOf('.');
+            string refShortName = referencedTypeName.Substring(pos + 1);
             refShortName = refShortName.Replace("`", string.Empty);
 
             pos = this.FullName.LastIndexOf('.');
@@ -613,6 +614,7 @@ namespace NDO.Mapping
 
             // Element->x?
             if (is1to1
+				&& mappingTableAttribute != null
                 && !(otherTypeIsPoly && r.Multiplicity == RelationMultiplicity.List)
                 && !(foreignRelation != null && foreignRelation.MappingTable != null))
             {
@@ -645,31 +647,17 @@ namespace NDO.Mapping
                 }
 
 
-                if (null != foreignRelation && foreignRelation.Multiplicity == RelationMultiplicity.List
+                if (mappingTableAttribute != null
+					||
+					null != foreignRelation && foreignRelation.Multiplicity == RelationMultiplicity.List
                     ||
                     (/*ownTypeIsPoly || */otherTypeIsPoly) && r.Multiplicity != RelationMultiplicity.Element
                     ||
                     foreignRelation != null && foreignRelation.MappingTable != null
                     )
                 {
-                    AddMappingTable(r, refShortName, myShortName, otherTypeIsPoly);
-                    if (foreignRelation != null)
-                    {
-                        AddMappingTable(foreignRelation, myShortName, refShortName, ownTypeIsPoly);
-                        string frFkcName = "ID" + refShortName;  // This is going to be the r.ForeignKeyColumnName of the foreign relation
-                        string frFtcName = null;
-                        if (otherTypeIsPoly)
-                            frFtcName = "TC" + myShortName;   // This is going to be the r.MappingTable.ChildForeignKeyColumnName of the foreign relation
-                        if (relationName != string.Empty)
-                        {
-                            frFkcName += "_" + relationName;
-                            if (otherTypeIsPoly)
-                                frFtcName += "_" + relationName;
-                        }
-                        ForeignKeyColumn forFkColumn = foreignRelation.ForeignKeyColumns.FirstOrDefault();
-                        forFkColumn.Name = frFkcName;
-                        foreignRelation.MappingTable.ChildForeignKeyTypeColumnName = frFtcName;
-                    }
+                    r.AddMappingTable(refShortName, myShortName, otherTypeIsPoly, mappingTableAttribute);
+					r.RemapForeignMappingTable( myShortName, refShortName, ownTypeIsPoly, otherTypeIsPoly, mappingTableAttribute );
                 }
                 else r.MappingTable = null;
             }
@@ -679,27 +667,6 @@ namespace NDO.Mapping
             return r;
         }
 
-
-        private void AddMappingTable(Relation r, string typeShortName1, string typeShortName2, bool otherTypeIsPoly)
-        {
-            r.MappingTable = new MappingTable(r);
-            ForeignKeyColumn fkColumn = r.MappingTable.NewForeignKeyColumn();
-            fkColumn.Name = "ID" + typeShortName1;
-            if (otherTypeIsPoly)
-                r.MappingTable.ChildForeignKeyTypeColumnName = "TC" + typeShortName1;
-            if (r.RelationName != null && r.RelationName != string.Empty)
-            {
-                fkColumn.Name += "_" + r.RelationName;
-                if (otherTypeIsPoly)
-                    r.MappingTable.ChildForeignKeyTypeColumnName += "_" + r.RelationName;
-            }
-
-            if (typeShortName1.CompareTo(typeShortName2) < 0)
-                r.MappingTable.TableName = "rel" + typeShortName1 + typeShortName2;
-            else
-                r.MappingTable.TableName = "rel" + typeShortName2 + typeShortName1;
-            r.MappingTable.ConnectionId = ((Connection)Parent.Connections.First()).ID;
-        }
         #endregion
 
         #region IComparable Member
