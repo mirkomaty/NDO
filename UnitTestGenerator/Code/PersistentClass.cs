@@ -54,7 +54,7 @@ namespace TestGenerator
             this.relations.Add((r = new Relation(this, ri, relatedTypeName)));
             if (ri.IsList)
             {
-                this.Properties.Add(new Property("IList", Relation.StandardFieldName, true, true));
+                this.Properties.Add(new Property("List<" + relatedTypeName + ">", Relation.StandardFieldName, true, true));
             }
             else
             {

@@ -2,6 +2,7 @@ using System;
 using System.Reflection;
 using System.Diagnostics;
 using System.Collections;
+using System.Collections.Generic;
 using NDO;
 using NDO.Mapping;
 using NUnit.Framework;
@@ -602,7 +603,7 @@ public class TestAgrDirnNoTblAuto
 		QueryOwn();
 		Assert.NotNull(ownVar, "No Query Result");
 		Assert.AreEqual(1, ownVar.RelField.Count, "Count wrong");
-		ownVar.RelField = new ArrayList();
+		ownVar.RelField = new List<AgrDirnNoTblAutoRight>();
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
@@ -699,7 +700,7 @@ public class TestAgrDirnTblAuto
 		QueryOwn();
 		Assert.NotNull(ownVar, "No Query Result");
 		Assert.AreEqual(1, ownVar.RelField.Count, "Count wrong");
-		ownVar.RelField = new ArrayList();
+		ownVar.RelField = new List<AgrDirnTblAutoRight>();
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
@@ -787,7 +788,7 @@ public class TestAgrBin1NoTblAuto
 		QueryOwn();
 		Assert.NotNull(ownVar, "No Query Result");
 		Assert.AreEqual(1, ownVar.RelField.Count, "Count wrong");
-		ownVar.RelField = new ArrayList();
+		ownVar.RelField = new List<AgrBin1NoTblAutoRight>();
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
@@ -925,7 +926,7 @@ public class TestAgrBin1TblAuto
 		QueryOwn();
 		Assert.NotNull(ownVar, "No Query Result");
 		Assert.AreEqual(1, ownVar.RelField.Count, "Count wrong");
-		ownVar.RelField = new ArrayList();
+		ownVar.RelField = new List<AgrBin1TblAutoRight>();
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
@@ -1301,7 +1302,7 @@ public class TestAgrBinnTblAuto
 		QueryOwn();
 		Assert.NotNull(ownVar, "No Query Result");
 		Assert.AreEqual(1, ownVar.RelField.Count, "Count wrong");
-		ownVar.RelField = new ArrayList();
+		ownVar.RelField = new List<AgrBinnTblAutoRight>();
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
@@ -1902,7 +1903,7 @@ public class TestCmpDirnNoTblAuto
 		QueryOwn();
 		Assert.NotNull(ownVar, "No Query Result");
 		Assert.AreEqual(1, ownVar.RelField.Count, "Count wrong");
-		ownVar.RelField = new ArrayList();
+		ownVar.RelField = new List<CmpDirnNoTblAutoRight>();
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
@@ -1994,7 +1995,7 @@ public class TestCmpDirnTblAuto
 		QueryOwn();
 		Assert.NotNull(ownVar, "No Query Result");
 		Assert.AreEqual(1, ownVar.RelField.Count, "Count wrong");
-		ownVar.RelField = new ArrayList();
+		ownVar.RelField = new List<CmpDirnTblAutoRight>();
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
@@ -2077,7 +2078,7 @@ public class TestCmpBin1NoTblAuto
 		QueryOwn();
 		Assert.NotNull(ownVar, "No Query Result");
 		Assert.AreEqual(1, ownVar.RelField.Count, "Count wrong");
-		ownVar.RelField = new ArrayList();
+		ownVar.RelField = new List<CmpBin1NoTblAutoRight>();
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
@@ -2210,7 +2211,7 @@ public class TestCmpBin1TblAuto
 		QueryOwn();
 		Assert.NotNull(ownVar, "No Query Result");
 		Assert.AreEqual(1, ownVar.RelField.Count, "Count wrong");
-		ownVar.RelField = new ArrayList();
+		ownVar.RelField = new List<CmpBin1TblAutoRight>();
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
@@ -2571,7 +2572,7 @@ public class TestCmpBinnTblAuto
 		QueryOwn();
 		Assert.NotNull(ownVar, "No Query Result");
 		Assert.AreEqual(1, ownVar.RelField.Count, "Count wrong");
-		ownVar.RelField = new ArrayList();
+		ownVar.RelField = new List<CmpBinnTblAutoRight>();
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
@@ -3207,7 +3208,7 @@ public class TestAgrDirnOwnpconNoTblAuto
 		QueryOwn();
 		Assert.NotNull(ownVar, "No Query Result");
 		Assert.AreEqual(1, ownVar.RelField.Count, "Count wrong");
-		ownVar.RelField = new ArrayList();
+		ownVar.RelField = new List<AgrDirnOwnpconNoTblAutoRight>();
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
@@ -3306,7 +3307,7 @@ public class TestAgrDirnOwnpconTblAuto
 		QueryOwn();
 		Assert.NotNull(ownVar, "No Query Result");
 		Assert.AreEqual(1, ownVar.RelField.Count, "Count wrong");
-		ownVar.RelField = new ArrayList();
+		ownVar.RelField = new List<AgrDirnOwnpconTblAutoRight>();
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
@@ -3394,7 +3395,7 @@ public class TestAgrBin1OwnpconNoTblAuto
 		QueryOwn();
 		Assert.NotNull(ownVar, "No Query Result");
 		Assert.AreEqual(1, ownVar.RelField.Count, "Count wrong");
-		ownVar.RelField = new ArrayList();
+		ownVar.RelField = new List<AgrBin1OwnpconNoTblAutoRight>();
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
@@ -3539,7 +3540,7 @@ public class TestAgrBin1OwnpconTblAuto
 		QueryOwn();
 		Assert.NotNull(ownVar, "No Query Result");
 		Assert.AreEqual(1, ownVar.RelField.Count, "Count wrong");
-		ownVar.RelField = new ArrayList();
+		ownVar.RelField = new List<AgrBin1OwnpconTblAutoRight>();
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
@@ -3796,7 +3797,7 @@ public class TestAgrBinnOwnpconTblAuto
 		QueryOwn();
 		Assert.NotNull(ownVar, "No Query Result");
 		Assert.AreEqual(1, ownVar.RelField.Count, "Count wrong");
-		ownVar.RelField = new ArrayList();
+		ownVar.RelField = new List<AgrBinnOwnpconTblAutoRight>();
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
@@ -4413,7 +4414,7 @@ public class TestCmpDirnOwnpconNoTblAuto
 		QueryOwn();
 		Assert.NotNull(ownVar, "No Query Result");
 		Assert.AreEqual(1, ownVar.RelField.Count, "Count wrong");
-		ownVar.RelField = new ArrayList();
+		ownVar.RelField = new List<CmpDirnOwnpconNoTblAutoRight>();
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
@@ -4507,7 +4508,7 @@ public class TestCmpDirnOwnpconTblAuto
 		QueryOwn();
 		Assert.NotNull(ownVar, "No Query Result");
 		Assert.AreEqual(1, ownVar.RelField.Count, "Count wrong");
-		ownVar.RelField = new ArrayList();
+		ownVar.RelField = new List<CmpDirnOwnpconTblAutoRight>();
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
@@ -4590,7 +4591,7 @@ public class TestCmpBin1OwnpconNoTblAuto
 		QueryOwn();
 		Assert.NotNull(ownVar, "No Query Result");
 		Assert.AreEqual(1, ownVar.RelField.Count, "Count wrong");
-		ownVar.RelField = new ArrayList();
+		ownVar.RelField = new List<CmpBin1OwnpconNoTblAutoRight>();
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
@@ -4729,7 +4730,7 @@ public class TestCmpBin1OwnpconTblAuto
 		QueryOwn();
 		Assert.NotNull(ownVar, "No Query Result");
 		Assert.AreEqual(1, ownVar.RelField.Count, "Count wrong");
-		ownVar.RelField = new ArrayList();
+		ownVar.RelField = new List<CmpBin1OwnpconTblAutoRight>();
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
@@ -4975,7 +4976,7 @@ public class TestCmpBinnOwnpconTblAuto
 		QueryOwn();
 		Assert.NotNull(ownVar, "No Query Result");
 		Assert.AreEqual(1, ownVar.RelField.Count, "Count wrong");
-		ownVar.RelField = new ArrayList();
+		ownVar.RelField = new List<CmpBinnOwnpconTblAutoRight>();
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
@@ -5617,7 +5618,7 @@ public class TestAgrDirnOthpconTblAuto
 		QueryOwn();
 		Assert.NotNull(ownVar, "No Query Result");
 		Assert.AreEqual(1, ownVar.RelField.Count, "Count wrong");
-		ownVar.RelField = new ArrayList();
+		ownVar.RelField = new List<AgrDirnOthpconTblAutoRightBase>();
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
@@ -5705,7 +5706,7 @@ public class TestAgrBin1OthpconTblAuto
 		QueryOwn();
 		Assert.NotNull(ownVar, "No Query Result");
 		Assert.AreEqual(1, ownVar.RelField.Count, "Count wrong");
-		ownVar.RelField = new ArrayList();
+		ownVar.RelField = new List<AgrBin1OthpconTblAutoRightBase>();
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
@@ -6097,7 +6098,7 @@ public class TestAgrBinnOthpconTblAuto
 		QueryOwn();
 		Assert.NotNull(ownVar, "No Query Result");
 		Assert.AreEqual(1, ownVar.RelField.Count, "Count wrong");
-		ownVar.RelField = new ArrayList();
+		ownVar.RelField = new List<AgrBinnOthpconTblAutoRightBase>();
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
@@ -6610,7 +6611,7 @@ public class TestCmpDirnOthpconTblAuto
 		QueryOwn();
 		Assert.NotNull(ownVar, "No Query Result");
 		Assert.AreEqual(1, ownVar.RelField.Count, "Count wrong");
-		ownVar.RelField = new ArrayList();
+		ownVar.RelField = new List<CmpDirnOthpconTblAutoRightBase>();
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
@@ -6693,7 +6694,7 @@ public class TestCmpBin1OthpconTblAuto
 		QueryOwn();
 		Assert.NotNull(ownVar, "No Query Result");
 		Assert.AreEqual(1, ownVar.RelField.Count, "Count wrong");
-		ownVar.RelField = new ArrayList();
+		ownVar.RelField = new List<CmpBin1OthpconTblAutoRightBase>();
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
@@ -7027,7 +7028,7 @@ public class TestCmpBinnOthpconTblAuto
 		QueryOwn();
 		Assert.NotNull(ownVar, "No Query Result");
 		Assert.AreEqual(1, ownVar.RelField.Count, "Count wrong");
-		ownVar.RelField = new ArrayList();
+		ownVar.RelField = new List<CmpBinnOthpconTblAutoRightBase>();
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
@@ -7683,7 +7684,7 @@ public class TestAgrDirnOwnpconOthpconTblAuto
 		QueryOwn();
 		Assert.NotNull(ownVar, "No Query Result");
 		Assert.AreEqual(1, ownVar.RelField.Count, "Count wrong");
-		ownVar.RelField = new ArrayList();
+		ownVar.RelField = new List<AgrDirnOwnpconOthpconTblAutoRightBase>();
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
@@ -7771,7 +7772,7 @@ public class TestAgrBin1OwnpconOthpconTblAuto
 		QueryOwn();
 		Assert.NotNull(ownVar, "No Query Result");
 		Assert.AreEqual(1, ownVar.RelField.Count, "Count wrong");
-		ownVar.RelField = new ArrayList();
+		ownVar.RelField = new List<AgrBin1OwnpconOthpconTblAutoRightBase>();
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
@@ -8040,7 +8041,7 @@ public class TestAgrBinnOwnpconOthpconTblAuto
 		QueryOwn();
 		Assert.NotNull(ownVar, "No Query Result");
 		Assert.AreEqual(1, ownVar.RelField.Count, "Count wrong");
-		ownVar.RelField = new ArrayList();
+		ownVar.RelField = new List<AgrBinnOwnpconOthpconTblAutoRightBase>();
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
@@ -8571,7 +8572,7 @@ public class TestCmpDirnOwnpconOthpconTblAuto
 		QueryOwn();
 		Assert.NotNull(ownVar, "No Query Result");
 		Assert.AreEqual(1, ownVar.RelField.Count, "Count wrong");
-		ownVar.RelField = new ArrayList();
+		ownVar.RelField = new List<CmpDirnOwnpconOthpconTblAutoRightBase>();
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
@@ -8654,7 +8655,7 @@ public class TestCmpBin1OwnpconOthpconTblAuto
 		QueryOwn();
 		Assert.NotNull(ownVar, "No Query Result");
 		Assert.AreEqual(1, ownVar.RelField.Count, "Count wrong");
-		ownVar.RelField = new ArrayList();
+		ownVar.RelField = new List<CmpBin1OwnpconOthpconTblAutoRightBase>();
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
@@ -8912,7 +8913,7 @@ public class TestCmpBinnOwnpconOthpconTblAuto
 		QueryOwn();
 		Assert.NotNull(ownVar, "No Query Result");
 		Assert.AreEqual(1, ownVar.RelField.Count, "Count wrong");
-		ownVar.RelField = new ArrayList();
+		ownVar.RelField = new List<CmpBinnOwnpconOthpconTblAutoRightBase>();
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
@@ -9537,7 +9538,7 @@ public class TestAgrDirnNoTblGuid
 		QueryOwn();
 		Assert.NotNull(ownVar, "No Query Result");
 		Assert.AreEqual(1, ownVar.RelField.Count, "Count wrong");
-		ownVar.RelField = new ArrayList();
+		ownVar.RelField = new List<AgrDirnNoTblGuidRight>();
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
@@ -9625,7 +9626,7 @@ public class TestAgrDirnTblGuid
 		QueryOwn();
 		Assert.NotNull(ownVar, "No Query Result");
 		Assert.AreEqual(1, ownVar.RelField.Count, "Count wrong");
-		ownVar.RelField = new ArrayList();
+		ownVar.RelField = new List<AgrDirnTblGuidRight>();
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
@@ -9713,7 +9714,7 @@ public class TestAgrBin1NoTblGuid
 		QueryOwn();
 		Assert.NotNull(ownVar, "No Query Result");
 		Assert.AreEqual(1, ownVar.RelField.Count, "Count wrong");
-		ownVar.RelField = new ArrayList();
+		ownVar.RelField = new List<AgrBin1NoTblGuidRight>();
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
@@ -9842,7 +9843,7 @@ public class TestAgrBin1TblGuid
 		QueryOwn();
 		Assert.NotNull(ownVar, "No Query Result");
 		Assert.AreEqual(1, ownVar.RelField.Count, "Count wrong");
-		ownVar.RelField = new ArrayList();
+		ownVar.RelField = new List<AgrBin1TblGuidRight>();
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
@@ -10209,7 +10210,7 @@ public class TestAgrBinnTblGuid
 		QueryOwn();
 		Assert.NotNull(ownVar, "No Query Result");
 		Assert.AreEqual(1, ownVar.RelField.Count, "Count wrong");
-		ownVar.RelField = new ArrayList();
+		ownVar.RelField = new List<AgrBinnTblGuidRight>();
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
@@ -10801,7 +10802,7 @@ public class TestCmpDirnNoTblGuid
 		QueryOwn();
 		Assert.NotNull(ownVar, "No Query Result");
 		Assert.AreEqual(1, ownVar.RelField.Count, "Count wrong");
-		ownVar.RelField = new ArrayList();
+		ownVar.RelField = new List<CmpDirnNoTblGuidRight>();
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
@@ -10884,7 +10885,7 @@ public class TestCmpDirnTblGuid
 		QueryOwn();
 		Assert.NotNull(ownVar, "No Query Result");
 		Assert.AreEqual(1, ownVar.RelField.Count, "Count wrong");
-		ownVar.RelField = new ArrayList();
+		ownVar.RelField = new List<CmpDirnTblGuidRight>();
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
@@ -10967,7 +10968,7 @@ public class TestCmpBin1NoTblGuid
 		QueryOwn();
 		Assert.NotNull(ownVar, "No Query Result");
 		Assert.AreEqual(1, ownVar.RelField.Count, "Count wrong");
-		ownVar.RelField = new ArrayList();
+		ownVar.RelField = new List<CmpBin1NoTblGuidRight>();
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
@@ -11091,7 +11092,7 @@ public class TestCmpBin1TblGuid
 		QueryOwn();
 		Assert.NotNull(ownVar, "No Query Result");
 		Assert.AreEqual(1, ownVar.RelField.Count, "Count wrong");
-		ownVar.RelField = new ArrayList();
+		ownVar.RelField = new List<CmpBin1TblGuidRight>();
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
@@ -11443,7 +11444,7 @@ public class TestCmpBinnTblGuid
 		QueryOwn();
 		Assert.NotNull(ownVar, "No Query Result");
 		Assert.AreEqual(1, ownVar.RelField.Count, "Count wrong");
-		ownVar.RelField = new ArrayList();
+		ownVar.RelField = new List<CmpBinnTblGuidRight>();
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
@@ -12066,7 +12067,7 @@ public class TestAgrDirnOwnpconNoTblGuid
 		QueryOwn();
 		Assert.NotNull(ownVar, "No Query Result");
 		Assert.AreEqual(1, ownVar.RelField.Count, "Count wrong");
-		ownVar.RelField = new ArrayList();
+		ownVar.RelField = new List<AgrDirnOwnpconNoTblGuidRight>();
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
@@ -12154,7 +12155,7 @@ public class TestAgrDirnOwnpconTblGuid
 		QueryOwn();
 		Assert.NotNull(ownVar, "No Query Result");
 		Assert.AreEqual(1, ownVar.RelField.Count, "Count wrong");
-		ownVar.RelField = new ArrayList();
+		ownVar.RelField = new List<AgrDirnOwnpconTblGuidRight>();
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
@@ -12242,7 +12243,7 @@ public class TestAgrBin1OwnpconNoTblGuid
 		QueryOwn();
 		Assert.NotNull(ownVar, "No Query Result");
 		Assert.AreEqual(1, ownVar.RelField.Count, "Count wrong");
-		ownVar.RelField = new ArrayList();
+		ownVar.RelField = new List<AgrBin1OwnpconNoTblGuidRight>();
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
@@ -12375,7 +12376,7 @@ public class TestAgrBin1OwnpconTblGuid
 		QueryOwn();
 		Assert.NotNull(ownVar, "No Query Result");
 		Assert.AreEqual(1, ownVar.RelField.Count, "Count wrong");
-		ownVar.RelField = new ArrayList();
+		ownVar.RelField = new List<AgrBin1OwnpconTblGuidRight>();
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
@@ -12631,7 +12632,7 @@ public class TestAgrBinnOwnpconTblGuid
 		QueryOwn();
 		Assert.NotNull(ownVar, "No Query Result");
 		Assert.AreEqual(1, ownVar.RelField.Count, "Count wrong");
-		ownVar.RelField = new ArrayList();
+		ownVar.RelField = new List<AgrBinnOwnpconTblGuidRight>();
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
@@ -13235,7 +13236,7 @@ public class TestCmpDirnOwnpconNoTblGuid
 		QueryOwn();
 		Assert.NotNull(ownVar, "No Query Result");
 		Assert.AreEqual(1, ownVar.RelField.Count, "Count wrong");
-		ownVar.RelField = new ArrayList();
+		ownVar.RelField = new List<CmpDirnOwnpconNoTblGuidRight>();
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
@@ -13318,7 +13319,7 @@ public class TestCmpDirnOwnpconTblGuid
 		QueryOwn();
 		Assert.NotNull(ownVar, "No Query Result");
 		Assert.AreEqual(1, ownVar.RelField.Count, "Count wrong");
-		ownVar.RelField = new ArrayList();
+		ownVar.RelField = new List<CmpDirnOwnpconTblGuidRight>();
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
@@ -13401,7 +13402,7 @@ public class TestCmpBin1OwnpconNoTblGuid
 		QueryOwn();
 		Assert.NotNull(ownVar, "No Query Result");
 		Assert.AreEqual(1, ownVar.RelField.Count, "Count wrong");
-		ownVar.RelField = new ArrayList();
+		ownVar.RelField = new List<CmpBin1OwnpconNoTblGuidRight>();
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
@@ -13529,7 +13530,7 @@ public class TestCmpBin1OwnpconTblGuid
 		QueryOwn();
 		Assert.NotNull(ownVar, "No Query Result");
 		Assert.AreEqual(1, ownVar.RelField.Count, "Count wrong");
-		ownVar.RelField = new ArrayList();
+		ownVar.RelField = new List<CmpBin1OwnpconTblGuidRight>();
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
@@ -13775,7 +13776,7 @@ public class TestCmpBinnOwnpconTblGuid
 		QueryOwn();
 		Assert.NotNull(ownVar, "No Query Result");
 		Assert.AreEqual(1, ownVar.RelField.Count, "Count wrong");
-		ownVar.RelField = new ArrayList();
+		ownVar.RelField = new List<CmpBinnOwnpconTblGuidRight>();
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
@@ -14402,7 +14403,7 @@ public class TestAgrDirnOthpconTblGuid
 		QueryOwn();
 		Assert.NotNull(ownVar, "No Query Result");
 		Assert.AreEqual(1, ownVar.RelField.Count, "Count wrong");
-		ownVar.RelField = new ArrayList();
+		ownVar.RelField = new List<AgrDirnOthpconTblGuidRightBase>();
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
@@ -14490,7 +14491,7 @@ public class TestAgrBin1OthpconTblGuid
 		QueryOwn();
 		Assert.NotNull(ownVar, "No Query Result");
 		Assert.AreEqual(1, ownVar.RelField.Count, "Count wrong");
-		ownVar.RelField = new ArrayList();
+		ownVar.RelField = new List<AgrBin1OthpconTblGuidRightBase>();
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
@@ -14869,7 +14870,7 @@ public class TestAgrBinnOthpconTblGuid
 		QueryOwn();
 		Assert.NotNull(ownVar, "No Query Result");
 		Assert.AreEqual(1, ownVar.RelField.Count, "Count wrong");
-		ownVar.RelField = new ArrayList();
+		ownVar.RelField = new List<AgrBinnOthpconTblGuidRightBase>();
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
@@ -15473,7 +15474,7 @@ public class TestCmpDirnOthpconTblGuid
 		QueryOwn();
 		Assert.NotNull(ownVar, "No Query Result");
 		Assert.AreEqual(1, ownVar.RelField.Count, "Count wrong");
-		ownVar.RelField = new ArrayList();
+		ownVar.RelField = new List<CmpDirnOthpconTblGuidRightBase>();
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
@@ -15556,7 +15557,7 @@ public class TestCmpBin1OthpconTblGuid
 		QueryOwn();
 		Assert.NotNull(ownVar, "No Query Result");
 		Assert.AreEqual(1, ownVar.RelField.Count, "Count wrong");
-		ownVar.RelField = new ArrayList();
+		ownVar.RelField = new List<CmpBin1OthpconTblGuidRightBase>();
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
@@ -15920,7 +15921,7 @@ public class TestCmpBinnOthpconTblGuid
 		QueryOwn();
 		Assert.NotNull(ownVar, "No Query Result");
 		Assert.AreEqual(1, ownVar.RelField.Count, "Count wrong");
-		ownVar.RelField = new ArrayList();
+		ownVar.RelField = new List<CmpBinnOthpconTblGuidRightBase>();
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
@@ -16559,7 +16560,7 @@ public class TestAgrDirnOwnpconOthpconTblGuid
 		QueryOwn();
 		Assert.NotNull(ownVar, "No Query Result");
 		Assert.AreEqual(1, ownVar.RelField.Count, "Count wrong");
-		ownVar.RelField = new ArrayList();
+		ownVar.RelField = new List<AgrDirnOwnpconOthpconTblGuidRightBase>();
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
@@ -16647,7 +16648,7 @@ public class TestAgrBin1OwnpconOthpconTblGuid
 		QueryOwn();
 		Assert.NotNull(ownVar, "No Query Result");
 		Assert.AreEqual(1, ownVar.RelField.Count, "Count wrong");
-		ownVar.RelField = new ArrayList();
+		ownVar.RelField = new List<AgrBin1OwnpconOthpconTblGuidRightBase>();
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
@@ -16915,7 +16916,7 @@ public class TestAgrBinnOwnpconOthpconTblGuid
 		QueryOwn();
 		Assert.NotNull(ownVar, "No Query Result");
 		Assert.AreEqual(1, ownVar.RelField.Count, "Count wrong");
-		ownVar.RelField = new ArrayList();
+		ownVar.RelField = new List<AgrBinnOwnpconOthpconTblGuidRightBase>();
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
@@ -17537,7 +17538,7 @@ public class TestCmpDirnOwnpconOthpconTblGuid
 		QueryOwn();
 		Assert.NotNull(ownVar, "No Query Result");
 		Assert.AreEqual(1, ownVar.RelField.Count, "Count wrong");
-		ownVar.RelField = new ArrayList();
+		ownVar.RelField = new List<CmpDirnOwnpconOthpconTblGuidRightBase>();
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
@@ -17620,7 +17621,7 @@ public class TestCmpBin1OwnpconOthpconTblGuid
 		QueryOwn();
 		Assert.NotNull(ownVar, "No Query Result");
 		Assert.AreEqual(1, ownVar.RelField.Count, "Count wrong");
-		ownVar.RelField = new ArrayList();
+		ownVar.RelField = new List<CmpBin1OwnpconOthpconTblGuidRightBase>();
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
@@ -17878,7 +17879,7 @@ public class TestCmpBinnOwnpconOthpconTblGuid
 		QueryOwn();
 		Assert.NotNull(ownVar, "No Query Result");
 		Assert.AreEqual(1, ownVar.RelField.Count, "Count wrong");
-		ownVar.RelField = new ArrayList();
+		ownVar.RelField = new List<CmpBinnOwnpconOthpconTblGuidRightBase>();
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
@@ -18522,7 +18523,7 @@ public class TestAgrDirnOwnpabsNoTblAuto
 		QueryOwn();
 		Assert.NotNull(ownVar, "No Query Result");
 		Assert.AreEqual(1, ownVar.RelField.Count, "Count wrong");
-		ownVar.RelField = new ArrayList();
+		ownVar.RelField = new List<AgrDirnOwnpabsNoTblAutoRight>();
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
@@ -18619,7 +18620,7 @@ public class TestAgrDirnOwnpabsTblAuto
 		QueryOwn();
 		Assert.NotNull(ownVar, "No Query Result");
 		Assert.AreEqual(1, ownVar.RelField.Count, "Count wrong");
-		ownVar.RelField = new ArrayList();
+		ownVar.RelField = new List<AgrDirnOwnpabsTblAutoRight>();
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
@@ -18707,7 +18708,7 @@ public class TestAgrBin1OwnpabsNoTblAuto
 		QueryOwn();
 		Assert.NotNull(ownVar, "No Query Result");
 		Assert.AreEqual(1, ownVar.RelField.Count, "Count wrong");
-		ownVar.RelField = new ArrayList();
+		ownVar.RelField = new List<AgrBin1OwnpabsNoTblAutoRight>();
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
@@ -18850,7 +18851,7 @@ public class TestAgrBin1OwnpabsTblAuto
 		QueryOwn();
 		Assert.NotNull(ownVar, "No Query Result");
 		Assert.AreEqual(1, ownVar.RelField.Count, "Count wrong");
-		ownVar.RelField = new ArrayList();
+		ownVar.RelField = new List<AgrBin1OwnpabsTblAutoRight>();
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
@@ -19107,7 +19108,7 @@ public class TestAgrBinnOwnpabsTblAuto
 		QueryOwn();
 		Assert.NotNull(ownVar, "No Query Result");
 		Assert.AreEqual(1, ownVar.RelField.Count, "Count wrong");
-		ownVar.RelField = new ArrayList();
+		ownVar.RelField = new List<AgrBinnOwnpabsTblAutoRight>();
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
@@ -19722,7 +19723,7 @@ public class TestCmpDirnOwnpabsNoTblAuto
 		QueryOwn();
 		Assert.NotNull(ownVar, "No Query Result");
 		Assert.AreEqual(1, ownVar.RelField.Count, "Count wrong");
-		ownVar.RelField = new ArrayList();
+		ownVar.RelField = new List<CmpDirnOwnpabsNoTblAutoRight>();
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
@@ -19814,7 +19815,7 @@ public class TestCmpDirnOwnpabsTblAuto
 		QueryOwn();
 		Assert.NotNull(ownVar, "No Query Result");
 		Assert.AreEqual(1, ownVar.RelField.Count, "Count wrong");
-		ownVar.RelField = new ArrayList();
+		ownVar.RelField = new List<CmpDirnOwnpabsTblAutoRight>();
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
@@ -19897,7 +19898,7 @@ public class TestCmpBin1OwnpabsNoTblAuto
 		QueryOwn();
 		Assert.NotNull(ownVar, "No Query Result");
 		Assert.AreEqual(1, ownVar.RelField.Count, "Count wrong");
-		ownVar.RelField = new ArrayList();
+		ownVar.RelField = new List<CmpBin1OwnpabsNoTblAutoRight>();
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
@@ -20034,7 +20035,7 @@ public class TestCmpBin1OwnpabsTblAuto
 		QueryOwn();
 		Assert.NotNull(ownVar, "No Query Result");
 		Assert.AreEqual(1, ownVar.RelField.Count, "Count wrong");
-		ownVar.RelField = new ArrayList();
+		ownVar.RelField = new List<CmpBin1OwnpabsTblAutoRight>();
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
@@ -20280,7 +20281,7 @@ public class TestCmpBinnOwnpabsTblAuto
 		QueryOwn();
 		Assert.NotNull(ownVar, "No Query Result");
 		Assert.AreEqual(1, ownVar.RelField.Count, "Count wrong");
-		ownVar.RelField = new ArrayList();
+		ownVar.RelField = new List<CmpBinnOwnpabsTblAutoRight>();
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
@@ -20920,7 +20921,7 @@ public class TestAgrDirnOthpabsTblAuto
 		QueryOwn();
 		Assert.NotNull(ownVar, "No Query Result");
 		Assert.AreEqual(1, ownVar.RelField.Count, "Count wrong");
-		ownVar.RelField = new ArrayList();
+		ownVar.RelField = new List<AgrDirnOthpabsTblAutoRightBase>();
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
@@ -21008,7 +21009,7 @@ public class TestAgrBin1OthpabsTblAuto
 		QueryOwn();
 		Assert.NotNull(ownVar, "No Query Result");
 		Assert.AreEqual(1, ownVar.RelField.Count, "Count wrong");
-		ownVar.RelField = new ArrayList();
+		ownVar.RelField = new List<AgrBin1OthpabsTblAutoRightBase>();
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
@@ -21398,7 +21399,7 @@ public class TestAgrBinnOthpabsTblAuto
 		QueryOwn();
 		Assert.NotNull(ownVar, "No Query Result");
 		Assert.AreEqual(1, ownVar.RelField.Count, "Count wrong");
-		ownVar.RelField = new ArrayList();
+		ownVar.RelField = new List<AgrBinnOthpabsTblAutoRightBase>();
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
@@ -21911,7 +21912,7 @@ public class TestCmpDirnOthpabsTblAuto
 		QueryOwn();
 		Assert.NotNull(ownVar, "No Query Result");
 		Assert.AreEqual(1, ownVar.RelField.Count, "Count wrong");
-		ownVar.RelField = new ArrayList();
+		ownVar.RelField = new List<CmpDirnOthpabsTblAutoRightBase>();
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
@@ -21994,7 +21995,7 @@ public class TestCmpBin1OthpabsTblAuto
 		QueryOwn();
 		Assert.NotNull(ownVar, "No Query Result");
 		Assert.AreEqual(1, ownVar.RelField.Count, "Count wrong");
-		ownVar.RelField = new ArrayList();
+		ownVar.RelField = new List<CmpBin1OthpabsTblAutoRightBase>();
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
@@ -22328,7 +22329,7 @@ public class TestCmpBinnOthpabsTblAuto
 		QueryOwn();
 		Assert.NotNull(ownVar, "No Query Result");
 		Assert.AreEqual(1, ownVar.RelField.Count, "Count wrong");
-		ownVar.RelField = new ArrayList();
+		ownVar.RelField = new List<CmpBinnOthpabsTblAutoRightBase>();
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
@@ -22982,7 +22983,7 @@ public class TestAgrDirnOwnpabsOthpabsTblAuto
 		QueryOwn();
 		Assert.NotNull(ownVar, "No Query Result");
 		Assert.AreEqual(1, ownVar.RelField.Count, "Count wrong");
-		ownVar.RelField = new ArrayList();
+		ownVar.RelField = new List<AgrDirnOwnpabsOthpabsTblAutoRightBase>();
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
@@ -23070,7 +23071,7 @@ public class TestAgrBin1OwnpabsOthpabsTblAuto
 		QueryOwn();
 		Assert.NotNull(ownVar, "No Query Result");
 		Assert.AreEqual(1, ownVar.RelField.Count, "Count wrong");
-		ownVar.RelField = new ArrayList();
+		ownVar.RelField = new List<AgrBin1OwnpabsOthpabsTblAutoRightBase>();
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
@@ -23339,7 +23340,7 @@ public class TestAgrBinnOwnpabsOthpabsTblAuto
 		QueryOwn();
 		Assert.NotNull(ownVar, "No Query Result");
 		Assert.AreEqual(1, ownVar.RelField.Count, "Count wrong");
-		ownVar.RelField = new ArrayList();
+		ownVar.RelField = new List<AgrBinnOwnpabsOthpabsTblAutoRightBase>();
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
@@ -23870,7 +23871,7 @@ public class TestCmpDirnOwnpabsOthpabsTblAuto
 		QueryOwn();
 		Assert.NotNull(ownVar, "No Query Result");
 		Assert.AreEqual(1, ownVar.RelField.Count, "Count wrong");
-		ownVar.RelField = new ArrayList();
+		ownVar.RelField = new List<CmpDirnOwnpabsOthpabsTblAutoRightBase>();
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
@@ -23953,7 +23954,7 @@ public class TestCmpBin1OwnpabsOthpabsTblAuto
 		QueryOwn();
 		Assert.NotNull(ownVar, "No Query Result");
 		Assert.AreEqual(1, ownVar.RelField.Count, "Count wrong");
-		ownVar.RelField = new ArrayList();
+		ownVar.RelField = new List<CmpBin1OwnpabsOthpabsTblAutoRightBase>();
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
@@ -24211,7 +24212,7 @@ public class TestCmpBinnOwnpabsOthpabsTblAuto
 		QueryOwn();
 		Assert.NotNull(ownVar, "No Query Result");
 		Assert.AreEqual(1, ownVar.RelField.Count, "Count wrong");
-		ownVar.RelField = new ArrayList();
+		ownVar.RelField = new List<CmpBinnOwnpabsOthpabsTblAutoRightBase>();
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
@@ -24844,7 +24845,7 @@ public class TestAgrDirnOwnpabsNoTblGuid
 		QueryOwn();
 		Assert.NotNull(ownVar, "No Query Result");
 		Assert.AreEqual(1, ownVar.RelField.Count, "Count wrong");
-		ownVar.RelField = new ArrayList();
+		ownVar.RelField = new List<AgrDirnOwnpabsNoTblGuidRight>();
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
@@ -24932,7 +24933,7 @@ public class TestAgrDirnOwnpabsTblGuid
 		QueryOwn();
 		Assert.NotNull(ownVar, "No Query Result");
 		Assert.AreEqual(1, ownVar.RelField.Count, "Count wrong");
-		ownVar.RelField = new ArrayList();
+		ownVar.RelField = new List<AgrDirnOwnpabsTblGuidRight>();
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
@@ -25020,7 +25021,7 @@ public class TestAgrBin1OwnpabsNoTblGuid
 		QueryOwn();
 		Assert.NotNull(ownVar, "No Query Result");
 		Assert.AreEqual(1, ownVar.RelField.Count, "Count wrong");
-		ownVar.RelField = new ArrayList();
+		ownVar.RelField = new List<AgrBin1OwnpabsNoTblGuidRight>();
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
@@ -25153,7 +25154,7 @@ public class TestAgrBin1OwnpabsTblGuid
 		QueryOwn();
 		Assert.NotNull(ownVar, "No Query Result");
 		Assert.AreEqual(1, ownVar.RelField.Count, "Count wrong");
-		ownVar.RelField = new ArrayList();
+		ownVar.RelField = new List<AgrBin1OwnpabsTblGuidRight>();
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
@@ -25409,7 +25410,7 @@ public class TestAgrBinnOwnpabsTblGuid
 		QueryOwn();
 		Assert.NotNull(ownVar, "No Query Result");
 		Assert.AreEqual(1, ownVar.RelField.Count, "Count wrong");
-		ownVar.RelField = new ArrayList();
+		ownVar.RelField = new List<AgrBinnOwnpabsTblGuidRight>();
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
@@ -26013,7 +26014,7 @@ public class TestCmpDirnOwnpabsNoTblGuid
 		QueryOwn();
 		Assert.NotNull(ownVar, "No Query Result");
 		Assert.AreEqual(1, ownVar.RelField.Count, "Count wrong");
-		ownVar.RelField = new ArrayList();
+		ownVar.RelField = new List<CmpDirnOwnpabsNoTblGuidRight>();
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
@@ -26096,7 +26097,7 @@ public class TestCmpDirnOwnpabsTblGuid
 		QueryOwn();
 		Assert.NotNull(ownVar, "No Query Result");
 		Assert.AreEqual(1, ownVar.RelField.Count, "Count wrong");
-		ownVar.RelField = new ArrayList();
+		ownVar.RelField = new List<CmpDirnOwnpabsTblGuidRight>();
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
@@ -26179,7 +26180,7 @@ public class TestCmpBin1OwnpabsNoTblGuid
 		QueryOwn();
 		Assert.NotNull(ownVar, "No Query Result");
 		Assert.AreEqual(1, ownVar.RelField.Count, "Count wrong");
-		ownVar.RelField = new ArrayList();
+		ownVar.RelField = new List<CmpBin1OwnpabsNoTblGuidRight>();
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
@@ -26307,7 +26308,7 @@ public class TestCmpBin1OwnpabsTblGuid
 		QueryOwn();
 		Assert.NotNull(ownVar, "No Query Result");
 		Assert.AreEqual(1, ownVar.RelField.Count, "Count wrong");
-		ownVar.RelField = new ArrayList();
+		ownVar.RelField = new List<CmpBin1OwnpabsTblGuidRight>();
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
@@ -26553,7 +26554,7 @@ public class TestCmpBinnOwnpabsTblGuid
 		QueryOwn();
 		Assert.NotNull(ownVar, "No Query Result");
 		Assert.AreEqual(1, ownVar.RelField.Count, "Count wrong");
-		ownVar.RelField = new ArrayList();
+		ownVar.RelField = new List<CmpBinnOwnpabsTblGuidRight>();
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
@@ -27180,7 +27181,7 @@ public class TestAgrDirnOthpabsTblGuid
 		QueryOwn();
 		Assert.NotNull(ownVar, "No Query Result");
 		Assert.AreEqual(1, ownVar.RelField.Count, "Count wrong");
-		ownVar.RelField = new ArrayList();
+		ownVar.RelField = new List<AgrDirnOthpabsTblGuidRightBase>();
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
@@ -27268,7 +27269,7 @@ public class TestAgrBin1OthpabsTblGuid
 		QueryOwn();
 		Assert.NotNull(ownVar, "No Query Result");
 		Assert.AreEqual(1, ownVar.RelField.Count, "Count wrong");
-		ownVar.RelField = new ArrayList();
+		ownVar.RelField = new List<AgrBin1OthpabsTblGuidRightBase>();
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
@@ -27647,7 +27648,7 @@ public class TestAgrBinnOthpabsTblGuid
 		QueryOwn();
 		Assert.NotNull(ownVar, "No Query Result");
 		Assert.AreEqual(1, ownVar.RelField.Count, "Count wrong");
-		ownVar.RelField = new ArrayList();
+		ownVar.RelField = new List<AgrBinnOthpabsTblGuidRightBase>();
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
@@ -28251,7 +28252,7 @@ public class TestCmpDirnOthpabsTblGuid
 		QueryOwn();
 		Assert.NotNull(ownVar, "No Query Result");
 		Assert.AreEqual(1, ownVar.RelField.Count, "Count wrong");
-		ownVar.RelField = new ArrayList();
+		ownVar.RelField = new List<CmpDirnOthpabsTblGuidRightBase>();
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
@@ -28334,7 +28335,7 @@ public class TestCmpBin1OthpabsTblGuid
 		QueryOwn();
 		Assert.NotNull(ownVar, "No Query Result");
 		Assert.AreEqual(1, ownVar.RelField.Count, "Count wrong");
-		ownVar.RelField = new ArrayList();
+		ownVar.RelField = new List<CmpBin1OthpabsTblGuidRightBase>();
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
@@ -28698,7 +28699,7 @@ public class TestCmpBinnOthpabsTblGuid
 		QueryOwn();
 		Assert.NotNull(ownVar, "No Query Result");
 		Assert.AreEqual(1, ownVar.RelField.Count, "Count wrong");
-		ownVar.RelField = new ArrayList();
+		ownVar.RelField = new List<CmpBinnOthpabsTblGuidRightBase>();
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
@@ -29337,7 +29338,7 @@ public class TestAgrDirnOwnpabsOthpabsTblGuid
 		QueryOwn();
 		Assert.NotNull(ownVar, "No Query Result");
 		Assert.AreEqual(1, ownVar.RelField.Count, "Count wrong");
-		ownVar.RelField = new ArrayList();
+		ownVar.RelField = new List<AgrDirnOwnpabsOthpabsTblGuidRightBase>();
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
@@ -29425,7 +29426,7 @@ public class TestAgrBin1OwnpabsOthpabsTblGuid
 		QueryOwn();
 		Assert.NotNull(ownVar, "No Query Result");
 		Assert.AreEqual(1, ownVar.RelField.Count, "Count wrong");
-		ownVar.RelField = new ArrayList();
+		ownVar.RelField = new List<AgrBin1OwnpabsOthpabsTblGuidRightBase>();
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
@@ -29693,7 +29694,7 @@ public class TestAgrBinnOwnpabsOthpabsTblGuid
 		QueryOwn();
 		Assert.NotNull(ownVar, "No Query Result");
 		Assert.AreEqual(1, ownVar.RelField.Count, "Count wrong");
-		ownVar.RelField = new ArrayList();
+		ownVar.RelField = new List<AgrBinnOwnpabsOthpabsTblGuidRightBase>();
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
@@ -30315,7 +30316,7 @@ public class TestCmpDirnOwnpabsOthpabsTblGuid
 		QueryOwn();
 		Assert.NotNull(ownVar, "No Query Result");
 		Assert.AreEqual(1, ownVar.RelField.Count, "Count wrong");
-		ownVar.RelField = new ArrayList();
+		ownVar.RelField = new List<CmpDirnOwnpabsOthpabsTblGuidRightBase>();
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
@@ -30398,7 +30399,7 @@ public class TestCmpBin1OwnpabsOthpabsTblGuid
 		QueryOwn();
 		Assert.NotNull(ownVar, "No Query Result");
 		Assert.AreEqual(1, ownVar.RelField.Count, "Count wrong");
-		ownVar.RelField = new ArrayList();
+		ownVar.RelField = new List<CmpBin1OwnpabsOthpabsTblGuidRightBase>();
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
@@ -30656,7 +30657,7 @@ public class TestCmpBinnOwnpabsOthpabsTblGuid
 		QueryOwn();
 		Assert.NotNull(ownVar, "No Query Result");
 		Assert.AreEqual(1, ownVar.RelField.Count, "Count wrong");
-		ownVar.RelField = new ArrayList();
+		ownVar.RelField = new List<CmpBinnOwnpabsOthpabsTblGuidRightBase>();
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();

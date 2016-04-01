@@ -35,6 +35,7 @@ using System.Collections;
 using System.Text;
 using System.IO;
 using CodeGenerator;
+using System.Collections.Generic;
 
 namespace TestGenerator
 {
@@ -43,12 +44,12 @@ namespace TestGenerator
 	/// </summary>
 	public class ClassGenerator
 	{
-		ArrayList relInfos;
+		IEnumerable<RelInfo> relInfos;
 		string fileName;
 		StreamWriter sw;
 		int count;
 
-		public ClassGenerator(ArrayList relInfos)
+		public ClassGenerator( IEnumerable<RelInfo> relInfos )
 		{
 			this.relInfos = relInfos;
 			fileName = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"..\..\PersistentClasses\PersistentClasses.cs");
@@ -116,7 +117,7 @@ namespace TestGenerator
 		{
 			sw = new StreamWriter(fileName, false, Encoding.UTF8);
 			sw.WriteLine("using System;");
-			sw.WriteLine("using System.Collections;");
+			sw.WriteLine("using System.Collections.Generic;");
 			sw.WriteLine("using NDO;\n");
 			sw.WriteLine( "using NDO.Mapping.Attributes;\n" );
 			sw.WriteLine( "namespace RelationTestClasses" );

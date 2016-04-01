@@ -34,6 +34,8 @@ using System;
 using System.Collections;
 using System.IO;
 using CodeGenerator;
+using System.Text;
+using System.Collections.Generic;
 
 namespace TestGenerator
 {
@@ -42,84 +44,84 @@ namespace TestGenerator
 	/// </summary>
 	public class TestGenerator
 	{
-		ArrayList relInfos;
+		List<RelInfo> relInfos;
 		string fileName;
 		StreamWriter sw;
 		TestFixture fixture;
 		Test test;
 		const string nameSpace = "RelationUnitTests";
 
-		public TestGenerator(ArrayList relInfos)
+		public TestGenerator( List<RelInfo> relInfos )
 		{
 			this.relInfos = relInfos;
-			fileName = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"..\..\UnitTests\UnitTests.cs");			
+			fileName = Path.Combine( AppDomain.CurrentDomain.BaseDirectory, @"..\..\UnitTests\UnitTests.cs" );
 		}
 
 
-		void CreateTests(RelInfo ri)
+		void CreateTests( RelInfo ri )
 		{
-			CreateTestSaveReload(ri);
-			CreateTestSaveReloadNull(ri);
-			CreateTestSaveReloadRemove(ri);
-			CreateTestChangeKeyHolderLeft(ri);
-			CreateTestChangeKeyHolderRight(ri);
-			CreateTestChangeKeyHolderLeftNoTouch(ri);
-			CreateTestChangeKeyHolderRightNoTouch(ri);
-			CreateTestUpdateOrder(ri);
-			CreateTestRelationHash(ri);
-			GenerateCreateObjects(ri);
-			GenerateQueryOwn(ri);
-			GenerateQueryOther(ri);
+			CreateTestSaveReload( ri );
+			CreateTestSaveReloadNull( ri );
+			CreateTestSaveReloadRemove( ri );
+			CreateTestChangeKeyHolderLeft( ri );
+			CreateTestChangeKeyHolderRight( ri );
+			CreateTestChangeKeyHolderLeftNoTouch( ri );
+			CreateTestChangeKeyHolderRightNoTouch( ri );
+			CreateTestUpdateOrder( ri );
+			CreateTestRelationHash( ri );
+			GenerateCreateObjects( ri );
+			GenerateQueryOwn( ri );
+			GenerateQueryOther( ri );
 		}
 
 
-		string AssertEquals(string text, object o2, object o3)
+		string AssertEquals( string text, object o2, object o3 )
 		{
 			return "Assert.AreEqual(" + o2 + ", " + o3 + ", \"" + text + "\");";
 		}
-		string AssertNotNull(string text, object o)
+		string AssertNotNull( string text, object o )
 		{
 			return "Assert.NotNull(" + o + ", \"" + text + "\");";
 		}
-		string AssertNull(string text, object o)
+		string AssertNull( string text, object o )
 		{
 			return "Assert.Null(" + o + ", \"" + text + "\");";
 		}
 
-		string Assert(string text, object o)
+		string Assert( string text, object o )
 		{
 			return "Assert.That(" + o + ", \"" + text + "\");";
 		}
 
-		string QualifiedClassName(string className)
+		string QualifiedClassName( string className )
 		{
 			return nameSpace + "." + className;
 		}
 
-		void CreateTestRelationHash(RelInfo ri)
+		void CreateTestRelationHash( RelInfo ri )
 		{
 			if (!ri.IsBi)
 				return;
-			Function func = fixture.NewFunction("void", "TestRelationHash");
-			func.Attributes.Add("Test");
+			Function func = fixture.NewFunction( "void", "TestRelationHash" );
+			func.Attributes.Add( "Test" );
 			func.AccessModifier = "public";
-			func.Statements.Add("Class clbaseLeft = pm.NDOMapping.FindClass(typeof(" + test.OwnClass.Name + "));");
-			func.Statements.Add("Relation relbaseLeft = clbaseLeft.FindRelation(\"relField\");");
-			func.Statements.Add("Class clbaseRight = pm.NDOMapping.FindClass(typeof(" + test.OtherClass.Name + "));");
-			func.Statements.Add("Relation relbaseRight = clbaseRight.FindRelation(\"relField\");");
+			func.Statements.Add( "Class clbaseLeft = pm.NDOMapping.FindClass(typeof(" + test.OwnClass.Name + "));" );
+			func.Statements.Add( "Relation relbaseLeft = clbaseLeft.FindRelation(\"relField\");" );
+			func.Statements.Add( "Class clbaseRight = pm.NDOMapping.FindClass(typeof(" + test.OtherClass.Name + "));" );
+			func.Statements.Add( "Relation relbaseRight = clbaseRight.FindRelation(\"relField\");" );
 			func.Statements.Add( Assert( "Relation should be equal #1", "relbaseRight.Equals(relbaseLeft)" ) );
 			func.Statements.Add( Assert( "Relation should be equal #2", "relbaseLeft.Equals(relbaseRight)" ) );
 			if (ri.OwnPoly)
 			{
-				func.Statements.Add("Class clderLeft = pm.NDOMapping.FindClass(typeof("+ test.OwnDerivedClass.Name + "));");
-				func.Statements.Add("Relation relderLeft = clderLeft.FindRelation(\"relField\");");
+				func.Statements.Add( "Class clderLeft = pm.NDOMapping.FindClass(typeof(" + test.OwnDerivedClass.Name + "));" );
+				func.Statements.Add( "Relation relderLeft = clderLeft.FindRelation(\"relField\");" );
 				func.Statements.Add( Assert( "Relation should be equal #3", "relderLeft.Equals(relbaseRight)" ) );
 				func.Statements.Add( Assert( "Relation should be equal #4", "relbaseRight.Equals(relderLeft)" ) );
 			}
 			if (ri.OtherPoly)
 			{
-				func.Statements.Add("Class clderRight = pm.NDOMapping.FindClass(typeof(" + test.OtherDerivedClass.Name + "));");
-				func.Statements.Add("Relation relderRight = clderRight.FindRelation(\"relField\");");
+				func.Statements.Add( "Class clderRight = pm.NDOMapping.FindClass(typeof(" + test.OtherDerivedClass.Name + "));" );
+				func.Statements.Add( "Relation relderRight = clderRight.FindRelation(\"relField\");" );
 				func.Statements.Add( Assert( "Relation should be equal #5", "relbaseLeft.Equals(relderRight)" ) );
 				func.Statements.Add( Assert( "Relation should be equal #6", "relderRight.Equals(relbaseLeft)" ) );
 				if (ri.OwnPoly)
@@ -130,221 +132,221 @@ namespace TestGenerator
 			}
 		}
 
-		bool IsForbiddenCase(RelInfo ri)
+		bool IsForbiddenCase( RelInfo ri )
 		{
 			return ri.IsComposite && !ri.UseGuid && !ri.HasTable && !ri.IsList && ri.OtherPoly;
 		}
 
-		void CreateTestSaveReload(RelInfo ri)
+		void CreateTestSaveReload( RelInfo ri )
 		{
-			Function func = fixture.NewFunction("void", "TestSaveReload");
-			func.Attributes.Add("Test");
-			if (IsForbiddenCase(ri))
-				func.Attributes.Add("ExpectedException(typeof(NDOException))");
+			Function func = fixture.NewFunction( "void", "TestSaveReload" );
+			func.Attributes.Add( "Test" );
+			if (IsForbiddenCase( ri ))
+				func.Attributes.Add( "ExpectedException(typeof(NDOException))" );
 			func.AccessModifier = "public";
 
-			func.Statements.Add("CreateObjects();");
-			func.Statements.Add("QueryOwn();");
-			func.Statements.Add(AssertNotNull("No Query Result", "ownVar"));
+			func.Statements.Add( "CreateObjects();" );
+			func.Statements.Add( "QueryOwn();" );
+			func.Statements.Add( AssertNotNull( "No Query Result", "ownVar" ) );
 			if (ri.IsList)
-				func.Statements.Add(AssertEquals("Count wrong", 1, "ownVar.RelField.Count"));
+				func.Statements.Add( AssertEquals( "Count wrong", 1, "ownVar.RelField.Count" ) );
 			else
-				func.Statements.Add(AssertNotNull("No related object", "ownVar.RelField"));
+				func.Statements.Add( AssertNotNull( "No related object", "ownVar.RelField" ) );
 		}
 
-		void CreateTestSaveReloadNull(RelInfo ri)
+		void CreateTestSaveReloadNull( RelInfo ri )
 		{
-			Function func = fixture.NewFunction("void", "TestSaveReloadNull");
-			func.Attributes.Add("Test");
-			if (IsForbiddenCase(ri))
-				func.Attributes.Add("ExpectedException(typeof(NDOException))");
+			Function func = fixture.NewFunction( "void", "TestSaveReloadNull" );
+			func.Attributes.Add( "Test" );
+			if (IsForbiddenCase( ri ))
+				func.Attributes.Add( "ExpectedException(typeof(NDOException))" );
 			func.AccessModifier = "public";
 
-			func.Statements.Add("CreateObjects();");
-			func.Statements.Add("QueryOwn();");
-			func.Statements.Add(AssertNotNull("No Query Result", "ownVar"));
+			func.Statements.Add( "CreateObjects();" );
+			func.Statements.Add( "QueryOwn();" );
+			func.Statements.Add( AssertNotNull( "No Query Result", "ownVar" ) );
 
 			if (ri.IsList)
-				func.Statements.Add(AssertEquals("Count wrong", 1, "ownVar.RelField.Count"));
+				func.Statements.Add( AssertEquals( "Count wrong", 1, "ownVar.RelField.Count" ) );
 			else
-				func.Statements.Add(AssertNotNull("No related object", "ownVar.RelField"));
+				func.Statements.Add( AssertNotNull( "No related object", "ownVar.RelField" ) );
 
 			if (ri.IsList)
-				func.Statements.Add("ownVar.RelField = new ArrayList();");
+				func.Statements.Add( "ownVar.RelField = new List<" + this.test.OtherClass.Name + ">();" );
 			else
-				func.Statements.Add("ownVar.RelField = null;");
-			func.Statements.Add("pm.Save();");
-			func.Statements.Add("pm.UnloadCache();");
-			func.Statements.Add("QueryOwn();");
+				func.Statements.Add( "ownVar.RelField = null;" );
+			func.Statements.Add( "pm.Save();" );
+			func.Statements.Add( "pm.UnloadCache();" );
+			func.Statements.Add( "QueryOwn();" );
 
-			func.Statements.Add(AssertNotNull("No Query Result", "ownVar"));
+			func.Statements.Add( AssertNotNull( "No Query Result", "ownVar" ) );
 
 			if (ri.IsList)
-				func.Statements.Add(AssertEquals("Count wrong", 0, "ownVar.RelField.Count"));
+				func.Statements.Add( AssertEquals( "Count wrong", 0, "ownVar.RelField.Count" ) );
 			else
-				func.Statements.Add(AssertNull("There should be no object", "ownVar.RelField"));
+				func.Statements.Add( AssertNull( "There should be no object", "ownVar.RelField" ) );
 		}
 
-		void CreateTestSaveReloadRemove(RelInfo ri)
+		void CreateTestSaveReloadRemove( RelInfo ri )
 		{
-			Function func = fixture.NewFunction("void", "TestSaveReloadRemove");
+			Function func = fixture.NewFunction( "void", "TestSaveReloadRemove" );
 			func.AccessModifier = "public";
-			func.Attributes.Add("Test");
+			func.Attributes.Add( "Test" );
 			if (!ri.IsList)
 				return;
-			if (IsForbiddenCase(ri))
-				func.Attributes.Add("ExpectedException(typeof(NDOException))");
+			if (IsForbiddenCase( ri ))
+				func.Attributes.Add( "ExpectedException(typeof(NDOException))" );
 
-			func.Statements.Add("CreateObjects();");
-			func.Statements.Add("QueryOwn();");
-			func.Statements.Add(AssertNotNull("No Query Result", "ownVar"));
+			func.Statements.Add( "CreateObjects();" );
+			func.Statements.Add( "QueryOwn();" );
+			func.Statements.Add( AssertNotNull( "No Query Result", "ownVar" ) );
 
 			if (ri.IsList)
-				func.Statements.Add(AssertEquals("Count wrong", 1, "ownVar.RelField.Count"));
+				func.Statements.Add( AssertEquals( "Count wrong", 1, "ownVar.RelField.Count" ) );
 			else
-				func.Statements.Add(AssertNotNull("No related object", "ownVar.RelField"));
+				func.Statements.Add( AssertNotNull( "No related object", "ownVar.RelField" ) );
 
-			func.Statements.Add("ownVar.RemoveRelatedObject();");
-			func.Statements.Add("pm.Save();");
-			func.Statements.Add("pm.UnloadCache();");
-			func.Statements.Add("QueryOwn();");
+			func.Statements.Add( "ownVar.RemoveRelatedObject();" );
+			func.Statements.Add( "pm.Save();" );
+			func.Statements.Add( "pm.UnloadCache();" );
+			func.Statements.Add( "QueryOwn();" );
 
-			func.Statements.Add(AssertNotNull("No Query Result", "ownVar"));
+			func.Statements.Add( AssertNotNull( "No Query Result", "ownVar" ) );
 
-			func.Statements.Add(AssertEquals("Count wrong", 0, "ownVar.RelField.Count"));
+			func.Statements.Add( AssertEquals( "Count wrong", 0, "ownVar.RelField.Count" ) );
 		}
 
-		void CreateTestChangeKeyHolderLeft(RelInfo ri)
+		void CreateTestChangeKeyHolderLeft( RelInfo ri )
 		{
-			if (IsForbiddenCase(ri))
+			if (IsForbiddenCase( ri ))
 				return; // These would throw exceptions
 
 			// Check Keyholders only
 			if (ri.IsList)
 				return;
 
-			Function func = fixture.NewFunction("void", "TestChangeKeyHolderLeft");
-			func.Attributes.Add("Test");
+			Function func = fixture.NewFunction( "void", "TestChangeKeyHolderLeft" );
+			func.Attributes.Add( "Test" );
 			func.AccessModifier = "public";
 
-			func.Statements.Add("CreateObjects();");
+			func.Statements.Add( "CreateObjects();" );
 			// 1:1 or n:1 - we check only the left side
-			func.Statements.Add("QueryOwn();");
-			func.Statements.Add(AssertNotNull("No Query Result", "ownVar"));
-			func.Statements.Add(AssertNotNull("No related object", "ownVar.RelField"));
+			func.Statements.Add( "QueryOwn();" );
+			func.Statements.Add( AssertNotNull( "No Query Result", "ownVar" ) );
+			func.Statements.Add( AssertNotNull( "No related object", "ownVar.RelField" ) );
 			// touch the related object
-			func.Statements.Add("int x = ownVar.RelField.Dummy;");
+			func.Statements.Add( "int x = ownVar.RelField.Dummy;" );
 			// change our object
-			func.Statements.Add("ownVar.Dummy = 4711;");
-			func.Statements.Add("pm.Save();");
-			func.Statements.Add("pm.UnloadCache();");
-			func.Statements.Add("QueryOwn();");
-			func.Statements.Add(AssertNotNull("No Query Result", "ownVar"));
-			func.Statements.Add(AssertNotNull("Wrong value", "ownVar.Dummy == 4711"));
-			func.Statements.Add(AssertNotNull("No related object", "ownVar.RelField"));
+			func.Statements.Add( "ownVar.Dummy = 4711;" );
+			func.Statements.Add( "pm.Save();" );
+			func.Statements.Add( "pm.UnloadCache();" );
+			func.Statements.Add( "QueryOwn();" );
+			func.Statements.Add( AssertNotNull( "No Query Result", "ownVar" ) );
+			func.Statements.Add( AssertNotNull( "Wrong value", "ownVar.Dummy == 4711" ) );
+			func.Statements.Add( AssertNotNull( "No related object", "ownVar.RelField" ) );
 
 		}
 
-		void CreateTestChangeKeyHolderRight(RelInfo ri)
+		void CreateTestChangeKeyHolderRight( RelInfo ri )
 		{
-			if (IsForbiddenCase(ri))
+			if (IsForbiddenCase( ri ))
 				return; // These would throw exceptions
 
 			// Check Keyholders only
 			if (ri.ForeignIsList || !ri.IsBi)
 				return;
 
-			Function func = fixture.NewFunction("void", "TestChangeKeyHolderRight");
-			func.Attributes.Add("Test");
+			Function func = fixture.NewFunction( "void", "TestChangeKeyHolderRight" );
+			func.Attributes.Add( "Test" );
 			func.AccessModifier = "public";
 
-			func.Statements.Add("CreateObjects();");
+			func.Statements.Add( "CreateObjects();" );
 			// 1:1 or n:1 - we check only the left side
-			func.Statements.Add("QueryOther();");
-			func.Statements.Add(AssertNotNull("No Query Result", "otherVar"));
-			func.Statements.Add(AssertNotNull("No related object", "otherVar.RelField"));
+			func.Statements.Add( "QueryOther();" );
+			func.Statements.Add( AssertNotNull( "No Query Result", "otherVar" ) );
+			func.Statements.Add( AssertNotNull( "No related object", "otherVar.RelField" ) );
 			// touch the related object
-			func.Statements.Add("int x = otherVar.RelField.Dummy;");
+			func.Statements.Add( "int x = otherVar.RelField.Dummy;" );
 			// change our object
-			func.Statements.Add("otherVar.Dummy = 4711;");
-			func.Statements.Add("pm.Save();");
-			func.Statements.Add("pm.UnloadCache();");
-			func.Statements.Add("QueryOther();");
-			func.Statements.Add(AssertNotNull("No Query Result", "otherVar"));
-			func.Statements.Add(AssertNotNull("Wrong value", "otherVar.Dummy == 4711"));
-			func.Statements.Add(AssertNotNull("No related object", "otherVar.RelField"));
+			func.Statements.Add( "otherVar.Dummy = 4711;" );
+			func.Statements.Add( "pm.Save();" );
+			func.Statements.Add( "pm.UnloadCache();" );
+			func.Statements.Add( "QueryOther();" );
+			func.Statements.Add( AssertNotNull( "No Query Result", "otherVar" ) );
+			func.Statements.Add( AssertNotNull( "Wrong value", "otherVar.Dummy == 4711" ) );
+			func.Statements.Add( AssertNotNull( "No related object", "otherVar.RelField" ) );
 		}
 
-		void CreateTestChangeKeyHolderLeftNoTouch(RelInfo ri)
+		void CreateTestChangeKeyHolderLeftNoTouch( RelInfo ri )
 		{
-			if (IsForbiddenCase(ri))
+			if (IsForbiddenCase( ri ))
 				return; // These would throw exceptions
 
 			// Check Keyholders only
 			if (ri.IsList)
 				return;
 
-			Function func = fixture.NewFunction("void", "TestChangeKeyHolderLeftNoTouch");
-			func.Attributes.Add("Test");
+			Function func = fixture.NewFunction( "void", "TestChangeKeyHolderLeftNoTouch" );
+			func.Attributes.Add( "Test" );
 			func.AccessModifier = "public";
 
-			func.Statements.Add("CreateObjects();");
+			func.Statements.Add( "CreateObjects();" );
 			// 1:1 or n:1 - we check only the left side
-			func.Statements.Add("QueryOwn();");
-			func.Statements.Add(AssertNotNull("No Query Result", "ownVar"));
-			func.Statements.Add(AssertNotNull("No related object", "ownVar.RelField"));
+			func.Statements.Add( "QueryOwn();" );
+			func.Statements.Add( AssertNotNull( "No Query Result", "ownVar" ) );
+			func.Statements.Add( AssertNotNull( "No related object", "ownVar.RelField" ) );
 			// change our object
-			func.Statements.Add("ownVar.Dummy = 4711;");
-			func.Statements.Add("pm.Save();");
-			func.Statements.Add("pm.UnloadCache();");
-			func.Statements.Add("QueryOwn();");
-			func.Statements.Add(AssertNotNull("No Query Result", "ownVar"));
-			func.Statements.Add(AssertNotNull("Wrong value", "ownVar.Dummy == 4711"));
-			func.Statements.Add(AssertNotNull("No related object", "ownVar.RelField"));
+			func.Statements.Add( "ownVar.Dummy = 4711;" );
+			func.Statements.Add( "pm.Save();" );
+			func.Statements.Add( "pm.UnloadCache();" );
+			func.Statements.Add( "QueryOwn();" );
+			func.Statements.Add( AssertNotNull( "No Query Result", "ownVar" ) );
+			func.Statements.Add( AssertNotNull( "Wrong value", "ownVar.Dummy == 4711" ) );
+			func.Statements.Add( AssertNotNull( "No related object", "ownVar.RelField" ) );
 
 		}
 
-		void CreateTestChangeKeyHolderRightNoTouch(RelInfo ri)
+		void CreateTestChangeKeyHolderRightNoTouch( RelInfo ri )
 		{
-			if (IsForbiddenCase(ri))
+			if (IsForbiddenCase( ri ))
 				return; // These would throw exceptions
 
 			// Check Keyholders only
 			if (ri.ForeignIsList || !ri.IsBi)
 				return;
 
-			Function func = fixture.NewFunction("void", "TestChangeKeyHolderRightNoTouch");
-			func.Attributes.Add("Test");
+			Function func = fixture.NewFunction( "void", "TestChangeKeyHolderRightNoTouch" );
+			func.Attributes.Add( "Test" );
 			func.AccessModifier = "public";
 
-			func.Statements.Add("CreateObjects();");
+			func.Statements.Add( "CreateObjects();" );
 			// 1:1 or n:1 - we check only the left side
-			func.Statements.Add("QueryOther();");
-			func.Statements.Add(AssertNotNull("No Query Result", "otherVar"));
-			func.Statements.Add(AssertNotNull("No related object", "otherVar.RelField"));
+			func.Statements.Add( "QueryOther();" );
+			func.Statements.Add( AssertNotNull( "No Query Result", "otherVar" ) );
+			func.Statements.Add( AssertNotNull( "No related object", "otherVar.RelField" ) );
 			// change our object
-			func.Statements.Add("otherVar.Dummy = 4711;");
-			func.Statements.Add("pm.Save();");
-			func.Statements.Add("pm.UnloadCache();");
-			func.Statements.Add("QueryOther();");
-			func.Statements.Add(AssertNotNull("No Query Result", "otherVar"));
-			func.Statements.Add(AssertNotNull("Wrong value", "otherVar.Dummy == 4711"));
-			func.Statements.Add(AssertNotNull("No related object", "otherVar.RelField"));
+			func.Statements.Add( "otherVar.Dummy = 4711;" );
+			func.Statements.Add( "pm.Save();" );
+			func.Statements.Add( "pm.UnloadCache();" );
+			func.Statements.Add( "QueryOther();" );
+			func.Statements.Add( AssertNotNull( "No Query Result", "otherVar" ) );
+			func.Statements.Add( AssertNotNull( "Wrong value", "otherVar.Dummy == 4711" ) );
+			func.Statements.Add( AssertNotNull( "No related object", "otherVar.RelField" ) );
 		}
 
-		void CreateTestUpdateOrder(RelInfo ri)
+		void CreateTestUpdateOrder( RelInfo ri )
 		{
-			if (ri.HasTable || ri.UseGuid || IsForbiddenCase(ri))
+			if (ri.HasTable || ri.UseGuid || IsForbiddenCase( ri ))
 				return;
 			if (!ri.IsList && ri.IsBi && !ri.ForeignIsList)
 				return;
 
-			Function func = fixture.NewFunction("void", "TestUpdateOrder");
-			func.Attributes.Add("Test");
+			Function func = fixture.NewFunction( "void", "TestUpdateOrder" );
+			func.Attributes.Add( "Test" );
 			func.AccessModifier = "public";
 
-			func.Statements.Add("NDO.Mapping.NDOMapping mapping = pm.NDOMapping;");
-			func.Statements.Add("MethodInfo mi = mapping.GetType().GetMethod(\"GetUpdateOrder\");");
+			func.Statements.Add( "NDO.Mapping.NDOMapping mapping = pm.NDOMapping;" );
+			func.Statements.Add( "MethodInfo mi = mapping.GetType().GetMethod(\"GetUpdateOrder\");" );
 			string br = null;
 			if (!ri.IsList)
 				br = ">";
@@ -352,54 +354,54 @@ namespace TestGenerator
 				br = "<";
 			if ((!ri.OwnPoly && !ri.OtherPoly) || !ri.IsAbstract)
 			{
-				func.Statements.Add(Assert("Wrong order #1", @"((int)mi.Invoke(mapping, new object[]{typeof(" + test.OwnClass.Name + @")})) 
-				" + br + " ((int)mi.Invoke(mapping, new object[]{typeof(" + test.OtherClass.Name + ")}))"));
+				func.Statements.Add( Assert( "Wrong order #1", @"((int)mi.Invoke(mapping, new object[]{typeof(" + test.OwnClass.Name + @")})) 
+				" + br + " ((int)mi.Invoke(mapping, new object[]{typeof(" + test.OtherClass.Name + ")}))" ) );
 			}
 			if (ri.OwnPoly && !ri.OtherPoly)
 			{
-				func.Statements.Add(Assert("Wrong order #2", @"((int)mi.Invoke(mapping, new object[]{typeof(" + test.OwnDerivedClass.Name + @")})) 
-				" + br + " ((int)mi.Invoke(mapping, new object[]{typeof(" + test.OtherClass.Name + ")}))"));
+				func.Statements.Add( Assert( "Wrong order #2", @"((int)mi.Invoke(mapping, new object[]{typeof(" + test.OwnDerivedClass.Name + @")})) 
+				" + br + " ((int)mi.Invoke(mapping, new object[]{typeof(" + test.OtherClass.Name + ")}))" ) );
 			}
 			if (!ri.OwnPoly && ri.OtherPoly)
 			{
-				func.Statements.Add(Assert("Wrong order #2", @"((int)mi.Invoke(mapping, new object[]{typeof(" + test.OwnClass.Name + @")})) 
-				" + br + " ((int)mi.Invoke(mapping, new object[]{typeof(" + test.OtherDerivedClass.Name + ")}))"));
+				func.Statements.Add( Assert( "Wrong order #2", @"((int)mi.Invoke(mapping, new object[]{typeof(" + test.OwnClass.Name + @")})) 
+				" + br + " ((int)mi.Invoke(mapping, new object[]{typeof(" + test.OtherDerivedClass.Name + ")}))" ) );
 			}
 			if (ri.OwnPoly && ri.OtherPoly)
 			{
-				func.Statements.Add(Assert("Wrong order #2", @"((int)mi.Invoke(mapping, new object[]{typeof(" + test.OwnDerivedClass.Name + @")})) 
-				" + br + " ((int)mi.Invoke(mapping, new object[]{typeof(" + test.OtherDerivedClass.Name + ")}))"));
+				func.Statements.Add( Assert( "Wrong order #2", @"((int)mi.Invoke(mapping, new object[]{typeof(" + test.OwnDerivedClass.Name + @")})) 
+				" + br + " ((int)mi.Invoke(mapping, new object[]{typeof(" + test.OtherDerivedClass.Name + ")}))" ) );
 			}
-			func.Statements.Add("Debug.WriteLine(\"" + test.OwnClass.Name + "\");");
+			func.Statements.Add( "Debug.WriteLine(\"" + test.OwnClass.Name + "\");" );
 
 		}
 
-		void GenerateTearDown(RelInfo ri)
+		void GenerateTearDown( RelInfo ri )
 		{
 			Function func = fixture.TearDown;
-			func.Statements.Add("pm.UnloadCache();");
+			func.Statements.Add( "pm.UnloadCache();" );
 			func.Statements.Add( "var l = pm.Objects<" + test.OwnClass.Name + ">().ResultTable;" );
-			func.Statements.Add("pm.Delete(l);");
-			func.Statements.Add("pm.Save();");
-			func.Statements.Add("pm.UnloadCache();");
+			func.Statements.Add( "pm.Delete(l);" );
+			func.Statements.Add( "pm.Save();" );
+			func.Statements.Add( "pm.UnloadCache();" );
 			if (!ri.IsComposite)
 			{
-				func.Statements.Add( "var m = pm.Objects<" + test.OtherClass.Name + ">().ResultTable;" );				
-				func.Statements.Add("pm.Delete(m);");
-				func.Statements.Add("pm.Save();");
-				func.Statements.Add("pm.UnloadCache();");
+				func.Statements.Add( "var m = pm.Objects<" + test.OtherClass.Name + ">().ResultTable;" );
+				func.Statements.Add( "pm.Delete(m);" );
+				func.Statements.Add( "pm.Save();" );
+				func.Statements.Add( "pm.UnloadCache();" );
 			}
-			func.Statements.Add("decimal count;");
-			func.Statements.Add("count = (decimal) new NDOQuery<" + test.OwnClass.Name + ">(pm).ExecuteAggregate(\"dummy\", Query.AggregateType.Count);");
-			func.Statements.Add("Assert.AreEqual(0, count, \"Count wrong #1\");");
-			func.Statements.Add("count = (decimal) new NDOQuery<" + test.OtherClass.Name + ">(pm).ExecuteAggregate(\"dummy\", Query.AggregateType.Count);");
-			func.Statements.Add("Assert.AreEqual(0, count, \"Count wrong #2\");");
+			func.Statements.Add( "decimal count;" );
+			func.Statements.Add( "count = (decimal) new " + NDOQuery(test.OwnClass.Name) + ".ExecuteAggregate(\"dummy\", Query.AggregateType.Count);" );
+			func.Statements.Add( "Assert.AreEqual(0, count, \"Count wrong #1\");" );
+			func.Statements.Add( "count = (decimal) new " + NDOQuery(test.OtherClass.Name) + ".ExecuteAggregate(\"dummy\", Query.AggregateType.Count);" );
+			func.Statements.Add( "Assert.AreEqual(0, count, \"Count wrong #2\");" );
 		}
 
-		void GenerateTestGroup(RelInfo ri)
+		void GenerateTestGroup( RelInfo ri )
 		{
-			fixture = new TestFixture("Test" + ri.ToString());
-			test = new Test(ri);
+			fixture = new TestFixture( "Test" + ri.ToString() );
+			test = new Test( ri );
 			Class ownClass = null;
 			Class otherClass = null;
 			if (ri.OwnPoly)
@@ -420,105 +422,120 @@ namespace TestGenerator
 			}
 
 
-			fixture.Statements.Add(test.OwnClass.Name + " ownVar;");
-			fixture.Statements.Add(test.OtherClass.Name + " otherVar;");  // always use the base class type
-			fixture.Statements.Add("PersistenceManager pm;");
+			fixture.Statements.Add( test.OwnClass.Name + " ownVar;" );
+			fixture.Statements.Add( test.OtherClass.Name + " otherVar;" );  // always use the base class type
+			fixture.Statements.Add( "PersistenceManager pm;" );
 
-			fixture.SetUp.Statements.Add("pm = PmFactory.NewPersistenceManager();");
-			fixture.SetUp.Statements.Add("ownVar = new " + ownClass.Name + "();");
-			fixture.SetUp.Statements.Add("otherVar = new " + otherClass.Name + "();");
+			fixture.SetUp.Statements.Add( "pm = PmFactory.NewPersistenceManager();" );
+			fixture.SetUp.Statements.Add( "ownVar = new " + ownClass.Name + "();" );
+			fixture.SetUp.Statements.Add( "otherVar = new " + otherClass.Name + "();" );
 
-			GenerateTearDown(ri);
+			GenerateTearDown( ri );
 
-			CreateTests(ri);
+			CreateTests( ri );
 
-			sw.WriteLine(fixture.ToString());
+			sw.WriteLine( fixture.ToString() );
 		}
 
 		void GeneratePmFactory()
 		{
-			Class cl = new Class("PmFactory");
+			Class cl = new Class( "PmFactory" );
 			string path = AppDomain.CurrentDomain.BaseDirectory;
-			path = Path.Combine(path, @"..\..\UnitTests\bin\Debug\NDOMapping.xml");
-			path = Path.GetFullPath(path);
-			cl.Statements.Add("static PersistenceManager pm;");
-			Function func = cl.NewFunction("PersistenceManager", "NewPersistenceManager");
+			path = Path.Combine( path, @"..\..\UnitTests\bin\Debug\NDOMapping.xml" );
+			path = Path.GetFullPath( path );
+			cl.Statements.Add( "static PersistenceManager pm;" );
+			Function func = cl.NewFunction( "PersistenceManager", "NewPersistenceManager" );
 			func.IsStatic = true;
 			func.AccessModifier = "public";
 
-			func.Statements.Add("if (pm == null)");
-			func.Statements.Add("{");
-			func.Statements.Add("\tpm = new PersistenceManager(@\"" + path + "\");");
-			path = Path.GetFullPath(Path.Combine(path, @"..\..\.."));
-			func.Statements.Add("\tpm.LogPath = @\"" + Path.GetDirectoryName(path) + "\";");
-			func.Statements.Add("}");
-			func.Statements.Add("else");
-			func.Statements.Add("{");
-			func.Statements.Add("\tpm.UnloadCache();");
-			func.Statements.Add("}");
-			func.Statements.Add("return pm;");
-			sw.WriteLine(cl.ToString());
+			func.Statements.Add( "if (pm == null)" );
+			func.Statements.Add( "{" );
+			func.Statements.Add( "\tpm = new PersistenceManager(@\"" + path + "\");" );
+			path = Path.GetFullPath( Path.Combine( path, @"..\..\.." ) );
+			func.Statements.Add( "\tpm.LogPath = @\"" + Path.GetDirectoryName( path ) + "\";" );
+			func.Statements.Add( "}" );
+			func.Statements.Add( "else" );
+			func.Statements.Add( "{" );
+			func.Statements.Add( "\tpm.UnloadCache();" );
+			func.Statements.Add( "}" );
+			func.Statements.Add( "return pm;" );
+			sw.WriteLine( cl.ToString() );
 		}
 
-		void GenerateCreateObjects(RelInfo ri)
+		void GenerateCreateObjects( RelInfo ri )
 		{
-			Function func = fixture.NewFunction("void", "CreateObjects");
-			func.Statements.Add("pm.MakePersistent(ownVar);");
+			Function func = fixture.NewFunction( "void", "CreateObjects" );
+			func.Statements.Add( "pm.MakePersistent(ownVar);" );
 			string secondMakePersistent = "pm.MakePersistent(otherVar);";
 			string assignRelation = "ownVar.AssignRelation(otherVar);";
 			if (ri.IsComposite)
 			{
 				if (!ri.IsList && (ri.OtherPoly || ri.OwnPoly) && !ri.HasTable && !ri.UseGuid)
-					func.Statements.Add("pm.Save();");
-				func.Statements.Add(assignRelation);
+					func.Statements.Add( "pm.Save();" );
+				func.Statements.Add( assignRelation );
 			}
 			else
 			{
 				if (!ri.IsList && ri.OtherPoly && !ri.HasTable && !ri.UseGuid)
-					func.Statements.Add("pm.Save();");
-				func.Statements.Add(secondMakePersistent);
+					func.Statements.Add( "pm.Save();" );
+				func.Statements.Add( secondMakePersistent );
 				if (!ri.IsList && ri.OtherPoly && !ri.HasTable && !ri.UseGuid)
-					func.Statements.Add("pm.Save();");
+					func.Statements.Add( "pm.Save();" );
 				if (ri.IsBi && !ri.ForeignIsList && ri.OwnPoly && !ri.UseGuid)
-					func.Statements.Add("pm.Save();");
-				func.Statements.Add(assignRelation);
+					func.Statements.Add( "pm.Save();" );
+				func.Statements.Add( assignRelation );
 			}
-			func.Statements.Add("pm.Save();");
-			func.Statements.Add("pm.UnloadCache();");
-	}
-
-		void GenerateQueryOwn(RelInfo ri)
-		{
-			Function func = fixture.NewFunction("void", "QueryOwn");
-			func.Statements.Add( "var q = new NDOQuery<" + test.OwnClass.Name + ">(pm);" );
-			func.Statements.Add("ownVar = q.ExecuteSingle();");
+			func.Statements.Add( "pm.Save();" );
+			func.Statements.Add( "pm.UnloadCache();" );
 		}
 
-		void GenerateQueryOther(RelInfo ri)
+		string NDOQuery( string className, string condition = null )
 		{
-			Function func = fixture.NewFunction("void", "QueryOther");
-			func.Statements.Add( "var q = new NDOQuery<" + test.OtherClass.Name + ">(pm);" );
-			func.Statements.Add("otherVar = q.ExecuteSingle();");
+			StringBuilder sb = new StringBuilder( "NDOQuery<" );
+			sb.Append( className );
+			sb.Append( ">(pm" );
+			if (condition != null)
+			{
+				sb.Append( "," );
+				sb.Append( condition );
+			}
+			sb.Append( ")" );
+			return sb.ToString();
+		}
+
+		void GenerateQueryOwn( RelInfo ri )
+		{
+			Function func = fixture.NewFunction( "void", "QueryOwn" );
+			func.Statements.Add( "var q = new " + NDOQuery(test.OwnClass.Name) + ';' );
+			func.Statements.Add( "ownVar = q.ExecuteSingle();" );
+		}
+
+		void GenerateQueryOther( RelInfo ri )
+		{
+			Function func = fixture.NewFunction( "void", "QueryOther" );
+			func.Statements.Add( "var q = new " + NDOQuery( test.OtherClass.Name ) + ';' );
+			func.Statements.Add( "otherVar = q.ExecuteSingle();" );
 		}
 
 
 		public void Generate()
 		{
-			sw = new StreamWriter(fileName);
-			sw.WriteLine("using System;");
-			sw.WriteLine("using System.Reflection;");
-			sw.WriteLine("using System.Diagnostics;");
-			sw.WriteLine("using System.Collections;");
-			sw.WriteLine("using NDO;");
-			sw.WriteLine("using NDO.Mapping;");
-			sw.WriteLine("using NUnit.Framework;");
-			sw.WriteLine("using RelationTestClasses;\n");
-			sw.WriteLine("namespace " + nameSpace);
-			sw.WriteLine("{\n");
+			sw = new StreamWriter( fileName );
+			sw.WriteLine( "using System;" );
+			sw.WriteLine( "using System.Reflection;" );
+			sw.WriteLine( "using System.Diagnostics;" );
+			sw.WriteLine( "using System.Collections;" );
+			sw.WriteLine( "using System.Collections.Generic;" );
+			sw.WriteLine( "using NDO;" );
+			sw.WriteLine( "using NDO.Mapping;" );
+			sw.WriteLine( "using NUnit.Framework;" );
+			sw.WriteLine( "using RelationTestClasses;\n" );
+			sw.WriteLine( "namespace " + nameSpace );
+			sw.WriteLine( "{\n" );
 			GeneratePmFactory();
-			foreach(RelInfo ri in relInfos)
-				GenerateTestGroup(ri);
-			sw.WriteLine("\n}");
+			foreach (RelInfo ri in relInfos)
+				GenerateTestGroup( ri );
+			sw.WriteLine( "\n}" );
 			sw.Close();
 		}
 

@@ -1,5 +1,5 @@
 ﻿using System;
-using System.Collections;
+using System.Collections.Generic;
 using NDO;
 
 using NDO.Mapping.Attributes;
@@ -171,15 +171,15 @@ public class AgrBi11TblAutoRight
 public class AgrDirnNoTblAutoLeft
 {
 	int dummy;
-	[NDORelation(typeof(AgrDirnNoTblAutoRight))]
-	IList relField = new ArrayList();
+	[NDORelation()]
+	List<AgrDirnNoTblAutoRight> relField = new List<AgrDirnNoTblAutoRight>();
 
 	public int Dummy
 	{
 		get { return dummy; }
 		set { dummy = value; }
 	}
-	public IList RelField
+	public List<AgrDirnNoTblAutoRight> RelField
 	{
 		get { return relField; }
 		set { relField = value; }
@@ -211,15 +211,15 @@ public class AgrDirnNoTblAutoRight
 public class AgrDirnTblAutoLeft
 {
 	int dummy;
-	[NDORelation(typeof(AgrDirnTblAutoRight)), MappingTable]
-	IList relField = new ArrayList();
+	[NDORelation(), MappingTable]
+	List<AgrDirnTblAutoRight> relField = new List<AgrDirnTblAutoRight>();
 
 	public int Dummy
 	{
 		get { return dummy; }
 		set { dummy = value; }
 	}
-	public IList RelField
+	public List<AgrDirnTblAutoRight> RelField
 	{
 		get { return relField; }
 		set { relField = value; }
@@ -251,15 +251,15 @@ public class AgrDirnTblAutoRight
 public class AgrBin1NoTblAutoLeft
 {
 	int dummy;
-	[NDORelation(typeof(AgrBin1NoTblAutoRight))]
-	IList relField = new ArrayList();
+	[NDORelation()]
+	List<AgrBin1NoTblAutoRight> relField = new List<AgrBin1NoTblAutoRight>();
 
 	public int Dummy
 	{
 		get { return dummy; }
 		set { dummy = value; }
 	}
-	public IList RelField
+	public List<AgrBin1NoTblAutoRight> RelField
 	{
 		get { return relField; }
 		set { relField = value; }
@@ -299,15 +299,15 @@ public class AgrBin1NoTblAutoRight
 public class AgrBin1TblAutoLeft
 {
 	int dummy;
-	[NDORelation(typeof(AgrBin1TblAutoRight)), MappingTable]
-	IList relField = new ArrayList();
+	[NDORelation(), MappingTable]
+	List<AgrBin1TblAutoRight> relField = new List<AgrBin1TblAutoRight>();
 
 	public int Dummy
 	{
 		get { return dummy; }
 		set { dummy = value; }
 	}
-	public IList RelField
+	public List<AgrBin1TblAutoRight> RelField
 	{
 		get { return relField; }
 		set { relField = value; }
@@ -371,15 +371,15 @@ public class AgrBi1nNoTblAutoLeft
 public class AgrBi1nNoTblAutoRight
 {
 	int dummy;
-	[NDORelation(typeof(AgrBi1nNoTblAutoLeft))]
-	IList relField = new ArrayList();
+	[NDORelation()]
+	List<AgrBi1nNoTblAutoLeft> relField = new List<AgrBi1nNoTblAutoLeft>();
 
 	public int Dummy
 	{
 		get { return dummy; }
 		set { dummy = value; }
 	}
-	public IList RelField
+	public List<AgrBi1nNoTblAutoLeft> RelField
 	{
 		get { return relField; }
 		set { relField = value; }
@@ -415,15 +415,15 @@ public class AgrBi1nTblAutoLeft
 public class AgrBi1nTblAutoRight
 {
 	int dummy;
-	[NDORelation(typeof(AgrBi1nTblAutoLeft)), MappingTable]
-	IList relField = new ArrayList();
+	[NDORelation(), MappingTable]
+	List<AgrBi1nTblAutoLeft> relField = new List<AgrBi1nTblAutoLeft>();
 
 	public int Dummy
 	{
 		get { return dummy; }
 		set { dummy = value; }
 	}
-	public IList RelField
+	public List<AgrBi1nTblAutoLeft> RelField
 	{
 		get { return relField; }
 		set { relField = value; }
@@ -435,15 +435,15 @@ public class AgrBi1nTblAutoRight
 public class AgrBinnTblAutoLeft
 {
 	int dummy;
-	[NDORelation(typeof(AgrBinnTblAutoRight))]
-	IList relField = new ArrayList();
+	[NDORelation()]
+	List<AgrBinnTblAutoRight> relField = new List<AgrBinnTblAutoRight>();
 
 	public int Dummy
 	{
 		get { return dummy; }
 		set { dummy = value; }
 	}
-	public IList RelField
+	public List<AgrBinnTblAutoRight> RelField
 	{
 		get { return relField; }
 		set { relField = value; }
@@ -463,15 +463,15 @@ public class AgrBinnTblAutoLeft
 public class AgrBinnTblAutoRight
 {
 	int dummy;
-	[NDORelation(typeof(AgrBinnTblAutoLeft))]
-	IList relField = new ArrayList();
+	[NDORelation()]
+	List<AgrBinnTblAutoLeft> relField = new List<AgrBinnTblAutoLeft>();
 
 	public int Dummy
 	{
 		get { return dummy; }
 		set { dummy = value; }
 	}
-	public IList RelField
+	public List<AgrBinnTblAutoLeft> RelField
 	{
 		get { return relField; }
 		set { relField = value; }
@@ -643,15 +643,15 @@ public class CmpBi11TblAutoRight
 public class CmpDirnNoTblAutoLeft
 {
 	int dummy;
-	[NDORelation(typeof(CmpDirnNoTblAutoRight), RelationInfo.Composite)]
-	IList relField = new ArrayList();
+	[NDORelation(RelationInfo.Composite)]
+	List<CmpDirnNoTblAutoRight> relField = new List<CmpDirnNoTblAutoRight>();
 
 	public int Dummy
 	{
 		get { return dummy; }
 		set { dummy = value; }
 	}
-	public IList RelField
+	public List<CmpDirnNoTblAutoRight> RelField
 	{
 		get { return relField; }
 		set { relField = value; }
@@ -683,15 +683,15 @@ public class CmpDirnNoTblAutoRight
 public class CmpDirnTblAutoLeft
 {
 	int dummy;
-	[NDORelation(typeof(CmpDirnTblAutoRight), RelationInfo.Composite), MappingTable]
-	IList relField = new ArrayList();
+	[NDORelation(RelationInfo.Composite), MappingTable]
+	List<CmpDirnTblAutoRight> relField = new List<CmpDirnTblAutoRight>();
 
 	public int Dummy
 	{
 		get { return dummy; }
 		set { dummy = value; }
 	}
-	public IList RelField
+	public List<CmpDirnTblAutoRight> RelField
 	{
 		get { return relField; }
 		set { relField = value; }
@@ -723,15 +723,15 @@ public class CmpDirnTblAutoRight
 public class CmpBin1NoTblAutoLeft
 {
 	int dummy;
-	[NDORelation(typeof(CmpBin1NoTblAutoRight), RelationInfo.Composite)]
-	IList relField = new ArrayList();
+	[NDORelation(RelationInfo.Composite)]
+	List<CmpBin1NoTblAutoRight> relField = new List<CmpBin1NoTblAutoRight>();
 
 	public int Dummy
 	{
 		get { return dummy; }
 		set { dummy = value; }
 	}
-	public IList RelField
+	public List<CmpBin1NoTblAutoRight> RelField
 	{
 		get { return relField; }
 		set { relField = value; }
@@ -771,15 +771,15 @@ public class CmpBin1NoTblAutoRight
 public class CmpBin1TblAutoLeft
 {
 	int dummy;
-	[NDORelation(typeof(CmpBin1TblAutoRight), RelationInfo.Composite), MappingTable]
-	IList relField = new ArrayList();
+	[NDORelation(RelationInfo.Composite), MappingTable]
+	List<CmpBin1TblAutoRight> relField = new List<CmpBin1TblAutoRight>();
 
 	public int Dummy
 	{
 		get { return dummy; }
 		set { dummy = value; }
 	}
-	public IList RelField
+	public List<CmpBin1TblAutoRight> RelField
 	{
 		get { return relField; }
 		set { relField = value; }
@@ -843,15 +843,15 @@ public class CmpBi1nNoTblAutoLeft
 public class CmpBi1nNoTblAutoRight
 {
 	int dummy;
-	[NDORelation(typeof(CmpBi1nNoTblAutoLeft))]
-	IList relField = new ArrayList();
+	[NDORelation()]
+	List<CmpBi1nNoTblAutoLeft> relField = new List<CmpBi1nNoTblAutoLeft>();
 
 	public int Dummy
 	{
 		get { return dummy; }
 		set { dummy = value; }
 	}
-	public IList RelField
+	public List<CmpBi1nNoTblAutoLeft> RelField
 	{
 		get { return relField; }
 		set { relField = value; }
@@ -887,15 +887,15 @@ public class CmpBi1nTblAutoLeft
 public class CmpBi1nTblAutoRight
 {
 	int dummy;
-	[NDORelation(typeof(CmpBi1nTblAutoLeft)), MappingTable]
-	IList relField = new ArrayList();
+	[NDORelation(), MappingTable]
+	List<CmpBi1nTblAutoLeft> relField = new List<CmpBi1nTblAutoLeft>();
 
 	public int Dummy
 	{
 		get { return dummy; }
 		set { dummy = value; }
 	}
-	public IList RelField
+	public List<CmpBi1nTblAutoLeft> RelField
 	{
 		get { return relField; }
 		set { relField = value; }
@@ -907,15 +907,15 @@ public class CmpBi1nTblAutoRight
 public class CmpBinnTblAutoLeft
 {
 	int dummy;
-	[NDORelation(typeof(CmpBinnTblAutoRight), RelationInfo.Composite)]
-	IList relField = new ArrayList();
+	[NDORelation(RelationInfo.Composite)]
+	List<CmpBinnTblAutoRight> relField = new List<CmpBinnTblAutoRight>();
 
 	public int Dummy
 	{
 		get { return dummy; }
 		set { dummy = value; }
 	}
-	public IList RelField
+	public List<CmpBinnTblAutoRight> RelField
 	{
 		get { return relField; }
 		set { relField = value; }
@@ -935,15 +935,15 @@ public class CmpBinnTblAutoLeft
 public class CmpBinnTblAutoRight
 {
 	int dummy;
-	[NDORelation(typeof(CmpBinnTblAutoLeft))]
-	IList relField = new ArrayList();
+	[NDORelation()]
+	List<CmpBinnTblAutoLeft> relField = new List<CmpBinnTblAutoLeft>();
 
 	public int Dummy
 	{
 		get { return dummy; }
 		set { dummy = value; }
 	}
-	public IList RelField
+	public List<CmpBinnTblAutoLeft> RelField
 	{
 		get { return relField; }
 		set { relField = value; }
@@ -1139,15 +1139,15 @@ public class AgrBi11OwnpconTblAutoRight
 public class AgrDirnOwnpconNoTblAutoLeftBase
 {
 	int dummy;
-	[NDORelation(typeof(AgrDirnOwnpconNoTblAutoRight))]
-	IList relField = new ArrayList();
+	[NDORelation()]
+	List<AgrDirnOwnpconNoTblAutoRight> relField = new List<AgrDirnOwnpconNoTblAutoRight>();
 
 	public int Dummy
 	{
 		get { return dummy; }
 		set { dummy = value; }
 	}
-	public IList RelField
+	public List<AgrDirnOwnpconNoTblAutoRight> RelField
 	{
 		get { return relField; }
 		set { relField = value; }
@@ -1185,15 +1185,15 @@ public class AgrDirnOwnpconNoTblAutoRight
 public class AgrDirnOwnpconTblAutoLeftBase
 {
 	int dummy;
-	[NDORelation(typeof(AgrDirnOwnpconTblAutoRight)), MappingTable]
-	IList relField = new ArrayList();
+	[NDORelation(), MappingTable]
+	List<AgrDirnOwnpconTblAutoRight> relField = new List<AgrDirnOwnpconTblAutoRight>();
 
 	public int Dummy
 	{
 		get { return dummy; }
 		set { dummy = value; }
 	}
-	public IList RelField
+	public List<AgrDirnOwnpconTblAutoRight> RelField
 	{
 		get { return relField; }
 		set { relField = value; }
@@ -1231,15 +1231,15 @@ public class AgrDirnOwnpconTblAutoRight
 public class AgrBin1OwnpconNoTblAutoLeftBase
 {
 	int dummy;
-	[NDORelation(typeof(AgrBin1OwnpconNoTblAutoRight))]
-	IList relField = new ArrayList();
+	[NDORelation()]
+	List<AgrBin1OwnpconNoTblAutoRight> relField = new List<AgrBin1OwnpconNoTblAutoRight>();
 
 	public int Dummy
 	{
 		get { return dummy; }
 		set { dummy = value; }
 	}
-	public IList RelField
+	public List<AgrBin1OwnpconNoTblAutoRight> RelField
 	{
 		get { return relField; }
 		set { relField = value; }
@@ -1285,15 +1285,15 @@ public class AgrBin1OwnpconNoTblAutoRight
 public class AgrBin1OwnpconTblAutoLeftBase
 {
 	int dummy;
-	[NDORelation(typeof(AgrBin1OwnpconTblAutoRight)), MappingTable]
-	IList relField = new ArrayList();
+	[NDORelation(), MappingTable]
+	List<AgrBin1OwnpconTblAutoRight> relField = new List<AgrBin1OwnpconTblAutoRight>();
 
 	public int Dummy
 	{
 		get { return dummy; }
 		set { dummy = value; }
 	}
-	public IList RelField
+	public List<AgrBin1OwnpconTblAutoRight> RelField
 	{
 		get { return relField; }
 		set { relField = value; }
@@ -1369,15 +1369,15 @@ public class AgrBi1nOwnpconTblAutoLeftDerived : AgrBi1nOwnpconTblAutoLeftBase
 public class AgrBi1nOwnpconTblAutoRight
 {
 	int dummy;
-	[NDORelation(typeof(AgrBi1nOwnpconTblAutoLeftBase))]
-	IList relField = new ArrayList();
+	[NDORelation()]
+	List<AgrBi1nOwnpconTblAutoLeftBase> relField = new List<AgrBi1nOwnpconTblAutoLeftBase>();
 
 	public int Dummy
 	{
 		get { return dummy; }
 		set { dummy = value; }
 	}
-	public IList RelField
+	public List<AgrBi1nOwnpconTblAutoLeftBase> RelField
 	{
 		get { return relField; }
 		set { relField = value; }
@@ -1389,15 +1389,15 @@ public class AgrBi1nOwnpconTblAutoRight
 public class AgrBinnOwnpconTblAutoLeftBase
 {
 	int dummy;
-	[NDORelation(typeof(AgrBinnOwnpconTblAutoRight))]
-	IList relField = new ArrayList();
+	[NDORelation()]
+	List<AgrBinnOwnpconTblAutoRight> relField = new List<AgrBinnOwnpconTblAutoRight>();
 
 	public int Dummy
 	{
 		get { return dummy; }
 		set { dummy = value; }
 	}
-	public IList RelField
+	public List<AgrBinnOwnpconTblAutoRight> RelField
 	{
 		get { return relField; }
 		set { relField = value; }
@@ -1423,15 +1423,15 @@ public class AgrBinnOwnpconTblAutoLeftDerived : AgrBinnOwnpconTblAutoLeftBase
 public class AgrBinnOwnpconTblAutoRight
 {
 	int dummy;
-	[NDORelation(typeof(AgrBinnOwnpconTblAutoLeftBase))]
-	IList relField = new ArrayList();
+	[NDORelation()]
+	List<AgrBinnOwnpconTblAutoLeftBase> relField = new List<AgrBinnOwnpconTblAutoLeftBase>();
 
 	public int Dummy
 	{
 		get { return dummy; }
 		set { dummy = value; }
 	}
-	public IList RelField
+	public List<AgrBinnOwnpconTblAutoLeftBase> RelField
 	{
 		get { return relField; }
 		set { relField = value; }
@@ -1627,15 +1627,15 @@ public class CmpBi11OwnpconTblAutoRight
 public class CmpDirnOwnpconNoTblAutoLeftBase
 {
 	int dummy;
-	[NDORelation(typeof(CmpDirnOwnpconNoTblAutoRight), RelationInfo.Composite)]
-	IList relField = new ArrayList();
+	[NDORelation(RelationInfo.Composite)]
+	List<CmpDirnOwnpconNoTblAutoRight> relField = new List<CmpDirnOwnpconNoTblAutoRight>();
 
 	public int Dummy
 	{
 		get { return dummy; }
 		set { dummy = value; }
 	}
-	public IList RelField
+	public List<CmpDirnOwnpconNoTblAutoRight> RelField
 	{
 		get { return relField; }
 		set { relField = value; }
@@ -1673,15 +1673,15 @@ public class CmpDirnOwnpconNoTblAutoRight
 public class CmpDirnOwnpconTblAutoLeftBase
 {
 	int dummy;
-	[NDORelation(typeof(CmpDirnOwnpconTblAutoRight), RelationInfo.Composite), MappingTable]
-	IList relField = new ArrayList();
+	[NDORelation(RelationInfo.Composite), MappingTable]
+	List<CmpDirnOwnpconTblAutoRight> relField = new List<CmpDirnOwnpconTblAutoRight>();
 
 	public int Dummy
 	{
 		get { return dummy; }
 		set { dummy = value; }
 	}
-	public IList RelField
+	public List<CmpDirnOwnpconTblAutoRight> RelField
 	{
 		get { return relField; }
 		set { relField = value; }
@@ -1719,15 +1719,15 @@ public class CmpDirnOwnpconTblAutoRight
 public class CmpBin1OwnpconNoTblAutoLeftBase
 {
 	int dummy;
-	[NDORelation(typeof(CmpBin1OwnpconNoTblAutoRight), RelationInfo.Composite)]
-	IList relField = new ArrayList();
+	[NDORelation(RelationInfo.Composite)]
+	List<CmpBin1OwnpconNoTblAutoRight> relField = new List<CmpBin1OwnpconNoTblAutoRight>();
 
 	public int Dummy
 	{
 		get { return dummy; }
 		set { dummy = value; }
 	}
-	public IList RelField
+	public List<CmpBin1OwnpconNoTblAutoRight> RelField
 	{
 		get { return relField; }
 		set { relField = value; }
@@ -1773,15 +1773,15 @@ public class CmpBin1OwnpconNoTblAutoRight
 public class CmpBin1OwnpconTblAutoLeftBase
 {
 	int dummy;
-	[NDORelation(typeof(CmpBin1OwnpconTblAutoRight), RelationInfo.Composite), MappingTable]
-	IList relField = new ArrayList();
+	[NDORelation(RelationInfo.Composite), MappingTable]
+	List<CmpBin1OwnpconTblAutoRight> relField = new List<CmpBin1OwnpconTblAutoRight>();
 
 	public int Dummy
 	{
 		get { return dummy; }
 		set { dummy = value; }
 	}
-	public IList RelField
+	public List<CmpBin1OwnpconTblAutoRight> RelField
 	{
 		get { return relField; }
 		set { relField = value; }
@@ -1857,15 +1857,15 @@ public class CmpBi1nOwnpconTblAutoLeftDerived : CmpBi1nOwnpconTblAutoLeftBase
 public class CmpBi1nOwnpconTblAutoRight
 {
 	int dummy;
-	[NDORelation(typeof(CmpBi1nOwnpconTblAutoLeftBase))]
-	IList relField = new ArrayList();
+	[NDORelation()]
+	List<CmpBi1nOwnpconTblAutoLeftBase> relField = new List<CmpBi1nOwnpconTblAutoLeftBase>();
 
 	public int Dummy
 	{
 		get { return dummy; }
 		set { dummy = value; }
 	}
-	public IList RelField
+	public List<CmpBi1nOwnpconTblAutoLeftBase> RelField
 	{
 		get { return relField; }
 		set { relField = value; }
@@ -1877,15 +1877,15 @@ public class CmpBi1nOwnpconTblAutoRight
 public class CmpBinnOwnpconTblAutoLeftBase
 {
 	int dummy;
-	[NDORelation(typeof(CmpBinnOwnpconTblAutoRight), RelationInfo.Composite)]
-	IList relField = new ArrayList();
+	[NDORelation(RelationInfo.Composite)]
+	List<CmpBinnOwnpconTblAutoRight> relField = new List<CmpBinnOwnpconTblAutoRight>();
 
 	public int Dummy
 	{
 		get { return dummy; }
 		set { dummy = value; }
 	}
-	public IList RelField
+	public List<CmpBinnOwnpconTblAutoRight> RelField
 	{
 		get { return relField; }
 		set { relField = value; }
@@ -1911,15 +1911,15 @@ public class CmpBinnOwnpconTblAutoLeftDerived : CmpBinnOwnpconTblAutoLeftBase
 public class CmpBinnOwnpconTblAutoRight
 {
 	int dummy;
-	[NDORelation(typeof(CmpBinnOwnpconTblAutoLeftBase))]
-	IList relField = new ArrayList();
+	[NDORelation()]
+	List<CmpBinnOwnpconTblAutoLeftBase> relField = new List<CmpBinnOwnpconTblAutoLeftBase>();
 
 	public int Dummy
 	{
 		get { return dummy; }
 		set { dummy = value; }
 	}
-	public IList RelField
+	public List<CmpBinnOwnpconTblAutoLeftBase> RelField
 	{
 		get { return relField; }
 		set { relField = value; }
@@ -2115,15 +2115,15 @@ public class AgrBi11OthpconTblAutoRightDerived : AgrBi11OthpconTblAutoRightBase
 public class AgrDirnOthpconTblAutoLeft
 {
 	int dummy;
-	[NDORelation(typeof(AgrDirnOthpconTblAutoRightBase))]
-	IList relField = new ArrayList();
+	[NDORelation()]
+	List<AgrDirnOthpconTblAutoRightBase> relField = new List<AgrDirnOthpconTblAutoRightBase>();
 
 	public int Dummy
 	{
 		get { return dummy; }
 		set { dummy = value; }
 	}
-	public IList RelField
+	public List<AgrDirnOthpconTblAutoRightBase> RelField
 	{
 		get { return relField; }
 		set { relField = value; }
@@ -2161,15 +2161,15 @@ public class AgrDirnOthpconTblAutoRightDerived : AgrDirnOthpconTblAutoRightBase
 public class AgrBin1OthpconTblAutoLeft
 {
 	int dummy;
-	[NDORelation(typeof(AgrBin1OthpconTblAutoRightBase))]
-	IList relField = new ArrayList();
+	[NDORelation()]
+	List<AgrBin1OthpconTblAutoRightBase> relField = new List<AgrBin1OthpconTblAutoRightBase>();
 
 	public int Dummy
 	{
 		get { return dummy; }
 		set { dummy = value; }
 	}
-	public IList RelField
+	public List<AgrBin1OthpconTblAutoRightBase> RelField
 	{
 		get { return relField; }
 		set { relField = value; }
@@ -2239,15 +2239,15 @@ public class AgrBi1nOthpconNoTblAutoLeft
 public class AgrBi1nOthpconNoTblAutoRightBase
 {
 	int dummy;
-	[NDORelation(typeof(AgrBi1nOthpconNoTblAutoLeft))]
-	IList relField = new ArrayList();
+	[NDORelation()]
+	List<AgrBi1nOthpconNoTblAutoLeft> relField = new List<AgrBi1nOthpconNoTblAutoLeft>();
 
 	public int Dummy
 	{
 		get { return dummy; }
 		set { dummy = value; }
 	}
-	public IList RelField
+	public List<AgrBi1nOthpconNoTblAutoLeft> RelField
 	{
 		get { return relField; }
 		set { relField = value; }
@@ -2289,15 +2289,15 @@ public class AgrBi1nOthpconTblAutoLeft
 public class AgrBi1nOthpconTblAutoRightBase
 {
 	int dummy;
-	[NDORelation(typeof(AgrBi1nOthpconTblAutoLeft)), MappingTable]
-	IList relField = new ArrayList();
+	[NDORelation(), MappingTable]
+	List<AgrBi1nOthpconTblAutoLeft> relField = new List<AgrBi1nOthpconTblAutoLeft>();
 
 	public int Dummy
 	{
 		get { return dummy; }
 		set { dummy = value; }
 	}
-	public IList RelField
+	public List<AgrBi1nOthpconTblAutoLeft> RelField
 	{
 		get { return relField; }
 		set { relField = value; }
@@ -2315,15 +2315,15 @@ public class AgrBi1nOthpconTblAutoRightDerived : AgrBi1nOthpconTblAutoRightBase
 public class AgrBinnOthpconTblAutoLeft
 {
 	int dummy;
-	[NDORelation(typeof(AgrBinnOthpconTblAutoRightBase))]
-	IList relField = new ArrayList();
+	[NDORelation()]
+	List<AgrBinnOthpconTblAutoRightBase> relField = new List<AgrBinnOthpconTblAutoRightBase>();
 
 	public int Dummy
 	{
 		get { return dummy; }
 		set { dummy = value; }
 	}
-	public IList RelField
+	public List<AgrBinnOthpconTblAutoRightBase> RelField
 	{
 		get { return relField; }
 		set { relField = value; }
@@ -2343,15 +2343,15 @@ public class AgrBinnOthpconTblAutoLeft
 public class AgrBinnOthpconTblAutoRightBase
 {
 	int dummy;
-	[NDORelation(typeof(AgrBinnOthpconTblAutoLeft))]
-	IList relField = new ArrayList();
+	[NDORelation()]
+	List<AgrBinnOthpconTblAutoLeft> relField = new List<AgrBinnOthpconTblAutoLeft>();
 
 	public int Dummy
 	{
 		get { return dummy; }
 		set { dummy = value; }
 	}
-	public IList RelField
+	public List<AgrBinnOthpconTblAutoLeft> RelField
 	{
 		get { return relField; }
 		set { relField = value; }
@@ -2553,15 +2553,15 @@ public class CmpBi11OthpconTblAutoRightDerived : CmpBi11OthpconTblAutoRightBase
 public class CmpDirnOthpconTblAutoLeft
 {
 	int dummy;
-	[NDORelation(typeof(CmpDirnOthpconTblAutoRightBase), RelationInfo.Composite)]
-	IList relField = new ArrayList();
+	[NDORelation(RelationInfo.Composite)]
+	List<CmpDirnOthpconTblAutoRightBase> relField = new List<CmpDirnOthpconTblAutoRightBase>();
 
 	public int Dummy
 	{
 		get { return dummy; }
 		set { dummy = value; }
 	}
-	public IList RelField
+	public List<CmpDirnOthpconTblAutoRightBase> RelField
 	{
 		get { return relField; }
 		set { relField = value; }
@@ -2599,15 +2599,15 @@ public class CmpDirnOthpconTblAutoRightDerived : CmpDirnOthpconTblAutoRightBase
 public class CmpBin1OthpconTblAutoLeft
 {
 	int dummy;
-	[NDORelation(typeof(CmpBin1OthpconTblAutoRightBase), RelationInfo.Composite)]
-	IList relField = new ArrayList();
+	[NDORelation(RelationInfo.Composite)]
+	List<CmpBin1OthpconTblAutoRightBase> relField = new List<CmpBin1OthpconTblAutoRightBase>();
 
 	public int Dummy
 	{
 		get { return dummy; }
 		set { dummy = value; }
 	}
-	public IList RelField
+	public List<CmpBin1OthpconTblAutoRightBase> RelField
 	{
 		get { return relField; }
 		set { relField = value; }
@@ -2677,15 +2677,15 @@ public class CmpBi1nOthpconNoTblAutoLeft
 public class CmpBi1nOthpconNoTblAutoRightBase
 {
 	int dummy;
-	[NDORelation(typeof(CmpBi1nOthpconNoTblAutoLeft))]
-	IList relField = new ArrayList();
+	[NDORelation()]
+	List<CmpBi1nOthpconNoTblAutoLeft> relField = new List<CmpBi1nOthpconNoTblAutoLeft>();
 
 	public int Dummy
 	{
 		get { return dummy; }
 		set { dummy = value; }
 	}
-	public IList RelField
+	public List<CmpBi1nOthpconNoTblAutoLeft> RelField
 	{
 		get { return relField; }
 		set { relField = value; }
@@ -2727,15 +2727,15 @@ public class CmpBi1nOthpconTblAutoLeft
 public class CmpBi1nOthpconTblAutoRightBase
 {
 	int dummy;
-	[NDORelation(typeof(CmpBi1nOthpconTblAutoLeft)), MappingTable]
-	IList relField = new ArrayList();
+	[NDORelation(), MappingTable]
+	List<CmpBi1nOthpconTblAutoLeft> relField = new List<CmpBi1nOthpconTblAutoLeft>();
 
 	public int Dummy
 	{
 		get { return dummy; }
 		set { dummy = value; }
 	}
-	public IList RelField
+	public List<CmpBi1nOthpconTblAutoLeft> RelField
 	{
 		get { return relField; }
 		set { relField = value; }
@@ -2753,15 +2753,15 @@ public class CmpBi1nOthpconTblAutoRightDerived : CmpBi1nOthpconTblAutoRightBase
 public class CmpBinnOthpconTblAutoLeft
 {
 	int dummy;
-	[NDORelation(typeof(CmpBinnOthpconTblAutoRightBase), RelationInfo.Composite)]
-	IList relField = new ArrayList();
+	[NDORelation(RelationInfo.Composite)]
+	List<CmpBinnOthpconTblAutoRightBase> relField = new List<CmpBinnOthpconTblAutoRightBase>();
 
 	public int Dummy
 	{
 		get { return dummy; }
 		set { dummy = value; }
 	}
-	public IList RelField
+	public List<CmpBinnOthpconTblAutoRightBase> RelField
 	{
 		get { return relField; }
 		set { relField = value; }
@@ -2781,15 +2781,15 @@ public class CmpBinnOthpconTblAutoLeft
 public class CmpBinnOthpconTblAutoRightBase
 {
 	int dummy;
-	[NDORelation(typeof(CmpBinnOthpconTblAutoLeft))]
-	IList relField = new ArrayList();
+	[NDORelation()]
+	List<CmpBinnOthpconTblAutoLeft> relField = new List<CmpBinnOthpconTblAutoLeft>();
 
 	public int Dummy
 	{
 		get { return dummy; }
 		set { dummy = value; }
 	}
-	public IList RelField
+	public List<CmpBinnOthpconTblAutoLeft> RelField
 	{
 		get { return relField; }
 		set { relField = value; }
@@ -3015,15 +3015,15 @@ public class AgrBi11OwnpconOthpconTblAutoRightDerived : AgrBi11OwnpconOthpconTbl
 public class AgrDirnOwnpconOthpconTblAutoLeftBase
 {
 	int dummy;
-	[NDORelation(typeof(AgrDirnOwnpconOthpconTblAutoRightBase))]
-	IList relField = new ArrayList();
+	[NDORelation()]
+	List<AgrDirnOwnpconOthpconTblAutoRightBase> relField = new List<AgrDirnOwnpconOthpconTblAutoRightBase>();
 
 	public int Dummy
 	{
 		get { return dummy; }
 		set { dummy = value; }
 	}
-	public IList RelField
+	public List<AgrDirnOwnpconOthpconTblAutoRightBase> RelField
 	{
 		get { return relField; }
 		set { relField = value; }
@@ -3067,15 +3067,15 @@ public class AgrDirnOwnpconOthpconTblAutoRightDerived : AgrDirnOwnpconOthpconTbl
 public class AgrBin1OwnpconOthpconTblAutoLeftBase
 {
 	int dummy;
-	[NDORelation(typeof(AgrBin1OwnpconOthpconTblAutoRightBase))]
-	IList relField = new ArrayList();
+	[NDORelation()]
+	List<AgrBin1OwnpconOthpconTblAutoRightBase> relField = new List<AgrBin1OwnpconOthpconTblAutoRightBase>();
 
 	public int Dummy
 	{
 		get { return dummy; }
 		set { dummy = value; }
 	}
-	public IList RelField
+	public List<AgrBin1OwnpconOthpconTblAutoRightBase> RelField
 	{
 		get { return relField; }
 		set { relField = value; }
@@ -3157,15 +3157,15 @@ public class AgrBi1nOwnpconOthpconTblAutoLeftDerived : AgrBi1nOwnpconOthpconTblA
 public class AgrBi1nOwnpconOthpconTblAutoRightBase
 {
 	int dummy;
-	[NDORelation(typeof(AgrBi1nOwnpconOthpconTblAutoLeftBase))]
-	IList relField = new ArrayList();
+	[NDORelation()]
+	List<AgrBi1nOwnpconOthpconTblAutoLeftBase> relField = new List<AgrBi1nOwnpconOthpconTblAutoLeftBase>();
 
 	public int Dummy
 	{
 		get { return dummy; }
 		set { dummy = value; }
 	}
-	public IList RelField
+	public List<AgrBi1nOwnpconOthpconTblAutoLeftBase> RelField
 	{
 		get { return relField; }
 		set { relField = value; }
@@ -3183,15 +3183,15 @@ public class AgrBi1nOwnpconOthpconTblAutoRightDerived : AgrBi1nOwnpconOthpconTbl
 public class AgrBinnOwnpconOthpconTblAutoLeftBase
 {
 	int dummy;
-	[NDORelation(typeof(AgrBinnOwnpconOthpconTblAutoRightBase))]
-	IList relField = new ArrayList();
+	[NDORelation()]
+	List<AgrBinnOwnpconOthpconTblAutoRightBase> relField = new List<AgrBinnOwnpconOthpconTblAutoRightBase>();
 
 	public int Dummy
 	{
 		get { return dummy; }
 		set { dummy = value; }
 	}
-	public IList RelField
+	public List<AgrBinnOwnpconOthpconTblAutoRightBase> RelField
 	{
 		get { return relField; }
 		set { relField = value; }
@@ -3217,15 +3217,15 @@ public class AgrBinnOwnpconOthpconTblAutoLeftDerived : AgrBinnOwnpconOthpconTblA
 public class AgrBinnOwnpconOthpconTblAutoRightBase
 {
 	int dummy;
-	[NDORelation(typeof(AgrBinnOwnpconOthpconTblAutoLeftBase))]
-	IList relField = new ArrayList();
+	[NDORelation()]
+	List<AgrBinnOwnpconOthpconTblAutoLeftBase> relField = new List<AgrBinnOwnpconOthpconTblAutoLeftBase>();
 
 	public int Dummy
 	{
 		get { return dummy; }
 		set { dummy = value; }
 	}
-	public IList RelField
+	public List<AgrBinnOwnpconOthpconTblAutoLeftBase> RelField
 	{
 		get { return relField; }
 		set { relField = value; }
@@ -3451,15 +3451,15 @@ public class CmpBi11OwnpconOthpconTblAutoRightDerived : CmpBi11OwnpconOthpconTbl
 public class CmpDirnOwnpconOthpconTblAutoLeftBase
 {
 	int dummy;
-	[NDORelation(typeof(CmpDirnOwnpconOthpconTblAutoRightBase), RelationInfo.Composite)]
-	IList relField = new ArrayList();
+	[NDORelation(RelationInfo.Composite)]
+	List<CmpDirnOwnpconOthpconTblAutoRightBase> relField = new List<CmpDirnOwnpconOthpconTblAutoRightBase>();
 
 	public int Dummy
 	{
 		get { return dummy; }
 		set { dummy = value; }
 	}
-	public IList RelField
+	public List<CmpDirnOwnpconOthpconTblAutoRightBase> RelField
 	{
 		get { return relField; }
 		set { relField = value; }
@@ -3503,15 +3503,15 @@ public class CmpDirnOwnpconOthpconTblAutoRightDerived : CmpDirnOwnpconOthpconTbl
 public class CmpBin1OwnpconOthpconTblAutoLeftBase
 {
 	int dummy;
-	[NDORelation(typeof(CmpBin1OwnpconOthpconTblAutoRightBase), RelationInfo.Composite)]
-	IList relField = new ArrayList();
+	[NDORelation(RelationInfo.Composite)]
+	List<CmpBin1OwnpconOthpconTblAutoRightBase> relField = new List<CmpBin1OwnpconOthpconTblAutoRightBase>();
 
 	public int Dummy
 	{
 		get { return dummy; }
 		set { dummy = value; }
 	}
-	public IList RelField
+	public List<CmpBin1OwnpconOthpconTblAutoRightBase> RelField
 	{
 		get { return relField; }
 		set { relField = value; }
@@ -3593,15 +3593,15 @@ public class CmpBi1nOwnpconOthpconTblAutoLeftDerived : CmpBi1nOwnpconOthpconTblA
 public class CmpBi1nOwnpconOthpconTblAutoRightBase
 {
 	int dummy;
-	[NDORelation(typeof(CmpBi1nOwnpconOthpconTblAutoLeftBase))]
-	IList relField = new ArrayList();
+	[NDORelation()]
+	List<CmpBi1nOwnpconOthpconTblAutoLeftBase> relField = new List<CmpBi1nOwnpconOthpconTblAutoLeftBase>();
 
 	public int Dummy
 	{
 		get { return dummy; }
 		set { dummy = value; }
 	}
-	public IList RelField
+	public List<CmpBi1nOwnpconOthpconTblAutoLeftBase> RelField
 	{
 		get { return relField; }
 		set { relField = value; }
@@ -3619,15 +3619,15 @@ public class CmpBi1nOwnpconOthpconTblAutoRightDerived : CmpBi1nOwnpconOthpconTbl
 public class CmpBinnOwnpconOthpconTblAutoLeftBase
 {
 	int dummy;
-	[NDORelation(typeof(CmpBinnOwnpconOthpconTblAutoRightBase), RelationInfo.Composite)]
-	IList relField = new ArrayList();
+	[NDORelation(RelationInfo.Composite)]
+	List<CmpBinnOwnpconOthpconTblAutoRightBase> relField = new List<CmpBinnOwnpconOthpconTblAutoRightBase>();
 
 	public int Dummy
 	{
 		get { return dummy; }
 		set { dummy = value; }
 	}
-	public IList RelField
+	public List<CmpBinnOwnpconOthpconTblAutoRightBase> RelField
 	{
 		get { return relField; }
 		set { relField = value; }
@@ -3653,15 +3653,15 @@ public class CmpBinnOwnpconOthpconTblAutoLeftDerived : CmpBinnOwnpconOthpconTblA
 public class CmpBinnOwnpconOthpconTblAutoRightBase
 {
 	int dummy;
-	[NDORelation(typeof(CmpBinnOwnpconOthpconTblAutoLeftBase))]
-	IList relField = new ArrayList();
+	[NDORelation()]
+	List<CmpBinnOwnpconOthpconTblAutoLeftBase> relField = new List<CmpBinnOwnpconOthpconTblAutoLeftBase>();
 
 	public int Dummy
 	{
 		get { return dummy; }
 		set { dummy = value; }
 	}
-	public IList RelField
+	public List<CmpBinnOwnpconOthpconTblAutoLeftBase> RelField
 	{
 		get { return relField; }
 		set { relField = value; }
@@ -3839,15 +3839,15 @@ public class AgrBi11TblGuidRight
 public class AgrDirnNoTblGuidLeft
 {
 	int dummy;
-	[NDORelation(typeof(AgrDirnNoTblGuidRight))]
-	IList relField = new ArrayList();
+	[NDORelation()]
+	List<AgrDirnNoTblGuidRight> relField = new List<AgrDirnNoTblGuidRight>();
 
 	public int Dummy
 	{
 		get { return dummy; }
 		set { dummy = value; }
 	}
-	public IList RelField
+	public List<AgrDirnNoTblGuidRight> RelField
 	{
 		get { return relField; }
 		set { relField = value; }
@@ -3879,15 +3879,15 @@ public class AgrDirnNoTblGuidRight
 public class AgrDirnTblGuidLeft
 {
 	int dummy;
-	[NDORelation(typeof(AgrDirnTblGuidRight)), MappingTable]
-	IList relField = new ArrayList();
+	[NDORelation(), MappingTable]
+	List<AgrDirnTblGuidRight> relField = new List<AgrDirnTblGuidRight>();
 
 	public int Dummy
 	{
 		get { return dummy; }
 		set { dummy = value; }
 	}
-	public IList RelField
+	public List<AgrDirnTblGuidRight> RelField
 	{
 		get { return relField; }
 		set { relField = value; }
@@ -3919,15 +3919,15 @@ public class AgrDirnTblGuidRight
 public class AgrBin1NoTblGuidLeft
 {
 	int dummy;
-	[NDORelation(typeof(AgrBin1NoTblGuidRight))]
-	IList relField = new ArrayList();
+	[NDORelation()]
+	List<AgrBin1NoTblGuidRight> relField = new List<AgrBin1NoTblGuidRight>();
 
 	public int Dummy
 	{
 		get { return dummy; }
 		set { dummy = value; }
 	}
-	public IList RelField
+	public List<AgrBin1NoTblGuidRight> RelField
 	{
 		get { return relField; }
 		set { relField = value; }
@@ -3967,15 +3967,15 @@ public class AgrBin1NoTblGuidRight
 public class AgrBin1TblGuidLeft
 {
 	int dummy;
-	[NDORelation(typeof(AgrBin1TblGuidRight)), MappingTable]
-	IList relField = new ArrayList();
+	[NDORelation(), MappingTable]
+	List<AgrBin1TblGuidRight> relField = new List<AgrBin1TblGuidRight>();
 
 	public int Dummy
 	{
 		get { return dummy; }
 		set { dummy = value; }
 	}
-	public IList RelField
+	public List<AgrBin1TblGuidRight> RelField
 	{
 		get { return relField; }
 		set { relField = value; }
@@ -4039,15 +4039,15 @@ public class AgrBi1nNoTblGuidLeft
 public class AgrBi1nNoTblGuidRight
 {
 	int dummy;
-	[NDORelation(typeof(AgrBi1nNoTblGuidLeft))]
-	IList relField = new ArrayList();
+	[NDORelation()]
+	List<AgrBi1nNoTblGuidLeft> relField = new List<AgrBi1nNoTblGuidLeft>();
 
 	public int Dummy
 	{
 		get { return dummy; }
 		set { dummy = value; }
 	}
-	public IList RelField
+	public List<AgrBi1nNoTblGuidLeft> RelField
 	{
 		get { return relField; }
 		set { relField = value; }
@@ -4083,15 +4083,15 @@ public class AgrBi1nTblGuidLeft
 public class AgrBi1nTblGuidRight
 {
 	int dummy;
-	[NDORelation(typeof(AgrBi1nTblGuidLeft)), MappingTable]
-	IList relField = new ArrayList();
+	[NDORelation(), MappingTable]
+	List<AgrBi1nTblGuidLeft> relField = new List<AgrBi1nTblGuidLeft>();
 
 	public int Dummy
 	{
 		get { return dummy; }
 		set { dummy = value; }
 	}
-	public IList RelField
+	public List<AgrBi1nTblGuidLeft> RelField
 	{
 		get { return relField; }
 		set { relField = value; }
@@ -4103,15 +4103,15 @@ public class AgrBi1nTblGuidRight
 public class AgrBinnTblGuidLeft
 {
 	int dummy;
-	[NDORelation(typeof(AgrBinnTblGuidRight))]
-	IList relField = new ArrayList();
+	[NDORelation()]
+	List<AgrBinnTblGuidRight> relField = new List<AgrBinnTblGuidRight>();
 
 	public int Dummy
 	{
 		get { return dummy; }
 		set { dummy = value; }
 	}
-	public IList RelField
+	public List<AgrBinnTblGuidRight> RelField
 	{
 		get { return relField; }
 		set { relField = value; }
@@ -4131,15 +4131,15 @@ public class AgrBinnTblGuidLeft
 public class AgrBinnTblGuidRight
 {
 	int dummy;
-	[NDORelation(typeof(AgrBinnTblGuidLeft))]
-	IList relField = new ArrayList();
+	[NDORelation()]
+	List<AgrBinnTblGuidLeft> relField = new List<AgrBinnTblGuidLeft>();
 
 	public int Dummy
 	{
 		get { return dummy; }
 		set { dummy = value; }
 	}
-	public IList RelField
+	public List<AgrBinnTblGuidLeft> RelField
 	{
 		get { return relField; }
 		set { relField = value; }
@@ -4311,15 +4311,15 @@ public class CmpBi11TblGuidRight
 public class CmpDirnNoTblGuidLeft
 {
 	int dummy;
-	[NDORelation(typeof(CmpDirnNoTblGuidRight), RelationInfo.Composite)]
-	IList relField = new ArrayList();
+	[NDORelation(RelationInfo.Composite)]
+	List<CmpDirnNoTblGuidRight> relField = new List<CmpDirnNoTblGuidRight>();
 
 	public int Dummy
 	{
 		get { return dummy; }
 		set { dummy = value; }
 	}
-	public IList RelField
+	public List<CmpDirnNoTblGuidRight> RelField
 	{
 		get { return relField; }
 		set { relField = value; }
@@ -4351,15 +4351,15 @@ public class CmpDirnNoTblGuidRight
 public class CmpDirnTblGuidLeft
 {
 	int dummy;
-	[NDORelation(typeof(CmpDirnTblGuidRight), RelationInfo.Composite), MappingTable]
-	IList relField = new ArrayList();
+	[NDORelation(RelationInfo.Composite), MappingTable]
+	List<CmpDirnTblGuidRight> relField = new List<CmpDirnTblGuidRight>();
 
 	public int Dummy
 	{
 		get { return dummy; }
 		set { dummy = value; }
 	}
-	public IList RelField
+	public List<CmpDirnTblGuidRight> RelField
 	{
 		get { return relField; }
 		set { relField = value; }
@@ -4391,15 +4391,15 @@ public class CmpDirnTblGuidRight
 public class CmpBin1NoTblGuidLeft
 {
 	int dummy;
-	[NDORelation(typeof(CmpBin1NoTblGuidRight), RelationInfo.Composite)]
-	IList relField = new ArrayList();
+	[NDORelation(RelationInfo.Composite)]
+	List<CmpBin1NoTblGuidRight> relField = new List<CmpBin1NoTblGuidRight>();
 
 	public int Dummy
 	{
 		get { return dummy; }
 		set { dummy = value; }
 	}
-	public IList RelField
+	public List<CmpBin1NoTblGuidRight> RelField
 	{
 		get { return relField; }
 		set { relField = value; }
@@ -4439,15 +4439,15 @@ public class CmpBin1NoTblGuidRight
 public class CmpBin1TblGuidLeft
 {
 	int dummy;
-	[NDORelation(typeof(CmpBin1TblGuidRight), RelationInfo.Composite), MappingTable]
-	IList relField = new ArrayList();
+	[NDORelation(RelationInfo.Composite), MappingTable]
+	List<CmpBin1TblGuidRight> relField = new List<CmpBin1TblGuidRight>();
 
 	public int Dummy
 	{
 		get { return dummy; }
 		set { dummy = value; }
 	}
-	public IList RelField
+	public List<CmpBin1TblGuidRight> RelField
 	{
 		get { return relField; }
 		set { relField = value; }
@@ -4511,15 +4511,15 @@ public class CmpBi1nNoTblGuidLeft
 public class CmpBi1nNoTblGuidRight
 {
 	int dummy;
-	[NDORelation(typeof(CmpBi1nNoTblGuidLeft))]
-	IList relField = new ArrayList();
+	[NDORelation()]
+	List<CmpBi1nNoTblGuidLeft> relField = new List<CmpBi1nNoTblGuidLeft>();
 
 	public int Dummy
 	{
 		get { return dummy; }
 		set { dummy = value; }
 	}
-	public IList RelField
+	public List<CmpBi1nNoTblGuidLeft> RelField
 	{
 		get { return relField; }
 		set { relField = value; }
@@ -4555,15 +4555,15 @@ public class CmpBi1nTblGuidLeft
 public class CmpBi1nTblGuidRight
 {
 	int dummy;
-	[NDORelation(typeof(CmpBi1nTblGuidLeft)), MappingTable]
-	IList relField = new ArrayList();
+	[NDORelation(), MappingTable]
+	List<CmpBi1nTblGuidLeft> relField = new List<CmpBi1nTblGuidLeft>();
 
 	public int Dummy
 	{
 		get { return dummy; }
 		set { dummy = value; }
 	}
-	public IList RelField
+	public List<CmpBi1nTblGuidLeft> RelField
 	{
 		get { return relField; }
 		set { relField = value; }
@@ -4575,15 +4575,15 @@ public class CmpBi1nTblGuidRight
 public class CmpBinnTblGuidLeft
 {
 	int dummy;
-	[NDORelation(typeof(CmpBinnTblGuidRight), RelationInfo.Composite)]
-	IList relField = new ArrayList();
+	[NDORelation(RelationInfo.Composite)]
+	List<CmpBinnTblGuidRight> relField = new List<CmpBinnTblGuidRight>();
 
 	public int Dummy
 	{
 		get { return dummy; }
 		set { dummy = value; }
 	}
-	public IList RelField
+	public List<CmpBinnTblGuidRight> RelField
 	{
 		get { return relField; }
 		set { relField = value; }
@@ -4603,15 +4603,15 @@ public class CmpBinnTblGuidLeft
 public class CmpBinnTblGuidRight
 {
 	int dummy;
-	[NDORelation(typeof(CmpBinnTblGuidLeft))]
-	IList relField = new ArrayList();
+	[NDORelation()]
+	List<CmpBinnTblGuidLeft> relField = new List<CmpBinnTblGuidLeft>();
 
 	public int Dummy
 	{
 		get { return dummy; }
 		set { dummy = value; }
 	}
-	public IList RelField
+	public List<CmpBinnTblGuidLeft> RelField
 	{
 		get { return relField; }
 		set { relField = value; }
@@ -4807,15 +4807,15 @@ public class AgrBi11OwnpconTblGuidRight
 public class AgrDirnOwnpconNoTblGuidLeftBase
 {
 	int dummy;
-	[NDORelation(typeof(AgrDirnOwnpconNoTblGuidRight))]
-	IList relField = new ArrayList();
+	[NDORelation()]
+	List<AgrDirnOwnpconNoTblGuidRight> relField = new List<AgrDirnOwnpconNoTblGuidRight>();
 
 	public int Dummy
 	{
 		get { return dummy; }
 		set { dummy = value; }
 	}
-	public IList RelField
+	public List<AgrDirnOwnpconNoTblGuidRight> RelField
 	{
 		get { return relField; }
 		set { relField = value; }
@@ -4853,15 +4853,15 @@ public class AgrDirnOwnpconNoTblGuidRight
 public class AgrDirnOwnpconTblGuidLeftBase
 {
 	int dummy;
-	[NDORelation(typeof(AgrDirnOwnpconTblGuidRight)), MappingTable]
-	IList relField = new ArrayList();
+	[NDORelation(), MappingTable]
+	List<AgrDirnOwnpconTblGuidRight> relField = new List<AgrDirnOwnpconTblGuidRight>();
 
 	public int Dummy
 	{
 		get { return dummy; }
 		set { dummy = value; }
 	}
-	public IList RelField
+	public List<AgrDirnOwnpconTblGuidRight> RelField
 	{
 		get { return relField; }
 		set { relField = value; }
@@ -4899,15 +4899,15 @@ public class AgrDirnOwnpconTblGuidRight
 public class AgrBin1OwnpconNoTblGuidLeftBase
 {
 	int dummy;
-	[NDORelation(typeof(AgrBin1OwnpconNoTblGuidRight))]
-	IList relField = new ArrayList();
+	[NDORelation()]
+	List<AgrBin1OwnpconNoTblGuidRight> relField = new List<AgrBin1OwnpconNoTblGuidRight>();
 
 	public int Dummy
 	{
 		get { return dummy; }
 		set { dummy = value; }
 	}
-	public IList RelField
+	public List<AgrBin1OwnpconNoTblGuidRight> RelField
 	{
 		get { return relField; }
 		set { relField = value; }
@@ -4953,15 +4953,15 @@ public class AgrBin1OwnpconNoTblGuidRight
 public class AgrBin1OwnpconTblGuidLeftBase
 {
 	int dummy;
-	[NDORelation(typeof(AgrBin1OwnpconTblGuidRight)), MappingTable]
-	IList relField = new ArrayList();
+	[NDORelation(), MappingTable]
+	List<AgrBin1OwnpconTblGuidRight> relField = new List<AgrBin1OwnpconTblGuidRight>();
 
 	public int Dummy
 	{
 		get { return dummy; }
 		set { dummy = value; }
 	}
-	public IList RelField
+	public List<AgrBin1OwnpconTblGuidRight> RelField
 	{
 		get { return relField; }
 		set { relField = value; }
@@ -5037,15 +5037,15 @@ public class AgrBi1nOwnpconTblGuidLeftDerived : AgrBi1nOwnpconTblGuidLeftBase
 public class AgrBi1nOwnpconTblGuidRight
 {
 	int dummy;
-	[NDORelation(typeof(AgrBi1nOwnpconTblGuidLeftBase))]
-	IList relField = new ArrayList();
+	[NDORelation()]
+	List<AgrBi1nOwnpconTblGuidLeftBase> relField = new List<AgrBi1nOwnpconTblGuidLeftBase>();
 
 	public int Dummy
 	{
 		get { return dummy; }
 		set { dummy = value; }
 	}
-	public IList RelField
+	public List<AgrBi1nOwnpconTblGuidLeftBase> RelField
 	{
 		get { return relField; }
 		set { relField = value; }
@@ -5057,15 +5057,15 @@ public class AgrBi1nOwnpconTblGuidRight
 public class AgrBinnOwnpconTblGuidLeftBase
 {
 	int dummy;
-	[NDORelation(typeof(AgrBinnOwnpconTblGuidRight))]
-	IList relField = new ArrayList();
+	[NDORelation()]
+	List<AgrBinnOwnpconTblGuidRight> relField = new List<AgrBinnOwnpconTblGuidRight>();
 
 	public int Dummy
 	{
 		get { return dummy; }
 		set { dummy = value; }
 	}
-	public IList RelField
+	public List<AgrBinnOwnpconTblGuidRight> RelField
 	{
 		get { return relField; }
 		set { relField = value; }
@@ -5091,15 +5091,15 @@ public class AgrBinnOwnpconTblGuidLeftDerived : AgrBinnOwnpconTblGuidLeftBase
 public class AgrBinnOwnpconTblGuidRight
 {
 	int dummy;
-	[NDORelation(typeof(AgrBinnOwnpconTblGuidLeftBase))]
-	IList relField = new ArrayList();
+	[NDORelation()]
+	List<AgrBinnOwnpconTblGuidLeftBase> relField = new List<AgrBinnOwnpconTblGuidLeftBase>();
 
 	public int Dummy
 	{
 		get { return dummy; }
 		set { dummy = value; }
 	}
-	public IList RelField
+	public List<AgrBinnOwnpconTblGuidLeftBase> RelField
 	{
 		get { return relField; }
 		set { relField = value; }
@@ -5295,15 +5295,15 @@ public class CmpBi11OwnpconTblGuidRight
 public class CmpDirnOwnpconNoTblGuidLeftBase
 {
 	int dummy;
-	[NDORelation(typeof(CmpDirnOwnpconNoTblGuidRight), RelationInfo.Composite)]
-	IList relField = new ArrayList();
+	[NDORelation(RelationInfo.Composite)]
+	List<CmpDirnOwnpconNoTblGuidRight> relField = new List<CmpDirnOwnpconNoTblGuidRight>();
 
 	public int Dummy
 	{
 		get { return dummy; }
 		set { dummy = value; }
 	}
-	public IList RelField
+	public List<CmpDirnOwnpconNoTblGuidRight> RelField
 	{
 		get { return relField; }
 		set { relField = value; }
@@ -5341,15 +5341,15 @@ public class CmpDirnOwnpconNoTblGuidRight
 public class CmpDirnOwnpconTblGuidLeftBase
 {
 	int dummy;
-	[NDORelation(typeof(CmpDirnOwnpconTblGuidRight), RelationInfo.Composite), MappingTable]
-	IList relField = new ArrayList();
+	[NDORelation(RelationInfo.Composite), MappingTable]
+	List<CmpDirnOwnpconTblGuidRight> relField = new List<CmpDirnOwnpconTblGuidRight>();
 
 	public int Dummy
 	{
 		get { return dummy; }
 		set { dummy = value; }
 	}
-	public IList RelField
+	public List<CmpDirnOwnpconTblGuidRight> RelField
 	{
 		get { return relField; }
 		set { relField = value; }
@@ -5387,15 +5387,15 @@ public class CmpDirnOwnpconTblGuidRight
 public class CmpBin1OwnpconNoTblGuidLeftBase
 {
 	int dummy;
-	[NDORelation(typeof(CmpBin1OwnpconNoTblGuidRight), RelationInfo.Composite)]
-	IList relField = new ArrayList();
+	[NDORelation(RelationInfo.Composite)]
+	List<CmpBin1OwnpconNoTblGuidRight> relField = new List<CmpBin1OwnpconNoTblGuidRight>();
 
 	public int Dummy
 	{
 		get { return dummy; }
 		set { dummy = value; }
 	}
-	public IList RelField
+	public List<CmpBin1OwnpconNoTblGuidRight> RelField
 	{
 		get { return relField; }
 		set { relField = value; }
@@ -5441,15 +5441,15 @@ public class CmpBin1OwnpconNoTblGuidRight
 public class CmpBin1OwnpconTblGuidLeftBase
 {
 	int dummy;
-	[NDORelation(typeof(CmpBin1OwnpconTblGuidRight), RelationInfo.Composite), MappingTable]
-	IList relField = new ArrayList();
+	[NDORelation(RelationInfo.Composite), MappingTable]
+	List<CmpBin1OwnpconTblGuidRight> relField = new List<CmpBin1OwnpconTblGuidRight>();
 
 	public int Dummy
 	{
 		get { return dummy; }
 		set { dummy = value; }
 	}
-	public IList RelField
+	public List<CmpBin1OwnpconTblGuidRight> RelField
 	{
 		get { return relField; }
 		set { relField = value; }
@@ -5525,15 +5525,15 @@ public class CmpBi1nOwnpconTblGuidLeftDerived : CmpBi1nOwnpconTblGuidLeftBase
 public class CmpBi1nOwnpconTblGuidRight
 {
 	int dummy;
-	[NDORelation(typeof(CmpBi1nOwnpconTblGuidLeftBase))]
-	IList relField = new ArrayList();
+	[NDORelation()]
+	List<CmpBi1nOwnpconTblGuidLeftBase> relField = new List<CmpBi1nOwnpconTblGuidLeftBase>();
 
 	public int Dummy
 	{
 		get { return dummy; }
 		set { dummy = value; }
 	}
-	public IList RelField
+	public List<CmpBi1nOwnpconTblGuidLeftBase> RelField
 	{
 		get { return relField; }
 		set { relField = value; }
@@ -5545,15 +5545,15 @@ public class CmpBi1nOwnpconTblGuidRight
 public class CmpBinnOwnpconTblGuidLeftBase
 {
 	int dummy;
-	[NDORelation(typeof(CmpBinnOwnpconTblGuidRight), RelationInfo.Composite)]
-	IList relField = new ArrayList();
+	[NDORelation(RelationInfo.Composite)]
+	List<CmpBinnOwnpconTblGuidRight> relField = new List<CmpBinnOwnpconTblGuidRight>();
 
 	public int Dummy
 	{
 		get { return dummy; }
 		set { dummy = value; }
 	}
-	public IList RelField
+	public List<CmpBinnOwnpconTblGuidRight> RelField
 	{
 		get { return relField; }
 		set { relField = value; }
@@ -5579,15 +5579,15 @@ public class CmpBinnOwnpconTblGuidLeftDerived : CmpBinnOwnpconTblGuidLeftBase
 public class CmpBinnOwnpconTblGuidRight
 {
 	int dummy;
-	[NDORelation(typeof(CmpBinnOwnpconTblGuidLeftBase))]
-	IList relField = new ArrayList();
+	[NDORelation()]
+	List<CmpBinnOwnpconTblGuidLeftBase> relField = new List<CmpBinnOwnpconTblGuidLeftBase>();
 
 	public int Dummy
 	{
 		get { return dummy; }
 		set { dummy = value; }
 	}
-	public IList RelField
+	public List<CmpBinnOwnpconTblGuidLeftBase> RelField
 	{
 		get { return relField; }
 		set { relField = value; }
@@ -5783,15 +5783,15 @@ public class AgrBi11OthpconTblGuidRightDerived : AgrBi11OthpconTblGuidRightBase
 public class AgrDirnOthpconTblGuidLeft
 {
 	int dummy;
-	[NDORelation(typeof(AgrDirnOthpconTblGuidRightBase))]
-	IList relField = new ArrayList();
+	[NDORelation()]
+	List<AgrDirnOthpconTblGuidRightBase> relField = new List<AgrDirnOthpconTblGuidRightBase>();
 
 	public int Dummy
 	{
 		get { return dummy; }
 		set { dummy = value; }
 	}
-	public IList RelField
+	public List<AgrDirnOthpconTblGuidRightBase> RelField
 	{
 		get { return relField; }
 		set { relField = value; }
@@ -5829,15 +5829,15 @@ public class AgrDirnOthpconTblGuidRightDerived : AgrDirnOthpconTblGuidRightBase
 public class AgrBin1OthpconTblGuidLeft
 {
 	int dummy;
-	[NDORelation(typeof(AgrBin1OthpconTblGuidRightBase))]
-	IList relField = new ArrayList();
+	[NDORelation()]
+	List<AgrBin1OthpconTblGuidRightBase> relField = new List<AgrBin1OthpconTblGuidRightBase>();
 
 	public int Dummy
 	{
 		get { return dummy; }
 		set { dummy = value; }
 	}
-	public IList RelField
+	public List<AgrBin1OthpconTblGuidRightBase> RelField
 	{
 		get { return relField; }
 		set { relField = value; }
@@ -5907,15 +5907,15 @@ public class AgrBi1nOthpconNoTblGuidLeft
 public class AgrBi1nOthpconNoTblGuidRightBase
 {
 	int dummy;
-	[NDORelation(typeof(AgrBi1nOthpconNoTblGuidLeft))]
-	IList relField = new ArrayList();
+	[NDORelation()]
+	List<AgrBi1nOthpconNoTblGuidLeft> relField = new List<AgrBi1nOthpconNoTblGuidLeft>();
 
 	public int Dummy
 	{
 		get { return dummy; }
 		set { dummy = value; }
 	}
-	public IList RelField
+	public List<AgrBi1nOthpconNoTblGuidLeft> RelField
 	{
 		get { return relField; }
 		set { relField = value; }
@@ -5957,15 +5957,15 @@ public class AgrBi1nOthpconTblGuidLeft
 public class AgrBi1nOthpconTblGuidRightBase
 {
 	int dummy;
-	[NDORelation(typeof(AgrBi1nOthpconTblGuidLeft)), MappingTable]
-	IList relField = new ArrayList();
+	[NDORelation(), MappingTable]
+	List<AgrBi1nOthpconTblGuidLeft> relField = new List<AgrBi1nOthpconTblGuidLeft>();
 
 	public int Dummy
 	{
 		get { return dummy; }
 		set { dummy = value; }
 	}
-	public IList RelField
+	public List<AgrBi1nOthpconTblGuidLeft> RelField
 	{
 		get { return relField; }
 		set { relField = value; }
@@ -5983,15 +5983,15 @@ public class AgrBi1nOthpconTblGuidRightDerived : AgrBi1nOthpconTblGuidRightBase
 public class AgrBinnOthpconTblGuidLeft
 {
 	int dummy;
-	[NDORelation(typeof(AgrBinnOthpconTblGuidRightBase))]
-	IList relField = new ArrayList();
+	[NDORelation()]
+	List<AgrBinnOthpconTblGuidRightBase> relField = new List<AgrBinnOthpconTblGuidRightBase>();
 
 	public int Dummy
 	{
 		get { return dummy; }
 		set { dummy = value; }
 	}
-	public IList RelField
+	public List<AgrBinnOthpconTblGuidRightBase> RelField
 	{
 		get { return relField; }
 		set { relField = value; }
@@ -6011,15 +6011,15 @@ public class AgrBinnOthpconTblGuidLeft
 public class AgrBinnOthpconTblGuidRightBase
 {
 	int dummy;
-	[NDORelation(typeof(AgrBinnOthpconTblGuidLeft))]
-	IList relField = new ArrayList();
+	[NDORelation()]
+	List<AgrBinnOthpconTblGuidLeft> relField = new List<AgrBinnOthpconTblGuidLeft>();
 
 	public int Dummy
 	{
 		get { return dummy; }
 		set { dummy = value; }
 	}
-	public IList RelField
+	public List<AgrBinnOthpconTblGuidLeft> RelField
 	{
 		get { return relField; }
 		set { relField = value; }
@@ -6221,15 +6221,15 @@ public class CmpBi11OthpconTblGuidRightDerived : CmpBi11OthpconTblGuidRightBase
 public class CmpDirnOthpconTblGuidLeft
 {
 	int dummy;
-	[NDORelation(typeof(CmpDirnOthpconTblGuidRightBase), RelationInfo.Composite)]
-	IList relField = new ArrayList();
+	[NDORelation(RelationInfo.Composite)]
+	List<CmpDirnOthpconTblGuidRightBase> relField = new List<CmpDirnOthpconTblGuidRightBase>();
 
 	public int Dummy
 	{
 		get { return dummy; }
 		set { dummy = value; }
 	}
-	public IList RelField
+	public List<CmpDirnOthpconTblGuidRightBase> RelField
 	{
 		get { return relField; }
 		set { relField = value; }
@@ -6267,15 +6267,15 @@ public class CmpDirnOthpconTblGuidRightDerived : CmpDirnOthpconTblGuidRightBase
 public class CmpBin1OthpconTblGuidLeft
 {
 	int dummy;
-	[NDORelation(typeof(CmpBin1OthpconTblGuidRightBase), RelationInfo.Composite)]
-	IList relField = new ArrayList();
+	[NDORelation(RelationInfo.Composite)]
+	List<CmpBin1OthpconTblGuidRightBase> relField = new List<CmpBin1OthpconTblGuidRightBase>();
 
 	public int Dummy
 	{
 		get { return dummy; }
 		set { dummy = value; }
 	}
-	public IList RelField
+	public List<CmpBin1OthpconTblGuidRightBase> RelField
 	{
 		get { return relField; }
 		set { relField = value; }
@@ -6345,15 +6345,15 @@ public class CmpBi1nOthpconNoTblGuidLeft
 public class CmpBi1nOthpconNoTblGuidRightBase
 {
 	int dummy;
-	[NDORelation(typeof(CmpBi1nOthpconNoTblGuidLeft))]
-	IList relField = new ArrayList();
+	[NDORelation()]
+	List<CmpBi1nOthpconNoTblGuidLeft> relField = new List<CmpBi1nOthpconNoTblGuidLeft>();
 
 	public int Dummy
 	{
 		get { return dummy; }
 		set { dummy = value; }
 	}
-	public IList RelField
+	public List<CmpBi1nOthpconNoTblGuidLeft> RelField
 	{
 		get { return relField; }
 		set { relField = value; }
@@ -6395,15 +6395,15 @@ public class CmpBi1nOthpconTblGuidLeft
 public class CmpBi1nOthpconTblGuidRightBase
 {
 	int dummy;
-	[NDORelation(typeof(CmpBi1nOthpconTblGuidLeft)), MappingTable]
-	IList relField = new ArrayList();
+	[NDORelation(), MappingTable]
+	List<CmpBi1nOthpconTblGuidLeft> relField = new List<CmpBi1nOthpconTblGuidLeft>();
 
 	public int Dummy
 	{
 		get { return dummy; }
 		set { dummy = value; }
 	}
-	public IList RelField
+	public List<CmpBi1nOthpconTblGuidLeft> RelField
 	{
 		get { return relField; }
 		set { relField = value; }
@@ -6421,15 +6421,15 @@ public class CmpBi1nOthpconTblGuidRightDerived : CmpBi1nOthpconTblGuidRightBase
 public class CmpBinnOthpconTblGuidLeft
 {
 	int dummy;
-	[NDORelation(typeof(CmpBinnOthpconTblGuidRightBase), RelationInfo.Composite)]
-	IList relField = new ArrayList();
+	[NDORelation(RelationInfo.Composite)]
+	List<CmpBinnOthpconTblGuidRightBase> relField = new List<CmpBinnOthpconTblGuidRightBase>();
 
 	public int Dummy
 	{
 		get { return dummy; }
 		set { dummy = value; }
 	}
-	public IList RelField
+	public List<CmpBinnOthpconTblGuidRightBase> RelField
 	{
 		get { return relField; }
 		set { relField = value; }
@@ -6449,15 +6449,15 @@ public class CmpBinnOthpconTblGuidLeft
 public class CmpBinnOthpconTblGuidRightBase
 {
 	int dummy;
-	[NDORelation(typeof(CmpBinnOthpconTblGuidLeft))]
-	IList relField = new ArrayList();
+	[NDORelation()]
+	List<CmpBinnOthpconTblGuidLeft> relField = new List<CmpBinnOthpconTblGuidLeft>();
 
 	public int Dummy
 	{
 		get { return dummy; }
 		set { dummy = value; }
 	}
-	public IList RelField
+	public List<CmpBinnOthpconTblGuidLeft> RelField
 	{
 		get { return relField; }
 		set { relField = value; }
@@ -6683,15 +6683,15 @@ public class AgrBi11OwnpconOthpconTblGuidRightDerived : AgrBi11OwnpconOthpconTbl
 public class AgrDirnOwnpconOthpconTblGuidLeftBase
 {
 	int dummy;
-	[NDORelation(typeof(AgrDirnOwnpconOthpconTblGuidRightBase))]
-	IList relField = new ArrayList();
+	[NDORelation()]
+	List<AgrDirnOwnpconOthpconTblGuidRightBase> relField = new List<AgrDirnOwnpconOthpconTblGuidRightBase>();
 
 	public int Dummy
 	{
 		get { return dummy; }
 		set { dummy = value; }
 	}
-	public IList RelField
+	public List<AgrDirnOwnpconOthpconTblGuidRightBase> RelField
 	{
 		get { return relField; }
 		set { relField = value; }
@@ -6735,15 +6735,15 @@ public class AgrDirnOwnpconOthpconTblGuidRightDerived : AgrDirnOwnpconOthpconTbl
 public class AgrBin1OwnpconOthpconTblGuidLeftBase
 {
 	int dummy;
-	[NDORelation(typeof(AgrBin1OwnpconOthpconTblGuidRightBase))]
-	IList relField = new ArrayList();
+	[NDORelation()]
+	List<AgrBin1OwnpconOthpconTblGuidRightBase> relField = new List<AgrBin1OwnpconOthpconTblGuidRightBase>();
 
 	public int Dummy
 	{
 		get { return dummy; }
 		set { dummy = value; }
 	}
-	public IList RelField
+	public List<AgrBin1OwnpconOthpconTblGuidRightBase> RelField
 	{
 		get { return relField; }
 		set { relField = value; }
@@ -6825,15 +6825,15 @@ public class AgrBi1nOwnpconOthpconTblGuidLeftDerived : AgrBi1nOwnpconOthpconTblG
 public class AgrBi1nOwnpconOthpconTblGuidRightBase
 {
 	int dummy;
-	[NDORelation(typeof(AgrBi1nOwnpconOthpconTblGuidLeftBase))]
-	IList relField = new ArrayList();
+	[NDORelation()]
+	List<AgrBi1nOwnpconOthpconTblGuidLeftBase> relField = new List<AgrBi1nOwnpconOthpconTblGuidLeftBase>();
 
 	public int Dummy
 	{
 		get { return dummy; }
 		set { dummy = value; }
 	}
-	public IList RelField
+	public List<AgrBi1nOwnpconOthpconTblGuidLeftBase> RelField
 	{
 		get { return relField; }
 		set { relField = value; }
@@ -6851,15 +6851,15 @@ public class AgrBi1nOwnpconOthpconTblGuidRightDerived : AgrBi1nOwnpconOthpconTbl
 public class AgrBinnOwnpconOthpconTblGuidLeftBase
 {
 	int dummy;
-	[NDORelation(typeof(AgrBinnOwnpconOthpconTblGuidRightBase))]
-	IList relField = new ArrayList();
+	[NDORelation()]
+	List<AgrBinnOwnpconOthpconTblGuidRightBase> relField = new List<AgrBinnOwnpconOthpconTblGuidRightBase>();
 
 	public int Dummy
 	{
 		get { return dummy; }
 		set { dummy = value; }
 	}
-	public IList RelField
+	public List<AgrBinnOwnpconOthpconTblGuidRightBase> RelField
 	{
 		get { return relField; }
 		set { relField = value; }
@@ -6885,15 +6885,15 @@ public class AgrBinnOwnpconOthpconTblGuidLeftDerived : AgrBinnOwnpconOthpconTblG
 public class AgrBinnOwnpconOthpconTblGuidRightBase
 {
 	int dummy;
-	[NDORelation(typeof(AgrBinnOwnpconOthpconTblGuidLeftBase))]
-	IList relField = new ArrayList();
+	[NDORelation()]
+	List<AgrBinnOwnpconOthpconTblGuidLeftBase> relField = new List<AgrBinnOwnpconOthpconTblGuidLeftBase>();
 
 	public int Dummy
 	{
 		get { return dummy; }
 		set { dummy = value; }
 	}
-	public IList RelField
+	public List<AgrBinnOwnpconOthpconTblGuidLeftBase> RelField
 	{
 		get { return relField; }
 		set { relField = value; }
@@ -7119,15 +7119,15 @@ public class CmpBi11OwnpconOthpconTblGuidRightDerived : CmpBi11OwnpconOthpconTbl
 public class CmpDirnOwnpconOthpconTblGuidLeftBase
 {
 	int dummy;
-	[NDORelation(typeof(CmpDirnOwnpconOthpconTblGuidRightBase), RelationInfo.Composite)]
-	IList relField = new ArrayList();
+	[NDORelation(RelationInfo.Composite)]
+	List<CmpDirnOwnpconOthpconTblGuidRightBase> relField = new List<CmpDirnOwnpconOthpconTblGuidRightBase>();
 
 	public int Dummy
 	{
 		get { return dummy; }
 		set { dummy = value; }
 	}
-	public IList RelField
+	public List<CmpDirnOwnpconOthpconTblGuidRightBase> RelField
 	{
 		get { return relField; }
 		set { relField = value; }
@@ -7171,15 +7171,15 @@ public class CmpDirnOwnpconOthpconTblGuidRightDerived : CmpDirnOwnpconOthpconTbl
 public class CmpBin1OwnpconOthpconTblGuidLeftBase
 {
 	int dummy;
-	[NDORelation(typeof(CmpBin1OwnpconOthpconTblGuidRightBase), RelationInfo.Composite)]
-	IList relField = new ArrayList();
+	[NDORelation(RelationInfo.Composite)]
+	List<CmpBin1OwnpconOthpconTblGuidRightBase> relField = new List<CmpBin1OwnpconOthpconTblGuidRightBase>();
 
 	public int Dummy
 	{
 		get { return dummy; }
 		set { dummy = value; }
 	}
-	public IList RelField
+	public List<CmpBin1OwnpconOthpconTblGuidRightBase> RelField
 	{
 		get { return relField; }
 		set { relField = value; }
@@ -7261,15 +7261,15 @@ public class CmpBi1nOwnpconOthpconTblGuidLeftDerived : CmpBi1nOwnpconOthpconTblG
 public class CmpBi1nOwnpconOthpconTblGuidRightBase
 {
 	int dummy;
-	[NDORelation(typeof(CmpBi1nOwnpconOthpconTblGuidLeftBase))]
-	IList relField = new ArrayList();
+	[NDORelation()]
+	List<CmpBi1nOwnpconOthpconTblGuidLeftBase> relField = new List<CmpBi1nOwnpconOthpconTblGuidLeftBase>();
 
 	public int Dummy
 	{
 		get { return dummy; }
 		set { dummy = value; }
 	}
-	public IList RelField
+	public List<CmpBi1nOwnpconOthpconTblGuidLeftBase> RelField
 	{
 		get { return relField; }
 		set { relField = value; }
@@ -7287,15 +7287,15 @@ public class CmpBi1nOwnpconOthpconTblGuidRightDerived : CmpBi1nOwnpconOthpconTbl
 public class CmpBinnOwnpconOthpconTblGuidLeftBase
 {
 	int dummy;
-	[NDORelation(typeof(CmpBinnOwnpconOthpconTblGuidRightBase), RelationInfo.Composite)]
-	IList relField = new ArrayList();
+	[NDORelation(RelationInfo.Composite)]
+	List<CmpBinnOwnpconOthpconTblGuidRightBase> relField = new List<CmpBinnOwnpconOthpconTblGuidRightBase>();
 
 	public int Dummy
 	{
 		get { return dummy; }
 		set { dummy = value; }
 	}
-	public IList RelField
+	public List<CmpBinnOwnpconOthpconTblGuidRightBase> RelField
 	{
 		get { return relField; }
 		set { relField = value; }
@@ -7321,15 +7321,15 @@ public class CmpBinnOwnpconOthpconTblGuidLeftDerived : CmpBinnOwnpconOthpconTblG
 public class CmpBinnOwnpconOthpconTblGuidRightBase
 {
 	int dummy;
-	[NDORelation(typeof(CmpBinnOwnpconOthpconTblGuidLeftBase))]
-	IList relField = new ArrayList();
+	[NDORelation()]
+	List<CmpBinnOwnpconOthpconTblGuidLeftBase> relField = new List<CmpBinnOwnpconOthpconTblGuidLeftBase>();
 
 	public int Dummy
 	{
 		get { return dummy; }
 		set { dummy = value; }
 	}
-	public IList RelField
+	public List<CmpBinnOwnpconOthpconTblGuidLeftBase> RelField
 	{
 		get { return relField; }
 		set { relField = value; }
@@ -7531,15 +7531,15 @@ public class AgrBi11OwnpabsTblAutoRight
 public abstract class AgrDirnOwnpabsNoTblAutoLeftBase
 {
 	int dummy;
-	[NDORelation(typeof(AgrDirnOwnpabsNoTblAutoRight))]
-	IList relField = new ArrayList();
+	[NDORelation()]
+	List<AgrDirnOwnpabsNoTblAutoRight> relField = new List<AgrDirnOwnpabsNoTblAutoRight>();
 
 	public int Dummy
 	{
 		get { return dummy; }
 		set { dummy = value; }
 	}
-	public IList RelField
+	public List<AgrDirnOwnpabsNoTblAutoRight> RelField
 	{
 		get { return relField; }
 		set { relField = value; }
@@ -7577,15 +7577,15 @@ public class AgrDirnOwnpabsNoTblAutoRight
 public abstract class AgrDirnOwnpabsTblAutoLeftBase
 {
 	int dummy;
-	[NDORelation(typeof(AgrDirnOwnpabsTblAutoRight)), MappingTable]
-	IList relField = new ArrayList();
+	[NDORelation(), MappingTable]
+	List<AgrDirnOwnpabsTblAutoRight> relField = new List<AgrDirnOwnpabsTblAutoRight>();
 
 	public int Dummy
 	{
 		get { return dummy; }
 		set { dummy = value; }
 	}
-	public IList RelField
+	public List<AgrDirnOwnpabsTblAutoRight> RelField
 	{
 		get { return relField; }
 		set { relField = value; }
@@ -7623,15 +7623,15 @@ public class AgrDirnOwnpabsTblAutoRight
 public abstract class AgrBin1OwnpabsNoTblAutoLeftBase
 {
 	int dummy;
-	[NDORelation(typeof(AgrBin1OwnpabsNoTblAutoRight))]
-	IList relField = new ArrayList();
+	[NDORelation()]
+	List<AgrBin1OwnpabsNoTblAutoRight> relField = new List<AgrBin1OwnpabsNoTblAutoRight>();
 
 	public int Dummy
 	{
 		get { return dummy; }
 		set { dummy = value; }
 	}
-	public IList RelField
+	public List<AgrBin1OwnpabsNoTblAutoRight> RelField
 	{
 		get { return relField; }
 		set { relField = value; }
@@ -7677,15 +7677,15 @@ public class AgrBin1OwnpabsNoTblAutoRight
 public abstract class AgrBin1OwnpabsTblAutoLeftBase
 {
 	int dummy;
-	[NDORelation(typeof(AgrBin1OwnpabsTblAutoRight)), MappingTable]
-	IList relField = new ArrayList();
+	[NDORelation(), MappingTable]
+	List<AgrBin1OwnpabsTblAutoRight> relField = new List<AgrBin1OwnpabsTblAutoRight>();
 
 	public int Dummy
 	{
 		get { return dummy; }
 		set { dummy = value; }
 	}
-	public IList RelField
+	public List<AgrBin1OwnpabsTblAutoRight> RelField
 	{
 		get { return relField; }
 		set { relField = value; }
@@ -7761,15 +7761,15 @@ public class AgrBi1nOwnpabsTblAutoLeftDerived : AgrBi1nOwnpabsTblAutoLeftBase
 public class AgrBi1nOwnpabsTblAutoRight
 {
 	int dummy;
-	[NDORelation(typeof(AgrBi1nOwnpabsTblAutoLeftBase))]
-	IList relField = new ArrayList();
+	[NDORelation()]
+	List<AgrBi1nOwnpabsTblAutoLeftBase> relField = new List<AgrBi1nOwnpabsTblAutoLeftBase>();
 
 	public int Dummy
 	{
 		get { return dummy; }
 		set { dummy = value; }
 	}
-	public IList RelField
+	public List<AgrBi1nOwnpabsTblAutoLeftBase> RelField
 	{
 		get { return relField; }
 		set { relField = value; }
@@ -7781,15 +7781,15 @@ public class AgrBi1nOwnpabsTblAutoRight
 public abstract class AgrBinnOwnpabsTblAutoLeftBase
 {
 	int dummy;
-	[NDORelation(typeof(AgrBinnOwnpabsTblAutoRight))]
-	IList relField = new ArrayList();
+	[NDORelation()]
+	List<AgrBinnOwnpabsTblAutoRight> relField = new List<AgrBinnOwnpabsTblAutoRight>();
 
 	public int Dummy
 	{
 		get { return dummy; }
 		set { dummy = value; }
 	}
-	public IList RelField
+	public List<AgrBinnOwnpabsTblAutoRight> RelField
 	{
 		get { return relField; }
 		set { relField = value; }
@@ -7815,15 +7815,15 @@ public class AgrBinnOwnpabsTblAutoLeftDerived : AgrBinnOwnpabsTblAutoLeftBase
 public class AgrBinnOwnpabsTblAutoRight
 {
 	int dummy;
-	[NDORelation(typeof(AgrBinnOwnpabsTblAutoLeftBase))]
-	IList relField = new ArrayList();
+	[NDORelation()]
+	List<AgrBinnOwnpabsTblAutoLeftBase> relField = new List<AgrBinnOwnpabsTblAutoLeftBase>();
 
 	public int Dummy
 	{
 		get { return dummy; }
 		set { dummy = value; }
 	}
-	public IList RelField
+	public List<AgrBinnOwnpabsTblAutoLeftBase> RelField
 	{
 		get { return relField; }
 		set { relField = value; }
@@ -8019,15 +8019,15 @@ public class CmpBi11OwnpabsTblAutoRight
 public abstract class CmpDirnOwnpabsNoTblAutoLeftBase
 {
 	int dummy;
-	[NDORelation(typeof(CmpDirnOwnpabsNoTblAutoRight), RelationInfo.Composite)]
-	IList relField = new ArrayList();
+	[NDORelation(RelationInfo.Composite)]
+	List<CmpDirnOwnpabsNoTblAutoRight> relField = new List<CmpDirnOwnpabsNoTblAutoRight>();
 
 	public int Dummy
 	{
 		get { return dummy; }
 		set { dummy = value; }
 	}
-	public IList RelField
+	public List<CmpDirnOwnpabsNoTblAutoRight> RelField
 	{
 		get { return relField; }
 		set { relField = value; }
@@ -8065,15 +8065,15 @@ public class CmpDirnOwnpabsNoTblAutoRight
 public abstract class CmpDirnOwnpabsTblAutoLeftBase
 {
 	int dummy;
-	[NDORelation(typeof(CmpDirnOwnpabsTblAutoRight), RelationInfo.Composite), MappingTable]
-	IList relField = new ArrayList();
+	[NDORelation(RelationInfo.Composite), MappingTable]
+	List<CmpDirnOwnpabsTblAutoRight> relField = new List<CmpDirnOwnpabsTblAutoRight>();
 
 	public int Dummy
 	{
 		get { return dummy; }
 		set { dummy = value; }
 	}
-	public IList RelField
+	public List<CmpDirnOwnpabsTblAutoRight> RelField
 	{
 		get { return relField; }
 		set { relField = value; }
@@ -8111,15 +8111,15 @@ public class CmpDirnOwnpabsTblAutoRight
 public abstract class CmpBin1OwnpabsNoTblAutoLeftBase
 {
 	int dummy;
-	[NDORelation(typeof(CmpBin1OwnpabsNoTblAutoRight), RelationInfo.Composite)]
-	IList relField = new ArrayList();
+	[NDORelation(RelationInfo.Composite)]
+	List<CmpBin1OwnpabsNoTblAutoRight> relField = new List<CmpBin1OwnpabsNoTblAutoRight>();
 
 	public int Dummy
 	{
 		get { return dummy; }
 		set { dummy = value; }
 	}
-	public IList RelField
+	public List<CmpBin1OwnpabsNoTblAutoRight> RelField
 	{
 		get { return relField; }
 		set { relField = value; }
@@ -8165,15 +8165,15 @@ public class CmpBin1OwnpabsNoTblAutoRight
 public abstract class CmpBin1OwnpabsTblAutoLeftBase
 {
 	int dummy;
-	[NDORelation(typeof(CmpBin1OwnpabsTblAutoRight), RelationInfo.Composite), MappingTable]
-	IList relField = new ArrayList();
+	[NDORelation(RelationInfo.Composite), MappingTable]
+	List<CmpBin1OwnpabsTblAutoRight> relField = new List<CmpBin1OwnpabsTblAutoRight>();
 
 	public int Dummy
 	{
 		get { return dummy; }
 		set { dummy = value; }
 	}
-	public IList RelField
+	public List<CmpBin1OwnpabsTblAutoRight> RelField
 	{
 		get { return relField; }
 		set { relField = value; }
@@ -8249,15 +8249,15 @@ public class CmpBi1nOwnpabsTblAutoLeftDerived : CmpBi1nOwnpabsTblAutoLeftBase
 public class CmpBi1nOwnpabsTblAutoRight
 {
 	int dummy;
-	[NDORelation(typeof(CmpBi1nOwnpabsTblAutoLeftBase))]
-	IList relField = new ArrayList();
+	[NDORelation()]
+	List<CmpBi1nOwnpabsTblAutoLeftBase> relField = new List<CmpBi1nOwnpabsTblAutoLeftBase>();
 
 	public int Dummy
 	{
 		get { return dummy; }
 		set { dummy = value; }
 	}
-	public IList RelField
+	public List<CmpBi1nOwnpabsTblAutoLeftBase> RelField
 	{
 		get { return relField; }
 		set { relField = value; }
@@ -8269,15 +8269,15 @@ public class CmpBi1nOwnpabsTblAutoRight
 public abstract class CmpBinnOwnpabsTblAutoLeftBase
 {
 	int dummy;
-	[NDORelation(typeof(CmpBinnOwnpabsTblAutoRight), RelationInfo.Composite)]
-	IList relField = new ArrayList();
+	[NDORelation(RelationInfo.Composite)]
+	List<CmpBinnOwnpabsTblAutoRight> relField = new List<CmpBinnOwnpabsTblAutoRight>();
 
 	public int Dummy
 	{
 		get { return dummy; }
 		set { dummy = value; }
 	}
-	public IList RelField
+	public List<CmpBinnOwnpabsTblAutoRight> RelField
 	{
 		get { return relField; }
 		set { relField = value; }
@@ -8303,15 +8303,15 @@ public class CmpBinnOwnpabsTblAutoLeftDerived : CmpBinnOwnpabsTblAutoLeftBase
 public class CmpBinnOwnpabsTblAutoRight
 {
 	int dummy;
-	[NDORelation(typeof(CmpBinnOwnpabsTblAutoLeftBase))]
-	IList relField = new ArrayList();
+	[NDORelation()]
+	List<CmpBinnOwnpabsTblAutoLeftBase> relField = new List<CmpBinnOwnpabsTblAutoLeftBase>();
 
 	public int Dummy
 	{
 		get { return dummy; }
 		set { dummy = value; }
 	}
-	public IList RelField
+	public List<CmpBinnOwnpabsTblAutoLeftBase> RelField
 	{
 		get { return relField; }
 		set { relField = value; }
@@ -8507,15 +8507,15 @@ public class AgrBi11OthpabsTblAutoRightDerived : AgrBi11OthpabsTblAutoRightBase
 public class AgrDirnOthpabsTblAutoLeft
 {
 	int dummy;
-	[NDORelation(typeof(AgrDirnOthpabsTblAutoRightBase))]
-	IList relField = new ArrayList();
+	[NDORelation()]
+	List<AgrDirnOthpabsTblAutoRightBase> relField = new List<AgrDirnOthpabsTblAutoRightBase>();
 
 	public int Dummy
 	{
 		get { return dummy; }
 		set { dummy = value; }
 	}
-	public IList RelField
+	public List<AgrDirnOthpabsTblAutoRightBase> RelField
 	{
 		get { return relField; }
 		set { relField = value; }
@@ -8553,15 +8553,15 @@ public class AgrDirnOthpabsTblAutoRightDerived : AgrDirnOthpabsTblAutoRightBase
 public class AgrBin1OthpabsTblAutoLeft
 {
 	int dummy;
-	[NDORelation(typeof(AgrBin1OthpabsTblAutoRightBase))]
-	IList relField = new ArrayList();
+	[NDORelation()]
+	List<AgrBin1OthpabsTblAutoRightBase> relField = new List<AgrBin1OthpabsTblAutoRightBase>();
 
 	public int Dummy
 	{
 		get { return dummy; }
 		set { dummy = value; }
 	}
-	public IList RelField
+	public List<AgrBin1OthpabsTblAutoRightBase> RelField
 	{
 		get { return relField; }
 		set { relField = value; }
@@ -8631,15 +8631,15 @@ public class AgrBi1nOthpabsNoTblAutoLeft
 public abstract class AgrBi1nOthpabsNoTblAutoRightBase
 {
 	int dummy;
-	[NDORelation(typeof(AgrBi1nOthpabsNoTblAutoLeft))]
-	IList relField = new ArrayList();
+	[NDORelation()]
+	List<AgrBi1nOthpabsNoTblAutoLeft> relField = new List<AgrBi1nOthpabsNoTblAutoLeft>();
 
 	public int Dummy
 	{
 		get { return dummy; }
 		set { dummy = value; }
 	}
-	public IList RelField
+	public List<AgrBi1nOthpabsNoTblAutoLeft> RelField
 	{
 		get { return relField; }
 		set { relField = value; }
@@ -8681,15 +8681,15 @@ public class AgrBi1nOthpabsTblAutoLeft
 public abstract class AgrBi1nOthpabsTblAutoRightBase
 {
 	int dummy;
-	[NDORelation(typeof(AgrBi1nOthpabsTblAutoLeft)), MappingTable]
-	IList relField = new ArrayList();
+	[NDORelation(), MappingTable]
+	List<AgrBi1nOthpabsTblAutoLeft> relField = new List<AgrBi1nOthpabsTblAutoLeft>();
 
 	public int Dummy
 	{
 		get { return dummy; }
 		set { dummy = value; }
 	}
-	public IList RelField
+	public List<AgrBi1nOthpabsTblAutoLeft> RelField
 	{
 		get { return relField; }
 		set { relField = value; }
@@ -8707,15 +8707,15 @@ public class AgrBi1nOthpabsTblAutoRightDerived : AgrBi1nOthpabsTblAutoRightBase
 public class AgrBinnOthpabsTblAutoLeft
 {
 	int dummy;
-	[NDORelation(typeof(AgrBinnOthpabsTblAutoRightBase))]
-	IList relField = new ArrayList();
+	[NDORelation()]
+	List<AgrBinnOthpabsTblAutoRightBase> relField = new List<AgrBinnOthpabsTblAutoRightBase>();
 
 	public int Dummy
 	{
 		get { return dummy; }
 		set { dummy = value; }
 	}
-	public IList RelField
+	public List<AgrBinnOthpabsTblAutoRightBase> RelField
 	{
 		get { return relField; }
 		set { relField = value; }
@@ -8735,15 +8735,15 @@ public class AgrBinnOthpabsTblAutoLeft
 public abstract class AgrBinnOthpabsTblAutoRightBase
 {
 	int dummy;
-	[NDORelation(typeof(AgrBinnOthpabsTblAutoLeft))]
-	IList relField = new ArrayList();
+	[NDORelation()]
+	List<AgrBinnOthpabsTblAutoLeft> relField = new List<AgrBinnOthpabsTblAutoLeft>();
 
 	public int Dummy
 	{
 		get { return dummy; }
 		set { dummy = value; }
 	}
-	public IList RelField
+	public List<AgrBinnOthpabsTblAutoLeft> RelField
 	{
 		get { return relField; }
 		set { relField = value; }
@@ -8945,15 +8945,15 @@ public class CmpBi11OthpabsTblAutoRightDerived : CmpBi11OthpabsTblAutoRightBase
 public class CmpDirnOthpabsTblAutoLeft
 {
 	int dummy;
-	[NDORelation(typeof(CmpDirnOthpabsTblAutoRightBase), RelationInfo.Composite)]
-	IList relField = new ArrayList();
+	[NDORelation(RelationInfo.Composite)]
+	List<CmpDirnOthpabsTblAutoRightBase> relField = new List<CmpDirnOthpabsTblAutoRightBase>();
 
 	public int Dummy
 	{
 		get { return dummy; }
 		set { dummy = value; }
 	}
-	public IList RelField
+	public List<CmpDirnOthpabsTblAutoRightBase> RelField
 	{
 		get { return relField; }
 		set { relField = value; }
@@ -8991,15 +8991,15 @@ public class CmpDirnOthpabsTblAutoRightDerived : CmpDirnOthpabsTblAutoRightBase
 public class CmpBin1OthpabsTblAutoLeft
 {
 	int dummy;
-	[NDORelation(typeof(CmpBin1OthpabsTblAutoRightBase), RelationInfo.Composite)]
-	IList relField = new ArrayList();
+	[NDORelation(RelationInfo.Composite)]
+	List<CmpBin1OthpabsTblAutoRightBase> relField = new List<CmpBin1OthpabsTblAutoRightBase>();
 
 	public int Dummy
 	{
 		get { return dummy; }
 		set { dummy = value; }
 	}
-	public IList RelField
+	public List<CmpBin1OthpabsTblAutoRightBase> RelField
 	{
 		get { return relField; }
 		set { relField = value; }
@@ -9069,15 +9069,15 @@ public class CmpBi1nOthpabsNoTblAutoLeft
 public abstract class CmpBi1nOthpabsNoTblAutoRightBase
 {
 	int dummy;
-	[NDORelation(typeof(CmpBi1nOthpabsNoTblAutoLeft))]
-	IList relField = new ArrayList();
+	[NDORelation()]
+	List<CmpBi1nOthpabsNoTblAutoLeft> relField = new List<CmpBi1nOthpabsNoTblAutoLeft>();
 
 	public int Dummy
 	{
 		get { return dummy; }
 		set { dummy = value; }
 	}
-	public IList RelField
+	public List<CmpBi1nOthpabsNoTblAutoLeft> RelField
 	{
 		get { return relField; }
 		set { relField = value; }
@@ -9119,15 +9119,15 @@ public class CmpBi1nOthpabsTblAutoLeft
 public abstract class CmpBi1nOthpabsTblAutoRightBase
 {
 	int dummy;
-	[NDORelation(typeof(CmpBi1nOthpabsTblAutoLeft)), MappingTable]
-	IList relField = new ArrayList();
+	[NDORelation(), MappingTable]
+	List<CmpBi1nOthpabsTblAutoLeft> relField = new List<CmpBi1nOthpabsTblAutoLeft>();
 
 	public int Dummy
 	{
 		get { return dummy; }
 		set { dummy = value; }
 	}
-	public IList RelField
+	public List<CmpBi1nOthpabsTblAutoLeft> RelField
 	{
 		get { return relField; }
 		set { relField = value; }
@@ -9145,15 +9145,15 @@ public class CmpBi1nOthpabsTblAutoRightDerived : CmpBi1nOthpabsTblAutoRightBase
 public class CmpBinnOthpabsTblAutoLeft
 {
 	int dummy;
-	[NDORelation(typeof(CmpBinnOthpabsTblAutoRightBase), RelationInfo.Composite)]
-	IList relField = new ArrayList();
+	[NDORelation(RelationInfo.Composite)]
+	List<CmpBinnOthpabsTblAutoRightBase> relField = new List<CmpBinnOthpabsTblAutoRightBase>();
 
 	public int Dummy
 	{
 		get { return dummy; }
 		set { dummy = value; }
 	}
-	public IList RelField
+	public List<CmpBinnOthpabsTblAutoRightBase> RelField
 	{
 		get { return relField; }
 		set { relField = value; }
@@ -9173,15 +9173,15 @@ public class CmpBinnOthpabsTblAutoLeft
 public abstract class CmpBinnOthpabsTblAutoRightBase
 {
 	int dummy;
-	[NDORelation(typeof(CmpBinnOthpabsTblAutoLeft))]
-	IList relField = new ArrayList();
+	[NDORelation()]
+	List<CmpBinnOthpabsTblAutoLeft> relField = new List<CmpBinnOthpabsTblAutoLeft>();
 
 	public int Dummy
 	{
 		get { return dummy; }
 		set { dummy = value; }
 	}
-	public IList RelField
+	public List<CmpBinnOthpabsTblAutoLeft> RelField
 	{
 		get { return relField; }
 		set { relField = value; }
@@ -9407,15 +9407,15 @@ public class AgrBi11OwnpabsOthpabsTblAutoRightDerived : AgrBi11OwnpabsOthpabsTbl
 public abstract class AgrDirnOwnpabsOthpabsTblAutoLeftBase
 {
 	int dummy;
-	[NDORelation(typeof(AgrDirnOwnpabsOthpabsTblAutoRightBase))]
-	IList relField = new ArrayList();
+	[NDORelation()]
+	List<AgrDirnOwnpabsOthpabsTblAutoRightBase> relField = new List<AgrDirnOwnpabsOthpabsTblAutoRightBase>();
 
 	public int Dummy
 	{
 		get { return dummy; }
 		set { dummy = value; }
 	}
-	public IList RelField
+	public List<AgrDirnOwnpabsOthpabsTblAutoRightBase> RelField
 	{
 		get { return relField; }
 		set { relField = value; }
@@ -9459,15 +9459,15 @@ public class AgrDirnOwnpabsOthpabsTblAutoRightDerived : AgrDirnOwnpabsOthpabsTbl
 public abstract class AgrBin1OwnpabsOthpabsTblAutoLeftBase
 {
 	int dummy;
-	[NDORelation(typeof(AgrBin1OwnpabsOthpabsTblAutoRightBase))]
-	IList relField = new ArrayList();
+	[NDORelation()]
+	List<AgrBin1OwnpabsOthpabsTblAutoRightBase> relField = new List<AgrBin1OwnpabsOthpabsTblAutoRightBase>();
 
 	public int Dummy
 	{
 		get { return dummy; }
 		set { dummy = value; }
 	}
-	public IList RelField
+	public List<AgrBin1OwnpabsOthpabsTblAutoRightBase> RelField
 	{
 		get { return relField; }
 		set { relField = value; }
@@ -9549,15 +9549,15 @@ public class AgrBi1nOwnpabsOthpabsTblAutoLeftDerived : AgrBi1nOwnpabsOthpabsTblA
 public abstract class AgrBi1nOwnpabsOthpabsTblAutoRightBase
 {
 	int dummy;
-	[NDORelation(typeof(AgrBi1nOwnpabsOthpabsTblAutoLeftBase))]
-	IList relField = new ArrayList();
+	[NDORelation()]
+	List<AgrBi1nOwnpabsOthpabsTblAutoLeftBase> relField = new List<AgrBi1nOwnpabsOthpabsTblAutoLeftBase>();
 
 	public int Dummy
 	{
 		get { return dummy; }
 		set { dummy = value; }
 	}
-	public IList RelField
+	public List<AgrBi1nOwnpabsOthpabsTblAutoLeftBase> RelField
 	{
 		get { return relField; }
 		set { relField = value; }
@@ -9575,15 +9575,15 @@ public class AgrBi1nOwnpabsOthpabsTblAutoRightDerived : AgrBi1nOwnpabsOthpabsTbl
 public abstract class AgrBinnOwnpabsOthpabsTblAutoLeftBase
 {
 	int dummy;
-	[NDORelation(typeof(AgrBinnOwnpabsOthpabsTblAutoRightBase))]
-	IList relField = new ArrayList();
+	[NDORelation()]
+	List<AgrBinnOwnpabsOthpabsTblAutoRightBase> relField = new List<AgrBinnOwnpabsOthpabsTblAutoRightBase>();
 
 	public int Dummy
 	{
 		get { return dummy; }
 		set { dummy = value; }
 	}
-	public IList RelField
+	public List<AgrBinnOwnpabsOthpabsTblAutoRightBase> RelField
 	{
 		get { return relField; }
 		set { relField = value; }
@@ -9609,15 +9609,15 @@ public class AgrBinnOwnpabsOthpabsTblAutoLeftDerived : AgrBinnOwnpabsOthpabsTblA
 public abstract class AgrBinnOwnpabsOthpabsTblAutoRightBase
 {
 	int dummy;
-	[NDORelation(typeof(AgrBinnOwnpabsOthpabsTblAutoLeftBase))]
-	IList relField = new ArrayList();
+	[NDORelation()]
+	List<AgrBinnOwnpabsOthpabsTblAutoLeftBase> relField = new List<AgrBinnOwnpabsOthpabsTblAutoLeftBase>();
 
 	public int Dummy
 	{
 		get { return dummy; }
 		set { dummy = value; }
 	}
-	public IList RelField
+	public List<AgrBinnOwnpabsOthpabsTblAutoLeftBase> RelField
 	{
 		get { return relField; }
 		set { relField = value; }
@@ -9843,15 +9843,15 @@ public class CmpBi11OwnpabsOthpabsTblAutoRightDerived : CmpBi11OwnpabsOthpabsTbl
 public abstract class CmpDirnOwnpabsOthpabsTblAutoLeftBase
 {
 	int dummy;
-	[NDORelation(typeof(CmpDirnOwnpabsOthpabsTblAutoRightBase), RelationInfo.Composite)]
-	IList relField = new ArrayList();
+	[NDORelation(RelationInfo.Composite)]
+	List<CmpDirnOwnpabsOthpabsTblAutoRightBase> relField = new List<CmpDirnOwnpabsOthpabsTblAutoRightBase>();
 
 	public int Dummy
 	{
 		get { return dummy; }
 		set { dummy = value; }
 	}
-	public IList RelField
+	public List<CmpDirnOwnpabsOthpabsTblAutoRightBase> RelField
 	{
 		get { return relField; }
 		set { relField = value; }
@@ -9895,15 +9895,15 @@ public class CmpDirnOwnpabsOthpabsTblAutoRightDerived : CmpDirnOwnpabsOthpabsTbl
 public abstract class CmpBin1OwnpabsOthpabsTblAutoLeftBase
 {
 	int dummy;
-	[NDORelation(typeof(CmpBin1OwnpabsOthpabsTblAutoRightBase), RelationInfo.Composite)]
-	IList relField = new ArrayList();
+	[NDORelation(RelationInfo.Composite)]
+	List<CmpBin1OwnpabsOthpabsTblAutoRightBase> relField = new List<CmpBin1OwnpabsOthpabsTblAutoRightBase>();
 
 	public int Dummy
 	{
 		get { return dummy; }
 		set { dummy = value; }
 	}
-	public IList RelField
+	public List<CmpBin1OwnpabsOthpabsTblAutoRightBase> RelField
 	{
 		get { return relField; }
 		set { relField = value; }
@@ -9985,15 +9985,15 @@ public class CmpBi1nOwnpabsOthpabsTblAutoLeftDerived : CmpBi1nOwnpabsOthpabsTblA
 public abstract class CmpBi1nOwnpabsOthpabsTblAutoRightBase
 {
 	int dummy;
-	[NDORelation(typeof(CmpBi1nOwnpabsOthpabsTblAutoLeftBase))]
-	IList relField = new ArrayList();
+	[NDORelation()]
+	List<CmpBi1nOwnpabsOthpabsTblAutoLeftBase> relField = new List<CmpBi1nOwnpabsOthpabsTblAutoLeftBase>();
 
 	public int Dummy
 	{
 		get { return dummy; }
 		set { dummy = value; }
 	}
-	public IList RelField
+	public List<CmpBi1nOwnpabsOthpabsTblAutoLeftBase> RelField
 	{
 		get { return relField; }
 		set { relField = value; }
@@ -10011,15 +10011,15 @@ public class CmpBi1nOwnpabsOthpabsTblAutoRightDerived : CmpBi1nOwnpabsOthpabsTbl
 public abstract class CmpBinnOwnpabsOthpabsTblAutoLeftBase
 {
 	int dummy;
-	[NDORelation(typeof(CmpBinnOwnpabsOthpabsTblAutoRightBase), RelationInfo.Composite)]
-	IList relField = new ArrayList();
+	[NDORelation(RelationInfo.Composite)]
+	List<CmpBinnOwnpabsOthpabsTblAutoRightBase> relField = new List<CmpBinnOwnpabsOthpabsTblAutoRightBase>();
 
 	public int Dummy
 	{
 		get { return dummy; }
 		set { dummy = value; }
 	}
-	public IList RelField
+	public List<CmpBinnOwnpabsOthpabsTblAutoRightBase> RelField
 	{
 		get { return relField; }
 		set { relField = value; }
@@ -10045,15 +10045,15 @@ public class CmpBinnOwnpabsOthpabsTblAutoLeftDerived : CmpBinnOwnpabsOthpabsTblA
 public abstract class CmpBinnOwnpabsOthpabsTblAutoRightBase
 {
 	int dummy;
-	[NDORelation(typeof(CmpBinnOwnpabsOthpabsTblAutoLeftBase))]
-	IList relField = new ArrayList();
+	[NDORelation()]
+	List<CmpBinnOwnpabsOthpabsTblAutoLeftBase> relField = new List<CmpBinnOwnpabsOthpabsTblAutoLeftBase>();
 
 	public int Dummy
 	{
 		get { return dummy; }
 		set { dummy = value; }
 	}
-	public IList RelField
+	public List<CmpBinnOwnpabsOthpabsTblAutoLeftBase> RelField
 	{
 		get { return relField; }
 		set { relField = value; }
@@ -10255,15 +10255,15 @@ public class AgrBi11OwnpabsTblGuidRight
 public abstract class AgrDirnOwnpabsNoTblGuidLeftBase
 {
 	int dummy;
-	[NDORelation(typeof(AgrDirnOwnpabsNoTblGuidRight))]
-	IList relField = new ArrayList();
+	[NDORelation()]
+	List<AgrDirnOwnpabsNoTblGuidRight> relField = new List<AgrDirnOwnpabsNoTblGuidRight>();
 
 	public int Dummy
 	{
 		get { return dummy; }
 		set { dummy = value; }
 	}
-	public IList RelField
+	public List<AgrDirnOwnpabsNoTblGuidRight> RelField
 	{
 		get { return relField; }
 		set { relField = value; }
@@ -10301,15 +10301,15 @@ public class AgrDirnOwnpabsNoTblGuidRight
 public abstract class AgrDirnOwnpabsTblGuidLeftBase
 {
 	int dummy;
-	[NDORelation(typeof(AgrDirnOwnpabsTblGuidRight)), MappingTable]
-	IList relField = new ArrayList();
+	[NDORelation(), MappingTable]
+	List<AgrDirnOwnpabsTblGuidRight> relField = new List<AgrDirnOwnpabsTblGuidRight>();
 
 	public int Dummy
 	{
 		get { return dummy; }
 		set { dummy = value; }
 	}
-	public IList RelField
+	public List<AgrDirnOwnpabsTblGuidRight> RelField
 	{
 		get { return relField; }
 		set { relField = value; }
@@ -10347,15 +10347,15 @@ public class AgrDirnOwnpabsTblGuidRight
 public abstract class AgrBin1OwnpabsNoTblGuidLeftBase
 {
 	int dummy;
-	[NDORelation(typeof(AgrBin1OwnpabsNoTblGuidRight))]
-	IList relField = new ArrayList();
+	[NDORelation()]
+	List<AgrBin1OwnpabsNoTblGuidRight> relField = new List<AgrBin1OwnpabsNoTblGuidRight>();
 
 	public int Dummy
 	{
 		get { return dummy; }
 		set { dummy = value; }
 	}
-	public IList RelField
+	public List<AgrBin1OwnpabsNoTblGuidRight> RelField
 	{
 		get { return relField; }
 		set { relField = value; }
@@ -10401,15 +10401,15 @@ public class AgrBin1OwnpabsNoTblGuidRight
 public abstract class AgrBin1OwnpabsTblGuidLeftBase
 {
 	int dummy;
-	[NDORelation(typeof(AgrBin1OwnpabsTblGuidRight)), MappingTable]
-	IList relField = new ArrayList();
+	[NDORelation(), MappingTable]
+	List<AgrBin1OwnpabsTblGuidRight> relField = new List<AgrBin1OwnpabsTblGuidRight>();
 
 	public int Dummy
 	{
 		get { return dummy; }
 		set { dummy = value; }
 	}
-	public IList RelField
+	public List<AgrBin1OwnpabsTblGuidRight> RelField
 	{
 		get { return relField; }
 		set { relField = value; }
@@ -10485,15 +10485,15 @@ public class AgrBi1nOwnpabsTblGuidLeftDerived : AgrBi1nOwnpabsTblGuidLeftBase
 public class AgrBi1nOwnpabsTblGuidRight
 {
 	int dummy;
-	[NDORelation(typeof(AgrBi1nOwnpabsTblGuidLeftBase))]
-	IList relField = new ArrayList();
+	[NDORelation()]
+	List<AgrBi1nOwnpabsTblGuidLeftBase> relField = new List<AgrBi1nOwnpabsTblGuidLeftBase>();
 
 	public int Dummy
 	{
 		get { return dummy; }
 		set { dummy = value; }
 	}
-	public IList RelField
+	public List<AgrBi1nOwnpabsTblGuidLeftBase> RelField
 	{
 		get { return relField; }
 		set { relField = value; }
@@ -10505,15 +10505,15 @@ public class AgrBi1nOwnpabsTblGuidRight
 public abstract class AgrBinnOwnpabsTblGuidLeftBase
 {
 	int dummy;
-	[NDORelation(typeof(AgrBinnOwnpabsTblGuidRight))]
-	IList relField = new ArrayList();
+	[NDORelation()]
+	List<AgrBinnOwnpabsTblGuidRight> relField = new List<AgrBinnOwnpabsTblGuidRight>();
 
 	public int Dummy
 	{
 		get { return dummy; }
 		set { dummy = value; }
 	}
-	public IList RelField
+	public List<AgrBinnOwnpabsTblGuidRight> RelField
 	{
 		get { return relField; }
 		set { relField = value; }
@@ -10539,15 +10539,15 @@ public class AgrBinnOwnpabsTblGuidLeftDerived : AgrBinnOwnpabsTblGuidLeftBase
 public class AgrBinnOwnpabsTblGuidRight
 {
 	int dummy;
-	[NDORelation(typeof(AgrBinnOwnpabsTblGuidLeftBase))]
-	IList relField = new ArrayList();
+	[NDORelation()]
+	List<AgrBinnOwnpabsTblGuidLeftBase> relField = new List<AgrBinnOwnpabsTblGuidLeftBase>();
 
 	public int Dummy
 	{
 		get { return dummy; }
 		set { dummy = value; }
 	}
-	public IList RelField
+	public List<AgrBinnOwnpabsTblGuidLeftBase> RelField
 	{
 		get { return relField; }
 		set { relField = value; }
@@ -10743,15 +10743,15 @@ public class CmpBi11OwnpabsTblGuidRight
 public abstract class CmpDirnOwnpabsNoTblGuidLeftBase
 {
 	int dummy;
-	[NDORelation(typeof(CmpDirnOwnpabsNoTblGuidRight), RelationInfo.Composite)]
-	IList relField = new ArrayList();
+	[NDORelation(RelationInfo.Composite)]
+	List<CmpDirnOwnpabsNoTblGuidRight> relField = new List<CmpDirnOwnpabsNoTblGuidRight>();
 
 	public int Dummy
 	{
 		get { return dummy; }
 		set { dummy = value; }
 	}
-	public IList RelField
+	public List<CmpDirnOwnpabsNoTblGuidRight> RelField
 	{
 		get { return relField; }
 		set { relField = value; }
@@ -10789,15 +10789,15 @@ public class CmpDirnOwnpabsNoTblGuidRight
 public abstract class CmpDirnOwnpabsTblGuidLeftBase
 {
 	int dummy;
-	[NDORelation(typeof(CmpDirnOwnpabsTblGuidRight), RelationInfo.Composite), MappingTable]
-	IList relField = new ArrayList();
+	[NDORelation(RelationInfo.Composite), MappingTable]
+	List<CmpDirnOwnpabsTblGuidRight> relField = new List<CmpDirnOwnpabsTblGuidRight>();
 
 	public int Dummy
 	{
 		get { return dummy; }
 		set { dummy = value; }
 	}
-	public IList RelField
+	public List<CmpDirnOwnpabsTblGuidRight> RelField
 	{
 		get { return relField; }
 		set { relField = value; }
@@ -10835,15 +10835,15 @@ public class CmpDirnOwnpabsTblGuidRight
 public abstract class CmpBin1OwnpabsNoTblGuidLeftBase
 {
 	int dummy;
-	[NDORelation(typeof(CmpBin1OwnpabsNoTblGuidRight), RelationInfo.Composite)]
-	IList relField = new ArrayList();
+	[NDORelation(RelationInfo.Composite)]
+	List<CmpBin1OwnpabsNoTblGuidRight> relField = new List<CmpBin1OwnpabsNoTblGuidRight>();
 
 	public int Dummy
 	{
 		get { return dummy; }
 		set { dummy = value; }
 	}
-	public IList RelField
+	public List<CmpBin1OwnpabsNoTblGuidRight> RelField
 	{
 		get { return relField; }
 		set { relField = value; }
@@ -10889,15 +10889,15 @@ public class CmpBin1OwnpabsNoTblGuidRight
 public abstract class CmpBin1OwnpabsTblGuidLeftBase
 {
 	int dummy;
-	[NDORelation(typeof(CmpBin1OwnpabsTblGuidRight), RelationInfo.Composite), MappingTable]
-	IList relField = new ArrayList();
+	[NDORelation(RelationInfo.Composite), MappingTable]
+	List<CmpBin1OwnpabsTblGuidRight> relField = new List<CmpBin1OwnpabsTblGuidRight>();
 
 	public int Dummy
 	{
 		get { return dummy; }
 		set { dummy = value; }
 	}
-	public IList RelField
+	public List<CmpBin1OwnpabsTblGuidRight> RelField
 	{
 		get { return relField; }
 		set { relField = value; }
@@ -10973,15 +10973,15 @@ public class CmpBi1nOwnpabsTblGuidLeftDerived : CmpBi1nOwnpabsTblGuidLeftBase
 public class CmpBi1nOwnpabsTblGuidRight
 {
 	int dummy;
-	[NDORelation(typeof(CmpBi1nOwnpabsTblGuidLeftBase))]
-	IList relField = new ArrayList();
+	[NDORelation()]
+	List<CmpBi1nOwnpabsTblGuidLeftBase> relField = new List<CmpBi1nOwnpabsTblGuidLeftBase>();
 
 	public int Dummy
 	{
 		get { return dummy; }
 		set { dummy = value; }
 	}
-	public IList RelField
+	public List<CmpBi1nOwnpabsTblGuidLeftBase> RelField
 	{
 		get { return relField; }
 		set { relField = value; }
@@ -10993,15 +10993,15 @@ public class CmpBi1nOwnpabsTblGuidRight
 public abstract class CmpBinnOwnpabsTblGuidLeftBase
 {
 	int dummy;
-	[NDORelation(typeof(CmpBinnOwnpabsTblGuidRight), RelationInfo.Composite)]
-	IList relField = new ArrayList();
+	[NDORelation(RelationInfo.Composite)]
+	List<CmpBinnOwnpabsTblGuidRight> relField = new List<CmpBinnOwnpabsTblGuidRight>();
 
 	public int Dummy
 	{
 		get { return dummy; }
 		set { dummy = value; }
 	}
-	public IList RelField
+	public List<CmpBinnOwnpabsTblGuidRight> RelField
 	{
 		get { return relField; }
 		set { relField = value; }
@@ -11027,15 +11027,15 @@ public class CmpBinnOwnpabsTblGuidLeftDerived : CmpBinnOwnpabsTblGuidLeftBase
 public class CmpBinnOwnpabsTblGuidRight
 {
 	int dummy;
-	[NDORelation(typeof(CmpBinnOwnpabsTblGuidLeftBase))]
-	IList relField = new ArrayList();
+	[NDORelation()]
+	List<CmpBinnOwnpabsTblGuidLeftBase> relField = new List<CmpBinnOwnpabsTblGuidLeftBase>();
 
 	public int Dummy
 	{
 		get { return dummy; }
 		set { dummy = value; }
 	}
-	public IList RelField
+	public List<CmpBinnOwnpabsTblGuidLeftBase> RelField
 	{
 		get { return relField; }
 		set { relField = value; }
@@ -11231,15 +11231,15 @@ public class AgrBi11OthpabsTblGuidRightDerived : AgrBi11OthpabsTblGuidRightBase
 public class AgrDirnOthpabsTblGuidLeft
 {
 	int dummy;
-	[NDORelation(typeof(AgrDirnOthpabsTblGuidRightBase))]
-	IList relField = new ArrayList();
+	[NDORelation()]
+	List<AgrDirnOthpabsTblGuidRightBase> relField = new List<AgrDirnOthpabsTblGuidRightBase>();
 
 	public int Dummy
 	{
 		get { return dummy; }
 		set { dummy = value; }
 	}
-	public IList RelField
+	public List<AgrDirnOthpabsTblGuidRightBase> RelField
 	{
 		get { return relField; }
 		set { relField = value; }
@@ -11277,15 +11277,15 @@ public class AgrDirnOthpabsTblGuidRightDerived : AgrDirnOthpabsTblGuidRightBase
 public class AgrBin1OthpabsTblGuidLeft
 {
 	int dummy;
-	[NDORelation(typeof(AgrBin1OthpabsTblGuidRightBase))]
-	IList relField = new ArrayList();
+	[NDORelation()]
+	List<AgrBin1OthpabsTblGuidRightBase> relField = new List<AgrBin1OthpabsTblGuidRightBase>();
 
 	public int Dummy
 	{
 		get { return dummy; }
 		set { dummy = value; }
 	}
-	public IList RelField
+	public List<AgrBin1OthpabsTblGuidRightBase> RelField
 	{
 		get { return relField; }
 		set { relField = value; }
@@ -11355,15 +11355,15 @@ public class AgrBi1nOthpabsNoTblGuidLeft
 public abstract class AgrBi1nOthpabsNoTblGuidRightBase
 {
 	int dummy;
-	[NDORelation(typeof(AgrBi1nOthpabsNoTblGuidLeft))]
-	IList relField = new ArrayList();
+	[NDORelation()]
+	List<AgrBi1nOthpabsNoTblGuidLeft> relField = new List<AgrBi1nOthpabsNoTblGuidLeft>();
 
 	public int Dummy
 	{
 		get { return dummy; }
 		set { dummy = value; }
 	}
-	public IList RelField
+	public List<AgrBi1nOthpabsNoTblGuidLeft> RelField
 	{
 		get { return relField; }
 		set { relField = value; }
@@ -11405,15 +11405,15 @@ public class AgrBi1nOthpabsTblGuidLeft
 public abstract class AgrBi1nOthpabsTblGuidRightBase
 {
 	int dummy;
-	[NDORelation(typeof(AgrBi1nOthpabsTblGuidLeft)), MappingTable]
-	IList relField = new ArrayList();
+	[NDORelation(), MappingTable]
+	List<AgrBi1nOthpabsTblGuidLeft> relField = new List<AgrBi1nOthpabsTblGuidLeft>();
 
 	public int Dummy
 	{
 		get { return dummy; }
 		set { dummy = value; }
 	}
-	public IList RelField
+	public List<AgrBi1nOthpabsTblGuidLeft> RelField
 	{
 		get { return relField; }
 		set { relField = value; }
@@ -11431,15 +11431,15 @@ public class AgrBi1nOthpabsTblGuidRightDerived : AgrBi1nOthpabsTblGuidRightBase
 public class AgrBinnOthpabsTblGuidLeft
 {
 	int dummy;
-	[NDORelation(typeof(AgrBinnOthpabsTblGuidRightBase))]
-	IList relField = new ArrayList();
+	[NDORelation()]
+	List<AgrBinnOthpabsTblGuidRightBase> relField = new List<AgrBinnOthpabsTblGuidRightBase>();
 
 	public int Dummy
 	{
 		get { return dummy; }
 		set { dummy = value; }
 	}
-	public IList RelField
+	public List<AgrBinnOthpabsTblGuidRightBase> RelField
 	{
 		get { return relField; }
 		set { relField = value; }
@@ -11459,15 +11459,15 @@ public class AgrBinnOthpabsTblGuidLeft
 public abstract class AgrBinnOthpabsTblGuidRightBase
 {
 	int dummy;
-	[NDORelation(typeof(AgrBinnOthpabsTblGuidLeft))]
-	IList relField = new ArrayList();
+	[NDORelation()]
+	List<AgrBinnOthpabsTblGuidLeft> relField = new List<AgrBinnOthpabsTblGuidLeft>();
 
 	public int Dummy
 	{
 		get { return dummy; }
 		set { dummy = value; }
 	}
-	public IList RelField
+	public List<AgrBinnOthpabsTblGuidLeft> RelField
 	{
 		get { return relField; }
 		set { relField = value; }
@@ -11669,15 +11669,15 @@ public class CmpBi11OthpabsTblGuidRightDerived : CmpBi11OthpabsTblGuidRightBase
 public class CmpDirnOthpabsTblGuidLeft
 {
 	int dummy;
-	[NDORelation(typeof(CmpDirnOthpabsTblGuidRightBase), RelationInfo.Composite)]
-	IList relField = new ArrayList();
+	[NDORelation(RelationInfo.Composite)]
+	List<CmpDirnOthpabsTblGuidRightBase> relField = new List<CmpDirnOthpabsTblGuidRightBase>();
 
 	public int Dummy
 	{
 		get { return dummy; }
 		set { dummy = value; }
 	}
-	public IList RelField
+	public List<CmpDirnOthpabsTblGuidRightBase> RelField
 	{
 		get { return relField; }
 		set { relField = value; }
@@ -11715,15 +11715,15 @@ public class CmpDirnOthpabsTblGuidRightDerived : CmpDirnOthpabsTblGuidRightBase
 public class CmpBin1OthpabsTblGuidLeft
 {
 	int dummy;
-	[NDORelation(typeof(CmpBin1OthpabsTblGuidRightBase), RelationInfo.Composite)]
-	IList relField = new ArrayList();
+	[NDORelation(RelationInfo.Composite)]
+	List<CmpBin1OthpabsTblGuidRightBase> relField = new List<CmpBin1OthpabsTblGuidRightBase>();
 
 	public int Dummy
 	{
 		get { return dummy; }
 		set { dummy = value; }
 	}
-	public IList RelField
+	public List<CmpBin1OthpabsTblGuidRightBase> RelField
 	{
 		get { return relField; }
 		set { relField = value; }
@@ -11793,15 +11793,15 @@ public class CmpBi1nOthpabsNoTblGuidLeft
 public abstract class CmpBi1nOthpabsNoTblGuidRightBase
 {
 	int dummy;
-	[NDORelation(typeof(CmpBi1nOthpabsNoTblGuidLeft))]
-	IList relField = new ArrayList();
+	[NDORelation()]
+	List<CmpBi1nOthpabsNoTblGuidLeft> relField = new List<CmpBi1nOthpabsNoTblGuidLeft>();
 
 	public int Dummy
 	{
 		get { return dummy; }
 		set { dummy = value; }
 	}
-	public IList RelField
+	public List<CmpBi1nOthpabsNoTblGuidLeft> RelField
 	{
 		get { return relField; }
 		set { relField = value; }
@@ -11843,15 +11843,15 @@ public class CmpBi1nOthpabsTblGuidLeft
 public abstract class CmpBi1nOthpabsTblGuidRightBase
 {
 	int dummy;
-	[NDORelation(typeof(CmpBi1nOthpabsTblGuidLeft)), MappingTable]
-	IList relField = new ArrayList();
+	[NDORelation(), MappingTable]
+	List<CmpBi1nOthpabsTblGuidLeft> relField = new List<CmpBi1nOthpabsTblGuidLeft>();
 
 	public int Dummy
 	{
 		get { return dummy; }
 		set { dummy = value; }
 	}
-	public IList RelField
+	public List<CmpBi1nOthpabsTblGuidLeft> RelField
 	{
 		get { return relField; }
 		set { relField = value; }
@@ -11869,15 +11869,15 @@ public class CmpBi1nOthpabsTblGuidRightDerived : CmpBi1nOthpabsTblGuidRightBase
 public class CmpBinnOthpabsTblGuidLeft
 {
 	int dummy;
-	[NDORelation(typeof(CmpBinnOthpabsTblGuidRightBase), RelationInfo.Composite)]
-	IList relField = new ArrayList();
+	[NDORelation(RelationInfo.Composite)]
+	List<CmpBinnOthpabsTblGuidRightBase> relField = new List<CmpBinnOthpabsTblGuidRightBase>();
 
 	public int Dummy
 	{
 		get { return dummy; }
 		set { dummy = value; }
 	}
-	public IList RelField
+	public List<CmpBinnOthpabsTblGuidRightBase> RelField
 	{
 		get { return relField; }
 		set { relField = value; }
@@ -11897,15 +11897,15 @@ public class CmpBinnOthpabsTblGuidLeft
 public abstract class CmpBinnOthpabsTblGuidRightBase
 {
 	int dummy;
-	[NDORelation(typeof(CmpBinnOthpabsTblGuidLeft))]
-	IList relField = new ArrayList();
+	[NDORelation()]
+	List<CmpBinnOthpabsTblGuidLeft> relField = new List<CmpBinnOthpabsTblGuidLeft>();
 
 	public int Dummy
 	{
 		get { return dummy; }
 		set { dummy = value; }
 	}
-	public IList RelField
+	public List<CmpBinnOthpabsTblGuidLeft> RelField
 	{
 		get { return relField; }
 		set { relField = value; }
@@ -12131,15 +12131,15 @@ public class AgrBi11OwnpabsOthpabsTblGuidRightDerived : AgrBi11OwnpabsOthpabsTbl
 public abstract class AgrDirnOwnpabsOthpabsTblGuidLeftBase
 {
 	int dummy;
-	[NDORelation(typeof(AgrDirnOwnpabsOthpabsTblGuidRightBase))]
-	IList relField = new ArrayList();
+	[NDORelation()]
+	List<AgrDirnOwnpabsOthpabsTblGuidRightBase> relField = new List<AgrDirnOwnpabsOthpabsTblGuidRightBase>();
 
 	public int Dummy
 	{
 		get { return dummy; }
 		set { dummy = value; }
 	}
-	public IList RelField
+	public List<AgrDirnOwnpabsOthpabsTblGuidRightBase> RelField
 	{
 		get { return relField; }
 		set { relField = value; }
@@ -12183,15 +12183,15 @@ public class AgrDirnOwnpabsOthpabsTblGuidRightDerived : AgrDirnOwnpabsOthpabsTbl
 public abstract class AgrBin1OwnpabsOthpabsTblGuidLeftBase
 {
 	int dummy;
-	[NDORelation(typeof(AgrBin1OwnpabsOthpabsTblGuidRightBase))]
-	IList relField = new ArrayList();
+	[NDORelation()]
+	List<AgrBin1OwnpabsOthpabsTblGuidRightBase> relField = new List<AgrBin1OwnpabsOthpabsTblGuidRightBase>();
 
 	public int Dummy
 	{
 		get { return dummy; }
 		set { dummy = value; }
 	}
-	public IList RelField
+	public List<AgrBin1OwnpabsOthpabsTblGuidRightBase> RelField
 	{
 		get { return relField; }
 		set { relField = value; }
@@ -12273,15 +12273,15 @@ public class AgrBi1nOwnpabsOthpabsTblGuidLeftDerived : AgrBi1nOwnpabsOthpabsTblG
 public abstract class AgrBi1nOwnpabsOthpabsTblGuidRightBase
 {
 	int dummy;
-	[NDORelation(typeof(AgrBi1nOwnpabsOthpabsTblGuidLeftBase))]
-	IList relField = new ArrayList();
+	[NDORelation()]
+	List<AgrBi1nOwnpabsOthpabsTblGuidLeftBase> relField = new List<AgrBi1nOwnpabsOthpabsTblGuidLeftBase>();
 
 	public int Dummy
 	{
 		get { return dummy; }
 		set { dummy = value; }
 	}
-	public IList RelField
+	public List<AgrBi1nOwnpabsOthpabsTblGuidLeftBase> RelField
 	{
 		get { return relField; }
 		set { relField = value; }
@@ -12299,15 +12299,15 @@ public class AgrBi1nOwnpabsOthpabsTblGuidRightDerived : AgrBi1nOwnpabsOthpabsTbl
 public abstract class AgrBinnOwnpabsOthpabsTblGuidLeftBase
 {
 	int dummy;
-	[NDORelation(typeof(AgrBinnOwnpabsOthpabsTblGuidRightBase))]
-	IList relField = new ArrayList();
+	[NDORelation()]
+	List<AgrBinnOwnpabsOthpabsTblGuidRightBase> relField = new List<AgrBinnOwnpabsOthpabsTblGuidRightBase>();
 
 	public int Dummy
 	{
 		get { return dummy; }
 		set { dummy = value; }
 	}
-	public IList RelField
+	public List<AgrBinnOwnpabsOthpabsTblGuidRightBase> RelField
 	{
 		get { return relField; }
 		set { relField = value; }
@@ -12333,15 +12333,15 @@ public class AgrBinnOwnpabsOthpabsTblGuidLeftDerived : AgrBinnOwnpabsOthpabsTblG
 public abstract class AgrBinnOwnpabsOthpabsTblGuidRightBase
 {
 	int dummy;
-	[NDORelation(typeof(AgrBinnOwnpabsOthpabsTblGuidLeftBase))]
-	IList relField = new ArrayList();
+	[NDORelation()]
+	List<AgrBinnOwnpabsOthpabsTblGuidLeftBase> relField = new List<AgrBinnOwnpabsOthpabsTblGuidLeftBase>();
 
 	public int Dummy
 	{
 		get { return dummy; }
 		set { dummy = value; }
 	}
-	public IList RelField
+	public List<AgrBinnOwnpabsOthpabsTblGuidLeftBase> RelField
 	{
 		get { return relField; }
 		set { relField = value; }
@@ -12567,15 +12567,15 @@ public class CmpBi11OwnpabsOthpabsTblGuidRightDerived : CmpBi11OwnpabsOthpabsTbl
 public abstract class CmpDirnOwnpabsOthpabsTblGuidLeftBase
 {
 	int dummy;
-	[NDORelation(typeof(CmpDirnOwnpabsOthpabsTblGuidRightBase), RelationInfo.Composite)]
-	IList relField = new ArrayList();
+	[NDORelation(RelationInfo.Composite)]
+	List<CmpDirnOwnpabsOthpabsTblGuidRightBase> relField = new List<CmpDirnOwnpabsOthpabsTblGuidRightBase>();
 
 	public int Dummy
 	{
 		get { return dummy; }
 		set { dummy = value; }
 	}
-	public IList RelField
+	public List<CmpDirnOwnpabsOthpabsTblGuidRightBase> RelField
 	{
 		get { return relField; }
 		set { relField = value; }
@@ -12619,15 +12619,15 @@ public class CmpDirnOwnpabsOthpabsTblGuidRightDerived : CmpDirnOwnpabsOthpabsTbl
 public abstract class CmpBin1OwnpabsOthpabsTblGuidLeftBase
 {
 	int dummy;
-	[NDORelation(typeof(CmpBin1OwnpabsOthpabsTblGuidRightBase), RelationInfo.Composite)]
-	IList relField = new ArrayList();
+	[NDORelation(RelationInfo.Composite)]
+	List<CmpBin1OwnpabsOthpabsTblGuidRightBase> relField = new List<CmpBin1OwnpabsOthpabsTblGuidRightBase>();
 
 	public int Dummy
 	{
 		get { return dummy; }
 		set { dummy = value; }
 	}
-	public IList RelField
+	public List<CmpBin1OwnpabsOthpabsTblGuidRightBase> RelField
 	{
 		get { return relField; }
 		set { relField = value; }
@@ -12709,15 +12709,15 @@ public class CmpBi1nOwnpabsOthpabsTblGuidLeftDerived : CmpBi1nOwnpabsOthpabsTblG
 public abstract class CmpBi1nOwnpabsOthpabsTblGuidRightBase
 {
 	int dummy;
-	[NDORelation(typeof(CmpBi1nOwnpabsOthpabsTblGuidLeftBase))]
-	IList relField = new ArrayList();
+	[NDORelation()]
+	List<CmpBi1nOwnpabsOthpabsTblGuidLeftBase> relField = new List<CmpBi1nOwnpabsOthpabsTblGuidLeftBase>();
 
 	public int Dummy
 	{
 		get { return dummy; }
 		set { dummy = value; }
 	}
-	public IList RelField
+	public List<CmpBi1nOwnpabsOthpabsTblGuidLeftBase> RelField
 	{
 		get { return relField; }
 		set { relField = value; }
@@ -12735,15 +12735,15 @@ public class CmpBi1nOwnpabsOthpabsTblGuidRightDerived : CmpBi1nOwnpabsOthpabsTbl
 public abstract class CmpBinnOwnpabsOthpabsTblGuidLeftBase
 {
 	int dummy;
-	[NDORelation(typeof(CmpBinnOwnpabsOthpabsTblGuidRightBase), RelationInfo.Composite)]
-	IList relField = new ArrayList();
+	[NDORelation(RelationInfo.Composite)]
+	List<CmpBinnOwnpabsOthpabsTblGuidRightBase> relField = new List<CmpBinnOwnpabsOthpabsTblGuidRightBase>();
 
 	public int Dummy
 	{
 		get { return dummy; }
 		set { dummy = value; }
 	}
-	public IList RelField
+	public List<CmpBinnOwnpabsOthpabsTblGuidRightBase> RelField
 	{
 		get { return relField; }
 		set { relField = value; }
@@ -12769,15 +12769,15 @@ public class CmpBinnOwnpabsOthpabsTblGuidLeftDerived : CmpBinnOwnpabsOthpabsTblG
 public abstract class CmpBinnOwnpabsOthpabsTblGuidRightBase
 {
 	int dummy;
-	[NDORelation(typeof(CmpBinnOwnpabsOthpabsTblGuidLeftBase))]
-	IList relField = new ArrayList();
+	[NDORelation()]
+	List<CmpBinnOwnpabsOthpabsTblGuidLeftBase> relField = new List<CmpBinnOwnpabsOthpabsTblGuidLeftBase>();
 
 	public int Dummy
 	{
 		get { return dummy; }
 		set { dummy = value; }
 	}
-	public IList RelField
+	public List<CmpBinnOwnpabsOthpabsTblGuidLeftBase> RelField
 	{
 		get { return relField; }
 		set { relField = value; }

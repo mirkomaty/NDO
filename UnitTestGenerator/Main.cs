@@ -32,6 +32,7 @@
 
 using System;
 using System.Collections;
+using System.Collections.Generic;
 
 namespace TestGenerator
 {
@@ -40,7 +41,7 @@ namespace TestGenerator
 		[STAThread]
 		static void Main(string[] args)
 		{
-			ArrayList relInfos = new ArrayList();
+			List<RelInfo> relInfos = new List<RelInfo>();
 			for (int i = 0; i < 128; i++)
 			{
                 //   isBi             !IsBi           !ForeignIsList
@@ -57,7 +58,7 @@ namespace TestGenerator
 
 				}
 			}
-			ArrayList newInfos = new ArrayList();
+			List<RelInfo> newInfos = new List<RelInfo>();
 			for (int i = 0; i < relInfos.Count; i++)
 			{
 				RelInfo ri = (RelInfo) relInfos[i];

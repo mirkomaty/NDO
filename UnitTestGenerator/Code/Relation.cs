@@ -62,21 +62,14 @@ namespace TestGenerator
 			{
                 List<string> result = new List<string>();
 				StringBuilder sb = new StringBuilder();
-				string listLeft = "IList";
-				string listRight = "ArrayList";
+				string listLeft = "IEnumerable<" + relatedTypeName + ">";
+				string listRight = "List<"+ relatedTypeName + ">";
 
 				sb.Append("[NDORelation");
 				if (ri.IsList || ri.IsComposite)
 				{
 					bool needsComma = false;
 					sb.Append('(');
-					if (ri.IsList)
-					{
-						sb.Append("typeof(");
-						sb.Append(relatedTypeName);
-						sb.Append(')');
-						needsComma = true;
-					}
 					if (ri.IsComposite)
 					{
 						if (needsComma)
@@ -84,11 +77,12 @@ namespace TestGenerator
 						sb.Append("RelationInfo.Composite");
 						needsComma = true;
 					}
-					sb.Append(')');
-					
+					sb.Append(')');					
 				}
+
 				if (!this.ri.MustHaveTable && this.ri.HasTable)
 					sb.Append( ", MappingTable" );
+
 				sb.Append("]");
 				
 				result.Add(sb.ToString());
@@ -96,15 +90,17 @@ namespace TestGenerator
 
 				if (ri.IsList)
 				{
-					sb.Append(listLeft);
-					sb.Append(' ');
+					sb.Append( listRight );
+					sb.Append( ' ' );
 				}
 				else
 				{
-					sb.Append(relatedTypeName);
-					sb.Append(' ');
+					sb.Append( relatedTypeName );
+					sb.Append( ' ' );
 				}
+
 				sb.Append(Relation.StandardFieldName);
+
 				if (ri.IsList)
 				{
 					sb.Append(" = new ");

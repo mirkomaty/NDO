@@ -38,7 +38,7 @@ using System.Collections.Generic;
 namespace CodeGenerator
 {
 	/// <summary>
-	/// Zusammenfassung f�r Class.
+	/// Renders classes.
 	/// </summary>
 	public class Class
 	{
@@ -62,13 +62,13 @@ namespace CodeGenerator
 		}
 
 
-		ArrayList properties = new ArrayList();
-		public ArrayList Properties
+		List<Property> properties = new List<Property>();
+		public List<Property> Properties
 		{
 			get { return properties; }
 		}
-		ArrayList functions = new ArrayList();
-		public ArrayList Functions
+		List<Function> functions = new List<Function>();
+		public List<Function> Functions
 		{
 			get { return functions; }
 		}
