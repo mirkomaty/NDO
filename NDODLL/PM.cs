@@ -2053,10 +2053,13 @@ namespace NDO
 				foreach(DataRow objRow in dt.Rows) 
 				{
 					Type relType;
-#if PRO
+
 					if (r.MappingTable.ChildForeignKeyTypeColumnName != null)						
 					{
-						relType = typeManager[(int)objRow[r.MappingTable.ChildForeignKeyTypeColumnName]];
+						object typeCodeObj = objRow[r.MappingTable.ChildForeignKeyTypeColumnName];
+						if (typeCodeObj is System.DBNull)
+							throw new NDOException( 75, String.Format( "Can't resolve subclass type code of type {0} in relation '{1}' - the type code in the data row is null.", r.ReferencedTypeName, r.ToString() ) );
+						relType = typeManager[(int)typeCodeObj];
 						if (relType == null)
 							throw new NDOException(75, String.Format("Can't resolve subclass type code {0} of type {1} - check, if your NDOTypes.xml exists.", objRow[r.MappingTable.ChildForeignKeyTypeColumnName], r.ReferencedTypeName));
 					}						
@@ -2064,10 +2067,8 @@ namespace NDO
 					{
 						relType = r.ReferencedType;
 					}
-#else
-					relType = r.ReferencedType;
-#endif
-                    //TODO: Generic Types: Exctract the type description from the type name column
+
+					//TODO: Generic Types: Exctract the type description from the type name column
                     if (relType.IsGenericTypeDefinition)
                         throw new NotImplementedException("NDO doesn't support relations to generic types via mapping tables.");
 					ObjectId id = ObjectIdFactory.NewObjectId(relType, GetClass(relType), objRow, r.MappingTable, this.typeManager);

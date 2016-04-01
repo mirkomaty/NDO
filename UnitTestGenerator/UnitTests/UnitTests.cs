@@ -46,19 +46,18 @@ public class TestAgrDir1NoTblAuto
 	public void TearDown()
 	{
 		pm.UnloadCache();
-		IList l;
-		l = pm.NewQuery(typeof(AgrDir1NoTblAutoLeft)).Execute();
+		var l = pm.Objects<AgrDir1NoTblAutoLeft>().ResultTable;
 		pm.Delete(l);
 		pm.Save();
 		pm.UnloadCache();
-		l = pm.NewQuery(typeof(AgrDir1NoTblAutoRight)).Execute();
-		pm.Delete(l);
+		var m = pm.Objects<AgrDir1NoTblAutoRight>().ResultTable;
+		pm.Delete(m);
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) pm.NewQuery(typeof(AgrDir1NoTblAutoLeft)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrDir1NoTblAutoLeft>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) pm.NewQuery(typeof(AgrDir1NoTblAutoRight)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrDir1NoTblAutoRight>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -137,13 +136,13 @@ public class TestAgrDir1NoTblAuto
 	}
 	void QueryOwn()
 	{
-		Query q = pm.NewQuery(typeof(AgrDir1NoTblAutoLeft));
-		ownVar = (AgrDir1NoTblAutoLeft) q.ExecuteSingle();
+		var q = new NDOQuery<AgrDir1NoTblAutoLeft>(pm);
+		ownVar = q.ExecuteSingle();
 	}
 	void QueryOther()
 	{
-		Query q = pm.NewQuery(typeof(AgrDir1NoTblAutoRight));
-		otherVar = (AgrDir1NoTblAutoRight) q.ExecuteSingle();
+		var q = new NDOQuery<AgrDir1NoTblAutoRight>(pm);
+		otherVar = q.ExecuteSingle();
 	}
 }
 
@@ -165,19 +164,18 @@ public class TestAgrDir1TblAuto
 	public void TearDown()
 	{
 		pm.UnloadCache();
-		IList l;
-		l = pm.NewQuery(typeof(AgrDir1TblAutoLeft)).Execute();
+		var l = pm.Objects<AgrDir1TblAutoLeft>().ResultTable;
 		pm.Delete(l);
 		pm.Save();
 		pm.UnloadCache();
-		l = pm.NewQuery(typeof(AgrDir1TblAutoRight)).Execute();
-		pm.Delete(l);
+		var m = pm.Objects<AgrDir1TblAutoRight>().ResultTable;
+		pm.Delete(m);
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) pm.NewQuery(typeof(AgrDir1TblAutoLeft)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrDir1TblAutoLeft>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) pm.NewQuery(typeof(AgrDir1TblAutoRight)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrDir1TblAutoRight>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -247,13 +245,13 @@ public class TestAgrDir1TblAuto
 	}
 	void QueryOwn()
 	{
-		Query q = pm.NewQuery(typeof(AgrDir1TblAutoLeft));
-		ownVar = (AgrDir1TblAutoLeft) q.ExecuteSingle();
+		var q = new NDOQuery<AgrDir1TblAutoLeft>(pm);
+		ownVar = q.ExecuteSingle();
 	}
 	void QueryOther()
 	{
-		Query q = pm.NewQuery(typeof(AgrDir1TblAutoRight));
-		otherVar = (AgrDir1TblAutoRight) q.ExecuteSingle();
+		var q = new NDOQuery<AgrDir1TblAutoRight>(pm);
+		otherVar = q.ExecuteSingle();
 	}
 }
 
@@ -275,19 +273,18 @@ public class TestAgrBi11NoTblAuto
 	public void TearDown()
 	{
 		pm.UnloadCache();
-		IList l;
-		l = pm.NewQuery(typeof(AgrBi11NoTblAutoLeft)).Execute();
+		var l = pm.Objects<AgrBi11NoTblAutoLeft>().ResultTable;
 		pm.Delete(l);
 		pm.Save();
 		pm.UnloadCache();
-		l = pm.NewQuery(typeof(AgrBi11NoTblAutoRight)).Execute();
-		pm.Delete(l);
+		var m = pm.Objects<AgrBi11NoTblAutoRight>().ResultTable;
+		pm.Delete(m);
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) pm.NewQuery(typeof(AgrBi11NoTblAutoLeft)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrBi11NoTblAutoLeft>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) pm.NewQuery(typeof(AgrBi11NoTblAutoRight)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrBi11NoTblAutoRight>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -398,13 +395,13 @@ public class TestAgrBi11NoTblAuto
 	}
 	void QueryOwn()
 	{
-		Query q = pm.NewQuery(typeof(AgrBi11NoTblAutoLeft));
-		ownVar = (AgrBi11NoTblAutoLeft) q.ExecuteSingle();
+		var q = new NDOQuery<AgrBi11NoTblAutoLeft>(pm);
+		ownVar = q.ExecuteSingle();
 	}
 	void QueryOther()
 	{
-		Query q = pm.NewQuery(typeof(AgrBi11NoTblAutoRight));
-		otherVar = (AgrBi11NoTblAutoRight) q.ExecuteSingle();
+		var q = new NDOQuery<AgrBi11NoTblAutoRight>(pm);
+		otherVar = q.ExecuteSingle();
 	}
 }
 
@@ -426,19 +423,18 @@ public class TestAgrBi11TblAuto
 	public void TearDown()
 	{
 		pm.UnloadCache();
-		IList l;
-		l = pm.NewQuery(typeof(AgrBi11TblAutoLeft)).Execute();
+		var l = pm.Objects<AgrBi11TblAutoLeft>().ResultTable;
 		pm.Delete(l);
 		pm.Save();
 		pm.UnloadCache();
-		l = pm.NewQuery(typeof(AgrBi11TblAutoRight)).Execute();
-		pm.Delete(l);
+		var m = pm.Objects<AgrBi11TblAutoRight>().ResultTable;
+		pm.Delete(m);
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) pm.NewQuery(typeof(AgrBi11TblAutoLeft)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrBi11TblAutoLeft>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) pm.NewQuery(typeof(AgrBi11TblAutoRight)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrBi11TblAutoRight>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -549,13 +545,13 @@ public class TestAgrBi11TblAuto
 	}
 	void QueryOwn()
 	{
-		Query q = pm.NewQuery(typeof(AgrBi11TblAutoLeft));
-		ownVar = (AgrBi11TblAutoLeft) q.ExecuteSingle();
+		var q = new NDOQuery<AgrBi11TblAutoLeft>(pm);
+		ownVar = q.ExecuteSingle();
 	}
 	void QueryOther()
 	{
-		Query q = pm.NewQuery(typeof(AgrBi11TblAutoRight));
-		otherVar = (AgrBi11TblAutoRight) q.ExecuteSingle();
+		var q = new NDOQuery<AgrBi11TblAutoRight>(pm);
+		otherVar = q.ExecuteSingle();
 	}
 }
 
@@ -577,19 +573,18 @@ public class TestAgrDirnNoTblAuto
 	public void TearDown()
 	{
 		pm.UnloadCache();
-		IList l;
-		l = pm.NewQuery(typeof(AgrDirnNoTblAutoLeft)).Execute();
+		var l = pm.Objects<AgrDirnNoTblAutoLeft>().ResultTable;
 		pm.Delete(l);
 		pm.Save();
 		pm.UnloadCache();
-		l = pm.NewQuery(typeof(AgrDirnNoTblAutoRight)).Execute();
-		pm.Delete(l);
+		var m = pm.Objects<AgrDirnNoTblAutoRight>().ResultTable;
+		pm.Delete(m);
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) pm.NewQuery(typeof(AgrDirnNoTblAutoLeft)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrDirnNoTblAutoLeft>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) pm.NewQuery(typeof(AgrDirnNoTblAutoRight)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrDirnNoTblAutoRight>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -647,13 +642,13 @@ public class TestAgrDirnNoTblAuto
 	}
 	void QueryOwn()
 	{
-		Query q = pm.NewQuery(typeof(AgrDirnNoTblAutoLeft));
-		ownVar = (AgrDirnNoTblAutoLeft) q.ExecuteSingle();
+		var q = new NDOQuery<AgrDirnNoTblAutoLeft>(pm);
+		ownVar = q.ExecuteSingle();
 	}
 	void QueryOther()
 	{
-		Query q = pm.NewQuery(typeof(AgrDirnNoTblAutoRight));
-		otherVar = (AgrDirnNoTblAutoRight) q.ExecuteSingle();
+		var q = new NDOQuery<AgrDirnNoTblAutoRight>(pm);
+		otherVar = q.ExecuteSingle();
 	}
 }
 
@@ -675,19 +670,18 @@ public class TestAgrDirnTblAuto
 	public void TearDown()
 	{
 		pm.UnloadCache();
-		IList l;
-		l = pm.NewQuery(typeof(AgrDirnTblAutoLeft)).Execute();
+		var l = pm.Objects<AgrDirnTblAutoLeft>().ResultTable;
 		pm.Delete(l);
 		pm.Save();
 		pm.UnloadCache();
-		l = pm.NewQuery(typeof(AgrDirnTblAutoRight)).Execute();
-		pm.Delete(l);
+		var m = pm.Objects<AgrDirnTblAutoRight>().ResultTable;
+		pm.Delete(m);
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) pm.NewQuery(typeof(AgrDirnTblAutoLeft)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrDirnTblAutoLeft>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) pm.NewQuery(typeof(AgrDirnTblAutoRight)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrDirnTblAutoRight>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -736,13 +730,13 @@ public class TestAgrDirnTblAuto
 	}
 	void QueryOwn()
 	{
-		Query q = pm.NewQuery(typeof(AgrDirnTblAutoLeft));
-		ownVar = (AgrDirnTblAutoLeft) q.ExecuteSingle();
+		var q = new NDOQuery<AgrDirnTblAutoLeft>(pm);
+		ownVar = q.ExecuteSingle();
 	}
 	void QueryOther()
 	{
-		Query q = pm.NewQuery(typeof(AgrDirnTblAutoRight));
-		otherVar = (AgrDirnTblAutoRight) q.ExecuteSingle();
+		var q = new NDOQuery<AgrDirnTblAutoRight>(pm);
+		otherVar = q.ExecuteSingle();
 	}
 }
 
@@ -764,19 +758,18 @@ public class TestAgrBin1NoTblAuto
 	public void TearDown()
 	{
 		pm.UnloadCache();
-		IList l;
-		l = pm.NewQuery(typeof(AgrBin1NoTblAutoLeft)).Execute();
+		var l = pm.Objects<AgrBin1NoTblAutoLeft>().ResultTable;
 		pm.Delete(l);
 		pm.Save();
 		pm.UnloadCache();
-		l = pm.NewQuery(typeof(AgrBin1NoTblAutoRight)).Execute();
-		pm.Delete(l);
+		var m = pm.Objects<AgrBin1NoTblAutoRight>().ResultTable;
+		pm.Delete(m);
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) pm.NewQuery(typeof(AgrBin1NoTblAutoLeft)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrBin1NoTblAutoLeft>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) pm.NewQuery(typeof(AgrBin1NoTblAutoRight)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrBin1NoTblAutoRight>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -875,13 +868,13 @@ public class TestAgrBin1NoTblAuto
 	}
 	void QueryOwn()
 	{
-		Query q = pm.NewQuery(typeof(AgrBin1NoTblAutoLeft));
-		ownVar = (AgrBin1NoTblAutoLeft) q.ExecuteSingle();
+		var q = new NDOQuery<AgrBin1NoTblAutoLeft>(pm);
+		ownVar = q.ExecuteSingle();
 	}
 	void QueryOther()
 	{
-		Query q = pm.NewQuery(typeof(AgrBin1NoTblAutoRight));
-		otherVar = (AgrBin1NoTblAutoRight) q.ExecuteSingle();
+		var q = new NDOQuery<AgrBin1NoTblAutoRight>(pm);
+		otherVar = q.ExecuteSingle();
 	}
 }
 
@@ -903,19 +896,18 @@ public class TestAgrBin1TblAuto
 	public void TearDown()
 	{
 		pm.UnloadCache();
-		IList l;
-		l = pm.NewQuery(typeof(AgrBin1TblAutoLeft)).Execute();
+		var l = pm.Objects<AgrBin1TblAutoLeft>().ResultTable;
 		pm.Delete(l);
 		pm.Save();
 		pm.UnloadCache();
-		l = pm.NewQuery(typeof(AgrBin1TblAutoRight)).Execute();
-		pm.Delete(l);
+		var m = pm.Objects<AgrBin1TblAutoRight>().ResultTable;
+		pm.Delete(m);
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) pm.NewQuery(typeof(AgrBin1TblAutoLeft)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrBin1TblAutoLeft>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) pm.NewQuery(typeof(AgrBin1TblAutoRight)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrBin1TblAutoRight>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -1005,13 +997,13 @@ public class TestAgrBin1TblAuto
 	}
 	void QueryOwn()
 	{
-		Query q = pm.NewQuery(typeof(AgrBin1TblAutoLeft));
-		ownVar = (AgrBin1TblAutoLeft) q.ExecuteSingle();
+		var q = new NDOQuery<AgrBin1TblAutoLeft>(pm);
+		ownVar = q.ExecuteSingle();
 	}
 	void QueryOther()
 	{
-		Query q = pm.NewQuery(typeof(AgrBin1TblAutoRight));
-		otherVar = (AgrBin1TblAutoRight) q.ExecuteSingle();
+		var q = new NDOQuery<AgrBin1TblAutoRight>(pm);
+		otherVar = q.ExecuteSingle();
 	}
 }
 
@@ -1033,19 +1025,18 @@ public class TestAgrBi1nNoTblAuto
 	public void TearDown()
 	{
 		pm.UnloadCache();
-		IList l;
-		l = pm.NewQuery(typeof(AgrBi1nNoTblAutoLeft)).Execute();
+		var l = pm.Objects<AgrBi1nNoTblAutoLeft>().ResultTable;
 		pm.Delete(l);
 		pm.Save();
 		pm.UnloadCache();
-		l = pm.NewQuery(typeof(AgrBi1nNoTblAutoRight)).Execute();
-		pm.Delete(l);
+		var m = pm.Objects<AgrBi1nNoTblAutoRight>().ResultTable;
+		pm.Delete(m);
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) pm.NewQuery(typeof(AgrBi1nNoTblAutoLeft)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrBi1nNoTblAutoLeft>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) pm.NewQuery(typeof(AgrBi1nNoTblAutoRight)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrBi1nNoTblAutoRight>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -1134,13 +1125,13 @@ public class TestAgrBi1nNoTblAuto
 	}
 	void QueryOwn()
 	{
-		Query q = pm.NewQuery(typeof(AgrBi1nNoTblAutoLeft));
-		ownVar = (AgrBi1nNoTblAutoLeft) q.ExecuteSingle();
+		var q = new NDOQuery<AgrBi1nNoTblAutoLeft>(pm);
+		ownVar = q.ExecuteSingle();
 	}
 	void QueryOther()
 	{
-		Query q = pm.NewQuery(typeof(AgrBi1nNoTblAutoRight));
-		otherVar = (AgrBi1nNoTblAutoRight) q.ExecuteSingle();
+		var q = new NDOQuery<AgrBi1nNoTblAutoRight>(pm);
+		otherVar = q.ExecuteSingle();
 	}
 }
 
@@ -1162,19 +1153,18 @@ public class TestAgrBi1nTblAuto
 	public void TearDown()
 	{
 		pm.UnloadCache();
-		IList l;
-		l = pm.NewQuery(typeof(AgrBi1nTblAutoLeft)).Execute();
+		var l = pm.Objects<AgrBi1nTblAutoLeft>().ResultTable;
 		pm.Delete(l);
 		pm.Save();
 		pm.UnloadCache();
-		l = pm.NewQuery(typeof(AgrBi1nTblAutoRight)).Execute();
-		pm.Delete(l);
+		var m = pm.Objects<AgrBi1nTblAutoRight>().ResultTable;
+		pm.Delete(m);
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) pm.NewQuery(typeof(AgrBi1nTblAutoLeft)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrBi1nTblAutoLeft>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) pm.NewQuery(typeof(AgrBi1nTblAutoRight)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrBi1nTblAutoRight>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -1254,13 +1244,13 @@ public class TestAgrBi1nTblAuto
 	}
 	void QueryOwn()
 	{
-		Query q = pm.NewQuery(typeof(AgrBi1nTblAutoLeft));
-		ownVar = (AgrBi1nTblAutoLeft) q.ExecuteSingle();
+		var q = new NDOQuery<AgrBi1nTblAutoLeft>(pm);
+		ownVar = q.ExecuteSingle();
 	}
 	void QueryOther()
 	{
-		Query q = pm.NewQuery(typeof(AgrBi1nTblAutoRight));
-		otherVar = (AgrBi1nTblAutoRight) q.ExecuteSingle();
+		var q = new NDOQuery<AgrBi1nTblAutoRight>(pm);
+		otherVar = q.ExecuteSingle();
 	}
 }
 
@@ -1282,19 +1272,18 @@ public class TestAgrBinnTblAuto
 	public void TearDown()
 	{
 		pm.UnloadCache();
-		IList l;
-		l = pm.NewQuery(typeof(AgrBinnTblAutoLeft)).Execute();
+		var l = pm.Objects<AgrBinnTblAutoLeft>().ResultTable;
 		pm.Delete(l);
 		pm.Save();
 		pm.UnloadCache();
-		l = pm.NewQuery(typeof(AgrBinnTblAutoRight)).Execute();
-		pm.Delete(l);
+		var m = pm.Objects<AgrBinnTblAutoRight>().ResultTable;
+		pm.Delete(m);
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) pm.NewQuery(typeof(AgrBinnTblAutoLeft)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrBinnTblAutoLeft>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) pm.NewQuery(typeof(AgrBinnTblAutoRight)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrBinnTblAutoRight>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -1353,13 +1342,13 @@ public class TestAgrBinnTblAuto
 	}
 	void QueryOwn()
 	{
-		Query q = pm.NewQuery(typeof(AgrBinnTblAutoLeft));
-		ownVar = (AgrBinnTblAutoLeft) q.ExecuteSingle();
+		var q = new NDOQuery<AgrBinnTblAutoLeft>(pm);
+		ownVar = q.ExecuteSingle();
 	}
 	void QueryOther()
 	{
-		Query q = pm.NewQuery(typeof(AgrBinnTblAutoRight));
-		otherVar = (AgrBinnTblAutoRight) q.ExecuteSingle();
+		var q = new NDOQuery<AgrBinnTblAutoRight>(pm);
+		otherVar = q.ExecuteSingle();
 	}
 }
 
@@ -1381,15 +1370,14 @@ public class TestCmpDir1NoTblAuto
 	public void TearDown()
 	{
 		pm.UnloadCache();
-		IList l;
-		l = pm.NewQuery(typeof(CmpDir1NoTblAutoLeft)).Execute();
+		var l = pm.Objects<CmpDir1NoTblAutoLeft>().ResultTable;
 		pm.Delete(l);
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) pm.NewQuery(typeof(CmpDir1NoTblAutoLeft)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpDir1NoTblAutoLeft>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) pm.NewQuery(typeof(CmpDir1NoTblAutoRight)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpDir1NoTblAutoRight>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -1467,13 +1455,13 @@ public class TestCmpDir1NoTblAuto
 	}
 	void QueryOwn()
 	{
-		Query q = pm.NewQuery(typeof(CmpDir1NoTblAutoLeft));
-		ownVar = (CmpDir1NoTblAutoLeft) q.ExecuteSingle();
+		var q = new NDOQuery<CmpDir1NoTblAutoLeft>(pm);
+		ownVar = q.ExecuteSingle();
 	}
 	void QueryOther()
 	{
-		Query q = pm.NewQuery(typeof(CmpDir1NoTblAutoRight));
-		otherVar = (CmpDir1NoTblAutoRight) q.ExecuteSingle();
+		var q = new NDOQuery<CmpDir1NoTblAutoRight>(pm);
+		otherVar = q.ExecuteSingle();
 	}
 }
 
@@ -1495,15 +1483,14 @@ public class TestCmpDir1TblAuto
 	public void TearDown()
 	{
 		pm.UnloadCache();
-		IList l;
-		l = pm.NewQuery(typeof(CmpDir1TblAutoLeft)).Execute();
+		var l = pm.Objects<CmpDir1TblAutoLeft>().ResultTable;
 		pm.Delete(l);
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) pm.NewQuery(typeof(CmpDir1TblAutoLeft)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpDir1TblAutoLeft>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) pm.NewQuery(typeof(CmpDir1TblAutoRight)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpDir1TblAutoRight>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -1572,13 +1559,13 @@ public class TestCmpDir1TblAuto
 	}
 	void QueryOwn()
 	{
-		Query q = pm.NewQuery(typeof(CmpDir1TblAutoLeft));
-		ownVar = (CmpDir1TblAutoLeft) q.ExecuteSingle();
+		var q = new NDOQuery<CmpDir1TblAutoLeft>(pm);
+		ownVar = q.ExecuteSingle();
 	}
 	void QueryOther()
 	{
-		Query q = pm.NewQuery(typeof(CmpDir1TblAutoRight));
-		otherVar = (CmpDir1TblAutoRight) q.ExecuteSingle();
+		var q = new NDOQuery<CmpDir1TblAutoRight>(pm);
+		otherVar = q.ExecuteSingle();
 	}
 }
 
@@ -1600,15 +1587,14 @@ public class TestCmpBi11NoTblAuto
 	public void TearDown()
 	{
 		pm.UnloadCache();
-		IList l;
-		l = pm.NewQuery(typeof(CmpBi11NoTblAutoLeft)).Execute();
+		var l = pm.Objects<CmpBi11NoTblAutoLeft>().ResultTable;
 		pm.Delete(l);
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) pm.NewQuery(typeof(CmpBi11NoTblAutoLeft)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpBi11NoTblAutoLeft>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) pm.NewQuery(typeof(CmpBi11NoTblAutoRight)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpBi11NoTblAutoRight>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -1718,13 +1704,13 @@ public class TestCmpBi11NoTblAuto
 	}
 	void QueryOwn()
 	{
-		Query q = pm.NewQuery(typeof(CmpBi11NoTblAutoLeft));
-		ownVar = (CmpBi11NoTblAutoLeft) q.ExecuteSingle();
+		var q = new NDOQuery<CmpBi11NoTblAutoLeft>(pm);
+		ownVar = q.ExecuteSingle();
 	}
 	void QueryOther()
 	{
-		Query q = pm.NewQuery(typeof(CmpBi11NoTblAutoRight));
-		otherVar = (CmpBi11NoTblAutoRight) q.ExecuteSingle();
+		var q = new NDOQuery<CmpBi11NoTblAutoRight>(pm);
+		otherVar = q.ExecuteSingle();
 	}
 }
 
@@ -1746,15 +1732,14 @@ public class TestCmpBi11TblAuto
 	public void TearDown()
 	{
 		pm.UnloadCache();
-		IList l;
-		l = pm.NewQuery(typeof(CmpBi11TblAutoLeft)).Execute();
+		var l = pm.Objects<CmpBi11TblAutoLeft>().ResultTable;
 		pm.Delete(l);
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) pm.NewQuery(typeof(CmpBi11TblAutoLeft)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpBi11TblAutoLeft>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) pm.NewQuery(typeof(CmpBi11TblAutoRight)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpBi11TblAutoRight>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -1864,13 +1849,13 @@ public class TestCmpBi11TblAuto
 	}
 	void QueryOwn()
 	{
-		Query q = pm.NewQuery(typeof(CmpBi11TblAutoLeft));
-		ownVar = (CmpBi11TblAutoLeft) q.ExecuteSingle();
+		var q = new NDOQuery<CmpBi11TblAutoLeft>(pm);
+		ownVar = q.ExecuteSingle();
 	}
 	void QueryOther()
 	{
-		Query q = pm.NewQuery(typeof(CmpBi11TblAutoRight));
-		otherVar = (CmpBi11TblAutoRight) q.ExecuteSingle();
+		var q = new NDOQuery<CmpBi11TblAutoRight>(pm);
+		otherVar = q.ExecuteSingle();
 	}
 }
 
@@ -1892,15 +1877,14 @@ public class TestCmpDirnNoTblAuto
 	public void TearDown()
 	{
 		pm.UnloadCache();
-		IList l;
-		l = pm.NewQuery(typeof(CmpDirnNoTblAutoLeft)).Execute();
+		var l = pm.Objects<CmpDirnNoTblAutoLeft>().ResultTable;
 		pm.Delete(l);
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) pm.NewQuery(typeof(CmpDirnNoTblAutoLeft)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpDirnNoTblAutoLeft>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) pm.NewQuery(typeof(CmpDirnNoTblAutoRight)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpDirnNoTblAutoRight>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -1957,13 +1941,13 @@ public class TestCmpDirnNoTblAuto
 	}
 	void QueryOwn()
 	{
-		Query q = pm.NewQuery(typeof(CmpDirnNoTblAutoLeft));
-		ownVar = (CmpDirnNoTblAutoLeft) q.ExecuteSingle();
+		var q = new NDOQuery<CmpDirnNoTblAutoLeft>(pm);
+		ownVar = q.ExecuteSingle();
 	}
 	void QueryOther()
 	{
-		Query q = pm.NewQuery(typeof(CmpDirnNoTblAutoRight));
-		otherVar = (CmpDirnNoTblAutoRight) q.ExecuteSingle();
+		var q = new NDOQuery<CmpDirnNoTblAutoRight>(pm);
+		otherVar = q.ExecuteSingle();
 	}
 }
 
@@ -1985,15 +1969,14 @@ public class TestCmpDirnTblAuto
 	public void TearDown()
 	{
 		pm.UnloadCache();
-		IList l;
-		l = pm.NewQuery(typeof(CmpDirnTblAutoLeft)).Execute();
+		var l = pm.Objects<CmpDirnTblAutoLeft>().ResultTable;
 		pm.Delete(l);
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) pm.NewQuery(typeof(CmpDirnTblAutoLeft)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpDirnTblAutoLeft>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) pm.NewQuery(typeof(CmpDirnTblAutoRight)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpDirnTblAutoRight>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -2041,13 +2024,13 @@ public class TestCmpDirnTblAuto
 	}
 	void QueryOwn()
 	{
-		Query q = pm.NewQuery(typeof(CmpDirnTblAutoLeft));
-		ownVar = (CmpDirnTblAutoLeft) q.ExecuteSingle();
+		var q = new NDOQuery<CmpDirnTblAutoLeft>(pm);
+		ownVar = q.ExecuteSingle();
 	}
 	void QueryOther()
 	{
-		Query q = pm.NewQuery(typeof(CmpDirnTblAutoRight));
-		otherVar = (CmpDirnTblAutoRight) q.ExecuteSingle();
+		var q = new NDOQuery<CmpDirnTblAutoRight>(pm);
+		otherVar = q.ExecuteSingle();
 	}
 }
 
@@ -2069,15 +2052,14 @@ public class TestCmpBin1NoTblAuto
 	public void TearDown()
 	{
 		pm.UnloadCache();
-		IList l;
-		l = pm.NewQuery(typeof(CmpBin1NoTblAutoLeft)).Execute();
+		var l = pm.Objects<CmpBin1NoTblAutoLeft>().ResultTable;
 		pm.Delete(l);
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) pm.NewQuery(typeof(CmpBin1NoTblAutoLeft)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpBin1NoTblAutoLeft>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) pm.NewQuery(typeof(CmpBin1NoTblAutoRight)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpBin1NoTblAutoRight>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -2175,13 +2157,13 @@ public class TestCmpBin1NoTblAuto
 	}
 	void QueryOwn()
 	{
-		Query q = pm.NewQuery(typeof(CmpBin1NoTblAutoLeft));
-		ownVar = (CmpBin1NoTblAutoLeft) q.ExecuteSingle();
+		var q = new NDOQuery<CmpBin1NoTblAutoLeft>(pm);
+		ownVar = q.ExecuteSingle();
 	}
 	void QueryOther()
 	{
-		Query q = pm.NewQuery(typeof(CmpBin1NoTblAutoRight));
-		otherVar = (CmpBin1NoTblAutoRight) q.ExecuteSingle();
+		var q = new NDOQuery<CmpBin1NoTblAutoRight>(pm);
+		otherVar = q.ExecuteSingle();
 	}
 }
 
@@ -2203,15 +2185,14 @@ public class TestCmpBin1TblAuto
 	public void TearDown()
 	{
 		pm.UnloadCache();
-		IList l;
-		l = pm.NewQuery(typeof(CmpBin1TblAutoLeft)).Execute();
+		var l = pm.Objects<CmpBin1TblAutoLeft>().ResultTable;
 		pm.Delete(l);
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) pm.NewQuery(typeof(CmpBin1TblAutoLeft)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpBin1TblAutoLeft>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) pm.NewQuery(typeof(CmpBin1TblAutoRight)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpBin1TblAutoRight>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -2300,13 +2281,13 @@ public class TestCmpBin1TblAuto
 	}
 	void QueryOwn()
 	{
-		Query q = pm.NewQuery(typeof(CmpBin1TblAutoLeft));
-		ownVar = (CmpBin1TblAutoLeft) q.ExecuteSingle();
+		var q = new NDOQuery<CmpBin1TblAutoLeft>(pm);
+		ownVar = q.ExecuteSingle();
 	}
 	void QueryOther()
 	{
-		Query q = pm.NewQuery(typeof(CmpBin1TblAutoRight));
-		otherVar = (CmpBin1TblAutoRight) q.ExecuteSingle();
+		var q = new NDOQuery<CmpBin1TblAutoRight>(pm);
+		otherVar = q.ExecuteSingle();
 	}
 }
 
@@ -2328,15 +2309,14 @@ public class TestCmpBi1nNoTblAuto
 	public void TearDown()
 	{
 		pm.UnloadCache();
-		IList l;
-		l = pm.NewQuery(typeof(CmpBi1nNoTblAutoLeft)).Execute();
+		var l = pm.Objects<CmpBi1nNoTblAutoLeft>().ResultTable;
 		pm.Delete(l);
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) pm.NewQuery(typeof(CmpBi1nNoTblAutoLeft)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpBi1nNoTblAutoLeft>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) pm.NewQuery(typeof(CmpBi1nNoTblAutoRight)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpBi1nNoTblAutoRight>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -2424,13 +2404,13 @@ public class TestCmpBi1nNoTblAuto
 	}
 	void QueryOwn()
 	{
-		Query q = pm.NewQuery(typeof(CmpBi1nNoTblAutoLeft));
-		ownVar = (CmpBi1nNoTblAutoLeft) q.ExecuteSingle();
+		var q = new NDOQuery<CmpBi1nNoTblAutoLeft>(pm);
+		ownVar = q.ExecuteSingle();
 	}
 	void QueryOther()
 	{
-		Query q = pm.NewQuery(typeof(CmpBi1nNoTblAutoRight));
-		otherVar = (CmpBi1nNoTblAutoRight) q.ExecuteSingle();
+		var q = new NDOQuery<CmpBi1nNoTblAutoRight>(pm);
+		otherVar = q.ExecuteSingle();
 	}
 }
 
@@ -2452,15 +2432,14 @@ public class TestCmpBi1nTblAuto
 	public void TearDown()
 	{
 		pm.UnloadCache();
-		IList l;
-		l = pm.NewQuery(typeof(CmpBi1nTblAutoLeft)).Execute();
+		var l = pm.Objects<CmpBi1nTblAutoLeft>().ResultTable;
 		pm.Delete(l);
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) pm.NewQuery(typeof(CmpBi1nTblAutoLeft)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpBi1nTblAutoLeft>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) pm.NewQuery(typeof(CmpBi1nTblAutoRight)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpBi1nTblAutoRight>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -2539,13 +2518,13 @@ public class TestCmpBi1nTblAuto
 	}
 	void QueryOwn()
 	{
-		Query q = pm.NewQuery(typeof(CmpBi1nTblAutoLeft));
-		ownVar = (CmpBi1nTblAutoLeft) q.ExecuteSingle();
+		var q = new NDOQuery<CmpBi1nTblAutoLeft>(pm);
+		ownVar = q.ExecuteSingle();
 	}
 	void QueryOther()
 	{
-		Query q = pm.NewQuery(typeof(CmpBi1nTblAutoRight));
-		otherVar = (CmpBi1nTblAutoRight) q.ExecuteSingle();
+		var q = new NDOQuery<CmpBi1nTblAutoRight>(pm);
+		otherVar = q.ExecuteSingle();
 	}
 }
 
@@ -2567,15 +2546,14 @@ public class TestCmpBinnTblAuto
 	public void TearDown()
 	{
 		pm.UnloadCache();
-		IList l;
-		l = pm.NewQuery(typeof(CmpBinnTblAutoLeft)).Execute();
+		var l = pm.Objects<CmpBinnTblAutoLeft>().ResultTable;
 		pm.Delete(l);
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) pm.NewQuery(typeof(CmpBinnTblAutoLeft)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpBinnTblAutoLeft>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) pm.NewQuery(typeof(CmpBinnTblAutoRight)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpBinnTblAutoRight>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -2633,13 +2611,13 @@ public class TestCmpBinnTblAuto
 	}
 	void QueryOwn()
 	{
-		Query q = pm.NewQuery(typeof(CmpBinnTblAutoLeft));
-		ownVar = (CmpBinnTblAutoLeft) q.ExecuteSingle();
+		var q = new NDOQuery<CmpBinnTblAutoLeft>(pm);
+		ownVar = q.ExecuteSingle();
 	}
 	void QueryOther()
 	{
-		Query q = pm.NewQuery(typeof(CmpBinnTblAutoRight));
-		otherVar = (CmpBinnTblAutoRight) q.ExecuteSingle();
+		var q = new NDOQuery<CmpBinnTblAutoRight>(pm);
+		otherVar = q.ExecuteSingle();
 	}
 }
 
@@ -2661,19 +2639,18 @@ public class TestAgrDir1OwnpconNoTblAuto
 	public void TearDown()
 	{
 		pm.UnloadCache();
-		IList l;
-		l = pm.NewQuery(typeof(AgrDir1OwnpconNoTblAutoLeftBase)).Execute();
+		var l = pm.Objects<AgrDir1OwnpconNoTblAutoLeftBase>().ResultTable;
 		pm.Delete(l);
 		pm.Save();
 		pm.UnloadCache();
-		l = pm.NewQuery(typeof(AgrDir1OwnpconNoTblAutoRight)).Execute();
-		pm.Delete(l);
+		var m = pm.Objects<AgrDir1OwnpconNoTblAutoRight>().ResultTable;
+		pm.Delete(m);
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) pm.NewQuery(typeof(AgrDir1OwnpconNoTblAutoLeftBase)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrDir1OwnpconNoTblAutoLeftBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) pm.NewQuery(typeof(AgrDir1OwnpconNoTblAutoRight)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrDir1OwnpconNoTblAutoRight>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -2754,13 +2731,13 @@ public class TestAgrDir1OwnpconNoTblAuto
 	}
 	void QueryOwn()
 	{
-		Query q = pm.NewQuery(typeof(AgrDir1OwnpconNoTblAutoLeftBase));
-		ownVar = (AgrDir1OwnpconNoTblAutoLeftBase) q.ExecuteSingle();
+		var q = new NDOQuery<AgrDir1OwnpconNoTblAutoLeftBase>(pm);
+		ownVar = q.ExecuteSingle();
 	}
 	void QueryOther()
 	{
-		Query q = pm.NewQuery(typeof(AgrDir1OwnpconNoTblAutoRight));
-		otherVar = (AgrDir1OwnpconNoTblAutoRight) q.ExecuteSingle();
+		var q = new NDOQuery<AgrDir1OwnpconNoTblAutoRight>(pm);
+		otherVar = q.ExecuteSingle();
 	}
 }
 
@@ -2782,19 +2759,18 @@ public class TestAgrDir1OwnpconTblAuto
 	public void TearDown()
 	{
 		pm.UnloadCache();
-		IList l;
-		l = pm.NewQuery(typeof(AgrDir1OwnpconTblAutoLeftBase)).Execute();
+		var l = pm.Objects<AgrDir1OwnpconTblAutoLeftBase>().ResultTable;
 		pm.Delete(l);
 		pm.Save();
 		pm.UnloadCache();
-		l = pm.NewQuery(typeof(AgrDir1OwnpconTblAutoRight)).Execute();
-		pm.Delete(l);
+		var m = pm.Objects<AgrDir1OwnpconTblAutoRight>().ResultTable;
+		pm.Delete(m);
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) pm.NewQuery(typeof(AgrDir1OwnpconTblAutoLeftBase)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrDir1OwnpconTblAutoLeftBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) pm.NewQuery(typeof(AgrDir1OwnpconTblAutoRight)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrDir1OwnpconTblAutoRight>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -2864,13 +2840,13 @@ public class TestAgrDir1OwnpconTblAuto
 	}
 	void QueryOwn()
 	{
-		Query q = pm.NewQuery(typeof(AgrDir1OwnpconTblAutoLeftBase));
-		ownVar = (AgrDir1OwnpconTblAutoLeftBase) q.ExecuteSingle();
+		var q = new NDOQuery<AgrDir1OwnpconTblAutoLeftBase>(pm);
+		ownVar = q.ExecuteSingle();
 	}
 	void QueryOther()
 	{
-		Query q = pm.NewQuery(typeof(AgrDir1OwnpconTblAutoRight));
-		otherVar = (AgrDir1OwnpconTblAutoRight) q.ExecuteSingle();
+		var q = new NDOQuery<AgrDir1OwnpconTblAutoRight>(pm);
+		otherVar = q.ExecuteSingle();
 	}
 }
 
@@ -2892,19 +2868,18 @@ public class TestAgrBi11OwnpconNoTblAuto
 	public void TearDown()
 	{
 		pm.UnloadCache();
-		IList l;
-		l = pm.NewQuery(typeof(AgrBi11OwnpconNoTblAutoLeftBase)).Execute();
+		var l = pm.Objects<AgrBi11OwnpconNoTblAutoLeftBase>().ResultTable;
 		pm.Delete(l);
 		pm.Save();
 		pm.UnloadCache();
-		l = pm.NewQuery(typeof(AgrBi11OwnpconNoTblAutoRight)).Execute();
-		pm.Delete(l);
+		var m = pm.Objects<AgrBi11OwnpconNoTblAutoRight>().ResultTable;
+		pm.Delete(m);
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) pm.NewQuery(typeof(AgrBi11OwnpconNoTblAutoLeftBase)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrBi11OwnpconNoTblAutoLeftBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) pm.NewQuery(typeof(AgrBi11OwnpconNoTblAutoRight)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrBi11OwnpconNoTblAutoRight>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -3020,13 +2995,13 @@ public class TestAgrBi11OwnpconNoTblAuto
 	}
 	void QueryOwn()
 	{
-		Query q = pm.NewQuery(typeof(AgrBi11OwnpconNoTblAutoLeftBase));
-		ownVar = (AgrBi11OwnpconNoTblAutoLeftBase) q.ExecuteSingle();
+		var q = new NDOQuery<AgrBi11OwnpconNoTblAutoLeftBase>(pm);
+		ownVar = q.ExecuteSingle();
 	}
 	void QueryOther()
 	{
-		Query q = pm.NewQuery(typeof(AgrBi11OwnpconNoTblAutoRight));
-		otherVar = (AgrBi11OwnpconNoTblAutoRight) q.ExecuteSingle();
+		var q = new NDOQuery<AgrBi11OwnpconNoTblAutoRight>(pm);
+		otherVar = q.ExecuteSingle();
 	}
 }
 
@@ -3048,19 +3023,18 @@ public class TestAgrBi11OwnpconTblAuto
 	public void TearDown()
 	{
 		pm.UnloadCache();
-		IList l;
-		l = pm.NewQuery(typeof(AgrBi11OwnpconTblAutoLeftBase)).Execute();
+		var l = pm.Objects<AgrBi11OwnpconTblAutoLeftBase>().ResultTable;
 		pm.Delete(l);
 		pm.Save();
 		pm.UnloadCache();
-		l = pm.NewQuery(typeof(AgrBi11OwnpconTblAutoRight)).Execute();
-		pm.Delete(l);
+		var m = pm.Objects<AgrBi11OwnpconTblAutoRight>().ResultTable;
+		pm.Delete(m);
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) pm.NewQuery(typeof(AgrBi11OwnpconTblAutoLeftBase)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrBi11OwnpconTblAutoLeftBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) pm.NewQuery(typeof(AgrBi11OwnpconTblAutoRight)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrBi11OwnpconTblAutoRight>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -3176,13 +3150,13 @@ public class TestAgrBi11OwnpconTblAuto
 	}
 	void QueryOwn()
 	{
-		Query q = pm.NewQuery(typeof(AgrBi11OwnpconTblAutoLeftBase));
-		ownVar = (AgrBi11OwnpconTblAutoLeftBase) q.ExecuteSingle();
+		var q = new NDOQuery<AgrBi11OwnpconTblAutoLeftBase>(pm);
+		ownVar = q.ExecuteSingle();
 	}
 	void QueryOther()
 	{
-		Query q = pm.NewQuery(typeof(AgrBi11OwnpconTblAutoRight));
-		otherVar = (AgrBi11OwnpconTblAutoRight) q.ExecuteSingle();
+		var q = new NDOQuery<AgrBi11OwnpconTblAutoRight>(pm);
+		otherVar = q.ExecuteSingle();
 	}
 }
 
@@ -3204,19 +3178,18 @@ public class TestAgrDirnOwnpconNoTblAuto
 	public void TearDown()
 	{
 		pm.UnloadCache();
-		IList l;
-		l = pm.NewQuery(typeof(AgrDirnOwnpconNoTblAutoLeftBase)).Execute();
+		var l = pm.Objects<AgrDirnOwnpconNoTblAutoLeftBase>().ResultTable;
 		pm.Delete(l);
 		pm.Save();
 		pm.UnloadCache();
-		l = pm.NewQuery(typeof(AgrDirnOwnpconNoTblAutoRight)).Execute();
-		pm.Delete(l);
+		var m = pm.Objects<AgrDirnOwnpconNoTblAutoRight>().ResultTable;
+		pm.Delete(m);
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) pm.NewQuery(typeof(AgrDirnOwnpconNoTblAutoLeftBase)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrDirnOwnpconNoTblAutoLeftBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) pm.NewQuery(typeof(AgrDirnOwnpconNoTblAutoRight)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrDirnOwnpconNoTblAutoRight>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -3276,13 +3249,13 @@ public class TestAgrDirnOwnpconNoTblAuto
 	}
 	void QueryOwn()
 	{
-		Query q = pm.NewQuery(typeof(AgrDirnOwnpconNoTblAutoLeftBase));
-		ownVar = (AgrDirnOwnpconNoTblAutoLeftBase) q.ExecuteSingle();
+		var q = new NDOQuery<AgrDirnOwnpconNoTblAutoLeftBase>(pm);
+		ownVar = q.ExecuteSingle();
 	}
 	void QueryOther()
 	{
-		Query q = pm.NewQuery(typeof(AgrDirnOwnpconNoTblAutoRight));
-		otherVar = (AgrDirnOwnpconNoTblAutoRight) q.ExecuteSingle();
+		var q = new NDOQuery<AgrDirnOwnpconNoTblAutoRight>(pm);
+		otherVar = q.ExecuteSingle();
 	}
 }
 
@@ -3304,19 +3277,18 @@ public class TestAgrDirnOwnpconTblAuto
 	public void TearDown()
 	{
 		pm.UnloadCache();
-		IList l;
-		l = pm.NewQuery(typeof(AgrDirnOwnpconTblAutoLeftBase)).Execute();
+		var l = pm.Objects<AgrDirnOwnpconTblAutoLeftBase>().ResultTable;
 		pm.Delete(l);
 		pm.Save();
 		pm.UnloadCache();
-		l = pm.NewQuery(typeof(AgrDirnOwnpconTblAutoRight)).Execute();
-		pm.Delete(l);
+		var m = pm.Objects<AgrDirnOwnpconTblAutoRight>().ResultTable;
+		pm.Delete(m);
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) pm.NewQuery(typeof(AgrDirnOwnpconTblAutoLeftBase)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrDirnOwnpconTblAutoLeftBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) pm.NewQuery(typeof(AgrDirnOwnpconTblAutoRight)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrDirnOwnpconTblAutoRight>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -3365,13 +3337,13 @@ public class TestAgrDirnOwnpconTblAuto
 	}
 	void QueryOwn()
 	{
-		Query q = pm.NewQuery(typeof(AgrDirnOwnpconTblAutoLeftBase));
-		ownVar = (AgrDirnOwnpconTblAutoLeftBase) q.ExecuteSingle();
+		var q = new NDOQuery<AgrDirnOwnpconTblAutoLeftBase>(pm);
+		ownVar = q.ExecuteSingle();
 	}
 	void QueryOther()
 	{
-		Query q = pm.NewQuery(typeof(AgrDirnOwnpconTblAutoRight));
-		otherVar = (AgrDirnOwnpconTblAutoRight) q.ExecuteSingle();
+		var q = new NDOQuery<AgrDirnOwnpconTblAutoRight>(pm);
+		otherVar = q.ExecuteSingle();
 	}
 }
 
@@ -3393,19 +3365,18 @@ public class TestAgrBin1OwnpconNoTblAuto
 	public void TearDown()
 	{
 		pm.UnloadCache();
-		IList l;
-		l = pm.NewQuery(typeof(AgrBin1OwnpconNoTblAutoLeftBase)).Execute();
+		var l = pm.Objects<AgrBin1OwnpconNoTblAutoLeftBase>().ResultTable;
 		pm.Delete(l);
 		pm.Save();
 		pm.UnloadCache();
-		l = pm.NewQuery(typeof(AgrBin1OwnpconNoTblAutoRight)).Execute();
-		pm.Delete(l);
+		var m = pm.Objects<AgrBin1OwnpconNoTblAutoRight>().ResultTable;
+		pm.Delete(m);
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) pm.NewQuery(typeof(AgrBin1OwnpconNoTblAutoLeftBase)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrBin1OwnpconNoTblAutoLeftBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) pm.NewQuery(typeof(AgrBin1OwnpconNoTblAutoRight)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrBin1OwnpconNoTblAutoRight>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -3511,13 +3482,13 @@ public class TestAgrBin1OwnpconNoTblAuto
 	}
 	void QueryOwn()
 	{
-		Query q = pm.NewQuery(typeof(AgrBin1OwnpconNoTblAutoLeftBase));
-		ownVar = (AgrBin1OwnpconNoTblAutoLeftBase) q.ExecuteSingle();
+		var q = new NDOQuery<AgrBin1OwnpconNoTblAutoLeftBase>(pm);
+		ownVar = q.ExecuteSingle();
 	}
 	void QueryOther()
 	{
-		Query q = pm.NewQuery(typeof(AgrBin1OwnpconNoTblAutoRight));
-		otherVar = (AgrBin1OwnpconNoTblAutoRight) q.ExecuteSingle();
+		var q = new NDOQuery<AgrBin1OwnpconNoTblAutoRight>(pm);
+		otherVar = q.ExecuteSingle();
 	}
 }
 
@@ -3539,19 +3510,18 @@ public class TestAgrBin1OwnpconTblAuto
 	public void TearDown()
 	{
 		pm.UnloadCache();
-		IList l;
-		l = pm.NewQuery(typeof(AgrBin1OwnpconTblAutoLeftBase)).Execute();
+		var l = pm.Objects<AgrBin1OwnpconTblAutoLeftBase>().ResultTable;
 		pm.Delete(l);
 		pm.Save();
 		pm.UnloadCache();
-		l = pm.NewQuery(typeof(AgrBin1OwnpconTblAutoRight)).Execute();
-		pm.Delete(l);
+		var m = pm.Objects<AgrBin1OwnpconTblAutoRight>().ResultTable;
+		pm.Delete(m);
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) pm.NewQuery(typeof(AgrBin1OwnpconTblAutoLeftBase)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrBin1OwnpconTblAutoLeftBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) pm.NewQuery(typeof(AgrBin1OwnpconTblAutoRight)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrBin1OwnpconTblAutoRight>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -3646,13 +3616,13 @@ public class TestAgrBin1OwnpconTblAuto
 	}
 	void QueryOwn()
 	{
-		Query q = pm.NewQuery(typeof(AgrBin1OwnpconTblAutoLeftBase));
-		ownVar = (AgrBin1OwnpconTblAutoLeftBase) q.ExecuteSingle();
+		var q = new NDOQuery<AgrBin1OwnpconTblAutoLeftBase>(pm);
+		ownVar = q.ExecuteSingle();
 	}
 	void QueryOther()
 	{
-		Query q = pm.NewQuery(typeof(AgrBin1OwnpconTblAutoRight));
-		otherVar = (AgrBin1OwnpconTblAutoRight) q.ExecuteSingle();
+		var q = new NDOQuery<AgrBin1OwnpconTblAutoRight>(pm);
+		otherVar = q.ExecuteSingle();
 	}
 }
 
@@ -3674,19 +3644,18 @@ public class TestAgrBi1nOwnpconTblAuto
 	public void TearDown()
 	{
 		pm.UnloadCache();
-		IList l;
-		l = pm.NewQuery(typeof(AgrBi1nOwnpconTblAutoLeftBase)).Execute();
+		var l = pm.Objects<AgrBi1nOwnpconTblAutoLeftBase>().ResultTable;
 		pm.Delete(l);
 		pm.Save();
 		pm.UnloadCache();
-		l = pm.NewQuery(typeof(AgrBi1nOwnpconTblAutoRight)).Execute();
-		pm.Delete(l);
+		var m = pm.Objects<AgrBi1nOwnpconTblAutoRight>().ResultTable;
+		pm.Delete(m);
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) pm.NewQuery(typeof(AgrBi1nOwnpconTblAutoLeftBase)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrBi1nOwnpconTblAutoLeftBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) pm.NewQuery(typeof(AgrBi1nOwnpconTblAutoRight)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrBi1nOwnpconTblAutoRight>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -3770,13 +3739,13 @@ public class TestAgrBi1nOwnpconTblAuto
 	}
 	void QueryOwn()
 	{
-		Query q = pm.NewQuery(typeof(AgrBi1nOwnpconTblAutoLeftBase));
-		ownVar = (AgrBi1nOwnpconTblAutoLeftBase) q.ExecuteSingle();
+		var q = new NDOQuery<AgrBi1nOwnpconTblAutoLeftBase>(pm);
+		ownVar = q.ExecuteSingle();
 	}
 	void QueryOther()
 	{
-		Query q = pm.NewQuery(typeof(AgrBi1nOwnpconTblAutoRight));
-		otherVar = (AgrBi1nOwnpconTblAutoRight) q.ExecuteSingle();
+		var q = new NDOQuery<AgrBi1nOwnpconTblAutoRight>(pm);
+		otherVar = q.ExecuteSingle();
 	}
 }
 
@@ -3798,19 +3767,18 @@ public class TestAgrBinnOwnpconTblAuto
 	public void TearDown()
 	{
 		pm.UnloadCache();
-		IList l;
-		l = pm.NewQuery(typeof(AgrBinnOwnpconTblAutoLeftBase)).Execute();
+		var l = pm.Objects<AgrBinnOwnpconTblAutoLeftBase>().ResultTable;
 		pm.Delete(l);
 		pm.Save();
 		pm.UnloadCache();
-		l = pm.NewQuery(typeof(AgrBinnOwnpconTblAutoRight)).Execute();
-		pm.Delete(l);
+		var m = pm.Objects<AgrBinnOwnpconTblAutoRight>().ResultTable;
+		pm.Delete(m);
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) pm.NewQuery(typeof(AgrBinnOwnpconTblAutoLeftBase)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrBinnOwnpconTblAutoLeftBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) pm.NewQuery(typeof(AgrBinnOwnpconTblAutoRight)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrBinnOwnpconTblAutoRight>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -3873,13 +3841,13 @@ public class TestAgrBinnOwnpconTblAuto
 	}
 	void QueryOwn()
 	{
-		Query q = pm.NewQuery(typeof(AgrBinnOwnpconTblAutoLeftBase));
-		ownVar = (AgrBinnOwnpconTblAutoLeftBase) q.ExecuteSingle();
+		var q = new NDOQuery<AgrBinnOwnpconTblAutoLeftBase>(pm);
+		ownVar = q.ExecuteSingle();
 	}
 	void QueryOther()
 	{
-		Query q = pm.NewQuery(typeof(AgrBinnOwnpconTblAutoRight));
-		otherVar = (AgrBinnOwnpconTblAutoRight) q.ExecuteSingle();
+		var q = new NDOQuery<AgrBinnOwnpconTblAutoRight>(pm);
+		otherVar = q.ExecuteSingle();
 	}
 }
 
@@ -3901,15 +3869,14 @@ public class TestCmpDir1OwnpconNoTblAuto
 	public void TearDown()
 	{
 		pm.UnloadCache();
-		IList l;
-		l = pm.NewQuery(typeof(CmpDir1OwnpconNoTblAutoLeftBase)).Execute();
+		var l = pm.Objects<CmpDir1OwnpconNoTblAutoLeftBase>().ResultTable;
 		pm.Delete(l);
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) pm.NewQuery(typeof(CmpDir1OwnpconNoTblAutoLeftBase)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpDir1OwnpconNoTblAutoLeftBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) pm.NewQuery(typeof(CmpDir1OwnpconNoTblAutoRight)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpDir1OwnpconNoTblAutoRight>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -3990,13 +3957,13 @@ public class TestCmpDir1OwnpconNoTblAuto
 	}
 	void QueryOwn()
 	{
-		Query q = pm.NewQuery(typeof(CmpDir1OwnpconNoTblAutoLeftBase));
-		ownVar = (CmpDir1OwnpconNoTblAutoLeftBase) q.ExecuteSingle();
+		var q = new NDOQuery<CmpDir1OwnpconNoTblAutoLeftBase>(pm);
+		ownVar = q.ExecuteSingle();
 	}
 	void QueryOther()
 	{
-		Query q = pm.NewQuery(typeof(CmpDir1OwnpconNoTblAutoRight));
-		otherVar = (CmpDir1OwnpconNoTblAutoRight) q.ExecuteSingle();
+		var q = new NDOQuery<CmpDir1OwnpconNoTblAutoRight>(pm);
+		otherVar = q.ExecuteSingle();
 	}
 }
 
@@ -4018,15 +3985,14 @@ public class TestCmpDir1OwnpconTblAuto
 	public void TearDown()
 	{
 		pm.UnloadCache();
-		IList l;
-		l = pm.NewQuery(typeof(CmpDir1OwnpconTblAutoLeftBase)).Execute();
+		var l = pm.Objects<CmpDir1OwnpconTblAutoLeftBase>().ResultTable;
 		pm.Delete(l);
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) pm.NewQuery(typeof(CmpDir1OwnpconTblAutoLeftBase)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpDir1OwnpconTblAutoLeftBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) pm.NewQuery(typeof(CmpDir1OwnpconTblAutoRight)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpDir1OwnpconTblAutoRight>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -4095,13 +4061,13 @@ public class TestCmpDir1OwnpconTblAuto
 	}
 	void QueryOwn()
 	{
-		Query q = pm.NewQuery(typeof(CmpDir1OwnpconTblAutoLeftBase));
-		ownVar = (CmpDir1OwnpconTblAutoLeftBase) q.ExecuteSingle();
+		var q = new NDOQuery<CmpDir1OwnpconTblAutoLeftBase>(pm);
+		ownVar = q.ExecuteSingle();
 	}
 	void QueryOther()
 	{
-		Query q = pm.NewQuery(typeof(CmpDir1OwnpconTblAutoRight));
-		otherVar = (CmpDir1OwnpconTblAutoRight) q.ExecuteSingle();
+		var q = new NDOQuery<CmpDir1OwnpconTblAutoRight>(pm);
+		otherVar = q.ExecuteSingle();
 	}
 }
 
@@ -4123,15 +4089,14 @@ public class TestCmpBi11OwnpconNoTblAuto
 	public void TearDown()
 	{
 		pm.UnloadCache();
-		IList l;
-		l = pm.NewQuery(typeof(CmpBi11OwnpconNoTblAutoLeftBase)).Execute();
+		var l = pm.Objects<CmpBi11OwnpconNoTblAutoLeftBase>().ResultTable;
 		pm.Delete(l);
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) pm.NewQuery(typeof(CmpBi11OwnpconNoTblAutoLeftBase)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpBi11OwnpconNoTblAutoLeftBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) pm.NewQuery(typeof(CmpBi11OwnpconNoTblAutoRight)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpBi11OwnpconNoTblAutoRight>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -4246,13 +4211,13 @@ public class TestCmpBi11OwnpconNoTblAuto
 	}
 	void QueryOwn()
 	{
-		Query q = pm.NewQuery(typeof(CmpBi11OwnpconNoTblAutoLeftBase));
-		ownVar = (CmpBi11OwnpconNoTblAutoLeftBase) q.ExecuteSingle();
+		var q = new NDOQuery<CmpBi11OwnpconNoTblAutoLeftBase>(pm);
+		ownVar = q.ExecuteSingle();
 	}
 	void QueryOther()
 	{
-		Query q = pm.NewQuery(typeof(CmpBi11OwnpconNoTblAutoRight));
-		otherVar = (CmpBi11OwnpconNoTblAutoRight) q.ExecuteSingle();
+		var q = new NDOQuery<CmpBi11OwnpconNoTblAutoRight>(pm);
+		otherVar = q.ExecuteSingle();
 	}
 }
 
@@ -4274,15 +4239,14 @@ public class TestCmpBi11OwnpconTblAuto
 	public void TearDown()
 	{
 		pm.UnloadCache();
-		IList l;
-		l = pm.NewQuery(typeof(CmpBi11OwnpconTblAutoLeftBase)).Execute();
+		var l = pm.Objects<CmpBi11OwnpconTblAutoLeftBase>().ResultTable;
 		pm.Delete(l);
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) pm.NewQuery(typeof(CmpBi11OwnpconTblAutoLeftBase)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpBi11OwnpconTblAutoLeftBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) pm.NewQuery(typeof(CmpBi11OwnpconTblAutoRight)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpBi11OwnpconTblAutoRight>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -4396,13 +4360,13 @@ public class TestCmpBi11OwnpconTblAuto
 	}
 	void QueryOwn()
 	{
-		Query q = pm.NewQuery(typeof(CmpBi11OwnpconTblAutoLeftBase));
-		ownVar = (CmpBi11OwnpconTblAutoLeftBase) q.ExecuteSingle();
+		var q = new NDOQuery<CmpBi11OwnpconTblAutoLeftBase>(pm);
+		ownVar = q.ExecuteSingle();
 	}
 	void QueryOther()
 	{
-		Query q = pm.NewQuery(typeof(CmpBi11OwnpconTblAutoRight));
-		otherVar = (CmpBi11OwnpconTblAutoRight) q.ExecuteSingle();
+		var q = new NDOQuery<CmpBi11OwnpconTblAutoRight>(pm);
+		otherVar = q.ExecuteSingle();
 	}
 }
 
@@ -4424,15 +4388,14 @@ public class TestCmpDirnOwnpconNoTblAuto
 	public void TearDown()
 	{
 		pm.UnloadCache();
-		IList l;
-		l = pm.NewQuery(typeof(CmpDirnOwnpconNoTblAutoLeftBase)).Execute();
+		var l = pm.Objects<CmpDirnOwnpconNoTblAutoLeftBase>().ResultTable;
 		pm.Delete(l);
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) pm.NewQuery(typeof(CmpDirnOwnpconNoTblAutoLeftBase)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpDirnOwnpconNoTblAutoLeftBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) pm.NewQuery(typeof(CmpDirnOwnpconNoTblAutoRight)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpDirnOwnpconNoTblAutoRight>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -4491,13 +4454,13 @@ public class TestCmpDirnOwnpconNoTblAuto
 	}
 	void QueryOwn()
 	{
-		Query q = pm.NewQuery(typeof(CmpDirnOwnpconNoTblAutoLeftBase));
-		ownVar = (CmpDirnOwnpconNoTblAutoLeftBase) q.ExecuteSingle();
+		var q = new NDOQuery<CmpDirnOwnpconNoTblAutoLeftBase>(pm);
+		ownVar = q.ExecuteSingle();
 	}
 	void QueryOther()
 	{
-		Query q = pm.NewQuery(typeof(CmpDirnOwnpconNoTblAutoRight));
-		otherVar = (CmpDirnOwnpconNoTblAutoRight) q.ExecuteSingle();
+		var q = new NDOQuery<CmpDirnOwnpconNoTblAutoRight>(pm);
+		otherVar = q.ExecuteSingle();
 	}
 }
 
@@ -4519,15 +4482,14 @@ public class TestCmpDirnOwnpconTblAuto
 	public void TearDown()
 	{
 		pm.UnloadCache();
-		IList l;
-		l = pm.NewQuery(typeof(CmpDirnOwnpconTblAutoLeftBase)).Execute();
+		var l = pm.Objects<CmpDirnOwnpconTblAutoLeftBase>().ResultTable;
 		pm.Delete(l);
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) pm.NewQuery(typeof(CmpDirnOwnpconTblAutoLeftBase)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpDirnOwnpconTblAutoLeftBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) pm.NewQuery(typeof(CmpDirnOwnpconTblAutoRight)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpDirnOwnpconTblAutoRight>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -4575,13 +4537,13 @@ public class TestCmpDirnOwnpconTblAuto
 	}
 	void QueryOwn()
 	{
-		Query q = pm.NewQuery(typeof(CmpDirnOwnpconTblAutoLeftBase));
-		ownVar = (CmpDirnOwnpconTblAutoLeftBase) q.ExecuteSingle();
+		var q = new NDOQuery<CmpDirnOwnpconTblAutoLeftBase>(pm);
+		ownVar = q.ExecuteSingle();
 	}
 	void QueryOther()
 	{
-		Query q = pm.NewQuery(typeof(CmpDirnOwnpconTblAutoRight));
-		otherVar = (CmpDirnOwnpconTblAutoRight) q.ExecuteSingle();
+		var q = new NDOQuery<CmpDirnOwnpconTblAutoRight>(pm);
+		otherVar = q.ExecuteSingle();
 	}
 }
 
@@ -4603,15 +4565,14 @@ public class TestCmpBin1OwnpconNoTblAuto
 	public void TearDown()
 	{
 		pm.UnloadCache();
-		IList l;
-		l = pm.NewQuery(typeof(CmpBin1OwnpconNoTblAutoLeftBase)).Execute();
+		var l = pm.Objects<CmpBin1OwnpconNoTblAutoLeftBase>().ResultTable;
 		pm.Delete(l);
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) pm.NewQuery(typeof(CmpBin1OwnpconNoTblAutoLeftBase)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpBin1OwnpconNoTblAutoLeftBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) pm.NewQuery(typeof(CmpBin1OwnpconNoTblAutoRight)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpBin1OwnpconNoTblAutoRight>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -4715,13 +4676,13 @@ public class TestCmpBin1OwnpconNoTblAuto
 	}
 	void QueryOwn()
 	{
-		Query q = pm.NewQuery(typeof(CmpBin1OwnpconNoTblAutoLeftBase));
-		ownVar = (CmpBin1OwnpconNoTblAutoLeftBase) q.ExecuteSingle();
+		var q = new NDOQuery<CmpBin1OwnpconNoTblAutoLeftBase>(pm);
+		ownVar = q.ExecuteSingle();
 	}
 	void QueryOther()
 	{
-		Query q = pm.NewQuery(typeof(CmpBin1OwnpconNoTblAutoRight));
-		otherVar = (CmpBin1OwnpconNoTblAutoRight) q.ExecuteSingle();
+		var q = new NDOQuery<CmpBin1OwnpconNoTblAutoRight>(pm);
+		otherVar = q.ExecuteSingle();
 	}
 }
 
@@ -4743,15 +4704,14 @@ public class TestCmpBin1OwnpconTblAuto
 	public void TearDown()
 	{
 		pm.UnloadCache();
-		IList l;
-		l = pm.NewQuery(typeof(CmpBin1OwnpconTblAutoLeftBase)).Execute();
+		var l = pm.Objects<CmpBin1OwnpconTblAutoLeftBase>().ResultTable;
 		pm.Delete(l);
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) pm.NewQuery(typeof(CmpBin1OwnpconTblAutoLeftBase)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpBin1OwnpconTblAutoLeftBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) pm.NewQuery(typeof(CmpBin1OwnpconTblAutoRight)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpBin1OwnpconTblAutoRight>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -4844,13 +4804,13 @@ public class TestCmpBin1OwnpconTblAuto
 	}
 	void QueryOwn()
 	{
-		Query q = pm.NewQuery(typeof(CmpBin1OwnpconTblAutoLeftBase));
-		ownVar = (CmpBin1OwnpconTblAutoLeftBase) q.ExecuteSingle();
+		var q = new NDOQuery<CmpBin1OwnpconTblAutoLeftBase>(pm);
+		ownVar = q.ExecuteSingle();
 	}
 	void QueryOther()
 	{
-		Query q = pm.NewQuery(typeof(CmpBin1OwnpconTblAutoRight));
-		otherVar = (CmpBin1OwnpconTblAutoRight) q.ExecuteSingle();
+		var q = new NDOQuery<CmpBin1OwnpconTblAutoRight>(pm);
+		otherVar = q.ExecuteSingle();
 	}
 }
 
@@ -4872,15 +4832,14 @@ public class TestCmpBi1nOwnpconTblAuto
 	public void TearDown()
 	{
 		pm.UnloadCache();
-		IList l;
-		l = pm.NewQuery(typeof(CmpBi1nOwnpconTblAutoLeftBase)).Execute();
+		var l = pm.Objects<CmpBi1nOwnpconTblAutoLeftBase>().ResultTable;
 		pm.Delete(l);
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) pm.NewQuery(typeof(CmpBi1nOwnpconTblAutoLeftBase)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpBi1nOwnpconTblAutoLeftBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) pm.NewQuery(typeof(CmpBi1nOwnpconTblAutoRight)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpBi1nOwnpconTblAutoRight>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -4963,13 +4922,13 @@ public class TestCmpBi1nOwnpconTblAuto
 	}
 	void QueryOwn()
 	{
-		Query q = pm.NewQuery(typeof(CmpBi1nOwnpconTblAutoLeftBase));
-		ownVar = (CmpBi1nOwnpconTblAutoLeftBase) q.ExecuteSingle();
+		var q = new NDOQuery<CmpBi1nOwnpconTblAutoLeftBase>(pm);
+		ownVar = q.ExecuteSingle();
 	}
 	void QueryOther()
 	{
-		Query q = pm.NewQuery(typeof(CmpBi1nOwnpconTblAutoRight));
-		otherVar = (CmpBi1nOwnpconTblAutoRight) q.ExecuteSingle();
+		var q = new NDOQuery<CmpBi1nOwnpconTblAutoRight>(pm);
+		otherVar = q.ExecuteSingle();
 	}
 }
 
@@ -4991,15 +4950,14 @@ public class TestCmpBinnOwnpconTblAuto
 	public void TearDown()
 	{
 		pm.UnloadCache();
-		IList l;
-		l = pm.NewQuery(typeof(CmpBinnOwnpconTblAutoLeftBase)).Execute();
+		var l = pm.Objects<CmpBinnOwnpconTblAutoLeftBase>().ResultTable;
 		pm.Delete(l);
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) pm.NewQuery(typeof(CmpBinnOwnpconTblAutoLeftBase)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpBinnOwnpconTblAutoLeftBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) pm.NewQuery(typeof(CmpBinnOwnpconTblAutoRight)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpBinnOwnpconTblAutoRight>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -5061,13 +5019,13 @@ public class TestCmpBinnOwnpconTblAuto
 	}
 	void QueryOwn()
 	{
-		Query q = pm.NewQuery(typeof(CmpBinnOwnpconTblAutoLeftBase));
-		ownVar = (CmpBinnOwnpconTblAutoLeftBase) q.ExecuteSingle();
+		var q = new NDOQuery<CmpBinnOwnpconTblAutoLeftBase>(pm);
+		ownVar = q.ExecuteSingle();
 	}
 	void QueryOther()
 	{
-		Query q = pm.NewQuery(typeof(CmpBinnOwnpconTblAutoRight));
-		otherVar = (CmpBinnOwnpconTblAutoRight) q.ExecuteSingle();
+		var q = new NDOQuery<CmpBinnOwnpconTblAutoRight>(pm);
+		otherVar = q.ExecuteSingle();
 	}
 }
 
@@ -5089,19 +5047,18 @@ public class TestAgrDir1OthpconNoTblAuto
 	public void TearDown()
 	{
 		pm.UnloadCache();
-		IList l;
-		l = pm.NewQuery(typeof(AgrDir1OthpconNoTblAutoLeft)).Execute();
+		var l = pm.Objects<AgrDir1OthpconNoTblAutoLeft>().ResultTable;
 		pm.Delete(l);
 		pm.Save();
 		pm.UnloadCache();
-		l = pm.NewQuery(typeof(AgrDir1OthpconNoTblAutoRightBase)).Execute();
-		pm.Delete(l);
+		var m = pm.Objects<AgrDir1OthpconNoTblAutoRightBase>().ResultTable;
+		pm.Delete(m);
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) pm.NewQuery(typeof(AgrDir1OthpconNoTblAutoLeft)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrDir1OthpconNoTblAutoLeft>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) pm.NewQuery(typeof(AgrDir1OthpconNoTblAutoRightBase)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrDir1OthpconNoTblAutoRightBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -5184,13 +5141,13 @@ public class TestAgrDir1OthpconNoTblAuto
 	}
 	void QueryOwn()
 	{
-		Query q = pm.NewQuery(typeof(AgrDir1OthpconNoTblAutoLeft));
-		ownVar = (AgrDir1OthpconNoTblAutoLeft) q.ExecuteSingle();
+		var q = new NDOQuery<AgrDir1OthpconNoTblAutoLeft>(pm);
+		ownVar = q.ExecuteSingle();
 	}
 	void QueryOther()
 	{
-		Query q = pm.NewQuery(typeof(AgrDir1OthpconNoTblAutoRightBase));
-		otherVar = (AgrDir1OthpconNoTblAutoRightBase) q.ExecuteSingle();
+		var q = new NDOQuery<AgrDir1OthpconNoTblAutoRightBase>(pm);
+		otherVar = q.ExecuteSingle();
 	}
 }
 
@@ -5212,19 +5169,18 @@ public class TestAgrDir1OthpconTblAuto
 	public void TearDown()
 	{
 		pm.UnloadCache();
-		IList l;
-		l = pm.NewQuery(typeof(AgrDir1OthpconTblAutoLeft)).Execute();
+		var l = pm.Objects<AgrDir1OthpconTblAutoLeft>().ResultTable;
 		pm.Delete(l);
 		pm.Save();
 		pm.UnloadCache();
-		l = pm.NewQuery(typeof(AgrDir1OthpconTblAutoRightBase)).Execute();
-		pm.Delete(l);
+		var m = pm.Objects<AgrDir1OthpconTblAutoRightBase>().ResultTable;
+		pm.Delete(m);
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) pm.NewQuery(typeof(AgrDir1OthpconTblAutoLeft)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrDir1OthpconTblAutoLeft>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) pm.NewQuery(typeof(AgrDir1OthpconTblAutoRightBase)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrDir1OthpconTblAutoRightBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -5294,13 +5250,13 @@ public class TestAgrDir1OthpconTblAuto
 	}
 	void QueryOwn()
 	{
-		Query q = pm.NewQuery(typeof(AgrDir1OthpconTblAutoLeft));
-		ownVar = (AgrDir1OthpconTblAutoLeft) q.ExecuteSingle();
+		var q = new NDOQuery<AgrDir1OthpconTblAutoLeft>(pm);
+		ownVar = q.ExecuteSingle();
 	}
 	void QueryOther()
 	{
-		Query q = pm.NewQuery(typeof(AgrDir1OthpconTblAutoRightBase));
-		otherVar = (AgrDir1OthpconTblAutoRightBase) q.ExecuteSingle();
+		var q = new NDOQuery<AgrDir1OthpconTblAutoRightBase>(pm);
+		otherVar = q.ExecuteSingle();
 	}
 }
 
@@ -5322,19 +5278,18 @@ public class TestAgrBi11OthpconNoTblAuto
 	public void TearDown()
 	{
 		pm.UnloadCache();
-		IList l;
-		l = pm.NewQuery(typeof(AgrBi11OthpconNoTblAutoLeft)).Execute();
+		var l = pm.Objects<AgrBi11OthpconNoTblAutoLeft>().ResultTable;
 		pm.Delete(l);
 		pm.Save();
 		pm.UnloadCache();
-		l = pm.NewQuery(typeof(AgrBi11OthpconNoTblAutoRightBase)).Execute();
-		pm.Delete(l);
+		var m = pm.Objects<AgrBi11OthpconNoTblAutoRightBase>().ResultTable;
+		pm.Delete(m);
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) pm.NewQuery(typeof(AgrBi11OthpconNoTblAutoLeft)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrBi11OthpconNoTblAutoLeft>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) pm.NewQuery(typeof(AgrBi11OthpconNoTblAutoRightBase)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrBi11OthpconNoTblAutoRightBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -5451,13 +5406,13 @@ public class TestAgrBi11OthpconNoTblAuto
 	}
 	void QueryOwn()
 	{
-		Query q = pm.NewQuery(typeof(AgrBi11OthpconNoTblAutoLeft));
-		ownVar = (AgrBi11OthpconNoTblAutoLeft) q.ExecuteSingle();
+		var q = new NDOQuery<AgrBi11OthpconNoTblAutoLeft>(pm);
+		ownVar = q.ExecuteSingle();
 	}
 	void QueryOther()
 	{
-		Query q = pm.NewQuery(typeof(AgrBi11OthpconNoTblAutoRightBase));
-		otherVar = (AgrBi11OthpconNoTblAutoRightBase) q.ExecuteSingle();
+		var q = new NDOQuery<AgrBi11OthpconNoTblAutoRightBase>(pm);
+		otherVar = q.ExecuteSingle();
 	}
 }
 
@@ -5479,19 +5434,18 @@ public class TestAgrBi11OthpconTblAuto
 	public void TearDown()
 	{
 		pm.UnloadCache();
-		IList l;
-		l = pm.NewQuery(typeof(AgrBi11OthpconTblAutoLeft)).Execute();
+		var l = pm.Objects<AgrBi11OthpconTblAutoLeft>().ResultTable;
 		pm.Delete(l);
 		pm.Save();
 		pm.UnloadCache();
-		l = pm.NewQuery(typeof(AgrBi11OthpconTblAutoRightBase)).Execute();
-		pm.Delete(l);
+		var m = pm.Objects<AgrBi11OthpconTblAutoRightBase>().ResultTable;
+		pm.Delete(m);
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) pm.NewQuery(typeof(AgrBi11OthpconTblAutoLeft)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrBi11OthpconTblAutoLeft>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) pm.NewQuery(typeof(AgrBi11OthpconTblAutoRightBase)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrBi11OthpconTblAutoRightBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -5606,13 +5560,13 @@ public class TestAgrBi11OthpconTblAuto
 	}
 	void QueryOwn()
 	{
-		Query q = pm.NewQuery(typeof(AgrBi11OthpconTblAutoLeft));
-		ownVar = (AgrBi11OthpconTblAutoLeft) q.ExecuteSingle();
+		var q = new NDOQuery<AgrBi11OthpconTblAutoLeft>(pm);
+		ownVar = q.ExecuteSingle();
 	}
 	void QueryOther()
 	{
-		Query q = pm.NewQuery(typeof(AgrBi11OthpconTblAutoRightBase));
-		otherVar = (AgrBi11OthpconTblAutoRightBase) q.ExecuteSingle();
+		var q = new NDOQuery<AgrBi11OthpconTblAutoRightBase>(pm);
+		otherVar = q.ExecuteSingle();
 	}
 }
 
@@ -5634,19 +5588,18 @@ public class TestAgrDirnOthpconTblAuto
 	public void TearDown()
 	{
 		pm.UnloadCache();
-		IList l;
-		l = pm.NewQuery(typeof(AgrDirnOthpconTblAutoLeft)).Execute();
+		var l = pm.Objects<AgrDirnOthpconTblAutoLeft>().ResultTable;
 		pm.Delete(l);
 		pm.Save();
 		pm.UnloadCache();
-		l = pm.NewQuery(typeof(AgrDirnOthpconTblAutoRightBase)).Execute();
-		pm.Delete(l);
+		var m = pm.Objects<AgrDirnOthpconTblAutoRightBase>().ResultTable;
+		pm.Delete(m);
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) pm.NewQuery(typeof(AgrDirnOthpconTblAutoLeft)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrDirnOthpconTblAutoLeft>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) pm.NewQuery(typeof(AgrDirnOthpconTblAutoRightBase)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrDirnOthpconTblAutoRightBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -5695,13 +5648,13 @@ public class TestAgrDirnOthpconTblAuto
 	}
 	void QueryOwn()
 	{
-		Query q = pm.NewQuery(typeof(AgrDirnOthpconTblAutoLeft));
-		ownVar = (AgrDirnOthpconTblAutoLeft) q.ExecuteSingle();
+		var q = new NDOQuery<AgrDirnOthpconTblAutoLeft>(pm);
+		ownVar = q.ExecuteSingle();
 	}
 	void QueryOther()
 	{
-		Query q = pm.NewQuery(typeof(AgrDirnOthpconTblAutoRightBase));
-		otherVar = (AgrDirnOthpconTblAutoRightBase) q.ExecuteSingle();
+		var q = new NDOQuery<AgrDirnOthpconTblAutoRightBase>(pm);
+		otherVar = q.ExecuteSingle();
 	}
 }
 
@@ -5723,19 +5676,18 @@ public class TestAgrBin1OthpconTblAuto
 	public void TearDown()
 	{
 		pm.UnloadCache();
-		IList l;
-		l = pm.NewQuery(typeof(AgrBin1OthpconTblAutoLeft)).Execute();
+		var l = pm.Objects<AgrBin1OthpconTblAutoLeft>().ResultTable;
 		pm.Delete(l);
 		pm.Save();
 		pm.UnloadCache();
-		l = pm.NewQuery(typeof(AgrBin1OthpconTblAutoRightBase)).Execute();
-		pm.Delete(l);
+		var m = pm.Objects<AgrBin1OthpconTblAutoRightBase>().ResultTable;
+		pm.Delete(m);
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) pm.NewQuery(typeof(AgrBin1OthpconTblAutoLeft)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrBin1OthpconTblAutoLeft>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) pm.NewQuery(typeof(AgrBin1OthpconTblAutoRightBase)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrBin1OthpconTblAutoRightBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -5829,13 +5781,13 @@ public class TestAgrBin1OthpconTblAuto
 	}
 	void QueryOwn()
 	{
-		Query q = pm.NewQuery(typeof(AgrBin1OthpconTblAutoLeft));
-		ownVar = (AgrBin1OthpconTblAutoLeft) q.ExecuteSingle();
+		var q = new NDOQuery<AgrBin1OthpconTblAutoLeft>(pm);
+		ownVar = q.ExecuteSingle();
 	}
 	void QueryOther()
 	{
-		Query q = pm.NewQuery(typeof(AgrBin1OthpconTblAutoRightBase));
-		otherVar = (AgrBin1OthpconTblAutoRightBase) q.ExecuteSingle();
+		var q = new NDOQuery<AgrBin1OthpconTblAutoRightBase>(pm);
+		otherVar = q.ExecuteSingle();
 	}
 }
 
@@ -5857,19 +5809,18 @@ public class TestAgrBi1nOthpconNoTblAuto
 	public void TearDown()
 	{
 		pm.UnloadCache();
-		IList l;
-		l = pm.NewQuery(typeof(AgrBi1nOthpconNoTblAutoLeft)).Execute();
+		var l = pm.Objects<AgrBi1nOthpconNoTblAutoLeft>().ResultTable;
 		pm.Delete(l);
 		pm.Save();
 		pm.UnloadCache();
-		l = pm.NewQuery(typeof(AgrBi1nOthpconNoTblAutoRightBase)).Execute();
-		pm.Delete(l);
+		var m = pm.Objects<AgrBi1nOthpconNoTblAutoRightBase>().ResultTable;
+		pm.Delete(m);
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) pm.NewQuery(typeof(AgrBi1nOthpconNoTblAutoLeft)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrBi1nOthpconNoTblAutoLeft>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) pm.NewQuery(typeof(AgrBi1nOthpconNoTblAutoRightBase)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrBi1nOthpconNoTblAutoRightBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -5966,13 +5917,13 @@ public class TestAgrBi1nOthpconNoTblAuto
 	}
 	void QueryOwn()
 	{
-		Query q = pm.NewQuery(typeof(AgrBi1nOthpconNoTblAutoLeft));
-		ownVar = (AgrBi1nOthpconNoTblAutoLeft) q.ExecuteSingle();
+		var q = new NDOQuery<AgrBi1nOthpconNoTblAutoLeft>(pm);
+		ownVar = q.ExecuteSingle();
 	}
 	void QueryOther()
 	{
-		Query q = pm.NewQuery(typeof(AgrBi1nOthpconNoTblAutoRightBase));
-		otherVar = (AgrBi1nOthpconNoTblAutoRightBase) q.ExecuteSingle();
+		var q = new NDOQuery<AgrBi1nOthpconNoTblAutoRightBase>(pm);
+		otherVar = q.ExecuteSingle();
 	}
 }
 
@@ -5994,19 +5945,18 @@ public class TestAgrBi1nOthpconTblAuto
 	public void TearDown()
 	{
 		pm.UnloadCache();
-		IList l;
-		l = pm.NewQuery(typeof(AgrBi1nOthpconTblAutoLeft)).Execute();
+		var l = pm.Objects<AgrBi1nOthpconTblAutoLeft>().ResultTable;
 		pm.Delete(l);
 		pm.Save();
 		pm.UnloadCache();
-		l = pm.NewQuery(typeof(AgrBi1nOthpconTblAutoRightBase)).Execute();
-		pm.Delete(l);
+		var m = pm.Objects<AgrBi1nOthpconTblAutoRightBase>().ResultTable;
+		pm.Delete(m);
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) pm.NewQuery(typeof(AgrBi1nOthpconTblAutoLeft)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrBi1nOthpconTblAutoLeft>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) pm.NewQuery(typeof(AgrBi1nOthpconTblAutoRightBase)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrBi1nOthpconTblAutoRightBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -6090,13 +6040,13 @@ public class TestAgrBi1nOthpconTblAuto
 	}
 	void QueryOwn()
 	{
-		Query q = pm.NewQuery(typeof(AgrBi1nOthpconTblAutoLeft));
-		ownVar = (AgrBi1nOthpconTblAutoLeft) q.ExecuteSingle();
+		var q = new NDOQuery<AgrBi1nOthpconTblAutoLeft>(pm);
+		ownVar = q.ExecuteSingle();
 	}
 	void QueryOther()
 	{
-		Query q = pm.NewQuery(typeof(AgrBi1nOthpconTblAutoRightBase));
-		otherVar = (AgrBi1nOthpconTblAutoRightBase) q.ExecuteSingle();
+		var q = new NDOQuery<AgrBi1nOthpconTblAutoRightBase>(pm);
+		otherVar = q.ExecuteSingle();
 	}
 }
 
@@ -6118,19 +6068,18 @@ public class TestAgrBinnOthpconTblAuto
 	public void TearDown()
 	{
 		pm.UnloadCache();
-		IList l;
-		l = pm.NewQuery(typeof(AgrBinnOthpconTblAutoLeft)).Execute();
+		var l = pm.Objects<AgrBinnOthpconTblAutoLeft>().ResultTable;
 		pm.Delete(l);
 		pm.Save();
 		pm.UnloadCache();
-		l = pm.NewQuery(typeof(AgrBinnOthpconTblAutoRightBase)).Execute();
-		pm.Delete(l);
+		var m = pm.Objects<AgrBinnOthpconTblAutoRightBase>().ResultTable;
+		pm.Delete(m);
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) pm.NewQuery(typeof(AgrBinnOthpconTblAutoLeft)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrBinnOthpconTblAutoLeft>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) pm.NewQuery(typeof(AgrBinnOthpconTblAutoRightBase)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrBinnOthpconTblAutoRightBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -6193,13 +6142,13 @@ public class TestAgrBinnOthpconTblAuto
 	}
 	void QueryOwn()
 	{
-		Query q = pm.NewQuery(typeof(AgrBinnOthpconTblAutoLeft));
-		ownVar = (AgrBinnOthpconTblAutoLeft) q.ExecuteSingle();
+		var q = new NDOQuery<AgrBinnOthpconTblAutoLeft>(pm);
+		ownVar = q.ExecuteSingle();
 	}
 	void QueryOther()
 	{
-		Query q = pm.NewQuery(typeof(AgrBinnOthpconTblAutoRightBase));
-		otherVar = (AgrBinnOthpconTblAutoRightBase) q.ExecuteSingle();
+		var q = new NDOQuery<AgrBinnOthpconTblAutoRightBase>(pm);
+		otherVar = q.ExecuteSingle();
 	}
 }
 
@@ -6221,15 +6170,14 @@ public class TestCmpDir1OthpconNoTblAuto
 	public void TearDown()
 	{
 		pm.UnloadCache();
-		IList l;
-		l = pm.NewQuery(typeof(CmpDir1OthpconNoTblAutoLeft)).Execute();
+		var l = pm.Objects<CmpDir1OthpconNoTblAutoLeft>().ResultTable;
 		pm.Delete(l);
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) pm.NewQuery(typeof(CmpDir1OthpconNoTblAutoLeft)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpDir1OthpconNoTblAutoLeft>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) pm.NewQuery(typeof(CmpDir1OthpconNoTblAutoRightBase)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpDir1OthpconNoTblAutoRightBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test, ExpectedException(typeof(NDOException))]
@@ -6268,13 +6216,13 @@ public class TestCmpDir1OthpconNoTblAuto
 	}
 	void QueryOwn()
 	{
-		Query q = pm.NewQuery(typeof(CmpDir1OthpconNoTblAutoLeft));
-		ownVar = (CmpDir1OthpconNoTblAutoLeft) q.ExecuteSingle();
+		var q = new NDOQuery<CmpDir1OthpconNoTblAutoLeft>(pm);
+		ownVar = q.ExecuteSingle();
 	}
 	void QueryOther()
 	{
-		Query q = pm.NewQuery(typeof(CmpDir1OthpconNoTblAutoRightBase));
-		otherVar = (CmpDir1OthpconNoTblAutoRightBase) q.ExecuteSingle();
+		var q = new NDOQuery<CmpDir1OthpconNoTblAutoRightBase>(pm);
+		otherVar = q.ExecuteSingle();
 	}
 }
 
@@ -6296,15 +6244,14 @@ public class TestCmpDir1OthpconTblAuto
 	public void TearDown()
 	{
 		pm.UnloadCache();
-		IList l;
-		l = pm.NewQuery(typeof(CmpDir1OthpconTblAutoLeft)).Execute();
+		var l = pm.Objects<CmpDir1OthpconTblAutoLeft>().ResultTable;
 		pm.Delete(l);
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) pm.NewQuery(typeof(CmpDir1OthpconTblAutoLeft)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpDir1OthpconTblAutoLeft>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) pm.NewQuery(typeof(CmpDir1OthpconTblAutoRightBase)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpDir1OthpconTblAutoRightBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -6373,13 +6320,13 @@ public class TestCmpDir1OthpconTblAuto
 	}
 	void QueryOwn()
 	{
-		Query q = pm.NewQuery(typeof(CmpDir1OthpconTblAutoLeft));
-		ownVar = (CmpDir1OthpconTblAutoLeft) q.ExecuteSingle();
+		var q = new NDOQuery<CmpDir1OthpconTblAutoLeft>(pm);
+		ownVar = q.ExecuteSingle();
 	}
 	void QueryOther()
 	{
-		Query q = pm.NewQuery(typeof(CmpDir1OthpconTblAutoRightBase));
-		otherVar = (CmpDir1OthpconTblAutoRightBase) q.ExecuteSingle();
+		var q = new NDOQuery<CmpDir1OthpconTblAutoRightBase>(pm);
+		otherVar = q.ExecuteSingle();
 	}
 }
 
@@ -6401,15 +6348,14 @@ public class TestCmpBi11OthpconNoTblAuto
 	public void TearDown()
 	{
 		pm.UnloadCache();
-		IList l;
-		l = pm.NewQuery(typeof(CmpBi11OthpconNoTblAutoLeft)).Execute();
+		var l = pm.Objects<CmpBi11OthpconNoTblAutoLeft>().ResultTable;
 		pm.Delete(l);
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) pm.NewQuery(typeof(CmpBi11OthpconNoTblAutoLeft)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpBi11OthpconNoTblAutoLeft>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) pm.NewQuery(typeof(CmpBi11OthpconNoTblAutoRightBase)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpBi11OthpconNoTblAutoRightBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test, ExpectedException(typeof(NDOException))]
@@ -6462,13 +6408,13 @@ public class TestCmpBi11OthpconNoTblAuto
 	}
 	void QueryOwn()
 	{
-		Query q = pm.NewQuery(typeof(CmpBi11OthpconNoTblAutoLeft));
-		ownVar = (CmpBi11OthpconNoTblAutoLeft) q.ExecuteSingle();
+		var q = new NDOQuery<CmpBi11OthpconNoTblAutoLeft>(pm);
+		ownVar = q.ExecuteSingle();
 	}
 	void QueryOther()
 	{
-		Query q = pm.NewQuery(typeof(CmpBi11OthpconNoTblAutoRightBase));
-		otherVar = (CmpBi11OthpconNoTblAutoRightBase) q.ExecuteSingle();
+		var q = new NDOQuery<CmpBi11OthpconNoTblAutoRightBase>(pm);
+		otherVar = q.ExecuteSingle();
 	}
 }
 
@@ -6490,15 +6436,14 @@ public class TestCmpBi11OthpconTblAuto
 	public void TearDown()
 	{
 		pm.UnloadCache();
-		IList l;
-		l = pm.NewQuery(typeof(CmpBi11OthpconTblAutoLeft)).Execute();
+		var l = pm.Objects<CmpBi11OthpconTblAutoLeft>().ResultTable;
 		pm.Delete(l);
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) pm.NewQuery(typeof(CmpBi11OthpconTblAutoLeft)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpBi11OthpconTblAutoLeft>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) pm.NewQuery(typeof(CmpBi11OthpconTblAutoRightBase)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpBi11OthpconTblAutoRightBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -6612,13 +6557,13 @@ public class TestCmpBi11OthpconTblAuto
 	}
 	void QueryOwn()
 	{
-		Query q = pm.NewQuery(typeof(CmpBi11OthpconTblAutoLeft));
-		ownVar = (CmpBi11OthpconTblAutoLeft) q.ExecuteSingle();
+		var q = new NDOQuery<CmpBi11OthpconTblAutoLeft>(pm);
+		ownVar = q.ExecuteSingle();
 	}
 	void QueryOther()
 	{
-		Query q = pm.NewQuery(typeof(CmpBi11OthpconTblAutoRightBase));
-		otherVar = (CmpBi11OthpconTblAutoRightBase) q.ExecuteSingle();
+		var q = new NDOQuery<CmpBi11OthpconTblAutoRightBase>(pm);
+		otherVar = q.ExecuteSingle();
 	}
 }
 
@@ -6640,15 +6585,14 @@ public class TestCmpDirnOthpconTblAuto
 	public void TearDown()
 	{
 		pm.UnloadCache();
-		IList l;
-		l = pm.NewQuery(typeof(CmpDirnOthpconTblAutoLeft)).Execute();
+		var l = pm.Objects<CmpDirnOthpconTblAutoLeft>().ResultTable;
 		pm.Delete(l);
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) pm.NewQuery(typeof(CmpDirnOthpconTblAutoLeft)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpDirnOthpconTblAutoLeft>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) pm.NewQuery(typeof(CmpDirnOthpconTblAutoRightBase)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpDirnOthpconTblAutoRightBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -6696,13 +6640,13 @@ public class TestCmpDirnOthpconTblAuto
 	}
 	void QueryOwn()
 	{
-		Query q = pm.NewQuery(typeof(CmpDirnOthpconTblAutoLeft));
-		ownVar = (CmpDirnOthpconTblAutoLeft) q.ExecuteSingle();
+		var q = new NDOQuery<CmpDirnOthpconTblAutoLeft>(pm);
+		ownVar = q.ExecuteSingle();
 	}
 	void QueryOther()
 	{
-		Query q = pm.NewQuery(typeof(CmpDirnOthpconTblAutoRightBase));
-		otherVar = (CmpDirnOthpconTblAutoRightBase) q.ExecuteSingle();
+		var q = new NDOQuery<CmpDirnOthpconTblAutoRightBase>(pm);
+		otherVar = q.ExecuteSingle();
 	}
 }
 
@@ -6724,15 +6668,14 @@ public class TestCmpBin1OthpconTblAuto
 	public void TearDown()
 	{
 		pm.UnloadCache();
-		IList l;
-		l = pm.NewQuery(typeof(CmpBin1OthpconTblAutoLeft)).Execute();
+		var l = pm.Objects<CmpBin1OthpconTblAutoLeft>().ResultTable;
 		pm.Delete(l);
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) pm.NewQuery(typeof(CmpBin1OthpconTblAutoLeft)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpBin1OthpconTblAutoLeft>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) pm.NewQuery(typeof(CmpBin1OthpconTblAutoRightBase)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpBin1OthpconTblAutoRightBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -6825,13 +6768,13 @@ public class TestCmpBin1OthpconTblAuto
 	}
 	void QueryOwn()
 	{
-		Query q = pm.NewQuery(typeof(CmpBin1OthpconTblAutoLeft));
-		ownVar = (CmpBin1OthpconTblAutoLeft) q.ExecuteSingle();
+		var q = new NDOQuery<CmpBin1OthpconTblAutoLeft>(pm);
+		ownVar = q.ExecuteSingle();
 	}
 	void QueryOther()
 	{
-		Query q = pm.NewQuery(typeof(CmpBin1OthpconTblAutoRightBase));
-		otherVar = (CmpBin1OthpconTblAutoRightBase) q.ExecuteSingle();
+		var q = new NDOQuery<CmpBin1OthpconTblAutoRightBase>(pm);
+		otherVar = q.ExecuteSingle();
 	}
 }
 
@@ -6853,15 +6796,14 @@ public class TestCmpBi1nOthpconNoTblAuto
 	public void TearDown()
 	{
 		pm.UnloadCache();
-		IList l;
-		l = pm.NewQuery(typeof(CmpBi1nOthpconNoTblAutoLeft)).Execute();
+		var l = pm.Objects<CmpBi1nOthpconNoTblAutoLeft>().ResultTable;
 		pm.Delete(l);
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) pm.NewQuery(typeof(CmpBi1nOthpconNoTblAutoLeft)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpBi1nOthpconNoTblAutoLeft>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) pm.NewQuery(typeof(CmpBi1nOthpconNoTblAutoRightBase)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpBi1nOthpconNoTblAutoRightBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test, ExpectedException(typeof(NDOException))]
@@ -6914,13 +6856,13 @@ public class TestCmpBi1nOthpconNoTblAuto
 	}
 	void QueryOwn()
 	{
-		Query q = pm.NewQuery(typeof(CmpBi1nOthpconNoTblAutoLeft));
-		ownVar = (CmpBi1nOthpconNoTblAutoLeft) q.ExecuteSingle();
+		var q = new NDOQuery<CmpBi1nOthpconNoTblAutoLeft>(pm);
+		ownVar = q.ExecuteSingle();
 	}
 	void QueryOther()
 	{
-		Query q = pm.NewQuery(typeof(CmpBi1nOthpconNoTblAutoRightBase));
-		otherVar = (CmpBi1nOthpconNoTblAutoRightBase) q.ExecuteSingle();
+		var q = new NDOQuery<CmpBi1nOthpconNoTblAutoRightBase>(pm);
+		otherVar = q.ExecuteSingle();
 	}
 }
 
@@ -6942,15 +6884,14 @@ public class TestCmpBi1nOthpconTblAuto
 	public void TearDown()
 	{
 		pm.UnloadCache();
-		IList l;
-		l = pm.NewQuery(typeof(CmpBi1nOthpconTblAutoLeft)).Execute();
+		var l = pm.Objects<CmpBi1nOthpconTblAutoLeft>().ResultTable;
 		pm.Delete(l);
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) pm.NewQuery(typeof(CmpBi1nOthpconTblAutoLeft)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpBi1nOthpconTblAutoLeft>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) pm.NewQuery(typeof(CmpBi1nOthpconTblAutoRightBase)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpBi1nOthpconTblAutoRightBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -7033,13 +6974,13 @@ public class TestCmpBi1nOthpconTblAuto
 	}
 	void QueryOwn()
 	{
-		Query q = pm.NewQuery(typeof(CmpBi1nOthpconTblAutoLeft));
-		ownVar = (CmpBi1nOthpconTblAutoLeft) q.ExecuteSingle();
+		var q = new NDOQuery<CmpBi1nOthpconTblAutoLeft>(pm);
+		ownVar = q.ExecuteSingle();
 	}
 	void QueryOther()
 	{
-		Query q = pm.NewQuery(typeof(CmpBi1nOthpconTblAutoRightBase));
-		otherVar = (CmpBi1nOthpconTblAutoRightBase) q.ExecuteSingle();
+		var q = new NDOQuery<CmpBi1nOthpconTblAutoRightBase>(pm);
+		otherVar = q.ExecuteSingle();
 	}
 }
 
@@ -7061,15 +7002,14 @@ public class TestCmpBinnOthpconTblAuto
 	public void TearDown()
 	{
 		pm.UnloadCache();
-		IList l;
-		l = pm.NewQuery(typeof(CmpBinnOthpconTblAutoLeft)).Execute();
+		var l = pm.Objects<CmpBinnOthpconTblAutoLeft>().ResultTable;
 		pm.Delete(l);
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) pm.NewQuery(typeof(CmpBinnOthpconTblAutoLeft)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpBinnOthpconTblAutoLeft>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) pm.NewQuery(typeof(CmpBinnOthpconTblAutoRightBase)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpBinnOthpconTblAutoRightBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -7131,13 +7071,13 @@ public class TestCmpBinnOthpconTblAuto
 	}
 	void QueryOwn()
 	{
-		Query q = pm.NewQuery(typeof(CmpBinnOthpconTblAutoLeft));
-		ownVar = (CmpBinnOthpconTblAutoLeft) q.ExecuteSingle();
+		var q = new NDOQuery<CmpBinnOthpconTblAutoLeft>(pm);
+		ownVar = q.ExecuteSingle();
 	}
 	void QueryOther()
 	{
-		Query q = pm.NewQuery(typeof(CmpBinnOthpconTblAutoRightBase));
-		otherVar = (CmpBinnOthpconTblAutoRightBase) q.ExecuteSingle();
+		var q = new NDOQuery<CmpBinnOthpconTblAutoRightBase>(pm);
+		otherVar = q.ExecuteSingle();
 	}
 }
 
@@ -7159,19 +7099,18 @@ public class TestAgrDir1OwnpconOthpconNoTblAuto
 	public void TearDown()
 	{
 		pm.UnloadCache();
-		IList l;
-		l = pm.NewQuery(typeof(AgrDir1OwnpconOthpconNoTblAutoLeftBase)).Execute();
+		var l = pm.Objects<AgrDir1OwnpconOthpconNoTblAutoLeftBase>().ResultTable;
 		pm.Delete(l);
 		pm.Save();
 		pm.UnloadCache();
-		l = pm.NewQuery(typeof(AgrDir1OwnpconOthpconNoTblAutoRightBase)).Execute();
-		pm.Delete(l);
+		var m = pm.Objects<AgrDir1OwnpconOthpconNoTblAutoRightBase>().ResultTable;
+		pm.Delete(m);
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) pm.NewQuery(typeof(AgrDir1OwnpconOthpconNoTblAutoLeftBase)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrDir1OwnpconOthpconNoTblAutoLeftBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) pm.NewQuery(typeof(AgrDir1OwnpconOthpconNoTblAutoRightBase)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrDir1OwnpconOthpconNoTblAutoRightBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -7254,13 +7193,13 @@ public class TestAgrDir1OwnpconOthpconNoTblAuto
 	}
 	void QueryOwn()
 	{
-		Query q = pm.NewQuery(typeof(AgrDir1OwnpconOthpconNoTblAutoLeftBase));
-		ownVar = (AgrDir1OwnpconOthpconNoTblAutoLeftBase) q.ExecuteSingle();
+		var q = new NDOQuery<AgrDir1OwnpconOthpconNoTblAutoLeftBase>(pm);
+		ownVar = q.ExecuteSingle();
 	}
 	void QueryOther()
 	{
-		Query q = pm.NewQuery(typeof(AgrDir1OwnpconOthpconNoTblAutoRightBase));
-		otherVar = (AgrDir1OwnpconOthpconNoTblAutoRightBase) q.ExecuteSingle();
+		var q = new NDOQuery<AgrDir1OwnpconOthpconNoTblAutoRightBase>(pm);
+		otherVar = q.ExecuteSingle();
 	}
 }
 
@@ -7282,19 +7221,18 @@ public class TestAgrDir1OwnpconOthpconTblAuto
 	public void TearDown()
 	{
 		pm.UnloadCache();
-		IList l;
-		l = pm.NewQuery(typeof(AgrDir1OwnpconOthpconTblAutoLeftBase)).Execute();
+		var l = pm.Objects<AgrDir1OwnpconOthpconTblAutoLeftBase>().ResultTable;
 		pm.Delete(l);
 		pm.Save();
 		pm.UnloadCache();
-		l = pm.NewQuery(typeof(AgrDir1OwnpconOthpconTblAutoRightBase)).Execute();
-		pm.Delete(l);
+		var m = pm.Objects<AgrDir1OwnpconOthpconTblAutoRightBase>().ResultTable;
+		pm.Delete(m);
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) pm.NewQuery(typeof(AgrDir1OwnpconOthpconTblAutoLeftBase)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrDir1OwnpconOthpconTblAutoLeftBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) pm.NewQuery(typeof(AgrDir1OwnpconOthpconTblAutoRightBase)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrDir1OwnpconOthpconTblAutoRightBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -7364,13 +7302,13 @@ public class TestAgrDir1OwnpconOthpconTblAuto
 	}
 	void QueryOwn()
 	{
-		Query q = pm.NewQuery(typeof(AgrDir1OwnpconOthpconTblAutoLeftBase));
-		ownVar = (AgrDir1OwnpconOthpconTblAutoLeftBase) q.ExecuteSingle();
+		var q = new NDOQuery<AgrDir1OwnpconOthpconTblAutoLeftBase>(pm);
+		ownVar = q.ExecuteSingle();
 	}
 	void QueryOther()
 	{
-		Query q = pm.NewQuery(typeof(AgrDir1OwnpconOthpconTblAutoRightBase));
-		otherVar = (AgrDir1OwnpconOthpconTblAutoRightBase) q.ExecuteSingle();
+		var q = new NDOQuery<AgrDir1OwnpconOthpconTblAutoRightBase>(pm);
+		otherVar = q.ExecuteSingle();
 	}
 }
 
@@ -7392,19 +7330,18 @@ public class TestAgrBi11OwnpconOthpconNoTblAuto
 	public void TearDown()
 	{
 		pm.UnloadCache();
-		IList l;
-		l = pm.NewQuery(typeof(AgrBi11OwnpconOthpconNoTblAutoLeftBase)).Execute();
+		var l = pm.Objects<AgrBi11OwnpconOthpconNoTblAutoLeftBase>().ResultTable;
 		pm.Delete(l);
 		pm.Save();
 		pm.UnloadCache();
-		l = pm.NewQuery(typeof(AgrBi11OwnpconOthpconNoTblAutoRightBase)).Execute();
-		pm.Delete(l);
+		var m = pm.Objects<AgrBi11OwnpconOthpconNoTblAutoRightBase>().ResultTable;
+		pm.Delete(m);
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) pm.NewQuery(typeof(AgrBi11OwnpconOthpconNoTblAutoLeftBase)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrBi11OwnpconOthpconNoTblAutoLeftBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) pm.NewQuery(typeof(AgrBi11OwnpconOthpconNoTblAutoRightBase)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrBi11OwnpconOthpconNoTblAutoRightBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -7528,13 +7465,13 @@ public class TestAgrBi11OwnpconOthpconNoTblAuto
 	}
 	void QueryOwn()
 	{
-		Query q = pm.NewQuery(typeof(AgrBi11OwnpconOthpconNoTblAutoLeftBase));
-		ownVar = (AgrBi11OwnpconOthpconNoTblAutoLeftBase) q.ExecuteSingle();
+		var q = new NDOQuery<AgrBi11OwnpconOthpconNoTblAutoLeftBase>(pm);
+		ownVar = q.ExecuteSingle();
 	}
 	void QueryOther()
 	{
-		Query q = pm.NewQuery(typeof(AgrBi11OwnpconOthpconNoTblAutoRightBase));
-		otherVar = (AgrBi11OwnpconOthpconNoTblAutoRightBase) q.ExecuteSingle();
+		var q = new NDOQuery<AgrBi11OwnpconOthpconNoTblAutoRightBase>(pm);
+		otherVar = q.ExecuteSingle();
 	}
 }
 
@@ -7556,19 +7493,18 @@ public class TestAgrBi11OwnpconOthpconTblAuto
 	public void TearDown()
 	{
 		pm.UnloadCache();
-		IList l;
-		l = pm.NewQuery(typeof(AgrBi11OwnpconOthpconTblAutoLeftBase)).Execute();
+		var l = pm.Objects<AgrBi11OwnpconOthpconTblAutoLeftBase>().ResultTable;
 		pm.Delete(l);
 		pm.Save();
 		pm.UnloadCache();
-		l = pm.NewQuery(typeof(AgrBi11OwnpconOthpconTblAutoRightBase)).Execute();
-		pm.Delete(l);
+		var m = pm.Objects<AgrBi11OwnpconOthpconTblAutoRightBase>().ResultTable;
+		pm.Delete(m);
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) pm.NewQuery(typeof(AgrBi11OwnpconOthpconTblAutoLeftBase)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrBi11OwnpconOthpconTblAutoLeftBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) pm.NewQuery(typeof(AgrBi11OwnpconOthpconTblAutoRightBase)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrBi11OwnpconOthpconTblAutoRightBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -7690,13 +7626,13 @@ public class TestAgrBi11OwnpconOthpconTblAuto
 	}
 	void QueryOwn()
 	{
-		Query q = pm.NewQuery(typeof(AgrBi11OwnpconOthpconTblAutoLeftBase));
-		ownVar = (AgrBi11OwnpconOthpconTblAutoLeftBase) q.ExecuteSingle();
+		var q = new NDOQuery<AgrBi11OwnpconOthpconTblAutoLeftBase>(pm);
+		ownVar = q.ExecuteSingle();
 	}
 	void QueryOther()
 	{
-		Query q = pm.NewQuery(typeof(AgrBi11OwnpconOthpconTblAutoRightBase));
-		otherVar = (AgrBi11OwnpconOthpconTblAutoRightBase) q.ExecuteSingle();
+		var q = new NDOQuery<AgrBi11OwnpconOthpconTblAutoRightBase>(pm);
+		otherVar = q.ExecuteSingle();
 	}
 }
 
@@ -7718,19 +7654,18 @@ public class TestAgrDirnOwnpconOthpconTblAuto
 	public void TearDown()
 	{
 		pm.UnloadCache();
-		IList l;
-		l = pm.NewQuery(typeof(AgrDirnOwnpconOthpconTblAutoLeftBase)).Execute();
+		var l = pm.Objects<AgrDirnOwnpconOthpconTblAutoLeftBase>().ResultTable;
 		pm.Delete(l);
 		pm.Save();
 		pm.UnloadCache();
-		l = pm.NewQuery(typeof(AgrDirnOwnpconOthpconTblAutoRightBase)).Execute();
-		pm.Delete(l);
+		var m = pm.Objects<AgrDirnOwnpconOthpconTblAutoRightBase>().ResultTable;
+		pm.Delete(m);
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) pm.NewQuery(typeof(AgrDirnOwnpconOthpconTblAutoLeftBase)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrDirnOwnpconOthpconTblAutoLeftBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) pm.NewQuery(typeof(AgrDirnOwnpconOthpconTblAutoRightBase)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrDirnOwnpconOthpconTblAutoRightBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -7779,13 +7714,13 @@ public class TestAgrDirnOwnpconOthpconTblAuto
 	}
 	void QueryOwn()
 	{
-		Query q = pm.NewQuery(typeof(AgrDirnOwnpconOthpconTblAutoLeftBase));
-		ownVar = (AgrDirnOwnpconOthpconTblAutoLeftBase) q.ExecuteSingle();
+		var q = new NDOQuery<AgrDirnOwnpconOthpconTblAutoLeftBase>(pm);
+		ownVar = q.ExecuteSingle();
 	}
 	void QueryOther()
 	{
-		Query q = pm.NewQuery(typeof(AgrDirnOwnpconOthpconTblAutoRightBase));
-		otherVar = (AgrDirnOwnpconOthpconTblAutoRightBase) q.ExecuteSingle();
+		var q = new NDOQuery<AgrDirnOwnpconOthpconTblAutoRightBase>(pm);
+		otherVar = q.ExecuteSingle();
 	}
 }
 
@@ -7807,19 +7742,18 @@ public class TestAgrBin1OwnpconOthpconTblAuto
 	public void TearDown()
 	{
 		pm.UnloadCache();
-		IList l;
-		l = pm.NewQuery(typeof(AgrBin1OwnpconOthpconTblAutoLeftBase)).Execute();
+		var l = pm.Objects<AgrBin1OwnpconOthpconTblAutoLeftBase>().ResultTable;
 		pm.Delete(l);
 		pm.Save();
 		pm.UnloadCache();
-		l = pm.NewQuery(typeof(AgrBin1OwnpconOthpconTblAutoRightBase)).Execute();
-		pm.Delete(l);
+		var m = pm.Objects<AgrBin1OwnpconOthpconTblAutoRightBase>().ResultTable;
+		pm.Delete(m);
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) pm.NewQuery(typeof(AgrBin1OwnpconOthpconTblAutoLeftBase)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrBin1OwnpconOthpconTblAutoLeftBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) pm.NewQuery(typeof(AgrBin1OwnpconOthpconTblAutoRightBase)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrBin1OwnpconOthpconTblAutoRightBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -7920,13 +7854,13 @@ public class TestAgrBin1OwnpconOthpconTblAuto
 	}
 	void QueryOwn()
 	{
-		Query q = pm.NewQuery(typeof(AgrBin1OwnpconOthpconTblAutoLeftBase));
-		ownVar = (AgrBin1OwnpconOthpconTblAutoLeftBase) q.ExecuteSingle();
+		var q = new NDOQuery<AgrBin1OwnpconOthpconTblAutoLeftBase>(pm);
+		ownVar = q.ExecuteSingle();
 	}
 	void QueryOther()
 	{
-		Query q = pm.NewQuery(typeof(AgrBin1OwnpconOthpconTblAutoRightBase));
-		otherVar = (AgrBin1OwnpconOthpconTblAutoRightBase) q.ExecuteSingle();
+		var q = new NDOQuery<AgrBin1OwnpconOthpconTblAutoRightBase>(pm);
+		otherVar = q.ExecuteSingle();
 	}
 }
 
@@ -7948,19 +7882,18 @@ public class TestAgrBi1nOwnpconOthpconTblAuto
 	public void TearDown()
 	{
 		pm.UnloadCache();
-		IList l;
-		l = pm.NewQuery(typeof(AgrBi1nOwnpconOthpconTblAutoLeftBase)).Execute();
+		var l = pm.Objects<AgrBi1nOwnpconOthpconTblAutoLeftBase>().ResultTable;
 		pm.Delete(l);
 		pm.Save();
 		pm.UnloadCache();
-		l = pm.NewQuery(typeof(AgrBi1nOwnpconOthpconTblAutoRightBase)).Execute();
-		pm.Delete(l);
+		var m = pm.Objects<AgrBi1nOwnpconOthpconTblAutoRightBase>().ResultTable;
+		pm.Delete(m);
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) pm.NewQuery(typeof(AgrBi1nOwnpconOthpconTblAutoLeftBase)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrBi1nOwnpconOthpconTblAutoLeftBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) pm.NewQuery(typeof(AgrBi1nOwnpconOthpconTblAutoRightBase)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrBi1nOwnpconOthpconTblAutoRightBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -8050,13 +7983,13 @@ public class TestAgrBi1nOwnpconOthpconTblAuto
 	}
 	void QueryOwn()
 	{
-		Query q = pm.NewQuery(typeof(AgrBi1nOwnpconOthpconTblAutoLeftBase));
-		ownVar = (AgrBi1nOwnpconOthpconTblAutoLeftBase) q.ExecuteSingle();
+		var q = new NDOQuery<AgrBi1nOwnpconOthpconTblAutoLeftBase>(pm);
+		ownVar = q.ExecuteSingle();
 	}
 	void QueryOther()
 	{
-		Query q = pm.NewQuery(typeof(AgrBi1nOwnpconOthpconTblAutoRightBase));
-		otherVar = (AgrBi1nOwnpconOthpconTblAutoRightBase) q.ExecuteSingle();
+		var q = new NDOQuery<AgrBi1nOwnpconOthpconTblAutoRightBase>(pm);
+		otherVar = q.ExecuteSingle();
 	}
 }
 
@@ -8078,19 +8011,18 @@ public class TestAgrBinnOwnpconOthpconTblAuto
 	public void TearDown()
 	{
 		pm.UnloadCache();
-		IList l;
-		l = pm.NewQuery(typeof(AgrBinnOwnpconOthpconTblAutoLeftBase)).Execute();
+		var l = pm.Objects<AgrBinnOwnpconOthpconTblAutoLeftBase>().ResultTable;
 		pm.Delete(l);
 		pm.Save();
 		pm.UnloadCache();
-		l = pm.NewQuery(typeof(AgrBinnOwnpconOthpconTblAutoRightBase)).Execute();
-		pm.Delete(l);
+		var m = pm.Objects<AgrBinnOwnpconOthpconTblAutoRightBase>().ResultTable;
+		pm.Delete(m);
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) pm.NewQuery(typeof(AgrBinnOwnpconOthpconTblAutoLeftBase)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrBinnOwnpconOthpconTblAutoLeftBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) pm.NewQuery(typeof(AgrBinnOwnpconOthpconTblAutoRightBase)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrBinnOwnpconOthpconTblAutoRightBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -8159,13 +8091,13 @@ public class TestAgrBinnOwnpconOthpconTblAuto
 	}
 	void QueryOwn()
 	{
-		Query q = pm.NewQuery(typeof(AgrBinnOwnpconOthpconTblAutoLeftBase));
-		ownVar = (AgrBinnOwnpconOthpconTblAutoLeftBase) q.ExecuteSingle();
+		var q = new NDOQuery<AgrBinnOwnpconOthpconTblAutoLeftBase>(pm);
+		ownVar = q.ExecuteSingle();
 	}
 	void QueryOther()
 	{
-		Query q = pm.NewQuery(typeof(AgrBinnOwnpconOthpconTblAutoRightBase));
-		otherVar = (AgrBinnOwnpconOthpconTblAutoRightBase) q.ExecuteSingle();
+		var q = new NDOQuery<AgrBinnOwnpconOthpconTblAutoRightBase>(pm);
+		otherVar = q.ExecuteSingle();
 	}
 }
 
@@ -8187,15 +8119,14 @@ public class TestCmpDir1OwnpconOthpconNoTblAuto
 	public void TearDown()
 	{
 		pm.UnloadCache();
-		IList l;
-		l = pm.NewQuery(typeof(CmpDir1OwnpconOthpconNoTblAutoLeftBase)).Execute();
+		var l = pm.Objects<CmpDir1OwnpconOthpconNoTblAutoLeftBase>().ResultTable;
 		pm.Delete(l);
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) pm.NewQuery(typeof(CmpDir1OwnpconOthpconNoTblAutoLeftBase)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpDir1OwnpconOthpconNoTblAutoLeftBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) pm.NewQuery(typeof(CmpDir1OwnpconOthpconNoTblAutoRightBase)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpDir1OwnpconOthpconNoTblAutoRightBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test, ExpectedException(typeof(NDOException))]
@@ -8234,13 +8165,13 @@ public class TestCmpDir1OwnpconOthpconNoTblAuto
 	}
 	void QueryOwn()
 	{
-		Query q = pm.NewQuery(typeof(CmpDir1OwnpconOthpconNoTblAutoLeftBase));
-		ownVar = (CmpDir1OwnpconOthpconNoTblAutoLeftBase) q.ExecuteSingle();
+		var q = new NDOQuery<CmpDir1OwnpconOthpconNoTblAutoLeftBase>(pm);
+		ownVar = q.ExecuteSingle();
 	}
 	void QueryOther()
 	{
-		Query q = pm.NewQuery(typeof(CmpDir1OwnpconOthpconNoTblAutoRightBase));
-		otherVar = (CmpDir1OwnpconOthpconNoTblAutoRightBase) q.ExecuteSingle();
+		var q = new NDOQuery<CmpDir1OwnpconOthpconNoTblAutoRightBase>(pm);
+		otherVar = q.ExecuteSingle();
 	}
 }
 
@@ -8262,15 +8193,14 @@ public class TestCmpDir1OwnpconOthpconTblAuto
 	public void TearDown()
 	{
 		pm.UnloadCache();
-		IList l;
-		l = pm.NewQuery(typeof(CmpDir1OwnpconOthpconTblAutoLeftBase)).Execute();
+		var l = pm.Objects<CmpDir1OwnpconOthpconTblAutoLeftBase>().ResultTable;
 		pm.Delete(l);
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) pm.NewQuery(typeof(CmpDir1OwnpconOthpconTblAutoLeftBase)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpDir1OwnpconOthpconTblAutoLeftBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) pm.NewQuery(typeof(CmpDir1OwnpconOthpconTblAutoRightBase)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpDir1OwnpconOthpconTblAutoRightBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -8339,13 +8269,13 @@ public class TestCmpDir1OwnpconOthpconTblAuto
 	}
 	void QueryOwn()
 	{
-		Query q = pm.NewQuery(typeof(CmpDir1OwnpconOthpconTblAutoLeftBase));
-		ownVar = (CmpDir1OwnpconOthpconTblAutoLeftBase) q.ExecuteSingle();
+		var q = new NDOQuery<CmpDir1OwnpconOthpconTblAutoLeftBase>(pm);
+		ownVar = q.ExecuteSingle();
 	}
 	void QueryOther()
 	{
-		Query q = pm.NewQuery(typeof(CmpDir1OwnpconOthpconTblAutoRightBase));
-		otherVar = (CmpDir1OwnpconOthpconTblAutoRightBase) q.ExecuteSingle();
+		var q = new NDOQuery<CmpDir1OwnpconOthpconTblAutoRightBase>(pm);
+		otherVar = q.ExecuteSingle();
 	}
 }
 
@@ -8367,15 +8297,14 @@ public class TestCmpBi11OwnpconOthpconNoTblAuto
 	public void TearDown()
 	{
 		pm.UnloadCache();
-		IList l;
-		l = pm.NewQuery(typeof(CmpBi11OwnpconOthpconNoTblAutoLeftBase)).Execute();
+		var l = pm.Objects<CmpBi11OwnpconOthpconNoTblAutoLeftBase>().ResultTable;
 		pm.Delete(l);
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) pm.NewQuery(typeof(CmpBi11OwnpconOthpconNoTblAutoLeftBase)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpBi11OwnpconOthpconNoTblAutoLeftBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) pm.NewQuery(typeof(CmpBi11OwnpconOthpconNoTblAutoRightBase)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpBi11OwnpconOthpconNoTblAutoRightBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test, ExpectedException(typeof(NDOException))]
@@ -8434,13 +8363,13 @@ public class TestCmpBi11OwnpconOthpconNoTblAuto
 	}
 	void QueryOwn()
 	{
-		Query q = pm.NewQuery(typeof(CmpBi11OwnpconOthpconNoTblAutoLeftBase));
-		ownVar = (CmpBi11OwnpconOthpconNoTblAutoLeftBase) q.ExecuteSingle();
+		var q = new NDOQuery<CmpBi11OwnpconOthpconNoTblAutoLeftBase>(pm);
+		ownVar = q.ExecuteSingle();
 	}
 	void QueryOther()
 	{
-		Query q = pm.NewQuery(typeof(CmpBi11OwnpconOthpconNoTblAutoRightBase));
-		otherVar = (CmpBi11OwnpconOthpconNoTblAutoRightBase) q.ExecuteSingle();
+		var q = new NDOQuery<CmpBi11OwnpconOthpconNoTblAutoRightBase>(pm);
+		otherVar = q.ExecuteSingle();
 	}
 }
 
@@ -8462,15 +8391,14 @@ public class TestCmpBi11OwnpconOthpconTblAuto
 	public void TearDown()
 	{
 		pm.UnloadCache();
-		IList l;
-		l = pm.NewQuery(typeof(CmpBi11OwnpconOthpconTblAutoLeftBase)).Execute();
+		var l = pm.Objects<CmpBi11OwnpconOthpconTblAutoLeftBase>().ResultTable;
 		pm.Delete(l);
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) pm.NewQuery(typeof(CmpBi11OwnpconOthpconTblAutoLeftBase)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpBi11OwnpconOthpconTblAutoLeftBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) pm.NewQuery(typeof(CmpBi11OwnpconOthpconTblAutoRightBase)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpBi11OwnpconOthpconTblAutoRightBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -8590,13 +8518,13 @@ public class TestCmpBi11OwnpconOthpconTblAuto
 	}
 	void QueryOwn()
 	{
-		Query q = pm.NewQuery(typeof(CmpBi11OwnpconOthpconTblAutoLeftBase));
-		ownVar = (CmpBi11OwnpconOthpconTblAutoLeftBase) q.ExecuteSingle();
+		var q = new NDOQuery<CmpBi11OwnpconOthpconTblAutoLeftBase>(pm);
+		ownVar = q.ExecuteSingle();
 	}
 	void QueryOther()
 	{
-		Query q = pm.NewQuery(typeof(CmpBi11OwnpconOthpconTblAutoRightBase));
-		otherVar = (CmpBi11OwnpconOthpconTblAutoRightBase) q.ExecuteSingle();
+		var q = new NDOQuery<CmpBi11OwnpconOthpconTblAutoRightBase>(pm);
+		otherVar = q.ExecuteSingle();
 	}
 }
 
@@ -8618,15 +8546,14 @@ public class TestCmpDirnOwnpconOthpconTblAuto
 	public void TearDown()
 	{
 		pm.UnloadCache();
-		IList l;
-		l = pm.NewQuery(typeof(CmpDirnOwnpconOthpconTblAutoLeftBase)).Execute();
+		var l = pm.Objects<CmpDirnOwnpconOthpconTblAutoLeftBase>().ResultTable;
 		pm.Delete(l);
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) pm.NewQuery(typeof(CmpDirnOwnpconOthpconTblAutoLeftBase)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpDirnOwnpconOthpconTblAutoLeftBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) pm.NewQuery(typeof(CmpDirnOwnpconOthpconTblAutoRightBase)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpDirnOwnpconOthpconTblAutoRightBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -8674,13 +8601,13 @@ public class TestCmpDirnOwnpconOthpconTblAuto
 	}
 	void QueryOwn()
 	{
-		Query q = pm.NewQuery(typeof(CmpDirnOwnpconOthpconTblAutoLeftBase));
-		ownVar = (CmpDirnOwnpconOthpconTblAutoLeftBase) q.ExecuteSingle();
+		var q = new NDOQuery<CmpDirnOwnpconOthpconTblAutoLeftBase>(pm);
+		ownVar = q.ExecuteSingle();
 	}
 	void QueryOther()
 	{
-		Query q = pm.NewQuery(typeof(CmpDirnOwnpconOthpconTblAutoRightBase));
-		otherVar = (CmpDirnOwnpconOthpconTblAutoRightBase) q.ExecuteSingle();
+		var q = new NDOQuery<CmpDirnOwnpconOthpconTblAutoRightBase>(pm);
+		otherVar = q.ExecuteSingle();
 	}
 }
 
@@ -8702,15 +8629,14 @@ public class TestCmpBin1OwnpconOthpconTblAuto
 	public void TearDown()
 	{
 		pm.UnloadCache();
-		IList l;
-		l = pm.NewQuery(typeof(CmpBin1OwnpconOthpconTblAutoLeftBase)).Execute();
+		var l = pm.Objects<CmpBin1OwnpconOthpconTblAutoLeftBase>().ResultTable;
 		pm.Delete(l);
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) pm.NewQuery(typeof(CmpBin1OwnpconOthpconTblAutoLeftBase)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpBin1OwnpconOthpconTblAutoLeftBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) pm.NewQuery(typeof(CmpBin1OwnpconOthpconTblAutoRightBase)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpBin1OwnpconOthpconTblAutoRightBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -8809,13 +8735,13 @@ public class TestCmpBin1OwnpconOthpconTblAuto
 	}
 	void QueryOwn()
 	{
-		Query q = pm.NewQuery(typeof(CmpBin1OwnpconOthpconTblAutoLeftBase));
-		ownVar = (CmpBin1OwnpconOthpconTblAutoLeftBase) q.ExecuteSingle();
+		var q = new NDOQuery<CmpBin1OwnpconOthpconTblAutoLeftBase>(pm);
+		ownVar = q.ExecuteSingle();
 	}
 	void QueryOther()
 	{
-		Query q = pm.NewQuery(typeof(CmpBin1OwnpconOthpconTblAutoRightBase));
-		otherVar = (CmpBin1OwnpconOthpconTblAutoRightBase) q.ExecuteSingle();
+		var q = new NDOQuery<CmpBin1OwnpconOthpconTblAutoRightBase>(pm);
+		otherVar = q.ExecuteSingle();
 	}
 }
 
@@ -8837,15 +8763,14 @@ public class TestCmpBi1nOwnpconOthpconTblAuto
 	public void TearDown()
 	{
 		pm.UnloadCache();
-		IList l;
-		l = pm.NewQuery(typeof(CmpBi1nOwnpconOthpconTblAutoLeftBase)).Execute();
+		var l = pm.Objects<CmpBi1nOwnpconOthpconTblAutoLeftBase>().ResultTable;
 		pm.Delete(l);
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) pm.NewQuery(typeof(CmpBi1nOwnpconOthpconTblAutoLeftBase)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpBi1nOwnpconOthpconTblAutoLeftBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) pm.NewQuery(typeof(CmpBi1nOwnpconOthpconTblAutoRightBase)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpBi1nOwnpconOthpconTblAutoRightBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -8934,13 +8859,13 @@ public class TestCmpBi1nOwnpconOthpconTblAuto
 	}
 	void QueryOwn()
 	{
-		Query q = pm.NewQuery(typeof(CmpBi1nOwnpconOthpconTblAutoLeftBase));
-		ownVar = (CmpBi1nOwnpconOthpconTblAutoLeftBase) q.ExecuteSingle();
+		var q = new NDOQuery<CmpBi1nOwnpconOthpconTblAutoLeftBase>(pm);
+		ownVar = q.ExecuteSingle();
 	}
 	void QueryOther()
 	{
-		Query q = pm.NewQuery(typeof(CmpBi1nOwnpconOthpconTblAutoRightBase));
-		otherVar = (CmpBi1nOwnpconOthpconTblAutoRightBase) q.ExecuteSingle();
+		var q = new NDOQuery<CmpBi1nOwnpconOthpconTblAutoRightBase>(pm);
+		otherVar = q.ExecuteSingle();
 	}
 }
 
@@ -8962,15 +8887,14 @@ public class TestCmpBinnOwnpconOthpconTblAuto
 	public void TearDown()
 	{
 		pm.UnloadCache();
-		IList l;
-		l = pm.NewQuery(typeof(CmpBinnOwnpconOthpconTblAutoLeftBase)).Execute();
+		var l = pm.Objects<CmpBinnOwnpconOthpconTblAutoLeftBase>().ResultTable;
 		pm.Delete(l);
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) pm.NewQuery(typeof(CmpBinnOwnpconOthpconTblAutoLeftBase)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpBinnOwnpconOthpconTblAutoLeftBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) pm.NewQuery(typeof(CmpBinnOwnpconOthpconTblAutoRightBase)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpBinnOwnpconOthpconTblAutoRightBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -9038,13 +8962,13 @@ public class TestCmpBinnOwnpconOthpconTblAuto
 	}
 	void QueryOwn()
 	{
-		Query q = pm.NewQuery(typeof(CmpBinnOwnpconOthpconTblAutoLeftBase));
-		ownVar = (CmpBinnOwnpconOthpconTblAutoLeftBase) q.ExecuteSingle();
+		var q = new NDOQuery<CmpBinnOwnpconOthpconTblAutoLeftBase>(pm);
+		ownVar = q.ExecuteSingle();
 	}
 	void QueryOther()
 	{
-		Query q = pm.NewQuery(typeof(CmpBinnOwnpconOthpconTblAutoRightBase));
-		otherVar = (CmpBinnOwnpconOthpconTblAutoRightBase) q.ExecuteSingle();
+		var q = new NDOQuery<CmpBinnOwnpconOthpconTblAutoRightBase>(pm);
+		otherVar = q.ExecuteSingle();
 	}
 }
 
@@ -9066,19 +8990,18 @@ public class TestAgrDir1NoTblGuid
 	public void TearDown()
 	{
 		pm.UnloadCache();
-		IList l;
-		l = pm.NewQuery(typeof(AgrDir1NoTblGuidLeft)).Execute();
+		var l = pm.Objects<AgrDir1NoTblGuidLeft>().ResultTable;
 		pm.Delete(l);
 		pm.Save();
 		pm.UnloadCache();
-		l = pm.NewQuery(typeof(AgrDir1NoTblGuidRight)).Execute();
-		pm.Delete(l);
+		var m = pm.Objects<AgrDir1NoTblGuidRight>().ResultTable;
+		pm.Delete(m);
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) pm.NewQuery(typeof(AgrDir1NoTblGuidLeft)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrDir1NoTblGuidLeft>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) pm.NewQuery(typeof(AgrDir1NoTblGuidRight)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrDir1NoTblGuidRight>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -9148,13 +9071,13 @@ public class TestAgrDir1NoTblGuid
 	}
 	void QueryOwn()
 	{
-		Query q = pm.NewQuery(typeof(AgrDir1NoTblGuidLeft));
-		ownVar = (AgrDir1NoTblGuidLeft) q.ExecuteSingle();
+		var q = new NDOQuery<AgrDir1NoTblGuidLeft>(pm);
+		ownVar = q.ExecuteSingle();
 	}
 	void QueryOther()
 	{
-		Query q = pm.NewQuery(typeof(AgrDir1NoTblGuidRight));
-		otherVar = (AgrDir1NoTblGuidRight) q.ExecuteSingle();
+		var q = new NDOQuery<AgrDir1NoTblGuidRight>(pm);
+		otherVar = q.ExecuteSingle();
 	}
 }
 
@@ -9176,19 +9099,18 @@ public class TestAgrDir1TblGuid
 	public void TearDown()
 	{
 		pm.UnloadCache();
-		IList l;
-		l = pm.NewQuery(typeof(AgrDir1TblGuidLeft)).Execute();
+		var l = pm.Objects<AgrDir1TblGuidLeft>().ResultTable;
 		pm.Delete(l);
 		pm.Save();
 		pm.UnloadCache();
-		l = pm.NewQuery(typeof(AgrDir1TblGuidRight)).Execute();
-		pm.Delete(l);
+		var m = pm.Objects<AgrDir1TblGuidRight>().ResultTable;
+		pm.Delete(m);
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) pm.NewQuery(typeof(AgrDir1TblGuidLeft)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrDir1TblGuidLeft>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) pm.NewQuery(typeof(AgrDir1TblGuidRight)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrDir1TblGuidRight>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -9258,13 +9180,13 @@ public class TestAgrDir1TblGuid
 	}
 	void QueryOwn()
 	{
-		Query q = pm.NewQuery(typeof(AgrDir1TblGuidLeft));
-		ownVar = (AgrDir1TblGuidLeft) q.ExecuteSingle();
+		var q = new NDOQuery<AgrDir1TblGuidLeft>(pm);
+		ownVar = q.ExecuteSingle();
 	}
 	void QueryOther()
 	{
-		Query q = pm.NewQuery(typeof(AgrDir1TblGuidRight));
-		otherVar = (AgrDir1TblGuidRight) q.ExecuteSingle();
+		var q = new NDOQuery<AgrDir1TblGuidRight>(pm);
+		otherVar = q.ExecuteSingle();
 	}
 }
 
@@ -9286,19 +9208,18 @@ public class TestAgrBi11NoTblGuid
 	public void TearDown()
 	{
 		pm.UnloadCache();
-		IList l;
-		l = pm.NewQuery(typeof(AgrBi11NoTblGuidLeft)).Execute();
+		var l = pm.Objects<AgrBi11NoTblGuidLeft>().ResultTable;
 		pm.Delete(l);
 		pm.Save();
 		pm.UnloadCache();
-		l = pm.NewQuery(typeof(AgrBi11NoTblGuidRight)).Execute();
-		pm.Delete(l);
+		var m = pm.Objects<AgrBi11NoTblGuidRight>().ResultTable;
+		pm.Delete(m);
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) pm.NewQuery(typeof(AgrBi11NoTblGuidLeft)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrBi11NoTblGuidLeft>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) pm.NewQuery(typeof(AgrBi11NoTblGuidRight)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrBi11NoTblGuidRight>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -9409,13 +9330,13 @@ public class TestAgrBi11NoTblGuid
 	}
 	void QueryOwn()
 	{
-		Query q = pm.NewQuery(typeof(AgrBi11NoTblGuidLeft));
-		ownVar = (AgrBi11NoTblGuidLeft) q.ExecuteSingle();
+		var q = new NDOQuery<AgrBi11NoTblGuidLeft>(pm);
+		ownVar = q.ExecuteSingle();
 	}
 	void QueryOther()
 	{
-		Query q = pm.NewQuery(typeof(AgrBi11NoTblGuidRight));
-		otherVar = (AgrBi11NoTblGuidRight) q.ExecuteSingle();
+		var q = new NDOQuery<AgrBi11NoTblGuidRight>(pm);
+		otherVar = q.ExecuteSingle();
 	}
 }
 
@@ -9437,19 +9358,18 @@ public class TestAgrBi11TblGuid
 	public void TearDown()
 	{
 		pm.UnloadCache();
-		IList l;
-		l = pm.NewQuery(typeof(AgrBi11TblGuidLeft)).Execute();
+		var l = pm.Objects<AgrBi11TblGuidLeft>().ResultTable;
 		pm.Delete(l);
 		pm.Save();
 		pm.UnloadCache();
-		l = pm.NewQuery(typeof(AgrBi11TblGuidRight)).Execute();
-		pm.Delete(l);
+		var m = pm.Objects<AgrBi11TblGuidRight>().ResultTable;
+		pm.Delete(m);
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) pm.NewQuery(typeof(AgrBi11TblGuidLeft)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrBi11TblGuidLeft>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) pm.NewQuery(typeof(AgrBi11TblGuidRight)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrBi11TblGuidRight>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -9560,13 +9480,13 @@ public class TestAgrBi11TblGuid
 	}
 	void QueryOwn()
 	{
-		Query q = pm.NewQuery(typeof(AgrBi11TblGuidLeft));
-		ownVar = (AgrBi11TblGuidLeft) q.ExecuteSingle();
+		var q = new NDOQuery<AgrBi11TblGuidLeft>(pm);
+		ownVar = q.ExecuteSingle();
 	}
 	void QueryOther()
 	{
-		Query q = pm.NewQuery(typeof(AgrBi11TblGuidRight));
-		otherVar = (AgrBi11TblGuidRight) q.ExecuteSingle();
+		var q = new NDOQuery<AgrBi11TblGuidRight>(pm);
+		otherVar = q.ExecuteSingle();
 	}
 }
 
@@ -9588,19 +9508,18 @@ public class TestAgrDirnNoTblGuid
 	public void TearDown()
 	{
 		pm.UnloadCache();
-		IList l;
-		l = pm.NewQuery(typeof(AgrDirnNoTblGuidLeft)).Execute();
+		var l = pm.Objects<AgrDirnNoTblGuidLeft>().ResultTable;
 		pm.Delete(l);
 		pm.Save();
 		pm.UnloadCache();
-		l = pm.NewQuery(typeof(AgrDirnNoTblGuidRight)).Execute();
-		pm.Delete(l);
+		var m = pm.Objects<AgrDirnNoTblGuidRight>().ResultTable;
+		pm.Delete(m);
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) pm.NewQuery(typeof(AgrDirnNoTblGuidLeft)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrDirnNoTblGuidLeft>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) pm.NewQuery(typeof(AgrDirnNoTblGuidRight)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrDirnNoTblGuidRight>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -9649,13 +9568,13 @@ public class TestAgrDirnNoTblGuid
 	}
 	void QueryOwn()
 	{
-		Query q = pm.NewQuery(typeof(AgrDirnNoTblGuidLeft));
-		ownVar = (AgrDirnNoTblGuidLeft) q.ExecuteSingle();
+		var q = new NDOQuery<AgrDirnNoTblGuidLeft>(pm);
+		ownVar = q.ExecuteSingle();
 	}
 	void QueryOther()
 	{
-		Query q = pm.NewQuery(typeof(AgrDirnNoTblGuidRight));
-		otherVar = (AgrDirnNoTblGuidRight) q.ExecuteSingle();
+		var q = new NDOQuery<AgrDirnNoTblGuidRight>(pm);
+		otherVar = q.ExecuteSingle();
 	}
 }
 
@@ -9677,19 +9596,18 @@ public class TestAgrDirnTblGuid
 	public void TearDown()
 	{
 		pm.UnloadCache();
-		IList l;
-		l = pm.NewQuery(typeof(AgrDirnTblGuidLeft)).Execute();
+		var l = pm.Objects<AgrDirnTblGuidLeft>().ResultTable;
 		pm.Delete(l);
 		pm.Save();
 		pm.UnloadCache();
-		l = pm.NewQuery(typeof(AgrDirnTblGuidRight)).Execute();
-		pm.Delete(l);
+		var m = pm.Objects<AgrDirnTblGuidRight>().ResultTable;
+		pm.Delete(m);
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) pm.NewQuery(typeof(AgrDirnTblGuidLeft)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrDirnTblGuidLeft>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) pm.NewQuery(typeof(AgrDirnTblGuidRight)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrDirnTblGuidRight>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -9738,13 +9656,13 @@ public class TestAgrDirnTblGuid
 	}
 	void QueryOwn()
 	{
-		Query q = pm.NewQuery(typeof(AgrDirnTblGuidLeft));
-		ownVar = (AgrDirnTblGuidLeft) q.ExecuteSingle();
+		var q = new NDOQuery<AgrDirnTblGuidLeft>(pm);
+		ownVar = q.ExecuteSingle();
 	}
 	void QueryOther()
 	{
-		Query q = pm.NewQuery(typeof(AgrDirnTblGuidRight));
-		otherVar = (AgrDirnTblGuidRight) q.ExecuteSingle();
+		var q = new NDOQuery<AgrDirnTblGuidRight>(pm);
+		otherVar = q.ExecuteSingle();
 	}
 }
 
@@ -9766,19 +9684,18 @@ public class TestAgrBin1NoTblGuid
 	public void TearDown()
 	{
 		pm.UnloadCache();
-		IList l;
-		l = pm.NewQuery(typeof(AgrBin1NoTblGuidLeft)).Execute();
+		var l = pm.Objects<AgrBin1NoTblGuidLeft>().ResultTable;
 		pm.Delete(l);
 		pm.Save();
 		pm.UnloadCache();
-		l = pm.NewQuery(typeof(AgrBin1NoTblGuidRight)).Execute();
-		pm.Delete(l);
+		var m = pm.Objects<AgrBin1NoTblGuidRight>().ResultTable;
+		pm.Delete(m);
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) pm.NewQuery(typeof(AgrBin1NoTblGuidLeft)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrBin1NoTblGuidLeft>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) pm.NewQuery(typeof(AgrBin1NoTblGuidRight)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrBin1NoTblGuidRight>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -9868,13 +9785,13 @@ public class TestAgrBin1NoTblGuid
 	}
 	void QueryOwn()
 	{
-		Query q = pm.NewQuery(typeof(AgrBin1NoTblGuidLeft));
-		ownVar = (AgrBin1NoTblGuidLeft) q.ExecuteSingle();
+		var q = new NDOQuery<AgrBin1NoTblGuidLeft>(pm);
+		ownVar = q.ExecuteSingle();
 	}
 	void QueryOther()
 	{
-		Query q = pm.NewQuery(typeof(AgrBin1NoTblGuidRight));
-		otherVar = (AgrBin1NoTblGuidRight) q.ExecuteSingle();
+		var q = new NDOQuery<AgrBin1NoTblGuidRight>(pm);
+		otherVar = q.ExecuteSingle();
 	}
 }
 
@@ -9896,19 +9813,18 @@ public class TestAgrBin1TblGuid
 	public void TearDown()
 	{
 		pm.UnloadCache();
-		IList l;
-		l = pm.NewQuery(typeof(AgrBin1TblGuidLeft)).Execute();
+		var l = pm.Objects<AgrBin1TblGuidLeft>().ResultTable;
 		pm.Delete(l);
 		pm.Save();
 		pm.UnloadCache();
-		l = pm.NewQuery(typeof(AgrBin1TblGuidRight)).Execute();
-		pm.Delete(l);
+		var m = pm.Objects<AgrBin1TblGuidRight>().ResultTable;
+		pm.Delete(m);
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) pm.NewQuery(typeof(AgrBin1TblGuidLeft)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrBin1TblGuidLeft>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) pm.NewQuery(typeof(AgrBin1TblGuidRight)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrBin1TblGuidRight>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -9998,13 +9914,13 @@ public class TestAgrBin1TblGuid
 	}
 	void QueryOwn()
 	{
-		Query q = pm.NewQuery(typeof(AgrBin1TblGuidLeft));
-		ownVar = (AgrBin1TblGuidLeft) q.ExecuteSingle();
+		var q = new NDOQuery<AgrBin1TblGuidLeft>(pm);
+		ownVar = q.ExecuteSingle();
 	}
 	void QueryOther()
 	{
-		Query q = pm.NewQuery(typeof(AgrBin1TblGuidRight));
-		otherVar = (AgrBin1TblGuidRight) q.ExecuteSingle();
+		var q = new NDOQuery<AgrBin1TblGuidRight>(pm);
+		otherVar = q.ExecuteSingle();
 	}
 }
 
@@ -10026,19 +9942,18 @@ public class TestAgrBi1nNoTblGuid
 	public void TearDown()
 	{
 		pm.UnloadCache();
-		IList l;
-		l = pm.NewQuery(typeof(AgrBi1nNoTblGuidLeft)).Execute();
+		var l = pm.Objects<AgrBi1nNoTblGuidLeft>().ResultTable;
 		pm.Delete(l);
 		pm.Save();
 		pm.UnloadCache();
-		l = pm.NewQuery(typeof(AgrBi1nNoTblGuidRight)).Execute();
-		pm.Delete(l);
+		var m = pm.Objects<AgrBi1nNoTblGuidRight>().ResultTable;
+		pm.Delete(m);
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) pm.NewQuery(typeof(AgrBi1nNoTblGuidLeft)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrBi1nNoTblGuidLeft>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) pm.NewQuery(typeof(AgrBi1nNoTblGuidRight)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrBi1nNoTblGuidRight>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -10118,13 +10033,13 @@ public class TestAgrBi1nNoTblGuid
 	}
 	void QueryOwn()
 	{
-		Query q = pm.NewQuery(typeof(AgrBi1nNoTblGuidLeft));
-		ownVar = (AgrBi1nNoTblGuidLeft) q.ExecuteSingle();
+		var q = new NDOQuery<AgrBi1nNoTblGuidLeft>(pm);
+		ownVar = q.ExecuteSingle();
 	}
 	void QueryOther()
 	{
-		Query q = pm.NewQuery(typeof(AgrBi1nNoTblGuidRight));
-		otherVar = (AgrBi1nNoTblGuidRight) q.ExecuteSingle();
+		var q = new NDOQuery<AgrBi1nNoTblGuidRight>(pm);
+		otherVar = q.ExecuteSingle();
 	}
 }
 
@@ -10146,19 +10061,18 @@ public class TestAgrBi1nTblGuid
 	public void TearDown()
 	{
 		pm.UnloadCache();
-		IList l;
-		l = pm.NewQuery(typeof(AgrBi1nTblGuidLeft)).Execute();
+		var l = pm.Objects<AgrBi1nTblGuidLeft>().ResultTable;
 		pm.Delete(l);
 		pm.Save();
 		pm.UnloadCache();
-		l = pm.NewQuery(typeof(AgrBi1nTblGuidRight)).Execute();
-		pm.Delete(l);
+		var m = pm.Objects<AgrBi1nTblGuidRight>().ResultTable;
+		pm.Delete(m);
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) pm.NewQuery(typeof(AgrBi1nTblGuidLeft)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrBi1nTblGuidLeft>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) pm.NewQuery(typeof(AgrBi1nTblGuidRight)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrBi1nTblGuidRight>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -10238,13 +10152,13 @@ public class TestAgrBi1nTblGuid
 	}
 	void QueryOwn()
 	{
-		Query q = pm.NewQuery(typeof(AgrBi1nTblGuidLeft));
-		ownVar = (AgrBi1nTblGuidLeft) q.ExecuteSingle();
+		var q = new NDOQuery<AgrBi1nTblGuidLeft>(pm);
+		ownVar = q.ExecuteSingle();
 	}
 	void QueryOther()
 	{
-		Query q = pm.NewQuery(typeof(AgrBi1nTblGuidRight));
-		otherVar = (AgrBi1nTblGuidRight) q.ExecuteSingle();
+		var q = new NDOQuery<AgrBi1nTblGuidRight>(pm);
+		otherVar = q.ExecuteSingle();
 	}
 }
 
@@ -10266,19 +10180,18 @@ public class TestAgrBinnTblGuid
 	public void TearDown()
 	{
 		pm.UnloadCache();
-		IList l;
-		l = pm.NewQuery(typeof(AgrBinnTblGuidLeft)).Execute();
+		var l = pm.Objects<AgrBinnTblGuidLeft>().ResultTable;
 		pm.Delete(l);
 		pm.Save();
 		pm.UnloadCache();
-		l = pm.NewQuery(typeof(AgrBinnTblGuidRight)).Execute();
-		pm.Delete(l);
+		var m = pm.Objects<AgrBinnTblGuidRight>().ResultTable;
+		pm.Delete(m);
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) pm.NewQuery(typeof(AgrBinnTblGuidLeft)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrBinnTblGuidLeft>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) pm.NewQuery(typeof(AgrBinnTblGuidRight)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrBinnTblGuidRight>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -10337,13 +10250,13 @@ public class TestAgrBinnTblGuid
 	}
 	void QueryOwn()
 	{
-		Query q = pm.NewQuery(typeof(AgrBinnTblGuidLeft));
-		ownVar = (AgrBinnTblGuidLeft) q.ExecuteSingle();
+		var q = new NDOQuery<AgrBinnTblGuidLeft>(pm);
+		ownVar = q.ExecuteSingle();
 	}
 	void QueryOther()
 	{
-		Query q = pm.NewQuery(typeof(AgrBinnTblGuidRight));
-		otherVar = (AgrBinnTblGuidRight) q.ExecuteSingle();
+		var q = new NDOQuery<AgrBinnTblGuidRight>(pm);
+		otherVar = q.ExecuteSingle();
 	}
 }
 
@@ -10365,15 +10278,14 @@ public class TestCmpDir1NoTblGuid
 	public void TearDown()
 	{
 		pm.UnloadCache();
-		IList l;
-		l = pm.NewQuery(typeof(CmpDir1NoTblGuidLeft)).Execute();
+		var l = pm.Objects<CmpDir1NoTblGuidLeft>().ResultTable;
 		pm.Delete(l);
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) pm.NewQuery(typeof(CmpDir1NoTblGuidLeft)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpDir1NoTblGuidLeft>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) pm.NewQuery(typeof(CmpDir1NoTblGuidRight)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpDir1NoTblGuidRight>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -10442,13 +10354,13 @@ public class TestCmpDir1NoTblGuid
 	}
 	void QueryOwn()
 	{
-		Query q = pm.NewQuery(typeof(CmpDir1NoTblGuidLeft));
-		ownVar = (CmpDir1NoTblGuidLeft) q.ExecuteSingle();
+		var q = new NDOQuery<CmpDir1NoTblGuidLeft>(pm);
+		ownVar = q.ExecuteSingle();
 	}
 	void QueryOther()
 	{
-		Query q = pm.NewQuery(typeof(CmpDir1NoTblGuidRight));
-		otherVar = (CmpDir1NoTblGuidRight) q.ExecuteSingle();
+		var q = new NDOQuery<CmpDir1NoTblGuidRight>(pm);
+		otherVar = q.ExecuteSingle();
 	}
 }
 
@@ -10470,15 +10382,14 @@ public class TestCmpDir1TblGuid
 	public void TearDown()
 	{
 		pm.UnloadCache();
-		IList l;
-		l = pm.NewQuery(typeof(CmpDir1TblGuidLeft)).Execute();
+		var l = pm.Objects<CmpDir1TblGuidLeft>().ResultTable;
 		pm.Delete(l);
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) pm.NewQuery(typeof(CmpDir1TblGuidLeft)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpDir1TblGuidLeft>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) pm.NewQuery(typeof(CmpDir1TblGuidRight)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpDir1TblGuidRight>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -10547,13 +10458,13 @@ public class TestCmpDir1TblGuid
 	}
 	void QueryOwn()
 	{
-		Query q = pm.NewQuery(typeof(CmpDir1TblGuidLeft));
-		ownVar = (CmpDir1TblGuidLeft) q.ExecuteSingle();
+		var q = new NDOQuery<CmpDir1TblGuidLeft>(pm);
+		ownVar = q.ExecuteSingle();
 	}
 	void QueryOther()
 	{
-		Query q = pm.NewQuery(typeof(CmpDir1TblGuidRight));
-		otherVar = (CmpDir1TblGuidRight) q.ExecuteSingle();
+		var q = new NDOQuery<CmpDir1TblGuidRight>(pm);
+		otherVar = q.ExecuteSingle();
 	}
 }
 
@@ -10575,15 +10486,14 @@ public class TestCmpBi11NoTblGuid
 	public void TearDown()
 	{
 		pm.UnloadCache();
-		IList l;
-		l = pm.NewQuery(typeof(CmpBi11NoTblGuidLeft)).Execute();
+		var l = pm.Objects<CmpBi11NoTblGuidLeft>().ResultTable;
 		pm.Delete(l);
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) pm.NewQuery(typeof(CmpBi11NoTblGuidLeft)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpBi11NoTblGuidLeft>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) pm.NewQuery(typeof(CmpBi11NoTblGuidRight)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpBi11NoTblGuidRight>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -10693,13 +10603,13 @@ public class TestCmpBi11NoTblGuid
 	}
 	void QueryOwn()
 	{
-		Query q = pm.NewQuery(typeof(CmpBi11NoTblGuidLeft));
-		ownVar = (CmpBi11NoTblGuidLeft) q.ExecuteSingle();
+		var q = new NDOQuery<CmpBi11NoTblGuidLeft>(pm);
+		ownVar = q.ExecuteSingle();
 	}
 	void QueryOther()
 	{
-		Query q = pm.NewQuery(typeof(CmpBi11NoTblGuidRight));
-		otherVar = (CmpBi11NoTblGuidRight) q.ExecuteSingle();
+		var q = new NDOQuery<CmpBi11NoTblGuidRight>(pm);
+		otherVar = q.ExecuteSingle();
 	}
 }
 
@@ -10721,15 +10631,14 @@ public class TestCmpBi11TblGuid
 	public void TearDown()
 	{
 		pm.UnloadCache();
-		IList l;
-		l = pm.NewQuery(typeof(CmpBi11TblGuidLeft)).Execute();
+		var l = pm.Objects<CmpBi11TblGuidLeft>().ResultTable;
 		pm.Delete(l);
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) pm.NewQuery(typeof(CmpBi11TblGuidLeft)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpBi11TblGuidLeft>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) pm.NewQuery(typeof(CmpBi11TblGuidRight)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpBi11TblGuidRight>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -10839,13 +10748,13 @@ public class TestCmpBi11TblGuid
 	}
 	void QueryOwn()
 	{
-		Query q = pm.NewQuery(typeof(CmpBi11TblGuidLeft));
-		ownVar = (CmpBi11TblGuidLeft) q.ExecuteSingle();
+		var q = new NDOQuery<CmpBi11TblGuidLeft>(pm);
+		ownVar = q.ExecuteSingle();
 	}
 	void QueryOther()
 	{
-		Query q = pm.NewQuery(typeof(CmpBi11TblGuidRight));
-		otherVar = (CmpBi11TblGuidRight) q.ExecuteSingle();
+		var q = new NDOQuery<CmpBi11TblGuidRight>(pm);
+		otherVar = q.ExecuteSingle();
 	}
 }
 
@@ -10867,15 +10776,14 @@ public class TestCmpDirnNoTblGuid
 	public void TearDown()
 	{
 		pm.UnloadCache();
-		IList l;
-		l = pm.NewQuery(typeof(CmpDirnNoTblGuidLeft)).Execute();
+		var l = pm.Objects<CmpDirnNoTblGuidLeft>().ResultTable;
 		pm.Delete(l);
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) pm.NewQuery(typeof(CmpDirnNoTblGuidLeft)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpDirnNoTblGuidLeft>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) pm.NewQuery(typeof(CmpDirnNoTblGuidRight)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpDirnNoTblGuidRight>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -10923,13 +10831,13 @@ public class TestCmpDirnNoTblGuid
 	}
 	void QueryOwn()
 	{
-		Query q = pm.NewQuery(typeof(CmpDirnNoTblGuidLeft));
-		ownVar = (CmpDirnNoTblGuidLeft) q.ExecuteSingle();
+		var q = new NDOQuery<CmpDirnNoTblGuidLeft>(pm);
+		ownVar = q.ExecuteSingle();
 	}
 	void QueryOther()
 	{
-		Query q = pm.NewQuery(typeof(CmpDirnNoTblGuidRight));
-		otherVar = (CmpDirnNoTblGuidRight) q.ExecuteSingle();
+		var q = new NDOQuery<CmpDirnNoTblGuidRight>(pm);
+		otherVar = q.ExecuteSingle();
 	}
 }
 
@@ -10951,15 +10859,14 @@ public class TestCmpDirnTblGuid
 	public void TearDown()
 	{
 		pm.UnloadCache();
-		IList l;
-		l = pm.NewQuery(typeof(CmpDirnTblGuidLeft)).Execute();
+		var l = pm.Objects<CmpDirnTblGuidLeft>().ResultTable;
 		pm.Delete(l);
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) pm.NewQuery(typeof(CmpDirnTblGuidLeft)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpDirnTblGuidLeft>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) pm.NewQuery(typeof(CmpDirnTblGuidRight)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpDirnTblGuidRight>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -11007,13 +10914,13 @@ public class TestCmpDirnTblGuid
 	}
 	void QueryOwn()
 	{
-		Query q = pm.NewQuery(typeof(CmpDirnTblGuidLeft));
-		ownVar = (CmpDirnTblGuidLeft) q.ExecuteSingle();
+		var q = new NDOQuery<CmpDirnTblGuidLeft>(pm);
+		ownVar = q.ExecuteSingle();
 	}
 	void QueryOther()
 	{
-		Query q = pm.NewQuery(typeof(CmpDirnTblGuidRight));
-		otherVar = (CmpDirnTblGuidRight) q.ExecuteSingle();
+		var q = new NDOQuery<CmpDirnTblGuidRight>(pm);
+		otherVar = q.ExecuteSingle();
 	}
 }
 
@@ -11035,15 +10942,14 @@ public class TestCmpBin1NoTblGuid
 	public void TearDown()
 	{
 		pm.UnloadCache();
-		IList l;
-		l = pm.NewQuery(typeof(CmpBin1NoTblGuidLeft)).Execute();
+		var l = pm.Objects<CmpBin1NoTblGuidLeft>().ResultTable;
 		pm.Delete(l);
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) pm.NewQuery(typeof(CmpBin1NoTblGuidLeft)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpBin1NoTblGuidLeft>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) pm.NewQuery(typeof(CmpBin1NoTblGuidRight)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpBin1NoTblGuidRight>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -11132,13 +11038,13 @@ public class TestCmpBin1NoTblGuid
 	}
 	void QueryOwn()
 	{
-		Query q = pm.NewQuery(typeof(CmpBin1NoTblGuidLeft));
-		ownVar = (CmpBin1NoTblGuidLeft) q.ExecuteSingle();
+		var q = new NDOQuery<CmpBin1NoTblGuidLeft>(pm);
+		ownVar = q.ExecuteSingle();
 	}
 	void QueryOther()
 	{
-		Query q = pm.NewQuery(typeof(CmpBin1NoTblGuidRight));
-		otherVar = (CmpBin1NoTblGuidRight) q.ExecuteSingle();
+		var q = new NDOQuery<CmpBin1NoTblGuidRight>(pm);
+		otherVar = q.ExecuteSingle();
 	}
 }
 
@@ -11160,15 +11066,14 @@ public class TestCmpBin1TblGuid
 	public void TearDown()
 	{
 		pm.UnloadCache();
-		IList l;
-		l = pm.NewQuery(typeof(CmpBin1TblGuidLeft)).Execute();
+		var l = pm.Objects<CmpBin1TblGuidLeft>().ResultTable;
 		pm.Delete(l);
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) pm.NewQuery(typeof(CmpBin1TblGuidLeft)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpBin1TblGuidLeft>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) pm.NewQuery(typeof(CmpBin1TblGuidRight)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpBin1TblGuidRight>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -11257,13 +11162,13 @@ public class TestCmpBin1TblGuid
 	}
 	void QueryOwn()
 	{
-		Query q = pm.NewQuery(typeof(CmpBin1TblGuidLeft));
-		ownVar = (CmpBin1TblGuidLeft) q.ExecuteSingle();
+		var q = new NDOQuery<CmpBin1TblGuidLeft>(pm);
+		ownVar = q.ExecuteSingle();
 	}
 	void QueryOther()
 	{
-		Query q = pm.NewQuery(typeof(CmpBin1TblGuidRight));
-		otherVar = (CmpBin1TblGuidRight) q.ExecuteSingle();
+		var q = new NDOQuery<CmpBin1TblGuidRight>(pm);
+		otherVar = q.ExecuteSingle();
 	}
 }
 
@@ -11285,15 +11190,14 @@ public class TestCmpBi1nNoTblGuid
 	public void TearDown()
 	{
 		pm.UnloadCache();
-		IList l;
-		l = pm.NewQuery(typeof(CmpBi1nNoTblGuidLeft)).Execute();
+		var l = pm.Objects<CmpBi1nNoTblGuidLeft>().ResultTable;
 		pm.Delete(l);
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) pm.NewQuery(typeof(CmpBi1nNoTblGuidLeft)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpBi1nNoTblGuidLeft>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) pm.NewQuery(typeof(CmpBi1nNoTblGuidRight)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpBi1nNoTblGuidRight>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -11372,13 +11276,13 @@ public class TestCmpBi1nNoTblGuid
 	}
 	void QueryOwn()
 	{
-		Query q = pm.NewQuery(typeof(CmpBi1nNoTblGuidLeft));
-		ownVar = (CmpBi1nNoTblGuidLeft) q.ExecuteSingle();
+		var q = new NDOQuery<CmpBi1nNoTblGuidLeft>(pm);
+		ownVar = q.ExecuteSingle();
 	}
 	void QueryOther()
 	{
-		Query q = pm.NewQuery(typeof(CmpBi1nNoTblGuidRight));
-		otherVar = (CmpBi1nNoTblGuidRight) q.ExecuteSingle();
+		var q = new NDOQuery<CmpBi1nNoTblGuidRight>(pm);
+		otherVar = q.ExecuteSingle();
 	}
 }
 
@@ -11400,15 +11304,14 @@ public class TestCmpBi1nTblGuid
 	public void TearDown()
 	{
 		pm.UnloadCache();
-		IList l;
-		l = pm.NewQuery(typeof(CmpBi1nTblGuidLeft)).Execute();
+		var l = pm.Objects<CmpBi1nTblGuidLeft>().ResultTable;
 		pm.Delete(l);
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) pm.NewQuery(typeof(CmpBi1nTblGuidLeft)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpBi1nTblGuidLeft>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) pm.NewQuery(typeof(CmpBi1nTblGuidRight)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpBi1nTblGuidRight>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -11487,13 +11390,13 @@ public class TestCmpBi1nTblGuid
 	}
 	void QueryOwn()
 	{
-		Query q = pm.NewQuery(typeof(CmpBi1nTblGuidLeft));
-		ownVar = (CmpBi1nTblGuidLeft) q.ExecuteSingle();
+		var q = new NDOQuery<CmpBi1nTblGuidLeft>(pm);
+		ownVar = q.ExecuteSingle();
 	}
 	void QueryOther()
 	{
-		Query q = pm.NewQuery(typeof(CmpBi1nTblGuidRight));
-		otherVar = (CmpBi1nTblGuidRight) q.ExecuteSingle();
+		var q = new NDOQuery<CmpBi1nTblGuidRight>(pm);
+		otherVar = q.ExecuteSingle();
 	}
 }
 
@@ -11515,15 +11418,14 @@ public class TestCmpBinnTblGuid
 	public void TearDown()
 	{
 		pm.UnloadCache();
-		IList l;
-		l = pm.NewQuery(typeof(CmpBinnTblGuidLeft)).Execute();
+		var l = pm.Objects<CmpBinnTblGuidLeft>().ResultTable;
 		pm.Delete(l);
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) pm.NewQuery(typeof(CmpBinnTblGuidLeft)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpBinnTblGuidLeft>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) pm.NewQuery(typeof(CmpBinnTblGuidRight)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpBinnTblGuidRight>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -11581,13 +11483,13 @@ public class TestCmpBinnTblGuid
 	}
 	void QueryOwn()
 	{
-		Query q = pm.NewQuery(typeof(CmpBinnTblGuidLeft));
-		ownVar = (CmpBinnTblGuidLeft) q.ExecuteSingle();
+		var q = new NDOQuery<CmpBinnTblGuidLeft>(pm);
+		ownVar = q.ExecuteSingle();
 	}
 	void QueryOther()
 	{
-		Query q = pm.NewQuery(typeof(CmpBinnTblGuidRight));
-		otherVar = (CmpBinnTblGuidRight) q.ExecuteSingle();
+		var q = new NDOQuery<CmpBinnTblGuidRight>(pm);
+		otherVar = q.ExecuteSingle();
 	}
 }
 
@@ -11609,19 +11511,18 @@ public class TestAgrDir1OwnpconNoTblGuid
 	public void TearDown()
 	{
 		pm.UnloadCache();
-		IList l;
-		l = pm.NewQuery(typeof(AgrDir1OwnpconNoTblGuidLeftBase)).Execute();
+		var l = pm.Objects<AgrDir1OwnpconNoTblGuidLeftBase>().ResultTable;
 		pm.Delete(l);
 		pm.Save();
 		pm.UnloadCache();
-		l = pm.NewQuery(typeof(AgrDir1OwnpconNoTblGuidRight)).Execute();
-		pm.Delete(l);
+		var m = pm.Objects<AgrDir1OwnpconNoTblGuidRight>().ResultTable;
+		pm.Delete(m);
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) pm.NewQuery(typeof(AgrDir1OwnpconNoTblGuidLeftBase)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrDir1OwnpconNoTblGuidLeftBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) pm.NewQuery(typeof(AgrDir1OwnpconNoTblGuidRight)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrDir1OwnpconNoTblGuidRight>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -11691,13 +11592,13 @@ public class TestAgrDir1OwnpconNoTblGuid
 	}
 	void QueryOwn()
 	{
-		Query q = pm.NewQuery(typeof(AgrDir1OwnpconNoTblGuidLeftBase));
-		ownVar = (AgrDir1OwnpconNoTblGuidLeftBase) q.ExecuteSingle();
+		var q = new NDOQuery<AgrDir1OwnpconNoTblGuidLeftBase>(pm);
+		ownVar = q.ExecuteSingle();
 	}
 	void QueryOther()
 	{
-		Query q = pm.NewQuery(typeof(AgrDir1OwnpconNoTblGuidRight));
-		otherVar = (AgrDir1OwnpconNoTblGuidRight) q.ExecuteSingle();
+		var q = new NDOQuery<AgrDir1OwnpconNoTblGuidRight>(pm);
+		otherVar = q.ExecuteSingle();
 	}
 }
 
@@ -11719,19 +11620,18 @@ public class TestAgrDir1OwnpconTblGuid
 	public void TearDown()
 	{
 		pm.UnloadCache();
-		IList l;
-		l = pm.NewQuery(typeof(AgrDir1OwnpconTblGuidLeftBase)).Execute();
+		var l = pm.Objects<AgrDir1OwnpconTblGuidLeftBase>().ResultTable;
 		pm.Delete(l);
 		pm.Save();
 		pm.UnloadCache();
-		l = pm.NewQuery(typeof(AgrDir1OwnpconTblGuidRight)).Execute();
-		pm.Delete(l);
+		var m = pm.Objects<AgrDir1OwnpconTblGuidRight>().ResultTable;
+		pm.Delete(m);
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) pm.NewQuery(typeof(AgrDir1OwnpconTblGuidLeftBase)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrDir1OwnpconTblGuidLeftBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) pm.NewQuery(typeof(AgrDir1OwnpconTblGuidRight)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrDir1OwnpconTblGuidRight>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -11801,13 +11701,13 @@ public class TestAgrDir1OwnpconTblGuid
 	}
 	void QueryOwn()
 	{
-		Query q = pm.NewQuery(typeof(AgrDir1OwnpconTblGuidLeftBase));
-		ownVar = (AgrDir1OwnpconTblGuidLeftBase) q.ExecuteSingle();
+		var q = new NDOQuery<AgrDir1OwnpconTblGuidLeftBase>(pm);
+		ownVar = q.ExecuteSingle();
 	}
 	void QueryOther()
 	{
-		Query q = pm.NewQuery(typeof(AgrDir1OwnpconTblGuidRight));
-		otherVar = (AgrDir1OwnpconTblGuidRight) q.ExecuteSingle();
+		var q = new NDOQuery<AgrDir1OwnpconTblGuidRight>(pm);
+		otherVar = q.ExecuteSingle();
 	}
 }
 
@@ -11829,19 +11729,18 @@ public class TestAgrBi11OwnpconNoTblGuid
 	public void TearDown()
 	{
 		pm.UnloadCache();
-		IList l;
-		l = pm.NewQuery(typeof(AgrBi11OwnpconNoTblGuidLeftBase)).Execute();
+		var l = pm.Objects<AgrBi11OwnpconNoTblGuidLeftBase>().ResultTable;
 		pm.Delete(l);
 		pm.Save();
 		pm.UnloadCache();
-		l = pm.NewQuery(typeof(AgrBi11OwnpconNoTblGuidRight)).Execute();
-		pm.Delete(l);
+		var m = pm.Objects<AgrBi11OwnpconNoTblGuidRight>().ResultTable;
+		pm.Delete(m);
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) pm.NewQuery(typeof(AgrBi11OwnpconNoTblGuidLeftBase)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrBi11OwnpconNoTblGuidLeftBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) pm.NewQuery(typeof(AgrBi11OwnpconNoTblGuidRight)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrBi11OwnpconNoTblGuidRight>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -11956,13 +11855,13 @@ public class TestAgrBi11OwnpconNoTblGuid
 	}
 	void QueryOwn()
 	{
-		Query q = pm.NewQuery(typeof(AgrBi11OwnpconNoTblGuidLeftBase));
-		ownVar = (AgrBi11OwnpconNoTblGuidLeftBase) q.ExecuteSingle();
+		var q = new NDOQuery<AgrBi11OwnpconNoTblGuidLeftBase>(pm);
+		ownVar = q.ExecuteSingle();
 	}
 	void QueryOther()
 	{
-		Query q = pm.NewQuery(typeof(AgrBi11OwnpconNoTblGuidRight));
-		otherVar = (AgrBi11OwnpconNoTblGuidRight) q.ExecuteSingle();
+		var q = new NDOQuery<AgrBi11OwnpconNoTblGuidRight>(pm);
+		otherVar = q.ExecuteSingle();
 	}
 }
 
@@ -11984,19 +11883,18 @@ public class TestAgrBi11OwnpconTblGuid
 	public void TearDown()
 	{
 		pm.UnloadCache();
-		IList l;
-		l = pm.NewQuery(typeof(AgrBi11OwnpconTblGuidLeftBase)).Execute();
+		var l = pm.Objects<AgrBi11OwnpconTblGuidLeftBase>().ResultTable;
 		pm.Delete(l);
 		pm.Save();
 		pm.UnloadCache();
-		l = pm.NewQuery(typeof(AgrBi11OwnpconTblGuidRight)).Execute();
-		pm.Delete(l);
+		var m = pm.Objects<AgrBi11OwnpconTblGuidRight>().ResultTable;
+		pm.Delete(m);
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) pm.NewQuery(typeof(AgrBi11OwnpconTblGuidLeftBase)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrBi11OwnpconTblGuidLeftBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) pm.NewQuery(typeof(AgrBi11OwnpconTblGuidRight)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrBi11OwnpconTblGuidRight>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -12111,13 +12009,13 @@ public class TestAgrBi11OwnpconTblGuid
 	}
 	void QueryOwn()
 	{
-		Query q = pm.NewQuery(typeof(AgrBi11OwnpconTblGuidLeftBase));
-		ownVar = (AgrBi11OwnpconTblGuidLeftBase) q.ExecuteSingle();
+		var q = new NDOQuery<AgrBi11OwnpconTblGuidLeftBase>(pm);
+		ownVar = q.ExecuteSingle();
 	}
 	void QueryOther()
 	{
-		Query q = pm.NewQuery(typeof(AgrBi11OwnpconTblGuidRight));
-		otherVar = (AgrBi11OwnpconTblGuidRight) q.ExecuteSingle();
+		var q = new NDOQuery<AgrBi11OwnpconTblGuidRight>(pm);
+		otherVar = q.ExecuteSingle();
 	}
 }
 
@@ -12139,19 +12037,18 @@ public class TestAgrDirnOwnpconNoTblGuid
 	public void TearDown()
 	{
 		pm.UnloadCache();
-		IList l;
-		l = pm.NewQuery(typeof(AgrDirnOwnpconNoTblGuidLeftBase)).Execute();
+		var l = pm.Objects<AgrDirnOwnpconNoTblGuidLeftBase>().ResultTable;
 		pm.Delete(l);
 		pm.Save();
 		pm.UnloadCache();
-		l = pm.NewQuery(typeof(AgrDirnOwnpconNoTblGuidRight)).Execute();
-		pm.Delete(l);
+		var m = pm.Objects<AgrDirnOwnpconNoTblGuidRight>().ResultTable;
+		pm.Delete(m);
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) pm.NewQuery(typeof(AgrDirnOwnpconNoTblGuidLeftBase)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrDirnOwnpconNoTblGuidLeftBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) pm.NewQuery(typeof(AgrDirnOwnpconNoTblGuidRight)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrDirnOwnpconNoTblGuidRight>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -12200,13 +12097,13 @@ public class TestAgrDirnOwnpconNoTblGuid
 	}
 	void QueryOwn()
 	{
-		Query q = pm.NewQuery(typeof(AgrDirnOwnpconNoTblGuidLeftBase));
-		ownVar = (AgrDirnOwnpconNoTblGuidLeftBase) q.ExecuteSingle();
+		var q = new NDOQuery<AgrDirnOwnpconNoTblGuidLeftBase>(pm);
+		ownVar = q.ExecuteSingle();
 	}
 	void QueryOther()
 	{
-		Query q = pm.NewQuery(typeof(AgrDirnOwnpconNoTblGuidRight));
-		otherVar = (AgrDirnOwnpconNoTblGuidRight) q.ExecuteSingle();
+		var q = new NDOQuery<AgrDirnOwnpconNoTblGuidRight>(pm);
+		otherVar = q.ExecuteSingle();
 	}
 }
 
@@ -12228,19 +12125,18 @@ public class TestAgrDirnOwnpconTblGuid
 	public void TearDown()
 	{
 		pm.UnloadCache();
-		IList l;
-		l = pm.NewQuery(typeof(AgrDirnOwnpconTblGuidLeftBase)).Execute();
+		var l = pm.Objects<AgrDirnOwnpconTblGuidLeftBase>().ResultTable;
 		pm.Delete(l);
 		pm.Save();
 		pm.UnloadCache();
-		l = pm.NewQuery(typeof(AgrDirnOwnpconTblGuidRight)).Execute();
-		pm.Delete(l);
+		var m = pm.Objects<AgrDirnOwnpconTblGuidRight>().ResultTable;
+		pm.Delete(m);
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) pm.NewQuery(typeof(AgrDirnOwnpconTblGuidLeftBase)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrDirnOwnpconTblGuidLeftBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) pm.NewQuery(typeof(AgrDirnOwnpconTblGuidRight)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrDirnOwnpconTblGuidRight>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -12289,13 +12185,13 @@ public class TestAgrDirnOwnpconTblGuid
 	}
 	void QueryOwn()
 	{
-		Query q = pm.NewQuery(typeof(AgrDirnOwnpconTblGuidLeftBase));
-		ownVar = (AgrDirnOwnpconTblGuidLeftBase) q.ExecuteSingle();
+		var q = new NDOQuery<AgrDirnOwnpconTblGuidLeftBase>(pm);
+		ownVar = q.ExecuteSingle();
 	}
 	void QueryOther()
 	{
-		Query q = pm.NewQuery(typeof(AgrDirnOwnpconTblGuidRight));
-		otherVar = (AgrDirnOwnpconTblGuidRight) q.ExecuteSingle();
+		var q = new NDOQuery<AgrDirnOwnpconTblGuidRight>(pm);
+		otherVar = q.ExecuteSingle();
 	}
 }
 
@@ -12317,19 +12213,18 @@ public class TestAgrBin1OwnpconNoTblGuid
 	public void TearDown()
 	{
 		pm.UnloadCache();
-		IList l;
-		l = pm.NewQuery(typeof(AgrBin1OwnpconNoTblGuidLeftBase)).Execute();
+		var l = pm.Objects<AgrBin1OwnpconNoTblGuidLeftBase>().ResultTable;
 		pm.Delete(l);
 		pm.Save();
 		pm.UnloadCache();
-		l = pm.NewQuery(typeof(AgrBin1OwnpconNoTblGuidRight)).Execute();
-		pm.Delete(l);
+		var m = pm.Objects<AgrBin1OwnpconNoTblGuidRight>().ResultTable;
+		pm.Delete(m);
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) pm.NewQuery(typeof(AgrBin1OwnpconNoTblGuidLeftBase)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrBin1OwnpconNoTblGuidLeftBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) pm.NewQuery(typeof(AgrBin1OwnpconNoTblGuidRight)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrBin1OwnpconNoTblGuidRight>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -12423,13 +12318,13 @@ public class TestAgrBin1OwnpconNoTblGuid
 	}
 	void QueryOwn()
 	{
-		Query q = pm.NewQuery(typeof(AgrBin1OwnpconNoTblGuidLeftBase));
-		ownVar = (AgrBin1OwnpconNoTblGuidLeftBase) q.ExecuteSingle();
+		var q = new NDOQuery<AgrBin1OwnpconNoTblGuidLeftBase>(pm);
+		ownVar = q.ExecuteSingle();
 	}
 	void QueryOther()
 	{
-		Query q = pm.NewQuery(typeof(AgrBin1OwnpconNoTblGuidRight));
-		otherVar = (AgrBin1OwnpconNoTblGuidRight) q.ExecuteSingle();
+		var q = new NDOQuery<AgrBin1OwnpconNoTblGuidRight>(pm);
+		otherVar = q.ExecuteSingle();
 	}
 }
 
@@ -12451,19 +12346,18 @@ public class TestAgrBin1OwnpconTblGuid
 	public void TearDown()
 	{
 		pm.UnloadCache();
-		IList l;
-		l = pm.NewQuery(typeof(AgrBin1OwnpconTblGuidLeftBase)).Execute();
+		var l = pm.Objects<AgrBin1OwnpconTblGuidLeftBase>().ResultTable;
 		pm.Delete(l);
 		pm.Save();
 		pm.UnloadCache();
-		l = pm.NewQuery(typeof(AgrBin1OwnpconTblGuidRight)).Execute();
-		pm.Delete(l);
+		var m = pm.Objects<AgrBin1OwnpconTblGuidRight>().ResultTable;
+		pm.Delete(m);
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) pm.NewQuery(typeof(AgrBin1OwnpconTblGuidLeftBase)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrBin1OwnpconTblGuidLeftBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) pm.NewQuery(typeof(AgrBin1OwnpconTblGuidRight)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrBin1OwnpconTblGuidRight>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -12557,13 +12451,13 @@ public class TestAgrBin1OwnpconTblGuid
 	}
 	void QueryOwn()
 	{
-		Query q = pm.NewQuery(typeof(AgrBin1OwnpconTblGuidLeftBase));
-		ownVar = (AgrBin1OwnpconTblGuidLeftBase) q.ExecuteSingle();
+		var q = new NDOQuery<AgrBin1OwnpconTblGuidLeftBase>(pm);
+		ownVar = q.ExecuteSingle();
 	}
 	void QueryOther()
 	{
-		Query q = pm.NewQuery(typeof(AgrBin1OwnpconTblGuidRight));
-		otherVar = (AgrBin1OwnpconTblGuidRight) q.ExecuteSingle();
+		var q = new NDOQuery<AgrBin1OwnpconTblGuidRight>(pm);
+		otherVar = q.ExecuteSingle();
 	}
 }
 
@@ -12585,19 +12479,18 @@ public class TestAgrBi1nOwnpconTblGuid
 	public void TearDown()
 	{
 		pm.UnloadCache();
-		IList l;
-		l = pm.NewQuery(typeof(AgrBi1nOwnpconTblGuidLeftBase)).Execute();
+		var l = pm.Objects<AgrBi1nOwnpconTblGuidLeftBase>().ResultTable;
 		pm.Delete(l);
 		pm.Save();
 		pm.UnloadCache();
-		l = pm.NewQuery(typeof(AgrBi1nOwnpconTblGuidRight)).Execute();
-		pm.Delete(l);
+		var m = pm.Objects<AgrBi1nOwnpconTblGuidRight>().ResultTable;
+		pm.Delete(m);
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) pm.NewQuery(typeof(AgrBi1nOwnpconTblGuidLeftBase)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrBi1nOwnpconTblGuidLeftBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) pm.NewQuery(typeof(AgrBi1nOwnpconTblGuidRight)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrBi1nOwnpconTblGuidRight>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -12681,13 +12574,13 @@ public class TestAgrBi1nOwnpconTblGuid
 	}
 	void QueryOwn()
 	{
-		Query q = pm.NewQuery(typeof(AgrBi1nOwnpconTblGuidLeftBase));
-		ownVar = (AgrBi1nOwnpconTblGuidLeftBase) q.ExecuteSingle();
+		var q = new NDOQuery<AgrBi1nOwnpconTblGuidLeftBase>(pm);
+		ownVar = q.ExecuteSingle();
 	}
 	void QueryOther()
 	{
-		Query q = pm.NewQuery(typeof(AgrBi1nOwnpconTblGuidRight));
-		otherVar = (AgrBi1nOwnpconTblGuidRight) q.ExecuteSingle();
+		var q = new NDOQuery<AgrBi1nOwnpconTblGuidRight>(pm);
+		otherVar = q.ExecuteSingle();
 	}
 }
 
@@ -12709,19 +12602,18 @@ public class TestAgrBinnOwnpconTblGuid
 	public void TearDown()
 	{
 		pm.UnloadCache();
-		IList l;
-		l = pm.NewQuery(typeof(AgrBinnOwnpconTblGuidLeftBase)).Execute();
+		var l = pm.Objects<AgrBinnOwnpconTblGuidLeftBase>().ResultTable;
 		pm.Delete(l);
 		pm.Save();
 		pm.UnloadCache();
-		l = pm.NewQuery(typeof(AgrBinnOwnpconTblGuidRight)).Execute();
-		pm.Delete(l);
+		var m = pm.Objects<AgrBinnOwnpconTblGuidRight>().ResultTable;
+		pm.Delete(m);
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) pm.NewQuery(typeof(AgrBinnOwnpconTblGuidLeftBase)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrBinnOwnpconTblGuidLeftBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) pm.NewQuery(typeof(AgrBinnOwnpconTblGuidRight)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrBinnOwnpconTblGuidRight>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -12784,13 +12676,13 @@ public class TestAgrBinnOwnpconTblGuid
 	}
 	void QueryOwn()
 	{
-		Query q = pm.NewQuery(typeof(AgrBinnOwnpconTblGuidLeftBase));
-		ownVar = (AgrBinnOwnpconTblGuidLeftBase) q.ExecuteSingle();
+		var q = new NDOQuery<AgrBinnOwnpconTblGuidLeftBase>(pm);
+		ownVar = q.ExecuteSingle();
 	}
 	void QueryOther()
 	{
-		Query q = pm.NewQuery(typeof(AgrBinnOwnpconTblGuidRight));
-		otherVar = (AgrBinnOwnpconTblGuidRight) q.ExecuteSingle();
+		var q = new NDOQuery<AgrBinnOwnpconTblGuidRight>(pm);
+		otherVar = q.ExecuteSingle();
 	}
 }
 
@@ -12812,15 +12704,14 @@ public class TestCmpDir1OwnpconNoTblGuid
 	public void TearDown()
 	{
 		pm.UnloadCache();
-		IList l;
-		l = pm.NewQuery(typeof(CmpDir1OwnpconNoTblGuidLeftBase)).Execute();
+		var l = pm.Objects<CmpDir1OwnpconNoTblGuidLeftBase>().ResultTable;
 		pm.Delete(l);
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) pm.NewQuery(typeof(CmpDir1OwnpconNoTblGuidLeftBase)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpDir1OwnpconNoTblGuidLeftBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) pm.NewQuery(typeof(CmpDir1OwnpconNoTblGuidRight)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpDir1OwnpconNoTblGuidRight>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -12889,13 +12780,13 @@ public class TestCmpDir1OwnpconNoTblGuid
 	}
 	void QueryOwn()
 	{
-		Query q = pm.NewQuery(typeof(CmpDir1OwnpconNoTblGuidLeftBase));
-		ownVar = (CmpDir1OwnpconNoTblGuidLeftBase) q.ExecuteSingle();
+		var q = new NDOQuery<CmpDir1OwnpconNoTblGuidLeftBase>(pm);
+		ownVar = q.ExecuteSingle();
 	}
 	void QueryOther()
 	{
-		Query q = pm.NewQuery(typeof(CmpDir1OwnpconNoTblGuidRight));
-		otherVar = (CmpDir1OwnpconNoTblGuidRight) q.ExecuteSingle();
+		var q = new NDOQuery<CmpDir1OwnpconNoTblGuidRight>(pm);
+		otherVar = q.ExecuteSingle();
 	}
 }
 
@@ -12917,15 +12808,14 @@ public class TestCmpDir1OwnpconTblGuid
 	public void TearDown()
 	{
 		pm.UnloadCache();
-		IList l;
-		l = pm.NewQuery(typeof(CmpDir1OwnpconTblGuidLeftBase)).Execute();
+		var l = pm.Objects<CmpDir1OwnpconTblGuidLeftBase>().ResultTable;
 		pm.Delete(l);
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) pm.NewQuery(typeof(CmpDir1OwnpconTblGuidLeftBase)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpDir1OwnpconTblGuidLeftBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) pm.NewQuery(typeof(CmpDir1OwnpconTblGuidRight)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpDir1OwnpconTblGuidRight>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -12994,13 +12884,13 @@ public class TestCmpDir1OwnpconTblGuid
 	}
 	void QueryOwn()
 	{
-		Query q = pm.NewQuery(typeof(CmpDir1OwnpconTblGuidLeftBase));
-		ownVar = (CmpDir1OwnpconTblGuidLeftBase) q.ExecuteSingle();
+		var q = new NDOQuery<CmpDir1OwnpconTblGuidLeftBase>(pm);
+		ownVar = q.ExecuteSingle();
 	}
 	void QueryOther()
 	{
-		Query q = pm.NewQuery(typeof(CmpDir1OwnpconTblGuidRight));
-		otherVar = (CmpDir1OwnpconTblGuidRight) q.ExecuteSingle();
+		var q = new NDOQuery<CmpDir1OwnpconTblGuidRight>(pm);
+		otherVar = q.ExecuteSingle();
 	}
 }
 
@@ -13022,15 +12912,14 @@ public class TestCmpBi11OwnpconNoTblGuid
 	public void TearDown()
 	{
 		pm.UnloadCache();
-		IList l;
-		l = pm.NewQuery(typeof(CmpBi11OwnpconNoTblGuidLeftBase)).Execute();
+		var l = pm.Objects<CmpBi11OwnpconNoTblGuidLeftBase>().ResultTable;
 		pm.Delete(l);
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) pm.NewQuery(typeof(CmpBi11OwnpconNoTblGuidLeftBase)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpBi11OwnpconNoTblGuidLeftBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) pm.NewQuery(typeof(CmpBi11OwnpconNoTblGuidRight)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpBi11OwnpconNoTblGuidRight>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -13144,13 +13033,13 @@ public class TestCmpBi11OwnpconNoTblGuid
 	}
 	void QueryOwn()
 	{
-		Query q = pm.NewQuery(typeof(CmpBi11OwnpconNoTblGuidLeftBase));
-		ownVar = (CmpBi11OwnpconNoTblGuidLeftBase) q.ExecuteSingle();
+		var q = new NDOQuery<CmpBi11OwnpconNoTblGuidLeftBase>(pm);
+		ownVar = q.ExecuteSingle();
 	}
 	void QueryOther()
 	{
-		Query q = pm.NewQuery(typeof(CmpBi11OwnpconNoTblGuidRight));
-		otherVar = (CmpBi11OwnpconNoTblGuidRight) q.ExecuteSingle();
+		var q = new NDOQuery<CmpBi11OwnpconNoTblGuidRight>(pm);
+		otherVar = q.ExecuteSingle();
 	}
 }
 
@@ -13172,15 +13061,14 @@ public class TestCmpBi11OwnpconTblGuid
 	public void TearDown()
 	{
 		pm.UnloadCache();
-		IList l;
-		l = pm.NewQuery(typeof(CmpBi11OwnpconTblGuidLeftBase)).Execute();
+		var l = pm.Objects<CmpBi11OwnpconTblGuidLeftBase>().ResultTable;
 		pm.Delete(l);
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) pm.NewQuery(typeof(CmpBi11OwnpconTblGuidLeftBase)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpBi11OwnpconTblGuidLeftBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) pm.NewQuery(typeof(CmpBi11OwnpconTblGuidRight)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpBi11OwnpconTblGuidRight>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -13294,13 +13182,13 @@ public class TestCmpBi11OwnpconTblGuid
 	}
 	void QueryOwn()
 	{
-		Query q = pm.NewQuery(typeof(CmpBi11OwnpconTblGuidLeftBase));
-		ownVar = (CmpBi11OwnpconTblGuidLeftBase) q.ExecuteSingle();
+		var q = new NDOQuery<CmpBi11OwnpconTblGuidLeftBase>(pm);
+		ownVar = q.ExecuteSingle();
 	}
 	void QueryOther()
 	{
-		Query q = pm.NewQuery(typeof(CmpBi11OwnpconTblGuidRight));
-		otherVar = (CmpBi11OwnpconTblGuidRight) q.ExecuteSingle();
+		var q = new NDOQuery<CmpBi11OwnpconTblGuidRight>(pm);
+		otherVar = q.ExecuteSingle();
 	}
 }
 
@@ -13322,15 +13210,14 @@ public class TestCmpDirnOwnpconNoTblGuid
 	public void TearDown()
 	{
 		pm.UnloadCache();
-		IList l;
-		l = pm.NewQuery(typeof(CmpDirnOwnpconNoTblGuidLeftBase)).Execute();
+		var l = pm.Objects<CmpDirnOwnpconNoTblGuidLeftBase>().ResultTable;
 		pm.Delete(l);
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) pm.NewQuery(typeof(CmpDirnOwnpconNoTblGuidLeftBase)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpDirnOwnpconNoTblGuidLeftBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) pm.NewQuery(typeof(CmpDirnOwnpconNoTblGuidRight)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpDirnOwnpconNoTblGuidRight>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -13378,13 +13265,13 @@ public class TestCmpDirnOwnpconNoTblGuid
 	}
 	void QueryOwn()
 	{
-		Query q = pm.NewQuery(typeof(CmpDirnOwnpconNoTblGuidLeftBase));
-		ownVar = (CmpDirnOwnpconNoTblGuidLeftBase) q.ExecuteSingle();
+		var q = new NDOQuery<CmpDirnOwnpconNoTblGuidLeftBase>(pm);
+		ownVar = q.ExecuteSingle();
 	}
 	void QueryOther()
 	{
-		Query q = pm.NewQuery(typeof(CmpDirnOwnpconNoTblGuidRight));
-		otherVar = (CmpDirnOwnpconNoTblGuidRight) q.ExecuteSingle();
+		var q = new NDOQuery<CmpDirnOwnpconNoTblGuidRight>(pm);
+		otherVar = q.ExecuteSingle();
 	}
 }
 
@@ -13406,15 +13293,14 @@ public class TestCmpDirnOwnpconTblGuid
 	public void TearDown()
 	{
 		pm.UnloadCache();
-		IList l;
-		l = pm.NewQuery(typeof(CmpDirnOwnpconTblGuidLeftBase)).Execute();
+		var l = pm.Objects<CmpDirnOwnpconTblGuidLeftBase>().ResultTable;
 		pm.Delete(l);
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) pm.NewQuery(typeof(CmpDirnOwnpconTblGuidLeftBase)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpDirnOwnpconTblGuidLeftBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) pm.NewQuery(typeof(CmpDirnOwnpconTblGuidRight)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpDirnOwnpconTblGuidRight>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -13462,13 +13348,13 @@ public class TestCmpDirnOwnpconTblGuid
 	}
 	void QueryOwn()
 	{
-		Query q = pm.NewQuery(typeof(CmpDirnOwnpconTblGuidLeftBase));
-		ownVar = (CmpDirnOwnpconTblGuidLeftBase) q.ExecuteSingle();
+		var q = new NDOQuery<CmpDirnOwnpconTblGuidLeftBase>(pm);
+		ownVar = q.ExecuteSingle();
 	}
 	void QueryOther()
 	{
-		Query q = pm.NewQuery(typeof(CmpDirnOwnpconTblGuidRight));
-		otherVar = (CmpDirnOwnpconTblGuidRight) q.ExecuteSingle();
+		var q = new NDOQuery<CmpDirnOwnpconTblGuidRight>(pm);
+		otherVar = q.ExecuteSingle();
 	}
 }
 
@@ -13490,15 +13376,14 @@ public class TestCmpBin1OwnpconNoTblGuid
 	public void TearDown()
 	{
 		pm.UnloadCache();
-		IList l;
-		l = pm.NewQuery(typeof(CmpBin1OwnpconNoTblGuidLeftBase)).Execute();
+		var l = pm.Objects<CmpBin1OwnpconNoTblGuidLeftBase>().ResultTable;
 		pm.Delete(l);
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) pm.NewQuery(typeof(CmpBin1OwnpconNoTblGuidLeftBase)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpBin1OwnpconNoTblGuidLeftBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) pm.NewQuery(typeof(CmpBin1OwnpconNoTblGuidRight)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpBin1OwnpconNoTblGuidRight>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -13591,13 +13476,13 @@ public class TestCmpBin1OwnpconNoTblGuid
 	}
 	void QueryOwn()
 	{
-		Query q = pm.NewQuery(typeof(CmpBin1OwnpconNoTblGuidLeftBase));
-		ownVar = (CmpBin1OwnpconNoTblGuidLeftBase) q.ExecuteSingle();
+		var q = new NDOQuery<CmpBin1OwnpconNoTblGuidLeftBase>(pm);
+		ownVar = q.ExecuteSingle();
 	}
 	void QueryOther()
 	{
-		Query q = pm.NewQuery(typeof(CmpBin1OwnpconNoTblGuidRight));
-		otherVar = (CmpBin1OwnpconNoTblGuidRight) q.ExecuteSingle();
+		var q = new NDOQuery<CmpBin1OwnpconNoTblGuidRight>(pm);
+		otherVar = q.ExecuteSingle();
 	}
 }
 
@@ -13619,15 +13504,14 @@ public class TestCmpBin1OwnpconTblGuid
 	public void TearDown()
 	{
 		pm.UnloadCache();
-		IList l;
-		l = pm.NewQuery(typeof(CmpBin1OwnpconTblGuidLeftBase)).Execute();
+		var l = pm.Objects<CmpBin1OwnpconTblGuidLeftBase>().ResultTable;
 		pm.Delete(l);
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) pm.NewQuery(typeof(CmpBin1OwnpconTblGuidLeftBase)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpBin1OwnpconTblGuidLeftBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) pm.NewQuery(typeof(CmpBin1OwnpconTblGuidRight)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpBin1OwnpconTblGuidRight>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -13720,13 +13604,13 @@ public class TestCmpBin1OwnpconTblGuid
 	}
 	void QueryOwn()
 	{
-		Query q = pm.NewQuery(typeof(CmpBin1OwnpconTblGuidLeftBase));
-		ownVar = (CmpBin1OwnpconTblGuidLeftBase) q.ExecuteSingle();
+		var q = new NDOQuery<CmpBin1OwnpconTblGuidLeftBase>(pm);
+		ownVar = q.ExecuteSingle();
 	}
 	void QueryOther()
 	{
-		Query q = pm.NewQuery(typeof(CmpBin1OwnpconTblGuidRight));
-		otherVar = (CmpBin1OwnpconTblGuidRight) q.ExecuteSingle();
+		var q = new NDOQuery<CmpBin1OwnpconTblGuidRight>(pm);
+		otherVar = q.ExecuteSingle();
 	}
 }
 
@@ -13748,15 +13632,14 @@ public class TestCmpBi1nOwnpconTblGuid
 	public void TearDown()
 	{
 		pm.UnloadCache();
-		IList l;
-		l = pm.NewQuery(typeof(CmpBi1nOwnpconTblGuidLeftBase)).Execute();
+		var l = pm.Objects<CmpBi1nOwnpconTblGuidLeftBase>().ResultTable;
 		pm.Delete(l);
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) pm.NewQuery(typeof(CmpBi1nOwnpconTblGuidLeftBase)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpBi1nOwnpconTblGuidLeftBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) pm.NewQuery(typeof(CmpBi1nOwnpconTblGuidRight)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpBi1nOwnpconTblGuidRight>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -13839,13 +13722,13 @@ public class TestCmpBi1nOwnpconTblGuid
 	}
 	void QueryOwn()
 	{
-		Query q = pm.NewQuery(typeof(CmpBi1nOwnpconTblGuidLeftBase));
-		ownVar = (CmpBi1nOwnpconTblGuidLeftBase) q.ExecuteSingle();
+		var q = new NDOQuery<CmpBi1nOwnpconTblGuidLeftBase>(pm);
+		ownVar = q.ExecuteSingle();
 	}
 	void QueryOther()
 	{
-		Query q = pm.NewQuery(typeof(CmpBi1nOwnpconTblGuidRight));
-		otherVar = (CmpBi1nOwnpconTblGuidRight) q.ExecuteSingle();
+		var q = new NDOQuery<CmpBi1nOwnpconTblGuidRight>(pm);
+		otherVar = q.ExecuteSingle();
 	}
 }
 
@@ -13867,15 +13750,14 @@ public class TestCmpBinnOwnpconTblGuid
 	public void TearDown()
 	{
 		pm.UnloadCache();
-		IList l;
-		l = pm.NewQuery(typeof(CmpBinnOwnpconTblGuidLeftBase)).Execute();
+		var l = pm.Objects<CmpBinnOwnpconTblGuidLeftBase>().ResultTable;
 		pm.Delete(l);
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) pm.NewQuery(typeof(CmpBinnOwnpconTblGuidLeftBase)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpBinnOwnpconTblGuidLeftBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) pm.NewQuery(typeof(CmpBinnOwnpconTblGuidRight)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpBinnOwnpconTblGuidRight>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -13937,13 +13819,13 @@ public class TestCmpBinnOwnpconTblGuid
 	}
 	void QueryOwn()
 	{
-		Query q = pm.NewQuery(typeof(CmpBinnOwnpconTblGuidLeftBase));
-		ownVar = (CmpBinnOwnpconTblGuidLeftBase) q.ExecuteSingle();
+		var q = new NDOQuery<CmpBinnOwnpconTblGuidLeftBase>(pm);
+		ownVar = q.ExecuteSingle();
 	}
 	void QueryOther()
 	{
-		Query q = pm.NewQuery(typeof(CmpBinnOwnpconTblGuidRight));
-		otherVar = (CmpBinnOwnpconTblGuidRight) q.ExecuteSingle();
+		var q = new NDOQuery<CmpBinnOwnpconTblGuidRight>(pm);
+		otherVar = q.ExecuteSingle();
 	}
 }
 
@@ -13965,19 +13847,18 @@ public class TestAgrDir1OthpconNoTblGuid
 	public void TearDown()
 	{
 		pm.UnloadCache();
-		IList l;
-		l = pm.NewQuery(typeof(AgrDir1OthpconNoTblGuidLeft)).Execute();
+		var l = pm.Objects<AgrDir1OthpconNoTblGuidLeft>().ResultTable;
 		pm.Delete(l);
 		pm.Save();
 		pm.UnloadCache();
-		l = pm.NewQuery(typeof(AgrDir1OthpconNoTblGuidRightBase)).Execute();
-		pm.Delete(l);
+		var m = pm.Objects<AgrDir1OthpconNoTblGuidRightBase>().ResultTable;
+		pm.Delete(m);
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) pm.NewQuery(typeof(AgrDir1OthpconNoTblGuidLeft)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrDir1OthpconNoTblGuidLeft>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) pm.NewQuery(typeof(AgrDir1OthpconNoTblGuidRightBase)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrDir1OthpconNoTblGuidRightBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -14047,13 +13928,13 @@ public class TestAgrDir1OthpconNoTblGuid
 	}
 	void QueryOwn()
 	{
-		Query q = pm.NewQuery(typeof(AgrDir1OthpconNoTblGuidLeft));
-		ownVar = (AgrDir1OthpconNoTblGuidLeft) q.ExecuteSingle();
+		var q = new NDOQuery<AgrDir1OthpconNoTblGuidLeft>(pm);
+		ownVar = q.ExecuteSingle();
 	}
 	void QueryOther()
 	{
-		Query q = pm.NewQuery(typeof(AgrDir1OthpconNoTblGuidRightBase));
-		otherVar = (AgrDir1OthpconNoTblGuidRightBase) q.ExecuteSingle();
+		var q = new NDOQuery<AgrDir1OthpconNoTblGuidRightBase>(pm);
+		otherVar = q.ExecuteSingle();
 	}
 }
 
@@ -14075,19 +13956,18 @@ public class TestAgrDir1OthpconTblGuid
 	public void TearDown()
 	{
 		pm.UnloadCache();
-		IList l;
-		l = pm.NewQuery(typeof(AgrDir1OthpconTblGuidLeft)).Execute();
+		var l = pm.Objects<AgrDir1OthpconTblGuidLeft>().ResultTable;
 		pm.Delete(l);
 		pm.Save();
 		pm.UnloadCache();
-		l = pm.NewQuery(typeof(AgrDir1OthpconTblGuidRightBase)).Execute();
-		pm.Delete(l);
+		var m = pm.Objects<AgrDir1OthpconTblGuidRightBase>().ResultTable;
+		pm.Delete(m);
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) pm.NewQuery(typeof(AgrDir1OthpconTblGuidLeft)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrDir1OthpconTblGuidLeft>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) pm.NewQuery(typeof(AgrDir1OthpconTblGuidRightBase)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrDir1OthpconTblGuidRightBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -14157,13 +14037,13 @@ public class TestAgrDir1OthpconTblGuid
 	}
 	void QueryOwn()
 	{
-		Query q = pm.NewQuery(typeof(AgrDir1OthpconTblGuidLeft));
-		ownVar = (AgrDir1OthpconTblGuidLeft) q.ExecuteSingle();
+		var q = new NDOQuery<AgrDir1OthpconTblGuidLeft>(pm);
+		ownVar = q.ExecuteSingle();
 	}
 	void QueryOther()
 	{
-		Query q = pm.NewQuery(typeof(AgrDir1OthpconTblGuidRightBase));
-		otherVar = (AgrDir1OthpconTblGuidRightBase) q.ExecuteSingle();
+		var q = new NDOQuery<AgrDir1OthpconTblGuidRightBase>(pm);
+		otherVar = q.ExecuteSingle();
 	}
 }
 
@@ -14185,19 +14065,18 @@ public class TestAgrBi11OthpconNoTblGuid
 	public void TearDown()
 	{
 		pm.UnloadCache();
-		IList l;
-		l = pm.NewQuery(typeof(AgrBi11OthpconNoTblGuidLeft)).Execute();
+		var l = pm.Objects<AgrBi11OthpconNoTblGuidLeft>().ResultTable;
 		pm.Delete(l);
 		pm.Save();
 		pm.UnloadCache();
-		l = pm.NewQuery(typeof(AgrBi11OthpconNoTblGuidRightBase)).Execute();
-		pm.Delete(l);
+		var m = pm.Objects<AgrBi11OthpconNoTblGuidRightBase>().ResultTable;
+		pm.Delete(m);
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) pm.NewQuery(typeof(AgrBi11OthpconNoTblGuidLeft)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrBi11OthpconNoTblGuidLeft>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) pm.NewQuery(typeof(AgrBi11OthpconNoTblGuidRightBase)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrBi11OthpconNoTblGuidRightBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -14312,13 +14191,13 @@ public class TestAgrBi11OthpconNoTblGuid
 	}
 	void QueryOwn()
 	{
-		Query q = pm.NewQuery(typeof(AgrBi11OthpconNoTblGuidLeft));
-		ownVar = (AgrBi11OthpconNoTblGuidLeft) q.ExecuteSingle();
+		var q = new NDOQuery<AgrBi11OthpconNoTblGuidLeft>(pm);
+		ownVar = q.ExecuteSingle();
 	}
 	void QueryOther()
 	{
-		Query q = pm.NewQuery(typeof(AgrBi11OthpconNoTblGuidRightBase));
-		otherVar = (AgrBi11OthpconNoTblGuidRightBase) q.ExecuteSingle();
+		var q = new NDOQuery<AgrBi11OthpconNoTblGuidRightBase>(pm);
+		otherVar = q.ExecuteSingle();
 	}
 }
 
@@ -14340,19 +14219,18 @@ public class TestAgrBi11OthpconTblGuid
 	public void TearDown()
 	{
 		pm.UnloadCache();
-		IList l;
-		l = pm.NewQuery(typeof(AgrBi11OthpconTblGuidLeft)).Execute();
+		var l = pm.Objects<AgrBi11OthpconTblGuidLeft>().ResultTable;
 		pm.Delete(l);
 		pm.Save();
 		pm.UnloadCache();
-		l = pm.NewQuery(typeof(AgrBi11OthpconTblGuidRightBase)).Execute();
-		pm.Delete(l);
+		var m = pm.Objects<AgrBi11OthpconTblGuidRightBase>().ResultTable;
+		pm.Delete(m);
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) pm.NewQuery(typeof(AgrBi11OthpconTblGuidLeft)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrBi11OthpconTblGuidLeft>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) pm.NewQuery(typeof(AgrBi11OthpconTblGuidRightBase)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrBi11OthpconTblGuidRightBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -14467,13 +14345,13 @@ public class TestAgrBi11OthpconTblGuid
 	}
 	void QueryOwn()
 	{
-		Query q = pm.NewQuery(typeof(AgrBi11OthpconTblGuidLeft));
-		ownVar = (AgrBi11OthpconTblGuidLeft) q.ExecuteSingle();
+		var q = new NDOQuery<AgrBi11OthpconTblGuidLeft>(pm);
+		ownVar = q.ExecuteSingle();
 	}
 	void QueryOther()
 	{
-		Query q = pm.NewQuery(typeof(AgrBi11OthpconTblGuidRightBase));
-		otherVar = (AgrBi11OthpconTblGuidRightBase) q.ExecuteSingle();
+		var q = new NDOQuery<AgrBi11OthpconTblGuidRightBase>(pm);
+		otherVar = q.ExecuteSingle();
 	}
 }
 
@@ -14495,19 +14373,18 @@ public class TestAgrDirnOthpconTblGuid
 	public void TearDown()
 	{
 		pm.UnloadCache();
-		IList l;
-		l = pm.NewQuery(typeof(AgrDirnOthpconTblGuidLeft)).Execute();
+		var l = pm.Objects<AgrDirnOthpconTblGuidLeft>().ResultTable;
 		pm.Delete(l);
 		pm.Save();
 		pm.UnloadCache();
-		l = pm.NewQuery(typeof(AgrDirnOthpconTblGuidRightBase)).Execute();
-		pm.Delete(l);
+		var m = pm.Objects<AgrDirnOthpconTblGuidRightBase>().ResultTable;
+		pm.Delete(m);
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) pm.NewQuery(typeof(AgrDirnOthpconTblGuidLeft)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrDirnOthpconTblGuidLeft>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) pm.NewQuery(typeof(AgrDirnOthpconTblGuidRightBase)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrDirnOthpconTblGuidRightBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -14556,13 +14433,13 @@ public class TestAgrDirnOthpconTblGuid
 	}
 	void QueryOwn()
 	{
-		Query q = pm.NewQuery(typeof(AgrDirnOthpconTblGuidLeft));
-		ownVar = (AgrDirnOthpconTblGuidLeft) q.ExecuteSingle();
+		var q = new NDOQuery<AgrDirnOthpconTblGuidLeft>(pm);
+		ownVar = q.ExecuteSingle();
 	}
 	void QueryOther()
 	{
-		Query q = pm.NewQuery(typeof(AgrDirnOthpconTblGuidRightBase));
-		otherVar = (AgrDirnOthpconTblGuidRightBase) q.ExecuteSingle();
+		var q = new NDOQuery<AgrDirnOthpconTblGuidRightBase>(pm);
+		otherVar = q.ExecuteSingle();
 	}
 }
 
@@ -14584,19 +14461,18 @@ public class TestAgrBin1OthpconTblGuid
 	public void TearDown()
 	{
 		pm.UnloadCache();
-		IList l;
-		l = pm.NewQuery(typeof(AgrBin1OthpconTblGuidLeft)).Execute();
+		var l = pm.Objects<AgrBin1OthpconTblGuidLeft>().ResultTable;
 		pm.Delete(l);
 		pm.Save();
 		pm.UnloadCache();
-		l = pm.NewQuery(typeof(AgrBin1OthpconTblGuidRightBase)).Execute();
-		pm.Delete(l);
+		var m = pm.Objects<AgrBin1OthpconTblGuidRightBase>().ResultTable;
+		pm.Delete(m);
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) pm.NewQuery(typeof(AgrBin1OthpconTblGuidLeft)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrBin1OthpconTblGuidLeft>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) pm.NewQuery(typeof(AgrBin1OthpconTblGuidRightBase)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrBin1OthpconTblGuidRightBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -14690,13 +14566,13 @@ public class TestAgrBin1OthpconTblGuid
 	}
 	void QueryOwn()
 	{
-		Query q = pm.NewQuery(typeof(AgrBin1OthpconTblGuidLeft));
-		ownVar = (AgrBin1OthpconTblGuidLeft) q.ExecuteSingle();
+		var q = new NDOQuery<AgrBin1OthpconTblGuidLeft>(pm);
+		ownVar = q.ExecuteSingle();
 	}
 	void QueryOther()
 	{
-		Query q = pm.NewQuery(typeof(AgrBin1OthpconTblGuidRightBase));
-		otherVar = (AgrBin1OthpconTblGuidRightBase) q.ExecuteSingle();
+		var q = new NDOQuery<AgrBin1OthpconTblGuidRightBase>(pm);
+		otherVar = q.ExecuteSingle();
 	}
 }
 
@@ -14718,19 +14594,18 @@ public class TestAgrBi1nOthpconNoTblGuid
 	public void TearDown()
 	{
 		pm.UnloadCache();
-		IList l;
-		l = pm.NewQuery(typeof(AgrBi1nOthpconNoTblGuidLeft)).Execute();
+		var l = pm.Objects<AgrBi1nOthpconNoTblGuidLeft>().ResultTable;
 		pm.Delete(l);
 		pm.Save();
 		pm.UnloadCache();
-		l = pm.NewQuery(typeof(AgrBi1nOthpconNoTblGuidRightBase)).Execute();
-		pm.Delete(l);
+		var m = pm.Objects<AgrBi1nOthpconNoTblGuidRightBase>().ResultTable;
+		pm.Delete(m);
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) pm.NewQuery(typeof(AgrBi1nOthpconNoTblGuidLeft)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrBi1nOthpconNoTblGuidLeft>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) pm.NewQuery(typeof(AgrBi1nOthpconNoTblGuidRightBase)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrBi1nOthpconNoTblGuidRightBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -14814,13 +14689,13 @@ public class TestAgrBi1nOthpconNoTblGuid
 	}
 	void QueryOwn()
 	{
-		Query q = pm.NewQuery(typeof(AgrBi1nOthpconNoTblGuidLeft));
-		ownVar = (AgrBi1nOthpconNoTblGuidLeft) q.ExecuteSingle();
+		var q = new NDOQuery<AgrBi1nOthpconNoTblGuidLeft>(pm);
+		ownVar = q.ExecuteSingle();
 	}
 	void QueryOther()
 	{
-		Query q = pm.NewQuery(typeof(AgrBi1nOthpconNoTblGuidRightBase));
-		otherVar = (AgrBi1nOthpconNoTblGuidRightBase) q.ExecuteSingle();
+		var q = new NDOQuery<AgrBi1nOthpconNoTblGuidRightBase>(pm);
+		otherVar = q.ExecuteSingle();
 	}
 }
 
@@ -14842,19 +14717,18 @@ public class TestAgrBi1nOthpconTblGuid
 	public void TearDown()
 	{
 		pm.UnloadCache();
-		IList l;
-		l = pm.NewQuery(typeof(AgrBi1nOthpconTblGuidLeft)).Execute();
+		var l = pm.Objects<AgrBi1nOthpconTblGuidLeft>().ResultTable;
 		pm.Delete(l);
 		pm.Save();
 		pm.UnloadCache();
-		l = pm.NewQuery(typeof(AgrBi1nOthpconTblGuidRightBase)).Execute();
-		pm.Delete(l);
+		var m = pm.Objects<AgrBi1nOthpconTblGuidRightBase>().ResultTable;
+		pm.Delete(m);
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) pm.NewQuery(typeof(AgrBi1nOthpconTblGuidLeft)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrBi1nOthpconTblGuidLeft>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) pm.NewQuery(typeof(AgrBi1nOthpconTblGuidRightBase)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrBi1nOthpconTblGuidRightBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -14938,13 +14812,13 @@ public class TestAgrBi1nOthpconTblGuid
 	}
 	void QueryOwn()
 	{
-		Query q = pm.NewQuery(typeof(AgrBi1nOthpconTblGuidLeft));
-		ownVar = (AgrBi1nOthpconTblGuidLeft) q.ExecuteSingle();
+		var q = new NDOQuery<AgrBi1nOthpconTblGuidLeft>(pm);
+		ownVar = q.ExecuteSingle();
 	}
 	void QueryOther()
 	{
-		Query q = pm.NewQuery(typeof(AgrBi1nOthpconTblGuidRightBase));
-		otherVar = (AgrBi1nOthpconTblGuidRightBase) q.ExecuteSingle();
+		var q = new NDOQuery<AgrBi1nOthpconTblGuidRightBase>(pm);
+		otherVar = q.ExecuteSingle();
 	}
 }
 
@@ -14966,19 +14840,18 @@ public class TestAgrBinnOthpconTblGuid
 	public void TearDown()
 	{
 		pm.UnloadCache();
-		IList l;
-		l = pm.NewQuery(typeof(AgrBinnOthpconTblGuidLeft)).Execute();
+		var l = pm.Objects<AgrBinnOthpconTblGuidLeft>().ResultTable;
 		pm.Delete(l);
 		pm.Save();
 		pm.UnloadCache();
-		l = pm.NewQuery(typeof(AgrBinnOthpconTblGuidRightBase)).Execute();
-		pm.Delete(l);
+		var m = pm.Objects<AgrBinnOthpconTblGuidRightBase>().ResultTable;
+		pm.Delete(m);
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) pm.NewQuery(typeof(AgrBinnOthpconTblGuidLeft)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrBinnOthpconTblGuidLeft>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) pm.NewQuery(typeof(AgrBinnOthpconTblGuidRightBase)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrBinnOthpconTblGuidRightBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -15041,13 +14914,13 @@ public class TestAgrBinnOthpconTblGuid
 	}
 	void QueryOwn()
 	{
-		Query q = pm.NewQuery(typeof(AgrBinnOthpconTblGuidLeft));
-		ownVar = (AgrBinnOthpconTblGuidLeft) q.ExecuteSingle();
+		var q = new NDOQuery<AgrBinnOthpconTblGuidLeft>(pm);
+		ownVar = q.ExecuteSingle();
 	}
 	void QueryOther()
 	{
-		Query q = pm.NewQuery(typeof(AgrBinnOthpconTblGuidRightBase));
-		otherVar = (AgrBinnOthpconTblGuidRightBase) q.ExecuteSingle();
+		var q = new NDOQuery<AgrBinnOthpconTblGuidRightBase>(pm);
+		otherVar = q.ExecuteSingle();
 	}
 }
 
@@ -15069,15 +14942,14 @@ public class TestCmpDir1OthpconNoTblGuid
 	public void TearDown()
 	{
 		pm.UnloadCache();
-		IList l;
-		l = pm.NewQuery(typeof(CmpDir1OthpconNoTblGuidLeft)).Execute();
+		var l = pm.Objects<CmpDir1OthpconNoTblGuidLeft>().ResultTable;
 		pm.Delete(l);
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) pm.NewQuery(typeof(CmpDir1OthpconNoTblGuidLeft)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpDir1OthpconNoTblGuidLeft>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) pm.NewQuery(typeof(CmpDir1OthpconNoTblGuidRightBase)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpDir1OthpconNoTblGuidRightBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -15146,13 +15018,13 @@ public class TestCmpDir1OthpconNoTblGuid
 	}
 	void QueryOwn()
 	{
-		Query q = pm.NewQuery(typeof(CmpDir1OthpconNoTblGuidLeft));
-		ownVar = (CmpDir1OthpconNoTblGuidLeft) q.ExecuteSingle();
+		var q = new NDOQuery<CmpDir1OthpconNoTblGuidLeft>(pm);
+		ownVar = q.ExecuteSingle();
 	}
 	void QueryOther()
 	{
-		Query q = pm.NewQuery(typeof(CmpDir1OthpconNoTblGuidRightBase));
-		otherVar = (CmpDir1OthpconNoTblGuidRightBase) q.ExecuteSingle();
+		var q = new NDOQuery<CmpDir1OthpconNoTblGuidRightBase>(pm);
+		otherVar = q.ExecuteSingle();
 	}
 }
 
@@ -15174,15 +15046,14 @@ public class TestCmpDir1OthpconTblGuid
 	public void TearDown()
 	{
 		pm.UnloadCache();
-		IList l;
-		l = pm.NewQuery(typeof(CmpDir1OthpconTblGuidLeft)).Execute();
+		var l = pm.Objects<CmpDir1OthpconTblGuidLeft>().ResultTable;
 		pm.Delete(l);
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) pm.NewQuery(typeof(CmpDir1OthpconTblGuidLeft)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpDir1OthpconTblGuidLeft>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) pm.NewQuery(typeof(CmpDir1OthpconTblGuidRightBase)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpDir1OthpconTblGuidRightBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -15251,13 +15122,13 @@ public class TestCmpDir1OthpconTblGuid
 	}
 	void QueryOwn()
 	{
-		Query q = pm.NewQuery(typeof(CmpDir1OthpconTblGuidLeft));
-		ownVar = (CmpDir1OthpconTblGuidLeft) q.ExecuteSingle();
+		var q = new NDOQuery<CmpDir1OthpconTblGuidLeft>(pm);
+		ownVar = q.ExecuteSingle();
 	}
 	void QueryOther()
 	{
-		Query q = pm.NewQuery(typeof(CmpDir1OthpconTblGuidRightBase));
-		otherVar = (CmpDir1OthpconTblGuidRightBase) q.ExecuteSingle();
+		var q = new NDOQuery<CmpDir1OthpconTblGuidRightBase>(pm);
+		otherVar = q.ExecuteSingle();
 	}
 }
 
@@ -15279,15 +15150,14 @@ public class TestCmpBi11OthpconNoTblGuid
 	public void TearDown()
 	{
 		pm.UnloadCache();
-		IList l;
-		l = pm.NewQuery(typeof(CmpBi11OthpconNoTblGuidLeft)).Execute();
+		var l = pm.Objects<CmpBi11OthpconNoTblGuidLeft>().ResultTable;
 		pm.Delete(l);
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) pm.NewQuery(typeof(CmpBi11OthpconNoTblGuidLeft)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpBi11OthpconNoTblGuidLeft>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) pm.NewQuery(typeof(CmpBi11OthpconNoTblGuidRightBase)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpBi11OthpconNoTblGuidRightBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -15401,13 +15271,13 @@ public class TestCmpBi11OthpconNoTblGuid
 	}
 	void QueryOwn()
 	{
-		Query q = pm.NewQuery(typeof(CmpBi11OthpconNoTblGuidLeft));
-		ownVar = (CmpBi11OthpconNoTblGuidLeft) q.ExecuteSingle();
+		var q = new NDOQuery<CmpBi11OthpconNoTblGuidLeft>(pm);
+		ownVar = q.ExecuteSingle();
 	}
 	void QueryOther()
 	{
-		Query q = pm.NewQuery(typeof(CmpBi11OthpconNoTblGuidRightBase));
-		otherVar = (CmpBi11OthpconNoTblGuidRightBase) q.ExecuteSingle();
+		var q = new NDOQuery<CmpBi11OthpconNoTblGuidRightBase>(pm);
+		otherVar = q.ExecuteSingle();
 	}
 }
 
@@ -15429,15 +15299,14 @@ public class TestCmpBi11OthpconTblGuid
 	public void TearDown()
 	{
 		pm.UnloadCache();
-		IList l;
-		l = pm.NewQuery(typeof(CmpBi11OthpconTblGuidLeft)).Execute();
+		var l = pm.Objects<CmpBi11OthpconTblGuidLeft>().ResultTable;
 		pm.Delete(l);
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) pm.NewQuery(typeof(CmpBi11OthpconTblGuidLeft)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpBi11OthpconTblGuidLeft>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) pm.NewQuery(typeof(CmpBi11OthpconTblGuidRightBase)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpBi11OthpconTblGuidRightBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -15551,13 +15420,13 @@ public class TestCmpBi11OthpconTblGuid
 	}
 	void QueryOwn()
 	{
-		Query q = pm.NewQuery(typeof(CmpBi11OthpconTblGuidLeft));
-		ownVar = (CmpBi11OthpconTblGuidLeft) q.ExecuteSingle();
+		var q = new NDOQuery<CmpBi11OthpconTblGuidLeft>(pm);
+		ownVar = q.ExecuteSingle();
 	}
 	void QueryOther()
 	{
-		Query q = pm.NewQuery(typeof(CmpBi11OthpconTblGuidRightBase));
-		otherVar = (CmpBi11OthpconTblGuidRightBase) q.ExecuteSingle();
+		var q = new NDOQuery<CmpBi11OthpconTblGuidRightBase>(pm);
+		otherVar = q.ExecuteSingle();
 	}
 }
 
@@ -15579,15 +15448,14 @@ public class TestCmpDirnOthpconTblGuid
 	public void TearDown()
 	{
 		pm.UnloadCache();
-		IList l;
-		l = pm.NewQuery(typeof(CmpDirnOthpconTblGuidLeft)).Execute();
+		var l = pm.Objects<CmpDirnOthpconTblGuidLeft>().ResultTable;
 		pm.Delete(l);
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) pm.NewQuery(typeof(CmpDirnOthpconTblGuidLeft)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpDirnOthpconTblGuidLeft>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) pm.NewQuery(typeof(CmpDirnOthpconTblGuidRightBase)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpDirnOthpconTblGuidRightBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -15635,13 +15503,13 @@ public class TestCmpDirnOthpconTblGuid
 	}
 	void QueryOwn()
 	{
-		Query q = pm.NewQuery(typeof(CmpDirnOthpconTblGuidLeft));
-		ownVar = (CmpDirnOthpconTblGuidLeft) q.ExecuteSingle();
+		var q = new NDOQuery<CmpDirnOthpconTblGuidLeft>(pm);
+		ownVar = q.ExecuteSingle();
 	}
 	void QueryOther()
 	{
-		Query q = pm.NewQuery(typeof(CmpDirnOthpconTblGuidRightBase));
-		otherVar = (CmpDirnOthpconTblGuidRightBase) q.ExecuteSingle();
+		var q = new NDOQuery<CmpDirnOthpconTblGuidRightBase>(pm);
+		otherVar = q.ExecuteSingle();
 	}
 }
 
@@ -15663,15 +15531,14 @@ public class TestCmpBin1OthpconTblGuid
 	public void TearDown()
 	{
 		pm.UnloadCache();
-		IList l;
-		l = pm.NewQuery(typeof(CmpBin1OthpconTblGuidLeft)).Execute();
+		var l = pm.Objects<CmpBin1OthpconTblGuidLeft>().ResultTable;
 		pm.Delete(l);
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) pm.NewQuery(typeof(CmpBin1OthpconTblGuidLeft)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpBin1OthpconTblGuidLeft>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) pm.NewQuery(typeof(CmpBin1OthpconTblGuidRightBase)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpBin1OthpconTblGuidRightBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -15764,13 +15631,13 @@ public class TestCmpBin1OthpconTblGuid
 	}
 	void QueryOwn()
 	{
-		Query q = pm.NewQuery(typeof(CmpBin1OthpconTblGuidLeft));
-		ownVar = (CmpBin1OthpconTblGuidLeft) q.ExecuteSingle();
+		var q = new NDOQuery<CmpBin1OthpconTblGuidLeft>(pm);
+		ownVar = q.ExecuteSingle();
 	}
 	void QueryOther()
 	{
-		Query q = pm.NewQuery(typeof(CmpBin1OthpconTblGuidRightBase));
-		otherVar = (CmpBin1OthpconTblGuidRightBase) q.ExecuteSingle();
+		var q = new NDOQuery<CmpBin1OthpconTblGuidRightBase>(pm);
+		otherVar = q.ExecuteSingle();
 	}
 }
 
@@ -15792,15 +15659,14 @@ public class TestCmpBi1nOthpconNoTblGuid
 	public void TearDown()
 	{
 		pm.UnloadCache();
-		IList l;
-		l = pm.NewQuery(typeof(CmpBi1nOthpconNoTblGuidLeft)).Execute();
+		var l = pm.Objects<CmpBi1nOthpconNoTblGuidLeft>().ResultTable;
 		pm.Delete(l);
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) pm.NewQuery(typeof(CmpBi1nOthpconNoTblGuidLeft)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpBi1nOthpconNoTblGuidLeft>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) pm.NewQuery(typeof(CmpBi1nOthpconNoTblGuidRightBase)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpBi1nOthpconNoTblGuidRightBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -15883,13 +15749,13 @@ public class TestCmpBi1nOthpconNoTblGuid
 	}
 	void QueryOwn()
 	{
-		Query q = pm.NewQuery(typeof(CmpBi1nOthpconNoTblGuidLeft));
-		ownVar = (CmpBi1nOthpconNoTblGuidLeft) q.ExecuteSingle();
+		var q = new NDOQuery<CmpBi1nOthpconNoTblGuidLeft>(pm);
+		ownVar = q.ExecuteSingle();
 	}
 	void QueryOther()
 	{
-		Query q = pm.NewQuery(typeof(CmpBi1nOthpconNoTblGuidRightBase));
-		otherVar = (CmpBi1nOthpconNoTblGuidRightBase) q.ExecuteSingle();
+		var q = new NDOQuery<CmpBi1nOthpconNoTblGuidRightBase>(pm);
+		otherVar = q.ExecuteSingle();
 	}
 }
 
@@ -15911,15 +15777,14 @@ public class TestCmpBi1nOthpconTblGuid
 	public void TearDown()
 	{
 		pm.UnloadCache();
-		IList l;
-		l = pm.NewQuery(typeof(CmpBi1nOthpconTblGuidLeft)).Execute();
+		var l = pm.Objects<CmpBi1nOthpconTblGuidLeft>().ResultTable;
 		pm.Delete(l);
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) pm.NewQuery(typeof(CmpBi1nOthpconTblGuidLeft)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpBi1nOthpconTblGuidLeft>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) pm.NewQuery(typeof(CmpBi1nOthpconTblGuidRightBase)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpBi1nOthpconTblGuidRightBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -16002,13 +15867,13 @@ public class TestCmpBi1nOthpconTblGuid
 	}
 	void QueryOwn()
 	{
-		Query q = pm.NewQuery(typeof(CmpBi1nOthpconTblGuidLeft));
-		ownVar = (CmpBi1nOthpconTblGuidLeft) q.ExecuteSingle();
+		var q = new NDOQuery<CmpBi1nOthpconTblGuidLeft>(pm);
+		ownVar = q.ExecuteSingle();
 	}
 	void QueryOther()
 	{
-		Query q = pm.NewQuery(typeof(CmpBi1nOthpconTblGuidRightBase));
-		otherVar = (CmpBi1nOthpconTblGuidRightBase) q.ExecuteSingle();
+		var q = new NDOQuery<CmpBi1nOthpconTblGuidRightBase>(pm);
+		otherVar = q.ExecuteSingle();
 	}
 }
 
@@ -16030,15 +15895,14 @@ public class TestCmpBinnOthpconTblGuid
 	public void TearDown()
 	{
 		pm.UnloadCache();
-		IList l;
-		l = pm.NewQuery(typeof(CmpBinnOthpconTblGuidLeft)).Execute();
+		var l = pm.Objects<CmpBinnOthpconTblGuidLeft>().ResultTable;
 		pm.Delete(l);
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) pm.NewQuery(typeof(CmpBinnOthpconTblGuidLeft)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpBinnOthpconTblGuidLeft>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) pm.NewQuery(typeof(CmpBinnOthpconTblGuidRightBase)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpBinnOthpconTblGuidRightBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -16100,13 +15964,13 @@ public class TestCmpBinnOthpconTblGuid
 	}
 	void QueryOwn()
 	{
-		Query q = pm.NewQuery(typeof(CmpBinnOthpconTblGuidLeft));
-		ownVar = (CmpBinnOthpconTblGuidLeft) q.ExecuteSingle();
+		var q = new NDOQuery<CmpBinnOthpconTblGuidLeft>(pm);
+		ownVar = q.ExecuteSingle();
 	}
 	void QueryOther()
 	{
-		Query q = pm.NewQuery(typeof(CmpBinnOthpconTblGuidRightBase));
-		otherVar = (CmpBinnOthpconTblGuidRightBase) q.ExecuteSingle();
+		var q = new NDOQuery<CmpBinnOthpconTblGuidRightBase>(pm);
+		otherVar = q.ExecuteSingle();
 	}
 }
 
@@ -16128,19 +15992,18 @@ public class TestAgrDir1OwnpconOthpconNoTblGuid
 	public void TearDown()
 	{
 		pm.UnloadCache();
-		IList l;
-		l = pm.NewQuery(typeof(AgrDir1OwnpconOthpconNoTblGuidLeftBase)).Execute();
+		var l = pm.Objects<AgrDir1OwnpconOthpconNoTblGuidLeftBase>().ResultTable;
 		pm.Delete(l);
 		pm.Save();
 		pm.UnloadCache();
-		l = pm.NewQuery(typeof(AgrDir1OwnpconOthpconNoTblGuidRightBase)).Execute();
-		pm.Delete(l);
+		var m = pm.Objects<AgrDir1OwnpconOthpconNoTblGuidRightBase>().ResultTable;
+		pm.Delete(m);
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) pm.NewQuery(typeof(AgrDir1OwnpconOthpconNoTblGuidLeftBase)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrDir1OwnpconOthpconNoTblGuidLeftBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) pm.NewQuery(typeof(AgrDir1OwnpconOthpconNoTblGuidRightBase)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrDir1OwnpconOthpconNoTblGuidRightBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -16210,13 +16073,13 @@ public class TestAgrDir1OwnpconOthpconNoTblGuid
 	}
 	void QueryOwn()
 	{
-		Query q = pm.NewQuery(typeof(AgrDir1OwnpconOthpconNoTblGuidLeftBase));
-		ownVar = (AgrDir1OwnpconOthpconNoTblGuidLeftBase) q.ExecuteSingle();
+		var q = new NDOQuery<AgrDir1OwnpconOthpconNoTblGuidLeftBase>(pm);
+		ownVar = q.ExecuteSingle();
 	}
 	void QueryOther()
 	{
-		Query q = pm.NewQuery(typeof(AgrDir1OwnpconOthpconNoTblGuidRightBase));
-		otherVar = (AgrDir1OwnpconOthpconNoTblGuidRightBase) q.ExecuteSingle();
+		var q = new NDOQuery<AgrDir1OwnpconOthpconNoTblGuidRightBase>(pm);
+		otherVar = q.ExecuteSingle();
 	}
 }
 
@@ -16238,19 +16101,18 @@ public class TestAgrDir1OwnpconOthpconTblGuid
 	public void TearDown()
 	{
 		pm.UnloadCache();
-		IList l;
-		l = pm.NewQuery(typeof(AgrDir1OwnpconOthpconTblGuidLeftBase)).Execute();
+		var l = pm.Objects<AgrDir1OwnpconOthpconTblGuidLeftBase>().ResultTable;
 		pm.Delete(l);
 		pm.Save();
 		pm.UnloadCache();
-		l = pm.NewQuery(typeof(AgrDir1OwnpconOthpconTblGuidRightBase)).Execute();
-		pm.Delete(l);
+		var m = pm.Objects<AgrDir1OwnpconOthpconTblGuidRightBase>().ResultTable;
+		pm.Delete(m);
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) pm.NewQuery(typeof(AgrDir1OwnpconOthpconTblGuidLeftBase)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrDir1OwnpconOthpconTblGuidLeftBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) pm.NewQuery(typeof(AgrDir1OwnpconOthpconTblGuidRightBase)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrDir1OwnpconOthpconTblGuidRightBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -16320,13 +16182,13 @@ public class TestAgrDir1OwnpconOthpconTblGuid
 	}
 	void QueryOwn()
 	{
-		Query q = pm.NewQuery(typeof(AgrDir1OwnpconOthpconTblGuidLeftBase));
-		ownVar = (AgrDir1OwnpconOthpconTblGuidLeftBase) q.ExecuteSingle();
+		var q = new NDOQuery<AgrDir1OwnpconOthpconTblGuidLeftBase>(pm);
+		ownVar = q.ExecuteSingle();
 	}
 	void QueryOther()
 	{
-		Query q = pm.NewQuery(typeof(AgrDir1OwnpconOthpconTblGuidRightBase));
-		otherVar = (AgrDir1OwnpconOthpconTblGuidRightBase) q.ExecuteSingle();
+		var q = new NDOQuery<AgrDir1OwnpconOthpconTblGuidRightBase>(pm);
+		otherVar = q.ExecuteSingle();
 	}
 }
 
@@ -16348,19 +16210,18 @@ public class TestAgrBi11OwnpconOthpconNoTblGuid
 	public void TearDown()
 	{
 		pm.UnloadCache();
-		IList l;
-		l = pm.NewQuery(typeof(AgrBi11OwnpconOthpconNoTblGuidLeftBase)).Execute();
+		var l = pm.Objects<AgrBi11OwnpconOthpconNoTblGuidLeftBase>().ResultTable;
 		pm.Delete(l);
 		pm.Save();
 		pm.UnloadCache();
-		l = pm.NewQuery(typeof(AgrBi11OwnpconOthpconNoTblGuidRightBase)).Execute();
-		pm.Delete(l);
+		var m = pm.Objects<AgrBi11OwnpconOthpconNoTblGuidRightBase>().ResultTable;
+		pm.Delete(m);
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) pm.NewQuery(typeof(AgrBi11OwnpconOthpconNoTblGuidLeftBase)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrBi11OwnpconOthpconNoTblGuidLeftBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) pm.NewQuery(typeof(AgrBi11OwnpconOthpconNoTblGuidRightBase)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrBi11OwnpconOthpconNoTblGuidRightBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -16481,13 +16342,13 @@ public class TestAgrBi11OwnpconOthpconNoTblGuid
 	}
 	void QueryOwn()
 	{
-		Query q = pm.NewQuery(typeof(AgrBi11OwnpconOthpconNoTblGuidLeftBase));
-		ownVar = (AgrBi11OwnpconOthpconNoTblGuidLeftBase) q.ExecuteSingle();
+		var q = new NDOQuery<AgrBi11OwnpconOthpconNoTblGuidLeftBase>(pm);
+		ownVar = q.ExecuteSingle();
 	}
 	void QueryOther()
 	{
-		Query q = pm.NewQuery(typeof(AgrBi11OwnpconOthpconNoTblGuidRightBase));
-		otherVar = (AgrBi11OwnpconOthpconNoTblGuidRightBase) q.ExecuteSingle();
+		var q = new NDOQuery<AgrBi11OwnpconOthpconNoTblGuidRightBase>(pm);
+		otherVar = q.ExecuteSingle();
 	}
 }
 
@@ -16509,19 +16370,18 @@ public class TestAgrBi11OwnpconOthpconTblGuid
 	public void TearDown()
 	{
 		pm.UnloadCache();
-		IList l;
-		l = pm.NewQuery(typeof(AgrBi11OwnpconOthpconTblGuidLeftBase)).Execute();
+		var l = pm.Objects<AgrBi11OwnpconOthpconTblGuidLeftBase>().ResultTable;
 		pm.Delete(l);
 		pm.Save();
 		pm.UnloadCache();
-		l = pm.NewQuery(typeof(AgrBi11OwnpconOthpconTblGuidRightBase)).Execute();
-		pm.Delete(l);
+		var m = pm.Objects<AgrBi11OwnpconOthpconTblGuidRightBase>().ResultTable;
+		pm.Delete(m);
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) pm.NewQuery(typeof(AgrBi11OwnpconOthpconTblGuidLeftBase)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrBi11OwnpconOthpconTblGuidLeftBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) pm.NewQuery(typeof(AgrBi11OwnpconOthpconTblGuidRightBase)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrBi11OwnpconOthpconTblGuidRightBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -16642,13 +16502,13 @@ public class TestAgrBi11OwnpconOthpconTblGuid
 	}
 	void QueryOwn()
 	{
-		Query q = pm.NewQuery(typeof(AgrBi11OwnpconOthpconTblGuidLeftBase));
-		ownVar = (AgrBi11OwnpconOthpconTblGuidLeftBase) q.ExecuteSingle();
+		var q = new NDOQuery<AgrBi11OwnpconOthpconTblGuidLeftBase>(pm);
+		ownVar = q.ExecuteSingle();
 	}
 	void QueryOther()
 	{
-		Query q = pm.NewQuery(typeof(AgrBi11OwnpconOthpconTblGuidRightBase));
-		otherVar = (AgrBi11OwnpconOthpconTblGuidRightBase) q.ExecuteSingle();
+		var q = new NDOQuery<AgrBi11OwnpconOthpconTblGuidRightBase>(pm);
+		otherVar = q.ExecuteSingle();
 	}
 }
 
@@ -16670,19 +16530,18 @@ public class TestAgrDirnOwnpconOthpconTblGuid
 	public void TearDown()
 	{
 		pm.UnloadCache();
-		IList l;
-		l = pm.NewQuery(typeof(AgrDirnOwnpconOthpconTblGuidLeftBase)).Execute();
+		var l = pm.Objects<AgrDirnOwnpconOthpconTblGuidLeftBase>().ResultTable;
 		pm.Delete(l);
 		pm.Save();
 		pm.UnloadCache();
-		l = pm.NewQuery(typeof(AgrDirnOwnpconOthpconTblGuidRightBase)).Execute();
-		pm.Delete(l);
+		var m = pm.Objects<AgrDirnOwnpconOthpconTblGuidRightBase>().ResultTable;
+		pm.Delete(m);
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) pm.NewQuery(typeof(AgrDirnOwnpconOthpconTblGuidLeftBase)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrDirnOwnpconOthpconTblGuidLeftBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) pm.NewQuery(typeof(AgrDirnOwnpconOthpconTblGuidRightBase)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrDirnOwnpconOthpconTblGuidRightBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -16731,13 +16590,13 @@ public class TestAgrDirnOwnpconOthpconTblGuid
 	}
 	void QueryOwn()
 	{
-		Query q = pm.NewQuery(typeof(AgrDirnOwnpconOthpconTblGuidLeftBase));
-		ownVar = (AgrDirnOwnpconOthpconTblGuidLeftBase) q.ExecuteSingle();
+		var q = new NDOQuery<AgrDirnOwnpconOthpconTblGuidLeftBase>(pm);
+		ownVar = q.ExecuteSingle();
 	}
 	void QueryOther()
 	{
-		Query q = pm.NewQuery(typeof(AgrDirnOwnpconOthpconTblGuidRightBase));
-		otherVar = (AgrDirnOwnpconOthpconTblGuidRightBase) q.ExecuteSingle();
+		var q = new NDOQuery<AgrDirnOwnpconOthpconTblGuidRightBase>(pm);
+		otherVar = q.ExecuteSingle();
 	}
 }
 
@@ -16759,19 +16618,18 @@ public class TestAgrBin1OwnpconOthpconTblGuid
 	public void TearDown()
 	{
 		pm.UnloadCache();
-		IList l;
-		l = pm.NewQuery(typeof(AgrBin1OwnpconOthpconTblGuidLeftBase)).Execute();
+		var l = pm.Objects<AgrBin1OwnpconOthpconTblGuidLeftBase>().ResultTable;
 		pm.Delete(l);
 		pm.Save();
 		pm.UnloadCache();
-		l = pm.NewQuery(typeof(AgrBin1OwnpconOthpconTblGuidRightBase)).Execute();
-		pm.Delete(l);
+		var m = pm.Objects<AgrBin1OwnpconOthpconTblGuidRightBase>().ResultTable;
+		pm.Delete(m);
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) pm.NewQuery(typeof(AgrBin1OwnpconOthpconTblGuidLeftBase)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrBin1OwnpconOthpconTblGuidLeftBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) pm.NewQuery(typeof(AgrBin1OwnpconOthpconTblGuidRightBase)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrBin1OwnpconOthpconTblGuidRightBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -16871,13 +16729,13 @@ public class TestAgrBin1OwnpconOthpconTblGuid
 	}
 	void QueryOwn()
 	{
-		Query q = pm.NewQuery(typeof(AgrBin1OwnpconOthpconTblGuidLeftBase));
-		ownVar = (AgrBin1OwnpconOthpconTblGuidLeftBase) q.ExecuteSingle();
+		var q = new NDOQuery<AgrBin1OwnpconOthpconTblGuidLeftBase>(pm);
+		ownVar = q.ExecuteSingle();
 	}
 	void QueryOther()
 	{
-		Query q = pm.NewQuery(typeof(AgrBin1OwnpconOthpconTblGuidRightBase));
-		otherVar = (AgrBin1OwnpconOthpconTblGuidRightBase) q.ExecuteSingle();
+		var q = new NDOQuery<AgrBin1OwnpconOthpconTblGuidRightBase>(pm);
+		otherVar = q.ExecuteSingle();
 	}
 }
 
@@ -16899,19 +16757,18 @@ public class TestAgrBi1nOwnpconOthpconTblGuid
 	public void TearDown()
 	{
 		pm.UnloadCache();
-		IList l;
-		l = pm.NewQuery(typeof(AgrBi1nOwnpconOthpconTblGuidLeftBase)).Execute();
+		var l = pm.Objects<AgrBi1nOwnpconOthpconTblGuidLeftBase>().ResultTable;
 		pm.Delete(l);
 		pm.Save();
 		pm.UnloadCache();
-		l = pm.NewQuery(typeof(AgrBi1nOwnpconOthpconTblGuidRightBase)).Execute();
-		pm.Delete(l);
+		var m = pm.Objects<AgrBi1nOwnpconOthpconTblGuidRightBase>().ResultTable;
+		pm.Delete(m);
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) pm.NewQuery(typeof(AgrBi1nOwnpconOthpconTblGuidLeftBase)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrBi1nOwnpconOthpconTblGuidLeftBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) pm.NewQuery(typeof(AgrBi1nOwnpconOthpconTblGuidRightBase)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrBi1nOwnpconOthpconTblGuidRightBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -17001,13 +16858,13 @@ public class TestAgrBi1nOwnpconOthpconTblGuid
 	}
 	void QueryOwn()
 	{
-		Query q = pm.NewQuery(typeof(AgrBi1nOwnpconOthpconTblGuidLeftBase));
-		ownVar = (AgrBi1nOwnpconOthpconTblGuidLeftBase) q.ExecuteSingle();
+		var q = new NDOQuery<AgrBi1nOwnpconOthpconTblGuidLeftBase>(pm);
+		ownVar = q.ExecuteSingle();
 	}
 	void QueryOther()
 	{
-		Query q = pm.NewQuery(typeof(AgrBi1nOwnpconOthpconTblGuidRightBase));
-		otherVar = (AgrBi1nOwnpconOthpconTblGuidRightBase) q.ExecuteSingle();
+		var q = new NDOQuery<AgrBi1nOwnpconOthpconTblGuidRightBase>(pm);
+		otherVar = q.ExecuteSingle();
 	}
 }
 
@@ -17029,19 +16886,18 @@ public class TestAgrBinnOwnpconOthpconTblGuid
 	public void TearDown()
 	{
 		pm.UnloadCache();
-		IList l;
-		l = pm.NewQuery(typeof(AgrBinnOwnpconOthpconTblGuidLeftBase)).Execute();
+		var l = pm.Objects<AgrBinnOwnpconOthpconTblGuidLeftBase>().ResultTable;
 		pm.Delete(l);
 		pm.Save();
 		pm.UnloadCache();
-		l = pm.NewQuery(typeof(AgrBinnOwnpconOthpconTblGuidRightBase)).Execute();
-		pm.Delete(l);
+		var m = pm.Objects<AgrBinnOwnpconOthpconTblGuidRightBase>().ResultTable;
+		pm.Delete(m);
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) pm.NewQuery(typeof(AgrBinnOwnpconOthpconTblGuidLeftBase)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrBinnOwnpconOthpconTblGuidLeftBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) pm.NewQuery(typeof(AgrBinnOwnpconOthpconTblGuidRightBase)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrBinnOwnpconOthpconTblGuidRightBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -17110,13 +16966,13 @@ public class TestAgrBinnOwnpconOthpconTblGuid
 	}
 	void QueryOwn()
 	{
-		Query q = pm.NewQuery(typeof(AgrBinnOwnpconOthpconTblGuidLeftBase));
-		ownVar = (AgrBinnOwnpconOthpconTblGuidLeftBase) q.ExecuteSingle();
+		var q = new NDOQuery<AgrBinnOwnpconOthpconTblGuidLeftBase>(pm);
+		ownVar = q.ExecuteSingle();
 	}
 	void QueryOther()
 	{
-		Query q = pm.NewQuery(typeof(AgrBinnOwnpconOthpconTblGuidRightBase));
-		otherVar = (AgrBinnOwnpconOthpconTblGuidRightBase) q.ExecuteSingle();
+		var q = new NDOQuery<AgrBinnOwnpconOthpconTblGuidRightBase>(pm);
+		otherVar = q.ExecuteSingle();
 	}
 }
 
@@ -17138,15 +16994,14 @@ public class TestCmpDir1OwnpconOthpconNoTblGuid
 	public void TearDown()
 	{
 		pm.UnloadCache();
-		IList l;
-		l = pm.NewQuery(typeof(CmpDir1OwnpconOthpconNoTblGuidLeftBase)).Execute();
+		var l = pm.Objects<CmpDir1OwnpconOthpconNoTblGuidLeftBase>().ResultTable;
 		pm.Delete(l);
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) pm.NewQuery(typeof(CmpDir1OwnpconOthpconNoTblGuidLeftBase)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpDir1OwnpconOthpconNoTblGuidLeftBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) pm.NewQuery(typeof(CmpDir1OwnpconOthpconNoTblGuidRightBase)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpDir1OwnpconOthpconNoTblGuidRightBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -17215,13 +17070,13 @@ public class TestCmpDir1OwnpconOthpconNoTblGuid
 	}
 	void QueryOwn()
 	{
-		Query q = pm.NewQuery(typeof(CmpDir1OwnpconOthpconNoTblGuidLeftBase));
-		ownVar = (CmpDir1OwnpconOthpconNoTblGuidLeftBase) q.ExecuteSingle();
+		var q = new NDOQuery<CmpDir1OwnpconOthpconNoTblGuidLeftBase>(pm);
+		ownVar = q.ExecuteSingle();
 	}
 	void QueryOther()
 	{
-		Query q = pm.NewQuery(typeof(CmpDir1OwnpconOthpconNoTblGuidRightBase));
-		otherVar = (CmpDir1OwnpconOthpconNoTblGuidRightBase) q.ExecuteSingle();
+		var q = new NDOQuery<CmpDir1OwnpconOthpconNoTblGuidRightBase>(pm);
+		otherVar = q.ExecuteSingle();
 	}
 }
 
@@ -17243,15 +17098,14 @@ public class TestCmpDir1OwnpconOthpconTblGuid
 	public void TearDown()
 	{
 		pm.UnloadCache();
-		IList l;
-		l = pm.NewQuery(typeof(CmpDir1OwnpconOthpconTblGuidLeftBase)).Execute();
+		var l = pm.Objects<CmpDir1OwnpconOthpconTblGuidLeftBase>().ResultTable;
 		pm.Delete(l);
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) pm.NewQuery(typeof(CmpDir1OwnpconOthpconTblGuidLeftBase)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpDir1OwnpconOthpconTblGuidLeftBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) pm.NewQuery(typeof(CmpDir1OwnpconOthpconTblGuidRightBase)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpDir1OwnpconOthpconTblGuidRightBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -17320,13 +17174,13 @@ public class TestCmpDir1OwnpconOthpconTblGuid
 	}
 	void QueryOwn()
 	{
-		Query q = pm.NewQuery(typeof(CmpDir1OwnpconOthpconTblGuidLeftBase));
-		ownVar = (CmpDir1OwnpconOthpconTblGuidLeftBase) q.ExecuteSingle();
+		var q = new NDOQuery<CmpDir1OwnpconOthpconTblGuidLeftBase>(pm);
+		ownVar = q.ExecuteSingle();
 	}
 	void QueryOther()
 	{
-		Query q = pm.NewQuery(typeof(CmpDir1OwnpconOthpconTblGuidRightBase));
-		otherVar = (CmpDir1OwnpconOthpconTblGuidRightBase) q.ExecuteSingle();
+		var q = new NDOQuery<CmpDir1OwnpconOthpconTblGuidRightBase>(pm);
+		otherVar = q.ExecuteSingle();
 	}
 }
 
@@ -17348,15 +17202,14 @@ public class TestCmpBi11OwnpconOthpconNoTblGuid
 	public void TearDown()
 	{
 		pm.UnloadCache();
-		IList l;
-		l = pm.NewQuery(typeof(CmpBi11OwnpconOthpconNoTblGuidLeftBase)).Execute();
+		var l = pm.Objects<CmpBi11OwnpconOthpconNoTblGuidLeftBase>().ResultTable;
 		pm.Delete(l);
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) pm.NewQuery(typeof(CmpBi11OwnpconOthpconNoTblGuidLeftBase)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpBi11OwnpconOthpconNoTblGuidLeftBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) pm.NewQuery(typeof(CmpBi11OwnpconOthpconNoTblGuidRightBase)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpBi11OwnpconOthpconNoTblGuidRightBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -17476,13 +17329,13 @@ public class TestCmpBi11OwnpconOthpconNoTblGuid
 	}
 	void QueryOwn()
 	{
-		Query q = pm.NewQuery(typeof(CmpBi11OwnpconOthpconNoTblGuidLeftBase));
-		ownVar = (CmpBi11OwnpconOthpconNoTblGuidLeftBase) q.ExecuteSingle();
+		var q = new NDOQuery<CmpBi11OwnpconOthpconNoTblGuidLeftBase>(pm);
+		ownVar = q.ExecuteSingle();
 	}
 	void QueryOther()
 	{
-		Query q = pm.NewQuery(typeof(CmpBi11OwnpconOthpconNoTblGuidRightBase));
-		otherVar = (CmpBi11OwnpconOthpconNoTblGuidRightBase) q.ExecuteSingle();
+		var q = new NDOQuery<CmpBi11OwnpconOthpconNoTblGuidRightBase>(pm);
+		otherVar = q.ExecuteSingle();
 	}
 }
 
@@ -17504,15 +17357,14 @@ public class TestCmpBi11OwnpconOthpconTblGuid
 	public void TearDown()
 	{
 		pm.UnloadCache();
-		IList l;
-		l = pm.NewQuery(typeof(CmpBi11OwnpconOthpconTblGuidLeftBase)).Execute();
+		var l = pm.Objects<CmpBi11OwnpconOthpconTblGuidLeftBase>().ResultTable;
 		pm.Delete(l);
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) pm.NewQuery(typeof(CmpBi11OwnpconOthpconTblGuidLeftBase)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpBi11OwnpconOthpconTblGuidLeftBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) pm.NewQuery(typeof(CmpBi11OwnpconOthpconTblGuidRightBase)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpBi11OwnpconOthpconTblGuidRightBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -17632,13 +17484,13 @@ public class TestCmpBi11OwnpconOthpconTblGuid
 	}
 	void QueryOwn()
 	{
-		Query q = pm.NewQuery(typeof(CmpBi11OwnpconOthpconTblGuidLeftBase));
-		ownVar = (CmpBi11OwnpconOthpconTblGuidLeftBase) q.ExecuteSingle();
+		var q = new NDOQuery<CmpBi11OwnpconOthpconTblGuidLeftBase>(pm);
+		ownVar = q.ExecuteSingle();
 	}
 	void QueryOther()
 	{
-		Query q = pm.NewQuery(typeof(CmpBi11OwnpconOthpconTblGuidRightBase));
-		otherVar = (CmpBi11OwnpconOthpconTblGuidRightBase) q.ExecuteSingle();
+		var q = new NDOQuery<CmpBi11OwnpconOthpconTblGuidRightBase>(pm);
+		otherVar = q.ExecuteSingle();
 	}
 }
 
@@ -17660,15 +17512,14 @@ public class TestCmpDirnOwnpconOthpconTblGuid
 	public void TearDown()
 	{
 		pm.UnloadCache();
-		IList l;
-		l = pm.NewQuery(typeof(CmpDirnOwnpconOthpconTblGuidLeftBase)).Execute();
+		var l = pm.Objects<CmpDirnOwnpconOthpconTblGuidLeftBase>().ResultTable;
 		pm.Delete(l);
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) pm.NewQuery(typeof(CmpDirnOwnpconOthpconTblGuidLeftBase)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpDirnOwnpconOthpconTblGuidLeftBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) pm.NewQuery(typeof(CmpDirnOwnpconOthpconTblGuidRightBase)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpDirnOwnpconOthpconTblGuidRightBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -17716,13 +17567,13 @@ public class TestCmpDirnOwnpconOthpconTblGuid
 	}
 	void QueryOwn()
 	{
-		Query q = pm.NewQuery(typeof(CmpDirnOwnpconOthpconTblGuidLeftBase));
-		ownVar = (CmpDirnOwnpconOthpconTblGuidLeftBase) q.ExecuteSingle();
+		var q = new NDOQuery<CmpDirnOwnpconOthpconTblGuidLeftBase>(pm);
+		ownVar = q.ExecuteSingle();
 	}
 	void QueryOther()
 	{
-		Query q = pm.NewQuery(typeof(CmpDirnOwnpconOthpconTblGuidRightBase));
-		otherVar = (CmpDirnOwnpconOthpconTblGuidRightBase) q.ExecuteSingle();
+		var q = new NDOQuery<CmpDirnOwnpconOthpconTblGuidRightBase>(pm);
+		otherVar = q.ExecuteSingle();
 	}
 }
 
@@ -17744,15 +17595,14 @@ public class TestCmpBin1OwnpconOthpconTblGuid
 	public void TearDown()
 	{
 		pm.UnloadCache();
-		IList l;
-		l = pm.NewQuery(typeof(CmpBin1OwnpconOthpconTblGuidLeftBase)).Execute();
+		var l = pm.Objects<CmpBin1OwnpconOthpconTblGuidLeftBase>().ResultTable;
 		pm.Delete(l);
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) pm.NewQuery(typeof(CmpBin1OwnpconOthpconTblGuidLeftBase)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpBin1OwnpconOthpconTblGuidLeftBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) pm.NewQuery(typeof(CmpBin1OwnpconOthpconTblGuidRightBase)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpBin1OwnpconOthpconTblGuidRightBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -17851,13 +17701,13 @@ public class TestCmpBin1OwnpconOthpconTblGuid
 	}
 	void QueryOwn()
 	{
-		Query q = pm.NewQuery(typeof(CmpBin1OwnpconOthpconTblGuidLeftBase));
-		ownVar = (CmpBin1OwnpconOthpconTblGuidLeftBase) q.ExecuteSingle();
+		var q = new NDOQuery<CmpBin1OwnpconOthpconTblGuidLeftBase>(pm);
+		ownVar = q.ExecuteSingle();
 	}
 	void QueryOther()
 	{
-		Query q = pm.NewQuery(typeof(CmpBin1OwnpconOthpconTblGuidRightBase));
-		otherVar = (CmpBin1OwnpconOthpconTblGuidRightBase) q.ExecuteSingle();
+		var q = new NDOQuery<CmpBin1OwnpconOthpconTblGuidRightBase>(pm);
+		otherVar = q.ExecuteSingle();
 	}
 }
 
@@ -17879,15 +17729,14 @@ public class TestCmpBi1nOwnpconOthpconTblGuid
 	public void TearDown()
 	{
 		pm.UnloadCache();
-		IList l;
-		l = pm.NewQuery(typeof(CmpBi1nOwnpconOthpconTblGuidLeftBase)).Execute();
+		var l = pm.Objects<CmpBi1nOwnpconOthpconTblGuidLeftBase>().ResultTable;
 		pm.Delete(l);
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) pm.NewQuery(typeof(CmpBi1nOwnpconOthpconTblGuidLeftBase)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpBi1nOwnpconOthpconTblGuidLeftBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) pm.NewQuery(typeof(CmpBi1nOwnpconOthpconTblGuidRightBase)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpBi1nOwnpconOthpconTblGuidRightBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -17976,13 +17825,13 @@ public class TestCmpBi1nOwnpconOthpconTblGuid
 	}
 	void QueryOwn()
 	{
-		Query q = pm.NewQuery(typeof(CmpBi1nOwnpconOthpconTblGuidLeftBase));
-		ownVar = (CmpBi1nOwnpconOthpconTblGuidLeftBase) q.ExecuteSingle();
+		var q = new NDOQuery<CmpBi1nOwnpconOthpconTblGuidLeftBase>(pm);
+		ownVar = q.ExecuteSingle();
 	}
 	void QueryOther()
 	{
-		Query q = pm.NewQuery(typeof(CmpBi1nOwnpconOthpconTblGuidRightBase));
-		otherVar = (CmpBi1nOwnpconOthpconTblGuidRightBase) q.ExecuteSingle();
+		var q = new NDOQuery<CmpBi1nOwnpconOthpconTblGuidRightBase>(pm);
+		otherVar = q.ExecuteSingle();
 	}
 }
 
@@ -18004,15 +17853,14 @@ public class TestCmpBinnOwnpconOthpconTblGuid
 	public void TearDown()
 	{
 		pm.UnloadCache();
-		IList l;
-		l = pm.NewQuery(typeof(CmpBinnOwnpconOthpconTblGuidLeftBase)).Execute();
+		var l = pm.Objects<CmpBinnOwnpconOthpconTblGuidLeftBase>().ResultTable;
 		pm.Delete(l);
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) pm.NewQuery(typeof(CmpBinnOwnpconOthpconTblGuidLeftBase)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpBinnOwnpconOthpconTblGuidLeftBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) pm.NewQuery(typeof(CmpBinnOwnpconOthpconTblGuidRightBase)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpBinnOwnpconOthpconTblGuidRightBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -18080,13 +17928,13 @@ public class TestCmpBinnOwnpconOthpconTblGuid
 	}
 	void QueryOwn()
 	{
-		Query q = pm.NewQuery(typeof(CmpBinnOwnpconOthpconTblGuidLeftBase));
-		ownVar = (CmpBinnOwnpconOthpconTblGuidLeftBase) q.ExecuteSingle();
+		var q = new NDOQuery<CmpBinnOwnpconOthpconTblGuidLeftBase>(pm);
+		ownVar = q.ExecuteSingle();
 	}
 	void QueryOther()
 	{
-		Query q = pm.NewQuery(typeof(CmpBinnOwnpconOthpconTblGuidRightBase));
-		otherVar = (CmpBinnOwnpconOthpconTblGuidRightBase) q.ExecuteSingle();
+		var q = new NDOQuery<CmpBinnOwnpconOthpconTblGuidRightBase>(pm);
+		otherVar = q.ExecuteSingle();
 	}
 }
 
@@ -18108,19 +17956,18 @@ public class TestAgrDir1OwnpabsNoTblAuto
 	public void TearDown()
 	{
 		pm.UnloadCache();
-		IList l;
-		l = pm.NewQuery(typeof(AgrDir1OwnpabsNoTblAutoLeftBase)).Execute();
+		var l = pm.Objects<AgrDir1OwnpabsNoTblAutoLeftBase>().ResultTable;
 		pm.Delete(l);
 		pm.Save();
 		pm.UnloadCache();
-		l = pm.NewQuery(typeof(AgrDir1OwnpabsNoTblAutoRight)).Execute();
-		pm.Delete(l);
+		var m = pm.Objects<AgrDir1OwnpabsNoTblAutoRight>().ResultTable;
+		pm.Delete(m);
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) pm.NewQuery(typeof(AgrDir1OwnpabsNoTblAutoLeftBase)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrDir1OwnpabsNoTblAutoLeftBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) pm.NewQuery(typeof(AgrDir1OwnpabsNoTblAutoRight)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrDir1OwnpabsNoTblAutoRight>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -18199,13 +18046,13 @@ public class TestAgrDir1OwnpabsNoTblAuto
 	}
 	void QueryOwn()
 	{
-		Query q = pm.NewQuery(typeof(AgrDir1OwnpabsNoTblAutoLeftBase));
-		ownVar = (AgrDir1OwnpabsNoTblAutoLeftBase) q.ExecuteSingle();
+		var q = new NDOQuery<AgrDir1OwnpabsNoTblAutoLeftBase>(pm);
+		ownVar = q.ExecuteSingle();
 	}
 	void QueryOther()
 	{
-		Query q = pm.NewQuery(typeof(AgrDir1OwnpabsNoTblAutoRight));
-		otherVar = (AgrDir1OwnpabsNoTblAutoRight) q.ExecuteSingle();
+		var q = new NDOQuery<AgrDir1OwnpabsNoTblAutoRight>(pm);
+		otherVar = q.ExecuteSingle();
 	}
 }
 
@@ -18227,19 +18074,18 @@ public class TestAgrDir1OwnpabsTblAuto
 	public void TearDown()
 	{
 		pm.UnloadCache();
-		IList l;
-		l = pm.NewQuery(typeof(AgrDir1OwnpabsTblAutoLeftBase)).Execute();
+		var l = pm.Objects<AgrDir1OwnpabsTblAutoLeftBase>().ResultTable;
 		pm.Delete(l);
 		pm.Save();
 		pm.UnloadCache();
-		l = pm.NewQuery(typeof(AgrDir1OwnpabsTblAutoRight)).Execute();
-		pm.Delete(l);
+		var m = pm.Objects<AgrDir1OwnpabsTblAutoRight>().ResultTable;
+		pm.Delete(m);
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) pm.NewQuery(typeof(AgrDir1OwnpabsTblAutoLeftBase)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrDir1OwnpabsTblAutoLeftBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) pm.NewQuery(typeof(AgrDir1OwnpabsTblAutoRight)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrDir1OwnpabsTblAutoRight>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -18309,13 +18155,13 @@ public class TestAgrDir1OwnpabsTblAuto
 	}
 	void QueryOwn()
 	{
-		Query q = pm.NewQuery(typeof(AgrDir1OwnpabsTblAutoLeftBase));
-		ownVar = (AgrDir1OwnpabsTblAutoLeftBase) q.ExecuteSingle();
+		var q = new NDOQuery<AgrDir1OwnpabsTblAutoLeftBase>(pm);
+		ownVar = q.ExecuteSingle();
 	}
 	void QueryOther()
 	{
-		Query q = pm.NewQuery(typeof(AgrDir1OwnpabsTblAutoRight));
-		otherVar = (AgrDir1OwnpabsTblAutoRight) q.ExecuteSingle();
+		var q = new NDOQuery<AgrDir1OwnpabsTblAutoRight>(pm);
+		otherVar = q.ExecuteSingle();
 	}
 }
 
@@ -18337,19 +18183,18 @@ public class TestAgrBi11OwnpabsNoTblAuto
 	public void TearDown()
 	{
 		pm.UnloadCache();
-		IList l;
-		l = pm.NewQuery(typeof(AgrBi11OwnpabsNoTblAutoLeftBase)).Execute();
+		var l = pm.Objects<AgrBi11OwnpabsNoTblAutoLeftBase>().ResultTable;
 		pm.Delete(l);
 		pm.Save();
 		pm.UnloadCache();
-		l = pm.NewQuery(typeof(AgrBi11OwnpabsNoTblAutoRight)).Execute();
-		pm.Delete(l);
+		var m = pm.Objects<AgrBi11OwnpabsNoTblAutoRight>().ResultTable;
+		pm.Delete(m);
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) pm.NewQuery(typeof(AgrBi11OwnpabsNoTblAutoLeftBase)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrBi11OwnpabsNoTblAutoLeftBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) pm.NewQuery(typeof(AgrBi11OwnpabsNoTblAutoRight)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrBi11OwnpabsNoTblAutoRight>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -18465,13 +18310,13 @@ public class TestAgrBi11OwnpabsNoTblAuto
 	}
 	void QueryOwn()
 	{
-		Query q = pm.NewQuery(typeof(AgrBi11OwnpabsNoTblAutoLeftBase));
-		ownVar = (AgrBi11OwnpabsNoTblAutoLeftBase) q.ExecuteSingle();
+		var q = new NDOQuery<AgrBi11OwnpabsNoTblAutoLeftBase>(pm);
+		ownVar = q.ExecuteSingle();
 	}
 	void QueryOther()
 	{
-		Query q = pm.NewQuery(typeof(AgrBi11OwnpabsNoTblAutoRight));
-		otherVar = (AgrBi11OwnpabsNoTblAutoRight) q.ExecuteSingle();
+		var q = new NDOQuery<AgrBi11OwnpabsNoTblAutoRight>(pm);
+		otherVar = q.ExecuteSingle();
 	}
 }
 
@@ -18493,19 +18338,18 @@ public class TestAgrBi11OwnpabsTblAuto
 	public void TearDown()
 	{
 		pm.UnloadCache();
-		IList l;
-		l = pm.NewQuery(typeof(AgrBi11OwnpabsTblAutoLeftBase)).Execute();
+		var l = pm.Objects<AgrBi11OwnpabsTblAutoLeftBase>().ResultTable;
 		pm.Delete(l);
 		pm.Save();
 		pm.UnloadCache();
-		l = pm.NewQuery(typeof(AgrBi11OwnpabsTblAutoRight)).Execute();
-		pm.Delete(l);
+		var m = pm.Objects<AgrBi11OwnpabsTblAutoRight>().ResultTable;
+		pm.Delete(m);
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) pm.NewQuery(typeof(AgrBi11OwnpabsTblAutoLeftBase)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrBi11OwnpabsTblAutoLeftBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) pm.NewQuery(typeof(AgrBi11OwnpabsTblAutoRight)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrBi11OwnpabsTblAutoRight>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -18621,13 +18465,13 @@ public class TestAgrBi11OwnpabsTblAuto
 	}
 	void QueryOwn()
 	{
-		Query q = pm.NewQuery(typeof(AgrBi11OwnpabsTblAutoLeftBase));
-		ownVar = (AgrBi11OwnpabsTblAutoLeftBase) q.ExecuteSingle();
+		var q = new NDOQuery<AgrBi11OwnpabsTblAutoLeftBase>(pm);
+		ownVar = q.ExecuteSingle();
 	}
 	void QueryOther()
 	{
-		Query q = pm.NewQuery(typeof(AgrBi11OwnpabsTblAutoRight));
-		otherVar = (AgrBi11OwnpabsTblAutoRight) q.ExecuteSingle();
+		var q = new NDOQuery<AgrBi11OwnpabsTblAutoRight>(pm);
+		otherVar = q.ExecuteSingle();
 	}
 }
 
@@ -18649,19 +18493,18 @@ public class TestAgrDirnOwnpabsNoTblAuto
 	public void TearDown()
 	{
 		pm.UnloadCache();
-		IList l;
-		l = pm.NewQuery(typeof(AgrDirnOwnpabsNoTblAutoLeftBase)).Execute();
+		var l = pm.Objects<AgrDirnOwnpabsNoTblAutoLeftBase>().ResultTable;
 		pm.Delete(l);
 		pm.Save();
 		pm.UnloadCache();
-		l = pm.NewQuery(typeof(AgrDirnOwnpabsNoTblAutoRight)).Execute();
-		pm.Delete(l);
+		var m = pm.Objects<AgrDirnOwnpabsNoTblAutoRight>().ResultTable;
+		pm.Delete(m);
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) pm.NewQuery(typeof(AgrDirnOwnpabsNoTblAutoLeftBase)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrDirnOwnpabsNoTblAutoLeftBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) pm.NewQuery(typeof(AgrDirnOwnpabsNoTblAutoRight)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrDirnOwnpabsNoTblAutoRight>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -18719,13 +18562,13 @@ public class TestAgrDirnOwnpabsNoTblAuto
 	}
 	void QueryOwn()
 	{
-		Query q = pm.NewQuery(typeof(AgrDirnOwnpabsNoTblAutoLeftBase));
-		ownVar = (AgrDirnOwnpabsNoTblAutoLeftBase) q.ExecuteSingle();
+		var q = new NDOQuery<AgrDirnOwnpabsNoTblAutoLeftBase>(pm);
+		ownVar = q.ExecuteSingle();
 	}
 	void QueryOther()
 	{
-		Query q = pm.NewQuery(typeof(AgrDirnOwnpabsNoTblAutoRight));
-		otherVar = (AgrDirnOwnpabsNoTblAutoRight) q.ExecuteSingle();
+		var q = new NDOQuery<AgrDirnOwnpabsNoTblAutoRight>(pm);
+		otherVar = q.ExecuteSingle();
 	}
 }
 
@@ -18747,19 +18590,18 @@ public class TestAgrDirnOwnpabsTblAuto
 	public void TearDown()
 	{
 		pm.UnloadCache();
-		IList l;
-		l = pm.NewQuery(typeof(AgrDirnOwnpabsTblAutoLeftBase)).Execute();
+		var l = pm.Objects<AgrDirnOwnpabsTblAutoLeftBase>().ResultTable;
 		pm.Delete(l);
 		pm.Save();
 		pm.UnloadCache();
-		l = pm.NewQuery(typeof(AgrDirnOwnpabsTblAutoRight)).Execute();
-		pm.Delete(l);
+		var m = pm.Objects<AgrDirnOwnpabsTblAutoRight>().ResultTable;
+		pm.Delete(m);
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) pm.NewQuery(typeof(AgrDirnOwnpabsTblAutoLeftBase)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrDirnOwnpabsTblAutoLeftBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) pm.NewQuery(typeof(AgrDirnOwnpabsTblAutoRight)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrDirnOwnpabsTblAutoRight>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -18808,13 +18650,13 @@ public class TestAgrDirnOwnpabsTblAuto
 	}
 	void QueryOwn()
 	{
-		Query q = pm.NewQuery(typeof(AgrDirnOwnpabsTblAutoLeftBase));
-		ownVar = (AgrDirnOwnpabsTblAutoLeftBase) q.ExecuteSingle();
+		var q = new NDOQuery<AgrDirnOwnpabsTblAutoLeftBase>(pm);
+		ownVar = q.ExecuteSingle();
 	}
 	void QueryOther()
 	{
-		Query q = pm.NewQuery(typeof(AgrDirnOwnpabsTblAutoRight));
-		otherVar = (AgrDirnOwnpabsTblAutoRight) q.ExecuteSingle();
+		var q = new NDOQuery<AgrDirnOwnpabsTblAutoRight>(pm);
+		otherVar = q.ExecuteSingle();
 	}
 }
 
@@ -18836,19 +18678,18 @@ public class TestAgrBin1OwnpabsNoTblAuto
 	public void TearDown()
 	{
 		pm.UnloadCache();
-		IList l;
-		l = pm.NewQuery(typeof(AgrBin1OwnpabsNoTblAutoLeftBase)).Execute();
+		var l = pm.Objects<AgrBin1OwnpabsNoTblAutoLeftBase>().ResultTable;
 		pm.Delete(l);
 		pm.Save();
 		pm.UnloadCache();
-		l = pm.NewQuery(typeof(AgrBin1OwnpabsNoTblAutoRight)).Execute();
-		pm.Delete(l);
+		var m = pm.Objects<AgrBin1OwnpabsNoTblAutoRight>().ResultTable;
+		pm.Delete(m);
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) pm.NewQuery(typeof(AgrBin1OwnpabsNoTblAutoLeftBase)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrBin1OwnpabsNoTblAutoLeftBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) pm.NewQuery(typeof(AgrBin1OwnpabsNoTblAutoRight)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrBin1OwnpabsNoTblAutoRight>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -18952,13 +18793,13 @@ public class TestAgrBin1OwnpabsNoTblAuto
 	}
 	void QueryOwn()
 	{
-		Query q = pm.NewQuery(typeof(AgrBin1OwnpabsNoTblAutoLeftBase));
-		ownVar = (AgrBin1OwnpabsNoTblAutoLeftBase) q.ExecuteSingle();
+		var q = new NDOQuery<AgrBin1OwnpabsNoTblAutoLeftBase>(pm);
+		ownVar = q.ExecuteSingle();
 	}
 	void QueryOther()
 	{
-		Query q = pm.NewQuery(typeof(AgrBin1OwnpabsNoTblAutoRight));
-		otherVar = (AgrBin1OwnpabsNoTblAutoRight) q.ExecuteSingle();
+		var q = new NDOQuery<AgrBin1OwnpabsNoTblAutoRight>(pm);
+		otherVar = q.ExecuteSingle();
 	}
 }
 
@@ -18980,19 +18821,18 @@ public class TestAgrBin1OwnpabsTblAuto
 	public void TearDown()
 	{
 		pm.UnloadCache();
-		IList l;
-		l = pm.NewQuery(typeof(AgrBin1OwnpabsTblAutoLeftBase)).Execute();
+		var l = pm.Objects<AgrBin1OwnpabsTblAutoLeftBase>().ResultTable;
 		pm.Delete(l);
 		pm.Save();
 		pm.UnloadCache();
-		l = pm.NewQuery(typeof(AgrBin1OwnpabsTblAutoRight)).Execute();
-		pm.Delete(l);
+		var m = pm.Objects<AgrBin1OwnpabsTblAutoRight>().ResultTable;
+		pm.Delete(m);
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) pm.NewQuery(typeof(AgrBin1OwnpabsTblAutoLeftBase)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrBin1OwnpabsTblAutoLeftBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) pm.NewQuery(typeof(AgrBin1OwnpabsTblAutoRight)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrBin1OwnpabsTblAutoRight>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -19087,13 +18927,13 @@ public class TestAgrBin1OwnpabsTblAuto
 	}
 	void QueryOwn()
 	{
-		Query q = pm.NewQuery(typeof(AgrBin1OwnpabsTblAutoLeftBase));
-		ownVar = (AgrBin1OwnpabsTblAutoLeftBase) q.ExecuteSingle();
+		var q = new NDOQuery<AgrBin1OwnpabsTblAutoLeftBase>(pm);
+		ownVar = q.ExecuteSingle();
 	}
 	void QueryOther()
 	{
-		Query q = pm.NewQuery(typeof(AgrBin1OwnpabsTblAutoRight));
-		otherVar = (AgrBin1OwnpabsTblAutoRight) q.ExecuteSingle();
+		var q = new NDOQuery<AgrBin1OwnpabsTblAutoRight>(pm);
+		otherVar = q.ExecuteSingle();
 	}
 }
 
@@ -19115,19 +18955,18 @@ public class TestAgrBi1nOwnpabsTblAuto
 	public void TearDown()
 	{
 		pm.UnloadCache();
-		IList l;
-		l = pm.NewQuery(typeof(AgrBi1nOwnpabsTblAutoLeftBase)).Execute();
+		var l = pm.Objects<AgrBi1nOwnpabsTblAutoLeftBase>().ResultTable;
 		pm.Delete(l);
 		pm.Save();
 		pm.UnloadCache();
-		l = pm.NewQuery(typeof(AgrBi1nOwnpabsTblAutoRight)).Execute();
-		pm.Delete(l);
+		var m = pm.Objects<AgrBi1nOwnpabsTblAutoRight>().ResultTable;
+		pm.Delete(m);
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) pm.NewQuery(typeof(AgrBi1nOwnpabsTblAutoLeftBase)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrBi1nOwnpabsTblAutoLeftBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) pm.NewQuery(typeof(AgrBi1nOwnpabsTblAutoRight)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrBi1nOwnpabsTblAutoRight>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -19211,13 +19050,13 @@ public class TestAgrBi1nOwnpabsTblAuto
 	}
 	void QueryOwn()
 	{
-		Query q = pm.NewQuery(typeof(AgrBi1nOwnpabsTblAutoLeftBase));
-		ownVar = (AgrBi1nOwnpabsTblAutoLeftBase) q.ExecuteSingle();
+		var q = new NDOQuery<AgrBi1nOwnpabsTblAutoLeftBase>(pm);
+		ownVar = q.ExecuteSingle();
 	}
 	void QueryOther()
 	{
-		Query q = pm.NewQuery(typeof(AgrBi1nOwnpabsTblAutoRight));
-		otherVar = (AgrBi1nOwnpabsTblAutoRight) q.ExecuteSingle();
+		var q = new NDOQuery<AgrBi1nOwnpabsTblAutoRight>(pm);
+		otherVar = q.ExecuteSingle();
 	}
 }
 
@@ -19239,19 +19078,18 @@ public class TestAgrBinnOwnpabsTblAuto
 	public void TearDown()
 	{
 		pm.UnloadCache();
-		IList l;
-		l = pm.NewQuery(typeof(AgrBinnOwnpabsTblAutoLeftBase)).Execute();
+		var l = pm.Objects<AgrBinnOwnpabsTblAutoLeftBase>().ResultTable;
 		pm.Delete(l);
 		pm.Save();
 		pm.UnloadCache();
-		l = pm.NewQuery(typeof(AgrBinnOwnpabsTblAutoRight)).Execute();
-		pm.Delete(l);
+		var m = pm.Objects<AgrBinnOwnpabsTblAutoRight>().ResultTable;
+		pm.Delete(m);
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) pm.NewQuery(typeof(AgrBinnOwnpabsTblAutoLeftBase)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrBinnOwnpabsTblAutoLeftBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) pm.NewQuery(typeof(AgrBinnOwnpabsTblAutoRight)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrBinnOwnpabsTblAutoRight>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -19314,13 +19152,13 @@ public class TestAgrBinnOwnpabsTblAuto
 	}
 	void QueryOwn()
 	{
-		Query q = pm.NewQuery(typeof(AgrBinnOwnpabsTblAutoLeftBase));
-		ownVar = (AgrBinnOwnpabsTblAutoLeftBase) q.ExecuteSingle();
+		var q = new NDOQuery<AgrBinnOwnpabsTblAutoLeftBase>(pm);
+		ownVar = q.ExecuteSingle();
 	}
 	void QueryOther()
 	{
-		Query q = pm.NewQuery(typeof(AgrBinnOwnpabsTblAutoRight));
-		otherVar = (AgrBinnOwnpabsTblAutoRight) q.ExecuteSingle();
+		var q = new NDOQuery<AgrBinnOwnpabsTblAutoRight>(pm);
+		otherVar = q.ExecuteSingle();
 	}
 }
 
@@ -19342,15 +19180,14 @@ public class TestCmpDir1OwnpabsNoTblAuto
 	public void TearDown()
 	{
 		pm.UnloadCache();
-		IList l;
-		l = pm.NewQuery(typeof(CmpDir1OwnpabsNoTblAutoLeftBase)).Execute();
+		var l = pm.Objects<CmpDir1OwnpabsNoTblAutoLeftBase>().ResultTable;
 		pm.Delete(l);
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) pm.NewQuery(typeof(CmpDir1OwnpabsNoTblAutoLeftBase)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpDir1OwnpabsNoTblAutoLeftBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) pm.NewQuery(typeof(CmpDir1OwnpabsNoTblAutoRight)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpDir1OwnpabsNoTblAutoRight>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -19429,13 +19266,13 @@ public class TestCmpDir1OwnpabsNoTblAuto
 	}
 	void QueryOwn()
 	{
-		Query q = pm.NewQuery(typeof(CmpDir1OwnpabsNoTblAutoLeftBase));
-		ownVar = (CmpDir1OwnpabsNoTblAutoLeftBase) q.ExecuteSingle();
+		var q = new NDOQuery<CmpDir1OwnpabsNoTblAutoLeftBase>(pm);
+		ownVar = q.ExecuteSingle();
 	}
 	void QueryOther()
 	{
-		Query q = pm.NewQuery(typeof(CmpDir1OwnpabsNoTblAutoRight));
-		otherVar = (CmpDir1OwnpabsNoTblAutoRight) q.ExecuteSingle();
+		var q = new NDOQuery<CmpDir1OwnpabsNoTblAutoRight>(pm);
+		otherVar = q.ExecuteSingle();
 	}
 }
 
@@ -19457,15 +19294,14 @@ public class TestCmpDir1OwnpabsTblAuto
 	public void TearDown()
 	{
 		pm.UnloadCache();
-		IList l;
-		l = pm.NewQuery(typeof(CmpDir1OwnpabsTblAutoLeftBase)).Execute();
+		var l = pm.Objects<CmpDir1OwnpabsTblAutoLeftBase>().ResultTable;
 		pm.Delete(l);
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) pm.NewQuery(typeof(CmpDir1OwnpabsTblAutoLeftBase)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpDir1OwnpabsTblAutoLeftBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) pm.NewQuery(typeof(CmpDir1OwnpabsTblAutoRight)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpDir1OwnpabsTblAutoRight>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -19534,13 +19370,13 @@ public class TestCmpDir1OwnpabsTblAuto
 	}
 	void QueryOwn()
 	{
-		Query q = pm.NewQuery(typeof(CmpDir1OwnpabsTblAutoLeftBase));
-		ownVar = (CmpDir1OwnpabsTblAutoLeftBase) q.ExecuteSingle();
+		var q = new NDOQuery<CmpDir1OwnpabsTblAutoLeftBase>(pm);
+		ownVar = q.ExecuteSingle();
 	}
 	void QueryOther()
 	{
-		Query q = pm.NewQuery(typeof(CmpDir1OwnpabsTblAutoRight));
-		otherVar = (CmpDir1OwnpabsTblAutoRight) q.ExecuteSingle();
+		var q = new NDOQuery<CmpDir1OwnpabsTblAutoRight>(pm);
+		otherVar = q.ExecuteSingle();
 	}
 }
 
@@ -19562,15 +19398,14 @@ public class TestCmpBi11OwnpabsNoTblAuto
 	public void TearDown()
 	{
 		pm.UnloadCache();
-		IList l;
-		l = pm.NewQuery(typeof(CmpBi11OwnpabsNoTblAutoLeftBase)).Execute();
+		var l = pm.Objects<CmpBi11OwnpabsNoTblAutoLeftBase>().ResultTable;
 		pm.Delete(l);
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) pm.NewQuery(typeof(CmpBi11OwnpabsNoTblAutoLeftBase)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpBi11OwnpabsNoTblAutoLeftBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) pm.NewQuery(typeof(CmpBi11OwnpabsNoTblAutoRight)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpBi11OwnpabsNoTblAutoRight>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -19685,13 +19520,13 @@ public class TestCmpBi11OwnpabsNoTblAuto
 	}
 	void QueryOwn()
 	{
-		Query q = pm.NewQuery(typeof(CmpBi11OwnpabsNoTblAutoLeftBase));
-		ownVar = (CmpBi11OwnpabsNoTblAutoLeftBase) q.ExecuteSingle();
+		var q = new NDOQuery<CmpBi11OwnpabsNoTblAutoLeftBase>(pm);
+		ownVar = q.ExecuteSingle();
 	}
 	void QueryOther()
 	{
-		Query q = pm.NewQuery(typeof(CmpBi11OwnpabsNoTblAutoRight));
-		otherVar = (CmpBi11OwnpabsNoTblAutoRight) q.ExecuteSingle();
+		var q = new NDOQuery<CmpBi11OwnpabsNoTblAutoRight>(pm);
+		otherVar = q.ExecuteSingle();
 	}
 }
 
@@ -19713,15 +19548,14 @@ public class TestCmpBi11OwnpabsTblAuto
 	public void TearDown()
 	{
 		pm.UnloadCache();
-		IList l;
-		l = pm.NewQuery(typeof(CmpBi11OwnpabsTblAutoLeftBase)).Execute();
+		var l = pm.Objects<CmpBi11OwnpabsTblAutoLeftBase>().ResultTable;
 		pm.Delete(l);
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) pm.NewQuery(typeof(CmpBi11OwnpabsTblAutoLeftBase)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpBi11OwnpabsTblAutoLeftBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) pm.NewQuery(typeof(CmpBi11OwnpabsTblAutoRight)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpBi11OwnpabsTblAutoRight>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -19835,13 +19669,13 @@ public class TestCmpBi11OwnpabsTblAuto
 	}
 	void QueryOwn()
 	{
-		Query q = pm.NewQuery(typeof(CmpBi11OwnpabsTblAutoLeftBase));
-		ownVar = (CmpBi11OwnpabsTblAutoLeftBase) q.ExecuteSingle();
+		var q = new NDOQuery<CmpBi11OwnpabsTblAutoLeftBase>(pm);
+		ownVar = q.ExecuteSingle();
 	}
 	void QueryOther()
 	{
-		Query q = pm.NewQuery(typeof(CmpBi11OwnpabsTblAutoRight));
-		otherVar = (CmpBi11OwnpabsTblAutoRight) q.ExecuteSingle();
+		var q = new NDOQuery<CmpBi11OwnpabsTblAutoRight>(pm);
+		otherVar = q.ExecuteSingle();
 	}
 }
 
@@ -19863,15 +19697,14 @@ public class TestCmpDirnOwnpabsNoTblAuto
 	public void TearDown()
 	{
 		pm.UnloadCache();
-		IList l;
-		l = pm.NewQuery(typeof(CmpDirnOwnpabsNoTblAutoLeftBase)).Execute();
+		var l = pm.Objects<CmpDirnOwnpabsNoTblAutoLeftBase>().ResultTable;
 		pm.Delete(l);
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) pm.NewQuery(typeof(CmpDirnOwnpabsNoTblAutoLeftBase)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpDirnOwnpabsNoTblAutoLeftBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) pm.NewQuery(typeof(CmpDirnOwnpabsNoTblAutoRight)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpDirnOwnpabsNoTblAutoRight>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -19928,13 +19761,13 @@ public class TestCmpDirnOwnpabsNoTblAuto
 	}
 	void QueryOwn()
 	{
-		Query q = pm.NewQuery(typeof(CmpDirnOwnpabsNoTblAutoLeftBase));
-		ownVar = (CmpDirnOwnpabsNoTblAutoLeftBase) q.ExecuteSingle();
+		var q = new NDOQuery<CmpDirnOwnpabsNoTblAutoLeftBase>(pm);
+		ownVar = q.ExecuteSingle();
 	}
 	void QueryOther()
 	{
-		Query q = pm.NewQuery(typeof(CmpDirnOwnpabsNoTblAutoRight));
-		otherVar = (CmpDirnOwnpabsNoTblAutoRight) q.ExecuteSingle();
+		var q = new NDOQuery<CmpDirnOwnpabsNoTblAutoRight>(pm);
+		otherVar = q.ExecuteSingle();
 	}
 }
 
@@ -19956,15 +19789,14 @@ public class TestCmpDirnOwnpabsTblAuto
 	public void TearDown()
 	{
 		pm.UnloadCache();
-		IList l;
-		l = pm.NewQuery(typeof(CmpDirnOwnpabsTblAutoLeftBase)).Execute();
+		var l = pm.Objects<CmpDirnOwnpabsTblAutoLeftBase>().ResultTable;
 		pm.Delete(l);
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) pm.NewQuery(typeof(CmpDirnOwnpabsTblAutoLeftBase)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpDirnOwnpabsTblAutoLeftBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) pm.NewQuery(typeof(CmpDirnOwnpabsTblAutoRight)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpDirnOwnpabsTblAutoRight>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -20012,13 +19844,13 @@ public class TestCmpDirnOwnpabsTblAuto
 	}
 	void QueryOwn()
 	{
-		Query q = pm.NewQuery(typeof(CmpDirnOwnpabsTblAutoLeftBase));
-		ownVar = (CmpDirnOwnpabsTblAutoLeftBase) q.ExecuteSingle();
+		var q = new NDOQuery<CmpDirnOwnpabsTblAutoLeftBase>(pm);
+		ownVar = q.ExecuteSingle();
 	}
 	void QueryOther()
 	{
-		Query q = pm.NewQuery(typeof(CmpDirnOwnpabsTblAutoRight));
-		otherVar = (CmpDirnOwnpabsTblAutoRight) q.ExecuteSingle();
+		var q = new NDOQuery<CmpDirnOwnpabsTblAutoRight>(pm);
+		otherVar = q.ExecuteSingle();
 	}
 }
 
@@ -20040,15 +19872,14 @@ public class TestCmpBin1OwnpabsNoTblAuto
 	public void TearDown()
 	{
 		pm.UnloadCache();
-		IList l;
-		l = pm.NewQuery(typeof(CmpBin1OwnpabsNoTblAutoLeftBase)).Execute();
+		var l = pm.Objects<CmpBin1OwnpabsNoTblAutoLeftBase>().ResultTable;
 		pm.Delete(l);
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) pm.NewQuery(typeof(CmpBin1OwnpabsNoTblAutoLeftBase)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpBin1OwnpabsNoTblAutoLeftBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) pm.NewQuery(typeof(CmpBin1OwnpabsNoTblAutoRight)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpBin1OwnpabsNoTblAutoRight>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -20150,13 +19981,13 @@ public class TestCmpBin1OwnpabsNoTblAuto
 	}
 	void QueryOwn()
 	{
-		Query q = pm.NewQuery(typeof(CmpBin1OwnpabsNoTblAutoLeftBase));
-		ownVar = (CmpBin1OwnpabsNoTblAutoLeftBase) q.ExecuteSingle();
+		var q = new NDOQuery<CmpBin1OwnpabsNoTblAutoLeftBase>(pm);
+		ownVar = q.ExecuteSingle();
 	}
 	void QueryOther()
 	{
-		Query q = pm.NewQuery(typeof(CmpBin1OwnpabsNoTblAutoRight));
-		otherVar = (CmpBin1OwnpabsNoTblAutoRight) q.ExecuteSingle();
+		var q = new NDOQuery<CmpBin1OwnpabsNoTblAutoRight>(pm);
+		otherVar = q.ExecuteSingle();
 	}
 }
 
@@ -20178,15 +20009,14 @@ public class TestCmpBin1OwnpabsTblAuto
 	public void TearDown()
 	{
 		pm.UnloadCache();
-		IList l;
-		l = pm.NewQuery(typeof(CmpBin1OwnpabsTblAutoLeftBase)).Execute();
+		var l = pm.Objects<CmpBin1OwnpabsTblAutoLeftBase>().ResultTable;
 		pm.Delete(l);
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) pm.NewQuery(typeof(CmpBin1OwnpabsTblAutoLeftBase)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpBin1OwnpabsTblAutoLeftBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) pm.NewQuery(typeof(CmpBin1OwnpabsTblAutoRight)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpBin1OwnpabsTblAutoRight>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -20279,13 +20109,13 @@ public class TestCmpBin1OwnpabsTblAuto
 	}
 	void QueryOwn()
 	{
-		Query q = pm.NewQuery(typeof(CmpBin1OwnpabsTblAutoLeftBase));
-		ownVar = (CmpBin1OwnpabsTblAutoLeftBase) q.ExecuteSingle();
+		var q = new NDOQuery<CmpBin1OwnpabsTblAutoLeftBase>(pm);
+		ownVar = q.ExecuteSingle();
 	}
 	void QueryOther()
 	{
-		Query q = pm.NewQuery(typeof(CmpBin1OwnpabsTblAutoRight));
-		otherVar = (CmpBin1OwnpabsTblAutoRight) q.ExecuteSingle();
+		var q = new NDOQuery<CmpBin1OwnpabsTblAutoRight>(pm);
+		otherVar = q.ExecuteSingle();
 	}
 }
 
@@ -20307,15 +20137,14 @@ public class TestCmpBi1nOwnpabsTblAuto
 	public void TearDown()
 	{
 		pm.UnloadCache();
-		IList l;
-		l = pm.NewQuery(typeof(CmpBi1nOwnpabsTblAutoLeftBase)).Execute();
+		var l = pm.Objects<CmpBi1nOwnpabsTblAutoLeftBase>().ResultTable;
 		pm.Delete(l);
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) pm.NewQuery(typeof(CmpBi1nOwnpabsTblAutoLeftBase)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpBi1nOwnpabsTblAutoLeftBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) pm.NewQuery(typeof(CmpBi1nOwnpabsTblAutoRight)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpBi1nOwnpabsTblAutoRight>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -20398,13 +20227,13 @@ public class TestCmpBi1nOwnpabsTblAuto
 	}
 	void QueryOwn()
 	{
-		Query q = pm.NewQuery(typeof(CmpBi1nOwnpabsTblAutoLeftBase));
-		ownVar = (CmpBi1nOwnpabsTblAutoLeftBase) q.ExecuteSingle();
+		var q = new NDOQuery<CmpBi1nOwnpabsTblAutoLeftBase>(pm);
+		ownVar = q.ExecuteSingle();
 	}
 	void QueryOther()
 	{
-		Query q = pm.NewQuery(typeof(CmpBi1nOwnpabsTblAutoRight));
-		otherVar = (CmpBi1nOwnpabsTblAutoRight) q.ExecuteSingle();
+		var q = new NDOQuery<CmpBi1nOwnpabsTblAutoRight>(pm);
+		otherVar = q.ExecuteSingle();
 	}
 }
 
@@ -20426,15 +20255,14 @@ public class TestCmpBinnOwnpabsTblAuto
 	public void TearDown()
 	{
 		pm.UnloadCache();
-		IList l;
-		l = pm.NewQuery(typeof(CmpBinnOwnpabsTblAutoLeftBase)).Execute();
+		var l = pm.Objects<CmpBinnOwnpabsTblAutoLeftBase>().ResultTable;
 		pm.Delete(l);
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) pm.NewQuery(typeof(CmpBinnOwnpabsTblAutoLeftBase)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpBinnOwnpabsTblAutoLeftBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) pm.NewQuery(typeof(CmpBinnOwnpabsTblAutoRight)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpBinnOwnpabsTblAutoRight>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -20496,13 +20324,13 @@ public class TestCmpBinnOwnpabsTblAuto
 	}
 	void QueryOwn()
 	{
-		Query q = pm.NewQuery(typeof(CmpBinnOwnpabsTblAutoLeftBase));
-		ownVar = (CmpBinnOwnpabsTblAutoLeftBase) q.ExecuteSingle();
+		var q = new NDOQuery<CmpBinnOwnpabsTblAutoLeftBase>(pm);
+		ownVar = q.ExecuteSingle();
 	}
 	void QueryOther()
 	{
-		Query q = pm.NewQuery(typeof(CmpBinnOwnpabsTblAutoRight));
-		otherVar = (CmpBinnOwnpabsTblAutoRight) q.ExecuteSingle();
+		var q = new NDOQuery<CmpBinnOwnpabsTblAutoRight>(pm);
+		otherVar = q.ExecuteSingle();
 	}
 }
 
@@ -20524,19 +20352,18 @@ public class TestAgrDir1OthpabsNoTblAuto
 	public void TearDown()
 	{
 		pm.UnloadCache();
-		IList l;
-		l = pm.NewQuery(typeof(AgrDir1OthpabsNoTblAutoLeft)).Execute();
+		var l = pm.Objects<AgrDir1OthpabsNoTblAutoLeft>().ResultTable;
 		pm.Delete(l);
 		pm.Save();
 		pm.UnloadCache();
-		l = pm.NewQuery(typeof(AgrDir1OthpabsNoTblAutoRightBase)).Execute();
-		pm.Delete(l);
+		var m = pm.Objects<AgrDir1OthpabsNoTblAutoRightBase>().ResultTable;
+		pm.Delete(m);
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) pm.NewQuery(typeof(AgrDir1OthpabsNoTblAutoLeft)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrDir1OthpabsNoTblAutoLeft>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) pm.NewQuery(typeof(AgrDir1OthpabsNoTblAutoRightBase)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrDir1OthpabsNoTblAutoRightBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -20617,13 +20444,13 @@ public class TestAgrDir1OthpabsNoTblAuto
 	}
 	void QueryOwn()
 	{
-		Query q = pm.NewQuery(typeof(AgrDir1OthpabsNoTblAutoLeft));
-		ownVar = (AgrDir1OthpabsNoTblAutoLeft) q.ExecuteSingle();
+		var q = new NDOQuery<AgrDir1OthpabsNoTblAutoLeft>(pm);
+		ownVar = q.ExecuteSingle();
 	}
 	void QueryOther()
 	{
-		Query q = pm.NewQuery(typeof(AgrDir1OthpabsNoTblAutoRightBase));
-		otherVar = (AgrDir1OthpabsNoTblAutoRightBase) q.ExecuteSingle();
+		var q = new NDOQuery<AgrDir1OthpabsNoTblAutoRightBase>(pm);
+		otherVar = q.ExecuteSingle();
 	}
 }
 
@@ -20645,19 +20472,18 @@ public class TestAgrDir1OthpabsTblAuto
 	public void TearDown()
 	{
 		pm.UnloadCache();
-		IList l;
-		l = pm.NewQuery(typeof(AgrDir1OthpabsTblAutoLeft)).Execute();
+		var l = pm.Objects<AgrDir1OthpabsTblAutoLeft>().ResultTable;
 		pm.Delete(l);
 		pm.Save();
 		pm.UnloadCache();
-		l = pm.NewQuery(typeof(AgrDir1OthpabsTblAutoRightBase)).Execute();
-		pm.Delete(l);
+		var m = pm.Objects<AgrDir1OthpabsTblAutoRightBase>().ResultTable;
+		pm.Delete(m);
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) pm.NewQuery(typeof(AgrDir1OthpabsTblAutoLeft)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrDir1OthpabsTblAutoLeft>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) pm.NewQuery(typeof(AgrDir1OthpabsTblAutoRightBase)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrDir1OthpabsTblAutoRightBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -20727,13 +20553,13 @@ public class TestAgrDir1OthpabsTblAuto
 	}
 	void QueryOwn()
 	{
-		Query q = pm.NewQuery(typeof(AgrDir1OthpabsTblAutoLeft));
-		ownVar = (AgrDir1OthpabsTblAutoLeft) q.ExecuteSingle();
+		var q = new NDOQuery<AgrDir1OthpabsTblAutoLeft>(pm);
+		ownVar = q.ExecuteSingle();
 	}
 	void QueryOther()
 	{
-		Query q = pm.NewQuery(typeof(AgrDir1OthpabsTblAutoRightBase));
-		otherVar = (AgrDir1OthpabsTblAutoRightBase) q.ExecuteSingle();
+		var q = new NDOQuery<AgrDir1OthpabsTblAutoRightBase>(pm);
+		otherVar = q.ExecuteSingle();
 	}
 }
 
@@ -20755,19 +20581,18 @@ public class TestAgrBi11OthpabsNoTblAuto
 	public void TearDown()
 	{
 		pm.UnloadCache();
-		IList l;
-		l = pm.NewQuery(typeof(AgrBi11OthpabsNoTblAutoLeft)).Execute();
+		var l = pm.Objects<AgrBi11OthpabsNoTblAutoLeft>().ResultTable;
 		pm.Delete(l);
 		pm.Save();
 		pm.UnloadCache();
-		l = pm.NewQuery(typeof(AgrBi11OthpabsNoTblAutoRightBase)).Execute();
-		pm.Delete(l);
+		var m = pm.Objects<AgrBi11OthpabsNoTblAutoRightBase>().ResultTable;
+		pm.Delete(m);
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) pm.NewQuery(typeof(AgrBi11OthpabsNoTblAutoLeft)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrBi11OthpabsNoTblAutoLeft>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) pm.NewQuery(typeof(AgrBi11OthpabsNoTblAutoRightBase)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrBi11OthpabsNoTblAutoRightBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -20884,13 +20709,13 @@ public class TestAgrBi11OthpabsNoTblAuto
 	}
 	void QueryOwn()
 	{
-		Query q = pm.NewQuery(typeof(AgrBi11OthpabsNoTblAutoLeft));
-		ownVar = (AgrBi11OthpabsNoTblAutoLeft) q.ExecuteSingle();
+		var q = new NDOQuery<AgrBi11OthpabsNoTblAutoLeft>(pm);
+		ownVar = q.ExecuteSingle();
 	}
 	void QueryOther()
 	{
-		Query q = pm.NewQuery(typeof(AgrBi11OthpabsNoTblAutoRightBase));
-		otherVar = (AgrBi11OthpabsNoTblAutoRightBase) q.ExecuteSingle();
+		var q = new NDOQuery<AgrBi11OthpabsNoTblAutoRightBase>(pm);
+		otherVar = q.ExecuteSingle();
 	}
 }
 
@@ -20912,19 +20737,18 @@ public class TestAgrBi11OthpabsTblAuto
 	public void TearDown()
 	{
 		pm.UnloadCache();
-		IList l;
-		l = pm.NewQuery(typeof(AgrBi11OthpabsTblAutoLeft)).Execute();
+		var l = pm.Objects<AgrBi11OthpabsTblAutoLeft>().ResultTable;
 		pm.Delete(l);
 		pm.Save();
 		pm.UnloadCache();
-		l = pm.NewQuery(typeof(AgrBi11OthpabsTblAutoRightBase)).Execute();
-		pm.Delete(l);
+		var m = pm.Objects<AgrBi11OthpabsTblAutoRightBase>().ResultTable;
+		pm.Delete(m);
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) pm.NewQuery(typeof(AgrBi11OthpabsTblAutoLeft)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrBi11OthpabsTblAutoLeft>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) pm.NewQuery(typeof(AgrBi11OthpabsTblAutoRightBase)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrBi11OthpabsTblAutoRightBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -21039,13 +20863,13 @@ public class TestAgrBi11OthpabsTblAuto
 	}
 	void QueryOwn()
 	{
-		Query q = pm.NewQuery(typeof(AgrBi11OthpabsTblAutoLeft));
-		ownVar = (AgrBi11OthpabsTblAutoLeft) q.ExecuteSingle();
+		var q = new NDOQuery<AgrBi11OthpabsTblAutoLeft>(pm);
+		ownVar = q.ExecuteSingle();
 	}
 	void QueryOther()
 	{
-		Query q = pm.NewQuery(typeof(AgrBi11OthpabsTblAutoRightBase));
-		otherVar = (AgrBi11OthpabsTblAutoRightBase) q.ExecuteSingle();
+		var q = new NDOQuery<AgrBi11OthpabsTblAutoRightBase>(pm);
+		otherVar = q.ExecuteSingle();
 	}
 }
 
@@ -21067,19 +20891,18 @@ public class TestAgrDirnOthpabsTblAuto
 	public void TearDown()
 	{
 		pm.UnloadCache();
-		IList l;
-		l = pm.NewQuery(typeof(AgrDirnOthpabsTblAutoLeft)).Execute();
+		var l = pm.Objects<AgrDirnOthpabsTblAutoLeft>().ResultTable;
 		pm.Delete(l);
 		pm.Save();
 		pm.UnloadCache();
-		l = pm.NewQuery(typeof(AgrDirnOthpabsTblAutoRightBase)).Execute();
-		pm.Delete(l);
+		var m = pm.Objects<AgrDirnOthpabsTblAutoRightBase>().ResultTable;
+		pm.Delete(m);
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) pm.NewQuery(typeof(AgrDirnOthpabsTblAutoLeft)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrDirnOthpabsTblAutoLeft>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) pm.NewQuery(typeof(AgrDirnOthpabsTblAutoRightBase)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrDirnOthpabsTblAutoRightBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -21128,13 +20951,13 @@ public class TestAgrDirnOthpabsTblAuto
 	}
 	void QueryOwn()
 	{
-		Query q = pm.NewQuery(typeof(AgrDirnOthpabsTblAutoLeft));
-		ownVar = (AgrDirnOthpabsTblAutoLeft) q.ExecuteSingle();
+		var q = new NDOQuery<AgrDirnOthpabsTblAutoLeft>(pm);
+		ownVar = q.ExecuteSingle();
 	}
 	void QueryOther()
 	{
-		Query q = pm.NewQuery(typeof(AgrDirnOthpabsTblAutoRightBase));
-		otherVar = (AgrDirnOthpabsTblAutoRightBase) q.ExecuteSingle();
+		var q = new NDOQuery<AgrDirnOthpabsTblAutoRightBase>(pm);
+		otherVar = q.ExecuteSingle();
 	}
 }
 
@@ -21156,19 +20979,18 @@ public class TestAgrBin1OthpabsTblAuto
 	public void TearDown()
 	{
 		pm.UnloadCache();
-		IList l;
-		l = pm.NewQuery(typeof(AgrBin1OthpabsTblAutoLeft)).Execute();
+		var l = pm.Objects<AgrBin1OthpabsTblAutoLeft>().ResultTable;
 		pm.Delete(l);
 		pm.Save();
 		pm.UnloadCache();
-		l = pm.NewQuery(typeof(AgrBin1OthpabsTblAutoRightBase)).Execute();
-		pm.Delete(l);
+		var m = pm.Objects<AgrBin1OthpabsTblAutoRightBase>().ResultTable;
+		pm.Delete(m);
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) pm.NewQuery(typeof(AgrBin1OthpabsTblAutoLeft)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrBin1OthpabsTblAutoLeft>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) pm.NewQuery(typeof(AgrBin1OthpabsTblAutoRightBase)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrBin1OthpabsTblAutoRightBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -21262,13 +21084,13 @@ public class TestAgrBin1OthpabsTblAuto
 	}
 	void QueryOwn()
 	{
-		Query q = pm.NewQuery(typeof(AgrBin1OthpabsTblAutoLeft));
-		ownVar = (AgrBin1OthpabsTblAutoLeft) q.ExecuteSingle();
+		var q = new NDOQuery<AgrBin1OthpabsTblAutoLeft>(pm);
+		ownVar = q.ExecuteSingle();
 	}
 	void QueryOther()
 	{
-		Query q = pm.NewQuery(typeof(AgrBin1OthpabsTblAutoRightBase));
-		otherVar = (AgrBin1OthpabsTblAutoRightBase) q.ExecuteSingle();
+		var q = new NDOQuery<AgrBin1OthpabsTblAutoRightBase>(pm);
+		otherVar = q.ExecuteSingle();
 	}
 }
 
@@ -21290,19 +21112,18 @@ public class TestAgrBi1nOthpabsNoTblAuto
 	public void TearDown()
 	{
 		pm.UnloadCache();
-		IList l;
-		l = pm.NewQuery(typeof(AgrBi1nOthpabsNoTblAutoLeft)).Execute();
+		var l = pm.Objects<AgrBi1nOthpabsNoTblAutoLeft>().ResultTable;
 		pm.Delete(l);
 		pm.Save();
 		pm.UnloadCache();
-		l = pm.NewQuery(typeof(AgrBi1nOthpabsNoTblAutoRightBase)).Execute();
-		pm.Delete(l);
+		var m = pm.Objects<AgrBi1nOthpabsNoTblAutoRightBase>().ResultTable;
+		pm.Delete(m);
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) pm.NewQuery(typeof(AgrBi1nOthpabsNoTblAutoLeft)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrBi1nOthpabsNoTblAutoLeft>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) pm.NewQuery(typeof(AgrBi1nOthpabsNoTblAutoRightBase)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrBi1nOthpabsNoTblAutoRightBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -21397,13 +21218,13 @@ public class TestAgrBi1nOthpabsNoTblAuto
 	}
 	void QueryOwn()
 	{
-		Query q = pm.NewQuery(typeof(AgrBi1nOthpabsNoTblAutoLeft));
-		ownVar = (AgrBi1nOthpabsNoTblAutoLeft) q.ExecuteSingle();
+		var q = new NDOQuery<AgrBi1nOthpabsNoTblAutoLeft>(pm);
+		ownVar = q.ExecuteSingle();
 	}
 	void QueryOther()
 	{
-		Query q = pm.NewQuery(typeof(AgrBi1nOthpabsNoTblAutoRightBase));
-		otherVar = (AgrBi1nOthpabsNoTblAutoRightBase) q.ExecuteSingle();
+		var q = new NDOQuery<AgrBi1nOthpabsNoTblAutoRightBase>(pm);
+		otherVar = q.ExecuteSingle();
 	}
 }
 
@@ -21425,19 +21246,18 @@ public class TestAgrBi1nOthpabsTblAuto
 	public void TearDown()
 	{
 		pm.UnloadCache();
-		IList l;
-		l = pm.NewQuery(typeof(AgrBi1nOthpabsTblAutoLeft)).Execute();
+		var l = pm.Objects<AgrBi1nOthpabsTblAutoLeft>().ResultTable;
 		pm.Delete(l);
 		pm.Save();
 		pm.UnloadCache();
-		l = pm.NewQuery(typeof(AgrBi1nOthpabsTblAutoRightBase)).Execute();
-		pm.Delete(l);
+		var m = pm.Objects<AgrBi1nOthpabsTblAutoRightBase>().ResultTable;
+		pm.Delete(m);
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) pm.NewQuery(typeof(AgrBi1nOthpabsTblAutoLeft)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrBi1nOthpabsTblAutoLeft>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) pm.NewQuery(typeof(AgrBi1nOthpabsTblAutoRightBase)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrBi1nOthpabsTblAutoRightBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -21521,13 +21341,13 @@ public class TestAgrBi1nOthpabsTblAuto
 	}
 	void QueryOwn()
 	{
-		Query q = pm.NewQuery(typeof(AgrBi1nOthpabsTblAutoLeft));
-		ownVar = (AgrBi1nOthpabsTblAutoLeft) q.ExecuteSingle();
+		var q = new NDOQuery<AgrBi1nOthpabsTblAutoLeft>(pm);
+		ownVar = q.ExecuteSingle();
 	}
 	void QueryOther()
 	{
-		Query q = pm.NewQuery(typeof(AgrBi1nOthpabsTblAutoRightBase));
-		otherVar = (AgrBi1nOthpabsTblAutoRightBase) q.ExecuteSingle();
+		var q = new NDOQuery<AgrBi1nOthpabsTblAutoRightBase>(pm);
+		otherVar = q.ExecuteSingle();
 	}
 }
 
@@ -21549,19 +21369,18 @@ public class TestAgrBinnOthpabsTblAuto
 	public void TearDown()
 	{
 		pm.UnloadCache();
-		IList l;
-		l = pm.NewQuery(typeof(AgrBinnOthpabsTblAutoLeft)).Execute();
+		var l = pm.Objects<AgrBinnOthpabsTblAutoLeft>().ResultTable;
 		pm.Delete(l);
 		pm.Save();
 		pm.UnloadCache();
-		l = pm.NewQuery(typeof(AgrBinnOthpabsTblAutoRightBase)).Execute();
-		pm.Delete(l);
+		var m = pm.Objects<AgrBinnOthpabsTblAutoRightBase>().ResultTable;
+		pm.Delete(m);
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) pm.NewQuery(typeof(AgrBinnOthpabsTblAutoLeft)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrBinnOthpabsTblAutoLeft>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) pm.NewQuery(typeof(AgrBinnOthpabsTblAutoRightBase)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrBinnOthpabsTblAutoRightBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -21624,13 +21443,13 @@ public class TestAgrBinnOthpabsTblAuto
 	}
 	void QueryOwn()
 	{
-		Query q = pm.NewQuery(typeof(AgrBinnOthpabsTblAutoLeft));
-		ownVar = (AgrBinnOthpabsTblAutoLeft) q.ExecuteSingle();
+		var q = new NDOQuery<AgrBinnOthpabsTblAutoLeft>(pm);
+		ownVar = q.ExecuteSingle();
 	}
 	void QueryOther()
 	{
-		Query q = pm.NewQuery(typeof(AgrBinnOthpabsTblAutoRightBase));
-		otherVar = (AgrBinnOthpabsTblAutoRightBase) q.ExecuteSingle();
+		var q = new NDOQuery<AgrBinnOthpabsTblAutoRightBase>(pm);
+		otherVar = q.ExecuteSingle();
 	}
 }
 
@@ -21652,15 +21471,14 @@ public class TestCmpDir1OthpabsNoTblAuto
 	public void TearDown()
 	{
 		pm.UnloadCache();
-		IList l;
-		l = pm.NewQuery(typeof(CmpDir1OthpabsNoTblAutoLeft)).Execute();
+		var l = pm.Objects<CmpDir1OthpabsNoTblAutoLeft>().ResultTable;
 		pm.Delete(l);
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) pm.NewQuery(typeof(CmpDir1OthpabsNoTblAutoLeft)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpDir1OthpabsNoTblAutoLeft>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) pm.NewQuery(typeof(CmpDir1OthpabsNoTblAutoRightBase)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpDir1OthpabsNoTblAutoRightBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test, ExpectedException(typeof(NDOException))]
@@ -21699,13 +21517,13 @@ public class TestCmpDir1OthpabsNoTblAuto
 	}
 	void QueryOwn()
 	{
-		Query q = pm.NewQuery(typeof(CmpDir1OthpabsNoTblAutoLeft));
-		ownVar = (CmpDir1OthpabsNoTblAutoLeft) q.ExecuteSingle();
+		var q = new NDOQuery<CmpDir1OthpabsNoTblAutoLeft>(pm);
+		ownVar = q.ExecuteSingle();
 	}
 	void QueryOther()
 	{
-		Query q = pm.NewQuery(typeof(CmpDir1OthpabsNoTblAutoRightBase));
-		otherVar = (CmpDir1OthpabsNoTblAutoRightBase) q.ExecuteSingle();
+		var q = new NDOQuery<CmpDir1OthpabsNoTblAutoRightBase>(pm);
+		otherVar = q.ExecuteSingle();
 	}
 }
 
@@ -21727,15 +21545,14 @@ public class TestCmpDir1OthpabsTblAuto
 	public void TearDown()
 	{
 		pm.UnloadCache();
-		IList l;
-		l = pm.NewQuery(typeof(CmpDir1OthpabsTblAutoLeft)).Execute();
+		var l = pm.Objects<CmpDir1OthpabsTblAutoLeft>().ResultTable;
 		pm.Delete(l);
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) pm.NewQuery(typeof(CmpDir1OthpabsTblAutoLeft)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpDir1OthpabsTblAutoLeft>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) pm.NewQuery(typeof(CmpDir1OthpabsTblAutoRightBase)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpDir1OthpabsTblAutoRightBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -21804,13 +21621,13 @@ public class TestCmpDir1OthpabsTblAuto
 	}
 	void QueryOwn()
 	{
-		Query q = pm.NewQuery(typeof(CmpDir1OthpabsTblAutoLeft));
-		ownVar = (CmpDir1OthpabsTblAutoLeft) q.ExecuteSingle();
+		var q = new NDOQuery<CmpDir1OthpabsTblAutoLeft>(pm);
+		ownVar = q.ExecuteSingle();
 	}
 	void QueryOther()
 	{
-		Query q = pm.NewQuery(typeof(CmpDir1OthpabsTblAutoRightBase));
-		otherVar = (CmpDir1OthpabsTblAutoRightBase) q.ExecuteSingle();
+		var q = new NDOQuery<CmpDir1OthpabsTblAutoRightBase>(pm);
+		otherVar = q.ExecuteSingle();
 	}
 }
 
@@ -21832,15 +21649,14 @@ public class TestCmpBi11OthpabsNoTblAuto
 	public void TearDown()
 	{
 		pm.UnloadCache();
-		IList l;
-		l = pm.NewQuery(typeof(CmpBi11OthpabsNoTblAutoLeft)).Execute();
+		var l = pm.Objects<CmpBi11OthpabsNoTblAutoLeft>().ResultTable;
 		pm.Delete(l);
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) pm.NewQuery(typeof(CmpBi11OthpabsNoTblAutoLeft)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpBi11OthpabsNoTblAutoLeft>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) pm.NewQuery(typeof(CmpBi11OthpabsNoTblAutoRightBase)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpBi11OthpabsNoTblAutoRightBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test, ExpectedException(typeof(NDOException))]
@@ -21893,13 +21709,13 @@ public class TestCmpBi11OthpabsNoTblAuto
 	}
 	void QueryOwn()
 	{
-		Query q = pm.NewQuery(typeof(CmpBi11OthpabsNoTblAutoLeft));
-		ownVar = (CmpBi11OthpabsNoTblAutoLeft) q.ExecuteSingle();
+		var q = new NDOQuery<CmpBi11OthpabsNoTblAutoLeft>(pm);
+		ownVar = q.ExecuteSingle();
 	}
 	void QueryOther()
 	{
-		Query q = pm.NewQuery(typeof(CmpBi11OthpabsNoTblAutoRightBase));
-		otherVar = (CmpBi11OthpabsNoTblAutoRightBase) q.ExecuteSingle();
+		var q = new NDOQuery<CmpBi11OthpabsNoTblAutoRightBase>(pm);
+		otherVar = q.ExecuteSingle();
 	}
 }
 
@@ -21921,15 +21737,14 @@ public class TestCmpBi11OthpabsTblAuto
 	public void TearDown()
 	{
 		pm.UnloadCache();
-		IList l;
-		l = pm.NewQuery(typeof(CmpBi11OthpabsTblAutoLeft)).Execute();
+		var l = pm.Objects<CmpBi11OthpabsTblAutoLeft>().ResultTable;
 		pm.Delete(l);
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) pm.NewQuery(typeof(CmpBi11OthpabsTblAutoLeft)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpBi11OthpabsTblAutoLeft>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) pm.NewQuery(typeof(CmpBi11OthpabsTblAutoRightBase)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpBi11OthpabsTblAutoRightBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -22043,13 +21858,13 @@ public class TestCmpBi11OthpabsTblAuto
 	}
 	void QueryOwn()
 	{
-		Query q = pm.NewQuery(typeof(CmpBi11OthpabsTblAutoLeft));
-		ownVar = (CmpBi11OthpabsTblAutoLeft) q.ExecuteSingle();
+		var q = new NDOQuery<CmpBi11OthpabsTblAutoLeft>(pm);
+		ownVar = q.ExecuteSingle();
 	}
 	void QueryOther()
 	{
-		Query q = pm.NewQuery(typeof(CmpBi11OthpabsTblAutoRightBase));
-		otherVar = (CmpBi11OthpabsTblAutoRightBase) q.ExecuteSingle();
+		var q = new NDOQuery<CmpBi11OthpabsTblAutoRightBase>(pm);
+		otherVar = q.ExecuteSingle();
 	}
 }
 
@@ -22071,15 +21886,14 @@ public class TestCmpDirnOthpabsTblAuto
 	public void TearDown()
 	{
 		pm.UnloadCache();
-		IList l;
-		l = pm.NewQuery(typeof(CmpDirnOthpabsTblAutoLeft)).Execute();
+		var l = pm.Objects<CmpDirnOthpabsTblAutoLeft>().ResultTable;
 		pm.Delete(l);
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) pm.NewQuery(typeof(CmpDirnOthpabsTblAutoLeft)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpDirnOthpabsTblAutoLeft>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) pm.NewQuery(typeof(CmpDirnOthpabsTblAutoRightBase)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpDirnOthpabsTblAutoRightBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -22127,13 +21941,13 @@ public class TestCmpDirnOthpabsTblAuto
 	}
 	void QueryOwn()
 	{
-		Query q = pm.NewQuery(typeof(CmpDirnOthpabsTblAutoLeft));
-		ownVar = (CmpDirnOthpabsTblAutoLeft) q.ExecuteSingle();
+		var q = new NDOQuery<CmpDirnOthpabsTblAutoLeft>(pm);
+		ownVar = q.ExecuteSingle();
 	}
 	void QueryOther()
 	{
-		Query q = pm.NewQuery(typeof(CmpDirnOthpabsTblAutoRightBase));
-		otherVar = (CmpDirnOthpabsTblAutoRightBase) q.ExecuteSingle();
+		var q = new NDOQuery<CmpDirnOthpabsTblAutoRightBase>(pm);
+		otherVar = q.ExecuteSingle();
 	}
 }
 
@@ -22155,15 +21969,14 @@ public class TestCmpBin1OthpabsTblAuto
 	public void TearDown()
 	{
 		pm.UnloadCache();
-		IList l;
-		l = pm.NewQuery(typeof(CmpBin1OthpabsTblAutoLeft)).Execute();
+		var l = pm.Objects<CmpBin1OthpabsTblAutoLeft>().ResultTable;
 		pm.Delete(l);
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) pm.NewQuery(typeof(CmpBin1OthpabsTblAutoLeft)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpBin1OthpabsTblAutoLeft>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) pm.NewQuery(typeof(CmpBin1OthpabsTblAutoRightBase)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpBin1OthpabsTblAutoRightBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -22256,13 +22069,13 @@ public class TestCmpBin1OthpabsTblAuto
 	}
 	void QueryOwn()
 	{
-		Query q = pm.NewQuery(typeof(CmpBin1OthpabsTblAutoLeft));
-		ownVar = (CmpBin1OthpabsTblAutoLeft) q.ExecuteSingle();
+		var q = new NDOQuery<CmpBin1OthpabsTblAutoLeft>(pm);
+		ownVar = q.ExecuteSingle();
 	}
 	void QueryOther()
 	{
-		Query q = pm.NewQuery(typeof(CmpBin1OthpabsTblAutoRightBase));
-		otherVar = (CmpBin1OthpabsTblAutoRightBase) q.ExecuteSingle();
+		var q = new NDOQuery<CmpBin1OthpabsTblAutoRightBase>(pm);
+		otherVar = q.ExecuteSingle();
 	}
 }
 
@@ -22284,15 +22097,14 @@ public class TestCmpBi1nOthpabsNoTblAuto
 	public void TearDown()
 	{
 		pm.UnloadCache();
-		IList l;
-		l = pm.NewQuery(typeof(CmpBi1nOthpabsNoTblAutoLeft)).Execute();
+		var l = pm.Objects<CmpBi1nOthpabsNoTblAutoLeft>().ResultTable;
 		pm.Delete(l);
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) pm.NewQuery(typeof(CmpBi1nOthpabsNoTblAutoLeft)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpBi1nOthpabsNoTblAutoLeft>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) pm.NewQuery(typeof(CmpBi1nOthpabsNoTblAutoRightBase)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpBi1nOthpabsNoTblAutoRightBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test, ExpectedException(typeof(NDOException))]
@@ -22345,13 +22157,13 @@ public class TestCmpBi1nOthpabsNoTblAuto
 	}
 	void QueryOwn()
 	{
-		Query q = pm.NewQuery(typeof(CmpBi1nOthpabsNoTblAutoLeft));
-		ownVar = (CmpBi1nOthpabsNoTblAutoLeft) q.ExecuteSingle();
+		var q = new NDOQuery<CmpBi1nOthpabsNoTblAutoLeft>(pm);
+		ownVar = q.ExecuteSingle();
 	}
 	void QueryOther()
 	{
-		Query q = pm.NewQuery(typeof(CmpBi1nOthpabsNoTblAutoRightBase));
-		otherVar = (CmpBi1nOthpabsNoTblAutoRightBase) q.ExecuteSingle();
+		var q = new NDOQuery<CmpBi1nOthpabsNoTblAutoRightBase>(pm);
+		otherVar = q.ExecuteSingle();
 	}
 }
 
@@ -22373,15 +22185,14 @@ public class TestCmpBi1nOthpabsTblAuto
 	public void TearDown()
 	{
 		pm.UnloadCache();
-		IList l;
-		l = pm.NewQuery(typeof(CmpBi1nOthpabsTblAutoLeft)).Execute();
+		var l = pm.Objects<CmpBi1nOthpabsTblAutoLeft>().ResultTable;
 		pm.Delete(l);
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) pm.NewQuery(typeof(CmpBi1nOthpabsTblAutoLeft)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpBi1nOthpabsTblAutoLeft>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) pm.NewQuery(typeof(CmpBi1nOthpabsTblAutoRightBase)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpBi1nOthpabsTblAutoRightBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -22464,13 +22275,13 @@ public class TestCmpBi1nOthpabsTblAuto
 	}
 	void QueryOwn()
 	{
-		Query q = pm.NewQuery(typeof(CmpBi1nOthpabsTblAutoLeft));
-		ownVar = (CmpBi1nOthpabsTblAutoLeft) q.ExecuteSingle();
+		var q = new NDOQuery<CmpBi1nOthpabsTblAutoLeft>(pm);
+		ownVar = q.ExecuteSingle();
 	}
 	void QueryOther()
 	{
-		Query q = pm.NewQuery(typeof(CmpBi1nOthpabsTblAutoRightBase));
-		otherVar = (CmpBi1nOthpabsTblAutoRightBase) q.ExecuteSingle();
+		var q = new NDOQuery<CmpBi1nOthpabsTblAutoRightBase>(pm);
+		otherVar = q.ExecuteSingle();
 	}
 }
 
@@ -22492,15 +22303,14 @@ public class TestCmpBinnOthpabsTblAuto
 	public void TearDown()
 	{
 		pm.UnloadCache();
-		IList l;
-		l = pm.NewQuery(typeof(CmpBinnOthpabsTblAutoLeft)).Execute();
+		var l = pm.Objects<CmpBinnOthpabsTblAutoLeft>().ResultTable;
 		pm.Delete(l);
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) pm.NewQuery(typeof(CmpBinnOthpabsTblAutoLeft)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpBinnOthpabsTblAutoLeft>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) pm.NewQuery(typeof(CmpBinnOthpabsTblAutoRightBase)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpBinnOthpabsTblAutoRightBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -22562,13 +22372,13 @@ public class TestCmpBinnOthpabsTblAuto
 	}
 	void QueryOwn()
 	{
-		Query q = pm.NewQuery(typeof(CmpBinnOthpabsTblAutoLeft));
-		ownVar = (CmpBinnOthpabsTblAutoLeft) q.ExecuteSingle();
+		var q = new NDOQuery<CmpBinnOthpabsTblAutoLeft>(pm);
+		ownVar = q.ExecuteSingle();
 	}
 	void QueryOther()
 	{
-		Query q = pm.NewQuery(typeof(CmpBinnOthpabsTblAutoRightBase));
-		otherVar = (CmpBinnOthpabsTblAutoRightBase) q.ExecuteSingle();
+		var q = new NDOQuery<CmpBinnOthpabsTblAutoRightBase>(pm);
+		otherVar = q.ExecuteSingle();
 	}
 }
 
@@ -22590,19 +22400,18 @@ public class TestAgrDir1OwnpabsOthpabsNoTblAuto
 	public void TearDown()
 	{
 		pm.UnloadCache();
-		IList l;
-		l = pm.NewQuery(typeof(AgrDir1OwnpabsOthpabsNoTblAutoLeftBase)).Execute();
+		var l = pm.Objects<AgrDir1OwnpabsOthpabsNoTblAutoLeftBase>().ResultTable;
 		pm.Delete(l);
 		pm.Save();
 		pm.UnloadCache();
-		l = pm.NewQuery(typeof(AgrDir1OwnpabsOthpabsNoTblAutoRightBase)).Execute();
-		pm.Delete(l);
+		var m = pm.Objects<AgrDir1OwnpabsOthpabsNoTblAutoRightBase>().ResultTable;
+		pm.Delete(m);
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) pm.NewQuery(typeof(AgrDir1OwnpabsOthpabsNoTblAutoLeftBase)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrDir1OwnpabsOthpabsNoTblAutoLeftBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) pm.NewQuery(typeof(AgrDir1OwnpabsOthpabsNoTblAutoRightBase)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrDir1OwnpabsOthpabsNoTblAutoRightBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -22683,13 +22492,13 @@ public class TestAgrDir1OwnpabsOthpabsNoTblAuto
 	}
 	void QueryOwn()
 	{
-		Query q = pm.NewQuery(typeof(AgrDir1OwnpabsOthpabsNoTblAutoLeftBase));
-		ownVar = (AgrDir1OwnpabsOthpabsNoTblAutoLeftBase) q.ExecuteSingle();
+		var q = new NDOQuery<AgrDir1OwnpabsOthpabsNoTblAutoLeftBase>(pm);
+		ownVar = q.ExecuteSingle();
 	}
 	void QueryOther()
 	{
-		Query q = pm.NewQuery(typeof(AgrDir1OwnpabsOthpabsNoTblAutoRightBase));
-		otherVar = (AgrDir1OwnpabsOthpabsNoTblAutoRightBase) q.ExecuteSingle();
+		var q = new NDOQuery<AgrDir1OwnpabsOthpabsNoTblAutoRightBase>(pm);
+		otherVar = q.ExecuteSingle();
 	}
 }
 
@@ -22711,19 +22520,18 @@ public class TestAgrDir1OwnpabsOthpabsTblAuto
 	public void TearDown()
 	{
 		pm.UnloadCache();
-		IList l;
-		l = pm.NewQuery(typeof(AgrDir1OwnpabsOthpabsTblAutoLeftBase)).Execute();
+		var l = pm.Objects<AgrDir1OwnpabsOthpabsTblAutoLeftBase>().ResultTable;
 		pm.Delete(l);
 		pm.Save();
 		pm.UnloadCache();
-		l = pm.NewQuery(typeof(AgrDir1OwnpabsOthpabsTblAutoRightBase)).Execute();
-		pm.Delete(l);
+		var m = pm.Objects<AgrDir1OwnpabsOthpabsTblAutoRightBase>().ResultTable;
+		pm.Delete(m);
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) pm.NewQuery(typeof(AgrDir1OwnpabsOthpabsTblAutoLeftBase)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrDir1OwnpabsOthpabsTblAutoLeftBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) pm.NewQuery(typeof(AgrDir1OwnpabsOthpabsTblAutoRightBase)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrDir1OwnpabsOthpabsTblAutoRightBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -22793,13 +22601,13 @@ public class TestAgrDir1OwnpabsOthpabsTblAuto
 	}
 	void QueryOwn()
 	{
-		Query q = pm.NewQuery(typeof(AgrDir1OwnpabsOthpabsTblAutoLeftBase));
-		ownVar = (AgrDir1OwnpabsOthpabsTblAutoLeftBase) q.ExecuteSingle();
+		var q = new NDOQuery<AgrDir1OwnpabsOthpabsTblAutoLeftBase>(pm);
+		ownVar = q.ExecuteSingle();
 	}
 	void QueryOther()
 	{
-		Query q = pm.NewQuery(typeof(AgrDir1OwnpabsOthpabsTblAutoRightBase));
-		otherVar = (AgrDir1OwnpabsOthpabsTblAutoRightBase) q.ExecuteSingle();
+		var q = new NDOQuery<AgrDir1OwnpabsOthpabsTblAutoRightBase>(pm);
+		otherVar = q.ExecuteSingle();
 	}
 }
 
@@ -22821,19 +22629,18 @@ public class TestAgrBi11OwnpabsOthpabsNoTblAuto
 	public void TearDown()
 	{
 		pm.UnloadCache();
-		IList l;
-		l = pm.NewQuery(typeof(AgrBi11OwnpabsOthpabsNoTblAutoLeftBase)).Execute();
+		var l = pm.Objects<AgrBi11OwnpabsOthpabsNoTblAutoLeftBase>().ResultTable;
 		pm.Delete(l);
 		pm.Save();
 		pm.UnloadCache();
-		l = pm.NewQuery(typeof(AgrBi11OwnpabsOthpabsNoTblAutoRightBase)).Execute();
-		pm.Delete(l);
+		var m = pm.Objects<AgrBi11OwnpabsOthpabsNoTblAutoRightBase>().ResultTable;
+		pm.Delete(m);
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) pm.NewQuery(typeof(AgrBi11OwnpabsOthpabsNoTblAutoLeftBase)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrBi11OwnpabsOthpabsNoTblAutoLeftBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) pm.NewQuery(typeof(AgrBi11OwnpabsOthpabsNoTblAutoRightBase)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrBi11OwnpabsOthpabsNoTblAutoRightBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -22957,13 +22764,13 @@ public class TestAgrBi11OwnpabsOthpabsNoTblAuto
 	}
 	void QueryOwn()
 	{
-		Query q = pm.NewQuery(typeof(AgrBi11OwnpabsOthpabsNoTblAutoLeftBase));
-		ownVar = (AgrBi11OwnpabsOthpabsNoTblAutoLeftBase) q.ExecuteSingle();
+		var q = new NDOQuery<AgrBi11OwnpabsOthpabsNoTblAutoLeftBase>(pm);
+		ownVar = q.ExecuteSingle();
 	}
 	void QueryOther()
 	{
-		Query q = pm.NewQuery(typeof(AgrBi11OwnpabsOthpabsNoTblAutoRightBase));
-		otherVar = (AgrBi11OwnpabsOthpabsNoTblAutoRightBase) q.ExecuteSingle();
+		var q = new NDOQuery<AgrBi11OwnpabsOthpabsNoTblAutoRightBase>(pm);
+		otherVar = q.ExecuteSingle();
 	}
 }
 
@@ -22985,19 +22792,18 @@ public class TestAgrBi11OwnpabsOthpabsTblAuto
 	public void TearDown()
 	{
 		pm.UnloadCache();
-		IList l;
-		l = pm.NewQuery(typeof(AgrBi11OwnpabsOthpabsTblAutoLeftBase)).Execute();
+		var l = pm.Objects<AgrBi11OwnpabsOthpabsTblAutoLeftBase>().ResultTable;
 		pm.Delete(l);
 		pm.Save();
 		pm.UnloadCache();
-		l = pm.NewQuery(typeof(AgrBi11OwnpabsOthpabsTblAutoRightBase)).Execute();
-		pm.Delete(l);
+		var m = pm.Objects<AgrBi11OwnpabsOthpabsTblAutoRightBase>().ResultTable;
+		pm.Delete(m);
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) pm.NewQuery(typeof(AgrBi11OwnpabsOthpabsTblAutoLeftBase)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrBi11OwnpabsOthpabsTblAutoLeftBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) pm.NewQuery(typeof(AgrBi11OwnpabsOthpabsTblAutoRightBase)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrBi11OwnpabsOthpabsTblAutoRightBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -23119,13 +22925,13 @@ public class TestAgrBi11OwnpabsOthpabsTblAuto
 	}
 	void QueryOwn()
 	{
-		Query q = pm.NewQuery(typeof(AgrBi11OwnpabsOthpabsTblAutoLeftBase));
-		ownVar = (AgrBi11OwnpabsOthpabsTblAutoLeftBase) q.ExecuteSingle();
+		var q = new NDOQuery<AgrBi11OwnpabsOthpabsTblAutoLeftBase>(pm);
+		ownVar = q.ExecuteSingle();
 	}
 	void QueryOther()
 	{
-		Query q = pm.NewQuery(typeof(AgrBi11OwnpabsOthpabsTblAutoRightBase));
-		otherVar = (AgrBi11OwnpabsOthpabsTblAutoRightBase) q.ExecuteSingle();
+		var q = new NDOQuery<AgrBi11OwnpabsOthpabsTblAutoRightBase>(pm);
+		otherVar = q.ExecuteSingle();
 	}
 }
 
@@ -23147,19 +22953,18 @@ public class TestAgrDirnOwnpabsOthpabsTblAuto
 	public void TearDown()
 	{
 		pm.UnloadCache();
-		IList l;
-		l = pm.NewQuery(typeof(AgrDirnOwnpabsOthpabsTblAutoLeftBase)).Execute();
+		var l = pm.Objects<AgrDirnOwnpabsOthpabsTblAutoLeftBase>().ResultTable;
 		pm.Delete(l);
 		pm.Save();
 		pm.UnloadCache();
-		l = pm.NewQuery(typeof(AgrDirnOwnpabsOthpabsTblAutoRightBase)).Execute();
-		pm.Delete(l);
+		var m = pm.Objects<AgrDirnOwnpabsOthpabsTblAutoRightBase>().ResultTable;
+		pm.Delete(m);
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) pm.NewQuery(typeof(AgrDirnOwnpabsOthpabsTblAutoLeftBase)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrDirnOwnpabsOthpabsTblAutoLeftBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) pm.NewQuery(typeof(AgrDirnOwnpabsOthpabsTblAutoRightBase)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrDirnOwnpabsOthpabsTblAutoRightBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -23208,13 +23013,13 @@ public class TestAgrDirnOwnpabsOthpabsTblAuto
 	}
 	void QueryOwn()
 	{
-		Query q = pm.NewQuery(typeof(AgrDirnOwnpabsOthpabsTblAutoLeftBase));
-		ownVar = (AgrDirnOwnpabsOthpabsTblAutoLeftBase) q.ExecuteSingle();
+		var q = new NDOQuery<AgrDirnOwnpabsOthpabsTblAutoLeftBase>(pm);
+		ownVar = q.ExecuteSingle();
 	}
 	void QueryOther()
 	{
-		Query q = pm.NewQuery(typeof(AgrDirnOwnpabsOthpabsTblAutoRightBase));
-		otherVar = (AgrDirnOwnpabsOthpabsTblAutoRightBase) q.ExecuteSingle();
+		var q = new NDOQuery<AgrDirnOwnpabsOthpabsTblAutoRightBase>(pm);
+		otherVar = q.ExecuteSingle();
 	}
 }
 
@@ -23236,19 +23041,18 @@ public class TestAgrBin1OwnpabsOthpabsTblAuto
 	public void TearDown()
 	{
 		pm.UnloadCache();
-		IList l;
-		l = pm.NewQuery(typeof(AgrBin1OwnpabsOthpabsTblAutoLeftBase)).Execute();
+		var l = pm.Objects<AgrBin1OwnpabsOthpabsTblAutoLeftBase>().ResultTable;
 		pm.Delete(l);
 		pm.Save();
 		pm.UnloadCache();
-		l = pm.NewQuery(typeof(AgrBin1OwnpabsOthpabsTblAutoRightBase)).Execute();
-		pm.Delete(l);
+		var m = pm.Objects<AgrBin1OwnpabsOthpabsTblAutoRightBase>().ResultTable;
+		pm.Delete(m);
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) pm.NewQuery(typeof(AgrBin1OwnpabsOthpabsTblAutoLeftBase)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrBin1OwnpabsOthpabsTblAutoLeftBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) pm.NewQuery(typeof(AgrBin1OwnpabsOthpabsTblAutoRightBase)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrBin1OwnpabsOthpabsTblAutoRightBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -23349,13 +23153,13 @@ public class TestAgrBin1OwnpabsOthpabsTblAuto
 	}
 	void QueryOwn()
 	{
-		Query q = pm.NewQuery(typeof(AgrBin1OwnpabsOthpabsTblAutoLeftBase));
-		ownVar = (AgrBin1OwnpabsOthpabsTblAutoLeftBase) q.ExecuteSingle();
+		var q = new NDOQuery<AgrBin1OwnpabsOthpabsTblAutoLeftBase>(pm);
+		ownVar = q.ExecuteSingle();
 	}
 	void QueryOther()
 	{
-		Query q = pm.NewQuery(typeof(AgrBin1OwnpabsOthpabsTblAutoRightBase));
-		otherVar = (AgrBin1OwnpabsOthpabsTblAutoRightBase) q.ExecuteSingle();
+		var q = new NDOQuery<AgrBin1OwnpabsOthpabsTblAutoRightBase>(pm);
+		otherVar = q.ExecuteSingle();
 	}
 }
 
@@ -23377,19 +23181,18 @@ public class TestAgrBi1nOwnpabsOthpabsTblAuto
 	public void TearDown()
 	{
 		pm.UnloadCache();
-		IList l;
-		l = pm.NewQuery(typeof(AgrBi1nOwnpabsOthpabsTblAutoLeftBase)).Execute();
+		var l = pm.Objects<AgrBi1nOwnpabsOthpabsTblAutoLeftBase>().ResultTable;
 		pm.Delete(l);
 		pm.Save();
 		pm.UnloadCache();
-		l = pm.NewQuery(typeof(AgrBi1nOwnpabsOthpabsTblAutoRightBase)).Execute();
-		pm.Delete(l);
+		var m = pm.Objects<AgrBi1nOwnpabsOthpabsTblAutoRightBase>().ResultTable;
+		pm.Delete(m);
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) pm.NewQuery(typeof(AgrBi1nOwnpabsOthpabsTblAutoLeftBase)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrBi1nOwnpabsOthpabsTblAutoLeftBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) pm.NewQuery(typeof(AgrBi1nOwnpabsOthpabsTblAutoRightBase)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrBi1nOwnpabsOthpabsTblAutoRightBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -23479,13 +23282,13 @@ public class TestAgrBi1nOwnpabsOthpabsTblAuto
 	}
 	void QueryOwn()
 	{
-		Query q = pm.NewQuery(typeof(AgrBi1nOwnpabsOthpabsTblAutoLeftBase));
-		ownVar = (AgrBi1nOwnpabsOthpabsTblAutoLeftBase) q.ExecuteSingle();
+		var q = new NDOQuery<AgrBi1nOwnpabsOthpabsTblAutoLeftBase>(pm);
+		ownVar = q.ExecuteSingle();
 	}
 	void QueryOther()
 	{
-		Query q = pm.NewQuery(typeof(AgrBi1nOwnpabsOthpabsTblAutoRightBase));
-		otherVar = (AgrBi1nOwnpabsOthpabsTblAutoRightBase) q.ExecuteSingle();
+		var q = new NDOQuery<AgrBi1nOwnpabsOthpabsTblAutoRightBase>(pm);
+		otherVar = q.ExecuteSingle();
 	}
 }
 
@@ -23507,19 +23310,18 @@ public class TestAgrBinnOwnpabsOthpabsTblAuto
 	public void TearDown()
 	{
 		pm.UnloadCache();
-		IList l;
-		l = pm.NewQuery(typeof(AgrBinnOwnpabsOthpabsTblAutoLeftBase)).Execute();
+		var l = pm.Objects<AgrBinnOwnpabsOthpabsTblAutoLeftBase>().ResultTable;
 		pm.Delete(l);
 		pm.Save();
 		pm.UnloadCache();
-		l = pm.NewQuery(typeof(AgrBinnOwnpabsOthpabsTblAutoRightBase)).Execute();
-		pm.Delete(l);
+		var m = pm.Objects<AgrBinnOwnpabsOthpabsTblAutoRightBase>().ResultTable;
+		pm.Delete(m);
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) pm.NewQuery(typeof(AgrBinnOwnpabsOthpabsTblAutoLeftBase)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrBinnOwnpabsOthpabsTblAutoLeftBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) pm.NewQuery(typeof(AgrBinnOwnpabsOthpabsTblAutoRightBase)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrBinnOwnpabsOthpabsTblAutoRightBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -23588,13 +23390,13 @@ public class TestAgrBinnOwnpabsOthpabsTblAuto
 	}
 	void QueryOwn()
 	{
-		Query q = pm.NewQuery(typeof(AgrBinnOwnpabsOthpabsTblAutoLeftBase));
-		ownVar = (AgrBinnOwnpabsOthpabsTblAutoLeftBase) q.ExecuteSingle();
+		var q = new NDOQuery<AgrBinnOwnpabsOthpabsTblAutoLeftBase>(pm);
+		ownVar = q.ExecuteSingle();
 	}
 	void QueryOther()
 	{
-		Query q = pm.NewQuery(typeof(AgrBinnOwnpabsOthpabsTblAutoRightBase));
-		otherVar = (AgrBinnOwnpabsOthpabsTblAutoRightBase) q.ExecuteSingle();
+		var q = new NDOQuery<AgrBinnOwnpabsOthpabsTblAutoRightBase>(pm);
+		otherVar = q.ExecuteSingle();
 	}
 }
 
@@ -23616,15 +23418,14 @@ public class TestCmpDir1OwnpabsOthpabsNoTblAuto
 	public void TearDown()
 	{
 		pm.UnloadCache();
-		IList l;
-		l = pm.NewQuery(typeof(CmpDir1OwnpabsOthpabsNoTblAutoLeftBase)).Execute();
+		var l = pm.Objects<CmpDir1OwnpabsOthpabsNoTblAutoLeftBase>().ResultTable;
 		pm.Delete(l);
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) pm.NewQuery(typeof(CmpDir1OwnpabsOthpabsNoTblAutoLeftBase)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpDir1OwnpabsOthpabsNoTblAutoLeftBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) pm.NewQuery(typeof(CmpDir1OwnpabsOthpabsNoTblAutoRightBase)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpDir1OwnpabsOthpabsNoTblAutoRightBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test, ExpectedException(typeof(NDOException))]
@@ -23663,13 +23464,13 @@ public class TestCmpDir1OwnpabsOthpabsNoTblAuto
 	}
 	void QueryOwn()
 	{
-		Query q = pm.NewQuery(typeof(CmpDir1OwnpabsOthpabsNoTblAutoLeftBase));
-		ownVar = (CmpDir1OwnpabsOthpabsNoTblAutoLeftBase) q.ExecuteSingle();
+		var q = new NDOQuery<CmpDir1OwnpabsOthpabsNoTblAutoLeftBase>(pm);
+		ownVar = q.ExecuteSingle();
 	}
 	void QueryOther()
 	{
-		Query q = pm.NewQuery(typeof(CmpDir1OwnpabsOthpabsNoTblAutoRightBase));
-		otherVar = (CmpDir1OwnpabsOthpabsNoTblAutoRightBase) q.ExecuteSingle();
+		var q = new NDOQuery<CmpDir1OwnpabsOthpabsNoTblAutoRightBase>(pm);
+		otherVar = q.ExecuteSingle();
 	}
 }
 
@@ -23691,15 +23492,14 @@ public class TestCmpDir1OwnpabsOthpabsTblAuto
 	public void TearDown()
 	{
 		pm.UnloadCache();
-		IList l;
-		l = pm.NewQuery(typeof(CmpDir1OwnpabsOthpabsTblAutoLeftBase)).Execute();
+		var l = pm.Objects<CmpDir1OwnpabsOthpabsTblAutoLeftBase>().ResultTable;
 		pm.Delete(l);
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) pm.NewQuery(typeof(CmpDir1OwnpabsOthpabsTblAutoLeftBase)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpDir1OwnpabsOthpabsTblAutoLeftBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) pm.NewQuery(typeof(CmpDir1OwnpabsOthpabsTblAutoRightBase)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpDir1OwnpabsOthpabsTblAutoRightBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -23768,13 +23568,13 @@ public class TestCmpDir1OwnpabsOthpabsTblAuto
 	}
 	void QueryOwn()
 	{
-		Query q = pm.NewQuery(typeof(CmpDir1OwnpabsOthpabsTblAutoLeftBase));
-		ownVar = (CmpDir1OwnpabsOthpabsTblAutoLeftBase) q.ExecuteSingle();
+		var q = new NDOQuery<CmpDir1OwnpabsOthpabsTblAutoLeftBase>(pm);
+		ownVar = q.ExecuteSingle();
 	}
 	void QueryOther()
 	{
-		Query q = pm.NewQuery(typeof(CmpDir1OwnpabsOthpabsTblAutoRightBase));
-		otherVar = (CmpDir1OwnpabsOthpabsTblAutoRightBase) q.ExecuteSingle();
+		var q = new NDOQuery<CmpDir1OwnpabsOthpabsTblAutoRightBase>(pm);
+		otherVar = q.ExecuteSingle();
 	}
 }
 
@@ -23796,15 +23596,14 @@ public class TestCmpBi11OwnpabsOthpabsNoTblAuto
 	public void TearDown()
 	{
 		pm.UnloadCache();
-		IList l;
-		l = pm.NewQuery(typeof(CmpBi11OwnpabsOthpabsNoTblAutoLeftBase)).Execute();
+		var l = pm.Objects<CmpBi11OwnpabsOthpabsNoTblAutoLeftBase>().ResultTable;
 		pm.Delete(l);
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) pm.NewQuery(typeof(CmpBi11OwnpabsOthpabsNoTblAutoLeftBase)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpBi11OwnpabsOthpabsNoTblAutoLeftBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) pm.NewQuery(typeof(CmpBi11OwnpabsOthpabsNoTblAutoRightBase)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpBi11OwnpabsOthpabsNoTblAutoRightBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test, ExpectedException(typeof(NDOException))]
@@ -23863,13 +23662,13 @@ public class TestCmpBi11OwnpabsOthpabsNoTblAuto
 	}
 	void QueryOwn()
 	{
-		Query q = pm.NewQuery(typeof(CmpBi11OwnpabsOthpabsNoTblAutoLeftBase));
-		ownVar = (CmpBi11OwnpabsOthpabsNoTblAutoLeftBase) q.ExecuteSingle();
+		var q = new NDOQuery<CmpBi11OwnpabsOthpabsNoTblAutoLeftBase>(pm);
+		ownVar = q.ExecuteSingle();
 	}
 	void QueryOther()
 	{
-		Query q = pm.NewQuery(typeof(CmpBi11OwnpabsOthpabsNoTblAutoRightBase));
-		otherVar = (CmpBi11OwnpabsOthpabsNoTblAutoRightBase) q.ExecuteSingle();
+		var q = new NDOQuery<CmpBi11OwnpabsOthpabsNoTblAutoRightBase>(pm);
+		otherVar = q.ExecuteSingle();
 	}
 }
 
@@ -23891,15 +23690,14 @@ public class TestCmpBi11OwnpabsOthpabsTblAuto
 	public void TearDown()
 	{
 		pm.UnloadCache();
-		IList l;
-		l = pm.NewQuery(typeof(CmpBi11OwnpabsOthpabsTblAutoLeftBase)).Execute();
+		var l = pm.Objects<CmpBi11OwnpabsOthpabsTblAutoLeftBase>().ResultTable;
 		pm.Delete(l);
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) pm.NewQuery(typeof(CmpBi11OwnpabsOthpabsTblAutoLeftBase)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpBi11OwnpabsOthpabsTblAutoLeftBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) pm.NewQuery(typeof(CmpBi11OwnpabsOthpabsTblAutoRightBase)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpBi11OwnpabsOthpabsTblAutoRightBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -24019,13 +23817,13 @@ public class TestCmpBi11OwnpabsOthpabsTblAuto
 	}
 	void QueryOwn()
 	{
-		Query q = pm.NewQuery(typeof(CmpBi11OwnpabsOthpabsTblAutoLeftBase));
-		ownVar = (CmpBi11OwnpabsOthpabsTblAutoLeftBase) q.ExecuteSingle();
+		var q = new NDOQuery<CmpBi11OwnpabsOthpabsTblAutoLeftBase>(pm);
+		ownVar = q.ExecuteSingle();
 	}
 	void QueryOther()
 	{
-		Query q = pm.NewQuery(typeof(CmpBi11OwnpabsOthpabsTblAutoRightBase));
-		otherVar = (CmpBi11OwnpabsOthpabsTblAutoRightBase) q.ExecuteSingle();
+		var q = new NDOQuery<CmpBi11OwnpabsOthpabsTblAutoRightBase>(pm);
+		otherVar = q.ExecuteSingle();
 	}
 }
 
@@ -24047,15 +23845,14 @@ public class TestCmpDirnOwnpabsOthpabsTblAuto
 	public void TearDown()
 	{
 		pm.UnloadCache();
-		IList l;
-		l = pm.NewQuery(typeof(CmpDirnOwnpabsOthpabsTblAutoLeftBase)).Execute();
+		var l = pm.Objects<CmpDirnOwnpabsOthpabsTblAutoLeftBase>().ResultTable;
 		pm.Delete(l);
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) pm.NewQuery(typeof(CmpDirnOwnpabsOthpabsTblAutoLeftBase)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpDirnOwnpabsOthpabsTblAutoLeftBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) pm.NewQuery(typeof(CmpDirnOwnpabsOthpabsTblAutoRightBase)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpDirnOwnpabsOthpabsTblAutoRightBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -24103,13 +23900,13 @@ public class TestCmpDirnOwnpabsOthpabsTblAuto
 	}
 	void QueryOwn()
 	{
-		Query q = pm.NewQuery(typeof(CmpDirnOwnpabsOthpabsTblAutoLeftBase));
-		ownVar = (CmpDirnOwnpabsOthpabsTblAutoLeftBase) q.ExecuteSingle();
+		var q = new NDOQuery<CmpDirnOwnpabsOthpabsTblAutoLeftBase>(pm);
+		ownVar = q.ExecuteSingle();
 	}
 	void QueryOther()
 	{
-		Query q = pm.NewQuery(typeof(CmpDirnOwnpabsOthpabsTblAutoRightBase));
-		otherVar = (CmpDirnOwnpabsOthpabsTblAutoRightBase) q.ExecuteSingle();
+		var q = new NDOQuery<CmpDirnOwnpabsOthpabsTblAutoRightBase>(pm);
+		otherVar = q.ExecuteSingle();
 	}
 }
 
@@ -24131,15 +23928,14 @@ public class TestCmpBin1OwnpabsOthpabsTblAuto
 	public void TearDown()
 	{
 		pm.UnloadCache();
-		IList l;
-		l = pm.NewQuery(typeof(CmpBin1OwnpabsOthpabsTblAutoLeftBase)).Execute();
+		var l = pm.Objects<CmpBin1OwnpabsOthpabsTblAutoLeftBase>().ResultTable;
 		pm.Delete(l);
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) pm.NewQuery(typeof(CmpBin1OwnpabsOthpabsTblAutoLeftBase)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpBin1OwnpabsOthpabsTblAutoLeftBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) pm.NewQuery(typeof(CmpBin1OwnpabsOthpabsTblAutoRightBase)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpBin1OwnpabsOthpabsTblAutoRightBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -24238,13 +24034,13 @@ public class TestCmpBin1OwnpabsOthpabsTblAuto
 	}
 	void QueryOwn()
 	{
-		Query q = pm.NewQuery(typeof(CmpBin1OwnpabsOthpabsTblAutoLeftBase));
-		ownVar = (CmpBin1OwnpabsOthpabsTblAutoLeftBase) q.ExecuteSingle();
+		var q = new NDOQuery<CmpBin1OwnpabsOthpabsTblAutoLeftBase>(pm);
+		ownVar = q.ExecuteSingle();
 	}
 	void QueryOther()
 	{
-		Query q = pm.NewQuery(typeof(CmpBin1OwnpabsOthpabsTblAutoRightBase));
-		otherVar = (CmpBin1OwnpabsOthpabsTblAutoRightBase) q.ExecuteSingle();
+		var q = new NDOQuery<CmpBin1OwnpabsOthpabsTblAutoRightBase>(pm);
+		otherVar = q.ExecuteSingle();
 	}
 }
 
@@ -24266,15 +24062,14 @@ public class TestCmpBi1nOwnpabsOthpabsTblAuto
 	public void TearDown()
 	{
 		pm.UnloadCache();
-		IList l;
-		l = pm.NewQuery(typeof(CmpBi1nOwnpabsOthpabsTblAutoLeftBase)).Execute();
+		var l = pm.Objects<CmpBi1nOwnpabsOthpabsTblAutoLeftBase>().ResultTable;
 		pm.Delete(l);
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) pm.NewQuery(typeof(CmpBi1nOwnpabsOthpabsTblAutoLeftBase)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpBi1nOwnpabsOthpabsTblAutoLeftBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) pm.NewQuery(typeof(CmpBi1nOwnpabsOthpabsTblAutoRightBase)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpBi1nOwnpabsOthpabsTblAutoRightBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -24363,13 +24158,13 @@ public class TestCmpBi1nOwnpabsOthpabsTblAuto
 	}
 	void QueryOwn()
 	{
-		Query q = pm.NewQuery(typeof(CmpBi1nOwnpabsOthpabsTblAutoLeftBase));
-		ownVar = (CmpBi1nOwnpabsOthpabsTblAutoLeftBase) q.ExecuteSingle();
+		var q = new NDOQuery<CmpBi1nOwnpabsOthpabsTblAutoLeftBase>(pm);
+		ownVar = q.ExecuteSingle();
 	}
 	void QueryOther()
 	{
-		Query q = pm.NewQuery(typeof(CmpBi1nOwnpabsOthpabsTblAutoRightBase));
-		otherVar = (CmpBi1nOwnpabsOthpabsTblAutoRightBase) q.ExecuteSingle();
+		var q = new NDOQuery<CmpBi1nOwnpabsOthpabsTblAutoRightBase>(pm);
+		otherVar = q.ExecuteSingle();
 	}
 }
 
@@ -24391,15 +24186,14 @@ public class TestCmpBinnOwnpabsOthpabsTblAuto
 	public void TearDown()
 	{
 		pm.UnloadCache();
-		IList l;
-		l = pm.NewQuery(typeof(CmpBinnOwnpabsOthpabsTblAutoLeftBase)).Execute();
+		var l = pm.Objects<CmpBinnOwnpabsOthpabsTblAutoLeftBase>().ResultTable;
 		pm.Delete(l);
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) pm.NewQuery(typeof(CmpBinnOwnpabsOthpabsTblAutoLeftBase)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpBinnOwnpabsOthpabsTblAutoLeftBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) pm.NewQuery(typeof(CmpBinnOwnpabsOthpabsTblAutoRightBase)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpBinnOwnpabsOthpabsTblAutoRightBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -24467,13 +24261,13 @@ public class TestCmpBinnOwnpabsOthpabsTblAuto
 	}
 	void QueryOwn()
 	{
-		Query q = pm.NewQuery(typeof(CmpBinnOwnpabsOthpabsTblAutoLeftBase));
-		ownVar = (CmpBinnOwnpabsOthpabsTblAutoLeftBase) q.ExecuteSingle();
+		var q = new NDOQuery<CmpBinnOwnpabsOthpabsTblAutoLeftBase>(pm);
+		ownVar = q.ExecuteSingle();
 	}
 	void QueryOther()
 	{
-		Query q = pm.NewQuery(typeof(CmpBinnOwnpabsOthpabsTblAutoRightBase));
-		otherVar = (CmpBinnOwnpabsOthpabsTblAutoRightBase) q.ExecuteSingle();
+		var q = new NDOQuery<CmpBinnOwnpabsOthpabsTblAutoRightBase>(pm);
+		otherVar = q.ExecuteSingle();
 	}
 }
 
@@ -24495,19 +24289,18 @@ public class TestAgrDir1OwnpabsNoTblGuid
 	public void TearDown()
 	{
 		pm.UnloadCache();
-		IList l;
-		l = pm.NewQuery(typeof(AgrDir1OwnpabsNoTblGuidLeftBase)).Execute();
+		var l = pm.Objects<AgrDir1OwnpabsNoTblGuidLeftBase>().ResultTable;
 		pm.Delete(l);
 		pm.Save();
 		pm.UnloadCache();
-		l = pm.NewQuery(typeof(AgrDir1OwnpabsNoTblGuidRight)).Execute();
-		pm.Delete(l);
+		var m = pm.Objects<AgrDir1OwnpabsNoTblGuidRight>().ResultTable;
+		pm.Delete(m);
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) pm.NewQuery(typeof(AgrDir1OwnpabsNoTblGuidLeftBase)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrDir1OwnpabsNoTblGuidLeftBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) pm.NewQuery(typeof(AgrDir1OwnpabsNoTblGuidRight)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrDir1OwnpabsNoTblGuidRight>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -24577,13 +24370,13 @@ public class TestAgrDir1OwnpabsNoTblGuid
 	}
 	void QueryOwn()
 	{
-		Query q = pm.NewQuery(typeof(AgrDir1OwnpabsNoTblGuidLeftBase));
-		ownVar = (AgrDir1OwnpabsNoTblGuidLeftBase) q.ExecuteSingle();
+		var q = new NDOQuery<AgrDir1OwnpabsNoTblGuidLeftBase>(pm);
+		ownVar = q.ExecuteSingle();
 	}
 	void QueryOther()
 	{
-		Query q = pm.NewQuery(typeof(AgrDir1OwnpabsNoTblGuidRight));
-		otherVar = (AgrDir1OwnpabsNoTblGuidRight) q.ExecuteSingle();
+		var q = new NDOQuery<AgrDir1OwnpabsNoTblGuidRight>(pm);
+		otherVar = q.ExecuteSingle();
 	}
 }
 
@@ -24605,19 +24398,18 @@ public class TestAgrDir1OwnpabsTblGuid
 	public void TearDown()
 	{
 		pm.UnloadCache();
-		IList l;
-		l = pm.NewQuery(typeof(AgrDir1OwnpabsTblGuidLeftBase)).Execute();
+		var l = pm.Objects<AgrDir1OwnpabsTblGuidLeftBase>().ResultTable;
 		pm.Delete(l);
 		pm.Save();
 		pm.UnloadCache();
-		l = pm.NewQuery(typeof(AgrDir1OwnpabsTblGuidRight)).Execute();
-		pm.Delete(l);
+		var m = pm.Objects<AgrDir1OwnpabsTblGuidRight>().ResultTable;
+		pm.Delete(m);
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) pm.NewQuery(typeof(AgrDir1OwnpabsTblGuidLeftBase)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrDir1OwnpabsTblGuidLeftBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) pm.NewQuery(typeof(AgrDir1OwnpabsTblGuidRight)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrDir1OwnpabsTblGuidRight>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -24687,13 +24479,13 @@ public class TestAgrDir1OwnpabsTblGuid
 	}
 	void QueryOwn()
 	{
-		Query q = pm.NewQuery(typeof(AgrDir1OwnpabsTblGuidLeftBase));
-		ownVar = (AgrDir1OwnpabsTblGuidLeftBase) q.ExecuteSingle();
+		var q = new NDOQuery<AgrDir1OwnpabsTblGuidLeftBase>(pm);
+		ownVar = q.ExecuteSingle();
 	}
 	void QueryOther()
 	{
-		Query q = pm.NewQuery(typeof(AgrDir1OwnpabsTblGuidRight));
-		otherVar = (AgrDir1OwnpabsTblGuidRight) q.ExecuteSingle();
+		var q = new NDOQuery<AgrDir1OwnpabsTblGuidRight>(pm);
+		otherVar = q.ExecuteSingle();
 	}
 }
 
@@ -24715,19 +24507,18 @@ public class TestAgrBi11OwnpabsNoTblGuid
 	public void TearDown()
 	{
 		pm.UnloadCache();
-		IList l;
-		l = pm.NewQuery(typeof(AgrBi11OwnpabsNoTblGuidLeftBase)).Execute();
+		var l = pm.Objects<AgrBi11OwnpabsNoTblGuidLeftBase>().ResultTable;
 		pm.Delete(l);
 		pm.Save();
 		pm.UnloadCache();
-		l = pm.NewQuery(typeof(AgrBi11OwnpabsNoTblGuidRight)).Execute();
-		pm.Delete(l);
+		var m = pm.Objects<AgrBi11OwnpabsNoTblGuidRight>().ResultTable;
+		pm.Delete(m);
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) pm.NewQuery(typeof(AgrBi11OwnpabsNoTblGuidLeftBase)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrBi11OwnpabsNoTblGuidLeftBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) pm.NewQuery(typeof(AgrBi11OwnpabsNoTblGuidRight)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrBi11OwnpabsNoTblGuidRight>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -24842,13 +24633,13 @@ public class TestAgrBi11OwnpabsNoTblGuid
 	}
 	void QueryOwn()
 	{
-		Query q = pm.NewQuery(typeof(AgrBi11OwnpabsNoTblGuidLeftBase));
-		ownVar = (AgrBi11OwnpabsNoTblGuidLeftBase) q.ExecuteSingle();
+		var q = new NDOQuery<AgrBi11OwnpabsNoTblGuidLeftBase>(pm);
+		ownVar = q.ExecuteSingle();
 	}
 	void QueryOther()
 	{
-		Query q = pm.NewQuery(typeof(AgrBi11OwnpabsNoTblGuidRight));
-		otherVar = (AgrBi11OwnpabsNoTblGuidRight) q.ExecuteSingle();
+		var q = new NDOQuery<AgrBi11OwnpabsNoTblGuidRight>(pm);
+		otherVar = q.ExecuteSingle();
 	}
 }
 
@@ -24870,19 +24661,18 @@ public class TestAgrBi11OwnpabsTblGuid
 	public void TearDown()
 	{
 		pm.UnloadCache();
-		IList l;
-		l = pm.NewQuery(typeof(AgrBi11OwnpabsTblGuidLeftBase)).Execute();
+		var l = pm.Objects<AgrBi11OwnpabsTblGuidLeftBase>().ResultTable;
 		pm.Delete(l);
 		pm.Save();
 		pm.UnloadCache();
-		l = pm.NewQuery(typeof(AgrBi11OwnpabsTblGuidRight)).Execute();
-		pm.Delete(l);
+		var m = pm.Objects<AgrBi11OwnpabsTblGuidRight>().ResultTable;
+		pm.Delete(m);
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) pm.NewQuery(typeof(AgrBi11OwnpabsTblGuidLeftBase)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrBi11OwnpabsTblGuidLeftBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) pm.NewQuery(typeof(AgrBi11OwnpabsTblGuidRight)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrBi11OwnpabsTblGuidRight>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -24997,13 +24787,13 @@ public class TestAgrBi11OwnpabsTblGuid
 	}
 	void QueryOwn()
 	{
-		Query q = pm.NewQuery(typeof(AgrBi11OwnpabsTblGuidLeftBase));
-		ownVar = (AgrBi11OwnpabsTblGuidLeftBase) q.ExecuteSingle();
+		var q = new NDOQuery<AgrBi11OwnpabsTblGuidLeftBase>(pm);
+		ownVar = q.ExecuteSingle();
 	}
 	void QueryOther()
 	{
-		Query q = pm.NewQuery(typeof(AgrBi11OwnpabsTblGuidRight));
-		otherVar = (AgrBi11OwnpabsTblGuidRight) q.ExecuteSingle();
+		var q = new NDOQuery<AgrBi11OwnpabsTblGuidRight>(pm);
+		otherVar = q.ExecuteSingle();
 	}
 }
 
@@ -25025,19 +24815,18 @@ public class TestAgrDirnOwnpabsNoTblGuid
 	public void TearDown()
 	{
 		pm.UnloadCache();
-		IList l;
-		l = pm.NewQuery(typeof(AgrDirnOwnpabsNoTblGuidLeftBase)).Execute();
+		var l = pm.Objects<AgrDirnOwnpabsNoTblGuidLeftBase>().ResultTable;
 		pm.Delete(l);
 		pm.Save();
 		pm.UnloadCache();
-		l = pm.NewQuery(typeof(AgrDirnOwnpabsNoTblGuidRight)).Execute();
-		pm.Delete(l);
+		var m = pm.Objects<AgrDirnOwnpabsNoTblGuidRight>().ResultTable;
+		pm.Delete(m);
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) pm.NewQuery(typeof(AgrDirnOwnpabsNoTblGuidLeftBase)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrDirnOwnpabsNoTblGuidLeftBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) pm.NewQuery(typeof(AgrDirnOwnpabsNoTblGuidRight)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrDirnOwnpabsNoTblGuidRight>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -25086,13 +24875,13 @@ public class TestAgrDirnOwnpabsNoTblGuid
 	}
 	void QueryOwn()
 	{
-		Query q = pm.NewQuery(typeof(AgrDirnOwnpabsNoTblGuidLeftBase));
-		ownVar = (AgrDirnOwnpabsNoTblGuidLeftBase) q.ExecuteSingle();
+		var q = new NDOQuery<AgrDirnOwnpabsNoTblGuidLeftBase>(pm);
+		ownVar = q.ExecuteSingle();
 	}
 	void QueryOther()
 	{
-		Query q = pm.NewQuery(typeof(AgrDirnOwnpabsNoTblGuidRight));
-		otherVar = (AgrDirnOwnpabsNoTblGuidRight) q.ExecuteSingle();
+		var q = new NDOQuery<AgrDirnOwnpabsNoTblGuidRight>(pm);
+		otherVar = q.ExecuteSingle();
 	}
 }
 
@@ -25114,19 +24903,18 @@ public class TestAgrDirnOwnpabsTblGuid
 	public void TearDown()
 	{
 		pm.UnloadCache();
-		IList l;
-		l = pm.NewQuery(typeof(AgrDirnOwnpabsTblGuidLeftBase)).Execute();
+		var l = pm.Objects<AgrDirnOwnpabsTblGuidLeftBase>().ResultTable;
 		pm.Delete(l);
 		pm.Save();
 		pm.UnloadCache();
-		l = pm.NewQuery(typeof(AgrDirnOwnpabsTblGuidRight)).Execute();
-		pm.Delete(l);
+		var m = pm.Objects<AgrDirnOwnpabsTblGuidRight>().ResultTable;
+		pm.Delete(m);
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) pm.NewQuery(typeof(AgrDirnOwnpabsTblGuidLeftBase)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrDirnOwnpabsTblGuidLeftBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) pm.NewQuery(typeof(AgrDirnOwnpabsTblGuidRight)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrDirnOwnpabsTblGuidRight>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -25175,13 +24963,13 @@ public class TestAgrDirnOwnpabsTblGuid
 	}
 	void QueryOwn()
 	{
-		Query q = pm.NewQuery(typeof(AgrDirnOwnpabsTblGuidLeftBase));
-		ownVar = (AgrDirnOwnpabsTblGuidLeftBase) q.ExecuteSingle();
+		var q = new NDOQuery<AgrDirnOwnpabsTblGuidLeftBase>(pm);
+		ownVar = q.ExecuteSingle();
 	}
 	void QueryOther()
 	{
-		Query q = pm.NewQuery(typeof(AgrDirnOwnpabsTblGuidRight));
-		otherVar = (AgrDirnOwnpabsTblGuidRight) q.ExecuteSingle();
+		var q = new NDOQuery<AgrDirnOwnpabsTblGuidRight>(pm);
+		otherVar = q.ExecuteSingle();
 	}
 }
 
@@ -25203,19 +24991,18 @@ public class TestAgrBin1OwnpabsNoTblGuid
 	public void TearDown()
 	{
 		pm.UnloadCache();
-		IList l;
-		l = pm.NewQuery(typeof(AgrBin1OwnpabsNoTblGuidLeftBase)).Execute();
+		var l = pm.Objects<AgrBin1OwnpabsNoTblGuidLeftBase>().ResultTable;
 		pm.Delete(l);
 		pm.Save();
 		pm.UnloadCache();
-		l = pm.NewQuery(typeof(AgrBin1OwnpabsNoTblGuidRight)).Execute();
-		pm.Delete(l);
+		var m = pm.Objects<AgrBin1OwnpabsNoTblGuidRight>().ResultTable;
+		pm.Delete(m);
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) pm.NewQuery(typeof(AgrBin1OwnpabsNoTblGuidLeftBase)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrBin1OwnpabsNoTblGuidLeftBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) pm.NewQuery(typeof(AgrBin1OwnpabsNoTblGuidRight)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrBin1OwnpabsNoTblGuidRight>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -25309,13 +25096,13 @@ public class TestAgrBin1OwnpabsNoTblGuid
 	}
 	void QueryOwn()
 	{
-		Query q = pm.NewQuery(typeof(AgrBin1OwnpabsNoTblGuidLeftBase));
-		ownVar = (AgrBin1OwnpabsNoTblGuidLeftBase) q.ExecuteSingle();
+		var q = new NDOQuery<AgrBin1OwnpabsNoTblGuidLeftBase>(pm);
+		ownVar = q.ExecuteSingle();
 	}
 	void QueryOther()
 	{
-		Query q = pm.NewQuery(typeof(AgrBin1OwnpabsNoTblGuidRight));
-		otherVar = (AgrBin1OwnpabsNoTblGuidRight) q.ExecuteSingle();
+		var q = new NDOQuery<AgrBin1OwnpabsNoTblGuidRight>(pm);
+		otherVar = q.ExecuteSingle();
 	}
 }
 
@@ -25337,19 +25124,18 @@ public class TestAgrBin1OwnpabsTblGuid
 	public void TearDown()
 	{
 		pm.UnloadCache();
-		IList l;
-		l = pm.NewQuery(typeof(AgrBin1OwnpabsTblGuidLeftBase)).Execute();
+		var l = pm.Objects<AgrBin1OwnpabsTblGuidLeftBase>().ResultTable;
 		pm.Delete(l);
 		pm.Save();
 		pm.UnloadCache();
-		l = pm.NewQuery(typeof(AgrBin1OwnpabsTblGuidRight)).Execute();
-		pm.Delete(l);
+		var m = pm.Objects<AgrBin1OwnpabsTblGuidRight>().ResultTable;
+		pm.Delete(m);
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) pm.NewQuery(typeof(AgrBin1OwnpabsTblGuidLeftBase)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrBin1OwnpabsTblGuidLeftBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) pm.NewQuery(typeof(AgrBin1OwnpabsTblGuidRight)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrBin1OwnpabsTblGuidRight>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -25443,13 +25229,13 @@ public class TestAgrBin1OwnpabsTblGuid
 	}
 	void QueryOwn()
 	{
-		Query q = pm.NewQuery(typeof(AgrBin1OwnpabsTblGuidLeftBase));
-		ownVar = (AgrBin1OwnpabsTblGuidLeftBase) q.ExecuteSingle();
+		var q = new NDOQuery<AgrBin1OwnpabsTblGuidLeftBase>(pm);
+		ownVar = q.ExecuteSingle();
 	}
 	void QueryOther()
 	{
-		Query q = pm.NewQuery(typeof(AgrBin1OwnpabsTblGuidRight));
-		otherVar = (AgrBin1OwnpabsTblGuidRight) q.ExecuteSingle();
+		var q = new NDOQuery<AgrBin1OwnpabsTblGuidRight>(pm);
+		otherVar = q.ExecuteSingle();
 	}
 }
 
@@ -25471,19 +25257,18 @@ public class TestAgrBi1nOwnpabsTblGuid
 	public void TearDown()
 	{
 		pm.UnloadCache();
-		IList l;
-		l = pm.NewQuery(typeof(AgrBi1nOwnpabsTblGuidLeftBase)).Execute();
+		var l = pm.Objects<AgrBi1nOwnpabsTblGuidLeftBase>().ResultTable;
 		pm.Delete(l);
 		pm.Save();
 		pm.UnloadCache();
-		l = pm.NewQuery(typeof(AgrBi1nOwnpabsTblGuidRight)).Execute();
-		pm.Delete(l);
+		var m = pm.Objects<AgrBi1nOwnpabsTblGuidRight>().ResultTable;
+		pm.Delete(m);
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) pm.NewQuery(typeof(AgrBi1nOwnpabsTblGuidLeftBase)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrBi1nOwnpabsTblGuidLeftBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) pm.NewQuery(typeof(AgrBi1nOwnpabsTblGuidRight)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrBi1nOwnpabsTblGuidRight>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -25567,13 +25352,13 @@ public class TestAgrBi1nOwnpabsTblGuid
 	}
 	void QueryOwn()
 	{
-		Query q = pm.NewQuery(typeof(AgrBi1nOwnpabsTblGuidLeftBase));
-		ownVar = (AgrBi1nOwnpabsTblGuidLeftBase) q.ExecuteSingle();
+		var q = new NDOQuery<AgrBi1nOwnpabsTblGuidLeftBase>(pm);
+		ownVar = q.ExecuteSingle();
 	}
 	void QueryOther()
 	{
-		Query q = pm.NewQuery(typeof(AgrBi1nOwnpabsTblGuidRight));
-		otherVar = (AgrBi1nOwnpabsTblGuidRight) q.ExecuteSingle();
+		var q = new NDOQuery<AgrBi1nOwnpabsTblGuidRight>(pm);
+		otherVar = q.ExecuteSingle();
 	}
 }
 
@@ -25595,19 +25380,18 @@ public class TestAgrBinnOwnpabsTblGuid
 	public void TearDown()
 	{
 		pm.UnloadCache();
-		IList l;
-		l = pm.NewQuery(typeof(AgrBinnOwnpabsTblGuidLeftBase)).Execute();
+		var l = pm.Objects<AgrBinnOwnpabsTblGuidLeftBase>().ResultTable;
 		pm.Delete(l);
 		pm.Save();
 		pm.UnloadCache();
-		l = pm.NewQuery(typeof(AgrBinnOwnpabsTblGuidRight)).Execute();
-		pm.Delete(l);
+		var m = pm.Objects<AgrBinnOwnpabsTblGuidRight>().ResultTable;
+		pm.Delete(m);
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) pm.NewQuery(typeof(AgrBinnOwnpabsTblGuidLeftBase)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrBinnOwnpabsTblGuidLeftBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) pm.NewQuery(typeof(AgrBinnOwnpabsTblGuidRight)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrBinnOwnpabsTblGuidRight>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -25670,13 +25454,13 @@ public class TestAgrBinnOwnpabsTblGuid
 	}
 	void QueryOwn()
 	{
-		Query q = pm.NewQuery(typeof(AgrBinnOwnpabsTblGuidLeftBase));
-		ownVar = (AgrBinnOwnpabsTblGuidLeftBase) q.ExecuteSingle();
+		var q = new NDOQuery<AgrBinnOwnpabsTblGuidLeftBase>(pm);
+		ownVar = q.ExecuteSingle();
 	}
 	void QueryOther()
 	{
-		Query q = pm.NewQuery(typeof(AgrBinnOwnpabsTblGuidRight));
-		otherVar = (AgrBinnOwnpabsTblGuidRight) q.ExecuteSingle();
+		var q = new NDOQuery<AgrBinnOwnpabsTblGuidRight>(pm);
+		otherVar = q.ExecuteSingle();
 	}
 }
 
@@ -25698,15 +25482,14 @@ public class TestCmpDir1OwnpabsNoTblGuid
 	public void TearDown()
 	{
 		pm.UnloadCache();
-		IList l;
-		l = pm.NewQuery(typeof(CmpDir1OwnpabsNoTblGuidLeftBase)).Execute();
+		var l = pm.Objects<CmpDir1OwnpabsNoTblGuidLeftBase>().ResultTable;
 		pm.Delete(l);
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) pm.NewQuery(typeof(CmpDir1OwnpabsNoTblGuidLeftBase)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpDir1OwnpabsNoTblGuidLeftBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) pm.NewQuery(typeof(CmpDir1OwnpabsNoTblGuidRight)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpDir1OwnpabsNoTblGuidRight>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -25775,13 +25558,13 @@ public class TestCmpDir1OwnpabsNoTblGuid
 	}
 	void QueryOwn()
 	{
-		Query q = pm.NewQuery(typeof(CmpDir1OwnpabsNoTblGuidLeftBase));
-		ownVar = (CmpDir1OwnpabsNoTblGuidLeftBase) q.ExecuteSingle();
+		var q = new NDOQuery<CmpDir1OwnpabsNoTblGuidLeftBase>(pm);
+		ownVar = q.ExecuteSingle();
 	}
 	void QueryOther()
 	{
-		Query q = pm.NewQuery(typeof(CmpDir1OwnpabsNoTblGuidRight));
-		otherVar = (CmpDir1OwnpabsNoTblGuidRight) q.ExecuteSingle();
+		var q = new NDOQuery<CmpDir1OwnpabsNoTblGuidRight>(pm);
+		otherVar = q.ExecuteSingle();
 	}
 }
 
@@ -25803,15 +25586,14 @@ public class TestCmpDir1OwnpabsTblGuid
 	public void TearDown()
 	{
 		pm.UnloadCache();
-		IList l;
-		l = pm.NewQuery(typeof(CmpDir1OwnpabsTblGuidLeftBase)).Execute();
+		var l = pm.Objects<CmpDir1OwnpabsTblGuidLeftBase>().ResultTable;
 		pm.Delete(l);
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) pm.NewQuery(typeof(CmpDir1OwnpabsTblGuidLeftBase)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpDir1OwnpabsTblGuidLeftBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) pm.NewQuery(typeof(CmpDir1OwnpabsTblGuidRight)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpDir1OwnpabsTblGuidRight>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -25880,13 +25662,13 @@ public class TestCmpDir1OwnpabsTblGuid
 	}
 	void QueryOwn()
 	{
-		Query q = pm.NewQuery(typeof(CmpDir1OwnpabsTblGuidLeftBase));
-		ownVar = (CmpDir1OwnpabsTblGuidLeftBase) q.ExecuteSingle();
+		var q = new NDOQuery<CmpDir1OwnpabsTblGuidLeftBase>(pm);
+		ownVar = q.ExecuteSingle();
 	}
 	void QueryOther()
 	{
-		Query q = pm.NewQuery(typeof(CmpDir1OwnpabsTblGuidRight));
-		otherVar = (CmpDir1OwnpabsTblGuidRight) q.ExecuteSingle();
+		var q = new NDOQuery<CmpDir1OwnpabsTblGuidRight>(pm);
+		otherVar = q.ExecuteSingle();
 	}
 }
 
@@ -25908,15 +25690,14 @@ public class TestCmpBi11OwnpabsNoTblGuid
 	public void TearDown()
 	{
 		pm.UnloadCache();
-		IList l;
-		l = pm.NewQuery(typeof(CmpBi11OwnpabsNoTblGuidLeftBase)).Execute();
+		var l = pm.Objects<CmpBi11OwnpabsNoTblGuidLeftBase>().ResultTable;
 		pm.Delete(l);
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) pm.NewQuery(typeof(CmpBi11OwnpabsNoTblGuidLeftBase)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpBi11OwnpabsNoTblGuidLeftBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) pm.NewQuery(typeof(CmpBi11OwnpabsNoTblGuidRight)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpBi11OwnpabsNoTblGuidRight>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -26030,13 +25811,13 @@ public class TestCmpBi11OwnpabsNoTblGuid
 	}
 	void QueryOwn()
 	{
-		Query q = pm.NewQuery(typeof(CmpBi11OwnpabsNoTblGuidLeftBase));
-		ownVar = (CmpBi11OwnpabsNoTblGuidLeftBase) q.ExecuteSingle();
+		var q = new NDOQuery<CmpBi11OwnpabsNoTblGuidLeftBase>(pm);
+		ownVar = q.ExecuteSingle();
 	}
 	void QueryOther()
 	{
-		Query q = pm.NewQuery(typeof(CmpBi11OwnpabsNoTblGuidRight));
-		otherVar = (CmpBi11OwnpabsNoTblGuidRight) q.ExecuteSingle();
+		var q = new NDOQuery<CmpBi11OwnpabsNoTblGuidRight>(pm);
+		otherVar = q.ExecuteSingle();
 	}
 }
 
@@ -26058,15 +25839,14 @@ public class TestCmpBi11OwnpabsTblGuid
 	public void TearDown()
 	{
 		pm.UnloadCache();
-		IList l;
-		l = pm.NewQuery(typeof(CmpBi11OwnpabsTblGuidLeftBase)).Execute();
+		var l = pm.Objects<CmpBi11OwnpabsTblGuidLeftBase>().ResultTable;
 		pm.Delete(l);
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) pm.NewQuery(typeof(CmpBi11OwnpabsTblGuidLeftBase)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpBi11OwnpabsTblGuidLeftBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) pm.NewQuery(typeof(CmpBi11OwnpabsTblGuidRight)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpBi11OwnpabsTblGuidRight>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -26180,13 +25960,13 @@ public class TestCmpBi11OwnpabsTblGuid
 	}
 	void QueryOwn()
 	{
-		Query q = pm.NewQuery(typeof(CmpBi11OwnpabsTblGuidLeftBase));
-		ownVar = (CmpBi11OwnpabsTblGuidLeftBase) q.ExecuteSingle();
+		var q = new NDOQuery<CmpBi11OwnpabsTblGuidLeftBase>(pm);
+		ownVar = q.ExecuteSingle();
 	}
 	void QueryOther()
 	{
-		Query q = pm.NewQuery(typeof(CmpBi11OwnpabsTblGuidRight));
-		otherVar = (CmpBi11OwnpabsTblGuidRight) q.ExecuteSingle();
+		var q = new NDOQuery<CmpBi11OwnpabsTblGuidRight>(pm);
+		otherVar = q.ExecuteSingle();
 	}
 }
 
@@ -26208,15 +25988,14 @@ public class TestCmpDirnOwnpabsNoTblGuid
 	public void TearDown()
 	{
 		pm.UnloadCache();
-		IList l;
-		l = pm.NewQuery(typeof(CmpDirnOwnpabsNoTblGuidLeftBase)).Execute();
+		var l = pm.Objects<CmpDirnOwnpabsNoTblGuidLeftBase>().ResultTable;
 		pm.Delete(l);
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) pm.NewQuery(typeof(CmpDirnOwnpabsNoTblGuidLeftBase)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpDirnOwnpabsNoTblGuidLeftBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) pm.NewQuery(typeof(CmpDirnOwnpabsNoTblGuidRight)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpDirnOwnpabsNoTblGuidRight>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -26264,13 +26043,13 @@ public class TestCmpDirnOwnpabsNoTblGuid
 	}
 	void QueryOwn()
 	{
-		Query q = pm.NewQuery(typeof(CmpDirnOwnpabsNoTblGuidLeftBase));
-		ownVar = (CmpDirnOwnpabsNoTblGuidLeftBase) q.ExecuteSingle();
+		var q = new NDOQuery<CmpDirnOwnpabsNoTblGuidLeftBase>(pm);
+		ownVar = q.ExecuteSingle();
 	}
 	void QueryOther()
 	{
-		Query q = pm.NewQuery(typeof(CmpDirnOwnpabsNoTblGuidRight));
-		otherVar = (CmpDirnOwnpabsNoTblGuidRight) q.ExecuteSingle();
+		var q = new NDOQuery<CmpDirnOwnpabsNoTblGuidRight>(pm);
+		otherVar = q.ExecuteSingle();
 	}
 }
 
@@ -26292,15 +26071,14 @@ public class TestCmpDirnOwnpabsTblGuid
 	public void TearDown()
 	{
 		pm.UnloadCache();
-		IList l;
-		l = pm.NewQuery(typeof(CmpDirnOwnpabsTblGuidLeftBase)).Execute();
+		var l = pm.Objects<CmpDirnOwnpabsTblGuidLeftBase>().ResultTable;
 		pm.Delete(l);
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) pm.NewQuery(typeof(CmpDirnOwnpabsTblGuidLeftBase)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpDirnOwnpabsTblGuidLeftBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) pm.NewQuery(typeof(CmpDirnOwnpabsTblGuidRight)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpDirnOwnpabsTblGuidRight>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -26348,13 +26126,13 @@ public class TestCmpDirnOwnpabsTblGuid
 	}
 	void QueryOwn()
 	{
-		Query q = pm.NewQuery(typeof(CmpDirnOwnpabsTblGuidLeftBase));
-		ownVar = (CmpDirnOwnpabsTblGuidLeftBase) q.ExecuteSingle();
+		var q = new NDOQuery<CmpDirnOwnpabsTblGuidLeftBase>(pm);
+		ownVar = q.ExecuteSingle();
 	}
 	void QueryOther()
 	{
-		Query q = pm.NewQuery(typeof(CmpDirnOwnpabsTblGuidRight));
-		otherVar = (CmpDirnOwnpabsTblGuidRight) q.ExecuteSingle();
+		var q = new NDOQuery<CmpDirnOwnpabsTblGuidRight>(pm);
+		otherVar = q.ExecuteSingle();
 	}
 }
 
@@ -26376,15 +26154,14 @@ public class TestCmpBin1OwnpabsNoTblGuid
 	public void TearDown()
 	{
 		pm.UnloadCache();
-		IList l;
-		l = pm.NewQuery(typeof(CmpBin1OwnpabsNoTblGuidLeftBase)).Execute();
+		var l = pm.Objects<CmpBin1OwnpabsNoTblGuidLeftBase>().ResultTable;
 		pm.Delete(l);
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) pm.NewQuery(typeof(CmpBin1OwnpabsNoTblGuidLeftBase)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpBin1OwnpabsNoTblGuidLeftBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) pm.NewQuery(typeof(CmpBin1OwnpabsNoTblGuidRight)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpBin1OwnpabsNoTblGuidRight>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -26477,13 +26254,13 @@ public class TestCmpBin1OwnpabsNoTblGuid
 	}
 	void QueryOwn()
 	{
-		Query q = pm.NewQuery(typeof(CmpBin1OwnpabsNoTblGuidLeftBase));
-		ownVar = (CmpBin1OwnpabsNoTblGuidLeftBase) q.ExecuteSingle();
+		var q = new NDOQuery<CmpBin1OwnpabsNoTblGuidLeftBase>(pm);
+		ownVar = q.ExecuteSingle();
 	}
 	void QueryOther()
 	{
-		Query q = pm.NewQuery(typeof(CmpBin1OwnpabsNoTblGuidRight));
-		otherVar = (CmpBin1OwnpabsNoTblGuidRight) q.ExecuteSingle();
+		var q = new NDOQuery<CmpBin1OwnpabsNoTblGuidRight>(pm);
+		otherVar = q.ExecuteSingle();
 	}
 }
 
@@ -26505,15 +26282,14 @@ public class TestCmpBin1OwnpabsTblGuid
 	public void TearDown()
 	{
 		pm.UnloadCache();
-		IList l;
-		l = pm.NewQuery(typeof(CmpBin1OwnpabsTblGuidLeftBase)).Execute();
+		var l = pm.Objects<CmpBin1OwnpabsTblGuidLeftBase>().ResultTable;
 		pm.Delete(l);
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) pm.NewQuery(typeof(CmpBin1OwnpabsTblGuidLeftBase)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpBin1OwnpabsTblGuidLeftBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) pm.NewQuery(typeof(CmpBin1OwnpabsTblGuidRight)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpBin1OwnpabsTblGuidRight>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -26606,13 +26382,13 @@ public class TestCmpBin1OwnpabsTblGuid
 	}
 	void QueryOwn()
 	{
-		Query q = pm.NewQuery(typeof(CmpBin1OwnpabsTblGuidLeftBase));
-		ownVar = (CmpBin1OwnpabsTblGuidLeftBase) q.ExecuteSingle();
+		var q = new NDOQuery<CmpBin1OwnpabsTblGuidLeftBase>(pm);
+		ownVar = q.ExecuteSingle();
 	}
 	void QueryOther()
 	{
-		Query q = pm.NewQuery(typeof(CmpBin1OwnpabsTblGuidRight));
-		otherVar = (CmpBin1OwnpabsTblGuidRight) q.ExecuteSingle();
+		var q = new NDOQuery<CmpBin1OwnpabsTblGuidRight>(pm);
+		otherVar = q.ExecuteSingle();
 	}
 }
 
@@ -26634,15 +26410,14 @@ public class TestCmpBi1nOwnpabsTblGuid
 	public void TearDown()
 	{
 		pm.UnloadCache();
-		IList l;
-		l = pm.NewQuery(typeof(CmpBi1nOwnpabsTblGuidLeftBase)).Execute();
+		var l = pm.Objects<CmpBi1nOwnpabsTblGuidLeftBase>().ResultTable;
 		pm.Delete(l);
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) pm.NewQuery(typeof(CmpBi1nOwnpabsTblGuidLeftBase)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpBi1nOwnpabsTblGuidLeftBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) pm.NewQuery(typeof(CmpBi1nOwnpabsTblGuidRight)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpBi1nOwnpabsTblGuidRight>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -26725,13 +26500,13 @@ public class TestCmpBi1nOwnpabsTblGuid
 	}
 	void QueryOwn()
 	{
-		Query q = pm.NewQuery(typeof(CmpBi1nOwnpabsTblGuidLeftBase));
-		ownVar = (CmpBi1nOwnpabsTblGuidLeftBase) q.ExecuteSingle();
+		var q = new NDOQuery<CmpBi1nOwnpabsTblGuidLeftBase>(pm);
+		ownVar = q.ExecuteSingle();
 	}
 	void QueryOther()
 	{
-		Query q = pm.NewQuery(typeof(CmpBi1nOwnpabsTblGuidRight));
-		otherVar = (CmpBi1nOwnpabsTblGuidRight) q.ExecuteSingle();
+		var q = new NDOQuery<CmpBi1nOwnpabsTblGuidRight>(pm);
+		otherVar = q.ExecuteSingle();
 	}
 }
 
@@ -26753,15 +26528,14 @@ public class TestCmpBinnOwnpabsTblGuid
 	public void TearDown()
 	{
 		pm.UnloadCache();
-		IList l;
-		l = pm.NewQuery(typeof(CmpBinnOwnpabsTblGuidLeftBase)).Execute();
+		var l = pm.Objects<CmpBinnOwnpabsTblGuidLeftBase>().ResultTable;
 		pm.Delete(l);
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) pm.NewQuery(typeof(CmpBinnOwnpabsTblGuidLeftBase)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpBinnOwnpabsTblGuidLeftBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) pm.NewQuery(typeof(CmpBinnOwnpabsTblGuidRight)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpBinnOwnpabsTblGuidRight>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -26823,13 +26597,13 @@ public class TestCmpBinnOwnpabsTblGuid
 	}
 	void QueryOwn()
 	{
-		Query q = pm.NewQuery(typeof(CmpBinnOwnpabsTblGuidLeftBase));
-		ownVar = (CmpBinnOwnpabsTblGuidLeftBase) q.ExecuteSingle();
+		var q = new NDOQuery<CmpBinnOwnpabsTblGuidLeftBase>(pm);
+		ownVar = q.ExecuteSingle();
 	}
 	void QueryOther()
 	{
-		Query q = pm.NewQuery(typeof(CmpBinnOwnpabsTblGuidRight));
-		otherVar = (CmpBinnOwnpabsTblGuidRight) q.ExecuteSingle();
+		var q = new NDOQuery<CmpBinnOwnpabsTblGuidRight>(pm);
+		otherVar = q.ExecuteSingle();
 	}
 }
 
@@ -26851,19 +26625,18 @@ public class TestAgrDir1OthpabsNoTblGuid
 	public void TearDown()
 	{
 		pm.UnloadCache();
-		IList l;
-		l = pm.NewQuery(typeof(AgrDir1OthpabsNoTblGuidLeft)).Execute();
+		var l = pm.Objects<AgrDir1OthpabsNoTblGuidLeft>().ResultTable;
 		pm.Delete(l);
 		pm.Save();
 		pm.UnloadCache();
-		l = pm.NewQuery(typeof(AgrDir1OthpabsNoTblGuidRightBase)).Execute();
-		pm.Delete(l);
+		var m = pm.Objects<AgrDir1OthpabsNoTblGuidRightBase>().ResultTable;
+		pm.Delete(m);
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) pm.NewQuery(typeof(AgrDir1OthpabsNoTblGuidLeft)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrDir1OthpabsNoTblGuidLeft>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) pm.NewQuery(typeof(AgrDir1OthpabsNoTblGuidRightBase)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrDir1OthpabsNoTblGuidRightBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -26933,13 +26706,13 @@ public class TestAgrDir1OthpabsNoTblGuid
 	}
 	void QueryOwn()
 	{
-		Query q = pm.NewQuery(typeof(AgrDir1OthpabsNoTblGuidLeft));
-		ownVar = (AgrDir1OthpabsNoTblGuidLeft) q.ExecuteSingle();
+		var q = new NDOQuery<AgrDir1OthpabsNoTblGuidLeft>(pm);
+		ownVar = q.ExecuteSingle();
 	}
 	void QueryOther()
 	{
-		Query q = pm.NewQuery(typeof(AgrDir1OthpabsNoTblGuidRightBase));
-		otherVar = (AgrDir1OthpabsNoTblGuidRightBase) q.ExecuteSingle();
+		var q = new NDOQuery<AgrDir1OthpabsNoTblGuidRightBase>(pm);
+		otherVar = q.ExecuteSingle();
 	}
 }
 
@@ -26961,19 +26734,18 @@ public class TestAgrDir1OthpabsTblGuid
 	public void TearDown()
 	{
 		pm.UnloadCache();
-		IList l;
-		l = pm.NewQuery(typeof(AgrDir1OthpabsTblGuidLeft)).Execute();
+		var l = pm.Objects<AgrDir1OthpabsTblGuidLeft>().ResultTable;
 		pm.Delete(l);
 		pm.Save();
 		pm.UnloadCache();
-		l = pm.NewQuery(typeof(AgrDir1OthpabsTblGuidRightBase)).Execute();
-		pm.Delete(l);
+		var m = pm.Objects<AgrDir1OthpabsTblGuidRightBase>().ResultTable;
+		pm.Delete(m);
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) pm.NewQuery(typeof(AgrDir1OthpabsTblGuidLeft)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrDir1OthpabsTblGuidLeft>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) pm.NewQuery(typeof(AgrDir1OthpabsTblGuidRightBase)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrDir1OthpabsTblGuidRightBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -27043,13 +26815,13 @@ public class TestAgrDir1OthpabsTblGuid
 	}
 	void QueryOwn()
 	{
-		Query q = pm.NewQuery(typeof(AgrDir1OthpabsTblGuidLeft));
-		ownVar = (AgrDir1OthpabsTblGuidLeft) q.ExecuteSingle();
+		var q = new NDOQuery<AgrDir1OthpabsTblGuidLeft>(pm);
+		ownVar = q.ExecuteSingle();
 	}
 	void QueryOther()
 	{
-		Query q = pm.NewQuery(typeof(AgrDir1OthpabsTblGuidRightBase));
-		otherVar = (AgrDir1OthpabsTblGuidRightBase) q.ExecuteSingle();
+		var q = new NDOQuery<AgrDir1OthpabsTblGuidRightBase>(pm);
+		otherVar = q.ExecuteSingle();
 	}
 }
 
@@ -27071,19 +26843,18 @@ public class TestAgrBi11OthpabsNoTblGuid
 	public void TearDown()
 	{
 		pm.UnloadCache();
-		IList l;
-		l = pm.NewQuery(typeof(AgrBi11OthpabsNoTblGuidLeft)).Execute();
+		var l = pm.Objects<AgrBi11OthpabsNoTblGuidLeft>().ResultTable;
 		pm.Delete(l);
 		pm.Save();
 		pm.UnloadCache();
-		l = pm.NewQuery(typeof(AgrBi11OthpabsNoTblGuidRightBase)).Execute();
-		pm.Delete(l);
+		var m = pm.Objects<AgrBi11OthpabsNoTblGuidRightBase>().ResultTable;
+		pm.Delete(m);
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) pm.NewQuery(typeof(AgrBi11OthpabsNoTblGuidLeft)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrBi11OthpabsNoTblGuidLeft>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) pm.NewQuery(typeof(AgrBi11OthpabsNoTblGuidRightBase)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrBi11OthpabsNoTblGuidRightBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -27198,13 +26969,13 @@ public class TestAgrBi11OthpabsNoTblGuid
 	}
 	void QueryOwn()
 	{
-		Query q = pm.NewQuery(typeof(AgrBi11OthpabsNoTblGuidLeft));
-		ownVar = (AgrBi11OthpabsNoTblGuidLeft) q.ExecuteSingle();
+		var q = new NDOQuery<AgrBi11OthpabsNoTblGuidLeft>(pm);
+		ownVar = q.ExecuteSingle();
 	}
 	void QueryOther()
 	{
-		Query q = pm.NewQuery(typeof(AgrBi11OthpabsNoTblGuidRightBase));
-		otherVar = (AgrBi11OthpabsNoTblGuidRightBase) q.ExecuteSingle();
+		var q = new NDOQuery<AgrBi11OthpabsNoTblGuidRightBase>(pm);
+		otherVar = q.ExecuteSingle();
 	}
 }
 
@@ -27226,19 +26997,18 @@ public class TestAgrBi11OthpabsTblGuid
 	public void TearDown()
 	{
 		pm.UnloadCache();
-		IList l;
-		l = pm.NewQuery(typeof(AgrBi11OthpabsTblGuidLeft)).Execute();
+		var l = pm.Objects<AgrBi11OthpabsTblGuidLeft>().ResultTable;
 		pm.Delete(l);
 		pm.Save();
 		pm.UnloadCache();
-		l = pm.NewQuery(typeof(AgrBi11OthpabsTblGuidRightBase)).Execute();
-		pm.Delete(l);
+		var m = pm.Objects<AgrBi11OthpabsTblGuidRightBase>().ResultTable;
+		pm.Delete(m);
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) pm.NewQuery(typeof(AgrBi11OthpabsTblGuidLeft)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrBi11OthpabsTblGuidLeft>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) pm.NewQuery(typeof(AgrBi11OthpabsTblGuidRightBase)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrBi11OthpabsTblGuidRightBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -27353,13 +27123,13 @@ public class TestAgrBi11OthpabsTblGuid
 	}
 	void QueryOwn()
 	{
-		Query q = pm.NewQuery(typeof(AgrBi11OthpabsTblGuidLeft));
-		ownVar = (AgrBi11OthpabsTblGuidLeft) q.ExecuteSingle();
+		var q = new NDOQuery<AgrBi11OthpabsTblGuidLeft>(pm);
+		ownVar = q.ExecuteSingle();
 	}
 	void QueryOther()
 	{
-		Query q = pm.NewQuery(typeof(AgrBi11OthpabsTblGuidRightBase));
-		otherVar = (AgrBi11OthpabsTblGuidRightBase) q.ExecuteSingle();
+		var q = new NDOQuery<AgrBi11OthpabsTblGuidRightBase>(pm);
+		otherVar = q.ExecuteSingle();
 	}
 }
 
@@ -27381,19 +27151,18 @@ public class TestAgrDirnOthpabsTblGuid
 	public void TearDown()
 	{
 		pm.UnloadCache();
-		IList l;
-		l = pm.NewQuery(typeof(AgrDirnOthpabsTblGuidLeft)).Execute();
+		var l = pm.Objects<AgrDirnOthpabsTblGuidLeft>().ResultTable;
 		pm.Delete(l);
 		pm.Save();
 		pm.UnloadCache();
-		l = pm.NewQuery(typeof(AgrDirnOthpabsTblGuidRightBase)).Execute();
-		pm.Delete(l);
+		var m = pm.Objects<AgrDirnOthpabsTblGuidRightBase>().ResultTable;
+		pm.Delete(m);
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) pm.NewQuery(typeof(AgrDirnOthpabsTblGuidLeft)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrDirnOthpabsTblGuidLeft>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) pm.NewQuery(typeof(AgrDirnOthpabsTblGuidRightBase)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrDirnOthpabsTblGuidRightBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -27442,13 +27211,13 @@ public class TestAgrDirnOthpabsTblGuid
 	}
 	void QueryOwn()
 	{
-		Query q = pm.NewQuery(typeof(AgrDirnOthpabsTblGuidLeft));
-		ownVar = (AgrDirnOthpabsTblGuidLeft) q.ExecuteSingle();
+		var q = new NDOQuery<AgrDirnOthpabsTblGuidLeft>(pm);
+		ownVar = q.ExecuteSingle();
 	}
 	void QueryOther()
 	{
-		Query q = pm.NewQuery(typeof(AgrDirnOthpabsTblGuidRightBase));
-		otherVar = (AgrDirnOthpabsTblGuidRightBase) q.ExecuteSingle();
+		var q = new NDOQuery<AgrDirnOthpabsTblGuidRightBase>(pm);
+		otherVar = q.ExecuteSingle();
 	}
 }
 
@@ -27470,19 +27239,18 @@ public class TestAgrBin1OthpabsTblGuid
 	public void TearDown()
 	{
 		pm.UnloadCache();
-		IList l;
-		l = pm.NewQuery(typeof(AgrBin1OthpabsTblGuidLeft)).Execute();
+		var l = pm.Objects<AgrBin1OthpabsTblGuidLeft>().ResultTable;
 		pm.Delete(l);
 		pm.Save();
 		pm.UnloadCache();
-		l = pm.NewQuery(typeof(AgrBin1OthpabsTblGuidRightBase)).Execute();
-		pm.Delete(l);
+		var m = pm.Objects<AgrBin1OthpabsTblGuidRightBase>().ResultTable;
+		pm.Delete(m);
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) pm.NewQuery(typeof(AgrBin1OthpabsTblGuidLeft)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrBin1OthpabsTblGuidLeft>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) pm.NewQuery(typeof(AgrBin1OthpabsTblGuidRightBase)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrBin1OthpabsTblGuidRightBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -27576,13 +27344,13 @@ public class TestAgrBin1OthpabsTblGuid
 	}
 	void QueryOwn()
 	{
-		Query q = pm.NewQuery(typeof(AgrBin1OthpabsTblGuidLeft));
-		ownVar = (AgrBin1OthpabsTblGuidLeft) q.ExecuteSingle();
+		var q = new NDOQuery<AgrBin1OthpabsTblGuidLeft>(pm);
+		ownVar = q.ExecuteSingle();
 	}
 	void QueryOther()
 	{
-		Query q = pm.NewQuery(typeof(AgrBin1OthpabsTblGuidRightBase));
-		otherVar = (AgrBin1OthpabsTblGuidRightBase) q.ExecuteSingle();
+		var q = new NDOQuery<AgrBin1OthpabsTblGuidRightBase>(pm);
+		otherVar = q.ExecuteSingle();
 	}
 }
 
@@ -27604,19 +27372,18 @@ public class TestAgrBi1nOthpabsNoTblGuid
 	public void TearDown()
 	{
 		pm.UnloadCache();
-		IList l;
-		l = pm.NewQuery(typeof(AgrBi1nOthpabsNoTblGuidLeft)).Execute();
+		var l = pm.Objects<AgrBi1nOthpabsNoTblGuidLeft>().ResultTable;
 		pm.Delete(l);
 		pm.Save();
 		pm.UnloadCache();
-		l = pm.NewQuery(typeof(AgrBi1nOthpabsNoTblGuidRightBase)).Execute();
-		pm.Delete(l);
+		var m = pm.Objects<AgrBi1nOthpabsNoTblGuidRightBase>().ResultTable;
+		pm.Delete(m);
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) pm.NewQuery(typeof(AgrBi1nOthpabsNoTblGuidLeft)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrBi1nOthpabsNoTblGuidLeft>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) pm.NewQuery(typeof(AgrBi1nOthpabsNoTblGuidRightBase)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrBi1nOthpabsNoTblGuidRightBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -27700,13 +27467,13 @@ public class TestAgrBi1nOthpabsNoTblGuid
 	}
 	void QueryOwn()
 	{
-		Query q = pm.NewQuery(typeof(AgrBi1nOthpabsNoTblGuidLeft));
-		ownVar = (AgrBi1nOthpabsNoTblGuidLeft) q.ExecuteSingle();
+		var q = new NDOQuery<AgrBi1nOthpabsNoTblGuidLeft>(pm);
+		ownVar = q.ExecuteSingle();
 	}
 	void QueryOther()
 	{
-		Query q = pm.NewQuery(typeof(AgrBi1nOthpabsNoTblGuidRightBase));
-		otherVar = (AgrBi1nOthpabsNoTblGuidRightBase) q.ExecuteSingle();
+		var q = new NDOQuery<AgrBi1nOthpabsNoTblGuidRightBase>(pm);
+		otherVar = q.ExecuteSingle();
 	}
 }
 
@@ -27728,19 +27495,18 @@ public class TestAgrBi1nOthpabsTblGuid
 	public void TearDown()
 	{
 		pm.UnloadCache();
-		IList l;
-		l = pm.NewQuery(typeof(AgrBi1nOthpabsTblGuidLeft)).Execute();
+		var l = pm.Objects<AgrBi1nOthpabsTblGuidLeft>().ResultTable;
 		pm.Delete(l);
 		pm.Save();
 		pm.UnloadCache();
-		l = pm.NewQuery(typeof(AgrBi1nOthpabsTblGuidRightBase)).Execute();
-		pm.Delete(l);
+		var m = pm.Objects<AgrBi1nOthpabsTblGuidRightBase>().ResultTable;
+		pm.Delete(m);
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) pm.NewQuery(typeof(AgrBi1nOthpabsTblGuidLeft)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrBi1nOthpabsTblGuidLeft>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) pm.NewQuery(typeof(AgrBi1nOthpabsTblGuidRightBase)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrBi1nOthpabsTblGuidRightBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -27824,13 +27590,13 @@ public class TestAgrBi1nOthpabsTblGuid
 	}
 	void QueryOwn()
 	{
-		Query q = pm.NewQuery(typeof(AgrBi1nOthpabsTblGuidLeft));
-		ownVar = (AgrBi1nOthpabsTblGuidLeft) q.ExecuteSingle();
+		var q = new NDOQuery<AgrBi1nOthpabsTblGuidLeft>(pm);
+		ownVar = q.ExecuteSingle();
 	}
 	void QueryOther()
 	{
-		Query q = pm.NewQuery(typeof(AgrBi1nOthpabsTblGuidRightBase));
-		otherVar = (AgrBi1nOthpabsTblGuidRightBase) q.ExecuteSingle();
+		var q = new NDOQuery<AgrBi1nOthpabsTblGuidRightBase>(pm);
+		otherVar = q.ExecuteSingle();
 	}
 }
 
@@ -27852,19 +27618,18 @@ public class TestAgrBinnOthpabsTblGuid
 	public void TearDown()
 	{
 		pm.UnloadCache();
-		IList l;
-		l = pm.NewQuery(typeof(AgrBinnOthpabsTblGuidLeft)).Execute();
+		var l = pm.Objects<AgrBinnOthpabsTblGuidLeft>().ResultTable;
 		pm.Delete(l);
 		pm.Save();
 		pm.UnloadCache();
-		l = pm.NewQuery(typeof(AgrBinnOthpabsTblGuidRightBase)).Execute();
-		pm.Delete(l);
+		var m = pm.Objects<AgrBinnOthpabsTblGuidRightBase>().ResultTable;
+		pm.Delete(m);
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) pm.NewQuery(typeof(AgrBinnOthpabsTblGuidLeft)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrBinnOthpabsTblGuidLeft>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) pm.NewQuery(typeof(AgrBinnOthpabsTblGuidRightBase)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrBinnOthpabsTblGuidRightBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -27927,13 +27692,13 @@ public class TestAgrBinnOthpabsTblGuid
 	}
 	void QueryOwn()
 	{
-		Query q = pm.NewQuery(typeof(AgrBinnOthpabsTblGuidLeft));
-		ownVar = (AgrBinnOthpabsTblGuidLeft) q.ExecuteSingle();
+		var q = new NDOQuery<AgrBinnOthpabsTblGuidLeft>(pm);
+		ownVar = q.ExecuteSingle();
 	}
 	void QueryOther()
 	{
-		Query q = pm.NewQuery(typeof(AgrBinnOthpabsTblGuidRightBase));
-		otherVar = (AgrBinnOthpabsTblGuidRightBase) q.ExecuteSingle();
+		var q = new NDOQuery<AgrBinnOthpabsTblGuidRightBase>(pm);
+		otherVar = q.ExecuteSingle();
 	}
 }
 
@@ -27955,15 +27720,14 @@ public class TestCmpDir1OthpabsNoTblGuid
 	public void TearDown()
 	{
 		pm.UnloadCache();
-		IList l;
-		l = pm.NewQuery(typeof(CmpDir1OthpabsNoTblGuidLeft)).Execute();
+		var l = pm.Objects<CmpDir1OthpabsNoTblGuidLeft>().ResultTable;
 		pm.Delete(l);
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) pm.NewQuery(typeof(CmpDir1OthpabsNoTblGuidLeft)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpDir1OthpabsNoTblGuidLeft>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) pm.NewQuery(typeof(CmpDir1OthpabsNoTblGuidRightBase)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpDir1OthpabsNoTblGuidRightBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -28032,13 +27796,13 @@ public class TestCmpDir1OthpabsNoTblGuid
 	}
 	void QueryOwn()
 	{
-		Query q = pm.NewQuery(typeof(CmpDir1OthpabsNoTblGuidLeft));
-		ownVar = (CmpDir1OthpabsNoTblGuidLeft) q.ExecuteSingle();
+		var q = new NDOQuery<CmpDir1OthpabsNoTblGuidLeft>(pm);
+		ownVar = q.ExecuteSingle();
 	}
 	void QueryOther()
 	{
-		Query q = pm.NewQuery(typeof(CmpDir1OthpabsNoTblGuidRightBase));
-		otherVar = (CmpDir1OthpabsNoTblGuidRightBase) q.ExecuteSingle();
+		var q = new NDOQuery<CmpDir1OthpabsNoTblGuidRightBase>(pm);
+		otherVar = q.ExecuteSingle();
 	}
 }
 
@@ -28060,15 +27824,14 @@ public class TestCmpDir1OthpabsTblGuid
 	public void TearDown()
 	{
 		pm.UnloadCache();
-		IList l;
-		l = pm.NewQuery(typeof(CmpDir1OthpabsTblGuidLeft)).Execute();
+		var l = pm.Objects<CmpDir1OthpabsTblGuidLeft>().ResultTable;
 		pm.Delete(l);
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) pm.NewQuery(typeof(CmpDir1OthpabsTblGuidLeft)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpDir1OthpabsTblGuidLeft>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) pm.NewQuery(typeof(CmpDir1OthpabsTblGuidRightBase)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpDir1OthpabsTblGuidRightBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -28137,13 +27900,13 @@ public class TestCmpDir1OthpabsTblGuid
 	}
 	void QueryOwn()
 	{
-		Query q = pm.NewQuery(typeof(CmpDir1OthpabsTblGuidLeft));
-		ownVar = (CmpDir1OthpabsTblGuidLeft) q.ExecuteSingle();
+		var q = new NDOQuery<CmpDir1OthpabsTblGuidLeft>(pm);
+		ownVar = q.ExecuteSingle();
 	}
 	void QueryOther()
 	{
-		Query q = pm.NewQuery(typeof(CmpDir1OthpabsTblGuidRightBase));
-		otherVar = (CmpDir1OthpabsTblGuidRightBase) q.ExecuteSingle();
+		var q = new NDOQuery<CmpDir1OthpabsTblGuidRightBase>(pm);
+		otherVar = q.ExecuteSingle();
 	}
 }
 
@@ -28165,15 +27928,14 @@ public class TestCmpBi11OthpabsNoTblGuid
 	public void TearDown()
 	{
 		pm.UnloadCache();
-		IList l;
-		l = pm.NewQuery(typeof(CmpBi11OthpabsNoTblGuidLeft)).Execute();
+		var l = pm.Objects<CmpBi11OthpabsNoTblGuidLeft>().ResultTable;
 		pm.Delete(l);
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) pm.NewQuery(typeof(CmpBi11OthpabsNoTblGuidLeft)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpBi11OthpabsNoTblGuidLeft>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) pm.NewQuery(typeof(CmpBi11OthpabsNoTblGuidRightBase)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpBi11OthpabsNoTblGuidRightBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -28287,13 +28049,13 @@ public class TestCmpBi11OthpabsNoTblGuid
 	}
 	void QueryOwn()
 	{
-		Query q = pm.NewQuery(typeof(CmpBi11OthpabsNoTblGuidLeft));
-		ownVar = (CmpBi11OthpabsNoTblGuidLeft) q.ExecuteSingle();
+		var q = new NDOQuery<CmpBi11OthpabsNoTblGuidLeft>(pm);
+		ownVar = q.ExecuteSingle();
 	}
 	void QueryOther()
 	{
-		Query q = pm.NewQuery(typeof(CmpBi11OthpabsNoTblGuidRightBase));
-		otherVar = (CmpBi11OthpabsNoTblGuidRightBase) q.ExecuteSingle();
+		var q = new NDOQuery<CmpBi11OthpabsNoTblGuidRightBase>(pm);
+		otherVar = q.ExecuteSingle();
 	}
 }
 
@@ -28315,15 +28077,14 @@ public class TestCmpBi11OthpabsTblGuid
 	public void TearDown()
 	{
 		pm.UnloadCache();
-		IList l;
-		l = pm.NewQuery(typeof(CmpBi11OthpabsTblGuidLeft)).Execute();
+		var l = pm.Objects<CmpBi11OthpabsTblGuidLeft>().ResultTable;
 		pm.Delete(l);
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) pm.NewQuery(typeof(CmpBi11OthpabsTblGuidLeft)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpBi11OthpabsTblGuidLeft>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) pm.NewQuery(typeof(CmpBi11OthpabsTblGuidRightBase)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpBi11OthpabsTblGuidRightBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -28437,13 +28198,13 @@ public class TestCmpBi11OthpabsTblGuid
 	}
 	void QueryOwn()
 	{
-		Query q = pm.NewQuery(typeof(CmpBi11OthpabsTblGuidLeft));
-		ownVar = (CmpBi11OthpabsTblGuidLeft) q.ExecuteSingle();
+		var q = new NDOQuery<CmpBi11OthpabsTblGuidLeft>(pm);
+		ownVar = q.ExecuteSingle();
 	}
 	void QueryOther()
 	{
-		Query q = pm.NewQuery(typeof(CmpBi11OthpabsTblGuidRightBase));
-		otherVar = (CmpBi11OthpabsTblGuidRightBase) q.ExecuteSingle();
+		var q = new NDOQuery<CmpBi11OthpabsTblGuidRightBase>(pm);
+		otherVar = q.ExecuteSingle();
 	}
 }
 
@@ -28465,15 +28226,14 @@ public class TestCmpDirnOthpabsTblGuid
 	public void TearDown()
 	{
 		pm.UnloadCache();
-		IList l;
-		l = pm.NewQuery(typeof(CmpDirnOthpabsTblGuidLeft)).Execute();
+		var l = pm.Objects<CmpDirnOthpabsTblGuidLeft>().ResultTable;
 		pm.Delete(l);
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) pm.NewQuery(typeof(CmpDirnOthpabsTblGuidLeft)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpDirnOthpabsTblGuidLeft>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) pm.NewQuery(typeof(CmpDirnOthpabsTblGuidRightBase)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpDirnOthpabsTblGuidRightBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -28521,13 +28281,13 @@ public class TestCmpDirnOthpabsTblGuid
 	}
 	void QueryOwn()
 	{
-		Query q = pm.NewQuery(typeof(CmpDirnOthpabsTblGuidLeft));
-		ownVar = (CmpDirnOthpabsTblGuidLeft) q.ExecuteSingle();
+		var q = new NDOQuery<CmpDirnOthpabsTblGuidLeft>(pm);
+		ownVar = q.ExecuteSingle();
 	}
 	void QueryOther()
 	{
-		Query q = pm.NewQuery(typeof(CmpDirnOthpabsTblGuidRightBase));
-		otherVar = (CmpDirnOthpabsTblGuidRightBase) q.ExecuteSingle();
+		var q = new NDOQuery<CmpDirnOthpabsTblGuidRightBase>(pm);
+		otherVar = q.ExecuteSingle();
 	}
 }
 
@@ -28549,15 +28309,14 @@ public class TestCmpBin1OthpabsTblGuid
 	public void TearDown()
 	{
 		pm.UnloadCache();
-		IList l;
-		l = pm.NewQuery(typeof(CmpBin1OthpabsTblGuidLeft)).Execute();
+		var l = pm.Objects<CmpBin1OthpabsTblGuidLeft>().ResultTable;
 		pm.Delete(l);
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) pm.NewQuery(typeof(CmpBin1OthpabsTblGuidLeft)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpBin1OthpabsTblGuidLeft>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) pm.NewQuery(typeof(CmpBin1OthpabsTblGuidRightBase)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpBin1OthpabsTblGuidRightBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -28650,13 +28409,13 @@ public class TestCmpBin1OthpabsTblGuid
 	}
 	void QueryOwn()
 	{
-		Query q = pm.NewQuery(typeof(CmpBin1OthpabsTblGuidLeft));
-		ownVar = (CmpBin1OthpabsTblGuidLeft) q.ExecuteSingle();
+		var q = new NDOQuery<CmpBin1OthpabsTblGuidLeft>(pm);
+		ownVar = q.ExecuteSingle();
 	}
 	void QueryOther()
 	{
-		Query q = pm.NewQuery(typeof(CmpBin1OthpabsTblGuidRightBase));
-		otherVar = (CmpBin1OthpabsTblGuidRightBase) q.ExecuteSingle();
+		var q = new NDOQuery<CmpBin1OthpabsTblGuidRightBase>(pm);
+		otherVar = q.ExecuteSingle();
 	}
 }
 
@@ -28678,15 +28437,14 @@ public class TestCmpBi1nOthpabsNoTblGuid
 	public void TearDown()
 	{
 		pm.UnloadCache();
-		IList l;
-		l = pm.NewQuery(typeof(CmpBi1nOthpabsNoTblGuidLeft)).Execute();
+		var l = pm.Objects<CmpBi1nOthpabsNoTblGuidLeft>().ResultTable;
 		pm.Delete(l);
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) pm.NewQuery(typeof(CmpBi1nOthpabsNoTblGuidLeft)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpBi1nOthpabsNoTblGuidLeft>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) pm.NewQuery(typeof(CmpBi1nOthpabsNoTblGuidRightBase)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpBi1nOthpabsNoTblGuidRightBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -28769,13 +28527,13 @@ public class TestCmpBi1nOthpabsNoTblGuid
 	}
 	void QueryOwn()
 	{
-		Query q = pm.NewQuery(typeof(CmpBi1nOthpabsNoTblGuidLeft));
-		ownVar = (CmpBi1nOthpabsNoTblGuidLeft) q.ExecuteSingle();
+		var q = new NDOQuery<CmpBi1nOthpabsNoTblGuidLeft>(pm);
+		ownVar = q.ExecuteSingle();
 	}
 	void QueryOther()
 	{
-		Query q = pm.NewQuery(typeof(CmpBi1nOthpabsNoTblGuidRightBase));
-		otherVar = (CmpBi1nOthpabsNoTblGuidRightBase) q.ExecuteSingle();
+		var q = new NDOQuery<CmpBi1nOthpabsNoTblGuidRightBase>(pm);
+		otherVar = q.ExecuteSingle();
 	}
 }
 
@@ -28797,15 +28555,14 @@ public class TestCmpBi1nOthpabsTblGuid
 	public void TearDown()
 	{
 		pm.UnloadCache();
-		IList l;
-		l = pm.NewQuery(typeof(CmpBi1nOthpabsTblGuidLeft)).Execute();
+		var l = pm.Objects<CmpBi1nOthpabsTblGuidLeft>().ResultTable;
 		pm.Delete(l);
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) pm.NewQuery(typeof(CmpBi1nOthpabsTblGuidLeft)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpBi1nOthpabsTblGuidLeft>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) pm.NewQuery(typeof(CmpBi1nOthpabsTblGuidRightBase)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpBi1nOthpabsTblGuidRightBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -28888,13 +28645,13 @@ public class TestCmpBi1nOthpabsTblGuid
 	}
 	void QueryOwn()
 	{
-		Query q = pm.NewQuery(typeof(CmpBi1nOthpabsTblGuidLeft));
-		ownVar = (CmpBi1nOthpabsTblGuidLeft) q.ExecuteSingle();
+		var q = new NDOQuery<CmpBi1nOthpabsTblGuidLeft>(pm);
+		ownVar = q.ExecuteSingle();
 	}
 	void QueryOther()
 	{
-		Query q = pm.NewQuery(typeof(CmpBi1nOthpabsTblGuidRightBase));
-		otherVar = (CmpBi1nOthpabsTblGuidRightBase) q.ExecuteSingle();
+		var q = new NDOQuery<CmpBi1nOthpabsTblGuidRightBase>(pm);
+		otherVar = q.ExecuteSingle();
 	}
 }
 
@@ -28916,15 +28673,14 @@ public class TestCmpBinnOthpabsTblGuid
 	public void TearDown()
 	{
 		pm.UnloadCache();
-		IList l;
-		l = pm.NewQuery(typeof(CmpBinnOthpabsTblGuidLeft)).Execute();
+		var l = pm.Objects<CmpBinnOthpabsTblGuidLeft>().ResultTable;
 		pm.Delete(l);
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) pm.NewQuery(typeof(CmpBinnOthpabsTblGuidLeft)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpBinnOthpabsTblGuidLeft>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) pm.NewQuery(typeof(CmpBinnOthpabsTblGuidRightBase)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpBinnOthpabsTblGuidRightBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -28986,13 +28742,13 @@ public class TestCmpBinnOthpabsTblGuid
 	}
 	void QueryOwn()
 	{
-		Query q = pm.NewQuery(typeof(CmpBinnOthpabsTblGuidLeft));
-		ownVar = (CmpBinnOthpabsTblGuidLeft) q.ExecuteSingle();
+		var q = new NDOQuery<CmpBinnOthpabsTblGuidLeft>(pm);
+		ownVar = q.ExecuteSingle();
 	}
 	void QueryOther()
 	{
-		Query q = pm.NewQuery(typeof(CmpBinnOthpabsTblGuidRightBase));
-		otherVar = (CmpBinnOthpabsTblGuidRightBase) q.ExecuteSingle();
+		var q = new NDOQuery<CmpBinnOthpabsTblGuidRightBase>(pm);
+		otherVar = q.ExecuteSingle();
 	}
 }
 
@@ -29014,19 +28770,18 @@ public class TestAgrDir1OwnpabsOthpabsNoTblGuid
 	public void TearDown()
 	{
 		pm.UnloadCache();
-		IList l;
-		l = pm.NewQuery(typeof(AgrDir1OwnpabsOthpabsNoTblGuidLeftBase)).Execute();
+		var l = pm.Objects<AgrDir1OwnpabsOthpabsNoTblGuidLeftBase>().ResultTable;
 		pm.Delete(l);
 		pm.Save();
 		pm.UnloadCache();
-		l = pm.NewQuery(typeof(AgrDir1OwnpabsOthpabsNoTblGuidRightBase)).Execute();
-		pm.Delete(l);
+		var m = pm.Objects<AgrDir1OwnpabsOthpabsNoTblGuidRightBase>().ResultTable;
+		pm.Delete(m);
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) pm.NewQuery(typeof(AgrDir1OwnpabsOthpabsNoTblGuidLeftBase)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrDir1OwnpabsOthpabsNoTblGuidLeftBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) pm.NewQuery(typeof(AgrDir1OwnpabsOthpabsNoTblGuidRightBase)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrDir1OwnpabsOthpabsNoTblGuidRightBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -29096,13 +28851,13 @@ public class TestAgrDir1OwnpabsOthpabsNoTblGuid
 	}
 	void QueryOwn()
 	{
-		Query q = pm.NewQuery(typeof(AgrDir1OwnpabsOthpabsNoTblGuidLeftBase));
-		ownVar = (AgrDir1OwnpabsOthpabsNoTblGuidLeftBase) q.ExecuteSingle();
+		var q = new NDOQuery<AgrDir1OwnpabsOthpabsNoTblGuidLeftBase>(pm);
+		ownVar = q.ExecuteSingle();
 	}
 	void QueryOther()
 	{
-		Query q = pm.NewQuery(typeof(AgrDir1OwnpabsOthpabsNoTblGuidRightBase));
-		otherVar = (AgrDir1OwnpabsOthpabsNoTblGuidRightBase) q.ExecuteSingle();
+		var q = new NDOQuery<AgrDir1OwnpabsOthpabsNoTblGuidRightBase>(pm);
+		otherVar = q.ExecuteSingle();
 	}
 }
 
@@ -29124,19 +28879,18 @@ public class TestAgrDir1OwnpabsOthpabsTblGuid
 	public void TearDown()
 	{
 		pm.UnloadCache();
-		IList l;
-		l = pm.NewQuery(typeof(AgrDir1OwnpabsOthpabsTblGuidLeftBase)).Execute();
+		var l = pm.Objects<AgrDir1OwnpabsOthpabsTblGuidLeftBase>().ResultTable;
 		pm.Delete(l);
 		pm.Save();
 		pm.UnloadCache();
-		l = pm.NewQuery(typeof(AgrDir1OwnpabsOthpabsTblGuidRightBase)).Execute();
-		pm.Delete(l);
+		var m = pm.Objects<AgrDir1OwnpabsOthpabsTblGuidRightBase>().ResultTable;
+		pm.Delete(m);
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) pm.NewQuery(typeof(AgrDir1OwnpabsOthpabsTblGuidLeftBase)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrDir1OwnpabsOthpabsTblGuidLeftBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) pm.NewQuery(typeof(AgrDir1OwnpabsOthpabsTblGuidRightBase)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrDir1OwnpabsOthpabsTblGuidRightBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -29206,13 +28960,13 @@ public class TestAgrDir1OwnpabsOthpabsTblGuid
 	}
 	void QueryOwn()
 	{
-		Query q = pm.NewQuery(typeof(AgrDir1OwnpabsOthpabsTblGuidLeftBase));
-		ownVar = (AgrDir1OwnpabsOthpabsTblGuidLeftBase) q.ExecuteSingle();
+		var q = new NDOQuery<AgrDir1OwnpabsOthpabsTblGuidLeftBase>(pm);
+		ownVar = q.ExecuteSingle();
 	}
 	void QueryOther()
 	{
-		Query q = pm.NewQuery(typeof(AgrDir1OwnpabsOthpabsTblGuidRightBase));
-		otherVar = (AgrDir1OwnpabsOthpabsTblGuidRightBase) q.ExecuteSingle();
+		var q = new NDOQuery<AgrDir1OwnpabsOthpabsTblGuidRightBase>(pm);
+		otherVar = q.ExecuteSingle();
 	}
 }
 
@@ -29234,19 +28988,18 @@ public class TestAgrBi11OwnpabsOthpabsNoTblGuid
 	public void TearDown()
 	{
 		pm.UnloadCache();
-		IList l;
-		l = pm.NewQuery(typeof(AgrBi11OwnpabsOthpabsNoTblGuidLeftBase)).Execute();
+		var l = pm.Objects<AgrBi11OwnpabsOthpabsNoTblGuidLeftBase>().ResultTable;
 		pm.Delete(l);
 		pm.Save();
 		pm.UnloadCache();
-		l = pm.NewQuery(typeof(AgrBi11OwnpabsOthpabsNoTblGuidRightBase)).Execute();
-		pm.Delete(l);
+		var m = pm.Objects<AgrBi11OwnpabsOthpabsNoTblGuidRightBase>().ResultTable;
+		pm.Delete(m);
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) pm.NewQuery(typeof(AgrBi11OwnpabsOthpabsNoTblGuidLeftBase)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrBi11OwnpabsOthpabsNoTblGuidLeftBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) pm.NewQuery(typeof(AgrBi11OwnpabsOthpabsNoTblGuidRightBase)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrBi11OwnpabsOthpabsNoTblGuidRightBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -29367,13 +29120,13 @@ public class TestAgrBi11OwnpabsOthpabsNoTblGuid
 	}
 	void QueryOwn()
 	{
-		Query q = pm.NewQuery(typeof(AgrBi11OwnpabsOthpabsNoTblGuidLeftBase));
-		ownVar = (AgrBi11OwnpabsOthpabsNoTblGuidLeftBase) q.ExecuteSingle();
+		var q = new NDOQuery<AgrBi11OwnpabsOthpabsNoTblGuidLeftBase>(pm);
+		ownVar = q.ExecuteSingle();
 	}
 	void QueryOther()
 	{
-		Query q = pm.NewQuery(typeof(AgrBi11OwnpabsOthpabsNoTblGuidRightBase));
-		otherVar = (AgrBi11OwnpabsOthpabsNoTblGuidRightBase) q.ExecuteSingle();
+		var q = new NDOQuery<AgrBi11OwnpabsOthpabsNoTblGuidRightBase>(pm);
+		otherVar = q.ExecuteSingle();
 	}
 }
 
@@ -29395,19 +29148,18 @@ public class TestAgrBi11OwnpabsOthpabsTblGuid
 	public void TearDown()
 	{
 		pm.UnloadCache();
-		IList l;
-		l = pm.NewQuery(typeof(AgrBi11OwnpabsOthpabsTblGuidLeftBase)).Execute();
+		var l = pm.Objects<AgrBi11OwnpabsOthpabsTblGuidLeftBase>().ResultTable;
 		pm.Delete(l);
 		pm.Save();
 		pm.UnloadCache();
-		l = pm.NewQuery(typeof(AgrBi11OwnpabsOthpabsTblGuidRightBase)).Execute();
-		pm.Delete(l);
+		var m = pm.Objects<AgrBi11OwnpabsOthpabsTblGuidRightBase>().ResultTable;
+		pm.Delete(m);
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) pm.NewQuery(typeof(AgrBi11OwnpabsOthpabsTblGuidLeftBase)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrBi11OwnpabsOthpabsTblGuidLeftBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) pm.NewQuery(typeof(AgrBi11OwnpabsOthpabsTblGuidRightBase)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrBi11OwnpabsOthpabsTblGuidRightBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -29528,13 +29280,13 @@ public class TestAgrBi11OwnpabsOthpabsTblGuid
 	}
 	void QueryOwn()
 	{
-		Query q = pm.NewQuery(typeof(AgrBi11OwnpabsOthpabsTblGuidLeftBase));
-		ownVar = (AgrBi11OwnpabsOthpabsTblGuidLeftBase) q.ExecuteSingle();
+		var q = new NDOQuery<AgrBi11OwnpabsOthpabsTblGuidLeftBase>(pm);
+		ownVar = q.ExecuteSingle();
 	}
 	void QueryOther()
 	{
-		Query q = pm.NewQuery(typeof(AgrBi11OwnpabsOthpabsTblGuidRightBase));
-		otherVar = (AgrBi11OwnpabsOthpabsTblGuidRightBase) q.ExecuteSingle();
+		var q = new NDOQuery<AgrBi11OwnpabsOthpabsTblGuidRightBase>(pm);
+		otherVar = q.ExecuteSingle();
 	}
 }
 
@@ -29556,19 +29308,18 @@ public class TestAgrDirnOwnpabsOthpabsTblGuid
 	public void TearDown()
 	{
 		pm.UnloadCache();
-		IList l;
-		l = pm.NewQuery(typeof(AgrDirnOwnpabsOthpabsTblGuidLeftBase)).Execute();
+		var l = pm.Objects<AgrDirnOwnpabsOthpabsTblGuidLeftBase>().ResultTable;
 		pm.Delete(l);
 		pm.Save();
 		pm.UnloadCache();
-		l = pm.NewQuery(typeof(AgrDirnOwnpabsOthpabsTblGuidRightBase)).Execute();
-		pm.Delete(l);
+		var m = pm.Objects<AgrDirnOwnpabsOthpabsTblGuidRightBase>().ResultTable;
+		pm.Delete(m);
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) pm.NewQuery(typeof(AgrDirnOwnpabsOthpabsTblGuidLeftBase)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrDirnOwnpabsOthpabsTblGuidLeftBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) pm.NewQuery(typeof(AgrDirnOwnpabsOthpabsTblGuidRightBase)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrDirnOwnpabsOthpabsTblGuidRightBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -29617,13 +29368,13 @@ public class TestAgrDirnOwnpabsOthpabsTblGuid
 	}
 	void QueryOwn()
 	{
-		Query q = pm.NewQuery(typeof(AgrDirnOwnpabsOthpabsTblGuidLeftBase));
-		ownVar = (AgrDirnOwnpabsOthpabsTblGuidLeftBase) q.ExecuteSingle();
+		var q = new NDOQuery<AgrDirnOwnpabsOthpabsTblGuidLeftBase>(pm);
+		ownVar = q.ExecuteSingle();
 	}
 	void QueryOther()
 	{
-		Query q = pm.NewQuery(typeof(AgrDirnOwnpabsOthpabsTblGuidRightBase));
-		otherVar = (AgrDirnOwnpabsOthpabsTblGuidRightBase) q.ExecuteSingle();
+		var q = new NDOQuery<AgrDirnOwnpabsOthpabsTblGuidRightBase>(pm);
+		otherVar = q.ExecuteSingle();
 	}
 }
 
@@ -29645,19 +29396,18 @@ public class TestAgrBin1OwnpabsOthpabsTblGuid
 	public void TearDown()
 	{
 		pm.UnloadCache();
-		IList l;
-		l = pm.NewQuery(typeof(AgrBin1OwnpabsOthpabsTblGuidLeftBase)).Execute();
+		var l = pm.Objects<AgrBin1OwnpabsOthpabsTblGuidLeftBase>().ResultTable;
 		pm.Delete(l);
 		pm.Save();
 		pm.UnloadCache();
-		l = pm.NewQuery(typeof(AgrBin1OwnpabsOthpabsTblGuidRightBase)).Execute();
-		pm.Delete(l);
+		var m = pm.Objects<AgrBin1OwnpabsOthpabsTblGuidRightBase>().ResultTable;
+		pm.Delete(m);
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) pm.NewQuery(typeof(AgrBin1OwnpabsOthpabsTblGuidLeftBase)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrBin1OwnpabsOthpabsTblGuidLeftBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) pm.NewQuery(typeof(AgrBin1OwnpabsOthpabsTblGuidRightBase)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrBin1OwnpabsOthpabsTblGuidRightBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -29757,13 +29507,13 @@ public class TestAgrBin1OwnpabsOthpabsTblGuid
 	}
 	void QueryOwn()
 	{
-		Query q = pm.NewQuery(typeof(AgrBin1OwnpabsOthpabsTblGuidLeftBase));
-		ownVar = (AgrBin1OwnpabsOthpabsTblGuidLeftBase) q.ExecuteSingle();
+		var q = new NDOQuery<AgrBin1OwnpabsOthpabsTblGuidLeftBase>(pm);
+		ownVar = q.ExecuteSingle();
 	}
 	void QueryOther()
 	{
-		Query q = pm.NewQuery(typeof(AgrBin1OwnpabsOthpabsTblGuidRightBase));
-		otherVar = (AgrBin1OwnpabsOthpabsTblGuidRightBase) q.ExecuteSingle();
+		var q = new NDOQuery<AgrBin1OwnpabsOthpabsTblGuidRightBase>(pm);
+		otherVar = q.ExecuteSingle();
 	}
 }
 
@@ -29785,19 +29535,18 @@ public class TestAgrBi1nOwnpabsOthpabsTblGuid
 	public void TearDown()
 	{
 		pm.UnloadCache();
-		IList l;
-		l = pm.NewQuery(typeof(AgrBi1nOwnpabsOthpabsTblGuidLeftBase)).Execute();
+		var l = pm.Objects<AgrBi1nOwnpabsOthpabsTblGuidLeftBase>().ResultTable;
 		pm.Delete(l);
 		pm.Save();
 		pm.UnloadCache();
-		l = pm.NewQuery(typeof(AgrBi1nOwnpabsOthpabsTblGuidRightBase)).Execute();
-		pm.Delete(l);
+		var m = pm.Objects<AgrBi1nOwnpabsOthpabsTblGuidRightBase>().ResultTable;
+		pm.Delete(m);
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) pm.NewQuery(typeof(AgrBi1nOwnpabsOthpabsTblGuidLeftBase)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrBi1nOwnpabsOthpabsTblGuidLeftBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) pm.NewQuery(typeof(AgrBi1nOwnpabsOthpabsTblGuidRightBase)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrBi1nOwnpabsOthpabsTblGuidRightBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -29887,13 +29636,13 @@ public class TestAgrBi1nOwnpabsOthpabsTblGuid
 	}
 	void QueryOwn()
 	{
-		Query q = pm.NewQuery(typeof(AgrBi1nOwnpabsOthpabsTblGuidLeftBase));
-		ownVar = (AgrBi1nOwnpabsOthpabsTblGuidLeftBase) q.ExecuteSingle();
+		var q = new NDOQuery<AgrBi1nOwnpabsOthpabsTblGuidLeftBase>(pm);
+		ownVar = q.ExecuteSingle();
 	}
 	void QueryOther()
 	{
-		Query q = pm.NewQuery(typeof(AgrBi1nOwnpabsOthpabsTblGuidRightBase));
-		otherVar = (AgrBi1nOwnpabsOthpabsTblGuidRightBase) q.ExecuteSingle();
+		var q = new NDOQuery<AgrBi1nOwnpabsOthpabsTblGuidRightBase>(pm);
+		otherVar = q.ExecuteSingle();
 	}
 }
 
@@ -29915,19 +29664,18 @@ public class TestAgrBinnOwnpabsOthpabsTblGuid
 	public void TearDown()
 	{
 		pm.UnloadCache();
-		IList l;
-		l = pm.NewQuery(typeof(AgrBinnOwnpabsOthpabsTblGuidLeftBase)).Execute();
+		var l = pm.Objects<AgrBinnOwnpabsOthpabsTblGuidLeftBase>().ResultTable;
 		pm.Delete(l);
 		pm.Save();
 		pm.UnloadCache();
-		l = pm.NewQuery(typeof(AgrBinnOwnpabsOthpabsTblGuidRightBase)).Execute();
-		pm.Delete(l);
+		var m = pm.Objects<AgrBinnOwnpabsOthpabsTblGuidRightBase>().ResultTable;
+		pm.Delete(m);
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) pm.NewQuery(typeof(AgrBinnOwnpabsOthpabsTblGuidLeftBase)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrBinnOwnpabsOthpabsTblGuidLeftBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) pm.NewQuery(typeof(AgrBinnOwnpabsOthpabsTblGuidRightBase)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrBinnOwnpabsOthpabsTblGuidRightBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -29996,13 +29744,13 @@ public class TestAgrBinnOwnpabsOthpabsTblGuid
 	}
 	void QueryOwn()
 	{
-		Query q = pm.NewQuery(typeof(AgrBinnOwnpabsOthpabsTblGuidLeftBase));
-		ownVar = (AgrBinnOwnpabsOthpabsTblGuidLeftBase) q.ExecuteSingle();
+		var q = new NDOQuery<AgrBinnOwnpabsOthpabsTblGuidLeftBase>(pm);
+		ownVar = q.ExecuteSingle();
 	}
 	void QueryOther()
 	{
-		Query q = pm.NewQuery(typeof(AgrBinnOwnpabsOthpabsTblGuidRightBase));
-		otherVar = (AgrBinnOwnpabsOthpabsTblGuidRightBase) q.ExecuteSingle();
+		var q = new NDOQuery<AgrBinnOwnpabsOthpabsTblGuidRightBase>(pm);
+		otherVar = q.ExecuteSingle();
 	}
 }
 
@@ -30024,15 +29772,14 @@ public class TestCmpDir1OwnpabsOthpabsNoTblGuid
 	public void TearDown()
 	{
 		pm.UnloadCache();
-		IList l;
-		l = pm.NewQuery(typeof(CmpDir1OwnpabsOthpabsNoTblGuidLeftBase)).Execute();
+		var l = pm.Objects<CmpDir1OwnpabsOthpabsNoTblGuidLeftBase>().ResultTable;
 		pm.Delete(l);
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) pm.NewQuery(typeof(CmpDir1OwnpabsOthpabsNoTblGuidLeftBase)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpDir1OwnpabsOthpabsNoTblGuidLeftBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) pm.NewQuery(typeof(CmpDir1OwnpabsOthpabsNoTblGuidRightBase)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpDir1OwnpabsOthpabsNoTblGuidRightBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -30101,13 +29848,13 @@ public class TestCmpDir1OwnpabsOthpabsNoTblGuid
 	}
 	void QueryOwn()
 	{
-		Query q = pm.NewQuery(typeof(CmpDir1OwnpabsOthpabsNoTblGuidLeftBase));
-		ownVar = (CmpDir1OwnpabsOthpabsNoTblGuidLeftBase) q.ExecuteSingle();
+		var q = new NDOQuery<CmpDir1OwnpabsOthpabsNoTblGuidLeftBase>(pm);
+		ownVar = q.ExecuteSingle();
 	}
 	void QueryOther()
 	{
-		Query q = pm.NewQuery(typeof(CmpDir1OwnpabsOthpabsNoTblGuidRightBase));
-		otherVar = (CmpDir1OwnpabsOthpabsNoTblGuidRightBase) q.ExecuteSingle();
+		var q = new NDOQuery<CmpDir1OwnpabsOthpabsNoTblGuidRightBase>(pm);
+		otherVar = q.ExecuteSingle();
 	}
 }
 
@@ -30129,15 +29876,14 @@ public class TestCmpDir1OwnpabsOthpabsTblGuid
 	public void TearDown()
 	{
 		pm.UnloadCache();
-		IList l;
-		l = pm.NewQuery(typeof(CmpDir1OwnpabsOthpabsTblGuidLeftBase)).Execute();
+		var l = pm.Objects<CmpDir1OwnpabsOthpabsTblGuidLeftBase>().ResultTable;
 		pm.Delete(l);
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) pm.NewQuery(typeof(CmpDir1OwnpabsOthpabsTblGuidLeftBase)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpDir1OwnpabsOthpabsTblGuidLeftBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) pm.NewQuery(typeof(CmpDir1OwnpabsOthpabsTblGuidRightBase)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpDir1OwnpabsOthpabsTblGuidRightBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -30206,13 +29952,13 @@ public class TestCmpDir1OwnpabsOthpabsTblGuid
 	}
 	void QueryOwn()
 	{
-		Query q = pm.NewQuery(typeof(CmpDir1OwnpabsOthpabsTblGuidLeftBase));
-		ownVar = (CmpDir1OwnpabsOthpabsTblGuidLeftBase) q.ExecuteSingle();
+		var q = new NDOQuery<CmpDir1OwnpabsOthpabsTblGuidLeftBase>(pm);
+		ownVar = q.ExecuteSingle();
 	}
 	void QueryOther()
 	{
-		Query q = pm.NewQuery(typeof(CmpDir1OwnpabsOthpabsTblGuidRightBase));
-		otherVar = (CmpDir1OwnpabsOthpabsTblGuidRightBase) q.ExecuteSingle();
+		var q = new NDOQuery<CmpDir1OwnpabsOthpabsTblGuidRightBase>(pm);
+		otherVar = q.ExecuteSingle();
 	}
 }
 
@@ -30234,15 +29980,14 @@ public class TestCmpBi11OwnpabsOthpabsNoTblGuid
 	public void TearDown()
 	{
 		pm.UnloadCache();
-		IList l;
-		l = pm.NewQuery(typeof(CmpBi11OwnpabsOthpabsNoTblGuidLeftBase)).Execute();
+		var l = pm.Objects<CmpBi11OwnpabsOthpabsNoTblGuidLeftBase>().ResultTable;
 		pm.Delete(l);
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) pm.NewQuery(typeof(CmpBi11OwnpabsOthpabsNoTblGuidLeftBase)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpBi11OwnpabsOthpabsNoTblGuidLeftBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) pm.NewQuery(typeof(CmpBi11OwnpabsOthpabsNoTblGuidRightBase)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpBi11OwnpabsOthpabsNoTblGuidRightBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -30362,13 +30107,13 @@ public class TestCmpBi11OwnpabsOthpabsNoTblGuid
 	}
 	void QueryOwn()
 	{
-		Query q = pm.NewQuery(typeof(CmpBi11OwnpabsOthpabsNoTblGuidLeftBase));
-		ownVar = (CmpBi11OwnpabsOthpabsNoTblGuidLeftBase) q.ExecuteSingle();
+		var q = new NDOQuery<CmpBi11OwnpabsOthpabsNoTblGuidLeftBase>(pm);
+		ownVar = q.ExecuteSingle();
 	}
 	void QueryOther()
 	{
-		Query q = pm.NewQuery(typeof(CmpBi11OwnpabsOthpabsNoTblGuidRightBase));
-		otherVar = (CmpBi11OwnpabsOthpabsNoTblGuidRightBase) q.ExecuteSingle();
+		var q = new NDOQuery<CmpBi11OwnpabsOthpabsNoTblGuidRightBase>(pm);
+		otherVar = q.ExecuteSingle();
 	}
 }
 
@@ -30390,15 +30135,14 @@ public class TestCmpBi11OwnpabsOthpabsTblGuid
 	public void TearDown()
 	{
 		pm.UnloadCache();
-		IList l;
-		l = pm.NewQuery(typeof(CmpBi11OwnpabsOthpabsTblGuidLeftBase)).Execute();
+		var l = pm.Objects<CmpBi11OwnpabsOthpabsTblGuidLeftBase>().ResultTable;
 		pm.Delete(l);
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) pm.NewQuery(typeof(CmpBi11OwnpabsOthpabsTblGuidLeftBase)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpBi11OwnpabsOthpabsTblGuidLeftBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) pm.NewQuery(typeof(CmpBi11OwnpabsOthpabsTblGuidRightBase)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpBi11OwnpabsOthpabsTblGuidRightBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -30518,13 +30262,13 @@ public class TestCmpBi11OwnpabsOthpabsTblGuid
 	}
 	void QueryOwn()
 	{
-		Query q = pm.NewQuery(typeof(CmpBi11OwnpabsOthpabsTblGuidLeftBase));
-		ownVar = (CmpBi11OwnpabsOthpabsTblGuidLeftBase) q.ExecuteSingle();
+		var q = new NDOQuery<CmpBi11OwnpabsOthpabsTblGuidLeftBase>(pm);
+		ownVar = q.ExecuteSingle();
 	}
 	void QueryOther()
 	{
-		Query q = pm.NewQuery(typeof(CmpBi11OwnpabsOthpabsTblGuidRightBase));
-		otherVar = (CmpBi11OwnpabsOthpabsTblGuidRightBase) q.ExecuteSingle();
+		var q = new NDOQuery<CmpBi11OwnpabsOthpabsTblGuidRightBase>(pm);
+		otherVar = q.ExecuteSingle();
 	}
 }
 
@@ -30546,15 +30290,14 @@ public class TestCmpDirnOwnpabsOthpabsTblGuid
 	public void TearDown()
 	{
 		pm.UnloadCache();
-		IList l;
-		l = pm.NewQuery(typeof(CmpDirnOwnpabsOthpabsTblGuidLeftBase)).Execute();
+		var l = pm.Objects<CmpDirnOwnpabsOthpabsTblGuidLeftBase>().ResultTable;
 		pm.Delete(l);
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) pm.NewQuery(typeof(CmpDirnOwnpabsOthpabsTblGuidLeftBase)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpDirnOwnpabsOthpabsTblGuidLeftBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) pm.NewQuery(typeof(CmpDirnOwnpabsOthpabsTblGuidRightBase)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpDirnOwnpabsOthpabsTblGuidRightBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -30602,13 +30345,13 @@ public class TestCmpDirnOwnpabsOthpabsTblGuid
 	}
 	void QueryOwn()
 	{
-		Query q = pm.NewQuery(typeof(CmpDirnOwnpabsOthpabsTblGuidLeftBase));
-		ownVar = (CmpDirnOwnpabsOthpabsTblGuidLeftBase) q.ExecuteSingle();
+		var q = new NDOQuery<CmpDirnOwnpabsOthpabsTblGuidLeftBase>(pm);
+		ownVar = q.ExecuteSingle();
 	}
 	void QueryOther()
 	{
-		Query q = pm.NewQuery(typeof(CmpDirnOwnpabsOthpabsTblGuidRightBase));
-		otherVar = (CmpDirnOwnpabsOthpabsTblGuidRightBase) q.ExecuteSingle();
+		var q = new NDOQuery<CmpDirnOwnpabsOthpabsTblGuidRightBase>(pm);
+		otherVar = q.ExecuteSingle();
 	}
 }
 
@@ -30630,15 +30373,14 @@ public class TestCmpBin1OwnpabsOthpabsTblGuid
 	public void TearDown()
 	{
 		pm.UnloadCache();
-		IList l;
-		l = pm.NewQuery(typeof(CmpBin1OwnpabsOthpabsTblGuidLeftBase)).Execute();
+		var l = pm.Objects<CmpBin1OwnpabsOthpabsTblGuidLeftBase>().ResultTable;
 		pm.Delete(l);
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) pm.NewQuery(typeof(CmpBin1OwnpabsOthpabsTblGuidLeftBase)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpBin1OwnpabsOthpabsTblGuidLeftBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) pm.NewQuery(typeof(CmpBin1OwnpabsOthpabsTblGuidRightBase)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpBin1OwnpabsOthpabsTblGuidRightBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -30737,13 +30479,13 @@ public class TestCmpBin1OwnpabsOthpabsTblGuid
 	}
 	void QueryOwn()
 	{
-		Query q = pm.NewQuery(typeof(CmpBin1OwnpabsOthpabsTblGuidLeftBase));
-		ownVar = (CmpBin1OwnpabsOthpabsTblGuidLeftBase) q.ExecuteSingle();
+		var q = new NDOQuery<CmpBin1OwnpabsOthpabsTblGuidLeftBase>(pm);
+		ownVar = q.ExecuteSingle();
 	}
 	void QueryOther()
 	{
-		Query q = pm.NewQuery(typeof(CmpBin1OwnpabsOthpabsTblGuidRightBase));
-		otherVar = (CmpBin1OwnpabsOthpabsTblGuidRightBase) q.ExecuteSingle();
+		var q = new NDOQuery<CmpBin1OwnpabsOthpabsTblGuidRightBase>(pm);
+		otherVar = q.ExecuteSingle();
 	}
 }
 
@@ -30765,15 +30507,14 @@ public class TestCmpBi1nOwnpabsOthpabsTblGuid
 	public void TearDown()
 	{
 		pm.UnloadCache();
-		IList l;
-		l = pm.NewQuery(typeof(CmpBi1nOwnpabsOthpabsTblGuidLeftBase)).Execute();
+		var l = pm.Objects<CmpBi1nOwnpabsOthpabsTblGuidLeftBase>().ResultTable;
 		pm.Delete(l);
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) pm.NewQuery(typeof(CmpBi1nOwnpabsOthpabsTblGuidLeftBase)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpBi1nOwnpabsOthpabsTblGuidLeftBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) pm.NewQuery(typeof(CmpBi1nOwnpabsOthpabsTblGuidRightBase)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpBi1nOwnpabsOthpabsTblGuidRightBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -30862,13 +30603,13 @@ public class TestCmpBi1nOwnpabsOthpabsTblGuid
 	}
 	void QueryOwn()
 	{
-		Query q = pm.NewQuery(typeof(CmpBi1nOwnpabsOthpabsTblGuidLeftBase));
-		ownVar = (CmpBi1nOwnpabsOthpabsTblGuidLeftBase) q.ExecuteSingle();
+		var q = new NDOQuery<CmpBi1nOwnpabsOthpabsTblGuidLeftBase>(pm);
+		ownVar = q.ExecuteSingle();
 	}
 	void QueryOther()
 	{
-		Query q = pm.NewQuery(typeof(CmpBi1nOwnpabsOthpabsTblGuidRightBase));
-		otherVar = (CmpBi1nOwnpabsOthpabsTblGuidRightBase) q.ExecuteSingle();
+		var q = new NDOQuery<CmpBi1nOwnpabsOthpabsTblGuidRightBase>(pm);
+		otherVar = q.ExecuteSingle();
 	}
 }
 
@@ -30890,15 +30631,14 @@ public class TestCmpBinnOwnpabsOthpabsTblGuid
 	public void TearDown()
 	{
 		pm.UnloadCache();
-		IList l;
-		l = pm.NewQuery(typeof(CmpBinnOwnpabsOthpabsTblGuidLeftBase)).Execute();
+		var l = pm.Objects<CmpBinnOwnpabsOthpabsTblGuidLeftBase>().ResultTable;
 		pm.Delete(l);
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) pm.NewQuery(typeof(CmpBinnOwnpabsOthpabsTblGuidLeftBase)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpBinnOwnpabsOthpabsTblGuidLeftBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) pm.NewQuery(typeof(CmpBinnOwnpabsOthpabsTblGuidRightBase)).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpBinnOwnpabsOthpabsTblGuidRightBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -30966,13 +30706,13 @@ public class TestCmpBinnOwnpabsOthpabsTblGuid
 	}
 	void QueryOwn()
 	{
-		Query q = pm.NewQuery(typeof(CmpBinnOwnpabsOthpabsTblGuidLeftBase));
-		ownVar = (CmpBinnOwnpabsOthpabsTblGuidLeftBase) q.ExecuteSingle();
+		var q = new NDOQuery<CmpBinnOwnpabsOthpabsTblGuidLeftBase>(pm);
+		ownVar = q.ExecuteSingle();
 	}
 	void QueryOther()
 	{
-		Query q = pm.NewQuery(typeof(CmpBinnOwnpabsOthpabsTblGuidRightBase));
-		otherVar = (CmpBinnOwnpabsOthpabsTblGuidRightBase) q.ExecuteSingle();
+		var q = new NDOQuery<CmpBinnOwnpabsOthpabsTblGuidRightBase>(pm);
+		otherVar = q.ExecuteSingle();
 	}
 }
 

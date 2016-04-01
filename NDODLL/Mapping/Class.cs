@@ -614,7 +614,7 @@ namespace NDO.Mapping
 
             // Element->x?
             if (is1to1
-				&& mappingTableAttribute != null
+				&& mappingTableAttribute == null
                 && !(otherTypeIsPoly && r.Multiplicity == RelationMultiplicity.List)
                 && !(foreignRelation != null && foreignRelation.MappingTable != null))
             {

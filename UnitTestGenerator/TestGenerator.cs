@@ -378,22 +378,21 @@ namespace TestGenerator
 		{
 			Function func = fixture.TearDown;
 			func.Statements.Add("pm.UnloadCache();");
-			func.Statements.Add("IList l;");
-			func.Statements.Add("l = pm.NewQuery(typeof(" + test.OwnClass.Name + ")).Execute();");
+			func.Statements.Add( "var l = pm.Objects<" + test.OwnClass.Name + ">().ResultTable;" );
 			func.Statements.Add("pm.Delete(l);");
 			func.Statements.Add("pm.Save();");
 			func.Statements.Add("pm.UnloadCache();");
 			if (!ri.IsComposite)
 			{
-				func.Statements.Add("l = pm.NewQuery(typeof(" + test.OtherClass.Name + ")).Execute();");
-				func.Statements.Add("pm.Delete(l);");
+				func.Statements.Add( "var m = pm.Objects<" + test.OtherClass.Name + ">().ResultTable;" );				
+				func.Statements.Add("pm.Delete(m);");
 				func.Statements.Add("pm.Save();");
 				func.Statements.Add("pm.UnloadCache();");
 			}
 			func.Statements.Add("decimal count;");
-			func.Statements.Add("count = (decimal) pm.NewQuery(typeof(" + test.OwnClass.Name + ")).ExecuteAggregate(\"dummy\", Query.AggregateType.Count);");
+			func.Statements.Add("count = (decimal) new NDOQuery<" + test.OwnClass.Name + ">(pm).ExecuteAggregate(\"dummy\", Query.AggregateType.Count);");
 			func.Statements.Add("Assert.AreEqual(0, count, \"Count wrong #1\");");
-			func.Statements.Add("count = (decimal) pm.NewQuery(typeof(" + test.OtherClass.Name + ")).ExecuteAggregate(\"dummy\", Query.AggregateType.Count);");
+			func.Statements.Add("count = (decimal) new NDOQuery<" + test.OtherClass.Name + ">(pm).ExecuteAggregate(\"dummy\", Query.AggregateType.Count);");
 			func.Statements.Add("Assert.AreEqual(0, count, \"Count wrong #2\");");
 		}
 
@@ -491,15 +490,15 @@ namespace TestGenerator
 		void GenerateQueryOwn(RelInfo ri)
 		{
 			Function func = fixture.NewFunction("void", "QueryOwn");
-			func.Statements.Add("Query q = pm.NewQuery(typeof(" + test.OwnClass.Name + "));");
-			func.Statements.Add("ownVar = (" + test.OwnClass.Name + ") q.ExecuteSingle();");
+			func.Statements.Add( "var q = new NDOQuery<" + test.OwnClass.Name + ">(pm);" );
+			func.Statements.Add("ownVar = q.ExecuteSingle();");
 		}
 
 		void GenerateQueryOther(RelInfo ri)
 		{
 			Function func = fixture.NewFunction("void", "QueryOther");
-			func.Statements.Add("Query q = pm.NewQuery(typeof(" + test.OtherClass.Name + "));");
-			func.Statements.Add("otherVar = (" + test.OtherClass.Name + ") q.ExecuteSingle();");
+			func.Statements.Add( "var q = new NDOQuery<" + test.OtherClass.Name + ">(pm);" );
+			func.Statements.Add("otherVar = q.ExecuteSingle();");
 		}
 
 

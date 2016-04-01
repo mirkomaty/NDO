@@ -4,7 +4,7 @@
     <EnableAddIn>True</EnableAddIn>
     <EnableEnhancer>True</EnableEnhancer>
     <VerboseMode>False</VerboseMode>
-    <NewMapping>False</NewMapping>
+    <NewMapping>True</NewMapping>
     <GenerateSQL>False</GenerateSQL>
     <DefaultConnection>Integrated Security=SSPI;Persist Security Info=False;Initial Catalog=NDOTest;Data Source=localhost</DefaultConnection>
     <TargetMappingFileName>NDOMapping.xml</TargetMappingFileName>
