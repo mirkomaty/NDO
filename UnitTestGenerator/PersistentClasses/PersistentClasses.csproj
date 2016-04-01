@@ -83,8 +83,9 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\NDODLL\bin\Debug\NDO.dll</HintPath>
     </Reference>
-    <Reference Include="SqlCeProvider">
-      <HintPath>..\packages\ndo.sqlce.3.0.0.0\lib\net40\SqlCeProvider.dll</HintPath>
+    <Reference Include="NDOInterfaces, Version=2.1.0.0, Culture=neutral, PublicKeyToken=ff5e453a099b8326, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\NDOInterfaces\bin\Release\NDOInterfaces.dll</HintPath>
     </Reference>
     <Reference Include="System">
       <Name>System</Name>
@@ -107,11 +108,6 @@
   <ItemGroup>
     <Content Include="NDOMapping.xml" />
   </ItemGroup>
-  <ProjectExtensions>
-    <VisualStudio>
-      <UserProperties DatabaseOwner="" NDOSQLScriptLanguage="SqlServer" NDOUseTimeStamps="false" NDOGenerateChangeEvents="false" NDOUsePolymorphy="true" NDODefaultConnection="Provider=SQLOLEDB.1;Integrated Security=SSPI;Persist Security Info=False;Initial Catalog=NDOTest;Data Source=NOTEBOOKZERO" NDOTypeListFile="C:\Projekte\Persistenz\UnitTestGenerator\UnitTests\bin\Debug\NDOTypes.xml" NDOGenerateSQL="false" NDOMergeSchema="false" NDOMergeMapping="false" NDONewMapping="false" NDOGenerateSchema="true" NDOGenerateMapping="true" NDOEnableEnhancer="true" NDOEnableAddIn="true" />
-    </VisualStudio>
-  </ProjectExtensions>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PreBuildEvent>copy /Y ..\..\..\..\NDOEnhancer\bin\Debug\NDOEnhancer.exe ..\..\..\packages\ndo.dll\build
