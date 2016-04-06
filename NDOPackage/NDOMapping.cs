@@ -19,10 +19,18 @@ namespace NETDataObjects.NDOVSPackage
         public NDOMapping(string fileName)
         {
             this.fileName = fileName;
-            ndoMappingElement = XElement.Load(fileName);
+            this.ndoMappingElement = XElement.Load(fileName);
             XAttribute schemaAttribute;
             if ((schemaAttribute = ndoMappingElement.Attribute("SchemaVersion")) != null)
                 this.schemaVersion = schemaAttribute.Value;
+			XElement connectionsElement = this.ndoMappingElement.Element( "Connections" );
+			if (connectionsElement != null)
+			{
+				foreach (var connectionElement in connectionsElement.Elements("Connection"))
+				{
+					this.connections.Add( new Connection( connectionElement ) );
+				}
+			}
         }
 
         public IEnumerable<Connection> Connections
@@ -50,7 +58,13 @@ namespace NETDataObjects.NDOVSPackage
                 new XAttribute("Type", type),
                 new XAttribute("ID", "C0")
             );
-            this.ndoMappingElement.Add(connectionElement);
+			XElement connectionsElement = this.ndoMappingElement.Element( "Connections" );
+			if (connectionsElement == null)
+			{
+				connectionsElement = new XElement( "Connections" );
+				this.ndoMappingElement.AddFirst( connectionsElement );
+			}
+            connectionsElement.Add(connectionElement);
             Connection result = new Connection(connectionElement);
             this.connections.Add(result);
             return result;
@@ -59,10 +73,10 @@ namespace NETDataObjects.NDOVSPackage
         public void Save()
         {
             this.ndoMappingElement.Attribute("SchemaVersion").Value = this.schemaVersion;
-            foreach (var conn in this.connections)
-            {
-                conn.Save();
-            }
+			foreach (var conn in this.connections)
+			{
+				conn.Save();
+			}
             this.ndoMappingElement.Save(this.fileName);
         }
     }
