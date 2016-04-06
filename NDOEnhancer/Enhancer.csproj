@@ -222,7 +222,7 @@
     <Compile Include="AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="EnhancerTest.cs">
+    <Compile Include="EnhancerMain.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="EnhDate.cs">
@@ -312,7 +312,7 @@
     <Compile Include="ILCode\PackedLength.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="TestConfigurationOptions.cs">
+    <Compile Include="ConfigurationOptions.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="UmlautName.cs">
