@@ -219,7 +219,7 @@
     <Compile Include="Enhancer\TypeManager.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="EnhancerAssemblyInfo.cs">
+    <Compile Include="AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="EnhancerTest.cs">
