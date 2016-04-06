@@ -152,7 +152,7 @@ namespace Generator
 					return;
 				if (rn.RelatedTableNode.Table.Skipped)
 					continue;
-				NDO.Mapping.Relation r = cl.AddStandardRelation(rel.FieldName, rn.RelatedTableNode.Table.Namespace + "." + rn.RelatedTableNode.Table.ClassName, rel.IsElement, string.Empty, false, false);
+				NDO.Mapping.Relation r = cl.AddStandardRelation(rel.FieldName, rn.RelatedTableNode.Table.Namespace + "." + rn.RelatedTableNode.Table.ClassName, rel.IsElement, string.Empty, false, false, null);
 				r.RelationName = rel.RelationName;
 				ForeignIntermediateTableRelation fitr = rel as ForeignIntermediateTableRelation;
                 NDO.Mapping.ForeignKeyColumn fkColumn = (NDO.Mapping.ForeignKeyColumn) r.ForeignKeyColumns.First();
