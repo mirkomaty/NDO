@@ -200,6 +200,34 @@ namespace NDOEnhancer
 					}
 				}
 			}
+
+			// If there is more than one relation to the same target type
+			// without relation name, assign a relation name automatically
+			foreach(var group in this.relations.GroupBy( r => r.RelatedType ))
+			{
+				if (group.Count() < 2)
+					continue;
+				int countWithoutName = 0;
+				foreach (var rel in group)
+				{
+					if (string.IsNullOrEmpty( rel.RelationName ))
+					{
+						if (countWithoutName > 0)
+						{
+							string relname = rel.Name;
+							if (relname[0]=='<')
+							{
+								int q = relname.IndexOf( '>' );
+								if (q == -1)
+									q = relname.Length;
+								relname = relname.Substring( 1, q - 1 );
+							}
+							rel.RelationName = relname;
+						}
+						countWithoutName++;
+					}
+				}
+			}
 		}
 
 

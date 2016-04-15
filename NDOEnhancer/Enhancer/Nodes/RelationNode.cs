@@ -147,7 +147,8 @@ namespace NDOEnhancer
 		string relationName;
 		public string RelationName
 		{
-			get { return relationName; }
+			get { return this.relationName; }
+			set { this.relationName = value; }
 		}
 
 		string name;
