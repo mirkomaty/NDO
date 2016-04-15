@@ -172,11 +172,11 @@ namespace NDO
         {
             try
             {
-                string path = NDOAddInPath.Instance;
-                AddProviderPlugIns(path);
+				//string path = NDOAddInPath.Instance;
+				//AddProviderPlugIns(path);
                 if (!skipPrivatePath)
                 {
-                    path = AppDomain.CurrentDomain.BaseDirectory;
+                    string path = AppDomain.CurrentDomain.BaseDirectory;
                     AddProviderPlugIns(path);
 					string binPath = Path.Combine( path, "bin" );
 					if ( Directory.Exists( binPath ) )
