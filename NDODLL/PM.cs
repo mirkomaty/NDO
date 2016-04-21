@@ -4069,7 +4069,15 @@ namespace NDO
 			return result;		
 		}
 
-		public int Revision { get { return 269; } }
+		public int Revision 
+		{ 
+			get 
+			{
+				Version v = new AssemblyName( GetType().Assembly.FullName ).Version;
+				string vstring = String.Format( "{0}{1:D2}{2}{3:D2}", v.Major, v.Minor, v.Build, v.MinorRevision );
+				return int.Parse( vstring );
+			} 
+		}
 	}
 
 
