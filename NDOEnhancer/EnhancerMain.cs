@@ -215,6 +215,14 @@ namespace EnhancerTest
                     return Assembly.LoadFrom(fileName);
                 return null;
             }
+			if (args.Name.ToUpper().StartsWith( "NDOInterfaces," ))
+			{
+				string path = AppDomain.CurrentDomain.BaseDirectory;
+				string fileName = Path.Combine( path, "NDOInterfaces.dll" );
+				if (File.Exists( fileName ))
+					return Assembly.LoadFrom( fileName );
+				return null;
+			}
             Console.WriteLine("Warning: Can't resolve assembly: " + args.Name);
             return null;
         }
