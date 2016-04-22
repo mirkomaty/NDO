@@ -136,9 +136,6 @@ namespace NDOInterfaces
 				return 0;
 		}
 
-		private static Hashtable dbTypes = null;
-
-	
 		/// <summary>
 		/// See <see cref="IProvider">IProvider interface</see>.
 		/// </summary>
