@@ -947,7 +947,7 @@ namespace NDO
 				}
 			}
 			GetPrefetches(result);
-			this.pm.CheckEndTransaction(false);
+			this.pm.CheckEndTransaction( ! this.pm.DeferredMode && this.pm.TransactionMode == TransactionMode.Optimistic );
 			if (! this.pm.GetClass(resultType).Provider.SupportsFetchLimit)
 			{
 				IList fetchResult = GenericListReflector.CreateList( resultType );
@@ -1044,8 +1044,8 @@ namespace NDO
 				}
 				i++;					
 			}
-			this.pm.CheckEndTransaction(false);
-			return func.ComputeResult(partResults);
+			this.pm.CheckEndTransaction( !this.pm.DeferredMode && this.pm.TransactionMode == TransactionMode.Optimistic );
+			return func.ComputeResult( partResults );
 
 		}
 

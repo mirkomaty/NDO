@@ -95,6 +95,7 @@ namespace NDO
 		private ArrayList createdMappingTableObjects = new ArrayList();  
 		private TypeManager typeManager;
 		private TransactionMode transactionMode = TransactionMode.None;
+		internal bool DeferredMode { get; private set; }
 		private IsolationLevel isolationLevel = IsolationLevel.ReadCommitted;
 		private TransactionTable transactionTable;
 
@@ -1028,58 +1029,66 @@ namespace NDO
 		}
 
 
+		/*
+		forceCommit should be:
+		 
+					Query	Save	Save(true)
+		Optimistic	1		1		0
+		Pessimistic	0		1		0
+			
+		Deferred Mode			
+					Query	Save	Save(true)
+		Optimistic	0		1		0
+		Pessimistic	0		1		0
+
+		 */
+
 		internal void CheckEndTransaction(bool forceCommit)
 		{
-#if PRO
-			if (transactionMode != TransactionMode.None)
+			if (transactionMode != TransactionMode.None && forceCommit)
 			{
-				if (forceCommit)
+				foreach(TransactionInfo ti in transactionTable)
 				{
-					foreach(TransactionInfo ti in transactionTable)
+					if (ti.Transaction != null)
 					{
-						if (ti.Transaction != null)
-						{
-							ti.Transaction.Commit();
-							if (this.LoggingPossible)
-								this.LogAdapter.Info("Committing transaction at connection '" + ti.ConnectionAlias + '\'');
-                            ti.Transaction = null;
-						}
-						if (ti.Connection != null && ti.Connection.State != ConnectionState.Closed)
-							ti.Connection.Close();
+						ti.Transaction.Commit();
+						if (this.LoggingPossible)
+							this.LogAdapter.Info("Committing transaction at connection '" + ti.ConnectionAlias + '\'');
+                        ti.Transaction = null;
 					}
+					if (ti.Connection != null && ti.Connection.State != ConnectionState.Closed)
+						ti.Connection.Close();
 				}
 			}
-			// There are entries in the txtable, even if there is no tx running
-            //if (this.transactionMode == TransactionMode.Optimistic || commitAnyway)
-            //    transactionTable.Clear();
-#endif
 		}
 
 	
 
 		internal void CheckTransaction(IPersistenceHandlerBase handler, Type t)
 		{
-			CheckTransaction(handler, this.GetClass(t).ConnectionId);
+			CheckTransaction(handler, this.GetClass(t).Connection);
 		}
 
 		/// <summary>
 		/// Each and every database operation has to be preceded by a call to this function.
 		/// </summary>
-		internal void CheckTransaction(IPersistenceHandlerBase handler, string connectionId)
+		internal void CheckTransaction(IPersistenceHandlerBase handler, Connection conn)
 		{
-			NDO.Mapping.Connection conn = mappings.FindConnection(connectionId);
 			TransactionInfo ti = (TransactionInfo) transactionTable[conn];
-            ti.SecureAddHandler(handler);
+			if (handler != null)
+			{
+				ti.SecureAddHandler( handler );
 
-            // In some ADO.NET providers we can't set a Connection if one exists,
-            // even if we set the same conn. object.
-            if (handler.Connection != null)
-            {
-                // CheckTransaction should have been called before for this handler.
-                System.Diagnostics.Debug.Assert(handler.Connection == ti.Connection);
-                // Force to always use the same connection.
-                ti.Connection = handler.Connection;
-            }
+				// In some ADO.NET providers we can't set a Connection if one exists,
+				// even if we set the same conn. object.
+				if (handler.Connection != null)
+				{
+					// CheckTransaction should have been called before for this handler.
+					System.Diagnostics.Debug.Assert( handler.Connection == ti.Connection );
+					// Force to always use the same connection.
+					ti.Connection = handler.Connection;
+				}
+			}
 
 #if PRO
 			if (transactionMode != TransactionMode.None)
@@ -1092,17 +1101,20 @@ namespace NDO
 					if (this.LoggingPossible)
 						this.LogAdapter.Info("Starting transaction at connection '" + conn.Name + '\'');
                 }
-                if (handler.Connection == null)
-                {
-                    handler.Connection = ti.Connection;
-                }
-                if (handler.Transaction == null || handler.Transaction != ti.Transaction)
-                {
-                    handler.Transaction = ti.Transaction;
-                }
+				if (handler != null)
+				{
+					if (handler.Connection == null)
+					{
+						handler.Connection = ti.Connection;
+					}
+					if (handler.Transaction == null || handler.Transaction != ti.Transaction)
+					{
+						handler.Transaction = ti.Transaction;
+					}
+				}
             }
 #endif
-            if (transactionMode == TransactionMode.None && handler.Connection == null)
+            if ( transactionMode == TransactionMode.None && handler != null && handler.Connection == null)
                 handler.Connection = ti.Connection;
 
 		}
@@ -1347,6 +1359,52 @@ namespace NDO
 			string file = Path.ChangeExtension(ass.Location, ".ndo.sql");
 			return BuildDatabase(file);
 		}
+
+		/// <summary>
+		/// Gets a SqlPassThroughHandler object which can be used to execute raw Sql statements.
+		/// </summary>
+		/// <param name="conn">Optional: The NDO-Connection to the database to be used.</param>
+		/// <returns>An ISqlPassThroughHandler implementation</returns>
+		public ISqlPassThroughHandler GetSqlPassThroughHandler( Connection conn = null )
+		{
+			if (!this.mappings.Connections.Any())
+				throw new NDOException( 48, "Mapping file doesn't define a connection." );
+			if (conn == null)
+			{
+				conn = new Connection( this.mappings );
+				Connection originalConnection = (Connection) this.mappings.Connections.First();
+				conn.Name = OnNewConnection( originalConnection );
+				conn.Type = originalConnection.Type;
+			}
+
+			return new SqlPassThroughHandler( this, conn );
+		}
+
+		/// <summary>
+		/// Gets a SqlPassThroughHandler object which can be used to execute raw Sql statements.
+		/// </summary>
+		/// <param name="predicate">A predicate defining which connection has to be used.</param>
+		/// <returns>An ISqlPassThroughHandler implementation</returns>
+		public ISqlPassThroughHandler GetSqlPassThroughHandler( Func<Connection, bool> predicate )
+		{
+			if (!this.mappings.Connections.Any())
+				throw new NDOException( 48, "The Mapping file doesn't define a connection." );
+			Connection conn = this.mappings.Connections.FirstOrDefault( predicate );
+			if (conn == null)
+				throw new NDOException( 48, "The Mapping file doesn't define a connection with this predicate." );
+			return GetSqlPassThroughHandler( conn );
+		}
+
+		/// <summary>
+		/// Gets a TransactionInfo object for a NDO connection
+		/// </summary>
+		/// <param name="conn">An NDO connection</param>
+		/// <returns></returns>
+		internal TransactionInfo GetTransactionInfo(Connection conn)
+		{
+			return this.transactionTable[conn];
+		}
+
 
 		/// <summary>
 		/// Executes a xml script to generate the database tables. 
@@ -2036,7 +2094,7 @@ namespace NDO
 			else 
 			{
 				IMappingTableHandler handler = mappings.GetPersistenceHandler(pc, this.HasOwnerCreatedIds).GetMappingTableHandler(r);
-				CheckTransaction(handler, r.MappingTable.ConnectionId);
+				CheckTransaction(handler, r.MappingTable.Connection);
 				DataTable dt = handler.FindRelatedObjects(pc.NDOObjectId);
 				IList relatedObjects;
 				if(r.Multiplicity == RelationMultiplicity.Element)
@@ -2444,6 +2502,7 @@ namespace NDO
 		/// </summary>
 		public virtual void Save(bool deferCommit = false) 
 		{
+			this.DeferredMode = deferCommit;
 			Hashtable htOnSaving = new Hashtable(cache.LockedObjects.Count * 2);
 			for(;;)
 			{
@@ -2715,7 +2774,7 @@ namespace NDO
 			}
 			IMappingTableHandler handler;
 			mappingHandler[r] = handler = mappings.GetPersistenceHandler(pc, this.HasOwnerCreatedIds).GetMappingTableHandler(r);
-			CheckTransaction(handler, e.Relation.MappingTable.ConnectionId);
+			CheckTransaction(handler, e.Relation.MappingTable.Connection);
 		}
 
 

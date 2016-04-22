@@ -31,6 +31,10 @@
     <KeyFile>
     </KeyFile>
     <References>
+      <Reference AssemblyName="System.Data.SqlServerCe" AssemblyPath="..\packages\Microsoft.SqlServer.Compact.4.0.8876.1\lib\net40\System.Data.SqlServerCe.dll" CheckThisDLL="False">
+      </Reference>
+      <Reference AssemblyName="NDOInterfaces" AssemblyPath="..\..\NDOInterfaces\bin\Debug\NDOInterfaces.dll" CheckThisDLL="False">
+      </Reference>
       <Reference AssemblyName="System.Core" AssemblyPath="..\..\..\..\program files (x86)\reference assemblies\microsoft\framework\.netframework\v4.0\system.core.dll" CheckThisDLL="False">
       </Reference>
     </References>

@@ -502,6 +502,15 @@ namespace NDO.Mapping
             return null;
         }
 
+		[Browsable(false)]
+		public Connection Connection
+		{
+			get
+			{
+				return Parent.FindConnection( this.connectionId );
+			}
+		}
+
         #endregion
 
         #region Enhancer Support
@@ -577,6 +586,21 @@ namespace NDO.Mapping
             this.typeNameColumn.NetType = "System.String,mscorlib";
             return this.typeNameColumn;
         }
+		
+		/// <summary>
+		/// This is for compatibility to enhancer versions &lt; 3.0.0.5
+		/// </summary>
+		/// <param name="fieldName">Name of the field</param>
+		/// <param name="referencedTypeName">Type name of the referenced class</param>
+		/// <param name="is1to1">True, if multiplicity is 1</param>
+		/// <param name="relationName">Optional relation name</param>
+		/// <param name="ownTypeIsPoly">True, if the class, containing the field, has a persistent base class</param>
+		/// <param name="otherTypeIsPoly">True, if the related type has a persistent base class</param>
+		/// <returns></returns>
+		public Relation AddStandardRelation(string fieldName, string referencedTypeName, bool is1to1, string relationName, bool ownTypeIsPoly, bool otherTypeIsPoly)
+		{
+			return AddStandardRelation( fieldName, referencedTypeName, is1to1, relationName, ownTypeIsPoly, otherTypeIsPoly, null );
+		}
 
         /// <summary>
         /// Adds a default relation mapping.

@@ -115,6 +115,16 @@ namespace NDO.Mapping
             set { connectionId = value; this.Changed = true; }
         }
         #endregion
+
+		[Browsable( false )]
+		public Connection Connection
+		{
+			get
+			{
+				return Parent.Parent.Parent.FindConnection( this.connectionId );
+			}
+		}
+
         /// <summary>
         /// Construct a new MappingTable
         /// </summary>

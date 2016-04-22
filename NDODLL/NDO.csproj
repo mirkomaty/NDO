@@ -160,6 +160,7 @@
     <Compile Include="Enterprise\SerializationFlags.cs" />
     <Compile Include="Enterprise\SerializationIterator.cs" />
     <Compile Include="Enterprise\Serializer.cs" />
+    <Compile Include="ISqlPassThroughHandler.cs" />
     <Compile Include="Linq\Index.cs" />
     <Compile Include="Linq\LinqStringExtension.cs" />
     <Compile Include="Linq\VirtualTable.cs" />
@@ -385,6 +386,7 @@
     <Compile Include="SqlDumper.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="SqlPassThroughHandler.cs" />
     <Compile Include="SqlServerGenerator.cs" />
     <Compile Include="StateManager.cs">
       <SubType>Code</SubType>
@@ -435,7 +437,7 @@
   </ItemGroup>
   <ProjectExtensions>
     <VisualStudio>
-      <UserProperties NDOGenerateSQL="false" NDOMergeSchema="false" NDOMergeMapping="false" NDONewMapping="false" NDOGenerateSchema="false" NDOGenerateMapping="false" NDOEnableEnhancer="false" NDOEnableAddIn="false" />
+      <UserProperties NDOEnableAddIn="false" NDOEnableEnhancer="false" NDOGenerateMapping="false" NDOGenerateSchema="false" NDONewMapping="false" NDOMergeMapping="false" NDOMergeSchema="false" NDOGenerateSQL="false" />
     </VisualStudio>
   </ProjectExtensions>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />

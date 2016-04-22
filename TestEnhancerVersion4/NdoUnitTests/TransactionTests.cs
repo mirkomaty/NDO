@@ -1,0 +1,310 @@
+﻿using NUnit.Framework;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using NDO;
+using Reisekosten.Personal;
+using System.Text.RegularExpressions;
+
+namespace NdoUnitTests
+{
+	[TestFixture]
+	public class TransactionTests
+	{
+		public void Setup() { }
+
+		public void TearDown() 
+		{
+			var pm = PmFactory.NewPersistenceManager();
+			NDOQuery<Mitarbeiter> q = new NDOQuery<Mitarbeiter>( pm );
+			pm.Delete( q.Execute() );
+		}
+
+
+		/*
+		forceCommit should be:
+		 
+					Query	Save	Save(true)
+		Optimistic	1		1		0
+		Pessimistic	0		1		0
+			
+		Deferred Mode			
+					Query	Save	Save(true)
+		Optimistic	0		1		0
+		Pessimistic	0		1		0
+
+		 */
+
+		[Test]
+		public void TestIfQueryWithoutTransactionDoesNotStartAndNotCommit()
+		{
+			var pm = PmFactory.NewPersistenceManager();
+			pm.LogAdapter = new TestLogAdapter();
+			pm.VerboseMode = true;
+			new NDOQuery<Mitarbeiter>( pm ).Execute();
+			Console.WriteLine( pm.LogAdapter.ToString() );
+			string log = pm.LogAdapter.ToString();
+			Assert.That( log.IndexOf( "Committing transaction" ) == -1, "Transaction should be committed" );
+			Assert.That( log.IndexOf( "Starting transaction" ) == -1, "Transaction should be committed" );
+		}
+
+
+		[Test]
+		public void TestIfOptimisticQueryIsImmediatelyCommitted()
+		{
+			var pm = PmFactory.NewPersistenceManager();
+			pm.TransactionMode = TransactionMode.Optimistic;
+			pm.LogAdapter = new TestLogAdapter();
+			pm.VerboseMode = true;
+			new NDOQuery<Mitarbeiter>( pm ).Execute();
+			Assert.That( pm.LogAdapter.ToString().IndexOf( "Committing transaction" ) > -1, "Transaction should be committed" );
+		}
+
+		[Test]
+		public void TestIfPessimisticQueryIsNotCommitted()
+		{
+			var pm = PmFactory.NewPersistenceManager();
+			pm.TransactionMode = TransactionMode.Pessimistic;
+			pm.LogAdapter = new TestLogAdapter();
+			pm.VerboseMode = true;
+			new NDOQuery<Mitarbeiter>( pm ).Execute();
+			string log = pm.LogAdapter.ToString();
+			Assert.That( log.IndexOf( "Starting transaction" ) > -1, "Transaction should be started" );
+			Assert.That( log.IndexOf( "Committing transaction" ) == -1, "Transaction shouldn't be committed" );
+			pm.Abort();
+		}
+
+		[Test]
+		public void TestIfOptimisticSaveIsCommitted()
+		{
+			var pm = PmFactory.NewPersistenceManager();
+			pm.TransactionMode = TransactionMode.Optimistic;
+			pm.LogAdapter = new TestLogAdapter();
+			pm.VerboseMode = true;
+			Mitarbeiter m = new Mitarbeiter();
+			pm.MakePersistent( m );
+			pm.Save();
+			string log = pm.LogAdapter.ToString();
+			Assert.That( log.IndexOf( "Starting transaction" ) > -1, "Transaction should be started" );
+			Assert.That( log.IndexOf( "Committing transaction" ) > -1, "Transaction should be committed" );
+		}
+
+		[Test]
+		public void TestIfPessimisticSaveIsCommitted()
+		{
+			var pm = PmFactory.NewPersistenceManager();
+			pm.TransactionMode = TransactionMode.Pessimistic;
+			pm.LogAdapter = new TestLogAdapter();
+			pm.VerboseMode = true;
+			Mitarbeiter m = new Mitarbeiter();
+			pm.MakePersistent( m );
+			pm.Save();
+			string log = pm.LogAdapter.ToString();
+			Assert.That( log.IndexOf( "Starting transaction" ) > -1, "Transaction should be started" );
+			Assert.That( log.IndexOf( "Committing transaction" ) > -1, "Transaction should be committed" );
+		}
+
+		[Test]
+		public void OptimisticQueryAndSaveShouldHaveTwoTransactions()
+		{
+			var pm = PmFactory.NewPersistenceManager();
+			pm.TransactionMode = TransactionMode.Optimistic;
+			pm.LogAdapter = new TestLogAdapter();
+			pm.VerboseMode = true;
+			new NDOQuery<Mitarbeiter>( pm ).Execute();
+			Mitarbeiter m = new Mitarbeiter();
+			pm.MakePersistent( m );
+			pm.Save();
+			string log = pm.LogAdapter.ToString();
+			Assert.That( new Regex( "Starting transaction" ).Matches(log).Count == 2, "Two Transactions should be started" );
+			Assert.That( new Regex( "Committing transaction" ).Matches(log).Count == 2, "Two Transactions should be committed" );
+		}
+
+		[Test]
+		public void PessimisticQueryAndSaveShouldHaveOneTransaction()
+		{
+			var pm = PmFactory.NewPersistenceManager();
+			pm.TransactionMode = TransactionMode.Pessimistic;
+			pm.LogAdapter = new TestLogAdapter();
+			pm.VerboseMode = true;
+			new NDOQuery<Mitarbeiter>( pm ).Execute();
+			Mitarbeiter m = new Mitarbeiter();
+			pm.MakePersistent( m );
+			pm.Save();
+			string log = pm.LogAdapter.ToString();
+			Console.WriteLine( log );
+			Assert.That( new Regex( "Starting transaction" ).Matches( log ).Count == 1, "One Transactions should be started" );
+			Assert.That( new Regex( "Committing transaction" ).Matches( log ).Count == 1, "One Transactions should be committed" );
+		}
+
+		[Test]
+		public void OptimisticDeferredSaveShouldNotCommit()
+		{
+			var pm = PmFactory.NewPersistenceManager();
+			pm.TransactionMode = TransactionMode.Optimistic;
+			pm.LogAdapter = new TestLogAdapter();
+			pm.VerboseMode = true;
+			Mitarbeiter m = new Mitarbeiter();
+			pm.MakePersistent( m );
+			pm.Save(true);
+			string log = pm.LogAdapter.ToString();
+			Assert.That( log.IndexOf( "Starting transaction" ) > -1, "Transaction should be started" );
+			Assert.That( log.IndexOf( "Committing transaction" ) == -1, "Transaction should be committed" );
+			pm.Abort();
+		}
+
+		[Test]
+		public void PessimisticDeferredSaveShouldNotCommit()
+		{
+			var pm = PmFactory.NewPersistenceManager();
+			pm.TransactionMode = TransactionMode.Pessimistic;
+			pm.LogAdapter = new TestLogAdapter();
+			pm.VerboseMode = true;
+			Mitarbeiter m = new Mitarbeiter();
+			pm.MakePersistent( m );
+			pm.Save(true);
+			string log = pm.LogAdapter.ToString();
+			Assert.That( log.IndexOf( "Starting transaction" ) > -1, "Transaction should be started" );
+			Assert.That( log.IndexOf( "Committing transaction" ) == -1, "Transaction should be committed" );
+			pm.Abort();
+		}
+
+		[Test]
+		public void OptimisticDeferredSaveAndQueryShouldNotCommit()
+		{
+			var pm = PmFactory.NewPersistenceManager();
+			pm.TransactionMode = TransactionMode.Optimistic;
+			pm.LogAdapter = new TestLogAdapter();
+			pm.VerboseMode = true;
+			Mitarbeiter m = new Mitarbeiter();
+			pm.MakePersistent( m );
+			pm.Save( true );
+			new NDOQuery<Mitarbeiter>( pm ).Execute();
+			string log = pm.LogAdapter.ToString();
+			Assert.That( log.IndexOf( "Starting transaction" ) > -1, "Transaction should be started" );
+			Assert.That( log.IndexOf( "Committing transaction" ) == -1, "Transaction should be committed" );
+			pm.Abort();
+		}
+
+		[Test]
+		public void PessimisticDeferredSaveAndQueryShouldNotCommit()
+		{
+			var pm = PmFactory.NewPersistenceManager();
+			pm.TransactionMode = TransactionMode.Pessimistic;
+			pm.LogAdapter = new TestLogAdapter();
+			pm.VerboseMode = true;
+			Mitarbeiter m = new Mitarbeiter();
+			pm.MakePersistent( m );
+			pm.Save( true );
+			new NDOQuery<Mitarbeiter>( pm ).Execute();
+			string log = pm.LogAdapter.ToString();
+			Assert.That( log.IndexOf( "Starting transaction" ) > -1, "Transaction should be started" );
+			Assert.That( log.IndexOf( "Committing transaction" ) == -1, "Transaction should be committed" );
+			pm.Abort();
+		}
+
+		[Test]
+		public void OptimisticSaveAfterDeferredSaveShouldCommit()
+		{
+			var pm = PmFactory.NewPersistenceManager();
+			pm.TransactionMode = TransactionMode.Optimistic;
+			pm.LogAdapter = new TestLogAdapter();
+			pm.VerboseMode = true;
+			Mitarbeiter m = new Mitarbeiter();
+			pm.MakePersistent( m );
+			pm.Save( true );
+			m.Nachname = "Test";
+			pm.Save();
+			string log = pm.LogAdapter.ToString();
+			Assert.That( new Regex( "Starting transaction" ).Matches( log ).Count == 1, "One Transactions should be started" );
+			Assert.That( new Regex( "Committing transaction" ).Matches( log ).Count == 1, "One Transactions should be committed" );
+			pm.Abort();
+		}
+
+		[Test]
+		public void PessimisticSaveAfterDeferredSaveShouldCommit()
+		{
+			var pm = PmFactory.NewPersistenceManager();
+			pm.TransactionMode = TransactionMode.Pessimistic;
+			pm.LogAdapter = new TestLogAdapter();
+			pm.VerboseMode = true;
+			Mitarbeiter m = new Mitarbeiter();
+			pm.MakePersistent( m );
+			pm.Save( true );
+			m.Nachname = "Test";
+			pm.Save();
+			string log = pm.LogAdapter.ToString();
+			Assert.That( new Regex( "Starting transaction" ).Matches( log ).Count == 1, "One Transactions should be started" );
+			Assert.That( new Regex( "Committing transaction" ).Matches( log ).Count == 1, "One Transactions should be committed" );
+			pm.Abort();
+		}
+
+
+		[Test]
+		public void DirectSqlPassThroughWithoutTransactionShouldNotCommit()
+		{
+			var pm = PmFactory.NewPersistenceManager();
+			pm.LogAdapter = new TestLogAdapter();
+			pm.VerboseMode = true;
+			ISqlPassThroughHandler sqlHandler = pm.GetSqlPassThroughHandler();
+			var reader = sqlHandler.Execute( "DELETE FROM Mitarbeiter" );
+			string log = pm.LogAdapter.ToString();
+			Assert.That( log.IndexOf( "Committing transaction" ) == -1, "Transaction should be committed" );
+			Assert.That( log.IndexOf( "Starting transaction" ) == -1, "Transaction should be committed" );
+			Assert.That( !reader.Read(), "Reader should be empty" );
+		}
+
+		[Test]
+		public void DirectSqlPassThroughWithTransactionShouldCommit()
+		{
+			var pm = PmFactory.NewPersistenceManager();
+			pm.LogAdapter = new TestLogAdapter();
+			pm.VerboseMode = true;
+			ISqlPassThroughHandler sqlHandler = pm.GetSqlPassThroughHandler();
+			sqlHandler.BeginTransaction();
+			sqlHandler.Execute( "DELETE FROM Mitarbeiter" ).Close();
+			sqlHandler.Execute( "DELETE FROM Reise" ).Close();
+			sqlHandler.CommitTransaction();
+			string log = pm.LogAdapter.ToString();
+			Assert.That( new Regex( "Starting transaction" ).Matches( log ).Count == 1, "One Transactions should be started" );
+			Assert.That( new Regex( "Committing transaction" ).Matches( log ).Count == 1, "One Transactions should be committed" );
+		}
+
+		[Test]
+		public void DirectSqlPassThroughWithCombinedStatementsDoesNotCommit()
+		{
+			var pm = PmFactory.NewPersistenceManager();
+			pm.LogAdapter = new TestLogAdapter();
+			pm.VerboseMode = true;
+			using (ISqlPassThroughHandler sqlHandler = pm.GetSqlPassThroughHandler())
+			{
+				sqlHandler.Execute( "DELETE FROM Mitarbeiter" ).Close();
+				sqlHandler.Execute( "DELETE FROM Reise" ).Close();
+			}
+			string log = pm.LogAdapter.ToString();
+			Assert.That( log.IndexOf( "Committing transaction" ) == -1, "Transaction should be committed" );
+			Assert.That( log.IndexOf( "Starting transaction" ) == -1, "Transaction should be committed" );
+		}
+
+		[Test]
+		public void DirectSqlPassWithAbortWorks()
+		{
+			var pm = PmFactory.NewPersistenceManager();
+			var m = new Mitarbeiter();
+			pm.MakePersistent( m );
+			pm.Save();
+			pm.UnloadCache();
+			pm.LogAdapter = new TestLogAdapter();
+			pm.VerboseMode = true;
+			using (ISqlPassThroughHandler sqlHandler = pm.GetSqlPassThroughHandler())
+			{
+				sqlHandler.BeginTransaction();
+				sqlHandler.Execute( "DELETE FROM Mitarbeiter" ).Close();
+				pm.Abort();
+			}
+			bool hasRecords = new NDOQuery<Mitarbeiter>( pm ).Execute().Count > 0;
+			Assert.That( hasRecords, "At least one record should be present" );
+		}
+	}
+}
