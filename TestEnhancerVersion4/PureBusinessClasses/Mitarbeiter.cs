@@ -1,33 +1,23 @@
-//
-// Copyright (C) 2002-2008 HoT - House of Tools Development GmbH 
-// (www.netdataobjects.com)
+﻿//
+// Copyright (c) 2002-2016 Mirko Matytschak 
+// (www.netdataobjects.de)
 //
 // Author: Mirko Matytschak
 //
-// This program is free software; you can redistribute it and/or modify
-// it under the terms of the GNU General Public License (v3) as published by
-// the Free Software Foundation.
+// Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated 
+// documentation files (the "Software"), to deal in the Software without restriction, including without limitation 
+// the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the 
+// Software, and to permit persons to whom the Software is furnished to do so, subject to the following 
+// conditions:
+
+// The above copyright notice and this permission notice shall be included in all copies or substantial portions 
+// of the Software.
 //
-// If you distribute copies of this program, whether gratis or for 
-// a fee, you must pass on to the recipients the same freedoms that 
-// you received.
-//
-// Commercial Licence:
-// For those, who want to develop software with help of this program 
-// and need to distribute their work with a more restrictive licence, 
-// there is a commercial licence available at www.netdataobjects.com.
-// 
-// The above copyright notice and this permission notice shall be
-// included in all copies or substantial portions of the Software.
-// 
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-// EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-// MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-// NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
-// LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
-// OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
-// WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-//
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED 
+// TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL 
+// THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF 
+// CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER 
+// DEALINGS IN THE SOFTWARE.
 
 
 using System;
@@ -104,12 +94,12 @@ namespace Reisekosten.Personal
         System.Collections.Generic.List<Reise> dieReisen = new System.Collections.Generic.List<Reise>();
 
 
-		// Mitarbeiter kann viele Reisebüros benutzen. Diese existieren unabh�nig vom Mitarbeiter.
+		// Mitarbeiter kann viele ReisebÃ¼ros benutzen. Diese existieren unabhï¿½nig vom Mitarbeiter.
 		// 1:n, mit Zwischentabelle
-		[NDORelation(typeof (Reisebüro))]
-		IList reiseBüros = new ArrayList();
+		[NDORelation(typeof (ReisebÃ¼ro))]
+		IList reiseBÃ¼ros = new ArrayList();
 
-		// Mitarbeiter kann mehrere Email-Adressen haben. Diese werden mit ihm gel�scht.
+		// Mitarbeiter kann mehrere Email-Adressen haben. Diese werden mit ihm gelï¿½scht.
 		// 1:n, Komposition, mit Zwischentabelle
 		[NDORelation(typeof (Email), RelationInfo.Composite)]
 		IList emails = new ArrayList();
@@ -126,10 +116,10 @@ namespace Reisekosten.Personal
 			set { meinBuero = value; }
 		}
 
-		public void Umziehen(string straße, string lkz, string plz, string ort) 
+		public void Umziehen(string straÃŸe, string lkz, string plz, string ort) 
 		{
 			adresse = new Adresse();
-			adresse.Straße = straße;
+			adresse.StraÃŸe = straÃŸe;
 			adresse.Lkz = lkz;
 			adresse.Plz = plz;
 			adresse.Ort = ort;
@@ -163,20 +153,20 @@ namespace Reisekosten.Personal
 		}
 
 		
-		public void Löschen(Email e) 
+		public void LÃ¶schen(Email e) 
 		{
 			emails.Remove(e);
 		}
 
-		public void Hinzufuegen(Reisebüro r) 
+		public void Hinzufuegen(ReisebÃ¼ro r) 
 		{
-			reiseBüros.Add(r);
+			reiseBÃ¼ros.Add(r);
 		}
 
 		
-		public void Löschen(Reisebüro r) 
+		public void LÃ¶schen(ReisebÃ¼ro r) 
 		{
-			reiseBüros.Remove(r);
+			reiseBÃ¼ros.Remove(r);
 		}
 
 
@@ -345,18 +335,18 @@ namespace Reisekosten.Personal
 			dieReisen.Add(r);
 		}
 
-		public void Einfügen(Reise r, int ind) 
+		public void EinfÃ¼gen(Reise r, int ind) 
 		{
 			dieReisen.Insert(ind, r);
 		}
 
 		
-		public void Löschen(Reise r) 
+		public void LÃ¶schen(Reise r) 
 		{
 			dieReisen.Remove(r);
 		}
 
-		public void LöscheReisen() 
+		public void LÃ¶scheReisen() 
 		{
 			dieReisen.Clear();
 		}
@@ -384,9 +374,9 @@ namespace Reisekosten.Personal
 			}
 		}
 
-		public IList Reisebüros {
+		public IList ReisebÃ¼ros {
 			get {
-				return reiseBüros;
+				return reiseBÃ¼ros;
 			}
 		}
 		public IList Emails {
@@ -395,12 +385,12 @@ namespace Reisekosten.Personal
 			}
 		}
 
-		public void LöscheEmails() {
+		public void LÃ¶scheEmails() {
 			emails.Clear();
 		}
 
-		public void LöscheReisebüros() {
-			reiseBüros.Clear();
+		public void LÃ¶scheReisebÃ¼ros() {
+			reiseBÃ¼ros.Clear();
 		}
 
 		public void TestIList()
@@ -425,7 +415,7 @@ namespace Reisekosten.Personal
 			dieReisen.Remove(r);
 			dieReisen.RemoveAt(0);
 
-			// Kann mit der blo�en Oid implementiert werden.
+			// Kann mit der bloï¿½en Oid implementiert werden.
 			bool b = dieReisen.Contains(r);
 			dieReisen.IndexOf(r);
 		}

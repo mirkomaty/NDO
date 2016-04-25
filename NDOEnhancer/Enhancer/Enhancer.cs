@@ -1,33 +1,23 @@
-//
-// Copyright (C) 2002-2008 HoT - House of Tools Development GmbH 
-// (www.netdataobjects.com)
+ï»¿//
+// Copyright (c) 2002-2016 Mirko Matytschak 
+// (www.netdataobjects.de)
 //
 // Author: Mirko Matytschak
 //
-// This program is free software; you can redistribute it and/or modify
-// it under the terms of the GNU General Public License (v3) as published by
-// the Free Software Foundation.
+// Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated 
+// documentation files (the "Software"), to deal in the Software without restriction, including without limitation 
+// the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the 
+// Software, and to permit persons to whom the Software is furnished to do so, subject to the following 
+// conditions:
+
+// The above copyright notice and this permission notice shall be included in all copies or substantial portions 
+// of the Software.
 //
-// If you distribute copies of this program, whether gratis or for 
-// a fee, you must pass on to the recipients the same freedoms that 
-// you received.
-//
-// Commercial Licence:
-// For those, who want to develop software with help of this program 
-// and need to distribute their work with a more restrictive licence, 
-// there is a commercial licence available at www.netdataobjects.com.
-// 
-// The above copyright notice and this permission notice shall be
-// included in all copies or substantial portions of the Software.
-// 
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-// EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-// MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-// NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
-// LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
-// OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
-// WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-//
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED 
+// TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL 
+// THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF 
+// CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER 
+// DEALINGS IN THE SOFTWARE.
 
 
 using System;
@@ -378,13 +368,13 @@ namespace NDOEnhancer
                 foreach (Relation r in cl.Relations)
                 {
                     /*
-                     * 1. klären, ob ForeignKeyColumns oder ChildForeignKeyColumns relevant sind
+                     * 1. klÃ¤ren, ob ForeignKeyColumns oder ChildForeignKeyColumns relevant sind
                      *      - Multiplicity  Ist die schon bekannt?
                      *      - ChildForeignKeyColumnAttributes
                      *      - r.MappingTable  RelationMappings sollten schon bestimmt sein
-                     * 2. Count vergleichen, bei MappingTable auch für eigenen Oid-Typ. Warnung bei !=
+                     * 2. Count vergleichen, bei MappingTable auch fÃ¼r eigenen Oid-Typ. Warnung bei !=
                      * 3. Bei Bedarf remappen
-                     * Präzedenz:   1. Attribute
+                     * PrÃ¤zedenz:   1. Attribute
                      *              2. Mapping File
                      *              3. Defaults
                      */
@@ -729,7 +719,7 @@ namespace NDOEnhancer
 				derivedclassNode = this.allPersistentClasses[derivedclassNode.BaseName];
 			}
 
-			// Ab hier nur noch Zeug für die Mapping-Datei
+			// Ab hier nur noch Zeug fÃ¼r die Mapping-Datei
 			if (classMapping == null)
 				return;
 
@@ -758,7 +748,7 @@ namespace NDOEnhancer
 			sortedFieldsFile.WriteLine();
 
 
-			// Und nun die überflüssigen entfernen
+			// Und nun die Ã¼berflÃ¼ssigen entfernen
 			List<Field> fieldsToRemove = new List<Field>();
 			foreach(Field f in classMapping.Fields)
 			{
@@ -833,18 +823,18 @@ namespace NDOEnhancer
 						ClassNode relClassNode = allPersistentClasses[relTypeName];
 						if (relClassNode.AssemblyName != this.ownAssemblyName && !relTypeName.StartsWith("["))
 							relTypeName = "[" + relClassNode.AssemblyName + "]" + relTypeName;
-						//TODO: warnen wenn Oid-Typen nicht übereinstimmen
+						//TODO: warnen wenn Oid-Typen nicht Ã¼bereinstimmen
 						references.Add(new Patcher.ILReference(containerType, relTypeName, ilType, rname, this.ownAssemblyName, ri, relName, true, is1To1, "class " + className));
 
 						if (classMapping != null)
 						{
-							// Ist diese Relation schon definiert? Wenn ja, wird sie nicht geändert
+							// Ist diese Relation schon definiert? Wenn ja, wird sie nicht geÃ¤ndert
 							Relation r = classMapping.FindRelation(rname);
 							if (null == r)
 							{
 								messages.WriteLine(String.Format("Ererbte Relation {0}.{1} wird kopiert", classNode.Name, rname));
 								if (null == baseClassMapping)
-									throw new Exception(String.Format("Kann die Mapping-Information für die Basisklasse {0} nicht finden", baseClassNode.Name));
+									throw new Exception(String.Format("Kann die Mapping-Information fÃ¼r die Basisklasse {0} nicht finden", baseClassNode.Name));
 								r = baseClassMapping.FindRelation(rname);
 								if (r == null)
 									throw new Exception(String.Format("Schwerwiegender interner Fehler: Ererbte Relation {0} in Basisklasse {1} nicht gefunden.", rname, baseClassMapping.FullName));								
@@ -876,7 +866,7 @@ namespace NDOEnhancer
 			IList refList = classNode.Relations;
 			foreach (RelationNode relationNode in refList)
 			{
-				// Übernehme die Relation nur aus der deklarierenden Klasse,
+				// Ãœbernehme die Relation nur aus der deklarierenden Klasse,
 				// damit gleich die richtigen Mappings eingetragen werden.
 				if (relationNode.DeclaringType != null)
 					continue;
@@ -972,7 +962,7 @@ namespace NDOEnhancer
 			}
 			sortedFieldsFile.Close();
 
-			// Lösche ungebrauchte Class Mappings
+			// LÃ¶sche ungebrauchte Class Mappings
 			ArrayList classesToDelete = new ArrayList();
 			foreach(Class c in mappings.Classes)
 			{
@@ -1165,7 +1155,7 @@ namespace NDOEnhancer
                     }
                 }
             }
-			// Mapping-Datei im Bin-Verzeichnis muss jünger oder gleich alt sein wie Mapping-Source-Datei
+			// Mapping-Datei im Bin-Verzeichnis muss jÃ¼nger oder gleich alt sein wie Mapping-Source-Datei
 			if (sourcesUpToDate)
 			{
 				if (File.Exists(mappingFile) && File.Exists(mappingDestFile))
@@ -1173,7 +1163,7 @@ namespace NDOEnhancer
 					DateTime mapSourceTime = File.GetLastWriteTime(mappingFile);
 					DateTime mapDestTime = File.GetLastWriteTime(mappingDestFile);
 					sourcesUpToDate = mapDestTime >= mapSourceTime && mapDestTime >= objTime;
-                    // Mapping-Datei muss jünger sein als die bin-Datei
+                    // Mapping-Datei muss jÃ¼nger sein als die bin-Datei
                     if (!projectDescription.IsWebProject && !File.Exists(projectDescription.BinFile))
                         throw new Exception("Can't find binary " + projectDescription.BinFile);
                     DateTime binFileTime = File.GetLastWriteTime(projectDescription.BinFile);
@@ -1279,7 +1269,7 @@ namespace NDOEnhancer
             }
             if (doEnhance)
 			{
-				// Hier wird ILDasm bemüht, um einen Dump des Assemblies herzustellen
+				// Hier wird ILDasm bemÃ¼ht, um einen Dump des Assemblies herzustellen
 				disassemble();
 
 				ILFile ilfile = new ILFile();
@@ -1700,7 +1690,7 @@ namespace NDOEnhancer
 
 			asm.DoIt(ilEnhFile, enhFile, this.assemblyKeyFile, debug);
 			if (! File.Exists(enhFile))
-					throw new Exception("Codeerzeugung: temporäre Datei " + enhFile + " konnte nicht erstellt werden.");
+					throw new Exception("Codeerzeugung: temporÃ¤re Datei " + enhFile + " konnte nicht erstellt werden.");
             string resFile = Path.ChangeExtension(enhFile, ".res");
             if (File.Exists(resFile))
                 File.Delete(resFile);
@@ -1719,7 +1709,7 @@ namespace NDOEnhancer
 //			if ( debug )
 //			{
 //				if (! File.Exists(enhPdbFile))
-//					throw new Exception("Codeerzeugung: temporäre Datei " + enhPdbFile + " konnte nicht erstellt werden.");
+//					throw new Exception("Codeerzeugung: temporÃ¤re Datei " + enhPdbFile + " konnte nicht erstellt werden.");
 //				File.Copy( enhPdbFile, binPdbFile, true );
 //			}
 

@@ -1,33 +1,23 @@
-//
-// Copyright (C) 2002-2008 HoT - House of Tools Development GmbH 
-// (www.netdataobjects.com)
+﻿//
+// Copyright (c) 2002-2016 Mirko Matytschak 
+// (www.netdataobjects.de)
 //
 // Author: Mirko Matytschak
 //
-// This program is free software; you can redistribute it and/or modify
-// it under the terms of the GNU General Public License (v3) as published by
-// the Free Software Foundation.
+// Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated 
+// documentation files (the "Software"), to deal in the Software without restriction, including without limitation 
+// the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the 
+// Software, and to permit persons to whom the Software is furnished to do so, subject to the following 
+// conditions:
+
+// The above copyright notice and this permission notice shall be included in all copies or substantial portions 
+// of the Software.
 //
-// If you distribute copies of this program, whether gratis or for 
-// a fee, you must pass on to the recipients the same freedoms that 
-// you received.
-//
-// Commercial Licence:
-// For those, who want to develop software with help of this program 
-// and need to distribute their work with a more restrictive licence, 
-// there is a commercial licence available at www.netdataobjects.com.
-// 
-// The above copyright notice and this permission notice shall be
-// included in all copies or substantial portions of the Software.
-// 
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-// EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-// MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-// NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
-// LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
-// OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
-// WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-//
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED 
+// TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL 
+// THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF 
+// CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER 
+// DEALINGS IN THE SOFTWARE.
 
 
 using System;
@@ -40,9 +30,9 @@ using Reisekosten.Personal;
 
 namespace NdoUnitTests {
 	[TestFixture] 
-	public class NDOReiseLänderTests {
+	public class NDOReiseLÃ¤nderTests {
 
-		public NDOReiseLänderTests() {
+		public NDOReiseLÃ¤nderTests() {
 		}
 
 		private PersistenceManager pm;
@@ -66,26 +56,26 @@ namespace NdoUnitTests {
 				pm = PmFactory.NewPersistenceManager();
 				pm.Abort();
 				IList mitarbeiterListe = pm.GetClassExtent(typeof(Mitarbeiter), false);
-//				Debug.WriteLine("TearDown l�scht " + mitarbeiterListe.Count + " Mitarbeiter");
+//				Debug.WriteLine("TearDown lï¿½scht " + mitarbeiterListe.Count + " Mitarbeiter");
 				pm.Delete(mitarbeiterListe);
 				pm.Save();
 				IList reiseListe = pm.GetClassExtent(typeof(Reise), false);
 //				foreach(Reise r in reiseListe)
-//					r.Länder.Clear(); Kann nicht gehen. Besser r.ClearLänder();
+//					r.LÃ¤nder.Clear(); Kann nicht gehen. Besser r.ClearLÃ¤nder();
 //				pm.Save();
 //				pm.UnloadCache();
 
-//				Debug.WriteLine("TearDown l�scht " + reiseListe.Count + " Reisen");
+//				Debug.WriteLine("TearDown lï¿½scht " + reiseListe.Count + " Reisen");
 				pm.Delete(reiseListe);
 				pm.Save();
 				pm.UnloadCache();
-				IList länderListe = pm.GetClassExtent(typeof(Land), true);
-//				foreach(Land land in länderListe)
+				IList lÃ¤nderListe = pm.GetClassExtent(typeof(Land), true);
+//				foreach(Land land in lÃ¤nderListe)
 //					if (land != null && land.DieReisen != null)
 //					 foreach(Reise r in land.DieReisen)
 //							land.RemoveReise(r);
-//				Debug.WriteLine("TearDown l�scht " + länderListe.Count + " Länder");
-				pm.Delete(länderListe);
+//				Debug.WriteLine("TearDown lï¿½scht " + lÃ¤nderListe.Count + " LÃ¤nder");
+				pm.Delete(lÃ¤nderListe);
 				pm.Save();
 				pm.Close();
 				pm = null;
@@ -113,48 +103,48 @@ namespace NdoUnitTests {
 		[Test]
 		[ExpectedException(typeof(NDOException))]
 		public void TestObjectCreationTransient() {
-			r.LandHinzufügen(new Land("USA"));
+			r.LandHinzufÃ¼gen(new Land("USA"));
 		}
 
 		[Test]
 		public void TestObjectCreation() {
-			CreateLänder();
-			r.LandHinzufügen(de);
-			Assert.AreEqual(1, r.Länder.Count, "Number of Länder");
+			CreateLÃ¤nder();
+			r.LandHinzufÃ¼gen(de);
+			Assert.AreEqual(1, r.LÃ¤nder.Count, "Number of LÃ¤nder");
 			Assert.AreEqual(NDOObjectState.Created, r.NDOObjectState, "Status wrong");
-			Land l = (Land)r.Länder[0];
+			Land l = (Land)r.LÃ¤nder[0];
 			Assert.AreEqual(NDOObjectState.Created, l.NDOObjectState, "Status wrong");
 		}
 
 		[Test]
 		public void TestObjectCreationSave() {
-			CreateLänder();
-			r.LandHinzufügen(de);
+			CreateLÃ¤nder();
+			r.LandHinzufÃ¼gen(de);
 			pm.Save();
 			Assert.AreEqual(NDOObjectState.Persistent, r.NDOObjectState, "Status wrong");
 			Assert.AreEqual(NDOObjectState.Persistent, de.NDOObjectState, "Status wrong");
 			Assert.AreEqual(NDOObjectState.Persistent, usa.NDOObjectState, "Status wrong");
-			Assert.AreEqual(1, r.Länder.Count, "Number of Länder");
+			Assert.AreEqual(1, r.LÃ¤nder.Count, "Number of LÃ¤nder");
 		}
 
 		[Test]
 		public void TestObjectCreationSaveMultiple() {
-			CreateLänder();
-			r.LandHinzufügen(de);
-			r.LandHinzufügen(usa);
+			CreateLÃ¤nder();
+			r.LandHinzufÃ¼gen(de);
+			r.LandHinzufÃ¼gen(usa);
 			pm.Save();
 			Assert.AreEqual(NDOObjectState.Persistent, r.NDOObjectState, "Status wrong");
 			Assert.AreEqual(NDOObjectState.Persistent, de.NDOObjectState, "Status wrong");
 			Assert.AreEqual(NDOObjectState.Persistent, usa.NDOObjectState, "Status wrong");
-			Assert.AreEqual(2, r.Länder.Count, "Number of Länder");
+			Assert.AreEqual(2, r.LÃ¤nder.Count, "Number of LÃ¤nder");
 		}
 
 
 		[Test]
 		public void AssoTestAggregateFunction()
 		{
-			CreateLänder();
-			r.LandHinzufügen(usa);
+			CreateLÃ¤nder();
+			r.LandHinzufÃ¼gen(usa);
 			pm.Save();
 			ObjectId oid = usa.NDOObjectId;
 			pm.UnloadCache();
@@ -165,7 +155,7 @@ namespace NdoUnitTests {
 			Assert.That(count > 0m, "Count should be > 0");
 			usa = (Land) pm.FindObject(oid);
 			Assert.NotNull(usa, "USA nicht gefunden");
-			r.LandLöschen(usa.Name);
+			r.LandLÃ¶schen(usa.Name);
 			pm.Save();
 			pm.UnloadCache();
 			count = (decimal) q.ExecuteAggregate(qh.zweck, Query.AggregateType.Count);
@@ -174,8 +164,8 @@ namespace NdoUnitTests {
 
 		[Test]
 		public void TestObjectCreationSaveChanged() {
-			CreateLänder();
-			r.LandHinzufügen(de);
+			CreateLÃ¤nder();
+			r.LandHinzufÃ¼gen(de);
 			de.Name = "Deutschland";
 			pm.Save();
 			Assert.AreEqual("Deutschland", de.Name, "Name wrong");
@@ -183,19 +173,19 @@ namespace NdoUnitTests {
 
 		[Test]
 		public void TestObjectCreationLandSavedFirst() {
-			CreateLänder();
+			CreateLÃ¤nder();
 			pm.Save();
-			r.LandHinzufügen(de);
+			r.LandHinzufÃ¼gen(de);
 			de.Name = "Deutschland";
 			pm.Save();
 			Assert.AreEqual("Deutschland", de.Name, "Name wrong");
-			Assert.AreEqual(1, r.Länder.Count, "Number of Länder");
+			Assert.AreEqual(1, r.LÃ¤nder.Count, "Number of LÃ¤nder");
 		}
 
 		[Test]
 		public void TestObjectCreationAbort() {
-			CreateLänder();
-			r.LandHinzufügen(de);
+			CreateLÃ¤nder();
+			r.LandHinzufÃ¼gen(de);
 			pm.Abort();
 			Assert.Null(de.NDOObjectId, "Transient object shouldn't have ID");
 			Assert.Null(de.NDOStateManager, "Transient object shouldn't have state manager");
@@ -204,9 +194,9 @@ namespace NdoUnitTests {
 
 		[Test]
 		public void TestCreateDeleteTransitionSave() {
-			CreateLänder();
-			r.LandHinzufügen(de);
-			m.LöscheReisen();
+			CreateLÃ¤nder();
+			r.LandHinzufÃ¼gen(de);
+			m.LÃ¶scheReisen();
 			Assert.AreEqual(NDOObjectState.Transient, r.NDOObjectState, "Reise should be transient");
 			Assert.Null(r.NDOObjectId, "Transient object shouldn't have ID");
 			Assert.Null(r.NDOStateManager, "Transient object shouldn't have state manager");
@@ -220,8 +210,8 @@ namespace NdoUnitTests {
 		[Test]
 		public void TestRelatedDelete()
 		{
-			CreateLänder();
-			r.LandHinzufügen(de);
+			CreateLÃ¤nder();
+			r.LandHinzufÃ¼gen(de);
 			pm.Save();
 			Assert.AreEqual(1, de.DieReisen.Count, "The Reise should still be in the container");
 			pm.Delete(m);
@@ -244,15 +234,15 @@ namespace NdoUnitTests {
 
 		[Test]
 		public void TestUnloadCache() {
-			CreateLänder();
-			r.LandHinzufügen(de);
+			CreateLÃ¤nder();
+			r.LandHinzufÃ¼gen(de);
 			//pm.UnloadCache();
-			Assert.AreSame(de, pm.FindObject(((Land)r.Länder[0]).NDOObjectId), "Getting same object twice should return same object");
+			Assert.AreSame(de, pm.FindObject(((Land)r.LÃ¤nder[0]).NDOObjectId), "Getting same object twice should return same object");
 			pm.Save();
 			pm.UnloadCache();
 			pm.MakeHollow(r);
-			Assert.AreEqual(1, r.Länder.Count, "Number of Länder");
-			Land l = (Land)r.Länder[0];
+			Assert.AreEqual(1, r.LÃ¤nder.Count, "Number of LÃ¤nder");
+			Land l = (Land)r.LÃ¤nder[0];
 			Assert.That(l != de, "Getting same object twice should return different objects");
 			Assert.AreEqual(de.Name, l.Name, "Name should be same");
 			ObjectId id = l.NDOObjectId;
@@ -260,13 +250,13 @@ namespace NdoUnitTests {
 			pm.UnloadCache();
 			Assert.NotNull(pm.FindObject(id), "Should find object");
 			pm.UnloadCache();
-			Assert.AreEqual(1, r.Länder.Count, "Number of Länder");
+			Assert.AreEqual(1, r.LÃ¤nder.Count, "Number of LÃ¤nder");
 		}
 
 		[Test]
 		public void TestMakeTransient() {
-			CreateLänder();
-			r.LandHinzufügen(de);
+			CreateLÃ¤nder();
+			r.LandHinzufÃ¼gen(de);
 			pm.Save();
 			ObjectId id = r.NDOObjectId;
 			pm.MakeTransient(r);
@@ -274,7 +264,7 @@ namespace NdoUnitTests {
 			Assert.AreEqual(NDOObjectState.Transient, r.NDOObjectState, "Wrong state #1");
 			Assert.That(id.IsValid(), "Id should still be valid #1");
 			pm.Save();
-			Land l = (Land)r.Länder[0];
+			Land l = (Land)r.LÃ¤nder[0];
 			Assert.AreEqual(de.Name, l.Name, "Name is wrong");
 			Assert.AreSame(de, l, "Land is wrong");
 			pm.MakeHollow(m);  // make sure, Reise is loaded fresh during TearDown
@@ -282,8 +272,8 @@ namespace NdoUnitTests {
 
 		[Test]
 		public void TestMakeTransientMitarbeiterDeleteFails() {
-			CreateLänder();
-			r.LandHinzufügen(de);
+			CreateLÃ¤nder();
+			r.LandHinzufÃ¼gen(de);
 			pm.Save();
 			pm.MakeTransient(r);
 			try {
@@ -297,110 +287,110 @@ namespace NdoUnitTests {
 
 		[Test]
 		public void TestDeleteLand() {
-			CreateLänder();
-			r.LandHinzufügen(de);
-			r.LandLöschen(de.Name);
+			CreateLÃ¤nder();
+			r.LandHinzufÃ¼gen(de);
+			r.LandLÃ¶schen(de.Name);
 			pm.Save();
-			Assert.AreEqual(0, r.Länder.Count, "#1 Number of Länder");
+			Assert.AreEqual(0, r.LÃ¤nder.Count, "#1 Number of LÃ¤nder");
 			pm.MakeHollow(r);
-			Assert.AreEqual(0, r.Länder.Count, "#2 Number of Länder");
+			Assert.AreEqual(0, r.LÃ¤nder.Count, "#2 Number of LÃ¤nder");
 		}
 
 		[Test]
-		public void TestDeleteLänder() {
-			CreateLänder();
-			r.LandHinzufügen(de);
-			r.LandHinzufügen(usa);
-			r.LandLöschen(de.Name);
-			Assert.AreEqual(1, r.Länder.Count, "#1 Number of Länder");
+		public void TestDeleteLÃ¤nder() {
+			CreateLÃ¤nder();
+			r.LandHinzufÃ¼gen(de);
+			r.LandHinzufÃ¼gen(usa);
+			r.LandLÃ¶schen(de.Name);
+			Assert.AreEqual(1, r.LÃ¤nder.Count, "#1 Number of LÃ¤nder");
 			pm.Save();
-			Assert.AreSame(usa, r.Länder[0], "Land is wrong");
-			Assert.AreEqual(1, r.Länder.Count, "#2 Number of Länder");
+			Assert.AreSame(usa, r.LÃ¤nder[0], "Land is wrong");
+			Assert.AreEqual(1, r.LÃ¤nder.Count, "#2 Number of LÃ¤nder");
 			pm.MakeHollow(r);
-			Assert.AreEqual(1, r.Länder.Count, "#3 Number of Länder");
+			Assert.AreEqual(1, r.LÃ¤nder.Count, "#3 Number of LÃ¤nder");
 		}
 
 		[Test]
 		public void TestDeleteReise() {
-			CreateLänder();
-			r.LandHinzufügen(de);
-			r.LandHinzufügen(usa);
-			m.LöscheReisen();
-			Assert.AreEqual(2, r.Länder.Count, "#1 Number of Länder");
+			CreateLÃ¤nder();
+			r.LandHinzufÃ¼gen(de);
+			r.LandHinzufÃ¼gen(usa);
+			m.LÃ¶scheReisen();
+			Assert.AreEqual(2, r.LÃ¤nder.Count, "#1 Number of LÃ¤nder");
 			pm.Save();
-			Assert.AreEqual(2, r.Länder.Count, "#2 Number of Länder");
+			Assert.AreEqual(2, r.LÃ¤nder.Count, "#2 Number of LÃ¤nder");
 		}
 
 		[Test]
 		public void TestDeleteReiseSave() 
 		{
-			CreateLänder();
-			r.LandHinzufügen(de);
-			r.LandHinzufügen(usa);
+			CreateLÃ¤nder();
+			r.LandHinzufÃ¼gen(de);
+			r.LandHinzufÃ¼gen(usa);
 			Assert.AreEqual(1, usa.DieReisen.Count, "#1 Number of Reisen");
 			Assert.AreEqual(1, de.DieReisen.Count, "#2 Number of Reisen");
 			pm.Save();
 			pm.UnloadCache();
-			m.LöscheReisen();
-			Assert.AreEqual(2, r.Länder.Count, "#1 Number of Länder");
+			m.LÃ¶scheReisen();
+			Assert.AreEqual(2, r.LÃ¤nder.Count, "#1 Number of LÃ¤nder");
 			pm.Save();
-			Assert.AreEqual(2, r.Länder.Count, "#2 Number of Länder");
+			Assert.AreEqual(2, r.LÃ¤nder.Count, "#2 Number of LÃ¤nder");
 			pm.UnloadCache();
 			Land.QueryHelper qh = new Land.QueryHelper();
 			Query q = pm.NewQuery(typeof(Land), qh.name + Query.Op.Like + "'D*'");
 			IList list = q.Execute();
-			Assert.AreEqual(1, list.Count, "#3 Number of Länder");
+			Assert.AreEqual(1, list.Count, "#3 Number of LÃ¤nder");
 			de = (Land) list[0];
 			Assert.AreEqual(0, de.DieReisen.Count, "#3 Number of Reisen");
 		}
 
 
 		[Test]
-		public void TestDeleteLänderSave() {
-			CreateLänder();
-			r.LandHinzufügen(de);
-			r.LandHinzufügen(usa);
+		public void TestDeleteLÃ¤nderSave() {
+			CreateLÃ¤nder();
+			r.LandHinzufÃ¼gen(de);
+			r.LandHinzufÃ¼gen(usa);
 			pm.Save();
-			r.LandLöschen(de.Name);
+			r.LandLÃ¶schen(de.Name);
 			pm.Save();
-			Assert.AreEqual(1, r.Länder.Count, "#1 Number of Länder");
+			Assert.AreEqual(1, r.LÃ¤nder.Count, "#1 Number of LÃ¤nder");
 			pm.MakeHollow(r);
-			Assert.AreEqual(1, r.Länder.Count, "#2 Number of Länder");
+			Assert.AreEqual(1, r.LÃ¤nder.Count, "#2 Number of LÃ¤nder");
 		}
 
 		[Test]
-		public void TestDeleteLänderAbort() {
-			CreateLänder();
-			r.LandHinzufügen(de);
-			r.LandHinzufügen(usa);
+		public void TestDeleteLÃ¤nderAbort() {
+			CreateLÃ¤nder();
+			r.LandHinzufÃ¼gen(de);
+			r.LandHinzufÃ¼gen(usa);
 			pm.Save();
-			r.LandLöschen(de.Name);
+			r.LandLÃ¶schen(de.Name);
 			pm.Abort();
-			Assert.AreEqual(2, r.Länder.Count, "#1 Number of Länder");
+			Assert.AreEqual(2, r.LÃ¤nder.Count, "#1 Number of LÃ¤nder");
 			pm.MakeHollow(r);
-			Assert.AreEqual(2, r.Länder.Count, "#2 Number of Länder");
+			Assert.AreEqual(2, r.LÃ¤nder.Count, "#2 Number of LÃ¤nder");
 		}
 
 		[Test]
 		public void TestMakeHollow() {
-			CreateLänder();
-			r.LandHinzufügen(de);
+			CreateLÃ¤nder();
+			r.LandHinzufÃ¼gen(de);
 			pm.Save();
 			pm.MakeHollow(r);
 			Assert.AreEqual(NDOObjectState.Hollow, r.NDOObjectState, "Wrong state #1");
-			Land l = (Land)r.Länder[0];
+			Land l = (Land)r.LÃ¤nder[0];
 			// Should be in Cache
 			Assert.AreEqual(NDOObjectState.Persistent, l.NDOObjectState, "Wrong state #2");
 			Assert.AreEqual(de.Name, l.Name, "Name is wrong");
 			Assert.AreSame(de, l, "Land is wrong");
-			Assert.AreEqual(1, r.Länder.Count, "#1 Number of Länder");
+			Assert.AreEqual(1, r.LÃ¤nder.Count, "#1 Number of LÃ¤nder");
 		}
 
 
 		[Test]
 		public void TestRefresh() {
-			CreateLänder();
-			r.LandHinzufügen(de);
+			CreateLÃ¤nder();
+			r.LandHinzufÃ¼gen(de);
 			pm.Save();
 			pm.MakeHollow(r);
 			pm.Refresh(r);
@@ -410,12 +400,12 @@ namespace NdoUnitTests {
 		[Test]
 		public void TestJoinQuery()
 		{
-			CreateLänder();
-			r.LandHinzufügen(de);
-			r.LandHinzufügen(usa);
+			CreateLÃ¤nder();
+			r.LandHinzufÃ¼gen(de);
+			r.LandHinzufÃ¼gen(usa);
 
 			Reise r2 = CreateReise("ADW");
-			r2.LandHinzufügen(de);
+			r2.LandHinzufÃ¼gen(de);
 			m.Hinzufuegen(r2);
 			
 
@@ -430,12 +420,12 @@ namespace NdoUnitTests {
         [Test]
         public void TestIntermediateTableDelete()
         {
-            CreateLänder();
+            CreateLÃ¤nder();
             pm.Save();
-            r.LandHinzufügen(de);
-            r.LandHinzufügen(usa);
+            r.LandHinzufÃ¼gen(de);
+            r.LandHinzufÃ¼gen(usa);
             pm.Save();
-            r.LandLöschen(de);
+            r.LandLÃ¶schen(de);
             pm.Delete(de);
             pm.Save();
         }
@@ -454,7 +444,7 @@ namespace NdoUnitTests {
 			return m;
 		}
 
-		private void CreateLänder() {
+		private void CreateLÃ¤nder() {
 			usa = new Land("US");
 			pm.MakePersistent(usa);
 			de = new Land("DE");

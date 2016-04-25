@@ -1,33 +1,23 @@
-//
-// Copyright (C) 2002-2014 Mirko Matytschak 
+ï»¿//
+// Copyright (c) 2002-2016 Mirko Matytschak 
 // (www.netdataobjects.de)
 //
 // Author: Mirko Matytschak
 //
-// This program is free software; you can redistribute it and/or modify
-// it under the terms of the GNU General Public License (v3) as published by
-// the Free Software Foundation.
+// Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated 
+// documentation files (the "Software"), to deal in the Software without restriction, including without limitation 
+// the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the 
+// Software, and to permit persons to whom the Software is furnished to do so, subject to the following 
+// conditions:
+
+// The above copyright notice and this permission notice shall be included in all copies or substantial portions 
+// of the Software.
 //
-// If you distribute copies of this program, whether gratis or for 
-// a fee, you must pass on to the recipients the same freedoms that 
-// you received.
-//
-// Commercial Licence:
-// For those, who want to develop software with help of this program 
-// and need to distribute their work with a more restrictive licence, 
-// there is a commercial licence available at www.netdataobjects.de.
-// 
-// The above copyright notice and this permission notice shall be
-// included in all copies or substantial portions of the Software.
-// 
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-// EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-// MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-// NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
-// LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
-// OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
-// WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-//
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED 
+// TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL 
+// THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF 
+// CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER 
+// DEALINGS IN THE SOFTWARE.
 
 
 using System;
@@ -93,7 +83,7 @@ namespace NDO
 					continue;
 					
 				//MM 5.2 Relationen anlegen 
-				// Zwei gegenläufige 1:1-Beziehungen benötigen zwei Relationen
+				// Zwei gegenlÃ¤ufige 1:1-Beziehungen benÃ¶tigen zwei Relationen
 				DataColumn parentCol;
 				DataColumn childCol;
 				DataTable foreignTable = dsSchema.Tables[refClass.TableName];
@@ -326,7 +316,7 @@ namespace NDO
 				if (null == refClass)
 				{
 					throw new InternalException(219, "SchemaGenerator.");
-//					messages.WriteLine("Fehler im Schemagenerator: Kann Mapping-Information für Klasse " + ri.RefType + " nicht finden");
+//					messages.WriteLine("Fehler im Schemagenerator: Kann Mapping-Information fÃ¼r Klasse " + ri.RefType + " nicht finden");
 //					messages.WriteInsertedLine("Referenzierte Klasse muss persistent sein");
 //					continue;
 				}
@@ -359,8 +349,8 @@ namespace NDO
 			}
 
 			//MM 5.1.2 nicht 1:1 - FK ist in fremder Tabelle
-			//wir legen nicht die Fremdschlüssel in der fremden Tabelle an, sondern
-			//die Schlüssel fremder Relationen in der eigenen Tabelle
+			//wir legen nicht die FremdschlÃ¼ssel in der fremden Tabelle an, sondern
+			//die SchlÃ¼ssel fremder Relationen in der eigenen Tabelle
 			foreach (NDO.Mapping.Class cl in mappings.Classes)
 			{
 				foreach(Relation r in cl.Relations)
@@ -372,11 +362,11 @@ namespace NDO
                             new ForeignKeyIterator(r).Iterate(delegate(ForeignKeyColumn fkColumn, bool isLastElement)
                             {
 
-                                // 1:n-Relation auf unsere Klasse - Schlüssel muss bei uns rein							
+                                // 1:n-Relation auf unsere Klasse - SchlÃ¼ssel muss bei uns rein							
                                 SearchAndAddColumn(dt, fkColumn.Name, fkColumn.SystemType);
                             });
 
-                            // Wir müssen auf die TypeColumn Rücksicht nehmen.
+                            // Wir mÃ¼ssen auf die TypeColumn RÃ¼cksicht nehmen.
                             // Das ist die Umkehrung einer 1:n-Beziehung, wir befinden
                             // uns auf der 1-Seite. Ist die 1-Seite polymorph, entspricht
                             // das einer polymorphen Element-Beziehung.
@@ -432,8 +422,8 @@ namespace NDO
 			else
 				dtMap = dsSchema.Tables[r.MappingTable.TableName];
 
-			//MM 7 ForeignKey-Spalten für eigene und Fremdklasse anlegen
-			//MM 7 Wenn nötig auch die TypeColumns anlegen
+			//MM 7 ForeignKey-Spalten fÃ¼r eigene und Fremdklasse anlegen
+			//MM 7 Wenn nÃ¶tig auch die TypeColumns anlegen
 			//    Addiere die Spalte r.ForeignKeyColumnName
             new ForeignKeyIterator(r).Iterate(delegate(ForeignKeyColumn fkColumn, bool isLastElement)
             {
@@ -451,7 +441,7 @@ namespace NDO
 #if nix  // Old single column code
 			Type defaultType = null;
 
-			//TODO: Interfaces berücksichtigen
+			//TODO: Interfaces berÃ¼cksichtigen
 			if (relClass == null)  // Interface
 			{
 				// Typ ist Interface

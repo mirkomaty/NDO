@@ -1,33 +1,23 @@
-//
-// Copyright (C) 2002-2008 HoT - House of Tools Development GmbH 
-// (www.netdataobjects.com)
+﻿//
+// Copyright (c) 2002-2016 Mirko Matytschak 
+// (www.netdataobjects.de)
 //
 // Author: Mirko Matytschak
 //
-// This program is free software; you can redistribute it and/or modify
-// it under the terms of the GNU General Public License (v3) as published by
-// the Free Software Foundation.
+// Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated 
+// documentation files (the "Software"), to deal in the Software without restriction, including without limitation 
+// the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the 
+// Software, and to permit persons to whom the Software is furnished to do so, subject to the following 
+// conditions:
+
+// The above copyright notice and this permission notice shall be included in all copies or substantial portions 
+// of the Software.
 //
-// If you distribute copies of this program, whether gratis or for 
-// a fee, you must pass on to the recipients the same freedoms that 
-// you received.
-//
-// Commercial Licence:
-// For those, who want to develop software with help of this program 
-// and need to distribute their work with a more restrictive licence, 
-// there is a commercial licence available at www.netdataobjects.com.
-// 
-// The above copyright notice and this permission notice shall be
-// included in all copies or substantial portions of the Software.
-// 
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-// EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-// MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-// NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
-// LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
-// OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
-// WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-//
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED 
+// TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL 
+// THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF 
+// CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER 
+// DEALINGS IN THE SOFTWARE.
 
 
 using System;
@@ -157,7 +147,7 @@ namespace NdoUnitTests {
 			pm.MakePersistent(m);
 			pm.Save();
             Assert.AreEqual(1, m.Emails.Count, "1. Wrong number of objects");
-			m.Löschen(e);
+			m.LÃ¶schen(e);
             Assert.AreEqual(NDOObjectState.Deleted, e.NDOObjectState, "1. Wrong state");
 			Assert.AreEqual(0, m.Emails.Count, "2. Wrong number of objects");
             //pm.LogAdapter = new NDO.Logging.ConsoleLogAdapter();
@@ -173,7 +163,7 @@ namespace NdoUnitTests {
 			m.Hinzufuegen(e);
 			pm.Save();
 			Assert.AreEqual(1, m.Emails.Count, "1. Wrong number of objects");
-			m.Löschen(e);
+			m.LÃ¶schen(e);
 			Assert.AreEqual(NDOObjectState.Deleted, e.NDOObjectState, "1. Wrong state");
 			Assert.AreEqual(0, m.Emails.Count, "2. Wrong number of objects");
 			pm.Abort();
@@ -214,7 +204,7 @@ namespace NdoUnitTests {
 			pm.MakePersistent(m);
 			pm.Save();
 			m.Hinzufuegen(e);
-			m.Löschen(e);
+			m.LÃ¶schen(e);
 			Assert.AreEqual(NDOObjectState.Transient, e.NDOObjectState, "1. Wrong state");
 			pm.Save();
 			Assert.AreEqual(NDOObjectState.Transient, e.NDOObjectState, "2. Wrong state");
@@ -226,7 +216,7 @@ namespace NdoUnitTests {
 			pm.MakePersistent(m);
 			pm.Save();
 			m.Hinzufuegen(e);
-			m.Löschen(e);
+			m.LÃ¶schen(e);
 			Assert.AreEqual(NDOObjectState.Transient, e.NDOObjectState, "1. Wrong state");
 			pm.Abort();
 			Assert.AreEqual(NDOObjectState.Transient, e.NDOObjectState, "2. Wrong state");
@@ -242,7 +232,7 @@ namespace NdoUnitTests {
 			pm.MakePersistent(m);
 			pm.Save();
 			IList rr = new ArrayList(m.Emails);
-			m.LöscheEmails();
+			m.LÃ¶scheEmails();
 			Assert.AreEqual(0, m.Emails.Count, "1. Wrong number of objects");
 			for(int i = 0; i < 10; i++) {
 				Assert.AreEqual(NDOObjectState.Deleted, ((Email)rr[i]).NDOObjectState, "2. Wrong state");
@@ -263,7 +253,7 @@ namespace NdoUnitTests {
 			pm.MakePersistent(m);
 			pm.Save();
 			IList rr = new ArrayList(m.Emails);
-			m.LöscheEmails();
+			m.LÃ¶scheEmails();
 			Assert.AreEqual(0, m.Emails.Count, "1. Wrong number of objects");
 			for(int i = 0; i < 10; i++) {
 				Assert.AreEqual(NDOObjectState.Deleted, ((Email)rr[i]).NDOObjectState, "2. Wrong state");
@@ -341,10 +331,10 @@ namespace NdoUnitTests {
 
 			pm.MakeAllHollow();
 			pm.UnloadCache();
-			IList Reisebüros2 = m.Emails;
+			IList ReisebÃ¼ros2 = m.Emails;
 			for(int i = 0; i < 10; i++) {
 				Email r1 = (Email)Emails[i];
-				Email r2 = (Email)Reisebüros2[i];
+				Email r2 = (Email)ReisebÃ¼ros2[i];
 #if !ORACLE && !MYSQL && !FIREBIRD
 				Assert.AreEqual(i.ToString(), r1.Adresse, "3: Email should be in right order");
 #endif
@@ -376,10 +366,10 @@ namespace NdoUnitTests {
 
 			pm.MakeAllHollow();
 			pm.UnloadCache();
-			IList Reisebüros2 = m.Emails;
+			IList ReisebÃ¼ros2 = m.Emails;
 			for(int i = 0; i < 10; i++) {
 				Email r1 = (Email)Emails[i];
-				Email r2 = (Email)Reisebüros2[i];
+				Email r2 = (Email)ReisebÃ¼ros2[i];
 #if !ORACLE && !MYSQL && !FIREBIRD
 				Assert.AreEqual(i.ToString(), r1.Adresse, "3: Email should be in right order");
 #endif

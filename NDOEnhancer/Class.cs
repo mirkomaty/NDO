@@ -1,33 +1,23 @@
-//
-// Copyright (C) 2002-2009 Mirko Matytschak 
-// (www.netdataobjects.com)
+ï»¿//
+// Copyright (c) 2002-2016 Mirko Matytschak 
+// (www.netdataobjects.de)
 //
 // Author: Mirko Matytschak
 //
-// This program is free software; you can redistribute it and/or modify
-// it under the terms of the GNU General Public License (v3) as published by
-// the Free Software Foundation.
+// Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated 
+// documentation files (the "Software"), to deal in the Software without restriction, including without limitation 
+// the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the 
+// Software, and to permit persons to whom the Software is furnished to do so, subject to the following 
+// conditions:
+
+// The above copyright notice and this permission notice shall be included in all copies or substantial portions 
+// of the Software.
 //
-// If you distribute copies of this program, whether gratis or for 
-// a fee, you must pass on to the recipients the same freedoms that 
-// you received.
-//
-// Commercial Licence:
-// For those, who want to develop software with help of this program 
-// and need to distribute their work with a more restrictive licence, 
-// there is a commercial licence available at www.netdataobjects.de.
-// 
-// The above copyright notice and this permission notice shall be
-// included in all copies or substantial portions of the Software.
-// 
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-// EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-// MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-// NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
-// LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
-// OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
-// WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-//
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED 
+// TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL 
+// THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF 
+// CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER 
+// DEALINGS IN THE SOFTWARE.
 
 
 using System;
@@ -112,7 +102,7 @@ namespace NDOEnhancer.Patcher
 
 			// sortedFields ist eine flache Ansicht auf die Felder, wie 
 			// sie in der Datenbank sein werden.
-			// Wir benötigen aber auch die hierarchische Sicht, die die 
+			// Wir benÃ¶tigen aber auch die hierarchische Sicht, die die 
 			// Namen der ValueTypes und embedded Objects liefert.
 			ownFieldsHierarchical = getHierarchicalFieldList();
 
@@ -631,10 +621,10 @@ namespace NDOEnhancer.Patcher
 						int mark = lbl++;
 						ILElement elToInsert = refEl.e.getPredecessor();
 						if (null == elToInsert)
-							throw new Exception("Ungültiger IL-Code bei IList.Add (kein Vorgänger)");
+							throw new Exception("UngÃ¼ltiger IL-Code bei IList.Add (kein VorgÃ¤nger)");
 						ILElement elParameter = refEl.e.getSuccessor();
 						if (null == elParameter)
-							throw new Exception("Ungültiger IL-Code bei IList.Add (kein Nachfolger)");
+							throw new Exception("UngÃ¼ltiger IL-Code bei IList.Add (kein Nachfolger)");
 
 						elToInsert.insertBefore(new ILStatementElement(ldarg_0));
 
@@ -659,10 +649,10 @@ namespace NDOEnhancer.Patcher
 						int mark = lbl++;
 						ILElement elToInsert = refEl.e.getPredecessor();
 						if (null == elToInsert)
-							throw new Exception("Ungültiger IL-Code bei IList.Add (kein Vorgänger)");
+							throw new Exception("UngÃ¼ltiger IL-Code bei IList.Add (kein VorgÃ¤nger)");
 						ILElement elParameter = refEl.e.getSuccessor();
 						if (null == elParameter)
-							throw new Exception("Ungültiger IL-Code bei IList.Add (kein Nachfolger)");
+							throw new Exception("UngÃ¼ltiger IL-Code bei IList.Add (kein Nachfolger)");
 
 						elToInsert.insertBefore(new ILStatementElement(ldarg_0));
 						elToInsert.insertBefore(new ILStatementElement(loadStateManager()));
@@ -685,7 +675,7 @@ namespace NDOEnhancer.Patcher
 						int mark = lbl++;
 						ILElement elToInsert = refEl.e.getPredecessor();
 						if (null == elToInsert)
-							throw new Exception("Ungültiger IL-Code bei IList.Clear (kein Vorgänger)");
+							throw new Exception("UngÃ¼ltiger IL-Code bei IList.Clear (kein VorgÃ¤nger)");
 						ILElement elParameter = refEl.e;
 
 						elToInsert.insertBefore(new ILStatementElement(ldarg_0));
@@ -712,10 +702,10 @@ namespace NDOEnhancer.Patcher
 						int mark = lbl++;
 						ILElement elToInsert = refEl.e.getPredecessor();
 						if (null == elToInsert)
-							throw new Exception("Ungültiger IL-Code bei IList.RemoveAt (kein Vorgänger)");
+							throw new Exception("UngÃ¼ltiger IL-Code bei IList.RemoveAt (kein VorgÃ¤nger)");
 						ILElement elParameter = refEl.e.getSuccessor();
 						if (null == elParameter)
-							throw new Exception("Ungültiger IL-Code bei IList.RemoveAt (kein Nachfolger)");
+							throw new Exception("UngÃ¼ltiger IL-Code bei IList.RemoveAt (kein Nachfolger)");
 						elToInsert.insertBefore(new ILStatementElement(ldarg_0));
 
 						elToInsert.insertBefore(new ILStatementElement(loadStateManager()));
@@ -745,13 +735,13 @@ namespace NDOEnhancer.Patcher
 						int mark = lbl++;
 						ILElement elToInsert = refEl.e.getPredecessor();
 						if (null == elToInsert)
-							throw new Exception("Ungültiger IL-Code bei IList.Add (kein Vorgänger)");
+							throw new Exception("UngÃ¼ltiger IL-Code bei IList.Add (kein VorgÃ¤nger)");
 						ILElement elParameter = refEl.e.getSuccessor();
 						if (null == elParameter)
-							throw new Exception("Ungültiger IL-Code bei IList.Add (kein Nachfolger 1)");
+							throw new Exception("UngÃ¼ltiger IL-Code bei IList.Add (kein Nachfolger 1)");
 						elParameter = elParameter.getSuccessor();
 						if (null == elParameter)
-							throw new Exception("Ungültiger IL-Code bei IList.Add (kein Nachfolger 2)");
+							throw new Exception("UngÃ¼ltiger IL-Code bei IList.Add (kein Nachfolger 2)");
 
 						elToInsert.insertBefore(new ILStatementElement(ldarg_0));
 
@@ -924,7 +914,7 @@ namespace NDOEnhancer.Patcher
 									elements.Add(new ILStatementElement(@"ldstr """ + reference.CleanName + @""""));
 									elements.Add(new ILStatementElement("call       object [NDO]NDO._NDOContainerStack::RegisterContainer(object,object,class [mscorlib]System.Collections.Hashtable,string)"));
                                     elements.Add(new ILStatementElement("castclass " + new ReflectedType(reference.FieldType, this.m_classElement.getAssemblyName()).QuotedILName));
-									// Achtung: insertAfter benötigt die Statements in umgekehrter Reihenfolge
+									// Achtung: insertAfter benÃ¶tigt die Statements in umgekehrter Reihenfolge
 									for (int i = elements.Count - 1; i >=0; i--)
 										statementElement.insertAfter((ILStatementElement)elements[i]);
 									needsContainerStack = true;
@@ -1355,7 +1345,7 @@ namespace NDOEnhancer.Patcher
 		private void
 			add1to1RelationGetAccessor(ILReference reference)
 		{
-			// Get-Methode nur für 1:1
+			// Get-Methode nur fÃ¼r 1:1
 			ILMethodElement method = new ILMethodElement();
 			method.addLine( ".method private hidebysig instance " );
 			method.addLine( reference.ILType + " " + getAccName("ndoget_", reference.Name) + "() cil managed");
@@ -2347,7 +2337,7 @@ namespace NDOEnhancer.Patcher
 
 			if (!parentIsValueType)
 			{
-				// nicht fname verwenden, weil evtl. die Anführungsstriche gebraucht werden
+				// nicht fname verwenden, weil evtl. die AnfÃ¼hrungsstriche gebraucht werden
 				method.addStatement("  stfld      " + tname + " " + m_refName+ "::" + field.Name);
 			}
 			else
@@ -2768,7 +2758,7 @@ namespace NDOEnhancer.Patcher
  
 
 			int nr = 0;
-			// SortedFields enthält auch die ererbten Felder
+			// SortedFields enthÃ¤lt auch die ererbten Felder
 			// Wir brauchen aber nur die eigenen. In ownFieldsHierarchical
 			// sind die eigenen, aber unsortiert
 			for(int i = 0; i < this.mappedFieldCount; i++)
@@ -3111,15 +3101,15 @@ namespace NDOEnhancer.Patcher
 
 			// Wir bauen hier eine hierarchische Ordnung der Felder auf,
 			// wie sie in ownFieldsHierarchical vorliegt. Dort sind aber nur
-			// die eigenen Felder berücksichtigt, wir benötigen hier aber auch
+			// die eigenen Felder berÃ¼cksichtigt, wir benÃ¶tigen hier aber auch
 			// die ererbten Felder.
 			ArrayList addedFields = new ArrayList();
 
 			foreach (DictionaryEntry de in this.sortedFields)
 			{
 				ILField f = (ILField) de.Value;
-				// Wir können hier nur die Parents brauchen, die kommen
-				// aber für jedes Child einmal vor
+				// Wir kÃ¶nnen hier nur die Parents brauchen, die kommen
+				// aber fÃ¼r jedes Child einmal vor
 				if (f.Parent != null)
 				{
 					f = f.Parent;
@@ -3135,8 +3125,8 @@ namespace NDOEnhancer.Patcher
 				}
 				else // Value Types und Embedded Types
 				{
-					// Für die Subfelder eines ValueTypes legen wir einen ValueType an,
-					// der diese Felder repräsentiert.
+					// FÃ¼r die Subfelder eines ValueTypes legen wir einen ValueType an,
+					// der diese Felder reprÃ¤sentiert.
 					ILClassElement valType = new ILClassElement();
 					System.Random r = new System.Random();
 					string vtName = this.getAccName("ndo" + r.Next().ToString(), f.Name);					
@@ -3144,7 +3134,7 @@ namespace NDOEnhancer.Patcher
 					valType.addLine(".class sequential ansi sealed nested public beforefieldinit " + vtName);
 					valType.addLine("extends [mscorlib]System.ValueType");
 
-					// Konstruktor für den ValueType
+					// Konstruktor fÃ¼r den ValueType
 					ILMethodElement vtCtor = new ILMethodElement();
 					vtCtor.addLine(".method public hidebysig specialname rtspecialname instance void  .ctor(string name) cil managed");
 					valType.addElement(vtCtor);
@@ -3179,7 +3169,7 @@ namespace NDOEnhancer.Patcher
 
 					valType.addElement(new ILFieldElement(".field private string __ndoqhname"));
 #if NET11
-					// Vorwärtsdeklaration für den Value Type
+					// VorwÃ¤rtsdeklaration fÃ¼r den Value Type
 					ILClassElement fwdValType = new ILClassElement();
 					fwdValType.addLine(".class sequential ansi sealed nested public beforefieldinit " + vtName);
 					fwdValType.addLine("extends [mscorlib]System.ValueType");
@@ -3228,7 +3218,7 @@ namespace NDOEnhancer.Patcher
 
 
 	/// <summary>
-	/// Die Klasse repräsentiert ein persistentes Feld
+	/// Die Klasse reprÃ¤sentiert ein persistentes Feld
 	/// </summary>
 	internal class ILField : IComparable
 	{
@@ -3342,7 +3332,7 @@ namespace NDOEnhancer.Patcher
 			if (isArray)
 				dottedName += "[]";
 			string ilType = ILFromType(dottedName);
-			// Hier können nochmal eingebaute Typen entstehen.
+			// Hier kÃ¶nnen nochmal eingebaute Typen entstehen.
 			if (this.isBuiltInType(ilType))
 			{
 //				this.isValueType = false;  // Mirko 23.9.

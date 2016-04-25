@@ -1,42 +1,32 @@
-//
-// Copyright (C) 2002-2014 Mirko Matytschak 
+﻿//
+// Copyright (c) 2002-2016 Mirko Matytschak 
 // (www.netdataobjects.de)
 //
 // Author: Mirko Matytschak
 //
-// This program is free software; you can redistribute it and/or modify
-// it under the terms of the GNU General Public License (v3) as published by
-// the Free Software Foundation.
+// Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated 
+// documentation files (the "Software"), to deal in the Software without restriction, including without limitation 
+// the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the 
+// Software, and to permit persons to whom the Software is furnished to do so, subject to the following 
+// conditions:
+
+// The above copyright notice and this permission notice shall be included in all copies or substantial portions 
+// of the Software.
 //
-// If you distribute copies of this program, whether gratis or for 
-// a fee, you must pass on to the recipients the same freedoms that 
-// you received.
-//
-// Commercial Licence:
-// For those, who want to develop software with help of this program 
-// and need to distribute their work with a more restrictive licence, 
-// there is a commercial licence available at www.netdataobjects.de.
-// 
-// The above copyright notice and this permission notice shall be
-// included in all copies or substantial portions of the Software.
-// 
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-// EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-// MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-// NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
-// LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
-// OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
-// WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-//
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED 
+// TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL 
+// THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF 
+// CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER 
+// DEALINGS IN THE SOFTWARE.
 
 
 using System.Reflection;
 using System.Runtime.CompilerServices;
 
 //
-// Allgemeine Informationen �ber eine Assembly werden �ber folgende Attribute 
-// gesteuert. �ndern Sie diese Attributswerte, um die Informationen zu modifizieren,
-// die mit einer Assembly verkn�pft sind.
+// Allgemeine Informationen ï¿½ber eine Assembly werden ï¿½ber folgende Attribute 
+// gesteuert. ï¿½ndern Sie diese Attributswerte, um die Informationen zu modifizieren,
+// die mit einer Assembly verknï¿½pft sind.
 //
 [assembly: AssemblyTitle("")]
 [assembly: AssemblyDescription("")]
@@ -48,41 +38,41 @@ using System.Runtime.CompilerServices;
 [assembly: AssemblyCulture("")]		
 
 //
-// Versionsinformationen f�r eine Assembly bestehen aus folgenden vier Werten:
+// Versionsinformationen fï¿½r eine Assembly bestehen aus folgenden vier Werten:
 //
 //      Hauptversion
 //      Nebenversion 
 //      Buildnummer
 //      Revision
 //
-// Sie k�nnen alle Werte oder die standardm��ige Revision und Buildnummer 
+// Sie kï¿½nnen alle Werte oder die standardmï¿½ï¿½ige Revision und Buildnummer 
 // mit '*' angeben:
 
 [assembly: AssemblyVersion("1.0.*")]
 
 //
-// Um die Assembly zu signieren, m�ssen Sie einen Schl�ssel angeben. Weitere Informationen 
-// �ber die Assemblysignierung finden Sie in der Microsoft .NET Framework-Dokumentation.
+// Um die Assembly zu signieren, mï¿½ssen Sie einen Schlï¿½ssel angeben. Weitere Informationen 
+// ï¿½ber die Assemblysignierung finden Sie in der Microsoft .NET Framework-Dokumentation.
 //
-// Mit den folgenden Attributen k�nnen Sie festlegen, welcher Schl�ssel f�r die Signierung verwendet wird. 
+// Mit den folgenden Attributen kï¿½nnen Sie festlegen, welcher Schlï¿½ssel fï¿½r die Signierung verwendet wird. 
 //
 // Hinweise: 
-//   (*) Wenn kein Schl�ssel angegeben ist, wird die Assembly nicht signiert.
-//   (*) KeyName verweist auf einen Schl�ssel, der im CSP (Crypto Service
+//   (*) Wenn kein Schlï¿½ssel angegeben ist, wird die Assembly nicht signiert.
+//   (*) KeyName verweist auf einen Schlï¿½ssel, der im CSP (Crypto Service
 //       Provider) auf Ihrem Computer installiert wurde. KeyFile verweist auf eine Datei, die einen
-//       Schl�ssel enth�lt.
-//   (*) Wenn die Werte f�r KeyFile und KeyName angegeben werden, 
-//       werden folgende Vorg�nge ausgef�hrt:
-//       (1) Wenn KeyName im CSP gefunden wird, wird dieser Schl�ssel verwendet.
+//       Schlï¿½ssel enthï¿½lt.
+//   (*) Wenn die Werte fï¿½r KeyFile und KeyName angegeben werden, 
+//       werden folgende Vorgï¿½nge ausgefï¿½hrt:
+//       (1) Wenn KeyName im CSP gefunden wird, wird dieser Schlï¿½ssel verwendet.
 //       (2) Wenn KeyName nicht vorhanden ist und KeyFile vorhanden ist, 
-//           wird der Schl�ssel in KeyFile im CSP installiert und verwendet.
-//   (*) Um eine KeyFile zu erstellen, k�nnen Sie das Programm sn.exe (Strong Name) verwenden.
+//           wird der Schlï¿½ssel in KeyFile im CSP installiert und verwendet.
+//   (*) Um eine KeyFile zu erstellen, kï¿½nnen Sie das Programm sn.exe (Strong Name) verwenden.
 //       Wenn KeyFile angegeben wird, muss der Pfad von KeyFile
 //       relativ zum Projektausgabeverzeichnis sein:
 //       %Project Directory%\obj\<configuration>. Wenn sich KeyFile z.B.
 //       im Projektverzeichnis befindet, geben Sie das AssemblyKeyFile-Attribut 
 //       wie folgt an: [assembly: AssemblyKeyFile("..\\..\\mykey.snk")]
-//   (*) Das verz�gern der Signierung ist eine erweiterte Option. Weitere Informationen finden Sie in der
+//   (*) Das verzï¿½gern der Signierung ist eine erweiterte Option. Weitere Informationen finden Sie in der
 //       Microsoft .NET Framework-Dokumentation.
 //
 [assembly: AssemblyDelaySign(false)]

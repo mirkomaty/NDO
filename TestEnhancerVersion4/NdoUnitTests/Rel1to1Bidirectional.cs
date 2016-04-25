@@ -1,33 +1,23 @@
-//
-// Copyright (C) 2002-2008 HoT - House of Tools Development GmbH 
-// (www.netdataobjects.com)
+﻿//
+// Copyright (c) 2002-2016 Mirko Matytschak 
+// (www.netdataobjects.de)
 //
 // Author: Mirko Matytschak
 //
-// This program is free software; you can redistribute it and/or modify
-// it under the terms of the GNU General Public License (v3) as published by
-// the Free Software Foundation.
+// Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated 
+// documentation files (the "Software"), to deal in the Software without restriction, including without limitation 
+// the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the 
+// Software, and to permit persons to whom the Software is furnished to do so, subject to the following 
+// conditions:
+
+// The above copyright notice and this permission notice shall be included in all copies or substantial portions 
+// of the Software.
 //
-// If you distribute copies of this program, whether gratis or for 
-// a fee, you must pass on to the recipients the same freedoms that 
-// you received.
-//
-// Commercial Licence:
-// For those, who want to develop software with help of this program 
-// and need to distribute their work with a more restrictive licence, 
-// there is a commercial licence available at www.netdataobjects.com.
-// 
-// The above copyright notice and this permission notice shall be
-// included in all copies or substantial portions of the Software.
-// 
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-// EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-// MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-// NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
-// LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
-// OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
-// WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-//
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED 
+// TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL 
+// THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF 
+// CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER 
+// DEALINGS IN THE SOFTWARE.
 
 
 using System;
@@ -138,7 +128,7 @@ namespace NdoUnitTests {
 			pm.Save();
 			pm.UnloadCache();
 			l = pm.GetClassExtent(typeof(Sozialversicherungsnummer));
-			Assert.That(l.Count == 0, "Sozialversicherungsnummer sollte gelöscht sein");
+			Assert.That(l.Count == 0, "Sozialversicherungsnummer sollte gelÃ¶scht sein");
 		}
 
 		[Test]
@@ -336,7 +326,7 @@ namespace NdoUnitTests {
 			{
 				thrown = true;
 			}
-			Assert.That(thrown, "Exception m�sste ausgel�st worden sein");
+			Assert.That(thrown, "Exception mï¿½sste ausgelï¿½st worden sein");
 		}
 
 
@@ -408,7 +398,7 @@ namespace NdoUnitTests {
 			Assert.AreEqual(NDOObjectState.Hollow, m.NDOObjectState, "1: Mitarbeiter should be hollow");
 			Assert.AreEqual(NDOObjectState.Persistent, svn.NDOObjectState, "1: SVN should be persistent");
 
-			svn = m.SVN; // ruft LoadData f�r m auf. m.svm liegt auf dem Cache und ist Persistent
+			svn = m.SVN; // ruft LoadData fï¿½r m auf. m.svm liegt auf dem Cache und ist Persistent
 			Assert.AreEqual(NDOObjectState.Persistent, m.NDOObjectState, "1: Mitarbeiter should be persistent");
 			Assert.AreEqual(NDOObjectState.Persistent, svn.NDOObjectState, "2: SVN should be persistent");
 			ObjectId id = m.NDOObjectId;
@@ -497,7 +487,7 @@ namespace NdoUnitTests {
 		[Test]
 		[ExpectedException(typeof(NDOException))]
 		public void AggrTestCreateObjectsTransient() {
-			e.Schlüssel = z;
+			e.SchlÃ¼ssel = z;
 			pm.MakePersistent(e);
 		}
 
@@ -505,18 +495,18 @@ namespace NdoUnitTests {
 		[ExpectedException(typeof(NDOException))]
 		public void AggrTestCreateObjectsTransient2() {
 			pm.MakePersistent(e);
-			e.Schlüssel = z;
+			e.SchlÃ¼ssel = z;
 		}
 
 		[Test]
 		public void AggrTestCreateObjectsSave() {
 			pm.MakePersistent(z);
-			e.Schlüssel = z;
+			e.SchlÃ¼ssel = z;
 			pm.MakePersistent(e);
 			pm.Save();
-			Assert.That(!e.NDOObjectId.Equals(e.Schlüssel.NDOObjectId), "Ids should be different");
+			Assert.That(!e.NDOObjectId.Equals(e.SchlÃ¼ssel.NDOObjectId), "Ids should be different");
 			e = (Email)pm.FindObject(e.NDOObjectId);
-			z = (Zertifikat)pm.FindObject(e.Schlüssel.NDOObjectId);
+			z = (Zertifikat)pm.FindObject(e.SchlÃ¼ssel.NDOObjectId);
 			Assert.NotNull(e, "1. Email not found");
 			Assert.NotNull(z, "1. Zertifikat not found");
 			ObjectId moid = e.NDOObjectId;
@@ -526,7 +516,7 @@ namespace NdoUnitTests {
 
 			pm.UnloadCache();
 			e = (Email)pm.FindObject(moid);
-			Zertifikat s2 = e.Schlüssel;
+			Zertifikat s2 = e.SchlÃ¼ssel;
 			z = (Zertifikat)pm.FindObject(soid);
 			Assert.NotNull(e, "2. Email not found");
 			Assert.NotNull(z, "2. Zertifikat not found");
@@ -560,7 +550,7 @@ namespace NdoUnitTests {
 			pm.MakePersistent(e);
 			pm.MakePersistent(z);
 			pm.Save();
-			e.Schlüssel = z;
+			e.SchlÃ¼ssel = z;
 			z.Adresse = e;
 		}
 
@@ -569,7 +559,7 @@ namespace NdoUnitTests {
 			pm.MakePersistent(z);
 			pm.MakePersistent(e);
 			pm.Save();
-			e.Schlüssel = z;
+			e.SchlÃ¼ssel = z;
 			z.Adresse = null;
 		}
 
@@ -578,7 +568,7 @@ namespace NdoUnitTests {
 			pm.MakePersistent(z);
 			pm.MakePersistent(e);
 			pm.Save();
-			e.Schlüssel = z;
+			e.SchlÃ¼ssel = z;
 			Assert.AreEqual(NDOObjectState.PersistentDirty, z.NDOObjectState, "1. Wrong state");
 			Assert.AreSame(e, z.Adresse, "1. Backlink wrong");
 			pm.Save();
@@ -595,12 +585,12 @@ namespace NdoUnitTests {
 			pm.MakePersistent(z);
 			pm.MakePersistent(e);
 			pm.Save();
-			e.Schlüssel = z;
+			e.SchlÃ¼ssel = z;
 			Assert.AreEqual(NDOObjectState.PersistentDirty, z.NDOObjectState, "1. Wrong state");
-			Assert.NotNull(e.Schlüssel, "1. Zertifikat not found");
+			Assert.NotNull(e.SchlÃ¼ssel, "1. Zertifikat not found");
 			pm.Abort();
 			Assert.AreEqual(NDOObjectState.Persistent, z.NDOObjectState, "2. Wrong state");
-			Assert.Null(e.Schlüssel, "1. Zertifikat should be null");
+			Assert.Null(e.SchlÃ¼ssel, "1. Zertifikat should be null");
 			Assert.Null(z.Adresse, "1. Email should be null");
 		}
 
@@ -609,52 +599,52 @@ namespace NdoUnitTests {
 		public void AggrTestReplaceChildSave() {
 			pm.MakePersistent(z);
 			pm.MakePersistent(e);
-			e.Schlüssel = z;
+			e.SchlÃ¼ssel = z;
 			pm.Save();
-			Assert.NotNull(e.Schlüssel, "1. Zertifikat not found");
+			Assert.NotNull(e.SchlÃ¼ssel, "1. Zertifikat not found");
 			Zertifikat z2 = new Zertifikat();
 			z2.Key = 0815;
 			pm.MakePersistent(z2);
-			e.Schlüssel = z2;
+			e.SchlÃ¼ssel = z2;
 			Assert.AreEqual(NDOObjectState.PersistentDirty, z.NDOObjectState, "1. Wrong state");
 			Assert.AreEqual(NDOObjectState.Created, z2.NDOObjectState, "2. Wrong state");
 			Assert.Null(z.Adresse, "3. No relation to Email");
 			Assert.AreSame(z2.Adresse, e, "4. Email should be same");
-			Assert.AreSame(e.Schlüssel, z2, "5. Zertifikat should be same");
+			Assert.AreSame(e.SchlÃ¼ssel, z2, "5. Zertifikat should be same");
 			pm.Save();
 			Assert.AreEqual(NDOObjectState.Persistent, z.NDOObjectState, "6. Wrong state");
 			Assert.AreEqual(NDOObjectState.Persistent, z2.NDOObjectState, "7. Wrong state");
 			Assert.Null(z.Adresse, "8. No relation to Email");
 			Assert.AreSame(z2.Adresse, e, "9. Email should be same");
-			Assert.AreSame(e.Schlüssel, z2, "10. Zertifikat should be same");
+			Assert.AreSame(e.SchlÃ¼ssel, z2, "10. Zertifikat should be same");
 		}
 
 		[Test]
 		public void AggrTestReplaceChildAbort() {
 			pm.MakePersistent(z);
 			pm.MakePersistent(e);
-			e.Schlüssel = z;
+			e.SchlÃ¼ssel = z;
 			pm.Save();
-			Assert.NotNull(e.Schlüssel, "1. Zertifikat not found");
+			Assert.NotNull(e.SchlÃ¼ssel, "1. Zertifikat not found");
 			Zertifikat z2 = new Zertifikat();
 			z2.Key = 0815;
 			pm.MakePersistent(z2);
-			e.Schlüssel = z2;
+			e.SchlÃ¼ssel = z2;
 			pm.Abort();
 			Assert.AreEqual(NDOObjectState.Transient, z2.NDOObjectState, "1. Wrong state");
 			Assert.AreEqual(NDOObjectState.Persistent, z.NDOObjectState, "2. Wrong state");
 			Assert.Null(z2.Adresse, "3. No relation to Email");
 			Assert.AreSame(z.Adresse, e, "4. Email should be same");
-			Assert.AreSame(e.Schlüssel, z, "5. Zertifikat should be same");
+			Assert.AreSame(e.SchlÃ¼ssel, z, "5. Zertifikat should be same");
 		}
 
 		[Test]
 		public void AggrTestReplaceParentSave() {
 			pm.MakePersistent(z);
 			pm.MakePersistent(e);
-			e.Schlüssel = z;
+			e.SchlÃ¼ssel = z;
 			pm.Save();
-			Assert.NotNull(e.Schlüssel, "1. Zertifikat not found");
+			Assert.NotNull(e.SchlÃ¼ssel, "1. Zertifikat not found");
 			Email m2 = new Email("db@cortex-brainware.de");
 			pm.MakePersistent(m2);
 			z.Adresse = m2;
@@ -665,37 +655,37 @@ namespace NdoUnitTests {
 		public void AggrTestRemoveObjectSave() {
 			pm.MakePersistent(z);
 			pm.MakePersistent(e);
-			e.Schlüssel = z;
+			e.SchlÃ¼ssel = z;
 			pm.Save();
-			Assert.NotNull(e.Schlüssel, "1. Zertifikat not found");
+			Assert.NotNull(e.SchlÃ¼ssel, "1. Zertifikat not found");
 			ObjectId aoid = z.NDOObjectId;
-			e.Schlüssel = null;
+			e.SchlÃ¼ssel = null;
 			Assert.AreEqual(NDOObjectState.PersistentDirty, z.NDOObjectState, "1. Wrong state");
-			Assert.Null(e.Schlüssel, "1. Zertifikat should be null");
+			Assert.Null(e.SchlÃ¼ssel, "1. Zertifikat should be null");
 			Assert.Null(z.Adresse, "1. Email should be null");
 			pm.Save();
-			Assert.Null(e.Schlüssel, "2. Zertifikat should be null");
+			Assert.Null(e.SchlÃ¼ssel, "2. Zertifikat should be null");
 			Assert.AreEqual(NDOObjectState.Persistent, z.NDOObjectState, "2. Wrong state");
 			ObjectId moid = e.NDOObjectId;
 			Assert.That(aoid.IsValid(), "Still valid Zertifikat");
 			pm.UnloadCache();
 			e = (Email)pm.FindObject(moid);
 			Assert.NotNull(e, "3. Email not found");
-			Assert.Null(e.Schlüssel, "3. Zertifikat should be null");
+			Assert.Null(e.SchlÃ¼ssel, "3. Zertifikat should be null");
 		}
 		
 		[Test]
 		public void AggrTestRemoveObjectAbort() {
 			pm.MakePersistent(z);
 			pm.MakePersistent(e);
-			e.Schlüssel = z;
+			e.SchlÃ¼ssel = z;
 			pm.Save();
-			Assert.NotNull(e.Schlüssel, "1. Zertifikat not found");
-			e.Schlüssel = null;
+			Assert.NotNull(e.SchlÃ¼ssel, "1. Zertifikat not found");
+			e.SchlÃ¼ssel = null;
 			Assert.AreEqual(NDOObjectState.PersistentDirty, z.NDOObjectState, "1. Wrong state");
-			Assert.Null(e.Schlüssel, "2. Zertifikat should be null");
+			Assert.Null(e.SchlÃ¼ssel, "2. Zertifikat should be null");
 			pm.Abort();
-			Assert.NotNull(e.Schlüssel, "2. Zertifikat not found");
+			Assert.NotNull(e.SchlÃ¼ssel, "2. Zertifikat not found");
 			Assert.AreEqual(NDOObjectState.Persistent, z.NDOObjectState, "2. Wrong state");
 			Assert.AreSame(e, z.Adresse, "2. Backlink wrong");
 		}
@@ -704,37 +694,37 @@ namespace NdoUnitTests {
 		public void AggrTestRemoveParentSave() {
 			pm.MakePersistent(z);
 			pm.MakePersistent(e);
-			e.Schlüssel = z;
+			e.SchlÃ¼ssel = z;
 			pm.Save();
 			Assert.NotNull(z.Adresse, "1. Email not found");
 			ObjectId aoid = z.NDOObjectId;
 			z.Adresse = null;
 			Assert.AreEqual(NDOObjectState.PersistentDirty, z.NDOObjectState, "1. Wrong state");
-			Assert.Null(e.Schlüssel, "1. Zertifikat should be null");
+			Assert.Null(e.SchlÃ¼ssel, "1. Zertifikat should be null");
 			Assert.Null(z.Adresse, "1. Email should be null");
 			pm.Save();
-			Assert.Null(e.Schlüssel, "2. Zertifikat should be null");
+			Assert.Null(e.SchlÃ¼ssel, "2. Zertifikat should be null");
 			Assert.AreEqual(NDOObjectState.Persistent, z.NDOObjectState, "2. Wrong state");
 			ObjectId moid = e.NDOObjectId;
 			Assert.That(aoid.IsValid(), "Zertifikat still valid");
 			pm.UnloadCache();
 			e = (Email)pm.FindObject(moid);
 			Assert.NotNull(e, "3. Email not found");
-			Assert.Null(e.Schlüssel, "3. Zertifikat should be null");
+			Assert.Null(e.SchlÃ¼ssel, "3. Zertifikat should be null");
 		}
 
 		[Test]
 		public void AggrTestRemoveParentAbort() {
 			pm.MakePersistent(z);
 			pm.MakePersistent(e);
-			e.Schlüssel = z;
+			e.SchlÃ¼ssel = z;
 			pm.Save();
-			Assert.NotNull(e.Schlüssel, "1. Zertifikat not found");
+			Assert.NotNull(e.SchlÃ¼ssel, "1. Zertifikat not found");
 			z.Adresse = null;
 			Assert.AreEqual(NDOObjectState.PersistentDirty, z.NDOObjectState, "1. Wrong state");
-			Assert.Null(e.Schlüssel, "2. Zertifikat should be null");
+			Assert.Null(e.SchlÃ¼ssel, "2. Zertifikat should be null");
 			pm.Abort();
-			Assert.NotNull(e.Schlüssel, "2. Zertifikat not found");
+			Assert.NotNull(e.SchlÃ¼ssel, "2. Zertifikat not found");
 			Assert.AreEqual(NDOObjectState.Persistent, z.NDOObjectState, "2. Wrong state");
 			Assert.AreSame(e, z.Adresse, "2. Backlink wrong");
 		}
@@ -746,7 +736,7 @@ namespace NdoUnitTests {
 			pm.MakePersistent(z);
 			pm.MakePersistent(e);
 			pm.Save();
-			e.Schlüssel = z;
+			e.SchlÃ¼ssel = z;
 			pm.Save();
 			pm.Delete(e);  // Cannot delete object within aggregation
 		}
@@ -757,7 +747,7 @@ namespace NdoUnitTests {
 		public void AggrTestCreateDelete() {
 			pm.MakePersistent(z);
 			pm.MakePersistent(e);
-			e.Schlüssel = z;
+			e.SchlÃ¼ssel = z;
 			pm.Delete(e);  // Cannot delete object within aggregation
 		}
 #endif
@@ -766,12 +756,12 @@ namespace NdoUnitTests {
 		public void AggrTestCreateDeleteAllowed() {
 			pm.MakePersistent(z);
 			pm.MakePersistent(e);
-			e.Schlüssel = z;
-			e.Schlüssel = null;
+			e.SchlÃ¼ssel = z;
+			e.SchlÃ¼ssel = null;
 			pm.Delete(e); 
 			Assert.AreEqual(NDOObjectState.Created, z.NDOObjectState, "1. Wrong state");
 			Assert.AreEqual(NDOObjectState.Transient, e.NDOObjectState, "2. Wrong state");
-			Assert.Null(e.Schlüssel, "3. Zertifikat should be null");
+			Assert.Null(e.SchlÃ¼ssel, "3. Zertifikat should be null");
 			Assert.Null(z.Adresse, "4. Email should be null");
 		}
 
@@ -781,14 +771,14 @@ namespace NdoUnitTests {
 			pm.MakePersistent(e);
 			pm.MakePersistent(z);
 			pm.Save();
-			e.Schlüssel = z;
-			e.Schlüssel = null;
+			e.SchlÃ¼ssel = z;
+			e.SchlÃ¼ssel = null;
 			Assert.AreEqual(NDOObjectState.PersistentDirty, z.NDOObjectState, "1. Wrong state");
-			Assert.Null(e.Schlüssel, "1. Zertifikat should be null");
+			Assert.Null(e.SchlÃ¼ssel, "1. Zertifikat should be null");
 			Assert.Null(z.Adresse, "1. Email should be null");
 			pm.Save();
 			Assert.AreEqual(NDOObjectState.Persistent, z.NDOObjectState, "2. Wrong state");
-			Assert.Null(e.Schlüssel, "2. Zertifikat should be null");
+			Assert.Null(e.SchlÃ¼ssel, "2. Zertifikat should be null");
 			Assert.Null(z.Adresse, "3. Email should be null");
 		}
 
@@ -797,12 +787,12 @@ namespace NdoUnitTests {
 			pm.MakePersistent(e);
 			pm.MakePersistent(z);
 			pm.Save();
-			e.Schlüssel = z;
-			e.Schlüssel = null;
+			e.SchlÃ¼ssel = z;
+			e.SchlÃ¼ssel = null;
 			Assert.AreEqual(NDOObjectState.PersistentDirty, z.NDOObjectState, "1. Wrong state");
 			pm.Abort();
 			Assert.AreEqual(NDOObjectState.Persistent, z.NDOObjectState, "2. Wrong state");
-			Assert.Null(e.Schlüssel, "2. Zertifikat should be null");
+			Assert.Null(e.SchlÃ¼ssel, "2. Zertifikat should be null");
 			Assert.Null(z.Adresse, "3. Email should be null");
 		}
 
@@ -811,7 +801,7 @@ namespace NdoUnitTests {
 		[Test]
 		public void AggrTestHollow() {
 			pm.MakePersistent(z);
-			e.Schlüssel = z;
+			e.SchlÃ¼ssel = z;
 			pm.MakePersistent(e);
 			pm.Save();
 			pm.MakeHollow(e); // setzt e.z auf null
@@ -819,7 +809,7 @@ namespace NdoUnitTests {
 			Assert.AreEqual(NDOObjectState.Hollow, e.NDOObjectState, "1: Email should be hollow");
 			Assert.AreEqual(NDOObjectState.Persistent, z.NDOObjectState, "1: Zertifikat should be persistent");
 
-			z = e.Schlüssel; // ruft LoadData f�r e auf. e.svm liegt auf dem Cache und ist Persistent
+			z = e.SchlÃ¼ssel; // ruft LoadData fï¿½r e auf. e.svm liegt auf dem Cache und ist Persistent
 			Assert.AreEqual(NDOObjectState.Persistent, e.NDOObjectState, "1: Email should be persistent");
 			Assert.AreEqual(NDOObjectState.Persistent, z.NDOObjectState, "2: Zertifikat should be persistent");
 			ObjectId id = e.NDOObjectId;
@@ -828,7 +818,7 @@ namespace NdoUnitTests {
 			e = (Email) pm.FindObject(id);
 			Assert.NotNull(e, "Email not found");
 			Assert.AreEqual(NDOObjectState.Hollow, e.NDOObjectState, "2: Email should be hollow");
-			z = e.Schlüssel;
+			z = e.SchlÃ¼ssel;
 			Assert.AreEqual(NDOObjectState.Persistent, e.NDOObjectState, "2: Email should be persistent");
 			Assert.NotNull(z, "Zertifikat not found");
 			Assert.AreEqual(NDOObjectState.Hollow, z.NDOObjectState, "1: Zertifikat should be hollow");
@@ -839,17 +829,17 @@ namespace NdoUnitTests {
 		[Test]
 		public void  AggrTestMakeAllHollowDelete() {
 			pm.MakePersistent(z);
-			e.Schlüssel = z;
+			e.SchlÃ¼ssel = z;
 			pm.MakePersistent(e);
 			pm.Save();
 			pm.MakeAllHollow();
 			Assert.AreEqual(NDOObjectState.Hollow, e.NDOObjectState, "1: Email should be hollow");
 			Assert.AreEqual(NDOObjectState.Hollow, z.NDOObjectState, "1: Zertifikat should be hollow");
-			Zertifikat zz = e.Schlüssel;  // Das l�dt das Objekt, deshalb geht es hier!
-			e.Schlüssel = null;
+			Zertifikat zz = e.SchlÃ¼ssel;  // Das lï¿½dt das Objekt, deshalb geht es hier!
+			e.SchlÃ¼ssel = null;
 			Assert.AreEqual(NDOObjectState.PersistentDirty, e.NDOObjectState, "2: Email should be persistent dirty");
 			Assert.AreEqual(NDOObjectState.PersistentDirty, z.NDOObjectState, "2: Zertifikat should be persistent dirty");
-			Assert.Null(e.Schlüssel, "3. Email should have no Zertifikat");
+			Assert.Null(e.SchlÃ¼ssel, "3. Email should have no Zertifikat");
 			Assert.Null(z.Adresse, "3. Zertifikat should have no Email");
 			pm.Delete(e);
 		}
@@ -857,7 +847,7 @@ namespace NdoUnitTests {
 		[Test]
 		public void  AggrTestMakeAllHollow() {
 			pm.MakePersistent(z);
-			e.Schlüssel = z;
+			e.SchlÃ¼ssel = z;
 			pm.MakePersistent(e);
 			pm.Save();
 			pm.MakeAllHollow();
@@ -869,7 +859,7 @@ namespace NdoUnitTests {
 		[Test]
 		public void  AggrTestMakeAllHollowUnsaved() {
 			pm.MakePersistent(z);
-			e.Schlüssel = z;
+			e.SchlÃ¼ssel = z;
 			pm.MakePersistent(e);
 			pm.MakeAllHollow();  // before save, objects cannot be made hollow. => in locked objects
 			Assert.AreEqual(NDOObjectState.Created, e.NDOObjectState, "1: Email should be created");
@@ -880,33 +870,33 @@ namespace NdoUnitTests {
 		[Test]
 		public void AggrTestExtentRelatedObjects() {
 			pm.MakePersistent(z);
-			e.Schlüssel = z;
+			e.SchlÃ¼ssel = z;
 			pm.MakePersistent(e);
 			pm.Save();
 			IList liste = pm.GetClassExtent(typeof(Email));
 			e = (Email)liste[0];
 			Assert.AreEqual(NDOObjectState.Persistent, e.NDOObjectState, "1: Email should be persistent");
-			Assert.NotNull(e.Schlüssel, "2. Relation is missing");
-			Assert.AreEqual(NDOObjectState.Persistent, e.Schlüssel.NDOObjectState, "2.: Zertifikat should be hollow");
+			Assert.NotNull(e.SchlÃ¼ssel, "2. Relation is missing");
+			Assert.AreEqual(NDOObjectState.Persistent, e.SchlÃ¼ssel.NDOObjectState, "2.: Zertifikat should be hollow");
 			Assert.AreSame(e, z.Adresse, "2. Backlink wrong");
 
 			pm.UnloadCache();
 			liste = pm.GetClassExtent(typeof(Email));
 			e = (Email)liste[0];
 			Assert.AreEqual(NDOObjectState.Hollow, e.NDOObjectState, "5: Email should be hollow");
-			Assert.NotNull(e.Schlüssel, "6. Relation is missing");
-			Assert.AreEqual(NDOObjectState.Hollow, e.Schlüssel.NDOObjectState, "8.: Zertifikat should be hollow");
+			Assert.NotNull(e.SchlÃ¼ssel, "6. Relation is missing");
+			Assert.AreEqual(NDOObjectState.Hollow, e.SchlÃ¼ssel.NDOObjectState, "8.: Zertifikat should be hollow");
 			Assert.That(e != z.Adresse, "8a. Should be different objects");
-			Assert.AreSame(e, e.Schlüssel.Adresse, "8b. Email should match");
+			Assert.AreSame(e, e.SchlÃ¼ssel.Adresse, "8b. Email should match");
 
 			pm.UnloadCache();
 			liste = pm.GetClassExtent(typeof(Email), false);
 			e = (Email)liste[0];
 			Assert.AreEqual(NDOObjectState.Persistent, e.NDOObjectState, "9: Email should be persistent");
-			Assert.NotNull(e.Schlüssel, "10. Relation is missing");
-			Assert.AreEqual(NDOObjectState.Hollow, e.Schlüssel.NDOObjectState, "12.: Zertifikat should be hollow");
+			Assert.NotNull(e.SchlÃ¼ssel, "10. Relation is missing");
+			Assert.AreEqual(NDOObjectState.Hollow, e.SchlÃ¼ssel.NDOObjectState, "12.: Zertifikat should be hollow");
 			Assert.That(e != z.Adresse, "12a. Should be different objects");
-			Assert.AreSame(e, e.Schlüssel.Adresse, "12b. Email should match");
+			Assert.AreSame(e, e.SchlÃ¼ssel.Adresse, "12b. Email should match");
 		}
 
 		[Test]
@@ -916,7 +906,7 @@ namespace NdoUnitTests {
 			pm.MakePersistent(z);
 //			System.Diagnostics.Debug.WriteLine("e:" + e.NDOObjectId.ExpressionString);
 //			System.Diagnostics.Debug.WriteLine("z:" + z.NDOObjectId.ExpressionString);
-			e.Schlüssel = this.z;
+			e.SchlÃ¼ssel = this.z;
 			pm.Save();
 //			System.Diagnostics.Debug.WriteLine("e:" + e.NDOObjectId.ExpressionString);
 //			System.Diagnostics.Debug.WriteLine("z:" + z.NDOObjectId.ExpressionString);

@@ -1,33 +1,23 @@
-//
-// Copyright (C) 2002-2014 Mirko Matytschak 
+ï»¿//
+// Copyright (c) 2002-2016 Mirko Matytschak 
 // (www.netdataobjects.de)
 //
 // Author: Mirko Matytschak
 //
-// This program is free software; you can redistribute it and/or modify
-// it under the terms of the GNU General Public License (v3) as published by
-// the Free Software Foundation.
+// Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated 
+// documentation files (the "Software"), to deal in the Software without restriction, including without limitation 
+// the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the 
+// Software, and to permit persons to whom the Software is furnished to do so, subject to the following 
+// conditions:
+
+// The above copyright notice and this permission notice shall be included in all copies or substantial portions 
+// of the Software.
 //
-// If you distribute copies of this program, whether gratis or for 
-// a fee, you must pass on to the recipients the same freedoms that 
-// you received.
-//
-// Commercial Licence:
-// For those, who want to develop software with help of this program 
-// and need to distribute their work with a more restrictive licence, 
-// there is a commercial licence available at www.netdataobjects.de.
-// 
-// The above copyright notice and this permission notice shall be
-// included in all copies or substantial portions of the Software.
-// 
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-// EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-// MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-// NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
-// LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
-// OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
-// WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-//
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED 
+// TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL 
+// THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF 
+// CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER 
+// DEALINGS IN THE SOFTWARE.
 
 
 using System;
@@ -230,7 +220,7 @@ namespace NDO
 
 		internal static Name Get (string content, ref int position)
 		{
-			Regex re = new Regex(@"[A-Za-z_öäüßÖÄÜ\[\]][A-Za-z0-9öäüÖÄÜß_\.\[\]]*", RegexOptions.Singleline);
+			Regex re = new Regex(@"[A-Za-z_Ã¶Ã¤Ã¼ÃŸÃ–Ã„Ãœ\[\]][A-Za-z0-9Ã¶Ã¤Ã¼Ã–Ã„ÃœÃŸ_\.\[\]]*", RegexOptions.Singleline);
 			Match match = re.Match(content);
 			if (match.Success && match.Index == 0)
 			{
@@ -462,7 +452,7 @@ namespace NDO
 			if ((t = Name.Get(content.Substring(position), ref position)) != null) return t;
 			if ((t = Operator.Get(content.Substring(position), ref position)) != null) return t;	
 			if ((t = ScParameter.Get(content.Substring(position), ref position)) != null) return t;	
-			throw new Exception("Ungültiger Code beim Scannen eines Abfragestrings. Position: " + position.ToString() + " String ab Position: " + content.Substring(position));
+			throw new Exception("UngÃ¼ltiger Code beim Scannen eines Abfragestrings. Position: " + position.ToString() + " String ab Position: " + content.Substring(position));
 		}
 	}
 }

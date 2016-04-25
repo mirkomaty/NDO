@@ -1,33 +1,23 @@
-//
-// Copyright (C) 2002-2014 Mirko Matytschak 
+ï»¿//
+// Copyright (c) 2002-2016 Mirko Matytschak 
 // (www.netdataobjects.de)
 //
 // Author: Mirko Matytschak
 //
-// This program is free software; you can redistribute it and/or modify
-// it under the terms of the GNU General Public License (v3) as published by
-// the Free Software Foundation.
+// Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated 
+// documentation files (the "Software"), to deal in the Software without restriction, including without limitation 
+// the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the 
+// Software, and to permit persons to whom the Software is furnished to do so, subject to the following 
+// conditions:
+
+// The above copyright notice and this permission notice shall be included in all copies or substantial portions 
+// of the Software.
 //
-// If you distribute copies of this program, whether gratis or for 
-// a fee, you must pass on to the recipients the same freedoms that 
-// you received.
-//
-// Commercial Licence:
-// For those, who want to develop software with help of this program 
-// and need to distribute their work with a more restrictive licence, 
-// there is a commercial licence available at www.netdataobjects.de.
-// 
-// The above copyright notice and this permission notice shall be
-// included in all copies or substantial portions of the Software.
-// 
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-// EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-// MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-// NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
-// LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
-// OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
-// WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-//
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED 
+// TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL 
+// THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF 
+// CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER 
+// DEALINGS IN THE SOFTWARE.
 
 
 using System;
@@ -38,7 +28,7 @@ using NDOInterfaces;
 namespace NDO
 {
 	/// <summary>
-	/// Zusammenfassung für SelectPartGenerator.
+	/// Zusammenfassung fÃ¼r SelectPartGenerator.
 	/// </summary>
 	internal class SelectPartGenerator
 	{
@@ -111,10 +101,10 @@ namespace NDO
 
 
 		/// <summary>
-		/// Trage eine Tabelle für eine Class in die From-List ein. 
+		/// Trage eine Tabelle fÃ¼r eine Class in die From-List ein. 
 		/// Vorher gibts noch ein paar Sicherheitschecks.
 		/// </summary>
-		/// <param name="parentClass">Elternklasse der Beziehung; wird nur für Fehlermeldungen gebraucht.</param>
+		/// <param name="parentClass">Elternklasse der Beziehung; wird nur fÃ¼r Fehlermeldungen gebraucht.</param>
 		/// <param name="relClass">Klasse, deren Tabelle aufgenommen werden soll.</param>
 		/// <param name="fromTable">Hashtabelle, in der alle bereits aufgenommenen Tabellen gelistet werden, um Mehrfachnennungen zu vermeiden</param>
 		/// <returns></returns>
@@ -141,7 +131,7 @@ namespace NDO
 
 			foreach (string name in names)
 			{
-				// Select-Part ändert sich nur, wenn ein Join vorliegt
+				// Select-Part Ã¤ndert sich nur, wenn ein Join vorliegt
 				if (name.IndexOf(".") > -1)
 				{
 					string[] namearr = name.Split(new char[]{'.'});
@@ -171,7 +161,7 @@ namespace NDO
 						}
 
 						Class relClass;
-						// Die bezogene Tabelle hinzufügen
+						// Die bezogene Tabelle hinzufÃ¼gen
 #if PRO
 						// In case of polymorphic queries
 						relClass = null;

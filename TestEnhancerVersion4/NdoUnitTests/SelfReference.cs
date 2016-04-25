@@ -1,33 +1,23 @@
-//
-// Copyright (C) 2002-2008 HoT - House of Tools Development GmbH 
-// (www.netdataobjects.com)
+﻿//
+// Copyright (c) 2002-2016 Mirko Matytschak 
+// (www.netdataobjects.de)
 //
 // Author: Mirko Matytschak
 //
-// This program is free software; you can redistribute it and/or modify
-// it under the terms of the GNU General Public License (v3) as published by
-// the Free Software Foundation.
+// Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated 
+// documentation files (the "Software"), to deal in the Software without restriction, including without limitation 
+// the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the 
+// Software, and to permit persons to whom the Software is furnished to do so, subject to the following 
+// conditions:
+
+// The above copyright notice and this permission notice shall be included in all copies or substantial portions 
+// of the Software.
 //
-// If you distribute copies of this program, whether gratis or for 
-// a fee, you must pass on to the recipients the same freedoms that 
-// you received.
-//
-// Commercial Licence:
-// For those, who want to develop software with help of this program 
-// and need to distribute their work with a more restrictive licence, 
-// there is a commercial licence available at www.netdataobjects.com.
-// 
-// The above copyright notice and this permission notice shall be
-// included in all copies or substantial portions of the Software.
-// 
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-// EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-// MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-// NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
-// LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
-// OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
-// WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-//
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED 
+// TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL 
+// THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF 
+// CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER 
+// DEALINGS IN THE SOFTWARE.
 
 
 using System;
@@ -85,14 +75,14 @@ namespace NdoUnitTests
 			m2.Nachname = "Galli";
 			pm.MakePersistent(m2);
 			m2.Vorgesetzter = m;
-			Assert.AreEqual(NDOObjectState.Created, m2.NDOObjectState, "m2 m�sste Created sein");
-			Assert.AreEqual(1, m.Untergebene.Count, "m m�sste einen Untergebenen in der Liste haben");
+			Assert.AreEqual(NDOObjectState.Created, m2.NDOObjectState, "m2 mï¿½sste Created sein");
+			Assert.AreEqual(1, m.Untergebene.Count, "m mï¿½sste einen Untergebenen in der Liste haben");
 			Mitarbeiter m3 = new Mitarbeiter();
 			m3.Vorname = "m3";
 			m3.Nachname = "dummy";
 			pm.MakePersistent(m3);
 			m2.AddUntergebener(m3);
-			Assert.NotNull(m3.Vorgesetzter, "m3 m�sste einen Chef haben");
+			Assert.NotNull(m3.Vorgesetzter, "m3 mï¿½sste einen Chef haben");
 			pm.Save();
 			pm.UnloadCache();
 			m = (Mitarbeiter) pm.FindObject(m.NDOObjectId);
@@ -113,13 +103,13 @@ namespace NdoUnitTests
 			pm.Save();
 
 			Topic t2 = t.NewSubTopic("Middle Topic");
-			Assert.AreEqual(NDOObjectState.Created, t2.NDOObjectState, "t2 m�sste Created sein");
+			Assert.AreEqual(NDOObjectState.Created, t2.NDOObjectState, "t2 mï¿½sste Created sein");
 			Assert.AreEqual(t, t2.Owner, "Owner stimmt nicht");
-			Assert.AreEqual(1, t.Subtopics.Count, "t m�sste einen Untergebenen in der Liste haben");
+			Assert.AreEqual(1, t.Subtopics.Count, "t mï¿½sste einen Untergebenen in der Liste haben");
 
 			Topic t3 = t2.NewSubTopic("End Topic");
-			Assert.AreEqual(NDOObjectState.Created, t3.NDOObjectState, "t3 m�sste Created sein");
-			Assert.NotNull(t3.Owner, "t3 m�sste einen Owner haben");
+			Assert.AreEqual(NDOObjectState.Created, t3.NDOObjectState, "t3 mï¿½sste Created sein");
+			Assert.NotNull(t3.Owner, "t3 mï¿½sste einen Owner haben");
 
 			pm.Save();
 
@@ -128,18 +118,18 @@ namespace NdoUnitTests
 			Query q = pm.NewQuery(typeof (Topic), "oid = {0}");
             q.Parameters.Add(t.NDOObjectId.Id[0]);
 			t = (Topic) q.ExecuteSingle(true);
-			Assert.AreEqual(1, t.Subtopics.Count, "t m�sste einen Untergebenen in der Liste haben");
+			Assert.AreEqual(1, t.Subtopics.Count, "t mï¿½sste einen Untergebenen in der Liste haben");
 
 			t2 = (Topic) t.Subtopics[0];
-			Assert.NotNull(t2.Owner, "t2 m�sste einen Owner haben");
-			Assert.AreEqual(1, t2.Subtopics.Count, "t2 m�sste einen Untergebenen in der Liste haben");
+			Assert.NotNull(t2.Owner, "t2 mï¿½sste einen Owner haben");
+			Assert.AreEqual(1, t2.Subtopics.Count, "t2 mï¿½sste einen Untergebenen in der Liste haben");
 
 			t3 = (Topic) t2.Subtopics[0];
 			
 			t.RemoveSubTopic(t2);
 			Assert.Null(t2.Owner, "Owner muss null sein");
-			Assert.AreEqual(NDOObjectState.Deleted, t2.NDOObjectState, "t2 muss gel�scht sein");
-			Assert.AreEqual(NDOObjectState.Deleted, t3.NDOObjectState, "t3 muss gel�scht sein");
+			Assert.AreEqual(NDOObjectState.Deleted, t2.NDOObjectState, "t2 muss gelï¿½scht sein");
+			Assert.AreEqual(NDOObjectState.Deleted, t3.NDOObjectState, "t3 muss gelï¿½scht sein");
 			pm.Save();
 		}
 
@@ -153,11 +143,11 @@ namespace NdoUnitTests
 
 			Topic t3 = t2.NewSubTopic("End Topic");
 
-			Assert.AreEqual(NDOObjectState.Created, t2.NDOObjectState, "t2 m�sste Created sein");
+			Assert.AreEqual(NDOObjectState.Created, t2.NDOObjectState, "t2 mï¿½sste Created sein");
 			Assert.AreEqual(t, t2.Owner, "Owner stimmt nicht");
-			Assert.AreEqual(1, t.Subtopics.Count, "t m�sste einen Untergebenen in der Liste haben");
-			Assert.AreEqual(NDOObjectState.Created, t3.NDOObjectState, "t3 m�sste Created sein");
-			Assert.NotNull(t3.Owner, "t3 m�sste einen Owner haben");
+			Assert.AreEqual(1, t.Subtopics.Count, "t mï¿½sste einen Untergebenen in der Liste haben");
+			Assert.AreEqual(NDOObjectState.Created, t3.NDOObjectState, "t3 mï¿½sste Created sein");
+			Assert.NotNull(t3.Owner, "t3 mï¿½sste einen Owner haben");
 			pm.Save();
 
 			pm.UnloadCache();
@@ -165,18 +155,18 @@ namespace NdoUnitTests
 			Query q = pm.NewQuery(typeof (Topic), "oid = {0}");
             q.Parameters.Add(t.NDOObjectId.Id[0]);
 			t = (Topic) q.ExecuteSingle(true);
-			Assert.AreEqual(1, t.Subtopics.Count, "t m�sste einen Untergebenen in der Liste haben");
+			Assert.AreEqual(1, t.Subtopics.Count, "t mï¿½sste einen Untergebenen in der Liste haben");
 
 			t2 = (Topic) t.Subtopics[0];
-			Assert.NotNull(t2.Owner, "t2 m�sste einen Owner haben");
-			Assert.AreEqual(1, t2.Subtopics.Count, "t2 m�sste einen Untergebenen in der Liste haben");
+			Assert.NotNull(t2.Owner, "t2 mï¿½sste einen Owner haben");
+			Assert.AreEqual(1, t2.Subtopics.Count, "t2 mï¿½sste einen Untergebenen in der Liste haben");
 
 			t3 = (Topic) t2.Subtopics[0];
 			
 			t.RemoveSubTopic(t2);
 			Assert.Null(t2.Owner, "Owner muss null sein");
-			Assert.AreEqual(NDOObjectState.Deleted, t2.NDOObjectState, "t2 muss gel�scht sein");
-			Assert.AreEqual(NDOObjectState.Deleted, t3.NDOObjectState, "t3 muss gel�scht sein");
+			Assert.AreEqual(NDOObjectState.Deleted, t2.NDOObjectState, "t2 muss gelï¿½scht sein");
+			Assert.AreEqual(NDOObjectState.Deleted, t3.NDOObjectState, "t3 muss gelï¿½scht sein");
 			pm.Save();
 		}
 
@@ -189,13 +179,13 @@ namespace NdoUnitTests
 			pm.Save();
 
 			Topic t2 = t.NewSubTopic("Middle Topic");
-			Assert.AreEqual(NDOObjectState.Created, t2.NDOObjectState, "t2 m�sste Created sein");
+			Assert.AreEqual(NDOObjectState.Created, t2.NDOObjectState, "t2 mï¿½sste Created sein");
 			Assert.AreEqual(t, t2.Owner, "Owner stimmt nicht");
-			Assert.AreEqual(1, t.Subtopics.Count, "t m�sste einen Untergebenen in der Liste haben");
+			Assert.AreEqual(1, t.Subtopics.Count, "t mï¿½sste einen Untergebenen in der Liste haben");
 
 			Topic t3 = t2.NewSubTopic("End Topic");
-			Assert.AreEqual(NDOObjectState.Created, t3.NDOObjectState, "t3 m�sste Created sein");
-			Assert.NotNull(t3.Owner, "t3 m�sste einen Owner haben");
+			Assert.AreEqual(NDOObjectState.Created, t3.NDOObjectState, "t3 mï¿½sste Created sein");
+			Assert.NotNull(t3.Owner, "t3 mï¿½sste einen Owner haben");
 
 			pm.Save();
 
@@ -204,12 +194,12 @@ namespace NdoUnitTests
 			Query q = pm.NewQuery(typeof (Topic), "oid = {0}");
             q.Parameters.Add(t.NDOObjectId.Id[0]);
             t = (Topic)q.ExecuteSingle(true);
-			Assert.AreEqual(1, t.Subtopics.Count, "t m�sste einen Untergebenen in der Liste haben");
+			Assert.AreEqual(1, t.Subtopics.Count, "t mï¿½sste einen Untergebenen in der Liste haben");
 
 			t2 = (Topic) t.Subtopics[0];
 			ObjectId oid2 = t2.NDOObjectId;
-			Assert.NotNull(t2.Owner, "t2 m�sste einen Owner haben");
-			Assert.AreEqual(1, t2.Subtopics.Count, "t2 m�sste einen Untergebenen in der Liste haben");
+			Assert.NotNull(t2.Owner, "t2 mï¿½sste einen Owner haben");
+			Assert.AreEqual(1, t2.Subtopics.Count, "t2 mï¿½sste einen Untergebenen in der Liste haben");
 
 			t3 = (Topic) t2.Subtopics[0];
 			ObjectId oid3 = t3.NDOObjectId;
@@ -217,8 +207,8 @@ namespace NdoUnitTests
 			t2.RemoveSubTopic(t3);
 			t.RemoveSubTopic(t2);
 			Assert.Null(t2.Owner, "Owner muss null sein");
-			Assert.AreEqual(NDOObjectState.Deleted, t2.NDOObjectState, "t2 muss gel�scht sein");
-			Assert.AreEqual(NDOObjectState.Deleted, t3.NDOObjectState, "t3 muss gel�scht sein");
+			Assert.AreEqual(NDOObjectState.Deleted, t2.NDOObjectState, "t2 muss gelï¿½scht sein");
+			Assert.AreEqual(NDOObjectState.Deleted, t3.NDOObjectState, "t3 muss gelï¿½scht sein");
 			pm.Delete(t);
 			pm.Save();
 			pm.UnloadCache();

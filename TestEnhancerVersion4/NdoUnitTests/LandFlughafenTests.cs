@@ -1,33 +1,23 @@
-//
-// Copyright (C) 2002-2008 HoT - House of Tools Development GmbH 
-// (www.netdataobjects.com)
+﻿//
+// Copyright (c) 2002-2016 Mirko Matytschak 
+// (www.netdataobjects.de)
 //
 // Author: Mirko Matytschak
 //
-// This program is free software; you can redistribute it and/or modify
-// it under the terms of the GNU General Public License (v3) as published by
-// the Free Software Foundation.
+// Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated 
+// documentation files (the "Software"), to deal in the Software without restriction, including without limitation 
+// the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the 
+// Software, and to permit persons to whom the Software is furnished to do so, subject to the following 
+// conditions:
+
+// The above copyright notice and this permission notice shall be included in all copies or substantial portions 
+// of the Software.
 //
-// If you distribute copies of this program, whether gratis or for 
-// a fee, you must pass on to the recipients the same freedoms that 
-// you received.
-//
-// Commercial Licence:
-// For those, who want to develop software with help of this program 
-// and need to distribute their work with a more restrictive licence, 
-// there is a commercial licence available at www.netdataobjects.com.
-// 
-// The above copyright notice and this permission notice shall be
-// included in all copies or substantial portions of the Software.
-// 
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-// EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-// MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-// NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
-// LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
-// OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
-// WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-//
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED 
+// TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL 
+// THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF 
+// CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER 
+// DEALINGS IN THE SOFTWARE.
 
 
 using System;
@@ -137,10 +127,10 @@ namespace NdoUnitTests
 			pm.MakePersistent(f);
 			l.AddFlughafen(f);
 			Assert.AreEqual(NDOObjectState.Created, f.NDOObjectState, "1. Wrong state");
-			Assert.AreEqual(1, l.Flughäfen.Count, "1. Wrong number of objects");
+			Assert.AreEqual(1, l.FlughÃ¤fen.Count, "1. Wrong number of objects");
 			pm.Abort();
 			Assert.AreEqual(NDOObjectState.Transient, f.NDOObjectState, "2. Wrong state");
-			Assert.AreEqual(0, l.Flughäfen.Count, "2. Wrong number of objects");
+			Assert.AreEqual(0, l.FlughÃ¤fen.Count, "2. Wrong number of objects");
 		}
 
 		[Test]
@@ -150,13 +140,13 @@ namespace NdoUnitTests
 			pm.MakePersistent(f);
 			l.AddFlughafen(f);
 			pm.Save();
-			Assert.AreEqual(1, l.Flughäfen.Count, "1. Wrong number of objects");
+			Assert.AreEqual(1, l.FlughÃ¤fen.Count, "1. Wrong number of objects");
 			l.RemoveFlughafen(f);
 			// f keeps the foreign key - so it get's dirty
 			Assert.AreEqual(NDOObjectState.PersistentDirty, f.NDOObjectState, "1. Wrong state");
-			Assert.AreEqual(0, l.Flughäfen.Count, "2. Wrong number of objects");
+			Assert.AreEqual(0, l.FlughÃ¤fen.Count, "2. Wrong number of objects");
 			pm.Save();
-			Assert.AreEqual(0, l.Flughäfen.Count, "3. Wrong number of objects");
+			Assert.AreEqual(0, l.FlughÃ¤fen.Count, "3. Wrong number of objects");
 			Assert.AreEqual(NDOObjectState.Persistent, f.NDOObjectState, "2. Wrong state");
 		}
 
@@ -171,16 +161,16 @@ namespace NdoUnitTests
 			Query q = pm.NewQuery(typeof(Land));
 			l = (Land) q.ExecuteSingle(true);
 			Assert.AreEqual(NDOObjectState.Persistent, l.NDOObjectState, "1. Wrong state");
-			Assert.AreEqual(1, l.Flughäfen.Count, "1. Wrong number of objects");
-			f = (Flughafen) l.Flughäfen[0];
+			Assert.AreEqual(1, l.FlughÃ¤fen.Count, "1. Wrong number of objects");
+			f = (Flughafen) l.FlughÃ¤fen[0];
 			l.RemoveFlughafen(f);
 			// f keeps the foreign key - so it get's dirty
 			Assert.AreEqual(NDOObjectState.PersistentDirty, f.NDOObjectState, "2. Wrong state");
-			Assert.AreEqual(0, l.Flughäfen.Count, "2. Wrong number of objects");
+			Assert.AreEqual(0, l.FlughÃ¤fen.Count, "2. Wrong number of objects");
 			pm.Save();
 			l = (Land) q.ExecuteSingle(true);
 			pm.UnloadCache();
-			Assert.AreEqual(0, l.Flughäfen.Count, "3. Wrong number of objects");
+			Assert.AreEqual(0, l.FlughÃ¤fen.Count, "3. Wrong number of objects");
 		}
 
 		[Test]
@@ -194,16 +184,16 @@ namespace NdoUnitTests
 			Query q = pm.NewQuery(typeof(Land), null, false);
 			l = (Land) q.ExecuteSingle(true);
 			Assert.AreEqual(NDOObjectState.Persistent, l.NDOObjectState, "1. Wrong state");
-			Assert.AreEqual(1, l.Flughäfen.Count, "1. Wrong number of objects");
-			f = (Flughafen) l.Flughäfen[0];
+			Assert.AreEqual(1, l.FlughÃ¤fen.Count, "1. Wrong number of objects");
+			f = (Flughafen) l.FlughÃ¤fen[0];
 			l.RemoveFlughafen(f);
 			// f keeps the foreign key - so it get's dirty
 			Assert.AreEqual(NDOObjectState.PersistentDirty, f.NDOObjectState, "2. Wrong state");
-			Assert.AreEqual(0, l.Flughäfen.Count, "2. Wrong number of objects");
+			Assert.AreEqual(0, l.FlughÃ¤fen.Count, "2. Wrong number of objects");
 			pm.Save();
 			l = (Land) q.ExecuteSingle(true);
 			pm.UnloadCache();
-			Assert.AreEqual(0, l.Flughäfen.Count, "3. Wrong number of objects");
+			Assert.AreEqual(0, l.FlughÃ¤fen.Count, "3. Wrong number of objects");
 		}
 
 		[Test]
@@ -213,12 +203,12 @@ namespace NdoUnitTests
 			pm.MakePersistent(f);
 			l.AddFlughafen(f);
 			pm.Save();
-			Assert.AreEqual(1, l.Flughäfen.Count, "1. Wrong number of objects");
+			Assert.AreEqual(1, l.FlughÃ¤fen.Count, "1. Wrong number of objects");
 			l.RemoveFlughafen(f);
 			Assert.AreEqual(NDOObjectState.PersistentDirty, f.NDOObjectState, "1. Wrong state");
-			Assert.AreEqual(0, l.Flughäfen.Count, "2. Wrong number of objects");
+			Assert.AreEqual(0, l.FlughÃ¤fen.Count, "2. Wrong number of objects");
 			pm.Abort();
-			Assert.AreEqual(1, l.Flughäfen.Count, "3. Wrong number of objects");
+			Assert.AreEqual(1, l.FlughÃ¤fen.Count, "3. Wrong number of objects");
 			Assert.AreEqual(NDOObjectState.Persistent, f.NDOObjectState, "2. Wrong state");
 		}
 
@@ -291,15 +281,15 @@ namespace NdoUnitTests
 				l.AddFlughafen(f);
 			}
 			pm.Save();
-			IList ff = new ArrayList(l.Flughäfen);
-			l.LöscheFlughäfen();
-			Assert.AreEqual(0, l.Flughäfen.Count, "1. Wrong number of objects");
+			IList ff = new ArrayList(l.FlughÃ¤fen);
+			l.LÃ¶scheFlughÃ¤fen();
+			Assert.AreEqual(0, l.FlughÃ¤fen.Count, "1. Wrong number of objects");
 			for(int i = 0; i < 10; i++) 
 			{
 				Assert.AreEqual(NDOObjectState.PersistentDirty, ((Flughafen)ff[i]).NDOObjectState, "2. Wrong state");
 			}
 			pm.Save();
-			Assert.AreEqual(0, l.Flughäfen.Count, "3. Wrong number of objects");
+			Assert.AreEqual(0, l.FlughÃ¤fen.Count, "3. Wrong number of objects");
 			for(int i = 0; i < 10; i++) 
 			{
 				Assert.AreEqual(NDOObjectState.Persistent, ((Flughafen)ff[i]).NDOObjectState, "4. Wrong state");
@@ -317,15 +307,15 @@ namespace NdoUnitTests
 				l.AddFlughafen(f);
 			}
 			pm.Save();
-			IList ff = new ArrayList(l.Flughäfen);
-			l.LöscheFlughäfen();
-			Assert.AreEqual(0, l.Flughäfen.Count, "1. Wrong number of objects");
+			IList ff = new ArrayList(l.FlughÃ¤fen);
+			l.LÃ¶scheFlughÃ¤fen();
+			Assert.AreEqual(0, l.FlughÃ¤fen.Count, "1. Wrong number of objects");
 			for(int i = 0; i < 10; i++) 
 			{
 				Assert.AreEqual(NDOObjectState.PersistentDirty, ((Flughafen)ff[i]).NDOObjectState, "2. Wrong state");
 			}
 			pm.Abort();
-			Assert.AreEqual(10, l.Flughäfen.Count, "3. Wrong number of objects");
+			Assert.AreEqual(10, l.FlughÃ¤fen.Count, "3. Wrong number of objects");
 			for(int i = 0; i < 10; i++) 
 			{
 				Assert.AreEqual(NDOObjectState.Persistent, ((Flughafen)ff[i]).NDOObjectState, "4. Wrong state");
@@ -343,15 +333,15 @@ namespace NdoUnitTests
 				l.AddFlughafen(f);
 			}
 			pm.Save();
-			IList ff = new ArrayList(l.Flughäfen);
-			l.ErsetzeFlughäfen(null);
-			Assert.Null(l.Flughäfen, "Flughäfen should be null");
+			IList ff = new ArrayList(l.FlughÃ¤fen);
+			l.ErsetzeFlughÃ¤fen(null);
+			Assert.Null(l.FlughÃ¤fen, "FlughÃ¤fen should be null");
 			for(int i = 0; i < 3; i++) 
 			{
 				Assert.AreEqual(NDOObjectState.PersistentDirty, ((Flughafen)ff[i]).NDOObjectState, "2. Wrong state");
 			}
 			pm.Save();
-			Assert.Null(l.Flughäfen, "Flughäfen should be null");
+			Assert.Null(l.FlughÃ¤fen, "FlughÃ¤fen should be null");
 			for(int i = 0; i < 3; i++) 
 			{
 				Assert.AreEqual(NDOObjectState.Persistent, ((Flughafen)ff[i]).NDOObjectState, "4. Wrong state");
@@ -369,15 +359,15 @@ namespace NdoUnitTests
 				l.AddFlughafen(f);
 			}
 			pm.Save();
-			IList ff = new ArrayList(l.Flughäfen);
-			l.ErsetzeFlughäfen(null);
-			Assert.Null(l.Flughäfen, "No objects should be there");
+			IList ff = new ArrayList(l.FlughÃ¤fen);
+			l.ErsetzeFlughÃ¤fen(null);
+			Assert.Null(l.FlughÃ¤fen, "No objects should be there");
 			for(int i = 0; i < 3; i++) 
 			{
 				Assert.AreEqual(NDOObjectState.PersistentDirty, ((Flughafen)ff[i]).NDOObjectState, "2. Wrong state");
 			}
 			pm.Abort();
-			Assert.AreEqual(3, l.Flughäfen.Count, "3. Wrong number of objects");
+			Assert.AreEqual(3, l.FlughÃ¤fen.Count, "3. Wrong number of objects");
 			for(int i = 0; i < 3; i++) 
 			{
 				Assert.AreEqual(NDOObjectState.Persistent, ((Flughafen)ff[i]).NDOObjectState, "4. Wrong state");
@@ -395,14 +385,14 @@ namespace NdoUnitTests
 				l.AddFlughafen(f);
 			}
 			pm.Save();
-			IList neueFlughäfen = new ArrayList();
+			IList neueFlughÃ¤fen = new ArrayList();
 			Flughafen nr = CreateFlughafen("Test");
 			pm.MakePersistent(nr);
-			neueFlughäfen.Add(nr);
+			neueFlughÃ¤fen.Add(nr);
 
-			IList ff = new ArrayList(l.Flughäfen);
-			l.ErsetzeFlughäfen(neueFlughäfen);
-			Assert.AreEqual(1, l.Flughäfen.Count, "1. Wrong number of objects");
+			IList ff = new ArrayList(l.FlughÃ¤fen);
+			l.ErsetzeFlughÃ¤fen(neueFlughÃ¤fen);
+			Assert.AreEqual(1, l.FlughÃ¤fen.Count, "1. Wrong number of objects");
 			for(int i = 0; i < 3; i++) 
 			{
 				Assert.AreEqual(NDOObjectState.PersistentDirty, ((Flughafen)ff[i]).NDOObjectState, "2. Wrong state");
@@ -410,7 +400,7 @@ namespace NdoUnitTests
 			Assert.AreEqual(NDOObjectState.Created, nr.NDOObjectState, "3. Wrong state");
 
 			pm.Save();
-			Assert.AreEqual(1, l.Flughäfen.Count, "4. Wrong number of objects");
+			Assert.AreEqual(1, l.FlughÃ¤fen.Count, "4. Wrong number of objects");
 			for(int i = 0; i < 3; i++) 
 			{
 				Assert.AreEqual(NDOObjectState.Persistent, ((Flughafen)ff[i]).NDOObjectState, "5. Wrong state");
@@ -429,13 +419,13 @@ namespace NdoUnitTests
 				l.AddFlughafen(f);
 			}
 			pm.Save();
-			IList neueFlughäfen = new ArrayList();
+			IList neueFlughÃ¤fen = new ArrayList();
 			Flughafen nr = CreateFlughafen("Test");
-			neueFlughäfen.Add(nr);
+			neueFlughÃ¤fen.Add(nr);
 
-			IList ff = new ArrayList(l.Flughäfen);
-			l.ErsetzeFlughafenn(neueFlughäfen);
-			Assert.AreEqual(1, l.Flughäfen.Count, "1. Wrong number of objects");
+			IList ff = new ArrayList(l.FlughÃ¤fen);
+			l.ErsetzeFlughafenn(neueFlughÃ¤fen);
+			Assert.AreEqual(1, l.FlughÃ¤fen.Count, "1. Wrong number of objects");
 			for(int i = 0; i < 3; i++) 
 			{
 				Assert.AreEqual(NDOObjectState.Deleted, ((Flughafen)ff[i]).NDOObjectState, "2. Wrong state");
@@ -443,7 +433,7 @@ namespace NdoUnitTests
 			Assert.AreEqual(NDOObjectState.Created, nr.NDOObjectState, "3. Wrong state");
 
 			pm.Abort();
-			Assert.AreEqual(3, l.Flughäfen.Count, "4. Wrong number of objects");
+			Assert.AreEqual(3, l.FlughÃ¤fen.Count, "4. Wrong number of objects");
 			for(int i = 0; i < 3; i++) 
 			{
 				Assert.AreEqual(NDOObjectState.Persistent, ((Flughafen)ff[i]).NDOObjectState, "5. Wrong state");
@@ -462,13 +452,13 @@ namespace NdoUnitTests
 			pm.MakeHollow(l);
 			Assert.AreEqual(NDOObjectState.Hollow, l.NDOObjectState, "1: Land should be hollow");
 			Assert.AreEqual(NDOObjectState.Persistent, f.NDOObjectState, "1: Flughafen should be persistent");
-			IList Flughafen = l.Flughäfen;
+			IList Flughafen = l.FlughÃ¤fen;
 
 			pm.MakeHollow(l, true);
 			Assert.AreEqual(NDOObjectState.Hollow, l.NDOObjectState, "2: Land should be hollow");
 			Assert.AreEqual(NDOObjectState.Hollow, f.NDOObjectState, "2: Flughafen should be hollow");
 
-			Flughafen = l.Flughäfen;
+			Flughafen = l.FlughÃ¤fen;
 			Assert.AreEqual(NDOObjectState.Persistent, l.NDOObjectState, "3: Land should be persistent");
 			Assert.AreEqual(NDOObjectState.Hollow, f.NDOObjectState, "3: Flughafen should be hollow");
 			Assert.AreEqual("ADC", f.Zweck, "3: Flughafen should have correct Zweck");
@@ -518,7 +508,7 @@ namespace NdoUnitTests
 			pm.Save();
 			pm.MakeHollow(l, true);
 
-			IList Flughafenn = new ArrayList(l.Flughäfen);
+			IList Flughafenn = new ArrayList(l.FlughÃ¤fen);
 			Assert.AreEqual(10, Flughafenn.Count, "Array size should be 10");
 
 			for(int i = 0; i < 10; i++) 
@@ -539,7 +529,7 @@ namespace NdoUnitTests
 
 			pm.MakeAllHollow();
 			pm.UnloadCache();
-			IList Flughafenn2 = l.Flughäfen;
+			IList Flughafenn2 = l.FlughÃ¤fen;
 			for(int i = 0; i < 10; i++) 
 			{
 				Flughafen r1 = (Flughafen)Flughafenn[i];
@@ -566,7 +556,7 @@ namespace NdoUnitTests
 			pm.Save();
 			pm.MakeHollow(l, true);
 
-			IList Flughafenn = new ArrayList(l.Flughäfen);
+			IList Flughafenn = new ArrayList(l.FlughÃ¤fen);
 
 			for(int i = 0; i < 10; i++) 
 			{
@@ -581,7 +571,7 @@ namespace NdoUnitTests
 
 			pm.MakeAllHollow();
 			pm.UnloadCache();
-			IList Flughafenn2 = l.Flughäfen;
+			IList Flughafenn2 = l.FlughÃ¤fen;
 			for(int i = 0; i < 10; i++) 
 			{
 				Flughafen r1 = (Flughafen)Flughafenn[i];
@@ -604,25 +594,25 @@ namespace NdoUnitTests
 			IList liste = pm.GetClassExtent(typeof(Land));
 			l = (Land)liste[0];
 			Assert.AreEqual(NDOObjectState.Persistent, l.NDOObjectState, "1: Land should be persistent");
-			Assert.NotNull(l.Flughäfen, "2. Relation is missing");
-			Assert.AreEqual(1, l.Flughäfen.Count, "3. Wrong number of objects");
-			Assert.AreEqual(NDOObjectState.Persistent, ((Flughafen)l.Flughäfen[0]).NDOObjectState, "4.: Flughafen should be hollow");
+			Assert.NotNull(l.FlughÃ¤fen, "2. Relation is missing");
+			Assert.AreEqual(1, l.FlughÃ¤fen.Count, "3. Wrong number of objects");
+			Assert.AreEqual(NDOObjectState.Persistent, ((Flughafen)l.FlughÃ¤fen[0]).NDOObjectState, "4.: Flughafen should be hollow");
 
 			pm.UnloadCache();
 			liste = pm.GetClassExtent(typeof(Land));
 			l = (Land)liste[0];
 			Assert.AreEqual(NDOObjectState.Hollow, l.NDOObjectState, "5: Land should be hollow");
-			Assert.NotNull(l.Flughäfen, "6. Relation is missing");
-			Assert.AreEqual(1, l.Flughäfen.Count, "7. Wrong number of objects");
-			Assert.AreEqual(NDOObjectState.Hollow, ((Flughafen)l.Flughäfen[0]).NDOObjectState, "8.: Flughafen should be hollow");
+			Assert.NotNull(l.FlughÃ¤fen, "6. Relation is missing");
+			Assert.AreEqual(1, l.FlughÃ¤fen.Count, "7. Wrong number of objects");
+			Assert.AreEqual(NDOObjectState.Hollow, ((Flughafen)l.FlughÃ¤fen[0]).NDOObjectState, "8.: Flughafen should be hollow");
 
 			pm.UnloadCache();
 			liste = pm.GetClassExtent(typeof(Land), false);
 			l = (Land)liste[0];
 			Assert.AreEqual(NDOObjectState.Persistent, l.NDOObjectState, "9: Land should be persistent");
-			Assert.NotNull(l.Flughäfen, "10. Relation is missing");
-			Assert.AreEqual(1, l.Flughäfen.Count, "11. Wrong number of objects");
-			Assert.AreEqual(NDOObjectState.Hollow, ((Flughafen)l.Flughäfen[0]).NDOObjectState, "12.: Flughafen should be hollow");
+			Assert.NotNull(l.FlughÃ¤fen, "10. Relation is missing");
+			Assert.AreEqual(1, l.FlughÃ¤fen.Count, "11. Wrong number of objects");
+			Assert.AreEqual(NDOObjectState.Hollow, ((Flughafen)l.FlughÃ¤fen[0]).NDOObjectState, "12.: Flughafen should be hollow");
 		}
 
 		[Test]
@@ -634,13 +624,13 @@ namespace NdoUnitTests
 			pm.Save();
 			pm.UnloadCache();
 			l = (Land) pm.FindObject(l.NDOObjectId);
-			//Assert.That(l.Flughäfen.Count == 1);
+			//Assert.That(l.FlughÃ¤fen.Count == 1);
 			l.ErsetzeFlughafenn(new ArrayList());
 			pm.Save();
 			pm.UnloadCache();
 			l = (Land) pm.FindObject(l.NDOObjectId);
-Assert.Null(l.Flughäfen, "Flughafenn should be null");
-			Assert.That(l.Flughäfen.Count == 0, "Flughafenn should be empty");
+Assert.Null(l.FlughÃ¤fen, "Flughafenn should be null");
+			Assert.That(l.FlughÃ¤fen.Count == 0, "Flughafenn should be empty");
 		}
 
 		[Test]
@@ -652,13 +642,13 @@ Assert.Null(l.Flughäfen, "Flughafenn should be null");
 			pm.Save();
 			pm.UnloadCache();
 			l = (Land) pm.FindObject(l.NDOObjectId);
-			//Assert.That(l.Flughäfen.Count == 1);
+			//Assert.That(l.FlughÃ¤fen.Count == 1);
 			l.ErsetzeFlughafenn(null);
 			pm.Save();
 			pm.UnloadCache();
 			l = (Land) pm.FindObject(l.NDOObjectId);
-Assert.Null(l.Flughäfen, "Flughafenn should be null");
-			Assert.That(l.Flughäfen.Count == 0, "Flughafenn should be empty");
+Assert.Null(l.FlughÃ¤fen, "Flughafenn should be null");
+			Assert.That(l.FlughÃ¤fen.Count == 0, "Flughafenn should be empty");
 		}
 
 #if !MYSQL
@@ -676,7 +666,7 @@ Assert.Null(l.Flughäfen, "Flughafenn should be null");
 			Query q = pm.NewQuery(typeof(Land), null);
 			l = (Land) q.ExecuteSingle(true);
 			l.Vorname = "Hans";
-			((Flughafen)l.Flughäfen[0]).Zweck = "Neuer Zweck";
+			((Flughafen)l.FlughÃ¤fen[0]).Zweck = "Neuer Zweck";
 
 			FieldInfo fi = pm.NDOMapping.GetType().GetField("persistenceHandler", BindingFlags.Instance | BindingFlags.NonPublic);
 			Hashtable ht = (Hashtable) fi.GetValue(pm.NDOMapping);
@@ -696,7 +686,7 @@ Assert.Null(l.Flughäfen, "Flughafenn should be null");
 			pm.UnloadCache();
 			l = (Land) q.ExecuteSingle(true);
 			Assert.AreEqual("Hartmut", l.Vorname, "Vorname falsch");
-			Assert.AreEqual("ADC", ((Flughafen)l.Flughäfen[0]).Zweck, "Vorname falsch");
+			Assert.AreEqual("ADC", ((Flughafen)l.FlughÃ¤fen[0]).Zweck, "Vorname falsch");
 			
 		}
 #endif
@@ -711,7 +701,7 @@ Assert.Null(l.Flughäfen, "Flughafenn should be null");
 			pm.UnloadCache();
 			Query q = pm.NewQuery(typeof(Land), null);
 			l = (Land) q.ExecuteSingle(true);
-			IEnumerator ie = l.Flughäfen.GetEnumerator();
+			IEnumerator ie = l.FlughÃ¤fen.GetEnumerator();
 			bool result = ie.MoveNext();
 			Assert.That(result, "Enumerator should give a result");
 			Assert.NotNull(ie.Current);
@@ -728,7 +718,7 @@ Assert.Null(l.Flughäfen, "Flughafenn should be null");
 			pm.UnloadCache();
 			Query q = pm.NewQuery(typeof(Land), null);
 			l = (Land) q.ExecuteSingle(true);
-			Assert.AreEqual(1, l.Flughäfen.Count, "Count should be 1");
+			Assert.AreEqual(1, l.FlughÃ¤fen.Count, "Count should be 1");
 		}
 
 
@@ -743,7 +733,7 @@ Assert.Null(l.Flughäfen, "Flughafenn should be null");
 			Query q = pm.NewQuery(typeof(Land), null);
 			l = (Land) q.ExecuteSingle(true);
 			Assert.NotNull(l, "Land not found");
-			Assert.AreEqual(1, l.Flughäfen.Count, "Count wrong");
+			Assert.AreEqual(1, l.FlughÃ¤fen.Count, "Count wrong");
 			Flughafen f2 = CreateFlughafen("FRA");
 			pm.MakePersistent(f2);
 			l.AddFlughafen(f2);
@@ -752,7 +742,7 @@ Assert.Null(l.Flughäfen, "Flughafenn should be null");
 			pm.VerboseMode = false;
 			pm.UnloadCache();
 			l = (Land) q.ExecuteSingle(true);
-			Assert.AreEqual(2, l.Flughäfen.Count, "Count wrong");
+			Assert.AreEqual(2, l.FlughÃ¤fen.Count, "Count wrong");
 		}
 
 		public void TestAddFlughafen2()
@@ -766,7 +756,7 @@ Assert.Null(l.Flughäfen, "Flughafenn should be null");
 			pm.VerboseMode = false;
 			pm.UnloadCache();
 			l = (Land) pm.FindObject(l.NDOObjectId);
-			Assert.AreEqual(1, l.Flughäfen.Count, "Count wrong");
+			Assert.AreEqual(1, l.FlughÃ¤fen.Count, "Count wrong");
 		}
 
 		[Test]
@@ -777,13 +767,13 @@ Assert.Null(l.Flughäfen, "Flughafenn should be null");
 			l.AddFlughafen(f);
 			pm.Save();
 			pm.MakeHollow(f);
-			f.Kürzel = "XXX";
+			f.KÃ¼rzel = "XXX";
 			pm.Save();  // Bug would overwrite foreign key in database.
-			Assert.AreEqual("XXX", f.Kürzel, "Kürzel should be changed");
+			Assert.AreEqual("XXX", f.KÃ¼rzel, "KÃ¼rzel should be changed");
 			ObjectId id = l.NDOObjectId;
 			pm.UnloadCache();
 			l = (Land) pm.FindObject(id);
-			Assert.AreEqual(1, l.Flughäfen.Count, "Number of children");
+			Assert.AreEqual(1, l.FlughÃ¤fen.Count, "Number of children");
 		}
 
 		private Land CreateLand(string name) 
@@ -796,7 +786,7 @@ Assert.Null(l.Flughäfen, "Flughafenn should be null");
 		private Flughafen CreateFlughafen(string name) 
 		{
 			Flughafen f = new Flughafen();
-			f.Kürzel = name;
+			f.KÃ¼rzel = name;
 			return f;
 		}
 	}
