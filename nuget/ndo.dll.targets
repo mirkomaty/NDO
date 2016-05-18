@@ -5,6 +5,5 @@
   </Target>
   
   <UsingTask AssemblyFile="NDOEnhancer.BuildTask.dll" TaskName="NDO.BuildTask.NDOEnhancer" />
-  <UsingTask AssemblyFile="NDOEnhancer.BuildTask.dll" TaskName="NDO.BuildTask.NDOEnhancer32" />
 
 </Project>
