@@ -209,9 +209,7 @@ namespace NDO.Linq
 			this.take = take;
 			return this;
 		}
-
 		
-
 		/// <summary>
 		/// Converts the VirtualTable to a List.
 		/// </summary>
@@ -229,10 +227,36 @@ namespace NDO.Linq
 		/// <returns></returns>
 		public T FirstOrDefault()
 		{
-			List<T> result = ResultTable;
-			if (result.Count == 0)
-				return default(T);
-			return result[0];
+			return Ndoquery.ExecuteSingle( true );
+		}
+
+		/// <summary>
+		/// Gets a single object with the query
+		/// </summary>
+		/// <returns></returns>
+		public T SingleOrDefault()
+		{
+			return FirstOrDefault();
+		}
+
+		/// <summary>
+		/// Gets a single object with the query
+		/// </summary>
+		/// <returns></returns>
+		/// <remarks>Throws a NDOException, if the query fetches an empty result set.</remarks>
+		public T First()
+		{
+			return Ndoquery.ExecuteSingle( true );
+		}
+
+		/// <summary>
+		/// Gets a single object with the query
+		/// </summary>
+		/// <returns></returns>
+		/// <remarks>Throws a NDOException, if the query fetches an empty result set.</remarks>
+		public T Single()
+		{
+			return Ndoquery.ExecuteSingle( true );
 		}
 
 		/// <summary>
