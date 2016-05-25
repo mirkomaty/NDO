@@ -1022,7 +1022,8 @@ namespace NDO
                 query = query.Replace(" DISTINCT", "");
 
 				IPersistenceHandler persistenceHandler = mappings.GetPersistenceHandler(t, this.PersistenceManager.HasOwnerCreatedIds);
-				this.pm.CheckTransaction(persistenceHandler, t);
+				// Each connection opens it's own transaction here.
+				this.pm.CheckTransaction( persistenceHandler, t );
 				// Note, that we can't execute all subQueries in one batch, because
 				// the subqueries could be executed against different connections.
 				IList l = persistenceHandler.ExecuteBatch(new string[]{query}, this.parameters);
