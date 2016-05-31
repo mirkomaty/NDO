@@ -41,7 +41,7 @@ namespace NDO
 		/// <param name="command">A SQL command string</param>
 		/// <returns>A DataReader object which may be empty.</returns>
 		/// <remarks>The command string must be formatted for the given database</remarks>
-		IDataReader Execute( string command );
+		IDataReader Execute( string command, bool returnReader = false );
 
 		/// <summary>
 		/// Returns the NDO Provider for the Database, which is configured in the given NDO Connection

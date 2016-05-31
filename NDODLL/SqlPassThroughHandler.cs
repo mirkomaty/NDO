@@ -56,7 +56,7 @@ namespace NDO
 			this.pm.CheckEndTransaction( true );
 		}
 
-		public IDataReader Execute( string command )
+		public IDataReader Execute( string command, bool returnReader = false )
 		{
 			if (this.pm.VerboseMode && this.pm.LogAdapter != null)
 				this.pm.LogAdapter.Info( command );
@@ -70,7 +70,11 @@ namespace NDO
 			cmd.CommandText = command;
 			cmd.Transaction = ti.Transaction;
 
-			return cmd.ExecuteReader();
+			if (returnReader)
+				return cmd.ExecuteReader();
+
+			cmd.ExecuteNonQuery();
+			return null;
 		}
 
 		public IProvider Provider
