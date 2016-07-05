@@ -208,7 +208,21 @@ namespace NDO.Mapping
         private IEnumerable<string> myEmbeddedTypes;            // wird in InitFields angelegt
         internal int                RelationOrdinalBase = -1;   // wird in InitFields angelegt
         internal IEnumerable<string>FKColumnNames;              // InitFields - collects all foreign key column names used in LoadState
+		private bool?				hasEncryptedFields;
 
+		[Browsable(false)]
+		public bool HasEncryptedFields
+		{
+			get 
+			{
+				if (!this.hasEncryptedFields.HasValue)
+				{
+					this.hasEncryptedFields = this.fields.Any( f => f.Encrypted );
+				}
+
+				return this.hasEncryptedFields.Value; 
+			}
+		}
 
         private Column typeNameColumn = null;
         [ReadOnly(true)]
@@ -390,20 +404,23 @@ namespace NDO.Mapping
             }
         }
 
-
         void IFieldInitializer.InitFields()
         {
-            systemType = Type.GetType(FullName + ", " + AssemblyName);
-            if (SystemType == null) throw new NDOException(22, "Can't load type: " + FullName + ", " + AssemblyName);
+            this.systemType = Type.GetType(FullName + ", " + AssemblyName);
+            if (this.systemType == null) throw new NDOException(22, "Can't load type: " + FullName + ", " + AssemblyName);
             IsAbstract = SystemType.IsAbstract;
-#if  PRO
             if (!IsAbstract)
                 AddToSuperClass(this);
-#endif
             FieldMap fieldMap = new FieldMap(this);
             myColumns = fieldMap.Fields;
             myEmbeddedTypes = fieldMap.EmbeddedTypes;
             ((IFieldInitializer)this.oid).InitFields();
+			foreach (var field in this.fields)
+			{
+				var type = ((FieldInfo) fieldMap.PersistentFields[field.Name]).FieldType;
+				if (field.Encrypted && type != typeof( string ))
+					throw new NDOException( 117, String.Format( "Field {0} can't be encrypted. Encrypted fields must be of type string. Change the Encrypted attribute in your mapping file.", field.Name ) );
+			}
         }
 
         internal void CollectForeignKeyNames()

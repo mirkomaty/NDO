@@ -108,6 +108,7 @@ namespace NDO
 		
 		private const string hollowMarker = "Hollow";
 
+		private byte[] encryptionKey;
 
 
 		protected override void Init(string mappingFileName)
@@ -1042,8 +1043,8 @@ namespace NDO
 					if (ti.Transaction != null)
 					{
 						ti.Transaction.Commit();
-						if (this.LoggingPossible)
-							this.LogAdapter.Info("Committing transaction at connection '" + ti.ConnectionAlias + '\'');
+						if (LoggingPossible)
+							this.LogAdapter.Info( String.Format( "Committing transaction {0:X} at connection '{1}'", ti.Transaction.GetHashCode(), ti.ConnectionAlias ) );
                         ti.Transaction = null;
 					}
 					if (ti.Connection != null && ti.Connection.State != ConnectionState.Closed)
@@ -1089,7 +1090,7 @@ namespace NDO
 				{
 					ti.Transaction = ti.Connection.BeginTransaction(this.isolationLevel);
 					if (this.LoggingPossible)
-						this.LogAdapter.Info("Starting transaction at connection '" + conn.Name + '\'');
+						this.LogAdapter.Info( String.Format( "Starting transaction {0:X} at connection '{1}'", ti.Transaction.GetHashCode(), conn.Name ) );
                 }
 				if (handler != null)
 				{
@@ -1228,6 +1229,16 @@ namespace NDO
 			
 			try
 			{
+				if (cl.HasEncryptedFields)
+				{
+					foreach (var field in cl.Fields.Where( f => f.Encrypted ))
+					{
+						string name = field.Column.Name;
+						string s = (string) row[name];
+						string es = AesHelper.Decrypt( s, EncryptionKey );
+						row[name] = es;
+					}
+				}
                 pc.NDORead(row, fieldNames, startIndex);
 			}
 			catch (Exception ex)
@@ -1615,20 +1626,29 @@ namespace NDO
 			return result;
 		}
 
-
+		// Transfers Data from the object to the DataRow
 		protected virtual void WriteObject(IPersistenceCapable pc, DataRow row, string[] fieldNames, int startIndex)
 		{
+			Class cl = GetClass( pc );
 			try
 			{
 				pc.NDOWrite(row, fieldNames, startIndex);
+				if (cl.HasEncryptedFields)
+				{
+					foreach (var field in cl.Fields.Where( f => f.Encrypted ))
+					{
+						string name = field.Column.Name;
+						string s = (string) row[name];
+						string es = AesHelper.Encrypt( s, EncryptionKey );
+						row[name] = es;
+					}
+				}
 			}
 			catch (Exception ex)
 			{
 				throw new NDOException(70, "Error while reading a field of an object of type " + pc.GetType().FullName + ". Check your mapping file.\n"
 					+ ex.Message);
 			}
-
-			Class cl = GetClass(pc);
 
             if (cl.TypeNameColumn != null)
             {
@@ -3937,6 +3957,19 @@ namespace NDO
 			cache.Unload();
 		}
 		#endregion
+
+
+		public byte[] EncryptionKey
+		{
+			get 
+			{
+				if (this.encryptionKey == null)
+					this.encryptionKey = new byte[] { 0x09,0xA2,0x79,0x5C,0x99,0xFF,0xCB,0x8B,0xA3,0x37,0x76,0xC8,0xA6,0x5D,0x6D,0x66,
+													  0xE2,0x74,0xCF,0xF0,0xF7,0xEA,0xC4,0x82,0x1E,0xD5,0x19,0x4C,0x5A,0xB4,0x89,0x4D };
+				return this.encryptionKey; 
+			}
+			set { this.encryptionKey = value; }
+		}
 
 
 		/// <summary>

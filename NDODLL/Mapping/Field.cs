@@ -43,6 +43,17 @@ namespace NDO.Mapping
             set { name = value; this.Changed = true; }
         }
         private string name;
+		private bool encrypted;
+
+		/// <summary>
+		/// Determines, if the field should be encrypted
+		/// </summary>
+		[Description( "Determines, if the field should be encrypted" )]	
+		public bool Encrypted
+		{
+			get { return this.encrypted; }
+			set { this.encrypted = value; this.Changed = true; }
+		}
 
         /// <summary>
         /// Accessor name 
@@ -117,6 +128,10 @@ namespace NDO.Mapping
             : base(fieldNode, parent)
         {
             Name = fieldNode.Attributes["Name"].Value;
+			var attr = fieldNode.Attributes["Encrypted"];
+			if (attr != null)
+				this.encrypted = bool.Parse( attr.Value );
+
 			if (null != fieldNode.Attributes["AccessorName"])
 			{
 				this.accessorName = fieldNode.Attributes["AccessorName"].Value;
@@ -162,6 +177,8 @@ namespace NDO.Mapping
             fieldNode.SetAttribute("Name", name);
 			if (!String.IsNullOrEmpty( this.accessorName ))
 				fieldNode.SetAttribute( "AccessorName", accessorName );
+			if (this.encrypted)
+				fieldNode.SetAttribute( "Encrypted", "True" );
             this.column.Save(fieldNode);
         }
         #endregion
