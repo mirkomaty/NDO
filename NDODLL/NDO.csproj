@@ -142,6 +142,7 @@
     <Compile Include="ClassHashView.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="ClassRank.cs" />
     <Compile Include="DependentKey.cs" />
     <Compile Include="DualKey.cs">
       <SubType>Code</SubType>
@@ -438,7 +439,7 @@
   </ItemGroup>
   <ProjectExtensions>
     <VisualStudio>
-      <UserProperties NDOGenerateSQL="false" NDOMergeSchema="false" NDOMergeMapping="false" NDONewMapping="false" NDOGenerateSchema="false" NDOGenerateMapping="false" NDOEnableEnhancer="false" NDOEnableAddIn="false" />
+      <UserProperties NDOEnableAddIn="false" NDOEnableEnhancer="false" NDOGenerateMapping="false" NDOGenerateSchema="false" NDONewMapping="false" NDOMergeMapping="false" NDOMergeSchema="false" NDOGenerateSQL="false" />
     </VisualStudio>
   </ProjectExtensions>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
