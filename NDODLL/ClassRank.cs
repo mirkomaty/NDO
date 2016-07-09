@@ -1,6 +1,7 @@
 ﻿using NDO.Mapping;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 
@@ -13,6 +14,7 @@ namespace NDO
 		private List<Type> clientGeneratedList = new List<Type>();
 		private List<Class> updateSearchedFor = new List<Class>();
 		IEnumerable<Class> classes;
+		Dictionary<string, Dictionary<string, int>> rankCache = new Dictionary<string, Dictionary<string, int>>();
 
 		public Dictionary<Type, int> BuildUpdateRankOld( IEnumerable<Class> classes )
 		{
@@ -154,17 +156,28 @@ namespace NDO
 		public Dictionary<Type, int> BuildUpdateRank( IEnumerable<Class> inputClasses )
 		{
 			List<Class> classes = inputClasses.ToList();
+
+			// We sort the classes in the insert / update order here.
+			// The persistence manager will sort the types in reverse order first 
+			// to update the deleted objects.
+
 			classes.Sort( ( cls1, cls2 ) => 
 			{
+				int? cachedRank = GetCachedRank(cls1,cls2);
+
+				if (cachedRank.HasValue)
+					return cachedRank.Value;
+
 				bool ai1 = cls1.Oid.HasAutoincrementedColumn;
 				bool ai2 = cls2.Oid.HasAutoincrementedColumn;
 				if (!ai1 && !ai2)
-					return 0;
+					return SetCachedRank( cls1, cls2, 0 );
 
-				var forwardRelations = cls1.Relations.Where(r=>r.ReferencedSubClasses.Any(r2=>r2.FullName == cls2.FullName)).ToList();
-				var backRelations = cls2.Relations.Where(r=>r.ReferencedSubClasses.Any(r2=>r2.FullName == cls1.FullName)).ToList();
+				var forwardRelations = cls1.Relations.Where(r=>r.ReferencedSubClasses.Any(sc=>sc.FullName == cls2.FullName)).ToList();
+				var backRelations = cls2.Relations.Where(r=>r.ReferencedSubClasses.Any(sc=>sc.FullName == cls1.FullName)).ToList();
 				if (forwardRelations.Count == 0 && backRelations.Count == 0)
-					return 0; // Order doesn't matter
+					return SetCachedRank( cls1, cls2, 0 ); // Order doesn't matter
+
 				int order = 0;
 				foreach(var rel in forwardRelations)
 				{
@@ -180,7 +193,7 @@ namespace NDO
 							// In case of a bidirectional relation the child of the composition should win,
 							// because the parent must be saved in an own transaction, anyway
 							if (rel.Composition && rel.Bidirectional && rel.ForeignRelation.Multiplicity == RelationMultiplicity.Element)
-								order--;
+								order++;  // give way to the counterpart of the relation
 						}
 					}
 					else
@@ -192,6 +205,7 @@ namespace NDO
 						}
 					}
 				}
+
 				foreach (var rel in backRelations)
 				{
 					if (rel.MappingTable != null)
@@ -203,10 +217,7 @@ namespace NDO
 						{
 							// cls2 has the foreign key. So cls1 must be saved first. Note, that we reverse the order, so that the delete statements will be performed first.
 							order--;
-							// In case of a bidirectional relation the child of the composition should win,
-							// because the parent must be saved in an own transaction, anyway
-							if (rel.Composition && rel.Bidirectional && rel.ForeignRelation.Multiplicity == RelationMultiplicity.Element)
-								order++;
+							// We don't need to check for the composition, since this matters only for bidirectional relations and we had the test in the forwardRelations
 						}
 					}
 					else
@@ -218,7 +229,8 @@ namespace NDO
 						}
 					}
 				}
-				return order;
+
+				return SetCachedRank( cls1, cls2, order );
 			} );
 
 			Dictionary<Type, int> updateOrder = new Dictionary<Type, int>();
@@ -226,6 +238,36 @@ namespace NDO
 				updateOrder.Add( classes[i].SystemType, i );
 
 			return updateOrder;
+		}
+
+		int? GetCachedRank(Class cls1, Class cls2)
+		{
+			int factor = Math.Sign( cls1.FullName.CompareTo(cls2.FullName));
+			string key1 = factor >= 0 ? cls1.FullName : cls2.FullName;
+			string key2 = factor < 0 ? cls2.FullName : cls1.FullName;
+			Dictionary<string, int> dict;
+			if (!rankCache.TryGetValue( key1, out dict ))
+				return null;
+			int result;
+			if (!dict.TryGetValue( key2, out result ))
+				return null;
+			return result * factor;
+		}
+
+		int SetCachedRank( Class cls1, Class cls2, int value )
+		{
+			int factor = Math.Sign( cls1.FullName.CompareTo(cls2.FullName));
+			string key1 = factor >= 0 ? cls1.FullName : cls2.FullName;
+			string key2 = factor < 0 ? cls2.FullName : cls1.FullName;
+			Dictionary<string, int> dict;
+			if (!rankCache.TryGetValue( key1, out dict ))
+			{
+				dict = new Dictionary<string, int>();
+			}
+			if (dict.ContainsKey( key2 ))
+				return value;  // shouldn't happen. But who knows...
+			dict[key2] = value * factor;
+			return value;
 		}
 	}
 }
