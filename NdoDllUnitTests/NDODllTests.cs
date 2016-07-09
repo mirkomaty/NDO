@@ -76,14 +76,14 @@ namespace NdoDllUnitTests
 		[Test]
 		public void TestRanknDirNoPoly()
 		{
-			Type t1;
-			Type t2;
+			Type tMitarbeiter;
+			Type tReise;
 			List<Class> classes = new List<Class>();
 
 
 			Class cls = new Class(null);
 			cls.FullName = "Mitarbeiter";
-			t1 = cls.SystemType = CreateType( cls.FullName ).Object;
+			tMitarbeiter = cls.SystemType = CreateType( cls.FullName ).Object;
 			var oid = new ClassOid(cls);
 			oid.OidColumns.Add( new OidColumn( oid ) { AutoIncremented = true } );
 			cls.Oid = oid;
@@ -104,7 +104,7 @@ namespace NdoDllUnitTests
 
 			cls = new Class( null );
 			cls.FullName = "Reise";
-			t2 = cls.SystemType = CreateType( cls.FullName ).Object;
+			tReise = cls.SystemType = CreateType( cls.FullName ).Object;
 			oid = new ClassOid( cls );
 			cls.Oid = oid;
 			classes.Add( cls );
@@ -114,8 +114,8 @@ namespace NdoDllUnitTests
 
 			ClassRank classRank = new ClassRank();
 			var updateRank = classRank.BuildUpdateRank( classes );
-			Assert.That( updateRank[t2] == 0 );
-			Assert.That( updateRank[t1] == 1 );
+			Assert.That( updateRank[tReise] == 1 );
+			Assert.That( updateRank[tMitarbeiter] == 0 );
 		}
 
 		[Test]
