@@ -14,7 +14,7 @@ namespace NDO
 		private List<Class> updateSearchedFor = new List<Class>();
 		IEnumerable<Class> classes;
 
-		public Dictionary<Type, int> BuildUpdateRank( IEnumerable<Class> classes )
+		public Dictionary<Type, int> BuildUpdateRankOld( IEnumerable<Class> classes )
 		{
 			this.classes = classes;
 			this.updateOrder = new Dictionary<Type, int>();
@@ -151,7 +151,7 @@ namespace NDO
 			//Console.WriteLine("End build dependency for " + c.FullName);
 		}
 
-		public Dictionary<Type, int> BuildUpdateRankNew( IEnumerable<Class> inputClasses )
+		public Dictionary<Type, int> BuildUpdateRank( IEnumerable<Class> inputClasses )
 		{
 			List<Class> classes = inputClasses.ToList();
 			classes.Sort( ( cls1, cls2 ) => 
@@ -165,42 +165,60 @@ namespace NDO
 				var backRelations = cls2.Relations.Where(r=>r.ReferencedSubClasses.Any(r2=>r2.FullName == cls1.FullName)).ToList();
 				if (forwardRelations.Count == 0 && backRelations.Count == 0)
 					return 0; // Order doesn't matter
-				int weight = 0;
+				int order = 0;
 				foreach(var rel in forwardRelations)
 				{
+					if (rel.MappingTable != null)
+						continue;
+
 					if (rel.Multiplicity == RelationMultiplicity.Element)
 					{
-						// cls1 has the foreign key. So cls2 must be saved first. Note, that we reverse the order, so that the delete statements will be performed first.
-						weight--;
-						// In case of a bidirectional relation the child of the composition should win,
-						// because the parent must be saved in an own transaction, anyway
-						if (rel.Composition && rel.Bidirectional && rel.ForeignRelation.Multiplicity == RelationMultiplicity.Element)
-							weight++;
+						if (ai2) // Ordering only matters, if the oid of the related class (cls2) is autoincremented
+						{
+							// cls1 has the foreign key. So cls2 must be saved first.
+							order++;
+							// In case of a bidirectional relation the child of the composition should win,
+							// because the parent must be saved in an own transaction, anyway
+							if (rel.Composition && rel.Bidirectional && rel.ForeignRelation.Multiplicity == RelationMultiplicity.Element)
+								order--;
+						}
 					}
 					else
 					{
-						// cls2 has the foreign key, so cls1 has to be saved first.
-						weight++;
+						if (ai1)  // Ordering only matters, if the oid of cls1 is autoincremented
+						{
+							// cls2 has the foreign key, so cls1 has to be saved first.
+							order--;
+						}
 					}
 				}
 				foreach (var rel in backRelations)
 				{
+					if (rel.MappingTable != null)
+						continue;
+
 					if (rel.Multiplicity == RelationMultiplicity.Element)
 					{
-						// cls2 has the foreign key. So cls1 must be saved first. Note, that we reverse the order, so that the delete statements will be performed first.
-						weight++;
-						// In case of a bidirectional relation the child of the composition should win,
-						// because the parent must be saved in an own transaction, anyway
-						if (rel.Composition && rel.Bidirectional && rel.ForeignRelation.Multiplicity == RelationMultiplicity.Element)
-							weight--;
+						if (ai1)
+						{
+							// cls2 has the foreign key. So cls1 must be saved first. Note, that we reverse the order, so that the delete statements will be performed first.
+							order--;
+							// In case of a bidirectional relation the child of the composition should win,
+							// because the parent must be saved in an own transaction, anyway
+							if (rel.Composition && rel.Bidirectional && rel.ForeignRelation.Multiplicity == RelationMultiplicity.Element)
+								order++;
+						}
 					}
 					else
 					{
-						// cls1 has the foreign key, so cls2 has to be saved first.
-						weight++;
+						if (ai2)
+						{
+							// cls1 has the foreign key, so cls2 has to be saved first.
+							order++;
+						}
 					}
 				}
-				return weight;
+				return order;
 			} );
 
 			Dictionary<Type, int> updateOrder = new Dictionary<Type, int>();

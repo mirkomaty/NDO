@@ -66,9 +66,12 @@ namespace NdoDllUnitTests
 			rel2Mock.Setup( r => r.ReferencedSubClasses ).Returns( new List<Class> { cls1 } );
 
 			classes.Add( cls2 );
-
 			ClassRank classRank = new ClassRank();
 			var updateRank = classRank.BuildUpdateRank( classes );
+			Assert.That( updateRank[t2] == 0 );
+			Assert.That( updateRank[t1] == 1 );
+			classes.Reverse();
+			updateRank = classRank.BuildUpdateRank( classes );
 			Assert.That( updateRank[t2] == 0 );
 			Assert.That( updateRank[t1] == 1 );
 		}
@@ -116,18 +119,86 @@ namespace NdoDllUnitTests
 			var updateRank = classRank.BuildUpdateRank( classes );
 			Assert.That( updateRank[tReise] == 1 );
 			Assert.That( updateRank[tMitarbeiter] == 0 );
+			classes.Reverse();
+			updateRank = classRank.BuildUpdateRank( classes );
+			Assert.That( updateRank[tReise] == 1 );
+			Assert.That( updateRank[tMitarbeiter] == 0 );
+		}
+
+
+		[Test]
+		public void TestRank1nNoPoly()
+		{
+			Type tMitarbeiter;
+			Type tReise;
+			List<Class> classes = new List<Class>();
+
+			Class cls1 = new Class(null);
+			cls1.FullName = "Mitarbeiter";
+			tMitarbeiter = cls1.SystemType = CreateType( cls1.FullName ).Object;
+			var oid = new ClassOid(cls1);
+			oid.OidColumns.Add( new OidColumn( oid ) { AutoIncremented = true } );
+			cls1.Oid = oid;
+
+			Mock<Relation> rel1Mock = new Mock<Relation>(cls1);
+			rel1Mock.Setup( t => t.Bidirectional ).Returns( true );
+			Relation relation = rel1Mock.Object;
+			List<Relation> relations = (List<Relation>)cls1.Relations;
+			relations.Add( relation );
+			relation.FieldName = "reisen";
+			relation.ReferencedTypeName = "Reise";
+			relation.RelationName = string.Empty;
+			relation.Multiplicity = RelationMultiplicity.List;
+			relation.Composition = true;
+			relation.HasSubclasses = false;
+
+			classes.Add( cls1 );
+
+			Class cls2 = new Class( null );
+			cls2.FullName = "Reise";
+			tReise = cls2.SystemType = CreateType( cls2.FullName ).Object;
+			oid = new ClassOid( cls2 );
+			cls2.Oid = oid;
+
+			Mock<Relation> rel2Mock = new Mock<Relation>(cls2);
+			rel2Mock.Setup( t => t.Bidirectional ).Returns( true );
+			relation = rel2Mock.Object;
+			relations = (List<Relation>)cls2.Relations;
+			relations.Add( relation );
+			relation.FieldName = "mitarbeiter";
+			relation.ReferencedTypeName = "Mitarbeiter";
+			relation.RelationName = string.Empty;
+			relation.Multiplicity = RelationMultiplicity.Element;
+			relation.Composition = false;
+			relation.HasSubclasses = false;
+
+			classes.Add( cls2 );
+
+			rel1Mock.Setup( r => r.ReferencedSubClasses ).Returns( new List<Class> { cls2 } );
+			rel1Mock.Setup( r => r.ForeignRelation ).Returns( rel2Mock.Object );
+			rel2Mock.Setup( r => r.ReferencedSubClasses ).Returns( new List<Class> { cls1 } );
+			rel2Mock.Setup( r => r.ForeignRelation ).Returns( rel1Mock.Object );
+
+			ClassRank classRank = new ClassRank();
+			var updateRank = classRank.BuildUpdateRank( classes );
+			Assert.That( updateRank[tReise] == 1 );
+			Assert.That( updateRank[tMitarbeiter] == 0 );
+			classes.Reverse();
+			updateRank = classRank.BuildUpdateRank( classes );
+			Assert.That( updateRank[tReise] == 1 );
+			Assert.That( updateRank[tMitarbeiter] == 0 );
 		}
 
 		[Test]
 		public void TestRank1DirNoPoly()
 		{
-			Type t1;
-			Type t2;
+			Type tMitarbeiter;
+			Type tAdresse;
 			List<Class> classes = new List<Class>();
 
 			Class cls1 = new Class(null);
 			cls1.FullName = "Mitarbeiter";
-			t1 = cls1.SystemType = CreateType( cls1.FullName ).Object;
+			tMitarbeiter = cls1.SystemType = CreateType( cls1.FullName ).Object;
 			var oid = new ClassOid(cls1);
 			oid.OidColumns.Add( new OidColumn( oid ) { AutoIncremented = true } );
 			cls1.Oid = oid;
@@ -148,7 +219,7 @@ namespace NdoDllUnitTests
 
 			Class cls2 = new Class( null );
 			cls2.FullName = "Adresse";
-			t2 = cls2.SystemType = CreateType( cls2.FullName ).Object;			
+			tAdresse = cls2.SystemType = CreateType( cls2.FullName ).Object;			
 			cls2.Oid = oid;  // We can use the same oid, since the code asks only for autoincremented columns
 			classes.Add( cls2 );
 
@@ -157,8 +228,12 @@ namespace NdoDllUnitTests
 
 			ClassRank classRank = new ClassRank();
 			var updateRank = classRank.BuildUpdateRank( classes );
-			Assert.That( updateRank[t1] == 0 );
-			Assert.That( updateRank[t2] == 1 );
+			Assert.That( updateRank[tMitarbeiter] == 1 );
+			Assert.That( updateRank[tAdresse] == 0 );
+			classes.Reverse();
+			updateRank = classRank.BuildUpdateRank( classes );
+			Assert.That( updateRank[tMitarbeiter] == 1 );
+			Assert.That( updateRank[tAdresse] == 0 );
 		}
 
 		[Test]
