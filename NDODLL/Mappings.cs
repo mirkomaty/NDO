@@ -305,8 +305,7 @@ namespace NDO
 
 
 		/// <summary>
-		/// Returns the update order of a class. Higher values means that the class should be updated after
-		/// classes with lower values.
+		/// Returns the delete update order of a class. Lower values have higher delete priority. The insert and update priority is reversed.
 		/// </summary>
 		/// <param name="t">the type for which the update order is requested</param>
 		/// <returns>the update order of the specified class</returns>

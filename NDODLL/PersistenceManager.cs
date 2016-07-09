@@ -2545,7 +2545,7 @@ namespace NDO
 				OnSavingEvent(onSavingObjects);
 			}
 
-			ArrayList types = new ArrayList();
+			List<Type> types = new List<Type>();
 			List<IPersistenceCapable> deletedObjects = new List<IPersistenceCapable>();
 			List<IPersistenceCapable> hollowModeObjects = hollowMode ? new List<IPersistenceCapable>() : null;
 			List<IPersistenceCapable> changedObjects = new List<IPersistenceCapable>();
@@ -2613,11 +2613,12 @@ namespace NDO
 			{
 
 				// Sort types for correct update order.
-				types.Sort(new UpdateComparer(mappings));
+				types.Sort( ( t1, t2 ) => mappings.GetUpdateOrder( t1 ) - mappings.GetUpdateOrder( t2 ) );
 
 				// Delete records first
 
 				UpdateTypes(types, true);
+
 				// Now do all other updates in correct order.
 				types.Reverse();
 
@@ -4003,26 +4004,6 @@ namespace NDO
 			get { return isolationLevel; }
 			set { isolationLevel = value; }
 		}
-
-
-		#region UpdateComparer
-		/// <summary>
-		/// Utility class to sort classes according to their update order.
-		/// </summary>
-		internal class UpdateComparer : IComparer 
-		{
-			private Mappings mappings;
-			public UpdateComparer(Mappings mappings) 
-			{
-				this.mappings = mappings;
-			}
-
-			public int Compare(object x, object y) 
-			{
-				return mappings.GetUpdateOrder((Type)y) - mappings.GetUpdateOrder((Type)x);
-			}
-		}
-		#endregion
 
 		internal class MappingTableEntry 
 		{

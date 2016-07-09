@@ -256,7 +256,7 @@ namespace NDO.Mapping
         /// Returns a list of the target class and all subclasses of the target class of the relation. This field is initialized by the NDO Framework.
         /// </summary>
         [Browsable(false)]
-        public IEnumerable<Class> ReferencedSubClasses
+        public virtual IEnumerable<Class> ReferencedSubClasses
         {
             get
             {
@@ -451,7 +451,7 @@ namespace NDO.Mapping
         /// <summary>
         /// Determines, if a relation is bidirectional
         /// </summary>
-        public bool Bidirectional
+        public virtual bool Bidirectional
         {
             get { return ForeignRelation != null; }
         }
@@ -642,7 +642,7 @@ namespace NDO.Mapping
         /// If a relation is bidirectional, this property gets the opposite relation
         /// </summary>
         [Browsable(false)]
-        public Relation ForeignRelation
+        public virtual Relation ForeignRelation
         {
             get
             {
@@ -751,7 +751,7 @@ namespace NDO.Mapping
                 return base.Equals(obj);
 
             Relation r = obj as Relation;
-            if ((object)r == null)
+            if (r == null)
                 return false;
             if (r.GetHashCode() == this.GetHashCode()
                 && r.relationName == this.relationName)
