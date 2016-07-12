@@ -784,7 +784,7 @@ namespace NDO
 								< mappings.GetUpdateOrder(relObj.GetType()))
 								createdDirectObjects.Add(pc);
 							else
-								createdDirectObjects.Add(relObj);
+								createdDirectObjects.Add( relObj );
 						}
 						//							else
 						//							{
@@ -2612,8 +2612,23 @@ namespace NDO
 			if (ds.HasChanges()) 
 			{
 
-				// Sort types for correct update order.
-				types.Sort( ( t1, t2 ) => mappings.GetUpdateOrder( t1 ) - mappings.GetUpdateOrder( t2 ) );
+				// We need the reversed update order for deletions.
+				types.Sort( ( t1, t2 ) => 
+				{
+					int i1 = mappings.GetUpdateOrder( t1 );
+					int i2 = mappings.GetUpdateOrder( t2 );
+					if (i1 < i2)
+					{
+						if (!addedObjects.Any( pc => pc.GetType() == t1 ))
+							i1 += 100000;
+					}
+					else
+					{
+						if (!addedObjects.Any( pc => pc.GetType() == t2 ))
+							i2 += 100000;
+					}
+					return i2 - i1;
+				} );
 
 				// Delete records first
 

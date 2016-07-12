@@ -71,6 +71,7 @@ namespace NdoDllUnitTests
 			Assert.That( updateRank[t2] == 0 );
 			Assert.That( updateRank[t1] == 1 );
 			classes.Reverse();
+			classRank = new ClassRank();
 			updateRank = classRank.BuildUpdateRank( classes );
 			Assert.That( updateRank[t2] == 0 );
 			Assert.That( updateRank[t1] == 1 );
@@ -120,6 +121,7 @@ namespace NdoDllUnitTests
 			Assert.That( updateRank[tReise] == 1 );
 			Assert.That( updateRank[tMitarbeiter] == 0 );
 			classes.Reverse();
+			classRank = new ClassRank();
 			updateRank = classRank.BuildUpdateRank( classes );
 			Assert.That( updateRank[tReise] == 1 );
 			Assert.That( updateRank[tMitarbeiter] == 0 );
@@ -136,7 +138,7 @@ namespace NdoDllUnitTests
 			Class cls1 = new Class(null);
 			cls1.FullName = "Mitarbeiter";
 			tMitarbeiter = cls1.SystemType = CreateType( cls1.FullName ).Object;
-			var oid = new ClassOid(cls1);
+			var oid = new ClassOid(null);
 			oid.OidColumns.Add( new OidColumn( oid ) { AutoIncremented = true } );
 			cls1.Oid = oid;
 
@@ -184,9 +186,149 @@ namespace NdoDllUnitTests
 			Assert.That( updateRank[tReise] == 1 );
 			Assert.That( updateRank[tMitarbeiter] == 0 );
 			classes.Reverse();
+			classRank = new ClassRank();
 			updateRank = classRank.BuildUpdateRank( classes );
 			Assert.That( updateRank[tReise] == 1 );
 			Assert.That( updateRank[tMitarbeiter] == 0 );
+		}
+
+		[Test]
+		public void TestRank1nNotAutoincremented()
+		{
+			Type tMitarbeiter;
+			Type tReise;
+			List<Class> classes = new List<Class>();
+
+			Class cls1 = new Class(null);
+			cls1.FullName = "Mitarbeiter";
+			tMitarbeiter = cls1.SystemType = CreateType( cls1.FullName ).Object;
+			var oid = new ClassOid(cls1);
+			// Mitarbeiter ist nicht autoincremented
+			oid.OidColumns.Add( new OidColumn( oid ) { AutoIncremented = false } );
+			cls1.Oid = oid;
+
+			var oid2 = new ClassOid(null);
+			oid2.OidColumns.Add( new OidColumn( oid ) { AutoIncremented = true } );
+
+			Mock<Relation> rel1Mock = new Mock<Relation>(cls1);
+			rel1Mock.Setup( t => t.Bidirectional ).Returns( true );
+			Relation relation = rel1Mock.Object;
+			List<Relation> relations = (List<Relation>)cls1.Relations;
+			relations.Add( relation );
+			relation.FieldName = "reisen";
+			relation.ReferencedTypeName = "Reise";
+			relation.RelationName = string.Empty;
+			relation.Multiplicity = RelationMultiplicity.List;
+			relation.Composition = true;
+			relation.HasSubclasses = false;
+
+			classes.Add( cls1 );
+
+			Class cls2 = new Class( null );
+			cls2.FullName = "Reise";
+			tReise = cls2.SystemType = CreateType( cls2.FullName ).Object;			
+			cls2.Oid = oid2;
+
+			Mock<Relation> rel2Mock = new Mock<Relation>(cls2);
+			rel2Mock.Setup( t => t.Bidirectional ).Returns( true );
+			relation = rel2Mock.Object;
+			relations = (List<Relation>) cls2.Relations;
+			relations.Add( relation );
+			relation.FieldName = "mitarbeiter";
+			relation.ReferencedTypeName = "Mitarbeiter";
+			relation.RelationName = string.Empty;
+			relation.Multiplicity = RelationMultiplicity.Element;
+			relation.Composition = false;
+			relation.HasSubclasses = false;
+
+			classes.Add( cls2 );
+
+			rel1Mock.Setup( r => r.ReferencedSubClasses ).Returns( new List<Class> { cls2 } );
+			rel1Mock.Setup( r => r.ForeignRelation ).Returns( rel2Mock.Object );
+			rel2Mock.Setup( r => r.ReferencedSubClasses ).Returns( new List<Class> { cls1 } );
+			rel2Mock.Setup( r => r.ForeignRelation ).Returns( rel1Mock.Object );
+
+			ClassRank classRank = new ClassRank();
+			var updateRank = classRank.BuildUpdateRank( classes );
+			Assert.That( updateRank[tReise] == 0 );
+			Assert.That( updateRank[tMitarbeiter] == 1 );
+			classes.Reverse();
+			classRank = new ClassRank();
+			updateRank = classRank.BuildUpdateRank( classes );
+			Assert.That( updateRank[tReise] == 0 );
+			Assert.That( updateRank[tMitarbeiter] == 1 );
+		}
+
+		[Test]
+		public void TestRank1nRightPoly()
+		{
+			Type tMitarbeiter;
+			Type tReise;
+			List<Class> classes = new List<Class>();
+
+			Class cls1 = new Class(null);
+			cls1.FullName = "Mitarbeiter";
+			tMitarbeiter = cls1.SystemType = CreateType( cls1.FullName ).Object;
+			var oid = new ClassOid(cls1);
+			oid.OidColumns.Add( new OidColumn( oid ) { AutoIncremented = true } );
+			cls1.Oid = oid;
+
+			Mock<Relation> rel1Mock = new Mock<Relation>(cls1);
+			rel1Mock.Setup( t => t.Bidirectional ).Returns( true );
+			Relation relation = rel1Mock.Object;
+			List<Relation> relations = (List<Relation>)cls1.Relations;
+			relations.Add( relation );
+			relation.FieldName = "reisen";
+			relation.ReferencedTypeName = "ReiseBase";
+			relation.RelationName = string.Empty;
+			relation.Multiplicity = RelationMultiplicity.List;
+			relation.Composition = true;
+			relation.HasSubclasses = false;
+
+			classes.Add( cls1 );
+
+			Class cls2 = new Class( null );
+			cls2.FullName = "Reise";
+			tReise = cls2.SystemType = CreateType( cls2.FullName ).Object;
+			oid = new ClassOid( cls2 );
+			cls2.Oid = oid;
+
+			Class cls2Base = new Class(null);
+			cls2Base.FullName = "ReiseBase";
+			cls2Base.SystemType = CreateType( cls2Base.FullName ).Object;
+			cls2Base.Oid = oid;
+			classes.Add( cls2Base );
+
+			Mock<Relation> rel2Mock = new Mock<Relation>(cls2);
+			rel2Mock.Setup( t => t.Bidirectional ).Returns( true );
+			relation = rel2Mock.Object;
+			relations = (List<Relation>) cls2.Relations;
+			relations.Add( relation );
+			relation.FieldName = "mitarbeiter";
+			relation.ReferencedTypeName = "Mitarbeiter";
+			relation.RelationName = string.Empty;
+			relation.Multiplicity = RelationMultiplicity.Element;
+			relation.Composition = false;
+			relation.HasSubclasses = false;
+
+			classes.Add( cls2 );
+
+			rel1Mock.Setup( r => r.ReferencedSubClasses ).Returns( new List<Class> { cls2, cls2Base } );
+			rel1Mock.Setup( r => r.ForeignRelation ).Returns( rel2Mock.Object );
+			rel2Mock.Setup( r => r.ReferencedSubClasses ).Returns( new List<Class> { cls1 } );
+			rel2Mock.Setup( r => r.ForeignRelation ).Returns( rel1Mock.Object );
+
+			ClassRank classRank = new ClassRank();
+			var updateRank = classRank.BuildUpdateRank( classes );
+			int maRank = updateRank[tMitarbeiter];
+			Assert.That( updateRank[tReise] > maRank );
+			Assert.That( updateRank[cls2Base.SystemType] > maRank );
+			classes.Reverse();
+			classRank = new ClassRank();
+			updateRank = classRank.BuildUpdateRank( classes );
+			maRank = updateRank[tMitarbeiter];
+			Assert.That( updateRank[tReise] > maRank );
+			Assert.That( updateRank[cls2Base.SystemType] > maRank );
 		}
 
 		[Test]
@@ -231,9 +373,116 @@ namespace NdoDllUnitTests
 			Assert.That( updateRank[tMitarbeiter] == 1 );
 			Assert.That( updateRank[tAdresse] == 0 );
 			classes.Reverse();
+			classRank = new ClassRank();
 			updateRank = classRank.BuildUpdateRank( classes );
 			Assert.That( updateRank[tMitarbeiter] == 1 );
 			Assert.That( updateRank[tAdresse] == 0 );
+		}
+
+		[Test]
+		public void TestRank1DirNotAutoincremented()
+		{
+			Type tMitarbeiter;
+			Type tAdresse;
+			List<Class> classes = new List<Class>();
+
+			Class cls1 = new Class(null);
+			cls1.FullName = "Mitarbeiter";
+			tMitarbeiter = cls1.SystemType = CreateType( cls1.FullName ).Object;
+			var oid = new ClassOid(cls1);
+			oid.OidColumns.Add( new OidColumn( oid ) { AutoIncremented = true } );
+			cls1.Oid = oid;
+
+			Mock<Relation> rel1Mock = new Mock<Relation>(cls1);
+			rel1Mock.Setup( t => t.Bidirectional ).Returns( false );
+			Relation relation = rel1Mock.Object;
+			List<Relation> relations = (List<Relation>)cls1.Relations;
+			relations.Add( relation );
+			relation.FieldName = "adresse";
+			relation.ReferencedTypeName = "Adresse";
+			relation.RelationName = string.Empty;
+			relation.Multiplicity = RelationMultiplicity.Element;
+			relation.Composition = true;
+			relation.HasSubclasses = false;
+
+			classes.Add( cls1 );
+
+			Class cls2 = new Class( null );
+			cls2.FullName = "Adresse";
+			tAdresse = cls2.SystemType = CreateType( cls2.FullName ).Object;
+			var oid2 = new ClassOid(cls2);
+			oid.OidColumns.Add( new OidColumn( oid ) { AutoIncremented = false } );
+			cls2.Oid = oid2; 
+			classes.Add( cls2 );
+
+			rel1Mock.Setup( r => r.ReferencedSubClasses ).Returns( new List<Class> { cls2 } );
+			rel1Mock.Setup( r => r.ForeignRelation ).Returns( (Relation) null );
+
+			ClassRank classRank = new ClassRank();
+			var updateRank = classRank.BuildUpdateRank( classes );
+			Assert.That( updateRank[tMitarbeiter] == 0 );
+			Assert.That( updateRank[tAdresse] == 1 );
+			classes.Reverse();
+			classRank = new ClassRank();
+			updateRank = classRank.BuildUpdateRank( classes );
+			Assert.That( updateRank[tMitarbeiter] == 0 );
+			Assert.That( updateRank[tAdresse] == 1 );
+		}
+
+		[Test]
+		public void TestRank1DirRightPoly()
+		{
+			Type tMitarbeiter;
+			Type tAdresse;
+			List<Class> classes = new List<Class>();
+
+			Class cls1 = new Class(null);
+			cls1.FullName = "Mitarbeiter";
+			tMitarbeiter = cls1.SystemType = CreateType( cls1.FullName ).Object;
+			var oid = new ClassOid(cls1);
+			oid.OidColumns.Add( new OidColumn( oid ) { AutoIncremented = true } );
+			cls1.Oid = oid;
+
+			Mock<Relation> rel1Mock = new Mock<Relation>(cls1);
+			rel1Mock.Setup( t => t.Bidirectional ).Returns( false );
+			Relation relation = rel1Mock.Object;
+			List<Relation> relations = (List<Relation>)cls1.Relations;
+			relations.Add( relation );
+			relation.FieldName = "adresse";
+			relation.ReferencedTypeName = "AdresseBase";
+			relation.RelationName = string.Empty;
+			relation.Multiplicity = RelationMultiplicity.Element;
+			relation.Composition = true;
+			relation.HasSubclasses = false;
+
+			classes.Add( cls1 );
+
+			Class cls2Base = new Class(null);
+			cls2Base.FullName = "AdresseBase";
+			cls2Base.SystemType = CreateType( cls2Base.FullName ).Object;
+			cls2Base.Oid = oid;
+			classes.Add( cls2Base );
+
+			Class cls2 = new Class( null );
+			cls2.FullName = "Adresse";
+			tAdresse = cls2.SystemType = CreateType( cls2.FullName ).Object;
+			cls2.Oid = oid;  // We can use the same oid, since the code asks only for autoincremented columns
+			classes.Add( cls2 );
+
+			rel1Mock.Setup( r => r.ReferencedSubClasses ).Returns( new List<Class> { cls2, cls2Base } );
+			rel1Mock.Setup( r => r.ForeignRelation ).Returns( (Relation) null );
+
+			ClassRank classRank = new ClassRank();
+			var updateRank = classRank.BuildUpdateRank( classes );
+			int maRank = updateRank[tMitarbeiter];
+			Assert.That( updateRank[cls2Base.SystemType] < maRank );
+			Assert.That( updateRank[tAdresse] < maRank );
+			classes.Reverse();
+			classRank = new ClassRank();
+			updateRank = classRank.BuildUpdateRank( classes );
+			maRank = updateRank[tMitarbeiter];
+			Assert.That( updateRank[cls2Base.SystemType] < maRank );
+			Assert.That( updateRank[tAdresse] < maRank );
 		}
 
 		[Test]

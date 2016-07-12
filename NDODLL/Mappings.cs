@@ -24,6 +24,7 @@ using System;
 using System.Diagnostics;
 using System.Data;
 using System.Collections;
+using System.Collections.Generic;
 using System.Reflection;
 using System.Xml;
 using NDO;
@@ -38,7 +39,7 @@ namespace NDO
 	internal class Mappings : NDOMapping
 	{
 		private Hashtable persistenceHandler = new Hashtable();
-		private Hashtable updateOrder = new Hashtable();
+		private Dictionary<Type,int> updateOrder = new Dictionary<Type, int>();
 		private DataSet ds;
 		ILogAdapter logAdapter;
 		private bool verboseMode;
@@ -63,7 +64,7 @@ namespace NDO
 		{
 			this.defaultHandlerType = defaultHandlerType;
 			InitClassFields();
-			new ClassRank().BuildUpdateRank( Classes );
+			this.updateOrder = new ClassRank().BuildUpdateRank( Classes );
 		}
 
 		private void InitClassFields()
@@ -242,10 +243,10 @@ namespace NDO
 		public IPersistenceHandler GetPersistenceHandler( IPersistenceCapable pc, bool useSelfGeneratedIds )
 		{
 			Type t = pc.GetType();
-#if !NDO11
+
 			if ( t.IsGenericType )
 				t = t.GetGenericTypeDefinition();
-#endif
+
 			IPersistenceHandler handler;
 			if ( (handler = (IPersistenceHandler) persistenceHandler[t]) != null )
 				return handler;
@@ -277,10 +278,10 @@ namespace NDO
 			//Assembly ass = Assembly.GetAssembly(t);
 			//if (null == ass)
 			//    throw new NDOException(10, "Assembly for Type " + t.FullName + " not found.");
-#if !NDO11
+
 			if ( t.IsGenericTypeDefinition )
 				t = t.MakeGenericType( typeof( int ) );
-#endif
+
 			IPersistenceCapable pc = (IPersistenceCapable) Activator.CreateInstance( t );//ass.CreateInstance(t.FullName);
 			return GetPersistenceHandler( pc, useSelfGeneratedIds );
 		}

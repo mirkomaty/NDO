@@ -404,7 +404,16 @@ namespace NDO.Mapping
             }
         }
 
-        void IFieldInitializer.InitFields()
+		Type GetMemberType(MemberInfo memberInfo)
+		{
+			if (memberInfo.MemberType == MemberTypes.Field)
+				return ((FieldInfo) memberInfo).FieldType;
+			if (memberInfo.MemberType == MemberTypes.Property)
+				return ((PropertyInfo) memberInfo).PropertyType;
+			throw new NDOException( 117, String.Format( "InitFields: MemberInfo of the persistent field {0}.{1} should be a FieldInfo or a PropertyInfo", FullName, memberInfo.Name ) );
+		}
+
+		void IFieldInitializer.InitFields()
         {
             this.systemType = Type.GetType(FullName + ", " + AssemblyName);
             if (this.systemType == null) throw new NDOException(22, "Can't load type: " + FullName + ", " + AssemblyName);
@@ -417,7 +426,7 @@ namespace NDO.Mapping
             ((IFieldInitializer)this.oid).InitFields();
 			foreach (var field in this.fields)
 			{
-				var type = ((FieldInfo) fieldMap.PersistentFields[field.Name]).FieldType;
+				var type = GetMemberType( fieldMap.PersistentFields[field.Name] );
 				if (field.Encrypted && type != typeof( string ))
 					throw new NDOException( 117, String.Format( "Field {0} can't be encrypted. Encrypted fields must be of type string. Change the Encrypted attribute in your mapping file.", field.Name ) );
 			}

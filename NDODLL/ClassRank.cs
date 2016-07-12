@@ -1,4 +1,25 @@
-﻿using NDO.Mapping;
+﻿//
+// Copyright (c) 2002-2016 Mirko Matytschak 
+// (www.netdataobjects.de)
+//
+// Author: Mirko Matytschak
+//
+// Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated 
+// documentation files (the "Software"), to deal in the Software without restriction, including without limitation 
+// the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the 
+// Software, and to permit persons to whom the Software is furnished to do so, subject to the following 
+// conditions:
+
+// The above copyright notice and this permission notice shall be included in all copies or substantial portions 
+// of the Software.
+//
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED 
+// TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL 
+// THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF 
+// CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER 
+// DEALINGS IN THE SOFTWARE.
+
+using NDO.Mapping;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -16,7 +37,7 @@ namespace NDO
 		IEnumerable<Class> classes;
 		Dictionary<string, Dictionary<string, int>> rankCache = new Dictionary<string, Dictionary<string, int>>();
 
-		public Dictionary<Type, int> BuildUpdateRankOld( IEnumerable<Class> classes )
+		public Dictionary<Type, int> BuildUpdateRank( IEnumerable<Class> classes )
 		{
 			this.classes = classes;
 			this.updateOrder = new Dictionary<Type, int>();
@@ -39,7 +60,7 @@ namespace NDO
 			int i;
 			for (i = 0; i <= end; i++)
 			{
-				updateOrder.Add( (Type) updateList[i], end - i );
+				updateOrder.Add( (Type) updateList[i], i );
 			}
 
 			int rank = i;
@@ -58,193 +79,156 @@ namespace NDO
 		/// <summary>
 		/// Builds update ranks.
 		/// </summary>
-		/// <param name="c">the class that should be inserted in the update list</param>
-		private void BuildUpdateDependency( Class c )
+		/// <param name="cls">the class that should be inserted in the update list</param>
+		private void BuildUpdateDependency( Class cls )
 		{
 			//Console.WriteLine("Build dependency for " + c.FullName);
-			if (c.SystemType == null)
+			if (cls.SystemType == null)
 			{
-				throw new NDOException( 11, "Type.GetType for the type name " + c.FullName + " failed; check your mapping File." );
+				throw new NDOException( 11, "Type.GetType for the type name " + cls.FullName + " failed; check your mapping File." );
 			}
 
 			//Debug.WriteLine("BuildUpdateDependency " + c.FullName);
 
 			// Avoid endless recursion
-			if (updateSearchedFor.Contains( c ))
+			if (updateSearchedFor.Contains( cls ))
 				return;
-			updateSearchedFor.Add( c );
+			updateSearchedFor.Add( cls );
 			// Can be stored at last, because the key is client generated
-			if (!c.Oid.HasAutoincrementedColumn)
+			if (!cls.Oid.HasAutoincrementedColumn)
 			{
-				clientGeneratedList.Add( c.SystemType );
+				clientGeneratedList.Add( cls.SystemType );
 				//updateList.Add( c.SystemType );
 				return;
 			}
-			int minIndex = int.MinValue;
-			foreach (Relation r in c.Relations)
+
+			// Collect all classes which are related to cls
+			// First collect from forward relations
+			List<Class> relatedClasses = new List<Class>();
+			foreach (var r in cls.Relations)
 			{
-				if (r.MappingTable != null)  // Foreign Keys will be managed by NDO
-					continue;
-				if (r.Multiplicity == RelationMultiplicity.Element)
+				foreach (var rsc in r.ReferencedSubClasses)
 				{
-					// Here we have two keys in each table. There is some probability, that the owner in a composite is yet saved.
-					if (!(r.Bidirectional && r.ForeignRelation.Multiplicity == RelationMultiplicity.Element && r.Composition))
-						continue;
-				}
-				if (c.FullName == r.ReferencedTypeName)
-					continue;
-				foreach (Class sc in r.ReferencedSubClasses)
-				{
-					// The foreign key is in the table of the referenced class.
-					// So the type has to be placed first in the update list.
-					// This will result in a higher rank value, which means, that 
-					// the type will be updated later than the current type.
-					BuildUpdateDependency( sc );
-					// This is used for sanity check. The current type cannot be
-					// placed above the referenced type. This may happen in certain scenarios 
-					// of circular references.
-					minIndex = Math.Max( minIndex, updateList.IndexOf( sc.SystemType ) );
+					if (!relatedClasses.Contains(rsc) && rsc != cls)
+						relatedClasses.Add( rsc );
 				}
 			}
 
-			foreach (Class c2 in classes)
+			// Now collect from backward relations
+			foreach (var refCls in (from c in this.classes where c.Relations.Any( r => r.ReferencedSubClasses.Any( rsc => rsc == cls ) ) select c))
 			{
-				if (c2.FullName == c.FullName)
-					continue;
-
-				foreach (Relation r in c2.Relations)
-				{
-					// Suche alle Relationen, die sich auf unsere Klasse beziehen
-					bool found = false;
-					foreach (Class cl in r.ReferencedSubClasses)
-					{
-						if (cl.FullName == c.FullName)
-						{
-							found = true;
-							break;
-						}
-					}
-					if (!found)
-						continue;
-					if (r.Multiplicity != RelationMultiplicity.Element)
-						continue;
-					// c2 has an element relation to c. This means, that c2 holds the foreign key
-					// and thus must appear first in the updateList.
-					// This will result in a higher rank value, which means, that 
-					// the type will be updated later than the current type.
-					BuildUpdateDependency( c2 );
-					// This is used for sanity check. The current type cannot be
-					// placed above the referenced type. This may happen in certain scenarios 
-					// of circular references.
-					minIndex = Math.Max( minIndex, updateList.IndexOf( c2.SystemType ) );
-					break;
-				}
+				if (!relatedClasses.Contains( refCls ) && refCls != cls)
+					relatedClasses.Add( refCls );
+			}
+			
+			foreach (var refCls in relatedClasses)
+			{
+				// Get the relative order from cls to refCls
+				int order = GetOrder(cls, refCls);
+				if (order > 0)  // refCls has a lower order value and must have precedence
+					BuildUpdateDependency( refCls );
 			}
 
-			int ix = updateList.IndexOf( c.SystemType );
-			if (ix >= 0 && ix < minIndex)
+			// After all related classes with precedence we add cls to the updateList
+			if (!this.updateList.Contains( cls.SystemType ) && !clientGeneratedList.Contains( cls.SystemType ))
 			{
-				throw new NDOException( 12, "Cannot construct update dependencies for class " + c.SystemType + ". Try to use client generated primary keys for this type or for the related types." );
-			}
-			else if (!updateList.Contains( c.SystemType ) && !clientGeneratedList.Contains( c.SystemType ))
-			{
-				updateList.Add( c.SystemType );
+				this.updateList.Add( cls.SystemType );
 			}
 			//Console.WriteLine("End build dependency for " + c.FullName);
 		}
 
-		public Dictionary<Type, int> BuildUpdateRank( IEnumerable<Class> inputClasses )
+		private int GetOrder( Class cls1, Class cls2 )
 		{
-			List<Class> classes = inputClasses.ToList();
+			int? cachedRank = GetCachedRank(cls1,cls2);
 
-			// We sort the classes in the insert / update order here.
-			// The persistence manager will sort the types in reverse order first 
-			// to update the deleted objects.
+			if (cachedRank.HasValue)
+				return cachedRank.Value;
 
-			classes.Sort( ( cls1, cls2 ) => 
+			bool ai1 = cls1.Oid.HasAutoincrementedColumn;
+			bool ai2 = cls2.Oid.HasAutoincrementedColumn;
+			if (!ai1 && !ai2)
+				return SetCachedRank( cls1, cls2, 0 );
+
+			var forwardRelations = cls1.Relations.Where(r=>r.ReferencedSubClasses.Any(sc=>sc.FullName == cls2.FullName)).ToList();
+			var backRelations = cls2.Relations.Where(r=>r.ReferencedSubClasses.Any(sc=>sc.FullName == cls1.FullName)).ToList();
+			if (forwardRelations.Count == 0 && backRelations.Count == 0)
+				return SetCachedRank( cls1, cls2, 0 ); // Order doesn't matter
+
+			int order = 0;
+			foreach (var rel in forwardRelations)
 			{
-				int? cachedRank = GetCachedRank(cls1,cls2);
+				if (rel.MappingTable != null)
+					continue;
 
-				if (cachedRank.HasValue)
-					return cachedRank.Value;
-
-				bool ai1 = cls1.Oid.HasAutoincrementedColumn;
-				bool ai2 = cls2.Oid.HasAutoincrementedColumn;
-				if (!ai1 && !ai2)
-					return SetCachedRank( cls1, cls2, 0 );
-
-				var forwardRelations = cls1.Relations.Where(r=>r.ReferencedSubClasses.Any(sc=>sc.FullName == cls2.FullName)).ToList();
-				var backRelations = cls2.Relations.Where(r=>r.ReferencedSubClasses.Any(sc=>sc.FullName == cls1.FullName)).ToList();
-				if (forwardRelations.Count == 0 && backRelations.Count == 0)
-					return SetCachedRank( cls1, cls2, 0 ); // Order doesn't matter
-
-				int order = 0;
-				foreach(var rel in forwardRelations)
+				if (rel.Multiplicity == RelationMultiplicity.Element)
 				{
-					if (rel.MappingTable != null)
-						continue;
-
-					if (rel.Multiplicity == RelationMultiplicity.Element)
+					if (ai2) // Ordering only matters, if the oid of the related class (cls2) is autoincremented
 					{
-						if (ai2) // Ordering only matters, if the oid of the related class (cls2) is autoincremented
-						{
-							// cls1 has the foreign key. So cls2 must be saved first.
-							order++;
-							// In case of a bidirectional relation the child of the composition should win,
-							// because the parent must be saved in an own transaction, anyway
-							if (rel.Composition && rel.Bidirectional && rel.ForeignRelation.Multiplicity == RelationMultiplicity.Element)
-								order++;  // give way to the counterpart of the relation
-						}
-					}
-					else
-					{
-						if (ai1)  // Ordering only matters, if the oid of cls1 is autoincremented
-						{
-							// cls2 has the foreign key, so cls1 has to be saved first.
-							order--;
-						}
+						// cls1 has the foreign key. So cls2 must be saved first.
+						order++;
+						// In case of a bidirectional relation the child of the composition should win,
+						// because the parent must be saved in an own transaction, anyway
+						if (rel.Composition && rel.Bidirectional && rel.ForeignRelation.Multiplicity == RelationMultiplicity.Element)
+							order++;  // give way to the counterpart of the relation
 					}
 				}
-
-				foreach (var rel in backRelations)
+				else
 				{
-					if (rel.MappingTable != null)
-						continue;
-
-					if (rel.Multiplicity == RelationMultiplicity.Element)
+					if (ai1)  // Ordering only matters, if the oid of cls1 is autoincremented
 					{
-						if (ai1)
-						{
-							// cls2 has the foreign key. So cls1 must be saved first. Note, that we reverse the order, so that the delete statements will be performed first.
-							order--;
-							// We don't need to check for the composition, since this matters only for bidirectional relations and we had the test in the forwardRelations
-						}
-					}
-					else
-					{
-						if (ai2)
-						{
-							// cls1 has the foreign key, so cls2 has to be saved first.
-							order++;
-						}
+						// cls2 has the foreign key, so cls1 has to be saved first.
+						order--;
 					}
 				}
+			}
 
-				return SetCachedRank( cls1, cls2, order );
-			} );
+			foreach (var rel in backRelations)
+			{
+				if (rel.MappingTable != null)
+					continue;
 
-			Dictionary<Type, int> updateOrder = new Dictionary<Type, int>();
-			for (int i = 0; i < classes.Count; i++)
-				updateOrder.Add( classes[i].SystemType, i );
+				if (rel.Multiplicity == RelationMultiplicity.Element)
+				{
+					if (ai1)
+					{
+						// cls2 has the foreign key. So cls1 must be saved first. Note, that we reverse the order, so that the delete statements will be performed first.
+						order--;
+						if (rel.Composition && rel.Bidirectional && rel.ForeignRelation.Multiplicity == RelationMultiplicity.Element)
+							order--;  // give way to the counterpart of the relation
+					}
+				}
+				else
+				{
+					if (ai2)
+					{
+						// cls1 has the foreign key, so cls2 has to be saved first.
+						order++;
+					}
+				}
+			}
 
-			return updateOrder;
+			return SetCachedRank( cls1, cls2, order );
 		}
 
 		int? GetCachedRank(Class cls1, Class cls2)
 		{
-			int factor = Math.Sign( cls1.FullName.CompareTo(cls2.FullName));
-			string key1 = factor >= 0 ? cls1.FullName : cls2.FullName;
-			string key2 = factor < 0 ? cls2.FullName : cls1.FullName;
+			// If cls2.FullName < cls1.FullName the order must be reversed,
+			// and factor must be -1
+			int factor = cls2.FullName.CompareTo(cls1.FullName);
+			string key1;
+			string key2;
+
+			if (factor >= 0)
+			{
+				key1 = cls1.FullName;
+				key2 = cls2.FullName;
+			}
+			else
+			{
+				key1 = cls2.FullName;
+				key2 = cls1.FullName;
+			}
+
 			Dictionary<string, int> dict;
 			if (!rankCache.TryGetValue( key1, out dict ))
 				return null;
@@ -256,16 +240,27 @@ namespace NDO
 
 		int SetCachedRank( Class cls1, Class cls2, int value )
 		{
-			int factor = Math.Sign( cls1.FullName.CompareTo(cls2.FullName));
-			string key1 = factor >= 0 ? cls1.FullName : cls2.FullName;
-			string key2 = factor < 0 ? cls2.FullName : cls1.FullName;
+			// If cls2.FullName < cls1.FullName the order must be reversed,
+			// and factor must be -1
+			int factor = cls2.FullName.CompareTo(cls1.FullName);
+			string key1;
+			string key2;
+			if (factor >= 0)
+			{
+				key1 = cls1.FullName;
+				key2 = cls2.FullName;
+			}
+			else
+			{
+				key1 = cls2.FullName;
+				key2 = cls1.FullName;
+			}
 			Dictionary<string, int> dict;
 			if (!rankCache.TryGetValue( key1, out dict ))
 			{
 				dict = new Dictionary<string, int>();
+				rankCache.Add( key1, dict );
 			}
-			if (dict.ContainsKey( key2 ))
-				return value;  // shouldn't happen. But who knows...
 			dict[key2] = value * factor;
 			return value;
 		}
