@@ -2,7 +2,7 @@
 <Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
 	<EnhDateString>V. 3.0</EnhDateString>
-	<GIT>C:\Program Files (x86)\PortableGit\bin\Git.exe</GIT>
+	<GIT>C:\Program Files (x86)\Portable Git\bin\Git.exe</GIT>
 	
 	<PERS_DIR>..</PERS_DIR>
 	<MAKE_DIR>$(PERS_DIR)\Make</MAKE_DIR>
