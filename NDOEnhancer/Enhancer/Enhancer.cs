@@ -276,7 +276,7 @@ namespace NDOEnhancer
 //				ValueTypes.Instance.Merge(vtnl);
 			}
 
-            if (projectDescription.IsWebProject)
+            if (projectDescription.IsWebProject || !options.EnableEnhancer)
             {
                 ownClassList = new ArrayList();
             }

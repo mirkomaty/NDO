@@ -138,7 +138,7 @@ namespace EnhancerTest
 #endif
 			Console.WriteLine( EnhDate.String, "NDO Enhancer", new AssemblyName( GetType().Assembly.FullName ).Version.ToString() );
 
-            if (!pd.IsWebProject)
+            if (!pd.IsWebProject && options.EnableEnhancer)
 			    pd.References.Add(pd.AssemblyName, new NDOReference(pd.AssemblyName, pd.BinFile, true));
 
 			MessageAdapter messages = new MessageAdapter();
