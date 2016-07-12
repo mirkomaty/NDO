@@ -147,7 +147,7 @@ namespace NdoUnitTests {
 			pm.MakePersistent(m);
 			pm.Save();
             Assert.AreEqual(1, m.Emails.Count, "1. Wrong number of objects");
-			m.LÃ¶schen(e);
+			m.Löschen(e);
             Assert.AreEqual(NDOObjectState.Deleted, e.NDOObjectState, "1. Wrong state");
 			Assert.AreEqual(0, m.Emails.Count, "2. Wrong number of objects");
             //pm.LogAdapter = new NDO.Logging.ConsoleLogAdapter();
@@ -163,7 +163,7 @@ namespace NdoUnitTests {
 			m.Hinzufuegen(e);
 			pm.Save();
 			Assert.AreEqual(1, m.Emails.Count, "1. Wrong number of objects");
-			m.LÃ¶schen(e);
+			m.Löschen(e);
 			Assert.AreEqual(NDOObjectState.Deleted, e.NDOObjectState, "1. Wrong state");
 			Assert.AreEqual(0, m.Emails.Count, "2. Wrong number of objects");
 			pm.Abort();
@@ -204,7 +204,7 @@ namespace NdoUnitTests {
 			pm.MakePersistent(m);
 			pm.Save();
 			m.Hinzufuegen(e);
-			m.LÃ¶schen(e);
+			m.Löschen(e);
 			Assert.AreEqual(NDOObjectState.Transient, e.NDOObjectState, "1. Wrong state");
 			pm.Save();
 			Assert.AreEqual(NDOObjectState.Transient, e.NDOObjectState, "2. Wrong state");
@@ -216,7 +216,7 @@ namespace NdoUnitTests {
 			pm.MakePersistent(m);
 			pm.Save();
 			m.Hinzufuegen(e);
-			m.LÃ¶schen(e);
+			m.Löschen(e);
 			Assert.AreEqual(NDOObjectState.Transient, e.NDOObjectState, "1. Wrong state");
 			pm.Abort();
 			Assert.AreEqual(NDOObjectState.Transient, e.NDOObjectState, "2. Wrong state");
@@ -232,7 +232,7 @@ namespace NdoUnitTests {
 			pm.MakePersistent(m);
 			pm.Save();
 			IList rr = new ArrayList(m.Emails);
-			m.LÃ¶scheEmails();
+			m.LöscheEmails();
 			Assert.AreEqual(0, m.Emails.Count, "1. Wrong number of objects");
 			for(int i = 0; i < 10; i++) {
 				Assert.AreEqual(NDOObjectState.Deleted, ((Email)rr[i]).NDOObjectState, "2. Wrong state");
@@ -253,7 +253,7 @@ namespace NdoUnitTests {
 			pm.MakePersistent(m);
 			pm.Save();
 			IList rr = new ArrayList(m.Emails);
-			m.LÃ¶scheEmails();
+			m.LöscheEmails();
 			Assert.AreEqual(0, m.Emails.Count, "1. Wrong number of objects");
 			for(int i = 0; i < 10; i++) {
 				Assert.AreEqual(NDOObjectState.Deleted, ((Email)rr[i]).NDOObjectState, "2. Wrong state");
@@ -331,10 +331,10 @@ namespace NdoUnitTests {
 
 			pm.MakeAllHollow();
 			pm.UnloadCache();
-			IList ReisebÃ¼ros2 = m.Emails;
+			IList Reisebüros2 = m.Emails;
 			for(int i = 0; i < 10; i++) {
 				Email r1 = (Email)Emails[i];
-				Email r2 = (Email)ReisebÃ¼ros2[i];
+				Email r2 = (Email)Reisebüros2[i];
 #if !ORACLE && !MYSQL && !FIREBIRD
 				Assert.AreEqual(i.ToString(), r1.Adresse, "3: Email should be in right order");
 #endif
@@ -366,10 +366,10 @@ namespace NdoUnitTests {
 
 			pm.MakeAllHollow();
 			pm.UnloadCache();
-			IList ReisebÃ¼ros2 = m.Emails;
+			IList Reisebüros2 = m.Emails;
 			for(int i = 0; i < 10; i++) {
 				Email r1 = (Email)Emails[i];
-				Email r2 = (Email)ReisebÃ¼ros2[i];
+				Email r2 = (Email)Reisebüros2[i];
 #if !ORACLE && !MYSQL && !FIREBIRD
 				Assert.AreEqual(i.ToString(), r1.Adresse, "3: Email should be in right order");
 #endif

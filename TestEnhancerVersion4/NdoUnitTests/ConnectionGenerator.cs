@@ -28,7 +28,7 @@ using NDO.Mapping;
 namespace NdoUnitTests
 {
 	/// <summary>
-	/// Zusammenfassung fï¿½r ConnectionGenerator.
+	/// Zusammenfassung för ConnectionGenerator.
 	/// </summary>
 	public class ConnectionGenerator
 	{

@@ -26,8 +26,8 @@ using NDO;
 namespace Reisekosten
 {
 	/// <summary>
-	/// Mitarbeiter kï¿½nnen in vielen Projekten mitarbeiten. Die Projekte haben eine vom Mitarbeiter
-	/// unabhï¿½ngige Lebenszeit.
+	/// Mitarbeiter können in vielen Projekten mitarbeiten. Die Projekte haben eine vom Mitarbeiter
+	/// unabhöngige Lebenszeit.
 	/// </summary>
 	[NDOPersistent]
 	public class Projekt

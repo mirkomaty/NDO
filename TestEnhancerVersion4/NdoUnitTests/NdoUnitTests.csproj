@@ -107,6 +107,9 @@
       <HintPath>..\..\..\..\..\Programme\NUnit V2.1\\bin\nunit.framework.dll</HintPath>
       <AssemblyFolderKey>hklm\dn\nunit.framework</AssemblyFolderKey>
     </Reference>
+    <Reference Include="SqlCeProvider">
+      <HintPath>..\..\SqlCEProvider\SqlCEProvider\bin\Debug\SqlCeProvider.dll</HintPath>
+    </Reference>
     <Reference Include="System">
       <Name>System</Name>
     </Reference>
@@ -116,9 +119,9 @@
     <Reference Include="System.Data.OracleClient">
       <Name>System.Data.OracleClient</Name>
     </Reference>
-    <Reference Include="System.Data.SqlServerCe, Version=4.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91, processorArchitecture=MSIL">
+    <Reference Include="System.Data.SqlServerCe">
+      <HintPath>..\..\SqlCEProvider\packages\Microsoft.SqlServer.Compact.4.0.8876.1\lib\net40\System.Data.SqlServerCe.dll</HintPath>
       <Private>True</Private>
-      <HintPath>..\packages\Microsoft.SqlServer.Compact.4.0.8876.1\lib\net40\System.Data.SqlServerCe.dll</HintPath>
     </Reference>
     <Reference Include="System.Drawing">
       <Name>System.Drawing</Name>
@@ -284,17 +287,6 @@
   <PropertyGroup>
     <PreBuildEvent>
     </PreBuildEvent>
-    <PostBuildEvent>
-    if not exist "$(TargetDir)x86" md "$(TargetDir)x86"
-    xcopy /s /y "$(SolutionDir)packages\Microsoft.SqlServer.Compact.4.0.8876.1\NativeBinaries\x86\*.*" "$(TargetDir)x86"
-    if not exist "$(TargetDir)amd64" md "$(TargetDir)amd64"
-    xcopy /s /y "$(SolutionDir)packages\Microsoft.SqlServer.Compact.4.0.8876.1\NativeBinaries\amd64\*.*" "$(TargetDir)amd64"</PostBuildEvent>
   </PropertyGroup>
-  <Import Project="..\packages\ndo.dll.3.0.0.4\build\ndo.dll.targets" Condition="Exists('..\packages\ndo.dll.3.0.0.4\build\ndo.dll.targets')" />
-  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
-    <PropertyGroup>
-      <ErrorText>This project references NuGet package(s) that are missing on this computer. Enable NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
-    </PropertyGroup>
-    <Error Condition="!Exists('..\packages\ndo.dll.3.0.0.4\build\ndo.dll.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\ndo.dll.3.0.0.4\build\ndo.dll.targets'))" />
-  </Target>
+  <Import Project="..\..\nuget\ndo.dll.targets" />
 </Project>

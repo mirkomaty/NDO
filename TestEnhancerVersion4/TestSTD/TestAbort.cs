@@ -29,7 +29,7 @@ using NDO.Mapping;
 namespace TestSTD
 {
 	/// <summary>
-	/// Zusammenfassung fï¿½r TestAbort.
+	/// Zusammenfassung för TestAbort.
 	/// </summary>
 	[TestFixture]
 	public class TestAbort
@@ -74,7 +74,7 @@ namespace TestSTD
 			}
 			Assert.AreEqual("Connection count wrong", 1, mapping.Connections.Count);
 			System.Diagnostics.Debug.WriteLine("1 Connection in list");
-			mapping.Connections.Add(mapping.NewConnection("zweimalnix", "UndSchonï¿½berhauptNix"));
+			mapping.Connections.Add(mapping.NewConnection("zweimalnix", "UndSchonöberhauptNix"));
 		}
 
 		[Test, ExpectedException(typeof(ArgumentOutOfRangeException))]

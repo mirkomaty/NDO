@@ -121,7 +121,7 @@ namespace NdoUnitTests
 			m.Hinzufuegen(r);
 			pm.Save();
 			Assert.AreEqual(1, m.Reisen.Count, "1. Wrong number of objects");
-			m.LÃ¶schen(r);
+			m.Löschen(r);
 			Assert.AreEqual(NDOObjectState.Deleted, r.NDOObjectState, "1. Wrong state");
 			Assert.AreEqual(0, m.Reisen.Count, "2. Wrong number of objects");
 			pm.Save();
@@ -135,7 +135,7 @@ namespace NdoUnitTests
 			m.Hinzufuegen(r);
 			pm.Save();
 			Assert.AreEqual(1, m.Reisen.Count, "1. Wrong number of objects");
-			m.LÃ¶schen(r);
+			m.Löschen(r);
 			Assert.AreEqual(NDOObjectState.Deleted, r.NDOObjectState, "1. Wrong state");
 			Assert.AreEqual(0, m.Reisen.Count, "2. Wrong number of objects");
 			pm.Abort();
@@ -176,7 +176,7 @@ namespace NdoUnitTests
 			pm.MakePersistent(m);
 			pm.Save();
 			m.Hinzufuegen(r);
-			m.LÃ¶schen(r);
+			m.Löschen(r);
 			Assert.AreEqual(NDOObjectState.Transient, r.NDOObjectState, "1. Wrong state");
 			pm.Save();
 			Assert.AreEqual(NDOObjectState.Transient, r.NDOObjectState, "2. Wrong state");
@@ -187,7 +187,7 @@ namespace NdoUnitTests
 			pm.MakePersistent(m);
 			pm.Save();
 			m.Hinzufuegen(r);
-			m.LÃ¶schen(r);
+			m.Löschen(r);
 			Assert.AreEqual(NDOObjectState.Transient, r.NDOObjectState, "1. Wrong state");
 			pm.Abort();
 			Assert.AreEqual(NDOObjectState.Transient, r.NDOObjectState, "2. Wrong state");
@@ -201,7 +201,7 @@ namespace NdoUnitTests
 			pm.MakePersistent(m);
 			pm.Save();
 			IList rr = new ArrayList(m.Reisen);
-			m.LÃ¶scheReisen();
+			m.LöscheReisen();
 			Assert.AreEqual(0, m.Reisen.Count, "1. Wrong number of objects");
 			for(int i = 0; i < 10; i++) {
 				Assert.AreEqual(NDOObjectState.Deleted, ((Reise)rr[i]).NDOObjectState, "2. Wrong state");
@@ -221,7 +221,7 @@ namespace NdoUnitTests
 			pm.MakePersistent(m);
 			pm.Save();
 			IList rr = new ArrayList(m.Reisen);
-			m.LÃ¶scheReisen();
+			m.LöscheReisen();
 			Assert.AreEqual(0, m.Reisen.Count, "1. Wrong number of objects");
 			for(int i = 0; i < 10; i++) {
 				Assert.AreEqual(NDOObjectState.Deleted, ((Reise)rr[i]).NDOObjectState, "2. Wrong state");
@@ -334,12 +334,12 @@ namespace NdoUnitTests
 			pm.MakePersistent(m);
 			pm.Save();
 			pm.UnloadCache();
-			Query q = pm.NewQuery(typeof(Mitarbeiter));
-			m = (Mitarbeiter) q.ExecuteSingle(true);
+			NDOQuery<Mitarbeiter> q = new NDOQuery<Mitarbeiter>(pm);
+			m = q.ExecuteSingle(true);
 			Reise r2 = CreateReise("Schnulli");
 			m.Hinzufuegen(r2);
 			pm.Save();
-			m = (Mitarbeiter) q.ExecuteSingle(true);
+			m = q.ExecuteSingle(true);
 			Assert.AreEqual(2, m.Reisen.Count, "Count wrong");
 		}
 

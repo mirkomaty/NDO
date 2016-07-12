@@ -143,9 +143,9 @@ namespace NdoUnitTests
 		public void TestObjectCreationSaveChanged() 
 		{
 			pm.MakePersistent(m);
-			m.Nachname = "MÃ¼ller";
+			m.Nachname = "Müller";
 			pm.Save();
-			Assert.AreEqual("MÃ¼ller", m.Nachname, "Nachname wrong");
+			Assert.AreEqual("Müller", m.Nachname, "Nachname wrong");
 		}
 
 		[Test]
@@ -162,7 +162,7 @@ namespace NdoUnitTests
 		public void TestObjectCreationAbortChanged() 
 		{
 			pm.MakePersistent(m);
-			m.Nachname = "MÃ¼ller";
+			m.Nachname = "Müller";
 			pm.Abort();
 			Assert.AreEqual("Kocher", m.Nachname, "Nachname wrong");
 		}
@@ -584,7 +584,7 @@ namespace NdoUnitTests
 			pm.UnloadCache();
 			Query q = pm.NewQuery(typeof(Mitarbeiter));
 			Mitarbeiter m2 = (Mitarbeiter) q.ExecuteSingle(true);
-			Assert.AreEqual(255, m2.Vorname.Length, "Lï¿½nge des Vornamens falsch");
+			Assert.AreEqual(255, m2.Vorname.Length, "Lönge des Vornamens falsch");
 		}
 
 

@@ -30,7 +30,7 @@ using Reisekosten.Personal;
 namespace NdoUnitTests
 {
 	/// <summary>
-	/// Zusammenfassung fï¿½r PersistenceManagerFactory.
+	/// Zusammenfassung för PersistenceManagerFactory.
 	/// </summary>
 	public class PmFactory
 	{

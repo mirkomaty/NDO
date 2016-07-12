@@ -44,22 +44,22 @@ namespace Reisekosten
 			set { zweck = value; }
 		}
 
-		public void LandHinzufÃ¼gen(Land l) {
+		public void LandHinzufügen(Land l) {
 			dieLaender.Add(l);
 		}
 
-		public IList LÃ¤nder {
+		public IList Länder {
 			get {
 				return dieLaender;
 			}
 		}
 
-        public void LandLÃ¶schen(Land l)
+        public void LandLöschen(Land l)
         {
             dieLaender.Remove(l);
         }
 
-		public void LandLÃ¶schen(string name) {
+		public void LandLöschen(string name) {
 			Land result = null;
 			foreach(Land l in dieLaender) {
 				if(l.Name == name) {
@@ -78,11 +78,11 @@ namespace Reisekosten
 			belege.Add(k);
 		}
 
-		public void LÃ¶schen(Kostenpunkt kp) {
+		public void Löschen(Kostenpunkt kp) {
 			belege.Remove(kp);
 		}
 
-		public void LÃ¶scheKostenpunkte() {
+		public void LöscheKostenpunkte() {
 			belege.Clear();
 		}
 

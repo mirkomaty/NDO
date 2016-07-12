@@ -25,11 +25,11 @@ using NDO;
 
 namespace Reisekosten.Personal {
 	/// <summary>
-	/// Zertifikat fï¿½r Emailadresse. 1:1, aber existiert schon aus Firmenpool und wird nur zugeordnet :-)
+	/// Zertifikat för Emailadresse. 1:1, aber existiert schon aus Firmenpool und wird nur zugeordnet :-)
 	/// </summary>
 	[NDOPersistent]
 	public class Zertifikat {
-		private int schlÃ¼ssel;
+		private int schlüssel;
 
 		[NDORelation(typeof(Email), RelationInfo.Default, "Zertifikat")]
 		private Email adresse;
@@ -46,8 +46,8 @@ namespace Reisekosten.Personal {
 		}
 
 		public int Key {
-			get { return schlÃ¼ssel; }
-			set { schlÃ¼ssel = value; }
+			get { return schlüssel; }
+			set { schlüssel = value; }
 		}
 
 		public Signatur SGN {

@@ -26,7 +26,7 @@ using Reisekosten.Personal;
 
 namespace Reisekosten {
 	/// <summary>
-	/// Ein Mitarbeiter kann viele Email-Adressen haben, die jedoch gelï¿½scht werden, wenn er geht.
+	/// Ein Mitarbeiter kann viele Email-Adressen haben, die jedoch gelöscht werden, wenn er geht.
 	/// 1:n Komposition mit Zwischentabelle.
 	/// Eine Email kann ein Zertifikat aus dem Firmenpool haben. 1:1-Aggregation bidirektional
 	/// </summary>
@@ -59,7 +59,7 @@ namespace Reisekosten {
 			set { adresse = value; }
 		}
 
-		public Zertifikat SchlÃ¼ssel {
+		public Zertifikat Schlüssel {
 			get { return key; }
 			set { key = value; }
 		}

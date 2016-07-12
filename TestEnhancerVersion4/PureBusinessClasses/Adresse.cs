@@ -31,16 +31,16 @@ namespace Reisekosten.Personal
 	[NDOPersistent]
 	public class Adresse
 	{
-		string straÃŸe;
+		string straße;
 		string lkz;
 		string plz;
 		string ort;
 
 
-		public string StraÃŸe
+		public string Straße
 		{
-			get { return straÃŸe; }
-			set { straÃŸe = value; }
+			get { return straße; }
+			set { straße = value; }
 		}
 		public string Lkz
 		{

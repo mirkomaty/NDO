@@ -26,18 +26,18 @@ using NDO;
 namespace Reisekosten
 {
 	/// <summary>
-	/// Ein Mitarbeiter kann viele ReisebÃ¼ros verwenden.
+	/// Ein Mitarbeiter kann viele Reisebüros verwenden.
 	/// </summary>
 	[NDOPersistent]
-	public class ReisebÃ¼ro
+	public class Reisebüro
 	{
 		private string name;
 
-		public ReisebÃ¼ro()
+		public Reisebüro()
 		{
 		}
 
-		public ReisebÃ¼ro(string name) {
+		public Reisebüro(string name) {
 			this.name = name;
 		}
 

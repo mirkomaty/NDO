@@ -50,11 +50,11 @@ namespace NdoUnitTests {
 			try {
 				pm.Abort();
 				IList mitarbeiterListe = pm.GetClassExtent(typeof(Mitarbeiter), false);
-//				Console.WriteLine("TearDown lï¿½scht " + mitarbeiterListe.Count + " Mitarbeiter");
+//				Console.WriteLine("TearDown löscht " + mitarbeiterListe.Count + " Mitarbeiter");
 				pm.Delete(mitarbeiterListe);
 				pm.Save();
 				IList reiseListe = pm.GetClassExtent(typeof(Reise), false);
-//				Console.WriteLine("TearDown lï¿½scht " + reiseListe.Count + " Reisen");
+//				Console.WriteLine("TearDown löscht " + reiseListe.Count + " Reisen");
 				pm.Delete(reiseListe);
 				pm.Save();
 				pm.Close();
@@ -123,7 +123,7 @@ namespace NdoUnitTests {
 		public void TestObjectCreationAbortChanged() {
 			m.Hinzufuegen(r);
 			pm.MakePersistent(m);
-			r.Zweck = "Mï¿½ller";
+			r.Zweck = "Möller";
 			pm.Abort();
 			Assert.AreEqual("ADC", r.Zweck, "Nachname wrong");
 		}

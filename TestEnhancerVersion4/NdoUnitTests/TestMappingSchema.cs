@@ -120,7 +120,7 @@ namespace NdoUnitTests
 			Class c2 = mapping.FindClass(newclassMitarbeiter);
 			Assert.NotNull(c, newclassMitarbeiter + " nicht gefunden");
 
-			Assert.That(c.TableName != c2.TableName, "TableNames mï¿½ssen ungleich sein");
+			Assert.That(c.TableName != c2.TableName, "TableNames mössen ungleich sein");
 		}
 
 		[Test]

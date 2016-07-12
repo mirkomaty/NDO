@@ -30,7 +30,7 @@ using System.Drawing;
 namespace NdoUnitTests
 {
 	/// <summary>
-	/// Zusammenfassung fï¿½r ForeignObjectTests.
+	/// Zusammenfassung för ForeignObjectTests.
 	/// </summary>
 	[TestFixture]
 	public class ForeignObjectTests

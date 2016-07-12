@@ -47,7 +47,7 @@ namespace NdoUnitTests {
 		public void Setup() {
 			pm = PmFactory.NewPersistenceManager();
 			m = CreateMitarbeiter("Mirko", "Matytschak");
-			a = CreateAdresse("D", "83646", "Nockhergasse 7", "Bad TÃ¶lz");
+			a = CreateAdresse("D", "83646", "Nockhergasse 7", "Bad Tölz");
 			b = CreateBuero("3-0815");
 		}
 
@@ -80,7 +80,7 @@ namespace NdoUnitTests {
 				if (a.NDOObjectId.Id[0] is Int32)
                     Assert.AreEqual(-1, a.NDOObjectId.Id[0], "Adresse key wrong");
                 if (b.NDOObjectId.Id[0] is Int32)
-                    Assert.AreEqual(-1, b.NDOObjectId.Id[0], "BÃ¼ro key wrong");
+                    Assert.AreEqual(-1, b.NDOObjectId.Id[0], "Büro key wrong");
 			}
 			Assert.That(!m.NDOObjectId.Equals(a.NDOObjectId), "Ids should be different m-a");
 			Assert.That(!m.NDOObjectId.Equals(b.NDOObjectId), "Ids should be different m-b");
@@ -237,7 +237,7 @@ namespace NdoUnitTests {
 			Assert.AreEqual(NDOObjectState.Hollow, m.NDOObjectState, "1: Mitarbeiter should be hollow");
 			Assert.AreEqual(NDOObjectState.Persistent, a.NDOObjectState, "1: Adresse should be persistent");
 
-			a = m.Adresse; // ruft LoadData fï¿½r m auf. m.adresse liegt auf dem Cache und ist Persistent
+			a = m.Adresse; // ruft LoadData för m auf. m.adresse liegt auf dem Cache und ist Persistent
 			Assert.AreEqual(NDOObjectState.Persistent, m.NDOObjectState, "1: Mitarbeiter should be persistent");
 			Assert.AreEqual(NDOObjectState.Persistent, a.NDOObjectState, "2: Adresse should be persistent");
 			ObjectId id = m.NDOObjectId;
@@ -327,7 +327,7 @@ namespace NdoUnitTests {
 			m = (Mitarbeiter)pm.FindObject(m.NDOObjectId);
 			b = (Buero)pm.FindObject(b.NDOObjectId);
 			Assert.NotNull(m, "1. Mitarbeiter not found");
-			Assert.NotNull(b, "1. BÃ¼ro not found");
+			Assert.NotNull(b, "1. Büro not found");
 			ObjectId moid = m.NDOObjectId;
 			ObjectId boid = b.NDOObjectId;
 			m = null;
@@ -339,7 +339,7 @@ namespace NdoUnitTests {
 			b = (Buero)pm.FindObject(boid);
 			Assert.NotNull(m, "2. Mitarbeiter not found");
 			Assert.NotNull(b, "2. Adresse not found");
-			Assert.AreSame(b, b2, "BÃ¼ro should match");
+			Assert.AreSame(b, b2, "Büro should match");
 		}
 
 		[Test]
@@ -366,7 +366,7 @@ namespace NdoUnitTests {
 			m = (Mitarbeiter)pm.FindObject(m.NDOObjectId);
 			b = (Buero)pm.FindObject(b.NDOObjectId);
 			Assert.NotNull(m, "1. Mitarbeiter not found");
-			Assert.NotNull(b, "1. BÃ¼ro not found");
+			Assert.NotNull(b, "1. Büro not found");
 			Assert.AreEqual(NDOObjectState.Persistent, m.NDOObjectState, "2. Wrong state");
 		}
 
@@ -400,10 +400,10 @@ namespace NdoUnitTests {
 			pm.Save();
 			m.Zimmer = b;
 			Assert.AreEqual(NDOObjectState.Persistent, b.NDOObjectState, "1. Wrong state");
-			Assert.NotNull(m.Zimmer, "1. BÃ¼ro not found");
+			Assert.NotNull(m.Zimmer, "1. Büro not found");
 			pm.Abort();
 			Assert.AreEqual(NDOObjectState.Persistent, b.NDOObjectState, "2. Wrong state");
-			Assert.Null(m.Zimmer, "1. BÃ¼ro should be null");
+			Assert.Null(m.Zimmer, "1. Büro should be null");
 		}
 
 		[Test]
@@ -412,19 +412,19 @@ namespace NdoUnitTests {
 			pm.MakePersistent(m);
 			m.Zimmer = b;
 			pm.Save();
-			Assert.NotNull(m.Zimmer, "1. BÃ¼ro not found");
+			Assert.NotNull(m.Zimmer, "1. Büro not found");
 			m.Zimmer = null;
 			Assert.AreEqual(NDOObjectState.Persistent, b.NDOObjectState, "1. Wrong state");
-			Assert.Null(m.Zimmer, "1. BÃ¼ro should be null");
+			Assert.Null(m.Zimmer, "1. Büro should be null");
 			pm.Save();
-			Assert.Null(m.Zimmer, "2. BÃ¼ro should be null");
+			Assert.Null(m.Zimmer, "2. Büro should be null");
 			Assert.AreEqual(NDOObjectState.Persistent, b.NDOObjectState, "2. Wrong state");
 			ObjectId moid = m.NDOObjectId;
 			ObjectId boid = b.NDOObjectId;
 			pm.UnloadCache();
 			m = (Mitarbeiter)pm.FindObject(moid);
 			Assert.NotNull(m, "3. Mitarbeiter not found");
-			Assert.Null(m.Zimmer, "3. BÃ¼ro should be null");
+			Assert.Null(m.Zimmer, "3. Büro should be null");
 			b = (Buero)pm.FindObject(boid);
 			Assert.NotNull(b, "3. Buero not found");
 		}
@@ -435,12 +435,12 @@ namespace NdoUnitTests {
 			pm.MakePersistent(m);
 			m.Zimmer = b;
 			pm.Save();
-			Assert.NotNull(m.Zimmer, "1. BÃ¼ro not found");
+			Assert.NotNull(m.Zimmer, "1. Büro not found");
 			m.Zimmer = null;
 			Assert.AreEqual(NDOObjectState.Persistent, b.NDOObjectState, "1. Wrong state");
-			Assert.Null(m.Zimmer, "2. BÃ¼ro should be null");
+			Assert.Null(m.Zimmer, "2. Büro should be null");
 			pm.Abort();
-			Assert.NotNull(m.Zimmer, "2. BÃ¼ro not found");
+			Assert.NotNull(m.Zimmer, "2. Büro not found");
 			Assert.AreEqual(NDOObjectState.Persistent, b.NDOObjectState, "2. Wrong state");
 		}
 
@@ -509,9 +509,9 @@ namespace NdoUnitTests {
 			pm.MakeHollow(m); // setzt m.Zimmer auf null
 			
 			Assert.AreEqual(NDOObjectState.Hollow, m.NDOObjectState, "1: Mitarbeiter should be hollow");
-			Assert.AreEqual(NDOObjectState.Persistent, b.NDOObjectState, "1: BÃ¼ro should be persistent");
+			Assert.AreEqual(NDOObjectState.Persistent, b.NDOObjectState, "1: Büro should be persistent");
 
-			b = m.Zimmer; // ruft LoadData fï¿½r m auf. m.Zimmer liegt im Cache und ist Persistent
+			b = m.Zimmer; // ruft LoadData för m auf. m.Zimmer liegt im Cache und ist Persistent
 			Assert.AreEqual(NDOObjectState.Persistent, m.NDOObjectState, "1: Mitarbeiter should be persistent");
 			Assert.AreEqual(NDOObjectState.Persistent, b.NDOObjectState, "2: Adresse should be persistent");
 			ObjectId id = m.NDOObjectId;
@@ -522,8 +522,8 @@ namespace NdoUnitTests {
 			Assert.AreEqual(NDOObjectState.Hollow, m.NDOObjectState, "2: Mitarbeiter should be hollow");
 			b = m.Zimmer;
 			Assert.AreEqual(NDOObjectState.Persistent, m.NDOObjectState, "2: Mitarbeiter should be persistent");
-			Assert.NotNull(b, "BÃ¼ro not found");
-			Assert.AreEqual(NDOObjectState.Hollow, b.NDOObjectState, "1: BÃ¼ro should be hollow");
+			Assert.NotNull(b, "Büro not found");
+			Assert.AreEqual(NDOObjectState.Hollow, b.NDOObjectState, "1: Büro should be hollow");
 		}
 
 
@@ -535,7 +535,7 @@ namespace NdoUnitTests {
 			pm.Save();
 			pm.MakeAllHollow();
 			Assert.AreEqual(NDOObjectState.Hollow, m.NDOObjectState, "1: Mitarbeiter should be hollow");
-			Assert.AreEqual(NDOObjectState.Hollow, b.NDOObjectState, "1: BÃ¼ro should be hollow");
+			Assert.AreEqual(NDOObjectState.Hollow, b.NDOObjectState, "1: Büro should be hollow");
 		}
 
 		[Test]
@@ -545,7 +545,7 @@ namespace NdoUnitTests {
 			pm.MakePersistent(m);
 			pm.MakeAllHollow();  // before save, objects cannot be made hollow. => in locked objects
 			Assert.AreEqual(NDOObjectState.Created, m.NDOObjectState, "1: Mitarbeiter should be created");
-			Assert.AreEqual(NDOObjectState.Created, b.NDOObjectState, "1: BÃ¼ro should be created");
+			Assert.AreEqual(NDOObjectState.Created, b.NDOObjectState, "1: Büro should be created");
 		}
 
 		[Test]
@@ -556,7 +556,7 @@ namespace NdoUnitTests {
 			pm.MakePersistent(m);
 			pm.MakeAllHollow();  // before save, objects cannot be made hollow. => in locked objects
 			Assert.AreEqual(NDOObjectState.Created, m.NDOObjectState, "1: Mitarbeiter should be created");
-			Assert.AreEqual(NDOObjectState.Hollow, b.NDOObjectState, "1: BÃ¼ro should be hollow");
+			Assert.AreEqual(NDOObjectState.Hollow, b.NDOObjectState, "1: Büro should be hollow");
 		}
 
 		[Test]
@@ -569,21 +569,21 @@ namespace NdoUnitTests {
 			m = (Mitarbeiter)liste[0];
 			Assert.AreEqual(NDOObjectState.Persistent, m.NDOObjectState, "1: Mitarbeiter should be persistent");
 			Assert.NotNull(m.Zimmer, "2. Relation is missing");
-			Assert.AreEqual(NDOObjectState.Persistent, m.Zimmer.NDOObjectState, "4.: BÃ¼ro should be hollow");
+			Assert.AreEqual(NDOObjectState.Persistent, m.Zimmer.NDOObjectState, "4.: Büro should be hollow");
 
 			pm.UnloadCache();
 			liste = pm.GetClassExtent(typeof(Mitarbeiter));
 			m = (Mitarbeiter)liste[0];
 			Assert.AreEqual(NDOObjectState.Hollow, m.NDOObjectState, "5: Mitarbeiter should be hollow");
 			Assert.NotNull(m.Zimmer, "6. Relation is missing");
-			Assert.AreEqual(NDOObjectState.Hollow, m.Zimmer.NDOObjectState, "8.: BÃ¼ro should be hollow");
+			Assert.AreEqual(NDOObjectState.Hollow, m.Zimmer.NDOObjectState, "8.: Büro should be hollow");
 
 			pm.UnloadCache();
 			liste = pm.GetClassExtent(typeof(Mitarbeiter), false);
 			m = (Mitarbeiter)liste[0];
 			Assert.AreEqual(NDOObjectState.Persistent, m.NDOObjectState, "9: Mitarbeiter should be persistent");
 			Assert.NotNull(m.Zimmer, "10. Relation is missing");
-			Assert.AreEqual(NDOObjectState.Hollow, m.Zimmer.NDOObjectState, "12.: BÃ¼ro should be hollow");
+			Assert.AreEqual(NDOObjectState.Hollow, m.Zimmer.NDOObjectState, "12.: Büro should be hollow");
 		}
 		#endregion
 
@@ -601,7 +601,7 @@ namespace NdoUnitTests {
 			b = (Buero)pm.FindObject(b.NDOObjectId);
 			Assert.NotNull(m, "1. Mitarbeiter not found");
 			Assert.NotNull(a, "1. Adresse not found");
-			Assert.NotNull(b, "1. BÃ¼ro not found");
+			Assert.NotNull(b, "1. Büro not found");
 			ObjectId moid = m.NDOObjectId;
 			ObjectId aoid = a.NDOObjectId;
 			ObjectId boid = b.NDOObjectId;
@@ -613,7 +613,7 @@ namespace NdoUnitTests {
 			m = (Mitarbeiter)pm.FindObject(moid);
 			Assert.NotNull(m, "2. Mitarbeiter not found");
 			Assert.NotNull(m.Adresse, "2. Adresse not found");
-			Assert.NotNull(m.Zimmer, "2. BÃ¼ro not found");
+			Assert.NotNull(m.Zimmer, "2. Büro not found");
 		}
 		[Test]
 		public void TestForeignKeyConstraint()
@@ -642,11 +642,11 @@ namespace NdoUnitTests {
 			m = (Mitarbeiter)pm.FindObject(moid);
 			Assert.NotNull(m, "2. Mitarbeiter not found");
 			Assert.NotNull(m.Adresse, "2. Adresse not found");
-			Assert.NotNull(m.Zimmer, "2. BÃ¼ro not found");
+			Assert.NotNull(m.Zimmer, "2. Büro not found");
 		}
 
 		[Test]
-		public void CombinedTestAddAdresseRemoveBÃ¼ro() {
+		public void CombinedTestAddAdresseRemoveBüro() {
 			pm.MakePersistent(b);
 			m.Zimmer = b;
 			pm.MakePersistent(m);
@@ -664,13 +664,13 @@ namespace NdoUnitTests {
 			m = (Mitarbeiter)pm.FindObject(moid);
 			Assert.NotNull(m, "Mitarbeiter not found");
 			Assert.NotNull(m.Adresse, "Adresse not found");
-			Assert.Null(m.Zimmer, "Unexpected BÃ¼ro");
+			Assert.Null(m.Zimmer, "Unexpected Büro");
 			b = (Buero)pm.FindObject(boid);
-			Assert.NotNull(b, "BÃ¼ro not found");
+			Assert.NotNull(b, "Büro not found");
 		}
 
 		[Test]
-		public void CombinedTestAddBÃ¼roRemoveAdresse() {
+		public void CombinedTestAddBüroRemoveAdresse() {
 			pm.MakePersistent(b);
 			m.Adresse = a;
 			pm.MakePersistent(m);
@@ -687,7 +687,7 @@ namespace NdoUnitTests {
 			pm.UnloadCache();
 			m = (Mitarbeiter)pm.FindObject(moid);
 			Assert.NotNull(m, "Mitarbeiter not found");
-			Assert.NotNull(m.Zimmer, "BÃ¼ro not found");
+			Assert.NotNull(m.Zimmer, "Büro not found");
 			Assert.Null(m.Adresse, "Unexpected Adresse");
 			Assert.That(adr.NDOObjectState == NDOObjectState.Transient, "Adresse should be deleted");
 		}
@@ -708,12 +708,12 @@ namespace NdoUnitTests {
 			pm.UnloadCache();
 			m = (Mitarbeiter)pm.FindObject(moid);
 			Assert.NotNull(m, "Mitarbeiter not found");
-			Assert.NotNull(m.Zimmer, "BÃ¼ro not found");
+			Assert.NotNull(m.Zimmer, "Büro not found");
 			Assert.Null(m.Adresse, "Unexpected Adresse");
 		}
 
 		[Test]
-		public void CombinedTestCreateAddRemoveBÃ¼ro() {
+		public void CombinedTestCreateAddRemoveBüro() {
 			pm.MakePersistent(b);
 			m.Zimmer = b;
 			m.Adresse = a;
@@ -729,11 +729,11 @@ namespace NdoUnitTests {
 			m = (Mitarbeiter)pm.FindObject(moid);
 			Assert.NotNull(m, "Mitarbeiter not found");
 			Assert.NotNull(m.Adresse, "Adresse not found");
-			Assert.Null(m.Zimmer, "Unexpected BÃ¼ro");
+			Assert.Null(m.Zimmer, "Unexpected Büro");
 		}
 
 		[Test]
-		public void CombinedTestAddRemoveBÃ¼ro() {
+		public void CombinedTestAddRemoveBüro() {
 			pm.MakePersistent(b);
 			m.Adresse = a;
 			m.Zimmer = null;
@@ -751,11 +751,11 @@ namespace NdoUnitTests {
 			m = (Mitarbeiter)pm.FindObject(moid);
 			Assert.NotNull(m, "Mitarbeiter not found");
 			Assert.NotNull(m.Adresse, "Adresse not found");
-			Assert.Null(m.Zimmer, "Unexpected BÃ¼ro");
+			Assert.Null(m.Zimmer, "Unexpected Büro");
 		}
 
 		[Test]
-		public void CombinedTestAddBÃ¼roRemoveAdresseAbort() {
+		public void CombinedTestAddBüroRemoveAdresseAbort() {
 			pm.MakePersistent(b);
 			m.Adresse = a;
 			pm.MakePersistent(m);
@@ -766,7 +766,7 @@ namespace NdoUnitTests {
 			pm.Abort();
 			Assert.NotNull(m, "1. Mitarbeiter not found");
 			Assert.NotNull(m.Adresse, "1. Adresse not found");
-			Assert.Null(m.Zimmer, "1. Unexpected BÃ¼ro");
+			Assert.Null(m.Zimmer, "1. Unexpected Büro");
 
 			
 			ObjectId moid = m.NDOObjectId;
@@ -778,7 +778,7 @@ namespace NdoUnitTests {
 			m = (Mitarbeiter)pm.FindObject(moid);
 			Assert.NotNull(m, "2. Mitarbeiter not found");
 			Assert.NotNull(m.Adresse, "2. Adresse not found");
-			Assert.Null(m.Zimmer, "2. Unexpected BÃ¼ro");
+			Assert.Null(m.Zimmer, "2. Unexpected Büro");
 		}
 		#endregion
 
@@ -789,11 +789,11 @@ namespace NdoUnitTests {
 			return m;
 		}
 
-		private Adresse CreateAdresse(string lkz, string plz, string straÃŸe, string ort) {
+		private Adresse CreateAdresse(string lkz, string plz, string straße, string ort) {
 			Adresse a = new Adresse();
 			a.Lkz = lkz;
 			a.Plz = plz;
-			a.StraÃŸe = straÃŸe;
+			a.Straße = straße;
 			a.Ort = ort;
 			return a;
 		}

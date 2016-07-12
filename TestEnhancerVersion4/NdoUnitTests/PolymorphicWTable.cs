@@ -261,7 +261,7 @@ namespace NdoUnitTests {
 			r.AddKostenpunkt(kp);
 			pm.Save();
 			Assert.AreEqual(1, r.Kostenpunkte.Count, "1. Wrong number of objects");
-			r.LÃ¶schen(kp);
+			r.Löschen(kp);
 			Assert.AreEqual(NDOObjectState.Deleted, kp.NDOObjectState, "1. Wrong state");
 			Assert.AreEqual(0, r.Kostenpunkte.Count, "2. Wrong number of objects");
 			pm.Save();
@@ -275,7 +275,7 @@ namespace NdoUnitTests {
 			r.AddKostenpunkt(kp);
 			pm.Save();
 			Assert.AreEqual(1, r.Kostenpunkte.Count, "1. Wrong number of objects");
-			r.LÃ¶schen(kp);
+			r.Löschen(kp);
 			Assert.AreEqual(NDOObjectState.Deleted, kp.NDOObjectState, "1. Wrong state");
 			Assert.AreEqual(0, r.Kostenpunkte.Count, "2. Wrong number of objects");
 			pm.Abort();
@@ -316,7 +316,7 @@ namespace NdoUnitTests {
 			pm.MakePersistent(r);
 			pm.Save();
 			r.AddKostenpunkt(kp);
-			r.LÃ¶schen(kp);
+			r.Löschen(kp);
 			Assert.AreEqual(NDOObjectState.Transient, kp.NDOObjectState, "1. Wrong state");
 			pm.Save();
 			Assert.AreEqual(NDOObjectState.Transient, kp.NDOObjectState, "2. Wrong state");
@@ -327,7 +327,7 @@ namespace NdoUnitTests {
 			pm.MakePersistent(r);
 			pm.Save();
 			r.AddKostenpunkt(kp);
-			r.LÃ¶schen(kp);
+			r.Löschen(kp);
 			Assert.AreEqual(NDOObjectState.Transient, kp.NDOObjectState, "1. Wrong state");
 			pm.Abort();
 			Assert.AreEqual(NDOObjectState.Transient, kp.NDOObjectState, "2. Wrong state");
@@ -341,7 +341,7 @@ namespace NdoUnitTests {
 			pm.MakePersistent(r);
 			pm.Save();
 			IList rr = new ArrayList(r.Kostenpunkte);
-			r.LÃ¶scheKostenpunkte();
+			r.LöscheKostenpunkte();
 			Assert.AreEqual(0, r.Kostenpunkte.Count, "1. Wrong number of objects");
 			for(int i = 0; i < 10; i++) {
 				Assert.AreEqual(NDOObjectState.Deleted, ((Kostenpunkt)rr[i]).NDOObjectState, "2. Wrong state");
@@ -361,7 +361,7 @@ namespace NdoUnitTests {
 			pm.MakePersistent(r);
 			pm.Save();
 			IList rr = new ArrayList(r.Kostenpunkte);
-			r.LÃ¶scheKostenpunkte();
+			r.LöscheKostenpunkte();
 			Assert.AreEqual(0, r.Kostenpunkte.Count, "1. Wrong number of objects");
 			for(int i = 0; i < 10; i++) {
 				Assert.AreEqual(NDOObjectState.Deleted, ((Kostenpunkt)rr[i]).NDOObjectState, "2. Wrong state");
@@ -617,19 +617,19 @@ namespace NdoUnitTests {
 			Adresse a1 = new Adresse();
 			a1.Lkz = "D";
 			a1.Plz = "83646";
-			a1.StraÃŸe = "Nockhergasse 7";
-			a1.Ort = "Bad Tï¿½lz";
+			a1.Straße = "Nockhergasse 7";
+			a1.Ort = "Bad Tölz";
 
 			Adresse a2 = new Adresse();
-			a2.Ort = "Mï¿½nchen";
+			a2.Ort = "Mönchen";
 			a2.Plz = "80331";
-			a2.StraÃŸe = "Isartorplatz 5";
+			a2.Straße = "Isartorplatz 5";
 			a2.Lkz = "D";
 
 			Institution i = new Institution();
 			i.FirstName = "Schnulli";
 			i.LastName = "Wauwau";
-			i.Hausmeister = "Mï¿½ller";
+			i.Hausmeister = "Möller";
 
 			pm.MakePersistent(a1);
 			pm.MakePersistent(a2);

@@ -24,9 +24,9 @@ using System.Reflection;
 using System.Runtime.CompilerServices;
 
 //
-// Allgemeine Informationen ï¿½ber eine Assembly werden ï¿½ber folgende Attribute 
-// gesteuert. ï¿½ndern Sie diese Attributswerte, um die Informationen zu modifizieren,
-// die mit einer Assembly verknï¿½pft sind.
+// Allgemeine Informationen öber eine Assembly werden öber folgende Attribute 
+// gesteuert. öndern Sie diese Attributswerte, um die Informationen zu modifizieren,
+// die mit einer Assembly verknöpft sind.
 //
 [assembly: AssemblyTitle("")]
 [assembly: AssemblyDescription("")]
@@ -38,41 +38,41 @@ using System.Runtime.CompilerServices;
 [assembly: AssemblyCulture("")]		
 
 //
-// Versionsinformationen fï¿½r eine Assembly bestehen aus folgenden vier Werten:
+// Versionsinformationen för eine Assembly bestehen aus folgenden vier Werten:
 //
 //      Hauptversion
 //      Nebenversion 
 //      Buildnummer
 //      Revision
 //
-// Sie kï¿½nnen alle Werte oder die standardmï¿½ï¿½ige Revision und Buildnummer 
+// Sie können alle Werte oder die standardmööige Revision und Buildnummer 
 // mit '*' angeben:
 
 [assembly: AssemblyVersion("1.0.*")]
 
 //
-// Um die Assembly zu signieren, mï¿½ssen Sie einen SchlÃ¼ssel angeben. Weitere Informationen 
-// ï¿½ber die Assemblysignierung finden Sie in der Microsoft .NET Framework-Dokumentation.
+// Um die Assembly zu signieren, mössen Sie einen Schlüssel angeben. Weitere Informationen 
+// öber die Assemblysignierung finden Sie in der Microsoft .NET Framework-Dokumentation.
 //
-// Mit den folgenden Attributen kï¿½nnen Sie festlegen, welcher SchlÃ¼ssel fï¿½r die Signierung verwendet wird. 
+// Mit den folgenden Attributen können Sie festlegen, welcher Schlüssel för die Signierung verwendet wird. 
 //
 // Hinweise: 
-//   (*) Wenn kein SchlÃ¼ssel angegeben ist, wird die Assembly nicht signiert.
-//   (*) KeyName verweist auf einen SchlÃ¼ssel, der im CSP (Crypto Service
+//   (*) Wenn kein Schlüssel angegeben ist, wird die Assembly nicht signiert.
+//   (*) KeyName verweist auf einen Schlüssel, der im CSP (Crypto Service
 //       Provider) auf Ihrem Computer installiert wurde. KeyFile verweist auf eine Datei, die einen
-//       SchlÃ¼ssel enthï¿½lt.
-//   (*) Wenn die Werte fï¿½r KeyFile und KeyName angegeben werden, 
-//       werden folgende Vorgï¿½nge ausgefï¿½hrt:
-//       (1) Wenn KeyName im CSP gefunden wird, wird dieser SchlÃ¼ssel verwendet.
+//       Schlüssel enthölt.
+//   (*) Wenn die Werte för KeyFile und KeyName angegeben werden, 
+//       werden folgende Vorgönge ausgeföhrt:
+//       (1) Wenn KeyName im CSP gefunden wird, wird dieser Schlüssel verwendet.
 //       (2) Wenn KeyName nicht vorhanden ist und KeyFile vorhanden ist, 
-//           wird der SchlÃ¼ssel in KeyFile im CSP installiert und verwendet.
-//   (*) Um eine KeyFile zu erstellen, kï¿½nnen Sie das Programm sn.exe (Strong Name) verwenden.
+//           wird der Schlüssel in KeyFile im CSP installiert und verwendet.
+//   (*) Um eine KeyFile zu erstellen, können Sie das Programm sn.exe (Strong Name) verwenden.
 //       Wenn KeyFile angegeben wird, muss der Pfad von KeyFile
 //       relativ zum Projektausgabeverzeichnis sein:
 //       %Project Directory%\obj\<configuration>. Wenn sich KeyFile z.B.
 //       im Projektverzeichnis befindet, geben Sie das AssemblyKeyFile-Attribut 
 //       wie folgt an: [assembly: AssemblyKeyFile("..\\..\\mykey.snk")]
-//   (*) Das verzï¿½gern der Signierung ist eine erweiterte Option. Weitere Informationen finden Sie in der
+//   (*) Das verzögern der Signierung ist eine erweiterte Option. Weitere Informationen finden Sie in der
 //       Microsoft .NET Framework-Dokumentation.
 //
 [assembly: AssemblyDelaySign(false)]

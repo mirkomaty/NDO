@@ -46,11 +46,11 @@ namespace NDO
 			DateTime startTime = DateTime.Now;
 
 #if false
-			TypeCodeTest t = new TypeCodeTest();
+			Rel1to1Bidirectional t = new Rel1to1Bidirectional();
             try
             {
                 t.Setup();
-				t.TestIfAllPersistentTypesHaveATypeCode();
+				t.AggrTestCreateObjectsWithTransaction();
             }
             catch (Exception ex)
             {

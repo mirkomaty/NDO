@@ -25,7 +25,7 @@ using NDO;
 
 namespace Reisekosten.Personal {
 	/// <summary>
-	/// Zusï¿½tzliche digitale Signatur fï¿½r ein Zertifikat.
+	/// Zusötzliche digitale Signatur för ein Zertifikat.
 	/// </summary>
 	[NDOPersistent]
 	public class Signatur {
@@ -34,7 +34,7 @@ namespace Reisekosten.Personal {
 		[NDORelation(typeof(Zertifikat), RelationInfo.Default, "Signatur")]
 		private Zertifikat owner;
 		
-		public Signatur() {}  // wird fï¿½r NDO laden benï¿½tigt.
+		public Signatur() {}  // wird för NDO laden benötigt.
 
 		public Signatur(string s) {
 			this.signature = s;

@@ -39,14 +39,14 @@ namespace NdoUnitTests {
 
 		private PersistenceManager pm;
 		private Mitarbeiter m;
-		private ReisebÃ¼ro r;
-		private ReisebÃ¼ro r2;
+		private Reisebüro r;
+		private Reisebüro r2;
 
 		[SetUp]
 		public void Setup() {
 			pm = PmFactory.NewPersistenceManager();
 			m = CreateMitarbeiter("Hartmut", "Kocher");
-			r = CreateReisebÃ¼ro("Lufthansa City Center");
+			r = CreateReisebüro("Lufthansa City Center");
 		}
 
 		[TearDown]
@@ -54,7 +54,7 @@ namespace NdoUnitTests {
 			pm.Abort();
 			IList mitarbeiterListe = pm.GetClassExtent(typeof(Mitarbeiter), false);
 			pm.Delete(mitarbeiterListe);
-			IList rbListe = pm.GetClassExtent(typeof(ReisebÃ¼ro), false);
+			IList rbListe = pm.GetClassExtent(typeof(Reisebüro), false);
 			pm.Delete(rbListe);
 			pm.Save();
 			pm.Close();
@@ -65,9 +65,9 @@ namespace NdoUnitTests {
 		public void TestCreateObjects() {
 			pm.MakePersistent(r);
 			if (r.NDOObjectId.Id[0] is Int32 && !pm.HasOwnerCreatedIds)
-				Assert.AreEqual(-1, r.NDOObjectId.Id[0], "ReisebÃ¼ro key wrong");
-			ReisebÃ¼ro r2 = (ReisebÃ¼ro)pm.FindObject(r.NDOObjectId);
-			Assert.AreSame(r, r2, "ReisebÃ¼ros should match");
+				Assert.AreEqual(-1, r.NDOObjectId.Id[0], "Reisebüro key wrong");
+			Reisebüro r2 = (Reisebüro)pm.FindObject(r.NDOObjectId);
+			Assert.AreSame(r, r2, "Reisebüros should match");
 		}
 
 		[Test]
@@ -106,15 +106,15 @@ namespace NdoUnitTests {
 			pm.Save();
 			Assert.That(!m.NDOObjectId.Equals(r.NDOObjectId), "Ids should be different");
 			m = (Mitarbeiter)pm.FindObject(m.NDOObjectId);
-			r = (ReisebÃ¼ro)pm.FindObject(r.NDOObjectId);
+			r = (Reisebüro)pm.FindObject(r.NDOObjectId);
 			Assert.NotNull(m, "1. Mitarbeiter not found");
-			Assert.NotNull(r, "1. ReisebÃ¼ro not found");
+			Assert.NotNull(r, "1. Reisebüro not found");
 
 			pm.UnloadCache();
 			m = (Mitarbeiter)pm.FindObject(m.NDOObjectId);
-			r = (ReisebÃ¼ro)pm.FindObject(r.NDOObjectId);
+			r = (Reisebüro)pm.FindObject(r.NDOObjectId);
 			Assert.NotNull(m, "2. Mitarbeiter not found");
-			Assert.NotNull(r, "2. ReisebÃ¼ro not found");
+			Assert.NotNull(r, "2. Reisebüro not found");
 		}
 
 		[Test]
@@ -127,7 +127,7 @@ namespace NdoUnitTests {
 
 			pm.UnloadCache();
 			Mitarbeiter.QueryHelper qh = new Mitarbeiter.QueryHelper();
-			Query q = pm.NewQuery(typeof(Mitarbeiter), qh.reiseBÃ¼ros.name + " LIKE 'L*'");
+			Query q = pm.NewQuery(typeof(Mitarbeiter), qh.reiseBüros.name + " LIKE 'L*'");
 			//System.Diagnostics.Debug.WriteLine(q.GeneratedQuery);
 			IList l = q.Execute();
 			Assert.AreEqual(1, l.Count, "Mitarbeiter not found");
@@ -143,9 +143,9 @@ namespace NdoUnitTests {
 			Assert.AreEqual(NDOObjectState.Persistent, r.NDOObjectState, "1. Wrong state");
 			pm.Save();
 			m = (Mitarbeiter)pm.FindObject(m.NDOObjectId);
-			r = (ReisebÃ¼ro)pm.FindObject(r.NDOObjectId);
+			r = (Reisebüro)pm.FindObject(r.NDOObjectId);
 			Assert.NotNull(m, "1. Mitarbeiter not found");
-			Assert.NotNull(r, "1. ReisebÃ¼ro not found");
+			Assert.NotNull(r, "1. Reisebüro not found");
 			Assert.AreEqual(NDOObjectState.Persistent, r.NDOObjectState, "2. Wrong state");
 		}
 			
@@ -156,10 +156,10 @@ namespace NdoUnitTests {
 			pm.Save();
 			m.Hinzufuegen(r);
 			Assert.AreEqual(NDOObjectState.Persistent, r.NDOObjectState, "1. Wrong state");
-			Assert.AreEqual(1, m.ReisebÃ¼ros.Count, "1. Wrong number of objects");
+			Assert.AreEqual(1, m.Reisebüros.Count, "1. Wrong number of objects");
 			pm.Abort();
 			Assert.AreEqual(NDOObjectState.Persistent, r.NDOObjectState, "2. Wrong state");
-			Assert.AreEqual(0, m.ReisebÃ¼ros.Count, "2. Wrong number of objects");
+			Assert.AreEqual(0, m.Reisebüros.Count, "2. Wrong number of objects");
 		}
 		[Test]
 		public void TestRemoveObjectSave() {
@@ -167,12 +167,12 @@ namespace NdoUnitTests {
 			m.Hinzufuegen(r);
 			pm.MakePersistent(m);
 			pm.Save();
-			Assert.AreEqual(1, m.ReisebÃ¼ros.Count, "1. Wrong number of objects");
-			m.LÃ¶schen(r);
+			Assert.AreEqual(1, m.Reisebüros.Count, "1. Wrong number of objects");
+			m.Löschen(r);
 			Assert.AreEqual(NDOObjectState.Persistent, r.NDOObjectState, "1. Wrong state");
-			Assert.AreEqual(0, m.ReisebÃ¼ros.Count, "2. Wrong number of objects");
+			Assert.AreEqual(0, m.Reisebüros.Count, "2. Wrong number of objects");
 			pm.Save();
-			Assert.AreEqual(0, m.ReisebÃ¼ros.Count, "3. Wrong number of objects");
+			Assert.AreEqual(0, m.Reisebüros.Count, "3. Wrong number of objects");
 			Assert.AreEqual(NDOObjectState.Persistent, r.NDOObjectState, "2. Wrong state");
 		}
 			
@@ -182,12 +182,12 @@ namespace NdoUnitTests {
 			pm.MakePersistent(m);
 			m.Hinzufuegen(r);
 			pm.Save();
-			Assert.AreEqual(1, m.ReisebÃ¼ros.Count, "1. Wrong number of objects");
-			m.LÃ¶schen(r);
+			Assert.AreEqual(1, m.Reisebüros.Count, "1. Wrong number of objects");
+			m.Löschen(r);
 			Assert.AreEqual(NDOObjectState.Persistent, r.NDOObjectState, "1. Wrong state");
-			Assert.AreEqual(0, m.ReisebÃ¼ros.Count, "2. Wrong number of objects");
+			Assert.AreEqual(0, m.Reisebüros.Count, "2. Wrong number of objects");
 			pm.Abort();
-			Assert.AreEqual(1, m.ReisebÃ¼ros.Count, "3. Wrong number of objects");
+			Assert.AreEqual(1, m.Reisebüros.Count, "3. Wrong number of objects");
 			Assert.AreEqual(NDOObjectState.Persistent, r.NDOObjectState, "2. Wrong state");
 		}
 
@@ -227,11 +227,11 @@ namespace NdoUnitTests {
 			pm.MakePersistent(m);
 			pm.Save();
 			m.Hinzufuegen(r);
-			m.LÃ¶schen(r);
+			m.Löschen(r);
 			Assert.AreEqual(NDOObjectState.Persistent, r.NDOObjectState, "1. Wrong state");
 			pm.Save();
 			Assert.AreEqual(NDOObjectState.Persistent, r.NDOObjectState, "2. Wrong state");
-			Assert.AreEqual(0, m.ReisebÃ¼ros.Count, "3. Wrong number of objects");
+			Assert.AreEqual(0, m.Reisebüros.Count, "3. Wrong number of objects");
 		}
 
 		[Test]
@@ -240,54 +240,54 @@ namespace NdoUnitTests {
 			pm.MakePersistent(m);
 			pm.Save();
 			m.Hinzufuegen(r);
-			m.LÃ¶schen(r);
+			m.Löschen(r);
 			Assert.AreEqual(NDOObjectState.Persistent, r.NDOObjectState, "1. Wrong state");
 			pm.Abort();
 			Assert.AreEqual(NDOObjectState.Persistent, r.NDOObjectState, "2. Wrong state");
-			Assert.AreEqual(0, m.ReisebÃ¼ros.Count, "3. Wrong number of objects");
+			Assert.AreEqual(0, m.Reisebüros.Count, "3. Wrong number of objects");
 		}
 
 		[Test]
 		public void TestClearRelatedObjectsSave() {
 			for(int i = 0; i < 10; i++) {
-				ReisebÃ¼ro rb = CreateReisebÃ¼ro(i.ToString());
+				Reisebüro rb = CreateReisebüro(i.ToString());
 				pm.MakePersistent(rb);
 				m.Hinzufuegen(rb);
 			}
 			pm.MakePersistent(m);
 			pm.Save();
-			IList rr = new ArrayList(m.ReisebÃ¼ros);
-			m.LÃ¶scheReisebÃ¼ros();
-			Assert.AreEqual(0, m.ReisebÃ¼ros.Count, "1. Wrong number of objects");
+			IList rr = new ArrayList(m.Reisebüros);
+			m.LöscheReisebüros();
+			Assert.AreEqual(0, m.Reisebüros.Count, "1. Wrong number of objects");
 			for(int i = 0; i < 10; i++) {
-				Assert.AreEqual(NDOObjectState.Persistent, ((ReisebÃ¼ro)rr[i]).NDOObjectState, "2. Wrong state");
+				Assert.AreEqual(NDOObjectState.Persistent, ((Reisebüro)rr[i]).NDOObjectState, "2. Wrong state");
 			}
 			pm.Save();
-			Assert.AreEqual(0, m.ReisebÃ¼ros.Count, "3. Wrong number of objects");
+			Assert.AreEqual(0, m.Reisebüros.Count, "3. Wrong number of objects");
 			for(int i = 0; i < 10; i++) {
-				Assert.AreEqual(NDOObjectState.Persistent, ((ReisebÃ¼ro)rr[i]).NDOObjectState, "4. Wrong state");
+				Assert.AreEqual(NDOObjectState.Persistent, ((Reisebüro)rr[i]).NDOObjectState, "4. Wrong state");
 			}
 		}
 
 		[Test]
 		public void TestClearRelatedObjectsAbort() {
 			for(int i = 0; i < 10; i++) {
-				ReisebÃ¼ro rb = CreateReisebÃ¼ro(i.ToString());
+				Reisebüro rb = CreateReisebüro(i.ToString());
 				pm.MakePersistent(rb);
 				m.Hinzufuegen(rb);
 			}
 			pm.MakePersistent(m);
 			pm.Save();
-			IList rr = new ArrayList(m.ReisebÃ¼ros);
-			m.LÃ¶scheReisebÃ¼ros();
-			Assert.AreEqual(0, m.ReisebÃ¼ros.Count, "1. Wrong number of objects");
+			IList rr = new ArrayList(m.Reisebüros);
+			m.LöscheReisebüros();
+			Assert.AreEqual(0, m.Reisebüros.Count, "1. Wrong number of objects");
 			for(int i = 0; i < 10; i++) {
-				Assert.AreEqual(NDOObjectState.Persistent, ((ReisebÃ¼ro)rr[i]).NDOObjectState, "2. Wrong state");
+				Assert.AreEqual(NDOObjectState.Persistent, ((Reisebüro)rr[i]).NDOObjectState, "2. Wrong state");
 			}
 			pm.Abort();
-			Assert.AreEqual(10, m.ReisebÃ¼ros.Count, "3. Wrong number of objects");
+			Assert.AreEqual(10, m.Reisebüros.Count, "3. Wrong number of objects");
 			for(int i = 0; i < 10; i++) {
-				Assert.AreEqual(NDOObjectState.Persistent, ((ReisebÃ¼ro)rr[i]).NDOObjectState, "4. Wrong state");
+				Assert.AreEqual(NDOObjectState.Persistent, ((Reisebüro)rr[i]).NDOObjectState, "4. Wrong state");
 			}
 		}
 
@@ -300,18 +300,18 @@ namespace NdoUnitTests {
 			pm.Save();
 			pm.MakeHollow(m);
 			Assert.AreEqual(NDOObjectState.Hollow, m.NDOObjectState, "1: Mitarbeiter should be hollow");
-			Assert.AreEqual(NDOObjectState.Persistent, r.NDOObjectState, "1: ReisebÃ¼ro should be persistent");
-			IList ReisebÃ¼ro = m.ReisebÃ¼ros;
+			Assert.AreEqual(NDOObjectState.Persistent, r.NDOObjectState, "1: Reisebüro should be persistent");
+			IList Reisebüro = m.Reisebüros;
 
 			pm.MakeHollow(m, true);
 			Assert.AreEqual(NDOObjectState.Hollow, m.NDOObjectState, "2: Mitarbeiter should be hollow");
-			Assert.AreEqual(NDOObjectState.Hollow, r.NDOObjectState, "2: ReisebÃ¼ro should be hollow");
+			Assert.AreEqual(NDOObjectState.Hollow, r.NDOObjectState, "2: Reisebüro should be hollow");
 
-			ReisebÃ¼ro = m.ReisebÃ¼ros;
+			Reisebüro = m.Reisebüros;
 			Assert.AreEqual(NDOObjectState.Persistent, m.NDOObjectState, "3: Mitarbeiter should be persistent");
-			Assert.AreEqual(NDOObjectState.Hollow, r.NDOObjectState, "3: ReisebÃ¼ro should be hollow");
-			Assert.AreEqual("Lufthansa City Center", r.Name, "3: ReisebÃ¼ro should have correct Name");
-			Assert.AreEqual(NDOObjectState.Persistent, r.NDOObjectState, "4: ReisebÃ¼ro should be persistent");
+			Assert.AreEqual(NDOObjectState.Hollow, r.NDOObjectState, "3: Reisebüro should be hollow");
+			Assert.AreEqual("Lufthansa City Center", r.Name, "3: Reisebüro should have correct Name");
+			Assert.AreEqual(NDOObjectState.Persistent, r.NDOObjectState, "4: Reisebüro should be persistent");
 		}
 
 		[Test]
@@ -322,7 +322,7 @@ namespace NdoUnitTests {
 			pm.Save();
 			pm.MakeAllHollow();
 			Assert.AreEqual(NDOObjectState.Hollow, m.NDOObjectState, "1: Mitarbeiter should be hollow");
-			Assert.AreEqual(NDOObjectState.Hollow, r.NDOObjectState, "1: ReisebÃ¼ro should be hollow");
+			Assert.AreEqual(NDOObjectState.Hollow, r.NDOObjectState, "1: Reisebüro should be hollow");
 		}
 
 		[Test]
@@ -332,13 +332,13 @@ namespace NdoUnitTests {
 			pm.MakePersistent(m);
 			pm.MakeAllHollow();  // before save, objects cannot be made hollow. => in locked objects
 			Assert.AreEqual(NDOObjectState.Created, m.NDOObjectState, "1: Mitarbeiter should be created");
-			Assert.AreEqual(NDOObjectState.Hollow, r.NDOObjectState, "1: ReisebÃ¼ro should be Persistent");
+			Assert.AreEqual(NDOObjectState.Hollow, r.NDOObjectState, "1: Reisebüro should be Persistent");
 		}
 
 		[Test]
 		public void TestLoadRelatedObjects() {
 			for(int i = 0; i < 10; i++) {
-				ReisebÃ¼ro rb = CreateReisebÃ¼ro(i.ToString());
+				Reisebüro rb = CreateReisebüro(i.ToString());
 				pm.MakePersistent(rb);
 				m.Hinzufuegen(rb);
 			}
@@ -346,26 +346,26 @@ namespace NdoUnitTests {
 			pm.Save();
 			pm.MakeHollow(m, true);
 
-			IList ReisebÃ¼ros = new ArrayList(m.ReisebÃ¼ros);
-			Assert.AreEqual(10, ReisebÃ¼ros.Count, "List size should be 10");
+			IList Reisebüros = new ArrayList(m.Reisebüros);
+			Assert.AreEqual(10, Reisebüros.Count, "List size should be 10");
 
 			for(int i = 0; i < 10; i++) {
-				ReisebÃ¼ro rr = (ReisebÃ¼ro)ReisebÃ¼ros[i];
-				Assert.AreEqual(NDOObjectState.Hollow, rr.NDOObjectState, "1: ReisebÃ¼ro should be hollow");
+				Reisebüro rr = (Reisebüro)Reisebüros[i];
+				Assert.AreEqual(NDOObjectState.Hollow, rr.NDOObjectState, "1: Reisebüro should be hollow");
 #if !ORACLE && !MYSQL && !FIREBIRD
-				Assert.AreEqual(i.ToString(), rr.Name, "2: ReisebÃ¼ro should be in right order");
+				Assert.AreEqual(i.ToString(), rr.Name, "2: Reisebüro should be in right order");
 #endif
 				}
 
 
 			pm.MakeAllHollow();
 			pm.UnloadCache();
-			IList ReisebÃ¼ros2 = m.ReisebÃ¼ros;
+			IList Reisebüros2 = m.Reisebüros;
 			for(int i = 0; i < 10; i++) {
-				ReisebÃ¼ro r1 = (ReisebÃ¼ro)ReisebÃ¼ros[i];
-				ReisebÃ¼ro r2 = (ReisebÃ¼ro)ReisebÃ¼ros2[i];
+				Reisebüro r1 = (Reisebüro)Reisebüros[i];
+				Reisebüro r2 = (Reisebüro)Reisebüros2[i];
 #if !ORACLE && !MYSQL && !FIREBIRD
-				Assert.AreEqual(i.ToString(), r1.Name, "3: ReisebÃ¼ro should be in right order");
+				Assert.AreEqual(i.ToString(), r1.Name, "3: Reisebüro should be in right order");
 #endif
 				Assert.That(r1 !=  r2, "Objects should be different");
 			}
@@ -376,32 +376,32 @@ namespace NdoUnitTests {
 			pm.MakePersistent(m);
 			pm.Save();
 			for(int i = 0; i < 10; i++) {
-				ReisebÃ¼ro rb = CreateReisebÃ¼ro(i.ToString());
+				Reisebüro rb = CreateReisebüro(i.ToString());
 				pm.MakePersistent(rb);
 				m.Hinzufuegen(rb);
 			}
 			pm.Save();
 			pm.MakeHollow(m, true);
 
-			IList ReisebÃ¼ros = new ArrayList(m.ReisebÃ¼ros);
+			IList Reisebüros = new ArrayList(m.Reisebüros);
 
 			for(int i = 0; i < 10; i++) {
-				ReisebÃ¼ro rr = (ReisebÃ¼ro)ReisebÃ¼ros[i];
-				Assert.AreEqual(NDOObjectState.Hollow, rr.NDOObjectState, "1: ReisebÃ¼ro should be hollow");
+				Reisebüro rr = (Reisebüro)Reisebüros[i];
+				Assert.AreEqual(NDOObjectState.Hollow, rr.NDOObjectState, "1: Reisebüro should be hollow");
 #if !ORACLE && !MYSQL && !FIREBIRD
-				Assert.AreEqual(i.ToString(), rr.Name, "2: ReisebÃ¼ro should be in right order");
+				Assert.AreEqual(i.ToString(), rr.Name, "2: Reisebüro should be in right order");
 #endif
 			}
 
 
 			pm.MakeAllHollow();
 			pm.UnloadCache();
-			IList ReisebÃ¼ros2 = m.ReisebÃ¼ros;
+			IList Reisebüros2 = m.Reisebüros;
 			for(int i = 0; i < 10; i++) {
-				ReisebÃ¼ro r1 = (ReisebÃ¼ro)ReisebÃ¼ros[i];
-				ReisebÃ¼ro r2 = (ReisebÃ¼ro)ReisebÃ¼ros2[i];
+				Reisebüro r1 = (Reisebüro)Reisebüros[i];
+				Reisebüro r2 = (Reisebüro)Reisebüros2[i];
 #if !ORACLE && !MYSQL && !FIREBIRD
-				Assert.AreEqual(i.ToString(), r1.Name, "3: ReisebÃ¼ro should be in right order");
+				Assert.AreEqual(i.ToString(), r1.Name, "3: Reisebüro should be in right order");
 #endif
 				Assert.That(r1 !=  r2, "Objects should be different");
 			}
@@ -416,25 +416,25 @@ namespace NdoUnitTests {
 			IList liste = pm.GetClassExtent(typeof(Mitarbeiter));
 			m = (Mitarbeiter)liste[0];
 			Assert.AreEqual(NDOObjectState.Persistent, m.NDOObjectState, "1: Mitarbeiter should be persistent");
-			Assert.NotNull(m.ReisebÃ¼ros, "2. Relation is missing");
-			Assert.AreEqual(1, m.ReisebÃ¼ros.Count, "3. Wrong number of objects");
-			Assert.AreEqual(NDOObjectState.Persistent, ((ReisebÃ¼ro)m.ReisebÃ¼ros[0]).NDOObjectState, "4.: ReisebÃ¼ro should be persistent");
+			Assert.NotNull(m.Reisebüros, "2. Relation is missing");
+			Assert.AreEqual(1, m.Reisebüros.Count, "3. Wrong number of objects");
+			Assert.AreEqual(NDOObjectState.Persistent, ((Reisebüro)m.Reisebüros[0]).NDOObjectState, "4.: Reisebüro should be persistent");
 
 			pm.UnloadCache();
 			liste = pm.GetClassExtent(typeof(Mitarbeiter));
 			m = (Mitarbeiter)liste[0];
 			Assert.AreEqual(NDOObjectState.Hollow, m.NDOObjectState, "5: Mitarbeiter should be hollow");
-			Assert.NotNull(m.ReisebÃ¼ros, "6. Relation is missing");
-			Assert.AreEqual(1, m.ReisebÃ¼ros.Count, "7. Wrong number of objects");
-			Assert.AreEqual(NDOObjectState.Hollow, ((ReisebÃ¼ro)m.ReisebÃ¼ros[0]).NDOObjectState, "8.: ReisebÃ¼ro should be hollow");
+			Assert.NotNull(m.Reisebüros, "6. Relation is missing");
+			Assert.AreEqual(1, m.Reisebüros.Count, "7. Wrong number of objects");
+			Assert.AreEqual(NDOObjectState.Hollow, ((Reisebüro)m.Reisebüros[0]).NDOObjectState, "8.: Reisebüro should be hollow");
 
 			pm.UnloadCache();
 			liste = pm.GetClassExtent(typeof(Mitarbeiter), false);
 			m = (Mitarbeiter)liste[0];
 			Assert.AreEqual(NDOObjectState.Persistent, m.NDOObjectState, "9: Mitarbeiter should be persistent");
-			Assert.NotNull(m.ReisebÃ¼ros, "10. Relation is missing");
-			Assert.AreEqual(1, m.ReisebÃ¼ros.Count, "11. Wrong number of objects");
-			Assert.AreEqual(NDOObjectState.Hollow, ((ReisebÃ¼ro)m.ReisebÃ¼ros[0]).NDOObjectState, "12.: ReisebÃ¼ro should be hollow");
+			Assert.NotNull(m.Reisebüros, "10. Relation is missing");
+			Assert.AreEqual(1, m.Reisebüros.Count, "11. Wrong number of objects");
+			Assert.AreEqual(NDOObjectState.Hollow, ((Reisebüro)m.Reisebüros[0]).NDOObjectState, "12.: Reisebüro should be hollow");
 		}
 
 		private Mitarbeiter CreateMitarbeiter(string vorname, string nachname) {
@@ -444,8 +444,8 @@ namespace NdoUnitTests {
 			return m;
 		}
 
-		private ReisebÃ¼ro CreateReisebÃ¼ro(string name) {
-			ReisebÃ¼ro r = new ReisebÃ¼ro();
+		private Reisebüro CreateReisebüro(string name) {
+			Reisebüro r = new Reisebüro();
 			r.Name = name;
 			return r;
 		}

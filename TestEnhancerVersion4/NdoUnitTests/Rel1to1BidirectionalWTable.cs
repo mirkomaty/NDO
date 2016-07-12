@@ -364,7 +364,7 @@ namespace NdoUnitTests {
 			Assert.AreEqual(NDOObjectState.Hollow, z.NDOObjectState, "1: Zertifikat should be hollow");
 			Assert.AreEqual(NDOObjectState.Persistent, sgn.NDOObjectState, "1: SGN should be persistent");
 
-			sgn = z.SGN; // ruft LoadData fï¿½r z auf. z.svm liegt auf dem Cache und ist Persistent
+			sgn = z.SGN; // ruft LoadData för z auf. z.svm liegt auf dem Cache und ist Persistent
 			Assert.AreEqual(NDOObjectState.Persistent, z.NDOObjectState, "1: Zertifikat should be persistent");
 			Assert.AreEqual(NDOObjectState.Persistent, sgn.NDOObjectState, "2: SGN should be persistent");
 			ObjectId id = z.NDOObjectId;

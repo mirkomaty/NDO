@@ -32,11 +32,11 @@ namespace Reisekosten
 	[NDOPersistent]
 	public class Flughafen
 	{
-		string kÃ¼rzel;
-		public string KÃ¼rzel
+		string kürzel;
+		public string Kürzel
 		{
-			get { return kÃ¼rzel; }
-			set { kÃ¼rzel = value; }
+			get { return kürzel; }
+			set { kürzel = value; }
 		}
 
 		public Flughafen()

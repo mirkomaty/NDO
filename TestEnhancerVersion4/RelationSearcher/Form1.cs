@@ -33,7 +33,7 @@ using NDO.Mapping;
 namespace RelationSearcher
 {
 	/// <summary>
-	/// Zusammenfassung fï¿½r Form1.
+	/// Zusammenfassung för Form1.
 	/// </summary>
 	public class Form1 : System.Windows.Forms.Form
 	{
@@ -52,12 +52,12 @@ namespace RelationSearcher
 		public Form1()
 		{
 			//
-			// Erforderlich fï¿½r die Windows Form-Designerunterstï¿½tzung
+			// Erforderlich för die Windows Form-Designerunterstötzung
 			//
 			InitializeComponent();
 
 			//
-			// TODO: Fï¿½gen Sie den Konstruktorcode nach dem Aufruf von InitializeComponent hinzu
+			// TODO: Fögen Sie den Konstruktorcode nach dem Aufruf von InitializeComponent hinzu
 			//
 		}
 
@@ -78,8 +78,8 @@ namespace RelationSearcher
 
 		#region Vom Windows Form-Designer generierter Code
 		/// <summary>
-		/// Erforderliche Methode fï¿½r die Designerunterstï¿½tzung. 
-		/// Der Inhalt der Methode darf nicht mit dem Code-Editor geï¿½ndert werden.
+		/// Erforderliche Methode för die Designerunterstötzung. 
+		/// Der Inhalt der Methode darf nicht mit dem Code-Editor geöndert werden.
 		/// </summary>
 		private void InitializeComponent()
 		{
@@ -168,7 +168,7 @@ namespace RelationSearcher
 		#endregion
 
 		/// <summary>
-		/// Der Haupteinstiegspunkt fï¿½r die Anwendung.
+		/// Der Haupteinstiegspunkt för die Anwendung.
 		/// </summary>
 		[STAThread]
 		static void Main() 

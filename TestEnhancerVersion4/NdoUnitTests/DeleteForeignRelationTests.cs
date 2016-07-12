@@ -57,7 +57,7 @@ namespace NdoUnitTests
 		{
 
 			DfrContact contact = new DfrContact();
-			contact.Name = "Hans Mï¿½ller";
+			contact.Name = "Hans Möller";
 			pm.MakePersistent(contact as IPersistenceCapable);
 
 			DfrAddress address = new DfrAddress();

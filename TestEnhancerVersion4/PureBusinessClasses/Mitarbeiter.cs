@@ -94,12 +94,12 @@ namespace Reisekosten.Personal
         System.Collections.Generic.List<Reise> dieReisen = new System.Collections.Generic.List<Reise>();
 
 
-		// Mitarbeiter kann viele ReisebÃ¼ros benutzen. Diese existieren unabhï¿½nig vom Mitarbeiter.
+		// Mitarbeiter kann viele Reisebüros benutzen. Diese existieren unabhönig vom Mitarbeiter.
 		// 1:n, mit Zwischentabelle
-		[NDORelation(typeof (ReisebÃ¼ro))]
-		IList reiseBÃ¼ros = new ArrayList();
+		[NDORelation(typeof (Reisebüro))]
+		IList reiseBüros = new ArrayList();
 
-		// Mitarbeiter kann mehrere Email-Adressen haben. Diese werden mit ihm gelï¿½scht.
+		// Mitarbeiter kann mehrere Email-Adressen haben. Diese werden mit ihm gelöscht.
 		// 1:n, Komposition, mit Zwischentabelle
 		[NDORelation(typeof (Email), RelationInfo.Composite)]
 		IList emails = new ArrayList();
@@ -116,10 +116,10 @@ namespace Reisekosten.Personal
 			set { meinBuero = value; }
 		}
 
-		public void Umziehen(string straÃŸe, string lkz, string plz, string ort) 
+		public void Umziehen(string straße, string lkz, string plz, string ort) 
 		{
 			adresse = new Adresse();
-			adresse.StraÃŸe = straÃŸe;
+			adresse.Straße = straße;
 			adresse.Lkz = lkz;
 			adresse.Plz = plz;
 			adresse.Ort = ort;
@@ -153,20 +153,20 @@ namespace Reisekosten.Personal
 		}
 
 		
-		public void LÃ¶schen(Email e) 
+		public void Löschen(Email e) 
 		{
 			emails.Remove(e);
 		}
 
-		public void Hinzufuegen(ReisebÃ¼ro r) 
+		public void Hinzufuegen(Reisebüro r) 
 		{
-			reiseBÃ¼ros.Add(r);
+			reiseBüros.Add(r);
 		}
 
 		
-		public void LÃ¶schen(ReisebÃ¼ro r) 
+		public void Löschen(Reisebüro r) 
 		{
-			reiseBÃ¼ros.Remove(r);
+			reiseBüros.Remove(r);
 		}
 
 
@@ -335,18 +335,18 @@ namespace Reisekosten.Personal
 			dieReisen.Add(r);
 		}
 
-		public void EinfÃ¼gen(Reise r, int ind) 
+		public void Einfügen(Reise r, int ind) 
 		{
 			dieReisen.Insert(ind, r);
 		}
 
 		
-		public void LÃ¶schen(Reise r) 
+		public void Löschen(Reise r) 
 		{
 			dieReisen.Remove(r);
 		}
 
-		public void LÃ¶scheReisen() 
+		public void LöscheReisen() 
 		{
 			dieReisen.Clear();
 		}
@@ -374,9 +374,9 @@ namespace Reisekosten.Personal
 			}
 		}
 
-		public IList ReisebÃ¼ros {
+		public IList Reisebüros {
 			get {
-				return reiseBÃ¼ros;
+				return reiseBüros;
 			}
 		}
 		public IList Emails {
@@ -385,12 +385,12 @@ namespace Reisekosten.Personal
 			}
 		}
 
-		public void LÃ¶scheEmails() {
+		public void LöscheEmails() {
 			emails.Clear();
 		}
 
-		public void LÃ¶scheReisebÃ¼ros() {
-			reiseBÃ¼ros.Clear();
+		public void LöscheReisebüros() {
+			reiseBüros.Clear();
 		}
 
 		public void TestIList()
@@ -415,7 +415,7 @@ namespace Reisekosten.Personal
 			dieReisen.Remove(r);
 			dieReisen.RemoveAt(0);
 
-			// Kann mit der bloï¿½en Oid implementiert werden.
+			// Kann mit der bloöen Oid implementiert werden.
 			bool b = dieReisen.Contains(r);
 			dieReisen.IndexOf(r);
 		}

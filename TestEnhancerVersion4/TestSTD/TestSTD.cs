@@ -25,7 +25,7 @@ using System;
 namespace TestSTD
 {
 	/// <summary>
-	/// Zusammenfassung fï¿½r TestSTD.
+	/// Zusammenfassung för TestSTD.
 	/// </summary>
 	public class TestSTD
 	{

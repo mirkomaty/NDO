@@ -30,7 +30,7 @@ using PureBusinessClasses;
 namespace NdoUnitTests
 {
 	/// <summary>
-	/// Zusammenfassung fï¿½r IdGenerator.
+	/// Zusammenfassung för IdGenerator.
 	/// </summary>
 	public class IdGenerator
 	{

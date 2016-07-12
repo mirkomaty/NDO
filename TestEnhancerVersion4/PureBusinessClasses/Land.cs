@@ -53,28 +53,29 @@ namespace Reisekosten
 
 		// Assoziation 1:n
 		[NDORelation(typeof(Flughafen))]
-		IList flughÃ¤fen = new ArrayList();
-		public IList FlughÃ¤fen
+		IList flughäfen = new ArrayList();
+
+		public IList Flughäfen
 		{
-			get { return flughÃ¤fen; }
-			set { flughÃ¤fen = value; }
+			get { return flughäfen; }
+			set { flughäfen = value; }
 		}
 		public void AddFlughafen(Flughafen f)
 		{
-			flughÃ¤fen.Add(f);
+			flughäfen.Add(f);
 		}
 		public void RemoveFlughafen(Flughafen f)
 		{
-			if (flughÃ¤fen.Contains(f))
-				flughÃ¤fen.Remove(f);
+			if (flughäfen.Contains(f))
+				flughäfen.Remove(f);
 		}
-		public void LÃ¶scheFlughÃ¤fen()
+		public void LöscheFlughäfen()
 		{
-			this.flughÃ¤fen.Clear();
+			this.flughäfen.Clear();
 		}
-		public void ErsetzeFlughÃ¤fen(IList l)
+		public void ErsetzeFlughäfen(IList l)
 		{
-			this.flughÃ¤fen = l;
+			this.flughäfen = l;
 		}
 
 		public Land()

@@ -24,7 +24,7 @@ using System;
 using System.Collections;
 using NDO;
 
-namespace ZirkulÃ¤r
+namespace Zirkulär
 {
 
 	[NDOPersistent]

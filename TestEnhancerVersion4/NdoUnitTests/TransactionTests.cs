@@ -274,7 +274,7 @@ namespace NdoUnitTests
 			string log = pm.LogAdapter.ToString();
 			Assert.That( log.IndexOf( "Committing transaction" ) == -1, "Transaction should be committed" );
 			Assert.That( log.IndexOf( "Starting transaction" ) == -1, "Transaction should be committed" );
-			Assert.That( !reader.Read(), "Reader should be empty" );
+			Assert.Null( reader, "Reader should be null" );
 		}
 
 		[Test]
@@ -285,8 +285,8 @@ namespace NdoUnitTests
 			pm.VerboseMode = true;
 			ISqlPassThroughHandler sqlHandler = pm.GetSqlPassThroughHandler();
 			sqlHandler.BeginTransaction();
-			sqlHandler.Execute( "DELETE FROM Mitarbeiter" ).Close();
-			sqlHandler.Execute( "DELETE FROM Reise" ).Close();
+			sqlHandler.Execute( "DELETE FROM Mitarbeiter" );
+			sqlHandler.Execute( "DELETE FROM Reise" );
 			sqlHandler.CommitTransaction();
 			string log = pm.LogAdapter.ToString();
 			Assert.That( new Regex( "Starting transaction" ).Matches( log ).Count == 1, "One Transactions should be started" );
@@ -301,8 +301,8 @@ namespace NdoUnitTests
 			pm.VerboseMode = true;
 			using (ISqlPassThroughHandler sqlHandler = pm.GetSqlPassThroughHandler())
 			{
-				sqlHandler.Execute( "DELETE FROM Mitarbeiter" ).Close();
-				sqlHandler.Execute( "DELETE FROM Reise" ).Close();
+				sqlHandler.Execute( "DELETE FROM Mitarbeiter" );
+				sqlHandler.Execute( "DELETE FROM Reise" );
 			}
 			string log = pm.LogAdapter.ToString();
 			Assert.That( log.IndexOf( "Committing transaction" ) == -1, "Transaction should be committed" );
@@ -322,7 +322,7 @@ namespace NdoUnitTests
 			using (ISqlPassThroughHandler sqlHandler = pm.GetSqlPassThroughHandler())
 			{
 				sqlHandler.BeginTransaction();
-				sqlHandler.Execute( "DELETE FROM Mitarbeiter" ).Close();
+				sqlHandler.Execute( "DELETE FROM Mitarbeiter" );
 				pm.Abort();
 			}
 			bool hasRecords = new NDOQuery<Mitarbeiter>( pm ).Execute().Count > 0;

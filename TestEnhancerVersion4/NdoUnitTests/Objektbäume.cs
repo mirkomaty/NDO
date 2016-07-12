@@ -30,7 +30,7 @@ using NUnit.Framework;
 namespace NdoUnitTests
 {
 	[TestFixture]
-	public class ObjektbÃ¤ume
+	public class Objektbäume
 	{
 		PersistenceManager pm;
 

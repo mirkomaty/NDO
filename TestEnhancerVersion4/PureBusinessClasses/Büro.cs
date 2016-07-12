@@ -31,7 +31,7 @@ namespace Reisekosten.Personal {
 	public class Buero {
 		private string zimmer;
 		
-		public Buero() {}  // wird fï¿½r NDO laden benï¿½tigt.
+		public Buero() {}  // wird för NDO laden benötigt.
 
 		public Buero(string zimmer) {
 			this.zimmer = zimmer;
