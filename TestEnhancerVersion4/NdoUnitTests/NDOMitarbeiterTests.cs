@@ -138,8 +138,23 @@ namespace NdoUnitTests
 			m2.Vorname = "Mirko";
 		}
 
+        [Test]
+        public void ObjectContainerContainsCreatedObject()
+        {
+            pm.MakePersistent( m );
+            var oc = pm.GetObjectContainer();
+            Assert.That( Object.ReferenceEquals( m, oc.RootObjects[0] ) );
+            pm.Save();
+            oc = pm.GetObjectContainer();
+            Assert.That( Object.ReferenceEquals( m, oc.RootObjects[0] ) );
+            pm.UnloadCache();
+            m = pm.Objects<Mitarbeiter>().Single();
+            oc = pm.GetObjectContainer();
+            Assert.That( Object.ReferenceEquals( m, oc.RootObjects[0] ) );
+        }
 
-		[Test]
+
+        [Test]
 		public void TestObjectCreationSaveChanged() 
 		{
 			pm.MakePersistent(m);

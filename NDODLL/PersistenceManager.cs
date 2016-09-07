@@ -283,7 +283,6 @@ namespace NDO
 		/// of the objects will be taken over by the pm.
 		/// </summary>
 		/// <remarks>
-		/// Requires the NDO Enterprise Edition.
 		/// The parameter can be either an ObjectContainer or a ChangeSetContainer.
 		/// The flag MarkAsTransient can be used to perform a kind
 		/// of object based replication using the ObjectContainer class. 

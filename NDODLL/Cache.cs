@@ -286,7 +286,7 @@ namespace NDO
 				{
 					Cache.Entry ce = (Cache.Entry) de.Value;
 					if (ce.row.RowState != DataRowState.Deleted)
-						al.Add(ce);
+						al.Add(ce.pc);
 				}
 				foreach(DictionaryEntry de in this.objects)
 				{
