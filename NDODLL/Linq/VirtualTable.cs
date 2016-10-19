@@ -227,7 +227,7 @@ namespace NDO.Linq
 		/// <returns></returns>
 		public T FirstOrDefault()
 		{
-			return Ndoquery.ExecuteSingle( true );
+			return Ndoquery.ExecuteSingle( false );
 		}
 
 		/// <summary>
