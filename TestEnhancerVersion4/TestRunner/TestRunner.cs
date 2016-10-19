@@ -45,12 +45,12 @@ namespace NDO
 #endif
 			DateTime startTime = DateTime.Now;
 
-#if false
-			Rel1to1Bidirectional t = new Rel1to1Bidirectional();
+#if true
+            NDOMitarbeiterTests t = new NDOMitarbeiterTests();
             try
             {
                 t.Setup();
-				t.AggrTestCreateObjectsWithTransaction();
+				t.LinqQueryWithParameterWorks();
             }
             catch (Exception ex)
             {

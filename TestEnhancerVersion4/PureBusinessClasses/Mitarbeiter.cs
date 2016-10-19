@@ -420,9 +420,11 @@ namespace Reisekosten.Personal
 			dieReisen.IndexOf(r);
 		}
 
-        public static Mitarbeiter QueryByName( PersistenceManager pm, string name )
+        public static Mitarbeiter QueryByName( PersistenceManager pm, string vorname )
         {
-            return pm.Objects<Mitarbeiter>().Where( m => m.Vorname == name ).FirstOrDefault();
+            // the parameter has deliberately the same name as the field.
+            // NDO should be able to  separate both
+            return pm.Objects<Mitarbeiter>().Where( m => m.vorname == vorname ).FirstOrDefault();
         }
 
         public string Vorname
