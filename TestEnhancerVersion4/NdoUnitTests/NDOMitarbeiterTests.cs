@@ -369,7 +369,25 @@ namespace NdoUnitTests
 			Assert.AreEqual(100/3, mitarbeiterListe.Count, "Number of read objects is wrong #4");
 		}
 
-		[Test]
+        [Test]
+        public void LinqQueryWithParameterWorks()
+        {
+            pm.MakePersistent( m );
+            pm.Save();
+            Mitarbeiter m2 = Mitarbeiter.QueryByName(pm, "Hartmut");
+            Assert.NotNull( m2 );
+        }
+
+        [Test]
+        public void LinqQueryWithNullParameterWorks()
+        {
+            pm.MakePersistent( m );
+            pm.Save();
+            Mitarbeiter m2 = Mitarbeiter.QueryByName(pm, null);
+            Assert.IsNull( m2 );
+        }
+
+        [Test]
 		public void TestDeleteHollow() 
 		{
 //			System.Diagnostics.Debug.WriteLine("TestDeleteHollow");

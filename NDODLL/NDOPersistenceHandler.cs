@@ -1124,6 +1124,8 @@ namespace NDO
                 {
                     p = new Query.Parameter(val);
                 }
+                if (p.Value == null)
+                    p.Value = DBNull.Value;
 				Type type = p.Value.GetType();
                 if (type.FullName.StartsWith("System.Nullable`1"))
                     type = type.GetGenericArguments()[0];
@@ -1160,7 +1162,7 @@ namespace NDO
 				IDataParameter par = provider.AddParameter(
 					command, 
 					this.provider.GetNamedParameter(name), 
-					this.provider.GetDbType(type), 
+					this.provider.GetDbType(type == typeof(DBNull) ? typeof(string) : type), 
 					length, 
 					this.provider.GetQuotedName(name)); 
 				par.Value = p.Value;

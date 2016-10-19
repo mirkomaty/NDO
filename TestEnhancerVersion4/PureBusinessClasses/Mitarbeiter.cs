@@ -420,7 +420,12 @@ namespace Reisekosten.Personal
 			dieReisen.IndexOf(r);
 		}
 
-		public string Vorname
+        public static Mitarbeiter QueryByName( PersistenceManager pm, string name )
+        {
+            return pm.Objects<Mitarbeiter>().Where( m => m.Vorname == name ).FirstOrDefault();
+        }
+
+        public string Vorname
 		{
 			get { return vorname; } 
 			set { vorname = value; }
