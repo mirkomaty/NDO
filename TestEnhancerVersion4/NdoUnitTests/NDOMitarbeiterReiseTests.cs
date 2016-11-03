@@ -357,6 +357,7 @@ namespace NdoUnitTests
 			Reise r2 = new Reise() { Zweck = "Test" };
 			m2.Hinzufuegen( r2 );
 			pm2.Save();
+			Assert.AreEqual( 1, m.Reisen.Count );
 			pm.Refresh( m );
 			Assert.AreEqual( 2, m.Reisen.Count );
 		}
