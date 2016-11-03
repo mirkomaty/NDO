@@ -21,6 +21,7 @@
 
 
 using System;
+using System.Linq;
 using System.Reflection;
 using System.Collections;
 using System.Collections.Generic;
@@ -341,6 +342,23 @@ namespace NdoUnitTests
 			pm.Save();
 			m = q.ExecuteSingle(true);
 			Assert.AreEqual(2, m.Reisen.Count, "Count wrong");
+		}
+
+		[Test]
+		public void RefreshReloadsRelation()
+		{
+			m.Hinzufuegen( r );
+			pm.MakePersistent( m );
+			pm.Save();
+			PersistenceManager pm2 = PmFactory.NewPersistenceManager();
+			Mitarbeiter m2 = pm2.Objects<Mitarbeiter>().ResultTable.First();
+			Assert.AreEqual( m.Reisen.Count, m2.Reisen.Count );
+			Assert.AreEqual( 1, m.Reisen.Count );
+			Reise r2 = new Reise() { Zweck = "Test" };
+			m2.Hinzufuegen( r2 );
+			pm2.Save();
+			pm.Refresh( m );
+			Assert.AreEqual( 2, m.Reisen.Count );
 		}
 
 		[Test]
