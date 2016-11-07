@@ -2,7 +2,7 @@
 <package >
   <metadata>
     <id>ndo.dll</id>
-    <version>3.0.0.6</version>
+    <version>3.0.0.7</version>
     <authors>Mirko Matytschak</authors>
     <owners>Mirko Matytschak</owners>
     <licenseUrl>http://opensource.org/licenses/MIT</licenseUrl>
@@ -12,8 +12,7 @@
     <releaseNotes>Initial package.</releaseNotes>
     <copyright>Copyright 2016 (c) Mirko Matytschak</copyright>
     <tags>NDO .NET Data Objects Persistence</tags>
-    <dependencies>
-		<dependency id="ndo.sqlce" version="3.0.0.0" />
+    <dependencies>		
     </dependencies>
   </metadata>
 	<files>
