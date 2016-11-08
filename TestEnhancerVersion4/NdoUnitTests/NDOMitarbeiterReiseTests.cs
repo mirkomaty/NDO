@@ -363,6 +363,25 @@ namespace NdoUnitTests
 		}
 
 		[Test]
+		public void CanIterateThrougRelatedObjectsWithLinq()
+		{
+			m.Hinzufuegen( r );
+			r = new Reise() { Zweck = "Test" };
+			m.Hinzufuegen( r );
+			pm.MakePersistent( m );
+			pm.Save();
+			Assert.AreEqual( 2, m.Reisen.Count );
+			ObjectId oid = m.NDOObjectId;
+			pm.UnloadCache();
+			pm = PmFactory.NewPersistenceManager();
+			m = (Mitarbeiter) pm.FindObject( oid );
+			Assert.That( m.NDOObjectState == NDOObjectState.Hollow );
+			Reise tr = (from reise in m.Reisen where reise.Zweck == "Test" select reise).SingleOrDefault();
+			Assert.NotNull( tr );
+			Assert.AreEqual( "Test", tr.Zweck );
+		}
+
+		[Test]
 		public void TestHollow() {
 			m.Hinzufuegen(r);
 			pm.MakePersistent(m);
