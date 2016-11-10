@@ -225,7 +225,9 @@ namespace NDO
 			{
 				throw new Exception( "The oid type of the object does not allow the indication by a ShortId: " + oidType.FullName );
 			}
-			return (Type.Name + "~" + this.typeManager[Type].ToString("X8") + "~" + Value).Encode();
+			// In case of a Guid the '-' chars should be removed.
+			// Guid.Parse can parse a string without these dashes.
+			return (Type.Name + "-" + this.typeManager[Type].ToString( "X8" ) + "-" + Value.ToString().Replace( "-", "" )).Encode();
 		}
 	}
 }

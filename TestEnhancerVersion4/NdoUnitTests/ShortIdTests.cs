@@ -65,12 +65,12 @@ namespace NdoUnitTests
 			string shortId = ((IPersistenceCapable)m).ShortId();
 			Console.WriteLine(shortId);
 			string decodedShortId = shortId.Decode();
-			Assert.AreEqual( decodedShortId, shortId, "Die ShortIds sollten gleich sein. #1" );
+			Assert.AreEqual( decodedShortId, shortId, "ShortIds should be equal. #1" );
 			string encodedShortId = decodedShortId.Encode();
-			Assert.AreEqual( encodedShortId, decodedShortId, "Die ShortIds sollten gleich sein. #2" );
+			Assert.AreEqual( encodedShortId, decodedShortId, "ShortIds should be equal. #2" );
 			Type t = shortId.GetObjectType(pm);
-			Assert.AreEqual( t, typeof( Mitarbeiter ), "Der Typ der ShortId sollte Mitarbeiter sein." );
-			Assert.AreEqual( shortId.GetEntityName(), "Mitarbeiter", "Der Entity-Name der ShortId sollte Mitarbeiter sein." );
+			Assert.AreEqual( t, typeof( Mitarbeiter ), "The Type should be Mitarbeiter." );
+			Assert.AreEqual( shortId.GetEntityName(), "Mitarbeiter", "The Entity Name should be Mitarbeiter." );
 		}
 
 		[Test]
@@ -79,13 +79,13 @@ namespace NdoUnitTests
 			string shortId = ((IPersistenceCapable)this.reiseBüro).ShortId();
 			Console.WriteLine(shortId);
 			string decodedShortId = shortId.Decode();
-			Assert.AreNotEqual( decodedShortId, shortId, "Die ShortIds sollten ungleich sein. #1" );
+			Assert.AreNotEqual( decodedShortId, shortId, "The ShortIds should'nt be equal. #1" );
 			string encodedShortId = decodedShortId.Encode();
-			Assert.AreNotEqual( encodedShortId, decodedShortId, "Die ShortIds sollten ungleich sein. #2" );
-			Assert.AreEqual( encodedShortId, shortId, "Die ShortId sollte gleich sein." );
+			Assert.AreNotEqual( encodedShortId, decodedShortId, "The ShortIds should'nt be equal. #2" );
+			Assert.AreEqual( encodedShortId, shortId, "The ShortId should be equal." );
 			Type t = shortId.GetObjectType(pm);
-			Assert.AreEqual( t, typeof( Reisebüro ), "Der Typ der ShortId sollte Reisebüro sein." );
-			Assert.AreEqual( shortId.GetEntityName(), "Reisebüro", "Der Entity-Name der ShortId sollte Reisebüro sein." );
+			Assert.AreEqual( t, typeof( Reisebüro ), "The Type should be Reisebüro." );
+			Assert.AreEqual( shortId.GetEntityName(), "Reisebüro", "The Entity Name should be Reisebüro." );
 		}
 
 		[Test]
@@ -93,10 +93,10 @@ namespace NdoUnitTests
 		{
 			string shortId = ((IPersistenceCapable)this.reiseBüro).ShortId();
 			Assert.That( shortId.IsShortId() );
-			string[] arr = shortId.Split( '~' );
+			string[] arr = shortId.Split( '-' );
 			arr[0] = typeof( Reisebüro ).FullName;
 			arr[1] = typeof( Reisebüro ).Assembly.GetName().Name;
-			shortId = string.Join( "~", arr );
+			shortId = string.Join( "-", arr );
 			Assert.That( shortId.GetEntityName() == "Reisebüro" );
 			Assert.That( shortId.GetObjectType( pm ) == typeof( Reisebüro ) );
 			Reisebüro rb = (Reisebüro)pm.FindObject( shortId );
@@ -108,10 +108,10 @@ namespace NdoUnitTests
 		{
 			string shortId = ((IPersistenceCapable)this.m).ShortId();
 			Assert.That( shortId.IsShortId() );
-			string[] arr = shortId.Split( '~' );
+			string[] arr = shortId.Split( '-' );
 			arr[0] = typeof( Mitarbeiter ).FullName;
 			arr[1] = typeof( Mitarbeiter ).Assembly.GetName().Name;
-			shortId = string.Join( "~", arr );
+			shortId = string.Join( "-", arr );
 			Assert.That( shortId.GetEntityName() == "Mitarbeiter" );
 			Assert.That( shortId.GetObjectType( pm ) == typeof( Mitarbeiter ) );
 			Mitarbeiter rb = (Mitarbeiter)pm.FindObject( shortId );
@@ -133,7 +133,7 @@ namespace NdoUnitTests
 			}
 			Assert.That( exceptionOccured, "It shouldn't be possible to get a ShortId from an object with mulitple keys." );
 			Type t = typeof(OrderDetail);
-			string sid = t.FullName + "~" + new AssemblyName( t.Assembly.FullName ).Name + "~4711";
+			string sid = t.FullName + "-" + new AssemblyName( t.Assembly.FullName ).Name + "-4711";
 			Assert.That( sid.IsShortId(), "The string should be a wellformed ShortId" );
 			exceptionOccured = false;
 			try

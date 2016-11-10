@@ -3584,7 +3584,7 @@ namespace NDO
 		public IPersistenceCapable FindObject(string encodedShortId)
 		{
 			string shortId = encodedShortId.Decode();
-			string[] arr = shortId.Split( '~' );
+			string[] arr = shortId.Split( '-' );
 			if (arr.Length != 3)
 				throw new ArgumentException( "The format of the string is not valid", "shortId" );
 			Type t = shortId.GetObjectType(this);  // try readable format
