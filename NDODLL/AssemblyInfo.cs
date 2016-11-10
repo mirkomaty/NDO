@@ -45,7 +45,7 @@ using System.Security;
 [assembly: CLSCompliant(true)]
 
 // Assembly Version
-[assembly: AssemblyVersion("3.0.0.7")]
+[assembly: AssemblyVersion("3.0.0.8")]
 
 [assembly: AssemblyKeyName("")]
 [assembly: AllowPartiallyTrustedCallers]
