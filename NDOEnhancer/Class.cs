@@ -418,6 +418,11 @@ namespace NDOEnhancer.Patcher
 				if (!field.Valid)
 					continue;
 
+                // The line might contain a ldfld to a member of a nested class
+                // so make sure the line contains a reference to m_refName class
+                if (line.IndexOf( m_refName + "::" ) == -1)
+                    return false;
+
 				int p = line.IndexOf("::");
 				string nameInLine = line.Substring(p + 2).Replace("'", string.Empty);
 
@@ -891,7 +896,7 @@ namespace NDOEnhancer.Patcher
 					if (p > -1)
 						cleanName = line.Substring(p + 2).Replace("'", string.Empty);
 
-					if ( line.StartsWith( "ldfld" ) )
+					if ( line.StartsWith( "ldfld" ) && -1 < line.IndexOf( m_refName + "::" ))
 					{
 						//Durchsuche alle privaten, persistenten Felder
 						foreach ( ILReference reference in m_references)

@@ -423,7 +423,7 @@ namespace Reisekosten.Personal
         public static Mitarbeiter QueryByName( PersistenceManager pm, string vorname )
         {
             // the parameter has deliberately the same name as the field.
-            // NDO should be able to  separate both
+            // NDO should be able to separate both
             return pm.Objects<Mitarbeiter>().Where( m => m.vorname == vorname ).FirstOrDefault();
         }
 
