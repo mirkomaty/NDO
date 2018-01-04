@@ -360,7 +360,7 @@ namespace NDOInterfaces
 				return string.Empty;
 			// Standard Sql implementation
 			string fetch = String.Empty;
-			if (take != null)
+			if (take != 0)
 				fetch = String.Format( " FETCH NEXT {1} ROWS ONLY", take );
 			return String.Format("OFFSET {0} ROWS{1}", skip, fetch);
 		}
