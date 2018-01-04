@@ -31,9 +31,9 @@ using System.Runtime.CompilerServices;
 [assembly: AssemblyTitle("")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("HoT Development GmbH, Bremen, Germany")]
+[assembly: AssemblyCompany("Mirko Matytschak")]
 [assembly: AssemblyProduct("")]
-[assembly: AssemblyCopyright("Copyright (c) 2007, HoT Development GmbH, Bremen, Germany")]
+[assembly: AssemblyCopyright("Copyright (c) 2017, Mirko Matytschak, Germany")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]		
 
@@ -48,7 +48,7 @@ using System.Runtime.CompilerServices;
 // You can specify all the values or you can default the Revision and Build Numbers 
 // by using the '*' as shown below:
 
-[assembly: AssemblyVersion("2.0.0.0")]
+[assembly: AssemblyVersion("3.0.0.0")]
 
 //
 // In order to sign your assembly you must specify a key to use. Refer to the 
