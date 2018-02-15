@@ -58,7 +58,7 @@ namespace NETDataObjects.NDOVSPackage
 	[ProvideLoadKey("Standard", NDOPackage.Version, ".NET Data Objects (NDO)", "Mirko Matytschak", 104) ]
     public sealed class NDOPackage : Package
     {
-		public const string Version = "3.0";
+		public const string Version = "3.0.1";
 		private BuildEventHandler		buildEventHandler;
 
         /// <summary>
