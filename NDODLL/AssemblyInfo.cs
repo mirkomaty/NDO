@@ -39,7 +39,7 @@ using System.Security;
 #endif
 [assembly: AssemblyCompany("Mirko Matytschak")]
 [assembly: AssemblyProduct("NDO 3.0")]
-[assembly: AssemblyCopyright("(c) 2002 - 2016, Mirko Matytschak, Marzling, Germany")]
+[assembly: AssemblyCopyright("(c) 2002 - 2016, Mirko Matytschak, Velden, Germany")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 [assembly: CLSCompliant(true)]
