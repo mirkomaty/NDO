@@ -284,7 +284,7 @@ namespace NDOEnhancer.Patcher
 		{
 			ILClassElement nestedClass = new ILClassElement();
 			nestedClass.addLine(".class auto ansi nested public beforefieldinit QueryHelper");
-			nestedClass.addLine("extends [mscorlib]System.Object");
+			nestedClass.addLine($"extends {Corlib.Name}System.Object");
 			m_classElement.getForwardClassElement().addElement(nestedClass);
 			return nestedClass;
 		}
@@ -296,7 +296,7 @@ namespace NDOEnhancer.Patcher
 		{
 			ILClassElement nestedClass = new ILClassElement();
 			nestedClass.addLine(".class auto ansi nested private beforefieldinit MetaClass");
-			nestedClass.addLine("extends [mscorlib]System.Object");
+			nestedClass.addLine($"extends {Corlib.Name}System.Object");
 			nestedClass.addLine("implements [NDO]NDO.IMetaClass");
 			m_classElement.getForwardClassElement().addElement(nestedClass);
 			return nestedClass;
@@ -328,7 +328,7 @@ namespace NDOEnhancer.Patcher
             //        ILElementIterator it = m_classElement.getAllIterator(false);
             //        ILElement firstEl = it.getNext();
             //        string bytes = ILString.CodeBytes(oidTypeName);
-            //        string line = string.Format(".custom instance void [NDO]NDO.NDOOidTypeAttribute::.ctor(class [mscorlib]System.Type) = ( 01 00 {0} 00 00 )", bytes);
+            //        string line = string.Format($".custom instance void [NDO]NDO.NDOOidTypeAttribute::.ctor(class {Corlib.Name}System.Type) = ( 01 00 {0} 00 00 )", bytes);
             //        firstEl.insertBefore(new ILCustomElement(line, m_classElement));
             //    }
             //}
@@ -340,7 +340,7 @@ namespace NDOEnhancer.Patcher
 			m_classElement.insertFieldBefore( ".field family valuetype [NDO]NDO.NDOObjectState _ndoObjectState", firstMethod );
 			m_classElement.insertFieldBefore( ".field family class [NDO]NDO.ObjectId _ndoObjectId", firstMethod );
 			m_classElement.insertFieldBefore( ".field family notserialized class [NDO]NDO.IStateManager _ndoSm", firstMethod );
-			m_classElement.insertFieldBefore( ".field family notserialized valuetype [mscorlib]System.Guid _ndoTimeStamp", firstMethod );
+			m_classElement.insertFieldBefore( $".field family notserialized valuetype {Corlib.Name}System.Guid _ndoTimeStamp", firstMethod );
 		}
 
 
@@ -562,16 +562,16 @@ namespace NDOEnhancer.Patcher
 		string loadTimeStamp()
 		{
 			if (m_hasPersistentBase)
-				return "ldfld      valuetype [mscorlib]System.Guid " + persistentRoot + "::_ndoTimeStamp";
+				return $"ldfld      valuetype {Corlib.Name}System.Guid " + persistentRoot + "::_ndoTimeStamp";
 			else
-				return "ldfld      valuetype [mscorlib]System.Guid " + m_refName + "::_ndoTimeStamp";
+				return $"ldfld      valuetype {Corlib.Name}System.Guid " + m_refName + "::_ndoTimeStamp";
 		}
 		string storeTimeStamp()
 		{
 			if (m_hasPersistentBase)
-				return "stfld      valuetype [mscorlib]System.Guid " + persistentRoot + "::_ndoTimeStamp";
+				return $"stfld      valuetype {Corlib.Name}System.Guid " + persistentRoot + "::_ndoTimeStamp";
 			else
-				return "stfld      valuetype [mscorlib]System.Guid " + m_refName + "::_ndoTimeStamp";
+				return $"stfld      valuetype {Corlib.Name}System.Guid " + m_refName + "::_ndoTimeStamp";
 		}
 
 
@@ -695,7 +695,7 @@ namespace NDOEnhancer.Patcher
 						elToInsert.insertBefore(new ILStatementElement(@"ldstr      """ + refEl.r.CleanName + @""""));
 						elToInsert.insertBefore(new ILStatementElement(ldarg_0));
 						elToInsert.insertBefore(new ILStatementElement(stripILx(elParameter.getLine(0))));
-						elToInsert.insertBefore(new ILStatementElement(@"callvirt   instance void [NDO]NDO.IStateManager::RemoveRangeRelatedObjects(class [NDO]NDO.IPersistenceCapable, string, class [mscorlib]System.Collections.IList)"));
+						elToInsert.insertBefore(new ILStatementElement(@"callvirt   instance void [NDO]NDO.IStateManager::RemoveRangeRelatedObjects(class [NDO]NDO.IPersistenceCapable, string, class {Corlib.Name}System.Collections.IList)"));
 						elToInsert.insertBefore(new ILStatementElement("Nosm" + mark.ToString() + ":"));
 					}
 				}
@@ -725,7 +725,7 @@ namespace NDOEnhancer.Patcher
 						elToInsert.insertBefore(new ILStatementElement(ldarg_0));
 						elToInsert.insertBefore(new ILStatementElement(stripILx(refEl.e.getLine(0))));
 						elToInsert.insertBefore(new ILStatementElement(stripILx(elParameter.getLine(0))));
-						elToInsert.insertBefore(new ILStatementElement("callvirt   instance object [mscorlib]System.Collections.IList::get_Item(int32)"));
+						elToInsert.insertBefore(new ILStatementElement("callvirt   instance object {Corlib.Name}System.Collections.IList::get_Item(int32)"));
 						elToInsert.insertBefore(new ILStatementElement("castclass  [NDO]NDO.IPersistenceCapable"));
 						elToInsert.insertBefore(new ILStatementElement("callvirt   instance void [NDO]NDO.IStateManager::RemoveRelatedObject(class [NDO]NDO.IPersistenceCapable, string, class [NDO]NDO.IPersistenceCapable)"));
 						elToInsert.insertBefore(new ILStatementElement("Nosm" + mark.ToString() + ":"));
@@ -917,7 +917,7 @@ namespace NDOEnhancer.Patcher
 									IList elements = new ArrayList();
 									elements.Add(new ILStatementElement("ldloc __ndocontainertable"));
 									elements.Add(new ILStatementElement(@"ldstr """ + reference.CleanName + @""""));
-									elements.Add(new ILStatementElement("call       object [NDO]NDO._NDOContainerStack::RegisterContainer(object,object,class [mscorlib]System.Collections.Hashtable,string)"));
+									elements.Add(new ILStatementElement($"call       object [NDO]NDO._NDOContainerStack::RegisterContainer(object,object,class {Corlib.Name}System.Collections.Hashtable,string)"));
                                     elements.Add(new ILStatementElement("castclass " + new ReflectedType(reference.FieldType, this.m_classElement.getAssemblyName()).QuotedILName));
 									// Achtung: insertAfter benötigt die Statements in umgekehrter Reihenfolge
 									for (int i = elements.Count - 1; i >=0; i--)
@@ -956,83 +956,14 @@ namespace NDOEnhancer.Patcher
 						{
 								if (accessManipulator.Manipulate(listReflectors, statementElement))
 									methodTouched = true;
-#if ReplacedWith_ListAccessManipulator
-							if (line.IndexOf("List::AddRange") > -1 || line.IndexOf("Collection::AddRange") > -1)
-							{
-								methodTouched = true;
-								statementElement.insertBefore(new ILStatementElement("ldloc __ndocontainertable"));
-								statementElement.insertBefore(new ILStatementElement("call       void [NDO]NDO._NDOContainerStack::AddRange(object,class [mscorlib]System.Collections.ICollection,class [mscorlib]System.Collections.Hashtable)"));
-								statementElement.remove();
-							}
-							else if (line.IndexOf("List::InsertRange") > -1 || line.IndexOf("Collection::InsertRange") > -1)
-							{
-								methodTouched = true;
-								statementElement.insertBefore(new ILStatementElement("ldloc __ndocontainertable"));
-								statementElement.insertBefore(new ILStatementElement("call       void [NDO]NDO._NDOContainerStack::InsertRange(object,int32,class [mscorlib]System.Collections.ICollection,class [mscorlib]System.Collections.Hashtable)"));
-								statementElement.remove();
-							}
-							else if (line.IndexOf("List::RemoveRange") > -1 || line.IndexOf("Collection::RemoveRange") > -1)
-							{
-								methodTouched = true;
-								statementElement.insertBefore(new ILStatementElement("ldloc __ndocontainertable"));
-								statementElement.insertBefore(new ILStatementElement("call       void [NDO]NDO._NDOContainerStack::RemoveRange(object,int32,int32,class [mscorlib]System.Collections.Hashtable)"));
-								statementElement.remove();
-							}
-							else if (line.IndexOf("List::SetRange") > -1 || line.IndexOf("Collection::SetRange") > -1)
-							{
-								methodTouched = true;
-								statementElement.insertBefore(new ILStatementElement("ldloc __ndocontainertable"));
-								statementElement.insertBefore(new ILStatementElement("call       void [NDO]NDO._NDOContainerStack::SetRange(object,int32,class [mscorlib]System.Collections.ICollection,class [mscorlib]System.Collections.Hashtable)"));
-								statementElement.remove();
-							}
-							else if (line.IndexOf("List::Add(object)") > -1 || line.IndexOf("Collection::Add(object)") > -1)
-							{
-								methodTouched = true;
-								statementElement.insertBefore(new ILStatementElement("ldloc __ndocontainertable"));
-								statementElement.insertBefore(new ILStatementElement("call       int32 [NDO]NDO._NDOContainerStack::AddRelatedObject(object,object,class [mscorlib]System.Collections.Hashtable)"));
-								statementElement.remove();
-							}
-							else if (line.IndexOf("List::Clear()") > -1 || line.IndexOf("Collection::Clear()") > -1)
-							{
-								methodTouched = true;
-								statementElement.insertBefore(new ILStatementElement("ldloc __ndocontainertable"));
-								statementElement.insertBefore(new ILStatementElement("call       void [NDO]NDO._NDOContainerStack::RemoveRange(object,class [mscorlib]System.Collections.Hashtable)"));
-								statementElement.remove();
-							}
-							else if (line.IndexOf("List::Insert") > -1 || line.IndexOf("Collection::Insert") > -1)
-							{
-								// int index, object value
-								methodTouched = true;
-								statementElement.insertBefore(new ILStatementElement("ldloc __ndocontainertable"));
-								statementElement.insertBefore(new ILStatementElement("call       void [NDO]NDO._NDOContainerStack::Insert(object,int32,object,class [mscorlib]System.Collections.Hashtable)"));
-								statementElement.remove();
-
-							}
-							else if (line.IndexOf("List::RemoveAt") > -1 || line.IndexOf("Collection::RemoveAt") > -1)
-							{
-								// includes RemoveAt
-								methodTouched = true;
-								statementElement.insertBefore(new ILStatementElement("ldloc __ndocontainertable"));
-								statementElement.insertBefore(new ILStatementElement("call       void [NDO]NDO._NDOContainerStack::RemoveRelatedObjectAt(object,int32,class [mscorlib]System.Collections.Hashtable)"));
-								statementElement.remove();
-
-							}
-							else if (line.IndexOf("List::Remove") > -1 || line.IndexOf("Collection::Remove") > -1)
-							{
-								methodTouched = true;
-								statementElement.insertBefore(new ILStatementElement("ldloc __ndocontainertable"));
-								statementElement.insertBefore(new ILStatementElement("call       void [NDO]NDO._NDOContainerStack::RemoveRelatedObject(object,object,class [mscorlib]System.Collections.Hashtable)"));
-								statementElement.remove();
-							}
-#endif
 						}
 					}
 				}
 
 				if (needsContainerStack)
 				{
-					addLocalVariable(methodElement, "__ndocontainertable", "class [mscorlib]System.Collections.Hashtable");
-					firstElement.insertBefore(new ILStatementElement("newobj     instance void [mscorlib]System.Collections.Hashtable::.ctor()"));
+					addLocalVariable(methodElement, "__ndocontainertable", $"class {Corlib.Name}System.Collections.Hashtable");
+					firstElement.insertBefore(new ILStatementElement($"newobj     instance void {Corlib.Name}System.Collections.Hashtable::.ctor()"));
 					firstElement.insertBefore(new ILStatementElement("stloc __ndocontainertable"));
 					addToMaxStackVal(methodElement, 3);
 				}
@@ -1128,7 +1059,7 @@ namespace NDOEnhancer.Patcher
 			methodElement.addStatement( ldarg_0 );  // this-Parameter for Constructor
 			if (!m_hasPersistentBase)
 			{
-				methodElement.addStatement( "call       instance void [mscorlib]System.Object::.ctor()" );  // System.Object
+				methodElement.addStatement( $"call       instance void {Corlib.Name}System.Object::.ctor()" );  // System.Object
 			}
 			else
 			{
@@ -1188,7 +1119,7 @@ namespace NDOEnhancer.Patcher
 			{
 				methodElement.addStatement(ldarg_1);
 				methodElement.addStatement(@"ldstr      """ + r.CleanName + @"""");
-				methodElement.addStatement("call       bool [mscorlib]System.String::op_Equality(string,string)");
+				methodElement.addStatement($"call       bool {Corlib.Name}System.String::op_Equality(string,string)");
 				methodElement.addStatement("brfalse.s  notthis" + r.Ordinal.ToString());
 				methodElement.addStatement(loadIntConst(r.Ordinal));
 				methodElement.addStatement("stloc.0");
@@ -1198,7 +1129,7 @@ namespace NDOEnhancer.Patcher
 			methodElement.addStatement(loadIntConst(20));
 			methodElement.addStatement(@"ldstr      ""GetRelationOrdinal: Can't find field " + m_refName + @".""");
 			methodElement.addStatement(ldarg_1);
-			methodElement.addStatement("call       string [mscorlib]System.String::Concat(string,string)");
+			methodElement.addStatement($"call       string {Corlib.Name}System.String::Concat(string,string)");
 			methodElement.addStatement(createNDOException());
 			methodElement.addStatement("throw");
 			methodElement.addStatement("exit:  ldloc.0");
@@ -1274,9 +1205,9 @@ namespace NDOEnhancer.Patcher
 
 			methodElement.addStatement(ldarg_0);
 			methodElement.addStatement("ldfld      class [NDO]NDO.LoadState " + m_refName + "::_ndoLoadState");
-			methodElement.addStatement("callvirt   instance class [mscorlib]System.Collections.BitArray [NDO]NDO.LoadState::get_RelationLoadState()");
+			methodElement.addStatement($"callvirt   instance class {Corlib.Name}System.Collections.BitArray [NDO]NDO.LoadState::get_RelationLoadState()");
 			methodElement.addStatement(ldarg_1);
-			methodElement.addStatement("callvirt instance bool [mscorlib]System.Collections.BitArray::get_Item(int32)");
+			methodElement.addStatement($"callvirt instance bool {Corlib.Name}System.Collections.BitArray::get_Item(int32)");
 			methodElement.addStatement("ret");
 		}
 
@@ -1304,10 +1235,10 @@ namespace NDOEnhancer.Patcher
 
 			methodElement.addStatement(ldarg_0);
 			methodElement.addStatement("ldfld      class [NDO]NDO.LoadState "  + m_refName + "::_ndoLoadState");
-			methodElement.addStatement("callvirt   instance class [mscorlib]System.Collections.BitArray [NDO]NDO.LoadState::get_RelationLoadState()");
+			methodElement.addStatement($"callvirt   instance class {Corlib.Name}System.Collections.BitArray [NDO]NDO.LoadState::get_RelationLoadState()");
 			methodElement.addStatement("ldarg.1");
 			methodElement.addStatement("ldarg.2");
-			methodElement.addStatement("callvirt instance void [mscorlib]System.Collections.BitArray::set_Item(int32, bool)");
+			methodElement.addStatement($"callvirt instance void {Corlib.Name}System.Collections.BitArray::set_Item(int32, bool)");
 			methodElement.addStatement("ret");
 		}
 
@@ -1381,7 +1312,7 @@ namespace NDOEnhancer.Patcher
 			method.addStatement( loadStateManager() );
 			method.addStatement(ldarg_0);
 			method.addStatement(@"ldstr      """ + reference.CleanName + @"""");
-			method.addStatement("callvirt   instance class [mscorlib]System.Collections.IList [NDO]NDO.IStateManager::LoadRelation(class [NDO]NDO.IPersistenceCapable,string)");
+			method.addStatement($"callvirt   instance class {Corlib.Name}System.Collections.IList [NDO]NDO.IStateManager::LoadRelation(class [NDO]NDO.IPersistenceCapable,string)");
 			method.addStatement("pop");
 			//			method.addStatement(ldarg_0);
 			//			method.addStatement("ldfld      bool[] " + m_refName + "::" + GetRelationStateName());
@@ -1469,7 +1400,7 @@ namespace NDOEnhancer.Patcher
 
 			method.addStatement( ldarg_1 );
 
-			method.addStatement( "callvirt   instance void [NDO]NDO.IStateManager::AssignRelation(class [NDO]NDO.IPersistenceCapable, string, class [mscorlib]System.Collections.IList, class [mscorlib]System.Collections.IList)");
+			method.addStatement( $"callvirt   instance void [NDO]NDO.IStateManager::AssignRelation(class [NDO]NDO.IPersistenceCapable, string, class {Corlib.Name}System.Collections.IList, class {Corlib.Name}System.Collections.IList)");
 
 			method.addStatement( "NoSm:");
 			method.addStatement(ldarg_0);
@@ -1708,10 +1639,8 @@ namespace NDOEnhancer.Patcher
 			else
 			{
 				method = new ILMethodElement();
-				//.method public hidebysig specialname instance valuetype [mscorlib]System.Guid 
-				// get_G2() cil managed
 				method.addLine( ".method public hidebysig newslot specialname final virtual" );
-				method.addLine( "instance valuetype [mscorlib]System.Guid get_NDOTimeStamp() cil managed" );
+				method.addLine( $"instance valuetype {Corlib.Name}System.Guid get_NDOTimeStamp() cil managed" );
 				m_classElement.getMethodIterator().getLast().insertAfter( method );
 			}
 			method.addStatement( ".maxstack  1" );
@@ -1730,7 +1659,7 @@ namespace NDOEnhancer.Patcher
 			{
 				method = new ILMethodElement();
 				method.addLine( ".method public hidebysig newslot specialname final virtual" );
-				method.addLine( "instance void  set_NDOTimeStamp(valuetype [mscorlib]System.Guid 'value') cil managed" );
+				method.addLine( $"instance void  set_NDOTimeStamp(valuetype {Corlib.Name}System.Guid 'value') cil managed" );
 				m_classElement.getMethodIterator().getLast().insertAfter( method );
 			}
 			method.addStatement( ".maxstack  2" );
@@ -1743,11 +1672,11 @@ namespace NDOEnhancer.Patcher
 			ILPropertyElement prop = m_classElement.getProperty( "NDOTimeStamp" );
 			if ( prop == null )
 			{
-				prop = new ILPropertyElement( ".property instance valuetype [mscorlib]System.Guid NDOTimeStamp()", m_classElement );
+				prop = new ILPropertyElement( $".property instance valuetype {Corlib.Name}System.Guid NDOTimeStamp()", m_classElement );
 				prop.addElement( new ILCustomElement( ".custom instance void [System]System.ComponentModel.BrowsableAttribute::.ctor(bool) = ( 01 00 00 00 00 )", prop ) );
 				prop.addElement( new ILCustomElement( ".custom instance void [System.Xml]System.Xml.Serialization.XmlIgnoreAttribute::.ctor() = ( 01 00 00 00 )", prop ) );
-				prop.addElement( new ILSetElement( ".set instance void " + m_nonGenericRefName + "::set_NDOTimeStamp(valuetype [mscorlib]System.Guid)" ) );
-				prop.addElement( new ILGetElement( ".get instance valuetype [mscorlib]System.Guid " + m_nonGenericRefName + "::get_NDOTimeStamp()" ) );
+				prop.addElement( new ILSetElement( ".set instance void " + m_nonGenericRefName + $"::set_NDOTimeStamp(valuetype {Corlib.Name}System.Guid)" ) );
+				prop.addElement( new ILGetElement( $".get instance valuetype {Corlib.Name}System.Guid " + m_nonGenericRefName + "::get_NDOTimeStamp()" ) );
 				m_classElement.getMethodIterator().getLast().insertAfter( prop );
 			}
 		}
@@ -1779,7 +1708,7 @@ namespace NDOEnhancer.Patcher
 
 			method.addStatement(".maxstack  1");
 			method.addStatement(ldarg_0);
-			method.addStatement("call       instance int32 [mscorlib]System.Object::GetHashCode()");
+			method.addStatement($"call       instance int32 {Corlib.Name}System.Object::GetHashCode()");
 			method.addStatement("ret");			   
 		}
 
@@ -1921,32 +1850,32 @@ namespace NDOEnhancer.Patcher
 			method.addStatement("\r\n//insertReadForGuidVtPublicField\r\n");
 
 
-			method.addStatement("ldsfld     class [mscorlib]System.DBNull [mscorlib]System.DBNull::Value");
+			method.addStatement($"ldsfld     class {Corlib.Name}System.DBNull {Corlib.Name}System.DBNull::Value");
 			method.addStatement("beq      GuidIsDbNull" + nr.ToString());
 
 			method.addStatement("ldloc.0");
-			method.addStatement("isinst     [mscorlib]System.String");
+			method.addStatement($"isinst     {Corlib.Name}System.String");
 			method.addStatement("brfalse.s  nostr" + nr.ToString());
 
 			method.addStatement(ldarg_0);
 			method.addStatement("ldflda     " + field.Parent.ILType + " " + m_refName + "::" + field.Parent.Name );
-			method.addStatement("ldflda     valuetype [mscorlib]System.Guid " + vtname + "::" + field.Name);
+			method.addStatement($"ldflda     valuetype {Corlib.Name}System.Guid " + vtname + "::" + field.Name);
 			method.addStatement("ldloc.0");
-			method.addStatement("castclass  [mscorlib]System.String");
-			method.addStatement("call       instance void [mscorlib]System.Guid::.ctor(string)");
+			method.addStatement($"castclass  {Corlib.Name}System.String");
+			method.addStatement($"call       instance void {Corlib.Name}System.Guid::.ctor(string)");
 			method.addStatement("br.s       guidready" + nr.ToString());
 
 			method.addStatement("nostr" + nr.ToString() + ":");
 			method.addStatement("ldloc.0");
-			method.addStatement("isinst     [mscorlib]System.Guid");
+			method.addStatement($"isinst     {Corlib.Name}System.Guid");
 			method.addStatement("brfalse.s  noguid" + nr.ToString());
 
 			method.addStatement(ldarg_0);
 			method.addStatement("ldflda     " + field.Parent.ILType + " " + m_refName + "::" + field.Parent.Name );
 			method.addStatement("ldloc.0");
-			method.addStatement("unbox      [mscorlib]System.Guid");
-			method.addStatement("ldobj      [mscorlib]System.Guid");
-			method.addStatement("stfld      valuetype [mscorlib]System.Guid " + vtname + "::" + field.Name);
+			method.addStatement($"unbox      {Corlib.Name}System.Guid");
+			method.addStatement($"ldobj      {Corlib.Name}System.Guid");
+			method.addStatement($"stfld      valuetype {Corlib.Name}System.Guid " + vtname + "::" + field.Name);
 			method.addStatement("br.s       guidready" + nr.ToString());
 
 			method.addStatement("noguid" + nr.ToString() + ":");
@@ -1956,26 +1885,26 @@ namespace NDOEnhancer.Patcher
 
 			method.addStatement(ldarg_0);
 			method.addStatement("ldflda     " + field.Parent.ILType + " " + m_refName + "::" + field.Parent.Name );
-			method.addStatement("ldflda     valuetype [mscorlib]System.Guid " + vtname +"::" + field.Name);
+			method.addStatement($"ldflda     valuetype {Corlib.Name}System.Guid " + vtname +"::" + field.Name);
 			method.addStatement("ldloc.0");
 			method.addStatement("castclass  unsigned int8[]");
-			method.addStatement("call       instance void [mscorlib]System.Guid::.ctor(unsigned int8[])");
+			method.addStatement($"call       instance void {Corlib.Name}System.Guid::.ctor(unsigned int8[])");
 			method.addStatement("br.s       guidready" + nr.ToString());
 
 			method.addStatement("nobytearr" + nr.ToString() + ":");
 			method.addStatement(@"ldstr      ""Can't convert Guid field to column type {0}""");
 			method.addStatement("ldloc.0");
-			method.addStatement("callvirt   instance class [mscorlib]System.Type [mscorlib]System.Object::GetType()");
-			method.addStatement("callvirt   instance string [mscorlib]System.Type::get_FullName()");
-			method.addStatement("call       string [mscorlib]System.String::Format(string,object)");
-			method.addStatement("newobj     instance void [mscorlib]System.Exception::.ctor(string)");
+			method.addStatement($"callvirt   instance class {Corlib.Name}System.Type {Corlib.Name}System.Object::GetType()");
+			method.addStatement($"callvirt   instance string {Corlib.Name}System.Type::get_FullName()");
+			method.addStatement($"call       string {Corlib.Name}System.String::Format(string,object)");
+			method.addStatement($"newobj     instance void {Corlib.Name}System.Exception::.ctor(string)");
 			method.addStatement("throw");
 
 			method.addStatement("GuidIsDbNull" + nr.ToString() + ":");
 			method.addStatement(ldarg_0);
 			method.addStatement("ldflda     " + field.Parent.ILType + " " + m_refName + "::" + field.Parent.Name );
-			method.addStatement("ldsfld     valuetype [mscorlib]System.Guid [mscorlib]System.Guid::Empty");
-			method.addStatement("stfld      valuetype [mscorlib]System.Guid " + vtname + "::" + field.Name);
+			method.addStatement($"ldsfld     valuetype {Corlib.Name}System.Guid {Corlib.Name}System.Guid::Empty");
+			method.addStatement($"stfld      valuetype {Corlib.Name}System.Guid " + vtname + "::" + field.Name);
 
 			method.addStatement("guidready" + nr.ToString() + ":");
 		}
@@ -1987,32 +1916,32 @@ namespace NDOEnhancer.Patcher
 				vtname = vtname.Substring(10);
 			method.addStatement("\r\n//insertReadForGuidVtProperty\r\n");
 
-			method.addStatement("ldsfld     class [mscorlib]System.DBNull [mscorlib]System.DBNull::Value");
+			method.addStatement($"ldsfld     class {Corlib.Name}System.DBNull {Corlib.Name}System.DBNull::Value");
 			method.addStatement("beq.s      GuidIsDbNull" + nr.ToString());
 
 			method.addStatement("ldloc.0");
-			method.addStatement("isinst     [mscorlib]System.String");
+			method.addStatement($"isinst     {Corlib.Name}System.String");
 			method.addStatement("brfalse.s  nostr" + nr.ToString());
 
 			method.addStatement(ldarg_0);
 			method.addStatement("ldflda     " + field.Parent.ILType + " " + m_refName + "::" + field.Parent.Name );
 			method.addStatement("ldloc.0");
-			method.addStatement("castclass  [mscorlib]System.String");
-			method.addStatement("newobj     instance void [mscorlib]System.Guid::.ctor(string)");
-			method.addStatement("call       instance void " + vtname +"::" + getAccName("set_", field.Name) + "(valuetype [mscorlib]System.Guid)");
+			method.addStatement($"castclass  {Corlib.Name}System.String");
+			method.addStatement($"newobj     instance void {Corlib.Name}System.Guid::.ctor(string)");
+			method.addStatement($"call       instance void " + vtname +"::" + getAccName("set_", field.Name) + "(valuetype {Corlib.Name}System.Guid)");
 			method.addStatement("br.s       guidready" + nr.ToString());
 
 			method.addStatement("nostr" + nr.ToString() + ":");
 			method.addStatement("ldloc.0");
-			method.addStatement("isinst     [mscorlib]System.Guid");
+			method.addStatement($"isinst     {Corlib.Name}System.Guid");
 			method.addStatement("brfalse.s  noguid" + nr.ToString());
 
 			method.addStatement(ldarg_0);
 			method.addStatement("ldflda     " + field.Parent.ILType + " " + m_refName + "::" + field.Parent.Name );
 			method.addStatement("ldloc.0");
-			method.addStatement("unbox      [mscorlib]System.Guid");
-			method.addStatement("ldobj      [mscorlib]System.Guid");
-			method.addStatement("call       instance void " + vtname +"::" + getAccName("set_", field.Name) + "(valuetype [mscorlib]System.Guid)");
+			method.addStatement($"unbox      {Corlib.Name}System.Guid");
+			method.addStatement($"ldobj      {Corlib.Name}System.Guid");
+			method.addStatement("call       instance void " + vtname +"::" + getAccName("set_", field.Name) + $"(valuetype {Corlib.Name}System.Guid)");
 			method.addStatement("br.s       guidready" + nr.ToString());
 
 			method.addStatement("noguid" + nr.ToString() + ":");
@@ -2024,24 +1953,24 @@ namespace NDOEnhancer.Patcher
 			method.addStatement("ldflda     " + field.Parent.ILType + " " + m_refName + "::" + field.Parent.Name );
 			method.addStatement("ldloc.0");
 			method.addStatement("castclass  unsigned int8[]");
-			method.addStatement("newobj     instance void [mscorlib]System.Guid::.ctor(unsigned int8[])");
-			method.addStatement("call       instance void " + vtname +"::" + getAccName("set_", field.Name) + "(valuetype [mscorlib]System.Guid)");
+			method.addStatement($"newobj     instance void {Corlib.Name}System.Guid::.ctor(unsigned int8[])");
+			method.addStatement("call       instance void " + vtname +"::" + getAccName("set_", field.Name) + $"(valuetype {Corlib.Name}System.Guid)");
 			method.addStatement("br.s       guidready" + nr.ToString());
 
 			method.addStatement("nobytearr" + nr.ToString() +":");
 			method.addStatement(@"ldstr      ""Can't convert Guid field to column type {0}""");
 			method.addStatement("ldloc.0");
-			method.addStatement("callvirt   instance class [mscorlib]System.Type [mscorlib]System.Object::GetType()");
-			method.addStatement("callvirt   instance string [mscorlib]System.Type::get_FullName()");
-			method.addStatement("call       string [mscorlib]System.String::Format(string,object)");
-			method.addStatement("newobj     instance void [mscorlib]System.Exception::.ctor(string)");
+			method.addStatement($"callvirt   instance class {Corlib.Name}System.Type {Corlib.Name}System.Object::GetType()");
+			method.addStatement($"callvirt   instance string {Corlib.Name}System.Type::get_FullName()");
+			method.addStatement($"call       string {Corlib.Name}System.String::Format(string,object)");
+			method.addStatement($"newobj     instance void {Corlib.Name}System.Exception::.ctor(string)");
 			method.addStatement("throw");
 
 			method.addStatement("GuidIsDbNull" + nr.ToString() + ":");
 			method.addStatement(ldarg_0);
 			method.addStatement("ldflda     " + field.Parent.ILType + " " + m_refName + "::" + field.Parent.Name );
-			method.addStatement("ldsfld     valuetype [mscorlib]System.Guid [mscorlib]System.Guid::Empty");
-			method.addStatement("call       instance void " + vtname +"::" + getAccName("set_", field.Name) + "(valuetype [mscorlib]System.Guid)");
+			method.addStatement($"ldsfld     valuetype {Corlib.Name}System.Guid {Corlib.Name}System.Guid::Empty");
+			method.addStatement("call       instance void " + vtname +"::" + getAccName("set_", field.Name) + $"(valuetype {Corlib.Name}System.Guid)");
 
 			method.addStatement("guidready" + nr.ToString() +":");
 		}
@@ -2051,30 +1980,30 @@ namespace NDOEnhancer.Patcher
 		{
 			method.addStatement("\n//insertReadForGuidMember\n");
 			//
-			method.addStatement("ldsfld     class [mscorlib]System.DBNull [mscorlib]System.DBNull::Value");
+			method.addStatement($"ldsfld     class {Corlib.Name}System.DBNull {Corlib.Name}System.DBNull::Value");
 			method.addStatement("beq.s      GuidIsDbNull" + nr.ToString());
 			method.addStatement("ldloc.0");
 
-			method.addStatement("isinst     [mscorlib]System.String");
+			method.addStatement($"isinst     {Corlib.Name}System.String");
 			method.addStatement("brfalse.s  nostr" + nr.ToString());
 
 			method.addStatement(ldarg_0);
-			method.addStatement("ldflda     valuetype [mscorlib]System.Guid " + m_refName + "::" + field.Name);
+			method.addStatement($"ldflda     valuetype {Corlib.Name}System.Guid " + m_refName + "::" + field.Name);
 			method.addStatement("ldloc.0");
-			method.addStatement("castclass  [mscorlib]System.String");
-			method.addStatement("call       instance void [mscorlib]System.Guid::.ctor(string)");
+			method.addStatement($"castclass  {Corlib.Name}System.String");
+			method.addStatement($"call       instance void {Corlib.Name}System.Guid::.ctor(string)");
 			method.addStatement("br.s       guidready" + nr.ToString());
 
 			method.addStatement("nostr" + nr.ToString() + ":");
 			method.addStatement("ldloc.0");
-			method.addStatement("isinst     [mscorlib]System.Guid");
+			method.addStatement($"isinst     {Corlib.Name}System.Guid");
 			method.addStatement("brfalse.s  noguid" + nr.ToString());
 
 			method.addStatement(ldarg_0);
 			method.addStatement("ldloc.0");
-			method.addStatement("unbox      [mscorlib]System.Guid");
-			method.addStatement("ldobj      [mscorlib]System.Guid");
-			method.addStatement("stfld      valuetype [mscorlib]System.Guid " + m_refName + "::" + field.Name);
+			method.addStatement($"unbox      {Corlib.Name}System.Guid");
+			method.addStatement($"ldobj      {Corlib.Name}System.Guid");
+			method.addStatement($"stfld      valuetype {Corlib.Name}System.Guid " + m_refName + "::" + field.Name);
 			method.addStatement("br.s       guidready" + nr.ToString());
 			method.addStatement("noguid" + nr.ToString() + ":");
 			method.addStatement("ldloc.0");
@@ -2082,26 +2011,25 @@ namespace NDOEnhancer.Patcher
 			method.addStatement("brfalse.s  nobytearr" + nr.ToString());
 
 			method.addStatement(ldarg_0);
-			method.addStatement("ldflda     valuetype [mscorlib]System.Guid " + m_refName + "::" + field.Name);
+			method.addStatement($"ldflda     valuetype {Corlib.Name}System.Guid " + m_refName + "::" + field.Name);
 			method.addStatement("ldloc.0");
 			method.addStatement("castclass  unsigned int8[]");
-			method.addStatement("call       instance void [mscorlib]System.Guid::.ctor(unsigned int8[])");
+			method.addStatement($"call       instance void {Corlib.Name}System.Guid::.ctor(unsigned int8[])");
 			method.addStatement("br.s       guidready" + nr.ToString());
 
 			method.addStatement("nobytearr" + nr.ToString() + ":");
 			method.addStatement(@"ldstr      ""Can't convert Guid field to column type {0}""");
 			method.addStatement("ldloc.0");
-			method.addStatement("callvirt   instance class [mscorlib]System.Type [mscorlib]System.Object::GetType()");
-			method.addStatement("callvirt   instance string [mscorlib]System.Type::get_FullName()");
-			method.addStatement("call       string [mscorlib]System.String::Format(string,object)");
-			method.addStatement("newobj     instance void [mscorlib]System.Exception::.ctor(string)");
+			method.addStatement($"callvirt   instance class {Corlib.Name}System.Type {Corlib.Name}System.Object::GetType()");
+			method.addStatement($"callvirt   instance string {Corlib.Name}System.Type::get_FullName()");
+			method.addStatement($"call       string {Corlib.Name}System.String::Format(string,object)");
+			method.addStatement($"newobj     instance void {Corlib.Name}System.Exception::.ctor(string)");
 			method.addStatement("throw");
 
 			method.addStatement("GuidIsDbNull" + nr.ToString() + ":");
 			method.addStatement(ldarg_0);
-			method.addStatement("ldsfld     valuetype [mscorlib]System.Guid [mscorlib]System.Guid::Empty");
-			method.addStatement("stfld      valuetype [mscorlib]System.Guid " + m_refName + "::" + field.Name);
-
+			method.addStatement($"ldsfld     valuetype {Corlib.Name}System.Guid {Corlib.Name}System.Guid::Empty");
+			method.addStatement($"stfld      valuetype {Corlib.Name}System.Guid " + m_refName + "::" + field.Name);
 
 			method.addStatement("guidready" + nr.ToString() + ":");
 		}
@@ -2120,50 +2048,50 @@ namespace NDOEnhancer.Patcher
 		private void
 			insertReadForDateTime(ILMethodElement method, ILField field, int nr, bool parentIsValueType)
 		{
-			method.addStatement("ldsfld     class [mscorlib]System.DBNull [mscorlib]System.DBNull::Value");
+			method.addStatement($"ldsfld     class {Corlib.Name}System.DBNull {Corlib.Name}System.DBNull::Value");
 			method.addStatement("beq.s      DateTimeIsNull" + nr);
 			if (!parentIsValueType)		// Member
 			{
 				method.addStatement(ldarg_0);
 				method.addStatement("ldloc.0");
-				method.addStatement("unbox      [mscorlib]System.DateTime");
-				method.addStatement("ldobj      [mscorlib]System.DateTime");
-				method.addStatement("stfld      valuetype [mscorlib]System.DateTime " + m_refName + "::" + field.Name);
+				method.addStatement($"unbox      {Corlib.Name}System.DateTime");
+				method.addStatement($"ldobj      {Corlib.Name}System.DateTime");
+				method.addStatement($"stfld      valuetype {Corlib.Name}System.DateTime " + m_refName + "::" + field.Name);
 				method.addStatement("br.s       DateTimeReady" + nr);
 				method.addStatement("DateTimeIsNull" + nr + ":");
 				method.addStatement(ldarg_0);
-				method.addStatement("ldsfld     valuetype [mscorlib]System.DateTime [mscorlib]System.DateTime::MinValue");
-				method.addStatement("stfld      valuetype [mscorlib]System.DateTime " + m_refName + "::" + field.Name);
+				method.addStatement($"ldsfld     valuetype {Corlib.Name}System.DateTime {Corlib.Name}System.DateTime::MinValue");
+				method.addStatement($"stfld      valuetype {Corlib.Name}System.DateTime " + m_refName + "::" + field.Name);
 			}
 			else if (field.IsProperty)  // Vt with property
 			{
 				method.addStatement(ldarg_0);
 				method.addStatement("ldflda     " + field.Parent.ILType + " " + m_refName + "::" + field.Parent.Name);
 				method.addStatement("ldloc.0");
-				method.addStatement("unbox      [mscorlib]System.DateTime");
-				method.addStatement("ldobj      [mscorlib]System.DateTime");
-				method.addStatement("call       instance void " + field.Parent.PureTypeName + "::" + getAccName("set_", field.Name) + "(valuetype [mscorlib]System.DateTime)");
+				method.addStatement($"unbox      {Corlib.Name}System.DateTime");
+				method.addStatement($"ldobj      {Corlib.Name}System.DateTime");
+				method.addStatement("call       instance void " + field.Parent.PureTypeName + "::" + getAccName("set_", field.Name) + $"(valuetype {Corlib.Name}System.DateTime)");
 				method.addStatement("br.s       DateTimeReady" + nr);
 				method.addStatement("DateTimeIsNull" + nr + ":");
 				method.addStatement(ldarg_0);
 				method.addStatement("ldflda     " + field.Parent.ILType + " " + m_refName + "::" + field.Parent.Name);
-				method.addStatement("ldsfld     valuetype [mscorlib]System.DateTime [mscorlib]System.DateTime::MinValue");
-				method.addStatement("call       instance void " + field.Parent.PureTypeName + "::" + getAccName("set_", field.Name) + "(valuetype [mscorlib]System.DateTime)");
+				method.addStatement($"ldsfld     valuetype {Corlib.Name}System.DateTime {Corlib.Name}System.DateTime::MinValue");
+				method.addStatement("call       instance void " + field.Parent.PureTypeName + "::" + getAccName("set_", field.Name) + $"(valuetype {Corlib.Name}System.DateTime)");
 			}
 			else						// Vt with public field
 			{
 				method.addStatement(ldarg_0);
 				method.addStatement("ldflda     " + field.Parent.ILType + " " + m_refName + "::" + field.Parent.Name);
 				method.addStatement("ldloc.0");
-				method.addStatement("unbox      [mscorlib]System.DateTime");
-				method.addStatement("ldobj      [mscorlib]System.DateTime");
-				method.addStatement("stfld      valuetype [mscorlib]System.DateTime " + field.Parent.PureTypeName + "::" + field.Name);
+				method.addStatement($"unbox      {Corlib.Name}System.DateTime");
+				method.addStatement($"ldobj      {Corlib.Name}System.DateTime");
+				method.addStatement($"stfld      valuetype {Corlib.Name}System.DateTime " + field.Parent.PureTypeName + "::" + field.Name);
 				method.addStatement("br.s       DateTimeReady" + nr);
 				method.addStatement("DateTimeIsNull" + nr + ":");
 				method.addStatement(ldarg_0);
 				method.addStatement("ldflda     " + field.Parent.ILType + " " + m_refName + "::" + field.Parent.Name);
-				method.addStatement("ldsfld     valuetype [mscorlib]System.DateTime [mscorlib]System.DateTime::MinValue");
-				method.addStatement("stfld      valuetype [mscorlib]System.DateTime " + field.Parent.PureTypeName + "::" + field.Name);
+				method.addStatement($"ldsfld     valuetype {Corlib.Name}System.DateTime {Corlib.Name}System.DateTime::MinValue");
+				method.addStatement($"stfld      valuetype {Corlib.Name}System.DateTime " + field.Parent.PureTypeName + "::" + field.Name);
 			}
 			method.addStatement("DateTimeReady" + nr + ":");
 		}
@@ -2172,14 +2100,14 @@ namespace NDOEnhancer.Patcher
         private void
         insertReadForGenericType(ILMethodElement method, ILField field, int nr)
         {
-            method.addStatement("ldsfld     class [mscorlib]System.DBNull [mscorlib]System.DBNull::Value");
+            method.addStatement($"ldsfld     class {Corlib.Name}System.DBNull {Corlib.Name}System.DBNull::Value");
             method.addStatement("ceq");
             method.addStatement("brtrue.s   FieldOver" + nr);
             method.addStatement(ldarg_0);
             method.addStatement("ldloc.0");
             method.addStatement("ldtoken    " + field.ILType);
-            method.addStatement("call       class [mscorlib]System.Type [mscorlib]System.Type::GetTypeFromHandle(valuetype [mscorlib]System.RuntimeTypeHandle)");
-            method.addStatement("call       object [NDO]NDO.GenericFieldConverter::FromString(object,class [mscorlib]System.Type)");
+            method.addStatement($"call       class {Corlib.Name}System.Type {Corlib.Name}System.Type::GetTypeFromHandle(valuetype {Corlib.Name}System.RuntimeTypeHandle)");
+            method.addStatement($"call       object [NDO]NDO.GenericFieldConverter::FromString(object,class {Corlib.Name}System.Type)");
             method.addStatement("unbox.any  " + field.ILType);
             method.addStatement("stfld      "+ field.ILType + " " + m_refName + "::" + field.Name);
         }
@@ -2188,30 +2116,30 @@ namespace NDOEnhancer.Patcher
         private void
             addReadForGuidNullable(ILMethodElement method, ILField field, int nr)
         {
-            method.addStatement("isinst     [mscorlib]System.String");
+            method.addStatement($"isinst     {Corlib.Name}System.String");
             method.addStatement("brfalse.s  nostring" + nr);
             method.addStatement("ldloc.0");
-            method.addStatement("castclass  [mscorlib]System.String");
-            method.addStatement("newobj     instance void [mscorlib]System.Guid::.ctor(string)");
+            method.addStatement($"castclass  {Corlib.Name}System.String");
+            method.addStatement($"newobj     instance void {Corlib.Name}System.Guid::.ctor(string)");
             method.addStatement("br.s       guidready" + nr);
             method.addStatement("nostring" + nr + ':');
             method.addStatement("ldloc.0");
-            method.addStatement("isinst     [mscorlib]System.Guid");
+            method.addStatement($"isinst     {Corlib.Name}System.Guid");
             method.addStatement("brfalse.s  noguid" + nr);
             method.addStatement("ldloc.0");
-            method.addStatement("unbox.any  [mscorlib]System.Guid");
+            method.addStatement($"unbox.any  {Corlib.Name}System.Guid");
             method.addStatement("br.s       guidready" + nr);
             method.addStatement("noguid" + nr + ':');
             method.addStatement("ldstr      \"Can't convert type \"");
             method.addStatement("ldloc.0");
-            method.addStatement("callvirt   instance class [mscorlib]System.Type [mscorlib]System.Object::GetType()");
-            method.addStatement("callvirt   instance string [mscorlib]System.Type::get_FullName()");
+            method.addStatement($"callvirt   instance class {Corlib.Name}System.Type {Corlib.Name}System.Object::GetType()");
+            method.addStatement($"callvirt   instance string {Corlib.Name}System.Type::get_FullName()");
             method.addStatement("ldstr      \" to field type System.Guid.\"");
-            method.addStatement("call       string [mscorlib]System.String::Concat(string,string,string)");
-            method.addStatement("newobj     instance void [mscorlib]System.Exception::.ctor(string)");
+            method.addStatement($"call       string {Corlib.Name}System.String::Concat(string,string,string)");
+            method.addStatement($"newobj     instance void {Corlib.Name}System.Exception::.ctor(string)");
             method.addStatement("throw");
             method.addStatement("guidready" + nr + ':');
-            method.addStatement("newobj     instance void valuetype [mscorlib]System.Nullable`1<valuetype [mscorlib]System.Guid>::.ctor(!0)");
+            method.addStatement($"newobj     instance void valuetype {Corlib.Name}System.Nullable`1<valuetype {Corlib.Name}System.Guid>::.ctor(!0)");
 
         }
 
@@ -2235,14 +2163,14 @@ namespace NDOEnhancer.Patcher
 			//			method.addStatement("  ldc.i4.s " + nr.ToString());
 			//			method.addStatement("  add");
 			//			method.addStatement("ldelem.ref");
-			//			method.addStatement("call       void [mscorlib]System.Console::WriteLine(string)");
+			//			method.addStatement($"call       void {Corlib.Name}System.Console::WriteLine(string)");
 
             bool isNullable = false;
 
 #if !NET11
             Type argType = null;
             string argTypeName = string.Empty;
-            if (tname.StartsWith("valuetype [mscorlib]System.Nullable`1<"))
+            if (tname.StartsWith($"valuetype {Corlib.Name}System.Nullable`1<"))
             {
                 isNullable = true;
                 argType = t.GetGenericArguments()[0];
@@ -2268,12 +2196,12 @@ namespace NDOEnhancer.Patcher
 			method.addStatement("stloc.0");
 
 			// Special treatment for DateTime and Guid values to map to and from DBNull
-			if (tname == "valuetype [mscorlib]System.Guid")
+			if (tname == $"valuetype {Corlib.Name}System.Guid")
 			{
 				insertReadForGuid(method, field, nr, parentIsValueType);
 				goto theexit;
 			}
-            else if (tname == "valuetype [mscorlib]System.DateTime")
+            else if (tname == $"valuetype {Corlib.Name}System.DateTime")
             {
                 insertReadForDateTime(method, field, nr, parentIsValueType);
                 goto theexit;
@@ -2285,7 +2213,7 @@ namespace NDOEnhancer.Patcher
             }
             else
             {
-                method.addStatement("ldsfld     class [mscorlib]System.DBNull [mscorlib]System.DBNull::Value");
+                method.addStatement($"ldsfld     class {Corlib.Name}System.DBNull {Corlib.Name}System.DBNull::Value");
                 method.addStatement("beq      FieldNull" + nr.ToString());
             }
 
@@ -2293,7 +2221,7 @@ namespace NDOEnhancer.Patcher
 			if (parentIsValueType)
 				method.addStatement("ldflda     " + field.Parent.ILType + " " + m_refName + "::" + field.Parent.Name);
 			method.addStatement("ldloc.0");
-			if (tname == "string" || tname == "unsigned int8[]" || tname == "class [mscorlib]System.String" || tname == "class [mscorlib]System.Byte[]")
+			if (tname == "string" || tname == "unsigned int8[]" || tname == $"class {Corlib.Name}System.String" || tname == $"class {Corlib.Name}System.Byte[]")
 				method.addStatement("  castclass  " + tname);
 			else if (tname.StartsWith("valuetype"))
 			{
@@ -2304,7 +2232,7 @@ namespace NDOEnhancer.Patcher
                     if (typeof(System.Enum).IsAssignableFrom(argType))
                     {
                         method.addStatement("unbox.any " + argTypeName);
-                        method.addStatement("newobj     instance void valuetype [mscorlib]System.Nullable`1<" + argTypeName + ">::.ctor(!0)");
+                        method.addStatement($"newobj     instance void valuetype {Corlib.Name}System.Nullable`1<" + argTypeName + ">::.ctor(!0)");
                     }
                     else if (argType == typeof(Guid))
                     {
@@ -2327,7 +2255,7 @@ namespace NDOEnhancer.Patcher
 			else
 			{
 				if (tname == "unsigned int8")
-					method.addStatement("unbox [mscorlib]System.Byte");
+					method.addStatement($"unbox {Corlib.Name}System.Byte");
 				else
 					method.addStatement("unbox  " + tname);
 				string indType = indTypes[tname] as string;
@@ -2369,8 +2297,8 @@ namespace NDOEnhancer.Patcher
                 if (isNullable)
                 {
                     method.addStatement(ldarg_0);
-                    method.addStatement("ldflda     valuetype [mscorlib]System.Nullable`1<" + argTypeName + "> " + m_refName + "::" + field.Name);
-                    method.addStatement("initobj    valuetype [mscorlib]System.Nullable`1<" + argTypeName + ">");
+                    method.addStatement($"ldflda     valuetype {Corlib.Name}System.Nullable`1<" + argTypeName + "> " + m_refName + "::" + field.Name);
+                    method.addStatement($"initobj    valuetype {Corlib.Name}System.Nullable`1<" + argTypeName + ">");
                 }
             #endif
                 method.addStatement("FieldOver" + nr.ToString() + ":");
@@ -2401,7 +2329,7 @@ namespace NDOEnhancer.Patcher
 			method.addStatement(".maxstack  8" );
 			addLocalVariable(method, "theObject", "object");
 			addLocalVariable(method, "i", "int32");
-			addLocalVariable(method, "ex", "class [mscorlib]System.Exception");
+			addLocalVariable(method, $"ex", $"class {Corlib.Name}System.Exception");
 
 			method.addStatement("ldc.i4.0");
 			method.addStatement("stloc.1");
@@ -2409,7 +2337,7 @@ namespace NDOEnhancer.Patcher
 			method.addStatement("ldarg.1");
 			method.addStatement("brtrue   rownotnull");
 			method.addStatement(@"ldstr      ""NDORead: DataRow ist null""");
-			method.addStatement("newobj     instance void [mscorlib]System.Exception::.ctor(string)");
+			method.addStatement($"newobj     instance void {Corlib.Name}System.Exception::.ctor(string)");
 			method.addStatement("throw");
 			method.addStatement("rownotnull: ");
 
@@ -2428,16 +2356,16 @@ namespace NDOEnhancer.Patcher
 			fixupElements[1] = new ILStatementElement("ldc.i4.s ##fieldcount");
 			method.addElement(fixupElements[1]);
 			method.addStatement("add");
-			method.addStatement("box        [mscorlib]System.Int32");
+			method.addStatement($"box        {Corlib.Name}System.Int32");
 			method.addStatement("ldarg.2");
 			method.addStatement("ldlen");
 			method.addStatement("conv.i4");
 			method.addStatement("ldc.i4.1");
 			method.addStatement("sub");
 
-			method.addStatement("box        [mscorlib]System.Int32");
-			method.addStatement("call       string [mscorlib]System.String::Format(string, object, object)");
-			method.addStatement("newobj     instance void [mscorlib]System.Exception::.ctor(string)");
+			method.addStatement($"box        {Corlib.Name}System.Int32");
+			method.addStatement($"call       string {Corlib.Name}System.String::Format(string, object, object)");
+			method.addStatement($"newobj     instance void {Corlib.Name}System.Exception::.ctor(string)");
 			method.addStatement("throw");
 
 			method.addStatement("indexbigger: ");
@@ -2462,7 +2390,7 @@ namespace NDOEnhancer.Patcher
 			method.addStatement("leave.s    aftercatch");
 
 			method.addStatement("}  // end .try");
-			method.addStatement("catch [mscorlib]System.Exception");
+			method.addStatement($"catch {Corlib.Name}System.Exception");
 			method.addStatement("{");
 			method.addStatement("stloc.2");
 			method.addStatement(@"ldstr      ""Error while writing to field """);
@@ -2471,9 +2399,9 @@ namespace NDOEnhancer.Patcher
 			method.addStatement("ldelem.ref");
 			method.addStatement(@"ldstr      ""\n""");
 			method.addStatement("ldloc.2");
-			method.addStatement("callvirt   instance string [mscorlib]System.Exception::get_Message()");
-			method.addStatement("call       string [mscorlib]System.String::Concat(string,string,string,string)");
-			method.addStatement("newobj     instance void [mscorlib]System.Exception::.ctor(string)");
+			method.addStatement($"callvirt   instance string {Corlib.Name}System.Exception::get_Message()");
+			method.addStatement($"call       string {Corlib.Name}System.String::Concat(string,string,string,string)");
+			method.addStatement($"newobj     instance void {Corlib.Name}System.Exception::.ctor(string)");
 			method.addStatement("throw");
 			method.addStatement("}  // end handler");
 
@@ -2506,51 +2434,51 @@ namespace NDOEnhancer.Patcher
 			if (!parentIsValueType) // Member
 			{
 				method.addStatement(ldarg_0);
-				method.addStatement("ldfld      valuetype [mscorlib]System." + type + " " + m_refName + "::" + field.Name);
-				method.addStatement("ldsfld     valuetype [mscorlib]System." + type + " [mscorlib]System." + empty);
-				method.addStatement("call       bool [mscorlib]System." + type + "::op_Inequality(valuetype [mscorlib]System." + type + ", valuetype [mscorlib]System." + type + ")");
+				method.addStatement($"ldfld      valuetype {Corlib.Name}System." + type + " " + m_refName + "::" + field.Name);
+				method.addStatement($"ldsfld     valuetype {Corlib.Name}System." + type + $" {Corlib.Name}System." + empty);
+				method.addStatement($"call       bool {Corlib.Name}System.{type}::op_Inequality(valuetype {Corlib.Name}System.{type}, valuetype {Corlib.Name}System.{type})");
 				method.addStatement("brtrue.s   VtFieldIsNotEmpty" + nr.ToString());
-				method.addStatement("ldsfld     class [mscorlib]System.DBNull [mscorlib]System.DBNull::Value");
+				method.addStatement($"ldsfld     class {Corlib.Name}System.DBNull {Corlib.Name}System.DBNull::Value");
 				method.addStatement("br.s       VtFieldReady" + nr.ToString());
 				method.addStatement("VtFieldIsNotEmpty" + nr.ToString() + ":");
 				method.addStatement(ldarg_0);
-				method.addStatement("ldfld      valuetype [mscorlib]System." + type + " " + m_refName + "::" + field.Name);
-				method.addStatement("box        [mscorlib]System." + type + "");
+				method.addStatement($"ldfld      valuetype {Corlib.Name}System." + type + " " + m_refName + "::" + field.Name);
+				method.addStatement($"box        {Corlib.Name}System." + type + "");
 				method.addStatement("VtFieldReady" + nr.ToString() + ":");
 			}
 			else if (field.IsProperty) // ValueType mit Property
 			{
 				method.addStatement(ldarg_0);
 				method.addStatement("ldflda     " + field.Parent.ILType + " " + m_refName + "::" + field.Parent.Name);																																 
-				method.addStatement("call       instance valuetype [mscorlib]System." + type + " " + field.Parent.PureTypeName + "::" + getAccName("get_", field.Name) + "()");
+				method.addStatement($"call       instance valuetype {Corlib.Name}System." + type + " " + field.Parent.PureTypeName + "::" + getAccName("get_", field.Name) + "()");
 
-				method.addStatement("ldsfld     valuetype [mscorlib]System." + type + " [mscorlib]System." + empty);
-				method.addStatement("call       bool [mscorlib]System." + type + "::op_Inequality(valuetype [mscorlib]System." + type + ",valuetype [mscorlib]System." + type + ")");
+				method.addStatement($"ldsfld     valuetype {Corlib.Name}System." + type + $" {Corlib.Name}System." + empty);
+				method.addStatement($"call       bool {Corlib.Name}System." + type + $"::op_Inequality(valuetype {Corlib.Name}System." + type + $",valuetype {Corlib.Name}System." + type + ")");
 				method.addStatement("brtrue.s   VtFieldIsNotEmpty" + nr.ToString());
-				method.addStatement("ldsfld     class [mscorlib]System.DBNull [mscorlib]System.DBNull::Value");
+				method.addStatement($"ldsfld     class {Corlib.Name}System.DBNull {Corlib.Name}System.DBNull::Value");
 				method.addStatement("br.s       VtFieldReady" + nr.ToString());
 				method.addStatement("VtFieldIsNotEmpty" + nr.ToString() + ":");
 				method.addStatement(ldarg_0);
 				method.addStatement("ldflda     " + field.Parent.ILType + " " + m_refName + "::" + field.Parent.Name);																																 
-				method.addStatement("call       instance valuetype [mscorlib]System." + type + " " + field.Parent.PureTypeName + "::" + getAccName("get_", field.Name) + "()");
-				method.addStatement("box        [mscorlib]System." + type + "");
+				method.addStatement($"call       instance valuetype {Corlib.Name}System." + type + " " + field.Parent.PureTypeName + "::" + getAccName("get_", field.Name) + "()");
+				method.addStatement($"box        {Corlib.Name}System." + type + "");
 				method.addStatement("VtFieldReady" + nr.ToString() + ":");
 			}
 			else // Vt. mit public field
 			{
 				method.addStatement(ldarg_0);
 				method.addStatement("ldflda     " + field.Parent.ILType + " " + m_refName + "::" + field.Parent.Name);																																 
-				method.addStatement("ldfld      valuetype [mscorlib]System." + type + " " + field.Parent.PureTypeName + "::" + field.Name);
-				method.addStatement("ldsfld     valuetype [mscorlib]System." + type + " [mscorlib]System." + empty);
-				method.addStatement("call       bool [mscorlib]System." + type + "::op_Inequality(valuetype [mscorlib]System." + type + ", valuetype [mscorlib]System." + type + ")");
+				method.addStatement($"ldfld      valuetype {Corlib.Name}System." + type + " " + field.Parent.PureTypeName + "::" + field.Name);
+				method.addStatement($"ldsfld     valuetype {Corlib.Name}System." + type + $" {Corlib.Name}System." + empty);
+				method.addStatement($"call       bool {Corlib.Name}System." + type + $"::op_Inequality(valuetype {Corlib.Name}System." + type + $", valuetype {Corlib.Name}System." + type + ")");
 				method.addStatement("brtrue.s   VtFieldIsNotEmpty" + nr.ToString());
-				method.addStatement("ldsfld     class [mscorlib]System.DBNull [mscorlib]System.DBNull::Value");
+				method.addStatement($"ldsfld     class {Corlib.Name}System.DBNull {Corlib.Name}System.DBNull::Value");
 				method.addStatement("br.s       VtFieldReady" + nr.ToString());
 				method.addStatement("VtFieldIsNotEmpty" + nr.ToString() + ":");
 				method.addStatement(ldarg_0);
 				method.addStatement("ldflda     " + field.Parent.ILType + " " + m_refName + "::" + field.Parent.Name);																																 
-				method.addStatement("ldfld      valuetype [mscorlib]System." + type + " " + field.Parent.PureTypeName + "::" + field.Name);
-				method.addStatement("box        [mscorlib]System." + type + "");				
+				method.addStatement($"ldfld      valuetype {Corlib.Name}System." + type + " " + field.Parent.PureTypeName + "::" + field.Name);
+				method.addStatement($"box        {Corlib.Name}System." + type + "");				
 				method.addStatement("VtFieldReady" + nr.ToString() + ":");
 			}
 		}
@@ -2558,7 +2486,7 @@ namespace NDOEnhancer.Patcher
 #if !NET11
 		private void insertWriteForNullable(ILMethodElement method, ILField field, int nr, bool parentIsValueType)
 		{
-			string loadDbNull = "ldsfld     class [mscorlib]System.DBNull [mscorlib]System.DBNull::Value";
+			string loadDbNull = $"ldsfld     class {Corlib.Name}System.DBNull {Corlib.Name}System.DBNull::Value";
 			string callInstance = "call       instance bool " + field.ILType + "::";
 			Type t = field.FieldType;
 			Type argType = t.GetGenericArguments()[0];
@@ -2648,16 +2576,16 @@ namespace NDOEnhancer.Patcher
 
 			// Guids and DateTimes have different Write logic, because
 			// they map to and from DbNull.
-			if (tname == "valuetype [mscorlib]System.Guid")
+			if (tname == $"valuetype {Corlib.Name}System.Guid")
 			{
 				insertWriteForVtField(method, field, nr, parentIsValueType, "Guid");
 			}
-			else if (tname == "valuetype [mscorlib]System.DateTime")
+			else if (tname == $"valuetype {Corlib.Name}System.DateTime")
 			{
 				insertWriteForVtField(method, field, nr, parentIsValueType, "DateTime");
 			}
 #if !NET11
-			else if (tname.StartsWith("valuetype [mscorlib]System.Nullable`1"))
+			else if (tname.StartsWith($"valuetype {Corlib.Name}System.Nullable`1"))
 			{
 				insertWriteForNullable(method, field, nr, parentIsValueType);
 			}
@@ -2691,7 +2619,7 @@ namespace NDOEnhancer.Patcher
 						method.addStatement("  ldfld       " + field.ILType + " " + vtname + "::" + field.Name);
 					}
 				}
-				if (!(tname == "class [mscorlib]System.String" || tname == "class [mscorlib]System.Byte[]" || tname == "string" || tname == "unsigned int8[]"))
+				if (!(tname == $"class {Corlib.Name}System.String" || tname == $"class {Corlib.Name}System.Byte[]" || tname == "string" || tname == "unsigned int8[]"))
 					method.addStatement("box  " + tname);
 			}
 			method.addStatement("callvirt   instance void [System.Data]System.Data.DataRow::set_Item(string, object)");
@@ -2720,7 +2648,7 @@ namespace NDOEnhancer.Patcher
 			method.addStatement( ".maxstack  8" );
 
 			addLocalVariable(method, "i", "int32");
-			addLocalVariable(method, "ex", "class [mscorlib]System.Exception");
+			addLocalVariable(method, "ex", $"class {Corlib.Name}System.Exception");
 
 			method.addStatement("ldc.i4.0");
 			method.addStatement("stloc.0");
@@ -2728,7 +2656,7 @@ namespace NDOEnhancer.Patcher
 			method.addStatement("ldarg.1");
 			method.addStatement("brtrue.s   rownotnull");
 			method.addStatement(@"ldstr      ""NDOWrite: DataRow ist null""");
-			method.addStatement("newobj     instance void [mscorlib]System.Exception::.ctor(string)");
+			method.addStatement($"newobj     instance void {Corlib.Name}System.Exception::.ctor(string)");
 			method.addStatement("throw");
 			method.addStatement("rownotnull: ");
 
@@ -2746,15 +2674,15 @@ namespace NDOEnhancer.Patcher
 			fixupElements[1] = new ILStatementElement("ldc.i4.s ##fieldcount");
 			method.addElement(fixupElements[1]);
 			method.addStatement("add");
-			method.addStatement("box        [mscorlib]System.Int32");
+			method.addStatement($"box        {Corlib.Name}System.Int32");
 			method.addStatement("ldarg.2");
 			method.addStatement("ldlen");
 			method.addStatement("conv.i4");
 			method.addStatement("ldc.i4.1");
 			method.addStatement("sub");
-			method.addStatement("box        [mscorlib]System.Int32");
-			method.addStatement("call       string [mscorlib]System.String::Format(string, object, object)");
-			method.addStatement("newobj     instance void [mscorlib]System.Exception::.ctor(string)");
+			method.addStatement($"box        {Corlib.Name}System.Int32");
+			method.addStatement($"call       string {Corlib.Name}System.String::Format(string, object, object)");
+			method.addStatement($"newobj     instance void {Corlib.Name}System.Exception::.ctor(string)");
 			method.addStatement("throw");
 
 			method.addStatement("indexbigger: ");
@@ -2783,7 +2711,7 @@ namespace NDOEnhancer.Patcher
 
 			method.addStatement("leave.s    aftercatch");
 			method.addStatement("}  // end .try");
-			method.addStatement("catch [mscorlib]System.Exception");
+			method.addStatement($"catch {Corlib.Name}System.Exception");
 			method.addStatement("{");
 			method.addStatement("stloc.1");
 			method.addStatement(@"ldstr      ""Error while reading from field """);
@@ -2792,9 +2720,9 @@ namespace NDOEnhancer.Patcher
 			method.addStatement("ldelem.ref");
 			method.addStatement(@"ldstr      ""\n""");
 			method.addStatement("ldloc.1");
-			method.addStatement("callvirt   instance string [mscorlib]System.Exception::get_Message()");
-			method.addStatement("call       string [mscorlib]System.String::Concat(string,string,string,string)");
-			method.addStatement("newobj     instance void [mscorlib]System.Exception::.ctor(string)");
+			method.addStatement($"callvirt   instance string {Corlib.Name}System.Exception::get_Message()");
+			method.addStatement($"call       string {Corlib.Name}System.String::Concat(string,string,string,string)");
+			method.addStatement($"newobj     instance void {Corlib.Name}System.Exception::.ctor(string)");
 			method.addStatement("throw");
 			method.addStatement("}  // end handler");
 
@@ -2887,7 +2815,7 @@ namespace NDOEnhancer.Patcher
 			newMethod.addLine(".method public hidebysig specialname rtspecialname instance void  .ctor() cil managed");
 			newMethod.addElement(new ILMaxstackElement(".maxstack  1", newMethod));
 			newMethod.addElement(new ILStatementElement(ldarg_0));
-			newMethod.addElement(new ILStatementElement("call       instance void [mscorlib]System.Object::.ctor()"));
+			newMethod.addElement(new ILStatementElement($"call       instance void {Corlib.Name}System.Object::.ctor()"));
 			newMethod.addElement(new ILStatementElement("ret"));
 			parent.addElement(newMethod);
 		}
@@ -2897,7 +2825,7 @@ namespace NDOEnhancer.Patcher
 		{
 			ILClassElement newClass = new ILClassElement();
 			newClass.addLine(".class auto ansi nested private beforefieldinit MetaClass " + this.m_classElement.getGenericArguments());
-			newClass.addLine("extends [mscorlib]System.Object");
+			newClass.addLine($"extends {Corlib.Name}System.Object");
 			newClass.addLine("implements [NDO]NDO.IMetaClass");
 			m_classElement.addElement(newClass);
 #if NET11
@@ -2927,7 +2855,7 @@ namespace NDOEnhancer.Patcher
 
 			method.addStatement("ldfld      string "+ qhTypeName + "::__ndoqhname");
 			method.addStatement(@"ldstr      """ + r.CleanName + @".""");
-			method.addStatement("call       string [mscorlib]System.String::Concat(string,string)");
+			method.addStatement($"call       string {Corlib.Name}System.String::Concat(string,string)");
 			method.addStatement("newobj     instance void " + refType + "/QueryHelper::.ctor(string)");
 			method.addStatement("stfld      class " + refType + "/QueryHelper " + qhTypeName + "::" + getAccName("__", r.Name));
 			method.addStatement("IL_0023: " + ldarg_0);
@@ -2967,7 +2895,7 @@ namespace NDOEnhancer.Patcher
 			method.addStatement(ldarg_0);
 			method.addStatement("ldfld      string " + qhTypeName + "::__ndoqhname");
 			method.addStatement(@"ldstr      """ + f.CleanName + @"""");
-			method.addStatement("call       string [mscorlib]System.String::Concat(string,string)");
+			method.addStatement($"call       string {Corlib.Name}System.String::Concat(string,string)");
 			method.addStatement("ret");
 			newClass.addElement(method);
 
@@ -2995,7 +2923,7 @@ namespace NDOEnhancer.Patcher
 			methEl.addStatement(ldarg_0);
 			methEl.addStatement("ldfld      string " + vtFullName + "::__ndoqhname");
 			methEl.addStatement(@"ldstr """ + subField.CleanName + @"""");
-			methEl.addStatement("call       string [mscorlib]System.String::Concat(string, string)");
+			methEl.addStatement($"call       string {Corlib.Name}System.String::Concat(string, string)");
 			methEl.addStatement("ret");
 			valType.addElement(methEl);
 
@@ -3048,10 +2976,10 @@ namespace NDOEnhancer.Patcher
 			toString.addStatement(ldarg_0);
 			toString.addStatement("ldfld      string " + qhTypeName + "::__ndoqhname");
 
-			toString.addStatement("ldsfld     string [mscorlib]System.String::Empty");
-			toString.addStatement("call       bool [mscorlib]System.String::op_Equality(string, string)");
+			toString.addStatement($"ldsfld     string {Corlib.Name}System.String::Empty");
+			toString.addStatement($"call       bool {Corlib.Name}System.String::op_Equality(string, string)");
 			toString.addStatement("brfalse.s  notEmpty");
-			toString.addStatement("ldsfld     string [mscorlib]System.String::Empty");
+			toString.addStatement($"ldsfld     string {Corlib.Name}System.String::Empty");
 			toString.addStatement("stloc.0");
 			toString.addStatement("br.s       exit");
 			toString.addStatement("notEmpty:  ldarg.0");
@@ -3059,10 +2987,10 @@ namespace NDOEnhancer.Patcher
 			toString.addStatement("ldc.i4.0");
 			toString.addStatement(ldarg_0);
 			toString.addStatement("ldfld      string " + qhTypeName + "::__ndoqhname");
-			toString.addStatement("callvirt   instance int32 [mscorlib]System.String::get_Length()");
+			toString.addStatement($"callvirt   instance int32 {Corlib.Name}System.String::get_Length()");
 			toString.addStatement("ldc.i4.1");
 			toString.addStatement("sub");
-			toString.addStatement("callvirt   instance string [mscorlib]System.String::Substring(int32,int32)");
+			toString.addStatement($"callvirt   instance string {Corlib.Name}System.String::Substring(int32,int32)");
 			toString.addStatement("stloc.0");
 			toString.addStatement("exit:  ldloc.0");
 			toString.addStatement("ret");
@@ -3078,7 +3006,7 @@ namespace NDOEnhancer.Patcher
 			strCtor.addLine("instance void  .ctor(string n) cil managed");
 			strCtor.addStatement(".maxstack  4");
 			strCtor.addStatement(ldarg_0);
-			string s1 = "call       instance void [mscorlib]System.Object::.ctor()";
+			string s1 = $"call       instance void {Corlib.Name}System.Object::.ctor()";
 			string s2 = "call       instance void " + qhTypeName + "::InitQhelper()";
 			strCtor.addStatement(s1);
 			strCtor.addStatement(ldarg_0);
@@ -3095,7 +3023,7 @@ namespace NDOEnhancer.Patcher
 			emptyCtor.addStatement(ldarg_0);
 			emptyCtor.addStatement(s2);
 			emptyCtor.addStatement(ldarg_0);
-			emptyCtor.addStatement("ldsfld     string [mscorlib]System.String::Empty");
+			emptyCtor.addStatement($"ldsfld     string {Corlib.Name}System.String::Empty");
 			emptyCtor.addStatement("stfld      string " + qhTypeName + "::__ndoqhname");
 
 			newClass.addElement(strCtor);
@@ -3137,7 +3065,7 @@ namespace NDOEnhancer.Patcher
 					string vtName = this.getAccName("ndo" + r.Next().ToString(), f.Name);					
 					string vtFullName = m_name + "/QueryHelper/" + vtName;
 					valType.addLine(".class sequential ansi sealed nested public beforefieldinit " + vtName);
-					valType.addLine("extends [mscorlib]System.ValueType");
+					valType.addLine($"extends {Corlib.Name}System.ValueType");
 
 					// Konstruktor für den ValueType
 					ILMethodElement vtCtor = new ILMethodElement();
@@ -3156,8 +3084,8 @@ namespace NDOEnhancer.Patcher
 					vtToString.addStatement(ldarg_0);
 					vtToString.addStatement("ldfld      string " + vtFullName + "::__ndoqhname");
 					vtToString.addStatement(@"ldstr      "" Use members of that type instead.""");
-					vtToString.addStatement("call       string [mscorlib]System.String::Concat(string, string, string)");
-					vtToString.addStatement("newobj     instance void [mscorlib]System.Exception::.ctor(string)");
+					vtToString.addStatement($"call       string {Corlib.Name}System.String::Concat(string, string, string)");
+					vtToString.addStatement($"newobj     instance void {Corlib.Name}System.Exception::.ctor(string)");
 					vtToString.addStatement("throw");
 
 					// Aufruf des Konstruktors des Value Types
@@ -3165,7 +3093,7 @@ namespace NDOEnhancer.Patcher
 					strCtor.addStatement("ldflda     valuetype " + vtFullName + " " + qhTypeName + "::" + f.Name);
 					strCtor.addStatement(ldarg_1);
 					strCtor.addStatement(@"ldstr     """ + f.CleanName + "." + @"""");
-					strCtor.addStatement("call       string [mscorlib]System.String::Concat(string,string)");
+					strCtor.addStatement($"call       string {Corlib.Name}System.String::Concat(string,string)");
 					strCtor.addStatement("call       instance void " + vtFullName + "::.ctor(string)");
 					emptyCtor.addStatement(ldarg_0);
 					emptyCtor.addStatement("ldflda     valuetype " + vtFullName + " " + qhTypeName + "::" + f.Name);
@@ -3177,7 +3105,7 @@ namespace NDOEnhancer.Patcher
 					// Vorwärtsdeklaration für den Value Type
 					ILClassElement fwdValType = new ILClassElement();
 					fwdValType.addLine(".class sequential ansi sealed nested public beforefieldinit " + vtName);
-					fwdValType.addLine("extends [mscorlib]System.ValueType");
+					fwdValType.addLine($"extends {Corlib.Name}System.ValueType");
 					fwdQhElement.addElement(fwdValType);
 #endif
 					newClass.addElement(new ILFieldElement(".field public valuetype " + vtFullName + " " + f.Name));
@@ -3210,7 +3138,7 @@ namespace NDOEnhancer.Patcher
 			nestedClass.setForwardClassElement(addQueryHelperForwardDecl());
 #endif
 			nestedClass.addLine(".class auto ansi nested public beforefieldinit QueryHelper " + m_classElement.getGenericArguments());
-			nestedClass.addLine("extends [mscorlib]System.Object");
+			nestedClass.addLine($"extends {Corlib.Name}System.Object");
 			m_classElement.addElement(nestedClass);
 #if NET11
 			addQueryHelperElements(nestedClass, nestedClass.getForwardClassElement());
@@ -3596,7 +3524,7 @@ namespace NDOEnhancer.Patcher
 				else if (tn.StartsWith(classPrefix)) 
 					tn = tn.Substring(6);
 				tn = tn.Trim();
-				if (tn.StartsWith("[mscorlib]"))
+				if (tn.StartsWith($"{Corlib.Name}"))
 					tn = tn.Substring(10).Trim();
 				if (!tn.StartsWith("["))
 					return tn;

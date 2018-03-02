@@ -21,11 +21,12 @@
 
 
 using System;
-using System.Text;
+using System.Linq;
 using System.Collections;
 using System.Reflection;
 using NDO;
 using NDO.Mapping;
+using System.Runtime.Versioning;
 
 namespace NDOEnhancer
 {
@@ -71,6 +72,7 @@ namespace NDOEnhancer
 			get { return fullName; }
 		}
 
+		public string TargetFramework { get; set; }
 
 	
 		ArrayList analyzedTypes = new ArrayList();
@@ -102,6 +104,7 @@ namespace NDOEnhancer
 		private bool IsPersistentType(Type t)
 		{
 			return t.GetCustomAttributes(typeof(NDOPersistentAttribute), false).Length > 0;
+			//return t.GetCustomAttributes( false ).Any( ca => ca.GetType().Name == "NDOPersistentAttribute" );
 		}
 
 
@@ -137,6 +140,7 @@ namespace NDOEnhancer
 			object[] attrs = ass.GetCustomAttributes(false);
 			this.isEnhanced = (HasEnhancedAttribute(attrs));
 			this.oidTypeName = GetOidTypeNameFromAttributes(attrs);
+			DetermineTargetFramework( attrs );
 		}
 
 		private string GetOidTypeNameFromAttributes(object[] attributes)
@@ -163,6 +167,19 @@ namespace NDOEnhancer
 				}
 			}			
 			return false;
+		}
+
+		private void DetermineTargetFramework( object[] attributes )
+		{
+			foreach (System.Attribute attr in attributes)
+			{
+				if (attr.GetType().Name == "TargetFrameworkAttribute")
+				{
+					this.TargetFramework = ((TargetFrameworkAttribute)attr).FrameworkName;
+					return;
+				}
+			}
+			this.TargetFramework = "Unknown";
 		}
 
 	}

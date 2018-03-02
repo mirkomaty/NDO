@@ -136,22 +136,22 @@ namespace NDOEnhancer
 
         void CheckNDO(Assembly ass)
         {
-            AssemblyName[] references = ass.GetReferencedAssemblies();
-            NDOAssemblyName refAn = null;
-            foreach (AssemblyName an in references)
-            {
-                if (an.Name == "NDO")
-                    refAn = new NDOAssemblyName(an.FullName);
-			}
-            if (refAn == null)
-                return;
-            NDOAssemblyName ndoAn = new NDOAssemblyName(typeof(NDOPersistentAttribute).Assembly.FullName);  // give us the NDO version the enhancer belongs to
-			Version refVersion = refAn.AssemblyVersion;
-			bool isRightVersion = refVersion.Major > 2 || refVersion.Major == 2 && refVersion.Minor >= 1;
-            if (refAn.PublicKeyToken != ndoAn.PublicKeyToken || !isRightVersion)
-            {
-                throw new Exception("Assembly " + ass.FullName + " references a wrong NDO.dll. Expected: " + ndoAn.FullName + ". Found: " + refAn.FullName + ".");
-            }
+   //         AssemblyName[] references = ass.GetReferencedAssemblies();
+   //         NDOAssemblyName refAn = null;
+   //         foreach (AssemblyName an in references)
+   //         {
+   //             if (an.Name == "NDO")
+   //                 refAn = new NDOAssemblyName(an.FullName);
+			//}
+   //         if (refAn == null)
+   //             return;
+   //         NDOAssemblyName ndoAn = new NDOAssemblyName(typeof(NDOPersistentAttribute).Assembly.FullName);  // give us the NDO version the enhancer belongs to
+			//Version refVersion = refAn.AssemblyVersion;
+			//bool isRightVersion = refVersion.Major > 2 || refVersion.Major == 2 && refVersion.Minor >= 1;
+   //         if (refAn.PublicKeyToken != ndoAn.PublicKeyToken || !isRightVersion)
+   //         {
+   //             throw new Exception("Assembly " + ass.FullName + " references a wrong NDO.dll. Expected: " + ndoAn.FullName + ". Found: " + refAn.FullName + ".");
+   //         }   
         }
 
 
@@ -230,7 +230,7 @@ namespace NDOEnhancer
 				bool ownAssembly = (string.Compare(dllPath, binFile, true) == 0);
 				AssemblyNode assemblyNode = null;
                 CheckNDO(ass);
-				//############## searcher neu #####################
+
 				try
 				{
 					assemblyNode = new AssemblyNode(ass, this.mappings);
@@ -242,13 +242,16 @@ namespace NDOEnhancer
                     else
 				    	messages.ShowError("Error while reflecting types of assembly " + dllPath + ". " + ex.Message);
 				}
+
 				if (ownAssembly)
 				{
 					ownClassList = assemblyNode.PersistentClasses;
 					this.isEnhanced = assemblyNode.IsEnhanced;
 					this.oidTypeName = assemblyNode.OidTypeName;
 					this.ownAssemblyName = assName;
+					Corlib.FxType = assemblyNode.TargetFramework == ".NETStandard,Version=v2.0" ? FxType.Standard2 : FxType.NetFx;
 				}
+
 				ArrayList classList = assemblyNode.PersistentClasses;
 				foreach(ClassNode classNode in classList)
 				{

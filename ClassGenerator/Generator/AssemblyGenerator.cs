@@ -161,6 +161,10 @@ namespace Generator
 					continue;
 				if (tn.Table.Skipped)
 					continue;
+				if (tn.Table.MappingType == TableMappingType.NotMapped)
+					continue;
+				if (!tn.UserData.ContainsKey( "cunit" ))
+					continue;
 				CodeCompileUnit cunit = (CodeCompileUnit) tn.UserData["cunit"];
 				string fileName = (string) tn.UserData["filename"];
 

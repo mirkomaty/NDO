@@ -43,17 +43,17 @@ namespace NDOEnhancer
 		static ListAccessManipulator()
 		{
 			functions = new Hashtable(11);
-			functions.Add("AddRange", "AddRange(object,class [mscorlib]System.Collections.IEnumerable,class [mscorlib]System.Collections.Hashtable)");
-			functions.Add("InsertRange", "InsertRange(object,int32,class [mscorlib]System.Collections.IEnumerable,class [mscorlib]System.Collections.Hashtable)");
-			functions.Add("RemoveRange", "RemoveRange(object,int32,int32,class [mscorlib]System.Collections.Hashtable)");
-			functions.Add("SetRange", "SetRange(object,int32,class [mscorlib]System.Collections.ICollection,class [mscorlib]System.Collections.Hashtable)");
-			functions.Add("Add", "Add(object,object,class [mscorlib]System.Collections.Hashtable)");
-			functions.Add("Clear", "Clear(object,class [mscorlib]System.Collections.Hashtable)");
-			functions.Add("Insert", "Insert(object,int32,object,class [mscorlib]System.Collections.Hashtable)");
-			functions.Add("RemoveAt", "RemoveAt(object,int32,class [mscorlib]System.Collections.Hashtable)");
-			functions.Add("Remove", "Remove(object,object,class [mscorlib]System.Collections.Hashtable)");
-			functions.Add("set_Item", "SetItem(object,int32,object,class [mscorlib]System.Collections.Hashtable)");
-            functions.Add("RemoveAll", "RemoveAll(object,class [mscorlib]System.Delegate,class [mscorlib]System.Collections.Hashtable)");
+			functions.Add("AddRange", $"AddRange(object,class {Corlib.Name}System.Collections.IEnumerable,class {Corlib.Name}System.Collections.Hashtable)");
+			functions.Add("InsertRange", $"InsertRange(object,int32,class {Corlib.Name}System.Collections.IEnumerable,class {Corlib.Name}System.Collections.Hashtable)");
+			functions.Add("RemoveRange", $"RemoveRange(object,int32,int32,class {Corlib.Name}System.Collections.Hashtable)");
+			functions.Add("SetRange", $"SetRange(object,int32,class {Corlib.Name}System.Collections.ICollection,class {Corlib.Name}System.Collections.Hashtable)");
+			functions.Add("Add", $"Add(object,object,class {Corlib.Name}System.Collections.Hashtable)");
+			functions.Add("Clear", $"Clear(object,class {Corlib.Name}System.Collections.Hashtable)");
+			functions.Add("Insert", $"Insert(object,int32,object,class {Corlib.Name}System.Collections.Hashtable)");
+			functions.Add("RemoveAt", $"RemoveAt(object,int32,class {Corlib.Name}System.Collections.Hashtable)");
+			functions.Add("Remove", $"Remove(object,object,class {Corlib.Name}System.Collections.Hashtable)");
+			functions.Add("set_Item", $"SetItem(object,int32,object,class {Corlib.Name}System.Collections.Hashtable)");
+            functions.Add("RemoveAll", $"RemoveAll(object,class {Corlib.Name}System.Delegate,class {Corlib.Name}System.Collections.Hashtable)");
 		}
 
 		public bool Manipulate(Hashtable reflectors, ILStatementElement statementElement)

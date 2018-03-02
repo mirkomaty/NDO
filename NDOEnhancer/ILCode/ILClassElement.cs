@@ -24,6 +24,7 @@ using System;
 using System.Diagnostics;
 using System.Collections;
 using System.Collections.Generic;
+using NDOEnhancer;
 
 namespace ILCode
 {
@@ -248,9 +249,9 @@ namespace ILCode
 				m_baseFullName = line.Substring( 7 );	//extends has 7 chars
 				m_baseFullName = stripComment( m_baseFullName );
 
-				if ( m_baseFullName.Equals( "[mscorlib]System.ValueType" ) )
+				if ( m_baseFullName.Equals( $"{Corlib.Name}System.ValueType" ) )
 					m_isValueType = true;
-				else if ( m_baseFullName.Equals( "[mscorlib]System.Enum" ) )
+				else if ( m_baseFullName.Equals( $"{Corlib.Name}System.Enum" ) )
 					m_isEnum = true;
 			}
 
