@@ -169,7 +169,7 @@ namespace NDOEnhancer
 					if (0 != field.Column.Size && !field.Column.IgnoreColumnSizeInDDL)
 					{
 						int dl = field.Column.Size;
-						if (dl == -1 && dc.DataType == typeof( string ))
+						if (dl == -1)
 							width = "max";
 						else
 							width = dl.ToString();
@@ -205,7 +205,7 @@ namespace NDOEnhancer
 				int dl = provider.GetDefaultLength(dc.DataType);
 				if (dl != 0)
 				{
-					if (dl == -1 && dc.DataType == typeof( string ))
+					if (dl == -1)
 						width = "max";
 					else
 						width = dl.ToString();
