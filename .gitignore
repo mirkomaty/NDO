@@ -14,3 +14,5 @@ TestRunner.ndoproj
 NDO.Sql.log
 *.nupkg
 logs.txt
+.vs
+NDOPackage/Backup

@@ -28,7 +28,7 @@ namespace NDO.Mapping
 {
     public abstract class MappingNode
     {
-        protected MappingNode nodeParent;
+        MappingNode nodeParent;
         Hashtable properties = new Hashtable();
 
         /// <summary>
@@ -94,6 +94,17 @@ namespace NDO.Mapping
             properties.Remove(name);
             this.Changed = true;
         }
+
+		/// <summary>
+		/// Returns the parent of the node.
+		/// </summary>
+		/// <remarks>Note, that the concrete MappingNode classes may have a specialiced Parent property.</remarks>
+		[Browsable(false)]
+		public MappingNode NodeParent
+		{
+			get { return this.nodeParent; }
+			set { this.nodeParent = value; }
+		}
 
         /// <summary>
         /// Gets or sets a property with the given name.

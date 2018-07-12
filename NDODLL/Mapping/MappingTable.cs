@@ -99,9 +99,9 @@ namespace NDO.Mapping
         /// Returns the relation the MappingTable belongs to. 
         /// </summary>
         [Browsable(false)]
-        Relation Parent
+        public Relation Parent
         {
-            get { return (Relation)nodeParent; }
+            get { return (Relation)NodeParent; }
         }
 
         /// <summary>

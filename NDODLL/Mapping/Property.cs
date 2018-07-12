@@ -145,7 +145,7 @@ namespace NDO.Mapping
         /// </summary>
         public override void Remove()
         {
-            nodeParent.RemoveProperty(this.name);
+            NodeParent.RemoveProperty(this.name);
         }
     }
 }

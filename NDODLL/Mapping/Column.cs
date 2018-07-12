@@ -149,7 +149,7 @@ namespace NDO.Mapping
         [Browsable(false)]
         public MappingNode Parent
         {
-            get { return nodeParent; }
+            get { return NodeParent; }
         }
 
         /// <summary>

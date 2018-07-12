@@ -1,4 +1,4 @@
-﻿//
+//
 // Copyright (c) 2002-2016 Mirko Matytschak 
 // (www.netdataobjects.de)
 //

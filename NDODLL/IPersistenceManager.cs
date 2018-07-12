@@ -194,42 +194,7 @@ namespace NDO
 			set;
 		}
 
-
-		/// <summary>
-		/// Create a new Query object. The query will return objects of the given type, selected by the 
-		/// expression.
-		/// </summary>
-		/// <param name="t">Result type</param>
-		/// <param name="expression">NDOql expression - syntax is similar to the where clause of a SQL statement.</param>
-		/// <returns>An object of type Query</returns>
-		Query NewQuery(Type t, string expression);
-
-
-		/// <summary>
-		/// Create a new Query object. The query will return objects of the given type, selected by the 
-		/// expression.
-		/// </summary>
-		/// <param name="t">Result type</param>
-		/// <param name="expression">NDOql expression - syntax is similar to the where clause of a SQL statement.</param>
-		/// <param name="hollow">If true, return objects in hollow state</param>
-		/// <returns>An object of type Query</returns>
-		Query NewQuery(Type t, string expression, bool hollow);
-		
-
-		/// <summary>
-		/// Create a new Query object. The query will return objects of the given type, selected by the 
-		/// expression. A NDOql query expects expressions using field names of the application classes. 
-		/// A SQL query expects expressions with column names of the underlying db. SQL expressions should
-		/// start with 'SELECT *'. The query should return data rows which correspond to objects of the type given in parameter 1. 
-		/// </summary>
-		/// <param name="t">Result type</param>
-		/// <param name="expression">NDOql expression - syntax is similar to the where clause of a SQL statement.</param>
-		/// <param name="hollow">If true, return objects in hollow state</param>
-		/// <param name="queryLanguage">The language of the query - NDOql or SQL.</param>
-		/// <returns>An object of type Query</returns>
-		Query NewQuery(Type t, string expression, bool hollow, Query.Language queryLanguage);
-
-		
+	
 		/// <summary>
 		/// Sets or gets transaction mode. Uses TransactionMode enum.
 		/// </summary>

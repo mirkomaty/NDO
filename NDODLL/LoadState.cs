@@ -36,6 +36,10 @@ namespace NDO
 		BitArray relationLoadState;
 		[NonSerialized]
 		IList lostRowInfo;
+		// We implement the field load state as an internal field instead of an array
+		// for faster access. There is a lot of code using this array.
+		[NonSerialized]
+		internal BitArray FieldLoadState;
 
 		public const int RelationLoadStateSize = 64;
 

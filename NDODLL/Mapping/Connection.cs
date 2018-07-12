@@ -136,7 +136,7 @@ namespace NDO.Mapping
         [Browsable(false)]
         public NDOMapping Parent
         {
-            get { return nodeParent as NDOMapping; }
+            get { return NodeParent as NDOMapping; }
             //			set { parent = value; }
         }
 

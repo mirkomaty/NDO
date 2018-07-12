@@ -23,6 +23,7 @@
 using System;
 using System.Text;
 using NDOInterfaces;
+using NDO.Mapping;
 
 namespace NDO
 {
@@ -31,6 +32,16 @@ namespace NDO
 	/// </summary>
 	internal class QualifiedTableName
 	{
+		public static string Get(Class cls)
+		{
+			return Get( cls.TableName, cls.Provider );
+		}
+
+		public static string Get(MappingTable mappingTable)
+		{
+			return Get( mappingTable.TableName, mappingTable.Parent.Parent.Provider );
+		}
+
 		public static string Get(string name, IProvider p)
 		{
 			if (name.IndexOf('.') == -1)

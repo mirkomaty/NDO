@@ -1,4 +1,4 @@
-ï»¿//
+//
 // Copyright (c) 2002-2016 Mirko Matytschak 
 // (www.netdataobjects.de)
 //
@@ -41,6 +41,7 @@ using NDOInterfaces;
 using NDO.ShortId;
 using System.Globalization;
 using NDO.Linq;
+using NDO.Query;
 
 namespace NDO 
 {
@@ -653,7 +654,7 @@ namespace NDO
 					mappings.SetRelationContainer(relObj, r.ForeignRelation, l);
 				}
 				// Hack: Es sollte erst gar nicht zu diesem Aufruf kommen.
-				// ZusÃ¤tzlicher Funktions-Parameter addObjectToList oder so.
+				// Zusätzlicher Funktions-Parameter addObjectToList oder so.
 				if (!ObjectListManipulator.Contains(l, pc))
 					l.Add(pc);
 			}
@@ -702,7 +703,8 @@ namespace NDO
 					&& GetClass(pc).Oid.HasAutoincrementedColumn
 					&& !relClass.HasGuidOid)
 				{
-					if (pc.NDOObjectState == NDOObjectState.Created && (relObj.NDOObjectState == NDOObjectState.Created || relObj.NDOObjectState == NDOObjectState.Transient))
+#warning Testcase!!!! // Das war vorher so: if (pc.NDOObjectState == NDOObjectState.Created && (relObj.NDOObjectState == NDOObjectState.Created || relObj.NDOObjectState == NDOObjectState.Transient))
+					if (pc.NDOObjectState == NDOObjectState.Created )  //TODO: Überprüfen!!!!
 						throw new NDOException(61, "Can't assign object of type " + relObj + " to relation " + pc.GetType().FullName + "." + r.FieldName + ". The parent object must be saved in an own transaction to retrieve the Id first. As an alternative you can use client generated Id's or a mapping table.");
 					if (r.Composition)
 						throw new NDOException(62, "Can't assign object of type " + relObj + " to relation " + pc.GetType().FullName + "." + r.FieldName + ". Can't handle a polymorphic composite relation with cardinality 1 with autonumbered id's. Use a mapping table or client generated id's.");
@@ -984,7 +986,7 @@ namespace NDO
 								if (l == null)
 									throw new NDOException(67, "Can't remove object from the list " + relObj.GetType().FullName + "." + r.FieldName + ". The list is null.");
 								l.Remove(pc);
-								//TODO: prÃ¼fen: ist das wirklich nÃ¶tig?
+								//TODO: prüfen: ist das wirklich nötig?
 								//mappings.SetRelationContainer(relObj, r.ForeignRelation, l);
 							}
 						}
@@ -1473,12 +1475,8 @@ namespace NDO
 		{
 			Regex regex = new Regex( @"ndodiff\.(.+)\.xml" );
 			Match match = regex.Match( fn1 );
-			if (!match.Success)
-				return fn1.CompareTo( fn2 );
 			string v1 = match.Groups[1].Value;
 			match = regex.Match( fn2 );
-			if (!match.Success)
-				return fn1.CompareTo( fn2 );
 			string v2 = match.Groups[1].Value;
 			return new Version( v2 ).CompareTo( new Version( v1 ) );
 		}
@@ -1488,7 +1486,7 @@ namespace NDO
 			IProvider provider = this.mappings.GetProvider( ndoConn );
 			TransactionInfo ti = transactionTable[ndoConn];
 			IDbConnection connection = ti.Connection;
-			string version = "0.0";  // Initial value - must have at least 1 period
+			string version = "0";  // Initial value
 			connection.Open();
 			using (connection)
 			{
@@ -1547,17 +1545,7 @@ namespace NDO
 			XElement transitionElements = XElement.Load( scriptFile );
 			if (transitionElements.Attribute( "schemaName" ) != null)
 				schemaName = transitionElements.Attribute( "schemaName" ).Value;
-			Version version = new Version();
-			string schemaVersion = GetSchemaVersion( ndoConn, schemaName );
-			try
-			{
-				version = new Version( schemaVersion );
-			}
-			catch (Exception ex)
-			{
-				throw new Exception( ex.Message + " '" + schemaVersion + "'" );
-			}
-			
+			Version version = new Version( GetSchemaVersion( ndoConn, schemaName ) );
 			SchemaTransitionGenerator schemaTransitionGenerator = new SchemaTransitionGenerator( NDOProviderFactory.Instance.Generators[ndoConn.Type], this.mappings );
 			MemoryStream ms = new MemoryStream();
 			StreamWriter sw = new StreamWriter(ms, System.Text.Encoding.UTF8);
@@ -1689,7 +1677,7 @@ namespace NDO
 		}
 
         /// <summary>
-        /// Load the fetch group for a specific field. Per default LoadData will be called.
+        /// Check, if the specific field is loaded. If not, LoadData will be called.
         /// </summary>
         /// <param name="o">The parent object.</param>
         /// <param name="fieldOrdinal">A number to identify the field.</param>
@@ -1697,7 +1685,19 @@ namespace NDO
         {
             IPersistenceCapable pc = CheckPc(o);
             if (pc.NDOObjectState == NDOObjectState.Hollow)
+			{
+				LoadState ls = pc.NDOLoadState;
+				if (ls.FieldLoadState != null)
+				{
+					if (ls.FieldLoadState[fieldOrdinal])
+						return;
+				}
+				else
+				{
+					ls.FieldLoadState = new BitArray( GetClass( pc ).Fields.Count() );
+				}
                 LoadData(o);
+        }
         }
 
 #pragma warning disable 419
@@ -1714,7 +1714,7 @@ namespace NDO
 			if (pc.NDOObjectState != NDOObjectState.Hollow)
 				return;
 			Class cl = GetClass(pc);
-			Query q;
+			IQuery q;
 			if (cl.Oid.IsDependent)
 			{
 				q = CreateDependentOidQuery(pc, cl);
@@ -1740,17 +1740,17 @@ namespace NDO
 		}
 
 
-        private Query CreateIndependentOidQuery(IPersistenceCapable pc, Class cl)
+        private NDOQuery<RT> CreateIndependentOidQuery<RT>(RT pc, Class cl) where RT:IPersistenceCapable
         {
             ArrayList parameters = new ArrayList();
 			string oql = "oid = {0}";
-			Query q = this.NewQuery(pc.GetType(), oql, false);
+			NDOQuery<RT> q = new NDOQuery<RT>(this, oql, false);
 			q.Parameters.Add( pc.NDOObjectId );
 			q.AllowSubclasses = false;
             return q;
         }
 
-		private Query CreateDependentOidQuery(IPersistenceCapable pc, Class cl)
+		private NDOQuery<RT> CreateDependentOidQuery<RT>(RT pc, Class cl) where RT: IPersistenceCapable
 		{
             // For an explanation the structure of the data contained in keys 
             // look at the DependentKey constructor.
@@ -1758,7 +1758,7 @@ namespace NDO
 			IProvider provider = cl.Provider;
             StringBuilder sb = new StringBuilder();
             sb.Append("SELECT ");
-            sb.Append(Query.FieldMarker);
+            sb.Append(FieldMarker.Instance);
             sb.Append(" from ");
             sb.Append(QualifiedTableName.Get(cl.TableName, provider));
             sb.Append(" WHERE ");
@@ -1774,7 +1774,7 @@ namespace NDO
             {
                 OidColumn oidColumn = (OidColumn)cl.Oid.OidColumns[i];
                 sb.Append(provider.GetQuotedName(oidColumn.Name));
-                sb.Append(Query.Op.Eq);
+                sb.Append(" = ");
                 sb.Append(provider.GetSqlLiteral(key[i]));
                 Relation rel = oidColumn.Relation;
                 if (relationName != oidColumn.RelationName)
@@ -1782,48 +1782,20 @@ namespace NDO
                     relationName = oidColumn.RelationName;
                     if (rel.ForeignKeyTypeColumnName != null)
                     {
-                        sb.Append(Query.Op.And);
+                        sb.Append(" AND ");
                         sb.Append(provider.GetQuotedName(rel.ForeignKeyTypeColumnName));
-                        sb.Append(Query.Op.Eq);
+                        sb.Append(" = ");
                         sb.Append(provider.GetSqlLiteral(key[columnCount + relationIndex]));
                         relationIndex++;
                     }
                 }
                 if (i < columnCount - 1)
-                    sb.Append(Query.Op.And);
+                    sb.Append(" AND ");
             }
 
-            Query q = this.NewQuery(pc.GetType(), sb.ToString(), false, Query.Language.Sql);
+            NDOQuery<RT> q = new NDOQuery<RT>(this, sb.ToString(), false, QueryLanguage.Sql);
             return q;
-
-            /*
-                        // need to create a sql pass through
-                        MultiKeyHandler dkh = new MultiKeyHandler(cl);
-                        IProvider provider = cl.Provider;
-                        object[] keydata = ((MultiKey)pc.NDOObjectId.Id).Key;
-                        string sql = "SELECT " + Query.FieldMarker + " from " + QualifiedTableName.Get(cl.TableName, provider) 
-                            + " WHERE " 
-                            + provider.GetQuotedName(dkh.ForeignKeyColumnName(0)) + Query.Op.Eq 
-                            + provider.GetSqlLiteral(keydata[0])
-                            + Query.Op.And
-                            + provider.GetQuotedName(dkh.ForeignKeyColumnName(1)) + Query.Op.Eq 
-                            + provider.GetSqlLiteral(keydata[2]);
-                        if (dkh.ForeignKeyTypeColumnName(0) != null)
-                        {
-                            sql += Query.Op.And
-                                + provider.GetQuotedName(dkh.ForeignKeyTypeColumnName(0)) + Query.Op.Eq
-                                + provider.GetSqlLiteral(keydata[1]);
                         }
-                        if (dkh.ForeignKeyTypeColumnName(1) != null)
-                        {
-                            sql += Query.Op.And
-                                + provider.GetQuotedName(dkh.ForeignKeyTypeColumnName(1)) + Query.Op.Eq
-                                + provider.GetSqlLiteral(keydata[3]);
-                        }
-                        Query q = this.NewQuery(pc.GetType(), sql, false, Query.Language.Sql);
-                        return q;
-             */
-		}
 
 		/// <summary>
 		/// Mark the object dirty. The current state is
@@ -2035,28 +2007,28 @@ namespace NDO
             // We can use the table name of cl, because, if we are at this point, we know,
             // that the target type is not polymorphic.
 
+#warning !!!! QueryRelatedObjects: Query mit Oid als Parameter implementieren  !!!!
+			//IProvider provider = mappings.GetProvider(cl);
 
-			IProvider provider = mappings.GetProvider(cl);
+			//string oql = string.Empty;
+			//int i = 0;
+			//new ForeignKeyIterator(r).Iterate(delegate(ForeignKeyColumn fkColumn, bool isLastElement)
+			//{
+			//	oql += QualifiedTableName.Get(cl.TableName + "." + fkColumn.Name, provider) + "=" + provider.GetSqlLiteral(pc.NDOObjectId.Id[i]);
+			//	if (!isLastElement)
+			//		oql += OldQuery.Op.And;
+			//	i++;
+			//});
+			//if (!(String.IsNullOrEmpty(r.ForeignKeyTypeColumnName)))
+			//{
+			//	oql += OldQuery.Op.And + QualifiedTableName.Get(cl.TableName + "." + r.ForeignKeyTypeColumnName, provider) + OldQuery.Op.Eq + pc.NDOObjectId.Id.TypeId;
+			//}
 
-            string oql = string.Empty;
-            int i = 0;
-            new ForeignKeyIterator(r).Iterate(delegate(ForeignKeyColumn fkColumn, bool isLastElement)
-            {
-                oql += QualifiedTableName.Get(cl.TableName + "." + fkColumn.Name, provider) + "=" + provider.GetSqlLiteral(pc.NDOObjectId.Id[i]);
-                if (!isLastElement)
-                    oql += Query.Op.And;
-                i++;
-            });
-            if (!(String.IsNullOrEmpty(r.ForeignKeyTypeColumnName)))
-            {
-                oql += Query.Op.And + QualifiedTableName.Get(cl.TableName + "." + r.ForeignKeyTypeColumnName, provider) + Query.Op.Eq + pc.NDOObjectId.Id.TypeId;
-            }
-
-			Query q = NewQuery(t, oql, hollow, (Query.Language) Query.LoadRelations);
-			q.AllowSubclasses = false;  // Remember: polymorphic relations always have a mapping table
-			IList l2 = q.Execute();
-			foreach(object o in l2)
-				relatedObjects.Add(o);
+			//OldQuery q = NewQuery(t, oql, hollow, (OldQuery.Language) OldQuery.LoadRelations);
+			//q.AllowSubclasses = false;  // Remember: polymorphic relations always have a mapping table
+			//IList l2 = q.Execute();
+			//foreach(object o in l2)
+			//	relatedObjects.Add(o);
 			return relatedObjects;
 		}
 
@@ -2894,7 +2866,7 @@ namespace NDO
 				foreach(TransactionInfo ti in transactionTable)
 				{
 					// Transaktionen werden mit Save() beendet.
-					// Da wÃ¤hrend Save() Callbacks passieren,
+					// Da während Save() Callbacks passieren,
 					// geben wir hier die Gelegenheit, Transaktionen abzubrechen.
 					if (ti.Transaction != null)
 					{
@@ -3122,14 +3094,14 @@ namespace NDO
                     MakeObjectTransient(pc, true);
                     break;
 				case NDOObjectState.Persistent:
-					if (!cache.IsLocked(pc)) // Deletes kÃ¶nnen durchaus mehrmals aufgerufen werden
+					if (!cache.IsLocked(pc)) // Deletes können durchaus mehrmals aufgerufen werden
 						SaveObjectState(pc);
 					row = cache.GetDataRow(pc);
 					row.Delete();
 					pc.NDOObjectState = NDOObjectState.Deleted;
 					break;
 				case NDOObjectState.Hollow:
-					if (!cache.IsLocked(pc)) // Deletes kÃ¶nnen durchaus mehrmals aufgerufen werden
+					if (!cache.IsLocked(pc)) // Deletes können durchaus mehrmals aufgerufen werden
 						SaveFakeRow(pc);
 					row = cache.GetDataRow(pc);
 					row.Delete();
@@ -3749,9 +3721,10 @@ namespace NDO
 		/// <remarks>Subclasses of the given type are not fetched.</remarks>
 		public virtual IList GetClassExtent(Type t, bool hollow) 
 		{
-			//return Query(t, null, hollow);
-			Query q = this.NewQuery(t, null, hollow);
-			q.AllowSubclasses = false;
+#warning Hier Virtual Table zurückgeben
+			Type template = typeof( NDOQuery<IPersistenceCapable> ).GetGenericTypeDefinition();
+			Type queryType = template.MakeGenericType( t );
+			IQuery q = (IQuery) Activator.CreateInstance( queryType, this );
 			return q.Execute();
 		}
 
@@ -3759,76 +3732,19 @@ namespace NDO
 
 		#region Query engine
 
-		/// <summary>
-		/// Create a new Query object. The query will return all objects of the given type.
-		/// </summary>
-		/// <param name="t">Result type</param>
-		/// <returns>An object of type Query</returns>
-		public virtual Query NewQuery(Type t) 
-		{
-			return NewQuery(t, null, false);
-		}
-
-
-		/// <summary>
-		/// Create a new Query object. The query will return objects of the given type, selected by the 
-		/// expression.
-		/// </summary>
-		/// <param name="t">Result type</param>
-		/// <param name="expression">NDOql expression - syntax is similar to the where clause of a SQL statement.</param>
-		/// <returns>An object of type Query</returns>
-		public virtual Query NewQuery(Type t, string expression) 
-		{
-			return NewQuery(t, expression, false);
-		}
 
 		/// <summary>
 		/// Returns a virtual table for Linq queries.
 		/// </summary>
 		/// <typeparam name="T"></typeparam>
 		/// <returns></returns>
-		public VirtualTable<T> Objects<T>()
+		public VirtualTable<T> Objects<T>() where T: IPersistenceCapable
 		{
 			return new VirtualTable<T>( this );
 		}
 
-		/// <summary>
-		/// Create a new Query object. The query will return objects of the given type, selected by the 
-		/// expression.
-		/// </summary>
-		/// <param name="t">Result type</param>
-		/// <param name="expression">NDOql expression - syntax is similar to the where clause of a SQL statement.</param>
-		/// <param name="hollow">If true, return objects in hollow state</param>
-		/// <returns>An object of type Query</returns>
-		public virtual Query NewQuery(Type t, string expression, bool hollow) 
-		{
-			Query q = new Query(t, expression, hollow, mappings, NDO.Query.Language.NDOql);
-			q.PersistenceManager = this;
-			return q;
-		}
 		
 		/// <summary>
-		/// Create a new Query object. The query will return objects of the given type, selected by the 
-		/// expression. A NDOql query expects expressions using field names of the application classes. 
-		/// A SQL query expects expressions with column names of the underlying db. SQL expressions should
-		/// start with 'SELECT *'. The query should return data rows which correspond to objects of the type given in parameter 1. 
-		/// </summary>
-		/// <param name="t">Result type</param>
-		/// <param name="expression">NDOql expression - syntax is similar to the where clause of a SQL statement.</param>
-		/// <param name="hollow">If true, return objects in hollow state</param>
-		/// <param name="queryLanguage">The language of the query - NDOql or SQL.</param>
-		/// <returns>An object of type Query</returns>
-		public virtual Query NewQuery(Type t, string expression, bool hollow, Query.Language queryLanguage) 
-		{
-			//			if (queryLanguage == Query.Language.Sql)
-			//				return new SqlQuery(t, expression, hollow);
-			//			else
-			Query q = new Query(t, expression, hollow, mappings, queryLanguage);
-			q.PersistenceManager = this;
-			return q;
-		}
-
-        /// <summary>
         /// Suppose, you had a directed 1:n relation from class A to class B. If you load an object of type B, 
         /// a foreign key pointing to a row in the table A is read as part of the B row. But since B doesn't have
         /// a relation to A the foreign key would get lost if we discard the row after building the B object. To
@@ -3875,9 +3791,9 @@ namespace NDO
 		/// <summary>
 		/// Convert a data table to objects. Note that the table might only hold objects of the specified type.
 		/// </summary>
-		internal IList DataTableToIList(Type t, ICollection rows, bool hollow) 
+		internal List<IPersistenceCapable> DataTableToIList(Type t, ICollection rows, bool hollow) 
 		{
-			IList queryResult = GenericListReflector.CreateList(t, rows.Count);
+			List<IPersistenceCapable> queryResult = new List<IPersistenceCapable>(rows.Count);
             if (rows.Count == 0)
                 return queryResult;
 

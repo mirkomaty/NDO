@@ -1,23 +1,34 @@
-ï»¿//
-// Copyright (c) 2002-2016 Mirko Matytschak 
+#if nix
+//
+// Copyright (C) 2002-2014 Mirko Matytschak 
 // (www.netdataobjects.de)
 //
 // Author: Mirko Matytschak
 //
-// Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated 
-// documentation files (the "Software"), to deal in the Software without restriction, including without limitation 
-// the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the 
-// Software, and to permit persons to whom the Software is furnished to do so, subject to the following 
-// conditions:
-
-// The above copyright notice and this permission notice shall be included in all copies or substantial portions 
-// of the Software.
+// This program is free software; you can redistribute it and/or modify
+// it under the terms of the GNU General Public License (v3) as published by
+// the Free Software Foundation.
 //
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED 
-// TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL 
-// THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF 
-// CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER 
-// DEALINGS IN THE SOFTWARE.
+// If you distribute copies of this program, whether gratis or for 
+// a fee, you must pass on to the recipients the same freedoms that 
+// you received.
+//
+// Commercial Licence:
+// For those, who want to develop software with help of this program 
+// and need to distribute their work with a more restrictive licence, 
+// there is a commercial licence available at www.netdataobjects.de.
+// 
+// The above copyright notice and this permission notice shall be
+// included in all copies or substantial portions of the Software.
+// 
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+// EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+// MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+// NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
+// LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
+// OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
+// WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+//
 
 
 using System;
@@ -32,7 +43,7 @@ using NDOInterfaces;
 namespace NDO
 {
 	/// <summary>
-	/// Zusammenfassung fÃ¼r WherePartGenerator.
+	/// Zusammenfassung für WherePartGenerator.
 	/// </summary>
 	internal class WherePartGenerator
 	{
@@ -78,7 +89,7 @@ namespace NDO
 			// Join - Part
 			string join = string.Empty;
 			// Tabelle die sicherstellt, dass eine Relation nicht 
-			// zweimal berÃ¼cksichtigt wird, zum Beispiel in AND-Konstrukten
+			// zweimal berücksichtigt wird, zum Beispiel in AND-Konstrukten
 			Hashtable relClasses = new Hashtable();
 			foreach (string name in names)
 			{
@@ -458,3 +469,5 @@ namespace NDO
 
 	}
 }
+
+#endif

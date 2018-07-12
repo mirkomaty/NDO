@@ -1,23 +1,35 @@
-ï»¿//
-// Copyright (c) 2002-2016 Mirko Matytschak 
+/*
+
+//
+// Copyright (C) 2002-2014 Mirko Matytschak 
 // (www.netdataobjects.de)
 //
 // Author: Mirko Matytschak
 //
-// Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated 
-// documentation files (the "Software"), to deal in the Software without restriction, including without limitation 
-// the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the 
-// Software, and to permit persons to whom the Software is furnished to do so, subject to the following 
-// conditions:
-
-// The above copyright notice and this permission notice shall be included in all copies or substantial portions 
-// of the Software.
+// This program is free software; you can redistribute it and/or modify
+// it under the terms of the GNU General Public License (v3) as published by
+// the Free Software Foundation.
 //
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED 
-// TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL 
-// THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF 
-// CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER 
-// DEALINGS IN THE SOFTWARE.
+// If you distribute copies of this program, whether gratis or for 
+// a fee, you must pass on to the recipients the same freedoms that 
+// you received.
+//
+// Commercial Licence:
+// For those, who want to develop software with help of this program 
+// and need to distribute their work with a more restrictive licence, 
+// there is a commercial licence available at www.netdataobjects.de.
+// 
+// The above copyright notice and this permission notice shall be
+// included in all copies or substantial portions of the Software.
+// 
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+// EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+// MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+// NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
+// LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
+// OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
+// WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+//
 
 
 using System;
@@ -32,6 +44,7 @@ using System.Collections.Generic;
 using System.Reflection;
 using NDO.Mapping;
 using NDOInterfaces;
+
 
 namespace NDO
 {
@@ -53,18 +66,6 @@ namespace NDO
 		public QueryException(int errorNr, string msg) : base (errorNr, "Query Exception: " + msg)
 		{
 		}
-	}
-
-	internal class QueryInfo
-	{
-		public QueryInfo(Type resultType, string queryString)
-		{
-			this.QueryString = queryString;
-			this.ResultType = resultType;
-		}
-
-		public string QueryString;
-		public Type ResultType;
 	}
 
 
@@ -411,7 +412,7 @@ namespace NDO
 			resultType = rt;
 			//			this.provider = mappings.GetProvider(rt);
 			//			if (provider == null)
-			//				throw new QueryxxException("Kein Provider mit der ID " + conn.Type + " - prÃ¼fen Sie die Connection-Angaben fÃ¼r den Typ " + rt.FullName);
+			//				throw new QueryxxException("Kein Provider mit der ID " + conn.Type + " - prüfen Sie die Connection-Angaben für den Typ " + rt.FullName);
 			this.filter = fi;
 			this.hollowMode = hollow;
 			this.mappings = mappings;
@@ -419,19 +420,6 @@ namespace NDO
 		}
 
 		
-		/*
-			SELECT Teilnehmer.* FROM Teilnehmer, Buchungen where Teilnehmer.Nummer = Buchungen.IDTeilnehmer and Buchungen.EarlyBird = true;			
-			SELECT Buchungen.* FROM Teilnehmer, Buchungen where Teilnehmer.Nummer = Buchungen.IDTeilnehmer and Teilnehmer.TNachname='Zech';
-			SELECT Reise.* FROM Mitarbeiter, Reise where Mitarbeiter.ID = Reise.IDMitarbeiter and Mitarbeiter.Nachname='Heege';
-
-		SELECT Teilnehmer.*
-		FROM Teilnehmer, refTeilnehmerHauptveranstaltungen, Hauptveranstaltungen
-		WHERE (((refTeilnehmerHauptveranstaltungen.IDTeilnehmer)=[Teilnehmer].[Nummer]) AND ((Hauptveranstaltungen.Name)="ADC 2002") AND ((refTeilnehmerHauptveranstaltungen.IDVeranstaltung)=[Hauptveranstaltungen].[IDVeranstaltung]));			
-		*/
-
-
-
-
 		private void CreateQueryContexts(Type t)
 		{
 			ArrayList queryContexts = new QueryContextGenerator(this.pm.GetClass(t), this.names, this.mappings).GetContexts();
@@ -742,22 +730,7 @@ namespace NDO
 				result.Add(orp.Obj);
 			return result;
 		}
-/*
-		void FindPrefetch(Type t, Hashtable prefetches, string name, Stack relations)
-		{
-			string[] parts = name.Split('.');
-			Class cl = this.pm.GetClass(this.resultType);
-			Relation r = cl.FindRelation(parts[0]);
-			relations.Push(r);
-			if (!prefetches.Contains(name))
-				prefetches.Add(name, relations.Clone());			
-			if (parts.Length > 1)
-			{
-				int p = name.IndexOf('.');
-				FindPrefetch(r.ReferencedType, prefetches, name.Substring(p + 1), relations);
-			}
-		}
-*/
+
 
 		Type GetPrefetchResultType(Type t, string relation)
 		{
@@ -889,23 +862,6 @@ namespace NDO
 				MatchRelations(parents, result, o.ToString());
 			}
 			
-
-/*
-			Hashtable serializedPrefetches = new Hashtable();
-			Stack relations = new Stack();
-			foreach(string prefetch in this.prefetches)
-			{
-				FindPrefetch(this.resultType, serializedPrefetches, prefetch, relations);
-			}
-			foreach(DictionaryEntry de in serializedPrefetches)
-			{
-				Stack stack = (Stack) de.Value;
-				for (int i = 0; i < stack.Count; i++)
-				{
-					Relation r = (Relation) stack.Pop();
-				}
-			}
-			*/
 		}
 
 
@@ -937,7 +893,7 @@ namespace NDO
 				}
 			}
 			GetPrefetches(result);
-			this.pm.CheckEndTransaction( ! this.pm.DeferredMode && this.pm.TransactionMode == TransactionMode.Optimistic );
+			this.pm.CheckEndTransaction(false);
 			if (! this.pm.GetClass(resultType).Provider.SupportsFetchLimit)
 			{
 				IList fetchResult = GenericListReflector.CreateList( resultType );
@@ -1022,8 +978,7 @@ namespace NDO
                 query = query.Replace(" DISTINCT", "");
 
 				IPersistenceHandler persistenceHandler = mappings.GetPersistenceHandler(t, this.PersistenceManager.HasOwnerCreatedIds);
-				// Each connection opens it's own transaction here.
-				this.pm.CheckTransaction( persistenceHandler, t );
+				this.pm.CheckTransaction(persistenceHandler, t);
 				// Note, that we can't execute all subQueries in one batch, because
 				// the subqueries could be executed against different connections.
 				IList l = persistenceHandler.ExecuteBatch(new string[]{query}, this.parameters);
@@ -1035,8 +990,8 @@ namespace NDO
 				}
 				i++;					
 			}
-			this.pm.CheckEndTransaction( !this.pm.DeferredMode && this.pm.TransactionMode == TransactionMode.Optimistic );
-			return func.ComputeResult( partResults );
+			this.pm.CheckEndTransaction(false);
+			return func.ComputeResult(partResults);
 
 		}
 
@@ -1398,3 +1353,4 @@ namespace NDO
 
 	}
 }
+*/
