@@ -36,7 +36,7 @@ namespace NDO.Linq
 	/// This class represents a virtual table which allows for Linq queries against the NDO data store.
 	/// </summary>
 	/// <typeparam name="T">The type of the result element class.</typeparam>
-    public class VirtualTable<T> : IEnumerable<T> where T: IPersistenceCapable
+    public class VirtualTable<T> : IEnumerable<T> //where T: IPersistenceCapable
     {
         PersistenceManager pm;
         List<string> prefetches = new List<string>();

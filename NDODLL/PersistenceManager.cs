@@ -3738,7 +3738,7 @@ namespace NDO
 		/// </summary>
 		/// <typeparam name="T"></typeparam>
 		/// <returns></returns>
-		public VirtualTable<T> Objects<T>() where T: IPersistenceCapable
+		public VirtualTable<T> Objects<T>() //where T: IPersistenceCapable
 		{
 			return new VirtualTable<T>( this );
 		}

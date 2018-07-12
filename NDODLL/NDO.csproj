@@ -116,6 +116,12 @@
       <Name>System.XML</Name>
     </Reference>
     <Reference Include="System.Xml.Linq" />
+    <Reference Include="Unity.Abstractions, Version=3.3.0.0, Culture=neutral, PublicKeyToken=6d32ff45e0ccc69f, processorArchitecture=MSIL">
+      <HintPath>packages\Unity.Abstractions.3.3.0\lib\net40\Unity.Abstractions.dll</HintPath>
+    </Reference>
+    <Reference Include="Unity.Container, Version=5.8.6.0, Culture=neutral, PublicKeyToken=489b6accfaf20ef0, processorArchitecture=MSIL">
+      <HintPath>packages\Unity.Container.5.8.6\lib\net40\Unity.Container.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AccessGenerator.cs" />
@@ -143,6 +149,7 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="ClassRank.cs" />
+    <Compile Include="Configuration\NDOContainer.cs" />
     <Compile Include="DependentKey.cs" />
     <Compile Include="DualKey.cs">
       <SubType>Code</SubType>
@@ -464,6 +471,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="ndo_ent.snk" />
+    <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Mapping.Attributes\" />

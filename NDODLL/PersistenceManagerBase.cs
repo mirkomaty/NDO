@@ -31,6 +31,7 @@ using System.Data;
 using NDO.Logging;
 using NDO.Mapping;
 using System.Web;
+using Unity;
 
 namespace NDO
 {
@@ -59,8 +60,10 @@ namespace NDO
 		/// <summary>
 		/// Constructor
 		/// </summary>
-		public PersistenceManagerBase() 
+		public PersistenceManagerBase(UnityContainer container = null) 
 		{
+            if (container == null)
+                container = NDOContainer.
 			Assembly ass = Assembly.GetEntryAssembly();
 
 			if (ass == null)

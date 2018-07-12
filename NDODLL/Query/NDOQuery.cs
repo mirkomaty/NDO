@@ -24,7 +24,7 @@ namespace NDO.Query
 	/// This class manages string based queries in NDOql and Sql
 	/// </summary>
 	/// <typeparam name="T"></typeparam>
-	public class NDOQuery<T> : IQuery where T: IPersistenceCapable
+	public class NDOQuery<T> : IQuery //where T: IPersistenceCapable
 	{
 		private PersistenceManager pm;
 		private string queryExpression;
@@ -529,14 +529,14 @@ namespace NDO.Query
 			return this.Execute();
 		}
 
-		IPersistenceCapable IQuery.ExecuteSingle()
-		{
-			return this.ExecuteSingle();
-		}
+        IPersistenceCapable IQuery.ExecuteSingle()
+        {
+            return (IPersistenceCapable) this.ExecuteSingle();
+        }
 
-		IPersistenceCapable IQuery.ExecuteSingle( bool throwIfResultCountIsWrong )
-		{
-			return this.ExecuteSingle( throwIfResultCountIsWrong );
-		}
-	}
+        IPersistenceCapable IQuery.ExecuteSingle(bool throwIfResultCountIsWrong)
+        {
+            return (IPersistenceCapable) this.ExecuteSingle(throwIfResultCountIsWrong);
+        }
+    }
 }
