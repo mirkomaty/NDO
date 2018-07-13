@@ -26,6 +26,7 @@ using System.Reflection;
 using System.Collections;
 using NUnit.Framework;
 using NDO;
+using NDO.Query;
 using Reisekosten;
 
 namespace NdoUnitTests
@@ -195,7 +196,7 @@ namespace NdoUnitTests
 			l.AddFlughafen(f);
 			pm.Save();
 			pm.UnloadCache();
-			Query q = pm.NewQuery(typeof(Land), null, false);
+			IQuery q = new NDOQuery<Land>(pm, null, false);
 			l = (Land) q.ExecuteSingle(true);
 			Assert.AreEqual(NDOObjectState.Persistent, l.NDOObjectState, "1. Wrong state");
 			Assert.AreEqual(1, l.Flughäfen.Count, "1. Wrong number of objects");
@@ -506,7 +507,7 @@ namespace NdoUnitTests
 		[Test]
 		public void TestLoadRelatedObjects() 
 		{
-			Query q = pm.NewQuery(typeof(Land), null);
+			IQuery q = new NDOQuery<Land>(pm, null);
 			IList dellist = q.Execute();
 			pm.Delete(dellist);
 			pm.Save();
@@ -677,7 +678,7 @@ Assert.Null(l.Flughäfen, "Flughafenn should be null");
 
 			pm.TransactionMode = TransactionMode.Optimistic;
 
-			Query q = pm.NewQuery(typeof(Land), null);
+			IQuery q = new NDOQuery<Land>(pm, null);
 			l = (Land) q.ExecuteSingle(true);
 			l.Vorname = "Hans";
 			((Flughafen)l.Flughäfen[0]).Zweck = "Neuer Zweck";
@@ -713,7 +714,7 @@ Assert.Null(l.Flughäfen, "Flughafenn should be null");
 			l.AddFlughafen(f);
 			pm.Save();
 			pm.UnloadCache();
-			Query q = pm.NewQuery(typeof(Land), null);
+			IQuery q = new NDOQuery<Land>(pm, null);
 			l = (Land) q.ExecuteSingle(true);
 			IEnumerator ie = l.Flughäfen.GetEnumerator();
 			bool result = ie.MoveNext();
@@ -730,7 +731,7 @@ Assert.Null(l.Flughäfen, "Flughafenn should be null");
 			l.AddFlughafen(f);
 			pm.Save();
 			pm.UnloadCache();
-			Query q = pm.NewQuery(typeof(Land), null);
+			IQuery q = new NDOQuery<Land>(pm, null);
 			l = (Land) q.ExecuteSingle(true);
 			Assert.AreEqual(1, l.Flughäfen.Count, "Count should be 1");
 		}
@@ -744,7 +745,7 @@ Assert.Null(l.Flughäfen, "Flughafenn should be null");
 			l.AddFlughafen(f);
 			pm.Save();
 			pm.UnloadCache();
-			Query q = pm.NewQuery(typeof(Land), null);
+			IQuery q = new NDOQuery<Land>(pm, null);
 			l = (Land) q.ExecuteSingle(true);
 			Assert.NotNull(l, "Land not found");
 			Assert.AreEqual(1, l.Flughäfen.Count, "Count wrong");

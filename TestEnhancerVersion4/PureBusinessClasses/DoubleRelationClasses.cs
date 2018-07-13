@@ -28,8 +28,8 @@ using NDO;
 namespace DoubleRelationClasses
 {
     [NDOPersistent]
-    public class DRAddress
-    {
+    public class DRAddress : IPersistentObject
+	{
         private string street;
         [NDORelation(RelationInfo.Default, "RelAddresses")]
         private DRPerson person;
@@ -45,16 +45,25 @@ namespace DoubleRelationClasses
             get { return person; }
         }
 
-        public DRAddress()
+		public NDOObjectState NDOObjectState { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+		public ObjectId NDOObjectId { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+		public Guid NDOTimeStamp { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+
+		public DRAddress()
         {
             this.street = string.Empty;
         }
-    }
+
+		public void NDOMarkDirty()
+		{
+			throw new NotImplementedException();
+		}
+	}
 
 
     [NDOPersistent]
-    public class DRPerson
-    {
+    public class DRPerson : IPersistentObject
+	{
         private string name;
         private string lastName;
 
@@ -86,7 +95,11 @@ namespace DoubleRelationClasses
             get { return new NDOReadOnlyGenericList<DRAddress>(addresses); }
         }
 
-        public DRPerson()
+		public NDOObjectState NDOObjectState { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+		public ObjectId NDOObjectId { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+		public Guid NDOTimeStamp { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+
+		public DRPerson()
         {
             this.name = string.Empty;
             this.lastName = string.Empty;
@@ -104,6 +117,11 @@ namespace DoubleRelationClasses
             if (addresses.Contains(a))
                 addresses.Remove(a);
         }
-    }
+
+		public void NDOMarkDirty()
+		{
+			throw new NotImplementedException();
+		}
+	}
 
 }

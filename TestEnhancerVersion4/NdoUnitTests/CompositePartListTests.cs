@@ -27,6 +27,7 @@ using NUnit.Framework;
 using PureBusinessClasses;
 using NDO;
 using NDO.Mapping;
+using NDO.Query;
 
 namespace NdoUnitTests
 {
@@ -80,7 +81,7 @@ namespace NdoUnitTests
             pm.Save();
 
             NDOQuery<Device> q = new NDOQuery<Device>(pm);
-            decimal c = (decimal)q.ExecuteAggregate("name", Query.AggregateType.Count);
+            decimal c = (decimal)q.ExecuteAggregate("name", AggregateType.Count);
 
             Assert.AreEqual(7m, c, "Count wrong: ");
 
@@ -100,7 +101,7 @@ namespace NdoUnitTests
             pm.UnloadCache();
 
             q = new NDOQuery<Device>(pm);
-            c = (decimal)q.ExecuteAggregate("name", Query.AggregateType.Count);
+            c = (decimal)q.ExecuteAggregate("name", AggregateType.Count);
             Assert.AreEqual(0m, c, "Count wrong: ");
 
         }
@@ -137,7 +138,7 @@ namespace NdoUnitTests
             pm.Save();
 
             NDOQuery<Device> q = new NDOQuery<Device>(pm);
-            decimal c = (decimal)q.ExecuteAggregate("name", Query.AggregateType.Count);
+            decimal c = (decimal)q.ExecuteAggregate("name", AggregateType.Count);
 
             Assert.AreEqual(7m, c, "Count wrong: ");
 
@@ -157,7 +158,7 @@ namespace NdoUnitTests
             pm.UnloadCache();
 
             q = new NDOQuery<Device>(pm);
-            c = (decimal)q.ExecuteAggregate("name", Query.AggregateType.Count);
+            c = (decimal)q.ExecuteAggregate("name", AggregateType.Count);
             Assert.AreEqual(0, c, "Count wrong: ");
         }
 
@@ -193,7 +194,7 @@ namespace NdoUnitTests
             pm.Save();
 
             NDOQuery<Device> q = new NDOQuery<Device>(pm);
-            decimal c = (decimal)q.ExecuteAggregate("name", Query.AggregateType.Count);
+            decimal c = (decimal)q.ExecuteAggregate("name", AggregateType.Count);
 
             Assert.AreEqual(7m, c, "Count wrong: ");
 
@@ -213,7 +214,7 @@ namespace NdoUnitTests
             pm.UnloadCache();
 
             q = new NDOQuery<Device>(pm);
-            c = (decimal)q.ExecuteAggregate("name", Query.AggregateType.Count);
+            c = (decimal)q.ExecuteAggregate("name", AggregateType.Count);
             Assert.AreEqual(0m, c, "Count wrong: ");
         }
 

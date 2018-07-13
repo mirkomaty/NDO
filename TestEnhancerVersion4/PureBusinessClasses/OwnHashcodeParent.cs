@@ -28,7 +28,7 @@ using NDO;
 namespace PureBusinessClasses
 {
 	[NDOPersistent]
-	public class OwnHashcodeParent
+	public class OwnHashcodeParent : IPersistentObject
 	{
 		[NDORelation]
 		OwnHashcodeClient client;
@@ -38,15 +38,24 @@ namespace PureBusinessClasses
 			set { client = value; }
 		}
 
+		public NDOObjectState NDOObjectState { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+		public ObjectId NDOObjectId { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+		public Guid NDOTimeStamp { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+
 		public override int GetHashCode()
 		{
 			throw new Exception( "Test-Exeption" );
 			//return client.GetHashCode();
 		}
+
+		public void NDOMarkDirty()
+		{
+			throw new NotImplementedException();
+		}
 	}
 
 	[NDOPersistent]
-	public class OwnHashcodeClient
+	public class OwnHashcodeClient : IPersistentObject
 	{
 		[NDORelation]
 		OwnHashcodeParent parent;
@@ -62,6 +71,15 @@ namespace PureBusinessClasses
 		{
 			get { return dummy; }
 			set { dummy = value; }
+		}
+
+		public NDOObjectState NDOObjectState { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+		public ObjectId NDOObjectId { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+		public Guid NDOTimeStamp { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+
+		public void NDOMarkDirty()
+		{
+			throw new NotImplementedException();
 		}
 	}
 }

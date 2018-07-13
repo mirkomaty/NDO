@@ -44,7 +44,7 @@ namespace DataTypeTestClasses
 	}
 
 	[NDOPersistent]
-	public class ParentWithEmbedded
+	public class ParentWithEmbedded : IPersistentObject
 	{
 		string test = "";
 		public string Test
@@ -58,6 +58,15 @@ namespace DataTypeTestClasses
 		{
 			get { return ewom; }
 			set { ewom = value; }
+		}
+
+		public NDOObjectState NDOObjectState { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+		public ObjectId NDOObjectId { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+		public Guid NDOTimeStamp { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+
+		public void NDOMarkDirty()
+		{
+			throw new NotImplementedException();
 		}
 	}
 
@@ -356,7 +365,7 @@ namespace DataTypeTestClasses
 	}
 
 	[NDOPersistent]
-	public class VtAndEtContainer
+	public class VtAndEtContainer : IPersistentObject
 	{
 		VtPropDataContainer propValType;
 		VtPublicDataContainer pubValType;
@@ -381,6 +390,10 @@ namespace DataTypeTestClasses
 			get { return pubValType; }
 			set { pubValType = value; }
 		}
+
+		public NDOObjectState NDOObjectState { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+		public ObjectId NDOObjectId { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+		public Guid NDOTimeStamp { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
 
 		public void Init()
 		{
@@ -441,6 +454,11 @@ namespace DataTypeTestClasses
 			embeddedType.EmptyGuidVar = Guid.Empty;
 			embeddedType.NullString = null;
 		}
+
+		public void NDOMarkDirty()
+		{
+			throw new NotImplementedException();
+		}
 	}
 
 
@@ -454,7 +472,7 @@ namespace DataTypeTestClasses
 
 
 	[NDOPersistent]
-	public class DataContainer
+	public class DataContainer : IPersistentObject
 	{		
 		public event EventHandler TestEvent;
 		private EventHandler shitTest;  // Just to test, that delegates are not persistent
@@ -592,6 +610,10 @@ namespace DataTypeTestClasses
 			set { nullString = value; }
 		}
 
+		public NDOObjectState NDOObjectState { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+		public ObjectId NDOObjectId { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+		public Guid NDOTimeStamp { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+
 		public void Init()
 		{
 			this.BoolVar = true;
@@ -614,6 +636,11 @@ namespace DataTypeTestClasses
 			this.NullString = null;
 		}
 
+		public void NDOMarkDirty()
+		{
+			throw new NotImplementedException();
+		}
+
 		public DataContainer()
 		{
 		}
@@ -630,7 +657,7 @@ namespace DataTypeTestClasses
 	}
 
     [NDOPersistent]
-    public class PrimitiveTypeMethodCaller
+    public class PrimitiveTypeMethodCaller : IPersistentObject
     {
         int intVar = 0;
         bool boolVar = false;
@@ -638,7 +665,11 @@ namespace DataTypeTestClasses
         string stringVar = "test";
 		DateTime dtVar = new DateTime( 2008, 10, 30, 11, 3, 33, 123 );
 
-        public int IntTest(PrimitiveTypeMethodCaller obj)
+		public NDOObjectState NDOObjectState { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+		public ObjectId NDOObjectId { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+		public Guid NDOTimeStamp { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+
+		public int IntTest(PrimitiveTypeMethodCaller obj)
         {
             return intVar.CompareTo(obj.intVar);
         }
@@ -658,7 +689,12 @@ namespace DataTypeTestClasses
         {
             return dtVar.CompareTo(obj.dtVar);
         }
-    }
+
+		public void NDOMarkDirty()
+		{
+			throw new NotImplementedException();
+		}
+	}
 
 
 }

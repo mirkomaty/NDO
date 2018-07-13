@@ -23,18 +23,28 @@
 using System;
 using NDO;
 using System.Collections;
+using System.Data;
 
 namespace AbstractBaseTestClasses
 {
 
 	[NDOPersistent]
-	public abstract class ABBase
+	public abstract class ABBase : IPersistentObject
 	{
 		string myString;
 		public string MyString
 		{
 			get { return myString; }
 			set { myString = value; }
+		}
+
+		public NDOObjectState NDOObjectState { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+		public ObjectId NDOObjectId { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+		public Guid NDOTimeStamp { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+
+		public void NDOMarkDirty()
+		{
+			throw new NotImplementedException();
 		}
 	}
 
@@ -69,7 +79,7 @@ namespace AbstractBaseTestClasses
 	}
 
 	[NDOPersistent]
-	public class AbstractRelLeft
+	public class AbstractRelLeft : IPersistentObject
 	{
 		string myString = "AbstractRelLeft";
 		public string MyString
@@ -86,6 +96,11 @@ namespace AbstractBaseTestClasses
 			get { return ArrayList.ReadOnly(theBases); }
 			set { theBases = value; }
 		}
+
+		public NDOObjectState NDOObjectState { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+		public ObjectId NDOObjectId { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+		public Guid NDOTimeStamp { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+
 		public void AddABBase(ABBase a)
 		{
 			theBases.Add(a);
@@ -95,7 +110,11 @@ namespace AbstractBaseTestClasses
 			if (theBases.Contains(a))
 				theBases.Remove(a);
 		}
-		
+
+		public void NDOMarkDirty()
+		{
+			throw new NotImplementedException();
+		}
 	}
 }
 

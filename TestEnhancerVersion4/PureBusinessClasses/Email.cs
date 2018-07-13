@@ -31,13 +31,14 @@ namespace Reisekosten {
 	/// Eine Email kann ein Zertifikat aus dem Firmenpool haben. 1:1-Aggregation bidirektional
 	/// </summary>
 	[NDOPersistent]
-	public class Email {
+	public class Email : IPersistentObject
+	{
 		private string adresse;
 
-		[NDORelation(typeof(Subject), RelationInfo.Composite)]
+		[NDORelation( typeof( Subject ), RelationInfo.Composite )]
 		Subject subject;
 
-		[NDORelation(typeof(Zertifikat), RelationInfo.Default, "Zertifikat")]
+		[NDORelation( typeof( Zertifikat ), RelationInfo.Default, "Zertifikat" )]
 		private Zertifikat key;
 
 		public Subject Subject
@@ -46,23 +47,34 @@ namespace Reisekosten {
 			set { subject = value; }
 		}
 
-		public Email() 
+		public Email()
 		{
 		}
 
-		public Email(string adresse) {
+		public Email( string adresse )
+		{
 			this.adresse = adresse;
 		}
 
-		public string Adresse {
+		public string Adresse
+		{
 			get { return adresse; }
 			set { adresse = value; }
 		}
 
-		public Zertifikat Schlüssel {
+		public Zertifikat Schlüssel
+		{
 			get { return key; }
 			set { key = value; }
 		}
 
+		public NDOObjectState NDOObjectState { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+		public ObjectId NDOObjectId { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+		public Guid NDOTimeStamp { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+
+		public void NDOMarkDirty()
+		{
+			throw new NotImplementedException();
+		}
 	}
 }

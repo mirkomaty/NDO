@@ -26,7 +26,7 @@ using NDO;
 namespace DateTest
 {
 	[NDOPersistent]
-	public class InnerDate
+	public class InnerDate : IPersistentObject
 	{
 		DateTime dt = DateTime.Now;
 		DateTime dt2 = DateTime.Now;
@@ -36,6 +36,10 @@ namespace DateTest
 			get { return dt; }
 			set { dt = value; }
 		}
+
+		public NDOObjectState NDOObjectState { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+		public ObjectId NDOObjectId { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+		public Guid NDOTimeStamp { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
 
 		public void SetInnerDate()
 		{
@@ -57,13 +61,18 @@ namespace DateTest
 			dt2 = dt;
 		}
 
+		public void NDOMarkDirty()
+		{
+			throw new NotImplementedException();
+		}
+
 		public InnerDate()
 		{
 		}
 	}
 
 	[NDOPersistent]
-	public class DateTestClass
+	public class DateTestClass : IPersistentObject
 	{
 		string name;
 		public string Name
@@ -81,6 +90,10 @@ namespace DateTest
 			set { innerDate = value; }
 		}
 
+		public NDOObjectState NDOObjectState { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+		public ObjectId NDOObjectId { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+		public Guid NDOTimeStamp { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+
 		public DateTestClass()
 		{
 		}
@@ -89,6 +102,11 @@ namespace DateTest
 		{
 			innerDate = new InnerDate();
 			innerDate.SetInnerDate();
+		}
+
+		public void NDOMarkDirty()
+		{
+			throw new NotImplementedException();
 		}
 	}
 }

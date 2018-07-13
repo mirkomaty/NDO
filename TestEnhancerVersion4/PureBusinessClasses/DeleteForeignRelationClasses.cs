@@ -88,7 +88,7 @@ namespace DeleteForeignRelation
 
 
 	[NDOPersistent]
-	public class DfrAddressDescriptor 
+	public class DfrAddressDescriptor : IPersistentObject 
 	{
 		private bool isAdopted = false;
 		//private AddressType addressType = AddressType.Private;
@@ -113,6 +113,15 @@ namespace DeleteForeignRelation
 		public DfrAddress Address 
 		{
 			get { return address; }
+		}
+
+		public NDOObjectState NDOObjectState { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+		public ObjectId NDOObjectId { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+		public Guid NDOTimeStamp { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+
+		public void NDOMarkDirty()
+		{
+			throw new NotImplementedException();
 		}
 	}
 

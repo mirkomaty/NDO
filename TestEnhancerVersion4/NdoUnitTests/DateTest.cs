@@ -26,6 +26,7 @@ using System.Collections;
 using NUnit.Framework;
 using NDO;
 using DateTest;
+using NDO.Query;
 
 namespace NdoUnitTests
 {
@@ -43,7 +44,7 @@ namespace NdoUnitTests
 		[TearDown]
 		public void TearDown()
 		{
-			Query q = pm.NewQuery(typeof(DateTestClass), null);
+			NDOQuery<DateTestClass> q = new NDOQuery<DateTestClass>(pm, null);
 			IList l = q.Execute();
 			pm.Delete(l);
 			pm.Save();
@@ -65,7 +66,7 @@ namespace NdoUnitTests
 			pm.Save();
 			pm.UnloadCache();
 
-			Query q = pm.NewQuery(typeof(DateTestClass), null);
+			NDOQuery<DateTestClass> q = new NDOQuery<DateTestClass>(pm, null);
 			dtc = (DateTestClass) q.ExecuteSingle(true);
 			Assert.AreEqual(2002, dtc.InnerDate.Dt.Year, "DateTime konnte nicht richtig gelesen werden");
 		}

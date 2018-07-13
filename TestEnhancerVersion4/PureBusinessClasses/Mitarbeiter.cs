@@ -27,11 +27,12 @@ using System.Diagnostics;
 using Reisekosten;
 using NDO;
 using System.Drawing;
+using System.Data;
 
 namespace Reisekosten.Personal
 {
 	[NDOPersistent]
-	public class Mitarbeiter 
+	public class Mitarbeiter : IPersistentObject
 	{
 		public Mitarbeiter()
 		{
@@ -427,7 +428,12 @@ namespace Reisekosten.Personal
             return pm.Objects<Mitarbeiter>().Where( m => m.vorname == vorname ).FirstOrDefault();
         }
 
-        public string Vorname
+		public void NDOMarkDirty()
+		{
+			throw new NotImplementedException();
+		}
+
+		public string Vorname
 		{
 			get { return vorname; } 
 			set { vorname = value; }
@@ -439,5 +445,8 @@ namespace Reisekosten.Personal
 			set { nachname = value; }
 		}
 
+		public NDOObjectState NDOObjectState { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+		public ObjectId NDOObjectId { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+		public Guid NDOTimeStamp { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
 	}
 }

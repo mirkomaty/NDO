@@ -29,7 +29,7 @@ namespace Reisekosten
 	/// Ein Mitarbeiter kann viele Reisebüros verwenden.
 	/// </summary>
 	[NDOPersistent]
-	public class Reisebüro
+	public class Reisebüro : IPersistentObject
 	{
 		private string name;
 
@@ -44,6 +44,15 @@ namespace Reisekosten
 		public string Name {
 			get { return name; }
 			set { name = value; }
+		}
+
+		public NDOObjectState NDOObjectState { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+		public ObjectId NDOObjectId { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+		public Guid NDOTimeStamp { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+
+		public void NDOMarkDirty()
+		{
+			throw new NotImplementedException();
 		}
 	}
 }

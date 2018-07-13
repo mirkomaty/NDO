@@ -8,10 +8,11 @@ using NDO.Mapping;
 using System.Data;
 using NDOInterfaces;
 using System.Text.RegularExpressions;
+using NDO.Linq;
+using System.Linq.Expressions;
 
 namespace NDO.Query
-{
-	[Obsolete]
+{	
 	internal class FieldMarker
 	{
 		public static string Instance
@@ -107,6 +108,26 @@ namespace NDO.Query
 			this.hollowResults = hollowResults;
 			this.queryLanguage = queryLanguage;
 		}
+
+		/// <summary>
+		/// Execute an aggregation query.
+		/// </summary>
+		/// <typeparam name="K"></typeparam>
+		/// <param name="keySelector">A Lambda expression of an accessor property of the field</param>
+		/// <param name="aggregateType">One of the <see cref="AggregateType">AggregateType</see> enum members.</param>
+		/// <returns>A single value, which represents the aggregate</returns>
+		/// <remarks>Before using this function, make shure, that your database product supports the aggregate function, as defined in aggregateType.
+		/// Polymorphy: StDev and Var only return the aggregate for the given class. All others return the aggregate for all subclasses.
+		/// Transactions: Please note, that the aggregate functions always work against the database.
+		/// Unsaved changes in your objects are not recognized.</remarks>
+		public object ExecuteAggregate<K>( Expression<Func<T,K>> keySelector, AggregateType aggregateType )
+		{
+			ExpressionTreeTransformer transformer =
+				new ExpressionTreeTransformer( (LambdaExpression)keySelector );
+			string field = transformer.Transform();
+			return ExecuteAggregate( field, aggregateType );
+		}
+
 
 		/// <summary>
 		/// Execute an aggregation query.
@@ -342,7 +363,19 @@ namespace NDO.Query
 		/// </remarks>
 		public new T ExecuteSingle( bool throwIfResultCountIsWrong )
 		{
-			return default( T );
+			var resultList = GetResultList();
+			int count = resultList.Count;
+			if (count == 1 || (!throwIfResultCountIsWrong && count > 0))
+			{
+				return resultList[0];
+			}
+			else
+			{
+				if (throwIfResultCountIsWrong)
+					throw new QueryException( 10002, count.ToString() + " result objects in ExecuteSingle call" );
+				else
+					return default(T);
+			}
 		}
 
 		/// <summary>
@@ -538,5 +571,11 @@ namespace NDO.Query
         {
             return (IPersistenceCapable) this.ExecuteSingle(throwIfResultCountIsWrong);
         }
-    }
+
+		ICollection<object> IQuery.Parameters => this.parameters;
+		ICollection<QueryOrder> IQuery.Orderings => this.orderings;
+		object IQuery.ExecuteAggregate( string field, AggregateType aggregateType ) => ExecuteAggregate( field, aggregateType );
+		bool IQuery.AllowSubclasses { get => this.allowSubclasses; set => this.allowSubclasses = value; }
+
+	}
 }

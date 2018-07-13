@@ -30,7 +30,7 @@ namespace PureBusinessClasses
 	/// Summary for Bestellung
 	/// </summary>
 	[NDOPersistent]
-	public class Order
+	public class Order : IPersistentObject
 	{
 		DateTime date;
 		public DateTime Date
@@ -46,6 +46,11 @@ namespace PureBusinessClasses
 			get { return ArrayList.ReadOnly(orderDetails); }
 			set { orderDetails = value; }
 		}
+
+		public NDOObjectState NDOObjectState { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+		public ObjectId NDOObjectId { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+		public Guid NDOTimeStamp { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+
 		public OrderDetail NewOrderDetail(Product p)
 		{
 			OrderDetail o = new OrderDetail();
@@ -57,6 +62,11 @@ namespace PureBusinessClasses
 		{
 			if (orderDetails.Contains(o))
 				orderDetails.Remove(o);
+		}
+
+		public void NDOMarkDirty()
+		{
+			throw new NotImplementedException();
 		}
 
 		public Order()

@@ -26,7 +26,7 @@ using NDO;
 namespace Reisekosten
 {
 	[NDOPersistent]
-	public abstract class Kostenpunkt
+	public abstract class Kostenpunkt : IPersistentObject
 	{
 		[NDORelation]
 		Reise reise;
@@ -48,7 +48,15 @@ namespace Reisekosten
 		public abstract double Kosten {
 			get;
 		}
+		public NDOObjectState NDOObjectState { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+		public ObjectId NDOObjectId { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+		public Guid NDOTimeStamp { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
 
 		public abstract void Drucken();
+
+		public void NDOMarkDirty()
+		{
+			throw new NotImplementedException();
+		}
 	}
 }

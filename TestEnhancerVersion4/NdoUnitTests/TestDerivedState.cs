@@ -24,6 +24,7 @@ using System;
 using System.Collections;
 using DerivedStateTestClasses;
 using NDO;
+using NDO.Query;
 using NUnit.Framework;
 
 namespace NdoUnitTests
@@ -43,7 +44,7 @@ namespace NdoUnitTests
 		[TearDown]
 		public void TearDown()
 		{
-			Query q = pm.NewQuery(typeof(Derived), null);
+			IQuery q = new NDOQuery<Derived>(pm, null);
 			IList l = q.Execute();
 			pm.Delete(l);
 			pm.Close();

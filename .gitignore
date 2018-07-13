@@ -16,3 +16,5 @@ NDO.Sql.log
 logs.txt
 .vs
 NDOPackage/Backup
+/nuget/NDOEnhancer.exe
+/nuget/NDOEnhancer.pdb

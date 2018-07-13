@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
@@ -31,6 +32,28 @@ namespace NDO.Query
         /// If throwIfResultCountIsWrong is false and the query has more than one result, the first of the results will be returned.
         /// </remarks>
 		IPersistenceCapable ExecuteSingle(bool throwIfResultCountIsWrong);
+		
+		/// <summary>
+		/// Gets the Parameters Collection
+		/// </summary>
+		ICollection<object> Parameters { get; }
 
+		/// <summary>
+		/// Gets the Parameters Collection
+		/// </summary>
+		ICollection<QueryOrder> Orderings { get; }
+
+		/// <summary>
+		/// Executes an aggregate operation
+		/// </summary>
+		/// <param name="field"></param>
+		/// <param name="aggregateType"></param>
+		/// <returns></returns>
+		object ExecuteAggregate( string field, AggregateType aggregateType );
+
+		/// <summary>
+		/// Defines, if the query should return subclasses of the given Query Type
+		/// </summary>
+		bool AllowSubclasses { get; set; }
 	}
 }

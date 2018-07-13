@@ -29,6 +29,7 @@ using NDO.Mapping;
 using Reisekosten;
 using Reisekosten.Personal;
 using PureBusinessClasses;
+using NDO.Query;
 
 namespace NdoUnitTests {
 	/// <summary>
@@ -59,20 +60,20 @@ namespace NdoUnitTests {
 			pm.Delete(reiseliste);
 			pm.Save();
 			pm.UnloadCache();
-			Query q = pm.NewQuery(typeof(Beleg));
+			IQuery q = new NDOQuery<Beleg>(pm);
 			IList liste = q.Execute();
 			pm.Delete(liste);
 			pm.Save();
-			q = pm.NewQuery(typeof(Contact));
+			q = new NDOQuery<Contact>(pm);
 			liste = q.Execute();
 			pm.Delete(liste);
 			pm.Save();
-			q = pm.NewQuery(typeof(Adresse));
+			q = new NDOQuery<Adresse>(pm);
 			liste = q.Execute();
 			pm.Delete(liste);
 			pm.Save();
 
-			q = pm.NewQuery(typeof(Beleg));
+			q = new NDOQuery<Beleg>(pm);
 			liste = q.Execute();
 			pm.Close();
 			pm = null;
@@ -155,7 +156,7 @@ namespace NdoUnitTests {
 			pm.Save();
 			pm.UnloadCache();
 
-			Query q = pm.NewQuery(typeof(Kostenpunkt), null);
+			IQuery q = new NDOQuery<Kostenpunkt>(pm, null);
 			IList l = q.Execute();
 			Assert.AreEqual(3, l.Count, "Anzahl Belege: ");
 		}
@@ -178,10 +179,10 @@ namespace NdoUnitTests {
 					sum += (Int32)kp2.NDOObjectId.Id[0];
 				}
 
-				Query q = pm.NewQuery(typeof(Kostenpunkt), null);
-				decimal newsum = (decimal)q.ExecuteAggregate("oid", Query.AggregateType.Sum);
+				IQuery q = new NDOQuery<Kostenpunkt>(pm, null);
+				decimal newsum = (decimal)q.ExecuteAggregate("oid", AggregateType.Sum);
 				Assert.AreEqual(sum, newsum, "Summe stimmt nicht: ");
-				decimal newcount = (decimal)q.ExecuteAggregate("oid", Query.AggregateType.Count);
+				decimal newcount = (decimal)q.ExecuteAggregate("oid", AggregateType.Count);
 				Assert.AreEqual(3, newcount, "Summe stimmt nicht: ");
 			}
 		}
@@ -221,7 +222,7 @@ namespace NdoUnitTests {
 			//string sql = "select distinct Reise.ID from Reise";
 			//string sql = "select * from Reise";
 
-			Query q = pm.NewQuery(typeof(Reise), sql, true, Query.Language.Sql);
+			NDOQuery<Reise> q = new NDOQuery<Reise>(pm, sql, true, QueryLanguage.Sql);
 			//System.Diagnostics.Debug.WriteLine(q.GeneratedQuery);
 
 			IList l = q.Execute();
@@ -641,8 +642,7 @@ namespace NdoUnitTests {
 			pm.Save();
 			pm.UnloadCache();
 
-			Contact.QueryHelper qh = new Contact.QueryHelper();
-			Query q = pm.NewQuery(typeof(Contact), qh.addresses.plz + Query.Op.Eq + "'" + a2.Plz + "'");
+			IQuery q = new NDOQuery<Contact>(pm, "addresses.plz" + " = " + "'" + a2.Plz + "'");
 			IList l = q.Execute();
 			Assert.AreEqual(1, l.Count, "Wrong number of contacts");
 		}
@@ -655,9 +655,8 @@ namespace NdoUnitTests {
 			pm.Save();
 
 			pm.UnloadCache();
-			Reise.QueryHelper qh = new Reise.QueryHelper();
-			Query q = pm.NewQuery(typeof(Reise), qh.belege.datum + Query.Op.Eq + Query.Placeholder(0));
-			q.Parameters.Add(new Query.Parameter(DateTime.Now.Date));
+			NDOQuery<Reise> q = new NDOQuery<Reise>(pm, "belege.datum" + " = " + "{0}");
+			q.Parameters.Add(DateTime.Now.Date);
 			r = (Reise)q.ExecuteSingle(true);
 			Assert.NotNull(r, "Reise not found");
 			Assert.That(r.Kostenpunkte.Count > 0, "No Beleg" );
@@ -676,9 +675,8 @@ namespace NdoUnitTests {
 			pm.Save();
 
 			pm.UnloadCache();
-			Query q = pm.NewQuery(typeof(Kostenpunkt));
-			Kostenpunkt.QueryHelper qh = new Reisekosten.Kostenpunkt.QueryHelper();
-			q.Orderings.Add(new Query.AscendingOrder(qh.datum));
+			IQuery q = new NDOQuery<Kostenpunkt>(pm);
+			q.Orderings.Add(new AscendingOrder("datum"));
 			NDO.Logging.DebugLogAdapter la = new NDO.Logging.DebugLogAdapter();
 			pm.LogAdapter = la;
 			pm.VerboseMode= true;
@@ -701,9 +699,8 @@ namespace NdoUnitTests {
 			pm.Save();
 
 			pm.UnloadCache();
-			Query q = pm.NewQuery(typeof(Kostenpunkt));
-			Kostenpunkt.QueryHelper qh = new Reisekosten.Kostenpunkt.QueryHelper();
-			q.Orderings.Add(new Query.DescendingOrder(qh.datum));
+			IQuery q = new NDOQuery<Kostenpunkt>(pm);
+			q.Orderings.Add(new DescendingOrder("datum"));
 			IList l = q.Execute();
 			//pm.VerboseMode = false;
 			Assert.AreEqual(2, l.Count, "Count wrong");
@@ -722,9 +719,8 @@ namespace NdoUnitTests {
 			pm.Save();
 
 			pm.UnloadCache();
-			Query q = pm.NewQuery(typeof(Kostenpunkt));
-			Kostenpunkt.QueryHelper qh = new Reisekosten.Kostenpunkt.QueryHelper();
-			q.Orderings.Add(new Query.AscendingOrder(qh.datum));
+			IQuery q = new NDOQuery<Kostenpunkt>(pm);
+			q.Orderings.Add(new AscendingOrder("datum"));
 			IList l = q.Execute();
 			//pm.VerboseMode = false;
 			Assert.AreEqual(2, l.Count, "Count wrong");
@@ -743,9 +739,8 @@ namespace NdoUnitTests {
 			pm.Save();
 
 			pm.UnloadCache();
-			Query q = pm.NewQuery(typeof(Kostenpunkt));
-			Kostenpunkt.QueryHelper qh = new Reisekosten.Kostenpunkt.QueryHelper();
-			q.Orderings.Add(new Query.AscendingOrder(qh.datum));
+			IQuery q = new NDOQuery<Kostenpunkt>(pm);
+			q.Orderings.Add(new AscendingOrder("datum"));
 			IList l = q.Execute();
 			//pm.VerboseMode = false;
 			Assert.AreEqual(2, l.Count, "Count wrong");
@@ -764,9 +759,8 @@ namespace NdoUnitTests {
 			pm.Save();
 
 			pm.UnloadCache();
-			Query q = pm.NewQuery(typeof(Kostenpunkt));
-			Kostenpunkt.QueryHelper qh = new Reisekosten.Kostenpunkt.QueryHelper();
-			q.Orderings.Add(new Query.DescendingOrder(qh.datum));
+			IQuery q = new NDOQuery<Kostenpunkt>(pm);
+			q.Orderings.Add(new DescendingOrder("datum"));
 			IList l = q.Execute();
 			//pm.VerboseMode = false;
 			Assert.AreEqual(2, l.Count, "Count wrong");
@@ -784,9 +778,8 @@ namespace NdoUnitTests {
 			pm.MakePersistent(r);
 			pm.Save();
 			pm.UnloadCache();
-			Reise.QueryHelper qh = new Reise.QueryHelper();
-			Query q = pm.NewQuery(typeof(Reise), qh.belege.datum + Query.Op.Eq + Query.Placeholder(0));
-			q.Parameters.Add(new Query.Parameter(DateTime.Now.Date));
+			NDOQuery<Reise> q = new NDOQuery<Reise>(pm, "belege.datum" + " = " + "{0}");
+			q.Parameters.Add(DateTime.Now.Date);
 			IList l = q.Execute();
 			Assert.AreEqual(1, l.Count, "Count wrong");
 		}
@@ -801,9 +794,8 @@ namespace NdoUnitTests {
 			pm.MakePersistent(r);
 			pm.Save();
 			pm.UnloadCache();
-			Reise.QueryHelper qh = new Reise.QueryHelper();
-			Query q = pm.NewQuery(typeof(Reise), qh.belege.datum + Query.Op.Eq + Query.Placeholder(0));
-			q.Parameters.Add(new Query.Parameter(DateTime.Now.Date));
+			NDOQuery<Reise> q = new NDOQuery<Reise>(pm, "belege.datum" + " = " + "{0}");
+			q.Parameters.Add(DateTime.Now.Date);
 			IList l = q.Execute();
 			Assert.AreEqual(1, l.Count, "Count wrong");
 			r = (Reise) l[0];

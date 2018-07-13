@@ -28,6 +28,7 @@ using System.Text;
 using NDO;
 using Reisekosten.Personal;
 using System.Text.RegularExpressions;
+using NDO.Query;
 
 namespace NdoUnitTests
 {

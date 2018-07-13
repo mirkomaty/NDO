@@ -27,6 +27,7 @@ using System.Collections;
 using System.Collections.Generic;
 using NUnit.Framework;
 using NDO;
+using NDO.Query;
 using Reisekosten;
 using Reisekosten.Personal;
 using NDO.Linq;
@@ -424,7 +425,7 @@ namespace NdoUnitTests
 
 		[Test]
 		public void TestLoadRelatedObjects() {
-			Query q = pm.NewQuery(typeof(Mitarbeiter), null);
+			NDOQuery<Mitarbeiter> q = new NDOQuery<Mitarbeiter>(pm, null);
 			IList dellist = q.Execute();
 			pm.Delete(dellist);
 			pm.Save();
@@ -541,14 +542,14 @@ namespace NdoUnitTests
 			pm.MakePersistent(m);
 			pm.Save();
 			pm.UnloadCache();
-			Query q = pm.NewQuery(typeof(Reise), "zweck LIKE 'A*'");
+			NDOQuery<Reise> q = new NDOQuery<Reise>(pm, "zweck LIKE 'A*'");
 			r = (Reise) q.ExecuteSingle(true);
 			r.Zweck = "NewPurpose";
 			pm.VerboseMode = true;
 			pm.Save();
 			pm.VerboseMode= false;
-			q = pm.NewQuery(typeof(Mitarbeiter));
-			m = (Mitarbeiter) q.ExecuteSingle(true);
+			NDOQuery<Mitarbeiter> qm = new NDOQuery<Mitarbeiter>(pm);
+			m = qm.ExecuteSingle(true);
 			Assert.AreEqual(1, m.Reisen.Count, "Count wrong");
 			Assert.AreEqual("NewPurpose", r.Zweck, "Reise wrong");
 		}
@@ -566,7 +567,7 @@ namespace NdoUnitTests
 			pm.Save();
 			pm.UnloadCache();
 //			// This code gets the same result
-//			Query q = pm.NewQuery(typeof(Mitarbeiter), "oid = {0}");
+//			NDOQuery<Mitarbeiter> q = new NDOQuery<Mitarbeiter>(pm, "oid = {0}");
 //			q.Parameters.Add(m.NDOObjectId.Id.Value);
 //			m = (Mitarbeiter) q.ExecuteSingle(true);
 
@@ -600,7 +601,7 @@ namespace NdoUnitTests
 
 			pm.TransactionMode = TransactionMode.Optimistic;
 
-			Query q = pm.NewQuery(typeof(Mitarbeiter), null);
+			NDOQuery<Mitarbeiter> q = new NDOQuery<Mitarbeiter>(pm, null);
             m = (Mitarbeiter)q.ExecuteSingle(true);
             m.Vorname = "Hans";
 			((Reise)m.Reisen[0]).Zweck = "Neuer Zweck";
@@ -641,7 +642,7 @@ namespace NdoUnitTests
 			pm.MakePersistent(m);
 			pm.Save();
 			pm.UnloadCache();
-			Query q = pm.NewQuery(typeof(Mitarbeiter), null);
+			NDOQuery<Mitarbeiter> q = new NDOQuery<Mitarbeiter>(pm, null);
 			m = (Mitarbeiter) q.ExecuteSingle(true);
 			IEnumerator ie = m.Reisen.GetEnumerator();
 			bool result = ie.MoveNext();
@@ -656,7 +657,7 @@ namespace NdoUnitTests
 			pm.MakePersistent(m);
 			pm.Save();
 			pm.UnloadCache();
-			Query q = pm.NewQuery(typeof(Mitarbeiter), null);
+			NDOQuery<Mitarbeiter> q = new NDOQuery<Mitarbeiter>(pm, null);
 			m = (Mitarbeiter) q.ExecuteSingle(true);
 			Assert.AreEqual(1, m.Reisen.Count, "Count should be 1");
 		}

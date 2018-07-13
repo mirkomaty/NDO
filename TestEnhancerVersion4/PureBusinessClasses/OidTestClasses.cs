@@ -30,7 +30,7 @@ namespace NDOObjectIdTestClasses
 	/// Summary for NDOoidAndHandler
 	/// </summary>
 	[NDOPersistent]
-	public class NDOoidAndHandler
+	public class NDOoidAndHandler : IPersistentObject
 	{
 		[NDOObjectId]
 		Guid myId;
@@ -46,13 +46,23 @@ namespace NDOObjectIdTestClasses
 			get { return text; }
 			set { text = value; }
 		}
+
+		public NDOObjectState NDOObjectState { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+		public ObjectId NDOObjectId { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+		public Guid NDOTimeStamp { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+
 		public NDOoidAndHandler()
 		{
+		}
+
+		public void NDOMarkDirty()
+		{
+			throw new NotImplementedException();
 		}
 	}
 
 	[NDOPersistent, NDOOidType(typeof(int))]
-	public class ObjectOwner
+	public class ObjectOwner : IPersistentObject
 	{
 		[NDORelation(RelationInfo.Composite)]
 		NDOoidAndHandler element;
@@ -61,11 +71,20 @@ namespace NDOObjectIdTestClasses
 		{
 			get { return element; }
 			set { element = value; }
-		}			
+		}
+
+		public NDOObjectState NDOObjectState { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+		public ObjectId NDOObjectId { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+		public Guid NDOTimeStamp { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+
+		public void NDOMarkDirty()
+		{
+			throw new NotImplementedException();
+		}
 	}
 
 	[NDOPersistent, NDOOidType(typeof(int))]
-	public class HintOwner
+	public class HintOwner : IPersistentObject
 	{
 		[NDORelation(RelationInfo.Composite)]
 		ClassWithHint element;
@@ -74,12 +93,21 @@ namespace NDOObjectIdTestClasses
 		{
 			get { return element; }
 			set { element = value; }
-		}			
+		}
+
+		public NDOObjectState NDOObjectState { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+		public ObjectId NDOObjectId { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+		public Guid NDOTimeStamp { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+
+		public void NDOMarkDirty()
+		{
+			throw new NotImplementedException();
+		}
 	}
 
 
 	[NDOPersistent, NDOOidType(typeof(Guid))]
-	public class ClassWithHint
+	public class ClassWithHint : IPersistentObject
 	{
 		string text;
 		public string Text
@@ -87,10 +115,19 @@ namespace NDOObjectIdTestClasses
 			get { return text; }
 			set { text = value; }
 		}
+
+		public NDOObjectState NDOObjectState { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+		public ObjectId NDOObjectId { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+		public Guid NDOTimeStamp { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+
+		public void NDOMarkDirty()
+		{
+			throw new NotImplementedException();
+		}
 	}
 
 	[NDOPersistent]
-	public abstract class AbstractBaseGuid
+	public abstract class AbstractBaseGuid : IPersistentObject
 	{
 		[NDOObjectId]
 		Guid guid;
@@ -98,6 +135,15 @@ namespace NDOObjectIdTestClasses
 		{
 			get { return guid; }
 			set { guid = value; }
+		}
+
+		public NDOObjectState NDOObjectState { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+		public ObjectId NDOObjectId { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+		public Guid NDOTimeStamp { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+
+		public void NDOMarkDirty()
+		{
+			throw new NotImplementedException();
 		}
 	}
 

@@ -25,6 +25,7 @@ using System.Diagnostics;
 using System.Collections;
 using NUnit.Framework;
 using NDO;
+using NDO.Query;
 using Reisekosten;
 using Reisekosten.Personal;
 
@@ -148,17 +149,16 @@ namespace NdoUnitTests {
 			pm.Save();
 			ObjectId oid = usa.NDOObjectId;
 			pm.UnloadCache();
-			Reise.QueryHelper qh = new Reise.QueryHelper();
-			Query q = pm.NewQuery(typeof(Reise), qh.dieLaender.oid + Query.Op.Eq + Query.Placeholder(0));
-			q.Parameters.Add(new Query.Parameter(oid.Id[0]));
-			decimal count = (decimal) q.ExecuteAggregate(qh.zweck, Query.AggregateType.Count);
+			NDOQuery<Reise> q = new NDOQuery<Reise>(pm, "dieLaender.oid" + " = " + "{0}");
+			q.Parameters.Add(oid.Id[0]);
+			decimal count = (decimal) q.ExecuteAggregate("zweck", AggregateType.Count);
 			Assert.That(count > 0m, "Count should be > 0");
 			usa = (Land) pm.FindObject(oid);
 			Assert.NotNull(usa, "USA nicht gefunden");
 			r.LandLöschen(usa.Name);
 			pm.Save();
 			pm.UnloadCache();
-			count = (decimal) q.ExecuteAggregate(qh.zweck, Query.AggregateType.Count);
+			count = (decimal) q.ExecuteAggregate("zweck", AggregateType.Count);
 			Assert.AreEqual(0m, count, "Count should be 0");
 		}
 
@@ -188,7 +188,7 @@ namespace NdoUnitTests {
 			r.LandHinzufügen(de);
 			pm.Abort();
 			Assert.Null(de.NDOObjectId, "Transient object shouldn't have ID");
-			Assert.Null(de.NDOStateManager, "Transient object shouldn't have state manager");
+			Assert.Null( ((IPersistenceCapable)de).NDOStateManager, "Transient object shouldn't have state manager");
 			Assert.AreEqual(NDOObjectState.Transient, de.NDOObjectState, "Status wrong");
 		}
 
@@ -199,11 +199,11 @@ namespace NdoUnitTests {
 			m.LöscheReisen();
 			Assert.AreEqual(NDOObjectState.Transient, r.NDOObjectState, "Reise should be transient");
 			Assert.Null(r.NDOObjectId, "Transient object shouldn't have ID");
-			Assert.Null(r.NDOStateManager, "Transient object shouldn't have state manager");
+			Assert.Null(((IPersistenceCapable)r).NDOStateManager, "Transient object shouldn't have state manager");
 			Assert.AreEqual(NDOObjectState.Transient, r.NDOObjectState, "Status wrong");
 			pm.Save();
 			Assert.Null(r.NDOObjectId, "Transient object shouldn't have ID");
-			Assert.Null(r.NDOStateManager, "Transient object shouldn't have state manager");
+			Assert.Null( ((IPersistenceCapable)r).NDOStateManager, "Transient object shouldn't have state manager");
 			Assert.AreEqual(NDOObjectState.Transient, r.NDOObjectState, "Status wrong");
 		}
 
@@ -260,7 +260,7 @@ namespace NdoUnitTests {
 			pm.Save();
 			ObjectId id = r.NDOObjectId;
 			pm.MakeTransient(r);
-			Assert.Null(r.NDOStateManager, "Transient object shouldn't have state manager");
+			Assert.Null( ((IPersistenceCapable)r).NDOStateManager, "Transient object shouldn't have state manager");
 			Assert.AreEqual(NDOObjectState.Transient, r.NDOObjectState, "Wrong state #1");
 			Assert.That(id.IsValid(), "Id should still be valid #1");
 			pm.Save();
@@ -336,8 +336,7 @@ namespace NdoUnitTests {
 			pm.Save();
 			Assert.AreEqual(2, r.Länder.Count, "#2 Number of Länder");
 			pm.UnloadCache();
-			Land.QueryHelper qh = new Land.QueryHelper();
-			Query q = pm.NewQuery(typeof(Land), qh.name + Query.Op.Like + "'D*'");
+			IQuery q = new NDOQuery<Land>(pm, "name" + " LIKE " + "'D*'");
 			IList list = q.Execute();
 			Assert.AreEqual(1, list.Count, "#3 Number of Länder");
 			de = (Land) list[0];
@@ -411,8 +410,7 @@ namespace NdoUnitTests {
 
 			pm.Save();
 
-			Reise.QueryHelper qh = new Reise.QueryHelper();
-			Query q = pm.NewQuery(typeof(Reise), qh.dieLaender.name + Query.Op.Eq + "'" + usa.Name + "'");
+			NDOQuery<Reise> q = new NDOQuery<Reise>(pm, "dieLaender.name" + " = " + "'" + usa.Name + "'");
 			IList l = q.Execute();
 			Assert.AreEqual(1, l.Count, "Wrong number of travels");
 		}

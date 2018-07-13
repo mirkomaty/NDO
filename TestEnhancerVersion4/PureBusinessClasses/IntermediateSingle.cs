@@ -31,7 +31,7 @@ namespace Zirkulär
 	/// Summary for IntermediateSingle
 	/// </summary>
 	[NDOPersistent]
-	public class IntermediateSingle
+	public class IntermediateSingle : IPersistentObject
 	{
 		[NDORelation(typeof(TopicIndirect), RelationInfo.Composite, "Subtopics")]
 		IList topics;
@@ -40,6 +40,11 @@ namespace Zirkulär
 			get { return ArrayList.ReadOnly(topics); }
 			set { topics = value; }
 		}
+
+		public NDOObjectState NDOObjectState { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+		public ObjectId NDOObjectId { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+		public Guid NDOTimeStamp { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+
 		public TopicIndirect NewTopicIndirect()
 		{
 			TopicIndirect t = new TopicIndirect();
@@ -50,6 +55,11 @@ namespace Zirkulär
 		{
 			if (topics.Contains(t))
 				topics.Remove(t);
+		}
+
+		public void NDOMarkDirty()
+		{
+			throw new NotImplementedException();
 		}
 
 		public IntermediateSingle()

@@ -134,21 +134,21 @@ namespace NdoUnitTests
 		}
 
 
-		private bool GetLock(IPersistenceCapable pc, Relation r, IPersistenceCapable child)
+		private bool GetLock(object pc, Relation r, object child)
 		{
 			MethodInfo mi = t.GetMethod("GetLock", new Type[]{typeof(IPersistenceCapable), typeof(Relation), typeof(IPersistenceCapable)});
 			Assert.NotNull(mi, "Method not found");
 			return (bool) mi.Invoke(theLock, new object[]{pc, r, child});
 		}
 
-		private bool IsLocked(IPersistenceCapable pc, Relation r, IPersistenceCapable child)
+		private bool IsLocked(object pc, Relation r, object child)
 		{
 			MethodInfo mi = t.GetMethod("IsLocked", new Type[]{typeof(IPersistenceCapable), typeof(Relation), typeof(IPersistenceCapable)});
 			Assert.NotNull(mi, "Method not found");
 			return (bool) mi.Invoke(theLock, new object[]{pc, r, child});
 		}
 
-		private void Unlock(IPersistenceCapable pc, Relation r, IPersistenceCapable child)
+		private void Unlock(object pc, Relation r, object child)
 		{
 			MethodInfo mi = t.GetMethod("Unlock", new Type[]{typeof(IPersistenceCapable), typeof(Relation), typeof(IPersistenceCapable)});
 			Assert.NotNull(mi, "Method not found");

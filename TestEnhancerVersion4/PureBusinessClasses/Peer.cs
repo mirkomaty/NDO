@@ -30,7 +30,7 @@ namespace PureBusinessClasses
 	/// Summary for Peer
 	/// </summary>
 	[NDOPersistent]
-	public class Peer
+	public class Peer : IPersistentObject
 	{
 		[NDORelation(typeof(Track), RelationInfo.Composite)]
 		IList tracks = new ArrayList();
@@ -51,12 +51,22 @@ namespace PureBusinessClasses
 				tracks.Remove(t);
 		}
 
+		public void NDOMarkDirty()
+		{
+			throw new NotImplementedException();
+		}
+
 		string name;
 		public string Name
 		{
 			get { return name; }
 			set { name = value; }
 		}
+
+		public NDOObjectState NDOObjectState { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+		public ObjectId NDOObjectId { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+		public Guid NDOTimeStamp { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+
 		public Peer()
 		{
 		}

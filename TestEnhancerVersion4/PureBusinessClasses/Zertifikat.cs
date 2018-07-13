@@ -28,31 +28,45 @@ namespace Reisekosten.Personal {
 	/// Zertifikat för Emailadresse. 1:1, aber existiert schon aus Firmenpool und wird nur zugeordnet :-)
 	/// </summary>
 	[NDOPersistent]
-	public class Zertifikat {
+	public class Zertifikat : IPersistentObject
+	{
 		private int schlüssel;
 
-		[NDORelation(typeof(Email), RelationInfo.Default, "Zertifikat")]
+		[NDORelation( typeof( Email ), RelationInfo.Default, "Zertifikat" )]
 		private Email adresse;
 
-		[NDORelation(typeof(Signatur), RelationInfo.Composite, "Signatur")]
+		[NDORelation( typeof( Signatur ), RelationInfo.Composite, "Signatur" )]
 		private Signatur sgn;
 
-		public Zertifikat() {
+		public Zertifikat()
+		{
 		}
 
-		public Email Adresse {
+		public Email Adresse
+		{
 			get { return adresse; }
 			set { adresse = value; }
 		}
 
-		public int Key {
+		public int Key
+		{
 			get { return schlüssel; }
 			set { schlüssel = value; }
 		}
 
-		public Signatur SGN {
+		public Signatur SGN
+		{
 			get { return sgn; }
 			set { sgn = value; }
+		}
+
+		public NDOObjectState NDOObjectState { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+		public ObjectId NDOObjectId { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+		public Guid NDOTimeStamp { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+
+		public void NDOMarkDirty()
+		{
+			throw new NotImplementedException();
 		}
 	}
 }

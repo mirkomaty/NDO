@@ -115,7 +115,7 @@ namespace NdoUnitTests {
 			pm.MakePersistent(m);
 			pm.Abort();
 			Assert.Null(r.NDOObjectId, "Transient object shouldn't have ID");
-			Assert.Null(r.NDOStateManager, "Transient object shouldn't have state manager");
+			Assert.Null( ((IPersistenceCapable)r).NDOStateManager, "Transient object shouldn't have state manager");
 			Assert.AreEqual(NDOObjectState.Transient, r.NDOObjectState, "Status wrong");
 		}
 
@@ -151,11 +151,11 @@ namespace NdoUnitTests {
 			pm.MakePersistent(m);
 			pm.Delete(m);
 			Assert.Null(r.NDOObjectId, "Transient object shouldn't have ID");
-			Assert.Null(r.NDOStateManager, "Transient object shouldn't have state manager");
+			Assert.Null( ((IPersistenceCapable)r).NDOStateManager, "Transient object shouldn't have state manager");
 			Assert.AreEqual(NDOObjectState.Transient, r.NDOObjectState, "Status wrong");
 			pm.Save();
 			Assert.Null(r.NDOObjectId, "Transient object shouldn't have ID");
-			Assert.Null(r.NDOStateManager, "Transient object shouldn't have state manager");
+			Assert.Null( ((IPersistenceCapable)r).NDOStateManager, "Transient object shouldn't have state manager");
 			Assert.AreEqual(NDOObjectState.Transient, r.NDOObjectState, "Status wrong");
 		}
 
@@ -167,7 +167,7 @@ namespace NdoUnitTests {
 			pm.Delete(m);
 			pm.Abort();
 			Assert.Null(r.NDOObjectId, "Transient object shouldn't have ID");
-			Assert.Null(r.NDOStateManager, "Transient object shouldn't have state manager");
+			Assert.Null( ((IPersistenceCapable)r).NDOStateManager, "Transient object shouldn't have state manager");
 			Assert.AreEqual(NDOObjectState.Transient, r.NDOObjectState, "Status wrong");
 		}
 
@@ -311,13 +311,13 @@ namespace NdoUnitTests {
 			pm.Save();
 			ObjectId id = r.NDOObjectId;
 			pm.MakeTransient(r);
-			Assert.Null(r.NDOStateManager, "Transient object shouldn't have state manager");
+			Assert.Null( ((IPersistenceCapable)r).NDOStateManager, "Transient object shouldn't have state manager");
 			Assert.AreEqual(NDOObjectState.Transient, r.NDOObjectState, "Wrong state #1");
 			Assert.That(id.IsValid(), "Id should still be valid #1");
 			r = (Reise)pm.FindObject(id);
 			Assert.AreEqual(NDOObjectState.Hollow, r.NDOObjectState, "Wrong state #2");
 			pm.MakeTransient(r);
-			Assert.Null(r.NDOStateManager, "Transient object shouldn't have state manager");
+			Assert.Null( ((IPersistenceCapable)r).NDOStateManager, "Transient object shouldn't have state manager");
 			Assert.AreEqual(NDOObjectState.Transient, r.NDOObjectState, "Wrong state #3");
 			Assert.That(id.IsValid(), "Id should still be valid #2");
 			r = (Reise)pm.FindObject(id);

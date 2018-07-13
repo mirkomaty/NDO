@@ -29,7 +29,7 @@ namespace Reisekosten.Personal
 	/// Summary description for Adresse.
 	/// </summary>
 	[NDOPersistent]
-	public class Adresse
+	public class Adresse : IPersistentObject
 	{
 		string straße;
 		string lkz;
@@ -56,6 +56,15 @@ namespace Reisekosten.Personal
 		{
 			get { return ort; }
 			set { ort = value; }
+		}
+
+		public NDOObjectState NDOObjectState { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+		public ObjectId NDOObjectId { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+		public Guid NDOTimeStamp { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+
+		public void NDOMarkDirty()
+		{
+			throw new NotImplementedException();
 		}
 	}
 }

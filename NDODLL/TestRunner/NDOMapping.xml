@@ -971,7 +971,7 @@
       </Oid>
       <Fields />
       <Relations>
-        <Relation FieldName="element" ReferencedTypeName="NDOObjectIdTestClasses.ClassWithHint" RelationName="">
+        <Relation FieldName="element" AccessorName="Element" ReferencedTypeName="NDOObjectIdTestClasses.ClassWithHint" RelationName="">
           <ForeignKeyColumn Name="IDClassWithHint" />
         </Relation>
       </Relations>
@@ -996,7 +996,7 @@
       </Oid>
       <Fields />
       <Relations>
-        <Relation FieldName="element" ReferencedTypeName="NDOObjectIdTestClasses.NDOoidAndHandler" RelationName="">
+        <Relation FieldName="element" AccessorName="Element" ReferencedTypeName="NDOObjectIdTestClasses.NDOoidAndHandler" RelationName="">
           <ForeignKeyColumn Name="IDNDOoidAndHandler" />
         </Relation>
       </Relations>

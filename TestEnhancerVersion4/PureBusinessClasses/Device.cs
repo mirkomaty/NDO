@@ -28,8 +28,8 @@ using NDO;
 namespace PureBusinessClasses
 {
     [NDOPersistent]
-    public class Device
-    {
+    public class Device : IPersistentObject
+	{
         string name;
         public string Name
         {
@@ -44,6 +44,11 @@ namespace PureBusinessClasses
             get { return new NDOReadOnlyGenericList<Device>(subdevices); }
             set { subdevices = (List<Device>)value; }
         }
+
+		public NDOObjectState NDOObjectState { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+		public ObjectId NDOObjectId { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+		public Guid NDOTimeStamp { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+
 		public Device NewDevice(Type t)
 		{
 			Device d = (Device) Activator.CreateInstance(t);
@@ -55,7 +60,12 @@ namespace PureBusinessClasses
 			if (subdevices.Contains(d))
 				subdevices.Remove(d);
 		}
-    }
+
+		public void NDOMarkDirty()
+		{
+			throw new NotImplementedException();
+		}
+	}
 
     [NDOPersistent]
     public class SnmpDevice : Device

@@ -30,7 +30,7 @@ namespace PureBusinessClasses
 	/// Summary for Product
 	/// </summary>
 	[NDOPersistent]
-	public class Product
+	public class Product : IPersistentObject
 	{
 		string name;
 		public string Name
@@ -39,8 +39,17 @@ namespace PureBusinessClasses
 			set { name = value; }
 		}
 
+		public NDOObjectState NDOObjectState { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+		public ObjectId NDOObjectId { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+		public Guid NDOTimeStamp { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+
 		public Product()
 		{
+		}
+
+		public void NDOMarkDirty()
+		{
+			throw new NotImplementedException();
 		}
 	}
 }

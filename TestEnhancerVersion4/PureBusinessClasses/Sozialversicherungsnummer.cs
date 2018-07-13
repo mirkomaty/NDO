@@ -28,23 +28,36 @@ namespace Reisekosten.Personal {
 	/// Sozialversicherungsnummer för Mitarbeiter
 	/// </summary>
 	[NDOPersistent]
-	public class Sozialversicherungsnummer {
+	public class Sozialversicherungsnummer : IPersistentObject
+	{
 		private int nummer;
 
-		[NDORelation(typeof(Mitarbeiter), RelationInfo.Default, "Versicherung")]
+		[NDORelation( typeof( Mitarbeiter ), RelationInfo.Default, "Versicherung" )]
 		private Mitarbeiter arbeiter;
 
-		public Sozialversicherungsnummer() {
+		public Sozialversicherungsnummer()
+		{
 		}
 
-		public Mitarbeiter Angestellter {
+		public Mitarbeiter Angestellter
+		{
 			get { return arbeiter; }
 			set { arbeiter = value; }
 		}
 
-		public int SVN {
+		public int SVN
+		{
 			get { return nummer; }
 			set { nummer = value; }
+		}
+
+		public NDOObjectState NDOObjectState { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+		public ObjectId NDOObjectId { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+		public Guid NDOTimeStamp { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+
+		public void NDOMarkDirty()
+		{
+			throw new NotImplementedException();
 		}
 	}
 }

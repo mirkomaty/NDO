@@ -23,6 +23,7 @@
 using System;
 using NDO;
 using System.Collections;
+using System.Data;
 
 namespace Reisekosten
 {
@@ -30,7 +31,7 @@ namespace Reisekosten
 	/// Summary description for Land.
 	/// </summary>
 	[NDOPersistent]
-	public class Land
+	public class Land : IPersistentObject
 	{
 		private string name;
 
@@ -78,6 +79,11 @@ namespace Reisekosten
 			this.flughäfen = l;
 		}
 
+		public void NDOMarkDirty()
+		{
+			throw new NotImplementedException();
+		}
+
 		public Land()
 		{
 		}
@@ -91,5 +97,9 @@ namespace Reisekosten
 			get { return name; }
 			set { name = value; }
 		}
+
+		public NDOObjectState NDOObjectState { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+		public ObjectId NDOObjectId { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+		public Guid NDOTimeStamp { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
 	}
 }

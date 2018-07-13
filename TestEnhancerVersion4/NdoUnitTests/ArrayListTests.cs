@@ -27,6 +27,7 @@ using NUnit.Framework;
 using NDO;
 using Reisekosten;
 using Reisekosten.Personal;
+using NDO.Query;
 
 namespace NdoUnitTests
 {
@@ -80,8 +81,8 @@ namespace NdoUnitTests
 		public void TestAddRange()
 		{
 			AddRange();
-			Query q = pm.NewQuery(typeof(Mitarbeiter));
-			m = (Mitarbeiter) q.ExecuteSingle(true);
+			NDOQuery<Mitarbeiter> q = new NDOQuery<Mitarbeiter>(pm);
+			m = q.ExecuteSingle(true);
 			Assert.AreEqual(2, m.Reisen.Count, "Count of Reisen wrong");
 		}
 
@@ -101,15 +102,6 @@ namespace NdoUnitTests
 			int result = m.ReisenCapacity;
 			Assert.That(GetLoadState(), "Relation not loaded");
 		}
-
-        //[Test]
-        //public void ReisenClone()
-        //{
-        //    AddRange();
-        //    IList l = m.ReisenClone;
-	//Assert.That(GetLoadState(), "Relation not loaded");
-	//Assert.AreEqual(2, l.Count, "Count is wrong");
-        //}
 
 		[Test]
 		public void ReisenGetRange()
@@ -352,14 +344,14 @@ namespace NdoUnitTests
 			Assert.NotNull(fi);
 			object o = fi.GetValue(r);
 			Assert.NotNull(o);
-			return m.NDOGetLoadState((int)o);
+			return ((IPersistenceCapable)m).NDOGetLoadState((int)o);
 		}
 
 		private void SaveAndReload()
 		{
 			pm.Save();
 			pm.UnloadCache();
-			Query q = pm.NewQuery(typeof(Mitarbeiter));
+			NDOQuery<Mitarbeiter> q = new NDOQuery<Mitarbeiter>(pm);
 			m = (Mitarbeiter) q.ExecuteSingle(true);
 		}
 

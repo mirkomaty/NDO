@@ -34,13 +34,11 @@
       </Reference>
       <Reference AssemblyName="nunit.framework" AssemblyPath="bin\Debug\nunit.framework.dll" CheckThisDLL="False">
       </Reference>
+      <Reference AssemblyName="SqlCeProvider" AssemblyPath="..\..\SqlCEProvider\SqlCEProvider\bin\Debug\SqlCeProvider.dll" CheckThisDLL="False">
+      </Reference>
       <Reference AssemblyName="System.Data.SqlServerCe" AssemblyPath="..\..\SqlCEProvider\packages\Microsoft.SqlServer.Compact.4.0.8876.1\lib\net40\System.Data.SqlServerCe.dll" CheckThisDLL="False">
       </Reference>
       <Reference AssemblyName="PureBusinessClasses" AssemblyPath="..\PureBusinessClasses\bin\Debug\PureBusinessClasses.dll">
-      </Reference>
-      <Reference AssemblyName="SqlCeProvider" AssemblyPath="..\..\SqlCEProvider\SqlCEProvider\bin\Debug\SqlCeProvider.dll" CheckThisDLL="False">
-      </Reference>
-      <Reference AssemblyName="System.Core" AssemblyPath="..\..\..\..\program files (x86)\reference assemblies\microsoft\framework\.netframework\v4.0\system.core.dll" CheckThisDLL="False">
       </Reference>
     </References>
   </ProjectDescription>

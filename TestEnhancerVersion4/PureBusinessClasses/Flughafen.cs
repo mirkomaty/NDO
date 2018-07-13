@@ -30,7 +30,7 @@ namespace Reisekosten
 	/// Summary for Flughafen
 	/// </summary>
 	[NDOPersistent]
-	public class Flughafen
+	public class Flughafen : IPersistentObject
 	{
 		string kürzel;
 		public string Kürzel
@@ -39,8 +39,17 @@ namespace Reisekosten
 			set { kürzel = value; }
 		}
 
+		public NDOObjectState NDOObjectState { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+		public ObjectId NDOObjectId { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+		public Guid NDOTimeStamp { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+
 		public Flughafen()
 		{
+		}
+
+		public void NDOMarkDirty()
+		{
+			throw new NotImplementedException();
 		}
 	}
 }

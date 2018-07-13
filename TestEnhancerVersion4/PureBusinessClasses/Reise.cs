@@ -22,12 +22,13 @@
 
 using System;
 using System.Collections;
+using System.Data;
 using NDO;
 
 namespace Reisekosten
 {
 	[NDOPersistent]
-	public class Reise : IComparable
+	public class Reise : IComparable, IPersistentObject
 	{
 		private string zweck;
 
@@ -108,6 +109,9 @@ namespace Reisekosten
 			}
 		}
 
+		public NDOObjectState NDOObjectState { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+		public ObjectId NDOObjectId { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+		public Guid NDOTimeStamp { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
 
 		public void Drucken() {
 			foreach(Kostenpunkt k in belege) {
@@ -121,6 +125,11 @@ namespace Reisekosten
             Reise r2 = obj as Reise;
             if ((object)r2 == null) return -1;
             return this.zweck.CompareTo(r2.zweck);
+		}
+
+		public void NDOMarkDirty()
+		{
+			throw new NotImplementedException();
 		}
 
 		#endregion

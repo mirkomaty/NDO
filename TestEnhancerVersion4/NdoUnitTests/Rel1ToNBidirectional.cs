@@ -25,6 +25,7 @@ using System.Collections;
 using PureBusinessClasses;
 using NDO;
 using NUnit.Framework;
+using NDO.Query;
 
 namespace NdoUnitTests
 {
@@ -67,7 +68,7 @@ namespace NdoUnitTests
 
 			pm.UnloadCache();
 
-			Query q = pm.NewQuery(typeof(Peer), null);
+			IQuery q = new NDOQuery<Peer>(pm, null);
 			IList l = q.Execute();
 			pm.Delete(l);
 			pm.Save();

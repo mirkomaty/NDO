@@ -23,6 +23,7 @@
 using System;
 using ForeignObjectManipulationClasses;
 using NDO;
+using NDO.Query;
 using System.Collections;
 using NUnit.Framework;
 using System.Drawing;
@@ -46,7 +47,7 @@ namespace NdoUnitTests
 		[TearDown]
 		public void TearDown()
 		{
-			Query q = pm.NewQuery(typeof(Parent), null);
+			NDOQuery<Parent> q = new NDOQuery<Parent>(pm, null);
 			IList l = q.Execute();
 			pm.Delete(l);
 			pm = null;

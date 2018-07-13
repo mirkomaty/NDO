@@ -26,7 +26,7 @@ using NDO;
 namespace PureBusinessClasses
 {
 	[NDOPersistent]
-	public class SequenceValue
+	public class SequenceValue : IPersistentObject
 	{
 		int _value;
 		public int Value
@@ -34,8 +34,18 @@ namespace PureBusinessClasses
 			get { return _value; }
 			set { _value = value; }
 		}
+
+		public NDOObjectState NDOObjectState { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+		public ObjectId NDOObjectId { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+		public Guid NDOTimeStamp { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+
 		public SequenceValue()
 		{
+		}
+
+		public void NDOMarkDirty()
+		{
+			throw new NotImplementedException();
 		}
 	}
 }

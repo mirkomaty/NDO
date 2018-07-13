@@ -27,7 +27,7 @@ using NDO;
 namespace Reisekosten
 {
 	[NDOPersistent]
-	public class Subject
+	public class Subject : IPersistentObject
 	{
 		string text;
 		public string Text
@@ -35,8 +35,18 @@ namespace Reisekosten
 			get { return text; }
 			set { text = value; }
 		}
+
+		public NDOObjectState NDOObjectState { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+		public ObjectId NDOObjectId { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+		public Guid NDOTimeStamp { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+
 		public Subject()
 		{
+		}
+
+		public void NDOMarkDirty()
+		{
+			throw new NotImplementedException();
 		}
 	}
 }

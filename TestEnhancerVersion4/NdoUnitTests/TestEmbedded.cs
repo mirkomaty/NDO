@@ -25,6 +25,7 @@ using System.Collections;
 using DataTypeTestClasses;
 using NUnit.Framework;
 using NDO;
+using NDO.Query;
 
 namespace NdoUnitTests
 {
@@ -68,7 +69,7 @@ namespace NdoUnitTests
 			pm.Save();
 			pm.UnloadCache();
 
-			Query q = pm.NewQuery(typeof(ParentWithEmbedded), null);
+			IQuery q = new NDOQuery<ParentWithEmbedded>(pm, null);
 			pwe = (ParentWithEmbedded) q.ExecuteSingle(true);
 
 			Assert.AreEqual("SecondEwom", pwe.Ewom.Member, "Inhalt falsch ");

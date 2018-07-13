@@ -25,30 +25,42 @@ using NDO;
 
 namespace Reisekosten.Personal {
 	/// <summary>
-	/// Zusötzliche digitale Signatur för ein Zertifikat.
+	/// Zusätzliche digitale Signatur für ein Zertifikat.
 	/// </summary>
 	[NDOPersistent]
-	public class Signatur {
+	public class Signatur : IPersistentObject
+	{
 		private string signature;
 
-		[NDORelation(typeof(Zertifikat), RelationInfo.Default, "Signatur")]
+		[NDORelation( typeof( Zertifikat ), RelationInfo.Default, "Signatur" )]
 		private Zertifikat owner;
-		
-		public Signatur() {}  // wird för NDO laden benötigt.
 
-		public Signatur(string s) {
+		public Signatur() { }  // wird för NDO laden benötigt.
+
+		public Signatur( string s )
+		{
 			this.signature = s;
 		}
 
-		public string Key {
+		public string Key
+		{
 			get { return signature; }
 			set { signature = value; }
 		}
 
-		public Zertifikat Owner {
+		public Zertifikat Owner
+		{
 			get { return owner; }
 			set { owner = value; }
 		}
 
+		public NDOObjectState NDOObjectState { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+		public ObjectId NDOObjectId { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+		public Guid NDOTimeStamp { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+
+		public void NDOMarkDirty()
+		{
+			throw new NotImplementedException();
+		}
 	}
 }

@@ -26,6 +26,7 @@ using System.IO;
 using NUnit.Framework;
 using Reisekosten.Personal;
 using NDO;
+using NDO.Query;
 
 namespace NdoUnitTests {
 	/// <summary>
@@ -381,15 +382,14 @@ namespace NdoUnitTests {
 			pm.Save();
 			ObjectId oid = b.NDOObjectId;
 			pm.UnloadCache();
-			Mitarbeiter.QueryHelper qh = new Mitarbeiter.QueryHelper();
-			Query q = pm.NewQuery(typeof(Mitarbeiter), qh.meinBuero.oid + Query.Op.Eq + Query.Placeholder(0));
-			q.Parameters.Add(new Query.Parameter(oid.Id[0]));
-			decimal count = (decimal) q.ExecuteAggregate(qh.nachname, Query.AggregateType.Count);
+			NDOQuery<Mitarbeiter> q = new NDOQuery<Mitarbeiter>(pm, "meinBuero.oid" + " = " + "{0}");
+			q.Parameters.Add(oid.Id[0]);
+			decimal count = (decimal) q.ExecuteAggregate(m => m.Nachname, AggregateType.Count);
 			Assert.That(count > 0m, "Count should be > 0");
 			m.Zimmer = null;
 			pm.Save();
 			pm.UnloadCache();
-			count = (decimal) q.ExecuteAggregate(qh.nachname, Query.AggregateType.Count);
+			count = (decimal) q.ExecuteAggregate(m => m.Nachname, AggregateType.Count);
 			Assert.AreEqual(0m, count, "Count should be 0");
 		}
 			

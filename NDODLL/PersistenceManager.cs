@@ -1739,63 +1739,77 @@ namespace NDO
 			Debug.Assert(pc.NDOObjectState == NDOObjectState.Persistent, "LoadData: Object should be Persistent after loading: " + pc.NDOObjectId.Dump() + ". But the object is " + pc.NDOObjectState + '.');			
 		}
 
+		/// <summary>
+		/// Creates a new IQuery object for the given type
+		/// </summary>
+		/// <param name="t"></param>
+		/// <param name="oql"></param>
+		/// <param name="hollow"></param>
+		/// <param name="queryLanguage"></param>
+		/// <returns></returns>
+		public IQuery NewQuery(Type t, string oql, bool hollow = false, QueryLanguage queryLanguage = QueryLanguage.NDOql)
+		{
+			Type template = typeof( NDOQuery<object> ).GetGenericTypeDefinition();
+			Type qt = template.MakeGenericType( t );
+			return (IQuery)Activator.CreateInstance( qt, this, oql, hollow );
+		}
 
-        private NDOQuery<RT> CreateIndependentOidQuery<RT>(RT pc, Class cl) where RT:IPersistenceCapable
+        private IQuery CreateIndependentOidQuery(IPersistenceCapable pc, Class cl) 
         {
             ArrayList parameters = new ArrayList();
 			string oql = "oid = {0}";
-			NDOQuery<RT> q = new NDOQuery<RT>(this, oql, false);
+			IQuery q = NewQuery(pc.GetType(), oql, false);
 			q.Parameters.Add( pc.NDOObjectId );
 			q.AllowSubclasses = false;
             return q;
         }
 
-		private NDOQuery<RT> CreateDependentOidQuery<RT>(RT pc, Class cl) where RT: IPersistenceCapable
+		private IQuery CreateDependentOidQuery( IPersistenceCapable pc, Class cl )
 		{
-            // For an explanation the structure of the data contained in keys 
-            // look at the DependentKey constructor.
-            ArrayList parameters = new ArrayList();
+			// For an explanation the structure of the data contained in keys 
+			// look at the DependentKey constructor.
+			ArrayList parameters = new ArrayList();
 			IProvider provider = cl.Provider;
-            StringBuilder sb = new StringBuilder();
-            sb.Append("SELECT ");
-            sb.Append(FieldMarker.Instance);
-            sb.Append(" from ");
-            sb.Append(QualifiedTableName.Get(cl.TableName, provider));
-            sb.Append(" WHERE ");
+			StringBuilder sb = new StringBuilder();
+			sb.Append( "SELECT " );
+			sb.Append( FieldMarker.Instance );
+			sb.Append( " from " );
+			sb.Append( QualifiedTableName.Get( cl.TableName, provider ) );
+			sb.Append( " WHERE " );
 
-            int columnCount = cl.Oid.OidColumns.Count;
+			int columnCount = cl.Oid.OidColumns.Count;
 
-            Key key = pc.NDOObjectId.Id;
+			Key key = pc.NDOObjectId.Id;
 
-            int relationIndex = 0;
-            string relationName = string.Empty;
+			int relationIndex = 0;
+			string relationName = string.Empty;
 
-            for (int i = 0; i < columnCount; i++)
-            {
-                OidColumn oidColumn = (OidColumn)cl.Oid.OidColumns[i];
-                sb.Append(provider.GetQuotedName(oidColumn.Name));
-                sb.Append(" = ");
-                sb.Append(provider.GetSqlLiteral(key[i]));
-                Relation rel = oidColumn.Relation;
-                if (relationName != oidColumn.RelationName)
-                {
-                    relationName = oidColumn.RelationName;
-                    if (rel.ForeignKeyTypeColumnName != null)
-                    {
-                        sb.Append(" AND ");
-                        sb.Append(provider.GetQuotedName(rel.ForeignKeyTypeColumnName));
-                        sb.Append(" = ");
-                        sb.Append(provider.GetSqlLiteral(key[columnCount + relationIndex]));
-                        relationIndex++;
-                    }
-                }
-                if (i < columnCount - 1)
-                    sb.Append(" AND ");
-            }
+			for (int i = 0; i < columnCount; i++)
+			{
+				OidColumn oidColumn = (OidColumn)cl.Oid.OidColumns[i];
+				sb.Append( provider.GetQuotedName( oidColumn.Name ) );
+				sb.Append( " = " );
+				sb.Append( provider.GetSqlLiteral( key[i] ) );
+				Relation rel = oidColumn.Relation;
+				if (relationName != oidColumn.RelationName)
+				{
+					relationName = oidColumn.RelationName;
+					if (rel.ForeignKeyTypeColumnName != null)
+					{
+						sb.Append( " AND " );
+						sb.Append( provider.GetQuotedName( rel.ForeignKeyTypeColumnName ) );
+						sb.Append( " = " );
+						sb.Append( provider.GetSqlLiteral( key[columnCount + relationIndex] ) );
+						relationIndex++;
+					}
+				}
+				if (i < columnCount - 1)
+					sb.Append( " AND " );
+			}
 
-            NDOQuery<RT> q = new NDOQuery<RT>(this, sb.ToString(), false, QueryLanguage.Sql);
-            return q;
-                        }
+			var q = NewQuery( pc.GetType(), sb.ToString(), false, QueryLanguage.Sql );
+			return q;
+		}
 
 		/// <summary>
 		/// Mark the object dirty. The current state is

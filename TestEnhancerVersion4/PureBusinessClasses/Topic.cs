@@ -31,7 +31,7 @@ namespace PureBusinessClasses
 	/// Summary for Topic
 	/// </summary>
 	[NDOPersistent]
-	public class Topic
+	public class Topic : IPersistentObject
 	{
 		string text;
 		public string Text
@@ -58,6 +58,12 @@ namespace PureBusinessClasses
 			if (subtopics.Contains(t))
 				subtopics.Remove(t);
 		}
+
+		public void NDOMarkDirty()
+		{
+			throw new NotImplementedException();
+		}
+
 		[NDORelation]
 		Topic owner;
 		public Topic Owner
@@ -65,6 +71,11 @@ namespace PureBusinessClasses
 			get { return owner; }
 			set { owner = value; }
 		}
+
+		public NDOObjectState NDOObjectState { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+		public ObjectId NDOObjectId { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+		public Guid NDOTimeStamp { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+
 		public Topic(string text)
 		{
 			this.text = text;

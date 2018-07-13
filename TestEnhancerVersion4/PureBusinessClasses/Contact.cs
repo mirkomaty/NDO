@@ -28,7 +28,7 @@ using NDO;
 namespace PureBusinessClasses
 {
 	[NDOPersistent]
-	public abstract class Contact
+	public abstract class Contact : IPersistentObject
 	{
 		string firstName;
 		public string FirstName
@@ -50,6 +50,11 @@ namespace PureBusinessClasses
 			get { return ArrayList.ReadOnly(addresses); }
 			set { addresses = value; }
 		}
+
+		public NDOObjectState NDOObjectState { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+		public ObjectId NDOObjectId { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+		public Guid NDOTimeStamp { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+
 		public void AddAdresse(Adresse a)
 		{
 			addresses.Add(a);
@@ -59,7 +64,12 @@ namespace PureBusinessClasses
 			if (addresses.Contains(a))
 				addresses.Remove(a);
 		}
-		
+
+		public void NDOMarkDirty()
+		{
+			throw new NotImplementedException();
+		}
+
 		public Contact()
 		{
 		}

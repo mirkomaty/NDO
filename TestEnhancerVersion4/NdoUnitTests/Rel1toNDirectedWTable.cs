@@ -23,6 +23,7 @@
 using System;
 using System.Collections;
 using NDO;
+using NDO.Query;
 using NUnit.Framework;
 using Reisekosten;
 using Reisekosten.Personal;
@@ -126,8 +127,7 @@ namespace NdoUnitTests {
 			pm.Save();
 
 			pm.UnloadCache();
-			Mitarbeiter.QueryHelper qh = new Mitarbeiter.QueryHelper();
-			Query q = pm.NewQuery(typeof(Mitarbeiter), qh.reiseBüros.name + " LIKE 'L*'");
+			NDOQuery<Mitarbeiter> q = new NDOQuery<Mitarbeiter>(pm, "reiseBüros.name LIKE 'L*'");
 			//System.Diagnostics.Debug.WriteLine(q.GeneratedQuery);
 			IList l = q.Execute();
 			Assert.AreEqual(1, l.Count, "Mitarbeiter not found");

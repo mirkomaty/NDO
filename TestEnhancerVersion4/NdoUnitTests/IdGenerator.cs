@@ -94,7 +94,7 @@ namespace NdoUnitTests
 #if FIREBIRD
 			//SET GENERATOR "NDOGenerator" TO 0;
 			PersistenceManager pm = PmFactory.NewPersistenceManager();
-			Query q = pm.NewQuery(typeof(SequenceValue), "SELECT GEN_ID(\"NDOGenerator\", " + increment.ToString() + ") AS \"Value\" FROM RDB$DATABASE;", false, Query.Language.Sql); 
+			IQuery q = new NDOQuery<SequenceValue), "SELECT GEN_ID(\"NDOGenerator\", " + increment.ToString() + ") AS \"Value\" FROM RDB$DATABASE;", false, QueryLanguage.Sql); 
 			SequenceValue sv = (SequenceValue) q.ExecuteSingle();
 			currentId = sv.Value;
 			upperLimit = sv.Value + increment;

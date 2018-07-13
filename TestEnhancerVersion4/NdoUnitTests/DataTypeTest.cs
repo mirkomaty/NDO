@@ -27,6 +27,7 @@ using DataTypeTestClasses;
 using NDO;
 using NDO.Mapping;
 using NUnit.Framework;
+using NDO.Query;
 
 namespace NdoUnitTests
 {
@@ -138,48 +139,48 @@ namespace NdoUnitTests
 			return false;
 		}
 
-		public void TestDataContainerEvent()
-		{
-			Type t = typeof(DataContainer.QueryHelper);
+		//public void TestDataContainerEvent()
+		//{
+		//	Type t = typeof(DataContainer.QueryHelper);
 
-			Class cl = pm.NDOMapping.FindClass(typeof(DataContainer));
-			Assert.Null(cl.FindField("TestEvent"), "Events should not be mapped");
+		//	Class cl = pm.NDOMapping.FindClass(typeof(DataContainer));
+		//	Assert.Null(cl.FindField("TestEvent"), "Events should not be mapped");
 
-			Assert.NotNull(t.GetMember("int16Var", BindingFlags.Instance), "Variables should appear in qh");
-			PropertyInfo pi = t.GetProperty("TestEvent");
-			Assert.Null(pi, "Events should not appear in qh");
+		//	Assert.NotNull(t.GetMember("int16Var", BindingFlags.Instance), "Variables should appear in qh");
+		//	PropertyInfo pi = t.GetProperty("TestEvent");
+		//	Assert.Null(pi, "Events should not appear in qh");
 
-			//----
-			t = typeof(DataContainerDerived.QueryHelper);
+		//	//----
+		//	t = typeof(DataContainerDerived.QueryHelper);
 
-			cl = pm.NDOMapping.FindClass(typeof(DataContainerDerived));
-			Assert.That(!FieldWithNameExists(cl, "TestEvent"), "Events should not be mapped");
+		//	cl = pm.NDOMapping.FindClass(typeof(DataContainerDerived));
+		//	Assert.That(!FieldWithNameExists(cl, "TestEvent"), "Events should not be mapped");
 
-			Assert.NotNull(t.GetMember("int16Var", BindingFlags.Instance), "Variables should appear in qh");
-			pi = t.GetProperty("TestEvent");
-			Assert.Null(pi, "Events should not appear in qh");
+		//	Assert.NotNull(t.GetMember("int16Var", BindingFlags.Instance), "Variables should appear in qh");
+		//	pi = t.GetProperty("TestEvent");
+		//	Assert.Null(pi, "Events should not appear in qh");
 
-			//----
-			t = typeof(VtAndEtContainer.QueryHelper);
+		//	//----
+		//	t = typeof(VtAndEtContainer.QueryHelper);
 
-			cl = pm.NDOMapping.FindClass(typeof(VtAndEtContainer));
-			Assert.That(!FieldWithNameExists(cl, "TestEvent"), "Events should not be mapped");
+		//	cl = pm.NDOMapping.FindClass(typeof(VtAndEtContainer));
+		//	Assert.That(!FieldWithNameExists(cl, "TestEvent"), "Events should not be mapped");
 
-			Assert.NotNull(t.GetMember("int16Var", BindingFlags.Instance), "Variables should appear in qh");
-			pi = t.GetProperty("TestEvent");
-			Assert.Null(pi, "Events should not appear in qh");
+		//	Assert.NotNull(t.GetMember("int16Var", BindingFlags.Instance), "Variables should appear in qh");
+		//	pi = t.GetProperty("TestEvent");
+		//	Assert.Null(pi, "Events should not appear in qh");
 
-			//----
-			t = typeof(VtAndEtContainerDerived.QueryHelper);
+		//	//----
+		//	t = typeof(VtAndEtContainerDerived.QueryHelper);
 
-			cl = pm.NDOMapping.FindClass(typeof(VtAndEtContainerDerived));
-			Assert.That(!FieldWithNameExists(cl, "TestEvent"), "Events should not be mapped");
+		//	cl = pm.NDOMapping.FindClass(typeof(VtAndEtContainerDerived));
+		//	Assert.That(!FieldWithNameExists(cl, "TestEvent"), "Events should not be mapped");
 
-			Assert.NotNull(t.GetMember("int16Var", BindingFlags.Instance), "Variables should appear in qh");
-			pi = t.GetProperty("TestEvent");
-			Assert.Null(pi, "Events should not appear in qh");
+		//	Assert.NotNull(t.GetMember("int16Var", BindingFlags.Instance), "Variables should appear in qh");
+		//	pi = t.GetProperty("TestEvent");
+		//	Assert.Null(pi, "Events should not appear in qh");
 
-		}
+		//}
 
 		[Test]
 		public void TestDataContainerDerived()
@@ -283,192 +284,190 @@ namespace NdoUnitTests
 			dc.Init();
 			pm.MakePersistent(dc);
 			pm.Save();
-            DataContainer.QueryHelper qh = new DataContainer.QueryHelper();
-			Query q = pm.NewQuery(typeof(DataContainer), qh.boolVar + Query.Op.Eq + Query.Placeholder(0));
+			IQuery q = new NDOQuery<DataContainer>(pm, "boolVar" + " = " + "{0}");
 #if !ORACLE
-			q.Parameters.Add(new Query.Parameter(true));
+			q.Parameters.Add(true);
 #else
-			q.Parameters.Add(new Query.Parameter(1));
+			q.Parameters.Add(1);
 #endif
 			q.ExecuteSingle(true);  // If something goes wrong, an Exception will be thrown.
 			
-			q = pm.NewQuery(typeof(DataContainer), qh.byteVar + Query.Op.Eq + Query.Placeholder(0));
-			q.Parameters.Add(new Query.Parameter((byte)127));
+			q = new NDOQuery<DataContainer>(pm, "byteVar" + " = " + "{0}");
+			q.Parameters.Add((byte)127);
 			q.ExecuteSingle(true);  // If something goes wrong, an Exception will be thrown.
 
-			q = pm.NewQuery(typeof(DataContainer), qh.dateTimeVar + Query.Op.Le + Query.Placeholder(0));
-			q.Parameters.Add(new Query.Parameter(DateTime.Now));
+			q = new NDOQuery<DataContainer>(pm, "dateTimeVar" + " <= " + "{0}");
+			q.Parameters.Add(DateTime.Now);
 			q.ExecuteSingle(true);  // If something goes wrong, an Exception will be thrown.
 
-			q = pm.NewQuery(typeof(DataContainer), qh.guidVar + Query.Op.Eq + Query.Placeholder(0));
-			q.Parameters.Add(new Query.Parameter(new Guid("12341234-1234-1234-1234-123412341234")));
+			q = new NDOQuery<DataContainer>(pm, "guidVar" + " = " + "{0}");
+			q.Parameters.Add(new Guid("12341234-1234-1234-1234-123412341234"));
 			q.ExecuteSingle(true);  // If something goes wrong, an Exception will be thrown.
 
-			q = pm.NewQuery(typeof(DataContainer), qh.decVar + Query.Op.Eq + Query.Placeholder(0));
-			q.Parameters.Add(new Query.Parameter(1231.12m));
+			q = new NDOQuery<DataContainer>(pm, "decVar" + " = " + "{0}");
+			q.Parameters.Add(1231.12m);
 			q.ExecuteSingle(true);  // If something goes wrong, an Exception will be thrown.
 
-			q = pm.NewQuery(typeof(DataContainer), qh.doubleVar + Query.Op.Eq + Query.Placeholder(0));
-			q.Parameters.Add(new Query.Parameter(1E28));
+			q = new NDOQuery<DataContainer>(pm, "doubleVar" + " = " + "{0}");
+			q.Parameters.Add(1E28);
 			q.ExecuteSingle(true);  // If something goes wrong, an Exception will be thrown.
 
-			q = pm.NewQuery(typeof(DataContainer), qh.enumVar + Query.Op.Eq + Query.Placeholder(0));
-			q.Parameters.Add(new Query.Parameter(EnumType.drei));
+			q = new NDOQuery<DataContainer>(pm, "enumVar" + " = " + "{0}");
+			q.Parameters.Add(EnumType.drei);
 			q.ExecuteSingle(true);  // If something goes wrong, an Exception will be thrown.
 
 #if !MYSQL
-			q = pm.NewQuery(typeof(DataContainer), qh.floatVar + Query.Op.Eq + Query.Placeholder(0));
-			q.Parameters.Add(new Query.Parameter(1E14F));
+			q = new NDOQuery<DataContainer>(pm, "floatVar" + " = " + "{0}");
+			q.Parameters.Add(1E14F);
 			q.ExecuteSingle(true);  // If something goes wrong, an Exception will be thrown.
 #endif
-			q = pm.NewQuery(typeof(DataContainer), qh.int16Var + Query.Op.Eq + Query.Placeholder(0));
-			q.Parameters.Add(new Query.Parameter(short.MaxValue));
+			q = new NDOQuery<DataContainer>(pm, "int16Var" + " = " + "{0}");
+			q.Parameters.Add(short.MaxValue);
 			q.ExecuteSingle(true);  // If something goes wrong, an Exception will be thrown.
 
-			q = pm.NewQuery(typeof(DataContainer), qh.int32Var + Query.Op.Eq + Query.Placeholder(0));
-			q.Parameters.Add(new Query.Parameter(int.MaxValue));
+			q = new NDOQuery<DataContainer>(pm, "int32Var" + " = " + "{0}");
+			q.Parameters.Add(int.MaxValue);
 			q.ExecuteSingle(true);  // If something goes wrong, an Exception will be thrown.
 
-			q = pm.NewQuery(typeof(DataContainer), qh.int64Var + Query.Op.Eq + Query.Placeholder(0));
-			q.Parameters.Add(new Query.Parameter(0x1ffffffff));
+			q = new NDOQuery<DataContainer>(pm, "int64Var" + " = " + "{0}");
+			q.Parameters.Add(0x1ffffffff);
 			q.ExecuteSingle(true);  // If something goes wrong, an Exception will be thrown.
 
-			q = pm.NewQuery(typeof(DataContainer), qh.stringVar + Query.Op.Eq + Query.Placeholder(0));
-			q.Parameters.Add(new Query.Parameter("Test"));
+			q = new NDOQuery<DataContainer>(pm, "stringVar" + " = " + "{0}");
+			q.Parameters.Add("Test");
 			q.ExecuteSingle(true);  // If something goes wrong, an Exception will be thrown.
 
-			q = pm.NewQuery(typeof(DataContainer), qh.uint16Var + Query.Op.Eq + Query.Placeholder(0));
-			q.Parameters.Add(new Query.Parameter((ushort) short.MaxValue));
+			q = new NDOQuery<DataContainer>(pm, "uint16Var" + " = " + "{0}");
+			q.Parameters.Add((ushort) short.MaxValue);
 			q.ExecuteSingle(true);  // If something goes wrong, an Exception will be thrown.
 
-			q = pm.NewQuery(typeof(DataContainer), qh.uint32Var + Query.Op.Eq + Query.Placeholder(0));
-			q.Parameters.Add(new Query.Parameter((uint) int.MaxValue));
+			q = new NDOQuery<DataContainer>(pm, "uint32Var" + " = " + "{0}");
+			q.Parameters.Add((uint) int.MaxValue);
 			q.ExecuteSingle(true);  // If something goes wrong, an Exception will be thrown.
 
-			q = pm.NewQuery(typeof(DataContainer), qh.uint64Var + Query.Op.Eq + Query.Placeholder(0));
-			q.Parameters.Add(new Query.Parameter(0x1ffffffff));
+			q = new NDOQuery<DataContainer>(pm, "uint64Var" + " = " + "{0}");
+			q.Parameters.Add(0x1ffffffff);
 			dc = (DataContainer) q.ExecuteSingle(true);  // If something goes wrong, an Exception will be thrown.
 
 			dc.StringVar = "";
 			pm.Save();
 
 #if ORACLE
-			q = pm.NewQuery(typeof(DataContainer), qh.stringVar + Query.Op.IsNull);
+			q = new NDOQuery<DataContainer>(pm, "stringVar" + Query.Op.IsNull);
 			q.ExecuteSingle(true);  // If something goes wrong, an Exception will be thrown.
 #else
-			q = pm.NewQuery(typeof(DataContainer), qh.stringVar + Query.Op.Eq + Query.Placeholder(0));
-			q.Parameters.Add(new Query.Parameter(""));
+			q = new NDOQuery<DataContainer>(pm, "stringVar" + " = " + "{0}");
+			q.Parameters.Add("");
 			q.ExecuteSingle(true);  // If something goes wrong, an Exception will be thrown.
 #endif
 
 		}
 
 
-
+#if nix
 		[Test]
 		public void TestQueryHelpers()
-		{
-			VtAndEtContainer.QueryHelper qh = new VtAndEtContainer.QueryHelper();
+		{			
+			Assert.AreEqual("propValType.ByteVar", "propValType.ByteVar", "ByteVar falsch #1");
+			Assert.AreEqual("propValType.BoolVar",  "propValType.BoolVar", "BoolVar falsch #1");
+			Assert.AreEqual("propValType.DecVar", "propValType.DecVar", "DecVar falsch #1");
+			Assert.AreEqual("propValType.DateTimeVar", "propValType.DateTimeVar", "DateTimeVar falsch #1");
+			Assert.AreEqual("propValType.DoubleVar", "propValType.DoubleVar", "DoubleVar falsch #1");
+			Assert.AreEqual("propValType.FloatVar", "propValType.FloatVar", "FloatVar falsch #1");
+			Assert.AreEqual("propValType.GuidVar", "propValType.GuidVar", "GuidVar falsch #1");
+			Assert.AreEqual("propValType.Int16Var", "propValType.Int16Var", "Int16Var falsch #1");
+			Assert.AreEqual("propValType.Int32Var", "propValType.Int32Var", "Int32Var falsch #1");
+			Assert.AreEqual("propValType.Int64Var", "propValType.Int64Var", "Int64Var falsch #1");
+			Assert.AreEqual("propValType.StringVar", "propValType.StringVar", "StringVar falsch #1");
+			Assert.AreEqual("propValType.Uint16Var", "propValType.Uint16Var", "Uint16Var falsch #1");
+			Assert.AreEqual("propValType.Uint32Var", "propValType.Uint32Var", "Uint32Var falsch #1");
+			Assert.AreEqual("propValType.Uint64Var", "propValType.Uint64Var", "Uint64Var falsch #1");
+			Assert.AreEqual("propValType.EnumVar", "propValType.EnumVar", "EnumVar falsch #1");
+
+			Assert.AreEqual("pubValType.ByteVar", "pubValType.ByteVar", "ByteVar falsch #2");
+			Assert.AreEqual("pubValType.BoolVar",  "pubValType.BoolVar", "BoolVar falsch #2");
+			Assert.AreEqual("pubValType.DecVar", "pubValType.DecVar", "DecVar falsch #2");
+			Assert.AreEqual("pubValType.DateTimeVar", "pubValType.DateTimeVar", "DateTimeVar falsch #2");
+			Assert.AreEqual("pubValType.DoubleVar", "pubValType.DoubleVar", "DoubleVar falsch #2");
+			Assert.AreEqual("pubValType.FloatVar", "pubValType.FloatVar", "FloatVar falsch #2");
+			Assert.AreEqual("pubValType.GuidVar", "pubValType.GuidVar", "GuidVar falsch #2");
+			Assert.AreEqual("pubValType.Int16Var", "pubValType.Int16Var", "Int16Var falsch #2");
+			Assert.AreEqual("pubValType.Int32Var", "pubValType.Int32Var", "Int32Var falsch #2");
+			Assert.AreEqual("pubValType.Int64Var", "pubValType.Int64Var", "Int64Var falsch #2");
+			Assert.AreEqual("pubValType.StringVar", "pubValType.StringVar", "StringVar falsch #2");
+			Assert.AreEqual("pubValType.Uint16Var", "pubValType.Uint16Var", "Uint16Var falsch #2");
+			Assert.AreEqual("pubValType.Uint32Var", "pubValType.Uint32Var", "Uint32Var falsch #2");
+			Assert.AreEqual("pubValType.Uint64Var", "pubValType.Uint64Var", "Uint64Var falsch #2");
+			Assert.AreEqual("pubValType.EnumVar", "pubValType.EnumVar", "EnumVar falsch #2");
+
+			Assert.AreEqual("embeddedType.byteVar", "embeddedType.byteVar", "ByteVar falsch #3");
+			Assert.AreEqual("embeddedType.boolVar",  "embeddedType.boolVar", "BoolVar falsch #3");
+			Assert.AreEqual("embeddedType.decVar", "embeddedType.decVar", "DecVar falsch #3");
+			Assert.AreEqual("embeddedType.dateTimeVar", "embeddedType.dateTimeVar", "DateTimeVar falsch #3");
+			Assert.AreEqual("embeddedType.doubleVar", "embeddedType.doubleVar", "DoubleVar falsch #3");
+			Assert.AreEqual("embeddedType.floatVar", "embeddedType.floatVar", "FloatVar falsch #3");
+			Assert.AreEqual("embeddedType.guidVar", "embeddedType.guidVar", "GuidVar falsch #3");
+			Assert.AreEqual("embeddedType.int16Var", "embeddedType.int16Var", "Int16Var falsch #3");
+			Assert.AreEqual("embeddedType.int32Var", "embeddedType.int32Var", "Int32Var falsch #3");
+			Assert.AreEqual("embeddedType.int64Var", "embeddedType.int64Var", "Int64Var falsch #3");
+			Assert.AreEqual("embeddedType.stringVar", "embeddedType.stringVar", "StringVar falsch #3");
+			Assert.AreEqual("embeddedType.uint16Var", "embeddedType.uint16Var", "Uint16Var falsch #3");
+			Assert.AreEqual("embeddedType.uint32Var", "embeddedType.uint32Var", "Uint32Var falsch #3");
+			Assert.AreEqual("embeddedType.uint64Var", "embeddedType.uint64Var", "Uint64Var falsch #3");
+			Assert.AreEqual("embeddedType.enumVar", "embeddedType.enumVar", "Uint64Var falsch #3");
+
+			VtAndEtContainerDerived.QueryHelper "" = new VtAndEtContainerDerived.QueryHelper();
 			
-			Assert.AreEqual("propValType.ByteVar", qh.propValType.ByteVar, "ByteVar falsch #1");
-			Assert.AreEqual("propValType.BoolVar",  qh.propValType.BoolVar, "BoolVar falsch #1");
-			Assert.AreEqual("propValType.DecVar", qh.propValType.DecVar, "DecVar falsch #1");
-			Assert.AreEqual("propValType.DateTimeVar", qh.propValType.DateTimeVar, "DateTimeVar falsch #1");
-			Assert.AreEqual("propValType.DoubleVar", qh.propValType.DoubleVar, "DoubleVar falsch #1");
-			Assert.AreEqual("propValType.FloatVar", qh.propValType.FloatVar, "FloatVar falsch #1");
-			Assert.AreEqual("propValType.GuidVar", qh.propValType.GuidVar, "GuidVar falsch #1");
-			Assert.AreEqual("propValType.Int16Var", qh.propValType.Int16Var, "Int16Var falsch #1");
-			Assert.AreEqual("propValType.Int32Var", qh.propValType.Int32Var, "Int32Var falsch #1");
-			Assert.AreEqual("propValType.Int64Var", qh.propValType.Int64Var, "Int64Var falsch #1");
-			Assert.AreEqual("propValType.StringVar", qh.propValType.StringVar, "StringVar falsch #1");
-			Assert.AreEqual("propValType.Uint16Var", qh.propValType.Uint16Var, "Uint16Var falsch #1");
-			Assert.AreEqual("propValType.Uint32Var", qh.propValType.Uint32Var, "Uint32Var falsch #1");
-			Assert.AreEqual("propValType.Uint64Var", qh.propValType.Uint64Var, "Uint64Var falsch #1");
-			Assert.AreEqual("propValType.EnumVar", qh.propValType.EnumVar, "EnumVar falsch #1");
+			Assert.AreEqual("propValType.ByteVar", ".propValType.ByteVar", "ByteVar falsch #1");
+			Assert.AreEqual("propValType.BoolVar",  ".propValType.BoolVar", "BoolVar falsch #1");
+			Assert.AreEqual("propValType.DecVar", ".propValType.DecVar", "DecVar falsch #1");
+			Assert.AreEqual("propValType.DateTimeVar", ".propValType.DateTimeVar", "DateTimeVar falsch #1");
+			Assert.AreEqual("propValType.DoubleVar", ".propValType.DoubleVar", "DoubleVar falsch #1");
+			Assert.AreEqual("propValType.FloatVar", ".propValType.FloatVar", "FloatVar falsch #1");
+			Assert.AreEqual("propValType.GuidVar", ".propValType.GuidVar", "GuidVar falsch #1");
+			Assert.AreEqual("propValType.Int16Var", ".propValType.Int16Var", "Int16Var falsch #1");
+			Assert.AreEqual("propValType.Int32Var", ".propValType.Int32Var", "Int32Var falsch #1");
+			Assert.AreEqual("propValType.Int64Var", ".propValType.Int64Var", "Int64Var falsch #1");
+			Assert.AreEqual("propValType.StringVar", ".propValType.StringVar", "StringVar falsch #1");
+			Assert.AreEqual("propValType.Uint16Var", ".propValType.Uint16Var", "Uint16Var falsch #1");
+			Assert.AreEqual("propValType.Uint32Var", ".propValType.Uint32Var", "Uint32Var falsch #1");
+			Assert.AreEqual("propValType.Uint64Var", ".propValType.Uint64Var", "Uint64Var falsch #1");
+			Assert.AreEqual("propValType.EnumVar", ".propValType.EnumVar", "EnumVar falsch #1");
 
-			Assert.AreEqual("pubValType.ByteVar", qh.pubValType.ByteVar, "ByteVar falsch #2");
-			Assert.AreEqual("pubValType.BoolVar",  qh.pubValType.BoolVar, "BoolVar falsch #2");
-			Assert.AreEqual("pubValType.DecVar", qh.pubValType.DecVar, "DecVar falsch #2");
-			Assert.AreEqual("pubValType.DateTimeVar", qh.pubValType.DateTimeVar, "DateTimeVar falsch #2");
-			Assert.AreEqual("pubValType.DoubleVar", qh.pubValType.DoubleVar, "DoubleVar falsch #2");
-			Assert.AreEqual("pubValType.FloatVar", qh.pubValType.FloatVar, "FloatVar falsch #2");
-			Assert.AreEqual("pubValType.GuidVar", qh.pubValType.GuidVar, "GuidVar falsch #2");
-			Assert.AreEqual("pubValType.Int16Var", qh.pubValType.Int16Var, "Int16Var falsch #2");
-			Assert.AreEqual("pubValType.Int32Var", qh.pubValType.Int32Var, "Int32Var falsch #2");
-			Assert.AreEqual("pubValType.Int64Var", qh.pubValType.Int64Var, "Int64Var falsch #2");
-			Assert.AreEqual("pubValType.StringVar", qh.pubValType.StringVar, "StringVar falsch #2");
-			Assert.AreEqual("pubValType.Uint16Var", qh.pubValType.Uint16Var, "Uint16Var falsch #2");
-			Assert.AreEqual("pubValType.Uint32Var", qh.pubValType.Uint32Var, "Uint32Var falsch #2");
-			Assert.AreEqual("pubValType.Uint64Var", qh.pubValType.Uint64Var, "Uint64Var falsch #2");
-			Assert.AreEqual("pubValType.EnumVar", qh.pubValType.EnumVar, "EnumVar falsch #2");
+			Assert.AreEqual("pubValType.ByteVar", ".pubValType.ByteVar", "ByteVar falsch #2");
+			Assert.AreEqual("pubValType.BoolVar",  ".pubValType.BoolVar", "BoolVar falsch #2");
+			Assert.AreEqual("pubValType.DecVar", ".pubValType.DecVar", "DecVar falsch #2");
+			Assert.AreEqual("pubValType.DateTimeVar", ".pubValType.DateTimeVar", "DateTimeVar falsch #2");
+			Assert.AreEqual("pubValType.DoubleVar", ".pubValType.DoubleVar", "DoubleVar falsch #2");
+			Assert.AreEqual("pubValType.FloatVar", ".pubValType.FloatVar", "FloatVar falsch #2");
+			Assert.AreEqual("pubValType.GuidVar", ".pubValType.GuidVar", "GuidVar falsch #2");
+			Assert.AreEqual("pubValType.Int16Var", ".pubValType.Int16Var", "Int16Var falsch #2");
+			Assert.AreEqual("pubValType.Int32Var", ".pubValType.Int32Var", "Int32Var falsch #2");
+			Assert.AreEqual("pubValType.Int64Var", ".pubValType.Int64Var", "Int64Var falsch #2");
+			Assert.AreEqual("pubValType.StringVar", ".pubValType.StringVar", "StringVar falsch #2");
+			Assert.AreEqual("pubValType.Uint16Var", ".pubValType.Uint16Var", "Uint16Var falsch #2");
+			Assert.AreEqual("pubValType.Uint32Var", ".pubValType.Uint32Var", "Uint32Var falsch #2");
+			Assert.AreEqual("pubValType.Uint64Var", ".pubValType.Uint64Var", "Uint64Var falsch #2");
+			Assert.AreEqual("pubValType.EnumVar", ".pubValType.EnumVar", "EnumVar falsch #2");
 
-			Assert.AreEqual("embeddedType.byteVar", qh.embeddedType.byteVar, "ByteVar falsch #3");
-			Assert.AreEqual("embeddedType.boolVar",  qh.embeddedType.boolVar, "BoolVar falsch #3");
-			Assert.AreEqual("embeddedType.decVar", qh.embeddedType.decVar, "DecVar falsch #3");
-			Assert.AreEqual("embeddedType.dateTimeVar", qh.embeddedType.dateTimeVar, "DateTimeVar falsch #3");
-			Assert.AreEqual("embeddedType.doubleVar", qh.embeddedType.doubleVar, "DoubleVar falsch #3");
-			Assert.AreEqual("embeddedType.floatVar", qh.embeddedType.floatVar, "FloatVar falsch #3");
-			Assert.AreEqual("embeddedType.guidVar", qh.embeddedType.guidVar, "GuidVar falsch #3");
-			Assert.AreEqual("embeddedType.int16Var", qh.embeddedType.int16Var, "Int16Var falsch #3");
-			Assert.AreEqual("embeddedType.int32Var", qh.embeddedType.int32Var, "Int32Var falsch #3");
-			Assert.AreEqual("embeddedType.int64Var", qh.embeddedType.int64Var, "Int64Var falsch #3");
-			Assert.AreEqual("embeddedType.stringVar", qh.embeddedType.stringVar, "StringVar falsch #3");
-			Assert.AreEqual("embeddedType.uint16Var", qh.embeddedType.uint16Var, "Uint16Var falsch #3");
-			Assert.AreEqual("embeddedType.uint32Var", qh.embeddedType.uint32Var, "Uint32Var falsch #3");
-			Assert.AreEqual("embeddedType.uint64Var", qh.embeddedType.uint64Var, "Uint64Var falsch #3");
-			Assert.AreEqual("embeddedType.enumVar", qh.embeddedType.enumVar, "Uint64Var falsch #3");
-
-			VtAndEtContainerDerived.QueryHelper qhd = new VtAndEtContainerDerived.QueryHelper();
-			
-			Assert.AreEqual("propValType.ByteVar", qhd.propValType.ByteVar, "ByteVar falsch #1");
-			Assert.AreEqual("propValType.BoolVar",  qhd.propValType.BoolVar, "BoolVar falsch #1");
-			Assert.AreEqual("propValType.DecVar", qhd.propValType.DecVar, "DecVar falsch #1");
-			Assert.AreEqual("propValType.DateTimeVar", qhd.propValType.DateTimeVar, "DateTimeVar falsch #1");
-			Assert.AreEqual("propValType.DoubleVar", qhd.propValType.DoubleVar, "DoubleVar falsch #1");
-			Assert.AreEqual("propValType.FloatVar", qhd.propValType.FloatVar, "FloatVar falsch #1");
-			Assert.AreEqual("propValType.GuidVar", qhd.propValType.GuidVar, "GuidVar falsch #1");
-			Assert.AreEqual("propValType.Int16Var", qhd.propValType.Int16Var, "Int16Var falsch #1");
-			Assert.AreEqual("propValType.Int32Var", qhd.propValType.Int32Var, "Int32Var falsch #1");
-			Assert.AreEqual("propValType.Int64Var", qhd.propValType.Int64Var, "Int64Var falsch #1");
-			Assert.AreEqual("propValType.StringVar", qhd.propValType.StringVar, "StringVar falsch #1");
-			Assert.AreEqual("propValType.Uint16Var", qhd.propValType.Uint16Var, "Uint16Var falsch #1");
-			Assert.AreEqual("propValType.Uint32Var", qhd.propValType.Uint32Var, "Uint32Var falsch #1");
-			Assert.AreEqual("propValType.Uint64Var", qhd.propValType.Uint64Var, "Uint64Var falsch #1");
-			Assert.AreEqual("propValType.EnumVar", qhd.propValType.EnumVar, "EnumVar falsch #1");
-
-			Assert.AreEqual("pubValType.ByteVar", qhd.pubValType.ByteVar, "ByteVar falsch #2");
-			Assert.AreEqual("pubValType.BoolVar",  qhd.pubValType.BoolVar, "BoolVar falsch #2");
-			Assert.AreEqual("pubValType.DecVar", qhd.pubValType.DecVar, "DecVar falsch #2");
-			Assert.AreEqual("pubValType.DateTimeVar", qhd.pubValType.DateTimeVar, "DateTimeVar falsch #2");
-			Assert.AreEqual("pubValType.DoubleVar", qhd.pubValType.DoubleVar, "DoubleVar falsch #2");
-			Assert.AreEqual("pubValType.FloatVar", qhd.pubValType.FloatVar, "FloatVar falsch #2");
-			Assert.AreEqual("pubValType.GuidVar", qhd.pubValType.GuidVar, "GuidVar falsch #2");
-			Assert.AreEqual("pubValType.Int16Var", qhd.pubValType.Int16Var, "Int16Var falsch #2");
-			Assert.AreEqual("pubValType.Int32Var", qhd.pubValType.Int32Var, "Int32Var falsch #2");
-			Assert.AreEqual("pubValType.Int64Var", qhd.pubValType.Int64Var, "Int64Var falsch #2");
-			Assert.AreEqual("pubValType.StringVar", qhd.pubValType.StringVar, "StringVar falsch #2");
-			Assert.AreEqual("pubValType.Uint16Var", qhd.pubValType.Uint16Var, "Uint16Var falsch #2");
-			Assert.AreEqual("pubValType.Uint32Var", qhd.pubValType.Uint32Var, "Uint32Var falsch #2");
-			Assert.AreEqual("pubValType.Uint64Var", qhd.pubValType.Uint64Var, "Uint64Var falsch #2");
-			Assert.AreEqual("pubValType.EnumVar", qhd.pubValType.EnumVar, "EnumVar falsch #2");
-
-			Assert.AreEqual("embeddedType.byteVar", qhd.embeddedType.byteVar, "ByteVar falsch #3");
-			Assert.AreEqual("embeddedType.boolVar",  qhd.embeddedType.boolVar, "BoolVar falsch #3");
-			Assert.AreEqual("embeddedType.decVar", qhd.embeddedType.decVar, "DecVar falsch #3");
-			Assert.AreEqual("embeddedType.dateTimeVar", qhd.embeddedType.dateTimeVar, "DateTimeVar falsch #3");
-			Assert.AreEqual("embeddedType.doubleVar", qhd.embeddedType.doubleVar, "DoubleVar falsch #3");
-			Assert.AreEqual("embeddedType.floatVar", qhd.embeddedType.floatVar, "FloatVar falsch #3");
-			Assert.AreEqual("embeddedType.guidVar", qhd.embeddedType.guidVar, "GuidVar falsch #3");
-			Assert.AreEqual("embeddedType.int16Var", qhd.embeddedType.int16Var, "Int16Var falsch #3");
-			Assert.AreEqual("embeddedType.int32Var", qhd.embeddedType.int32Var, "Int32Var falsch #3");
-			Assert.AreEqual("embeddedType.int64Var", qhd.embeddedType.int64Var, "Int64Var falsch #3");
-			Assert.AreEqual("embeddedType.stringVar", qhd.embeddedType.stringVar, "StringVar falsch #3");
-			Assert.AreEqual("embeddedType.uint16Var", qhd.embeddedType.uint16Var, "Uint16Var falsch #3");
-			Assert.AreEqual("embeddedType.uint32Var", qhd.embeddedType.uint32Var, "Uint32Var falsch #3");
-			Assert.AreEqual("embeddedType.uint64Var", qhd.embeddedType.uint64Var, "Uint64Var falsch #3");
-			Assert.AreEqual("embeddedType.enumVar", qhd.embeddedType.enumVar, "Uint64Var falsch #3");
+			Assert.AreEqual("embeddedType.byteVar", ".embeddedType.byteVar", "ByteVar falsch #3");
+			Assert.AreEqual("embeddedType.boolVar",  ".embeddedType.boolVar", "BoolVar falsch #3");
+			Assert.AreEqual("embeddedType.decVar", ".embeddedType.decVar", "DecVar falsch #3");
+			Assert.AreEqual("embeddedType.dateTimeVar", ".embeddedType.dateTimeVar", "DateTimeVar falsch #3");
+			Assert.AreEqual("embeddedType.doubleVar", ".embeddedType.doubleVar", "DoubleVar falsch #3");
+			Assert.AreEqual("embeddedType.floatVar", ".embeddedType.floatVar", "FloatVar falsch #3");
+			Assert.AreEqual("embeddedType.guidVar", ".embeddedType.guidVar", "GuidVar falsch #3");
+			Assert.AreEqual("embeddedType.int16Var", ".embeddedType.int16Var", "Int16Var falsch #3");
+			Assert.AreEqual("embeddedType.int32Var", ".embeddedType.int32Var", "Int32Var falsch #3");
+			Assert.AreEqual("embeddedType.int64Var", ".embeddedType.int64Var", "Int64Var falsch #3");
+			Assert.AreEqual("embeddedType.stringVar", ".embeddedType.stringVar", "StringVar falsch #3");
+			Assert.AreEqual("embeddedType.uint16Var", ".embeddedType.uint16Var", "Uint16Var falsch #3");
+			Assert.AreEqual("embeddedType.uint32Var", ".embeddedType.uint32Var", "Uint32Var falsch #3");
+			Assert.AreEqual("embeddedType.uint64Var", ".embeddedType.uint64Var", "Uint64Var falsch #3");
+			Assert.AreEqual("embeddedType.enumVar", ".embeddedType.enumVar", "Uint64Var falsch #3");
 
 		}
+#endif
 
         [Test]
         public void TestPrimitiveTypeMethodCall()

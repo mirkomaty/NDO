@@ -26,7 +26,7 @@ using NDO;
 namespace TestBlocks
 {
 	[NDOPersistent]
-	public class ClassWithBlock
+	public class ClassWithBlock : IPersistentObject
 	{
 		string testfeld;
 		public string Testfeld
@@ -44,8 +44,18 @@ namespace TestBlocks
 				}
  			}
 		}
+
+		public NDOObjectState NDOObjectState { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+		public ObjectId NDOObjectId { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+		public Guid NDOTimeStamp { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+
 		public ClassWithBlock()
 		{
+		}
+
+		public void NDOMarkDirty()
+		{
+			throw new NotImplementedException();
 		}
 	}
 }

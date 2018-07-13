@@ -46,11 +46,11 @@ namespace NDO
 			DateTime startTime = DateTime.Now;
 
 #if true
-            NDOMitarbeiterTests t = new NDOMitarbeiterTests();
+			AbstractBaseTests t = new AbstractBaseTests();
             try
             {
                 t.Setup();
-				t.LinqQueryWithParameterWorks();
+				t.TestConcreteRel();
             }
             catch (Exception ex)
             {

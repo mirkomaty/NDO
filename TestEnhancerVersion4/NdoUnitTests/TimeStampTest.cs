@@ -25,6 +25,7 @@ using System.Collections;
 using TimeStampTestClasses;
 using NDO;
 using NUnit.Framework;
+using NDO.Query;
 
 namespace NdoUnitTests
 {
@@ -96,7 +97,7 @@ namespace NdoUnitTests
 		[Test]
 		public void TestDeleteHollow()
 		{
-			Query q = pm1.NewQuery(typeof(TimeStampContainer), null, true);
+			IQuery q = new NDOQuery<TimeStampContainer>(pm1, null, true);
 			tsc = (TimeStampContainer) q.ExecuteSingle(true);
 			Assert.AreEqual(NDOObjectState.Hollow, tsc.NDOObjectState, "Object should be hollow");
 			Assert.That(((IPersistenceCapable)tsc).NDOTimeStamp != Guid.Empty, "Time Stamp should be there");

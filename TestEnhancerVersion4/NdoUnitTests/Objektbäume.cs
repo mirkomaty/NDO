@@ -26,6 +26,7 @@ using Reisekosten.Personal;
 using Reisekosten;
 using NDO;
 using NUnit.Framework;
+using NDO.Query;
 
 namespace NdoUnitTests
 {
@@ -86,7 +87,7 @@ namespace NdoUnitTests
 
 			pm.UnloadCache();
 
-			Query q = pm.NewQuery(typeof(Mitarbeiter), null);
+			NDOQuery<Mitarbeiter> q = new NDOQuery<Mitarbeiter>(pm, null);
 			m = (Mitarbeiter) q.ExecuteSingle(true);
 			Assert.AreEqual(1, m.Reisen.Count, "Reise nicht gefunden");
 			r = (Reise) m.Reisen[0];

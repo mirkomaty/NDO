@@ -30,18 +30,36 @@ namespace ForeignObjectManipulationClasses
 	/// Summary for ChildList
 	/// </summary>
 	[NDOPersistent]
-	public class ChildList
+	public class ChildList : IPersistentObject
 	{
 		public ChildList()
 		{
 		}
+
+		public NDOObjectState NDOObjectState { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+		public ObjectId NDOObjectId { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+		public Guid NDOTimeStamp { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+
+		public void NDOMarkDirty()
+		{
+			throw new NotImplementedException();
+		}
 	}
 
 	[NDOPersistent]
-	public class ChildElement
+	public class ChildElement : IPersistentObject
 	{
 		public ChildElement()
 		{
+		}
+
+		public NDOObjectState NDOObjectState { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+		public ObjectId NDOObjectId { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+		public Guid NDOTimeStamp { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+
+		public void NDOMarkDirty()
+		{
+			throw new NotImplementedException();
 		}
 	}
 
@@ -55,7 +73,7 @@ namespace ForeignObjectManipulationClasses
 	}
 
 	[NDOPersistent]
-	public class Parent
+	public class Parent : IPersistentObject
 	{
 		string name;
 
@@ -146,11 +164,20 @@ namespace ForeignObjectManipulationClasses
 				listChilds.Remove(c);
 		}
 
+		public void NDOMarkDirty()
+		{
+			throw new NotImplementedException();
+		}
+
 		public ChildElement ElementChild
 		{
 			get { return elementChild; }
 			set { elementChild = value; }
 		}
+
+		public NDOObjectState NDOObjectState { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+		public ObjectId NDOObjectId { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+		public Guid NDOTimeStamp { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
 
 		#endregion
 	}

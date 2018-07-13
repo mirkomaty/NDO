@@ -30,6 +30,7 @@ using NDO;
 using NDO.Mapping;
 using NDOObjectIdTestClasses;
 using NDOInterfaces;
+using NDO.Query;
 
 namespace NdoUnitTests
 {
@@ -76,7 +77,7 @@ namespace NdoUnitTests
 			pm.MakePersistent(testobj);
 			pm.Save();
 			pm.UnloadCache();
-			Query q = pm.NewQuery(typeof(NDOoidAndHandler));
+			IQuery q = new NDOQuery<NDOoidAndHandler>(pm);
 			testobj = null;
 			testobj = (NDOoidAndHandler) q.ExecuteSingle(true);
 			Assert.AreEqual(guid, testobj.MyId, "Wrong guid");
@@ -103,7 +104,7 @@ namespace NdoUnitTests
 			pm.Save();
 			owner = null;
 			pm.UnloadCache();
-			Query q = pm.NewQuery(typeof(ObjectOwner));
+			IQuery q = new NDOQuery<ObjectOwner>(pm);
 			owner = (ObjectOwner) q.ExecuteSingle(true);
 			Assert.NotNull(owner.Element, "No element");
 			Assert.AreEqual(guid, owner.Element.MyId, "Wrong guid");
@@ -121,7 +122,7 @@ namespace NdoUnitTests
 			pm.Save();
 			owner = null;
 			pm.UnloadCache();
-			Query q = pm.NewQuery(typeof(HintOwner));
+			IQuery q = new NDOQuery<HintOwner>(pm);
 			owner = (HintOwner) q.ExecuteSingle(true);
 			Assert.NotNull(owner.Element, "No element");
 			Assert.AreEqual(guid, owner.Element.NDOObjectId.Id[0], "Wrong guid");
@@ -162,7 +163,7 @@ namespace NdoUnitTests
 			pm.MakePersistent(testobj);
 			pm.Save();
 			pm.UnloadCache();
-			Query q = pm.NewQuery(typeof(ClassWithHint));
+			IQuery q = new NDOQuery<ClassWithHint>(pm);
 			testobj = null;
 			testobj = (ClassWithHint) q.ExecuteSingle(true);
 			Assert.AreEqual(guid, testobj.NDOObjectId.Id[0], "Wrong guid #1");
@@ -190,7 +191,7 @@ namespace NdoUnitTests
 			pm.Save();
 			dg = null;
 			pm.UnloadCache();
-			Query q = pm.NewQuery(typeof(DerivedGuid));
+			IQuery q = new NDOQuery<DerivedGuid>(pm);
 			dg = (DerivedGuid) q.ExecuteSingle(true);
 			Assert.AreEqual(new Guid(5,5,5,5,5,5,5,5,5,5,5), dg.Guid, "Guid wrong");
 			Assert.AreEqual(new Guid(5,5,5,5,5,5,5,5,5,5,5), dg.NDOObjectId.Id[0], "Oid wrong");

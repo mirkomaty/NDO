@@ -28,18 +28,30 @@ namespace Reisekosten.Personal {
 	/// Buero eines Mitarbeiters
 	/// </summary>
 	[NDOPersistent]
-	public class Buero {
+	public class Buero : IPersistentObject
+	{
 		private string zimmer;
 		
-		public Buero() {}  // wird för NDO laden benötigt.
+		public Buero() {}  // wird für NDO laden benötigt.
 
-		public Buero(string zimmer) {
+		public Buero(string zimmer)
+		{
 			this.zimmer = zimmer;
 		}
 
-		public string Zimmer {
+		public string Zimmer
+		{
 			get { return zimmer; }
 			set { zimmer = value; }
+		}
+
+		public NDOObjectState NDOObjectState { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+		public ObjectId NDOObjectId { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+		public Guid NDOTimeStamp { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+
+		public void NDOMarkDirty()
+		{
+			throw new NotImplementedException();
 		}
 	}
 }

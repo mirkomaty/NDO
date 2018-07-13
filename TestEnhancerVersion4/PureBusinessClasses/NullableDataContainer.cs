@@ -29,8 +29,8 @@ namespace DataTypeTestClasses
 {
 
     [NDOPersistent]
-    public class NullableDataContainer
-    {
+    public class NullableDataContainer : IPersistentObject
+	{
         EnumType? enumVar;
         public EnumType? EnumVar
         {
@@ -237,8 +237,11 @@ namespace DataTypeTestClasses
             set { uint16EmptyVar = value; }
         }
 
+		public NDOObjectState NDOObjectState { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+		public ObjectId NDOObjectId { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+		public Guid NDOTimeStamp { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
 
-        public void Init()
+		public void Init()
         {
             this.boolVar = true;
             this.byteVar = 127;
@@ -256,7 +259,12 @@ namespace DataTypeTestClasses
             this.enumVar = EnumType.drei;
         }
 
-        public NullableDataContainer()
+		public void NDOMarkDirty()
+		{
+			throw new NotImplementedException();
+		}
+
+		public NullableDataContainer()
         {
         }
     }

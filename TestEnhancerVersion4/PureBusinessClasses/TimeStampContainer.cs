@@ -26,7 +26,7 @@ using NDO;
 namespace TimeStampTestClasses
 {
 	[NDOPersistent]
-	public class TimeStampContainer
+	public class TimeStampContainer : IPersistentObject
 	{
 		string name;
 		public string Name
@@ -35,12 +35,21 @@ namespace TimeStampTestClasses
 			set { name = value; }
 		}
 
+		public NDOObjectState NDOObjectState { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+		public ObjectId NDOObjectId { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+		public Guid NDOTimeStamp { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+
 		public TimeStampContainer()
 		{
 		}
 		public TimeStampContainer(string name)
 		{
 			this.name = name;
+		}
+
+		public void NDOMarkDirty()
+		{
+			throw new NotImplementedException();
 		}
 	}
 }

@@ -26,7 +26,7 @@ using NDO;
 namespace DerivedStateTestClasses
 {
 	[NDOPersistent]
-	public class Base
+	public class Base : IPersistentObject
 	{
 		int theField;
 		public int TheField
@@ -35,8 +35,17 @@ namespace DerivedStateTestClasses
 			set { theField = value; }
 		}
 
+		public NDOObjectState NDOObjectState { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+		public ObjectId NDOObjectId { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+		public Guid NDOTimeStamp { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+
 		public Base()
 		{
+		}
+
+		public void NDOMarkDirty()
+		{
+			throw new NotImplementedException();
 		}
 	}
 

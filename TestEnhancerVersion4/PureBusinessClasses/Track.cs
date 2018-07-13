@@ -30,7 +30,7 @@ namespace PureBusinessClasses
 	/// Summary for Track
 	/// </summary>
 	[NDOPersistent]
-	public class Track
+	public class Track : IPersistentObject
 	{
 		string name;
 		public string Name
@@ -47,8 +47,17 @@ namespace PureBusinessClasses
 			set { peer = value; }
 		}
 
+		public NDOObjectState NDOObjectState { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+		public ObjectId NDOObjectId { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+		public Guid NDOTimeStamp { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+
 		public Track()
 		{
+		}
+
+		public void NDOMarkDirty()
+		{
+			throw new NotImplementedException();
 		}
 	}
 }

@@ -29,6 +29,7 @@ using NDO.Mapping;
 using Reisekosten;
 using Reisekosten.Personal;
 using PureBusinessClasses;
+using NDO.Query;
 
 namespace NdoUnitTests
 {
@@ -115,7 +116,7 @@ namespace NdoUnitTests
 
 			pm.UnloadCache();
 
-			Query q = pm.NewQuery(typeof (Topic), "oid = {0}");
+			IQuery q = new NDOQuery<Topic>(pm, "oid = {0}");
             q.Parameters.Add(t.NDOObjectId.Id[0]);
 			t = (Topic) q.ExecuteSingle(true);
 			Assert.AreEqual(1, t.Subtopics.Count, "t mösste einen Untergebenen in der Liste haben");
@@ -152,7 +153,7 @@ namespace NdoUnitTests
 
 			pm.UnloadCache();
 
-			Query q = pm.NewQuery(typeof (Topic), "oid = {0}");
+			IQuery q = new NDOQuery<Topic>(pm, "oid = {0}");
             q.Parameters.Add(t.NDOObjectId.Id[0]);
 			t = (Topic) q.ExecuteSingle(true);
 			Assert.AreEqual(1, t.Subtopics.Count, "t mösste einen Untergebenen in der Liste haben");
@@ -191,7 +192,7 @@ namespace NdoUnitTests
 
 			pm.UnloadCache();
 
-			Query q = pm.NewQuery(typeof (Topic), "oid = {0}");
+			IQuery q = new NDOQuery<Topic>(pm, "oid = {0}");
             q.Parameters.Add(t.NDOObjectId.Id[0]);
             t = (Topic)q.ExecuteSingle(true);
 			Assert.AreEqual(1, t.Subtopics.Count, "t mösste einen Untergebenen in der Liste haben");
@@ -214,11 +215,11 @@ namespace NdoUnitTests
 			pm.UnloadCache();
 			IList l = q.Execute();
 			Assert.AreEqual(0, l.Count, "Liste muss leer sein 1");
-			q = pm.NewQuery(typeof (Topic), "oid = {0}");
+			q = new NDOQuery<Topic>(pm, "oid = {0}");
             q.Parameters.Add(oid2.Id[0]);
 			l = q.Execute();
 			Assert.AreEqual(0, l.Count, "Liste muss leer sein 2");
-			q = pm.NewQuery(typeof (Topic), "oid = {0}");
+			q = new NDOQuery<Topic>(pm, "oid = {0}");
             q.Parameters.Add(oid3.Id[0]);
             l = q.Execute();
 			Assert.AreEqual(0, l.Count, "Liste muss leer sein 3");

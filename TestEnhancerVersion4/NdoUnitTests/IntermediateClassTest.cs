@@ -30,6 +30,7 @@ using NDO;
 using NDO.Mapping;
 using NDOInterfaces;
 using PureBusinessClasses;
+using NDO.Query;
 
 namespace NdoUnitTests
 {
@@ -167,7 +168,7 @@ namespace NdoUnitTests
 			Assert.That(od.NDOObjectState == NDOObjectState.Deleted, "Wrong state");
 			pm.Save();
 			pm.UnloadCache();
-			Query q = pm.NewQuery(typeof(Order));
+			IQuery q = new NDOQuery<Order>(pm);
 			order = (Order) q.ExecuteSingle(true);
 			Assert.That(order.OrderDetails.Count == 0, "Wrong count");
 			IList l = pm.GetClassExtent(typeof(OrderDetail));
@@ -216,7 +217,7 @@ namespace NdoUnitTests
 			od.Price = 55;
 			pm.Save();
 			pm.UnloadCache();
-			Query q = pm.NewQuery(typeof(Order));
+			IQuery q = new NDOQuery<Order>(pm);
 			order = (Order) q.ExecuteSingle(true);
 			Assert.AreEqual(2, order.OrderDetails.Count, "Wrong count");
 		}
@@ -237,7 +238,7 @@ namespace NdoUnitTests
 		{
 			CreateSave();
 			pm.UnloadCache();
-			Query q = pm.NewQuery(typeof(OrderDetail));
+			IQuery q = new NDOQuery<OrderDetail>(pm);
 			OrderDetail od = (OrderDetail) q.ExecuteSingle(true);
 			pm.Delete(od);
 			pm.Save();
@@ -245,7 +246,7 @@ namespace NdoUnitTests
 			IList l = pm.GetClassExtent(typeof(OrderDetail));
 			Assert.AreEqual(0, l.Count, "Wrong count #1");
 
-			q = pm.NewQuery(typeof(Order));
+			q = new NDOQuery<Order>(pm);
 			order = (Order) q.ExecuteSingle(true);
 			Assert.AreEqual(0, order.OrderDetails.Count, "Wrong count #2");
 		}
@@ -255,7 +256,7 @@ namespace NdoUnitTests
 		{
 			CreateSave();
 			pm.UnloadCache();
-			Query q = pm.NewQuery(typeof(Order));
+			IQuery q = new NDOQuery<Order>(pm);
 			order = (Order) q.ExecuteSingle(true);
 			pm.Delete(order);
 			pm.Save();

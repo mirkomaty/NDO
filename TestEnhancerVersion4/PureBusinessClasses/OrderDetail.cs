@@ -30,7 +30,7 @@ namespace PureBusinessClasses
 	/// Summary for OrderDetail
 	/// </summary>
 	[NDOPersistent]
-	public class OrderDetail
+	public class OrderDetail : IPersistentObject
 	{
 		decimal price;
 		public decimal Price
@@ -55,8 +55,17 @@ namespace PureBusinessClasses
 			set { product = value; }
 		}
 
+		public NDOObjectState NDOObjectState { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+		public ObjectId NDOObjectId { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+		public Guid NDOTimeStamp { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+
 		public OrderDetail()
 		{
+		}
+
+		public void NDOMarkDirty()
+		{
+			throw new NotImplementedException();
 		}
 	}
 }
