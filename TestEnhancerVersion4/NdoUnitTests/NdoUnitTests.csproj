@@ -102,10 +102,8 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\NDOInterfaces\bin\Debug\NDOInterfaces.dll</HintPath>
     </Reference>
-    <Reference Include="nunit.framework">
-      <Name>nunit.framework</Name>
-      <HintPath>..\..\..\..\..\Programme\NUnit V2.1\\bin\nunit.framework.dll</HintPath>
-      <AssemblyFolderKey>hklm\dn\nunit.framework</AssemblyFolderKey>
+    <Reference Include="nunit.framework, Version=3.4.1.0, Culture=neutral, PublicKeyToken=2638cd05610744eb, processorArchitecture=MSIL">
+      <HintPath>..\packages\NUnit.3.4.1\lib\net40\nunit.framework.dll</HintPath>
     </Reference>
     <Reference Include="SqlCeProvider">
       <HintPath>..\..\SqlCEProvider\SqlCEProvider\bin\Debug\SqlCeProvider.dll</HintPath>
@@ -154,6 +152,7 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="DoubleRelationTests.cs" />
+    <Compile Include="ExpectedExceptionAttribut.cs" />
     <Compile Include="ForeignObjectTests.cs">
       <SubType>Code</SubType>
     </Compile>
