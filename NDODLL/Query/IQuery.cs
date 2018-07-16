@@ -55,5 +55,10 @@ namespace NDO.Query
 		/// Defines, if the query should return subclasses of the given Query Type
 		/// </summary>
 		bool AllowSubclasses { get; set; }
+
+		/// <summary>
+		/// Returns the generated SQL Query
+		/// </summary>
+		string GeneratedQuery { get; }
 	}
 }

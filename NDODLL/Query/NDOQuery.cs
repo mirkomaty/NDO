@@ -25,7 +25,7 @@ namespace NDO.Query
 	/// This class manages string based queries in NDOql and Sql
 	/// </summary>
 	/// <typeparam name="T"></typeparam>
-	public class NDOQuery<T> : IQuery //where T: IPersistenceCapable
+	public class NDOQuery<T> : IQuery
 	{
 		private PersistenceManager pm;
 		private string queryExpression;
@@ -246,7 +246,7 @@ namespace NDO.Query
 
 		void GetPrefetches(List<T> parents)
 		{
-			//TODO: Das müssen wir überarbeiten
+#warning Das müssen wir implementieren
 
 			//if (this.prefetches.Count == 0)
 			//	return;
@@ -557,6 +557,8 @@ namespace NDO.Query
 			set { this.take = value; }
 		}
 
+#region IQuery Interface
+
 		System.Collections.IList IQuery.Execute()
 		{
 			return this.Execute();
@@ -564,7 +566,7 @@ namespace NDO.Query
 
         IPersistenceCapable IQuery.ExecuteSingle()
         {
-            return (IPersistenceCapable) this.ExecuteSingle();
+            return (IPersistenceCapable) this.ExecuteSingle(false);
         }
 
         IPersistenceCapable IQuery.ExecuteSingle(bool throwIfResultCountIsWrong)
@@ -577,5 +579,7 @@ namespace NDO.Query
 		object IQuery.ExecuteAggregate( string field, AggregateType aggregateType ) => ExecuteAggregate( field, aggregateType );
 		bool IQuery.AllowSubclasses { get => this.allowSubclasses; set => this.allowSubclasses = value; }
 
+		string IQuery.GeneratedQuery { get { return this.GeneratedQuery; } }
+#endregion
 	}
 }
