@@ -13,6 +13,7 @@ namespace NDO.Configuration
                 if (instance == null)
                 {
                     instance = new UnityContainer();
+					instance.RegisterType<IPersistenceHandler, NDOPersistenceHandler>();
                 }
 
                 return instance;

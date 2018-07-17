@@ -20,7 +20,6 @@
 // DEALINGS IN THE SOFTWARE.
 
 
-#if ENT
 using System;
 using System.Reflection;
 using System.Collections;
@@ -131,4 +130,3 @@ namespace NDO
 
 	}
 }
-#endif

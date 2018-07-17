@@ -96,14 +96,13 @@ namespace NDO
             return newKey;
         }
 
-#if PRO
 		/// <summary>
 		/// Retrieve the unique type identifier of the persistent object.
 		/// </summary>
 		public int TypeId {
 			get { return typeManager[t]; }
 		}
-#endif
+
 		/// <summary>
 		/// Test if two keys are equal
 		/// </summary>

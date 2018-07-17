@@ -77,12 +77,11 @@ namespace NDO
             {
                 ReplaceRowInfo(fkColumn.Name, key[i]);
             }
-#if PRO
-            if (r.ForeignKeyTypeColumnName != null)
+
+			if (r.ForeignKeyTypeColumnName != null)
             {
                 ReplaceRowInfo(r.ForeignKeyTypeColumnName, key.TypeId);
             }
-#endif
         }
 
 

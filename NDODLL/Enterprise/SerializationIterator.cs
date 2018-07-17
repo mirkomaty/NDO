@@ -20,7 +20,6 @@
 // DEALINGS IN THE SOFTWARE.
 
 
-#if ENT
 using System;
 using System.Collections;
 using NDO.Mapping;
@@ -156,5 +155,3 @@ namespace NDO
 
 	}
 }
-
-#endif

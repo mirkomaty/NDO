@@ -523,7 +523,6 @@ namespace NDO.Mapping
             }
 
 
-#if PRO
             // This could be easier, if we hadn't the choice whether to use
             // polymorphy or not.
             bool cond1 = this.Multiplicity == RelationMultiplicity.Element
@@ -532,20 +531,16 @@ namespace NDO.Mapping
                 && this.MappingTable != null && this.MappingTable.ChildForeignKeyTypeColumnName != null;
             hasSubclasses = (relatedClass.HasSubclasses)
                 && (cond1 || cond2);
-#else
-            hasSubclasses = false;
-#endif
 
 
             if (this.multiplicity == RelationMultiplicity.List)
             {
                 if (ra == null)
                     throw new Exception("Kann Relationstyp für Feld " + Parent.FullName + "." + fi.Name + " nicht bestimmen.");
-#if !NDO11
+
                 if (ra.RelationType == null && fi.FieldType.IsGenericType)
                     this.referencedType = fi.FieldType.GetGenericArguments()[0];
                 else
-#endif
                     this.referencedType = ra.RelationType;
                 if (referencedType == null)
                     throw new NDOException(101, "Can't determine referenced type in relation " + this.Parent.FullName + "." + this.fieldName + ". Provide a type parameter for the [NDORelation] attribute.");

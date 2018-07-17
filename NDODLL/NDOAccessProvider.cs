@@ -380,20 +380,10 @@ namespace NDO
 			}
 		}
 
-#if NDO20
         public override string GetLastInsertedId(string tableName, string columnName)
         {
             return "SELECT @@IDENTITY";
         }
-#else
-		public override string GetLastInsertedId
-		{
-			get
-			{
-				return "SELECT @@IDENTITY";
-			}
-		}
-#endif
 
 		public override bool SupportsLastInsertedId
 		{

@@ -20,7 +20,6 @@
 // DEALINGS IN THE SOFTWARE.
 
 
-#if ENT
 using System;
 using System.Diagnostics;
 using System.Data;
@@ -378,5 +377,3 @@ namespace NDO
 	}
 }
 
-
-#endif

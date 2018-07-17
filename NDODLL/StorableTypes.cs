@@ -40,12 +40,11 @@ namespace NDO
                 return false;
 			if (t == typeof(System.IntPtr))
 				return false;
-#if !NET11
             if (t.IsGenericParameter)
                 return true;
 			if (t.FullName.StartsWith("System.Nullable`1"))
 				return true;
-#endif
+
 			return t.IsPrimitive || t == typeof(string) || t == typeof(decimal) || t == typeof(DateTime) || t == typeof(Guid) || t == typeof(byte[]) || t.IsSubclassOf(typeof(System.Enum));
 		}
 	}

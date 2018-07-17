@@ -386,11 +386,7 @@ namespace NDO
 			//{4} = Name der Id-Spalte
 			if (hasAutoincrementedColumn && provider.SupportsLastInsertedId && provider.SupportsInsertBatch)
 			{
-#if NDO20
 				sql = "INSERT INTO {0} ({1}) VALUES ({2}); SELECT {3} FROM {0} WHERE ({4} = " + provider.GetLastInsertedId(this.tableName, this.autoIncrementColumn.Name) + ")";
-#else
-				sql = "INSERT INTO {0} ({1}) VALUES ({2}); SELECT {3} FROM {0} WHERE ({4} = " + provider.GetLastInsertedId + ")";
-#endif
                 sql = string.Format(sql, qualifiedTableName, fieldList, namedParamList, selectFieldList, this.autoIncrementColumn.Name);
 				this.insertCommand.UpdatedRowSource = UpdateRowSource.FirstReturnedRecord;
 			}

@@ -118,20 +118,17 @@ namespace NDO
 			}
 			string mappingFileName = Path.GetFileNameWithoutExtension(ass.Location) + ".ndo.xml";
 			string mp = null;
-#if PRO
+
 			mp = Path.Combine(baseDir, mappingFileName);
 			if (!File.Exists(mp))
-#endif
 				mp = Path.Combine(baseDir, "NDOMapping.xml");
 			Init(Path.Combine(baseDir, mp));
 		}
 
-#if PRO
 		public PersistenceManagerBase(string mappingFile)
 		{
 			Init(mappingFile);
 		}
-#endif
 
 		protected virtual void Init(string mappingFileName)
 		{
@@ -277,13 +274,8 @@ namespace NDO
 		/// </summary>
 		public virtual bool VerboseMode 
 		{
-#if PRO
 			get {return mappings.VerboseMode;}
 			set {mappings.VerboseMode = value;}
-#else
-			get {return false;}
-			set {}
-#endif
 		}
 
 		/// <summary>
@@ -311,8 +303,6 @@ namespace NDO
 		/// </remarks>
 		public ILogAdapter LogAdapter
 		{
-#if PRO
-
 			get 
 			{ 
 				return this.logAdapter; 
@@ -327,11 +317,6 @@ namespace NDO
 					this.logPath = Path.GetDirectoryName(lfa.FileName);
 				}
 			}
-#else
-			get { return null; }
-			set {}
-#endif
-
 		}
 
 		/// <summary>
@@ -346,7 +331,6 @@ namespace NDO
 		/// </remarks>
 		public string LogPath
 		{
-#if PRO
 			get { return logPath; }
 			set 
 			{ 
@@ -359,10 +343,6 @@ namespace NDO
 				// use the Property to invoke the additional logic
 				this.LogAdapter = new LogFileAdapter(fileName);
 			}
-#else
-			get { return null; }
-			set {}
-#endif
 		}
 
 		

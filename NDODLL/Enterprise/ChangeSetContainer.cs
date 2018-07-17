@@ -20,7 +20,6 @@
 // DEALINGS IN THE SOFTWARE.
 
 
-#if ENT
 using System;
 using System.Runtime.Serialization;
 using System.Collections;
@@ -100,7 +99,3 @@ namespace NDO
 
 	}
 }
-
-
-
-#endif

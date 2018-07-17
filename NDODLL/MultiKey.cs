@@ -238,12 +238,11 @@ namespace NDO
             }
 
             // This is not to be confused with the type id's stored in DependentKeys
-#if PRO
+
             if (relation.ForeignKeyTypeColumnName != null)
             {
                 row[relation.ForeignKeyTypeColumnName] = this.TypeId;
             }
-#endif
         }
 
         public static Key OldDeserialization(SerializationInfo info, StreamingContext context)

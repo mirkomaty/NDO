@@ -471,7 +471,6 @@ namespace NDO.Mapping
         }
 
 
-#if PRO
         private void AddSubClass(Class c)
         {
             if (!Subclasses.Contains(c))
@@ -499,7 +498,7 @@ namespace NDO.Mapping
                 }
             }
         }
-#endif
+
         #endregion
 
         #region Find Functions

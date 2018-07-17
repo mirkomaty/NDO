@@ -153,7 +153,7 @@ namespace NDO
                     provider.AddParameter(deleteCommand, provider.GetNamedParameter("Original_" + fkColumn.Name), provider.GetDbType(fkColumn.SystemType), fkColumn.Size, System.Data.ParameterDirection.Input, false, ((System.Byte)(0)), ((System.Byte)(0)), fkColumn.Name, System.Data.DataRowVersion.Original, null);
                 }
             );
-#if PRO
+
 			if (r.ForeignKeyTypeColumnName != null) 
             {
 				where += " AND " + provider.GetQuotedName(r.ForeignKeyTypeColumnName) + " = " + GetParameter(provider, "Original_" + r.ForeignKeyTypeColumnName);
@@ -164,7 +164,6 @@ namespace NDO
 				where += " AND " + provider.GetQuotedName(r.MappingTable.ChildForeignKeyTypeColumnName) + " = " + GetParameter(provider, "Original_" + r.MappingTable.ChildForeignKeyTypeColumnName);
                 provider.AddParameter(deleteCommand, provider.GetNamedParameter("Original_" + r.MappingTable.ChildForeignKeyTypeColumnName), provider.GetDbType(typeof(int)), 4, System.Data.ParameterDirection.Input, false, ((System.Byte)(0)), ((System.Byte)(0)), r.MappingTable.ChildForeignKeyTypeColumnName, System.Data.DataRowVersion.Original, null);
             }
-#endif
 
             deleteCommand.CommandText = string.Format(sql, QualifiedTableName.Get(r.MappingTable.TableName, provider), where);
 
@@ -228,7 +227,6 @@ namespace NDO
                 i++;
             });
             
-#if PRO
 			if (r.ForeignKeyTypeColumnName != null) 
 			{
                 //sql += " AND " + provider.GetQuotedName(r.ForeignKeyTypeColumnName) + " = " + oid.Id.TypeId;
@@ -237,8 +235,8 @@ namespace NDO
                 dataParameter.Value = oid.Id.TypeId;
                 dataParameter.Direction = ParameterDirection.Input;                
 			}
-#endif
-            selectCommand.CommandText = sql;
+
+			selectCommand.CommandText = sql;
             try 
             {
 				Dump(null);

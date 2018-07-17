@@ -20,7 +20,6 @@
 // DEALINGS IN THE SOFTWARE.
 
 
-#if PRO
 using System;
 using System.Collections;
 using System.Collections.Specialized;
@@ -189,4 +188,3 @@ namespace NDO.Mapping {
 
 	}
 }
-#endif

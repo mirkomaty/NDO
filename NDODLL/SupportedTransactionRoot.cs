@@ -20,7 +20,6 @@
 // DEALINGS IN THE SOFTWARE.
 
 
-#if ENT
 using System;
 using System.EnterpriseServices;
 using NDO;
@@ -102,4 +101,3 @@ namespace NDO
 
 	}
 }
-#endif

@@ -49,12 +49,11 @@ namespace NDO
 
 		public static object CreateList(Type t)
 		{
-#if !NDO11
 			if (t.FullName.StartsWith("System.Collections.Generic.IList`1"))
 			{
 				return GenericListReflector.CreateList(t.GetGenericArguments()[0]);
 			}
-#endif
+
 			if (t == typeof(IList))
 				return new ArrayList();
 			try

@@ -148,8 +148,6 @@ exit:
                 ((IList)container).Insert(index, temp[i]);
 		}
 
-
-#if !NET11
         public static int RemoveAll(object container, Delegate pred, Hashtable table)
         {
 			if (container == null)
@@ -195,7 +193,6 @@ exit:
 
             return toDelete.Count;
         }
-#endif
 
 
         public static void SetRange(object container, int index, ICollection coll, Hashtable table)
@@ -407,26 +404,5 @@ exit:
 			exit:
 				((IList)container).Clear();			
 		}
-
-		// Maintaining old function names out of compatibility reasons.
-#if NDO11
-		public static int AddRelatedObject(object container, object element, Hashtable table)
-		{
-			return Add(container, element, table);
-		}
-		public static void RemoveRelatedObject(object container, object element, Hashtable table)
-		{
-			Remove(container, element, table);
-		}
-		public static void RemoveRelatedObjectAt(object container, int index, Hashtable table)
-		{
-			RemoveAt(container, index, table);
-		}
-		public static void RemoveRange(object container, Hashtable table)
-		{
-			Clear(container, table);
-		}
-#endif
-
 	}
 }

@@ -20,7 +20,6 @@
 // DEALINGS IN THE SOFTWARE.
 
 
-#if ENT
 using System;
 using NDO;
 
@@ -96,6 +95,3 @@ namespace NDO
 	}
 }
 
-
-
-#endif

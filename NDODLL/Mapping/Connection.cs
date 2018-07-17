@@ -165,18 +165,6 @@ namespace NDO.Mapping
         {
         }
 
-#if NDO11
-		string owner;
-		/// <summary>
-		///  Don't use this property - it's obsolete.
-		/// </summary>
-		public string Owner
-		{
-			get { return owner; }
-			set { owner = value; }
-		}
-#endif
-
         /// <summary>
         /// Returns a connection type according to an OleDb connection string.
         /// </summary>

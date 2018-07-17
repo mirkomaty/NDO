@@ -118,10 +118,10 @@ namespace NDO
             {
 				base.Init(mappingFileName);
 				string dir = Path.GetDirectoryName(mappingFileName);
-#if PRO
+
 				string typesFile = Path.Combine(dir, "NDOTypes.xml");
 				typeManager = new TypeManager(typesFile, this.mappings);
-#endif
+
 				sm = new StateManager(this);
 
 				transactionTable = new TransactionTable(new TransactionTable.NewConnectionCallback(OnNewConnection));
@@ -150,9 +150,7 @@ namespace NDO
 		public PersistenceManager() : base()
 		{
 		}
-
 		
-#if PRO
 		/// <summary>
 		/// Loads the mapping file from the specified location. This allows to use
 		/// different mapping files with different classes mapped in it.
@@ -163,10 +161,8 @@ namespace NDO
 		public PersistenceManager(string mappingFile) : base (mappingFile)
 		{
 		}
-#endif
 
 
-#if ENT
 		#region Object Container Stuff
 		/// <summary>
 		/// Only available in the NDO Enterprise Edition.
@@ -396,7 +392,7 @@ namespace NDO
 
 		}
 		#endregion
-#endif
+
 		#region Implementation of IPersistenceManager
 
 		// Complete documentation can be found in IPersistenceManager
@@ -545,20 +541,12 @@ namespace NDO
 		public void MakePersistent(object o) 
 		{
 			IPersistenceCapable pc = CheckPc(o);
-#if !ENT
-			bool inTx = ContextUtil.IsInTransaction;
-#endif
+
 			//Debug.WriteLine("MakePersistent: " + pc.GetType().Name);
 			//Debug.Indent();
 
 			if (pc.NDOObjectState != NDOObjectState.Transient)
 				throw new NDOException(54, "MakePersistent: Object is already persistent: " + pc.NDOObjectId.Dump());
-
-
-#if !ENT
-			if (inTx)
-				ContextUtil.MyTransactionVote = TransactionVote.Abort;
-#endif
 
 			InternalMakePersistent(pc, true);
 
@@ -1082,7 +1070,6 @@ namespace NDO
 				}
 			}
 
-#if PRO
 			if (transactionMode != TransactionMode.None)
 			{
 				if (ti.Connection.State == ConnectionState.Closed)
@@ -1105,7 +1092,7 @@ namespace NDO
 					}
 				}
             }
-#endif
+
             if ( transactionMode == TransactionMode.None && handler != null && handler.Connection == null)
                 handler.Connection = ti.Connection;
 
@@ -2194,8 +2181,6 @@ namespace NDO
 						}
 						else
 						{
-
-#if PRO
 							Type relType;
                             if (r.HasSubclasses)
                             {
@@ -2217,9 +2202,6 @@ namespace NDO
                                     row[r.ForeignKeyTypeColumnName], r.ReferencedTypeName));
                             }
 	
-#else
-						Type relType = r.ReferencedType;
-#endif
                             int count = r.ForeignKeyColumns.Count();
                             object[] keydata = new object[count];
                             int i = 0;
@@ -2541,10 +2523,10 @@ namespace NDO
 			foreach (Cache.Entry e in cache.LockedObjects) 
 			{
 				Type objType = e.pc.GetType();
-#if !NET11
+
                 if (objType.IsGenericType && !objType.IsGenericTypeDefinition)
                     objType = objType.GetGenericTypeDefinition();
-#endif
+
 				Class cl = GetClass(e.pc);
 				//Debug.WriteLine("Saving: " + objType.Name + " id = " + e.pc.NDOObjectId.Dump());
 				if(!types.Contains(objType)) 
@@ -2771,12 +2753,12 @@ namespace NDO
             {
                 row[fkColumn.Name] = relObj.NDOObjectId.Id[i++];
             }
-#if PRO
+
 			if (r.ForeignKeyTypeColumnName != null)
 				row[r.ForeignKeyTypeColumnName] = pc.NDOObjectId.Id.TypeId;
 			if (r.MappingTable.ChildForeignKeyTypeColumnName != null)
 				row[r.MappingTable.ChildForeignKeyTypeColumnName] = relObj.NDOObjectId.Id.TypeId;
-#endif
+
 			dt.Rows.Add(row);
 			if(e.DeleteEntry) 
 			{
@@ -2796,7 +2778,6 @@ namespace NDO
 		public void Restore(object o)
 		{			
 			IPersistenceCapable pc = CheckPc(o);
-#if STD
 			Cache.Entry e = null;
 			foreach (Cache.Entry entry in cache.LockedObjects) 
 			{
@@ -2863,9 +2844,6 @@ namespace NDO
                     break;
 
 			}
-#else
-			throw new NotImplementedException("Restore(IPersistenceCapable) is not implemented in NDO community version");
-#endif
 		}
 
 		/// <summary>
@@ -2874,7 +2852,6 @@ namespace NDO
 		/// <remarks>Supports both local and EnterpriseService Transactions.</remarks>
 		public virtual void AbortTransaction()
 		{
-#if PRO
 			if (transactionMode != TransactionMode.None)
 			{
 				foreach(TransactionInfo ti in transactionTable)
@@ -2893,9 +2870,7 @@ namespace NDO
 						ti.Connection.Close();
 				}
 			}
-//			transactionTable.Clear();
-#endif
-#if ENT
+
             try
             {
                 if (ContextUtil.IsInTransaction)
@@ -2904,7 +2879,6 @@ namespace NDO
             catch (NotImplementedException)  // Mono Hack: Mono doesn't implement IsInTransaction
             {
             }
-#endif
 		}
 
 		/// <summary>
@@ -2912,7 +2886,6 @@ namespace NDO
 		/// </summary>
 		public virtual void Abort() 
 		{
-#if STD	
 			// RejectChanges of the DS cannot be called because newly added rows would be deleted,
 			// and therefore, couldn't be restored. Instead we call RejectChanges() for each
 			// individual row.
@@ -2986,9 +2959,6 @@ namespace NDO
 				MakeHollow(hollowModeObjects);
 			}
 			AbortTransaction();
-#else			
-			throw new NotImplementedException("Abort() is not implemented in NDO community version");
-#endif
 		}
 
 
