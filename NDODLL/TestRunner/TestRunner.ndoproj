@@ -36,6 +36,10 @@
       </Reference>
       <Reference AssemblyName="QueryTests" AssemblyPath="..\..\QueryTests\bin\Debug\QueryTests.dll">
       </Reference>
+      <Reference AssemblyName="Unity.Abstractions" AssemblyPath="..\packages\Unity.Abstractions.3.3.0\lib\net40\Unity.Abstractions.dll">
+      </Reference>
+      <Reference AssemblyName="Unity.Container" AssemblyPath="..\packages\Unity.Container.5.8.6\lib\net40\Unity.Container.dll">
+      </Reference>
     </References>
   </ProjectDescription>
 </Enhancer>

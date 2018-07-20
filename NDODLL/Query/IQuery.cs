@@ -60,5 +60,17 @@ namespace NDO.Query
 		/// Returns the generated SQL Query
 		/// </summary>
 		string GeneratedQuery { get; }
+
+		/// <summary>
+		/// Gets or sets the amount of elements to be skipped in an ordered query
+		/// </summary>
+		/// <remarks>This is for paging support.</remarks>
+		int Skip { get; set; }
+
+		/// <summary>
+		/// Gets or sets the amount of elements to be taken in an ordered query
+		/// </summary>
+		/// <remarks>This is for paging support.</remarks>
+		int Take { get; set; }
 	}
 }

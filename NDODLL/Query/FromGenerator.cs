@@ -52,7 +52,7 @@ namespace NDO.Query
 					sb.Length--;
 				}
 			}
-			return "FROM " + QualifiedTableName.Get( cls ) + sb.ToString();
+			return "FROM " + cls.GetQualifiedTableName() + sb.ToString();
 		}
 
 		private void AnnotateExpressionTree( OqlExpression expressionTree )

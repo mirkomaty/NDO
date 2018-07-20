@@ -67,6 +67,12 @@
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
+    <Reference Include="Unity.Abstractions, Version=3.3.0.0, Culture=neutral, PublicKeyToken=6d32ff45e0ccc69f, processorArchitecture=MSIL">
+      <HintPath>..\packages\Unity.Abstractions.3.3.0\lib\net40\Unity.Abstractions.dll</HintPath>
+    </Reference>
+    <Reference Include="Unity.Container, Version=5.8.6.0, Culture=neutral, PublicKeyToken=489b6accfaf20ef0, processorArchitecture=MSIL">
+      <HintPath>..\packages\Unity.Container.5.8.6\lib\net40\Unity.Container.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="TestRunner.cs" />
@@ -80,7 +86,7 @@
     <ProjectReference Include="..\NDO.csproj">
       <Project>{ef666155-b2df-4a2f-9de5-839b1b9df98c}</Project>
       <Name>NDO</Name>
-    </ProjectReference>	
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <Content Include="NDOMapping.xml" />

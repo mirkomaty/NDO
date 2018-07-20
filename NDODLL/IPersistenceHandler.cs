@@ -22,10 +22,13 @@
 
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
 using NDO.Mapping;
+using NDO.SqlPersistenceHandling;
 using NDOInterfaces;
+using NDOql.Expressions;
 
 namespace NDO
 {
@@ -84,12 +87,12 @@ namespace NDO
 		/// Execute a SQL query. The query has to beginn with 'SELECT *' where '*' will be 
 		/// replaced with the correct field list depending on the mapping information and hollow state.
 		/// </summary>
-		/// <param name="expression">SQL expression</param>
+		/// <param name="expressionTree">Syntax Tree of the NDOQl expression</param>
 		/// <param name="hollow">True if only ids should be read, false if all fields should be read.</param>
 		/// <param name="dontTouch">True if expression should not be touched - i. e. if the expression is in sql language</param>
 		/// <param name="parameters">A collection of objects, corresponding to the query parameters.</param>
 		/// <returns>A DataTable object, containing the query result.</returns>
-		DataTable SqlQuery(string expression, bool hollow, bool dontTouch, IList parameters);
+		DataTable SqlQuery( OqlExpression expressionTree, List<QueryContextsEntry> queryContextsForAllTypes, bool hollow, IList parameters );
 
 		/// <summary>
 		/// Gets a Handler which can store data in relation tables. The handler is an Implementation of IMappingTableHandler.

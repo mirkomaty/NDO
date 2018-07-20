@@ -49,7 +49,7 @@ namespace NDO
 		private string logPath;
 		private ILogAdapter logAdapter;
 		private Type persistenceHandlerType = null;
-
+		private IUnityContainer configContainer;
 
 		/// <summary>
 		/// Register a listener to this event, if you have to provide user generated ids. 
@@ -61,10 +61,8 @@ namespace NDO
 		/// <summary>
 		/// Constructor
 		/// </summary>
-		public PersistenceManagerBase(UnityContainer container = null) 
+		public PersistenceManagerBase(IUnityContainer container = null) 
 		{
-			if (container == null)
-				container = NDOContainer.Instance;
 			Assembly ass = Assembly.GetEntryAssembly();
 
 			if (ass == null)
@@ -125,8 +123,9 @@ namespace NDO
 			Init(Path.Combine(baseDir, mp));
 		}
 
-		public PersistenceManagerBase(string mappingFile)
+		public PersistenceManagerBase(string mappingFile, IUnityContainer container = null)
 		{
+			this.configContainer = container;
 			Init(mappingFile);
 		}
 
@@ -136,7 +135,8 @@ namespace NDO
 			this.mappingPath = mappingFileName;
 			if (!File.Exists(mappingPath))
 				throw new NDOException(45, String.Format("Mapping File {0} doesn't exist.", mappingFileName));
-			mappings = new Mappings(mappingPath, this.persistenceHandlerType);
+			mappings = new Mappings(mappingPath, this.configContainer);
+			this.configContainer.RegisterInstance( mappings );
 			ds = new NDODataSet(mappings);
 			mappings.DataSet = ds;
 			string logPath = AppDomain.CurrentDomain.BaseDirectory;
@@ -281,6 +281,7 @@ namespace NDO
 		/// <summary>
 		/// Gets or sets the type which is used to construct persistence handlers.
 		/// </summary>
+		[Obsolete("Use the ConfigContainer to register a handler type.")]
 		public Type PersistenceHandlerType
 		{
 			get { return persistenceHandlerType; }
@@ -288,10 +289,26 @@ namespace NDO
 			{ 
 				if (value != null && value.GetInterface("IPersistenceHandler") == null)
 					throw new NDOException(46, "Invalid PersistenceHandlerType: " + value.FullName);
-                this.persistenceHandlerType = value;
-                this.mappings.DefaultHandlerType = value;
+				ConfigContainer.RegisterType( typeof( IPersistenceHandler ), persistenceHandlerType );
             }
 		}
+
+		/// <summary>
+		/// Gets or sets the container for the configuration of the system.
+		/// </summary>
+		public IUnityContainer ConfigContainer
+		{
+			get
+			{
+				if (this.configContainer == null)
+					this.configContainer = NDOContainer.Instance.CreateChildContainer();
+
+				this.configContainer.RegisterInstance( GetType(), this );
+				return this.configContainer;
+			}
+			set { this.configContainer = value; }
+		}
+
 
 		/// <summary>
 		/// Available only in the NDO Professional Edition or above. 
@@ -393,10 +410,12 @@ namespace NDO
 			return pc;
 		}
 
-
-
-
-
-
+		/// <summary>
+		/// Disposes any Resources which might be held by the PersistenceManager implementation.
+		/// </summary>
+		public virtual void Dispose()
+		{
+			this.configContainer.Dispose();
+		}
 	}
 }

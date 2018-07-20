@@ -30,29 +30,29 @@ namespace NDO
 	/// <summary>
 	/// Summary description for QualifiedTableName.
 	/// </summary>
-	internal class QualifiedTableName
+	internal static class QualifiedTableName
 	{
-		public static string Get(Class cls)
+		public static string GetQualifiedTableName( this Class cls)
 		{
-			return Get( cls.TableName, cls.Provider );
+			return GetQualifiedTableName( cls.Provider, cls.TableName);
 		}
 
-		public static string Get(MappingTable mappingTable)
+		public static string GetQualifiedTableName( this MappingTable mappingTable)
 		{
-			return Get( mappingTable.TableName, mappingTable.Parent.Parent.Provider );
+			return mappingTable.Parent.Parent.Provider.GetQualifiedTableName( mappingTable.TableName );
 		}
 
-		public static string Get(string name, IProvider p)
+		public static string GetQualifiedTableName(this IProvider p, string name)
 		{
-			if (name.IndexOf('.') == -1)
-				return p.GetQuotedName(name);
-			string[] strarr = name.Split('.');
+			if (name.IndexOf( '.' ) == -1)
+				return p.GetQuotedName( name );
+			string[] strarr = name.Split( '.' );
 			StringBuilder sb = new StringBuilder();
 
-			foreach(string n in strarr)
+			foreach (string n in strarr)
 			{
-				sb.Append(p.GetQuotedName(n));
-				sb.Append('.');
+				sb.Append( p.GetQuotedName( n ) );
+				sb.Append( '.' );
 			}
 			sb.Length--;
 			return sb.ToString();

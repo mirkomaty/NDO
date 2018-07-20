@@ -395,6 +395,7 @@
     <Compile Include="Query\NDOQuery.cs" />
     <Compile Include="Query\ObjectRowPair.cs" />
     <Compile Include="Query\Order.cs" />
+    <Compile Include="Query\QueryContexts.cs" />
     <Compile Include="Query\QueryException.cs" />
     <Compile Include="Query\QueryLanguage.cs" />
     <Compile Include="Query\QueryInfo.cs" />
@@ -427,6 +428,10 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="SqlPassThroughHandler.cs" />
+    <Compile Include="SqlPersistenceHandling\AssignmentGenerator.cs" />
+    <Compile Include="SqlPersistenceHandling\QueryContextsEntry.cs" />
+    <Compile Include="SqlPersistenceHandling\SqlColumnListGenerator.cs" />
+    <Compile Include="SqlPersistenceHandling\SqlQueryGenerator.cs" />
     <Compile Include="SqlServerGenerator.cs" />
     <Compile Include="StateManager.cs">
       <SubType>Code</SubType>

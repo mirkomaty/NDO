@@ -10,6 +10,8 @@ using NDOInterfaces;
 using System.Text.RegularExpressions;
 using NDO.Linq;
 using System.Linq.Expressions;
+using Unity;
+using NDO.SqlPersistenceHandling;
 
 namespace NDO.Query
 {	
@@ -31,7 +33,6 @@ namespace NDO.Query
 		private string queryExpression;
 		private bool hollowResults;
 		private QueryLanguage queryLanguage;
-		private List<QueryInfo> subQueries = new List<QueryInfo>();
 		private Type resultType = typeof(T);
 		private bool allowSubclasses = true;
 		private OqlExpression expressionTree;
@@ -175,7 +176,7 @@ namespace NDO.Query
 
 				IProvider provider = mappings.GetProvider(cl);
 
-				string table = QualifiedTableName.Get(cl.TableName, provider);
+				string table = provider.GetQualifiedTableName(cl.TableName);
 				column = table + "." + provider.GetQuotedName(column);
 
                 query = query.Replace(FieldMarker.Instance, func.ToString() + "(" + column + ") as " + provider.GetQuotedName("AggrResult"));
@@ -378,57 +379,9 @@ namespace NDO.Query
 			}
 		}
 
-		/// <summary>
-		/// Retrieves the SQL code of a NDOql Query.
-		/// </summary>
-		/// <remarks>Note that the query string doesn't show the actually used field names. They are built in the PersistenceHandler.</remarks>
-		public string GeneratedQuery
+		private QueryContexts CreateQueryContexts(Type t)
 		{
-			get
-			{
-				StringBuilder generatedQuery = new StringBuilder();
-				if (subQueries.Count == 0)
-					GenerateQuery();
-				foreach (QueryInfo qi in subQueries)
-				{
-					generatedQuery.Append(qi.QueryString);
-					generatedQuery.Append(";\n");
-				}
-
-				generatedQuery.Length--; // the trailing \n
-
-				if (subQueries.Count == 1)
-					generatedQuery.Length--; // the semicolon
-
-				return generatedQuery.ToString(); 
-			}
-		}
-
-		private void CreateQueryContexts(Type t)
-		{
-			List<Dictionary<Relation, Class>> queryContexts = new RelationContextGenerator( this.pm.GetClass( t ), this.expressionTree, this.pm.NDOMapping ).GetContexts();
-			if (queryContexts.Count == 0)
-			{
-				this.subQueries.Add( new QueryInfo( t, ConstructQueryString( t, new Dictionary<Relation, Class>() ) ) );
-			}				
-			else
-			{
-				string queryString = string.Empty;
-				int added = 0;
-				for (int i = 0; i < queryContexts.Count; i++)
-				{
-					Dictionary<Relation, Class> queryContext = (Dictionary<Relation, Class>) queryContexts[i];
-
-					if (!queryContext.Any(kvp=>kvp.Value.SystemType == t))
-					{
-						if (added > 0)
-							queryString += " UNION \r\n";
-						queryString += ConstructQueryString(t, queryContext);
-						added++;
-					}
-				}
-				this.subQueries.Add(new QueryInfo(t, queryString));
-			}				 
+			return ConfigContainer.Resolve<RelationContextGenerator>().GetContexts( this.pm.GetClass( t ), this.expressionTree );
 		}
 
 		/// <summary>
@@ -439,7 +392,7 @@ namespace NDO.Query
 		/// The function isn't actually recursive. The subclasses have been
 		/// recursively collected in NDOMapping.
 		/// </remarks>
-		private void AddSubQueries()
+		private List<QueryContextsEntry> CreateQueryContextsForTypes()
 		{
 			Dictionary<string, Type> usedTables = new Dictionary<string,Type>();
 			if (!resultType.IsAbstract)
@@ -469,14 +422,17 @@ namespace NDO.Query
 				}
 			}
 
+			List<QueryContextsEntry> queryContextsForTypes = new List<QueryContextsEntry>();
 			// usedTables now contains all assignable classes of our result type
-			foreach(var de in usedTables)
+			foreach (var de in usedTables)
 			{
 				Type t2 = (Type) de.Value;
 				// Now we have to iterate through all mutations of
 				// polymorphic relations, used in the filter expression
-				CreateQueryContexts(t2);
+				queryContextsForTypes.Add( new QueryContextsEntry() { Type = t2, QueryContexts = CreateQueryContexts( t2 ) } );
 			}
+
+			return queryContextsForTypes;
 		}
 
 		private void GenerateQuery()
@@ -489,37 +445,18 @@ namespace NDO.Query
 				NDOql.OqlParser parser = new NDOql.OqlParser();
 				this.expressionTree = parser.Parse( this.queryExpression );
 
-				AddSubQueries();
+				var queryContextsForTypes = CreateQueryContextsForTypes();
 			}
 			else
 			{
-				subQueries.Add (new QueryInfo(typeof(T), this.queryExpression));
+#warning Here we should look, if we can manage a SqlPassThrough-Execution
+				//subQueries.Add (new QueryInfo(typeof(T), this.queryExpression));
 			}
 		}
 
-		string ConstructQueryString(Type resultType, Dictionary<Relation, Class> relationContext)
+		IUnityContainer ConfigContainer
 		{
-			if (this.queryLanguage == QueryLanguage.Sql)
-				return this.queryExpression;
-
-			Class cls = this.pm.mappings.FindClass( resultType );
-
-			// We need a string like the following:
-			// SELECT <column_list> 
-			//		FROM <table_name> { INNER JOIN <table_name> ON { <fk_column_name> = <oid_column_name> [AND] } }
-			//		WHERE <where_clause>
-			StringBuilder sb = new StringBuilder( "SELECT " );
-			sb.Append( new ColumnListGenerator( cls, this.hollowResults ).GenerateColumnList( this.expressionTree ) );
-			sb.Append( ' ' );
-			sb.Append( new FromGenerator( cls, relationContext ).GenerateFromExpression( this.expressionTree ) );
-			string where = new WhereGenerator( cls, relationContext ).GenerateWhereClause( this.expressionTree );
-			if (where != string.Empty)
-			{
-				sb.Append( ' ' );
-				sb.Append( where );
-			}
-
-			return sb.ToString();
+			get { return this.pm.ConfigContainer; }
 		}
 
 		public ICollection<object> Parameters
@@ -545,12 +482,20 @@ namespace NDO.Query
 			set { this.orderings = value.ToList(); }
 		}
 
+		/// <summary>
+		/// Gets or sets the amount of elements to be skipped in an ordered query
+		/// </summary>
+		/// <remarks>This is for paging support.</remarks>
 		public int Skip
 		{
 			get { return this.skip; }
 			set { this.skip = value; }
 		}
 
+		/// <summary>
+		/// Gets or sets the amount of elements to be taken in an ordered query
+		/// </summary>
+		/// <remarks>This is for paging support.</remarks>
 		public int Take
 		{
 			get { return this.take; }
@@ -578,7 +523,8 @@ namespace NDO.Query
 		ICollection<QueryOrder> IQuery.Orderings => this.orderings;
 		object IQuery.ExecuteAggregate( string field, AggregateType aggregateType ) => ExecuteAggregate( field, aggregateType );
 		bool IQuery.AllowSubclasses { get => this.allowSubclasses; set => this.allowSubclasses = value; }
-
+		int IQuery.Skip { get => this.skip; set => this.skip = value; }
+		int IQuery.Take { get => this.take; set => this.take = value; }
 		string IQuery.GeneratedQuery { get { return this.GeneratedQuery; } }
 #endregion
 	}

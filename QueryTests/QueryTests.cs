@@ -234,6 +234,13 @@ namespace QueryTests
 		}
 
 		[Test]
+		public void TestIfOidWithInClauseWorks()
+		{
+			NDOQuery<Mitarbeiter> q = new NDOQuery<Mitarbeiter>( pm, "oid IN (1,2,3,4,5)" );
+			Assert.That( false, "Must be implemented. Needs relation.oid too." );
+		}
+
+		[Test]
 		public void TestIfLinqQueryForNonNullOidsWorks()
 		{
 			// This test will fail because VirtualTable works with the OldQuery.

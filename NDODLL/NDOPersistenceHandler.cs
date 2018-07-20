@@ -40,6 +40,9 @@ using NDO.Logging;
 using NDOInterfaces;
 using NDO.Query;
 using System.Globalization;
+using NDOql.Expressions;
+using Unity;
+using NDO.SqlPersistenceHandling;
 
 namespace NDO
 {
@@ -59,171 +62,6 @@ namespace NDO
 			TableName = tableName;
 		}
 	}
-
-	internal class ColumnListGenerator
-	{
-		IProvider p;
-		IList columns = new ArrayList();
-		string tableName;
-		bool useTableName = true;
-		bool generateAliasNames = false;
-
-		public bool GenerateAliasNames
-		{
-			get { return this.generateAliasNames; }
-			set { this.generateAliasNames = value; }
-		}
-
-		public bool UseTableName
-		{
-			get { return this.useTableName; }
-			set { this.useTableName = value; }
-		}
-
-		public ColumnListGenerator(IProvider provider, string tableName)
-		{
-			this.tableName = tableName;
-			p = provider;
-		}
-
-		public void Add(string columnName)
-		{
-			columns.Add(columnName);
-		}
-
-		public void Insert(string columnName)
-		{
-			columns.Insert(0, columnName);
-		}
-
-		public string Result
-		{
-			get 
-			{
-				StringBuilder result = new StringBuilder();
-				int ende = columns.Count - 1;
-				for (int i = 0; i < columns.Count; i++)
-				{
-					string f = (string) columns[i];
-					if (this.useTableName)
-					{
-						result.Append(QualifiedTableName.Get(tableName, p));
-						result.Append('.');
-					}
-					result.Append(p.GetQuotedName(f));
-					if (this.generateAliasNames)
-					{
-						result.Append( " AS " );
-						result.Append( p.GetQuotedName( f ) );
-					}
-					if (i < ende)
-					{
-						result.Append(", ");
-					}
-				}
-				return result.ToString();
-			}
-		}
-	}
-
-	internal class ZuweisungsGenerator
-	{
-		IProvider p;
-		IList fields = new ArrayList();
-
-		public ZuweisungsGenerator(IProvider provider)
-		{
-			p = provider;
-		}
-
-		public void Add(string s)
-		{
-			fields.Add(s);
-		}
-
-//		public void Insert(string s)
-//		{
-//			fields.Insert(0, s);
-//		}
-
-		public string Result
-		{
-			get 
-			{
-				StringBuilder result = new StringBuilder();
-				int ende = fields.Count - 1;
-				for (int i = 0; i < fields.Count; i++)
-				{
-					string fieldName = (string)fields[i];
-					result.Append(p.GetQuotedName(fieldName));
-					result.Append(" = ");
-					if (!p.UseNamedParams)
-						result.Append("?");
-					else
-					{
-						result.Append(p.GetNamedParameter("U_" + fieldName));
-					}
-					if (i < ende)
-					{
-						result.Append(", ");
-					}
-				}
-				return result.ToString();
-			}
-		}
-	}
-
-	internal class ParamListGenerator
-	{
-		IProvider p;
-		IList fields = new ArrayList();
-
-		public ParamListGenerator(IProvider provider)
-		{
-			p = provider;
-		}
-
-		public void Add(string s)
-		{
-			fields.Add(s);
-		}
-
-		public void Insert(string s)
-		{
-			fields.Insert(0, s);
-		}
-
-		public string Result
-		{
-			get 
-			{
-				StringBuilder result = new StringBuilder();
-				int ende = fields.Count - 1;
-				for (int i = 0; i < fields.Count; i++)
-				{
-					if (p.UseNamedParams)
-					{
-						result.Append(p.GetNamedParameter((string)fields[i]));
-						if (i < ende)
-						{
-							result.Append(", ");
-						}
-					}
-					else
-					{
-						if (i < ende)
-						{
-							result.Append("?, ");
-						}
-						else
-							result.Append("?");
-					}
-				}
-				return result.ToString();
-			}
-		}
-	}
-
 
 	/// <summary>
 	/// Summary description for NDOPersistenceHandler.
@@ -262,9 +100,16 @@ namespace NDO
 		private int guidlength;
 		private string hollowFields;
 		private string hollowFieldsWithAlias;
+		private string fieldList;
+		private string namedParamList;
 		private bool hasGuidOid;
+		private readonly IUnityContainer configContainer;
 
-		
+		public NDOPersistenceHandler(IUnityContainer configContainer)
+		{
+			this.configContainer = configContainer;
+		}
+
 		private void GenerateSelectCommand()
 		{
 			this.selectCommand.CommandText = string.Empty;
@@ -280,29 +125,14 @@ namespace NDO
 
 		private void GenerateInsertCommand()
 		{
-			NDO.Mapping.Field fieldMapping;
-
-			ColumnListGenerator columnListGenerator = new ColumnListGenerator(this.provider, this.tableName);
-			columnListGenerator.UseTableName = false;
-			ParamListGenerator paramListGenerator = new ParamListGenerator(this.provider);
-
-#if nix
-			if (this.useSelfGeneratedIds && !oidIsAField && !this.classMapping.Oid.IsMulti)
+			// Generate Parameters
+			foreach (OidColumn oidColumn in this.classMapping.Oid.OidColumns)
 			{
-				provider.AddParameter(insertCommand, provider.GetNamedParameter(oidColumnName), provider.GetDbType(classMapping.Oid.FieldType), provider.GetDefaultLength(classMapping.Oid.FieldType), this.oidColumnName);
-				columnListGenerator.Add(oidColumnName);
-				paramListGenerator.Add(oidColumnName); 
+				if (!oidColumn.AutoIncremented && oidColumn.FieldName == null && oidColumn.RelationName == null)
+				{
+					provider.AddParameter( insertCommand, provider.GetNamedParameter( oidColumn.Name ), provider.GetDbType( oidColumn.SystemType ), provider.GetDefaultLength( oidColumn.SystemType ), oidColumn.Name );
+				}
 			}
-#endif
-            foreach (OidColumn oidColumn in this.classMapping.Oid.OidColumns)
-            {
-                if (!oidColumn.AutoIncremented && oidColumn.FieldName == null && oidColumn.RelationName == null)
-                {
-                    provider.AddParameter(insertCommand, provider.GetNamedParameter(oidColumn.Name), provider.GetDbType(oidColumn.SystemType), provider.GetDefaultLength(oidColumn.SystemType), oidColumn.Name);
-                    columnListGenerator.Add(oidColumn.Name);
-                    paramListGenerator.Add(oidColumn.Name);
-                }
-            }
 
 			foreach (var e in this.persistentFields)
 			{
@@ -312,72 +142,49 @@ namespace NDO
 				else
 					memberType = ((PropertyInfo)e.Value).PropertyType;
 
-				fieldMapping = classMapping.FindField((string) e.Key);
+				var fieldMapping = classMapping.FindField( (string)e.Key );
 
 				// Ignore fields without mapping.
-				if (null == fieldMapping) 
+				if (null == fieldMapping)
 					continue;
 
 				if (null == fieldMapping.Column.DbType)
 				{
-					fieldMapping.ColumnDbType = (int) provider.GetDbType(memberType);
+					fieldMapping.ColumnDbType = (int)provider.GetDbType( memberType );
 				}
 				else
 				{
-					fieldMapping.ColumnDbType = (int) provider.GetDbType(fieldMapping.Column.DbType);
+					fieldMapping.ColumnDbType = (int)provider.GetDbType( fieldMapping.Column.DbType );
 				}
 
-				provider.AddParameter(insertCommand, provider.GetNamedParameter(fieldMapping.Column.Name), fieldMapping.ColumnDbType, ParameterLength(fieldMapping, memberType), fieldMapping.Column.Name);
-
-				columnListGenerator.Add(fieldMapping.Column.Name);
-				paramListGenerator.Add(fieldMapping.Column.Name);
+				provider.AddParameter( insertCommand, provider.GetNamedParameter( fieldMapping.Column.Name ), fieldMapping.ColumnDbType, ParameterLength( fieldMapping, memberType ), fieldMapping.Column.Name );
 			}
 
 			foreach (RelationFieldInfo ri in relationInfos)
 			{
 				Relation r = ri.Rel;
-                foreach(ForeignKeyColumn fkColumn in r.ForeignKeyColumns)
-                {
-                    provider.AddParameter(insertCommand, provider.GetNamedParameter(fkColumn.Name), provider.GetDbType(fkColumn.SystemType), provider.GetDefaultLength(fkColumn.SystemType), fkColumn.Name);
-				    columnListGenerator.Add(fkColumn.Name);
-				    paramListGenerator.Add(fkColumn.Name);
-                }
+				foreach (ForeignKeyColumn fkColumn in r.ForeignKeyColumns)
+				{
+					provider.AddParameter( insertCommand, provider.GetNamedParameter( fkColumn.Name ), provider.GetDbType( fkColumn.SystemType ), provider.GetDefaultLength( fkColumn.SystemType ), fkColumn.Name );
+				}
 				if (r.ForeignKeyTypeColumnName != null)
 				{
-					provider.AddParameter(insertCommand, provider.GetNamedParameter(r.ForeignKeyTypeColumnName), provider.GetDbType(typeof(int)), provider.GetDefaultLength(typeof(int)), r.ForeignKeyTypeColumnName);
-					columnListGenerator.Add(r.ForeignKeyTypeColumnName);
-					paramListGenerator.Add(r.ForeignKeyTypeColumnName);
+					provider.AddParameter( insertCommand, provider.GetNamedParameter( r.ForeignKeyTypeColumnName ), provider.GetDbType( typeof( int ) ), provider.GetDefaultLength( typeof( int ) ), r.ForeignKeyTypeColumnName );
 				}
 
 			}
 
 			if (this.timeStampColumn != null)
 			{
-				provider.AddParameter(insertCommand, provider.GetNamedParameter(timeStampColumn), provider.GetDbType(typeof(Guid)), guidlength, this.timeStampColumn);
-				columnListGenerator.Add(timeStampColumn);
-				paramListGenerator.Add(this.timeStampColumn); 
+				provider.AddParameter( insertCommand, provider.GetNamedParameter( timeStampColumn ), provider.GetDbType( typeof( Guid ) ), guidlength, this.timeStampColumn );
 			}
 
-            if (this.typeNameColumn != null)
-            {
-                Type tncType = Type.GetType(this.typeNameColumn.NetType);
-                provider.AddParameter(insertCommand, provider.GetNamedParameter(typeNameColumn.Name), provider.GetDbType(tncType), provider.GetDefaultLength(tncType), this.typeNameColumn.Name);
-                columnListGenerator.Add(this.typeNameColumn.Name);
-                paramListGenerator.Add(this.typeNameColumn.Name); 
-            }
+			if (this.typeNameColumn != null)
+			{
+				Type tncType = Type.GetType( this.typeNameColumn.NetType );
+				provider.AddParameter( insertCommand, provider.GetNamedParameter( typeNameColumn.Name ), provider.GetDbType( tncType ), provider.GetDefaultLength( tncType ), this.typeNameColumn.Name );
+			}
 
-			string namedParamList = paramListGenerator.Result;
-			string fieldList = columnListGenerator.Result;
-
-            foreach (OidColumn oidColumn in this.classMapping.Oid.OidColumns)
-            {
-                if (oidColumn.FieldName == null && oidColumn.RelationName == null && oidColumn.AutoIncremented)
-                    columnListGenerator.Insert(oidColumn.Name);
-            }
-			columnListGenerator.UseTableName = true;
-			this.selectFieldList = columnListGenerator.Result;
-			columnListGenerator.GenerateAliasNames = true;
-			this.selectFieldListWithAlias = columnListGenerator.Result;
 			string sql;
 			//{0} = TableName: Mitarbeiter			
 			//{1} = FieldList: vorname, nachname
@@ -387,13 +194,13 @@ namespace NDO
 			if (hasAutoincrementedColumn && provider.SupportsLastInsertedId && provider.SupportsInsertBatch)
 			{
 				sql = "INSERT INTO {0} ({1}) VALUES ({2}); SELECT {3} FROM {0} WHERE ({4} = " + provider.GetLastInsertedId(this.tableName, this.autoIncrementColumn.Name) + ")";
-                sql = string.Format(sql, qualifiedTableName, fieldList, namedParamList, selectFieldList, this.autoIncrementColumn.Name);
+                sql = string.Format(sql, qualifiedTableName, this.fieldList, this.namedParamList, selectFieldList, this.autoIncrementColumn.Name);
 				this.insertCommand.UpdatedRowSource = UpdateRowSource.FirstReturnedRecord;
 			}
 			else
 			{
 				sql = "INSERT INTO {0} ({1}) VALUES ({2})";
-				sql = string.Format(sql, qualifiedTableName, fieldList, namedParamList);
+				sql = string.Format(sql, qualifiedTableName, this.fieldList, this.namedParamList);
 			}
 			if (hasAutoincrementedColumn && !provider.SupportsInsertBatch)
 			{
@@ -452,18 +259,15 @@ namespace NDO
 
 			NDO.Mapping.Field fieldMapping;
 
-//			if (!this.oidIsAField && provider is NDOSqlProvider)
-//				sql = @"UPDATE {0} SET {1} WHERE ({2}) ; SELECT {3} FROM {0} WHERE ({4})";
-//			else
-				sql = @"UPDATE {0} SET {1} WHERE ({2})";
+			sql = @"UPDATE {0} SET {1} WHERE ({2})";
 
 		
 			//{0} = Tabellenname: Mitarbeiter
 			//{1} = Zuweisungsliste: vorname = @vorname, nachname = @nachname 
 			//{2} = Where-Bedingung: id = @Original_id [ AND TimeStamp = @Original_timestamp ]
-			//{3} = Feldliste mit Id: id, vorname, nachname 
-			//{4} = Where-Bedingung ohne Timestamp
-			ZuweisungsGenerator zuwGenerator = new ZuweisungsGenerator(this.provider);
+			AssignmentGenerator assignmentGenerator = new AssignmentGenerator(this.classMapping);
+			string zuwListe = assignmentGenerator.Result;
+
 			foreach (var e in this.persistentFields)
 			{
 				Type memberType;
@@ -472,39 +276,30 @@ namespace NDO
 				else
 					memberType = ((PropertyInfo)e.Value).PropertyType;
 
-				fieldMapping = classMapping.FindField((string)e.Key);
-				if (fieldMapping != null) 
-				{ 
-					zuwGenerator.Add(fieldMapping.Column.Name);
-					provider.AddParameter(updateCommand, provider.GetNamedParameter("U_" + fieldMapping.Column.Name), fieldMapping.ColumnDbType, ParameterLength(fieldMapping, memberType), fieldMapping.Column.Name);
-				} 
+				fieldMapping = classMapping.FindField( (string)e.Key );
+				if (fieldMapping != null)
+				{
+					provider.AddParameter( updateCommand, provider.GetNamedParameter( "U_" + fieldMapping.Column.Name ), fieldMapping.ColumnDbType, ParameterLength( fieldMapping, memberType ), fieldMapping.Column.Name );
+				}
 			}
 
-			foreach (RelationFieldInfo ri in relationInfos) 
+			foreach (RelationFieldInfo ri in relationInfos)
 			{
 				Relation r = ri.Rel;
-				if(r.Multiplicity == RelationMultiplicity.Element && r.MappingTable == null
+				if (r.Multiplicity == RelationMultiplicity.Element && r.MappingTable == null
 					|| r.Multiplicity == RelationMultiplicity.List && r.MappingTable == null && r.Parent.FullName != classMapping.FullName)
 				{
-                    foreach (ForeignKeyColumn fkColumn in r.ForeignKeyColumns)
-                    {
-                        zuwGenerator.Add(fkColumn.Name);
-                        Type systemType = fkColumn.SystemType;
-                        provider.AddParameter(updateCommand, provider.GetNamedParameter("U_" + fkColumn.Name), provider.GetDbType(systemType), provider.GetDefaultLength(systemType), fkColumn.Name);
-                    }
+					foreach (ForeignKeyColumn fkColumn in r.ForeignKeyColumns)
+					{
+						Type systemType = fkColumn.SystemType;
+						provider.AddParameter( updateCommand, provider.GetNamedParameter( "U_" + fkColumn.Name ), provider.GetDbType( systemType ), provider.GetDefaultLength( systemType ), fkColumn.Name );
+					}
 					if (r.ForeignKeyTypeColumnName != null)
 					{
-						zuwGenerator.Add(r.ForeignKeyTypeColumnName);
-						provider.AddParameter(updateCommand, provider.GetNamedParameter("U_" + r.ForeignKeyTypeColumnName), provider.GetDbType(typeof(int)), provider.GetDefaultLength(typeof(int)), r.ForeignKeyTypeColumnName);
+						provider.AddParameter( updateCommand, provider.GetNamedParameter( "U_" + r.ForeignKeyTypeColumnName ), provider.GetDbType( typeof( int ) ), provider.GetDefaultLength( typeof( int ) ), r.ForeignKeyTypeColumnName );
 					}
 				}
 			}
-			if (this.timeStampColumn != null)
-			{
-				zuwGenerator.Add(timeStampColumn);
-			}
-
-			string zuwListe = zuwGenerator.Result;
 
 			string where = string.Empty;
 
@@ -561,7 +356,7 @@ namespace NDO
             //    }
             //}
 
-			sql = string.Format(sql, qualifiedTableName, zuwListe, where, selectFieldList, where);
+			sql = string.Format(sql, qualifiedTableName, zuwListe, where);
 			//Console.WriteLine(sql);
 			this.updateCommand.CommandText = sql;
 		}
@@ -673,40 +468,20 @@ namespace NDO
 			this.tableName = classMapping.TableName;
 			Connection connInfo = mappings.FindConnection(classMapping);
 			this.provider = mappings.GetProvider(connInfo);
-			this.qualifiedTableName = QualifiedTableName.Get(tableName, provider);
+			this.qualifiedTableName = provider.GetQualifiedTableName( tableName );
 			// The connection object will be initialized in the pm, to 
 			// enable the callback for getting the real connection string.
 			// CheckTransaction is the place, where this happens.
 			this.conn = null;
 
-            ColumnListGenerator generator = new ColumnListGenerator(this.provider, this.classMapping.TableName);
-            foreach(OidColumn oidColumn in this.classMapping.Oid.OidColumns)
-            {
-                generator.Add(oidColumn.Name);
-                Relation r = oidColumn.Relation;
-                if (r != null && r.ForeignKeyTypeColumnName != null)
-                    generator.Add(r.ForeignKeyTypeColumnName);
-            }
-
-#if MaskedOut
-            hollowFields = generator.Result;
-			if (this.timeStampColumn != null)
-				this.hollowFields += ", " + (this.qualifiedTableName + "." + provider.GetQuotedName(this.timeStampColumn));
-
-            if (this.typeNameColumn != null)
-                this.hollowFields += ", " + (this.qualifiedTableName + "." + provider.GetQuotedName(this.typeNameColumn.Name));
-#else
-			if ( this.timeStampColumn != null )
-				generator.Add( this.timeStampColumn );
-
-			if ( this.typeNameColumn != null )
-				generator.Add( this.typeNameColumn.Name );
-
-#endif
-			this.hollowFields = generator.Result;
-			generator.GenerateAliasNames = true;
-			this.hollowFieldsWithAlias = generator.Result;
-
+            SqlColumnListGenerator columnListGenerator = new SqlColumnListGenerator();
+			columnListGenerator.Init( this.classMapping );
+			this.hollowFields = columnListGenerator.HollowFields;
+			this.hollowFieldsWithAlias = columnListGenerator.HollowFieldsWithAlias;
+			this.namedParamList = columnListGenerator.ParamList;
+			this.fieldList = columnListGenerator.BaseList;
+			this.selectFieldList = columnListGenerator.SelectList;
+			this.selectFieldListWithAlias = columnListGenerator.SelectListWithAlias;
 			this.guidlength = provider.GetDefaultLength(typeof(Guid));
             if (this.guidlength == 0)
                 this.guidlength = provider.SupportsNativeGuidType ? 16 : 36;
@@ -1152,8 +927,10 @@ namespace NDO
 			}
 		}
 
-		public DataTable SqlQuery( string expression, bool hollow, bool dontTouch, IList parameters )
+		public DataTable SqlQuery( OqlExpression expressionTree, List<QueryContextsEntry> queryContextsForAllTypes, bool hollow, IList parameters )
 		{
+#warning Das muss implementiert werden.
+			string expression = String.Empty;
 			if (expression.Trim().IndexOf(" ") == -1)
 				this.selectCommand.CommandType = CommandType.StoredProcedure;
 			else

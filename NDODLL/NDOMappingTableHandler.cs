@@ -71,7 +71,7 @@ namespace NDO
 			//
 			// select
 			//
-			string sql = string.Format("SELECT * FROM {0} WHERE ", QualifiedTableName.Get(r.MappingTable.TableName, provider));
+			string sql = string.Format("SELECT * FROM {0} WHERE ", provider.GetQualifiedTableName(r.MappingTable.TableName));
 			selectCommand.CommandText = sql;
 
 			//
@@ -128,7 +128,7 @@ namespace NDO
 				namedParameters += ", " + GetParameter(provider, r.MappingTable.ChildForeignKeyTypeColumnName);
                 provider.AddParameter(insertCommand, provider.GetNamedParameter(r.MappingTable.ChildForeignKeyTypeColumnName), provider.GetDbType(typeof(int)), provider.GetDefaultLength(typeof(int)), r.MappingTable.ChildForeignKeyTypeColumnName);
             }
-			insertCommand.CommandText = string.Format(sql, QualifiedTableName.Get(r.MappingTable.TableName, provider), columns, namedParameters);
+			insertCommand.CommandText = string.Format(sql, provider.GetQualifiedTableName(r.MappingTable.TableName), columns, namedParameters);
 
 			Class relatedClass = mappings.FindClass(r.ReferencedTypeName);
 
@@ -165,7 +165,7 @@ namespace NDO
                 provider.AddParameter(deleteCommand, provider.GetNamedParameter("Original_" + r.MappingTable.ChildForeignKeyTypeColumnName), provider.GetDbType(typeof(int)), 4, System.Data.ParameterDirection.Input, false, ((System.Byte)(0)), ((System.Byte)(0)), r.MappingTable.ChildForeignKeyTypeColumnName, System.Data.DataRowVersion.Original, null);
             }
 
-            deleteCommand.CommandText = string.Format(sql, QualifiedTableName.Get(r.MappingTable.TableName, provider), where);
+            deleteCommand.CommandText = string.Format(sql, provider.GetQualifiedTableName(r.MappingTable.TableName), where);
 
 		}
 
@@ -208,7 +208,7 @@ namespace NDO
 		public DataTable FindRelatedObjects(ObjectId oid) 
 		{
 			DataTable table = GetTable(r.MappingTable.TableName).Clone();
-            string sql = "SELECT * FROM " + QualifiedTableName.Get(r.MappingTable.TableName, provider) + " WHERE ";
+            string sql = "SELECT * FROM " + provider.GetQualifiedTableName(r.MappingTable.TableName) + " WHERE ";
             selectCommand.Parameters.Clear();
 
             int i = 0;

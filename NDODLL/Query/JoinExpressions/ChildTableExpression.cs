@@ -19,13 +19,13 @@ namespace NDO.Query.JoinExpressions
 
 			if (relation.MappingTable == null)
 			{
-				Value = QualifiedTableName.Get( childClass );
+				Value = childClass.GetQualifiedTableName();
 
 				Add( new OnExpression( relation, relationContext ) );
 			}
 			else
 			{
-				Value = QualifiedTableName.Get( relation.MappingTable );
+				Value = relation.MappingTable.GetQualifiedTableName();
 				Add( new OnExpression( relation.MappingTable, relationContext, true ) );
 				Add( new InnerJoinExpression( relation.MappingTable, relationContext ) );
 			}			
@@ -44,7 +44,7 @@ namespace NDO.Query.JoinExpressions
 				? relationContext[relation]
 				: relation.Parent.Parent.FindClass( relation.ReferencedType );
 			
-			Value = QualifiedTableName.Get( childClass );
+			Value = childClass.GetQualifiedTableName();
 			Add( new OnExpression( relation.MappingTable, relationContext, false ) );
 		}
 	}

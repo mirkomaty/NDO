@@ -30,6 +30,7 @@ using System.Xml;
 using NDO;
 using NDO.Mapping;
 using NDO.Logging;
+using Unity;
 
 namespace NDO 
 {
@@ -43,13 +44,7 @@ namespace NDO
 		private DataSet ds;
 		ILogAdapter logAdapter;
 		private bool verboseMode;
-		private Type defaultHandlerType;
-		public Type DefaultHandlerType
-		{
-			get { return defaultHandlerType; }
-			set { defaultHandlerType = value; }
-		}
-
+		private readonly IUnityContainer configContainer;
 
 		// Must be set after the schema is generated
 		public DataSet DataSet
@@ -59,12 +54,12 @@ namespace NDO
 		}
 
 
-		internal Mappings( string mappingFile, Type defaultHandlerType )
+		internal Mappings( string mappingFile, IUnityContainer configContainer )
 			: base( mappingFile )
 		{
-			this.defaultHandlerType = defaultHandlerType;
 			InitClassFields();
 			this.updateOrder = new ClassRank().BuildUpdateRank( Classes );
+			this.configContainer = configContainer;
 		}
 
 		private void InitClassFields()
@@ -242,25 +237,24 @@ namespace NDO
 		/// <returns></returns>
 		public IPersistenceHandler GetPersistenceHandler( IPersistenceCapable pc, bool useSelfGeneratedIds )
 		{
-			Type t = pc.GetType();
+			return GetPersistenceHandler( pc.GetType(), useSelfGeneratedIds );
+		}
 
-			if ( t.IsGenericType )
+		public IPersistenceHandler GetPersistenceHandler( Type t, bool useSelfGeneratedIds )
+		{
+			if (t.IsGenericType)
 				t = t.GetGenericTypeDefinition();
 
 			IPersistenceHandler handler;
-			if ( (handler = (IPersistenceHandler) persistenceHandler[t]) != null )
+			if ((handler = (IPersistenceHandler)persistenceHandler[t]) != null)
 				return handler;
-			// 1. Handler des Objekts versuchen
-			handler = pc.NDOHandler;
-			// 2. Standard-Handler des pm versuchen
-			if ( handler == null )
-			{
-				if ( defaultHandlerType != null )
-					handler = Activator.CreateInstance( defaultHandlerType )
-						as IPersistenceHandler;
-			}
+
+			// 1. Standard-Handler des pm versuchen
+
+			handler = this.configContainer.Resolve<IPersistenceHandler>();
+
 			// 3. NDOPersistenceHandler versuchen
-			if ( handler == null )
+			if (handler == null)
 				handler = new NDOPersistenceHandler();
 
 			handler.Initialize( this, t, ds );
@@ -268,22 +262,6 @@ namespace NDO
 			handler.LogAdapter = this.logAdapter;
 			persistenceHandler.Add( t, handler );
 			return handler;
-		}
-
-		public IPersistenceHandler GetPersistenceHandler( Type t, bool useSelfGeneratedIds )
-		{
-			IPersistenceHandler handler;
-			if ( (handler = (IPersistenceHandler) persistenceHandler[t]) != null )
-				return handler;
-			//Assembly ass = Assembly.GetAssembly(t);
-			//if (null == ass)
-			//    throw new NDOException(10, "Assembly for Type " + t.FullName + " not found.");
-
-			if ( t.IsGenericTypeDefinition )
-				t = t.MakeGenericType( typeof( int ) );
-
-			IPersistenceCapable pc = (IPersistenceCapable) Activator.CreateInstance( t );//ass.CreateInstance(t.FullName);
-			return GetPersistenceHandler( pc, useSelfGeneratedIds );
 		}
 
 		internal ICollection Get1to1Relations( Type t )

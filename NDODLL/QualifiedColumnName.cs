@@ -54,7 +54,7 @@ namespace NDO
 			}
 			cls = (Class)node;
 			IProvider provider = cls.Provider;
-			StringBuilder sb = new StringBuilder( QualifiedTableName.Get( cls ) );
+			StringBuilder sb = new StringBuilder( cls.GetQualifiedTableName() );
 			sb.Append( '.' );
 			sb.Append( provider.GetQuotedName( column.Name ) );
 			return sb.ToString();
@@ -63,7 +63,7 @@ namespace NDO
 		public static string Get(Class parentClass, Column column)
 		{
 			IProvider provider = parentClass.Provider;
-			StringBuilder sb = new StringBuilder( QualifiedTableName.Get( parentClass ) );
+			StringBuilder sb = new StringBuilder( parentClass.GetQualifiedTableName() );
 			sb.Append( '.' );
 			sb.Append( provider.GetQuotedName( column.Name ) );
 			return sb.ToString();

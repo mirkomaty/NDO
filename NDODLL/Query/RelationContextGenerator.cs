@@ -9,17 +9,13 @@ namespace NDO.Query
 {
 	internal class RelationContextGenerator
 	{
-		Class resultClass;
-		OqlExpression expressionTree;
 		NDOMapping mappings;
 		List<string> names;
 		HashSet<Relation> allRelations;
 		List<Relation> relations;
 
-		public RelationContextGenerator(Class resultClass, OqlExpression expressionTree, NDOMapping mappings)
+		public RelationContextGenerator(Mappings mappings)
 		{
-			this.resultClass = resultClass;
-			this.expressionTree = expressionTree;
 			this.mappings = mappings;
 		}
 
@@ -27,9 +23,9 @@ namespace NDO.Query
 		/// Get the where clause of the SQL string
 		/// </summary>
 		/// <returns>Where clause string</returns>
-		public List<Dictionary<Relation,Class>> GetContexts()
+		public QueryContexts GetContexts( Class resultClass, OqlExpression expressionTree )
 		{
-			List<Dictionary<Relation, Class>> result = new List<Dictionary<Relation, Class>>();
+			var result = new QueryContexts();
 
 			if (expressionTree == null)
 				return result;
@@ -42,7 +38,7 @@ namespace NDO.Query
 
 			foreach (string name in names)
 			{
-				CreateContextForName(name);
+				CreateContextForName(resultClass, name);
 			}
 			if (allRelations.Count > 0)
 			{
@@ -54,7 +50,7 @@ namespace NDO.Query
 			return result;
 		}
 
-		private void BuildMutations(int start, List<Dictionary<Relation, Class>> queryContexts, Stack<Class> stack)
+		private void BuildMutations(int start, QueryContexts queryContexts, Stack<Class> stack)
 		{
 			Relation r = (Relation) relations[start];
 			HashSet<string> tables = new HashSet<string>();
@@ -86,7 +82,7 @@ namespace NDO.Query
 			}
 		}
 
-		private void CreateContextForName(string name)
+		private void CreateContextForName(Class resultClass, string name)
 		{
 			if (name.IndexOf(".") == -1)
 				return;

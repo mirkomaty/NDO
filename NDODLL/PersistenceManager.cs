@@ -42,11 +42,11 @@ using NDO.ShortId;
 using System.Globalization;
 using NDO.Linq;
 using NDO.Query;
+using Unity;
+using NDO.Configuration;
 
 namespace NDO 
 {
-
-
 	/// <summary>
 	/// Delegate type of an handler, which can be registered by the CollisionEvent event of the PersistenceManager.
 	/// <see cref="NDO.PersistenceManager.CollisionEvent"/>
@@ -108,7 +108,6 @@ namespace NDO
 		public event OnSavedHandler OnSavedEvent;
 		
 		private const string hollowMarker = "Hollow";
-
 		private byte[] encryptionKey;
 
 
@@ -147,7 +146,7 @@ namespace NDO
 		/// or if the NDO Version is below the Professional Version it tries to find a
 		/// file called "NDOMapping.xml" in the application directory.
 		/// </remarks>
-		public PersistenceManager() : base()
+		public PersistenceManager(IUnityContainer unityContainer = null) : base(unityContainer)
 		{
 		}
 		
@@ -162,6 +161,18 @@ namespace NDO
 		{
 		}
 
+		/// <summary>
+		/// Loads the mapping file from the specified location. This allows to use
+		/// different mapping files with different classes mapped in it.
+		/// </summary>
+		/// <param name="mappingFile">Path to the mapping file.</param>
+		/// <param name="configContainer">A Unity Container containing the configuration of the system.</param>
+		/// <remarks>Only the Professional and Enterprise
+		/// Editions can handle more than one mapping file.</remarks>
+		public PersistenceManager( string mappingFile, IUnityContainer configContainer ) : base( mappingFile, configContainer )
+		{			
+		}
+
 
 		#region Object Container Stuff
 		/// <summary>
@@ -173,7 +184,7 @@ namespace NDO
 		/// <remarks>
 		/// It is not recommended, to transfer objects with a state other than Hollow, 
 		/// Persistent, or Transient.
-        /// The transfer format is binary.
+		/// The transfer format is binary.
 		/// </remarks>
 		public ObjectContainer GetObjectContainer()
 		{
@@ -1761,7 +1772,7 @@ namespace NDO
 			sb.Append( "SELECT " );
 			sb.Append( FieldMarker.Instance );
 			sb.Append( " from " );
-			sb.Append( QualifiedTableName.Get( cl.TableName, provider ) );
+			sb.Append( provider.GetQualifiedTableName( cl.TableName ) );
 			sb.Append( " WHERE " );
 
 			int columnCount = cl.Oid.OidColumns.Count;
@@ -3679,8 +3690,9 @@ namespace NDO
 		/// <summary>
 		/// Make sure, the pm will be closed when it gets disposed
 		/// </summary>
-		public virtual void Dispose() 
+		public override void Dispose() 
 		{
+			base.Dispose();
 			Close();
 		}
 		#endregion
@@ -3885,7 +3897,6 @@ namespace NDO
 			}
 			set { this.encryptionKey = value; }
 		}
-
 
 		/// <summary>
 		/// Hollow mode: If true all objects are made hollow after each transaction.

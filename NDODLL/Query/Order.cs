@@ -66,7 +66,7 @@ namespace NDO.Query
 			if (provider == null)
 				return cl.TableName + "." + column.Name + " " + orderType;
 			else
-				return QualifiedTableName.Get( cl.TableName, provider ) + "." + provider.GetQuotedName( column.Name ) + " " + orderType;
+				return provider.GetQualifiedTableName( cl.TableName ) + "." + provider.GetQuotedName( column.Name ) + " " + orderType;
 
 		}
 	}

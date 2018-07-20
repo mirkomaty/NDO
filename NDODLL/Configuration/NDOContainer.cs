@@ -1,4 +1,6 @@
-﻿using Unity;
+﻿using NDO.Query;
+using NDO.SqlPersistenceHandling;
+using Unity;
 
 namespace NDO.Configuration
 {
@@ -14,6 +16,8 @@ namespace NDO.Configuration
                 {
                     instance = new UnityContainer();
 					instance.RegisterType<IPersistenceHandler, NDOPersistenceHandler>();
+					instance.RegisterType<SqlQueryGenerator>();
+					instance.RegisterType<RelationContextGenerator>();
                 }
 
                 return instance;
