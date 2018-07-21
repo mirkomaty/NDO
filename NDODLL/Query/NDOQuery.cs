@@ -379,11 +379,6 @@ namespace NDO.Query
 			}
 		}
 
-		private QueryContexts CreateQueryContexts(Type t)
-		{
-			return ConfigContainer.Resolve<RelationContextGenerator>().GetContexts( this.pm.GetClass( t ), this.expressionTree );
-		}
-
 		/// <summary>
 		/// Constructs the subqueries necessary to fetch all objects of a 
 		/// class and its subclasses.
@@ -422,6 +417,7 @@ namespace NDO.Query
 				}
 			}
 
+			var contextGenerator = ConfigContainer.Resolve<RelationContextGenerator>();
 			List<QueryContextsEntry> queryContextsForTypes = new List<QueryContextsEntry>();
 			// usedTables now contains all assignable classes of our result type
 			foreach (var de in usedTables)
@@ -429,7 +425,8 @@ namespace NDO.Query
 				Type t2 = (Type) de.Value;
 				// Now we have to iterate through all mutations of
 				// polymorphic relations, used in the filter expression
-				queryContextsForTypes.Add( new QueryContextsEntry() { Type = t2, QueryContexts = CreateQueryContexts( t2 ) } );
+				var queryContexts = contextGenerator.GetContexts( this.pm.GetClass( t2 ), this.expressionTree );
+				queryContextsForTypes.Add( new QueryContextsEntry() { Type = t2, QueryContexts = queryContexts } );
 			}
 
 			return queryContextsForTypes;
