@@ -2443,7 +2443,7 @@ namespace NDO
 				{
 					DataTable dt = GetTable(t);
 					if (delete)
-						handler.UpdateDeleted0bjects(dt);
+						handler.UpdateDeletedObjects(dt);
 					else
 						handler.Update(dt);
 				}

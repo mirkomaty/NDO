@@ -145,7 +145,7 @@ namespace NDO.Query
 			if (aggregateType == AggregateType.StDev || aggregateType == AggregateType.Var)
 				allowSubclasses = false;
 			if (this.queryContextsForTypes == null)
-				GenerateQuery();
+				GenerateQueryContexts();
 
 			object[] partResults = new object[subQueries.Count];
 
@@ -211,24 +211,49 @@ namespace NDO.Query
 			return GetResultList();
 		}
 
+		/// <summary>
+		/// Retrieves the SQL code of a NDOql Query.
+		/// </summary>
+		public string GeneratedQuery
+		{
+			get
+			{
+				if (this.queryContextsForTypes == null)
+					GenerateQueryContexts();
+
+				StringBuilder sb = new StringBuilder();
+
+				foreach (var queryContextsEntry in this.queryContextsForTypes)
+				{
+					Type t = queryContextsEntry.Type;
+					IQueryGenerator queryGenerator = ConfigContainer.Resolve<IQueryGenerator>();
+					sb.Append( queryGenerator.GenerateQueryString( queryContextsEntry, this.expressionTree, this.hollowResults, this.queryContextsForTypes.Count > 1, this.orderings, this.skip, this.take ) );
+					sb.Append( ";\r\n" );
+				}
+
+				sb.Length -= 3;
+
+				return sb.ToString();
+			}
+		}
 		
 		private List<T> GetResultList()
 		{
 			List<T> result = new List<T>();
 
-			if (this.query.Count == 0) // Query is not yet built
-				GenerateQuery();
+			if (this.queryContextsForTypes == null)
+				GenerateQueryContexts();
 
             // this.pm.CheckTransaction happens in ExecuteOrderedSubQuery or in ExecuteSubQuery
-			if (this.subQueries.Count > 1 && this.orderings.Count > 0)
+			if (this.queryContextsForTypes.Count > 1 && this.orderings.Count > 0)
 			{
 				result = QueryOrderedPolymorphicList();
 			}
 			else
 			{
-				foreach (QueryInfo qi in subQueries)
+				foreach (var queryContextsEntry in this.queryContextsForTypes)
 				{
-					foreach (var item in ExecuteSubQuery( qi.ResultType, qi.QueryString ))
+					foreach (var item in ExecuteSubQuery( queryContextsEntry ))
 					{
 						result.Add( item );
 					}
@@ -278,13 +303,17 @@ namespace NDO.Query
 		}
 
 
-		private List<T> ExecuteSubQuery(Type t, string generatedQuery)
+		private List<T> ExecuteSubQuery(QueryContextsEntry queryContextsEntry)
 		{
+			Type t = queryContextsEntry.Type;
+			IQueryGenerator queryGenerator = ConfigContainer.Resolve<IQueryGenerator>();
+			string generatedQuery = queryGenerator.GenerateQueryString( queryContextsEntry, this.expressionTree, this.hollowResults, this.queryContextsForTypes.Count > 1, this.orderings, this.skip, this.take );
+
 			IPersistenceHandler persistenceHandler = mappings.GetPersistenceHandler(t, this.pm.HasOwnerCreatedIds);
 			this.pm.CheckTransaction(persistenceHandler, t);
 			//TODO: eliminieren von dontTouch
 			bool dontTouch = this.queryLanguage == QueryLanguage.Sql;
-			DataTable table = persistenceHandler.SqlQuery(generatedQuery, this.hollowResults, dontTouch, parameters);
+			DataTable table = persistenceHandler.PerformQuery(generatedQuery, this.parameters);
 			return pm.DataTableToIList(t, table.Rows, this.hollowResults).Cast<T>().ToList();
 		}
 
@@ -292,8 +321,8 @@ namespace NDO.Query
 		private List<T> QueryOrderedPolymorphicList()
 		{
 			List<ObjectRowPair<T>> rowPairList = new List<ObjectRowPair<T>>();
-			foreach (QueryInfo qi in subQueries)
-				rowPairList.AddRange(ExecuteOrderedSubQuery(qi.ResultType, qi.QueryString));
+			foreach (var queryContextsEntry in this.queryContextsForTypes)
+				rowPairList.AddRange(ExecuteOrderedSubQuery(queryContextsEntry));
 			rowPairList.Sort();
 			List<T> result = new List<T>(rowPairList.Count);
 			foreach(ObjectRowPair<T> orp in rowPairList)
@@ -301,8 +330,9 @@ namespace NDO.Query
 			return result;
 		}
 
-		private List<ObjectRowPair<T>> ExecuteOrderedSubQuery(Type t, string generatedQuery)
+		private List<ObjectRowPair<T>> ExecuteOrderedSubQuery(QueryContextsEntry queryContextsEntry)
 		{
+			Type t = queryContextsEntry.Type;
 			Class resultSubClass = this.pm.GetClass(t);
 			DataTable comparismTable = new DataTable("ComparismTable");
 			foreach(QueryOrder order in this.orderings)
@@ -317,8 +347,10 @@ namespace NDO.Query
 			IPersistenceHandler persistenceHandler = this.mappings.GetPersistenceHandler(t, this.pm.HasOwnerCreatedIds);
 			this.pm.CheckTransaction(persistenceHandler, t);
 
-			bool dontTouch = this.queryLanguage == QueryLanguage.Sql;
-			DataTable table = persistenceHandler.SqlQuery(generatedQuery, this.hollowResults, dontTouch, this.parameters);
+			IQueryGenerator queryGenerator = ConfigContainer.Resolve<IQueryGenerator>();
+			string generatedQuery = queryGenerator.GenerateQueryString( queryContextsEntry, this.expressionTree, this.hollowResults, this.queryContextsForTypes.Count > 1, this.orderings, this.skip, this.take );
+
+			DataTable table = persistenceHandler.PerformQuery(generatedQuery, this.parameters);
 			DataRow[] rows = table.Select();
 			List<IPersistenceCapable> objects = pm.DataTableToIList(t, rows, this.hollowResults);
 			List<ObjectRowPair<T>> result = new List<ObjectRowPair<T>>(objects.Count);
@@ -340,6 +372,7 @@ namespace NDO.Query
 				}
 				result.Add(new ObjectRowPair<T>(obj, newRow));
 			}
+
 			return result;
 		}
 
@@ -430,7 +463,7 @@ namespace NDO.Query
 			}
 		}
 
-		private void GenerateQuery()
+		private void GenerateQueryContexts()
 		{
 			//if ((int) this.queryLanguage == OldQuery.LoadRelations)
 			//	LoadRelatedTables();
@@ -521,6 +554,8 @@ namespace NDO.Query
 		int IQuery.Skip { get => this.skip; set => this.skip = value; }
 		int IQuery.Take { get => this.take; set => this.take = value; }
 		string IQuery.GeneratedQuery { get { return this.GeneratedQuery; } }
+
 #endregion
+
 	}
 }

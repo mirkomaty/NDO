@@ -15,9 +15,9 @@ namespace NDO.Configuration
                 if (instance == null)
                 {
                     instance = new UnityContainer();
-					instance.RegisterType<IPersistenceHandler, NDOPersistenceHandler>();
-					instance.RegisterType<SqlQueryGenerator>();
+					instance.RegisterType<IPersistenceHandler, SqlPersistenceHandler>();
 					instance.RegisterType<RelationContextGenerator>();
+					instance.RegisterType<IQueryGenerator, SqlQueryGenerator>();
                 }
 
                 return instance;

@@ -31,6 +31,7 @@ using NDO;
 using NDO.Mapping;
 using NDO.Logging;
 using Unity;
+using NDO.SqlPersistenceHandling;
 
 namespace NDO 
 {
@@ -94,9 +95,9 @@ namespace NDO
 			set
 			{
 				this.verboseMode = value;
-				foreach ( DictionaryEntry de in persistenceHandler )
+				foreach ( var de in persistenceHandler )
 				{
-					((IPersistenceHandler) de.Value).VerboseMode = value;
+					de.Value.VerboseMode = value;
 				}
 			}
 		}
@@ -109,9 +110,9 @@ namespace NDO
 			set
 			{
 				this.logAdapter = value;
-				foreach ( DictionaryEntry de in persistenceHandler )
+				foreach ( var de in persistenceHandler )
 				{
-					((IPersistenceHandler) de.Value).LogAdapter = value;
+					de.Value.LogAdapter = value;
 				}
 			}
 		}
@@ -255,7 +256,7 @@ namespace NDO
 
 			// 3. NDOPersistenceHandler versuchen
 			if (handler == null)
-				handler = new NDOPersistenceHandler(this.configContainer);
+				handler = new SqlPersistenceHandler(this.configContainer);
 
 			handler.Initialize( this, t, ds );
 			handler.VerboseMode = this.verboseMode;

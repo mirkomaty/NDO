@@ -17,14 +17,17 @@ namespace NDO.SqlPersistenceHandling
 		List<string> hollowList = new List<string>();
 
 		string tableName;
+		Type resultType;
 
 		public SqlColumnListGenerator()
 		{
 		}
 
-		public void Init(Class cls)
+		public void Init( Class cls )
 		{
 			this.tableName = cls.TableName;
+			this.resultType = cls.SystemType;
+
 			provider = cls.Provider;
 			FieldMap fm = new FieldMap( cls );
 			var persistentFields = fm.PersistentFields;
@@ -145,34 +148,36 @@ namespace NDO.SqlPersistenceHandling
 							result.Append( "?" );
 					}
 				}
+
 				return result.ToString();
 			}
 		}
 
 		string Result(List<string> columnList, bool generateAliasNames, bool useTableName )
 		{
-			StringBuilder result = new StringBuilder();
+			StringBuilder sb = new StringBuilder();
 			int ende = columnList.Count - 1;
 			for (int i = 0; i < columnList.Count; i++)
 			{
 				string f = columnList[i];
 				if (useTableName)
 				{
-					result.Append( provider.GetQualifiedTableName( tableName ) );
-					result.Append( '.' );
+					sb.Append( provider.GetQualifiedTableName( tableName ) );
+					sb.Append( '.' );
 				}
-				result.Append( provider.GetQuotedName( f ) );
+				sb.Append( provider.GetQuotedName( f ) );
 				if (generateAliasNames)
 				{
-					result.Append( " AS " );
-					result.Append( provider.GetQuotedName( f ) );
+					sb.Append( " AS " );
+					sb.Append( provider.GetQuotedName( f ) );
 				}
 				if (i < ende)
 				{
-					result.Append( ", " );
+					sb.Append( ", " );
 				}
 			}
-			return result.ToString();
+
+			return sb.ToString();
 		}
 	}
 }

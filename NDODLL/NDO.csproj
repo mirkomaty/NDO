@@ -169,6 +169,7 @@
     <Compile Include="Enterprise\SerializationFlags.cs" />
     <Compile Include="Enterprise\SerializationIterator.cs" />
     <Compile Include="Enterprise\Serializer.cs" />
+    <Compile Include="IQueryGenerator.cs" />
     <Compile Include="ISqlPassThroughHandler.cs" />
     <Compile Include="Linq\Index.cs" />
     <Compile Include="Linq\LinqStringExtension.cs" />
@@ -259,6 +260,7 @@
     <Compile Include="Mapping\OidColumn.cs" />
     <Compile Include="Mapping\Property.cs" />
     <Compile Include="Mapping\Relation.cs" />
+    <Compile Include="Mapping\RelationFieldInfo.cs" />
     <Compile Include="Mapping\RelationMultiplicity.cs" />
     <Compile Include="Metaclasses.cs">
       <SubType>Code</SubType>
@@ -294,7 +296,7 @@
     <Compile Include="NDOOidTypeAttribute.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="NDOPersistenceHandler.cs">
+    <Compile Include="SqlPersistenceHandling\SqlPersistenceHandler.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="NDOPersistentAttribute.cs">
@@ -385,8 +387,7 @@
     <Compile Include="Query\AscendingOrder.cs" />
     <Compile Include="Query\DescendingOrder.cs" />
     <Compile Include="Query\FetchGroup.cs" />
-    <Compile Include="Query\ColumnListGenerator.cs" />
-    <Compile Include="Query\FromGenerator.cs" />
+    <Compile Include="SqlPersistenceHandling\FromGenerator.cs" />
     <Compile Include="Query\IQuery.cs" />
     <Compile Include="Query\JoinExpressions\ChildTableExpression.cs" />
     <Compile Include="Query\JoinExpressions\InnerJoinExpression.cs" />
@@ -400,8 +401,9 @@
     <Compile Include="Query\QueryLanguage.cs" />
     <Compile Include="Query\QueryInfo.cs" />
     <Compile Include="Query\RelationContextGenerator.cs" />
-    <Compile Include="Query\WhereGenerator.cs" />
-    <Compile Include="RelationCollector.cs">
+    <Compile Include="SqlPersistenceHandling\OrderGenerator.cs" />
+    <Compile Include="SqlPersistenceHandling\WhereGenerator.cs" />
+    <Compile Include="Mapping\RelationCollector.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="RelationInfo.cs">

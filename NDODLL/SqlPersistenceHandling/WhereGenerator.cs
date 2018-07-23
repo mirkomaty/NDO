@@ -5,8 +5,9 @@ using System.Text;
 using NDOql.Expressions;
 using NDO.Mapping;
 using System.Globalization;
+using NDO.Query;
 
-namespace NDO.Query
+namespace NDO.SqlPersistenceHandling
 {
 	/// <summary>
 	/// Helper class to generate Column names of the select statement

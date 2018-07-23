@@ -29,7 +29,6 @@ namespace NDO.SqlPersistenceHandling
 				if (fieldMapping != null)
 				{
 					fields.Add( fieldMapping.Column.Name );
-					provider.AddParameter( updateCommand, provider.GetNamedParameter( "U_" + fieldMapping.Column.Name ), fieldMapping.ColumnDbType, ParameterLength( fieldMapping, memberType ), fieldMapping.Column.Name );
 				}
 			}
 
@@ -45,12 +44,10 @@ namespace NDO.SqlPersistenceHandling
 					{
 						fields.Add( fkColumn.Name );
 						Type systemType = fkColumn.SystemType;
-						provider.AddParameter( updateCommand, provider.GetNamedParameter( "U_" + fkColumn.Name ), provider.GetDbType( systemType ), provider.GetDefaultLength( systemType ), fkColumn.Name );
 					}
 					if (r.ForeignKeyTypeColumnName != null)
 					{
 						fields.Add( r.ForeignKeyTypeColumnName );
-						provider.AddParameter( updateCommand, provider.GetNamedParameter( "U_" + r.ForeignKeyTypeColumnName ), provider.GetDbType( typeof( int ) ), provider.GetDefaultLength( typeof( int ) ), r.ForeignKeyTypeColumnName );
 					}
 				}
 			}

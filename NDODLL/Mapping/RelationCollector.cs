@@ -28,7 +28,7 @@ using NDO.Mapping;
 using NDOInterfaces;
 using System.Collections.Generic;
 
-namespace NDO
+namespace NDO.Mapping
 {
 	/// <summary>
 	/// Contains algorithms to determine the relations, which have a foreign key
@@ -93,8 +93,6 @@ namespace NDO
 			// collect all list relations directed to the own class
 			foreach (NDO.Mapping.Class c in mappings.Classes)
 			{
-//				if (c.FullName == classMapping.FullName)
-//					continue;
 				foreach (Relation r in c.Relations)
 				{
 					if (r.MappingTable != null)

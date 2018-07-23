@@ -44,30 +44,18 @@ using NDOql.Expressions;
 using Unity;
 using NDO.SqlPersistenceHandling;
 
-namespace NDO
+namespace NDO.SqlPersistenceHandling
 {
 	/// <summary>
 	/// Parameter type for the IProvider function RegisterRowUpdateHandler
 	/// </summary>
 	public delegate void RowUpdateHandler(DataRow row);
 
-	internal class RelationFieldInfo
-	{
-		public Relation Rel;
-		public string TableName;
-
-		public RelationFieldInfo(Relation rel, string tableName)
-		{
-			Rel = rel;
-			TableName = tableName;
-		}
-	}
-
 	/// <summary>
 	/// Summary description for NDOPersistenceHandler.
 	/// </summary>
 	/// 
-	internal class NDOPersistenceHandler : IPersistenceHandler
+	internal class SqlPersistenceHandler : IPersistenceHandler
 	{
 		public event ConcurrencyErrorHandler ConcurrencyError;
 
@@ -105,7 +93,7 @@ namespace NDO
 		private bool hasGuidOid;
 		private readonly IUnityContainer configContainer;
 
-		public NDOPersistenceHandler(IUnityContainer configContainer)
+		public SqlPersistenceHandler(IUnityContainer configContainer)
 		{
 			this.configContainer = configContainer;
 		}
@@ -447,6 +435,20 @@ namespace NDO
 			}
 		}
 
+		SqlColumnListGenerator CreateColumnListGenerator( Class cls )
+		{
+			var isRegistered = configContainer.IsRegistered<SqlColumnListGenerator>( cls.FullName );
+			if (!isRegistered)
+			{
+				var generator = new SqlColumnListGenerator();
+				generator.Init( cls );
+				configContainer.RegisterInstance<SqlColumnListGenerator>( cls.FullName, generator );
+				return generator;
+			}
+
+			return configContainer.Resolve<SqlColumnListGenerator>( cls.FullName );
+		}
+
 		public void Initialize(NDOMapping mappings, Type t, DataSet ds)
 		{
 			this.mappings = mappings;
@@ -474,8 +476,7 @@ namespace NDO
 			// CheckTransaction is the place, where this happens.
 			this.conn = null;
 
-            SqlColumnListGenerator columnListGenerator = new SqlColumnListGenerator();
-			columnListGenerator.Init( this.classMapping );
+			var columnListGenerator = CreateColumnListGenerator( classMapping );	
 			this.hollowFields = columnListGenerator.HollowFields;
 			this.hollowFieldsWithAlias = columnListGenerator.HollowFieldsWithAlias;
 			this.namedParamList = columnListGenerator.ParamList;
@@ -508,47 +509,6 @@ namespace NDO
 		}
 	
 		#region Implementation of IPersistenceHandler
-#if obsolete
-		public System.Data.DataRow Fill(NDO.ObjectId id) 
-		{
-			try
-			{
-				string sql;
-
-				DataTable table = GetTable(this.tableName).Clone();
-			
-				sql = "SELECT {0} FROM {1} WHERE {2} = ";  // we add the value later, because String.Format doesn't like "{guid-xxx}" literals
-				//{0} = FieldList mit Id: id, vorname, nachname 
-				//{1} = TableName: Mitarbeiter			
-				//{2} = Name der ID-Spalte: id
-
-				sql = string.Format(sql, selectFieldList, qualifiedTableName, provider.GetQuotedName(oidColumnName));
-
-				sql += provider.GetSqlLiteral(id.Id.Value);
-
-				this.selectCommand.CommandText = sql;
-				this.selectCommand.Parameters.Clear();
-				this.Dump(null);
-				dataAdapter.Fill(table);
-
-				if(table.Rows.Count != 1) 
-				{
-					throw new NDOxxException(35, String.Format("Object {0} not found", id));
-				}
-				return table.Rows[0];
-			}
-			catch (System.Exception ex)
-			{
-				string text = "Exception vom Typ " + ex.GetType().Name + " bei Select: " + ex.Message + "\n";
-				if ((ex.Message.IndexOf("Die Variable") > -1 && ex.Message.IndexOf("muss deklariert") > -1) || (ex.Message.IndexOf("Variable") > -1 && ex.Message.IndexOf("declared") > -1))
-					text += "Sind die Feldnamen in der Mapping-Datei richtig geschrieben?\n";
-				text += "Sql-Select-Anweisung: " + selectCommand.CommandText + "\n";
-				throw new NDOException(36, text);
-			}
-		}
-
-#endif
-
 
 		public void Update(DataTable dt) 
 		{
@@ -637,7 +597,7 @@ namespace NDO
             return rows;
         }
 
-        public void UpdateDeleted0bjects(DataTable dt)
+        public void UpdateDeletedObjects(DataTable dt)
 		{
 			DataRow[] rows = Select(dt, DataViewRowState.Deleted);
 			if (rows.Length == 0) return;
@@ -927,34 +887,14 @@ namespace NDO
 			}
 		}
 
-		public DataTable SqlQuery( OqlExpression expressionTree, List<QueryContextsEntry> queryContextsForAllTypes, bool hollow, IList parameters )
+		public DataTable PerformQuery( string sql, IList parameters )
 		{
-#warning Das muss implementiert werden.
-			string expression = String.Empty;
-			if (expression.Trim().IndexOf(" ") == -1)
+			if (sql.Trim().StartsWith( "EXEC", StringComparison.InvariantCultureIgnoreCase ))
 				this.selectCommand.CommandType = CommandType.StoredProcedure;
 			else
 				this.selectCommand.CommandType = CommandType.Text;
 
 			DataTable table = GetTable(this.tableName).Clone();
-			string sql;
-			if (expression.IndexOf(FieldMarker.Instance) > -1) // Abfragesprache ist SQL
-			{
-				string fields = hollow ? this.hollowFields : this.selectFieldList;
-				if ( provider.GetType().FullName.IndexOf( "Sqlite" ) > -1 )
-				{
-					// We have to hack around a special behavior of SQLite, generating
-					// new columns with fully specified column names, if the query
-					// is a UNION
-					if ( expression.IndexOf( " UNION ", StringComparison.InvariantCultureIgnoreCase ) > 0 )
-					{
-						fields = hollow ? this.hollowFieldsWithAlias : this.selectFieldListWithAlias;
-					}
-				}
-				sql = expression.Replace(FieldMarker.Instance, fields);
-			}
-			else
-				sql = expression;
 
 			this.selectCommand.CommandText = sql;
 

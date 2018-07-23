@@ -6,7 +6,7 @@ using NDOql.Expressions;
 using NDO.Mapping;
 using NDO.Query.JoinExpressions;
 
-namespace NDO.Query
+namespace NDO.SqlPersistenceHandling
 {
 	/// <summary>
 	/// Helper class to generate Column names of the select statement

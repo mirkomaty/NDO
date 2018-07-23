@@ -51,11 +51,6 @@ namespace NDO
 		/// </summary>
 		event ConcurrencyErrorHandler ConcurrencyError;
 
-//		/// <summary>
-//		/// Called by the NDO Framework. Get the data for the specified object.
-//		/// </summary>
-//		DataRow Fill(ObjectId id);
-
 		/// <summary>
 		/// Called by the NDO Framework. Write all changed rows back to DB
 		/// </summary>
@@ -67,7 +62,7 @@ namespace NDO
 		/// because deleted rows must be updated in reverse order as changed or created rows.
 		/// </summary>
 		/// <param name="dt">DataTable containing the rows to delete</param>
-		void UpdateDeleted0bjects(DataTable dt);
+		void UpdateDeletedObjects(DataTable dt);
 
 		/// <summary>
 		/// Executes a batch of sql statements.
@@ -84,15 +79,12 @@ namespace NDO
 		IList ExecuteBatch(string[] statements, IList parameters);
 
 		/// <summary>
-		/// Execute a SQL query. The query has to beginn with 'SELECT *' where '*' will be 
-		/// replaced with the correct field list depending on the mapping information and hollow state.
+		/// Execute a SQL query.
 		/// </summary>
-		/// <param name="expressionTree">Syntax Tree of the NDOQl expression</param>
-		/// <param name="hollow">True if only ids should be read, false if all fields should be read.</param>
-		/// <param name="dontTouch">True if expression should not be touched - i. e. if the expression is in sql language</param>
+		/// <param name="expression">SQL expression</param>
 		/// <param name="parameters">A collection of objects, corresponding to the query parameters.</param>
 		/// <returns>A DataTable object, containing the query result.</returns>
-		DataTable SqlQuery( OqlExpression expressionTree, List<QueryContextsEntry> queryContextsForAllTypes, bool hollow, IList parameters );
+		DataTable PerformQuery( string expression, IList parameters );
 
 		/// <summary>
 		/// Gets a Handler which can store data in relation tables. The handler is an Implementation of IMappingTableHandler.

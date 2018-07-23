@@ -57,5 +57,12 @@ namespace NDO
 			sb.Length--;
 			return sb.ToString();
 		}
+
+		public static string GetQualifiedName( this Column col )
+		{
+			var cls = ((Field)col.Parent).Parent;
+			var provider = cls.Provider;
+			return $"{provider.GetQuotedName( cls.TableName )}.{provider.GetQuotedName( col.Name )}";
+		}
 	}
 }
