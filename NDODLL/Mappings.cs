@@ -39,7 +39,7 @@ namespace NDO
 	/// </summary>
 	internal class Mappings : NDOMapping
 	{
-		private Hashtable persistenceHandler = new Hashtable();
+        private Dictionary<Type, IPersistenceHandler> persistenceHandler = new Dictionary<Type, IPersistenceHandler>();
 		private Dictionary<Type,int> updateOrder = new Dictionary<Type, int>();
 		private DataSet ds;
 		ILogAdapter logAdapter;
@@ -255,12 +255,12 @@ namespace NDO
 
 			// 3. NDOPersistenceHandler versuchen
 			if (handler == null)
-				handler = new NDOPersistenceHandler();
+				handler = new NDOPersistenceHandler(this.configContainer);
 
 			handler.Initialize( this, t, ds );
 			handler.VerboseMode = this.verboseMode;
 			handler.LogAdapter = this.logAdapter;
-			persistenceHandler.Add( t, handler );
+			this.persistenceHandler.Add( t, handler );
 			return handler;
 		}
 

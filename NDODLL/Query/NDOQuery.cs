@@ -37,8 +37,8 @@ namespace NDO.Query
 		private bool allowSubclasses = true;
 		private OqlExpression expressionTree;
 		private List<QueryOrder> orderings;
-
-		private Mappings mappings;
+        private List<QueryContextsEntry> queryContextsForTypes = null;
+        private Mappings mappings;
 		private List<object> parameters = new List<object>();
 		private List<string> prefetches = new List<string>();
 		public void Addstring(string s)
@@ -144,7 +144,7 @@ namespace NDO.Query
 		{
 			if (aggregateType == AggregateType.StDev || aggregateType == AggregateType.Var)
 				allowSubclasses = false;
-			if (subQueries.Count == 0)
+			if (this.queryContextsForTypes == null)
 				GenerateQuery();
 
 			object[] partResults = new object[subQueries.Count];
@@ -216,7 +216,7 @@ namespace NDO.Query
 		{
 			List<T> result = new List<T>();
 
-			if (this.subQueries.Count == 0) // Query is not yet built
+			if (this.query.Count == 0) // Query is not yet built
 				GenerateQuery();
 
             // this.pm.CheckTransaction happens in ExecuteOrderedSubQuery or in ExecuteSubQuery
@@ -387,7 +387,7 @@ namespace NDO.Query
 		/// The function isn't actually recursive. The subclasses have been
 		/// recursively collected in NDOMapping.
 		/// </remarks>
-		private List<QueryContextsEntry> CreateQueryContextsForTypes()
+		private void CreateQueryContextsForTypes()
 		{
 			Dictionary<string, Type> usedTables = new Dictionary<string,Type>();
 			if (!resultType.IsAbstract)
@@ -418,7 +418,7 @@ namespace NDO.Query
 			}
 
 			var contextGenerator = ConfigContainer.Resolve<RelationContextGenerator>();
-			List<QueryContextsEntry> queryContextsForTypes = new List<QueryContextsEntry>();
+			this.queryContextsForTypes = new List<QueryContextsEntry>();
 			// usedTables now contains all assignable classes of our result type
 			foreach (var de in usedTables)
 			{
@@ -426,10 +426,8 @@ namespace NDO.Query
 				// Now we have to iterate through all mutations of
 				// polymorphic relations, used in the filter expression
 				var queryContexts = contextGenerator.GetContexts( this.pm.GetClass( t2 ), this.expressionTree );
-				queryContextsForTypes.Add( new QueryContextsEntry() { Type = t2, QueryContexts = queryContexts } );
+				this.queryContextsForTypes.Add( new QueryContextsEntry() { Type = t2, QueryContexts = queryContexts } );
 			}
-
-			return queryContextsForTypes;
 		}
 
 		private void GenerateQuery()
@@ -442,7 +440,7 @@ namespace NDO.Query
 				NDOql.OqlParser parser = new NDOql.OqlParser();
 				this.expressionTree = parser.Parse( this.queryExpression );
 
-				var queryContextsForTypes = CreateQueryContextsForTypes();
+				CreateQueryContextsForTypes();
 			}
 			else
 			{

@@ -20,33 +20,27 @@ namespace NDO.SqlPersistenceHandling
 			this.configContainer = configContainer;
 		}
 
-		/// <summary>
-		/// Retrieves the SQL code of a NDOql Query.
-		/// </summary>
-		/// <remarks>Note that the query string doesn't show the actually used field names. They are built in the PersistenceHandler.</remarks>
-		//public string GeneratedQuery
-		//{
-		//	get
-		//	{
-		//		StringBuilder generatedQuery = new StringBuilder();
-		//		if (subQueries.Count == 0)
-		//			GenerateQuery();
-		//		foreach (QueryInfo qi in subQueries)
-		//		{
-		//			generatedQuery.Append( qi.QueryString );
-		//			generatedQuery.Append( ";\n" );
-		//		}
+        public string GenerateQueryExpression(List<QueryContextsEntry> queryContextsList, OqlExpression expressionTree, bool hollow)
+        {
+            CreateSubQueriesForAllTypes(queryContextsList, expressionTree, hollow);
+            StringBuilder generatedQuery = new StringBuilder();
 
-		//		generatedQuery.Length--; // the trailing \n
+            foreach (QueryInfo qi in subQueries)
+            {
+                generatedQuery.Append(qi.QueryString);
+                generatedQuery.Append(";\n");
+            }
 
-		//		if (subQueries.Count == 1)
-		//			generatedQuery.Length--; // the semicolon
+            generatedQuery.Length--; // the trailing \n
 
-		//		return generatedQuery.ToString();
-		//	}
-		//}
+            if (subQueries.Count == 1)
+                generatedQuery.Length--; // the semicolon
 
-		void CreateSubQueriesForAllTypes( List<QueryContextsEntry> queryContextsList, OqlExpression expressionTree, bool hollow )
+            return generatedQuery.ToString();
+        }
+
+
+        void CreateSubQueriesForAllTypes( List<QueryContextsEntry> queryContextsList, OqlExpression expressionTree, bool hollow )
 		{
 			foreach (var item in queryContextsList)
 			{
