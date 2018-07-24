@@ -256,7 +256,10 @@ namespace NDO.Linq
 						return;
 					  //-------
 					}
-					throw new Exception( "Indexer must habe Any.Index or Index.Any parameter." );
+					Transform( mcex.Object, false );
+					sb.Append( '(' );
+					Transform( mcex.Arguments[0], false );
+					sb.Append( ')' );
 				}
 				else if (mname == "Oid")
 				{

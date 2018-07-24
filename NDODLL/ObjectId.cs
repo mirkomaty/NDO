@@ -185,6 +185,27 @@ namespace NDO
             this.id.Serialize(info, context);
         }
 
+		/// <summary>
+		/// Gets the key value of an oid.
+		/// </summary>
+		/// <remarks>
+		/// You can get the id value of an oid like that:
+		/// <code>
+		/// var key = pc.NDOObjectId[0];
+		/// </code>
+		/// Or use it in a Linq query:
+		/// <code>
+		/// var vt = pm.Objects&lt;YourType&gt;.Where(o=>o.NDOObjectId[0] == yourValue);
+		/// var yourObject = vt.ExecuteSingle();
+		/// </code>
+		/// </remarks>
+		/// <param name="i"></param>
+		/// <returns></returns>
+		public object this[int i]
+		{
+			get => Id.Values[i];
+		}
+
         /// <summary>
         /// Constructs an ObjectId from a deserialization stream
         /// </summary>
