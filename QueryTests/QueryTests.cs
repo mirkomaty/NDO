@@ -276,13 +276,16 @@ namespace QueryTests
 		public void TestIfSimpleLinqQueryWithExpressionWorks()
 		{
 			VirtualTable<Mitarbeiter> vt = pm.Objects<Mitarbeiter>().Where(m=>m.Vorname == "Mirko");
-			string qs = vt.QueryString;
-			Assert.AreEqual( $"SELECT {this.mitarbeiterFields} FROM [Mitarbeiter] WHERE [Mitarbeiter].[Vorname] = {{0}}", qs );
+			Assert.AreEqual( $"SELECT {this.mitarbeiterFields} FROM [Mitarbeiter] WHERE [Mitarbeiter].[Vorname] = {{0}}", vt.QueryString );
 			// Query for Oid values
 			vt = pm.Objects<Mitarbeiter>().Where( m => m.Oid() == 5 );
-			qs = vt.QueryString;
-			Console.WriteLine(qs);
-			Assert.AreEqual( $"SELECT {this.mitarbeiterFields} FROM [Mitarbeiter] WHERE [Mitarbeiter].[ID] = {{0}}", qs );
+			Assert.AreEqual( $"SELECT {this.mitarbeiterFields} FROM [Mitarbeiter] WHERE [Mitarbeiter].[ID] = {{0}}", vt.QueryString );
+			vt = pm.Objects<Mitarbeiter>().Where( m => m.NDOObjectId == 5 );
+			Assert.AreEqual( $"SELECT {this.mitarbeiterFields} FROM [Mitarbeiter] WHERE [Mitarbeiter].[ID] = {{0}}", vt.QueryString );
+			vt = pm.Objects<Mitarbeiter>().Where( m => m.Oid().Equals(5) );
+			Assert.AreEqual( $"SELECT {this.mitarbeiterFields} FROM [Mitarbeiter] WHERE [Mitarbeiter].[ID] = {{0}}", vt.QueryString );
+			vt = pm.Objects<Mitarbeiter>().Where( m => m.NDOObjectId.Equals(5) );
+			Assert.AreEqual( $"SELECT {this.mitarbeiterFields} FROM [Mitarbeiter] WHERE [Mitarbeiter].[ID] = {{0}}", vt.QueryString );
 		}
 
 		[Test]
@@ -294,6 +297,10 @@ namespace QueryTests
 			vt = pm.Objects<Mitarbeiter>().Where( m => m.Reisen[Any.Index].Oid().Equals( 5 ) );
 			Assert.AreEqual( String.Format( "SELECT {0} FROM [Mitarbeiter] INNER JOIN [Reise] ON [Mitarbeiter].[ID] = [Reise].[IDMitarbeiter] WHERE [Reise].[ID] = {{0}}", this.mitarbeiterFields ), vt.QueryString );
 			vt = pm.Objects<Mitarbeiter>().Where( m => m.Reisen[Any.Index].Oid() ==  5 );
+			Assert.AreEqual( String.Format( "SELECT {0} FROM [Mitarbeiter] INNER JOIN [Reise] ON [Mitarbeiter].[ID] = [Reise].[IDMitarbeiter] WHERE [Reise].[ID] = {{0}}", this.mitarbeiterFields ), vt.QueryString );
+			vt = pm.Objects<Mitarbeiter>().Where( m => m.Reisen[Any.Index].NDOObjectId.Equals( 5 ) );
+			Assert.AreEqual( String.Format( "SELECT {0} FROM [Mitarbeiter] INNER JOIN [Reise] ON [Mitarbeiter].[ID] = [Reise].[IDMitarbeiter] WHERE [Reise].[ID] = {{0}}", this.mitarbeiterFields ), vt.QueryString );
+			vt = pm.Objects<Mitarbeiter>().Where( m => m.Reisen[Any.Index].NDOObjectId == 5 );
 			Assert.AreEqual( String.Format( "SELECT {0} FROM [Mitarbeiter] INNER JOIN [Reise] ON [Mitarbeiter].[ID] = [Reise].[IDMitarbeiter] WHERE [Reise].[ID] = {{0}}", this.mitarbeiterFields ), vt.QueryString );
 		}
 
@@ -307,9 +314,12 @@ namespace QueryTests
 		[Test]
 		public void TestIfLinqQueryForNonNullOidsWorks()
 		{
-			VirtualTable<Mitarbeiter> vt = pm.Objects<Mitarbeiter>();
-			string qs = vt.Where( m => m.Reisen[Any.Index].Oid() != null ).QueryString;
+			VirtualTable<Mitarbeiter> vt = pm.Objects<Mitarbeiter>().Where( m => m.Reisen[Any.Index].Oid() != null );
+			var qs = vt.QueryString;
 			Assert.AreEqual( $"SELECT {this.mitarbeiterFields} FROM [Mitarbeiter] INNER JOIN [Reise] ON [Mitarbeiter].[ID] = [Reise].[IDMitarbeiter] WHERE [Reise].[ID] IS NOT NULL", qs );
+			vt = pm.Objects<Mitarbeiter>().Where( m => m.Reisen[Any.Index].Länder[Any.Index].Oid() != null );
+			qs = vt.QueryString;
+			Assert.AreEqual( $"SELECT {this.mitarbeiterFields} FROM [Mitarbeiter] INNER JOIN [Reise] ON [Mitarbeiter].[ID] = [Reise].[IDMitarbeiter] INNER JOIN [relLandReise] ON [Reise].[ID] = [relLandReise].[IDReise] INNER JOIN [Land] ON [Land].[ID] = [relLandReise].[IDLand] WHERE [Land].[ID] IS NOT NULL", qs );
 		}
 
 		[Test]

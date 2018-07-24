@@ -260,8 +260,12 @@ namespace NDO.Linq
 				}
 				else if (mname == "Oid")
 				{
+					var sbLength = sb.Length;
 					Transform( mcex.Arguments[0], false );
-					sb.Append( ".oid" );
+					if (sb.Length > sbLength)
+						sb.Append( ".oid" );
+					else
+						sb.Append( "oid" );
 					if (mcex.Arguments.Count > 1)
 					{
 						// Hier könnte man schon die Arrays / Multikeys auswerten
