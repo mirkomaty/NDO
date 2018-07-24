@@ -115,12 +115,12 @@ namespace NDO
         }
 
         /// <summary>
-        /// Overloaded Operator ==, to make sure, that Equals is called.
+        /// Overloaded Operator ==
         /// </summary>
         /// <param name="o1">Value to compare with</param>
         /// <param name="o2">Value to compare with</param>
         /// <returns>True if the objects are equal.</returns>
-        public static bool operator ==(ObjectId o1, ObjectId o2)
+        public static bool operator ==(ObjectId o1, object o2)
         {
             if (((object)o1) == null && ((object)o2) == null)
                 return true;
@@ -135,7 +135,7 @@ namespace NDO
         /// <param name="o1">Value to compare with</param>
         /// <param name="o2">Value to compare with</param>
         /// <returns>True if the objects are equal.</returns>
-        public static bool operator !=(ObjectId o1, ObjectId o2)
+        public static bool operator !=(ObjectId o1, object o2)
         {
             return !(o1 == o2);
         }

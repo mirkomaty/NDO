@@ -36,7 +36,7 @@ namespace NDO.Query
 		private Type resultType = typeof(T);
 		private bool allowSubclasses = true;
 		private OqlExpression expressionTree;
-		private List<QueryOrder> orderings;
+		private List<QueryOrder> orderings = new List<QueryOrder>();
         private List<QueryContextsEntry> queryContextsForTypes = null;
         private Mappings mappings;
 		private List<object> parameters = new List<object>();
@@ -114,7 +114,7 @@ namespace NDO.Query
 		/// Execute an aggregation query.
 		/// </summary>
 		/// <typeparam name="K"></typeparam>
-		/// <param name="keySelector">A Lambda expression of an accessor property of the field</param>
+		/// <param name="keySelector">A Lambda expression which represents an accessor property of the field which shoule be aggregated.</param>
 		/// <param name="aggregateType">One of the <see cref="AggregateType">AggregateType</see> enum members.</param>
 		/// <returns>A single value, which represents the aggregate</returns>
 		/// <remarks>Before using this function, make shure, that your database product supports the aggregate function, as defined in aggregateType.
@@ -129,7 +129,6 @@ namespace NDO.Query
 			return ExecuteAggregate( field, aggregateType );
 		}
 
-
 		/// <summary>
 		/// Execute an aggregation query.
 		/// </summary>
@@ -143,64 +142,22 @@ namespace NDO.Query
 		public object ExecuteAggregate(string field, AggregateType aggregateType)
 		{
 			if (aggregateType == AggregateType.StDev || aggregateType == AggregateType.Var)
-				allowSubclasses = false;
+				this.allowSubclasses = false;
 			if (this.queryContextsForTypes == null)
 				GenerateQueryContexts();
 
-			object[] partResults = new object[subQueries.Count];
+			object[] partResults = new object[this.queryContextsForTypes.Count];
 
 			AggregateFunction func = new AggregateFunction(aggregateType);
 
 			int i = 0;
-			foreach (QueryInfo qi in subQueries)
+			foreach (var queryContextsEntry in this.queryContextsForTypes)
 			{
-				string query = qi.QueryString;
-				Type t = qi.ResultType;
-				Class cl = pm.GetClass(t);
-
-                string column;
-				if (field.ToLower().StartsWith("oid"))
-				{
-#warning !!!! Oid-Queries: Ändern !!!!!
-                    Regex regex = new Regex(@"\(\s*(\d+)\s*\)");
-                    Match match = regex.Match(field);
-                    int index = 0;
-                    if (match.Success)
-                        index = int.Parse(match.Groups[1].Value);
-                    column = ((OidColumn)cl.Oid.OidColumns[index]).Name;
-				}
-				else
-				{
-					column = pm.GetField(cl, field).Column.Name;
-				}
-
-				IProvider provider = mappings.GetProvider(cl);
-
-				string table = provider.GetQualifiedTableName(cl.TableName);
-				column = table + "." + provider.GetQuotedName(column);
-
-                query = query.Replace(FieldMarker.Instance, func.ToString() + "(" + column + ") as " + provider.GetQuotedName("AggrResult"));
-                query = query.Replace(" DISTINCT", "");
-
-				IPersistenceHandler persistenceHandler = mappings.GetPersistenceHandler(t, this.pm.HasOwnerCreatedIds);
-				this.pm.CheckTransaction(persistenceHandler, t);
-				// Note, that we can't execute all subQueries in one batch, because
-				// the subqueries could be executed against different connections.
-				System.Collections.IList l = persistenceHandler.ExecuteBatch(new string[]{query}, this.parameters);
-				if (l.Count == 0)
-					partResults[i] = null;
-				else
-				{
-                    partResults[i] = ((System.Collections.Hashtable)l[0])["AggrResult"];
-				}
-				i++;					
+				partResults[i++] = ExecuteAggregateQuery( queryContextsEntry, field, aggregateType );				
 			}
 			this.pm.CheckEndTransaction(false);
 			return func.ComputeResult(partResults);
-
 		}
-
-
 
 		/// <summary>
 		/// Executes the query and returns a list of result objects.
@@ -302,6 +259,26 @@ namespace NDO.Query
 			//}			
 		}
 
+
+		private object ExecuteAggregateQuery( QueryContextsEntry queryContextsEntry, string field, AggregateType aggregateType )
+		{
+			Type t = queryContextsEntry.Type;
+			IQueryGenerator queryGenerator = ConfigContainer.Resolve<IQueryGenerator>();
+			string generatedQuery = queryGenerator.GenerateAggregateQueryString(field, queryContextsEntry, this.expressionTree, this.queryContextsForTypes.Count > 1, aggregateType );
+
+			IPersistenceHandler persistenceHandler = mappings.GetPersistenceHandler( t, this.pm.HasOwnerCreatedIds );
+			this.pm.CheckTransaction( persistenceHandler, t );
+
+			// Note, that we can't execute all subQueries in one batch, because
+			// the subqueries could be executed against different connections.
+			// TODO: This could be optimized, if we made clear whether the involved tables
+			// can be reached with the same connection.
+			var l = persistenceHandler.ExecuteBatch( new string[] { generatedQuery }, this.parameters );
+			if (l.Count == 0)
+				return null;
+
+			return (l[0])["AggrResult"];			
+		}
 
 		private List<T> ExecuteSubQuery(QueryContextsEntry queryContextsEntry)
 		{

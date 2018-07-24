@@ -54,12 +54,7 @@ namespace NDO.Linq
 		}
 
 		/// <summary>
-		/// Helper Method for Linq queries. Use this method only, if you can't implement the IPersistentObject interface. 
-		/// If possible use a linq query like that:
-		/// <code>
-		/// Customer c1 = (Customer)pm.FindObject( typeof( Customer ), "ALFKI" );  // get an object with a valid object id
-		/// var vt3 = from c in vt where c.NDOObjectId == c1.NDOObjectId select c;
-		/// </code>
+		/// Helper Method for Linq queries.
 		/// </summary>
 		/// <param name="o"></param>
 		/// <returns></returns>
@@ -71,6 +66,22 @@ namespace NDO.Linq
 			if (po == null)
 				return default(ObjectId);
 			return po.NDOObjectId;
+		}
+
+		/// <summary>
+		/// Helper Method for Linq queries. Used to query for columns of multikey oids.
+		/// </summary>
+		/// <param name="o"></param>
+		/// <param name="index">The index of the Multikey value to compare with</param>
+		/// <returns></returns>
+		public static object Oid( this object o, int index )
+		{
+			// If Oid() is used at the right side of a comparison
+			// we try to return the NDOObjectId.
+			IPersistentObject po = o as IPersistentObject;
+			if (po == null)
+				return null;
+			return po.NDOObjectId.Id.Values[index];
 		}
 	}
 }

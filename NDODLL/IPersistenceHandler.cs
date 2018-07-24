@@ -76,7 +76,7 @@ namespace NDO
 		/// all subqueries. If parameters is an ordinary IList, NDO expects to find a NDOParameterCollection 
 		/// for each subquery. If an element is null, no parameters are submitted for the given query.
 		/// </remarks>
-		IList ExecuteBatch(string[] statements, IList parameters);
+		IList<Dictionary<string,object>> ExecuteBatch(string[] statements, IList parameters);
 
 		/// <summary>
 		/// Execute a SQL query.
@@ -100,7 +100,5 @@ namespace NDO
 		/// <param name="t">Type for which the Handler is constructed.</param>
 		/// <param name="ds">DataSet, which is used to clone tables.</param>
 		void Initialize(NDOMapping mappings, Type t, DataSet ds);
-
-
 	}
 }

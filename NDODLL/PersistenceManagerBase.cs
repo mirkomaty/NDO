@@ -135,7 +135,7 @@ namespace NDO
 			this.mappingPath = mappingFileName;
 			if (!File.Exists(mappingPath))
 				throw new NDOException(45, String.Format("Mapping File {0} doesn't exist.", mappingFileName));
-			mappings = new Mappings(mappingPath, this.configContainer);
+			mappings = new Mappings(mappingPath, ConfigContainer);
 			this.configContainer.RegisterInstance( mappings );
 			ds = new NDODataSet(mappings);
 			mappings.DataSet = ds;
@@ -301,9 +301,11 @@ namespace NDO
 			get
 			{
 				if (this.configContainer == null)
+				{
 					this.configContainer = NDOContainer.Instance.CreateChildContainer();
+					this.configContainer.RegisterInstance( GetType(), this );
+				}
 
-				this.configContainer.RegisterInstance( GetType(), this );
 				return this.configContainer;
 			}
 			set { this.configContainer = value; }

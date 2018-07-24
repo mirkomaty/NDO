@@ -56,7 +56,7 @@ namespace NDO
 #endif
             DateTime startTime = DateTime.Now;
 
-#if false
+#if true
             NDOQueryTests t = new NDOQueryTests();
             try
             {
@@ -68,7 +68,7 @@ namespace NDO
             }
 			try
 			{
-	            t.CheckMitarbeiterQuery();
+	            t.TestIfLinqQueryWithOidParameterWorks();
 			}
 			catch (Exception ex)
 			{

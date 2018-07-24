@@ -440,8 +440,7 @@ namespace NDO.SqlPersistenceHandling
 			var isRegistered = configContainer.IsRegistered<SqlColumnListGenerator>( cls.FullName );
 			if (!isRegistered)
 			{
-				var generator = new SqlColumnListGenerator();
-				generator.Init( cls );
+				var generator = new SqlColumnListGenerator( cls );
 				configContainer.RegisterInstance<SqlColumnListGenerator>( cls.FullName, generator );
 				return generator;
 			}
@@ -634,16 +633,16 @@ namespace NDO.SqlPersistenceHandling
 		/// </summary>
 		/// <param name="statements">Each element in the array is a sql statement.</param>
 		/// <param name="parameters">A list of parameters (see remarks).</param>
-		/// <returns>An IList with Hashtables, containing the Name/Value pairs of the results.</returns>
+		/// <returns>An List of Hashtables, containing the Name/Value pairs of the results.</returns>
 		/// <remarks>
 		/// For emty resultsets an empty Hashtable will be returned. 
 		/// If parameters is a NDOParameterCollection, the parameters in the collection are valid for 
 		/// all subqueries. If parameters is an ordinary IList, NDO expects to find a NDOParameterCollection 
 		/// for each subquery. If an element is null, no parameters are submitted for the given query.
 		/// </remarks>
-		public IList ExecuteBatch(string[] statements, IList parameters)
+		public IList<Dictionary<string, object>> ExecuteBatch( string[] statements, IList parameters )
 		{
-			IList result = new ArrayList();
+			List<Dictionary<string, object>> result = new List<Dictionary<string, object>>();
 			bool closeIt = false;
 			IDataReader dr = null;
 			int i;
@@ -658,38 +657,38 @@ namespace NDO.SqlPersistenceHandling
 
 				if (this.provider.SupportsBulkCommands)
 				{
-					IDbCommand cmd = this.provider.NewSqlCommand(conn);
+					IDbCommand cmd = this.provider.NewSqlCommand( conn );
 					if (parameters != null && parameters.Count > 0)
 					{
-							// Only the first command gets parameters
-							for (i = 0; i < statements.Length; i++)
-							{
-								if (i == 0)
-									CreateQueryParameters(ref statements[i], cmd, parameters, 0);
-								else
-									CreateQueryParameters(ref statements[i], null, null, 0);
-							}
+						// Only the first command gets parameters
+						for (i = 0; i < statements.Length; i++)
+						{
+							if (i == 0)
+								CreateQueryParameters( ref statements[i], cmd, parameters, 0 );
+							else
+								CreateQueryParameters( ref statements[i], null, null, 0 );
 						}
-					sql = this.provider.GenerateBulkCommand(statements);
-					DumpBatch(sql);
+					}
+					sql = this.provider.GenerateBulkCommand( statements );
+					DumpBatch( sql );
 					if (this.Transaction != null)
 						cmd.Transaction = this.Transaction;
 					cmd.CommandText = sql;
 					dr = cmd.ExecuteReader();
-					for(;;)
+					for (; ; )
 					{
-						Hashtable ht = new Hashtable();
-						while(dr.Read())
+						var ht = new Dictionary<string, object>();
+						while (dr.Read())
 						{
 							for (i = 0; i < dr.FieldCount; i++)
 							{
-								ht.Add(dr.GetName(i), dr.GetValue(i));
+								ht.Add( dr.GetName( i ), dr.GetValue( i ) );
 							}
 						}
-						result.Add(ht);
+						result.Add( ht );
 						if (!dr.NextResult())
 							break;
-					} 
+					}
 					dr.Close();
 				}
 				else
@@ -698,27 +697,27 @@ namespace NDO.SqlPersistenceHandling
 					{
 						string s = statements[i];
 						sql += s + ";\n"; // For DumpBatch only
-						Hashtable ht = new Hashtable();
-						IDbCommand cmd = this.provider.NewSqlCommand(conn);
-                        if (this.Transaction != null)
-                            cmd.Transaction = this.Transaction;
+						var ht = new Dictionary<string, object>();
+						IDbCommand cmd = this.provider.NewSqlCommand( conn );
+						if (this.Transaction != null)
+							cmd.Transaction = this.Transaction;
 						if (parameters != null && parameters.Count > 0)
 						{
-								CreateQueryParameters(ref s, cmd, parameters, 0);
-							}
+							CreateQueryParameters( ref s, cmd, parameters, 0 );
+						}
 						cmd.CommandText = s;
 						dr = cmd.ExecuteReader();
-						while(dr.Read())
+						while (dr.Read())
 						{
 							for (int j = 0; j < dr.FieldCount; j++)
 							{
-								ht.Add(dr.GetName(j), dr.GetValue(j));
+								ht.Add( dr.GetName( j ), dr.GetValue( j ) );
 							}
 						}
 						dr.Close();
-						result.Add(ht);
+						result.Add( ht );
 					}
-					DumpBatch(sql);
+					DumpBatch( sql );
 				}
 			}
 			finally
@@ -728,6 +727,7 @@ namespace NDO.SqlPersistenceHandling
 				if (closeIt)
 					this.conn.Close();
 			}
+
 			return result;
 		}
 

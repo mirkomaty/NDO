@@ -47,6 +47,7 @@ namespace NDO.Linq
 				return expType == ExpressionType.GreaterThanOrEqual || expType == ExpressionType.GreaterThan || expType == ExpressionType.LessThan || expType == ExpressionType.LessThanOrEqual || expType == ExpressionType.Equal || expType == ExpressionType.NotEqual;
 			}
         }
+
         static OperatorEntry[] operators =
         {
             new OperatorEntry(ExpressionType.Modulo, "%", 0),
@@ -226,6 +227,12 @@ namespace NDO.Linq
                     sb.Append(" = ");
                     Transform(mcex.Arguments[1], true);
                 }
+				else if (mname == "Equals")
+				{
+					Transform( mcex.Object, false );
+					sb.Append( " = " );
+					Transform( mcex.Arguments[0], true );
+				}
 				else if (mname == "Like")
 				{
 					Transform(mcex.Arguments[0], false);
@@ -253,13 +260,15 @@ namespace NDO.Linq
 				}
 				else if (mname == "Oid")
 				{
-					string exStr = ex.ToString();
-					exStr = exStr.Substring( baseParameterLength, exStr.Length - 5 - baseParameterLength );
-					if (exStr.Length > 0)
+					Transform( mcex.Arguments[0], false );
+					sb.Append( ".oid" );
+					if (mcex.Arguments.Count > 1)
 					{
-						sb.Append( exStr );
+						// Hier könnte man schon die Arrays / Multikeys auswerten
+						sb.Append( '(' );
+						Transform(mcex.Arguments[1], false ); // There should only be one argument
+						sb.Append( ')' );
 					}
-					sb.Append("oid ");
 				}
 				else
                     throw new Exception("Method call not supported: " + mname);
@@ -290,7 +299,10 @@ namespace NDO.Linq
 			if (ex.NodeType == ExpressionType.Constant)
             {
                 ConstantExpression constEx = (ConstantExpression) ex;
-                AddParameter(constEx.Value);
+				if (isRightSide)
+					AddParameter( constEx.Value );
+				else
+					sb.Append( constEx.Value );
 				return;
 			  //-------
             }

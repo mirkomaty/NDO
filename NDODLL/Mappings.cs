@@ -247,8 +247,8 @@ namespace NDO
 				t = t.GetGenericTypeDefinition();
 
 			IPersistenceHandler handler;
-			if ((handler = (IPersistenceHandler)persistenceHandler[t]) != null)
-				return handler;
+			if (this.persistenceHandler.ContainsKey( t ))
+				return this.persistenceHandler[t];
 
 			// 1. Standard-Handler des pm versuchen
 

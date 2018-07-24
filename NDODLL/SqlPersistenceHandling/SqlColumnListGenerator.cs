@@ -8,7 +8,7 @@ using System.Text;
 
 namespace NDO.SqlPersistenceHandling
 {
-	internal class SqlColumnListGenerator
+	public class SqlColumnListGenerator
 	{
 		IProvider provider;
 		List<string> baseColumnList = new List<string>();
@@ -19,8 +19,9 @@ namespace NDO.SqlPersistenceHandling
 		string tableName;
 		Type resultType;
 
-		public SqlColumnListGenerator()
+		public SqlColumnListGenerator( Class cls )
 		{
+			Init( cls );
 		}
 
 		public void Init( Class cls )
