@@ -1560,7 +1560,7 @@
             <ForeignKeyColumn Name="IDBeleg" />
           </MappingTable>
         </Relation>
-        <Relation FieldName="dieLaender" ReferencedTypeName="Reisekosten.Land" RelationName="">
+        <Relation FieldName="dieLaender" AccessorName="Länder" ReferencedTypeName="Reisekosten.Land" RelationName="">
           <ForeignKeyColumn Name="IDReise" />
           <MappingTable TableName="relLandReise" ConnectionId="C0">
             <ForeignKeyColumn Name="IDLand" />
