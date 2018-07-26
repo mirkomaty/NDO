@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+using System.IO;
 using NDO;
 
 namespace QueryTests
@@ -26,7 +24,8 @@ namespace QueryTests
 			{
 				if (this.persistenceManager == null)
 				{
-					this.persistenceManager = new PersistenceManager();
+					var baseDirectory = AppDomain.CurrentDomain.BaseDirectory;
+					this.persistenceManager = new PersistenceManager( Path.Combine( baseDirectory, "NDOMapping.xml" ) );
 				}
 				else
 				{

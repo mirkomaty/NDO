@@ -11,6 +11,7 @@ using Reisekosten;
 using Reisekosten.Personal;
 using PureBusinessClasses;
 using NDO.SqlPersistenceHandling;
+using System.Diagnostics;
 
 namespace QueryTests
 {
@@ -203,7 +204,7 @@ namespace QueryTests
 		public void TestSuperclasses()
 		{
 			NDOQuery<Kostenpunkt> qk = new NDOQuery<Kostenpunkt>( pm );
-			Assert.AreEqual( $"SELECT {this.belegFields} FROM [Beleg];\r\nSELECT {this.pkwFahrtFields} FROM [PKWFahrt];", qk.GeneratedQuery );
+			Assert.AreEqual( $"SELECT {this.belegFields} FROM [Beleg];\r\nSELECT {this.pkwFahrtFields} FROM [PKWFahrt]", qk.GeneratedQuery );
 		}
 
 		[Test]
@@ -258,10 +259,35 @@ namespace QueryTests
 		}
 
 		[Test]
+		public void TestIfInClauseWorks()
+		{
+			NDOQuery<Mitarbeiter> q = new NDOQuery<Mitarbeiter>( pm, "vorname IN (1,2,3,4,5)" );
+			var s = q.GeneratedQuery;
+			Assert.AreEqual( $"SELECT {this.mitarbeiterFields} FROM [Mitarbeiter] WHERE [Mitarbeiter].[Vorname] IN (1, 2, 3, 4, 5)", s );
+		}
+
+		[Test]
+		public void TestIfInClauseWithStringsWorks()
+		{
+			NDOQuery<Mitarbeiter> q = new NDOQuery<Mitarbeiter>( pm, "vorname IN ('1','2','3','4','5')" );
+			var s = q.GeneratedQuery;
+			Assert.AreEqual( $"SELECT {this.mitarbeiterFields} FROM [Mitarbeiter] WHERE [Mitarbeiter].[Vorname] IN ('1', '2', '3', '4', '5')", s );
+		}
+
+		[Test]
+		public void TestIfRelationInInClauseWorks()
+		{
+			NDOQuery<Mitarbeiter> q = new NDOQuery<Mitarbeiter>( pm, "dieReisen.oid IN (1,2,3,4,5)" );
+			var s = q.GeneratedQuery;
+			Assert.AreEqual( $"SELECT {this.mitarbeiterFields} FROM [Mitarbeiter] INNER JOIN [Reise] ON [Mitarbeiter].[ID] = [Reise].[IDMitarbeiter] WHERE [Reise].[ID] IN (1, 2, 3, 4, 5)", s );
+		}
+
+		[Test]
 		public void TestIfOidWithInClauseWorks()
 		{
 			NDOQuery<Mitarbeiter> q = new NDOQuery<Mitarbeiter>( pm, "oid IN (1,2,3,4,5)" );
-			Assert.That( false, "Must be implemented. Needs relation.oid too." );
+			var s = q.GeneratedQuery;
+			Assert.AreEqual( $"SELECT {this.mitarbeiterFields} FROM [Mitarbeiter] WHERE [Mitarbeiter].[ID] IN (1, 2, 3, 4, 5)", s );
 		}
 
 		[Test]

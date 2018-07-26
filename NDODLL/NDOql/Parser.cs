@@ -28,8 +28,9 @@ public class Parser {
 	public const int _NULL = 12;
 	public const int _TRUE = 13;
 	public const int _MOD = 14;
-	public const int _parameter = 15;
-	public const int maxT = 37;
+	public const int _IN = 15;
+	public const int _parameter = 16;
+	public const int maxT = 39;
 
 	const bool T = true;
 	const bool x = false;
@@ -177,29 +178,44 @@ public OqlExpression RootExpression
 		string newOp = null;
 		bool negated = false;
 		
-		RelExpr(out child);
-		result.Add(child); 
-		while (StartOf(1)) {
-			if (la.kind == 16) {
-				Get();
-				newOp = "<>"; 
-			} else if (la.kind == 17) {
-				Get();
-				newOp = "<>"; 
-			} else if (la.kind == 18) {
-				Get();
-				newOp = "="; 
-				if (la.kind == 7) {
-					Get();
-					negated = true; 
-				}
-			} else {
-				Get();
-				newOp = "LIKE"; 
-			}
+		if (!(scanner.Peek().kind==_IN)) {
 			RelExpr(out child);
-			if (negated) child.UnaryOp = "NOT"; result.Add(child, newOp); 
-		}
+			result.Add(child); 
+			while (StartOf(1)) {
+				if (la.kind == 17) {
+					Get();
+					newOp = "<>"; 
+				} else if (la.kind == 18) {
+					Get();
+					newOp = "<>"; 
+				} else if (la.kind == 19) {
+					Get();
+					newOp = "="; 
+					if (la.kind == 7) {
+						Get();
+						negated = true; 
+					}
+				} else {
+					Get();
+					newOp = "LIKE"; 
+				}
+				RelExpr(out child);
+				if (negated) child.UnaryOp = "NOT"; result.Add(child, newOp); 
+			}
+		} else if (la.kind == 1) {
+			Identifier(out child);
+			result.Add(child); 
+			Expect(15);
+			Expect(20);
+			if (la.kind == 2 || la.kind == 3) {
+				NumList(out child);
+				child.HasBrackets = true; result.Add(child, "IN"); 
+			} else if (la.kind == 4) {
+				StringList(out child);
+				child.HasBrackets = true; result.Add(child, "IN"); 
+			} else SynErr(40);
+			Expect(21);
+		} else SynErr(41);
 		expression = result.Simplify(); 
 	}
 
@@ -214,32 +230,32 @@ public OqlExpression RootExpression
 		if (StartOf(2)) {
 			if (StartOf(3)) {
 				switch (la.kind) {
-				case 19: {
+				case 22: {
 					Get();
 					newOp = "<"; 
 					break;
 				}
-				case 20: {
+				case 23: {
 					Get();
 					newOp = ">"; 
 					break;
 				}
-				case 21: {
+				case 24: {
 					Get();
 					newOp = "<="; 
 					break;
 				}
-				case 22: {
+				case 25: {
 					Get();
 					newOp = "<="; 
 					break;
 				}
-				case 23: {
+				case 26: {
 					Get();
 					newOp = ">="; 
 					break;
 				}
-				case 24: {
+				case 27: {
 					Get();
 					newOp = "<="; 
 					break;
@@ -271,13 +287,57 @@ public OqlExpression RootExpression
 		expression = result.Simplify(); 
 	}
 
+	void Identifier(out OqlExpression expression) {
+		OqlExpression result = null;
+		
+		Expect(1);
+		result = new IdentifierExpression(t.val, t.line, t.col); 
+		expression = result.Simplify(); 
+	}
+
+	void NumList(out OqlExpression expression) {
+		OqlExpression result = new OqlExpression(la.line, la.col);
+		
+		if (la.kind == 2) {
+			Get();
+			result.Add(new NumberExpression(double.Parse(t.val, CultureInfo.InvariantCulture ), t.line, t.col)); 
+		} else if (la.kind == 3) {
+			Get();
+			result.Add(new NumberExpression(int.Parse(t.val), t.line, t.col)); 
+		} else SynErr(42);
+		while (la.kind == 37) {
+			Get();
+			if (la.kind == 2) {
+				Get();
+				result.Add(new NumberExpression(double.Parse(t.val, CultureInfo.InvariantCulture ), t.line, t.col), ","); 
+			} else if (la.kind == 3) {
+				Get();
+				result.Add(new NumberExpression(int.Parse(t.val), t.line, t.col), ","); 
+			} else SynErr(43);
+		}
+		expression = result.Simplify(); 
+	}
+
+	void StringList(out OqlExpression expression) {
+		OqlExpression result = new OqlExpression(la.line, la.col);
+		
+		Expect(4);
+		result.Add(new StringLiteralExpression(t.val, t.line, t.col)); 
+		while (la.kind == 37) {
+			Get();
+			Expect(4);
+			result.Add(new StringLiteralExpression(t.val, t.line, t.col), ","); 
+		}
+		expression = result.Simplify(); 
+	}
+
 	void BitOrExpr(out OqlExpression expression) {
 		OqlExpression child;
 		OqlExpression result = new OqlExpression(la.line, la.col);
 		
 		BitXorExpr(out child);
 		result.Add(child); 
-		while (la.kind == 25) {
+		while (la.kind == 28) {
 			Get();
 			BitXorExpr(out child);
 			result.Add(child, "|"); 
@@ -291,7 +351,7 @@ public OqlExpression RootExpression
 		
 		BitAndExpr(out child);
 		result.Add(child); 
-		while (la.kind == 26) {
+		while (la.kind == 29) {
 			Get();
 			BitAndExpr(out child);
 			result.Add(child, "^"); 
@@ -305,7 +365,7 @@ public OqlExpression RootExpression
 		
 		AddExpr(out child);
 		result.Add(child); 
-		while (la.kind == 27) {
+		while (la.kind == 30) {
 			Get();
 			AddExpr(out child);
 			result.Add(child, "&"); 
@@ -320,8 +380,8 @@ public OqlExpression RootExpression
 		
 		MulExpr(out child);
 		result.Add(child); 
-		while (la.kind == 28 || la.kind == 29) {
-			if (la.kind == 28) {
+		while (la.kind == 31 || la.kind == 32) {
+			if (la.kind == 31) {
 				Get();
 				newOp = "+"; 
 			} else {
@@ -342,13 +402,13 @@ public OqlExpression RootExpression
 		Unary(out child);
 		result.Add(child); 
 		while (StartOf(4)) {
-			if (la.kind == 30) {
+			if (la.kind == 33) {
 				Get();
 				newOp = "*"; 
-			} else if (la.kind == 31) {
+			} else if (la.kind == 34) {
 				Get();
 				newOp = "/"; 
-			} else if (la.kind == 32) {
+			} else if (la.kind == 35) {
 				Get();
 				newOp = "%"; 
 			} else {
@@ -366,11 +426,11 @@ public OqlExpression RootExpression
 		OqlExpression result = new OqlExpression(la.line, la.col);
 		string newOp = null;
 		
-		if (la.kind == 28 || la.kind == 29 || la.kind == 33) {
-			if (la.kind == 28) {
+		if (la.kind == 31 || la.kind == 32 || la.kind == 36) {
+			if (la.kind == 31) {
 				Get();
 				newOp = "+"; 
-			} else if (la.kind == 29) {
+			} else if (la.kind == 32) {
 				Get();
 				newOp = "-"; 
 			} else {
@@ -391,15 +451,15 @@ public OqlExpression RootExpression
 			result = new IdentifierExpression(t.val, t.line, t.col); 
 		} else if (StartOf(5)) {
 			Literal(out result);
-		} else if (la.kind == 15) {
+		} else if (la.kind == 16) {
 			Get();
 			result = new ParameterExpression(t.val, t.line, t.col); 
-		} else if (la.kind == 34) {
+		} else if (la.kind == 20) {
 			Get();
 			RootExpr(out result);
 			result.HasBrackets = true; 
-			Expect(35);
-		} else SynErr(38);
+			Expect(21);
+		} else SynErr(44);
 		expression = result.Simplify(); 
 	}
 
@@ -427,7 +487,7 @@ public OqlExpression RootExpression
 			result = new NamedConstantExpression("TRUE", t.line, t.col); 
 			break;
 		}
-		case 36: {
+		case 38: {
 			Get();
 			result = new NamedConstantExpression("FALSE", t.line, t.col); 
 			break;
@@ -437,7 +497,7 @@ public OqlExpression RootExpression
 			result = new NamedConstantExpression("NULL", t.line, t.col); 
 			break;
 		}
-		default: SynErr(39); break;
+		default: SynErr(45); break;
 		}
 		expression = result.Simplify(); 
 	}
@@ -454,12 +514,12 @@ public OqlExpression RootExpression
 	}
 	
 	static readonly bool[,] set = {
-		{T,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x},
-		{x,x,x,x, x,x,x,x, T,x,x,x, x,x,x,x, T,T,T,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x},
-		{x,x,x,x, x,x,x,T, x,x,T,T, x,x,x,x, x,x,x,T, T,T,T,T, T,x,x,x, x,x,x,x, x,x,x,x, x,x,x},
-		{x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,T, T,T,T,T, T,x,x,x, x,x,x,x, x,x,x,x, x,x,x},
-		{x,x,x,x, x,x,x,x, x,x,x,x, x,x,T,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,T,T, T,x,x,x, x,x,x},
-		{x,x,T,T, T,x,x,x, x,x,x,x, T,T,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, T,x,x}
+		{T,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x},
+		{x,x,x,x, x,x,x,x, T,x,x,x, x,x,x,x, x,T,T,T, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x},
+		{x,x,x,x, x,x,x,T, x,x,T,T, x,x,x,x, x,x,x,x, x,x,T,T, T,T,T,T, x,x,x,x, x,x,x,x, x,x,x,x, x},
+		{x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,T,T, T,T,T,T, x,x,x,x, x,x,x,x, x,x,x,x, x},
+		{x,x,x,x, x,x,x,x, x,x,x,x, x,x,T,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,T,T,T, x,x,x,x, x},
+		{x,x,T,T, T,x,x,x, x,x,x,x, T,T,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,T,x, x}
 
 	};
 } // end Parser
@@ -488,31 +548,37 @@ public class Errors {
 			case 12: s = "NULL expected"; break;
 			case 13: s = "TRUE expected"; break;
 			case 14: s = "MOD expected"; break;
-			case 15: s = "parameter expected"; break;
-			case 16: s = "\"!=\" expected"; break;
-			case 17: s = "\"<>\" expected"; break;
-			case 18: s = "\"=\" expected"; break;
-			case 19: s = "\"<\" expected"; break;
-			case 20: s = "\">\" expected"; break;
-			case 21: s = "\"<=\" expected"; break;
-			case 22: s = "\">=\" expected"; break;
-			case 23: s = "\"!<\" expected"; break;
-			case 24: s = "\"!>\" expected"; break;
-			case 25: s = "\"|\" expected"; break;
-			case 26: s = "\"^\" expected"; break;
-			case 27: s = "\"&\" expected"; break;
-			case 28: s = "\"+\" expected"; break;
-			case 29: s = "\"-\" expected"; break;
-			case 30: s = "\"*\" expected"; break;
-			case 31: s = "\"/\" expected"; break;
-			case 32: s = "\"%\" expected"; break;
-			case 33: s = "\"~\" expected"; break;
-			case 34: s = "\"(\" expected"; break;
-			case 35: s = "\")\" expected"; break;
-			case 36: s = "\"false\" expected"; break;
-			case 37: s = "??? expected"; break;
-			case 38: s = "invalid Primary"; break;
-			case 39: s = "invalid Literal"; break;
+			case 15: s = "IN expected"; break;
+			case 16: s = "parameter expected"; break;
+			case 17: s = "\"!=\" expected"; break;
+			case 18: s = "\"<>\" expected"; break;
+			case 19: s = "\"=\" expected"; break;
+			case 20: s = "\"(\" expected"; break;
+			case 21: s = "\")\" expected"; break;
+			case 22: s = "\"<\" expected"; break;
+			case 23: s = "\">\" expected"; break;
+			case 24: s = "\"<=\" expected"; break;
+			case 25: s = "\">=\" expected"; break;
+			case 26: s = "\"!<\" expected"; break;
+			case 27: s = "\"!>\" expected"; break;
+			case 28: s = "\"|\" expected"; break;
+			case 29: s = "\"^\" expected"; break;
+			case 30: s = "\"&\" expected"; break;
+			case 31: s = "\"+\" expected"; break;
+			case 32: s = "\"-\" expected"; break;
+			case 33: s = "\"*\" expected"; break;
+			case 34: s = "\"/\" expected"; break;
+			case 35: s = "\"%\" expected"; break;
+			case 36: s = "\"~\" expected"; break;
+			case 37: s = "\",\" expected"; break;
+			case 38: s = "\"false\" expected"; break;
+			case 39: s = "??? expected"; break;
+			case 40: s = "invalid EqlExpr"; break;
+			case 41: s = "invalid EqlExpr"; break;
+			case 42: s = "invalid NumList"; break;
+			case 43: s = "invalid NumList"; break;
+			case 44: s = "invalid Primary"; break;
+			case 45: s = "invalid Literal"; break;
 
 			default: s = "error " + n; break;
 		}

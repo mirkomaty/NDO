@@ -178,7 +178,8 @@ namespace NDO.SqlPersistenceHandling
 					sb.Append( WhereString( child ) );
                     if (i < thisExpression.Children.Count - 1)
                     {
-                        sb.Append(' ');
+						if (op1 != ",")
+							sb.Append(' ');
                         sb.Append(op1);
                         if (op1 == "BETWEEN")
                         {

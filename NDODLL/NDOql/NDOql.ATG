@@ -73,6 +73,7 @@ TOKENS
 	NULL     = "NULL".
 	TRUE      = "TRUE".
 	MOD	 = "MOD".
+	IN	 = "IN".
 
 
 	parameter =  "{" digit "}".
@@ -144,7 +145,10 @@ EqlExpr<out OqlExpression expression>
 		string newOp = null;
 		bool negated = false;
 	.)
-= RelExpr<out child> (. result.Add(child); .)
+	
+= (
+	IF(!(scanner.Peek().kind==_IN))
+	RelExpr<out child> (. result.Add(child); .)
 	{
 		(
 			"!=" (. newOp = "<>"; .) 
@@ -154,6 +158,15 @@ EqlExpr<out OqlExpression expression>
 		) 
 		RelExpr<out child> (. if (negated) child.UnaryOp = "NOT"; result.Add(child, newOp); .)
 	}
+	|
+	Identifier <out child> (. result.Add(child); .)
+		IN "("
+		(
+			NumList <out child> (. child.HasBrackets = true; result.Add(child, "IN"); .)
+			| StringList <out child> (. child.HasBrackets = true; result.Add(child, "IN"); .)
+		)
+		")"
+   )
 (. expression = result.Simplify(); .)
 .
 
@@ -284,6 +297,48 @@ Primary <out OqlExpression expression>
   )
 (. expression = result.Simplify(); .)  
 .
+
+Identifier <out OqlExpression expression>
+	(. 
+		OqlExpression result = null;
+	.)
+=   
+	ident (. result = new IdentifierExpression(t.val, t.line, t.col); .)
+(. expression = result.Simplify(); .)  
+.
+
+NumList <out OqlExpression expression>
+	(. 		
+		OqlExpression result = new OqlExpression(la.line, la.col);
+	.)
+=
+	(
+		realCon (. result.Add(new NumberExpression(double.Parse(t.val, CultureInfo.InvariantCulture ), t.line, t.col)); .)
+		| intCon (. result.Add(new NumberExpression(int.Parse(t.val), t.line, t.col)); .)
+	)
+{
+	","
+	(
+		realCon (. result.Add(new NumberExpression(double.Parse(t.val, CultureInfo.InvariantCulture ), t.line, t.col), ","); .)
+		| intCon (. result.Add(new NumberExpression(int.Parse(t.val), t.line, t.col), ","); .)
+	)
+}
+(. expression = result.Simplify(); .)
+.
+
+StringList <out OqlExpression expression>
+	(. 
+		OqlExpression result = new OqlExpression(la.line, la.col);
+	.)
+=
+	stringCon (. result.Add(new StringLiteralExpression(t.val, t.line, t.col)); .)
+	{
+		","
+		stringCon (. result.Add(new StringLiteralExpression(t.val, t.line, t.col), ","); .)
+	}
+(. expression = result.Simplify(); .)
+.
+
 
 
 /*------------------------------------------------------------------------*/

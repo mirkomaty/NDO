@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
 <Enhancer>
   <Options>
-    <EnableAddIn>False</EnableAddIn>
+    <EnableAddIn>True</EnableAddIn>
     <EnableEnhancer>False</EnableEnhancer>
     <VerboseMode>False</VerboseMode>
     <NewMapping>False</NewMapping>
@@ -12,14 +12,13 @@
     <GenerateChangeEvents>False</GenerateChangeEvents>
     <UseTimeStamps>False</UseTimeStamps>
     <Utf8Encoding>False</Utf8Encoding>
-    <SQLScriptLanguage>SqlCe</SQLScriptLanguage>
-    <SchemaVersion>
-    </SchemaVersion>
+    <SQLScriptLanguage>SqlServer</SQLScriptLanguage>
+    <SchemaVersion>1.0</SchemaVersion>
     <IncludeTypecodes>False</IncludeTypecodes>
     <DatabaseOwner>
     </DatabaseOwner>
     <GenerateConstraints>False</GenerateConstraints>
-    <UseMsBuild>False</UseMsBuild>
+    <UseMsBuild>True</UseMsBuild>
     <DropExistingElements>True</DropExistingElements>
   </Options>
   <ProjectDescription>
@@ -31,6 +30,28 @@
     <KeyFile>
     </KeyFile>
     <References>
+      <Reference AssemblyName="nunit.framework" AssemblyPath="..\NDODLL\packages\NUnit.3.4.1\lib\net40\nunit.framework.dll" CheckThisDLL="False">
+      </Reference>
+      <Reference AssemblyName="PureBusinessClasses" AssemblyPath="..\TestEnhancerVersion4\PureBusinessClasses\bin\Debug\PureBusinessClasses.dll">
+      </Reference>
+      <Reference AssemblyName="Unity.Abstractions" AssemblyPath="..\NDODLL\packages\Unity.Abstractions.3.3.0\lib\net40\Unity.Abstractions.dll" CheckThisDLL="False">
+      </Reference>
+      <Reference AssemblyName="Unity.Container" AssemblyPath="..\NDODLL\packages\Unity.Container.5.8.6\lib\net40\Unity.Container.dll" CheckThisDLL="False">
+      </Reference>
+      <Reference AssemblyName="Mono.Cecil" AssemblyPath="..\NDODLL\packages\NUnit3TestAdapter.3.4.1\lib\Mono.Cecil.dll" CheckThisDLL="False">
+      </Reference>
+      <Reference AssemblyName="Mono.Cecil.Mdb" AssemblyPath="..\NDODLL\packages\NUnit3TestAdapter.3.4.1\lib\Mono.Cecil.Mdb.dll" CheckThisDLL="False">
+      </Reference>
+      <Reference AssemblyName="Mono.Cecil.Pdb" AssemblyPath="..\NDODLL\packages\NUnit3TestAdapter.3.4.1\lib\Mono.Cecil.Pdb.dll" CheckThisDLL="False">
+      </Reference>
+      <Reference AssemblyName="Mono.Cecil.Rocks" AssemblyPath="..\NDODLL\packages\NUnit3TestAdapter.3.4.1\lib\Mono.Cecil.Rocks.dll" CheckThisDLL="False">
+      </Reference>
+      <Reference AssemblyName="nunit.engine.api" AssemblyPath="..\NDODLL\packages\NUnit3TestAdapter.3.4.1\lib\nunit.engine.api.dll" CheckThisDLL="False">
+      </Reference>
+      <Reference AssemblyName="nunit.engine" AssemblyPath="..\NDODLL\packages\NUnit3TestAdapter.3.4.1\lib\nunit.engine.dll" CheckThisDLL="False">
+      </Reference>
+      <Reference AssemblyName="NUnit3.TestAdapter" AssemblyPath="..\NDODLL\packages\NUnit3TestAdapter.3.4.1\lib\NUnit3.TestAdapter.dll" CheckThisDLL="False">
+      </Reference>
     </References>
   </ProjectDescription>
 </Enhancer>

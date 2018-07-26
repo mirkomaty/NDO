@@ -264,7 +264,8 @@ namespace NDOql.Expressions
                     {
 						if (!String.IsNullOrEmpty( op ))
 						{
-							sb.Append( ' ' );
+							if (op != ",")
+								sb.Append( ' ' );
 							sb.Append( op1 );
 							if (op1 == "BETWEEN")
 							{
