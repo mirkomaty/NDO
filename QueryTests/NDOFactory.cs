@@ -24,8 +24,7 @@ namespace QueryTests
 			{
 				if (this.persistenceManager == null)
 				{
-					var baseDirectory = AppDomain.CurrentDomain.BaseDirectory;
-					this.persistenceManager = new PersistenceManager( Path.Combine( baseDirectory, "NDOMapping.xml" ) );
+					this.persistenceManager = new PersistenceManager();
 				}
 				else
 				{
