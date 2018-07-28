@@ -164,13 +164,13 @@ namespace NDO.SqlPersistenceHandling
             }
             else
             {
-                if (thisExpression.HasBrackets)
+				if (thisExpression.UnaryOp != null)
+				{
+					sb.Append( thisExpression.UnaryOp );
+					sb.Append( ' ' );
+				}
+				if (thisExpression.HasBrackets)
                     sb.Append('(');
-                if (thisExpression.UnaryOp != null)
-                {
-                    sb.Append(thisExpression.UnaryOp);
-                    sb.Append(' ');
-                }
                 string op1 = thisExpression.Operator;                
                 for (int i = 0; i < thisExpression.Children.Count; i++)
                 {

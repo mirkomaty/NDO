@@ -121,7 +121,9 @@ namespace QueryTests
 		[Test]
 		public void CheckNotOperator()
 		{
-			NDOQuery<Mitarbeiter> q = new NDOQuery<Mitarbeiter>( pm, "vorname LIKE 'M%' AND NOT nachname = 'Matytschak'" );
+			NDOQuery<Mitarbeiter> q = new NDOQuery<Mitarbeiter>( pm, "NOT (vorname LIKE 'M%')" );
+			Assert.AreEqual( String.Format( "SELECT {0} FROM [Mitarbeiter] WHERE NOT ([Mitarbeiter].[Vorname] LIKE 'M%')", this.mitarbeiterFields ), q.GeneratedQuery );
+			q = new NDOQuery<Mitarbeiter>( pm, "vorname LIKE 'M%' AND NOT nachname = 'Matytschak'" );
 			Assert.AreEqual( String.Format( "SELECT {0} FROM [Mitarbeiter] WHERE [Mitarbeiter].[Vorname] LIKE 'M%' AND NOT [Mitarbeiter].[Nachname] = 'Matytschak'", this.mitarbeiterFields ), q.GeneratedQuery );
 			q = new NDOQuery<Mitarbeiter>( pm, "NOT (vorname LIKE 'M%' AND nachname = 'Matytschak')" );
 			Assert.AreEqual( String.Format( "SELECT {0} FROM [Mitarbeiter] WHERE NOT ([Mitarbeiter].[Vorname] LIKE 'M%' AND [Mitarbeiter].[Nachname] = 'Matytschak')", this.mitarbeiterFields ), q.GeneratedQuery );
@@ -155,6 +157,10 @@ namespace QueryTests
 		{
 			NDOQuery<Mitarbeiter> q = new NDOQuery<Mitarbeiter>( pm, "vorname BETWEEN 'A' AND 'B'" );
 			Assert.AreEqual( $"SELECT {this.mitarbeiterFields} FROM [Mitarbeiter] WHERE [Mitarbeiter].[Vorname] BETWEEN 'A' AND 'B'", q.GeneratedQuery );
+			q = new NDOQuery<Mitarbeiter>( pm, "NOT vorname BETWEEN 'A' AND 'B'" );
+			Assert.AreEqual( $"SELECT {this.mitarbeiterFields} FROM [Mitarbeiter] WHERE NOT [Mitarbeiter].[Vorname] BETWEEN 'A' AND 'B'", q.GeneratedQuery );
+			q = new NDOQuery<Mitarbeiter>( pm, "NOT (vorname BETWEEN 'A' AND 'B')" );
+			Assert.AreEqual( $"SELECT {this.mitarbeiterFields} FROM [Mitarbeiter] WHERE NOT ([Mitarbeiter].[Vorname] BETWEEN 'A' AND 'B')", q.GeneratedQuery );
 		}
 
 		[Test]
@@ -182,6 +188,23 @@ namespace QueryTests
 		}
 
 		[Test]
+		public void CheckIfSyntaxErrorThrowsAQueryException()
+		{
+			bool qeThrown = false;
+			NDOQuery<Mitarbeiter> q = new NDOQuery<Mitarbeiter>( pm, "vorname IN 'Mirko'" );
+			try
+			{
+				var s = q.GeneratedQuery;
+			}
+			catch (OqlExpressionException)
+			{
+				qeThrown = true;
+			}
+
+			Assert.That( qeThrown, "Syntax Error should throw an OqlExpressionException" );
+		}
+
+		[Test]
 		public void CheckIfMultiKeysWork()
 		{
 			NDOQuery<OrderDetail> q = new NDOQuery<OrderDetail>( pm, "oid = {0}" );
@@ -193,7 +216,7 @@ namespace QueryTests
 				q = new NDOQuery<OrderDetail>( pm, "oid = -4" );
 				string s = q.GeneratedQuery;
 			}
-			catch (Exception)
+			catch (Exception ex)
 			{
 				thrown = true;
 			}

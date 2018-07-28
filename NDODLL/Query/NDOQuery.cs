@@ -449,7 +449,6 @@ namespace NDO.Query
 			{
 				NDOql.OqlParser parser = new NDOql.OqlParser();
 				this.expressionTree = parser.Parse( this.queryExpression );
-
 				CreateQueryContextsForTypes();
 			}
 			else

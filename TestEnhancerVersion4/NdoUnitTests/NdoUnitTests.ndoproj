@@ -40,6 +40,8 @@
       </Reference>
       <Reference AssemblyName="PureBusinessClasses" AssemblyPath="..\PureBusinessClasses\bin\Debug\PureBusinessClasses.dll">
       </Reference>
+      <Reference AssemblyName="Unity.Abstractions" AssemblyPath="..\packages\Unity.Abstractions.3.3.0\lib\net40\Unity.Abstractions.dll">
+      </Reference>
     </References>
   </ProjectDescription>
 </Enhancer>

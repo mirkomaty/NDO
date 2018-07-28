@@ -319,6 +319,20 @@ namespace NDO.Linq
 				return;
 			  //-------
 			}
-        }
-    }
+			if (ex.NodeType == ExpressionType.Not)
+			{
+				sb.Append( " NOT " );
+				Expression inner = ((UnaryExpression)ex).Operand;
+				var binary = (inner is BinaryExpression);
+				if (binary)
+					sb.Append( '(' );
+				Transform( inner, isRightSide );
+				if (binary)
+					sb.Append( ')' );
+				return;
+				//-------
+			}
+
+		}
+	}
 }

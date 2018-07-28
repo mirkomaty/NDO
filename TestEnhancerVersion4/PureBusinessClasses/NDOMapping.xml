@@ -1309,6 +1309,9 @@
         <OidColumn AutoIncremented="True" Name="ID" />
       </Oid>
       <Fields>
+        <Field Name="isInEu" AccessorName="IsInEu">
+          <Column Name="IsInEu" />
+        </Field>
         <Field Name="name" AccessorName="Name">
           <Column Name="Name" />
         </Field>

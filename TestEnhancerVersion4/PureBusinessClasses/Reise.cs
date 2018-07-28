@@ -22,7 +22,7 @@
 
 using System;
 using System.Collections;
-using System.Data;
+using System.Collections.Generic;
 using NDO;
 
 namespace Reisekosten
@@ -32,8 +32,8 @@ namespace Reisekosten
 	{
 		private string zweck;
 
-		[NDORelation(typeof (Reisekosten.Land), RelationInfo.Default)]
-		IList dieLaender = new ArrayList();
+		[NDORelation(RelationInfo.Default)]
+		List<Land> dieLaender = new List<Land>();
 
 		public Reise()
 		{
@@ -49,7 +49,7 @@ namespace Reisekosten
 			dieLaender.Add(l);
 		}
 
-		public IList Länder {
+		public List<Land> Länder {
 			get {
 				return dieLaender;
 			}

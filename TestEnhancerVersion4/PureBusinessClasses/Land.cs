@@ -37,6 +37,9 @@ namespace Reisekosten
 
 		[NDORelation(typeof(Reise))]
 		private IList dieReisen = new ArrayList();
+
+		private bool isInEu;
+
 		public IList DieReisen
 		{
 			get { return dieReisen == null ? null : ArrayList.ReadOnly(dieReisen); }
@@ -77,6 +80,12 @@ namespace Reisekosten
 		public void ErsetzeFlughäfen(IList l)
 		{
 			this.flughäfen = l;
+		}
+
+		public bool IsInEu
+		{
+			get { return this.isInEu; }
+			set { this.isInEu = value; }
 		}
 
 		public void NDOMarkDirty()
