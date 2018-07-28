@@ -21,6 +21,7 @@
 
 
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -68,13 +69,31 @@ namespace NDO.Linq
 			return po.NDOObjectId;
 		}
 
-		/// <summary>
-		/// Helper Method for Linq queries. Used to query for columns of multikey oids.
-		/// </summary>
-		/// <param name="o"></param>
-		/// <param name="index">The index of the Multikey value to compare with</param>
-		/// <returns></returns>
-		public static object Oid( this object o, int index )
+        /// <summary>
+        /// Helper Method for Linq queries.
+        /// </summary>
+        /// <param name="o"></param>
+        /// <returns></returns>
+        public static bool In(this object o, IEnumerable list)
+        {
+            // In Linq queries this code doesn't execute 
+            foreach (object o2 in list)
+            {
+                if (object.ReferenceEquals(o, o2))
+                    return true;
+            }
+
+            return false;
+        }
+
+
+        /// <summary>
+        /// Helper Method for Linq queries. Used to query for columns of multikey oids.
+        /// </summary>
+        /// <param name="o"></param>
+        /// <param name="index">The index of the Multikey value to compare with</param>
+        /// <returns></returns>
+        public static object Oid( this object o, int index )
 		{
 			// If Oid() is used at the right side of a comparison
 			// we try to return the NDOObjectId.

@@ -249,7 +249,7 @@ namespace NDO.Linq
 				}
 				else if (mname == "get_Item")
 				{
-					string argStr = mcex.Arguments[0].ToString();
+                    string argStr = mcex.Arguments[0].ToString();
 					if (argStr == "Any.Index" || "Index.Any" == argStr)
 					{
 						Transform( mcex.Object, false );
@@ -261,7 +261,42 @@ namespace NDO.Linq
 					Transform( mcex.Arguments[0], false );
 					sb.Append( ')' );
 				}
-				else if (mname == "Oid")
+                else if (mname == "ElementAt")
+                {
+                    string argStr = mcex.Arguments[1].ToString();
+                    if (argStr == "Any.Index" || "Index.Any" == argStr)
+                    {
+                        Transform(mcex.Arguments[0], false);
+                        return;
+                        //-------
+                    }
+                    Transform(mcex.Arguments[0], false);
+                    sb.Append('(');
+                    Transform(mcex.Arguments[1], false);
+                    sb.Append(')');
+                }
+                else if (mname == "In")
+                {
+                    var arg = mcex.Arguments[1];
+                    IEnumerable list = (IEnumerable)(Expression.Lambda(arg).Compile().DynamicInvoke());
+                    Transform(mcex.Arguments[0], false);
+                    sb.Append(" IN (");
+                    var en = list.GetEnumerator();
+                    en.MoveNext();
+                    bool isString = en.Current.GetType() == typeof(string);
+                    foreach(object obj in list)
+                    {
+                        if (isString)
+                            sb.Append('\'');
+                        sb.Append(obj);
+                        if (isString)
+                            sb.Append('\'');
+                        sb.Append(',');
+                    }
+                    sb.Length -= 1;
+                    sb.Append(')');
+                }
+                else if (mname == "Oid")
 				{
 					var sbLength = sb.Length;
 					Transform( mcex.Arguments[0], false );

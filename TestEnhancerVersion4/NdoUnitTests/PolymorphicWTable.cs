@@ -30,6 +30,8 @@ using Reisekosten;
 using Reisekosten.Personal;
 using PureBusinessClasses;
 using NDO.Query;
+using System.Linq;
+using System.Collections.Generic;
 
 namespace NdoUnitTests {
 	/// <summary>
@@ -341,7 +343,7 @@ namespace NdoUnitTests {
 			}
 			pm.MakePersistent(r);
 			pm.Save();
-			IList rr = new ArrayList(r.Kostenpunkte);
+			IList rr = r.Kostenpunkte.ToList();
 			r.LöscheKostenpunkte();
 			Assert.AreEqual(0, r.Kostenpunkte.Count, "1. Wrong number of objects");
 			for(int i = 0; i < 10; i++) {
@@ -361,8 +363,8 @@ namespace NdoUnitTests {
 			}
 			pm.MakePersistent(r);
 			pm.Save();
-			IList rr = new ArrayList(r.Kostenpunkte);
-			r.LöscheKostenpunkte();
+            IList rr = r.Kostenpunkte.ToList();
+            r.LöscheKostenpunkte();
 			Assert.AreEqual(0, r.Kostenpunkte.Count, "1. Wrong number of objects");
 			for(int i = 0; i < 10; i++) {
 				Assert.AreEqual(NDOObjectState.Deleted, ((Kostenpunkt)rr[i]).NDOObjectState, "2. Wrong state");
@@ -381,8 +383,8 @@ namespace NdoUnitTests {
 			}
 			pm.MakePersistent(r);
 			pm.Save();
-			IList rr = new ArrayList(r.Kostenpunkte);
-			r.ErsetzeKostenpunkte();
+            IList rr = r.Kostenpunkte.ToList();
+            r.ErsetzeKostenpunkte();
 			Assert.Null(r.Kostenpunkte, "No objects should be there");
 			for(int i = 0; i < 3; i++) {
 				Assert.AreEqual(NDOObjectState.Deleted, ((Kostenpunkt)rr[i]).NDOObjectState, "2. Wrong state");
@@ -401,8 +403,8 @@ namespace NdoUnitTests {
 			}
 			pm.MakePersistent(r);
 			pm.Save();
-			IList rr = new ArrayList(r.Kostenpunkte);
-			r.ErsetzeKostenpunkte();
+            IList rr = r.Kostenpunkte.ToList();
+            r.ErsetzeKostenpunkte();
 			Assert.Null(r.Kostenpunkte, "No objects should be there");
 			for(int i = 0; i < 3; i++) {
 				Assert.AreEqual(NDOObjectState.Deleted, ((Kostenpunkt)rr[i]).NDOObjectState, "2. Wrong state");
@@ -421,12 +423,12 @@ namespace NdoUnitTests {
 			}
 			pm.MakePersistent(r);
 			pm.Save();
-			IList neueReisen = new ArrayList();
+			List<Kostenpunkt> neueKostenpunkte = new List<Kostenpunkt>();
 			Kostenpunkt nr = CreateBeleg(50);
-			neueReisen.Add(nr);
+			neueKostenpunkte.Add(nr);
 
-			IList rr = new ArrayList(r.Kostenpunkte);
-			r.ErsetzeKostenpunkte(neueReisen);
+            IList rr = r.Kostenpunkte.ToList();
+            r.ErsetzeKostenpunkte(neueKostenpunkte);
 			Assert.AreEqual(1, r.Kostenpunkte.Count, "1. Wrong number of objects");
 			for(int i = 0; i < 3; i++) {
 				Assert.AreEqual(NDOObjectState.Deleted, ((Kostenpunkt)rr[i]).NDOObjectState, "2. Wrong state");
@@ -448,12 +450,12 @@ namespace NdoUnitTests {
 			}
 			pm.MakePersistent(r);
 			pm.Save();
-			IList neueReisen = new ArrayList();
-			Kostenpunkt nr = CreateBeleg(200);
-			neueReisen.Add(nr);
+            List<Kostenpunkt> neueKostenpunkte = new List<Kostenpunkt>();
+            Kostenpunkt nr = CreateBeleg(200);
+            neueKostenpunkte.Add(nr);
 
-			IList rr = new ArrayList(r.Kostenpunkte);
-			r.ErsetzeKostenpunkte(neueReisen);
+            IList rr = r.Kostenpunkte.ToList();
+			r.ErsetzeKostenpunkte(neueKostenpunkte);
 			Assert.AreEqual(1, r.Kostenpunkte.Count, "1. Wrong number of objects");
 			for(int i = 0; i < 3; i++) {
 				Assert.AreEqual(NDOObjectState.Deleted, ((Kostenpunkt)rr[i]).NDOObjectState, "2. Wrong state");
@@ -477,13 +479,13 @@ namespace NdoUnitTests {
 			pm.MakeHollow(r);
 			Assert.AreEqual(NDOObjectState.Hollow, r.NDOObjectState, "1: Reise should be hollow");
 			Assert.AreEqual(NDOObjectState.Persistent, kp.NDOObjectState, "1: Kostenpunkt should be persistent");
-			IList reise = r.Kostenpunkte;
+			var kostenpunkte = r.Kostenpunkte;
 
 			pm.MakeHollow(r, true);
 			Assert.AreEqual(NDOObjectState.Hollow, r.NDOObjectState, "2: Reise should be hollow");
 			Assert.AreEqual(NDOObjectState.Hollow, kp.NDOObjectState, "2: Kostenpunkt should be hollow");
 
-			reise = r.Kostenpunkte;
+			kostenpunkte = r.Kostenpunkte;
 			Assert.AreEqual(NDOObjectState.Persistent, r.NDOObjectState, "3: Reise should be persistent");
 			Assert.AreEqual(NDOObjectState.Hollow, kp.NDOObjectState, "3: Kostenpunkt should be hollow");
 			Assert.AreEqual(200, kp.Kosten, "3: Kostenpunkt should have correct Kosten");
@@ -518,7 +520,7 @@ namespace NdoUnitTests {
 			pm.Save();
 			pm.MakeHollow(r, true);
 
-			IList kpunkte = new ArrayList(r.Kostenpunkte);
+			var kpunkte = r.Kostenpunkte.ToList();
 			Assert.AreEqual(10, kpunkte.Count, "Array size should be 10");
 
 			for(int i = 0; i < 10; i++) {
@@ -532,7 +534,7 @@ namespace NdoUnitTests {
 
 			pm.MakeAllHollow();
 			pm.UnloadCache();
-			IList kpunkte2 = r.Kostenpunkte;
+			var kpunkte2 = r.Kostenpunkte.ToList();
 			for(int i = 0; i < 10; i++) {
 				Kostenpunkt r1 = (Kostenpunkt)kpunkte[i];
 				Kostenpunkt r2 = (Kostenpunkt)kpunkte2[i];
@@ -553,7 +555,7 @@ namespace NdoUnitTests {
 			pm.Save();
 			pm.MakeHollow(r, true);
 
-			IList reisen = new ArrayList(r.Kostenpunkte);
+			IList reisen = r.Kostenpunkte.ToList();
 
 			for(int i = 0; i < 10; i++) {
 				Kostenpunkt rr = (Kostenpunkt)reisen[i];
@@ -566,7 +568,7 @@ namespace NdoUnitTests {
 
 			pm.MakeAllHollow();
 			pm.UnloadCache();
-			IList reisen2 = r.Kostenpunkte;
+			IList reisen2 = r.Kostenpunkte.ToList();
 			for(int i = 0; i < 10; i++) {
 				Kostenpunkt r1 = (Kostenpunkt)reisen[i];
 				Kostenpunkt r2 = (Kostenpunkt)reisen2[i];

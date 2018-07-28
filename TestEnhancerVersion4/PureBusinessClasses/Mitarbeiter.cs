@@ -28,6 +28,7 @@ using Reisekosten;
 using NDO;
 using System.Drawing;
 using System.Data;
+using System.Linq;
 
 namespace Reisekosten.Personal
 {
@@ -95,10 +96,15 @@ namespace Reisekosten.Personal
         System.Collections.Generic.List<Reise> dieReisen = new System.Collections.Generic.List<Reise>();
 
 
-		// Mitarbeiter kann viele Reisebüros benutzen. Diese existieren unabhönig vom Mitarbeiter.
+		// Mitarbeiter kann viele Reisebüros benutzen. Diese existieren unabhängig vom Mitarbeiter.
 		// 1:n, mit Zwischentabelle
-		[NDORelation(typeof (Reisebüro))]
-		IList reiseBüros = new ArrayList();
+		[NDORelation]
+		List<Reisebüro> reiseBüros = new List<Reisebüro>();
+        public IEnumerable<Reisebüro> ReiseBüros
+        {
+            get { return this.reiseBüros; }
+            set { this.reiseBüros = value.ToList(); }
+        }
 
 		// Mitarbeiter kann mehrere Email-Adressen haben. Diese werden mit ihm gelöscht.
 		// 1:n, Komposition, mit Zwischentabelle

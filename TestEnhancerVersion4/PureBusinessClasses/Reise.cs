@@ -21,6 +21,7 @@
 
 
 using System;
+using System.Linq;
 using System.Collections;
 using System.Collections.Generic;
 using NDO;
@@ -72,8 +73,8 @@ namespace Reisekosten
 				dieLaender.Remove(result);
 		}
 
-		[NDORelation(typeof (Reisekosten.Kostenpunkt), RelationInfo.Composite)]
-		private IList belege = new ArrayList();
+		[NDORelation(RelationInfo.Composite)]
+		private List<Kostenpunkt> belege = new List<Kostenpunkt>();
 
 		public void AddKostenpunkt(Kostenpunkt k) {
 			belege.Add(k);
@@ -91,11 +92,11 @@ namespace Reisekosten
 			belege = null;
 		}
 
-		public void ErsetzeKostenpunkte(IList belege) {
-			this.belege = belege;
+		public void ErsetzeKostenpunkte(IEnumerable<Kostenpunkt> belege) {
+			this.belege = belege.ToList();
 		}
 
-		public IList Kostenpunkte {
+		public IList<Kostenpunkt> Kostenpunkte {
 			get { return belege; }
 		}
 
