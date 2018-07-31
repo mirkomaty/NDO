@@ -192,6 +192,26 @@ namespace NDOql.Expressions
 			}
 		}
 
+        public OqlExpression NextSibling
+        {
+            get
+            {
+                if (this.parent != null)
+                {
+                    bool foundMyself = false;
+                    foreach (OqlExpression child in parent.children)
+                    {
+                        if (foundMyself)
+                            return child;
+                        if (Object.ReferenceEquals(child, this))
+                            foundMyself = true;
+
+                    }
+                }
+                return null;
+            }
+        }
+
         protected virtual OqlExpression Clone()
         {
             OqlExpression exp = new OqlExpression(this.line, this.col);
@@ -228,60 +248,57 @@ namespace NDOql.Expressions
         {
             StringBuilder sb = new StringBuilder();
 
-            if (this.IsTerminating)
+            if (hasBrackets)
+                sb.Append('(');
+            if (unaryOp != null)
             {
-                if (this.UnaryOp != null)
-                {
-                    sb.Append(this.UnaryOp);
-                    sb.Append(' ');
-                }
-				if (this.value is Double)
-					sb.Append( ((Double)this.value).ToString( CultureInfo.InvariantCulture ) );
-				else
-					if (value != null)
-						sb.Append( this.value.ToString() );
+                sb.Append(unaryOp);
+                sb.Append(' ');
             }
-            else
+			if (ExpressionType == Expressions.ExpressionType.Raw && value != null)
+			{
+				sb.Append( this.value.ToString() );
+                if (!IsTerminating)
+				    sb.Append( ' ' );
+			}
+            else if (this.IsTerminating)
             {
-                if (hasBrackets)
-                    sb.Append('(');
-                if (unaryOp != null)
-                {
-                    sb.Append(unaryOp);
-                    sb.Append(' ');
-                }
-				if (ExpressionType == Expressions.ExpressionType.Raw && value != null)
-				{
-					sb.Append( this.value.ToString() );
-					sb.Append( ' ' );
-				}
-                string op1 = op;                
+                if (this.value is Double)
+                    sb.Append(((Double)this.value).ToString(CultureInfo.InvariantCulture));
+                else
+                    if (value != null)
+                    sb.Append(this.value.ToString());
+            }
+            if (!this.IsTerminating)
+            {
+                string op1 = op;
                 for (int i = 0; i < children.Count; i++)
                 {
                     OqlExpression child = this.children[i];
                     sb.Append(child.ToString());
                     if (i < children.Count - 1)
                     {
-						if (!String.IsNullOrEmpty( op ))
-						{
-							if (op != ",")
-								sb.Append( ' ' );
-							sb.Append( op1 );
-							if (op1 == "BETWEEN")
-							{
-								op1 = "AND";
-							}
-							sb.Append( ' ' );
-						}
-						else
-						{
-							sb.Append( ' ' );
-						}
+                        if (!String.IsNullOrEmpty(op))
+                        {
+                            if (op != ",")
+                                sb.Append(' ');
+                            sb.Append(op1);
+                            if (op1 == "BETWEEN")
+                            {
+                                op1 = "AND";
+                            }
+                            sb.Append(' ');
+                        }
+                        else
+                        {
+                            sb.Append(' ');
+                        }
                     }
                 }
-                if (hasBrackets)
-                    sb.Append(')');
             }
+            if (hasBrackets)
+                sb.Append(')');
+            
             return sb.ToString();
         }
 

@@ -1250,7 +1250,7 @@
         <Field Name="betrag">
           <Column Name="Betrag" />
         </Field>
-        <Field Name="datum">
+        <Field Name="datum" AccessorName="Datum">
           <Column Name="Datum" />
         </Field>
       </Fields>
@@ -1396,7 +1396,7 @@
         <Relation FieldName="meinBuero" AccessorName="Zimmer" ReferencedTypeName="Reisekosten.Personal.Buero" RelationName="">
           <ForeignKeyColumn Name="IDBuero" />
         </Relation>
-        <Relation FieldName="reiseBüros" ReferencedTypeName="Reisekosten.Reisebüro" RelationName="">
+        <Relation FieldName="reiseBüros" AccessorName="ReiseBüros" ReferencedTypeName="Reisekosten.Reisebüro" RelationName="">
           <ForeignKeyColumn Name="IDMitarbeiter" />
           <MappingTable TableName="relMitarbeiterReisebuero" ConnectionId="C0">
             <ForeignKeyColumn Name="IDReisebuero" />
@@ -1447,7 +1447,7 @@
         <Relation FieldName="meinBuero" AccessorName="Zimmer" ReferencedTypeName="Reisekosten.Personal.Buero" RelationName="">
           <ForeignKeyColumn Name="IDBuero" />
         </Relation>
-        <Relation FieldName="reiseBüros" ReferencedTypeName="Reisekosten.Reisebüro" RelationName="">
+        <Relation FieldName="reiseBüros" AccessorName="ReiseBüros" ReferencedTypeName="Reisekosten.Reisebüro" RelationName="">
           <ForeignKeyColumn Name="IDMitarbeiter" />
           <MappingTable TableName="relMitarbeiterReisebuero" ConnectionId="C0">
             <ForeignKeyColumn Name="IDReisebuero" />
@@ -1523,7 +1523,7 @@
         <OidColumn AutoIncremented="True" Name="ID" />
       </Oid>
       <Fields>
-        <Field Name="datum">
+        <Field Name="datum" AccessorName="Datum">
           <Column Name="Datum" />
         </Field>
         <Field Name="km">

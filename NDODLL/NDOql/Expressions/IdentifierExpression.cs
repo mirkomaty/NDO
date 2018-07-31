@@ -15,7 +15,7 @@ namespace NDOql.Expressions
                 temp = temp.Substring(0, temp.Length - 1);
             base.Value = temp;
 
-            base.ExpressionType = ExpressionType.Unknown;
+            base.ExpressionType = ExpressionType.Raw;
         }
 
 		public override OqlExpression DeepClone

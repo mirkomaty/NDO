@@ -290,7 +290,15 @@ Primary <out OqlExpression expression>
 	.)
 =   
   ( 
-	  ident (. result = new IdentifierExpression(t.val, t.line, t.col); .)
+	  ident (. result = new IdentifierExpression(t.val, t.line, t.col); .) 
+			[ 
+				"(" intCon 
+					(. 
+					result.UnaryOp="";  // Index-Expression has Brackets, so no Op String is necessary
+					result.Add(new IndexExpression(int.Parse(t.val), t.line, t.col)); 
+					.) 
+				")" 
+			]
 	  | Literal <out result>
 	  | parameter (. result = new ParameterExpression(t.val, t.line, t.col); .)
 	  | "(" RootExpr <out result> (. result.HasBrackets = true; .) ")"

@@ -257,7 +257,7 @@ namespace QueryTests
 		public void LinqTest1ToNWithTable()
 		{
             var vt = pm.Objects<Mitarbeiter>().Where(m => m.ReiseBüros.ElementAt(Any.Index).Name == "abc");
-			Assert.AreEqual( $"SELECT {0} FROM [Mitarbeiter] INNER JOIN [relMitarbeiterReisebuero] ON [Mitarbeiter].[ID] = [relMitarbeiterReisebuero].[IDMitarbeiter] INNER JOIN [Reisebuero] ON [Reisebuero].[ID] = [relMitarbeiterReisebuero].[IDReisebuero] WHERE [Reisebuero].[Name] = {{0}}", vt.QueryString );
+			Assert.AreEqual( $"SELECT {this.mitarbeiterFields} FROM [Mitarbeiter] INNER JOIN [relMitarbeiterReisebuero] ON [Mitarbeiter].[ID] = [relMitarbeiterReisebuero].[IDMitarbeiter] INNER JOIN [Reisebuero] ON [Reisebuero].[ID] = [relMitarbeiterReisebuero].[IDReisebuero] WHERE [Reisebuero].[Name] = {{0}}", vt.QueryString );
 		}
 
 		[Test]

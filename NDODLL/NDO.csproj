@@ -296,6 +296,7 @@
     <Compile Include="NDOOidTypeAttribute.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="NDOql\Expressions\IndexExpression.cs" />
     <Compile Include="SqlPersistenceHandling\SqlPersistenceHandler.cs">
       <SubType>Code</SubType>
     </Compile>

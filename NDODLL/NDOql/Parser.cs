@@ -449,6 +449,14 @@ public OqlExpression RootExpression
 		if (la.kind == 1) {
 			Get();
 			result = new IdentifierExpression(t.val, t.line, t.col); 
+			if (la.kind == 20) {
+				Get();
+				Expect(3);
+				result.UnaryOp="";  // Index-Expression has Brackets, so no Op String is necessary
+				result.Add(new IndexExpression(int.Parse(t.val), t.line, t.col)); 
+				
+				Expect(21);
+			}
 		} else if (StartOf(5)) {
 			Literal(out result);
 		} else if (la.kind == 16) {
