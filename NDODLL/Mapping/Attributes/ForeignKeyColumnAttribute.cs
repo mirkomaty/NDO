@@ -83,6 +83,15 @@ namespace NDO.Mapping.Attributes
     [AttributeUsage(AttributeTargets.Field, AllowMultiple = true)]
     public class ForeignKeyColumnAttribute : ColumnAttribute
     {
-        // Currently no additional properties
-    }
+		/// <summary>
+		/// Creats a column object and initializes it to the values defined in this ColumnAttribute.
+		/// </summary>
+		/// <returns>A new Column object.</returns>
+		public new ForeignKeyColumn CreateColum( MappingNode parent )
+		{
+			ForeignKeyColumn column = new ForeignKeyColumn( parent );
+			SetColumnValues( column );
+			return column;
+		}
+	}
 }

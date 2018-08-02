@@ -328,7 +328,7 @@ namespace NDOEnhancer
                     continue;
                 }
                 ClassOid oid = cl.Oid;
-                if (oid.OidColumns.Count == 0)
+                if (oid.OidColumns.Count == 0 && !classNode.ColumnAttributes.Any())
                 {
                     OidColumn oidColumn = oid.NewOidColumn();
                     oidColumn.Name = "ID";
@@ -337,10 +337,7 @@ namespace NDOEnhancer
                 // Check, if the oid columns match the OidColumnAttributes, if any of them exist
                 // In case of NDOOidType the ClassNode constructor creates an OidColumnAttribute
 
-                // We decided, not to remap oid's since explicit entries for a certain class in the
-                // mapping file would be overwritten by assembly-wide attribute declarations.
-
-                // oid.RemapOidColumns(classNode.ColumnAttributes);
+                oid.RemapOidColumns(classNode.ColumnAttributes);
 
                 bool noNameError = false;
 

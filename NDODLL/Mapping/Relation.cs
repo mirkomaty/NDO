@@ -273,7 +273,6 @@ namespace NDO.Mapping
         /// </summary>
         public void RemapForeignKeyColumns(ForeignKeyColumnAttribute[] fkAttributes, ChildForeignKeyColumnAttribute[] childFkAttributes)
         {
-#if ShouldBeImplemented
             bool remap = false;
             Class cl = this.RelatedClass;
             if (this.mappingTable == null)
@@ -285,15 +284,25 @@ namespace NDO.Mapping
                 else
                 {
                     int i = 0;
-                    new ForeignKeyIterator(this).Iterate(delegate(ForeignKeyColumn fkColumn, bool isLastElement)
-                    {
-
-                    });
-
-
+					foreach(var fkColumn in this.foreignKeyColumns)
+					{
+						fkAttributes[i].SetColumnValues( fkColumn );
+					}
                 }
+
+				if (!remap)
+					return;
+
+				this.foreignKeyColumns.Clear();
+				foreach(var attr in fkAttributes)
+				{
+					attr.CreateColum( this );
+				}
             }
-#endif
+			else
+			{
+
+			}
         }
 
 		public void RemapMappingTable(bool ownTypeIsPoly, bool otherTypeIsPoly, MappingTableAttribute mappingTableAttribute )

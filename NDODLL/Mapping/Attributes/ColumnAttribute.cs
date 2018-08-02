@@ -164,16 +164,45 @@ namespace NDO.Mapping.Attributes
 				column.Size = this.size.Value;
         }
 
-        /// <summary>
-        /// Creats a column object and initializes it to the values defined in this ColumnAttribute.
-        /// </summary>
-        /// <returns>A new Column object.</returns>
-        public Column CreateColum(MappingNode parent)
+		/// <summary>
+		/// Initializes a given column to the values defined in this ColumnAttribute.
+		/// </summary>
+		/// <param name="column">The column to be initialized.</param>
+		public void RemapColumn( Column column )
+		{
+			if (this.allowDbNull.HasValue && (!IsAssemblyWideDefinition || !column.AllowDbNull))
+				column.AllowDbNull = this.allowDbNull.Value;
+			if (this.dbType != null && (!IsAssemblyWideDefinition || column.DbType == null))
+				column.DbType = this.dbType;
+			if (this.ignoreColumnSizeInDDL.HasValue && (!IsAssemblyWideDefinition || !column.IgnoreColumnSizeInDDL))
+				column.IgnoreColumnSizeInDDL = this.ignoreColumnSizeInDDL.Value;
+			if (this.name != null && (!IsAssemblyWideDefinition || String.IsNullOrEmpty( column.Name )))
+				column.Name = this.name;
+			if (this.netType != null && (!IsAssemblyWideDefinition || String.IsNullOrEmpty( column.NetType )))
+				column.NetType = this.netType.FullName + "," + this.netType.Assembly.GetName().Name;
+			if (this.precision.HasValue && (!IsAssemblyWideDefinition || column.Precision == 0))
+				column.Precision = this.precision.Value;
+			if (this.size.HasValue && (!IsAssemblyWideDefinition || column.Size == 0))
+				column.Size = this.size.Value;
+		}
+
+		/// <summary>
+		/// Determines, if this instance has been defined assembly-wide.
+		/// </summary>
+		/// <remarks>
+		/// This property is set by the enhancer and used during creation of the mappings.
+		/// </remarks>
+		public bool IsAssemblyWideDefinition { get; set; }
+
+		/// <summary>
+		/// Creats a column object and initializes it to the values defined in this ColumnAttribute.
+		/// </summary>
+		/// <returns>A new Column object.</returns>
+		public Column CreateColum(MappingNode parent)
         {
             Column column = new Column(parent);
             SetColumnValues(column);
             return column;
         }
-
     }
 }

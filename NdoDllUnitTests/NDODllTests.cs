@@ -569,12 +569,5 @@ namespace NdoDllUnitTests
 			// This expression is used by the .NET Framework's implementation of Equals.
 			Assert.That( object.ReferenceEquals( type.Object.UnderlyingSystemType, type2.Object.UnderlyingSystemType ) );
 		}
-
-		[Test]
-		public void MappingTableAttributeWorks()
-		{
-			NDOMapping mapping = NDOMapping.Create( null );
-			mapping.AddStandardClass()
-		}
-    }
+	}
 }

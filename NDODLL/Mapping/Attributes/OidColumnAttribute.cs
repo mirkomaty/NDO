@@ -198,18 +198,40 @@ namespace NDO.Mapping.Attributes
             base.SetColumnValues(column);
         }
 
-        /// <summary>
-        /// Creates a new OidColumn object and initializes it to the values defined in this OidColumnAttribute.
-        /// </summary>
-        /// <param name="parent"></param>
-        /// <returns></returns>
-        public OidColumn CreateOidColumn(ClassOid parent)
+		/// <summary>
+		/// Initializes a given column to the values defined in this ColumnAttribute.
+		/// </summary>
+		/// <param name="column"></param>
+		public void RemapColumn( OidColumn column )
+		{
+			// If the attribute was set over a class definition,
+			// it should overwrite existing values.
+			// If the attribute is assembly wide
+			// existing values should only be altered, if they don't equal
+			// the initial values of a column.
+			if (!IsAssemblyWideDefinition || column.AutoIncremented )
+				column.AutoIncremented = this.autoIncremented;
+			if (!IsAssemblyWideDefinition || column.AutoIncrementStart != 1)
+				column.AutoIncrementStart = this.autoIncrementStart;
+			if (!IsAssemblyWideDefinition || column.AutoIncrementStep != 1)
+				column.AutoIncrementStep = this.autoIncrementStep;
+			if (!IsAssemblyWideDefinition || String.IsNullOrEmpty(column.FieldName))
+				column.FieldName = this.fieldName;
+			if (!IsAssemblyWideDefinition || String.IsNullOrEmpty( column.RelationName ))
+				column.RelationName = this.relationName;
+			base.RemapColumn( column );
+		}
+
+		/// <summary>
+		/// Creates a new OidColumn object and initializes it to the values defined in this OidColumnAttribute.
+		/// </summary>
+		/// <param name="parent"></param>
+		/// <returns></returns>
+		public OidColumn CreateOidColumn(ClassOid parent)
         {
             OidColumn oidColumn = new OidColumn(parent);
             SetOidColumnValues(oidColumn);
             return oidColumn;
         }
-
-
     }
 }
