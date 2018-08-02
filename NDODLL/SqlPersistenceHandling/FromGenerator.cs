@@ -73,6 +73,9 @@ namespace NDO.SqlPersistenceHandling
 				{
 					string relationName = arr[i];
 
+					if (relationName == "oid")
+						break;
+
 					Relation relation = startClass.FindRelation( relationName );
 
 					if (relation == null)
@@ -89,7 +92,11 @@ namespace NDO.SqlPersistenceHandling
 
 					if (!isFirst)
 						sb.Append( ' ' );
-					sb.Append( new InnerJoinExpression( relation, this.relationContext ).ToString() );
+
+					// In the cases where the following condition doesn't apply, we don't need the join to the table of the class owning the oid.
+					// It's sufficient to compare against the foreign keys stored in the owner class' table.
+					if ((relation.Multiplicity == RelationMultiplicity.List || relation.MappingTable != null) || arr[i + 1] != "oid")
+						sb.Append( new InnerJoinExpression( relation, this.relationContext, arr[i + 1] == "oid" ).ToString() );
 
 					startClass = childClass;
 					isFirst = false;

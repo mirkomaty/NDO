@@ -60,13 +60,29 @@ namespace NDO.SqlPersistenceHandling
 			foreach (IdentifierExpression exp in expressionTree.GetAll( e => e is IdentifierExpression ))
 			{
 				string[] arr = ((string)exp.Value).Split( '.' );
-				string fieldName = arr[arr.Length - 1];
-				Class parentClass = GetParentClass( exp, arr, out fieldName );
+				string fieldName = arr[arr.Length - 1]; // In case of embedded or value types this will be overwritten
+				Relation relation;
+				Class parentClass = GetParentClass( exp, arr, out fieldName, out relation );
 
 				if (fieldName == "oid")
 				{
-					string[] oidColumns = (from c in parentClass.Oid.OidColumns select QualifiedColumnName.Get(c)).ToArray();
-                    if (oidColumns.Length > 1 && exp.Children.Count == 0)
+					string[] oidColumns = (from c in parentClass.Oid.OidColumns select QualifiedColumnName.Get( c )).ToArray();
+					if (relation != null)
+					{
+						// In these cases we don't need the join to the table of the class owning the oid.
+						// It's sufficient to compare against the foreign keys stored in the owner class' table
+						// or in the mapping table
+						if (relation.MappingTable != null)
+						{
+							oidColumns = (from c in relation.MappingTable.ChildForeignKeyColumns select QualifiedColumnName.Get( relation.MappingTable, c )).ToArray();
+						}
+						else if (relation.Multiplicity == RelationMultiplicity.Element)
+						{
+							oidColumns = (from c in relation.ForeignKeyColumns select QualifiedColumnName.Get( c )).ToArray();
+						}
+					}
+
+					if (oidColumns.Length > 1 && exp.Children.Count == 0)
                     {
                         OqlExpression parent = exp.Parent;  // Must be a = expression like 'xxx.oid = {0}'.
                         ParameterExpression parExp = exp.Siblings[0] as ParameterExpression;
@@ -119,24 +135,27 @@ namespace NDO.SqlPersistenceHandling
 			}
 		}
 
-		private Class GetParentClass( OqlExpression exp, string[] arr, out string fieldName )
+		private Class GetParentClass( OqlExpression exp, string[] arr, out string fieldName, out Relation relation )
 		{
 			Class relClass = this.cls;
 			NDOMapping mappings = relClass.Parent;
 			int i;
+			relation = null;
+
 			for (i = 0; i < arr.Length - 1; i++)
 			{
-				Relation rel = relClass.FindRelation( arr[i] );
-				if (rel == null)  // must be a value type or embedded type
+				relation = relClass.FindRelation( arr[i] );
+				if (relation == null)  // must be a value type or embedded type
 				{
 					break;
 				}
 
- 				if (this.queryContext.ContainsKey(rel))
-					relClass = this.queryContext[rel];
+ 				if (this.queryContext.ContainsKey(relation))
+					relClass = this.queryContext[relation];
 				else
-					relClass = mappings.FindClass( rel.ReferencedType );
+					relClass = mappings.FindClass( relation.ReferencedType );
 			}
+
 			fieldName = String.Join( ".", arr, i, arr.Length - i );
 			return relClass;
 		}

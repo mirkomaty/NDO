@@ -122,7 +122,7 @@ namespace QueryTests
 		public void LinqCheckOidWithTable()
 		{
 			VirtualTable<Mitarbeiter> vt = pm.Objects<Mitarbeiter>().Where( m => m.Reisen[Any.Index].Länder[Any.Index].Oid() == 55 );
-			Assert.AreEqual( String.Format( "SELECT {0} FROM [Mitarbeiter] INNER JOIN [Reise] ON [Mitarbeiter].[ID] = [Reise].[IDMitarbeiter] INNER JOIN [relLandReise] ON [Reise].[ID] = [relLandReise].[IDReise] INNER JOIN [Land] ON [Land].[ID] = [relLandReise].[IDLand] WHERE [Land].[ID] = {{0}}", this.mitarbeiterFields ), vt.QueryString );
+			Assert.AreEqual( String.Format( "SELECT {0} FROM [Mitarbeiter] INNER JOIN [Reise] ON [Mitarbeiter].[ID] = [Reise].[IDMitarbeiter] INNER JOIN [relLandReise] ON [Reise].[ID] = [relLandReise].[IDReise] WHERE [relLandReise].[IDLand] = {{0}}", this.mitarbeiterFields ), vt.QueryString );
 		}
 
 		[Test]
@@ -218,7 +218,13 @@ namespace QueryTests
 		[Test]
 		public void LinqTestPolymorphicRelationQueries()
 		{
-            var vt = pm.Objects<Reise>().Where(r => r.Kostenpunkte[Any.Index].Datum == DateTime.Now.Date);
+			// We have to patch the AccessorName here, since the Enhancer doesn't create the AccessorName automatically.
+			// This will change as soon as we update the tests.
+			pm.NDOMapping.FindClass( typeof( Kostenpunkt ) ).FindField( "datum" ).AccessorName = "Datum";
+			pm.NDOMapping.FindClass( typeof( Beleg ) ).FindField( "datum" ).AccessorName = "Datum";
+			pm.NDOMapping.FindClass( typeof( PKWFahrt ) ).FindField( "datum" ).AccessorName = "Datum";
+
+			var vt = pm.Objects<Reise>().Where(r => r.Kostenpunkte[Any.Index].Datum == DateTime.Now.Date);
 
 			Assert.AreEqual( $"SELECT {reiseFields} FROM [Reise] INNER JOIN [relBelegKostenpunkt] ON [Reise].[ID] = [relBelegKostenpunkt].[IDReise] INNER JOIN [Beleg] ON [Beleg].[ID] = [relBelegKostenpunkt].[IDBeleg] AND [relBelegKostenpunkt].[TCBeleg] = 926149172 WHERE [Beleg].[Datum] = {{0}} UNION \r\nSELECT {reiseFields} FROM [Reise] INNER JOIN [relBelegKostenpunkt] ON [Reise].[ID] = [relBelegKostenpunkt].[IDReise] INNER JOIN [PKWFahrt] ON [PKWFahrt].[ID] = [relBelegKostenpunkt].[IDBeleg] AND [relBelegKostenpunkt].[TCBeleg] = 734406058 WHERE [PKWFahrt].[Datum] = {{0}}", vt.QueryString );
 		}
@@ -256,6 +262,9 @@ namespace QueryTests
 		[Test]
 		public void LinqTest1ToNWithTable()
 		{
+			// We have to patch the AccessorName here, since the Enhancer doesn't create the AccessorName automatically.
+			// This will change as soon as we update the tests.
+			pm.NDOMapping.FindClass( typeof( Mitarbeiter ) ).FindRelation( "reiseBüros" ).AccessorName = "ReiseBüros";
             var vt = pm.Objects<Mitarbeiter>().Where(m => m.ReiseBüros.ElementAt(Any.Index).Name == "abc");
 			Assert.AreEqual( $"SELECT {this.mitarbeiterFields} FROM [Mitarbeiter] INNER JOIN [relMitarbeiterReisebuero] ON [Mitarbeiter].[ID] = [relMitarbeiterReisebuero].[IDMitarbeiter] INNER JOIN [Reisebuero] ON [Reisebuero].[ID] = [relMitarbeiterReisebuero].[IDReisebuero] WHERE [Reisebuero].[Name] = {{0}}", vt.QueryString );
 		}
@@ -263,13 +272,15 @@ namespace QueryTests
 		[Test]
 		public void LinqTestIfQueryForNonNullOidsWorks()
 		{
-            var vt = pm.Objects<Mitarbeiter>().Where(m => m.Reisen[Any.Index].Länder.Oid() != null);
-			Assert.AreEqual($"SELECT {this.mitarbeiterFields} FROM [Mitarbeiter] INNER JOIN [Reise] ON [Mitarbeiter].[ID] = [Reise].[IDMitarbeiter] INNER JOIN [relLandReise] ON [Reise].[ID] = [relLandReise].[IDReise] WHERE [relLandReise].[IDLand] IS NOT NULL", vt.QueryString );
-            vt = pm.Objects<Mitarbeiter>().Where(m => m.Reisen[Any.Index].Länder[Any.Index].NDOObjectId != null);
-            Assert.AreEqual($"SELECT {this.mitarbeiterFields} FROM [Mitarbeiter] INNER JOIN [Reise] ON [Mitarbeiter].[ID] = [Reise].[IDMitarbeiter] INNER JOIN [relLandReise] ON [Reise].[ID] = [relLandReise].[IDReise] WHERE [relLandReise].[IDLand] IS NOT NULL", vt.QueryString);
-        }
+			var vt = pm.Objects<Mitarbeiter>().Where( m => m.Reisen[Any.Index].Länder.Oid() != null );
+			Assert.AreEqual( $"SELECT {this.mitarbeiterFields} FROM [Mitarbeiter] INNER JOIN [Reise] ON [Mitarbeiter].[ID] = [Reise].[IDMitarbeiter] INNER JOIN [relLandReise] ON [Reise].[ID] = [relLandReise].[IDReise] WHERE [relLandReise].[IDLand] IS NOT NULL", vt.QueryString );
+			vt = pm.Objects<Mitarbeiter>().Where( m => m.Reisen[Any.Index].Länder[Any.Index].NDOObjectId != null );
+			Assert.AreEqual( $"SELECT {this.mitarbeiterFields} FROM [Mitarbeiter] INNER JOIN [Reise] ON [Mitarbeiter].[ID] = [Reise].[IDMitarbeiter] INNER JOIN [relLandReise] ON [Reise].[ID] = [relLandReise].[IDReise] WHERE [relLandReise].[IDLand] IS NOT NULL", vt.QueryString );
+			vt = pm.Objects<Mitarbeiter>().Where( m => m.Adresse.NDOObjectId != null );
+			Assert.AreEqual( $"SELECT {this.mitarbeiterFields} FROM [Mitarbeiter] WHERE [Mitarbeiter].[IDAdresse] IS NOT NULL", vt.QueryString );
+		}
 
-        [Test]
+		[Test]
 		public void LinqTestIfInClauseWorks()
 		{
             var arr = new[] { "Mirko", "Hans" };
@@ -322,7 +333,7 @@ namespace QueryTests
 			Assert.AreEqual( $"SELECT {this.mitarbeiterFields} FROM [Mitarbeiter] INNER JOIN [Reise] ON [Mitarbeiter].[ID] = [Reise].[IDMitarbeiter] WHERE [Reise].[ID] IS NOT NULL", qs );
 			vt = pm.Objects<Mitarbeiter>().Where( m => m.Reisen[Any.Index].Länder[Any.Index].Oid() != null );
 			qs = vt.QueryString;
-			Assert.AreEqual( $"SELECT {this.mitarbeiterFields} FROM [Mitarbeiter] INNER JOIN [Reise] ON [Mitarbeiter].[ID] = [Reise].[IDMitarbeiter] INNER JOIN [relLandReise] ON [Reise].[ID] = [relLandReise].[IDReise] INNER JOIN [Land] ON [Land].[ID] = [relLandReise].[IDLand] WHERE [Land].[ID] IS NOT NULL", qs );
+			Assert.AreEqual( $"SELECT {this.mitarbeiterFields} FROM [Mitarbeiter] INNER JOIN [Reise] ON [Mitarbeiter].[ID] = [Reise].[IDMitarbeiter] INNER JOIN [relLandReise] ON [Reise].[ID] = [relLandReise].[IDReise] WHERE [relLandReise].[IDLand] IS NOT NULL", qs );
 		}
 	}
 }
