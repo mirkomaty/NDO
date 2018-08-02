@@ -543,24 +543,11 @@ namespace NdoDllUnitTests
 			Assert.That( rank == 0 || rank == 1 );  // Expected result with two classes...
 		}
 
-		/// <summary>
-		/// Creates a Type mock which can be used in updateRanks and other
-		/// Lists and Dictionaries
-		/// </summary>
-		/// <param name="typeName"></param>
-		/// <returns>The type mock</returns>
-		Mock<Type> CreateType(string typeName)
+		public Mock<Type> CreateType( string typeName )
 		{
 			if (types.ContainsKey( typeName ))
 				return types[typeName];
-			Mock<Type> type = new Mock<Type>();
-			type.Setup( t => t.FullName ).Returns( typeName );
-			type.Setup( t => t.GetHashCode() ).Returns( typeName.GetHashCode() );
-			type.Setup( t => t.Equals(It.IsAny<Type>()) ).Returns( (Type t)=>t.FullName == typeName );
-			type.Setup( t => t.Equals( It.IsAny<object>() ) ).Returns( ( Type t ) => t.FullName == typeName );
-			type.Setup( t => t.Name ).Returns( typeName.Substring( typeName.LastIndexOf( '.' ) + 1 ) );
-			type.Setup( t => t.ToString() ).Returns( typeName );
-			type.Setup( t => t.UnderlyingSystemType ).Returns( type.Object );
+			var type = MockType.CreateType( typeName );
 			types.Add( typeName, type );
 			return type;
 		}
@@ -581,6 +568,13 @@ namespace NdoDllUnitTests
 			Assert.That( type.Object.Equals( type2.Object ) );
 			// This expression is used by the .NET Framework's implementation of Equals.
 			Assert.That( object.ReferenceEquals( type.Object.UnderlyingSystemType, type2.Object.UnderlyingSystemType ) );
+		}
+
+		[Test]
+		public void MappingTableAttributeWorks()
+		{
+			NDOMapping mapping = NDOMapping.Create( null );
+			mapping.AddStandardClass()
 		}
     }
 }

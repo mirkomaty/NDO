@@ -56,6 +56,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="MockType.cs" />
     <Compile Include="NDODllTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

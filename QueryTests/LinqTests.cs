@@ -264,9 +264,9 @@ namespace QueryTests
 		public void LinqTestIfQueryForNonNullOidsWorks()
 		{
             var vt = pm.Objects<Mitarbeiter>().Where(m => m.Reisen[Any.Index].Länder.Oid() != null);
-			Assert.AreEqual($"SELECT {this.mitarbeiterFields} FROM [Mitarbeiter] INNER JOIN [Reise] ON [Mitarbeiter].[ID] = [Reise].[IDMitarbeiter] INNER JOIN [relLandReise] ON [Reise].[ID] = [relLandReise].[IDReise] INNER JOIN [Land] ON [Land].[ID] = [relLandReise].[IDLand] WHERE [Land].[ID] IS NOT NULL", vt.QueryString );
+			Assert.AreEqual($"SELECT {this.mitarbeiterFields} FROM [Mitarbeiter] INNER JOIN [Reise] ON [Mitarbeiter].[ID] = [Reise].[IDMitarbeiter] INNER JOIN [relLandReise] ON [Reise].[ID] = [relLandReise].[IDReise] WHERE [relLandReise].[IDLand] IS NOT NULL", vt.QueryString );
             vt = pm.Objects<Mitarbeiter>().Where(m => m.Reisen[Any.Index].Länder[Any.Index].NDOObjectId != null);
-            Assert.AreEqual($"SELECT {this.mitarbeiterFields} FROM [Mitarbeiter] INNER JOIN [Reise] ON [Mitarbeiter].[ID] = [Reise].[IDMitarbeiter] INNER JOIN [relLandReise] ON [Reise].[ID] = [relLandReise].[IDReise] INNER JOIN [Land] ON [Land].[ID] = [relLandReise].[IDLand] WHERE [Land].[ID] IS NOT NULL", vt.QueryString);
+            Assert.AreEqual($"SELECT {this.mitarbeiterFields} FROM [Mitarbeiter] INNER JOIN [Reise] ON [Mitarbeiter].[ID] = [Reise].[IDMitarbeiter] INNER JOIN [relLandReise] ON [Reise].[ID] = [relLandReise].[IDReise] WHERE [relLandReise].[IDLand] IS NOT NULL", vt.QueryString);
         }
 
         [Test]
