@@ -64,5 +64,16 @@ namespace NdoDllUnitTests
 			cls.Oid.RemapOidColumns( new[] { attr } );
 			Assert.AreEqual( "ID", cls.Oid.OidColumns.First().Name );
 		}
-	}
+
+        [Test]
+        public void AssembyWideColumnAttributeOverwritesDefaultValues()
+        {
+            NDOMapping mapping = NDOMapping.Create(null);
+            var cls = mapping.AddStandardClass("TestClass", "TestAssembly", null);
+            Assert.AreEqual(1, cls.Oid.OidColumns.First().AutoIncrementStart);
+            var attr = new OidColumnAttribute() { Name = "newColumnName", AutoIncrementStart = 2, IsAssemblyWideDefinition = true };
+            cls.Oid.RemapOidColumns(new[] { attr });
+            Assert.AreEqual(2, cls.Oid.OidColumns.First().AutoIncrementStart);
+        }
+    }
 }

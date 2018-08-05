@@ -209,11 +209,11 @@ namespace NDO.Mapping.Attributes
 			// If the attribute is assembly wide
 			// existing values should only be altered, if they don't equal
 			// the initial values of a column.
-			if (!IsAssemblyWideDefinition || column.AutoIncremented )
+			if (!IsAssemblyWideDefinition || !column.AutoIncremented )
 				column.AutoIncremented = this.autoIncremented;
-			if (!IsAssemblyWideDefinition || column.AutoIncrementStart != 1)
+			if (!IsAssemblyWideDefinition || column.AutoIncrementStart == 1)
 				column.AutoIncrementStart = this.autoIncrementStart;
-			if (!IsAssemblyWideDefinition || column.AutoIncrementStep != 1)
+			if (!IsAssemblyWideDefinition || column.AutoIncrementStep == 1)
 				column.AutoIncrementStep = this.autoIncrementStep;
 			if (!IsAssemblyWideDefinition || String.IsNullOrEmpty(column.FieldName))
 				column.FieldName = this.fieldName;
