@@ -172,6 +172,19 @@ namespace NDO.Linq
         }
 
 		/// <summary>
+		/// Add an expression which represents a relation. The query will try to fetch these related objects together with the main resultset.
+		/// </summary>
+		/// <typeparam name="TP">The type of the property - will be automatically determined by the compiler.</typeparam>
+		/// <param name="expr"></param>
+		public void AddPrefetch<TP>( Expression<Func<T, TP>> expr )
+		{
+			ExpressionTreeTransformer transformer =
+				new ExpressionTreeTransformer( (LambdaExpression)expr );
+			string field = transformer.Transform();
+			this.prefetches.Add( field );
+		}
+
+		/// <summary>
 		/// Gets the Query String of the generated query.
 		/// </summary>
 		public string QueryString

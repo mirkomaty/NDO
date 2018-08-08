@@ -41,15 +41,6 @@ namespace NDO.Query
         private Mappings mappings;
 		private List<object> parameters = new List<object>();
 		private List<string> prefetches = new List<string>();
-		public void Addstring(string s)
-		{
-			this.prefetches.Add(s);
-		}
-		public void Removestring(string s)
-		{
-			if (this.prefetches.Contains(s))
-				this.prefetches.Remove(s);
-		}
 		private int skip;
 		private int take;
 
@@ -506,7 +497,26 @@ namespace NDO.Query
 			set { this.take = value; }
 		}
 
-#region IQuery Interface
+		/// <summary>
+		/// Adds a prefetch to the query
+		/// </summary>
+		/// <param name="s"></param>
+		public void AddPrefetch( string s )
+		{
+			this.prefetches.Add( s );
+		}
+
+		/// <summary>
+		/// Removes a prefetch from the query
+		/// </summary>
+		/// <param name="s"></param>
+		public void RemovePrefetch( string s )
+		{
+			if (this.prefetches.Contains( s ))
+				this.prefetches.Remove( s );
+		}
+
+		#region IQuery Interface
 
 		System.Collections.IList IQuery.Execute()
 		{

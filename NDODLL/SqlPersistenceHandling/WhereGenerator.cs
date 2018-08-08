@@ -157,6 +157,19 @@ namespace NDO.SqlPersistenceHandling
 			}
 
 			fieldName = String.Join( ".", arr, i, arr.Length - i );
+			if (relClass.FindField(fieldName) == null &&  fieldName.IndexOf('.') > -1)
+			{
+				// We might have a value type or embedded type here.
+				// These don't have accessor names.
+				// So we try to find the field via the standard column name.
+				// Note, that this doesn't work, if the column name was remapped.
+				// But we don't see another solution for this situation.
+				string tempName = fieldName.Replace( '.', '_' );
+				var field = relClass.Fields.FirstOrDefault( f => f.Column.Name == tempName );
+				if (field != null)
+					fieldName = field.Name;
+			}
+
 			return relClass;
 		}
 

@@ -779,44 +779,43 @@ namespace NDO.SqlPersistenceHandling
 					this.provider.GetNamedParameter("p" + tc + nr.ToString()));
 			}
 
-			Dictionary<string, object> oidParameters = new Dictionary<string, object>();
-#warning !!!! Hier kommt die Oid-Parameter-Schose  !!!!
-			regex = new Regex( @"\{oid:(\d+):(\d+)\}" );
-			matches = regex.Matches( sql );
-			if ( matches.Count > 0 )
-			{
-				foreach ( Match match in matches )
-				{
-					int parIndex = int.Parse( match.Groups[1].Value ) + offset;
-					int oidIndex = int.Parse( match.Groups[2].Value ) + offset;
-                    if (parIndex > endIndex)
-                        throw new QueryException(10009, "Parameter-Reference {" + parIndex + "} has no matching parameter.");
-					object p = parameters[parIndex];
-					ObjectId oid = p as ObjectId;
+//			Dictionary<string, object> oidParameters = new Dictionary<string, object>();
+//			regex = new Regex( @"\{oid:(\d+):(\d+)\}" );
+//			matches = regex.Matches( sql );
+//			if ( matches.Count > 0 )
+//			{
+//				foreach ( Match match in matches )
+//				{
+//					int parIndex = int.Parse( match.Groups[1].Value ) + offset;
+//					int oidIndex = int.Parse( match.Groups[2].Value ) + offset;
+//                    if (parIndex > endIndex)
+//                        throw new QueryException(10009, "Parameter-Reference {" + parIndex + "} has no matching parameter.");
+//					object p = parameters[parIndex];
+//					ObjectId oid = p as ObjectId;
 
-					if ( oid == null && oidIndex > 0 )
-						throw new QueryException( 10005, "Parameter {" + parIndex + "} was expected to be an ObjectId." );
+//					if ( oid == null && oidIndex > 0 )
+//						throw new QueryException( 10005, "Parameter {" + parIndex + "} was expected to be an ObjectId." );
 
-					if (oid != null && this.type != oid.Id.Type)
-						throw new QueryException( 10006, "Oid-Parameter {" + parIndex + "} has the wrong type: '" + oid.Id.Type.Name +"'");
+//					if (oid != null && this.type != oid.Id.Type)
+//						throw new QueryException( 10006, "Oid-Parameter {" + parIndex + "} has the wrong type: '" + oid.Id.Type.Name +"'");
 
 
-					string key = null;
+//					string key = null;
 
-					if ( oidIndex > 0 )  // need to add additional parameters for the 2nd, 3rd etc. column
-					{
-						key = "poid" + oidIndex;
-						if ( !tcValues.ContainsKey( key ) )
-							tcValues.Add( key, oid.Id[oidIndex] );
-					}
-					else
-					{
-						key = "p" + parIndex;
-					}
-					sql = sql.Replace( match.Value,
-						this.provider.GetNamedParameter( key ) );
-				}
-			}
+//					if ( oidIndex > 0 )  // need to add additional parameters for the 2nd, 3rd etc. column
+//					{
+//						key = "poid" + oidIndex;
+//						if ( !tcValues.ContainsKey( key ) )
+//							tcValues.Add( key, oid.Id[oidIndex] );
+//					}
+//					else
+//					{
+//						key = "p" + parIndex;
+//					}
+//					sql = sql.Replace( match.Value,
+//						this.provider.GetNamedParameter( key ) );
+//				}
+//			}
 
 			commandText = sql;
 

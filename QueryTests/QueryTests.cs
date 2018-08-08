@@ -51,6 +51,14 @@ namespace QueryTests
 			Assert.AreEqual( String.Format( "SELECT {0} FROM [Mitarbeiter]", this.mitarbeiterFields ), q.GeneratedQuery );
 		}
 
+		[Test]
+		public void CheckIfSimplePrefetchWorks()
+		{
+			NDOQuery<Mitarbeiter> q = new NDOQuery<Mitarbeiter>( pm );
+			q.AddPrefetch( "dieReisen" );
+			Assert.AreEqual( String.Format( "SELECT {0} FROM [Mitarbeiter]", this.mitarbeiterFields ), q.GeneratedQuery );
+		}
+
 		public void CheckMitarbeiterQuery()
 		{
 			NDOQuery<Mitarbeiter> q = new NDOQuery<Mitarbeiter>( pm );
