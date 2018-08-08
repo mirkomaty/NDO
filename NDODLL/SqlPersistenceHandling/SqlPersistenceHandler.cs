@@ -664,9 +664,9 @@ namespace NDO.SqlPersistenceHandling
 						for (i = 0; i < statements.Length; i++)
 						{
 							if (i == 0)
-								CreateQueryParameters( ref statements[i], cmd, parameters, 0 );
+								CreateQueryParameters( cmd, parameters );
 							else
-								CreateQueryParameters( ref statements[i], null, null, 0 );
+								CreateQueryParameters( null, null );
 						}
 					}
 					sql = this.provider.GenerateBulkCommand( statements );
@@ -703,7 +703,7 @@ namespace NDO.SqlPersistenceHandling
 							cmd.Transaction = this.Transaction;
 						if (parameters != null && parameters.Count > 0)
 						{
-							CreateQueryParameters( ref s, cmd, parameters, 0 );
+							CreateQueryParameters( cmd, parameters );
 						}
 						cmd.CommandText = s;
 						dr = cmd.ExecuteReader();
@@ -733,108 +733,40 @@ namespace NDO.SqlPersistenceHandling
 
 		private void CreateQueryParameters(IDbCommand command, IList parameters)
 		{
-			command.Parameters.Clear();
-            string sql = command.CommandText;
-
-            if (parameters == null || parameters.Count == 0)
-            {
-                Regex regex = new Regex(@"\{(tc:|)(\d+)\}");
-                Match match = regex.Match(sql);
-                if (match.Success)
-                {
-                    throw new QueryException(10009, "Parameter-Reference " + match.Value + " has no matching parameter.");
-                }
-            }
-
-			CreateQueryParameters(ref sql, command, parameters, 0);
-			command.CommandText = sql;
-		}
-
-		private void CreateQueryParameters(ref string commandText, IDbCommand command, IList parameters, int offset)
-		{
-			string sql = commandText;
-			int nr;
-			Regex regex = new Regex(@"\{(tc:|)(\d+)\}");
-			
-			MatchCollection matches = regex.Matches(sql);
-			Dictionary<string, object> tcValues = new Dictionary<string, object>();
-            int endIndex = parameters.Count - 1;
-			foreach(Match match in matches)
-			{
-				nr = int.Parse(match.Groups[2].Value) + offset;
-                if (nr > endIndex)
-                    throw new QueryException(10009, "Parameter-Reference " + match.Value + " has no matching parameter.");
-				string tc = match.Groups[1].Value.Replace( ":", string.Empty );
-				if ( tc != string.Empty )
-				{
-					object p = parameters[nr];
-					ObjectId oid = p as ObjectId;
-					if ( oid == null )
-						throw new QueryException( 10005, "Parameter {" + nr + "} was expected to be an ObjectId." );
-					string key = "ptc" + nr;
-					if ( !tcValues.ContainsKey( key ) )
-						tcValues.Add( key, oid.Id.TypeId );
-				}
-				sql = sql.Replace(match.Value, 
-					this.provider.GetNamedParameter("p" + tc + nr.ToString()));
-			}
-
-//			Dictionary<string, object> oidParameters = new Dictionary<string, object>();
-//			regex = new Regex( @"\{oid:(\d+):(\d+)\}" );
-//			matches = regex.Matches( sql );
-//			if ( matches.Count > 0 )
-//			{
-//				foreach ( Match match in matches )
-//				{
-//					int parIndex = int.Parse( match.Groups[1].Value ) + offset;
-//					int oidIndex = int.Parse( match.Groups[2].Value ) + offset;
-//                    if (parIndex > endIndex)
-//                        throw new QueryException(10009, "Parameter-Reference {" + parIndex + "} has no matching parameter.");
-//					object p = parameters[parIndex];
-//					ObjectId oid = p as ObjectId;
-
-//					if ( oid == null && oidIndex > 0 )
-//						throw new QueryException( 10005, "Parameter {" + parIndex + "} was expected to be an ObjectId." );
-
-//					if (oid != null && this.type != oid.Id.Type)
-//						throw new QueryException( 10006, "Oid-Parameter {" + parIndex + "} has the wrong type: '" + oid.Id.Type.Name +"'");
-
-
-//					string key = null;
-
-//					if ( oidIndex > 0 )  // need to add additional parameters for the 2nd, 3rd etc. column
-//					{
-//						key = "poid" + oidIndex;
-//						if ( !tcValues.ContainsKey( key ) )
-//							tcValues.Add( key, oid.Id[oidIndex] );
-//					}
-//					else
-//					{
-//						key = "p" + parIndex;
-//					}
-//					sql = sql.Replace( match.Value,
-//						this.provider.GetNamedParameter( key ) );
-//				}
-//			}
-
-			commandText = sql;
-
 			if (parameters == null || parameters.Count == 0)
 				return;
 
+			string sql = command.CommandText;
+
+			Regex regex = new Regex( @"\{(\d+)\}" );
+
+			MatchCollection matches = regex.Matches( sql );
+			Dictionary<string, object> tcValues = new Dictionary<string, object>();
+			int endIndex = parameters.Count - 1;
+			foreach (Match match in matches)
+			{
+				int nr = int.Parse( match.Groups[1].Value );
+				if (nr > endIndex)
+					throw new QueryException( 10009, "Parameter-Reference " + match.Value + " has no matching parameter." );
+
+				sql = sql.Replace( match.Value,
+					this.provider.GetNamedParameter( "p" + nr.ToString() ) );
+			}
+
+			command.CommandText = sql;
+
 			for (int i = 0; i < parameters.Count; i++)
 			{
-				nr = offset + i;
 				object p = parameters[i];
 				Type type = p.GetType();
                 if (type.FullName.StartsWith("System.Nullable`1"))
                     type = type.GetGenericArguments()[0];
-				if ( type == typeof( ObjectId ) )
-				{
-					type = ( (ObjectId) p ).Id.Value.GetType();
-					p = ( (ObjectId) p ).Id.Value;
-#warning !!!! Das muss geändert werden. !!!!
-				}
+				//if ( type == typeof( ObjectId ) )  Kann raus
+				//{
+
+				//	type = ( (ObjectId) p ).Id.Value.GetType();
+				//	p = ( (ObjectId) p ).Id.Value;
+				//}
                 if (type.IsEnum)
                 {
                     type = Enum.GetUnderlyingType(type);
@@ -845,7 +777,7 @@ namespace NDO.SqlPersistenceHandling
 					type = typeof(string);
 					p = p.ToString();
 				}
-				string name = "p" + nr.ToString();
+				string name = "p" + i.ToString();
 				int length = this.provider.GetDefaultLength(type);
 				if (type == typeof(string))
 				{
@@ -868,21 +800,6 @@ namespace NDO.SqlPersistenceHandling
 					this.provider.GetQuotedName(name)); 
 				par.Value = p;
 				par.Direction = ParameterDirection.Input;					
-			}
-
-			foreach ( string key in tcValues.Keys )
-			{
-				string name = this.provider.GetNamedParameter( key );
-				object o = tcValues[key];
-				Type type = o.GetType();
-				IDataParameter par = provider.AddParameter(
-					command,
-					name,
-					this.provider.GetDbType( type ),
-					this.provider.GetDefaultLength( type ),
-					key );
-				par.Value = tcValues[key];
-				par.Direction = ParameterDirection.Input;
 			}
 		}
 

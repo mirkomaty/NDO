@@ -2006,41 +2006,22 @@ namespace NDO
 		/// <returns></returns>
 		IList QueryRelatedObjects(IPersistenceCapable pc, Relation r, IList l, bool hollow)
 		{
-            //TODO: Change this method to real Oql queries
+			// At this point of execution we know,
+			// that the target type is not polymorphic and is not 1:1.
 
-            Type t = null;
 			IList relatedObjects;
 			if (l != null)
 				relatedObjects = l;
 			else
-				relatedObjects = mappings.CreateRelationContainer(pc, r);
-			t = r.ReferencedType;
-			Class cl = GetClass(t);
-            // We can use the table name of cl, because, if we are at this point, we know,
-            // that the target type is not polymorphic.
+				relatedObjects = mappings.CreateRelationContainer( pc, r );
 
-#warning !!!! QueryRelatedObjects: Query mit Oid als Parameter implementieren  !!!!
-			//IProvider provider = mappings.GetProvider(cl);
+			IQuery q = NewQuery( r.ReferencedType, $"oid={1}", true );
+			q.Parameters.Add( pc.NDOObjectId );
+			var result = q.Execute();
 
-			//string oql = string.Empty;
-			//int i = 0;
-			//new ForeignKeyIterator(r).Iterate(delegate(ForeignKeyColumn fkColumn, bool isLastElement)
-			//{
-			//	oql += QualifiedTableName.Get(cl.TableName + "." + fkColumn.Name, provider) + "=" + provider.GetSqlLiteral(pc.NDOObjectId.Id[i]);
-			//	if (!isLastElement)
-			//		oql += OldQuery.Op.And;
-			//	i++;
-			//});
-			//if (!(String.IsNullOrEmpty(r.ForeignKeyTypeColumnName)))
-			//{
-			//	oql += OldQuery.Op.And + QualifiedTableName.Get(cl.TableName + "." + r.ForeignKeyTypeColumnName, provider) + OldQuery.Op.Eq + pc.NDOObjectId.Id.TypeId;
-			//}
+			foreach (object item in result)
+				relatedObjects.Add( item );
 
-			//OldQuery q = NewQuery(t, oql, hollow, (OldQuery.Language) OldQuery.LoadRelations);
-			//q.AllowSubclasses = false;  // Remember: polymorphic relations always have a mapping table
-			//IList l2 = q.Execute();
-			//foreach(object o in l2)
-			//	relatedObjects.Add(o);
 			return relatedObjects;
 		}
 
@@ -3787,11 +3768,13 @@ namespace NDO
 		/// <summary>
 		/// Convert a data table to objects. Note that the table might only hold objects of the specified type.
 		/// </summary>
-		internal List<IPersistenceCapable> DataTableToIList(Type t, ICollection rows, bool hollow) 
+		internal List<T> DataTableToIList<T>(ICollection rows, bool hollow) 
 		{
-			List<IPersistenceCapable> queryResult = new List<IPersistenceCapable>(rows.Count);
+			List<T> queryResult = new List<T>(rows.Count);
             if (rows.Count == 0)
                 return queryResult;
+
+			Type t = typeof( T );
 
 			IList callbackObjects = new ArrayList();
 			Class cl = GetClass(t);
@@ -3851,8 +3834,7 @@ namespace NDO
 				} 
 
 				cache.UpdateCache(pc);
-				queryResult.Add(pc);
-
+				queryResult.Add((T)pc);
 			}
 			// Make shure this is the last statement before returning
 			// to the caller, so the user can recursively use persistent

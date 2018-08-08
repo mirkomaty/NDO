@@ -233,10 +233,9 @@ namespace QueryTests
 		[Test]
 		public void LinqSimplePrefetchWorks()
 		{
-			Assert.That( false, "Not implemented" );
-			// Mit Bidirektionaler Relation (vorhandener JOIN)
-			// Monodirektional (neuer JOIN)
-			// Unterschiedliche Relationen werden auseinandergehalten
+			var vt = pm.Objects<Mitarbeiter>();
+			vt.AddPrefetch( m => m.Reisen );
+			var s = vt.QueryString;
 		}
 
 		[Test]

@@ -60,7 +60,7 @@ namespace NDO
 
 		public static string GetQualifiedName( this Column col )
 		{
-			var cls = ((Field)col.Parent).Parent;
+			var cls = (Class)col.NodeParent.NodeParent;
 			var provider = cls.Provider;
 			return $"{provider.GetQuotedName( cls.TableName )}.{provider.GetQuotedName( col.Name )}";
 		}

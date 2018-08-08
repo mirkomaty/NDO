@@ -9,7 +9,7 @@ using System.Data;
 using NDOInterfaces;
 using System.Text.RegularExpressions;
 using NDO.Linq;
-using System.Linq.Expressions;
+using LE=System.Linq.Expressions;
 using Unity;
 using NDO.SqlPersistenceHandling;
 
@@ -112,10 +112,10 @@ namespace NDO.Query
 		/// Polymorphy: StDev and Var only return the aggregate for the given class. All others return the aggregate for all subclasses.
 		/// Transactions: Please note, that the aggregate functions always work against the database.
 		/// Unsaved changes in your objects are not recognized.</remarks>
-		public object ExecuteAggregate<K>( Expression<Func<T,K>> keySelector, AggregateType aggregateType )
+		public object ExecuteAggregate<K>( LE.Expression<Func<T,K>> keySelector, AggregateType aggregateType )
 		{
 			ExpressionTreeTransformer transformer =
-				new ExpressionTreeTransformer( (LambdaExpression)keySelector );
+				new ExpressionTreeTransformer( keySelector );
 			string field = transformer.Transform();
 			return ExecuteAggregate( field, aggregateType );
 		}
@@ -166,15 +166,20 @@ namespace NDO.Query
 		{
 			get
 			{
+				if (this.queryLanguage == QueryLanguage.Sql)
+				{
+					return this.queryExpression;
+				}
+
 				if (this.queryContextsForTypes == null)
 					GenerateQueryContexts();
 
 				StringBuilder sb = new StringBuilder();
 
+				IQueryGenerator queryGenerator = ConfigContainer.Resolve<IQueryGenerator>();
 				foreach (var queryContextsEntry in this.queryContextsForTypes)
 				{
 					Type t = queryContextsEntry.Type;
-					IQueryGenerator queryGenerator = ConfigContainer.Resolve<IQueryGenerator>();
 					sb.Append( queryGenerator.GenerateQueryString( queryContextsEntry, this.expressionTree, this.hollowResults, this.queryContextsForTypes.Count > 1, this.orderings, this.skip, this.take ) );
 					sb.Append( ";\r\n" );
 				}
@@ -250,7 +255,6 @@ namespace NDO.Query
 			//}			
 		}
 
-
 		private object ExecuteAggregateQuery( QueryContextsEntry queryContextsEntry, string field, AggregateType aggregateType )
 		{
 			Type t = queryContextsEntry.Type;
@@ -271,20 +275,67 @@ namespace NDO.Query
 			return (l[0])["AggrResult"];			
 		}
 
+		private List<T> ExecuteSqlQuery()
+		{
+			Type t = this.resultType;
+			IPersistenceHandler persistenceHandler = mappings.GetPersistenceHandler( t, this.pm.HasOwnerCreatedIds );
+			this.pm.CheckTransaction( persistenceHandler, t );
+			DataTable table = persistenceHandler.PerformQuery( this.queryExpression, this.parameters );
+			return pm.DataTableToIList<T>( table.Rows, this.hollowResults );
+		}
+
+		private bool PrepareParameters()
+		{
+			if (this.expressionTree == null)
+				return false;
+			var expressions = this.expressionTree.GetAll( e => e is ParameterExpression ).Select( e => (ParameterExpression)e ).ToList();
+			if (expressions.Count == 0)
+				return true;
+			if (expressions[0].ParameterValue != null)
+				return false;
+			foreach (ParameterExpression item in expressions)
+			{
+				item.ParameterValue = this.parameters[item.Ordinal];
+			}
+
+			return true;
+		}
+
+		private void WriteBackParameters()
+		{
+			if (this.expressionTree == null)
+				return;
+			var expressions = this.expressionTree.GetAll( e => e is ParameterExpression ).Select(e=>(ParameterExpression)e).ToList();
+			if (expressions.Count == 0)
+				return;
+			var count = (from e in expressions select e.Ordinal).Max();
+			this.parameters = new List<object>( count );
+			for (int i = 0; i < count + 1; i++)
+				this.parameters.Add( null );
+			foreach (ParameterExpression item in expressions)
+			{
+				this.parameters[item.Ordinal] = item.ParameterValue;
+			}
+		}
+
 		private List<T> ExecuteSubQuery(QueryContextsEntry queryContextsEntry)
 		{
 			Type t = queryContextsEntry.Type;
 			IQueryGenerator queryGenerator = ConfigContainer.Resolve<IQueryGenerator>();
+			bool hasBeenPrepared = PrepareParameters();
 			string generatedQuery = queryGenerator.GenerateQueryString( queryContextsEntry, this.expressionTree, this.hollowResults, this.queryContextsForTypes.Count > 1, this.orderings, this.skip, this.take );
+
+			if (hasBeenPrepared)
+			{
+				WriteBackParameters();
+			}
 
 			IPersistenceHandler persistenceHandler = mappings.GetPersistenceHandler(t, this.pm.HasOwnerCreatedIds);
 			this.pm.CheckTransaction(persistenceHandler, t);
-			//TODO: eliminieren von dontTouch
-			bool dontTouch = this.queryLanguage == QueryLanguage.Sql;
+			
 			DataTable table = persistenceHandler.PerformQuery(generatedQuery, this.parameters);
-			return pm.DataTableToIList(t, table.Rows, this.hollowResults).Cast<T>().ToList();
+			return pm.DataTableToIList<T>( table.Rows, this.hollowResults );
 		}
-
 
 		private List<T> QueryOrderedPolymorphicList()
 		{
@@ -315,12 +366,18 @@ namespace NDO.Query
 			IPersistenceHandler persistenceHandler = this.mappings.GetPersistenceHandler(t, this.pm.HasOwnerCreatedIds);
 			this.pm.CheckTransaction(persistenceHandler, t);
 
+			bool hasBeenPrepared = PrepareParameters();
 			IQueryGenerator queryGenerator = ConfigContainer.Resolve<IQueryGenerator>();
 			string generatedQuery = queryGenerator.GenerateQueryString( queryContextsEntry, this.expressionTree, this.hollowResults, this.queryContextsForTypes.Count > 1, this.orderings, this.skip, this.take );
 
+			if (hasBeenPrepared)
+			{
+				WriteBackParameters();
+			}
+
 			DataTable table = persistenceHandler.PerformQuery(generatedQuery, this.parameters);
 			DataRow[] rows = table.Select();
-			List<IPersistenceCapable> objects = pm.DataTableToIList(t, rows, this.hollowResults);
+			List<T> objects = pm.DataTableToIList<T>(rows, this.hollowResults);
 			List<ObjectRowPair<T>> result = new List<ObjectRowPair<T>>(objects.Count);
 			int i = 0;
 			IProvider provider = mappings.GetProvider(t);
@@ -439,12 +496,20 @@ namespace NDO.Query
 			if (this.queryLanguage == QueryLanguage.NDOql)
 			{
 				NDOql.OqlParser parser = new NDOql.OqlParser();
-				this.expressionTree = parser.Parse( this.queryExpression );
+				var parsedTree = parser.Parse( this.queryExpression );
+				if (parsedTree != null)
+				{
+					// The root expression tree might get exchanged.
+					// To make this possible we make it the child of a dummy expression.
+					this.expressionTree = new OqlExpression( 0, 0 );
+					this.expressionTree.Add( parsedTree );
+					((IManageExpression)parsedTree).SetParent( this.expressionTree );
+				}
 				CreateQueryContextsForTypes();
 			}
 			else
 			{
-#warning Here we should look, if we can manage a SqlPassThrough-Execution
+				var selectList = new SqlColumnListGenerator( pm.NDOMapping.FindClass( typeof( T ) ) ).SelectList;
 				//subQueries.Add (new QueryInfo(typeof(T), this.queryExpression));
 			}
 		}

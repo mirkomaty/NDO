@@ -142,6 +142,15 @@ namespace NDO
         }
 
 		/// <summary>
+		/// Overridden cast operator
+		/// </summary>
+		/// <param name="key">A key instance</param>
+		public static implicit operator object[]( Key key )  // explicit byte to digit conversion operator
+		{
+			return key.Values;
+		}
+
+		/// <summary>
 		/// Generate hash code
 		/// </summary>
 		/// <returns>Hash code</returns>

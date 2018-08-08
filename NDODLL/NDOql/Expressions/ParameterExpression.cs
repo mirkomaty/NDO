@@ -6,6 +6,8 @@ namespace NDOql.Expressions
 {
     public class ParameterExpression : OqlExpression
     {
+		public object ParameterValue { get; set; }
+
         public ParameterExpression(string value, int line, int col) : base(line, col)
         {
             base.Value = value;

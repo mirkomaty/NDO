@@ -8,6 +8,13 @@ using Reisekosten;
 using Reisekosten.Personal;
 using PureBusinessClasses;
 using NDO.SqlPersistenceHandling;
+using Moq;
+using Unity;
+using NDO.Logging;
+using NDO.Mapping;
+using System.Collections;
+using System.Data;
+using System.Data.Common;
 
 namespace QueryTests
 {
@@ -39,9 +46,11 @@ namespace QueryTests
 		[TearDown]
 		public void TearDown()
 		{
-			NDOQuery<Mitarbeiter> q = new NDOQuery<Mitarbeiter>( pm );
-			this.pm.Delete( q.Execute() );
-			this.pm.Save();
+			//NDOQuery<Mitarbeiter> q = new NDOQuery<Mitarbeiter>( pm );
+			//this.pm.Delete( q.Execute() );
+			//this.pm.Save();
+			var sqlHandler = pm.GetSqlPassThroughHandler();
+			sqlHandler.Execute( "DELETE FROM Mitarbeiter" );
 		}
 
 		[Test]
@@ -227,6 +236,74 @@ namespace QueryTests
 			Assert.AreEqual( true, thrown );
 		}
 
+		public class MockHandler : IPersistenceHandler
+		{
+			public static MockHandler Instance { get; } = new MockHandler();
+			public IList Parameters { get; set; }
+
+			public bool VerboseMode { get => false; set { } }
+			public IDbConnection Connection { get => null; set { } }
+			public IDbTransaction Transaction { get => null; set { } }
+			public ILogAdapter LogAdapter { get => null; set { } }
+
+			public DbDataAdapter DataAdapter => null;
+
+			public event ConcurrencyErrorHandler ConcurrencyError;
+
+			public IList<Dictionary<string, object>> ExecuteBatch( string[] statements, IList parameters )
+			{
+				return null;
+			}
+
+			public IMappingTableHandler GetMappingTableHandler( Relation r )
+			{
+				return null;
+			}
+
+			public void Initialize( NDOMapping mappings, Type t, DataSet ds )
+			{
+				
+			}
+
+			public void OnRowUpdate( DataRow row )
+			{
+				
+			}
+
+			public DataTable PerformQuery( string expression, IList parameters )
+			{
+				Instance.Parameters = parameters;
+				return new DataTable();
+			}
+
+			public void Update( DataTable dt )
+			{
+				
+			}
+
+			public void UpdateDeletedObjects( DataTable dt )
+			{
+				
+			}
+		}
+
+		[Test]
+		public void CheckIfMultiKeyParametersAreProcessed()
+		{
+			NDOQuery<OrderDetail> q = new NDOQuery<OrderDetail>( pm, "oid = {0}" );
+			ObjectId oid = pm.FindObject( typeof( OrderDetail ), new object[] { 1, 2 } ).NDOObjectId;
+			q.Parameters.Add( oid );
+			var oldContainer = pm.ConfigContainer;
+			var container = pm.ConfigContainer;
+			container.RegisterType<IPersistenceHandler, MockHandler>();
+			q.Execute();
+			Assert.NotNull( MockHandler.Instance.Parameters );
+			Assert.AreEqual( 2, MockHandler.Instance.Parameters.Count );
+			Assert.AreEqual( 1, MockHandler.Instance.Parameters[0] );
+			Assert.AreEqual( 2, MockHandler.Instance.Parameters[1] );
+			container.Dispose();
+		}
+
 		[Test]
 		public void TestSuperclasses()
 		{
@@ -324,6 +401,14 @@ namespace QueryTests
 			q.Parameters.Add( "Mirko" );
 			var list = q.Execute();
 			Assert.AreEqual( 1, list.Count );
+		}
+
+		[Test]
+		public void TestIfSqlCodeWorks()
+		{
+			var expression = "SELECT * FROM Mitarbeiter WHERE Vorname = 'Mirko'";
+			NDOQuery<Mitarbeiter> q = new NDOQuery<Mitarbeiter>( this.pm, expression, false, QueryLanguage.Sql );
+			Assert.AreEqual( expression, q.GeneratedQuery );
 		}
 	}
 }
