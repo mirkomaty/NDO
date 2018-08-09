@@ -174,19 +174,8 @@ namespace NDO.Query
 				if (this.queryContextsForTypes == null)
 					GenerateQueryContexts();
 
-				StringBuilder sb = new StringBuilder();
-
 				IQueryGenerator queryGenerator = ConfigContainer.Resolve<IQueryGenerator>();
-				foreach (var queryContextsEntry in this.queryContextsForTypes)
-				{
-					Type t = queryContextsEntry.Type;
-					sb.Append( queryGenerator.GenerateQueryString( queryContextsEntry, this.expressionTree, this.hollowResults, this.queryContextsForTypes.Count > 1, this.orderings, this.skip, this.take ) );
-					sb.Append( ";\r\n" );
-				}
-
-				sb.Length -= 3;
-
-				return sb.ToString();
+				return queryGenerator.GenerateQueryStringForAllTypes( this.queryContextsForTypes, this.expressionTree, this.hollowResults, this.orderings, this.skip, this.take );
 			}
 		}
 		
@@ -261,7 +250,9 @@ namespace NDO.Query
 			IQueryGenerator queryGenerator = ConfigContainer.Resolve<IQueryGenerator>();
 			string generatedQuery = queryGenerator.GenerateAggregateQueryString(field, queryContextsEntry, this.expressionTree, this.queryContextsForTypes.Count > 1, aggregateType );
 
-			IPersistenceHandler persistenceHandler = mappings.GetPersistenceHandler( t, this.pm.HasOwnerCreatedIds );
+			IPersistenceHandler persistenceHandler = this.pm.PersistenceHandlerManager.GetPersistenceHandler( t, this.pm.HasOwnerCreatedIds );
+			persistenceHandler.VerboseMode = this.pm.VerboseMode;
+			persistenceHandler.LogAdapter = this.pm.LogAdapter;
 			this.pm.CheckTransaction( persistenceHandler, t );
 
 			// Note, that we can't execute all subQueries in one batch, because
@@ -278,7 +269,9 @@ namespace NDO.Query
 		private List<T> ExecuteSqlQuery()
 		{
 			Type t = this.resultType;
-			IPersistenceHandler persistenceHandler = mappings.GetPersistenceHandler( t, this.pm.HasOwnerCreatedIds );
+			IPersistenceHandler persistenceHandler = this.pm.PersistenceHandlerManager.GetPersistenceHandler( t, this.pm.HasOwnerCreatedIds );
+			persistenceHandler.VerboseMode = this.pm.VerboseMode;
+			persistenceHandler.LogAdapter = this.pm.LogAdapter;
 			this.pm.CheckTransaction( persistenceHandler, t );
 			DataTable table = persistenceHandler.PerformQuery( this.queryExpression, this.parameters );
 			return pm.DataTableToIList<T>( table.Rows, this.hollowResults );
@@ -330,7 +323,9 @@ namespace NDO.Query
 				WriteBackParameters();
 			}
 
-			IPersistenceHandler persistenceHandler = mappings.GetPersistenceHandler(t, this.pm.HasOwnerCreatedIds);
+			IPersistenceHandler persistenceHandler = this.pm.PersistenceHandlerManager.GetPersistenceHandler( t, this.pm.HasOwnerCreatedIds );
+			persistenceHandler.VerboseMode = this.pm.VerboseMode;
+			persistenceHandler.LogAdapter = this.pm.LogAdapter;
 			this.pm.CheckTransaction(persistenceHandler, t);
 			
 			DataTable table = persistenceHandler.PerformQuery(generatedQuery, this.parameters);
@@ -363,7 +358,9 @@ namespace NDO.Query
 					col.AutoIncrementStep = -1;
 			}
 
-			IPersistenceHandler persistenceHandler = this.mappings.GetPersistenceHandler(t, this.pm.HasOwnerCreatedIds);
+			IPersistenceHandler persistenceHandler = this.pm.PersistenceHandlerManager.GetPersistenceHandler( t, this.pm.HasOwnerCreatedIds );
+			persistenceHandler.VerboseMode = this.pm.VerboseMode;
+			persistenceHandler.LogAdapter = this.pm.LogAdapter;
 			this.pm.CheckTransaction(persistenceHandler, t);
 
 			bool hasBeenPrepared = PrepareParameters();

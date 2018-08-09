@@ -49,13 +49,10 @@ namespace NDO.SqlPersistenceHandling
             foreach (QueryInfo qi in subQueries)
             {
                 generatedQuery.Append(qi.QueryString);
-                generatedQuery.Append(";\n");
+                generatedQuery.Append(";\r\n");
             }
 
-            generatedQuery.Length--; // the trailing \n
-
-            if (subQueries.Count == 1)
-                generatedQuery.Length--; // the semicolon
+            generatedQuery.Length -= 3; // the trailing ;\r\n
 
             return generatedQuery.ToString();
 		}
@@ -87,12 +84,6 @@ namespace NDO.SqlPersistenceHandling
 
 		private string InnerGenerateQueryString( QueryContextsEntry queryContextsEntry, OqlExpression expressionTree, bool hollow, bool hasSubclassResultsets, List<QueryOrder> orderings, int skip, int take )
 		{
-			if (expressionTree != null)
-			{
-				foreach (var exp in from e in expressionTree.GetAll( ex => true ) select e)
-					exp.AdditionalInformation = null;
-			}
-
 			CreateSubQueries( queryContextsEntry, expressionTree, hollow, hasSubclassResultsets, orderings, skip, take );
 			StringBuilder generatedQuery = new StringBuilder();
 

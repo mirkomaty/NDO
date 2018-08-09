@@ -2067,7 +2067,9 @@ namespace NDO
 			} 
 			else 
 			{
-				IMappingTableHandler handler = mappings.GetPersistenceHandler(pc, this.HasOwnerCreatedIds).GetMappingTableHandler(r);
+				IMappingTableHandler handler = PersistenceHandlerManager.GetPersistenceHandler(pc, this.HasOwnerCreatedIds).GetMappingTableHandler(r);
+				handler.VerboseMode = VerboseMode;
+				handler.LogAdapter = LogAdapter;
 				CheckTransaction(handler, r.MappingTable.Connection);
 				DataTable dt = handler.FindRelatedObjects(pc.NDOObjectId);
 				IList relatedObjects;
@@ -2416,7 +2418,9 @@ namespace NDO
 			foreach(Type t in types) 
 			{
 				//Debug.WriteLine("Update Deleted Objects: "  + t.Name);
-				IPersistenceHandler handler = mappings.GetPersistenceHandler(t, this.HasOwnerCreatedIds);
+				IPersistenceHandler handler = PersistenceHandlerManager.GetPersistenceHandler(t, this.HasOwnerCreatedIds);
+				handler.VerboseMode = VerboseMode;
+				handler.LogAdapter = LogAdapter;
 				CheckTransaction(handler, t);
 				ConcurrencyErrorHandler ceh = new ConcurrencyErrorHandler(this.OnConcurrencyError);
 				handler.ConcurrencyError += ceh;
@@ -2758,7 +2762,9 @@ namespace NDO
 				row.Delete();
 			}
 			IMappingTableHandler handler;
-			mappingHandler[r] = handler = mappings.GetPersistenceHandler(pc, this.HasOwnerCreatedIds).GetMappingTableHandler(r);
+			mappingHandler[r] = handler = PersistenceHandlerManager.GetPersistenceHandler(pc, this.HasOwnerCreatedIds).GetMappingTableHandler(r);
+			handler.VerboseMode = VerboseMode;
+			handler.LogAdapter = LogAdapter;
 			CheckTransaction(handler, e.Relation.MappingTable.Connection);
 		}
 

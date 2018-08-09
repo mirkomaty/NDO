@@ -50,6 +50,7 @@ namespace NDO
 		private ILogAdapter logAdapter;
 		private Type persistenceHandlerType = null;
 		private IUnityContainer configContainer;
+		private IPersistenceHandlerManager persistenceHandlerManager;
 
 		/// <summary>
 		/// Register a listener to this event, if you have to provide user generated ids. 
@@ -337,6 +338,22 @@ namespace NDO
 				}
 			}
 		}
+
+		/// <summary>
+		/// Gets or sets an implementation of the PersistenceHandlerManager.
+		/// </summary>
+		public IPersistenceHandlerManager PersistenceHandlerManager
+		{
+			get
+			{
+				if (this.persistenceHandlerManager == null)
+					this.persistenceHandlerManager = ConfigContainer.Resolve<IPersistenceHandlerManager>();
+
+				return this.persistenceHandlerManager;
+			}
+			set { this.persistenceHandlerManager = value; }
+		}
+
 
 		/// <summary>
 		/// Available only in the NDO Professional Edition or above. 

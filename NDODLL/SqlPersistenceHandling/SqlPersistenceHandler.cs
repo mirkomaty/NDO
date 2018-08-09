@@ -55,7 +55,7 @@ namespace NDO.SqlPersistenceHandling
 	/// Summary description for NDOPersistenceHandler.
 	/// </summary>
 	/// 
-	internal class SqlPersistenceHandler : IPersistenceHandler
+	public class SqlPersistenceHandler : IPersistenceHandler
 	{
 		public event ConcurrencyErrorHandler ConcurrencyError;
 

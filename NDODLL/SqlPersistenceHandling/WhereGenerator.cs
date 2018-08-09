@@ -16,6 +16,7 @@ namespace NDO.SqlPersistenceHandling
 	{
 		Class cls;
 		Dictionary<Relation, Class> queryContext;
+		static readonly string anKey = "where";
 
 		internal WhereGenerator(Class cls, Dictionary<Relation, Class> queryContext)
 		{
@@ -106,7 +107,7 @@ namespace NDO.SqlPersistenceHandling
 						// Reuse the original equality expression as first child of the AND expression
 						((IManageExpression)equalsExpression).SetParent( andExpression );
 						andExpression.Add( equalsExpression );
-						exp.AdditionalInformation = oidColumns[0];
+						exp.SetAnnotation( anKey, oidColumns[0] );
 						int currentOrdinal = parExp.Ordinal;
 						// Now add the additional children of the AND expression
 						for (int i = 1; i < oidColumns.Length; i++)
@@ -116,7 +117,7 @@ namespace NDO.SqlPersistenceHandling
 							((IManageExpression)newParent).SetParent( andExpression );
 							// Now patch the Annotation and a new parameter to the children
 							IdentifierExpression newIdentExp = (IdentifierExpression)newParent.Children.Where( e => e is IdentifierExpression ).First();
-							newIdentExp.AdditionalInformation = oidColumns[i];
+							newIdentExp.SetAnnotation( anKey, oidColumns[i]);
 							ParameterExpression newParExp = (ParameterExpression)newParent.Children.Where( e => e is ParameterExpression ).First();
 							if (oidKeys != null)
 								newParExp.ParameterValue = oidKeys[i];
@@ -130,15 +131,14 @@ namespace NDO.SqlPersistenceHandling
                             index = (int)exp.Children[0].Value;
                         if (index >= oidColumns.Length)
                             throw new IndexOutOfRangeException("oid index exceeds oid column count");
-                        exp.AdditionalInformation = oidColumns[index];                                                
-                    }
+						exp.SetAnnotation( anKey, oidColumns[index]);                    }
 				}
 				else
 				{
 					Field field = parentClass.FindField( fieldName );
 					if (field == null)
 						throw new Exception( "Can't find Field mapping for " + fieldName + " in " + exp.Value );
-					exp.AdditionalInformation = QualifiedColumnName.Get( field.Column );
+					exp.SetAnnotation( anKey, QualifiedColumnName.Get( field.Column ) );
 				}
 			}
 		}
@@ -214,7 +214,7 @@ namespace NDO.SqlPersistenceHandling
 					IdentifierExpression iexp = thisExpression as IdentifierExpression;
 					if (iexp != null)
 					{
-						sb.Append( iexp.AdditionalInformation );
+						sb.Append( iexp.GetAnnotation<string>( anKey ) );
 					}
 					else
 					{

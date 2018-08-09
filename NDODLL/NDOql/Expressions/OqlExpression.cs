@@ -20,13 +20,22 @@ namespace NDOql.Expressions
 		OqlExpression parent = null;
         List<OqlExpression> children = new List<OqlExpression>();
         object value;
-		object additionalInformation;
+		Dictionary<string, object> annotations = new Dictionary<string, object>();
 
-		public object AdditionalInformation
+		public void SetAnnotation(string key, object value)
 		{
-			get { return this.additionalInformation; }
-			set { this.additionalInformation = value; }
+			annotations[key] = value;
 		}
+
+		public T GetAnnotation<T>( string key )
+		{
+			if (!annotations.ContainsKey( key ))
+				return default(T);
+
+			return (T)annotations[key];
+		}
+
+
 		public int Line
         {
             get { return line; }
@@ -325,6 +334,7 @@ namespace NDOql.Expressions
 				clone.op = this.op;
 				clone.unaryOp = this.unaryOp;
 				clone.value = this.value;
+				clone.annotations = annotations;
 				foreach(var child in children)
 				{
 					OqlExpression childClone = child.DeepClone;

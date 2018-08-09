@@ -236,73 +236,53 @@ namespace QueryTests
 			Assert.AreEqual( true, thrown );
 		}
 
-		public class MockHandler : IPersistenceHandler
-		{
-			public static MockHandler Instance { get; } = new MockHandler();
-			public IList Parameters { get; set; }
-
-			public bool VerboseMode { get => false; set { } }
-			public IDbConnection Connection { get => null; set { } }
-			public IDbTransaction Transaction { get => null; set { } }
-			public ILogAdapter LogAdapter { get => null; set { } }
-
-			public DbDataAdapter DataAdapter => null;
-
-			public event ConcurrencyErrorHandler ConcurrencyError;
-
-			public IList<Dictionary<string, object>> ExecuteBatch( string[] statements, IList parameters )
-			{
-				return null;
-			}
-
-			public IMappingTableHandler GetMappingTableHandler( Relation r )
-			{
-				return null;
-			}
-
-			public void Initialize( NDOMapping mappings, Type t, DataSet ds )
-			{
-				
-			}
-
-			public void OnRowUpdate( DataRow row )
-			{
-				
-			}
-
-			public DataTable PerformQuery( string expression, IList parameters )
-			{
-				Instance.Parameters = parameters;
-				return new DataTable();
-			}
-
-			public void Update( DataTable dt )
-			{
-				
-			}
-
-			public void UpdateDeletedObjects( DataTable dt )
-			{
-				
-			}
-		}
-
 		[Test]
-		public void CheckIfMultiKeyParametersAreProcessed()
+		public void CheckIfMultiKeyObjectIdParametersAreProcessed()
 		{
+			IList generatedParameters = null;
+			Mock<IPersistenceHandler> handlerMock = new Mock<IPersistenceHandler>();
+			handlerMock.Setup( h => h.PerformQuery( It.IsAny<string>(), It.IsAny<IList>() ) ).Returns( new DataTable() ).Callback<string, IList>( ( s, l ) => generatedParameters = l );
+			IPersistenceHandler handler = handlerMock.Object;
+
+			Mock<IPersistenceHandlerManager> managerMock = new Mock<IPersistenceHandlerManager>();
+			managerMock.Setup( c => c.GetPersistenceHandler( It.IsAny<Type>(), It.IsAny<bool>() ) ).Returns( handler );
+
+			var phm = pm.PersistenceHandlerManager;
+			pm.PersistenceHandlerManager = managerMock.Object;
+
 			NDOQuery<OrderDetail> q = new NDOQuery<OrderDetail>( pm, "oid = {0}" );
 			ObjectId oid = pm.FindObject( typeof( OrderDetail ), new object[] { 1, 2 } ).NDOObjectId;
 			q.Parameters.Add( oid );
-			var oldContainer = pm.ConfigContainer;
-			var container = pm.ConfigContainer;
-			container.RegisterType<IPersistenceHandler, MockHandler>();
+
 			q.Execute();
-			Assert.NotNull( MockHandler.Instance.Parameters );
-			Assert.AreEqual( 2, MockHandler.Instance.Parameters.Count );
-			Assert.AreEqual( 1, MockHandler.Instance.Parameters[0] );
-			Assert.AreEqual( 2, MockHandler.Instance.Parameters[1] );
-			container.Dispose();
+
+			Assert.NotNull( generatedParameters );
+			Assert.AreEqual( 2, generatedParameters.Count );
+			Assert.AreEqual( 1, generatedParameters[0] );
+			Assert.AreEqual( 2, generatedParameters[1] );
+
+			pm.PersistenceHandlerManager = phm;
 		}
+
+		[Test]
+		public void CheckIfMultiKeyArrayParametersAreProcessed()
+		{
+			NDOQuery<OrderDetail> q = new NDOQuery<OrderDetail>( pm, "oid = {0}" );
+			q.Parameters.Add( new object[] { 1, 2 } );
+
+			IList generatedParameters = null;
+			Mock<IPersistenceHandler> handlerMock = new Mock<IPersistenceHandler>();
+			handlerMock.Setup( h => h.PerformQuery( It.IsAny<string>(), It.IsAny<IList>() ) ).Returns( new DataTable() ).Callback<string, IList>( ( s, l ) => generatedParameters = l );
+			var container = pm.ConfigContainer;
+			container.RegisterInstance<IPersistenceHandler>( handlerMock.Object );
+			q.Execute();
+			Assert.NotNull( generatedParameters );
+			Assert.AreEqual( 2, generatedParameters.Count );
+			Assert.AreEqual( 1, generatedParameters[0] );
+			Assert.AreEqual( 2, generatedParameters[1] );
+			container.RegisterType<IPersistenceHandler, SqlPersistenceHandler>();
+		}
+
 
 		[Test]
 		public void TestSuperclasses()

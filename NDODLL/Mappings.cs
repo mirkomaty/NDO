@@ -229,42 +229,6 @@ namespace NDO
 			return fi.GetValue( pc );
 		}
 
-
-		/// <summary>
-		/// Get a persistence handler for the given object.
-		/// </summary>
-		/// <param name="pc"></param>
-		/// <param name="useSelfGeneratedIds"></param>
-		/// <returns></returns>
-		public IPersistenceHandler GetPersistenceHandler( IPersistenceCapable pc, bool useSelfGeneratedIds )
-		{
-			return GetPersistenceHandler( pc.GetType(), useSelfGeneratedIds );
-		}
-
-		public IPersistenceHandler GetPersistenceHandler( Type t, bool useSelfGeneratedIds )
-		{
-			if (t.IsGenericType)
-				t = t.GetGenericTypeDefinition();
-
-			IPersistenceHandler handler;
-			if (this.persistenceHandler.ContainsKey( t ))
-				return this.persistenceHandler[t];
-
-			// 1. Standard-Handler des pm versuchen
-
-			handler = this.configContainer.Resolve<IPersistenceHandler>();
-
-			// 3. NDOPersistenceHandler versuchen
-			if (handler == null)
-				handler = new SqlPersistenceHandler(this.configContainer);
-
-			handler.Initialize( this, t, ds );
-			handler.VerboseMode = this.verboseMode;
-			handler.LogAdapter = this.logAdapter;
-			this.persistenceHandler.Add( t, handler );
-			return handler;
-		}
-
 		internal ICollection Get1to1Relations( Type t )
 		{
 			// this will be optimized later:

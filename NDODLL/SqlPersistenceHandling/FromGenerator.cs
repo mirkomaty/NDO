@@ -16,6 +16,7 @@ namespace NDO.SqlPersistenceHandling
 		Class cls;
 		Dictionary<Relation, Class> relationContext;
 		NDOMapping mappings;
+		static readonly string anKey = "from";
 
 		internal FromGenerator( Class cls, Dictionary<Relation, Class> relationContext )
 		{
@@ -30,19 +31,19 @@ namespace NDO.SqlPersistenceHandling
 			if (expressionTree != null)
 			{
 				AnnotateExpressionTree( expressionTree );
-				List<IdentifierExpression> identifiers = expressionTree.GetAll( e => e is IdentifierExpression && !String.Empty.Equals( e.AdditionalInformation ) ).Select( e => (IdentifierExpression)e ).ToList();
+				List<IdentifierExpression> identifiers = expressionTree.GetAll( e => e is IdentifierExpression && !String.Empty.Equals( e.GetAnnotation<string>(anKey) ) ).Select( e => (IdentifierExpression)e ).ToList();
 				identifiers.Sort( ( i1, i2 ) => ((string)i1.Value).CompareTo( (string)i2.Value ) );
 				bool isFirst = true;
 				foreach (IdentifierExpression exp in identifiers)
 				{
-					if (!String.IsNullOrEmpty( (string)exp.AdditionalInformation ))
+					if (!String.IsNullOrEmpty( exp.GetAnnotation<string>(anKey) ))
 					{
 						if (isFirst)
 						{
 							sb.Append( ' ' );
 							isFirst = false;
 						}
-						sb.Append( exp.AdditionalInformation );
+						sb.Append( exp.GetAnnotation<string>( anKey ) );
 						sb.Append( ' ' );
 					}
 				}
@@ -102,7 +103,7 @@ namespace NDO.SqlPersistenceHandling
 					isFirst = false;
 				}
 				string join = sb.ToString();
-				exp.AdditionalInformation = join;
+				exp.SetAnnotation( anKey, join );
 			}
 		}
 	}
