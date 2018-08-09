@@ -169,8 +169,8 @@
     <Compile Include="Enterprise\SerializationFlags.cs" />
     <Compile Include="Enterprise\SerializationIterator.cs" />
     <Compile Include="Enterprise\Serializer.cs" />
-    <Compile Include="IPersistenceHandlerCache.cs" />
-    <Compile Include="IPersistenceHandlerManager.cs" />
+    <Compile Include="PersistenceHandlerManagement\IPersistenceHandlerCache.cs" />
+    <Compile Include="PersistenceHandlerManagement\IPersistenceHandlerManager.cs" />
     <Compile Include="IQueryGenerator.cs" />
     <Compile Include="ISqlPassThroughHandler.cs" />
     <Compile Include="Linq\Index.cs" />
@@ -298,8 +298,8 @@
     <Compile Include="NDOOidTypeAttribute.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="NDOPersistenceHandlerCache.cs" />
-    <Compile Include="NDOPersistenceHandlerManager.cs" />
+    <Compile Include="PersistenceHandlerManagement\NDOPersistenceHandlerCache.cs" />
+    <Compile Include="PersistenceHandlerManagement\NDOPersistenceHandlerManager.cs" />
     <Compile Include="NDOql\Expressions\IndexExpression.cs" />
     <Compile Include="SqlPersistenceHandling\SqlPersistenceHandler.cs">
       <SubType>Code</SubType>
