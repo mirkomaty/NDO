@@ -40,7 +40,7 @@ namespace NDO
 		{
 			FieldInfo result;
 			Type t2 = t;
-			while (t.GetCustomAttributes(typeof(NDOPersistentAttribute), false).Length > 0)
+			while (t2.GetCustomAttributes(typeof(NDOPersistentAttribute), false).Length > 0)
 			{
 				if ((result = t2.GetField(name, bindingFlags)) != null)
 					return result;
