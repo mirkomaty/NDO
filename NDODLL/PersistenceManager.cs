@@ -3774,13 +3774,11 @@ namespace NDO
 		/// <summary>
 		/// Convert a data table to objects. Note that the table might only hold objects of the specified type.
 		/// </summary>
-		internal List<T> DataTableToIList<T>(ICollection rows, bool hollow) 
+		internal IList DataTableToIList(Type t, ICollection rows, bool hollow) 
 		{
-			List<T> queryResult = new List<T>(rows.Count);
+			IList queryResult = GenericListReflector.CreateList(t, rows.Count);
             if (rows.Count == 0)
                 return queryResult;
-
-			Type t = typeof( T );
 
 			IList callbackObjects = new ArrayList();
 			Class cl = GetClass(t);
@@ -3840,7 +3838,7 @@ namespace NDO
 				} 
 
 				cache.UpdateCache(pc);
-				queryResult.Add((T)pc);
+				queryResult.Add(pc);
 			}
 			// Make shure this is the last statement before returning
 			// to the caller, so the user can recursively use persistent

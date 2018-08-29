@@ -25,12 +25,12 @@ namespace NDO.SqlPersistenceHandling
 			this.relationContext = relationContext;
 		}
 
-		internal string GenerateFromExpression(OqlExpression expressionTree)
+		internal string GenerateFromExpression(OqlExpression expressionTree, List<Relation> prefetchRelations = null)
 		{
 			StringBuilder sb = new StringBuilder();
+			AnnotateExpressionTree( expressionTree, prefetchRelations );
 			if (expressionTree != null)
 			{
-				AnnotateExpressionTree( expressionTree );
 				List<IdentifierExpression> identifiers = expressionTree.GetAll( e => e is IdentifierExpression && !String.Empty.Equals( e.GetAnnotation<string>(anKey) ) ).Select( e => (IdentifierExpression)e ).ToList();
 				identifiers.Sort( ( i1, i2 ) => ((string)i1.Value).CompareTo( (string)i2.Value ) );
 				bool isFirst = true;
@@ -56,9 +56,23 @@ namespace NDO.SqlPersistenceHandling
 			return "FROM " + cls.GetQualifiedTableName() + sb.ToString();
 		}
 
-		private void AnnotateExpressionTree( OqlExpression expressionTree )
+		private void AnnotateExpressionTree( OqlExpression expressionTree, List<Relation> prefetchRelations )
 		{
-			Dictionary<Relation, object> allJoins = new Dictionary<Relation, object>();
+			HashSet<Relation> allJoins = new HashSet<Relation>();
+			if (prefetchRelations != null)
+			{
+				// if a prefetch relation is bidirectional,
+				// this will prevent adding the relation into the joins twice
+				foreach(var rel in prefetchRelations)
+				allJoins.Add( rel );
+				// We know, that this must be a prefetch, so the direction
+				// of the relation is reversed.
+#warning Hier muss noch die Annotation rein
+			}
+
+			if (expressionTree == null)
+				return;
+
 			foreach (IdentifierExpression exp in expressionTree.GetAll( e => e is IdentifierExpression ))
 			{
 				string fullName = (string)exp.Value;
@@ -82,10 +96,10 @@ namespace NDO.SqlPersistenceHandling
 					if (relation == null)
 						break;
 
-					if (allJoins.ContainsKey( relation ))
+					if (allJoins.Contains( relation ))
 						continue;
 
-					allJoins.Add( relation, null );
+					allJoins.Add( relation );
 
 					Class childClass = this.relationContext.ContainsKey( relation ) 
 						? this.relationContext[relation] 

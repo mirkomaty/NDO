@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -14,7 +15,7 @@ using Unity;
 using NDO.SqlPersistenceHandling;
 
 namespace NDO.Query
-{	
+{
 	internal class FieldMarker
 	{
 		public static string Instance
@@ -33,12 +34,12 @@ namespace NDO.Query
 		private string queryExpression;
 		private bool hollowResults;
 		private QueryLanguage queryLanguage;
-		private Type resultType = typeof(T);
+		private Type resultType = typeof( T );
 		private bool allowSubclasses = true;
 		private OqlExpression expressionTree;
 		private List<QueryOrder> orderings = new List<QueryOrder>();
-        private List<QueryContextsEntry> queryContextsForTypes = null;
-        private Mappings mappings;
+		private List<QueryContextsEntry> queryContextsForTypes = null;
+		private Mappings mappings;
 		private List<object> parameters = new List<object>();
 		private List<string> prefetches = new List<string>();
 		private int skip;
@@ -112,7 +113,7 @@ namespace NDO.Query
 		/// Polymorphy: StDev and Var only return the aggregate for the given class. All others return the aggregate for all subclasses.
 		/// Transactions: Please note, that the aggregate functions always work against the database.
 		/// Unsaved changes in your objects are not recognized.</remarks>
-		public object ExecuteAggregate<K>( LE.Expression<Func<T,K>> keySelector, AggregateType aggregateType )
+		public object ExecuteAggregate<K>( LE.Expression<Func<T, K>> keySelector, AggregateType aggregateType )
 		{
 			ExpressionTreeTransformer transformer =
 				new ExpressionTreeTransformer( keySelector );
@@ -130,7 +131,7 @@ namespace NDO.Query
 		/// Polymorphy: StDev and Var only return the aggregate for the given class. All others return the aggregate for all subclasses.
 		/// Transactions: Please note, that the aggregate functions always work against the database.
 		/// Unsaved changes in your objects are not recognized.</remarks>
-		public object ExecuteAggregate(string field, AggregateType aggregateType)
+		public object ExecuteAggregate( string field, AggregateType aggregateType )
 		{
 			if (aggregateType == AggregateType.StDev || aggregateType == AggregateType.Var)
 				this.allowSubclasses = false;
@@ -139,15 +140,15 @@ namespace NDO.Query
 
 			object[] partResults = new object[this.queryContextsForTypes.Count];
 
-			AggregateFunction func = new AggregateFunction(aggregateType);
+			AggregateFunction func = new AggregateFunction( aggregateType );
 
 			int i = 0;
 			foreach (var queryContextsEntry in this.queryContextsForTypes)
 			{
-				partResults[i++] = ExecuteAggregateQuery( queryContextsEntry, field, aggregateType );				
+				partResults[i++] = ExecuteAggregateQuery( queryContextsEntry, field, aggregateType );
 			}
-			this.pm.CheckEndTransaction(false);
-			return func.ComputeResult(partResults);
+			this.pm.CheckEndTransaction( false );
+			return func.ComputeResult( partResults );
 		}
 
 		/// <summary>
@@ -178,7 +179,7 @@ namespace NDO.Query
 				return queryGenerator.GenerateQueryStringForAllTypes( this.queryContextsForTypes, this.expressionTree, this.hollowResults, this.orderings, this.skip, this.take );
 			}
 		}
-		
+
 		private List<T> GetResultList()
 		{
 			List<T> result = new List<T>();
@@ -186,7 +187,7 @@ namespace NDO.Query
 			if (this.queryContextsForTypes == null)
 				GenerateQueryContexts();
 
-            // this.pm.CheckTransaction happens in ExecuteOrderedSubQuery or in ExecuteSubQuery
+			// this.pm.CheckTransaction happens in ExecuteOrderedSubQuery or in ExecuteSubQuery
 			if (this.queryContextsForTypes.Count > 1 && this.orderings.Count > 0)
 			{
 				result = QueryOrderedPolymorphicList();
@@ -201,54 +202,127 @@ namespace NDO.Query
 					}
 				}
 			}
-			GetPrefetches(result);
-			this.pm.CheckEndTransaction(false);
-			if (! this.pm.GetClass(resultType).Provider.SupportsFetchLimit)
+			GetPrefetches( result );
+			this.pm.CheckEndTransaction( false );
+			if (!this.pm.GetClass( resultType ).Provider.SupportsFetchLimit)
 			{
 				List<T> fetchResult = new List<T>();
-				for (int i = this.skip; i < Math.Min( result.Count, i + this.take ); i++ )
+				for (int i = this.skip; i < Math.Min( result.Count, i + this.take ); i++)
 					fetchResult.Add( result[i] );
 			}
 			return result;
 		}
 
-		void GetPrefetches(List<T> parents)
+		Type GetPrefetchResultType( Type t, string relation )
 		{
-#warning Das müssen wir implementieren
-
-			//if (this.prefetches.Count == 0)
-			//	return;
-
-			//foreach(object o in this.prefetches)
-			//{
-			//	string pf = o.ToString() + ".oid";
-			//	ArrayList pfNames = new ArrayList(this.names);
-			//	pfNames.Add(pf);
-			//	WherePartGenerator gen = new WherePartGenerator(this.mappings.GetProvider(resultType), 
-			//		pm.GetClass(resultType),
-			//		pfNames, this.tokens,
-			//		this.mappings, new Hashtable(), this.pm.TypeManager);
-			//	string condition = gen.ToString();
-			//	Type t = GetPrefetchResultType(this.resultType, o.ToString());
-			//	IProvider provider = this.mappings.GetProvider(t);
-			//	Class cl = pm.GetClass(t);
-			//	string tableNames = ExtractTableNames(condition, QualifiedTableName.Get(cl.TableName, provider), provider.GetQuotedName("yyy"));
-			//	SelectPartGenerator sgen = new SelectPartGenerator(provider, cl, new ArrayList(), this.mappings, new Hashtable());				
-			//	string select = sgen.ToString();
-			//	if (select.IndexOf("SELECT DISTINCT") < 0)
-			//		select = select.Replace("SELECT", "SELECT DISTINCT");
-			//	select += "," + tableNames;
-			//	this.hollowMode = false;
-			//	IList result = ExecuteSubQuery(t, select + " " + condition);
-			//	MatchRelations(parents, result, o.ToString());
-			//}			
+			string[] parts = relation.Split( '.' );
+			Class cl = pm.GetClass( t );
+			Relation rel = cl.FindRelation( parts[0] );
+			if (parts.Length == 1)
+				return rel.ReferencedType;
+			else
+				return GetPrefetchResultType( rel.ReferencedType,
+					relation.Substring( relation.IndexOf( '.' ) + 1 ) );
 		}
+
+		void GetPrefetches( List<T> parents )
+		{
+			var queryGenerator = this.ConfigContainer.Resolve<IQueryGenerator>();
+			if (parents.Count == 0)
+				return;
+
+			var mustUseInClause = this.expressionTree.GetAll( n => n.Operator == "IN" ).Any();
+
+			foreach (string prefetch in this.Prefetches)
+			{
+				Type t = GetPrefetchResultType( this.resultType, prefetch );
+				IPersistenceHandler persistenceHandler = this.pm.PersistenceHandlerManager.GetPersistenceHandler( t, this.pm.HasOwnerCreatedIds );
+				persistenceHandler.VerboseMode = this.pm.VerboseMode;
+				persistenceHandler.LogAdapter = this.pm.LogAdapter;
+
+				foreach (var queryContextsEntry in this.queryContextsForTypes)
+				{
+					Type parentType = queryContextsEntry.Type;
+					var parentCls = mappings.FindClass( parentType );
+					var isMultiple = parentCls.Oid.OidColumns.Count > 1;
+					var selectedParents = parents.Where( p => p.GetType() == parentType ).Select(p=>(IPersistenceCapable)p).ToList();
+					if (selectedParents.Count == 0)
+						continue;
+
+					string generatedQuery;
+					if (!mustUseInClause && (parents.Count > 100 || isMultiple) && this.skip == 0 && this.take == 0)
+					{
+						generatedQuery = queryGenerator.GenerateQueryString( queryContextsEntry, this.expressionTree, false, true, new List<QueryOrder>(), 0, 0, prefetch );
+					}
+					else
+					{
+						if (isMultiple)
+							throw new QueryException( 10050, "Can't process a prefetch with skip, take & multiple oid columns" );
+						generatedQuery = queryGenerator.GeneratePrefetchQuery( parentType, selectedParents, prefetch );
+					}
+#warning Überprüfen, ob das in der normalen Transaktion mitläuft
+					//					this.pm.CheckTransaction( persistenceHandler, t );
+
+					DataTable table = persistenceHandler.PerformQuery( generatedQuery, this.parameters );
+					var result = pm.DataTableToIList( t, table.Rows, false );
+					MatchRelations( parents, result, prefetch );
+				}
+			}
+		}
+
+		void MatchRelations( List<T> parents, IList childs, string relationName )
+		{
+			if (parents.Count == 0)
+				return;
+			if (childs.Count == 0)
+				return;
+			Class cl = pm.GetClass( resultType );
+			Relation r = cl.FindRelation( relationName );
+			RelationCollector rc = new RelationCollector( cl );
+			rc.CollectRelations();
+			string[] parentColumns = rc.ForeignKeyColumns.ToArray();
+			cl = pm.GetClass( r.ReferencedType );
+			rc = new RelationCollector( cl );
+			rc.CollectRelations();
+			string[] childColumns = rc.ForeignKeyColumns.ToArray();
+			// Used to determine, if the relation has been collected
+			string testColumnName = r.ForeignKeyColumns.First().Name;
+			if (r.Multiplicity == RelationMultiplicity.Element && parentColumns.Contains( testColumnName ))
+			{
+				foreach (IPersistenceCapable parent in parents)
+				{
+					foreach (IPersistenceCapable child in childs)
+					{
+						if (parent.NDOLoadState.LostRowsEqualsOid( child.NDOObjectId.Id, r ))
+							mappings.SetRelationField( parent, r.FieldName, child );
+						//KeyValuePair kvp = ((KeyValueList)parent.NDOLoadState.LostRowInfo)[r.ForeignKeyColumnName];
+						//if (kvp.Value.Equals(child.NDOObjectId.Id.Value))
+						//    mappings.SetRelationField(parent, r.FieldName, child);
+					}
+				}
+			}
+			else if (r.Multiplicity == RelationMultiplicity.List && childColumns.Contains( testColumnName ))
+			{
+				foreach (IPersistenceCapable parent in parents)
+				{
+					IList container = mappings.GetRelationContainer( parent, r );
+					foreach (IPersistenceCapable child in childs)
+					{
+						if (child.NDOLoadState.LostRowsEqualsOid( parent.NDOObjectId.Id, r ))
+							container.Add( child );
+					}
+
+					parent.NDOSetLoadState( r.Ordinal, true );
+				}
+			}
+		}
+
 
 		private object ExecuteAggregateQuery( QueryContextsEntry queryContextsEntry, string field, AggregateType aggregateType )
 		{
 			Type t = queryContextsEntry.Type;
 			IQueryGenerator queryGenerator = ConfigContainer.Resolve<IQueryGenerator>();
-			string generatedQuery = queryGenerator.GenerateAggregateQueryString(field, queryContextsEntry, this.expressionTree, this.queryContextsForTypes.Count > 1, aggregateType );
+			string generatedQuery = queryGenerator.GenerateAggregateQueryString( field, queryContextsEntry, this.expressionTree, this.queryContextsForTypes.Count > 1, aggregateType );
 
 			IPersistenceHandler persistenceHandler = this.pm.PersistenceHandlerManager.GetPersistenceHandler( t, this.pm.HasOwnerCreatedIds );
 			persistenceHandler.VerboseMode = this.pm.VerboseMode;
@@ -263,7 +337,7 @@ namespace NDO.Query
 			if (l.Count == 0)
 				return null;
 
-			return (l[0])["AggrResult"];			
+			return (l[0])["AggrResult"];
 		}
 
 		private List<T> ExecuteSqlQuery()
@@ -274,7 +348,7 @@ namespace NDO.Query
 			persistenceHandler.LogAdapter = this.pm.LogAdapter;
 			this.pm.CheckTransaction( persistenceHandler, t );
 			DataTable table = persistenceHandler.PerformQuery( this.queryExpression, this.parameters );
-			return pm.DataTableToIList<T>( table.Rows, this.hollowResults );
+			return (List<T>)pm.DataTableToIList( t, table.Rows, this.hollowResults );
 		}
 
 		private bool PrepareParameters()
@@ -298,7 +372,7 @@ namespace NDO.Query
 		{
 			if (this.expressionTree == null)
 				return;
-			var expressions = this.expressionTree.GetAll( e => e is ParameterExpression ).Select(e=>(ParameterExpression)e).ToList();
+			var expressions = this.expressionTree.GetAll( e => e is ParameterExpression ).Select( e => (ParameterExpression)e ).ToList();
 			if (expressions.Count == 0)
 				return;
 			var count = (from e in expressions select e.Ordinal).Max();
@@ -311,9 +385,8 @@ namespace NDO.Query
 			}
 		}
 
-		private List<T> ExecuteSubQuery(QueryContextsEntry queryContextsEntry)
+		private IList ExecuteSubQuery( Type t, QueryContextsEntry queryContextsEntry )
 		{
-			Type t = queryContextsEntry.Type;
 			IQueryGenerator queryGenerator = ConfigContainer.Resolve<IQueryGenerator>();
 			bool hasBeenPrepared = PrepareParameters();
 			string generatedQuery = queryGenerator.GenerateQueryString( queryContextsEntry, this.expressionTree, this.hollowResults, this.queryContextsForTypes.Count > 1, this.orderings, this.skip, this.take );
@@ -326,32 +399,37 @@ namespace NDO.Query
 			IPersistenceHandler persistenceHandler = this.pm.PersistenceHandlerManager.GetPersistenceHandler( t, this.pm.HasOwnerCreatedIds );
 			persistenceHandler.VerboseMode = this.pm.VerboseMode;
 			persistenceHandler.LogAdapter = this.pm.LogAdapter;
-			this.pm.CheckTransaction(persistenceHandler, t);
-			
-			DataTable table = persistenceHandler.PerformQuery(generatedQuery, this.parameters);
-			return pm.DataTableToIList<T>( table.Rows, this.hollowResults );
+			this.pm.CheckTransaction( persistenceHandler, t );
+
+			DataTable table = persistenceHandler.PerformQuery( generatedQuery, this.parameters );
+			return pm.DataTableToIList( t, table.Rows, this.hollowResults );
+		}
+
+		private List<T> ExecuteSubQuery( QueryContextsEntry queryContextsEntry )
+		{
+			return (List<T>)ExecuteSubQuery( typeof( T ), queryContextsEntry );
 		}
 
 		private List<T> QueryOrderedPolymorphicList()
 		{
 			List<ObjectRowPair<T>> rowPairList = new List<ObjectRowPair<T>>();
 			foreach (var queryContextsEntry in this.queryContextsForTypes)
-				rowPairList.AddRange(ExecuteOrderedSubQuery(queryContextsEntry));
+				rowPairList.AddRange( ExecuteOrderedSubQuery( queryContextsEntry ) );
 			rowPairList.Sort();
-			List<T> result = new List<T>(rowPairList.Count);
-			foreach(ObjectRowPair<T> orp in rowPairList)
-				result.Add((T)orp.Obj);
+			List<T> result = new List<T>( rowPairList.Count );
+			foreach (ObjectRowPair<T> orp in rowPairList)
+				result.Add( (T)orp.Obj );
 			return result;
 		}
 
-		private List<ObjectRowPair<T>> ExecuteOrderedSubQuery(QueryContextsEntry queryContextsEntry)
+		private List<ObjectRowPair<T>> ExecuteOrderedSubQuery( QueryContextsEntry queryContextsEntry )
 		{
 			Type t = queryContextsEntry.Type;
-			Class resultSubClass = this.pm.GetClass(t);
-			DataTable comparismTable = new DataTable("ComparismTable");
-			foreach(QueryOrder order in this.orderings)
+			Class resultSubClass = this.pm.GetClass( t );
+			DataTable comparismTable = new DataTable( "ComparismTable" );
+			foreach (QueryOrder order in this.orderings)
 			{
-				DataColumn col = comparismTable.Columns.Add(order.FieldName);
+				DataColumn col = comparismTable.Columns.Add( order.FieldName );
 				if (order.IsAscending)
 					col.AutoIncrementStep = 1;
 				else
@@ -361,7 +439,7 @@ namespace NDO.Query
 			IPersistenceHandler persistenceHandler = this.pm.PersistenceHandlerManager.GetPersistenceHandler( t, this.pm.HasOwnerCreatedIds );
 			persistenceHandler.VerboseMode = this.pm.VerboseMode;
 			persistenceHandler.LogAdapter = this.pm.LogAdapter;
-			this.pm.CheckTransaction(persistenceHandler, t);
+			this.pm.CheckTransaction( persistenceHandler, t );
 
 			bool hasBeenPrepared = PrepareParameters();
 			IQueryGenerator queryGenerator = ConfigContainer.Resolve<IQueryGenerator>();
@@ -372,33 +450,33 @@ namespace NDO.Query
 				WriteBackParameters();
 			}
 
-			DataTable table = persistenceHandler.PerformQuery(generatedQuery, this.parameters);
+			DataTable table = persistenceHandler.PerformQuery( generatedQuery, this.parameters );
 			DataRow[] rows = table.Select();
-			List<T> objects = pm.DataTableToIList<T>(rows, this.hollowResults);
-			List<ObjectRowPair<T>> result = new List<ObjectRowPair<T>>(objects.Count);
+			List<T> objects = (List<T>)pm.DataTableToIList( typeof( T ), rows, this.hollowResults );
+			List<ObjectRowPair<T>> result = new List<ObjectRowPair<T>>( objects.Count );
 			int i = 0;
-			IProvider provider = mappings.GetProvider(t);
-			foreach(T obj in objects)
+			IProvider provider = mappings.GetProvider( t );
+			foreach (T obj in objects)
 			{
 				DataRow row = rows[i++];
 				DataRow newRow = comparismTable.NewRow();
-				foreach(QueryOrder order in this.orderings)
+				foreach (QueryOrder order in this.orderings)
 				{
 					string newColumnName = order.FieldName;
-					if (!comparismTable.Columns.Contains(newColumnName))
-						throw new InternalException(558, "Query.cs - Column not found.");
-					string oldColumnName = resultSubClass.FindField(order.FieldName).Column.Name;
-					if (!table.Columns.Contains(oldColumnName))
-						throw new InternalException(561, "Query.cs - Column not found.");
+					if (!comparismTable.Columns.Contains( newColumnName ))
+						throw new InternalException( 558, "Query.cs - Column not found." );
+					string oldColumnName = resultSubClass.FindField( order.FieldName ).Column.Name;
+					if (!table.Columns.Contains( oldColumnName ))
+						throw new InternalException( 561, "Query.cs - Column not found." );
 					newRow[newColumnName] = row[oldColumnName];
 				}
-				result.Add(new ObjectRowPair<T>(obj, newRow));
+				result.Add( new ObjectRowPair<T>( obj, newRow ) );
 			}
 
 			return result;
 		}
 
-		
+
 		/// <summary>
 		/// Executes the query and returns a single object.
 		/// </summary>
@@ -430,7 +508,7 @@ namespace NDO.Query
 				if (throwIfResultCountIsWrong)
 					throw new QueryException( 10002, count.ToString() + " result objects in ExecuteSingle call" );
 				else
-					return default(T);
+					return default( T );
 			}
 		}
 
@@ -444,31 +522,31 @@ namespace NDO.Query
 		/// </remarks>
 		private void CreateQueryContextsForTypes()
 		{
-			Dictionary<string, Type> usedTables = new Dictionary<string,Type>();
+			Dictionary<string, Type> usedTables = new Dictionary<string, Type>();
 			if (!resultType.IsAbstract)
 			{
-				Class cl = pm.GetClass(this.resultType);
-				usedTables.Add(cl.TableName, cl.SystemType);				
+				Class cl = pm.GetClass( this.resultType );
+				usedTables.Add( cl.TableName, cl.SystemType );
 			}
 
 			if (this.allowSubclasses)
 			{
 				// Check if subclasses are mapped to the same table.
 				// Always fetch for the base class in the table
-				foreach(Class cl in pm.GetClass(resultType).Subclasses)
+				foreach (Class cl in pm.GetClass( resultType ).Subclasses)
 				{
 					string tn = cl.TableName;
-					if (usedTables.ContainsKey(tn))
+					if (usedTables.ContainsKey( tn ))
 					{
-						Type t = (Type) usedTables[tn];
-						if (t.IsSubclassOf(cl.SystemType))
+						Type t = (Type)usedTables[tn];
+						if (t.IsSubclassOf( cl.SystemType ))
 						{
-							usedTables.Remove(tn);
-							usedTables.Add(tn, cl.SystemType);
+							usedTables.Remove( tn );
+							usedTables.Add( tn, cl.SystemType );
 						}
 						break;
 					}
-					usedTables.Add(tn, cl.SystemType);
+					usedTables.Add( tn, cl.SystemType );
 				}
 			}
 
@@ -477,7 +555,7 @@ namespace NDO.Query
 			// usedTables now contains all assignable classes of our result type
 			foreach (var de in usedTables)
 			{
-				Type t2 = (Type) de.Value;
+				Type t2 = (Type)de.Value;
 				// Now we have to iterate through all mutations of
 				// polymorphic relations, used in the filter expression
 				var queryContexts = contextGenerator.GetContexts( this.pm.GetClass( t2 ), this.expressionTree );
@@ -585,15 +663,15 @@ namespace NDO.Query
 			return this.Execute();
 		}
 
-        IPersistenceCapable IQuery.ExecuteSingle()
-        {
-            return (IPersistenceCapable) this.ExecuteSingle(false);
-        }
+		IPersistenceCapable IQuery.ExecuteSingle()
+		{
+			return (IPersistenceCapable)this.ExecuteSingle( false );
+		}
 
-        IPersistenceCapable IQuery.ExecuteSingle(bool throwIfResultCountIsWrong)
-        {
-            return (IPersistenceCapable) this.ExecuteSingle(throwIfResultCountIsWrong);
-        }
+		IPersistenceCapable IQuery.ExecuteSingle( bool throwIfResultCountIsWrong )
+		{
+			return (IPersistenceCapable)this.ExecuteSingle( throwIfResultCountIsWrong );
+		}
 
 		ICollection<object> IQuery.Parameters => this.parameters;
 		ICollection<QueryOrder> IQuery.Orderings => this.orderings;
@@ -603,7 +681,7 @@ namespace NDO.Query
 		int IQuery.Take { get => this.take; set => this.take = value; }
 		string IQuery.GeneratedQuery { get { return this.GeneratedQuery; } }
 
-#endregion
+		#endregion
 
 	}
 }

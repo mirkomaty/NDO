@@ -38,7 +38,7 @@ namespace NDO.Query
 
 			foreach (string name in names)
 			{
-				CreateContextForName(resultClass, name);
+				CreateContextForName(resultClass, name, allRelations);
 			}
 			if (allRelations.Count > 0)
 			{
@@ -82,7 +82,13 @@ namespace NDO.Query
 			}
 		}
 
-		private void CreateContextForName(Class resultClass, string name)
+		/// <summary>
+		/// Generates all relations for a given relation name
+		/// </summary>
+		/// <param name="resultClass"></param>
+		/// <param name="name"></param>
+		/// <param name="relationSet"></param>
+		public void CreateContextForName(Class resultClass, string name, ICollection<Relation> relationSet)
 		{
 			if (name.IndexOf(".") == -1)
 				return;
@@ -106,8 +112,8 @@ namespace NDO.Query
 
 				if (relClass.Subclasses.Count() > 0)
 				{
-					if (!allRelations.Contains( resultRelation ))
-						allRelations.Add( resultRelation );
+					if (!relationSet.Contains( resultRelation ))  // relationSet might be a HashSet
+						relationSet.Add( resultRelation );
 				}
 				
 				// will be overwritten until we have the innermost table

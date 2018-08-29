@@ -16,9 +16,11 @@ namespace NDO.SqlPersistenceHandling
 		private List<QueryInfo> subQueries = new List<QueryInfo>();
 		private Func<Dictionary<Relation, Class>, bool, Class, object, string> selectPartCreator;
 		private object additionalSelectPartData = null;
+		private Mappings mappings;
 
 		public SqlQueryGenerator(IUnityContainer configContainer)
 		{
+			this.mappings = this.configContainer.Resolve<Mappings>();
 			this.configContainer = configContainer;
 		}
 
@@ -31,6 +33,7 @@ namespace NDO.SqlPersistenceHandling
 		/// <param name="orderings">List of orderings for the resultset.</param>
 		/// <param name="skip">Determines how many records of the resultset should be skipped. The resultset must be ordered.</param>
 		/// <param name="take">Determines how many records of the resultset should be returned by the query. The resultset must be ordered.</param>
+		/// <param name="prefetch">Query for the given prefetch relation.</param>
 		/// <returns>A query string.</returns>
 		/// <remarks>The result can be used for debugging and display purposes or with handlers, which don't support distributed databases.</remarks>
 		public string GenerateQueryStringForAllTypes(
@@ -39,7 +42,7 @@ namespace NDO.SqlPersistenceHandling
 			bool hollow, 
 			List<QueryOrder> orderings,
 			int skip,
-			int take )
+			int take, string prefetch = null )
         {
 			this.selectPartCreator = CreateQuerySelectPart;
 
@@ -67,6 +70,7 @@ namespace NDO.SqlPersistenceHandling
 		/// <param name="orderings">List of orderings for the resultset.</param>
 		/// <param name="skip">Determines how many records of the resultset should be skipped. The resultset must be ordered.</param>
 		/// <param name="take">Determines how many records of the resultset should be returned by the query. The resultset must be ordered.</param>
+		/// <param name="prefetch">Query for the given prefetch relation.</param>
 		/// <returns>A Query string.</returns>
 		public string GenerateQueryString( 
 			QueryContextsEntry queryContextsEntry, 
@@ -75,14 +79,15 @@ namespace NDO.SqlPersistenceHandling
 			bool hasSubclassResultsets,
 			List<QueryOrder> orderings,
 			int skip,
-			int take )
+			int take, 
+			string prefetch )
 		{
 			this.selectPartCreator = CreateQuerySelectPart;
 
-			return InnerGenerateQueryString( queryContextsEntry, expressionTree, hollow, hasSubclassResultsets, orderings, skip, take );
+			return InnerGenerateQueryString( queryContextsEntry, expressionTree, hollow, hasSubclassResultsets, orderings, skip, take, prefetch );
 		}
 
-		private string InnerGenerateQueryString( QueryContextsEntry queryContextsEntry, OqlExpression expressionTree, bool hollow, bool hasSubclassResultsets, List<QueryOrder> orderings, int skip, int take )
+		private string InnerGenerateQueryString( QueryContextsEntry queryContextsEntry, OqlExpression expressionTree, bool hollow, bool hasSubclassResultsets, List<QueryOrder> orderings, int skip, int take, string prefetch )
 		{
 			CreateSubQueries( queryContextsEntry, expressionTree, hollow, hasSubclassResultsets, orderings, skip, take );
 			StringBuilder generatedQuery = new StringBuilder();
@@ -107,7 +112,8 @@ namespace NDO.SqlPersistenceHandling
 			bool hollow, 
 			List<QueryOrder> orderings,
 			int skip,
-			int take )
+			int take, 
+			string prefetch = null )
 		{
 			foreach (var item in queryContextsList)
 			{
@@ -171,7 +177,7 @@ namespace NDO.SqlPersistenceHandling
 			int skip, 
 			int take )
 		{
-			Class cls = this.configContainer.Resolve<Mappings>().FindClass( resultType );
+			Class cls = this.mappings.FindClass( resultType );
 
 			StringBuilder sb = new StringBuilder( "SELECT " );
 
@@ -271,8 +277,31 @@ namespace NDO.SqlPersistenceHandling
 			this.selectPartCreator = CreateAggregateSelectPart;
 			this.additionalSelectPartData = new Tuple<string,AggregateType>( field, aggregateType );
 
-			var query = InnerGenerateQueryString( queryContextsEntry, expressionTree, true, hasSubclassResultsets, new List<QueryOrder>(), 0, 0 );
+			var query = InnerGenerateQueryString( queryContextsEntry, expressionTree, true, hasSubclassResultsets, new List<QueryOrder>(), 0, 0, null );
 			return query.Replace( " DISTINCT", "" );
+		}
+
+		public string GeneratePrefetchQuery( Type parentType, IEnumerable<IPersistenceCapable> parents, string prefetch )
+		{
+			Class parentCls = this.mappings.FindClass( parentType );
+
+			StringBuilder sb = new StringBuilder( "SELECT " );
+			List<Relation> relations = new List<Relation>();
+			new RelationContextGenerator( this.mappings ).CreateContextForName( parentCls, prefetch, relations );
+			Class cls = mappings.FindClass( relations[relations.Count - 1].ReferencedTypeName );
+			var relationContext = new Dictionary<Relation, Class>();
+			string columnList = CreateQuerySelectPart( relationContext, false, cls, null );
+			sb.Append( columnList );
+
+			sb.Append( ' ' );
+			sb.Append( new FromGenerator( cls, relationContext ).GenerateFromExpression( null, relations ) );
+			// We can be sure, that we have only one oid column here.
+			var oidList = String.Join( ",", from p in parents select p.NDOObjectId.Id.Values[0].ToString() );
+			string where = $"WHERE {parentCls.Oid.OidColumns.First().GetQualifiedName()} IN ({oidList})";
+			sb.Append( ' ' );
+			sb.Append( where );
+
+			return sb.ToString();
 		}
 	}
 }

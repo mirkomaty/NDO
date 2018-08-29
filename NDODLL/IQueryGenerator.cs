@@ -2,6 +2,7 @@
 using NDO.SqlPersistenceHandling;
 using NDOql.Expressions;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -20,8 +21,9 @@ namespace NDO
 		/// <param name="orderings">List of orderings for the resultset.</param>
 		/// <param name="skip">Determines how many records of the resultset should be skipped. The resultset must be ordered.</param>
 		/// <param name="take">Determines how many records of the resultset should be returned by the query. The resultset must be ordered.</param>
+		/// <param name="prefetch">Query for the given prefetch relation.</param>
 		/// <returns>A Query string.</returns>
-		string GenerateQueryString( QueryContextsEntry queryContextsEntry, OqlExpression expressionTree, bool hollow, bool hasSubclassResultsets, List<QueryOrder> orderings, int skip, int take );
+		string GenerateQueryString( QueryContextsEntry queryContextsEntry, OqlExpression expressionTree, bool hollow, bool hasSubclassResultsets, List<QueryOrder> orderings, int skip, int take, string prefetch = null );
 
 		/// <summary>
 		/// Creates a query string for the complete query over all types.
@@ -32,9 +34,10 @@ namespace NDO
 		/// <param name="orderings">List of orderings for the resultset</param>
 		/// <param name="skip">Determines how many records of the resultset should be skipped. The resultset must be ordered.</param>
 		/// <param name="take">Determines how many records of the resultset should be returned by the query. The resultset must be ordered.</param>
+		/// <param name="prefetch">Query for the given prefetch relation.</param>
 		/// <returns>A query string.</returns>
 		/// <remarks>The result can be used for debugging and display purposes or with handlers, which don't support distributed databases.</remarks>
-		string GenerateQueryStringForAllTypes( List<QueryContextsEntry> queryContextsList, OqlExpression expressionTree, bool hollow, List<QueryOrder> orderings, int skip, int take );
+		string GenerateQueryStringForAllTypes( List<QueryContextsEntry> queryContextsList, OqlExpression expressionTree, bool hollow, List<QueryOrder> orderings, int skip, int take, string prefetch = null );
 
 		/// <summary>
 		/// Creates a query string, which can be passed to the IPersistenceHandler to fetch the results of an aggregate operation for a given concrete type
@@ -45,5 +48,14 @@ namespace NDO
 		/// <param name="aggregateType">The type of the aggregate function which should be performed</param>
 		/// <returns></returns>
 		string GenerateAggregateQueryString( string field, QueryContextsEntry queryContextsEntry, OqlExpression expressionTree, bool hasSubclassResultsets, Query.AggregateType aggregateType );
+
+		/// <summary>
+		/// Generates a query with an IN clause to fetch the child objects of a given relation
+		/// </summary>
+		/// <param name="parentType">Concrete type of the parent</param>
+		/// <param name="parents">All parent objects</param>
+		/// <param name="prefetch">The name of the relation, which has to be fetched</param>
+		/// <returns></returns>
+		string GeneratePrefetchQuery( Type parentType, IEnumerable<IPersistenceCapable> parents, string prefetch );
 	}
 }
