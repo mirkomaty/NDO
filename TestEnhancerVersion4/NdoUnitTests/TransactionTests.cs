@@ -29,6 +29,7 @@ using NDO;
 using Reisekosten.Personal;
 using System.Text.RegularExpressions;
 using NDO.Query;
+using Reisekosten;
 
 namespace NdoUnitTests
 {
@@ -206,7 +207,7 @@ namespace NdoUnitTests
 			new NDOQuery<Mitarbeiter>( pm ).Execute();
 			string log = pm.LogAdapter.ToString();
 			Assert.That( log.IndexOf( "Starting transaction" ) > -1, "Transaction should be started" );
-			Assert.That( log.IndexOf( "Committing transaction" ) == -1, "Transaction should be committed" );
+			Assert.That( log.IndexOf( "Committing transaction" ) == -1, "Transaction should not be committed" );
 			pm.Abort();
 		}
 
@@ -223,7 +224,7 @@ namespace NdoUnitTests
 			new NDOQuery<Mitarbeiter>( pm ).Execute();
 			string log = pm.LogAdapter.ToString();
 			Assert.That( log.IndexOf( "Starting transaction" ) > -1, "Transaction should be started" );
-			Assert.That( log.IndexOf( "Committing transaction" ) == -1, "Transaction should be committed" );
+			Assert.That( log.IndexOf( "Committing transaction" ) == -1, "Transaction should not be committed" );
 			pm.Abort();
 		}
 
@@ -276,6 +277,52 @@ namespace NdoUnitTests
 			Assert.That( log.IndexOf( "Committing transaction" ) == -1, "Transaction should be committed" );
 			Assert.That( log.IndexOf( "Starting transaction" ) == -1, "Transaction should be committed" );
 			Assert.Null( reader, "Reader should be null" );
+		}
+
+		int FlughafenCount(PersistenceManager pm)
+		{
+			NDOQuery<Flughafen> q = new NDOQuery<Flughafen>( pm );
+			return (int)(decimal)q.ExecuteAggregate( "oid", AggregateType.Count );
+		}
+
+		int LänderCount( PersistenceManager pm )
+		{
+			NDOQuery<Land> q = new NDOQuery<Land>( pm );
+			return (int)(decimal)q.ExecuteAggregate( "oid", AggregateType.Count );
+		}
+
+		[Test]
+		public void AbortedDeferredMultiStepTransactionDoesNotCommit()
+		{
+			PersistenceManager pm = new PersistenceManager();
+			var landCount = LänderCount( pm );
+			var fhCount = FlughafenCount( pm );
+
+			pm.LogAdapter = new TestLogAdapter();
+			pm.VerboseMode = true;
+			pm.TransactionMode = TransactionMode.Optimistic;
+
+			Land land = new Land();
+			land.Name = "Germany";
+			pm.MakePersistent( land );
+			pm.Save( true );
+
+			var flughafen = new Flughafen();
+			flughafen.Kürzel = "MUC";
+			pm.MakePersistent( flughafen );
+			land.AddFlughafen( flughafen );
+			pm.Save( true );
+
+			pm.Abort();
+
+			string log = pm.LogAdapter.ToString();
+			Assert.That( new Regex( "Starting transaction" ).Matches( log ).Count == 1, "One Transactions should be started" );
+			Assert.That( log.IndexOf( "Committing transaction" ) == -1, "Transaction should be committed" );
+			Assert.That( new Regex( "Rollback transaction" ).Matches( log ).Count == 1, "One Transactions should be rolled back" );
+			
+			pm.TransactionMode = TransactionMode.None;
+			Assert.AreEqual( landCount, LänderCount( pm ) );
+			Assert.AreEqual( fhCount, FlughafenCount( pm ) );
 		}
 
 		[Test]
