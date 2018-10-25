@@ -323,12 +323,18 @@ namespace NDO
 		/// Unlock all locked objects
 		/// </summary>
 		public void UnlockAll() {
-			foreach(Entry e in lockedObjects.Values) {
-				objects.Add(e.pc.NDOObjectId, new WeakReference(e.pc));
-				if(e.relations != null) {
-					// support GC
-					e.relations.Clear();
-					e.relations = null;
+			foreach(Entry e in lockedObjects.Values)
+			{
+				var key = e.pc.NDOObjectId;
+				if (!objects.ContainsKey( key ))
+				{
+					objects.Add( key, new WeakReference( e.pc ) );
+					if (e.relations != null)
+					{
+						// support GC
+						e.relations.Clear();
+						e.relations = null;
+					}
 				}
 			}
 			lockedObjects.Clear();
