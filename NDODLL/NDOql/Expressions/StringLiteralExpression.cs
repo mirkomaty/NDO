@@ -4,7 +4,7 @@ using System.Text;
 
 namespace NDOql.Expressions
 {
-    public class StringLiteralExpression : OqlExpression
+    public class StringLiteralExpression : ConstantExpression
     {
         public StringLiteralExpression(string value, int line, int col) : base(line, col)
         {

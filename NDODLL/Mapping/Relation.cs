@@ -275,7 +275,7 @@ namespace NDO.Mapping
         {
             bool remap = false;
             Class cl = this.RelatedClass;
-            if (this.mappingTable == null)
+            if (this.mappingTable == null && fkAttributes != null)
             {
                 if (cl.Oid.OidColumns.Count != this.foreignKeyColumns.Count)
                 {
@@ -301,7 +301,7 @@ namespace NDO.Mapping
             }
 			else
 			{
-
+#warning Hier muss noch der Mapping Table-Fall erzeugt werden.
 			}
         }
 

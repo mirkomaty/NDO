@@ -169,6 +169,7 @@
     <Compile Include="Enterprise\SerializationFlags.cs" />
     <Compile Include="Enterprise\SerializationIterator.cs" />
     <Compile Include="Enterprise\Serializer.cs" />
+    <Compile Include="NDOql\Expressions\ConstantExpression.cs" />
     <Compile Include="PersistenceHandlerManagement\IPersistenceHandlerCache.cs" />
     <Compile Include="PersistenceHandlerManagement\IPersistenceHandlerManager.cs" />
     <Compile Include="IQueryGenerator.cs" />

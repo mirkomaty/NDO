@@ -81,21 +81,28 @@ namespace NDO.SqlPersistenceHandling
 						}
 					}
 
-					if (oidColumns.Length > 1 && exp.Children.Count == 0)
-					{
-						OqlExpression equalsExpression = exp.Parent;  // Must be a = expression like 'xxx.oid = {0}'.
-						ParameterExpression parExp = exp.Siblings[0] as ParameterExpression;
-						if (parExp == null)
-							throw new QueryException( 10010, String.Format( "Expression {0} resolves to multiple columns. It's sibling expression must be a ParameterExpression. But the sibling is {1}", exp.ToString(), equalsExpression.Children[1].ToString() ) );
-						// We need some additional parameters for the additional columns.
-						MoveParameterExpression( expressionTree, parExp.Ordinal, oidColumns.Length - 1 );
+					ParameterExpression parExp = exp.Siblings[0] as ParameterExpression;
+					var isDirectSingleExpression = oidColumns.Length == 1 && exp.Siblings[0] is ConstantExpression; // like "oid = 123"
+					if (parExp == null && !isDirectSingleExpression)
+						throw new QueryException( 10010, $"Expression '{exp.ToString()}' resolves to an oid. It's sibling expression must be a ParameterExpression. But the sibling is {exp.Siblings[0]}" );
 
-						// split the ObjectId or an array in individual parameters
-						object[] oidKeys = ExtractOidKeys( parExp );
+					object[] oidKeys = null;
+
+					if (!isDirectSingleExpression)
+					{
+						// split the ObjectId or an array into individual parameters
+						oidKeys = ExtractOidKeys( parExp );
 
 						// Now set the parameter value of the first column
 						if (oidKeys != null)
 							parExp.ParameterValue = oidKeys[0];
+					}
+
+					if (oidColumns.Length > 1 && exp.Children.Count == 0)
+					{
+						OqlExpression equalsExpression = exp.Parent;  // Must be a = expression like 'xxx.oid = {0}'.
+						// We need some additional parameters for the additional columns.
+						MoveParameterExpression( expressionTree, parExp.Ordinal, oidColumns.Length - 1 );
 
 						// Replace the parent expression with a new AND expression
 						OqlExpression andExpression = new OqlExpression( 0, 0 );
@@ -151,6 +158,8 @@ namespace NDO.SqlPersistenceHandling
 				oidKeys = ((parExp.ParameterValue as ObjectId)?.Id);
 				if (oidKeys == null)
 					oidKeys = (parExp.ParameterValue as object[]);
+				if (oidKeys == null)
+					oidKeys = new object[] { parExp.ParameterValue };
 			}
 
 			return oidKeys;

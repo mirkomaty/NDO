@@ -64,5 +64,11 @@ namespace NDO
 			var provider = cls.Provider;
 			return $"{provider.GetQuotedName( cls.TableName )}.{provider.GetQuotedName( col.Name )}";
 		}
+
+		public static string GetQualifiedName( this ForeignKeyColumn col, Class relClass )
+		{
+			var provider = relClass.Provider;
+			return $"{provider.GetQuotedName( relClass.TableName )}.{provider.GetQuotedName( col.Name )}";
+		}
 	}
 }

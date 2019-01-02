@@ -20,8 +20,8 @@ namespace NDO.SqlPersistenceHandling
 
 		public SqlQueryGenerator(IUnityContainer configContainer)
 		{
-			this.mappings = this.configContainer.Resolve<Mappings>();
 			this.configContainer = configContainer;
+			this.mappings = this.configContainer.Resolve<Mappings>();
 		}
 
 		/// <summary>
@@ -250,8 +250,9 @@ namespace NDO.SqlPersistenceHandling
 			var tuple = (Tuple<string, AggregateType>)additionalData;
 			string field = tuple.Item1;
 			AggregateType aggregateType = tuple.Item2;
+			bool isStar = field != "*";
 
-			Column column;
+			Column column = null;
 			if (field.ToLower().StartsWith( "oid" ))
 			{
 #warning !!!! Oid-Queries: Ändern !!!!!
@@ -264,12 +265,14 @@ namespace NDO.SqlPersistenceHandling
 			}
 			else
 			{
-				column = cls.FindField( field ).Column;
+				if (isStar)
+					column = cls.FindField( field ).Column;
 			}
 
 			var provider = cls.Provider;
+			var colName = isStar ? column.GetQualifiedName() : "*";
 
-			return aggregateType.ToString().ToUpper() + "(" + column.GetQualifiedName() + ") as " + provider.GetQuotedName( "AggrResult" );
+			return aggregateType.ToString().ToUpper() + "(" + colName + ") as " + provider.GetQuotedName( "AggrResult" );
 		}
 
 		public string GenerateAggregateQueryString( string field, QueryContextsEntry queryContextsEntry, OqlExpression expressionTree, bool hasSubclassResultsets, AggregateType aggregateType )

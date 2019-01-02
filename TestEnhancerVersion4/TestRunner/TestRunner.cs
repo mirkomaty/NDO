@@ -35,22 +35,22 @@ namespace NDO
     {
         static void Main(string[] args)
         {
-
+			var sqlScriptName = @"..\..\..\NdoUnitTests\bin\Debug\NdoUnitTests.ndo.sql";
 #if true
             PersistenceManager pm = new PersistenceManager(@"..\..\..\NdoUnitTests\bin\Debug\NDOMapping.xml");
-            foreach(string s in pm.BuildDatabase(@"..\..\..\NdoUnitTests\bin\Debug\NdoUnitTests.ndo.sql"))
+            foreach(string s in pm.BuildDatabase(sqlScriptName))
 			{
 				Console.WriteLine(s);
 			}
 #endif
 			DateTime startTime = DateTime.Now;
 
-#if true
-			AbstractBaseTests t = new AbstractBaseTests();
+#if false
+			NdoUnitTests.CompositePartListTests t = new NdoUnitTests.CompositePartListTests();
             try
             {
                 t.Setup();
-				t.TestConcreteRel();
+				t.TestDerivedOnly();
             }
             catch (Exception ex)
             {
@@ -104,7 +104,7 @@ namespace NDO
                                     Type expectedException = null;
 
                                     object[] attrs;
-                                    if ((attrs = mi.GetCustomAttributes(typeof(NUnit.Framework.ExpectedExceptionAttribute), false)).Length > 0)
+                                    if ((attrs = mi.GetCustomAttributes(typeof(ExpectedExceptionAttribute), false)).Length > 0)
                                     {
                                         expectedException = ((ExpectedExceptionAttribute)attrs[0]).ExpectedException;
                                     }
@@ -156,7 +156,7 @@ namespace NDO
 											Debug.Write("Trying to call BuildDatabase");
                                             try
                                             {
-                                                pm.BuildDatabase();
+                                                pm.BuildDatabase(sqlScriptName);
                                             }
                                             catch (Exception ex2)
                                             {

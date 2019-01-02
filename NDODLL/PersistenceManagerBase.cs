@@ -33,6 +33,7 @@ using NDO.Mapping;
 using System.Web;
 using Unity;
 using NDO.Configuration;
+using NDO.SqlPersistenceHandling;
 
 namespace NDO
 {
@@ -304,7 +305,9 @@ namespace NDO
 				if (this.configContainer == null)
 				{
 					this.configContainer = NDOContainer.Instance.CreateChildContainer();
-					this.configContainer.RegisterInstance( GetType(), this );
+#warning Das müsste eigentlich IPersistenceManager sein. Interface überdenken!
+					this.configContainer.RegisterInstance( typeof(PersistenceManager), this );
+					this.configContainer.RegisterType<IQueryGenerator, SqlQueryGenerator>();
 				}
 
 				return this.configContainer;
@@ -346,10 +349,10 @@ namespace NDO
 		{
 			get
 			{
-				if (this.persistenceHandlerManager == null)
-					this.persistenceHandlerManager = ConfigContainer.Resolve<IPersistenceHandlerManager>();
+				// (this.persistenceHandlerManager == null)
+				return this.persistenceHandlerManager = ConfigContainer.Resolve<IPersistenceHandlerManager>();
 
-				return this.persistenceHandlerManager;
+				//return this.persistenceHandlerManager;
 			}
 			set { this.persistenceHandlerManager = value; }
 		}

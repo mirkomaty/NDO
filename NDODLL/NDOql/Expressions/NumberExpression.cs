@@ -4,7 +4,7 @@ using System.Text;
 
 namespace NDOql.Expressions
 {
-    public class NumberExpression : OqlExpression
+    public class NumberExpression : ConstantExpression
     {
         public NumberExpression(object value, int line, int col) : base (line, col)
         {

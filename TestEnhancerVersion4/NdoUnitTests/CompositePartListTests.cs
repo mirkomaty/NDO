@@ -138,7 +138,7 @@ namespace NdoUnitTests
             pm.Save();
 
             NDOQuery<Device> q = new NDOQuery<Device>(pm);
-            decimal c = (decimal)q.ExecuteAggregate("name", AggregateType.Count);
+            decimal c = (decimal)q.ExecuteAggregate(AggregateType.Count);  // COUNT (*) FROM...
 
             Assert.AreEqual(7m, c, "Count wrong: ");
 

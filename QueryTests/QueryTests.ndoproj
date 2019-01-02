@@ -40,11 +40,11 @@
       </Reference>
       <Reference AssemblyName="PureBusinessClasses" AssemblyPath="..\TestEnhancerVersion4\PureBusinessClasses\bin\Debug\PureBusinessClasses.dll">
       </Reference>
-      <Reference AssemblyName="System.Threading.Tasks.Extensions" AssemblyPath="..\NDODLL\packages\System.Threading.Tasks.Extensions.4.3.0\lib\portable-net45+win8+wp8+wpa81\System.Threading.Tasks.Extensions.dll" CheckThisDLL="False">
+      <Reference AssemblyName="System.Threading.Tasks.Extensions" AssemblyPath="..\NDODLL\packages\System.Threading.Tasks.Extensions.4.3.0\lib\portable-net45+win8+wp8+wpa81\System.Threading.Tasks.Extensions.dll">
       </Reference>
-      <Reference AssemblyName="System.ValueTuple" AssemblyPath="..\NDODLL\packages\System.ValueTuple.4.4.0\lib\net47\System.ValueTuple.dll" CheckThisDLL="False">
+      <Reference AssemblyName="System.ValueTuple" AssemblyPath="..\NDODLL\packages\System.ValueTuple.4.4.0\lib\net47\System.ValueTuple.dll">
       </Reference>
-      <Reference AssemblyName="Unity.Abstractions" AssemblyPath="..\NDODLL\packages\Unity.Abstractions.3.3.0\lib\net40\Unity.Abstractions.dll" CheckThisDLL="False">
+      <Reference AssemblyName="Unity.Abstractions" AssemblyPath="..\NDODLL\packages\Unity.Abstractions.3.3.0\lib\net40\Unity.Abstractions.dll">
       </Reference>
     </References>
   </ProjectDescription>

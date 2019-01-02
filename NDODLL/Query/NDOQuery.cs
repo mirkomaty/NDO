@@ -124,10 +124,24 @@ namespace NDO.Query
 		/// <summary>
 		/// Execute an aggregation query.
 		/// </summary>
+		/// <param name="aggregateType">One of the <see cref="AggregateType">AggregateType</see> enum members.</param>
+		/// <returns>A single value, which represents the aggregate</returns>
+		/// <remarks>Before using this function, make sure, that your database product supports the aggregate function, as defined in aggregateType.
+		/// Polymorphy: StDev and Var only return the aggregate for the given class. All others return the aggregate for all subclasses.
+		/// Transactions: Please note, that the aggregate functions always work against the database.
+		/// Unsaved changes in your objects are not recognized.</remarks>
+		public object ExecuteAggregate( AggregateType aggregateType )
+		{
+			return ExecuteAggregate( "*", aggregateType );
+		}
+
+		/// <summary>
+		/// Execute an aggregation query.
+		/// </summary>
 		/// <param name="field">The field, which should be aggregated</param>
 		/// <param name="aggregateType">One of the <see cref="AggregateType">AggregateType</see> enum members.</param>
 		/// <returns>A single value, which represents the aggregate</returns>
-		/// <remarks>Before using this function, make shure, that your database product supports the aggregate function, as defined in aggregateType.
+		/// <remarks>Before using this function, make sure, that your database product supports the aggregate function, as defined in aggregateType.
 		/// Polymorphy: StDev and Var only return the aggregate for the given class. All others return the aggregate for all subclasses.
 		/// Transactions: Please note, that the aggregate functions always work against the database.
 		/// Unsaved changes in your objects are not recognized.</remarks>
@@ -188,6 +202,7 @@ namespace NDO.Query
 				GenerateQueryContexts();
 
 			// this.pm.CheckTransaction happens in ExecuteOrderedSubQuery or in ExecuteSubQuery
+
 			if (this.queryContextsForTypes.Count > 1 && this.orderings.Count > 0)
 			{
 				result = QueryOrderedPolymorphicList();
@@ -202,6 +217,7 @@ namespace NDO.Query
 					}
 				}
 			}
+
 			GetPrefetches( result );
 			this.pm.CheckEndTransaction( false );
 			if (!this.pm.GetClass( resultType ).Provider.SupportsFetchLimit)
@@ -231,7 +247,10 @@ namespace NDO.Query
 			if (parents.Count == 0)
 				return;
 
-			var mustUseInClause = this.expressionTree.GetAll( n => n.Operator == "IN" ).Any();
+			var mustUseInClause = false;
+
+			if (this.expressionTree != null)
+				mustUseInClause = this.expressionTree.GetAll( n => n.Operator == "IN" ).Any();
 
 			foreach (string prefetch in this.Prefetches)
 			{
@@ -389,7 +408,12 @@ namespace NDO.Query
 		{
 			IQueryGenerator queryGenerator = ConfigContainer.Resolve<IQueryGenerator>();
 			bool hasBeenPrepared = PrepareParameters();
-			string generatedQuery = queryGenerator.GenerateQueryString( queryContextsEntry, this.expressionTree, this.hollowResults, this.queryContextsForTypes.Count > 1, this.orderings, this.skip, this.take );
+			string generatedQuery;
+
+			if (this.queryLanguage == QueryLanguage.NDOql)
+				generatedQuery = queryGenerator.GenerateQueryString( queryContextsEntry, this.expressionTree, this.hollowResults, this.queryContextsForTypes.Count > 1, this.orderings, this.skip, this.take );
+			else
+				generatedQuery = (string)this.expressionTree.Value;
 
 			if (hasBeenPrepared)
 			{
@@ -405,9 +429,13 @@ namespace NDO.Query
 			return pm.DataTableToIList( t, table.Rows, this.hollowResults );
 		}
 
-		private List<T> ExecuteSubQuery( QueryContextsEntry queryContextsEntry )
+		private IEnumerable<T> ExecuteSubQuery( QueryContextsEntry queryContextsEntry )
 		{
-			return (List<T>)ExecuteSubQuery( typeof( T ), queryContextsEntry );
+			var subResult = ExecuteSubQuery( queryContextsEntry.Type, queryContextsEntry );
+			foreach (var item in subResult)
+			{
+				yield return (T)item;
+			}
 		}
 
 		private List<T> QueryOrderedPolymorphicList()
@@ -568,8 +596,14 @@ namespace NDO.Query
 			//if ((int) this.queryLanguage == OldQuery.LoadRelations)
 			//	LoadRelatedTables();
 			//else if (this.queryLanguage == Language.NDOql)
-			if (this.queryLanguage == QueryLanguage.NDOql)
+			if (this.queryLanguage == QueryLanguage.Sql)
 			{
+				var selectList = new SqlColumnListGenerator( pm.NDOMapping.FindClass( typeof( T ) ) ).SelectList;
+				var sql = Regex.Replace( this.queryExpression, @"SELECT\s+\*", "SELECT " + selectList );
+				this.expressionTree = new RawIdentifierExpression( sql, 0, 0 );
+			}
+			else
+			{ 
 				NDOql.OqlParser parser = new NDOql.OqlParser();
 				var parsedTree = parser.Parse( this.queryExpression );
 				if (parsedTree != null)
@@ -580,13 +614,9 @@ namespace NDO.Query
 					this.expressionTree.Add( parsedTree );
 					((IManageExpression)parsedTree).SetParent( this.expressionTree );
 				}
-				CreateQueryContextsForTypes();
 			}
-			else
-			{
-				var selectList = new SqlColumnListGenerator( pm.NDOMapping.FindClass( typeof( T ) ) ).SelectList;
-				//subQueries.Add (new QueryInfo(typeof(T), this.queryExpression));
-			}
+
+			CreateQueryContextsForTypes();
 		}
 
 		IUnityContainer ConfigContainer

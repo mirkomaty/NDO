@@ -1075,7 +1075,9 @@ namespace NDO
 				if (handler.Connection != null)
 				{
 					// CheckTransaction should have been called before for this handler.
-					System.Diagnostics.Debug.Assert( handler.Connection == ti.Connection );
+#warning Der Assert muss wieder rein
+
+					//System.Diagnostics.Debug.Assert( handler.Connection == ti.Connection );
 					// Force to always use the same connection.
 					ti.Connection = handler.Connection;
 				}
@@ -1749,7 +1751,7 @@ namespace NDO
 		{
 			Type template = typeof( NDOQuery<object> ).GetGenericTypeDefinition();
 			Type qt = template.MakeGenericType( t );
-			return (IQuery)Activator.CreateInstance( qt, this, oql, hollow );
+			return (IQuery)Activator.CreateInstance( qt, this, oql, hollow, queryLanguage );
 		}
 
         private IQuery CreateIndependentOidQuery(IPersistenceCapable pc, Class cl) 
@@ -2009,18 +2011,58 @@ namespace NDO
 			// At this point of execution we know,
 			// that the target type is not polymorphic and is not 1:1.
 
+			// We can't fetch these objects with an NDOql query
+			// since this would require a relation in the opposite direction
+
 			IList relatedObjects;
 			if (l != null)
 				relatedObjects = l;
 			else
 				relatedObjects = mappings.CreateRelationContainer( pc, r );
 
-			IQuery q = NewQuery( r.ReferencedType, $"oid={1}", true );
-			q.Parameters.Add( pc.NDOObjectId );
-			var result = q.Execute();
+			Type t = r.ReferencedType;
+			Class cl = GetClass( t );
+			var provider = cl.Provider;
 
-			foreach (object item in result)
-				relatedObjects.Add( item );
+			StringBuilder sb = new StringBuilder("SELECT * FROM ");
+			var relClass = GetClass( r.ReferencedType );
+			sb.Append( GetClass( r.ReferencedType ).GetQualifiedTableName() );
+			sb.Append( " WHERE " );
+			int i = 0;
+			List<object> parameters = new List<object>();
+			new ForeignKeyIterator( r ).Iterate( delegate ( ForeignKeyColumn fkColumn, bool isLastElement )
+			   {
+				   sb.Append( fkColumn.GetQualifiedName(relClass) );
+				   sb.Append( " = {" );
+				   sb.Append(i);
+				   sb.Append( '}' );
+				   parameters.Add( pc.NDOObjectId.Id[i] );
+				   if (!isLastElement)
+					   sb.Append( " AND " );
+				   i++;
+			   } );
+
+			if (!(String.IsNullOrEmpty( r.ForeignKeyTypeColumnName )))
+			{
+				sb.Append( " AND " );
+				sb.Append( provider.GetQualifiedTableName( relClass.TableName + "." + r.ForeignKeyTypeColumnName ) );
+				sb.Append( " = " );
+				sb.Append( pc.NDOObjectId.Id.TypeId );
+			}
+
+			IQuery q = NewQuery( t, sb.ToString(), hollow, Query.QueryLanguage.Sql );
+
+			foreach (var p in parameters)
+			{
+				q.Parameters.Add( p );
+			}
+
+			q.AllowSubclasses = false;  // Remember: polymorphic relations always have a mapping table
+
+			IList l2 = q.Execute();
+
+			foreach (object o in l2)
+				relatedObjects.Add( o );
 
 			return relatedObjects;
 		}
