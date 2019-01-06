@@ -67,7 +67,6 @@ namespace NdoUnitTests
 			pm.LogAdapter = new TestLogAdapter();
 			pm.VerboseMode = true;
 			new NDOQuery<Mitarbeiter>( pm ).Execute();
-			Console.WriteLine( pm.LogAdapter.ToString() );
 			string log = pm.LogAdapter.ToString();
 			Assert.That( log.IndexOf( "Committing transaction" ) == -1, "Transaction should be committed" );
 			Assert.That( log.IndexOf( "Starting transaction" ) == -1, "Transaction should be committed" );

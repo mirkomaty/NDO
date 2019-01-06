@@ -82,7 +82,7 @@ namespace NDO.SqlPersistenceHandling
 					}
 
 					ParameterExpression parExp = exp.Siblings[0] as ParameterExpression;
-					var isDirectSingleExpression = oidColumns.Length == 1 && exp.Siblings[0] is ConstantExpression; // like "oid = 123"
+					var isDirectSingleExpression = exp.Parent.Operator != "=" || oidColumns.Length == 1 && exp.Siblings[0] is ConstantExpression; // like "oid = 123"
 					if (parExp == null && !isDirectSingleExpression)
 						throw new QueryException( 10010, $"Expression '{exp.ToString()}' resolves to an oid. It's sibling expression must be a ParameterExpression. But the sibling is {exp.Siblings[0]}" );
 

@@ -42,7 +42,7 @@ namespace NDO
 		private IDbConnection connection;
 		private DbDataAdapter dataAdapter;
 		private IProvider provider;
-		private DataSet ds;
+		private DataSet templateDataset;
 		private bool verboseMode;
 		private ILogAdapter logAdapter;
 
@@ -51,9 +51,9 @@ namespace NDO
 			return provider.UseNamedParams ? provider.GetNamedParameter(name) : "?";
 		}
 
-		public void Initialize(NDOMapping mappings, Relation r, DataSet ds)
+		public void Initialize(NDOMapping mappings, Relation r, DataSet templateDataSet)
 		{
-			this.ds = ds;
+			this.templateDataset = templateDataSet;
 			Connection con = mappings.FindConnection(r.MappingTable.ConnectionId);
 			this.provider = mappings.GetProvider(con);
 
@@ -196,9 +196,9 @@ namespace NDO
 			new SqlDumper(this.logAdapter, this.provider, insertCommand, selectCommand, null, deleteCommand).Dump(rows);
 		}
 
-		private DataTable GetTable(string name)
+		private DataTable GetTableTemplate(string name)
 		{
-			DataTable dt = ds.Tables[name];
+			DataTable dt = templateDataset.Tables[name];
 			if (dt == null)
 				throw new NDOException(24, "Can't find mapping table '" + name + "' in the schema. Check your mapping file.");
 			return dt;
@@ -207,7 +207,7 @@ namespace NDO
 		
 		public DataTable FindRelatedObjects(ObjectId oid) 
 		{
-			DataTable table = GetTable(r.MappingTable.TableName).Clone();
+			DataTable table = GetTableTemplate(r.MappingTable.TableName).Clone();
             string sql = "SELECT * FROM " + provider.GetQualifiedTableName(r.MappingTable.TableName) + " WHERE ";
             selectCommand.Parameters.Clear();
 
@@ -254,7 +254,7 @@ namespace NDO
 
 		public void Update(DataSet ds) 
 		{
-			DataTable dt = GetTable(r.MappingTable.TableName);
+			DataTable dt = ds.Tables[r.MappingTable.TableName];
 			try 
 			{
 				DataRow[] rows = dt.Select(null, null, DataViewRowState.Added 

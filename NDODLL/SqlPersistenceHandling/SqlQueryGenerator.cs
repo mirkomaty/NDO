@@ -14,7 +14,7 @@ namespace NDO.SqlPersistenceHandling
 	{
 		private readonly IUnityContainer configContainer;
 		private List<QueryInfo> subQueries = new List<QueryInfo>();
-		private Func<Dictionary<Relation, Class>, bool, Class, object, string> selectPartCreator;
+		private Func<Dictionary<Relation, Class>, bool, Class, bool, object, string> selectPartCreator;
 		private object additionalSelectPartData = null;
 		private Mappings mappings;
 
@@ -181,7 +181,10 @@ namespace NDO.SqlPersistenceHandling
 
 			StringBuilder sb = new StringBuilder( "SELECT " );
 
-			string columnList = this.selectPartCreator( relationContext, hollow, cls, this.additionalSelectPartData );
+			var from = new FromGenerator( cls, relationContext ).GenerateFromExpression( expressionTree );
+			var qualifyWithTableName = from.IndexOf( "INNER JOIN" ) > -1;
+
+			string columnList = this.selectPartCreator( relationContext, hollow, cls, qualifyWithTableName, this.additionalSelectPartData );
 			sb.Append( columnList );
 
 			// If we need to sort a set of hollow results for different subclasses
@@ -193,7 +196,7 @@ namespace NDO.SqlPersistenceHandling
 			}
 
 			sb.Append( ' ' );
-			sb.Append( new FromGenerator( cls, relationContext ).GenerateFromExpression( expressionTree ) );
+			sb.Append( from );
 			string where = new WhereGenerator( cls, relationContext ).GenerateWhereClause( expressionTree );
 			if (where != string.Empty)
 			{
@@ -210,52 +213,28 @@ namespace NDO.SqlPersistenceHandling
 			return sb.ToString();
 		}
 
-		private string CreateQuerySelectPart( Dictionary<Relation, Class> relationContext, bool hollow, Class cls, object additionalData )
+		private string CreateQuerySelectPart( Dictionary<Relation, Class> relationContext, bool hollow, Class cls, bool qualifyWithTableName, object additionalData )
 		{
 			var generator = CreateColumnListGenerator( cls );
 
 			// We have to hack around a special behavior of SQLite, generating
 			// new columns with fully specified column names, if the query
 			// is a UNION			
-			var useSqliteHack = relationContext.Count > 0 && cls.Provider.GetType().FullName.IndexOf( "Sqlite" ) > -1;
-			string columnList;
-			if (hollow)
-			{
-				if (useSqliteHack)
-				{
-					columnList = generator.HollowFieldsWithAlias;
-				}
-				else
-				{
-					columnList = generator.HollowFields;
-				}
-			}
-			else
-			{
-				if (useSqliteHack)
-				{
-					columnList = generator.SelectListWithAlias;
-				}
-				else
-				{
-					columnList = generator.SelectList;
-				}
-			}
+			var generateAliasNames = relationContext.Count > 0 && cls.Provider.GetType().FullName.IndexOf( "Sqlite" ) > -1;
 
-			return columnList;
+			return generator.Result( hollow, generateAliasNames, qualifyWithTableName );
 		}
 
-		private string CreateAggregateSelectPart( Dictionary<Relation, Class> relationContext, bool hollow, Class cls, object additionalData )
+		private string CreateAggregateSelectPart( Dictionary<Relation, Class> relationContext, bool hollow, Class cls, bool qualifyWithTableName, object additionalData )
 		{
 			var tuple = (Tuple<string, AggregateType>)additionalData;
 			string field = tuple.Item1;
 			AggregateType aggregateType = tuple.Item2;
-			bool isStar = field != "*";
+			bool isStar = field == "*";
 
 			Column column = null;
 			if (field.ToLower().StartsWith( "oid" ))
 			{
-#warning !!!! Oid-Queries: Ändern !!!!!
 				Regex regex = new Regex( @"\(\s*(\d+)\s*\)" );
 				Match match = regex.Match( field );
 				int index = 0;
@@ -265,14 +244,15 @@ namespace NDO.SqlPersistenceHandling
 			}
 			else
 			{
-				if (isStar)
+				if (!isStar)
 					column = cls.FindField( field ).Column;
 			}
 
 			var provider = cls.Provider;
-			var colName = isStar ? column.GetQualifiedName() : "*";
+			var colName = isStar ? "*" : column.GetQualifiedName();
+			//var tableName = qualifyWithTableName ? cls.GetQualifiedTableName() + "." : String.Empty;
 
-			return aggregateType.ToString().ToUpper() + "(" + colName + ") as " + provider.GetQuotedName( "AggrResult" );
+			return $"{aggregateType.ToString().ToUpper()} ({colName}) AS {provider.GetQuotedName( "AggrResult" )}";
 		}
 
 		public string GenerateAggregateQueryString( string field, QueryContextsEntry queryContextsEntry, OqlExpression expressionTree, bool hasSubclassResultsets, AggregateType aggregateType )
@@ -281,7 +261,7 @@ namespace NDO.SqlPersistenceHandling
 			this.additionalSelectPartData = new Tuple<string,AggregateType>( field, aggregateType );
 
 			var query = InnerGenerateQueryString( queryContextsEntry, expressionTree, true, hasSubclassResultsets, new List<QueryOrder>(), 0, 0, null );
-			return query.Replace( " DISTINCT", "" );
+			return query;
 		}
 
 		public string GeneratePrefetchQuery( Type parentType, IEnumerable<IPersistenceCapable> parents, string prefetch )
@@ -293,7 +273,7 @@ namespace NDO.SqlPersistenceHandling
 			new RelationContextGenerator( this.mappings ).CreateContextForName( parentCls, prefetch, relations );
 			Class cls = mappings.FindClass( relations[relations.Count - 1].ReferencedTypeName );
 			var relationContext = new Dictionary<Relation, Class>();
-			string columnList = CreateQuerySelectPart( relationContext, false, cls, null );
+			string columnList = CreateQuerySelectPart( relationContext, false, cls, true, null );
 			sb.Append( columnList );
 
 			sb.Append( ' ' );

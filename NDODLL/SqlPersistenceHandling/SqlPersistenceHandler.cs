@@ -70,10 +70,10 @@ namespace NDO.SqlPersistenceHandling
 		private string selectFieldListWithAlias;
 		private string tableName;
 		private string qualifiedTableName;
-		private DataSet ds;
+		private DataSet templateDataset;
 		private bool verboseMode;
 		private ILogAdapter logAdapter;
-		private Hashtable mappingTableHandlers = new Hashtable();  // all handlers
+		private Dictionary<string, IMappingTableHandler> mappingTableHandlers = new Dictionary<string, IMappingTableHandler>();
 		private IProvider provider;
 		private NDOMapping mappings;
 		private string timeStampColumn = null;
@@ -82,8 +82,6 @@ namespace NDO.SqlPersistenceHandling
         private OidColumn autoIncrementColumn;
         private Dictionary<string,MemberInfo> persistentFields;
 		private List<RelationFieldInfo> relationInfos;
-//		private string where;
-//		private string whereTS;
 		private Type type;
 		private int guidlength;
 		private string hollowFields;
@@ -410,9 +408,9 @@ namespace NDO.SqlPersistenceHandling
 			set 
 			{ 
 				this.verboseMode = value; 
-				foreach(DictionaryEntry de in this.mappingTableHandlers)
+				foreach(var mth in this.mappingTableHandlers.Values)
 				{
-					((IMappingTableHandler)de.Value).VerboseMode = value;
+					mth.VerboseMode = value;
 				}
 			}
 		}
@@ -428,9 +426,9 @@ namespace NDO.SqlPersistenceHandling
 			set 
 			{ 
 				this.logAdapter = value; 
-				foreach(DictionaryEntry de in this.mappingTableHandlers)
+				foreach(var mth in this.mappingTableHandlers.Values)
 				{
-					((IMappingTableHandler)de.Value).LogAdapter = value;
+					mth.LogAdapter = value;
 				}
 			}
 		}
@@ -451,7 +449,7 @@ namespace NDO.SqlPersistenceHandling
 		public void Initialize(NDOMapping mappings, Type t, DataSet ds)
 		{
 			this.mappings = mappings;
-			this.ds = ds;
+			this.templateDataset = ds;
 			this.classMapping = mappings.FindClass(t);
 			this.timeStampColumn = classMapping.TimeStampColumn;
             this.typeNameColumn = classMapping.TypeNameColumn;
@@ -620,9 +618,12 @@ namespace NDO.SqlPersistenceHandling
 			}
 		}
 
-		private DataTable GetTable(string name)
+		private DataTable GetTemplateTable(string name)
 		{
-			DataTable dt = ds.Tables[name];
+			// The instance of ds is actually static,
+			// since the SqlPersistenceHandler lives as
+			// a static instance in the PersistenceHandlerCache.
+			DataTable dt = this.templateDataset.Tables[name];
 			if (dt == null)
 				throw new NDOException(39, "Can't find table '" + name + "' in the schema. Check your mapping file.");
 			return dt;
@@ -658,6 +659,8 @@ namespace NDO.SqlPersistenceHandling
 				if (this.provider.SupportsBulkCommands)
 				{
 					IDbCommand cmd = this.provider.NewSqlCommand( conn );
+					sql = this.provider.GenerateBulkCommand( statements );
+					cmd.CommandText = sql;
 					if (parameters != null && parameters.Count > 0)
 					{
 						// Only the first command gets parameters
@@ -669,26 +672,30 @@ namespace NDO.SqlPersistenceHandling
 								CreateQueryParameters( null, null );
 						}
 					}
-					sql = this.provider.GenerateBulkCommand( statements );
-					DumpBatch( sql );
+
+					// cmd.CommandText can be changed in CreateQueryParameters
+					DumpBatch( cmd.CommandText );
+
 					if (this.Transaction != null)
 						cmd.Transaction = this.Transaction;
-					cmd.CommandText = sql;
+
 					dr = cmd.ExecuteReader();
+
 					for (; ; )
 					{
-						var ht = new Dictionary<string, object>();
+						var dict = new Dictionary<string, object>();
 						while (dr.Read())
 						{
 							for (i = 0; i < dr.FieldCount; i++)
 							{
-								ht.Add( dr.GetName( i ), dr.GetValue( i ) );
+								dict.Add( dr.GetName( i ), dr.GetValue( i ) );
 							}
 						}
-						result.Add( ht );
+						result.Add( dict );
 						if (!dr.NextResult())
 							break;
 					}
+
 					dr.Close();
 				}
 				else
@@ -697,26 +704,30 @@ namespace NDO.SqlPersistenceHandling
 					{
 						string s = statements[i];
 						sql += s + ";\n"; // For DumpBatch only
-						var ht = new Dictionary<string, object>();
+						var dict = new Dictionary<string, object>();
 						IDbCommand cmd = this.provider.NewSqlCommand( conn );
 						if (this.Transaction != null)
 							cmd.Transaction = this.Transaction;
+						cmd.CommandText = s;
 						if (parameters != null && parameters.Count > 0)
 						{
 							CreateQueryParameters( cmd, parameters );
 						}
-						cmd.CommandText = s;
+
 						dr = cmd.ExecuteReader();
+
 						while (dr.Read())
 						{
 							for (int j = 0; j < dr.FieldCount; j++)
 							{
-								ht.Add( dr.GetName( j ), dr.GetValue( j ) );
+								dict.Add( dr.GetName( j ), dr.GetValue( j ) );
 							}
 						}
+
 						dr.Close();
-						result.Add( ht );
+						result.Add( dict );
 					}
+
 					DumpBatch( sql );
 				}
 			}
@@ -758,15 +769,11 @@ namespace NDO.SqlPersistenceHandling
 			for (int i = 0; i < parameters.Count; i++)
 			{
 				object p = parameters[i];
+				if (p == null)
+					p = DBNull.Value;
 				Type type = p.GetType();
                 if (type.FullName.StartsWith("System.Nullable`1"))
                     type = type.GetGenericArguments()[0];
-				//if ( type == typeof( ObjectId ) )  Kann raus
-				//{
-
-				//	type = ( (ObjectId) p ).Id.Value.GetType();
-				//	p = ( (ObjectId) p ).Id.Value;
-				//}
                 if (type.IsEnum)
                 {
                     type = Enum.GetUnderlyingType(type);
@@ -794,8 +801,8 @@ namespace NDO.SqlPersistenceHandling
 				}
 				IDataParameter par = provider.AddParameter(
 					command, 
-					this.provider.GetNamedParameter(name), 
-					this.provider.GetDbType(type == typeof(DBNull) ? typeof(string) : type), 
+					this.provider.GetNamedParameter(name),
+					this.provider.GetDbType( type == typeof( DBNull ) ? typeof( string ) : type ),
 					length, 
 					this.provider.GetQuotedName(name)); 
 				par.Value = p;
@@ -810,7 +817,7 @@ namespace NDO.SqlPersistenceHandling
 			else
 				this.selectCommand.CommandType = CommandType.Text;
 
-			DataTable table = GetTable(this.tableName).Clone();
+			DataTable table = GetTemplateTable(this.tableName).Clone();
 
 			this.selectCommand.CommandText = sql;
 
@@ -832,7 +839,6 @@ namespace NDO.SqlPersistenceHandling
 			return table;		
 		}
 
-
 		/// <summary>
 		/// Gets a Handler which can store data in relation tables
 		/// </summary>
@@ -840,19 +846,17 @@ namespace NDO.SqlPersistenceHandling
 		/// <returns>The handler</returns>
 		public IMappingTableHandler GetMappingTableHandler(Relation r) 
 		{
-			IMappingTableHandler handler = (NDOMappingTableHandler)mappingTableHandlers[r.FieldName];
-			if(handler == null) 
+			IMappingTableHandler handler;
+			if (!mappingTableHandlers.TryGetValue( r.FieldName, out handler ))
 			{
 				handler = new NDOMappingTableHandler();
-				handler.Initialize(mappings, r, this.ds);
+				handler.Initialize(mappings, r, this.templateDataset);
 				handler.VerboseMode = this.verboseMode;
 				handler.LogAdapter = this.logAdapter;
 				mappingTableHandlers[r.FieldName] = handler;
 			}
 			return handler;
-		}
-
-	
+		}	
 	
 		public IDbConnection Connection
 		{

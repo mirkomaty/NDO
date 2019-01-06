@@ -18,7 +18,6 @@ namespace NDO.Configuration
 					instance.RegisterType<IPersistenceHandler, SqlPersistenceHandler>();
 					instance.RegisterType<RelationContextGenerator>();
 					instance.RegisterType<IQueryGenerator, SqlQueryGenerator>();
-					instance.RegisterInstance<IPersistenceHandlerCache>( NDOPersistenceHandlerCache.Instance );
 					instance.RegisterType<IPersistenceHandlerManager, NDOPersistenceHandlerManager>();
                 }
 

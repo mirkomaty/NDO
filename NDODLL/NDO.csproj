@@ -269,9 +269,6 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="MultiKey.cs" />
-    <Compile Include="MyRand.cs">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="NDOAccessProvider.cs">
       <SubType>Code</SubType>
     </Compile>

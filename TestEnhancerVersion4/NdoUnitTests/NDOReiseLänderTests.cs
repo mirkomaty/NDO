@@ -55,32 +55,39 @@ namespace NdoUnitTests {
 		public void TearDown() {
 			try {
 				pm = PmFactory.NewPersistenceManager();
-				pm.Abort();
-				IList mitarbeiterListe = pm.GetClassExtent(typeof(Mitarbeiter), false);
-//				Debug.WriteLine("TearDown löscht " + mitarbeiterListe.Count + " Mitarbeiter");
-				pm.Delete(mitarbeiterListe);
+				//				pm.Abort();
+				IList mitarbeiterListe = pm.GetClassExtent( typeof( Mitarbeiter ), false );
+				//				Debug.WriteLine("TearDown löscht " + mitarbeiterListe.Count + " Mitarbeiter");
+				pm.Delete( mitarbeiterListe );
 				pm.Save();
-				IList reiseListe = pm.GetClassExtent(typeof(Reise), false);
-//				foreach(Reise r in reiseListe)
-//					r.Länder.Clear(); Kann nicht gehen. Besser r.ClearLänder();
-//				pm.Save();
-//				pm.UnloadCache();
+				//				IList reiseListe = pm.GetClassExtent(typeof(Reise), false);
+				////				foreach(Reise r in reiseListe)
+				////					r.Länder.Clear(); Kann nicht gehen. Besser r.ClearLänder();
+				////				pm.Save();
+				////				pm.UnloadCache();
 
-//				Debug.WriteLine("TearDown löscht " + reiseListe.Count + " Reisen");
-				pm.Delete(reiseListe);
-				pm.Save();
-				pm.UnloadCache();
-				IList länderListe = pm.GetClassExtent(typeof(Land), true);
-//				foreach(Land land in länderListe)
-//					if (land != null && land.DieReisen != null)
-//					 foreach(Reise r in land.DieReisen)
-//							land.RemoveReise(r);
-//				Debug.WriteLine("TearDown löscht " + länderListe.Count + " Länder");
-				pm.Delete(länderListe);
-				pm.Save();
-				pm.Close();
-				pm = null;
-			} catch(Exception ex) {
+				////				Debug.WriteLine("TearDown löscht " + reiseListe.Count + " Reisen");
+				//				pm.Delete(reiseListe);
+				//				pm.Save();
+				//				pm.UnloadCache();
+				//				IList länderListe = pm.GetClassExtent(typeof(Land), true);
+				////				foreach(Land land in länderListe)
+				////					if (land != null && land.DieReisen != null)
+				////					 foreach(Reise r in land.DieReisen)
+				////							land.RemoveReise(r);
+				////				Debug.WriteLine("TearDown löscht " + länderListe.Count + " Länder");
+				//				pm.Delete(länderListe);
+				//				pm.Save();
+				//				pm.Close();
+				var handler = pm.GetSqlPassThroughHandler();
+				var sql = $"DELETE FROM {pm.NDOMapping.FindClass( typeof( Reise ) ).TableName}";
+				handler.Execute( sql );
+				sql = $"DELETE FROM {pm.NDOMapping.FindClass(typeof(Mitarbeiter)).TableName}";
+				handler.Execute( sql );
+				sql = $"DELETE FROM {pm.NDOMapping.FindClass( typeof( Land ) ).TableName}";
+				handler.Execute( sql );
+			}
+			catch (Exception ex) {
 				System.Diagnostics.Debug.WriteLine("Exception in TearDown: " + ex);
 			}
 		}
@@ -102,9 +109,18 @@ namespace NdoUnitTests {
 		}
 
 		[Test]
-		[ExpectedException(typeof(NDOException))]
-		public void TestObjectCreationTransient() {
-			r.LandHinzufügen(new Land("USA"));
+		public void TestObjectCreationTransient()
+		{
+			bool thrown = false;
+			try
+			{
+				r.LandHinzufügen( new Land( "USA" ) );
+			}
+			catch (Exception ex)
+			{
+				thrown = true;
+			}
+			Assert.AreEqual( true, thrown );
 		}
 
 		[Test]
@@ -149,7 +165,7 @@ namespace NdoUnitTests {
 			pm.Save();
 			ObjectId oid = usa.NDOObjectId;
 			pm.UnloadCache();
-			NDOQuery<Reise> q = new NDOQuery<Reise>(pm, "dieLaender.oid" + " = " + "{0}");
+			NDOQuery<Reise> q = new NDOQuery<Reise>(pm, "dieLaender.oid = {0}");
 			q.Parameters.Add(oid.Id[0]);
 			decimal count = (decimal) q.ExecuteAggregate("zweck", AggregateType.Count);
 			Assert.That(count > 0m, "Count should be > 0");
@@ -336,7 +352,7 @@ namespace NdoUnitTests {
 			pm.Save();
 			Assert.AreEqual(2, r.Länder.Count, "#2 Number of Länder");
 			pm.UnloadCache();
-			IQuery q = new NDOQuery<Land>(pm, "name" + " LIKE " + "'D*'");
+			IQuery q = new NDOQuery<Land>(pm, "name LIKE 'D%'");
 			IList list = q.Execute();
 			Assert.AreEqual(1, list.Count, "#3 Number of Länder");
 			de = (Land) list[0];
@@ -410,7 +426,8 @@ namespace NdoUnitTests {
 
 			pm.Save();
 
-			NDOQuery<Reise> q = new NDOQuery<Reise>(pm, "dieLaender.name" + " = " + "'" + usa.Name + "'");
+			NDOQuery<Reise> q = new NDOQuery<Reise>(pm, "dieLaender.name = {0}");
+			q.Parameters.Add( usa.Name );
 			IList l = q.Execute();
 			Assert.AreEqual(1, l.Count, "Wrong number of travels");
 		}

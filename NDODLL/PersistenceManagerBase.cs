@@ -307,6 +307,7 @@ namespace NDO
 					this.configContainer = NDOContainer.Instance.CreateChildContainer();
 #warning Das müsste eigentlich IPersistenceManager sein. Interface überdenken!
 					this.configContainer.RegisterInstance( typeof(PersistenceManager), this );
+					this.configContainer.RegisterInstance<IPersistenceHandlerCache>(new NDOPersistenceHandlerCache());
 					this.configContainer.RegisterType<IQueryGenerator, SqlQueryGenerator>();
 				}
 
@@ -317,7 +318,6 @@ namespace NDO
 
 
 		/// <summary>
-		/// Available only in the NDO Professional Edition or above. 
 		/// Sets or gets the logging Adapter, log information is written to.
 		/// </summary>
 		/// <remarks>
@@ -359,7 +359,6 @@ namespace NDO
 
 
 		/// <summary>
-		/// Available only in the NDO Professional Edition or above. 
 		/// Gets or sets the directory, where NDO writes the sql log file to.
 		/// </summary>
 		/// <remarks>

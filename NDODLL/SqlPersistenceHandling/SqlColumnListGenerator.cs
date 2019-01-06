@@ -119,7 +119,7 @@ namespace NDO.SqlPersistenceHandling
 
 		public string BaseList => Result( this.baseColumnList, false, false );
 		public string SelectList => Result( this.selectColumnList, false, false );
-		public string SelectListWithAlias => Result( this.selectColumnList, true, true );
+		public string SelectListWithAlias => Result( this.selectColumnList, true, false );
 		public string HollowFields => Result( this.hollowList, false, false );
 		public string HollowFieldsWithAlias => Result( this.hollowList, true, false );
 
@@ -152,6 +152,11 @@ namespace NDO.SqlPersistenceHandling
 
 				return result.ToString();
 			}
+		}
+
+		public string Result(bool hollow, bool generateAliasNames, bool useTableName)
+		{
+			return Result( hollow ? this.hollowList : this.selectColumnList, generateAliasNames, useTableName );
 		}
 
 		string Result(List<string> columnList, bool generateAliasNames, bool useTableName )

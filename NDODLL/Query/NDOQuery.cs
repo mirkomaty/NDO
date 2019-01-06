@@ -161,7 +161,7 @@ namespace NDO.Query
 			{
 				partResults[i++] = ExecuteAggregateQuery( queryContextsEntry, field, aggregateType );
 			}
-			this.pm.CheckEndTransaction( false );
+			this.pm.CheckEndTransaction( !this.pm.DeferredMode && this.pm.TransactionMode == TransactionMode.Optimistic );
 			return func.ComputeResult( partResults );
 		}
 
@@ -219,7 +219,7 @@ namespace NDO.Query
 			}
 
 			GetPrefetches( result );
-			this.pm.CheckEndTransaction( false );
+			this.pm.CheckEndTransaction( !this.pm.DeferredMode && this.pm.TransactionMode == TransactionMode.Optimistic );
 			if (!this.pm.GetClass( resultType ).Provider.SupportsFetchLimit)
 			{
 				List<T> fetchResult = new List<T>();
@@ -480,7 +480,7 @@ namespace NDO.Query
 
 			DataTable table = persistenceHandler.PerformQuery( generatedQuery, this.parameters );
 			DataRow[] rows = table.Select();
-			List<T> objects = (List<T>)pm.DataTableToIList( typeof( T ), rows, this.hollowResults );
+			var objects = pm.DataTableToIList( t, rows, this.hollowResults );
 			List<ObjectRowPair<T>> result = new List<ObjectRowPair<T>>( objects.Count );
 			int i = 0;
 			IProvider provider = mappings.GetProvider( t );

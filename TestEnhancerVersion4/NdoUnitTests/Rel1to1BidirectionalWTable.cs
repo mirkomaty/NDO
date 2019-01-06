@@ -28,15 +28,18 @@ using Reisekosten.Personal;
 using Reisekosten;
 using NDO;
 
-namespace NdoUnitTests {
+namespace NdoUnitTests
+{
 	/// <summary>
 	/// All tests for 1:1-Relations. Bidirectional Composition and Aggregation with mapping table.
 	/// </summary>
 
 
 	[TestFixture]
-	public class Rel1to1BidirectionalWTable {
-		public Rel1to1BidirectionalWTable() {
+	public class Rel1to1BidirectionalWTable
+	{
+		public Rel1to1BidirectionalWTable()
+		{
 		}
 
 		private PersistenceManager pm;
@@ -44,20 +47,22 @@ namespace NdoUnitTests {
 		private Signatur sgn;
 
 		[SetUp]
-		public void Setup() {
+		public void Setup()
+		{
 			pm = PmFactory.NewPersistenceManager();
-			z = CreateZertifikat(0815);
+			z = CreateZertifikat( 0815 );
 			sgn = new Signatur();
 			sgn.Key = "Signiert";
 		}
 
 		[TearDown]
-		public void TearDown() {
+		public void TearDown()
+		{
 			pm.Abort();
-			IList zertifikatListe = pm.GetClassExtent(typeof(Zertifikat), true);
-			pm.Delete(zertifikatListe);
-			IList sListe = pm.GetClassExtent(typeof(Signatur), true);
-			pm.Delete(sListe);
+			IList zertifikatListe = pm.GetClassExtent( typeof( Zertifikat ), true );
+			pm.Delete( zertifikatListe );
+			IList sListe = pm.GetClassExtent( typeof( Signatur ), true );
+			pm.Delete( sListe );
 			pm.Save();
 			pm.Close();
 			pm = null;
@@ -68,376 +73,465 @@ namespace NdoUnitTests {
 		#region Composition Tests
 
 		[Test]
-		public void CompTestCreateObjectsSave() {
+		public void CompTestCreateObjectsSave()
+		{
 			z.SGN = sgn;
-			pm.MakePersistent(z);
+			pm.MakePersistent( z );
 			pm.Save();
-			Assert.That(!z.NDOObjectId.Equals(z.SGN.NDOObjectId), "Ids should be different");
-			z = (Zertifikat)pm.FindObject(z.NDOObjectId);
-			sgn = (Signatur)pm.FindObject(z.SGN.NDOObjectId);
-			Assert.NotNull(z, "1. Zertifikat not found");
-			Assert.NotNull(sgn, "1. SGN not found");
+			Assert.That( !z.NDOObjectId.Equals( z.SGN.NDOObjectId ), "Ids should be different" );
+			z = (Zertifikat)pm.FindObject( z.NDOObjectId );
+			sgn = (Signatur)pm.FindObject( z.SGN.NDOObjectId );
+			Assert.NotNull( z, "1. Zertifikat not found" );
+			Assert.NotNull( sgn, "1. SGN not found" );
 			ObjectId moid = z.NDOObjectId;
 			ObjectId soid = sgn.NDOObjectId;
 			z = null;
 			sgn = null;
 
 			pm.UnloadCache();
-			z = (Zertifikat)pm.FindObject(moid);
+			z = (Zertifikat)pm.FindObject( moid );
 			Signatur s2 = z.SGN;
-			sgn = (Signatur)pm.FindObject(soid);
-			Assert.NotNull(z, "2. Zertifikat not found");
-			Assert.NotNull(sgn, "2. SGN not found");
-			Assert.AreSame(sgn, s2, "SGN should match");
-			Assert.AreSame(z, sgn.Owner, "Zertifikat should match");
+			sgn = (Signatur)pm.FindObject( soid );
+			Assert.NotNull( z, "2. Zertifikat not found" );
+			Assert.NotNull( sgn, "2. SGN not found" );
+			Assert.AreSame( sgn, s2, "SGN should match" );
+			Assert.AreSame( z, sgn.Owner, "Zertifikat should match" );
 		}
 
 		[Test]
-		public void SimpleObjectSave() {
-			pm.MakePersistent(sgn);
+		public void SimpleObjectSave()
+		{
+			pm.MakePersistent( sgn );
 			pm.Save();
 		}
 
 		[Test]
-		[ExpectedException(typeof(NDOException))]
-		public void CompChildAddFail() {
-			pm.MakePersistent(sgn);
-			sgn.Owner = z;
+		public void CompChildAddFail()
+		{
+			bool thrown = false;
+			pm.MakePersistent( sgn );
+			try
+			{
+				sgn.Owner = z;
+			}
+			catch (NDOException)
+			{
+				thrown = true;
+			}
+			Assert.AreEqual( true, thrown );
 		}
 
 		[Test]
-		[ExpectedException(typeof(NDOException))]
-		public void CompChildAddFail2() {
-			pm.MakePersistent(sgn);
+		public void CompChildAddFail2()
+		{
+			bool thrown = false;
+			pm.MakePersistent( sgn );
 			pm.Save();
-			sgn.Owner = z;
+			try
+			{
+				sgn.Owner = z;
+			}
+			catch (NDOException)
+			{
+				thrown = true;
+			}
+			Assert.AreEqual( true, thrown );
 		}
 
 		[Test]
-		[ExpectedException(typeof(NDOException))]
-		public void CompChildAdd3() {
-			pm.MakePersistent(z);
+		public void CompChildAdd3()
+		{
+			pm.MakePersistent( z );
 			pm.Save();
 			z.SGN = sgn;
-			sgn.Owner = z;  // Cannot manipulate composition relation through child
+			var thrown = false;
+			try
+			{
+				sgn.Owner = z;  // Cannot manipulate composition relation through child
+			}
+			catch (NDOException)
+			{
+				thrown = true;
+			}
+			Assert.AreEqual( true, thrown );
 		}
 
 		[Test]
-		[ExpectedException(typeof(NDOException))]
-		public void CompChildAdd4() {
-			pm.MakePersistent(z);
+		public void CompChildAdd4()
+		{
+			pm.MakePersistent( z );
 			pm.Save();
 			z.SGN = sgn;
-			sgn.Owner = null;  // Cannot manipulate composition relation through child
+			var thrown = false;
+			try
+			{
+				sgn.Owner = null;  // Cannot manipulate composition relation through child
+			}
+			catch (NDOException)
+			{
+				thrown = true;
+			}
+			Assert.AreEqual( true, thrown );
 		}
 
 		[Test]
-		public void CompTestAddObjectSave() {
-			pm.MakePersistent(z);
+		public void CompTestAddObjectSave()
+		{
+			pm.MakePersistent( z );
 			pm.Save();
 			z.SGN = sgn;
-			Assert.AreEqual(NDOObjectState.Created, sgn.NDOObjectState, "1. Wrong state");
-			Assert.AreSame(z, sgn.Owner, "1. Backlink wrong");
+			Assert.AreEqual( NDOObjectState.Created, sgn.NDOObjectState, "1. Wrong state" );
+			Assert.AreSame( z, sgn.Owner, "1. Backlink wrong" );
 			pm.Save();
-			z = (Zertifikat)pm.FindObject(z.NDOObjectId);
-			sgn = (Signatur)pm.FindObject(sgn.NDOObjectId);
-			Assert.NotNull(z, "1. Zertifikat not found");
-			Assert.NotNull(sgn, "1. SGN not found");
-			Assert.AreEqual(NDOObjectState.Persistent, sgn.NDOObjectState, "2. Wrong state");
-			Assert.AreSame(z, sgn.Owner, "2. Backlink wrong");
+			z = (Zertifikat)pm.FindObject( z.NDOObjectId );
+			sgn = (Signatur)pm.FindObject( sgn.NDOObjectId );
+			Assert.NotNull( z, "1. Zertifikat not found" );
+			Assert.NotNull( sgn, "1. SGN not found" );
+			Assert.AreEqual( NDOObjectState.Persistent, sgn.NDOObjectState, "2. Wrong state" );
+			Assert.AreSame( z, sgn.Owner, "2. Backlink wrong" );
 		}
-			
+
 		[Test]
-		public void CompTestAddObjectAbort() {
-			pm.MakePersistent(z);
+		public void CompTestAddObjectAbort()
+		{
+			pm.MakePersistent( z );
 			pm.Save();
 			z.SGN = sgn;
-			Assert.AreEqual(NDOObjectState.Created, sgn.NDOObjectState, "1. Wrong state");
-			Assert.NotNull(z.SGN, "1. SGN not found");
+			Assert.AreEqual( NDOObjectState.Created, sgn.NDOObjectState, "1. Wrong state" );
+			Assert.NotNull( z.SGN, "1. SGN not found" );
 			pm.Abort();
-			Assert.AreEqual(NDOObjectState.Transient, sgn.NDOObjectState, "2. Wrong state");
-			Assert.Null(z.SGN, "1. SGN should be null");
-			Assert.Null(sgn.Owner, "1. Zertifikat should be null");
+			Assert.AreEqual( NDOObjectState.Transient, sgn.NDOObjectState, "2. Wrong state" );
+			Assert.Null( z.SGN, "1. SGN should be null" );
+			Assert.Null( sgn.Owner, "1. Zertifikat should be null" );
 		}
 
 
 		[Test]
-		public void CompTestReplaceChildSave() {
-			pm.MakePersistent(z);
+		public void CompTestReplaceChildSave()
+		{
+			pm.MakePersistent( z );
 			z.SGN = sgn;
 			pm.Save();
-			Assert.NotNull(z.SGN, "1. SGN not found");
+			Assert.NotNull( z.SGN, "1. SGN not found" );
 			Signatur svn2 = new Signatur();
 			svn2.Key = "VeriSign";
 			z.SGN = svn2;
-			Assert.AreEqual(NDOObjectState.Deleted, sgn.NDOObjectState, "1. Wrong state");
-			Assert.AreEqual(NDOObjectState.Created, svn2.NDOObjectState, "2. Wrong state");
-			Assert.Null(sgn.Owner, "3. No relation to Zertifikat");
-			Assert.AreSame(svn2.Owner, z, "4. Zertifikat should be same");
-			Assert.AreSame(z.SGN, svn2, "5. SGN should be same");
+			Assert.AreEqual( NDOObjectState.Deleted, sgn.NDOObjectState, "1. Wrong state" );
+			Assert.AreEqual( NDOObjectState.Created, svn2.NDOObjectState, "2. Wrong state" );
+			Assert.Null( sgn.Owner, "3. No relation to Zertifikat" );
+			Assert.AreSame( svn2.Owner, z, "4. Zertifikat should be same" );
+			Assert.AreSame( z.SGN, svn2, "5. SGN should be same" );
 			pm.Save();
-			Assert.AreEqual(NDOObjectState.Transient, sgn.NDOObjectState, "6. Wrong state");
-			Assert.AreEqual(NDOObjectState.Persistent, svn2.NDOObjectState, "7. Wrong state");
-			Assert.Null(sgn.Owner, "8. No relation to Zertifikat");
-			Assert.AreSame(svn2.Owner, z, "9. Zertifikat should be same");
-			Assert.AreSame(z.SGN, svn2, "10. SGN should be same");
+			Assert.AreEqual( NDOObjectState.Transient, sgn.NDOObjectState, "6. Wrong state" );
+			Assert.AreEqual( NDOObjectState.Persistent, svn2.NDOObjectState, "7. Wrong state" );
+			Assert.Null( sgn.Owner, "8. No relation to Zertifikat" );
+			Assert.AreSame( svn2.Owner, z, "9. Zertifikat should be same" );
+			Assert.AreSame( z.SGN, svn2, "10. SGN should be same" );
 		}
 
 		[Test]
-		public void CompTestReplaceChildAbort() {
-			pm.MakePersistent(z);
+		public void CompTestReplaceChildAbort()
+		{
+			pm.MakePersistent( z );
 			z.SGN = sgn;
 			pm.Save();
-			Assert.NotNull(z.SGN, "1. SGN not found");
+			Assert.NotNull( z.SGN, "1. SGN not found" );
 			Signatur svn2 = new Signatur();
 			svn2.Key = "VeriSign";
 			z.SGN = svn2;
 			pm.Abort();
-			Assert.AreEqual(NDOObjectState.Transient, svn2.NDOObjectState, "1. Wrong state");
-			Assert.AreEqual(NDOObjectState.Persistent, sgn.NDOObjectState, "2. Wrong state");
-			Assert.Null(svn2.Owner, "3. No relation to Zertifikat");
-			Assert.AreSame(sgn.Owner, z, "4. Zertifikat should be same");
-			Assert.AreSame(z.SGN, sgn, "5. SGN should be same");
+			Assert.AreEqual( NDOObjectState.Transient, svn2.NDOObjectState, "1. Wrong state" );
+			Assert.AreEqual( NDOObjectState.Persistent, sgn.NDOObjectState, "2. Wrong state" );
+			Assert.Null( svn2.Owner, "3. No relation to Zertifikat" );
+			Assert.AreSame( sgn.Owner, z, "4. Zertifikat should be same" );
+			Assert.AreSame( z.SGN, sgn, "5. SGN should be same" );
 		}
 
 		[Test]
-		[ExpectedException(typeof(NDOException))]
-		public void CompTestReplaceParentSave() {
-			pm.MakePersistent(z);
+		public void CompTestReplaceParentSave()
+		{
+			pm.MakePersistent( z );
 			z.SGN = sgn;
 			pm.Save();
-			Assert.NotNull(z.SGN, "1. SGN not found");
-			Zertifikat m2 = CreateZertifikat(3345);
-			sgn.Owner = m2;
+			Assert.NotNull( z.SGN, "1. SGN not found" );
+			Zertifikat m2 = CreateZertifikat( 3345 );
+			var thrown = false;
+			try
+			{
+				sgn.Owner = m2;
+			}
+			catch (NDOException)
+			{
+				thrown = true;
+			}
+			Assert.AreEqual( true, thrown );
 		}
 
 
 		[Test]
-		public void CompTestRemoveObjectSave() {
-			pm.MakePersistent(z);
+		public void CompTestRemoveObjectSave()
+		{
+			pm.MakePersistent( z );
 			z.SGN = sgn;
 			pm.Save();
-			Assert.NotNull(z.SGN, "1. SGN not found");
+			Assert.NotNull( z.SGN, "1. SGN not found" );
 			z.SGN = null;
-			Assert.AreEqual(NDOObjectState.Deleted, sgn.NDOObjectState, "1. Wrong state");
-			Assert.Null(z.SGN, "1. SGN should be null");
-			Assert.Null(sgn.Owner, "1. Zertifikat should be null");
+			Assert.AreEqual( NDOObjectState.Deleted, sgn.NDOObjectState, "1. Wrong state" );
+			Assert.Null( z.SGN, "1. SGN should be null" );
+			Assert.Null( sgn.Owner, "1. Zertifikat should be null" );
 			pm.Save();
-			Assert.Null(z.SGN, "2. SGN should be null");
-			Assert.AreEqual(NDOObjectState.Transient, sgn.NDOObjectState, "2. Wrong state");
+			Assert.Null( z.SGN, "2. SGN should be null" );
+			Assert.AreEqual( NDOObjectState.Transient, sgn.NDOObjectState, "2. Wrong state" );
 			ObjectId moid = z.NDOObjectId;
 			pm.UnloadCache();
-			z = (Zertifikat)pm.FindObject(moid);
-			Assert.NotNull(z, "3. Zertifikat not found");
-			Assert.Null(z.SGN, "3. SGN should be null");
-		}
-		
-		[Test]
-		public void CompTestRemoveObjectAbort() {
-			pm.MakePersistent(z);
-			z.SGN = sgn;
-			pm.Save();
-			Assert.NotNull(z.SGN, "1. SGN not found");
-			z.SGN = null;
-			Assert.AreEqual(NDOObjectState.Deleted, sgn.NDOObjectState, "1. Wrong state");
-			Assert.Null(z.SGN, "2. SGN should be null");
-			pm.Abort();
-			Assert.NotNull(z.SGN, "2. SGN not found");
-			Assert.AreEqual(NDOObjectState.Persistent, sgn.NDOObjectState, "2. Wrong state");
-			Assert.AreSame(z, sgn.Owner, "2. Backlink wrong");
+			z = (Zertifikat)pm.FindObject( moid );
+			Assert.NotNull( z, "3. Zertifikat not found" );
+			Assert.Null( z.SGN, "3. SGN should be null" );
 		}
 
 		[Test]
-		[ExpectedException(typeof(NDOException))]
-		public void CompTestRemoveParent() {
-			pm.MakePersistent(z);
+		public void CompTestRemoveObjectAbort()
+		{
+			pm.MakePersistent( z );
 			z.SGN = sgn;
 			pm.Save();
-			Assert.NotNull(sgn.Owner, "1. Zertifikat not found");
+			Assert.NotNull( z.SGN, "1. SGN not found" );
+			z.SGN = null;
+			Assert.AreEqual( NDOObjectState.Deleted, sgn.NDOObjectState, "1. Wrong state" );
+			Assert.Null( z.SGN, "2. SGN should be null" );
+			pm.Abort();
+			Assert.NotNull( z.SGN, "2. SGN not found" );
+			Assert.AreEqual( NDOObjectState.Persistent, sgn.NDOObjectState, "2. Wrong state" );
+			Assert.AreSame( z, sgn.Owner, "2. Backlink wrong" );
+		}
+
+		[Test]
+		public void CompTestRemoveParent()
+		{
+			pm.MakePersistent( z );
+			z.SGN = sgn;
+			pm.Save();
+			Assert.NotNull( sgn.Owner, "1. Zertifikat not found" );
 			ObjectId aoid = sgn.NDOObjectId;
-			sgn.Owner = null;  	// Cannot manipulate composition relation through child
+			var thrown = false;
+			try
+			{
+				sgn.Owner = null;   // Cannot manipulate composition relation through child
+			}
+			catch (NDOException)
+			{
+				thrown = true;
+			}
+			Assert.AreEqual( true, thrown );
 		}
 
 		[Test]
-		[ExpectedException(typeof(NDOException))]
-		public void CompTestRemoveParentBeforeSave() {
-			pm.MakePersistent(z);
+		public void CompTestRemoveParentBeforeSave()
+		{
+			pm.MakePersistent( z );
 			z.SGN = sgn;
-			sgn.Owner = null;  	// Cannot manipulate composition relation through child
+			var thrown = false;
+			try
+			{
+				sgn.Owner = null;   // Cannot manipulate composition relation through child
+			}
+			catch (NDOException)
+			{
+				thrown = true;
+			}
+			Assert.AreEqual( true, thrown );
 		}
 
 
 		[Test]
-		public void CompTestDeleteSave() {
-			pm.MakePersistent(z);
+		public void CompTestDeleteSave()
+		{
+			pm.MakePersistent( z );
 			pm.Save();
 			z.SGN = sgn;
 			pm.Save();
-			pm.Delete(z);
-			Assert.AreEqual(NDOObjectState.Deleted, z.NDOObjectState, "1. Wrong state");
-			Assert.AreEqual(NDOObjectState.Deleted, sgn.NDOObjectState, "2. Wrong state");
+			pm.Delete( z );
+			Assert.AreEqual( NDOObjectState.Deleted, z.NDOObjectState, "1. Wrong state" );
+			Assert.AreEqual( NDOObjectState.Deleted, sgn.NDOObjectState, "2. Wrong state" );
 			pm.Save();
-			Assert.AreEqual(NDOObjectState.Transient, z.NDOObjectState, "1. Wrong state");
-			Assert.AreEqual(NDOObjectState.Transient, sgn.NDOObjectState, "2. Wrong state");
+			Assert.AreEqual( NDOObjectState.Transient, z.NDOObjectState, "1. Wrong state" );
+			Assert.AreEqual( NDOObjectState.Transient, sgn.NDOObjectState, "2. Wrong state" );
 			// Objects should retain relations in memory
-			Assert.NotNull(z.SGN, "3. SGN shouldn't be null");
-			Assert.Null(sgn.Owner, "3. Zertifikat should be null");
+			Assert.NotNull( z.SGN, "3. SGN shouldn't be null" );
+			Assert.Null( sgn.Owner, "3. Zertifikat should be null" );
 		}
 
 		[Test]
-		[ExpectedException(typeof(NDOException))]
-		public void CompTestDeleteChildSave() {
-			pm.MakePersistent(z);
+		public void CompTestDeleteChildSave()
+		{
+			pm.MakePersistent( z );
 			pm.Save();
 			z.SGN = sgn;
 			pm.Save();
-			pm.Delete(sgn);
-			pm.Save();
+			var thrown = false;
+			try
+			{
+				pm.Delete( sgn );
+			}
+			catch (NDOException)
+			{
+				thrown = true;
+			}
+			Assert.AreEqual( true, thrown );
 		}
 
 
 		[Test]
-		public void CompTestDeleteAbort() {
-			pm.MakePersistent(z);
+		public void CompTestDeleteAbort()
+		{
+			pm.MakePersistent( z );
 			pm.Save();
 			z.SGN = sgn;
 			pm.Save();
-			pm.Delete(z);
-			Assert.AreEqual(NDOObjectState.Deleted, z.NDOObjectState, "1. Wrong state");
-			Assert.AreEqual(NDOObjectState.Deleted, sgn.NDOObjectState, "2. Wrong state");
+			pm.Delete( z );
+			Assert.AreEqual( NDOObjectState.Deleted, z.NDOObjectState, "1. Wrong state" );
+			Assert.AreEqual( NDOObjectState.Deleted, sgn.NDOObjectState, "2. Wrong state" );
 			pm.Abort();
-			Assert.AreEqual(NDOObjectState.Persistent, z.NDOObjectState, "1. Wrong state");
-			Assert.AreEqual(NDOObjectState.Persistent, sgn.NDOObjectState, "2. Wrong state");
-			Assert.NotNull(z.SGN, "2. SGN not found");
-			Assert.AreSame(z, sgn.Owner, "2. Backlink wrong");
+			Assert.AreEqual( NDOObjectState.Persistent, z.NDOObjectState, "1. Wrong state" );
+			Assert.AreEqual( NDOObjectState.Persistent, sgn.NDOObjectState, "2. Wrong state" );
+			Assert.NotNull( z.SGN, "2. SGN not found" );
+			Assert.AreSame( z, sgn.Owner, "2. Backlink wrong" );
 		}
 
 		[Test]
-		public void CompTestCreateDelete() {
-			pm.MakePersistent(z);
+		public void CompTestCreateDelete()
+		{
+			pm.MakePersistent( z );
 			z.SGN = sgn;
-			pm.Delete(z);
-			Assert.AreEqual(NDOObjectState.Transient, z.NDOObjectState, "1. Wrong state");
-			Assert.AreEqual(NDOObjectState.Transient, sgn.NDOObjectState, "2. Wrong state");
+			pm.Delete( z );
+			Assert.AreEqual( NDOObjectState.Transient, z.NDOObjectState, "1. Wrong state" );
+			Assert.AreEqual( NDOObjectState.Transient, sgn.NDOObjectState, "2. Wrong state" );
 			// Objects should retain relations in memory
-			Assert.NotNull(z.SGN, "3. SGN shouldn't be null");
-			Assert.Null(sgn.Owner, "3. Zertifikat should be null");
+			Assert.NotNull( z.SGN, "3. SGN shouldn't be null" );
+			Assert.Null( sgn.Owner, "3. Zertifikat should be null" );
 		}
 
 		[Test]
-		public void CompTestAddRemoveSave() {
-			pm.MakePersistent(z);
+		public void CompTestAddRemoveSave()
+		{
+			pm.MakePersistent( z );
 			pm.Save();
 			z.SGN = sgn;
 			z.SGN = null;
-			Assert.AreEqual(NDOObjectState.Transient, sgn.NDOObjectState, "1. Wrong state");
-			Assert.Null(z.SGN, "1. SGN should be null");
-			Assert.Null(sgn.Owner, "1. Zertifikat should be null");
+			Assert.AreEqual( NDOObjectState.Transient, sgn.NDOObjectState, "1. Wrong state" );
+			Assert.Null( z.SGN, "1. SGN should be null" );
+			Assert.Null( sgn.Owner, "1. Zertifikat should be null" );
 			pm.Save();
-			Assert.AreEqual(NDOObjectState.Transient, sgn.NDOObjectState, "2. Wrong state");
-			Assert.Null(z.SGN, "2. SGN should be null");
-			Assert.Null(sgn.Owner, "3. Zertifikat should be null");
+			Assert.AreEqual( NDOObjectState.Transient, sgn.NDOObjectState, "2. Wrong state" );
+			Assert.Null( z.SGN, "2. SGN should be null" );
+			Assert.Null( sgn.Owner, "3. Zertifikat should be null" );
 		}
 
 		[Test]
-		public void CompTestAddRemoveAbort() {
-			pm.MakePersistent(z);
+		public void CompTestAddRemoveAbort()
+		{
+			pm.MakePersistent( z );
 			pm.Save();
 			z.SGN = sgn;
 			z.SGN = null;
-			Assert.AreEqual(NDOObjectState.Transient, sgn.NDOObjectState, "1. Wrong state");
+			Assert.AreEqual( NDOObjectState.Transient, sgn.NDOObjectState, "1. Wrong state" );
 			pm.Abort();
-			Assert.AreEqual(NDOObjectState.Transient, sgn.NDOObjectState, "2. Wrong state");
-			Assert.Null(z.SGN, "2. SGN should be null");
-			Assert.Null(sgn.Owner, "3. Zertifikat should be null");
+			Assert.AreEqual( NDOObjectState.Transient, sgn.NDOObjectState, "2. Wrong state" );
+			Assert.Null( z.SGN, "2. SGN should be null" );
+			Assert.Null( sgn.Owner, "3. Zertifikat should be null" );
 		}
 
 
 
 		[Test]
-		public void CompTestHollow() {
+		public void CompTestHollow()
+		{
 			z.SGN = sgn;
-			pm.MakePersistent(z);
+			pm.MakePersistent( z );
 			pm.Save();
-			pm.MakeHollow(z); // setzt z.sgn auf null
-			
-			Assert.AreEqual(NDOObjectState.Hollow, z.NDOObjectState, "1: Zertifikat should be hollow");
-			Assert.AreEqual(NDOObjectState.Persistent, sgn.NDOObjectState, "1: SGN should be persistent");
+			pm.MakeHollow( z ); // setzt z.sgn auf null
+
+			Assert.AreEqual( NDOObjectState.Hollow, z.NDOObjectState, "1: Zertifikat should be hollow" );
+			Assert.AreEqual( NDOObjectState.Persistent, sgn.NDOObjectState, "1: SGN should be persistent" );
 
 			sgn = z.SGN; // ruft LoadData för z auf. z.svm liegt auf dem Cache und ist Persistent
-			Assert.AreEqual(NDOObjectState.Persistent, z.NDOObjectState, "1: Zertifikat should be persistent");
-			Assert.AreEqual(NDOObjectState.Persistent, sgn.NDOObjectState, "2: SGN should be persistent");
+			Assert.AreEqual( NDOObjectState.Persistent, z.NDOObjectState, "1: Zertifikat should be persistent" );
+			Assert.AreEqual( NDOObjectState.Persistent, sgn.NDOObjectState, "2: SGN should be persistent" );
 			ObjectId id = z.NDOObjectId;
 			pm.Close();
 			pm = PmFactory.NewPersistenceManager();
-			z = (Zertifikat) pm.FindObject(id);
-			Assert.NotNull(z, "Zertifikat not found");
-			Assert.AreEqual(NDOObjectState.Hollow, z.NDOObjectState, "2: Zertifikat should be hollow");
+			z = (Zertifikat)pm.FindObject( id );
+			Assert.NotNull( z, "Zertifikat not found" );
+			Assert.AreEqual( NDOObjectState.Hollow, z.NDOObjectState, "2: Zertifikat should be hollow" );
 			sgn = z.SGN;
-			Assert.AreEqual(NDOObjectState.Persistent, z.NDOObjectState, "2: Zertifikat should be persistent");
-			Assert.NotNull(sgn, "SGN not found");
-			Assert.AreEqual(NDOObjectState.Hollow, sgn.NDOObjectState, "1: SGN should be hollow");
-			Assert.AreSame(z, sgn.Owner, "2. Backlink wrong");
+			Assert.AreEqual( NDOObjectState.Persistent, z.NDOObjectState, "2: Zertifikat should be persistent" );
+			Assert.NotNull( sgn, "SGN not found" );
+			Assert.AreEqual( NDOObjectState.Hollow, sgn.NDOObjectState, "1: SGN should be hollow" );
+			Assert.AreSame( z, sgn.Owner, "2. Backlink wrong" );
 		}
 
 
 		[Test]
-		public void  CompTestMakeAllHollow() {
+		public void CompTestMakeAllHollow()
+		{
 			z.SGN = sgn;
-			pm.MakePersistent(z);
+			pm.MakePersistent( z );
 			pm.Save();
 			pm.MakeAllHollow();
-			Assert.AreEqual(NDOObjectState.Hollow, z.NDOObjectState, "1: Zertifikat should be hollow");
-			Assert.AreEqual(NDOObjectState.Hollow, sgn.NDOObjectState, "1: SGN should be hollow");
-			Assert.AreSame(z, sgn.Owner, "2. Backlink wrong");
+			Assert.AreEqual( NDOObjectState.Hollow, z.NDOObjectState, "1: Zertifikat should be hollow" );
+			Assert.AreEqual( NDOObjectState.Hollow, sgn.NDOObjectState, "1: SGN should be hollow" );
+			Assert.AreSame( z, sgn.Owner, "2. Backlink wrong" );
 		}
 
 		[Test]
-		public void  CompTestMakeAllHollowUnsaved() {
+		public void CompTestMakeAllHollowUnsaved()
+		{
 			z.SGN = sgn;
-			pm.MakePersistent(z);
+			pm.MakePersistent( z );
 			pm.MakeAllHollow();  // before save, objects cannot be made hollow. => in locked objects
-			Assert.AreEqual(NDOObjectState.Created, z.NDOObjectState, "1: Zertifikat should be created");
-			Assert.AreEqual(NDOObjectState.Created, sgn.NDOObjectState, "1: SGN should be created");
+			Assert.AreEqual( NDOObjectState.Created, z.NDOObjectState, "1: Zertifikat should be created" );
+			Assert.AreEqual( NDOObjectState.Created, sgn.NDOObjectState, "1: SGN should be created" );
 		}
 
 
 		[Test]
-		public void CompTestExtentRelatedObjects() {
+		public void CompTestExtentRelatedObjects()
+		{
 			z.SGN = sgn;
-			pm.MakePersistent(z);
+			pm.MakePersistent( z );
 			pm.Save();
-			IList liste = pm.GetClassExtent(typeof(Zertifikat));
+			IList liste = pm.GetClassExtent( typeof( Zertifikat ) );
 			z = (Zertifikat)liste[0];
-			Assert.AreEqual(NDOObjectState.Persistent, z.NDOObjectState, "1: Zertifikat should be persistent");
-			Assert.NotNull(z.SGN, "2. Relation is missing");
-			Assert.AreEqual(NDOObjectState.Persistent, z.SGN.NDOObjectState, "2.: SGN should be hollow");
-			Assert.AreSame(z, sgn.Owner, "2. Backlink wrong");
+			Assert.AreEqual( NDOObjectState.Persistent, z.NDOObjectState, "1: Zertifikat should be persistent" );
+			Assert.NotNull( z.SGN, "2. Relation is missing" );
+			Assert.AreEqual( NDOObjectState.Persistent, z.SGN.NDOObjectState, "2.: SGN should be hollow" );
+			Assert.AreSame( z, sgn.Owner, "2. Backlink wrong" );
 
 			pm.UnloadCache();
-			liste = pm.GetClassExtent(typeof(Zertifikat));
+			liste = pm.GetClassExtent( typeof( Zertifikat ) );
 			z = (Zertifikat)liste[0];
-			Assert.AreEqual(NDOObjectState.Hollow, z.NDOObjectState, "5: Zertifikat should be hollow");
-			Assert.NotNull(z.SGN, "6. Relation is missing");
-			Assert.AreEqual(NDOObjectState.Hollow, z.SGN.NDOObjectState, "8.: Key should be hollow");
-			Assert.That(z != sgn.Owner, "8a. Should be different objects");
-			Assert.AreSame(z, z.SGN.Owner, "8b. Zertifikat should match");
+			Assert.AreEqual( NDOObjectState.Hollow, z.NDOObjectState, "5: Zertifikat should be hollow" );
+			Assert.NotNull( z.SGN, "6. Relation is missing" );
+			Assert.AreEqual( NDOObjectState.Hollow, z.SGN.NDOObjectState, "8.: Key should be hollow" );
+			Assert.That( z != sgn.Owner, "8a. Should be different objects" );
+			Assert.AreSame( z, z.SGN.Owner, "8b. Zertifikat should match" );
 
 			pm.UnloadCache();
-			liste = pm.GetClassExtent(typeof(Zertifikat), false);
+			liste = pm.GetClassExtent( typeof( Zertifikat ), false );
 			z = (Zertifikat)liste[0];
-			Assert.AreEqual(NDOObjectState.Persistent, z.NDOObjectState, "9: Zertifikat should be persistent");
-			Assert.NotNull(z.SGN, "10. Relation is missing");
-			Assert.AreEqual(NDOObjectState.Hollow, z.SGN.NDOObjectState, "12.: Key should be hollow");
-			Assert.That(z != sgn.Owner, "12a. Should be different objects");
-			Assert.AreSame(z, z.SGN.Owner, "12b. Zertifikat should match");
+			Assert.AreEqual( NDOObjectState.Persistent, z.NDOObjectState, "9: Zertifikat should be persistent" );
+			Assert.NotNull( z.SGN, "10. Relation is missing" );
+			Assert.AreEqual( NDOObjectState.Hollow, z.SGN.NDOObjectState, "12.: Key should be hollow" );
+			Assert.That( z != sgn.Owner, "12a. Should be different objects" );
+			Assert.AreSame( z, z.SGN.Owner, "12b. Zertifikat should match" );
 		}
 
 		#endregion
 
-				
 
-		private Zertifikat CreateZertifikat(int k) {
+
+		private Zertifikat CreateZertifikat( int k )
+		{
 			Zertifikat z = new Zertifikat();
 			z.Key = k;
 			return z;

@@ -62,10 +62,14 @@ namespace NdoUnitTests {
 			pm.Delete(reiseliste);
 			pm.Save();
 			pm.UnloadCache();
-			IQuery q = new NDOQuery<Beleg>(pm);
-			IList liste = q.Execute();
-			pm.Delete(liste);
-			pm.Save();
+			IQuery q;
+			IList liste;
+
+			// We can't delete orphan Beleg object with NDO, so use direct Sql statements
+			var handler = pm.GetSqlPassThroughHandler();
+			var sql = "DELETE FROM " + pm.NDOMapping.FindClass( typeof( Beleg ) ).TableName;
+			handler.Execute(sql);
+
 			q = new NDOQuery<Contact>(pm);
 			liste = q.Execute();
 			pm.Delete(liste);
@@ -75,10 +79,7 @@ namespace NdoUnitTests {
 			pm.Delete(liste);
 			pm.Save();
 
-			q = new NDOQuery<Beleg>(pm);
-			liste = q.Execute();
-			pm.Close();
-			pm = null;
+
 		}
 
 		[Test]
@@ -96,19 +97,19 @@ namespace NdoUnitTests {
 			Assert.AreEqual(NDOObjectState.Created, kp.NDOObjectState, "Beleg should be Created: ");
 		}
 
-
 		[Test]
 		public void TestCreateObjectsSave() {
 			r.AddKostenpunkt(kp);
 			pm.MakePersistent(r);
-			pm.LogAdapter.Clear();
 			pm.Save();
 
 			pm.UnloadCache();
 			r = (Reise)pm.FindObject(r.NDOObjectId);
 			Assert.NotNull(r, "Reise not found");
+			Assert.AreEqual( 1, r.Kostenpunkte.Count );
 			Assert.NotNull(r.Kostenpunkte[0], "Beleg not found");
 		}
+
 		[Test]
 		public void TestCreateManyObjectsSave() {
 			r.AddKostenpunkt(kp);
@@ -121,8 +122,8 @@ namespace NdoUnitTests {
 			pm.UnloadCache();
 			r = (Reise)pm.FindObject(r.NDOObjectId);
 			Assert.NotNull(r, "Reise not found");
+			Assert.AreEqual( 3, r.Kostenpunkte.Count, "Anzahl Belege: " );
 			Assert.NotNull(r.Kostenpunkte[0], "Beleg not found");
-			Assert.AreEqual(3, r.Kostenpunkte.Count, "Anzahl Belege: ");
 			Assert.AreEqual(300, r.Gesamtkosten, "Gesamtkosten: ");
 		}
 		[Test]
@@ -644,7 +645,7 @@ namespace NdoUnitTests {
 			pm.Save();
 			pm.UnloadCache();
 
-			IQuery q = new NDOQuery<Contact>(pm, "addresses.plz" + " = " + "'" + a2.Plz + "'");
+			IQuery q = new NDOQuery<Contact>(pm, $"addresses.plz = '{a2.Plz}'");
 			IList l = q.Execute();
 			Assert.AreEqual(1, l.Count, "Wrong number of contacts");
 		}

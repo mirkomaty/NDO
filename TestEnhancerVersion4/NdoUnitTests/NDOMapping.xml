@@ -931,7 +931,7 @@
     </Class>
     <Class AssemblyName="PureBusinessClasses" FullName="NDOObjectIdTestClasses.AbstractBaseGuid" TableName="Unused" ConnectionId="C0">
       <Oid>
-        <OidColumn FieldName="guid" />
+        <OidColumn FieldName="guid" AllowDbNull="False" />
       </Oid>
       <Fields>
         <Field Name="guid" AccessorName="Guid">
@@ -942,7 +942,7 @@
     </Class>
     <Class AssemblyName="PureBusinessClasses" FullName="NDOObjectIdTestClasses.ClassWithHint" TableName="ClassWithHint" ConnectionId="C0" TypeCode="1351541559">
       <Oid>
-        <OidColumn Name="ID" NetType="System.Guid,mscorlib" />
+        <OidColumn Name="ID" NetType="System.Guid,mscorlib" AllowDbNull="False" />
       </Oid>
       <Fields>
         <Field Name="text" AccessorName="Text">
@@ -953,7 +953,7 @@
     </Class>
     <Class AssemblyName="PureBusinessClasses" FullName="NDOObjectIdTestClasses.DerivedGuid" TableName="DerivedGuid" ConnectionId="C0" TypeCode="-145388552">
       <Oid>
-        <OidColumn FieldName="guid" />
+        <OidColumn FieldName="guid" AllowDbNull="False" />
       </Oid>
       <Fields>
         <Field Name="guid">
@@ -967,7 +967,7 @@
     </Class>
     <Class AssemblyName="PureBusinessClasses" FullName="NDOObjectIdTestClasses.HintOwner" TableName="HintOwner" ConnectionId="C0" TypeCode="-1156110690">
       <Oid>
-        <OidColumn Name="ID" NetType="System.Int32,mscorlib" />
+        <OidColumn Name="ID" NetType="System.Int32,mscorlib" AllowDbNull="False" />
       </Oid>
       <Fields />
       <Relations>
@@ -978,7 +978,7 @@
     </Class>
     <Class AssemblyName="PureBusinessClasses" FullName="NDOObjectIdTestClasses.NDOoidAndHandler" TableName="NDOoidAndHandler" ConnectionId="C0" TypeCode="-1615192174">
       <Oid>
-        <OidColumn FieldName="myId" />
+        <OidColumn FieldName="myId" AllowDbNull="False" />
       </Oid>
       <Fields>
         <Field Name="myId" AccessorName="MyId">
@@ -992,7 +992,7 @@
     </Class>
     <Class AssemblyName="PureBusinessClasses" FullName="NDOObjectIdTestClasses.ObjectOwner" TableName="ObjectOwner" ConnectionId="C0" TypeCode="1779748966">
       <Oid>
-        <OidColumn Name="ID" NetType="System.Int32,mscorlib" />
+        <OidColumn Name="ID" NetType="System.Int32,mscorlib" AllowDbNull="False" />
       </Oid>
       <Fields />
       <Relations>
@@ -1250,12 +1250,12 @@
         <Field Name="betrag">
           <Column Name="Betrag" />
         </Field>
-        <Field Name="datum">
+        <Field Name="datum" AccessorName="Datum">
           <Column Name="Datum" />
         </Field>
       </Fields>
       <Relations>
-        <Relation FieldName="reise" ReferencedTypeName="Reisekosten.Reise" RelationName="">
+        <Relation FieldName="reise" AccessorName="Reise" ReferencedTypeName="Reisekosten.Reise" RelationName="">
           <ForeignKeyColumn Name="IDReise" />
         </Relation>
       </Relations>
@@ -1523,7 +1523,7 @@
         <OidColumn AutoIncremented="True" Name="ID" />
       </Oid>
       <Fields>
-        <Field Name="datum">
+        <Field Name="datum" AccessorName="Datum">
           <Column Name="Datum" />
         </Field>
         <Field Name="km">
@@ -1531,7 +1531,7 @@
         </Field>
       </Fields>
       <Relations>
-        <Relation FieldName="reise" ReferencedTypeName="Reisekosten.Reise" RelationName="">
+        <Relation FieldName="reise" AccessorName="Reise" ReferencedTypeName="Reisekosten.Reise" RelationName="">
           <ForeignKeyColumn Name="IDReise" />
         </Relation>
       </Relations>

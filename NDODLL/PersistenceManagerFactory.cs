@@ -185,8 +185,10 @@ namespace NDO
 			pm.IsolationLevel = isolationLevel;
 			pm.TransactionMode = transactionMode;
 			pm.VerboseMode = verboseMode;
+#pragma warning disable 618
 			if (persistenceHandlerType != null)
 				pm.PersistenceHandlerType = persistenceHandlerType;
+#pragma warning restore 618
 			pm.LogPath = logPath;
 			if (openConnectionListener != null)
 				pm.RegisterConnectionListener(openConnectionListener);

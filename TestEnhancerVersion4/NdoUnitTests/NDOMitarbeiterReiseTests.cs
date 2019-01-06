@@ -31,6 +31,7 @@ using NDO.Query;
 using Reisekosten;
 using Reisekosten.Personal;
 using NDO.Linq;
+using Unity;
 
 namespace NdoUnitTests
 {
@@ -58,10 +59,12 @@ namespace NdoUnitTests
 		[TearDown]
 		public void TearDown() {
 			pm.Abort();
+			pm.UnloadCache();
 			IList mitarbeiterListe = pm.GetClassExtent(typeof(Mitarbeiter), true);
 			pm.Delete(mitarbeiterListe);
 			pm.Save();
 			pm.Close();
+			pm.GetSqlPassThroughHandler().Execute( "DELETE FROM " + pm.NDOMapping.FindClass( typeof( Reise ) ).TableName );
 			pm = null;
 		}
 
@@ -542,7 +545,8 @@ namespace NdoUnitTests
 			pm.MakePersistent(m);
 			pm.Save();
 			pm.UnloadCache();
-			NDOQuery<Reise> q = new NDOQuery<Reise>(pm, "zweck LIKE 'A*'");
+			var provider = pm.NDOMapping.FindClass( typeof( Reise ) ).Provider;
+			NDOQuery<Reise> q = new NDOQuery<Reise>(pm, $"zweck LIKE 'A{provider.Wildcard}'");
 			r = (Reise) q.ExecuteSingle(true);
 			r.Zweck = "NewPurpose";
 			pm.VerboseMode = true;
@@ -592,48 +596,52 @@ namespace NdoUnitTests
 		}
 
 		[Test]
+//		[Ignore("Erzeugt Exception in TearDown")]
 		public void AbortedTransaction()
 		{
-			m.Hinzufuegen(r);
-			pm.MakePersistent(m);
+			m.Hinzufuegen( r );
+			pm.MakePersistent( m );
 			pm.Save();
 			pm.UnloadCache();
 
 			pm.TransactionMode = TransactionMode.Optimistic;
 
-			NDOQuery<Mitarbeiter> q = new NDOQuery<Mitarbeiter>(pm, null);
-            m = (Mitarbeiter)q.ExecuteSingle(true);
-            m.Vorname = "Hans";
+			NDOQuery<Mitarbeiter> q = new NDOQuery<Mitarbeiter>( pm, null );
+			m = (Mitarbeiter)q.ExecuteSingle( true );
+			m.Vorname = "Hans";
 			((Reise)m.Reisen[0]).Zweck = "Neuer Zweck";
 
-			FieldInfo fi = pm.NDOMapping.GetType().GetField("persistenceHandler", BindingFlags.Instance | BindingFlags.NonPublic);
-            if (fi == null)
-            {
-                System.Diagnostics.Debug.WriteLine("NDOMitarbeiterReiseTests.AbortedTransaction: obfuscated NDO dll; can't reflect fields");
-                return;
-            }
-			Hashtable ht = (Hashtable) fi.GetValue(pm.NDOMapping);
+			FieldInfo fi = pm.NDOMapping.GetType().GetField( "persistenceHandler", BindingFlags.Instance | BindingFlags.NonPublic );
+
+			Dictionary<Type, IPersistenceHandler> ht = (Dictionary<Type, IPersistenceHandler>)fi.GetValue( pm.NDOMapping );
 			ht.Clear();
-			pm.NDOMapping.FindClass(typeof(Reise)).FindField("zweck").Column.Name = "nix";
-			
+			pm.NDOMapping.FindClass( typeof( Reise ) ).FindField( "zweck" ).Column.Name = "nix";
+
 			try
 			{
-                pm.Save();
-
-            }
+				pm.Save();
+			}
 			catch
 			{
 				ht.Clear();
-				pm.NDOMapping.FindClass(typeof(Reise)).FindField("zweck").Column.Name = "Zweck";
+				pm.NDOMapping.FindClass( typeof( Reise ) ).FindField( "zweck" ).Column.Name = "Zweck";
 				pm.Abort();
 			}
+
 			pm.UnloadCache();
-            m = (Mitarbeiter)q.ExecuteSingle(true);
-			Assert.AreEqual("Hartmut", m.Vorname, "Vorname falsch");
-			Assert.AreEqual("ADC", ((Reise)m.Reisen[0]).Zweck, "Vorname falsch");
-			
+			m = (Mitarbeiter)q.ExecuteSingle( true );
+			Assert.AreEqual( "Hartmut", m.Vorname, "Vorname falsch" );
+			Assert.AreEqual( "ADC", ((Reise)m.Reisen[0]).Zweck, "Vorname falsch" );
 		}
 
+		[Test]
+		public void ResolveTest()
+		{
+			// This makes sure, that each resolve delivers a new PersistenceHandler.
+			var h1 = pm.ConfigContainer.Resolve<IPersistenceHandler>();
+			var h2 = pm.ConfigContainer.Resolve<IPersistenceHandler>();
+			Assert.IsTrue( !object.ReferenceEquals( h1, h2 ) );
+		}
 
 		[Test]
 		public void TestListEnumerator()

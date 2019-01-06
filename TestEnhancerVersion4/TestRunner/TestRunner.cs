@@ -28,6 +28,7 @@ using NdoUnitTests;
 using NDO;
 using NUnit.Framework;
 using System.Reflection;
+using NUnit.Framework.Internal;
 
 namespace NDO
 {
@@ -46,12 +47,12 @@ namespace NDO
 			DateTime startTime = DateTime.Now;
 
 #if false
-			NdoUnitTests.CompositePartListTests t = new NdoUnitTests.CompositePartListTests();
+			NDOReiseLänderTests t = new NDOReiseLänderTests();
             try
             {
                 t.Setup();
-				t.TestDerivedOnly();
-            }
+				t.TestDeleteReiseSave();
+			}
             catch (Exception ex)
             {
 				Console.WriteLine(ex.ToString());
@@ -95,19 +96,15 @@ namespace NDO
                             if (mi.GetCustomAttributes(typeof(NUnit.Framework.TestAttribute), false).Length > 0)
                             {
                                 string testName = t.FullName + "." + mi.Name;
-                                if (mi.GetCustomAttributes(typeof(NUnit.Framework.IgnoreAttribute), false).Length > 0)
-                                {
-                                    Console.WriteLine("\nIgnore: " + testName);
+								object[] attrs;
+								if ((attrs = mi.GetCustomAttributes( typeof( NUnit.Framework.IgnoreAttribute ), false )).Length > 0)
+								{
+									var attr = attrs[0];
+									var reason = (string) attr.GetType().GetField("_reason", BindingFlags.NonPublic | BindingFlags.Instance).GetValue(attr);									
+                                    Console.WriteLine($"\n===Ignore: {testName} Reason: {reason}" );
                                 }
                                 else
                                 {
-                                    Type expectedException = null;
-
-                                    object[] attrs;
-                                    if ((attrs = mi.GetCustomAttributes(typeof(ExpectedExceptionAttribute), false)).Length > 0)
-                                    {
-                                        expectedException = ((ExpectedExceptionAttribute)attrs[0]).ExpectedException;
-                                    }
                                     if (setUp != null)
                                     {
                                         try
@@ -129,18 +126,10 @@ namespace NDO
                                     }
                                     catch (TargetInvocationException ex)
                                     {
-                                        if (ex.InnerException.GetType() == expectedException)
-                                        {
-                                            Console.Write('.');
-                                            passed++;
-                                        }
-                                        else
-                                        {
-                                            //Console.Write('-');
-                                            failed++;
-                                            Console.WriteLine("\n===Test Failure===\n" + testName + "\n" + ex.InnerException.ToString());
-											Debug.WriteLine("\n===Test Failure===\n" + testName + "\n" + ex.InnerException.ToString());
-                                        }
+                                        //Console.Write('-');
+                                        failed++;
+                                        Console.WriteLine("\n===Test Failure===\n" + testName + "\n" + ex.InnerException.ToString());
+										Debug.WriteLine("\n===Test Failure===\n" + testName + "\n" + ex.InnerException.ToString());
                                     }
                                     if (tearDown != null)
                                     {

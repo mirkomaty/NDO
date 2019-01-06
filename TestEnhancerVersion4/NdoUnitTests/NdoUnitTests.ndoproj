@@ -32,15 +32,15 @@
     <References>
       <Reference AssemblyName="NDOInterfaces" AssemblyPath="..\..\NDOInterfaces\bin\Debug\NDOInterfaces.dll" CheckThisDLL="False">
       </Reference>
-      <Reference AssemblyName="nunit.framework" AssemblyPath="..\packages\NUnit.3.4.1\lib\net40\nunit.framework.dll" CheckThisDLL="False">
-      </Reference>
       <Reference AssemblyName="SqlCeProvider" AssemblyPath="..\..\SqlCEProvider\SqlCEProvider\bin\Debug\SqlCeProvider.dll" CheckThisDLL="False">
       </Reference>
       <Reference AssemblyName="System.Data.SqlServerCe" AssemblyPath="..\..\SqlCEProvider\packages\Microsoft.SqlServer.Compact.4.0.8876.1\lib\net40\System.Data.SqlServerCe.dll" CheckThisDLL="False">
       </Reference>
+      <Reference AssemblyName="Unity.Abstractions" AssemblyPath="..\packages\Unity.Abstractions.3.3.0\lib\net40\Unity.Abstractions.dll">
+      </Reference>
       <Reference AssemblyName="PureBusinessClasses" AssemblyPath="..\PureBusinessClasses\bin\Debug\PureBusinessClasses.dll">
       </Reference>
-      <Reference AssemblyName="Unity.Abstractions" AssemblyPath="..\packages\Unity.Abstractions.3.3.0\lib\net40\Unity.Abstractions.dll">
+      <Reference AssemblyName="nunit.framework" AssemblyPath="..\packages\NUnit.3.11.0\lib\net40\nunit.framework.dll" CheckThisDLL="False">
       </Reference>
     </References>
   </ProjectDescription>

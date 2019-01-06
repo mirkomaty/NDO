@@ -507,10 +507,18 @@ namespace NdoUnitTests
 		}
 
 		[Test]
-		[ExpectedException(typeof(NDOException))]
 		public void TestRefreshFailed() 
 		{
-			pm.Refresh(m);
+			bool thrown = false;
+			try
+			{
+				pm.Refresh( m );
+			}
+			catch (NDOException)
+			{
+				thrown = true;
+			}
+			Assert.AreEqual( true, thrown );
 		}
 
 		[Test]

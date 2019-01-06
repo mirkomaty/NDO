@@ -75,7 +75,7 @@ namespace NDO
 	public class PersistenceManager : PersistenceManagerBase, IPersistenceManager
 	{		
 		private bool hollowMode = false;
-		private IDictionary mappingHandler = new ListDictionary(); // currently used handlers
+		private Dictionary<Relation, IMappingTableHandler> mappingHandler = new Dictionary<Relation,IMappingTableHandler>(); // currently used handlers
 
 		private Hashtable currentRelations = new Hashtable(); // Contains names of current bidirectional relations
 		private ObjectLock removeLock = new ObjectLock();
@@ -141,7 +141,7 @@ namespace NDO
 		/// </summary>
 		/// <remarks>
 		/// Searches for a mapping file in the application directory. 
-		/// In the Professional Edition and above the constructor tries to find a file with the same name as
+		/// The constructor tries to find a file with the same name as
 		/// the assembly, but with the extension .ndo.xml. If the file is not found
 		/// or if the NDO Version is below the Professional Version it tries to find a
 		/// file called "NDOMapping.xml" in the application directory.
@@ -176,7 +176,6 @@ namespace NDO
 
 		#region Object Container Stuff
 		/// <summary>
-		/// Only available in the NDO Enterprise Edition.
 		/// Gets a container of all loaded objects and tries to load all child objects, 
 		/// which are reachable through composite relations.
 		/// </summary>
@@ -192,7 +191,6 @@ namespace NDO
 		}
 
 		/// <summary>
-		/// Only available in the NDO Enterprise Edition.
 		/// Gets a container of all loaded objects and tries to load child objects 
 		/// according to the serialisation flags provided.
 		/// </summary>
@@ -220,7 +218,6 @@ namespace NDO
 		}
 
 		/// <summary>
-		/// Only available in the NDO Enterprise Edition.
 		/// Returns a container of all objects provided in the objects list and searches for
 		/// child objects according to the serFlags.
 		/// </summary>
@@ -247,7 +244,6 @@ namespace NDO
 
 
 		/// <summary>
-		/// Only available in the NDO Enterprise Edition.
 		/// Returns a container containing the provided object 
 		/// and tries to load all child objects 
 		/// reachable through composite relations.
@@ -265,7 +261,6 @@ namespace NDO
 		}
 
 		/// <summary>
-		/// Only available in the NDO Enterprise Edition.
 		/// Returns a container containing the provided object and searches for
 		/// child objects according to the serFlags.
 		/// </summary>
@@ -684,7 +679,7 @@ namespace NDO
 			try
 			{
 				//TODO: We need a relation management, which is independent of
-				//the state management of an object. At the moment the relation
+				//the state management of an object. Currently the relation
 				//lists or elements are cached for restore, if an object is marked dirty.
 				//Thus we have to mark dirty our parent object in any case at the moment.
 				MarkDirty(pc);
@@ -1108,7 +1103,6 @@ namespace NDO
 
             if ( transactionMode == TransactionMode.None && handler != null && handler.Connection == null)
                 handler.Connection = ti.Connection;
-
 		}
 
 		/// <summary>
@@ -1715,14 +1709,7 @@ namespace NDO
 				return;
 			Class cl = GetClass(pc);
 			IQuery q;
-			if (cl.Oid.IsDependent)
-			{
-				q = CreateDependentOidQuery(pc, cl);
-			}
-			else
-			{
-                q = CreateIndependentOidQuery(pc, cl);
-			}
+            q = CreateOidQuery(pc, cl);
 			cache.UpdateCache(pc); // Make sure the object is in the cache
 			IPersistenceCapable pc2;
 			try
@@ -1754,7 +1741,7 @@ namespace NDO
 			return (IQuery)Activator.CreateInstance( qt, this, oql, hollow, queryLanguage );
 		}
 
-        private IQuery CreateIndependentOidQuery(IPersistenceCapable pc, Class cl) 
+        private IQuery CreateOidQuery(IPersistenceCapable pc, Class cl) 
         {
             ArrayList parameters = new ArrayList();
 			string oql = "oid = {0}";
@@ -1763,53 +1750,6 @@ namespace NDO
 			q.AllowSubclasses = false;
             return q;
         }
-
-		private IQuery CreateDependentOidQuery( IPersistenceCapable pc, Class cl )
-		{
-			// For an explanation the structure of the data contained in keys 
-			// look at the DependentKey constructor.
-			ArrayList parameters = new ArrayList();
-			IProvider provider = cl.Provider;
-			StringBuilder sb = new StringBuilder();
-			sb.Append( "SELECT " );
-			sb.Append( FieldMarker.Instance );
-			sb.Append( " from " );
-			sb.Append( provider.GetQualifiedTableName( cl.TableName ) );
-			sb.Append( " WHERE " );
-
-			int columnCount = cl.Oid.OidColumns.Count;
-
-			Key key = pc.NDOObjectId.Id;
-
-			int relationIndex = 0;
-			string relationName = string.Empty;
-
-			for (int i = 0; i < columnCount; i++)
-			{
-				OidColumn oidColumn = (OidColumn)cl.Oid.OidColumns[i];
-				sb.Append( provider.GetQuotedName( oidColumn.Name ) );
-				sb.Append( " = " );
-				sb.Append( provider.GetSqlLiteral( key[i] ) );
-				Relation rel = oidColumn.Relation;
-				if (relationName != oidColumn.RelationName)
-				{
-					relationName = oidColumn.RelationName;
-					if (rel.ForeignKeyTypeColumnName != null)
-					{
-						sb.Append( " AND " );
-						sb.Append( provider.GetQuotedName( rel.ForeignKeyTypeColumnName ) );
-						sb.Append( " = " );
-						sb.Append( provider.GetSqlLiteral( key[columnCount + relationIndex] ) );
-						relationIndex++;
-					}
-				}
-				if (i < columnCount - 1)
-					sb.Append( " AND " );
-			}
-
-			var q = NewQuery( pc.GetType(), sb.ToString(), false, QueryLanguage.Sql );
-			return q;
-		}
 
 		/// <summary>
 		/// Mark the object dirty. The current state is
@@ -2481,7 +2421,6 @@ namespace NDO
 			}
 		}
 
-
         public void UpdateCreatedMappingTableEntries()
         {
             foreach (MappingTableEntry e in createdMappingTableObjects)
@@ -2804,9 +2743,13 @@ namespace NDO
 				row.Delete();
 			}
 			IMappingTableHandler handler;
-			mappingHandler[r] = handler = PersistenceHandlerManager.GetPersistenceHandler(pc, this.HasOwnerCreatedIds).GetMappingTableHandler(r);
-			handler.VerboseMode = VerboseMode;
-			handler.LogAdapter = LogAdapter;
+			if (!mappingHandler.TryGetValue( r, out handler ))
+			{
+				mappingHandler[r] = handler = PersistenceHandlerManager.GetPersistenceHandler( pc, this.HasOwnerCreatedIds ).GetMappingTableHandler( r );
+				handler.VerboseMode = VerboseMode;
+				handler.LogAdapter = LogAdapter;
+			}
+
 			CheckTransaction(handler, e.Relation.MappingTable.Connection);
 		}
 
@@ -3734,6 +3677,7 @@ namespace NDO
 		/// <returns>A list of all persistent objects of the given class. Subclasses will not be included in the result set.</returns>
 		public virtual IList GetClassExtent(Type t) 
 		{
+#warning Das sollte nochmal überdacht werden, ob das noch Sinn macht
 			return GetClassExtent(t, true);
 		}
 
@@ -3746,10 +3690,7 @@ namespace NDO
 		/// <remarks>Subclasses of the given type are not fetched.</remarks>
 		public virtual IList GetClassExtent(Type t, bool hollow) 
 		{
-#warning Hier Virtual Table zurückgeben
-			Type template = typeof( NDOQuery<IPersistenceCapable> ).GetGenericTypeDefinition();
-			Type queryType = template.MakeGenericType( t );
-			IQuery q = (IQuery) Activator.CreateInstance( queryType, this );
+			IQuery q = NewQuery( t, null, hollow );
 			return q.Execute();
 		}
 
@@ -3946,7 +3887,7 @@ namespace NDO
 		public TransactionMode TransactionMode
 		{
 			get { return transactionMode; }
-			set { transactionMode = value; }			
+			set { transactionMode = value; }
 		}
 
 		/// <summary>
@@ -4099,23 +4040,12 @@ namespace NDO
 
 	internal class TransactionInfo
 	{
-        Hashtable handlers = new Hashtable();
+        HashSet<IPersistenceHandlerBase> handlers = new HashSet<IPersistenceHandlerBase>();
         public void SecureAddHandler(IPersistenceHandlerBase o)
         {
             if(!this.handlers.Contains(o))
-                this.handlers.Add(o, null);
-        }
-        
-        ArrayList Handlers
-        {
-            get
-            {
-                ArrayList result = new ArrayList();
-                foreach (DictionaryEntry de in this.handlers)
-                    result.Add(de.Key);
-                return result;
-            }
-        }
+                this.handlers.Add(o);
+        }        
 
 		IDbTransaction transaction = null;
 		public IDbTransaction Transaction
@@ -4125,22 +4055,14 @@ namespace NDO
             { 
                 transaction = value;
                 // Set the Transaction property of all commands in all handlers to null
-                foreach (IPersistenceHandlerBase hb in this.Handlers)
+                foreach (IPersistenceHandlerBase hb in this.handlers)
                     hb.Transaction = null;
             }
 		}
-		IDbConnection connection = null;
-		public IDbConnection Connection
-		{
-			get { return connection; }
-			set { connection = value; }
-		}
-		string connectionAlias = null;
-        public string ConnectionAlias
-        {
-            get { return connectionAlias; }
-            set { connectionAlias = value; }
-        }
+		
+		public IDbConnection Connection { get; set; }
+		
+        public string ConnectionAlias { get; set; }
 	}
 
 	internal class TransactionTable : IEnumerable, IEnumerator
@@ -4153,13 +4075,14 @@ namespace NDO
 			this.newConnectionCallback = callback;
 		}
 
-		Hashtable transactionInfos = new Hashtable();
-		public TransactionInfo this[NDO.Mapping.Connection conn]
+		Dictionary<string, TransactionInfo> transactionInfos = new Dictionary<string, TransactionInfo>();
+		public TransactionInfo this[Connection conn]
 		{
 			get 
 			{
-				TransactionInfo result = (TransactionInfo) transactionInfos[conn.ID];
-				if (result == null)
+				TransactionInfo result;
+
+				if (!transactionInfos.TryGetValue( conn.ID, out result ))
 				{
 					result = new TransactionInfo();
 					IProvider p = conn.Parent.GetProvider(conn);
@@ -4177,6 +4100,7 @@ namespace NDO
 					result.Transaction = null;
 					transactionInfos[conn.ID] = result;
 				}
+
 				return result;
 			}
 		}
