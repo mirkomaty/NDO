@@ -31,7 +31,7 @@ using NDO.Linq;
 using NDO.Mapping;
 using BusinessClasses;
 using NDOInterfaces;
-using FirebirdSql.Data.FirebirdClient;
+using NDO.Query;
 
 namespace TestApp
 {
@@ -64,49 +64,54 @@ namespace TestApp
 
 			List<DataContainer> list = pm.Objects<DataContainer>();
 
-			//VirtualTable<DataContainer> vt = pm.Objects<DataContainer>().Where( dc => dc.StringVar.Like( "T%" ) );
-			//Console.WriteLine(vt.QueryString);
+            Dump(pm.Objects<DataContainer>().ResultTable, 1);
+            Dump(pm.Objects<DataContainer>().Where(dc => dc.BoolVar == true).ResultTable, 1);
+            Dump(pm.Objects<DataContainer>().Where(dc => dc.ByteVar == 0x55).ResultTable, 3);
 
-//			List<DataContainer> list = from dc in pm.Objects<DataContainer>() where dc.BoolVar == true select dc;
-//			List<DataContainer> list = from dc in pm.Objects<DataContainer>() where dc.ByteVar == 0x55 select dc;
-			
-			//DateTime dt = DateTime.Today;
-			//List<DataContainer> list = from dc in pm.Objects<DataContainer>() where dc.DateTimeVar == dt select dc;
+            DateTime dt = new DataContainer().DateTimeVar;
+            Dump(pm.Objects<DataContainer>().Where(dc => dc.DateTimeVar == dt).ResultTable, 4);
+            DateTime dt1 = new DateTime(2006, 12, 6, 0, 0, 0);
+            DateTime dt2 = new DateTime(2006, 12, 8, 23, 0, 0);
+            Dump(pm.Objects<DataContainer>().Where(dc => dc.DateTimeVar.Between(dt1, dt2)).ResultTable, 5);
 
-            //DateTime dt1 = DateTime.Today - TimeSpan.FromDays(1);
-            //DateTime dt2 = DateTime.Today + TimeSpan.FromDays(1);
-            //Query q = pm.NewQuery(typeof (DataContainer), qh.dateTimeVar + " BETWEEN {0} AND {1}");
-            //q.Parameters.Add(dt1);
-            //q.Parameters.Add(dt2);
-//			List<DataContainer> list = from dc in pm.Objects<DataContainer>() where dc.DecVar > 0.34m select dc;
-//			List<DataContainer> list = from dc in pm.Objects<DataContainer>() where dc.DoubleVar < 6.54 select dc;
-//			List<DataContainer> list = from dc in pm.Objects<DataContainer>() where dc.FloatVar <= 10 select dc;
-//			List<DataContainer> list = from dc in pm.Objects<DataContainer>() where 10 >= dc.FloatVar select dc;
-//			List<DataContainer> list = from dc in pm.Objects<DataContainer>() where dc.Int64Var == 0x123456781234567 select dc;
+            Dump(pm.Objects<DataContainer>().Where(dc => dc.DecVar > 0.34m).ResultTable, 6);
+            Dump(pm.Objects<DataContainer>().Where(dc => dc.DoubleVar < 6.54).ResultTable, 7);
+            Dump(pm.Objects<DataContainer>().Where(dc => dc.FloatVar <= 10).ResultTable, 8);
+            Dump(pm.Objects<DataContainer>().Where(dc => dc.Int64Var == 0x123456781234567).ResultTable, 9);
+            Dump(pm.Objects<DataContainer>().Where(dc => dc.StringVar == "Test").ResultTable, 10);
+            Dump(pm.Objects<DataContainer>().Where(dc => dc.StringVar.Like("T%")).ResultTable, 11);
+            Dump(new NDOQuery<DataContainer>(pm, "SELECT * FROM \"DataContainer\" WHERE \"StringVar\" LIKE 'T%'", false, QueryLanguage.Sql).Execute(), 12);
 
-//			List<DataContainer> list = from dc in pm.Objects<DataContainer>() where dc.StringVar == "Test" select dc;
-
-//			List<DataContainer> list = from dc in pm.Objects<DataContainer>() where dc.StringVar.Like( "T%" ) select dc;
-
-//			List<DataContainer> list = new NDOQuery<DataContainer>( pm, "stringVar LIKE 'T%' ESCAPE '\\'" ).Execute();
-//			List<DataContainer> list = new NDOQuery<DataContainer>( pm, "SELECT * FROM \"DataContainer\" WHERE \"StringVar\" LIKE 'T%'", false, Query.Language.Sql).Execute();
-
-			if (list.Count == 0)
-			{
-				Console.WriteLine("Nothing found");
-			}
-			else
-			{
-				DataContainer dc = (DataContainer) list[0];
-				//Console.WriteLine(dc.DoubleVar);
-				Console.WriteLine(dc.ByteVar);
-				Console.WriteLine(dc.GuidVar);
-				//Console.WriteLine(dc.DecVar.ToString());
-			}
-			Console.WriteLine("Ready");		
+            Console.WriteLine("Ready");		
 			
 #endif			
 		}
+
+        private static void Dump(List<DataContainer> l, int nr)
+        {
+            Console.Write($"{nr} ");
+            if (l.Count == 0)
+            {
+                Console.WriteLine("Nichts gefunden");
+            }
+            else
+            {
+                //DataContainer dc = (DataContainer)l[0];
+                //Console.WriteLine( dc.DecVar );
+                //Console.WriteLine( dc.GuidVar );
+                //Console.WriteLine( dc.NDOObjectId.Id.Value );
+
+                //Console.WriteLine(dc.Uint64Var);
+                //Console.WriteLine(dc.ByteVar);
+                //foreach ( Byte b in dc.ByteArrVar )
+                //	Console.Write( b.ToString() + " " );
+                //            Console.WriteLine("");
+                //Console.WriteLine(dc.GuidVar);
+                //Console.WriteLine(dc.DecVar.ToString());				 
+                Console.WriteLine("OK");
+            }
+        }
+
 
         static void GenerateDatabase()
         {

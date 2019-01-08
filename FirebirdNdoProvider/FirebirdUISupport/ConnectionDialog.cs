@@ -27,7 +27,7 @@ using System.ComponentModel;
 using System.Windows.Forms;
 using FirebirdSql.Data.FirebirdClient;
 
-namespace NDO.FirebirdProvider
+namespace FirebirdUISupport
 {
 	/// <summary>
 	/// Zusammenfassung für ConnectionDialog.

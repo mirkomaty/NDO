@@ -80,6 +80,13 @@
     <Reference Include="FirebirdProvider">
       <HintPath>..\FirebirdNdoProvider\FirebirdProvider.dll</HintPath>
     </Reference>
+    <Reference Include="FirebirdSql.Data.FirebirdClient, Version=5.12.1.0, Culture=neutral, PublicKeyToken=3750abcc3150b00c, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\FirebirdNdoProvider\packages\FirebirdSql.Data.FirebirdClient.5.12.1\lib\net452\FirebirdSql.Data.FirebirdClient.dll</HintPath>
+    </Reference>
+    <Reference Include="FirebirdUISupport">
+      <HintPath>..\FirebirdNdoProvider\FirebirdUISupport\bin\$(Configuration)\FirebirdUISupport.dll</HintPath>
+    </Reference>
     <Reference Include="Mapping, Version=1.0.5490.31731, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\SimpleMappingTool\bin\Release\Mapping.exe</HintPath>

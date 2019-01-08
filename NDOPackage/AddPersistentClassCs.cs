@@ -25,8 +25,6 @@ using System.Text;
 using System.IO;
 using System.Windows.Forms;
 using EnvDTE;
-using EnvDTE80;
-using Microsoft.VisualStudio.CommandBars;
 
 namespace NETDataObjects.NDOVSPackage
 {
