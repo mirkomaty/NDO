@@ -22,38 +22,55 @@
 
 using System;
 
-namespace NDOInterfaces
+namespace NDO.UISupport
 {
 	/// <summary>
-	/// Use this interface to output messages, while generating DDL code.
+	/// Objects of this class are used to create a database using the default 
+	/// implementation of IProvider.CreateDatabase in NDOAbstractProvider.
+	/// <seealso cref="NDOAbstractProvider"/>
 	/// </summary>
-	public interface IMessageAdapter
+	public class NDOCreateDbParameter
 	{
+		string databaseName;
+		string connection;
+
+
 		/// <summary>
-		/// Increases the current indent level.
+		/// Unquoted name of the database.
 		/// </summary>
-		void Indent();
-		/// <summary>
-		/// Decreases the current indent level.
-		/// </summary>
-		void Unindent();
-		/// <summary>
-		/// Writes the given text to the output device.
-		/// </summary>
-		/// <param name="text">A message to write.</param>
 		/// <remarks>
-		/// The text will be written to the Visual Studio Output pane, if the enhancer runs in visual studio.
-		/// The stand-alone enhancer writes to the console.
+		/// Please note, that NDO uses the provider to quote the database name before passing it to CREATE TABLE.
 		/// </remarks>
-		void Write(String text);
+		public string DatabaseName
+		{
+			get { return databaseName; }
+			set { databaseName = value; }
+		}
+
 		/// <summary>
-		/// Writes the given text to the output device.
+		/// Connection string to be used to create the database;
 		/// </summary>
-		/// <param name="text">A message to write.</param>
-		/// <remarks>
-		/// The text will be written to the Visual Studio Output pane, if the enhancer runs in visual studio.
-		/// The stand-alone enhancer writes to the console.
-		/// </remarks>
-		void WriteLine(String text);
+		public string ConnectionString
+		{
+			get { return connection; }
+			set { connection = value; }
+		}
+
+
+		/// <summary>
+		/// Constructs a NDOCreateDbParameter object.
+		/// </summary>
+		/// <param name="databaseName">Initializes the datbase name.</param>
+		/// <param name="connection">Initializes the connection string.</param>
+		public NDOCreateDbParameter(string databaseName, string connection)
+		{
+			this.databaseName = databaseName;
+			this.connection = connection;
+		}
+
+		/// <summary>
+		/// Constructs a NDOCreateDbParameter object.
+		/// </summary>
+		public NDOCreateDbParameter(){}
 	}
 }

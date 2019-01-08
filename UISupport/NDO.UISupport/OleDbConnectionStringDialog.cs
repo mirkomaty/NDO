@@ -25,7 +25,7 @@ using System.Windows.Forms;
 using System.Runtime.InteropServices;
 using System.Runtime.CompilerServices;
 
-namespace NDOInterfaces
+namespace NDO.UISupport
 {
 	[ComImport, Guid("00000515-0000-0010-8000-00AA006D2EA4")]
 	internal interface Connection15

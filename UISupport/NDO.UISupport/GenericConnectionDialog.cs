@@ -1,5 +1,5 @@
 ﻿//
-// Copyright (c) 2002-2016 Mirko Matytschak 
+// Copyright (c) 2002-2019 Mirko Matytschak 
 // (www.netdataobjects.de)
 //
 // Author: Mirko Matytschak
@@ -26,7 +26,7 @@ using System.Collections;
 using System.ComponentModel;
 using System.Windows.Forms;
 
-namespace NDOInterfaces
+namespace NDO.UISupport
 {
 	/// <summary>
 	/// Zusammenfassung für GenericConnectionDialog.

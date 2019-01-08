@@ -5,7 +5,7 @@
     <EnableEnhancer>False</EnableEnhancer>
     <VerboseMode>False</VerboseMode>
     <NewMapping>False</NewMapping>
-    <GenerateSQL>True</GenerateSQL>
+    <GenerateSQL>False</GenerateSQL>
     <DefaultConnection>
     </DefaultConnection>
     <TargetMappingFileName>NDOMapping.xml</TargetMappingFileName>
@@ -30,13 +30,13 @@
     <KeyFile>
     </KeyFile>
     <References>
-      <Reference AssemblyName="Castle.Core" AssemblyPath="..\NDODLL\packages\Castle.Core.4.3.1\lib\net45\Castle.Core.dll" CheckThisDLL="False">
+      <Reference AssemblyName="Castle.Core" AssemblyPath="..\NDODLL\packages\Castle.Core.4.3.1\lib\net45\Castle.Core.dll">
       </Reference>
-      <Reference AssemblyName="Moq" AssemblyPath="..\NDODLL\packages\Moq.4.9.0\lib\net45\Moq.dll" CheckThisDLL="False">
+      <Reference AssemblyName="Moq" AssemblyPath="..\NDODLL\packages\Moq.4.9.0\lib\net45\Moq.dll">
       </Reference>
-      <Reference AssemblyName="NDOInterfaces" AssemblyPath="..\NDOInterfaces\bin\Debug\NDOInterfaces.dll" CheckThisDLL="False">
+      <Reference AssemblyName="NDOInterfaces" AssemblyPath="..\NDOInterfaces\bin\Debug\NDOInterfaces.dll">
       </Reference>
-      <Reference AssemblyName="nunit.framework" AssemblyPath="..\NDODLL\packages\NUnit.3.10.1\lib\net45\nunit.framework.dll" CheckThisDLL="False">
+      <Reference AssemblyName="nunit.framework" AssemblyPath="..\NDODLL\packages\NUnit.3.10.1\lib\net45\nunit.framework.dll">
       </Reference>
       <Reference AssemblyName="PureBusinessClasses" AssemblyPath="..\TestEnhancerVersion4\PureBusinessClasses\bin\Debug\PureBusinessClasses.dll">
       </Reference>

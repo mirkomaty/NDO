@@ -109,9 +109,6 @@
     </Reference>
     <Reference Include="System.Runtime.Serialization.Formatters.Soap" />
     <Reference Include="System.Web" />
-    <Reference Include="System.Windows.Forms">
-      <Name>System.Windows.Forms</Name>
-    </Reference>
     <Reference Include="System.Xml">
       <Name>System.XML</Name>
     </Reference>
@@ -125,15 +122,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AccessGenerator.cs" />
-    <Compile Include="ADOX\AccessCreateDbDlg.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="ADOX\ObjectTypeEnum.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="ADOX\_Catalog.cs">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="AesHelper.cs" />
     <Compile Include="AssemblyInfo.cs">
       <SubType>Code</SubType>
@@ -466,10 +454,6 @@
     <Compile Include="_NDOContainerStack.cs">
       <SubType>Code</SubType>
     </Compile>
-    <EmbeddedResource Include="ADOX\AccessCreateDbDlg.resx">
-      <DependentUpon>AccessCreateDbDlg.cs</DependentUpon>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
     <EmbeddedResource Include="NDODataSet.resx">
       <DependentUpon>NDODataSet.cs</DependentUpon>
       <SubType>Designer</SubType>

@@ -28,8 +28,6 @@ using System.Data;
 using System.Data.Common;
 using System.Data.SqlClient;
 using NDOInterfaces;
-using System.Windows.Forms;
-
 
 namespace NDO
 {
@@ -200,27 +198,6 @@ namespace NDO
 				return 65535;
 			return base.GetDefaultLength (t);
 		}
-
-		const string SqlString = "Provider=SQLOLEDB.1;";
-		public override System.Windows.Forms.DialogResult ShowConnectionDialog(ref string connectionString)
-		{
-			string tempstr;
-			if (connectionString == null || connectionString == string.Empty)
-				tempstr = SqlString;
-			else
-			{
-				if (!(connectionString.IndexOf(SqlString) > -1))
-					tempstr = SqlString + connectionString;
-				else
-					tempstr = connectionString;
-			}
-			OleDbConnectionDialog dlg = new OleDbConnectionDialog(tempstr);
-			DialogResult result = dlg.Show();
-			if (result != DialogResult.Cancel)
-				connectionString = dlg.ConnectionString.Replace(SqlString, string.Empty);
-			return result;
-		}
-
 
 		/// <summary>
 		/// See <see cref="IProvider"> IProvider interface </see>

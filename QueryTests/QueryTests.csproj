@@ -43,7 +43,7 @@
     <Reference Include="Moq, Version=4.9.0.0, Culture=neutral, PublicKeyToken=69f491c39445e920, processorArchitecture=MSIL">
       <HintPath>..\NDODLL\packages\Moq.4.9.0\lib\net45\Moq.dll</HintPath>
     </Reference>
-    <Reference Include="NDOInterfaces, Version=3.0.0.0, Culture=neutral, PublicKeyToken=ff5e453a099b8326, processorArchitecture=MSIL">
+    <Reference Include="NDOInterfaces, Version=4.0.0.0, Culture=neutral, PublicKeyToken=ff5e453a099b8326, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\NDOInterfaces\bin\Debug\NDOInterfaces.dll</HintPath>
     </Reference>

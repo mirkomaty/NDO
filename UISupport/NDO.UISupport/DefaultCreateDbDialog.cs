@@ -1,5 +1,5 @@
 ﻿//
-// Copyright (c) 2002-2016 Mirko Matytschak 
+// Copyright (c) 2002-2019 Mirko Matytschak 
 // (www.netdataobjects.de)
 //
 // Author: Mirko Matytschak
@@ -24,9 +24,9 @@ using System;
 using System.Drawing;
 using System.Collections;
 using System.ComponentModel;
-using System.Windows.Forms;
+using F = System.Windows.Forms;
 
-namespace NDOInterfaces
+namespace NDO.UISupport
 {
 	/// <summary>
 	/// Zusammenfassung für DefaultCreateDbDialog.
@@ -37,7 +37,6 @@ namespace NDOInterfaces
 		private System.Windows.Forms.Button btnCancel;
 		private System.Windows.Forms.TextBox txtDbName;
 		private System.Windows.Forms.Label label1;
-		IProvider provider;
 		private System.Windows.Forms.Label label3;
 		private System.Windows.Forms.TextBox txtConnection;
 		private System.Windows.Forms.Button btnConnection;
@@ -46,6 +45,7 @@ namespace NDOInterfaces
 		/// Erforderliche Designervariable.
 		/// </summary>
 		private System.ComponentModel.Container components = null;
+		private readonly IDbUISupport provider;
 
 		/// <summary>
 		/// Gets the data entered by the user.
@@ -72,18 +72,19 @@ namespace NDOInterfaces
 			return input;
 		}
 
-		public DefaultCreateDbDialog(IProvider provider, NDOCreateDbParameter data)
+		public DefaultCreateDbDialog(IDbUISupport provider, NDOCreateDbParameter data)
 		{
 			//
 			// Erforderlich für die Windows Form-Designerunterstützung
 			//
 			InitializeComponent();
-			this.provider = provider;
 			if (data != null)
 			{
-				this.txtConnection.Text = SaveString(data.Connection);
+				this.txtConnection.Text = SaveString(data.ConnectionString);
 				this.txtDbName.Text = SaveString(data.DatabaseName);
 			}
+
+			this.provider = provider;
 		}
 
 		/// <summary>
@@ -201,7 +202,7 @@ namespace NDOInterfaces
 		private void btnConnection_Click(object sender, System.EventArgs e)
 		{
 			string conn = null;
-			if (this.provider.ShowConnectionDialog(ref conn) == DialogResult.Cancel)
+			if (this.provider.ShowConnectionDialog(ref conn) == NDO.UISupport.NdoDialogResult.Cancel)
 				return;
 			this.txtConnection.Text = conn;
 		}

@@ -27,8 +27,6 @@ using System.Data;
 using System.Data.Common;
 using System.Data.OleDb;
 using NDOInterfaces;
-using System.Windows.Forms;
-using ADOX;
 
 namespace NDO
 {
@@ -218,29 +216,6 @@ namespace NDO
 				throw new NDOException(27, "Can't convert " + t.FullName + " into a DbType type.");
 		}
 
-
-		const string AccessString = "Provider=Microsoft.Jet.OLEDB.4.0;";
-		public override DialogResult ShowConnectionDialog(ref string connectionString)
-		{
-			string tempstr;
-			if (connectionString == null || connectionString == string.Empty)
-				tempstr = AccessString;
-			else
-			{
-				if (!(connectionString.IndexOf(AccessString) > -1))
-					tempstr = AccessString;
-				else
-					tempstr = connectionString;
-			}
-			OleDbConnectionDialog dlg = new OleDbConnectionDialog(tempstr);
-			DialogResult result = dlg.Show();
-			if (result != DialogResult.Cancel)
-				connectionString = dlg.ConnectionString;
-			return result;
-		}
-
-
-
 		/// <summary>
 		/// See <see cref="IProvider"> IProvider interface </see>
 		/// </summary>
@@ -427,39 +402,9 @@ namespace NDO
 		/// </summary>
 		public override bool SupportsNativeGuidType { get { return true; } }
 
-		public override string CreateDatabase(object necessaryData)
-		{
-			string connStr = necessaryData as string;
-			if (connStr == null)
-				throw new ArgumentException("CreateDatabase: wrong parameter type or null parameter", "necessaryData");
-
-			try
-			{
-				Type t = Type.GetTypeFromCLSID(new Guid("{00000602-0000-0010-8000-00AA006D2EA4}"));
-				object oc = Activator.CreateInstance(t);
-				ADOX._Catalog cat = (ADOX._Catalog) oc;
-				cat.Create(connStr + ";Jet OLEDB:Engine Type=5");
-				return connStr;
-			}
-			catch (Exception ex)
-			{
-				throw new NDOException(19, "Error while attempting to create a database: Exception Type: " + ex.GetType().Name + " Message: " + ex.Message);
-			}
-
-		}
-
 		public override bool SupportsFetchLimit
 		{
 			get { return false; }
-		}
-
-		public override DialogResult ShowCreateDbDialog(ref object necessaryData)
-		{
-			AccessCreateDbDlg dlg = new AccessCreateDbDlg();
-			if (dlg.ShowDialog() == DialogResult.Cancel)
-				return DialogResult.Cancel;
-			necessaryData = dlg.ConnectionString;
-			return DialogResult.OK;
 		}
 
 		#endregion

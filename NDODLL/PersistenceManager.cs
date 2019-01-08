@@ -1070,9 +1070,8 @@ namespace NDO
 				if (handler.Connection != null)
 				{
 					// CheckTransaction should have been called before for this handler.
-#warning Der Assert muss wieder rein
+					System.Diagnostics.Debug.Assert( handler.Connection == ti.Connection );
 
-					//System.Diagnostics.Debug.Assert( handler.Connection == ti.Connection );
 					// Force to always use the same connection.
 					ti.Connection = handler.Connection;
 				}

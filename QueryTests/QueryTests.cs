@@ -235,7 +235,7 @@ namespace QueryTests
 				q = new NDOQuery<OrderDetail>( pm, "oid = -4" );
 				string s = q.GeneratedQuery;
 			}
-			catch (Exception ex)
+			catch (NDOException)
 			{
 				thrown = true;
 			}
