@@ -320,7 +320,7 @@
     <Compile Include="NDORelationAttribute.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="NDOSqlProvider.cs">
+    <Compile Include="NDOSqlServerProvider.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="NDOTransientAttribute.cs">
