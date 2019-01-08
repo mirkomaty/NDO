@@ -149,7 +149,7 @@ namespace NDO
 			foreach(System.Data.IDbDataParameter dp in cmd.Parameters)
 			{
 				string parType;
-				if (provider is NDOSqlProvider)
+				if (provider is NDOSqlServerProvider)
 					parType = (((System.Data.SqlClient.SqlParameter)dp).SqlDbType).ToString();
 				else if (provider is NDOAccessProvider)
 					parType = (((System.Data.OleDb.OleDbParameter)dp).OleDbType).ToString();

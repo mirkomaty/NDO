@@ -35,7 +35,7 @@ namespace NDO
 	/// This is an Implementation of the IProvider interface for SqlServer. 
 	/// For more information see <see cref="IProvider"> IProvider interface </see>.
 	/// </summary>
-	public class NDOSqlProvider : NDOAbstractProvider 
+	public class NDOSqlServerProvider : NDOAbstractProvider 
 	{
 	
 		#region Implementation of IProvider
@@ -361,26 +361,21 @@ namespace NDO
 			}
 		}
 
-		public override string CreateDatabase(object necessaryData)
+		public override string CreateDatabase(string databaseName, string connectionString, object additionalData)
 		{
-			base.CreateDatabase(necessaryData);
-			// Don't need to check, if type is OK, since that happens in base.CreateDatabase
-			NDOCreateDbParameter par = necessaryData as NDOCreateDbParameter;
-
-			string dbName = par.DatabaseName;
 
 			Regex regex = new Regex(@"Initial\sCatalog=([^\;]*)");
-			Match match = regex.Match(par.Connection);
+			Match match = regex.Match( connectionString );
 			if (match.Success)
 			{
-				return par.Connection.Substring(0, match.Groups[1].Index) + dbName + par.Connection.Substring(match.Index + match.Length);
+				return connectionString.Substring(0, match.Groups[1].Index) + GetQuotedName(databaseName) + connectionString.Substring(match.Index + match.Length);
 			}
-			if (par.Connection.EndsWith(";"))
-				return par.Connection + "Initial Catalog=" + dbName;
-			else
-				return par.Connection + ";Initial Catalog=" + dbName;
-		}
 
+			if (connectionString.EndsWith(";"))
+				return connectionString + "Initial Catalog=" + databaseName;
+			else
+				return connectionString + ";Initial Catalog=" + databaseName;
+		}
 
 		#endregion
 

@@ -70,7 +70,7 @@ namespace NDO
 				if (this.providers == null)  // Multithreading DoubleCheck
 				{
 					this.providers = new Dictionary<string, IProvider>();
-                    IProvider provider = new NDOSqlProvider();
+                    IProvider provider = new NDOSqlServerProvider();
                     if (!this.providers.ContainsKey("SqlServer"))
                         this.providers.Add("SqlServer", provider);
 					SqlServerGenerator sqlGen = new SqlServerGenerator();
