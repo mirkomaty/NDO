@@ -4,7 +4,7 @@
     <Connection ID="C0" Name="Data Source=test.db" Type="Sqlite" />
   </Connections>
   <Classes>
-    <Class AssemblyName="BusinessClasses" FullName="BusinessClasses.DataContainer" TableName="DataContainer" ConnectionId="C0">
+    <Class AssemblyName="BusinessClasses" FullName="BusinessClasses.DataContainer" TableName="DataContainer" ConnectionId="C0" TypeCode="1273860208">
       <Oid>
         <OidColumn Name="ID" NetType="System.Guid, mscorlib" />
       </Oid>

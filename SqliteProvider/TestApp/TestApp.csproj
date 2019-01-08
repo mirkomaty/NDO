@@ -44,6 +44,8 @@
     <IsWebBootstrapper>false</IsWebBootstrapper>
     <UseApplicationTrust>false</UseApplicationTrust>
     <BootstrapperEnabled>true</BootstrapperEnabled>
+    <NuGetPackageImportStamp>
+    </NuGetPackageImportStamp>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <OutputPath>bin\Debug\</OutputPath>
@@ -96,22 +98,29 @@
       <Project>{273BB4ED-74C4-482F-ACE2-E1564ACBA210}</Project>
       <Name>SqliteProvider</Name>
     </ProjectReference>
-    <Reference Include="NDO, Version=2.0.0.0, Culture=neutral, PublicKeyToken=37bfdffa92a0cd24, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
+    <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.2.0\lib\net40\EntityFramework.dll</HintPath>
     </Reference>
-    <Reference Include="NDOInterfaces, Version=2.0.0.0, Culture=neutral, PublicKeyToken=ff5e453a099b8326, processorArchitecture=MSIL">
+    <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.2.0\lib\net40\EntityFramework.SqlServer.dll</HintPath>
+    </Reference>
+    <Reference Include="NDO, Version=4.0.0.0, Culture=neutral, PublicKeyToken=37bfdffa92a0cd24, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\NDOInterfaces\bin\release\NDOInterfaces.dll</HintPath>
+      <HintPath>..\..\NDODLL\bin\Debug\NDO.dll</HintPath>
+    </Reference>
+    <Reference Include="NDOInterfaces, Version=4.0.0.0, Culture=neutral, PublicKeyToken=ff5e453a099b8326, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\NDOInterfaces\bin\Debug\NDOInterfaces.dll</HintPath>
     </Reference>
     <Reference Include="System">
       <Name>System</Name>
     </Reference>
+    <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Data">
       <Name>System.Data</Name>
     </Reference>
-    <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="System.EnterpriseServices">
-      <Name>System.EnterpriseServices</Name>
+    <Reference Include="System.Data.SQLite, Version=1.0.109.0, Culture=neutral, PublicKeyToken=db937bc2d44ff139, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Data.SQLite.Core.1.0.109.2\lib\net40\System.Data.SQLite.dll</HintPath>
     </Reference>
     <Reference Include="System.Xml">
       <Name>System.XML</Name>
@@ -121,6 +130,9 @@
       <Project>{96E72A69-AAF6-48F7-8541-57F516414969}</Project>
       <Package>{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</Package>
     </ProjectReference>
+    <Reference Include="Unity.Abstractions, Version=3.3.0.0, Culture=neutral, PublicKeyToken=6d32ff45e0ccc69f, processorArchitecture=MSIL">
+      <HintPath>..\packages\Unity.Abstractions.3.3.0\lib\net40\Unity.Abstractions.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Content Include="App.ico" />
@@ -136,6 +148,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
+    <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
@@ -157,7 +170,7 @@
   <ItemGroup />
   <ProjectExtensions>
     <VisualStudio>
-      <UserProperties NDODefaultConnection="Provider=Microsoft.Jet.OLEDB.4.0;Data Source=D:\Persistenz\TestDataTypes\DataTest.mdb;Persist Security Info=False" NDOEnableAddIn="true" NDOEnableEnhancer="false" NDOGenerateMapping="true" NDOGenerateSchema="true" NDONewMapping="false" NDOMergeMapping="true" NDOMergeSchema="true" NDOGenerateSQL="false" />
+      <UserProperties NDOGenerateSQL="false" NDOMergeSchema="true" NDOMergeMapping="true" NDONewMapping="false" NDOGenerateSchema="true" NDOGenerateMapping="true" NDOEnableEnhancer="false" NDOEnableAddIn="true" NDODefaultConnection="Provider=Microsoft.Jet.OLEDB.4.0;Data Source=D:\Persistenz\TestDataTypes\DataTest.mdb;Persist Security Info=False" />
     </VisualStudio>
   </ProjectExtensions>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
@@ -167,4 +180,13 @@
     <PostBuildEvent>
     </PostBuildEvent>
   </PropertyGroup>
+  <Import Project="..\packages\ndo.dll.3.0.0.9\build\ndo.dll.targets" Condition="Exists('..\packages\ndo.dll.3.0.0.9\build\ndo.dll.targets')" />
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>Dieses Projekt verweist auf mindestens ein NuGet-Paket, das auf diesem Computer fehlt. Verwenden Sie die Wiederherstellung von NuGet-Paketen, um die fehlenden Dateien herunterzuladen. Weitere Informationen finden Sie unter "http://go.microsoft.com/fwlink/?LinkID=322105". Die fehlende Datei ist "{0}".</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('..\packages\ndo.dll.3.0.0.9\build\ndo.dll.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\ndo.dll.3.0.0.9\build\ndo.dll.targets'))" />
+    <Error Condition="!Exists('..\packages\System.Data.SQLite.Core.1.0.109.2\build\net40\System.Data.SQLite.Core.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\System.Data.SQLite.Core.1.0.109.2\build\net40\System.Data.SQLite.Core.targets'))" />
+  </Target>
+  <Import Project="..\packages\System.Data.SQLite.Core.1.0.109.2\build\net40\System.Data.SQLite.Core.targets" Condition="Exists('..\packages\System.Data.SQLite.Core.1.0.109.2\build\net40\System.Data.SQLite.Core.targets')" />
 </Project>

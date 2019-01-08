@@ -1,5 +1,5 @@
 ﻿//
-// Copyright (c) 2002-2016 Mirko Matytschak 
+// Copyright (c) 2002-2019 Mirko Matytschak 
 // (www.netdataobjects.de)
 //
 // Author: Mirko Matytschak
@@ -32,7 +32,7 @@ namespace BusinessClasses
 	/// Summary description for DataContainer.
 	/// </summary>
 	[NDOPersistent, NDOOidType(typeof(Guid))]
-	public class DataContainer
+	public partial class DataContainer
 	{
 
 //		[NDOObjectId]

@@ -1,5 +1,5 @@
 ﻿//
-// Copyright (c) 2002-2016 Mirko Matytschak 
+// Copyright (c) 2002-2019 Mirko Matytschak 
 // (www.netdataobjects.de)
 //
 // Author: Mirko Matytschak
@@ -23,13 +23,9 @@
 using System;
 using System.Text;
 using System.Reflection;
-using System.Text.RegularExpressions;
 using System.Data;
 using System.Data.Common;
 using NDOInterfaces;
-using System.Collections;
-using System.Collections.Generic;
-using System.Windows.Forms;
 
 using System.Data.SQLite;
 using System.IO;
@@ -405,54 +401,19 @@ namespace NDO.SqliteProvider
 			return "LIMIT " + skip + "," + take;
 		}
 
-		public override DialogResult ShowConnectionDialog(ref string connectionString)
+
+		public override string CreateDatabase(string databaseName, string connectionString, object additionalData)
 		{
-			OpenFileDialog ofd = new OpenFileDialog();
-			if (!string.IsNullOrEmpty(connectionString))
-			{
-				try
-				{
-					string fileName = connectionString.Substring(connectionString.IndexOf('=') + 1);				
-					ofd.InitialDirectory = Path.GetDirectoryName( connectionString);
-				}
-				catch {}
-			}
-			ofd.Filter = "SQLite Database File (*.db)|*.db";
-			ofd.DefaultExt = ( "db" );
-			ofd.CheckFileExists = false;
-			DialogResult result = DialogResult.OK;
-			if ( (result = ofd.ShowDialog()) == DialogResult.OK )
-			{
-				connectionString = "Data Source=" + ofd.FileName;
-			}
-			return result;
-		}
+			if (connectionString == null )
+				throw new ArgumentNullException( nameof(connectionString) );
 
-		public override DialogResult ShowCreateDbDialog( ref object necessaryData )
-		{
-			string connectionString = string.Empty;
-			DialogResult result = ShowConnectionDialog( ref connectionString );
-			if ( result == DialogResult.OK )
-			{
-				necessaryData = connectionString;
-			}
-
-			return result;
-		}
-
-		public override string CreateDatabase(object necessaryData)
-		{
-			string s = necessaryData as string;
-			if ( s == null )
-				throw new ArgumentException( "NDO.SqliteProvider.Provider.CreateDatabase: wrong parameter type for 'necessaryData'. Expected: string." );
-
-			string path = s.Substring( s.IndexOf( '=' ) + 1 );
+			string path = connectionString.Substring( connectionString.IndexOf( '=' ) + 1 );
 			path = path.Trim();
 
 			FileStream fs = new FileStream( path, FileMode.OpenOrCreate );
 			fs.Close();
 
-			return s;
+			return connectionString;
 		}
 
 

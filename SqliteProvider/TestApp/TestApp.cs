@@ -1,5 +1,5 @@
 ﻿//
-// Copyright (c) 2002-2016 Mirko Matytschak 
+// Copyright (c) 2002-2019 Mirko Matytschak 
 // (www.netdataobjects.de)
 //
 // Author: Mirko Matytschak
@@ -21,17 +21,17 @@
 
 
 using System;
-using System.Reflection;
-using System.IO;
-using System.Data;
-using System.Collections;
-using System.Text;
 using NDO;
+using NDO.Linq;
 using NDO.Mapping;
 using NDOInterfaces;
 using BusinessClasses;
-using System.Threading;
-using System.Globalization;
+using System.Collections.Generic;
+using NDO.Query;
+using System.IO;
+using System.Reflection;
+using System.Linq;
+using System.Text;
 
 namespace TestApp
 {
@@ -41,88 +41,82 @@ namespace TestApp
 	class Class1
 	{
 		[STAThread]
-		static void Main(string[] args)
+		static void Main( string[] args )
 		{
-            NDOProviderFactory.Instance["Sqlite"] = new NDO.SqliteProvider.Provider();
-            if (!NDOProviderFactory.Instance.Generators.ContainsKey("Sqlite"))
+			NDOProviderFactory.Instance["Sqlite"] = new NDO.SqliteProvider.Provider();
+			if (!NDOProviderFactory.Instance.Generators.ContainsKey( "Sqlite" ))
 				NDOProviderFactory.Instance.Generators.Add( "Sqlite", new NDO.SqliteProvider.SqliteGenerator() );
 			PersistenceManager pm = new PersistenceManager();
 
-            pm.LogAdapter = new NDO.Logging.ConsoleLogAdapter();
-            pm.VerboseMode = true;
+			pm.LogAdapter = new NDO.Logging.ConsoleLogAdapter();
+			pm.VerboseMode = true;
 
 			//Thread.CurrentThread.CurrentCulture = CultureInfo.InvariantCulture;
 
 			// Make this true to store the test instance. 
 			// Make it false if you want to retrieve data.
-#if false
+#if true
             GenerateDatabase();
 
             DataContainer dc = new DataContainer();
             pm.MakePersistent(dc);
 			pm.Save();
 			Console.WriteLine("Fertig");
-#else			
+#else
 
-			// uncomment the queries you like to test
+			Dump( pm.Objects<DataContainer>().ResultTable, 1 );
+			Dump( pm.Objects<DataContainer>().Where( dc => dc.BoolVar == true ).ResultTable, 1 );
+			Dump( pm.Objects<DataContainer>().Where( dc => dc.ByteVar == 0x55 ).ResultTable, 3 );
 
-			DataContainer.QueryHelper qh = new DataContainer.QueryHelper();
-			Query q = pm.NewQuery(typeof (DataContainer), null);
-//			Query q = pm.NewQuery(typeof (DataContainer), qh.boolVar + " = {0}");
-//			q.Parameters.Add( true );
-//			Query q = pm.NewQuery(typeof (DataContainer), qh.byteVar + " = " + (0x55).ToString());
-//          Query q = pm.NewQuery(typeof(DataContainer), qh.byteVar + " = {0}");
-//          q.Parameters.Add(0x55);
-			
-//          DateTime dt = new DataContainer().DateTimeVar;
-//          Query q = pm.NewQuery(typeof (DataContainer), qh.dateTimeVar + " = {0}");
-//          q.Parameters.Add(dt);
-//          DateTime dt1 = new DateTime(2006, 12, 6, 0, 0, 0);
-//          DateTime dt2 = new DateTime(2006, 12, 8, 23, 0, 0);
-//          Query q = pm.NewQuery(typeof (DataContainer), qh.dateTimeVar + " BETWEEN {0} AND {1}");
-//          q.Parameters.Add(dt1);
-//          q.Parameters.Add(dt2);
+			DateTime dt = new DataContainer().DateTimeVar;
+			Dump( pm.Objects<DataContainer>().Where( dc => dc.DateTimeVar == dt ).ResultTable, 4 );
+			DateTime dt1 = new DateTime( 2006, 12, 6, 0, 0, 0 );
+			DateTime dt2 = new DateTime( 2006, 12, 8, 23, 0, 0 );
+			Dump( pm.Objects<DataContainer>().Where( dc => dc.DateTimeVar.Between( dt1, dt2 ) ).ResultTable, 5 );
 
-//          Query q = pm.NewQuery(typeof (DataContainer), qh.decVar + " > 0.34");
-//			Query q = pm.NewQuery(typeof (DataContainer), qh.doubleVar + " < 6.54");
-//			Query q = pm.NewQuery(typeof (DataContainer), qh.floatVar + " <= 10");
-//			Query q = pm.NewQuery(typeof (DataContainer), qh.int64Var + " = " + (0x123456781234567).ToString());
-//			Query q = pm.NewQuery(typeof (DataContainer), qh.stringVar + " = \'Test\'");
-//			Query q = pm.NewQuery(typeof (DataContainer), qh.stringVar + " LIKE 'T*'", false);
-//			Query q = pm.NewQuery(typeof (DataContainer), qh.stringVar + " LIKE 'T%'", false);
-//			Query q = pm.NewQuery(typeof (DataContainer), "SELECT * FROM \"DataContainer\" WHERE \"StringVar\" LIKE 'T%'", false, Query.Language.Sql);
+			Dump( pm.Objects<DataContainer>().Where( dc => dc.DecVar > 0.34m ).ResultTable, 6 );
+			Dump( pm.Objects<DataContainer>().Where( dc => dc.DoubleVar < 6.54 ).ResultTable, 7 );
+			Dump( pm.Objects<DataContainer>().Where( dc => dc.FloatVar <= 10 ).ResultTable, 8 );
+			Dump( pm.Objects<DataContainer>().Where( dc => dc.Int64Var == 0x123456781234567 ).ResultTable, 9 );
+			Dump( pm.Objects<DataContainer>().Where( dc => dc.StringVar == "Test" ).ResultTable, 10 );
+			Dump( pm.Objects<DataContainer>().Where( dc => dc.StringVar.Like( "T%" ) ).ResultTable, 11 );
+			Dump( new NDOQuery<DataContainer>( pm, "SELECT * FROM \"DataContainer\" WHERE \"StringVar\" LIKE 'T%'", false, QueryLanguage.Sql ).Execute(), 12 );
 
-			
+
 			pm.VerboseMode = true;
 			pm.LogAdapter = new NDO.Logging.ConsoleLogAdapter();
-			IList l = q.Execute();
+			Console.WriteLine( "Fertig" );
+
+#endif
+
+		}
+
+		private static void Dump( List<DataContainer> l, int nr )
+		{
+			Console.Write( $"{nr} " );
 			if (l.Count == 0)
 			{
-				Console.WriteLine("Nichts gefunden");
+				Console.WriteLine( "Nichts gefunden" );
 			}
 			else
 			{
-				DataContainer dc = (DataContainer) l[0];
-				Console.WriteLine(dc.DecVar);
-				Console.WriteLine( dc.GuidVar );
-				Console.WriteLine(dc.NDOObjectId.Id.Value);
-				/*
-				Console.WriteLine(dc.Uint64Var);
+				//DataContainer dc = (DataContainer)l[0];
+				//Console.WriteLine( dc.DecVar );
+				//Console.WriteLine( dc.GuidVar );
+				//Console.WriteLine( dc.NDOObjectId.Id.Value );
+
+				//Console.WriteLine(dc.Uint64Var);
 				//Console.WriteLine(dc.ByteVar);
-				foreach ( Byte b in dc.ByteArrVar )
-					Console.Write( b.ToString() + " " );
-                Console.WriteLine("");
-				Console.WriteLine(dc.GuidVar);
-				//Console.WriteLine(dc.DecVar.ToString());
-				 */
+				//foreach ( Byte b in dc.ByteArrVar )
+				//	Console.Write( b.ToString() + " " );
+				//            Console.WriteLine("");
+				//Console.WriteLine(dc.GuidVar);
+				//Console.WriteLine(dc.DecVar.ToString());				 
+				Console.WriteLine("OK");
 			}
-			Console.WriteLine("Fertig");
-			
-#endif		
-			
 		}
 
-        static void GenerateDatabase()
+		static void GenerateDatabase()
         {
             // This code is used to generate a database while the generator is not available.
             // If the generator is available, NDO will generate the DDL code using the generator.
@@ -142,11 +136,11 @@ namespace TestApp
                 OidColumn oidColumn = (OidColumn)cl.Oid.OidColumns[0];
                 sw.Write(gen.PrimaryKeyColumn(p.GetQuotedName(oidColumn.Name), typeof(Guid), gen.DbTypeFromType(typeof(Guid)), p.GetDefaultLength(typeof(Guid)).ToString()));
                 sw.Write(" NOT NULL");
-                if (cl.Fields.Count > 0)
+                if (cl.Fields.Count() > 0)
                     sw.WriteLine(",");
-                for (int i = 0; i < cl.Fields.Count; i++)
+				int i = 0;
+                foreach ( Field f in cl.Fields )
                 {
-                    Field f = (Field)cl.Fields[i];
                     FieldInfo fi = t.GetField(f.Name, BindingFlags.Instance | BindingFlags.NonPublic);
                     sw.Write(p.GetQuotedName(f.Column.Name) + " " + gen.DbTypeFromType(fi.FieldType));
                     if (fi.FieldType == typeof(string))
@@ -154,7 +148,7 @@ namespace TestApp
                     if (fi.FieldType == typeof(Guid))
                         sw.Write("(36)");
                     sw.Write(" NULL");
-                    if (i < cl.Fields.Count - 1)
+                    if (i++ < cl.Fields.Count() - 1)
                         sw.WriteLine(",");
                     else
                         sw.WriteLine();

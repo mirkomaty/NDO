@@ -93,9 +93,8 @@
     <ErrorReport>prompt</ErrorReport>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="NDO, Version=3.0.0.0, Culture=neutral, PublicKeyToken=37bfdffa92a0cd24, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\..\Program Files (x86)\NDO 2.1 Dev Edition\NDO.dll</HintPath>
+    <Reference Include="NDO">
+      <HintPath>..\..\NDODLL\bin\$(Configuration)\NDO.dll</HintPath>
     </Reference>
     <Reference Include="System">
       <Name>System</Name>
@@ -113,6 +112,9 @@
     </Compile>
     <Compile Include="DataContainer.cs">
       <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="DataContainer.ndo.cs">
+      <DependentUpon>DataContainer.cs</DependentUpon>
     </Compile>
     <Content Include="bin\Debug\BusinessClasses.ndo.sql" />
     <Content Include="bin\Release\BusinessClasses.ndo.sql" />
