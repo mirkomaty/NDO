@@ -1,5 +1,5 @@
 ﻿//
-// Copyright (c) 2002-2016 Mirko Matytschak 
+// Copyright (c) 2002-2019 Mirko Matytschak 
 // (www.netdataobjects.de)
 //
 // Author: Mirko Matytschak
@@ -588,6 +588,7 @@ namespace NETDataObjects.NDOVSPackage
                 int i = 0;
                 this.cbSqlDialect.Items.Clear();
                 int currentDialectIndex = -1;
+				-------
                 NDO.NDOProviderFactory.Instance.SkipPrivatePath = true;
                 ProviderLoader.AddProviderDlls();
                 foreach (string s in NDO.NDOProviderFactory.Instance.ProviderNames) //GeneratorFactory.Instance.ProviderNames)
