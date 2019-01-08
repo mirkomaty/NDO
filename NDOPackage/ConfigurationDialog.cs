@@ -45,6 +45,7 @@ using System.Text.RegularExpressions;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.ComponentModelHost;
 using NuGet.VisualStudio;
+using NDO.UISupport;
 
 namespace NETDataObjects.NDOVSPackage
 {
@@ -562,8 +563,6 @@ namespace NETDataObjects.NDOVSPackage
             chkActivateEnhancer_CheckedChanged(null, EventArgs.Empty);
 		}
 
-
-
 		private void ConfigurationDialog_Load(object sender, System.EventArgs e)
 		{
             try
@@ -588,18 +587,13 @@ namespace NETDataObjects.NDOVSPackage
                 int i = 0;
                 this.cbSqlDialect.Items.Clear();
                 int currentDialectIndex = -1;
-				-------
-                NDO.NDOProviderFactory.Instance.SkipPrivatePath = true;
-                ProviderLoader.AddProviderDlls();
-                foreach (string s in NDO.NDOProviderFactory.Instance.ProviderNames) //GeneratorFactory.Instance.ProviderNames)
+
+                foreach (string s in NdoUIProviderFactory.Instance.Keys)
                 {
-                    if (NDO.NDOProviderFactory.Instance.Generators.ContainsKey(s))
-                    {
-                        this.cbSqlDialect.Items.Add(s);
-                        if (options.SQLScriptLanguage == s)
-                            currentDialectIndex = i;
-                        i++;
-                    }
+                    this.cbSqlDialect.Items.Add(s);
+                    if (options.SQLScriptLanguage == s)
+                        currentDialectIndex = i;
+                    i++;
                 }
                 if (currentDialectIndex > -1)
                     cbSqlDialect.SelectedIndex = currentDialectIndex;
@@ -755,21 +749,22 @@ namespace NETDataObjects.NDOVSPackage
 		{
 			try
 			{
-				string connType = cbSqlDialect.Text;
-				if (connType == string.Empty)
-					connType = "SqlServer";
-				IProvider provider = NDO.NDOProviderFactory.Instance[connType];
-				if (provider == null)
-				{
-					MessageBox.Show("Can't find a NDO provider for the sql dialect " + connType);
-					return;
-				}
-				string temp = this.txtConnectionString.Text;
-				DialogResult r = provider.ShowConnectionDialog(ref temp);
-				if (r == DialogResult.Cancel)
-					return;
-				this.txtConnectionString.Text = temp;
-			}
+                string connType = cbSqlDialect.Text;
+                if (connType == string.Empty)
+                    connType = "SqlServer";
+                var provider = NdoUIProviderFactory.Instance[connType];
+                if (provider == null)
+                {
+                    MessageBox.Show("Can't find a NDO UI provider for the sql dialect " + connType);
+                    return;
+                }
+
+                string temp = this.txtConnectionString.Text;
+                NdoDialogResult r = provider.ShowConnectionDialog(ref temp);
+                if (r == NdoDialogResult.Cancel)
+                    return;
+                this.txtConnectionString.Text = temp;
+            }
 			catch (Exception ex)
 			{
 				ShowError(ex);
@@ -891,19 +886,19 @@ namespace NETDataObjects.NDOVSPackage
 			string connType = cbSqlDialect.Text;
 			if (connType == string.Empty)
 				connType = "SqlServer";
-			IProvider provider = NDO.NDOProviderFactory.Instance[connType];
+			IDbUISupport provider = NdoUIProviderFactory.Instance[connType];
 			if (provider == null)
 			{
-				MessageBox.Show("Can't find a NDO provider for the sql dialect " + connType);
+				MessageBox.Show("Can't find a NDO UI provider for the sql dialect " + connType);
 				return;
 			}
 			object necessaryData = null;
 			try
 			{
-				if (provider.ShowCreateDbDialog(ref necessaryData) == DialogResult.Cancel)
-					return;
-				this.txtConnectionString.Text = provider.CreateDatabase(necessaryData);
-			}
+                if (provider.ShowCreateDbDialog(ref necessaryData) == NdoDialogResult.Cancel)
+                    return;
+                this.txtConnectionString.Text = provider.CreateDatabase(necessaryData);
+            }
 			catch (Exception ex)
 			{
 #if !DEBUG

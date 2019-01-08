@@ -105,9 +105,12 @@
     <Reference Include="MySqlProvider">
       <HintPath>..\MySqlNdoProvider\MySqlProvider.dll</HintPath>
     </Reference>
-    <Reference Include="NDO, Version=3.0.0.0, Culture=neutral, PublicKeyToken=37bfdffa92a0cd24, processorArchitecture=MSIL">
+    <Reference Include="NDO, Version=4.0.0.0, Culture=neutral, PublicKeyToken=37bfdffa92a0cd24, processorArchitecture=MSIL">
       <SpecificVersion>false</SpecificVersion>
       <HintPath>..\NDODLL\bin\$(Configuration)\NDO.dll</HintPath>
+    </Reference>
+    <Reference Include="NDO.UISupport">
+      <HintPath>..\UISupport\NDO.UISupport\bin\$(Configuration)\NDO.UISupport.dll</HintPath>
     </Reference>
     <Reference Include="NDOInterfaces, Version=3.0.0.0, Culture=neutral, PublicKeyToken=ff5e453a099b8326, processorArchitecture=MSIL">
       <SpecificVersion>false</SpecificVersion>
@@ -129,6 +132,9 @@
     </Reference>
     <Reference Include="SqliteProvider">
       <HintPath>..\SqliteProvider\SqliteProvider.dll</HintPath>
+    </Reference>
+    <Reference Include="SqliteUISupport">
+      <HintPath>..\SqliteProvider\SqliteUISupport\bin\$(Configuration)\SqliteUISupport.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -176,6 +182,8 @@
     <Compile Include="MergeConflictUseCGCode.cs" />
     <Compile Include="MergeConflictUseYourCode.cs" />
     <Compile Include="NDOMapping.cs" />
+    <Compile Include="NDOProviderFactory.cs" />
+    <Compile Include="NdoUIProviderFactory.cs" />
     <Compile Include="OpenClassGenerator.cs" />
     <Compile Include="OpenMappingTool.cs" />
     <Compile Include="AddPersistentClass.cs" />
@@ -206,7 +214,6 @@
     <Compile Include="ProjectDescription.cs" />
     <Compile Include="ProjectIterator.cs" />
     <Compile Include="ProjectKind.cs" />
-    <Compile Include="ProviderLoader.cs" />
     <Compile Include="RelationDialog.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -243,7 +250,6 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <None Include="app.config" />
     <None Include="packages.config" />
     <None Include="source.extension.vsixmanifest">
       <SubType>Designer</SubType>
