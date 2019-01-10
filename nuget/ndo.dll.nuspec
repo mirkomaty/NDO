@@ -5,7 +5,7 @@
     <version>3.0.0.10</version>
     <authors>Mirko Matytschak</authors>
     <owners>Mirko Matytschak</owners>
-    <licenseUrl>https://opensource.org/licenses/MIT</licenseUrl>
+    <license type="file">license\license.txt</license>
     <projectUrl>https://www.netdataobjects.de</projectUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>Package to enable VS Solutions to compile and enhance persistent classes</description>
@@ -23,5 +23,6 @@
     <file src="..\NDOEnhancer\bin\Release\NDOEnhancer.exe" target="build" />
     <file src="..\NDOEnhancer\bin\Release\NDOEnhancer.exe.config" target="build" />
     <file src="..\EnhancerX86Stub\EnhancerX86Stub\bin\Release\EnhancerX86Stub.exe" target="build" />
+    <file src="license.txt" target="/license/license.txt" />
   </files>  
 </package>
