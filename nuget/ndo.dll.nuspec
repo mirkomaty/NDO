@@ -5,8 +5,8 @@
     <version>3.0.0.10</version>
     <authors>Mirko Matytschak</authors>
     <owners>Mirko Matytschak</owners>
-    <licenseUrl>http://opensource.org/licenses/MIT</licenseUrl>
-    <projectUrl>http://www.netdataobjects.de</projectUrl>
+    <licenseUrl>https://opensource.org/licenses/MIT</licenseUrl>
+    <projectUrl>https://www.netdataobjects.de</projectUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>Package to enable VS Solutions to compile and enhance persistent classes</description>
     <releaseNotes>Initial package.</releaseNotes>
