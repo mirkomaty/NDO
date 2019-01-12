@@ -28,7 +28,6 @@ using NDO;
 using System.Collections;
 using System.Text.RegularExpressions;
 using NDOInterfaces;
-using System.Windows.Forms;
 
 #pragma warning disable 618
 
@@ -89,29 +88,6 @@ namespace OracleProvider
 			return cmd.Parameters.Add(new OracleParameter(parameterName, (OracleDbType)dbType, size > -1 ? size : 0, dir, isNullable, precision, scale, srcColumn, srcVersion, value));
 		}
 		#endregion
-
-
-		const string OraString = "Provider=MSDAORA.1;";
-		public override DialogResult ShowConnectionDialog(ref string connectionString)
-		{
-			string tempstr;
-			if (connectionString == null || connectionString == string.Empty)
-				tempstr = OraString;
-			else
-			{
-				if (!(connectionString.IndexOf(OraString) > -1))
-					tempstr = OraString + connectionString;
-				else
-					tempstr = connectionString;
-			}
-			OleDbConnectionDialog dlg = new OleDbConnectionDialog(tempstr);
-			DialogResult result = dlg.Show();
-			if (result != DialogResult.Cancel)
-			{
-				connectionString = dlg.ConnectionString.Replace(OraString, string.Empty);
-			}
-			return result;
-		}
 
 
 		// The following method convert System.Type objects to OracleType-Members
@@ -312,26 +288,6 @@ namespace OracleProvider
 		/// See <see cref="IProvider"> IProvider interface </see>
 		/// </summary>
 		public override bool SupportsNativeGuidType { get { return false; } }
-
-
-		/// <summary>
-		/// See <see cref="IProvider"> IProvider interface </see>
-		/// </summary>
-		/// <remarks>Note, that Oracle doesn't allow to programmatically create a database.</remarks>
-		public override string CreateDatabase(object necessaryData)
-		{
-			return string.Empty;
-		}
-
-		/// <summary>
-		/// See <see cref="IProvider"> IProvider interface </see>
-		/// </summary>
-		public override DialogResult ShowCreateDbDialog(ref object necessaryData)
-		{
-			MessageBox.Show("Oracle doesn't allow to programmatically create a database.\nPlease use the Enterprise Manager Console.");
-			return DialogResult.Cancel;
-		}
-
 
 		#endregion
 

@@ -93,9 +93,8 @@
     <ErrorReport>prompt</ErrorReport>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="NDO, Version=2.1.0.0, Culture=neutral, PublicKeyToken=37bfdffa92a0cd24, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>D:\Program Files (x86)\NDO 3.0 Dev Edition\NDO.dll</HintPath>
+    <Reference Include="NDO">
+      <HintPath>..\..\NDODLL\bin\Debug\NDO.dll</HintPath>
     </Reference>
     <Reference Include="System">
       <Name>System</Name>
@@ -137,11 +136,6 @@
       <Install>true</Install>
     </BootstrapperPackage>
   </ItemGroup>
-  <ProjectExtensions>
-    <VisualStudio>
-      <UserProperties NDODefaultConnection="Database=NDOTest;User=root;" NDOEnableAddIn="true" NDOEnableEnhancer="true" NDOGenerateMapping="true" NDOGenerateSchema="true" NDONewMapping="false" NDOMergeMapping="true" NDOMergeSchema="true" NDOGenerateSQL="false" NDOTypeListFile="" NDOUsePolymorphy="false" NDOGenerateChangeEvents="false" NDOUseTimeStamps="false" NDOSQLScriptLanguage="MySql" DatabaseOwner="" />
-    </VisualStudio>
-  </ProjectExtensions>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PreBuildEvent>
@@ -149,11 +143,4 @@
     <PostBuildEvent>
     </PostBuildEvent>
   </PropertyGroup>
-  <Target Name="AfterBuild">
-    <NDOEnhancer NdoProjectFile="$(ProjectName).ndoproj" NdoPlatformTarget="$(Platform)" />
-  </Target>
-  <PropertyGroup>
-    <NDOInstallPath Condition=" '$(NDOInstallPath)' == ''">$(Registry:HKEY_LOCAL_MACHINE\SOFTWARE\NDO@InstallDir)</NDOInstallPath>
-  </PropertyGroup>
-  <Import Project="$(NDOInstallPath)\NDOEnhancer.Targets" />
 </Project>

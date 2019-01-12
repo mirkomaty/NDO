@@ -29,8 +29,6 @@
     <KeyFile>
     </KeyFile>
     <References>
-      <Reference AssemblyName="System.Core" AssemblyPath="d:\program files (x86)\reference assemblies\microsoft\framework\.netframework\v4.0\system.core.dll">
-      </Reference>
     </References>
   </ProjectDescription>
 </Enhancer>

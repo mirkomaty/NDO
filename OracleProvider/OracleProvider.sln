@@ -1,5 +1,7 @@
-Microsoft Visual Studio Solution File, Format Version 11.00
-# Visual Studio 2010
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.27703.2047
+MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestApp", "TestApp\TestApp.csproj", "{1BBF17E3-D321-4823-9E96-DDCD1FA54B08}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BusinessClasses", "BusinessClasses\BusinessClasses.csproj", "{96E72A69-AAF6-48F7-8541-57F516414969}"
@@ -7,6 +9,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OracleProvider", "OracleProvider\OracleProvider.csproj", "{273BB4ED-74C4-482F-ACE2-E1564ACBA210}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CheckCommandBuilder", "CheckCommandBuilder\CheckCommandBuilder.csproj", "{B3DB4428-BECB-4C23-8F18-B18B448BE24B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OracleUISupport", "OracleUISupport\OracleUISupport.csproj", "{BD611655-F744-454A-A4C1-2AA9087C98BF}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -30,8 +34,15 @@ Global
 		{B3DB4428-BECB-4C23-8F18-B18B448BE24B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B3DB4428-BECB-4C23-8F18-B18B448BE24B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B3DB4428-BECB-4C23-8F18-B18B448BE24B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BD611655-F744-454A-A4C1-2AA9087C98BF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BD611655-F744-454A-A4C1-2AA9087C98BF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BD611655-F744-454A-A4C1-2AA9087C98BF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BD611655-F744-454A-A4C1-2AA9087C98BF}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {31D39544-5A0F-4470-8699-00E8F8FDD0B2}
 	EndGlobalSection
 EndGlobal

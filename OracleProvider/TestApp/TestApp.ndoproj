@@ -29,13 +29,13 @@
     <KeyFile>
     </KeyFile>
     <References>
-      <Reference AssemblyName="NDOInterfaces" AssemblyPath="D:\Program Files (x86)\NDO 3.0 Dev Edition\NDOInterfaces.dll">
+      <Reference AssemblyName="NDOInterfaces" AssemblyPath="..\..\NDOInterfaces\bin\Debug\NDOInterfaces.dll">
+      </Reference>
+      <Reference AssemblyName="Unity.Abstractions" AssemblyPath="..\..\NDODLL\bin\Debug\Unity.Abstractions.dll">
       </Reference>
       <Reference AssemblyName="OracleProvider" AssemblyPath="..\OracleProvider\bin\Debug\OracleProvider.dll">
       </Reference>
       <Reference AssemblyName="BusinessClasses" AssemblyPath="..\BusinessClasses\bin\Debug\BusinessClasses.dll">
-      </Reference>
-      <Reference AssemblyName="System.Core" AssemblyPath="d:\program files (x86)\reference assemblies\microsoft\framework\.netframework\v4.0\system.core.dll">
       </Reference>
     </References>
   </ProjectDescription>

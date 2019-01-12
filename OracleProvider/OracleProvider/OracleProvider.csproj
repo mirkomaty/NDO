@@ -110,12 +110,6 @@
     <Reference Include="System.Data">
       <Name>System.Data</Name>
     </Reference>
-    <Reference Include="System.Drawing">
-      <Name>System.Drawing</Name>
-    </Reference>
-    <Reference Include="System.Windows.Forms">
-      <Name>System.Windows.Forms</Name>
-    </Reference>
     <Reference Include="System.Xml">
       <Name>System.XML</Name>
     </Reference>
@@ -124,18 +118,12 @@
     <Compile Include="AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="ConnectionDialog.cs">
-      <SubType>Form</SubType>
-    </Compile>
     <Compile Include="Generator.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="OracleProvider.cs">
       <SubType>Code</SubType>
     </Compile>
-    <EmbeddedResource Include="ConnectionDialog.resx">
-      <DependentUpon>ConnectionDialog.cs</DependentUpon>
-    </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
