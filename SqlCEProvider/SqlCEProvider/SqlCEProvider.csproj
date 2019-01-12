@@ -107,12 +107,6 @@
       <Private>True</Private>
       <HintPath>..\packages\Microsoft.SqlServer.Compact.4.0.8876.1\lib\net40\System.Data.SqlServerCe.dll</HintPath>
     </Reference>
-    <Reference Include="System.Drawing">
-      <Name>System.Drawing</Name>
-    </Reference>
-    <Reference Include="System.Windows.Forms">
-      <Name>System.Windows.Forms</Name>
-    </Reference>
     <Reference Include="System.Xml">
       <Name>System.XML</Name>
     </Reference>
@@ -120,12 +114,6 @@
   <ItemGroup>
     <Compile Include="AssemblyInfo.cs">
       <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="ConnectionDialog.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="ConnectionDialog.Designer.cs">
-      <DependentUpon>ConnectionDialog.cs</DependentUpon>
     </Compile>
     <Compile Include="Generator.cs">
       <SubType>Code</SubType>
@@ -150,11 +138,6 @@
       <ProductName>Windows Installer 3.1</ProductName>
       <Install>true</Install>
     </BootstrapperPackage>
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="ConnectionDialog.resx">
-      <DependentUpon>ConnectionDialog.cs</DependentUpon>
-    </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

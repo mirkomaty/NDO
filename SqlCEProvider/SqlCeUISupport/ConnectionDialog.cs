@@ -30,7 +30,7 @@ using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 
-namespace NDO.SqlCeProvider
+namespace NDO.SqlCeUISupport
 {
     public partial class ConnectionDialog : Form
     {

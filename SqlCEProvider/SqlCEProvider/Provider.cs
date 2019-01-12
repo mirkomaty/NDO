@@ -22,17 +22,13 @@
 
 using System;
 using System.Text;
-using System.Reflection;
-using System.Text.RegularExpressions;
 using System.Data;
 using System.Data.Common;
 using NDOInterfaces;
 using System.Collections;
 using System.Collections.Generic;
-using System.Windows.Forms;
 
 using System.Data.SqlServerCe;
-using System.IO;
 
 
 namespace NDO.SqlCeProvider
@@ -353,39 +349,12 @@ namespace NDO.SqlCeProvider
 			get { return true; } 
 		}
 
-		public override DialogResult ShowConnectionDialog(ref string connectionString)
+		public override string CreateDatabase(string databaseName, string connectionString, object additionalData)
 		{
-            ConnectionDialog cd = new ConnectionDialog();
-            DialogResult result = cd.ShowDialog();
-            if (result == DialogResult.Cancel)
-                return result;
-
-            connectionString = cd.Connection;
-            return DialogResult.OK;
-		}
-
-		public override DialogResult ShowCreateDbDialog( ref object necessaryData )
-		{
-			string connectionString = string.Empty;
-			DialogResult result = ShowConnectionDialog( ref connectionString );
-			if ( result == DialogResult.OK )
-			{
-				necessaryData = connectionString;
-			}
-
-			return result;
-		}
-
-		public override string CreateDatabase(object necessaryData)
-		{
-			string s = necessaryData as string;
-			if ( s == null )
-				throw new ArgumentException( "NDO.SqlCEProvider.Provider.CreateDatabase: wrong parameter type for 'necessaryData'. Expected: string." );
-
-            SqlCeEngine en = new SqlCeEngine(s);
+            SqlCeEngine en = new SqlCeEngine(databaseName);
             en.CreateDatabase();
 
-			return s;
+			return databaseName;
 		}
 	}
 }

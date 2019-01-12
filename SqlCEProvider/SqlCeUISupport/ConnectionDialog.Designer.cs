@@ -20,7 +20,7 @@
 // DEALINGS IN THE SOFTWARE.
 
 
-namespace NDO.SqlCeProvider
+namespace NDO.SqlCeUISupport
 {
     partial class ConnectionDialog
     {
