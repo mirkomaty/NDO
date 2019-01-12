@@ -128,14 +128,22 @@
       <HintPath>packages\NuGet.VisualStudio.4.0.0\lib\net45\NuGet.VisualStudio.dll</HintPath>
       <EmbedInteropTypes>True</EmbedInteropTypes>
     </Reference>
-    <Reference Include="OracleProvider">
-      <HintPath>..\OracleProvider\OracleProvider.dll</HintPath>
+    <Reference Include="OracleUISupport, Version=4.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\OracleProvider\OracleUISupport\bin\$(Configuration)\OracleUISupport.dll</HintPath>
     </Reference>
-    <Reference Include="PostGreProvider">
-      <HintPath>..\PostGresProvider\PostGreProvider.dll</HintPath>
+    <Reference Include="PostGreProvider, Version=2.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\PostGresProvider\PostgreProvider\bin\$(Configuration)\PostGreProvider.dll</HintPath>
+    </Reference>
+    <Reference Include="PostGresUISupport">
+      <HintPath>..\PostGresProvider\PostGresUISupport\bin\$(Configuration)\PostGresUISupport.dll</HintPath>
     </Reference>
     <Reference Include="SqlCeProvider">
       <HintPath>..\SqlCEProvider\SqlCeProvider.dll</HintPath>
+    </Reference>
+    <Reference Include="SqlCeUISupport">
+      <HintPath>..\SqlCEProvider\SqlCeUISupport\bin\$(Configuration)\SqlCeUISupport.dll</HintPath>
     </Reference>
     <Reference Include="SqliteProvider">
       <HintPath>..\SqliteProvider\SqliteProvider.dll</HintPath>
