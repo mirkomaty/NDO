@@ -93,27 +93,21 @@
     <ErrorReport>prompt</ErrorReport>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Mono.Security">
-      <HintPath>..\packages\Npgsql.2.2.5\lib\net40\Mono.Security.dll</HintPath>
+    <Reference Include="Mono.Security, Version=4.0.0.0, Culture=neutral, PublicKeyToken=0738eb9f132ed756, processorArchitecture=MSIL">
+      <HintPath>..\packages\Npgsql.2.2.7\lib\net40\Mono.Security.dll</HintPath>
     </Reference>
     <Reference Include="NDOInterfaces, Version=2.0.0.0, Culture=neutral, PublicKeyToken=ff5e453a099b8326, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\NDOInterfaces\bin\release\NDOInterfaces.dll</HintPath>
     </Reference>
-    <Reference Include="Npgsql">
-      <HintPath>..\packages\Npgsql.2.2.5\lib\net40\Npgsql.dll</HintPath>
+    <Reference Include="Npgsql, Version=2.2.7.0, Culture=neutral, PublicKeyToken=5d8b90d52f46fda7, processorArchitecture=MSIL">
+      <HintPath>..\packages\Npgsql.2.2.7\lib\net40\Npgsql.dll</HintPath>
     </Reference>
     <Reference Include="System">
       <Name>System</Name>
     </Reference>
     <Reference Include="System.Data">
       <Name>System.Data</Name>
-    </Reference>
-    <Reference Include="System.Drawing">
-      <Name>System.Drawing</Name>
-    </Reference>
-    <Reference Include="System.Windows.Forms">
-      <Name>System.Windows.Forms</Name>
     </Reference>
     <Reference Include="System.Xml">
       <Name>System.XML</Name>
@@ -122,12 +116,6 @@
   <ItemGroup>
     <Compile Include="AssemblyInfo.cs">
       <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="ConnectionStringEditorForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="ConnectionStringEditorForm.Designer.cs">
-      <DependentUpon>ConnectionStringEditorForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Generator.cs">
       <SubType>Code</SubType>
@@ -152,11 +140,6 @@
       <ProductName>Windows Installer 3.1</ProductName>
       <Install>true</Install>
     </BootstrapperPackage>
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="ConnectionStringEditorForm.resx">
-      <DependentUpon>ConnectionStringEditorForm.cs</DependentUpon>
-    </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

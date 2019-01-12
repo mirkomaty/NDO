@@ -29,7 +29,7 @@ using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 
-namespace Npgsql.Design
+namespace NDO.PostGresUISupport
 {
 	public partial class ConnectionStringEditorForm : Form
 	{
@@ -83,6 +83,7 @@ namespace Npgsql.Design
 				this.connectionString += "User=" + this.txtUser.Text + ";";
 			if ( this.txtPassword.Text != string.Empty )
 				this.connectionString += "Password=" + this.txtPassword.Text + ";";
+            Close();
 		}
 
 		public string ConnectionString

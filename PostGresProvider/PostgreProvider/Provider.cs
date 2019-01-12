@@ -27,7 +27,6 @@ using System.Data;
 using System.Data.Common;
 using NDOInterfaces;
 using System.Collections;
-using System.Windows.Forms;
 using Npgsql;
 using NpgsqlTypes;
 
@@ -357,35 +356,34 @@ namespace NDO.PostGreProvider
 			get { return false; } 
 		}
 
-		public override DialogResult ShowConnectionDialog(ref string connectionString)
+        /// <summary>
+        /// Creates a Database
+        /// </summary>
+        /// <param name="databaseName">The name of the new database</param>
+        /// <param name="connectionString">The connection string used to create the database</param>
+        /// <param name="additionalData">Not used</param>
+        /// <returns></returns>
+		public override string CreateDatabase(string databaseName, string connectionString, object additionalData)
 		{
-            Npgsql.Design.ConnectionStringEditorForm csef = new Npgsql.Design.ConnectionStringEditorForm(connectionString);
-            if (csef.ShowDialog() == DialogResult.Cancel)
-				return DialogResult.Cancel;
-			connectionString = csef.ConnectionString;
-			return DialogResult.OK;
-		}
+			base.CreateDatabase (databaseName, connectionString, additionalData);
 
-		public override string CreateDatabase(object necessaryData)
-		{
-			base.CreateDatabase (necessaryData);
-			// Don't need to check wether the type of necessaryData is OK, since that happens in CreateDatabase
-			NDOCreateDbParameter par = necessaryData as NDOCreateDbParameter;
+            // We have to construct a connectionString
+            // containing the database name
 
-			string dbName = par.DatabaseName;
+            // If somebody has provided a connection string containing the name of an existing database
+            // replace it with the name of the new database.
 			Regex regex = new Regex(@"Database\s*=([^\;]*)");
-			Match match = regex.Match(par.Connection);
+			Match match = regex.Match(connectionString);
 			if (match.Success)
 			{
-				return par.Connection.Substring(0, match.Groups[1].Index) + dbName + par.Connection.Substring(match.Index + match.Length);
+				return connectionString.Substring(0, match.Groups[1].Index) + databaseName + connectionString.Substring(match.Index + match.Length);
 			}
 			
-			if (!par.Connection.EndsWith(";"))
-				par.Connection = par.Connection + ";";
+            // Add the name of the new database to the connection string.
+			if (!connectionString.EndsWith(";"))
+                connectionString = connectionString + ";";
 			
-			return par.Connection + "Database=" + dbName;
+			return connectionString + "Database=" + databaseName;
 		}
-
-
 	}
 }

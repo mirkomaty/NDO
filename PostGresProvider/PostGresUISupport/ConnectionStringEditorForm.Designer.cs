@@ -20,7 +20,7 @@
 // DEALINGS IN THE SOFTWARE.
 
 
-namespace Npgsql.Design
+namespace NDO.PostGresUISupport
 {
 	partial class ConnectionStringEditorForm
 	{
