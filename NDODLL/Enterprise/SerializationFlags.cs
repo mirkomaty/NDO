@@ -38,7 +38,7 @@ namespace NDO
 	/// by the receiving PersistenceManager.
 	/// </remarks>
 	[Flags]
-	public enum SerializationFlags
+	public enum SerializationFlagsX
 	{
 		/// <summary>
 		/// Don't serialize any child objects

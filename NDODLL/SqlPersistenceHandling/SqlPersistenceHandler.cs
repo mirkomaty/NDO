@@ -22,7 +22,6 @@
 
 using System;
 using System.Text;
-using System.EnterpriseServices;
 using System.Text.RegularExpressions;
 using System.Diagnostics;
 using System.IO;
@@ -32,8 +31,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Data;
 using System.Data.Common;
-using System.Data.SqlClient;
-using System.Data.OleDb;
 using NDO;
 using NDO.Mapping;
 using NDO.Logging;

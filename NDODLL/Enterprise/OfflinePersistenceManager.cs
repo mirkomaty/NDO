@@ -86,8 +86,8 @@ namespace NDO
 
 		ChangeSetContainer CreateChangeSet(bool acceptChanges)
 		{
-			ChangeSetContainer csc = new ChangeSetContainer();
-			csc.BinaryFormat = true;
+#warning Wir brauchen einen Test, der sicherstellt, dass hier ein Formatter gesetzt wird
+            ChangeSetContainer csc = new ChangeSetContainer();
 			ArrayList addedObjects = new ArrayList();
 			ArrayList deletedObjects = new ArrayList();
 			ArrayList changedObjects = new ArrayList();
@@ -172,7 +172,7 @@ namespace NDO
 		/// <returns>A ChangeSetContainer object.</returns>
 		public virtual ChangeSetContainer GetChangeSet()
 		{
-			return GetChangeSet(true, true);
+			return GetChangeSet(true);
 		}
 
 
@@ -188,23 +188,9 @@ namespace NDO
 		/// <returns>A ChangeSetContainer object.</returns>
 		public virtual ChangeSetContainer GetChangeSet(bool acceptChanges)
 		{
-			return GetChangeSet(acceptChanges, true);
-		}
-
-		/// <summary>
-		/// Gets a serializable container, which contains all changes made to objects and relations.
-		/// </summary>
-		/// <param name="acceptChanges">
-		/// If true, a subsequent call to GetChangeSet would return an empty ChangeSetContainer.
-		/// If false, a subsequent call to GetChangeSet would return the same ChangeSetContainer.
-		/// <seealso cref="NDO.ChangeSetContainer"/></param>
-		/// <param name="useBinaryFormat">Determines, if the binary formatter is used for transmission of the container.</param>
-		/// <returns>A ChangeSetContainer object.</returns>
-		public virtual ChangeSetContainer GetChangeSet(bool acceptChanges, bool useBinaryFormat)
-		{
 			ChangeSetContainer csc = CreateChangeSet(acceptChanges);
-			csc.BinaryFormat = useBinaryFormat;
-			return csc;
+#warning Wir brauchen einen Test, der sicherstellt, dass hier ein Formatter gesetzt wird.
+            return csc;
 		}
 
 		/// <summary>

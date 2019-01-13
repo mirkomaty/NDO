@@ -36,20 +36,33 @@ namespace NDO
 	/// </remarks>
 	public class SerializationIterator : ISerializationIterator
 	{
-		SerializationFlags serFlags;
-		Mappings mapping;
+        public static Action<IPersistenceCapable> MarkAsTransientAction;
+        private readonly Predicate<Relation> relationSelector;
+        private readonly Action<IPersistenceCapable> actionOnIncludedObject;
+
+        Mappings mapping;
 		Hashtable objects;
 		IPersistenceManager pm;
 
-		/// <summary>
-		/// Standard constructor.
-		/// </summary>
-		/// <param name="serFlags">Determines, how the search for child objects is conducted.</param>
-		public SerializationIterator(SerializationFlags serFlags)
+        static SerializationIterator()
+        {
+            MarkAsTransientAction = pc => pc.NDOObjectState = NDOObjectState.Transient;
+        }
+
+        /// <summary>
+        /// Standard constructor.
+        /// </summary>
+        /// <param name="relationSelector">Determines whether a certain relation should be included in the container. Null means that no relations should be searched.</param>
+        /// <param name="actionOnRelatedObject">Action to be executed on every object included in the container. Use this action to mark objects as NDOTransient.</param>
+        /// <remarks>
+        /// You can use SerializationIterator.MarkAsTransientAction as parameter to make all found objects NDOTransient.
+        /// </remarks>
+        public SerializationIterator(Predicate<Relation> relationSelector = null, Action<IPersistenceCapable> actionOnRelatedObject = null)
 		{
-			this.serFlags = serFlags;
 			objects = new Hashtable();
-		}
+            this.relationSelector = relationSelector;
+            this.actionOnIncludedObject = actionOnRelatedObject;
+        }
 
 
 		/// <summary>
@@ -63,42 +76,11 @@ namespace NDO
 			if (root.NDOObjectState == NDOObjectState.Hollow)
 				this.pm.LoadData(root);
 			Search(root);
-			if (MarkAsTransient)
+			if (actionOnIncludedObject != null)
 			{
-				root.NDOObjectState = NDOObjectState.Transient;
-				//root.NDOObjectId = null;
+                actionOnIncludedObject( root );
 			}
 		}
-
-		internal bool SerializeCompositeRelations
-		{
-			get { return (serFlags & SerializationFlags.SerializeCompositeRelations) != 0; }
-		}
-
-		internal bool SerializeAggregateRelations
-		{
-			get { return (serFlags & SerializationFlags.SerializeAggregateRelations) != 0; }
-		}
-
-		internal bool SerializeRelations
-		{
-			get { return (serFlags & SerializationFlags.SerializeAllRelations) != 0; }
-		}
-
-		internal bool SerializeHollowObjects
-		{
-			get { return (serFlags & SerializationFlags.SerializeHollowObjects) != 0; }
-		}
-
-		internal bool MarkAsTransient
-		{
-			get { return (serFlags & SerializationFlags.MarkAsTransient) != 0; }
-		}
-
-        internal bool NullObjectId
-        {
-            get { return (serFlags & SerializationFlags.NullObjectId) != 0; }
-        }
 
 		private void Search(IPersistenceCapable pc)
 		{
@@ -106,14 +88,13 @@ namespace NDO
 				return;
 			objects.Add(pc, null);
 
-			if (SerializeRelations)
+			if (this.relationSelector != null)
 			{
 				Class cl = mapping.FindClass(pc.GetType());
 
 				foreach(Relation r in cl.Relations)
 				{
-					if (r.Composition && SerializeCompositeRelations
-						|| !r.Composition && SerializeAggregateRelations)
+					if (this.relationSelector(r))
 					{
 						pm.LoadRelation(pc, r.FieldName, false);
 						if (r.Multiplicity == RelationMultiplicity.Element)
@@ -124,14 +105,8 @@ namespace NDO
 							if (relObj.NDOObjectState == NDOObjectState.Hollow)
 								pm.LoadData(relObj);
 							Search(relObj);
-							if (MarkAsTransient && r.Composition)
-							{
-								relObj.NDOObjectState = NDOObjectState.Transient;
-                                if (NullObjectId)
-								    relObj.NDOObjectId = null;
-							}
-
-						}
+                            this.actionOnIncludedObject?.Invoke( relObj );
+                        }
 						else
 						{
 							IList l = mapping.GetRelationContainer(pc, r);
@@ -140,14 +115,9 @@ namespace NDO
 								if (relObj2.NDOObjectState == NDOObjectState.Hollow)
 									pm.LoadData(relObj2);
 								Search(relObj2);
-								if (MarkAsTransient && r.Composition)
-								{
-									relObj2.NDOObjectState = NDOObjectState.Transient;
-                                    if (NullObjectId)
-									    relObj2.NDOObjectId = null;
-								}
-							}
-						}
+                                this.actionOnIncludedObject?.Invoke( relObj2 );
+                            }
+                        }
 					}
 				}
 			}

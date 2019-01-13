@@ -151,8 +151,6 @@ namespace NDO
 				string parType;
 				if (provider is NDOSqlServerProvider)
 					parType = (((System.Data.SqlClient.SqlParameter)dp).SqlDbType).ToString();
-				else if (provider is NDOAccessProvider)
-					parType = (((System.Data.OleDb.OleDbParameter)dp).OleDbType).ToString();
 				else if (dp.GetType().Name == "MySqlParameter")
 				{
 					Type t = dp.GetType();

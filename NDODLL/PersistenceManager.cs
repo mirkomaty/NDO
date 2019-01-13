@@ -23,10 +23,8 @@
 using System;
 using System.Text;
 using System.IO;
-using System.EnterpriseServices;
 using System.Collections;
 using System.Collections.Generic;
-using System.Collections.Specialized;
 using System.Data;
 using System.Diagnostics;
 using System.Reflection;
@@ -36,14 +34,12 @@ using System.Linq;
 using System.Xml.Linq;
 
 using NDO.Mapping;
-using NDO.Logging;
 using NDOInterfaces;
 using NDO.ShortId;
 using System.Globalization;
 using NDO.Linq;
 using NDO.Query;
 using Unity;
-using NDO.Configuration;
 
 namespace NDO 
 {
@@ -187,21 +183,6 @@ namespace NDO
 		/// </remarks>
 		public ObjectContainer GetObjectContainer()
 		{
-			return GetObjectContainer(SerializationFlags.SerializeCompositeRelations | SerializationFlags.UseBinaryFormat);
-		}
-
-		/// <summary>
-		/// Gets a container of all loaded objects and tries to load child objects 
-		/// according to the serialisation flags provided.
-		/// </summary>
-		/// <param name="serFlags">Determines, how the search for child objects is conducted.</param>
-		/// <returns>An ObjectContainer object.</returns>
-		/// <remarks>
-		/// It is not recommended, to transfer objects with a state other than Hollow, 
-		/// Persistent, or Transient.
-		/// </remarks>
-		public ObjectContainer GetObjectContainer(SerializationFlags serFlags)
-		{
 			IList l = this.cache.AllObjects;
 			foreach(IPersistenceCapable pc in l)
 			{
@@ -212,7 +193,7 @@ namespace NDO
 					System.Diagnostics.Trace.WriteLine("NDO warning: Call to GetObjectContainer returns changed objects.");
 				}
 			}
-			ObjectContainer oc = new ObjectContainer(serFlags);
+			ObjectContainer oc = new ObjectContainer();
 			oc.AddList(l);
 			return oc;
 		}
@@ -222,13 +203,12 @@ namespace NDO
 		/// child objects according to the serFlags.
 		/// </summary>
 		/// <param name="objects">The list of the root objects to add to the container.</param>
-		/// <param name="serFlags">Determines, how the search for child objects is conducted.</param>
 		/// <returns>An ObjectContainer object.</returns>
 		/// <remarks>
 		/// It is not recommended, to transfer objects with a state other than Hollow, 
 		/// Persistent, or Transient.
 		/// </remarks>
-		public ObjectContainer GetObjectContainer(IList objects, SerializationFlags serFlags)
+		public ObjectContainer GetObjectContainer(IList objects)
 		{
 			foreach(object o in objects)
 			{
@@ -237,7 +217,7 @@ namespace NDO
 				if (pc.NDOObjectState == NDOObjectState.Hollow)
 					LoadData(pc);
 			}
-			ObjectContainer oc = new ObjectContainer(serFlags);
+			ObjectContainer oc = new ObjectContainer();
 			oc.AddList(objects);
 			return oc;
 		}
@@ -257,26 +237,10 @@ namespace NDO
 		/// </remarks>
 		public ObjectContainer GetObjectContainer(Object obj)
 		{
-			return GetObjectContainer(obj, SerializationFlags.SerializeCompositeRelations | SerializationFlags.UseBinaryFormat);
-		}
-
-		/// <summary>
-		/// Returns a container containing the provided object and searches for
-		/// child objects according to the serFlags.
-		/// </summary>
-		/// <param name="obj">The root objects to add to the container.</param>
-		/// <param name="serFlags">Determines, how the search for child objects is conducted.</param>
-		/// <returns>An ObjectContainer object.</returns>
-		/// <remarks>
-		/// It is not recommended, to transfer objects with a state other than Hollow, 
-		/// Persistent, or Transient.
-		/// </remarks>
-		public ObjectContainer GetObjectContainer(Object obj, SerializationFlags serFlags)
-		{
 			CheckPc(obj);
 			if (((IPersistenceCapable)obj).NDOObjectState == NDOObjectState.Hollow)
 				LoadData(obj);
-			ObjectContainer oc = new ObjectContainer(serFlags);
+			ObjectContainer oc = new ObjectContainer();
 			oc.AddObject(obj);
 			return oc;
 		}
@@ -2852,15 +2816,6 @@ namespace NDO
 						ti.Connection.Close();
 				}
 			}
-
-            try
-            {
-                if (ContextUtil.IsInTransaction)
-                    ContextUtil.SetAbort();
-            }
-            catch (NotImplementedException)  // Mono Hack: Mono doesn't implement IsInTransaction
-            {
-            }
 		}
 
 		/// <summary>
@@ -3655,9 +3610,9 @@ namespace NDO
 
 
 
-		#endregion
+#endregion
 
-		#region Implementation of IDisposable
+#region Implementation of IDisposable
 		/// <summary>
 		/// Make sure, the pm will be closed when it gets disposed
 		/// </summary>
@@ -3666,9 +3621,9 @@ namespace NDO
 			base.Dispose();
 			Close();
 		}
-		#endregion
+#endregion
 
-		#region Class extent
+#region Class extent
 		/// <summary>
 		/// Gets all objects of a given class.
 		/// </summary>
@@ -3693,9 +3648,9 @@ namespace NDO
 			return q.Execute();
 		}
 
-		#endregion
+#endregion
 
-		#region Query engine
+#region Query engine
 
 
 		/// <summary>
@@ -3831,9 +3786,9 @@ namespace NDO
 			return queryResult;
 		}
 
-		#endregion
+#endregion
 
-		#region Cache Management
+#region Cache Management
 		/// <summary>
 		/// Remove all unused entries from the cache.
 		/// </summary>
@@ -3851,7 +3806,7 @@ namespace NDO
 		{
 			cache.Unload();
 		}
-		#endregion
+#endregion
 
 
 		public byte[] EncryptionKey
@@ -4109,7 +4064,7 @@ namespace NDO
 			transactionInfos.Clear();
 		}
 	
-		#region IEnumerable Member
+#region IEnumerable Member
 
 		public IEnumerator GetEnumerator()
 		{
@@ -4117,9 +4072,9 @@ namespace NDO
 			return this;
 		}
 
-		#endregion
+#endregion
 	
-		#region IEnumerator Members
+#region IEnumerator Members
 
 		private IDictionaryEnumerator enumerator;
 
@@ -4141,7 +4096,7 @@ namespace NDO
 			return enumerator.MoveNext();
 		}
 
-		#endregion
+#endregion
 	}
 
 }

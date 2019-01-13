@@ -76,12 +76,6 @@ namespace NDO
 					SqlServerGenerator sqlGen = new SqlServerGenerator();
 					sqlGen.Provider = provider;
 					this.generators.Add( "SqlServer", sqlGen );
-                    provider = new NDOAccessProvider();
-                    if (!this.providers.ContainsKey("Access"))
-                        this.providers.Add("Access", provider);
-                    AccessGenerator accGen = new AccessGenerator();
-					accGen.Provider = provider;
-					this.generators.Add( "Access", accGen );
 					SearchProviderPlugIns();
 				}
 			}

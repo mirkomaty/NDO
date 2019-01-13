@@ -210,17 +210,10 @@ namespace NDOInterfaces
 		/// <summary>
 		/// See <see cref="IProvider">IProvider interface</see>.
 		/// </summary>
-#if NDO20
         public virtual string GetLastInsertedId(string tableName, string columnName)
 		{
 			return null;
 		}
-#else
-        public virtual string GetLastInsertedId
-        {
-            get { return null; }
-        }
-#endif
 
         /// <summary>
 		/// See <see cref="IProvider">IProvider interface</see>.

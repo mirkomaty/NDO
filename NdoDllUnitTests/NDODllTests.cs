@@ -77,6 +77,14 @@ namespace NdoDllUnitTests
 			Assert.That( updateRank[t1] == 1 );
 		}
 
+        [Test]
+        public void TestHttpUtil()
+        {
+            string s = "abc/d \\ üÜöÖäÄß";
+            string encoded = NDO.HttpUtil.HttpUtility.UrlEncode( s );
+            Assert.AreEqual( s, NDO.HttpUtil.HttpUtility.UrlDecode( encoded ) );
+        }
+
 		[Test]
 		public void TestRanknDirNoPoly()
 		{

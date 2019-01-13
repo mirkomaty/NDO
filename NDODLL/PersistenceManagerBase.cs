@@ -21,16 +21,12 @@
 
 
 using System;
-using System.Diagnostics;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
 using System.IO;
 using System.Data;
 using NDO.Logging;
 using NDO.Mapping;
-using System.Web;
 using Unity;
 using NDO.Configuration;
 using NDO.SqlPersistenceHandling;
@@ -65,64 +61,15 @@ namespace NDO
 		/// </summary>
 		public PersistenceManagerBase(IUnityContainer container = null) 
 		{
-			Assembly ass = Assembly.GetEntryAssembly();
+            this.configContainer = container;
+			string baseDir = AppDomain.CurrentDomain.BaseDirectory;
+            if (File.Exists( Path.Combine( baseDir, "Web.config" ) ))
+                baseDir = Path.Combine( baseDir, "bin" );
+            string mappingFileName = Path.Combine( baseDir, "NDOMapping.xml" );
+			if (!File.Exists(mappingFileName))
+                throw new NDOException( 49, "Can't determine the path to the mapping file - please provide a mapping file path as argument to the PersistenceManager ctor." );
 
-			if (ass == null)
-			{
-				StackTrace st = new StackTrace();
-				Assembly ndoAss = this.GetType().Assembly;
-				for(int i = 0; i < st.FrameCount; i++)
-				{
-					MethodBase mb = st.GetFrame(i).GetMethod();
-					MethodInfo mi = mb as MethodInfo;
-					Assembly frameAss = null;
-					if (mi != null)
-					{
-						frameAss = mi.ReflectedType.Assembly;
-					}
-					else
-					{
-						ConstructorInfo ci = mb as ConstructorInfo;
-						if (ci != null)
-						{
-							frameAss = ci.ReflectedType.Assembly;
-						}
-					}
-					if (frameAss != null && frameAss != ndoAss)
-					{
-						ass = frameAss;
-						break;
-					}
-				}
-			}
-			if (ass == null)
-				throw new NDOException(49, "Can't determine the path to the mapping file - please provide a mapping file path as argument to the PersistenceManager ctor.");
-
-			string baseDir;
-			if ( HttpContext.Current != null /*ass.Location.ToLower().IndexOf("temporary asp.net files") > -1*/)
-			{
-				/*
-				string localPath = HttpContext.Current.Request.Url.LocalPath;
-				int p; 
-				if ((p = localPath.ToLower().IndexOf(".asmx")) > -1)
-					localPath = localPath.Substring(0, p + 5);
-				 */
-				baseDir = HttpContext.Current.Request.MapPath("/");
-				//baseDir = Path.GetDirectoryName(localPath);
-				if (Directory.Exists(Path.Combine(baseDir, "bin")))
-					baseDir = Path.Combine( baseDir, "bin" );
-			}
-			else
-			{
-				baseDir = Path.GetDirectoryName(ass.Location);
-			}
-			string mappingFileName = Path.GetFileNameWithoutExtension(ass.Location) + ".ndo.xml";
-			string mp = null;
-
-			mp = Path.Combine(baseDir, mappingFileName);
-			if (!File.Exists(mp))
-				mp = Path.Combine(baseDir, "NDOMapping.xml");
-			Init(Path.Combine(baseDir, mp));
+            Init( Path.Combine(baseDir, mappingFileName));
 		}
 
 		public PersistenceManagerBase(string mappingFile, IUnityContainer container = null)
