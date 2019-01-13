@@ -34,7 +34,7 @@
       </Reference>
       <Reference AssemblyName="Moq" AssemblyPath="..\NDODLL\packages\Moq.4.9.0\lib\net45\Moq.dll" CheckThisDLL="False">
       </Reference>
-      <Reference AssemblyName="NDOInterfaces" AssemblyPath="..\NDOInterfaces\bin\Debug\NDOInterfaces.dll" CheckThisDLL="False">
+      <Reference AssemblyName="NDOInterfaces" AssemblyPath="bin\Debug\NDOInterfaces.dll" CheckThisDLL="False">
       </Reference>
       <Reference AssemblyName="nunit.framework" AssemblyPath="..\NDODLL\packages\NUnit.3.10.1\lib\net45\nunit.framework.dll" CheckThisDLL="False">
       </Reference>
@@ -44,7 +44,9 @@
       </Reference>
       <Reference AssemblyName="System.ValueTuple" AssemblyPath="..\NDODLL\packages\System.ValueTuple.4.4.0\lib\net47\System.ValueTuple.dll" CheckThisDLL="False">
       </Reference>
-      <Reference AssemblyName="Unity.Abstractions" AssemblyPath="..\NDODLL\packages\Unity.Abstractions.3.3.0\lib\net40\Unity.Abstractions.dll" CheckThisDLL="False">
+      <Reference AssemblyName="Unity.Abstractions" AssemblyPath="..\NDODLL\packages\Unity.Abstractions.3.3.1\lib\net47\Unity.Abstractions.dll" CheckThisDLL="False">
+      </Reference>
+      <Reference AssemblyName="Unity.Container" AssemblyPath="..\NDODLL\packages\Unity.Container.5.8.13\lib\net47\Unity.Container.dll" CheckThisDLL="False">
       </Reference>
     </References>
   </ProjectDescription>
