@@ -28,7 +28,7 @@ using System.IO;
 using VSLangProj;
 using EnvDTE;
 using VsWebSite;
-
+using Microsoft.VisualStudio.Shell.Interop;
 
 namespace NETDataObjects.NDOVSPackage
 {
@@ -237,25 +237,49 @@ namespace NETDataObjects.NDOVSPackage
 			}
 		}
 
-#if !STANDALONE
+		string GetBuildProperty(IVsBuildPropertyStorage propertyStorage, string key, string configuration = "")
+		{
+			string result = null;
+			if (propertyStorage != null)
+				propertyStorage.GetPropertyValue( key, configuration, (uint)_PersistStorageType.PST_PROJECT_FILE, out result );
+			return result;
+		}
+
 		public ProjectDescription(Solution solution, Project project)
 		{
 			this.solution = solution;
 			this.project = project;
-
+			
 			Configuration		 conf = project.ConfigurationManager.ActiveConfiguration;
+			IVsHierarchy projectHierarchy = null;
+
+			if (NDOPackage.SolutionService.GetProjectOfUniqueName( project.UniqueName, out projectHierarchy ) != 0)  // 0 == S_OK
+			{
+				projectHierarchy = null;
+			}
+
+			IVsBuildPropertyStorage propertyStorage = null;
+
+			if (projectHierarchy != null)
+			{
+				propertyStorage = (IVsBuildPropertyStorage)projectHierarchy;
+			}
 
 			try
 			{
 				this.platformTarget = (string) conf.Properties.Item( "PlatformTarget" ).Value;
-				this.targetFramework = (string) project.Properties.Item( "TargetFrameworkMoniker" ).Value;
+			}
+			catch { }
+			try
+			{
+				this.targetFramework = (string)project.Properties.Item( "TargetFrameworkMoniker" ).Value;
 			}
 			catch { }
 
-            // Web Projects don't have an assembly name.
-            // Since NDO computes some information from the 
-            // binFile, we produce a dummy binFile name.
-            if (project.Kind == "{E24C65DC-7377-472b-9ABA-BC803B73C61A}")
+			// Web Projects don't have an assembly name.
+			// Since NDO computes some information from the 
+			// binFile, we produce a dummy binFile name.
+			if (project.Kind == "{E24C65DC-7377-472b-9ABA-BC803B73C61A}")
             {
                 this.isWebProject = true;
                 binFile = project.Name;
@@ -277,46 +301,15 @@ namespace NETDataObjects.NDOVSPackage
                 string outputPath = (string)conf.Properties.Item("OutputPath").Value;
                 string fullPath = project.Properties.Item("FullPath").Value as string;
                 string outputFileName = project.Properties.Item("OutputFileName").Value as string;
-                debug = (bool)conf.Properties.Item("DebugSymbols").Value;
-                objPath = Path.Combine(fullPath, conf.Properties.Item("IntermediatePath").Value as string);
-                binFile = Path.Combine(fullPath, outputPath);
+				string configuration = GetBuildProperty( propertyStorage, "Configuration" );
+				debug = configuration == "Debug";
+				objPath = GetBuildProperty( propertyStorage, "IntermediateOutputPath" );
+				binFile = Path.Combine(fullPath, outputPath);
                 binFile = Path.Combine(binFile, outputFileName);
                 projPath = Path.GetDirectoryName(project.FileName) + "\\";
-                Property prop = null;
-                try 
-                {
-                    prop = project.Properties.Item("AssemblyOriginatorKeyFile");
-                }
-                catch {}
-                if (prop != null)
-                {
-                    keyFile = prop.Value.ToString();
-                }
-                else
-                {
-                    try
-                    {
-                        prop = project.Properties.Item("AssemblyKeyContainerName");
-                    }
-                    catch { }
-                    if (prop != null)
-                    {
-                        keyFile = "@" + prop.Value.ToString();
-                    }
-                }
+				keyFile = GetBuildProperty( propertyStorage, "AssemblyOriginatorKeyFile" );
             }
-			if (!Directory.Exists(objPath))
-				objPath = Path.GetDirectoryName(binFile) + "\\";
-			//solutionPath			= solution.Properties.Item( "Path" ).Value as string;
-			//solutionPath			= Path.GetDirectoryName( solutionPath ) + "\\";			
 		}
-#endif
-
-		//		public string SolutionPath
-		//		{
-		//			get { return solutionPath; }
-		//			set { solutionPath = value; }
-		//		}
 
 		public string ObjPath
 		{

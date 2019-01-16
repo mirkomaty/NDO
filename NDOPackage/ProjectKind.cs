@@ -36,5 +36,6 @@ namespace NETDataObjects.NDOVSPackage
 		public const string prjKindSDECSharpProject = "{20D4826A-C6FA-45db-90F4-C717570B9F32}";
 		public const string prjKindSDEVBProject = "{CB4CE8C6-1BDB-4dc7-A4D3-65A1999772F8}";
 		public const string prjKindVJSharpProject = "{E6FDF86B-F3D1-11D4-8576-0002A516ECE8}";
+		public const string prjKindNewCSharpProject = "{9A19103F-16F7-4668-BE54-9A1E7A4F7556}";  // This will no longer exist after VS 17.8
 	}
 }

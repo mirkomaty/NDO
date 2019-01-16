@@ -39,6 +39,34 @@ Support for .NET Standard</PackageReleaseNotes>
     <PackageReference Include="System.Data.SqlClient" Version="4.6.0" />
     <PackageReference Include="Unity.Container" Version="5.8.13" />
   </ItemGroup>
+  
+  <ItemGroup>
+    <Content Include="..\nuget\NDO.dll.targets">
+      <Pack>true</Pack>
+      <PackageCopyToOutput>true</PackageCopyToOutput>
+      <PackagePath>build</PackagePath>	
+    </Content>
+    <Content Include="..\nuget\NDOEnhancer.BuildTask.dll">
+      <Pack>true</Pack>
+      <PackageCopyToOutput>true</PackageCopyToOutput>
+      <PackagePath>build</PackagePath>
+    </Content>
+    <Content Include="..\NDOEnhancer\bin\Release\NDOEnhancer.exe">
+      <Pack>true</Pack>
+      <PackageCopyToOutput>true</PackageCopyToOutput>
+      <PackagePath>build</PackagePath>
+    </Content>
+    <Content Include="..\NDOEnhancer\bin\Release\NDOEnhancer.exe.config">
+      <Pack>true</Pack>
+      <PackageCopyToOutput>true</PackageCopyToOutput>
+      <PackagePath>build</PackagePath>
+    </Content>
+    <Content Include="..\EnhancerX86Stub\EnhancerX86Stub\bin\Release\EnhancerX86Stub.exe">
+      <Pack>true</Pack>
+      <PackageCopyToOutput>true</PackageCopyToOutput>
+      <PackagePath>build</PackagePath>
+    </Content>
+  </ItemGroup>
 
   <Target Name="PostBuild" AfterTargets="Pack">
     <Exec Command="IF NOT EXIST ..\Nuget-Packages md ..\Nuget-Packages&#xD;&#xA;echo Copy package&#xD;&#xA;copy bin\$(Configuration)\NDO*.nupkg ..\Nuget-Packages /Y&#xD;&#xA;" />

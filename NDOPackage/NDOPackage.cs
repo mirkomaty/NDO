@@ -58,8 +58,9 @@ namespace NETDataObjects.NDOVSPackage
 	[ProvideLoadKey("Standard", NDOPackage.Version, ".NET Data Objects (NDO)", "Mirko Matytschak", 104) ]
     public sealed class NDOPackage : Package
     {
-		public const string Version = "3.0.1";
+		public const string Version = "4.0.0";
 		private BuildEventHandler		buildEventHandler;
+		public static IVsSolution SolutionService { get; private set; }
 
         /// <summary>
         /// Default constructor of the package.
@@ -89,15 +90,22 @@ namespace NETDataObjects.NDOVSPackage
 			base.Initialize();
 
 			_DTE dte = (_DTE)this.GetService( typeof( _DTE ) );
+			var serviceProvider = (Microsoft.VisualStudio.OLE.Interop.IServiceProvider)dte;
+			SolutionService = (IVsSolution)GetService(typeof( IVsSolution ) );
 
 			// Add our command handlers for menu (commands must exist in the .vsct file)
 			OleMenuCommandService mcs = GetService( typeof( IMenuCommandService ) ) as OleMenuCommandService;
 			if (null != mcs)
 			{
+				OleMenuCommand menuItem;
 				// Create the command for the menu items.
 				CommandID menuCommandID = new CommandID( GuidList.guidNDOPackageCmdSet, (int)PkgCmdIDList.cmdidNDOConfiguration );
-				OleMenuCommand menuItem = new Configure( dte, menuCommandID );
-				mcs.AddCommand( menuItem );
+				var cmd = mcs.FindCommand( menuCommandID );
+				if (cmd == null)
+				{
+					menuItem = new Configure( dte, menuCommandID );
+					mcs.AddCommand( menuItem );
+				}
 
 				menuCommandID = new CommandID( GuidList.guidNDOPackageCmdSet, (int)PkgCmdIDList.cmdidAddRelation );
 				menuItem = new AddRelation( dte, menuCommandID );
@@ -124,14 +132,5 @@ namespace NETDataObjects.NDOVSPackage
 		}
         #endregion
 
-		private void dummy()
-		{
-			SimpleMappingTool.AddPropertyDialog dlg = null;
-			dummy2( dlg );
-		}
-		private void dummy2(object o)
-		{
-			Console.WriteLine( o.ToString() );
-		}
     }
 }
