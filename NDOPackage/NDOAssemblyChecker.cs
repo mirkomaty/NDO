@@ -19,30 +19,24 @@
 // CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER 
 // DEALINGS IN THE SOFTWARE.
 
+using System.Diagnostics;
+using System.IO;
+using System.Linq;
+using Mono.Cecil;
 
-using System;
-using System.Reflection;
-using System.Resources;
-using System.Runtime.CompilerServices;
-using System.Runtime.InteropServices;
-
-// General Information about an assembly is controlled through the following 
-// set of attributes. Change these attribute values to modify the information
-// associated with an assembly.
-[assembly: AssemblyTitle("NDOPackage")]
-[assembly: AssemblyDescription("")]
-[assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany(".NET Data Objects")]
-[assembly: AssemblyProduct("NDOPackage")]
-[assembly: AssemblyCopyright("")]
-[assembly: AssemblyTrademark("")]
-[assembly: AssemblyCulture("")]   
-[assembly: ComVisible(false)]     
-[assembly: CLSCompliant(false)]
-[assembly: NeutralResourcesLanguage("en-US")]
-
-[assembly: AssemblyVersion("4.0.0")]
-[assembly: AssemblyFileVersion( "4.0.0" )]
-
-
-
+namespace NETDataObjects.NDOVSPackage
+{
+	public class NDOAssemblyChecker
+	{
+		public static bool IsEnhanced(string targetFileName)
+		{
+			if (!File.Exists( targetFileName ))
+			{
+				Debug.WriteLine( "NDOAssemblyChecker: DLL doesn't exist: " + targetFileName );
+				return false;
+			}
+			var module = ModuleDefinition.ReadModule( targetFileName );
+			return module.Assembly.CustomAttributes.Any( a => a.AttributeType.Name == "NDOEnhancedAttribute" );
+		}
+	}
+}

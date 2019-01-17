@@ -59,9 +59,9 @@ namespace NETDataObjects.NDOVSPackage
         void FindProjects(Project project)
         {
             string kindUpper = project.Kind.ToUpper();
-            if (kindUpper == ProjectKind.prjKindCSharpProject.ToUpper()
-                || kindUpper == ProjectKind.prjKindVBProject.ToUpper()
-                || kindUpper == ProjectKind.prjKindVJSharpProject.ToUpper()
+#warning Check, if we're able to support WebSite projects (E24C65DC...)
+			if (CodeGenHelper.IsCsProject(project)
+                || CodeGenHelper.IsVbProject(project)
                 || kindUpper == "{E24C65DC-7377-472B-9ABA-BC803B73C61A}")
             dictionary.Add(ProjectName(project).ToLower(CultureInfo.InvariantCulture), project);
             FindProjects(project.ProjectItems);

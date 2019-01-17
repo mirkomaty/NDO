@@ -182,7 +182,7 @@ namespace NETDataObjects.NDOVSPackage
 				FileInfo fi = new FileInfo(fileName);
 				if ((fi.Attributes & FileAttributes.ReadOnly) != 0)
 				{
-					MessageBox.Show("The NDO project file '" + fileName + "' is write protected, probably due to a checked in state of your Source Code Control system. NDO needs to update this file now. The ReadOnly attribute will be removed. If you check out the file the next time, make sure to keep the local version of the file.", "NDO Add-in", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+					MessageBox.Show("The NDO project file '" + fileName + "' is write protected, probably due to your Source Code Control system. NDO needs to update this file now. NDO tries to remove the write protect attribute in order to update the file.", "NDO Add-in", MessageBoxButtons.OK, MessageBoxIcon.Warning);
 					fi.Attributes &= (~FileAttributes.ReadOnly);
 				}
 				options.Save(pd);

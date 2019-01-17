@@ -337,15 +337,6 @@ namespace NETDataObjects.NDOVSPackage
 
 		private void AddReference( string name, string path, bool checkThisDLL )
 		{
-			if ( path.IndexOf( @"Microsoft.NET\Framework" ) > -1 )
-				return;
-			if ( path.IndexOf( @"Reference Assemblies\Microsoft" ) > -1 )
-				return;
-			if ( name.ToUpper() == "NDO" )
-				return;
-			if ( name.ToUpper() == "NDOInterfaces" )
-				return;
-
 			if ( !references.ContainsKey( name ) )
 				references.Add( name, new NDOReference( name, path, checkThisDLL ) );
 		}
@@ -396,7 +387,7 @@ namespace NETDataObjects.NDOVSPackage
 			if (references != null)
 				return;
 			references = new Dictionary<string,NDOReference>();
-			Hashtable allProjects = new Hashtable();
+			Dictionary<string,string> allProjects = new Dictionary<string, string>();
 			foreach(Project p in new ProjectIterator(solution).Projects)
 			{
 				if (p.Name == project.Name) continue;
@@ -412,7 +403,7 @@ namespace NETDataObjects.NDOVSPackage
                     string fullPath = (string)p.Properties.Item("FullPath").Value;
                     string outputFileName = (string)p.Properties.Item("OutputFileName").Value;
                     //messages.Output(fullPath + outputPath + outputFileName);
-                    if (!allProjects.Contains(p.Name))
+                    if (!allProjects.ContainsKey(p.Name))
                         allProjects.Add(p.Name, fullPath + outputPath + outputFileName);
                 }
                 catch { }
@@ -429,7 +420,7 @@ namespace NETDataObjects.NDOVSPackage
                         if (referencedProject != null)
                         {
                             string rname = referencedProject.Name;
-                            if (allProjects.Contains(rname))
+                            if (allProjects.ContainsKey(rname))
                                 AddReference(ar.Name, (string)allProjects[rname], true);
                             else
                             {
@@ -459,13 +450,13 @@ namespace NETDataObjects.NDOVSPackage
                         rname = r.Name;
                     if (rname == project.Name) continue;
 
-                    if (allProjects.Contains(rname))
+                    if (allProjects.ContainsKey(rname))
                         AddReference(r.Name, (string)allProjects[rname], true);
                     else
                     {
                         // Referenzen, die auf keine gültige DLL verweisen...
-                        if (r.Path != "")
-                            AddReference(rname, r.Path, true);
+                        if (!String.IsNullOrEmpty(r.Path) && NDOAssemblyChecker.IsEnhanced(r.Path))
+                            AddReference(rname, r.Path, false);
                     }
                 }
             }

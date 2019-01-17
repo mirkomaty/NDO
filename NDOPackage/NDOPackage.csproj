@@ -109,6 +109,9 @@
     <Reference Include="Microsoft.VisualStudio.Shell.Interop.10.0" />
     <Reference Include="Microsoft.VisualStudio.TextManager.Interop" />
     <Reference Include="Microsoft.VisualStudio.Shell.Immutable.10.0" />
+    <Reference Include="Mono.Cecil, Version=0.10.1.0, Culture=neutral, PublicKeyToken=50cebf1cceb9d05e, processorArchitecture=MSIL">
+      <HintPath>packages\Mono.Cecil.0.10.1\lib\net40\Mono.Cecil.dll</HintPath>
+    </Reference>
     <Reference Include="MySqlProvider">
       <HintPath>..\MySqlNdoProvider\MySqlProvider.dll</HintPath>
     </Reference>
@@ -196,6 +199,7 @@
     <Compile Include="MergeConflictBase.cs" />
     <Compile Include="MergeConflictUseCGCode.cs" />
     <Compile Include="MergeConflictUseYourCode.cs" />
+    <Compile Include="NDOAssemblyChecker.cs" />
     <Compile Include="NDOMapping.cs" />
     <Compile Include="NDOProviderFactory.cs" />
     <Compile Include="NdoUIProviderFactory.cs" />
@@ -265,6 +269,7 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
+    <None Include="app.config" />
     <None Include="packages.config" />
     <None Include="source.extension.vsixmanifest">
       <SubType>Designer</SubType>
