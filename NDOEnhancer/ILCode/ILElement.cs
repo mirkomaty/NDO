@@ -168,31 +168,38 @@ namespace ILCode
 		}
 
 		public void
-		writeSubElements( ILFile ilfile, int level )
+		writeSubElements( ILFile ilfile, int level, bool isNetStandard )
 		{
 			if ( null == m_elements )
 				return;
 
 			foreach ( ILElement element in m_elements )
 			{
-				element.write( ilfile, level );
+				element.write( ilfile, level, isNetStandard );
 			}
 		}
 
 		public void
-		write( ILFile ilfile, int level )
+		write( ILFile ilfile, int level, bool isNetStandard )
 		{
-//			ilfile.writeLine( 0, "// " + GetType().Name );
+			//			ilfile.writeLine( 0, "// " + GetType().Name );
 
-			foreach ( string line in m_lines )
-				ilfile.writeLine( level, line );
+			foreach (string line in m_lines)
+			{
+				var outputLine = line;
+				// even if the dll is a netstandard dll we analyze it
+				// using the .NET Fx, which has dependencies into the mscorlib.
+				if (isNetStandard)
+					outputLine = line.Replace( "[mscorlib]", "[netstandard]" );
+				ilfile.writeLine( level, outputLine );
+			}
 
 			if ( null == m_elements )
 				return;
 
 			ilfile.writeLine( level, "{" );
 
-			writeSubElements( ilfile, level + 1 );
+			writeSubElements( ilfile, level + 1, isNetStandard );
 
 			ilfile.writeLine( level, "}" );
 		}

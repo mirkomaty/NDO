@@ -109,6 +109,7 @@ namespace EnhancerTest
 
 		public void InternalStart(string arg)
 		{
+			Console.WriteLine("Runtime: " + typeof(string).Assembly.FullName);
 			ProjectDescription pd;
 			ConfigurationOptions options;
 
@@ -197,23 +198,23 @@ namespace EnhancerTest
 
         static Assembly OnAssemblyResolve(object sender, ResolveEventArgs args)
         {
-            if (args.Name.ToUpper().StartsWith("NDO,"))
+			Console.WriteLine($"AssemblyResolve: {args.Name}");
+			string path = Path.GetDirectoryName( Assembly.GetExecutingAssembly().Location );
+			if (args.Name.ToUpper().StartsWith("NDO,"))
             {
-                string path = AppDomain.CurrentDomain.BaseDirectory;
                 string fileName = Path.Combine(path, "NDO.dll");
                 if (File.Exists(fileName))
                     return Assembly.LoadFrom(fileName);
                 return null;
             }
-			if (args.Name.ToUpper().StartsWith( "NDOInterfaces," ))
+			if (args.Name.ToUpper().StartsWith( "NDOINTERFACES," ))
 			{
-				string path = AppDomain.CurrentDomain.BaseDirectory;
 				string fileName = Path.Combine( path, "NDOInterfaces.dll" );
 				if (File.Exists( fileName ))
 					return Assembly.LoadFrom( fileName );
 				return null;
 			}
-            Console.WriteLine("Warning: Can't resolve assembly: " + args.Name);
+			Console.WriteLine("Warning: Can't resolve assembly: " + args.Name);
             return null;
         }
 

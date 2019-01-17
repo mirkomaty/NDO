@@ -91,11 +91,10 @@
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="NDO, Version=3.0.0.2, Culture=neutral, PublicKeyToken=37bfdffa92a0cd24, processorArchitecture=MSIL">
-      <HintPath>..\NDODLL\bin\$(Configuration)\NDO.dll</HintPath>
-      <SpecificVersion>False</SpecificVersion>
+    <Reference Include="NDO, Version=4.0.0.0, Culture=neutral, PublicKeyToken=37bfdffa92a0cd24, processorArchitecture=MSIL">
+      <HintPath>..\NDODLL\bin\Debug\net451\NDO.dll</HintPath>
     </Reference>
-    <Reference Include="NDOInterfaces, Version=3.0.0.0, Culture=neutral, PublicKeyToken=ff5e453a099b8326, processorArchitecture=MSIL">
+    <Reference Include="NDOInterfaces, Version=4.0.0.0, Culture=neutral, PublicKeyToken=ff5e453a099b8326, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\NDOInterfaces\bin\Debug\net451\NDOInterfaces.dll</HintPath>
     </Reference>
@@ -136,6 +135,7 @@
     <Compile Include="Enhancer\ClassHashtable.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Enhancer\Corlib.cs" />
     <Compile Include="Enhancer\Decryptor.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -338,6 +338,8 @@
   <PropertyGroup>
     <PostBuildEvent>copy NDOEnhancer.exe ..\..\..\nuget
 copy NDOEnhancer.pdb ..\..\..\nuget
+copy NDOEnhancer.exe "C:\Users\Mirko Matytschak\.nuget\packages\ndo.dll\4.0.0\build"
+copy NDOEnhancer.pdb "C:\Users\Mirko Matytschak\.nuget\packages\ndo.dll\4.0.0\build"
 </PostBuildEvent>
   </PropertyGroup>
 </Project>

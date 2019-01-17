@@ -20,6 +20,7 @@
 // DEALINGS IN THE SOFTWARE.
 
 
+using NDOEnhancer;
 using System;
 
 namespace ILCode
@@ -308,14 +309,14 @@ namespace ILCode
 				m_poetSlotType 	= "object";
 				m_poetSlotName 	= "Object";
 			}
-			else if ( m_ilType == "valuetype [mscorlib]System.DateTime" )
+			else if ( m_ilType == $"valuetype {Corlib.Name}System.DateTime" )
 			{
 				m_javaType	   	= "java.util.Date";
 				m_javaSignature	= "System.DateTime";
 				m_poetSlotType 	= "object";
 				m_poetSlotName 	= "Object";
 			}
-			else if ( m_ilType == "valuetype [mscorlib]System.DateTime[]" )
+			else if ( m_ilType == $"valuetype {Corlib.Name}System.DateTime[]" )
 			{
 				m_javaType	   	= "java.util.Date[]";
 				m_javaSignature	= "[LSystem.DateTime;";

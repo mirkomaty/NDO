@@ -91,13 +91,13 @@ namespace ILCode
 		}
 
 		public void
-		writeWithPreExtension( string preExtension )
+		writeWithPreExtension( string preExtension, bool isNetStandard )
 		{
 			write( Path.GetDirectoryName( m_filename )
 					+ Path.DirectorySeparatorChar
 					+ Path.GetFileNameWithoutExtension( m_filename )
 					+ "."
-					+ preExtension + Path.GetExtension( m_filename ) );
+					+ preExtension + Path.GetExtension( m_filename ), isNetStandard );
 		}
 
 		public string
@@ -107,11 +107,11 @@ namespace ILCode
 		}
 
 		public void
-		write( string file )
+		write( string file, bool isNetStandard )
 		{
 			m_streamOut = new StreamWriter( file, false, Encoding.UTF8);
 
-			writeSubElements( this, 0 );
+			writeSubElements( this, 0, isNetStandard );
 
 			m_streamOut.Close();
 			m_streamOut = null;
