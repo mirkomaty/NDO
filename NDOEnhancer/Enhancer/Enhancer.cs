@@ -250,6 +250,8 @@ namespace NDOEnhancer
 					this.oidTypeName = assemblyNode.OidTypeName;
 					this.ownAssemblyName = assName;
 					Corlib.FxType = assemblyNode.TargetFramework == ".NETStandard,Version=v2.0" ? FxType.Standard2 : FxType.NetFx;
+					if (this.verboseMode)
+						messages.WriteLine( $"FxType: {ownAssemblyName}: {Corlib.FxType}" );
 				}
 
 				ArrayList classList = assemblyNode.PersistentClasses;

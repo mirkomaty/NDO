@@ -146,8 +146,10 @@ namespace NDOEnhancer
 					errorMessage += '\n';
 				errorMessage += Stdout.Substring(p + 7);
 			}
-			if (errorMessage != string.Empty)
-				throw new Exception("ILAsm: " + errorMessage);
+			if (errorMessage != string.Empty && errorMessage.IndexOf( "error", StringComparison.InvariantCultureIgnoreCase ) > -1)
+				throw new Exception( "ILAsm: " + errorMessage );
+			else
+				messages.WriteLine( errorMessage );
 		}
 	}
 }

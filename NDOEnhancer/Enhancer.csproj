@@ -332,9 +332,9 @@
     <None Include="app.config" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
-  <PropertyGroup>
-    <PreBuildEvent>..\..\..\MakeEnhancerDate\bin\$(Configuration)\MakeEnhancerDate.exe "V. 3.0" "C:\Program Files (x86)\Portable Git\bin\git.exe" &gt; $(ProjectDir)\EnhDate.cs</PreBuildEvent>
-  </PropertyGroup>
+  <Target Name="PrepareEnhDate" BeforeTargets="PrepareForBuild">
+	<Exec Command="..\MakeEnhancerDate\bin\Release\MakeEnhancerDate.exe &gt; EnhDate.cs"/>  
+  </Target>
   <PropertyGroup>
     <PostBuildEvent>copy NDOEnhancer.exe ..\..\..\nuget
 copy NDOEnhancer.pdb ..\..\..\nuget

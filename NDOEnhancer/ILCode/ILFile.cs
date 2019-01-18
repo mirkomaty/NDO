@@ -90,16 +90,6 @@ namespace ILCode
 			}
 		}
 
-		public void
-		writeWithPreExtension( string preExtension, bool isNetStandard )
-		{
-			write( Path.GetDirectoryName( m_filename )
-					+ Path.DirectorySeparatorChar
-					+ Path.GetFileNameWithoutExtension( m_filename )
-					+ "."
-					+ preExtension + Path.GetExtension( m_filename ), isNetStandard );
-		}
-
 		public string
 		getFileName()
 		{

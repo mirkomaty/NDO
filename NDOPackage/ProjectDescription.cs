@@ -307,7 +307,11 @@ namespace NETDataObjects.NDOVSPackage
 				binFile = Path.Combine(fullPath, outputPath);
                 binFile = Path.Combine(binFile, outputFileName);
                 projPath = Path.GetDirectoryName(project.FileName) + "\\";
-				keyFile = GetBuildProperty( propertyStorage, "AssemblyOriginatorKeyFile" );
+				string sign = GetBuildProperty( propertyStorage, "SignAssembly" );
+				if (!String.IsNullOrEmpty( sign ) && String.Compare( sign, "true", true ) == 0)
+					keyFile = GetBuildProperty( propertyStorage, "AssemblyOriginatorKeyFile" );
+				else
+					keyFile = null;
             }
 		}
 
