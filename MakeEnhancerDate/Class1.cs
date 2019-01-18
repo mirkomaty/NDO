@@ -40,16 +40,33 @@ namespace MakeEnhancerDate
 		static void Main(string[] args)
 		{
 			ConsoleProcess cp = new ConsoleProcess(false);
-			string path = AppDomain.CurrentDomain.BaseDirectory;
-			path = Path.GetFullPath(Path.Combine(path, @"..\..\.."));
-			//Console.Error.WriteLine("Path: " + path);
-			cp.Execute(args[1], "log -1", path);
-			string response = cp.Stdout;
-			Regex regex = new Regex( @"commit ([a-f0-9]{7})" );
-			Match match = regex.Match(response);
-			string rev = string.Empty;
-			if (match.Success)
-				rev = "r. " + match.Groups[1].Value;
+			string ndoRootPath = AppDomain.CurrentDomain.BaseDirectory;
+			string gitDir;
+
+			do
+			{
+				ndoRootPath = Path.GetFullPath( Path.Combine( ndoRootPath, ".." ) );
+				gitDir = Path.Combine( ndoRootPath, ".git" );
+			} while (!Directory.Exists( gitDir ));
+
+				string head = null;
+			char[] buf = new char[7];
+			using (StreamReader sr = new StreamReader( Path.Combine( gitDir, "HEAD" ) ))
+			{
+				sr.Read( buf, 0, 5 );
+				head = sr.ReadToEnd().Trim();
+			}
+
+			var refHeadPath = Path.Combine( gitDir, head.Replace( "/", "\\" ) );
+			if (!File.Exists( refHeadPath ))
+				throw new Exception( "Ref head doesn't exist: " + refHeadPath );
+
+			using (StreamReader sr = new StreamReader( refHeadPath ))
+			{
+				sr.Read( buf, 0, 7 );  // first 7 chars of the head				
+			}
+
+			string rev = "r. " + new string( buf );
             Thread.CurrentThread.CurrentCulture = CultureInfo.InvariantCulture;
 			Console.Write(@"namespace NDOEnhancer
 {
