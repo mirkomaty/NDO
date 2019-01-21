@@ -21,6 +21,7 @@
 
 
 using System;
+using SD = System.Diagnostics;
 using System.Xml;
 using System.Collections;
 using System.Collections.Generic;
@@ -29,6 +30,7 @@ using VSLangProj;
 using EnvDTE;
 using VsWebSite;
 using Microsoft.VisualStudio.Shell.Interop;
+using Microsoft.VisualStudio.Shell;
 
 namespace NETDataObjects.NDOVSPackage
 {
@@ -249,25 +251,13 @@ namespace NETDataObjects.NDOVSPackage
 		{
 			this.solution = solution;
 			this.project = project;
-			
-			Configuration		 conf = project.ConfigurationManager.ActiveConfiguration;
-			IVsHierarchy projectHierarchy = null;
 
-			if (NDOPackage.SolutionService.GetProjectOfUniqueName( project.UniqueName, out projectHierarchy ) != 0)  // 0 == S_OK
-			{
-				projectHierarchy = null;
-			}
-
-			IVsBuildPropertyStorage propertyStorage = null;
-
-			if (projectHierarchy != null)
-			{
-				propertyStorage = (IVsBuildPropertyStorage)projectHierarchy;
-			}
+			Configuration conf = project.ConfigurationManager.ActiveConfiguration;
+			IVsBuildPropertyStorage propertyStorage = GetPropertyStorage( project );
 
 			try
 			{
-				this.platformTarget = (string) conf.Properties.Item( "PlatformTarget" ).Value;
+				this.platformTarget = (string)conf.Properties.Item( "PlatformTarget" ).Value;
 			}
 			catch { }
 			try
@@ -280,39 +270,72 @@ namespace NETDataObjects.NDOVSPackage
 			// Since NDO computes some information from the 
 			// binFile, we produce a dummy binFile name.
 			if (project.Kind == "{E24C65DC-7377-472b-9ABA-BC803B73C61A}")
-            {
-                this.isWebProject = true;
-                binFile = project.Name;
-                projPath = binFile;
-                if (binFile.EndsWith("\\"))
-                    binFile = binFile.Substring(0, binFile.Length - 1);
-                int p = binFile.LastIndexOf("\\");
-                string fileName = binFile;
-                if (p > -1)
-                {
-                    fileName = binFile.Substring(p + 1);
-                }
-                objPath = Path.Combine(binFile, "bin");
-                // Dummy file name
-                binFile = Path.Combine(objPath, fileName + ".dll");
-            }
-            else
-            {
-                string outputPath = (string)conf.Properties.Item("OutputPath").Value;
-                string fullPath = project.Properties.Item("FullPath").Value as string;
-                string outputFileName = project.Properties.Item("OutputFileName").Value as string;
+			{
+				this.isWebProject = true;
+				binFile = project.Name;
+				projPath = binFile;
+				if (binFile.EndsWith( "\\" ))
+					binFile = binFile.Substring( 0, binFile.Length - 1 );
+				int p = binFile.LastIndexOf( "\\" );
+				string fileName = binFile;
+				if (p > -1)
+				{
+					fileName = binFile.Substring( p + 1 );
+				}
+				objPath = Path.Combine( binFile, "bin" );
+				// Dummy file name
+				binFile = Path.Combine( objPath, fileName + ".dll" );
+			}
+			else
+			{
+				string outputPath = (string)conf.Properties.Item( "OutputPath" ).Value;
+				string fullPath = project.Properties.Item( "FullPath" ).Value as string;
+				string outputFileName = GetBuildProperty( propertyStorage, "TargetFileName" );
+				//foreach (Property item in project.Properties)
+				//{
+				//	SD.Debug.WriteLine( $"{item.Name} = {item.Value}" );
+				//}
+				if (String.IsNullOrEmpty( outputFileName ))
+				{
+					int outputType = (int)project.Properties.Item( "OutputType" ).Value;
+					// .NET Core Executables are dlls.
+					if (this.targetFramework.StartsWith( ".NETCoreApp" ))
+						outputType = 2;
+					outputFileName = (string)project.Properties.Item( "AssemblyName" ).Value + (outputType == 2 ? ".dll" : ".exe");
+				}
 				string configuration = GetBuildProperty( propertyStorage, "Configuration" );
 				debug = configuration == "Debug";
 				objPath = GetBuildProperty( propertyStorage, "IntermediateOutputPath" );
-				binFile = Path.Combine(fullPath, outputPath);
-                binFile = Path.Combine(binFile, outputFileName);
-                projPath = Path.GetDirectoryName(project.FileName) + "\\";
+				binFile = Path.Combine( fullPath, outputPath );
+				binFile = Path.Combine( binFile, outputFileName );
+				projPath = Path.GetDirectoryName( project.FileName ) + "\\";
 				string sign = GetBuildProperty( propertyStorage, "SignAssembly" );
 				if (!String.IsNullOrEmpty( sign ) && String.Compare( sign, "true", true ) == 0)
 					keyFile = GetBuildProperty( propertyStorage, "AssemblyOriginatorKeyFile" );
 				else
 					keyFile = null;
-            }
+			}
+		}
+
+		private static IVsBuildPropertyStorage GetPropertyStorage( Project project )
+		{
+			IVsHierarchy projectHierarchy = null;
+
+			//if (NDOPackage.SolutionService.GetProjectOfUniqueName( project.UniqueName, out projectHierarchy ) != 0)  // 0 == S_OK
+			//{
+			//	projectHierarchy = null;
+			//}
+
+			((IVsSolution)Package.GetGlobalService( typeof( IVsSolution ) )).GetProjectOfUniqueName( project.UniqueName, out projectHierarchy );
+
+			IVsBuildPropertyStorage propertyStorage = null;
+
+			if (projectHierarchy != null)
+			{
+				propertyStorage = (IVsBuildPropertyStorage)projectHierarchy;
+			}
+
+			return propertyStorage;
 		}
 
 		public string ObjPath
@@ -405,9 +428,9 @@ namespace NETDataObjects.NDOVSPackage
                 {
                     string outputPath = (string)conf.Properties.Item("OutputPath").Value;
                     string fullPath = (string)p.Properties.Item("FullPath").Value;
-                    string outputFileName = (string)p.Properties.Item("OutputFileName").Value;
-                    //messages.Output(fullPath + outputPath + outputFileName);
-                    if (!allProjects.ContainsKey(p.Name))
+					string outputFileName = GetBuildProperty( GetPropertyStorage(p), "TargetFileName" );
+					//messages.Output(fullPath + outputPath + outputFileName);
+					if (!allProjects.ContainsKey(p.Name))
                         allProjects.Add(p.Name, fullPath + outputPath + outputFileName);
                 }
                 catch { }

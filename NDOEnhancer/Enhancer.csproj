@@ -91,6 +91,9 @@
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Mono.Cecil, Version=0.10.1.0, Culture=neutral, PublicKeyToken=50cebf1cceb9d05e, processorArchitecture=MSIL">
+      <HintPath>packages\Mono.Cecil.0.10.1\lib\net40\Mono.Cecil.dll</HintPath>
+    </Reference>
     <Reference Include="NDO, Version=4.0.0.0, Culture=neutral, PublicKeyToken=37bfdffa92a0cd24, processorArchitecture=MSIL">
       <HintPath>..\NDODLL\bin\Debug\net451\NDO.dll</HintPath>
     </Reference>
@@ -185,6 +188,7 @@
     <Compile Include="Enhancer\ListReflectors\IListReflector.cs" />
     <Compile Include="Enhancer\ListReflectors\ListAccessManipulator.cs" />
     <Compile Include="Enhancer\ListReflectors\ListReflectorFactory.cs" />
+    <Compile Include="Enhancer\NDOAssemblyChecker.cs" />
     <Compile Include="Enhancer\Nodes\AssemblyNode.cs" />
     <Compile Include="Enhancer\Nodes\EmbeddedTypeNode.cs" />
     <Compile Include="Enhancer\Nodes\ValueTypeNode.cs" />
@@ -330,10 +334,11 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
+    <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Target Name="PrepareEnhDate" BeforeTargets="PrepareForBuild">
-	<Exec Command="..\MakeEnhancerDate\bin\Release\MakeEnhancerDate.exe &gt; EnhDate.cs"/>  
+    <Exec Command="..\MakeEnhancerDate\bin\Release\MakeEnhancerDate.exe &gt; EnhDate.cs" />
   </Target>
   <PropertyGroup>
     <PostBuildEvent>copy NDOEnhancer.exe ..\..\..\nuget

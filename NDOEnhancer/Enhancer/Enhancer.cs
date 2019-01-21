@@ -160,18 +160,18 @@ namespace NDOEnhancer
 		{
 			Dictionary<string, NDOReference> references = projectDescription.References;
 			ArrayList ownClassList = null;
-			AssemblyName binaryAssemblyName = null;
+			string binaryAssemblyFullName = null;
 
             if (!projectDescription.IsWebProject)
             {
                 // Check, if we can load the project bin file.
                 try
                 {
-                    binaryAssemblyName = AssemblyName.GetAssemblyName(projectDescription.BinFile);
+                    binaryAssemblyFullName = NDOAssemblyChecker.GetAssemblyName(this.binFile);
                 }
                 catch (Exception ex)
                 {
-                    throw new Exception("Can't load referenced Assembly '" + projectDescription.BinFile + ". " + ex.Message);
+                    throw new Exception("Can't load referenced Assembly '" + this.binFile + ". " + ex.Message);
                 }
             }
 
@@ -182,10 +182,9 @@ namespace NDOEnhancer
 					continue;
 
 				string dllPath = reference.Path;
-				if (dllPath.IndexOf(@"Microsoft.NET\Framework") != -1
-                    || dllPath.IndexOf(@"Reference Assemblies\Microsoft") != -1
-					|| String.Compare(Path.GetFileName(dllPath), "NDO.dll") == 0
-                    || String.Compare(Path.GetFileName(dllPath), "NDOInterfaces.dll") == 0)
+				bool ownAssembly = (string.Compare( dllPath, this.binFile, true ) == 0);
+
+				if (!ownAssembly && !NDOAssemblyChecker.IsEnhanced( dllPath ))
 					continue;
 
 				AssemblyName assToLoad = null;
@@ -193,15 +192,11 @@ namespace NDOEnhancer
 				try
 				{
                     assToLoad = AssemblyName.GetAssemblyName(dllPath);
-                    NDOAssemblyName ndoAn = new NDOAssemblyName(assToLoad.FullName);
-                    // Don't need to analyze Microsofts assemblies.
-                    if (ndoAn.PublicKeyToken == "b03f5f7f11d50a3a" || ndoAn.PublicKeyToken == "b77a5c561934e089")
-                        continue;
                     ass = Assembly.Load(assToLoad);
                 }
 				catch (Exception ex)
 				{
-					if (assToLoad != null && (binaryAssemblyName == null || string.Compare(binaryAssemblyName.FullName, assToLoad.FullName, true) != 0))
+					if (assToLoad != null && (binaryAssemblyFullName == null || string.Compare(binaryAssemblyFullName, assToLoad.FullName, true) != 0))
 					{
 						// Not bin file - enhancer may work, if assembly doesn't contain
 						// persistent classes.
@@ -227,7 +222,7 @@ namespace NDOEnhancer
                     messages.WriteLine("Checking DLL: " + dllPath);
                     messages.WriteLine("BinFile: " + binFile);
                 }
-				bool ownAssembly = (string.Compare(dllPath, binFile, true) == 0);
+
 				AssemblyNode assemblyNode = null;
                 CheckNDO(ass);
 
