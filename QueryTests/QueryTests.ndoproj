@@ -34,7 +34,7 @@
       </Reference>
       <Reference AssemblyName="Moq" AssemblyPath="..\NDODLL\packages\Moq.4.9.0\lib\net45\Moq.dll" CheckThisDLL="False">
       </Reference>
-      <Reference AssemblyName="NDOInterfaces" AssemblyPath="bin\Debug\NDOInterfaces.dll" CheckThisDLL="False">
+      <Reference AssemblyName="NDOInterfaces" AssemblyPath="..\NDOInterfaces\bin\Debug\net451\NDOInterfaces.dll" CheckThisDLL="False">
       </Reference>
       <Reference AssemblyName="nunit.framework" AssemblyPath="..\NDODLL\packages\NUnit.3.10.1\lib\net45\nunit.framework.dll" CheckThisDLL="False">
       </Reference>

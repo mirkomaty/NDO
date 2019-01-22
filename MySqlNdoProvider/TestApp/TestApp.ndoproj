@@ -18,25 +18,25 @@
     <DatabaseOwner>
     </DatabaseOwner>
     <GenerateConstraints>False</GenerateConstraints>
-    <UseMsBuild>False</UseMsBuild>
+    <UseMsBuild>True</UseMsBuild>
     <DropExistingElements>True</DropExistingElements>
   </Options>
   <ProjectDescription>
-    <BinPath>bin\Release\TestApp.exe</BinPath>
-    <ObjPath>obj\Release\</ObjPath>
+    <BinPath>bin\Debug\TestApp.exe</BinPath>
+    <ObjPath>obj\Debug\</ObjPath>
     <AssemblyName />
-    <Debug>False</Debug>
+    <Debug>True</Debug>
     <IsWebProject>False</IsWebProject>
     <KeyFile>
     </KeyFile>
     <References>
-      <Reference AssemblyName="NDOInterfaces" AssemblyPath="..\..\NDOInterfaces\bin\release\NDOInterfaces.dll" CheckThisDll="False">
+      <Reference AssemblyName="NDOInterfaces" AssemblyPath="..\..\NDOInterfaces\bin\debug\net451\NDOInterfaces.dll">
       </Reference>
-      <Reference AssemblyName="BusinessClasses" AssemblyPath="..\BusinessClasses\bin\Release\BusinessClasses.dll">
+      <Reference AssemblyName="Unity.Abstractions" AssemblyPath="..\..\NDODLL\bin\Debug\net452\Unity.Abstractions.dll">
       </Reference>
-      <Reference AssemblyName="MySqlProvider" AssemblyPath="..\MySqlProvider\bin\Release\MySqlProvider.dll" CheckThisDll="False">
+      <Reference AssemblyName="BusinessClasses" AssemblyPath="..\BusinessClasses\bin\Debug\BusinessClasses.dll">
       </Reference>
-      <Reference AssemblyName="System.Core" AssemblyPath="d:\program files (x86)\reference assemblies\microsoft\framework\.netframework\v4.0\system.core.dll" CheckThisDll="False">
+      <Reference AssemblyName="MySqlProvider" AssemblyPath="..\MySqlProvider\bin\Debug\netstandard2.0\MySqlProvider.dll">
       </Reference>
     </References>
   </ProjectDescription>

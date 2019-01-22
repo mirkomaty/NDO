@@ -1928,7 +1928,7 @@ namespace NDOEnhancer.Patcher
 			method.addStatement("ldloc.0");
 			method.addStatement($"castclass  {Corlib.Name}System.String");
 			method.addStatement($"newobj     instance void {Corlib.Name}System.Guid::.ctor(string)");
-			method.addStatement($"call       instance void " + vtname +"::" + getAccName("set_", field.Name) + "(valuetype {Corlib.Name}System.Guid)");
+			method.addStatement($"call       instance void " + vtname +"::" + getAccName("set_", field.Name) + $"(valuetype {Corlib.Name}System.Guid)");
 			method.addStatement("br.s       guidready" + nr.ToString());
 
 			method.addStatement("nostr" + nr.ToString() + ":");

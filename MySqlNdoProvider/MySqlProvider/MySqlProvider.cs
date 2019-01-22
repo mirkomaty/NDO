@@ -29,7 +29,6 @@ using NDOInterfaces;
 using System.Collections;
 using MySql.Data.MySqlClient;
 using MySql.Data.Types;
-using System.Windows.Forms;
 
 namespace NDO.MySqlProvider
 {
@@ -369,56 +368,20 @@ namespace NDO.MySqlProvider
 			return "LIMIT " + take + " OFFSET " + skip;
 		}
 
-		public override System.Windows.Forms.DialogResult ShowConnectionDialog(ref string connectionString)
-		{
-			ConnectionDialog dlg = new ConnectionDialog(connectionString, false);
-			if (dlg.ShowDialog() == DialogResult.Cancel)
-				return DialogResult.Cancel;
-			connectionString = dlg.ConnectionString;
-			return DialogResult.OK;
-		}
 
-		public override string CreateDatabase(object necessaryData)
+		public override string CreateDatabase(string databaseName, string connectionString, object additionalData)
 		{
-			base.CreateDatabase (necessaryData);
-			// Don't need to check, if type is OK, since that happens in CreateDatabase
-			NDOCreateDbParameter par = necessaryData as NDOCreateDbParameter;
-
-			string dbName = par.DatabaseName;
 			Regex regex = new Regex(@"Database\s*=([^\;]*)");
-			Match match = regex.Match(par.Connection);
+			Match match = regex.Match( connectionString );
 			if (match.Success)
 			{
-				return par.Connection.Substring(0, match.Groups[1].Index) + dbName + par.Connection.Substring(match.Index + match.Length);
+				return connectionString.Substring(0, match.Groups[1].Index) + databaseName + connectionString.Substring(match.Index + match.Length);
 			}
 			
-			if (!par.Connection.EndsWith(";"))
-				par.Connection = par.Connection + ";";
+			if (!connectionString.EndsWith(";"))
+				connectionString = connectionString + ";";
 			
-			return par.Connection + "Database=" + dbName;
+			return connectionString + "Database=" + databaseName;
 		}
-
-		public override DialogResult ShowCreateDbDialog(ref object necessaryData)
-		{
-			NDOCreateDbParameter par;
-			if (necessaryData == null)
-				par = new NDOCreateDbParameter(string.Empty, "Data Source=localhost;User Id=root;");
-			else
-				par = necessaryData as NDOCreateDbParameter;
-			if (par == null)
-				throw new ArgumentException("MySql provider: parameter type " + necessaryData.GetType().FullName + " is wrong.", "necessaryData");
-			if (par.Connection == null || par.Connection == string.Empty)
-				par.Connection = "Data Source=localhost;User Id=root";
-			ConnectionDialog dlg = new ConnectionDialog(par.Connection, true);
-			if (dlg.ShowDialog() == DialogResult.Cancel)
-				return DialogResult.Cancel;
-			par.Connection = dlg.ConnectionString;
-			par.DatabaseName = dlg.Database;
-			necessaryData = par;
-			return DialogResult.OK;
-		}
-
-
-
 	}
 }

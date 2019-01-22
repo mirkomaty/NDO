@@ -110,8 +110,11 @@
       <HintPath>packages\Mono.Cecil.0.10.1\lib\net40\Mono.Cecil.dll</HintPath>
     </Reference>
     <Reference Include="MySqlProvider">
-      <HintPath>..\MySqlNdoProvider\MySqlProvider.dll</HintPath>
+      <HintPath>..\MySqlNdoProvider\MySqlProvider\bin\$(Configuration)\net452\MySqlProvider.dll</HintPath>
     </Reference>
+    <Reference Include="MySqlProvider">
+      <HintPath>..\MySqlNdoProvider\MySqlUISupport\bin\$(Configuration)\MySqlUISupport.dll</HintPath>
+    </Reference>    
     <Reference Include="NDO, Version=4.0.0.0, Culture=neutral, PublicKeyToken=37bfdffa92a0cd24, processorArchitecture=MSIL">
       <SpecificVersion>false</SpecificVersion>
       <HintPath>..\NDODLL\bin\$(Configuration)\NDO.dll</HintPath>

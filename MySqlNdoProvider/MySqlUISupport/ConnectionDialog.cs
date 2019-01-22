@@ -28,7 +28,7 @@ using System.Collections;
 using System.ComponentModel;
 using System.Windows.Forms;
 
-namespace NDO.MySqlProvider
+namespace MySqlUISupport
 {
 	/// <summary>
 	/// Zusammenfassung für ConnectionDialog.

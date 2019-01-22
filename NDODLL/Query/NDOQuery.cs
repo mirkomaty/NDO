@@ -169,7 +169,7 @@ namespace NDO.Query
 		/// Executes the query and returns a list of result objects.
 		/// </summary>
 		/// <returns></returns>
-		public new List<T> Execute()
+		public List<T> Execute()
 		{
 			return GetResultList();
 		}
@@ -509,7 +509,7 @@ namespace NDO.Query
 		/// Executes the query and returns a single object.
 		/// </summary>
 		/// <returns>The fetched object or null, if the object wasn't found. If the query has more than one result, the first of the results will be returned.</returns>
-		public new T ExecuteSingle()
+		public T ExecuteSingle()
 		{
 			return ExecuteSingle( false );
 		}
@@ -523,7 +523,7 @@ namespace NDO.Query
 		/// If throwIfResultCountIsWrong is true, an Exception will be throwed, if the result count isn't exactly 1. 
 		/// If throwIfResultCountIsWrong is false and the query has more than one result, the first of the results will be returned.
 		/// </remarks>
-		public new T ExecuteSingle( bool throwIfResultCountIsWrong )
+		public T ExecuteSingle( bool throwIfResultCountIsWrong )
 		{
 			var resultList = GetResultList();
 			int count = resultList.Count;
