@@ -98,10 +98,7 @@
       <HintPath>Dlls\Microsoft.VisualStudio.ComponentModelHost</HintPath>
     </Reference>
     <Reference Include="Microsoft.VisualStudio.OLE.Interop" />
-    <Reference Include="Microsoft.VisualStudio.Shell.10.0, Version=12.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>Dlls\Microsoft.VisualStudio.Shell.10.0.dll</HintPath>
-    </Reference>
+    <Reference Include="Microsoft.VisualStudio.Shell.15.0, Version=15.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
     <Reference Include="Microsoft.VisualStudio.Shell.Framework, Version=15.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
     <Reference Include="Microsoft.VisualStudio.Shell.Interop" />
     <Reference Include="Microsoft.VisualStudio.Shell.Interop.8.0" />
@@ -324,8 +321,12 @@
   </Target>
   <Import Project="packages\Microsoft.VSSDK.BuildTools.15.1.192\build\Microsoft.VSSDK.BuildTools.targets" Condition="Exists('packages\Microsoft.VSSDK.BuildTools.15.1.192\build\Microsoft.VSSDK.BuildTools.targets')" />
   <Target Name="PrepareEnhDate" BeforeTargets="PrepareForBuild">
-	<Exec Command="..\MakeEnhancerDate\bin\Release\MakeEnhancerDate.exe &gt; EnhDate.cs"/>  
+    <Exec Command="..\MakeEnhancerDate\bin\Release\MakeEnhancerDate.exe &gt; EnhDate.cs" />
   </Target>
+  <PropertyGroup>
+    <PreBuildEvent>
+</PreBuildEvent>
+  </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

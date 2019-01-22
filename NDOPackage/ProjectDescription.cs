@@ -253,6 +253,12 @@ namespace NETDataObjects.NDOVSPackage
 			this.project = project;
 
 			Configuration conf = project.ConfigurationManager.ActiveConfiguration;
+			//foreach (Property item in conf.Properties)
+			//{
+			//	SD.Debug.WriteLine( $"{item.Name} = {item.Value}" );
+			//}
+
+			// Get the MSBuild property storage
 			IVsBuildPropertyStorage propertyStorage = GetPropertyStorage( project );
 
 			try
@@ -291,10 +297,7 @@ namespace NETDataObjects.NDOVSPackage
 				string outputPath = (string)conf.Properties.Item( "OutputPath" ).Value;
 				string fullPath = project.Properties.Item( "FullPath" ).Value as string;
 				string outputFileName = GetBuildProperty( propertyStorage, "TargetFileName" );
-				//foreach (Property item in project.Properties)
-				//{
-				//	SD.Debug.WriteLine( $"{item.Name} = {item.Value}" );
-				//}
+
 				if (String.IsNullOrEmpty( outputFileName ))
 				{
 					int outputType = (int)project.Properties.Item( "OutputType" ).Value;
@@ -303,9 +306,21 @@ namespace NETDataObjects.NDOVSPackage
 						outputType = 2;
 					outputFileName = (string)project.Properties.Item( "AssemblyName" ).Value + (outputType == 2 ? ".dll" : ".exe");
 				}
-				string configuration = GetBuildProperty( propertyStorage, "Configuration" );
-				debug = configuration == "Debug";
-				objPath = GetBuildProperty( propertyStorage, "IntermediateOutputPath" );
+
+				if (GetVsHierarchy( project ).IsCapabilityMatch( "CPS" ))
+				{
+					// new .csproj format
+					objPath = GetBuildProperty( propertyStorage, "IntermediateOutputPath" );
+					string configuration = GetBuildProperty( propertyStorage, "Configuration" );
+					debug = configuration == "Debug";
+				}
+				else
+				{
+					// old .csproj format
+					string debugInfo = (string)conf.Properties.Item( "DebugInfo" ).Value;
+					debug = debugInfo == "full";
+					objPath = (string)conf.Properties.Item( "IntermediatePath" ).Value;
+				}
 				binFile = Path.Combine( fullPath, outputPath );
 				binFile = Path.Combine( binFile, outputFileName );
 				projPath = Path.GetDirectoryName( project.FileName ) + "\\";
@@ -317,16 +332,17 @@ namespace NETDataObjects.NDOVSPackage
 			}
 		}
 
-		private static IVsBuildPropertyStorage GetPropertyStorage( Project project )
+		private static IVsHierarchy GetVsHierarchy(Project project)
 		{
 			IVsHierarchy projectHierarchy = null;
 
-			//if (NDOPackage.SolutionService.GetProjectOfUniqueName( project.UniqueName, out projectHierarchy ) != 0)  // 0 == S_OK
-			//{
-			//	projectHierarchy = null;
-			//}
-
 			((IVsSolution)Package.GetGlobalService( typeof( IVsSolution ) )).GetProjectOfUniqueName( project.UniqueName, out projectHierarchy );
+			return projectHierarchy;
+		}
+
+		private static IVsBuildPropertyStorage GetPropertyStorage( Project project )
+		{
+			IVsHierarchy projectHierarchy = GetVsHierarchy(project);
 
 			IVsBuildPropertyStorage propertyStorage = null;
 

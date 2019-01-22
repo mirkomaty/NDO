@@ -700,7 +700,6 @@ namespace NETDataObjects.NDOVSPackage
 					if ( !options.UseMsBuild )
 					{
 						options.UseMsBuild = true;
-						options.Save( this.projectDescription );
 						GeneratePackageReference();
 					}
 				}
@@ -720,7 +719,6 @@ namespace NETDataObjects.NDOVSPackage
 
 		void GeneratePackageReference()
 		{
-
 			try
 			{
 				var componentModel = (IComponentModel) Package.GetGlobalService( typeof( SComponentModel ) );
@@ -729,11 +727,10 @@ namespace NETDataObjects.NDOVSPackage
 				if (!installerServices.IsPackageInstalled( this.project, "ndo.dll" ))
 				{
 					var installer = componentModel.GetService<IVsPackageInstaller>();
-#warning Hier muss als erster Parameter am Ende null rein.
-					installer.InstallPackage( @"C:\Projekte\NDO\Nuget-Packages", this.project, "ndo.dll", (string)null, false );
+#warning Hier muss als 4. Parameter am Ende (string)null rein.
+					installer.InstallPackage( null, this.project, "ndo.dll", "4.0.0", false );
 				}
 			}
-
 			catch (Exception ex)
 			{
 				MessageBox.Show( "Error while installing the ndo.dll package: " + ex.ToString() );
