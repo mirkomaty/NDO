@@ -1,13 +1,13 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>netstandard2.0;net451</TargetFrameworks>
+    <TargetFrameworks>netstandard2.0;net452</TargetFrameworks>
     <AssemblyVersion>4.0.0.0</AssemblyVersion>
     <Version>4.0.0</Version>
     <Authors>Mirko Matytschak</Authors>
     <Description>Interfaces and base implementations for NDO.</Description>
     <Copyright>Copyright (c) 2002-2019 Mirko Matytschak</Copyright>
-    <PackageLicenseUrl>https://opensource.org/licenses/MIT</PackageLicenseUrl>
+    <PackageLicense>MIT</PackageLicense>
     <PackageProjectUrl>https://www.netdatobjects.de</PackageProjectUrl>
     <RepositoryUrl>https://git.netdataobjects.de</RepositoryUrl>
     <RepositoryType>GIT</RepositoryType>

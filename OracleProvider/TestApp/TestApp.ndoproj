@@ -21,21 +21,21 @@
     <DropExistingElements>False</DropExistingElements>
   </Options>
   <ProjectDescription>
-    <BinPath>bin\Debug\TestApp.exe</BinPath>
-    <ObjPath>obj\Debug\</ObjPath>
+    <BinPath>bin\Release\TestApp.exe</BinPath>
+    <ObjPath>obj\Release\</ObjPath>
     <AssemblyName />
-    <Debug>True</Debug>
+    <Debug>False</Debug>
     <IsWebProject>False</IsWebProject>
     <KeyFile>
     </KeyFile>
     <References>
-      <Reference AssemblyName="NDOInterfaces" AssemblyPath="..\..\NDOInterfaces\bin\Debug\NDOInterfaces.dll">
+      <Reference AssemblyName="NDOInterfaces" AssemblyPath="..\..\NDOInterfaces\bin\Debug\net452\NDOInterfaces.dll">
       </Reference>
-      <Reference AssemblyName="Unity.Abstractions" AssemblyPath="..\..\NDODLL\bin\Debug\Unity.Abstractions.dll">
+      <Reference AssemblyName="Unity.Abstractions" AssemblyPath="..\..\NDODLL\bin\Debug\net452\Unity.Abstractions.dll">
       </Reference>
-      <Reference AssemblyName="OracleProvider" AssemblyPath="..\OracleProvider\bin\Debug\OracleProvider.dll">
+      <Reference AssemblyName="OracleProvider" AssemblyPath="..\OracleProvider\bin\Release\net452\OracleProvider.dll">
       </Reference>
-      <Reference AssemblyName="BusinessClasses" AssemblyPath="..\BusinessClasses\bin\Debug\BusinessClasses.dll">
+      <Reference AssemblyName="BusinessClasses" AssemblyPath="..\BusinessClasses\bin\Release\BusinessClasses.dll">
       </Reference>
     </References>
   </ProjectDescription>

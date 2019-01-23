@@ -26,8 +26,6 @@ using System.Collections;
 using System.Data;
 using Oracle.ManagedDataAccess.Client;
 using System.IO;
-using NDO.Mapping;
-using NDO;
 using NDOInterfaces;
 
 
@@ -95,22 +93,6 @@ namespace OracleProvider
 
             return ((OracleDbType)Provider.GetDbType(t)).ToString();
         }
-
-
-        private NDO.Mapping.Class FindClass(string tableName, NDOMapping mappings)
-        {
-            Class result = null;
-            foreach (Class cl in mappings.Classes)
-            {
-                if (cl.TableName == tableName)
-                {
-                    result = cl;
-                    break;
-                }
-            }
-            return result;
-        }
-
 
         public override string AlterColumnType()
         {

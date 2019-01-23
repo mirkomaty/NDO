@@ -30,7 +30,6 @@ using FirebirdSql.Data.FirebirdClient;
 using System.Globalization;
 using System.Threading;
 using NDOInterfaces;
-using System.Windows.Forms;
 
 namespace NDO.FirebirdProvider
 {

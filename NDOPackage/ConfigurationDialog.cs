@@ -730,8 +730,7 @@ namespace NETDataObjects.NDOVSPackage
 				if (!installerServices.IsPackageInstalled( this.project, "ndo.dll" ))
 				{
 					var installer = componentModel.GetService<IVsPackageInstaller>();
-#warning Hier muss als 4. Parameter am Ende (string)null rein.
-					installer.InstallPackage( null, this.project, "ndo.dll", "4.0.0", false );
+					installer.InstallPackage( null, this.project, "ndo.dll", (string)null, false );
 				}
 			}
 			catch (Exception ex)

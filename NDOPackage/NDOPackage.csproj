@@ -77,12 +77,13 @@
     <Reference Include="envdte90, Version=9.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
       <EmbedInteropTypes>False</EmbedInteropTypes>
     </Reference>
-    <Reference Include="FirebirdProvider">
-      <HintPath>..\FirebirdNdoProvider\FirebirdProvider.dll</HintPath>
+    <Reference Include="FirebirdProvider, Version=4.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\FirebirdNdoProvider\FirebirdProvider\bin\$(Configuration)\net452\FirebirdProvider.dll</HintPath>
     </Reference>
     <Reference Include="FirebirdSql.Data.FirebirdClient, Version=5.12.1.0, Culture=neutral, PublicKeyToken=3750abcc3150b00c, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\FirebirdNdoProvider\packages\FirebirdSql.Data.FirebirdClient.5.12.1\lib\net452\FirebirdSql.Data.FirebirdClient.dll</HintPath>
+      <HintPath>..\FirebirdNdoProvider\FirebirdProvider\bin\$(Configuration)\net452\FirebirdSql.Data.FirebirdClient.dll</HintPath>
     </Reference>
     <Reference Include="FirebirdUISupport">
       <HintPath>..\FirebirdNdoProvider\FirebirdUISupport\bin\$(Configuration)\FirebirdUISupport.dll</HintPath>
@@ -102,10 +103,7 @@
     <Reference Include="Microsoft.VisualStudio.Shell.Framework, Version=15.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
     <Reference Include="Microsoft.VisualStudio.Shell.Interop" />
     <Reference Include="Microsoft.VisualStudio.Shell.Interop.8.0" />
-    <Reference Include="Microsoft.VisualStudio.Shell.Interop.9.0" />
-    <Reference Include="Microsoft.VisualStudio.Shell.Interop.10.0" />
     <Reference Include="Microsoft.VisualStudio.TextManager.Interop" />
-    <Reference Include="Microsoft.VisualStudio.Shell.Immutable.10.0" />
     <Reference Include="Mono.Cecil, Version=0.10.1.0, Culture=neutral, PublicKeyToken=50cebf1cceb9d05e, processorArchitecture=MSIL">
       <HintPath>packages\Mono.Cecil.0.10.1\lib\net40\Mono.Cecil.dll</HintPath>
     </Reference>
@@ -122,28 +120,29 @@
     <Reference Include="NDO.UISupport">
       <HintPath>..\UISupport\NDO.UISupport\bin\$(Configuration)\NDO.UISupport.dll</HintPath>
     </Reference>
-    <Reference Include="NDOInterfaces, Version=3.0.0.0, Culture=neutral, PublicKeyToken=ff5e453a099b8326, processorArchitecture=MSIL">
+    <Reference Include="NDOInterfaces, Version=4.0.0.0, Culture=neutral, PublicKeyToken=ff5e453a099b8326, processorArchitecture=MSIL">
       <SpecificVersion>false</SpecificVersion>
-      <HintPath>..\NDOInterfaces\bin\$(Configuration)\NDOInterfaces.dll</HintPath>
+      <HintPath>..\NDOInterfaces\bin\$(Configuration)\net452\NDOInterfaces.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="NuGet.VisualStudio, Version=4.0.0.2323, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>packages\NuGet.VisualStudio.4.0.0\lib\net45\NuGet.VisualStudio.dll</HintPath>
       <EmbedInteropTypes>True</EmbedInteropTypes>
     </Reference>
-    <Reference Include="OracleUISupport, Version=4.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
+    <Reference Include="OracleProvider">
+      <HintPath>..\OracleProvider\OracleProvider\bin\$(Configuration)\net452\OracleProvider.dll</HintPath>
+    </Reference>
+    <Reference Include="OracleUISupport">
       <HintPath>..\OracleProvider\OracleUISupport\bin\$(Configuration)\OracleUISupport.dll</HintPath>
     </Reference>
-    <Reference Include="PostGreProvider, Version=2.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\PostGresProvider\PostgreProvider\bin\$(Configuration)\PostGreProvider.dll</HintPath>
+    <Reference Include="PostGreProvider">
+      <HintPath>..\PostGresProvider\PostgreProvider\bin\$(Configuration)\net452\PostGreProvider.dll</HintPath>
     </Reference>
     <Reference Include="PostGresUISupport">
       <HintPath>..\PostGresProvider\PostGresUISupport\bin\$(Configuration)\PostGresUISupport.dll</HintPath>
     </Reference>
     <Reference Include="SqlCeProvider">
-      <HintPath>..\SqlCEProvider\SqlCeProvider.dll</HintPath>
+      <HintPath>..\SqlCEProvider\SqlCEProvider\bin\$(Configuration)\net452\SqlCEProvider.dll</HintPath>
     </Reference>
     <Reference Include="SqlCeUISupport">
       <HintPath>..\SqlCEProvider\SqlCeUISupport\bin\$(Configuration)\SqlCeUISupport.dll</HintPath>
@@ -152,7 +151,7 @@
       <HintPath>..\SqliteProvider\SqliteProvider.dll</HintPath>
     </Reference>
     <Reference Include="SqliteUISupport">
-      <HintPath>..\SqliteProvider\SqliteUISupport\bin\$(Configuration)\SqliteUISupport.dll</HintPath>
+      <HintPath>..\SqliteProvider\SqliteUISupport\bin\$(Configuration)\net452\SqliteUISupport.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
