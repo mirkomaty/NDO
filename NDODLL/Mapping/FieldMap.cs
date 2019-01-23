@@ -99,9 +99,6 @@ namespace NDO.Mapping
 		{
 			Type t = parent.FieldType;
 
-			if (t.FullName.IndexOf("+QueryHelper+") > -1)
-				return;
-
 			List<FieldInfo> publicFields = new List<FieldInfo>();
 			List<PropertyInfo> publicProps = new List<PropertyInfo>();
 
