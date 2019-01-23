@@ -69,16 +69,14 @@ namespace NDOEnhancer
 			Type parentType = relationFieldInfo.ReflectedType;
 			NDOAssemblyName an = new NDOAssemblyName(parentType.Assembly.FullName);
 			string assShortName = an.Name;
-#if NDO11
-			this.isElement = !(fi.FieldType == typeof(IList) || fi.FieldType.GetInterface("IList") != null);
-#else
+
 			this.isElement = !(relationFieldInfo.FieldType == typeof(IList) 
 				|| relationFieldInfo.FieldType.GetInterface("IList") != null 
 				|| GenericIListReflector.IsGenericIList(relationFieldInfo.FieldType));
-#endif
-			// dataType & declaringType haben
-			// - immer ein class/valutype prefix
-			// - immer ein [AssName] prefix
+
+			// dataType & declaringType always have
+			// - a class/valutype prefix
+			// - an [AssName] prefix
 			this.dataType = new ReflectedType(relationFieldInfo.FieldType).ILName;
 			if (relationFieldInfo.DeclaringType != relationFieldInfo.ReflectedType)
 				this.declaringType = new ReflectedType(relationFieldInfo.DeclaringType).ILName;
@@ -96,15 +94,12 @@ namespace NDOEnhancer
             }
             else
             {
-#if !NET11
                 if (attr.RelationType == null && relationFieldInfo.FieldType.IsGenericType)
                     relType = relationFieldInfo.FieldType.GetGenericArguments()[0];
                 else
                     relType = attr.RelationType;
-#else
-                relType = attr.RelationType;
-#endif
-                if (relType == null)
+
+				if (relType == null)
                     throw new Exception("Can't determine referenced type in relation " + parent.Name + "." + this.name + ". Provide a type parameter for the [NDORelation] attribute.");
                                     
             }

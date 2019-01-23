@@ -75,9 +75,6 @@ namespace ILCode
         private string                      m_genericArguments = string.Empty;
 		private string						m_fullName = null;
 		private string						m_baseFullName;
-#if NET11
-		private ILClassElement				m_forwardClassElement = null;
-#endif
 		private bool						m_isPublic			  = false;
 		private bool						m_isPrivate			  = false;
 		private bool						m_isSealed			  = false;
@@ -262,21 +259,6 @@ namespace ILCode
 		{
 			m_name = null;
 		}
-
-
-#if NET11
-		public void
-		setForwardClassElement( ILClassElement forwardClassElement )
-		{
-			m_forwardClassElement = forwardClassElement;
-		}
-
-		public ILClassElement
-		getForwardClassElement()
-		{
-			return m_forwardClassElement;
-		}
-#endif
 
 		public ILMethodElement getMethod(string name)
 		{

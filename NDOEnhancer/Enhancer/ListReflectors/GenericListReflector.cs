@@ -20,7 +20,6 @@
 // DEALINGS IN THE SOFTWARE.
 
 
-#if !NET11
 using System;
 using System.Reflection;
 using System.Collections;
@@ -80,4 +79,3 @@ namespace NDOEnhancer
 
     }
 }
-#endif

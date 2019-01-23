@@ -264,9 +264,6 @@ namespace NDOEnhancer.Patcher
 			enhance(  )
 		{
 			addInterfaces(m_classElement);
-#if NET11
-			addInterfaces(m_classElement.getForwardClassElement());
-#endif
 			addRelationAttributes();
 			addFieldsAndOidAttribute();
 			replaceLdfldAndStfld();
@@ -275,33 +272,7 @@ namespace NDOEnhancer.Patcher
 			patchConstructor();
 			addMethods();
 			addMetaClass();
-			addQueryHelper();
 		}
-
-#if NET11
-		public ILClassElement
-			addQueryHelperForwardDecl()
-		{
-			ILClassElement nestedClass = new ILClassElement();
-			nestedClass.addLine(".class auto ansi nested public beforefieldinit QueryHelper");
-			nestedClass.addLine($"extends {Corlib.Name}System.Object");
-			m_classElement.getForwardClassElement().addElement(nestedClass);
-			return nestedClass;
-		}
-#endif
-
-#if NET11
-		public ILClassElement
-			addNestedMetaClass()
-		{
-			ILClassElement nestedClass = new ILClassElement();
-			nestedClass.addLine(".class auto ansi nested private beforefieldinit MetaClass");
-			nestedClass.addLine($"extends {Corlib.Name}System.Object");
-			nestedClass.addLine("implements [NDO]NDO.IMetaClass");
-			m_classElement.getForwardClassElement().addElement(nestedClass);
-			return nestedClass;
-		}
-#endif
 
 
         private void
@@ -2167,7 +2138,6 @@ namespace NDOEnhancer.Patcher
 
             bool isNullable = false;
 
-#if !NET11
             Type argType = null;
             string argTypeName = string.Empty;
             if (tname.StartsWith($"valuetype {Corlib.Name}System.Nullable`1<"))
@@ -2176,7 +2146,6 @@ namespace NDOEnhancer.Patcher
                 argType = t.GetGenericArguments()[0];
                 argTypeName = new ReflectedType(argType, this.m_classElement.getAssemblyName()).QuotedILName;
             }
-#endif
 
 			method.addStatement("ldarg.1");
 			method.addStatement("ldarg.2");
@@ -2226,7 +2195,7 @@ namespace NDOEnhancer.Patcher
 			else if (tname.StartsWith("valuetype"))
 			{
 				string tname2 = tname.Substring(10);
-#if !NET11
+
                 if (isNullable)
                 {
                     if (typeof(System.Enum).IsAssignableFrom(argType))
@@ -2245,12 +2214,9 @@ namespace NDOEnhancer.Patcher
                 }
                 else
                 {
-#endif
                     method.addStatement("unbox  " + tname2);
                     method.addStatement("ldobj  " + tname2);
-#if !NET11
                 }
-#endif
 			}
 			else
 			{
@@ -2483,7 +2449,6 @@ namespace NDOEnhancer.Patcher
 			}
 		}
 
-#if !NET11
 		private void insertWriteForNullable(ILMethodElement method, ILField field, int nr, bool parentIsValueType)
 		{
 			string loadDbNull = $"ldsfld     class {Corlib.Name}System.DBNull {Corlib.Name}System.DBNull::Value";
@@ -2546,7 +2511,6 @@ namespace NDOEnhancer.Patcher
 			method.addStatement("VtFieldReady" + nr.ToString() + ":");
 		}
 
-#endif
 		private void 
 			addWriteForField(ILMethodElement method, ILField field, int nr)
 		{
@@ -2584,7 +2548,6 @@ namespace NDOEnhancer.Patcher
 			{
 				insertWriteForVtField(method, field, nr, parentIsValueType, "DateTime");
 			}
-#if !NET11
 			else if (tname.StartsWith($"valuetype {Corlib.Name}System.Nullable`1"))
 			{
 				insertWriteForNullable(method, field, nr, parentIsValueType);
@@ -2593,7 +2556,6 @@ namespace NDOEnhancer.Patcher
             {
                 insertWriteForGenericTypes(method, field, nr);
             }
-#endif
 			else
 			{
 				method.addStatement(ldarg_0);
@@ -2828,109 +2790,9 @@ namespace NDOEnhancer.Patcher
 			newClass.addLine($"extends {Corlib.Name}System.Object");
 			newClass.addLine("implements [NDO]NDO.IMetaClass");
 			m_classElement.addElement(newClass);
-#if NET11
-			newClass.setForwardClassElement(addNestedMetaClass());
-#endif
 			addMetaClassCtor(newClass);
 			addCreateObject(newClass);
 			addGetOrdinal(newClass);
-		}
-
-
-		private void 
-			addForeignQueryHelperAccessor(ILClassElement newClass, ILReference r, string qhTypeName)
-		{
-			string refType = QuotedName.ConvertTypename(r.RefType);
-			ILMethodElement method = new ILMethodElement();
-			method.addLine(".method public hidebysig specialname");
-			method.addLine("instance class " + refType + "/QueryHelper");
-			string propName = getAccName("get_", r.Name);
-			method.addLine(propName + "() cil managed");
-			method.addStatement(".maxstack  3");
-			method.addStatement(ldarg_0);
-			method.addStatement("ldfld      class " + refType + "/QueryHelper " + qhTypeName + "::" + getAccName("__", r.Name));
-			method.addStatement("brtrue.s   IL_0023");
-			method.addStatement(ldarg_0);
-			method.addStatement(ldarg_0);
-
-			method.addStatement("ldfld      string "+ qhTypeName + "::__ndoqhname");
-			method.addStatement(@"ldstr      """ + r.CleanName + @".""");
-			method.addStatement($"call       string {Corlib.Name}System.String::Concat(string,string)");
-			method.addStatement("newobj     instance void " + refType + "/QueryHelper::.ctor(string)");
-			method.addStatement("stfld      class " + refType + "/QueryHelper " + qhTypeName + "::" + getAccName("__", r.Name));
-			method.addStatement("IL_0023: " + ldarg_0);
-			method.addStatement("ldfld      class " + refType + "/QueryHelper " + qhTypeName + "::" + getAccName("__", r.Name));
-			method.addStatement("ret");
-			newClass.addElement(method);
-
-			ILPropertyElement property = new ILPropertyElement();
-			property.addLine(".property instance class " + refType + "/QueryHelper " + r.Name + "()");
-            string nonGenericQhTypeName = refType;
-            int p = nonGenericQhTypeName.IndexOf('<');
-            if (p > 1)
-                nonGenericQhTypeName = nonGenericQhTypeName.Substring(0, p);
-            if (nonGenericQhTypeName.StartsWith("valuetype "))
-                nonGenericQhTypeName = nonGenericQhTypeName.Substring(10);
-            property.addElement(new ILGetElement(".get instance class " + nonGenericQhTypeName + "/QueryHelper " + qhTypeName + "::" + getAccName("get_", r.Name) + "()"));
-            newClass.addElement(property);
-		}
-
-		private void 
-			addQHelperInitEntry(ILMethodElement initQhelper, ILReference r)
-		{
-			string refType = QuotedName.ConvertTypename(r.RefType);
-			initQhelper.addStatement(ldarg_0);
-			initQhelper.addStatement("ldnull");
-			initQhelper.addStatement("stfld      class " + refType + "/QueryHelper " + m_refName + "/QueryHelper::" + getAccName("__", r.Name));
-		}
-
-		private void
-			addQHelperGetFieldProperty(ILClassElement newClass, ILField f, string qhTypeName)
-		{
-			ILMethodElement method = new ILMethodElement();
-			method.addLine(".method public hidebysig specialname");
-			string propName = getAccName("get_", f.Name);
-			method.addLine("instance string  " + propName + "() cil managed");
-			method.addStatement(".maxstack  2");
-			method.addStatement(ldarg_0);
-			method.addStatement("ldfld      string " + qhTypeName + "::__ndoqhname");
-			method.addStatement(@"ldstr      """ + f.CleanName + @"""");
-			method.addStatement($"call       string {Corlib.Name}System.String::Concat(string,string)");
-			method.addStatement("ret");
-			newClass.addElement(method);
-
-			ILPropertyElement property = new ILPropertyElement();
-			property.addLine(".property instance string " + f.Name + "()");
-            string nonGenericQhTypeName = qhTypeName;
-            int p = nonGenericQhTypeName.IndexOf('<');
-            if (p > -1)
-                nonGenericQhTypeName = nonGenericQhTypeName.Substring(0, p);
-            if (nonGenericQhTypeName.StartsWith("class "))
-                nonGenericQhTypeName = nonGenericQhTypeName.Substring(6);
-            property.addElement(new ILGetElement(".get instance string " + nonGenericQhTypeName + "::" + propName + "()"));
-            newClass.addElement(property);
-		}
-
-		private void
-		addValueTypeAccessor(ILClassElement valType, ILField subField)
-		{
-			string vtFullName = m_name + "/QueryHelper/" + valType.getName();
-			ILMethodElement methEl = new ILMethodElement();
-			methEl.addLine(".method public hidebysig specialname ");
-			string accName = this.getAccName("get_", subField.Name);
-			methEl.addLine("instance string  " + accName + "() cil managed");
-			methEl.addStatement(".maxstack  3");
-			methEl.addStatement(ldarg_0);
-			methEl.addStatement("ldfld      string " + vtFullName + "::__ndoqhname");
-			methEl.addStatement(@"ldstr """ + subField.CleanName + @"""");
-			methEl.addStatement($"call       string {Corlib.Name}System.String::Concat(string, string)");
-			methEl.addStatement("ret");
-			valType.addElement(methEl);
-
-			ILPropertyElement propEl = new ILPropertyElement();
-			propEl.addLine(".property instance string " + subField.Name + "()");
-			propEl.addElement(new ILGetElement(".get instance string " + vtFullName + "::" + accName + "()"));
-            valType.addElement(propEl);
 		}
 
         private string getGenericRefParameters()
@@ -2942,210 +2804,6 @@ namespace NDOEnhancer.Patcher
             }
             return string.Empty;
         }
-
-#if NET11
-		private void
-			addQueryHelperElements(ILClassElement newClass, ILClassElement fwdQhElement)
-#else
-        private void
-            addQueryHelperElements(ILClassElement newClass)
-#endif
-		{
-            string outerTypeName = m_name;
-            int p = m_name.IndexOf('<');
-            if (p > -1)
-                outerTypeName = "class " + m_name.Substring(0, p);
-            string qhTypeName = outerTypeName + "/QueryHelper";
-                qhTypeName += getGenericRefParameters();
-
-			newClass.addElement(new ILStatementElement(".field private string __ndoqhname"));
-
-			// initQhelper setzt alle Query-Helpers auf null
-			ILMethodElement initQhelper = new ILMethodElement();
-			initQhelper.addLine(".method private hidebysig instance void");
-			initQhelper.addLine("InitQhelper() cil managed");
-			initQhelper.addStatement(".maxstack 2");
-			newClass.addElement(initQhelper);
-
-			// ToString()
-			ILMethodElement toString = new ILMethodElement();
-			toString.addLine(".method public hidebysig virtual instance string ToString() cil managed");
-			toString.addStatement(".maxstack  4");
-			addLocalVariable(toString, "CS$00000003$00000000", "string");
-
-			toString.addStatement(ldarg_0);
-			toString.addStatement("ldfld      string " + qhTypeName + "::__ndoqhname");
-
-			toString.addStatement($"ldsfld     string {Corlib.Name}System.String::Empty");
-			toString.addStatement($"call       bool {Corlib.Name}System.String::op_Equality(string, string)");
-			toString.addStatement("brfalse.s  notEmpty");
-			toString.addStatement($"ldsfld     string {Corlib.Name}System.String::Empty");
-			toString.addStatement("stloc.0");
-			toString.addStatement("br.s       exit");
-			toString.addStatement("notEmpty:  ldarg.0");
-			toString.addStatement("ldfld      string " + qhTypeName + "::__ndoqhname");
-			toString.addStatement("ldc.i4.0");
-			toString.addStatement(ldarg_0);
-			toString.addStatement("ldfld      string " + qhTypeName + "::__ndoqhname");
-			toString.addStatement($"callvirt   instance int32 {Corlib.Name}System.String::get_Length()");
-			toString.addStatement("ldc.i4.1");
-			toString.addStatement("sub");
-			toString.addStatement($"callvirt   instance string {Corlib.Name}System.String::Substring(int32,int32)");
-			toString.addStatement("stloc.0");
-			toString.addStatement("exit:  ldloc.0");
-			toString.addStatement("ret");
-			newClass.addElement(toString);
-
-
-
-			// Zwei Konstruktoren, in denen der Namensprefix gesetzt wird
-			// Entweder leer (Standard-Konstruktor) oder mit String ("prefix.fieldname")
-			ILMethodElement strCtor = new ILMethodElement();
-			ILMethodElement emptyCtor = new ILMethodElement();
-			strCtor.addLine(".method public hidebysig specialname rtspecialname");
-			strCtor.addLine("instance void  .ctor(string n) cil managed");
-			strCtor.addStatement(".maxstack  4");
-			strCtor.addStatement(ldarg_0);
-			string s1 = $"call       instance void {Corlib.Name}System.Object::.ctor()";
-			string s2 = "call       instance void " + qhTypeName + "::InitQhelper()";
-			strCtor.addStatement(s1);
-			strCtor.addStatement(ldarg_0);
-			strCtor.addStatement(s2);
-			strCtor.addStatement(ldarg_0);
-			strCtor.addStatement(ldarg_1);
-			strCtor.addStatement("stfld      string " + qhTypeName + "::__ndoqhname");
-
-			emptyCtor.addLine(".method public hidebysig specialname rtspecialname");
-			emptyCtor.addLine("instance void  .ctor() cil managed");
-			emptyCtor.addStatement(".maxstack  3");
-			emptyCtor.addStatement(ldarg_0);
-			emptyCtor.addStatement(s1);
-			emptyCtor.addStatement(ldarg_0);
-			emptyCtor.addStatement(s2);
-			emptyCtor.addStatement(ldarg_0);
-			emptyCtor.addStatement($"ldsfld     string {Corlib.Name}System.String::Empty");
-			emptyCtor.addStatement("stfld      string " + qhTypeName + "::__ndoqhname");
-
-			newClass.addElement(strCtor);
-			newClass.addElement(emptyCtor);
-
-			ILField oidf = new ILField(typeof(int), "int32", "oid", this.m_classElement.getAssemblyName(), null);  // Der Typ ist in diesem Fall unerheblich
-			addQHelperGetFieldProperty(newClass, oidf, qhTypeName);
-
-			// Wir bauen hier eine hierarchische Ordnung der Felder auf,
-			// wie sie in ownFieldsHierarchical vorliegt. Dort sind aber nur
-			// die eigenen Felder berücksichtigt, wir benötigen hier aber auch
-			// die ererbten Felder.
-			ArrayList addedFields = new ArrayList();
-
-			foreach (DictionaryEntry de in this.sortedFields)
-			{
-				ILField f = (ILField) de.Value;
-				// Wir können hier nur die Parents brauchen, die kommen
-				// aber für jedes Child einmal vor
-				if (f.Parent != null)
-				{
-					f = f.Parent;
-					if (addedFields.Contains(f.CleanName))
-						continue;
-					addedFields.Add(f.CleanName);
-				}
-					
-				//messages.WriteLine(f.CleanName);
-				if (! f.HasNestedFields) // direkt speicherbare Typen
-				{
-					addQHelperGetFieldProperty(newClass, f, qhTypeName);
-				}
-				else // Value Types und Embedded Types
-				{
-					// Für die Subfelder eines ValueTypes legen wir einen ValueType an,
-					// der diese Felder repräsentiert.
-					ILClassElement valType = new ILClassElement();
-					System.Random r = new System.Random();
-					string vtName = this.getAccName("ndo" + r.Next().ToString(), f.Name);					
-					string vtFullName = m_name + "/QueryHelper/" + vtName;
-					valType.addLine(".class sequential ansi sealed nested public beforefieldinit " + vtName);
-					valType.addLine($"extends {Corlib.Name}System.ValueType");
-
-					// Konstruktor für den ValueType
-					ILMethodElement vtCtor = new ILMethodElement();
-					vtCtor.addLine(".method public hidebysig specialname rtspecialname instance void  .ctor(string name) cil managed");
-					valType.addElement(vtCtor);
-					vtCtor.addStatement(ldarg_0);
-					vtCtor.addStatement(ldarg_1);
-					vtCtor.addStatement("stfld      string " + vtFullName + "::__ndoqhname");
-					vtCtor.addStatement("ret");
-					ILMethodElement vtToString = new ILMethodElement();
-					valType.addElement(vtToString);
-					vtToString.addLine(".method public hidebysig virtual instance string ");
-					vtToString.addLine("ToString() cil managed");
-					vtToString.addStatement(".maxstack  3");
-					vtToString.addStatement(@"ldstr      ""Wrong query helper argument: """);
-					vtToString.addStatement(ldarg_0);
-					vtToString.addStatement("ldfld      string " + vtFullName + "::__ndoqhname");
-					vtToString.addStatement(@"ldstr      "" Use members of that type instead.""");
-					vtToString.addStatement($"call       string {Corlib.Name}System.String::Concat(string, string, string)");
-					vtToString.addStatement($"newobj     instance void {Corlib.Name}System.Exception::.ctor(string)");
-					vtToString.addStatement("throw");
-
-					// Aufruf des Konstruktors des Value Types
-					strCtor.addStatement(ldarg_0);
-					strCtor.addStatement("ldflda     valuetype " + vtFullName + " " + qhTypeName + "::" + f.Name);
-					strCtor.addStatement(ldarg_1);
-					strCtor.addStatement(@"ldstr     """ + f.CleanName + "." + @"""");
-					strCtor.addStatement($"call       string {Corlib.Name}System.String::Concat(string,string)");
-					strCtor.addStatement("call       instance void " + vtFullName + "::.ctor(string)");
-					emptyCtor.addStatement(ldarg_0);
-					emptyCtor.addStatement("ldflda     valuetype " + vtFullName + " " + qhTypeName + "::" + f.Name);
-					emptyCtor.addStatement(@"ldstr     """ + f.CleanName + "." + @"""");
-					emptyCtor.addStatement("call       instance void " + vtFullName + "::.ctor(string)");
-
-					valType.addElement(new ILFieldElement(".field private string __ndoqhname"));
-#if NET11
-					// Vorwärtsdeklaration für den Value Type
-					ILClassElement fwdValType = new ILClassElement();
-					fwdValType.addLine(".class sequential ansi sealed nested public beforefieldinit " + vtName);
-					fwdValType.addLine($"extends {Corlib.Name}System.ValueType");
-					fwdQhElement.addElement(fwdValType);
-#endif
-					newClass.addElement(new ILFieldElement(".field public valuetype " + vtFullName + " " + f.Name));
-
-					foreach(ILField subField in f.Fields)
-						addValueTypeAccessor(valType, subField);
-
-					newClass.addElement(valType);
-				}
-			}
-
-			foreach (ILReference r in this.m_references)
-			{
-				this.addQHelperInitEntry(initQhelper, r);
-				newClass.addElement(new ILFieldElement(".field private class " + QuotedName.ConvertTypename(r.RefType) + "/QueryHelper " + getAccName("__", r.Name)));
-				addForeignQueryHelperAccessor(newClass, r, qhTypeName);
-			}
-
-			strCtor.addStatement("ret");
-			emptyCtor.addStatement("ret");
-
-			initQhelper.addStatement("ret");
-		}
-
-		public void
-			addQueryHelper()
-		{
-			ILClassElement nestedClass = new ILClassElement();
-#if NET11
-			nestedClass.setForwardClassElement(addQueryHelperForwardDecl());
-#endif
-			nestedClass.addLine(".class auto ansi nested public beforefieldinit QueryHelper " + m_classElement.getGenericArguments());
-			nestedClass.addLine($"extends {Corlib.Name}System.Object");
-			m_classElement.addElement(nestedClass);
-#if NET11
-			addQueryHelperElements(nestedClass, nestedClass.getForwardClassElement());
-#else
-            addQueryHelperElements(nestedClass);
-#endif
-		}
 
 	}  // internal class Class
 
@@ -3219,70 +2877,6 @@ namespace NDOEnhancer.Patcher
                 m_ilTypeWithoutPrefix = m_ilType.Substring(classPrefix.Length);
             else
                 m_ilTypeWithoutPrefix = m_ilType;
-
-            //Regex regex = new Regex(@"(class\s|valuetype\s|)(\[[^\]]+\]|)([^<]+)(<[^>]+>|)$");
-            //Match match = regex.Match(ilTypeName);
-#if nix
-			if (isBuiltInType(ilTypeName))
-			{
-				pureTypeName = m_ilType = ilTypeName;
-				return;
-			}
-			if (isEmbeddedType)
-			{
-				if (!ilTypeName.StartsWith(classPrefix))
-					ilTypeName = classPrefix + ilTypeName;
-			}
-			string tempName;
-			string prefix;
-			bool isArray = false;
-
-			if (ilTypeName.StartsWith(vtPrefix))
-			{
-				tempName = ilTypeName.Substring(10);
-				prefix = vtPrefix;
-				isValueType = true;  
-				this.Fields = new ArrayList();
-			}
-			else if (ilTypeName.StartsWith(classPrefix))
-			{
-				tempName = ilTypeName.Substring(6);
-				prefix = classPrefix;
-			}
-			else
-			{
-				tempName = ilTypeName;
-				prefix = string.Empty;
-			}
-			if (tempName.EndsWith("[]"))
-			{
-				isArray = true;
-				tempName = tempName.Substring(0, tempName.Length - 2);
-			}
-
-			int p = tempName.IndexOf("]") + 1;
-			string dottedName = UmlautName.Convert(tempName.Substring(p));
-			if (isArray)
-				dottedName += "[]";
-			string ilType = ILFromType(dottedName);
-			// Hier können nochmal eingebaute Typen entstehen.
-			if (this.isBuiltInType(ilType))
-			{
-//				this.isValueType = false;  // Mirko 23.9.
-//				this.Fields = null;
-				pureTypeName = m_ilType = ilType;
-				return;
-			}
-//			else
-//			{
-//				if (!prefix.StartsWith("v"))
-//					valid = false;
-//			}
-			m_ilType = prefix + tempName.Substring(0, p) + dottedName;
-			pureTypeName = m_ilType.Substring(m_ilType.IndexOf("]") + 1);
-			if (pureTypeName.StartsWith("valuetype"))
-				pureTypeName = pureTypeName.Substring(10);
-#endif
 		}
 		private void Init( Type type, string iltype, string name, string declaringType, string assemblyName )
 		{
@@ -3299,14 +2893,7 @@ namespace NDOEnhancer.Patcher
 			parent = null;
 			string quotedName;
 			PrepareType(iltype);
-#if nix
-			if (m_ilType.StartsWith(vtPrefix))
-				m_ilTypeWithoutPrefix = m_ilType.Substring(vtPrefix.Length);
-			else if (m_ilType.StartsWith(classPrefix))
-				m_ilTypeWithoutPrefix = m_ilType.Substring(classPrefix.Length);
-			else
-				m_ilTypeWithoutPrefix = m_ilType;
-#endif
+
 			if (isEmbeddedType)
 			{
 				Fields = new ArrayList();

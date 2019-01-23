@@ -32,9 +32,6 @@ namespace NDOEnhancer
     {
         public static IListReflector CreateListReflector(Type t)
         {
-#if NET11
-                return new StandardListReflector(t);
-#else
             //if (!typeof(System.Collections.IList).IsAssignableFrom(t))
             //    Console.WriteLine("************ can't assign " + t.FullName + " to IList.");
             if (!t.IsGenericType)
@@ -47,7 +44,6 @@ namespace NDOEnhancer
                     return new GenericListReflector(t);
                 return new GenericIListReflector(t);
             }
-#endif
         }
     }
 }
