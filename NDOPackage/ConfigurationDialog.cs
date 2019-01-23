@@ -535,7 +535,9 @@ namespace NETDataObjects.NDOVSPackage
 			// 
 			// ConfigurationDialog
 			// 
+			this.AcceptButton = this.btnOK;
 			this.AutoScaleBaseSize = new System.Drawing.Size(5, 13);
+			this.CancelButton = this.btnCancel;
 			this.ClientSize = new System.Drawing.Size(661, 439);
 			this.Controls.Add(this.tabControl);
 			this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));

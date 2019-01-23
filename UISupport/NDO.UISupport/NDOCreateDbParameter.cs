@@ -72,5 +72,17 @@ namespace NDO.UISupport
 		/// Constructs a NDOCreateDbParameter object.
 		/// </summary>
 		public NDOCreateDbParameter(){}
+
+		/// <summary>
+		/// Converts an NDOCreateDbParameter to a string.
+		/// </summary>
+		/// <remarks>
+		/// This is only for test purposes.
+		/// </remarks>
+		/// <returns></returns>
+		public override string ToString()
+		{
+			return ConnectionString.TrimEnd(';') + ";Database=" + DatabaseName;
+		}
 	}
 }

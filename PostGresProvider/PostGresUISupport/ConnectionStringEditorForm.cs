@@ -21,12 +21,6 @@
 
 
 using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
 using System.Windows.Forms;
 
 namespace NDO.PostGresUISupport
@@ -42,7 +36,8 @@ namespace NDO.PostGresUISupport
 
 		public ConnectionStringEditorForm(string initialConnection)
 		{
-			this.connectionString = initialConnection;
+			InitializeComponent();
+			this.connectionString = initialConnection ?? String.Empty;
 			string[] parts = connectionString.Split( ';' );
 			foreach ( string part in parts )
 			{
@@ -69,7 +64,6 @@ namespace NDO.PostGresUISupport
 						break;
 				}
 			}
-			InitializeComponent();
 		}
 
 		private void btnOK_Click( object sender, EventArgs e )
@@ -83,7 +77,6 @@ namespace NDO.PostGresUISupport
 				this.connectionString += "User=" + this.txtUser.Text + ";";
 			if ( this.txtPassword.Text != string.Empty )
 				this.connectionString += "Password=" + this.txtPassword.Text + ";";
-            Close();
 		}
 
 		public string ConnectionString

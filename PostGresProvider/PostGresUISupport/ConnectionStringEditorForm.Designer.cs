@@ -128,6 +128,7 @@ namespace NDO.PostGresUISupport
 			// 
 			// btnOK
 			// 
+			this.btnOK.DialogResult = System.Windows.Forms.DialogResult.OK;
 			this.btnOK.Location = new System.Drawing.Point(182, 158);
 			this.btnOK.Name = "btnOK";
 			this.btnOK.Size = new System.Drawing.Size(104, 32);
