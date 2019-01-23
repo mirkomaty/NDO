@@ -114,7 +114,7 @@
     </Reference>
     <Reference Include="MySqlProvider">
       <HintPath>..\MySqlNdoProvider\MySqlUISupport\bin\$(Configuration)\MySqlUISupport.dll</HintPath>
-    </Reference>    
+    </Reference>
     <Reference Include="NDO, Version=4.0.0.0, Culture=neutral, PublicKeyToken=37bfdffa92a0cd24, processorArchitecture=MSIL">
       <SpecificVersion>false</SpecificVersion>
       <HintPath>..\NDODLL\bin\$(Configuration)\NDO.dll</HintPath>
@@ -202,6 +202,7 @@
     <Compile Include="NDOAssemblyChecker.cs" />
     <Compile Include="NDOMapping.cs" />
     <Compile Include="NDOProviderFactory.cs" />
+    <Compile Include="NDOReference.cs" />
     <Compile Include="NdoUIProviderFactory.cs" />
     <Compile Include="OpenClassGenerator.cs" />
     <Compile Include="OpenMappingTool.cs" />
@@ -328,7 +329,7 @@
   </Target>
   <PropertyGroup>
     <PreBuildEvent>
-</PreBuildEvent>
+    </PreBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

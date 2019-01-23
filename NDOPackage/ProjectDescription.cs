@@ -31,50 +31,18 @@ using EnvDTE;
 using VsWebSite;
 using Microsoft.VisualStudio.Shell.Interop;
 using Microsoft.VisualStudio.Shell;
+using System.Linq;
 
 namespace NETDataObjects.NDOVSPackage
 {
 
 	/// <summary>
-	/// 
-	/// </summary>
-	internal class NDOReference
-	{
-		public string Name;
-		public string Path;
-		public bool CheckThisDLL;
-
-		public NDOReference( string name, string path, bool checkThisDLL )
-		{
-			this.Name = name;
-			this.Path = path;
-			this.CheckThisDLL = checkThisDLL;
-		}
-
-		public override bool Equals( object obj )
-		{
-			NDOReference ndoRef = obj as NDOReference;
-			if ( obj == null )
-				return false;
-
-			return ndoRef.Name == this.Name;
-		}
-
-		public override int GetHashCode()
-		{
-			return this.Name.GetHashCode();
-		}
-	}
-
-	/// <summary>
-	/// Zusammenfassung für ProjectDescription.
+	/// ProjectDescription.
 	/// </summary>
 	internal class ProjectDescription
 	{
-#if !STANDALONE
 		Solution solution = null;
 		Project project = null;
-#endif
 		Dictionary<string, NDOReference> references = null;
 		bool debug;
 		string binFile;
@@ -130,11 +98,7 @@ namespace NETDataObjects.NDOVSPackage
 
 		public ConfigurationOptions NewConfigurationOptions()
 		{
-#if !STANDALONE
 			return new ConfigurationOptions(project);
-#else
-			return new ConfigurationOptions();
-#endif
 		}
 
 		public ProjectDescription()
@@ -425,7 +389,7 @@ namespace NETDataObjects.NDOVSPackage
         }
 
 
-		private void BuildReferences()
+		public void BuildReferences()
 		{
 			if (references != null)
 				return;
@@ -494,7 +458,7 @@ namespace NETDataObjects.NDOVSPackage
                     if (rname == project.Name) continue;
 
                     if (allProjects.ContainsKey(rname))
-                        AddReference(r.Name, (string)allProjects[rname], true);
+                        AddReference(r.Name, (string)allProjects[rname], false);
                     else
                     {
                         // Referenzen, die auf keine gültige DLL verweisen...
@@ -527,6 +491,27 @@ namespace NETDataObjects.NDOVSPackage
             return result;
         }
 
+		public void FixDllState()
+		{
+			// The package works with a transient version of the ProjectDescription, which will be saved 
+			// after a successful Build. But we need the CheckThisDLL state from the saved version for the UI.
+
+			var fileName = ConfigurationOptions.GetNdoProjFileName( project );
+
+			if (!String.IsNullOrEmpty( fileName ) && File.Exists( fileName ))
+			{
+				ProjectDescription storedDescription = new ProjectDescription( fileName );
+				var storedReferences = storedDescription.references.Values.ToArray();
+				foreach (var reference in this.references.Values)
+				{
+					var storedReference = storedReferences.FirstOrDefault( r => r.Name == reference.Name );
+					if (storedReference != null)
+					{
+						reference.CheckThisDLL = storedReference.CheckThisDLL;
+					}
+				}
+			}
+		}
 
 		public void AddFileToProject(string fileName)
 		{
@@ -561,13 +546,8 @@ namespace NETDataObjects.NDOVSPackage
 		{
 			get
 			{
-#if !STANDALONE
-					BuildReferences();
-#else
-					if (references == null)
-						references = new Dictionary<string,NDOReference>();
-#endif
-					return references;
+				BuildReferences();
+				return references;
 			}
 		}
 

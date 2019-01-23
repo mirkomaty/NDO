@@ -163,12 +163,14 @@ namespace NETDataObjects.NDOVSPackage
 				if ( !storedPd.References.ContainsKey( key ) )
 				{
 					storeIt = true;
-					break;
+					continue;
 				}
+
 				NDOReference r1 = pd.References[key];
 				NDOReference r2 = storedPd.References[key];
 
-				// If we save the collected data, we should use the previously stored CheckThisDLL settings
+				// If we save the collected data, we should use the previously stored CheckThisDLL settings,
+				// except in case we changed the state using the UI
 				r1.CheckThisDLL = r2.CheckThisDLL;
 
 				//					messages.WriteLine("  " + s1 + ", " + s2);
@@ -249,64 +251,6 @@ namespace NETDataObjects.NDOVSPackage
 				//}
 
 				// ------------------ MsBuild Support -----------------------
-#if EnhancerLaunch  // Masked out. Shouldn't be used in future.
-				if (!options.UseMsBuild)
-				{
-
-					// The platform target is the more correct platform description.
-					// If it is available, let's use it.
-					string platform2 = projectDescription.PlatformTarget;
-					if (!string.IsNullOrEmpty( platform2 ))
-						platform = platform2;
-
-					string appName = "NDOEnhancer.exe";
-					if (platform == "x86" && OperatingSystem.Is64Bit)
-					{
-						appName = "Enhancerx86Stub.exe";
-						messages.WriteLine( "NDO-Addin: Using x86 Stub" );
-					}
-					ConsoleProcess cp = new ConsoleProcess( false );
-					int result = cp.Execute( "\"" + Path.Combine( ApplicationObject.AssemblyPath, appName ) + "\"",
-						"\"" + projFileName + "\"" );
-
-					if (cp.Stdout != String.Empty)
-						messages.WriteLine( cp.Stdout );
-
-					string stderr = cp.Stderr;
-					if (stderr != string.Empty)
-					{
-						Regex regex = new Regex( @"Error:" );
-						MatchCollection mc = regex.Matches( stderr );
-						int lastmatch = mc.Count - 1;
-						for (int i = 0; i < mc.Count; i++)
-						{
-							int endindex;
-							if (i == lastmatch)
-								endindex = stderr.Length;
-							else
-								endindex = mc[i + 1].Index;
-							int startindex = mc[i].Index;
-							//						messages.WriteLine("[" + i + "]:" + startindex + ',' + endindex);
-							// The substring always ends with a '\n', which should be removed.
-							string outString = stderr.Substring( startindex, endindex - startindex );
-							if (outString.EndsWith( "\r\n" ))
-								outString = outString.Substring( 0, outString.Length - 2 );
-							//						messages.ShowError("|" + outString + "|");
-							messages.ShowError( outString );
-						}
-					}
-
-					//if ( projectDescription.ConfigurationOptions.EnableEnhancer )
-					//    PostProcess( projectDescription );
-
-					if (result != 0)
-					{
-						if (messages.Success)
-							messages.ShowError( "An unknown error occured in the NDO Enhancer" );
-						// Now messages.Success is false
-					}
-				}
-#endif
 				if (messages.Success || options.UseMsBuild)
 				{
 					IncludeFiles(options, project, projectDescription);
