@@ -12,6 +12,7 @@
     <PackageProjectUrl>https://www.netdataobjects.de</PackageProjectUrl>
     <RepositoryUrl>https://git.netdataobjects.de</RepositoryUrl>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <PackageId>ndo.mysql</PackageId>
   </PropertyGroup>
 
   <ItemGroup>
