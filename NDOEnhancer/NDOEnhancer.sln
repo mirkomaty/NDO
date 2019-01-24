@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 11.00
 # Visual Studio 2010
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Enhancer", "Enhancer.csproj", "{3A0A82CF-F913-4701-B482-FF8709031777}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NDOEnhancer", "NDOEnhancer.csproj", "{3A0A82CF-F913-4701-B482-FF8709031777}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
