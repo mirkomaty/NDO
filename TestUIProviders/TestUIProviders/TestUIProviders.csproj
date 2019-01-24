@@ -33,16 +33,16 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="FirebirdProvider">
-      <HintPath>..\..\FirebirdNdoProvider\FirebirdProvider\bin\Debug\net452\FirebirdProvider.dll</HintPath>
+      <HintPath>..\..\Provider\FirebirdNdoProvider\FirebirdProvider\bin\Debug\net452\FirebirdProvider.dll</HintPath>
     </Reference>
     <Reference Include="FirebirdUISupport">
-      <HintPath>..\..\FirebirdNdoProvider\FirebirdUISupport\bin\Debug\FirebirdUISupport.dll</HintPath>
+      <HintPath>..\..\Provider\FirebirdNdoProvider\FirebirdUISupport\bin\Debug\FirebirdUISupport.dll</HintPath>
     </Reference>
     <Reference Include="MySqlProvider">
-      <HintPath>..\..\MySqlNdoProvider\MySqlProvider\bin\Debug\net452\MySqlProvider.dll</HintPath>
+      <HintPath>..\..\Provider\MySqlNdoProvider\MySqlProvider\bin\Debug\net452\MySqlProvider.dll</HintPath>
     </Reference>
     <Reference Include="MySqlUISupport">
-      <HintPath>..\..\MySqlNdoProvider\MySqlUISupport\bin\Debug\MySqlUISupport.dll</HintPath>
+      <HintPath>..\..\Provider\MySqlNdoProvider\MySqlUISupport\bin\Debug\MySqlUISupport.dll</HintPath>
     </Reference>
     <Reference Include="NDO">
       <HintPath>..\..\NDODLL\bin\Debug\net452\NDO.dll</HintPath>
@@ -54,28 +54,28 @@
       <HintPath>..\..\NDOInterfaces\bin\Debug\net452\NDOInterfaces.dll</HintPath>
     </Reference>
     <Reference Include="OracleProvider">
-      <HintPath>..\..\OracleProvider\OracleProvider\bin\Debug\net452\OracleProvider.dll</HintPath>
+      <HintPath>..\..\Provider\OracleProvider\OracleProvider\bin\Debug\net452\OracleProvider.dll</HintPath>
     </Reference>
     <Reference Include="OracleUISupport">
-      <HintPath>..\..\OracleProvider\OracleUISupport\bin\Debug\OracleUISupport.dll</HintPath>
+      <HintPath>..\..\Provider\OracleProvider\OracleUISupport\bin\Debug\OracleUISupport.dll</HintPath>
     </Reference>
     <Reference Include="PostgreProvider">
-      <HintPath>..\..\PostGresProvider\PostgreProvider\bin\Debug\net452\PostgreProvider.dll</HintPath>
+      <HintPath>..\..\Provider\PostGresProvider\PostgreProvider\bin\Debug\net452\PostgreProvider.dll</HintPath>
     </Reference>
     <Reference Include="PostGresUISupport">
-      <HintPath>..\..\PostGresProvider\PostGresUISupport\bin\Debug\PostGresUISupport.dll</HintPath>
+      <HintPath>..\..\Provider\PostGresProvider\PostGresUISupport\bin\Debug\PostGresUISupport.dll</HintPath>
     </Reference>
     <Reference Include="SqlCEProvider">
-      <HintPath>..\..\SqlCEProvider\SqlCEProvider\bin\Debug\net452\SqlCEProvider.dll</HintPath>
+      <HintPath>..\..\Provider\SqlCEProvider\SqlCEProvider\bin\Debug\net452\SqlCEProvider.dll</HintPath>
     </Reference>
     <Reference Include="SqlCeUISupport">
-      <HintPath>..\..\SqlCEProvider\SqlCeUISupport\bin\Debug\SqlCeUISupport.dll</HintPath>
+      <HintPath>..\..\Provider\SqlCEProvider\SqlCeUISupport\bin\Debug\SqlCeUISupport.dll</HintPath>
     </Reference>
     <Reference Include="SqliteProvider">
-      <HintPath>..\..\SqliteProvider\SqliteProvider\bin\Debug\net452\SqliteProvider.dll</HintPath>
+      <HintPath>..\..\Provider\SqliteProvider\SqliteProvider\bin\Debug\net452\SqliteProvider.dll</HintPath>
     </Reference>
     <Reference Include="SqliteUISupport">
-      <HintPath>..\..\SqliteProvider\SqliteUISupport\bin\Release\SqliteUISupport.dll</HintPath>
+      <HintPath>..\..\Provider\SqliteProvider\SqliteUISupport\bin\Release\SqliteUISupport.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />

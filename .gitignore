@@ -18,3 +18,5 @@ logs.txt
 NDOPackage/Backup
 /nuget/NDOEnhancer.exe
 /nuget/NDOEnhancer.pdb
+UsersGuide
+/QueryTests/NDOMapping.xml

@@ -260,7 +260,6 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <None Include="app.config" />
     <None Include="bin\Debug\NdoUnitTests.ndo.xsc">
       <DependentUpon>NdoUnitTests.ndo.xsd</DependentUpon>
     </None>
