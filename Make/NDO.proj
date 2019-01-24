@@ -1,9 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <PropertyGroup>
-	<EnhDateString>V. 3.0</EnhDateString>
-	<GIT>C:\Program Files (x86)\Portable Git\bin\Git.exe</GIT>
-	
+  <PropertyGroup>	
 	<PERS_DIR>..</PERS_DIR>
 	<MAKE_DIR>$(PERS_DIR)\Make</MAKE_DIR>
 	<NDO_DIR>$(PERS_DIR)\ndodll</NDO_DIR>
@@ -24,45 +21,39 @@
   <ItemGroup>
     <Tools Include="..\MakeEnhancerDate\MakeEnhancerDate.csproj" />	
   </ItemGroup>
+  
   <ItemGroup>
     <Project Include="..\NDOInterfaces\NDOInterfaces.csproj" />
-    <Project Include="..\NDODLL\NDO.csproj" />
-    <Project Include="..\NDOPackage\NDOPackage.csproj" />
-    <Project Include="..\SimpleMappingTool\Mapping.csproj" />
-    <Project Include="..\ClassGenerator\ClassGeneratorDll.csproj" />
-    <Project Include="..\ClassGenerator\ClassGenerator\ClassGenerator.csproj" />	
-    <Project Include="..\NDOEnhancer\Enhancer.csproj" />
-    <Project Include="..\NDOEnhancer.BuildTask\NDOEnhancer.BuildTask\NDOEnhancer.BuildTask.csproj" />
+    <Project Include="..\NDODLL\NDO.csproj" />	
+    <Project Include="..\UISupport\NDO.UISupport\NDO.UISupport.csproj" />
+
     <Project Include="..\Provider\MySqlNdoProvider\MySqlProvider\MySqlProvider.csproj" />
     <Project Include="..\Provider\OracleProvider\OracleProvider\OracleProvider.csproj" />
     <Project Include="..\Provider\FirebirdNdoProvider\FirebirdProvider\FirebirdProvider.csproj" />
     <Project Include="..\Provider\SqlCeProvider\SqlCeProvider\SqlCeProvider.csproj" />
     <Project Include="..\Provider\SqliteProvider\SqliteProvider\SqliteProvider.csproj" />	
     <Project Include="..\Provider\PostgresProvider\PostgreProvider\PostgreProvider.csproj" />
+	
+    <Project Include="..\Provider\MySqlNdoProvider\MySqlUISupport\MySqlUISupport.csproj" />
+    <Project Include="..\Provider\OracleProvider\OracleUISupport\OracleUISupport.csproj" />
+    <Project Include="..\Provider\FirebirdNdoProvider\FirebirdUISupport\FirebirdUISupport.csproj" />
+    <Project Include="..\Provider\SqlCeProvider\SqlCeUISupport\SqlCeUISupport.csproj" />
+    <Project Include="..\Provider\SqliteProvider\SqliteUISupport\SqliteUISupport.csproj" />	
+    <Project Include="..\Provider\PostgresProvider\PostgreUISupport\PostgreUISupport.csproj" />	
+    
+    <Project Include="..\SimpleMappingTool\Mapping.csproj" />
+	<Project Include="..\NDOPackage\NDOPackage.csproj" />
+    <Project Include="..\NDOEnhancer\NDOEnhancer.csproj" />
+    <Project Include="..\NDOEnhancer.BuildTask\NDOEnhancer.BuildTask\NDOEnhancer.BuildTask.csproj" />
   </ItemGroup>
+  
   <ItemGroup>
     <Projectx86 Include="..\EnhancerX86Stub\EnhancerX86Stub\EnhancerX86Stub.csproj" />
-  </ItemGroup>
-  
-  
-  <ItemGroup>
-    <DeployFiles Include="$(NDO_DLL)"/>
-    <DeployFiles Include="$(ENH_DIR)\bin\Release\NDOEnhancer.exe"/>
-    <DeployFiles Include="$(ENH_DIR)\Enhancerparameters.xsd"/>
-    <DeployFiles Include="$(MAP_DIR)\bin\release\Mapping.exe"/>
-    <DeployFiles Include="$(GEN_DIR)\bin\release\ClassGeneratorDll.dll"/>
-    <DeployFiles Include="$(GEN_DIR)\ClassGenerator\bin\release\ClassGenerator.exe"/>
-    <DeployFiles Include="$(PERS_DIR)\NDOInterfaces\bin\release\NDOInterfaces.dll"/>
-    <DeployFiles Include="$(PERS_DIR)\NDODLL\NDOMapping.xsd"/>
   </ItemGroup>
 
   <Target Name="Build">
 	<MSBuild Projects="@(Tools)" Targets="Rebuild" Properties="Configuration=$(Configuration);Platform=$(Platform)" />
-	<Exec Command="..\MakeEnhancerDate\bin\Release\MakeEnhancerDate.exe &quot;$(EnhDateString)&quot; &quot;$(GIT)&quot; &gt; ..\NDOPackage\EnhDate.cs"/>
-	<Copy SourceFiles="..\NDOPackage\EnhDate.cs" DestinationFolder="..\NDOEnhancer" />
 	<MSBuild Projects="@(Project)" Targets="Rebuild" Properties="Configuration=$(Configuration);Platform=$(Platform)" />
 	<MSBuild Projects="@(Projectx86)" Targets="Rebuild" Properties="Configuration=$(Configuration);Platform=x86" />
-	<Copy SourceFiles="@(DeployFiles)" DestinationFolder="$(DEPLOY_DIR)" />
-  <Exec Command="..\nuget\nuget.exe pack ndo.dll.nuspec" WorkingDirectory="..\nuget" />
   </Target>
 </Project>

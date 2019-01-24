@@ -2,13 +2,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.27703.2047
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestApp", "TestApp\TestApp.csproj", "{1BBF17E3-D321-4823-9E96-DDCD1FA54B08}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BusinessClasses", "BusinessClasses\BusinessClasses.csproj", "{96E72A69-AAF6-48F7-8541-57F516414969}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SqlCEProvider", "SqlCEProvider\SqlCEProvider.csproj", "{273BB4ED-74C4-482F-ACE2-E1564ACBA210}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CheckCommandBuilder", "CheckCommandBuilder\CheckCommandBuilder.csproj", "{B3DB4428-BECB-4C23-8F18-B18B448BE24B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SqlCEProvider", "SqlCEProvider\SqlCEProvider.csproj", "{273BB4ED-74C4-482F-ACE2-E1564ACBA210}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SqlCeUISupport", "SqlCeUISupport\SqlCeUISupport.csproj", "{C4E552A6-BAAE-4DD5-A527-7E1BA8399BB5}"
 EndProject
@@ -18,22 +12,10 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{1BBF17E3-D321-4823-9E96-DDCD1FA54B08}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{1BBF17E3-D321-4823-9E96-DDCD1FA54B08}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{1BBF17E3-D321-4823-9E96-DDCD1FA54B08}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{1BBF17E3-D321-4823-9E96-DDCD1FA54B08}.Release|Any CPU.Build.0 = Release|Any CPU
-		{96E72A69-AAF6-48F7-8541-57F516414969}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{96E72A69-AAF6-48F7-8541-57F516414969}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{96E72A69-AAF6-48F7-8541-57F516414969}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{96E72A69-AAF6-48F7-8541-57F516414969}.Release|Any CPU.Build.0 = Release|Any CPU
 		{273BB4ED-74C4-482F-ACE2-E1564ACBA210}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{273BB4ED-74C4-482F-ACE2-E1564ACBA210}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{273BB4ED-74C4-482F-ACE2-E1564ACBA210}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{273BB4ED-74C4-482F-ACE2-E1564ACBA210}.Release|Any CPU.Build.0 = Release|Any CPU
-		{B3DB4428-BECB-4C23-8F18-B18B448BE24B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{B3DB4428-BECB-4C23-8F18-B18B448BE24B}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{B3DB4428-BECB-4C23-8F18-B18B448BE24B}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{B3DB4428-BECB-4C23-8F18-B18B448BE24B}.Release|Any CPU.Build.0 = Release|Any CPU
 		{C4E552A6-BAAE-4DD5-A527-7E1BA8399BB5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{C4E552A6-BAAE-4DD5-A527-7E1BA8399BB5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C4E552A6-BAAE-4DD5-A527-7E1BA8399BB5}.Release|Any CPU.ActiveCfg = Release|Any CPU

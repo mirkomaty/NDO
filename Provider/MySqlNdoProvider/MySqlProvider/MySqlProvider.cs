@@ -188,6 +188,11 @@ namespace NDO.MySqlProvider
 			throw new NDOException(27, "NDOMySql.Provider.GetDbType: Typname " + typeName + " kann nicht in MySql.Data.MySqlClient.MySqlDbType konvertiert werden");
 		}
 
+		public override string GetDbTypeString( IDbDataParameter parameter )
+		{
+			return (((MySqlParameter)parameter).MySqlDbType).ToString();
+		}
+
 		private string GetDateExpression(System.DateTime dt)
 		{
 			//'9999-12-31 23:59:59'

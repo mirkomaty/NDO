@@ -410,5 +410,18 @@ namespace NDOInterfaces
 			return t;
         }
 
+		/// <summary>
+		/// Gets the string representation of the provider specific parameter type.
+		/// </summary>
+		/// <param name="parameter">An IDbDataParameter implementation.</param>
+		/// <returns>The string Representation of the parameter.</returns>
+		/// <remarks>
+		/// Each ADO.NET implementation uses it's own parameter types, e.g. SqlDbType for SqlParameter. 
+		/// We need the names of this parameters to support the Loggin.
+		/// </remarks>
+		public virtual string GetDbTypeString( IDbDataParameter parameter )
+		{
+			return parameter.DbType.ToString();
+		}
 	}
 }

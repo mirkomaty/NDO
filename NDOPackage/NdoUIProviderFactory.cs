@@ -45,9 +45,6 @@ namespace NETDataObjects.NDOVSPackage
                     this.uiSupportProviders = new Dictionary<string, IDbUISupport>();
                     string path = Path.GetDirectoryName(GetType().Assembly.Location);
 
-                    var ndop = new SqlServerUISupport();
-                    this.uiSupportProviders.Add(ndop.Name, ndop);
-
                     var ifc = typeof(IDbUISupport);
 
                     foreach (var fileName in Directory.GetFiles(path, "*UISupport.dll"))

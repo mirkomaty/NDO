@@ -146,21 +146,11 @@ namespace NDO
 		private void DumpParameters(IDbCommand cmd, TextWriter sw)
 		{
 			int j = 1;
-			foreach(System.Data.IDbDataParameter dp in cmd.Parameters)
+			foreach(IDbDataParameter dp in cmd.Parameters)
 			{
-				string parType;
-				if (provider is NDOSqlServerProvider)
-					parType = (((System.Data.SqlClient.SqlParameter)dp).SqlDbType).ToString();
-				else if (dp.GetType().Name == "MySqlParameter")
-				{
-					Type t = dp.GetType();
-					FieldInfo fi = t.GetField("dbType", BindingFlags.NonPublic | BindingFlags.Instance);
-					parType = fi.GetValue(dp).ToString();	
-				}
-				else 
-					parType = dp.DbType.ToString();
-				sw.Write("Parameter " + j.ToString() + ": " + dp.ToString() + '(' + parType + ") Source Column: " + dp.SourceColumn + " ");
-				sw.Write("Prec: " + dp.Precision + " Scale: " + dp.Scale + " Size: " + dp.Size);
+				string parType = provider.GetDbTypeString(dp);
+				sw.Write($"Parameter {j}: {dp.ToString()}({parType}) Source Column: {dp.SourceColumn} ");
+				sw.Write($"Prec: {dp.Precision} Scale: {dp.Scale} Size: {dp.Size}");
 				if (dp.Value != null)
 					sw.WriteLine(" Value: " + dp.Value);
 				else
@@ -169,6 +159,5 @@ namespace NDO
 				j++;
 			}
 		}
-
 	}
 }

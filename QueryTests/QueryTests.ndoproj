@@ -22,10 +22,10 @@
     <DropExistingElements>True</DropExistingElements>
   </Options>
   <ProjectDescription>
-    <BinPath>bin\Debug\QueryTests.dll</BinPath>
-    <ObjPath>obj\Debug\</ObjPath>
+    <BinPath>bin\Release\QueryTests.dll</BinPath>
+    <ObjPath>obj\Release\</ObjPath>
     <AssemblyName />
-    <Debug>True</Debug>
+    <Debug>False</Debug>
     <IsWebProject>False</IsWebProject>
     <KeyFile>
     </KeyFile>
@@ -34,11 +34,11 @@
       </Reference>
       <Reference AssemblyName="Moq" AssemblyPath="..\NDODLL\packages\Moq.4.9.0\lib\net45\Moq.dll" CheckThisDLL="False">
       </Reference>
-      <Reference AssemblyName="NDOInterfaces" AssemblyPath="..\NDOInterfaces\bin\Debug\net451\NDOInterfaces.dll" CheckThisDLL="False">
+      <Reference AssemblyName="NDOInterfaces" AssemblyPath="bin\Release\NDOInterfaces.dll" CheckThisDLL="False">
       </Reference>
       <Reference AssemblyName="nunit.framework" AssemblyPath="..\NDODLL\packages\NUnit.3.10.1\lib\net45\nunit.framework.dll" CheckThisDLL="False">
       </Reference>
-      <Reference AssemblyName="PureBusinessClasses" AssemblyPath="..\TestEnhancerVersion4\PureBusinessClasses\bin\Debug\PureBusinessClasses.dll">
+      <Reference AssemblyName="PureBusinessClasses" AssemblyPath="bin\Release\PureBusinessClasses.dll">
       </Reference>
       <Reference AssemblyName="System.Threading.Tasks.Extensions" AssemblyPath="..\NDODLL\packages\System.Threading.Tasks.Extensions.4.3.0\lib\portable-net45+win8+wp8+wpa81\System.Threading.Tasks.Extensions.dll" CheckThisDLL="False">
       </Reference>
@@ -47,6 +47,8 @@
       <Reference AssemblyName="Unity.Abstractions" AssemblyPath="..\NDODLL\packages\Unity.Abstractions.3.3.1\lib\net47\Unity.Abstractions.dll" CheckThisDLL="False">
       </Reference>
       <Reference AssemblyName="Unity.Container" AssemblyPath="..\NDODLL\packages\Unity.Container.5.8.13\lib\net47\Unity.Container.dll" CheckThisDLL="False">
+      </Reference>
+      <Reference AssemblyName="SqlServerProvider" AssemblyPath="..\Provider\SqlServerProvider\SqlServerProvider\bin\Debug\net452\SqlServerProvider.dll">
       </Reference>
     </References>
   </ProjectDescription>

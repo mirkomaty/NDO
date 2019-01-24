@@ -122,13 +122,13 @@
     </Reference>
     <Reference Include="FirebirdUISupport">
       <HintPath>..\Provider\FirebirdNdoProvider\FirebirdUISupport\bin\$(Configuration)\FirebirdUISupport.dll</HintPath>
-    </Reference>	
+    </Reference>
     <Reference Include="MySqlProvider">
       <HintPath>..\Provider\MySqlNdoProvider\MySqlProvider\bin\$(Configuration)\net452\MySqlProvider.dll</HintPath>
     </Reference>
     <Reference Include="MySqlProvider">
       <HintPath>..\Provider\MySqlNdoProvider\MySqlUISupport\bin\$(Configuration)\MySqlUISupport.dll</HintPath>
-    </Reference>		
+    </Reference>
     <Reference Include="OracleProvider">
       <HintPath>..\Provider\OracleProvider\OracleProvider\bin\$(Configuration)\net452\OracleProvider.dll</HintPath>
     </Reference>
@@ -152,6 +152,12 @@
     </Reference>
     <Reference Include="SqliteUISupport">
       <HintPath>..\Provider\SqliteProvider\SqliteUISupport\bin\$(Configuration)\net452\SqliteUISupport.dll</HintPath>
+    </Reference>
+    <Reference Include="SqlServerProvider">
+      <HintPath>..\Provider\SqlServerProvider\SqlServerProvider\bin\$(Configuration)\net452\SqlServerProvider.dll</HintPath>
+    </Reference>
+    <Reference Include="SqlServerUISupport">
+      <HintPath>..\Provider\SqlServerProvider\SqlServerUISupport\bin\$(Configuration)\SqlServerUISupport.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />

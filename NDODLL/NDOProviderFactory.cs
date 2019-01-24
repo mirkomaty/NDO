@@ -28,6 +28,8 @@ using System.Data.Common;
 using System.Collections.Generic;
 using Cli;
 using NDOInterfaces;
+using System.Runtime.Versioning;
+using System.Linq;
 
 namespace NDO
 {
@@ -36,18 +38,13 @@ namespace NDO
     /// </summary>
     /// <remarks>
     /// Providers implement the interface IProvider and optional the interface ISqlGenerator.
-    /// All managed dlls in the NDO provider directory  and in the base directory of the running AppDomain
+    /// All managed dllsin the base directory of the running AppDomain
     /// will be scanned for implementations of the IProvider interface.
-    /// Sql Server, Oracle and Access providers are built into the NDO.Dll. 
-    /// All other providers reside in additional dlls. NDO finds the NDO provider directory using the
-	/// file %ALLUSERSPROFILE%\Microsoft\MSEnvShared\Addins\NDOxy.AddIn where 
-    /// xy is the NDO version x.y, i.e. 2.1 -> NDO21.AddIn. See also the documentation in the UserSetup directory
-	/// of your NDO installation.
     /// </remarks>
     public class NDOProviderFactory
     {
 		private static readonly object lockObject = new object();
-        private static NDOProviderFactory factory = new NDOProviderFactory();
+        private static readonly NDOProviderFactory factory = new NDOProviderFactory();
         private Dictionary<string,IProvider> providers = null; // Marks the providers as not loaded
 		private Dictionary<string,ISqlGenerator> generators = new Dictionary<string,ISqlGenerator>();
         private bool skipPrivatePath;
@@ -70,12 +67,6 @@ namespace NDO
 				if (this.providers == null)  // Multithreading DoubleCheck
 				{
 					this.providers = new Dictionary<string, IProvider>();
-                    IProvider provider = new NDOSqlServerProvider();
-                    if (!this.providers.ContainsKey("SqlServer"))
-                        this.providers.Add("SqlServer", provider);
-					SqlServerGenerator sqlGen = new SqlServerGenerator();
-					sqlGen.Provider = provider;
-					this.generators.Add( "SqlServer", sqlGen );
 					SearchProviderPlugIns();
 				}
 			}
@@ -158,14 +149,44 @@ namespace NDO
             {
 				//string path = NDOAddInPath.Instance;
 				//AddProviderPlugIns(path);
-                if (!skipPrivatePath)
-                {
-                    string path = AppDomain.CurrentDomain.BaseDirectory;
-                    AddProviderPlugIns(path);
+				if (!skipPrivatePath)
+				{
+					string path = AppDomain.CurrentDomain.BaseDirectory;
+					AddProviderPlugIns( path );
 					string binPath = Path.Combine( path, "bin" );
-					if ( Directory.Exists( binPath ) )
+					if (string.Compare( path, binPath, true ) != 0 && Directory.Exists( binPath ))
 						AddProviderPlugIns( binPath );
-                }
+
+					// This is a hack to determine any loaded provider packages.
+					var runtimeDir = System.Runtime.InteropServices.RuntimeEnvironment.GetRuntimeDirectory();
+
+					if (runtimeDir != null && runtimeDir.IndexOf( "Microsoft.NETCore.App" ) > -1)
+					{
+						path = typeof( PersistenceManager ).Assembly.Location;
+						var pattern = $".nuget{Path.DirectorySeparatorChar}packages";
+						int p;
+						if ((p = path.IndexOf( pattern )) > -1)
+						{
+							p += pattern.Length;
+							path = path.Substring( 0, p );
+							var majorVersion = GetType().Assembly.GetName().Version.Major.ToString();
+							var standardVersion = "netstandard2.0";
+
+							foreach (var subPath in Directory.GetDirectories( path, "ndo.*" ))
+							{
+								if (Path.GetFileName( subPath ) == "ndo.dll")
+									continue;
+								var versionDir = Directory.GetDirectories( subPath ).FirstOrDefault( s => Path.GetFileName( s ).StartsWith( majorVersion) );
+								if (versionDir == null)
+									continue;
+								var libDir = Path.Combine( versionDir, "lib", standardVersion );
+								if (!Directory.Exists( libDir ))
+									continue;
+								AddProviderPlugIns( libDir );
+							}
+						}
+					}
+				}
             }
             catch
             {

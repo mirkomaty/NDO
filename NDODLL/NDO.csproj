@@ -36,7 +36,6 @@ Support for .NET Standard</PackageReleaseNotes>
 
   <ItemGroup>
     <PackageReference Include="ndointerfaces" Version="4.0.0" />
-    <PackageReference Include="System.Data.SqlClient" Version="4.6.0" />
     <PackageReference Include="Unity.Container" Version="5.8.13" />
   </ItemGroup>
   
@@ -56,6 +55,11 @@ Support for .NET Standard</PackageReleaseNotes>
       <PackageCopyToOutput>true</PackageCopyToOutput>
       <PackagePath>build</PackagePath>
     </Content>
+    <Content Include="..\NDOEnhancer\bin\Release\Mono.Cecil.dll">
+      <Pack>true</Pack>
+      <PackageCopyToOutput>true</PackageCopyToOutput>
+      <PackagePath>build</PackagePath>
+    </Content>    
     <Content Include="..\NDOEnhancer\bin\Release\NDOEnhancer.exe.config">
       <Pack>true</Pack>
       <PackageCopyToOutput>true</PackageCopyToOutput>
@@ -66,6 +70,11 @@ Support for .NET Standard</PackageReleaseNotes>
       <PackageCopyToOutput>true</PackageCopyToOutput>
       <PackagePath>build</PackagePath>
     </Content>
+    <Content Include="bin/$(Configuration)/net452/NDO.dll">
+      <Pack>true</Pack>
+      <PackageCopyToOutput>true</PackageCopyToOutput>
+      <PackagePath>build</PackagePath>
+    </Content>    
   </ItemGroup>
 
   <Target Name="PostBuild" AfterTargets="Pack">

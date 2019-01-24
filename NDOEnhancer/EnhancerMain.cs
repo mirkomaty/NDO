@@ -201,18 +201,19 @@ namespace EnhancerTest
 			if (verboseMode)
 			Console.WriteLine($"AssemblyResolve: {args.Name}");
 			string path = Path.GetDirectoryName( Assembly.GetExecutingAssembly().Location );
-			if (args.Name.ToUpper().StartsWith("NDO,"))
+			Console.WriteLine("Location: " + path);
+			if (args.Name.StartsWith("NDO,", StringComparison.InvariantCultureIgnoreCase))
             {
                 string fileName = Path.Combine(path, "NDO.dll");
+				if (verboseMode)
+					Console.WriteLine( $"  -> {fileName}" );
 				if (File.Exists( fileName ))
 				{
-					if (verboseMode)
-						Console.WriteLine( $"  -> {fileName}" );
 					return Assembly.LoadFrom( fileName );
 				}
                 return null;
             }
-			if (args.Name.ToUpper().StartsWith( "NDOINTERFACES," ))
+			if (args.Name.StartsWith( "NDOInterfaces,", StringComparison.InvariantCultureIgnoreCase ))
 			{
 				string fileName = Path.Combine( path, "NDOInterfaces.dll" );
 				if (File.Exists( fileName ))

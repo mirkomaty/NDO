@@ -54,7 +54,6 @@
     <Compile Include="NDOCreateDbParameter.cs" />
     <Compile Include="OleDbConnectionStringDialog.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="SqlServerUISupport.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="DefaultCreateDbDialog.resx">

@@ -174,6 +174,11 @@ namespace NDO.FirebirdProvider
 			throw new NDOException(27, "NDOFb.Provider.GetDbType: Typname " + typeName + " kann nicht in FbDbType konvertiert werden");
 		}
 
+		public override string GetDbTypeString( IDbDataParameter parameter )
+		{
+			return (((FbParameter)parameter).FbDbType).ToString();
+		}
+
 		private string GetDateExpression(System.DateTime dt)
 		{
 			//'9999-12-31 23:59:59'

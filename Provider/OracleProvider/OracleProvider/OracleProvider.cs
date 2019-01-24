@@ -149,6 +149,11 @@ namespace OracleProvider
 			return result;
 		}
 
+		public override string GetDbTypeString( IDbDataParameter parameter )
+		{
+			return (((OracleParameter)parameter).OracleDbType).ToString();
+		}
+
 		private string GetDateExpression(System.DateTime dt)
 		{
 			string ts = dt.ToString("dd-MMM-yyyy hh:mm:ss ");
@@ -231,13 +236,6 @@ namespace OracleProvider
 		{
 			get { return true; }
 		}
-
-/*
-	    public override bool UseStoredProcedure
-		{
-			get { return false; }
-		}
-*/
 		
 		//private Hashtable namedParameters = new Hashtable();
 		public override string GetNamedParameter(string plainParameterName)
@@ -249,7 +247,6 @@ namespace OracleProvider
 		{
 			return "\"" + plainName + "\"";
 		}
-
 	
 		public override string[] GetTableNames(IDbConnection conn, string owner)
 		{
@@ -280,7 +277,6 @@ namespace OracleProvider
 				return Enum.GetNames(typeof(OracleDbType));
 			}
 		}
-
 
 		public override string Name { get { return "Oracle"; }  }
 

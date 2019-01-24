@@ -154,8 +154,6 @@ namespace NDO.SqlCeProvider
                 throw new NDOException(41, "NDOSqlProvider.GetDbType: Type " + t.Name + " can't be converted into a SqlDbType.");
         }
 
-
-
 		#endregion
 
 		// The following method convert System.Type objects to SqlDbType-Members
@@ -182,13 +180,12 @@ namespace NDO.SqlCeProvider
 			return result;
 		}
 
-        //private string GetDateExpression(System.DateTime dt)
-        //{
-        //    //'9999-12-31 23:59:59'
-        //    return "'" + dt.ToString("yyyy-MM-dd HH:mm:ss") + "." + dt.Millisecond + "'";
-        //}
+		public override string GetDbTypeString( IDbDataParameter parameter )
+		{
+			return (((SqlCeParameter)parameter).SqlDbType).ToString();
+		}
 
-        public override int GetDefaultLength(Type t)
+		public override int GetDefaultLength(Type t)
         {
             if (t == typeof(byte[]))
                 return 65535;

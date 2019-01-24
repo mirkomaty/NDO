@@ -222,6 +222,10 @@ namespace NDO.PostGreProvider
 				return 0;		
 		}
 
+		public override string GetDbTypeString( IDbDataParameter parameter )
+		{
+			return (((NpgsqlParameter)parameter).NpgsqlDbType).ToString();
+		}
 
 		public override string Wildcard
 		{

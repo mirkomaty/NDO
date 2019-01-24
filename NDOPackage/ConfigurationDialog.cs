@@ -78,6 +78,7 @@ namespace NETDataObjects.NDOVSPackage
 		private Label label6;
 		private CheckedListBox chlbAssemblies;
 		private ProjectDescription projectDescription;
+		private Button btnInstallProvider;
 		private NDOReference[] references;
 
 		public ConfigurationDialog(Project project, ProjectDescription projectDescription)
@@ -104,6 +105,34 @@ namespace NETDataObjects.NDOVSPackage
 			{
 				Debug.WriteLine( ex.ToString() );
 			}
+		}
+
+		void CheckEnabledStateForLoadProviderButton()
+		{
+			string providerName = this.cbSqlDialect.Text;
+
+			if (string.IsNullOrEmpty( providerName ))
+			{
+				this.btnInstallProvider.Enabled = false;
+				return;
+			}
+
+			if (IsProviderInstalled(providerName))
+			{
+				this.btnInstallProvider.Enabled = false;
+				return;
+			}
+
+			this.btnInstallProvider.Enabled = true;
+		}
+
+		bool IsProviderInstalled(string providerName)
+		{
+			IComponentModel componentModel;
+			var installerService = GetInstallerService( out componentModel );
+
+			string packageName = $"ndo.{providerName.ToLower()}";
+			return installerService.IsPackageInstalled( this.project, packageName );
 		}
 
 		/// <summary>
@@ -159,6 +188,7 @@ namespace NETDataObjects.NDOVSPackage
 			this.label5 = new System.Windows.Forms.Label();
 			this.label3 = new System.Windows.Forms.Label();
 			this.groupBox1 = new System.Windows.Forms.GroupBox();
+			this.btnInstallProvider = new System.Windows.Forms.Button();
 			this.label4 = new System.Windows.Forms.Label();
 			this.label2 = new System.Windows.Forms.Label();
 			this.btnOK = new System.Windows.Forms.Button();
@@ -288,6 +318,7 @@ namespace NETDataObjects.NDOVSPackage
 			this.cbSqlDialect.Size = new System.Drawing.Size(220, 21);
 			this.cbSqlDialect.TabIndex = 18;
 			this.toolTip1.SetToolTip(this.cbSqlDialect, "Choose an available NDO provider.");
+			this.cbSqlDialect.SelectedIndexChanged += new System.EventHandler(this.cbSqlDialect_SelectedIndexChanged);
 			// 
 			// chkGenerateSQLScript
 			// 
@@ -450,6 +481,7 @@ namespace NETDataObjects.NDOVSPackage
 			// 
 			// groupBox1
 			// 
+			this.groupBox1.Controls.Add(this.btnInstallProvider);
 			this.groupBox1.Controls.Add(this.chkDropExistingElements);
 			this.groupBox1.Controls.Add(this.chkGenerateFkConstraints);
 			this.groupBox1.Controls.Add(this.chkIncludeTypecodes);
@@ -464,6 +496,16 @@ namespace NETDataObjects.NDOVSPackage
 			this.groupBox1.TabIndex = 43;
 			this.groupBox1.TabStop = false;
 			this.groupBox1.Text = " SQL ";
+			// 
+			// btnInstallProvider
+			// 
+			this.btnInstallProvider.Location = new System.Drawing.Point(142, 102);
+			this.btnInstallProvider.Name = "btnInstallProvider";
+			this.btnInstallProvider.Size = new System.Drawing.Size(91, 22);
+			this.btnInstallProvider.TabIndex = 25;
+			this.btnInstallProvider.Text = "Install Provider";
+			this.btnInstallProvider.UseVisualStyleBackColor = true;
+			this.btnInstallProvider.Click += new System.EventHandler(this.btnInstallProvider_Click);
 			// 
 			// label4
 			// 
@@ -616,8 +658,10 @@ namespace NETDataObjects.NDOVSPackage
                     radioDefaultEncoding.Checked = true;
                 if (project.Kind == "{E24C65DC-7377-472b-9ABA-BC803B73C61A}")
                     this.chkActivateEnhancer.Enabled = false;
-            }
-            catch (Exception ex)
+
+				CheckEnabledStateForLoadProviderButton();
+			}
+			catch (Exception ex)
             {
 #if !DEBUG
                 MessageBox.Show(ex.Message, "NDO Configuration");
@@ -705,8 +749,8 @@ namespace NETDataObjects.NDOVSPackage
 					if ( !options.UseMsBuild )
 					{
 						options.UseMsBuild = true;
-						GeneratePackageReference();
 					}
+					GeneratePackageReference();
 				}
 
 				options.Save( this.projectDescription );
@@ -726,10 +770,10 @@ namespace NETDataObjects.NDOVSPackage
 		{
 			try
 			{
-				var componentModel = (IComponentModel) Package.GetGlobalService( typeof( SComponentModel ) );
-				IVsPackageInstallerServices installerServices = componentModel.GetService<IVsPackageInstallerServices>();
+				IComponentModel componentModel;
+				var installerService = GetInstallerService( out componentModel );
 
-				if (!installerServices.IsPackageInstalled( this.project, "ndo.dll" ))
+				if (!installerService.IsPackageInstalled( this.project, "ndo.dll" ))
 				{
 					var installer = componentModel.GetService<IVsPackageInstaller>();
 					installer.InstallPackage( null, this.project, "ndo.dll", (string)null, false );
@@ -741,6 +785,12 @@ namespace NETDataObjects.NDOVSPackage
 			}
 		}
 
+		private static IVsPackageInstallerServices GetInstallerService( out IComponentModel componentModel )
+		{
+			componentModel = (IComponentModel)Package.GetGlobalService( typeof( SComponentModel ) );
+			var installerService = componentModel.GetService<IVsPackageInstallerServices>();
+			return installerService;
+		}
 
 		void ShowError(Exception ex)
 		{
@@ -881,6 +931,7 @@ namespace NETDataObjects.NDOVSPackage
 		private void cbSqlDialect_SelectedIndexChanged(object sender, System.EventArgs e)
 		{
 			this.txtConnectionString.Text = string.Empty;
+			CheckEnabledStateForLoadProviderButton();
 		}
 
 		private void btnNewDatabase_Click(object sender, System.EventArgs e)
@@ -914,6 +965,36 @@ namespace NETDataObjects.NDOVSPackage
 		private void chlbAssemblies_ItemCheck( object sender, ItemCheckEventArgs e )
 		{
 			this.references[e.Index].CheckState = e.NewValue;
+		}
+
+		private void btnInstallProvider_Click( object sender, EventArgs e )
+		{
+			try
+			{
+				string providerName = this.cbSqlDialect.Text;
+
+				if (string.IsNullOrEmpty( providerName ))
+				{
+					MessageBox.Show( "Please choose a provider" );
+					return;
+				}
+
+				IComponentModel componentModel;
+				var installerService = GetInstallerService( out componentModel );
+
+				string packageName = $"ndo.{providerName.ToLower()}";
+				if (!installerService.IsPackageInstalled( this.project, packageName ))
+				{
+					var installer = componentModel.GetService<IVsPackageInstaller>();
+					installer.InstallPackage( null, this.project, packageName, (string)null, false );
+				}
+
+				this.btnInstallProvider.Enabled = false;
+			}
+			catch (Exception ex)
+			{
+				MessageBox.Show( "Error while installing the ndo.dll package: " + ex.ToString() );
+			}
 		}
 	}
 }
