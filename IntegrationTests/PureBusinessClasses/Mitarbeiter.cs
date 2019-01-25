@@ -29,6 +29,7 @@ using NDO;
 using System.Drawing;
 using System.Data;
 using System.Linq;
+using NDO.Mapping.Attributes;
 
 namespace Reisekosten.Personal
 {
@@ -98,7 +99,7 @@ namespace Reisekosten.Personal
 
 		// Mitarbeiter kann viele Reisebüros benutzen. Diese existieren unabhängig vom Mitarbeiter.
 		// 1:n, mit Zwischentabelle
-		[NDORelation]
+		[NDORelation, MappingTable]
 		List<Reisebüro> reiseBüros = new List<Reisebüro>();
         public IEnumerable<Reisebüro> ReiseBüros
         {
@@ -108,7 +109,7 @@ namespace Reisekosten.Personal
 
 		// Mitarbeiter kann mehrere Email-Adressen haben. Diese werden mit ihm gelöscht.
 		// 1:n, Komposition, mit Zwischentabelle
-		[NDORelation(typeof (Email), RelationInfo.Composite)]
+		[NDORelation(typeof (Email), RelationInfo.Composite), MappingTable]
 		IList emails = new ArrayList();
 
 		public Adresse Adresse 

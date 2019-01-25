@@ -63,7 +63,7 @@ namespace NDO.HttpUtil
         /// <returns></returns>
         public static string UrlDecode( string s )
         {
-            byte[] bytes = Encoding.ASCII.GetBytes( s );
+            byte[] bytes = Encoding.UTF8.GetBytes( s );
             return Encoding.UTF8.GetString( UrlDecode( bytes, 0, bytes.Length ) );
         }
 

@@ -91,6 +91,7 @@ namespace NdoUnitTests
 		[Test]
 		public void TestReadableShortIdMitUmlauten()
 		{
+			// Note: This test uses the old ShortId format, which is deprecated
 			string shortId = ((IPersistenceCapable)this.reiseBüro).ShortId();
 			Assert.That( shortId.IsShortId() );
 			string[] arr = shortId.Split( '-' );
@@ -106,6 +107,7 @@ namespace NdoUnitTests
 		[Test]
 		public void TestReadableShortIdOhneUmlaute()
 		{
+			// Note: This test uses the old ShortId format, which is deprecated
 			string shortId = ((IPersistenceCapable)this.m).ShortId();
 			Assert.That( shortId.IsShortId() );
 			string[] arr = shortId.Split( '-' );

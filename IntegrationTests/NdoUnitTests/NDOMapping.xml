@@ -921,7 +921,7 @@
         </Field>
       </Fields>
       <Relations>
-        <Relation FieldName="elementChild" ReferencedTypeName="ForeignObjectManipulationClasses.ChildElement" RelationName="">
+        <Relation FieldName="elementChild" AccessorName="ElementChild" ReferencedTypeName="ForeignObjectManipulationClasses.ChildElement" RelationName="">
           <ForeignKeyColumn Name="IDChildElement" />
         </Relation>
         <Relation FieldName="listChilds" ReferencedTypeName="ForeignObjectManipulationClasses.ChildList" RelationName="">
@@ -971,7 +971,7 @@
       </Oid>
       <Fields />
       <Relations>
-        <Relation FieldName="element" ReferencedTypeName="NDOObjectIdTestClasses.ClassWithHint" RelationName="">
+        <Relation FieldName="element" AccessorName="Element" ReferencedTypeName="NDOObjectIdTestClasses.ClassWithHint" RelationName="">
           <ForeignKeyColumn Name="IDClassWithHint" />
         </Relation>
       </Relations>
@@ -996,7 +996,7 @@
       </Oid>
       <Fields />
       <Relations>
-        <Relation FieldName="element" ReferencedTypeName="NDOObjectIdTestClasses.NDOoidAndHandler" RelationName="">
+        <Relation FieldName="element" AccessorName="Element" ReferencedTypeName="NDOObjectIdTestClasses.NDOoidAndHandler" RelationName="">
           <ForeignKeyColumn Name="IDNDOoidAndHandler" />
         </Relation>
       </Relations>
@@ -1119,7 +1119,7 @@
       </Oid>
       <Fields />
       <Relations>
-        <Relation FieldName="client" ReferencedTypeName="PureBusinessClasses.OwnHashcodeClient" RelationName="">
+        <Relation FieldName="client" AccessorName="Client" ReferencedTypeName="PureBusinessClasses.OwnHashcodeClient" RelationName="">
           <ForeignKeyColumn Name="IDOwnHashcodeClient" />
         </Relation>
       </Relations>
@@ -1396,7 +1396,7 @@
         <Relation FieldName="meinBuero" AccessorName="Zimmer" ReferencedTypeName="Reisekosten.Personal.Buero" RelationName="">
           <ForeignKeyColumn Name="IDBuero" />
         </Relation>
-        <Relation FieldName="reiseBüros" ReferencedTypeName="Reisekosten.Reisebüro" RelationName="">
+        <Relation FieldName="reiseBüros" AccessorName="ReiseBüros" ReferencedTypeName="Reisekosten.Reisebüro" RelationName="">
           <ForeignKeyColumn Name="IDMitarbeiter" />
           <MappingTable TableName="relMitarbeiterReisebuero" ConnectionId="C0">
             <ForeignKeyColumn Name="IDReisebuero" />
@@ -1447,7 +1447,7 @@
         <Relation FieldName="meinBuero" AccessorName="Zimmer" ReferencedTypeName="Reisekosten.Personal.Buero" RelationName="">
           <ForeignKeyColumn Name="IDBuero" />
         </Relation>
-        <Relation FieldName="reiseBüros" ReferencedTypeName="Reisekosten.Reisebüro" RelationName="">
+        <Relation FieldName="reiseBüros" AccessorName="ReiseBüros" ReferencedTypeName="Reisekosten.Reisebüro" RelationName="">
           <ForeignKeyColumn Name="IDMitarbeiter" />
           <MappingTable TableName="relMitarbeiterReisebuero" ConnectionId="C0">
             <ForeignKeyColumn Name="IDReisebuero" />
@@ -1557,13 +1557,13 @@
         </Field>
       </Fields>
       <Relations>
-        <Relation FieldName="belege" ReferencedTypeName="Reisekosten.Kostenpunkt" RelationName="">
+        <Relation FieldName="belege" AccessorName="Kostenpunkte" ReferencedTypeName="Reisekosten.Kostenpunkt" RelationName="">
           <ForeignKeyColumn Name="IDReise" />
           <MappingTable TableName="relBelegKostenpunkt" ChildForeignKeyTypeColumnName="TCBeleg" ConnectionId="C0">
             <ForeignKeyColumn Name="IDBeleg" />
           </MappingTable>
         </Relation>
-        <Relation FieldName="dieLaender" ReferencedTypeName="Reisekosten.Land" RelationName="">
+        <Relation FieldName="dieLaender" AccessorName="Länder" ReferencedTypeName="Reisekosten.Land" RelationName="">
           <ForeignKeyColumn Name="IDReise" />
           <MappingTable TableName="relLandReise" ConnectionId="C0">
             <ForeignKeyColumn Name="IDLand" />
@@ -1646,7 +1646,7 @@
         <Relation FieldName="intermediates" ReferencedTypeName="Zirkulär.Intermediate" RelationName="">
           <ForeignKeyColumn Name="IDTopicIndirect" />
         </Relation>
-        <Relation FieldName="intermediateSingle" ReferencedTypeName="Zirkulär.IntermediateSingle" RelationName="">
+        <Relation FieldName="intermediateSingle" AccessorName="IntermediateSingle" ReferencedTypeName="Zirkulär.IntermediateSingle" RelationName="">
           <ForeignKeyColumn Name="IDIntermediateSingle" />
         </Relation>
       </Relations>
