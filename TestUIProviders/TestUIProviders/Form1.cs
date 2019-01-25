@@ -41,5 +41,28 @@ namespace TestUIProviders
 				this.txtConnectionString.Text = this.connectionString = necessaryData.ToString();
 			}
 		}
+
+		private void btnCreate_Click( object sender, EventArgs e )
+		{
+			var uiProvider = (DbUISupportBase)NdoUIProviderFactory.Instance[this.comboBox1.Text];
+			var ndoProvider = NDOProviderFactory.Instance[this.comboBox1.Text];
+
+			object necessaryData = null;
+			var result = uiProvider.ShowCreateDbDialog( ref necessaryData );
+			if (result == NdoDialogResult.OK)
+			{
+				try
+				{
+					this.txtConnectionString.Text = this.connectionString = uiProvider.CreateDatabase( necessaryData );
+				}
+				catch (Exception ex)
+				{
+					MessageBox.Show( ex.Message );
+					return;
+				}
+
+				MessageBox.Show( "OK" );
+			}
+		}
 	}
 }

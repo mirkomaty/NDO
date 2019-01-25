@@ -77,6 +77,12 @@
     <Reference Include="SqliteUISupport">
       <HintPath>..\..\Provider\SqliteProvider\SqliteUISupport\bin\Release\SqliteUISupport.dll</HintPath>
     </Reference>
+    <Reference Include="SqlServerProvider">
+      <HintPath>..\..\Provider\SqlServerProvider\SqlServerProvider\bin\Debug\net452\SqlServerProvider.dll</HintPath>
+    </Reference>
+    <Reference Include="SqlServerUISupport">
+      <HintPath>..\..\Provider\SqlServerProvider\SqlServerUISupport\bin\Debug\SqlServerUISupport.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />

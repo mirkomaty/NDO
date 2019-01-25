@@ -376,6 +376,8 @@ namespace NDO.MySqlProvider
 
 		public override string CreateDatabase(string databaseName, string connectionString, object additionalData)
 		{
+			base.CreateDatabase( databaseName, connectionString, additionalData );
+
 			Regex regex = new Regex(@"Database\s*=([^\;]*)");
 			Match match = regex.Match( connectionString );
 			if (match.Success)

@@ -348,6 +348,7 @@ namespace SqlServerProvider
 
 		public override string CreateDatabase( string databaseName, string connectionString, object additionalData )
 		{
+			base.CreateDatabase( databaseName, connectionString, additionalData );
 			Regex regex = new Regex( @"Initial\sCatalog=([^\;]*)" );
 			Match match = regex.Match( connectionString );
 			if (match.Success)

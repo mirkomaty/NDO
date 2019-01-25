@@ -1,5 +1,6 @@
 ﻿using NDO;
 using NDO.UISupport;
+using SqlServerUISupport;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -41,9 +42,6 @@ namespace TestUIProviders
 				{
 					this.uiSupportProviders = new Dictionary<string, IDbUISupport>();
 					string path = Path.GetDirectoryName( GetType().Assembly.Location );
-
-					var ndop = new SqlServerUISupport();
-					this.uiSupportProviders.Add( ndop.Name, ndop );
 
 					var ifc = typeof( IDbUISupport );
 
