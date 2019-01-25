@@ -272,11 +272,11 @@
   "project": {
     "version": "4.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Projekte\\NDO\\Provider\\SqlCEProvider\\SqlCEProvider\\SqlCEProvider.csproj",
-      "projectName": "SqlCEProvider",
-      "projectPath": "C:\\Projekte\\NDO\\Provider\\SqlCEProvider\\SqlCEProvider\\SqlCEProvider.csproj",
+      "projectUniqueName": "C:\\Projekte\\NDO\\Provider\\SqlCeProvider\\SqlCeProvider\\SqlCeProvider.csproj",
+      "projectName": "SqlCeProvider",
+      "projectPath": "C:\\Projekte\\NDO\\Provider\\SqlCeProvider\\SqlCeProvider\\SqlCeProvider.csproj",
       "packagesPath": "C:\\Users\\Mirko Matytschak\\.nuget\\packages\\",
-      "outputPath": "C:\\Projekte\\NDO\\Provider\\SqlCEProvider\\SqlCEProvider\\obj\\",
+      "outputPath": "C:\\Projekte\\NDO\\Provider\\SqlCeProvider\\SqlCeProvider\\obj\\",
       "projectStyle": "PackageReference",
       "crossTargeting": true,
       "fallbackFolders": [

@@ -31,10 +31,10 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="NDO.UISupport">
-      <HintPath>..\..\UISupport\NDO.UISupport\bin\$(Configuration)\NDO.UISupport.dll</HintPath>
+      <HintPath>..\..\..\UISupport\NDO.UISupport\bin\$(Configuration)\NDO.UISupport.dll</HintPath>
     </Reference>
     <Reference Include="NDOInterfaces">
-      <HintPath>..\..\NDOInterfaces\bin\$(Configuration)\NDOInterfaces.dll</HintPath>
+      <HintPath>..\..\..\NDOInterfaces\bin\$(Configuration)\net452\NDOInterfaces.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />

@@ -95,11 +95,11 @@
       <HintPath>packages\Mono.Cecil.0.10.1\lib\net40\Mono.Cecil.dll</HintPath>
     </Reference>
     <Reference Include="NDO, Version=4.0.0.0, Culture=neutral, PublicKeyToken=37bfdffa92a0cd24, processorArchitecture=MSIL">
-      <HintPath>..\NDODLL\bin\Debug\net451\NDO.dll</HintPath>
+      <HintPath>..\NDODLL\bin\$(Configuration)\net452\NDO.dll</HintPath>
     </Reference>
     <Reference Include="NDOInterfaces, Version=4.0.0.0, Culture=neutral, PublicKeyToken=ff5e453a099b8326, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\NDOInterfaces\bin\Debug\net451\NDOInterfaces.dll</HintPath>
+      <HintPath>..\NDOInterfaces\bin\$(Configuration)\net452\NDOInterfaces.dll</HintPath>
     </Reference>
     <Reference Include="System">
       <Name>System</Name>
@@ -334,7 +334,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
-    <None Include="packages.config" />
+    <None Include="packages.config">
+      <SubType>Designer</SubType>
+    </None>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Target Name="PrepareEnhDate" BeforeTargets="PrepareForBuild">

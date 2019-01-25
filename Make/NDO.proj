@@ -32,6 +32,7 @@
     <Project Include="..\Provider\FirebirdNdoProvider\FirebirdProvider\FirebirdProvider.csproj" />
     <Project Include="..\Provider\SqlCeProvider\SqlCeProvider\SqlCeProvider.csproj" />
     <Project Include="..\Provider\SqliteProvider\SqliteProvider\SqliteProvider.csproj" />	
+    <Project Include="..\Provider\SqlServerProvider\SqlServerProvider\SqlServerProvider.csproj" />	
     <Project Include="..\Provider\PostgresProvider\PostgreProvider\PostgreProvider.csproj" />
 	
     <Project Include="..\Provider\MySqlNdoProvider\MySqlUISupport\MySqlUISupport.csproj" />
@@ -39,7 +40,8 @@
     <Project Include="..\Provider\FirebirdNdoProvider\FirebirdUISupport\FirebirdUISupport.csproj" />
     <Project Include="..\Provider\SqlCeProvider\SqlCeUISupport\SqlCeUISupport.csproj" />
     <Project Include="..\Provider\SqliteProvider\SqliteUISupport\SqliteUISupport.csproj" />	
-    <Project Include="..\Provider\PostgresProvider\PostgreUISupport\PostgreUISupport.csproj" />	
+    <Project Include="..\Provider\SqlServerProvider\SqlServerUISupport\SqlServerUISupport.csproj" />	
+    <Project Include="..\Provider\PostgresProvider\PostgresUISupport\PostgresUISupport.csproj" />	
     
     <Project Include="..\SimpleMappingTool\Mapping.csproj" />
 	<Project Include="..\NDOPackage\NDOPackage.csproj" />
@@ -48,12 +50,19 @@
   </ItemGroup>
   
   <ItemGroup>
+    <PackProject Include="..\NDODLL\NDO.csproj" />	
+  </ItemGroup>
+  
+  <ItemGroup>
     <Projectx86 Include="..\EnhancerX86Stub\EnhancerX86Stub\EnhancerX86Stub.csproj" />
   </ItemGroup>
 
   <Target Name="Build">
 	<MSBuild Projects="@(Tools)" Targets="Rebuild" Properties="Configuration=$(Configuration);Platform=$(Platform)" />
+	<MSBuild Projects="@(Project)" Targets="restore" />
 	<MSBuild Projects="@(Project)" Targets="Rebuild" Properties="Configuration=$(Configuration);Platform=$(Platform)" />
 	<MSBuild Projects="@(Projectx86)" Targets="Rebuild" Properties="Configuration=$(Configuration);Platform=x86" />
+	<MSBuild Projects="@(PackProject)" Targets="Pack" Properties="Configuration=$(Configuration);Platform=$(Platform)" />
   </Target>
+  
 </Project>

@@ -99,7 +99,7 @@
       <HintPath>..\..\NDODLL\bin\Debug\net452\NDO.dll</HintPath>
     </Reference>
     <Reference Include="NDOInterfaces">
-      <HintPath>..\..\NDOInterfaces\bin\Debug\net451\NDOInterfaces.dll</HintPath>
+      <HintPath>..\..\NDOInterfaces\bin\Debug\net452\NDOInterfaces.dll</HintPath>
     </Reference>
     <Reference Include="System">
       <Name>System</Name>

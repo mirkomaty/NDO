@@ -100,7 +100,7 @@
     </Reference>
     <Reference Include="NDOInterfaces, Version=4.0.0.0, Culture=neutral, PublicKeyToken=ff5e453a099b8326, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\NDOInterfaces\bin\debug\net451\NDOInterfaces.dll</HintPath>
+      <HintPath>..\..\NDOInterfaces\bin\debug\net452\NDOInterfaces.dll</HintPath>
     </Reference>
     <Reference Include="System">
       <Name>System</Name>

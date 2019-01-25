@@ -148,10 +148,10 @@
       <HintPath>..\Provider\SqlCEProvider\SqlCeUISupport\bin\$(Configuration)\SqlCeUISupport.dll</HintPath>
     </Reference>
     <Reference Include="SqliteProvider">
-      <HintPath>..\Provider\SqliteProvider\SqliteProvider.dll</HintPath>
+      <HintPath>..\Provider\SqliteProvider\SqliteProvider\bin\$(Configuration)\net452\SqliteProvider.dll</HintPath>
     </Reference>
     <Reference Include="SqliteUISupport">
-      <HintPath>..\Provider\SqliteProvider\SqliteUISupport\bin\$(Configuration)\net452\SqliteUISupport.dll</HintPath>
+      <HintPath>..\Provider\SqliteProvider\SqliteUISupport\bin\$(Configuration)\SqliteUISupport.dll</HintPath>
     </Reference>
     <Reference Include="SqlServerProvider">
       <HintPath>..\Provider\SqlServerProvider\SqlServerProvider\bin\$(Configuration)\net452\SqlServerProvider.dll</HintPath>

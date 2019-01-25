@@ -30,14 +30,14 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="FirebirdSql.Data.FirebirdClient">
+    <Reference Include="FirebirdSql.Data.FirebirdClient, Version=5.12.1.0, Culture=neutral, PublicKeyToken=3750abcc3150b00c, processorArchitecture=MSIL">
       <HintPath>..\packages\FirebirdSql.Data.FirebirdClient.5.12.1\lib\net452\FirebirdSql.Data.FirebirdClient.dll</HintPath>
     </Reference>
     <Reference Include="NDO.UISupport">
-      <HintPath>..\..\UISupport\NDO.UISupport\bin\$(Configuration)\NDO.UISupport.dll</HintPath>
+      <HintPath>..\..\..\UISupport\NDO.UISupport\bin\$(Configuration)\NDO.UISupport.dll</HintPath>
     </Reference>
     <Reference Include="NDOInterfaces">
-      <HintPath>..\..\NDOInterfaces\bin\$(Configuration)\NDOInterfaces.dll</HintPath>
+      <HintPath>..\..\..\NDOInterfaces\bin\$(Configuration)\net452\NDOInterfaces.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -61,6 +61,10 @@
     <EmbeddedResource Include="ConnectionDialog.resx">
       <DependentUpon>ConnectionDialog.cs</DependentUpon>
     </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="app.config" />
+    <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

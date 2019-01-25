@@ -205,6 +205,7 @@
       ],
       "sources": {
         "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+        "C:\\Projekte\\NDO\\Nuget-Packages": {},
         "http://nuget.formfakten.de/nuget": {},
         "https://www.nuget.org/api/v2/": {}
       },
