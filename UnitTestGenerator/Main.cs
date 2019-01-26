@@ -28,30 +28,43 @@ namespace TestGenerator
 {
 	class Class1
 	{
+		static readonly int isBi			=	1;
+		static readonly int isList			=	2;
+		static readonly int foreignIsList	=	4;
+		static readonly int isComposite		=	8;
+		static readonly int ownPoly			=	16;
+		static readonly int otherPoly		=	32;
+		static readonly int useGuid			=	64;
+
+
 		[STAThread]
 		static void Main(string[] args)
 		{
 			List<RelInfo> relInfos = new List<RelInfo>();
 			for (int i = 0; i < 128; i++)
 			{
-                //   isBi             !IsBi           !ForeignIsList
-				if ((i & 1) != 0 || ((i & 1) == 0 && (i & 4) == 0))
+                //   isBi      ||        !IsBi          &&  !ForeignIsList
+				if ((i & isBi) != 0 || ((i & isBi) == 0 && (i & foreignIsList) == 0))
 				{
-					RelInfo ri = new RelInfo((i & 1) != 0, (i & 2) != 0, (i & 4) != 0, (i & 8) != 0, (i & 16) != 0, (i & 32) != 0, (i & 64) != 0);
+					RelInfo ri = new RelInfo((i & isBi) != 0, (i & isList) != 0, (i & foreignIsList) != 0, (i & isComposite) != 0, (i & ownPoly) != 0, (i & otherPoly) != 0, (i & useGuid) != 0);
 					relInfos.Add(ri);
-					if (!ri.HasTable)
+					if (!ri.MustHaveTable)
 					{
-						ri =     new RelInfo((i & 1) != 0, (i & 2) != 0, (i & 4) != 0, (i & 8) != 0, (i & 16) != 0, (i & 32) != 0, (i & 64) != 0);
+						// We duplicate every scenario without a mapping table
+						// and try to map using a mapping table
+						ri =     new RelInfo((i & isBi) != 0, (i & isList) != 0, (i & foreignIsList) != 0, (i & isComposite) != 0, (i & ownPoly) != 0, (i & otherPoly) != 0, (i & useGuid) != 0);
 						ri.HasTable = true;
 						relInfos.Add(ri);
 					}
-
 				}
 			}
+
+			// We duplicate all polymorphic scenarios
+			// and use abstract base classes.
 			List<RelInfo> newInfos = new List<RelInfo>();
 			for (int i = 0; i < relInfos.Count; i++)
 			{
-				RelInfo ri = (RelInfo) relInfos[i];
+				RelInfo ri = relInfos[i];
 				if (ri.OtherPoly || ri.OwnPoly)
 				{
 					ri = ri.Clone();

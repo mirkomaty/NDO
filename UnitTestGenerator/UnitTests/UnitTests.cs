@@ -1,4 +1,4 @@
-﻿//
+//
 // Copyright (c) 2002-2016 Mirko Matytschak 
 // (www.netdataobjects.de)
 //
@@ -27,6 +27,7 @@ using System.Collections;
 using System.Collections.Generic;
 using NDO;
 using NDO.Mapping;
+using NDO.Query;
 using NUnit.Framework;
 using RelationTestClasses;
 
@@ -40,12 +41,12 @@ public class PmFactory
 	{
 		if (pm == null)
 		{
-			pm = new PersistenceManager(@"C:\Projekte\NDO\UnitTestGenerator\UnitTests\bin\Debug\NDOMapping.xml");
-			pm.LogPath = @"C:\Projekte\NDO\UnitTestGenerator";
+				pm = new PersistenceManager(@"C:\Projekte\NDO\UnitTestGenerator\UnitTests\bin\Debug\NDOMapping.xml");
+				pm.LogPath = @"C:\Projekte\NDO\UnitTestGenerator";
 		}
 		else
 		{
-			pm.UnloadCache();
+				pm.UnloadCache();
 		}
 		return pm;
 	}
@@ -78,9 +79,9 @@ public class TestAgrDir1NoTblAuto
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) new NDOQuery<AgrDir1NoTblAutoLeft>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrDir1NoTblAutoLeft>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<AgrDir1NoTblAutoRight>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrDir1NoTblAutoRight>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -196,9 +197,9 @@ public class TestAgrDir1TblAuto
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) new NDOQuery<AgrDir1TblAutoLeft>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrDir1TblAutoLeft>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<AgrDir1TblAutoRight>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrDir1TblAutoRight>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -305,9 +306,9 @@ public class TestAgrBi11NoTblAuto
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) new NDOQuery<AgrBi11NoTblAutoLeft>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrBi11NoTblAutoLeft>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<AgrBi11NoTblAutoRight>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrBi11NoTblAutoRight>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -455,9 +456,9 @@ public class TestAgrBi11TblAuto
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) new NDOQuery<AgrBi11TblAutoLeft>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrBi11TblAutoLeft>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<AgrBi11TblAutoRight>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrBi11TblAutoRight>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -605,9 +606,9 @@ public class TestAgrDirnNoTblAuto
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) new NDOQuery<AgrDirnNoTblAutoLeft>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrDirnNoTblAutoLeft>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<AgrDirnNoTblAutoRight>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrDirnNoTblAutoRight>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -702,9 +703,9 @@ public class TestAgrDirnTblAuto
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) new NDOQuery<AgrDirnTblAutoLeft>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrDirnTblAutoLeft>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<AgrDirnTblAutoRight>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrDirnTblAutoRight>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -790,9 +791,9 @@ public class TestAgrBin1NoTblAuto
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) new NDOQuery<AgrBin1NoTblAutoLeft>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrBin1NoTblAutoLeft>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<AgrBin1NoTblAutoRight>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrBin1NoTblAutoRight>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -928,9 +929,9 @@ public class TestAgrBin1TblAuto
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) new NDOQuery<AgrBin1TblAutoLeft>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrBin1TblAutoLeft>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<AgrBin1TblAutoRight>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrBin1TblAutoRight>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -1057,9 +1058,9 @@ public class TestAgrBi1nNoTblAuto
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) new NDOQuery<AgrBi1nNoTblAutoLeft>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrBi1nNoTblAutoLeft>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<AgrBi1nNoTblAutoRight>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrBi1nNoTblAutoRight>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -1185,9 +1186,9 @@ public class TestAgrBi1nTblAuto
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) new NDOQuery<AgrBi1nTblAutoLeft>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrBi1nTblAutoLeft>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<AgrBi1nTblAutoRight>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrBi1nTblAutoRight>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -1304,9 +1305,9 @@ public class TestAgrBinnTblAuto
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) new NDOQuery<AgrBinnTblAutoLeft>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrBinnTblAutoLeft>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<AgrBinnTblAutoRight>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrBinnTblAutoRight>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -1398,9 +1399,9 @@ public class TestCmpDir1NoTblAuto
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) new NDOQuery<CmpDir1NoTblAutoLeft>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpDir1NoTblAutoLeft>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<CmpDir1NoTblAutoRight>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpDir1NoTblAutoRight>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -1511,9 +1512,9 @@ public class TestCmpDir1TblAuto
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) new NDOQuery<CmpDir1TblAutoLeft>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpDir1TblAutoLeft>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<CmpDir1TblAutoRight>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpDir1TblAutoRight>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -1615,9 +1616,9 @@ public class TestCmpBi11NoTblAuto
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) new NDOQuery<CmpBi11NoTblAutoLeft>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpBi11NoTblAutoLeft>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<CmpBi11NoTblAutoRight>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpBi11NoTblAutoRight>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -1760,9 +1761,9 @@ public class TestCmpBi11TblAuto
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) new NDOQuery<CmpBi11TblAutoLeft>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpBi11TblAutoLeft>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<CmpBi11TblAutoRight>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpBi11TblAutoRight>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -1905,9 +1906,9 @@ public class TestCmpDirnNoTblAuto
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) new NDOQuery<CmpDirnNoTblAutoLeft>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpDirnNoTblAutoLeft>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<CmpDirnNoTblAutoRight>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpDirnNoTblAutoRight>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -1997,9 +1998,9 @@ public class TestCmpDirnTblAuto
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) new NDOQuery<CmpDirnTblAutoLeft>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpDirnTblAutoLeft>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<CmpDirnTblAutoRight>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpDirnTblAutoRight>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -2080,9 +2081,9 @@ public class TestCmpBin1NoTblAuto
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) new NDOQuery<CmpBin1NoTblAutoLeft>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpBin1NoTblAutoLeft>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<CmpBin1NoTblAutoRight>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpBin1NoTblAutoRight>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -2213,9 +2214,9 @@ public class TestCmpBin1TblAuto
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) new NDOQuery<CmpBin1TblAutoLeft>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpBin1TblAutoLeft>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<CmpBin1TblAutoRight>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpBin1TblAutoRight>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -2337,9 +2338,9 @@ public class TestCmpBi1nNoTblAuto
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) new NDOQuery<CmpBi1nNoTblAutoLeft>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpBi1nNoTblAutoLeft>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<CmpBi1nNoTblAutoRight>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpBi1nNoTblAutoRight>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -2460,9 +2461,9 @@ public class TestCmpBi1nTblAuto
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) new NDOQuery<CmpBi1nTblAutoLeft>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpBi1nTblAutoLeft>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<CmpBi1nTblAutoRight>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpBi1nTblAutoRight>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -2574,9 +2575,9 @@ public class TestCmpBinnTblAuto
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) new NDOQuery<CmpBinnTblAutoLeft>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpBinnTblAutoLeft>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<CmpBinnTblAutoRight>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpBinnTblAutoRight>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -2671,9 +2672,9 @@ public class TestAgrDir1OwnpconNoTblAuto
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) new NDOQuery<AgrDir1OwnpconNoTblAutoLeftBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrDir1OwnpconNoTblAutoLeftBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<AgrDir1OwnpconNoTblAutoRight>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrDir1OwnpconNoTblAutoRight>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -2791,9 +2792,9 @@ public class TestAgrDir1OwnpconTblAuto
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) new NDOQuery<AgrDir1OwnpconTblAutoLeftBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrDir1OwnpconTblAutoLeftBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<AgrDir1OwnpconTblAutoRight>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrDir1OwnpconTblAutoRight>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -2900,9 +2901,9 @@ public class TestAgrBi11OwnpconNoTblAuto
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) new NDOQuery<AgrBi11OwnpconNoTblAutoLeftBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrBi11OwnpconNoTblAutoLeftBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<AgrBi11OwnpconNoTblAutoRight>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrBi11OwnpconNoTblAutoRight>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -3055,9 +3056,9 @@ public class TestAgrBi11OwnpconTblAuto
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) new NDOQuery<AgrBi11OwnpconTblAutoLeftBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrBi11OwnpconTblAutoLeftBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<AgrBi11OwnpconTblAutoRight>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrBi11OwnpconTblAutoRight>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -3210,9 +3211,9 @@ public class TestAgrDirnOwnpconNoTblAuto
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) new NDOQuery<AgrDirnOwnpconNoTblAutoLeftBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrDirnOwnpconNoTblAutoLeftBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<AgrDirnOwnpconNoTblAutoRight>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrDirnOwnpconNoTblAutoRight>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -3309,9 +3310,9 @@ public class TestAgrDirnOwnpconTblAuto
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) new NDOQuery<AgrDirnOwnpconTblAutoLeftBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrDirnOwnpconTblAutoLeftBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<AgrDirnOwnpconTblAutoRight>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrDirnOwnpconTblAutoRight>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -3397,9 +3398,9 @@ public class TestAgrBin1OwnpconNoTblAuto
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) new NDOQuery<AgrBin1OwnpconNoTblAutoLeftBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrBin1OwnpconNoTblAutoLeftBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<AgrBin1OwnpconNoTblAutoRight>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrBin1OwnpconNoTblAutoRight>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -3542,9 +3543,9 @@ public class TestAgrBin1OwnpconTblAuto
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) new NDOQuery<AgrBin1OwnpconTblAutoLeftBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrBin1OwnpconTblAutoLeftBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<AgrBin1OwnpconTblAutoRight>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrBin1OwnpconTblAutoRight>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -3676,9 +3677,9 @@ public class TestAgrBi1nOwnpconTblAuto
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) new NDOQuery<AgrBi1nOwnpconTblAutoLeftBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrBi1nOwnpconTblAutoLeftBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<AgrBi1nOwnpconTblAutoRight>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrBi1nOwnpconTblAutoRight>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -3799,9 +3800,9 @@ public class TestAgrBinnOwnpconTblAuto
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) new NDOQuery<AgrBinnOwnpconTblAutoLeftBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrBinnOwnpconTblAutoLeftBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<AgrBinnOwnpconTblAutoRight>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrBinnOwnpconTblAutoRight>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -3897,9 +3898,9 @@ public class TestCmpDir1OwnpconNoTblAuto
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) new NDOQuery<CmpDir1OwnpconNoTblAutoLeftBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpDir1OwnpconNoTblAutoLeftBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<CmpDir1OwnpconNoTblAutoRight>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpDir1OwnpconNoTblAutoRight>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -4013,9 +4014,9 @@ public class TestCmpDir1OwnpconTblAuto
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) new NDOQuery<CmpDir1OwnpconTblAutoLeftBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpDir1OwnpconTblAutoLeftBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<CmpDir1OwnpconTblAutoRight>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpDir1OwnpconTblAutoRight>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -4117,9 +4118,9 @@ public class TestCmpBi11OwnpconNoTblAuto
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) new NDOQuery<CmpBi11OwnpconNoTblAutoLeftBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpBi11OwnpconNoTblAutoLeftBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<CmpBi11OwnpconNoTblAutoRight>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpBi11OwnpconNoTblAutoRight>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -4267,9 +4268,9 @@ public class TestCmpBi11OwnpconTblAuto
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) new NDOQuery<CmpBi11OwnpconTblAutoLeftBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpBi11OwnpconTblAutoLeftBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<CmpBi11OwnpconTblAutoRight>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpBi11OwnpconTblAutoRight>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -4416,9 +4417,9 @@ public class TestCmpDirnOwnpconNoTblAuto
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) new NDOQuery<CmpDirnOwnpconNoTblAutoLeftBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpDirnOwnpconNoTblAutoLeftBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<CmpDirnOwnpconNoTblAutoRight>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpDirnOwnpconNoTblAutoRight>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -4510,9 +4511,9 @@ public class TestCmpDirnOwnpconTblAuto
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) new NDOQuery<CmpDirnOwnpconTblAutoLeftBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpDirnOwnpconTblAutoLeftBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<CmpDirnOwnpconTblAutoRight>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpDirnOwnpconTblAutoRight>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -4593,9 +4594,9 @@ public class TestCmpBin1OwnpconNoTblAuto
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) new NDOQuery<CmpBin1OwnpconNoTblAutoLeftBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpBin1OwnpconNoTblAutoLeftBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<CmpBin1OwnpconNoTblAutoRight>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpBin1OwnpconNoTblAutoRight>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -4732,9 +4733,9 @@ public class TestCmpBin1OwnpconTblAuto
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) new NDOQuery<CmpBin1OwnpconTblAutoLeftBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpBin1OwnpconTblAutoLeftBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<CmpBin1OwnpconTblAutoRight>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpBin1OwnpconTblAutoRight>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -4860,9 +4861,9 @@ public class TestCmpBi1nOwnpconTblAuto
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) new NDOQuery<CmpBi1nOwnpconTblAutoLeftBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpBi1nOwnpconTblAutoLeftBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<CmpBi1nOwnpconTblAutoRight>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpBi1nOwnpconTblAutoRight>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -4978,9 +4979,9 @@ public class TestCmpBinnOwnpconTblAuto
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) new NDOQuery<CmpBinnOwnpconTblAutoLeftBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpBinnOwnpconTblAutoLeftBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<CmpBinnOwnpconTblAutoRight>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpBinnOwnpconTblAutoRight>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -5079,9 +5080,9 @@ public class TestAgrDir1OthpconNoTblAuto
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) new NDOQuery<AgrDir1OthpconNoTblAutoLeft>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrDir1OthpconNoTblAutoLeft>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<AgrDir1OthpconNoTblAutoRightBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrDir1OthpconNoTblAutoRightBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -5201,9 +5202,9 @@ public class TestAgrDir1OthpconTblAuto
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) new NDOQuery<AgrDir1OthpconTblAutoLeft>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrDir1OthpconTblAutoLeft>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<AgrDir1OthpconTblAutoRightBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrDir1OthpconTblAutoRightBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -5310,9 +5311,9 @@ public class TestAgrBi11OthpconNoTblAuto
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) new NDOQuery<AgrBi11OthpconNoTblAutoLeft>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrBi11OthpconNoTblAutoLeft>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<AgrBi11OthpconNoTblAutoRightBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrBi11OthpconNoTblAutoRightBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -5466,9 +5467,9 @@ public class TestAgrBi11OthpconTblAuto
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) new NDOQuery<AgrBi11OthpconTblAutoLeft>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrBi11OthpconTblAutoLeft>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<AgrBi11OthpconTblAutoRightBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrBi11OthpconTblAutoRightBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -5620,9 +5621,9 @@ public class TestAgrDirnOthpconTblAuto
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) new NDOQuery<AgrDirnOthpconTblAutoLeft>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrDirnOthpconTblAutoLeft>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<AgrDirnOthpconTblAutoRightBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrDirnOthpconTblAutoRightBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -5708,9 +5709,9 @@ public class TestAgrBin1OthpconTblAuto
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) new NDOQuery<AgrBin1OthpconTblAutoLeft>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrBin1OthpconTblAutoLeft>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<AgrBin1OthpconTblAutoRightBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrBin1OthpconTblAutoRightBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -5841,9 +5842,9 @@ public class TestAgrBi1nOthpconNoTblAuto
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) new NDOQuery<AgrBi1nOthpconNoTblAutoLeft>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrBi1nOthpconNoTblAutoLeft>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<AgrBi1nOthpconNoTblAutoRightBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrBi1nOthpconNoTblAutoRightBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -5977,9 +5978,9 @@ public class TestAgrBi1nOthpconTblAuto
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) new NDOQuery<AgrBi1nOthpconTblAutoLeft>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrBi1nOthpconTblAutoLeft>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<AgrBi1nOthpconTblAutoRightBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrBi1nOthpconTblAutoRightBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -6100,9 +6101,9 @@ public class TestAgrBinnOthpconTblAuto
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) new NDOQuery<AgrBinnOthpconTblAutoLeft>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrBinnOthpconTblAutoLeft>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<AgrBinnOthpconTblAutoRightBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrBinnOthpconTblAutoRightBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -6198,32 +6199,50 @@ public class TestCmpDir1OthpconNoTblAuto
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) new NDOQuery<CmpDir1OthpconNoTblAutoLeft>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpDir1OthpconNoTblAutoLeft>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<CmpDir1OthpconNoTblAutoRightBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpDir1OthpconNoTblAutoRightBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
-	[Test, ExpectedException(typeof(NDOException))]
+	[Test]
 	public void TestSaveReload()
 	{
-		CreateObjects();
-		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		bool thrown = false;
+		try
+		{
+			CreateObjects();
+			QueryOwn();
+			Assert.NotNull(ownVar, "No Query Result");
+			Assert.NotNull(ownVar.RelField, "No related object");
+		}
+		catch (NDOException)
+		{
+			thrown = true;
+		}
+		Assert.AreEqual(true, thrown, "NDOException should have been thrown");
 	}
-	[Test, ExpectedException(typeof(NDOException))]
+	[Test]
 	public void TestSaveReloadNull()
 	{
-		CreateObjects();
-		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
-		ownVar.RelField = null;
-		pm.Save();
-		pm.UnloadCache();
-		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.Null(ownVar.RelField, "There should be no object");
+		bool thrown = false;
+		try
+		{
+			CreateObjects();
+			QueryOwn();
+			Assert.NotNull(ownVar, "No Query Result");
+			Assert.NotNull(ownVar.RelField, "No related object");
+			ownVar.RelField = null;
+			pm.Save();
+			pm.UnloadCache();
+			QueryOwn();
+			Assert.NotNull(ownVar, "No Query Result");
+			Assert.Null(ownVar.RelField, "There should be no object");
+		}
+		catch (NDOException)
+		{
+			thrown = true;
+		}
+		Assert.AreEqual(true, thrown, "NDOException should have been thrown");
 	}
 	[Test]
 	public void TestSaveReloadRemove()
@@ -6272,9 +6291,9 @@ public class TestCmpDir1OthpconTblAuto
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) new NDOQuery<CmpDir1OthpconTblAutoLeft>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpDir1OthpconTblAutoLeft>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<CmpDir1OthpconTblAutoRightBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpDir1OthpconTblAutoRightBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -6376,32 +6395,50 @@ public class TestCmpBi11OthpconNoTblAuto
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) new NDOQuery<CmpBi11OthpconNoTblAutoLeft>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpBi11OthpconNoTblAutoLeft>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<CmpBi11OthpconNoTblAutoRightBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpBi11OthpconNoTblAutoRightBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
-	[Test, ExpectedException(typeof(NDOException))]
+	[Test]
 	public void TestSaveReload()
 	{
-		CreateObjects();
-		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		bool thrown = false;
+		try
+		{
+			CreateObjects();
+			QueryOwn();
+			Assert.NotNull(ownVar, "No Query Result");
+			Assert.NotNull(ownVar.RelField, "No related object");
+		}
+		catch (NDOException)
+		{
+			thrown = true;
+		}
+		Assert.AreEqual(true, thrown, "NDOException should have been thrown");
 	}
-	[Test, ExpectedException(typeof(NDOException))]
+	[Test]
 	public void TestSaveReloadNull()
 	{
-		CreateObjects();
-		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
-		ownVar.RelField = null;
-		pm.Save();
-		pm.UnloadCache();
-		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.Null(ownVar.RelField, "There should be no object");
+		bool thrown = false;
+		try
+		{
+			CreateObjects();
+			QueryOwn();
+			Assert.NotNull(ownVar, "No Query Result");
+			Assert.NotNull(ownVar.RelField, "No related object");
+			ownVar.RelField = null;
+			pm.Save();
+			pm.UnloadCache();
+			QueryOwn();
+			Assert.NotNull(ownVar, "No Query Result");
+			Assert.Null(ownVar.RelField, "There should be no object");
+		}
+		catch (NDOException)
+		{
+			thrown = true;
+		}
+		Assert.AreEqual(true, thrown, "NDOException should have been thrown");
 	}
 	[Test]
 	public void TestSaveReloadRemove()
@@ -6464,9 +6501,9 @@ public class TestCmpBi11OthpconTblAuto
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) new NDOQuery<CmpBi11OthpconTblAutoLeft>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpBi11OthpconTblAutoLeft>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<CmpBi11OthpconTblAutoRightBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpBi11OthpconTblAutoRightBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -6613,9 +6650,9 @@ public class TestCmpDirnOthpconTblAuto
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) new NDOQuery<CmpDirnOthpconTblAutoLeft>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpDirnOthpconTblAutoLeft>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<CmpDirnOthpconTblAutoRightBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpDirnOthpconTblAutoRightBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -6696,9 +6733,9 @@ public class TestCmpBin1OthpconTblAuto
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) new NDOQuery<CmpBin1OthpconTblAutoLeft>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpBin1OthpconTblAutoLeft>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<CmpBin1OthpconTblAutoRightBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpBin1OthpconTblAutoRightBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -6824,32 +6861,50 @@ public class TestCmpBi1nOthpconNoTblAuto
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) new NDOQuery<CmpBi1nOthpconNoTblAutoLeft>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpBi1nOthpconNoTblAutoLeft>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<CmpBi1nOthpconNoTblAutoRightBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpBi1nOthpconNoTblAutoRightBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
-	[Test, ExpectedException(typeof(NDOException))]
+	[Test]
 	public void TestSaveReload()
 	{
-		CreateObjects();
-		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		bool thrown = false;
+		try
+		{
+			CreateObjects();
+			QueryOwn();
+			Assert.NotNull(ownVar, "No Query Result");
+			Assert.NotNull(ownVar.RelField, "No related object");
+		}
+		catch (NDOException)
+		{
+			thrown = true;
+		}
+		Assert.AreEqual(true, thrown, "NDOException should have been thrown");
 	}
-	[Test, ExpectedException(typeof(NDOException))]
+	[Test]
 	public void TestSaveReloadNull()
 	{
-		CreateObjects();
-		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
-		ownVar.RelField = null;
-		pm.Save();
-		pm.UnloadCache();
-		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.Null(ownVar.RelField, "There should be no object");
+		bool thrown = false;
+		try
+		{
+			CreateObjects();
+			QueryOwn();
+			Assert.NotNull(ownVar, "No Query Result");
+			Assert.NotNull(ownVar.RelField, "No related object");
+			ownVar.RelField = null;
+			pm.Save();
+			pm.UnloadCache();
+			QueryOwn();
+			Assert.NotNull(ownVar, "No Query Result");
+			Assert.Null(ownVar.RelField, "There should be no object");
+		}
+		catch (NDOException)
+		{
+			thrown = true;
+		}
+		Assert.AreEqual(true, thrown, "NDOException should have been thrown");
 	}
 	[Test]
 	public void TestSaveReloadRemove()
@@ -6912,9 +6967,9 @@ public class TestCmpBi1nOthpconTblAuto
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) new NDOQuery<CmpBi1nOthpconTblAutoLeft>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpBi1nOthpconTblAutoLeft>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<CmpBi1nOthpconTblAutoRightBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpBi1nOthpconTblAutoRightBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -7030,9 +7085,9 @@ public class TestCmpBinnOthpconTblAuto
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) new NDOQuery<CmpBinnOthpconTblAutoLeft>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpBinnOthpconTblAutoLeft>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<CmpBinnOthpconTblAutoRightBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpBinnOthpconTblAutoRightBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -7131,9 +7186,9 @@ public class TestAgrDir1OwnpconOthpconNoTblAuto
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) new NDOQuery<AgrDir1OwnpconOthpconNoTblAutoLeftBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrDir1OwnpconOthpconNoTblAutoLeftBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<AgrDir1OwnpconOthpconNoTblAutoRightBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrDir1OwnpconOthpconNoTblAutoRightBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -7253,9 +7308,9 @@ public class TestAgrDir1OwnpconOthpconTblAuto
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) new NDOQuery<AgrDir1OwnpconOthpconTblAutoLeftBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrDir1OwnpconOthpconTblAutoLeftBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<AgrDir1OwnpconOthpconTblAutoRightBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrDir1OwnpconOthpconTblAutoRightBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -7362,9 +7417,9 @@ public class TestAgrBi11OwnpconOthpconNoTblAuto
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) new NDOQuery<AgrBi11OwnpconOthpconNoTblAutoLeftBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrBi11OwnpconOthpconNoTblAutoLeftBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<AgrBi11OwnpconOthpconNoTblAutoRightBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrBi11OwnpconOthpconNoTblAutoRightBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -7525,9 +7580,9 @@ public class TestAgrBi11OwnpconOthpconTblAuto
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) new NDOQuery<AgrBi11OwnpconOthpconTblAutoLeftBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrBi11OwnpconOthpconTblAutoLeftBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<AgrBi11OwnpconOthpconTblAutoRightBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrBi11OwnpconOthpconTblAutoRightBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -7686,9 +7741,9 @@ public class TestAgrDirnOwnpconOthpconTblAuto
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) new NDOQuery<AgrDirnOwnpconOthpconTblAutoLeftBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrDirnOwnpconOthpconTblAutoLeftBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<AgrDirnOwnpconOthpconTblAutoRightBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrDirnOwnpconOthpconTblAutoRightBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -7774,9 +7829,9 @@ public class TestAgrBin1OwnpconOthpconTblAuto
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) new NDOQuery<AgrBin1OwnpconOthpconTblAutoLeftBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrBin1OwnpconOthpconTblAutoLeftBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<AgrBin1OwnpconOthpconTblAutoRightBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrBin1OwnpconOthpconTblAutoRightBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -7914,9 +7969,9 @@ public class TestAgrBi1nOwnpconOthpconTblAuto
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) new NDOQuery<AgrBi1nOwnpconOthpconTblAutoLeftBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrBi1nOwnpconOthpconTblAutoLeftBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<AgrBi1nOwnpconOthpconTblAutoRightBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrBi1nOwnpconOthpconTblAutoRightBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -8043,9 +8098,9 @@ public class TestAgrBinnOwnpconOthpconTblAuto
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) new NDOQuery<AgrBinnOwnpconOthpconTblAutoLeftBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrBinnOwnpconOthpconTblAutoLeftBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<AgrBinnOwnpconOthpconTblAutoRightBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrBinnOwnpconOthpconTblAutoRightBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -8147,32 +8202,50 @@ public class TestCmpDir1OwnpconOthpconNoTblAuto
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) new NDOQuery<CmpDir1OwnpconOthpconNoTblAutoLeftBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpDir1OwnpconOthpconNoTblAutoLeftBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<CmpDir1OwnpconOthpconNoTblAutoRightBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpDir1OwnpconOthpconNoTblAutoRightBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
-	[Test, ExpectedException(typeof(NDOException))]
+	[Test]
 	public void TestSaveReload()
 	{
-		CreateObjects();
-		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		bool thrown = false;
+		try
+		{
+			CreateObjects();
+			QueryOwn();
+			Assert.NotNull(ownVar, "No Query Result");
+			Assert.NotNull(ownVar.RelField, "No related object");
+		}
+		catch (NDOException)
+		{
+			thrown = true;
+		}
+		Assert.AreEqual(true, thrown, "NDOException should have been thrown");
 	}
-	[Test, ExpectedException(typeof(NDOException))]
+	[Test]
 	public void TestSaveReloadNull()
 	{
-		CreateObjects();
-		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
-		ownVar.RelField = null;
-		pm.Save();
-		pm.UnloadCache();
-		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.Null(ownVar.RelField, "There should be no object");
+		bool thrown = false;
+		try
+		{
+			CreateObjects();
+			QueryOwn();
+			Assert.NotNull(ownVar, "No Query Result");
+			Assert.NotNull(ownVar.RelField, "No related object");
+			ownVar.RelField = null;
+			pm.Save();
+			pm.UnloadCache();
+			QueryOwn();
+			Assert.NotNull(ownVar, "No Query Result");
+			Assert.Null(ownVar.RelField, "There should be no object");
+		}
+		catch (NDOException)
+		{
+			thrown = true;
+		}
+		Assert.AreEqual(true, thrown, "NDOException should have been thrown");
 	}
 	[Test]
 	public void TestSaveReloadRemove()
@@ -8221,9 +8294,9 @@ public class TestCmpDir1OwnpconOthpconTblAuto
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) new NDOQuery<CmpDir1OwnpconOthpconTblAutoLeftBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpDir1OwnpconOthpconTblAutoLeftBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<CmpDir1OwnpconOthpconTblAutoRightBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpDir1OwnpconOthpconTblAutoRightBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -8325,32 +8398,50 @@ public class TestCmpBi11OwnpconOthpconNoTblAuto
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) new NDOQuery<CmpBi11OwnpconOthpconNoTblAutoLeftBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpBi11OwnpconOthpconNoTblAutoLeftBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<CmpBi11OwnpconOthpconNoTblAutoRightBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpBi11OwnpconOthpconNoTblAutoRightBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
-	[Test, ExpectedException(typeof(NDOException))]
+	[Test]
 	public void TestSaveReload()
 	{
-		CreateObjects();
-		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		bool thrown = false;
+		try
+		{
+			CreateObjects();
+			QueryOwn();
+			Assert.NotNull(ownVar, "No Query Result");
+			Assert.NotNull(ownVar.RelField, "No related object");
+		}
+		catch (NDOException)
+		{
+			thrown = true;
+		}
+		Assert.AreEqual(true, thrown, "NDOException should have been thrown");
 	}
-	[Test, ExpectedException(typeof(NDOException))]
+	[Test]
 	public void TestSaveReloadNull()
 	{
-		CreateObjects();
-		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
-		ownVar.RelField = null;
-		pm.Save();
-		pm.UnloadCache();
-		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.Null(ownVar.RelField, "There should be no object");
+		bool thrown = false;
+		try
+		{
+			CreateObjects();
+			QueryOwn();
+			Assert.NotNull(ownVar, "No Query Result");
+			Assert.NotNull(ownVar.RelField, "No related object");
+			ownVar.RelField = null;
+			pm.Save();
+			pm.UnloadCache();
+			QueryOwn();
+			Assert.NotNull(ownVar, "No Query Result");
+			Assert.Null(ownVar.RelField, "There should be no object");
+		}
+		catch (NDOException)
+		{
+			thrown = true;
+		}
+		Assert.AreEqual(true, thrown, "NDOException should have been thrown");
 	}
 	[Test]
 	public void TestSaveReloadRemove()
@@ -8419,9 +8510,9 @@ public class TestCmpBi11OwnpconOthpconTblAuto
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) new NDOQuery<CmpBi11OwnpconOthpconTblAutoLeftBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpBi11OwnpconOthpconTblAutoLeftBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<CmpBi11OwnpconOthpconTblAutoRightBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpBi11OwnpconOthpconTblAutoRightBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -8574,9 +8665,9 @@ public class TestCmpDirnOwnpconOthpconTblAuto
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) new NDOQuery<CmpDirnOwnpconOthpconTblAutoLeftBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpDirnOwnpconOthpconTblAutoLeftBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<CmpDirnOwnpconOthpconTblAutoRightBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpDirnOwnpconOthpconTblAutoRightBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -8657,9 +8748,9 @@ public class TestCmpBin1OwnpconOthpconTblAuto
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) new NDOQuery<CmpBin1OwnpconOthpconTblAutoLeftBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpBin1OwnpconOthpconTblAutoLeftBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<CmpBin1OwnpconOthpconTblAutoRightBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpBin1OwnpconOthpconTblAutoRightBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -8791,9 +8882,9 @@ public class TestCmpBi1nOwnpconOthpconTblAuto
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) new NDOQuery<CmpBi1nOwnpconOthpconTblAutoLeftBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpBi1nOwnpconOthpconTblAutoLeftBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<CmpBi1nOwnpconOthpconTblAutoRightBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpBi1nOwnpconOthpconTblAutoRightBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -8915,9 +9006,9 @@ public class TestCmpBinnOwnpconOthpconTblAuto
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) new NDOQuery<CmpBinnOwnpconOthpconTblAutoLeftBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpBinnOwnpconOthpconTblAutoLeftBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<CmpBinnOwnpconOthpconTblAutoRightBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpBinnOwnpconOthpconTblAutoRightBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -9022,9 +9113,9 @@ public class TestAgrDir1NoTblGuid
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) new NDOQuery<AgrDir1NoTblGuidLeft>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrDir1NoTblGuidLeft>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<AgrDir1NoTblGuidRight>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrDir1NoTblGuidRight>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -9131,9 +9222,9 @@ public class TestAgrDir1TblGuid
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) new NDOQuery<AgrDir1TblGuidLeft>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrDir1TblGuidLeft>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<AgrDir1TblGuidRight>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrDir1TblGuidRight>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -9240,9 +9331,9 @@ public class TestAgrBi11NoTblGuid
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) new NDOQuery<AgrBi11NoTblGuidLeft>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrBi11NoTblGuidLeft>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<AgrBi11NoTblGuidRight>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrBi11NoTblGuidRight>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -9390,9 +9481,9 @@ public class TestAgrBi11TblGuid
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) new NDOQuery<AgrBi11TblGuidLeft>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrBi11TblGuidLeft>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<AgrBi11TblGuidRight>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrBi11TblGuidRight>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -9540,9 +9631,9 @@ public class TestAgrDirnNoTblGuid
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) new NDOQuery<AgrDirnNoTblGuidLeft>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrDirnNoTblGuidLeft>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<AgrDirnNoTblGuidRight>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrDirnNoTblGuidRight>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -9628,9 +9719,9 @@ public class TestAgrDirnTblGuid
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) new NDOQuery<AgrDirnTblGuidLeft>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrDirnTblGuidLeft>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<AgrDirnTblGuidRight>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrDirnTblGuidRight>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -9716,9 +9807,9 @@ public class TestAgrBin1NoTblGuid
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) new NDOQuery<AgrBin1NoTblGuidLeft>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrBin1NoTblGuidLeft>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<AgrBin1NoTblGuidRight>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrBin1NoTblGuidRight>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -9845,9 +9936,9 @@ public class TestAgrBin1TblGuid
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) new NDOQuery<AgrBin1TblGuidLeft>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrBin1TblGuidLeft>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<AgrBin1TblGuidRight>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrBin1TblGuidRight>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -9974,9 +10065,9 @@ public class TestAgrBi1nNoTblGuid
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) new NDOQuery<AgrBi1nNoTblGuidLeft>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrBi1nNoTblGuidLeft>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<AgrBi1nNoTblGuidRight>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrBi1nNoTblGuidRight>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -10093,9 +10184,9 @@ public class TestAgrBi1nTblGuid
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) new NDOQuery<AgrBi1nTblGuidLeft>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrBi1nTblGuidLeft>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<AgrBi1nTblGuidRight>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrBi1nTblGuidRight>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -10212,9 +10303,9 @@ public class TestAgrBinnTblGuid
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) new NDOQuery<AgrBinnTblGuidLeft>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrBinnTblGuidLeft>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<AgrBinnTblGuidRight>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrBinnTblGuidRight>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -10306,9 +10397,9 @@ public class TestCmpDir1NoTblGuid
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) new NDOQuery<CmpDir1NoTblGuidLeft>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpDir1NoTblGuidLeft>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<CmpDir1NoTblGuidRight>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpDir1NoTblGuidRight>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -10410,9 +10501,9 @@ public class TestCmpDir1TblGuid
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) new NDOQuery<CmpDir1TblGuidLeft>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpDir1TblGuidLeft>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<CmpDir1TblGuidRight>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpDir1TblGuidRight>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -10514,9 +10605,9 @@ public class TestCmpBi11NoTblGuid
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) new NDOQuery<CmpBi11NoTblGuidLeft>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpBi11NoTblGuidLeft>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<CmpBi11NoTblGuidRight>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpBi11NoTblGuidRight>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -10659,9 +10750,9 @@ public class TestCmpBi11TblGuid
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) new NDOQuery<CmpBi11TblGuidLeft>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpBi11TblGuidLeft>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<CmpBi11TblGuidRight>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpBi11TblGuidRight>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -10804,9 +10895,9 @@ public class TestCmpDirnNoTblGuid
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) new NDOQuery<CmpDirnNoTblGuidLeft>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpDirnNoTblGuidLeft>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<CmpDirnNoTblGuidRight>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpDirnNoTblGuidRight>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -10887,9 +10978,9 @@ public class TestCmpDirnTblGuid
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) new NDOQuery<CmpDirnTblGuidLeft>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpDirnTblGuidLeft>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<CmpDirnTblGuidRight>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpDirnTblGuidRight>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -10970,9 +11061,9 @@ public class TestCmpBin1NoTblGuid
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) new NDOQuery<CmpBin1NoTblGuidLeft>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpBin1NoTblGuidLeft>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<CmpBin1NoTblGuidRight>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpBin1NoTblGuidRight>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -11094,9 +11185,9 @@ public class TestCmpBin1TblGuid
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) new NDOQuery<CmpBin1TblGuidLeft>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpBin1TblGuidLeft>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<CmpBin1TblGuidRight>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpBin1TblGuidRight>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -11218,9 +11309,9 @@ public class TestCmpBi1nNoTblGuid
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) new NDOQuery<CmpBi1nNoTblGuidLeft>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpBi1nNoTblGuidLeft>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<CmpBi1nNoTblGuidRight>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpBi1nNoTblGuidRight>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -11332,9 +11423,9 @@ public class TestCmpBi1nTblGuid
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) new NDOQuery<CmpBi1nTblGuidLeft>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpBi1nTblGuidLeft>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<CmpBi1nTblGuidRight>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpBi1nTblGuidRight>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -11446,9 +11537,9 @@ public class TestCmpBinnTblGuid
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) new NDOQuery<CmpBinnTblGuidLeft>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpBinnTblGuidLeft>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<CmpBinnTblGuidRight>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpBinnTblGuidRight>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -11543,9 +11634,9 @@ public class TestAgrDir1OwnpconNoTblGuid
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) new NDOQuery<AgrDir1OwnpconNoTblGuidLeftBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrDir1OwnpconNoTblGuidLeftBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<AgrDir1OwnpconNoTblGuidRight>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrDir1OwnpconNoTblGuidRight>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -11652,9 +11743,9 @@ public class TestAgrDir1OwnpconTblGuid
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) new NDOQuery<AgrDir1OwnpconTblGuidLeftBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrDir1OwnpconTblGuidLeftBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<AgrDir1OwnpconTblGuidRight>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrDir1OwnpconTblGuidRight>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -11761,9 +11852,9 @@ public class TestAgrBi11OwnpconNoTblGuid
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) new NDOQuery<AgrBi11OwnpconNoTblGuidLeftBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrBi11OwnpconNoTblGuidLeftBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<AgrBi11OwnpconNoTblGuidRight>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrBi11OwnpconNoTblGuidRight>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -11915,9 +12006,9 @@ public class TestAgrBi11OwnpconTblGuid
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) new NDOQuery<AgrBi11OwnpconTblGuidLeftBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrBi11OwnpconTblGuidLeftBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<AgrBi11OwnpconTblGuidRight>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrBi11OwnpconTblGuidRight>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -12069,9 +12160,9 @@ public class TestAgrDirnOwnpconNoTblGuid
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) new NDOQuery<AgrDirnOwnpconNoTblGuidLeftBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrDirnOwnpconNoTblGuidLeftBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<AgrDirnOwnpconNoTblGuidRight>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrDirnOwnpconNoTblGuidRight>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -12157,9 +12248,9 @@ public class TestAgrDirnOwnpconTblGuid
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) new NDOQuery<AgrDirnOwnpconTblGuidLeftBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrDirnOwnpconTblGuidLeftBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<AgrDirnOwnpconTblGuidRight>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrDirnOwnpconTblGuidRight>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -12245,9 +12336,9 @@ public class TestAgrBin1OwnpconNoTblGuid
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) new NDOQuery<AgrBin1OwnpconNoTblGuidLeftBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrBin1OwnpconNoTblGuidLeftBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<AgrBin1OwnpconNoTblGuidRight>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrBin1OwnpconNoTblGuidRight>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -12378,9 +12469,9 @@ public class TestAgrBin1OwnpconTblGuid
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) new NDOQuery<AgrBin1OwnpconTblGuidLeftBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrBin1OwnpconTblGuidLeftBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<AgrBin1OwnpconTblGuidRight>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrBin1OwnpconTblGuidRight>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -12511,9 +12602,9 @@ public class TestAgrBi1nOwnpconTblGuid
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) new NDOQuery<AgrBi1nOwnpconTblGuidLeftBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrBi1nOwnpconTblGuidLeftBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<AgrBi1nOwnpconTblGuidRight>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrBi1nOwnpconTblGuidRight>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -12634,9 +12725,9 @@ public class TestAgrBinnOwnpconTblGuid
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) new NDOQuery<AgrBinnOwnpconTblGuidLeftBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrBinnOwnpconTblGuidLeftBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<AgrBinnOwnpconTblGuidRight>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrBinnOwnpconTblGuidRight>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -12732,9 +12823,9 @@ public class TestCmpDir1OwnpconNoTblGuid
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) new NDOQuery<CmpDir1OwnpconNoTblGuidLeftBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpDir1OwnpconNoTblGuidLeftBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<CmpDir1OwnpconNoTblGuidRight>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpDir1OwnpconNoTblGuidRight>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -12836,9 +12927,9 @@ public class TestCmpDir1OwnpconTblGuid
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) new NDOQuery<CmpDir1OwnpconTblGuidLeftBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpDir1OwnpconTblGuidLeftBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<CmpDir1OwnpconTblGuidRight>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpDir1OwnpconTblGuidRight>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -12940,9 +13031,9 @@ public class TestCmpBi11OwnpconNoTblGuid
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) new NDOQuery<CmpBi11OwnpconNoTblGuidLeftBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpBi11OwnpconNoTblGuidLeftBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<CmpBi11OwnpconNoTblGuidRight>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpBi11OwnpconNoTblGuidRight>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -13089,9 +13180,9 @@ public class TestCmpBi11OwnpconTblGuid
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) new NDOQuery<CmpBi11OwnpconTblGuidLeftBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpBi11OwnpconTblGuidLeftBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<CmpBi11OwnpconTblGuidRight>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpBi11OwnpconTblGuidRight>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -13238,9 +13329,9 @@ public class TestCmpDirnOwnpconNoTblGuid
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) new NDOQuery<CmpDirnOwnpconNoTblGuidLeftBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpDirnOwnpconNoTblGuidLeftBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<CmpDirnOwnpconNoTblGuidRight>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpDirnOwnpconNoTblGuidRight>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -13321,9 +13412,9 @@ public class TestCmpDirnOwnpconTblGuid
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) new NDOQuery<CmpDirnOwnpconTblGuidLeftBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpDirnOwnpconTblGuidLeftBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<CmpDirnOwnpconTblGuidRight>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpDirnOwnpconTblGuidRight>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -13404,9 +13495,9 @@ public class TestCmpBin1OwnpconNoTblGuid
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) new NDOQuery<CmpBin1OwnpconNoTblGuidLeftBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpBin1OwnpconNoTblGuidLeftBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<CmpBin1OwnpconNoTblGuidRight>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpBin1OwnpconNoTblGuidRight>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -13532,9 +13623,9 @@ public class TestCmpBin1OwnpconTblGuid
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) new NDOQuery<CmpBin1OwnpconTblGuidLeftBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpBin1OwnpconTblGuidLeftBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<CmpBin1OwnpconTblGuidRight>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpBin1OwnpconTblGuidRight>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -13660,9 +13751,9 @@ public class TestCmpBi1nOwnpconTblGuid
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) new NDOQuery<CmpBi1nOwnpconTblGuidLeftBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpBi1nOwnpconTblGuidLeftBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<CmpBi1nOwnpconTblGuidRight>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpBi1nOwnpconTblGuidRight>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -13778,9 +13869,9 @@ public class TestCmpBinnOwnpconTblGuid
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) new NDOQuery<CmpBinnOwnpconTblGuidLeftBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpBinnOwnpconTblGuidLeftBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<CmpBinnOwnpconTblGuidRight>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpBinnOwnpconTblGuidRight>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -13879,9 +13970,9 @@ public class TestAgrDir1OthpconNoTblGuid
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) new NDOQuery<AgrDir1OthpconNoTblGuidLeft>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrDir1OthpconNoTblGuidLeft>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<AgrDir1OthpconNoTblGuidRightBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrDir1OthpconNoTblGuidRightBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -13988,9 +14079,9 @@ public class TestAgrDir1OthpconTblGuid
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) new NDOQuery<AgrDir1OthpconTblGuidLeft>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrDir1OthpconTblGuidLeft>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<AgrDir1OthpconTblGuidRightBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrDir1OthpconTblGuidRightBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -14097,9 +14188,9 @@ public class TestAgrBi11OthpconNoTblGuid
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) new NDOQuery<AgrBi11OthpconNoTblGuidLeft>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrBi11OthpconNoTblGuidLeft>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<AgrBi11OthpconNoTblGuidRightBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrBi11OthpconNoTblGuidRightBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -14251,9 +14342,9 @@ public class TestAgrBi11OthpconTblGuid
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) new NDOQuery<AgrBi11OthpconTblGuidLeft>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrBi11OthpconTblGuidLeft>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<AgrBi11OthpconTblGuidRightBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrBi11OthpconTblGuidRightBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -14405,9 +14496,9 @@ public class TestAgrDirnOthpconTblGuid
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) new NDOQuery<AgrDirnOthpconTblGuidLeft>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrDirnOthpconTblGuidLeft>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<AgrDirnOthpconTblGuidRightBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrDirnOthpconTblGuidRightBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -14493,9 +14584,9 @@ public class TestAgrBin1OthpconTblGuid
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) new NDOQuery<AgrBin1OthpconTblGuidLeft>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrBin1OthpconTblGuidLeft>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<AgrBin1OthpconTblGuidRightBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrBin1OthpconTblGuidRightBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -14626,9 +14717,9 @@ public class TestAgrBi1nOthpconNoTblGuid
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) new NDOQuery<AgrBi1nOthpconNoTblGuidLeft>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrBi1nOthpconNoTblGuidLeft>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<AgrBi1nOthpconNoTblGuidRightBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrBi1nOthpconNoTblGuidRightBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -14749,9 +14840,9 @@ public class TestAgrBi1nOthpconTblGuid
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) new NDOQuery<AgrBi1nOthpconTblGuidLeft>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrBi1nOthpconTblGuidLeft>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<AgrBi1nOthpconTblGuidRightBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrBi1nOthpconTblGuidRightBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -14872,9 +14963,9 @@ public class TestAgrBinnOthpconTblGuid
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) new NDOQuery<AgrBinnOthpconTblGuidLeft>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrBinnOthpconTblGuidLeft>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<AgrBinnOthpconTblGuidRightBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrBinnOthpconTblGuidRightBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -14970,9 +15061,9 @@ public class TestCmpDir1OthpconNoTblGuid
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) new NDOQuery<CmpDir1OthpconNoTblGuidLeft>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpDir1OthpconNoTblGuidLeft>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<CmpDir1OthpconNoTblGuidRightBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpDir1OthpconNoTblGuidRightBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -15074,9 +15165,9 @@ public class TestCmpDir1OthpconTblGuid
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) new NDOQuery<CmpDir1OthpconTblGuidLeft>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpDir1OthpconTblGuidLeft>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<CmpDir1OthpconTblGuidRightBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpDir1OthpconTblGuidRightBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -15178,9 +15269,9 @@ public class TestCmpBi11OthpconNoTblGuid
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) new NDOQuery<CmpBi11OthpconNoTblGuidLeft>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpBi11OthpconNoTblGuidLeft>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<CmpBi11OthpconNoTblGuidRightBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpBi11OthpconNoTblGuidRightBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -15327,9 +15418,9 @@ public class TestCmpBi11OthpconTblGuid
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) new NDOQuery<CmpBi11OthpconTblGuidLeft>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpBi11OthpconTblGuidLeft>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<CmpBi11OthpconTblGuidRightBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpBi11OthpconTblGuidRightBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -15476,9 +15567,9 @@ public class TestCmpDirnOthpconTblGuid
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) new NDOQuery<CmpDirnOthpconTblGuidLeft>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpDirnOthpconTblGuidLeft>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<CmpDirnOthpconTblGuidRightBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpDirnOthpconTblGuidRightBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -15559,9 +15650,9 @@ public class TestCmpBin1OthpconTblGuid
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) new NDOQuery<CmpBin1OthpconTblGuidLeft>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpBin1OthpconTblGuidLeft>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<CmpBin1OthpconTblGuidRightBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpBin1OthpconTblGuidRightBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -15687,9 +15778,9 @@ public class TestCmpBi1nOthpconNoTblGuid
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) new NDOQuery<CmpBi1nOthpconNoTblGuidLeft>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpBi1nOthpconNoTblGuidLeft>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<CmpBi1nOthpconNoTblGuidRightBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpBi1nOthpconNoTblGuidRightBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -15805,9 +15896,9 @@ public class TestCmpBi1nOthpconTblGuid
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) new NDOQuery<CmpBi1nOthpconTblGuidLeft>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpBi1nOthpconTblGuidLeft>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<CmpBi1nOthpconTblGuidRightBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpBi1nOthpconTblGuidRightBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -15923,9 +16014,9 @@ public class TestCmpBinnOthpconTblGuid
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) new NDOQuery<CmpBinnOthpconTblGuidLeft>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpBinnOthpconTblGuidLeft>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<CmpBinnOthpconTblGuidRightBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpBinnOthpconTblGuidRightBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -16024,9 +16115,9 @@ public class TestAgrDir1OwnpconOthpconNoTblGuid
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) new NDOQuery<AgrDir1OwnpconOthpconNoTblGuidLeftBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrDir1OwnpconOthpconNoTblGuidLeftBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<AgrDir1OwnpconOthpconNoTblGuidRightBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrDir1OwnpconOthpconNoTblGuidRightBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -16133,9 +16224,9 @@ public class TestAgrDir1OwnpconOthpconTblGuid
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) new NDOQuery<AgrDir1OwnpconOthpconTblGuidLeftBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrDir1OwnpconOthpconTblGuidLeftBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<AgrDir1OwnpconOthpconTblGuidRightBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrDir1OwnpconOthpconTblGuidRightBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -16242,9 +16333,9 @@ public class TestAgrBi11OwnpconOthpconNoTblGuid
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) new NDOQuery<AgrBi11OwnpconOthpconNoTblGuidLeftBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrBi11OwnpconOthpconNoTblGuidLeftBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<AgrBi11OwnpconOthpconNoTblGuidRightBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrBi11OwnpconOthpconNoTblGuidRightBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -16402,9 +16493,9 @@ public class TestAgrBi11OwnpconOthpconTblGuid
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) new NDOQuery<AgrBi11OwnpconOthpconTblGuidLeftBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrBi11OwnpconOthpconTblGuidLeftBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<AgrBi11OwnpconOthpconTblGuidRightBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrBi11OwnpconOthpconTblGuidRightBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -16562,9 +16653,9 @@ public class TestAgrDirnOwnpconOthpconTblGuid
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) new NDOQuery<AgrDirnOwnpconOthpconTblGuidLeftBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrDirnOwnpconOthpconTblGuidLeftBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<AgrDirnOwnpconOthpconTblGuidRightBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrDirnOwnpconOthpconTblGuidRightBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -16650,9 +16741,9 @@ public class TestAgrBin1OwnpconOthpconTblGuid
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) new NDOQuery<AgrBin1OwnpconOthpconTblGuidLeftBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrBin1OwnpconOthpconTblGuidLeftBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<AgrBin1OwnpconOthpconTblGuidRightBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrBin1OwnpconOthpconTblGuidRightBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -16789,9 +16880,9 @@ public class TestAgrBi1nOwnpconOthpconTblGuid
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) new NDOQuery<AgrBi1nOwnpconOthpconTblGuidLeftBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrBi1nOwnpconOthpconTblGuidLeftBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<AgrBi1nOwnpconOthpconTblGuidRightBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrBi1nOwnpconOthpconTblGuidRightBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -16918,9 +17009,9 @@ public class TestAgrBinnOwnpconOthpconTblGuid
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) new NDOQuery<AgrBinnOwnpconOthpconTblGuidLeftBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrBinnOwnpconOthpconTblGuidLeftBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<AgrBinnOwnpconOthpconTblGuidRightBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrBinnOwnpconOthpconTblGuidRightBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -17022,9 +17113,9 @@ public class TestCmpDir1OwnpconOthpconNoTblGuid
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) new NDOQuery<CmpDir1OwnpconOthpconNoTblGuidLeftBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpDir1OwnpconOthpconNoTblGuidLeftBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<CmpDir1OwnpconOthpconNoTblGuidRightBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpDir1OwnpconOthpconNoTblGuidRightBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -17126,9 +17217,9 @@ public class TestCmpDir1OwnpconOthpconTblGuid
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) new NDOQuery<CmpDir1OwnpconOthpconTblGuidLeftBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpDir1OwnpconOthpconTblGuidLeftBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<CmpDir1OwnpconOthpconTblGuidRightBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpDir1OwnpconOthpconTblGuidRightBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -17230,9 +17321,9 @@ public class TestCmpBi11OwnpconOthpconNoTblGuid
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) new NDOQuery<CmpBi11OwnpconOthpconNoTblGuidLeftBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpBi11OwnpconOthpconNoTblGuidLeftBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<CmpBi11OwnpconOthpconNoTblGuidRightBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpBi11OwnpconOthpconNoTblGuidRightBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -17385,9 +17476,9 @@ public class TestCmpBi11OwnpconOthpconTblGuid
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) new NDOQuery<CmpBi11OwnpconOthpconTblGuidLeftBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpBi11OwnpconOthpconTblGuidLeftBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<CmpBi11OwnpconOthpconTblGuidRightBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpBi11OwnpconOthpconTblGuidRightBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -17540,9 +17631,9 @@ public class TestCmpDirnOwnpconOthpconTblGuid
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) new NDOQuery<CmpDirnOwnpconOthpconTblGuidLeftBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpDirnOwnpconOthpconTblGuidLeftBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<CmpDirnOwnpconOthpconTblGuidRightBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpDirnOwnpconOthpconTblGuidRightBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -17623,9 +17714,9 @@ public class TestCmpBin1OwnpconOthpconTblGuid
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) new NDOQuery<CmpBin1OwnpconOthpconTblGuidLeftBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpBin1OwnpconOthpconTblGuidLeftBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<CmpBin1OwnpconOthpconTblGuidRightBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpBin1OwnpconOthpconTblGuidRightBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -17757,9 +17848,9 @@ public class TestCmpBi1nOwnpconOthpconTblGuid
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) new NDOQuery<CmpBi1nOwnpconOthpconTblGuidLeftBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpBi1nOwnpconOthpconTblGuidLeftBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<CmpBi1nOwnpconOthpconTblGuidRightBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpBi1nOwnpconOthpconTblGuidRightBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -17881,9 +17972,9 @@ public class TestCmpBinnOwnpconOthpconTblGuid
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) new NDOQuery<CmpBinnOwnpconOthpconTblGuidLeftBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpBinnOwnpconOthpconTblGuidLeftBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<CmpBinnOwnpconOthpconTblGuidRightBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpBinnOwnpconOthpconTblGuidRightBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -17988,9 +18079,9 @@ public class TestAgrDir1OwnpabsNoTblAuto
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) new NDOQuery<AgrDir1OwnpabsNoTblAutoLeftBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrDir1OwnpabsNoTblAutoLeftBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<AgrDir1OwnpabsNoTblAutoRight>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrDir1OwnpabsNoTblAutoRight>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -18106,9 +18197,9 @@ public class TestAgrDir1OwnpabsTblAuto
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) new NDOQuery<AgrDir1OwnpabsTblAutoLeftBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrDir1OwnpabsTblAutoLeftBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<AgrDir1OwnpabsTblAutoRight>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrDir1OwnpabsTblAutoRight>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -18215,9 +18306,9 @@ public class TestAgrBi11OwnpabsNoTblAuto
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) new NDOQuery<AgrBi11OwnpabsNoTblAutoLeftBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrBi11OwnpabsNoTblAutoLeftBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<AgrBi11OwnpabsNoTblAutoRight>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrBi11OwnpabsNoTblAutoRight>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -18370,9 +18461,9 @@ public class TestAgrBi11OwnpabsTblAuto
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) new NDOQuery<AgrBi11OwnpabsTblAutoLeftBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrBi11OwnpabsTblAutoLeftBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<AgrBi11OwnpabsTblAutoRight>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrBi11OwnpabsTblAutoRight>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -18525,9 +18616,9 @@ public class TestAgrDirnOwnpabsNoTblAuto
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) new NDOQuery<AgrDirnOwnpabsNoTblAutoLeftBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrDirnOwnpabsNoTblAutoLeftBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<AgrDirnOwnpabsNoTblAutoRight>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrDirnOwnpabsNoTblAutoRight>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -18622,9 +18713,9 @@ public class TestAgrDirnOwnpabsTblAuto
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) new NDOQuery<AgrDirnOwnpabsTblAutoLeftBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrDirnOwnpabsTblAutoLeftBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<AgrDirnOwnpabsTblAutoRight>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrDirnOwnpabsTblAutoRight>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -18710,9 +18801,9 @@ public class TestAgrBin1OwnpabsNoTblAuto
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) new NDOQuery<AgrBin1OwnpabsNoTblAutoLeftBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrBin1OwnpabsNoTblAutoLeftBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<AgrBin1OwnpabsNoTblAutoRight>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrBin1OwnpabsNoTblAutoRight>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -18853,9 +18944,9 @@ public class TestAgrBin1OwnpabsTblAuto
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) new NDOQuery<AgrBin1OwnpabsTblAutoLeftBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrBin1OwnpabsTblAutoLeftBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<AgrBin1OwnpabsTblAutoRight>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrBin1OwnpabsTblAutoRight>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -18987,9 +19078,9 @@ public class TestAgrBi1nOwnpabsTblAuto
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) new NDOQuery<AgrBi1nOwnpabsTblAutoLeftBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrBi1nOwnpabsTblAutoLeftBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<AgrBi1nOwnpabsTblAutoRight>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrBi1nOwnpabsTblAutoRight>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -19110,9 +19201,9 @@ public class TestAgrBinnOwnpabsTblAuto
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) new NDOQuery<AgrBinnOwnpabsTblAutoLeftBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrBinnOwnpabsTblAutoLeftBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<AgrBinnOwnpabsTblAutoRight>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrBinnOwnpabsTblAutoRight>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -19208,9 +19299,9 @@ public class TestCmpDir1OwnpabsNoTblAuto
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) new NDOQuery<CmpDir1OwnpabsNoTblAutoLeftBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpDir1OwnpabsNoTblAutoLeftBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<CmpDir1OwnpabsNoTblAutoRight>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpDir1OwnpabsNoTblAutoRight>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -19322,9 +19413,9 @@ public class TestCmpDir1OwnpabsTblAuto
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) new NDOQuery<CmpDir1OwnpabsTblAutoLeftBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpDir1OwnpabsTblAutoLeftBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<CmpDir1OwnpabsTblAutoRight>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpDir1OwnpabsTblAutoRight>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -19426,9 +19517,9 @@ public class TestCmpBi11OwnpabsNoTblAuto
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) new NDOQuery<CmpBi11OwnpabsNoTblAutoLeftBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpBi11OwnpabsNoTblAutoLeftBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<CmpBi11OwnpabsNoTblAutoRight>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpBi11OwnpabsNoTblAutoRight>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -19576,9 +19667,9 @@ public class TestCmpBi11OwnpabsTblAuto
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) new NDOQuery<CmpBi11OwnpabsTblAutoLeftBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpBi11OwnpabsTblAutoLeftBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<CmpBi11OwnpabsTblAutoRight>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpBi11OwnpabsTblAutoRight>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -19725,9 +19816,9 @@ public class TestCmpDirnOwnpabsNoTblAuto
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) new NDOQuery<CmpDirnOwnpabsNoTblAutoLeftBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpDirnOwnpabsNoTblAutoLeftBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<CmpDirnOwnpabsNoTblAutoRight>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpDirnOwnpabsNoTblAutoRight>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -19817,9 +19908,9 @@ public class TestCmpDirnOwnpabsTblAuto
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) new NDOQuery<CmpDirnOwnpabsTblAutoLeftBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpDirnOwnpabsTblAutoLeftBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<CmpDirnOwnpabsTblAutoRight>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpDirnOwnpabsTblAutoRight>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -19900,9 +19991,9 @@ public class TestCmpBin1OwnpabsNoTblAuto
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) new NDOQuery<CmpBin1OwnpabsNoTblAutoLeftBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpBin1OwnpabsNoTblAutoLeftBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<CmpBin1OwnpabsNoTblAutoRight>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpBin1OwnpabsNoTblAutoRight>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -20037,9 +20128,9 @@ public class TestCmpBin1OwnpabsTblAuto
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) new NDOQuery<CmpBin1OwnpabsTblAutoLeftBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpBin1OwnpabsTblAutoLeftBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<CmpBin1OwnpabsTblAutoRight>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpBin1OwnpabsTblAutoRight>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -20165,9 +20256,9 @@ public class TestCmpBi1nOwnpabsTblAuto
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) new NDOQuery<CmpBi1nOwnpabsTblAutoLeftBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpBi1nOwnpabsTblAutoLeftBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<CmpBi1nOwnpabsTblAutoRight>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpBi1nOwnpabsTblAutoRight>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -20283,9 +20374,9 @@ public class TestCmpBinnOwnpabsTblAuto
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) new NDOQuery<CmpBinnOwnpabsTblAutoLeftBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpBinnOwnpabsTblAutoLeftBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<CmpBinnOwnpabsTblAutoRight>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpBinnOwnpabsTblAutoRight>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -20384,9 +20475,9 @@ public class TestAgrDir1OthpabsNoTblAuto
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) new NDOQuery<AgrDir1OthpabsNoTblAutoLeft>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrDir1OthpabsNoTblAutoLeft>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<AgrDir1OthpabsNoTblAutoRightBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrDir1OthpabsNoTblAutoRightBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -20504,9 +20595,9 @@ public class TestAgrDir1OthpabsTblAuto
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) new NDOQuery<AgrDir1OthpabsTblAutoLeft>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrDir1OthpabsTblAutoLeft>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<AgrDir1OthpabsTblAutoRightBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrDir1OthpabsTblAutoRightBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -20613,9 +20704,9 @@ public class TestAgrBi11OthpabsNoTblAuto
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) new NDOQuery<AgrBi11OthpabsNoTblAutoLeft>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrBi11OthpabsNoTblAutoLeft>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<AgrBi11OthpabsNoTblAutoRightBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrBi11OthpabsNoTblAutoRightBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -20769,9 +20860,9 @@ public class TestAgrBi11OthpabsTblAuto
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) new NDOQuery<AgrBi11OthpabsTblAutoLeft>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrBi11OthpabsTblAutoLeft>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<AgrBi11OthpabsTblAutoRightBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrBi11OthpabsTblAutoRightBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -20923,9 +21014,9 @@ public class TestAgrDirnOthpabsTblAuto
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) new NDOQuery<AgrDirnOthpabsTblAutoLeft>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrDirnOthpabsTblAutoLeft>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<AgrDirnOthpabsTblAutoRightBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrDirnOthpabsTblAutoRightBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -21011,9 +21102,9 @@ public class TestAgrBin1OthpabsTblAuto
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) new NDOQuery<AgrBin1OthpabsTblAutoLeft>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrBin1OthpabsTblAutoLeft>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<AgrBin1OthpabsTblAutoRightBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrBin1OthpabsTblAutoRightBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -21144,9 +21235,9 @@ public class TestAgrBi1nOthpabsNoTblAuto
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) new NDOQuery<AgrBi1nOthpabsNoTblAutoLeft>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrBi1nOthpabsNoTblAutoLeft>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<AgrBi1nOthpabsNoTblAutoRightBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrBi1nOthpabsNoTblAutoRightBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -21278,9 +21369,9 @@ public class TestAgrBi1nOthpabsTblAuto
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) new NDOQuery<AgrBi1nOthpabsTblAutoLeft>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrBi1nOthpabsTblAutoLeft>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<AgrBi1nOthpabsTblAutoRightBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrBi1nOthpabsTblAutoRightBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -21401,9 +21492,9 @@ public class TestAgrBinnOthpabsTblAuto
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) new NDOQuery<AgrBinnOthpabsTblAutoLeft>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrBinnOthpabsTblAutoLeft>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<AgrBinnOthpabsTblAutoRightBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrBinnOthpabsTblAutoRightBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -21499,32 +21590,50 @@ public class TestCmpDir1OthpabsNoTblAuto
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) new NDOQuery<CmpDir1OthpabsNoTblAutoLeft>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpDir1OthpabsNoTblAutoLeft>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<CmpDir1OthpabsNoTblAutoRightBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpDir1OthpabsNoTblAutoRightBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
-	[Test, ExpectedException(typeof(NDOException))]
+	[Test]
 	public void TestSaveReload()
 	{
-		CreateObjects();
-		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		bool thrown = false;
+		try
+		{
+			CreateObjects();
+			QueryOwn();
+			Assert.NotNull(ownVar, "No Query Result");
+			Assert.NotNull(ownVar.RelField, "No related object");
+		}
+		catch (NDOException)
+		{
+			thrown = true;
+		}
+		Assert.AreEqual(true, thrown, "NDOException should have been thrown");
 	}
-	[Test, ExpectedException(typeof(NDOException))]
+	[Test]
 	public void TestSaveReloadNull()
 	{
-		CreateObjects();
-		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
-		ownVar.RelField = null;
-		pm.Save();
-		pm.UnloadCache();
-		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.Null(ownVar.RelField, "There should be no object");
+		bool thrown = false;
+		try
+		{
+			CreateObjects();
+			QueryOwn();
+			Assert.NotNull(ownVar, "No Query Result");
+			Assert.NotNull(ownVar.RelField, "No related object");
+			ownVar.RelField = null;
+			pm.Save();
+			pm.UnloadCache();
+			QueryOwn();
+			Assert.NotNull(ownVar, "No Query Result");
+			Assert.Null(ownVar.RelField, "There should be no object");
+		}
+		catch (NDOException)
+		{
+			thrown = true;
+		}
+		Assert.AreEqual(true, thrown, "NDOException should have been thrown");
 	}
 	[Test]
 	public void TestSaveReloadRemove()
@@ -21573,9 +21682,9 @@ public class TestCmpDir1OthpabsTblAuto
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) new NDOQuery<CmpDir1OthpabsTblAutoLeft>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpDir1OthpabsTblAutoLeft>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<CmpDir1OthpabsTblAutoRightBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpDir1OthpabsTblAutoRightBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -21677,32 +21786,50 @@ public class TestCmpBi11OthpabsNoTblAuto
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) new NDOQuery<CmpBi11OthpabsNoTblAutoLeft>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpBi11OthpabsNoTblAutoLeft>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<CmpBi11OthpabsNoTblAutoRightBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpBi11OthpabsNoTblAutoRightBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
-	[Test, ExpectedException(typeof(NDOException))]
+	[Test]
 	public void TestSaveReload()
 	{
-		CreateObjects();
-		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		bool thrown = false;
+		try
+		{
+			CreateObjects();
+			QueryOwn();
+			Assert.NotNull(ownVar, "No Query Result");
+			Assert.NotNull(ownVar.RelField, "No related object");
+		}
+		catch (NDOException)
+		{
+			thrown = true;
+		}
+		Assert.AreEqual(true, thrown, "NDOException should have been thrown");
 	}
-	[Test, ExpectedException(typeof(NDOException))]
+	[Test]
 	public void TestSaveReloadNull()
 	{
-		CreateObjects();
-		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
-		ownVar.RelField = null;
-		pm.Save();
-		pm.UnloadCache();
-		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.Null(ownVar.RelField, "There should be no object");
+		bool thrown = false;
+		try
+		{
+			CreateObjects();
+			QueryOwn();
+			Assert.NotNull(ownVar, "No Query Result");
+			Assert.NotNull(ownVar.RelField, "No related object");
+			ownVar.RelField = null;
+			pm.Save();
+			pm.UnloadCache();
+			QueryOwn();
+			Assert.NotNull(ownVar, "No Query Result");
+			Assert.Null(ownVar.RelField, "There should be no object");
+		}
+		catch (NDOException)
+		{
+			thrown = true;
+		}
+		Assert.AreEqual(true, thrown, "NDOException should have been thrown");
 	}
 	[Test]
 	public void TestSaveReloadRemove()
@@ -21765,9 +21892,9 @@ public class TestCmpBi11OthpabsTblAuto
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) new NDOQuery<CmpBi11OthpabsTblAutoLeft>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpBi11OthpabsTblAutoLeft>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<CmpBi11OthpabsTblAutoRightBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpBi11OthpabsTblAutoRightBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -21914,9 +22041,9 @@ public class TestCmpDirnOthpabsTblAuto
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) new NDOQuery<CmpDirnOthpabsTblAutoLeft>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpDirnOthpabsTblAutoLeft>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<CmpDirnOthpabsTblAutoRightBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpDirnOthpabsTblAutoRightBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -21997,9 +22124,9 @@ public class TestCmpBin1OthpabsTblAuto
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) new NDOQuery<CmpBin1OthpabsTblAutoLeft>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpBin1OthpabsTblAutoLeft>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<CmpBin1OthpabsTblAutoRightBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpBin1OthpabsTblAutoRightBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -22125,32 +22252,50 @@ public class TestCmpBi1nOthpabsNoTblAuto
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) new NDOQuery<CmpBi1nOthpabsNoTblAutoLeft>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpBi1nOthpabsNoTblAutoLeft>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<CmpBi1nOthpabsNoTblAutoRightBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpBi1nOthpabsNoTblAutoRightBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
-	[Test, ExpectedException(typeof(NDOException))]
+	[Test]
 	public void TestSaveReload()
 	{
-		CreateObjects();
-		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		bool thrown = false;
+		try
+		{
+			CreateObjects();
+			QueryOwn();
+			Assert.NotNull(ownVar, "No Query Result");
+			Assert.NotNull(ownVar.RelField, "No related object");
+		}
+		catch (NDOException)
+		{
+			thrown = true;
+		}
+		Assert.AreEqual(true, thrown, "NDOException should have been thrown");
 	}
-	[Test, ExpectedException(typeof(NDOException))]
+	[Test]
 	public void TestSaveReloadNull()
 	{
-		CreateObjects();
-		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
-		ownVar.RelField = null;
-		pm.Save();
-		pm.UnloadCache();
-		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.Null(ownVar.RelField, "There should be no object");
+		bool thrown = false;
+		try
+		{
+			CreateObjects();
+			QueryOwn();
+			Assert.NotNull(ownVar, "No Query Result");
+			Assert.NotNull(ownVar.RelField, "No related object");
+			ownVar.RelField = null;
+			pm.Save();
+			pm.UnloadCache();
+			QueryOwn();
+			Assert.NotNull(ownVar, "No Query Result");
+			Assert.Null(ownVar.RelField, "There should be no object");
+		}
+		catch (NDOException)
+		{
+			thrown = true;
+		}
+		Assert.AreEqual(true, thrown, "NDOException should have been thrown");
 	}
 	[Test]
 	public void TestSaveReloadRemove()
@@ -22213,9 +22358,9 @@ public class TestCmpBi1nOthpabsTblAuto
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) new NDOQuery<CmpBi1nOthpabsTblAutoLeft>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpBi1nOthpabsTblAutoLeft>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<CmpBi1nOthpabsTblAutoRightBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpBi1nOthpabsTblAutoRightBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -22331,9 +22476,9 @@ public class TestCmpBinnOthpabsTblAuto
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) new NDOQuery<CmpBinnOthpabsTblAutoLeft>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpBinnOthpabsTblAutoLeft>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<CmpBinnOthpabsTblAutoRightBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpBinnOthpabsTblAutoRightBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -22432,9 +22577,9 @@ public class TestAgrDir1OwnpabsOthpabsNoTblAuto
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) new NDOQuery<AgrDir1OwnpabsOthpabsNoTblAutoLeftBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrDir1OwnpabsOthpabsNoTblAutoLeftBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<AgrDir1OwnpabsOthpabsNoTblAutoRightBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrDir1OwnpabsOthpabsNoTblAutoRightBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -22552,9 +22697,9 @@ public class TestAgrDir1OwnpabsOthpabsTblAuto
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) new NDOQuery<AgrDir1OwnpabsOthpabsTblAutoLeftBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrDir1OwnpabsOthpabsTblAutoLeftBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<AgrDir1OwnpabsOthpabsTblAutoRightBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrDir1OwnpabsOthpabsTblAutoRightBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -22661,9 +22806,9 @@ public class TestAgrBi11OwnpabsOthpabsNoTblAuto
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) new NDOQuery<AgrBi11OwnpabsOthpabsNoTblAutoLeftBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrBi11OwnpabsOthpabsNoTblAutoLeftBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<AgrBi11OwnpabsOthpabsNoTblAutoRightBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrBi11OwnpabsOthpabsNoTblAutoRightBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -22824,9 +22969,9 @@ public class TestAgrBi11OwnpabsOthpabsTblAuto
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) new NDOQuery<AgrBi11OwnpabsOthpabsTblAutoLeftBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrBi11OwnpabsOthpabsTblAutoLeftBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<AgrBi11OwnpabsOthpabsTblAutoRightBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrBi11OwnpabsOthpabsTblAutoRightBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -22985,9 +23130,9 @@ public class TestAgrDirnOwnpabsOthpabsTblAuto
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) new NDOQuery<AgrDirnOwnpabsOthpabsTblAutoLeftBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrDirnOwnpabsOthpabsTblAutoLeftBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<AgrDirnOwnpabsOthpabsTblAutoRightBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrDirnOwnpabsOthpabsTblAutoRightBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -23073,9 +23218,9 @@ public class TestAgrBin1OwnpabsOthpabsTblAuto
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) new NDOQuery<AgrBin1OwnpabsOthpabsTblAutoLeftBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrBin1OwnpabsOthpabsTblAutoLeftBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<AgrBin1OwnpabsOthpabsTblAutoRightBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrBin1OwnpabsOthpabsTblAutoRightBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -23213,9 +23358,9 @@ public class TestAgrBi1nOwnpabsOthpabsTblAuto
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) new NDOQuery<AgrBi1nOwnpabsOthpabsTblAutoLeftBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrBi1nOwnpabsOthpabsTblAutoLeftBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<AgrBi1nOwnpabsOthpabsTblAutoRightBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrBi1nOwnpabsOthpabsTblAutoRightBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -23342,9 +23487,9 @@ public class TestAgrBinnOwnpabsOthpabsTblAuto
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) new NDOQuery<AgrBinnOwnpabsOthpabsTblAutoLeftBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrBinnOwnpabsOthpabsTblAutoLeftBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<AgrBinnOwnpabsOthpabsTblAutoRightBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrBinnOwnpabsOthpabsTblAutoRightBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -23446,32 +23591,50 @@ public class TestCmpDir1OwnpabsOthpabsNoTblAuto
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) new NDOQuery<CmpDir1OwnpabsOthpabsNoTblAutoLeftBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpDir1OwnpabsOthpabsNoTblAutoLeftBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<CmpDir1OwnpabsOthpabsNoTblAutoRightBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpDir1OwnpabsOthpabsNoTblAutoRightBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
-	[Test, ExpectedException(typeof(NDOException))]
+	[Test]
 	public void TestSaveReload()
 	{
-		CreateObjects();
-		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		bool thrown = false;
+		try
+		{
+			CreateObjects();
+			QueryOwn();
+			Assert.NotNull(ownVar, "No Query Result");
+			Assert.NotNull(ownVar.RelField, "No related object");
+		}
+		catch (NDOException)
+		{
+			thrown = true;
+		}
+		Assert.AreEqual(true, thrown, "NDOException should have been thrown");
 	}
-	[Test, ExpectedException(typeof(NDOException))]
+	[Test]
 	public void TestSaveReloadNull()
 	{
-		CreateObjects();
-		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
-		ownVar.RelField = null;
-		pm.Save();
-		pm.UnloadCache();
-		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.Null(ownVar.RelField, "There should be no object");
+		bool thrown = false;
+		try
+		{
+			CreateObjects();
+			QueryOwn();
+			Assert.NotNull(ownVar, "No Query Result");
+			Assert.NotNull(ownVar.RelField, "No related object");
+			ownVar.RelField = null;
+			pm.Save();
+			pm.UnloadCache();
+			QueryOwn();
+			Assert.NotNull(ownVar, "No Query Result");
+			Assert.Null(ownVar.RelField, "There should be no object");
+		}
+		catch (NDOException)
+		{
+			thrown = true;
+		}
+		Assert.AreEqual(true, thrown, "NDOException should have been thrown");
 	}
 	[Test]
 	public void TestSaveReloadRemove()
@@ -23520,9 +23683,9 @@ public class TestCmpDir1OwnpabsOthpabsTblAuto
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) new NDOQuery<CmpDir1OwnpabsOthpabsTblAutoLeftBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpDir1OwnpabsOthpabsTblAutoLeftBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<CmpDir1OwnpabsOthpabsTblAutoRightBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpDir1OwnpabsOthpabsTblAutoRightBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -23624,32 +23787,50 @@ public class TestCmpBi11OwnpabsOthpabsNoTblAuto
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) new NDOQuery<CmpBi11OwnpabsOthpabsNoTblAutoLeftBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpBi11OwnpabsOthpabsNoTblAutoLeftBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<CmpBi11OwnpabsOthpabsNoTblAutoRightBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpBi11OwnpabsOthpabsNoTblAutoRightBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
-	[Test, ExpectedException(typeof(NDOException))]
+	[Test]
 	public void TestSaveReload()
 	{
-		CreateObjects();
-		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		bool thrown = false;
+		try
+		{
+			CreateObjects();
+			QueryOwn();
+			Assert.NotNull(ownVar, "No Query Result");
+			Assert.NotNull(ownVar.RelField, "No related object");
+		}
+		catch (NDOException)
+		{
+			thrown = true;
+		}
+		Assert.AreEqual(true, thrown, "NDOException should have been thrown");
 	}
-	[Test, ExpectedException(typeof(NDOException))]
+	[Test]
 	public void TestSaveReloadNull()
 	{
-		CreateObjects();
-		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
-		ownVar.RelField = null;
-		pm.Save();
-		pm.UnloadCache();
-		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.Null(ownVar.RelField, "There should be no object");
+		bool thrown = false;
+		try
+		{
+			CreateObjects();
+			QueryOwn();
+			Assert.NotNull(ownVar, "No Query Result");
+			Assert.NotNull(ownVar.RelField, "No related object");
+			ownVar.RelField = null;
+			pm.Save();
+			pm.UnloadCache();
+			QueryOwn();
+			Assert.NotNull(ownVar, "No Query Result");
+			Assert.Null(ownVar.RelField, "There should be no object");
+		}
+		catch (NDOException)
+		{
+			thrown = true;
+		}
+		Assert.AreEqual(true, thrown, "NDOException should have been thrown");
 	}
 	[Test]
 	public void TestSaveReloadRemove()
@@ -23718,9 +23899,9 @@ public class TestCmpBi11OwnpabsOthpabsTblAuto
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) new NDOQuery<CmpBi11OwnpabsOthpabsTblAutoLeftBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpBi11OwnpabsOthpabsTblAutoLeftBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<CmpBi11OwnpabsOthpabsTblAutoRightBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpBi11OwnpabsOthpabsTblAutoRightBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -23873,9 +24054,9 @@ public class TestCmpDirnOwnpabsOthpabsTblAuto
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) new NDOQuery<CmpDirnOwnpabsOthpabsTblAutoLeftBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpDirnOwnpabsOthpabsTblAutoLeftBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<CmpDirnOwnpabsOthpabsTblAutoRightBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpDirnOwnpabsOthpabsTblAutoRightBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -23956,9 +24137,9 @@ public class TestCmpBin1OwnpabsOthpabsTblAuto
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) new NDOQuery<CmpBin1OwnpabsOthpabsTblAutoLeftBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpBin1OwnpabsOthpabsTblAutoLeftBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<CmpBin1OwnpabsOthpabsTblAutoRightBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpBin1OwnpabsOthpabsTblAutoRightBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -24090,9 +24271,9 @@ public class TestCmpBi1nOwnpabsOthpabsTblAuto
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) new NDOQuery<CmpBi1nOwnpabsOthpabsTblAutoLeftBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpBi1nOwnpabsOthpabsTblAutoLeftBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<CmpBi1nOwnpabsOthpabsTblAutoRightBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpBi1nOwnpabsOthpabsTblAutoRightBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -24214,9 +24395,9 @@ public class TestCmpBinnOwnpabsOthpabsTblAuto
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) new NDOQuery<CmpBinnOwnpabsOthpabsTblAutoLeftBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpBinnOwnpabsOthpabsTblAutoLeftBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<CmpBinnOwnpabsOthpabsTblAutoRightBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpBinnOwnpabsOthpabsTblAutoRightBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -24321,9 +24502,9 @@ public class TestAgrDir1OwnpabsNoTblGuid
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) new NDOQuery<AgrDir1OwnpabsNoTblGuidLeftBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrDir1OwnpabsNoTblGuidLeftBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<AgrDir1OwnpabsNoTblGuidRight>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrDir1OwnpabsNoTblGuidRight>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -24430,9 +24611,9 @@ public class TestAgrDir1OwnpabsTblGuid
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) new NDOQuery<AgrDir1OwnpabsTblGuidLeftBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrDir1OwnpabsTblGuidLeftBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<AgrDir1OwnpabsTblGuidRight>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrDir1OwnpabsTblGuidRight>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -24539,9 +24720,9 @@ public class TestAgrBi11OwnpabsNoTblGuid
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) new NDOQuery<AgrBi11OwnpabsNoTblGuidLeftBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrBi11OwnpabsNoTblGuidLeftBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<AgrBi11OwnpabsNoTblGuidRight>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrBi11OwnpabsNoTblGuidRight>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -24693,9 +24874,9 @@ public class TestAgrBi11OwnpabsTblGuid
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) new NDOQuery<AgrBi11OwnpabsTblGuidLeftBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrBi11OwnpabsTblGuidLeftBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<AgrBi11OwnpabsTblGuidRight>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrBi11OwnpabsTblGuidRight>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -24847,9 +25028,9 @@ public class TestAgrDirnOwnpabsNoTblGuid
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) new NDOQuery<AgrDirnOwnpabsNoTblGuidLeftBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrDirnOwnpabsNoTblGuidLeftBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<AgrDirnOwnpabsNoTblGuidRight>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrDirnOwnpabsNoTblGuidRight>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -24935,9 +25116,9 @@ public class TestAgrDirnOwnpabsTblGuid
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) new NDOQuery<AgrDirnOwnpabsTblGuidLeftBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrDirnOwnpabsTblGuidLeftBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<AgrDirnOwnpabsTblGuidRight>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrDirnOwnpabsTblGuidRight>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -25023,9 +25204,9 @@ public class TestAgrBin1OwnpabsNoTblGuid
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) new NDOQuery<AgrBin1OwnpabsNoTblGuidLeftBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrBin1OwnpabsNoTblGuidLeftBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<AgrBin1OwnpabsNoTblGuidRight>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrBin1OwnpabsNoTblGuidRight>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -25156,9 +25337,9 @@ public class TestAgrBin1OwnpabsTblGuid
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) new NDOQuery<AgrBin1OwnpabsTblGuidLeftBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrBin1OwnpabsTblGuidLeftBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<AgrBin1OwnpabsTblGuidRight>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrBin1OwnpabsTblGuidRight>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -25289,9 +25470,9 @@ public class TestAgrBi1nOwnpabsTblGuid
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) new NDOQuery<AgrBi1nOwnpabsTblGuidLeftBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrBi1nOwnpabsTblGuidLeftBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<AgrBi1nOwnpabsTblGuidRight>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrBi1nOwnpabsTblGuidRight>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -25412,9 +25593,9 @@ public class TestAgrBinnOwnpabsTblGuid
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) new NDOQuery<AgrBinnOwnpabsTblGuidLeftBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrBinnOwnpabsTblGuidLeftBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<AgrBinnOwnpabsTblGuidRight>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrBinnOwnpabsTblGuidRight>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -25510,9 +25691,9 @@ public class TestCmpDir1OwnpabsNoTblGuid
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) new NDOQuery<CmpDir1OwnpabsNoTblGuidLeftBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpDir1OwnpabsNoTblGuidLeftBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<CmpDir1OwnpabsNoTblGuidRight>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpDir1OwnpabsNoTblGuidRight>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -25614,9 +25795,9 @@ public class TestCmpDir1OwnpabsTblGuid
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) new NDOQuery<CmpDir1OwnpabsTblGuidLeftBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpDir1OwnpabsTblGuidLeftBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<CmpDir1OwnpabsTblGuidRight>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpDir1OwnpabsTblGuidRight>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -25718,9 +25899,9 @@ public class TestCmpBi11OwnpabsNoTblGuid
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) new NDOQuery<CmpBi11OwnpabsNoTblGuidLeftBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpBi11OwnpabsNoTblGuidLeftBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<CmpBi11OwnpabsNoTblGuidRight>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpBi11OwnpabsNoTblGuidRight>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -25867,9 +26048,9 @@ public class TestCmpBi11OwnpabsTblGuid
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) new NDOQuery<CmpBi11OwnpabsTblGuidLeftBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpBi11OwnpabsTblGuidLeftBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<CmpBi11OwnpabsTblGuidRight>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpBi11OwnpabsTblGuidRight>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -26016,9 +26197,9 @@ public class TestCmpDirnOwnpabsNoTblGuid
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) new NDOQuery<CmpDirnOwnpabsNoTblGuidLeftBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpDirnOwnpabsNoTblGuidLeftBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<CmpDirnOwnpabsNoTblGuidRight>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpDirnOwnpabsNoTblGuidRight>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -26099,9 +26280,9 @@ public class TestCmpDirnOwnpabsTblGuid
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) new NDOQuery<CmpDirnOwnpabsTblGuidLeftBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpDirnOwnpabsTblGuidLeftBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<CmpDirnOwnpabsTblGuidRight>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpDirnOwnpabsTblGuidRight>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -26182,9 +26363,9 @@ public class TestCmpBin1OwnpabsNoTblGuid
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) new NDOQuery<CmpBin1OwnpabsNoTblGuidLeftBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpBin1OwnpabsNoTblGuidLeftBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<CmpBin1OwnpabsNoTblGuidRight>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpBin1OwnpabsNoTblGuidRight>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -26310,9 +26491,9 @@ public class TestCmpBin1OwnpabsTblGuid
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) new NDOQuery<CmpBin1OwnpabsTblGuidLeftBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpBin1OwnpabsTblGuidLeftBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<CmpBin1OwnpabsTblGuidRight>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpBin1OwnpabsTblGuidRight>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -26438,9 +26619,9 @@ public class TestCmpBi1nOwnpabsTblGuid
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) new NDOQuery<CmpBi1nOwnpabsTblGuidLeftBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpBi1nOwnpabsTblGuidLeftBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<CmpBi1nOwnpabsTblGuidRight>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpBi1nOwnpabsTblGuidRight>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -26556,9 +26737,9 @@ public class TestCmpBinnOwnpabsTblGuid
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) new NDOQuery<CmpBinnOwnpabsTblGuidLeftBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpBinnOwnpabsTblGuidLeftBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<CmpBinnOwnpabsTblGuidRight>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpBinnOwnpabsTblGuidRight>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -26657,9 +26838,9 @@ public class TestAgrDir1OthpabsNoTblGuid
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) new NDOQuery<AgrDir1OthpabsNoTblGuidLeft>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrDir1OthpabsNoTblGuidLeft>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<AgrDir1OthpabsNoTblGuidRightBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrDir1OthpabsNoTblGuidRightBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -26766,9 +26947,9 @@ public class TestAgrDir1OthpabsTblGuid
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) new NDOQuery<AgrDir1OthpabsTblGuidLeft>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrDir1OthpabsTblGuidLeft>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<AgrDir1OthpabsTblGuidRightBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrDir1OthpabsTblGuidRightBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -26875,9 +27056,9 @@ public class TestAgrBi11OthpabsNoTblGuid
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) new NDOQuery<AgrBi11OthpabsNoTblGuidLeft>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrBi11OthpabsNoTblGuidLeft>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<AgrBi11OthpabsNoTblGuidRightBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrBi11OthpabsNoTblGuidRightBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -27029,9 +27210,9 @@ public class TestAgrBi11OthpabsTblGuid
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) new NDOQuery<AgrBi11OthpabsTblGuidLeft>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrBi11OthpabsTblGuidLeft>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<AgrBi11OthpabsTblGuidRightBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrBi11OthpabsTblGuidRightBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -27183,9 +27364,9 @@ public class TestAgrDirnOthpabsTblGuid
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) new NDOQuery<AgrDirnOthpabsTblGuidLeft>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrDirnOthpabsTblGuidLeft>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<AgrDirnOthpabsTblGuidRightBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrDirnOthpabsTblGuidRightBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -27271,9 +27452,9 @@ public class TestAgrBin1OthpabsTblGuid
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) new NDOQuery<AgrBin1OthpabsTblGuidLeft>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrBin1OthpabsTblGuidLeft>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<AgrBin1OthpabsTblGuidRightBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrBin1OthpabsTblGuidRightBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -27404,9 +27585,9 @@ public class TestAgrBi1nOthpabsNoTblGuid
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) new NDOQuery<AgrBi1nOthpabsNoTblGuidLeft>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrBi1nOthpabsNoTblGuidLeft>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<AgrBi1nOthpabsNoTblGuidRightBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrBi1nOthpabsNoTblGuidRightBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -27527,9 +27708,9 @@ public class TestAgrBi1nOthpabsTblGuid
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) new NDOQuery<AgrBi1nOthpabsTblGuidLeft>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrBi1nOthpabsTblGuidLeft>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<AgrBi1nOthpabsTblGuidRightBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrBi1nOthpabsTblGuidRightBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -27650,9 +27831,9 @@ public class TestAgrBinnOthpabsTblGuid
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) new NDOQuery<AgrBinnOthpabsTblGuidLeft>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrBinnOthpabsTblGuidLeft>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<AgrBinnOthpabsTblGuidRightBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrBinnOthpabsTblGuidRightBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -27748,9 +27929,9 @@ public class TestCmpDir1OthpabsNoTblGuid
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) new NDOQuery<CmpDir1OthpabsNoTblGuidLeft>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpDir1OthpabsNoTblGuidLeft>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<CmpDir1OthpabsNoTblGuidRightBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpDir1OthpabsNoTblGuidRightBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -27852,9 +28033,9 @@ public class TestCmpDir1OthpabsTblGuid
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) new NDOQuery<CmpDir1OthpabsTblGuidLeft>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpDir1OthpabsTblGuidLeft>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<CmpDir1OthpabsTblGuidRightBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpDir1OthpabsTblGuidRightBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -27956,9 +28137,9 @@ public class TestCmpBi11OthpabsNoTblGuid
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) new NDOQuery<CmpBi11OthpabsNoTblGuidLeft>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpBi11OthpabsNoTblGuidLeft>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<CmpBi11OthpabsNoTblGuidRightBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpBi11OthpabsNoTblGuidRightBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -28105,9 +28286,9 @@ public class TestCmpBi11OthpabsTblGuid
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) new NDOQuery<CmpBi11OthpabsTblGuidLeft>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpBi11OthpabsTblGuidLeft>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<CmpBi11OthpabsTblGuidRightBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpBi11OthpabsTblGuidRightBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -28254,9 +28435,9 @@ public class TestCmpDirnOthpabsTblGuid
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) new NDOQuery<CmpDirnOthpabsTblGuidLeft>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpDirnOthpabsTblGuidLeft>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<CmpDirnOthpabsTblGuidRightBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpDirnOthpabsTblGuidRightBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -28337,9 +28518,9 @@ public class TestCmpBin1OthpabsTblGuid
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) new NDOQuery<CmpBin1OthpabsTblGuidLeft>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpBin1OthpabsTblGuidLeft>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<CmpBin1OthpabsTblGuidRightBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpBin1OthpabsTblGuidRightBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -28465,9 +28646,9 @@ public class TestCmpBi1nOthpabsNoTblGuid
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) new NDOQuery<CmpBi1nOthpabsNoTblGuidLeft>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpBi1nOthpabsNoTblGuidLeft>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<CmpBi1nOthpabsNoTblGuidRightBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpBi1nOthpabsNoTblGuidRightBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -28583,9 +28764,9 @@ public class TestCmpBi1nOthpabsTblGuid
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) new NDOQuery<CmpBi1nOthpabsTblGuidLeft>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpBi1nOthpabsTblGuidLeft>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<CmpBi1nOthpabsTblGuidRightBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpBi1nOthpabsTblGuidRightBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -28701,9 +28882,9 @@ public class TestCmpBinnOthpabsTblGuid
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) new NDOQuery<CmpBinnOthpabsTblGuidLeft>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpBinnOthpabsTblGuidLeft>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<CmpBinnOthpabsTblGuidRightBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpBinnOthpabsTblGuidRightBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -28802,9 +28983,9 @@ public class TestAgrDir1OwnpabsOthpabsNoTblGuid
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) new NDOQuery<AgrDir1OwnpabsOthpabsNoTblGuidLeftBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrDir1OwnpabsOthpabsNoTblGuidLeftBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<AgrDir1OwnpabsOthpabsNoTblGuidRightBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrDir1OwnpabsOthpabsNoTblGuidRightBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -28911,9 +29092,9 @@ public class TestAgrDir1OwnpabsOthpabsTblGuid
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) new NDOQuery<AgrDir1OwnpabsOthpabsTblGuidLeftBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrDir1OwnpabsOthpabsTblGuidLeftBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<AgrDir1OwnpabsOthpabsTblGuidRightBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrDir1OwnpabsOthpabsTblGuidRightBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -29020,9 +29201,9 @@ public class TestAgrBi11OwnpabsOthpabsNoTblGuid
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) new NDOQuery<AgrBi11OwnpabsOthpabsNoTblGuidLeftBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrBi11OwnpabsOthpabsNoTblGuidLeftBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<AgrBi11OwnpabsOthpabsNoTblGuidRightBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrBi11OwnpabsOthpabsNoTblGuidRightBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -29180,9 +29361,9 @@ public class TestAgrBi11OwnpabsOthpabsTblGuid
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) new NDOQuery<AgrBi11OwnpabsOthpabsTblGuidLeftBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrBi11OwnpabsOthpabsTblGuidLeftBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<AgrBi11OwnpabsOthpabsTblGuidRightBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrBi11OwnpabsOthpabsTblGuidRightBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -29340,9 +29521,9 @@ public class TestAgrDirnOwnpabsOthpabsTblGuid
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) new NDOQuery<AgrDirnOwnpabsOthpabsTblGuidLeftBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrDirnOwnpabsOthpabsTblGuidLeftBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<AgrDirnOwnpabsOthpabsTblGuidRightBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrDirnOwnpabsOthpabsTblGuidRightBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -29428,9 +29609,9 @@ public class TestAgrBin1OwnpabsOthpabsTblGuid
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) new NDOQuery<AgrBin1OwnpabsOthpabsTblGuidLeftBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrBin1OwnpabsOthpabsTblGuidLeftBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<AgrBin1OwnpabsOthpabsTblGuidRightBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrBin1OwnpabsOthpabsTblGuidRightBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -29567,9 +29748,9 @@ public class TestAgrBi1nOwnpabsOthpabsTblGuid
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) new NDOQuery<AgrBi1nOwnpabsOthpabsTblGuidLeftBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrBi1nOwnpabsOthpabsTblGuidLeftBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<AgrBi1nOwnpabsOthpabsTblGuidRightBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrBi1nOwnpabsOthpabsTblGuidRightBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -29696,9 +29877,9 @@ public class TestAgrBinnOwnpabsOthpabsTblGuid
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) new NDOQuery<AgrBinnOwnpabsOthpabsTblGuidLeftBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrBinnOwnpabsOthpabsTblGuidLeftBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<AgrBinnOwnpabsOthpabsTblGuidRightBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<AgrBinnOwnpabsOthpabsTblGuidRightBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -29800,9 +29981,9 @@ public class TestCmpDir1OwnpabsOthpabsNoTblGuid
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) new NDOQuery<CmpDir1OwnpabsOthpabsNoTblGuidLeftBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpDir1OwnpabsOthpabsNoTblGuidLeftBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<CmpDir1OwnpabsOthpabsNoTblGuidRightBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpDir1OwnpabsOthpabsNoTblGuidRightBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -29904,9 +30085,9 @@ public class TestCmpDir1OwnpabsOthpabsTblGuid
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) new NDOQuery<CmpDir1OwnpabsOthpabsTblGuidLeftBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpDir1OwnpabsOthpabsTblGuidLeftBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<CmpDir1OwnpabsOthpabsTblGuidRightBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpDir1OwnpabsOthpabsTblGuidRightBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -30008,9 +30189,9 @@ public class TestCmpBi11OwnpabsOthpabsNoTblGuid
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) new NDOQuery<CmpBi11OwnpabsOthpabsNoTblGuidLeftBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpBi11OwnpabsOthpabsNoTblGuidLeftBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<CmpBi11OwnpabsOthpabsNoTblGuidRightBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpBi11OwnpabsOthpabsNoTblGuidRightBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -30163,9 +30344,9 @@ public class TestCmpBi11OwnpabsOthpabsTblGuid
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) new NDOQuery<CmpBi11OwnpabsOthpabsTblGuidLeftBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpBi11OwnpabsOthpabsTblGuidLeftBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<CmpBi11OwnpabsOthpabsTblGuidRightBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpBi11OwnpabsOthpabsTblGuidRightBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -30318,9 +30499,9 @@ public class TestCmpDirnOwnpabsOthpabsTblGuid
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) new NDOQuery<CmpDirnOwnpabsOthpabsTblGuidLeftBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpDirnOwnpabsOthpabsTblGuidLeftBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<CmpDirnOwnpabsOthpabsTblGuidRightBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpDirnOwnpabsOthpabsTblGuidRightBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -30401,9 +30582,9 @@ public class TestCmpBin1OwnpabsOthpabsTblGuid
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) new NDOQuery<CmpBin1OwnpabsOthpabsTblGuidLeftBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpBin1OwnpabsOthpabsTblGuidLeftBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<CmpBin1OwnpabsOthpabsTblGuidRightBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpBin1OwnpabsOthpabsTblGuidRightBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -30535,9 +30716,9 @@ public class TestCmpBi1nOwnpabsOthpabsTblGuid
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) new NDOQuery<CmpBi1nOwnpabsOthpabsTblGuidLeftBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpBi1nOwnpabsOthpabsTblGuidLeftBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<CmpBi1nOwnpabsOthpabsTblGuidRightBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpBi1nOwnpabsOthpabsTblGuidRightBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
@@ -30659,9 +30840,9 @@ public class TestCmpBinnOwnpabsOthpabsTblGuid
 		pm.Save();
 		pm.UnloadCache();
 		decimal count;
-		count = (decimal) new NDOQuery<CmpBinnOwnpabsOthpabsTblGuidLeftBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpBinnOwnpabsOthpabsTblGuidLeftBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<CmpBinnOwnpabsOthpabsTblGuidRightBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
+		count = (decimal) new NDOQuery<CmpBinnOwnpabsOthpabsTblGuidRightBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
 		Assert.AreEqual(0, count, "Count wrong #2");
 	}
 	[Test]
