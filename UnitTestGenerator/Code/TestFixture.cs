@@ -41,7 +41,7 @@ namespace TestGenerator
 			get { return tearDown; }
 		}
 
-		public TestFixture(string name) : base (false, name, null)
+		public TestFixture(string nameSpace, string name) : base (false, nameSpace, name, null)
 		{			
 			setUp = new Function("void", "Setup");
 			setUp.Attributes.Add("SetUp");

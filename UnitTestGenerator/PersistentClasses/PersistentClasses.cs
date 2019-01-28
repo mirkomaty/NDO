@@ -26,7 +26,7 @@ using NDO;
 
 using NDO.Mapping.Attributes;
 
-namespace RelationTestClasses
+namespace  RelationTestClasses
 {
 
 [NDOPersistent]

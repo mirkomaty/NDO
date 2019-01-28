@@ -38,6 +38,7 @@ namespace TestGenerator
 		string fileName;
 		StreamWriter sw;
 		int count;
+		readonly string nameSpace = "RelationTestClasses";
 
 		public ClassGenerator( IEnumerable<RelInfo> relInfos )
 		{
@@ -67,7 +68,7 @@ namespace TestGenerator
 
 		void GenerateClassGroup(RelInfo ri)
 		{
-			Test test = new Test(ri);
+			Test test = new Test(ri, this.nameSpace);
 
 			PersistentClass ownBaseClass = test.OwnClass;
 			PersistentClass otherBaseClass = test.OtherClass;
@@ -132,7 +133,7 @@ namespace TestGenerator
 			sw.WriteLine("using System.Collections.Generic;");
 			sw.WriteLine("using NDO;\n");
 			sw.WriteLine( "using NDO.Mapping.Attributes;\n" );
-			sw.WriteLine( "namespace RelationTestClasses" );
+			sw.WriteLine( $"namespace  {this.nameSpace}" );
 			sw.WriteLine("{\n");
 			foreach(RelInfo ri in relInfos)
 				GenerateClassGroup(ri);

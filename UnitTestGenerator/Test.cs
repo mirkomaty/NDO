@@ -30,9 +30,12 @@ namespace TestGenerator
 	public class Test
 	{
 		RelInfo ri;
-		public Test(RelInfo ri)
+		private readonly string nameSpace;
+
+		public Test(RelInfo ri, string nameSpace)
 		{
 			this.ri = ri;
+			this.nameSpace = nameSpace;
 		}
 
 		PersistentClass ownClass = null;
@@ -58,7 +61,7 @@ namespace TestGenerator
 
 		public Test GetReverse()
 		{
-			Test test = new Test(this.ri);
+			Test test = new Test(this.ri, nameSpace);
 			test.DissolveReverse();
 			return test;
 		}
@@ -79,14 +82,14 @@ namespace TestGenerator
 				if (ri.OtherPoly)
 					otherClassName += "Base";
 
-				ownClass = new PersistentClass(ri.OwnPoly && ri.IsAbstract, ownClassName, null);
+				ownClass = new PersistentClass(ri.OwnPoly && ri.IsAbstract, this.nameSpace, ownClassName, null);
 				if (ri.UseGuid)
 					ownClass.Attributes.Add("NDOOidType(typeof(Guid))");
 
 				if (ri.OwnPoly)
 				{
 					string ownDerivedName = ri.ToString() + "LeftDerived";
-					ownDerivedClass = new PersistentClass(false, ownDerivedName, ownClass);
+					ownDerivedClass = new PersistentClass(false, this.nameSpace, ownDerivedName, ownClass);
 
 
 					if (ri.UseGuid)
@@ -95,13 +98,13 @@ namespace TestGenerator
 
 			
 				// Right class
-				otherClass = new PersistentClass(ri.OtherPoly && ri.IsAbstract, otherClassName, null);
+				otherClass = new PersistentClass(ri.OtherPoly && ri.IsAbstract, this.nameSpace, otherClassName, null);
 				if (ri.UseGuid)
 					otherClass.Attributes.Add("NDOOidType(typeof(Guid))");
 				if (ri.OtherPoly)
 				{
 					string otherDerivedName = ri.ToString() + "RightDerived";
-					otherDerivedClass = new PersistentClass(false, otherDerivedName, otherClass);
+					otherDerivedClass = new PersistentClass(false, this.nameSpace, otherDerivedName, otherClass);
 					if (ri.UseGuid)
 						otherDerivedClass.Attributes.Add("NDOOidType(typeof(Guid))");
 				}
@@ -122,21 +125,21 @@ namespace TestGenerator
 			if (ri.OtherPoly)
 				otherClassName += "Base";
 
-			otherClass = new PersistentClass(ri.OwnPoly && ri.IsAbstract, ownClassName, null);
+			otherClass = new PersistentClass(ri.OwnPoly && ri.IsAbstract, this.nameSpace, ownClassName, null);
 
 			if (ri.OwnPoly)
 			{
 				string ownDerivedName = ri.ToString() + "LeftDerived";
-				otherDerivedClass = new PersistentClass(false, ownDerivedName, ownClass);
+				otherDerivedClass = new PersistentClass(false, this.nameSpace, ownDerivedName, ownClass);
 			}
 
 			
 			// Right class
-			ownClass = new PersistentClass(ri.OtherPoly && ri.IsAbstract, otherClassName, null);
+			ownClass = new PersistentClass(ri.OtherPoly && ri.IsAbstract, this.nameSpace, otherClassName, null);
 			if (ri.OtherPoly)
 			{
 				string otherDerivedName = ri.ToString() + "RightDerived";
-				ownDerivedClass = new PersistentClass(false, otherDerivedName, otherClass);
+				ownDerivedClass = new PersistentClass(false, this.nameSpace, otherDerivedName, otherClass);
 			}
 		}
 

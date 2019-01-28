@@ -41,12 +41,12 @@ public class PmFactory
 	{
 		if (pm == null)
 		{
-				pm = new PersistenceManager(@"C:\Projekte\NDO\UnitTestGenerator\UnitTests\bin\Debug\NDOMapping.xml");
-				pm.LogPath = @"C:\Projekte\NDO\UnitTestGenerator";
+			pm = new PersistenceManager(@"C:\Projekte\NDO\UnitTestGenerator\UnitTests\bin\Debug\NDOMapping.xml");
+			pm.LogPath = @"C:\Projekte\NDO\UnitTestGenerator";
 		}
 		else
 		{
-				pm.UnloadCache();
+			pm.UnloadCache();
 		}
 		return pm;
 	}
@@ -105,10 +105,6 @@ public class TestAgrDir1NoTblAuto
 		QueryOwn();
 		Assert.NotNull(ownVar, "No Query Result");
 		Assert.Null(ownVar.RelField, "There should be no object");
-	}
-	[Test]
-	public void TestSaveReloadRemove()
-	{
 	}
 	[Test]
 	public void TestChangeKeyHolderLeft()
@@ -225,10 +221,6 @@ public class TestAgrDir1TblAuto
 		Assert.Null(ownVar.RelField, "There should be no object");
 	}
 	[Test]
-	public void TestSaveReloadRemove()
-	{
-	}
-	[Test]
 	public void TestChangeKeyHolderLeft()
 	{
 		CreateObjects();
@@ -332,10 +324,6 @@ public class TestAgrBi11NoTblAuto
 		QueryOwn();
 		Assert.NotNull(ownVar, "No Query Result");
 		Assert.Null(ownVar.RelField, "There should be no object");
-	}
-	[Test]
-	public void TestSaveReloadRemove()
-	{
 	}
 	[Test]
 	public void TestChangeKeyHolderLeft()
@@ -482,10 +470,6 @@ public class TestAgrBi11TblAuto
 		QueryOwn();
 		Assert.NotNull(ownVar, "No Query Result");
 		Assert.Null(ownVar.RelField, "There should be no object");
-	}
-	[Test]
-	public void TestSaveReloadRemove()
-	{
 	}
 	[Test]
 	public void TestChangeKeyHolderLeft()
@@ -1086,10 +1070,6 @@ public class TestAgrBi1nNoTblAuto
 		Assert.Null(ownVar.RelField, "There should be no object");
 	}
 	[Test]
-	public void TestSaveReloadRemove()
-	{
-	}
-	[Test]
 	public void TestChangeKeyHolderLeft()
 	{
 		CreateObjects();
@@ -1212,10 +1192,6 @@ public class TestAgrBi1nTblAuto
 		QueryOwn();
 		Assert.NotNull(ownVar, "No Query Result");
 		Assert.Null(ownVar.RelField, "There should be no object");
-	}
-	[Test]
-	public void TestSaveReloadRemove()
-	{
 	}
 	[Test]
 	public void TestChangeKeyHolderLeft()
@@ -1427,10 +1403,6 @@ public class TestCmpDir1NoTblAuto
 		Assert.Null(ownVar.RelField, "There should be no object");
 	}
 	[Test]
-	public void TestSaveReloadRemove()
-	{
-	}
-	[Test]
 	public void TestChangeKeyHolderLeft()
 	{
 		CreateObjects();
@@ -1540,10 +1512,6 @@ public class TestCmpDir1TblAuto
 		Assert.Null(ownVar.RelField, "There should be no object");
 	}
 	[Test]
-	public void TestSaveReloadRemove()
-	{
-	}
-	[Test]
 	public void TestChangeKeyHolderLeft()
 	{
 		CreateObjects();
@@ -1642,10 +1610,6 @@ public class TestCmpBi11NoTblAuto
 		QueryOwn();
 		Assert.NotNull(ownVar, "No Query Result");
 		Assert.Null(ownVar.RelField, "There should be no object");
-	}
-	[Test]
-	public void TestSaveReloadRemove()
-	{
 	}
 	[Test]
 	public void TestChangeKeyHolderLeft()
@@ -1787,10 +1751,6 @@ public class TestCmpBi11TblAuto
 		QueryOwn();
 		Assert.NotNull(ownVar, "No Query Result");
 		Assert.Null(ownVar.RelField, "There should be no object");
-	}
-	[Test]
-	public void TestSaveReloadRemove()
-	{
 	}
 	[Test]
 	public void TestChangeKeyHolderLeft()
@@ -2366,10 +2326,6 @@ public class TestCmpBi1nNoTblAuto
 		Assert.Null(ownVar.RelField, "There should be no object");
 	}
 	[Test]
-	public void TestSaveReloadRemove()
-	{
-	}
-	[Test]
 	public void TestChangeKeyHolderLeft()
 	{
 		CreateObjects();
@@ -2487,10 +2443,6 @@ public class TestCmpBi1nTblAuto
 		QueryOwn();
 		Assert.NotNull(ownVar, "No Query Result");
 		Assert.Null(ownVar.RelField, "There should be no object");
-	}
-	[Test]
-	public void TestSaveReloadRemove()
-	{
 	}
 	[Test]
 	public void TestChangeKeyHolderLeft()
@@ -2700,10 +2652,6 @@ public class TestAgrDir1OwnpconNoTblAuto
 		Assert.Null(ownVar.RelField, "There should be no object");
 	}
 	[Test]
-	public void TestSaveReloadRemove()
-	{
-	}
-	[Test]
 	public void TestChangeKeyHolderLeft()
 	{
 		CreateObjects();
@@ -2820,10 +2768,6 @@ public class TestAgrDir1OwnpconTblAuto
 		Assert.Null(ownVar.RelField, "There should be no object");
 	}
 	[Test]
-	public void TestSaveReloadRemove()
-	{
-	}
-	[Test]
 	public void TestChangeKeyHolderLeft()
 	{
 		CreateObjects();
@@ -2927,10 +2871,6 @@ public class TestAgrBi11OwnpconNoTblAuto
 		QueryOwn();
 		Assert.NotNull(ownVar, "No Query Result");
 		Assert.Null(ownVar.RelField, "There should be no object");
-	}
-	[Test]
-	public void TestSaveReloadRemove()
-	{
 	}
 	[Test]
 	public void TestChangeKeyHolderLeft()
@@ -3082,10 +3022,6 @@ public class TestAgrBi11OwnpconTblAuto
 		QueryOwn();
 		Assert.NotNull(ownVar, "No Query Result");
 		Assert.Null(ownVar.RelField, "There should be no object");
-	}
-	[Test]
-	public void TestSaveReloadRemove()
-	{
 	}
 	[Test]
 	public void TestChangeKeyHolderLeft()
@@ -3705,10 +3641,6 @@ public class TestAgrBi1nOwnpconTblAuto
 		Assert.Null(ownVar.RelField, "There should be no object");
 	}
 	[Test]
-	public void TestSaveReloadRemove()
-	{
-	}
-	[Test]
 	public void TestChangeKeyHolderLeft()
 	{
 		CreateObjects();
@@ -3926,10 +3858,6 @@ public class TestCmpDir1OwnpconNoTblAuto
 		Assert.Null(ownVar.RelField, "There should be no object");
 	}
 	[Test]
-	public void TestSaveReloadRemove()
-	{
-	}
-	[Test]
 	public void TestChangeKeyHolderLeft()
 	{
 		CreateObjects();
@@ -4042,10 +3970,6 @@ public class TestCmpDir1OwnpconTblAuto
 		Assert.Null(ownVar.RelField, "There should be no object");
 	}
 	[Test]
-	public void TestSaveReloadRemove()
-	{
-	}
-	[Test]
 	public void TestChangeKeyHolderLeft()
 	{
 		CreateObjects();
@@ -4144,10 +4068,6 @@ public class TestCmpBi11OwnpconNoTblAuto
 		QueryOwn();
 		Assert.NotNull(ownVar, "No Query Result");
 		Assert.Null(ownVar.RelField, "There should be no object");
-	}
-	[Test]
-	public void TestSaveReloadRemove()
-	{
 	}
 	[Test]
 	public void TestChangeKeyHolderLeft()
@@ -4294,10 +4214,6 @@ public class TestCmpBi11OwnpconTblAuto
 		QueryOwn();
 		Assert.NotNull(ownVar, "No Query Result");
 		Assert.Null(ownVar.RelField, "There should be no object");
-	}
-	[Test]
-	public void TestSaveReloadRemove()
-	{
 	}
 	[Test]
 	public void TestChangeKeyHolderLeft()
@@ -4889,10 +4805,6 @@ public class TestCmpBi1nOwnpconTblAuto
 		Assert.Null(ownVar.RelField, "There should be no object");
 	}
 	[Test]
-	public void TestSaveReloadRemove()
-	{
-	}
-	[Test]
 	public void TestChangeKeyHolderLeft()
 	{
 		CreateObjects();
@@ -5108,10 +5020,6 @@ public class TestAgrDir1OthpconNoTblAuto
 		Assert.Null(ownVar.RelField, "There should be no object");
 	}
 	[Test]
-	public void TestSaveReloadRemove()
-	{
-	}
-	[Test]
 	public void TestChangeKeyHolderLeft()
 	{
 		CreateObjects();
@@ -5230,10 +5138,6 @@ public class TestAgrDir1OthpconTblAuto
 		Assert.Null(ownVar.RelField, "There should be no object");
 	}
 	[Test]
-	public void TestSaveReloadRemove()
-	{
-	}
-	[Test]
 	public void TestChangeKeyHolderLeft()
 	{
 		CreateObjects();
@@ -5337,10 +5241,6 @@ public class TestAgrBi11OthpconNoTblAuto
 		QueryOwn();
 		Assert.NotNull(ownVar, "No Query Result");
 		Assert.Null(ownVar.RelField, "There should be no object");
-	}
-	[Test]
-	public void TestSaveReloadRemove()
-	{
 	}
 	[Test]
 	public void TestChangeKeyHolderLeft()
@@ -5493,10 +5393,6 @@ public class TestAgrBi11OthpconTblAuto
 		QueryOwn();
 		Assert.NotNull(ownVar, "No Query Result");
 		Assert.Null(ownVar.RelField, "There should be no object");
-	}
-	[Test]
-	public void TestSaveReloadRemove()
-	{
 	}
 	[Test]
 	public void TestChangeKeyHolderLeft()
@@ -5870,10 +5766,6 @@ public class TestAgrBi1nOthpconNoTblAuto
 		Assert.Null(ownVar.RelField, "There should be no object");
 	}
 	[Test]
-	public void TestSaveReloadRemove()
-	{
-	}
-	[Test]
 	public void TestChangeKeyHolderLeft()
 	{
 		CreateObjects();
@@ -6004,10 +5896,6 @@ public class TestAgrBi1nOthpconTblAuto
 		QueryOwn();
 		Assert.NotNull(ownVar, "No Query Result");
 		Assert.Null(ownVar.RelField, "There should be no object");
-	}
-	[Test]
-	public void TestSaveReloadRemove()
-	{
 	}
 	[Test]
 	public void TestChangeKeyHolderLeft()
@@ -6244,10 +6132,6 @@ public class TestCmpDir1OthpconNoTblAuto
 		}
 		Assert.AreEqual(true, thrown, "NDOException should have been thrown");
 	}
-	[Test]
-	public void TestSaveReloadRemove()
-	{
-	}
 	void CreateObjects()
 	{
 		pm.MakePersistent(ownVar);
@@ -6317,10 +6201,6 @@ public class TestCmpDir1OthpconTblAuto
 		QueryOwn();
 		Assert.NotNull(ownVar, "No Query Result");
 		Assert.Null(ownVar.RelField, "There should be no object");
-	}
-	[Test]
-	public void TestSaveReloadRemove()
-	{
 	}
 	[Test]
 	public void TestChangeKeyHolderLeft()
@@ -6441,10 +6321,6 @@ public class TestCmpBi11OthpconNoTblAuto
 		Assert.AreEqual(true, thrown, "NDOException should have been thrown");
 	}
 	[Test]
-	public void TestSaveReloadRemove()
-	{
-	}
-	[Test]
 	public void TestRelationHash()
 	{
 		Class clbaseLeft = pm.NDOMapping.FindClass(typeof(CmpBi11OthpconNoTblAutoLeft));
@@ -6527,10 +6403,6 @@ public class TestCmpBi11OthpconTblAuto
 		QueryOwn();
 		Assert.NotNull(ownVar, "No Query Result");
 		Assert.Null(ownVar.RelField, "There should be no object");
-	}
-	[Test]
-	public void TestSaveReloadRemove()
-	{
 	}
 	[Test]
 	public void TestChangeKeyHolderLeft()
@@ -6907,10 +6779,6 @@ public class TestCmpBi1nOthpconNoTblAuto
 		Assert.AreEqual(true, thrown, "NDOException should have been thrown");
 	}
 	[Test]
-	public void TestSaveReloadRemove()
-	{
-	}
-	[Test]
 	public void TestRelationHash()
 	{
 		Class clbaseLeft = pm.NDOMapping.FindClass(typeof(CmpBi1nOthpconNoTblAutoLeft));
@@ -6993,10 +6861,6 @@ public class TestCmpBi1nOthpconTblAuto
 		QueryOwn();
 		Assert.NotNull(ownVar, "No Query Result");
 		Assert.Null(ownVar.RelField, "There should be no object");
-	}
-	[Test]
-	public void TestSaveReloadRemove()
-	{
 	}
 	[Test]
 	public void TestChangeKeyHolderLeft()
@@ -7214,10 +7078,6 @@ public class TestAgrDir1OwnpconOthpconNoTblAuto
 		Assert.Null(ownVar.RelField, "There should be no object");
 	}
 	[Test]
-	public void TestSaveReloadRemove()
-	{
-	}
-	[Test]
 	public void TestChangeKeyHolderLeft()
 	{
 		CreateObjects();
@@ -7336,10 +7196,6 @@ public class TestAgrDir1OwnpconOthpconTblAuto
 		Assert.Null(ownVar.RelField, "There should be no object");
 	}
 	[Test]
-	public void TestSaveReloadRemove()
-	{
-	}
-	[Test]
 	public void TestChangeKeyHolderLeft()
 	{
 		CreateObjects();
@@ -7443,10 +7299,6 @@ public class TestAgrBi11OwnpconOthpconNoTblAuto
 		QueryOwn();
 		Assert.NotNull(ownVar, "No Query Result");
 		Assert.Null(ownVar.RelField, "There should be no object");
-	}
-	[Test]
-	public void TestSaveReloadRemove()
-	{
 	}
 	[Test]
 	public void TestChangeKeyHolderLeft()
@@ -7606,10 +7458,6 @@ public class TestAgrBi11OwnpconOthpconTblAuto
 		QueryOwn();
 		Assert.NotNull(ownVar, "No Query Result");
 		Assert.Null(ownVar.RelField, "There should be no object");
-	}
-	[Test]
-	public void TestSaveReloadRemove()
-	{
 	}
 	[Test]
 	public void TestChangeKeyHolderLeft()
@@ -7997,10 +7845,6 @@ public class TestAgrBi1nOwnpconOthpconTblAuto
 		Assert.Null(ownVar.RelField, "There should be no object");
 	}
 	[Test]
-	public void TestSaveReloadRemove()
-	{
-	}
-	[Test]
 	public void TestChangeKeyHolderLeft()
 	{
 		CreateObjects();
@@ -8247,10 +8091,6 @@ public class TestCmpDir1OwnpconOthpconNoTblAuto
 		}
 		Assert.AreEqual(true, thrown, "NDOException should have been thrown");
 	}
-	[Test]
-	public void TestSaveReloadRemove()
-	{
-	}
 	void CreateObjects()
 	{
 		pm.MakePersistent(ownVar);
@@ -8320,10 +8160,6 @@ public class TestCmpDir1OwnpconOthpconTblAuto
 		QueryOwn();
 		Assert.NotNull(ownVar, "No Query Result");
 		Assert.Null(ownVar.RelField, "There should be no object");
-	}
-	[Test]
-	public void TestSaveReloadRemove()
-	{
 	}
 	[Test]
 	public void TestChangeKeyHolderLeft()
@@ -8444,10 +8280,6 @@ public class TestCmpBi11OwnpconOthpconNoTblAuto
 		Assert.AreEqual(true, thrown, "NDOException should have been thrown");
 	}
 	[Test]
-	public void TestSaveReloadRemove()
-	{
-	}
-	[Test]
 	public void TestRelationHash()
 	{
 		Class clbaseLeft = pm.NDOMapping.FindClass(typeof(CmpBi11OwnpconOthpconNoTblAutoLeftBase));
@@ -8536,10 +8368,6 @@ public class TestCmpBi11OwnpconOthpconTblAuto
 		QueryOwn();
 		Assert.NotNull(ownVar, "No Query Result");
 		Assert.Null(ownVar.RelField, "There should be no object");
-	}
-	[Test]
-	public void TestSaveReloadRemove()
-	{
 	}
 	[Test]
 	public void TestChangeKeyHolderLeft()
@@ -8910,10 +8738,6 @@ public class TestCmpBi1nOwnpconOthpconTblAuto
 		Assert.Null(ownVar.RelField, "There should be no object");
 	}
 	[Test]
-	public void TestSaveReloadRemove()
-	{
-	}
-	[Test]
 	public void TestChangeKeyHolderLeft()
 	{
 		CreateObjects();
@@ -9141,10 +8965,6 @@ public class TestAgrDir1NoTblGuid
 		Assert.Null(ownVar.RelField, "There should be no object");
 	}
 	[Test]
-	public void TestSaveReloadRemove()
-	{
-	}
-	[Test]
 	public void TestChangeKeyHolderLeft()
 	{
 		CreateObjects();
@@ -9250,10 +9070,6 @@ public class TestAgrDir1TblGuid
 		Assert.Null(ownVar.RelField, "There should be no object");
 	}
 	[Test]
-	public void TestSaveReloadRemove()
-	{
-	}
-	[Test]
 	public void TestChangeKeyHolderLeft()
 	{
 		CreateObjects();
@@ -9357,10 +9173,6 @@ public class TestAgrBi11NoTblGuid
 		QueryOwn();
 		Assert.NotNull(ownVar, "No Query Result");
 		Assert.Null(ownVar.RelField, "There should be no object");
-	}
-	[Test]
-	public void TestSaveReloadRemove()
-	{
 	}
 	[Test]
 	public void TestChangeKeyHolderLeft()
@@ -9507,10 +9319,6 @@ public class TestAgrBi11TblGuid
 		QueryOwn();
 		Assert.NotNull(ownVar, "No Query Result");
 		Assert.Null(ownVar.RelField, "There should be no object");
-	}
-	[Test]
-	public void TestSaveReloadRemove()
-	{
 	}
 	[Test]
 	public void TestChangeKeyHolderLeft()
@@ -10093,10 +9901,6 @@ public class TestAgrBi1nNoTblGuid
 		Assert.Null(ownVar.RelField, "There should be no object");
 	}
 	[Test]
-	public void TestSaveReloadRemove()
-	{
-	}
-	[Test]
 	public void TestChangeKeyHolderLeft()
 	{
 		CreateObjects();
@@ -10210,10 +10014,6 @@ public class TestAgrBi1nTblGuid
 		QueryOwn();
 		Assert.NotNull(ownVar, "No Query Result");
 		Assert.Null(ownVar.RelField, "There should be no object");
-	}
-	[Test]
-	public void TestSaveReloadRemove()
-	{
 	}
 	[Test]
 	public void TestChangeKeyHolderLeft()
@@ -10425,10 +10225,6 @@ public class TestCmpDir1NoTblGuid
 		Assert.Null(ownVar.RelField, "There should be no object");
 	}
 	[Test]
-	public void TestSaveReloadRemove()
-	{
-	}
-	[Test]
 	public void TestChangeKeyHolderLeft()
 	{
 		CreateObjects();
@@ -10529,10 +10325,6 @@ public class TestCmpDir1TblGuid
 		Assert.Null(ownVar.RelField, "There should be no object");
 	}
 	[Test]
-	public void TestSaveReloadRemove()
-	{
-	}
-	[Test]
 	public void TestChangeKeyHolderLeft()
 	{
 		CreateObjects();
@@ -10631,10 +10423,6 @@ public class TestCmpBi11NoTblGuid
 		QueryOwn();
 		Assert.NotNull(ownVar, "No Query Result");
 		Assert.Null(ownVar.RelField, "There should be no object");
-	}
-	[Test]
-	public void TestSaveReloadRemove()
-	{
 	}
 	[Test]
 	public void TestChangeKeyHolderLeft()
@@ -10776,10 +10564,6 @@ public class TestCmpBi11TblGuid
 		QueryOwn();
 		Assert.NotNull(ownVar, "No Query Result");
 		Assert.Null(ownVar.RelField, "There should be no object");
-	}
-	[Test]
-	public void TestSaveReloadRemove()
-	{
 	}
 	[Test]
 	public void TestChangeKeyHolderLeft()
@@ -11337,10 +11121,6 @@ public class TestCmpBi1nNoTblGuid
 		Assert.Null(ownVar.RelField, "There should be no object");
 	}
 	[Test]
-	public void TestSaveReloadRemove()
-	{
-	}
-	[Test]
 	public void TestChangeKeyHolderLeft()
 	{
 		CreateObjects();
@@ -11449,10 +11229,6 @@ public class TestCmpBi1nTblGuid
 		QueryOwn();
 		Assert.NotNull(ownVar, "No Query Result");
 		Assert.Null(ownVar.RelField, "There should be no object");
-	}
-	[Test]
-	public void TestSaveReloadRemove()
-	{
 	}
 	[Test]
 	public void TestChangeKeyHolderLeft()
@@ -11662,10 +11438,6 @@ public class TestAgrDir1OwnpconNoTblGuid
 		Assert.Null(ownVar.RelField, "There should be no object");
 	}
 	[Test]
-	public void TestSaveReloadRemove()
-	{
-	}
-	[Test]
 	public void TestChangeKeyHolderLeft()
 	{
 		CreateObjects();
@@ -11771,10 +11543,6 @@ public class TestAgrDir1OwnpconTblGuid
 		Assert.Null(ownVar.RelField, "There should be no object");
 	}
 	[Test]
-	public void TestSaveReloadRemove()
-	{
-	}
-	[Test]
 	public void TestChangeKeyHolderLeft()
 	{
 		CreateObjects();
@@ -11878,10 +11646,6 @@ public class TestAgrBi11OwnpconNoTblGuid
 		QueryOwn();
 		Assert.NotNull(ownVar, "No Query Result");
 		Assert.Null(ownVar.RelField, "There should be no object");
-	}
-	[Test]
-	public void TestSaveReloadRemove()
-	{
 	}
 	[Test]
 	public void TestChangeKeyHolderLeft()
@@ -12032,10 +11796,6 @@ public class TestAgrBi11OwnpconTblGuid
 		QueryOwn();
 		Assert.NotNull(ownVar, "No Query Result");
 		Assert.Null(ownVar.RelField, "There should be no object");
-	}
-	[Test]
-	public void TestSaveReloadRemove()
-	{
 	}
 	[Test]
 	public void TestChangeKeyHolderLeft()
@@ -12630,10 +12390,6 @@ public class TestAgrBi1nOwnpconTblGuid
 		Assert.Null(ownVar.RelField, "There should be no object");
 	}
 	[Test]
-	public void TestSaveReloadRemove()
-	{
-	}
-	[Test]
 	public void TestChangeKeyHolderLeft()
 	{
 		CreateObjects();
@@ -12851,10 +12607,6 @@ public class TestCmpDir1OwnpconNoTblGuid
 		Assert.Null(ownVar.RelField, "There should be no object");
 	}
 	[Test]
-	public void TestSaveReloadRemove()
-	{
-	}
-	[Test]
 	public void TestChangeKeyHolderLeft()
 	{
 		CreateObjects();
@@ -12955,10 +12707,6 @@ public class TestCmpDir1OwnpconTblGuid
 		Assert.Null(ownVar.RelField, "There should be no object");
 	}
 	[Test]
-	public void TestSaveReloadRemove()
-	{
-	}
-	[Test]
 	public void TestChangeKeyHolderLeft()
 	{
 		CreateObjects();
@@ -13057,10 +12805,6 @@ public class TestCmpBi11OwnpconNoTblGuid
 		QueryOwn();
 		Assert.NotNull(ownVar, "No Query Result");
 		Assert.Null(ownVar.RelField, "There should be no object");
-	}
-	[Test]
-	public void TestSaveReloadRemove()
-	{
 	}
 	[Test]
 	public void TestChangeKeyHolderLeft()
@@ -13206,10 +12950,6 @@ public class TestCmpBi11OwnpconTblGuid
 		QueryOwn();
 		Assert.NotNull(ownVar, "No Query Result");
 		Assert.Null(ownVar.RelField, "There should be no object");
-	}
-	[Test]
-	public void TestSaveReloadRemove()
-	{
 	}
 	[Test]
 	public void TestChangeKeyHolderLeft()
@@ -13779,10 +13519,6 @@ public class TestCmpBi1nOwnpconTblGuid
 		Assert.Null(ownVar.RelField, "There should be no object");
 	}
 	[Test]
-	public void TestSaveReloadRemove()
-	{
-	}
-	[Test]
 	public void TestChangeKeyHolderLeft()
 	{
 		CreateObjects();
@@ -13998,10 +13734,6 @@ public class TestAgrDir1OthpconNoTblGuid
 		Assert.Null(ownVar.RelField, "There should be no object");
 	}
 	[Test]
-	public void TestSaveReloadRemove()
-	{
-	}
-	[Test]
 	public void TestChangeKeyHolderLeft()
 	{
 		CreateObjects();
@@ -14107,10 +13839,6 @@ public class TestAgrDir1OthpconTblGuid
 		Assert.Null(ownVar.RelField, "There should be no object");
 	}
 	[Test]
-	public void TestSaveReloadRemove()
-	{
-	}
-	[Test]
 	public void TestChangeKeyHolderLeft()
 	{
 		CreateObjects();
@@ -14214,10 +13942,6 @@ public class TestAgrBi11OthpconNoTblGuid
 		QueryOwn();
 		Assert.NotNull(ownVar, "No Query Result");
 		Assert.Null(ownVar.RelField, "There should be no object");
-	}
-	[Test]
-	public void TestSaveReloadRemove()
-	{
 	}
 	[Test]
 	public void TestChangeKeyHolderLeft()
@@ -14368,10 +14092,6 @@ public class TestAgrBi11OthpconTblGuid
 		QueryOwn();
 		Assert.NotNull(ownVar, "No Query Result");
 		Assert.Null(ownVar.RelField, "There should be no object");
-	}
-	[Test]
-	public void TestSaveReloadRemove()
-	{
 	}
 	[Test]
 	public void TestChangeKeyHolderLeft()
@@ -14745,10 +14465,6 @@ public class TestAgrBi1nOthpconNoTblGuid
 		Assert.Null(ownVar.RelField, "There should be no object");
 	}
 	[Test]
-	public void TestSaveReloadRemove()
-	{
-	}
-	[Test]
 	public void TestChangeKeyHolderLeft()
 	{
 		CreateObjects();
@@ -14866,10 +14582,6 @@ public class TestAgrBi1nOthpconTblGuid
 		QueryOwn();
 		Assert.NotNull(ownVar, "No Query Result");
 		Assert.Null(ownVar.RelField, "There should be no object");
-	}
-	[Test]
-	public void TestSaveReloadRemove()
-	{
 	}
 	[Test]
 	public void TestChangeKeyHolderLeft()
@@ -15089,10 +14801,6 @@ public class TestCmpDir1OthpconNoTblGuid
 		Assert.Null(ownVar.RelField, "There should be no object");
 	}
 	[Test]
-	public void TestSaveReloadRemove()
-	{
-	}
-	[Test]
 	public void TestChangeKeyHolderLeft()
 	{
 		CreateObjects();
@@ -15193,10 +14901,6 @@ public class TestCmpDir1OthpconTblGuid
 		Assert.Null(ownVar.RelField, "There should be no object");
 	}
 	[Test]
-	public void TestSaveReloadRemove()
-	{
-	}
-	[Test]
 	public void TestChangeKeyHolderLeft()
 	{
 		CreateObjects();
@@ -15295,10 +14999,6 @@ public class TestCmpBi11OthpconNoTblGuid
 		QueryOwn();
 		Assert.NotNull(ownVar, "No Query Result");
 		Assert.Null(ownVar.RelField, "There should be no object");
-	}
-	[Test]
-	public void TestSaveReloadRemove()
-	{
 	}
 	[Test]
 	public void TestChangeKeyHolderLeft()
@@ -15444,10 +15144,6 @@ public class TestCmpBi11OthpconTblGuid
 		QueryOwn();
 		Assert.NotNull(ownVar, "No Query Result");
 		Assert.Null(ownVar.RelField, "There should be no object");
-	}
-	[Test]
-	public void TestSaveReloadRemove()
-	{
 	}
 	[Test]
 	public void TestChangeKeyHolderLeft()
@@ -15806,10 +15502,6 @@ public class TestCmpBi1nOthpconNoTblGuid
 		Assert.Null(ownVar.RelField, "There should be no object");
 	}
 	[Test]
-	public void TestSaveReloadRemove()
-	{
-	}
-	[Test]
 	public void TestChangeKeyHolderLeft()
 	{
 		CreateObjects();
@@ -15922,10 +15614,6 @@ public class TestCmpBi1nOthpconTblGuid
 		QueryOwn();
 		Assert.NotNull(ownVar, "No Query Result");
 		Assert.Null(ownVar.RelField, "There should be no object");
-	}
-	[Test]
-	public void TestSaveReloadRemove()
-	{
 	}
 	[Test]
 	public void TestChangeKeyHolderLeft()
@@ -16143,10 +15831,6 @@ public class TestAgrDir1OwnpconOthpconNoTblGuid
 		Assert.Null(ownVar.RelField, "There should be no object");
 	}
 	[Test]
-	public void TestSaveReloadRemove()
-	{
-	}
-	[Test]
 	public void TestChangeKeyHolderLeft()
 	{
 		CreateObjects();
@@ -16252,10 +15936,6 @@ public class TestAgrDir1OwnpconOthpconTblGuid
 		Assert.Null(ownVar.RelField, "There should be no object");
 	}
 	[Test]
-	public void TestSaveReloadRemove()
-	{
-	}
-	[Test]
 	public void TestChangeKeyHolderLeft()
 	{
 		CreateObjects();
@@ -16359,10 +16039,6 @@ public class TestAgrBi11OwnpconOthpconNoTblGuid
 		QueryOwn();
 		Assert.NotNull(ownVar, "No Query Result");
 		Assert.Null(ownVar.RelField, "There should be no object");
-	}
-	[Test]
-	public void TestSaveReloadRemove()
-	{
 	}
 	[Test]
 	public void TestChangeKeyHolderLeft()
@@ -16519,10 +16195,6 @@ public class TestAgrBi11OwnpconOthpconTblGuid
 		QueryOwn();
 		Assert.NotNull(ownVar, "No Query Result");
 		Assert.Null(ownVar.RelField, "There should be no object");
-	}
-	[Test]
-	public void TestSaveReloadRemove()
-	{
 	}
 	[Test]
 	public void TestChangeKeyHolderLeft()
@@ -16908,10 +16580,6 @@ public class TestAgrBi1nOwnpconOthpconTblGuid
 		Assert.Null(ownVar.RelField, "There should be no object");
 	}
 	[Test]
-	public void TestSaveReloadRemove()
-	{
-	}
-	[Test]
 	public void TestChangeKeyHolderLeft()
 	{
 		CreateObjects();
@@ -17141,10 +16809,6 @@ public class TestCmpDir1OwnpconOthpconNoTblGuid
 		Assert.Null(ownVar.RelField, "There should be no object");
 	}
 	[Test]
-	public void TestSaveReloadRemove()
-	{
-	}
-	[Test]
 	public void TestChangeKeyHolderLeft()
 	{
 		CreateObjects();
@@ -17245,10 +16909,6 @@ public class TestCmpDir1OwnpconOthpconTblGuid
 		Assert.Null(ownVar.RelField, "There should be no object");
 	}
 	[Test]
-	public void TestSaveReloadRemove()
-	{
-	}
-	[Test]
 	public void TestChangeKeyHolderLeft()
 	{
 		CreateObjects();
@@ -17347,10 +17007,6 @@ public class TestCmpBi11OwnpconOthpconNoTblGuid
 		QueryOwn();
 		Assert.NotNull(ownVar, "No Query Result");
 		Assert.Null(ownVar.RelField, "There should be no object");
-	}
-	[Test]
-	public void TestSaveReloadRemove()
-	{
 	}
 	[Test]
 	public void TestChangeKeyHolderLeft()
@@ -17502,10 +17158,6 @@ public class TestCmpBi11OwnpconOthpconTblGuid
 		QueryOwn();
 		Assert.NotNull(ownVar, "No Query Result");
 		Assert.Null(ownVar.RelField, "There should be no object");
-	}
-	[Test]
-	public void TestSaveReloadRemove()
-	{
 	}
 	[Test]
 	public void TestChangeKeyHolderLeft()
@@ -17876,10 +17528,6 @@ public class TestCmpBi1nOwnpconOthpconTblGuid
 		Assert.Null(ownVar.RelField, "There should be no object");
 	}
 	[Test]
-	public void TestSaveReloadRemove()
-	{
-	}
-	[Test]
 	public void TestChangeKeyHolderLeft()
 	{
 		CreateObjects();
@@ -18107,10 +17755,6 @@ public class TestAgrDir1OwnpabsNoTblAuto
 		Assert.Null(ownVar.RelField, "There should be no object");
 	}
 	[Test]
-	public void TestSaveReloadRemove()
-	{
-	}
-	[Test]
 	public void TestChangeKeyHolderLeft()
 	{
 		CreateObjects();
@@ -18225,10 +17869,6 @@ public class TestAgrDir1OwnpabsTblAuto
 		Assert.Null(ownVar.RelField, "There should be no object");
 	}
 	[Test]
-	public void TestSaveReloadRemove()
-	{
-	}
-	[Test]
 	public void TestChangeKeyHolderLeft()
 	{
 		CreateObjects();
@@ -18332,10 +17972,6 @@ public class TestAgrBi11OwnpabsNoTblAuto
 		QueryOwn();
 		Assert.NotNull(ownVar, "No Query Result");
 		Assert.Null(ownVar.RelField, "There should be no object");
-	}
-	[Test]
-	public void TestSaveReloadRemove()
-	{
 	}
 	[Test]
 	public void TestChangeKeyHolderLeft()
@@ -18487,10 +18123,6 @@ public class TestAgrBi11OwnpabsTblAuto
 		QueryOwn();
 		Assert.NotNull(ownVar, "No Query Result");
 		Assert.Null(ownVar.RelField, "There should be no object");
-	}
-	[Test]
-	public void TestSaveReloadRemove()
-	{
 	}
 	[Test]
 	public void TestChangeKeyHolderLeft()
@@ -19106,10 +18738,6 @@ public class TestAgrBi1nOwnpabsTblAuto
 		Assert.Null(ownVar.RelField, "There should be no object");
 	}
 	[Test]
-	public void TestSaveReloadRemove()
-	{
-	}
-	[Test]
 	public void TestChangeKeyHolderLeft()
 	{
 		CreateObjects();
@@ -19327,10 +18955,6 @@ public class TestCmpDir1OwnpabsNoTblAuto
 		Assert.Null(ownVar.RelField, "There should be no object");
 	}
 	[Test]
-	public void TestSaveReloadRemove()
-	{
-	}
-	[Test]
 	public void TestChangeKeyHolderLeft()
 	{
 		CreateObjects();
@@ -19441,10 +19065,6 @@ public class TestCmpDir1OwnpabsTblAuto
 		Assert.Null(ownVar.RelField, "There should be no object");
 	}
 	[Test]
-	public void TestSaveReloadRemove()
-	{
-	}
-	[Test]
 	public void TestChangeKeyHolderLeft()
 	{
 		CreateObjects();
@@ -19543,10 +19163,6 @@ public class TestCmpBi11OwnpabsNoTblAuto
 		QueryOwn();
 		Assert.NotNull(ownVar, "No Query Result");
 		Assert.Null(ownVar.RelField, "There should be no object");
-	}
-	[Test]
-	public void TestSaveReloadRemove()
-	{
 	}
 	[Test]
 	public void TestChangeKeyHolderLeft()
@@ -19693,10 +19309,6 @@ public class TestCmpBi11OwnpabsTblAuto
 		QueryOwn();
 		Assert.NotNull(ownVar, "No Query Result");
 		Assert.Null(ownVar.RelField, "There should be no object");
-	}
-	[Test]
-	public void TestSaveReloadRemove()
-	{
 	}
 	[Test]
 	public void TestChangeKeyHolderLeft()
@@ -20284,10 +19896,6 @@ public class TestCmpBi1nOwnpabsTblAuto
 		Assert.Null(ownVar.RelField, "There should be no object");
 	}
 	[Test]
-	public void TestSaveReloadRemove()
-	{
-	}
-	[Test]
 	public void TestChangeKeyHolderLeft()
 	{
 		CreateObjects();
@@ -20503,10 +20111,6 @@ public class TestAgrDir1OthpabsNoTblAuto
 		Assert.Null(ownVar.RelField, "There should be no object");
 	}
 	[Test]
-	public void TestSaveReloadRemove()
-	{
-	}
-	[Test]
 	public void TestChangeKeyHolderLeft()
 	{
 		CreateObjects();
@@ -20623,10 +20227,6 @@ public class TestAgrDir1OthpabsTblAuto
 		Assert.Null(ownVar.RelField, "There should be no object");
 	}
 	[Test]
-	public void TestSaveReloadRemove()
-	{
-	}
-	[Test]
 	public void TestChangeKeyHolderLeft()
 	{
 		CreateObjects();
@@ -20730,10 +20330,6 @@ public class TestAgrBi11OthpabsNoTblAuto
 		QueryOwn();
 		Assert.NotNull(ownVar, "No Query Result");
 		Assert.Null(ownVar.RelField, "There should be no object");
-	}
-	[Test]
-	public void TestSaveReloadRemove()
-	{
 	}
 	[Test]
 	public void TestChangeKeyHolderLeft()
@@ -20886,10 +20482,6 @@ public class TestAgrBi11OthpabsTblAuto
 		QueryOwn();
 		Assert.NotNull(ownVar, "No Query Result");
 		Assert.Null(ownVar.RelField, "There should be no object");
-	}
-	[Test]
-	public void TestSaveReloadRemove()
-	{
 	}
 	[Test]
 	public void TestChangeKeyHolderLeft()
@@ -21263,10 +20855,6 @@ public class TestAgrBi1nOthpabsNoTblAuto
 		Assert.Null(ownVar.RelField, "There should be no object");
 	}
 	[Test]
-	public void TestSaveReloadRemove()
-	{
-	}
-	[Test]
 	public void TestChangeKeyHolderLeft()
 	{
 		CreateObjects();
@@ -21395,10 +20983,6 @@ public class TestAgrBi1nOthpabsTblAuto
 		QueryOwn();
 		Assert.NotNull(ownVar, "No Query Result");
 		Assert.Null(ownVar.RelField, "There should be no object");
-	}
-	[Test]
-	public void TestSaveReloadRemove()
-	{
 	}
 	[Test]
 	public void TestChangeKeyHolderLeft()
@@ -21635,10 +21219,6 @@ public class TestCmpDir1OthpabsNoTblAuto
 		}
 		Assert.AreEqual(true, thrown, "NDOException should have been thrown");
 	}
-	[Test]
-	public void TestSaveReloadRemove()
-	{
-	}
 	void CreateObjects()
 	{
 		pm.MakePersistent(ownVar);
@@ -21708,10 +21288,6 @@ public class TestCmpDir1OthpabsTblAuto
 		QueryOwn();
 		Assert.NotNull(ownVar, "No Query Result");
 		Assert.Null(ownVar.RelField, "There should be no object");
-	}
-	[Test]
-	public void TestSaveReloadRemove()
-	{
 	}
 	[Test]
 	public void TestChangeKeyHolderLeft()
@@ -21832,10 +21408,6 @@ public class TestCmpBi11OthpabsNoTblAuto
 		Assert.AreEqual(true, thrown, "NDOException should have been thrown");
 	}
 	[Test]
-	public void TestSaveReloadRemove()
-	{
-	}
-	[Test]
 	public void TestRelationHash()
 	{
 		Class clbaseLeft = pm.NDOMapping.FindClass(typeof(CmpBi11OthpabsNoTblAutoLeft));
@@ -21918,10 +21490,6 @@ public class TestCmpBi11OthpabsTblAuto
 		QueryOwn();
 		Assert.NotNull(ownVar, "No Query Result");
 		Assert.Null(ownVar.RelField, "There should be no object");
-	}
-	[Test]
-	public void TestSaveReloadRemove()
-	{
 	}
 	[Test]
 	public void TestChangeKeyHolderLeft()
@@ -22298,10 +21866,6 @@ public class TestCmpBi1nOthpabsNoTblAuto
 		Assert.AreEqual(true, thrown, "NDOException should have been thrown");
 	}
 	[Test]
-	public void TestSaveReloadRemove()
-	{
-	}
-	[Test]
 	public void TestRelationHash()
 	{
 		Class clbaseLeft = pm.NDOMapping.FindClass(typeof(CmpBi1nOthpabsNoTblAutoLeft));
@@ -22384,10 +21948,6 @@ public class TestCmpBi1nOthpabsTblAuto
 		QueryOwn();
 		Assert.NotNull(ownVar, "No Query Result");
 		Assert.Null(ownVar.RelField, "There should be no object");
-	}
-	[Test]
-	public void TestSaveReloadRemove()
-	{
 	}
 	[Test]
 	public void TestChangeKeyHolderLeft()
@@ -22605,10 +22165,6 @@ public class TestAgrDir1OwnpabsOthpabsNoTblAuto
 		Assert.Null(ownVar.RelField, "There should be no object");
 	}
 	[Test]
-	public void TestSaveReloadRemove()
-	{
-	}
-	[Test]
 	public void TestChangeKeyHolderLeft()
 	{
 		CreateObjects();
@@ -22725,10 +22281,6 @@ public class TestAgrDir1OwnpabsOthpabsTblAuto
 		Assert.Null(ownVar.RelField, "There should be no object");
 	}
 	[Test]
-	public void TestSaveReloadRemove()
-	{
-	}
-	[Test]
 	public void TestChangeKeyHolderLeft()
 	{
 		CreateObjects();
@@ -22832,10 +22384,6 @@ public class TestAgrBi11OwnpabsOthpabsNoTblAuto
 		QueryOwn();
 		Assert.NotNull(ownVar, "No Query Result");
 		Assert.Null(ownVar.RelField, "There should be no object");
-	}
-	[Test]
-	public void TestSaveReloadRemove()
-	{
 	}
 	[Test]
 	public void TestChangeKeyHolderLeft()
@@ -22995,10 +22543,6 @@ public class TestAgrBi11OwnpabsOthpabsTblAuto
 		QueryOwn();
 		Assert.NotNull(ownVar, "No Query Result");
 		Assert.Null(ownVar.RelField, "There should be no object");
-	}
-	[Test]
-	public void TestSaveReloadRemove()
-	{
 	}
 	[Test]
 	public void TestChangeKeyHolderLeft()
@@ -23386,10 +22930,6 @@ public class TestAgrBi1nOwnpabsOthpabsTblAuto
 		Assert.Null(ownVar.RelField, "There should be no object");
 	}
 	[Test]
-	public void TestSaveReloadRemove()
-	{
-	}
-	[Test]
 	public void TestChangeKeyHolderLeft()
 	{
 		CreateObjects();
@@ -23636,10 +23176,6 @@ public class TestCmpDir1OwnpabsOthpabsNoTblAuto
 		}
 		Assert.AreEqual(true, thrown, "NDOException should have been thrown");
 	}
-	[Test]
-	public void TestSaveReloadRemove()
-	{
-	}
 	void CreateObjects()
 	{
 		pm.MakePersistent(ownVar);
@@ -23709,10 +23245,6 @@ public class TestCmpDir1OwnpabsOthpabsTblAuto
 		QueryOwn();
 		Assert.NotNull(ownVar, "No Query Result");
 		Assert.Null(ownVar.RelField, "There should be no object");
-	}
-	[Test]
-	public void TestSaveReloadRemove()
-	{
 	}
 	[Test]
 	public void TestChangeKeyHolderLeft()
@@ -23833,10 +23365,6 @@ public class TestCmpBi11OwnpabsOthpabsNoTblAuto
 		Assert.AreEqual(true, thrown, "NDOException should have been thrown");
 	}
 	[Test]
-	public void TestSaveReloadRemove()
-	{
-	}
-	[Test]
 	public void TestRelationHash()
 	{
 		Class clbaseLeft = pm.NDOMapping.FindClass(typeof(CmpBi11OwnpabsOthpabsNoTblAutoLeftBase));
@@ -23925,10 +23453,6 @@ public class TestCmpBi11OwnpabsOthpabsTblAuto
 		QueryOwn();
 		Assert.NotNull(ownVar, "No Query Result");
 		Assert.Null(ownVar.RelField, "There should be no object");
-	}
-	[Test]
-	public void TestSaveReloadRemove()
-	{
 	}
 	[Test]
 	public void TestChangeKeyHolderLeft()
@@ -24299,10 +23823,6 @@ public class TestCmpBi1nOwnpabsOthpabsTblAuto
 		Assert.Null(ownVar.RelField, "There should be no object");
 	}
 	[Test]
-	public void TestSaveReloadRemove()
-	{
-	}
-	[Test]
 	public void TestChangeKeyHolderLeft()
 	{
 		CreateObjects();
@@ -24530,10 +24050,6 @@ public class TestAgrDir1OwnpabsNoTblGuid
 		Assert.Null(ownVar.RelField, "There should be no object");
 	}
 	[Test]
-	public void TestSaveReloadRemove()
-	{
-	}
-	[Test]
 	public void TestChangeKeyHolderLeft()
 	{
 		CreateObjects();
@@ -24639,10 +24155,6 @@ public class TestAgrDir1OwnpabsTblGuid
 		Assert.Null(ownVar.RelField, "There should be no object");
 	}
 	[Test]
-	public void TestSaveReloadRemove()
-	{
-	}
-	[Test]
 	public void TestChangeKeyHolderLeft()
 	{
 		CreateObjects();
@@ -24746,10 +24258,6 @@ public class TestAgrBi11OwnpabsNoTblGuid
 		QueryOwn();
 		Assert.NotNull(ownVar, "No Query Result");
 		Assert.Null(ownVar.RelField, "There should be no object");
-	}
-	[Test]
-	public void TestSaveReloadRemove()
-	{
 	}
 	[Test]
 	public void TestChangeKeyHolderLeft()
@@ -24900,10 +24408,6 @@ public class TestAgrBi11OwnpabsTblGuid
 		QueryOwn();
 		Assert.NotNull(ownVar, "No Query Result");
 		Assert.Null(ownVar.RelField, "There should be no object");
-	}
-	[Test]
-	public void TestSaveReloadRemove()
-	{
 	}
 	[Test]
 	public void TestChangeKeyHolderLeft()
@@ -25498,10 +25002,6 @@ public class TestAgrBi1nOwnpabsTblGuid
 		Assert.Null(ownVar.RelField, "There should be no object");
 	}
 	[Test]
-	public void TestSaveReloadRemove()
-	{
-	}
-	[Test]
 	public void TestChangeKeyHolderLeft()
 	{
 		CreateObjects();
@@ -25719,10 +25219,6 @@ public class TestCmpDir1OwnpabsNoTblGuid
 		Assert.Null(ownVar.RelField, "There should be no object");
 	}
 	[Test]
-	public void TestSaveReloadRemove()
-	{
-	}
-	[Test]
 	public void TestChangeKeyHolderLeft()
 	{
 		CreateObjects();
@@ -25823,10 +25319,6 @@ public class TestCmpDir1OwnpabsTblGuid
 		Assert.Null(ownVar.RelField, "There should be no object");
 	}
 	[Test]
-	public void TestSaveReloadRemove()
-	{
-	}
-	[Test]
 	public void TestChangeKeyHolderLeft()
 	{
 		CreateObjects();
@@ -25925,10 +25417,6 @@ public class TestCmpBi11OwnpabsNoTblGuid
 		QueryOwn();
 		Assert.NotNull(ownVar, "No Query Result");
 		Assert.Null(ownVar.RelField, "There should be no object");
-	}
-	[Test]
-	public void TestSaveReloadRemove()
-	{
 	}
 	[Test]
 	public void TestChangeKeyHolderLeft()
@@ -26074,10 +25562,6 @@ public class TestCmpBi11OwnpabsTblGuid
 		QueryOwn();
 		Assert.NotNull(ownVar, "No Query Result");
 		Assert.Null(ownVar.RelField, "There should be no object");
-	}
-	[Test]
-	public void TestSaveReloadRemove()
-	{
 	}
 	[Test]
 	public void TestChangeKeyHolderLeft()
@@ -26647,10 +26131,6 @@ public class TestCmpBi1nOwnpabsTblGuid
 		Assert.Null(ownVar.RelField, "There should be no object");
 	}
 	[Test]
-	public void TestSaveReloadRemove()
-	{
-	}
-	[Test]
 	public void TestChangeKeyHolderLeft()
 	{
 		CreateObjects();
@@ -26866,10 +26346,6 @@ public class TestAgrDir1OthpabsNoTblGuid
 		Assert.Null(ownVar.RelField, "There should be no object");
 	}
 	[Test]
-	public void TestSaveReloadRemove()
-	{
-	}
-	[Test]
 	public void TestChangeKeyHolderLeft()
 	{
 		CreateObjects();
@@ -26975,10 +26451,6 @@ public class TestAgrDir1OthpabsTblGuid
 		Assert.Null(ownVar.RelField, "There should be no object");
 	}
 	[Test]
-	public void TestSaveReloadRemove()
-	{
-	}
-	[Test]
 	public void TestChangeKeyHolderLeft()
 	{
 		CreateObjects();
@@ -27082,10 +26554,6 @@ public class TestAgrBi11OthpabsNoTblGuid
 		QueryOwn();
 		Assert.NotNull(ownVar, "No Query Result");
 		Assert.Null(ownVar.RelField, "There should be no object");
-	}
-	[Test]
-	public void TestSaveReloadRemove()
-	{
 	}
 	[Test]
 	public void TestChangeKeyHolderLeft()
@@ -27236,10 +26704,6 @@ public class TestAgrBi11OthpabsTblGuid
 		QueryOwn();
 		Assert.NotNull(ownVar, "No Query Result");
 		Assert.Null(ownVar.RelField, "There should be no object");
-	}
-	[Test]
-	public void TestSaveReloadRemove()
-	{
 	}
 	[Test]
 	public void TestChangeKeyHolderLeft()
@@ -27613,10 +27077,6 @@ public class TestAgrBi1nOthpabsNoTblGuid
 		Assert.Null(ownVar.RelField, "There should be no object");
 	}
 	[Test]
-	public void TestSaveReloadRemove()
-	{
-	}
-	[Test]
 	public void TestChangeKeyHolderLeft()
 	{
 		CreateObjects();
@@ -27734,10 +27194,6 @@ public class TestAgrBi1nOthpabsTblGuid
 		QueryOwn();
 		Assert.NotNull(ownVar, "No Query Result");
 		Assert.Null(ownVar.RelField, "There should be no object");
-	}
-	[Test]
-	public void TestSaveReloadRemove()
-	{
 	}
 	[Test]
 	public void TestChangeKeyHolderLeft()
@@ -27957,10 +27413,6 @@ public class TestCmpDir1OthpabsNoTblGuid
 		Assert.Null(ownVar.RelField, "There should be no object");
 	}
 	[Test]
-	public void TestSaveReloadRemove()
-	{
-	}
-	[Test]
 	public void TestChangeKeyHolderLeft()
 	{
 		CreateObjects();
@@ -28061,10 +27513,6 @@ public class TestCmpDir1OthpabsTblGuid
 		Assert.Null(ownVar.RelField, "There should be no object");
 	}
 	[Test]
-	public void TestSaveReloadRemove()
-	{
-	}
-	[Test]
 	public void TestChangeKeyHolderLeft()
 	{
 		CreateObjects();
@@ -28163,10 +27611,6 @@ public class TestCmpBi11OthpabsNoTblGuid
 		QueryOwn();
 		Assert.NotNull(ownVar, "No Query Result");
 		Assert.Null(ownVar.RelField, "There should be no object");
-	}
-	[Test]
-	public void TestSaveReloadRemove()
-	{
 	}
 	[Test]
 	public void TestChangeKeyHolderLeft()
@@ -28312,10 +27756,6 @@ public class TestCmpBi11OthpabsTblGuid
 		QueryOwn();
 		Assert.NotNull(ownVar, "No Query Result");
 		Assert.Null(ownVar.RelField, "There should be no object");
-	}
-	[Test]
-	public void TestSaveReloadRemove()
-	{
 	}
 	[Test]
 	public void TestChangeKeyHolderLeft()
@@ -28674,10 +28114,6 @@ public class TestCmpBi1nOthpabsNoTblGuid
 		Assert.Null(ownVar.RelField, "There should be no object");
 	}
 	[Test]
-	public void TestSaveReloadRemove()
-	{
-	}
-	[Test]
 	public void TestChangeKeyHolderLeft()
 	{
 		CreateObjects();
@@ -28790,10 +28226,6 @@ public class TestCmpBi1nOthpabsTblGuid
 		QueryOwn();
 		Assert.NotNull(ownVar, "No Query Result");
 		Assert.Null(ownVar.RelField, "There should be no object");
-	}
-	[Test]
-	public void TestSaveReloadRemove()
-	{
 	}
 	[Test]
 	public void TestChangeKeyHolderLeft()
@@ -29011,10 +28443,6 @@ public class TestAgrDir1OwnpabsOthpabsNoTblGuid
 		Assert.Null(ownVar.RelField, "There should be no object");
 	}
 	[Test]
-	public void TestSaveReloadRemove()
-	{
-	}
-	[Test]
 	public void TestChangeKeyHolderLeft()
 	{
 		CreateObjects();
@@ -29120,10 +28548,6 @@ public class TestAgrDir1OwnpabsOthpabsTblGuid
 		Assert.Null(ownVar.RelField, "There should be no object");
 	}
 	[Test]
-	public void TestSaveReloadRemove()
-	{
-	}
-	[Test]
 	public void TestChangeKeyHolderLeft()
 	{
 		CreateObjects();
@@ -29227,10 +28651,6 @@ public class TestAgrBi11OwnpabsOthpabsNoTblGuid
 		QueryOwn();
 		Assert.NotNull(ownVar, "No Query Result");
 		Assert.Null(ownVar.RelField, "There should be no object");
-	}
-	[Test]
-	public void TestSaveReloadRemove()
-	{
 	}
 	[Test]
 	public void TestChangeKeyHolderLeft()
@@ -29387,10 +28807,6 @@ public class TestAgrBi11OwnpabsOthpabsTblGuid
 		QueryOwn();
 		Assert.NotNull(ownVar, "No Query Result");
 		Assert.Null(ownVar.RelField, "There should be no object");
-	}
-	[Test]
-	public void TestSaveReloadRemove()
-	{
 	}
 	[Test]
 	public void TestChangeKeyHolderLeft()
@@ -29776,10 +29192,6 @@ public class TestAgrBi1nOwnpabsOthpabsTblGuid
 		Assert.Null(ownVar.RelField, "There should be no object");
 	}
 	[Test]
-	public void TestSaveReloadRemove()
-	{
-	}
-	[Test]
 	public void TestChangeKeyHolderLeft()
 	{
 		CreateObjects();
@@ -30009,10 +29421,6 @@ public class TestCmpDir1OwnpabsOthpabsNoTblGuid
 		Assert.Null(ownVar.RelField, "There should be no object");
 	}
 	[Test]
-	public void TestSaveReloadRemove()
-	{
-	}
-	[Test]
 	public void TestChangeKeyHolderLeft()
 	{
 		CreateObjects();
@@ -30113,10 +29521,6 @@ public class TestCmpDir1OwnpabsOthpabsTblGuid
 		Assert.Null(ownVar.RelField, "There should be no object");
 	}
 	[Test]
-	public void TestSaveReloadRemove()
-	{
-	}
-	[Test]
 	public void TestChangeKeyHolderLeft()
 	{
 		CreateObjects();
@@ -30215,10 +29619,6 @@ public class TestCmpBi11OwnpabsOthpabsNoTblGuid
 		QueryOwn();
 		Assert.NotNull(ownVar, "No Query Result");
 		Assert.Null(ownVar.RelField, "There should be no object");
-	}
-	[Test]
-	public void TestSaveReloadRemove()
-	{
 	}
 	[Test]
 	public void TestChangeKeyHolderLeft()
@@ -30370,10 +29770,6 @@ public class TestCmpBi11OwnpabsOthpabsTblGuid
 		QueryOwn();
 		Assert.NotNull(ownVar, "No Query Result");
 		Assert.Null(ownVar.RelField, "There should be no object");
-	}
-	[Test]
-	public void TestSaveReloadRemove()
-	{
 	}
 	[Test]
 	public void TestChangeKeyHolderLeft()
@@ -30742,10 +30138,6 @@ public class TestCmpBi1nOwnpabsOthpabsTblGuid
 		QueryOwn();
 		Assert.NotNull(ownVar, "No Query Result");
 		Assert.Null(ownVar.RelField, "There should be no object");
-	}
-	[Test]
-	public void TestSaveReloadRemove()
-	{
 	}
 	[Test]
 	public void TestChangeKeyHolderLeft()

@@ -110,15 +110,13 @@
     <Compile Include="Main.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="MappingGenerator.cs">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="RelInfo.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Test.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="MappingTestGenerator.cs" />
     <Compile Include="TestGenerator.cs">
       <SubType>Code</SubType>
     </Compile>

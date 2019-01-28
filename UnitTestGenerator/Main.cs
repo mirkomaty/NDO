@@ -77,6 +77,7 @@ namespace TestGenerator
 
 			new ClassGenerator(relInfos).Generate();
 			new TestGenerator(relInfos).Generate();
+			new MappingTestGenerator( relInfos ).Generate();
 			Console.WriteLine(relInfos.Count);
 //			for (int i = 0; i < relInfos.Count; i++)
 //			{

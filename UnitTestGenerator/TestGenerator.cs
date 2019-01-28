@@ -39,7 +39,7 @@ namespace TestGenerator
 		StreamWriter sw;
 		TestFixture fixture;
 		Test test;
-		const string nameSpace = "RelationUnitTests";
+		readonly string nameSpace = "RelationUnitTests";
 
 		public TestGenerator( List<RelInfo> relInfos )
 		{
@@ -433,8 +433,8 @@ namespace TestGenerator
 
 		void GenerateTestGroup( RelInfo ri )
 		{
-			fixture = new TestFixture( "Test" + ri.ToString() );
-			test = new Test( ri );
+			fixture = new TestFixture( this.nameSpace, "Test" + ri.ToString() );
+			test = new Test( ri, "RelationTestClasses" );
 			Class ownClass = null;
 			Class otherClass = null;
 			if (ri.OwnPoly)
@@ -467,12 +467,12 @@ namespace TestGenerator
 
 			CreateTests( ri );
 
-			sw.WriteLine( fixture.ToString() );
+			this.sw.WriteLine( fixture.ToString() );
 		}
 
 		void GeneratePmFactory()
 		{
-			Class cl = new Class( "PmFactory" );
+			Class cl = new Class( this.nameSpace, "PmFactory" );
 			string path = AppDomain.CurrentDomain.BaseDirectory;
 			path = Path.Combine( path, @"..\..\UnitTests\bin\Debug\NDOMapping.xml" );
 			path = Path.GetFullPath( path );
@@ -483,13 +483,13 @@ namespace TestGenerator
 
 			func.Statements.Add( "if (pm == null)" );
 			func.Statements.Add( "{" );
-			func.Statements.Add( "\tpm = new PersistenceManager(@\"" + path + "\");" );
+			func.Statements.Add( "pm = new PersistenceManager(@\"" + path + "\");" );
 			path = Path.GetFullPath( Path.Combine( path, @"..\..\.." ) );
-			func.Statements.Add( "\tpm.LogPath = @\"" + Path.GetDirectoryName( path ) + "\";" );
+			func.Statements.Add( "pm.LogPath = @\"" + Path.GetDirectoryName( path ) + "\";" );
 			func.Statements.Add( "}" );
 			func.Statements.Add( "else" );
 			func.Statements.Add( "{" );
-			func.Statements.Add( "\tpm.UnloadCache();" );
+			func.Statements.Add( "pm.UnloadCache();" );
 			func.Statements.Add( "}" );
 			func.Statements.Add( "return pm;" );
 			sw.WriteLine( cl.ToString() );
