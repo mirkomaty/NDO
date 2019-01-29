@@ -216,6 +216,18 @@ namespace QueryTests
 		}
 
 		[Test]
+		public void LinqTestBooleanExpression()
+		{
+			var vt = pm.Objects<DataTypeTestClasses.DataContainer>().Where( dc => dc.BoolVar == true );
+			var fields = new SqlColumnListGenerator( pm.NDOMapping.FindClass( typeof( DataTypeTestClasses.DataContainer ) ) ).SelectList;
+			Assert.AreEqual( $"SELECT {fields} FROM [DataContainer] WHERE [BoolVar] = 1", vt.QueryString );
+
+			vt = pm.Objects<DataTypeTestClasses.DataContainer>().Where( dc => dc.BoolVar );
+			Assert.AreEqual( $"SELECT {fields} FROM [DataContainer] WHERE [BoolVar] = 1", vt.QueryString );
+		}
+
+
+		[Test]
 		public void LinqTestSuperclasses()
 		{
 			var vt = pm.Objects<Kostenpunkt>();

@@ -63,6 +63,9 @@ namespace NDO.ShortId
 		/// <returns></returns>
 		public static Type GetObjectType(this string shortId, PersistenceManager pm)
 		{
+			if (!shortId.IsShortId())
+				return null;
+
 			string[] arr = shortId.Decode().Split('-');
 			int typeCode = 0;
 			if (int.TryParse(arr[1],System.Globalization.NumberStyles.HexNumber, System.Globalization.CultureInfo.InvariantCulture, out typeCode))

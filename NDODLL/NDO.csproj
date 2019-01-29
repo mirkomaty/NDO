@@ -21,11 +21,11 @@ Support for .NET Standard</PackageReleaseNotes>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <DefineConstants>TRACE;DEBUG;STD;PRO;ENT;NDO20;NET20;</DefineConstants>
+    <DefineConstants>TRACE;DEBUG;</DefineConstants>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
-    <DefineConstants>TRACE;RELEASE;STD;PRO;ENT;NDO20;NET20</DefineConstants>
+    <DefineConstants>TRACE;RELEASE;</DefineConstants>
   </PropertyGroup>
 
   <ItemGroup>
