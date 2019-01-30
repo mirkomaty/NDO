@@ -337,15 +337,19 @@ namespace NDO.Mapping
 			if (foreignRelation.MappingTable == null)
 			{
 				foreignRelation.AddMappingTable( myShortName, refShortName, ownTypeIsPoly, mappingTableAttribute );
+				if (otherTypeIsPoly)
+				{
+					foreignRelation.ForeignKeyTypeColumnName = "TC" + refShortName;
+				}
 			}
 			string frFkcName = "ID" + refShortName;  // This is going to be the r.ForeignKeyColumnName of the foreign relation
 			string frFtcName = null;
-			if (otherTypeIsPoly)
+			if (ownTypeIsPoly)
 				frFtcName = "TC" + myShortName;   // This is going to be the r.MappingTable.ChildForeignKeyColumnName of the foreign relation
 			if (relationName != string.Empty)
 			{
 				frFkcName += "_" + relationName;
-				if (otherTypeIsPoly)
+				if (ownTypeIsPoly)
 					frFtcName += "_" + relationName;
 			}
 			ForeignKeyColumn forFkColumn = foreignRelation.ForeignKeyColumns.FirstOrDefault();

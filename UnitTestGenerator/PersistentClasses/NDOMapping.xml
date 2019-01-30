@@ -1541,7 +1541,7 @@
         </Field>
       </Fields>
       <Relations>
-        <Relation FieldName="relField" AccessorName="RelField" ForeignKeyTypeColumnName="TCAgrBi1nOthpabsNoTblAutoRightBase" ReferencedTypeName="RelationTestClasses.AgrBi1nOthpabsNoTblAutoLeft" RelationName="">
+        <Relation FieldName="relField" AccessorName="RelField" ReferencedTypeName="RelationTestClasses.AgrBi1nOthpabsNoTblAutoLeft" RelationName="">
           <ForeignKeyColumn Name="IDAgrBi1nOthpabsNoTblAutoRightBase" />
         </Relation>
       </Relations>
@@ -1556,7 +1556,7 @@
         </Field>
       </Fields>
       <Relations>
-        <Relation FieldName="relField" AccessorName="RelField" ForeignKeyTypeColumnName="TCAgrBi1nOthpabsNoTblAutoRightBase" ReferencedTypeName="RelationTestClasses.AgrBi1nOthpabsNoTblAutoLeft" RelationName="">
+        <Relation FieldName="relField" AccessorName="RelField" ReferencedTypeName="RelationTestClasses.AgrBi1nOthpabsNoTblAutoLeft" RelationName="">
           <ForeignKeyColumn Name="IDAgrBi1nOthpabsNoTblAutoRightBase" />
         </Relation>
       </Relations>
@@ -1586,7 +1586,7 @@
         </Field>
       </Fields>
       <Relations>
-        <Relation FieldName="relField" AccessorName="RelField" ForeignKeyTypeColumnName="TCAgrBi1nOthpabsNoTblGuidRightBase" ReferencedTypeName="RelationTestClasses.AgrBi1nOthpabsNoTblGuidLeft" RelationName="">
+        <Relation FieldName="relField" AccessorName="RelField" ReferencedTypeName="RelationTestClasses.AgrBi1nOthpabsNoTblGuidLeft" RelationName="">
           <ForeignKeyColumn Name="IDAgrBi1nOthpabsNoTblGuidRightBase" />
         </Relation>
       </Relations>
@@ -1601,7 +1601,7 @@
         </Field>
       </Fields>
       <Relations>
-        <Relation FieldName="relField" AccessorName="RelField" ForeignKeyTypeColumnName="TCAgrBi1nOthpabsNoTblGuidRightBase" ReferencedTypeName="RelationTestClasses.AgrBi1nOthpabsNoTblGuidLeft" RelationName="">
+        <Relation FieldName="relField" AccessorName="RelField" ReferencedTypeName="RelationTestClasses.AgrBi1nOthpabsNoTblGuidLeft" RelationName="">
           <ForeignKeyColumn Name="IDAgrBi1nOthpabsNoTblGuidRightBase" />
         </Relation>
       </Relations>
@@ -1739,7 +1739,7 @@
         </Field>
       </Fields>
       <Relations>
-        <Relation FieldName="relField" AccessorName="RelField" ForeignKeyTypeColumnName="TCAgrBi1nOthpconNoTblAutoRightBase" ReferencedTypeName="RelationTestClasses.AgrBi1nOthpconNoTblAutoLeft" RelationName="">
+        <Relation FieldName="relField" AccessorName="RelField" ReferencedTypeName="RelationTestClasses.AgrBi1nOthpconNoTblAutoLeft" RelationName="">
           <ForeignKeyColumn Name="IDAgrBi1nOthpconNoTblAutoRightBase" />
         </Relation>
       </Relations>
@@ -1754,7 +1754,7 @@
         </Field>
       </Fields>
       <Relations>
-        <Relation FieldName="relField" AccessorName="RelField" ForeignKeyTypeColumnName="TCAgrBi1nOthpconNoTblAutoRightBase" ReferencedTypeName="RelationTestClasses.AgrBi1nOthpconNoTblAutoLeft" RelationName="">
+        <Relation FieldName="relField" AccessorName="RelField" ReferencedTypeName="RelationTestClasses.AgrBi1nOthpconNoTblAutoLeft" RelationName="">
           <ForeignKeyColumn Name="IDAgrBi1nOthpconNoTblAutoRightBase" />
         </Relation>
       </Relations>
@@ -1784,7 +1784,7 @@
         </Field>
       </Fields>
       <Relations>
-        <Relation FieldName="relField" AccessorName="RelField" ForeignKeyTypeColumnName="TCAgrBi1nOthpconNoTblGuidRightBase" ReferencedTypeName="RelationTestClasses.AgrBi1nOthpconNoTblGuidLeft" RelationName="">
+        <Relation FieldName="relField" AccessorName="RelField" ReferencedTypeName="RelationTestClasses.AgrBi1nOthpconNoTblGuidLeft" RelationName="">
           <ForeignKeyColumn Name="IDAgrBi1nOthpconNoTblGuidRightBase" />
         </Relation>
       </Relations>
@@ -1799,7 +1799,7 @@
         </Field>
       </Fields>
       <Relations>
-        <Relation FieldName="relField" AccessorName="RelField" ForeignKeyTypeColumnName="TCAgrBi1nOthpconNoTblGuidRightBase" ReferencedTypeName="RelationTestClasses.AgrBi1nOthpconNoTblGuidLeft" RelationName="">
+        <Relation FieldName="relField" AccessorName="RelField" ReferencedTypeName="RelationTestClasses.AgrBi1nOthpconNoTblGuidLeft" RelationName="">
           <ForeignKeyColumn Name="IDAgrBi1nOthpconNoTblGuidRightBase" />
         </Relation>
       </Relations>
@@ -1922,7 +1922,7 @@
         </Field>
       </Fields>
       <Relations>
-        <Relation FieldName="relField" AccessorName="RelField" ForeignKeyTypeColumnName="TCAgrBi1nOwnpabsOthpabsTblAutoRightBase" ReferencedTypeName="RelationTestClasses.AgrBi1nOwnpabsOthpabsTblAutoRightBase" RelationName="">
+        <Relation FieldName="relField" AccessorName="RelField" ForeignKeyTypeColumnName="TCAgrBi1nOwnpabsOthpabsTblAutoLeftBase" ReferencedTypeName="RelationTestClasses.AgrBi1nOwnpabsOthpabsTblAutoRightBase" RelationName="">
           <ForeignKeyColumn Name="IDAgrBi1nOwnpabsOthpabsTblAutoLeftBase" />
           <MappingTable TableName="relAgrBi1nOwnpabsOthpabsTblAutoLeftBaseAgrBi1nOwnpabsOthpabsTblAutoRightBase" ChildForeignKeyTypeColumnName="TCAgrBi1nOwnpabsOthpabsTblAutoRightBase" ConnectionId="C0">
             <ForeignKeyColumn Name="IDAgrBi1nOwnpabsOthpabsTblAutoRightBase" />
@@ -1940,7 +1940,7 @@
         </Field>
       </Fields>
       <Relations>
-        <Relation FieldName="relField" AccessorName="RelField" ForeignKeyTypeColumnName="TCAgrBi1nOwnpabsOthpabsTblAutoRightBase" ReferencedTypeName="RelationTestClasses.AgrBi1nOwnpabsOthpabsTblAutoRightBase" RelationName="">
+        <Relation FieldName="relField" AccessorName="RelField" ForeignKeyTypeColumnName="TCAgrBi1nOwnpabsOthpabsTblAutoLeftBase" ReferencedTypeName="RelationTestClasses.AgrBi1nOwnpabsOthpabsTblAutoRightBase" RelationName="">
           <ForeignKeyColumn Name="IDAgrBi1nOwnpabsOthpabsTblAutoLeftBase" />
           <MappingTable TableName="relAgrBi1nOwnpabsOthpabsTblAutoLeftBaseAgrBi1nOwnpabsOthpabsTblAutoRightBase" ChildForeignKeyTypeColumnName="TCAgrBi1nOwnpabsOthpabsTblAutoRightBase" ConnectionId="C0">
             <ForeignKeyColumn Name="IDAgrBi1nOwnpabsOthpabsTblAutoRightBase" />
@@ -1994,7 +1994,7 @@
         </Field>
       </Fields>
       <Relations>
-        <Relation FieldName="relField" AccessorName="RelField" ForeignKeyTypeColumnName="TCAgrBi1nOwnpabsOthpabsTblGuidRightBase" ReferencedTypeName="RelationTestClasses.AgrBi1nOwnpabsOthpabsTblGuidRightBase" RelationName="">
+        <Relation FieldName="relField" AccessorName="RelField" ForeignKeyTypeColumnName="TCAgrBi1nOwnpabsOthpabsTblGuidLeftBase" ReferencedTypeName="RelationTestClasses.AgrBi1nOwnpabsOthpabsTblGuidRightBase" RelationName="">
           <ForeignKeyColumn Name="IDAgrBi1nOwnpabsOthpabsTblGuidLeftBase" />
           <MappingTable TableName="relAgrBi1nOwnpabsOthpabsTblGuidLeftBaseAgrBi1nOwnpabsOthpabsTblGuidRightBase" ChildForeignKeyTypeColumnName="TCAgrBi1nOwnpabsOthpabsTblGuidRightBase" ConnectionId="C0">
             <ForeignKeyColumn Name="IDAgrBi1nOwnpabsOthpabsTblGuidRightBase" />
@@ -2012,7 +2012,7 @@
         </Field>
       </Fields>
       <Relations>
-        <Relation FieldName="relField" AccessorName="RelField" ForeignKeyTypeColumnName="TCAgrBi1nOwnpabsOthpabsTblGuidRightBase" ReferencedTypeName="RelationTestClasses.AgrBi1nOwnpabsOthpabsTblGuidRightBase" RelationName="">
+        <Relation FieldName="relField" AccessorName="RelField" ForeignKeyTypeColumnName="TCAgrBi1nOwnpabsOthpabsTblGuidLeftBase" ReferencedTypeName="RelationTestClasses.AgrBi1nOwnpabsOthpabsTblGuidRightBase" RelationName="">
           <ForeignKeyColumn Name="IDAgrBi1nOwnpabsOthpabsTblGuidLeftBase" />
           <MappingTable TableName="relAgrBi1nOwnpabsOthpabsTblGuidLeftBaseAgrBi1nOwnpabsOthpabsTblGuidRightBase" ChildForeignKeyTypeColumnName="TCAgrBi1nOwnpabsOthpabsTblGuidRightBase" ConnectionId="C0">
             <ForeignKeyColumn Name="IDAgrBi1nOwnpabsOthpabsTblGuidRightBase" />
@@ -2066,7 +2066,7 @@
         </Field>
       </Fields>
       <Relations>
-        <Relation FieldName="relField" AccessorName="RelField" ReferencedTypeName="RelationTestClasses.AgrBi1nOwnpabsTblAutoRight" RelationName="">
+        <Relation FieldName="relField" AccessorName="RelField" ForeignKeyTypeColumnName="TCAgrBi1nOwnpabsTblAutoLeftBase" ReferencedTypeName="RelationTestClasses.AgrBi1nOwnpabsTblAutoRight" RelationName="">
           <ForeignKeyColumn Name="IDAgrBi1nOwnpabsTblAutoLeftBase" />
           <MappingTable TableName="relAgrBi1nOwnpabsTblAutoLeftBaseAgrBi1nOwnpabsTblAutoRight" ConnectionId="C0">
             <ForeignKeyColumn Name="IDAgrBi1nOwnpabsTblAutoRight" />
@@ -2084,7 +2084,7 @@
         </Field>
       </Fields>
       <Relations>
-        <Relation FieldName="relField" AccessorName="RelField" ReferencedTypeName="RelationTestClasses.AgrBi1nOwnpabsTblAutoRight" RelationName="">
+        <Relation FieldName="relField" AccessorName="RelField" ForeignKeyTypeColumnName="TCAgrBi1nOwnpabsTblAutoLeftBase" ReferencedTypeName="RelationTestClasses.AgrBi1nOwnpabsTblAutoRight" RelationName="">
           <ForeignKeyColumn Name="IDAgrBi1nOwnpabsTblAutoLeftBase" />
           <MappingTable TableName="relAgrBi1nOwnpabsTblAutoLeftBaseAgrBi1nOwnpabsTblAutoRight" ConnectionId="C0">
             <ForeignKeyColumn Name="IDAgrBi1nOwnpabsTblAutoRight" />
@@ -2120,7 +2120,7 @@
         </Field>
       </Fields>
       <Relations>
-        <Relation FieldName="relField" AccessorName="RelField" ReferencedTypeName="RelationTestClasses.AgrBi1nOwnpabsTblGuidRight" RelationName="">
+        <Relation FieldName="relField" AccessorName="RelField" ForeignKeyTypeColumnName="TCAgrBi1nOwnpabsTblGuidLeftBase" ReferencedTypeName="RelationTestClasses.AgrBi1nOwnpabsTblGuidRight" RelationName="">
           <ForeignKeyColumn Name="IDAgrBi1nOwnpabsTblGuidLeftBase" />
           <MappingTable TableName="relAgrBi1nOwnpabsTblGuidLeftBaseAgrBi1nOwnpabsTblGuidRight" ConnectionId="C0">
             <ForeignKeyColumn Name="IDAgrBi1nOwnpabsTblGuidRight" />
@@ -2138,7 +2138,7 @@
         </Field>
       </Fields>
       <Relations>
-        <Relation FieldName="relField" AccessorName="RelField" ReferencedTypeName="RelationTestClasses.AgrBi1nOwnpabsTblGuidRight" RelationName="">
+        <Relation FieldName="relField" AccessorName="RelField" ForeignKeyTypeColumnName="TCAgrBi1nOwnpabsTblGuidLeftBase" ReferencedTypeName="RelationTestClasses.AgrBi1nOwnpabsTblGuidRight" RelationName="">
           <ForeignKeyColumn Name="IDAgrBi1nOwnpabsTblGuidLeftBase" />
           <MappingTable TableName="relAgrBi1nOwnpabsTblGuidLeftBaseAgrBi1nOwnpabsTblGuidRight" ConnectionId="C0">
             <ForeignKeyColumn Name="IDAgrBi1nOwnpabsTblGuidRight" />
@@ -2174,7 +2174,7 @@
         </Field>
       </Fields>
       <Relations>
-        <Relation FieldName="relField" AccessorName="RelField" ForeignKeyTypeColumnName="TCAgrBi1nOwnpconOthpconTblAutoRightBase" ReferencedTypeName="RelationTestClasses.AgrBi1nOwnpconOthpconTblAutoRightBase" RelationName="">
+        <Relation FieldName="relField" AccessorName="RelField" ForeignKeyTypeColumnName="TCAgrBi1nOwnpconOthpconTblAutoLeftBase" ReferencedTypeName="RelationTestClasses.AgrBi1nOwnpconOthpconTblAutoRightBase" RelationName="">
           <ForeignKeyColumn Name="IDAgrBi1nOwnpconOthpconTblAutoLeftBase" />
           <MappingTable TableName="relAgrBi1nOwnpconOthpconTblAutoLeftBaseAgrBi1nOwnpconOthpconTblAutoRightBase" ChildForeignKeyTypeColumnName="TCAgrBi1nOwnpconOthpconTblAutoRightBase" ConnectionId="C0">
             <ForeignKeyColumn Name="IDAgrBi1nOwnpconOthpconTblAutoRightBase" />
@@ -2192,7 +2192,7 @@
         </Field>
       </Fields>
       <Relations>
-        <Relation FieldName="relField" AccessorName="RelField" ForeignKeyTypeColumnName="TCAgrBi1nOwnpconOthpconTblAutoRightBase" ReferencedTypeName="RelationTestClasses.AgrBi1nOwnpconOthpconTblAutoRightBase" RelationName="">
+        <Relation FieldName="relField" AccessorName="RelField" ForeignKeyTypeColumnName="TCAgrBi1nOwnpconOthpconTblAutoLeftBase" ReferencedTypeName="RelationTestClasses.AgrBi1nOwnpconOthpconTblAutoRightBase" RelationName="">
           <ForeignKeyColumn Name="IDAgrBi1nOwnpconOthpconTblAutoLeftBase" />
           <MappingTable TableName="relAgrBi1nOwnpconOthpconTblAutoLeftBaseAgrBi1nOwnpconOthpconTblAutoRightBase" ChildForeignKeyTypeColumnName="TCAgrBi1nOwnpconOthpconTblAutoRightBase" ConnectionId="C0">
             <ForeignKeyColumn Name="IDAgrBi1nOwnpconOthpconTblAutoRightBase" />
@@ -2246,7 +2246,7 @@
         </Field>
       </Fields>
       <Relations>
-        <Relation FieldName="relField" AccessorName="RelField" ForeignKeyTypeColumnName="TCAgrBi1nOwnpconOthpconTblGuidRightBase" ReferencedTypeName="RelationTestClasses.AgrBi1nOwnpconOthpconTblGuidRightBase" RelationName="">
+        <Relation FieldName="relField" AccessorName="RelField" ForeignKeyTypeColumnName="TCAgrBi1nOwnpconOthpconTblGuidLeftBase" ReferencedTypeName="RelationTestClasses.AgrBi1nOwnpconOthpconTblGuidRightBase" RelationName="">
           <ForeignKeyColumn Name="IDAgrBi1nOwnpconOthpconTblGuidLeftBase" />
           <MappingTable TableName="relAgrBi1nOwnpconOthpconTblGuidLeftBaseAgrBi1nOwnpconOthpconTblGuidRightBase" ChildForeignKeyTypeColumnName="TCAgrBi1nOwnpconOthpconTblGuidRightBase" ConnectionId="C0">
             <ForeignKeyColumn Name="IDAgrBi1nOwnpconOthpconTblGuidRightBase" />
@@ -2264,7 +2264,7 @@
         </Field>
       </Fields>
       <Relations>
-        <Relation FieldName="relField" AccessorName="RelField" ForeignKeyTypeColumnName="TCAgrBi1nOwnpconOthpconTblGuidRightBase" ReferencedTypeName="RelationTestClasses.AgrBi1nOwnpconOthpconTblGuidRightBase" RelationName="">
+        <Relation FieldName="relField" AccessorName="RelField" ForeignKeyTypeColumnName="TCAgrBi1nOwnpconOthpconTblGuidLeftBase" ReferencedTypeName="RelationTestClasses.AgrBi1nOwnpconOthpconTblGuidRightBase" RelationName="">
           <ForeignKeyColumn Name="IDAgrBi1nOwnpconOthpconTblGuidLeftBase" />
           <MappingTable TableName="relAgrBi1nOwnpconOthpconTblGuidLeftBaseAgrBi1nOwnpconOthpconTblGuidRightBase" ChildForeignKeyTypeColumnName="TCAgrBi1nOwnpconOthpconTblGuidRightBase" ConnectionId="C0">
             <ForeignKeyColumn Name="IDAgrBi1nOwnpconOthpconTblGuidRightBase" />
@@ -2318,7 +2318,7 @@
         </Field>
       </Fields>
       <Relations>
-        <Relation FieldName="relField" AccessorName="RelField" ReferencedTypeName="RelationTestClasses.AgrBi1nOwnpconTblAutoRight" RelationName="">
+        <Relation FieldName="relField" AccessorName="RelField" ForeignKeyTypeColumnName="TCAgrBi1nOwnpconTblAutoLeftBase" ReferencedTypeName="RelationTestClasses.AgrBi1nOwnpconTblAutoRight" RelationName="">
           <ForeignKeyColumn Name="IDAgrBi1nOwnpconTblAutoLeftBase" />
           <MappingTable TableName="relAgrBi1nOwnpconTblAutoLeftBaseAgrBi1nOwnpconTblAutoRight" ConnectionId="C0">
             <ForeignKeyColumn Name="IDAgrBi1nOwnpconTblAutoRight" />
@@ -2336,7 +2336,7 @@
         </Field>
       </Fields>
       <Relations>
-        <Relation FieldName="relField" AccessorName="RelField" ReferencedTypeName="RelationTestClasses.AgrBi1nOwnpconTblAutoRight" RelationName="">
+        <Relation FieldName="relField" AccessorName="RelField" ForeignKeyTypeColumnName="TCAgrBi1nOwnpconTblAutoLeftBase" ReferencedTypeName="RelationTestClasses.AgrBi1nOwnpconTblAutoRight" RelationName="">
           <ForeignKeyColumn Name="IDAgrBi1nOwnpconTblAutoLeftBase" />
           <MappingTable TableName="relAgrBi1nOwnpconTblAutoLeftBaseAgrBi1nOwnpconTblAutoRight" ConnectionId="C0">
             <ForeignKeyColumn Name="IDAgrBi1nOwnpconTblAutoRight" />
@@ -2372,7 +2372,7 @@
         </Field>
       </Fields>
       <Relations>
-        <Relation FieldName="relField" AccessorName="RelField" ReferencedTypeName="RelationTestClasses.AgrBi1nOwnpconTblGuidRight" RelationName="">
+        <Relation FieldName="relField" AccessorName="RelField" ForeignKeyTypeColumnName="TCAgrBi1nOwnpconTblGuidLeftBase" ReferencedTypeName="RelationTestClasses.AgrBi1nOwnpconTblGuidRight" RelationName="">
           <ForeignKeyColumn Name="IDAgrBi1nOwnpconTblGuidLeftBase" />
           <MappingTable TableName="relAgrBi1nOwnpconTblGuidLeftBaseAgrBi1nOwnpconTblGuidRight" ConnectionId="C0">
             <ForeignKeyColumn Name="IDAgrBi1nOwnpconTblGuidRight" />
@@ -2390,7 +2390,7 @@
         </Field>
       </Fields>
       <Relations>
-        <Relation FieldName="relField" AccessorName="RelField" ReferencedTypeName="RelationTestClasses.AgrBi1nOwnpconTblGuidRight" RelationName="">
+        <Relation FieldName="relField" AccessorName="RelField" ForeignKeyTypeColumnName="TCAgrBi1nOwnpconTblGuidLeftBase" ReferencedTypeName="RelationTestClasses.AgrBi1nOwnpconTblGuidRight" RelationName="">
           <ForeignKeyColumn Name="IDAgrBi1nOwnpconTblGuidLeftBase" />
           <MappingTable TableName="relAgrBi1nOwnpconTblGuidLeftBaseAgrBi1nOwnpconTblGuidRight" ConnectionId="C0">
             <ForeignKeyColumn Name="IDAgrBi1nOwnpconTblGuidRight" />
@@ -2774,7 +2774,7 @@
         </Field>
       </Fields>
       <Relations>
-        <Relation FieldName="relField" AccessorName="RelField" ForeignKeyTypeColumnName="TCAgrBin1OwnpabsNoTblAutoLeftBase" ReferencedTypeName="RelationTestClasses.AgrBin1OwnpabsNoTblAutoRight" RelationName="">
+        <Relation FieldName="relField" AccessorName="RelField" ReferencedTypeName="RelationTestClasses.AgrBin1OwnpabsNoTblAutoRight" RelationName="">
           <ForeignKeyColumn Name="IDAgrBin1OwnpabsNoTblAutoLeftBase" />
         </Relation>
       </Relations>
@@ -2789,7 +2789,7 @@
         </Field>
       </Fields>
       <Relations>
-        <Relation FieldName="relField" AccessorName="RelField" ForeignKeyTypeColumnName="TCAgrBin1OwnpabsNoTblAutoLeftBase" ReferencedTypeName="RelationTestClasses.AgrBin1OwnpabsNoTblAutoRight" RelationName="">
+        <Relation FieldName="relField" AccessorName="RelField" ReferencedTypeName="RelationTestClasses.AgrBin1OwnpabsNoTblAutoRight" RelationName="">
           <ForeignKeyColumn Name="IDAgrBin1OwnpabsNoTblAutoLeftBase" />
         </Relation>
       </Relations>
@@ -2819,7 +2819,7 @@
         </Field>
       </Fields>
       <Relations>
-        <Relation FieldName="relField" AccessorName="RelField" ForeignKeyTypeColumnName="TCAgrBin1OwnpabsNoTblGuidLeftBase" ReferencedTypeName="RelationTestClasses.AgrBin1OwnpabsNoTblGuidRight" RelationName="">
+        <Relation FieldName="relField" AccessorName="RelField" ReferencedTypeName="RelationTestClasses.AgrBin1OwnpabsNoTblGuidRight" RelationName="">
           <ForeignKeyColumn Name="IDAgrBin1OwnpabsNoTblGuidLeftBase" />
         </Relation>
       </Relations>
@@ -2834,7 +2834,7 @@
         </Field>
       </Fields>
       <Relations>
-        <Relation FieldName="relField" AccessorName="RelField" ForeignKeyTypeColumnName="TCAgrBin1OwnpabsNoTblGuidLeftBase" ReferencedTypeName="RelationTestClasses.AgrBin1OwnpabsNoTblGuidRight" RelationName="">
+        <Relation FieldName="relField" AccessorName="RelField" ReferencedTypeName="RelationTestClasses.AgrBin1OwnpabsNoTblGuidRight" RelationName="">
           <ForeignKeyColumn Name="IDAgrBin1OwnpabsNoTblGuidLeftBase" />
         </Relation>
       </Relations>
@@ -3116,7 +3116,7 @@
         </Field>
       </Fields>
       <Relations>
-        <Relation FieldName="relField" AccessorName="RelField" ForeignKeyTypeColumnName="TCAgrBin1OwnpconNoTblAutoLeftBase" ReferencedTypeName="RelationTestClasses.AgrBin1OwnpconNoTblAutoRight" RelationName="">
+        <Relation FieldName="relField" AccessorName="RelField" ReferencedTypeName="RelationTestClasses.AgrBin1OwnpconNoTblAutoRight" RelationName="">
           <ForeignKeyColumn Name="IDAgrBin1OwnpconNoTblAutoLeftBase" />
         </Relation>
       </Relations>
@@ -3131,7 +3131,7 @@
         </Field>
       </Fields>
       <Relations>
-        <Relation FieldName="relField" AccessorName="RelField" ForeignKeyTypeColumnName="TCAgrBin1OwnpconNoTblAutoLeftBase" ReferencedTypeName="RelationTestClasses.AgrBin1OwnpconNoTblAutoRight" RelationName="">
+        <Relation FieldName="relField" AccessorName="RelField" ReferencedTypeName="RelationTestClasses.AgrBin1OwnpconNoTblAutoRight" RelationName="">
           <ForeignKeyColumn Name="IDAgrBin1OwnpconNoTblAutoLeftBase" />
         </Relation>
       </Relations>
@@ -3161,7 +3161,7 @@
         </Field>
       </Fields>
       <Relations>
-        <Relation FieldName="relField" AccessorName="RelField" ForeignKeyTypeColumnName="TCAgrBin1OwnpconNoTblGuidLeftBase" ReferencedTypeName="RelationTestClasses.AgrBin1OwnpconNoTblGuidRight" RelationName="">
+        <Relation FieldName="relField" AccessorName="RelField" ReferencedTypeName="RelationTestClasses.AgrBin1OwnpconNoTblGuidRight" RelationName="">
           <ForeignKeyColumn Name="IDAgrBin1OwnpconNoTblGuidLeftBase" />
         </Relation>
       </Relations>
@@ -3176,7 +3176,7 @@
         </Field>
       </Fields>
       <Relations>
-        <Relation FieldName="relField" AccessorName="RelField" ForeignKeyTypeColumnName="TCAgrBin1OwnpconNoTblGuidLeftBase" ReferencedTypeName="RelationTestClasses.AgrBin1OwnpconNoTblGuidRight" RelationName="">
+        <Relation FieldName="relField" AccessorName="RelField" ReferencedTypeName="RelationTestClasses.AgrBin1OwnpconNoTblGuidRight" RelationName="">
           <ForeignKeyColumn Name="IDAgrBin1OwnpconNoTblGuidLeftBase" />
         </Relation>
       </Relations>
@@ -5744,7 +5744,7 @@
         </Field>
       </Fields>
       <Relations>
-        <Relation FieldName="relField" AccessorName="RelField" ForeignKeyTypeColumnName="TCAgrDirnOwnpabsNoTblAutoLeftBase" ReferencedTypeName="RelationTestClasses.AgrDirnOwnpabsNoTblAutoRight" RelationName="">
+        <Relation FieldName="relField" AccessorName="RelField" ReferencedTypeName="RelationTestClasses.AgrDirnOwnpabsNoTblAutoRight" RelationName="">
           <ForeignKeyColumn Name="IDAgrDirnOwnpabsNoTblAutoLeftBase" />
         </Relation>
       </Relations>
@@ -5759,7 +5759,7 @@
         </Field>
       </Fields>
       <Relations>
-        <Relation FieldName="relField" AccessorName="RelField" ForeignKeyTypeColumnName="TCAgrDirnOwnpabsNoTblAutoLeftBase" ReferencedTypeName="RelationTestClasses.AgrDirnOwnpabsNoTblAutoRight" RelationName="">
+        <Relation FieldName="relField" AccessorName="RelField" ReferencedTypeName="RelationTestClasses.AgrDirnOwnpabsNoTblAutoRight" RelationName="">
           <ForeignKeyColumn Name="IDAgrDirnOwnpabsNoTblAutoLeftBase" />
         </Relation>
       </Relations>
@@ -5785,7 +5785,7 @@
         </Field>
       </Fields>
       <Relations>
-        <Relation FieldName="relField" AccessorName="RelField" ForeignKeyTypeColumnName="TCAgrDirnOwnpabsNoTblGuidLeftBase" ReferencedTypeName="RelationTestClasses.AgrDirnOwnpabsNoTblGuidRight" RelationName="">
+        <Relation FieldName="relField" AccessorName="RelField" ReferencedTypeName="RelationTestClasses.AgrDirnOwnpabsNoTblGuidRight" RelationName="">
           <ForeignKeyColumn Name="IDAgrDirnOwnpabsNoTblGuidLeftBase" />
         </Relation>
       </Relations>
@@ -5800,7 +5800,7 @@
         </Field>
       </Fields>
       <Relations>
-        <Relation FieldName="relField" AccessorName="RelField" ForeignKeyTypeColumnName="TCAgrDirnOwnpabsNoTblGuidLeftBase" ReferencedTypeName="RelationTestClasses.AgrDirnOwnpabsNoTblGuidRight" RelationName="">
+        <Relation FieldName="relField" AccessorName="RelField" ReferencedTypeName="RelationTestClasses.AgrDirnOwnpabsNoTblGuidRight" RelationName="">
           <ForeignKeyColumn Name="IDAgrDirnOwnpabsNoTblGuidLeftBase" />
         </Relation>
       </Relations>
@@ -6036,7 +6036,7 @@
         </Field>
       </Fields>
       <Relations>
-        <Relation FieldName="relField" AccessorName="RelField" ForeignKeyTypeColumnName="TCAgrDirnOwnpconNoTblAutoLeftBase" ReferencedTypeName="RelationTestClasses.AgrDirnOwnpconNoTblAutoRight" RelationName="">
+        <Relation FieldName="relField" AccessorName="RelField" ReferencedTypeName="RelationTestClasses.AgrDirnOwnpconNoTblAutoRight" RelationName="">
           <ForeignKeyColumn Name="IDAgrDirnOwnpconNoTblAutoLeftBase" />
         </Relation>
       </Relations>
@@ -6051,7 +6051,7 @@
         </Field>
       </Fields>
       <Relations>
-        <Relation FieldName="relField" AccessorName="RelField" ForeignKeyTypeColumnName="TCAgrDirnOwnpconNoTblAutoLeftBase" ReferencedTypeName="RelationTestClasses.AgrDirnOwnpconNoTblAutoRight" RelationName="">
+        <Relation FieldName="relField" AccessorName="RelField" ReferencedTypeName="RelationTestClasses.AgrDirnOwnpconNoTblAutoRight" RelationName="">
           <ForeignKeyColumn Name="IDAgrDirnOwnpconNoTblAutoLeftBase" />
         </Relation>
       </Relations>
@@ -6077,7 +6077,7 @@
         </Field>
       </Fields>
       <Relations>
-        <Relation FieldName="relField" AccessorName="RelField" ForeignKeyTypeColumnName="TCAgrDirnOwnpconNoTblGuidLeftBase" ReferencedTypeName="RelationTestClasses.AgrDirnOwnpconNoTblGuidRight" RelationName="">
+        <Relation FieldName="relField" AccessorName="RelField" ReferencedTypeName="RelationTestClasses.AgrDirnOwnpconNoTblGuidRight" RelationName="">
           <ForeignKeyColumn Name="IDAgrDirnOwnpconNoTblGuidLeftBase" />
         </Relation>
       </Relations>
@@ -6092,7 +6092,7 @@
         </Field>
       </Fields>
       <Relations>
-        <Relation FieldName="relField" AccessorName="RelField" ForeignKeyTypeColumnName="TCAgrDirnOwnpconNoTblGuidLeftBase" ReferencedTypeName="RelationTestClasses.AgrDirnOwnpconNoTblGuidRight" RelationName="">
+        <Relation FieldName="relField" AccessorName="RelField" ReferencedTypeName="RelationTestClasses.AgrDirnOwnpconNoTblGuidRight" RelationName="">
           <ForeignKeyColumn Name="IDAgrDirnOwnpconNoTblGuidLeftBase" />
         </Relation>
       </Relations>
@@ -7913,7 +7913,7 @@
         </Field>
       </Fields>
       <Relations>
-        <Relation FieldName="relField" AccessorName="RelField" ForeignKeyTypeColumnName="TCCmpBi1nOthpabsNoTblAutoRightBase" ReferencedTypeName="RelationTestClasses.CmpBi1nOthpabsNoTblAutoLeft" RelationName="">
+        <Relation FieldName="relField" AccessorName="RelField" ReferencedTypeName="RelationTestClasses.CmpBi1nOthpabsNoTblAutoLeft" RelationName="">
           <ForeignKeyColumn Name="IDCmpBi1nOthpabsNoTblAutoRightBase" />
         </Relation>
       </Relations>
@@ -7928,7 +7928,7 @@
         </Field>
       </Fields>
       <Relations>
-        <Relation FieldName="relField" AccessorName="RelField" ForeignKeyTypeColumnName="TCCmpBi1nOthpabsNoTblAutoRightBase" ReferencedTypeName="RelationTestClasses.CmpBi1nOthpabsNoTblAutoLeft" RelationName="">
+        <Relation FieldName="relField" AccessorName="RelField" ReferencedTypeName="RelationTestClasses.CmpBi1nOthpabsNoTblAutoLeft" RelationName="">
           <ForeignKeyColumn Name="IDCmpBi1nOthpabsNoTblAutoRightBase" />
         </Relation>
       </Relations>
@@ -7958,7 +7958,7 @@
         </Field>
       </Fields>
       <Relations>
-        <Relation FieldName="relField" AccessorName="RelField" ForeignKeyTypeColumnName="TCCmpBi1nOthpabsNoTblGuidRightBase" ReferencedTypeName="RelationTestClasses.CmpBi1nOthpabsNoTblGuidLeft" RelationName="">
+        <Relation FieldName="relField" AccessorName="RelField" ReferencedTypeName="RelationTestClasses.CmpBi1nOthpabsNoTblGuidLeft" RelationName="">
           <ForeignKeyColumn Name="IDCmpBi1nOthpabsNoTblGuidRightBase" />
         </Relation>
       </Relations>
@@ -7973,7 +7973,7 @@
         </Field>
       </Fields>
       <Relations>
-        <Relation FieldName="relField" AccessorName="RelField" ForeignKeyTypeColumnName="TCCmpBi1nOthpabsNoTblGuidRightBase" ReferencedTypeName="RelationTestClasses.CmpBi1nOthpabsNoTblGuidLeft" RelationName="">
+        <Relation FieldName="relField" AccessorName="RelField" ReferencedTypeName="RelationTestClasses.CmpBi1nOthpabsNoTblGuidLeft" RelationName="">
           <ForeignKeyColumn Name="IDCmpBi1nOthpabsNoTblGuidRightBase" />
         </Relation>
       </Relations>
@@ -8111,7 +8111,7 @@
         </Field>
       </Fields>
       <Relations>
-        <Relation FieldName="relField" AccessorName="RelField" ForeignKeyTypeColumnName="TCCmpBi1nOthpconNoTblAutoRightBase" ReferencedTypeName="RelationTestClasses.CmpBi1nOthpconNoTblAutoLeft" RelationName="">
+        <Relation FieldName="relField" AccessorName="RelField" ReferencedTypeName="RelationTestClasses.CmpBi1nOthpconNoTblAutoLeft" RelationName="">
           <ForeignKeyColumn Name="IDCmpBi1nOthpconNoTblAutoRightBase" />
         </Relation>
       </Relations>
@@ -8126,7 +8126,7 @@
         </Field>
       </Fields>
       <Relations>
-        <Relation FieldName="relField" AccessorName="RelField" ForeignKeyTypeColumnName="TCCmpBi1nOthpconNoTblAutoRightBase" ReferencedTypeName="RelationTestClasses.CmpBi1nOthpconNoTblAutoLeft" RelationName="">
+        <Relation FieldName="relField" AccessorName="RelField" ReferencedTypeName="RelationTestClasses.CmpBi1nOthpconNoTblAutoLeft" RelationName="">
           <ForeignKeyColumn Name="IDCmpBi1nOthpconNoTblAutoRightBase" />
         </Relation>
       </Relations>
@@ -8156,7 +8156,7 @@
         </Field>
       </Fields>
       <Relations>
-        <Relation FieldName="relField" AccessorName="RelField" ForeignKeyTypeColumnName="TCCmpBi1nOthpconNoTblGuidRightBase" ReferencedTypeName="RelationTestClasses.CmpBi1nOthpconNoTblGuidLeft" RelationName="">
+        <Relation FieldName="relField" AccessorName="RelField" ReferencedTypeName="RelationTestClasses.CmpBi1nOthpconNoTblGuidLeft" RelationName="">
           <ForeignKeyColumn Name="IDCmpBi1nOthpconNoTblGuidRightBase" />
         </Relation>
       </Relations>
@@ -8171,7 +8171,7 @@
         </Field>
       </Fields>
       <Relations>
-        <Relation FieldName="relField" AccessorName="RelField" ForeignKeyTypeColumnName="TCCmpBi1nOthpconNoTblGuidRightBase" ReferencedTypeName="RelationTestClasses.CmpBi1nOthpconNoTblGuidLeft" RelationName="">
+        <Relation FieldName="relField" AccessorName="RelField" ReferencedTypeName="RelationTestClasses.CmpBi1nOthpconNoTblGuidLeft" RelationName="">
           <ForeignKeyColumn Name="IDCmpBi1nOthpconNoTblGuidRightBase" />
         </Relation>
       </Relations>
@@ -8294,7 +8294,7 @@
         </Field>
       </Fields>
       <Relations>
-        <Relation FieldName="relField" AccessorName="RelField" ForeignKeyTypeColumnName="TCCmpBi1nOwnpabsOthpabsTblAutoRightBase" ReferencedTypeName="RelationTestClasses.CmpBi1nOwnpabsOthpabsTblAutoRightBase" RelationName="">
+        <Relation FieldName="relField" AccessorName="RelField" ForeignKeyTypeColumnName="TCCmpBi1nOwnpabsOthpabsTblAutoLeftBase" ReferencedTypeName="RelationTestClasses.CmpBi1nOwnpabsOthpabsTblAutoRightBase" RelationName="">
           <ForeignKeyColumn Name="IDCmpBi1nOwnpabsOthpabsTblAutoLeftBase" />
           <MappingTable TableName="relCmpBi1nOwnpabsOthpabsTblAutoLeftBaseCmpBi1nOwnpabsOthpabsTblAutoRightBase" ChildForeignKeyTypeColumnName="TCCmpBi1nOwnpabsOthpabsTblAutoRightBase" ConnectionId="C0">
             <ForeignKeyColumn Name="IDCmpBi1nOwnpabsOthpabsTblAutoRightBase" />
@@ -8312,7 +8312,7 @@
         </Field>
       </Fields>
       <Relations>
-        <Relation FieldName="relField" AccessorName="RelField" ForeignKeyTypeColumnName="TCCmpBi1nOwnpabsOthpabsTblAutoRightBase" ReferencedTypeName="RelationTestClasses.CmpBi1nOwnpabsOthpabsTblAutoRightBase" RelationName="">
+        <Relation FieldName="relField" AccessorName="RelField" ForeignKeyTypeColumnName="TCCmpBi1nOwnpabsOthpabsTblAutoLeftBase" ReferencedTypeName="RelationTestClasses.CmpBi1nOwnpabsOthpabsTblAutoRightBase" RelationName="">
           <ForeignKeyColumn Name="IDCmpBi1nOwnpabsOthpabsTblAutoLeftBase" />
           <MappingTable TableName="relCmpBi1nOwnpabsOthpabsTblAutoLeftBaseCmpBi1nOwnpabsOthpabsTblAutoRightBase" ChildForeignKeyTypeColumnName="TCCmpBi1nOwnpabsOthpabsTblAutoRightBase" ConnectionId="C0">
             <ForeignKeyColumn Name="IDCmpBi1nOwnpabsOthpabsTblAutoRightBase" />
@@ -8366,7 +8366,7 @@
         </Field>
       </Fields>
       <Relations>
-        <Relation FieldName="relField" AccessorName="RelField" ForeignKeyTypeColumnName="TCCmpBi1nOwnpabsOthpabsTblGuidRightBase" ReferencedTypeName="RelationTestClasses.CmpBi1nOwnpabsOthpabsTblGuidRightBase" RelationName="">
+        <Relation FieldName="relField" AccessorName="RelField" ForeignKeyTypeColumnName="TCCmpBi1nOwnpabsOthpabsTblGuidLeftBase" ReferencedTypeName="RelationTestClasses.CmpBi1nOwnpabsOthpabsTblGuidRightBase" RelationName="">
           <ForeignKeyColumn Name="IDCmpBi1nOwnpabsOthpabsTblGuidLeftBase" />
           <MappingTable TableName="relCmpBi1nOwnpabsOthpabsTblGuidLeftBaseCmpBi1nOwnpabsOthpabsTblGuidRightBase" ChildForeignKeyTypeColumnName="TCCmpBi1nOwnpabsOthpabsTblGuidRightBase" ConnectionId="C0">
             <ForeignKeyColumn Name="IDCmpBi1nOwnpabsOthpabsTblGuidRightBase" />
@@ -8384,7 +8384,7 @@
         </Field>
       </Fields>
       <Relations>
-        <Relation FieldName="relField" AccessorName="RelField" ForeignKeyTypeColumnName="TCCmpBi1nOwnpabsOthpabsTblGuidRightBase" ReferencedTypeName="RelationTestClasses.CmpBi1nOwnpabsOthpabsTblGuidRightBase" RelationName="">
+        <Relation FieldName="relField" AccessorName="RelField" ForeignKeyTypeColumnName="TCCmpBi1nOwnpabsOthpabsTblGuidLeftBase" ReferencedTypeName="RelationTestClasses.CmpBi1nOwnpabsOthpabsTblGuidRightBase" RelationName="">
           <ForeignKeyColumn Name="IDCmpBi1nOwnpabsOthpabsTblGuidLeftBase" />
           <MappingTable TableName="relCmpBi1nOwnpabsOthpabsTblGuidLeftBaseCmpBi1nOwnpabsOthpabsTblGuidRightBase" ChildForeignKeyTypeColumnName="TCCmpBi1nOwnpabsOthpabsTblGuidRightBase" ConnectionId="C0">
             <ForeignKeyColumn Name="IDCmpBi1nOwnpabsOthpabsTblGuidRightBase" />
@@ -8438,7 +8438,7 @@
         </Field>
       </Fields>
       <Relations>
-        <Relation FieldName="relField" AccessorName="RelField" ReferencedTypeName="RelationTestClasses.CmpBi1nOwnpabsTblAutoRight" RelationName="">
+        <Relation FieldName="relField" AccessorName="RelField" ForeignKeyTypeColumnName="TCCmpBi1nOwnpabsTblAutoLeftBase" ReferencedTypeName="RelationTestClasses.CmpBi1nOwnpabsTblAutoRight" RelationName="">
           <ForeignKeyColumn Name="IDCmpBi1nOwnpabsTblAutoLeftBase" />
           <MappingTable TableName="relCmpBi1nOwnpabsTblAutoLeftBaseCmpBi1nOwnpabsTblAutoRight" ConnectionId="C0">
             <ForeignKeyColumn Name="IDCmpBi1nOwnpabsTblAutoRight" />
@@ -8456,7 +8456,7 @@
         </Field>
       </Fields>
       <Relations>
-        <Relation FieldName="relField" AccessorName="RelField" ReferencedTypeName="RelationTestClasses.CmpBi1nOwnpabsTblAutoRight" RelationName="">
+        <Relation FieldName="relField" AccessorName="RelField" ForeignKeyTypeColumnName="TCCmpBi1nOwnpabsTblAutoLeftBase" ReferencedTypeName="RelationTestClasses.CmpBi1nOwnpabsTblAutoRight" RelationName="">
           <ForeignKeyColumn Name="IDCmpBi1nOwnpabsTblAutoLeftBase" />
           <MappingTable TableName="relCmpBi1nOwnpabsTblAutoLeftBaseCmpBi1nOwnpabsTblAutoRight" ConnectionId="C0">
             <ForeignKeyColumn Name="IDCmpBi1nOwnpabsTblAutoRight" />
@@ -8492,7 +8492,7 @@
         </Field>
       </Fields>
       <Relations>
-        <Relation FieldName="relField" AccessorName="RelField" ReferencedTypeName="RelationTestClasses.CmpBi1nOwnpabsTblGuidRight" RelationName="">
+        <Relation FieldName="relField" AccessorName="RelField" ForeignKeyTypeColumnName="TCCmpBi1nOwnpabsTblGuidLeftBase" ReferencedTypeName="RelationTestClasses.CmpBi1nOwnpabsTblGuidRight" RelationName="">
           <ForeignKeyColumn Name="IDCmpBi1nOwnpabsTblGuidLeftBase" />
           <MappingTable TableName="relCmpBi1nOwnpabsTblGuidLeftBaseCmpBi1nOwnpabsTblGuidRight" ConnectionId="C0">
             <ForeignKeyColumn Name="IDCmpBi1nOwnpabsTblGuidRight" />
@@ -8510,7 +8510,7 @@
         </Field>
       </Fields>
       <Relations>
-        <Relation FieldName="relField" AccessorName="RelField" ReferencedTypeName="RelationTestClasses.CmpBi1nOwnpabsTblGuidRight" RelationName="">
+        <Relation FieldName="relField" AccessorName="RelField" ForeignKeyTypeColumnName="TCCmpBi1nOwnpabsTblGuidLeftBase" ReferencedTypeName="RelationTestClasses.CmpBi1nOwnpabsTblGuidRight" RelationName="">
           <ForeignKeyColumn Name="IDCmpBi1nOwnpabsTblGuidLeftBase" />
           <MappingTable TableName="relCmpBi1nOwnpabsTblGuidLeftBaseCmpBi1nOwnpabsTblGuidRight" ConnectionId="C0">
             <ForeignKeyColumn Name="IDCmpBi1nOwnpabsTblGuidRight" />
@@ -8546,7 +8546,7 @@
         </Field>
       </Fields>
       <Relations>
-        <Relation FieldName="relField" AccessorName="RelField" ForeignKeyTypeColumnName="TCCmpBi1nOwnpconOthpconTblAutoRightBase" ReferencedTypeName="RelationTestClasses.CmpBi1nOwnpconOthpconTblAutoRightBase" RelationName="">
+        <Relation FieldName="relField" AccessorName="RelField" ForeignKeyTypeColumnName="TCCmpBi1nOwnpconOthpconTblAutoLeftBase" ReferencedTypeName="RelationTestClasses.CmpBi1nOwnpconOthpconTblAutoRightBase" RelationName="">
           <ForeignKeyColumn Name="IDCmpBi1nOwnpconOthpconTblAutoLeftBase" />
           <MappingTable TableName="relCmpBi1nOwnpconOthpconTblAutoLeftBaseCmpBi1nOwnpconOthpconTblAutoRightBase" ChildForeignKeyTypeColumnName="TCCmpBi1nOwnpconOthpconTblAutoRightBase" ConnectionId="C0">
             <ForeignKeyColumn Name="IDCmpBi1nOwnpconOthpconTblAutoRightBase" />
@@ -8564,7 +8564,7 @@
         </Field>
       </Fields>
       <Relations>
-        <Relation FieldName="relField" AccessorName="RelField" ForeignKeyTypeColumnName="TCCmpBi1nOwnpconOthpconTblAutoRightBase" ReferencedTypeName="RelationTestClasses.CmpBi1nOwnpconOthpconTblAutoRightBase" RelationName="">
+        <Relation FieldName="relField" AccessorName="RelField" ForeignKeyTypeColumnName="TCCmpBi1nOwnpconOthpconTblAutoLeftBase" ReferencedTypeName="RelationTestClasses.CmpBi1nOwnpconOthpconTblAutoRightBase" RelationName="">
           <ForeignKeyColumn Name="IDCmpBi1nOwnpconOthpconTblAutoLeftBase" />
           <MappingTable TableName="relCmpBi1nOwnpconOthpconTblAutoLeftBaseCmpBi1nOwnpconOthpconTblAutoRightBase" ChildForeignKeyTypeColumnName="TCCmpBi1nOwnpconOthpconTblAutoRightBase" ConnectionId="C0">
             <ForeignKeyColumn Name="IDCmpBi1nOwnpconOthpconTblAutoRightBase" />
@@ -8618,7 +8618,7 @@
         </Field>
       </Fields>
       <Relations>
-        <Relation FieldName="relField" AccessorName="RelField" ForeignKeyTypeColumnName="TCCmpBi1nOwnpconOthpconTblGuidRightBase" ReferencedTypeName="RelationTestClasses.CmpBi1nOwnpconOthpconTblGuidRightBase" RelationName="">
+        <Relation FieldName="relField" AccessorName="RelField" ForeignKeyTypeColumnName="TCCmpBi1nOwnpconOthpconTblGuidLeftBase" ReferencedTypeName="RelationTestClasses.CmpBi1nOwnpconOthpconTblGuidRightBase" RelationName="">
           <ForeignKeyColumn Name="IDCmpBi1nOwnpconOthpconTblGuidLeftBase" />
           <MappingTable TableName="relCmpBi1nOwnpconOthpconTblGuidLeftBaseCmpBi1nOwnpconOthpconTblGuidRightBase" ChildForeignKeyTypeColumnName="TCCmpBi1nOwnpconOthpconTblGuidRightBase" ConnectionId="C0">
             <ForeignKeyColumn Name="IDCmpBi1nOwnpconOthpconTblGuidRightBase" />
@@ -8636,7 +8636,7 @@
         </Field>
       </Fields>
       <Relations>
-        <Relation FieldName="relField" AccessorName="RelField" ForeignKeyTypeColumnName="TCCmpBi1nOwnpconOthpconTblGuidRightBase" ReferencedTypeName="RelationTestClasses.CmpBi1nOwnpconOthpconTblGuidRightBase" RelationName="">
+        <Relation FieldName="relField" AccessorName="RelField" ForeignKeyTypeColumnName="TCCmpBi1nOwnpconOthpconTblGuidLeftBase" ReferencedTypeName="RelationTestClasses.CmpBi1nOwnpconOthpconTblGuidRightBase" RelationName="">
           <ForeignKeyColumn Name="IDCmpBi1nOwnpconOthpconTblGuidLeftBase" />
           <MappingTable TableName="relCmpBi1nOwnpconOthpconTblGuidLeftBaseCmpBi1nOwnpconOthpconTblGuidRightBase" ChildForeignKeyTypeColumnName="TCCmpBi1nOwnpconOthpconTblGuidRightBase" ConnectionId="C0">
             <ForeignKeyColumn Name="IDCmpBi1nOwnpconOthpconTblGuidRightBase" />
@@ -8690,7 +8690,7 @@
         </Field>
       </Fields>
       <Relations>
-        <Relation FieldName="relField" AccessorName="RelField" ReferencedTypeName="RelationTestClasses.CmpBi1nOwnpconTblAutoRight" RelationName="">
+        <Relation FieldName="relField" AccessorName="RelField" ForeignKeyTypeColumnName="TCCmpBi1nOwnpconTblAutoLeftBase" ReferencedTypeName="RelationTestClasses.CmpBi1nOwnpconTblAutoRight" RelationName="">
           <ForeignKeyColumn Name="IDCmpBi1nOwnpconTblAutoLeftBase" />
           <MappingTable TableName="relCmpBi1nOwnpconTblAutoLeftBaseCmpBi1nOwnpconTblAutoRight" ConnectionId="C0">
             <ForeignKeyColumn Name="IDCmpBi1nOwnpconTblAutoRight" />
@@ -8708,7 +8708,7 @@
         </Field>
       </Fields>
       <Relations>
-        <Relation FieldName="relField" AccessorName="RelField" ReferencedTypeName="RelationTestClasses.CmpBi1nOwnpconTblAutoRight" RelationName="">
+        <Relation FieldName="relField" AccessorName="RelField" ForeignKeyTypeColumnName="TCCmpBi1nOwnpconTblAutoLeftBase" ReferencedTypeName="RelationTestClasses.CmpBi1nOwnpconTblAutoRight" RelationName="">
           <ForeignKeyColumn Name="IDCmpBi1nOwnpconTblAutoLeftBase" />
           <MappingTable TableName="relCmpBi1nOwnpconTblAutoLeftBaseCmpBi1nOwnpconTblAutoRight" ConnectionId="C0">
             <ForeignKeyColumn Name="IDCmpBi1nOwnpconTblAutoRight" />
@@ -8744,7 +8744,7 @@
         </Field>
       </Fields>
       <Relations>
-        <Relation FieldName="relField" AccessorName="RelField" ReferencedTypeName="RelationTestClasses.CmpBi1nOwnpconTblGuidRight" RelationName="">
+        <Relation FieldName="relField" AccessorName="RelField" ForeignKeyTypeColumnName="TCCmpBi1nOwnpconTblGuidLeftBase" ReferencedTypeName="RelationTestClasses.CmpBi1nOwnpconTblGuidRight" RelationName="">
           <ForeignKeyColumn Name="IDCmpBi1nOwnpconTblGuidLeftBase" />
           <MappingTable TableName="relCmpBi1nOwnpconTblGuidLeftBaseCmpBi1nOwnpconTblGuidRight" ConnectionId="C0">
             <ForeignKeyColumn Name="IDCmpBi1nOwnpconTblGuidRight" />
@@ -8762,7 +8762,7 @@
         </Field>
       </Fields>
       <Relations>
-        <Relation FieldName="relField" AccessorName="RelField" ReferencedTypeName="RelationTestClasses.CmpBi1nOwnpconTblGuidRight" RelationName="">
+        <Relation FieldName="relField" AccessorName="RelField" ForeignKeyTypeColumnName="TCCmpBi1nOwnpconTblGuidLeftBase" ReferencedTypeName="RelationTestClasses.CmpBi1nOwnpconTblGuidRight" RelationName="">
           <ForeignKeyColumn Name="IDCmpBi1nOwnpconTblGuidLeftBase" />
           <MappingTable TableName="relCmpBi1nOwnpconTblGuidLeftBaseCmpBi1nOwnpconTblGuidRight" ConnectionId="C0">
             <ForeignKeyColumn Name="IDCmpBi1nOwnpconTblGuidRight" />
@@ -9146,7 +9146,7 @@
         </Field>
       </Fields>
       <Relations>
-        <Relation FieldName="relField" AccessorName="RelField" ForeignKeyTypeColumnName="TCCmpBin1OwnpabsNoTblAutoLeftBase" ReferencedTypeName="RelationTestClasses.CmpBin1OwnpabsNoTblAutoRight" RelationName="">
+        <Relation FieldName="relField" AccessorName="RelField" ReferencedTypeName="RelationTestClasses.CmpBin1OwnpabsNoTblAutoRight" RelationName="">
           <ForeignKeyColumn Name="IDCmpBin1OwnpabsNoTblAutoLeftBase" />
         </Relation>
       </Relations>
@@ -9161,7 +9161,7 @@
         </Field>
       </Fields>
       <Relations>
-        <Relation FieldName="relField" AccessorName="RelField" ForeignKeyTypeColumnName="TCCmpBin1OwnpabsNoTblAutoLeftBase" ReferencedTypeName="RelationTestClasses.CmpBin1OwnpabsNoTblAutoRight" RelationName="">
+        <Relation FieldName="relField" AccessorName="RelField" ReferencedTypeName="RelationTestClasses.CmpBin1OwnpabsNoTblAutoRight" RelationName="">
           <ForeignKeyColumn Name="IDCmpBin1OwnpabsNoTblAutoLeftBase" />
         </Relation>
       </Relations>
@@ -9191,7 +9191,7 @@
         </Field>
       </Fields>
       <Relations>
-        <Relation FieldName="relField" AccessorName="RelField" ForeignKeyTypeColumnName="TCCmpBin1OwnpabsNoTblGuidLeftBase" ReferencedTypeName="RelationTestClasses.CmpBin1OwnpabsNoTblGuidRight" RelationName="">
+        <Relation FieldName="relField" AccessorName="RelField" ReferencedTypeName="RelationTestClasses.CmpBin1OwnpabsNoTblGuidRight" RelationName="">
           <ForeignKeyColumn Name="IDCmpBin1OwnpabsNoTblGuidLeftBase" />
         </Relation>
       </Relations>
@@ -9206,7 +9206,7 @@
         </Field>
       </Fields>
       <Relations>
-        <Relation FieldName="relField" AccessorName="RelField" ForeignKeyTypeColumnName="TCCmpBin1OwnpabsNoTblGuidLeftBase" ReferencedTypeName="RelationTestClasses.CmpBin1OwnpabsNoTblGuidRight" RelationName="">
+        <Relation FieldName="relField" AccessorName="RelField" ReferencedTypeName="RelationTestClasses.CmpBin1OwnpabsNoTblGuidRight" RelationName="">
           <ForeignKeyColumn Name="IDCmpBin1OwnpabsNoTblGuidLeftBase" />
         </Relation>
       </Relations>
@@ -9488,7 +9488,7 @@
         </Field>
       </Fields>
       <Relations>
-        <Relation FieldName="relField" AccessorName="RelField" ForeignKeyTypeColumnName="TCCmpBin1OwnpconNoTblAutoLeftBase" ReferencedTypeName="RelationTestClasses.CmpBin1OwnpconNoTblAutoRight" RelationName="">
+        <Relation FieldName="relField" AccessorName="RelField" ReferencedTypeName="RelationTestClasses.CmpBin1OwnpconNoTblAutoRight" RelationName="">
           <ForeignKeyColumn Name="IDCmpBin1OwnpconNoTblAutoLeftBase" />
         </Relation>
       </Relations>
@@ -9503,7 +9503,7 @@
         </Field>
       </Fields>
       <Relations>
-        <Relation FieldName="relField" AccessorName="RelField" ForeignKeyTypeColumnName="TCCmpBin1OwnpconNoTblAutoLeftBase" ReferencedTypeName="RelationTestClasses.CmpBin1OwnpconNoTblAutoRight" RelationName="">
+        <Relation FieldName="relField" AccessorName="RelField" ReferencedTypeName="RelationTestClasses.CmpBin1OwnpconNoTblAutoRight" RelationName="">
           <ForeignKeyColumn Name="IDCmpBin1OwnpconNoTblAutoLeftBase" />
         </Relation>
       </Relations>
@@ -9533,7 +9533,7 @@
         </Field>
       </Fields>
       <Relations>
-        <Relation FieldName="relField" AccessorName="RelField" ForeignKeyTypeColumnName="TCCmpBin1OwnpconNoTblGuidLeftBase" ReferencedTypeName="RelationTestClasses.CmpBin1OwnpconNoTblGuidRight" RelationName="">
+        <Relation FieldName="relField" AccessorName="RelField" ReferencedTypeName="RelationTestClasses.CmpBin1OwnpconNoTblGuidRight" RelationName="">
           <ForeignKeyColumn Name="IDCmpBin1OwnpconNoTblGuidLeftBase" />
         </Relation>
       </Relations>
@@ -9548,7 +9548,7 @@
         </Field>
       </Fields>
       <Relations>
-        <Relation FieldName="relField" AccessorName="RelField" ForeignKeyTypeColumnName="TCCmpBin1OwnpconNoTblGuidLeftBase" ReferencedTypeName="RelationTestClasses.CmpBin1OwnpconNoTblGuidRight" RelationName="">
+        <Relation FieldName="relField" AccessorName="RelField" ReferencedTypeName="RelationTestClasses.CmpBin1OwnpconNoTblGuidRight" RelationName="">
           <ForeignKeyColumn Name="IDCmpBin1OwnpconNoTblGuidLeftBase" />
         </Relation>
       </Relations>
@@ -12116,7 +12116,7 @@
         </Field>
       </Fields>
       <Relations>
-        <Relation FieldName="relField" AccessorName="RelField" ForeignKeyTypeColumnName="TCCmpDirnOwnpabsNoTblAutoLeftBase" ReferencedTypeName="RelationTestClasses.CmpDirnOwnpabsNoTblAutoRight" RelationName="">
+        <Relation FieldName="relField" AccessorName="RelField" ReferencedTypeName="RelationTestClasses.CmpDirnOwnpabsNoTblAutoRight" RelationName="">
           <ForeignKeyColumn Name="IDCmpDirnOwnpabsNoTblAutoLeftBase" />
         </Relation>
       </Relations>
@@ -12131,7 +12131,7 @@
         </Field>
       </Fields>
       <Relations>
-        <Relation FieldName="relField" AccessorName="RelField" ForeignKeyTypeColumnName="TCCmpDirnOwnpabsNoTblAutoLeftBase" ReferencedTypeName="RelationTestClasses.CmpDirnOwnpabsNoTblAutoRight" RelationName="">
+        <Relation FieldName="relField" AccessorName="RelField" ReferencedTypeName="RelationTestClasses.CmpDirnOwnpabsNoTblAutoRight" RelationName="">
           <ForeignKeyColumn Name="IDCmpDirnOwnpabsNoTblAutoLeftBase" />
         </Relation>
       </Relations>
@@ -12157,7 +12157,7 @@
         </Field>
       </Fields>
       <Relations>
-        <Relation FieldName="relField" AccessorName="RelField" ForeignKeyTypeColumnName="TCCmpDirnOwnpabsNoTblGuidLeftBase" ReferencedTypeName="RelationTestClasses.CmpDirnOwnpabsNoTblGuidRight" RelationName="">
+        <Relation FieldName="relField" AccessorName="RelField" ReferencedTypeName="RelationTestClasses.CmpDirnOwnpabsNoTblGuidRight" RelationName="">
           <ForeignKeyColumn Name="IDCmpDirnOwnpabsNoTblGuidLeftBase" />
         </Relation>
       </Relations>
@@ -12172,7 +12172,7 @@
         </Field>
       </Fields>
       <Relations>
-        <Relation FieldName="relField" AccessorName="RelField" ForeignKeyTypeColumnName="TCCmpDirnOwnpabsNoTblGuidLeftBase" ReferencedTypeName="RelationTestClasses.CmpDirnOwnpabsNoTblGuidRight" RelationName="">
+        <Relation FieldName="relField" AccessorName="RelField" ReferencedTypeName="RelationTestClasses.CmpDirnOwnpabsNoTblGuidRight" RelationName="">
           <ForeignKeyColumn Name="IDCmpDirnOwnpabsNoTblGuidLeftBase" />
         </Relation>
       </Relations>
@@ -12408,7 +12408,7 @@
         </Field>
       </Fields>
       <Relations>
-        <Relation FieldName="relField" AccessorName="RelField" ForeignKeyTypeColumnName="TCCmpDirnOwnpconNoTblAutoLeftBase" ReferencedTypeName="RelationTestClasses.CmpDirnOwnpconNoTblAutoRight" RelationName="">
+        <Relation FieldName="relField" AccessorName="RelField" ReferencedTypeName="RelationTestClasses.CmpDirnOwnpconNoTblAutoRight" RelationName="">
           <ForeignKeyColumn Name="IDCmpDirnOwnpconNoTblAutoLeftBase" />
         </Relation>
       </Relations>
@@ -12423,7 +12423,7 @@
         </Field>
       </Fields>
       <Relations>
-        <Relation FieldName="relField" AccessorName="RelField" ForeignKeyTypeColumnName="TCCmpDirnOwnpconNoTblAutoLeftBase" ReferencedTypeName="RelationTestClasses.CmpDirnOwnpconNoTblAutoRight" RelationName="">
+        <Relation FieldName="relField" AccessorName="RelField" ReferencedTypeName="RelationTestClasses.CmpDirnOwnpconNoTblAutoRight" RelationName="">
           <ForeignKeyColumn Name="IDCmpDirnOwnpconNoTblAutoLeftBase" />
         </Relation>
       </Relations>
@@ -12449,7 +12449,7 @@
         </Field>
       </Fields>
       <Relations>
-        <Relation FieldName="relField" AccessorName="RelField" ForeignKeyTypeColumnName="TCCmpDirnOwnpconNoTblGuidLeftBase" ReferencedTypeName="RelationTestClasses.CmpDirnOwnpconNoTblGuidRight" RelationName="">
+        <Relation FieldName="relField" AccessorName="RelField" ReferencedTypeName="RelationTestClasses.CmpDirnOwnpconNoTblGuidRight" RelationName="">
           <ForeignKeyColumn Name="IDCmpDirnOwnpconNoTblGuidLeftBase" />
         </Relation>
       </Relations>
@@ -12464,7 +12464,7 @@
         </Field>
       </Fields>
       <Relations>
-        <Relation FieldName="relField" AccessorName="RelField" ForeignKeyTypeColumnName="TCCmpDirnOwnpconNoTblGuidLeftBase" ReferencedTypeName="RelationTestClasses.CmpDirnOwnpconNoTblGuidRight" RelationName="">
+        <Relation FieldName="relField" AccessorName="RelField" ReferencedTypeName="RelationTestClasses.CmpDirnOwnpconNoTblGuidRight" RelationName="">
           <ForeignKeyColumn Name="IDCmpDirnOwnpconNoTblGuidLeftBase" />
         </Relation>
       </Relations>

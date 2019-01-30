@@ -141,9 +141,28 @@ namespace TestGenerator
 							func.Statements.Add( AssertNotNull( "Relation should have a TypeColumn #8", "otherDerivedClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName" ) );
 					}
 				}
+				if (!ri.OwnPoly)
+				{
+					func.Statements.Add( AssertNull( "Relation shouldn't have a TypeColumn #1", "ownClass.Relations.First().ForeignKeyTypeColumnName" ) );
+					if (ri.IsBi)
+					{
+						func.Statements.Add( AssertNull( "Relation shouldn't have a TypeColumn #2", "otherClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName" ) );
+					}
+				}
+				if (!ri.OtherPoly)
+				{
+					func.Statements.Add( AssertNull( "Relation shouldn't have a TypeColumn #3", "ownClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName" ) );
+					if (ri.IsBi)
+					{
+						func.Statements.Add( AssertNull( "Relation shouldn't have a TypeColumn #4", "otherClass.Relations.First().ForeignKeyTypeColumnName" ) );
+					}
+				}
 			}
-			else
+			else  // No Mapping Table
 			{
+				if (!ri.OtherPoly)
+					func.Statements.Add( AssertNull( "Relation shouldn't have a TypeColumn #1", "ownClass.Relations.First().ForeignKeyTypeColumnName" ) );
+
 				// Polymorphic 1:n relations always have a mapping table,
 				// so we check only the 1:1 relations.
 				if (!ri.IsList)
@@ -155,6 +174,12 @@ namespace TestGenerator
 				}
 			}
 		}
+
+		bool IsForbiddenCase( RelInfo ri )
+		{
+			return ri.IsComposite && !ri.UseGuid && !ri.HasTable && !ri.IsList && ri.OtherPoly;
+		}
+
 
 		public void Generate()
 		{
@@ -193,7 +218,12 @@ namespace TestGenerator
 			sw.WriteLine( "{\n" );
 			GeneratePmFactory();
 			foreach (RelInfo ri in relInfos)
+			{
+				if (IsForbiddenCase( ri ))
+					continue;
+
 				GenerateTestGroup( ri );
+			}
 			sw.WriteLine( "\n}" );
 			sw.Close();
 		}

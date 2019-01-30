@@ -654,12 +654,12 @@ namespace NDO.Mapping
         /// </summary>
         /// <param name="fieldName">Name of the field</param>
         /// <param name="referencedTypeName">Type name of the referenced class</param>
-        /// <param name="is1to1">True, if multiplicity is 1</param>
+        /// <param name="isElement">True, if multiplicity is 1</param>
         /// <param name="relationName">Optional relation name</param>
         /// <param name="ownTypeIsPoly">True, if the class, containing the field, has a persistent base class</param>
         /// <param name="otherTypeIsPoly">True, if the related type has a persistent base class</param>
         /// <returns>A new constructed <code>Relation</code> object</returns>
-        public Relation AddStandardRelation(string fieldName, string referencedTypeName, bool is1to1, string relationName, bool ownTypeIsPoly, bool otherTypeIsPoly, MappingTableAttribute mappingTableAttribute)
+        public Relation AddStandardRelation(string fieldName, string referencedTypeName, bool isElement, string relationName, bool ownTypeIsPoly, bool otherTypeIsPoly, MappingTableAttribute mappingTableAttribute)
         {
             //			if (null != Parent)
             //				Parent.this.Changed = true;
@@ -669,7 +669,7 @@ namespace NDO.Mapping
             r.ReferencedTypeName = referencedTypeName;
             //r.parent = this;
             r.RelationName = relationName;
-            r.Multiplicity = is1to1 ? RelationMultiplicity.Element : RelationMultiplicity.List;
+            r.Multiplicity = isElement ? RelationMultiplicity.Element : RelationMultiplicity.List;
 
             int pos = referencedTypeName.LastIndexOf('.');
             string refShortName = referencedTypeName.Substring(pos + 1);
@@ -683,16 +683,17 @@ namespace NDO.Mapping
 
             ForeignKeyColumn fkColumn = r.NewForeignKeyColumn();
 
-            // Element->x?
-            if (is1to1
+            // Element->x AND no MappingTable
+            if (isElement
 				&& mappingTableAttribute == null
-                && !(otherTypeIsPoly && r.Multiplicity == RelationMultiplicity.List)
                 && !(foreignRelation != null && foreignRelation.MappingTable != null))
             {
                 r.MappingTable = null;
-                // Foreign Key is in the own table and points to rows of another table
+
+                // Foreign Key is in the own table and points to rows of the other table
                 fkColumn.Name = "ID" + refShortName;
-                if (otherTypeIsPoly)
+
+				if (otherTypeIsPoly)
                     r.ForeignKeyTypeColumnName = "TC" + refShortName;
 
                 if (relationName != string.Empty)
@@ -702,30 +703,40 @@ namespace NDO.Mapping
                         r.ForeignKeyTypeColumnName += "_" + relationName;
                 }
             }
-            else
-            {
-                // Liste->x
-                // Foreign Key points to rows of our own table
-                fkColumn.Name = "ID" + myShortName;
-                if (ownTypeIsPoly)
-                    r.ForeignKeyTypeColumnName = "TC" + myShortName;
+			else  // List or (Element with Mapping Table)
+			{
+				// These are the reasons for creating a mapping table:
+				// 1. The MappingTableAttribute demands it
+				// 2. We have a n:n relationship
+				// 3. We have a 1:n relationship and the other type is poly
+				// 4. The relation is bidirectional and the other side demands a mapping table
 
-                if (relationName != string.Empty)
+				bool needsMappingTable =
+					mappingTableAttribute != null
+					||
+					null != foreignRelation && (foreignRelation.Multiplicity == RelationMultiplicity.List && r.Multiplicity == RelationMultiplicity.List)
+					||
+					otherTypeIsPoly && r.Multiplicity == RelationMultiplicity.List
+					||
+					null != foreignRelation && foreignRelation.MappingTable != null;
+					
+				
+				// Foreign Key points to rows of our own table
+				fkColumn.Name = "ID" + myShortName;
+
+                if (ownTypeIsPoly && needsMappingTable)
+                    r.ForeignKeyTypeColumnName = "TC" + myShortName;
+				else if (otherTypeIsPoly && !needsMappingTable)
+					r.ForeignKeyTypeColumnName = "TC" + refShortName;
+
+				if (relationName != string.Empty)
                 {
                     fkColumn.Name += "_" + relationName;
                     if (ownTypeIsPoly)
                         r.ForeignKeyTypeColumnName += "_" + relationName;
                 }
 
-
-                if (mappingTableAttribute != null
-					||
-					null != foreignRelation && foreignRelation.Multiplicity == RelationMultiplicity.List
-                    ||
-                    (/*ownTypeIsPoly || */otherTypeIsPoly) && r.Multiplicity != RelationMultiplicity.Element
-                    ||
-                    foreignRelation != null && foreignRelation.MappingTable != null
-                    )
+                if (needsMappingTable)
                 {
                     r.AddMappingTable(refShortName, myShortName, otherTypeIsPoly, mappingTableAttribute);
 					r.RemapForeignMappingTable( myShortName, refShortName, ownTypeIsPoly, otherTypeIsPoly, mappingTableAttribute );

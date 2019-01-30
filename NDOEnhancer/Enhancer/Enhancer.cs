@@ -1253,7 +1253,7 @@ namespace NDOEnhancer
 			// will be merged here
 			searchPersistentBases();
 			bool doEnhance = options.EnableEnhancer && !this.isEnhanced;
-#if DEBUG
+#if xDEBUG
 			doEnhance = options.EnableEnhancer;
 #endif
             if (this.verboseMode)
