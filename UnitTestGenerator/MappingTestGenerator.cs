@@ -52,6 +52,7 @@ namespace TestGenerator
 		{
 			CreateTestHasMappingTable( ri );
 			CreateTestHasTypeColumn( ri );
+			CreateTestHasTypeCode( ri );
 		}
 
 
@@ -76,6 +77,21 @@ namespace TestGenerator
 		string QualifiedClassName( string className )
 		{
 			return nameSpace + "." + className;
+		}
+
+		void CreateTestHasTypeCode( RelInfo ri )
+		{
+			Function func = fixture.NewFunction( "void", "HasTypeCode" );
+			func.Attributes.Add( "Test" );
+			func.AccessModifier = "public";
+			if (!(ri.IsAbstract && ri.OwnPoly)) // abstract classes don't need a type code
+				func.Statements.Add( Assert("Class should have a Type Code #1", "this.ownClass.TypeCode != 0" ) );
+			if (!(ri.IsAbstract && ri.OtherPoly))
+				func.Statements.Add( Assert( "Class should have a Type Code #2", "this.otherClass.TypeCode != 0" ) );
+			if (ri.OwnPoly)
+				func.Statements.Add( Assert( "Class should have a Type Code #3", "this.ownDerivedClass.TypeCode != 0" ) );
+			if (ri.OtherPoly)
+				func.Statements.Add( Assert( "Class should have a Type Code #4", "this.otherDerivedClass.TypeCode != 0" ) );
 		}
 
 		void CreateTestHasMappingTable( RelInfo ri )

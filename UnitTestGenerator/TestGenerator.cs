@@ -412,6 +412,8 @@ namespace TestGenerator
 		void GenerateTearDown( RelInfo ri )
 		{
 			Function func = fixture.TearDown;
+			func.Statements.Add( "try" );
+			func.Statements.Add( "{" );
 			func.Statements.Add( "pm.UnloadCache();" );
 			func.Statements.Add( "var l = pm.Objects<" + test.OwnClass.Name + ">().ResultTable;" );
 			func.Statements.Add( "pm.Delete(l);" );
@@ -425,10 +427,23 @@ namespace TestGenerator
 				func.Statements.Add( "pm.UnloadCache();" );
 			}
 			func.Statements.Add( "decimal count;" );
-			func.Statements.Add( "count = (decimal) new " + NDOQuery(test.OwnClass.Name) + ".ExecuteAggregate(\"dummy\", AggregateType.Count);" );
+			func.Statements.Add( "count = (decimal) new " + NDOQuery( test.OwnClass.Name ) + ".ExecuteAggregate(\"dummy\", AggregateType.Count);" );
 			func.Statements.Add( "Assert.AreEqual(0, count, \"Count wrong #1\");" );
-			func.Statements.Add( "count = (decimal) new " + NDOQuery(test.OtherClass.Name) + ".ExecuteAggregate(\"dummy\", AggregateType.Count);" );
+			func.Statements.Add( "count = (decimal) new " + NDOQuery( test.OtherClass.Name ) + ".ExecuteAggregate(\"dummy\", AggregateType.Count);" );
 			func.Statements.Add( "Assert.AreEqual(0, count, \"Count wrong #2\");" );
+			func.Statements.Add( "}" );
+			func.Statements.Add( "catch (Exception)" );
+			func.Statements.Add( "{" );
+			func.Statements.Add( "var handler = pm.GetSqlPassThroughHandler( pm.NDOMapping.Connections.First() );" );
+			
+			func.Statements.Add( "handler.Execute($\"DELETE FROM {pm.NDOMapping.FindClass( ownVar.GetType() ).TableName}\");" );
+			func.Statements.Add( "handler.Execute($\"DELETE FROM {pm.NDOMapping.FindClass( otherVar.GetType() ).TableName}\");" );
+			if (ri.HasTable)
+			{
+				func.Statements.Add( "handler.Execute( $\"DELETE FROM {pm.NDOMapping.FindClass( ownVar.GetType() ).Relations.First().MappingTable.TableName}\" );" );
+			}
+			func.Statements.Add( "}" );
+
 		}
 
 		void GenerateTestGroup( RelInfo ri )
@@ -577,6 +592,7 @@ namespace TestGenerator
 
 ");
 			sw.WriteLine( "using System;" );
+			sw.WriteLine( "using System.Linq;" );
 			sw.WriteLine( "using System.Reflection;" );
 			sw.WriteLine( "using System.Diagnostics;" );
 			sw.WriteLine( "using System.Collections;" );
