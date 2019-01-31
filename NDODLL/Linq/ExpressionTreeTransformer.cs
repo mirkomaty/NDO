@@ -81,9 +81,19 @@ namespace NDO.Linq
         public ExpressionTreeTransformer(LambdaExpression ex)
         {
             this.baseExpression = ex;
-        }            
+        }
+		
         public string Transform()
         {
+			// If an expression consists only of a boolean expression like in o=>o.BooleanProperty
+			// we alter the expression to an Equal expression like o=>o.BooleanProperty == true.
+			// SqlServer syntax needs a binary expression which reads like WHERE BooleanProperty = 1.
+			// Note that this solution doesn't cover all cases of unary boolean expressions like o=>o.BooleanProperty && o.Name == "Max".
+			if (this.baseExpression.Body.NodeType == ExpressionType.MemberAccess && this.baseExpression.ReturnType == typeof(bool))
+			{
+				this.baseExpression = Expression.Lambda( Expression.Equal( baseExpression.Body, Expression.Constant(true) ), baseExpression.Parameters );
+			}
+
             baseParameterName = baseExpression.Parameters[0].Name;
             baseParameterLength = baseParameterName.Length + 1;
             sb = new StringBuilder();
@@ -91,7 +101,6 @@ namespace NDO.Linq
             Transform(baseExpression.Body, false);
             return sb.ToString();
         }
-
 
         void TransformBinaryOperator(ExpressionType exprType, bool rightIsNull)
         {
@@ -170,6 +179,7 @@ namespace NDO.Linq
 				return;
 			  //-------
 			}
+
             BinaryExpression binex = ex as BinaryExpression;
             if (binex !=  null)
             {
@@ -217,6 +227,7 @@ namespace NDO.Linq
 				return;
 			  //-------
             }
+
             MethodCallExpression mcex = ex as MethodCallExpression;
             if (mcex !=  null)
             {
@@ -317,6 +328,7 @@ namespace NDO.Linq
 				return;
 			  //-------
             }
+
             if (ex.NodeType == ExpressionType.MemberAccess)
             {
                 MemberExpression memberex = (MemberExpression) ex;
@@ -338,7 +350,8 @@ namespace NDO.Linq
 				return;
 			  //-------
             }
-			if (ex.NodeType == ExpressionType.Constant)
+
+			else if (ex.NodeType == ExpressionType.Constant)
             {
                 ConstantExpression constEx = (ConstantExpression) ex;
 				if (isRightSide)
@@ -348,13 +361,15 @@ namespace NDO.Linq
 				return;
 			  //-------
             }
-			if (ex.NodeType == ExpressionType.Convert)
+
+			else if (ex.NodeType == ExpressionType.Convert)
 			{
 				Transform( ((UnaryExpression)ex).Operand, isRightSide );
 				return;
 			  //-------
 			}
-			if (ex.NodeType == ExpressionType.Not)
+
+			else if (ex.NodeType == ExpressionType.Not)
 			{
 				sb.Append( " NOT " );
 				Expression inner = ((UnaryExpression)ex).Operand;

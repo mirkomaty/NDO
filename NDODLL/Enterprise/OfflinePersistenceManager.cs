@@ -86,8 +86,8 @@ namespace NDO
 
 		ChangeSetContainer CreateChangeSet(bool acceptChanges)
 		{
-#warning Wir brauchen einen Test, der sicherstellt, dass hier ein Formatter gesetzt wird
-            ChangeSetContainer csc = new ChangeSetContainer();
+#warning We need a test to ensure a Formatter is set here
+			ChangeSetContainer csc = new ChangeSetContainer();
 			ArrayList addedObjects = new ArrayList();
 			ArrayList deletedObjects = new ArrayList();
 			ArrayList changedObjects = new ArrayList();

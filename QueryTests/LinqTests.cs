@@ -218,12 +218,12 @@ namespace QueryTests
 		[Test]
 		public void LinqTestBooleanExpression()
 		{
-			var vt = pm.Objects<DataTypeTestClasses.DataContainer>().Where( dc => dc.BoolVar == true );
-			var fields = new SqlColumnListGenerator( pm.NDOMapping.FindClass( typeof( DataTypeTestClasses.DataContainer ) ) ).SelectList;
-			Assert.AreEqual( $"SELECT {fields} FROM [DataContainer] WHERE [BoolVar] = 1", vt.QueryString );
+			var vt = pm.Objects<Land>().Where( l => l.IsInEu == true );
+			var fields = new SqlColumnListGenerator( pm.NDOMapping.FindClass( typeof( Land ) ) ).SelectList;
+			Assert.AreEqual( $"SELECT {fields} FROM [Land] WHERE [Land].[IsInEu] = {{0}}", vt.QueryString );
 
-			vt = pm.Objects<DataTypeTestClasses.DataContainer>().Where( dc => dc.BoolVar );
-			Assert.AreEqual( $"SELECT {fields} FROM [DataContainer] WHERE [BoolVar] = 1", vt.QueryString );
+			vt = pm.Objects<Land>().Where( l => l.IsInEu );
+			Assert.AreEqual( $"SELECT {fields} FROM [Land] WHERE [Land].[IsInEu] = {{0}}", vt.QueryString );
 		}
 
 
@@ -254,21 +254,21 @@ namespace QueryTests
 			var s = vt.QueryString;
 		}
 
-		[Test]
+		[Test, Ignore("This is not implemented")]
 		public void LinqPrefetchWithBidirectionalRelationWorks()
 		{
 			Assert.That( false, "Not implemented" );
-			// Mit Bidirektionaler Relation (vorhandener JOIN)
+			// With Bidirectional Relation (vorhandener JOIN)
 		}
 
-		[Test]
+		[Test, Ignore( "This is not implemented" )]
 		public void LinqPrefetchWithMonoRelationWorks()
 		{
 			Assert.That( false, "Not implemented" );
 			// Monodirektional (neuer JOIN)
 		}
 
-		[Test]
+		[Test, Ignore( "This is not implemented" )]
 		public void LinqPrefetchWithDifferentRelationRolesWorks()
 		{
 			Assert.That( false, "Not implemented" );
