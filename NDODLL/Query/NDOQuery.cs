@@ -279,7 +279,7 @@ namespace NDO.Query
 							throw new QueryException( 10050, "Can't process a prefetch with skip, take & multiple oid columns" );
 						generatedQuery = queryGenerator.GeneratePrefetchQuery( parentType, selectedParents, prefetch );
 					}
-#warning Überprüfen, ob das in der normalen Transaktion mitläuft
+#warning Prefetches: Überprüfen, ob das in der normalen Transaktion mitläuft
 					//					this.pm.CheckTransaction( persistenceHandler, t );
 
 					DataTable table = persistenceHandler.PerformQuery( generatedQuery, this.parameters );

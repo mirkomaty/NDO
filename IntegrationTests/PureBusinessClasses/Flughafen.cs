@@ -29,7 +29,7 @@ namespace Reisekosten
 	/// <summary>
 	/// Summary for Flughafen
 	/// </summary>
-	[NDOPersistent]
+	[NDOPersistent, Serializable]
 	public class Flughafen : IPersistentObject
 	{
 		string kürzel;

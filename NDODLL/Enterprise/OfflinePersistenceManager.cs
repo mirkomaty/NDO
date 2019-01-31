@@ -24,6 +24,7 @@ using System;
 using System.Diagnostics;
 using System.Data;
 using System.Collections;
+using NDO.Mapping;
 
 namespace NDO
 {
@@ -46,6 +47,10 @@ namespace NDO
 		}
 
 		public OfflinePersistenceManager(string mappingFile) : base(mappingFile)
+		{
+		}
+
+		public OfflinePersistenceManager(NDOMapping mapping) : base(mapping)
 		{
 		}
 
@@ -86,7 +91,6 @@ namespace NDO
 
 		ChangeSetContainer CreateChangeSet(bool acceptChanges)
 		{
-#warning We need a test to ensure a Formatter is set here
 			ChangeSetContainer csc = new ChangeSetContainer();
 			ArrayList addedObjects = new ArrayList();
 			ArrayList deletedObjects = new ArrayList();
@@ -189,7 +193,6 @@ namespace NDO
 		public virtual ChangeSetContainer GetChangeSet(bool acceptChanges)
 		{
 			ChangeSetContainer csc = CreateChangeSet(acceptChanges);
-#warning Wir brauchen einen Test, der sicherstellt, dass hier ein Formatter gesetzt wird.
             return csc;
 		}
 

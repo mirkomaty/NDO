@@ -35,6 +35,7 @@ namespace NDO
 	public class ObjectContainerBase : ISerializable
 	{
 		private ArrayList objects = new ArrayList();  // If transmitted via Soap/Binary Formatter, this list will be transfered
+													  // List<object> can't be transferred via SoapFormatter, so we use ArrayList.
 
 		/// <summary>
 		/// Standard Constructor, which is used mainly by the XmlSerializer.
@@ -176,6 +177,8 @@ namespace NDO
 			using ( MemoryStream ms = new MemoryStream() )
 			{
 				InnerSerialize( ms, formatter );
+
+				ms.Seek( 0L, SeekOrigin.Begin );
 
                 var binaryFormat = formatter.GetType().Name == "BinaryFormatter";
 

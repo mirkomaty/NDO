@@ -32,7 +32,6 @@ namespace NDO
 	/// a <see cref="ObjectContainer"/> object to a <see cref="OfflinePersistenceManager"/>.
 	/// </summary>
 	/// <remarks>
-	/// Only available in the NDO Enterprise Edition.
 	/// You don't need to instantiate objects of this class. NDO will do it automatically,
 	/// if <see cref="OfflinePersistenceManager.MergeObjectContainer"/> is called.
 	/// </remarks>

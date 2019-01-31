@@ -112,15 +112,6 @@ namespace NDO
             try
             {
 				base.Init(mappingFileName);
-				string dir = Path.GetDirectoryName(mappingFileName);
-
-				string typesFile = Path.Combine(dir, "NDOTypes.xml");
-				typeManager = new TypeManager(typesFile, this.mappings);
-
-				sm = new StateManager(this);
-
-				transactionTable = new TransactionTable(new TransactionTable.NewConnectionCallback(OnNewConnection));
-				InitClasses();
             }
             catch (Exception ex)
             {
@@ -129,6 +120,21 @@ namespace NDO
                 throw new NDOException(30, "Persistence manager initialization error: " + ex.ToString());
             }
 
+		}
+
+		internal override void Init( Mappings mapping )
+		{
+			base.Init( mapping );
+
+			string dir = Path.GetDirectoryName( mapping.FileName );
+
+			string typesFile = Path.Combine( dir, "NDOTypes.xml" );
+			typeManager = new TypeManager( typesFile, this.mappings );
+
+			sm = new StateManager( this );
+
+			transactionTable = new TransactionTable( new TransactionTable.NewConnectionCallback( OnNewConnection ) );
+			InitClasses();
 		}
 
 
@@ -142,7 +148,7 @@ namespace NDO
 		/// or if the NDO Version is below the Professional Version it tries to find a
 		/// file called "NDOMapping.xml" in the application directory.
 		/// </remarks>
-		public PersistenceManager(IUnityContainer unityContainer = null) : base(unityContainer)
+		public PersistenceManager() : base()
 		{
 		}
 		
@@ -158,17 +164,12 @@ namespace NDO
 		}
 
 		/// <summary>
-		/// Loads the mapping file from the specified location. This allows to use
-		/// different mapping files with different classes mapped in it.
+		/// Constructs a PersistenceManager and reuses a cached NDOMapping.
 		/// </summary>
-		/// <param name="mappingFile">Path to the mapping file.</param>
-		/// <param name="configContainer">A Unity Container containing the configuration of the system.</param>
-		/// <remarks>Only the Professional and Enterprise
-		/// Editions can handle more than one mapping file.</remarks>
-		public PersistenceManager( string mappingFile, IUnityContainer configContainer ) : base( mappingFile, configContainer )
-		{			
+		/// <param name="mapping">The cached mapping object</param>
+		public PersistenceManager(NDOMapping mapping) : base (mapping)
+		{
 		}
-
 
 		#region Object Container Stuff
 		/// <summary>
@@ -1770,7 +1771,7 @@ namespace NDO
 		/// Oid									WriteId
 		/// Foreign Keys and their Type Codes	WriteForeignKeys
 		/// </remarks>
-		protected virtual void SaveObjectState(IPersistenceCapable pc) 
+		protected virtual void SaveObjectState(IPersistenceCapable pc, bool isDeleting = false) 
 		{
 			Debug.Assert(pc.NDOObjectState == NDOObjectState.Persistent, "Object must be unmodified and persistent but is " + pc.NDOObjectState);
 			
@@ -1779,7 +1780,8 @@ namespace NDO
 			Class cl = GetClass(pc);
 			WriteObject(pc, row, cl.ColumnNames, 0);
 			WriteIdToRow(pc, row);
-			WriteLostForeignKeysToRow(cl, pc, row);
+			if (!isDeleting)
+				WriteLostForeignKeysToRow(cl, pc, row);
 			table.Rows.Add(row);
 			row.AcceptChanges();
 			
@@ -3016,7 +3018,7 @@ namespace NDO
                     break;
 				case NDOObjectState.Persistent:
 					if (!cache.IsLocked(pc)) // Deletes können durchaus mehrmals aufgerufen werden
-						SaveObjectState(pc);
+						SaveObjectState(pc, true);
 					row = cache.GetDataRow(pc);
 					row.Delete();
 					pc.NDOObjectState = NDOObjectState.Deleted;
@@ -3631,7 +3633,6 @@ namespace NDO
 		/// <returns>A list of all persistent objects of the given class. Subclasses will not be included in the result set.</returns>
 		public virtual IList GetClassExtent(Type t) 
 		{
-#warning Das sollte nochmal überdacht werden, ob das noch Sinn macht
 			return GetClassExtent(t, true);
 		}
 

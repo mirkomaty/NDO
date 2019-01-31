@@ -193,6 +193,7 @@
     <Compile Include="NDOReiseTests.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="ObjectContainerTests.cs" />
     <Compile Include="Objektbäume.cs">
       <SubType>Code</SubType>
     </Compile>

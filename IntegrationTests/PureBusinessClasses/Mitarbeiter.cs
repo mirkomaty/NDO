@@ -33,16 +33,20 @@ using NDO.Mapping.Attributes;
 
 namespace Reisekosten.Personal
 {
-	[NDOPersistent]
+	[NDOPersistent, Serializable]
 	public class Mitarbeiter : IPersistentObject
 	{
+		string vorname = "";
+		string nachname = "";
+		Point position = new Point( 0, 0 );
+
 		public Mitarbeiter()
 		{
 		}
 
-		[NDORelation(typeof(Mitarbeiter))]
-		IList untergebene = new ArrayList();
-		public IList Untergebene
+		[NDORelation]
+		List<Mitarbeiter> untergebene = new List<Mitarbeiter>();
+		public List<Mitarbeiter> Untergebene
 		{
 			get { return untergebene; }
 			set { untergebene = value; }
@@ -65,11 +69,6 @@ namespace Reisekosten.Personal
 			set { vorgesetzter = value; }
 		}
 
-		
-		string vorname = "";
-		string nachname = "";
-		Point position = new Point(0,0);
-
 		public Point Position
 		{
 			get { return position; }
@@ -77,7 +76,7 @@ namespace Reisekosten.Personal
 		}
 
 		// Buero muss vorher existieren
-		[NDORelation(typeof(Buero), RelationInfo.Default)]
+		[NDORelation(typeof(Buero), RelationInfo.Default), NonSerialized]
 		private Buero meinBuero;
 
 
@@ -99,7 +98,7 @@ namespace Reisekosten.Personal
 
 		// Mitarbeiter kann viele Reisebüros benutzen. Diese existieren unabhängig vom Mitarbeiter.
 		// 1:n, mit Zwischentabelle
-		[NDORelation, MappingTable]
+		[NDORelation, MappingTable, NonSerialized]
 		List<Reisebüro> reiseBüros = new List<Reisebüro>();
         public IEnumerable<Reisebüro> ReiseBüros
         {
@@ -109,8 +108,8 @@ namespace Reisekosten.Personal
 
 		// Mitarbeiter kann mehrere Email-Adressen haben. Diese werden mit ihm gelöscht.
 		// 1:n, Komposition, mit Zwischentabelle
-		[NDORelation(typeof (Email), RelationInfo.Composite), MappingTable]
-		IList emails = new ArrayList();
+		[NDORelation(typeof (Email), RelationInfo.Composite), MappingTable, NonSerialized]
+		List<Email> emails = new List<Email>();
 
 		public Adresse Adresse 
 		{

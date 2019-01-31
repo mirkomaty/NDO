@@ -113,6 +113,5 @@ namespace NDO
 		public ObjectContainer(SerializationInfo info, StreamingContext context) : base(info, context)
 		{
 		}
-
 	}
 }

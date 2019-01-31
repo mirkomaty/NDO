@@ -140,22 +140,6 @@ namespace NdoUnitTests
 		}
 
         [Test]
-        public void ObjectContainerContainsCreatedObject()
-        {
-            pm.MakePersistent( m );
-            var oc = pm.GetObjectContainer();
-            Assert.That( Object.ReferenceEquals( m, oc.RootObjects[0] ) );
-            pm.Save();
-            oc = pm.GetObjectContainer();
-            Assert.That( Object.ReferenceEquals( m, oc.RootObjects[0] ) );
-            pm.UnloadCache();
-            m = pm.Objects<Mitarbeiter>().Single();
-            oc = pm.GetObjectContainer();
-            Assert.That( Object.ReferenceEquals( m, oc.RootObjects[0] ) );
-        }
-
-
-        [Test]
 		public void TestObjectCreationSaveChanged() 
 		{
 			pm.MakePersistent(m);
@@ -257,6 +241,19 @@ namespace NdoUnitTests
 			m = null;
 			pm.UnloadCache();
 			Assert.NotNull(pm.FindObject(id), "Should find object");
+		}
+
+		[Test]
+		public void PmWithCachedMappingsWorks()
+		{
+			PersistenceManager pm2 = new PersistenceManager( pm.NDOMapping );
+
+			pm2.MakePersistent( m );
+			pm2.Save();
+			pm2.UnloadCache();
+			var m2 = pm2.Objects<Mitarbeiter>().First();
+
+			Assert.AreEqual( m.NDOObjectId, m2.NDOObjectId );
 		}
 
 		[Test]

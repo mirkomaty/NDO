@@ -42,7 +42,6 @@ namespace NDO
 		protected DataSet ds = null;
 		protected IStateManager sm;
 		internal Mappings mappings;  // protected will make the compiler complaining
-		protected string mappingPath = null;
 		private string logPath;
 		private ILogAdapter logAdapter;
 		private Type persistenceHandlerType = null;
@@ -59,9 +58,8 @@ namespace NDO
 		/// <summary>
 		/// Constructor
 		/// </summary>
-		public PersistenceManagerBase(IUnityContainer container = null) 
+		public PersistenceManagerBase() 
 		{
-            this.configContainer = container;
 			string baseDir = AppDomain.CurrentDomain.BaseDirectory;
             if (File.Exists( Path.Combine( baseDir, "Web.config" ) ))
                 baseDir = Path.Combine( baseDir, "bin" );
@@ -72,25 +70,48 @@ namespace NDO
             Init( Path.Combine(baseDir, mappingFileName));
 		}
 
-		public PersistenceManagerBase(string mappingFile, IUnityContainer container = null)
+		public PersistenceManagerBase(string mappingFile)
 		{
-			this.configContainer = container;
 			Init(mappingFile);
 		}
 
-		protected virtual void Init(string mappingFileName)
+		public PersistenceManagerBase(NDOMapping mapping)
 		{
-			string dir = Path.GetDirectoryName(mappingFileName);
-			this.mappingPath = mappingFileName;
+			var localMappings = mapping as Mappings;
+			if (localMappings == null)
+				throw new ArgumentException( "The mapping must be constructed by a PersistenceManager", nameof( mapping ) );
+
+			Init( localMappings );
+		}
+
+		protected virtual void Init(string mappingPath)
+		{
 			if (!File.Exists(mappingPath))
-				throw new NDOException(45, String.Format("Mapping File {0} doesn't exist.", mappingFileName));
-			mappings = new Mappings(mappingPath, ConfigContainer);
-			this.configContainer.RegisterInstance( mappings );
-			ds = new NDODataSet(mappings);
-			mappings.DataSet = ds;
+				throw new NDOException(45, String.Format("Mapping File {0} doesn't exist.", mappingPath));
+			Init( new Mappings( mappingPath, ConfigContainer ) );
+		}
+
+		internal virtual void Init( Mappings mapping )
+		{
+			this.mappings = mapping;
+
+			ConfigContainer.RegisterInstance( mappings );
+
+			if (this.mappings.DataSet != null)
+			{
+				ds = mappings.DataSet;
+			}
+			else
+			{
+				ds = new NDODataSet( mappings );
+				mappings.DataSet = ds;
+			}
+
 			string logPath = AppDomain.CurrentDomain.BaseDirectory;
+
 			if (logPath == null)
-				logPath = dir;
+				logPath = Path.GetDirectoryName( mapping.FileName );
+
 			this.LogPath = logPath;
 		}
 
@@ -252,10 +273,12 @@ namespace NDO
 				if (this.configContainer == null)
 				{
 					this.configContainer = NDOContainer.Instance.CreateChildContainer();
-#warning Das müsste eigentlich IPersistenceManager sein. Interface überdenken!
-					this.configContainer.RegisterInstance( typeof(PersistenceManager), this );
 					this.configContainer.RegisterInstance<IPersistenceHandlerCache>(new NDOPersistenceHandlerCache());
 					this.configContainer.RegisterType<IQueryGenerator, SqlQueryGenerator>();
+
+					// Currently the PersistenceManager instance is not used.
+					// But we are able to pull it from the container.
+					this.configContainer.RegisterInstance( typeof( PersistenceManager ), this );
 				}
 
 				return this.configContainer;

@@ -30,7 +30,7 @@ namespace Reisekosten
 	/// <summary>
 	/// Summary description for Land.
 	/// </summary>
-	[NDOPersistent]
+	[NDOPersistent, Serializable]
 	public class Land : IPersistentObject
 	{
 		private string name;

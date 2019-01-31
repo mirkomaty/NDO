@@ -28,7 +28,7 @@ using NDO;
 
 namespace Reisekosten
 {
-	[NDOPersistent]
+	[NDOPersistent, Serializable]
 	public class Reise : IComparable, IPersistentObject
 	{
 		private string zweck;
@@ -73,7 +73,7 @@ namespace Reisekosten
 				dieLaender.Remove(result);
 		}
 
-		[NDORelation(RelationInfo.Composite)]
+		[NDORelation(RelationInfo.Composite), NonSerialized]
 		private List<Kostenpunkt> belege = new List<Kostenpunkt>();
 
 		public void AddKostenpunkt(Kostenpunkt k) {
