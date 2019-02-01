@@ -270,9 +270,22 @@ namespace NDO.SqlPersistenceHandling
 
 			StringBuilder sb = new StringBuilder( "SELECT " );
 			List<Relation> relations = new List<Relation>();
+
+			if (prefetch.IndexOf('.') == -1)
+			{
+				var rel = parentCls.FindRelation( prefetch );
+				if (rel != null)
+					relations.Add( rel );
+			}
+
 			new RelationContextGenerator( this.mappings ).CreateContextForName( parentCls, prefetch, relations );
+
+			if (relations.Count == 0)
+				throw new NDOException( 76, $"Prefetch: Can't find relation mapping with name {prefetch} in class {parentCls.FullName}" );
+
 			Class cls = mappings.FindClass( relations[relations.Count - 1].ReferencedTypeName );
 			var relationContext = new Dictionary<Relation, Class>();
+#error Hier fehlt der INNER JOIN
 			string columnList = CreateQuerySelectPart( relationContext, false, cls, true, null );
 			sb.Append( columnList );
 

@@ -206,6 +206,7 @@
     <Compile Include="PolymorphicWTable.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="PrefetchTests.cs" />
     <Compile Include="Rel1to1Bidirectional.cs">
       <SubType>Code</SubType>
     </Compile>

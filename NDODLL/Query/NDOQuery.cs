@@ -282,6 +282,8 @@ namespace NDO.Query
 #warning Prefetches: Überprüfen, ob das in der normalen Transaktion mitläuft
 					//					this.pm.CheckTransaction( persistenceHandler, t );
 
+					this.pm.CheckTransaction( persistenceHandler, t );
+
 					DataTable table = persistenceHandler.PerformQuery( generatedQuery, this.parameters );
 					var result = pm.DataTableToIList( t, table.Rows, false );
 					MatchRelations( parents, result, prefetch );
