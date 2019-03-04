@@ -285,7 +285,7 @@ namespace NDO.SqlPersistenceHandling
 
 			Class cls = mappings.FindClass( relations[relations.Count - 1].ReferencedTypeName );
 			var relationContext = new Dictionary<Relation, Class>();
-#error Hier fehlt der INNER JOIN
+#warning Hier fehlt der INNER JOIN
 			string columnList = CreateQuerySelectPart( relationContext, false, cls, true, null );
 			sb.Append( columnList );
 

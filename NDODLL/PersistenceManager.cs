@@ -44,7 +44,7 @@ using Unity;
 namespace NDO 
 {
 	/// <summary>
-	/// Delegate type of an handler, which can be registered by the CollisionEvent event of the PersistenceManager.
+	/// Delegate type of an handler, which can be registered by the CollisionEvent of the PersistenceManager.
 	/// <see cref="NDO.PersistenceManager.CollisionEvent"/>
 	/// </summary>
 	public delegate void CollisionHandler(object o);
@@ -63,6 +63,13 @@ namespace NDO
 	/// <param name="auditSet"></param>
 	public delegate void OnSavedHandler(AuditSet auditSet);
 
+	/// <summary>
+	/// Delegate type of an handler, which can be registered by the ObjectNotPresentEvent of the PersistenceManager. The event will be called, if LoadData doesn't find an object with the given oid.
+	/// </summary>
+	/// <param name="ea"></param>
+	/// <returns>A boolean value which determines, if the handler could solve the situation.</returns>
+	/// <remarks>If the handler returns false, NDO will throw an exception.</remarks>
+	public delegate bool ObjectNotPresentHandler( EventArgs ea );
 
 	/// <summary>
 	/// Standard implementation of the IPersistenceManager interface. Provides transaction like manipulation of data sets.
@@ -92,6 +99,13 @@ namespace NDO
 		/// If a collision occurs, this event gets fired and gives the opportunity to handle the situation.
 		/// </summary>
 		public event CollisionHandler CollisionEvent;
+
+		/// <summary>
+		/// Register a listener to this event to handle situations where LoadData doesn't find an object.
+		/// The listener can determine, whether an exception should be thrown, if the situation occurs.
+		/// </summary>
+		public event ObjectNotPresentHandler ObjectNotPresentEvent;
+
 		/// <summary>
 		/// Register a listener to this event, if you want to be notified about the end 
 		/// of a transaction. The listener gets a ICollection of all objects, which have been changed
@@ -1675,19 +1689,19 @@ namespace NDO
 			IQuery q;
             q = CreateOidQuery(pc, cl);
 			cache.UpdateCache(pc); // Make sure the object is in the cache
-			IPersistenceCapable pc2;
-			try
+
+			var objects = q.Execute();
+			var count = objects.Count;
+
+			if (count > 1)
 			{
-				pc2 = q.ExecuteSingle(true);
+				throw new NDOException( 72, "Load Data: " + count + " result objects with the same oid" );
 			}
-			catch (QueryException ex)
+			else if (count == 0)
 			{
-				if (ex.Message.IndexOf("0 result objects") > -1)
-					throw new NDOException(72, "LoadData: Object " + pc.NDOObjectId.Dump() + " is not present in the database.");
-				else
-					throw ex;
+				if (ObjectNotPresentEvent == null || !ObjectNotPresentEvent(null))
+				throw new NDOException( 72, "LoadData: Object " + pc.NDOObjectId.Dump() + " is not present in the database." );
 			}
-			Debug.Assert(pc.NDOObjectState == NDOObjectState.Persistent, "LoadData: Object should be Persistent after loading: " + pc.NDOObjectId.Dump() + ". But the object is " + pc.NDOObjectState + '.');			
 		}
 
 		/// <summary>
