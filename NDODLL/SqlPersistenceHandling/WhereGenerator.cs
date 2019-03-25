@@ -143,9 +143,20 @@ namespace NDO.SqlPersistenceHandling
 				else
 				{
 					Field field = parentClass.FindField( fieldName );
-					if (field == null)
-						throw new Exception( "Can't find Field mapping for " + fieldName + " in " + exp.Value );
-					exp.SetAnnotation( anKey, QualifiedColumnName.Get( field.Column ) );
+					if (field != null)
+					{
+						exp.SetAnnotation( anKey, QualifiedColumnName.Get( field.Column ) );
+					}
+					else
+					{
+
+						Relation oneTooneRelation = parentClass.Relations.FirstOrDefault( r => r.Multiplicity == RelationMultiplicity.Element && (r.FieldName == fieldName || r.AccessorName == fieldName) );
+						if (oneTooneRelation != null)
+							exp.SetAnnotation( anKey, QualifiedColumnName.Get( oneTooneRelation.ForeignKeyColumns.First() ) );
+
+						else
+							throw new Exception( "Can't find Field mapping for " + fieldName + " in " + exp.Value );
+					}
 				}
 			}
 		}

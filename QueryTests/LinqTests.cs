@@ -341,6 +341,20 @@ namespace QueryTests
 		}
 
 		[Test]
+		public void LinqTestIfQueryWithNonNullRelationWorks()
+		{
+			var vt = pm.Objects<Mitarbeiter>().Where( m => m.Adresse != null );
+			Assert.AreEqual( $"SELECT {this.mitarbeiterFields} FROM [Mitarbeiter] WHERE [Mitarbeiter].[IDAdresse] IS NOT NULL", vt.QueryString );
+		}
+
+		[Test]
+		public void LinqTestIfQueryWithNullRelationWorks()
+		{
+			var vt = pm.Objects<Mitarbeiter>().Where( m => m.Adresse == null );
+			Assert.AreEqual( $"SELECT {this.mitarbeiterFields} FROM [Mitarbeiter] WHERE [Mitarbeiter].[IDAdresse] IS NULL", vt.QueryString );
+		}
+
+		[Test]
 		public void LinqTestIfInClauseWorks()
 		{
             var arr = new[] { "Mirko", "Hans" };

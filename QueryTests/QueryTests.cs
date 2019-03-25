@@ -423,7 +423,21 @@ namespace QueryTests
 		public void TestIfQueryForNonNullOidsWorks()
 		{
 			NDOQuery<Mitarbeiter> q = new NDOQuery<Mitarbeiter>( pm, "dieReisen.dieLaender.oid IS NOT NULL" );
-			String.Format( "SELECT {0} FROM [Mitarbeiter] INNER JOIN [Reise] ON [Mitarbeiter].[ID] = [Reise].[IDMitarbeiter] INNER JOIN [relLandReise] ON [Reise].[ID] = [relLandReise].[IDReise] INNER JOIN [Land] ON [Land].[ID] = [relLandReise].[IDLand] WHERE [Land].[ID] IS NOT NULL", this.mitarbeiterFields );
+			Assert.AreEqual( $"SELECT {this.mitarbeiterJoinFields} FROM [Mitarbeiter] INNER JOIN [Reise] ON [Mitarbeiter].[ID] = [Reise].[IDMitarbeiter] INNER JOIN [relLandReise] ON [Reise].[ID] = [relLandReise].[IDReise] INNER JOIN [Land] ON [Land].[ID] = [relLandReise].[IDLand] WHERE [Land].[ID] IS NOT NULL", q.GeneratedQuery );
+		}
+
+		[Test]
+		public void TestIfQueryWithNonNullRelationWorks()
+		{
+			NDOQuery<Mitarbeiter> q = new NDOQuery<Mitarbeiter>( pm, "adresse IS NOT NULL" );
+			Assert.AreEqual( $"SELECT {this.mitarbeiterFields} FROM [Mitarbeiter] WHERE [Mitarbeiter].[IDAdresse] IS NOT NULL", q.GeneratedQuery );
+		}
+
+		[Test]
+		public void TestIfQueryWithNullRelationWorks()
+		{
+			NDOQuery<Mitarbeiter> q = new NDOQuery<Mitarbeiter>( pm, "adresse IS NULL" );
+			Assert.AreEqual( $"SELECT {this.mitarbeiterFields} FROM [Mitarbeiter] WHERE [Mitarbeiter].[IDAdresse] IS NULL", q.GeneratedQuery );
 		}
 
 		[Test]
