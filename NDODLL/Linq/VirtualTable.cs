@@ -153,9 +153,106 @@ namespace NDO.Linq
         }
 
 		/// <summary>
+		/// Executes the COUNT aggregate query for the given virtual table.
+		/// </summary>
+		public int Count
+		{
+			get
+			{
+				var ndoQuery = Ndoquery;
+				return (int)(decimal)ndoQuery.ExecuteAggregate( "*", AggregateType.Count );
+			}
+		}
+
+		/// <summary>
+		/// Executes the MAX aggregate query for the given virtual table.
+		/// </summary>
+		/// <typeparam name="TP"></typeparam>
+		/// <param name="fieldSelector"></param>
+		/// <returns></returns>
+		public TP Max<TP>( Expression<Func<T, TP>> fieldSelector )
+		{
+			return ExecuteAggregate(fieldSelector, AggregateType.Max );
+		}
+
+		/// <summary>
+		/// Executes the MAX aggregate query for the given virtual table.
+		/// </summary>
+		/// <typeparam name="TP"></typeparam>
+		/// <param name="fieldSelector"></param>
+		/// <returns></returns>
+		public TP Min<TP>( Expression<Func<T, TP>> fieldSelector )
+		{
+			return ExecuteAggregate( fieldSelector, AggregateType.Min );
+		}
+
+		/// <summary>
+		/// Executes the MAX aggregate query for the given virtual table.
+		/// </summary>
+		/// <typeparam name="TP"></typeparam>
+		/// <param name="fieldSelector"></param>
+		/// <returns></returns>
+		public TP StandardDeviation<TP>( Expression<Func<T, TP>> fieldSelector )
+		{
+			return ExecuteAggregate( fieldSelector, AggregateType.StDev );
+		}
+
+		/// <summary>
+		/// Executes the MAX aggregate query for the given virtual table.
+		/// </summary>
+		/// <typeparam name="TP"></typeparam>
+		/// <param name="fieldSelector"></param>
+		/// <returns></returns>
+		public TP Average<TP>( Expression<Func<T, TP>> fieldSelector )
+		{
+			return ExecuteAggregate( fieldSelector, AggregateType.Avg );
+		}
+
+		/// <summary>
+		/// Executes the SUM aggregate query for the given virtual table.
+		/// </summary>
+		/// <typeparam name="TP"></typeparam>
+		/// <param name="fieldSelector"></param>
+		/// <returns></returns>
+		public TP Sum<TP>( Expression<Func<T, TP>> fieldSelector )
+		{
+			return ExecuteAggregate( fieldSelector, AggregateType.Sum );
+		}
+
+		/// <summary>
+		/// Executes the VAR aggregate query for the given virtual table.
+		/// </summary>
+		/// <typeparam name="TP"></typeparam>
+		/// <param name="fieldSelector"></param>
+		/// <returns></returns>
+		public TP Variance<TP>( Expression<Func<T, TP>> fieldSelector )
+		{
+			return ExecuteAggregate( fieldSelector, AggregateType.Var );
+		}
+
+		string GetField<TP>( Expression<Func<T, TP>> fieldSelector )
+		{
+			ExpressionTreeTransformer transformer =
+				new ExpressionTreeTransformer( fieldSelector );
+			return transformer.Transform();
+		}
+
+		/// <summary>
+		/// /// Executes the aggregate query for the given virtual table.
+		/// </summary>
+		/// <typeparam name="TP"></typeparam>
+		/// <param name="fieldSelector"></param>
+		/// <param name="aggregateType"></param>
+		/// <returns></returns>
+		TP ExecuteAggregate<TP>( Expression<Func<T, TP>> fieldSelector, AggregateType aggregateType )
+		{
+			return (TP)Ndoquery.ExecuteAggregate( GetField(fieldSelector), aggregateType );
+		}
+
+		/// <summary>
 		/// Executes the Query and returns the result table
 		/// </summary>
-        public List<T> ResultTable
+		public List<T> ResultTable
         {
             get 
             {

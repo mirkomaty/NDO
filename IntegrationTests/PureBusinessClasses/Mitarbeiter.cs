@@ -39,6 +39,7 @@ namespace Reisekosten.Personal
 		string vorname = "";
 		string nachname = "";
 		Point position = new Point( 0, 0 );
+		decimal gehalt;
 
 		public Mitarbeiter()
 		{
@@ -449,6 +450,12 @@ namespace Reisekosten.Personal
 		{
 			get { return nachname; }
 			set { nachname = value; }
+		}
+
+		public decimal Gehalt
+		{
+			get { return this.gehalt; }
+			set { this.gehalt = value; }
 		}
 
 		public NDOObjectState NDOObjectState { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }

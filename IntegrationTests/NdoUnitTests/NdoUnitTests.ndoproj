@@ -27,22 +27,9 @@
     <AssemblyName />
     <Debug>True</Debug>
     <IsWebProject>False</IsWebProject>
-    <KeyFile>
-    </KeyFile>
+    <KeyFile />
     <References>
-      <Reference AssemblyName="NDOInterfaces" AssemblyPath="..\..\NDOInterfaces\bin\Debug\net452\NDOInterfaces.dll" CheckThisDLL="False">
-      </Reference>
-      <Reference AssemblyName="nunit.framework" AssemblyPath="..\packages\NUnit.3.11.0\lib\net40\nunit.framework.dll" CheckThisDLL="False">
-      </Reference>
-      <Reference AssemblyName="SqlCeProvider" AssemblyPath="bin\Debug\SqlCeProvider.dll" CheckThisDLL="False">
-      </Reference>
-      <Reference AssemblyName="System.Data.SqlServerCe" AssemblyPath="..\..\..\..\WINDOWS\assembly\GAC_MSIL\System.Data.SqlServerCe\4.0.0.0__89845dcd8080cc91\System.Data.SqlServerCe.dll" CheckThisDLL="False">
-      </Reference>
-      <Reference AssemblyName="Unity.Abstractions" AssemblyPath="..\packages\Unity.Abstractions.3.3.1\lib\net45\Unity.Abstractions.dll" CheckThisDLL="False">
-      </Reference>
       <Reference AssemblyName="PureBusinessClasses" AssemblyPath="..\PureBusinessClasses\bin\Debug\PureBusinessClasses.dll">
-      </Reference>
-      <Reference AssemblyName="SqlServerProvider" AssemblyPath="..\..\Provider\SqlServerProvider\SqlServerProvider\bin\Debug\net452\SqlServerProvider.dll" CheckThisDLL="False">
       </Reference>
     </References>
   </ProjectDescription>

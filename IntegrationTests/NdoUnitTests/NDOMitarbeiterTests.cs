@@ -588,6 +588,43 @@ namespace NdoUnitTests
 
 
 		[Test]
+		public void LinqTestAggregateQuery()
+		{
+			Mitarbeiter mm;
+			var l = new List<Mitarbeiter>();
+
+			for (int i = 0; i < 20; i++)
+			{
+				mm = new Mitarbeiter();
+				mm.Vorname = "lkj";
+				mm.Nachname = i.ToString();
+				mm.Gehalt = 5000m + i * 100m;
+				pm.MakePersistent( mm );
+				l.Add( mm );
+			}
+			pm.Save();
+			decimal sum = 0m;
+			foreach (Mitarbeiter m2 in l)
+			{
+				sum += m2.Gehalt;
+			}
+
+			decimal avg = sum / 20m;
+
+			var virtualTable = pm.Objects<Mitarbeiter>();
+
+			decimal count = virtualTable.Count;
+			Assert.AreEqual( 20, count, "Count stimmt nicht" );
+
+			decimal newsum = virtualTable.Sum( m => m.Gehalt );
+			Assert.AreEqual( sum, newsum, "Summe stimmt nicht" );
+
+			decimal newavg = virtualTable.Average( m => m.Gehalt );
+			Assert.AreEqual( avg, newavg, "Durchschnitt stimmt nicht" );
+		}
+
+
+		[Test]
 		public void TestPolymorphicQuery()
 		{
 			// If two classes are mapped to the same table, the query
@@ -694,6 +731,44 @@ namespace NdoUnitTests
 			IList l = q.Execute();
 		}
 
+		[Test]
+		public void LoadDataOnUnknownObjectThrows()
+		{
+			Mitarbeiter m = (Mitarbeiter)pm.FindObject( typeof( Mitarbeiter ), 1000000 );
+			bool thrown = false;
+			try
+			{
+				pm.LoadData( m );
+			}
+			catch (NDOException ex)
+			{
+				Assert.AreEqual( 72, ex.ErrorNumber );
+				thrown = true;
+			}
+
+			Assert.That( thrown );
+		}
+
+		[Test]
+		public void LoadDataOnUnknownObjectCallsEventHandler()
+		{
+			pm.ObjectNotPresentEvent += ea => true;  // prevents throwing an exception
+			Mitarbeiter m = (Mitarbeiter)pm.FindObject( typeof( Mitarbeiter ), 1000000 );
+			pm.LoadData( m );
+		}
+
+		[Test]
+		public void LoadDataReturnsPersistentObject()
+		{
+			pm.MakePersistent( m );
+			var oid = m.NDOObjectId;
+			pm.Save();
+			pm.UnloadCache();
+			var m2 = pm.FindObject( oid );
+			Assert.AreEqual( NDOObjectState.Hollow, m2.NDOObjectState );
+			pm.LoadData( m2 );
+			Assert.AreEqual( NDOObjectState.Persistent, m2.NDOObjectState );
+		}
 
 		private Mitarbeiter CreateMitarbeiter(string vorname, string nachname) 
 		{
