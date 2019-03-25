@@ -1364,6 +1364,9 @@
         <OidColumn AutoIncremented="True" Name="ID" />
       </Oid>
       <Fields>
+        <Field Name="gehalt">
+          <Column Name="Gehalt" />
+        </Field>
         <Field Name="nachname">
           <Column Name="Nachname" />
         </Field>
@@ -1418,6 +1421,9 @@
         <OidColumn AutoIncremented="True" Name="ID" />
       </Oid>
       <Fields>
+        <Field Name="gehalt" AccessorName="Gehalt">
+          <Column Name="Gehalt" />
+        </Field>
         <Field Name="nachname" AccessorName="Nachname">
           <Column Name="Nachname" />
         </Field>
