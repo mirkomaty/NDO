@@ -2,7 +2,7 @@
 <package >
 	<metadata>
 		<id>ndo.sqlite</id>
-		<version>3.0.0.0</version>
+		<version>3.0.0.11</version>
 		<authors>Mirko Matytschak</authors>
 		<owners>Mirko Matytschak</owners>
 		<licenseUrl>http://opensource.org/licenses/MIT</licenseUrl>
@@ -13,7 +13,7 @@
 		<copyright>Copyright 2016 (c) Mirko Matytschak</copyright>
 		<tags>NDO .NET Data Objects Persistence</tags>
 		<dependencies>
-			<dependency id="System.Data.SQLite.Core" version="1.0.99.0" />
+			<dependency id="System.Data.SQLite.Core.MSIL" version="1.0.110" />
 		</dependencies>
 	</metadata>
 	<files>

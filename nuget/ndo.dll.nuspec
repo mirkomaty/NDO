@@ -2,7 +2,7 @@
 <package >
   <metadata>
     <id>ndo.dll</id>
-    <version>3.0.0.10</version>
+    <version>3.0.0.11</version>
     <authors>Mirko Matytschak</authors>
     <owners>Mirko Matytschak</owners>
     <license type="file">license\license.txt</license>

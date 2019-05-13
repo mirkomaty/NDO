@@ -110,6 +110,9 @@
       <Name>System.Data</Name>
     </Reference>
     <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Data.SQLite, Version=1.0.110.0, Culture=neutral, PublicKeyToken=db937bc2d44ff139, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Data.SQLite.Core.MSIL.1.0.110.0\lib\net40\System.Data.SQLite.dll</HintPath>
+    </Reference>
     <Reference Include="System.EnterpriseServices">
       <Name>System.EnterpriseServices</Name>
     </Reference>
@@ -136,6 +139,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
+    <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
@@ -157,7 +161,7 @@
   <ItemGroup />
   <ProjectExtensions>
     <VisualStudio>
-      <UserProperties NDODefaultConnection="Provider=Microsoft.Jet.OLEDB.4.0;Data Source=D:\Persistenz\TestDataTypes\DataTest.mdb;Persist Security Info=False" NDOEnableAddIn="true" NDOEnableEnhancer="false" NDOGenerateMapping="true" NDOGenerateSchema="true" NDONewMapping="false" NDOMergeMapping="true" NDOMergeSchema="true" NDOGenerateSQL="false" />
+      <UserProperties NDOGenerateSQL="false" NDOMergeSchema="true" NDOMergeMapping="true" NDONewMapping="false" NDOGenerateSchema="true" NDOGenerateMapping="true" NDOEnableEnhancer="false" NDOEnableAddIn="true" NDODefaultConnection="Provider=Microsoft.Jet.OLEDB.4.0;Data Source=D:\Persistenz\TestDataTypes\DataTest.mdb;Persist Security Info=False" />
     </VisualStudio>
   </ProjectExtensions>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
