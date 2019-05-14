@@ -122,9 +122,6 @@
     <Compile Include="Asm.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="BigInteger.cs">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="Class.cs">
       <SubType>Code</SubType>
     </Compile>

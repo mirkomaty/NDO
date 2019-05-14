@@ -73,8 +73,11 @@ namespace NDO.BuildTask
 				psi.WorkingDirectory = workingDirectory;
 			psi.RedirectStandardOutput = true;
 			psi.RedirectStandardError = true;
-			psi.StandardErrorEncoding = Encoding.GetEncoding( CultureInfo.CurrentCulture.TextInfo.OEMCodePage );
-			psi.StandardOutputEncoding = Encoding.GetEncoding( CultureInfo.CurrentCulture.TextInfo.OEMCodePage );
+			var codePage = CultureInfo.CurrentCulture.TextInfo.OEMCodePage;
+			if (codePage == 1)  // Windows Bug: CP 65001 will be read as 1
+				codePage = 437;
+			psi.StandardErrorEncoding = Encoding.GetEncoding( codePage );
+			psi.StandardOutputEncoding = Encoding.GetEncoding( codePage );
 
 			System.Diagnostics.Process proc = System.Diagnostics.Process.Start( psi );
 
