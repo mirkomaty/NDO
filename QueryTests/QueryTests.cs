@@ -99,6 +99,30 @@ namespace QueryTests
 		}
 
 		[Test]
+		public void SkipTakeParametersDontChangeTheCoreQuery()
+		{
+			NDOQuery<Mitarbeiter> q = new NDOQuery<Mitarbeiter>( pm, "vorname = {0}" );
+			q.Orderings.Add( new AscendingOrder( "vorname" ) );
+			q.Take = 10;
+			Assert.AreEqual( $"SELECT {this.mitarbeiterFields} FROM [Mitarbeiter] WHERE [Mitarbeiter].[Vorname] = {{0}} ORDER BY [Mitarbeiter].[Vorname] OFFSET 0 ROWS FETCH NEXT 10 ROWS ONLY", q.GeneratedQuery );
+			q.Skip = 10;
+			q.Take = 10;
+			Assert.AreEqual( $"SELECT {this.mitarbeiterFields} FROM [Mitarbeiter] WHERE [Mitarbeiter].[Vorname] = {{0}} ORDER BY [Mitarbeiter].[Vorname] OFFSET 10 ROWS FETCH NEXT 10 ROWS ONLY", q.GeneratedQuery );
+		}
+
+		[Test]
+		public void ParametersChangesDontChangeTheCoreQuery()
+		{
+			NDOQuery<Mitarbeiter> q = new NDOQuery<Mitarbeiter>( pm, "vorname = {0}" );
+			q.Orderings.Add( new AscendingOrder( "vorname" ) );
+			q.Take = 10;
+			q.Parameters.Add( "Mirko" );
+			Assert.AreEqual( $"SELECT {this.mitarbeiterFields} FROM [Mitarbeiter] WHERE [Mitarbeiter].[Vorname] = {{0}} ORDER BY [Mitarbeiter].[Vorname] OFFSET 0 ROWS FETCH NEXT 10 ROWS ONLY", q.GeneratedQuery );
+			q.Parameters.Add( "Hans" );
+			Assert.AreEqual( $"SELECT {this.mitarbeiterFields} FROM [Mitarbeiter] WHERE [Mitarbeiter].[Vorname] = {{0}} ORDER BY [Mitarbeiter].[Vorname] OFFSET 0 ROWS FETCH NEXT 10 ROWS ONLY", q.GeneratedQuery );
+		}
+
+		[Test]
 		public void CheckIfWhereClauseWith1nRelationWorks()
 		{
 			NDOQuery<Mitarbeiter> q = new NDOQuery<Mitarbeiter>( pm, "dieReisen.zweck = 'ADC'" );
