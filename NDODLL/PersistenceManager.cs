@@ -1022,7 +1022,11 @@ namespace NDO
                         ti.Transaction = null;
 					}
 					if (ti.Connection != null && ti.Connection.State != ConnectionState.Closed)
+					{
 						ti.Connection.Close();
+						if (LoggingPossible)
+							this.LogAdapter.Info( $"Closing connection {ti.ConnectionAlias}" );
+					}
 				}
 			}
 		}
@@ -1039,7 +1043,7 @@ namespace NDO
 		/// </summary>
 		internal void CheckTransaction(IPersistenceHandlerBase handler, Connection conn)
 		{
-			TransactionInfo ti = (TransactionInfo) transactionTable[conn];
+			TransactionInfo ti = transactionTable[conn];
 			if (handler != null)
 			{
 				ti.SecureAddHandler( handler );
@@ -1049,7 +1053,7 @@ namespace NDO
 				if (handler.Connection != null)
 				{
 					// CheckTransaction should have been called before for this handler.
-					System.Diagnostics.Debug.Assert( handler.Connection == ti.Connection );
+					Debug.Assert( handler.Connection == ti.Connection );
 
 					// Force to always use the same connection.
 					ti.Connection = handler.Connection;
@@ -1059,7 +1063,11 @@ namespace NDO
 			if (transactionMode != TransactionMode.None)
 			{
 				if (ti.Connection.State == ConnectionState.Closed)
+				{
 					ti.Connection.Open();
+					if (LoggingPossible)
+						this.LogAdapter.Info( $"Opening connection {ti.ConnectionAlias}" );
+				}
 				if (ti.Transaction == null)
 				{
 					ti.Transaction = ti.Connection.BeginTransaction(this.isolationLevel);
@@ -4059,7 +4067,7 @@ namespace NDO
 					try
 					{
 						result.Connection = p.NewConnection(connStr);
-						result.ConnectionAlias = conn.Name;
+						result.ConnectionAlias = conn.DisplayName;
 					}
 					catch (Exception ex)
 					{
