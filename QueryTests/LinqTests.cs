@@ -93,6 +93,18 @@ namespace QueryTests
 		}
 
 		[Test]
+		public void LinqParameterChangesDontChangeTheQuery()
+		{
+			VirtualTable<Mitarbeiter> vt = pm.Objects<Mitarbeiter>().Where( m => m.Vorname == "Mirko" );
+
+			Assert.AreEqual( $"SELECT {this.mitarbeiterFields} FROM [Mitarbeiter] WHERE [Mitarbeiter].[Vorname] = {{0}}", vt.QueryString );
+
+			vt.ReplaceParameters( new object[] { "Hans" } );
+
+			Assert.AreEqual( $"SELECT {this.mitarbeiterFields} FROM [Mitarbeiter] WHERE [Mitarbeiter].[Vorname] = {{0}}", vt.QueryString );
+		}
+
+		[Test]
 		public void LinqCheckIfWhereClauseWith1nRelationWorks()
 		{
 			VirtualTable<Mitarbeiter> vt = pm.Objects<Mitarbeiter>().Where( m => m.Reisen[Any.Index].Zweck == "ADC" );

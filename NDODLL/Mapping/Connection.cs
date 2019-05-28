@@ -25,6 +25,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Xml;
 
 namespace NDO.Mapping
@@ -52,48 +53,6 @@ namespace NDO.Mapping
             standardConnection.type = "";
         }
 
-        //		public static void ImportOleDbConnectionString(string oleDbString)
-        //		{
-        //			if (oleDbString.StartsWith(sqlString))
-        //			{
-        //				standardConnection.type = "SqlServer";
-        //				standardConnection.name = oleDbString.Substring(sqlString.Length);
-        //			}
-        //			else if (oleDbString.StartsWith(oracleString1))
-        //			{
-        //				standardConnection.type = "Oracle";
-        //				standardConnection.name = oleDbString.Substring(oracleString1.Length);
-        //			}
-        //			else if (oleDbString.StartsWith(oracleString2))
-        //			{
-        //				standardConnection.type = "Oracle";
-        //				standardConnection.name = oleDbString.Substring(oracleString2.Length);
-        //			}
-        //			else if (oleDbString.StartsWith(jetString))
-        //			{
-        //				standardConnection.type = "Access";
-        //				// don't remove the provider part since Jet is an OleDb provider
-        //			}
-        //			else 
-        //			{
-        //				standardConnection.type = string.Empty;
-        //				standardConnection.name = oleDbString;
-        //			}
-        //		}
-        //
-        //		public static string GetTypeFromOleDbString(string oleDbString)
-        //		{
-        //			if (oleDbString.StartsWith(sqlString))
-        //				return "SqlServer";
-        //			if (oleDbString.StartsWith(oracleString1))
-        //				return "Oracle";
-        //			if (oleDbString.StartsWith(oracleString2))
-        //				return "Oracle";
-        //			if (oleDbString.StartsWith(jetString))
-        //				return "Access";
-        //			return string.Empty;
-        //		}
-
         #endregion
 
         # region State variables and accessor properties
@@ -117,7 +76,18 @@ namespace NDO.Mapping
             get { return name; }
             set { name = value; this.Changed = true; }
         }
-        private string type = "Sql";
+
+		[Browsable( false )]
+		public string DisplayName
+		{
+			get
+			{
+				Regex regex = new Regex( "password=[^;]*" );
+				return regex.Replace( this.name, "password=***" );				
+			}
+		}
+
+		private string type = "Sql";
         /// <summary>
         /// Gets or sets the provider type string.
         /// </summary>

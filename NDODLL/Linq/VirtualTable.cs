@@ -123,11 +123,7 @@ namespace NDO.Linq
 		/// <param name="expr"></param>
 		/// <returns></returns>
         public VirtualTable<T>Where(Expression<Func<T,bool>>expr)
-        {
-            // Determine the result type of the query.
-            // Construct a dummy instance of T to ask it.
-            T instance = (T) Activator.CreateInstance(typeof(T));
-            
+        { 
 			// Transform the expression to NDOql
             ExpressionTreeTransformer transformer = new ExpressionTreeTransformer((LambdaExpression)expr);
             string query = transformer.Transform();
@@ -151,6 +147,23 @@ namespace NDO.Linq
 			this.ndoquery.Prefetches = this.prefetches;
             return this;
         }
+
+		/// <summary>
+		/// Allows to reuse a VirtualTable with different parameters.
+		/// Parameters must have the same order, as they appear in the Linq query.
+		/// </summary>
+		/// <param name="newParameters"></param>
+		public void ReplaceParameters(IEnumerable<object> newParameters)
+		{
+			if (this.ndoquery == null)
+				throw new QueryException(100400, $"Can't replace parameters before the query is built. Call Where() or use {nameof(QueryString)} to build the query.");
+
+			this.ndoquery.Parameters.Clear();
+			foreach (var p in parameters)
+			{
+				this.ndoquery.Parameters.Add( p );
+			}
+		}
 
 		/// <summary>
 		/// Executes the COUNT aggregate query for the given virtual table.
