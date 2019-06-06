@@ -142,6 +142,10 @@
     <Compile Include="Büro.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="ClassWithDIConstructor.cs" />
+    <Compile Include="ClassWithDIConstructor.ndo.cs">
+      <DependentUpon>ClassWithDIConstructor.cs</DependentUpon>
+    </Compile>
     <Compile Include="DoubleRelationClasses.cs" />
     <Compile Include="ClassWithBlock.cs">
       <SubType>Code</SubType>

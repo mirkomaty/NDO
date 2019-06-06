@@ -161,6 +161,7 @@
     <Compile Include="DeleteForeignRelationTests.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="DITests.cs" />
     <Compile Include="DoubleRelationTests.cs" />
     <Compile Include="ForeignObjectTests.cs">
       <SubType>Code</SubType>

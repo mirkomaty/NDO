@@ -473,7 +473,7 @@ namespace NDO.Mapping
         {
             System.Diagnostics.Debug.Assert(this.Parent.RelationOrdinalBase > -1, "RelationOrdinalBase for type " + Parent.FullName + " not computed");
             Type t = Type.GetType(this.Parent.FullName + ", " + this.Parent.AssemblyName);
-            IMetaClass mc = Metaclasses.GetClass(t);
+            IMetaClass mc = Metaclasses.GetInnerClass(t);
             Ordinal = this.Parent.RelationOrdinalBase + mc.GetRelationOrdinal(this.FieldName);
             if (Ordinal > 63)
                 throw new NDOException(18, "Class " + Parent.FullName + " has too much relations.");

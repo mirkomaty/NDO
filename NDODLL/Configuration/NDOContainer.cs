@@ -8,7 +8,7 @@ namespace NDO.Configuration
     {
         static UnityContainer instance;
 
-        public static UnityContainer Instance
+        public static IUnityContainer Instance
         {
             get
             {

@@ -1040,6 +1040,17 @@
         </Relation>
       </Relations>
     </Class>
+    <Class AssemblyName="PureBusinessClasses" FullName="PureBusinessClasses.DITests.ClassWithDIConstructor" TableName="ClassWithDIConstructor" ConnectionId="C0" TypeCode="685441128">
+      <Oid>
+        <OidColumn AutoIncremented="True" Name="ID" AllowDbNull="False" />
+      </Oid>
+      <Fields>
+        <Field Name="persistentField" AccessorName="PersistentField">
+          <Column Name="PersistentField" />
+        </Field>
+      </Fields>
+      <Relations />
+    </Class>
     <Class AssemblyName="PureBusinessClasses" FullName="PureBusinessClasses.Institution" TableName="Institution" ConnectionId="C0" TypeCode="-16582183">
       <Oid>
         <OidColumn AutoIncremented="True" Name="ID" />

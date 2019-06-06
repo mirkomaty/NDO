@@ -970,7 +970,7 @@ namespace NDOEnhancer.Patcher
 		}
 
 		public void
-			patchConstructor()
+		patchConstructor()
 		{
 			ArrayList constructors = new ArrayList();
 			ILMethodElement.Iterator methodIter = m_classElement.getMethodIterator();
@@ -987,8 +987,8 @@ namespace NDOEnhancer.Patcher
 					hasDefaultConstructor = true;
 			}
 
-			if (!hasDefaultConstructor)
-				constructors.Add(addDefaultConstructor());
+			if (!hasDefaultConstructor && constructors.Count > 0)
+				messages.WriteLine( "Warning: class " + m_refName.Replace( "'", string.Empty ) + " doesn't have a default constructor. NDO will try to resolve other constructors during runtime." );
 
 			int maxStack = this.m_hasPersistentBase ? 2 : 2;
 			
@@ -1018,27 +1018,6 @@ namespace NDOEnhancer.Patcher
 			}
 
 
-		}
-
-
-		public ILMethodElement addDefaultConstructor()
-		{
-			messages.WriteLine("Warning: A default constructor for class " + m_refName.Replace("'", string.Empty) + " has been created by the enhancer. The constructor doesn't contain any initialization code.");
-			ILMethodElement methodElement = new ILMethodElement();
-			methodElement.addLine(".method public hidebysig specialname rtspecialname instance void  .ctor() cil managed");
-			methodElement.addStatement(".maxstack 2");
-			methodElement.addStatement( ldarg_0 );  // this-Parameter for Constructor
-			if (!m_hasPersistentBase)
-			{
-				methodElement.addStatement( $"call       instance void {Corlib.Name}System.Object::.ctor()" );  // System.Object
-			}
-			else
-			{
-				methodElement.addStatement( "call       instance void " + m_persistentBase + "::.ctor()" );  // Base class
-			}
-			methodElement.addStatement("ret");
-			this.m_classElement.addElement(methodElement);
-			return methodElement;
 		}
 
 		public void

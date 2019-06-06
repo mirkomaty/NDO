@@ -3432,7 +3432,6 @@ namespace NDO
 				pc.NDOSetLoadState(r.Ordinal, true);
 		}
 
-
 		/// <summary>
 		/// Create object of a given type.
 		/// </summary>
@@ -3440,44 +3439,9 @@ namespace NDO
 		/// <returns></returns>
 		private IPersistenceCapable CreateObject(Type t) 
 		{
-            //t = NDOTemporaryGenericType.MakeTemporaryType(t);
-            return (IPersistenceCapable)Activator.CreateInstance(t);
+			return Metaclasses.GetClass( t, this.ConfigContainer ).CreateObject();
 		}
-#if nix
-		/// <summary>
-		/// Create an ObjectId for the given class
-		/// </summary>
-		/// <param name="r">the data row of the object</param>
-		/// <param name="t">the type if the persistent object</param>
-		/// <returns></returns>
-		private ObjectId NewObjectId(DataRow row, Type t) 
-		{
-			Class cl =  GetClass(t);			
 
-                MultiKey multiKey = new MultiKey(t);
-
-                for (int i = 0; i < cl.Oid.OidColumns.Count; i++)
-                {
-                    OidColumn oidColumn = cl.Oid.OidColumns[i] as OidColumn;
-                    Relation r = oidColumn.Relation;
-                    object o;
-                    if (r != null)
-                    {
-                        o = row[oidColumn.Name];
-                        if (o != DBNull.Value)
-                            multiKey.KeyData[i] = o;
-                    }
-                    if (r.ForeignKeyTypeColumnName != null)
-                    {
-                        o = row[r.ForeignKeyTypeColumnName];
-                        if (o != DBNull.Value)
-                            multiKey.SetTypeCode(i, o);
-                    }
-                }
-				return new ObjectId(multiKey);
-
-		}
-#endif
 		/// <summary>
 		/// Gets the requested object. It first builds an ObjectId using the type and the 
 		/// key data. Then it uses FindObject to retrieve the object. No database access 
@@ -3742,7 +3706,7 @@ namespace NDO
 
 			IList callbackObjects = new ArrayList();
 			Class cl = GetClass(t);
-			IMetaClass mc = Metaclasses.GetClass(t);
+			IMetaClass mc = null;
             if (t.IsGenericTypeDefinition)
             {
                 if (cl.TypeNameColumn == null)
@@ -3773,8 +3737,8 @@ namespace NDO
 				IPersistenceCapable pc = cache.GetObject(id);                
 				if(pc == null) 
 				{
-                    if (t.IsGenericTypeDefinition)  // redefine mc for each row
-                        mc = Metaclasses.GetClass(concreteType);
+                    // redefine mc for each row, because we could have different generic types.
+                    mc = Metaclasses.GetClass(concreteType, this.ConfigContainer);
                     pc = mc.CreateObject();
                     pc.NDOObjectId = id;
 					pc.NDOStateManager = sm;
