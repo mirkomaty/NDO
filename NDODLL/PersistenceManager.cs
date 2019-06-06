@@ -69,7 +69,7 @@ namespace NDO
 	/// <param name="ea"></param>
 	/// <returns>A boolean value which determines, if the handler could solve the situation.</returns>
 	/// <remarks>If the handler returns false, NDO will throw an exception.</remarks>
-	public delegate bool ObjectNotPresentHandler( EventArgs ea );
+	public delegate bool ObjectNotPresentHandler( IPersistenceCapable pc );
 
 	/// <summary>
 	/// Standard implementation of the IPersistenceManager interface. Provides transaction like manipulation of data sets.
@@ -1072,7 +1072,7 @@ namespace NDO
 				{
 					ti.Transaction = ti.Connection.BeginTransaction(this.isolationLevel);
 					if (this.LoggingPossible)
-						this.LogAdapter.Info( String.Format( "Starting transaction {0:X} at connection '{1}'", ti.Transaction.GetHashCode(), conn.Name ) );
+						this.LogAdapter.Info( String.Format( "Starting transaction {0:X} at connection '{1}'", ti.Transaction.GetHashCode(), conn.DisplayName ) );
                 }
 				if (handler != null)
 				{
@@ -1707,7 +1707,7 @@ namespace NDO
 			}
 			else if (count == 0)
 			{
-				if (ObjectNotPresentEvent == null || !ObjectNotPresentEvent(null))
+				if (ObjectNotPresentEvent == null || !ObjectNotPresentEvent(pc))
 				throw new NDOException( 72, "LoadData: Object " + pc.NDOObjectId.Dump() + " is not present in the database." );
 			}
 		}
