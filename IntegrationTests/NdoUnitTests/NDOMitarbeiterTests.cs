@@ -783,6 +783,18 @@ namespace NdoUnitTests
 			Assert.AreEqual( 123456.34m, m.Gehalt );
 		}
 
+		[Test]
+		public void CanInsertObjectsWithNullParameterUsingSqlHandler()
+		{
+			var handler = pm.GetSqlPassThroughHandler();
+			var sql = "INSERT INTO [Mitarbeiter] ([Vorname],[Nachname],[Gehalt]) VALUES (@p0, @p1, @p2)";
+			handler.Execute( sql, false, null, "Müller", 123456.34m );
+			var m = pm.Objects<Mitarbeiter>().SingleOrDefault();
+			Assert.NotNull( m );
+			Assert.AreEqual( "Müller", m.Nachname );
+			Assert.AreEqual( 123456.34m, m.Gehalt );
+		}
+
 		private Mitarbeiter CreateMitarbeiter(string vorname, string nachname) 
 		{
 			Mitarbeiter m = new Mitarbeiter();

@@ -87,7 +87,7 @@ namespace NDO
 			{
 				var dbpar = cmd.CreateParameter();
 				dbpar.ParameterName = $"@p{pcount++}";
-				dbpar.Value = par;
+				dbpar.Value = par ?? DBNull.Value;
 				cmd.Parameters.Add( dbpar );
 			}
 
