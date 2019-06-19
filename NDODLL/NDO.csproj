@@ -4,7 +4,7 @@
     <TargetFrameworks>netstandard2.0;net452</TargetFrameworks>
     <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
     <PackageId>NDO.dll</PackageId>
-    <Version>4.0.0.0-beta6</Version>
+    <Version>4.0.0.0-beta7</Version>
     <Authors>Mirko Matytschak</Authors>
     <Company>Mirko Matytschak</Company>
     <Description>Package to enable VS Solutions to compile and enhance persistent classes.</Description>

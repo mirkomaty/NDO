@@ -56,7 +56,19 @@ namespace NDO
 			this.pm.CheckEndTransaction( true );
 		}
 
-		public IDataReader Execute( string command, bool returnReader = false )
+		/// <summary>
+		/// Executes the given command.
+		/// </summary>
+		/// <param name="command">A SQL command string</param>
+		/// <param name="returnReader">Determines, if the command should return a reader</param>
+		/// <param name="parameters">Optional command parameters</param>
+		/// <returns>A DataReader object which may be empty.</returns>
+		/// <remarks>
+		/// The command string must be formatted for the given database. 
+		/// The names of the parameters in the query must have the names @px, 
+		/// where x is the index of the parameter in the parameters array.
+		/// </remarks>
+		public IDataReader Execute( string command, bool returnReader = false, params object[] parameters )
 		{
 			if (this.pm.VerboseMode && this.pm.LogAdapter != null)
 				this.pm.LogAdapter.Info( command );
@@ -69,6 +81,15 @@ namespace NDO
 			IDbCommand cmd = provider.NewSqlCommand( dbConnection );
 			cmd.CommandText = command;
 			cmd.Transaction = ti.Transaction;
+
+			int pcount = 0;
+			foreach (var par in parameters)
+			{
+				var dbpar = cmd.CreateParameter();
+				dbpar.ParameterName = $"@p{pcount++}";
+				dbpar.Value = par;
+				cmd.Parameters.Add( dbpar );
+			}
 
 			if (returnReader)
 				return cmd.ExecuteReader();
