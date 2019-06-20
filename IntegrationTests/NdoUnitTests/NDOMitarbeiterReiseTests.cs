@@ -32,6 +32,7 @@ using Reisekosten;
 using Reisekosten.Personal;
 using NDO.Linq;
 using Unity;
+using NDO.Mapping;
 
 namespace NdoUnitTests
 {
@@ -108,7 +109,49 @@ namespace NdoUnitTests
 			Assert.NotNull(r, "1. Reise not found");
 			Assert.AreEqual(NDOObjectState.Persistent, r.NDOObjectState, "2. Wrong state");
 		}
-			
+
+		int GetOrdinal(Relation r)
+		{
+			var t = r.Parent.SystemType;
+			Type mcType = t.GetNestedType( "MetaClass", BindingFlags.NonPublic | BindingFlags.Public );
+			if (null == mcType)
+				throw new NDOException( 13, "Missing nested class 'MetaClass' for type '" + t.Name + "'; the type doesn't seem to be enhanced." );
+			var mc = (IMetaClass)Activator.CreateInstance( mcType );
+			return mc.GetRelationOrdinal( r.FieldName );
+		}
+
+		bool IsLoaded(IPersistentObject pc, Relation r)
+		{
+			return ((IPersistenceCapable)pc).NDOLoadState.RelationLoadState[GetOrdinal( r )];
+		}
+
+		[Test]
+		public void RestorePreservesRelationLists()
+		{
+			pm.MakePersistent( m );
+			pm.Save();
+			m.Hinzufuegen( r );
+			pm.Save();
+			Assert.AreEqual( 1, m.Reisen.Count );
+
+			pm.UnloadCache();
+			var m2 = pm.Objects<Mitarbeiter>().Single();
+
+			var relation = pm.NDOMapping.FindClass( typeof( Mitarbeiter ) ).FindRelation( "dieReisen" );
+
+			Assert.That( !IsLoaded( m2, relation ) );
+			var list = m2.Reisen;
+			m2.Vorname = "Testxxxx";
+
+			Assert.That( IsLoaded( m2, relation ) );
+
+			pm.Restore( m2 );
+			m2.Nachname = "Testyyyy";
+			pm.Save();
+
+			Assert.AreEqual( 1, m2.Reisen.Count );
+		}
+
 		[Test]
 		public void TestAddObjectAbort() {
 			pm.MakePersistent(m);

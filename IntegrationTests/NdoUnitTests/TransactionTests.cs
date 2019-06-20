@@ -352,8 +352,8 @@ namespace NdoUnitTests
 				sqlHandler.Execute( "DELETE FROM Reise" );
 			}
 			string log = pm.LogAdapter.ToString();
-			Assert.That( log.IndexOf( "Committing transaction" ) == -1, "Transaction should be committed" );
-			Assert.That( log.IndexOf( "Starting transaction" ) == -1, "Transaction should be committed" );
+			Assert.That( log.IndexOf( "Committing transaction" ) == -1, "Transaction should not be started" );
+			Assert.That( log.IndexOf( "Starting transaction" ) == -1, "Transaction should not be committed" );
 		}
 
 		[Test]

@@ -47,6 +47,11 @@ namespace PureBusinessClasses
 			get { return ArrayList.ReadOnly(subtopics); }
 			set { subtopics = value; }
 		}
+
+		// Public constructor for NDO
+		public Topic()
+		{
+		}
 		public Topic NewSubTopic(string text)
 		{
 			Topic t = new Topic(text);

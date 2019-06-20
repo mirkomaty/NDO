@@ -243,7 +243,7 @@ namespace NDO.Mapping
         /// <summary>
         /// For accessing the relation load state in the objects
         /// </summary>
-        internal int Ordinal;// If you ever change the name of this variable, change it in dotfuscator.xml too.
+        internal int Ordinal;
 
         private bool foreignRelationValid;
         private Relation foreignRelation;

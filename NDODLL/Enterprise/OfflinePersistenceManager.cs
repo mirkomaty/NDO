@@ -21,9 +21,9 @@
 
 
 using System;
-using System.Diagnostics;
 using System.Data;
 using System.Collections;
+using System.Collections.Generic;
 using NDO.Mapping;
 
 namespace NDO
@@ -40,8 +40,6 @@ namespace NDO
 	/// </remarks>
 	public class OfflinePersistenceManager : PersistenceManager
 	{
-		ArrayList relationChanges = new ArrayList();
-
 		public OfflinePersistenceManager() : base ()
 		{
 		}
@@ -64,13 +62,13 @@ namespace NDO
 		/// <returns></returns>
 		public override System.Collections.IList GetClassExtent(Type t)
 		{
-			ArrayList result = new ArrayList();
-			foreach(Cache.Entry ce in cache.LockedObjects)
+			var result = new List<IPersistenceCapable>();
+			foreach(var ce in cache.LockedObjects)
 			{
 				if (t == ce.pc.GetType())
 					result.Add(ce.pc);
 			}
-			foreach(object o in cache.UnlockedObjects)
+			foreach(var o in cache.UnlockedObjects)
 			{
 				if (t == o.GetType())
 					result.Add(o);
@@ -92,10 +90,10 @@ namespace NDO
 		ChangeSetContainer CreateChangeSet(bool acceptChanges)
 		{
 			ChangeSetContainer csc = new ChangeSetContainer();
-			ArrayList addedObjects = new ArrayList();
-			ArrayList deletedObjects = new ArrayList();
-			ArrayList changedObjects = new ArrayList();
-			foreach(Cache.Entry cacheEntry in cache.LockedObjects)
+			var addedObjects = new List<IPersistenceCapable>();
+			var deletedObjects = new List<ObjectId>();
+			var changedObjects = new List<IPersistenceCapable>();
+			foreach(var cacheEntry in cache.LockedObjects)
 			{
 				IPersistenceCapable pc = cacheEntry.pc;
 				if (pc.NDOObjectState == NDOObjectState.Created)
@@ -117,25 +115,17 @@ namespace NDO
 						pc.NDOObjectState = NDOObjectState.Persistent;
 				}
 			}
-			csc.RelationChanges = this.relationChanges;
+			csc.RelationChanges = RelationChanges;
 			csc.ChangedObjects = changedObjects;
 			csc.AddedObjects = addedObjects;
 			csc.DeletedObjects = deletedObjects;
 			if (acceptChanges)
 			{
 				cache.UnlockAll();
-				this.relationChanges = new ArrayList();
+				RelationChanges.Clear();
 			}
 			return csc;
 		}
-
-
-		protected override void AddRelatedObject(IPersistenceCapable pc, NDO.Mapping.Relation r, IPersistenceCapable relObj)
-		{
-			base.AddRelatedObject (pc, r, relObj);
-			this.relationChanges.Add(new RelationChangeRecord(pc, relObj, r.FieldName, true));
-		}
-
 
 		protected override void InternalRemoveRelatedObject(IPersistenceCapable pc, NDO.Mapping.Relation r, IPersistenceCapable child, bool calledFromStateManager)
 		{
@@ -147,7 +137,6 @@ namespace NDO
 				cache.Unlock(child);
 				child.NDOObjectState = oldState;
 			}
-			this.relationChanges.Add(new RelationChangeRecord(pc, child, r.FieldName, false));
 		}
 
 
@@ -158,7 +147,7 @@ namespace NDO
 		{
 			get 
 			{
-				return cache.LockedObjects.Count > 0 || this.relationChanges.Count > 0;
+				return cache.LockedObjects.Count > 0 || RelationChanges.Count > 0;
 			}
 		}
 
@@ -195,16 +184,6 @@ namespace NDO
 			ChangeSetContainer csc = CreateChangeSet(acceptChanges);
             return csc;
 		}
-
-		/// <summary>
-		/// Rejects all changes and restores the original object state. Added Objects will be made transient.
-		/// </summary>
-		public override void Abort()
-		{
-			base.Abort ();
-			this.relationChanges = new ArrayList();
-		}
-
 
 
 		#region Not implemented functions
@@ -322,7 +301,7 @@ namespace NDO
 		/// A NotImplementedException will be thrown after calling that function.
 		/// </summary>
 		/// <param name="list"></param>
-		public override void Refresh(System.Collections.IList list)
+		public override void Refresh(IList list)
 		{
 			throw new NotImplementedException("This function isn't supported in offline mode");
 		}

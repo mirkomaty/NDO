@@ -119,8 +119,20 @@ namespace NDO
 		
 		private const string hollowMarker = "Hollow";
 		private byte[] encryptionKey;
+		private List<RelationChangeRecord> relationChanges = new List<RelationChangeRecord>();
 
+		/// <summary>
+		/// Gets a list of structures which represent relation changes, i.e. additions and removals
+		/// </summary>
+		protected List<RelationChangeRecord> RelationChanges
+		{
+			get { return this.relationChanges; }
+		}
 
+		/// <summary>
+		/// Initializes a new PersistenceManager instance.
+		/// </summary>
+		/// <param name="mappingFileName"></param>
 		protected override void Init(string mappingFileName)
 		{
             try
@@ -514,7 +526,7 @@ namespace NDO
 				}
 			}
 
-			IList relations  = CollectRelationStates(pc, row);
+			var relations  = CollectRelationStates(pc, row);
 			cache.Lock(pc, row, relations);
 		}
 
@@ -648,6 +660,13 @@ namespace NDO
 			AddRelatedObject(pc, r, relObj);
 		}
 
+		/// <summary>
+		/// Core functionality to add an object to a relation container or relation field.
+		/// </summary>
+		/// <param name="pc"></param>
+		/// <param name="r"></param>
+		/// <param name="relObj"></param>
+		/// <param name="isMerging"></param>
 		protected virtual void InternalAddRelatedObject(IPersistenceCapable pc, Relation r, IPersistenceCapable relObj, bool isMerging)
 		{
 			
@@ -794,10 +813,8 @@ namespace NDO
 						PatchForeignRelation( pc, r, relObj );
 					}
 				}
-			}
-			catch(Exception ex)
-			{
-				throw(ex);
+
+				this.relationChanges.Add( new RelationChangeRecord( pc, relObj, r.FieldName, true ) );
 			}
 			finally
 			{
@@ -1592,8 +1609,14 @@ namespace NDO
 			cn.Close();
 			return result;
 		}
-
-		// Transfers Data from the object to the DataRow
+		
+		/// <summary>
+		/// Transfers Data from the object to the DataRow
+		/// </summary>
+		/// <param name="pc"></param>
+		/// <param name="row"></param>
+		/// <param name="fieldNames"></param>
+		/// <param name="startIndex"></param>
 		protected virtual void WriteObject(IPersistenceCapable pc, DataRow row, string[] fieldNames, int startIndex)
 		{
 			Class cl = GetClass( pc );
@@ -1784,7 +1807,8 @@ namespace NDO
 		/// The saved state can be used later to retrieve the original object value if the
 		/// current transaction is aborted. Also the state of all relations (not related objects) is stored.
 		/// </summary>
-		/// <param name="pc">the object that should be saved</param>
+		/// <param name="pc">The object that should be saved</param>
+		/// <param name="isDeleting">Determines, if the object is about being deletet.</param>
 		/// <remarks>
 		/// In a data row there are the following things:
 		/// Item								Responsible for writing
@@ -1807,7 +1831,7 @@ namespace NDO
 			table.Rows.Add(row);
 			row.AcceptChanges();
 			
-			IList relations = CollectRelationStates(pc, row);
+			var relations = CollectRelationStates(pc, row);
 			cache.Lock(pc, row, relations);
 		}
 
@@ -1865,16 +1889,16 @@ namespace NDO
 		/// <param name="pc">the parent object of all relations</param>
 		/// <param name="row"></param>
 		/// <returns></returns>
-		protected virtual IList CollectRelationStates(IPersistenceCapable pc, DataRow row) 
+		protected virtual List<KeyValuePair<Relation,object>> CollectRelationStates(IPersistenceCapable pc, DataRow row) 
 		{
 			// Save state of relations
 			Class c = GetClass(pc);
-			IList relations = new ArrayList(c.Relations.Count());
+			List<KeyValuePair<Relation, object>> relations = new List<KeyValuePair<Relation, object>>( c.Relations.Count());
 			foreach(Relation r in c.Relations)
 			{
 				if (r.Multiplicity == RelationMultiplicity.Element) 
 				{
-					relations.Add(mappings.GetRelationField(pc, r.FieldName));
+					relations.Add( new KeyValuePair<Relation, object>( r, mappings.GetRelationField( pc, r.FieldName ) ) );
 				} 
 				else 
 				{
@@ -1883,12 +1907,12 @@ namespace NDO
 					{
 						l = (IList) ListCloner.CloneList(l);
 					}
-					relations.Add(l);
+					relations.Add( new KeyValuePair<Relation, object>( r, l ) );
 				}
 			}
+
 			return relations;
 		}
-
 
 
 		/// <summary>
@@ -1898,15 +1922,16 @@ namespace NDO
 		/// </summary>
 		/// <param name="pc"></param>
 		/// <param name="relations"></param>
-		private void RestoreRelatedObjects(IPersistenceCapable pc, IList relations) 
+		private void RestoreRelatedObjects(IPersistenceCapable pc, List<KeyValuePair<Relation, object>> relations ) 
 		{
 			Class c = GetClass(pc);
-			int i = 0;
-			foreach(Relation r in c.Relations) 
+
+			foreach(var entry in relations) 
 			{
-				if (r.Multiplicity == RelationMultiplicity.Element) 
+				var r = entry.Key;
+				if (r.Multiplicity == RelationMultiplicity.Element)
 				{
-					mappings.SetRelationField(pc, r.FieldName, relations[i]);
+					mappings.SetRelationField(pc, r.FieldName, entry.Value);
 				} 
 				else 
 				{
@@ -1919,10 +1944,9 @@ namespace NDO
 							l.Clear();
 						}
 						// Restore relation
-						mappings.SetRelationContainer(pc, r, (IList)relations[i]);
+						mappings.SetRelationContainer(pc, r, (IList)entry.Value);
 					}
 				}
-				i++;
 			}
 		}
 
@@ -2351,29 +2375,6 @@ namespace NDO
             }
         }
 
-        /*
-                private DataRow CloneRow(DataRow row)
-                {
-                    DataRow newRow = row.Table.NewRow();
-                    for (int i = 0; i < row.Table.Columns.Count; i++)
-                        newRow[i] = row[i];
-                    return newRow;
-                }
-
-                private bool RowsAreIdentical(DataRow r1, DataRow r2)
-                {
-                    int r1Count = r1.Table.Columns.Count;
-                    int r2Count = r2.Table.Columns.Count;
-                    Debug.Assert(r1Count == r2Count);
-                    if (r1Count != r2Count)
-                        return false;
-                    for (int i = 0; i < r1Count; i++)
-                        if (!r1[i].Equals(r2[i]))
-                            return false;
-                    return true;
-                }
-        */
-
         /// <summary>
 		/// Do the update for all rows in the ds.
 		/// </summary>
@@ -2408,7 +2409,7 @@ namespace NDO
 			}
 		}
 
-        public void UpdateCreatedMappingTableEntries()
+        internal void UpdateCreatedMappingTableEntries()
         {
             foreach (MappingTableEntry e in createdMappingTableObjects)
             {
@@ -2422,7 +2423,7 @@ namespace NDO
             }
         }
 
-        public void UpdateDeletedMappingTableEntries()
+        internal void UpdateDeletedMappingTableEntries()
         {
             foreach (MappingTableEntry e in createdMappingTableObjects)
             {
@@ -2444,12 +2445,14 @@ namespace NDO
 		public virtual void Save(bool deferCommit = false) 
 		{
 			this.DeferredMode = deferCommit;
-			Hashtable htOnSaving = new Hashtable(cache.LockedObjects.Count * 2);
+			var htOnSaving = new HashSet<ObjectId>();
 			for(;;)
 			{
-				ArrayList l = new ArrayList(cache.LockedObjects);
-				int count = l.Count;
-				foreach(Cache.Entry e in l)
+				// We need to work on a copy of the locked objects list, 
+				// since the handlers might add more objects to the cache
+				var lockedObjects = cache.LockedObjects.ToList();
+				int count = lockedObjects.Count;
+				foreach(Cache.Entry e in lockedObjects)
 				{
 					if (e.pc.NDOObjectState != NDOObjectState.Deleted)
 					{
@@ -2459,11 +2462,12 @@ namespace NDO
 							if (!htOnSaving.Contains(e.pc.NDOObjectId))
 							{
 								ipn.OnSaving();
-								htOnSaving.Add(e.pc.NDOObjectId, null);
+								htOnSaving.Add(e.pc.NDOObjectId);
 							}
 						}
 					}
 				}
+				// The system is stable, if the count doesn't change
 				if (cache.LockedObjects.Count == count)
 					break;
 			}
@@ -2625,6 +2629,8 @@ namespace NDO
 			mappingHandler.Clear();
 			createdDirectObjects.Clear();
 			createdMappingTableObjects.Clear();
+			this.relationChanges.Clear();
+
 			if(hollowMode) 
 			{
 				MakeHollow(hollowModeObjects);
@@ -2919,6 +2925,10 @@ namespace NDO
 			{
 				MakeHollow(hollowModeObjects);
 			}
+
+			this.relationChanges.Clear();
+
+
 			AbortTransaction();
 		}
 
@@ -3176,7 +3186,13 @@ namespace NDO
 			}
 		}
 
-
+		/// <summary>
+		/// Remove a related object
+		/// </summary>
+		/// <param name="pc"></param>
+		/// <param name="r"></param>
+		/// <param name="child"></param>
+		/// <param name="calledFromStateManager"></param>
 		protected virtual void InternalRemoveRelatedObject(IPersistenceCapable pc, Relation r, IPersistenceCapable child, bool calledFromStateManager)
 		{
 			//TODO: We need a relation management, which is independent of
@@ -3217,6 +3233,8 @@ namespace NDO
 			{
 				removeLock.Unlock(pc, r, child);
 			}
+
+			this.relationChanges.Add( new RelationChangeRecord( pc, child, r.FieldName, false ) );
 		}
 
 		private void DeleteRelatedObjects2(IPersistenceCapable pc, Class parentClass, bool checkAssoziations, Relation r)
@@ -3356,12 +3374,9 @@ namespace NDO
 		/// </summary>
 		public virtual void MakeAllHollow() 
 		{
-			foreach(WeakReference objRef in cache.UnlockedObjects) 
+			foreach(var pc in cache.UnlockedObjects) 
 			{
-				if(objRef.IsAlive) 
-				{
-					MakeHollow((IPersistenceCapable)objRef.Target, false);
-				}
+				MakeHollow(pc, false);
 			}
 		}
 
@@ -3565,7 +3580,7 @@ namespace NDO
 		/// Refresh a list of objects.
 		/// </summary>
 		/// <param name="list">The list of objects to be refreshed.</param>
-		public virtual void Refresh(System.Collections.IList list) 
+		public virtual void Refresh(IList list) 
 		{
 			foreach (IPersistenceCapable pc in list)
 				Refresh(pc);						
@@ -3576,15 +3591,7 @@ namespace NDO
 		/// </summary>
 		public virtual void RefreshAll() 
 		{
-			ArrayList objectsToRefresh = new ArrayList();
-			foreach(WeakReference objRef in cache.UnlockedObjects) 
-			{
-				if(objRef.IsAlive) 
-				{
-					objectsToRefresh.Add(objRef.Target);
-				}
-			}
-			Refresh(objectsToRefresh);
+			Refresh( cache.UnlockedObjects.ToList() );
 		}
 
 		/// <summary>
@@ -3672,6 +3679,12 @@ namespace NDO
 			}
 		}
 
+		/// <summary>
+		/// Writes information into the data row, which cannot be stored in the object.
+		/// </summary>
+		/// <param name="cl"></param>
+		/// <param name="pc"></param>
+		/// <param name="row"></param>
 		protected virtual void WriteLostForeignKeysToRow(Class cl, IPersistenceCapable pc, DataRow row)
 		{
 			if (cl.FKColumnNames != null)
@@ -3795,8 +3808,13 @@ namespace NDO
 		}
 #endregion
 
-
-		public byte[] EncryptionKey
+		/// <summary>
+		/// Default encryption key for NDO
+		/// </summary>
+		/// <remarks>
+		/// We recommend strongly to use an own encryption key, which can be set with this property.
+		/// </remarks>
+		public virtual byte[] EncryptionKey
 		{
 			get 
 			{
@@ -3892,6 +3910,11 @@ namespace NDO
 			}
 		}
 
+		/// <summary>
+		/// Get a DataRow representing the given object.
+		/// </summary>
+		/// <param name="o"></param>
+		/// <returns></returns>
 		public DataRow GetClonedDataRow( object o )
 		{
 			IPersistenceCapable pc = CheckPc( o );
@@ -3911,6 +3934,12 @@ namespace NDO
 			return row;
 		}
 
+		/// <summary>
+		/// Gets an object, which shows all changes applied to the given object.
+		/// This function can be used to build an audit system.
+		/// </summary>
+		/// <param name="o"></param>
+		/// <returns>An ExpandoObject</returns>
 		public ExpandoObject GetChangeSet( object o )
 		{
 			IPersistenceCapable pc = CheckPc( o );
@@ -3945,20 +3974,48 @@ namespace NDO
 				}
 			}
 
-			foreach (NDO.Mapping.Relation relation in cls.Relations)
+			var objRelationChanges = this.relationChanges.Where( ce => ce.Parent.NDOObjectId == pc.NDOObjectId ).GroupBy(ce=>ce.RelationName).ToList();
+			if (objRelationChanges.Count > 0)
 			{
-				if (relation.Multiplicity != RelationMultiplicity.Element || relation.MappingTable != null)
-					continue;
-				if (relation.ForeignKeyColumns.Count() > 1)
-					throw new Exception( String.Format( "GetChangeSet does not support relations with multiple ForeignKeyColumns ({0}).", relation.ToString() ) );
-				string colName = relation.ForeignKeyColumns.First().Name;
-				object currentVal = row[colName, DataRowVersion.Current];
-				object originalVal = row[colName, DataRowVersion.Original];
-
-				if (!currentVal.Equals( originalVal ))
+				var relStates = CollectRelationStates( pc, row );
+				foreach (var group in objRelationChanges)
 				{
-					originalValues.Add( relation.FieldName, originalVal );
-					currentValues.Add( relation.FieldName, currentVal );
+					string fieldName = group.Key;
+					object fieldValue = (from rs in relStates where rs.Key.FieldName == fieldName select rs.Value).SingleOrDefault();
+					var relCurrent = new List<string>();
+					if (fieldValue is IList l)
+					{
+						foreach (IPersistenceCapable item in l)
+						{
+							var shortId = item.ShortId();
+							if (item.NDOObjectState == NDOObjectState.Created)
+								relCurrent.Add( shortId.Substring( 0, shortId.LastIndexOf( '-' ) + 1 ) + '?' );
+							else
+								relCurrent.Add( shortId );
+						}
+					}
+					else
+					{
+						relCurrent.Add( ((IPersistenceCapable)fieldValue).ShortId() );
+					}
+
+					var relOriginal = relCurrent.ToList();
+
+					foreach (var changeEntry in group)
+					{
+						if (changeEntry.IsAdded)
+						{
+							var shortId = changeEntry.Child.ShortId();
+							if (relOriginal.Contains( shortId ))
+								relOriginal.Remove( shortId );
+						}
+						else
+						{
+							relOriginal.Add( changeEntry.Child.ShortId() );
+						}
+					}
+					originalValues.Add( fieldName, relOriginal );
+					currentValues.Add( fieldName, relCurrent );
 				}
 			}
 
@@ -3967,6 +4024,10 @@ namespace NDO
 			return result;		
 		}
 
+		/// <summary>
+		/// Outputs a revision number representing the assembly version.
+		/// </summary>
+		/// <remarks>This can be used for debugging purposes</remarks>
 		public int Revision 
 		{ 
 			get 
