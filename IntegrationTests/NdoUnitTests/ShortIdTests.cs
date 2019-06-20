@@ -22,6 +22,7 @@
 
 using NDO;
 using NDO.ShortId;
+using Newtonsoft.Json;
 using NUnit.Framework;
 using PureBusinessClasses;
 using Reisekosten;
@@ -121,34 +122,57 @@ namespace NdoUnitTests
 		}
 
 		[Test]
-		public void TestIfMultikeyGivesAnException()
+		public void TestIfMultikeysCanBeConverted()
 		{
-			IPersistenceCapable orderDetail = pm.FindObject( typeof( OrderDetail ), new object[] { new Guid( 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11 ), new Guid( 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11 ) } );
-			bool exceptionOccured = false;
-			try
-			{
-				string shortId = orderDetail.ShortId();
-			}
-			catch
-			{
-				exceptionOccured = true;
-			}
-			Assert.That( exceptionOccured, "It shouldn't be possible to get a ShortId from an object with mulitple keys." );
-			Type t = typeof(OrderDetail);
-			string sid = t.FullName + "-" + new AssemblyName( t.Assembly.FullName ).Name + "-4711";
-			Assert.That( sid.IsShortId(), "The string should be a wellformed ShortId" );
-			exceptionOccured = false;
-			try
-			{
-				orderDetail = pm.FindObject( sid );
-			}
-			catch
-			{
-				exceptionOccured = true;
-			}
-			Assert.That( exceptionOccured, "It shouldn't be possible to retrieve an object with mulitple keys using a ShortId." );
+			var guid = new Guid( 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11 );
+			var guidString = guid.ToString().Replace( "-", "" );
+			IPersistenceCapable orderDetail = pm.FindObject( typeof( OrderDetail ), new object[] { guid, guid } );
+			string shortId = ((IPersistenceCapable)orderDetail).ShortId();
+			Assert.That( shortId.IsShortId() );
+			Assert.That( shortId.GetEntityName() == "OrderDetail" );
+			Assert.That( shortId.GetObjectType( pm ) == typeof( OrderDetail ) );
+			string[] arr = shortId.Split( '-' );
+			Assert.AreEqual( $"{guidString}+{guidString}", arr[2] );
+			var decodedShortId = shortId.Decode();
+			arr = decodedShortId.Split( '-' );
+			Assert.AreEqual( $"{guidString} {guidString}", arr[2] );
+
+#if !USEGUIDS
+			orderDetail = pm.FindObject( typeof(OrderDetail), new object[] { 1, 2 } );
+			shortId = orderDetail.ShortId();
+#endif
+			orderDetail = pm.FindObject( shortId );
+#if USEGUIDS
+			Assert.AreEqual( guid, orderDetail.NDOObjectId.Id.Values[0] );
+			Assert.AreEqual( guid, orderDetail.NDOObjectId.Id.Values[1] );
+#else
+			Assert.AreEqual( 1, orderDetail.NDOObjectId.Id.Values[0] );
+			Assert.AreEqual( 2, orderDetail.NDOObjectId.Id.Values[1] );
+#endif
 		}
 
+		public class ObjectIdConverter : JsonConverter<ObjectId>
+		{
+			public override void WriteJson( JsonWriter writer, ObjectId value, JsonSerializer serializer )
+			{
+				writer.WriteValue( value.ToString() );
+			}
+
+			public override ObjectId ReadJson( JsonReader reader, Type objectType, ObjectId existingValue, bool hasExistingValue, JsonSerializer serializer )
+			{
+				return null;
+			}
+		}
+
+		[Test]
+		public void OidArrayCanBeSerializedToJson()
+		{
+			var oid1 = ((IPersistenceCapable)pm.FindObject( typeof( Mitarbeiter ), 1 )).NDOObjectId;
+			var oid2 = ((IPersistenceCapable)pm.FindObject( typeof( Mitarbeiter ), 2 )).NDOObjectId;
+			ObjectIdList arr = new ObjectIdList { oid1, oid2 };
+			var json = JsonConvert.SerializeObject( arr, new ObjectIdConverter() );
+			Assert.AreEqual( "[\"Mitarbeiter-F33D0A6D-1\",\"Mitarbeiter-F33D0A6D-2\"]", json );
+		}
 
 		[Test]
 		public void TestIfWeCanRetrieveAnObjectFromShortId()

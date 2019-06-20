@@ -41,7 +41,9 @@ namespace NdoUnitTests
 			pm.Delete( mitarbeiterListe );
 			pm.Save();
 			pm.UnloadCache();
-			pm.GetSqlPassThroughHandler().Execute( $"DELETE FROM {pm.NDOMapping.FindClass( typeof( Reise ) ).TableName}" );
+			var handler = pm.GetSqlPassThroughHandler();
+			handler.Execute( $"DELETE FROM {pm.NDOMapping.FindClass( typeof( Reise ) ).TableName}" );
+			handler.Execute( $"DELETE FROM {pm.NDOMapping.FindClass( typeof( Adresse ) ).TableName}" );
 			pm = null;
 		}
 
@@ -69,13 +71,11 @@ namespace NdoUnitTests
 		}
 
 		[Test]
-		public void ChangeSetDetectsObjectAddition()
+		public void ChangeSetDetectsObjectAddition1_to_n()
 		{
 			m = pm.Objects<Mitarbeiter>().Single();
 			var r = m.ErzeugeReise();
 			r.Zweck = "Test";
-			var shortId = r.ShortId();
-			shortId = shortId.Substring( 0, shortId.LastIndexOf( '-' ) + 1 ) + '?';
 			var changeObject = pm.GetChangeSet( m );
 			var dict = (IDictionary<string, object>)changeObject;
 			var original = (IDictionary<string, object>)dict["original"];
@@ -84,7 +84,79 @@ namespace NdoUnitTests
 			Assert.AreEqual( 1, current.Count );
 			Assert.That( original.ContainsKey("dieReisen") );
 			Assert.That( current.ContainsKey( "dieReisen" ) );
-			Assert.AreEqual(shortId, ((List<string>)current["dieReisen"])[1] );
+			Assert.AreEqual( 1, ((List<ObjectId>)original["dieReisen"]).Count );
+			Assert.AreEqual( 2, ((List<ObjectId>)current["dieReisen"]).Count );
+			Assert.AreEqual(r.NDOObjectId, ((List<ObjectId>)current["dieReisen"])[1] );
+			// At this point it doesn't make any sense to serialize the changeObject,
+			// since the id of r is not yet determined.
+			Assert.That( (int)r.NDOObjectId.Id[0] < 0 );
+			pm.Save();
+			// Now the id of r is determined. Let's assert, that the list in current reflects the change.
+			Assert.That( (int)r.NDOObjectId.Id[0] > 0 );
+			Assert.AreEqual( r.NDOObjectId, ((List<ObjectId>)current["dieReisen"])[1] );
+		}
+
+		[Test]
+		public void ChangeSetDetectsObjectDeletion1_to_n()
+		{
+			m = pm.Objects<Mitarbeiter>().Single();
+			m.Löschen( m.Reisen[0] );
+			var changeObject = pm.GetChangeSet( m );
+			var dict = (IDictionary<string, object>)changeObject;
+			var original = (IDictionary<string, object>)dict["original"];
+			var current = (IDictionary<string, object>)dict["current"];
+			Assert.AreEqual( 1, original.Count );
+			Assert.AreEqual( 1, current.Count );
+			Assert.That( original.ContainsKey( "dieReisen" ) );
+			Assert.That( current.ContainsKey( "dieReisen" ) );
+			Assert.AreEqual( 1, ((List<ObjectId>)original["dieReisen"]).Count );
+			Assert.AreEqual( 0, ((List<ObjectId>)current["dieReisen"]).Count );
+		}
+
+		[Test]
+		public void ChangeSetDetectsObjectAddition1_to_1()
+		{
+			m = pm.Objects<Mitarbeiter>().Single();
+			Adresse a = new Adresse() { Ort = "München", Straße = "Teststr", Plz = "80133" };
+			m.Adresse = a;
+			var changeObject = pm.GetChangeSet( m );
+			var dict = (IDictionary<string, object>)changeObject;
+			var original = (IDictionary<string, object>)dict["original"];
+			var current = (IDictionary<string, object>)dict["current"];
+			Assert.AreEqual( 1, original.Count );
+			Assert.AreEqual( 1, current.Count );
+			Assert.That( original.ContainsKey( "adresse" ) );
+			Assert.That( current.ContainsKey( "adresse" ) );
+			Assert.AreEqual( a.NDOObjectId, ((List<ObjectId>)current["adresse"])[0] );
+			// At this point it doesn't make any sense to serialize the changeObject,
+			// since the id of r is not yet determined.
+			Assert.That( (int)a.NDOObjectId.Id[0] < 0 );
+			pm.Save();
+			// Now the id of r is determined. Let's assert, that the list in current reflects the change.
+			Assert.That( (int)a.NDOObjectId.Id[0] > 0 );
+			Assert.AreEqual( a.NDOObjectId, ((List<ObjectId>)current["adresse"])[0] );
+		}
+
+		[Test]
+		public void ChangeSetDetectsObjectDeletion1_to_1()
+		{
+			m = pm.Objects<Mitarbeiter>().Single();
+			Adresse a = new Adresse() { Ort = "München", Straße = "Teststr", Plz = "80133" };
+			m.Adresse = a;
+			pm.Save();
+			pm.UnloadCache();
+			m = pm.Objects<Mitarbeiter>().Single();
+			m.Adresse = null;
+			var changeObject = pm.GetChangeSet( m );
+			var dict = (IDictionary<string, object>)changeObject;
+			var original = (IDictionary<string, object>)dict["original"];
+			var current = (IDictionary<string, object>)dict["current"];
+			Assert.AreEqual( 1, original.Count );
+			Assert.AreEqual( 1, current.Count );
+			Assert.That( original.ContainsKey( "adresse" ) );
+			Assert.That( current.ContainsKey( "adresse" ) );
+			Assert.AreEqual( 1, ((List<ObjectId>)original["adresse"]).Count );
+			Assert.AreEqual( 0, ((List<ObjectId>)current["adresse"]).Count );
 		}
 	}
 }

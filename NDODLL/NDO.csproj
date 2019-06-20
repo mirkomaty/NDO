@@ -31,6 +31,16 @@ Support for .NET Standard</PackageReleaseNotes>
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="packages\**" />
+    <Compile Remove="TestRunner\**" />
+    <EmbeddedResource Remove="packages\**" />
+    <EmbeddedResource Remove="TestRunner\**" />
+    <None Remove="packages\**" />
+    <None Remove="TestRunner\**" />
+    <None Remove="NDO.v12.suo" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="ndointerfaces" Version="4.0.0" />
     <PackageReference Include="Unity.Container" Version="5.8.13" />
   </ItemGroup>

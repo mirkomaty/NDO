@@ -155,9 +155,7 @@ namespace NDO
         /// <returns></returns>
         public override string ToString()
         {
-            return this.Dump();
-            //return id.Value.ToString();
-            //return string.Format("[Type = {0}|Id = {1}]", id.Type, id.Value);
+            return this.ToShortId();
         }
 
         /// <summary>
@@ -180,6 +178,11 @@ namespace NDO
 			return id.ToShortId();
 		}
 
+		/// <summary>
+		/// Gets the oid data for serialization purposes.
+		/// </summary>
+		/// <param name="info"></param>
+		/// <param name="context"></param>
         public void GetObjectData(SerializationInfo info, StreamingContext context)
         {
             this.id.Serialize(info, context);
@@ -213,23 +216,8 @@ namespace NDO
         /// <param name="context"></param>
         public ObjectId(SerializationInfo info, StreamingContext context)
         {
-            bool isOldObject = false;
-            try
-            {
-                Type keyType = (Type)info.GetValue("KeyType", typeof(Type));
-            }
-            catch (SerializationException)
-            {
-                isOldObject = true;
-            }
-            if (!isOldObject)
-            {
-                this.id = Key.NewKey(info, context);
-            }
-            else
-            {
-                this.id = MultiKey.OldDeserialization(info, context);
-            }
+            Type keyType = (Type)info.GetValue("KeyType", typeof(Type));
+            this.id = Key.NewKey(info, context);
         }
     }
 }

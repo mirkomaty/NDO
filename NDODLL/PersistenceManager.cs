@@ -3493,35 +3493,46 @@ namespace NDO
 				if (t == null) 
 					throw new ArgumentException( "The string doesn't represent a loadable type", "shortId" );
 			}
+
 			Class cls = GetClass( t );
 			if (cls == null)
 				throw new ArgumentException( "The type identified by the string is not persistent or is not managed by the given mapping file", "shortId" );
-			if (cls.Oid.OidColumns.Count > 1)
-				throw new ArgumentException( "The type identified by the string has multiple oid columns and can't be loaded by a ShortId", "shortId" );
-			object keydata;
-			Type oidType = cls.Oid.OidColumns[0].SystemType;
-			if (oidType == typeof(int))
+
+			object[] keydata = new object[cls.Oid.OidColumns.Count];
+			string[] oidValues = arr[2].Split( ' ' );
+
+			int i = 0;
+			foreach (var oidValue in oidValues)
 			{
-				int key;
-				if (!int.TryParse( arr[2], out key ))
-					throw new ArgumentException( "The ShortId doesn't contain an int value", "shortId" );
-				keydata = key;
+				Type oidType = cls.Oid.OidColumns[i].SystemType;
+				if (oidType == typeof( int ))
+				{
+					int key;
+					if (!int.TryParse( oidValue, out key ))
+						throw new ArgumentException( $"The ShortId value at index {i} doesn't contain an int value", nameof(encodedShortId) );
+					keydata[i] = key;
+				}
+				else if (oidType == typeof( Guid ))
+				{
+					Guid key;
+					if (!Guid.TryParse( oidValue, out key ))
+						throw new ArgumentException( $"The ShortId value at index {i} doesn't contain an Guid value", nameof( encodedShortId ) );
+					keydata[i] = key;
+				}
+				else if (oidType == typeof( string ))
+				{
+					keydata[i] = oidValue;
+				}
+				else
+				{
+					throw new ArgumentException( $"The oid type at index {i} of the persistent type {t} can't be used by a ShortId: {oidType.FullName}", nameof( encodedShortId ) );
+				}
+
+				i++;
 			}
-			else if (oidType == typeof(Guid))
-			{
-				Guid key;
-				if (!Guid.TryParse( arr[2], out key ))
-					throw new ArgumentException( "The ShortId doesn't contain a guid value", "shortId" );
-				keydata = key;
-			}
-			else if (oidType == typeof(string))
-			{
-				keydata = arr[2];
-			}
-			else
-			{
-				throw new ArgumentException( "The oid type of the persistent type can't be used by a ShortId: " + oidType.FullName, "shortId" );
-			}
+
+			if (keydata.Length == 1)
+				return FindObject( t, keydata[0] );
 
 			return FindObject( t, keydata );			
 		}
@@ -3982,36 +3993,35 @@ namespace NDO
 				{
 					string fieldName = group.Key;
 					object fieldValue = (from rs in relStates where rs.Key.FieldName == fieldName select rs.Value).SingleOrDefault();
-					var relCurrent = new List<string>();
+					var relCurrent = new ObjectIdList();
 					if (fieldValue is IList l)
 					{
 						foreach (IPersistenceCapable item in l)
 						{
-							var shortId = item.ShortId();
-							if (item.NDOObjectState == NDOObjectState.Created)
-								relCurrent.Add( shortId.Substring( 0, shortId.LastIndexOf( '-' ) + 1 ) + '?' );
-							else
-								relCurrent.Add( shortId );
+							relCurrent.Add( item.NDOObjectId);
 						}
 					}
 					else
 					{
-						relCurrent.Add( ((IPersistenceCapable)fieldValue).ShortId() );
+						if (fieldValue != null)
+							relCurrent.Add( ((IPersistenceCapable)fieldValue).NDOObjectId );
 					}
 
-					var relOriginal = relCurrent.ToList();
+					var relOriginal = new ObjectIdList(relCurrent);
 
+					// In order to get the original array, we remove added objects
+					// and add removed objects
 					foreach (var changeEntry in group)
 					{
 						if (changeEntry.IsAdded)
 						{
-							var shortId = changeEntry.Child.ShortId();
-							if (relOriginal.Contains( shortId ))
-								relOriginal.Remove( shortId );
+							var objectId = changeEntry.Child.NDOObjectId;
+							if (relOriginal.Contains( objectId ))
+								relOriginal.Remove( objectId );
 						}
 						else
 						{
-							relOriginal.Add( changeEntry.Child.ShortId() );
+							relOriginal.Add( changeEntry.Child.NDOObjectId );
 						}
 					}
 					originalValues.Add( fieldName, relOriginal );

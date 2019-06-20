@@ -35,6 +35,9 @@ namespace NDO
 	/// </summary>
 	public abstract class Key
 	{
+		/// <summary>
+		/// The type of the object
+		/// </summary>
 		protected Type t;
 		private TypeManager typeManager;
 
@@ -50,6 +53,7 @@ namespace NDO
 		/// Constructor
 		/// </summary>
 		/// <param name="t">Persistent class type</param>
+		/// <param name="typeManager">The TypeManager to get the type code</param>
 		internal Key(Type t, TypeManager typeManager)
 		{
 			this.typeManager = typeManager;
@@ -70,23 +74,58 @@ namespace NDO
 			get { return t; }
 		}
 
+		/// <summary>
+		/// Writes the key data into the DataRow using the class mapping information.
+		/// </summary>
+		/// <param name="cl"></param>
+		/// <param name="row"></param>
+		public abstract void ToRow(Class cl, DataRow row);
 
-        public abstract void ToRow(Class cl, DataRow row);
+		/// <summary>
+		/// Initializes the key data from the given DataRow using the class mapping information.
+		/// </summary>
+		/// <param name="cl"></param>
+		/// <param name="row"></param>
+		public abstract void FromRow(Class cl, DataRow row);
 
-        public abstract void FromRow(Class cl, DataRow row);
-
+		/// <summary>
+		/// Serializes the key values
+		/// </summary>
+		/// <param name="info"></param>
+		/// <param name="context"></param>
         public abstract void Serialize(SerializationInfo info, StreamingContext context);
 
+		/// <summary>
+		/// Deserializes a key
+		/// </summary>
+		/// <param name="info"></param>
+		/// <param name="context"></param>
         public abstract void Deserialize(SerializationInfo info, StreamingContext context);
 
+		/// <summary>
+		/// Writes the key data as foreign key to a DataRow
+		/// </summary>
+		/// <param name="relation"></param>
+		/// <param name="row"></param>
         public abstract void ToForeignKey(Relation relation, DataRow row);
 
+		/// <summary>
+		/// Gets key data.
+		/// </summary>
+		/// <param name="index"></param>
+		/// <returns></returns>
         public virtual object this[int index]
         {
             get { throw new InternalException(59, "Key.this: Class " + this.GetType().FullName + " doesn't support access to the primary key column values."); }
             set { throw new InternalException(59, "Key.this: Class " + this.GetType().FullName + " doesn't support access to the primary key column values."); }
         }
 
+		/// <summary>
+		/// Creates a new key from a serialized stream
+		/// </summary>
+		/// <param name="info"></param>
+		/// <param name="context"></param>
+		/// <returns></returns>
         public static Key NewKey(SerializationInfo info, StreamingContext context)
         {
             Type keyType = (Type)info.GetValue("KeyType", typeof(Type));
@@ -159,8 +198,18 @@ namespace NDO
 			return t.GetHashCode();
 		}
 
+		/// <summary>
+		/// Clones a key
+		/// </summary>
+		/// <returns></returns>
         public abstract Key Clone();
 
+		/// <summary>
+		/// Creates a key from another key
+		/// </summary>
+		/// <param name="template"></param>
+		/// <param name="t"></param>
+		/// <returns></returns>
         public static Key NewKey(Key template, Type t)
         {
             Key newKey = template.Clone();
@@ -169,17 +218,16 @@ namespace NDO
         }
 
 
-        /// <summary>
-        /// Gets or sets the Key value of the first oid column. This property is equivalent to 
-        /// key[0];
-        /// </summary>
-        /// <remarks>
-        /// Use this property only, if you don't use multi-column primary keys. Otherwise use this[int].
-        /// </remarks>
-        public abstract object Value
+		/// <summary>
+		/// Gets the Key value of the first oid column. This property is equivalent to 
+		/// key[0];
+		/// </summary>
+		/// <remarks>
+		/// This property is for convenience, since most objects have only one key value. Use this property only, if your object doesn't use a multi-column primary key. Otherwise use this[int].
+		/// </remarks>
+		public abstract object Value
         {
             get;
-            set;
         }
 
         /// <summary>
@@ -226,16 +274,29 @@ namespace NDO
 		/// <returns>A string consisting of the type information and the oid of the object.</returns>
 		internal virtual string ToShortId()
 		{
-			if (Values.Length > 1)
-				throw new Exception( "Can't construct a ShortId because the object has multiple key values." );
-			Type oidType = Value.GetType();
-			if (oidType != typeof(int) && oidType != typeof(Guid) && oidType != typeof(string))
+			StringBuilder valueSb = new StringBuilder();
+			foreach (var value in Values)
 			{
-				throw new Exception( "The oid type of the object does not allow the indication by a ShortId: " + oidType.FullName );
+				Type oidType = value.GetType();
+
+				if (oidType != typeof( int ) && oidType != typeof( Guid ) && oidType != typeof( string ))
+					throw new Exception( "The oid type of the object does not allow the indication by a ShortId: " + oidType.FullName );
+
+				if (oidType == typeof(string) && ((string)value).IndexOf(' ') > -1)
+					throw new Exception( "The string oid value contains a ' ' char. It can't be converted to a ShortId. Type: " + oidType.FullName );
+
+				if (valueSb.Length > 0)
+					valueSb.Append( ' ' );  // Will be convertet to '+' by Encode()
+
+				if (value is int i)
+					valueSb.Append( i < 0 ? "?" : i.ToString() );
+				else
+					// In case of a Guid the '-' chars should be removed.
+					// Guid.Parse can parse a string without these dashes.
+					valueSb.Append( Value.ToString().Replace( "-", "" ) );
 			}
-			// In case of a Guid the '-' chars should be removed.
-			// Guid.Parse can parse a string without these dashes.
-			return (Type.Name + "-" + this.typeManager[Type].ToString( "X8" ) + "-" + Value.ToString().Replace( "-", "" )).Encode();
+
+			return (Type.Name + "-" + this.typeManager[Type].ToString( "X8" ) + "-" + valueSb.ToString()).Encode();
 		}
 	}
 }
