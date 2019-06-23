@@ -98,7 +98,7 @@
     </Reference>
     <Reference Include="NDO, Version=4.0.0.0, Culture=neutral, PublicKeyToken=37bfdffa92a0cd24, processorArchitecture=MSIL">
       <SpecificVersion>false</SpecificVersion>
-      <HintPath>..\NDODLL\bin\$(Configuration)\NDO.dll</HintPath>
+      <HintPath>..\NDODLL\bin\$(Configuration)\net452\NDO.dll</HintPath>
     </Reference>
     <Reference Include="NDO.UISupport">
       <HintPath>..\UISupport\NDO.UISupport\bin\$(Configuration)\NDO.UISupport.dll</HintPath>

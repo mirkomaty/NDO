@@ -32,6 +32,7 @@ using Microsoft.VisualStudio.OLE.Interop;
 using Microsoft.VisualStudio.Shell;
 using System.Windows.Forms;
 using EnvDTE;
+using System.Threading;
 
 namespace NETDataObjects.NDOVSPackage
 {
@@ -47,16 +48,16 @@ namespace NETDataObjects.NDOVSPackage
     /// </summary>
     // This attribute tells the PkgDef creation utility (CreatePkgDef.exe) that this class is
     // a package.
-    [PackageRegistration(UseManagedResourcesOnly = true)]
+    [PackageRegistration(UseManagedResourcesOnly = true, AllowsBackgroundLoading = true )]
     // This attribute is used to register the information needed to show this package
     // in the Help/About dialog of Visual Studio.
     [InstalledProductRegistration("#110", "#112", NDOPackage.Version, IconResourceID = 400)]
     // This attribute is needed to let the shell know that this package exposes some menus.
     [ProvideMenuResource("Menus.ctmenu", 1)]
     [Guid(GuidList.guidNDOPackagePkgString)]
-	[ProvideAutoLoad("f1536ef8-92ec-443c-9ed7-fdadf150da82")]
+	[ProvideAutoLoad( VSConstants.UICONTEXT.SolutionExistsAndFullyLoaded_string, PackageAutoLoadFlags.BackgroundLoad )]
 	[ProvideLoadKey("Standard", NDOPackage.Version, ".NET Data Objects (NDO)", "Mirko Matytschak", 104) ]
-    public sealed class NDOPackage : Package
+    public sealed class NDOPackage : AsyncPackage
     {
 		public const string Version = "4.0.0";
 		private BuildEventHandler		buildEventHandler;
@@ -84,7 +85,7 @@ namespace NETDataObjects.NDOVSPackage
         /// Initialization of the package; this method is called right after the package is sited, so this is the place
         /// where you can put all the initialization code that rely on services provided by VisualStudio.
         /// </summary>
-		protected override void Initialize()
+		protected override async System.Threading.Tasks.Task InitializeAsync(CancellationToken cancellationToken, IProgress<ServiceProgressData> progress)
 		{
 			Debug.WriteLine( string.Format( CultureInfo.CurrentCulture, "Entering Initialize() of: {0}", this.ToString() ) );
 			base.Initialize();
@@ -123,9 +124,7 @@ namespace NETDataObjects.NDOVSPackage
 				menuItem = new OpenMappingTool( dte, menuCommandID );
 				mcs.AddCommand( menuItem );
 
-				//menuCommandID = new CommandID( GuidList.guidNDOPackageCmdSet, (int)PkgCmdIDList.cmdidOpenClassGenerator );
-				//menuItem = new OpenClassGenerator( dte, menuCommandID );
-				//mcs.AddCommand( menuItem );
+				await System.Threading.Tasks.Task.Run( () => { } );
 			}
 
 			this.buildEventHandler = new BuildEventHandler( dte );
