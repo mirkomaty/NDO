@@ -3458,6 +3458,16 @@ namespace NDO
 		}
 
 		/// <summary>
+		/// Creates an object of a given type and resolves constructor parameters using the container.
+		/// </summary>
+		/// <typeparam name="T"></typeparam>
+		/// <returns></returns>
+		public IPersistenceCapable CreateObject<T>()
+		{
+			return CreateObject( typeof( T ) );
+		}
+
+		/// <summary>
 		/// Gets the requested object. It first builds an ObjectId using the type and the 
 		/// key data. Then it uses FindObject to retrieve the object. No database access 
 		/// is performed.
