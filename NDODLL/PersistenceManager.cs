@@ -3460,11 +3460,11 @@ namespace NDO
 		/// <summary>
 		/// Creates an object of a given type and resolves constructor parameters using the container.
 		/// </summary>
-		/// <typeparam name="T"></typeparam>
+		/// <typeparam name="T">The type of the object to create.</typeparam>
 		/// <returns></returns>
-		public IPersistenceCapable CreateObject<T>()
+		public T CreateObject<T>()
 		{
-			return CreateObject( typeof( T ) );
+			return (T)CreateObject( typeof( T ) );
 		}
 
 		/// <summary>
