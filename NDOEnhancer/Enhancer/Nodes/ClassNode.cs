@@ -130,7 +130,7 @@ namespace NDOEnhancer
 		private void AnalyzeFields()
 		{
 			IList relations = new ArrayList();
-			FieldInfo[] fis = this.classType.GetFields(BindingFlags.NonPublic | BindingFlags.Instance);
+			var fis = this.classType.GetFields(BindingFlags.NonPublic | BindingFlags.Instance).Where(fi=>!fi.IsInitOnly);
 			foreach (FieldInfo fi in fis)
 			{
 				string fname = fi.Name;
@@ -164,7 +164,7 @@ namespace NDOEnhancer
 					this.relations.Add(new RelationNode(fi, nra, this));
 					continue;
 				}
-#if !NDO11
+
 				// Field is a collection - assume that it is either a relation or a transient field.
 				if (GenericIListReflector.IsGenericIList(fi.FieldType))
 				{
@@ -179,7 +179,7 @@ namespace NDOEnhancer
 					}
 					continue;
 				}
-#endif
+
 				if (!fi.FieldType.IsGenericParameter && fi.FieldType.IsClass && fi.FieldType != typeof(string) && fi.FieldType != typeof(byte[]))
 				{
 					this.embeddedTypes.Add(new EmbeddedTypeNode(fi));
