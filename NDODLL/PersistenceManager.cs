@@ -3448,11 +3448,11 @@ namespace NDO
 		}
 
 		/// <summary>
-		/// Create object of a given type.
+		/// Creates an object of a given type and resolves constructor parameters using the container.
 		/// </summary>
-		/// <param name="t">the type of the persistent object</param>
+		/// <param name="t">The type of the persistent object</param>
 		/// <returns></returns>
-		private IPersistenceCapable CreateObject(Type t) 
+		public IPersistenceCapable CreateObject(Type t) 
 		{
 			return Metaclasses.GetClass( t, this.ConfigContainer ).CreateObject();
 		}
