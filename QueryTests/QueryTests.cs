@@ -58,6 +58,12 @@ namespace QueryTests
 		}
 
 		[Test]
+		public void QueryWithEmptyGuidParameterSearchesForNull()
+		{
+			Assert.That( false, "Der Test muss noch geschrieben werden." );
+		}
+
+		[Test]
 		public void CheckIfQueryWithoutWhereClauseWorks()
 		{
 			NDOQuery<Mitarbeiter> q = new NDOQuery<Mitarbeiter>( pm );
