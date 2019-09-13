@@ -33,6 +33,7 @@ using Microsoft.VisualStudio.Shell;
 using System.Windows.Forms;
 using EnvDTE;
 using System.Threading;
+using ST=System.Threading.Tasks;
 
 namespace NETDataObjects.NDOVSPackage
 {
@@ -85,10 +86,16 @@ namespace NETDataObjects.NDOVSPackage
         /// Initialization of the package; this method is called right after the package is sited, so this is the place
         /// where you can put all the initialization code that rely on services provided by VisualStudio.
         /// </summary>
-		protected override async System.Threading.Tasks.Task InitializeAsync(CancellationToken cancellationToken, IProgress<ServiceProgressData> progress)
+		protected override async ST.Task InitializeAsync(CancellationToken cancellationToken, IProgress<ServiceProgressData> progress)
 		{
 			Debug.WriteLine( string.Format( CultureInfo.CurrentCulture, "Entering Initialize() of: {0}", this.ToString() ) );
-			base.Initialize();
+
+			await base.InitializeAsync( cancellationToken, progress );
+
+			// Let the remainder of the InitializeAsync method run on the main thread,
+			// because it uses a lot of UI and Com stuff.
+
+			await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();			
 
 			_DTE dte = (_DTE)this.GetService( typeof( _DTE ) );
 			var serviceProvider = (Microsoft.VisualStudio.OLE.Interop.IServiceProvider)dte;
@@ -123,13 +130,13 @@ namespace NETDataObjects.NDOVSPackage
 				menuCommandID = new CommandID( GuidList.guidNDOPackageCmdSet, (int)PkgCmdIDList.cmdidOpenMappingTool );
 				menuItem = new OpenMappingTool( dte, menuCommandID );
 				mcs.AddCommand( menuItem );
-
-				await System.Threading.Tasks.Task.Run( () => { } );
 			}
 
 			this.buildEventHandler = new BuildEventHandler( dte );
-		}
-        #endregion
 
-    }
+			//await ST.Task.CompletedTask;// Run( () => { } );
+		}
+		#endregion
+
+	}
 }
