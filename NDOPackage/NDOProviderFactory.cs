@@ -32,10 +32,6 @@ namespace NETDataObjects.NDOVSPackage
                             this.ndoProviders = new Dictionary<string, IProvider>();
                             string path = Path.GetDirectoryName(GetType().Assembly.Location);
 
-                            var ndoAssembly = Assembly.LoadFrom(Path.Combine(path, "NDO.dll"));
-                            var sqlp = (IProvider)Activator.CreateInstance(ndoAssembly.GetType("NDO.NDOSqlServerProvider"));
-                            this.ndoProviders.Add(sqlp.Name, sqlp);
-
                             var ifc = typeof(IProvider);
 
                             foreach (var fileName in Directory.GetFiles(path, "*Provider.dll"))
