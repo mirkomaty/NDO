@@ -549,7 +549,7 @@ namespace NDO.Mapping
             if (this.multiplicity == RelationMultiplicity.List)
             {
                 if (ra == null)
-                    throw new Exception("Kann Relationstyp für Feld " + Parent.FullName + "." + fi.Name + " nicht bestimmen.");
+                    throw new NDOException(97, $"Can't determine relation type for relation {Parent.FullName}.{fi.Name}");
 
                 if (ra.RelationType == null && fi.FieldType.IsGenericType)
                     this.referencedType = fi.FieldType.GetGenericArguments()[0];

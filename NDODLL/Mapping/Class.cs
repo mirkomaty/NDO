@@ -410,7 +410,7 @@ namespace NDO.Mapping
 				return ((FieldInfo) memberInfo).FieldType;
 			if (memberInfo.MemberType == MemberTypes.Property)
 				return ((PropertyInfo) memberInfo).PropertyType;
-			throw new NDOException( 117, String.Format( "InitFields: MemberInfo of the persistent field {0}.{1} should be a FieldInfo or a PropertyInfo", FullName, memberInfo.Name ) );
+			throw new NDOException( 117, $"InitFields: MemberInfo of the persistent field {FullName}.{memberInfo.Name} should be a FieldInfo or a PropertyInfo");
 		}
 
 		void IFieldInitializer.InitFields()
@@ -423,12 +423,16 @@ namespace NDO.Mapping
             FieldMap fieldMap = new FieldMap(this);
             myColumns = fieldMap.Fields;
             myEmbeddedTypes = fieldMap.EmbeddedTypes;
+			var persistentFields = fieldMap.PersistentFields;
             ((IFieldInitializer)this.oid).InitFields();
 			foreach (var field in this.fields)
 			{
-				var type = GetMemberType( fieldMap.PersistentFields[field.Name] );
+				var fieldName = field.Name;
+				if (!persistentFields.ContainsKey( fieldName ))
+					continue;  // The mapping file contains a needless field definition
+				var type = GetMemberType( persistentFields[fieldName] );
 				if (field.Encrypted && type != typeof( string ))
-					throw new NDOException( 117, String.Format( "Field {0} can't be encrypted. Encrypted fields must be of type string. Change the Encrypted attribute in your mapping file.", field.Name ) );
+					throw new NDOException( 118, $"Field {fieldName} can't be encrypted. Encrypted fields must be of type string. Change the 'Encrypted' attribute in your mapping file." );
 			}
         }
 
