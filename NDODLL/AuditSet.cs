@@ -32,8 +32,17 @@ namespace NDO
 	/// </summary>
 	public class AuditSet
 	{
+		/// <summary>
+		/// Contains all created objects.
+		/// </summary>
 		public IEnumerable<IPersistenceCapable> CreatedObjects { get; set; }
+		/// <summary>
+		/// Contains all deleted objects.
+		/// </summary>
 		public IEnumerable<IPersistenceCapable> DeletedObjects { get; set; }
+		/// <summary>
+		/// Contains all changed objects.
+		/// </summary>
 		public IEnumerable<IPersistenceCapable> ChangedObjects { get; set; }
 	}
 }

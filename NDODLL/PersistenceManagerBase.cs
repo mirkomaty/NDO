@@ -70,11 +70,19 @@ namespace NDO
             Init( Path.Combine(baseDir, mappingFileName));
 		}
 
+		/// <summary>
+		/// Constructs a PersistenceManagerBase object using the path to a mapping file.
+		/// </summary>
+		/// <param name="mappingFile"></param>
 		public PersistenceManagerBase(string mappingFile)
 		{
 			Init(mappingFile);
 		}
 
+		/// <summary>
+		/// Constructs a PersistenceManagerBase object using the mapping object.
+		/// </summary>
+		/// <param name="mapping"></param>
 		public PersistenceManagerBase(NDOMapping mapping)
 		{
 			var localMappings = mapping as Mappings;
@@ -84,6 +92,10 @@ namespace NDO
 			Init( localMappings );
 		}
 
+		/// <summary>
+		/// Initializes a PersistenceManager using the path to a mapping file
+		/// </summary>
+		/// <param name="mappingPath"></param>
 		protected virtual void Init(string mappingPath)
 		{
 			if (!File.Exists(mappingPath))
@@ -97,15 +109,7 @@ namespace NDO
 
 			ConfigContainer.RegisterInstance( mappings );
 
-			if (this.mappings.DataSet != null)
-			{
-				ds = mappings.DataSet;
-			}
-			else
-			{
-				ds = new NDODataSet( mappings );
-				mappings.DataSet = ds;
-			}
+			this.ds = new NDODataSet( mappings );  // Each PersistenceManager instance must have it's own DataSet.
 
 			string logPath = AppDomain.CurrentDomain.BaseDirectory;
 
@@ -365,7 +369,11 @@ namespace NDO
 			get { return this.mappings; }
 		}
 
-		internal DataSet DataSet
+		/// <summary>
+		/// Gets the DataSet behind the operations of the pm.
+		/// </summary>
+		/// <remarks>This property should't be used by user code. It exists only for test purposes.</remarks>
+		public DataSet DataSet
 		{
 			get { return this.ds; }
 		}

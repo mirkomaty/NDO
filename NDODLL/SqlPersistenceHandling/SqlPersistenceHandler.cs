@@ -67,7 +67,6 @@ namespace NDO.SqlPersistenceHandling
 		private string selectFieldListWithAlias;
 		private string tableName;
 		private string qualifiedTableName;
-		private DataSet templateDataset;
 		private bool verboseMode;
 		private ILogAdapter logAdapter;
 		private Dictionary<string, IMappingTableHandler> mappingTableHandlers = new Dictionary<string, IMappingTableHandler>();
@@ -443,10 +442,9 @@ namespace NDO.SqlPersistenceHandling
 			return configContainer.Resolve<SqlColumnListGenerator>( cls.FullName );
 		}
 
-		public void Initialize(NDOMapping mappings, Type t, DataSet ds)
+		public void Initialize(NDOMapping mappings, Type t)
 		{
 			this.mappings = mappings;
-			this.templateDataset = ds;
 			this.classMapping = mappings.FindClass(t);
 			this.timeStampColumn = classMapping.TimeStampColumn;
             this.typeNameColumn = classMapping.TypeNameColumn;
@@ -504,7 +502,11 @@ namespace NDO.SqlPersistenceHandling
 	
 		#region Implementation of IPersistenceHandler
 
-		public void Update(DataTable dt) 
+		/// <summary>
+		/// Saves Changes to a DataTable
+		/// </summary>
+		/// <param name="dt"></param>
+		public void Update(DataTable dt)
 		{
 			DataRow[] rows = null;
 			try
@@ -571,26 +573,15 @@ namespace NDO.SqlPersistenceHandling
 
         DataRow[] Select(DataTable dt, DataViewRowState rowState)
         {
-            DataRow[] rows = dt.Select(null, null, rowState);
-            // Mono Hack: Since some rows in Mono are null after Select.
-            // We have to remove it manually
-            int count = 0;
-            for (int i = 0; i < rows.Length; i++)
-                if (rows[i] != null)
-                    count++;
-            if (count < rows.Length)
-            {
-                DataRow[] rows2 = new DataRow[count];
-                count = 0;
-                for (int i = 0; i < rows.Length; i++)
-                    if (rows[i] != null)
-                        rows2[count++] = rows[i];
-                return rows2;
-            }
-            // End Mono Hack
+			// Mono Hack: Some rows in Mono are null after Select.
+			DataRow[] rows = dt.Select(null, null, rowState).Where(dr=>dr != null).ToArray();
             return rows;
         }
 
+		/// <summary>
+		/// Delets all rows of a DataTable marked as deleted
+		/// </summary>
+		/// <param name="dt"></param>
         public void UpdateDeletedObjects(DataTable dt)
 		{
 			DataRow[] rows = Select(dt, DataViewRowState.Deleted);
@@ -615,12 +606,12 @@ namespace NDO.SqlPersistenceHandling
 			}
 		}
 
-		private DataTable GetTemplateTable(string name)
+		private DataTable GetTemplateTable(DataSet templateDataset, string name)
 		{
 			// The instance of ds is actually static,
 			// since the SqlPersistenceHandler lives as
 			// a static instance in the PersistenceHandlerCache.
-			DataTable dt = this.templateDataset.Tables[name];
+			DataTable dt = templateDataset.Tables[name];
 			if (dt == null)
 				throw new NDOException(39, "Can't find table '" + name + "' in the schema. Check your mapping file.");
 			return dt;
@@ -807,14 +798,20 @@ namespace NDO.SqlPersistenceHandling
 			}
 		}
 
-		public DataTable PerformQuery( string sql, IList parameters )
+		/// <summary>
+		/// Performs a query and returns a DataTable
+		/// </summary>
+		/// <param name="sql"></param>
+		/// <param name="parameters"></param>
+		/// <returns></returns>
+		public DataTable PerformQuery( string sql, IList parameters, DataSet templateDataSet )
 		{
 			if (sql.Trim().StartsWith( "EXEC", StringComparison.InvariantCultureIgnoreCase ))
 				this.selectCommand.CommandType = CommandType.StoredProcedure;
 			else
 				this.selectCommand.CommandType = CommandType.Text;
 
-			DataTable table = GetTemplateTable(this.tableName).Clone();
+			DataTable table = GetTemplateTable(templateDataSet, this.tableName).Clone();
 
 			this.selectCommand.CommandText = sql;
 
@@ -847,7 +844,7 @@ namespace NDO.SqlPersistenceHandling
 			if (!mappingTableHandlers.TryGetValue( r.FieldName, out handler ))
 			{
 				handler = new NDOMappingTableHandler();
-				handler.Initialize(mappings, r, this.templateDataset);
+				handler.Initialize(mappings, r);
 				handler.VerboseMode = this.verboseMode;
 				handler.LogAdapter = this.logAdapter;
 				mappingTableHandlers[r.FieldName] = handler;
@@ -855,6 +852,9 @@ namespace NDO.SqlPersistenceHandling
 			return handler;
 		}	
 	
+		/// <summary>
+		/// Gets or sets the connection to be used for the handler
+		/// </summary>
 		public IDbConnection Connection
 		{
 			get { return this.conn; }
@@ -868,6 +868,9 @@ namespace NDO.SqlPersistenceHandling
 			}
 		}
 	
+		/// <summary>
+		/// Sets the transaction to be used for the next query
+		/// </summary>
 		public IDbTransaction Transaction
 		{
 			get { return this.selectCommand.Transaction; }

@@ -83,8 +83,9 @@ namespace NDO
 		/// </summary>
 		/// <param name="expression">SQL expression</param>
 		/// <param name="parameters">A collection of objects, corresponding to the query parameters.</param>
+		/// <param name="templateDataset">The DataSet from which the DataTable for the results is cloned</param>
 		/// <returns>A DataTable object, containing the query result.</returns>
-		DataTable PerformQuery( string expression, IList parameters );
+		DataTable PerformQuery( string expression, IList parameters, DataSet templateDataset );
 
 		/// <summary>
 		/// Gets a Handler which can store data in relation tables. The handler is an Implementation of IMappingTableHandler.
@@ -98,7 +99,6 @@ namespace NDO
 		/// </summary>
 		/// <param name="mappings">Mapping information.</param>
 		/// <param name="t">Type for which the Handler is constructed.</param>
-		/// <param name="ds">DataSet, which is used to clone tables.</param>
-		void Initialize(NDOMapping mappings, Type t, DataSet ds);
+		void Initialize(NDOMapping mappings, Type t);
 	}
 }

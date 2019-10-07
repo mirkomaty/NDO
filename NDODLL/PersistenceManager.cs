@@ -2064,7 +2064,7 @@ namespace NDO
 				handler.VerboseMode = VerboseMode;
 				handler.LogAdapter = LogAdapter;
 				CheckTransaction(handler, r.MappingTable.Connection);
-				DataTable dt = handler.FindRelatedObjects(pc.NDOObjectId);
+				DataTable dt = handler.FindRelatedObjects(pc.NDOObjectId, this.ds);
 				IList relatedObjects;
 				if(r.Multiplicity == RelationMultiplicity.Element)
 					relatedObjects = GenericListReflector.CreateList(r.ReferencedType, dt.Rows.Count);

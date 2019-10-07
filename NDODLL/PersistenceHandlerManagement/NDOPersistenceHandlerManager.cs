@@ -15,6 +15,11 @@ namespace NDO
 		private readonly IUnityContainer configContainer;
 		private readonly IPersistenceHandlerCache persistenceHandlerCache;
 
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="configContainer"></param>
+		/// <param name="persistenceHandlerCache"></param>
 		public NDOPersistenceHandlerManager(IUnityContainer configContainer, IPersistenceHandlerCache persistenceHandlerCache)
 		{
 			this.configContainer = configContainer;
@@ -31,6 +36,12 @@ namespace NDO
 			return GetPersistenceHandler( pc.GetType(), useSelfGeneratedIds );
 		}
 
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="t"></param>
+		/// <param name="useSelfGeneratedIds"></param>
+		/// <returns></returns>
 		public IPersistenceHandler GetPersistenceHandler( Type t, bool useSelfGeneratedIds )
 		{
 			if (t.IsGenericType)
@@ -51,8 +62,8 @@ namespace NDO
 			}
 
 			Mappings mappings = configContainer.Resolve<Mappings>();
-			
-			handler.Initialize( mappings, t, mappings.DataSet );
+			// The dataSet will be used as template to create a DataTable for the query results.
+			handler.Initialize( mappings, t );
 
 			return handler;
 		}

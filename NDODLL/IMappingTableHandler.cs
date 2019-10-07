@@ -46,16 +46,16 @@ namespace NDO
 		/// <seealso cref="ObjectId"/>
 		/// </summary>
 		/// <param name="id">ObjectId of the parent object.</param>
+		/// <param name="templateDataSet">The resulting table will be cloned from this DataSet</param>
 		/// <returns></returns>
-		DataTable FindRelatedObjects(ObjectId id);
+		DataTable FindRelatedObjects(ObjectId id, DataSet templateDataSet);
 
 		/// <summary>
 		/// Called by IPersistenceHandler implementations. Constructs a new handler in a polymorphic way.
 		/// </summary>
 		/// <param name="mappings">Mapping information. See <see cref="NDO.Mapping.NDOMapping"/> class.</param>
 		/// <param name="r">The Relation for which the handler is constructed</param>
-		/// <param name="ds">The data set containing all data</param>
-		void Initialize(NDOMapping mappings, Relation r, DataSet ds);
+		void Initialize(NDOMapping mappings, Relation r);
 
 
 	}

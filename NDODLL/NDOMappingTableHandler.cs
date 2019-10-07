@@ -42,7 +42,6 @@ namespace NDO
 		private IDbConnection connection;
 		private DbDataAdapter dataAdapter;
 		private IProvider provider;
-		private DataSet templateDataset;
 		private bool verboseMode;
 		private ILogAdapter logAdapter;
 
@@ -51,9 +50,8 @@ namespace NDO
 			return provider.UseNamedParams ? provider.GetNamedParameter(name) : "?";
 		}
 
-		public void Initialize(NDOMapping mappings, Relation r, DataSet templateDataSet)
+		public void Initialize(NDOMapping mappings, Relation r)
 		{
-			this.templateDataset = templateDataSet;
 			Connection con = mappings.FindConnection(r.MappingTable.ConnectionId);
 			this.provider = mappings.GetProvider(con);
 
@@ -196,7 +194,7 @@ namespace NDO
 			new SqlDumper(this.logAdapter, this.provider, insertCommand, selectCommand, null, deleteCommand).Dump(rows);
 		}
 
-		private DataTable GetTableTemplate(string name)
+		private DataTable GetTableTemplate(DataSet templateDataset, string name)
 		{
 			DataTable dt = templateDataset.Tables[name];
 			if (dt == null)
@@ -205,9 +203,9 @@ namespace NDO
 		}
 
 		
-		public DataTable FindRelatedObjects(ObjectId oid) 
+		public DataTable FindRelatedObjects(ObjectId oid, DataSet templateDataset) 
 		{
-			DataTable table = GetTableTemplate(r.MappingTable.TableName).Clone();
+			DataTable table = GetTableTemplate(templateDataset, r.MappingTable.TableName).Clone();
             string sql = "SELECT * FROM " + provider.GetQualifiedTableName(r.MappingTable.TableName) + " WHERE ";
             selectCommand.Parameters.Clear();
 

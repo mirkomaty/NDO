@@ -42,25 +42,16 @@ namespace NDO
 	{
         private Dictionary<Type, IPersistenceHandler> persistenceHandler = new Dictionary<Type, IPersistenceHandler>();
 		private Dictionary<Type,int> updateOrder = new Dictionary<Type, int>();
-		private DataSet ds;
 		ILogAdapter logAdapter;
 		private bool verboseMode;
 		private readonly IUnityContainer configContainer;
 
-		// Must be set after the schema is generated
-		public DataSet DataSet
-		{
-			get { return ds; }
-			set { ds = value; }
-		}
-
-
 		internal Mappings( string mappingFile, IUnityContainer configContainer )
 			: base( mappingFile )
 		{
+			this.configContainer = configContainer;
 			InitClassFields();
 			this.updateOrder = new ClassRank().BuildUpdateRank( Classes );
-			this.configContainer = configContainer;
 		}
 
 		private void InitClassFields()

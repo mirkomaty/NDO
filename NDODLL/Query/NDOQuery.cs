@@ -284,7 +284,7 @@ namespace NDO.Query
 
 					this.pm.CheckTransaction( persistenceHandler, t );
 
-					DataTable table = persistenceHandler.PerformQuery( generatedQuery, this.parameters );
+					DataTable table = persistenceHandler.PerformQuery( generatedQuery, this.parameters, this.pm.DataSet );
 					var result = pm.DataTableToIList( t, table.Rows, false );
 					MatchRelations( parents, result, prefetch );
 				}
@@ -368,7 +368,7 @@ namespace NDO.Query
 			persistenceHandler.VerboseMode = this.pm.VerboseMode;
 			persistenceHandler.LogAdapter = this.pm.LogAdapter;
 			this.pm.CheckTransaction( persistenceHandler, t );
-			DataTable table = persistenceHandler.PerformQuery( this.queryExpression, this.parameters );
+			DataTable table = persistenceHandler.PerformQuery( this.queryExpression, this.parameters, this.pm.DataSet );
 			return (List<T>)pm.DataTableToIList( t, table.Rows, this.hollowResults );
 		}
 
@@ -427,7 +427,7 @@ namespace NDO.Query
 			persistenceHandler.LogAdapter = this.pm.LogAdapter;
 			this.pm.CheckTransaction( persistenceHandler, t );
 
-			DataTable table = persistenceHandler.PerformQuery( generatedQuery, this.parameters );
+			DataTable table = persistenceHandler.PerformQuery( generatedQuery, this.parameters, this.pm.DataSet );
 			return pm.DataTableToIList( t, table.Rows, this.hollowResults );
 		}
 
@@ -480,7 +480,7 @@ namespace NDO.Query
 				WriteBackParameters();
 			}
 
-			DataTable table = persistenceHandler.PerformQuery( generatedQuery, this.parameters );
+			DataTable table = persistenceHandler.PerformQuery( generatedQuery, this.parameters, this.pm.DataSet );
 			DataRow[] rows = table.Select();
 			var objects = pm.DataTableToIList( t, rows, this.hollowResults );
 			List<ObjectRowPair<T>> result = new List<ObjectRowPair<T>>( objects.Count );

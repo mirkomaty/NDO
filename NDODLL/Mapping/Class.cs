@@ -83,6 +83,10 @@ namespace NDO.Mapping
         /// This is for use of the NDO framework only. It will be initialized, if passed to an IPersistenceHandler.
         /// </summary>
         private List<Class> subclasses = new List<Class>();
+
+		/// <summary>
+		/// Gets the Subclasses of the current class
+		/// </summary>
         [Browsable(false)]
         public IEnumerable<Class> Subclasses
         {
