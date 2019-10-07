@@ -6,7 +6,7 @@
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <IncludeSymbols>True</IncludeSymbols>
     <PackageId>NDO.dll</PackageId>
-    <Version>4.0.0.0-beta10</Version>
+    <Version>4.0.0.0-beta11</Version>
     <Authors>Mirko Matytschak</Authors>
     <Company>Mirko Matytschak</Company>
     <Description>Package to enable VS Solutions to compile and enhance persistent classes.</Description>
