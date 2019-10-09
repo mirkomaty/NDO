@@ -41,10 +41,12 @@ namespace NdoUnitTests
 			pm.Delete( mitarbeiterListe );
 			pm.Save();
 			pm.UnloadCache();
-			var handler = pm.GetSqlPassThroughHandler();
-			handler.Execute( $"DELETE FROM {pm.NDOMapping.FindClass( typeof( Reise ) ).TableName}" );
-			handler.Execute( $"DELETE FROM {pm.NDOMapping.FindClass( typeof( Adresse ) ).TableName}" );
-			pm = null;
+			using (var handler = pm.GetSqlPassThroughHandler())
+			{
+				handler.Execute( $"DELETE FROM {pm.NDOMapping.FindClass( typeof( Reise ) ).TableName}" );
+				handler.Execute( $"DELETE FROM {pm.NDOMapping.FindClass( typeof( Adresse ) ).TableName}" );
+			}
+			Assert.That( PmFactory.PoolCount <= 1, "Pool Count is " + PmFactory.PoolCount );
 		}
 
 		private Mitarbeiter CreateMitarbeiter( string vorname, string nachname )

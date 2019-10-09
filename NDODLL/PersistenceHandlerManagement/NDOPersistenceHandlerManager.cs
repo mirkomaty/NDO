@@ -13,57 +13,62 @@ namespace NDO
 	public class NDOPersistenceHandlerManager : IPersistenceHandlerManager
 	{
 		private readonly IUnityContainer configContainer;
-		private readonly IPersistenceHandlerCache persistenceHandlerCache;
+		private readonly IPersistenceHandlerPool persistenceHandlerPool;
 
 		/// <summary>
 		/// 
 		/// </summary>
 		/// <param name="configContainer"></param>
-		/// <param name="persistenceHandlerCache"></param>
-		public NDOPersistenceHandlerManager(IUnityContainer configContainer, IPersistenceHandlerCache persistenceHandlerCache)
+		/// <param name="persistenceHandlerPool"></param>
+		public NDOPersistenceHandlerManager(IUnityContainer configContainer, IPersistenceHandlerPool persistenceHandlerPool)
 		{
 			this.configContainer = configContainer;
-			this.persistenceHandlerCache = persistenceHandlerCache;
+			this.persistenceHandlerPool = persistenceHandlerPool;
 		}
 		/// <summary>
 		/// Get a persistence handler for the given object.
 		/// </summary>
 		/// <param name="pc"></param>
-		/// <param name="useSelfGeneratedIds"></param>
 		/// <returns></returns>
-		public IPersistenceHandler GetPersistenceHandler( IPersistenceCapable pc, bool useSelfGeneratedIds )
+		public IPersistenceHandler GetPersistenceHandler( IPersistenceCapable pc )
 		{
-			return GetPersistenceHandler( pc.GetType(), useSelfGeneratedIds );
+			return GetPersistenceHandler( pc.GetType() );
+		}
+
+		void ReleaseHandler(Type t, IPersistenceHandler handler)
+		{
+			// Don't close the connection or transaction here
+			// because it might be used with other handlers.
+			handler.Connection = null;
+			handler.Transaction = null;
+			this.persistenceHandlerPool.ReleaseHandler( t, handler );
 		}
 
 		/// <summary>
-		/// 
+		/// Gets a persistence handler for a given type
 		/// </summary>
-		/// <param name="t"></param>
-		/// <param name="useSelfGeneratedIds"></param>
+		/// <param name="type"></param>
 		/// <returns></returns>
-		public IPersistenceHandler GetPersistenceHandler( Type t, bool useSelfGeneratedIds )
+		public IPersistenceHandler GetPersistenceHandler( Type type )
 		{
-			if (t.IsGenericType)
-				t = t.GetGenericTypeDefinition();
+			if (type.IsGenericType)
+				type = type.GetGenericTypeDefinition();
 
-			IPersistenceHandler handler;
-			if (!persistenceHandlerCache.TryGetValue( t, out handler ))
+			IPersistenceHandler handler = persistenceHandlerPool.GetHandler( type, (t)=>
 			{
-				// 1. Standard-Handler des pm versuchen
+				// 1. If a handler type is registered, use an instance of this handler
+				var newHandler = this.configContainer.Resolve<IPersistenceHandler>();
 
-				handler = this.configContainer.Resolve<IPersistenceHandler>();
+				// 2. try to use an NDOPersistenceHandler
+				if (newHandler == null)
+					newHandler = new SqlPersistenceHandler( this.configContainer );
 
-				// 3. NDOPersistenceHandler versuchen
-				if (handler == null)
-					handler = new SqlPersistenceHandler( this.configContainer );
-
-				this.persistenceHandlerCache.Add( t, handler );
-			}
+				return newHandler;
+			});
 
 			Mappings mappings = configContainer.Resolve<Mappings>();
 			// The dataSet will be used as template to create a DataTable for the query results.
-			handler.Initialize( mappings, t );
+			handler.Initialize( mappings, type, ReleaseHandler );
 
 			return handler;
 		}

@@ -79,13 +79,16 @@ namespace NdoUnitTests {
 				//				pm.Delete(länderListe);
 				//				pm.Save();
 				//				pm.Close();
-				var handler = pm.GetSqlPassThroughHandler();
-				var sql = $"DELETE FROM {pm.NDOMapping.FindClass( typeof( Reise ) ).TableName}";
-				handler.Execute( sql );
-				sql = $"DELETE FROM {pm.NDOMapping.FindClass(typeof(Mitarbeiter)).TableName}";
-				handler.Execute( sql );
-				sql = $"DELETE FROM {pm.NDOMapping.FindClass( typeof( Land ) ).TableName}";
-				handler.Execute( sql );
+				using (var handler = pm.GetSqlPassThroughHandler())
+				{
+					var sql = $"DELETE FROM {pm.NDOMapping.FindClass( typeof( Reise ) ).TableName}";
+					handler.Execute( sql );
+					sql = $"DELETE FROM {pm.NDOMapping.FindClass( typeof( Mitarbeiter ) ).TableName}";
+					handler.Execute( sql );
+					sql = $"DELETE FROM {pm.NDOMapping.FindClass( typeof( Land ) ).TableName}";
+					handler.Execute( sql );
+				}
+				Assert.That( PmFactory.PoolCount <= 1 );
 			}
 			catch (Exception ex) {
 				System.Diagnostics.Debug.WriteLine("Exception in TearDown: " + ex);
@@ -167,14 +170,14 @@ namespace NdoUnitTests {
 			pm.UnloadCache();
 			NDOQuery<Reise> q = new NDOQuery<Reise>(pm, "dieLaender.oid = {0}");
 			q.Parameters.Add(oid.Id[0]);
-			decimal count = (decimal) q.ExecuteAggregate("zweck", AggregateType.Count);
+			decimal count = (decimal) q.ExecuteAggregate("*", AggregateType.Count);
 			Assert.That(count > 0m, "Count should be > 0");
 			usa = (Land) pm.FindObject(oid);
 			Assert.NotNull(usa, "USA nicht gefunden");
 			r.LandLöschen(usa.Name);
 			pm.Save();
 			pm.UnloadCache();
-			count = (decimal) q.ExecuteAggregate("zweck", AggregateType.Count);
+			count = (decimal) q.ExecuteAggregate("*", AggregateType.Count);
 			Assert.AreEqual(0m, count, "Count should be 0");
 		}
 

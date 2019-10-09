@@ -54,6 +54,9 @@ namespace NDO
 		public void CommitTransaction()
 		{
 			this.pm.CheckEndTransaction( true );
+			if (this.forcedTransactionMode)
+				this.pm.TransactionMode = this.oldTransactionMode;
+			this.forcedTransactionMode = false;
 		}
 
 		/// <summary>
@@ -76,8 +79,14 @@ namespace NDO
 			IProvider provider = this.pm.NDOMapping.GetProvider( this.connection );
 			TransactionInfo ti = this.pm.GetTransactionInfo( this.connection );
 			IDbConnection dbConnection = ti.Connection;
+			bool wasOpened = false;
 			if (dbConnection.State == ConnectionState.Closed)
+			{
+				wasOpened = true;
 				dbConnection.Open();
+			}
+			try
+			{
 			IDbCommand cmd = provider.NewSqlCommand( dbConnection );
 			cmd.CommandText = command;
 			cmd.Transaction = ti.Transaction;
@@ -96,6 +105,12 @@ namespace NDO
 
 			cmd.ExecuteNonQuery();
 			return null;
+			}
+			finally
+			{
+				if (wasOpened)
+					dbConnection.Close();
+			}
 		}
 
 		public IProvider Provider
@@ -108,6 +123,10 @@ namespace NDO
 
 		public void Dispose()
 		{
+			TransactionInfo ti = this.pm.GetTransactionInfo( this.connection );
+			IDbConnection dbConnection = ti.Connection;
+			if (dbConnection.State == ConnectionState.Open)
+				dbConnection.Close();
 			if (this.forcedTransactionMode)
 				this.pm.TransactionMode = this.oldTransactionMode;
 		}

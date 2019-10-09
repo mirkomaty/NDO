@@ -255,38 +255,41 @@ namespace NDO.Query
 			foreach (string prefetch in this.Prefetches)
 			{
 				Type t = GetPrefetchResultType( this.resultType, prefetch );
-				IPersistenceHandler persistenceHandler = this.pm.PersistenceHandlerManager.GetPersistenceHandler( t, this.pm.HasOwnerCreatedIds );
-				persistenceHandler.VerboseMode = this.pm.VerboseMode;
-				persistenceHandler.LogAdapter = this.pm.LogAdapter;
-
-				foreach (var queryContextsEntry in this.queryContextsForTypes)
-				{
-					Type parentType = queryContextsEntry.Type;
-					var parentCls = mappings.FindClass( parentType );
-					var isMultiple = parentCls.Oid.OidColumns.Count > 1;
-					var selectedParents = parents.Where( p => p.GetType() == parentType ).Select(p=>(IPersistenceCapable)p).ToList();
-					if (selectedParents.Count == 0)
-						continue;
-
-					string generatedQuery;
-					if (!mustUseInClause && (parents.Count > 100 || isMultiple) && this.skip == 0 && this.take == 0)
+				using (IPersistenceHandler persistenceHandler = this.pm.PersistenceHandlerManager.GetPersistenceHandler( t ))
+				{ 
+					persistenceHandler.VerboseMode = this.pm.VerboseMode;
+					persistenceHandler.LogAdapter = this.pm.LogAdapter;
+					DataTable table = null;
+					foreach (var queryContextsEntry in this.queryContextsForTypes)
 					{
-						generatedQuery = queryGenerator.GenerateQueryString( queryContextsEntry, this.expressionTree, false, true, new List<QueryOrder>(), 0, 0, prefetch );
-					}
-					else
-					{
-						if (isMultiple)
-							throw new QueryException( 10050, "Can't process a prefetch with skip, take & multiple oid columns" );
-						generatedQuery = queryGenerator.GeneratePrefetchQuery( parentType, selectedParents, prefetch );
-					}
+						Type parentType = queryContextsEntry.Type;
+						var parentCls = mappings.FindClass( parentType );
+						var isMultiple = parentCls.Oid.OidColumns.Count > 1;
+						var selectedParents = parents.Where( p => p.GetType() == parentType ).Select(p=>(IPersistenceCapable)p).ToList();
+						if (selectedParents.Count == 0)
+							continue;
+
+						string generatedQuery;
+						if (!mustUseInClause && ( parents.Count > 100 || isMultiple ) && this.skip == 0 && this.take == 0)
+						{
+							generatedQuery = queryGenerator.GenerateQueryString( queryContextsEntry, this.expressionTree, false, true, new List<QueryOrder>(), 0, 0, prefetch );
+						}
+						else
+						{
+							if (isMultiple)
+								throw new QueryException( 10050, "Can't process a prefetch with skip, take & multiple oid columns" );
+							generatedQuery = queryGenerator.GeneratePrefetchQuery( parentType, selectedParents, prefetch );
+						}
 #warning Prefetches: Überprüfen, ob das in der normalen Transaktion mitläuft
-					//					this.pm.CheckTransaction( persistenceHandler, t );
+						//					this.pm.CheckTransaction( persistenceHandler, t );
 
-					this.pm.CheckTransaction( persistenceHandler, t );
+						this.pm.CheckTransaction( persistenceHandler, t );
 
-					DataTable table = persistenceHandler.PerformQuery( generatedQuery, this.parameters, this.pm.DataSet );
-					var result = pm.DataTableToIList( t, table.Rows, false );
-					MatchRelations( parents, result, prefetch );
+						table = persistenceHandler.PerformQuery( generatedQuery, this.parameters, this.pm.DataSet );
+
+						var result = pm.DataTableToIList( t, table.Rows, false );
+						MatchRelations( parents, result, prefetch );
+					}
 				}
 			}
 		}
@@ -345,31 +348,35 @@ namespace NDO.Query
 			IQueryGenerator queryGenerator = ConfigContainer.Resolve<IQueryGenerator>();
 			string generatedQuery = queryGenerator.GenerateAggregateQueryString( field, queryContextsEntry, this.expressionTree, this.queryContextsForTypes.Count > 1, aggregateType );
 
-			IPersistenceHandler persistenceHandler = this.pm.PersistenceHandlerManager.GetPersistenceHandler( t, this.pm.HasOwnerCreatedIds );
-			persistenceHandler.VerboseMode = this.pm.VerboseMode;
-			persistenceHandler.LogAdapter = this.pm.LogAdapter;
-			this.pm.CheckTransaction( persistenceHandler, t );
+			using (IPersistenceHandler persistenceHandler = this.pm.PersistenceHandlerManager.GetPersistenceHandler( t ))
+			{
+				persistenceHandler.VerboseMode = this.pm.VerboseMode;
+				persistenceHandler.LogAdapter = this.pm.LogAdapter;
+				this.pm.CheckTransaction( persistenceHandler, t );
 
-			// Note, that we can't execute all subQueries in one batch, because
-			// the subqueries could be executed against different connections.
-			// TODO: This could be optimized, if we made clear whether the involved tables
-			// can be reached with the same connection.
-			var l = persistenceHandler.ExecuteBatch( new string[] { generatedQuery }, this.parameters );
-			if (l.Count == 0)
-				return null;
+				// Note, that we can't execute all subQueries in one batch, because
+				// the subqueries could be executed against different connections.
+				// TODO: This could be optimized, if we made clear whether the involved tables
+				// can be reached with the same connection.
+				var l = persistenceHandler.ExecuteBatch( new string[] { generatedQuery }, this.parameters );
+				if (l.Count == 0)
+					return null;
 
-			return (l[0])["AggrResult"];
+				return ( l[0] )["AggrResult"];
+			}
 		}
 
 		private List<T> ExecuteSqlQuery()
 		{
 			Type t = this.resultType;
-			IPersistenceHandler persistenceHandler = this.pm.PersistenceHandlerManager.GetPersistenceHandler( t, this.pm.HasOwnerCreatedIds );
-			persistenceHandler.VerboseMode = this.pm.VerboseMode;
-			persistenceHandler.LogAdapter = this.pm.LogAdapter;
-			this.pm.CheckTransaction( persistenceHandler, t );
-			DataTable table = persistenceHandler.PerformQuery( this.queryExpression, this.parameters, this.pm.DataSet );
-			return (List<T>)pm.DataTableToIList( t, table.Rows, this.hollowResults );
+			using (IPersistenceHandler persistenceHandler = this.pm.PersistenceHandlerManager.GetPersistenceHandler( t ))
+			{
+				persistenceHandler.VerboseMode = this.pm.VerboseMode;
+				persistenceHandler.LogAdapter = this.pm.LogAdapter;
+				this.pm.CheckTransaction( persistenceHandler, t );
+				DataTable table = persistenceHandler.PerformQuery( this.queryExpression, this.parameters, this.pm.DataSet );
+				return (List<T>) pm.DataTableToIList( t, table.Rows, this.hollowResults );
+			}
 		}
 
 		private bool PrepareParameters()
@@ -422,13 +429,15 @@ namespace NDO.Query
 				WriteBackParameters();
 			}
 
-			IPersistenceHandler persistenceHandler = this.pm.PersistenceHandlerManager.GetPersistenceHandler( t, this.pm.HasOwnerCreatedIds );
-			persistenceHandler.VerboseMode = this.pm.VerboseMode;
-			persistenceHandler.LogAdapter = this.pm.LogAdapter;
-			this.pm.CheckTransaction( persistenceHandler, t );
+			using (IPersistenceHandler persistenceHandler = this.pm.PersistenceHandlerManager.GetPersistenceHandler( t ))
+			{
+				persistenceHandler.VerboseMode = this.pm.VerboseMode;
+				persistenceHandler.LogAdapter = this.pm.LogAdapter;
+				this.pm.CheckTransaction( persistenceHandler, t );
 
-			DataTable table = persistenceHandler.PerformQuery( generatedQuery, this.parameters, this.pm.DataSet );
-			return pm.DataTableToIList( t, table.Rows, this.hollowResults );
+				DataTable table = persistenceHandler.PerformQuery( generatedQuery, this.parameters, this.pm.DataSet );
+				return pm.DataTableToIList( t, table.Rows, this.hollowResults );
+			}
 		}
 
 		private IEnumerable<T> ExecuteSubQuery( QueryContextsEntry queryContextsEntry )
@@ -466,21 +475,25 @@ namespace NDO.Query
 					col.AutoIncrementStep = -1;
 			}
 
-			IPersistenceHandler persistenceHandler = this.pm.PersistenceHandlerManager.GetPersistenceHandler( t, this.pm.HasOwnerCreatedIds );
-			persistenceHandler.VerboseMode = this.pm.VerboseMode;
-			persistenceHandler.LogAdapter = this.pm.LogAdapter;
-			this.pm.CheckTransaction( persistenceHandler, t );
-
-			bool hasBeenPrepared = PrepareParameters();
-			IQueryGenerator queryGenerator = ConfigContainer.Resolve<IQueryGenerator>();
-			string generatedQuery = queryGenerator.GenerateQueryString( queryContextsEntry, this.expressionTree, this.hollowResults, this.queryContextsForTypes.Count > 1, this.orderings, this.skip, this.take );
-
-			if (hasBeenPrepared)
+			DataTable table = null;
+			using (IPersistenceHandler persistenceHandler = this.pm.PersistenceHandlerManager.GetPersistenceHandler( t ))
 			{
-				WriteBackParameters();
+				persistenceHandler.VerboseMode = this.pm.VerboseMode;
+				persistenceHandler.LogAdapter = this.pm.LogAdapter;
+				this.pm.CheckTransaction( persistenceHandler, t );
+
+				bool hasBeenPrepared = PrepareParameters();
+				IQueryGenerator queryGenerator = ConfigContainer.Resolve<IQueryGenerator>();
+				string generatedQuery = queryGenerator.GenerateQueryString( queryContextsEntry, this.expressionTree, this.hollowResults, this.queryContextsForTypes.Count > 1, this.orderings, this.skip, this.take );
+
+				if (hasBeenPrepared)
+				{
+					WriteBackParameters();
+				}
+
+				table = persistenceHandler.PerformQuery( generatedQuery, this.parameters, this.pm.DataSet );
 			}
 
-			DataTable table = persistenceHandler.PerformQuery( generatedQuery, this.parameters, this.pm.DataSet );
 			DataRow[] rows = table.Select();
 			var objects = pm.DataTableToIList( t, rows, this.hollowResults );
 			List<ObjectRowPair<T>> result = new List<ObjectRowPair<T>>( objects.Count );

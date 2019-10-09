@@ -324,7 +324,7 @@ namespace QueryTests
 			handlerMock.Setup( h => h.PerformQuery( It.IsAny<string>(), It.IsAny<IList>(), It.IsAny<DataSet>() ) ).Returns( new DataTable() ).Callback<string, IList, DataSet>( ( s, l, d ) => generatedParameters = l );
 			var handler = handlerMock.Object;
 			Mock<IPersistenceHandlerManager> phManagerMock = new Mock<IPersistenceHandlerManager>();
-			phManagerMock.Setup( m => m.GetPersistenceHandler( It.IsAny<Type>(), It.IsAny<bool>() ) ).Returns( handler ).Callback<Type, bool>( ( pc, b ) => { Console.WriteLine("Test"); });
+			phManagerMock.Setup( m => m.GetPersistenceHandler( It.IsAny<Type>() ) ).Returns( handler ).Callback<Type>( ( pc ) => { Console.WriteLine("Test"); });
 			var container = pm.ConfigContainer;
 			container.RegisterInstance<IPersistenceHandlerManager>( phManagerMock.Object );
 			q.Execute();
@@ -346,7 +346,7 @@ namespace QueryTests
 			handlerMock.Setup( h => h.PerformQuery( It.IsAny<string>(), It.IsAny<IList>(), It.IsAny<DataSet>() ) ).Returns( new DataTable() ).Callback<string, IList, DataSet>( ( s, l, d ) => { generatedParameters = l; expression = s; } );
 			var handler = handlerMock.Object;
 			Mock<IPersistenceHandlerManager> phManagerMock = new Mock<IPersistenceHandlerManager>();
-			phManagerMock.Setup( m => m.GetPersistenceHandler( It.IsAny<Type>(), It.IsAny<bool>() ) ).Returns( handler );
+			phManagerMock.Setup( m => m.GetPersistenceHandler( It.IsAny<Type>() ) ).Returns( handler );
 			var container = pm.ConfigContainer;
 			container.RegisterInstance<IPersistenceHandlerManager>( phManagerMock.Object );
 			q.Execute();
@@ -369,7 +369,7 @@ namespace QueryTests
 			handlerMock.Setup( h => h.PerformQuery( It.IsAny<string>(), It.IsAny<IList>(), It.IsAny<DataSet>() ) ).Returns( new DataTable() ).Callback<string, IList, DataSet>( ( s, l, d ) => generatedParameters = l );
 			var handler = handlerMock.Object;
 			Mock<IPersistenceHandlerManager> phManagerMock = new Mock<IPersistenceHandlerManager>();
-			phManagerMock.Setup( m => m.GetPersistenceHandler( It.IsAny<Type>(), It.IsAny<bool>() ) ).Returns( handler ).Callback<Type, bool>( ( pc, b ) => { Console.WriteLine( "Test" ); } );
+			phManagerMock.Setup( m => m.GetPersistenceHandler( It.IsAny<Type>() ) ).Returns( handler ).Callback<Type>( ( pc ) => { Console.WriteLine( "Test" ); } );
 			var container = pm.ConfigContainer;
 			container.RegisterInstance<IPersistenceHandlerManager>( phManagerMock.Object );
 			q.Execute();
@@ -389,7 +389,7 @@ namespace QueryTests
 			handlerMock.Setup( h => h.PerformQuery( It.IsAny<string>(), It.IsAny<IList>(), It.IsAny<DataSet>() ) ).Returns( new DataTable() ).Callback<string, IList, DataSet>( ( s, l, d ) => generatedParameters = l );
 			var handler = handlerMock.Object;
 			Mock<IPersistenceHandlerManager> phManagerMock = new Mock<IPersistenceHandlerManager>();
-			phManagerMock.Setup( m => m.GetPersistenceHandler( It.IsAny<Type>(), It.IsAny<bool>() ) ).Returns( handler ).Callback<Type, bool>( ( pc, b ) => { Console.WriteLine( "Test" ); } );
+			phManagerMock.Setup( m => m.GetPersistenceHandler( It.IsAny<Type>() ) ).Returns( handler ).Callback<Type>( ( pc ) => { Console.WriteLine( "Test" ); } );
 			var container = pm.ConfigContainer;
 			container.RegisterInstance<IPersistenceHandlerManager>( phManagerMock.Object );
 			q.Execute();

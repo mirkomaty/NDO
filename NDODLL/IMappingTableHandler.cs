@@ -57,6 +57,9 @@ namespace NDO
 		/// <param name="r">The Relation for which the handler is constructed</param>
 		void Initialize(NDOMapping mappings, Relation r);
 
-
+		/// <summary>
+		/// Gets the underlying relation of the mapping table.
+		/// </summary>
+		Relation Relation { get; }
 	}
 }

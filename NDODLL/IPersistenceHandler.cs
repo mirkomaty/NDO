@@ -97,8 +97,9 @@ namespace NDO
 		/// <summary>
 		/// Called by the NDO Framework. Constructs a new handler in a polymorphic way. Each persistent class will have an own handler.
 		/// </summary>
-		/// <param name="mappings">Mapping information.</param>
+		/// <param name="ndoMapping">Mapping information.</param>
 		/// <param name="t">Type for which the Handler is constructed.</param>
-		void Initialize(NDOMapping mappings, Type t);
+		/// <param name="disposeCallback">Method to be called at the end of the usage. The method can be used to push back the object to the PersistenceHandlerPool.</param>
+		void Initialize(NDOMapping ndoMapping, Type t, Action<Type, IPersistenceHandler> disposeCallback );
 	}
 }

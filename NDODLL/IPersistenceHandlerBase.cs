@@ -29,7 +29,7 @@ namespace NDO
 	/// <summary>
 	/// This interface is used to manage all transaction related operations of a PersistenceHandler.
 	/// </summary>
-	public interface IPersistenceHandlerBase
+	public interface IPersistenceHandlerBase : IDisposable
 	{
 		/// <summary>
 		/// Gets or sets a value which determines, if database operations will be logged in a logging file.

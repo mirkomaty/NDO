@@ -15,16 +15,14 @@ namespace NDO
 		/// Get a persistence handler for the type of a given object.
 		/// </summary>
 		/// <param name="pc"></param>
-		/// <param name="useSelfGeneratedIds"></param>
 		/// <returns></returns>
-		IPersistenceHandler GetPersistenceHandler( IPersistenceCapable pc, bool useSelfGeneratedIds );
+		IPersistenceHandler GetPersistenceHandler( IPersistenceCapable pc );
 
 		/// <summary>
 		/// Get a persistence handler for the given type.
 		/// </summary>
 		/// <param name="t"></param>
-		/// <param name="useSelfGeneratedIds"></param>
 		/// <returns></returns>
-		IPersistenceHandler GetPersistenceHandler( Type t, bool useSelfGeneratedIds );
+		IPersistenceHandler GetPersistenceHandler( Type t );
 	}
 }

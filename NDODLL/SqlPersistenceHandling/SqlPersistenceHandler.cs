@@ -71,7 +71,7 @@ namespace NDO.SqlPersistenceHandling
 		private ILogAdapter logAdapter;
 		private Dictionary<string, IMappingTableHandler> mappingTableHandlers = new Dictionary<string, IMappingTableHandler>();
 		private IProvider provider;
-		private NDOMapping mappings;
+		private NDOMapping ndoMapping;
 		private string timeStampColumn = null;
         private Column typeNameColumn = null;
         private bool hasAutoincrementedColumn;
@@ -86,6 +86,7 @@ namespace NDO.SqlPersistenceHandling
 		private string namedParamList;
 		private bool hasGuidOid;
 		private readonly IUnityContainer configContainer;
+		private Action<Type,IPersistenceHandler> disposeCallback;
 
 		public SqlPersistenceHandler(IUnityContainer configContainer)
 		{
@@ -442,10 +443,16 @@ namespace NDO.SqlPersistenceHandling
 			return configContainer.Resolve<SqlColumnListGenerator>( cls.FullName );
 		}
 
-		public void Initialize(NDOMapping mappings, Type t)
+		/// <summary>
+		/// Initializes the PersistenceHandler
+		/// </summary>
+		/// <param name="ndoMapping">Mapping information.</param>
+		/// <param name="t">Type for which the Handler is constructed.</param>
+		/// <param name="disposeCallback">Method to be called at the end of the usage. The method can be used to push back the object to the PersistenceHandlerPool.</param>
+		public void Initialize(NDOMapping ndoMapping, Type t, Action<Type,IPersistenceHandler> disposeCallback)
 		{
-			this.mappings = mappings;
-			this.classMapping = mappings.FindClass(t);
+			this.ndoMapping = ndoMapping;
+			this.classMapping = ndoMapping.FindClass(t);
 			this.timeStampColumn = classMapping.TimeStampColumn;
             this.typeNameColumn = classMapping.TypeNameColumn;
             this.hasAutoincrementedColumn = false;
@@ -460,8 +467,8 @@ namespace NDO.SqlPersistenceHandling
             }
             this.hasGuidOid = this.classMapping.HasGuidOid;
 			this.tableName = classMapping.TableName;
-			Connection connInfo = mappings.FindConnection(classMapping);
-			this.provider = mappings.GetProvider(connInfo);
+			Connection connInfo = ndoMapping.FindConnection(classMapping);
+			this.provider = ndoMapping.GetProvider(connInfo);
 			this.qualifiedTableName = provider.GetQualifiedTableName( tableName );
 			// The connection object will be initialized in the pm, to 
 			// enable the callback for getting the real connection string.
@@ -478,6 +485,7 @@ namespace NDO.SqlPersistenceHandling
 			this.guidlength = provider.GetDefaultLength(typeof(Guid));
             if (this.guidlength == 0)
                 this.guidlength = provider.SupportsNativeGuidType ? 16 : 36;
+			this.disposeCallback = disposeCallback;
 
 
 			this.selectCommand = provider.NewSqlCommand(conn);
@@ -844,14 +852,22 @@ namespace NDO.SqlPersistenceHandling
 			if (!mappingTableHandlers.TryGetValue( r.FieldName, out handler ))
 			{
 				handler = new NDOMappingTableHandler();
-				handler.Initialize(mappings, r);
+				handler.Initialize(ndoMapping, r);
 				handler.VerboseMode = this.verboseMode;
 				handler.LogAdapter = this.logAdapter;
 				mappingTableHandlers[r.FieldName] = handler;
 			}
 			return handler;
-		}	
-	
+		}
+
+		/// <summary>
+		/// Disposes a SqlPersistenceHandler
+		/// </summary>
+		public void Dispose()
+		{
+			this.disposeCallback( this.type, this );
+		}
+
 		/// <summary>
 		/// Gets or sets the connection to be used for the handler
 		/// </summary>
@@ -883,11 +899,8 @@ namespace NDO.SqlPersistenceHandling
 			}
 		}
 
+		public DbDataAdapter DataAdapter => throw new NotImplementedException();
 
-		public DbDataAdapter DataAdapter
-		{
-			get { return dataAdapter; }
-		}
 		#endregion
 	}
 }

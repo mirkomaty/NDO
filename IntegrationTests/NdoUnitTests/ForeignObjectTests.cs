@@ -50,7 +50,8 @@ namespace NdoUnitTests
 			NDOQuery<Parent> q = new NDOQuery<Parent>(pm, null);
 			IList l = q.Execute();
 			pm.Delete(l);
-			pm = null;
+			pm.Dispose();
+			Assert.That( PmFactory.PoolCount <= 1, "Pool Count is " + PmFactory.PoolCount );
 		}
 
 		[Test]

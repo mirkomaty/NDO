@@ -60,6 +60,9 @@ namespace NDO.Mapping
             }
         }
 
+		/// <summary>
+		/// Determines if the mapping has changes.
+		/// </summary>
         [Browsable(false)]
         public bool HasChanges
         {

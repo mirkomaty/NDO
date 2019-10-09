@@ -50,9 +50,9 @@ namespace NdoUnitTests
 				IList mitarbeiterListe = pm.GetClassExtent(typeof(Mitarbeiter), true);
 				pm.Delete(mitarbeiterListe);
 				pm.Save();
-				pm.Close();
-				pm = null;
+				pm.Close();				
 			}
+			Assert.That( PmFactory.PoolCount <= 1 );
 		}
 
 

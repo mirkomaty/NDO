@@ -2060,11 +2060,16 @@ namespace NDO
 			} 
 			else 
 			{
-				IMappingTableHandler handler = PersistenceHandlerManager.GetPersistenceHandler(pc, this.HasOwnerCreatedIds).GetMappingTableHandler(r);
-				handler.VerboseMode = VerboseMode;
-				handler.LogAdapter = LogAdapter;
-				CheckTransaction(handler, r.MappingTable.Connection);
-				DataTable dt = handler.FindRelatedObjects(pc.NDOObjectId, this.ds);
+				DataTable dt = null;
+
+				using (IMappingTableHandler handler = PersistenceHandlerManager.GetPersistenceHandler( pc ).GetMappingTableHandler( r ))
+				{
+					handler.VerboseMode = VerboseMode;
+					handler.LogAdapter = LogAdapter;
+					CheckTransaction( handler, r.MappingTable.Connection );
+					dt = handler.FindRelatedObjects(pc.NDOObjectId, this.ds);
+				}
+
 				IList relatedObjects;
 				if(r.Multiplicity == RelationMultiplicity.Element)
 					relatedObjects = GenericListReflector.CreateList(r.ReferencedType, dt.Rows.Count);
@@ -2388,23 +2393,25 @@ namespace NDO
 			foreach(Type t in types) 
 			{
 				//Debug.WriteLine("Update Deleted Objects: "  + t.Name);
-				IPersistenceHandler handler = PersistenceHandlerManager.GetPersistenceHandler(t, this.HasOwnerCreatedIds);
-				handler.VerboseMode = VerboseMode;
-				handler.LogAdapter = LogAdapter;
-				CheckTransaction(handler, t);
-				ConcurrencyErrorHandler ceh = new ConcurrencyErrorHandler(this.OnConcurrencyError);
-				handler.ConcurrencyError += ceh;
-				try
+				using (IPersistenceHandler handler = PersistenceHandlerManager.GetPersistenceHandler( t ))
 				{
-					DataTable dt = GetTable(t);
-					if (delete)
-						handler.UpdateDeletedObjects(dt);
-					else
-						handler.Update(dt);
-				}
-				finally
-				{
-					handler.ConcurrencyError -= ceh;
+					handler.VerboseMode = VerboseMode;
+					handler.LogAdapter = LogAdapter;
+					CheckTransaction( handler, t );
+					ConcurrencyErrorHandler ceh = new ConcurrencyErrorHandler(this.OnConcurrencyError);
+					handler.ConcurrencyError += ceh;
+					try
+					{
+						DataTable dt = GetTable(t);
+						if (delete)
+							handler.UpdateDeletedObjects( dt );
+						else
+							handler.Update( dt );
+					}
+					finally
+					{
+						handler.ConcurrencyError -= ceh;
+					}
 				}
 			}
 		}
@@ -2419,6 +2426,9 @@ namespace NDO
             // Now update all mapping tables
             foreach (IMappingTableHandler handler in mappingHandler.Values)
             {
+				handler.LogAdapter = this.LogAdapter;
+				handler.VerboseMode = this.VerboseMode;
+				CheckTransaction( handler, handler.Relation.MappingTable.Connection );
                 handler.Update(ds);
             }
         }
@@ -2433,7 +2443,10 @@ namespace NDO
             // Now update all mapping tables
             foreach (IMappingTableHandler handler in mappingHandler.Values)
             {
-                handler.Update(ds);
+				handler.LogAdapter = this.LogAdapter;
+				handler.VerboseMode = this.VerboseMode;
+				CheckTransaction( handler, handler.Relation.MappingTable.Connection );
+				handler.Update(ds);
             }
         }
 
@@ -2735,15 +2748,12 @@ namespace NDO
 				row.AcceptChanges();
 				row.Delete();
 			}
+
 			IMappingTableHandler handler;
 			if (!mappingHandler.TryGetValue( r, out handler ))
 			{
-				mappingHandler[r] = handler = PersistenceHandlerManager.GetPersistenceHandler( pc, this.HasOwnerCreatedIds ).GetMappingTableHandler( r );
-				handler.VerboseMode = VerboseMode;
-				handler.LogAdapter = LogAdapter;
+				mappingHandler[r] = handler = PersistenceHandlerManager.GetPersistenceHandler( pc ).GetMappingTableHandler( r );
 			}
-
-			CheckTransaction(handler, e.Relation.MappingTable.Connection);
 		}
 
 
@@ -4087,6 +4097,13 @@ namespace NDO
         public string ConnectionAlias { get; set; }
 	}
 
+	/// <summary>
+	/// This class manages TransactionInfo elements. We need a TransactionInfo element
+	/// for each connection that participates in a transaction.
+	/// </summary>
+	/// <remarks>
+	/// The TransactionTable is owned by the PersistenceManager. Thus each Thread has a TransactionTable.
+	/// </remarks>
 	internal class TransactionTable : IEnumerable, IEnumerator
 	{
 		public delegate string NewConnectionCallback(NDO.Mapping.Connection conn);

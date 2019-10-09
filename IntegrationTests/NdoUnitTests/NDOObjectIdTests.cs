@@ -66,6 +66,8 @@ namespace NdoUnitTests
 			l = pm.GetClassExtent(typeof(DerivedGuid));
 			pm.Delete(l);
 			pm.Save();
+			pm.Dispose();
+			Assert.That( PmFactory.PoolCount <= 1 );
 		}
 
 		[Test]

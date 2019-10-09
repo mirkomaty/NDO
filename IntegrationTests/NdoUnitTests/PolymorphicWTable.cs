@@ -66,9 +66,11 @@ namespace NdoUnitTests {
 			IList liste;
 
 			// We can't delete orphan Beleg object with NDO, so use direct Sql statements
-			var handler = pm.GetSqlPassThroughHandler();
-			var sql = "DELETE FROM " + pm.NDOMapping.FindClass( typeof( Beleg ) ).TableName;
-			handler.Execute(sql);
+			using (var handler = pm.GetSqlPassThroughHandler())
+			{
+				var sql = "DELETE FROM " + pm.NDOMapping.FindClass( typeof( Beleg ) ).TableName;
+				handler.Execute( sql );
+			}
 
 			q = new NDOQuery<Contact>(pm);
 			liste = q.Execute();
@@ -78,8 +80,8 @@ namespace NdoUnitTests {
 			liste = q.Execute();
 			pm.Delete(liste);
 			pm.Save();
-
-
+			pm.Dispose();
+			Assert.That( PmFactory.PoolCount <= 1 );
 		}
 
 		[Test]

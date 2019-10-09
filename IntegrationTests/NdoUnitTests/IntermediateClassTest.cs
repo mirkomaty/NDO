@@ -82,7 +82,8 @@ namespace NdoUnitTests
                 cmd.ExecuteNonQuery();
                 conn.Close();
             }
-        }
+			Assert.That( PmFactory.PoolCount <= 1, "Pool Count is " + PmFactory.PoolCount );
+		}
 
 		private void DoCreate()
 		{

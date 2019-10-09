@@ -23,6 +23,8 @@
 using System;
 using NUnit.Framework;
 using NDO;
+using System.Linq;
+using System.Data.SqlClient;
 
 namespace NdoUnitTests
 {
@@ -35,6 +37,19 @@ namespace NdoUnitTests
             PersistenceManager pm = PmFactory.NewPersistenceManager();
             PersistenceManagerFactory.MappingFileName = pm.NDOMapping.FileName;
 			PersistenceManager pm2 = PersistenceManagerFactory.NewPersistenceManager();
+		}
+
+		[Test]
+		public void TestPerformanceCounter()
+		{
+			PersistenceManager pm = PmFactory.NewPersistenceManager();
+			Assert.That( PmFactory.PoolCount <= 1 );
+			var ndoConn = pm.NDOMapping.Connections.First();
+			using (SqlConnection sqlConn = new SqlConnection( ndoConn.Name ))
+			{
+				sqlConn.Open();
+				Assert.That( PmFactory.PoolCount == 1);
+			}
 		}
 	}
 }

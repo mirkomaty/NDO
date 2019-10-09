@@ -66,7 +66,8 @@ namespace NdoUnitTests
 			pm.Save();
 			pm.Close();
 			pm.GetSqlPassThroughHandler().Execute( "DELETE FROM " + pm.NDOMapping.FindClass( typeof( Reise ) ).TableName );
-			pm = null;
+			pm.Dispose();
+			Assert.That( PmFactory.PoolCount <= 1 );
 		}
 
 		[Test]

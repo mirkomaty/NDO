@@ -48,9 +48,11 @@ namespace NdoUnitTests
             pm.Save();
             pm.Delete(pm.GetClassExtent(typeof(Device)));
             pm.Save();
-        }
+			pm.Dispose();
+			Assert.That( PmFactory.PoolCount <= 1, "Pool Count is " + PmFactory.PoolCount );
+		}
 
-        [Test]
+		[Test]
         public void TestBaseOnly()
         {
             Device root = new Device();

@@ -277,7 +277,7 @@ namespace NDO
 				if (this.configContainer == null)
 				{
 					this.configContainer = NDOContainer.Instance.CreateChildContainer();
-					this.configContainer.RegisterInstance<IPersistenceHandlerCache>(new NDOPersistenceHandlerCache());
+//					this.configContainer.RegisterInstance<IPersistenceHandlerPool>(new NDOPersistenceHandlerPool());
 					this.configContainer.RegisterType<IQueryGenerator, SqlQueryGenerator>();
 
 					// Currently the PersistenceManager instance is not used.

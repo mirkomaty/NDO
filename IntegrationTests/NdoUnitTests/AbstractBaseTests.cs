@@ -48,6 +48,8 @@ namespace NdoUnitTests
 			pm.Delete(l);
 			l = pm.GetClassExtent(typeof(ABB));
 			pm.Delete(l);
+			pm.Dispose();
+			Assert.That( PmFactory.PoolCount <= 1);
 		}
 
 
