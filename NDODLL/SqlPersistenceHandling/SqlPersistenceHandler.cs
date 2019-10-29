@@ -899,7 +899,14 @@ namespace NDO.SqlPersistenceHandling
 			}
 		}
 
-		public DbDataAdapter DataAdapter => throw new NotImplementedException();
+		/// <summary>
+		/// Gets the current DataAdapter.
+		/// </summary>
+		/// <remarks>
+		/// This is needed by RegisterRowUpdateHandler.
+		/// See the comment in SqlCeProvider.
+		/// </remarks>
+		public DbDataAdapter DataAdapter => this.dataAdapter;
 
 		#endregion
 	}
