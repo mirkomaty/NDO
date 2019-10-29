@@ -264,6 +264,8 @@ namespace NDO.SqlCeProvider
 				if (handler == null)
 					throw new ArgumentNullException( "handler", "RegisterRowUpdateHandler" );
 				updateHandlers.Add( da, handler );
+				// The RowUpdated method doesn't exist in an abstract form in DbDataAdapter.
+				// So we need to add the handler here, where the concrete type is known.
                 da.RowUpdated += new SqlCeRowUpdatedEventHandler(this.OnRowUpdated);
             }
         }
