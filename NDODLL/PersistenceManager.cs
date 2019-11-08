@@ -1034,6 +1034,8 @@ namespace NDO
 					if (ti.Transaction != null)
 					{
 						ti.Transaction.Commit();
+						NDOPerformanceCounter.DecrementOpenTransactions();
+						NDOPerformanceCounter.IncrementReleaseTransactionCount();
 						if (LoggingPossible)
 							this.LogAdapter.Info( String.Format( "Committing transaction {0:X} at connection '{1}'", ti.Transaction.GetHashCode(), ti.ConnectionAlias ) );
                         ti.Transaction = null;
@@ -1087,6 +1089,8 @@ namespace NDO
 				}
 				if (ti.Transaction == null)
 				{
+					NDOPerformanceCounter.IncrementCreateTransactionCount();
+					NDOPerformanceCounter.IncrementOpenTransactions();
 					ti.Transaction = ti.Connection.BeginTransaction(this.isolationLevel);
 					if (this.LoggingPossible)
 						this.LogAdapter.Info( String.Format( "Starting transaction {0:X} at connection '{1}'", ti.Transaction.GetHashCode(), conn.DisplayName ) );
@@ -2848,6 +2852,8 @@ namespace NDO
 					if (ti.Transaction != null)
 					{
 						ti.Transaction.Rollback();
+						NDOPerformanceCounter.DecrementOpenTransactions();
+						NDOPerformanceCounter.IncrementReleaseTransactionCount();
 						if (this.LoggingPossible)
 							LogAdapter.Info("Rollback transaction at connection '" + ti.ConnectionAlias + '\'');
                         ti.Transaction = null;

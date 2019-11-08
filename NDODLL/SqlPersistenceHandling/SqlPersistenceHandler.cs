@@ -811,6 +811,7 @@ namespace NDO.SqlPersistenceHandling
 		/// </summary>
 		/// <param name="sql"></param>
 		/// <param name="parameters"></param>
+		/// <param name="templateDataSet"></param>
 		/// <returns></returns>
 		public DataTable PerformQuery( string sql, IList parameters, DataSet templateDataSet )
 		{
