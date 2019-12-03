@@ -2851,11 +2851,12 @@ namespace NDO
 					// geben wir hier die Gelegenheit, Transaktionen abzubrechen.
 					if (ti.Transaction != null)
 					{
+						int id = ti.Transaction.GetHashCode();
 						ti.Transaction.Rollback();
 						NDOPerformanceCounter.DecrementOpenTransactions();
 						NDOPerformanceCounter.IncrementReleaseTransactionCount();
 						if (this.LoggingPossible)
-							LogAdapter.Info("Rollback transaction at connection '" + ti.ConnectionAlias + '\'');
+							LogAdapter.Info( $"Rollback transaction {id.ToString( "X" )} at connection '{ti.ConnectionAlias}'" );
                         ti.Transaction = null;
 					}
 					if (ti.Connection.State != ConnectionState.Closed)
