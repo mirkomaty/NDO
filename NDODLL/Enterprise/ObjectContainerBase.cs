@@ -20,14 +20,10 @@
 // DEALINGS IN THE SOFTWARE.
 
 
-#if ENT
 using System;
 using System.IO;
 using System.Collections;
 using System.Xml.Serialization;
-using System.Runtime.Serialization.Formatters.Binary;
-using System.Runtime.Serialization.Formatters.Soap;
-using System.Runtime.Remoting.Messaging;
 using System.Runtime.Serialization;
 
 namespace NDO
@@ -39,9 +35,7 @@ namespace NDO
 	public class ObjectContainerBase : ISerializable
 	{
 		private ArrayList objects = new ArrayList();  // If transmitted via Soap/Binary Formatter, this list will be transfered
-
-		[NonSerialized]
-		private SerializationFlags serFlags;
+													  // List<object> can't be transferred via SoapFormatter, so we use ArrayList.
 
 		/// <summary>
 		/// Standard Constructor, which is used mainly by the XmlSerializer.
@@ -54,7 +48,10 @@ namespace NDO
 		{
 		}
 
-
+        /// <summary>
+        /// If the XmlSerializer or Remoting is used, set the formatter after creating the object container.
+        /// </summary>
+        public IFormatter Formatter { get; set; }
 
 		// Internal remark: The MarshalingString property should be the only
 		// public property or variable, which is not marked with [XmlIgnore] 
@@ -72,56 +69,20 @@ namespace NDO
 		public virtual string MarshalingString
 		{
 			get 
-			{ 
-				return Serialize(); 
+			{
+                if (Formatter == null)
+                    throw new NDOException( 101, "Formatter is null. Please provide a value for the Formatter property." );
+
+				return Serialize(Formatter); 
 			}
 			set 
-			{ 
-				Deserialize(value); 
+			{
+                if (Formatter == null)
+                    throw new NDOException( 101, "Formatter is null. Please provide a value for the Formatter property." );
+
+                Deserialize( value, Formatter); 
 			}
 		}
-
-
-		/// <summary>
-		/// Gets or sets a value indicating whether serializing uses the Binary or the Soap formatter.
-		/// </summary>
-		/// <remarks>
-		/// This property is a wrapper around the UseBinaryFormat flag of the SerFlags property.
-		/// BinaryFormat is false by default. Before deserializing from a not seekable stream, which 
-		/// was serialized using the Binary Formatter, set UseBinaryFormat explicitly to true.
-		/// </remarks>
-		/// <value><c>true</c> if the Binary Formatter should be used.</value>
-		[XmlIgnore]
-		public bool BinaryFormat
-		{
-			get { return (serFlags & SerializationFlags.UseBinaryFormat) != 0; }
-			set 
-			{ 
-				if (value) 
-					serFlags |= SerializationFlags.UseBinaryFormat; 
-				else
-					serFlags &= ~SerializationFlags.UseBinaryFormat;
-			}
-		}
-
-
-		/// <summary>
-		/// Gets or sets the flags, which determine, how the search for child objects is conducted 
-		/// and what formatter should be used.
-		/// </summary>
-		/// <remarks>
-		/// The ObjectContainerBase ignores all flags except UseBinaryFormat. Other classes, 
-		/// derived from ObjectContainerBase use the other flags.
-		/// </remarks>
-		/// <value>The flags.</value>
-		[XmlIgnore]
-		public SerializationFlags SerFlags
-		{
-			get { return serFlags; }
-			set { serFlags = value; }
-		}
-
-
 
 		/// <summary>
 		/// Returns a list of the added root objects in the container. 
@@ -160,17 +121,14 @@ namespace NDO
 		/// </summary>
 		/// <param name="value">The string to deserialize.</param>
 		/// <remarks>
-		/// Only available in the NDO Enterprise Edition.
-		/// The function determines, if the string is a soap string. If that is the case,
-		/// the string will be deserialized using the SoapFormatter. Otherwise, the string
-		/// will be considered as a Base64 string. It will be converted to a byte array and 
-		/// deserialized using the BinaryFormatter.
+		/// The function determines, if the string is a base64 string. If that is the case,
+		/// the string will be decoded befor using the Formatter.
 		/// </remarks>
-		public virtual void Deserialize(string value)
+		public virtual void Deserialize(string value, IFormatter formatter)
 		{
-			this.BinaryFormat = !value.StartsWith("<SOAP");
+			var binaryFormat = value.StartsWith( "AAEAAAD/////" );
 			MemoryStream ms = new MemoryStream();
-			if (BinaryFormat)
+			if (binaryFormat)
 			{
 				byte[] bytes = Convert.FromBase64String(value);
 				ms.Write(bytes, 0, bytes.Length);
@@ -183,7 +141,7 @@ namespace NDO
 				sw.Flush();
 			}
 			ms.Seek(0, SeekOrigin.Begin);
-			Deserialize(ms, false);
+			Deserialize(ms, formatter);
 			ms.Close();
 		}
 
@@ -198,42 +156,11 @@ namespace NDO
 		}
 
 
-		void Deserialize(Stream stream, bool testForBinary)
+		void Deserialize(Stream stream, IFormatter formatter)
 		{
-			if (testForBinary && stream.CanSeek)
-			{
-				long pos = stream.Position;
-				byte[] buf1 = new byte[5];
-				stream.Read(buf1, 0, 5);
-				byte[] buf2 = System.Text.Encoding.ASCII.GetBytes("<SOAP");
-				this.BinaryFormat = !BufEqual(buf1, buf2);
-				stream.Seek(pos, SeekOrigin.Begin);
-			}
-
-			IRemotingFormatter formatter;
-			if (this.BinaryFormat)
-				formatter = new BinaryFormatter();
-			else
-				formatter = new SoapFormatter();
             formatter.Binder = new NDODeserializationBinder();
 			object o = formatter.Deserialize(stream);
 			this.objects = (ArrayList) o;
-		}
-
-		/// <summary>
-		/// Deserializes the object container from the specified stream.
-		/// </summary>
-		/// <remarks>
-		/// Note: If the stream is seekable (CanSeek returns true), NDO will determine automatically,
-		/// if the Soap or the binary Formatter should be used. Otherwise NDO will use the BinaryFormat
-		/// property to determine, what formatter should be used. BinaryFormat
-		/// is false by default. So, if a binary stream is not seekable, set the BinaryFormat property
-		/// explicitly before calling Deserialize.
-		/// </remarks>
-		/// <param name="stream">A stream instance.</param>
-		public void Deserialize(Stream stream)
-		{
-			Deserialize(stream, true);
 		}
 
 		/// <summary>
@@ -241,18 +168,21 @@ namespace NDO
 		/// </summary>
 		/// <returns>The serialized string.</returns>
 		/// <remarks>
-		/// If binaryFormat is true, the BinaryFormatter will be used and the results will be
-		/// converted into a Base64 string. Otherwise the SoapFormatter will be used.
+		/// If binaryFormat is true, the results will be
+		/// converted into a Base64 string.
 		/// </remarks>
-		public virtual string Serialize()
+		public virtual string Serialize(IFormatter formatter)
 		{
 			string s;
 			using ( MemoryStream ms = new MemoryStream() )
 			{
-				InnerSerialize( ms );
+				InnerSerialize( ms, formatter );
 
-				ms.Seek( 0, SeekOrigin.Begin );
-				if ( !BinaryFormat )
+				ms.Seek( 0L, SeekOrigin.Begin );
+
+                var binaryFormat = formatter.GetType().Name == "BinaryFormatter";
+
+                if ( !binaryFormat )
 				{
 					StreamReader sr = new StreamReader( ms );
 					s = sr.ReadToEnd();
@@ -264,8 +194,8 @@ namespace NDO
 					ms.Read( buffer, 0, (int) ms.Length );
 					s = Convert.ToBase64String( buffer );
 				}
-				ms.Close();
 			}
+
 			return s;
 		}
 
@@ -274,49 +204,47 @@ namespace NDO
 		/// Serializes the object container to the specified stream.
 		/// </summary>
 		/// <param name="stream">A stream instance.</param>
-		public virtual void Serialize(Stream stream)
+		public virtual void Serialize(Stream stream, IFormatter formatter)
 		{
-			InnerSerialize(stream);
+			InnerSerialize(stream, formatter);
 		}
 
 		/// <summary>
 		/// Non overridable version of Serialize
 		/// </summary>
 		/// <param name="stream"></param>
-		void InnerSerialize( Stream stream )
+		void InnerSerialize( Stream stream, IFormatter formatter )
 		{
-			IRemotingFormatter formatter;
-			if ( this.BinaryFormat )
-				formatter = new BinaryFormatter();
-			else
-				formatter = new SoapFormatter();
 			formatter.Serialize( stream, this.objects );
 			stream.Flush();
 		}
 
-		/// <summary>
-		/// This function is used by the Soap/Binary formatters and shouldn't be called by users.
-		/// </summary>
-		/// <param name="info"></param>
-		/// <param name="context"></param>
-		public virtual void GetObjectData(SerializationInfo info, StreamingContext context)
-		{
-			info.AddValue("objects", this.Serialize());
-		}
+        /// <summary>
+        /// This function is used by the formatters and shouldn't be called by users.
+        /// </summary>
+        /// <param name="info"></param>
+        /// <param name="context"></param>
+        public virtual void GetObjectData( SerializationInfo info, StreamingContext context )
+        {
+            if (Formatter == null)
+                throw new NDOException( 101, "Formatter is null. Please provide a value for the Formatter property." );
 
-		/// <summary>
-		/// This constructor is used by the Soap/Binary formatters and shouldn't be called by users.
-		/// </summary>
-		/// <param name="info"></param>
-		/// <param name="context"></param>
-		public ObjectContainerBase(SerializationInfo info, StreamingContext context)
-		{
-			string s = (string) info.GetValue("objects", typeof(string));
-			this.Deserialize(s);
-		}
+            info.AddValue( "objects", this.Serialize(Formatter) );
+        }
 
-	}
+        /// <summary>
+        /// This constructor is used by the Soap/Binary formatters and shouldn't be called by users.
+        /// </summary>
+        /// <param name="info"></param>
+        /// <param name="context"></param>
+        public ObjectContainerBase( SerializationInfo info, StreamingContext context )
+        {
+            if (Formatter == null)
+                throw new NDOException( 101, "Formatter is null. Please provide a value for the Formatter property." );
+
+            string s = (string)info.GetValue( "objects", typeof( string ) );
+            this.Deserialize( s, Formatter );
+        }
+    }
 }
 
-
-#endif

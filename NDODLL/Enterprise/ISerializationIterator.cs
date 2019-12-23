@@ -20,7 +20,6 @@
 // DEALINGS IN THE SOFTWARE.
 
 
-#if ENT
 using System;
 
 namespace NDO
@@ -42,6 +41,3 @@ namespace NDO
 		void Iterate(IPersistenceCapable root);
 	}
 }
-
-
-#endif

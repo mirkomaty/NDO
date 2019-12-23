@@ -159,9 +159,7 @@
     <Compile Include="Enterprise\OfflinePersistenceManager.cs" />
     <Compile Include="Enterprise\OnlineMergeIterator.cs" />
     <Compile Include="Enterprise\RelationChangeRecord.cs" />
-    <Compile Include="Enterprise\SerializationFlags.cs" />
     <Compile Include="Enterprise\SerializationIterator.cs" />
-    <Compile Include="Enterprise\Serializer.cs" />
     <Compile Include="ISqlPassThroughHandler.cs" />
     <Compile Include="Linq\Index.cs" />
     <Compile Include="Linq\LinqStringExtension.cs" />
@@ -439,7 +437,7 @@
   </ItemGroup>
   <ProjectExtensions>
     <VisualStudio>
-      <UserProperties NDOEnableAddIn="false" NDOEnableEnhancer="false" NDOGenerateMapping="false" NDOGenerateSchema="false" NDONewMapping="false" NDOMergeMapping="false" NDOMergeSchema="false" NDOGenerateSQL="false" />
+      <UserProperties NDOGenerateSQL="false" NDOMergeSchema="false" NDOMergeMapping="false" NDONewMapping="false" NDOGenerateSchema="false" NDOGenerateMapping="false" NDOEnableEnhancer="false" NDOEnableAddIn="false" />
     </VisualStudio>
   </ProjectExtensions>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />

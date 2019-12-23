@@ -20,11 +20,12 @@
 // DEALINGS IN THE SOFTWARE.
 
 
-#if ENT
 using System;
-using System.Diagnostics;
 using System.Data;
 using System.Collections;
+using System.Collections.Generic;
+using NDO.Mapping;
+using System.Linq;
 
 namespace NDO
 {
@@ -40,8 +41,7 @@ namespace NDO
 	/// </remarks>
 	public class OfflinePersistenceManager : PersistenceManager
 	{
-		ArrayList relationChanges = new ArrayList();
-
+		private List<RelationChangeRecord> relationChanges = new List<RelationChangeRecord>();
 		public OfflinePersistenceManager() : base ()
 		{
 		}
@@ -49,6 +49,7 @@ namespace NDO
 		public OfflinePersistenceManager(string mappingFile) : base(mappingFile)
 		{
 		}
+
 
 		#region IPersistenceManager Member
 
@@ -58,23 +59,21 @@ namespace NDO
 		/// </summary>
 		/// <param name="t">Type of the objects, which are searched for.</param>
 		/// <returns></returns>
-		public override System.Collections.IList GetClassExtent(Type t)
+		public override System.Collections.IList GetClassExtent( Type t )
 		{
 			ArrayList result = new ArrayList();
-			foreach(Cache.Entry ce in cache.LockedObjects)
+			foreach (Cache.Entry ce in cache.LockedObjects)
 			{
 				if (t == ce.pc.GetType())
-					result.Add(ce.pc);
+					result.Add( ce.pc );
 			}
-			foreach(object o in cache.UnlockedObjects)
+			foreach (object o in cache.UnlockedObjects)
 			{
 				if (t == o.GetType())
-					result.Add(o);
+					result.Add( o );
 			}
 			return result;
 		}
-
-
 
 		public void MergeObjectContainer(ObjectContainer oc)
 		{
@@ -85,13 +84,25 @@ namespace NDO
 			}
 		}
 
+		internal override void AddRelatedObject(IPersistenceCapable pc, string fieldName, IPersistenceCapable relObj)
+		{
+			base.AddRelatedObject(pc, fieldName, relObj);
+			this.relationChanges.Add(new RelationChangeRecord(pc, relObj, fieldName, true));
+		}
+
+		internal override void RemoveRelatedObject(IPersistenceCapable pc, string fieldName, IPersistenceCapable relObj)
+		{
+			if (pc.NDOObjectState == NDOObjectState.Persistent)
+				MarkDirty(pc);
+			this.relationChanges.Add(new RelationChangeRecord(pc, relObj, fieldName, false));
+		}
+
 		ChangeSetContainer CreateChangeSet(bool acceptChanges)
 		{
 			ChangeSetContainer csc = new ChangeSetContainer();
-			csc.BinaryFormat = true;
-			ArrayList addedObjects = new ArrayList();
-			ArrayList deletedObjects = new ArrayList();
-			ArrayList changedObjects = new ArrayList();
+			var addedObjects = new List<IPersistenceCapable>();
+			var deletedObjects = new List<ObjectId>();
+			var changedObjects = new List<IPersistenceCapable>();
 			foreach(Cache.Entry cacheEntry in cache.LockedObjects)
 			{
 				IPersistenceCapable pc = cacheEntry.pc;
@@ -114,25 +125,17 @@ namespace NDO
 						pc.NDOObjectState = NDOObjectState.Persistent;
 				}
 			}
-			csc.RelationChanges = this.relationChanges;
+			csc.RelationChanges = this.relationChanges.ToList();
 			csc.ChangedObjects = changedObjects;
 			csc.AddedObjects = addedObjects;
 			csc.DeletedObjects = deletedObjects;
 			if (acceptChanges)
 			{
 				cache.UnlockAll();
-				this.relationChanges = new ArrayList();
+				this.relationChanges.Clear();
 			}
 			return csc;
 		}
-
-
-		protected override void AddRelatedObject(IPersistenceCapable pc, NDO.Mapping.Relation r, IPersistenceCapable relObj)
-		{
-			base.AddRelatedObject (pc, r, relObj);
-			this.relationChanges.Add(new RelationChangeRecord(pc, relObj, r.FieldName, true));
-		}
-
 
 		protected override void InternalRemoveRelatedObject(IPersistenceCapable pc, NDO.Mapping.Relation r, IPersistenceCapable child, bool calledFromStateManager)
 		{
@@ -144,7 +147,6 @@ namespace NDO
 				cache.Unlock(child);
 				child.NDOObjectState = oldState;
 			}
-			this.relationChanges.Add(new RelationChangeRecord(pc, child, r.FieldName, false));
 		}
 
 
@@ -173,7 +175,7 @@ namespace NDO
 		/// <returns>A ChangeSetContainer object.</returns>
 		public virtual ChangeSetContainer GetChangeSet()
 		{
-			return GetChangeSet(true, true);
+			return GetChangeSet(true);
 		}
 
 
@@ -189,34 +191,9 @@ namespace NDO
 		/// <returns>A ChangeSetContainer object.</returns>
 		public virtual ChangeSetContainer GetChangeSet(bool acceptChanges)
 		{
-			return GetChangeSet(acceptChanges, true);
-		}
-
-		/// <summary>
-		/// Gets a serializable container, which contains all changes made to objects and relations.
-		/// </summary>
-		/// <param name="acceptChanges">
-		/// If true, a subsequent call to GetChangeSet would return an empty ChangeSetContainer.
-		/// If false, a subsequent call to GetChangeSet would return the same ChangeSetContainer.
-		/// <seealso cref="NDO.ChangeSetContainer"/></param>
-		/// <param name="useBinaryFormat">Determines, if the binary formatter is used for transmission of the container.</param>
-		/// <returns>A ChangeSetContainer object.</returns>
-		public virtual ChangeSetContainer GetChangeSet(bool acceptChanges, bool useBinaryFormat)
-		{
 			ChangeSetContainer csc = CreateChangeSet(acceptChanges);
-			csc.BinaryFormat = useBinaryFormat;
-			return csc;
+            return csc;
 		}
-
-		/// <summary>
-		/// Rejects all changes and restores the original object state. Added Objects will be made transient.
-		/// </summary>
-		public override void Abort()
-		{
-			base.Abort ();
-			this.relationChanges = new ArrayList();
-		}
-
 
 
 		#region Not implemented functions
@@ -334,7 +311,7 @@ namespace NDO
 		/// A NotImplementedException will be thrown after calling that function.
 		/// </summary>
 		/// <param name="list"></param>
-		public override void Refresh(System.Collections.IList list)
+		public override void Refresh(IList list)
 		{
 			throw new NotImplementedException("This function isn't supported in offline mode");
 		}
@@ -354,45 +331,6 @@ namespace NDO
 		/// A NotImplementedException will be thrown after calling that function.
 		/// </summary>
 		public override void Save(bool deferCommit = false)
-		{
-			throw new NotImplementedException("This function isn't supported in offline mode");
-		}
-
-		/// <summary>
-		/// The function is not implemented. 
-		/// A NotImplementedException will be thrown after calling that function.
-		/// </summary>
-		/// <param name="t"></param>
-		/// <param name="expression"></param>
-		/// <returns></returns>
-		public override Query NewQuery(Type t, string expression)
-		{
-			throw new NotImplementedException("This function isn't supported in offline mode");
-		}
-
-		/// <summary>
-		/// The function is not implemented. 
-		/// A NotImplementedException will be thrown after calling that function.
-		/// </summary>
-		/// <param name="t"></param>
-		/// <param name="expression"></param>
-		/// <param name="hollow"></param>
-		/// <returns></returns>
-		public override Query NewQuery(Type t, string expression, bool hollow)
-		{
-			throw new NotImplementedException("This function isn't supported in offline mode");
-		}
-
-		/// <summary>
-		/// The function is not implemented. 
-		/// A NotImplementedException will be thrown after calling that function.
-		/// </summary>
-		/// <param name="t"></param>
-		/// <param name="expression"></param>
-		/// <param name="hollow"></param>
-		/// <param name="queryLanguage"></param>
-		/// <returns></returns>
-		public override Query NewQuery(Type t, string expression, bool hollow, NDO.Query.Language queryLanguage)
 		{
 			throw new NotImplementedException("This function isn't supported in offline mode");
 		}
@@ -417,5 +355,3 @@ namespace NDO
 	}
 }
 
-
-#endif

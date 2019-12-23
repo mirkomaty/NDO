@@ -173,7 +173,7 @@ namespace NDO
 		/// Serializes the ObjectId to a ShortId, which can be used to identify an object of any type.
 		/// </summary>
 		/// <returns>A string consisting of the type information and the oid of the object.</returns>
-		internal string ToShortId()
+		public string ToShortId()
 		{
 			if (!IsValid())
 				throw new NDOException(86, "ObjectId is not valid.");

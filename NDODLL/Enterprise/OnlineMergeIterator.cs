@@ -20,7 +20,6 @@
 // DEALINGS IN THE SOFTWARE.
 
 
-#if ENT
 using System;
 using System.Reflection;
 using System.Collections;
@@ -34,7 +33,6 @@ namespace NDO
 	/// to a PersistenceManager.
 	/// </summary>
 	/// <remarks>
-	/// Only available in the NDO Enterprise Edition.
 	/// You don't need to instantiate objects of this class. NDO will do it automatically,
 	/// if <see cref="PersistenceManager.MergeObjectContainer"/> is called.
 	/// </remarks>
@@ -115,5 +113,3 @@ namespace NDO
 
 	}
 }
-
-#endif
