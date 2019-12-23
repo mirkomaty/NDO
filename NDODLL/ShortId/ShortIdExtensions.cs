@@ -114,7 +114,7 @@ namespace NDO.ShortId
 		/// <returns></returns>
 		public static string ShortId(this IPersistentObject pc)
 		{
-			return pc.NDOObjectId.ToShortId();
+			return pc.NDOObjectId?.ToShortId();
 		}
 
 		/// <summary>
