@@ -27,7 +27,7 @@ namespace Reisekosten.Personal {
 	/// <summary>
 	/// Sozialversicherungsnummer för Mitarbeiter
 	/// </summary>
-	[NDOPersistent]
+	[NDOPersistent, Serializable]
 	public class Sozialversicherungsnummer {
 		private int nummer;
 

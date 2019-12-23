@@ -36,7 +36,7 @@ namespace NDO
         static void Main(string[] args)
         {
 
-#if true
+#if false
             PersistenceManager pm = new PersistenceManager(@"..\..\..\NdoUnitTests\bin\Debug\NDOMapping.xml");
             foreach(string s in pm.BuildDatabase(@"..\..\..\NdoUnitTests\bin\Debug\NdoUnitTests.ndo.sql"))
 			{
@@ -46,11 +46,11 @@ namespace NDO
 			DateTime startTime = DateTime.Now;
 
 #if true
-            NDOMitarbeiterTests t = new NDOMitarbeiterTests();
+            var t = new ObjectContainerTests();
             try
             {
                 t.Setup();
-				t.LinqQueryWithParameterWorks();
+				t.ObjectContainerSerializesRelations();
             }
             catch (Exception ex)
             {

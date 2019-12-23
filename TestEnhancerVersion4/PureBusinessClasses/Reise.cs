@@ -26,7 +26,7 @@ using NDO;
 
 namespace Reisekosten
 {
-	[NDOPersistent]
+	[NDOPersistent, Serializable]
 	public class Reise : IComparable
 	{
 		private string zweck;

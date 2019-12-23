@@ -28,7 +28,7 @@ namespace Reisekosten.Personal
 	/// <summary>
 	/// Summary description for Adresse.
 	/// </summary>
-	[NDOPersistent]
+	[NDOPersistent, Serializable]
 	public class Adresse
 	{
 		string straße;

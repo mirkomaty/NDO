@@ -27,7 +27,7 @@ namespace Reisekosten.Personal {
 	/// <summary>
 	/// Buero eines Mitarbeiters
 	/// </summary>
-	[NDOPersistent]
+	[NDOPersistent, Serializable]
 	public class Buero {
 		private string zimmer;
 		

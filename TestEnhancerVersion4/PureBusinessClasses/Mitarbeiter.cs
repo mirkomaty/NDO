@@ -30,7 +30,7 @@ using System.Drawing;
 
 namespace Reisekosten.Personal
 {
-	[NDOPersistent]
+	[NDOPersistent, Serializable]
 	public class Mitarbeiter 
 	{
 		public Mitarbeiter()

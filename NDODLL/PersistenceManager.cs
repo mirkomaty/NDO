@@ -168,7 +168,6 @@ namespace NDO
 #if ENT
 		#region Object Container Stuff
 		/// <summary>
-		/// Only available in the NDO Enterprise Edition.
 		/// Gets a container of all loaded objects and tries to load all child objects, 
 		/// which are reachable through composite relations.
 		/// </summary>
@@ -176,70 +175,51 @@ namespace NDO
 		/// <remarks>
 		/// It is not recommended, to transfer objects with a state other than Hollow, 
 		/// Persistent, or Transient.
-        /// The transfer format is binary.
+		/// The transfer format is binary.
 		/// </remarks>
 		public ObjectContainer GetObjectContainer()
 		{
-			return GetObjectContainer(SerializationFlags.SerializeCompositeRelations | SerializationFlags.UseBinaryFormat);
-		}
-
-		/// <summary>
-		/// Only available in the NDO Enterprise Edition.
-		/// Gets a container of all loaded objects and tries to load child objects 
-		/// according to the serialisation flags provided.
-		/// </summary>
-		/// <param name="serFlags">Determines, how the search for child objects is conducted.</param>
-		/// <returns>An ObjectContainer object.</returns>
-		/// <remarks>
-		/// It is not recommended, to transfer objects with a state other than Hollow, 
-		/// Persistent, or Transient.
-		/// </remarks>
-		public ObjectContainer GetObjectContainer(SerializationFlags serFlags)
-		{
 			IList l = this.cache.AllObjects;
-			foreach(IPersistenceCapable pc in l)
+			foreach (IPersistenceCapable pc in l)
 			{
 				if (pc.NDOObjectState == NDOObjectState.PersistentDirty)
 				{
 					if (this.VerboseMode)
-						this.LogAdapter.Warn("Call to GetObjectContainer returns changed objects.");
-					System.Diagnostics.Trace.WriteLine("NDO warning: Call to GetObjectContainer returns changed objects.");
+						this.LogAdapter.Warn( "Call to GetObjectContainer returns changed objects." );
+					System.Diagnostics.Trace.WriteLine( "NDO warning: Call to GetObjectContainer returns changed objects." );
 				}
 			}
-			ObjectContainer oc = new ObjectContainer(serFlags);
-			oc.AddList(l);
+			ObjectContainer oc = new ObjectContainer();
+			oc.AddList( l );
 			return oc;
 		}
 
 		/// <summary>
-		/// Only available in the NDO Enterprise Edition.
 		/// Returns a container of all objects provided in the objects list and searches for
 		/// child objects according to the serFlags.
 		/// </summary>
 		/// <param name="objects">The list of the root objects to add to the container.</param>
-		/// <param name="serFlags">Determines, how the search for child objects is conducted.</param>
 		/// <returns>An ObjectContainer object.</returns>
 		/// <remarks>
 		/// It is not recommended, to transfer objects with a state other than Hollow, 
 		/// Persistent, or Transient.
 		/// </remarks>
-		public ObjectContainer GetObjectContainer(IList objects, SerializationFlags serFlags)
+		public ObjectContainer GetObjectContainer( IList objects )
 		{
-			foreach(object o in objects)
+			foreach (object o in objects)
 			{
-				CheckPc(o);
+				CheckPc( o );
 				IPersistenceCapable pc = o as IPersistenceCapable;
 				if (pc.NDOObjectState == NDOObjectState.Hollow)
-					LoadData(pc);
+					LoadData( pc );
 			}
-			ObjectContainer oc = new ObjectContainer(serFlags);
-			oc.AddList(objects);
+			ObjectContainer oc = new ObjectContainer();
+			oc.AddList( objects );
 			return oc;
 		}
 
 
 		/// <summary>
-		/// Only available in the NDO Enterprise Edition.
 		/// Returns a container containing the provided object 
 		/// and tries to load all child objects 
 		/// reachable through composite relations.
@@ -249,32 +229,15 @@ namespace NDO
 		/// <remarks>
 		/// It is not recommended, to transfer objects with a state other than Hollow, 
 		/// Persistent, or Transient.
-        /// The transfer format is binary.
+		/// The transfer format is binary.
 		/// </remarks>
-		public ObjectContainer GetObjectContainer(Object obj)
+		public ObjectContainer GetObjectContainer( Object obj )
 		{
-			return GetObjectContainer(obj, SerializationFlags.SerializeCompositeRelations | SerializationFlags.UseBinaryFormat);
-		}
-
-		/// <summary>
-		/// Only available in the NDO Enterprise Edition.
-		/// Returns a container containing the provided object and searches for
-		/// child objects according to the serFlags.
-		/// </summary>
-		/// <param name="obj">The root objects to add to the container.</param>
-		/// <param name="serFlags">Determines, how the search for child objects is conducted.</param>
-		/// <returns>An ObjectContainer object.</returns>
-		/// <remarks>
-		/// It is not recommended, to transfer objects with a state other than Hollow, 
-		/// Persistent, or Transient.
-		/// </remarks>
-		public ObjectContainer GetObjectContainer(Object obj, SerializationFlags serFlags)
-		{
-			CheckPc(obj);
-			if (((IPersistenceCapable)obj).NDOObjectState == NDOObjectState.Hollow)
-				LoadData(obj);
-			ObjectContainer oc = new ObjectContainer(serFlags);
-			oc.AddObject(obj);
+			CheckPc( obj );
+			if (( (IPersistenceCapable) obj ).NDOObjectState == NDOObjectState.Hollow)
+				LoadData( obj );
+			ObjectContainer oc = new ObjectContainer();
+			oc.AddObject( obj );
 			return oc;
 		}
 
@@ -914,7 +877,7 @@ namespace NDO
 		/// <param name="pc">the parent object</param>
 		/// <param name="fieldName">Field name of the relation</param>
 		/// <param name="relObj">the related object that should be removed</param>
-		internal void RemoveRelatedObject(IPersistenceCapable pc, string fieldName, IPersistenceCapable relObj) 
+		internal virtual void RemoveRelatedObject(IPersistenceCapable pc, string fieldName, IPersistenceCapable relObj) 
 		{
 			Debug.Assert(pc.NDOObjectState != NDOObjectState.Transient);
 			Relation r = mappings.FindRelation(pc, fieldName);
