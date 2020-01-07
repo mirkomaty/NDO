@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+<package >
+  <metadata>
+    <id>ndo.jsonformatter</id>
+    <version>3.0.0</version>
+    <authors>Mirko Matytschak</authors>
+    <owners>Mirko Matytschak</owners>
+    <license type="expression">MIT</license>
+    <projectUrl>http://www.formfakten.de</projectUrl>
+    <requireLicenseAcceptance>true</requireLicenseAcceptance>
+    <description>Json Formatter for serializing and deserializing ObjectContainers in NDO</description>
+    <releaseNotes>Initial version. Version Nr. 3 refers to the appropriate NDO version.</releaseNotes>
+    <copyright>Copyright 2020 (c) Mirko Matytschak</copyright>
+    <tags></tags>
+  </metadata>
+	<files>
+		<file src="..\bin\Release\NDO.JsonFormatter.dll" target="/lib/net451" />
+		<file src="..\bin\Release\NDO.JsonFormatter.pdb" target="/lib/net451" />
+  </files>  
+</package>

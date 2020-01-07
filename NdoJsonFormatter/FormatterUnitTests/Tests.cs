@@ -1,4 +1,25 @@
-﻿using NDO.JsonFormatter;
+﻿//
+// Copyright (c) 2002-2020 Mirko Matytschak 
+// (www.netdataobjects.de)
+//
+// Author: Mirko Matytschak
+//
+// Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated 
+// documentation files (the "Software"), to deal in the Software without restriction, including without limitation 
+// the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the 
+// Software, and to permit persons to whom the Software is furnished to do so, subject to the following 
+// conditions:
+
+// The above copyright notice and this permission notice shall be included in all copies or substantial portions 
+// of the Software.
+//
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED 
+// TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL 
+// THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF 
+// CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER 
+// DEALINGS IN THE SOFTWARE.
+
+using NDO.JsonFormatter;
 using NUnit.Framework;
 using System;
 using System.Collections.Generic;
@@ -212,8 +233,9 @@ namespace FormatterUnitTests
 
 			opm.MergeObjectContainer(oc);
 
-			var r2 = (Reise)oc.RootObjects[0];
-			var l2 = (Land)oc.RootObjects[1];
+			var newOc = oc.RootObjects.Cast<IPersistenceCapable>();
+			var r2 = (Reise)newOc.FirstOrDefault(pc=>pc is Reise);
+			var l2 = (Land)newOc.FirstOrDefault(pc => pc is Land); ;
 			Assert.AreEqual(NDOObjectState.Persistent, r2.NDOObjectState);
 			Assert.AreEqual(NDOObjectState.Persistent, l2.NDOObjectState);
 			r2.LandHinzufügen(l2);
@@ -227,7 +249,7 @@ namespace FormatterUnitTests
 			// Merge the changes back to pm
 			csc = new ChangeSetContainer();
 			csc.Deserialize(serializedChanges, formatter);
-			r = (Reise)csc.ChangedObjects[0];
+			r = (Reise)csc.ChangedObjects.Cast<IPersistenceCapable>().FirstOrDefault(pc => pc is Reise);
 			pm.MergeObjectContainer(csc);
 			r2 = (Reise)pm.FindObject(r.NDOObjectId);
 			Assert.AreEqual(NDOObjectState.PersistentDirty, r2.NDOObjectState);
@@ -246,7 +268,6 @@ namespace FormatterUnitTests
 		[TestCase(typeof(NdoJsonFormatter))]
 		public void ChangeRelationWithNewObject(Type formatterType)
 		{
-#warning This test fails, but shouldn't. This has to be fixed in future releases.
 			// Create object and serialize it
 			IFormatter formatter = (IFormatter)Activator.CreateInstance(formatterType);
 
@@ -282,6 +303,7 @@ namespace FormatterUnitTests
 			csc = new ChangeSetContainer();
 			csc.Deserialize(serializedChanges, formatter);
 			m = (Mitarbeiter)csc.ChangedObjects[0];
+#warning This test fails, but shouldn't. This has to be fixed in future releases.
 			try
 			{
 				pm.MergeObjectContainer(csc);
@@ -448,6 +470,7 @@ namespace FormatterUnitTests
 		[TestCase(typeof(NdoJsonFormatter))]
 		public void ObjectContainerSerializesRelations(Type formatterType)
 		{
+			// This test fails in TearDown. This behavior desperately needs a fix.
 			IFormatter formatter = (IFormatter)Activator.CreateInstance(formatterType);
 			var serializationIterator = new NDO.SerializationIterator( r => r.ReferencedType == typeof( Reise ) );
 

@@ -3,7 +3,7 @@
   <Options>
     <EnableAddIn>True</EnableAddIn>
     <EnableEnhancer>False</EnableEnhancer>
-    <VerboseMode>True</VerboseMode>
+    <VerboseMode>False</VerboseMode>
     <NewMapping>False</NewMapping>
     <GenerateSQL>True</GenerateSQL>
     <DefaultConnection>Integrated Security=SSPI;Persist Security Info=False;Initial Catalog=NDOTest;Data Source=localhost</DefaultConnection>
