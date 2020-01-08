@@ -39,14 +39,14 @@ using System.Security;
 #endif
 [assembly: AssemblyCompany("Mirko Matytschak")]
 [assembly: AssemblyProduct("NDO 3.0")]
-[assembly: AssemblyCopyright("(c) 2002 - 2019, Mirko Matytschak, Velden, Germany")]
+[assembly: AssemblyCopyright("(c) 2002 - 2020, Mirko Matytschak, Velden, Germany")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 [assembly: CLSCompliant(true)]
 
 // Assembly Version
-[assembly: AssemblyVersion("3.0.0.12")]
-[assembly: AssemblyFileVersion( "3.0.0.12" )]
+[assembly: AssemblyVersion("3.1.0.0")]
+[assembly: AssemblyFileVersion( "3.1.0.0" )]
 
 [assembly: AssemblyKeyName("")]
 [assembly: AllowPartiallyTrustedCallers]

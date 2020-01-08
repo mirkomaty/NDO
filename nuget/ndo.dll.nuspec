@@ -2,15 +2,15 @@
 <package >
   <metadata>
     <id>ndo.dll</id>
-    <version>3.0.0.12</version>
+    <version>3.1.0.0</version>
     <authors>Mirko Matytschak</authors>
     <owners>Mirko Matytschak</owners>
     <license type="file">license\license.txt</license>
     <projectUrl>https://www.netdataobjects.de</projectUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>Package to enable VS Solutions to compile and enhance persistent classes</description>
-    <releaseNotes>Initial package.</releaseNotes>
-    <copyright>Copyright 2019 (c) Mirko Matytschak</copyright>
+    <releaseNotes>This release breaks existing ObjectContainer and ChangeSet code. Allows to replace the standard formatter for the generation of ObjectContainers and ChangeSetContainers.</releaseNotes>
+    <copyright>Copyright 2020 (c) Mirko Matytschak</copyright>
     <tags>NDO .NET Data Objects Persistence</tags>
     <dependencies>		
     </dependencies>
