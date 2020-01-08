@@ -258,6 +258,8 @@ namespace NDO.JsonFormatter
 			JsonSerializer serializer = new JsonSerializer();
 			TextReader textReader = new StreamReader( serializationStream );
 			var rootObject = (JToken)serializer.Deserialize(textReader, typeof(JToken));
+			if (rootObject == null || rootObject.Type == JTokenType.Null)
+				return null;
 			var result = DeserializeRootArray( rootObject );
 			this.pm.UnloadCache();
 			return result;
