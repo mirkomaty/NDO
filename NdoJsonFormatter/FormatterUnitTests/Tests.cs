@@ -527,7 +527,18 @@ namespace FormatterUnitTests
 			Assert.AreEqual( "NDO", r2.Zweck );
 			Assert.AreEqual( NDOObjectState.Persistent, r2.NDOObjectState );
 		}
+		[Test]
+		public void TestJsonNull()
+		{
+			var formatter = new NdoJsonFormatter(this.pm);
+			MemoryStream ms = new MemoryStream();
+			StreamWriter sw = new StreamWriter(ms);
+			sw.Write("null");
+			ms.Position = 0;
 
+			object obj = formatter.Deserialize(ms);
+			Assert.IsNull(obj);
+		}
 
 	}
 }
