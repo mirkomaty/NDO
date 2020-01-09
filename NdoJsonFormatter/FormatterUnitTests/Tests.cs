@@ -126,12 +126,12 @@ namespace FormatterUnitTests
 			CreateObjectContainer();
 		}
 
-		private string CreateObjectContainer()
+		private string CreateObjectContainer(bool serializeAddress = false)
 		{
 			NdoJsonFormatter formatter = new NdoJsonFormatter();
 			Mitarbeiter user = CreateMitarbeiterWithTravelAndAddress();
 			Assert.IsNotNull( user );
-			var relations = new string[]{"dieReisen"};
+			var relations = serializeAddress ? new string[] { "dieReisen", "adresse" } : new string[]{"dieReisen"};
 			ObjectContainer container = new ObjectContainer(r=>relations.Contains( r.FieldName ));
 			container.AddObject( user );
 
@@ -158,10 +158,12 @@ namespace FormatterUnitTests
 		}
 
 		[Test]
-		public void CanDeserializeObjectContainer()
+        [TestCase(true)]
+        [TestCase( false )]
+        public void CanDeserializeObjectContainer(bool serializeAddress)
 		{
 			ObjectContainer oc = new ObjectContainer();
-			string json = CreateObjectContainer();
+			string json = CreateObjectContainer(serializeAddress);
 			this.pm = new PersistenceManager();
 			oc.Deserialize( json, new NdoJsonFormatter(this.pm) );
 			Assert.AreEqual( 1, oc.RootObjects.Count );
@@ -169,6 +171,15 @@ namespace FormatterUnitTests
 			Mitarbeiter m = (Mitarbeiter)oc.RootObjects[0];
 			Assert.AreEqual( "Mirko", m.Vorname );
 			Assert.AreEqual( 1, m.Reisen.Count );
+            if (serializeAddress)
+            {
+                Assert.NotNull( m.Adresse );
+                Assert.AreEqual( "D", m.Adresse.Lkz );
+            }
+            else
+            {
+                Assert.IsNull( m.Adresse );
+            }
 		}
 
 		[Test]
