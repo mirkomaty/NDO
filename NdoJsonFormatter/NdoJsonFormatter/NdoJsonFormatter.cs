@@ -274,7 +274,8 @@ namespace NDO.JsonFormatter
 			var mc = Metaclasses.GetClass(t);
 			foreach (var fi in fm.Relations)
 			{
-				if (( (IPersistenceCapable) pc ).NDOGetLoadState( mc.GetRelationOrdinal( fi.Name ) ))
+                var fiName = fi.Name;
+				if (( (IPersistenceCapable) pc ).NDOGetLoadState( mc.GetRelationOrdinal( fiName ) ))
 				{
 					object relationObj = fi.GetValue(pc);
 					if (relationObj is IList list)
@@ -285,19 +286,20 @@ namespace NDO.JsonFormatter
 							shortId = ( (IPersistenceCapable) relObject ).ShortId();
 							dictList.Add( new { _oid = shortId } );
 						}
-						dict.Add( fi.Name, dictList );
+						dict.Add( fiName, dictList );
 					}
 					else
 					{
-						if (relationObj == null)
+                        // Hollow object means, that we don't want to transfer the object to the other side.
+						if (relationObj == null || ((IPersistenceCapable)relationObj).NDOObjectState == NDOObjectState.Hollow)
 						{
-							dict.Add( fi.Name, null );
+							dict.Add( fiName, null );
 						}
 						else
 						{
 							IPersistenceCapable relIPersistenceCapable = (IPersistenceCapable) relationObj;
 							shortId = ( (IPersistenceCapable) relIPersistenceCapable ).ShortId();
-							dict.Add( fi.Name, new { _oid = shortId } );
+							dict.Add( fiName, new { _oid = shortId } );
 						}
 					}
 				}
@@ -347,7 +349,8 @@ namespace NDO.JsonFormatter
 					}
 					else
 					{
-						if (relationObj != null)
+                        // Hollow object means, that we don't want to transfer the object to the other side.
+                        if (relationObj != null && ((IPersistenceCapable)relationObj).NDOObjectState != NDOObjectState.Hollow)
 						{
 							IPersistenceCapable relIPersistenceCapable = (IPersistenceCapable) relationObj;
 							if (!rootObjects.Contains( relIPersistenceCapable ) && !additionalObjects.Contains( relIPersistenceCapable ))

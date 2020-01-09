@@ -2,7 +2,7 @@
 <package >
   <metadata>
     <id>ndo.jsonformatter</id>
-    <version>3.0.0</version>
+    <version>3.0.1</version>
     <authors>Mirko Matytschak</authors>
     <owners>Mirko Matytschak</owners>
     <license type="expression">MIT</license>
