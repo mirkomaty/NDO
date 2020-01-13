@@ -151,7 +151,7 @@ namespace FormatterUnitTests
 			Assert.NotNull( rootObjects );
 			Assert.NotNull( additionalObjects );
 			Assert.AreEqual( 1, rootObjects.Count() );
-			Assert.AreEqual( 2, additionalObjects.Count() );
+			Assert.AreEqual( serializeAddress ? 2 : 1, additionalObjects.Count() );
 			var rootObject = rootObjects[0];
 			Assert.That( ( (string) rootObject["_oid"] ).StartsWith( "Mitarbeiter-F33D0A6D" ) );
 			return json;
