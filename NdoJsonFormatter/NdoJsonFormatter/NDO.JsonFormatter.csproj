@@ -11,7 +11,7 @@
     <Company>Mirko Matytschak</Company>
     <Description>Json Formatter for serializing and deserializing ObjectContainers in NDO.</Description>
     <Copyright>(c) 2002 - 2020, Mirko Matytschak, Velden, Germany</Copyright>
-    <PackageLicenseUrl>https://opensource.org/licenses/MIT</PackageLicenseUrl>
+    <PackageLicense>MIT</PackageLicense>
     <PackageProjectUrl>https://www.netdataobjects.de</PackageProjectUrl>
     <PackageTags>NDO .NET Data Objects Persistence JsonFormatter</PackageTags>
     <PackageReleaseNotes>Update to NDO 4.0.</PackageReleaseNotes>
@@ -40,7 +40,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="ndo.dll" Version="4.0.0-beta14" />
+    <PackageReference Include="ndo.dll" Version="4.0.0-beta15" />
     <PackageReference Include="newtonsoft.json" Version="12.0.1" />
   </ItemGroup>
   
