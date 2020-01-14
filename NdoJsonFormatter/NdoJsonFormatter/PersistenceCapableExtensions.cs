@@ -31,14 +31,15 @@ namespace NDO.JsonFormatter
 {
 	static class PersistenceCapableExtensions
 	{
-		/// <summary>
-		/// Reads an object from a JToken
-		/// </summary>
-		/// <param name="objectState"></param>
-		/// <remarks>
-		/// The method doesn't change the NDOObjectState.
-		/// </remarks>		
-		public static void FromJToken( this IPersistenceCapable pc, JToken objectState )
+        /// <summary>
+        /// Reads an object from a JToken
+        /// </summary>
+        /// <remarks>
+        /// The method doesn't change the NDOObjectState.
+        /// </remarks>
+        /// <param name="pc"></param>
+        /// <param name="objectState"></param>
+        public static void FromJToken( this IPersistenceCapable pc, JToken objectState )
 		{
 			Type myType = pc.GetType();
 			FieldMap fm = new FieldMap( myType );

@@ -36,26 +36,38 @@ using Newtonsoft.Json.Linq;
 
 namespace NDO.JsonFormatter
 {
+    /// <summary>
+    /// Formatter implementation which serializes NDO ObjectContainers and ChangeSetContainers into Json.
+    /// </summary>
 	public class NdoJsonFormatter : IFormatter
 	{
+        /// <inheritdoc/> 
 		public ISurrogateSelector SurrogateSelector { get; set; }
+        /// <inheritdoc/> 
 		public SerializationBinder Binder { get; set; }
+        /// <inheritdoc/> 
 		public StreamingContext Context { get; set; }
 
 		PersistenceManager pm;
 
-
+        /// <summary>
+        /// Constructs an NdoJsonFormatter object. This constructor is sufficient for serialization.
+        /// </summary>
 		public NdoJsonFormatter()
 		{
 			this.pm = null;
 		}
 
+        /// <summary>
+        /// Constructs an NdoJsonFormatter object. This constructor should be used for deserialization.
+        /// </summary>
+        /// <param name="pm"></param>
 		public NdoJsonFormatter( PersistenceManager pm )
 		{
 			this.pm = pm;
 		}
 
-		public IPersistenceCapable DeserializeObject( JToken jobj )
+		IPersistenceCapable DeserializeObject( JToken jobj )
 		{
 			var shortId = (string)jobj["_oid"];
 
@@ -70,7 +82,7 @@ namespace NDO.JsonFormatter
 			return null;
 		}
 
-		public IPersistenceCapable DeserializeHollowObject(JToken jobj)
+		IPersistenceCapable DeserializeHollowObject(JToken jobj)
 		{
 			var shortId = (string)jobj["_oid"];
 
@@ -84,7 +96,7 @@ namespace NDO.JsonFormatter
 			return null;
 		}
 
-		public RelationChangeRecord DeserializeRelationChangeRecord(JToken jobj)
+		RelationChangeRecord DeserializeRelationChangeRecord(JToken jobj)
 		{
 			var parent = this.pm.FindObject((string)jobj["parent"]["_oid"]);
 			parent.NDOStateManager = null;  // Detach object
@@ -250,6 +262,11 @@ namespace NDO.JsonFormatter
 			}
 		}
 
+        /// <summary>
+        /// Deserializes a Container from a stream.
+        /// </summary>
+        /// <param name="serializationStream"></param>
+        /// <returns></returns>
 		public object Deserialize( Stream serializationStream )
 		{
 			if (this.pm == null)
@@ -406,6 +423,11 @@ namespace NDO.JsonFormatter
 			serializationStream.Write(byteArray, 0, byteArray.Length);
 		}
 
+        /// <summary>
+        /// Serializes an object graph to a stream. 
+        /// </summary>
+        /// <param name="serializationStream"></param>
+        /// <param name="graph"></param>
 		public void Serialize( Stream serializationStream, object graph )
 		{
 			string json = null;
