@@ -286,10 +286,10 @@ namespace NDO
 					throw new Exception( "The string oid value contains a ' ' char. It can't be converted to a ShortId. Type: " + oidType.FullName );
 
 				if (valueSb.Length > 0)
-					valueSb.Append( ' ' );  // Will be convertet to '+' by Encode()
+					valueSb.Append( ' ' );  // Will be converted to '+' by Encode()
 
 				if (value is int i)
-					valueSb.Append( i < 0 ? "?" : i.ToString() );
+					valueSb.Append( i < 0 ? (int.MaxValue + i).ToString() : i.ToString() );
 				else
 					// In case of a Guid the '-' chars should be removed.
 					// Guid.Parse can parse a string without these dashes.

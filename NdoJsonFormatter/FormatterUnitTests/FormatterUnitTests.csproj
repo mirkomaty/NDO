@@ -94,7 +94,7 @@
     </PropertyGroup>
     <Error Condition="!Exists('..\packages\NUnit.3.12.0\build\NUnit.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\NUnit.3.12.0\build\NUnit.props'))" />
     <Error Condition="!Exists('..\packages\NUnit3TestAdapter.3.15.1\build\net35\NUnit3TestAdapter.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\NUnit3TestAdapter.3.15.1\build\net35\NUnit3TestAdapter.props'))" />
-    <Error Condition="!Exists('..\packages\ndo.dll.3.0.0.12\build\ndo.dll.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\ndo.dll.3.0.0.12\build\ndo.dll.targets'))" />
+    <Error Condition="!Exists('..\..\nuget\ndo.dll.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\nuget\ndo.dll.targets'))" />
   </Target>
-  <Import Project="..\packages\ndo.dll.3.0.0.12\build\ndo.dll.targets" Condition="Exists('..\packages\ndo.dll.3.0.0.12\build\ndo.dll.targets')" />
+  <Import Project="..\..\nuget\ndo.dll.targets" Condition="Exists('..\..\nuget\ndo.dll.targets')" />
 </Project>

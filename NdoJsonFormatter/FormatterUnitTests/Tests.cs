@@ -314,24 +314,16 @@ namespace FormatterUnitTests
 			csc = new ChangeSetContainer();
 			csc.Deserialize(serializedChanges, formatter);
 			m = (Mitarbeiter)csc.ChangedObjects[0];
-#warning This test fails, but shouldn't. This has to be fixed in future releases.
-			try
-			{
-				pm.MergeObjectContainer(csc);
-				m2 = (Mitarbeiter)pm.FindObject(m.NDOObjectId);
-				Assert.AreEqual(NDOObjectState.PersistentDirty, m2.NDOObjectState);
-				Assert.AreEqual(1, m2.Reisen.Count);
+			pm.MergeObjectContainer(csc);
+			m2 = (Mitarbeiter)pm.FindObject(m.NDOObjectId);
+			Assert.AreEqual(NDOObjectState.PersistentDirty, m2.NDOObjectState);
+			Assert.AreEqual(1, m2.Reisen.Count);
 
-				// Save and Reload
-				pm.Save();
-				pm.UnloadCache();
-				m = pm.Objects<Mitarbeiter>().Single();
-				Assert.AreEqual(1, m2.Reisen.Count);
-			}
-			catch (ArgumentNullException ex)
-			{
-				// The ArgumentNullException is the expected behavior
-			}
+			// Save and Reload
+			pm.Save();
+			pm.UnloadCache();
+			m = pm.Objects<Mitarbeiter>().Single();
+			Assert.AreEqual(1, m2.Reisen.Count);
 		}
 
 		[Test]
@@ -481,7 +473,6 @@ namespace FormatterUnitTests
 		[TestCase(typeof(NdoJsonFormatter))]
 		public void ObjectContainerSerializesRelations(Type formatterType)
 		{
-			// This test fails in TearDown. This behavior desperately needs a fix.
 			IFormatter formatter = (IFormatter)Activator.CreateInstance(formatterType);
 			var serializationIterator = new NDO.SerializationIterator( r => r.ReferencedType == typeof( Reise ) );
 

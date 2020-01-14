@@ -906,7 +906,7 @@ namespace NDO
 		/// <param name="pc">the parent object</param>
 		/// <param name="fieldName">Field name of the relation</param>
 		/// <param name="relObj">the related object that should be removed</param>
-		internal void RemoveRelatedObject(IPersistenceCapable pc, string fieldName, IPersistenceCapable relObj) 
+		internal virtual void RemoveRelatedObject(IPersistenceCapable pc, string fieldName, IPersistenceCapable relObj) 
 		{
 			Debug.Assert(pc.NDOObjectState != NDOObjectState.Transient);
 			Relation r = mappings.FindRelation(pc, fieldName);
@@ -3537,6 +3537,8 @@ namespace NDO
 					int key;
 					if (!int.TryParse( oidValue, out key ))
 						throw new ArgumentException( $"The ShortId value at index {i} doesn't contain an int value", nameof(encodedShortId) );
+                    if (key > (int.MaxValue >> 1))
+                        key = -(int.MaxValue - key);
 					keydata[i] = key;
 				}
 				else if (oidType == typeof( Guid ))
