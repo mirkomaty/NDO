@@ -6,10 +6,10 @@
     <authors>Mirko Matytschak</authors>
     <owners>Mirko Matytschak</owners>
     <license type="expression">MIT</license>
-    <projectUrl>http://www.formfakten.de</projectUrl>
-    <requireLicenseAcceptance>true</requireLicenseAcceptance>
+    <projectUrl>https://www.netdataobjects.de</projectUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>Json Formatter for serializing and deserializing ObjectContainers in NDO</description>
-    <releaseNotes>Initial version. Version Nr. 3 refers to the appropriate NDO version.</releaseNotes>
+    <releaseNotes>Initial version. Main version Nr. 3 refers to the appropriate NDO version the formatter works with.</releaseNotes>
     <copyright>Copyright 2020 (c) Mirko Matytschak</copyright>
     <tags></tags>
   </metadata>
