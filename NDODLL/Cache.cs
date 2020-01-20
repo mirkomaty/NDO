@@ -242,6 +242,10 @@ namespace NDO
             if (pc.NDOObjectId == null)
                 throw new InternalException(60, "Cache.Lock: ObjectId of an object of type " + pc.GetType().FullName + " is null.");
             objects.Remove(pc.NDOObjectId);
+			// Since objects might exist as Persistent objects without a DataRow.
+			// We simple replace it at this point.
+			if (lockedObjects.ContainsKey(pc.NDOObjectId))
+				lockedObjects.Remove(pc.NDOObjectId);
             lockedObjects.Add(pc.NDOObjectId, new Entry(pc, row, relations));
         }
 
