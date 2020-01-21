@@ -108,7 +108,7 @@ namespace NDO
 			}
 			finally
 			{
-				if (wasOpened)
+				if (wasOpened && !returnReader)
 					dbConnection.Close();
 			}
 		}
