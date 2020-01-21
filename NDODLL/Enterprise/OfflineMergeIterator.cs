@@ -80,7 +80,7 @@ namespace NDO
 				return;
 			objects.Add(pc.NDOObjectId, pc);
 
-			this.cache.Lock(pc, null, null);  // Cache.Register is not sufficient here, because the WeakReference doesn't hold the objects long enough
+			this.cache.Register(pc);
 			pc.NDOStateManager = this.stateManager;
 			if (pc.NDOLoadState.RelationLoadState == null)
 				pc.NDOLoadState.RelationLoadState = new BitArray(64);
