@@ -1,8 +1,9 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project Sdk="Microsoft.NET.Sdk">
-
+  <Import Project="SourceRevisionId.props" />
   <PropertyGroup>
     <TargetFrameworks>netstandard2.0;net452</TargetFrameworks>
-    <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <IncludeSymbols>True</IncludeSymbols>
     <PackageId>NDO.dll</PackageId>
@@ -22,15 +23,12 @@ Json Serializing for the Containers</PackageReleaseNotes>
     <SignAssembly>true</SignAssembly>
     <AssemblyOriginatorKeyFile>ndo_ent.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
-
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <DefineConstants>TRACE;DEBUG;</DefineConstants>
   </PropertyGroup>
-
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
     <DefineConstants>TRACE;RELEASE;</DefineConstants>
   </PropertyGroup>
-
   <ItemGroup>
     <Compile Remove="packages\**" />
     <Compile Remove="TestRunner\**" />
@@ -40,17 +38,16 @@ Json Serializing for the Containers</PackageReleaseNotes>
     <None Remove="TestRunner\**" />
     <None Remove="NDO.v12.suo" />
   </ItemGroup>
-
   <ItemGroup>
     <PackageReference Include="ndointerfaces" Version="4.0.0" />
+    <PackageReference Include="PatchProductVersion" Version="1.0.1" />
     <PackageReference Include="Unity.Container" Version="5.8.13" />
   </ItemGroup>
-  
   <ItemGroup>
     <Content Include="..\nuget\NDO.dll.targets">
       <Pack>true</Pack>
       <PackageCopyToOutput>true</PackageCopyToOutput>
-      <PackagePath>build</PackagePath>	
+      <PackagePath>build</PackagePath>
     </Content>
     <Content Include="..\nuget\NDOEnhancer.BuildTask.dll">
       <Pack>true</Pack>
@@ -66,7 +63,7 @@ Json Serializing for the Containers</PackageReleaseNotes>
       <Pack>true</Pack>
       <PackageCopyToOutput>true</PackageCopyToOutput>
       <PackagePath>build</PackagePath>
-    </Content>    
+    </Content>
     <Content Include="..\NDOEnhancer\bin\Release\NDOEnhancer.exe.config">
       <Pack>true</Pack>
       <PackageCopyToOutput>true</PackageCopyToOutput>
@@ -81,11 +78,9 @@ Json Serializing for the Containers</PackageReleaseNotes>
       <Pack>true</Pack>
       <PackageCopyToOutput>true</PackageCopyToOutput>
       <PackagePath>build</PackagePath>
-    </Content>    
+    </Content>
   </ItemGroup>
-
   <Target Name="PostBuild" AfterTargets="Pack">
     <Exec Command="IF NOT EXIST ..\Nuget-Packages md ..\Nuget-Packages&#xD;&#xA;echo Copy package&#xD;&#xA;copy bin\$(Configuration)\NDO*.nupkg ..\Nuget-Packages /Y&#xD;&#xA;" />
   </Target>
-  
 </Project>

@@ -20,3 +20,4 @@ NDOPackage/Backup
 /nuget/NDOEnhancer.pdb
 UsersGuide
 /QueryTests/NDOMapping.xml
+SourceRevisionId.props
