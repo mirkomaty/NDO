@@ -4022,21 +4022,21 @@ namespace NDO
 				{
 					string fieldName = group.Key;
 					object fieldValue = (from rs in relStates where rs.Key.FieldName == fieldName select rs.Value).SingleOrDefault();
-					var relCurrent = new ObjectIdList();
+					var relCurrent = new List<string>();
 					if (fieldValue is IList l)
 					{
 						foreach (IPersistenceCapable item in l)
 						{
-							relCurrent.Add( item.NDOObjectId);
+							relCurrent.Add( item.NDOObjectId.ToShortId());
 						}
 					}
 					else
 					{
 						if (fieldValue != null)
-							relCurrent.Add( ((IPersistenceCapable)fieldValue).NDOObjectId );
+							relCurrent.Add( ((IPersistenceCapable)fieldValue).NDOObjectId.ToShortId() );
 					}
 
-					var relOriginal = new ObjectIdList(relCurrent);
+					var relOriginal = relCurrent.ToList();
 
 					// In order to get the original array, we remove added objects
 					// and add removed objects
@@ -4044,13 +4044,13 @@ namespace NDO
 					{
 						if (changeEntry.IsAdded)
 						{
-							var objectId = changeEntry.Child.NDOObjectId;
-							if (relOriginal.Contains( objectId ))
-								relOriginal.Remove( objectId );
+							var shortId = changeEntry.Child.NDOObjectId.ToShortId();
+							if (relOriginal.Contains( shortId ))
+								relOriginal.Remove( shortId );
 						}
 						else
 						{
-							relOriginal.Add( changeEntry.Child.NDOObjectId );
+							relOriginal.Add( changeEntry.Child.NDOObjectId.ToShortId() );
 						}
 					}
 					originalValues.Add( fieldName, relOriginal );
