@@ -509,5 +509,16 @@ namespace QueryTests
 			NDOQuery<Mitarbeiter> q = new NDOQuery<Mitarbeiter>( this.pm, expression, false, QueryLanguage.Sql );
 			Assert.AreEqual( expression, q.GeneratedQuery );
 		}
+
+		[Test]
+		public void GreaterEqualsWorks()
+		{
+			var query = new NDOQuery<Mitarbeiter>( NDOFactory.Instance.PersistenceManager, "vorname >= {0} AND vorname < {1}" );
+			query.Parameters.Add( "ab" );
+			query.Parameters.Add( "abc" );
+			query.Orderings.Add( new NDO.Query.DescendingOrder( "vorname" ) );
+			Assert.That(query.GeneratedQuery.IndexOf( "[Mitarbeiter].[Vorname] >= {0}" ) > -1);
+			Assert.That( query.GeneratedQuery.IndexOf( "[Mitarbeiter].[Vorname] < {1}" ) > -1 );
+		}
 	}
 }

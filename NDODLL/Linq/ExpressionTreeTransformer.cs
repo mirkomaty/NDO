@@ -160,6 +160,18 @@ namespace NDO.Linq
 			return Expression.MakeBinary( binex.NodeType, binex.Right, binex.Left );
 		}
 
+		void FlipArguments(List<Expression>arguments)
+		{
+			var temp = arguments[0];
+			arguments[0] = arguments[1];
+			arguments[1] = temp;
+		}
+
+		bool IsReversedExpression( List<Expression> arguments )
+		{
+			return arguments.Count == 2 && arguments[0] is ConstantExpression && !( arguments[1] is ConstantExpression );
+		}
+
         void Transform(Expression ex, bool isRightSide)
         {
 			if (ex.ToString() == baseParameterName)
@@ -231,12 +243,17 @@ namespace NDO.Linq
             MethodCallExpression mcex = ex as MethodCallExpression;
             if (mcex !=  null)
             {
+				var arguments = new List<Expression>(mcex.Arguments);
                 string mname = mcex.Method.Name;
                 if (mname == "op_Equality")
                 {
-                    Transform(mcex.Arguments[0], false);
+					if (IsReversedExpression( arguments ))
+					{
+						FlipArguments( arguments );
+					}
+					Transform( arguments[0], false);
                     sb.Append(" = ");
-                    Transform(mcex.Arguments[1], true);
+                    Transform(arguments[1], true);
                 }
 				else if (mname == "Equals")
 				{
@@ -246,9 +263,61 @@ namespace NDO.Linq
 				}
 				else if (mname == "Like")
 				{
-					Transform(mcex.Arguments[0], false);
+					if (IsReversedExpression( arguments ))
+					{
+						FlipArguments( arguments );
+					}
+					Transform( arguments[0], false);
 					sb.Append(" LIKE ");
-					Transform(mcex.Arguments[1], true);
+					Transform(arguments[1], true);
+				}
+				else if (mname == "GreaterEqual")
+				{
+					string op = " >= ";
+					if (IsReversedExpression( arguments ))
+					{
+						FlipArguments( arguments );
+						op = " <= ";
+					}
+					Transform( arguments[0], false );
+					sb.Append( op );
+					Transform( arguments[1], true );
+				}
+				else if (mname == "LowerEqual")
+				{
+					string op = " <= ";
+					if (IsReversedExpression( arguments ))
+					{
+						FlipArguments( arguments );
+						op = " >= ";
+					}
+					Transform( arguments[0], false );
+					sb.Append( op );
+					Transform( arguments[1], true );
+				}
+				else if (mname == "GreaterThan")
+				{
+					string op = " > ";
+					if (IsReversedExpression( arguments ))
+					{
+						FlipArguments( arguments );
+						op = " < ";
+					}
+					Transform( arguments[0], false );
+					sb.Append( op );
+					Transform( arguments[1], true );
+				}
+				else if (mname == "LowerThan")
+				{
+					string op = " < ";
+					if (IsReversedExpression( arguments ))
+					{
+						FlipArguments( arguments );
+						op = " > ";
+					}
+					Transform( arguments[0], false );
+					sb.Append( op );
+					Transform( arguments[1], true );
 				}
 				else if (mname == "Between")
 				{

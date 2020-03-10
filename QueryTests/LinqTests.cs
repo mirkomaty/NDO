@@ -421,5 +421,92 @@ namespace QueryTests
 			qs = vt.QueryString;
 			Assert.AreEqual( $"SELECT {this.mitarbeiterJoinFields} FROM [Mitarbeiter] INNER JOIN [Reise] ON [Mitarbeiter].[ID] = [Reise].[IDMitarbeiter] INNER JOIN [relLandReise] ON [Reise].[ID] = [relLandReise].[IDReise] WHERE [relLandReise].[IDLand] IS NOT NULL", qs );
 		}
+
+		[Test]
+		public void ComparismWithStringWorks()
+		{
+			var vt = pm.Objects<Mitarbeiter>().Where( m => m.Vorname.GreaterEqual( "abc" ) && m.Vorname.LowerThan( "abcd") );
+			var qs = vt.QueryString; 
+			Assert.That( qs.IndexOf( "[Mitarbeiter].[Vorname] >= {0}" ) > -1 );
+			Assert.That( qs.IndexOf( "[Mitarbeiter].[Vorname] < {1}" ) > -1 );
+		}
+
+		[Test]
+		public void FlipParametersWorks()
+		{
+			var vt = pm.Objects<Mitarbeiter>().Where(m => "abc" == m.Vorname );
+			var qs = vt.QueryString;
+			Assert.That( qs.IndexOf( "[Mitarbeiter].[Vorname] = {0}" ) > -1 );
+		}
+
+		[Test]
+		public void FlipParametersInComplexExpressionsWorks()
+		{
+			var vt = pm.Objects<Mitarbeiter>().Where(m => "abc" == m.Vorname && "def" == m.Nachname );
+			var qs = vt.QueryString;
+			Assert.That( qs.IndexOf( "[Mitarbeiter].[Vorname] = {0}" ) > -1 );
+			Assert.That( qs.IndexOf( "[Mitarbeiter].[Nachname] = {1}" ) > -1 );
+		}
+
+		[Test]
+		public void FlipParametersWithGTWorks()
+		{
+			var vt = pm.Objects<Mitarbeiter>().Where( m => "abc".GreaterThan(m.Vorname) );
+			var qs = vt.QueryString;
+			Assert.That( qs.IndexOf( "[Mitarbeiter].[Vorname] < {0}" ) > -1 );
+		}
+
+		[Test]
+		public void FlipParametersWithGEWorks()
+		{
+			var vt = pm.Objects<Mitarbeiter>().Where( m => "abc".GreaterEqual(m.Vorname) );
+			var qs = vt.QueryString;
+			Assert.That( qs.IndexOf( "[Mitarbeiter].[Vorname] <= {0}" ) > -1 );
+		}
+		[Test]
+		public void FlipParametersWithLTWorks()
+		{
+			var vt = pm.Objects<Mitarbeiter>().Where( m => "abc".LowerThan(m.Vorname) );
+			var qs = vt.QueryString;
+			Assert.That( qs.IndexOf( "[Mitarbeiter].[Vorname] > {0}" ) > -1 );
+		}
+		[Test]
+		public void FlipParametersWithLEWorks()
+		{
+			var vt = pm.Objects<Mitarbeiter>().Where( m => "abc".LowerEqual(m.Vorname) );
+			var qs = vt.QueryString;
+			Assert.That( qs.IndexOf( "[Mitarbeiter].[Vorname] >= {0}" ) > -1 );
+		}
+
+		[Test]
+		public void GTWorks()
+		{
+			var vt = pm.Objects<Mitarbeiter>().Where( m => m.Vorname.GreaterThan( "abc" ) );
+			var qs = vt.QueryString;
+			Assert.That( qs.IndexOf( "[Mitarbeiter].[Vorname] > {0}" ) > -1 );
+		}
+
+		[Test]
+		public void GEWorks()
+		{
+			var vt = pm.Objects<Mitarbeiter>().Where( m => m.Vorname.GreaterEqual( "abc" ) );
+			var qs = vt.QueryString;
+			Assert.That( qs.IndexOf( "[Mitarbeiter].[Vorname] >= {0}" ) > -1 );
+		}
+		[Test]
+		public void LTWorks()
+		{
+			var vt = pm.Objects<Mitarbeiter>().Where( m => m.Vorname.LowerThan( "abc" ) );
+			var qs = vt.QueryString;
+			Assert.That( qs.IndexOf( "[Mitarbeiter].[Vorname] < {0}" ) > -1 );
+		}
+		[Test]
+		public void LEWorks()
+		{
+			var vt = pm.Objects<Mitarbeiter>().Where( m => m.Vorname.LowerEqual("abc") );
+			var qs = vt.QueryString;
+			Assert.That( qs.IndexOf( "[Mitarbeiter].[Vorname] <= {0}" ) > -1 );
+		}
+
 	}
 }

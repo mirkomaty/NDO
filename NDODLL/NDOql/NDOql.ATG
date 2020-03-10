@@ -184,7 +184,7 @@ RelExpr <out OqlExpression expression>
 		"<" (. newOp = "<"; .)
 		| ">" (. newOp = ">"; .)
 		| "<=" (. newOp = "<="; .)
-		| ">=" (. newOp = "<="; .)
+		| ">=" (. newOp = ">="; .)
 		| "!<" (. newOp = ">="; .)
 		| "!>" (. newOp = "<="; .)
 	) BitOrExpr <out child> (. result.Add(child, newOp); .)

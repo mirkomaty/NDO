@@ -102,5 +102,49 @@ namespace NDO.Linq
 				return null;
 			return po.NDOObjectId.Id.Values[index];
 		}
+
+		/// <summary>
+		/// Compares two strings and converts the Method call to a Sql operator.
+		/// </summary>
+		/// <param name="l"></param>
+		/// <param name="r"></param>
+		/// <returns></returns>
+		public static bool GreaterEqual(this string l, string r)
+		{
+			return String.Compare( l, r ) >= 0;
+		}
+
+		/// <summary>
+		/// Compares two strings and converts the Method call to a Sql operator.
+		/// </summary>
+		/// <param name="l"></param>
+		/// <param name="r"></param>
+		/// <returns></returns>
+		public static bool GreaterThan( this string l, string r )
+		{
+			return String.Compare( l, r ) > 0;
+		}
+
+		/// <summary>
+		/// Compares two strings and converts the Method call to a Sql operator.
+		/// </summary>
+		/// <param name="l"></param>
+		/// <param name="r"></param>
+		/// <returns></returns>
+		public static bool LowerEqual( this string l, string r )
+		{
+			return String.Compare( l, r ) <= 0;
+		}
+
+		/// <summary>
+		/// Compares two strings and converts the Method call to a Sql operator.
+		/// </summary>
+		/// <param name="l"></param>
+		/// <param name="r"></param>
+		/// <returns></returns>
+		public static bool LowerThan( this string l, string r )
+		{
+			return String.Compare( l, r ) < 0;
+		}
 	}
 }

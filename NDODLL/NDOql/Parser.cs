@@ -247,7 +247,7 @@ public OqlExpression RootExpression
 				}
 				case 25: {
 					Get();
-					newOp = "<="; 
+					newOp = ">="; 
 					break;
 				}
 				case 26: {
