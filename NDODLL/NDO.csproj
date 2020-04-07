@@ -40,7 +40,7 @@ Json Serializing for the Containers</PackageReleaseNotes>
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="ndointerfaces" Version="4.0.0" />
-    <PackageReference Include="PatchProductVersion" Version="1.0.1" />
+    <PackageReference Include="PatchProductVersion" Version="1.0.2" />
     <PackageReference Include="Unity.Container" Version="5.8.13" />
   </ItemGroup>
   <ItemGroup>
