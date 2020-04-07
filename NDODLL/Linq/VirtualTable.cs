@@ -40,10 +40,11 @@ namespace NDO.Linq
     {
         PersistenceManager pm;
         List<string> prefetches = new List<string>();
-        NDOQuery<T> ndoquery = null;
-        ArrayList parameters = new ArrayList();
 		int skip = -1;
 		int take = -1;
+		List<QueryOrder> orderings = new List<QueryOrder>();
+		string queryString = String.Empty;
+		List<object> queryParameters = new List<object>();
 
 		/// <summary>
 		/// Constructs a virtual table object
@@ -76,7 +77,7 @@ namespace NDO.Linq
             ExpressionTreeTransformer transformer = 
                 new ExpressionTreeTransformer((LambdaExpression)keySelector);
             string field = transformer.Transform();
-            Ndoquery.Orderings.Add(new Query.AscendingOrder(field));
+            this.orderings.Add(new Query.AscendingOrder(field));
             return this;
         }
 
@@ -91,7 +92,7 @@ namespace NDO.Linq
             ExpressionTreeTransformer transformer = 
                 new ExpressionTreeTransformer((LambdaExpression)keySelector);
             string field = transformer.Transform();
-            Ndoquery.Orderings.Add(new Query.DescendingOrder(field));
+            this.orderings.Add(new Query.DescendingOrder(field));
             return this;
         }
 
@@ -126,25 +127,13 @@ namespace NDO.Linq
         { 
 			// Transform the expression to NDOql
             ExpressionTreeTransformer transformer = new ExpressionTreeTransformer((LambdaExpression)expr);
-            string query = transformer.Transform();
+            this.queryString = transformer.Transform();
 
-            // Create the NDO query
-            this.ndoquery = new NDOQuery<T>( pm, query);
-            
+			this.queryParameters.Clear();
 			// Add the parameters collected by the transformer
             foreach(object o in transformer.Parameters)
-                this.ndoquery.Parameters.Add(o);
+                this.queryParameters.Add(o);
 
-			// If we have a paged view
-			// define the take and skip parameters
-			if (this.take > -1)
-				ndoquery.Take = take;
-			if (this.skip > -1)
-				ndoquery.Skip = skip;
-			
-			// Add the prefetch definitions
-#warning Änderung überprüfen			// this.ndoquery.Prefetches = new ArrayList( this.prefetches );
-			this.ndoquery.Prefetches = this.prefetches;
             return this;
         }
 
@@ -155,13 +144,10 @@ namespace NDO.Linq
 		/// <param name="newParameters"></param>
 		public void ReplaceParameters(IEnumerable<object> newParameters)
 		{
-			if (this.ndoquery == null)
-				throw new QueryException(100400, $"Can't replace parameters before the query is built. Call Where() or use {nameof(QueryString)} to build the query.");
-
-			this.ndoquery.Parameters.Clear();
-			foreach (var p in parameters)
+			this.queryParameters.Clear();
+			foreach (var p in queryParameters)
 			{
-				this.ndoquery.Parameters.Add( p );
+				this.queryParameters.Add( p );
 			}
 		}
 
@@ -305,20 +291,27 @@ namespace NDO.Linq
 			}
 		}
 
+		NDOQuery<T> CreateNDOQuery()
+		{
+			var ndoquery = new NDOQuery<T>( pm, this.queryString );
+			if (this.take > -1)
+				ndoquery.Take = take;
+			if (this.skip > -1)
+				ndoquery.Skip = skip;
+			ndoquery.Prefetches = this.prefetches;
+			foreach (var p in this.queryParameters)
+			{
+				ndoquery.Parameters.Add( p );
+			}
+			ndoquery.Orderings = this.orderings;
+			return ndoquery;
+		}
+
 		private NDOQuery<T> Ndoquery
 		{
 			get
 			{
-				if (this.ndoquery == null)
-				{
-					this.ndoquery = new NDOQuery<T>( pm );
-					if (this.take > -1)
-						ndoquery.Take = take;
-					if (this.skip > -1)
-						ndoquery.Skip = skip;
-					this.ndoquery.Prefetches = this.prefetches;
-				}
-                return this.ndoquery;
+				return CreateNDOQuery();
 			}
 		}
 
@@ -334,14 +327,36 @@ namespace NDO.Linq
 			this.take = take;
 			return this;
 		}
-		
+
+		/// <summary>
+		/// Supports Take and Skip
+		/// </summary>
+		/// <param name="take"></param>
+		/// <returns></returns>
+		public VirtualTable<T> Take( int take )
+		{
+			this.take = take;
+			return this;
+		}
+
+		/// <summary>
+		/// Supports Take and Skip
+		/// </summary>
+		/// <param name="skip"></param>
+		/// <returns></returns>
+		public VirtualTable<T> Skip( int skip )
+		{
+			this.skip = skip;
+			return this;
+		}
+
 		/// <summary>
 		/// Converts the VirtualTable to a List.
 		/// </summary>
 		/// <remarks>This operator makes sure that the results of the Linq query are usable as List classes.</remarks>
 		/// <param name="table"></param>
 		/// <returns></returns>
-        public static implicit operator List<T>(VirtualTable<T> table)
+		public static implicit operator List<T>(VirtualTable<T> table)
         {
             return table.ResultTable;
         }
