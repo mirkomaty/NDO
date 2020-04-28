@@ -105,27 +105,52 @@ namespace QueryTests
 		}
 
 		[Test]
-		public void SkipTakeParametersDontChangeTheCoreQuery()
+		[TestCase( true )]
+		[TestCase( false )]
+		public void SkipTakeParametersDontChangeTheCoreQuery(bool asc)
 		{
 			NDOQuery<Mitarbeiter> q = new NDOQuery<Mitarbeiter>( pm, "vorname = {0}" );
-			q.Orderings.Add( new AscendingOrder( "vorname" ) );
+			if (asc)
+				q.Orderings.Add( new AscendingOrder( "vorname" ) );
+			else
+				q.Orderings.Add( new DescendingOrder( "vorname" ) );
 			q.Take = 10;
-			Assert.AreEqual( $"SELECT {this.mitarbeiterFields} FROM [Mitarbeiter] WHERE [Mitarbeiter].[Vorname] = {{0}} ORDER BY [Mitarbeiter].[Vorname] OFFSET 0 ROWS FETCH NEXT 10 ROWS ONLY", q.GeneratedQuery );
+			var desc = asc ? "" : "DESC ";
+			Assert.AreEqual( $"SELECT {this.mitarbeiterFields} FROM [Mitarbeiter] WHERE [Mitarbeiter].[Vorname] = {{0}} ORDER BY [Mitarbeiter].[Vorname] {desc}OFFSET 0 ROWS FETCH NEXT 10 ROWS ONLY", q.GeneratedQuery );
 			q.Skip = 10;
 			q.Take = 10;
-			Assert.AreEqual( $"SELECT {this.mitarbeiterFields} FROM [Mitarbeiter] WHERE [Mitarbeiter].[Vorname] = {{0}} ORDER BY [Mitarbeiter].[Vorname] OFFSET 10 ROWS FETCH NEXT 10 ROWS ONLY", q.GeneratedQuery );
+			Assert.AreEqual( $"SELECT {this.mitarbeiterFields} FROM [Mitarbeiter] WHERE [Mitarbeiter].[Vorname] = {{0}} ORDER BY [Mitarbeiter].[Vorname] {desc}OFFSET 10 ROWS FETCH NEXT 10 ROWS ONLY", q.GeneratedQuery );
 		}
 
 		[Test]
-		public void ParametersChangesDontChangeTheCoreQuery()
+		public void MixedOrderingsWork()
 		{
 			NDOQuery<Mitarbeiter> q = new NDOQuery<Mitarbeiter>( pm, "vorname = {0}" );
 			q.Orderings.Add( new AscendingOrder( "vorname" ) );
+			q.Orderings.Add( new DescendingOrder( "nachname" ) );
+			q.Take = 10;
+			Assert.AreEqual( $"SELECT {this.mitarbeiterFields} FROM [Mitarbeiter] WHERE [Mitarbeiter].[Vorname] = {{0}} ORDER BY [Mitarbeiter].[Vorname] ASC, [Mitarbeiter].[Nachname] DESC OFFSET 0 ROWS FETCH NEXT 10 ROWS ONLY", q.GeneratedQuery );
+			q.Skip = 10;
+			q.Take = 10;
+			Assert.AreEqual( $"SELECT {this.mitarbeiterFields} FROM [Mitarbeiter] WHERE [Mitarbeiter].[Vorname] = {{0}} ORDER BY [Mitarbeiter].[Vorname] ASC, [Mitarbeiter].[Nachname] DESC OFFSET 10 ROWS FETCH NEXT 10 ROWS ONLY", q.GeneratedQuery );
+		}
+
+		[Test]
+		[TestCase( true )]
+		[TestCase( false )]
+		public void ParametersChangesDontChangeTheCoreQuery(bool asc)
+		{
+			NDOQuery<Mitarbeiter> q = new NDOQuery<Mitarbeiter>( pm, "vorname = {0}" );
+			if (asc)
+				q.Orderings.Add( new AscendingOrder( "vorname" ) );
+			else
+				q.Orderings.Add( new DescendingOrder( "vorname" ) );
 			q.Take = 10;
 			q.Parameters.Add( "Mirko" );
-			Assert.AreEqual( $"SELECT {this.mitarbeiterFields} FROM [Mitarbeiter] WHERE [Mitarbeiter].[Vorname] = {{0}} ORDER BY [Mitarbeiter].[Vorname] OFFSET 0 ROWS FETCH NEXT 10 ROWS ONLY", q.GeneratedQuery );
+			var desc = asc ? "" : "DESC ";
+			Assert.AreEqual( $"SELECT {this.mitarbeiterFields} FROM [Mitarbeiter] WHERE [Mitarbeiter].[Vorname] = {{0}} ORDER BY [Mitarbeiter].[Vorname] {desc}OFFSET 0 ROWS FETCH NEXT 10 ROWS ONLY", q.GeneratedQuery );
 			q.Parameters.Add( "Hans" );
-			Assert.AreEqual( $"SELECT {this.mitarbeiterFields} FROM [Mitarbeiter] WHERE [Mitarbeiter].[Vorname] = {{0}} ORDER BY [Mitarbeiter].[Vorname] OFFSET 0 ROWS FETCH NEXT 10 ROWS ONLY", q.GeneratedQuery );
+			Assert.AreEqual( $"SELECT {this.mitarbeiterFields} FROM [Mitarbeiter] WHERE [Mitarbeiter].[Vorname] = {{0}} ORDER BY [Mitarbeiter].[Vorname] {desc}OFFSET 0 ROWS FETCH NEXT 10 ROWS ONLY", q.GeneratedQuery );
 		}
 
 		[Test]
