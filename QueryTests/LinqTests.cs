@@ -68,6 +68,21 @@ namespace QueryTests
 		}
 
 		[Test]
+		public void CheckIfOrderingsWork()
+		{
+			VirtualTable<Mitarbeiter> vt = pm.Objects<Mitarbeiter>();
+			vt.OrderBy( m => m.Vorname ).OrderByDescending( m => m.Nachname );
+			string qs = vt.QueryString;
+			Assert.AreEqual( $"SELECT {this.mitarbeiterFields} FROM [Mitarbeiter] ORDER BY [Mitarbeiter].[Vorname] ASC, [Mitarbeiter].[Nachname] DESC", qs );
+
+			vt = pm.Objects<Mitarbeiter>();
+			vt.OrderBy( m => m.Vorname ).OrderByDescending( m => m.Nachname );
+			vt.Take( 10 ).Skip( 12 );
+			qs = vt.QueryString;
+			Assert.AreEqual( $"SELECT {this.mitarbeiterFields} FROM [Mitarbeiter] ORDER BY [Mitarbeiter].[Vorname] ASC, [Mitarbeiter].[Nachname] DESC OFFSET 12 ROWS FETCH NEXT 10 ROWS ONLY", qs );
+		}
+
+		[Test]
 		public void LinqTestIfSimpleWhereClauseWorks()
 		{
 			VirtualTable<Mitarbeiter> vt = pm.Objects<Mitarbeiter>().Where( m => m.Vorname == "Mirko" );
@@ -119,6 +134,23 @@ namespace QueryTests
 			vt = pm.Objects<Mitarbeiter>().Where( m => m.Reisen[Any.Index].NDOObjectId == 5 );
 			Assert.AreEqual( String.Format( "SELECT {0} FROM [Mitarbeiter] INNER JOIN [Reise] ON [Mitarbeiter].[ID] = [Reise].[IDMitarbeiter] WHERE [Reise].[ID] = {{0}}", this.mitarbeiterJoinFields ), vt.QueryString );
 		}
+
+		[Test]
+		public void LinqCheckIfWhereClauseWithAnyIn1nRelationWorks()
+		{
+			VirtualTable<Mitarbeiter> vt = pm.Objects<Mitarbeiter>().Where( m => m.Reisen.Any(r=>r.Zweck == "ADC") );
+			string qs = vt.QueryString;
+			Assert.AreEqual( $"SELECT {this.mitarbeiterJoinFields} FROM [Mitarbeiter] INNER JOIN [Reise] ON [Mitarbeiter].[ID] = [Reise].[IDMitarbeiter] WHERE [Reise].[Zweck] = {{0}}", qs );
+			vt = pm.Objects<Mitarbeiter>().Where( m => m.Reisen.Any( r => r.Oid().Equals( 5 ) ) );
+			Assert.AreEqual( String.Format( "SELECT {0} FROM [Mitarbeiter] INNER JOIN [Reise] ON [Mitarbeiter].[ID] = [Reise].[IDMitarbeiter] WHERE [Reise].[ID] = {{0}}", this.mitarbeiterJoinFields ), vt.QueryString );
+			vt = pm.Objects<Mitarbeiter>().Where( m => m.Reisen.Any( r => r.Oid() == 5 ) );
+			Assert.AreEqual( String.Format( "SELECT {0} FROM [Mitarbeiter] INNER JOIN [Reise] ON [Mitarbeiter].[ID] = [Reise].[IDMitarbeiter] WHERE [Reise].[ID] = {{0}}", this.mitarbeiterJoinFields ), vt.QueryString );
+			vt = pm.Objects<Mitarbeiter>().Where( m => m.Reisen.Any( r => r.NDOObjectId.Equals( 5 ) ) );
+			Assert.AreEqual( String.Format( "SELECT {0} FROM [Mitarbeiter] INNER JOIN [Reise] ON [Mitarbeiter].[ID] = [Reise].[IDMitarbeiter] WHERE [Reise].[ID] = {{0}}", this.mitarbeiterJoinFields ), vt.QueryString );
+			vt = pm.Objects<Mitarbeiter>().Where( m => m.Reisen.Any( r => r.NDOObjectId == 5 ) );
+			Assert.AreEqual( String.Format( "SELECT {0} FROM [Mitarbeiter] INNER JOIN [Reise] ON [Mitarbeiter].[ID] = [Reise].[IDMitarbeiter] WHERE [Reise].[ID] = {{0}}", this.mitarbeiterJoinFields ), vt.QueryString );
+		}
+
 
 		[Test]
 		public void LinqCheckIfWhereClauseWith11RelationWorks()

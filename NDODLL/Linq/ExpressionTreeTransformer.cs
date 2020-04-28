@@ -355,7 +355,14 @@ namespace NDO.Linq
                     Transform(mcex.Arguments[1], false);
                     sb.Append(')');
                 }
-                else if (mname == "In")
+				else if (mname == "Any")
+				{
+					Transform( mcex.Arguments[0], false );
+					var exprx = mcex.Arguments[1];
+					sb.Append( '.' );
+					Transform( ( (LambdaExpression) mcex.Arguments[1] ).Body, false );
+				}
+				else if (mname == "In")
                 {
                     var arg = mcex.Arguments[1];
                     IEnumerable list = (IEnumerable)(Expression.Lambda(arg).Compile().DynamicInvoke());
@@ -406,7 +413,8 @@ namespace NDO.Linq
 					if (memberex.Expression.ToString() != this.baseParameterName)
 					{
 						Transform( memberex.Expression, false );
-						sb.Append( '.' );
+						if (sb[sb.Length - 1] != '.')
+							sb.Append( '.' );
 					}
 					sb.Append( "oid" );
 					return;
