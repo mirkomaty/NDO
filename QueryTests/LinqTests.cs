@@ -160,6 +160,13 @@ namespace QueryTests
 		}
 
 		[Test]
+		public void LinqCheckIfWhereClauseWithOidIn11RelationWorks()
+		{
+			VirtualTable<Mitarbeiter> vt = pm.Objects<Mitarbeiter>().Where( m => m.Adresse.Oid() == 5 );
+			Assert.AreEqual( $"SELECT {this.mitarbeiterFields} FROM [Mitarbeiter] WHERE [Mitarbeiter].[IDAdresse] = {{0}}", vt.QueryString );
+		}
+
+		[Test]
 		public void LinqCheckIfMultipleRelationsWork()
 		{
 			VirtualTable<Mitarbeiter> vt = pm.Objects<Mitarbeiter>().Where( m => m.Adresse.Lkz.Like( "D%" ) && m.Reisen[Any.Index].Länder[Any.Index].Name == "D" );
