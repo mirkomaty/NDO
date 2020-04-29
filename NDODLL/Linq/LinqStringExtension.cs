@@ -22,13 +22,12 @@
 
 using System;
 using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace NDO.Linq
 {
+	/// <summary>
+	/// This class helps formulating linq queries.
+	/// </summary>
 	public static class LinqStringExtension
 	{
 		/// <summary>
@@ -69,12 +68,13 @@ namespace NDO.Linq
 			return po.NDOObjectId;
 		}
 
-        /// <summary>
-        /// Helper Method for Linq queries.
-        /// </summary>
-        /// <param name="o"></param>
-        /// <returns></returns>
-        public static bool In(this object o, IEnumerable list)
+		/// <summary>
+		/// Helper Method for Linq queries.
+		/// </summary>
+		/// <param name="o"></param>
+		/// <param name="list"></param>
+		/// <returns></returns>
+		public static bool In(this object o, IEnumerable list)
         {
             // In Linq queries this code doesn't execute 
             foreach (object o2 in list)
@@ -145,6 +145,17 @@ namespace NDO.Linq
 		public static bool LowerThan( this string l, string r )
 		{
 			return String.Compare( l, r ) < 0;
+		}
+
+		/// <summary>
+		/// Overrides the Count() linq method to deliver the count using database queries.
+		/// </summary>
+		/// <typeparam name="T"></typeparam>
+		/// <param name="vt"></param>
+		/// <returns></returns>
+		public static int Count<T>(this VirtualTable<T> vt)
+		{
+			return vt.Count;
 		}
 	}
 }
