@@ -133,6 +133,8 @@ namespace QueryTests
 			Assert.AreEqual( String.Format( "SELECT {0} FROM [Mitarbeiter] INNER JOIN [Reise] ON [Mitarbeiter].[ID] = [Reise].[IDMitarbeiter] WHERE [Reise].[ID] = {{0}}", this.mitarbeiterJoinFields ), vt.QueryString );
 			vt = pm.Objects<Mitarbeiter>().Where( m => m.Reisen[Any.Index].NDOObjectId == 5 );
 			Assert.AreEqual( String.Format( "SELECT {0} FROM [Mitarbeiter] INNER JOIN [Reise] ON [Mitarbeiter].[ID] = [Reise].[IDMitarbeiter] WHERE [Reise].[ID] = {{0}}", this.mitarbeiterJoinFields ), vt.QueryString );
+			vt = pm.Objects<Mitarbeiter>().Where( m => m.Reisen[Any.Index].NDOObjectId.In(new int[] { 1, 2, 3 } ) );
+			Assert.AreEqual( String.Format( "SELECT {0} FROM [Mitarbeiter] INNER JOIN [Reise] ON [Mitarbeiter].[ID] = [Reise].[IDMitarbeiter] WHERE [Reise].[ID] IN (1, 2, 3)", this.mitarbeiterJoinFields ), vt.QueryString );
 		}
 
 		[Test]
@@ -149,6 +151,8 @@ namespace QueryTests
 			Assert.AreEqual( String.Format( "SELECT {0} FROM [Mitarbeiter] INNER JOIN [Reise] ON [Mitarbeiter].[ID] = [Reise].[IDMitarbeiter] WHERE [Reise].[ID] = {{0}}", this.mitarbeiterJoinFields ), vt.QueryString );
 			vt = pm.Objects<Mitarbeiter>().Where( m => m.Reisen.Any( r => r.NDOObjectId == 5 ) );
 			Assert.AreEqual( String.Format( "SELECT {0} FROM [Mitarbeiter] INNER JOIN [Reise] ON [Mitarbeiter].[ID] = [Reise].[IDMitarbeiter] WHERE [Reise].[ID] = {{0}}", this.mitarbeiterJoinFields ), vt.QueryString );
+			vt = pm.Objects<Mitarbeiter>().Where( m => m.Reisen.Any( r => r.NDOObjectId.In( new int[] { 1, 2, 3 } ) ) );
+			Assert.AreEqual( String.Format( "SELECT {0} FROM [Mitarbeiter] INNER JOIN [Reise] ON [Mitarbeiter].[ID] = [Reise].[IDMitarbeiter] WHERE [Reise].[ID] IN (1, 2, 3)", this.mitarbeiterJoinFields ), vt.QueryString );
 		}
 
 
@@ -164,6 +168,8 @@ namespace QueryTests
 		{
 			VirtualTable<Mitarbeiter> vt = pm.Objects<Mitarbeiter>().Where( m => m.Adresse.Oid() == 5 );
 			Assert.AreEqual( $"SELECT {this.mitarbeiterFields} FROM [Mitarbeiter] WHERE [Mitarbeiter].[IDAdresse] = {{0}}", vt.QueryString );
+			vt = pm.Objects<Mitarbeiter>().Where( m => m.Adresse.Oid().In(new[]{ 1, 2, 3 } ) );
+			Assert.AreEqual( $"SELECT {this.mitarbeiterFields} FROM [Mitarbeiter] WHERE [Mitarbeiter].[IDAdresse] IN (1, 2, 3)", vt.QueryString );
 		}
 
 		[Test]
@@ -468,6 +474,14 @@ namespace QueryTests
 			var qs = vt.QueryString; 
 			Assert.That( qs.IndexOf( "[Mitarbeiter].[Vorname] >= {0}" ) > -1 );
 			Assert.That( qs.IndexOf( "[Mitarbeiter].[Vorname] < {1}" ) > -1 );
+		}
+
+		[Test]
+		public void ComparismBetweenTwoFieldWorks()
+		{
+			var vt = pm.Objects<Mitarbeiter>().Where( m => m.Vorname.GreaterEqual( m.Nachname ) );
+			var qs = vt.QueryString;
+			Assert.That( qs.IndexOf( "[Mitarbeiter].[Vorname] >= [Mitarbeiter].[Nachname]" ) > -1 );
 		}
 
 		[Test]
