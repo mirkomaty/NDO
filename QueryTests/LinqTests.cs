@@ -12,6 +12,7 @@ using Reisekosten.Personal;
 using PureBusinessClasses;
 using NDO.SqlPersistenceHandling;
 using System.Diagnostics;
+using DataTypeTestClasses;
 
 namespace QueryTests
 {
@@ -409,6 +410,106 @@ namespace QueryTests
 		{
 			var vt = pm.Objects<Mitarbeiter>().Where( m => m.Adresse == null );
 			Assert.AreEqual( $"SELECT {this.mitarbeiterFields} FROM [Mitarbeiter] WHERE [Mitarbeiter].[IDAdresse] IS NULL", vt.QueryString );
+		}
+
+		[Test]
+		public void LinqTestIfIsNullWithStringWorks()
+		{
+			var sql = $"SELECT {this.mitarbeiterFields} FROM [Mitarbeiter] WHERE [Mitarbeiter].[Vorname] IS NULL";
+			var vt = pm.Objects<Mitarbeiter>().Where( m => m.Vorname == null );
+			Assert.AreEqual( sql, vt.QueryString );
+			vt = pm.Objects<Mitarbeiter>().Where( m => null == m.Vorname );
+			Assert.AreEqual( sql, vt.QueryString );
+			vt = pm.Objects<Mitarbeiter>().Where( m => m.Vorname.Equals(null) );
+			Assert.AreEqual( sql, vt.QueryString );
+		}
+
+		[Test]
+		public void LinqTestIfIsNotNullWithStringWorks()
+		{
+			var sql = $"SELECT {this.mitarbeiterFields} FROM [Mitarbeiter] WHERE [Mitarbeiter].[Vorname] IS NOT NULL";
+			var vt = pm.Objects<Mitarbeiter>().Where( m => m.Vorname != null );
+			Assert.AreEqual( sql, vt.QueryString );
+			vt = pm.Objects<Mitarbeiter>().Where( m => null != m.Vorname );
+			Assert.AreEqual( sql, vt.QueryString );
+			vt = pm.Objects<Mitarbeiter>().Where( m => !m.Vorname.Equals( null ) );
+			Assert.AreEqual( $"SELECT {this.mitarbeiterFields} FROM [Mitarbeiter] WHERE NOT [Mitarbeiter].[Vorname] IS NULL", vt.QueryString );
+		}
+
+		[Test]
+		public void LinqTestIfIsNullWithGuidWorks()
+		{
+			// The query will fetch for DataContainerDerived objects, too. We need to define the Accessor on-the-fly for this class, since
+			// the accessor isn't defined in the original mapping file.
+			// We also test for "StartsWith", because the query contains additional text, which doesn't matter here.
+			pm.NDOMapping.FindClass( typeof( DataContainerDerived ) ).FindField( "guidVar" ).AccessorName = "GuidVar";
+			var fields = new SqlColumnListGenerator( pm.NDOMapping.FindClass( typeof( DataContainer ) ) ).SelectList;
+			var sql = $"SELECT {fields} FROM [DataContainer] WHERE [DataContainer].[GuidVar] IS NULL";
+			var vt = pm.Objects<DataContainer>().Where( m => m.GuidVar == null );
+			Assert.That( vt.QueryString.StartsWith( sql) );
+			vt = pm.Objects<DataContainer>().Where( m => m.GuidVar == Guid.Empty );
+			Assert.That( vt.QueryString.StartsWith( sql ) );
+			vt = pm.Objects<DataContainer>().Where( m => Guid.Empty == m.GuidVar );
+			Assert.That( vt.QueryString.StartsWith( sql ) );
+			vt = pm.Objects<DataContainer>().Where( m => m.GuidVar.Equals(Guid.Empty) );
+			Assert.That( vt.QueryString.StartsWith( sql ) );
+		}
+
+		[Test]
+		public void LinqTestIfIsNotNullWithGuidWorks()
+		{
+			// The query will fetch for DataContainerDerived objects, too. We need to define the Accessor on-the-fly for this class, since
+			// the accessor isn't defined in the original mapping file.
+			// We also test for "StartsWith", because the query contains additional text, which doesn't matter here.
+			pm.NDOMapping.FindClass( typeof( DataContainerDerived ) ).FindField( "guidVar" ).AccessorName = "GuidVar";
+			var fields = new SqlColumnListGenerator( pm.NDOMapping.FindClass( typeof( DataContainer ) ) ).SelectList;
+			var sql = $"SELECT {fields} FROM [DataContainer] WHERE [DataContainer].[GuidVar] IS NOT NULL";
+			var vt = pm.Objects<DataContainer>().Where( m => m.GuidVar != null );
+			Assert.That( vt.QueryString.StartsWith( sql ) );
+			vt = pm.Objects<DataContainer>().Where( m => m.GuidVar != Guid.Empty );
+			Assert.That( vt.QueryString.StartsWith( sql ) );
+			vt = pm.Objects<DataContainer>().Where( m => Guid.Empty != m.GuidVar );
+			Assert.That( vt.QueryString.StartsWith( sql ) );
+			vt = pm.Objects<DataContainer>().Where( m => !m.GuidVar.Equals( Guid.Empty ) );
+			Assert.That( vt.QueryString.StartsWith( $"SELECT {fields} FROM [DataContainer] WHERE NOT [DataContainer].[GuidVar] IS NULL" ) );
+		}
+
+		[Test]
+		public void LinqTestIfIsNullWithDateTimeWorks()
+		{
+			// The query will fetch for DataContainerDerived objects, too. We need to define the Accessor on-the-fly for this class, since
+			// the accessor isn't defined in the original mapping file.
+			// We also test for "StartsWith", because the query contains additional text, which doesn't matter here.
+			pm.NDOMapping.FindClass( typeof( DataContainerDerived ) ).FindField( "dateTimeVar" ).AccessorName = "DateTimeVar";
+			var fields = new SqlColumnListGenerator( pm.NDOMapping.FindClass( typeof( DataContainer ) ) ).SelectList;
+			var sql = $"SELECT {fields} FROM [DataContainer] WHERE [DataContainer].[DateTimeVar] IS NULL";
+			var vt = pm.Objects<DataContainer>().Where( m => m.DateTimeVar == null );
+			Assert.That( vt.QueryString.StartsWith( sql ) );
+			vt = pm.Objects<DataContainer>().Where( m => m.DateTimeVar == DateTime.MinValue );
+			Assert.That( vt.QueryString.StartsWith( sql ) );
+			vt = pm.Objects<DataContainer>().Where( m => DateTime.MinValue == m.DateTimeVar );
+			Assert.That( vt.QueryString.StartsWith( sql ) );
+			vt = pm.Objects<DataContainer>().Where( m => m.DateTimeVar.Equals(DateTime.MinValue) );
+			Assert.That( vt.QueryString.StartsWith( sql ) );
+		}
+
+		[Test]
+		public void LinqTestIfIsNotNullWithDateTimeWorks()
+		{
+			// The query will fetch for DataContainerDerived objects, too. We need to define the Accessor on-the-fly for this class, since
+			// the accessor isn't defined in the original mapping file.
+			// We also test for "StartsWith", because the query contains additional text, which doesn't matter here.
+			pm.NDOMapping.FindClass( typeof( DataContainerDerived ) ).FindField( "dateTimeVar" ).AccessorName = "DateTimeVar";
+			var fields = new SqlColumnListGenerator( pm.NDOMapping.FindClass( typeof( DataContainer ) ) ).SelectList;
+			var sql = $"SELECT {fields} FROM [DataContainer] WHERE [DataContainer].[DateTimeVar] IS NOT NULL";
+			var vt = pm.Objects<DataContainer>().Where( m => m.DateTimeVar != null );
+			Assert.That( vt.QueryString.StartsWith( sql ) );
+			vt = pm.Objects<DataContainer>().Where( m => m.DateTimeVar != DateTime.MinValue );
+			Assert.That( vt.QueryString.StartsWith( sql ) );
+			vt = pm.Objects<DataContainer>().Where( m => DateTime.MinValue != m.DateTimeVar );
+			Assert.That( vt.QueryString.StartsWith( sql ) );
+			vt = pm.Objects<DataContainer>().Where( m => !m.DateTimeVar.Equals( DateTime.MinValue ) );
+			Assert.That( vt.QueryString.StartsWith( $"SELECT {fields} FROM [DataContainer] WHERE NOT [DataContainer].[DateTimeVar] IS NULL" ) );
 		}
 
 		[Test]

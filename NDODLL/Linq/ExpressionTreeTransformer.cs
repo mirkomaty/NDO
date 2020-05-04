@@ -106,18 +106,60 @@ namespace NDO.Linq
 
 		bool IsNull( Expression ex )
 		{
-			return ex is ConstantExpression ce && ce.Value == null;
+			if (ex is ConstantExpression ce)
+			{
+				if (ce.Value == null)
+					return true;
+			}
+
+			if (ex.NodeType == ExpressionType.MemberAccess)
+			{
+				var me = ex as MemberExpression;
+				if (me != null)
+				{
+					if (me.Type == typeof( DateTime ))
+					{
+						try
+						{
+							var d = Expression.Lambda( ex ).Compile();
+							var dt = (DateTime)d.DynamicInvoke();
+							if (dt == DateTime.MinValue)
+								return true;
+						}
+						catch { }
+					}
+					else if (me.Type == typeof( Guid ))
+					{
+						try
+						{
+							var d = Expression.Lambda( ex ).Compile();
+							var g = (Guid)d.DynamicInvoke();
+							if (g == Guid.Empty)
+								return true;
+						}
+						catch { }
+					}
+				}
+			}
+
+			return false;
 		}
 
-		void TransformBinaryOperator( ExpressionType exprType, Expression right )
+		void TransformBinaryOperator( ExpressionType exprType, ref Expression right )
 		{
 			sb.Append( ' ' );
 			if (IsNull( right ))
 			{
 				if (exprType == ExpressionType.NotEqual)
+				{
 					sb.Append( "IS NOT" );
+					right = Expression.Constant(null);
+				}
 				else if (exprType == ExpressionType.Equal)
+				{
 					sb.Append( "IS" );
+					right = Expression.Constant( null );
+				}
 				else
 				{
 					OperatorEntry oe = FindOperator( exprType );
@@ -177,6 +219,13 @@ namespace NDO.Linq
 		bool IsReversedExpression( List<Expression> arguments )
 		{
 			return arguments.Count == 2 && arguments[0] is ConstantExpression && !( arguments[1] is ConstantExpression );
+		}
+
+		void TransformEquality(Expression ex1, Expression ex2)
+		{
+			Transform( ex1 );
+			TransformBinaryOperator( ExpressionType.Equal, ref ex2 );
+			Transform( ex2 );
 		}
 
 		bool IsPropertyOfBaseExpression( Expression ex )
@@ -263,7 +312,7 @@ namespace NDO.Linq
 				Transform( left );
 				if (leftbracket)
 					sb.Append( ')' );
-				TransformBinaryOperator( ex.NodeType, right );
+				TransformBinaryOperator( ex.NodeType, ref right );
 				if (rightbracket)
 					sb.Append( '(' );
 				Transform( right );
@@ -284,15 +333,11 @@ namespace NDO.Linq
 					{
 						FlipArguments( arguments );
 					}
-					Transform( arguments[0] );
-					sb.Append( " = " );
-					Transform( arguments[1] );
+					TransformEquality( arguments[0], arguments[1] );
 				}
 				else if (mname == "Equals")
 				{
-					Transform( mcex.Object );
-					sb.Append( " = " );
-					Transform( mcex.Arguments[0] );
+					TransformEquality( mcex.Object, arguments[0] );
 				}
 				else if (mname == "Like")
 				{
@@ -495,10 +540,17 @@ namespace NDO.Linq
 
 		}
 
+		private void TransformEquality( List<Expression> arguments )
+		{
+			Transform( arguments[0] );
+			sb.Append( " = " );
+			Transform( arguments[1] );
+		}
+
 		private void TransformOidIndex( Expression ex )
 		{
 			var ce = ex as ConstantExpression;
-			if (ce is null)
+			if (ce == null)
 				throw new Exception( "Oid index expression must be a ConstantExpression" );
 			if (!( ce.Value is System.Int32 ))
 				throw new Exception( "Oid index expression must be an Int32" );
