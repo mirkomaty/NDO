@@ -22,6 +22,8 @@
 
 using System;
 using System.Collections;
+using System.Linq;
+using System.Linq.Expressions;
 
 namespace NDO.Linq
 {
@@ -156,6 +158,22 @@ namespace NDO.Linq
 		public static int Count<T>(this VirtualTable<T> vt)
 		{
 			return vt.Count;
+		}
+
+		/// <summary>
+		/// Combines two partial expressions with a binary operator.
+		/// </summary>
+		/// <typeparam name="T">The type of the query result</typeparam>
+		/// <param name="ex1">First expression to be combined</param>
+		/// <param name="ex2">Second expression to be combined</param>
+		/// <param name="expressionType">Operation type. Use And, Or, AndAlso or OrElse</param>
+		/// <returns></returns>
+		public static Expression<Func<T,bool>>Combine<T>(this Expression<Func<T, bool>> ex1, Expression<Func<T, bool>> ex2, ExpressionType expressionType )
+		{
+			var lambdaParameter = ex1.Parameters[0];
+			var newEx2 = new ReplaceVisitor( ex2.Parameters[0], lambdaParameter ).VisitAndConvert( ex2, String.Empty );
+			var combined = Expression.Lambda<Func<T,bool>>( Expression.MakeBinary(expressionType, ex1.Body, newEx2.Body ), lambdaParameter);
+			return combined;
 		}
 	}
 }

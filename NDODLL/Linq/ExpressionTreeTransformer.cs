@@ -88,15 +88,6 @@ namespace NDO.Linq
 
 		public string Transform()
 		{
-			// If an expression consists only of a boolean expression like in o=>o.BooleanProperty
-			// we alter the expression to an Equal expression like o=>o.BooleanProperty == true.
-			// SqlServer syntax needs a binary expression which reads like WHERE BooleanProperty = 1.
-			// Note that this solution doesn't cover all cases of unary boolean expressions like o=>o.BooleanProperty && o.Name == "Max".
-			if (this.baseExpression.Body.NodeType == ExpressionType.MemberAccess && this.baseExpression.ReturnType == typeof( bool ))
-			{
-				this.baseExpression = Expression.Lambda( Expression.Equal( baseExpression.Body, Expression.Constant( true ) ), baseExpression.Parameters );
-			}
-
 			baseParameterName = baseExpression.Parameters[0].Name;
 			baseLeftSide = baseExpression.Parameters[0];
 			baseParameterLength = baseParameterName.Length + 1;
@@ -520,22 +511,25 @@ namespace NDO.Linq
 					if (ex.Type == typeof( bool ))
 					{
 						var top = expressionStack.Pop();
-						bool hasBeenTransformed = false;
+						bool transformIt = expressionStack.Count == 0;  // The boolean expression is the top
 						if (expressionStack.Count > 0)
 						{
 							var parent = expressionStack.Peek();
 							if (parent.NodeType != ExpressionType.Equal && parent.NodeType != ExpressionType.NotEqual)
 							{
-								// A Boolean Expression, which is not part of an == or != expression,
-								// must be unary. Since Sql Server doesn't support unary boolean expressions, we add an == Expression which compares with 1.
+								// A Boolean Expression, which is not part of an Equals or NotEquals expression,
+								// must be unary. Since Sql Server doesn't support unary boolean expressions, we add an Equals Expression which compares with 1.
 								// Fortunately this works with other databases, too.
-								sb.Append( memberex.Member.Name );
-								sb.Append( " = 1" );
-								hasBeenTransformed = true;
+								transformIt = true;
 							}
 						}
+						if (transformIt)
+						{
+							sb.Append( memberex.Member.Name );
+							sb.Append( " = 1" );
+						}
 						expressionStack.Push( top );
-						if (hasBeenTransformed)
+						if (transformIt)
 							return;
 						//-------
 					}

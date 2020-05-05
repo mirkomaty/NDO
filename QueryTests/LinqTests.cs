@@ -13,6 +13,7 @@ using PureBusinessClasses;
 using NDO.SqlPersistenceHandling;
 using System.Diagnostics;
 using DataTypeTestClasses;
+using System.Linq.Expressions;
 
 namespace QueryTests
 {
@@ -431,6 +432,18 @@ namespace QueryTests
 		}
 
 		[Test]
+		public void CanCombineExpressions()
+		{
+			var sql = $"SELECT {this.mitarbeiterFields} FROM [Mitarbeiter] WHERE [Mitarbeiter].[Vorname] = {{0}} AND [Mitarbeiter].[Nachname] = {{1}}";
+			Expression<Func<Mitarbeiter,bool>> expr1 = m=>m.Vorname == "Mirko";
+			Expression<Func<Mitarbeiter,bool>> expr2 = m=>m.Nachname == "Matytschak";
+			var combined = expr1.Combine(expr2, System.Linq.Expressions.ExpressionType.And);
+			var vt = pm.Objects<Mitarbeiter>().Where( combined );
+			Assert.AreEqual( sql, vt.QueryString );
+		}
+
+
+		[Test]
 		public void LinqTestIfIsNotNullWithStringWorks()
 		{
 			var sql = $"SELECT {this.mitarbeiterFields} FROM [Mitarbeiter] WHERE [Mitarbeiter].[Vorname] IS NOT NULL";
@@ -593,6 +606,15 @@ namespace QueryTests
 			// We compare with String.Empty two times. The ExpressionTreeTransformer recognizes the equality and 
 			// creates only one parameter.
 		}
+
+		[Test]
+		public void CanFetchForNotStringIsNullOrEmpty()
+		{
+			var vt = pm.Objects<Mitarbeiter>().Where( m => m.Vorname != null && m.Vorname != String.Empty );
+			var qs = vt.QueryString;
+			Assert.AreEqual( $"SELECT {this.mitarbeiterFields} FROM [Mitarbeiter] WHERE [Mitarbeiter].[Vorname] IS NOT NULL AND [Mitarbeiter].[Vorname] <> {{0}}", vt.QueryString );
+		}
+
 
 		[Test]
 		public void ComparismBetweenTwoFieldWorks()
