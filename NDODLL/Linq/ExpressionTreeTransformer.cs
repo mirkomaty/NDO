@@ -25,6 +25,7 @@ using System.Collections.Generic;
 using System.Collections;
 using System.Text;
 using System.Linq.Expressions;
+using System.Linq;
 
 namespace NDO.Linq
 {
@@ -70,11 +71,12 @@ namespace NDO.Linq
 		LambdaExpression baseExpression;
 		Expression baseLeftSide;
 		StringBuilder sb;
-		ArrayList parameters;
+		List<object> parameters;
 		string baseParameterName;
 		int baseParameterLength;
+		Stack<Expression> expressionStack;
 
-		public ArrayList Parameters
+		public IEnumerable<object> Parameters
 		{
 			get { return parameters; }
 		}
@@ -98,8 +100,9 @@ namespace NDO.Linq
 			baseParameterName = baseExpression.Parameters[0].Name;
 			baseLeftSide = baseExpression.Parameters[0];
 			baseParameterLength = baseParameterName.Length + 1;
+			this.expressionStack = new Stack<Expression>();
 			sb = new StringBuilder();
-			parameters = new ArrayList();
+			parameters = new List<object>();
 			Transform( baseExpression.Body );
 			return sb.ToString();
 		}
@@ -190,10 +193,20 @@ namespace NDO.Linq
 
 		void AddParameter( object value )
 		{
-			sb.Append( '{' );
-			sb.Append( parameters.Count.ToString() );
-			sb.Append( '}' );
-			parameters.Add( value );
+			var ix = parameters.FindIndex(p => p.Equals(value));
+			if (ix > -1)
+			{
+				sb.Append( '{' );
+				sb.Append( ix.ToString() );
+				sb.Append( '}' );
+			}
+			else
+			{
+				sb.Append( '{' );
+				sb.Append( parameters.Count.ToString() );
+				sb.Append( '}' );
+				parameters.Add( value );
+			}
 		}
 
 		BinaryExpression FlipExpression( BinaryExpression binex )
@@ -240,304 +253,337 @@ namespace NDO.Linq
 
 		void Transform( Expression ex )
 		{
-			if (ex == this.baseLeftSide)
-				return;
-			  //-------
-
-			string exStr = ex.ToString();
-			if (exStr == "null")
+			expressionStack.Push( ex );  // This helps determining parent expressions
+			try
 			{
-				sb.Append( "NULL" );
-				return;
-			  //-------
-			}
+				if (ex == this.baseLeftSide)
+					return;
+				  //-------
 
-			if (ex.NodeType == ExpressionType.MemberAccess )
-			{
-				// We try to compile the expression.
-				// If it can be compiled, we have a value,
-				// which should be added as a parameter.
-				// We are safe to use MemberAccess nodes only,
-				// because local variables will be wrapped in
-				// display classes and accessed as members of 
-				// these classes. All other cases are anyway 
-				// members of arbitrary types.
-				try
+				string exStr = ex.ToString();
+				if (exStr == "null")
 				{
-					var d = Expression.Lambda( ex ).Compile();
-					AddParameter( d.DynamicInvoke() );
+					sb.Append( "NULL" );
 					return;
 				  //-------
 				}
-				catch
-				{  // Can't be compiled, so pass on.
-				}
-			}
 
-			BinaryExpression binex = ex as BinaryExpression;
-			if (binex != null)
-			{
-				Expression left = binex.Left;
-				Expression right = binex.Right;
-				if (left.NodeType == ExpressionType.Convert)
-					left = ( (UnaryExpression) left ).Operand;
-				if (right.NodeType == ExpressionType.Convert)
-					right = ( (UnaryExpression) right ).Operand;
-
-				if (!IsPropertyOfBaseExpression( binex.Left ) && IsPropertyOfBaseExpression( binex.Right ))
+				if (ex.NodeType == ExpressionType.MemberAccess )
 				{
-					Transform( FlipExpression( binex ) );
+					// We try to compile the expression.
+					// If it can be compiled, we have a value,
+					// which should be added as a parameter.
+					// We are safe to examine MemberAccess nodes only,
+					// because local variables will be wrapped in
+					// display classes and accessed as members of 
+					// these classes. All other cases are anyway 
+					// members of arbitrary types (like String.Empty).
+					try
+					{
+						var d = Expression.Lambda( ex ).Compile();
+						AddParameter( d.DynamicInvoke() );
+						return;
+					  //-------
+					}
+					catch
+					{  // Can't be compiled, so pass on.
+					}
+				}
+
+				BinaryExpression binex = ex as BinaryExpression;
+				if (binex != null)
+				{
+					Expression left = binex.Left;
+					Expression right = binex.Right;
+					if (left.NodeType == ExpressionType.Convert)
+						left = ( (UnaryExpression) left ).Operand;
+					if (right.NodeType == ExpressionType.Convert)
+						right = ( (UnaryExpression) right ).Operand;
+
+					if (!IsPropertyOfBaseExpression( binex.Left ) && IsPropertyOfBaseExpression( binex.Right ))
+					{
+						Transform( FlipExpression( binex ) );
+						return;
+						//-------
+					}
+
+					int ownPrecedence = GetPrecedence(binex.NodeType);
+					int childPrecedence = 0;
+					BinaryExpression childBinex = binex.Left as BinaryExpression;
+					bool leftbracket = false;
+					if (childBinex != null)
+					{
+						childPrecedence = Math.Max( childPrecedence, GetPrecedence( childBinex.NodeType ) );
+						leftbracket = childPrecedence > ownPrecedence;
+					}
+					childBinex = binex.Right as BinaryExpression;
+					bool rightbracket = false;
+					if (childBinex != null)
+					{
+						childPrecedence = Math.Max( childPrecedence, GetPrecedence( childBinex.NodeType ) );
+						rightbracket = childPrecedence > ownPrecedence;
+					}
+					if (leftbracket)
+						sb.Append( '(' );
+					Transform( left );
+					if (leftbracket)
+						sb.Append( ')' );
+					TransformBinaryOperator( ex.NodeType, ref right );
+					if (rightbracket)
+						sb.Append( '(' );
+					Transform( right );
+					if (rightbracket)
+						sb.Append( ')' );
 					return;
-				  //-------
+					//-------
 				}
-				
-				int ownPrecedence = GetPrecedence(binex.NodeType);
-				int childPrecedence = 0;
-				BinaryExpression childBinex = binex.Left as BinaryExpression;
-				bool leftbracket = false;
-				if (childBinex != null)
-				{
-					childPrecedence = Math.Max( childPrecedence, GetPrecedence( childBinex.NodeType ) );
-					leftbracket = childPrecedence > ownPrecedence;
-				}
-				childBinex = binex.Right as BinaryExpression;
-				bool rightbracket = false;
-				if (childBinex != null)
-				{
-					childPrecedence = Math.Max( childPrecedence, GetPrecedence( childBinex.NodeType ) );
-					rightbracket = childPrecedence > ownPrecedence;
-				}
-				if (leftbracket)
-					sb.Append( '(' );
-				Transform( left );
-				if (leftbracket)
-					sb.Append( ')' );
-				TransformBinaryOperator( ex.NodeType, ref right );
-				if (rightbracket)
-					sb.Append( '(' );
-				Transform( right );
-				if (rightbracket)
-					sb.Append( ')' );
-				return;
-				//-------
-			}
 
-			MethodCallExpression mcex = ex as MethodCallExpression;
-			if (mcex != null)
-			{
-				var arguments = new List<Expression>(mcex.Arguments);
-				string mname = mcex.Method.Name;
-				if (mname == "op_Equality")
+				MethodCallExpression mcex = ex as MethodCallExpression;
+				if (mcex != null)
 				{
-					if (IsReversedExpression( arguments ))
+					var arguments = new List<Expression>(mcex.Arguments);
+					string mname = mcex.Method.Name;
+					if (mname == "op_Equality")
 					{
-						FlipArguments( arguments );
+						if (IsReversedExpression( arguments ))
+						{
+							FlipArguments( arguments );
+						}
+						TransformEquality( arguments[0], arguments[1] );
 					}
-					TransformEquality( arguments[0], arguments[1] );
-				}
-				else if (mname == "Equals")
-				{
-					TransformEquality( mcex.Object, arguments[0] );
-				}
-				else if (mname == "Like")
-				{
-					if (IsReversedExpression( arguments ))
+					else if (mname == "Equals")
 					{
-						FlipArguments( arguments );
+						TransformEquality( mcex.Object, arguments[0] );
 					}
-					Transform( arguments[0] );
-					sb.Append( " LIKE " );
-					Transform( arguments[1] );
-				}
-				else if (mname == "GreaterEqual")
-				{
-					string op = " >= ";
-					if (IsReversedExpression( arguments ))
+					else if (mname == "Like")
 					{
-						FlipArguments( arguments );
-						op = " <= ";
+						if (IsReversedExpression( arguments ))
+						{
+							FlipArguments( arguments );
+						}
+						Transform( arguments[0] );
+						sb.Append( " LIKE " );
+						Transform( arguments[1] );
 					}
-					Transform( arguments[0] );
-					sb.Append( op );
-					Transform( arguments[1] );
-				}
-				else if (mname == "LowerEqual")
-				{
-					string op = " <= ";
-					if (IsReversedExpression( arguments ))
+					else if (mname == "GreaterEqual")
 					{
-						FlipArguments( arguments );
-						op = " >= ";
+						string op = " >= ";
+						if (IsReversedExpression( arguments ))
+						{
+							FlipArguments( arguments );
+							op = " <= ";
+						}
+						Transform( arguments[0] );
+						sb.Append( op );
+						Transform( arguments[1] );
 					}
-					Transform( arguments[0] );
-					sb.Append( op );
-					Transform( arguments[1] );
-				}
-				else if (mname == "GreaterThan")
-				{
-					string op = " > ";
-					if (IsReversedExpression( arguments ))
+					else if (mname == "LowerEqual")
 					{
-						FlipArguments( arguments );
-						op = " < ";
+						string op = " <= ";
+						if (IsReversedExpression( arguments ))
+						{
+							FlipArguments( arguments );
+							op = " >= ";
+						}
+						Transform( arguments[0] );
+						sb.Append( op );
+						Transform( arguments[1] );
 					}
-					Transform( arguments[0] );
-					sb.Append( op );
-					Transform( arguments[1] );
-				}
-				else if (mname == "LowerThan")
-				{
-					string op = " < ";
-					if (IsReversedExpression( arguments ))
+					else if (mname == "GreaterThan")
 					{
-						FlipArguments( arguments );
-						op = " > ";
+						string op = " > ";
+						if (IsReversedExpression( arguments ))
+						{
+							FlipArguments( arguments );
+							op = " < ";
+						}
+						Transform( arguments[0] );
+						sb.Append( op );
+						Transform( arguments[1] );
 					}
-					Transform( arguments[0] );
-					sb.Append( op );
-					Transform( arguments[1] );
-				}
-				else if (mname == "Between")
-				{
-					Transform( mcex.Arguments[0] );
-					sb.Append( " BETWEEN " );
-					Transform( mcex.Arguments[1] );
-					sb.Append( " AND " );
-					Transform( mcex.Arguments[2] );
-				}
-				else if (mname == "get_Item")
-				{
-					string argStr = mcex.Arguments[0].ToString();
-					if (argStr == "Any.Index" || "Index.Any" == argStr)
+					else if (mname == "LowerThan")
 					{
-						Transform( mcex.Object );
-						return;
-						//-------
+						string op = " < ";
+						if (IsReversedExpression( arguments ))
+						{
+							FlipArguments( arguments );
+							op = " > ";
+						}
+						Transform( arguments[0] );
+						sb.Append( op );
+						Transform( arguments[1] );
 					}
-					Transform( mcex.Object );
-					if (mcex.Object.Type.FullName == "NDO.ObjectId")
-					{
-						TransformOidIndex( mcex.Arguments[0] );
-						return;
-						//-------
-					}
-					sb.Append( '(' );
-					Transform( mcex.Arguments[0] );
-					sb.Append( ')' );
-				}
-				else if (mname == "ElementAt")
-				{
-					string argStr = mcex.Arguments[1].ToString();
-					if (argStr == "Any.Index" || "Index.Any" == argStr)
+					else if (mname == "Between")
 					{
 						Transform( mcex.Arguments[0] );
+						sb.Append( " BETWEEN " );
+						Transform( mcex.Arguments[1] );
+						sb.Append( " AND " );
+						Transform( mcex.Arguments[2] );
+					}
+					else if (mname == "get_Item")
+					{
+						string argStr = mcex.Arguments[0].ToString();
+						if (argStr == "Any.Index" || "Index.Any" == argStr)
+						{
+							Transform( mcex.Object );
+							return;
+							//-------
+						}
+						Transform( mcex.Object );
+						if (mcex.Object.Type.FullName == "NDO.ObjectId")
+						{
+							TransformOidIndex( mcex.Arguments[0] );
+							return;
+							//-------
+						}
+						sb.Append( '(' );
+						Transform( mcex.Arguments[0] );
+						sb.Append( ')' );
+					}
+					else if (mname == "ElementAt")
+					{
+						string argStr = mcex.Arguments[1].ToString();
+						if (argStr == "Any.Index" || "Index.Any" == argStr)
+						{
+							Transform( mcex.Arguments[0] );
+							return;
+							//-------
+						}
+						Transform( mcex.Arguments[0] );
+						sb.Append( '(' );
+						Transform( mcex.Arguments[1] );
+						sb.Append( ')' );
+					}
+					else if (mname == "Any")
+					{
+						Transform( mcex.Arguments[0] );
+						var exprx = mcex.Arguments[1];
+						if (sb[sb.Length - 1] != '.')
+							sb.Append( '.' );
+						Transform( ( (LambdaExpression) mcex.Arguments[1] ).Body );
+					}
+					else if (mname == "In")
+					{
+						var arg = mcex.Arguments[1];
+						IEnumerable list = (IEnumerable)(Expression.Lambda(arg).Compile().DynamicInvoke());
+						Transform( mcex.Arguments[0] );
+						sb.Append( " IN (" );
+						var en = list.GetEnumerator();
+						en.MoveNext();
+						bool isString = en.Current.GetType() == typeof(string);
+						foreach (object obj in list)
+						{
+							if (isString)
+								sb.Append( '\'' );
+							sb.Append( obj );
+							if (isString)
+								sb.Append( '\'' );
+							sb.Append( ',' );
+						}
+						sb.Length -= 1;
+						sb.Append( ')' );
+					}
+					else if (mname == "Oid")
+					{
+						var sbLength = sb.Length;
+						Transform( mcex.Arguments[0] );
+						if (sb.Length > sbLength)
+							sb.Append( ".oid" );
+						else
+							sb.Append( "oid" );
+						if (mcex.Arguments.Count > 1)
+						{
+							TransformOidIndex( mcex.Arguments[1] );
+						}
+					}
+					else
+						throw new Exception( "Method call not supported: " + mname );
+					return;
+					//-------
+				}
+
+				if (ex.NodeType == ExpressionType.MemberAccess)
+				{
+					MemberExpression memberex = (MemberExpression) ex;
+					if (memberex.Member.Name == "NDOObjectId")
+					{
+						if (memberex.Expression.ToString() != this.baseParameterName)
+						{
+							Transform( memberex.Expression );
+							if (sb[sb.Length - 1] != '.')
+								sb.Append( '.' );
+						}
+						sb.Append( "oid" );
 						return;
+					}
+					if (ex.Type == typeof( bool ))
+					{
+						var top = expressionStack.Pop();
+						bool hasBeenTransformed = false;
+						if (expressionStack.Count > 0)
+						{
+							var parent = expressionStack.Peek();
+							if (parent.NodeType != ExpressionType.Equal && parent.NodeType != ExpressionType.NotEqual)
+							{
+								// A Boolean Expression, which is not part of an == or != expression,
+								// must be unary. Since Sql Server doesn't support unary boolean expressions, we add an == Expression which compares with 1.
+								// Fortunately this works with other databases, too.
+								sb.Append( memberex.Member.Name );
+								sb.Append( " = 1" );
+								hasBeenTransformed = true;
+							}
+						}
+						expressionStack.Push( top );
+						if (hasBeenTransformed)
+							return;
 						//-------
 					}
-					Transform( mcex.Arguments[0] );
-					sb.Append( '(' );
-					Transform( mcex.Arguments[1] );
-					sb.Append( ')' );
-				}
-				else if (mname == "Any")
-				{
-					Transform( mcex.Arguments[0] );
-					var exprx = mcex.Arguments[1];
-					sb.Append( '.' );
-					Transform( ( (LambdaExpression) mcex.Arguments[1] ).Body );
-				}
-				else if (mname == "In")
-				{
-					var arg = mcex.Arguments[1];
-					IEnumerable list = (IEnumerable)(Expression.Lambda(arg).Compile().DynamicInvoke());
-					Transform( mcex.Arguments[0] );
-					sb.Append( " IN (" );
-					var en = list.GetEnumerator();
-					en.MoveNext();
-					bool isString = en.Current.GetType() == typeof(string);
-					foreach (object obj in list)
+					if (memberex.Expression != baseLeftSide)
 					{
-						if (isString)
-							sb.Append( '\'' );
-						sb.Append( obj );
-						if (isString)
-							sb.Append( '\'' );
-						sb.Append( ',' );
-					}
-					sb.Length -= 1;
-					sb.Append( ')' );
-				}
-				else if (mname == "Oid")
-				{
-					var sbLength = sb.Length;
-					Transform( mcex.Arguments[0] );
-					if (sb.Length > sbLength)
-						sb.Append( ".oid" );
-					else
-						sb.Append( "oid" );
-					if (mcex.Arguments.Count > 1)
-					{
-						TransformOidIndex( mcex.Arguments[1] );
-					}
-				}
-				else
-					throw new Exception( "Method call not supported: " + mname );
-				return;
-				//-------
-			}
-
-			if (ex.NodeType == ExpressionType.MemberAccess)
-			{
-				MemberExpression memberex = (MemberExpression) ex;
-				if (memberex.Member.Name == "NDOObjectId")
-				{
-					if (memberex.Expression.ToString() != this.baseParameterName)
-					{
+						// This happens while navigating through relations.
 						Transform( memberex.Expression );
 						if (sb[sb.Length - 1] != '.')
 							sb.Append( '.' );
 					}
-					sb.Append( "oid" );
+					sb.Append( memberex.Member.Name );
 					return;
+					//-------
 				}
-				int l = sb.Length;
-				Transform( memberex.Expression );
-				if (l != sb.Length)
-					sb.Append( '.' );
-				sb.Append( memberex.Member.Name );
-				return;
-				//-------
-			}
 
-			else if (ex.NodeType == ExpressionType.Constant)
-			{
-				ConstantExpression constEx = (ConstantExpression) ex;
-				AddParameter( constEx.Value );
-				return;
-				//-------
-			}
+				else if (ex.NodeType == ExpressionType.Constant)
+				{
+					ConstantExpression constEx = (ConstantExpression) ex;
+					AddParameter( constEx.Value );
+					return;
+					//-------
+				}
 
-			else if (ex.NodeType == ExpressionType.Convert)
-			{
-				Transform( ( (UnaryExpression) ex ).Operand );
-				return;
-				//-------
-			}
+				else if (ex.NodeType == ExpressionType.Convert)
+				{
+					Transform( ( (UnaryExpression) ex ).Operand );
+					return;
+					//-------
+				}
 
-			else if (ex.NodeType == ExpressionType.Not)
-			{
-				sb.Append( " NOT " );
-				Expression inner = ((UnaryExpression)ex).Operand;
-				var binary = (inner is BinaryExpression);
-				if (binary)
-					sb.Append( '(' );
-				Transform( inner );
-				if (binary)
-					sb.Append( ')' );
-				return;
-				//-------
+				else if (ex.NodeType == ExpressionType.Not)
+				{
+					sb.Append( " NOT " );
+					Expression inner = ((UnaryExpression)ex).Operand;
+					var binary = (inner is BinaryExpression);
+					if (binary)
+						sb.Append( '(' );
+					Transform( inner );
+					if (binary)
+						sb.Append( ')' );
+					return;
+					//-------
+				}
 			}
-
+			finally
+			{				
+				expressionStack.Pop();
+			}
 		}
 
 		private void TransformEquality( List<Expression> arguments )

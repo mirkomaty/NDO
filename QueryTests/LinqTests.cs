@@ -276,12 +276,18 @@ namespace QueryTests
 		[Test]
 		public void LinqTestBooleanExpression()
 		{
-			var vt = pm.Objects<Land>().Where( l => l.IsInEu == true );
 			var fields = new SqlColumnListGenerator( pm.NDOMapping.FindClass( typeof( Land ) ) ).SelectList;
+			var vt = pm.Objects<Land>().Where( l => l.IsInEu == true );
 			Assert.AreEqual( $"SELECT {fields} FROM [Land] WHERE [Land].[IsInEu] = {{0}}", vt.QueryString );
 
 			vt = pm.Objects<Land>().Where( l => l.IsInEu );
 			Assert.AreEqual( $"SELECT {fields} FROM [Land] WHERE [Land].[IsInEu] = {{0}}", vt.QueryString );
+
+			vt = pm.Objects<Land>().Where( l => l.IsInEu && l.Name == "Lala" );
+			Assert.AreEqual( $"SELECT {fields} FROM [Land] WHERE [Land].[IsInEu] = 1 AND [Land].[Name] = {{0}}", vt.QueryString );
+
+			vt = pm.Objects<Land>().Where( l => l.Name == "Lala" && l.IsInEu );
+			Assert.AreEqual( $"SELECT {fields} FROM [Land] WHERE [Land].[IsInEu] = 1 AND [Land].[Name] = {{0}}", vt.QueryString );
 		}
 
 
@@ -575,6 +581,17 @@ namespace QueryTests
 			var qs = vt.QueryString; 
 			Assert.That( qs.IndexOf( "[Mitarbeiter].[Vorname] >= {0}" ) > -1 );
 			Assert.That( qs.IndexOf( "[Mitarbeiter].[Vorname] < {1}" ) > -1 );
+		}
+
+		[Test]
+		public void ComparismWithEmptyStringWorks()
+		{
+			var vt = pm.Objects<Mitarbeiter>().Where( m => m.Vorname.GreaterEqual( String.Empty ) && m.Vorname == String.Empty );
+			var qs = vt.QueryString;
+			Assert.That( qs.IndexOf( "[Mitarbeiter].[Vorname] >= {0}" ) > -1 );
+			Assert.That( qs.IndexOf( "[Mitarbeiter].[Vorname] = {0}" ) > -1 );
+			// We compare with String.Empty two times. The ExpressionTreeTransformer recognizes the equality and 
+			// creates only one parameter.
 		}
 
 		[Test]
