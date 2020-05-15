@@ -550,7 +550,16 @@ namespace QueryTests
             Assert.AreEqual($"SELECT {this.mitarbeiterFields} FROM [Mitarbeiter] WHERE [Mitarbeiter].[Vorname] IN (1, 2, 3, 4, 5)", vt.QueryString);
         }
 
-        [Test]
+		[Test]
+		public void LinqTestIfInClauseWithGuidsWorks()
+		{
+			var guids = new Guid[]{ Guid.NewGuid(), Guid.NewGuid() };
+			// NDO won't check, if the types match
+			var vt = pm.Objects<Mitarbeiter>().Where(m => m.Vorname.In(guids));
+			Assert.AreEqual( $"SELECT {this.mitarbeiterFields} FROM [Mitarbeiter] WHERE [Mitarbeiter].[Vorname] IN ('{guids[0]}', '{guids[1]}')", vt.QueryString );
+		}
+
+		[Test]
 		public void LinqTestIfRelationInInClauseWorks()
 		{
             var arr = new[] { 1, 2, 3, 4, 5 };
@@ -614,6 +623,16 @@ namespace QueryTests
 			var qs = vt.QueryString;
 			Assert.AreEqual( $"SELECT {this.mitarbeiterFields} FROM [Mitarbeiter] WHERE [Mitarbeiter].[Vorname] IS NOT NULL AND [Mitarbeiter].[Vorname] <> {{0}}", vt.QueryString );
 		}
+
+		[Test]
+		public void CanUseStringsInINClauses()
+		{
+			List<string> strings = new List<string>{ "1", "2", "3" };
+			var vt = pm.Objects<Mitarbeiter>().Where( m => m.Vorname.Like("Hallo") && !m.Nachname.In( strings ) );
+			var qs = vt.QueryString;
+			Assert.AreEqual( $"SELECT {this.mitarbeiterFields} FROM [Mitarbeiter] WHERE [Mitarbeiter].[Vorname] LIKE {{0}} AND NOT [Mitarbeiter].[Nachname] IN ('1', '2', '3')", vt.QueryString );
+		}
+
 
 
 		[Test]

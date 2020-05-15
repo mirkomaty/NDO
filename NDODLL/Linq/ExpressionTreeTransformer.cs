@@ -462,13 +462,13 @@ namespace NDO.Linq
 						sb.Append( " IN (" );
 						var en = list.GetEnumerator();
 						en.MoveNext();
-						bool isString = en.Current.GetType() == typeof(string);
+						bool doQuote = en.Current is string || en.Current is Guid || en.Current is DateTime;
 						foreach (object obj in list)
 						{
-							if (isString)
+							if (doQuote)
 								sb.Append( '\'' );
 							sb.Append( obj );
-							if (isString)
+							if (doQuote)
 								sb.Append( '\'' );
 							sb.Append( ',' );
 						}

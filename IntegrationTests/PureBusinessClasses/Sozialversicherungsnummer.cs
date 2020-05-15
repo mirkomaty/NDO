@@ -25,7 +25,7 @@ using NDO;
 
 namespace Reisekosten.Personal {
 	/// <summary>
-	/// Sozialversicherungsnummer för Mitarbeiter
+	/// Sozialversicherungsnummer für Mitarbeiter
 	/// </summary>
 	[NDOPersistent, Serializable]
 	public class Sozialversicherungsnummer : IPersistentObject
