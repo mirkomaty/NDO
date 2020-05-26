@@ -45,14 +45,6 @@ namespace NDO
 		}
 
 		/// <summary>
-		/// Called by the NDO Framework. Gets or sets the transaction attribute for each command.
-		/// </summary>
-		IDbTransaction Transaction
-		{
-			set; get;
-		}
-
-		/// <summary>
 		/// In verbose mode, the logs will be written into this file.
 		/// </summary>
 		ILogAdapter LogAdapter

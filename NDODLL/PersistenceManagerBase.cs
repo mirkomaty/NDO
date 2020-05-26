@@ -30,6 +30,7 @@ using NDO.Mapping;
 using Unity;
 using NDO.Configuration;
 using NDO.SqlPersistenceHandling;
+using System.Reflection;
 
 namespace NDO
 {
@@ -63,11 +64,24 @@ namespace NDO
 			string baseDir = AppDomain.CurrentDomain.BaseDirectory;
             if (File.Exists( Path.Combine( baseDir, "Web.config" ) ))
                 baseDir = Path.Combine( baseDir, "bin" );
-            string mappingFileName = Path.Combine( baseDir, "NDOMapping.xml" );
-			if (!File.Exists(mappingFileName))
-                throw new NDOException( 49, "Can't determine the path to the mapping file - please provide a mapping file path as argument to the PersistenceManager ctor." );
-
-            Init( Path.Combine(baseDir, mappingFileName));
+			var entryAssemblyName = Assembly.GetEntryAssembly().GetName().Name;
+			string[] paths = new string[]
+			{ 
+				Path.Combine( baseDir, $"{entryAssemblyName}.ndo.mapping" ),
+				Path.Combine( baseDir, "NDOMapping.xml" )
+			};
+			bool found = false;
+			foreach (var path in paths)
+			{
+				if (File.Exists(path))
+				{
+					Init( path );
+					found = true;
+					break;
+				}
+			}
+			if (!found)
+                throw new NDOException( 49, $"Can't determine the path to the mapping file. Tried the following locations:\n{string.Join("\n", paths)}\nPlease provide a mapping file path as argument to the PersistenceManager ctor." );
 		}
 
 		/// <summary>

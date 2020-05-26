@@ -54,6 +54,9 @@ namespace NDO.SqlPersistenceHandling
 	/// 
 	public class SqlPersistenceHandler : IPersistenceHandler
 	{
+		/// <summary>
+		/// This event will be triggered, if a concurrency error occurs
+		/// </summary>
 		public event ConcurrencyErrorHandler ConcurrencyError;
 
 		private System.Data.IDbCommand selectCommand;
@@ -88,6 +91,10 @@ namespace NDO.SqlPersistenceHandling
 		private readonly IUnityContainer configContainer;
 		private Action<Type,IPersistenceHandler> disposeCallback;
 
+		/// <summary>
+		/// Constructs a SqlPersistenceHandler object
+		/// </summary>
+		/// <param name="configContainer"></param>
 		public SqlPersistenceHandler(IUnityContainer configContainer)
 		{
 			this.configContainer = configContainer;
@@ -196,25 +203,32 @@ namespace NDO.SqlPersistenceHandling
 			this.insertCommand.Connection = this.conn;
 		}
 
+		/// <summary>
+		/// Row update handler for providers that require Row Update Handling
+		/// </summary>
+		/// <param name="row"></param>
 		public void OnRowUpdate(DataRow row)
 		{
 			if (row.RowState == DataRowState.Deleted)
 				return;
+
 			if (!hasAutoincrementedColumn)
 				return;
+			
 			string oidColumnName = this.autoIncrementColumn.Name;
 			Type t = row[oidColumnName].GetType();
 			if (t != typeof(int))
 				return;
+			
 			// Ist schon eine ID vergeben?
 			if (((int)row[oidColumnName]) > 0)
 				return;
 			bool unchanged = (row.RowState == DataRowState.Unchanged);
 			IDbCommand cmd = provider.NewSqlCommand(this.conn);
-            if (this.Transaction != null)
-                cmd.Transaction = this.Transaction;
+
 			cmd.CommandText = provider.GetLastInsertedId(this.tableName, this.autoIncrementColumn.Name);
 			DumpBatch(cmd.CommandText);
+
 			using (IDataReader reader = cmd.ExecuteReader())
 			{
 				if (reader.Read())
@@ -672,9 +686,6 @@ namespace NDO.SqlPersistenceHandling
 					// cmd.CommandText can be changed in CreateQueryParameters
 					DumpBatch( cmd.CommandText );
 
-					if (this.Transaction != null)
-						cmd.Transaction = this.Transaction;
-
 					dr = cmd.ExecuteReader();
 
 					for (; ; )
@@ -702,8 +713,7 @@ namespace NDO.SqlPersistenceHandling
 						sql += s + ";\n"; // For DumpBatch only
 						var dict = new Dictionary<string, object>();
 						IDbCommand cmd = this.provider.NewSqlCommand( conn );
-						if (this.Transaction != null)
-							cmd.Transaction = this.Transaction;
+
 						cmd.CommandText = s;
 						if (parameters != null && parameters.Count > 0)
 						{
@@ -882,21 +892,6 @@ namespace NDO.SqlPersistenceHandling
 				this.deleteCommand.Connection = value;
 				this.updateCommand.Connection = value;
 				this.insertCommand.Connection = value;
-			}
-		}
-	
-		/// <summary>
-		/// Sets the transaction to be used for the next query
-		/// </summary>
-		public IDbTransaction Transaction
-		{
-			get { return this.selectCommand.Transaction; }
-			set
-			{
-				this.selectCommand.Transaction = value;
-				this.deleteCommand.Transaction = value;
-				this.updateCommand.Transaction = value;
-				this.insertCommand.Transaction = value;
 			}
 		}
 

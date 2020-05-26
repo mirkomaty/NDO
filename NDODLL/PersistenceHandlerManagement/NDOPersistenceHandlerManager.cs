@@ -40,7 +40,6 @@ namespace NDO
 			// Don't close the connection or transaction here
 			// because it might be used with other handlers.
 			handler.Connection = null;
-			handler.Transaction = null;
 			this.persistenceHandlerPool.ReleaseHandler( t, handler );
 		}
 

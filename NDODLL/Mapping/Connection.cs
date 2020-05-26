@@ -77,6 +77,9 @@ namespace NDO.Mapping
             set { name = value; this.Changed = true; }
         }
 
+        /// <summary>
+        /// This is used to log the connection without password.
+        /// </summary>
 		[Browsable( false )]
 		public string DisplayName
 		{

@@ -39,9 +39,9 @@ using NDO.ShortId;
 using System.Globalization;
 using NDO.Linq;
 using NDO.Query;
-using Unity;
+using ST = System.Transactions;
 
-namespace NDO 
+namespace NDO
 {
 	/// <summary>
 	/// Delegate type of an handler, which can be registered by the CollisionEvent of the PersistenceManager.
@@ -88,12 +88,13 @@ namespace NDO
 		// after they have been stored to the database to update foreign keys.
 		private ArrayList createdMappingTableObjects = new ArrayList();  
 		private TypeManager typeManager;
-		private TransactionMode transactionMode = TransactionMode.None;
 		internal bool DeferredMode { get; private set; }
-		private IsolationLevel isolationLevel = IsolationLevel.ReadCommitted;
-		private TransactionTable transactionTable;
+		private NDOTransactionScope transactionScope = new NDOTransactionScope();
+		internal NDOTransactionScope TransactionScope => this.transactionScope;		
 
 		private OpenConnectionListener openConnectionListener;
+		private Dictionary<string, IDbConnection> usedConnections = new Dictionary<string, IDbConnection>();
+
 		/// <summary>
 		/// Register a listener to this event if you work in concurrent scenarios and you use TimeStamps.
 		/// If a collision occurs, this event gets fired and gives the opportunity to handle the situation.
@@ -159,7 +160,6 @@ namespace NDO
 
 			sm = new StateManager( this );
 
-			transactionTable = new TransactionTable( new TransactionTable.NewConnectionCallback( OnNewConnection ) );
 			InitClasses();
 		}
 
@@ -170,9 +170,8 @@ namespace NDO
 		/// <remarks>
 		/// Searches for a mapping file in the application directory. 
 		/// The constructor tries to find a file with the same name as
-		/// the assembly, but with the extension .ndo.xml. If the file is not found
-		/// or if the NDO Version is below the Professional Version it tries to find a
-		/// file called "NDOMapping.xml" in the application directory.
+		/// the assembly, but with the extension .ndo.xml. If the file is not found the constructor tries to find a
+		/// file called AssemblyName.ndo.mapping in the application directory.
 		/// </remarks>
 		public PersistenceManager() : base()
 		{
@@ -1012,7 +1011,7 @@ namespace NDO
 
 
 		/*
-		forceCommit should be:
+		doCommit should be:
 		 
 					Query	Save	Save(true)
 		Optimistic	1		1		0
@@ -1022,35 +1021,22 @@ namespace NDO
 					Query	Save	Save(true)
 		Optimistic	0		1		0
 		Pessimistic	0		1		0
-
 		 */
 
-		internal void CheckEndTransaction(bool forceCommit)
+		internal void CheckEndTransaction(bool doCommit)
 		{
-			if (transactionMode != TransactionMode.None && forceCommit)
+			if (doCommit)
 			{
-				foreach(TransactionInfo ti in transactionTable)
+				this.transactionScope.Complete();
+				
+				foreach (var conn in this.usedConnections.Values.Where( c=>c.State == ConnectionState.Open ))
 				{
-					if (ti.Transaction != null)
-					{
-						ti.Transaction.Commit();
-						NDOPerformanceCounter.DecrementOpenTransactions();
-						NDOPerformanceCounter.IncrementReleaseTransactionCount();
-						if (LoggingPossible)
-							this.LogAdapter.Info( String.Format( "Committing transaction {0:X} at connection '{1}'", ti.Transaction.GetHashCode(), ti.ConnectionAlias ) );
-                        ti.Transaction = null;
-					}
-					if (ti.Connection != null && ti.Connection.State != ConnectionState.Closed)
-					{
-						ti.Connection.Close();
-						if (LoggingPossible)
-							this.LogAdapter.Info( $"Closing connection {ti.ConnectionAlias}" );
-					}
+					conn.Close();
 				}
+
+				this.usedConnections.Clear();
 			}
 		}
-
-	
 
 		internal void CheckTransaction(IPersistenceHandlerBase handler, Type t)
 		{
@@ -1060,56 +1046,27 @@ namespace NDO
 		/// <summary>
 		/// Each and every database operation has to be preceded by a call to this function.
 		/// </summary>
-		internal void CheckTransaction(IPersistenceHandlerBase handler, Connection conn)
+		internal void CheckTransaction( IPersistenceHandlerBase handler, Connection ndoConn )
 		{
-			TransactionInfo ti = transactionTable[conn];
-			if (handler != null)
+			this.transactionScope.CheckTransaction();
+			
+			if (handler.Connection == null)
 			{
-				ti.SecureAddHandler( handler );
-
-				// In some ADO.NET providers we can't set a Connection if one exists,
-				// even if we set the same conn. object.
-				if (handler.Connection != null)
+				if (this.usedConnections.ContainsKey( ndoConn.ID ))
 				{
-					// CheckTransaction should have been called before for this handler.
-					Debug.Assert( handler.Connection == ti.Connection );
-
-					// Force to always use the same connection.
-					ti.Connection = handler.Connection;
+					handler.Connection = this.usedConnections[ndoConn.ID];
+				}
+				else
+				{
+					IProvider p = ndoConn.Parent.GetProvider( ndoConn );
+					string connStr = this.OnNewConnection( ndoConn );
+					var connection = handler.Connection = p.NewConnection( connStr );
+					this.usedConnections.Add( ndoConn.ID, connection );
 				}
 			}
 
-			if (transactionMode != TransactionMode.None)
-			{
-				if (ti.Connection.State == ConnectionState.Closed)
-				{
-					ti.Connection.Open();
-					if (LoggingPossible)
-						this.LogAdapter.Info( $"Opening connection {ti.ConnectionAlias}" );
-				}
-				if (ti.Transaction == null)
-				{
-					NDOPerformanceCounter.IncrementCreateTransactionCount();
-					NDOPerformanceCounter.IncrementOpenTransactions();
-					ti.Transaction = ti.Connection.BeginTransaction(this.isolationLevel);
-					if (this.LoggingPossible)
-						this.LogAdapter.Info( String.Format( "Starting transaction {0:X} at connection '{1}'", ti.Transaction.GetHashCode(), conn.DisplayName ) );
-                }
-				if (handler != null)
-				{
-					if (handler.Connection == null)
-					{
-						handler.Connection = ti.Connection;
-					}
-					if (handler.Transaction == null || handler.Transaction != ti.Transaction)
-					{
-						handler.Transaction = ti.Transaction;
-					}
-				}
-            }
-
-            if ( transactionMode == TransactionMode.None && handler != null && handler.Connection == null)
-                handler.Connection = ti.Connection;
+			if (handler.Connection.State != ConnectionState.Open)
+				handler.Connection.Open();
 		}
 
 		/// <summary>
@@ -1275,31 +1232,27 @@ namespace NDO
 			string last = arr[arr.Length - 1];
 			bool lastInvalid = (last == null || last.Trim() == string.Empty);
 			string[] result = new string[arr.Length - (lastInvalid ? 1 : 0)];
-			IProvider provider = this.mappings.GetProvider(conn);
-            TransactionInfo ti = transactionTable[conn];
-			IDbConnection cn = ti.Connection;
-			cn.Open();
-			IDbCommand cmd = provider.NewSqlCommand(cn);
-			int i = 0;
-			string ok = "OK";
-			foreach(string statement in arr)
+			using (var handler = GetSqlPassThroughHandler())
 			{
-				if (statement != null && statement.Trim() != string.Empty)
+				int i = 0;
+				string ok = "OK";
+				foreach (string statement in arr)
 				{
-					try
+					if (statement != null && statement.Trim() != string.Empty)
 					{
-						cmd.CommandText = statement;
-						cmd.ExecuteNonQuery();
-						result[i] = ok;
+						try
+						{
+							handler.Execute(statement);
+							result[i] = ok;
+						}
+						catch (Exception ex)
+						{
+							result[i] = ex.Message;
+						}
 					}
-					catch(Exception ex)
-					{
-						result[i] = ex.Message;
-					}
+					i++;
 				}
-				i++;
 			}
-			cn.Close();
 			return result;
 		}
 
@@ -1399,17 +1352,6 @@ namespace NDO
 		}
 
 		/// <summary>
-		/// Gets a TransactionInfo object for a NDO connection
-		/// </summary>
-		/// <param name="conn">An NDO connection</param>
-		/// <returns></returns>
-		internal TransactionInfo GetTransactionInfo(Connection conn)
-		{
-			return this.transactionTable[conn];
-		}
-
-
-		/// <summary>
 		/// Executes a xml script to generate the database tables. 
 		/// The function will generate and execute sql statements to perform 
 		/// the changes described by the xml.
@@ -1485,11 +1427,9 @@ namespace NDO
 		string GetSchemaVersion(Connection ndoConn, string schemaName)
 		{
 			IProvider provider = this.mappings.GetProvider( ndoConn );
-			TransactionInfo ti = transactionTable[ndoConn];
-			IDbConnection connection = ti.Connection;
 			string version = "0";  // Initial value
-			connection.Open();
-			using (connection)
+			var connection = provider.NewConnection( ndoConn.Name );
+			using (var handler = GetSqlPassThroughHandler())
 			{
 				string[] TableNames = provider.GetTableNames( connection );
 				if (TableNames.Any(t=>t=="NDOSchemaVersion"))
@@ -1499,9 +1439,7 @@ namespace NDO
 						sql += "IS NULL;";
 					else
 						sql += "LIKE '" + schemaName + "'";
-					IDbCommand cmd = provider.NewSqlCommand( connection );
-					cmd.CommandText = sql;
-					using(IDataReader dr = cmd.ExecuteReader())
+					using(IDataReader dr = handler.Execute(sql, true))
 					{
 						if (dr.Read())
 							version = dr.GetString( 0 );
@@ -1519,11 +1457,9 @@ namespace NDO
 					XElement transitionElement = XElement.Parse(transition);
 
 					string sql = schemaTransitionGenerator.Generate( transitionElement );
-					IDbCommand cmd = provider.NewSqlCommand( connection );
-					cmd.CommandText = sql;
-					cmd.ExecuteNonQuery();
-					cmd.CommandText = String.Format( "INSERT INTO NDOSchemaVersion([SchemaName],[Version]) VALUES({0},'0')", schemaName == null ? "NULL" : provider.GetSqlLiteral( schemaName ) );
-					cmd.ExecuteNonQuery();
+					handler.Execute(sql);
+					sql = String.Format( "INSERT INTO NDOSchemaVersion([SchemaName],[Version]) VALUES({0},'0')", schemaName == null ? "NULL" : provider.GetSqlLiteral( schemaName ) );
+					handler.Execute( sql );
 				}
 			}
 
@@ -1541,6 +1477,7 @@ namespace NDO
 		/// <remarks>Note that an additional command is executed, which will update the NDOSchemaVersion entry.</remarks>
 		public string[] PerformSchemaTransitions(string scriptFile, Connection ndoConn)
 		{
+#warning this must be tested
 			string schemaName = null;
 			// Gespeicherte Version ermitteln.
 			XElement transitionElements = XElement.Load( scriptFile );
@@ -2842,27 +2779,7 @@ namespace NDO
 		/// <remarks>Supports both local and EnterpriseService Transactions.</remarks>
 		public virtual void AbortTransaction()
 		{
-			if (transactionMode != TransactionMode.None)
-			{
-				foreach(TransactionInfo ti in transactionTable)
-				{
-					// Transaktionen werden mit Save() beendet.
-					// Da während Save() Callbacks passieren,
-					// geben wir hier die Gelegenheit, Transaktionen abzubrechen.
-					if (ti.Transaction != null)
-					{
-						int id = ti.Transaction.GetHashCode();
-						ti.Transaction.Rollback();
-						NDOPerformanceCounter.DecrementOpenTransactions();
-						NDOPerformanceCounter.IncrementReleaseTransactionCount();
-						if (this.LoggingPossible)
-							LogAdapter.Info( $"Rollback transaction {id.ToString( "X" )} at connection '{ti.ConnectionAlias}'" );
-                        ti.Transaction = null;
-					}
-					if (ti.Connection.State != ConnectionState.Closed)
-						ti.Connection.Close();
-				}
-			}
+			this.transactionScope.Dispose();
 		}
 
 		/// <summary>
@@ -3639,10 +3556,20 @@ namespace NDO
 		/// </summary>
 		public void Close() 
 		{
-			Abort();
+			this.transactionScope.Dispose();
 			UnloadCache();
 		}
 
+		///// <summary>
+		///// Completes the current transaction.
+		///// </summary>
+		///// <remarks>
+		///// This method should be called, if you want to make sure, that a fresh transaction will be started.
+		///// </remarks>
+		//public void Complete()
+		//{
+		//	this.transactionScope.Complete();
+		//}
 
 
 #endregion
@@ -3653,6 +3580,7 @@ namespace NDO
 		/// </summary>
 		public override void Dispose() 
 		{
+			this.transactionScope.Dispose();
 			base.Dispose();
 			Close();
 		}
@@ -3883,19 +3811,25 @@ namespace NDO
 		/// <summary>
 		/// Sets or gets transaction mode. Uses TransactionMode enum.
 		/// </summary>
+		/// <remarks>
+		/// Set this value before you start any transactions.
+		/// </remarks>
 		public TransactionMode TransactionMode
 		{
-			get { return transactionMode; }
-			set { transactionMode = value; }
+			get { return this.transactionScope.TransactionMode; }
+			set { this.transactionScope.TransactionMode = value; }
 		}
 
 		/// <summary>
-		/// Sets or gets the Isolation Level. Setting the Isolation Level during an transaction will have effect only on Connections which will be opened after the setting.
+		/// Sets or gets the Isolation Level.
 		/// </summary>
-		public System.Data.IsolationLevel IsolationLevel
+		/// <remarks>
+		/// Set this value before you start any transactions.
+		/// </remarks>
+		public ST.IsolationLevel IsolationLevel
 		{
-			get { return isolationLevel; }
-			set { isolationLevel = value; }
+			get { return this.transactionScope.IsolationLevel; }
+			set { this.transactionScope.IsolationLevel = value; }
 		}
 
 		internal class MappingTableEntry 
@@ -4079,118 +4013,118 @@ namespace NDO
 	}
 
 
-	internal class TransactionInfo
-	{
-        HashSet<IPersistenceHandlerBase> handlers = new HashSet<IPersistenceHandlerBase>();
-        public void SecureAddHandler(IPersistenceHandlerBase o)
-        {
-            if(!this.handlers.Contains(o))
-                this.handlers.Add(o);
-        }        
+//	internal class TransactionInfo
+//	{
+//        HashSet<IPersistenceHandlerBase> handlers = new HashSet<IPersistenceHandlerBase>();
+//        public void SecureAddHandler(IPersistenceHandlerBase o)
+//        {
+//            if(!this.handlers.Contains(o))
+//                this.handlers.Add(o);
+//        }        
 
-		IDbTransaction transaction = null;
-		public IDbTransaction Transaction
-		{
-			get { return transaction; }
-			set 
-            { 
-                transaction = value;
-                // Set the Transaction property of all commands in all handlers to null
-                foreach (IPersistenceHandlerBase hb in this.handlers)
-                    hb.Transaction = null;
-            }
-		}
+//		IDbTransaction transaction = null;
+//		public IDbTransaction Transaction
+//		{
+//			get { return transaction; }
+//			set 
+//            { 
+//                transaction = value;
+//                // Set the Transaction property of all commands in all handlers to null
+//                foreach (IPersistenceHandlerBase hb in this.handlers)
+//                    hb.Transaction = null;
+//            }
+//		}
 		
-		public IDbConnection Connection { get; set; }
+//		public IDbConnection Connection { get; set; }
 		
-        public string ConnectionAlias { get; set; }
-	}
+//        public string ConnectionAlias { get; set; }
+//	}
 
-	/// <summary>
-	/// This class manages TransactionInfo elements. We need a TransactionInfo element
-	/// for each connection that participates in a transaction.
-	/// </summary>
-	/// <remarks>
-	/// The TransactionTable is owned by the PersistenceManager. Thus each Thread has a TransactionTable.
-	/// </remarks>
-	internal class TransactionTable : IEnumerable, IEnumerator
-	{
-		public delegate string NewConnectionCallback(NDO.Mapping.Connection conn);
-		private NewConnectionCallback newConnectionCallback;
+//	/// <summary>
+//	/// This class manages TransactionInfo elements. We need a TransactionInfo element
+//	/// for each connection that participates in a transaction.
+//	/// </summary>
+//	/// <remarks>
+//	/// The TransactionTable is owned by the PersistenceManager. Thus each Thread has a TransactionTable.
+//	/// </remarks>
+//	internal class TransactionTable : IEnumerable, IEnumerator
+//	{
+//		public delegate string NewConnectionCallback(NDO.Mapping.Connection conn);
+//		private NewConnectionCallback newConnectionCallback;
 
-		public TransactionTable(NewConnectionCallback callback) 
-		{
-			this.newConnectionCallback = callback;
-		}
+//		public TransactionTable(NewConnectionCallback callback) 
+//		{
+//			this.newConnectionCallback = callback;
+//		}
 
-		Dictionary<string, TransactionInfo> transactionInfos = new Dictionary<string, TransactionInfo>();
-		public TransactionInfo this[Connection conn]
-		{
-			get 
-			{
-				TransactionInfo result;
+//		Dictionary<string, TransactionInfo> transactionInfos = new Dictionary<string, TransactionInfo>();
+//		public TransactionInfo this[Connection conn]
+//		{
+//			get 
+//			{
+//				TransactionInfo result;
 
-				if (!transactionInfos.TryGetValue( conn.ID, out result ))
-				{
-					result = new TransactionInfo();
-					IProvider p = conn.Parent.GetProvider(conn);
-					string connStr = newConnectionCallback(conn);
-					try
-					{
-						result.Connection = p.NewConnection(connStr);
-						result.ConnectionAlias = conn.DisplayName;
-					}
-					catch (Exception ex)
-					{
-						throw new NDOException(89, "Can't construct a connection object: " + ex.Message + ". Check your connection string.", ex);
-					}
+//				if (!transactionInfos.TryGetValue( conn.ID, out result ))
+//				{
+//					result = new TransactionInfo();
+//					IProvider p = conn.Parent.GetProvider(conn);
+//					string connStr = newConnectionCallback(conn);
+//					try
+//					{
+//						result.Connection = p.NewConnection(connStr);
+//						result.ConnectionAlias = conn.DisplayName;
+//					}
+//					catch (Exception ex)
+//					{
+//						throw new NDOException(89, "Can't construct a connection object: " + ex.Message + ". Check your connection string.", ex);
+//					}
 
-					result.Transaction = null;
-					transactionInfos[conn.ID] = result;
-				}
+//					result.Transaction = null;
+//					transactionInfos[conn.ID] = result;
+//				}
 
-				return result;
-			}
-		}
+//				return result;
+//			}
+//		}
 
-		public void Clear()
-		{
-			transactionInfos.Clear();
-		}
+//		public void Clear()
+//		{
+//			transactionInfos.Clear();
+//		}
 	
-#region IEnumerable Member
+//#region IEnumerable Member
 
-		public IEnumerator GetEnumerator()
-		{
-			enumerator = this.transactionInfos.GetEnumerator();
-			return this;
-		}
+//		public IEnumerator GetEnumerator()
+//		{
+//			enumerator = this.transactionInfos.GetEnumerator();
+//			return this;
+//		}
 
-#endregion
+//#endregion
 	
-#region IEnumerator Members
+//#region IEnumerator Members
 
-		private IDictionaryEnumerator enumerator;
+//		private IDictionaryEnumerator enumerator;
 
-		public void Reset()
-		{
-			enumerator = this.transactionInfos.GetEnumerator();
-		}
+//		public void Reset()
+//		{
+//			enumerator = this.transactionInfos.GetEnumerator();
+//		}
 
-		public object Current
-		{
-			get
-			{
-				return enumerator.Value;
-			}
-		}
+//		public object Current
+//		{
+//			get
+//			{
+//				return enumerator.Value;
+//			}
+//		}
 
-		public bool MoveNext()
-		{
-			return enumerator.MoveNext();
-		}
+//		public bool MoveNext()
+//		{
+//			return enumerator.MoveNext();
+//		}
 
-#endregion
-	}
+//#endregion
+//	}
 
 }

@@ -23,6 +23,7 @@
 using System;
 using System.Data;
 using System.Collections;
+using ST = System.Transactions;
 using NDO.Logging;
 
 
@@ -207,7 +208,7 @@ namespace NDO
 		/// <summary>
 		/// Sets or gets the Isolation Level. Setting the Isolation Level during an transaction will have effect only on Connections which will be opened after the setting.
 		/// </summary>
-		IsolationLevel IsolationLevel
+		ST.IsolationLevel IsolationLevel
 		{
 			get; set;
 		}

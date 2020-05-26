@@ -36,6 +36,7 @@ namespace NDO
 		Connection connection;
 		TransactionMode oldTransactionMode;
 		bool forcedTransactionMode = false;
+		IDbConnection dbConnection;
 
 		public SqlPassThroughHandler(PersistenceManager pm, Connection connection)
 		{
@@ -48,12 +49,12 @@ namespace NDO
 			this.forcedTransactionMode = true;
 			this.oldTransactionMode = this.pm.TransactionMode;
 			this.pm.TransactionMode = TransactionMode.Pessimistic;
-			this.pm.CheckTransaction( null, this.connection );
+			this.pm.TransactionScope.CheckTransaction();
 		}
 
 		public void CommitTransaction()
 		{
-			this.pm.CheckEndTransaction( true );
+			this.pm.TransactionScope.Complete();
 			if (this.forcedTransactionMode)
 				this.pm.TransactionMode = this.oldTransactionMode;
 			this.forcedTransactionMode = false;
@@ -73,23 +74,19 @@ namespace NDO
 		/// </remarks>
 		public IDataReader Execute( string command, bool returnReader = false, params object[] parameters )
 		{
+			this.pm.TransactionScope.CheckTransaction();
 			if (this.pm.VerboseMode && this.pm.LogAdapter != null)
 				this.pm.LogAdapter.Info( command );
 
 			IProvider provider = this.pm.NDOMapping.GetProvider( this.connection );
-			TransactionInfo ti = this.pm.GetTransactionInfo( this.connection );
-			IDbConnection dbConnection = ti.Connection;
-			bool wasOpened = false;
+
+			if (this.dbConnection == null || this.dbConnection.State == ConnectionState.Closed)
+				dbConnection = provider.NewConnection(this.connection.Name);
+
 			if (dbConnection.State == ConnectionState.Closed)
-			{
-				wasOpened = true;
 				dbConnection.Open();
-			}
-			try
-			{
 			IDbCommand cmd = provider.NewSqlCommand( dbConnection );
 			cmd.CommandText = command;
-			cmd.Transaction = ti.Transaction;
 
 			int pcount = 0;
 			foreach (var par in parameters)
@@ -105,12 +102,6 @@ namespace NDO
 
 			cmd.ExecuteNonQuery();
 			return null;
-			}
-			finally
-			{
-				if (wasOpened && !returnReader)
-					dbConnection.Close();
-			}
 		}
 
 		public IProvider Provider
@@ -123,12 +114,13 @@ namespace NDO
 
 		public void Dispose()
 		{
-			TransactionInfo ti = this.pm.GetTransactionInfo( this.connection );
-			IDbConnection dbConnection = ti.Connection;
 			if (dbConnection.State == ConnectionState.Open)
 				dbConnection.Close();
 			if (this.forcedTransactionMode)
+			{
+				this.pm.TransactionScope.Dispose();
 				this.pm.TransactionMode = this.oldTransactionMode;
+			}
 		}
 	}
 }

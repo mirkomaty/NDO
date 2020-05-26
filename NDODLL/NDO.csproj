@@ -43,6 +43,9 @@ Json Serializing for the Containers</PackageReleaseNotes>
     <PackageReference Include="PatchProductVersion" Version="1.0.2" />
     <PackageReference Include="Unity.Container" Version="5.8.13" />
   </ItemGroup>
+	<ItemGroup Condition="'$(TargetFramework)'=='net452'">
+		<Reference Include="System.Transactions" />
+	</ItemGroup>	
   <ItemGroup>
     <Content Include="..\nuget\NDO.dll.targets">
       <Pack>true</Pack>
