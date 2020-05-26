@@ -89,7 +89,7 @@ namespace NDO
 		private ArrayList createdMappingTableObjects = new ArrayList();  
 		private TypeManager typeManager;
 		internal bool DeferredMode { get; private set; }
-		private NDOTransactionScope transactionScope = new NDOTransactionScope();
+		private NDOTransactionScope transactionScope;
 		internal NDOTransactionScope TransactionScope => this.transactionScope;		
 
 		private OpenConnectionListener openConnectionListener;
@@ -175,8 +175,9 @@ namespace NDO
 		/// </remarks>
 		public PersistenceManager() : base()
 		{
+			this.transactionScope = new NDOTransactionScope( this );
 		}
-		
+
 		/// <summary>
 		/// Loads the mapping file from the specified location. This allows to use
 		/// different mapping files with different classes mapped in it.
@@ -186,6 +187,7 @@ namespace NDO
 		/// Editions can handle more than one mapping file.</remarks>
 		public PersistenceManager(string mappingFile) : base (mappingFile)
 		{
+			this.transactionScope = new NDOTransactionScope( this );
 		}
 
 		/// <summary>
@@ -194,6 +196,7 @@ namespace NDO
 		/// <param name="mapping">The cached mapping object</param>
 		public PersistenceManager(NDOMapping mapping) : base (mapping)
 		{
+			this.transactionScope = new NDOTransactionScope( this );
 		}
 
 		#region Object Container Stuff
@@ -1028,14 +1031,19 @@ namespace NDO
 			if (doCommit)
 			{
 				this.transactionScope.Complete();
-				
-				foreach (var conn in this.usedConnections.Values.Where( c=>c.State == ConnectionState.Open ))
-				{
-					conn.Close();
-				}
-
-				this.usedConnections.Clear();
+				CloseConnections();
 			}
+		}
+
+		private void CloseConnections()
+		{
+			foreach (var conn in this.usedConnections.Values.Where( c => c.State == ConnectionState.Open ))
+			{
+				conn.Close();
+				LogIfVerbose( $"Closed connection {new Connection(null) { Name = conn.ConnectionString }.DisplayName }" );
+			}
+
+			this.usedConnections.Clear();
 		}
 
 		internal void CheckTransaction(IPersistenceHandlerBase handler, Type t)
@@ -1061,12 +1069,16 @@ namespace NDO
 					IProvider p = ndoConn.Parent.GetProvider( ndoConn );
 					string connStr = this.OnNewConnection( ndoConn );
 					var connection = handler.Connection = p.NewConnection( connStr );
+					LogIfVerbose( $"Creating a connection object for {ndoConn.DisplayName}" );
 					this.usedConnections.Add( ndoConn.ID, connection );
 				}
 			}
 
 			if (handler.Connection.State != ConnectionState.Open)
+			{
 				handler.Connection.Open();
+				LogIfVerbose( $"Opening connection {ndoConn.DisplayName}" );
+			}
 		}
 
 		/// <summary>
@@ -3556,8 +3568,17 @@ namespace NDO
 		/// </summary>
 		public void Close() 
 		{
+			CloseConnections();
 			this.transactionScope.Dispose();
 			UnloadCache();
+		}
+
+		internal void LogIfVerbose(string msg)
+		{
+			if (VerboseMode && LogAdapter != null)
+			{
+				this.LogAdapter.Info( msg );
+			}
 		}
 
 		///// <summary>
@@ -3580,9 +3601,8 @@ namespace NDO
 		/// </summary>
 		public override void Dispose() 
 		{
-			this.transactionScope.Dispose();
-			base.Dispose();
 			Close();
+			base.Dispose();
 		}
 #endregion
 

@@ -37,10 +37,16 @@ namespace NDO.Mapping
     public class Connection : MappingNode
     {
         #region Standard Connection Stuff
+        /// <summary>
+        /// 
+        /// </summary>
         public const string DummyConnectionString = "Substitute this string with your connection string";
 
         static Connection standardConnection;
-
+        
+        /// <summary>
+        /// Creates a new, empty Connection object.
+        /// </summary>
         public static Connection StandardConnection
         {
             get { return standardConnection; }

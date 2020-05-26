@@ -5,16 +5,18 @@ namespace NDO
 {
 	class NDOTransactionScope : IDisposable
 	{
+		TransactionScope innerScope;
+		private readonly PersistenceManager pm;
+
 		public IsolationLevel IsolationLevel { get; set; }
 		public TransactionMode TransactionMode { get; set; }
 
-		public NDOTransactionScope()
+		public NDOTransactionScope(PersistenceManager pm)
 		{
 			IsolationLevel = IsolationLevel.ReadCommitted;
 			TransactionMode = TransactionMode.Optimistic;
+			this.pm = pm;
 		}
-
-		TransactionScope innerScope;
 
 		public void CheckTransaction()
 		{
@@ -25,13 +27,17 @@ namespace NDO
 			}
 
 			if (innerScope == null)
+			{
 				innerScope = new TransactionScope( TransactionScopeOption.Required, new TransactionOptions() { IsolationLevel = this.IsolationLevel } );
+				this.pm.LogIfVerbose( "Creating a new TransactionScope" );
+			}
 		}
 
 		public void Complete()
 		{
 			if (innerScope != null)
 			{
+				this.pm.LogIfVerbose( "Completing the TransactionScope" );
 				innerScope.Complete();
 				innerScope.Dispose();
 			}
@@ -43,6 +49,7 @@ namespace NDO
 		{
 			if (innerScope != null)
 			{
+				this.pm.LogIfVerbose( "Disposing the TransactionScope" );
 				innerScope.Dispose();
 				innerScope = null;
 			}
