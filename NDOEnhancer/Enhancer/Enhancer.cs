@@ -1052,8 +1052,12 @@ namespace NDOEnhancer
 
 		public void
 		mergeMappingFile(string absDllPath, ArrayList classList)
-		{			
-			string mapFileName = Path.Combine(Path.GetDirectoryName(absDllPath), "NDOMapping.xml");
+		{
+			var dir = Path.GetDirectoryName(absDllPath);
+			var mapFileName = Path.Combine(dir, Path.GetFileNameWithoutExtension(absDllPath) + ".ndo.mapping");
+			if (!File.Exists( mapFileName )) 
+				mapFileName = Path.Combine(dir, "NDOMapping.xml");
+
 			if (classList.Count > 0 && !File.Exists(mapFileName))
 			{
 				messages.WriteLine("Mapping file for assembly " + absDllPath + " not found.");

@@ -109,21 +109,13 @@ namespace NDOEnhancer
 			set { assemblyName = value; }
 		}
 
-		public ConfigurationOptions NewConfigurationOptions()
-		{
-#if !STANDALONE
-			return new ConfigurationOptions(project);
-#else
-			return new ConfigurationOptions();
-#endif
-		}
-
 		public ProjectDescription()
 		{
 		}
 
 		public ProjectDescription(string fileName)
 		{
+			this.FileName = fileName;
 			this.projPath = Path.GetDirectoryName(fileName) + Path.DirectorySeparatorChar;
 			XmlDocument doc = new XmlDocument();
 			try
@@ -136,7 +128,7 @@ namespace NDOEnhancer
 			}
 			XmlHelper.AddNamespace(doc);
 			Load(doc);
-			options = new ConfigurationOptions(doc);
+			options = new ConfigurationOptions(this, doc);
 		}
 
 		string AbsolutePath(string path)
@@ -303,6 +295,8 @@ namespace NDOEnhancer
                 return null;
             }
         }
+
+		public string FileName { get; set; }
 
 
 		public Dictionary<string, NDOReference> References
