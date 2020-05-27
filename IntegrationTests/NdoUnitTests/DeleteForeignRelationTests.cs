@@ -50,7 +50,6 @@ namespace NdoUnitTests
 			l = pm.GetClassExtent(typeof(DfrAddressDescriptor));
 			pm.Delete(l);
 			pm.Dispose();
-			Assert.That( PmFactory.PoolCount <= 1 );
 		}
 
 

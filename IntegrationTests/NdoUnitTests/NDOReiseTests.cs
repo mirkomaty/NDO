@@ -64,7 +64,6 @@ namespace NdoUnitTests
 				pm.Delete( reiseListe );
 				pm.Save();
 				pm.Close();
-				Assert.That( PmFactory.PoolCount <= 1 );
 			}
 			catch (Exception ex)
 			{

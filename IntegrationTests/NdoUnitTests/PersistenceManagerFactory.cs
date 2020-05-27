@@ -38,42 +38,33 @@ namespace NdoUnitTests
 	/// </summary>
 	public class PmFactory
 	{
-		static PerformanceCounter numOfPoolConnectionsCounter;
 		static PmFactory()
 		{
-			PersistenceManager pm = NewPersistenceManager();
-			var ndoConn = pm.NDOMapping.Connections.First();
-			if (ndoConn.Type == "SqlServer")
-			{
-				using (SqlConnection conn = new SqlConnection( "Integrated Security=SSPI;Persist Security Info=False;Data Source=localhost" ))
-				{
-					numOfPoolConnectionsCounter = new PerformanceCounter();
-					numOfPoolConnectionsCounter.CategoryName = ".NET-Datenanbieter für SqlServer";
-					numOfPoolConnectionsCounter.CounterName = "NumberOfPooledConnections";
-					var categories = PerformanceCounterCategory.GetCategories();
-					var categoryNames = categories.Select(c=>c.CategoryName);
-					PerformanceCounterCategory category = categories.FirstOrDefault(c => c.CategoryName == numOfPoolConnectionsCounter.CategoryName);
-					var instanceName = category.GetInstanceNames().FirstOrDefault(n=>n.IndexOf(GetCurrentProcessId().ToString()) > -1);
-					if (instanceName != null)
-						numOfPoolConnectionsCounter.InstanceName = instanceName;
-					numOfPoolConnectionsCounter.NextValue();  // Zähler starten.
-				}
-			}
-			else
-			{
-				numOfPoolConnectionsCounter = null;
-			}
+			//PersistenceManager pm = NewPersistenceManager();
+			//pm.TransactionMode = TransactionMode.None;
+			//var ndoConn = pm.NDOMapping.Connections.First();
+			//if (ndoConn.Type == "SqlServer")
+			//{
+			//	using (SqlConnection conn = new SqlConnection( "Integrated Security=SSPI;Persist Security Info=False;Data Source=localhost" ))
+			//	{
+			//		numOfPoolConnectionsCounter = new PerformanceCounter();
+			//		numOfPoolConnectionsCounter.CategoryName = ".NET-Datenanbieter für SqlServer";
+			//		numOfPoolConnectionsCounter.CounterName = "NumberOfPooledConnections";
+			//		var categories = PerformanceCounterCategory.GetCategories();
+			//		var categoryNames = categories.Select(c=>c.CategoryName);
+			//		PerformanceCounterCategory category = categories.FirstOrDefault(c => c.CategoryName == numOfPoolConnectionsCounter.CategoryName);
+			//		var instanceName = category.GetInstanceNames().FirstOrDefault(n=>n.IndexOf(GetCurrentProcessId().ToString()) > -1);
+			//		if (instanceName != null)
+			//			numOfPoolConnectionsCounter.InstanceName = instanceName;
+			//		numOfPoolConnectionsCounter.NextValue();  // Zähler starten.
+			//	}
+			//}
+			//else
+			//{
+			//	numOfPoolConnectionsCounter = null;
+			//}
 		}
 
-		public static int PoolCount
-		{
-			get
-			{
-				if (numOfPoolConnectionsCounter == null)
-					return 0;
-				return (int)numOfPoolConnectionsCounter.NextValue();
-			}
-		}
 
 		[DllImport( "kernel32.dll", SetLastError = true )]
 		static extern int GetCurrentProcessId();
@@ -101,6 +92,7 @@ namespace NdoUnitTests
 			//string path = Path.Combine( Path.GetDirectoryName( typeof( PmFactory ).Assembly.Location ), "NDOMapping.xml" );
             string path = @"C:\Projekte\NDO\IntegrationTests\NDOUnitTests\bin\Debug\NDOMapping.xml";
             PersistenceManager pm = new PersistenceManager(path);
+			pm.TransactionMode = TransactionMode.None;
             //PersistenceManager pm = new PersistenceManager();
 //			pm.LogPath = Path.GetDirectoryName(path);
 //			pm.RegisterConnectionListener(new OpenConnectionListener(ConnectionGenerator.OnConnection));

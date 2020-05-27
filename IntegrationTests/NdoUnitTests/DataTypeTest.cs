@@ -28,6 +28,7 @@ using NDO;
 using NDO.Mapping;
 using NUnit.Framework;
 using NDO.Query;
+using System.Linq;
 
 namespace NdoUnitTests
 {
@@ -86,7 +87,6 @@ namespace NdoUnitTests
                 }
 
 				pm.Close();
-				Assert.That( PmFactory.PoolCount <= 1, "Pool Count is " + PmFactory.PoolCount );
 			}
 		}
 
@@ -276,6 +276,36 @@ namespace NdoUnitTests
             Assert.That(!dc.EnumEmptyVar.HasValue, "EnumType falsch");
 
         }
+
+		[Test]
+		public void QueryWithEmptyGuidParameterSearchesForNull()
+		{
+			dc.Init();
+			dc.GuidVar = Guid.Empty;
+			pm.MakePersistent( dc );
+			pm.Save();
+			pm.UnloadCache();
+
+			var q = new NDOQuery<DataContainer>(pm, "guidVar = {0}");
+			q.Parameters.Add( Guid.Empty );
+			var list = q.Execute();
+			Assert.AreEqual( Guid.Empty, list.First().GuidVar );
+		}
+
+		[Test]
+		public void QueryWithDateTimeMinValueParameterSearchesForNull()
+		{
+			dc.Init();
+			dc.DateTimeVar = DateTime.MinValue;
+			pm.MakePersistent( dc );
+			pm.Save();
+			pm.UnloadCache();
+
+			var q = new NDOQuery<DataContainer>(pm, "dateTimeVar = {0}");
+			q.Parameters.Add( DateTime.MinValue );
+			var list = q.Execute();
+			Assert.AreEqual( DateTime.MinValue, list.First().DateTimeVar );
+		}
 
 
 		[Test]

@@ -39,7 +39,6 @@ namespace NdoUnitTests
 				}
 				pm.Close();				
 			}
-			Assert.That( PmFactory.PoolCount <= 1 );
 		}
 
 		private Mitarbeiter CreateMitarbeiter( string vorname, string nachname )

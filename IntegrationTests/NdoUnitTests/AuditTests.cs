@@ -46,7 +46,6 @@ namespace NdoUnitTests
 				handler.Execute( $"DELETE FROM {pm.NDOMapping.FindClass( typeof( Reise ) ).TableName}" );
 				handler.Execute( $"DELETE FROM {pm.NDOMapping.FindClass( typeof( Adresse ) ).TableName}" );
 			}
-			Assert.That( PmFactory.PoolCount <= 1, "Pool Count is " + PmFactory.PoolCount );
 		}
 
 		private Mitarbeiter CreateMitarbeiter( string vorname, string nachname )
@@ -129,14 +128,14 @@ namespace NdoUnitTests
 			Assert.AreEqual( 1, current.Count );
 			Assert.That( original.ContainsKey( "adresse" ) );
 			Assert.That( current.ContainsKey( "adresse" ) );
-			Assert.AreEqual( a.NDOObjectId, ((List<ObjectId>)current["adresse"])[0] );
+			Assert.AreEqual( a.NDOObjectId.ToShortId(), ((List<string>)current["adresse"])[0] );
 			// At this point it doesn't make any sense to serialize the changeObject,
 			// since the id of r is not yet determined.
 			Assert.That( (int)a.NDOObjectId.Id[0] < 0 );
 			pm.Save();
 			// Now the id of r is determined. Let's assert, that the list in current reflects the change.
 			Assert.That( (int)a.NDOObjectId.Id[0] > 0 );
-			Assert.AreEqual( a.NDOObjectId, ((List<ObjectId>)current["adresse"])[0] );
+			Assert.AreEqual( a.NDOObjectId.ToShortId(), ((List<string>)current["adresse"])[0] );
 		}
 
 		[Test]

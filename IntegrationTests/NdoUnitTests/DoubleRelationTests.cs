@@ -44,7 +44,6 @@ namespace NdoUnitTests
         public void TearDown()
         {
 			pm.Close();
-			Assert.That( PmFactory.PoolCount <= 1, "Pool Count is " + PmFactory.PoolCount );
 		}
 
 		[Test]

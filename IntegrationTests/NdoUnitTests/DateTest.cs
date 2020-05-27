@@ -49,7 +49,6 @@ namespace NdoUnitTests
 			pm.Delete(l);
 			pm.Save();
 			pm.Close();
-			Assert.That( PmFactory.PoolCount <= 1, "Pool Count is " + PmFactory.PoolCount );
 		}
 
 		[Test]

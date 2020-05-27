@@ -88,7 +88,6 @@ namespace NdoUnitTests {
 					sql = $"DELETE FROM {pm.NDOMapping.FindClass( typeof( Land ) ).TableName}";
 					handler.Execute( sql );
 				}
-				Assert.That( PmFactory.PoolCount <= 1 );
 			}
 			catch (Exception ex) {
 				System.Diagnostics.Debug.WriteLine("Exception in TearDown: " + ex);

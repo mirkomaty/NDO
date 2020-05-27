@@ -164,15 +164,15 @@ namespace NdoUnitTests
 			}
 		}
 
-		[Test]
-		public void OidArrayCanBeSerializedToJson()
-		{
-			var oid1 = ((IPersistenceCapable)pm.FindObject( typeof( Mitarbeiter ), 1 )).NDOObjectId;
-			var oid2 = ((IPersistenceCapable)pm.FindObject( typeof( Mitarbeiter ), 2 )).NDOObjectId;
-			ObjectIdList arr = new ObjectIdList { oid1, oid2 };
-			var json = JsonConvert.SerializeObject( arr, new ObjectIdConverter() );
-			Assert.AreEqual( "[\"Mitarbeiter-F33D0A6D-1\",\"Mitarbeiter-F33D0A6D-2\"]", json );
-		}
+		//[Test]
+		//public void OidArrayCanBeSerializedToJson()
+		//{
+		//	var oid1 = ((IPersistenceCapable)pm.FindObject( typeof( Mitarbeiter ), 1 )).NDOObjectId;
+		//	var oid2 = ((IPersistenceCapable)pm.FindObject( typeof( Mitarbeiter ), 2 )).NDOObjectId;
+		//	ObjectIdList arr = new ObjectIdList { oid1, oid2 };
+		//	var json = JsonConvert.SerializeObject( arr, new ObjectIdConverter() );
+		//	Assert.AreEqual( "[\"Mitarbeiter-F33D0A6D-1\",\"Mitarbeiter-F33D0A6D-2\"]", json );
+		//}
 
 		[Test]
 		public void TestIfWeCanRetrieveAnObjectFromShortId()

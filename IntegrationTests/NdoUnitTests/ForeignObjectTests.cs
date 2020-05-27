@@ -51,7 +51,6 @@ namespace NdoUnitTests
 			IList l = q.Execute();
 			pm.Delete(l);
 			pm.Dispose();
-			Assert.That( PmFactory.PoolCount <= 1, "Pool Count is " + PmFactory.PoolCount );
 		}
 
 		[Test]
