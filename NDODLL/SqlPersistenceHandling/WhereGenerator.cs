@@ -56,6 +56,30 @@ namespace NDO.SqlPersistenceHandling
 
 		private void AnnotateExpressionTree( OqlExpression expressionTree )
 		{
+			foreach (ParameterExpression parExp in expressionTree.GetAll(e=>e is ParameterExpression).ToList())
+			{
+				if (Guid.Empty.Equals( parExp.ParameterValue ) || DateTime.MinValue.Equals( parExp.ParameterValue ))
+				{
+					var parent = parExp.Parent;
+					if (parent.Operator == "=")
+					{
+						var i = parent.Children.IndexOf(parExp);
+						var nullExp = new NamedConstantExpression( "NULL", false, 0, 0 );
+						parent.Children[i] = nullExp;
+						( (IManageExpression) nullExp ).SetParent( parent );
+						parent.Operator = "IS";
+					}
+					if (parent.Operator == "<>")
+					{
+						var i = parent.Children.IndexOf(parExp);
+						var nullExp = new NamedConstantExpression( "NULL", true, 0, 0 );
+						parent.Children[i] = nullExp;
+						( (IManageExpression) nullExp ).SetParent( parent );
+						parent.Operator = "IS";
+					}
+				}
+			}
+
 			foreach (IdentifierExpression exp in expressionTree.GetAll( e => e is IdentifierExpression ).ToList())
 			{
 				string[] arr = ((string)exp.Value).Split( '.' );

@@ -282,7 +282,7 @@ namespace QueryTests
 			Assert.AreEqual( $"SELECT {fields} FROM [Land] WHERE [Land].[IsInEu] = {{0}}", vt.QueryString );
 
 			vt = pm.Objects<Land>().Where( l => l.IsInEu );
-			Assert.AreEqual( $"SELECT {fields} FROM [Land] WHERE [Land].[IsInEu] = {{0}}", vt.QueryString );
+			Assert.AreEqual( $"SELECT {fields} FROM [Land] WHERE [Land].[IsInEu] = 1", vt.QueryString );
 
 			vt = pm.Objects<Land>().Where( l => l.IsInEu && l.Name == "Lala" );
 			Assert.AreEqual( $"SELECT {fields} FROM [Land] WHERE [Land].[IsInEu] = 1 AND [Land].[Name] = {{0}}", vt.QueryString );

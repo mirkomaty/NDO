@@ -142,7 +142,7 @@ namespace NDO.Linq
 		public void ReplaceParameters(IEnumerable<object> newParameters)
 		{
 			this.queryParameters.Clear();
-			foreach (var p in queryParameters)
+			foreach (var p in newParameters)
 			{
 				this.queryParameters.Add( p );
 			}

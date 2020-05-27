@@ -15,6 +15,7 @@ using NDO.Mapping;
 using System.Collections;
 using System.Data;
 using System.Data.Common;
+using DataTypeTestClasses;
 
 namespace QueryTests
 {
@@ -60,7 +61,36 @@ namespace QueryTests
 		[Test]
 		public void QueryWithEmptyGuidParameterSearchesForNull()
 		{
-			Assert.That( false, "Der Test muss noch geschrieben werden." );
+			// The query will fetch for DataContainerDerived objects, too.
+			// Hence we test with "StartsWith", because the query contains additional text, which doesn't matter here.
+			var q = new NDOQuery<DataContainer>(pm, "guidVar = {0}");
+			q.Parameters.Add( Guid.Empty );
+			var fields = new SqlColumnListGenerator( pm.NDOMapping.FindClass( typeof( DataContainer ) ) ).SelectList;
+			var sql = $"SELECT {fields} FROM [DataContainer] WHERE [DataContainer].[GuidVar] IS NULL";
+			Assert.That( q.GeneratedQuery.StartsWith( sql ) );
+
+			q = new NDOQuery<DataContainer>(pm, "guidVar <> {0}");
+			q.Parameters.Add( Guid.Empty );
+			sql = $"SELECT {fields} FROM [DataContainer] WHERE [DataContainer].[GuidVar] IS NOT NULL";
+			Assert.That( q.GeneratedQuery.StartsWith( sql ) );
+		}
+
+		[Test]
+		public void QueryWithDateTimeMinValueParameterSearchesForNull()
+		{
+			// The query will fetch for DataContainerDerived objects, too.
+			// Hence we test with "StartsWith", because the query contains additional text, which doesn't matter here.
+			var q = new NDOQuery<DataContainer>(pm, "dateTimeVar = {0}");
+			q.Parameters.Add( DateTime.MinValue );
+			var fields = new SqlColumnListGenerator( pm.NDOMapping.FindClass( typeof( DataContainer ) ) ).SelectList;
+			var sql = $"SELECT {fields} FROM [DataContainer] WHERE [DataContainer].[DateTimeVar] IS NULL";
+			Assert.That( q.GeneratedQuery.StartsWith( sql ) );
+
+			q = new NDOQuery<DataContainer>(pm, "dateTimeVar <> {0}");
+			q.Parameters.Add( DateTime.MinValue );
+			sql = $"SELECT {fields} FROM [DataContainer] WHERE [DataContainer].[DateTimeVar] IS NOT NULL";
+			Assert.That( q.GeneratedQuery.StartsWith( sql ) );
+
 		}
 
 		[Test]
@@ -110,6 +140,7 @@ namespace QueryTests
 		public void SkipTakeParametersDontChangeTheCoreQuery(bool asc)
 		{
 			NDOQuery<Mitarbeiter> q = new NDOQuery<Mitarbeiter>( pm, "vorname = {0}" );
+			q.Parameters.Add( "Mirko" );
 			if (asc)
 				q.Orderings.Add( new AscendingOrder( "vorname" ) );
 			else
@@ -126,6 +157,7 @@ namespace QueryTests
 		public void MixedOrderingsWork()
 		{
 			NDOQuery<Mitarbeiter> q = new NDOQuery<Mitarbeiter>( pm, "vorname = {0}" );
+			q.Parameters.Add( "Mirko" );
 			q.Orderings.Add( new AscendingOrder( "vorname" ) );
 			q.Orderings.Add( new DescendingOrder( "nachname" ) );
 			q.Take = 10;
@@ -159,6 +191,7 @@ namespace QueryTests
 			NDOQuery<Mitarbeiter> q = new NDOQuery<Mitarbeiter>( pm, "dieReisen.zweck = 'ADC'" );
 			Assert.AreEqual( String.Format( "SELECT {0} FROM [Mitarbeiter] INNER JOIN [Reise] ON [Mitarbeiter].[ID] = [Reise].[IDMitarbeiter] WHERE [Reise].[Zweck] = 'ADC'", this.mitarbeiterJoinFields ), q.GeneratedQuery );
 			q = new NDOQuery<Mitarbeiter>( pm, "dieReisen.oid = {0}" );
+			q.Parameters.Add( 1 );
 			Assert.AreEqual( String.Format( "SELECT {0} FROM [Mitarbeiter] INNER JOIN [Reise] ON [Mitarbeiter].[ID] = [Reise].[IDMitarbeiter] WHERE [Reise].[ID] = {{0}}", this.mitarbeiterJoinFields ), q.GeneratedQuery );
 		}
 
@@ -180,6 +213,7 @@ namespace QueryTests
 		public void CheckOidWithTable()
 		{
 			NDOQuery<Mitarbeiter> q = new NDOQuery<Mitarbeiter>( pm, "dieReisen.dieLaender.oid = {0}" );
+			q.Parameters.Add( 1 );
 			Assert.AreEqual( String.Format( "SELECT {0} FROM [Mitarbeiter] INNER JOIN [Reise] ON [Mitarbeiter].[ID] = [Reise].[IDMitarbeiter] INNER JOIN [relLandReise] ON [Reise].[ID] = [relLandReise].[IDReise] WHERE [relLandReise].[IDLand] = {{0}}", this.mitarbeiterJoinFields ), q.GeneratedQuery );
 		}
 
@@ -282,6 +316,8 @@ namespace QueryTests
 		public void CheckIfMultiKeysWork()
 		{
 			NDOQuery<OrderDetail> q = new NDOQuery<OrderDetail>( pm, "oid = {0}" );
+			var od = pm.FindObject(typeof(OrderDetail), new object[]{ 1, 2 } );
+			q.Parameters.Add( od.NDOObjectId );
 			var fields = new SqlColumnListGenerator( pm.NDOMapping.FindClass( typeof( OrderDetail ) ) ).SelectList;
 			Assert.AreEqual( $"SELECT {fields} FROM [OrderDetail] WHERE [OrderDetail].[IDProduct] = {{0}} AND [OrderDetail].[IDOrder] = {{1}}", q.GeneratedQuery );
 			bool thrown = false;
@@ -434,6 +470,7 @@ namespace QueryTests
 		public void TestPolymorphicRelationQueries()
 		{
 			NDOQuery<Reise> q = new NDOQuery<Reise>( pm, "belege.datum = {0}" );
+			q.Parameters.Add( DateTime.Now );
 			Assert.AreEqual( $"SELECT {reiseJoinFields} FROM [Reise] INNER JOIN [relBelegKostenpunkt] ON [Reise].[ID] = [relBelegKostenpunkt].[IDReise] INNER JOIN [Beleg] ON [Beleg].[ID] = [relBelegKostenpunkt].[IDBeleg] AND [relBelegKostenpunkt].[TCBeleg] = 926149172 WHERE [Beleg].[Datum] = {{0}} UNION \r\nSELECT {reiseJoinFields} FROM [Reise] INNER JOIN [relBelegKostenpunkt] ON [Reise].[ID] = [relBelegKostenpunkt].[IDReise] INNER JOIN [PKWFahrt] ON [PKWFahrt].[ID] = [relBelegKostenpunkt].[IDBeleg] AND [relBelegKostenpunkt].[TCBeleg] = 734406058 WHERE [PKWFahrt].[Datum] = {{0}}", q.GeneratedQuery );
 		}
 

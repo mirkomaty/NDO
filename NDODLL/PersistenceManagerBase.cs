@@ -64,12 +64,12 @@ namespace NDO
 			string baseDir = AppDomain.CurrentDomain.BaseDirectory;
             if (File.Exists( Path.Combine( baseDir, "Web.config" ) ))
                 baseDir = Path.Combine( baseDir, "bin" );
-			var entryAssemblyName = Assembly.GetEntryAssembly().GetName().Name;
-			string[] paths = new string[]
-			{ 
-				Path.Combine( baseDir, $"{entryAssemblyName}.ndo.mapping" ),
-				Path.Combine( baseDir, "NDOMapping.xml" )
-			};
+			var entryAssemblyName = Assembly.GetEntryAssembly()?.GetName()?.Name;
+			List<string> paths = new List<string>();
+			if (entryAssemblyName != null)
+			paths.Add( Path.Combine( baseDir, $"{entryAssemblyName}.ndo.mapping" ) );
+			paths.Add( Path.Combine( baseDir, "NDOMapping.xml" ) );
+			
 			bool found = false;
 			foreach (var path in paths)
 			{

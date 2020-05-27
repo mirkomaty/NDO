@@ -189,6 +189,7 @@ namespace NDO.Query
 				if (this.queryContextsForTypes == null)
 					GenerateQueryContexts();
 
+				PrepareParameters();
 				IQueryGenerator queryGenerator = ConfigContainer.Resolve<IQueryGenerator>();
 				return queryGenerator.GenerateQueryStringForAllTypes( this.queryContextsForTypes, this.expressionTree, this.hollowResults, this.orderings, this.skip, this.take );
 			}

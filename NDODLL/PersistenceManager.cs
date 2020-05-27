@@ -1068,13 +1068,17 @@ namespace NDO
 				{
 					IProvider p = ndoConn.Parent.GetProvider( ndoConn );
 					string connStr = this.OnNewConnection( ndoConn );
-					var connection = handler.Connection = p.NewConnection( connStr );
+					var connection = p.NewConnection( connStr );
+					if (connection == null)
+						throw new NDOException( 119, $"Can't construct connection for {connStr}. The provider returns null." );
+					handler.Connection = connection;
 					LogIfVerbose( $"Creating a connection object for {ndoConn.DisplayName}" );
 					this.usedConnections.Add( ndoConn.ID, connection );
 				}
 			}
 
-			if (handler.Connection.State != ConnectionState.Open)
+			// During the tests, we work with a handler mock that always returns zero for the Connection property.
+			if (handler.Connection != null && handler.Connection.State != ConnectionState.Open)
 			{
 				handler.Connection.Open();
 				LogIfVerbose( $"Opening connection {ndoConn.DisplayName}" );

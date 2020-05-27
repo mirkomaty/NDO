@@ -81,6 +81,7 @@ namespace NDOql.Expressions
         public string Operator
         {
             get { return op; }
+            set { op = value; }
         }
 
         bool hasBrackets;

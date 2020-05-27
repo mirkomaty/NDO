@@ -780,6 +780,10 @@ namespace NDO.SqlPersistenceHandling
 				Type type = p.GetType();
                 if (type.FullName.StartsWith("System.Nullable`1"))
                     type = type.GetGenericArguments()[0];
+				if (type == typeof( Guid ) && Guid.Empty.Equals( p ) || type == typeof( DateTime ) && DateTime.MinValue.Equals( p ))
+				{
+					p = DBNull.Value;
+				}
                 if (type.IsEnum)
                 {
                     type = Enum.GetUnderlyingType(type);
@@ -788,7 +792,8 @@ namespace NDO.SqlPersistenceHandling
 				else if (type == typeof(Guid) && !provider.SupportsNativeGuidType)
 				{
 					type = typeof(string);
-					p = p.ToString();
+					if (p != DBNull.Value)
+						p = p.ToString();
 				}
 				string name = "p" + i.ToString();
 				int length = this.provider.GetDefaultLength(type);
