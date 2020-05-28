@@ -1,5 +1,10 @@
-﻿using System;
+﻿using NDO.Mapping;
+using System;
+using System.Collections.Generic;
+using System.Data;
+using System.Linq;
 using System.Transactions;
+using ST = System.Transactions;
 
 namespace NDO
 {
@@ -8,12 +13,14 @@ namespace NDO
 		TransactionScope innerScope;
 		private readonly PersistenceManager pm;
 
-		public IsolationLevel IsolationLevel { get; set; }
+		private Dictionary<string, IDbConnection> usedConnections = new Dictionary<string, IDbConnection>();
+
+		public ST.IsolationLevel IsolationLevel { get; set; }
 		public TransactionMode TransactionMode { get; set; }
 
 		public NDOTransactionScope(PersistenceManager pm)
 		{
-			IsolationLevel = IsolationLevel.ReadCommitted;
+			IsolationLevel = ST.IsolationLevel.ReadCommitted;
 			TransactionMode = TransactionMode.Optimistic;
 			this.pm = pm;
 		}
@@ -42,7 +49,23 @@ namespace NDO
 				innerScope.Dispose();
 			}
 
+			CloseConnections();
+
 			innerScope = null;
+		}
+
+		public IDbConnection GetConnection(string id, Func<IDbConnection> factory)
+		{
+			if (this.usedConnections.ContainsKey( id ))
+			{
+				return this.usedConnections[id];
+			}
+			else
+			{
+				var conn = factory();
+				this.usedConnections.Add( id, conn );
+				return conn;
+			}
 		}
 
 		public void Dispose()
@@ -53,6 +76,19 @@ namespace NDO
 				innerScope.Dispose();
 				innerScope = null;
 			}
+
+			CloseConnections();
+		}
+
+		private void CloseConnections()
+		{
+			foreach (var conn in this.usedConnections.Values.Where( c => c.State == ConnectionState.Open ))
+			{
+				conn.Close();
+				pm.LogIfVerbose( $"Closed connection {new Connection( null ) { Name = conn.ConnectionString }.DisplayName }" );
+			}
+
+			this.usedConnections.Clear();
 		}
 	}
 }

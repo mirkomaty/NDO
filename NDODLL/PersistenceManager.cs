@@ -93,7 +93,6 @@ namespace NDO
 		internal NDOTransactionScope TransactionScope => this.transactionScope;		
 
 		private OpenConnectionListener openConnectionListener;
-		private Dictionary<string, IDbConnection> usedConnections = new Dictionary<string, IDbConnection>();
 
 		/// <summary>
 		/// Register a listener to this event if you work in concurrent scenarios and you use TimeStamps.
@@ -1031,19 +1030,7 @@ namespace NDO
 			if (doCommit)
 			{
 				this.transactionScope.Complete();
-				CloseConnections();
 			}
-		}
-
-		private void CloseConnections()
-		{
-			foreach (var conn in this.usedConnections.Values.Where( c => c.State == ConnectionState.Open ))
-			{
-				conn.Close();
-				LogIfVerbose( $"Closed connection {new Connection(null) { Name = conn.ConnectionString }.DisplayName }" );
-			}
-
-			this.usedConnections.Clear();
 		}
 
 		internal void CheckTransaction(IPersistenceHandlerBase handler, Type t)
@@ -1060,21 +1047,16 @@ namespace NDO
 			
 			if (handler.Connection == null)
 			{
-				if (this.usedConnections.ContainsKey( ndoConn.ID ))
-				{
-					handler.Connection = this.usedConnections[ndoConn.ID];
-				}
-				else
+				handler.Connection = this.transactionScope.GetConnection(ndoConn.ID, () =>
 				{
 					IProvider p = ndoConn.Parent.GetProvider( ndoConn );
 					string connStr = this.OnNewConnection( ndoConn );
 					var connection = p.NewConnection( connStr );
 					if (connection == null)
 						throw new NDOException( 119, $"Can't construct connection for {connStr}. The provider returns null." );
-					handler.Connection = connection;
 					LogIfVerbose( $"Creating a connection object for {ndoConn.DisplayName}" );
-					this.usedConnections.Add( ndoConn.ID, connection );
-				}
+					return connection;
+				} );
 			}
 
 			// During the tests, we work with a handler mock that always returns zero for the Connection property.
@@ -3572,7 +3554,6 @@ namespace NDO
 		/// </summary>
 		public void Close() 
 		{
-			CloseConnections();
 			this.transactionScope.Dispose();
 			UnloadCache();
 		}
