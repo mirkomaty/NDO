@@ -31,6 +31,7 @@ using System.Collections.Generic;
 using NDO;
 using Reisekosten.Personal;
 using NDO.Query;
+using NDO.Linq;
 
 namespace NdoUnitTests
 {
@@ -767,6 +768,28 @@ namespace NdoUnitTests
 			Assert.AreEqual( NDOObjectState.Hollow, m2.NDOObjectState );
 			pm.LoadData( m2 );
 			Assert.AreEqual( NDOObjectState.Persistent, m2.NDOObjectState );
+		}
+
+		[Test]
+		public void CanQueryWithInClause()
+		{
+			var pm = PmFactory.NewPersistenceManager();
+			var m1 = CreateMitarbeiter("Mirko", "Matytschak");
+			var m2 = CreateMitarbeiter("Hans", "Huber");
+			pm.MakePersistent( m1 );
+			pm.MakePersistent( m2 );
+			pm.Save();
+			pm.UnloadCache();
+			var l = pm.Objects<Mitarbeiter>().Where(m=>m.Vorname.In(new []{ "Mirko" } )).ResultTable;
+			Assert.AreEqual( 1, l.Count );
+			l = pm.Objects<Mitarbeiter>().Where(m=>m.Vorname.In(new []{ "Mirko", "Hans" } )).ResultTable;
+			Assert.AreEqual( 2, l.Count );
+			Assert.AreEqual( 0, QueryByGuid( new[] { Guid.NewGuid() } ).Count );
+		}
+
+		List<Mitarbeiter> QueryByGuid(Guid[] guids)
+		{
+			return pm.Objects<Mitarbeiter>().Where( m => m.Vorname.In( guids ) );
 		}
 
 		[Test]

@@ -328,7 +328,7 @@ public OqlExpression RootExpression
 			Expect(4);
 			result.Add(new StringLiteralExpression(t.val, t.line, t.col), ","); 
 		}
-		expression = result.Simplify(); 
+		expression = result; /* Do not simplify here, because otherwise the brackets are missing */ 
 	}
 
 	void BitOrExpr(out OqlExpression expression) {

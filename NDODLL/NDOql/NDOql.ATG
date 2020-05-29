@@ -344,7 +344,7 @@ StringList <out OqlExpression expression>
 		","
 		stringCon (. result.Add(new StringLiteralExpression(t.val, t.line, t.col), ","); .)
 	}
-(. expression = result.Simplify(); .)
+(. expression = result; /* Do not simplify here, because otherwise the brackets are missing */ .)
 .
 
 
