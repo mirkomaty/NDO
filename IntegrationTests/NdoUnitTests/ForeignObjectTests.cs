@@ -36,17 +36,16 @@ namespace NdoUnitTests
 	[TestFixture]
 	public class ForeignObjectTests
 	{
-		PersistenceManager pm; 
 
 		[SetUp]
 		public void Setup()
 		{
-			pm = PmFactory.NewPersistenceManager();
 		}
 
 		[TearDown]
 		public void TearDown()
 		{
+			var pm = PmFactory.NewPersistenceManager();
 			NDOQuery<Parent> q = new NDOQuery<Parent>(pm, null);
 			IList l = q.Execute();
 			pm.Delete(l);
@@ -56,6 +55,7 @@ namespace NdoUnitTests
 		[Test]
 		public void TestString()
 		{
+			var pm = PmFactory.NewPersistenceManager();
 			Parent p1 = new Parent();
 			Parent p2 = new Parent();
 			pm.MakePersistent(p1);
@@ -69,6 +69,7 @@ namespace NdoUnitTests
 		[Test]
 		public void TestPoint()
 		{
+			var pm = PmFactory.NewPersistenceManager();
 			Parent p1 = new Parent();
 			Parent p2 = new Parent();
 			pm.MakePersistent(p1);
@@ -83,6 +84,7 @@ namespace NdoUnitTests
 		[Test]
 		public void TestPoint2()
 		{
+			var pm = PmFactory.NewPersistenceManager();
 			Parent p1 = new Parent();
 			Parent p2 = new Parent();
 			pm.MakePersistent(p1);
@@ -97,6 +99,7 @@ namespace NdoUnitTests
 		[Test]
 		public void TestOwnPoint2()
 		{
+			var pm = PmFactory.NewPersistenceManager();
 			Parent p1 = new Parent();
 			Parent p2 = new Parent();
 			pm.MakePersistent(p1);
@@ -111,6 +114,7 @@ namespace NdoUnitTests
 		[Test]
 		public void TestOwnPoint()
 		{
+			var pm = PmFactory.NewPersistenceManager();
 			Parent p1 = new Parent();
 			pm.MakePersistent(p1);
 			pm.Save();
@@ -123,6 +127,7 @@ namespace NdoUnitTests
 		[Test]
 		public void TestListElement()
 		{
+			var pm = PmFactory.NewPersistenceManager();
 			Parent p1 = new Parent();
 			Parent p2 = new Parent();
 			pm.MakePersistent(p1);
@@ -139,6 +144,7 @@ namespace NdoUnitTests
 		[Test]
 		public void TestList()
 		{
+			var pm = PmFactory.NewPersistenceManager();
 			Parent p1 = new Parent();
 			Parent p2 = new Parent();
 			pm.MakePersistent(p1);
@@ -157,6 +163,7 @@ namespace NdoUnitTests
 		[Test]
 		public void TestEmbedded()
 		{
+			var pm = PmFactory.NewPersistenceManager();
 			Parent p1 = new Parent();
 			Parent p2 = new Parent();
 			pm.MakePersistent(p1);
@@ -172,6 +179,7 @@ namespace NdoUnitTests
 		[Test]
 		public void TestOwnEmbedded()
 		{
+			var pm = PmFactory.NewPersistenceManager();
 			Parent p1 = new Parent();
 			pm.MakePersistent(p1);
 			pm.Save();
@@ -185,6 +193,7 @@ namespace NdoUnitTests
 		[Test]
 		public void TestElement()
 		{
+			var pm = PmFactory.NewPersistenceManager();
 			Parent p1 = new Parent();
 			Parent p2 = new Parent();
 			pm.MakePersistent(p1);

@@ -56,7 +56,9 @@ namespace NdoUnitTests {
 
 		[TearDown]
 		public void TearDown() {
-			pm.Abort();
+			var pm = PmFactory.NewPersistenceManager();
+			pm.TransactionMode = TransactionMode.None;
+
 			//pm.UnloadCache();
 			IList reiseliste = pm.GetClassExtent(typeof(Reise), true);
 			pm.Delete(reiseliste);

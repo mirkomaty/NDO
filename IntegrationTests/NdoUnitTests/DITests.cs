@@ -21,26 +21,30 @@ namespace NdoUnitTests
 			}
 		}
 
-		PersistenceManager pm;
 
 		[SetUp]
 		public void Setup()
 		{
-			this.pm = PmFactory.NewPersistenceManager();
-//			this.pm.ConfigContainer.RegisterType<IDIParameter, DIParameter>();
 			NDO.Configuration.NDOContainer.Instance.RegisterType<IDIParameter, DIParameter>();
+		}
+		public void TearDown()
+		{
+			var pm = PmFactory.NewPersistenceManager();
+			pm.Delete( pm.Objects<ClassWithDIConstructor>().ResultTable );
 		}
 
 		[Test]
 		public void FindObject_provides_DIParameter()
 		{
-			var testObject = (ClassWithDIConstructor)this.pm.FindObject( typeof( ClassWithDIConstructor ), 0 );
+			var pm = PmFactory.NewPersistenceManager();
+			var testObject = (ClassWithDIConstructor)pm.FindObject( typeof( ClassWithDIConstructor ), 0 );
 			Assert.AreEqual( "Teststring", testObject.DiField );
 		}
 
 		[Test]
 		public void Query_provides_DIParameter()
 		{
+			var pm = PmFactory.NewPersistenceManager();
 			var testObject = new ClassWithDIConstructor(new DIParameter());
 			testObject.PersistentField = "PersistentFieldValue";
 			pm.MakePersistent( testObject );

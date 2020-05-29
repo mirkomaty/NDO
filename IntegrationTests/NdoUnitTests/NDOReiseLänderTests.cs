@@ -55,30 +55,11 @@ namespace NdoUnitTests {
 		public void TearDown() {
 			try {
 				pm = PmFactory.NewPersistenceManager();
-				//				pm.Abort();
+				pm.TransactionMode = TransactionMode.None;
+
 				IList mitarbeiterListe = pm.GetClassExtent( typeof( Mitarbeiter ), false );
-				//				Debug.WriteLine("TearDown löscht " + mitarbeiterListe.Count + " Mitarbeiter");
 				pm.Delete( mitarbeiterListe );
 				pm.Save();
-				//				IList reiseListe = pm.GetClassExtent(typeof(Reise), false);
-				////				foreach(Reise r in reiseListe)
-				////					r.Länder.Clear(); Kann nicht gehen. Besser r.ClearLänder();
-				////				pm.Save();
-				////				pm.UnloadCache();
-
-				////				Debug.WriteLine("TearDown löscht " + reiseListe.Count + " Reisen");
-				//				pm.Delete(reiseListe);
-				//				pm.Save();
-				//				pm.UnloadCache();
-				//				IList länderListe = pm.GetClassExtent(typeof(Land), true);
-				////				foreach(Land land in länderListe)
-				////					if (land != null && land.DieReisen != null)
-				////					 foreach(Reise r in land.DieReisen)
-				////							land.RemoveReise(r);
-				////				Debug.WriteLine("TearDown löscht " + länderListe.Count + " Länder");
-				//				pm.Delete(länderListe);
-				//				pm.Save();
-				//				pm.Close();
 				using (var handler = pm.GetSqlPassThroughHandler())
 				{
 					var sql = $"DELETE FROM {pm.NDOMapping.FindClass( typeof( Reise ) ).TableName}";

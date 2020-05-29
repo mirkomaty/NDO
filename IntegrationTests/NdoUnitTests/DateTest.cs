@@ -33,17 +33,16 @@ namespace NdoUnitTests
 	[TestFixture]
 	public class DateTest
 	{
-		PersistenceManager pm;
 		
 		[SetUp]
 		public void Setup()
 		{
-			pm = PmFactory.NewPersistenceManager();
 		}
 
 		[TearDown]
 		public void TearDown()
 		{
+			var pm = PmFactory.NewPersistenceManager();
 			NDOQuery<DateTestClass> q = new NDOQuery<DateTestClass>(pm, null);
 			IList l = q.Execute();
 			pm.Delete(l);
@@ -54,6 +53,7 @@ namespace NdoUnitTests
 		[Test]
 		public void TestCreated()
 		{
+			var pm = PmFactory.NewPersistenceManager();
 
 			// dt = new DateTime(2004, 10, 12, 13, 30, 31, 123);
 			DateTestClass dtc = new DateTestClass();
@@ -75,6 +75,8 @@ namespace NdoUnitTests
 		[Test]
 		public void TestPersistent()
 		{
+			var pm = PmFactory.NewPersistenceManager();
+
 			InnerDate id = new InnerDate();
 			pm.MakePersistent(id);
 			pm.Save();
@@ -88,7 +90,9 @@ namespace NdoUnitTests
         [Test]
         public void ProviderTest()
         {
-            Trace.WriteLine("Provider: " + pm.NDOMapping.GetProvider(typeof(Reisekosten.Personal.Mitarbeiter)).GetType().Assembly.FullName);
+			var pm = PmFactory.NewPersistenceManager();
+
+			Trace.WriteLine("Provider: " + pm.NDOMapping.GetProvider(typeof(Reisekosten.Personal.Mitarbeiter)).GetType().Assembly.FullName);
             Trace.WriteLine("Available Providers:");
             foreach (string s in NDOProviderFactory.Instance.ProviderNames)
                 Trace.WriteLine("  " + s);

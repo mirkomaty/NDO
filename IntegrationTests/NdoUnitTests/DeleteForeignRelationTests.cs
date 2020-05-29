@@ -31,18 +31,15 @@ namespace NdoUnitTests
 	[TestFixture]
 	public class DeleteForeignRelationTests
 	{
-
-		PersistenceManager pm;
-
 		[SetUp]
 		public void Setup()
 		{
-			pm = PmFactory.NewPersistenceManager();
 		}
 
 		[TearDown]
 		public void TearDown()
 		{
+			var pm = PmFactory.NewPersistenceManager();
 			IList l = pm.GetClassExtent(typeof(DfrAddress));
 			pm.Delete(l);
 			l = pm.GetClassExtent(typeof(DfrContact));
@@ -56,6 +53,7 @@ namespace NdoUnitTests
 		[Test]
 		public void TestDfr()
 		{
+			var pm = PmFactory.NewPersistenceManager();
 
 			DfrContact contact = new DfrContact();
 			contact.Name = "Hans Möller";

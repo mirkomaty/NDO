@@ -772,9 +772,13 @@ namespace NdoUnitTests
 		[Test]
 		public void CanInsertObjectsUsingSqlHandler()
 		{
-			var handler = pm.GetSqlPassThroughHandler();
-			var sql = "INSERT INTO [Mitarbeiter] ([Vorname],[Nachname],[Gehalt]) VALUES (@p0, @p1, @p2)";
-			handler.Execute( sql, false, "Fritz", "Müller", 123456.34m );
+			var pm = PmFactory.NewPersistenceManager();
+			pm.TransactionMode = TransactionMode.None;
+			using (var handler = pm.GetSqlPassThroughHandler())
+			{
+				var sql = "INSERT INTO [Mitarbeiter] ([Vorname],[Nachname],[Gehalt]) VALUES (@p0, @p1, @p2)";
+				handler.Execute( sql, false, "Fritz", "Müller", 123456.34m );
+			}
 			var m = pm.Objects<Mitarbeiter>().SingleOrDefault();
 			Assert.NotNull( m );
 			Assert.AreEqual( "Fritz", m.Vorname );
@@ -785,9 +789,13 @@ namespace NdoUnitTests
 		[Test]
 		public void CanInsertObjectsWithNullParameterUsingSqlHandler()
 		{
-			var handler = pm.GetSqlPassThroughHandler();
-			var sql = "INSERT INTO [Mitarbeiter] ([Vorname],[Nachname],[Gehalt]) VALUES (@p0, @p1, @p2)";
-			handler.Execute( sql, false, null, "Müller", 123456.34m );
+			var pm = PmFactory.NewPersistenceManager();
+			pm.TransactionMode = TransactionMode.None;
+			using (var handler = pm.GetSqlPassThroughHandler())
+			{
+				var sql = "INSERT INTO [Mitarbeiter] ([Vorname],[Nachname],[Gehalt]) VALUES (@p0, @p1, @p2)";
+				handler.Execute( sql, false, null, "Müller", 123456.34m );
+			}
 			var m = pm.Objects<Mitarbeiter>().SingleOrDefault();
 			Assert.NotNull( m );
 			Assert.AreEqual( "Müller", m.Nachname );

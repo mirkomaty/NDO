@@ -255,6 +255,7 @@
     <Compile Include="TimeStampTest.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="TransactionScopeTests.cs" />
     <Compile Include="TransactionTests.cs" />
     <Compile Include="TypeCodeTest.cs" />
     <Content Include="App.ico" />

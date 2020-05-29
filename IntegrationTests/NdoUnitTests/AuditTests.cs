@@ -15,28 +15,25 @@ namespace NdoUnitTests
 	[TestFixture]
 	public class AuditTests
 	{
-		PersistenceManager pm;
 		Mitarbeiter m;
 		Reise r;
-		int reiseTypeCode;
 
 		[SetUp]
 		public void Setup()
 		{
-			pm = PmFactory.NewPersistenceManager();
+			var pm = PmFactory.NewPersistenceManager();
 			m = CreateMitarbeiter( "Mirko", "Matytschak" );
 			pm.MakePersistent( m );
 			m.ErzeugeReise().Zweck = "ADC";
 			pm.Save();
 			pm.UnloadCache();
-			this.reiseTypeCode = pm.NDOMapping.FindClass( typeof( Reise ) ).TypeCode;
 		}
 
 		[TearDown]
 		public void TearDown()
 		{
-			pm.Abort();
-			pm.UnloadCache();
+			var pm = PmFactory.NewPersistenceManager();
+			pm.TransactionMode = TransactionMode.None;
 			var mitarbeiterListe = pm.GetClassExtent( typeof( Mitarbeiter ), true );
 			pm.Delete( mitarbeiterListe );
 			pm.Save();
@@ -59,6 +56,7 @@ namespace NdoUnitTests
 		[Test]
 		public void ChangeSetDetectsSimpleChange()
 		{
+			var pm = PmFactory.NewPersistenceManager();
 			m = pm.Objects<Mitarbeiter>().Single();
 			m.Vorname = "Hans";
 			var changeObject = pm.GetChangeSet( m );
@@ -74,6 +72,7 @@ namespace NdoUnitTests
 		[Test]
 		public void ChangeSetDetectsObjectAddition1_to_n()
 		{
+			var pm = PmFactory.NewPersistenceManager();
 			m = pm.Objects<Mitarbeiter>().Single();
 			var r = m.ErzeugeReise();
 			r.Zweck = "Test";
@@ -100,6 +99,7 @@ namespace NdoUnitTests
 		[Test]
 		public void ChangeSetDetectsObjectDeletion1_to_n()
 		{
+			var pm = PmFactory.NewPersistenceManager();
 			m = pm.Objects<Mitarbeiter>().Single();
 			m.Löschen( m.Reisen[0] );
 			var changeObject = pm.GetChangeSet( m );
@@ -117,6 +117,7 @@ namespace NdoUnitTests
 		[Test]
 		public void ChangeSetDetectsObjectAddition1_to_1()
 		{
+			var pm = PmFactory.NewPersistenceManager();
 			m = pm.Objects<Mitarbeiter>().Single();
 			Adresse a = new Adresse() { Ort = "München", Straße = "Teststr", Plz = "80133" };
 			m.Adresse = a;
@@ -130,7 +131,7 @@ namespace NdoUnitTests
 			Assert.That( current.ContainsKey( "adresse" ) );
 			Assert.AreEqual( a.NDOObjectId.ToShortId(), ((List<string>)current["adresse"])[0] );
 			// At this point it doesn't make any sense to serialize the changeObject,
-			// since the id of r is not yet determined.
+			// since the id of a is not yet determined.
 			Assert.That( (int)a.NDOObjectId.Id[0] < 0 );
 			pm.Save();
 			// Now the id of r is determined. Let's assert, that the list in current reflects the change.
@@ -141,6 +142,7 @@ namespace NdoUnitTests
 		[Test]
 		public void ChangeSetDetectsObjectDeletion1_to_1()
 		{
+			var pm = PmFactory.NewPersistenceManager();
 			m = pm.Objects<Mitarbeiter>().Single();
 			Adresse a = new Adresse() { Ort = "München", Straße = "Teststr", Plz = "80133" };
 			m.Adresse = a;

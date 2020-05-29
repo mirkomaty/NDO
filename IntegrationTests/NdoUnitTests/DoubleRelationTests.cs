@@ -26,29 +26,32 @@ using System.Text;
 using NUnit.Framework;
 using NDO;
 using DoubleRelationClasses;
+using Unity;
 
 namespace NdoUnitTests
 {
     [TestFixture]
     public class DoubleRelationTests
     {
-        PersistenceManager pm;
-
         [SetUp]
         public void Setup()
         {
-            pm = PmFactory.NewPersistenceManager();
         }
 
         [TearDown]
         public void TearDown()
         {
-			pm.Close();
+            var pm = PmFactory.NewPersistenceManager();
+            var l = pm.Objects<DRPerson>().ResultTable;
+            pm.Delete( l );
+            pm.Save();
+            pm.Close();
 		}
 
 		[Test]
         public void TestDoubleRelation()
         {
+            var pm = PmFactory.NewPersistenceManager();
             DRPerson oPerson1 = new DRPerson();
             pm.MakePersistent(oPerson1);
             oPerson1.DefaultAddress = oPerson1.NewAddress();

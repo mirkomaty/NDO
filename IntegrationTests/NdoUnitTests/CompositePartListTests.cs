@@ -34,16 +34,15 @@ namespace NdoUnitTests
     [TestFixture]
     public class CompositePartListTests
     {
-        PersistenceManager pm;
         [SetUp]
         public void Setup()
         {
-            pm = PmFactory.NewPersistenceManager();
         }
 
         [TearDown]
         public void TearDown()
         {
+            var pm = PmFactory.NewPersistenceManager();
             pm.Delete(pm.GetClassExtent(typeof(SnmpDevice)));
             pm.Save();
             pm.Delete(pm.GetClassExtent(typeof(Device)));
@@ -54,6 +53,7 @@ namespace NdoUnitTests
 		[Test]
         public void TestBaseOnly()
         {
+            var pm = PmFactory.NewPersistenceManager();
             Device root = new Device();
             root.Name = "root";
             pm.MakePersistent(root);
@@ -111,6 +111,7 @@ namespace NdoUnitTests
         [Test]
         public void TestDerivedOnly()
         {
+            var pm = PmFactory.NewPersistenceManager();
             Device root = new SnmpDevice();
             root.Name = "root";
             pm.MakePersistent(root);
@@ -167,6 +168,7 @@ namespace NdoUnitTests
         [Test]
         public void TestMixed()
         {
+            var pm = PmFactory.NewPersistenceManager();
             Device root = new Device();
             root.Name = "root";
             pm.MakePersistent(root);
@@ -223,6 +225,7 @@ namespace NdoUnitTests
         [Test]
         public void TestMapping()
         {
+            var pm = PmFactory.NewPersistenceManager();
             Class cl = pm.NDOMapping.FindClass(typeof(Device));
             Relation r = cl.FindRelation("subdevices");
             Assert.That(r.Bidirectional == false, "Relation shouldn't be bidirectional #1");

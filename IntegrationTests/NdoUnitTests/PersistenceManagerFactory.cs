@@ -38,6 +38,9 @@ namespace NdoUnitTests
 	/// </summary>
 	public class PmFactory
 	{
+		static object lockObject = new object();
+		static NDOMapping mapping;
+
 		static PmFactory()
 		{
 			//PersistenceManager pm = NewPersistenceManager();
@@ -87,12 +90,25 @@ namespace NdoUnitTests
 			return result;
 		}
 
-		public static PersistenceManager NewPersistenceManager()
+		public static PersistenceManager NewPersistenceManager(TransactionMode transactionMode = TransactionMode.Optimistic)
 		{
 			//string path = Path.Combine( Path.GetDirectoryName( typeof( PmFactory ).Assembly.Location ), "NDOMapping.xml" );
             string path = @"C:\Projekte\NDO\IntegrationTests\NDOUnitTests\bin\Debug\NDOMapping.xml";
-            PersistenceManager pm = new PersistenceManager(path);
-			pm.TransactionMode = TransactionMode.None;
+			
+			PersistenceManager pm;
+			
+			lock (lockObject)
+			{
+				if (mapping != null)
+					pm = new PersistenceManager( mapping );
+				else
+				{
+					pm = new PersistenceManager(path);
+					mapping = pm.NDOMapping;
+				}
+			}
+
+			pm.TransactionMode = transactionMode;
             //PersistenceManager pm = new PersistenceManager();
 //			pm.LogPath = Path.GetDirectoryName(path);
 //			pm.RegisterConnectionListener(new OpenConnectionListener(ConnectionGenerator.OnConnection));

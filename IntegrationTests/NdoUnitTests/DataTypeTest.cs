@@ -35,66 +35,65 @@ namespace NdoUnitTests
 	[TestFixture] 
 	public class DataTypeTest
 	{
-		PersistenceManager pm;
-		DataContainer dc = new DataContainer();
-
 		[SetUp]
 		public void Setup() 
 		{
-			pm = PmFactory.NewPersistenceManager();
 		}
 
 		[TearDown]
-		public void TearDown() 
+		public void TearDown()
 		{
-			if (null != pm)
-			{
-				IList l = pm.GetClassExtent(typeof(DataContainer), true);
-				if (l.Count > 0)
-				{
-					pm.Delete(l);
-					pm.Save();
-				}
-				l = pm.GetClassExtent(typeof(DataContainerDerived), true);
-				if (l.Count > 0)
-				{
-					pm.Delete(l);
-					pm.Save();
-				}
-				l = pm.GetClassExtent(typeof(VtAndEtContainer), true);
-				if (l.Count > 0)
-				{
-					pm.Delete(l);
-					pm.Save();
-				}
-				l = pm.GetClassExtent(typeof(VtAndEtContainerDerived), true);
-				if (l.Count > 0)
-				{
-					pm.Delete(l);
-					pm.Save();
-				}
-                l = pm.GetClassExtent(typeof(NullableDataContainer), true);
-                if (l.Count > 0)
-                {
-                    pm.Delete(l);
-                    pm.Save();
-                }
-                l = pm.GetClassExtent(typeof(NullableDataContainerDerived), true);
-                if (l.Count > 0)
-                {
-                    pm.Delete(l);
-                    pm.Save();
-                }
+			var pm = PmFactory.NewPersistenceManager();
 
-				pm.Close();
+			IList l = pm.GetClassExtent(typeof(DataContainer), true);
+			if (l.Count > 0)
+			{
+				pm.Delete( l );
+				pm.Save();
 			}
+			l = pm.GetClassExtent( typeof( DataContainerDerived ), true );
+			if (l.Count > 0)
+			{
+				pm.Delete( l );
+				pm.Save();
+			}
+			l = pm.GetClassExtent( typeof( VtAndEtContainer ), true );
+			if (l.Count > 0)
+			{
+				pm.Delete( l );
+				pm.Save();
+			}
+			l = pm.GetClassExtent( typeof( VtAndEtContainerDerived ), true );
+			if (l.Count > 0)
+			{
+				pm.Delete( l );
+				pm.Save();
+			}
+			l = pm.GetClassExtent( typeof( NullableDataContainer ), true );
+			if (l.Count > 0)
+			{
+				pm.Delete( l );
+				pm.Save();
+			}
+			l = pm.GetClassExtent( typeof( NullableDataContainerDerived ), true );
+			if (l.Count > 0)
+			{
+				pm.Delete( l );
+				pm.Save();
+			}
+
+			pm.Close();
 		}
 
 		[Test]
 		public void TestDataContainer()
 		{
+			DataContainer dc = new DataContainer();
+
 			dc.Init();
-			
+
+			var pm = PmFactory.NewPersistenceManager();
+
 			pm.MakePersistent(dc);
 			pm.Save();
 			pm.UnloadCache();
@@ -110,7 +109,8 @@ namespace NdoUnitTests
             NullableDataContainer ndc = new NullableDataContainer();
             ndc.Init();
 
-            pm.MakePersistent(ndc);
+			var pm = PmFactory.NewPersistenceManager();
+			pm.MakePersistent(ndc);
             pm.Save();
             pm.UnloadCache();
             ndc = new NDOQuery<NullableDataContainer>(pm, null, false).ExecuteSingle(true);
@@ -124,7 +124,8 @@ namespace NdoUnitTests
             NullableDataContainerDerived ndc = new NullableDataContainerDerived();
             ndc.Init();
 
-            pm.MakePersistent(ndc);
+			var pm = PmFactory.NewPersistenceManager();
+			pm.MakePersistent(ndc);
             pm.Save();
             pm.UnloadCache();
             ndc = new NDOQuery<NullableDataContainerDerived>(pm, null, false).ExecuteSingle(true);
@@ -187,6 +188,7 @@ namespace NdoUnitTests
 		{			
 			DataContainerDerived dcd = new DataContainerDerived();
 			dcd.Init();
+			var pm = PmFactory.NewPersistenceManager();
 			pm.MakePersistent(dcd);
 			pm.Save();
 			pm.UnloadCache();
@@ -280,6 +282,9 @@ namespace NdoUnitTests
 		[Test]
 		public void QueryWithEmptyGuidParameterSearchesForNull()
 		{
+			var pm = PmFactory.NewPersistenceManager();
+
+			DataContainer dc = new DataContainer();
 			dc.Init();
 			dc.GuidVar = Guid.Empty;
 			pm.MakePersistent( dc );
@@ -295,6 +300,10 @@ namespace NdoUnitTests
 		[Test]
 		public void QueryWithDateTimeMinValueParameterSearchesForNull()
 		{
+			var pm = PmFactory.NewPersistenceManager();
+
+			DataContainer dc = new DataContainer();
+
 			dc.Init();
 			dc.DateTimeVar = DateTime.MinValue;
 			pm.MakePersistent( dc );
@@ -311,6 +320,9 @@ namespace NdoUnitTests
 		[Test]
 		public void ParametersTest()
 		{
+			var pm = PmFactory.NewPersistenceManager();
+
+			DataContainer dc = new DataContainer();
 			dc.Init();
 			pm.MakePersistent(dc);
 			pm.Save();
@@ -514,6 +526,8 @@ namespace NdoUnitTests
 		[Test]
 		public void TestValueTypeAndEmbeddedType()
 		{
+			var pm = PmFactory.NewPersistenceManager();
+
 			Class cl = pm.NDOMapping.FindClass("DataTypeTestClasses.VtAndEtContainer");
 			Field f = cl.FindField("embeddedType.doubleVar");
 			f.Column.Size = 12;
@@ -532,6 +546,8 @@ namespace NdoUnitTests
 		[Test]
 		public void TestValueTypeAndEmbeddedTypeDerived()
 		{
+			var pm = PmFactory.NewPersistenceManager();
+
 			VtAndEtContainerDerived cont = new VtAndEtContainerDerived();
 			cont.Init();
 			pm.MakePersistent(cont);

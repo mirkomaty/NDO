@@ -22,6 +22,7 @@
 
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using NDO;
 
 namespace PureBusinessClasses
@@ -39,12 +40,12 @@ namespace PureBusinessClasses
 			set { date = value; }
 		}
 
-		[NDORelation(typeof(OrderDetail))]
-		IList orderDetails = new ArrayList();
-		public IList OrderDetails
+		[NDORelation(RelationInfo.Composite)]
+		List<OrderDetail> orderDetails = new List<OrderDetail>();
+
+		public IEnumerable<OrderDetail> OrderDetails
 		{
-			get { return ArrayList.ReadOnly(orderDetails); }
-			set { orderDetails = value; }
+			get { return orderDetails; }
 		}
 
 		public NDOObjectState NDOObjectState { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }

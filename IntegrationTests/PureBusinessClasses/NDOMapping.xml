@@ -1085,7 +1085,7 @@
         </Field>
       </Fields>
       <Relations>
-        <Relation FieldName="orderDetails" ReferencedTypeName="PureBusinessClasses.OrderDetail" RelationName="">
+        <Relation FieldName="orderDetails" AccessorName="OrderDetails" ReferencedTypeName="PureBusinessClasses.OrderDetail" RelationName="">
           <ForeignKeyColumn Name="IDOrder" />
         </Relation>
       </Relations>

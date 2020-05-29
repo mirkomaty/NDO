@@ -45,7 +45,6 @@ namespace NdoUnitTests
 		}
 
 		private static int count = 0;
-		private PersistenceManager pm;
 		private Mitarbeiter m;
 		private Sozialversicherungsnummer svn;
 		private Email e;
@@ -55,7 +54,6 @@ namespace NdoUnitTests
 		public void Setup()
 		{
 			count++;
-			pm = PmFactory.NewPersistenceManager();
 			m = CreateMitarbeiter( "Boris", "Becker" );
 			svn = new Sozialversicherungsnummer();
 			svn.SVN = 4711;
@@ -64,12 +62,9 @@ namespace NdoUnitTests
 			z.Key = 42; // :-)
 		}
 
-		[TearDown]
-		public void TearDown()
+		public void DeleteAll()
 		{
-			pm.Abort();
-			pm.UnloadCache();
-			/*
+			var pm = PmFactory.NewPersistenceManager();
 			IList mitarbeiterListe = pm.GetClassExtent( typeof( Mitarbeiter ), true );
 			pm.Delete( mitarbeiterListe );
 			pm.Save();
@@ -86,11 +81,13 @@ namespace NdoUnitTests
 			IList zListe = pm.GetClassExtent( typeof( Zertifikat ) );
 			pm.Delete( zListe );
 			pm.Save();
-			 */
-			string path = Path.GetDirectoryName( pm.NDOMapping.FileName );
-			path = Path.Combine( path, "NDOUnitTests.ndo.sql" );
-			pm.BuildDatabase( path );
+		}
 
+		[TearDown]
+		public void TearDown()
+		{
+			var pm = PmFactory.NewPersistenceManager();
+			DeleteAll();
 			pm.Close();
 			pm = null;
 		}
@@ -102,6 +99,7 @@ namespace NdoUnitTests
 		[Test]
 		public void CompTestCreateObjectsSave()
 		{
+			var pm = PmFactory.NewPersistenceManager();
 			m.SVN = svn;
 			pm.MakePersistent( m );
 			pm.Save();
@@ -128,6 +126,10 @@ namespace NdoUnitTests
 		[Test]
 		public void SimpleObjectSave()
 		{
+			var pm = PmFactory.NewPersistenceManager();
+			var testLogAdapter = new TestLogAdapter();
+			pm.LogAdapter = testLogAdapter;
+			pm.VerboseMode = true;
 			pm.MakePersistent( svn );
 			pm.Save();
 			pm.UnloadCache();
@@ -135,6 +137,7 @@ namespace NdoUnitTests
 			Assert.That( l.Count == 1, "Sozialversicherungsnummer sollte gespeichert sein" );
 			pm.Delete( l );
 			pm.Save();
+			var text = testLogAdapter.Text;
 			pm.UnloadCache();
 			l = pm.GetClassExtent( typeof( Sozialversicherungsnummer ) );
 			Assert.That( l.Count == 0, "Sozialversicherungsnummer sollte gelöscht sein" );
@@ -143,6 +146,7 @@ namespace NdoUnitTests
 		[Test]
 		public void CompChildAddFail()
 		{
+			var pm = PmFactory.NewPersistenceManager();
 			pm.MakePersistent( svn );
 			var thrown = false;
 			try
@@ -159,6 +163,7 @@ namespace NdoUnitTests
 		[Test]
 		public void CompChildAddFail2()
 		{
+			var pm = PmFactory.NewPersistenceManager();
 			pm.MakePersistent( svn );
 			pm.Save();
 			var thrown = false;
@@ -176,6 +181,7 @@ namespace NdoUnitTests
 		[Test]
 		public void CompChildAdd3()
 		{
+			var pm = PmFactory.NewPersistenceManager();
 			pm.MakePersistent( m );
 			pm.Save();
 			m.SVN = svn;
@@ -194,6 +200,7 @@ namespace NdoUnitTests
 		[Test]
 		public void CompChildAdd4()
 		{
+			var pm = PmFactory.NewPersistenceManager();
 			pm.MakePersistent( m );
 			pm.Save();
 			m.SVN = svn;
@@ -212,6 +219,7 @@ namespace NdoUnitTests
 		[Test]
 		public void CompTestAddObjectSave()
 		{
+			var pm = PmFactory.NewPersistenceManager();
 			pm.MakePersistent( m );
 			pm.Save();
 			m.SVN = svn;
@@ -229,6 +237,7 @@ namespace NdoUnitTests
 		[Test]
 		public void CompTestAddObjectAbort()
 		{
+			var pm = PmFactory.NewPersistenceManager();
 			pm.MakePersistent( m );
 			pm.Save();
 			m.SVN = svn;
@@ -244,6 +253,7 @@ namespace NdoUnitTests
 		[Test]
 		public void CompTestReplaceChildSave()
 		{
+			var pm = PmFactory.NewPersistenceManager();
 			pm.MakePersistent( m );
 			m.SVN = svn;
 			pm.Save();
@@ -267,6 +277,7 @@ namespace NdoUnitTests
 		[Test]
 		public void CompTestReplaceChildAbort()
 		{
+			var pm = PmFactory.NewPersistenceManager();
 			pm.MakePersistent( m );
 			m.SVN = svn;
 			Assert.AreSame( svn.Angestellter, m, "1. Mitarbeiter should be same" );
@@ -286,6 +297,7 @@ namespace NdoUnitTests
 		[Test]
 		public void CompTestReplaceParent()
 		{
+			var pm = PmFactory.NewPersistenceManager();
 			pm.MakePersistent( m );
 			m.SVN = svn;
 			pm.Save();
@@ -307,6 +319,7 @@ namespace NdoUnitTests
 		[Test]
 		public void CompTestRemoveObjectSave()
 		{
+			var pm = PmFactory.NewPersistenceManager();
 			pm.MakePersistent( m );
 			m.SVN = svn;
 			pm.Save();
@@ -329,6 +342,7 @@ namespace NdoUnitTests
 		[Test]
 		public void CompTestRemoveObjectAbort()
 		{
+			var pm = PmFactory.NewPersistenceManager();
 			pm.MakePersistent( m );
 			m.SVN = svn;
 			pm.Save();
@@ -345,6 +359,7 @@ namespace NdoUnitTests
 		[Test]
 		public void CompTestRemoveParentSave()
 		{
+			var pm = PmFactory.NewPersistenceManager();
 			pm.MakePersistent( m );
 			m.SVN = svn;
 			pm.Save();
@@ -365,6 +380,7 @@ namespace NdoUnitTests
 		[Test]
 		public void CompTestDeleteSave()
 		{
+			var pm = PmFactory.NewPersistenceManager();
 			pm.MakePersistent( m );
 			pm.Save();
 			m.SVN = svn;
@@ -383,6 +399,7 @@ namespace NdoUnitTests
 		[Test]
 		public void CompTestDeleteChildSave()
 		{
+			var pm = PmFactory.NewPersistenceManager();
 			bool thrown = false;
 			pm.MakePersistent( m );
 			pm.Save();
@@ -403,6 +420,7 @@ namespace NdoUnitTests
 		[Test]
 		public void CompTestDeleteAbort()
 		{
+			var pm = PmFactory.NewPersistenceManager();
 			pm.MakePersistent( m );
 			pm.Save();
 			m.SVN = svn;
@@ -420,6 +438,7 @@ namespace NdoUnitTests
 		[Test]
 		public void CompTestCreateDelete()
 		{
+			var pm = PmFactory.NewPersistenceManager();
 			pm.MakePersistent( m );
 			m.SVN = svn;
 			pm.Delete( m );
@@ -433,6 +452,7 @@ namespace NdoUnitTests
 		[Test]
 		public void CompTestAddRemoveSave()
 		{
+			var pm = PmFactory.NewPersistenceManager();
 			pm.MakePersistent( m );
 			pm.Save();
 			m.SVN = svn;
@@ -449,6 +469,7 @@ namespace NdoUnitTests
 		[Test]
 		public void CompTestAddRemoveAbort()
 		{
+			var pm = PmFactory.NewPersistenceManager();
 			pm.MakePersistent( m );
 			pm.Save();
 			m.SVN = svn;
@@ -465,6 +486,7 @@ namespace NdoUnitTests
 		[Test]
 		public void CompTestHollow()
 		{
+			var pm = PmFactory.NewPersistenceManager();
 			m.SVN = svn;
 			pm.MakePersistent( m );
 			pm.Save();
@@ -493,6 +515,7 @@ namespace NdoUnitTests
 		[Test]
 		public void CompTestMakeAllHollow()
 		{
+			var pm = PmFactory.NewPersistenceManager();
 			m.SVN = svn;
 			pm.MakePersistent( m );
 			pm.Save();
@@ -505,6 +528,7 @@ namespace NdoUnitTests
 		[Test]
 		public void CompTestMakeAllHollowUnsaved()
 		{
+			var pm = PmFactory.NewPersistenceManager();
 			m.SVN = svn;
 			pm.MakePersistent( m );
 			pm.MakeAllHollow();  // before save, objects cannot be made hollow. => in locked objects
@@ -515,6 +539,7 @@ namespace NdoUnitTests
 		[Test]
 		public void CompTestLockRelations()
 		{
+			var pm = PmFactory.NewPersistenceManager();
 			m.SVN = svn;
 			pm.MakePersistent( m );
 			m.Adresse = new Adresse();
@@ -530,6 +555,7 @@ namespace NdoUnitTests
 		[Test]
 		public void CompTestExtentRelatedObjects()
 		{
+			var pm = PmFactory.NewPersistenceManager();
 			m.SVN = svn;
 			pm.MakePersistent( m );
 			pm.Save();
@@ -566,6 +592,7 @@ namespace NdoUnitTests
 		[Test]
 		public void AggrTestCreateObjectsTransient()
 		{
+			var pm = PmFactory.NewPersistenceManager();
 			e.Schlüssel = z;
 			var thrown = false;
 			try
@@ -582,6 +609,7 @@ namespace NdoUnitTests
 		[Test]
 		public void AggrTestCreateObjectsTransient2()
 		{
+			var pm = PmFactory.NewPersistenceManager();
 			pm.MakePersistent( e );
 			var thrown = false;
 			try
@@ -598,6 +626,7 @@ namespace NdoUnitTests
 		[Test]
 		public void AggrTestCreateObjectsSave()
 		{
+			var pm = PmFactory.NewPersistenceManager();
 			pm.MakePersistent( z );
 			e.Schlüssel = z;
 			pm.MakePersistent( e );
@@ -625,6 +654,8 @@ namespace NdoUnitTests
 		[Test]
 		public void AggrTestCreateObjectsWithTransaction()
 		{
+			var pm = PmFactory.NewPersistenceManager();
+			var tm = pm.TransactionMode;
 			try
 			{
 				// See Issue #1145
@@ -649,7 +680,7 @@ namespace NdoUnitTests
 			}
 			finally
 			{
-				pm.TransactionMode = TransactionMode.None;
+				pm.TransactionMode = tm;
 			}
 		}
 
@@ -657,6 +688,7 @@ namespace NdoUnitTests
 		[Test]
 		public void AggrSimpleObjectSave()
 		{
+			var pm = PmFactory.NewPersistenceManager();
 			pm.MakePersistent( z );
 			pm.Save();
 		}
@@ -664,6 +696,7 @@ namespace NdoUnitTests
 		[Test]
 		public void AggrChildAddFail()
 		{
+			var pm = PmFactory.NewPersistenceManager();
 			pm.MakePersistent( z );
 			pm.MakePersistent( e );
 			z.Adresse = e;
@@ -672,6 +705,7 @@ namespace NdoUnitTests
 		[Test]
 		public void AggrChildAddFail2()
 		{
+			var pm = PmFactory.NewPersistenceManager();
 			pm.MakePersistent( e );
 			pm.MakePersistent( z );
 			pm.Save();
@@ -681,6 +715,7 @@ namespace NdoUnitTests
 		[Test]
 		public void AggrChildAdd3()
 		{
+			var pm = PmFactory.NewPersistenceManager();
 			pm.MakePersistent( e );
 			pm.MakePersistent( z );
 			pm.Save();
@@ -691,6 +726,7 @@ namespace NdoUnitTests
 		[Test]
 		public void AggrChildAdd4()
 		{
+			var pm = PmFactory.NewPersistenceManager();
 			pm.MakePersistent( z );
 			pm.MakePersistent( e );
 			pm.Save();
@@ -701,6 +737,7 @@ namespace NdoUnitTests
 		[Test]
 		public void AggrTestAddObjectSave()
 		{
+			var pm = PmFactory.NewPersistenceManager();
 			pm.MakePersistent( z );
 			pm.MakePersistent( e );
 			pm.Save();
@@ -719,6 +756,7 @@ namespace NdoUnitTests
 		[Test]
 		public void AggrTestAddObjectAbort()
 		{
+			var pm = PmFactory.NewPersistenceManager();
 			pm.MakePersistent( z );
 			pm.MakePersistent( e );
 			pm.Save();
@@ -735,6 +773,7 @@ namespace NdoUnitTests
 		[Test]
 		public void AggrTestReplaceChildSave()
 		{
+			var pm = PmFactory.NewPersistenceManager();
 			pm.MakePersistent( z );
 			pm.MakePersistent( e );
 			e.Schlüssel = z;
@@ -760,6 +799,7 @@ namespace NdoUnitTests
 		[Test]
 		public void AggrTestReplaceChildAbort()
 		{
+			var pm = PmFactory.NewPersistenceManager();
 			pm.MakePersistent( z );
 			pm.MakePersistent( e );
 			e.Schlüssel = z;
@@ -780,6 +820,7 @@ namespace NdoUnitTests
 		[Test]
 		public void AggrTestReplaceParentSave()
 		{
+			var pm = PmFactory.NewPersistenceManager();
 			pm.MakePersistent( z );
 			pm.MakePersistent( e );
 			e.Schlüssel = z;
@@ -794,6 +835,7 @@ namespace NdoUnitTests
 		[Test]
 		public void AggrTestRemoveObjectSave()
 		{
+			var pm = PmFactory.NewPersistenceManager();
 			pm.MakePersistent( z );
 			pm.MakePersistent( e );
 			e.Schlüssel = z;
@@ -818,6 +860,7 @@ namespace NdoUnitTests
 		[Test]
 		public void AggrTestRemoveObjectAbort()
 		{
+			var pm = PmFactory.NewPersistenceManager();
 			pm.MakePersistent( z );
 			pm.MakePersistent( e );
 			e.Schlüssel = z;
@@ -835,6 +878,7 @@ namespace NdoUnitTests
 		[Test]
 		public void AggrTestRemoveParentSave()
 		{
+			var pm = PmFactory.NewPersistenceManager();
 			pm.MakePersistent( z );
 			pm.MakePersistent( e );
 			e.Schlüssel = z;
@@ -859,6 +903,7 @@ namespace NdoUnitTests
 		[Test]
 		public void AggrTestRemoveParentAbort()
 		{
+			var pm = PmFactory.NewPersistenceManager();
 			pm.MakePersistent( z );
 			pm.MakePersistent( e );
 			e.Schlüssel = z;
@@ -899,6 +944,7 @@ namespace NdoUnitTests
 		[Test]
 		public void AggrTestCreateDeleteAllowed()
 		{
+			var pm = PmFactory.NewPersistenceManager();
 			pm.MakePersistent( z );
 			pm.MakePersistent( e );
 			e.Schlüssel = z;
@@ -914,6 +960,7 @@ namespace NdoUnitTests
 		[Test]
 		public void AggrTestAddRemoveSave()
 		{
+			var pm = PmFactory.NewPersistenceManager();
 			pm.MakePersistent( e );
 			pm.MakePersistent( z );
 			pm.Save();
@@ -931,6 +978,7 @@ namespace NdoUnitTests
 		[Test]
 		public void AggrTestAddRemoveAbort()
 		{
+			var pm = PmFactory.NewPersistenceManager();
 			pm.MakePersistent( e );
 			pm.MakePersistent( z );
 			pm.Save();
@@ -948,6 +996,7 @@ namespace NdoUnitTests
 		[Test]
 		public void AggrTestHollow()
 		{
+			var pm = PmFactory.NewPersistenceManager();
 			pm.MakePersistent( z );
 			e.Schlüssel = z;
 			pm.MakePersistent( e );
@@ -977,6 +1026,7 @@ namespace NdoUnitTests
 		[Test]
 		public void AggrTestMakeAllHollowDelete()
 		{
+			var pm = PmFactory.NewPersistenceManager();
 			pm.MakePersistent( z );
 			e.Schlüssel = z;
 			pm.MakePersistent( e );
@@ -996,6 +1046,7 @@ namespace NdoUnitTests
 		[Test]
 		public void AggrTestMakeAllHollow()
 		{
+			var pm = PmFactory.NewPersistenceManager();
 			pm.MakePersistent( z );
 			e.Schlüssel = z;
 			pm.MakePersistent( e );
@@ -1009,6 +1060,7 @@ namespace NdoUnitTests
 		[Test]
 		public void AggrTestMakeAllHollowUnsaved()
 		{
+			var pm = PmFactory.NewPersistenceManager();
 			pm.MakePersistent( z );
 			e.Schlüssel = z;
 			pm.MakePersistent( e );
@@ -1021,6 +1073,7 @@ namespace NdoUnitTests
 		[Test]
 		public void AggrTestExtentRelatedObjects()
 		{
+			var pm = PmFactory.NewPersistenceManager();
 			pm.MakePersistent( z );
 			e.Schlüssel = z;
 			pm.MakePersistent( e );
@@ -1054,6 +1107,7 @@ namespace NdoUnitTests
 		[Test]
 		public void BiTest()
 		{
+			var pm = PmFactory.NewPersistenceManager();
 			pm.MakePersistent( e );
 			pm.MakePersistent( z );
 			//			System.Diagnostics.Debug.WriteLine("e:" + e.NDOObjectId.ExpressionString);
@@ -1070,6 +1124,7 @@ namespace NdoUnitTests
 
 		private void SetupEmail()
 		{
+			var pm = PmFactory.NewPersistenceManager();
 			pm.MakePersistent( e );
 			pm.Save();
 		}

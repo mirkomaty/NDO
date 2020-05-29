@@ -21,7 +21,7 @@
 
 
 using System;
-using System.Data;
+using System.Linq;
 using System.Data.Common;
 using System.Diagnostics;
 using System.Collections;
@@ -37,54 +37,37 @@ namespace NdoUnitTests
 	[TestFixture]
 	public class IntermediateClassTest
 	{
-		PersistenceManager pm;
-
 		Order order;
 		Product pr;
 		
 		[SetUp]
 		public void Setup()
 		{
-			pm = PmFactory.NewPersistenceManager();
+		}
+
+		void CreateProductAndOrder(PersistenceManager pm)
+		{
 			order = new Order();
 			order.Date = DateTime.Now;
-			pm.MakePersistent(order);
+			pm.MakePersistent( order );
 
 			pr = new Product();
 			pr.Name = "Shirt";
-			pm.MakePersistent(pr);
+			pm.MakePersistent( pr );
 			pm.Save();
 		}
 
 		[TearDown]
 		public void TearDown()
 		{
-			pm.Abort();
-			pm.UnloadCache();
+			var pm = PmFactory.NewPersistenceManager();
 			pm.Delete(pm.GetClassExtent(typeof(Order)));
 			pm.Save();
             pm.Delete(pm.GetClassExtent(typeof(Product)));
 			pm.Save();
-			Class cl = pm.NDOMapping.FindClass(typeof(OrderDetail));
-			IProvider p = cl.Provider;
-			string odname = cl.TableName;
-            string[] arr = odname.Split('.');
-            string tname = string.Empty;
-            foreach (string name in arr)
-                tname += p.GetQuotedName(name) + '.';
-            tname = tname.Substring(0, tname.Length - 1);
-            string sql = "Delete from " + tname;
-            using (IDbConnection conn = p.NewConnection(pm.NDOMapping.FindConnection(cl).Name))
-            {
-                IDbCommand cmd = p.NewSqlCommand(conn);
-                cmd.CommandText = sql;
-                conn.Open();
-                cmd.ExecuteNonQuery();
-                conn.Close();
-            }
 		}
 
-		private void DoCreate()
+		private void CreateOrderDetail()
 		{
 			OrderDetail od = order.NewOrderDetail(pr);
 			od.Price =49m;
@@ -94,33 +77,36 @@ namespace NdoUnitTests
 		}
 
 		[Test]
-		public void Create()
+		public void TestCreateSave()
 		{
-//			Debug.WriteLine("Create");
-			DoCreate();
+			var pm = PmFactory.NewPersistenceManager();
+			CreateSave( pm );
 		}
 
-		[Test]
-		public void CreateSave()
+		public void CreateSave(PersistenceManager pm)
 		{
-//			Debug.WriteLine("CreateSave");
-			DoCreate();
+			CreateProductAndOrder( pm );
+			var logAdapter = new TestLogAdapter();
+			pm.VerboseMode = true;
+			pm.LogAdapter = logAdapter;
+			CreateOrderDetail();
 			pm.Save();
 			pm.UnloadCache();
 			IList orders = pm.GetClassExtent(typeof(Order));
-			Assert.That(orders.Count == 1, "Wrong count");
+			Assert.AreEqual( 1, orders.Count );
 			Order o = (Order) orders[0];
-			Assert.That(o.OrderDetails.Count == 1, "Wrong count #2");
-			OrderDetail od = (OrderDetail) o.OrderDetails[0];
+			Assert.AreEqual( 1, o.OrderDetails.Count() );
+			var text = logAdapter.Text;
+			OrderDetail od = (OrderDetail) o.OrderDetails.First();
 			Assert.NotNull(od.Product, "Product shouldn't be null");
 		}
 
 		[Test]
 		public void WrongSetup()
 		{
+			var pm = PmFactory.NewPersistenceManager();
 			order = new Order();
 			order.Date = DateTime.Now.Date;
-			pm = PmFactory.NewPersistenceManager();
 			pm.MakePersistent(order);
 			int exnr = 0;
 			try
@@ -137,42 +123,46 @@ namespace NdoUnitTests
 		[Test]
 		public void RemoveRelatedObject()
 		{
-			DoCreate();
-			OrderDetail od = (OrderDetail)order.OrderDetails[0];
-			Assert.That(od.NDOObjectState == NDOObjectState.Created, "Wrong state");
-			order.RemoveOrderDetail(od);
-			Assert.That(od.NDOObjectState == NDOObjectState.Transient, "Wrong state");
+			var pm = PmFactory.NewPersistenceManager();
+			CreateProductAndOrder( pm );
+			CreateOrderDetail();
+			OrderDetail od = (OrderDetail)order.OrderDetails.First();
+			Assert.AreEqual( NDOObjectState.Created, od.NDOObjectState );
+			order.RemoveOrderDetail( od );
+			Assert.AreEqual( NDOObjectState.Transient, od.NDOObjectState );
 		}
 
 		[Test]
 		public void RemoveRelatedObjectSave()
 		{
-			DoCreate();
-			OrderDetail od = (OrderDetail)order.OrderDetails[0];
-			Assert.That(od.NDOObjectState == NDOObjectState.Created, "Wrong state");
+			var pm = PmFactory.NewPersistenceManager();
+			CreateProductAndOrder( pm );
+			CreateOrderDetail();
+			OrderDetail od = (OrderDetail)order.OrderDetails.First();
+			Assert.That(od.NDOObjectState == NDOObjectState.Created, "Wrong state #1");
 			pm.Save();
-			Assert.That(od.NDOObjectState == NDOObjectState.Persistent, "Wrong state");
+			Assert.That(od.NDOObjectState == NDOObjectState.Persistent, "Wrong state #2");
 			order.RemoveOrderDetail(od);
-			Assert.That(od.NDOObjectState == NDOObjectState.Deleted, "Wrong state");
+			Assert.That(od.NDOObjectState == NDOObjectState.Deleted, "Wrong state #3");
 		}
 
 		[Test]
 		public void RemoveRelatedObjectSaveReload()
 		{
-			DoCreate();
-			OrderDetail od = (OrderDetail)order.OrderDetails[0];
-			Assert.That(od.NDOObjectState == NDOObjectState.Created, "Wrong state");
+			var pm = PmFactory.NewPersistenceManager();
+			CreateProductAndOrder( pm );
+			CreateOrderDetail();
+			OrderDetail od = (OrderDetail)order.OrderDetails.First();
+			Assert.That( od.NDOObjectState == NDOObjectState.Created, "Wrong state #1" );
 			pm.Save();
-			Assert.That(od.NDOObjectState == NDOObjectState.Persistent, "Wrong state");
-			order.RemoveOrderDetail(od);
-			Assert.That(od.NDOObjectState == NDOObjectState.Deleted, "Wrong state");
+			Assert.That( od.NDOObjectState == NDOObjectState.Persistent, "Wrong state #2" );
+			order.RemoveOrderDetail( od );
+			Assert.That( od.NDOObjectState == NDOObjectState.Deleted, "Wrong state #3" );
 			pm.Save();
 			pm.UnloadCache();
-			IQuery q = new NDOQuery<Order>(pm);
-			order = (Order) q.ExecuteSingle(true);
-			Assert.That(order.OrderDetails.Count == 0, "Wrong count");
-			IList l = pm.GetClassExtent(typeof(OrderDetail));
-			Assert.That(order.OrderDetails.Count == 0, "Wrong count #2");
+			order = pm.Objects<Order>().Single();
+			Assert.AreEqual( 0, order.OrderDetails.Count() );
+			Assert.AreEqual( 0, pm.Objects<OrderDetail>().Count );
 
 		}
 
@@ -208,7 +198,8 @@ namespace NdoUnitTests
 		[Test]
 		public void Insert()
 		{
-			CreateSave();
+			var pm = PmFactory.NewPersistenceManager();
+			CreateSave(pm);
 			Product p2 = new Product();
 			p2.Name = "Trouser";
 			pm.MakePersistent(p2);
@@ -219,15 +210,16 @@ namespace NdoUnitTests
 			pm.UnloadCache();
 			IQuery q = new NDOQuery<Order>(pm);
 			order = (Order) q.ExecuteSingle(true);
-			Assert.AreEqual(2, order.OrderDetails.Count, "Wrong count");
+			Assert.AreEqual(2, order.OrderDetails.Count(), "Wrong count");
 		}
 
 
 		[Test]
 		public void Reload()
 		{
-			CreateSave();
-			OrderDetail od = (OrderDetail) order.OrderDetails[0];
+			var pm = PmFactory.NewPersistenceManager();
+			CreateSave(pm);
+			OrderDetail od = (OrderDetail) order.OrderDetails.First();
 			pm.UnloadCache();
 			od = (OrderDetail) pm.FindObject(od.NDOObjectId);
 			decimal d = od.Price;
@@ -236,25 +228,26 @@ namespace NdoUnitTests
 		[Test]
 		public void Delete()
 		{
-			CreateSave();
+			var pm = PmFactory.NewPersistenceManager();
+			CreateSave( pm );
 			pm.UnloadCache();
-			IQuery q = new NDOQuery<OrderDetail>(pm);
-			OrderDetail od = (OrderDetail) q.ExecuteSingle(true);
-			pm.Delete(od);
+			var q = new NDOQuery<Order>(pm);
+			var order = q.ExecuteSingle(true);
+			order.RemoveOrderDetail( order.OrderDetails.First() );
 			pm.Save();
 			pm.UnloadCache();
-			IList l = pm.GetClassExtent(typeof(OrderDetail));
-			Assert.AreEqual(0, l.Count, "Wrong count #1");
+			var count = pm.Objects<OrderDetail>().Count;
+			Assert.AreEqual( 0, count );
 
-			q = new NDOQuery<Order>(pm);
-			order = (Order) q.ExecuteSingle(true);
-			Assert.AreEqual(0, order.OrderDetails.Count, "Wrong count #2");
+			order = pm.Objects<Order>().Single(); // Throws, if count != 1
+			Assert.AreEqual( 0, order.OrderDetails.Count() );
 		}
 
 		[Test]
 		public void DeleteParent()
 		{
-			CreateSave();
+			var pm = PmFactory.NewPersistenceManager();
+			CreateSave(pm);
 			pm.UnloadCache();
 			IQuery q = new NDOQuery<Order>(pm);
 			order = (Order) q.ExecuteSingle(true);
