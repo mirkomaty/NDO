@@ -26,7 +26,6 @@ using System.Data;
 using System.Collections;
 using System.IO;
 using NDO.Logging;
-using ST = System.Transactions;
 
 namespace NDO
 {
@@ -41,7 +40,7 @@ namespace NDO
 		private static TransactionMode transactionMode = TransactionMode.None;
 		private static bool verboseMode = false;		
 		private static Type persistenceHandlerType;
-		private static ST.IsolationLevel isolationLevel = ST.IsolationLevel.ReadCommitted;
+		private static IsolationLevel isolationLevel = IsolationLevel.ReadCommitted;
 		private static CollisionHandler collisionHandler;
 		private static string logPath;
 		private static OpenConnectionListener openConnectionListener;
@@ -127,7 +126,7 @@ namespace NDO
 		/// <summary>
 		/// <see cref="NDO.PersistenceManager.IsolationLevel"/>
 		/// </summary>
-		public static ST.IsolationLevel IsolationLevel
+		public static IsolationLevel IsolationLevel
 		{
 			get { return isolationLevel; }
 			set { isolationLevel = value; }

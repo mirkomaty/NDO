@@ -37,9 +37,7 @@ using NDO.Logging;
 using NDOInterfaces;
 using NDO.Query;
 using System.Globalization;
-using NDOql.Expressions;
 using Unity;
-using NDO.SqlPersistenceHandling;
 
 namespace NDO.SqlPersistenceHandling
 {
@@ -59,12 +57,13 @@ namespace NDO.SqlPersistenceHandling
 		/// </summary>
 		public event ConcurrencyErrorHandler ConcurrencyError;
 
-		private System.Data.IDbCommand selectCommand;
-		private System.Data.IDbCommand insertCommand;
-		private System.Data.IDbCommand updateCommand;
-		private System.Data.IDbCommand deleteCommand;
-		private System.Data.IDbConnection conn;
-		private System.Data.Common.DbDataAdapter dataAdapter;
+		private IDbCommand selectCommand;
+		private IDbCommand insertCommand;
+		private IDbCommand updateCommand;
+		private IDbCommand deleteCommand;
+		private IDbConnection conn;
+		private IDbTransaction transaction;
+		private DbDataAdapter dataAdapter;
 		private Class classMapping;
 		private string selectFieldList;
 		private string selectFieldListWithAlias;
@@ -484,8 +483,8 @@ namespace NDO.SqlPersistenceHandling
 			Connection connInfo = ndoMapping.FindConnection(classMapping);
 			this.provider = ndoMapping.GetProvider(connInfo);
 			this.qualifiedTableName = provider.GetQualifiedTableName( tableName );
-			// The connection object will be initialized in the pm, to 
-			// enable the callback for getting the real connection string.
+			// The connection object will be initialized by the pm, to 
+			// enable connection string housekeeping.
 			// CheckTransaction is the place, where this happens.
 			this.conn = null;
 
@@ -685,6 +684,8 @@ namespace NDO.SqlPersistenceHandling
 
 					// cmd.CommandText can be changed in CreateQueryParameters
 					DumpBatch( cmd.CommandText );
+					if (this.transaction != null)
+						cmd.Transaction = this.transaction;
 
 					dr = cmd.ExecuteReader();
 
@@ -719,6 +720,9 @@ namespace NDO.SqlPersistenceHandling
 						{
 							CreateQueryParameters( cmd, parameters );
 						}
+
+						if (this.transaction != null)
+							cmd.Transaction = this.transaction;
 
 						dr = cmd.ExecuteReader();
 
@@ -899,6 +903,23 @@ namespace NDO.SqlPersistenceHandling
 				this.insertCommand.Connection = value;
 			}
 		}
+
+		/// <summary>
+		/// Gets or sets the connection to be used for the handler
+		/// </summary>
+		public IDbTransaction Transaction
+		{
+			get { return this.transaction; }
+			set
+			{
+				this.transaction = value;
+				this.selectCommand.Transaction = value;
+				this.deleteCommand.Transaction = value;
+				this.updateCommand.Transaction = value;
+				this.insertCommand.Transaction = value;
+			}
+		}
+
 
 		/// <summary>
 		/// Gets the current DataAdapter.

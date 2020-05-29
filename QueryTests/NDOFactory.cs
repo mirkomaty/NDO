@@ -1,13 +1,16 @@
 ﻿using System;
 using System.IO;
 using NDO;
+using NDO.Mapping;
 
 namespace QueryTests
 {
 	class NDOFactory
 	{
+		static object lockObject = new object();
 		static NDOFactory instance;
-		PersistenceManager persistenceManager;
+		static NDOMapping mapping;
+
 		static NDOFactory()
 		{
 			instance = new NDOFactory();
@@ -22,16 +25,21 @@ namespace QueryTests
 		{
 			get
 			{
-				if (this.persistenceManager == null)
+				PersistenceManager pm;
+				lock (lockObject)
 				{
-					this.persistenceManager = new PersistenceManager();
+					if (mapping == null)
+					{
+						pm = new PersistenceManager();
+						mapping = pm.NDOMapping;
+					}
+					else
+					{
+						pm = new PersistenceManager( mapping );
+					}
 				}
-				else
-				{
-					this.persistenceManager.Abort();
-					this.persistenceManager.UnloadCache();
-				}
-				return this.persistenceManager;
+
+				return pm;
 			}
 		}
 	}

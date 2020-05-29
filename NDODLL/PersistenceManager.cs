@@ -40,6 +40,7 @@ using System.Globalization;
 using NDO.Linq;
 using NDO.Query;
 using ST = System.Transactions;
+using Unity;
 
 namespace NDO
 {
@@ -89,8 +90,8 @@ namespace NDO
 		private ArrayList createdMappingTableObjects = new ArrayList();  
 		private TypeManager typeManager;
 		internal bool DeferredMode { get; private set; }
-		private NDOTransactionScope transactionScope;
-		internal NDOTransactionScope TransactionScope => this.transactionScope;		
+		private INDOTransactionScope transactionScope;
+		internal INDOTransactionScope TransactionScope => transactionScope ?? (transactionScope = ConfigContainer.Resolve<INDOTransactionScope>());		
 
 		private OpenConnectionListener openConnectionListener;
 
@@ -148,8 +149,17 @@ namespace NDO
 
 		}
 
+		/// <summary>
+		/// Initializes the persistence manager
+		/// </summary>
+		/// <remarks>
+		/// Note: This is the method, which will be called from all different ways to instantiate a PersistenceManagerBase.
+		/// </remarks>
+		/// <param name="mapping"></param>
 		internal override void Init( Mappings mapping )
 		{
+			ConfigContainer.RegisterType<INDOTransactionScope, NDOTransactionScope>();
+
 			base.Init( mapping );
 
 			string dir = Path.GetDirectoryName( mapping.FileName );
@@ -174,7 +184,6 @@ namespace NDO
 		/// </remarks>
 		public PersistenceManager() : base()
 		{
-			this.transactionScope = new NDOTransactionScope( this );
 		}
 
 		/// <summary>
@@ -186,7 +195,6 @@ namespace NDO
 		/// Editions can handle more than one mapping file.</remarks>
 		public PersistenceManager(string mappingFile) : base (mappingFile)
 		{
-			this.transactionScope = new NDOTransactionScope( this );
 		}
 
 		/// <summary>
@@ -195,7 +203,6 @@ namespace NDO
 		/// <param name="mapping">The cached mapping object</param>
 		public PersistenceManager(NDOMapping mapping) : base (mapping)
 		{
-			this.transactionScope = new NDOTransactionScope( this );
 		}
 
 		#region Object Container Stuff
@@ -1029,7 +1036,7 @@ namespace NDO
 		{
 			if (doCommit)
 			{
-				this.transactionScope.Complete();
+				TransactionScope.Complete();
 			}
 		}
 
@@ -1043,11 +1050,11 @@ namespace NDO
 		/// </summary>
 		internal void CheckTransaction( IPersistenceHandlerBase handler, Connection ndoConn )
 		{
-			this.transactionScope.CheckTransaction();
+			TransactionScope.CheckTransaction();
 			
 			if (handler.Connection == null)
 			{
-				handler.Connection = this.transactionScope.GetConnection(ndoConn.ID, () =>
+				handler.Connection = TransactionScope.GetConnection(ndoConn.ID, () =>
 				{
 					IProvider p = ndoConn.Parent.GetProvider( ndoConn );
 					string connStr = this.OnNewConnection( ndoConn );
@@ -1057,6 +1064,11 @@ namespace NDO
 					LogIfVerbose( $"Creating a connection object for {ndoConn.DisplayName}" );
 					return connection;
 				} );
+			}
+
+			if (TransactionMode != TransactionMode.None)
+			{
+				handler.Transaction = TransactionScope.GetTransaction( ndoConn.ID );
 			}
 
 			// During the tests, we work with a handler mock that always returns zero for the Connection property.
@@ -2777,7 +2789,7 @@ namespace NDO
 		/// <remarks>Supports both local and EnterpriseService Transactions.</remarks>
 		public virtual void AbortTransaction()
 		{
-			this.transactionScope.Dispose();
+			TransactionScope.Dispose();
 		}
 
 		/// <summary>
@@ -3554,7 +3566,7 @@ namespace NDO
 		/// </summary>
 		public void Close() 
 		{
-			this.transactionScope.Dispose();
+			TransactionScope.Dispose();
 			UnloadCache();
 		}
 
@@ -3574,7 +3586,7 @@ namespace NDO
 		///// </remarks>
 		//public void Complete()
 		//{
-		//	this.transactionScope.Complete();
+		//	TransactionScope.Complete();
 		//}
 
 
@@ -3821,8 +3833,8 @@ namespace NDO
 		/// </remarks>
 		public TransactionMode TransactionMode
 		{
-			get { return this.transactionScope.TransactionMode; }
-			set { this.transactionScope.TransactionMode = value; }
+			get { return TransactionScope.TransactionMode; }
+			set { TransactionScope.TransactionMode = value; }
 		}
 
 		/// <summary>
@@ -3831,10 +3843,10 @@ namespace NDO
 		/// <remarks>
 		/// Set this value before you start any transactions.
 		/// </remarks>
-		public ST.IsolationLevel IsolationLevel
+		public IsolationLevel IsolationLevel
 		{
-			get { return this.transactionScope.IsolationLevel; }
-			set { this.transactionScope.IsolationLevel = value; }
+			get { return TransactionScope.IsolationLevel; }
+			set { TransactionScope.IsolationLevel = value; }
 		}
 
 		internal class MappingTableEntry 
@@ -4016,120 +4028,4 @@ namespace NDO
 			} 
 		}
 	}
-
-
-//	internal class TransactionInfo
-//	{
-//        HashSet<IPersistenceHandlerBase> handlers = new HashSet<IPersistenceHandlerBase>();
-//        public void SecureAddHandler(IPersistenceHandlerBase o)
-//        {
-//            if(!this.handlers.Contains(o))
-//                this.handlers.Add(o);
-//        }        
-
-//		IDbTransaction transaction = null;
-//		public IDbTransaction Transaction
-//		{
-//			get { return transaction; }
-//			set 
-//            { 
-//                transaction = value;
-//                // Set the Transaction property of all commands in all handlers to null
-//                foreach (IPersistenceHandlerBase hb in this.handlers)
-//                    hb.Transaction = null;
-//            }
-//		}
-		
-//		public IDbConnection Connection { get; set; }
-		
-//        public string ConnectionAlias { get; set; }
-//	}
-
-//	/// <summary>
-//	/// This class manages TransactionInfo elements. We need a TransactionInfo element
-//	/// for each connection that participates in a transaction.
-//	/// </summary>
-//	/// <remarks>
-//	/// The TransactionTable is owned by the PersistenceManager. Thus each Thread has a TransactionTable.
-//	/// </remarks>
-//	internal class TransactionTable : IEnumerable, IEnumerator
-//	{
-//		public delegate string NewConnectionCallback(NDO.Mapping.Connection conn);
-//		private NewConnectionCallback newConnectionCallback;
-
-//		public TransactionTable(NewConnectionCallback callback) 
-//		{
-//			this.newConnectionCallback = callback;
-//		}
-
-//		Dictionary<string, TransactionInfo> transactionInfos = new Dictionary<string, TransactionInfo>();
-//		public TransactionInfo this[Connection conn]
-//		{
-//			get 
-//			{
-//				TransactionInfo result;
-
-//				if (!transactionInfos.TryGetValue( conn.ID, out result ))
-//				{
-//					result = new TransactionInfo();
-//					IProvider p = conn.Parent.GetProvider(conn);
-//					string connStr = newConnectionCallback(conn);
-//					try
-//					{
-//						result.Connection = p.NewConnection(connStr);
-//						result.ConnectionAlias = conn.DisplayName;
-//					}
-//					catch (Exception ex)
-//					{
-//						throw new NDOException(89, "Can't construct a connection object: " + ex.Message + ". Check your connection string.", ex);
-//					}
-
-//					result.Transaction = null;
-//					transactionInfos[conn.ID] = result;
-//				}
-
-//				return result;
-//			}
-//		}
-
-//		public void Clear()
-//		{
-//			transactionInfos.Clear();
-//		}
-	
-//#region IEnumerable Member
-
-//		public IEnumerator GetEnumerator()
-//		{
-//			enumerator = this.transactionInfos.GetEnumerator();
-//			return this;
-//		}
-
-//#endregion
-	
-//#region IEnumerator Members
-
-//		private IDictionaryEnumerator enumerator;
-
-//		public void Reset()
-//		{
-//			enumerator = this.transactionInfos.GetEnumerator();
-//		}
-
-//		public object Current
-//		{
-//			get
-//			{
-//				return enumerator.Value;
-//			}
-//		}
-
-//		public bool MoveNext()
-//		{
-//			return enumerator.MoveNext();
-//		}
-
-//#endregion
-//	}
-
 }

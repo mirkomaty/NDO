@@ -36,7 +36,6 @@ namespace NDO
 		Connection connection;
 		TransactionMode oldTransactionMode;
 		bool forcedTransactionMode = false;
-		IDbConnection dbConnection;
 
 		public SqlPassThroughHandler(PersistenceManager pm, Connection connection)
 		{
@@ -80,13 +79,13 @@ namespace NDO
 
 			IProvider provider = this.pm.NDOMapping.GetProvider( this.connection );
 
-			if (this.dbConnection == null || this.dbConnection.State == ConnectionState.Closed)
-				dbConnection = provider.NewConnection(this.connection.Name);
+			var dbConnection = this.pm.TransactionScope.GetConnection(this.connection.ID, () => provider.NewConnection(this.connection.Name) );
 
-			if (dbConnection.State == ConnectionState.Closed)
-				dbConnection.Open();
 			IDbCommand cmd = provider.NewSqlCommand( dbConnection );
 			cmd.CommandText = command;
+			var tx = this.pm.TransactionScope.GetTransaction(this.connection.ID);
+			if (tx != null)
+				cmd.Transaction = tx;
 
 			int pcount = 0;
 			foreach (var par in parameters)
@@ -96,6 +95,9 @@ namespace NDO
 				dbpar.Value = par ?? DBNull.Value;
 				cmd.Parameters.Add( dbpar );
 			}
+
+			if (dbConnection.State == ConnectionState.Closed)
+				dbConnection.Open();
 
 			if (returnReader)
 				return cmd.ExecuteReader();
@@ -114,12 +116,11 @@ namespace NDO
 
 		public void Dispose()
 		{
-			if (dbConnection.State == ConnectionState.Open)
-				dbConnection.Close();
+			this.pm.TransactionScope.Dispose();
 			if (this.forcedTransactionMode)
 			{
-				this.pm.TransactionScope.Dispose();
 				this.pm.TransactionMode = this.oldTransactionMode;
+				this.forcedTransactionMode = false;
 			}
 		}
 	}

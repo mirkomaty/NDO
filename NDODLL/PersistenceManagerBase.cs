@@ -117,6 +117,13 @@ namespace NDO
 			Init( new Mappings( mappingPath, ConfigContainer ) );
 		}
 
+		/// <summary>
+		/// Initializes the persistence manager
+		/// </summary>
+		/// <remarks>
+		/// Note: This is the method, which will be called from all different ways to instantiate a PersistenceManagerBase.
+		/// </remarks>
+		/// <param name="mapping"></param>
 		internal virtual void Init( Mappings mapping )
 		{
 			this.mappings = mapping;
