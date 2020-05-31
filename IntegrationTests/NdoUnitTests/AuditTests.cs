@@ -9,6 +9,7 @@ using NDO;
 using NDO.ShortId;
 using Reisekosten.Personal;
 using Reisekosten;
+using Newtonsoft.Json;
 
 namespace NdoUnitTests
 {
@@ -60,13 +61,10 @@ namespace NdoUnitTests
 			m = pm.Objects<Mitarbeiter>().Single();
 			m.Vorname = "Hans";
 			var changeObject = pm.GetChangeSet( m );
-			var dict = (IDictionary<string,object>)changeObject;
-			var original = (IDictionary<string, object>)dict["original"];
-			var current = (IDictionary<string, object>)dict["current"];
-			Assert.AreEqual( 1, original.Count );
-			Assert.AreEqual( 1, current.Count );
-			Assert.AreEqual( "Mirko", original["vorname"] );
-			Assert.AreEqual( "Hans", current["vorname"] );
+			Assert.AreEqual( 1, changeObject.original.Count );
+			Assert.AreEqual( 1, changeObject.current.Count );
+			Assert.AreEqual( "Mirko", changeObject.original["vorname"] );
+			Assert.AreEqual( "Hans", changeObject.current["vorname"] );
 		}
 
 		[Test]
@@ -77,9 +75,8 @@ namespace NdoUnitTests
 			var r = m.ErzeugeReise();
 			r.Zweck = "Test";
 			var changeObject = pm.GetChangeSet( m );
-			var dict = (IDictionary<string, object>)changeObject;
-			var original = (IDictionary<string, object>)dict["original"];
-			var current = (IDictionary<string, object>)dict["current"];
+			var original = changeObject.original;
+			var current = changeObject.current;
 			Assert.AreEqual( 1, original.Count );
 			Assert.AreEqual( 1, current.Count );
 			Assert.That( original.ContainsKey("dieReisen") );
@@ -94,6 +91,18 @@ namespace NdoUnitTests
 			// Now the id of r is determined. Let's assert, that the list in current reflects the change.
 			Assert.That( (int)r.NDOObjectId.Id[0] > 0 );
 			Assert.AreEqual( r.NDOObjectId, ((List<ObjectId>)current["dieReisen"])[1] );
+
+			changeObject = changeObject.SerializableClone();
+			original = changeObject.original;
+			current = changeObject.current;
+			Assert.AreEqual( 1, original.Count );
+			Assert.AreEqual( 1, current.Count );
+			Assert.That( original.ContainsKey( "dieReisen" ) );
+			Assert.That( current.ContainsKey( "dieReisen" ) );
+			Assert.AreEqual( 1, ( (List<string>) original["dieReisen"] ).Count );
+			Assert.AreEqual( 2, ( (List<string>) current["dieReisen"] ).Count );
+			Assert.AreEqual( r.NDOObjectId.ToShortId(), ( (List<string>) current["dieReisen"] )[1] );
+			string json = JsonConvert.SerializeObject(changeObject);
 		}
 
 		[Test]
@@ -103,9 +112,8 @@ namespace NdoUnitTests
 			m = pm.Objects<Mitarbeiter>().Single();
 			m.Löschen( m.Reisen[0] );
 			var changeObject = pm.GetChangeSet( m );
-			var dict = (IDictionary<string, object>)changeObject;
-			var original = (IDictionary<string, object>)dict["original"];
-			var current = (IDictionary<string, object>)dict["current"];
+			var original = changeObject.original;
+			var current = changeObject.current;
 			Assert.AreEqual( 1, original.Count );
 			Assert.AreEqual( 1, current.Count );
 			Assert.That( original.ContainsKey( "dieReisen" ) );
@@ -122,21 +130,21 @@ namespace NdoUnitTests
 			Adresse a = new Adresse() { Ort = "München", Straße = "Teststr", Plz = "80133" };
 			m.Adresse = a;
 			var changeObject = pm.GetChangeSet( m );
-			var dict = (IDictionary<string, object>)changeObject;
-			var original = (IDictionary<string, object>)dict["original"];
-			var current = (IDictionary<string, object>)dict["current"];
+			var original = changeObject.original;
+			var current = changeObject.current;
 			Assert.AreEqual( 1, original.Count );
 			Assert.AreEqual( 1, current.Count );
 			Assert.That( original.ContainsKey( "adresse" ) );
 			Assert.That( current.ContainsKey( "adresse" ) );
-			Assert.AreEqual( a.NDOObjectId.ToShortId(), ((List<string>)current["adresse"])[0] );
+			Assert.AreEqual( a.NDOObjectId, ((List<ObjectId>) current["adresse"])[0] );
 			// At this point it doesn't make any sense to serialize the changeObject,
 			// since the id of a is not yet determined.
 			Assert.That( (int)a.NDOObjectId.Id[0] < 0 );
 			pm.Save();
+			var newChangeObject = changeObject.SerializableClone();
 			// Now the id of r is determined. Let's assert, that the list in current reflects the change.
 			Assert.That( (int)a.NDOObjectId.Id[0] > 0 );
-			Assert.AreEqual( a.NDOObjectId.ToShortId(), ((List<string>)current["adresse"])[0] );
+			Assert.AreEqual( a.NDOObjectId.ToShortId(), ((List<string>)newChangeObject.current["adresse"])[0] );
 		}
 
 		[Test]
@@ -151,9 +159,8 @@ namespace NdoUnitTests
 			m = pm.Objects<Mitarbeiter>().Single();
 			m.Adresse = null;
 			var changeObject = pm.GetChangeSet( m );
-			var dict = (IDictionary<string, object>)changeObject;
-			var original = (IDictionary<string, object>)dict["original"];
-			var current = (IDictionary<string, object>)dict["current"];
+			var original = changeObject.original;
+			var current = changeObject.current;
 			Assert.AreEqual( 1, original.Count );
 			Assert.AreEqual( 1, current.Count );
 			Assert.That( original.ContainsKey( "adresse" ) );

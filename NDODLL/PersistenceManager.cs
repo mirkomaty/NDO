@@ -41,6 +41,7 @@ using NDO.Linq;
 using NDO.Query;
 using ST = System.Transactions;
 using Unity;
+using NDO.ChangeLogging;
 
 namespace NDO
 {
@@ -125,7 +126,7 @@ namespace NDO
 		/// <summary>
 		/// Gets a list of structures which represent relation changes, i.e. additions and removals
 		/// </summary>
-		protected List<RelationChangeRecord> RelationChanges
+		protected internal List<RelationChangeRecord> RelationChanges
 		{
 			get { return this.relationChanges; }
 		}
@@ -1840,7 +1841,7 @@ namespace NDO
 		/// <param name="pc">the parent object of all relations</param>
 		/// <param name="row"></param>
 		/// <returns></returns>
-		protected virtual List<KeyValuePair<Relation,object>> CollectRelationStates(IPersistenceCapable pc, DataRow row) 
+		protected internal virtual List<KeyValuePair<Relation,object>> CollectRelationStates(IPersistenceCapable pc, DataRow row) 
 		{
 			// Save state of relations
 			Class c = GetClass(pc);
@@ -3931,87 +3932,11 @@ namespace NDO
 		/// </summary>
 		/// <param name="o"></param>
 		/// <returns>An ExpandoObject</returns>
-		public ExpandoObject GetChangeSet( object o )
+		public ChangeLog GetChangeSet( object o )
 		{
-			IPersistenceCapable pc = CheckPc( o );
-
-			ExpandoObject result = new ExpandoObject();
-			ExpandoObject current = new ExpandoObject();
-			ExpandoObject original = new ExpandoObject();
-			IDictionary<string, object> originalValues = (IDictionary<string, object>)original;
-			IDictionary<string, object> currentValues = (IDictionary<string, object>)current;
-			IDictionary<string, object> resultValues = (IDictionary<string, object>)result;
-
-			// No changes
-			if (pc.NDOObjectState == NDOObjectState.Hollow || pc.NDOObjectState == NDOObjectState.Persistent)
-			{
-				return result;
-			}
-
-			DataRow row = GetClonedDataRow( o );
-
-			NDO.Mapping.Class cls = mappings.FindClass(o.GetType());
-
-			foreach (NDO.Mapping.Field field in cls.Fields)
-			{
-				string colName = field.Column.Name;
-				object currentVal = row[colName, DataRowVersion.Current];
-				object originalVal = row[colName, DataRowVersion.Original];
-
-				if (!currentVal.Equals( originalVal ))
-				{
-					originalValues.Add( field.Name, originalVal );
-					currentValues.Add( field.Name, currentVal );
-				}
-			}
-
-			var objRelationChanges = this.relationChanges.Where( ce => ce.Parent.NDOObjectId == pc.NDOObjectId ).GroupBy(ce=>ce.RelationName).ToList();
-			if (objRelationChanges.Count > 0)
-			{
-				var relStates = CollectRelationStates( pc, row );
-				foreach (var group in objRelationChanges)
-				{
-					string fieldName = group.Key;
-					object fieldValue = (from rs in relStates where rs.Key.FieldName == fieldName select rs.Value).SingleOrDefault();
-					var relCurrent = new List<string>();
-					if (fieldValue is IList l)
-					{
-						foreach (IPersistenceCapable item in l)
-						{
-							relCurrent.Add( item.NDOObjectId.ToShortId());
-						}
-					}
-					else
-					{
-						if (fieldValue != null)
-							relCurrent.Add( ((IPersistenceCapable)fieldValue).NDOObjectId.ToShortId() );
-					}
-
-					var relOriginal = relCurrent.ToList();
-
-					// In order to get the original array, we remove added objects
-					// and add removed objects
-					foreach (var changeEntry in group)
-					{
-						if (changeEntry.IsAdded)
-						{
-							var shortId = changeEntry.Child.NDOObjectId.ToShortId();
-							if (relOriginal.Contains( shortId ))
-								relOriginal.Remove( shortId );
-						}
-						else
-						{
-							relOriginal.Add( changeEntry.Child.NDOObjectId.ToShortId() );
-						}
-					}
-					originalValues.Add( fieldName, relOriginal );
-					currentValues.Add( fieldName, relCurrent );
-				}
-			}
-
-			resultValues.Add( "original", original );
-			resultValues.Add( "current", current );
-			return result;		
+			var changeLog = new ChangeLog(this);
+			changeLog.Initialize( o );
+			return changeLog;
 		}
 
 		/// <summary>

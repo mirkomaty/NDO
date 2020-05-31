@@ -422,7 +422,7 @@ namespace NDO
 			get { return (VerboseMode && this.logAdapter != null); }
 		}
 
-		protected IPersistenceCapable CheckPc(object o)
+		protected internal IPersistenceCapable CheckPc(object o)
 		{
 			IPersistenceCapable pc = o as IPersistenceCapable;
 			if (pc == null && !(o == null))
