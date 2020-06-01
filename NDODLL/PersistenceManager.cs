@@ -1471,6 +1471,7 @@ namespace NDO
 					handler.Execute(sql);
 					sql = String.Format( "INSERT INTO NDOSchemaVersion([SchemaName],[Version]) VALUES({0},'0')", schemaName == null ? "NULL" : provider.GetSqlLiteral( schemaName ) );
 					handler.Execute( sql );
+					handler.CommitTransaction();
 				}
 			}
 
