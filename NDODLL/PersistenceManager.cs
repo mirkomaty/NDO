@@ -1438,7 +1438,7 @@ namespace NDO
 		string GetSchemaVersion(Connection ndoConn, string schemaName)
 		{
 			IProvider provider = this.mappings.GetProvider( ndoConn );
-			string version = "0";  // Initial value
+			string version = "0.0";  // Initial value
 			var connection = provider.NewConnection( ndoConn.Name );
 			using (var handler = GetSqlPassThroughHandler())
 			{
@@ -1488,7 +1488,6 @@ namespace NDO
 		/// <remarks>Note that an additional command is executed, which will update the NDOSchemaVersion entry.</remarks>
 		public string[] PerformSchemaTransitions(string scriptFile, Connection ndoConn)
 		{
-#warning this must be tested
 			string schemaName = null;
 			// Gespeicherte Version ermitteln.
 			XElement transitionElements = XElement.Load( scriptFile );
