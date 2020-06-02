@@ -20,10 +20,13 @@ namespace NDO.SqlPersistenceHandling
 
 		public string GenerateOrderClause( List<QueryOrder> orderings, int skip, int take )
 		{
-			var ascOrderings = orderings.Where(o=>o.IsAscending);
-			var descOrderings = orderings.Where(o=>!o.IsAscending);
-			var ascOrderCols = (from o in ascOrderings select cls.FindField( o.FieldName ).Column.GetQualifiedName()).ToArray();
-			var descOrderCols = (from o in descOrderings select cls.FindField( o.FieldName ).Column.GetQualifiedName()).ToArray();
+			Func<QueryOrder, string> fieldSelector = o => cls.FindField(o.FieldName)?.Column?.GetQualifiedName();
+			Func<QueryOrder, string> oidSelector = o => cls.Oid.OidColumns.First().GetQualifiedName();
+
+			var ascOrderCols = orderings.Where(o=>o.IsAscending && o.FieldName != "oid").Select(fieldSelector)
+				.Union(orderings.Where(o=>o.IsAscending && o.FieldName == "oid").Select(oidSelector));
+			var descOrderCols = orderings.Where(o=>!o.IsAscending && o.FieldName != "oid").Select(fieldSelector)
+				.Union(orderings.Where(o=>!o.IsAscending && o.FieldName == "oid").Select(oidSelector));
 			var ascOrderString = String.Join( ",", ascOrderCols );
 			if (ascOrderString != String.Empty)
 				ascOrderString += " ASC";

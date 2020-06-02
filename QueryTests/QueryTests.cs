@@ -51,11 +51,9 @@ namespace QueryTests
 		[TearDown]
 		public void TearDown()
 		{
-			//NDOQuery<Mitarbeiter> q = new NDOQuery<Mitarbeiter>( pm );
-			//this.pm.Delete( q.Execute() );
-			//this.pm.Save();
-			var sqlHandler = pm.GetSqlPassThroughHandler();
-			sqlHandler.Execute( "DELETE FROM Mitarbeiter" );
+			var pm = NDOFactory.Instance.PersistenceManager;
+			pm.Delete( pm.Objects<Mitarbeiter>().ResultTable );
+			pm.Save();
 		}
 
 		[Test]
@@ -165,6 +163,28 @@ namespace QueryTests
 			q.Skip = 10;
 			q.Take = 10;
 			Assert.AreEqual( $"SELECT {this.mitarbeiterFields} FROM [Mitarbeiter] WHERE [Mitarbeiter].[Vorname] = {{0}} ORDER BY [Mitarbeiter].[Vorname] ASC, [Mitarbeiter].[Nachname] DESC OFFSET 10 ROWS FETCH NEXT 10 ROWS ONLY", q.GeneratedQuery );
+		}
+
+		[Test]
+		public void OrderingByOidWorks()
+		{
+			NDOQuery<Mitarbeiter> q = new NDOQuery<Mitarbeiter>( pm, "vorname = {0}" );
+			q.Parameters.Add( "Mirko" );
+			q.Orderings.Add( new AscendingOrder( "oid" ) );
+			q.Take = 10;
+			Assert.AreEqual( $"SELECT {this.mitarbeiterFields} FROM [Mitarbeiter] WHERE [Mitarbeiter].[Vorname] = {{0}} ORDER BY [Mitarbeiter].[ID] OFFSET 0 ROWS FETCH NEXT 10 ROWS ONLY", q.GeneratedQuery );
+			q.Skip = 10;
+			q.Take = 10;
+			Assert.AreEqual( $"SELECT {this.mitarbeiterFields} FROM [Mitarbeiter] WHERE [Mitarbeiter].[Vorname] = {{0}} ORDER BY [Mitarbeiter].[ID] OFFSET 10 ROWS FETCH NEXT 10 ROWS ONLY", q.GeneratedQuery );
+
+			q = new NDOQuery<Mitarbeiter>( pm, "vorname = {0}" );
+			q.Parameters.Add( "Mirko" );
+			q.Orderings.Add( new DescendingOrder( "oid" ) );
+			q.Take = 10;
+			Assert.AreEqual( $"SELECT {this.mitarbeiterFields} FROM [Mitarbeiter] WHERE [Mitarbeiter].[Vorname] = {{0}} ORDER BY [Mitarbeiter].[ID] DESC OFFSET 0 ROWS FETCH NEXT 10 ROWS ONLY", q.GeneratedQuery );
+			q.Skip = 10;
+			q.Take = 10;
+			Assert.AreEqual( $"SELECT {this.mitarbeiterFields} FROM [Mitarbeiter] WHERE [Mitarbeiter].[Vorname] = {{0}} ORDER BY [Mitarbeiter].[ID] DESC OFFSET 10 ROWS FETCH NEXT 10 ROWS ONLY", q.GeneratedQuery );
 		}
 
 		[Test]

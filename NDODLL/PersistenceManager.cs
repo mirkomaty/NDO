@@ -347,11 +347,12 @@ namespace NDO
 				Class pcClass = GetClass(pc);
 				// Make sure, the object is loaded.
 				if (pc2.NDOObjectState == NDOObjectState.Hollow)
-					LoadData(pc2); 
-				DataRow row = GetTable(pc).NewRow();
+					LoadData(pc2);
+				MarkDirty( pc2 );  // This locks the object and generates a LockEntry, which contains a row
+				var entry = cache.LockedObjects.FirstOrDefault( e => e.pc.NDOObjectId == pc.NDOObjectId );
+				DataRow row = entry.row;
 				pc.NDOWrite(row, pcClass.ColumnNames, 0);
 				pc2.NDORead(row, pcClass.ColumnNames, 0);
-				MarkDirty(pc2);
 			}
 			foreach(RelationChangeRecord rcr in cs.RelationChanges)
 			{
