@@ -391,8 +391,7 @@ namespace NDO.SqliteProvider
 			string path = connectionString.Substring( connectionString.IndexOf( '=' ) + 1 );
 			path = path.Trim();
 
-			FileStream fs = new FileStream( path, FileMode.OpenOrCreate );
-			fs.Close();
+			SQLiteConnection.CreateFile( path );
 
 			return connectionString;
 		}
