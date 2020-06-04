@@ -1228,16 +1228,38 @@ namespace NDO
 		/// <param name="scriptFile">The script file to execute.</param>
 		/// <param name="conn">A connection object, containing the connection 
 		/// string to the database, which should be altered.</param>
-		/// <returns></returns>
+		/// <returns>A string array with error messages or the string "OK" for each of the statements in the file.</returns>
 		/// <remarks>
 		/// If the Connection object is invalid or null, a NDOException with ErrorNumber 44 will be thrown.
 		/// Any exceptions thrown while executing a statement in the script, will be caught.
 		/// Their message property will appear in the result array.
 		/// If the script doesn't exist, a NDOException with ErrorNumber 48 will be thrown.
 		/// </remarks>
-		public string[] BuildDatabase(string scriptFile, Connection conn)
+		public string[] BuildDatabase( string scriptFile, Connection conn )
 		{
-			StreamReader sr = new StreamReader(scriptFile, System.Text.Encoding.Default);
+			return BuildDatabase( scriptFile, conn, Encoding.UTF8 );
+		}
+
+		/// <summary>
+		/// Executes an sql script to generate the database tables. 
+		/// The function will execute any sql statements in the script 
+		/// which are valid according to the
+		/// rules of the underlying database. Result sets are ignored.
+		/// </summary>
+		/// <param name="scriptFile">The script file to execute.</param>
+		/// <param name="conn">A connection object, containing the connection 
+		/// string to the database, which should be altered.</param>
+		/// <param name="encoding">The encoding of the script file. Default is UTF8.</param>
+		/// <returns>A string array with error messages or the string "OK" for each of the statements in the file.</returns>
+		/// <remarks>
+		/// If the Connection object is invalid or null, a NDOException with ErrorNumber 44 will be thrown.
+		/// Any exceptions thrown while executing a statement in the script, will be caught.
+		/// Their message property will appear in the result array.
+		/// If the script doesn't exist, a NDOException with ErrorNumber 48 will be thrown.
+		/// </remarks>
+		public string[] BuildDatabase(string scriptFile, Connection conn, Encoding encoding)
+		{
+			StreamReader sr = new StreamReader(scriptFile, encoding);
 			string s = sr.ReadToEnd();
 			sr.Close();
 			string[] arr = s.Split(';');
@@ -1264,6 +1286,7 @@ namespace NDO
 					}
 					i++;
 				}
+				CheckEndTransaction(true);
 			}
 			return result;
 		}

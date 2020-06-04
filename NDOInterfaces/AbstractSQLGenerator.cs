@@ -139,12 +139,13 @@ namespace NDOInterfaces
 		/// Converts a System.Type to default DbType value.
 		/// </summary>
 		/// <param name="t">The type to convert.</param>
+		/// <param name="size">The intended size of the type. If type is string, the value -1 means, that a CLOB type should be returned.</param>
 		/// <returns>A string representation of the DbType.</returns>
 		/// <remarks>
 		/// Concrete providers should override this function to provide DbType names, 
 		/// which can be used in the DDL code of the underlying database.
 		/// </remarks>
-		public abstract string DbTypeFromType(Type t);
+		public abstract string DbTypeFromType(Type t, int size = 0);
 
 		/// <summary>
 		/// See <see cref="ISqlGenerator">ISqlGenerator interface</see>.

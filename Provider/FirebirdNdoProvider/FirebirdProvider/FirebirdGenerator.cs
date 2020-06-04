@@ -82,28 +82,30 @@ namespace FirebirdProvider
 
 		// Standard conversion of types to DbTypes.
 		// ColumnType entries in the mapping file will override this entries.
-		public override string DbTypeFromType(Type t)
+		public override string DbTypeFromType(Type t, int size)
 		{
-			if ( t == typeof(bool) ||  t == typeof(byte) || t == typeof(sbyte) 
-				|| t == typeof(char) || t == typeof(short) || t == typeof(ushort) )
+			if (t == typeof( bool ) || t == typeof( byte ) || t == typeof( sbyte )
+				|| t == typeof( char ) || t == typeof( short ) || t == typeof( ushort ))
 				return "SMALLINT";
-			else if ( t == typeof(int)|| t == typeof(uint) || t.IsSubclassOf(typeof(System.Enum)))
+			else if (t == typeof( int ) || t == typeof( uint ) || t.IsSubclassOf( typeof( System.Enum ) ))
 				return "INTEGER";
-			else if ( t == typeof(long)|| t == typeof(ulong))
+			else if (t == typeof( long ) || t == typeof( ulong ))
 				return "BIGINT";
-			else if ( t == typeof(System.Guid))
+			else if (t == typeof( System.Guid ))
 				return "CHAR";
-			else if ( t == typeof(float))
+			else if (t == typeof( float ))
 				return "FLOAT";
-			else if ( t == typeof(double))
+			else if (t == typeof( double ))
 				return "DOUBLE PRECISION";
-			else if ( t == typeof(string))
+			else if (t == typeof( string ) && size == -1)
+				return "BLOB SUB_TYPE TEXT";
+			else if (t == typeof( string ))
 				return "VARCHAR";
-			else if ( t == typeof(byte[]))
+			else if (t == typeof( byte[] ))
 				return "BLOB";
-			else if ( t == typeof(decimal))
+			else if (t == typeof( decimal ))
 				return "DECIMAL";
-			else if ( t == typeof(System.DateTime))
+			else if (t == typeof( System.DateTime ))
 				return "DATE";
 			else
 				return "VARCHAR";

@@ -42,24 +42,6 @@ namespace NDO.SqlCeProvider
 		{
 		}
 
-        //Assembly OnAssemblyResolve( object sender, ResolveEventArgs args )
-        //{
-        //    if (args.Name.StartsWith("System.Data.SqlServerCe"))
-        //    {
-        //        string path = Path.GetDirectoryName( Assembly.GetExecutingAssembly().Location );
-        //        if ( path.IndexOf( "Temporary ASP.NET Files" ) > -1 )
-        //            path = Path.Combine( AppDomain.CurrentDomain.BaseDirectory, "bin" );
-        //        if ( IntPtr.Size == 8 )
-        //            path = Path.Combine( path, "amd64" );
-        //        else
-        //            path = Path.Combine( path, "x86" );
-        //        path = Path.Combine( path, "System.Data.SqlServerCe.dll" );				
-        //        return Assembly.LoadFrom( path );
-        //    }
-        //    return null;
-        //}
-
-
 		// The following methods provide objects of provider classes 
 		// which implement common interfaces in .NET:
 		// IDbConnection, IDbCommand, DbDataAdapter and the Parameter objects

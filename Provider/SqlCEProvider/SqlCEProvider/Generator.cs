@@ -60,10 +60,12 @@ namespace NDO.SqlCeProvider
             return string.Compare(dbType, "nvarchar", true) == 0 || string.Compare(dbType, "decimal", true) == 0;
         }
 
-        public override string DbTypeFromType(Type t)
+        public override string DbTypeFromType(Type t, int size)
         {
             if (t == typeof(DateTime))
                 return "DateTime";
+            if (t == typeof( string ) && size == -1)
+                return "NTEXT";
             return ((SqlDbType)Provider.GetDbType(t)).ToString();
         }
 

@@ -56,26 +56,7 @@ namespace NDO.SqliteProvider
 	{
 		public Provider()
 		{
-			AppDomain.CurrentDomain.AssemblyResolve += new ResolveEventHandler( OnAssemblyResolve );
 		}
-
-		Assembly OnAssemblyResolve( object sender, ResolveEventArgs args )
-		{
-			if (args.Name.StartsWith("System.Data.SQLite"))
-			{
-				string path = Path.GetDirectoryName( Assembly.GetExecutingAssembly().Location );
-				if ( path.IndexOf( "Temporary ASP.NET Files" ) > -1 )
-					path = Path.Combine( AppDomain.CurrentDomain.BaseDirectory, "bin" );
-				if ( IntPtr.Size == 8 )
-					path = Path.Combine( path, "amd64" );
-				else
-					path = Path.Combine( path, "x86" );
-				path = Path.Combine( path, "System.Data.SQLite.dll" );				
-				return Assembly.LoadFrom( path );
-			}
-			return null;
-		}
-
 
 		// The following methods provide objects of provider classes 
 		// which implement common interfaces in .NET:

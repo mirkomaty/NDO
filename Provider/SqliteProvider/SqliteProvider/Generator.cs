@@ -60,38 +60,10 @@ namespace NDO.SqliteProvider
 			return true;
 		}
 
-		public override string DbTypeFromType(Type t)
+		public override string DbTypeFromType(Type t, int size)
 		{
+			// CLOBs: Strings don't have a limit in Sqlite. So there is nothing to do.
 			return NDO.SqliteProvider.Provider.GetInternalDbType( t ).ToString();
-#if MaskedOut
-            if (t == typeof(bool))
-                return("Int2");
-            else if (t == typeof(Byte))
-				return ( "Int2" );
-			else if ( t == typeof( Byte[] ) )
-                return "Blob";
-            else if (t == typeof(DateTime))
-				return "Datetime";
-			else if (t == typeof(decimal))
-				return "Decimal";
-			else if (t == typeof(double))
-				return "Real";
-			else if (t.IsEnum)
-				return "Integer";
-			else if (t == typeof(float))
-				return "Real";
-			else if (t == typeof(Guid))
-				return "Text";
-			else if (t == typeof(Int16) || t == typeof(UInt16))
-				return "Int2";
-			else if (t == typeof(Int32) || t == typeof(UInt32))
-				return "Integer";
-			else if ( t == typeof( Int64 ) || t == typeof( UInt64 ) )
-				return "Numeric";
-			else if ( t == typeof( string ) )
-				return "Text";
-			throw new Exception("Can't resolve type " + t.FullName + " as storable.");
-#endif
 		}
 
 		public override string AutoIncrementColumn(string columnName, Type dataType, string columnType, string width)

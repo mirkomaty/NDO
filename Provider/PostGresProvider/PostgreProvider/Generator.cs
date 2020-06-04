@@ -60,7 +60,7 @@ namespace NDO.PostGreProvider
             return (string.Compare(dbType, "char", true) == 0 || string.Compare(dbType, "varchar", true) == 0 || string.Compare(dbType, "numeric", true) == 0);
 		}
 
-		public override string DbTypeFromType(Type t)
+		public override string DbTypeFromType(Type t, int size)
 		{
             if (t == typeof(bool))
                 return("bool");
@@ -86,6 +86,8 @@ namespace NDO.PostGreProvider
 				return "int4";
 			else if (t == typeof(Int64) || t == typeof(UInt64))
 				return "int8";
+			else if (t == typeof( string ) && size == -1)
+				return "text";
 			else if (t == typeof(string))
 				return "varchar";
 			throw new Exception("Can't resolve type " + t.FullName + " as storable.");

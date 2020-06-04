@@ -39,7 +39,7 @@ namespace SqlServerProvider
 			return string.Compare( dbType, "nvarchar", true ) == 0 || string.Compare( dbType, "decimal", true ) == 0;
 		}
 
-		public override string DbTypeFromType( Type t )
+		public override string DbTypeFromType( Type t, int size )
 		{
 			if (t == typeof( DateTime ))
 				return "DateTime";

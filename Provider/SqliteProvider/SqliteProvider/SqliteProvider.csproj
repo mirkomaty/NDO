@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <TargetFrameworks>netstandard2.0;net452</TargetFrameworks>
-    <Version>4.0.0</Version>
+    <Version>4.0.1</Version>
     <Authors>Mirko Matytschak</Authors>
     <Company>Mirko Matytschak</Company>
     <Product>.NET Data Objects (NDO)</Product>
@@ -10,13 +10,14 @@
     <!--PackageLicenseUrl>https://opensource.org/licenses/MIT</PackageLicenseUrl-->
     <PackageLicense>MIT</PackageLicense>
     <PackageProjectUrl>https://www.netdataobjects.de</PackageProjectUrl>
-    <RepositoryUrl>https://git.netdataobjects.de</RepositoryUrl>
+    <RepositoryUrl>https://github.com/mirkomaty/NDO</RepositoryUrl>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <PackageId>ndo.sqlite</PackageId>
+    <PackageReleaseNotes>Support for NDOInterfaces 4.0.1</PackageReleaseNotes>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="NDOInterfaces" Version="4.0.0" />
+    <PackageReference Include="NDOInterfaces" Version="4.0.1" />
     <PackageReference Include="System.Data.SQLite.Core.MSIL" Version="1.0.109" />
   </ItemGroup>
  

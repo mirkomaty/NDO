@@ -34,10 +34,10 @@ using System.Linq;
 namespace NDO
 {
     /// <summary>
-    /// This singleton class is a factory for NDO providers. 
+    /// This singleton class is a factory for NDO providers and generators. 
     /// </summary>
     /// <remarks>
-    /// Providers implement the interface IProvider and optional the interface ISqlGenerator.
+    /// Providers implement the interface IProvider. Generators implement ISqlGenerator.
     /// All managed dllsin the base directory of the running AppDomain
     /// will be scanned for implementations of the IProvider interface.
     /// </remarks>
@@ -235,6 +235,26 @@ namespace NDO
         {
             get { return skipPrivatePath; }
             set { skipPrivatePath = value; }
+        }
+
+        /// <summary>
+        /// Tries to get a provider with the given name. If the provider doesn't exist, the first available provider is used.
+        /// </summary>
+        /// <remarks>
+        /// This method ist used by the enhancer. Use NDOProviderFactory.Instance[providerName] in your application code.
+        /// In most cases it is sufficient to use the first available provider, because only one provider is used.
+        /// </remarks>
+        /// <param name="name"></param>
+        /// <returns></returns>
+        public IProvider GetProviderOrDefault(string name)
+        {
+            LoadProviders();
+            if (providers.ContainsKey( name ))
+                return (IProvider) providers[name];
+            var provider = providers.Values.FirstOrDefault();
+            if (provider == null)
+                throw new Exception( "There is no provider available. Please install at least one NDOProvider." );
+            return provider;
         }
 
 

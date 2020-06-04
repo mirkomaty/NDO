@@ -188,7 +188,7 @@ namespace NDO
 		private bool CheckGuidType()
 		{
             // Since the generator might be called from the enhancer
-            // with no provider defined, we have can't use GetProvider
+            // with no provider defined, we can't use GetProvider
             // because it throws an exeption, if no provider exists.
             //IProvider provider = mappings.GetProvider(c);
 
@@ -197,7 +197,7 @@ namespace NDO
                 throw new NDOException(102, "No connection defined in class mapping for type " + c.FullName + ". Check your mapping file.");
             if (conn.Type == string.Empty)
                 return true;
-            IProvider provider = NDOProviderFactory.Instance[conn.Type];
+            IProvider provider = NDOProviderFactory.Instance.GetProviderOrDefault(conn.Type);
             if (provider == null)
                 return true;
             return (provider.SupportsNativeGuidType);

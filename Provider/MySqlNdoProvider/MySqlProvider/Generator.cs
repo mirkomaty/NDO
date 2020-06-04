@@ -72,32 +72,34 @@ namespace MySqlProvider
 			return (string.Compare(dbType, "varchar", true) == 0 || string.Compare(dbType, "decimal", true) == 0);
 		}
 
-		public override string DbTypeFromType(Type t)
+		public override string DbTypeFromType(Type t, int size)
 		{
-			if (t == typeof(bool) || t == typeof(Byte))
+			if (t == typeof( bool ) || t == typeof( Byte ))
 				return "Tinyint";
-			else if (t == typeof(DateTime))
+			else if (t == typeof( DateTime ))
 				return "Datetime";
-			else if (t == typeof(decimal))
+			else if (t == typeof( decimal ))
 				return "Decimal";
-			else if (t == typeof(double))
+			else if (t == typeof( double ))
 				return "Double";
 			else if (t.IsEnum)
 				return "Int";
-			else if (t == typeof(float))
+			else if (t == typeof( float ))
 				return "Float";
-			else if (t == typeof(Guid))
+			else if (t == typeof( Guid ))
 				return "Varchar";
-			else if (t == typeof(Int16) || t == typeof(UInt16))
+			else if (t == typeof( Int16 ) || t == typeof( UInt16 ))
 				return "Smallint";
-			else if (t == typeof(Int32) || t == typeof(UInt32))
+			else if (t == typeof( Int32 ) || t == typeof( UInt32 ))
 				return "Int";
-			else if (t == typeof(Int64) || t == typeof(UInt64))
+			else if (t == typeof( Int64 ) || t == typeof( UInt64 ))
 				return "BigInt";
-			else if (t == typeof(string))
+			else if (t == typeof( string ) && size == -1)
+				return "TEXT";
+			else if (t == typeof( string ))
 				return "Varchar";
-            else if (t == typeof(byte[]))
-                return "MediumBlob";
+			else if (t == typeof( byte[] ))
+				return "MediumBlob";
             throw new Exception("Can't resolve type " + t.FullName + " as storable.");
 		}
 
