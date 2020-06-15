@@ -294,6 +294,10 @@
     <None Include="Resources\Images.png" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="App.ico">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
     <Content Include="Resources\Package.ico">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       <IncludeInVSIX>true</IncludeInVSIX>

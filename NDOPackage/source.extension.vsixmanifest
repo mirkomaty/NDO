@@ -1,9 +1,13 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <PackageManifest Version="2.0.0" xmlns="http://schemas.microsoft.com/developer/vsx-schema/2011" xmlns:d="http://schemas.microsoft.com/developer/vsx-schema-design/2011">
     <Metadata>
-        <Identity Id="9a3bfde0-3b01-4a99-9ddc-1544345635fc" Version="4.0.2" Language="en-US" Publisher="Mirko Matytschak" />
+        <Identity Id="9a3bfde0-3b01-4a99-9ddc-1544345635fc" Version="4.0.3" Language="en-US" Publisher="Mirko Matytschak" />
         <DisplayName>.NET Data Objects 4</DisplayName>
         <Description xml:space="preserve">NDO Integration into Visual Studio.</Description>
+        <MoreInfo>https://www.netdataobjects.de</MoreInfo>
+        <GettingStartedGuide>https://www.netdataobjects.de/wie-funktioniert-ndo/ndo-users-guide/</GettingStartedGuide>
+        <ReleaseNotes>Built for VS 2019 and .NET 4.7.2</ReleaseNotes>
+        <Icon>App.ico</Icon>
     </Metadata>
     <Installation>
         <InstallationTarget Id="Microsoft.VisualStudio.Community" Version="[15.0,17.0)" />

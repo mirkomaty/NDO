@@ -64,6 +64,7 @@ namespace NDO.ShortId
 		/// Gets the type of the object denoted by the ShortId
 		/// </summary>
 		/// <param name="shortId"></param>
+		/// <param name="pm"></param>
 		/// <returns></returns>
 		public static Type GetObjectType(this string shortId, PersistenceManager pm)
 		{
