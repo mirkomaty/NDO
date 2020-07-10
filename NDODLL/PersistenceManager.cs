@@ -122,6 +122,7 @@ namespace NDO
 		private const string hollowMarker = "Hollow";
 		private byte[] encryptionKey;
 		private List<RelationChangeRecord> relationChanges = new List<RelationChangeRecord>();
+		private bool isClosing = false;
 
 		/// <summary>
 		/// Gets a list of structures which represent relation changes, i.e. additions and removals
@@ -3591,6 +3592,9 @@ namespace NDO
 		/// </summary>
 		public override void Close() 
 		{
+			if (this.isClosing)
+				return;
+			this.isClosing = true;
 			TransactionScope.Dispose();
 			UnloadCache();
 			base.Close();
@@ -3607,15 +3611,6 @@ namespace NDO
 
 		#endregion
 
-		#region Implementation of IDisposable
-		/// <summary>
-		/// We make sure that the PM is closed during disposal.
-		/// </summary>
-		public override void Dispose() 
-		{
-			Close();
-		}
-#endregion
 
 #region Class extent
 		/// <summary>

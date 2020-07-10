@@ -456,7 +456,18 @@ namespace NDO
 			isClosing = true;
 			this.ds.Dispose();
 			this.ds = null;
-			this.configContainer.Dispose();
+			this.configContainer.Dispose();  // Leads to another Disposal of the PM. therefore we query for isClosing.
+		}
+
+		/// <summary>
+		/// IDisposable implementation.
+		/// </summary>
+		/// <remarks>Note: The derived classes don't need to override the Dispose methods, since Close() is virtual. Just override Close() and call base.Close() in the overridden version.</remarks>
+		/// <param name="disposing"></param>
+		protected virtual void Dispose(bool disposing)
+		{
+			if (disposing)
+				Close();
 		}
 
 		/// <summary>
@@ -464,7 +475,16 @@ namespace NDO
 		/// </summary>
 		public virtual void Dispose()
 		{
-			Close();
+			Dispose( true );
+			GC.SuppressFinalize( this );
+		}
+
+		/// <summary>
+		/// Finalizer.
+		/// </summary>
+		~PersistenceManagerBase()
+		{
+			Dispose( false );
 		}
 	}
 }
