@@ -202,6 +202,7 @@ namespace NDO
 		public void Unload()
 		{
 			//			Debug.WriteLine("Cache unloaded " + objects.Count + " objects");
+			lockedObjects.Clear();
 			objects.Clear();
 		}
 

@@ -3587,12 +3587,13 @@ namespace NDO
 		}
 
 		/// <summary>
-		/// Close the persistence manager. After that it should not be used any more.
+		/// Closes the PersistenceManager and releases all resources.
 		/// </summary>
-		public void Close() 
+		public override void Close() 
 		{
 			TransactionScope.Dispose();
 			UnloadCache();
+			base.Close();
 		}
 
 		internal void LogIfVerbose(string msg)
@@ -3603,28 +3604,16 @@ namespace NDO
 			}
 		}
 
-		///// <summary>
-		///// Completes the current transaction.
-		///// </summary>
-		///// <remarks>
-		///// This method should be called, if you want to make sure, that a fresh transaction will be started.
-		///// </remarks>
-		//public void Complete()
-		//{
-		//	TransactionScope.Complete();
-		//}
 
+		#endregion
 
-#endregion
-
-#region Implementation of IDisposable
+		#region Implementation of IDisposable
 		/// <summary>
-		/// Make sure, the pm will be closed when it gets disposed
+		/// We make sure that the PM is closed during disposal.
 		/// </summary>
 		public override void Dispose() 
 		{
 			Close();
-			base.Dispose();
 		}
 #endregion
 

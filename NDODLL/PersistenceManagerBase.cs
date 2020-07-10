@@ -40,7 +40,13 @@ namespace NDO
 	public class PersistenceManagerBase : IPersistenceManagerBase
 	{
 		internal Cache cache = new Cache();
+		/// <summary>
+		/// The DataSet used as template for DataRows
+		/// </summary>
 		protected DataSet ds = null;
+		/// <summary>
+		/// The StateManager instance which will be used for all objects
+		/// </summary>
 		protected IStateManager sm;
 		internal Mappings mappings;  // protected will make the compiler complaining
 		private string logPath;
@@ -48,6 +54,7 @@ namespace NDO
 		private Type persistenceHandlerType = null;
 		private IUnityContainer configContainer;
 		private IPersistenceHandlerManager persistenceHandlerManager;
+		bool isClosing = false;
 
 		/// <summary>
 		/// Register a listener to this event, if you have to provide user generated ids. 
@@ -417,11 +424,20 @@ namespace NDO
 				this.LogAdapter.Clear();
 		}
 
+		/// <summary>
+		/// Determines, if a log message will actually be issued.
+		/// </summary>
 		public bool LoggingPossible
 		{
 			get { return (VerboseMode && this.logAdapter != null); }
 		}
 
+		/// <summary>
+		/// Checks whether an object is an IPersistenceCapable and converts the object into an IPersistenceCapable.
+		/// </summary>
+		/// <param name="o"></param>
+		/// <returns></returns>
+		/// <remarks>Throws an NDOException, if the object can't be converted.</remarks>
 		protected internal IPersistenceCapable CheckPc(object o)
 		{
 			IPersistenceCapable pc = o as IPersistenceCapable;
@@ -431,11 +447,24 @@ namespace NDO
 		}
 
 		/// <summary>
+		/// Closes the PersistenceManager and releases all resources.
+		/// </summary>
+		public virtual void Close()
+		{
+			if (isClosing)
+				return;
+			isClosing = true;
+			this.ds.Dispose();
+			this.ds = null;
+			this.configContainer.Dispose();
+		}
+
+		/// <summary>
 		/// Disposes any Resources which might be held by the PersistenceManager implementation.
 		/// </summary>
 		public virtual void Dispose()
 		{
-			this.configContainer.Dispose();
+			Close();
 		}
 	}
 }
