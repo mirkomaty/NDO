@@ -1,4 +1,4 @@
-﻿//
+//
 // Copyright (c) 2002-2016 Mirko Matytschak 
 // (www.netdataobjects.de)
 //
@@ -21,12 +21,14 @@
 
 
 using System;
+using System.Linq;
 using System.Reflection;
 using System.Diagnostics;
 using System.Collections;
 using System.Collections.Generic;
 using NDO;
 using NDO.Mapping;
+using NDO.Query;
 using NUnit.Framework;
 using RelationTestClasses;
 
@@ -68,20 +70,29 @@ public class TestAgrDir1NoTblAuto
 	[TearDown]
 	public void TearDown()
 	{
-		pm.UnloadCache();
-		var l = pm.Objects<AgrDir1NoTblAutoLeft>().ResultTable;
-		pm.Delete(l);
-		pm.Save();
-		pm.UnloadCache();
-		var m = pm.Objects<AgrDir1NoTblAutoRight>().ResultTable;
-		pm.Delete(m);
-		pm.Save();
-		pm.UnloadCache();
-		decimal count;
-		count = (decimal) new NDOQuery<AgrDir1NoTblAutoLeft>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<AgrDir1NoTblAutoRight>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #2");
+		try
+		{
+			pm.UnloadCache();
+			var l = pm.Objects<AgrDir1NoTblAutoLeft>().ResultTable;
+			pm.Delete(l);
+			pm.Save();
+			pm.UnloadCache();
+			var m = pm.Objects<AgrDir1NoTblAutoRight>().ResultTable;
+			pm.Delete(m);
+			pm.Save();
+			pm.UnloadCache();
+			decimal count;
+			count = (decimal) new NDOQuery<AgrDir1NoTblAutoLeft>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #1");
+			count = (decimal) new NDOQuery<AgrDir1NoTblAutoRight>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #2");
+		}
+		catch (Exception)
+		{
+			var handler = pm.GetSqlPassThroughHandler( pm.NDOMapping.Connections.First() );
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( ownVar.GetType() ).TableName}");
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( otherVar.GetType() ).TableName}");
+		}
 	}
 	[Test]
 	public void TestSaveReload()
@@ -104,10 +115,6 @@ public class TestAgrDir1NoTblAuto
 		QueryOwn();
 		Assert.NotNull(ownVar, "No Query Result");
 		Assert.Null(ownVar.RelField, "There should be no object");
-	}
-	[Test]
-	public void TestSaveReloadRemove()
-	{
 	}
 	[Test]
 	public void TestChangeKeyHolderLeft()
@@ -186,20 +193,30 @@ public class TestAgrDir1TblAuto
 	[TearDown]
 	public void TearDown()
 	{
-		pm.UnloadCache();
-		var l = pm.Objects<AgrDir1TblAutoLeft>().ResultTable;
-		pm.Delete(l);
-		pm.Save();
-		pm.UnloadCache();
-		var m = pm.Objects<AgrDir1TblAutoRight>().ResultTable;
-		pm.Delete(m);
-		pm.Save();
-		pm.UnloadCache();
-		decimal count;
-		count = (decimal) new NDOQuery<AgrDir1TblAutoLeft>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<AgrDir1TblAutoRight>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #2");
+		try
+		{
+			pm.UnloadCache();
+			var l = pm.Objects<AgrDir1TblAutoLeft>().ResultTable;
+			pm.Delete(l);
+			pm.Save();
+			pm.UnloadCache();
+			var m = pm.Objects<AgrDir1TblAutoRight>().ResultTable;
+			pm.Delete(m);
+			pm.Save();
+			pm.UnloadCache();
+			decimal count;
+			count = (decimal) new NDOQuery<AgrDir1TblAutoLeft>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #1");
+			count = (decimal) new NDOQuery<AgrDir1TblAutoRight>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #2");
+		}
+		catch (Exception)
+		{
+			var handler = pm.GetSqlPassThroughHandler( pm.NDOMapping.Connections.First() );
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( ownVar.GetType() ).TableName}");
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( otherVar.GetType() ).TableName}");
+			handler.Execute( $"DELETE FROM {pm.NDOMapping.FindClass( ownVar.GetType() ).Relations.First().MappingTable.TableName}" );
+		}
 	}
 	[Test]
 	public void TestSaveReload()
@@ -222,10 +239,6 @@ public class TestAgrDir1TblAuto
 		QueryOwn();
 		Assert.NotNull(ownVar, "No Query Result");
 		Assert.Null(ownVar.RelField, "There should be no object");
-	}
-	[Test]
-	public void TestSaveReloadRemove()
-	{
 	}
 	[Test]
 	public void TestChangeKeyHolderLeft()
@@ -295,20 +308,29 @@ public class TestAgrBi11NoTblAuto
 	[TearDown]
 	public void TearDown()
 	{
-		pm.UnloadCache();
-		var l = pm.Objects<AgrBi11NoTblAutoLeft>().ResultTable;
-		pm.Delete(l);
-		pm.Save();
-		pm.UnloadCache();
-		var m = pm.Objects<AgrBi11NoTblAutoRight>().ResultTable;
-		pm.Delete(m);
-		pm.Save();
-		pm.UnloadCache();
-		decimal count;
-		count = (decimal) new NDOQuery<AgrBi11NoTblAutoLeft>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<AgrBi11NoTblAutoRight>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #2");
+		try
+		{
+			pm.UnloadCache();
+			var l = pm.Objects<AgrBi11NoTblAutoLeft>().ResultTable;
+			pm.Delete(l);
+			pm.Save();
+			pm.UnloadCache();
+			var m = pm.Objects<AgrBi11NoTblAutoRight>().ResultTable;
+			pm.Delete(m);
+			pm.Save();
+			pm.UnloadCache();
+			decimal count;
+			count = (decimal) new NDOQuery<AgrBi11NoTblAutoLeft>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #1");
+			count = (decimal) new NDOQuery<AgrBi11NoTblAutoRight>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #2");
+		}
+		catch (Exception)
+		{
+			var handler = pm.GetSqlPassThroughHandler( pm.NDOMapping.Connections.First() );
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( ownVar.GetType() ).TableName}");
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( otherVar.GetType() ).TableName}");
+		}
 	}
 	[Test]
 	public void TestSaveReload()
@@ -331,10 +353,6 @@ public class TestAgrBi11NoTblAuto
 		QueryOwn();
 		Assert.NotNull(ownVar, "No Query Result");
 		Assert.Null(ownVar.RelField, "There should be no object");
-	}
-	[Test]
-	public void TestSaveReloadRemove()
-	{
 	}
 	[Test]
 	public void TestChangeKeyHolderLeft()
@@ -445,20 +463,30 @@ public class TestAgrBi11TblAuto
 	[TearDown]
 	public void TearDown()
 	{
-		pm.UnloadCache();
-		var l = pm.Objects<AgrBi11TblAutoLeft>().ResultTable;
-		pm.Delete(l);
-		pm.Save();
-		pm.UnloadCache();
-		var m = pm.Objects<AgrBi11TblAutoRight>().ResultTable;
-		pm.Delete(m);
-		pm.Save();
-		pm.UnloadCache();
-		decimal count;
-		count = (decimal) new NDOQuery<AgrBi11TblAutoLeft>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<AgrBi11TblAutoRight>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #2");
+		try
+		{
+			pm.UnloadCache();
+			var l = pm.Objects<AgrBi11TblAutoLeft>().ResultTable;
+			pm.Delete(l);
+			pm.Save();
+			pm.UnloadCache();
+			var m = pm.Objects<AgrBi11TblAutoRight>().ResultTable;
+			pm.Delete(m);
+			pm.Save();
+			pm.UnloadCache();
+			decimal count;
+			count = (decimal) new NDOQuery<AgrBi11TblAutoLeft>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #1");
+			count = (decimal) new NDOQuery<AgrBi11TblAutoRight>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #2");
+		}
+		catch (Exception)
+		{
+			var handler = pm.GetSqlPassThroughHandler( pm.NDOMapping.Connections.First() );
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( ownVar.GetType() ).TableName}");
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( otherVar.GetType() ).TableName}");
+			handler.Execute( $"DELETE FROM {pm.NDOMapping.FindClass( ownVar.GetType() ).Relations.First().MappingTable.TableName}" );
+		}
 	}
 	[Test]
 	public void TestSaveReload()
@@ -481,10 +509,6 @@ public class TestAgrBi11TblAuto
 		QueryOwn();
 		Assert.NotNull(ownVar, "No Query Result");
 		Assert.Null(ownVar.RelField, "There should be no object");
-	}
-	[Test]
-	public void TestSaveReloadRemove()
-	{
 	}
 	[Test]
 	public void TestChangeKeyHolderLeft()
@@ -595,20 +619,29 @@ public class TestAgrDirnNoTblAuto
 	[TearDown]
 	public void TearDown()
 	{
-		pm.UnloadCache();
-		var l = pm.Objects<AgrDirnNoTblAutoLeft>().ResultTable;
-		pm.Delete(l);
-		pm.Save();
-		pm.UnloadCache();
-		var m = pm.Objects<AgrDirnNoTblAutoRight>().ResultTable;
-		pm.Delete(m);
-		pm.Save();
-		pm.UnloadCache();
-		decimal count;
-		count = (decimal) new NDOQuery<AgrDirnNoTblAutoLeft>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<AgrDirnNoTblAutoRight>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #2");
+		try
+		{
+			pm.UnloadCache();
+			var l = pm.Objects<AgrDirnNoTblAutoLeft>().ResultTable;
+			pm.Delete(l);
+			pm.Save();
+			pm.UnloadCache();
+			var m = pm.Objects<AgrDirnNoTblAutoRight>().ResultTable;
+			pm.Delete(m);
+			pm.Save();
+			pm.UnloadCache();
+			decimal count;
+			count = (decimal) new NDOQuery<AgrDirnNoTblAutoLeft>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #1");
+			count = (decimal) new NDOQuery<AgrDirnNoTblAutoRight>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #2");
+		}
+		catch (Exception)
+		{
+			var handler = pm.GetSqlPassThroughHandler( pm.NDOMapping.Connections.First() );
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( ownVar.GetType() ).TableName}");
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( otherVar.GetType() ).TableName}");
+		}
 	}
 	[Test]
 	public void TestSaveReload()
@@ -692,20 +725,30 @@ public class TestAgrDirnTblAuto
 	[TearDown]
 	public void TearDown()
 	{
-		pm.UnloadCache();
-		var l = pm.Objects<AgrDirnTblAutoLeft>().ResultTable;
-		pm.Delete(l);
-		pm.Save();
-		pm.UnloadCache();
-		var m = pm.Objects<AgrDirnTblAutoRight>().ResultTable;
-		pm.Delete(m);
-		pm.Save();
-		pm.UnloadCache();
-		decimal count;
-		count = (decimal) new NDOQuery<AgrDirnTblAutoLeft>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<AgrDirnTblAutoRight>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #2");
+		try
+		{
+			pm.UnloadCache();
+			var l = pm.Objects<AgrDirnTblAutoLeft>().ResultTable;
+			pm.Delete(l);
+			pm.Save();
+			pm.UnloadCache();
+			var m = pm.Objects<AgrDirnTblAutoRight>().ResultTable;
+			pm.Delete(m);
+			pm.Save();
+			pm.UnloadCache();
+			decimal count;
+			count = (decimal) new NDOQuery<AgrDirnTblAutoLeft>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #1");
+			count = (decimal) new NDOQuery<AgrDirnTblAutoRight>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #2");
+		}
+		catch (Exception)
+		{
+			var handler = pm.GetSqlPassThroughHandler( pm.NDOMapping.Connections.First() );
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( ownVar.GetType() ).TableName}");
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( otherVar.GetType() ).TableName}");
+			handler.Execute( $"DELETE FROM {pm.NDOMapping.FindClass( ownVar.GetType() ).Relations.First().MappingTable.TableName}" );
+		}
 	}
 	[Test]
 	public void TestSaveReload()
@@ -780,20 +823,29 @@ public class TestAgrBin1NoTblAuto
 	[TearDown]
 	public void TearDown()
 	{
-		pm.UnloadCache();
-		var l = pm.Objects<AgrBin1NoTblAutoLeft>().ResultTable;
-		pm.Delete(l);
-		pm.Save();
-		pm.UnloadCache();
-		var m = pm.Objects<AgrBin1NoTblAutoRight>().ResultTable;
-		pm.Delete(m);
-		pm.Save();
-		pm.UnloadCache();
-		decimal count;
-		count = (decimal) new NDOQuery<AgrBin1NoTblAutoLeft>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<AgrBin1NoTblAutoRight>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #2");
+		try
+		{
+			pm.UnloadCache();
+			var l = pm.Objects<AgrBin1NoTblAutoLeft>().ResultTable;
+			pm.Delete(l);
+			pm.Save();
+			pm.UnloadCache();
+			var m = pm.Objects<AgrBin1NoTblAutoRight>().ResultTable;
+			pm.Delete(m);
+			pm.Save();
+			pm.UnloadCache();
+			decimal count;
+			count = (decimal) new NDOQuery<AgrBin1NoTblAutoLeft>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #1");
+			count = (decimal) new NDOQuery<AgrBin1NoTblAutoRight>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #2");
+		}
+		catch (Exception)
+		{
+			var handler = pm.GetSqlPassThroughHandler( pm.NDOMapping.Connections.First() );
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( ownVar.GetType() ).TableName}");
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( otherVar.GetType() ).TableName}");
+		}
 	}
 	[Test]
 	public void TestSaveReload()
@@ -918,20 +970,30 @@ public class TestAgrBin1TblAuto
 	[TearDown]
 	public void TearDown()
 	{
-		pm.UnloadCache();
-		var l = pm.Objects<AgrBin1TblAutoLeft>().ResultTable;
-		pm.Delete(l);
-		pm.Save();
-		pm.UnloadCache();
-		var m = pm.Objects<AgrBin1TblAutoRight>().ResultTable;
-		pm.Delete(m);
-		pm.Save();
-		pm.UnloadCache();
-		decimal count;
-		count = (decimal) new NDOQuery<AgrBin1TblAutoLeft>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<AgrBin1TblAutoRight>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #2");
+		try
+		{
+			pm.UnloadCache();
+			var l = pm.Objects<AgrBin1TblAutoLeft>().ResultTable;
+			pm.Delete(l);
+			pm.Save();
+			pm.UnloadCache();
+			var m = pm.Objects<AgrBin1TblAutoRight>().ResultTable;
+			pm.Delete(m);
+			pm.Save();
+			pm.UnloadCache();
+			decimal count;
+			count = (decimal) new NDOQuery<AgrBin1TblAutoLeft>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #1");
+			count = (decimal) new NDOQuery<AgrBin1TblAutoRight>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #2");
+		}
+		catch (Exception)
+		{
+			var handler = pm.GetSqlPassThroughHandler( pm.NDOMapping.Connections.First() );
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( ownVar.GetType() ).TableName}");
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( otherVar.GetType() ).TableName}");
+			handler.Execute( $"DELETE FROM {pm.NDOMapping.FindClass( ownVar.GetType() ).Relations.First().MappingTable.TableName}" );
+		}
 	}
 	[Test]
 	public void TestSaveReload()
@@ -1047,20 +1109,29 @@ public class TestAgrBi1nNoTblAuto
 	[TearDown]
 	public void TearDown()
 	{
-		pm.UnloadCache();
-		var l = pm.Objects<AgrBi1nNoTblAutoLeft>().ResultTable;
-		pm.Delete(l);
-		pm.Save();
-		pm.UnloadCache();
-		var m = pm.Objects<AgrBi1nNoTblAutoRight>().ResultTable;
-		pm.Delete(m);
-		pm.Save();
-		pm.UnloadCache();
-		decimal count;
-		count = (decimal) new NDOQuery<AgrBi1nNoTblAutoLeft>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<AgrBi1nNoTblAutoRight>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #2");
+		try
+		{
+			pm.UnloadCache();
+			var l = pm.Objects<AgrBi1nNoTblAutoLeft>().ResultTable;
+			pm.Delete(l);
+			pm.Save();
+			pm.UnloadCache();
+			var m = pm.Objects<AgrBi1nNoTblAutoRight>().ResultTable;
+			pm.Delete(m);
+			pm.Save();
+			pm.UnloadCache();
+			decimal count;
+			count = (decimal) new NDOQuery<AgrBi1nNoTblAutoLeft>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #1");
+			count = (decimal) new NDOQuery<AgrBi1nNoTblAutoRight>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #2");
+		}
+		catch (Exception)
+		{
+			var handler = pm.GetSqlPassThroughHandler( pm.NDOMapping.Connections.First() );
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( ownVar.GetType() ).TableName}");
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( otherVar.GetType() ).TableName}");
+		}
 	}
 	[Test]
 	public void TestSaveReload()
@@ -1083,10 +1154,6 @@ public class TestAgrBi1nNoTblAuto
 		QueryOwn();
 		Assert.NotNull(ownVar, "No Query Result");
 		Assert.Null(ownVar.RelField, "There should be no object");
-	}
-	[Test]
-	public void TestSaveReloadRemove()
-	{
 	}
 	[Test]
 	public void TestChangeKeyHolderLeft()
@@ -1175,20 +1242,30 @@ public class TestAgrBi1nTblAuto
 	[TearDown]
 	public void TearDown()
 	{
-		pm.UnloadCache();
-		var l = pm.Objects<AgrBi1nTblAutoLeft>().ResultTable;
-		pm.Delete(l);
-		pm.Save();
-		pm.UnloadCache();
-		var m = pm.Objects<AgrBi1nTblAutoRight>().ResultTable;
-		pm.Delete(m);
-		pm.Save();
-		pm.UnloadCache();
-		decimal count;
-		count = (decimal) new NDOQuery<AgrBi1nTblAutoLeft>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<AgrBi1nTblAutoRight>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #2");
+		try
+		{
+			pm.UnloadCache();
+			var l = pm.Objects<AgrBi1nTblAutoLeft>().ResultTable;
+			pm.Delete(l);
+			pm.Save();
+			pm.UnloadCache();
+			var m = pm.Objects<AgrBi1nTblAutoRight>().ResultTable;
+			pm.Delete(m);
+			pm.Save();
+			pm.UnloadCache();
+			decimal count;
+			count = (decimal) new NDOQuery<AgrBi1nTblAutoLeft>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #1");
+			count = (decimal) new NDOQuery<AgrBi1nTblAutoRight>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #2");
+		}
+		catch (Exception)
+		{
+			var handler = pm.GetSqlPassThroughHandler( pm.NDOMapping.Connections.First() );
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( ownVar.GetType() ).TableName}");
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( otherVar.GetType() ).TableName}");
+			handler.Execute( $"DELETE FROM {pm.NDOMapping.FindClass( ownVar.GetType() ).Relations.First().MappingTable.TableName}" );
+		}
 	}
 	[Test]
 	public void TestSaveReload()
@@ -1211,10 +1288,6 @@ public class TestAgrBi1nTblAuto
 		QueryOwn();
 		Assert.NotNull(ownVar, "No Query Result");
 		Assert.Null(ownVar.RelField, "There should be no object");
-	}
-	[Test]
-	public void TestSaveReloadRemove()
-	{
 	}
 	[Test]
 	public void TestChangeKeyHolderLeft()
@@ -1294,20 +1367,30 @@ public class TestAgrBinnTblAuto
 	[TearDown]
 	public void TearDown()
 	{
-		pm.UnloadCache();
-		var l = pm.Objects<AgrBinnTblAutoLeft>().ResultTable;
-		pm.Delete(l);
-		pm.Save();
-		pm.UnloadCache();
-		var m = pm.Objects<AgrBinnTblAutoRight>().ResultTable;
-		pm.Delete(m);
-		pm.Save();
-		pm.UnloadCache();
-		decimal count;
-		count = (decimal) new NDOQuery<AgrBinnTblAutoLeft>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<AgrBinnTblAutoRight>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #2");
+		try
+		{
+			pm.UnloadCache();
+			var l = pm.Objects<AgrBinnTblAutoLeft>().ResultTable;
+			pm.Delete(l);
+			pm.Save();
+			pm.UnloadCache();
+			var m = pm.Objects<AgrBinnTblAutoRight>().ResultTable;
+			pm.Delete(m);
+			pm.Save();
+			pm.UnloadCache();
+			decimal count;
+			count = (decimal) new NDOQuery<AgrBinnTblAutoLeft>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #1");
+			count = (decimal) new NDOQuery<AgrBinnTblAutoRight>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #2");
+		}
+		catch (Exception)
+		{
+			var handler = pm.GetSqlPassThroughHandler( pm.NDOMapping.Connections.First() );
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( ownVar.GetType() ).TableName}");
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( otherVar.GetType() ).TableName}");
+			handler.Execute( $"DELETE FROM {pm.NDOMapping.FindClass( ownVar.GetType() ).Relations.First().MappingTable.TableName}" );
+		}
 	}
 	[Test]
 	public void TestSaveReload()
@@ -1392,16 +1475,25 @@ public class TestCmpDir1NoTblAuto
 	[TearDown]
 	public void TearDown()
 	{
-		pm.UnloadCache();
-		var l = pm.Objects<CmpDir1NoTblAutoLeft>().ResultTable;
-		pm.Delete(l);
-		pm.Save();
-		pm.UnloadCache();
-		decimal count;
-		count = (decimal) new NDOQuery<CmpDir1NoTblAutoLeft>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<CmpDir1NoTblAutoRight>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #2");
+		try
+		{
+			pm.UnloadCache();
+			var l = pm.Objects<CmpDir1NoTblAutoLeft>().ResultTable;
+			pm.Delete(l);
+			pm.Save();
+			pm.UnloadCache();
+			decimal count;
+			count = (decimal) new NDOQuery<CmpDir1NoTblAutoLeft>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #1");
+			count = (decimal) new NDOQuery<CmpDir1NoTblAutoRight>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #2");
+		}
+		catch (Exception)
+		{
+			var handler = pm.GetSqlPassThroughHandler( pm.NDOMapping.Connections.First() );
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( ownVar.GetType() ).TableName}");
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( otherVar.GetType() ).TableName}");
+		}
 	}
 	[Test]
 	public void TestSaveReload()
@@ -1424,10 +1516,6 @@ public class TestCmpDir1NoTblAuto
 		QueryOwn();
 		Assert.NotNull(ownVar, "No Query Result");
 		Assert.Null(ownVar.RelField, "There should be no object");
-	}
-	[Test]
-	public void TestSaveReloadRemove()
-	{
 	}
 	[Test]
 	public void TestChangeKeyHolderLeft()
@@ -1505,16 +1593,26 @@ public class TestCmpDir1TblAuto
 	[TearDown]
 	public void TearDown()
 	{
-		pm.UnloadCache();
-		var l = pm.Objects<CmpDir1TblAutoLeft>().ResultTable;
-		pm.Delete(l);
-		pm.Save();
-		pm.UnloadCache();
-		decimal count;
-		count = (decimal) new NDOQuery<CmpDir1TblAutoLeft>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<CmpDir1TblAutoRight>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #2");
+		try
+		{
+			pm.UnloadCache();
+			var l = pm.Objects<CmpDir1TblAutoLeft>().ResultTable;
+			pm.Delete(l);
+			pm.Save();
+			pm.UnloadCache();
+			decimal count;
+			count = (decimal) new NDOQuery<CmpDir1TblAutoLeft>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #1");
+			count = (decimal) new NDOQuery<CmpDir1TblAutoRight>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #2");
+		}
+		catch (Exception)
+		{
+			var handler = pm.GetSqlPassThroughHandler( pm.NDOMapping.Connections.First() );
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( ownVar.GetType() ).TableName}");
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( otherVar.GetType() ).TableName}");
+			handler.Execute( $"DELETE FROM {pm.NDOMapping.FindClass( ownVar.GetType() ).Relations.First().MappingTable.TableName}" );
+		}
 	}
 	[Test]
 	public void TestSaveReload()
@@ -1537,10 +1635,6 @@ public class TestCmpDir1TblAuto
 		QueryOwn();
 		Assert.NotNull(ownVar, "No Query Result");
 		Assert.Null(ownVar.RelField, "There should be no object");
-	}
-	[Test]
-	public void TestSaveReloadRemove()
-	{
 	}
 	[Test]
 	public void TestChangeKeyHolderLeft()
@@ -1609,16 +1703,25 @@ public class TestCmpBi11NoTblAuto
 	[TearDown]
 	public void TearDown()
 	{
-		pm.UnloadCache();
-		var l = pm.Objects<CmpBi11NoTblAutoLeft>().ResultTable;
-		pm.Delete(l);
-		pm.Save();
-		pm.UnloadCache();
-		decimal count;
-		count = (decimal) new NDOQuery<CmpBi11NoTblAutoLeft>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<CmpBi11NoTblAutoRight>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #2");
+		try
+		{
+			pm.UnloadCache();
+			var l = pm.Objects<CmpBi11NoTblAutoLeft>().ResultTable;
+			pm.Delete(l);
+			pm.Save();
+			pm.UnloadCache();
+			decimal count;
+			count = (decimal) new NDOQuery<CmpBi11NoTblAutoLeft>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #1");
+			count = (decimal) new NDOQuery<CmpBi11NoTblAutoRight>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #2");
+		}
+		catch (Exception)
+		{
+			var handler = pm.GetSqlPassThroughHandler( pm.NDOMapping.Connections.First() );
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( ownVar.GetType() ).TableName}");
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( otherVar.GetType() ).TableName}");
+		}
 	}
 	[Test]
 	public void TestSaveReload()
@@ -1641,10 +1744,6 @@ public class TestCmpBi11NoTblAuto
 		QueryOwn();
 		Assert.NotNull(ownVar, "No Query Result");
 		Assert.Null(ownVar.RelField, "There should be no object");
-	}
-	[Test]
-	public void TestSaveReloadRemove()
-	{
 	}
 	[Test]
 	public void TestChangeKeyHolderLeft()
@@ -1754,16 +1853,26 @@ public class TestCmpBi11TblAuto
 	[TearDown]
 	public void TearDown()
 	{
-		pm.UnloadCache();
-		var l = pm.Objects<CmpBi11TblAutoLeft>().ResultTable;
-		pm.Delete(l);
-		pm.Save();
-		pm.UnloadCache();
-		decimal count;
-		count = (decimal) new NDOQuery<CmpBi11TblAutoLeft>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<CmpBi11TblAutoRight>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #2");
+		try
+		{
+			pm.UnloadCache();
+			var l = pm.Objects<CmpBi11TblAutoLeft>().ResultTable;
+			pm.Delete(l);
+			pm.Save();
+			pm.UnloadCache();
+			decimal count;
+			count = (decimal) new NDOQuery<CmpBi11TblAutoLeft>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #1");
+			count = (decimal) new NDOQuery<CmpBi11TblAutoRight>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #2");
+		}
+		catch (Exception)
+		{
+			var handler = pm.GetSqlPassThroughHandler( pm.NDOMapping.Connections.First() );
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( ownVar.GetType() ).TableName}");
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( otherVar.GetType() ).TableName}");
+			handler.Execute( $"DELETE FROM {pm.NDOMapping.FindClass( ownVar.GetType() ).Relations.First().MappingTable.TableName}" );
+		}
 	}
 	[Test]
 	public void TestSaveReload()
@@ -1786,10 +1895,6 @@ public class TestCmpBi11TblAuto
 		QueryOwn();
 		Assert.NotNull(ownVar, "No Query Result");
 		Assert.Null(ownVar.RelField, "There should be no object");
-	}
-	[Test]
-	public void TestSaveReloadRemove()
-	{
 	}
 	[Test]
 	public void TestChangeKeyHolderLeft()
@@ -1899,16 +2004,25 @@ public class TestCmpDirnNoTblAuto
 	[TearDown]
 	public void TearDown()
 	{
-		pm.UnloadCache();
-		var l = pm.Objects<CmpDirnNoTblAutoLeft>().ResultTable;
-		pm.Delete(l);
-		pm.Save();
-		pm.UnloadCache();
-		decimal count;
-		count = (decimal) new NDOQuery<CmpDirnNoTblAutoLeft>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<CmpDirnNoTblAutoRight>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #2");
+		try
+		{
+			pm.UnloadCache();
+			var l = pm.Objects<CmpDirnNoTblAutoLeft>().ResultTable;
+			pm.Delete(l);
+			pm.Save();
+			pm.UnloadCache();
+			decimal count;
+			count = (decimal) new NDOQuery<CmpDirnNoTblAutoLeft>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #1");
+			count = (decimal) new NDOQuery<CmpDirnNoTblAutoRight>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #2");
+		}
+		catch (Exception)
+		{
+			var handler = pm.GetSqlPassThroughHandler( pm.NDOMapping.Connections.First() );
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( ownVar.GetType() ).TableName}");
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( otherVar.GetType() ).TableName}");
+		}
 	}
 	[Test]
 	public void TestSaveReload()
@@ -1991,16 +2105,26 @@ public class TestCmpDirnTblAuto
 	[TearDown]
 	public void TearDown()
 	{
-		pm.UnloadCache();
-		var l = pm.Objects<CmpDirnTblAutoLeft>().ResultTable;
-		pm.Delete(l);
-		pm.Save();
-		pm.UnloadCache();
-		decimal count;
-		count = (decimal) new NDOQuery<CmpDirnTblAutoLeft>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<CmpDirnTblAutoRight>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #2");
+		try
+		{
+			pm.UnloadCache();
+			var l = pm.Objects<CmpDirnTblAutoLeft>().ResultTable;
+			pm.Delete(l);
+			pm.Save();
+			pm.UnloadCache();
+			decimal count;
+			count = (decimal) new NDOQuery<CmpDirnTblAutoLeft>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #1");
+			count = (decimal) new NDOQuery<CmpDirnTblAutoRight>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #2");
+		}
+		catch (Exception)
+		{
+			var handler = pm.GetSqlPassThroughHandler( pm.NDOMapping.Connections.First() );
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( ownVar.GetType() ).TableName}");
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( otherVar.GetType() ).TableName}");
+			handler.Execute( $"DELETE FROM {pm.NDOMapping.FindClass( ownVar.GetType() ).Relations.First().MappingTable.TableName}" );
+		}
 	}
 	[Test]
 	public void TestSaveReload()
@@ -2074,16 +2198,25 @@ public class TestCmpBin1NoTblAuto
 	[TearDown]
 	public void TearDown()
 	{
-		pm.UnloadCache();
-		var l = pm.Objects<CmpBin1NoTblAutoLeft>().ResultTable;
-		pm.Delete(l);
-		pm.Save();
-		pm.UnloadCache();
-		decimal count;
-		count = (decimal) new NDOQuery<CmpBin1NoTblAutoLeft>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<CmpBin1NoTblAutoRight>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #2");
+		try
+		{
+			pm.UnloadCache();
+			var l = pm.Objects<CmpBin1NoTblAutoLeft>().ResultTable;
+			pm.Delete(l);
+			pm.Save();
+			pm.UnloadCache();
+			decimal count;
+			count = (decimal) new NDOQuery<CmpBin1NoTblAutoLeft>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #1");
+			count = (decimal) new NDOQuery<CmpBin1NoTblAutoRight>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #2");
+		}
+		catch (Exception)
+		{
+			var handler = pm.GetSqlPassThroughHandler( pm.NDOMapping.Connections.First() );
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( ownVar.GetType() ).TableName}");
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( otherVar.GetType() ).TableName}");
+		}
 	}
 	[Test]
 	public void TestSaveReload()
@@ -2207,16 +2340,26 @@ public class TestCmpBin1TblAuto
 	[TearDown]
 	public void TearDown()
 	{
-		pm.UnloadCache();
-		var l = pm.Objects<CmpBin1TblAutoLeft>().ResultTable;
-		pm.Delete(l);
-		pm.Save();
-		pm.UnloadCache();
-		decimal count;
-		count = (decimal) new NDOQuery<CmpBin1TblAutoLeft>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<CmpBin1TblAutoRight>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #2");
+		try
+		{
+			pm.UnloadCache();
+			var l = pm.Objects<CmpBin1TblAutoLeft>().ResultTable;
+			pm.Delete(l);
+			pm.Save();
+			pm.UnloadCache();
+			decimal count;
+			count = (decimal) new NDOQuery<CmpBin1TblAutoLeft>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #1");
+			count = (decimal) new NDOQuery<CmpBin1TblAutoRight>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #2");
+		}
+		catch (Exception)
+		{
+			var handler = pm.GetSqlPassThroughHandler( pm.NDOMapping.Connections.First() );
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( ownVar.GetType() ).TableName}");
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( otherVar.GetType() ).TableName}");
+			handler.Execute( $"DELETE FROM {pm.NDOMapping.FindClass( ownVar.GetType() ).Relations.First().MappingTable.TableName}" );
+		}
 	}
 	[Test]
 	public void TestSaveReload()
@@ -2331,16 +2474,25 @@ public class TestCmpBi1nNoTblAuto
 	[TearDown]
 	public void TearDown()
 	{
-		pm.UnloadCache();
-		var l = pm.Objects<CmpBi1nNoTblAutoLeft>().ResultTable;
-		pm.Delete(l);
-		pm.Save();
-		pm.UnloadCache();
-		decimal count;
-		count = (decimal) new NDOQuery<CmpBi1nNoTblAutoLeft>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<CmpBi1nNoTblAutoRight>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #2");
+		try
+		{
+			pm.UnloadCache();
+			var l = pm.Objects<CmpBi1nNoTblAutoLeft>().ResultTable;
+			pm.Delete(l);
+			pm.Save();
+			pm.UnloadCache();
+			decimal count;
+			count = (decimal) new NDOQuery<CmpBi1nNoTblAutoLeft>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #1");
+			count = (decimal) new NDOQuery<CmpBi1nNoTblAutoRight>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #2");
+		}
+		catch (Exception)
+		{
+			var handler = pm.GetSqlPassThroughHandler( pm.NDOMapping.Connections.First() );
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( ownVar.GetType() ).TableName}");
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( otherVar.GetType() ).TableName}");
+		}
 	}
 	[Test]
 	public void TestSaveReload()
@@ -2363,10 +2515,6 @@ public class TestCmpBi1nNoTblAuto
 		QueryOwn();
 		Assert.NotNull(ownVar, "No Query Result");
 		Assert.Null(ownVar.RelField, "There should be no object");
-	}
-	[Test]
-	public void TestSaveReloadRemove()
-	{
 	}
 	[Test]
 	public void TestChangeKeyHolderLeft()
@@ -2454,16 +2602,26 @@ public class TestCmpBi1nTblAuto
 	[TearDown]
 	public void TearDown()
 	{
-		pm.UnloadCache();
-		var l = pm.Objects<CmpBi1nTblAutoLeft>().ResultTable;
-		pm.Delete(l);
-		pm.Save();
-		pm.UnloadCache();
-		decimal count;
-		count = (decimal) new NDOQuery<CmpBi1nTblAutoLeft>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<CmpBi1nTblAutoRight>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #2");
+		try
+		{
+			pm.UnloadCache();
+			var l = pm.Objects<CmpBi1nTblAutoLeft>().ResultTable;
+			pm.Delete(l);
+			pm.Save();
+			pm.UnloadCache();
+			decimal count;
+			count = (decimal) new NDOQuery<CmpBi1nTblAutoLeft>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #1");
+			count = (decimal) new NDOQuery<CmpBi1nTblAutoRight>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #2");
+		}
+		catch (Exception)
+		{
+			var handler = pm.GetSqlPassThroughHandler( pm.NDOMapping.Connections.First() );
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( ownVar.GetType() ).TableName}");
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( otherVar.GetType() ).TableName}");
+			handler.Execute( $"DELETE FROM {pm.NDOMapping.FindClass( ownVar.GetType() ).Relations.First().MappingTable.TableName}" );
+		}
 	}
 	[Test]
 	public void TestSaveReload()
@@ -2486,10 +2644,6 @@ public class TestCmpBi1nTblAuto
 		QueryOwn();
 		Assert.NotNull(ownVar, "No Query Result");
 		Assert.Null(ownVar.RelField, "There should be no object");
-	}
-	[Test]
-	public void TestSaveReloadRemove()
-	{
 	}
 	[Test]
 	public void TestChangeKeyHolderLeft()
@@ -2568,16 +2722,26 @@ public class TestCmpBinnTblAuto
 	[TearDown]
 	public void TearDown()
 	{
-		pm.UnloadCache();
-		var l = pm.Objects<CmpBinnTblAutoLeft>().ResultTable;
-		pm.Delete(l);
-		pm.Save();
-		pm.UnloadCache();
-		decimal count;
-		count = (decimal) new NDOQuery<CmpBinnTblAutoLeft>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<CmpBinnTblAutoRight>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #2");
+		try
+		{
+			pm.UnloadCache();
+			var l = pm.Objects<CmpBinnTblAutoLeft>().ResultTable;
+			pm.Delete(l);
+			pm.Save();
+			pm.UnloadCache();
+			decimal count;
+			count = (decimal) new NDOQuery<CmpBinnTblAutoLeft>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #1");
+			count = (decimal) new NDOQuery<CmpBinnTblAutoRight>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #2");
+		}
+		catch (Exception)
+		{
+			var handler = pm.GetSqlPassThroughHandler( pm.NDOMapping.Connections.First() );
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( ownVar.GetType() ).TableName}");
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( otherVar.GetType() ).TableName}");
+			handler.Execute( $"DELETE FROM {pm.NDOMapping.FindClass( ownVar.GetType() ).Relations.First().MappingTable.TableName}" );
+		}
 	}
 	[Test]
 	public void TestSaveReload()
@@ -2661,20 +2825,29 @@ public class TestAgrDir1OwnpconNoTblAuto
 	[TearDown]
 	public void TearDown()
 	{
-		pm.UnloadCache();
-		var l = pm.Objects<AgrDir1OwnpconNoTblAutoLeftBase>().ResultTable;
-		pm.Delete(l);
-		pm.Save();
-		pm.UnloadCache();
-		var m = pm.Objects<AgrDir1OwnpconNoTblAutoRight>().ResultTable;
-		pm.Delete(m);
-		pm.Save();
-		pm.UnloadCache();
-		decimal count;
-		count = (decimal) new NDOQuery<AgrDir1OwnpconNoTblAutoLeftBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<AgrDir1OwnpconNoTblAutoRight>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #2");
+		try
+		{
+			pm.UnloadCache();
+			var l = pm.Objects<AgrDir1OwnpconNoTblAutoLeftBase>().ResultTable;
+			pm.Delete(l);
+			pm.Save();
+			pm.UnloadCache();
+			var m = pm.Objects<AgrDir1OwnpconNoTblAutoRight>().ResultTable;
+			pm.Delete(m);
+			pm.Save();
+			pm.UnloadCache();
+			decimal count;
+			count = (decimal) new NDOQuery<AgrDir1OwnpconNoTblAutoLeftBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #1");
+			count = (decimal) new NDOQuery<AgrDir1OwnpconNoTblAutoRight>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #2");
+		}
+		catch (Exception)
+		{
+			var handler = pm.GetSqlPassThroughHandler( pm.NDOMapping.Connections.First() );
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( ownVar.GetType() ).TableName}");
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( otherVar.GetType() ).TableName}");
+		}
 	}
 	[Test]
 	public void TestSaveReload()
@@ -2697,10 +2870,6 @@ public class TestAgrDir1OwnpconNoTblAuto
 		QueryOwn();
 		Assert.NotNull(ownVar, "No Query Result");
 		Assert.Null(ownVar.RelField, "There should be no object");
-	}
-	[Test]
-	public void TestSaveReloadRemove()
-	{
 	}
 	[Test]
 	public void TestChangeKeyHolderLeft()
@@ -2781,20 +2950,30 @@ public class TestAgrDir1OwnpconTblAuto
 	[TearDown]
 	public void TearDown()
 	{
-		pm.UnloadCache();
-		var l = pm.Objects<AgrDir1OwnpconTblAutoLeftBase>().ResultTable;
-		pm.Delete(l);
-		pm.Save();
-		pm.UnloadCache();
-		var m = pm.Objects<AgrDir1OwnpconTblAutoRight>().ResultTable;
-		pm.Delete(m);
-		pm.Save();
-		pm.UnloadCache();
-		decimal count;
-		count = (decimal) new NDOQuery<AgrDir1OwnpconTblAutoLeftBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<AgrDir1OwnpconTblAutoRight>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #2");
+		try
+		{
+			pm.UnloadCache();
+			var l = pm.Objects<AgrDir1OwnpconTblAutoLeftBase>().ResultTable;
+			pm.Delete(l);
+			pm.Save();
+			pm.UnloadCache();
+			var m = pm.Objects<AgrDir1OwnpconTblAutoRight>().ResultTable;
+			pm.Delete(m);
+			pm.Save();
+			pm.UnloadCache();
+			decimal count;
+			count = (decimal) new NDOQuery<AgrDir1OwnpconTblAutoLeftBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #1");
+			count = (decimal) new NDOQuery<AgrDir1OwnpconTblAutoRight>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #2");
+		}
+		catch (Exception)
+		{
+			var handler = pm.GetSqlPassThroughHandler( pm.NDOMapping.Connections.First() );
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( ownVar.GetType() ).TableName}");
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( otherVar.GetType() ).TableName}");
+			handler.Execute( $"DELETE FROM {pm.NDOMapping.FindClass( ownVar.GetType() ).Relations.First().MappingTable.TableName}" );
+		}
 	}
 	[Test]
 	public void TestSaveReload()
@@ -2817,10 +2996,6 @@ public class TestAgrDir1OwnpconTblAuto
 		QueryOwn();
 		Assert.NotNull(ownVar, "No Query Result");
 		Assert.Null(ownVar.RelField, "There should be no object");
-	}
-	[Test]
-	public void TestSaveReloadRemove()
-	{
 	}
 	[Test]
 	public void TestChangeKeyHolderLeft()
@@ -2890,20 +3065,29 @@ public class TestAgrBi11OwnpconNoTblAuto
 	[TearDown]
 	public void TearDown()
 	{
-		pm.UnloadCache();
-		var l = pm.Objects<AgrBi11OwnpconNoTblAutoLeftBase>().ResultTable;
-		pm.Delete(l);
-		pm.Save();
-		pm.UnloadCache();
-		var m = pm.Objects<AgrBi11OwnpconNoTblAutoRight>().ResultTable;
-		pm.Delete(m);
-		pm.Save();
-		pm.UnloadCache();
-		decimal count;
-		count = (decimal) new NDOQuery<AgrBi11OwnpconNoTblAutoLeftBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<AgrBi11OwnpconNoTblAutoRight>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #2");
+		try
+		{
+			pm.UnloadCache();
+			var l = pm.Objects<AgrBi11OwnpconNoTblAutoLeftBase>().ResultTable;
+			pm.Delete(l);
+			pm.Save();
+			pm.UnloadCache();
+			var m = pm.Objects<AgrBi11OwnpconNoTblAutoRight>().ResultTable;
+			pm.Delete(m);
+			pm.Save();
+			pm.UnloadCache();
+			decimal count;
+			count = (decimal) new NDOQuery<AgrBi11OwnpconNoTblAutoLeftBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #1");
+			count = (decimal) new NDOQuery<AgrBi11OwnpconNoTblAutoRight>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #2");
+		}
+		catch (Exception)
+		{
+			var handler = pm.GetSqlPassThroughHandler( pm.NDOMapping.Connections.First() );
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( ownVar.GetType() ).TableName}");
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( otherVar.GetType() ).TableName}");
+		}
 	}
 	[Test]
 	public void TestSaveReload()
@@ -2926,10 +3110,6 @@ public class TestAgrBi11OwnpconNoTblAuto
 		QueryOwn();
 		Assert.NotNull(ownVar, "No Query Result");
 		Assert.Null(ownVar.RelField, "There should be no object");
-	}
-	[Test]
-	public void TestSaveReloadRemove()
-	{
 	}
 	[Test]
 	public void TestChangeKeyHolderLeft()
@@ -3045,20 +3225,30 @@ public class TestAgrBi11OwnpconTblAuto
 	[TearDown]
 	public void TearDown()
 	{
-		pm.UnloadCache();
-		var l = pm.Objects<AgrBi11OwnpconTblAutoLeftBase>().ResultTable;
-		pm.Delete(l);
-		pm.Save();
-		pm.UnloadCache();
-		var m = pm.Objects<AgrBi11OwnpconTblAutoRight>().ResultTable;
-		pm.Delete(m);
-		pm.Save();
-		pm.UnloadCache();
-		decimal count;
-		count = (decimal) new NDOQuery<AgrBi11OwnpconTblAutoLeftBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<AgrBi11OwnpconTblAutoRight>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #2");
+		try
+		{
+			pm.UnloadCache();
+			var l = pm.Objects<AgrBi11OwnpconTblAutoLeftBase>().ResultTable;
+			pm.Delete(l);
+			pm.Save();
+			pm.UnloadCache();
+			var m = pm.Objects<AgrBi11OwnpconTblAutoRight>().ResultTable;
+			pm.Delete(m);
+			pm.Save();
+			pm.UnloadCache();
+			decimal count;
+			count = (decimal) new NDOQuery<AgrBi11OwnpconTblAutoLeftBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #1");
+			count = (decimal) new NDOQuery<AgrBi11OwnpconTblAutoRight>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #2");
+		}
+		catch (Exception)
+		{
+			var handler = pm.GetSqlPassThroughHandler( pm.NDOMapping.Connections.First() );
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( ownVar.GetType() ).TableName}");
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( otherVar.GetType() ).TableName}");
+			handler.Execute( $"DELETE FROM {pm.NDOMapping.FindClass( ownVar.GetType() ).Relations.First().MappingTable.TableName}" );
+		}
 	}
 	[Test]
 	public void TestSaveReload()
@@ -3081,10 +3271,6 @@ public class TestAgrBi11OwnpconTblAuto
 		QueryOwn();
 		Assert.NotNull(ownVar, "No Query Result");
 		Assert.Null(ownVar.RelField, "There should be no object");
-	}
-	[Test]
-	public void TestSaveReloadRemove()
-	{
 	}
 	[Test]
 	public void TestChangeKeyHolderLeft()
@@ -3200,20 +3386,29 @@ public class TestAgrDirnOwnpconNoTblAuto
 	[TearDown]
 	public void TearDown()
 	{
-		pm.UnloadCache();
-		var l = pm.Objects<AgrDirnOwnpconNoTblAutoLeftBase>().ResultTable;
-		pm.Delete(l);
-		pm.Save();
-		pm.UnloadCache();
-		var m = pm.Objects<AgrDirnOwnpconNoTblAutoRight>().ResultTable;
-		pm.Delete(m);
-		pm.Save();
-		pm.UnloadCache();
-		decimal count;
-		count = (decimal) new NDOQuery<AgrDirnOwnpconNoTblAutoLeftBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<AgrDirnOwnpconNoTblAutoRight>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #2");
+		try
+		{
+			pm.UnloadCache();
+			var l = pm.Objects<AgrDirnOwnpconNoTblAutoLeftBase>().ResultTable;
+			pm.Delete(l);
+			pm.Save();
+			pm.UnloadCache();
+			var m = pm.Objects<AgrDirnOwnpconNoTblAutoRight>().ResultTable;
+			pm.Delete(m);
+			pm.Save();
+			pm.UnloadCache();
+			decimal count;
+			count = (decimal) new NDOQuery<AgrDirnOwnpconNoTblAutoLeftBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #1");
+			count = (decimal) new NDOQuery<AgrDirnOwnpconNoTblAutoRight>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #2");
+		}
+		catch (Exception)
+		{
+			var handler = pm.GetSqlPassThroughHandler( pm.NDOMapping.Connections.First() );
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( ownVar.GetType() ).TableName}");
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( otherVar.GetType() ).TableName}");
+		}
 	}
 	[Test]
 	public void TestSaveReload()
@@ -3299,20 +3494,30 @@ public class TestAgrDirnOwnpconTblAuto
 	[TearDown]
 	public void TearDown()
 	{
-		pm.UnloadCache();
-		var l = pm.Objects<AgrDirnOwnpconTblAutoLeftBase>().ResultTable;
-		pm.Delete(l);
-		pm.Save();
-		pm.UnloadCache();
-		var m = pm.Objects<AgrDirnOwnpconTblAutoRight>().ResultTable;
-		pm.Delete(m);
-		pm.Save();
-		pm.UnloadCache();
-		decimal count;
-		count = (decimal) new NDOQuery<AgrDirnOwnpconTblAutoLeftBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<AgrDirnOwnpconTblAutoRight>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #2");
+		try
+		{
+			pm.UnloadCache();
+			var l = pm.Objects<AgrDirnOwnpconTblAutoLeftBase>().ResultTable;
+			pm.Delete(l);
+			pm.Save();
+			pm.UnloadCache();
+			var m = pm.Objects<AgrDirnOwnpconTblAutoRight>().ResultTable;
+			pm.Delete(m);
+			pm.Save();
+			pm.UnloadCache();
+			decimal count;
+			count = (decimal) new NDOQuery<AgrDirnOwnpconTblAutoLeftBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #1");
+			count = (decimal) new NDOQuery<AgrDirnOwnpconTblAutoRight>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #2");
+		}
+		catch (Exception)
+		{
+			var handler = pm.GetSqlPassThroughHandler( pm.NDOMapping.Connections.First() );
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( ownVar.GetType() ).TableName}");
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( otherVar.GetType() ).TableName}");
+			handler.Execute( $"DELETE FROM {pm.NDOMapping.FindClass( ownVar.GetType() ).Relations.First().MappingTable.TableName}" );
+		}
 	}
 	[Test]
 	public void TestSaveReload()
@@ -3387,20 +3592,29 @@ public class TestAgrBin1OwnpconNoTblAuto
 	[TearDown]
 	public void TearDown()
 	{
-		pm.UnloadCache();
-		var l = pm.Objects<AgrBin1OwnpconNoTblAutoLeftBase>().ResultTable;
-		pm.Delete(l);
-		pm.Save();
-		pm.UnloadCache();
-		var m = pm.Objects<AgrBin1OwnpconNoTblAutoRight>().ResultTable;
-		pm.Delete(m);
-		pm.Save();
-		pm.UnloadCache();
-		decimal count;
-		count = (decimal) new NDOQuery<AgrBin1OwnpconNoTblAutoLeftBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<AgrBin1OwnpconNoTblAutoRight>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #2");
+		try
+		{
+			pm.UnloadCache();
+			var l = pm.Objects<AgrBin1OwnpconNoTblAutoLeftBase>().ResultTable;
+			pm.Delete(l);
+			pm.Save();
+			pm.UnloadCache();
+			var m = pm.Objects<AgrBin1OwnpconNoTblAutoRight>().ResultTable;
+			pm.Delete(m);
+			pm.Save();
+			pm.UnloadCache();
+			decimal count;
+			count = (decimal) new NDOQuery<AgrBin1OwnpconNoTblAutoLeftBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #1");
+			count = (decimal) new NDOQuery<AgrBin1OwnpconNoTblAutoRight>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #2");
+		}
+		catch (Exception)
+		{
+			var handler = pm.GetSqlPassThroughHandler( pm.NDOMapping.Connections.First() );
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( ownVar.GetType() ).TableName}");
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( otherVar.GetType() ).TableName}");
+		}
 	}
 	[Test]
 	public void TestSaveReload()
@@ -3532,20 +3746,30 @@ public class TestAgrBin1OwnpconTblAuto
 	[TearDown]
 	public void TearDown()
 	{
-		pm.UnloadCache();
-		var l = pm.Objects<AgrBin1OwnpconTblAutoLeftBase>().ResultTable;
-		pm.Delete(l);
-		pm.Save();
-		pm.UnloadCache();
-		var m = pm.Objects<AgrBin1OwnpconTblAutoRight>().ResultTable;
-		pm.Delete(m);
-		pm.Save();
-		pm.UnloadCache();
-		decimal count;
-		count = (decimal) new NDOQuery<AgrBin1OwnpconTblAutoLeftBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<AgrBin1OwnpconTblAutoRight>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #2");
+		try
+		{
+			pm.UnloadCache();
+			var l = pm.Objects<AgrBin1OwnpconTblAutoLeftBase>().ResultTable;
+			pm.Delete(l);
+			pm.Save();
+			pm.UnloadCache();
+			var m = pm.Objects<AgrBin1OwnpconTblAutoRight>().ResultTable;
+			pm.Delete(m);
+			pm.Save();
+			pm.UnloadCache();
+			decimal count;
+			count = (decimal) new NDOQuery<AgrBin1OwnpconTblAutoLeftBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #1");
+			count = (decimal) new NDOQuery<AgrBin1OwnpconTblAutoRight>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #2");
+		}
+		catch (Exception)
+		{
+			var handler = pm.GetSqlPassThroughHandler( pm.NDOMapping.Connections.First() );
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( ownVar.GetType() ).TableName}");
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( otherVar.GetType() ).TableName}");
+			handler.Execute( $"DELETE FROM {pm.NDOMapping.FindClass( ownVar.GetType() ).Relations.First().MappingTable.TableName}" );
+		}
 	}
 	[Test]
 	public void TestSaveReload()
@@ -3666,20 +3890,30 @@ public class TestAgrBi1nOwnpconTblAuto
 	[TearDown]
 	public void TearDown()
 	{
-		pm.UnloadCache();
-		var l = pm.Objects<AgrBi1nOwnpconTblAutoLeftBase>().ResultTable;
-		pm.Delete(l);
-		pm.Save();
-		pm.UnloadCache();
-		var m = pm.Objects<AgrBi1nOwnpconTblAutoRight>().ResultTable;
-		pm.Delete(m);
-		pm.Save();
-		pm.UnloadCache();
-		decimal count;
-		count = (decimal) new NDOQuery<AgrBi1nOwnpconTblAutoLeftBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<AgrBi1nOwnpconTblAutoRight>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #2");
+		try
+		{
+			pm.UnloadCache();
+			var l = pm.Objects<AgrBi1nOwnpconTblAutoLeftBase>().ResultTable;
+			pm.Delete(l);
+			pm.Save();
+			pm.UnloadCache();
+			var m = pm.Objects<AgrBi1nOwnpconTblAutoRight>().ResultTable;
+			pm.Delete(m);
+			pm.Save();
+			pm.UnloadCache();
+			decimal count;
+			count = (decimal) new NDOQuery<AgrBi1nOwnpconTblAutoLeftBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #1");
+			count = (decimal) new NDOQuery<AgrBi1nOwnpconTblAutoRight>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #2");
+		}
+		catch (Exception)
+		{
+			var handler = pm.GetSqlPassThroughHandler( pm.NDOMapping.Connections.First() );
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( ownVar.GetType() ).TableName}");
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( otherVar.GetType() ).TableName}");
+			handler.Execute( $"DELETE FROM {pm.NDOMapping.FindClass( ownVar.GetType() ).Relations.First().MappingTable.TableName}" );
+		}
 	}
 	[Test]
 	public void TestSaveReload()
@@ -3702,10 +3936,6 @@ public class TestAgrBi1nOwnpconTblAuto
 		QueryOwn();
 		Assert.NotNull(ownVar, "No Query Result");
 		Assert.Null(ownVar.RelField, "There should be no object");
-	}
-	[Test]
-	public void TestSaveReloadRemove()
-	{
 	}
 	[Test]
 	public void TestChangeKeyHolderLeft()
@@ -3789,20 +4019,30 @@ public class TestAgrBinnOwnpconTblAuto
 	[TearDown]
 	public void TearDown()
 	{
-		pm.UnloadCache();
-		var l = pm.Objects<AgrBinnOwnpconTblAutoLeftBase>().ResultTable;
-		pm.Delete(l);
-		pm.Save();
-		pm.UnloadCache();
-		var m = pm.Objects<AgrBinnOwnpconTblAutoRight>().ResultTable;
-		pm.Delete(m);
-		pm.Save();
-		pm.UnloadCache();
-		decimal count;
-		count = (decimal) new NDOQuery<AgrBinnOwnpconTblAutoLeftBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<AgrBinnOwnpconTblAutoRight>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #2");
+		try
+		{
+			pm.UnloadCache();
+			var l = pm.Objects<AgrBinnOwnpconTblAutoLeftBase>().ResultTable;
+			pm.Delete(l);
+			pm.Save();
+			pm.UnloadCache();
+			var m = pm.Objects<AgrBinnOwnpconTblAutoRight>().ResultTable;
+			pm.Delete(m);
+			pm.Save();
+			pm.UnloadCache();
+			decimal count;
+			count = (decimal) new NDOQuery<AgrBinnOwnpconTblAutoLeftBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #1");
+			count = (decimal) new NDOQuery<AgrBinnOwnpconTblAutoRight>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #2");
+		}
+		catch (Exception)
+		{
+			var handler = pm.GetSqlPassThroughHandler( pm.NDOMapping.Connections.First() );
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( ownVar.GetType() ).TableName}");
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( otherVar.GetType() ).TableName}");
+			handler.Execute( $"DELETE FROM {pm.NDOMapping.FindClass( ownVar.GetType() ).Relations.First().MappingTable.TableName}" );
+		}
 	}
 	[Test]
 	public void TestSaveReload()
@@ -3891,16 +4131,25 @@ public class TestCmpDir1OwnpconNoTblAuto
 	[TearDown]
 	public void TearDown()
 	{
-		pm.UnloadCache();
-		var l = pm.Objects<CmpDir1OwnpconNoTblAutoLeftBase>().ResultTable;
-		pm.Delete(l);
-		pm.Save();
-		pm.UnloadCache();
-		decimal count;
-		count = (decimal) new NDOQuery<CmpDir1OwnpconNoTblAutoLeftBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<CmpDir1OwnpconNoTblAutoRight>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #2");
+		try
+		{
+			pm.UnloadCache();
+			var l = pm.Objects<CmpDir1OwnpconNoTblAutoLeftBase>().ResultTable;
+			pm.Delete(l);
+			pm.Save();
+			pm.UnloadCache();
+			decimal count;
+			count = (decimal) new NDOQuery<CmpDir1OwnpconNoTblAutoLeftBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #1");
+			count = (decimal) new NDOQuery<CmpDir1OwnpconNoTblAutoRight>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #2");
+		}
+		catch (Exception)
+		{
+			var handler = pm.GetSqlPassThroughHandler( pm.NDOMapping.Connections.First() );
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( ownVar.GetType() ).TableName}");
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( otherVar.GetType() ).TableName}");
+		}
 	}
 	[Test]
 	public void TestSaveReload()
@@ -3923,10 +4172,6 @@ public class TestCmpDir1OwnpconNoTblAuto
 		QueryOwn();
 		Assert.NotNull(ownVar, "No Query Result");
 		Assert.Null(ownVar.RelField, "There should be no object");
-	}
-	[Test]
-	public void TestSaveReloadRemove()
-	{
 	}
 	[Test]
 	public void TestChangeKeyHolderLeft()
@@ -4007,16 +4252,26 @@ public class TestCmpDir1OwnpconTblAuto
 	[TearDown]
 	public void TearDown()
 	{
-		pm.UnloadCache();
-		var l = pm.Objects<CmpDir1OwnpconTblAutoLeftBase>().ResultTable;
-		pm.Delete(l);
-		pm.Save();
-		pm.UnloadCache();
-		decimal count;
-		count = (decimal) new NDOQuery<CmpDir1OwnpconTblAutoLeftBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<CmpDir1OwnpconTblAutoRight>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #2");
+		try
+		{
+			pm.UnloadCache();
+			var l = pm.Objects<CmpDir1OwnpconTblAutoLeftBase>().ResultTable;
+			pm.Delete(l);
+			pm.Save();
+			pm.UnloadCache();
+			decimal count;
+			count = (decimal) new NDOQuery<CmpDir1OwnpconTblAutoLeftBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #1");
+			count = (decimal) new NDOQuery<CmpDir1OwnpconTblAutoRight>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #2");
+		}
+		catch (Exception)
+		{
+			var handler = pm.GetSqlPassThroughHandler( pm.NDOMapping.Connections.First() );
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( ownVar.GetType() ).TableName}");
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( otherVar.GetType() ).TableName}");
+			handler.Execute( $"DELETE FROM {pm.NDOMapping.FindClass( ownVar.GetType() ).Relations.First().MappingTable.TableName}" );
+		}
 	}
 	[Test]
 	public void TestSaveReload()
@@ -4039,10 +4294,6 @@ public class TestCmpDir1OwnpconTblAuto
 		QueryOwn();
 		Assert.NotNull(ownVar, "No Query Result");
 		Assert.Null(ownVar.RelField, "There should be no object");
-	}
-	[Test]
-	public void TestSaveReloadRemove()
-	{
 	}
 	[Test]
 	public void TestChangeKeyHolderLeft()
@@ -4111,16 +4362,25 @@ public class TestCmpBi11OwnpconNoTblAuto
 	[TearDown]
 	public void TearDown()
 	{
-		pm.UnloadCache();
-		var l = pm.Objects<CmpBi11OwnpconNoTblAutoLeftBase>().ResultTable;
-		pm.Delete(l);
-		pm.Save();
-		pm.UnloadCache();
-		decimal count;
-		count = (decimal) new NDOQuery<CmpBi11OwnpconNoTblAutoLeftBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<CmpBi11OwnpconNoTblAutoRight>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #2");
+		try
+		{
+			pm.UnloadCache();
+			var l = pm.Objects<CmpBi11OwnpconNoTblAutoLeftBase>().ResultTable;
+			pm.Delete(l);
+			pm.Save();
+			pm.UnloadCache();
+			decimal count;
+			count = (decimal) new NDOQuery<CmpBi11OwnpconNoTblAutoLeftBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #1");
+			count = (decimal) new NDOQuery<CmpBi11OwnpconNoTblAutoRight>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #2");
+		}
+		catch (Exception)
+		{
+			var handler = pm.GetSqlPassThroughHandler( pm.NDOMapping.Connections.First() );
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( ownVar.GetType() ).TableName}");
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( otherVar.GetType() ).TableName}");
+		}
 	}
 	[Test]
 	public void TestSaveReload()
@@ -4143,10 +4403,6 @@ public class TestCmpBi11OwnpconNoTblAuto
 		QueryOwn();
 		Assert.NotNull(ownVar, "No Query Result");
 		Assert.Null(ownVar.RelField, "There should be no object");
-	}
-	[Test]
-	public void TestSaveReloadRemove()
-	{
 	}
 	[Test]
 	public void TestChangeKeyHolderLeft()
@@ -4261,16 +4517,26 @@ public class TestCmpBi11OwnpconTblAuto
 	[TearDown]
 	public void TearDown()
 	{
-		pm.UnloadCache();
-		var l = pm.Objects<CmpBi11OwnpconTblAutoLeftBase>().ResultTable;
-		pm.Delete(l);
-		pm.Save();
-		pm.UnloadCache();
-		decimal count;
-		count = (decimal) new NDOQuery<CmpBi11OwnpconTblAutoLeftBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<CmpBi11OwnpconTblAutoRight>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #2");
+		try
+		{
+			pm.UnloadCache();
+			var l = pm.Objects<CmpBi11OwnpconTblAutoLeftBase>().ResultTable;
+			pm.Delete(l);
+			pm.Save();
+			pm.UnloadCache();
+			decimal count;
+			count = (decimal) new NDOQuery<CmpBi11OwnpconTblAutoLeftBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #1");
+			count = (decimal) new NDOQuery<CmpBi11OwnpconTblAutoRight>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #2");
+		}
+		catch (Exception)
+		{
+			var handler = pm.GetSqlPassThroughHandler( pm.NDOMapping.Connections.First() );
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( ownVar.GetType() ).TableName}");
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( otherVar.GetType() ).TableName}");
+			handler.Execute( $"DELETE FROM {pm.NDOMapping.FindClass( ownVar.GetType() ).Relations.First().MappingTable.TableName}" );
+		}
 	}
 	[Test]
 	public void TestSaveReload()
@@ -4293,10 +4559,6 @@ public class TestCmpBi11OwnpconTblAuto
 		QueryOwn();
 		Assert.NotNull(ownVar, "No Query Result");
 		Assert.Null(ownVar.RelField, "There should be no object");
-	}
-	[Test]
-	public void TestSaveReloadRemove()
-	{
 	}
 	[Test]
 	public void TestChangeKeyHolderLeft()
@@ -4410,16 +4672,25 @@ public class TestCmpDirnOwnpconNoTblAuto
 	[TearDown]
 	public void TearDown()
 	{
-		pm.UnloadCache();
-		var l = pm.Objects<CmpDirnOwnpconNoTblAutoLeftBase>().ResultTable;
-		pm.Delete(l);
-		pm.Save();
-		pm.UnloadCache();
-		decimal count;
-		count = (decimal) new NDOQuery<CmpDirnOwnpconNoTblAutoLeftBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<CmpDirnOwnpconNoTblAutoRight>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #2");
+		try
+		{
+			pm.UnloadCache();
+			var l = pm.Objects<CmpDirnOwnpconNoTblAutoLeftBase>().ResultTable;
+			pm.Delete(l);
+			pm.Save();
+			pm.UnloadCache();
+			decimal count;
+			count = (decimal) new NDOQuery<CmpDirnOwnpconNoTblAutoLeftBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #1");
+			count = (decimal) new NDOQuery<CmpDirnOwnpconNoTblAutoRight>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #2");
+		}
+		catch (Exception)
+		{
+			var handler = pm.GetSqlPassThroughHandler( pm.NDOMapping.Connections.First() );
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( ownVar.GetType() ).TableName}");
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( otherVar.GetType() ).TableName}");
+		}
 	}
 	[Test]
 	public void TestSaveReload()
@@ -4504,16 +4775,26 @@ public class TestCmpDirnOwnpconTblAuto
 	[TearDown]
 	public void TearDown()
 	{
-		pm.UnloadCache();
-		var l = pm.Objects<CmpDirnOwnpconTblAutoLeftBase>().ResultTable;
-		pm.Delete(l);
-		pm.Save();
-		pm.UnloadCache();
-		decimal count;
-		count = (decimal) new NDOQuery<CmpDirnOwnpconTblAutoLeftBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<CmpDirnOwnpconTblAutoRight>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #2");
+		try
+		{
+			pm.UnloadCache();
+			var l = pm.Objects<CmpDirnOwnpconTblAutoLeftBase>().ResultTable;
+			pm.Delete(l);
+			pm.Save();
+			pm.UnloadCache();
+			decimal count;
+			count = (decimal) new NDOQuery<CmpDirnOwnpconTblAutoLeftBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #1");
+			count = (decimal) new NDOQuery<CmpDirnOwnpconTblAutoRight>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #2");
+		}
+		catch (Exception)
+		{
+			var handler = pm.GetSqlPassThroughHandler( pm.NDOMapping.Connections.First() );
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( ownVar.GetType() ).TableName}");
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( otherVar.GetType() ).TableName}");
+			handler.Execute( $"DELETE FROM {pm.NDOMapping.FindClass( ownVar.GetType() ).Relations.First().MappingTable.TableName}" );
+		}
 	}
 	[Test]
 	public void TestSaveReload()
@@ -4587,16 +4868,25 @@ public class TestCmpBin1OwnpconNoTblAuto
 	[TearDown]
 	public void TearDown()
 	{
-		pm.UnloadCache();
-		var l = pm.Objects<CmpBin1OwnpconNoTblAutoLeftBase>().ResultTable;
-		pm.Delete(l);
-		pm.Save();
-		pm.UnloadCache();
-		decimal count;
-		count = (decimal) new NDOQuery<CmpBin1OwnpconNoTblAutoLeftBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<CmpBin1OwnpconNoTblAutoRight>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #2");
+		try
+		{
+			pm.UnloadCache();
+			var l = pm.Objects<CmpBin1OwnpconNoTblAutoLeftBase>().ResultTable;
+			pm.Delete(l);
+			pm.Save();
+			pm.UnloadCache();
+			decimal count;
+			count = (decimal) new NDOQuery<CmpBin1OwnpconNoTblAutoLeftBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #1");
+			count = (decimal) new NDOQuery<CmpBin1OwnpconNoTblAutoRight>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #2");
+		}
+		catch (Exception)
+		{
+			var handler = pm.GetSqlPassThroughHandler( pm.NDOMapping.Connections.First() );
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( ownVar.GetType() ).TableName}");
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( otherVar.GetType() ).TableName}");
+		}
 	}
 	[Test]
 	public void TestSaveReload()
@@ -4726,16 +5016,26 @@ public class TestCmpBin1OwnpconTblAuto
 	[TearDown]
 	public void TearDown()
 	{
-		pm.UnloadCache();
-		var l = pm.Objects<CmpBin1OwnpconTblAutoLeftBase>().ResultTable;
-		pm.Delete(l);
-		pm.Save();
-		pm.UnloadCache();
-		decimal count;
-		count = (decimal) new NDOQuery<CmpBin1OwnpconTblAutoLeftBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<CmpBin1OwnpconTblAutoRight>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #2");
+		try
+		{
+			pm.UnloadCache();
+			var l = pm.Objects<CmpBin1OwnpconTblAutoLeftBase>().ResultTable;
+			pm.Delete(l);
+			pm.Save();
+			pm.UnloadCache();
+			decimal count;
+			count = (decimal) new NDOQuery<CmpBin1OwnpconTblAutoLeftBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #1");
+			count = (decimal) new NDOQuery<CmpBin1OwnpconTblAutoRight>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #2");
+		}
+		catch (Exception)
+		{
+			var handler = pm.GetSqlPassThroughHandler( pm.NDOMapping.Connections.First() );
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( ownVar.GetType() ).TableName}");
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( otherVar.GetType() ).TableName}");
+			handler.Execute( $"DELETE FROM {pm.NDOMapping.FindClass( ownVar.GetType() ).Relations.First().MappingTable.TableName}" );
+		}
 	}
 	[Test]
 	public void TestSaveReload()
@@ -4854,16 +5154,26 @@ public class TestCmpBi1nOwnpconTblAuto
 	[TearDown]
 	public void TearDown()
 	{
-		pm.UnloadCache();
-		var l = pm.Objects<CmpBi1nOwnpconTblAutoLeftBase>().ResultTable;
-		pm.Delete(l);
-		pm.Save();
-		pm.UnloadCache();
-		decimal count;
-		count = (decimal) new NDOQuery<CmpBi1nOwnpconTblAutoLeftBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<CmpBi1nOwnpconTblAutoRight>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #2");
+		try
+		{
+			pm.UnloadCache();
+			var l = pm.Objects<CmpBi1nOwnpconTblAutoLeftBase>().ResultTable;
+			pm.Delete(l);
+			pm.Save();
+			pm.UnloadCache();
+			decimal count;
+			count = (decimal) new NDOQuery<CmpBi1nOwnpconTblAutoLeftBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #1");
+			count = (decimal) new NDOQuery<CmpBi1nOwnpconTblAutoRight>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #2");
+		}
+		catch (Exception)
+		{
+			var handler = pm.GetSqlPassThroughHandler( pm.NDOMapping.Connections.First() );
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( ownVar.GetType() ).TableName}");
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( otherVar.GetType() ).TableName}");
+			handler.Execute( $"DELETE FROM {pm.NDOMapping.FindClass( ownVar.GetType() ).Relations.First().MappingTable.TableName}" );
+		}
 	}
 	[Test]
 	public void TestSaveReload()
@@ -4886,10 +5196,6 @@ public class TestCmpBi1nOwnpconTblAuto
 		QueryOwn();
 		Assert.NotNull(ownVar, "No Query Result");
 		Assert.Null(ownVar.RelField, "There should be no object");
-	}
-	[Test]
-	public void TestSaveReloadRemove()
-	{
 	}
 	[Test]
 	public void TestChangeKeyHolderLeft()
@@ -4972,16 +5278,26 @@ public class TestCmpBinnOwnpconTblAuto
 	[TearDown]
 	public void TearDown()
 	{
-		pm.UnloadCache();
-		var l = pm.Objects<CmpBinnOwnpconTblAutoLeftBase>().ResultTable;
-		pm.Delete(l);
-		pm.Save();
-		pm.UnloadCache();
-		decimal count;
-		count = (decimal) new NDOQuery<CmpBinnOwnpconTblAutoLeftBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<CmpBinnOwnpconTblAutoRight>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #2");
+		try
+		{
+			pm.UnloadCache();
+			var l = pm.Objects<CmpBinnOwnpconTblAutoLeftBase>().ResultTable;
+			pm.Delete(l);
+			pm.Save();
+			pm.UnloadCache();
+			decimal count;
+			count = (decimal) new NDOQuery<CmpBinnOwnpconTblAutoLeftBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #1");
+			count = (decimal) new NDOQuery<CmpBinnOwnpconTblAutoRight>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #2");
+		}
+		catch (Exception)
+		{
+			var handler = pm.GetSqlPassThroughHandler( pm.NDOMapping.Connections.First() );
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( ownVar.GetType() ).TableName}");
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( otherVar.GetType() ).TableName}");
+			handler.Execute( $"DELETE FROM {pm.NDOMapping.FindClass( ownVar.GetType() ).Relations.First().MappingTable.TableName}" );
+		}
 	}
 	[Test]
 	public void TestSaveReload()
@@ -5069,20 +5385,29 @@ public class TestAgrDir1OthpconNoTblAuto
 	[TearDown]
 	public void TearDown()
 	{
-		pm.UnloadCache();
-		var l = pm.Objects<AgrDir1OthpconNoTblAutoLeft>().ResultTable;
-		pm.Delete(l);
-		pm.Save();
-		pm.UnloadCache();
-		var m = pm.Objects<AgrDir1OthpconNoTblAutoRightBase>().ResultTable;
-		pm.Delete(m);
-		pm.Save();
-		pm.UnloadCache();
-		decimal count;
-		count = (decimal) new NDOQuery<AgrDir1OthpconNoTblAutoLeft>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<AgrDir1OthpconNoTblAutoRightBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #2");
+		try
+		{
+			pm.UnloadCache();
+			var l = pm.Objects<AgrDir1OthpconNoTblAutoLeft>().ResultTable;
+			pm.Delete(l);
+			pm.Save();
+			pm.UnloadCache();
+			var m = pm.Objects<AgrDir1OthpconNoTblAutoRightBase>().ResultTable;
+			pm.Delete(m);
+			pm.Save();
+			pm.UnloadCache();
+			decimal count;
+			count = (decimal) new NDOQuery<AgrDir1OthpconNoTblAutoLeft>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #1");
+			count = (decimal) new NDOQuery<AgrDir1OthpconNoTblAutoRightBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #2");
+		}
+		catch (Exception)
+		{
+			var handler = pm.GetSqlPassThroughHandler( pm.NDOMapping.Connections.First() );
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( ownVar.GetType() ).TableName}");
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( otherVar.GetType() ).TableName}");
+		}
 	}
 	[Test]
 	public void TestSaveReload()
@@ -5105,10 +5430,6 @@ public class TestAgrDir1OthpconNoTblAuto
 		QueryOwn();
 		Assert.NotNull(ownVar, "No Query Result");
 		Assert.Null(ownVar.RelField, "There should be no object");
-	}
-	[Test]
-	public void TestSaveReloadRemove()
-	{
 	}
 	[Test]
 	public void TestChangeKeyHolderLeft()
@@ -5191,20 +5512,30 @@ public class TestAgrDir1OthpconTblAuto
 	[TearDown]
 	public void TearDown()
 	{
-		pm.UnloadCache();
-		var l = pm.Objects<AgrDir1OthpconTblAutoLeft>().ResultTable;
-		pm.Delete(l);
-		pm.Save();
-		pm.UnloadCache();
-		var m = pm.Objects<AgrDir1OthpconTblAutoRightBase>().ResultTable;
-		pm.Delete(m);
-		pm.Save();
-		pm.UnloadCache();
-		decimal count;
-		count = (decimal) new NDOQuery<AgrDir1OthpconTblAutoLeft>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<AgrDir1OthpconTblAutoRightBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #2");
+		try
+		{
+			pm.UnloadCache();
+			var l = pm.Objects<AgrDir1OthpconTblAutoLeft>().ResultTable;
+			pm.Delete(l);
+			pm.Save();
+			pm.UnloadCache();
+			var m = pm.Objects<AgrDir1OthpconTblAutoRightBase>().ResultTable;
+			pm.Delete(m);
+			pm.Save();
+			pm.UnloadCache();
+			decimal count;
+			count = (decimal) new NDOQuery<AgrDir1OthpconTblAutoLeft>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #1");
+			count = (decimal) new NDOQuery<AgrDir1OthpconTblAutoRightBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #2");
+		}
+		catch (Exception)
+		{
+			var handler = pm.GetSqlPassThroughHandler( pm.NDOMapping.Connections.First() );
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( ownVar.GetType() ).TableName}");
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( otherVar.GetType() ).TableName}");
+			handler.Execute( $"DELETE FROM {pm.NDOMapping.FindClass( ownVar.GetType() ).Relations.First().MappingTable.TableName}" );
+		}
 	}
 	[Test]
 	public void TestSaveReload()
@@ -5227,10 +5558,6 @@ public class TestAgrDir1OthpconTblAuto
 		QueryOwn();
 		Assert.NotNull(ownVar, "No Query Result");
 		Assert.Null(ownVar.RelField, "There should be no object");
-	}
-	[Test]
-	public void TestSaveReloadRemove()
-	{
 	}
 	[Test]
 	public void TestChangeKeyHolderLeft()
@@ -5300,20 +5627,29 @@ public class TestAgrBi11OthpconNoTblAuto
 	[TearDown]
 	public void TearDown()
 	{
-		pm.UnloadCache();
-		var l = pm.Objects<AgrBi11OthpconNoTblAutoLeft>().ResultTable;
-		pm.Delete(l);
-		pm.Save();
-		pm.UnloadCache();
-		var m = pm.Objects<AgrBi11OthpconNoTblAutoRightBase>().ResultTable;
-		pm.Delete(m);
-		pm.Save();
-		pm.UnloadCache();
-		decimal count;
-		count = (decimal) new NDOQuery<AgrBi11OthpconNoTblAutoLeft>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<AgrBi11OthpconNoTblAutoRightBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #2");
+		try
+		{
+			pm.UnloadCache();
+			var l = pm.Objects<AgrBi11OthpconNoTblAutoLeft>().ResultTable;
+			pm.Delete(l);
+			pm.Save();
+			pm.UnloadCache();
+			var m = pm.Objects<AgrBi11OthpconNoTblAutoRightBase>().ResultTable;
+			pm.Delete(m);
+			pm.Save();
+			pm.UnloadCache();
+			decimal count;
+			count = (decimal) new NDOQuery<AgrBi11OthpconNoTblAutoLeft>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #1");
+			count = (decimal) new NDOQuery<AgrBi11OthpconNoTblAutoRightBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #2");
+		}
+		catch (Exception)
+		{
+			var handler = pm.GetSqlPassThroughHandler( pm.NDOMapping.Connections.First() );
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( ownVar.GetType() ).TableName}");
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( otherVar.GetType() ).TableName}");
+		}
 	}
 	[Test]
 	public void TestSaveReload()
@@ -5336,10 +5672,6 @@ public class TestAgrBi11OthpconNoTblAuto
 		QueryOwn();
 		Assert.NotNull(ownVar, "No Query Result");
 		Assert.Null(ownVar.RelField, "There should be no object");
-	}
-	[Test]
-	public void TestSaveReloadRemove()
-	{
 	}
 	[Test]
 	public void TestChangeKeyHolderLeft()
@@ -5456,20 +5788,30 @@ public class TestAgrBi11OthpconTblAuto
 	[TearDown]
 	public void TearDown()
 	{
-		pm.UnloadCache();
-		var l = pm.Objects<AgrBi11OthpconTblAutoLeft>().ResultTable;
-		pm.Delete(l);
-		pm.Save();
-		pm.UnloadCache();
-		var m = pm.Objects<AgrBi11OthpconTblAutoRightBase>().ResultTable;
-		pm.Delete(m);
-		pm.Save();
-		pm.UnloadCache();
-		decimal count;
-		count = (decimal) new NDOQuery<AgrBi11OthpconTblAutoLeft>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<AgrBi11OthpconTblAutoRightBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #2");
+		try
+		{
+			pm.UnloadCache();
+			var l = pm.Objects<AgrBi11OthpconTblAutoLeft>().ResultTable;
+			pm.Delete(l);
+			pm.Save();
+			pm.UnloadCache();
+			var m = pm.Objects<AgrBi11OthpconTblAutoRightBase>().ResultTable;
+			pm.Delete(m);
+			pm.Save();
+			pm.UnloadCache();
+			decimal count;
+			count = (decimal) new NDOQuery<AgrBi11OthpconTblAutoLeft>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #1");
+			count = (decimal) new NDOQuery<AgrBi11OthpconTblAutoRightBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #2");
+		}
+		catch (Exception)
+		{
+			var handler = pm.GetSqlPassThroughHandler( pm.NDOMapping.Connections.First() );
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( ownVar.GetType() ).TableName}");
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( otherVar.GetType() ).TableName}");
+			handler.Execute( $"DELETE FROM {pm.NDOMapping.FindClass( ownVar.GetType() ).Relations.First().MappingTable.TableName}" );
+		}
 	}
 	[Test]
 	public void TestSaveReload()
@@ -5492,10 +5834,6 @@ public class TestAgrBi11OthpconTblAuto
 		QueryOwn();
 		Assert.NotNull(ownVar, "No Query Result");
 		Assert.Null(ownVar.RelField, "There should be no object");
-	}
-	[Test]
-	public void TestSaveReloadRemove()
-	{
 	}
 	[Test]
 	public void TestChangeKeyHolderLeft()
@@ -5610,20 +5948,30 @@ public class TestAgrDirnOthpconTblAuto
 	[TearDown]
 	public void TearDown()
 	{
-		pm.UnloadCache();
-		var l = pm.Objects<AgrDirnOthpconTblAutoLeft>().ResultTable;
-		pm.Delete(l);
-		pm.Save();
-		pm.UnloadCache();
-		var m = pm.Objects<AgrDirnOthpconTblAutoRightBase>().ResultTable;
-		pm.Delete(m);
-		pm.Save();
-		pm.UnloadCache();
-		decimal count;
-		count = (decimal) new NDOQuery<AgrDirnOthpconTblAutoLeft>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<AgrDirnOthpconTblAutoRightBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #2");
+		try
+		{
+			pm.UnloadCache();
+			var l = pm.Objects<AgrDirnOthpconTblAutoLeft>().ResultTable;
+			pm.Delete(l);
+			pm.Save();
+			pm.UnloadCache();
+			var m = pm.Objects<AgrDirnOthpconTblAutoRightBase>().ResultTable;
+			pm.Delete(m);
+			pm.Save();
+			pm.UnloadCache();
+			decimal count;
+			count = (decimal) new NDOQuery<AgrDirnOthpconTblAutoLeft>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #1");
+			count = (decimal) new NDOQuery<AgrDirnOthpconTblAutoRightBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #2");
+		}
+		catch (Exception)
+		{
+			var handler = pm.GetSqlPassThroughHandler( pm.NDOMapping.Connections.First() );
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( ownVar.GetType() ).TableName}");
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( otherVar.GetType() ).TableName}");
+			handler.Execute( $"DELETE FROM {pm.NDOMapping.FindClass( ownVar.GetType() ).Relations.First().MappingTable.TableName}" );
+		}
 	}
 	[Test]
 	public void TestSaveReload()
@@ -5698,20 +6046,30 @@ public class TestAgrBin1OthpconTblAuto
 	[TearDown]
 	public void TearDown()
 	{
-		pm.UnloadCache();
-		var l = pm.Objects<AgrBin1OthpconTblAutoLeft>().ResultTable;
-		pm.Delete(l);
-		pm.Save();
-		pm.UnloadCache();
-		var m = pm.Objects<AgrBin1OthpconTblAutoRightBase>().ResultTable;
-		pm.Delete(m);
-		pm.Save();
-		pm.UnloadCache();
-		decimal count;
-		count = (decimal) new NDOQuery<AgrBin1OthpconTblAutoLeft>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<AgrBin1OthpconTblAutoRightBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #2");
+		try
+		{
+			pm.UnloadCache();
+			var l = pm.Objects<AgrBin1OthpconTblAutoLeft>().ResultTable;
+			pm.Delete(l);
+			pm.Save();
+			pm.UnloadCache();
+			var m = pm.Objects<AgrBin1OthpconTblAutoRightBase>().ResultTable;
+			pm.Delete(m);
+			pm.Save();
+			pm.UnloadCache();
+			decimal count;
+			count = (decimal) new NDOQuery<AgrBin1OthpconTblAutoLeft>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #1");
+			count = (decimal) new NDOQuery<AgrBin1OthpconTblAutoRightBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #2");
+		}
+		catch (Exception)
+		{
+			var handler = pm.GetSqlPassThroughHandler( pm.NDOMapping.Connections.First() );
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( ownVar.GetType() ).TableName}");
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( otherVar.GetType() ).TableName}");
+			handler.Execute( $"DELETE FROM {pm.NDOMapping.FindClass( ownVar.GetType() ).Relations.First().MappingTable.TableName}" );
+		}
 	}
 	[Test]
 	public void TestSaveReload()
@@ -5831,20 +6189,29 @@ public class TestAgrBi1nOthpconNoTblAuto
 	[TearDown]
 	public void TearDown()
 	{
-		pm.UnloadCache();
-		var l = pm.Objects<AgrBi1nOthpconNoTblAutoLeft>().ResultTable;
-		pm.Delete(l);
-		pm.Save();
-		pm.UnloadCache();
-		var m = pm.Objects<AgrBi1nOthpconNoTblAutoRightBase>().ResultTable;
-		pm.Delete(m);
-		pm.Save();
-		pm.UnloadCache();
-		decimal count;
-		count = (decimal) new NDOQuery<AgrBi1nOthpconNoTblAutoLeft>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<AgrBi1nOthpconNoTblAutoRightBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #2");
+		try
+		{
+			pm.UnloadCache();
+			var l = pm.Objects<AgrBi1nOthpconNoTblAutoLeft>().ResultTable;
+			pm.Delete(l);
+			pm.Save();
+			pm.UnloadCache();
+			var m = pm.Objects<AgrBi1nOthpconNoTblAutoRightBase>().ResultTable;
+			pm.Delete(m);
+			pm.Save();
+			pm.UnloadCache();
+			decimal count;
+			count = (decimal) new NDOQuery<AgrBi1nOthpconNoTblAutoLeft>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #1");
+			count = (decimal) new NDOQuery<AgrBi1nOthpconNoTblAutoRightBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #2");
+		}
+		catch (Exception)
+		{
+			var handler = pm.GetSqlPassThroughHandler( pm.NDOMapping.Connections.First() );
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( ownVar.GetType() ).TableName}");
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( otherVar.GetType() ).TableName}");
+		}
 	}
 	[Test]
 	public void TestSaveReload()
@@ -5867,10 +6234,6 @@ public class TestAgrBi1nOthpconNoTblAuto
 		QueryOwn();
 		Assert.NotNull(ownVar, "No Query Result");
 		Assert.Null(ownVar.RelField, "There should be no object");
-	}
-	[Test]
-	public void TestSaveReloadRemove()
-	{
 	}
 	[Test]
 	public void TestChangeKeyHolderLeft()
@@ -5967,20 +6330,30 @@ public class TestAgrBi1nOthpconTblAuto
 	[TearDown]
 	public void TearDown()
 	{
-		pm.UnloadCache();
-		var l = pm.Objects<AgrBi1nOthpconTblAutoLeft>().ResultTable;
-		pm.Delete(l);
-		pm.Save();
-		pm.UnloadCache();
-		var m = pm.Objects<AgrBi1nOthpconTblAutoRightBase>().ResultTable;
-		pm.Delete(m);
-		pm.Save();
-		pm.UnloadCache();
-		decimal count;
-		count = (decimal) new NDOQuery<AgrBi1nOthpconTblAutoLeft>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<AgrBi1nOthpconTblAutoRightBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #2");
+		try
+		{
+			pm.UnloadCache();
+			var l = pm.Objects<AgrBi1nOthpconTblAutoLeft>().ResultTable;
+			pm.Delete(l);
+			pm.Save();
+			pm.UnloadCache();
+			var m = pm.Objects<AgrBi1nOthpconTblAutoRightBase>().ResultTable;
+			pm.Delete(m);
+			pm.Save();
+			pm.UnloadCache();
+			decimal count;
+			count = (decimal) new NDOQuery<AgrBi1nOthpconTblAutoLeft>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #1");
+			count = (decimal) new NDOQuery<AgrBi1nOthpconTblAutoRightBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #2");
+		}
+		catch (Exception)
+		{
+			var handler = pm.GetSqlPassThroughHandler( pm.NDOMapping.Connections.First() );
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( ownVar.GetType() ).TableName}");
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( otherVar.GetType() ).TableName}");
+			handler.Execute( $"DELETE FROM {pm.NDOMapping.FindClass( ownVar.GetType() ).Relations.First().MappingTable.TableName}" );
+		}
 	}
 	[Test]
 	public void TestSaveReload()
@@ -6003,10 +6376,6 @@ public class TestAgrBi1nOthpconTblAuto
 		QueryOwn();
 		Assert.NotNull(ownVar, "No Query Result");
 		Assert.Null(ownVar.RelField, "There should be no object");
-	}
-	[Test]
-	public void TestSaveReloadRemove()
-	{
 	}
 	[Test]
 	public void TestChangeKeyHolderLeft()
@@ -6090,20 +6459,30 @@ public class TestAgrBinnOthpconTblAuto
 	[TearDown]
 	public void TearDown()
 	{
-		pm.UnloadCache();
-		var l = pm.Objects<AgrBinnOthpconTblAutoLeft>().ResultTable;
-		pm.Delete(l);
-		pm.Save();
-		pm.UnloadCache();
-		var m = pm.Objects<AgrBinnOthpconTblAutoRightBase>().ResultTable;
-		pm.Delete(m);
-		pm.Save();
-		pm.UnloadCache();
-		decimal count;
-		count = (decimal) new NDOQuery<AgrBinnOthpconTblAutoLeft>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<AgrBinnOthpconTblAutoRightBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #2");
+		try
+		{
+			pm.UnloadCache();
+			var l = pm.Objects<AgrBinnOthpconTblAutoLeft>().ResultTable;
+			pm.Delete(l);
+			pm.Save();
+			pm.UnloadCache();
+			var m = pm.Objects<AgrBinnOthpconTblAutoRightBase>().ResultTable;
+			pm.Delete(m);
+			pm.Save();
+			pm.UnloadCache();
+			decimal count;
+			count = (decimal) new NDOQuery<AgrBinnOthpconTblAutoLeft>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #1");
+			count = (decimal) new NDOQuery<AgrBinnOthpconTblAutoRightBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #2");
+		}
+		catch (Exception)
+		{
+			var handler = pm.GetSqlPassThroughHandler( pm.NDOMapping.Connections.First() );
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( ownVar.GetType() ).TableName}");
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( otherVar.GetType() ).TableName}");
+			handler.Execute( $"DELETE FROM {pm.NDOMapping.FindClass( ownVar.GetType() ).Relations.First().MappingTable.TableName}" );
+		}
 	}
 	[Test]
 	public void TestSaveReload()
@@ -6192,42 +6571,65 @@ public class TestCmpDir1OthpconNoTblAuto
 	[TearDown]
 	public void TearDown()
 	{
-		pm.UnloadCache();
-		var l = pm.Objects<CmpDir1OthpconNoTblAutoLeft>().ResultTable;
-		pm.Delete(l);
-		pm.Save();
-		pm.UnloadCache();
-		decimal count;
-		count = (decimal) new NDOQuery<CmpDir1OthpconNoTblAutoLeft>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<CmpDir1OthpconNoTblAutoRightBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #2");
-	}
-	[Test, ExpectedException(typeof(NDOException))]
-	public void TestSaveReload()
-	{
-		CreateObjects();
-		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
-	}
-	[Test, ExpectedException(typeof(NDOException))]
-	public void TestSaveReloadNull()
-	{
-		CreateObjects();
-		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
-		ownVar.RelField = null;
-		pm.Save();
-		pm.UnloadCache();
-		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.Null(ownVar.RelField, "There should be no object");
+		try
+		{
+			pm.UnloadCache();
+			var l = pm.Objects<CmpDir1OthpconNoTblAutoLeft>().ResultTable;
+			pm.Delete(l);
+			pm.Save();
+			pm.UnloadCache();
+			decimal count;
+			count = (decimal) new NDOQuery<CmpDir1OthpconNoTblAutoLeft>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #1");
+			count = (decimal) new NDOQuery<CmpDir1OthpconNoTblAutoRightBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #2");
+		}
+		catch (Exception)
+		{
+			var handler = pm.GetSqlPassThroughHandler( pm.NDOMapping.Connections.First() );
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( ownVar.GetType() ).TableName}");
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( otherVar.GetType() ).TableName}");
+		}
 	}
 	[Test]
-	public void TestSaveReloadRemove()
+	public void TestSaveReload()
 	{
+		bool thrown = false;
+		try
+		{
+			CreateObjects();
+			QueryOwn();
+			Assert.NotNull(ownVar, "No Query Result");
+			Assert.NotNull(ownVar.RelField, "No related object");
+		}
+		catch (NDOException)
+		{
+			thrown = true;
+		}
+		Assert.AreEqual(true, thrown, "NDOException should have been thrown");
+	}
+	[Test]
+	public void TestSaveReloadNull()
+	{
+		bool thrown = false;
+		try
+		{
+			CreateObjects();
+			QueryOwn();
+			Assert.NotNull(ownVar, "No Query Result");
+			Assert.NotNull(ownVar.RelField, "No related object");
+			ownVar.RelField = null;
+			pm.Save();
+			pm.UnloadCache();
+			QueryOwn();
+			Assert.NotNull(ownVar, "No Query Result");
+			Assert.Null(ownVar.RelField, "There should be no object");
+		}
+		catch (NDOException)
+		{
+			thrown = true;
+		}
+		Assert.AreEqual(true, thrown, "NDOException should have been thrown");
 	}
 	void CreateObjects()
 	{
@@ -6266,16 +6668,26 @@ public class TestCmpDir1OthpconTblAuto
 	[TearDown]
 	public void TearDown()
 	{
-		pm.UnloadCache();
-		var l = pm.Objects<CmpDir1OthpconTblAutoLeft>().ResultTable;
-		pm.Delete(l);
-		pm.Save();
-		pm.UnloadCache();
-		decimal count;
-		count = (decimal) new NDOQuery<CmpDir1OthpconTblAutoLeft>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<CmpDir1OthpconTblAutoRightBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #2");
+		try
+		{
+			pm.UnloadCache();
+			var l = pm.Objects<CmpDir1OthpconTblAutoLeft>().ResultTable;
+			pm.Delete(l);
+			pm.Save();
+			pm.UnloadCache();
+			decimal count;
+			count = (decimal) new NDOQuery<CmpDir1OthpconTblAutoLeft>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #1");
+			count = (decimal) new NDOQuery<CmpDir1OthpconTblAutoRightBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #2");
+		}
+		catch (Exception)
+		{
+			var handler = pm.GetSqlPassThroughHandler( pm.NDOMapping.Connections.First() );
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( ownVar.GetType() ).TableName}");
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( otherVar.GetType() ).TableName}");
+			handler.Execute( $"DELETE FROM {pm.NDOMapping.FindClass( ownVar.GetType() ).Relations.First().MappingTable.TableName}" );
+		}
 	}
 	[Test]
 	public void TestSaveReload()
@@ -6298,10 +6710,6 @@ public class TestCmpDir1OthpconTblAuto
 		QueryOwn();
 		Assert.NotNull(ownVar, "No Query Result");
 		Assert.Null(ownVar.RelField, "There should be no object");
-	}
-	[Test]
-	public void TestSaveReloadRemove()
-	{
 	}
 	[Test]
 	public void TestChangeKeyHolderLeft()
@@ -6370,42 +6778,65 @@ public class TestCmpBi11OthpconNoTblAuto
 	[TearDown]
 	public void TearDown()
 	{
-		pm.UnloadCache();
-		var l = pm.Objects<CmpBi11OthpconNoTblAutoLeft>().ResultTable;
-		pm.Delete(l);
-		pm.Save();
-		pm.UnloadCache();
-		decimal count;
-		count = (decimal) new NDOQuery<CmpBi11OthpconNoTblAutoLeft>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<CmpBi11OthpconNoTblAutoRightBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #2");
-	}
-	[Test, ExpectedException(typeof(NDOException))]
-	public void TestSaveReload()
-	{
-		CreateObjects();
-		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
-	}
-	[Test, ExpectedException(typeof(NDOException))]
-	public void TestSaveReloadNull()
-	{
-		CreateObjects();
-		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
-		ownVar.RelField = null;
-		pm.Save();
-		pm.UnloadCache();
-		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.Null(ownVar.RelField, "There should be no object");
+		try
+		{
+			pm.UnloadCache();
+			var l = pm.Objects<CmpBi11OthpconNoTblAutoLeft>().ResultTable;
+			pm.Delete(l);
+			pm.Save();
+			pm.UnloadCache();
+			decimal count;
+			count = (decimal) new NDOQuery<CmpBi11OthpconNoTblAutoLeft>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #1");
+			count = (decimal) new NDOQuery<CmpBi11OthpconNoTblAutoRightBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #2");
+		}
+		catch (Exception)
+		{
+			var handler = pm.GetSqlPassThroughHandler( pm.NDOMapping.Connections.First() );
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( ownVar.GetType() ).TableName}");
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( otherVar.GetType() ).TableName}");
+		}
 	}
 	[Test]
-	public void TestSaveReloadRemove()
+	public void TestSaveReload()
 	{
+		bool thrown = false;
+		try
+		{
+			CreateObjects();
+			QueryOwn();
+			Assert.NotNull(ownVar, "No Query Result");
+			Assert.NotNull(ownVar.RelField, "No related object");
+		}
+		catch (NDOException)
+		{
+			thrown = true;
+		}
+		Assert.AreEqual(true, thrown, "NDOException should have been thrown");
+	}
+	[Test]
+	public void TestSaveReloadNull()
+	{
+		bool thrown = false;
+		try
+		{
+			CreateObjects();
+			QueryOwn();
+			Assert.NotNull(ownVar, "No Query Result");
+			Assert.NotNull(ownVar.RelField, "No related object");
+			ownVar.RelField = null;
+			pm.Save();
+			pm.UnloadCache();
+			QueryOwn();
+			Assert.NotNull(ownVar, "No Query Result");
+			Assert.Null(ownVar.RelField, "There should be no object");
+		}
+		catch (NDOException)
+		{
+			thrown = true;
+		}
+		Assert.AreEqual(true, thrown, "NDOException should have been thrown");
 	}
 	[Test]
 	public void TestRelationHash()
@@ -6458,16 +6889,26 @@ public class TestCmpBi11OthpconTblAuto
 	[TearDown]
 	public void TearDown()
 	{
-		pm.UnloadCache();
-		var l = pm.Objects<CmpBi11OthpconTblAutoLeft>().ResultTable;
-		pm.Delete(l);
-		pm.Save();
-		pm.UnloadCache();
-		decimal count;
-		count = (decimal) new NDOQuery<CmpBi11OthpconTblAutoLeft>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<CmpBi11OthpconTblAutoRightBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #2");
+		try
+		{
+			pm.UnloadCache();
+			var l = pm.Objects<CmpBi11OthpconTblAutoLeft>().ResultTable;
+			pm.Delete(l);
+			pm.Save();
+			pm.UnloadCache();
+			decimal count;
+			count = (decimal) new NDOQuery<CmpBi11OthpconTblAutoLeft>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #1");
+			count = (decimal) new NDOQuery<CmpBi11OthpconTblAutoRightBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #2");
+		}
+		catch (Exception)
+		{
+			var handler = pm.GetSqlPassThroughHandler( pm.NDOMapping.Connections.First() );
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( ownVar.GetType() ).TableName}");
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( otherVar.GetType() ).TableName}");
+			handler.Execute( $"DELETE FROM {pm.NDOMapping.FindClass( ownVar.GetType() ).Relations.First().MappingTable.TableName}" );
+		}
 	}
 	[Test]
 	public void TestSaveReload()
@@ -6490,10 +6931,6 @@ public class TestCmpBi11OthpconTblAuto
 		QueryOwn();
 		Assert.NotNull(ownVar, "No Query Result");
 		Assert.Null(ownVar.RelField, "There should be no object");
-	}
-	[Test]
-	public void TestSaveReloadRemove()
-	{
 	}
 	[Test]
 	public void TestChangeKeyHolderLeft()
@@ -6607,16 +7044,26 @@ public class TestCmpDirnOthpconTblAuto
 	[TearDown]
 	public void TearDown()
 	{
-		pm.UnloadCache();
-		var l = pm.Objects<CmpDirnOthpconTblAutoLeft>().ResultTable;
-		pm.Delete(l);
-		pm.Save();
-		pm.UnloadCache();
-		decimal count;
-		count = (decimal) new NDOQuery<CmpDirnOthpconTblAutoLeft>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<CmpDirnOthpconTblAutoRightBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #2");
+		try
+		{
+			pm.UnloadCache();
+			var l = pm.Objects<CmpDirnOthpconTblAutoLeft>().ResultTable;
+			pm.Delete(l);
+			pm.Save();
+			pm.UnloadCache();
+			decimal count;
+			count = (decimal) new NDOQuery<CmpDirnOthpconTblAutoLeft>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #1");
+			count = (decimal) new NDOQuery<CmpDirnOthpconTblAutoRightBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #2");
+		}
+		catch (Exception)
+		{
+			var handler = pm.GetSqlPassThroughHandler( pm.NDOMapping.Connections.First() );
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( ownVar.GetType() ).TableName}");
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( otherVar.GetType() ).TableName}");
+			handler.Execute( $"DELETE FROM {pm.NDOMapping.FindClass( ownVar.GetType() ).Relations.First().MappingTable.TableName}" );
+		}
 	}
 	[Test]
 	public void TestSaveReload()
@@ -6690,16 +7137,26 @@ public class TestCmpBin1OthpconTblAuto
 	[TearDown]
 	public void TearDown()
 	{
-		pm.UnloadCache();
-		var l = pm.Objects<CmpBin1OthpconTblAutoLeft>().ResultTable;
-		pm.Delete(l);
-		pm.Save();
-		pm.UnloadCache();
-		decimal count;
-		count = (decimal) new NDOQuery<CmpBin1OthpconTblAutoLeft>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<CmpBin1OthpconTblAutoRightBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #2");
+		try
+		{
+			pm.UnloadCache();
+			var l = pm.Objects<CmpBin1OthpconTblAutoLeft>().ResultTable;
+			pm.Delete(l);
+			pm.Save();
+			pm.UnloadCache();
+			decimal count;
+			count = (decimal) new NDOQuery<CmpBin1OthpconTblAutoLeft>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #1");
+			count = (decimal) new NDOQuery<CmpBin1OthpconTblAutoRightBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #2");
+		}
+		catch (Exception)
+		{
+			var handler = pm.GetSqlPassThroughHandler( pm.NDOMapping.Connections.First() );
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( ownVar.GetType() ).TableName}");
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( otherVar.GetType() ).TableName}");
+			handler.Execute( $"DELETE FROM {pm.NDOMapping.FindClass( ownVar.GetType() ).Relations.First().MappingTable.TableName}" );
+		}
 	}
 	[Test]
 	public void TestSaveReload()
@@ -6818,42 +7275,65 @@ public class TestCmpBi1nOthpconNoTblAuto
 	[TearDown]
 	public void TearDown()
 	{
-		pm.UnloadCache();
-		var l = pm.Objects<CmpBi1nOthpconNoTblAutoLeft>().ResultTable;
-		pm.Delete(l);
-		pm.Save();
-		pm.UnloadCache();
-		decimal count;
-		count = (decimal) new NDOQuery<CmpBi1nOthpconNoTblAutoLeft>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<CmpBi1nOthpconNoTblAutoRightBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #2");
-	}
-	[Test, ExpectedException(typeof(NDOException))]
-	public void TestSaveReload()
-	{
-		CreateObjects();
-		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
-	}
-	[Test, ExpectedException(typeof(NDOException))]
-	public void TestSaveReloadNull()
-	{
-		CreateObjects();
-		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
-		ownVar.RelField = null;
-		pm.Save();
-		pm.UnloadCache();
-		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.Null(ownVar.RelField, "There should be no object");
+		try
+		{
+			pm.UnloadCache();
+			var l = pm.Objects<CmpBi1nOthpconNoTblAutoLeft>().ResultTable;
+			pm.Delete(l);
+			pm.Save();
+			pm.UnloadCache();
+			decimal count;
+			count = (decimal) new NDOQuery<CmpBi1nOthpconNoTblAutoLeft>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #1");
+			count = (decimal) new NDOQuery<CmpBi1nOthpconNoTblAutoRightBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #2");
+		}
+		catch (Exception)
+		{
+			var handler = pm.GetSqlPassThroughHandler( pm.NDOMapping.Connections.First() );
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( ownVar.GetType() ).TableName}");
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( otherVar.GetType() ).TableName}");
+		}
 	}
 	[Test]
-	public void TestSaveReloadRemove()
+	public void TestSaveReload()
 	{
+		bool thrown = false;
+		try
+		{
+			CreateObjects();
+			QueryOwn();
+			Assert.NotNull(ownVar, "No Query Result");
+			Assert.NotNull(ownVar.RelField, "No related object");
+		}
+		catch (NDOException)
+		{
+			thrown = true;
+		}
+		Assert.AreEqual(true, thrown, "NDOException should have been thrown");
+	}
+	[Test]
+	public void TestSaveReloadNull()
+	{
+		bool thrown = false;
+		try
+		{
+			CreateObjects();
+			QueryOwn();
+			Assert.NotNull(ownVar, "No Query Result");
+			Assert.NotNull(ownVar.RelField, "No related object");
+			ownVar.RelField = null;
+			pm.Save();
+			pm.UnloadCache();
+			QueryOwn();
+			Assert.NotNull(ownVar, "No Query Result");
+			Assert.Null(ownVar.RelField, "There should be no object");
+		}
+		catch (NDOException)
+		{
+			thrown = true;
+		}
+		Assert.AreEqual(true, thrown, "NDOException should have been thrown");
 	}
 	[Test]
 	public void TestRelationHash()
@@ -6906,16 +7386,26 @@ public class TestCmpBi1nOthpconTblAuto
 	[TearDown]
 	public void TearDown()
 	{
-		pm.UnloadCache();
-		var l = pm.Objects<CmpBi1nOthpconTblAutoLeft>().ResultTable;
-		pm.Delete(l);
-		pm.Save();
-		pm.UnloadCache();
-		decimal count;
-		count = (decimal) new NDOQuery<CmpBi1nOthpconTblAutoLeft>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<CmpBi1nOthpconTblAutoRightBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #2");
+		try
+		{
+			pm.UnloadCache();
+			var l = pm.Objects<CmpBi1nOthpconTblAutoLeft>().ResultTable;
+			pm.Delete(l);
+			pm.Save();
+			pm.UnloadCache();
+			decimal count;
+			count = (decimal) new NDOQuery<CmpBi1nOthpconTblAutoLeft>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #1");
+			count = (decimal) new NDOQuery<CmpBi1nOthpconTblAutoRightBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #2");
+		}
+		catch (Exception)
+		{
+			var handler = pm.GetSqlPassThroughHandler( pm.NDOMapping.Connections.First() );
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( ownVar.GetType() ).TableName}");
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( otherVar.GetType() ).TableName}");
+			handler.Execute( $"DELETE FROM {pm.NDOMapping.FindClass( ownVar.GetType() ).Relations.First().MappingTable.TableName}" );
+		}
 	}
 	[Test]
 	public void TestSaveReload()
@@ -6938,10 +7428,6 @@ public class TestCmpBi1nOthpconTblAuto
 		QueryOwn();
 		Assert.NotNull(ownVar, "No Query Result");
 		Assert.Null(ownVar.RelField, "There should be no object");
-	}
-	[Test]
-	public void TestSaveReloadRemove()
-	{
 	}
 	[Test]
 	public void TestChangeKeyHolderLeft()
@@ -7024,16 +7510,26 @@ public class TestCmpBinnOthpconTblAuto
 	[TearDown]
 	public void TearDown()
 	{
-		pm.UnloadCache();
-		var l = pm.Objects<CmpBinnOthpconTblAutoLeft>().ResultTable;
-		pm.Delete(l);
-		pm.Save();
-		pm.UnloadCache();
-		decimal count;
-		count = (decimal) new NDOQuery<CmpBinnOthpconTblAutoLeft>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<CmpBinnOthpconTblAutoRightBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #2");
+		try
+		{
+			pm.UnloadCache();
+			var l = pm.Objects<CmpBinnOthpconTblAutoLeft>().ResultTable;
+			pm.Delete(l);
+			pm.Save();
+			pm.UnloadCache();
+			decimal count;
+			count = (decimal) new NDOQuery<CmpBinnOthpconTblAutoLeft>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #1");
+			count = (decimal) new NDOQuery<CmpBinnOthpconTblAutoRightBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #2");
+		}
+		catch (Exception)
+		{
+			var handler = pm.GetSqlPassThroughHandler( pm.NDOMapping.Connections.First() );
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( ownVar.GetType() ).TableName}");
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( otherVar.GetType() ).TableName}");
+			handler.Execute( $"DELETE FROM {pm.NDOMapping.FindClass( ownVar.GetType() ).Relations.First().MappingTable.TableName}" );
+		}
 	}
 	[Test]
 	public void TestSaveReload()
@@ -7121,20 +7617,29 @@ public class TestAgrDir1OwnpconOthpconNoTblAuto
 	[TearDown]
 	public void TearDown()
 	{
-		pm.UnloadCache();
-		var l = pm.Objects<AgrDir1OwnpconOthpconNoTblAutoLeftBase>().ResultTable;
-		pm.Delete(l);
-		pm.Save();
-		pm.UnloadCache();
-		var m = pm.Objects<AgrDir1OwnpconOthpconNoTblAutoRightBase>().ResultTable;
-		pm.Delete(m);
-		pm.Save();
-		pm.UnloadCache();
-		decimal count;
-		count = (decimal) new NDOQuery<AgrDir1OwnpconOthpconNoTblAutoLeftBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<AgrDir1OwnpconOthpconNoTblAutoRightBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #2");
+		try
+		{
+			pm.UnloadCache();
+			var l = pm.Objects<AgrDir1OwnpconOthpconNoTblAutoLeftBase>().ResultTable;
+			pm.Delete(l);
+			pm.Save();
+			pm.UnloadCache();
+			var m = pm.Objects<AgrDir1OwnpconOthpconNoTblAutoRightBase>().ResultTable;
+			pm.Delete(m);
+			pm.Save();
+			pm.UnloadCache();
+			decimal count;
+			count = (decimal) new NDOQuery<AgrDir1OwnpconOthpconNoTblAutoLeftBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #1");
+			count = (decimal) new NDOQuery<AgrDir1OwnpconOthpconNoTblAutoRightBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #2");
+		}
+		catch (Exception)
+		{
+			var handler = pm.GetSqlPassThroughHandler( pm.NDOMapping.Connections.First() );
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( ownVar.GetType() ).TableName}");
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( otherVar.GetType() ).TableName}");
+		}
 	}
 	[Test]
 	public void TestSaveReload()
@@ -7157,10 +7662,6 @@ public class TestAgrDir1OwnpconOthpconNoTblAuto
 		QueryOwn();
 		Assert.NotNull(ownVar, "No Query Result");
 		Assert.Null(ownVar.RelField, "There should be no object");
-	}
-	[Test]
-	public void TestSaveReloadRemove()
-	{
 	}
 	[Test]
 	public void TestChangeKeyHolderLeft()
@@ -7243,20 +7744,30 @@ public class TestAgrDir1OwnpconOthpconTblAuto
 	[TearDown]
 	public void TearDown()
 	{
-		pm.UnloadCache();
-		var l = pm.Objects<AgrDir1OwnpconOthpconTblAutoLeftBase>().ResultTable;
-		pm.Delete(l);
-		pm.Save();
-		pm.UnloadCache();
-		var m = pm.Objects<AgrDir1OwnpconOthpconTblAutoRightBase>().ResultTable;
-		pm.Delete(m);
-		pm.Save();
-		pm.UnloadCache();
-		decimal count;
-		count = (decimal) new NDOQuery<AgrDir1OwnpconOthpconTblAutoLeftBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<AgrDir1OwnpconOthpconTblAutoRightBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #2");
+		try
+		{
+			pm.UnloadCache();
+			var l = pm.Objects<AgrDir1OwnpconOthpconTblAutoLeftBase>().ResultTable;
+			pm.Delete(l);
+			pm.Save();
+			pm.UnloadCache();
+			var m = pm.Objects<AgrDir1OwnpconOthpconTblAutoRightBase>().ResultTable;
+			pm.Delete(m);
+			pm.Save();
+			pm.UnloadCache();
+			decimal count;
+			count = (decimal) new NDOQuery<AgrDir1OwnpconOthpconTblAutoLeftBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #1");
+			count = (decimal) new NDOQuery<AgrDir1OwnpconOthpconTblAutoRightBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #2");
+		}
+		catch (Exception)
+		{
+			var handler = pm.GetSqlPassThroughHandler( pm.NDOMapping.Connections.First() );
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( ownVar.GetType() ).TableName}");
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( otherVar.GetType() ).TableName}");
+			handler.Execute( $"DELETE FROM {pm.NDOMapping.FindClass( ownVar.GetType() ).Relations.First().MappingTable.TableName}" );
+		}
 	}
 	[Test]
 	public void TestSaveReload()
@@ -7279,10 +7790,6 @@ public class TestAgrDir1OwnpconOthpconTblAuto
 		QueryOwn();
 		Assert.NotNull(ownVar, "No Query Result");
 		Assert.Null(ownVar.RelField, "There should be no object");
-	}
-	[Test]
-	public void TestSaveReloadRemove()
-	{
 	}
 	[Test]
 	public void TestChangeKeyHolderLeft()
@@ -7352,20 +7859,29 @@ public class TestAgrBi11OwnpconOthpconNoTblAuto
 	[TearDown]
 	public void TearDown()
 	{
-		pm.UnloadCache();
-		var l = pm.Objects<AgrBi11OwnpconOthpconNoTblAutoLeftBase>().ResultTable;
-		pm.Delete(l);
-		pm.Save();
-		pm.UnloadCache();
-		var m = pm.Objects<AgrBi11OwnpconOthpconNoTblAutoRightBase>().ResultTable;
-		pm.Delete(m);
-		pm.Save();
-		pm.UnloadCache();
-		decimal count;
-		count = (decimal) new NDOQuery<AgrBi11OwnpconOthpconNoTblAutoLeftBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<AgrBi11OwnpconOthpconNoTblAutoRightBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #2");
+		try
+		{
+			pm.UnloadCache();
+			var l = pm.Objects<AgrBi11OwnpconOthpconNoTblAutoLeftBase>().ResultTable;
+			pm.Delete(l);
+			pm.Save();
+			pm.UnloadCache();
+			var m = pm.Objects<AgrBi11OwnpconOthpconNoTblAutoRightBase>().ResultTable;
+			pm.Delete(m);
+			pm.Save();
+			pm.UnloadCache();
+			decimal count;
+			count = (decimal) new NDOQuery<AgrBi11OwnpconOthpconNoTblAutoLeftBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #1");
+			count = (decimal) new NDOQuery<AgrBi11OwnpconOthpconNoTblAutoRightBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #2");
+		}
+		catch (Exception)
+		{
+			var handler = pm.GetSqlPassThroughHandler( pm.NDOMapping.Connections.First() );
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( ownVar.GetType() ).TableName}");
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( otherVar.GetType() ).TableName}");
+		}
 	}
 	[Test]
 	public void TestSaveReload()
@@ -7388,10 +7904,6 @@ public class TestAgrBi11OwnpconOthpconNoTblAuto
 		QueryOwn();
 		Assert.NotNull(ownVar, "No Query Result");
 		Assert.Null(ownVar.RelField, "There should be no object");
-	}
-	[Test]
-	public void TestSaveReloadRemove()
-	{
 	}
 	[Test]
 	public void TestChangeKeyHolderLeft()
@@ -7515,20 +8027,30 @@ public class TestAgrBi11OwnpconOthpconTblAuto
 	[TearDown]
 	public void TearDown()
 	{
-		pm.UnloadCache();
-		var l = pm.Objects<AgrBi11OwnpconOthpconTblAutoLeftBase>().ResultTable;
-		pm.Delete(l);
-		pm.Save();
-		pm.UnloadCache();
-		var m = pm.Objects<AgrBi11OwnpconOthpconTblAutoRightBase>().ResultTable;
-		pm.Delete(m);
-		pm.Save();
-		pm.UnloadCache();
-		decimal count;
-		count = (decimal) new NDOQuery<AgrBi11OwnpconOthpconTblAutoLeftBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<AgrBi11OwnpconOthpconTblAutoRightBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #2");
+		try
+		{
+			pm.UnloadCache();
+			var l = pm.Objects<AgrBi11OwnpconOthpconTblAutoLeftBase>().ResultTable;
+			pm.Delete(l);
+			pm.Save();
+			pm.UnloadCache();
+			var m = pm.Objects<AgrBi11OwnpconOthpconTblAutoRightBase>().ResultTable;
+			pm.Delete(m);
+			pm.Save();
+			pm.UnloadCache();
+			decimal count;
+			count = (decimal) new NDOQuery<AgrBi11OwnpconOthpconTblAutoLeftBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #1");
+			count = (decimal) new NDOQuery<AgrBi11OwnpconOthpconTblAutoRightBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #2");
+		}
+		catch (Exception)
+		{
+			var handler = pm.GetSqlPassThroughHandler( pm.NDOMapping.Connections.First() );
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( ownVar.GetType() ).TableName}");
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( otherVar.GetType() ).TableName}");
+			handler.Execute( $"DELETE FROM {pm.NDOMapping.FindClass( ownVar.GetType() ).Relations.First().MappingTable.TableName}" );
+		}
 	}
 	[Test]
 	public void TestSaveReload()
@@ -7551,10 +8073,6 @@ public class TestAgrBi11OwnpconOthpconTblAuto
 		QueryOwn();
 		Assert.NotNull(ownVar, "No Query Result");
 		Assert.Null(ownVar.RelField, "There should be no object");
-	}
-	[Test]
-	public void TestSaveReloadRemove()
-	{
 	}
 	[Test]
 	public void TestChangeKeyHolderLeft()
@@ -7676,20 +8194,30 @@ public class TestAgrDirnOwnpconOthpconTblAuto
 	[TearDown]
 	public void TearDown()
 	{
-		pm.UnloadCache();
-		var l = pm.Objects<AgrDirnOwnpconOthpconTblAutoLeftBase>().ResultTable;
-		pm.Delete(l);
-		pm.Save();
-		pm.UnloadCache();
-		var m = pm.Objects<AgrDirnOwnpconOthpconTblAutoRightBase>().ResultTable;
-		pm.Delete(m);
-		pm.Save();
-		pm.UnloadCache();
-		decimal count;
-		count = (decimal) new NDOQuery<AgrDirnOwnpconOthpconTblAutoLeftBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<AgrDirnOwnpconOthpconTblAutoRightBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #2");
+		try
+		{
+			pm.UnloadCache();
+			var l = pm.Objects<AgrDirnOwnpconOthpconTblAutoLeftBase>().ResultTable;
+			pm.Delete(l);
+			pm.Save();
+			pm.UnloadCache();
+			var m = pm.Objects<AgrDirnOwnpconOthpconTblAutoRightBase>().ResultTable;
+			pm.Delete(m);
+			pm.Save();
+			pm.UnloadCache();
+			decimal count;
+			count = (decimal) new NDOQuery<AgrDirnOwnpconOthpconTblAutoLeftBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #1");
+			count = (decimal) new NDOQuery<AgrDirnOwnpconOthpconTblAutoRightBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #2");
+		}
+		catch (Exception)
+		{
+			var handler = pm.GetSqlPassThroughHandler( pm.NDOMapping.Connections.First() );
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( ownVar.GetType() ).TableName}");
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( otherVar.GetType() ).TableName}");
+			handler.Execute( $"DELETE FROM {pm.NDOMapping.FindClass( ownVar.GetType() ).Relations.First().MappingTable.TableName}" );
+		}
 	}
 	[Test]
 	public void TestSaveReload()
@@ -7764,20 +8292,30 @@ public class TestAgrBin1OwnpconOthpconTblAuto
 	[TearDown]
 	public void TearDown()
 	{
-		pm.UnloadCache();
-		var l = pm.Objects<AgrBin1OwnpconOthpconTblAutoLeftBase>().ResultTable;
-		pm.Delete(l);
-		pm.Save();
-		pm.UnloadCache();
-		var m = pm.Objects<AgrBin1OwnpconOthpconTblAutoRightBase>().ResultTable;
-		pm.Delete(m);
-		pm.Save();
-		pm.UnloadCache();
-		decimal count;
-		count = (decimal) new NDOQuery<AgrBin1OwnpconOthpconTblAutoLeftBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<AgrBin1OwnpconOthpconTblAutoRightBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #2");
+		try
+		{
+			pm.UnloadCache();
+			var l = pm.Objects<AgrBin1OwnpconOthpconTblAutoLeftBase>().ResultTable;
+			pm.Delete(l);
+			pm.Save();
+			pm.UnloadCache();
+			var m = pm.Objects<AgrBin1OwnpconOthpconTblAutoRightBase>().ResultTable;
+			pm.Delete(m);
+			pm.Save();
+			pm.UnloadCache();
+			decimal count;
+			count = (decimal) new NDOQuery<AgrBin1OwnpconOthpconTblAutoLeftBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #1");
+			count = (decimal) new NDOQuery<AgrBin1OwnpconOthpconTblAutoRightBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #2");
+		}
+		catch (Exception)
+		{
+			var handler = pm.GetSqlPassThroughHandler( pm.NDOMapping.Connections.First() );
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( ownVar.GetType() ).TableName}");
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( otherVar.GetType() ).TableName}");
+			handler.Execute( $"DELETE FROM {pm.NDOMapping.FindClass( ownVar.GetType() ).Relations.First().MappingTable.TableName}" );
+		}
 	}
 	[Test]
 	public void TestSaveReload()
@@ -7904,20 +8442,30 @@ public class TestAgrBi1nOwnpconOthpconTblAuto
 	[TearDown]
 	public void TearDown()
 	{
-		pm.UnloadCache();
-		var l = pm.Objects<AgrBi1nOwnpconOthpconTblAutoLeftBase>().ResultTable;
-		pm.Delete(l);
-		pm.Save();
-		pm.UnloadCache();
-		var m = pm.Objects<AgrBi1nOwnpconOthpconTblAutoRightBase>().ResultTable;
-		pm.Delete(m);
-		pm.Save();
-		pm.UnloadCache();
-		decimal count;
-		count = (decimal) new NDOQuery<AgrBi1nOwnpconOthpconTblAutoLeftBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<AgrBi1nOwnpconOthpconTblAutoRightBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #2");
+		try
+		{
+			pm.UnloadCache();
+			var l = pm.Objects<AgrBi1nOwnpconOthpconTblAutoLeftBase>().ResultTable;
+			pm.Delete(l);
+			pm.Save();
+			pm.UnloadCache();
+			var m = pm.Objects<AgrBi1nOwnpconOthpconTblAutoRightBase>().ResultTable;
+			pm.Delete(m);
+			pm.Save();
+			pm.UnloadCache();
+			decimal count;
+			count = (decimal) new NDOQuery<AgrBi1nOwnpconOthpconTblAutoLeftBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #1");
+			count = (decimal) new NDOQuery<AgrBi1nOwnpconOthpconTblAutoRightBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #2");
+		}
+		catch (Exception)
+		{
+			var handler = pm.GetSqlPassThroughHandler( pm.NDOMapping.Connections.First() );
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( ownVar.GetType() ).TableName}");
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( otherVar.GetType() ).TableName}");
+			handler.Execute( $"DELETE FROM {pm.NDOMapping.FindClass( ownVar.GetType() ).Relations.First().MappingTable.TableName}" );
+		}
 	}
 	[Test]
 	public void TestSaveReload()
@@ -7940,10 +8488,6 @@ public class TestAgrBi1nOwnpconOthpconTblAuto
 		QueryOwn();
 		Assert.NotNull(ownVar, "No Query Result");
 		Assert.Null(ownVar.RelField, "There should be no object");
-	}
-	[Test]
-	public void TestSaveReloadRemove()
-	{
 	}
 	[Test]
 	public void TestChangeKeyHolderLeft()
@@ -8033,20 +8577,30 @@ public class TestAgrBinnOwnpconOthpconTblAuto
 	[TearDown]
 	public void TearDown()
 	{
-		pm.UnloadCache();
-		var l = pm.Objects<AgrBinnOwnpconOthpconTblAutoLeftBase>().ResultTable;
-		pm.Delete(l);
-		pm.Save();
-		pm.UnloadCache();
-		var m = pm.Objects<AgrBinnOwnpconOthpconTblAutoRightBase>().ResultTable;
-		pm.Delete(m);
-		pm.Save();
-		pm.UnloadCache();
-		decimal count;
-		count = (decimal) new NDOQuery<AgrBinnOwnpconOthpconTblAutoLeftBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<AgrBinnOwnpconOthpconTblAutoRightBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #2");
+		try
+		{
+			pm.UnloadCache();
+			var l = pm.Objects<AgrBinnOwnpconOthpconTblAutoLeftBase>().ResultTable;
+			pm.Delete(l);
+			pm.Save();
+			pm.UnloadCache();
+			var m = pm.Objects<AgrBinnOwnpconOthpconTblAutoRightBase>().ResultTable;
+			pm.Delete(m);
+			pm.Save();
+			pm.UnloadCache();
+			decimal count;
+			count = (decimal) new NDOQuery<AgrBinnOwnpconOthpconTblAutoLeftBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #1");
+			count = (decimal) new NDOQuery<AgrBinnOwnpconOthpconTblAutoRightBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #2");
+		}
+		catch (Exception)
+		{
+			var handler = pm.GetSqlPassThroughHandler( pm.NDOMapping.Connections.First() );
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( ownVar.GetType() ).TableName}");
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( otherVar.GetType() ).TableName}");
+			handler.Execute( $"DELETE FROM {pm.NDOMapping.FindClass( ownVar.GetType() ).Relations.First().MappingTable.TableName}" );
+		}
 	}
 	[Test]
 	public void TestSaveReload()
@@ -8141,42 +8695,65 @@ public class TestCmpDir1OwnpconOthpconNoTblAuto
 	[TearDown]
 	public void TearDown()
 	{
-		pm.UnloadCache();
-		var l = pm.Objects<CmpDir1OwnpconOthpconNoTblAutoLeftBase>().ResultTable;
-		pm.Delete(l);
-		pm.Save();
-		pm.UnloadCache();
-		decimal count;
-		count = (decimal) new NDOQuery<CmpDir1OwnpconOthpconNoTblAutoLeftBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<CmpDir1OwnpconOthpconNoTblAutoRightBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #2");
-	}
-	[Test, ExpectedException(typeof(NDOException))]
-	public void TestSaveReload()
-	{
-		CreateObjects();
-		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
-	}
-	[Test, ExpectedException(typeof(NDOException))]
-	public void TestSaveReloadNull()
-	{
-		CreateObjects();
-		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
-		ownVar.RelField = null;
-		pm.Save();
-		pm.UnloadCache();
-		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.Null(ownVar.RelField, "There should be no object");
+		try
+		{
+			pm.UnloadCache();
+			var l = pm.Objects<CmpDir1OwnpconOthpconNoTblAutoLeftBase>().ResultTable;
+			pm.Delete(l);
+			pm.Save();
+			pm.UnloadCache();
+			decimal count;
+			count = (decimal) new NDOQuery<CmpDir1OwnpconOthpconNoTblAutoLeftBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #1");
+			count = (decimal) new NDOQuery<CmpDir1OwnpconOthpconNoTblAutoRightBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #2");
+		}
+		catch (Exception)
+		{
+			var handler = pm.GetSqlPassThroughHandler( pm.NDOMapping.Connections.First() );
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( ownVar.GetType() ).TableName}");
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( otherVar.GetType() ).TableName}");
+		}
 	}
 	[Test]
-	public void TestSaveReloadRemove()
+	public void TestSaveReload()
 	{
+		bool thrown = false;
+		try
+		{
+			CreateObjects();
+			QueryOwn();
+			Assert.NotNull(ownVar, "No Query Result");
+			Assert.NotNull(ownVar.RelField, "No related object");
+		}
+		catch (NDOException)
+		{
+			thrown = true;
+		}
+		Assert.AreEqual(true, thrown, "NDOException should have been thrown");
+	}
+	[Test]
+	public void TestSaveReloadNull()
+	{
+		bool thrown = false;
+		try
+		{
+			CreateObjects();
+			QueryOwn();
+			Assert.NotNull(ownVar, "No Query Result");
+			Assert.NotNull(ownVar.RelField, "No related object");
+			ownVar.RelField = null;
+			pm.Save();
+			pm.UnloadCache();
+			QueryOwn();
+			Assert.NotNull(ownVar, "No Query Result");
+			Assert.Null(ownVar.RelField, "There should be no object");
+		}
+		catch (NDOException)
+		{
+			thrown = true;
+		}
+		Assert.AreEqual(true, thrown, "NDOException should have been thrown");
 	}
 	void CreateObjects()
 	{
@@ -8215,16 +8792,26 @@ public class TestCmpDir1OwnpconOthpconTblAuto
 	[TearDown]
 	public void TearDown()
 	{
-		pm.UnloadCache();
-		var l = pm.Objects<CmpDir1OwnpconOthpconTblAutoLeftBase>().ResultTable;
-		pm.Delete(l);
-		pm.Save();
-		pm.UnloadCache();
-		decimal count;
-		count = (decimal) new NDOQuery<CmpDir1OwnpconOthpconTblAutoLeftBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<CmpDir1OwnpconOthpconTblAutoRightBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #2");
+		try
+		{
+			pm.UnloadCache();
+			var l = pm.Objects<CmpDir1OwnpconOthpconTblAutoLeftBase>().ResultTable;
+			pm.Delete(l);
+			pm.Save();
+			pm.UnloadCache();
+			decimal count;
+			count = (decimal) new NDOQuery<CmpDir1OwnpconOthpconTblAutoLeftBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #1");
+			count = (decimal) new NDOQuery<CmpDir1OwnpconOthpconTblAutoRightBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #2");
+		}
+		catch (Exception)
+		{
+			var handler = pm.GetSqlPassThroughHandler( pm.NDOMapping.Connections.First() );
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( ownVar.GetType() ).TableName}");
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( otherVar.GetType() ).TableName}");
+			handler.Execute( $"DELETE FROM {pm.NDOMapping.FindClass( ownVar.GetType() ).Relations.First().MappingTable.TableName}" );
+		}
 	}
 	[Test]
 	public void TestSaveReload()
@@ -8247,10 +8834,6 @@ public class TestCmpDir1OwnpconOthpconTblAuto
 		QueryOwn();
 		Assert.NotNull(ownVar, "No Query Result");
 		Assert.Null(ownVar.RelField, "There should be no object");
-	}
-	[Test]
-	public void TestSaveReloadRemove()
-	{
 	}
 	[Test]
 	public void TestChangeKeyHolderLeft()
@@ -8319,42 +8902,65 @@ public class TestCmpBi11OwnpconOthpconNoTblAuto
 	[TearDown]
 	public void TearDown()
 	{
-		pm.UnloadCache();
-		var l = pm.Objects<CmpBi11OwnpconOthpconNoTblAutoLeftBase>().ResultTable;
-		pm.Delete(l);
-		pm.Save();
-		pm.UnloadCache();
-		decimal count;
-		count = (decimal) new NDOQuery<CmpBi11OwnpconOthpconNoTblAutoLeftBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<CmpBi11OwnpconOthpconNoTblAutoRightBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #2");
-	}
-	[Test, ExpectedException(typeof(NDOException))]
-	public void TestSaveReload()
-	{
-		CreateObjects();
-		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
-	}
-	[Test, ExpectedException(typeof(NDOException))]
-	public void TestSaveReloadNull()
-	{
-		CreateObjects();
-		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
-		ownVar.RelField = null;
-		pm.Save();
-		pm.UnloadCache();
-		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.Null(ownVar.RelField, "There should be no object");
+		try
+		{
+			pm.UnloadCache();
+			var l = pm.Objects<CmpBi11OwnpconOthpconNoTblAutoLeftBase>().ResultTable;
+			pm.Delete(l);
+			pm.Save();
+			pm.UnloadCache();
+			decimal count;
+			count = (decimal) new NDOQuery<CmpBi11OwnpconOthpconNoTblAutoLeftBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #1");
+			count = (decimal) new NDOQuery<CmpBi11OwnpconOthpconNoTblAutoRightBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #2");
+		}
+		catch (Exception)
+		{
+			var handler = pm.GetSqlPassThroughHandler( pm.NDOMapping.Connections.First() );
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( ownVar.GetType() ).TableName}");
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( otherVar.GetType() ).TableName}");
+		}
 	}
 	[Test]
-	public void TestSaveReloadRemove()
+	public void TestSaveReload()
 	{
+		bool thrown = false;
+		try
+		{
+			CreateObjects();
+			QueryOwn();
+			Assert.NotNull(ownVar, "No Query Result");
+			Assert.NotNull(ownVar.RelField, "No related object");
+		}
+		catch (NDOException)
+		{
+			thrown = true;
+		}
+		Assert.AreEqual(true, thrown, "NDOException should have been thrown");
+	}
+	[Test]
+	public void TestSaveReloadNull()
+	{
+		bool thrown = false;
+		try
+		{
+			CreateObjects();
+			QueryOwn();
+			Assert.NotNull(ownVar, "No Query Result");
+			Assert.NotNull(ownVar.RelField, "No related object");
+			ownVar.RelField = null;
+			pm.Save();
+			pm.UnloadCache();
+			QueryOwn();
+			Assert.NotNull(ownVar, "No Query Result");
+			Assert.Null(ownVar.RelField, "There should be no object");
+		}
+		catch (NDOException)
+		{
+			thrown = true;
+		}
+		Assert.AreEqual(true, thrown, "NDOException should have been thrown");
 	}
 	[Test]
 	public void TestRelationHash()
@@ -8413,16 +9019,26 @@ public class TestCmpBi11OwnpconOthpconTblAuto
 	[TearDown]
 	public void TearDown()
 	{
-		pm.UnloadCache();
-		var l = pm.Objects<CmpBi11OwnpconOthpconTblAutoLeftBase>().ResultTable;
-		pm.Delete(l);
-		pm.Save();
-		pm.UnloadCache();
-		decimal count;
-		count = (decimal) new NDOQuery<CmpBi11OwnpconOthpconTblAutoLeftBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<CmpBi11OwnpconOthpconTblAutoRightBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #2");
+		try
+		{
+			pm.UnloadCache();
+			var l = pm.Objects<CmpBi11OwnpconOthpconTblAutoLeftBase>().ResultTable;
+			pm.Delete(l);
+			pm.Save();
+			pm.UnloadCache();
+			decimal count;
+			count = (decimal) new NDOQuery<CmpBi11OwnpconOthpconTblAutoLeftBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #1");
+			count = (decimal) new NDOQuery<CmpBi11OwnpconOthpconTblAutoRightBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #2");
+		}
+		catch (Exception)
+		{
+			var handler = pm.GetSqlPassThroughHandler( pm.NDOMapping.Connections.First() );
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( ownVar.GetType() ).TableName}");
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( otherVar.GetType() ).TableName}");
+			handler.Execute( $"DELETE FROM {pm.NDOMapping.FindClass( ownVar.GetType() ).Relations.First().MappingTable.TableName}" );
+		}
 	}
 	[Test]
 	public void TestSaveReload()
@@ -8445,10 +9061,6 @@ public class TestCmpBi11OwnpconOthpconTblAuto
 		QueryOwn();
 		Assert.NotNull(ownVar, "No Query Result");
 		Assert.Null(ownVar.RelField, "There should be no object");
-	}
-	[Test]
-	public void TestSaveReloadRemove()
-	{
 	}
 	[Test]
 	public void TestChangeKeyHolderLeft()
@@ -8568,16 +9180,26 @@ public class TestCmpDirnOwnpconOthpconTblAuto
 	[TearDown]
 	public void TearDown()
 	{
-		pm.UnloadCache();
-		var l = pm.Objects<CmpDirnOwnpconOthpconTblAutoLeftBase>().ResultTable;
-		pm.Delete(l);
-		pm.Save();
-		pm.UnloadCache();
-		decimal count;
-		count = (decimal) new NDOQuery<CmpDirnOwnpconOthpconTblAutoLeftBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<CmpDirnOwnpconOthpconTblAutoRightBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #2");
+		try
+		{
+			pm.UnloadCache();
+			var l = pm.Objects<CmpDirnOwnpconOthpconTblAutoLeftBase>().ResultTable;
+			pm.Delete(l);
+			pm.Save();
+			pm.UnloadCache();
+			decimal count;
+			count = (decimal) new NDOQuery<CmpDirnOwnpconOthpconTblAutoLeftBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #1");
+			count = (decimal) new NDOQuery<CmpDirnOwnpconOthpconTblAutoRightBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #2");
+		}
+		catch (Exception)
+		{
+			var handler = pm.GetSqlPassThroughHandler( pm.NDOMapping.Connections.First() );
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( ownVar.GetType() ).TableName}");
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( otherVar.GetType() ).TableName}");
+			handler.Execute( $"DELETE FROM {pm.NDOMapping.FindClass( ownVar.GetType() ).Relations.First().MappingTable.TableName}" );
+		}
 	}
 	[Test]
 	public void TestSaveReload()
@@ -8651,16 +9273,26 @@ public class TestCmpBin1OwnpconOthpconTblAuto
 	[TearDown]
 	public void TearDown()
 	{
-		pm.UnloadCache();
-		var l = pm.Objects<CmpBin1OwnpconOthpconTblAutoLeftBase>().ResultTable;
-		pm.Delete(l);
-		pm.Save();
-		pm.UnloadCache();
-		decimal count;
-		count = (decimal) new NDOQuery<CmpBin1OwnpconOthpconTblAutoLeftBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<CmpBin1OwnpconOthpconTblAutoRightBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #2");
+		try
+		{
+			pm.UnloadCache();
+			var l = pm.Objects<CmpBin1OwnpconOthpconTblAutoLeftBase>().ResultTable;
+			pm.Delete(l);
+			pm.Save();
+			pm.UnloadCache();
+			decimal count;
+			count = (decimal) new NDOQuery<CmpBin1OwnpconOthpconTblAutoLeftBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #1");
+			count = (decimal) new NDOQuery<CmpBin1OwnpconOthpconTblAutoRightBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #2");
+		}
+		catch (Exception)
+		{
+			var handler = pm.GetSqlPassThroughHandler( pm.NDOMapping.Connections.First() );
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( ownVar.GetType() ).TableName}");
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( otherVar.GetType() ).TableName}");
+			handler.Execute( $"DELETE FROM {pm.NDOMapping.FindClass( ownVar.GetType() ).Relations.First().MappingTable.TableName}" );
+		}
 	}
 	[Test]
 	public void TestSaveReload()
@@ -8785,16 +9417,26 @@ public class TestCmpBi1nOwnpconOthpconTblAuto
 	[TearDown]
 	public void TearDown()
 	{
-		pm.UnloadCache();
-		var l = pm.Objects<CmpBi1nOwnpconOthpconTblAutoLeftBase>().ResultTable;
-		pm.Delete(l);
-		pm.Save();
-		pm.UnloadCache();
-		decimal count;
-		count = (decimal) new NDOQuery<CmpBi1nOwnpconOthpconTblAutoLeftBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<CmpBi1nOwnpconOthpconTblAutoRightBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #2");
+		try
+		{
+			pm.UnloadCache();
+			var l = pm.Objects<CmpBi1nOwnpconOthpconTblAutoLeftBase>().ResultTable;
+			pm.Delete(l);
+			pm.Save();
+			pm.UnloadCache();
+			decimal count;
+			count = (decimal) new NDOQuery<CmpBi1nOwnpconOthpconTblAutoLeftBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #1");
+			count = (decimal) new NDOQuery<CmpBi1nOwnpconOthpconTblAutoRightBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #2");
+		}
+		catch (Exception)
+		{
+			var handler = pm.GetSqlPassThroughHandler( pm.NDOMapping.Connections.First() );
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( ownVar.GetType() ).TableName}");
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( otherVar.GetType() ).TableName}");
+			handler.Execute( $"DELETE FROM {pm.NDOMapping.FindClass( ownVar.GetType() ).Relations.First().MappingTable.TableName}" );
+		}
 	}
 	[Test]
 	public void TestSaveReload()
@@ -8817,10 +9459,6 @@ public class TestCmpBi1nOwnpconOthpconTblAuto
 		QueryOwn();
 		Assert.NotNull(ownVar, "No Query Result");
 		Assert.Null(ownVar.RelField, "There should be no object");
-	}
-	[Test]
-	public void TestSaveReloadRemove()
-	{
 	}
 	[Test]
 	public void TestChangeKeyHolderLeft()
@@ -8909,16 +9547,26 @@ public class TestCmpBinnOwnpconOthpconTblAuto
 	[TearDown]
 	public void TearDown()
 	{
-		pm.UnloadCache();
-		var l = pm.Objects<CmpBinnOwnpconOthpconTblAutoLeftBase>().ResultTable;
-		pm.Delete(l);
-		pm.Save();
-		pm.UnloadCache();
-		decimal count;
-		count = (decimal) new NDOQuery<CmpBinnOwnpconOthpconTblAutoLeftBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<CmpBinnOwnpconOthpconTblAutoRightBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #2");
+		try
+		{
+			pm.UnloadCache();
+			var l = pm.Objects<CmpBinnOwnpconOthpconTblAutoLeftBase>().ResultTable;
+			pm.Delete(l);
+			pm.Save();
+			pm.UnloadCache();
+			decimal count;
+			count = (decimal) new NDOQuery<CmpBinnOwnpconOthpconTblAutoLeftBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #1");
+			count = (decimal) new NDOQuery<CmpBinnOwnpconOthpconTblAutoRightBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #2");
+		}
+		catch (Exception)
+		{
+			var handler = pm.GetSqlPassThroughHandler( pm.NDOMapping.Connections.First() );
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( ownVar.GetType() ).TableName}");
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( otherVar.GetType() ).TableName}");
+			handler.Execute( $"DELETE FROM {pm.NDOMapping.FindClass( ownVar.GetType() ).Relations.First().MappingTable.TableName}" );
+		}
 	}
 	[Test]
 	public void TestSaveReload()
@@ -9012,20 +9660,29 @@ public class TestAgrDir1NoTblGuid
 	[TearDown]
 	public void TearDown()
 	{
-		pm.UnloadCache();
-		var l = pm.Objects<AgrDir1NoTblGuidLeft>().ResultTable;
-		pm.Delete(l);
-		pm.Save();
-		pm.UnloadCache();
-		var m = pm.Objects<AgrDir1NoTblGuidRight>().ResultTable;
-		pm.Delete(m);
-		pm.Save();
-		pm.UnloadCache();
-		decimal count;
-		count = (decimal) new NDOQuery<AgrDir1NoTblGuidLeft>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<AgrDir1NoTblGuidRight>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #2");
+		try
+		{
+			pm.UnloadCache();
+			var l = pm.Objects<AgrDir1NoTblGuidLeft>().ResultTable;
+			pm.Delete(l);
+			pm.Save();
+			pm.UnloadCache();
+			var m = pm.Objects<AgrDir1NoTblGuidRight>().ResultTable;
+			pm.Delete(m);
+			pm.Save();
+			pm.UnloadCache();
+			decimal count;
+			count = (decimal) new NDOQuery<AgrDir1NoTblGuidLeft>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #1");
+			count = (decimal) new NDOQuery<AgrDir1NoTblGuidRight>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #2");
+		}
+		catch (Exception)
+		{
+			var handler = pm.GetSqlPassThroughHandler( pm.NDOMapping.Connections.First() );
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( ownVar.GetType() ).TableName}");
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( otherVar.GetType() ).TableName}");
+		}
 	}
 	[Test]
 	public void TestSaveReload()
@@ -9048,10 +9705,6 @@ public class TestAgrDir1NoTblGuid
 		QueryOwn();
 		Assert.NotNull(ownVar, "No Query Result");
 		Assert.Null(ownVar.RelField, "There should be no object");
-	}
-	[Test]
-	public void TestSaveReloadRemove()
-	{
 	}
 	[Test]
 	public void TestChangeKeyHolderLeft()
@@ -9121,20 +9774,30 @@ public class TestAgrDir1TblGuid
 	[TearDown]
 	public void TearDown()
 	{
-		pm.UnloadCache();
-		var l = pm.Objects<AgrDir1TblGuidLeft>().ResultTable;
-		pm.Delete(l);
-		pm.Save();
-		pm.UnloadCache();
-		var m = pm.Objects<AgrDir1TblGuidRight>().ResultTable;
-		pm.Delete(m);
-		pm.Save();
-		pm.UnloadCache();
-		decimal count;
-		count = (decimal) new NDOQuery<AgrDir1TblGuidLeft>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<AgrDir1TblGuidRight>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #2");
+		try
+		{
+			pm.UnloadCache();
+			var l = pm.Objects<AgrDir1TblGuidLeft>().ResultTable;
+			pm.Delete(l);
+			pm.Save();
+			pm.UnloadCache();
+			var m = pm.Objects<AgrDir1TblGuidRight>().ResultTable;
+			pm.Delete(m);
+			pm.Save();
+			pm.UnloadCache();
+			decimal count;
+			count = (decimal) new NDOQuery<AgrDir1TblGuidLeft>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #1");
+			count = (decimal) new NDOQuery<AgrDir1TblGuidRight>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #2");
+		}
+		catch (Exception)
+		{
+			var handler = pm.GetSqlPassThroughHandler( pm.NDOMapping.Connections.First() );
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( ownVar.GetType() ).TableName}");
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( otherVar.GetType() ).TableName}");
+			handler.Execute( $"DELETE FROM {pm.NDOMapping.FindClass( ownVar.GetType() ).Relations.First().MappingTable.TableName}" );
+		}
 	}
 	[Test]
 	public void TestSaveReload()
@@ -9157,10 +9820,6 @@ public class TestAgrDir1TblGuid
 		QueryOwn();
 		Assert.NotNull(ownVar, "No Query Result");
 		Assert.Null(ownVar.RelField, "There should be no object");
-	}
-	[Test]
-	public void TestSaveReloadRemove()
-	{
 	}
 	[Test]
 	public void TestChangeKeyHolderLeft()
@@ -9230,20 +9889,29 @@ public class TestAgrBi11NoTblGuid
 	[TearDown]
 	public void TearDown()
 	{
-		pm.UnloadCache();
-		var l = pm.Objects<AgrBi11NoTblGuidLeft>().ResultTable;
-		pm.Delete(l);
-		pm.Save();
-		pm.UnloadCache();
-		var m = pm.Objects<AgrBi11NoTblGuidRight>().ResultTable;
-		pm.Delete(m);
-		pm.Save();
-		pm.UnloadCache();
-		decimal count;
-		count = (decimal) new NDOQuery<AgrBi11NoTblGuidLeft>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<AgrBi11NoTblGuidRight>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #2");
+		try
+		{
+			pm.UnloadCache();
+			var l = pm.Objects<AgrBi11NoTblGuidLeft>().ResultTable;
+			pm.Delete(l);
+			pm.Save();
+			pm.UnloadCache();
+			var m = pm.Objects<AgrBi11NoTblGuidRight>().ResultTable;
+			pm.Delete(m);
+			pm.Save();
+			pm.UnloadCache();
+			decimal count;
+			count = (decimal) new NDOQuery<AgrBi11NoTblGuidLeft>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #1");
+			count = (decimal) new NDOQuery<AgrBi11NoTblGuidRight>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #2");
+		}
+		catch (Exception)
+		{
+			var handler = pm.GetSqlPassThroughHandler( pm.NDOMapping.Connections.First() );
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( ownVar.GetType() ).TableName}");
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( otherVar.GetType() ).TableName}");
+		}
 	}
 	[Test]
 	public void TestSaveReload()
@@ -9266,10 +9934,6 @@ public class TestAgrBi11NoTblGuid
 		QueryOwn();
 		Assert.NotNull(ownVar, "No Query Result");
 		Assert.Null(ownVar.RelField, "There should be no object");
-	}
-	[Test]
-	public void TestSaveReloadRemove()
-	{
 	}
 	[Test]
 	public void TestChangeKeyHolderLeft()
@@ -9380,20 +10044,30 @@ public class TestAgrBi11TblGuid
 	[TearDown]
 	public void TearDown()
 	{
-		pm.UnloadCache();
-		var l = pm.Objects<AgrBi11TblGuidLeft>().ResultTable;
-		pm.Delete(l);
-		pm.Save();
-		pm.UnloadCache();
-		var m = pm.Objects<AgrBi11TblGuidRight>().ResultTable;
-		pm.Delete(m);
-		pm.Save();
-		pm.UnloadCache();
-		decimal count;
-		count = (decimal) new NDOQuery<AgrBi11TblGuidLeft>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<AgrBi11TblGuidRight>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #2");
+		try
+		{
+			pm.UnloadCache();
+			var l = pm.Objects<AgrBi11TblGuidLeft>().ResultTable;
+			pm.Delete(l);
+			pm.Save();
+			pm.UnloadCache();
+			var m = pm.Objects<AgrBi11TblGuidRight>().ResultTable;
+			pm.Delete(m);
+			pm.Save();
+			pm.UnloadCache();
+			decimal count;
+			count = (decimal) new NDOQuery<AgrBi11TblGuidLeft>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #1");
+			count = (decimal) new NDOQuery<AgrBi11TblGuidRight>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #2");
+		}
+		catch (Exception)
+		{
+			var handler = pm.GetSqlPassThroughHandler( pm.NDOMapping.Connections.First() );
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( ownVar.GetType() ).TableName}");
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( otherVar.GetType() ).TableName}");
+			handler.Execute( $"DELETE FROM {pm.NDOMapping.FindClass( ownVar.GetType() ).Relations.First().MappingTable.TableName}" );
+		}
 	}
 	[Test]
 	public void TestSaveReload()
@@ -9416,10 +10090,6 @@ public class TestAgrBi11TblGuid
 		QueryOwn();
 		Assert.NotNull(ownVar, "No Query Result");
 		Assert.Null(ownVar.RelField, "There should be no object");
-	}
-	[Test]
-	public void TestSaveReloadRemove()
-	{
 	}
 	[Test]
 	public void TestChangeKeyHolderLeft()
@@ -9530,20 +10200,29 @@ public class TestAgrDirnNoTblGuid
 	[TearDown]
 	public void TearDown()
 	{
-		pm.UnloadCache();
-		var l = pm.Objects<AgrDirnNoTblGuidLeft>().ResultTable;
-		pm.Delete(l);
-		pm.Save();
-		pm.UnloadCache();
-		var m = pm.Objects<AgrDirnNoTblGuidRight>().ResultTable;
-		pm.Delete(m);
-		pm.Save();
-		pm.UnloadCache();
-		decimal count;
-		count = (decimal) new NDOQuery<AgrDirnNoTblGuidLeft>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<AgrDirnNoTblGuidRight>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #2");
+		try
+		{
+			pm.UnloadCache();
+			var l = pm.Objects<AgrDirnNoTblGuidLeft>().ResultTable;
+			pm.Delete(l);
+			pm.Save();
+			pm.UnloadCache();
+			var m = pm.Objects<AgrDirnNoTblGuidRight>().ResultTable;
+			pm.Delete(m);
+			pm.Save();
+			pm.UnloadCache();
+			decimal count;
+			count = (decimal) new NDOQuery<AgrDirnNoTblGuidLeft>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #1");
+			count = (decimal) new NDOQuery<AgrDirnNoTblGuidRight>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #2");
+		}
+		catch (Exception)
+		{
+			var handler = pm.GetSqlPassThroughHandler( pm.NDOMapping.Connections.First() );
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( ownVar.GetType() ).TableName}");
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( otherVar.GetType() ).TableName}");
+		}
 	}
 	[Test]
 	public void TestSaveReload()
@@ -9618,20 +10297,30 @@ public class TestAgrDirnTblGuid
 	[TearDown]
 	public void TearDown()
 	{
-		pm.UnloadCache();
-		var l = pm.Objects<AgrDirnTblGuidLeft>().ResultTable;
-		pm.Delete(l);
-		pm.Save();
-		pm.UnloadCache();
-		var m = pm.Objects<AgrDirnTblGuidRight>().ResultTable;
-		pm.Delete(m);
-		pm.Save();
-		pm.UnloadCache();
-		decimal count;
-		count = (decimal) new NDOQuery<AgrDirnTblGuidLeft>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<AgrDirnTblGuidRight>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #2");
+		try
+		{
+			pm.UnloadCache();
+			var l = pm.Objects<AgrDirnTblGuidLeft>().ResultTable;
+			pm.Delete(l);
+			pm.Save();
+			pm.UnloadCache();
+			var m = pm.Objects<AgrDirnTblGuidRight>().ResultTable;
+			pm.Delete(m);
+			pm.Save();
+			pm.UnloadCache();
+			decimal count;
+			count = (decimal) new NDOQuery<AgrDirnTblGuidLeft>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #1");
+			count = (decimal) new NDOQuery<AgrDirnTblGuidRight>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #2");
+		}
+		catch (Exception)
+		{
+			var handler = pm.GetSqlPassThroughHandler( pm.NDOMapping.Connections.First() );
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( ownVar.GetType() ).TableName}");
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( otherVar.GetType() ).TableName}");
+			handler.Execute( $"DELETE FROM {pm.NDOMapping.FindClass( ownVar.GetType() ).Relations.First().MappingTable.TableName}" );
+		}
 	}
 	[Test]
 	public void TestSaveReload()
@@ -9706,20 +10395,29 @@ public class TestAgrBin1NoTblGuid
 	[TearDown]
 	public void TearDown()
 	{
-		pm.UnloadCache();
-		var l = pm.Objects<AgrBin1NoTblGuidLeft>().ResultTable;
-		pm.Delete(l);
-		pm.Save();
-		pm.UnloadCache();
-		var m = pm.Objects<AgrBin1NoTblGuidRight>().ResultTable;
-		pm.Delete(m);
-		pm.Save();
-		pm.UnloadCache();
-		decimal count;
-		count = (decimal) new NDOQuery<AgrBin1NoTblGuidLeft>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<AgrBin1NoTblGuidRight>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #2");
+		try
+		{
+			pm.UnloadCache();
+			var l = pm.Objects<AgrBin1NoTblGuidLeft>().ResultTable;
+			pm.Delete(l);
+			pm.Save();
+			pm.UnloadCache();
+			var m = pm.Objects<AgrBin1NoTblGuidRight>().ResultTable;
+			pm.Delete(m);
+			pm.Save();
+			pm.UnloadCache();
+			decimal count;
+			count = (decimal) new NDOQuery<AgrBin1NoTblGuidLeft>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #1");
+			count = (decimal) new NDOQuery<AgrBin1NoTblGuidRight>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #2");
+		}
+		catch (Exception)
+		{
+			var handler = pm.GetSqlPassThroughHandler( pm.NDOMapping.Connections.First() );
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( ownVar.GetType() ).TableName}");
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( otherVar.GetType() ).TableName}");
+		}
 	}
 	[Test]
 	public void TestSaveReload()
@@ -9835,20 +10533,30 @@ public class TestAgrBin1TblGuid
 	[TearDown]
 	public void TearDown()
 	{
-		pm.UnloadCache();
-		var l = pm.Objects<AgrBin1TblGuidLeft>().ResultTable;
-		pm.Delete(l);
-		pm.Save();
-		pm.UnloadCache();
-		var m = pm.Objects<AgrBin1TblGuidRight>().ResultTable;
-		pm.Delete(m);
-		pm.Save();
-		pm.UnloadCache();
-		decimal count;
-		count = (decimal) new NDOQuery<AgrBin1TblGuidLeft>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<AgrBin1TblGuidRight>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #2");
+		try
+		{
+			pm.UnloadCache();
+			var l = pm.Objects<AgrBin1TblGuidLeft>().ResultTable;
+			pm.Delete(l);
+			pm.Save();
+			pm.UnloadCache();
+			var m = pm.Objects<AgrBin1TblGuidRight>().ResultTable;
+			pm.Delete(m);
+			pm.Save();
+			pm.UnloadCache();
+			decimal count;
+			count = (decimal) new NDOQuery<AgrBin1TblGuidLeft>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #1");
+			count = (decimal) new NDOQuery<AgrBin1TblGuidRight>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #2");
+		}
+		catch (Exception)
+		{
+			var handler = pm.GetSqlPassThroughHandler( pm.NDOMapping.Connections.First() );
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( ownVar.GetType() ).TableName}");
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( otherVar.GetType() ).TableName}");
+			handler.Execute( $"DELETE FROM {pm.NDOMapping.FindClass( ownVar.GetType() ).Relations.First().MappingTable.TableName}" );
+		}
 	}
 	[Test]
 	public void TestSaveReload()
@@ -9964,20 +10672,29 @@ public class TestAgrBi1nNoTblGuid
 	[TearDown]
 	public void TearDown()
 	{
-		pm.UnloadCache();
-		var l = pm.Objects<AgrBi1nNoTblGuidLeft>().ResultTable;
-		pm.Delete(l);
-		pm.Save();
-		pm.UnloadCache();
-		var m = pm.Objects<AgrBi1nNoTblGuidRight>().ResultTable;
-		pm.Delete(m);
-		pm.Save();
-		pm.UnloadCache();
-		decimal count;
-		count = (decimal) new NDOQuery<AgrBi1nNoTblGuidLeft>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<AgrBi1nNoTblGuidRight>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #2");
+		try
+		{
+			pm.UnloadCache();
+			var l = pm.Objects<AgrBi1nNoTblGuidLeft>().ResultTable;
+			pm.Delete(l);
+			pm.Save();
+			pm.UnloadCache();
+			var m = pm.Objects<AgrBi1nNoTblGuidRight>().ResultTable;
+			pm.Delete(m);
+			pm.Save();
+			pm.UnloadCache();
+			decimal count;
+			count = (decimal) new NDOQuery<AgrBi1nNoTblGuidLeft>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #1");
+			count = (decimal) new NDOQuery<AgrBi1nNoTblGuidRight>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #2");
+		}
+		catch (Exception)
+		{
+			var handler = pm.GetSqlPassThroughHandler( pm.NDOMapping.Connections.First() );
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( ownVar.GetType() ).TableName}");
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( otherVar.GetType() ).TableName}");
+		}
 	}
 	[Test]
 	public void TestSaveReload()
@@ -10000,10 +10717,6 @@ public class TestAgrBi1nNoTblGuid
 		QueryOwn();
 		Assert.NotNull(ownVar, "No Query Result");
 		Assert.Null(ownVar.RelField, "There should be no object");
-	}
-	[Test]
-	public void TestSaveReloadRemove()
-	{
 	}
 	[Test]
 	public void TestChangeKeyHolderLeft()
@@ -10083,20 +10796,30 @@ public class TestAgrBi1nTblGuid
 	[TearDown]
 	public void TearDown()
 	{
-		pm.UnloadCache();
-		var l = pm.Objects<AgrBi1nTblGuidLeft>().ResultTable;
-		pm.Delete(l);
-		pm.Save();
-		pm.UnloadCache();
-		var m = pm.Objects<AgrBi1nTblGuidRight>().ResultTable;
-		pm.Delete(m);
-		pm.Save();
-		pm.UnloadCache();
-		decimal count;
-		count = (decimal) new NDOQuery<AgrBi1nTblGuidLeft>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<AgrBi1nTblGuidRight>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #2");
+		try
+		{
+			pm.UnloadCache();
+			var l = pm.Objects<AgrBi1nTblGuidLeft>().ResultTable;
+			pm.Delete(l);
+			pm.Save();
+			pm.UnloadCache();
+			var m = pm.Objects<AgrBi1nTblGuidRight>().ResultTable;
+			pm.Delete(m);
+			pm.Save();
+			pm.UnloadCache();
+			decimal count;
+			count = (decimal) new NDOQuery<AgrBi1nTblGuidLeft>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #1");
+			count = (decimal) new NDOQuery<AgrBi1nTblGuidRight>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #2");
+		}
+		catch (Exception)
+		{
+			var handler = pm.GetSqlPassThroughHandler( pm.NDOMapping.Connections.First() );
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( ownVar.GetType() ).TableName}");
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( otherVar.GetType() ).TableName}");
+			handler.Execute( $"DELETE FROM {pm.NDOMapping.FindClass( ownVar.GetType() ).Relations.First().MappingTable.TableName}" );
+		}
 	}
 	[Test]
 	public void TestSaveReload()
@@ -10119,10 +10842,6 @@ public class TestAgrBi1nTblGuid
 		QueryOwn();
 		Assert.NotNull(ownVar, "No Query Result");
 		Assert.Null(ownVar.RelField, "There should be no object");
-	}
-	[Test]
-	public void TestSaveReloadRemove()
-	{
 	}
 	[Test]
 	public void TestChangeKeyHolderLeft()
@@ -10202,20 +10921,30 @@ public class TestAgrBinnTblGuid
 	[TearDown]
 	public void TearDown()
 	{
-		pm.UnloadCache();
-		var l = pm.Objects<AgrBinnTblGuidLeft>().ResultTable;
-		pm.Delete(l);
-		pm.Save();
-		pm.UnloadCache();
-		var m = pm.Objects<AgrBinnTblGuidRight>().ResultTable;
-		pm.Delete(m);
-		pm.Save();
-		pm.UnloadCache();
-		decimal count;
-		count = (decimal) new NDOQuery<AgrBinnTblGuidLeft>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<AgrBinnTblGuidRight>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #2");
+		try
+		{
+			pm.UnloadCache();
+			var l = pm.Objects<AgrBinnTblGuidLeft>().ResultTable;
+			pm.Delete(l);
+			pm.Save();
+			pm.UnloadCache();
+			var m = pm.Objects<AgrBinnTblGuidRight>().ResultTable;
+			pm.Delete(m);
+			pm.Save();
+			pm.UnloadCache();
+			decimal count;
+			count = (decimal) new NDOQuery<AgrBinnTblGuidLeft>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #1");
+			count = (decimal) new NDOQuery<AgrBinnTblGuidRight>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #2");
+		}
+		catch (Exception)
+		{
+			var handler = pm.GetSqlPassThroughHandler( pm.NDOMapping.Connections.First() );
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( ownVar.GetType() ).TableName}");
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( otherVar.GetType() ).TableName}");
+			handler.Execute( $"DELETE FROM {pm.NDOMapping.FindClass( ownVar.GetType() ).Relations.First().MappingTable.TableName}" );
+		}
 	}
 	[Test]
 	public void TestSaveReload()
@@ -10300,16 +11029,25 @@ public class TestCmpDir1NoTblGuid
 	[TearDown]
 	public void TearDown()
 	{
-		pm.UnloadCache();
-		var l = pm.Objects<CmpDir1NoTblGuidLeft>().ResultTable;
-		pm.Delete(l);
-		pm.Save();
-		pm.UnloadCache();
-		decimal count;
-		count = (decimal) new NDOQuery<CmpDir1NoTblGuidLeft>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<CmpDir1NoTblGuidRight>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #2");
+		try
+		{
+			pm.UnloadCache();
+			var l = pm.Objects<CmpDir1NoTblGuidLeft>().ResultTable;
+			pm.Delete(l);
+			pm.Save();
+			pm.UnloadCache();
+			decimal count;
+			count = (decimal) new NDOQuery<CmpDir1NoTblGuidLeft>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #1");
+			count = (decimal) new NDOQuery<CmpDir1NoTblGuidRight>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #2");
+		}
+		catch (Exception)
+		{
+			var handler = pm.GetSqlPassThroughHandler( pm.NDOMapping.Connections.First() );
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( ownVar.GetType() ).TableName}");
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( otherVar.GetType() ).TableName}");
+		}
 	}
 	[Test]
 	public void TestSaveReload()
@@ -10332,10 +11070,6 @@ public class TestCmpDir1NoTblGuid
 		QueryOwn();
 		Assert.NotNull(ownVar, "No Query Result");
 		Assert.Null(ownVar.RelField, "There should be no object");
-	}
-	[Test]
-	public void TestSaveReloadRemove()
-	{
 	}
 	[Test]
 	public void TestChangeKeyHolderLeft()
@@ -10404,16 +11138,26 @@ public class TestCmpDir1TblGuid
 	[TearDown]
 	public void TearDown()
 	{
-		pm.UnloadCache();
-		var l = pm.Objects<CmpDir1TblGuidLeft>().ResultTable;
-		pm.Delete(l);
-		pm.Save();
-		pm.UnloadCache();
-		decimal count;
-		count = (decimal) new NDOQuery<CmpDir1TblGuidLeft>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<CmpDir1TblGuidRight>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #2");
+		try
+		{
+			pm.UnloadCache();
+			var l = pm.Objects<CmpDir1TblGuidLeft>().ResultTable;
+			pm.Delete(l);
+			pm.Save();
+			pm.UnloadCache();
+			decimal count;
+			count = (decimal) new NDOQuery<CmpDir1TblGuidLeft>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #1");
+			count = (decimal) new NDOQuery<CmpDir1TblGuidRight>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #2");
+		}
+		catch (Exception)
+		{
+			var handler = pm.GetSqlPassThroughHandler( pm.NDOMapping.Connections.First() );
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( ownVar.GetType() ).TableName}");
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( otherVar.GetType() ).TableName}");
+			handler.Execute( $"DELETE FROM {pm.NDOMapping.FindClass( ownVar.GetType() ).Relations.First().MappingTable.TableName}" );
+		}
 	}
 	[Test]
 	public void TestSaveReload()
@@ -10436,10 +11180,6 @@ public class TestCmpDir1TblGuid
 		QueryOwn();
 		Assert.NotNull(ownVar, "No Query Result");
 		Assert.Null(ownVar.RelField, "There should be no object");
-	}
-	[Test]
-	public void TestSaveReloadRemove()
-	{
 	}
 	[Test]
 	public void TestChangeKeyHolderLeft()
@@ -10508,16 +11248,25 @@ public class TestCmpBi11NoTblGuid
 	[TearDown]
 	public void TearDown()
 	{
-		pm.UnloadCache();
-		var l = pm.Objects<CmpBi11NoTblGuidLeft>().ResultTable;
-		pm.Delete(l);
-		pm.Save();
-		pm.UnloadCache();
-		decimal count;
-		count = (decimal) new NDOQuery<CmpBi11NoTblGuidLeft>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<CmpBi11NoTblGuidRight>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #2");
+		try
+		{
+			pm.UnloadCache();
+			var l = pm.Objects<CmpBi11NoTblGuidLeft>().ResultTable;
+			pm.Delete(l);
+			pm.Save();
+			pm.UnloadCache();
+			decimal count;
+			count = (decimal) new NDOQuery<CmpBi11NoTblGuidLeft>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #1");
+			count = (decimal) new NDOQuery<CmpBi11NoTblGuidRight>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #2");
+		}
+		catch (Exception)
+		{
+			var handler = pm.GetSqlPassThroughHandler( pm.NDOMapping.Connections.First() );
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( ownVar.GetType() ).TableName}");
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( otherVar.GetType() ).TableName}");
+		}
 	}
 	[Test]
 	public void TestSaveReload()
@@ -10540,10 +11289,6 @@ public class TestCmpBi11NoTblGuid
 		QueryOwn();
 		Assert.NotNull(ownVar, "No Query Result");
 		Assert.Null(ownVar.RelField, "There should be no object");
-	}
-	[Test]
-	public void TestSaveReloadRemove()
-	{
 	}
 	[Test]
 	public void TestChangeKeyHolderLeft()
@@ -10653,16 +11398,26 @@ public class TestCmpBi11TblGuid
 	[TearDown]
 	public void TearDown()
 	{
-		pm.UnloadCache();
-		var l = pm.Objects<CmpBi11TblGuidLeft>().ResultTable;
-		pm.Delete(l);
-		pm.Save();
-		pm.UnloadCache();
-		decimal count;
-		count = (decimal) new NDOQuery<CmpBi11TblGuidLeft>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<CmpBi11TblGuidRight>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #2");
+		try
+		{
+			pm.UnloadCache();
+			var l = pm.Objects<CmpBi11TblGuidLeft>().ResultTable;
+			pm.Delete(l);
+			pm.Save();
+			pm.UnloadCache();
+			decimal count;
+			count = (decimal) new NDOQuery<CmpBi11TblGuidLeft>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #1");
+			count = (decimal) new NDOQuery<CmpBi11TblGuidRight>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #2");
+		}
+		catch (Exception)
+		{
+			var handler = pm.GetSqlPassThroughHandler( pm.NDOMapping.Connections.First() );
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( ownVar.GetType() ).TableName}");
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( otherVar.GetType() ).TableName}");
+			handler.Execute( $"DELETE FROM {pm.NDOMapping.FindClass( ownVar.GetType() ).Relations.First().MappingTable.TableName}" );
+		}
 	}
 	[Test]
 	public void TestSaveReload()
@@ -10685,10 +11440,6 @@ public class TestCmpBi11TblGuid
 		QueryOwn();
 		Assert.NotNull(ownVar, "No Query Result");
 		Assert.Null(ownVar.RelField, "There should be no object");
-	}
-	[Test]
-	public void TestSaveReloadRemove()
-	{
 	}
 	[Test]
 	public void TestChangeKeyHolderLeft()
@@ -10798,16 +11549,25 @@ public class TestCmpDirnNoTblGuid
 	[TearDown]
 	public void TearDown()
 	{
-		pm.UnloadCache();
-		var l = pm.Objects<CmpDirnNoTblGuidLeft>().ResultTable;
-		pm.Delete(l);
-		pm.Save();
-		pm.UnloadCache();
-		decimal count;
-		count = (decimal) new NDOQuery<CmpDirnNoTblGuidLeft>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<CmpDirnNoTblGuidRight>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #2");
+		try
+		{
+			pm.UnloadCache();
+			var l = pm.Objects<CmpDirnNoTblGuidLeft>().ResultTable;
+			pm.Delete(l);
+			pm.Save();
+			pm.UnloadCache();
+			decimal count;
+			count = (decimal) new NDOQuery<CmpDirnNoTblGuidLeft>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #1");
+			count = (decimal) new NDOQuery<CmpDirnNoTblGuidRight>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #2");
+		}
+		catch (Exception)
+		{
+			var handler = pm.GetSqlPassThroughHandler( pm.NDOMapping.Connections.First() );
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( ownVar.GetType() ).TableName}");
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( otherVar.GetType() ).TableName}");
+		}
 	}
 	[Test]
 	public void TestSaveReload()
@@ -10881,16 +11641,26 @@ public class TestCmpDirnTblGuid
 	[TearDown]
 	public void TearDown()
 	{
-		pm.UnloadCache();
-		var l = pm.Objects<CmpDirnTblGuidLeft>().ResultTable;
-		pm.Delete(l);
-		pm.Save();
-		pm.UnloadCache();
-		decimal count;
-		count = (decimal) new NDOQuery<CmpDirnTblGuidLeft>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<CmpDirnTblGuidRight>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #2");
+		try
+		{
+			pm.UnloadCache();
+			var l = pm.Objects<CmpDirnTblGuidLeft>().ResultTable;
+			pm.Delete(l);
+			pm.Save();
+			pm.UnloadCache();
+			decimal count;
+			count = (decimal) new NDOQuery<CmpDirnTblGuidLeft>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #1");
+			count = (decimal) new NDOQuery<CmpDirnTblGuidRight>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #2");
+		}
+		catch (Exception)
+		{
+			var handler = pm.GetSqlPassThroughHandler( pm.NDOMapping.Connections.First() );
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( ownVar.GetType() ).TableName}");
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( otherVar.GetType() ).TableName}");
+			handler.Execute( $"DELETE FROM {pm.NDOMapping.FindClass( ownVar.GetType() ).Relations.First().MappingTable.TableName}" );
+		}
 	}
 	[Test]
 	public void TestSaveReload()
@@ -10964,16 +11734,25 @@ public class TestCmpBin1NoTblGuid
 	[TearDown]
 	public void TearDown()
 	{
-		pm.UnloadCache();
-		var l = pm.Objects<CmpBin1NoTblGuidLeft>().ResultTable;
-		pm.Delete(l);
-		pm.Save();
-		pm.UnloadCache();
-		decimal count;
-		count = (decimal) new NDOQuery<CmpBin1NoTblGuidLeft>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<CmpBin1NoTblGuidRight>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #2");
+		try
+		{
+			pm.UnloadCache();
+			var l = pm.Objects<CmpBin1NoTblGuidLeft>().ResultTable;
+			pm.Delete(l);
+			pm.Save();
+			pm.UnloadCache();
+			decimal count;
+			count = (decimal) new NDOQuery<CmpBin1NoTblGuidLeft>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #1");
+			count = (decimal) new NDOQuery<CmpBin1NoTblGuidRight>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #2");
+		}
+		catch (Exception)
+		{
+			var handler = pm.GetSqlPassThroughHandler( pm.NDOMapping.Connections.First() );
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( ownVar.GetType() ).TableName}");
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( otherVar.GetType() ).TableName}");
+		}
 	}
 	[Test]
 	public void TestSaveReload()
@@ -11088,16 +11867,26 @@ public class TestCmpBin1TblGuid
 	[TearDown]
 	public void TearDown()
 	{
-		pm.UnloadCache();
-		var l = pm.Objects<CmpBin1TblGuidLeft>().ResultTable;
-		pm.Delete(l);
-		pm.Save();
-		pm.UnloadCache();
-		decimal count;
-		count = (decimal) new NDOQuery<CmpBin1TblGuidLeft>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<CmpBin1TblGuidRight>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #2");
+		try
+		{
+			pm.UnloadCache();
+			var l = pm.Objects<CmpBin1TblGuidLeft>().ResultTable;
+			pm.Delete(l);
+			pm.Save();
+			pm.UnloadCache();
+			decimal count;
+			count = (decimal) new NDOQuery<CmpBin1TblGuidLeft>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #1");
+			count = (decimal) new NDOQuery<CmpBin1TblGuidRight>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #2");
+		}
+		catch (Exception)
+		{
+			var handler = pm.GetSqlPassThroughHandler( pm.NDOMapping.Connections.First() );
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( ownVar.GetType() ).TableName}");
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( otherVar.GetType() ).TableName}");
+			handler.Execute( $"DELETE FROM {pm.NDOMapping.FindClass( ownVar.GetType() ).Relations.First().MappingTable.TableName}" );
+		}
 	}
 	[Test]
 	public void TestSaveReload()
@@ -11212,16 +12001,25 @@ public class TestCmpBi1nNoTblGuid
 	[TearDown]
 	public void TearDown()
 	{
-		pm.UnloadCache();
-		var l = pm.Objects<CmpBi1nNoTblGuidLeft>().ResultTable;
-		pm.Delete(l);
-		pm.Save();
-		pm.UnloadCache();
-		decimal count;
-		count = (decimal) new NDOQuery<CmpBi1nNoTblGuidLeft>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<CmpBi1nNoTblGuidRight>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #2");
+		try
+		{
+			pm.UnloadCache();
+			var l = pm.Objects<CmpBi1nNoTblGuidLeft>().ResultTable;
+			pm.Delete(l);
+			pm.Save();
+			pm.UnloadCache();
+			decimal count;
+			count = (decimal) new NDOQuery<CmpBi1nNoTblGuidLeft>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #1");
+			count = (decimal) new NDOQuery<CmpBi1nNoTblGuidRight>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #2");
+		}
+		catch (Exception)
+		{
+			var handler = pm.GetSqlPassThroughHandler( pm.NDOMapping.Connections.First() );
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( ownVar.GetType() ).TableName}");
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( otherVar.GetType() ).TableName}");
+		}
 	}
 	[Test]
 	public void TestSaveReload()
@@ -11244,10 +12042,6 @@ public class TestCmpBi1nNoTblGuid
 		QueryOwn();
 		Assert.NotNull(ownVar, "No Query Result");
 		Assert.Null(ownVar.RelField, "There should be no object");
-	}
-	[Test]
-	public void TestSaveReloadRemove()
-	{
 	}
 	[Test]
 	public void TestChangeKeyHolderLeft()
@@ -11326,16 +12120,26 @@ public class TestCmpBi1nTblGuid
 	[TearDown]
 	public void TearDown()
 	{
-		pm.UnloadCache();
-		var l = pm.Objects<CmpBi1nTblGuidLeft>().ResultTable;
-		pm.Delete(l);
-		pm.Save();
-		pm.UnloadCache();
-		decimal count;
-		count = (decimal) new NDOQuery<CmpBi1nTblGuidLeft>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<CmpBi1nTblGuidRight>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #2");
+		try
+		{
+			pm.UnloadCache();
+			var l = pm.Objects<CmpBi1nTblGuidLeft>().ResultTable;
+			pm.Delete(l);
+			pm.Save();
+			pm.UnloadCache();
+			decimal count;
+			count = (decimal) new NDOQuery<CmpBi1nTblGuidLeft>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #1");
+			count = (decimal) new NDOQuery<CmpBi1nTblGuidRight>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #2");
+		}
+		catch (Exception)
+		{
+			var handler = pm.GetSqlPassThroughHandler( pm.NDOMapping.Connections.First() );
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( ownVar.GetType() ).TableName}");
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( otherVar.GetType() ).TableName}");
+			handler.Execute( $"DELETE FROM {pm.NDOMapping.FindClass( ownVar.GetType() ).Relations.First().MappingTable.TableName}" );
+		}
 	}
 	[Test]
 	public void TestSaveReload()
@@ -11358,10 +12162,6 @@ public class TestCmpBi1nTblGuid
 		QueryOwn();
 		Assert.NotNull(ownVar, "No Query Result");
 		Assert.Null(ownVar.RelField, "There should be no object");
-	}
-	[Test]
-	public void TestSaveReloadRemove()
-	{
 	}
 	[Test]
 	public void TestChangeKeyHolderLeft()
@@ -11440,16 +12240,26 @@ public class TestCmpBinnTblGuid
 	[TearDown]
 	public void TearDown()
 	{
-		pm.UnloadCache();
-		var l = pm.Objects<CmpBinnTblGuidLeft>().ResultTable;
-		pm.Delete(l);
-		pm.Save();
-		pm.UnloadCache();
-		decimal count;
-		count = (decimal) new NDOQuery<CmpBinnTblGuidLeft>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<CmpBinnTblGuidRight>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #2");
+		try
+		{
+			pm.UnloadCache();
+			var l = pm.Objects<CmpBinnTblGuidLeft>().ResultTable;
+			pm.Delete(l);
+			pm.Save();
+			pm.UnloadCache();
+			decimal count;
+			count = (decimal) new NDOQuery<CmpBinnTblGuidLeft>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #1");
+			count = (decimal) new NDOQuery<CmpBinnTblGuidRight>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #2");
+		}
+		catch (Exception)
+		{
+			var handler = pm.GetSqlPassThroughHandler( pm.NDOMapping.Connections.First() );
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( ownVar.GetType() ).TableName}");
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( otherVar.GetType() ).TableName}");
+			handler.Execute( $"DELETE FROM {pm.NDOMapping.FindClass( ownVar.GetType() ).Relations.First().MappingTable.TableName}" );
+		}
 	}
 	[Test]
 	public void TestSaveReload()
@@ -11533,20 +12343,29 @@ public class TestAgrDir1OwnpconNoTblGuid
 	[TearDown]
 	public void TearDown()
 	{
-		pm.UnloadCache();
-		var l = pm.Objects<AgrDir1OwnpconNoTblGuidLeftBase>().ResultTable;
-		pm.Delete(l);
-		pm.Save();
-		pm.UnloadCache();
-		var m = pm.Objects<AgrDir1OwnpconNoTblGuidRight>().ResultTable;
-		pm.Delete(m);
-		pm.Save();
-		pm.UnloadCache();
-		decimal count;
-		count = (decimal) new NDOQuery<AgrDir1OwnpconNoTblGuidLeftBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<AgrDir1OwnpconNoTblGuidRight>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #2");
+		try
+		{
+			pm.UnloadCache();
+			var l = pm.Objects<AgrDir1OwnpconNoTblGuidLeftBase>().ResultTable;
+			pm.Delete(l);
+			pm.Save();
+			pm.UnloadCache();
+			var m = pm.Objects<AgrDir1OwnpconNoTblGuidRight>().ResultTable;
+			pm.Delete(m);
+			pm.Save();
+			pm.UnloadCache();
+			decimal count;
+			count = (decimal) new NDOQuery<AgrDir1OwnpconNoTblGuidLeftBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #1");
+			count = (decimal) new NDOQuery<AgrDir1OwnpconNoTblGuidRight>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #2");
+		}
+		catch (Exception)
+		{
+			var handler = pm.GetSqlPassThroughHandler( pm.NDOMapping.Connections.First() );
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( ownVar.GetType() ).TableName}");
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( otherVar.GetType() ).TableName}");
+		}
 	}
 	[Test]
 	public void TestSaveReload()
@@ -11569,10 +12388,6 @@ public class TestAgrDir1OwnpconNoTblGuid
 		QueryOwn();
 		Assert.NotNull(ownVar, "No Query Result");
 		Assert.Null(ownVar.RelField, "There should be no object");
-	}
-	[Test]
-	public void TestSaveReloadRemove()
-	{
 	}
 	[Test]
 	public void TestChangeKeyHolderLeft()
@@ -11642,20 +12457,30 @@ public class TestAgrDir1OwnpconTblGuid
 	[TearDown]
 	public void TearDown()
 	{
-		pm.UnloadCache();
-		var l = pm.Objects<AgrDir1OwnpconTblGuidLeftBase>().ResultTable;
-		pm.Delete(l);
-		pm.Save();
-		pm.UnloadCache();
-		var m = pm.Objects<AgrDir1OwnpconTblGuidRight>().ResultTable;
-		pm.Delete(m);
-		pm.Save();
-		pm.UnloadCache();
-		decimal count;
-		count = (decimal) new NDOQuery<AgrDir1OwnpconTblGuidLeftBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<AgrDir1OwnpconTblGuidRight>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #2");
+		try
+		{
+			pm.UnloadCache();
+			var l = pm.Objects<AgrDir1OwnpconTblGuidLeftBase>().ResultTable;
+			pm.Delete(l);
+			pm.Save();
+			pm.UnloadCache();
+			var m = pm.Objects<AgrDir1OwnpconTblGuidRight>().ResultTable;
+			pm.Delete(m);
+			pm.Save();
+			pm.UnloadCache();
+			decimal count;
+			count = (decimal) new NDOQuery<AgrDir1OwnpconTblGuidLeftBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #1");
+			count = (decimal) new NDOQuery<AgrDir1OwnpconTblGuidRight>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #2");
+		}
+		catch (Exception)
+		{
+			var handler = pm.GetSqlPassThroughHandler( pm.NDOMapping.Connections.First() );
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( ownVar.GetType() ).TableName}");
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( otherVar.GetType() ).TableName}");
+			handler.Execute( $"DELETE FROM {pm.NDOMapping.FindClass( ownVar.GetType() ).Relations.First().MappingTable.TableName}" );
+		}
 	}
 	[Test]
 	public void TestSaveReload()
@@ -11678,10 +12503,6 @@ public class TestAgrDir1OwnpconTblGuid
 		QueryOwn();
 		Assert.NotNull(ownVar, "No Query Result");
 		Assert.Null(ownVar.RelField, "There should be no object");
-	}
-	[Test]
-	public void TestSaveReloadRemove()
-	{
 	}
 	[Test]
 	public void TestChangeKeyHolderLeft()
@@ -11751,20 +12572,29 @@ public class TestAgrBi11OwnpconNoTblGuid
 	[TearDown]
 	public void TearDown()
 	{
-		pm.UnloadCache();
-		var l = pm.Objects<AgrBi11OwnpconNoTblGuidLeftBase>().ResultTable;
-		pm.Delete(l);
-		pm.Save();
-		pm.UnloadCache();
-		var m = pm.Objects<AgrBi11OwnpconNoTblGuidRight>().ResultTable;
-		pm.Delete(m);
-		pm.Save();
-		pm.UnloadCache();
-		decimal count;
-		count = (decimal) new NDOQuery<AgrBi11OwnpconNoTblGuidLeftBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<AgrBi11OwnpconNoTblGuidRight>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #2");
+		try
+		{
+			pm.UnloadCache();
+			var l = pm.Objects<AgrBi11OwnpconNoTblGuidLeftBase>().ResultTable;
+			pm.Delete(l);
+			pm.Save();
+			pm.UnloadCache();
+			var m = pm.Objects<AgrBi11OwnpconNoTblGuidRight>().ResultTable;
+			pm.Delete(m);
+			pm.Save();
+			pm.UnloadCache();
+			decimal count;
+			count = (decimal) new NDOQuery<AgrBi11OwnpconNoTblGuidLeftBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #1");
+			count = (decimal) new NDOQuery<AgrBi11OwnpconNoTblGuidRight>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #2");
+		}
+		catch (Exception)
+		{
+			var handler = pm.GetSqlPassThroughHandler( pm.NDOMapping.Connections.First() );
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( ownVar.GetType() ).TableName}");
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( otherVar.GetType() ).TableName}");
+		}
 	}
 	[Test]
 	public void TestSaveReload()
@@ -11787,10 +12617,6 @@ public class TestAgrBi11OwnpconNoTblGuid
 		QueryOwn();
 		Assert.NotNull(ownVar, "No Query Result");
 		Assert.Null(ownVar.RelField, "There should be no object");
-	}
-	[Test]
-	public void TestSaveReloadRemove()
-	{
 	}
 	[Test]
 	public void TestChangeKeyHolderLeft()
@@ -11905,20 +12731,30 @@ public class TestAgrBi11OwnpconTblGuid
 	[TearDown]
 	public void TearDown()
 	{
-		pm.UnloadCache();
-		var l = pm.Objects<AgrBi11OwnpconTblGuidLeftBase>().ResultTable;
-		pm.Delete(l);
-		pm.Save();
-		pm.UnloadCache();
-		var m = pm.Objects<AgrBi11OwnpconTblGuidRight>().ResultTable;
-		pm.Delete(m);
-		pm.Save();
-		pm.UnloadCache();
-		decimal count;
-		count = (decimal) new NDOQuery<AgrBi11OwnpconTblGuidLeftBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<AgrBi11OwnpconTblGuidRight>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #2");
+		try
+		{
+			pm.UnloadCache();
+			var l = pm.Objects<AgrBi11OwnpconTblGuidLeftBase>().ResultTable;
+			pm.Delete(l);
+			pm.Save();
+			pm.UnloadCache();
+			var m = pm.Objects<AgrBi11OwnpconTblGuidRight>().ResultTable;
+			pm.Delete(m);
+			pm.Save();
+			pm.UnloadCache();
+			decimal count;
+			count = (decimal) new NDOQuery<AgrBi11OwnpconTblGuidLeftBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #1");
+			count = (decimal) new NDOQuery<AgrBi11OwnpconTblGuidRight>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #2");
+		}
+		catch (Exception)
+		{
+			var handler = pm.GetSqlPassThroughHandler( pm.NDOMapping.Connections.First() );
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( ownVar.GetType() ).TableName}");
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( otherVar.GetType() ).TableName}");
+			handler.Execute( $"DELETE FROM {pm.NDOMapping.FindClass( ownVar.GetType() ).Relations.First().MappingTable.TableName}" );
+		}
 	}
 	[Test]
 	public void TestSaveReload()
@@ -11941,10 +12777,6 @@ public class TestAgrBi11OwnpconTblGuid
 		QueryOwn();
 		Assert.NotNull(ownVar, "No Query Result");
 		Assert.Null(ownVar.RelField, "There should be no object");
-	}
-	[Test]
-	public void TestSaveReloadRemove()
-	{
 	}
 	[Test]
 	public void TestChangeKeyHolderLeft()
@@ -12059,20 +12891,29 @@ public class TestAgrDirnOwnpconNoTblGuid
 	[TearDown]
 	public void TearDown()
 	{
-		pm.UnloadCache();
-		var l = pm.Objects<AgrDirnOwnpconNoTblGuidLeftBase>().ResultTable;
-		pm.Delete(l);
-		pm.Save();
-		pm.UnloadCache();
-		var m = pm.Objects<AgrDirnOwnpconNoTblGuidRight>().ResultTable;
-		pm.Delete(m);
-		pm.Save();
-		pm.UnloadCache();
-		decimal count;
-		count = (decimal) new NDOQuery<AgrDirnOwnpconNoTblGuidLeftBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<AgrDirnOwnpconNoTblGuidRight>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #2");
+		try
+		{
+			pm.UnloadCache();
+			var l = pm.Objects<AgrDirnOwnpconNoTblGuidLeftBase>().ResultTable;
+			pm.Delete(l);
+			pm.Save();
+			pm.UnloadCache();
+			var m = pm.Objects<AgrDirnOwnpconNoTblGuidRight>().ResultTable;
+			pm.Delete(m);
+			pm.Save();
+			pm.UnloadCache();
+			decimal count;
+			count = (decimal) new NDOQuery<AgrDirnOwnpconNoTblGuidLeftBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #1");
+			count = (decimal) new NDOQuery<AgrDirnOwnpconNoTblGuidRight>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #2");
+		}
+		catch (Exception)
+		{
+			var handler = pm.GetSqlPassThroughHandler( pm.NDOMapping.Connections.First() );
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( ownVar.GetType() ).TableName}");
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( otherVar.GetType() ).TableName}");
+		}
 	}
 	[Test]
 	public void TestSaveReload()
@@ -12147,20 +12988,30 @@ public class TestAgrDirnOwnpconTblGuid
 	[TearDown]
 	public void TearDown()
 	{
-		pm.UnloadCache();
-		var l = pm.Objects<AgrDirnOwnpconTblGuidLeftBase>().ResultTable;
-		pm.Delete(l);
-		pm.Save();
-		pm.UnloadCache();
-		var m = pm.Objects<AgrDirnOwnpconTblGuidRight>().ResultTable;
-		pm.Delete(m);
-		pm.Save();
-		pm.UnloadCache();
-		decimal count;
-		count = (decimal) new NDOQuery<AgrDirnOwnpconTblGuidLeftBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<AgrDirnOwnpconTblGuidRight>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #2");
+		try
+		{
+			pm.UnloadCache();
+			var l = pm.Objects<AgrDirnOwnpconTblGuidLeftBase>().ResultTable;
+			pm.Delete(l);
+			pm.Save();
+			pm.UnloadCache();
+			var m = pm.Objects<AgrDirnOwnpconTblGuidRight>().ResultTable;
+			pm.Delete(m);
+			pm.Save();
+			pm.UnloadCache();
+			decimal count;
+			count = (decimal) new NDOQuery<AgrDirnOwnpconTblGuidLeftBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #1");
+			count = (decimal) new NDOQuery<AgrDirnOwnpconTblGuidRight>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #2");
+		}
+		catch (Exception)
+		{
+			var handler = pm.GetSqlPassThroughHandler( pm.NDOMapping.Connections.First() );
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( ownVar.GetType() ).TableName}");
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( otherVar.GetType() ).TableName}");
+			handler.Execute( $"DELETE FROM {pm.NDOMapping.FindClass( ownVar.GetType() ).Relations.First().MappingTable.TableName}" );
+		}
 	}
 	[Test]
 	public void TestSaveReload()
@@ -12235,20 +13086,29 @@ public class TestAgrBin1OwnpconNoTblGuid
 	[TearDown]
 	public void TearDown()
 	{
-		pm.UnloadCache();
-		var l = pm.Objects<AgrBin1OwnpconNoTblGuidLeftBase>().ResultTable;
-		pm.Delete(l);
-		pm.Save();
-		pm.UnloadCache();
-		var m = pm.Objects<AgrBin1OwnpconNoTblGuidRight>().ResultTable;
-		pm.Delete(m);
-		pm.Save();
-		pm.UnloadCache();
-		decimal count;
-		count = (decimal) new NDOQuery<AgrBin1OwnpconNoTblGuidLeftBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<AgrBin1OwnpconNoTblGuidRight>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #2");
+		try
+		{
+			pm.UnloadCache();
+			var l = pm.Objects<AgrBin1OwnpconNoTblGuidLeftBase>().ResultTable;
+			pm.Delete(l);
+			pm.Save();
+			pm.UnloadCache();
+			var m = pm.Objects<AgrBin1OwnpconNoTblGuidRight>().ResultTable;
+			pm.Delete(m);
+			pm.Save();
+			pm.UnloadCache();
+			decimal count;
+			count = (decimal) new NDOQuery<AgrBin1OwnpconNoTblGuidLeftBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #1");
+			count = (decimal) new NDOQuery<AgrBin1OwnpconNoTblGuidRight>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #2");
+		}
+		catch (Exception)
+		{
+			var handler = pm.GetSqlPassThroughHandler( pm.NDOMapping.Connections.First() );
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( ownVar.GetType() ).TableName}");
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( otherVar.GetType() ).TableName}");
+		}
 	}
 	[Test]
 	public void TestSaveReload()
@@ -12368,20 +13228,30 @@ public class TestAgrBin1OwnpconTblGuid
 	[TearDown]
 	public void TearDown()
 	{
-		pm.UnloadCache();
-		var l = pm.Objects<AgrBin1OwnpconTblGuidLeftBase>().ResultTable;
-		pm.Delete(l);
-		pm.Save();
-		pm.UnloadCache();
-		var m = pm.Objects<AgrBin1OwnpconTblGuidRight>().ResultTable;
-		pm.Delete(m);
-		pm.Save();
-		pm.UnloadCache();
-		decimal count;
-		count = (decimal) new NDOQuery<AgrBin1OwnpconTblGuidLeftBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<AgrBin1OwnpconTblGuidRight>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #2");
+		try
+		{
+			pm.UnloadCache();
+			var l = pm.Objects<AgrBin1OwnpconTblGuidLeftBase>().ResultTable;
+			pm.Delete(l);
+			pm.Save();
+			pm.UnloadCache();
+			var m = pm.Objects<AgrBin1OwnpconTblGuidRight>().ResultTable;
+			pm.Delete(m);
+			pm.Save();
+			pm.UnloadCache();
+			decimal count;
+			count = (decimal) new NDOQuery<AgrBin1OwnpconTblGuidLeftBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #1");
+			count = (decimal) new NDOQuery<AgrBin1OwnpconTblGuidRight>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #2");
+		}
+		catch (Exception)
+		{
+			var handler = pm.GetSqlPassThroughHandler( pm.NDOMapping.Connections.First() );
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( ownVar.GetType() ).TableName}");
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( otherVar.GetType() ).TableName}");
+			handler.Execute( $"DELETE FROM {pm.NDOMapping.FindClass( ownVar.GetType() ).Relations.First().MappingTable.TableName}" );
+		}
 	}
 	[Test]
 	public void TestSaveReload()
@@ -12501,20 +13371,30 @@ public class TestAgrBi1nOwnpconTblGuid
 	[TearDown]
 	public void TearDown()
 	{
-		pm.UnloadCache();
-		var l = pm.Objects<AgrBi1nOwnpconTblGuidLeftBase>().ResultTable;
-		pm.Delete(l);
-		pm.Save();
-		pm.UnloadCache();
-		var m = pm.Objects<AgrBi1nOwnpconTblGuidRight>().ResultTable;
-		pm.Delete(m);
-		pm.Save();
-		pm.UnloadCache();
-		decimal count;
-		count = (decimal) new NDOQuery<AgrBi1nOwnpconTblGuidLeftBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<AgrBi1nOwnpconTblGuidRight>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #2");
+		try
+		{
+			pm.UnloadCache();
+			var l = pm.Objects<AgrBi1nOwnpconTblGuidLeftBase>().ResultTable;
+			pm.Delete(l);
+			pm.Save();
+			pm.UnloadCache();
+			var m = pm.Objects<AgrBi1nOwnpconTblGuidRight>().ResultTable;
+			pm.Delete(m);
+			pm.Save();
+			pm.UnloadCache();
+			decimal count;
+			count = (decimal) new NDOQuery<AgrBi1nOwnpconTblGuidLeftBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #1");
+			count = (decimal) new NDOQuery<AgrBi1nOwnpconTblGuidRight>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #2");
+		}
+		catch (Exception)
+		{
+			var handler = pm.GetSqlPassThroughHandler( pm.NDOMapping.Connections.First() );
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( ownVar.GetType() ).TableName}");
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( otherVar.GetType() ).TableName}");
+			handler.Execute( $"DELETE FROM {pm.NDOMapping.FindClass( ownVar.GetType() ).Relations.First().MappingTable.TableName}" );
+		}
 	}
 	[Test]
 	public void TestSaveReload()
@@ -12537,10 +13417,6 @@ public class TestAgrBi1nOwnpconTblGuid
 		QueryOwn();
 		Assert.NotNull(ownVar, "No Query Result");
 		Assert.Null(ownVar.RelField, "There should be no object");
-	}
-	[Test]
-	public void TestSaveReloadRemove()
-	{
 	}
 	[Test]
 	public void TestChangeKeyHolderLeft()
@@ -12624,20 +13500,30 @@ public class TestAgrBinnOwnpconTblGuid
 	[TearDown]
 	public void TearDown()
 	{
-		pm.UnloadCache();
-		var l = pm.Objects<AgrBinnOwnpconTblGuidLeftBase>().ResultTable;
-		pm.Delete(l);
-		pm.Save();
-		pm.UnloadCache();
-		var m = pm.Objects<AgrBinnOwnpconTblGuidRight>().ResultTable;
-		pm.Delete(m);
-		pm.Save();
-		pm.UnloadCache();
-		decimal count;
-		count = (decimal) new NDOQuery<AgrBinnOwnpconTblGuidLeftBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<AgrBinnOwnpconTblGuidRight>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #2");
+		try
+		{
+			pm.UnloadCache();
+			var l = pm.Objects<AgrBinnOwnpconTblGuidLeftBase>().ResultTable;
+			pm.Delete(l);
+			pm.Save();
+			pm.UnloadCache();
+			var m = pm.Objects<AgrBinnOwnpconTblGuidRight>().ResultTable;
+			pm.Delete(m);
+			pm.Save();
+			pm.UnloadCache();
+			decimal count;
+			count = (decimal) new NDOQuery<AgrBinnOwnpconTblGuidLeftBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #1");
+			count = (decimal) new NDOQuery<AgrBinnOwnpconTblGuidRight>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #2");
+		}
+		catch (Exception)
+		{
+			var handler = pm.GetSqlPassThroughHandler( pm.NDOMapping.Connections.First() );
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( ownVar.GetType() ).TableName}");
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( otherVar.GetType() ).TableName}");
+			handler.Execute( $"DELETE FROM {pm.NDOMapping.FindClass( ownVar.GetType() ).Relations.First().MappingTable.TableName}" );
+		}
 	}
 	[Test]
 	public void TestSaveReload()
@@ -12726,16 +13612,25 @@ public class TestCmpDir1OwnpconNoTblGuid
 	[TearDown]
 	public void TearDown()
 	{
-		pm.UnloadCache();
-		var l = pm.Objects<CmpDir1OwnpconNoTblGuidLeftBase>().ResultTable;
-		pm.Delete(l);
-		pm.Save();
-		pm.UnloadCache();
-		decimal count;
-		count = (decimal) new NDOQuery<CmpDir1OwnpconNoTblGuidLeftBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<CmpDir1OwnpconNoTblGuidRight>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #2");
+		try
+		{
+			pm.UnloadCache();
+			var l = pm.Objects<CmpDir1OwnpconNoTblGuidLeftBase>().ResultTable;
+			pm.Delete(l);
+			pm.Save();
+			pm.UnloadCache();
+			decimal count;
+			count = (decimal) new NDOQuery<CmpDir1OwnpconNoTblGuidLeftBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #1");
+			count = (decimal) new NDOQuery<CmpDir1OwnpconNoTblGuidRight>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #2");
+		}
+		catch (Exception)
+		{
+			var handler = pm.GetSqlPassThroughHandler( pm.NDOMapping.Connections.First() );
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( ownVar.GetType() ).TableName}");
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( otherVar.GetType() ).TableName}");
+		}
 	}
 	[Test]
 	public void TestSaveReload()
@@ -12758,10 +13653,6 @@ public class TestCmpDir1OwnpconNoTblGuid
 		QueryOwn();
 		Assert.NotNull(ownVar, "No Query Result");
 		Assert.Null(ownVar.RelField, "There should be no object");
-	}
-	[Test]
-	public void TestSaveReloadRemove()
-	{
 	}
 	[Test]
 	public void TestChangeKeyHolderLeft()
@@ -12830,16 +13721,26 @@ public class TestCmpDir1OwnpconTblGuid
 	[TearDown]
 	public void TearDown()
 	{
-		pm.UnloadCache();
-		var l = pm.Objects<CmpDir1OwnpconTblGuidLeftBase>().ResultTable;
-		pm.Delete(l);
-		pm.Save();
-		pm.UnloadCache();
-		decimal count;
-		count = (decimal) new NDOQuery<CmpDir1OwnpconTblGuidLeftBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<CmpDir1OwnpconTblGuidRight>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #2");
+		try
+		{
+			pm.UnloadCache();
+			var l = pm.Objects<CmpDir1OwnpconTblGuidLeftBase>().ResultTable;
+			pm.Delete(l);
+			pm.Save();
+			pm.UnloadCache();
+			decimal count;
+			count = (decimal) new NDOQuery<CmpDir1OwnpconTblGuidLeftBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #1");
+			count = (decimal) new NDOQuery<CmpDir1OwnpconTblGuidRight>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #2");
+		}
+		catch (Exception)
+		{
+			var handler = pm.GetSqlPassThroughHandler( pm.NDOMapping.Connections.First() );
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( ownVar.GetType() ).TableName}");
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( otherVar.GetType() ).TableName}");
+			handler.Execute( $"DELETE FROM {pm.NDOMapping.FindClass( ownVar.GetType() ).Relations.First().MappingTable.TableName}" );
+		}
 	}
 	[Test]
 	public void TestSaveReload()
@@ -12862,10 +13763,6 @@ public class TestCmpDir1OwnpconTblGuid
 		QueryOwn();
 		Assert.NotNull(ownVar, "No Query Result");
 		Assert.Null(ownVar.RelField, "There should be no object");
-	}
-	[Test]
-	public void TestSaveReloadRemove()
-	{
 	}
 	[Test]
 	public void TestChangeKeyHolderLeft()
@@ -12934,16 +13831,25 @@ public class TestCmpBi11OwnpconNoTblGuid
 	[TearDown]
 	public void TearDown()
 	{
-		pm.UnloadCache();
-		var l = pm.Objects<CmpBi11OwnpconNoTblGuidLeftBase>().ResultTable;
-		pm.Delete(l);
-		pm.Save();
-		pm.UnloadCache();
-		decimal count;
-		count = (decimal) new NDOQuery<CmpBi11OwnpconNoTblGuidLeftBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<CmpBi11OwnpconNoTblGuidRight>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #2");
+		try
+		{
+			pm.UnloadCache();
+			var l = pm.Objects<CmpBi11OwnpconNoTblGuidLeftBase>().ResultTable;
+			pm.Delete(l);
+			pm.Save();
+			pm.UnloadCache();
+			decimal count;
+			count = (decimal) new NDOQuery<CmpBi11OwnpconNoTblGuidLeftBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #1");
+			count = (decimal) new NDOQuery<CmpBi11OwnpconNoTblGuidRight>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #2");
+		}
+		catch (Exception)
+		{
+			var handler = pm.GetSqlPassThroughHandler( pm.NDOMapping.Connections.First() );
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( ownVar.GetType() ).TableName}");
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( otherVar.GetType() ).TableName}");
+		}
 	}
 	[Test]
 	public void TestSaveReload()
@@ -12966,10 +13872,6 @@ public class TestCmpBi11OwnpconNoTblGuid
 		QueryOwn();
 		Assert.NotNull(ownVar, "No Query Result");
 		Assert.Null(ownVar.RelField, "There should be no object");
-	}
-	[Test]
-	public void TestSaveReloadRemove()
-	{
 	}
 	[Test]
 	public void TestChangeKeyHolderLeft()
@@ -13083,16 +13985,26 @@ public class TestCmpBi11OwnpconTblGuid
 	[TearDown]
 	public void TearDown()
 	{
-		pm.UnloadCache();
-		var l = pm.Objects<CmpBi11OwnpconTblGuidLeftBase>().ResultTable;
-		pm.Delete(l);
-		pm.Save();
-		pm.UnloadCache();
-		decimal count;
-		count = (decimal) new NDOQuery<CmpBi11OwnpconTblGuidLeftBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<CmpBi11OwnpconTblGuidRight>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #2");
+		try
+		{
+			pm.UnloadCache();
+			var l = pm.Objects<CmpBi11OwnpconTblGuidLeftBase>().ResultTable;
+			pm.Delete(l);
+			pm.Save();
+			pm.UnloadCache();
+			decimal count;
+			count = (decimal) new NDOQuery<CmpBi11OwnpconTblGuidLeftBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #1");
+			count = (decimal) new NDOQuery<CmpBi11OwnpconTblGuidRight>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #2");
+		}
+		catch (Exception)
+		{
+			var handler = pm.GetSqlPassThroughHandler( pm.NDOMapping.Connections.First() );
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( ownVar.GetType() ).TableName}");
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( otherVar.GetType() ).TableName}");
+			handler.Execute( $"DELETE FROM {pm.NDOMapping.FindClass( ownVar.GetType() ).Relations.First().MappingTable.TableName}" );
+		}
 	}
 	[Test]
 	public void TestSaveReload()
@@ -13115,10 +14027,6 @@ public class TestCmpBi11OwnpconTblGuid
 		QueryOwn();
 		Assert.NotNull(ownVar, "No Query Result");
 		Assert.Null(ownVar.RelField, "There should be no object");
-	}
-	[Test]
-	public void TestSaveReloadRemove()
-	{
 	}
 	[Test]
 	public void TestChangeKeyHolderLeft()
@@ -13232,16 +14140,25 @@ public class TestCmpDirnOwnpconNoTblGuid
 	[TearDown]
 	public void TearDown()
 	{
-		pm.UnloadCache();
-		var l = pm.Objects<CmpDirnOwnpconNoTblGuidLeftBase>().ResultTable;
-		pm.Delete(l);
-		pm.Save();
-		pm.UnloadCache();
-		decimal count;
-		count = (decimal) new NDOQuery<CmpDirnOwnpconNoTblGuidLeftBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<CmpDirnOwnpconNoTblGuidRight>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #2");
+		try
+		{
+			pm.UnloadCache();
+			var l = pm.Objects<CmpDirnOwnpconNoTblGuidLeftBase>().ResultTable;
+			pm.Delete(l);
+			pm.Save();
+			pm.UnloadCache();
+			decimal count;
+			count = (decimal) new NDOQuery<CmpDirnOwnpconNoTblGuidLeftBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #1");
+			count = (decimal) new NDOQuery<CmpDirnOwnpconNoTblGuidRight>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #2");
+		}
+		catch (Exception)
+		{
+			var handler = pm.GetSqlPassThroughHandler( pm.NDOMapping.Connections.First() );
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( ownVar.GetType() ).TableName}");
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( otherVar.GetType() ).TableName}");
+		}
 	}
 	[Test]
 	public void TestSaveReload()
@@ -13315,16 +14232,26 @@ public class TestCmpDirnOwnpconTblGuid
 	[TearDown]
 	public void TearDown()
 	{
-		pm.UnloadCache();
-		var l = pm.Objects<CmpDirnOwnpconTblGuidLeftBase>().ResultTable;
-		pm.Delete(l);
-		pm.Save();
-		pm.UnloadCache();
-		decimal count;
-		count = (decimal) new NDOQuery<CmpDirnOwnpconTblGuidLeftBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<CmpDirnOwnpconTblGuidRight>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #2");
+		try
+		{
+			pm.UnloadCache();
+			var l = pm.Objects<CmpDirnOwnpconTblGuidLeftBase>().ResultTable;
+			pm.Delete(l);
+			pm.Save();
+			pm.UnloadCache();
+			decimal count;
+			count = (decimal) new NDOQuery<CmpDirnOwnpconTblGuidLeftBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #1");
+			count = (decimal) new NDOQuery<CmpDirnOwnpconTblGuidRight>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #2");
+		}
+		catch (Exception)
+		{
+			var handler = pm.GetSqlPassThroughHandler( pm.NDOMapping.Connections.First() );
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( ownVar.GetType() ).TableName}");
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( otherVar.GetType() ).TableName}");
+			handler.Execute( $"DELETE FROM {pm.NDOMapping.FindClass( ownVar.GetType() ).Relations.First().MappingTable.TableName}" );
+		}
 	}
 	[Test]
 	public void TestSaveReload()
@@ -13398,16 +14325,25 @@ public class TestCmpBin1OwnpconNoTblGuid
 	[TearDown]
 	public void TearDown()
 	{
-		pm.UnloadCache();
-		var l = pm.Objects<CmpBin1OwnpconNoTblGuidLeftBase>().ResultTable;
-		pm.Delete(l);
-		pm.Save();
-		pm.UnloadCache();
-		decimal count;
-		count = (decimal) new NDOQuery<CmpBin1OwnpconNoTblGuidLeftBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<CmpBin1OwnpconNoTblGuidRight>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #2");
+		try
+		{
+			pm.UnloadCache();
+			var l = pm.Objects<CmpBin1OwnpconNoTblGuidLeftBase>().ResultTable;
+			pm.Delete(l);
+			pm.Save();
+			pm.UnloadCache();
+			decimal count;
+			count = (decimal) new NDOQuery<CmpBin1OwnpconNoTblGuidLeftBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #1");
+			count = (decimal) new NDOQuery<CmpBin1OwnpconNoTblGuidRight>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #2");
+		}
+		catch (Exception)
+		{
+			var handler = pm.GetSqlPassThroughHandler( pm.NDOMapping.Connections.First() );
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( ownVar.GetType() ).TableName}");
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( otherVar.GetType() ).TableName}");
+		}
 	}
 	[Test]
 	public void TestSaveReload()
@@ -13526,16 +14462,26 @@ public class TestCmpBin1OwnpconTblGuid
 	[TearDown]
 	public void TearDown()
 	{
-		pm.UnloadCache();
-		var l = pm.Objects<CmpBin1OwnpconTblGuidLeftBase>().ResultTable;
-		pm.Delete(l);
-		pm.Save();
-		pm.UnloadCache();
-		decimal count;
-		count = (decimal) new NDOQuery<CmpBin1OwnpconTblGuidLeftBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<CmpBin1OwnpconTblGuidRight>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #2");
+		try
+		{
+			pm.UnloadCache();
+			var l = pm.Objects<CmpBin1OwnpconTblGuidLeftBase>().ResultTable;
+			pm.Delete(l);
+			pm.Save();
+			pm.UnloadCache();
+			decimal count;
+			count = (decimal) new NDOQuery<CmpBin1OwnpconTblGuidLeftBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #1");
+			count = (decimal) new NDOQuery<CmpBin1OwnpconTblGuidRight>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #2");
+		}
+		catch (Exception)
+		{
+			var handler = pm.GetSqlPassThroughHandler( pm.NDOMapping.Connections.First() );
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( ownVar.GetType() ).TableName}");
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( otherVar.GetType() ).TableName}");
+			handler.Execute( $"DELETE FROM {pm.NDOMapping.FindClass( ownVar.GetType() ).Relations.First().MappingTable.TableName}" );
+		}
 	}
 	[Test]
 	public void TestSaveReload()
@@ -13654,16 +14600,26 @@ public class TestCmpBi1nOwnpconTblGuid
 	[TearDown]
 	public void TearDown()
 	{
-		pm.UnloadCache();
-		var l = pm.Objects<CmpBi1nOwnpconTblGuidLeftBase>().ResultTable;
-		pm.Delete(l);
-		pm.Save();
-		pm.UnloadCache();
-		decimal count;
-		count = (decimal) new NDOQuery<CmpBi1nOwnpconTblGuidLeftBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<CmpBi1nOwnpconTblGuidRight>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #2");
+		try
+		{
+			pm.UnloadCache();
+			var l = pm.Objects<CmpBi1nOwnpconTblGuidLeftBase>().ResultTable;
+			pm.Delete(l);
+			pm.Save();
+			pm.UnloadCache();
+			decimal count;
+			count = (decimal) new NDOQuery<CmpBi1nOwnpconTblGuidLeftBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #1");
+			count = (decimal) new NDOQuery<CmpBi1nOwnpconTblGuidRight>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #2");
+		}
+		catch (Exception)
+		{
+			var handler = pm.GetSqlPassThroughHandler( pm.NDOMapping.Connections.First() );
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( ownVar.GetType() ).TableName}");
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( otherVar.GetType() ).TableName}");
+			handler.Execute( $"DELETE FROM {pm.NDOMapping.FindClass( ownVar.GetType() ).Relations.First().MappingTable.TableName}" );
+		}
 	}
 	[Test]
 	public void TestSaveReload()
@@ -13686,10 +14642,6 @@ public class TestCmpBi1nOwnpconTblGuid
 		QueryOwn();
 		Assert.NotNull(ownVar, "No Query Result");
 		Assert.Null(ownVar.RelField, "There should be no object");
-	}
-	[Test]
-	public void TestSaveReloadRemove()
-	{
 	}
 	[Test]
 	public void TestChangeKeyHolderLeft()
@@ -13772,16 +14724,26 @@ public class TestCmpBinnOwnpconTblGuid
 	[TearDown]
 	public void TearDown()
 	{
-		pm.UnloadCache();
-		var l = pm.Objects<CmpBinnOwnpconTblGuidLeftBase>().ResultTable;
-		pm.Delete(l);
-		pm.Save();
-		pm.UnloadCache();
-		decimal count;
-		count = (decimal) new NDOQuery<CmpBinnOwnpconTblGuidLeftBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<CmpBinnOwnpconTblGuidRight>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #2");
+		try
+		{
+			pm.UnloadCache();
+			var l = pm.Objects<CmpBinnOwnpconTblGuidLeftBase>().ResultTable;
+			pm.Delete(l);
+			pm.Save();
+			pm.UnloadCache();
+			decimal count;
+			count = (decimal) new NDOQuery<CmpBinnOwnpconTblGuidLeftBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #1");
+			count = (decimal) new NDOQuery<CmpBinnOwnpconTblGuidRight>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #2");
+		}
+		catch (Exception)
+		{
+			var handler = pm.GetSqlPassThroughHandler( pm.NDOMapping.Connections.First() );
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( ownVar.GetType() ).TableName}");
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( otherVar.GetType() ).TableName}");
+			handler.Execute( $"DELETE FROM {pm.NDOMapping.FindClass( ownVar.GetType() ).Relations.First().MappingTable.TableName}" );
+		}
 	}
 	[Test]
 	public void TestSaveReload()
@@ -13869,20 +14831,29 @@ public class TestAgrDir1OthpconNoTblGuid
 	[TearDown]
 	public void TearDown()
 	{
-		pm.UnloadCache();
-		var l = pm.Objects<AgrDir1OthpconNoTblGuidLeft>().ResultTable;
-		pm.Delete(l);
-		pm.Save();
-		pm.UnloadCache();
-		var m = pm.Objects<AgrDir1OthpconNoTblGuidRightBase>().ResultTable;
-		pm.Delete(m);
-		pm.Save();
-		pm.UnloadCache();
-		decimal count;
-		count = (decimal) new NDOQuery<AgrDir1OthpconNoTblGuidLeft>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<AgrDir1OthpconNoTblGuidRightBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #2");
+		try
+		{
+			pm.UnloadCache();
+			var l = pm.Objects<AgrDir1OthpconNoTblGuidLeft>().ResultTable;
+			pm.Delete(l);
+			pm.Save();
+			pm.UnloadCache();
+			var m = pm.Objects<AgrDir1OthpconNoTblGuidRightBase>().ResultTable;
+			pm.Delete(m);
+			pm.Save();
+			pm.UnloadCache();
+			decimal count;
+			count = (decimal) new NDOQuery<AgrDir1OthpconNoTblGuidLeft>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #1");
+			count = (decimal) new NDOQuery<AgrDir1OthpconNoTblGuidRightBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #2");
+		}
+		catch (Exception)
+		{
+			var handler = pm.GetSqlPassThroughHandler( pm.NDOMapping.Connections.First() );
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( ownVar.GetType() ).TableName}");
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( otherVar.GetType() ).TableName}");
+		}
 	}
 	[Test]
 	public void TestSaveReload()
@@ -13905,10 +14876,6 @@ public class TestAgrDir1OthpconNoTblGuid
 		QueryOwn();
 		Assert.NotNull(ownVar, "No Query Result");
 		Assert.Null(ownVar.RelField, "There should be no object");
-	}
-	[Test]
-	public void TestSaveReloadRemove()
-	{
 	}
 	[Test]
 	public void TestChangeKeyHolderLeft()
@@ -13978,20 +14945,30 @@ public class TestAgrDir1OthpconTblGuid
 	[TearDown]
 	public void TearDown()
 	{
-		pm.UnloadCache();
-		var l = pm.Objects<AgrDir1OthpconTblGuidLeft>().ResultTable;
-		pm.Delete(l);
-		pm.Save();
-		pm.UnloadCache();
-		var m = pm.Objects<AgrDir1OthpconTblGuidRightBase>().ResultTable;
-		pm.Delete(m);
-		pm.Save();
-		pm.UnloadCache();
-		decimal count;
-		count = (decimal) new NDOQuery<AgrDir1OthpconTblGuidLeft>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<AgrDir1OthpconTblGuidRightBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #2");
+		try
+		{
+			pm.UnloadCache();
+			var l = pm.Objects<AgrDir1OthpconTblGuidLeft>().ResultTable;
+			pm.Delete(l);
+			pm.Save();
+			pm.UnloadCache();
+			var m = pm.Objects<AgrDir1OthpconTblGuidRightBase>().ResultTable;
+			pm.Delete(m);
+			pm.Save();
+			pm.UnloadCache();
+			decimal count;
+			count = (decimal) new NDOQuery<AgrDir1OthpconTblGuidLeft>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #1");
+			count = (decimal) new NDOQuery<AgrDir1OthpconTblGuidRightBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #2");
+		}
+		catch (Exception)
+		{
+			var handler = pm.GetSqlPassThroughHandler( pm.NDOMapping.Connections.First() );
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( ownVar.GetType() ).TableName}");
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( otherVar.GetType() ).TableName}");
+			handler.Execute( $"DELETE FROM {pm.NDOMapping.FindClass( ownVar.GetType() ).Relations.First().MappingTable.TableName}" );
+		}
 	}
 	[Test]
 	public void TestSaveReload()
@@ -14014,10 +14991,6 @@ public class TestAgrDir1OthpconTblGuid
 		QueryOwn();
 		Assert.NotNull(ownVar, "No Query Result");
 		Assert.Null(ownVar.RelField, "There should be no object");
-	}
-	[Test]
-	public void TestSaveReloadRemove()
-	{
 	}
 	[Test]
 	public void TestChangeKeyHolderLeft()
@@ -14087,20 +15060,29 @@ public class TestAgrBi11OthpconNoTblGuid
 	[TearDown]
 	public void TearDown()
 	{
-		pm.UnloadCache();
-		var l = pm.Objects<AgrBi11OthpconNoTblGuidLeft>().ResultTable;
-		pm.Delete(l);
-		pm.Save();
-		pm.UnloadCache();
-		var m = pm.Objects<AgrBi11OthpconNoTblGuidRightBase>().ResultTable;
-		pm.Delete(m);
-		pm.Save();
-		pm.UnloadCache();
-		decimal count;
-		count = (decimal) new NDOQuery<AgrBi11OthpconNoTblGuidLeft>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<AgrBi11OthpconNoTblGuidRightBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #2");
+		try
+		{
+			pm.UnloadCache();
+			var l = pm.Objects<AgrBi11OthpconNoTblGuidLeft>().ResultTable;
+			pm.Delete(l);
+			pm.Save();
+			pm.UnloadCache();
+			var m = pm.Objects<AgrBi11OthpconNoTblGuidRightBase>().ResultTable;
+			pm.Delete(m);
+			pm.Save();
+			pm.UnloadCache();
+			decimal count;
+			count = (decimal) new NDOQuery<AgrBi11OthpconNoTblGuidLeft>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #1");
+			count = (decimal) new NDOQuery<AgrBi11OthpconNoTblGuidRightBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #2");
+		}
+		catch (Exception)
+		{
+			var handler = pm.GetSqlPassThroughHandler( pm.NDOMapping.Connections.First() );
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( ownVar.GetType() ).TableName}");
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( otherVar.GetType() ).TableName}");
+		}
 	}
 	[Test]
 	public void TestSaveReload()
@@ -14123,10 +15105,6 @@ public class TestAgrBi11OthpconNoTblGuid
 		QueryOwn();
 		Assert.NotNull(ownVar, "No Query Result");
 		Assert.Null(ownVar.RelField, "There should be no object");
-	}
-	[Test]
-	public void TestSaveReloadRemove()
-	{
 	}
 	[Test]
 	public void TestChangeKeyHolderLeft()
@@ -14241,20 +15219,30 @@ public class TestAgrBi11OthpconTblGuid
 	[TearDown]
 	public void TearDown()
 	{
-		pm.UnloadCache();
-		var l = pm.Objects<AgrBi11OthpconTblGuidLeft>().ResultTable;
-		pm.Delete(l);
-		pm.Save();
-		pm.UnloadCache();
-		var m = pm.Objects<AgrBi11OthpconTblGuidRightBase>().ResultTable;
-		pm.Delete(m);
-		pm.Save();
-		pm.UnloadCache();
-		decimal count;
-		count = (decimal) new NDOQuery<AgrBi11OthpconTblGuidLeft>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<AgrBi11OthpconTblGuidRightBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #2");
+		try
+		{
+			pm.UnloadCache();
+			var l = pm.Objects<AgrBi11OthpconTblGuidLeft>().ResultTable;
+			pm.Delete(l);
+			pm.Save();
+			pm.UnloadCache();
+			var m = pm.Objects<AgrBi11OthpconTblGuidRightBase>().ResultTable;
+			pm.Delete(m);
+			pm.Save();
+			pm.UnloadCache();
+			decimal count;
+			count = (decimal) new NDOQuery<AgrBi11OthpconTblGuidLeft>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #1");
+			count = (decimal) new NDOQuery<AgrBi11OthpconTblGuidRightBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #2");
+		}
+		catch (Exception)
+		{
+			var handler = pm.GetSqlPassThroughHandler( pm.NDOMapping.Connections.First() );
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( ownVar.GetType() ).TableName}");
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( otherVar.GetType() ).TableName}");
+			handler.Execute( $"DELETE FROM {pm.NDOMapping.FindClass( ownVar.GetType() ).Relations.First().MappingTable.TableName}" );
+		}
 	}
 	[Test]
 	public void TestSaveReload()
@@ -14277,10 +15265,6 @@ public class TestAgrBi11OthpconTblGuid
 		QueryOwn();
 		Assert.NotNull(ownVar, "No Query Result");
 		Assert.Null(ownVar.RelField, "There should be no object");
-	}
-	[Test]
-	public void TestSaveReloadRemove()
-	{
 	}
 	[Test]
 	public void TestChangeKeyHolderLeft()
@@ -14395,20 +15379,30 @@ public class TestAgrDirnOthpconTblGuid
 	[TearDown]
 	public void TearDown()
 	{
-		pm.UnloadCache();
-		var l = pm.Objects<AgrDirnOthpconTblGuidLeft>().ResultTable;
-		pm.Delete(l);
-		pm.Save();
-		pm.UnloadCache();
-		var m = pm.Objects<AgrDirnOthpconTblGuidRightBase>().ResultTable;
-		pm.Delete(m);
-		pm.Save();
-		pm.UnloadCache();
-		decimal count;
-		count = (decimal) new NDOQuery<AgrDirnOthpconTblGuidLeft>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<AgrDirnOthpconTblGuidRightBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #2");
+		try
+		{
+			pm.UnloadCache();
+			var l = pm.Objects<AgrDirnOthpconTblGuidLeft>().ResultTable;
+			pm.Delete(l);
+			pm.Save();
+			pm.UnloadCache();
+			var m = pm.Objects<AgrDirnOthpconTblGuidRightBase>().ResultTable;
+			pm.Delete(m);
+			pm.Save();
+			pm.UnloadCache();
+			decimal count;
+			count = (decimal) new NDOQuery<AgrDirnOthpconTblGuidLeft>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #1");
+			count = (decimal) new NDOQuery<AgrDirnOthpconTblGuidRightBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #2");
+		}
+		catch (Exception)
+		{
+			var handler = pm.GetSqlPassThroughHandler( pm.NDOMapping.Connections.First() );
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( ownVar.GetType() ).TableName}");
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( otherVar.GetType() ).TableName}");
+			handler.Execute( $"DELETE FROM {pm.NDOMapping.FindClass( ownVar.GetType() ).Relations.First().MappingTable.TableName}" );
+		}
 	}
 	[Test]
 	public void TestSaveReload()
@@ -14483,20 +15477,30 @@ public class TestAgrBin1OthpconTblGuid
 	[TearDown]
 	public void TearDown()
 	{
-		pm.UnloadCache();
-		var l = pm.Objects<AgrBin1OthpconTblGuidLeft>().ResultTable;
-		pm.Delete(l);
-		pm.Save();
-		pm.UnloadCache();
-		var m = pm.Objects<AgrBin1OthpconTblGuidRightBase>().ResultTable;
-		pm.Delete(m);
-		pm.Save();
-		pm.UnloadCache();
-		decimal count;
-		count = (decimal) new NDOQuery<AgrBin1OthpconTblGuidLeft>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<AgrBin1OthpconTblGuidRightBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #2");
+		try
+		{
+			pm.UnloadCache();
+			var l = pm.Objects<AgrBin1OthpconTblGuidLeft>().ResultTable;
+			pm.Delete(l);
+			pm.Save();
+			pm.UnloadCache();
+			var m = pm.Objects<AgrBin1OthpconTblGuidRightBase>().ResultTable;
+			pm.Delete(m);
+			pm.Save();
+			pm.UnloadCache();
+			decimal count;
+			count = (decimal) new NDOQuery<AgrBin1OthpconTblGuidLeft>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #1");
+			count = (decimal) new NDOQuery<AgrBin1OthpconTblGuidRightBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #2");
+		}
+		catch (Exception)
+		{
+			var handler = pm.GetSqlPassThroughHandler( pm.NDOMapping.Connections.First() );
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( ownVar.GetType() ).TableName}");
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( otherVar.GetType() ).TableName}");
+			handler.Execute( $"DELETE FROM {pm.NDOMapping.FindClass( ownVar.GetType() ).Relations.First().MappingTable.TableName}" );
+		}
 	}
 	[Test]
 	public void TestSaveReload()
@@ -14616,20 +15620,29 @@ public class TestAgrBi1nOthpconNoTblGuid
 	[TearDown]
 	public void TearDown()
 	{
-		pm.UnloadCache();
-		var l = pm.Objects<AgrBi1nOthpconNoTblGuidLeft>().ResultTable;
-		pm.Delete(l);
-		pm.Save();
-		pm.UnloadCache();
-		var m = pm.Objects<AgrBi1nOthpconNoTblGuidRightBase>().ResultTable;
-		pm.Delete(m);
-		pm.Save();
-		pm.UnloadCache();
-		decimal count;
-		count = (decimal) new NDOQuery<AgrBi1nOthpconNoTblGuidLeft>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<AgrBi1nOthpconNoTblGuidRightBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #2");
+		try
+		{
+			pm.UnloadCache();
+			var l = pm.Objects<AgrBi1nOthpconNoTblGuidLeft>().ResultTable;
+			pm.Delete(l);
+			pm.Save();
+			pm.UnloadCache();
+			var m = pm.Objects<AgrBi1nOthpconNoTblGuidRightBase>().ResultTable;
+			pm.Delete(m);
+			pm.Save();
+			pm.UnloadCache();
+			decimal count;
+			count = (decimal) new NDOQuery<AgrBi1nOthpconNoTblGuidLeft>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #1");
+			count = (decimal) new NDOQuery<AgrBi1nOthpconNoTblGuidRightBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #2");
+		}
+		catch (Exception)
+		{
+			var handler = pm.GetSqlPassThroughHandler( pm.NDOMapping.Connections.First() );
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( ownVar.GetType() ).TableName}");
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( otherVar.GetType() ).TableName}");
+		}
 	}
 	[Test]
 	public void TestSaveReload()
@@ -14652,10 +15665,6 @@ public class TestAgrBi1nOthpconNoTblGuid
 		QueryOwn();
 		Assert.NotNull(ownVar, "No Query Result");
 		Assert.Null(ownVar.RelField, "There should be no object");
-	}
-	[Test]
-	public void TestSaveReloadRemove()
-	{
 	}
 	[Test]
 	public void TestChangeKeyHolderLeft()
@@ -14739,20 +15748,30 @@ public class TestAgrBi1nOthpconTblGuid
 	[TearDown]
 	public void TearDown()
 	{
-		pm.UnloadCache();
-		var l = pm.Objects<AgrBi1nOthpconTblGuidLeft>().ResultTable;
-		pm.Delete(l);
-		pm.Save();
-		pm.UnloadCache();
-		var m = pm.Objects<AgrBi1nOthpconTblGuidRightBase>().ResultTable;
-		pm.Delete(m);
-		pm.Save();
-		pm.UnloadCache();
-		decimal count;
-		count = (decimal) new NDOQuery<AgrBi1nOthpconTblGuidLeft>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<AgrBi1nOthpconTblGuidRightBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #2");
+		try
+		{
+			pm.UnloadCache();
+			var l = pm.Objects<AgrBi1nOthpconTblGuidLeft>().ResultTable;
+			pm.Delete(l);
+			pm.Save();
+			pm.UnloadCache();
+			var m = pm.Objects<AgrBi1nOthpconTblGuidRightBase>().ResultTable;
+			pm.Delete(m);
+			pm.Save();
+			pm.UnloadCache();
+			decimal count;
+			count = (decimal) new NDOQuery<AgrBi1nOthpconTblGuidLeft>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #1");
+			count = (decimal) new NDOQuery<AgrBi1nOthpconTblGuidRightBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #2");
+		}
+		catch (Exception)
+		{
+			var handler = pm.GetSqlPassThroughHandler( pm.NDOMapping.Connections.First() );
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( ownVar.GetType() ).TableName}");
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( otherVar.GetType() ).TableName}");
+			handler.Execute( $"DELETE FROM {pm.NDOMapping.FindClass( ownVar.GetType() ).Relations.First().MappingTable.TableName}" );
+		}
 	}
 	[Test]
 	public void TestSaveReload()
@@ -14775,10 +15794,6 @@ public class TestAgrBi1nOthpconTblGuid
 		QueryOwn();
 		Assert.NotNull(ownVar, "No Query Result");
 		Assert.Null(ownVar.RelField, "There should be no object");
-	}
-	[Test]
-	public void TestSaveReloadRemove()
-	{
 	}
 	[Test]
 	public void TestChangeKeyHolderLeft()
@@ -14862,20 +15877,30 @@ public class TestAgrBinnOthpconTblGuid
 	[TearDown]
 	public void TearDown()
 	{
-		pm.UnloadCache();
-		var l = pm.Objects<AgrBinnOthpconTblGuidLeft>().ResultTable;
-		pm.Delete(l);
-		pm.Save();
-		pm.UnloadCache();
-		var m = pm.Objects<AgrBinnOthpconTblGuidRightBase>().ResultTable;
-		pm.Delete(m);
-		pm.Save();
-		pm.UnloadCache();
-		decimal count;
-		count = (decimal) new NDOQuery<AgrBinnOthpconTblGuidLeft>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<AgrBinnOthpconTblGuidRightBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #2");
+		try
+		{
+			pm.UnloadCache();
+			var l = pm.Objects<AgrBinnOthpconTblGuidLeft>().ResultTable;
+			pm.Delete(l);
+			pm.Save();
+			pm.UnloadCache();
+			var m = pm.Objects<AgrBinnOthpconTblGuidRightBase>().ResultTable;
+			pm.Delete(m);
+			pm.Save();
+			pm.UnloadCache();
+			decimal count;
+			count = (decimal) new NDOQuery<AgrBinnOthpconTblGuidLeft>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #1");
+			count = (decimal) new NDOQuery<AgrBinnOthpconTblGuidRightBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #2");
+		}
+		catch (Exception)
+		{
+			var handler = pm.GetSqlPassThroughHandler( pm.NDOMapping.Connections.First() );
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( ownVar.GetType() ).TableName}");
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( otherVar.GetType() ).TableName}");
+			handler.Execute( $"DELETE FROM {pm.NDOMapping.FindClass( ownVar.GetType() ).Relations.First().MappingTable.TableName}" );
+		}
 	}
 	[Test]
 	public void TestSaveReload()
@@ -14964,16 +15989,25 @@ public class TestCmpDir1OthpconNoTblGuid
 	[TearDown]
 	public void TearDown()
 	{
-		pm.UnloadCache();
-		var l = pm.Objects<CmpDir1OthpconNoTblGuidLeft>().ResultTable;
-		pm.Delete(l);
-		pm.Save();
-		pm.UnloadCache();
-		decimal count;
-		count = (decimal) new NDOQuery<CmpDir1OthpconNoTblGuidLeft>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<CmpDir1OthpconNoTblGuidRightBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #2");
+		try
+		{
+			pm.UnloadCache();
+			var l = pm.Objects<CmpDir1OthpconNoTblGuidLeft>().ResultTable;
+			pm.Delete(l);
+			pm.Save();
+			pm.UnloadCache();
+			decimal count;
+			count = (decimal) new NDOQuery<CmpDir1OthpconNoTblGuidLeft>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #1");
+			count = (decimal) new NDOQuery<CmpDir1OthpconNoTblGuidRightBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #2");
+		}
+		catch (Exception)
+		{
+			var handler = pm.GetSqlPassThroughHandler( pm.NDOMapping.Connections.First() );
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( ownVar.GetType() ).TableName}");
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( otherVar.GetType() ).TableName}");
+		}
 	}
 	[Test]
 	public void TestSaveReload()
@@ -14996,10 +16030,6 @@ public class TestCmpDir1OthpconNoTblGuid
 		QueryOwn();
 		Assert.NotNull(ownVar, "No Query Result");
 		Assert.Null(ownVar.RelField, "There should be no object");
-	}
-	[Test]
-	public void TestSaveReloadRemove()
-	{
 	}
 	[Test]
 	public void TestChangeKeyHolderLeft()
@@ -15068,16 +16098,26 @@ public class TestCmpDir1OthpconTblGuid
 	[TearDown]
 	public void TearDown()
 	{
-		pm.UnloadCache();
-		var l = pm.Objects<CmpDir1OthpconTblGuidLeft>().ResultTable;
-		pm.Delete(l);
-		pm.Save();
-		pm.UnloadCache();
-		decimal count;
-		count = (decimal) new NDOQuery<CmpDir1OthpconTblGuidLeft>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<CmpDir1OthpconTblGuidRightBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #2");
+		try
+		{
+			pm.UnloadCache();
+			var l = pm.Objects<CmpDir1OthpconTblGuidLeft>().ResultTable;
+			pm.Delete(l);
+			pm.Save();
+			pm.UnloadCache();
+			decimal count;
+			count = (decimal) new NDOQuery<CmpDir1OthpconTblGuidLeft>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #1");
+			count = (decimal) new NDOQuery<CmpDir1OthpconTblGuidRightBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #2");
+		}
+		catch (Exception)
+		{
+			var handler = pm.GetSqlPassThroughHandler( pm.NDOMapping.Connections.First() );
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( ownVar.GetType() ).TableName}");
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( otherVar.GetType() ).TableName}");
+			handler.Execute( $"DELETE FROM {pm.NDOMapping.FindClass( ownVar.GetType() ).Relations.First().MappingTable.TableName}" );
+		}
 	}
 	[Test]
 	public void TestSaveReload()
@@ -15100,10 +16140,6 @@ public class TestCmpDir1OthpconTblGuid
 		QueryOwn();
 		Assert.NotNull(ownVar, "No Query Result");
 		Assert.Null(ownVar.RelField, "There should be no object");
-	}
-	[Test]
-	public void TestSaveReloadRemove()
-	{
 	}
 	[Test]
 	public void TestChangeKeyHolderLeft()
@@ -15172,16 +16208,25 @@ public class TestCmpBi11OthpconNoTblGuid
 	[TearDown]
 	public void TearDown()
 	{
-		pm.UnloadCache();
-		var l = pm.Objects<CmpBi11OthpconNoTblGuidLeft>().ResultTable;
-		pm.Delete(l);
-		pm.Save();
-		pm.UnloadCache();
-		decimal count;
-		count = (decimal) new NDOQuery<CmpBi11OthpconNoTblGuidLeft>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<CmpBi11OthpconNoTblGuidRightBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #2");
+		try
+		{
+			pm.UnloadCache();
+			var l = pm.Objects<CmpBi11OthpconNoTblGuidLeft>().ResultTable;
+			pm.Delete(l);
+			pm.Save();
+			pm.UnloadCache();
+			decimal count;
+			count = (decimal) new NDOQuery<CmpBi11OthpconNoTblGuidLeft>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #1");
+			count = (decimal) new NDOQuery<CmpBi11OthpconNoTblGuidRightBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #2");
+		}
+		catch (Exception)
+		{
+			var handler = pm.GetSqlPassThroughHandler( pm.NDOMapping.Connections.First() );
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( ownVar.GetType() ).TableName}");
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( otherVar.GetType() ).TableName}");
+		}
 	}
 	[Test]
 	public void TestSaveReload()
@@ -15204,10 +16249,6 @@ public class TestCmpBi11OthpconNoTblGuid
 		QueryOwn();
 		Assert.NotNull(ownVar, "No Query Result");
 		Assert.Null(ownVar.RelField, "There should be no object");
-	}
-	[Test]
-	public void TestSaveReloadRemove()
-	{
 	}
 	[Test]
 	public void TestChangeKeyHolderLeft()
@@ -15321,16 +16362,26 @@ public class TestCmpBi11OthpconTblGuid
 	[TearDown]
 	public void TearDown()
 	{
-		pm.UnloadCache();
-		var l = pm.Objects<CmpBi11OthpconTblGuidLeft>().ResultTable;
-		pm.Delete(l);
-		pm.Save();
-		pm.UnloadCache();
-		decimal count;
-		count = (decimal) new NDOQuery<CmpBi11OthpconTblGuidLeft>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<CmpBi11OthpconTblGuidRightBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #2");
+		try
+		{
+			pm.UnloadCache();
+			var l = pm.Objects<CmpBi11OthpconTblGuidLeft>().ResultTable;
+			pm.Delete(l);
+			pm.Save();
+			pm.UnloadCache();
+			decimal count;
+			count = (decimal) new NDOQuery<CmpBi11OthpconTblGuidLeft>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #1");
+			count = (decimal) new NDOQuery<CmpBi11OthpconTblGuidRightBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #2");
+		}
+		catch (Exception)
+		{
+			var handler = pm.GetSqlPassThroughHandler( pm.NDOMapping.Connections.First() );
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( ownVar.GetType() ).TableName}");
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( otherVar.GetType() ).TableName}");
+			handler.Execute( $"DELETE FROM {pm.NDOMapping.FindClass( ownVar.GetType() ).Relations.First().MappingTable.TableName}" );
+		}
 	}
 	[Test]
 	public void TestSaveReload()
@@ -15353,10 +16404,6 @@ public class TestCmpBi11OthpconTblGuid
 		QueryOwn();
 		Assert.NotNull(ownVar, "No Query Result");
 		Assert.Null(ownVar.RelField, "There should be no object");
-	}
-	[Test]
-	public void TestSaveReloadRemove()
-	{
 	}
 	[Test]
 	public void TestChangeKeyHolderLeft()
@@ -15470,16 +16517,26 @@ public class TestCmpDirnOthpconTblGuid
 	[TearDown]
 	public void TearDown()
 	{
-		pm.UnloadCache();
-		var l = pm.Objects<CmpDirnOthpconTblGuidLeft>().ResultTable;
-		pm.Delete(l);
-		pm.Save();
-		pm.UnloadCache();
-		decimal count;
-		count = (decimal) new NDOQuery<CmpDirnOthpconTblGuidLeft>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<CmpDirnOthpconTblGuidRightBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #2");
+		try
+		{
+			pm.UnloadCache();
+			var l = pm.Objects<CmpDirnOthpconTblGuidLeft>().ResultTable;
+			pm.Delete(l);
+			pm.Save();
+			pm.UnloadCache();
+			decimal count;
+			count = (decimal) new NDOQuery<CmpDirnOthpconTblGuidLeft>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #1");
+			count = (decimal) new NDOQuery<CmpDirnOthpconTblGuidRightBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #2");
+		}
+		catch (Exception)
+		{
+			var handler = pm.GetSqlPassThroughHandler( pm.NDOMapping.Connections.First() );
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( ownVar.GetType() ).TableName}");
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( otherVar.GetType() ).TableName}");
+			handler.Execute( $"DELETE FROM {pm.NDOMapping.FindClass( ownVar.GetType() ).Relations.First().MappingTable.TableName}" );
+		}
 	}
 	[Test]
 	public void TestSaveReload()
@@ -15553,16 +16610,26 @@ public class TestCmpBin1OthpconTblGuid
 	[TearDown]
 	public void TearDown()
 	{
-		pm.UnloadCache();
-		var l = pm.Objects<CmpBin1OthpconTblGuidLeft>().ResultTable;
-		pm.Delete(l);
-		pm.Save();
-		pm.UnloadCache();
-		decimal count;
-		count = (decimal) new NDOQuery<CmpBin1OthpconTblGuidLeft>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<CmpBin1OthpconTblGuidRightBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #2");
+		try
+		{
+			pm.UnloadCache();
+			var l = pm.Objects<CmpBin1OthpconTblGuidLeft>().ResultTable;
+			pm.Delete(l);
+			pm.Save();
+			pm.UnloadCache();
+			decimal count;
+			count = (decimal) new NDOQuery<CmpBin1OthpconTblGuidLeft>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #1");
+			count = (decimal) new NDOQuery<CmpBin1OthpconTblGuidRightBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #2");
+		}
+		catch (Exception)
+		{
+			var handler = pm.GetSqlPassThroughHandler( pm.NDOMapping.Connections.First() );
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( ownVar.GetType() ).TableName}");
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( otherVar.GetType() ).TableName}");
+			handler.Execute( $"DELETE FROM {pm.NDOMapping.FindClass( ownVar.GetType() ).Relations.First().MappingTable.TableName}" );
+		}
 	}
 	[Test]
 	public void TestSaveReload()
@@ -15681,16 +16748,25 @@ public class TestCmpBi1nOthpconNoTblGuid
 	[TearDown]
 	public void TearDown()
 	{
-		pm.UnloadCache();
-		var l = pm.Objects<CmpBi1nOthpconNoTblGuidLeft>().ResultTable;
-		pm.Delete(l);
-		pm.Save();
-		pm.UnloadCache();
-		decimal count;
-		count = (decimal) new NDOQuery<CmpBi1nOthpconNoTblGuidLeft>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<CmpBi1nOthpconNoTblGuidRightBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #2");
+		try
+		{
+			pm.UnloadCache();
+			var l = pm.Objects<CmpBi1nOthpconNoTblGuidLeft>().ResultTable;
+			pm.Delete(l);
+			pm.Save();
+			pm.UnloadCache();
+			decimal count;
+			count = (decimal) new NDOQuery<CmpBi1nOthpconNoTblGuidLeft>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #1");
+			count = (decimal) new NDOQuery<CmpBi1nOthpconNoTblGuidRightBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #2");
+		}
+		catch (Exception)
+		{
+			var handler = pm.GetSqlPassThroughHandler( pm.NDOMapping.Connections.First() );
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( ownVar.GetType() ).TableName}");
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( otherVar.GetType() ).TableName}");
+		}
 	}
 	[Test]
 	public void TestSaveReload()
@@ -15713,10 +16789,6 @@ public class TestCmpBi1nOthpconNoTblGuid
 		QueryOwn();
 		Assert.NotNull(ownVar, "No Query Result");
 		Assert.Null(ownVar.RelField, "There should be no object");
-	}
-	[Test]
-	public void TestSaveReloadRemove()
-	{
 	}
 	[Test]
 	public void TestChangeKeyHolderLeft()
@@ -15799,16 +16871,26 @@ public class TestCmpBi1nOthpconTblGuid
 	[TearDown]
 	public void TearDown()
 	{
-		pm.UnloadCache();
-		var l = pm.Objects<CmpBi1nOthpconTblGuidLeft>().ResultTable;
-		pm.Delete(l);
-		pm.Save();
-		pm.UnloadCache();
-		decimal count;
-		count = (decimal) new NDOQuery<CmpBi1nOthpconTblGuidLeft>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<CmpBi1nOthpconTblGuidRightBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #2");
+		try
+		{
+			pm.UnloadCache();
+			var l = pm.Objects<CmpBi1nOthpconTblGuidLeft>().ResultTable;
+			pm.Delete(l);
+			pm.Save();
+			pm.UnloadCache();
+			decimal count;
+			count = (decimal) new NDOQuery<CmpBi1nOthpconTblGuidLeft>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #1");
+			count = (decimal) new NDOQuery<CmpBi1nOthpconTblGuidRightBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #2");
+		}
+		catch (Exception)
+		{
+			var handler = pm.GetSqlPassThroughHandler( pm.NDOMapping.Connections.First() );
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( ownVar.GetType() ).TableName}");
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( otherVar.GetType() ).TableName}");
+			handler.Execute( $"DELETE FROM {pm.NDOMapping.FindClass( ownVar.GetType() ).Relations.First().MappingTable.TableName}" );
+		}
 	}
 	[Test]
 	public void TestSaveReload()
@@ -15831,10 +16913,6 @@ public class TestCmpBi1nOthpconTblGuid
 		QueryOwn();
 		Assert.NotNull(ownVar, "No Query Result");
 		Assert.Null(ownVar.RelField, "There should be no object");
-	}
-	[Test]
-	public void TestSaveReloadRemove()
-	{
 	}
 	[Test]
 	public void TestChangeKeyHolderLeft()
@@ -15917,16 +16995,26 @@ public class TestCmpBinnOthpconTblGuid
 	[TearDown]
 	public void TearDown()
 	{
-		pm.UnloadCache();
-		var l = pm.Objects<CmpBinnOthpconTblGuidLeft>().ResultTable;
-		pm.Delete(l);
-		pm.Save();
-		pm.UnloadCache();
-		decimal count;
-		count = (decimal) new NDOQuery<CmpBinnOthpconTblGuidLeft>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<CmpBinnOthpconTblGuidRightBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #2");
+		try
+		{
+			pm.UnloadCache();
+			var l = pm.Objects<CmpBinnOthpconTblGuidLeft>().ResultTable;
+			pm.Delete(l);
+			pm.Save();
+			pm.UnloadCache();
+			decimal count;
+			count = (decimal) new NDOQuery<CmpBinnOthpconTblGuidLeft>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #1");
+			count = (decimal) new NDOQuery<CmpBinnOthpconTblGuidRightBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #2");
+		}
+		catch (Exception)
+		{
+			var handler = pm.GetSqlPassThroughHandler( pm.NDOMapping.Connections.First() );
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( ownVar.GetType() ).TableName}");
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( otherVar.GetType() ).TableName}");
+			handler.Execute( $"DELETE FROM {pm.NDOMapping.FindClass( ownVar.GetType() ).Relations.First().MappingTable.TableName}" );
+		}
 	}
 	[Test]
 	public void TestSaveReload()
@@ -16014,20 +17102,29 @@ public class TestAgrDir1OwnpconOthpconNoTblGuid
 	[TearDown]
 	public void TearDown()
 	{
-		pm.UnloadCache();
-		var l = pm.Objects<AgrDir1OwnpconOthpconNoTblGuidLeftBase>().ResultTable;
-		pm.Delete(l);
-		pm.Save();
-		pm.UnloadCache();
-		var m = pm.Objects<AgrDir1OwnpconOthpconNoTblGuidRightBase>().ResultTable;
-		pm.Delete(m);
-		pm.Save();
-		pm.UnloadCache();
-		decimal count;
-		count = (decimal) new NDOQuery<AgrDir1OwnpconOthpconNoTblGuidLeftBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<AgrDir1OwnpconOthpconNoTblGuidRightBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #2");
+		try
+		{
+			pm.UnloadCache();
+			var l = pm.Objects<AgrDir1OwnpconOthpconNoTblGuidLeftBase>().ResultTable;
+			pm.Delete(l);
+			pm.Save();
+			pm.UnloadCache();
+			var m = pm.Objects<AgrDir1OwnpconOthpconNoTblGuidRightBase>().ResultTable;
+			pm.Delete(m);
+			pm.Save();
+			pm.UnloadCache();
+			decimal count;
+			count = (decimal) new NDOQuery<AgrDir1OwnpconOthpconNoTblGuidLeftBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #1");
+			count = (decimal) new NDOQuery<AgrDir1OwnpconOthpconNoTblGuidRightBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #2");
+		}
+		catch (Exception)
+		{
+			var handler = pm.GetSqlPassThroughHandler( pm.NDOMapping.Connections.First() );
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( ownVar.GetType() ).TableName}");
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( otherVar.GetType() ).TableName}");
+		}
 	}
 	[Test]
 	public void TestSaveReload()
@@ -16050,10 +17147,6 @@ public class TestAgrDir1OwnpconOthpconNoTblGuid
 		QueryOwn();
 		Assert.NotNull(ownVar, "No Query Result");
 		Assert.Null(ownVar.RelField, "There should be no object");
-	}
-	[Test]
-	public void TestSaveReloadRemove()
-	{
 	}
 	[Test]
 	public void TestChangeKeyHolderLeft()
@@ -16123,20 +17216,30 @@ public class TestAgrDir1OwnpconOthpconTblGuid
 	[TearDown]
 	public void TearDown()
 	{
-		pm.UnloadCache();
-		var l = pm.Objects<AgrDir1OwnpconOthpconTblGuidLeftBase>().ResultTable;
-		pm.Delete(l);
-		pm.Save();
-		pm.UnloadCache();
-		var m = pm.Objects<AgrDir1OwnpconOthpconTblGuidRightBase>().ResultTable;
-		pm.Delete(m);
-		pm.Save();
-		pm.UnloadCache();
-		decimal count;
-		count = (decimal) new NDOQuery<AgrDir1OwnpconOthpconTblGuidLeftBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<AgrDir1OwnpconOthpconTblGuidRightBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #2");
+		try
+		{
+			pm.UnloadCache();
+			var l = pm.Objects<AgrDir1OwnpconOthpconTblGuidLeftBase>().ResultTable;
+			pm.Delete(l);
+			pm.Save();
+			pm.UnloadCache();
+			var m = pm.Objects<AgrDir1OwnpconOthpconTblGuidRightBase>().ResultTable;
+			pm.Delete(m);
+			pm.Save();
+			pm.UnloadCache();
+			decimal count;
+			count = (decimal) new NDOQuery<AgrDir1OwnpconOthpconTblGuidLeftBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #1");
+			count = (decimal) new NDOQuery<AgrDir1OwnpconOthpconTblGuidRightBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #2");
+		}
+		catch (Exception)
+		{
+			var handler = pm.GetSqlPassThroughHandler( pm.NDOMapping.Connections.First() );
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( ownVar.GetType() ).TableName}");
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( otherVar.GetType() ).TableName}");
+			handler.Execute( $"DELETE FROM {pm.NDOMapping.FindClass( ownVar.GetType() ).Relations.First().MappingTable.TableName}" );
+		}
 	}
 	[Test]
 	public void TestSaveReload()
@@ -16159,10 +17262,6 @@ public class TestAgrDir1OwnpconOthpconTblGuid
 		QueryOwn();
 		Assert.NotNull(ownVar, "No Query Result");
 		Assert.Null(ownVar.RelField, "There should be no object");
-	}
-	[Test]
-	public void TestSaveReloadRemove()
-	{
 	}
 	[Test]
 	public void TestChangeKeyHolderLeft()
@@ -16232,20 +17331,29 @@ public class TestAgrBi11OwnpconOthpconNoTblGuid
 	[TearDown]
 	public void TearDown()
 	{
-		pm.UnloadCache();
-		var l = pm.Objects<AgrBi11OwnpconOthpconNoTblGuidLeftBase>().ResultTable;
-		pm.Delete(l);
-		pm.Save();
-		pm.UnloadCache();
-		var m = pm.Objects<AgrBi11OwnpconOthpconNoTblGuidRightBase>().ResultTable;
-		pm.Delete(m);
-		pm.Save();
-		pm.UnloadCache();
-		decimal count;
-		count = (decimal) new NDOQuery<AgrBi11OwnpconOthpconNoTblGuidLeftBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<AgrBi11OwnpconOthpconNoTblGuidRightBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #2");
+		try
+		{
+			pm.UnloadCache();
+			var l = pm.Objects<AgrBi11OwnpconOthpconNoTblGuidLeftBase>().ResultTable;
+			pm.Delete(l);
+			pm.Save();
+			pm.UnloadCache();
+			var m = pm.Objects<AgrBi11OwnpconOthpconNoTblGuidRightBase>().ResultTable;
+			pm.Delete(m);
+			pm.Save();
+			pm.UnloadCache();
+			decimal count;
+			count = (decimal) new NDOQuery<AgrBi11OwnpconOthpconNoTblGuidLeftBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #1");
+			count = (decimal) new NDOQuery<AgrBi11OwnpconOthpconNoTblGuidRightBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #2");
+		}
+		catch (Exception)
+		{
+			var handler = pm.GetSqlPassThroughHandler( pm.NDOMapping.Connections.First() );
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( ownVar.GetType() ).TableName}");
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( otherVar.GetType() ).TableName}");
+		}
 	}
 	[Test]
 	public void TestSaveReload()
@@ -16268,10 +17376,6 @@ public class TestAgrBi11OwnpconOthpconNoTblGuid
 		QueryOwn();
 		Assert.NotNull(ownVar, "No Query Result");
 		Assert.Null(ownVar.RelField, "There should be no object");
-	}
-	[Test]
-	public void TestSaveReloadRemove()
-	{
 	}
 	[Test]
 	public void TestChangeKeyHolderLeft()
@@ -16392,20 +17496,30 @@ public class TestAgrBi11OwnpconOthpconTblGuid
 	[TearDown]
 	public void TearDown()
 	{
-		pm.UnloadCache();
-		var l = pm.Objects<AgrBi11OwnpconOthpconTblGuidLeftBase>().ResultTable;
-		pm.Delete(l);
-		pm.Save();
-		pm.UnloadCache();
-		var m = pm.Objects<AgrBi11OwnpconOthpconTblGuidRightBase>().ResultTable;
-		pm.Delete(m);
-		pm.Save();
-		pm.UnloadCache();
-		decimal count;
-		count = (decimal) new NDOQuery<AgrBi11OwnpconOthpconTblGuidLeftBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<AgrBi11OwnpconOthpconTblGuidRightBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #2");
+		try
+		{
+			pm.UnloadCache();
+			var l = pm.Objects<AgrBi11OwnpconOthpconTblGuidLeftBase>().ResultTable;
+			pm.Delete(l);
+			pm.Save();
+			pm.UnloadCache();
+			var m = pm.Objects<AgrBi11OwnpconOthpconTblGuidRightBase>().ResultTable;
+			pm.Delete(m);
+			pm.Save();
+			pm.UnloadCache();
+			decimal count;
+			count = (decimal) new NDOQuery<AgrBi11OwnpconOthpconTblGuidLeftBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #1");
+			count = (decimal) new NDOQuery<AgrBi11OwnpconOthpconTblGuidRightBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #2");
+		}
+		catch (Exception)
+		{
+			var handler = pm.GetSqlPassThroughHandler( pm.NDOMapping.Connections.First() );
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( ownVar.GetType() ).TableName}");
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( otherVar.GetType() ).TableName}");
+			handler.Execute( $"DELETE FROM {pm.NDOMapping.FindClass( ownVar.GetType() ).Relations.First().MappingTable.TableName}" );
+		}
 	}
 	[Test]
 	public void TestSaveReload()
@@ -16428,10 +17542,6 @@ public class TestAgrBi11OwnpconOthpconTblGuid
 		QueryOwn();
 		Assert.NotNull(ownVar, "No Query Result");
 		Assert.Null(ownVar.RelField, "There should be no object");
-	}
-	[Test]
-	public void TestSaveReloadRemove()
-	{
 	}
 	[Test]
 	public void TestChangeKeyHolderLeft()
@@ -16552,20 +17662,30 @@ public class TestAgrDirnOwnpconOthpconTblGuid
 	[TearDown]
 	public void TearDown()
 	{
-		pm.UnloadCache();
-		var l = pm.Objects<AgrDirnOwnpconOthpconTblGuidLeftBase>().ResultTable;
-		pm.Delete(l);
-		pm.Save();
-		pm.UnloadCache();
-		var m = pm.Objects<AgrDirnOwnpconOthpconTblGuidRightBase>().ResultTable;
-		pm.Delete(m);
-		pm.Save();
-		pm.UnloadCache();
-		decimal count;
-		count = (decimal) new NDOQuery<AgrDirnOwnpconOthpconTblGuidLeftBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<AgrDirnOwnpconOthpconTblGuidRightBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #2");
+		try
+		{
+			pm.UnloadCache();
+			var l = pm.Objects<AgrDirnOwnpconOthpconTblGuidLeftBase>().ResultTable;
+			pm.Delete(l);
+			pm.Save();
+			pm.UnloadCache();
+			var m = pm.Objects<AgrDirnOwnpconOthpconTblGuidRightBase>().ResultTable;
+			pm.Delete(m);
+			pm.Save();
+			pm.UnloadCache();
+			decimal count;
+			count = (decimal) new NDOQuery<AgrDirnOwnpconOthpconTblGuidLeftBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #1");
+			count = (decimal) new NDOQuery<AgrDirnOwnpconOthpconTblGuidRightBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #2");
+		}
+		catch (Exception)
+		{
+			var handler = pm.GetSqlPassThroughHandler( pm.NDOMapping.Connections.First() );
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( ownVar.GetType() ).TableName}");
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( otherVar.GetType() ).TableName}");
+			handler.Execute( $"DELETE FROM {pm.NDOMapping.FindClass( ownVar.GetType() ).Relations.First().MappingTable.TableName}" );
+		}
 	}
 	[Test]
 	public void TestSaveReload()
@@ -16640,20 +17760,30 @@ public class TestAgrBin1OwnpconOthpconTblGuid
 	[TearDown]
 	public void TearDown()
 	{
-		pm.UnloadCache();
-		var l = pm.Objects<AgrBin1OwnpconOthpconTblGuidLeftBase>().ResultTable;
-		pm.Delete(l);
-		pm.Save();
-		pm.UnloadCache();
-		var m = pm.Objects<AgrBin1OwnpconOthpconTblGuidRightBase>().ResultTable;
-		pm.Delete(m);
-		pm.Save();
-		pm.UnloadCache();
-		decimal count;
-		count = (decimal) new NDOQuery<AgrBin1OwnpconOthpconTblGuidLeftBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<AgrBin1OwnpconOthpconTblGuidRightBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #2");
+		try
+		{
+			pm.UnloadCache();
+			var l = pm.Objects<AgrBin1OwnpconOthpconTblGuidLeftBase>().ResultTable;
+			pm.Delete(l);
+			pm.Save();
+			pm.UnloadCache();
+			var m = pm.Objects<AgrBin1OwnpconOthpconTblGuidRightBase>().ResultTable;
+			pm.Delete(m);
+			pm.Save();
+			pm.UnloadCache();
+			decimal count;
+			count = (decimal) new NDOQuery<AgrBin1OwnpconOthpconTblGuidLeftBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #1");
+			count = (decimal) new NDOQuery<AgrBin1OwnpconOthpconTblGuidRightBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #2");
+		}
+		catch (Exception)
+		{
+			var handler = pm.GetSqlPassThroughHandler( pm.NDOMapping.Connections.First() );
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( ownVar.GetType() ).TableName}");
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( otherVar.GetType() ).TableName}");
+			handler.Execute( $"DELETE FROM {pm.NDOMapping.FindClass( ownVar.GetType() ).Relations.First().MappingTable.TableName}" );
+		}
 	}
 	[Test]
 	public void TestSaveReload()
@@ -16779,20 +17909,30 @@ public class TestAgrBi1nOwnpconOthpconTblGuid
 	[TearDown]
 	public void TearDown()
 	{
-		pm.UnloadCache();
-		var l = pm.Objects<AgrBi1nOwnpconOthpconTblGuidLeftBase>().ResultTable;
-		pm.Delete(l);
-		pm.Save();
-		pm.UnloadCache();
-		var m = pm.Objects<AgrBi1nOwnpconOthpconTblGuidRightBase>().ResultTable;
-		pm.Delete(m);
-		pm.Save();
-		pm.UnloadCache();
-		decimal count;
-		count = (decimal) new NDOQuery<AgrBi1nOwnpconOthpconTblGuidLeftBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<AgrBi1nOwnpconOthpconTblGuidRightBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #2");
+		try
+		{
+			pm.UnloadCache();
+			var l = pm.Objects<AgrBi1nOwnpconOthpconTblGuidLeftBase>().ResultTable;
+			pm.Delete(l);
+			pm.Save();
+			pm.UnloadCache();
+			var m = pm.Objects<AgrBi1nOwnpconOthpconTblGuidRightBase>().ResultTable;
+			pm.Delete(m);
+			pm.Save();
+			pm.UnloadCache();
+			decimal count;
+			count = (decimal) new NDOQuery<AgrBi1nOwnpconOthpconTblGuidLeftBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #1");
+			count = (decimal) new NDOQuery<AgrBi1nOwnpconOthpconTblGuidRightBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #2");
+		}
+		catch (Exception)
+		{
+			var handler = pm.GetSqlPassThroughHandler( pm.NDOMapping.Connections.First() );
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( ownVar.GetType() ).TableName}");
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( otherVar.GetType() ).TableName}");
+			handler.Execute( $"DELETE FROM {pm.NDOMapping.FindClass( ownVar.GetType() ).Relations.First().MappingTable.TableName}" );
+		}
 	}
 	[Test]
 	public void TestSaveReload()
@@ -16815,10 +17955,6 @@ public class TestAgrBi1nOwnpconOthpconTblGuid
 		QueryOwn();
 		Assert.NotNull(ownVar, "No Query Result");
 		Assert.Null(ownVar.RelField, "There should be no object");
-	}
-	[Test]
-	public void TestSaveReloadRemove()
-	{
 	}
 	[Test]
 	public void TestChangeKeyHolderLeft()
@@ -16908,20 +18044,30 @@ public class TestAgrBinnOwnpconOthpconTblGuid
 	[TearDown]
 	public void TearDown()
 	{
-		pm.UnloadCache();
-		var l = pm.Objects<AgrBinnOwnpconOthpconTblGuidLeftBase>().ResultTable;
-		pm.Delete(l);
-		pm.Save();
-		pm.UnloadCache();
-		var m = pm.Objects<AgrBinnOwnpconOthpconTblGuidRightBase>().ResultTable;
-		pm.Delete(m);
-		pm.Save();
-		pm.UnloadCache();
-		decimal count;
-		count = (decimal) new NDOQuery<AgrBinnOwnpconOthpconTblGuidLeftBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<AgrBinnOwnpconOthpconTblGuidRightBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #2");
+		try
+		{
+			pm.UnloadCache();
+			var l = pm.Objects<AgrBinnOwnpconOthpconTblGuidLeftBase>().ResultTable;
+			pm.Delete(l);
+			pm.Save();
+			pm.UnloadCache();
+			var m = pm.Objects<AgrBinnOwnpconOthpconTblGuidRightBase>().ResultTable;
+			pm.Delete(m);
+			pm.Save();
+			pm.UnloadCache();
+			decimal count;
+			count = (decimal) new NDOQuery<AgrBinnOwnpconOthpconTblGuidLeftBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #1");
+			count = (decimal) new NDOQuery<AgrBinnOwnpconOthpconTblGuidRightBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #2");
+		}
+		catch (Exception)
+		{
+			var handler = pm.GetSqlPassThroughHandler( pm.NDOMapping.Connections.First() );
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( ownVar.GetType() ).TableName}");
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( otherVar.GetType() ).TableName}");
+			handler.Execute( $"DELETE FROM {pm.NDOMapping.FindClass( ownVar.GetType() ).Relations.First().MappingTable.TableName}" );
+		}
 	}
 	[Test]
 	public void TestSaveReload()
@@ -17016,16 +18162,25 @@ public class TestCmpDir1OwnpconOthpconNoTblGuid
 	[TearDown]
 	public void TearDown()
 	{
-		pm.UnloadCache();
-		var l = pm.Objects<CmpDir1OwnpconOthpconNoTblGuidLeftBase>().ResultTable;
-		pm.Delete(l);
-		pm.Save();
-		pm.UnloadCache();
-		decimal count;
-		count = (decimal) new NDOQuery<CmpDir1OwnpconOthpconNoTblGuidLeftBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<CmpDir1OwnpconOthpconNoTblGuidRightBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #2");
+		try
+		{
+			pm.UnloadCache();
+			var l = pm.Objects<CmpDir1OwnpconOthpconNoTblGuidLeftBase>().ResultTable;
+			pm.Delete(l);
+			pm.Save();
+			pm.UnloadCache();
+			decimal count;
+			count = (decimal) new NDOQuery<CmpDir1OwnpconOthpconNoTblGuidLeftBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #1");
+			count = (decimal) new NDOQuery<CmpDir1OwnpconOthpconNoTblGuidRightBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #2");
+		}
+		catch (Exception)
+		{
+			var handler = pm.GetSqlPassThroughHandler( pm.NDOMapping.Connections.First() );
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( ownVar.GetType() ).TableName}");
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( otherVar.GetType() ).TableName}");
+		}
 	}
 	[Test]
 	public void TestSaveReload()
@@ -17048,10 +18203,6 @@ public class TestCmpDir1OwnpconOthpconNoTblGuid
 		QueryOwn();
 		Assert.NotNull(ownVar, "No Query Result");
 		Assert.Null(ownVar.RelField, "There should be no object");
-	}
-	[Test]
-	public void TestSaveReloadRemove()
-	{
 	}
 	[Test]
 	public void TestChangeKeyHolderLeft()
@@ -17120,16 +18271,26 @@ public class TestCmpDir1OwnpconOthpconTblGuid
 	[TearDown]
 	public void TearDown()
 	{
-		pm.UnloadCache();
-		var l = pm.Objects<CmpDir1OwnpconOthpconTblGuidLeftBase>().ResultTable;
-		pm.Delete(l);
-		pm.Save();
-		pm.UnloadCache();
-		decimal count;
-		count = (decimal) new NDOQuery<CmpDir1OwnpconOthpconTblGuidLeftBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<CmpDir1OwnpconOthpconTblGuidRightBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #2");
+		try
+		{
+			pm.UnloadCache();
+			var l = pm.Objects<CmpDir1OwnpconOthpconTblGuidLeftBase>().ResultTable;
+			pm.Delete(l);
+			pm.Save();
+			pm.UnloadCache();
+			decimal count;
+			count = (decimal) new NDOQuery<CmpDir1OwnpconOthpconTblGuidLeftBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #1");
+			count = (decimal) new NDOQuery<CmpDir1OwnpconOthpconTblGuidRightBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #2");
+		}
+		catch (Exception)
+		{
+			var handler = pm.GetSqlPassThroughHandler( pm.NDOMapping.Connections.First() );
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( ownVar.GetType() ).TableName}");
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( otherVar.GetType() ).TableName}");
+			handler.Execute( $"DELETE FROM {pm.NDOMapping.FindClass( ownVar.GetType() ).Relations.First().MappingTable.TableName}" );
+		}
 	}
 	[Test]
 	public void TestSaveReload()
@@ -17152,10 +18313,6 @@ public class TestCmpDir1OwnpconOthpconTblGuid
 		QueryOwn();
 		Assert.NotNull(ownVar, "No Query Result");
 		Assert.Null(ownVar.RelField, "There should be no object");
-	}
-	[Test]
-	public void TestSaveReloadRemove()
-	{
 	}
 	[Test]
 	public void TestChangeKeyHolderLeft()
@@ -17224,16 +18381,25 @@ public class TestCmpBi11OwnpconOthpconNoTblGuid
 	[TearDown]
 	public void TearDown()
 	{
-		pm.UnloadCache();
-		var l = pm.Objects<CmpBi11OwnpconOthpconNoTblGuidLeftBase>().ResultTable;
-		pm.Delete(l);
-		pm.Save();
-		pm.UnloadCache();
-		decimal count;
-		count = (decimal) new NDOQuery<CmpBi11OwnpconOthpconNoTblGuidLeftBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<CmpBi11OwnpconOthpconNoTblGuidRightBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #2");
+		try
+		{
+			pm.UnloadCache();
+			var l = pm.Objects<CmpBi11OwnpconOthpconNoTblGuidLeftBase>().ResultTable;
+			pm.Delete(l);
+			pm.Save();
+			pm.UnloadCache();
+			decimal count;
+			count = (decimal) new NDOQuery<CmpBi11OwnpconOthpconNoTblGuidLeftBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #1");
+			count = (decimal) new NDOQuery<CmpBi11OwnpconOthpconNoTblGuidRightBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #2");
+		}
+		catch (Exception)
+		{
+			var handler = pm.GetSqlPassThroughHandler( pm.NDOMapping.Connections.First() );
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( ownVar.GetType() ).TableName}");
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( otherVar.GetType() ).TableName}");
+		}
 	}
 	[Test]
 	public void TestSaveReload()
@@ -17256,10 +18422,6 @@ public class TestCmpBi11OwnpconOthpconNoTblGuid
 		QueryOwn();
 		Assert.NotNull(ownVar, "No Query Result");
 		Assert.Null(ownVar.RelField, "There should be no object");
-	}
-	[Test]
-	public void TestSaveReloadRemove()
-	{
 	}
 	[Test]
 	public void TestChangeKeyHolderLeft()
@@ -17379,16 +18541,26 @@ public class TestCmpBi11OwnpconOthpconTblGuid
 	[TearDown]
 	public void TearDown()
 	{
-		pm.UnloadCache();
-		var l = pm.Objects<CmpBi11OwnpconOthpconTblGuidLeftBase>().ResultTable;
-		pm.Delete(l);
-		pm.Save();
-		pm.UnloadCache();
-		decimal count;
-		count = (decimal) new NDOQuery<CmpBi11OwnpconOthpconTblGuidLeftBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<CmpBi11OwnpconOthpconTblGuidRightBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #2");
+		try
+		{
+			pm.UnloadCache();
+			var l = pm.Objects<CmpBi11OwnpconOthpconTblGuidLeftBase>().ResultTable;
+			pm.Delete(l);
+			pm.Save();
+			pm.UnloadCache();
+			decimal count;
+			count = (decimal) new NDOQuery<CmpBi11OwnpconOthpconTblGuidLeftBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #1");
+			count = (decimal) new NDOQuery<CmpBi11OwnpconOthpconTblGuidRightBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #2");
+		}
+		catch (Exception)
+		{
+			var handler = pm.GetSqlPassThroughHandler( pm.NDOMapping.Connections.First() );
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( ownVar.GetType() ).TableName}");
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( otherVar.GetType() ).TableName}");
+			handler.Execute( $"DELETE FROM {pm.NDOMapping.FindClass( ownVar.GetType() ).Relations.First().MappingTable.TableName}" );
+		}
 	}
 	[Test]
 	public void TestSaveReload()
@@ -17411,10 +18583,6 @@ public class TestCmpBi11OwnpconOthpconTblGuid
 		QueryOwn();
 		Assert.NotNull(ownVar, "No Query Result");
 		Assert.Null(ownVar.RelField, "There should be no object");
-	}
-	[Test]
-	public void TestSaveReloadRemove()
-	{
 	}
 	[Test]
 	public void TestChangeKeyHolderLeft()
@@ -17534,16 +18702,26 @@ public class TestCmpDirnOwnpconOthpconTblGuid
 	[TearDown]
 	public void TearDown()
 	{
-		pm.UnloadCache();
-		var l = pm.Objects<CmpDirnOwnpconOthpconTblGuidLeftBase>().ResultTable;
-		pm.Delete(l);
-		pm.Save();
-		pm.UnloadCache();
-		decimal count;
-		count = (decimal) new NDOQuery<CmpDirnOwnpconOthpconTblGuidLeftBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<CmpDirnOwnpconOthpconTblGuidRightBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #2");
+		try
+		{
+			pm.UnloadCache();
+			var l = pm.Objects<CmpDirnOwnpconOthpconTblGuidLeftBase>().ResultTable;
+			pm.Delete(l);
+			pm.Save();
+			pm.UnloadCache();
+			decimal count;
+			count = (decimal) new NDOQuery<CmpDirnOwnpconOthpconTblGuidLeftBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #1");
+			count = (decimal) new NDOQuery<CmpDirnOwnpconOthpconTblGuidRightBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #2");
+		}
+		catch (Exception)
+		{
+			var handler = pm.GetSqlPassThroughHandler( pm.NDOMapping.Connections.First() );
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( ownVar.GetType() ).TableName}");
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( otherVar.GetType() ).TableName}");
+			handler.Execute( $"DELETE FROM {pm.NDOMapping.FindClass( ownVar.GetType() ).Relations.First().MappingTable.TableName}" );
+		}
 	}
 	[Test]
 	public void TestSaveReload()
@@ -17617,16 +18795,26 @@ public class TestCmpBin1OwnpconOthpconTblGuid
 	[TearDown]
 	public void TearDown()
 	{
-		pm.UnloadCache();
-		var l = pm.Objects<CmpBin1OwnpconOthpconTblGuidLeftBase>().ResultTable;
-		pm.Delete(l);
-		pm.Save();
-		pm.UnloadCache();
-		decimal count;
-		count = (decimal) new NDOQuery<CmpBin1OwnpconOthpconTblGuidLeftBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<CmpBin1OwnpconOthpconTblGuidRightBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #2");
+		try
+		{
+			pm.UnloadCache();
+			var l = pm.Objects<CmpBin1OwnpconOthpconTblGuidLeftBase>().ResultTable;
+			pm.Delete(l);
+			pm.Save();
+			pm.UnloadCache();
+			decimal count;
+			count = (decimal) new NDOQuery<CmpBin1OwnpconOthpconTblGuidLeftBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #1");
+			count = (decimal) new NDOQuery<CmpBin1OwnpconOthpconTblGuidRightBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #2");
+		}
+		catch (Exception)
+		{
+			var handler = pm.GetSqlPassThroughHandler( pm.NDOMapping.Connections.First() );
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( ownVar.GetType() ).TableName}");
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( otherVar.GetType() ).TableName}");
+			handler.Execute( $"DELETE FROM {pm.NDOMapping.FindClass( ownVar.GetType() ).Relations.First().MappingTable.TableName}" );
+		}
 	}
 	[Test]
 	public void TestSaveReload()
@@ -17751,16 +18939,26 @@ public class TestCmpBi1nOwnpconOthpconTblGuid
 	[TearDown]
 	public void TearDown()
 	{
-		pm.UnloadCache();
-		var l = pm.Objects<CmpBi1nOwnpconOthpconTblGuidLeftBase>().ResultTable;
-		pm.Delete(l);
-		pm.Save();
-		pm.UnloadCache();
-		decimal count;
-		count = (decimal) new NDOQuery<CmpBi1nOwnpconOthpconTblGuidLeftBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<CmpBi1nOwnpconOthpconTblGuidRightBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #2");
+		try
+		{
+			pm.UnloadCache();
+			var l = pm.Objects<CmpBi1nOwnpconOthpconTblGuidLeftBase>().ResultTable;
+			pm.Delete(l);
+			pm.Save();
+			pm.UnloadCache();
+			decimal count;
+			count = (decimal) new NDOQuery<CmpBi1nOwnpconOthpconTblGuidLeftBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #1");
+			count = (decimal) new NDOQuery<CmpBi1nOwnpconOthpconTblGuidRightBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #2");
+		}
+		catch (Exception)
+		{
+			var handler = pm.GetSqlPassThroughHandler( pm.NDOMapping.Connections.First() );
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( ownVar.GetType() ).TableName}");
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( otherVar.GetType() ).TableName}");
+			handler.Execute( $"DELETE FROM {pm.NDOMapping.FindClass( ownVar.GetType() ).Relations.First().MappingTable.TableName}" );
+		}
 	}
 	[Test]
 	public void TestSaveReload()
@@ -17783,10 +18981,6 @@ public class TestCmpBi1nOwnpconOthpconTblGuid
 		QueryOwn();
 		Assert.NotNull(ownVar, "No Query Result");
 		Assert.Null(ownVar.RelField, "There should be no object");
-	}
-	[Test]
-	public void TestSaveReloadRemove()
-	{
 	}
 	[Test]
 	public void TestChangeKeyHolderLeft()
@@ -17875,16 +19069,26 @@ public class TestCmpBinnOwnpconOthpconTblGuid
 	[TearDown]
 	public void TearDown()
 	{
-		pm.UnloadCache();
-		var l = pm.Objects<CmpBinnOwnpconOthpconTblGuidLeftBase>().ResultTable;
-		pm.Delete(l);
-		pm.Save();
-		pm.UnloadCache();
-		decimal count;
-		count = (decimal) new NDOQuery<CmpBinnOwnpconOthpconTblGuidLeftBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<CmpBinnOwnpconOthpconTblGuidRightBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #2");
+		try
+		{
+			pm.UnloadCache();
+			var l = pm.Objects<CmpBinnOwnpconOthpconTblGuidLeftBase>().ResultTable;
+			pm.Delete(l);
+			pm.Save();
+			pm.UnloadCache();
+			decimal count;
+			count = (decimal) new NDOQuery<CmpBinnOwnpconOthpconTblGuidLeftBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #1");
+			count = (decimal) new NDOQuery<CmpBinnOwnpconOthpconTblGuidRightBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #2");
+		}
+		catch (Exception)
+		{
+			var handler = pm.GetSqlPassThroughHandler( pm.NDOMapping.Connections.First() );
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( ownVar.GetType() ).TableName}");
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( otherVar.GetType() ).TableName}");
+			handler.Execute( $"DELETE FROM {pm.NDOMapping.FindClass( ownVar.GetType() ).Relations.First().MappingTable.TableName}" );
+		}
 	}
 	[Test]
 	public void TestSaveReload()
@@ -17978,20 +19182,29 @@ public class TestAgrDir1OwnpabsNoTblAuto
 	[TearDown]
 	public void TearDown()
 	{
-		pm.UnloadCache();
-		var l = pm.Objects<AgrDir1OwnpabsNoTblAutoLeftBase>().ResultTable;
-		pm.Delete(l);
-		pm.Save();
-		pm.UnloadCache();
-		var m = pm.Objects<AgrDir1OwnpabsNoTblAutoRight>().ResultTable;
-		pm.Delete(m);
-		pm.Save();
-		pm.UnloadCache();
-		decimal count;
-		count = (decimal) new NDOQuery<AgrDir1OwnpabsNoTblAutoLeftBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<AgrDir1OwnpabsNoTblAutoRight>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #2");
+		try
+		{
+			pm.UnloadCache();
+			var l = pm.Objects<AgrDir1OwnpabsNoTblAutoLeftBase>().ResultTable;
+			pm.Delete(l);
+			pm.Save();
+			pm.UnloadCache();
+			var m = pm.Objects<AgrDir1OwnpabsNoTblAutoRight>().ResultTable;
+			pm.Delete(m);
+			pm.Save();
+			pm.UnloadCache();
+			decimal count;
+			count = (decimal) new NDOQuery<AgrDir1OwnpabsNoTblAutoLeftBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #1");
+			count = (decimal) new NDOQuery<AgrDir1OwnpabsNoTblAutoRight>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #2");
+		}
+		catch (Exception)
+		{
+			var handler = pm.GetSqlPassThroughHandler( pm.NDOMapping.Connections.First() );
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( ownVar.GetType() ).TableName}");
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( otherVar.GetType() ).TableName}");
+		}
 	}
 	[Test]
 	public void TestSaveReload()
@@ -18014,10 +19227,6 @@ public class TestAgrDir1OwnpabsNoTblAuto
 		QueryOwn();
 		Assert.NotNull(ownVar, "No Query Result");
 		Assert.Null(ownVar.RelField, "There should be no object");
-	}
-	[Test]
-	public void TestSaveReloadRemove()
-	{
 	}
 	[Test]
 	public void TestChangeKeyHolderLeft()
@@ -18096,20 +19305,30 @@ public class TestAgrDir1OwnpabsTblAuto
 	[TearDown]
 	public void TearDown()
 	{
-		pm.UnloadCache();
-		var l = pm.Objects<AgrDir1OwnpabsTblAutoLeftBase>().ResultTable;
-		pm.Delete(l);
-		pm.Save();
-		pm.UnloadCache();
-		var m = pm.Objects<AgrDir1OwnpabsTblAutoRight>().ResultTable;
-		pm.Delete(m);
-		pm.Save();
-		pm.UnloadCache();
-		decimal count;
-		count = (decimal) new NDOQuery<AgrDir1OwnpabsTblAutoLeftBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<AgrDir1OwnpabsTblAutoRight>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #2");
+		try
+		{
+			pm.UnloadCache();
+			var l = pm.Objects<AgrDir1OwnpabsTblAutoLeftBase>().ResultTable;
+			pm.Delete(l);
+			pm.Save();
+			pm.UnloadCache();
+			var m = pm.Objects<AgrDir1OwnpabsTblAutoRight>().ResultTable;
+			pm.Delete(m);
+			pm.Save();
+			pm.UnloadCache();
+			decimal count;
+			count = (decimal) new NDOQuery<AgrDir1OwnpabsTblAutoLeftBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #1");
+			count = (decimal) new NDOQuery<AgrDir1OwnpabsTblAutoRight>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #2");
+		}
+		catch (Exception)
+		{
+			var handler = pm.GetSqlPassThroughHandler( pm.NDOMapping.Connections.First() );
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( ownVar.GetType() ).TableName}");
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( otherVar.GetType() ).TableName}");
+			handler.Execute( $"DELETE FROM {pm.NDOMapping.FindClass( ownVar.GetType() ).Relations.First().MappingTable.TableName}" );
+		}
 	}
 	[Test]
 	public void TestSaveReload()
@@ -18132,10 +19351,6 @@ public class TestAgrDir1OwnpabsTblAuto
 		QueryOwn();
 		Assert.NotNull(ownVar, "No Query Result");
 		Assert.Null(ownVar.RelField, "There should be no object");
-	}
-	[Test]
-	public void TestSaveReloadRemove()
-	{
 	}
 	[Test]
 	public void TestChangeKeyHolderLeft()
@@ -18205,20 +19420,29 @@ public class TestAgrBi11OwnpabsNoTblAuto
 	[TearDown]
 	public void TearDown()
 	{
-		pm.UnloadCache();
-		var l = pm.Objects<AgrBi11OwnpabsNoTblAutoLeftBase>().ResultTable;
-		pm.Delete(l);
-		pm.Save();
-		pm.UnloadCache();
-		var m = pm.Objects<AgrBi11OwnpabsNoTblAutoRight>().ResultTable;
-		pm.Delete(m);
-		pm.Save();
-		pm.UnloadCache();
-		decimal count;
-		count = (decimal) new NDOQuery<AgrBi11OwnpabsNoTblAutoLeftBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<AgrBi11OwnpabsNoTblAutoRight>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #2");
+		try
+		{
+			pm.UnloadCache();
+			var l = pm.Objects<AgrBi11OwnpabsNoTblAutoLeftBase>().ResultTable;
+			pm.Delete(l);
+			pm.Save();
+			pm.UnloadCache();
+			var m = pm.Objects<AgrBi11OwnpabsNoTblAutoRight>().ResultTable;
+			pm.Delete(m);
+			pm.Save();
+			pm.UnloadCache();
+			decimal count;
+			count = (decimal) new NDOQuery<AgrBi11OwnpabsNoTblAutoLeftBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #1");
+			count = (decimal) new NDOQuery<AgrBi11OwnpabsNoTblAutoRight>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #2");
+		}
+		catch (Exception)
+		{
+			var handler = pm.GetSqlPassThroughHandler( pm.NDOMapping.Connections.First() );
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( ownVar.GetType() ).TableName}");
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( otherVar.GetType() ).TableName}");
+		}
 	}
 	[Test]
 	public void TestSaveReload()
@@ -18241,10 +19465,6 @@ public class TestAgrBi11OwnpabsNoTblAuto
 		QueryOwn();
 		Assert.NotNull(ownVar, "No Query Result");
 		Assert.Null(ownVar.RelField, "There should be no object");
-	}
-	[Test]
-	public void TestSaveReloadRemove()
-	{
 	}
 	[Test]
 	public void TestChangeKeyHolderLeft()
@@ -18360,20 +19580,30 @@ public class TestAgrBi11OwnpabsTblAuto
 	[TearDown]
 	public void TearDown()
 	{
-		pm.UnloadCache();
-		var l = pm.Objects<AgrBi11OwnpabsTblAutoLeftBase>().ResultTable;
-		pm.Delete(l);
-		pm.Save();
-		pm.UnloadCache();
-		var m = pm.Objects<AgrBi11OwnpabsTblAutoRight>().ResultTable;
-		pm.Delete(m);
-		pm.Save();
-		pm.UnloadCache();
-		decimal count;
-		count = (decimal) new NDOQuery<AgrBi11OwnpabsTblAutoLeftBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<AgrBi11OwnpabsTblAutoRight>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #2");
+		try
+		{
+			pm.UnloadCache();
+			var l = pm.Objects<AgrBi11OwnpabsTblAutoLeftBase>().ResultTable;
+			pm.Delete(l);
+			pm.Save();
+			pm.UnloadCache();
+			var m = pm.Objects<AgrBi11OwnpabsTblAutoRight>().ResultTable;
+			pm.Delete(m);
+			pm.Save();
+			pm.UnloadCache();
+			decimal count;
+			count = (decimal) new NDOQuery<AgrBi11OwnpabsTblAutoLeftBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #1");
+			count = (decimal) new NDOQuery<AgrBi11OwnpabsTblAutoRight>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #2");
+		}
+		catch (Exception)
+		{
+			var handler = pm.GetSqlPassThroughHandler( pm.NDOMapping.Connections.First() );
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( ownVar.GetType() ).TableName}");
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( otherVar.GetType() ).TableName}");
+			handler.Execute( $"DELETE FROM {pm.NDOMapping.FindClass( ownVar.GetType() ).Relations.First().MappingTable.TableName}" );
+		}
 	}
 	[Test]
 	public void TestSaveReload()
@@ -18396,10 +19626,6 @@ public class TestAgrBi11OwnpabsTblAuto
 		QueryOwn();
 		Assert.NotNull(ownVar, "No Query Result");
 		Assert.Null(ownVar.RelField, "There should be no object");
-	}
-	[Test]
-	public void TestSaveReloadRemove()
-	{
 	}
 	[Test]
 	public void TestChangeKeyHolderLeft()
@@ -18515,20 +19741,29 @@ public class TestAgrDirnOwnpabsNoTblAuto
 	[TearDown]
 	public void TearDown()
 	{
-		pm.UnloadCache();
-		var l = pm.Objects<AgrDirnOwnpabsNoTblAutoLeftBase>().ResultTable;
-		pm.Delete(l);
-		pm.Save();
-		pm.UnloadCache();
-		var m = pm.Objects<AgrDirnOwnpabsNoTblAutoRight>().ResultTable;
-		pm.Delete(m);
-		pm.Save();
-		pm.UnloadCache();
-		decimal count;
-		count = (decimal) new NDOQuery<AgrDirnOwnpabsNoTblAutoLeftBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<AgrDirnOwnpabsNoTblAutoRight>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #2");
+		try
+		{
+			pm.UnloadCache();
+			var l = pm.Objects<AgrDirnOwnpabsNoTblAutoLeftBase>().ResultTable;
+			pm.Delete(l);
+			pm.Save();
+			pm.UnloadCache();
+			var m = pm.Objects<AgrDirnOwnpabsNoTblAutoRight>().ResultTable;
+			pm.Delete(m);
+			pm.Save();
+			pm.UnloadCache();
+			decimal count;
+			count = (decimal) new NDOQuery<AgrDirnOwnpabsNoTblAutoLeftBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #1");
+			count = (decimal) new NDOQuery<AgrDirnOwnpabsNoTblAutoRight>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #2");
+		}
+		catch (Exception)
+		{
+			var handler = pm.GetSqlPassThroughHandler( pm.NDOMapping.Connections.First() );
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( ownVar.GetType() ).TableName}");
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( otherVar.GetType() ).TableName}");
+		}
 	}
 	[Test]
 	public void TestSaveReload()
@@ -18612,20 +19847,30 @@ public class TestAgrDirnOwnpabsTblAuto
 	[TearDown]
 	public void TearDown()
 	{
-		pm.UnloadCache();
-		var l = pm.Objects<AgrDirnOwnpabsTblAutoLeftBase>().ResultTable;
-		pm.Delete(l);
-		pm.Save();
-		pm.UnloadCache();
-		var m = pm.Objects<AgrDirnOwnpabsTblAutoRight>().ResultTable;
-		pm.Delete(m);
-		pm.Save();
-		pm.UnloadCache();
-		decimal count;
-		count = (decimal) new NDOQuery<AgrDirnOwnpabsTblAutoLeftBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<AgrDirnOwnpabsTblAutoRight>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #2");
+		try
+		{
+			pm.UnloadCache();
+			var l = pm.Objects<AgrDirnOwnpabsTblAutoLeftBase>().ResultTable;
+			pm.Delete(l);
+			pm.Save();
+			pm.UnloadCache();
+			var m = pm.Objects<AgrDirnOwnpabsTblAutoRight>().ResultTable;
+			pm.Delete(m);
+			pm.Save();
+			pm.UnloadCache();
+			decimal count;
+			count = (decimal) new NDOQuery<AgrDirnOwnpabsTblAutoLeftBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #1");
+			count = (decimal) new NDOQuery<AgrDirnOwnpabsTblAutoRight>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #2");
+		}
+		catch (Exception)
+		{
+			var handler = pm.GetSqlPassThroughHandler( pm.NDOMapping.Connections.First() );
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( ownVar.GetType() ).TableName}");
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( otherVar.GetType() ).TableName}");
+			handler.Execute( $"DELETE FROM {pm.NDOMapping.FindClass( ownVar.GetType() ).Relations.First().MappingTable.TableName}" );
+		}
 	}
 	[Test]
 	public void TestSaveReload()
@@ -18700,20 +19945,29 @@ public class TestAgrBin1OwnpabsNoTblAuto
 	[TearDown]
 	public void TearDown()
 	{
-		pm.UnloadCache();
-		var l = pm.Objects<AgrBin1OwnpabsNoTblAutoLeftBase>().ResultTable;
-		pm.Delete(l);
-		pm.Save();
-		pm.UnloadCache();
-		var m = pm.Objects<AgrBin1OwnpabsNoTblAutoRight>().ResultTable;
-		pm.Delete(m);
-		pm.Save();
-		pm.UnloadCache();
-		decimal count;
-		count = (decimal) new NDOQuery<AgrBin1OwnpabsNoTblAutoLeftBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<AgrBin1OwnpabsNoTblAutoRight>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #2");
+		try
+		{
+			pm.UnloadCache();
+			var l = pm.Objects<AgrBin1OwnpabsNoTblAutoLeftBase>().ResultTable;
+			pm.Delete(l);
+			pm.Save();
+			pm.UnloadCache();
+			var m = pm.Objects<AgrBin1OwnpabsNoTblAutoRight>().ResultTable;
+			pm.Delete(m);
+			pm.Save();
+			pm.UnloadCache();
+			decimal count;
+			count = (decimal) new NDOQuery<AgrBin1OwnpabsNoTblAutoLeftBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #1");
+			count = (decimal) new NDOQuery<AgrBin1OwnpabsNoTblAutoRight>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #2");
+		}
+		catch (Exception)
+		{
+			var handler = pm.GetSqlPassThroughHandler( pm.NDOMapping.Connections.First() );
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( ownVar.GetType() ).TableName}");
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( otherVar.GetType() ).TableName}");
+		}
 	}
 	[Test]
 	public void TestSaveReload()
@@ -18843,20 +20097,30 @@ public class TestAgrBin1OwnpabsTblAuto
 	[TearDown]
 	public void TearDown()
 	{
-		pm.UnloadCache();
-		var l = pm.Objects<AgrBin1OwnpabsTblAutoLeftBase>().ResultTable;
-		pm.Delete(l);
-		pm.Save();
-		pm.UnloadCache();
-		var m = pm.Objects<AgrBin1OwnpabsTblAutoRight>().ResultTable;
-		pm.Delete(m);
-		pm.Save();
-		pm.UnloadCache();
-		decimal count;
-		count = (decimal) new NDOQuery<AgrBin1OwnpabsTblAutoLeftBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<AgrBin1OwnpabsTblAutoRight>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #2");
+		try
+		{
+			pm.UnloadCache();
+			var l = pm.Objects<AgrBin1OwnpabsTblAutoLeftBase>().ResultTable;
+			pm.Delete(l);
+			pm.Save();
+			pm.UnloadCache();
+			var m = pm.Objects<AgrBin1OwnpabsTblAutoRight>().ResultTable;
+			pm.Delete(m);
+			pm.Save();
+			pm.UnloadCache();
+			decimal count;
+			count = (decimal) new NDOQuery<AgrBin1OwnpabsTblAutoLeftBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #1");
+			count = (decimal) new NDOQuery<AgrBin1OwnpabsTblAutoRight>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #2");
+		}
+		catch (Exception)
+		{
+			var handler = pm.GetSqlPassThroughHandler( pm.NDOMapping.Connections.First() );
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( ownVar.GetType() ).TableName}");
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( otherVar.GetType() ).TableName}");
+			handler.Execute( $"DELETE FROM {pm.NDOMapping.FindClass( ownVar.GetType() ).Relations.First().MappingTable.TableName}" );
+		}
 	}
 	[Test]
 	public void TestSaveReload()
@@ -18977,20 +20241,30 @@ public class TestAgrBi1nOwnpabsTblAuto
 	[TearDown]
 	public void TearDown()
 	{
-		pm.UnloadCache();
-		var l = pm.Objects<AgrBi1nOwnpabsTblAutoLeftBase>().ResultTable;
-		pm.Delete(l);
-		pm.Save();
-		pm.UnloadCache();
-		var m = pm.Objects<AgrBi1nOwnpabsTblAutoRight>().ResultTable;
-		pm.Delete(m);
-		pm.Save();
-		pm.UnloadCache();
-		decimal count;
-		count = (decimal) new NDOQuery<AgrBi1nOwnpabsTblAutoLeftBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<AgrBi1nOwnpabsTblAutoRight>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #2");
+		try
+		{
+			pm.UnloadCache();
+			var l = pm.Objects<AgrBi1nOwnpabsTblAutoLeftBase>().ResultTable;
+			pm.Delete(l);
+			pm.Save();
+			pm.UnloadCache();
+			var m = pm.Objects<AgrBi1nOwnpabsTblAutoRight>().ResultTable;
+			pm.Delete(m);
+			pm.Save();
+			pm.UnloadCache();
+			decimal count;
+			count = (decimal) new NDOQuery<AgrBi1nOwnpabsTblAutoLeftBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #1");
+			count = (decimal) new NDOQuery<AgrBi1nOwnpabsTblAutoRight>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #2");
+		}
+		catch (Exception)
+		{
+			var handler = pm.GetSqlPassThroughHandler( pm.NDOMapping.Connections.First() );
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( ownVar.GetType() ).TableName}");
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( otherVar.GetType() ).TableName}");
+			handler.Execute( $"DELETE FROM {pm.NDOMapping.FindClass( ownVar.GetType() ).Relations.First().MappingTable.TableName}" );
+		}
 	}
 	[Test]
 	public void TestSaveReload()
@@ -19013,10 +20287,6 @@ public class TestAgrBi1nOwnpabsTblAuto
 		QueryOwn();
 		Assert.NotNull(ownVar, "No Query Result");
 		Assert.Null(ownVar.RelField, "There should be no object");
-	}
-	[Test]
-	public void TestSaveReloadRemove()
-	{
 	}
 	[Test]
 	public void TestChangeKeyHolderLeft()
@@ -19100,20 +20370,30 @@ public class TestAgrBinnOwnpabsTblAuto
 	[TearDown]
 	public void TearDown()
 	{
-		pm.UnloadCache();
-		var l = pm.Objects<AgrBinnOwnpabsTblAutoLeftBase>().ResultTable;
-		pm.Delete(l);
-		pm.Save();
-		pm.UnloadCache();
-		var m = pm.Objects<AgrBinnOwnpabsTblAutoRight>().ResultTable;
-		pm.Delete(m);
-		pm.Save();
-		pm.UnloadCache();
-		decimal count;
-		count = (decimal) new NDOQuery<AgrBinnOwnpabsTblAutoLeftBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<AgrBinnOwnpabsTblAutoRight>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #2");
+		try
+		{
+			pm.UnloadCache();
+			var l = pm.Objects<AgrBinnOwnpabsTblAutoLeftBase>().ResultTable;
+			pm.Delete(l);
+			pm.Save();
+			pm.UnloadCache();
+			var m = pm.Objects<AgrBinnOwnpabsTblAutoRight>().ResultTable;
+			pm.Delete(m);
+			pm.Save();
+			pm.UnloadCache();
+			decimal count;
+			count = (decimal) new NDOQuery<AgrBinnOwnpabsTblAutoLeftBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #1");
+			count = (decimal) new NDOQuery<AgrBinnOwnpabsTblAutoRight>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #2");
+		}
+		catch (Exception)
+		{
+			var handler = pm.GetSqlPassThroughHandler( pm.NDOMapping.Connections.First() );
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( ownVar.GetType() ).TableName}");
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( otherVar.GetType() ).TableName}");
+			handler.Execute( $"DELETE FROM {pm.NDOMapping.FindClass( ownVar.GetType() ).Relations.First().MappingTable.TableName}" );
+		}
 	}
 	[Test]
 	public void TestSaveReload()
@@ -19202,16 +20482,25 @@ public class TestCmpDir1OwnpabsNoTblAuto
 	[TearDown]
 	public void TearDown()
 	{
-		pm.UnloadCache();
-		var l = pm.Objects<CmpDir1OwnpabsNoTblAutoLeftBase>().ResultTable;
-		pm.Delete(l);
-		pm.Save();
-		pm.UnloadCache();
-		decimal count;
-		count = (decimal) new NDOQuery<CmpDir1OwnpabsNoTblAutoLeftBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<CmpDir1OwnpabsNoTblAutoRight>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #2");
+		try
+		{
+			pm.UnloadCache();
+			var l = pm.Objects<CmpDir1OwnpabsNoTblAutoLeftBase>().ResultTable;
+			pm.Delete(l);
+			pm.Save();
+			pm.UnloadCache();
+			decimal count;
+			count = (decimal) new NDOQuery<CmpDir1OwnpabsNoTblAutoLeftBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #1");
+			count = (decimal) new NDOQuery<CmpDir1OwnpabsNoTblAutoRight>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #2");
+		}
+		catch (Exception)
+		{
+			var handler = pm.GetSqlPassThroughHandler( pm.NDOMapping.Connections.First() );
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( ownVar.GetType() ).TableName}");
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( otherVar.GetType() ).TableName}");
+		}
 	}
 	[Test]
 	public void TestSaveReload()
@@ -19234,10 +20523,6 @@ public class TestCmpDir1OwnpabsNoTblAuto
 		QueryOwn();
 		Assert.NotNull(ownVar, "No Query Result");
 		Assert.Null(ownVar.RelField, "There should be no object");
-	}
-	[Test]
-	public void TestSaveReloadRemove()
-	{
 	}
 	[Test]
 	public void TestChangeKeyHolderLeft()
@@ -19316,16 +20601,26 @@ public class TestCmpDir1OwnpabsTblAuto
 	[TearDown]
 	public void TearDown()
 	{
-		pm.UnloadCache();
-		var l = pm.Objects<CmpDir1OwnpabsTblAutoLeftBase>().ResultTable;
-		pm.Delete(l);
-		pm.Save();
-		pm.UnloadCache();
-		decimal count;
-		count = (decimal) new NDOQuery<CmpDir1OwnpabsTblAutoLeftBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<CmpDir1OwnpabsTblAutoRight>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #2");
+		try
+		{
+			pm.UnloadCache();
+			var l = pm.Objects<CmpDir1OwnpabsTblAutoLeftBase>().ResultTable;
+			pm.Delete(l);
+			pm.Save();
+			pm.UnloadCache();
+			decimal count;
+			count = (decimal) new NDOQuery<CmpDir1OwnpabsTblAutoLeftBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #1");
+			count = (decimal) new NDOQuery<CmpDir1OwnpabsTblAutoRight>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #2");
+		}
+		catch (Exception)
+		{
+			var handler = pm.GetSqlPassThroughHandler( pm.NDOMapping.Connections.First() );
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( ownVar.GetType() ).TableName}");
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( otherVar.GetType() ).TableName}");
+			handler.Execute( $"DELETE FROM {pm.NDOMapping.FindClass( ownVar.GetType() ).Relations.First().MappingTable.TableName}" );
+		}
 	}
 	[Test]
 	public void TestSaveReload()
@@ -19348,10 +20643,6 @@ public class TestCmpDir1OwnpabsTblAuto
 		QueryOwn();
 		Assert.NotNull(ownVar, "No Query Result");
 		Assert.Null(ownVar.RelField, "There should be no object");
-	}
-	[Test]
-	public void TestSaveReloadRemove()
-	{
 	}
 	[Test]
 	public void TestChangeKeyHolderLeft()
@@ -19420,16 +20711,25 @@ public class TestCmpBi11OwnpabsNoTblAuto
 	[TearDown]
 	public void TearDown()
 	{
-		pm.UnloadCache();
-		var l = pm.Objects<CmpBi11OwnpabsNoTblAutoLeftBase>().ResultTable;
-		pm.Delete(l);
-		pm.Save();
-		pm.UnloadCache();
-		decimal count;
-		count = (decimal) new NDOQuery<CmpBi11OwnpabsNoTblAutoLeftBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<CmpBi11OwnpabsNoTblAutoRight>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #2");
+		try
+		{
+			pm.UnloadCache();
+			var l = pm.Objects<CmpBi11OwnpabsNoTblAutoLeftBase>().ResultTable;
+			pm.Delete(l);
+			pm.Save();
+			pm.UnloadCache();
+			decimal count;
+			count = (decimal) new NDOQuery<CmpBi11OwnpabsNoTblAutoLeftBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #1");
+			count = (decimal) new NDOQuery<CmpBi11OwnpabsNoTblAutoRight>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #2");
+		}
+		catch (Exception)
+		{
+			var handler = pm.GetSqlPassThroughHandler( pm.NDOMapping.Connections.First() );
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( ownVar.GetType() ).TableName}");
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( otherVar.GetType() ).TableName}");
+		}
 	}
 	[Test]
 	public void TestSaveReload()
@@ -19452,10 +20752,6 @@ public class TestCmpBi11OwnpabsNoTblAuto
 		QueryOwn();
 		Assert.NotNull(ownVar, "No Query Result");
 		Assert.Null(ownVar.RelField, "There should be no object");
-	}
-	[Test]
-	public void TestSaveReloadRemove()
-	{
 	}
 	[Test]
 	public void TestChangeKeyHolderLeft()
@@ -19570,16 +20866,26 @@ public class TestCmpBi11OwnpabsTblAuto
 	[TearDown]
 	public void TearDown()
 	{
-		pm.UnloadCache();
-		var l = pm.Objects<CmpBi11OwnpabsTblAutoLeftBase>().ResultTable;
-		pm.Delete(l);
-		pm.Save();
-		pm.UnloadCache();
-		decimal count;
-		count = (decimal) new NDOQuery<CmpBi11OwnpabsTblAutoLeftBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<CmpBi11OwnpabsTblAutoRight>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #2");
+		try
+		{
+			pm.UnloadCache();
+			var l = pm.Objects<CmpBi11OwnpabsTblAutoLeftBase>().ResultTable;
+			pm.Delete(l);
+			pm.Save();
+			pm.UnloadCache();
+			decimal count;
+			count = (decimal) new NDOQuery<CmpBi11OwnpabsTblAutoLeftBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #1");
+			count = (decimal) new NDOQuery<CmpBi11OwnpabsTblAutoRight>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #2");
+		}
+		catch (Exception)
+		{
+			var handler = pm.GetSqlPassThroughHandler( pm.NDOMapping.Connections.First() );
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( ownVar.GetType() ).TableName}");
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( otherVar.GetType() ).TableName}");
+			handler.Execute( $"DELETE FROM {pm.NDOMapping.FindClass( ownVar.GetType() ).Relations.First().MappingTable.TableName}" );
+		}
 	}
 	[Test]
 	public void TestSaveReload()
@@ -19602,10 +20908,6 @@ public class TestCmpBi11OwnpabsTblAuto
 		QueryOwn();
 		Assert.NotNull(ownVar, "No Query Result");
 		Assert.Null(ownVar.RelField, "There should be no object");
-	}
-	[Test]
-	public void TestSaveReloadRemove()
-	{
 	}
 	[Test]
 	public void TestChangeKeyHolderLeft()
@@ -19719,16 +21021,25 @@ public class TestCmpDirnOwnpabsNoTblAuto
 	[TearDown]
 	public void TearDown()
 	{
-		pm.UnloadCache();
-		var l = pm.Objects<CmpDirnOwnpabsNoTblAutoLeftBase>().ResultTable;
-		pm.Delete(l);
-		pm.Save();
-		pm.UnloadCache();
-		decimal count;
-		count = (decimal) new NDOQuery<CmpDirnOwnpabsNoTblAutoLeftBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<CmpDirnOwnpabsNoTblAutoRight>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #2");
+		try
+		{
+			pm.UnloadCache();
+			var l = pm.Objects<CmpDirnOwnpabsNoTblAutoLeftBase>().ResultTable;
+			pm.Delete(l);
+			pm.Save();
+			pm.UnloadCache();
+			decimal count;
+			count = (decimal) new NDOQuery<CmpDirnOwnpabsNoTblAutoLeftBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #1");
+			count = (decimal) new NDOQuery<CmpDirnOwnpabsNoTblAutoRight>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #2");
+		}
+		catch (Exception)
+		{
+			var handler = pm.GetSqlPassThroughHandler( pm.NDOMapping.Connections.First() );
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( ownVar.GetType() ).TableName}");
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( otherVar.GetType() ).TableName}");
+		}
 	}
 	[Test]
 	public void TestSaveReload()
@@ -19811,16 +21122,26 @@ public class TestCmpDirnOwnpabsTblAuto
 	[TearDown]
 	public void TearDown()
 	{
-		pm.UnloadCache();
-		var l = pm.Objects<CmpDirnOwnpabsTblAutoLeftBase>().ResultTable;
-		pm.Delete(l);
-		pm.Save();
-		pm.UnloadCache();
-		decimal count;
-		count = (decimal) new NDOQuery<CmpDirnOwnpabsTblAutoLeftBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<CmpDirnOwnpabsTblAutoRight>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #2");
+		try
+		{
+			pm.UnloadCache();
+			var l = pm.Objects<CmpDirnOwnpabsTblAutoLeftBase>().ResultTable;
+			pm.Delete(l);
+			pm.Save();
+			pm.UnloadCache();
+			decimal count;
+			count = (decimal) new NDOQuery<CmpDirnOwnpabsTblAutoLeftBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #1");
+			count = (decimal) new NDOQuery<CmpDirnOwnpabsTblAutoRight>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #2");
+		}
+		catch (Exception)
+		{
+			var handler = pm.GetSqlPassThroughHandler( pm.NDOMapping.Connections.First() );
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( ownVar.GetType() ).TableName}");
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( otherVar.GetType() ).TableName}");
+			handler.Execute( $"DELETE FROM {pm.NDOMapping.FindClass( ownVar.GetType() ).Relations.First().MappingTable.TableName}" );
+		}
 	}
 	[Test]
 	public void TestSaveReload()
@@ -19894,16 +21215,25 @@ public class TestCmpBin1OwnpabsNoTblAuto
 	[TearDown]
 	public void TearDown()
 	{
-		pm.UnloadCache();
-		var l = pm.Objects<CmpBin1OwnpabsNoTblAutoLeftBase>().ResultTable;
-		pm.Delete(l);
-		pm.Save();
-		pm.UnloadCache();
-		decimal count;
-		count = (decimal) new NDOQuery<CmpBin1OwnpabsNoTblAutoLeftBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<CmpBin1OwnpabsNoTblAutoRight>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #2");
+		try
+		{
+			pm.UnloadCache();
+			var l = pm.Objects<CmpBin1OwnpabsNoTblAutoLeftBase>().ResultTable;
+			pm.Delete(l);
+			pm.Save();
+			pm.UnloadCache();
+			decimal count;
+			count = (decimal) new NDOQuery<CmpBin1OwnpabsNoTblAutoLeftBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #1");
+			count = (decimal) new NDOQuery<CmpBin1OwnpabsNoTblAutoRight>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #2");
+		}
+		catch (Exception)
+		{
+			var handler = pm.GetSqlPassThroughHandler( pm.NDOMapping.Connections.First() );
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( ownVar.GetType() ).TableName}");
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( otherVar.GetType() ).TableName}");
+		}
 	}
 	[Test]
 	public void TestSaveReload()
@@ -20031,16 +21361,26 @@ public class TestCmpBin1OwnpabsTblAuto
 	[TearDown]
 	public void TearDown()
 	{
-		pm.UnloadCache();
-		var l = pm.Objects<CmpBin1OwnpabsTblAutoLeftBase>().ResultTable;
-		pm.Delete(l);
-		pm.Save();
-		pm.UnloadCache();
-		decimal count;
-		count = (decimal) new NDOQuery<CmpBin1OwnpabsTblAutoLeftBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<CmpBin1OwnpabsTblAutoRight>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #2");
+		try
+		{
+			pm.UnloadCache();
+			var l = pm.Objects<CmpBin1OwnpabsTblAutoLeftBase>().ResultTable;
+			pm.Delete(l);
+			pm.Save();
+			pm.UnloadCache();
+			decimal count;
+			count = (decimal) new NDOQuery<CmpBin1OwnpabsTblAutoLeftBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #1");
+			count = (decimal) new NDOQuery<CmpBin1OwnpabsTblAutoRight>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #2");
+		}
+		catch (Exception)
+		{
+			var handler = pm.GetSqlPassThroughHandler( pm.NDOMapping.Connections.First() );
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( ownVar.GetType() ).TableName}");
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( otherVar.GetType() ).TableName}");
+			handler.Execute( $"DELETE FROM {pm.NDOMapping.FindClass( ownVar.GetType() ).Relations.First().MappingTable.TableName}" );
+		}
 	}
 	[Test]
 	public void TestSaveReload()
@@ -20159,16 +21499,26 @@ public class TestCmpBi1nOwnpabsTblAuto
 	[TearDown]
 	public void TearDown()
 	{
-		pm.UnloadCache();
-		var l = pm.Objects<CmpBi1nOwnpabsTblAutoLeftBase>().ResultTable;
-		pm.Delete(l);
-		pm.Save();
-		pm.UnloadCache();
-		decimal count;
-		count = (decimal) new NDOQuery<CmpBi1nOwnpabsTblAutoLeftBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<CmpBi1nOwnpabsTblAutoRight>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #2");
+		try
+		{
+			pm.UnloadCache();
+			var l = pm.Objects<CmpBi1nOwnpabsTblAutoLeftBase>().ResultTable;
+			pm.Delete(l);
+			pm.Save();
+			pm.UnloadCache();
+			decimal count;
+			count = (decimal) new NDOQuery<CmpBi1nOwnpabsTblAutoLeftBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #1");
+			count = (decimal) new NDOQuery<CmpBi1nOwnpabsTblAutoRight>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #2");
+		}
+		catch (Exception)
+		{
+			var handler = pm.GetSqlPassThroughHandler( pm.NDOMapping.Connections.First() );
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( ownVar.GetType() ).TableName}");
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( otherVar.GetType() ).TableName}");
+			handler.Execute( $"DELETE FROM {pm.NDOMapping.FindClass( ownVar.GetType() ).Relations.First().MappingTable.TableName}" );
+		}
 	}
 	[Test]
 	public void TestSaveReload()
@@ -20191,10 +21541,6 @@ public class TestCmpBi1nOwnpabsTblAuto
 		QueryOwn();
 		Assert.NotNull(ownVar, "No Query Result");
 		Assert.Null(ownVar.RelField, "There should be no object");
-	}
-	[Test]
-	public void TestSaveReloadRemove()
-	{
 	}
 	[Test]
 	public void TestChangeKeyHolderLeft()
@@ -20277,16 +21623,26 @@ public class TestCmpBinnOwnpabsTblAuto
 	[TearDown]
 	public void TearDown()
 	{
-		pm.UnloadCache();
-		var l = pm.Objects<CmpBinnOwnpabsTblAutoLeftBase>().ResultTable;
-		pm.Delete(l);
-		pm.Save();
-		pm.UnloadCache();
-		decimal count;
-		count = (decimal) new NDOQuery<CmpBinnOwnpabsTblAutoLeftBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<CmpBinnOwnpabsTblAutoRight>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #2");
+		try
+		{
+			pm.UnloadCache();
+			var l = pm.Objects<CmpBinnOwnpabsTblAutoLeftBase>().ResultTable;
+			pm.Delete(l);
+			pm.Save();
+			pm.UnloadCache();
+			decimal count;
+			count = (decimal) new NDOQuery<CmpBinnOwnpabsTblAutoLeftBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #1");
+			count = (decimal) new NDOQuery<CmpBinnOwnpabsTblAutoRight>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #2");
+		}
+		catch (Exception)
+		{
+			var handler = pm.GetSqlPassThroughHandler( pm.NDOMapping.Connections.First() );
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( ownVar.GetType() ).TableName}");
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( otherVar.GetType() ).TableName}");
+			handler.Execute( $"DELETE FROM {pm.NDOMapping.FindClass( ownVar.GetType() ).Relations.First().MappingTable.TableName}" );
+		}
 	}
 	[Test]
 	public void TestSaveReload()
@@ -20374,20 +21730,29 @@ public class TestAgrDir1OthpabsNoTblAuto
 	[TearDown]
 	public void TearDown()
 	{
-		pm.UnloadCache();
-		var l = pm.Objects<AgrDir1OthpabsNoTblAutoLeft>().ResultTable;
-		pm.Delete(l);
-		pm.Save();
-		pm.UnloadCache();
-		var m = pm.Objects<AgrDir1OthpabsNoTblAutoRightBase>().ResultTable;
-		pm.Delete(m);
-		pm.Save();
-		pm.UnloadCache();
-		decimal count;
-		count = (decimal) new NDOQuery<AgrDir1OthpabsNoTblAutoLeft>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<AgrDir1OthpabsNoTblAutoRightBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #2");
+		try
+		{
+			pm.UnloadCache();
+			var l = pm.Objects<AgrDir1OthpabsNoTblAutoLeft>().ResultTable;
+			pm.Delete(l);
+			pm.Save();
+			pm.UnloadCache();
+			var m = pm.Objects<AgrDir1OthpabsNoTblAutoRightBase>().ResultTable;
+			pm.Delete(m);
+			pm.Save();
+			pm.UnloadCache();
+			decimal count;
+			count = (decimal) new NDOQuery<AgrDir1OthpabsNoTblAutoLeft>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #1");
+			count = (decimal) new NDOQuery<AgrDir1OthpabsNoTblAutoRightBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #2");
+		}
+		catch (Exception)
+		{
+			var handler = pm.GetSqlPassThroughHandler( pm.NDOMapping.Connections.First() );
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( ownVar.GetType() ).TableName}");
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( otherVar.GetType() ).TableName}");
+		}
 	}
 	[Test]
 	public void TestSaveReload()
@@ -20410,10 +21775,6 @@ public class TestAgrDir1OthpabsNoTblAuto
 		QueryOwn();
 		Assert.NotNull(ownVar, "No Query Result");
 		Assert.Null(ownVar.RelField, "There should be no object");
-	}
-	[Test]
-	public void TestSaveReloadRemove()
-	{
 	}
 	[Test]
 	public void TestChangeKeyHolderLeft()
@@ -20494,20 +21855,30 @@ public class TestAgrDir1OthpabsTblAuto
 	[TearDown]
 	public void TearDown()
 	{
-		pm.UnloadCache();
-		var l = pm.Objects<AgrDir1OthpabsTblAutoLeft>().ResultTable;
-		pm.Delete(l);
-		pm.Save();
-		pm.UnloadCache();
-		var m = pm.Objects<AgrDir1OthpabsTblAutoRightBase>().ResultTable;
-		pm.Delete(m);
-		pm.Save();
-		pm.UnloadCache();
-		decimal count;
-		count = (decimal) new NDOQuery<AgrDir1OthpabsTblAutoLeft>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<AgrDir1OthpabsTblAutoRightBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #2");
+		try
+		{
+			pm.UnloadCache();
+			var l = pm.Objects<AgrDir1OthpabsTblAutoLeft>().ResultTable;
+			pm.Delete(l);
+			pm.Save();
+			pm.UnloadCache();
+			var m = pm.Objects<AgrDir1OthpabsTblAutoRightBase>().ResultTable;
+			pm.Delete(m);
+			pm.Save();
+			pm.UnloadCache();
+			decimal count;
+			count = (decimal) new NDOQuery<AgrDir1OthpabsTblAutoLeft>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #1");
+			count = (decimal) new NDOQuery<AgrDir1OthpabsTblAutoRightBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #2");
+		}
+		catch (Exception)
+		{
+			var handler = pm.GetSqlPassThroughHandler( pm.NDOMapping.Connections.First() );
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( ownVar.GetType() ).TableName}");
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( otherVar.GetType() ).TableName}");
+			handler.Execute( $"DELETE FROM {pm.NDOMapping.FindClass( ownVar.GetType() ).Relations.First().MappingTable.TableName}" );
+		}
 	}
 	[Test]
 	public void TestSaveReload()
@@ -20530,10 +21901,6 @@ public class TestAgrDir1OthpabsTblAuto
 		QueryOwn();
 		Assert.NotNull(ownVar, "No Query Result");
 		Assert.Null(ownVar.RelField, "There should be no object");
-	}
-	[Test]
-	public void TestSaveReloadRemove()
-	{
 	}
 	[Test]
 	public void TestChangeKeyHolderLeft()
@@ -20603,20 +21970,29 @@ public class TestAgrBi11OthpabsNoTblAuto
 	[TearDown]
 	public void TearDown()
 	{
-		pm.UnloadCache();
-		var l = pm.Objects<AgrBi11OthpabsNoTblAutoLeft>().ResultTable;
-		pm.Delete(l);
-		pm.Save();
-		pm.UnloadCache();
-		var m = pm.Objects<AgrBi11OthpabsNoTblAutoRightBase>().ResultTable;
-		pm.Delete(m);
-		pm.Save();
-		pm.UnloadCache();
-		decimal count;
-		count = (decimal) new NDOQuery<AgrBi11OthpabsNoTblAutoLeft>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<AgrBi11OthpabsNoTblAutoRightBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #2");
+		try
+		{
+			pm.UnloadCache();
+			var l = pm.Objects<AgrBi11OthpabsNoTblAutoLeft>().ResultTable;
+			pm.Delete(l);
+			pm.Save();
+			pm.UnloadCache();
+			var m = pm.Objects<AgrBi11OthpabsNoTblAutoRightBase>().ResultTable;
+			pm.Delete(m);
+			pm.Save();
+			pm.UnloadCache();
+			decimal count;
+			count = (decimal) new NDOQuery<AgrBi11OthpabsNoTblAutoLeft>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #1");
+			count = (decimal) new NDOQuery<AgrBi11OthpabsNoTblAutoRightBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #2");
+		}
+		catch (Exception)
+		{
+			var handler = pm.GetSqlPassThroughHandler( pm.NDOMapping.Connections.First() );
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( ownVar.GetType() ).TableName}");
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( otherVar.GetType() ).TableName}");
+		}
 	}
 	[Test]
 	public void TestSaveReload()
@@ -20639,10 +22015,6 @@ public class TestAgrBi11OthpabsNoTblAuto
 		QueryOwn();
 		Assert.NotNull(ownVar, "No Query Result");
 		Assert.Null(ownVar.RelField, "There should be no object");
-	}
-	[Test]
-	public void TestSaveReloadRemove()
-	{
 	}
 	[Test]
 	public void TestChangeKeyHolderLeft()
@@ -20759,20 +22131,30 @@ public class TestAgrBi11OthpabsTblAuto
 	[TearDown]
 	public void TearDown()
 	{
-		pm.UnloadCache();
-		var l = pm.Objects<AgrBi11OthpabsTblAutoLeft>().ResultTable;
-		pm.Delete(l);
-		pm.Save();
-		pm.UnloadCache();
-		var m = pm.Objects<AgrBi11OthpabsTblAutoRightBase>().ResultTable;
-		pm.Delete(m);
-		pm.Save();
-		pm.UnloadCache();
-		decimal count;
-		count = (decimal) new NDOQuery<AgrBi11OthpabsTblAutoLeft>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<AgrBi11OthpabsTblAutoRightBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #2");
+		try
+		{
+			pm.UnloadCache();
+			var l = pm.Objects<AgrBi11OthpabsTblAutoLeft>().ResultTable;
+			pm.Delete(l);
+			pm.Save();
+			pm.UnloadCache();
+			var m = pm.Objects<AgrBi11OthpabsTblAutoRightBase>().ResultTable;
+			pm.Delete(m);
+			pm.Save();
+			pm.UnloadCache();
+			decimal count;
+			count = (decimal) new NDOQuery<AgrBi11OthpabsTblAutoLeft>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #1");
+			count = (decimal) new NDOQuery<AgrBi11OthpabsTblAutoRightBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #2");
+		}
+		catch (Exception)
+		{
+			var handler = pm.GetSqlPassThroughHandler( pm.NDOMapping.Connections.First() );
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( ownVar.GetType() ).TableName}");
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( otherVar.GetType() ).TableName}");
+			handler.Execute( $"DELETE FROM {pm.NDOMapping.FindClass( ownVar.GetType() ).Relations.First().MappingTable.TableName}" );
+		}
 	}
 	[Test]
 	public void TestSaveReload()
@@ -20795,10 +22177,6 @@ public class TestAgrBi11OthpabsTblAuto
 		QueryOwn();
 		Assert.NotNull(ownVar, "No Query Result");
 		Assert.Null(ownVar.RelField, "There should be no object");
-	}
-	[Test]
-	public void TestSaveReloadRemove()
-	{
 	}
 	[Test]
 	public void TestChangeKeyHolderLeft()
@@ -20913,20 +22291,30 @@ public class TestAgrDirnOthpabsTblAuto
 	[TearDown]
 	public void TearDown()
 	{
-		pm.UnloadCache();
-		var l = pm.Objects<AgrDirnOthpabsTblAutoLeft>().ResultTable;
-		pm.Delete(l);
-		pm.Save();
-		pm.UnloadCache();
-		var m = pm.Objects<AgrDirnOthpabsTblAutoRightBase>().ResultTable;
-		pm.Delete(m);
-		pm.Save();
-		pm.UnloadCache();
-		decimal count;
-		count = (decimal) new NDOQuery<AgrDirnOthpabsTblAutoLeft>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<AgrDirnOthpabsTblAutoRightBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #2");
+		try
+		{
+			pm.UnloadCache();
+			var l = pm.Objects<AgrDirnOthpabsTblAutoLeft>().ResultTable;
+			pm.Delete(l);
+			pm.Save();
+			pm.UnloadCache();
+			var m = pm.Objects<AgrDirnOthpabsTblAutoRightBase>().ResultTable;
+			pm.Delete(m);
+			pm.Save();
+			pm.UnloadCache();
+			decimal count;
+			count = (decimal) new NDOQuery<AgrDirnOthpabsTblAutoLeft>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #1");
+			count = (decimal) new NDOQuery<AgrDirnOthpabsTblAutoRightBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #2");
+		}
+		catch (Exception)
+		{
+			var handler = pm.GetSqlPassThroughHandler( pm.NDOMapping.Connections.First() );
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( ownVar.GetType() ).TableName}");
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( otherVar.GetType() ).TableName}");
+			handler.Execute( $"DELETE FROM {pm.NDOMapping.FindClass( ownVar.GetType() ).Relations.First().MappingTable.TableName}" );
+		}
 	}
 	[Test]
 	public void TestSaveReload()
@@ -21001,20 +22389,30 @@ public class TestAgrBin1OthpabsTblAuto
 	[TearDown]
 	public void TearDown()
 	{
-		pm.UnloadCache();
-		var l = pm.Objects<AgrBin1OthpabsTblAutoLeft>().ResultTable;
-		pm.Delete(l);
-		pm.Save();
-		pm.UnloadCache();
-		var m = pm.Objects<AgrBin1OthpabsTblAutoRightBase>().ResultTable;
-		pm.Delete(m);
-		pm.Save();
-		pm.UnloadCache();
-		decimal count;
-		count = (decimal) new NDOQuery<AgrBin1OthpabsTblAutoLeft>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<AgrBin1OthpabsTblAutoRightBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #2");
+		try
+		{
+			pm.UnloadCache();
+			var l = pm.Objects<AgrBin1OthpabsTblAutoLeft>().ResultTable;
+			pm.Delete(l);
+			pm.Save();
+			pm.UnloadCache();
+			var m = pm.Objects<AgrBin1OthpabsTblAutoRightBase>().ResultTable;
+			pm.Delete(m);
+			pm.Save();
+			pm.UnloadCache();
+			decimal count;
+			count = (decimal) new NDOQuery<AgrBin1OthpabsTblAutoLeft>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #1");
+			count = (decimal) new NDOQuery<AgrBin1OthpabsTblAutoRightBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #2");
+		}
+		catch (Exception)
+		{
+			var handler = pm.GetSqlPassThroughHandler( pm.NDOMapping.Connections.First() );
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( ownVar.GetType() ).TableName}");
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( otherVar.GetType() ).TableName}");
+			handler.Execute( $"DELETE FROM {pm.NDOMapping.FindClass( ownVar.GetType() ).Relations.First().MappingTable.TableName}" );
+		}
 	}
 	[Test]
 	public void TestSaveReload()
@@ -21134,20 +22532,29 @@ public class TestAgrBi1nOthpabsNoTblAuto
 	[TearDown]
 	public void TearDown()
 	{
-		pm.UnloadCache();
-		var l = pm.Objects<AgrBi1nOthpabsNoTblAutoLeft>().ResultTable;
-		pm.Delete(l);
-		pm.Save();
-		pm.UnloadCache();
-		var m = pm.Objects<AgrBi1nOthpabsNoTblAutoRightBase>().ResultTable;
-		pm.Delete(m);
-		pm.Save();
-		pm.UnloadCache();
-		decimal count;
-		count = (decimal) new NDOQuery<AgrBi1nOthpabsNoTblAutoLeft>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<AgrBi1nOthpabsNoTblAutoRightBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #2");
+		try
+		{
+			pm.UnloadCache();
+			var l = pm.Objects<AgrBi1nOthpabsNoTblAutoLeft>().ResultTable;
+			pm.Delete(l);
+			pm.Save();
+			pm.UnloadCache();
+			var m = pm.Objects<AgrBi1nOthpabsNoTblAutoRightBase>().ResultTable;
+			pm.Delete(m);
+			pm.Save();
+			pm.UnloadCache();
+			decimal count;
+			count = (decimal) new NDOQuery<AgrBi1nOthpabsNoTblAutoLeft>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #1");
+			count = (decimal) new NDOQuery<AgrBi1nOthpabsNoTblAutoRightBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #2");
+		}
+		catch (Exception)
+		{
+			var handler = pm.GetSqlPassThroughHandler( pm.NDOMapping.Connections.First() );
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( ownVar.GetType() ).TableName}");
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( otherVar.GetType() ).TableName}");
+		}
 	}
 	[Test]
 	public void TestSaveReload()
@@ -21170,10 +22577,6 @@ public class TestAgrBi1nOthpabsNoTblAuto
 		QueryOwn();
 		Assert.NotNull(ownVar, "No Query Result");
 		Assert.Null(ownVar.RelField, "There should be no object");
-	}
-	[Test]
-	public void TestSaveReloadRemove()
-	{
 	}
 	[Test]
 	public void TestChangeKeyHolderLeft()
@@ -21268,20 +22671,30 @@ public class TestAgrBi1nOthpabsTblAuto
 	[TearDown]
 	public void TearDown()
 	{
-		pm.UnloadCache();
-		var l = pm.Objects<AgrBi1nOthpabsTblAutoLeft>().ResultTable;
-		pm.Delete(l);
-		pm.Save();
-		pm.UnloadCache();
-		var m = pm.Objects<AgrBi1nOthpabsTblAutoRightBase>().ResultTable;
-		pm.Delete(m);
-		pm.Save();
-		pm.UnloadCache();
-		decimal count;
-		count = (decimal) new NDOQuery<AgrBi1nOthpabsTblAutoLeft>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<AgrBi1nOthpabsTblAutoRightBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #2");
+		try
+		{
+			pm.UnloadCache();
+			var l = pm.Objects<AgrBi1nOthpabsTblAutoLeft>().ResultTable;
+			pm.Delete(l);
+			pm.Save();
+			pm.UnloadCache();
+			var m = pm.Objects<AgrBi1nOthpabsTblAutoRightBase>().ResultTable;
+			pm.Delete(m);
+			pm.Save();
+			pm.UnloadCache();
+			decimal count;
+			count = (decimal) new NDOQuery<AgrBi1nOthpabsTblAutoLeft>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #1");
+			count = (decimal) new NDOQuery<AgrBi1nOthpabsTblAutoRightBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #2");
+		}
+		catch (Exception)
+		{
+			var handler = pm.GetSqlPassThroughHandler( pm.NDOMapping.Connections.First() );
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( ownVar.GetType() ).TableName}");
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( otherVar.GetType() ).TableName}");
+			handler.Execute( $"DELETE FROM {pm.NDOMapping.FindClass( ownVar.GetType() ).Relations.First().MappingTable.TableName}" );
+		}
 	}
 	[Test]
 	public void TestSaveReload()
@@ -21304,10 +22717,6 @@ public class TestAgrBi1nOthpabsTblAuto
 		QueryOwn();
 		Assert.NotNull(ownVar, "No Query Result");
 		Assert.Null(ownVar.RelField, "There should be no object");
-	}
-	[Test]
-	public void TestSaveReloadRemove()
-	{
 	}
 	[Test]
 	public void TestChangeKeyHolderLeft()
@@ -21391,20 +22800,30 @@ public class TestAgrBinnOthpabsTblAuto
 	[TearDown]
 	public void TearDown()
 	{
-		pm.UnloadCache();
-		var l = pm.Objects<AgrBinnOthpabsTblAutoLeft>().ResultTable;
-		pm.Delete(l);
-		pm.Save();
-		pm.UnloadCache();
-		var m = pm.Objects<AgrBinnOthpabsTblAutoRightBase>().ResultTable;
-		pm.Delete(m);
-		pm.Save();
-		pm.UnloadCache();
-		decimal count;
-		count = (decimal) new NDOQuery<AgrBinnOthpabsTblAutoLeft>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<AgrBinnOthpabsTblAutoRightBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #2");
+		try
+		{
+			pm.UnloadCache();
+			var l = pm.Objects<AgrBinnOthpabsTblAutoLeft>().ResultTable;
+			pm.Delete(l);
+			pm.Save();
+			pm.UnloadCache();
+			var m = pm.Objects<AgrBinnOthpabsTblAutoRightBase>().ResultTable;
+			pm.Delete(m);
+			pm.Save();
+			pm.UnloadCache();
+			decimal count;
+			count = (decimal) new NDOQuery<AgrBinnOthpabsTblAutoLeft>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #1");
+			count = (decimal) new NDOQuery<AgrBinnOthpabsTblAutoRightBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #2");
+		}
+		catch (Exception)
+		{
+			var handler = pm.GetSqlPassThroughHandler( pm.NDOMapping.Connections.First() );
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( ownVar.GetType() ).TableName}");
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( otherVar.GetType() ).TableName}");
+			handler.Execute( $"DELETE FROM {pm.NDOMapping.FindClass( ownVar.GetType() ).Relations.First().MappingTable.TableName}" );
+		}
 	}
 	[Test]
 	public void TestSaveReload()
@@ -21493,42 +22912,65 @@ public class TestCmpDir1OthpabsNoTblAuto
 	[TearDown]
 	public void TearDown()
 	{
-		pm.UnloadCache();
-		var l = pm.Objects<CmpDir1OthpabsNoTblAutoLeft>().ResultTable;
-		pm.Delete(l);
-		pm.Save();
-		pm.UnloadCache();
-		decimal count;
-		count = (decimal) new NDOQuery<CmpDir1OthpabsNoTblAutoLeft>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<CmpDir1OthpabsNoTblAutoRightBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #2");
-	}
-	[Test, ExpectedException(typeof(NDOException))]
-	public void TestSaveReload()
-	{
-		CreateObjects();
-		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
-	}
-	[Test, ExpectedException(typeof(NDOException))]
-	public void TestSaveReloadNull()
-	{
-		CreateObjects();
-		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
-		ownVar.RelField = null;
-		pm.Save();
-		pm.UnloadCache();
-		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.Null(ownVar.RelField, "There should be no object");
+		try
+		{
+			pm.UnloadCache();
+			var l = pm.Objects<CmpDir1OthpabsNoTblAutoLeft>().ResultTable;
+			pm.Delete(l);
+			pm.Save();
+			pm.UnloadCache();
+			decimal count;
+			count = (decimal) new NDOQuery<CmpDir1OthpabsNoTblAutoLeft>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #1");
+			count = (decimal) new NDOQuery<CmpDir1OthpabsNoTblAutoRightBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #2");
+		}
+		catch (Exception)
+		{
+			var handler = pm.GetSqlPassThroughHandler( pm.NDOMapping.Connections.First() );
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( ownVar.GetType() ).TableName}");
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( otherVar.GetType() ).TableName}");
+		}
 	}
 	[Test]
-	public void TestSaveReloadRemove()
+	public void TestSaveReload()
 	{
+		bool thrown = false;
+		try
+		{
+			CreateObjects();
+			QueryOwn();
+			Assert.NotNull(ownVar, "No Query Result");
+			Assert.NotNull(ownVar.RelField, "No related object");
+		}
+		catch (NDOException)
+		{
+			thrown = true;
+		}
+		Assert.AreEqual(true, thrown, "NDOException should have been thrown");
+	}
+	[Test]
+	public void TestSaveReloadNull()
+	{
+		bool thrown = false;
+		try
+		{
+			CreateObjects();
+			QueryOwn();
+			Assert.NotNull(ownVar, "No Query Result");
+			Assert.NotNull(ownVar.RelField, "No related object");
+			ownVar.RelField = null;
+			pm.Save();
+			pm.UnloadCache();
+			QueryOwn();
+			Assert.NotNull(ownVar, "No Query Result");
+			Assert.Null(ownVar.RelField, "There should be no object");
+		}
+		catch (NDOException)
+		{
+			thrown = true;
+		}
+		Assert.AreEqual(true, thrown, "NDOException should have been thrown");
 	}
 	void CreateObjects()
 	{
@@ -21567,16 +23009,26 @@ public class TestCmpDir1OthpabsTblAuto
 	[TearDown]
 	public void TearDown()
 	{
-		pm.UnloadCache();
-		var l = pm.Objects<CmpDir1OthpabsTblAutoLeft>().ResultTable;
-		pm.Delete(l);
-		pm.Save();
-		pm.UnloadCache();
-		decimal count;
-		count = (decimal) new NDOQuery<CmpDir1OthpabsTblAutoLeft>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<CmpDir1OthpabsTblAutoRightBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #2");
+		try
+		{
+			pm.UnloadCache();
+			var l = pm.Objects<CmpDir1OthpabsTblAutoLeft>().ResultTable;
+			pm.Delete(l);
+			pm.Save();
+			pm.UnloadCache();
+			decimal count;
+			count = (decimal) new NDOQuery<CmpDir1OthpabsTblAutoLeft>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #1");
+			count = (decimal) new NDOQuery<CmpDir1OthpabsTblAutoRightBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #2");
+		}
+		catch (Exception)
+		{
+			var handler = pm.GetSqlPassThroughHandler( pm.NDOMapping.Connections.First() );
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( ownVar.GetType() ).TableName}");
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( otherVar.GetType() ).TableName}");
+			handler.Execute( $"DELETE FROM {pm.NDOMapping.FindClass( ownVar.GetType() ).Relations.First().MappingTable.TableName}" );
+		}
 	}
 	[Test]
 	public void TestSaveReload()
@@ -21599,10 +23051,6 @@ public class TestCmpDir1OthpabsTblAuto
 		QueryOwn();
 		Assert.NotNull(ownVar, "No Query Result");
 		Assert.Null(ownVar.RelField, "There should be no object");
-	}
-	[Test]
-	public void TestSaveReloadRemove()
-	{
 	}
 	[Test]
 	public void TestChangeKeyHolderLeft()
@@ -21671,42 +23119,65 @@ public class TestCmpBi11OthpabsNoTblAuto
 	[TearDown]
 	public void TearDown()
 	{
-		pm.UnloadCache();
-		var l = pm.Objects<CmpBi11OthpabsNoTblAutoLeft>().ResultTable;
-		pm.Delete(l);
-		pm.Save();
-		pm.UnloadCache();
-		decimal count;
-		count = (decimal) new NDOQuery<CmpBi11OthpabsNoTblAutoLeft>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<CmpBi11OthpabsNoTblAutoRightBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #2");
-	}
-	[Test, ExpectedException(typeof(NDOException))]
-	public void TestSaveReload()
-	{
-		CreateObjects();
-		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
-	}
-	[Test, ExpectedException(typeof(NDOException))]
-	public void TestSaveReloadNull()
-	{
-		CreateObjects();
-		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
-		ownVar.RelField = null;
-		pm.Save();
-		pm.UnloadCache();
-		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.Null(ownVar.RelField, "There should be no object");
+		try
+		{
+			pm.UnloadCache();
+			var l = pm.Objects<CmpBi11OthpabsNoTblAutoLeft>().ResultTable;
+			pm.Delete(l);
+			pm.Save();
+			pm.UnloadCache();
+			decimal count;
+			count = (decimal) new NDOQuery<CmpBi11OthpabsNoTblAutoLeft>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #1");
+			count = (decimal) new NDOQuery<CmpBi11OthpabsNoTblAutoRightBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #2");
+		}
+		catch (Exception)
+		{
+			var handler = pm.GetSqlPassThroughHandler( pm.NDOMapping.Connections.First() );
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( ownVar.GetType() ).TableName}");
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( otherVar.GetType() ).TableName}");
+		}
 	}
 	[Test]
-	public void TestSaveReloadRemove()
+	public void TestSaveReload()
 	{
+		bool thrown = false;
+		try
+		{
+			CreateObjects();
+			QueryOwn();
+			Assert.NotNull(ownVar, "No Query Result");
+			Assert.NotNull(ownVar.RelField, "No related object");
+		}
+		catch (NDOException)
+		{
+			thrown = true;
+		}
+		Assert.AreEqual(true, thrown, "NDOException should have been thrown");
+	}
+	[Test]
+	public void TestSaveReloadNull()
+	{
+		bool thrown = false;
+		try
+		{
+			CreateObjects();
+			QueryOwn();
+			Assert.NotNull(ownVar, "No Query Result");
+			Assert.NotNull(ownVar.RelField, "No related object");
+			ownVar.RelField = null;
+			pm.Save();
+			pm.UnloadCache();
+			QueryOwn();
+			Assert.NotNull(ownVar, "No Query Result");
+			Assert.Null(ownVar.RelField, "There should be no object");
+		}
+		catch (NDOException)
+		{
+			thrown = true;
+		}
+		Assert.AreEqual(true, thrown, "NDOException should have been thrown");
 	}
 	[Test]
 	public void TestRelationHash()
@@ -21759,16 +23230,26 @@ public class TestCmpBi11OthpabsTblAuto
 	[TearDown]
 	public void TearDown()
 	{
-		pm.UnloadCache();
-		var l = pm.Objects<CmpBi11OthpabsTblAutoLeft>().ResultTable;
-		pm.Delete(l);
-		pm.Save();
-		pm.UnloadCache();
-		decimal count;
-		count = (decimal) new NDOQuery<CmpBi11OthpabsTblAutoLeft>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<CmpBi11OthpabsTblAutoRightBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #2");
+		try
+		{
+			pm.UnloadCache();
+			var l = pm.Objects<CmpBi11OthpabsTblAutoLeft>().ResultTable;
+			pm.Delete(l);
+			pm.Save();
+			pm.UnloadCache();
+			decimal count;
+			count = (decimal) new NDOQuery<CmpBi11OthpabsTblAutoLeft>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #1");
+			count = (decimal) new NDOQuery<CmpBi11OthpabsTblAutoRightBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #2");
+		}
+		catch (Exception)
+		{
+			var handler = pm.GetSqlPassThroughHandler( pm.NDOMapping.Connections.First() );
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( ownVar.GetType() ).TableName}");
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( otherVar.GetType() ).TableName}");
+			handler.Execute( $"DELETE FROM {pm.NDOMapping.FindClass( ownVar.GetType() ).Relations.First().MappingTable.TableName}" );
+		}
 	}
 	[Test]
 	public void TestSaveReload()
@@ -21791,10 +23272,6 @@ public class TestCmpBi11OthpabsTblAuto
 		QueryOwn();
 		Assert.NotNull(ownVar, "No Query Result");
 		Assert.Null(ownVar.RelField, "There should be no object");
-	}
-	[Test]
-	public void TestSaveReloadRemove()
-	{
 	}
 	[Test]
 	public void TestChangeKeyHolderLeft()
@@ -21908,16 +23385,26 @@ public class TestCmpDirnOthpabsTblAuto
 	[TearDown]
 	public void TearDown()
 	{
-		pm.UnloadCache();
-		var l = pm.Objects<CmpDirnOthpabsTblAutoLeft>().ResultTable;
-		pm.Delete(l);
-		pm.Save();
-		pm.UnloadCache();
-		decimal count;
-		count = (decimal) new NDOQuery<CmpDirnOthpabsTblAutoLeft>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<CmpDirnOthpabsTblAutoRightBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #2");
+		try
+		{
+			pm.UnloadCache();
+			var l = pm.Objects<CmpDirnOthpabsTblAutoLeft>().ResultTable;
+			pm.Delete(l);
+			pm.Save();
+			pm.UnloadCache();
+			decimal count;
+			count = (decimal) new NDOQuery<CmpDirnOthpabsTblAutoLeft>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #1");
+			count = (decimal) new NDOQuery<CmpDirnOthpabsTblAutoRightBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #2");
+		}
+		catch (Exception)
+		{
+			var handler = pm.GetSqlPassThroughHandler( pm.NDOMapping.Connections.First() );
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( ownVar.GetType() ).TableName}");
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( otherVar.GetType() ).TableName}");
+			handler.Execute( $"DELETE FROM {pm.NDOMapping.FindClass( ownVar.GetType() ).Relations.First().MappingTable.TableName}" );
+		}
 	}
 	[Test]
 	public void TestSaveReload()
@@ -21991,16 +23478,26 @@ public class TestCmpBin1OthpabsTblAuto
 	[TearDown]
 	public void TearDown()
 	{
-		pm.UnloadCache();
-		var l = pm.Objects<CmpBin1OthpabsTblAutoLeft>().ResultTable;
-		pm.Delete(l);
-		pm.Save();
-		pm.UnloadCache();
-		decimal count;
-		count = (decimal) new NDOQuery<CmpBin1OthpabsTblAutoLeft>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<CmpBin1OthpabsTblAutoRightBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #2");
+		try
+		{
+			pm.UnloadCache();
+			var l = pm.Objects<CmpBin1OthpabsTblAutoLeft>().ResultTable;
+			pm.Delete(l);
+			pm.Save();
+			pm.UnloadCache();
+			decimal count;
+			count = (decimal) new NDOQuery<CmpBin1OthpabsTblAutoLeft>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #1");
+			count = (decimal) new NDOQuery<CmpBin1OthpabsTblAutoRightBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #2");
+		}
+		catch (Exception)
+		{
+			var handler = pm.GetSqlPassThroughHandler( pm.NDOMapping.Connections.First() );
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( ownVar.GetType() ).TableName}");
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( otherVar.GetType() ).TableName}");
+			handler.Execute( $"DELETE FROM {pm.NDOMapping.FindClass( ownVar.GetType() ).Relations.First().MappingTable.TableName}" );
+		}
 	}
 	[Test]
 	public void TestSaveReload()
@@ -22119,42 +23616,65 @@ public class TestCmpBi1nOthpabsNoTblAuto
 	[TearDown]
 	public void TearDown()
 	{
-		pm.UnloadCache();
-		var l = pm.Objects<CmpBi1nOthpabsNoTblAutoLeft>().ResultTable;
-		pm.Delete(l);
-		pm.Save();
-		pm.UnloadCache();
-		decimal count;
-		count = (decimal) new NDOQuery<CmpBi1nOthpabsNoTblAutoLeft>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<CmpBi1nOthpabsNoTblAutoRightBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #2");
-	}
-	[Test, ExpectedException(typeof(NDOException))]
-	public void TestSaveReload()
-	{
-		CreateObjects();
-		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
-	}
-	[Test, ExpectedException(typeof(NDOException))]
-	public void TestSaveReloadNull()
-	{
-		CreateObjects();
-		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
-		ownVar.RelField = null;
-		pm.Save();
-		pm.UnloadCache();
-		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.Null(ownVar.RelField, "There should be no object");
+		try
+		{
+			pm.UnloadCache();
+			var l = pm.Objects<CmpBi1nOthpabsNoTblAutoLeft>().ResultTable;
+			pm.Delete(l);
+			pm.Save();
+			pm.UnloadCache();
+			decimal count;
+			count = (decimal) new NDOQuery<CmpBi1nOthpabsNoTblAutoLeft>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #1");
+			count = (decimal) new NDOQuery<CmpBi1nOthpabsNoTblAutoRightBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #2");
+		}
+		catch (Exception)
+		{
+			var handler = pm.GetSqlPassThroughHandler( pm.NDOMapping.Connections.First() );
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( ownVar.GetType() ).TableName}");
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( otherVar.GetType() ).TableName}");
+		}
 	}
 	[Test]
-	public void TestSaveReloadRemove()
+	public void TestSaveReload()
 	{
+		bool thrown = false;
+		try
+		{
+			CreateObjects();
+			QueryOwn();
+			Assert.NotNull(ownVar, "No Query Result");
+			Assert.NotNull(ownVar.RelField, "No related object");
+		}
+		catch (NDOException)
+		{
+			thrown = true;
+		}
+		Assert.AreEqual(true, thrown, "NDOException should have been thrown");
+	}
+	[Test]
+	public void TestSaveReloadNull()
+	{
+		bool thrown = false;
+		try
+		{
+			CreateObjects();
+			QueryOwn();
+			Assert.NotNull(ownVar, "No Query Result");
+			Assert.NotNull(ownVar.RelField, "No related object");
+			ownVar.RelField = null;
+			pm.Save();
+			pm.UnloadCache();
+			QueryOwn();
+			Assert.NotNull(ownVar, "No Query Result");
+			Assert.Null(ownVar.RelField, "There should be no object");
+		}
+		catch (NDOException)
+		{
+			thrown = true;
+		}
+		Assert.AreEqual(true, thrown, "NDOException should have been thrown");
 	}
 	[Test]
 	public void TestRelationHash()
@@ -22207,16 +23727,26 @@ public class TestCmpBi1nOthpabsTblAuto
 	[TearDown]
 	public void TearDown()
 	{
-		pm.UnloadCache();
-		var l = pm.Objects<CmpBi1nOthpabsTblAutoLeft>().ResultTable;
-		pm.Delete(l);
-		pm.Save();
-		pm.UnloadCache();
-		decimal count;
-		count = (decimal) new NDOQuery<CmpBi1nOthpabsTblAutoLeft>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<CmpBi1nOthpabsTblAutoRightBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #2");
+		try
+		{
+			pm.UnloadCache();
+			var l = pm.Objects<CmpBi1nOthpabsTblAutoLeft>().ResultTable;
+			pm.Delete(l);
+			pm.Save();
+			pm.UnloadCache();
+			decimal count;
+			count = (decimal) new NDOQuery<CmpBi1nOthpabsTblAutoLeft>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #1");
+			count = (decimal) new NDOQuery<CmpBi1nOthpabsTblAutoRightBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #2");
+		}
+		catch (Exception)
+		{
+			var handler = pm.GetSqlPassThroughHandler( pm.NDOMapping.Connections.First() );
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( ownVar.GetType() ).TableName}");
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( otherVar.GetType() ).TableName}");
+			handler.Execute( $"DELETE FROM {pm.NDOMapping.FindClass( ownVar.GetType() ).Relations.First().MappingTable.TableName}" );
+		}
 	}
 	[Test]
 	public void TestSaveReload()
@@ -22239,10 +23769,6 @@ public class TestCmpBi1nOthpabsTblAuto
 		QueryOwn();
 		Assert.NotNull(ownVar, "No Query Result");
 		Assert.Null(ownVar.RelField, "There should be no object");
-	}
-	[Test]
-	public void TestSaveReloadRemove()
-	{
 	}
 	[Test]
 	public void TestChangeKeyHolderLeft()
@@ -22325,16 +23851,26 @@ public class TestCmpBinnOthpabsTblAuto
 	[TearDown]
 	public void TearDown()
 	{
-		pm.UnloadCache();
-		var l = pm.Objects<CmpBinnOthpabsTblAutoLeft>().ResultTable;
-		pm.Delete(l);
-		pm.Save();
-		pm.UnloadCache();
-		decimal count;
-		count = (decimal) new NDOQuery<CmpBinnOthpabsTblAutoLeft>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<CmpBinnOthpabsTblAutoRightBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #2");
+		try
+		{
+			pm.UnloadCache();
+			var l = pm.Objects<CmpBinnOthpabsTblAutoLeft>().ResultTable;
+			pm.Delete(l);
+			pm.Save();
+			pm.UnloadCache();
+			decimal count;
+			count = (decimal) new NDOQuery<CmpBinnOthpabsTblAutoLeft>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #1");
+			count = (decimal) new NDOQuery<CmpBinnOthpabsTblAutoRightBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #2");
+		}
+		catch (Exception)
+		{
+			var handler = pm.GetSqlPassThroughHandler( pm.NDOMapping.Connections.First() );
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( ownVar.GetType() ).TableName}");
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( otherVar.GetType() ).TableName}");
+			handler.Execute( $"DELETE FROM {pm.NDOMapping.FindClass( ownVar.GetType() ).Relations.First().MappingTable.TableName}" );
+		}
 	}
 	[Test]
 	public void TestSaveReload()
@@ -22422,20 +23958,29 @@ public class TestAgrDir1OwnpabsOthpabsNoTblAuto
 	[TearDown]
 	public void TearDown()
 	{
-		pm.UnloadCache();
-		var l = pm.Objects<AgrDir1OwnpabsOthpabsNoTblAutoLeftBase>().ResultTable;
-		pm.Delete(l);
-		pm.Save();
-		pm.UnloadCache();
-		var m = pm.Objects<AgrDir1OwnpabsOthpabsNoTblAutoRightBase>().ResultTable;
-		pm.Delete(m);
-		pm.Save();
-		pm.UnloadCache();
-		decimal count;
-		count = (decimal) new NDOQuery<AgrDir1OwnpabsOthpabsNoTblAutoLeftBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<AgrDir1OwnpabsOthpabsNoTblAutoRightBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #2");
+		try
+		{
+			pm.UnloadCache();
+			var l = pm.Objects<AgrDir1OwnpabsOthpabsNoTblAutoLeftBase>().ResultTable;
+			pm.Delete(l);
+			pm.Save();
+			pm.UnloadCache();
+			var m = pm.Objects<AgrDir1OwnpabsOthpabsNoTblAutoRightBase>().ResultTable;
+			pm.Delete(m);
+			pm.Save();
+			pm.UnloadCache();
+			decimal count;
+			count = (decimal) new NDOQuery<AgrDir1OwnpabsOthpabsNoTblAutoLeftBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #1");
+			count = (decimal) new NDOQuery<AgrDir1OwnpabsOthpabsNoTblAutoRightBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #2");
+		}
+		catch (Exception)
+		{
+			var handler = pm.GetSqlPassThroughHandler( pm.NDOMapping.Connections.First() );
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( ownVar.GetType() ).TableName}");
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( otherVar.GetType() ).TableName}");
+		}
 	}
 	[Test]
 	public void TestSaveReload()
@@ -22458,10 +24003,6 @@ public class TestAgrDir1OwnpabsOthpabsNoTblAuto
 		QueryOwn();
 		Assert.NotNull(ownVar, "No Query Result");
 		Assert.Null(ownVar.RelField, "There should be no object");
-	}
-	[Test]
-	public void TestSaveReloadRemove()
-	{
 	}
 	[Test]
 	public void TestChangeKeyHolderLeft()
@@ -22542,20 +24083,30 @@ public class TestAgrDir1OwnpabsOthpabsTblAuto
 	[TearDown]
 	public void TearDown()
 	{
-		pm.UnloadCache();
-		var l = pm.Objects<AgrDir1OwnpabsOthpabsTblAutoLeftBase>().ResultTable;
-		pm.Delete(l);
-		pm.Save();
-		pm.UnloadCache();
-		var m = pm.Objects<AgrDir1OwnpabsOthpabsTblAutoRightBase>().ResultTable;
-		pm.Delete(m);
-		pm.Save();
-		pm.UnloadCache();
-		decimal count;
-		count = (decimal) new NDOQuery<AgrDir1OwnpabsOthpabsTblAutoLeftBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<AgrDir1OwnpabsOthpabsTblAutoRightBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #2");
+		try
+		{
+			pm.UnloadCache();
+			var l = pm.Objects<AgrDir1OwnpabsOthpabsTblAutoLeftBase>().ResultTable;
+			pm.Delete(l);
+			pm.Save();
+			pm.UnloadCache();
+			var m = pm.Objects<AgrDir1OwnpabsOthpabsTblAutoRightBase>().ResultTable;
+			pm.Delete(m);
+			pm.Save();
+			pm.UnloadCache();
+			decimal count;
+			count = (decimal) new NDOQuery<AgrDir1OwnpabsOthpabsTblAutoLeftBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #1");
+			count = (decimal) new NDOQuery<AgrDir1OwnpabsOthpabsTblAutoRightBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #2");
+		}
+		catch (Exception)
+		{
+			var handler = pm.GetSqlPassThroughHandler( pm.NDOMapping.Connections.First() );
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( ownVar.GetType() ).TableName}");
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( otherVar.GetType() ).TableName}");
+			handler.Execute( $"DELETE FROM {pm.NDOMapping.FindClass( ownVar.GetType() ).Relations.First().MappingTable.TableName}" );
+		}
 	}
 	[Test]
 	public void TestSaveReload()
@@ -22578,10 +24129,6 @@ public class TestAgrDir1OwnpabsOthpabsTblAuto
 		QueryOwn();
 		Assert.NotNull(ownVar, "No Query Result");
 		Assert.Null(ownVar.RelField, "There should be no object");
-	}
-	[Test]
-	public void TestSaveReloadRemove()
-	{
 	}
 	[Test]
 	public void TestChangeKeyHolderLeft()
@@ -22651,20 +24198,29 @@ public class TestAgrBi11OwnpabsOthpabsNoTblAuto
 	[TearDown]
 	public void TearDown()
 	{
-		pm.UnloadCache();
-		var l = pm.Objects<AgrBi11OwnpabsOthpabsNoTblAutoLeftBase>().ResultTable;
-		pm.Delete(l);
-		pm.Save();
-		pm.UnloadCache();
-		var m = pm.Objects<AgrBi11OwnpabsOthpabsNoTblAutoRightBase>().ResultTable;
-		pm.Delete(m);
-		pm.Save();
-		pm.UnloadCache();
-		decimal count;
-		count = (decimal) new NDOQuery<AgrBi11OwnpabsOthpabsNoTblAutoLeftBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<AgrBi11OwnpabsOthpabsNoTblAutoRightBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #2");
+		try
+		{
+			pm.UnloadCache();
+			var l = pm.Objects<AgrBi11OwnpabsOthpabsNoTblAutoLeftBase>().ResultTable;
+			pm.Delete(l);
+			pm.Save();
+			pm.UnloadCache();
+			var m = pm.Objects<AgrBi11OwnpabsOthpabsNoTblAutoRightBase>().ResultTable;
+			pm.Delete(m);
+			pm.Save();
+			pm.UnloadCache();
+			decimal count;
+			count = (decimal) new NDOQuery<AgrBi11OwnpabsOthpabsNoTblAutoLeftBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #1");
+			count = (decimal) new NDOQuery<AgrBi11OwnpabsOthpabsNoTblAutoRightBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #2");
+		}
+		catch (Exception)
+		{
+			var handler = pm.GetSqlPassThroughHandler( pm.NDOMapping.Connections.First() );
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( ownVar.GetType() ).TableName}");
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( otherVar.GetType() ).TableName}");
+		}
 	}
 	[Test]
 	public void TestSaveReload()
@@ -22687,10 +24243,6 @@ public class TestAgrBi11OwnpabsOthpabsNoTblAuto
 		QueryOwn();
 		Assert.NotNull(ownVar, "No Query Result");
 		Assert.Null(ownVar.RelField, "There should be no object");
-	}
-	[Test]
-	public void TestSaveReloadRemove()
-	{
 	}
 	[Test]
 	public void TestChangeKeyHolderLeft()
@@ -22814,20 +24366,30 @@ public class TestAgrBi11OwnpabsOthpabsTblAuto
 	[TearDown]
 	public void TearDown()
 	{
-		pm.UnloadCache();
-		var l = pm.Objects<AgrBi11OwnpabsOthpabsTblAutoLeftBase>().ResultTable;
-		pm.Delete(l);
-		pm.Save();
-		pm.UnloadCache();
-		var m = pm.Objects<AgrBi11OwnpabsOthpabsTblAutoRightBase>().ResultTable;
-		pm.Delete(m);
-		pm.Save();
-		pm.UnloadCache();
-		decimal count;
-		count = (decimal) new NDOQuery<AgrBi11OwnpabsOthpabsTblAutoLeftBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<AgrBi11OwnpabsOthpabsTblAutoRightBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #2");
+		try
+		{
+			pm.UnloadCache();
+			var l = pm.Objects<AgrBi11OwnpabsOthpabsTblAutoLeftBase>().ResultTable;
+			pm.Delete(l);
+			pm.Save();
+			pm.UnloadCache();
+			var m = pm.Objects<AgrBi11OwnpabsOthpabsTblAutoRightBase>().ResultTable;
+			pm.Delete(m);
+			pm.Save();
+			pm.UnloadCache();
+			decimal count;
+			count = (decimal) new NDOQuery<AgrBi11OwnpabsOthpabsTblAutoLeftBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #1");
+			count = (decimal) new NDOQuery<AgrBi11OwnpabsOthpabsTblAutoRightBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #2");
+		}
+		catch (Exception)
+		{
+			var handler = pm.GetSqlPassThroughHandler( pm.NDOMapping.Connections.First() );
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( ownVar.GetType() ).TableName}");
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( otherVar.GetType() ).TableName}");
+			handler.Execute( $"DELETE FROM {pm.NDOMapping.FindClass( ownVar.GetType() ).Relations.First().MappingTable.TableName}" );
+		}
 	}
 	[Test]
 	public void TestSaveReload()
@@ -22850,10 +24412,6 @@ public class TestAgrBi11OwnpabsOthpabsTblAuto
 		QueryOwn();
 		Assert.NotNull(ownVar, "No Query Result");
 		Assert.Null(ownVar.RelField, "There should be no object");
-	}
-	[Test]
-	public void TestSaveReloadRemove()
-	{
 	}
 	[Test]
 	public void TestChangeKeyHolderLeft()
@@ -22975,20 +24533,30 @@ public class TestAgrDirnOwnpabsOthpabsTblAuto
 	[TearDown]
 	public void TearDown()
 	{
-		pm.UnloadCache();
-		var l = pm.Objects<AgrDirnOwnpabsOthpabsTblAutoLeftBase>().ResultTable;
-		pm.Delete(l);
-		pm.Save();
-		pm.UnloadCache();
-		var m = pm.Objects<AgrDirnOwnpabsOthpabsTblAutoRightBase>().ResultTable;
-		pm.Delete(m);
-		pm.Save();
-		pm.UnloadCache();
-		decimal count;
-		count = (decimal) new NDOQuery<AgrDirnOwnpabsOthpabsTblAutoLeftBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<AgrDirnOwnpabsOthpabsTblAutoRightBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #2");
+		try
+		{
+			pm.UnloadCache();
+			var l = pm.Objects<AgrDirnOwnpabsOthpabsTblAutoLeftBase>().ResultTable;
+			pm.Delete(l);
+			pm.Save();
+			pm.UnloadCache();
+			var m = pm.Objects<AgrDirnOwnpabsOthpabsTblAutoRightBase>().ResultTable;
+			pm.Delete(m);
+			pm.Save();
+			pm.UnloadCache();
+			decimal count;
+			count = (decimal) new NDOQuery<AgrDirnOwnpabsOthpabsTblAutoLeftBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #1");
+			count = (decimal) new NDOQuery<AgrDirnOwnpabsOthpabsTblAutoRightBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #2");
+		}
+		catch (Exception)
+		{
+			var handler = pm.GetSqlPassThroughHandler( pm.NDOMapping.Connections.First() );
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( ownVar.GetType() ).TableName}");
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( otherVar.GetType() ).TableName}");
+			handler.Execute( $"DELETE FROM {pm.NDOMapping.FindClass( ownVar.GetType() ).Relations.First().MappingTable.TableName}" );
+		}
 	}
 	[Test]
 	public void TestSaveReload()
@@ -23063,20 +24631,30 @@ public class TestAgrBin1OwnpabsOthpabsTblAuto
 	[TearDown]
 	public void TearDown()
 	{
-		pm.UnloadCache();
-		var l = pm.Objects<AgrBin1OwnpabsOthpabsTblAutoLeftBase>().ResultTable;
-		pm.Delete(l);
-		pm.Save();
-		pm.UnloadCache();
-		var m = pm.Objects<AgrBin1OwnpabsOthpabsTblAutoRightBase>().ResultTable;
-		pm.Delete(m);
-		pm.Save();
-		pm.UnloadCache();
-		decimal count;
-		count = (decimal) new NDOQuery<AgrBin1OwnpabsOthpabsTblAutoLeftBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<AgrBin1OwnpabsOthpabsTblAutoRightBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #2");
+		try
+		{
+			pm.UnloadCache();
+			var l = pm.Objects<AgrBin1OwnpabsOthpabsTblAutoLeftBase>().ResultTable;
+			pm.Delete(l);
+			pm.Save();
+			pm.UnloadCache();
+			var m = pm.Objects<AgrBin1OwnpabsOthpabsTblAutoRightBase>().ResultTable;
+			pm.Delete(m);
+			pm.Save();
+			pm.UnloadCache();
+			decimal count;
+			count = (decimal) new NDOQuery<AgrBin1OwnpabsOthpabsTblAutoLeftBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #1");
+			count = (decimal) new NDOQuery<AgrBin1OwnpabsOthpabsTblAutoRightBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #2");
+		}
+		catch (Exception)
+		{
+			var handler = pm.GetSqlPassThroughHandler( pm.NDOMapping.Connections.First() );
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( ownVar.GetType() ).TableName}");
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( otherVar.GetType() ).TableName}");
+			handler.Execute( $"DELETE FROM {pm.NDOMapping.FindClass( ownVar.GetType() ).Relations.First().MappingTable.TableName}" );
+		}
 	}
 	[Test]
 	public void TestSaveReload()
@@ -23203,20 +24781,30 @@ public class TestAgrBi1nOwnpabsOthpabsTblAuto
 	[TearDown]
 	public void TearDown()
 	{
-		pm.UnloadCache();
-		var l = pm.Objects<AgrBi1nOwnpabsOthpabsTblAutoLeftBase>().ResultTable;
-		pm.Delete(l);
-		pm.Save();
-		pm.UnloadCache();
-		var m = pm.Objects<AgrBi1nOwnpabsOthpabsTblAutoRightBase>().ResultTable;
-		pm.Delete(m);
-		pm.Save();
-		pm.UnloadCache();
-		decimal count;
-		count = (decimal) new NDOQuery<AgrBi1nOwnpabsOthpabsTblAutoLeftBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<AgrBi1nOwnpabsOthpabsTblAutoRightBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #2");
+		try
+		{
+			pm.UnloadCache();
+			var l = pm.Objects<AgrBi1nOwnpabsOthpabsTblAutoLeftBase>().ResultTable;
+			pm.Delete(l);
+			pm.Save();
+			pm.UnloadCache();
+			var m = pm.Objects<AgrBi1nOwnpabsOthpabsTblAutoRightBase>().ResultTable;
+			pm.Delete(m);
+			pm.Save();
+			pm.UnloadCache();
+			decimal count;
+			count = (decimal) new NDOQuery<AgrBi1nOwnpabsOthpabsTblAutoLeftBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #1");
+			count = (decimal) new NDOQuery<AgrBi1nOwnpabsOthpabsTblAutoRightBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #2");
+		}
+		catch (Exception)
+		{
+			var handler = pm.GetSqlPassThroughHandler( pm.NDOMapping.Connections.First() );
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( ownVar.GetType() ).TableName}");
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( otherVar.GetType() ).TableName}");
+			handler.Execute( $"DELETE FROM {pm.NDOMapping.FindClass( ownVar.GetType() ).Relations.First().MappingTable.TableName}" );
+		}
 	}
 	[Test]
 	public void TestSaveReload()
@@ -23239,10 +24827,6 @@ public class TestAgrBi1nOwnpabsOthpabsTblAuto
 		QueryOwn();
 		Assert.NotNull(ownVar, "No Query Result");
 		Assert.Null(ownVar.RelField, "There should be no object");
-	}
-	[Test]
-	public void TestSaveReloadRemove()
-	{
 	}
 	[Test]
 	public void TestChangeKeyHolderLeft()
@@ -23332,20 +24916,30 @@ public class TestAgrBinnOwnpabsOthpabsTblAuto
 	[TearDown]
 	public void TearDown()
 	{
-		pm.UnloadCache();
-		var l = pm.Objects<AgrBinnOwnpabsOthpabsTblAutoLeftBase>().ResultTable;
-		pm.Delete(l);
-		pm.Save();
-		pm.UnloadCache();
-		var m = pm.Objects<AgrBinnOwnpabsOthpabsTblAutoRightBase>().ResultTable;
-		pm.Delete(m);
-		pm.Save();
-		pm.UnloadCache();
-		decimal count;
-		count = (decimal) new NDOQuery<AgrBinnOwnpabsOthpabsTblAutoLeftBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<AgrBinnOwnpabsOthpabsTblAutoRightBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #2");
+		try
+		{
+			pm.UnloadCache();
+			var l = pm.Objects<AgrBinnOwnpabsOthpabsTblAutoLeftBase>().ResultTable;
+			pm.Delete(l);
+			pm.Save();
+			pm.UnloadCache();
+			var m = pm.Objects<AgrBinnOwnpabsOthpabsTblAutoRightBase>().ResultTable;
+			pm.Delete(m);
+			pm.Save();
+			pm.UnloadCache();
+			decimal count;
+			count = (decimal) new NDOQuery<AgrBinnOwnpabsOthpabsTblAutoLeftBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #1");
+			count = (decimal) new NDOQuery<AgrBinnOwnpabsOthpabsTblAutoRightBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #2");
+		}
+		catch (Exception)
+		{
+			var handler = pm.GetSqlPassThroughHandler( pm.NDOMapping.Connections.First() );
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( ownVar.GetType() ).TableName}");
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( otherVar.GetType() ).TableName}");
+			handler.Execute( $"DELETE FROM {pm.NDOMapping.FindClass( ownVar.GetType() ).Relations.First().MappingTable.TableName}" );
+		}
 	}
 	[Test]
 	public void TestSaveReload()
@@ -23440,42 +25034,65 @@ public class TestCmpDir1OwnpabsOthpabsNoTblAuto
 	[TearDown]
 	public void TearDown()
 	{
-		pm.UnloadCache();
-		var l = pm.Objects<CmpDir1OwnpabsOthpabsNoTblAutoLeftBase>().ResultTable;
-		pm.Delete(l);
-		pm.Save();
-		pm.UnloadCache();
-		decimal count;
-		count = (decimal) new NDOQuery<CmpDir1OwnpabsOthpabsNoTblAutoLeftBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<CmpDir1OwnpabsOthpabsNoTblAutoRightBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #2");
-	}
-	[Test, ExpectedException(typeof(NDOException))]
-	public void TestSaveReload()
-	{
-		CreateObjects();
-		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
-	}
-	[Test, ExpectedException(typeof(NDOException))]
-	public void TestSaveReloadNull()
-	{
-		CreateObjects();
-		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
-		ownVar.RelField = null;
-		pm.Save();
-		pm.UnloadCache();
-		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.Null(ownVar.RelField, "There should be no object");
+		try
+		{
+			pm.UnloadCache();
+			var l = pm.Objects<CmpDir1OwnpabsOthpabsNoTblAutoLeftBase>().ResultTable;
+			pm.Delete(l);
+			pm.Save();
+			pm.UnloadCache();
+			decimal count;
+			count = (decimal) new NDOQuery<CmpDir1OwnpabsOthpabsNoTblAutoLeftBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #1");
+			count = (decimal) new NDOQuery<CmpDir1OwnpabsOthpabsNoTblAutoRightBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #2");
+		}
+		catch (Exception)
+		{
+			var handler = pm.GetSqlPassThroughHandler( pm.NDOMapping.Connections.First() );
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( ownVar.GetType() ).TableName}");
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( otherVar.GetType() ).TableName}");
+		}
 	}
 	[Test]
-	public void TestSaveReloadRemove()
+	public void TestSaveReload()
 	{
+		bool thrown = false;
+		try
+		{
+			CreateObjects();
+			QueryOwn();
+			Assert.NotNull(ownVar, "No Query Result");
+			Assert.NotNull(ownVar.RelField, "No related object");
+		}
+		catch (NDOException)
+		{
+			thrown = true;
+		}
+		Assert.AreEqual(true, thrown, "NDOException should have been thrown");
+	}
+	[Test]
+	public void TestSaveReloadNull()
+	{
+		bool thrown = false;
+		try
+		{
+			CreateObjects();
+			QueryOwn();
+			Assert.NotNull(ownVar, "No Query Result");
+			Assert.NotNull(ownVar.RelField, "No related object");
+			ownVar.RelField = null;
+			pm.Save();
+			pm.UnloadCache();
+			QueryOwn();
+			Assert.NotNull(ownVar, "No Query Result");
+			Assert.Null(ownVar.RelField, "There should be no object");
+		}
+		catch (NDOException)
+		{
+			thrown = true;
+		}
+		Assert.AreEqual(true, thrown, "NDOException should have been thrown");
 	}
 	void CreateObjects()
 	{
@@ -23514,16 +25131,26 @@ public class TestCmpDir1OwnpabsOthpabsTblAuto
 	[TearDown]
 	public void TearDown()
 	{
-		pm.UnloadCache();
-		var l = pm.Objects<CmpDir1OwnpabsOthpabsTblAutoLeftBase>().ResultTable;
-		pm.Delete(l);
-		pm.Save();
-		pm.UnloadCache();
-		decimal count;
-		count = (decimal) new NDOQuery<CmpDir1OwnpabsOthpabsTblAutoLeftBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<CmpDir1OwnpabsOthpabsTblAutoRightBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #2");
+		try
+		{
+			pm.UnloadCache();
+			var l = pm.Objects<CmpDir1OwnpabsOthpabsTblAutoLeftBase>().ResultTable;
+			pm.Delete(l);
+			pm.Save();
+			pm.UnloadCache();
+			decimal count;
+			count = (decimal) new NDOQuery<CmpDir1OwnpabsOthpabsTblAutoLeftBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #1");
+			count = (decimal) new NDOQuery<CmpDir1OwnpabsOthpabsTblAutoRightBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #2");
+		}
+		catch (Exception)
+		{
+			var handler = pm.GetSqlPassThroughHandler( pm.NDOMapping.Connections.First() );
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( ownVar.GetType() ).TableName}");
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( otherVar.GetType() ).TableName}");
+			handler.Execute( $"DELETE FROM {pm.NDOMapping.FindClass( ownVar.GetType() ).Relations.First().MappingTable.TableName}" );
+		}
 	}
 	[Test]
 	public void TestSaveReload()
@@ -23546,10 +25173,6 @@ public class TestCmpDir1OwnpabsOthpabsTblAuto
 		QueryOwn();
 		Assert.NotNull(ownVar, "No Query Result");
 		Assert.Null(ownVar.RelField, "There should be no object");
-	}
-	[Test]
-	public void TestSaveReloadRemove()
-	{
 	}
 	[Test]
 	public void TestChangeKeyHolderLeft()
@@ -23618,42 +25241,65 @@ public class TestCmpBi11OwnpabsOthpabsNoTblAuto
 	[TearDown]
 	public void TearDown()
 	{
-		pm.UnloadCache();
-		var l = pm.Objects<CmpBi11OwnpabsOthpabsNoTblAutoLeftBase>().ResultTable;
-		pm.Delete(l);
-		pm.Save();
-		pm.UnloadCache();
-		decimal count;
-		count = (decimal) new NDOQuery<CmpBi11OwnpabsOthpabsNoTblAutoLeftBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<CmpBi11OwnpabsOthpabsNoTblAutoRightBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #2");
-	}
-	[Test, ExpectedException(typeof(NDOException))]
-	public void TestSaveReload()
-	{
-		CreateObjects();
-		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
-	}
-	[Test, ExpectedException(typeof(NDOException))]
-	public void TestSaveReloadNull()
-	{
-		CreateObjects();
-		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
-		ownVar.RelField = null;
-		pm.Save();
-		pm.UnloadCache();
-		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.Null(ownVar.RelField, "There should be no object");
+		try
+		{
+			pm.UnloadCache();
+			var l = pm.Objects<CmpBi11OwnpabsOthpabsNoTblAutoLeftBase>().ResultTable;
+			pm.Delete(l);
+			pm.Save();
+			pm.UnloadCache();
+			decimal count;
+			count = (decimal) new NDOQuery<CmpBi11OwnpabsOthpabsNoTblAutoLeftBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #1");
+			count = (decimal) new NDOQuery<CmpBi11OwnpabsOthpabsNoTblAutoRightBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #2");
+		}
+		catch (Exception)
+		{
+			var handler = pm.GetSqlPassThroughHandler( pm.NDOMapping.Connections.First() );
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( ownVar.GetType() ).TableName}");
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( otherVar.GetType() ).TableName}");
+		}
 	}
 	[Test]
-	public void TestSaveReloadRemove()
+	public void TestSaveReload()
 	{
+		bool thrown = false;
+		try
+		{
+			CreateObjects();
+			QueryOwn();
+			Assert.NotNull(ownVar, "No Query Result");
+			Assert.NotNull(ownVar.RelField, "No related object");
+		}
+		catch (NDOException)
+		{
+			thrown = true;
+		}
+		Assert.AreEqual(true, thrown, "NDOException should have been thrown");
+	}
+	[Test]
+	public void TestSaveReloadNull()
+	{
+		bool thrown = false;
+		try
+		{
+			CreateObjects();
+			QueryOwn();
+			Assert.NotNull(ownVar, "No Query Result");
+			Assert.NotNull(ownVar.RelField, "No related object");
+			ownVar.RelField = null;
+			pm.Save();
+			pm.UnloadCache();
+			QueryOwn();
+			Assert.NotNull(ownVar, "No Query Result");
+			Assert.Null(ownVar.RelField, "There should be no object");
+		}
+		catch (NDOException)
+		{
+			thrown = true;
+		}
+		Assert.AreEqual(true, thrown, "NDOException should have been thrown");
 	}
 	[Test]
 	public void TestRelationHash()
@@ -23712,16 +25358,26 @@ public class TestCmpBi11OwnpabsOthpabsTblAuto
 	[TearDown]
 	public void TearDown()
 	{
-		pm.UnloadCache();
-		var l = pm.Objects<CmpBi11OwnpabsOthpabsTblAutoLeftBase>().ResultTable;
-		pm.Delete(l);
-		pm.Save();
-		pm.UnloadCache();
-		decimal count;
-		count = (decimal) new NDOQuery<CmpBi11OwnpabsOthpabsTblAutoLeftBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<CmpBi11OwnpabsOthpabsTblAutoRightBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #2");
+		try
+		{
+			pm.UnloadCache();
+			var l = pm.Objects<CmpBi11OwnpabsOthpabsTblAutoLeftBase>().ResultTable;
+			pm.Delete(l);
+			pm.Save();
+			pm.UnloadCache();
+			decimal count;
+			count = (decimal) new NDOQuery<CmpBi11OwnpabsOthpabsTblAutoLeftBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #1");
+			count = (decimal) new NDOQuery<CmpBi11OwnpabsOthpabsTblAutoRightBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #2");
+		}
+		catch (Exception)
+		{
+			var handler = pm.GetSqlPassThroughHandler( pm.NDOMapping.Connections.First() );
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( ownVar.GetType() ).TableName}");
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( otherVar.GetType() ).TableName}");
+			handler.Execute( $"DELETE FROM {pm.NDOMapping.FindClass( ownVar.GetType() ).Relations.First().MappingTable.TableName}" );
+		}
 	}
 	[Test]
 	public void TestSaveReload()
@@ -23744,10 +25400,6 @@ public class TestCmpBi11OwnpabsOthpabsTblAuto
 		QueryOwn();
 		Assert.NotNull(ownVar, "No Query Result");
 		Assert.Null(ownVar.RelField, "There should be no object");
-	}
-	[Test]
-	public void TestSaveReloadRemove()
-	{
 	}
 	[Test]
 	public void TestChangeKeyHolderLeft()
@@ -23867,16 +25519,26 @@ public class TestCmpDirnOwnpabsOthpabsTblAuto
 	[TearDown]
 	public void TearDown()
 	{
-		pm.UnloadCache();
-		var l = pm.Objects<CmpDirnOwnpabsOthpabsTblAutoLeftBase>().ResultTable;
-		pm.Delete(l);
-		pm.Save();
-		pm.UnloadCache();
-		decimal count;
-		count = (decimal) new NDOQuery<CmpDirnOwnpabsOthpabsTblAutoLeftBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<CmpDirnOwnpabsOthpabsTblAutoRightBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #2");
+		try
+		{
+			pm.UnloadCache();
+			var l = pm.Objects<CmpDirnOwnpabsOthpabsTblAutoLeftBase>().ResultTable;
+			pm.Delete(l);
+			pm.Save();
+			pm.UnloadCache();
+			decimal count;
+			count = (decimal) new NDOQuery<CmpDirnOwnpabsOthpabsTblAutoLeftBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #1");
+			count = (decimal) new NDOQuery<CmpDirnOwnpabsOthpabsTblAutoRightBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #2");
+		}
+		catch (Exception)
+		{
+			var handler = pm.GetSqlPassThroughHandler( pm.NDOMapping.Connections.First() );
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( ownVar.GetType() ).TableName}");
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( otherVar.GetType() ).TableName}");
+			handler.Execute( $"DELETE FROM {pm.NDOMapping.FindClass( ownVar.GetType() ).Relations.First().MappingTable.TableName}" );
+		}
 	}
 	[Test]
 	public void TestSaveReload()
@@ -23950,16 +25612,26 @@ public class TestCmpBin1OwnpabsOthpabsTblAuto
 	[TearDown]
 	public void TearDown()
 	{
-		pm.UnloadCache();
-		var l = pm.Objects<CmpBin1OwnpabsOthpabsTblAutoLeftBase>().ResultTable;
-		pm.Delete(l);
-		pm.Save();
-		pm.UnloadCache();
-		decimal count;
-		count = (decimal) new NDOQuery<CmpBin1OwnpabsOthpabsTblAutoLeftBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<CmpBin1OwnpabsOthpabsTblAutoRightBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #2");
+		try
+		{
+			pm.UnloadCache();
+			var l = pm.Objects<CmpBin1OwnpabsOthpabsTblAutoLeftBase>().ResultTable;
+			pm.Delete(l);
+			pm.Save();
+			pm.UnloadCache();
+			decimal count;
+			count = (decimal) new NDOQuery<CmpBin1OwnpabsOthpabsTblAutoLeftBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #1");
+			count = (decimal) new NDOQuery<CmpBin1OwnpabsOthpabsTblAutoRightBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #2");
+		}
+		catch (Exception)
+		{
+			var handler = pm.GetSqlPassThroughHandler( pm.NDOMapping.Connections.First() );
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( ownVar.GetType() ).TableName}");
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( otherVar.GetType() ).TableName}");
+			handler.Execute( $"DELETE FROM {pm.NDOMapping.FindClass( ownVar.GetType() ).Relations.First().MappingTable.TableName}" );
+		}
 	}
 	[Test]
 	public void TestSaveReload()
@@ -24084,16 +25756,26 @@ public class TestCmpBi1nOwnpabsOthpabsTblAuto
 	[TearDown]
 	public void TearDown()
 	{
-		pm.UnloadCache();
-		var l = pm.Objects<CmpBi1nOwnpabsOthpabsTblAutoLeftBase>().ResultTable;
-		pm.Delete(l);
-		pm.Save();
-		pm.UnloadCache();
-		decimal count;
-		count = (decimal) new NDOQuery<CmpBi1nOwnpabsOthpabsTblAutoLeftBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<CmpBi1nOwnpabsOthpabsTblAutoRightBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #2");
+		try
+		{
+			pm.UnloadCache();
+			var l = pm.Objects<CmpBi1nOwnpabsOthpabsTblAutoLeftBase>().ResultTable;
+			pm.Delete(l);
+			pm.Save();
+			pm.UnloadCache();
+			decimal count;
+			count = (decimal) new NDOQuery<CmpBi1nOwnpabsOthpabsTblAutoLeftBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #1");
+			count = (decimal) new NDOQuery<CmpBi1nOwnpabsOthpabsTblAutoRightBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #2");
+		}
+		catch (Exception)
+		{
+			var handler = pm.GetSqlPassThroughHandler( pm.NDOMapping.Connections.First() );
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( ownVar.GetType() ).TableName}");
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( otherVar.GetType() ).TableName}");
+			handler.Execute( $"DELETE FROM {pm.NDOMapping.FindClass( ownVar.GetType() ).Relations.First().MappingTable.TableName}" );
+		}
 	}
 	[Test]
 	public void TestSaveReload()
@@ -24116,10 +25798,6 @@ public class TestCmpBi1nOwnpabsOthpabsTblAuto
 		QueryOwn();
 		Assert.NotNull(ownVar, "No Query Result");
 		Assert.Null(ownVar.RelField, "There should be no object");
-	}
-	[Test]
-	public void TestSaveReloadRemove()
-	{
 	}
 	[Test]
 	public void TestChangeKeyHolderLeft()
@@ -24208,16 +25886,26 @@ public class TestCmpBinnOwnpabsOthpabsTblAuto
 	[TearDown]
 	public void TearDown()
 	{
-		pm.UnloadCache();
-		var l = pm.Objects<CmpBinnOwnpabsOthpabsTblAutoLeftBase>().ResultTable;
-		pm.Delete(l);
-		pm.Save();
-		pm.UnloadCache();
-		decimal count;
-		count = (decimal) new NDOQuery<CmpBinnOwnpabsOthpabsTblAutoLeftBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<CmpBinnOwnpabsOthpabsTblAutoRightBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #2");
+		try
+		{
+			pm.UnloadCache();
+			var l = pm.Objects<CmpBinnOwnpabsOthpabsTblAutoLeftBase>().ResultTable;
+			pm.Delete(l);
+			pm.Save();
+			pm.UnloadCache();
+			decimal count;
+			count = (decimal) new NDOQuery<CmpBinnOwnpabsOthpabsTblAutoLeftBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #1");
+			count = (decimal) new NDOQuery<CmpBinnOwnpabsOthpabsTblAutoRightBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #2");
+		}
+		catch (Exception)
+		{
+			var handler = pm.GetSqlPassThroughHandler( pm.NDOMapping.Connections.First() );
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( ownVar.GetType() ).TableName}");
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( otherVar.GetType() ).TableName}");
+			handler.Execute( $"DELETE FROM {pm.NDOMapping.FindClass( ownVar.GetType() ).Relations.First().MappingTable.TableName}" );
+		}
 	}
 	[Test]
 	public void TestSaveReload()
@@ -24311,20 +25999,29 @@ public class TestAgrDir1OwnpabsNoTblGuid
 	[TearDown]
 	public void TearDown()
 	{
-		pm.UnloadCache();
-		var l = pm.Objects<AgrDir1OwnpabsNoTblGuidLeftBase>().ResultTable;
-		pm.Delete(l);
-		pm.Save();
-		pm.UnloadCache();
-		var m = pm.Objects<AgrDir1OwnpabsNoTblGuidRight>().ResultTable;
-		pm.Delete(m);
-		pm.Save();
-		pm.UnloadCache();
-		decimal count;
-		count = (decimal) new NDOQuery<AgrDir1OwnpabsNoTblGuidLeftBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<AgrDir1OwnpabsNoTblGuidRight>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #2");
+		try
+		{
+			pm.UnloadCache();
+			var l = pm.Objects<AgrDir1OwnpabsNoTblGuidLeftBase>().ResultTable;
+			pm.Delete(l);
+			pm.Save();
+			pm.UnloadCache();
+			var m = pm.Objects<AgrDir1OwnpabsNoTblGuidRight>().ResultTable;
+			pm.Delete(m);
+			pm.Save();
+			pm.UnloadCache();
+			decimal count;
+			count = (decimal) new NDOQuery<AgrDir1OwnpabsNoTblGuidLeftBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #1");
+			count = (decimal) new NDOQuery<AgrDir1OwnpabsNoTblGuidRight>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #2");
+		}
+		catch (Exception)
+		{
+			var handler = pm.GetSqlPassThroughHandler( pm.NDOMapping.Connections.First() );
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( ownVar.GetType() ).TableName}");
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( otherVar.GetType() ).TableName}");
+		}
 	}
 	[Test]
 	public void TestSaveReload()
@@ -24347,10 +26044,6 @@ public class TestAgrDir1OwnpabsNoTblGuid
 		QueryOwn();
 		Assert.NotNull(ownVar, "No Query Result");
 		Assert.Null(ownVar.RelField, "There should be no object");
-	}
-	[Test]
-	public void TestSaveReloadRemove()
-	{
 	}
 	[Test]
 	public void TestChangeKeyHolderLeft()
@@ -24420,20 +26113,30 @@ public class TestAgrDir1OwnpabsTblGuid
 	[TearDown]
 	public void TearDown()
 	{
-		pm.UnloadCache();
-		var l = pm.Objects<AgrDir1OwnpabsTblGuidLeftBase>().ResultTable;
-		pm.Delete(l);
-		pm.Save();
-		pm.UnloadCache();
-		var m = pm.Objects<AgrDir1OwnpabsTblGuidRight>().ResultTable;
-		pm.Delete(m);
-		pm.Save();
-		pm.UnloadCache();
-		decimal count;
-		count = (decimal) new NDOQuery<AgrDir1OwnpabsTblGuidLeftBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<AgrDir1OwnpabsTblGuidRight>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #2");
+		try
+		{
+			pm.UnloadCache();
+			var l = pm.Objects<AgrDir1OwnpabsTblGuidLeftBase>().ResultTable;
+			pm.Delete(l);
+			pm.Save();
+			pm.UnloadCache();
+			var m = pm.Objects<AgrDir1OwnpabsTblGuidRight>().ResultTable;
+			pm.Delete(m);
+			pm.Save();
+			pm.UnloadCache();
+			decimal count;
+			count = (decimal) new NDOQuery<AgrDir1OwnpabsTblGuidLeftBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #1");
+			count = (decimal) new NDOQuery<AgrDir1OwnpabsTblGuidRight>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #2");
+		}
+		catch (Exception)
+		{
+			var handler = pm.GetSqlPassThroughHandler( pm.NDOMapping.Connections.First() );
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( ownVar.GetType() ).TableName}");
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( otherVar.GetType() ).TableName}");
+			handler.Execute( $"DELETE FROM {pm.NDOMapping.FindClass( ownVar.GetType() ).Relations.First().MappingTable.TableName}" );
+		}
 	}
 	[Test]
 	public void TestSaveReload()
@@ -24456,10 +26159,6 @@ public class TestAgrDir1OwnpabsTblGuid
 		QueryOwn();
 		Assert.NotNull(ownVar, "No Query Result");
 		Assert.Null(ownVar.RelField, "There should be no object");
-	}
-	[Test]
-	public void TestSaveReloadRemove()
-	{
 	}
 	[Test]
 	public void TestChangeKeyHolderLeft()
@@ -24529,20 +26228,29 @@ public class TestAgrBi11OwnpabsNoTblGuid
 	[TearDown]
 	public void TearDown()
 	{
-		pm.UnloadCache();
-		var l = pm.Objects<AgrBi11OwnpabsNoTblGuidLeftBase>().ResultTable;
-		pm.Delete(l);
-		pm.Save();
-		pm.UnloadCache();
-		var m = pm.Objects<AgrBi11OwnpabsNoTblGuidRight>().ResultTable;
-		pm.Delete(m);
-		pm.Save();
-		pm.UnloadCache();
-		decimal count;
-		count = (decimal) new NDOQuery<AgrBi11OwnpabsNoTblGuidLeftBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<AgrBi11OwnpabsNoTblGuidRight>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #2");
+		try
+		{
+			pm.UnloadCache();
+			var l = pm.Objects<AgrBi11OwnpabsNoTblGuidLeftBase>().ResultTable;
+			pm.Delete(l);
+			pm.Save();
+			pm.UnloadCache();
+			var m = pm.Objects<AgrBi11OwnpabsNoTblGuidRight>().ResultTable;
+			pm.Delete(m);
+			pm.Save();
+			pm.UnloadCache();
+			decimal count;
+			count = (decimal) new NDOQuery<AgrBi11OwnpabsNoTblGuidLeftBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #1");
+			count = (decimal) new NDOQuery<AgrBi11OwnpabsNoTblGuidRight>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #2");
+		}
+		catch (Exception)
+		{
+			var handler = pm.GetSqlPassThroughHandler( pm.NDOMapping.Connections.First() );
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( ownVar.GetType() ).TableName}");
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( otherVar.GetType() ).TableName}");
+		}
 	}
 	[Test]
 	public void TestSaveReload()
@@ -24565,10 +26273,6 @@ public class TestAgrBi11OwnpabsNoTblGuid
 		QueryOwn();
 		Assert.NotNull(ownVar, "No Query Result");
 		Assert.Null(ownVar.RelField, "There should be no object");
-	}
-	[Test]
-	public void TestSaveReloadRemove()
-	{
 	}
 	[Test]
 	public void TestChangeKeyHolderLeft()
@@ -24683,20 +26387,30 @@ public class TestAgrBi11OwnpabsTblGuid
 	[TearDown]
 	public void TearDown()
 	{
-		pm.UnloadCache();
-		var l = pm.Objects<AgrBi11OwnpabsTblGuidLeftBase>().ResultTable;
-		pm.Delete(l);
-		pm.Save();
-		pm.UnloadCache();
-		var m = pm.Objects<AgrBi11OwnpabsTblGuidRight>().ResultTable;
-		pm.Delete(m);
-		pm.Save();
-		pm.UnloadCache();
-		decimal count;
-		count = (decimal) new NDOQuery<AgrBi11OwnpabsTblGuidLeftBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<AgrBi11OwnpabsTblGuidRight>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #2");
+		try
+		{
+			pm.UnloadCache();
+			var l = pm.Objects<AgrBi11OwnpabsTblGuidLeftBase>().ResultTable;
+			pm.Delete(l);
+			pm.Save();
+			pm.UnloadCache();
+			var m = pm.Objects<AgrBi11OwnpabsTblGuidRight>().ResultTable;
+			pm.Delete(m);
+			pm.Save();
+			pm.UnloadCache();
+			decimal count;
+			count = (decimal) new NDOQuery<AgrBi11OwnpabsTblGuidLeftBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #1");
+			count = (decimal) new NDOQuery<AgrBi11OwnpabsTblGuidRight>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #2");
+		}
+		catch (Exception)
+		{
+			var handler = pm.GetSqlPassThroughHandler( pm.NDOMapping.Connections.First() );
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( ownVar.GetType() ).TableName}");
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( otherVar.GetType() ).TableName}");
+			handler.Execute( $"DELETE FROM {pm.NDOMapping.FindClass( ownVar.GetType() ).Relations.First().MappingTable.TableName}" );
+		}
 	}
 	[Test]
 	public void TestSaveReload()
@@ -24719,10 +26433,6 @@ public class TestAgrBi11OwnpabsTblGuid
 		QueryOwn();
 		Assert.NotNull(ownVar, "No Query Result");
 		Assert.Null(ownVar.RelField, "There should be no object");
-	}
-	[Test]
-	public void TestSaveReloadRemove()
-	{
 	}
 	[Test]
 	public void TestChangeKeyHolderLeft()
@@ -24837,20 +26547,29 @@ public class TestAgrDirnOwnpabsNoTblGuid
 	[TearDown]
 	public void TearDown()
 	{
-		pm.UnloadCache();
-		var l = pm.Objects<AgrDirnOwnpabsNoTblGuidLeftBase>().ResultTable;
-		pm.Delete(l);
-		pm.Save();
-		pm.UnloadCache();
-		var m = pm.Objects<AgrDirnOwnpabsNoTblGuidRight>().ResultTable;
-		pm.Delete(m);
-		pm.Save();
-		pm.UnloadCache();
-		decimal count;
-		count = (decimal) new NDOQuery<AgrDirnOwnpabsNoTblGuidLeftBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<AgrDirnOwnpabsNoTblGuidRight>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #2");
+		try
+		{
+			pm.UnloadCache();
+			var l = pm.Objects<AgrDirnOwnpabsNoTblGuidLeftBase>().ResultTable;
+			pm.Delete(l);
+			pm.Save();
+			pm.UnloadCache();
+			var m = pm.Objects<AgrDirnOwnpabsNoTblGuidRight>().ResultTable;
+			pm.Delete(m);
+			pm.Save();
+			pm.UnloadCache();
+			decimal count;
+			count = (decimal) new NDOQuery<AgrDirnOwnpabsNoTblGuidLeftBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #1");
+			count = (decimal) new NDOQuery<AgrDirnOwnpabsNoTblGuidRight>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #2");
+		}
+		catch (Exception)
+		{
+			var handler = pm.GetSqlPassThroughHandler( pm.NDOMapping.Connections.First() );
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( ownVar.GetType() ).TableName}");
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( otherVar.GetType() ).TableName}");
+		}
 	}
 	[Test]
 	public void TestSaveReload()
@@ -24925,20 +26644,30 @@ public class TestAgrDirnOwnpabsTblGuid
 	[TearDown]
 	public void TearDown()
 	{
-		pm.UnloadCache();
-		var l = pm.Objects<AgrDirnOwnpabsTblGuidLeftBase>().ResultTable;
-		pm.Delete(l);
-		pm.Save();
-		pm.UnloadCache();
-		var m = pm.Objects<AgrDirnOwnpabsTblGuidRight>().ResultTable;
-		pm.Delete(m);
-		pm.Save();
-		pm.UnloadCache();
-		decimal count;
-		count = (decimal) new NDOQuery<AgrDirnOwnpabsTblGuidLeftBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<AgrDirnOwnpabsTblGuidRight>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #2");
+		try
+		{
+			pm.UnloadCache();
+			var l = pm.Objects<AgrDirnOwnpabsTblGuidLeftBase>().ResultTable;
+			pm.Delete(l);
+			pm.Save();
+			pm.UnloadCache();
+			var m = pm.Objects<AgrDirnOwnpabsTblGuidRight>().ResultTable;
+			pm.Delete(m);
+			pm.Save();
+			pm.UnloadCache();
+			decimal count;
+			count = (decimal) new NDOQuery<AgrDirnOwnpabsTblGuidLeftBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #1");
+			count = (decimal) new NDOQuery<AgrDirnOwnpabsTblGuidRight>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #2");
+		}
+		catch (Exception)
+		{
+			var handler = pm.GetSqlPassThroughHandler( pm.NDOMapping.Connections.First() );
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( ownVar.GetType() ).TableName}");
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( otherVar.GetType() ).TableName}");
+			handler.Execute( $"DELETE FROM {pm.NDOMapping.FindClass( ownVar.GetType() ).Relations.First().MappingTable.TableName}" );
+		}
 	}
 	[Test]
 	public void TestSaveReload()
@@ -25013,20 +26742,29 @@ public class TestAgrBin1OwnpabsNoTblGuid
 	[TearDown]
 	public void TearDown()
 	{
-		pm.UnloadCache();
-		var l = pm.Objects<AgrBin1OwnpabsNoTblGuidLeftBase>().ResultTable;
-		pm.Delete(l);
-		pm.Save();
-		pm.UnloadCache();
-		var m = pm.Objects<AgrBin1OwnpabsNoTblGuidRight>().ResultTable;
-		pm.Delete(m);
-		pm.Save();
-		pm.UnloadCache();
-		decimal count;
-		count = (decimal) new NDOQuery<AgrBin1OwnpabsNoTblGuidLeftBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<AgrBin1OwnpabsNoTblGuidRight>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #2");
+		try
+		{
+			pm.UnloadCache();
+			var l = pm.Objects<AgrBin1OwnpabsNoTblGuidLeftBase>().ResultTable;
+			pm.Delete(l);
+			pm.Save();
+			pm.UnloadCache();
+			var m = pm.Objects<AgrBin1OwnpabsNoTblGuidRight>().ResultTable;
+			pm.Delete(m);
+			pm.Save();
+			pm.UnloadCache();
+			decimal count;
+			count = (decimal) new NDOQuery<AgrBin1OwnpabsNoTblGuidLeftBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #1");
+			count = (decimal) new NDOQuery<AgrBin1OwnpabsNoTblGuidRight>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #2");
+		}
+		catch (Exception)
+		{
+			var handler = pm.GetSqlPassThroughHandler( pm.NDOMapping.Connections.First() );
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( ownVar.GetType() ).TableName}");
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( otherVar.GetType() ).TableName}");
+		}
 	}
 	[Test]
 	public void TestSaveReload()
@@ -25146,20 +26884,30 @@ public class TestAgrBin1OwnpabsTblGuid
 	[TearDown]
 	public void TearDown()
 	{
-		pm.UnloadCache();
-		var l = pm.Objects<AgrBin1OwnpabsTblGuidLeftBase>().ResultTable;
-		pm.Delete(l);
-		pm.Save();
-		pm.UnloadCache();
-		var m = pm.Objects<AgrBin1OwnpabsTblGuidRight>().ResultTable;
-		pm.Delete(m);
-		pm.Save();
-		pm.UnloadCache();
-		decimal count;
-		count = (decimal) new NDOQuery<AgrBin1OwnpabsTblGuidLeftBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<AgrBin1OwnpabsTblGuidRight>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #2");
+		try
+		{
+			pm.UnloadCache();
+			var l = pm.Objects<AgrBin1OwnpabsTblGuidLeftBase>().ResultTable;
+			pm.Delete(l);
+			pm.Save();
+			pm.UnloadCache();
+			var m = pm.Objects<AgrBin1OwnpabsTblGuidRight>().ResultTable;
+			pm.Delete(m);
+			pm.Save();
+			pm.UnloadCache();
+			decimal count;
+			count = (decimal) new NDOQuery<AgrBin1OwnpabsTblGuidLeftBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #1");
+			count = (decimal) new NDOQuery<AgrBin1OwnpabsTblGuidRight>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #2");
+		}
+		catch (Exception)
+		{
+			var handler = pm.GetSqlPassThroughHandler( pm.NDOMapping.Connections.First() );
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( ownVar.GetType() ).TableName}");
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( otherVar.GetType() ).TableName}");
+			handler.Execute( $"DELETE FROM {pm.NDOMapping.FindClass( ownVar.GetType() ).Relations.First().MappingTable.TableName}" );
+		}
 	}
 	[Test]
 	public void TestSaveReload()
@@ -25279,20 +27027,30 @@ public class TestAgrBi1nOwnpabsTblGuid
 	[TearDown]
 	public void TearDown()
 	{
-		pm.UnloadCache();
-		var l = pm.Objects<AgrBi1nOwnpabsTblGuidLeftBase>().ResultTable;
-		pm.Delete(l);
-		pm.Save();
-		pm.UnloadCache();
-		var m = pm.Objects<AgrBi1nOwnpabsTblGuidRight>().ResultTable;
-		pm.Delete(m);
-		pm.Save();
-		pm.UnloadCache();
-		decimal count;
-		count = (decimal) new NDOQuery<AgrBi1nOwnpabsTblGuidLeftBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<AgrBi1nOwnpabsTblGuidRight>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #2");
+		try
+		{
+			pm.UnloadCache();
+			var l = pm.Objects<AgrBi1nOwnpabsTblGuidLeftBase>().ResultTable;
+			pm.Delete(l);
+			pm.Save();
+			pm.UnloadCache();
+			var m = pm.Objects<AgrBi1nOwnpabsTblGuidRight>().ResultTable;
+			pm.Delete(m);
+			pm.Save();
+			pm.UnloadCache();
+			decimal count;
+			count = (decimal) new NDOQuery<AgrBi1nOwnpabsTblGuidLeftBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #1");
+			count = (decimal) new NDOQuery<AgrBi1nOwnpabsTblGuidRight>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #2");
+		}
+		catch (Exception)
+		{
+			var handler = pm.GetSqlPassThroughHandler( pm.NDOMapping.Connections.First() );
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( ownVar.GetType() ).TableName}");
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( otherVar.GetType() ).TableName}");
+			handler.Execute( $"DELETE FROM {pm.NDOMapping.FindClass( ownVar.GetType() ).Relations.First().MappingTable.TableName}" );
+		}
 	}
 	[Test]
 	public void TestSaveReload()
@@ -25315,10 +27073,6 @@ public class TestAgrBi1nOwnpabsTblGuid
 		QueryOwn();
 		Assert.NotNull(ownVar, "No Query Result");
 		Assert.Null(ownVar.RelField, "There should be no object");
-	}
-	[Test]
-	public void TestSaveReloadRemove()
-	{
 	}
 	[Test]
 	public void TestChangeKeyHolderLeft()
@@ -25402,20 +27156,30 @@ public class TestAgrBinnOwnpabsTblGuid
 	[TearDown]
 	public void TearDown()
 	{
-		pm.UnloadCache();
-		var l = pm.Objects<AgrBinnOwnpabsTblGuidLeftBase>().ResultTable;
-		pm.Delete(l);
-		pm.Save();
-		pm.UnloadCache();
-		var m = pm.Objects<AgrBinnOwnpabsTblGuidRight>().ResultTable;
-		pm.Delete(m);
-		pm.Save();
-		pm.UnloadCache();
-		decimal count;
-		count = (decimal) new NDOQuery<AgrBinnOwnpabsTblGuidLeftBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<AgrBinnOwnpabsTblGuidRight>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #2");
+		try
+		{
+			pm.UnloadCache();
+			var l = pm.Objects<AgrBinnOwnpabsTblGuidLeftBase>().ResultTable;
+			pm.Delete(l);
+			pm.Save();
+			pm.UnloadCache();
+			var m = pm.Objects<AgrBinnOwnpabsTblGuidRight>().ResultTable;
+			pm.Delete(m);
+			pm.Save();
+			pm.UnloadCache();
+			decimal count;
+			count = (decimal) new NDOQuery<AgrBinnOwnpabsTblGuidLeftBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #1");
+			count = (decimal) new NDOQuery<AgrBinnOwnpabsTblGuidRight>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #2");
+		}
+		catch (Exception)
+		{
+			var handler = pm.GetSqlPassThroughHandler( pm.NDOMapping.Connections.First() );
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( ownVar.GetType() ).TableName}");
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( otherVar.GetType() ).TableName}");
+			handler.Execute( $"DELETE FROM {pm.NDOMapping.FindClass( ownVar.GetType() ).Relations.First().MappingTable.TableName}" );
+		}
 	}
 	[Test]
 	public void TestSaveReload()
@@ -25504,16 +27268,25 @@ public class TestCmpDir1OwnpabsNoTblGuid
 	[TearDown]
 	public void TearDown()
 	{
-		pm.UnloadCache();
-		var l = pm.Objects<CmpDir1OwnpabsNoTblGuidLeftBase>().ResultTable;
-		pm.Delete(l);
-		pm.Save();
-		pm.UnloadCache();
-		decimal count;
-		count = (decimal) new NDOQuery<CmpDir1OwnpabsNoTblGuidLeftBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<CmpDir1OwnpabsNoTblGuidRight>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #2");
+		try
+		{
+			pm.UnloadCache();
+			var l = pm.Objects<CmpDir1OwnpabsNoTblGuidLeftBase>().ResultTable;
+			pm.Delete(l);
+			pm.Save();
+			pm.UnloadCache();
+			decimal count;
+			count = (decimal) new NDOQuery<CmpDir1OwnpabsNoTblGuidLeftBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #1");
+			count = (decimal) new NDOQuery<CmpDir1OwnpabsNoTblGuidRight>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #2");
+		}
+		catch (Exception)
+		{
+			var handler = pm.GetSqlPassThroughHandler( pm.NDOMapping.Connections.First() );
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( ownVar.GetType() ).TableName}");
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( otherVar.GetType() ).TableName}");
+		}
 	}
 	[Test]
 	public void TestSaveReload()
@@ -25536,10 +27309,6 @@ public class TestCmpDir1OwnpabsNoTblGuid
 		QueryOwn();
 		Assert.NotNull(ownVar, "No Query Result");
 		Assert.Null(ownVar.RelField, "There should be no object");
-	}
-	[Test]
-	public void TestSaveReloadRemove()
-	{
 	}
 	[Test]
 	public void TestChangeKeyHolderLeft()
@@ -25608,16 +27377,26 @@ public class TestCmpDir1OwnpabsTblGuid
 	[TearDown]
 	public void TearDown()
 	{
-		pm.UnloadCache();
-		var l = pm.Objects<CmpDir1OwnpabsTblGuidLeftBase>().ResultTable;
-		pm.Delete(l);
-		pm.Save();
-		pm.UnloadCache();
-		decimal count;
-		count = (decimal) new NDOQuery<CmpDir1OwnpabsTblGuidLeftBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<CmpDir1OwnpabsTblGuidRight>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #2");
+		try
+		{
+			pm.UnloadCache();
+			var l = pm.Objects<CmpDir1OwnpabsTblGuidLeftBase>().ResultTable;
+			pm.Delete(l);
+			pm.Save();
+			pm.UnloadCache();
+			decimal count;
+			count = (decimal) new NDOQuery<CmpDir1OwnpabsTblGuidLeftBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #1");
+			count = (decimal) new NDOQuery<CmpDir1OwnpabsTblGuidRight>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #2");
+		}
+		catch (Exception)
+		{
+			var handler = pm.GetSqlPassThroughHandler( pm.NDOMapping.Connections.First() );
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( ownVar.GetType() ).TableName}");
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( otherVar.GetType() ).TableName}");
+			handler.Execute( $"DELETE FROM {pm.NDOMapping.FindClass( ownVar.GetType() ).Relations.First().MappingTable.TableName}" );
+		}
 	}
 	[Test]
 	public void TestSaveReload()
@@ -25640,10 +27419,6 @@ public class TestCmpDir1OwnpabsTblGuid
 		QueryOwn();
 		Assert.NotNull(ownVar, "No Query Result");
 		Assert.Null(ownVar.RelField, "There should be no object");
-	}
-	[Test]
-	public void TestSaveReloadRemove()
-	{
 	}
 	[Test]
 	public void TestChangeKeyHolderLeft()
@@ -25712,16 +27487,25 @@ public class TestCmpBi11OwnpabsNoTblGuid
 	[TearDown]
 	public void TearDown()
 	{
-		pm.UnloadCache();
-		var l = pm.Objects<CmpBi11OwnpabsNoTblGuidLeftBase>().ResultTable;
-		pm.Delete(l);
-		pm.Save();
-		pm.UnloadCache();
-		decimal count;
-		count = (decimal) new NDOQuery<CmpBi11OwnpabsNoTblGuidLeftBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<CmpBi11OwnpabsNoTblGuidRight>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #2");
+		try
+		{
+			pm.UnloadCache();
+			var l = pm.Objects<CmpBi11OwnpabsNoTblGuidLeftBase>().ResultTable;
+			pm.Delete(l);
+			pm.Save();
+			pm.UnloadCache();
+			decimal count;
+			count = (decimal) new NDOQuery<CmpBi11OwnpabsNoTblGuidLeftBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #1");
+			count = (decimal) new NDOQuery<CmpBi11OwnpabsNoTblGuidRight>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #2");
+		}
+		catch (Exception)
+		{
+			var handler = pm.GetSqlPassThroughHandler( pm.NDOMapping.Connections.First() );
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( ownVar.GetType() ).TableName}");
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( otherVar.GetType() ).TableName}");
+		}
 	}
 	[Test]
 	public void TestSaveReload()
@@ -25744,10 +27528,6 @@ public class TestCmpBi11OwnpabsNoTblGuid
 		QueryOwn();
 		Assert.NotNull(ownVar, "No Query Result");
 		Assert.Null(ownVar.RelField, "There should be no object");
-	}
-	[Test]
-	public void TestSaveReloadRemove()
-	{
 	}
 	[Test]
 	public void TestChangeKeyHolderLeft()
@@ -25861,16 +27641,26 @@ public class TestCmpBi11OwnpabsTblGuid
 	[TearDown]
 	public void TearDown()
 	{
-		pm.UnloadCache();
-		var l = pm.Objects<CmpBi11OwnpabsTblGuidLeftBase>().ResultTable;
-		pm.Delete(l);
-		pm.Save();
-		pm.UnloadCache();
-		decimal count;
-		count = (decimal) new NDOQuery<CmpBi11OwnpabsTblGuidLeftBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<CmpBi11OwnpabsTblGuidRight>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #2");
+		try
+		{
+			pm.UnloadCache();
+			var l = pm.Objects<CmpBi11OwnpabsTblGuidLeftBase>().ResultTable;
+			pm.Delete(l);
+			pm.Save();
+			pm.UnloadCache();
+			decimal count;
+			count = (decimal) new NDOQuery<CmpBi11OwnpabsTblGuidLeftBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #1");
+			count = (decimal) new NDOQuery<CmpBi11OwnpabsTblGuidRight>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #2");
+		}
+		catch (Exception)
+		{
+			var handler = pm.GetSqlPassThroughHandler( pm.NDOMapping.Connections.First() );
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( ownVar.GetType() ).TableName}");
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( otherVar.GetType() ).TableName}");
+			handler.Execute( $"DELETE FROM {pm.NDOMapping.FindClass( ownVar.GetType() ).Relations.First().MappingTable.TableName}" );
+		}
 	}
 	[Test]
 	public void TestSaveReload()
@@ -25893,10 +27683,6 @@ public class TestCmpBi11OwnpabsTblGuid
 		QueryOwn();
 		Assert.NotNull(ownVar, "No Query Result");
 		Assert.Null(ownVar.RelField, "There should be no object");
-	}
-	[Test]
-	public void TestSaveReloadRemove()
-	{
 	}
 	[Test]
 	public void TestChangeKeyHolderLeft()
@@ -26010,16 +27796,25 @@ public class TestCmpDirnOwnpabsNoTblGuid
 	[TearDown]
 	public void TearDown()
 	{
-		pm.UnloadCache();
-		var l = pm.Objects<CmpDirnOwnpabsNoTblGuidLeftBase>().ResultTable;
-		pm.Delete(l);
-		pm.Save();
-		pm.UnloadCache();
-		decimal count;
-		count = (decimal) new NDOQuery<CmpDirnOwnpabsNoTblGuidLeftBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<CmpDirnOwnpabsNoTblGuidRight>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #2");
+		try
+		{
+			pm.UnloadCache();
+			var l = pm.Objects<CmpDirnOwnpabsNoTblGuidLeftBase>().ResultTable;
+			pm.Delete(l);
+			pm.Save();
+			pm.UnloadCache();
+			decimal count;
+			count = (decimal) new NDOQuery<CmpDirnOwnpabsNoTblGuidLeftBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #1");
+			count = (decimal) new NDOQuery<CmpDirnOwnpabsNoTblGuidRight>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #2");
+		}
+		catch (Exception)
+		{
+			var handler = pm.GetSqlPassThroughHandler( pm.NDOMapping.Connections.First() );
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( ownVar.GetType() ).TableName}");
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( otherVar.GetType() ).TableName}");
+		}
 	}
 	[Test]
 	public void TestSaveReload()
@@ -26093,16 +27888,26 @@ public class TestCmpDirnOwnpabsTblGuid
 	[TearDown]
 	public void TearDown()
 	{
-		pm.UnloadCache();
-		var l = pm.Objects<CmpDirnOwnpabsTblGuidLeftBase>().ResultTable;
-		pm.Delete(l);
-		pm.Save();
-		pm.UnloadCache();
-		decimal count;
-		count = (decimal) new NDOQuery<CmpDirnOwnpabsTblGuidLeftBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<CmpDirnOwnpabsTblGuidRight>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #2");
+		try
+		{
+			pm.UnloadCache();
+			var l = pm.Objects<CmpDirnOwnpabsTblGuidLeftBase>().ResultTable;
+			pm.Delete(l);
+			pm.Save();
+			pm.UnloadCache();
+			decimal count;
+			count = (decimal) new NDOQuery<CmpDirnOwnpabsTblGuidLeftBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #1");
+			count = (decimal) new NDOQuery<CmpDirnOwnpabsTblGuidRight>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #2");
+		}
+		catch (Exception)
+		{
+			var handler = pm.GetSqlPassThroughHandler( pm.NDOMapping.Connections.First() );
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( ownVar.GetType() ).TableName}");
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( otherVar.GetType() ).TableName}");
+			handler.Execute( $"DELETE FROM {pm.NDOMapping.FindClass( ownVar.GetType() ).Relations.First().MappingTable.TableName}" );
+		}
 	}
 	[Test]
 	public void TestSaveReload()
@@ -26176,16 +27981,25 @@ public class TestCmpBin1OwnpabsNoTblGuid
 	[TearDown]
 	public void TearDown()
 	{
-		pm.UnloadCache();
-		var l = pm.Objects<CmpBin1OwnpabsNoTblGuidLeftBase>().ResultTable;
-		pm.Delete(l);
-		pm.Save();
-		pm.UnloadCache();
-		decimal count;
-		count = (decimal) new NDOQuery<CmpBin1OwnpabsNoTblGuidLeftBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<CmpBin1OwnpabsNoTblGuidRight>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #2");
+		try
+		{
+			pm.UnloadCache();
+			var l = pm.Objects<CmpBin1OwnpabsNoTblGuidLeftBase>().ResultTable;
+			pm.Delete(l);
+			pm.Save();
+			pm.UnloadCache();
+			decimal count;
+			count = (decimal) new NDOQuery<CmpBin1OwnpabsNoTblGuidLeftBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #1");
+			count = (decimal) new NDOQuery<CmpBin1OwnpabsNoTblGuidRight>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #2");
+		}
+		catch (Exception)
+		{
+			var handler = pm.GetSqlPassThroughHandler( pm.NDOMapping.Connections.First() );
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( ownVar.GetType() ).TableName}");
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( otherVar.GetType() ).TableName}");
+		}
 	}
 	[Test]
 	public void TestSaveReload()
@@ -26304,16 +28118,26 @@ public class TestCmpBin1OwnpabsTblGuid
 	[TearDown]
 	public void TearDown()
 	{
-		pm.UnloadCache();
-		var l = pm.Objects<CmpBin1OwnpabsTblGuidLeftBase>().ResultTable;
-		pm.Delete(l);
-		pm.Save();
-		pm.UnloadCache();
-		decimal count;
-		count = (decimal) new NDOQuery<CmpBin1OwnpabsTblGuidLeftBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<CmpBin1OwnpabsTblGuidRight>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #2");
+		try
+		{
+			pm.UnloadCache();
+			var l = pm.Objects<CmpBin1OwnpabsTblGuidLeftBase>().ResultTable;
+			pm.Delete(l);
+			pm.Save();
+			pm.UnloadCache();
+			decimal count;
+			count = (decimal) new NDOQuery<CmpBin1OwnpabsTblGuidLeftBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #1");
+			count = (decimal) new NDOQuery<CmpBin1OwnpabsTblGuidRight>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #2");
+		}
+		catch (Exception)
+		{
+			var handler = pm.GetSqlPassThroughHandler( pm.NDOMapping.Connections.First() );
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( ownVar.GetType() ).TableName}");
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( otherVar.GetType() ).TableName}");
+			handler.Execute( $"DELETE FROM {pm.NDOMapping.FindClass( ownVar.GetType() ).Relations.First().MappingTable.TableName}" );
+		}
 	}
 	[Test]
 	public void TestSaveReload()
@@ -26432,16 +28256,26 @@ public class TestCmpBi1nOwnpabsTblGuid
 	[TearDown]
 	public void TearDown()
 	{
-		pm.UnloadCache();
-		var l = pm.Objects<CmpBi1nOwnpabsTblGuidLeftBase>().ResultTable;
-		pm.Delete(l);
-		pm.Save();
-		pm.UnloadCache();
-		decimal count;
-		count = (decimal) new NDOQuery<CmpBi1nOwnpabsTblGuidLeftBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<CmpBi1nOwnpabsTblGuidRight>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #2");
+		try
+		{
+			pm.UnloadCache();
+			var l = pm.Objects<CmpBi1nOwnpabsTblGuidLeftBase>().ResultTable;
+			pm.Delete(l);
+			pm.Save();
+			pm.UnloadCache();
+			decimal count;
+			count = (decimal) new NDOQuery<CmpBi1nOwnpabsTblGuidLeftBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #1");
+			count = (decimal) new NDOQuery<CmpBi1nOwnpabsTblGuidRight>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #2");
+		}
+		catch (Exception)
+		{
+			var handler = pm.GetSqlPassThroughHandler( pm.NDOMapping.Connections.First() );
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( ownVar.GetType() ).TableName}");
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( otherVar.GetType() ).TableName}");
+			handler.Execute( $"DELETE FROM {pm.NDOMapping.FindClass( ownVar.GetType() ).Relations.First().MappingTable.TableName}" );
+		}
 	}
 	[Test]
 	public void TestSaveReload()
@@ -26464,10 +28298,6 @@ public class TestCmpBi1nOwnpabsTblGuid
 		QueryOwn();
 		Assert.NotNull(ownVar, "No Query Result");
 		Assert.Null(ownVar.RelField, "There should be no object");
-	}
-	[Test]
-	public void TestSaveReloadRemove()
-	{
 	}
 	[Test]
 	public void TestChangeKeyHolderLeft()
@@ -26550,16 +28380,26 @@ public class TestCmpBinnOwnpabsTblGuid
 	[TearDown]
 	public void TearDown()
 	{
-		pm.UnloadCache();
-		var l = pm.Objects<CmpBinnOwnpabsTblGuidLeftBase>().ResultTable;
-		pm.Delete(l);
-		pm.Save();
-		pm.UnloadCache();
-		decimal count;
-		count = (decimal) new NDOQuery<CmpBinnOwnpabsTblGuidLeftBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<CmpBinnOwnpabsTblGuidRight>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #2");
+		try
+		{
+			pm.UnloadCache();
+			var l = pm.Objects<CmpBinnOwnpabsTblGuidLeftBase>().ResultTable;
+			pm.Delete(l);
+			pm.Save();
+			pm.UnloadCache();
+			decimal count;
+			count = (decimal) new NDOQuery<CmpBinnOwnpabsTblGuidLeftBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #1");
+			count = (decimal) new NDOQuery<CmpBinnOwnpabsTblGuidRight>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #2");
+		}
+		catch (Exception)
+		{
+			var handler = pm.GetSqlPassThroughHandler( pm.NDOMapping.Connections.First() );
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( ownVar.GetType() ).TableName}");
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( otherVar.GetType() ).TableName}");
+			handler.Execute( $"DELETE FROM {pm.NDOMapping.FindClass( ownVar.GetType() ).Relations.First().MappingTable.TableName}" );
+		}
 	}
 	[Test]
 	public void TestSaveReload()
@@ -26647,20 +28487,29 @@ public class TestAgrDir1OthpabsNoTblGuid
 	[TearDown]
 	public void TearDown()
 	{
-		pm.UnloadCache();
-		var l = pm.Objects<AgrDir1OthpabsNoTblGuidLeft>().ResultTable;
-		pm.Delete(l);
-		pm.Save();
-		pm.UnloadCache();
-		var m = pm.Objects<AgrDir1OthpabsNoTblGuidRightBase>().ResultTable;
-		pm.Delete(m);
-		pm.Save();
-		pm.UnloadCache();
-		decimal count;
-		count = (decimal) new NDOQuery<AgrDir1OthpabsNoTblGuidLeft>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<AgrDir1OthpabsNoTblGuidRightBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #2");
+		try
+		{
+			pm.UnloadCache();
+			var l = pm.Objects<AgrDir1OthpabsNoTblGuidLeft>().ResultTable;
+			pm.Delete(l);
+			pm.Save();
+			pm.UnloadCache();
+			var m = pm.Objects<AgrDir1OthpabsNoTblGuidRightBase>().ResultTable;
+			pm.Delete(m);
+			pm.Save();
+			pm.UnloadCache();
+			decimal count;
+			count = (decimal) new NDOQuery<AgrDir1OthpabsNoTblGuidLeft>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #1");
+			count = (decimal) new NDOQuery<AgrDir1OthpabsNoTblGuidRightBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #2");
+		}
+		catch (Exception)
+		{
+			var handler = pm.GetSqlPassThroughHandler( pm.NDOMapping.Connections.First() );
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( ownVar.GetType() ).TableName}");
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( otherVar.GetType() ).TableName}");
+		}
 	}
 	[Test]
 	public void TestSaveReload()
@@ -26683,10 +28532,6 @@ public class TestAgrDir1OthpabsNoTblGuid
 		QueryOwn();
 		Assert.NotNull(ownVar, "No Query Result");
 		Assert.Null(ownVar.RelField, "There should be no object");
-	}
-	[Test]
-	public void TestSaveReloadRemove()
-	{
 	}
 	[Test]
 	public void TestChangeKeyHolderLeft()
@@ -26756,20 +28601,30 @@ public class TestAgrDir1OthpabsTblGuid
 	[TearDown]
 	public void TearDown()
 	{
-		pm.UnloadCache();
-		var l = pm.Objects<AgrDir1OthpabsTblGuidLeft>().ResultTable;
-		pm.Delete(l);
-		pm.Save();
-		pm.UnloadCache();
-		var m = pm.Objects<AgrDir1OthpabsTblGuidRightBase>().ResultTable;
-		pm.Delete(m);
-		pm.Save();
-		pm.UnloadCache();
-		decimal count;
-		count = (decimal) new NDOQuery<AgrDir1OthpabsTblGuidLeft>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<AgrDir1OthpabsTblGuidRightBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #2");
+		try
+		{
+			pm.UnloadCache();
+			var l = pm.Objects<AgrDir1OthpabsTblGuidLeft>().ResultTable;
+			pm.Delete(l);
+			pm.Save();
+			pm.UnloadCache();
+			var m = pm.Objects<AgrDir1OthpabsTblGuidRightBase>().ResultTable;
+			pm.Delete(m);
+			pm.Save();
+			pm.UnloadCache();
+			decimal count;
+			count = (decimal) new NDOQuery<AgrDir1OthpabsTblGuidLeft>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #1");
+			count = (decimal) new NDOQuery<AgrDir1OthpabsTblGuidRightBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #2");
+		}
+		catch (Exception)
+		{
+			var handler = pm.GetSqlPassThroughHandler( pm.NDOMapping.Connections.First() );
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( ownVar.GetType() ).TableName}");
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( otherVar.GetType() ).TableName}");
+			handler.Execute( $"DELETE FROM {pm.NDOMapping.FindClass( ownVar.GetType() ).Relations.First().MappingTable.TableName}" );
+		}
 	}
 	[Test]
 	public void TestSaveReload()
@@ -26792,10 +28647,6 @@ public class TestAgrDir1OthpabsTblGuid
 		QueryOwn();
 		Assert.NotNull(ownVar, "No Query Result");
 		Assert.Null(ownVar.RelField, "There should be no object");
-	}
-	[Test]
-	public void TestSaveReloadRemove()
-	{
 	}
 	[Test]
 	public void TestChangeKeyHolderLeft()
@@ -26865,20 +28716,29 @@ public class TestAgrBi11OthpabsNoTblGuid
 	[TearDown]
 	public void TearDown()
 	{
-		pm.UnloadCache();
-		var l = pm.Objects<AgrBi11OthpabsNoTblGuidLeft>().ResultTable;
-		pm.Delete(l);
-		pm.Save();
-		pm.UnloadCache();
-		var m = pm.Objects<AgrBi11OthpabsNoTblGuidRightBase>().ResultTable;
-		pm.Delete(m);
-		pm.Save();
-		pm.UnloadCache();
-		decimal count;
-		count = (decimal) new NDOQuery<AgrBi11OthpabsNoTblGuidLeft>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<AgrBi11OthpabsNoTblGuidRightBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #2");
+		try
+		{
+			pm.UnloadCache();
+			var l = pm.Objects<AgrBi11OthpabsNoTblGuidLeft>().ResultTable;
+			pm.Delete(l);
+			pm.Save();
+			pm.UnloadCache();
+			var m = pm.Objects<AgrBi11OthpabsNoTblGuidRightBase>().ResultTable;
+			pm.Delete(m);
+			pm.Save();
+			pm.UnloadCache();
+			decimal count;
+			count = (decimal) new NDOQuery<AgrBi11OthpabsNoTblGuidLeft>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #1");
+			count = (decimal) new NDOQuery<AgrBi11OthpabsNoTblGuidRightBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #2");
+		}
+		catch (Exception)
+		{
+			var handler = pm.GetSqlPassThroughHandler( pm.NDOMapping.Connections.First() );
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( ownVar.GetType() ).TableName}");
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( otherVar.GetType() ).TableName}");
+		}
 	}
 	[Test]
 	public void TestSaveReload()
@@ -26901,10 +28761,6 @@ public class TestAgrBi11OthpabsNoTblGuid
 		QueryOwn();
 		Assert.NotNull(ownVar, "No Query Result");
 		Assert.Null(ownVar.RelField, "There should be no object");
-	}
-	[Test]
-	public void TestSaveReloadRemove()
-	{
 	}
 	[Test]
 	public void TestChangeKeyHolderLeft()
@@ -27019,20 +28875,30 @@ public class TestAgrBi11OthpabsTblGuid
 	[TearDown]
 	public void TearDown()
 	{
-		pm.UnloadCache();
-		var l = pm.Objects<AgrBi11OthpabsTblGuidLeft>().ResultTable;
-		pm.Delete(l);
-		pm.Save();
-		pm.UnloadCache();
-		var m = pm.Objects<AgrBi11OthpabsTblGuidRightBase>().ResultTable;
-		pm.Delete(m);
-		pm.Save();
-		pm.UnloadCache();
-		decimal count;
-		count = (decimal) new NDOQuery<AgrBi11OthpabsTblGuidLeft>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<AgrBi11OthpabsTblGuidRightBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #2");
+		try
+		{
+			pm.UnloadCache();
+			var l = pm.Objects<AgrBi11OthpabsTblGuidLeft>().ResultTable;
+			pm.Delete(l);
+			pm.Save();
+			pm.UnloadCache();
+			var m = pm.Objects<AgrBi11OthpabsTblGuidRightBase>().ResultTable;
+			pm.Delete(m);
+			pm.Save();
+			pm.UnloadCache();
+			decimal count;
+			count = (decimal) new NDOQuery<AgrBi11OthpabsTblGuidLeft>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #1");
+			count = (decimal) new NDOQuery<AgrBi11OthpabsTblGuidRightBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #2");
+		}
+		catch (Exception)
+		{
+			var handler = pm.GetSqlPassThroughHandler( pm.NDOMapping.Connections.First() );
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( ownVar.GetType() ).TableName}");
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( otherVar.GetType() ).TableName}");
+			handler.Execute( $"DELETE FROM {pm.NDOMapping.FindClass( ownVar.GetType() ).Relations.First().MappingTable.TableName}" );
+		}
 	}
 	[Test]
 	public void TestSaveReload()
@@ -27055,10 +28921,6 @@ public class TestAgrBi11OthpabsTblGuid
 		QueryOwn();
 		Assert.NotNull(ownVar, "No Query Result");
 		Assert.Null(ownVar.RelField, "There should be no object");
-	}
-	[Test]
-	public void TestSaveReloadRemove()
-	{
 	}
 	[Test]
 	public void TestChangeKeyHolderLeft()
@@ -27173,20 +29035,30 @@ public class TestAgrDirnOthpabsTblGuid
 	[TearDown]
 	public void TearDown()
 	{
-		pm.UnloadCache();
-		var l = pm.Objects<AgrDirnOthpabsTblGuidLeft>().ResultTable;
-		pm.Delete(l);
-		pm.Save();
-		pm.UnloadCache();
-		var m = pm.Objects<AgrDirnOthpabsTblGuidRightBase>().ResultTable;
-		pm.Delete(m);
-		pm.Save();
-		pm.UnloadCache();
-		decimal count;
-		count = (decimal) new NDOQuery<AgrDirnOthpabsTblGuidLeft>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<AgrDirnOthpabsTblGuidRightBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #2");
+		try
+		{
+			pm.UnloadCache();
+			var l = pm.Objects<AgrDirnOthpabsTblGuidLeft>().ResultTable;
+			pm.Delete(l);
+			pm.Save();
+			pm.UnloadCache();
+			var m = pm.Objects<AgrDirnOthpabsTblGuidRightBase>().ResultTable;
+			pm.Delete(m);
+			pm.Save();
+			pm.UnloadCache();
+			decimal count;
+			count = (decimal) new NDOQuery<AgrDirnOthpabsTblGuidLeft>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #1");
+			count = (decimal) new NDOQuery<AgrDirnOthpabsTblGuidRightBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #2");
+		}
+		catch (Exception)
+		{
+			var handler = pm.GetSqlPassThroughHandler( pm.NDOMapping.Connections.First() );
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( ownVar.GetType() ).TableName}");
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( otherVar.GetType() ).TableName}");
+			handler.Execute( $"DELETE FROM {pm.NDOMapping.FindClass( ownVar.GetType() ).Relations.First().MappingTable.TableName}" );
+		}
 	}
 	[Test]
 	public void TestSaveReload()
@@ -27261,20 +29133,30 @@ public class TestAgrBin1OthpabsTblGuid
 	[TearDown]
 	public void TearDown()
 	{
-		pm.UnloadCache();
-		var l = pm.Objects<AgrBin1OthpabsTblGuidLeft>().ResultTable;
-		pm.Delete(l);
-		pm.Save();
-		pm.UnloadCache();
-		var m = pm.Objects<AgrBin1OthpabsTblGuidRightBase>().ResultTable;
-		pm.Delete(m);
-		pm.Save();
-		pm.UnloadCache();
-		decimal count;
-		count = (decimal) new NDOQuery<AgrBin1OthpabsTblGuidLeft>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<AgrBin1OthpabsTblGuidRightBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #2");
+		try
+		{
+			pm.UnloadCache();
+			var l = pm.Objects<AgrBin1OthpabsTblGuidLeft>().ResultTable;
+			pm.Delete(l);
+			pm.Save();
+			pm.UnloadCache();
+			var m = pm.Objects<AgrBin1OthpabsTblGuidRightBase>().ResultTable;
+			pm.Delete(m);
+			pm.Save();
+			pm.UnloadCache();
+			decimal count;
+			count = (decimal) new NDOQuery<AgrBin1OthpabsTblGuidLeft>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #1");
+			count = (decimal) new NDOQuery<AgrBin1OthpabsTblGuidRightBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #2");
+		}
+		catch (Exception)
+		{
+			var handler = pm.GetSqlPassThroughHandler( pm.NDOMapping.Connections.First() );
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( ownVar.GetType() ).TableName}");
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( otherVar.GetType() ).TableName}");
+			handler.Execute( $"DELETE FROM {pm.NDOMapping.FindClass( ownVar.GetType() ).Relations.First().MappingTable.TableName}" );
+		}
 	}
 	[Test]
 	public void TestSaveReload()
@@ -27394,20 +29276,29 @@ public class TestAgrBi1nOthpabsNoTblGuid
 	[TearDown]
 	public void TearDown()
 	{
-		pm.UnloadCache();
-		var l = pm.Objects<AgrBi1nOthpabsNoTblGuidLeft>().ResultTable;
-		pm.Delete(l);
-		pm.Save();
-		pm.UnloadCache();
-		var m = pm.Objects<AgrBi1nOthpabsNoTblGuidRightBase>().ResultTable;
-		pm.Delete(m);
-		pm.Save();
-		pm.UnloadCache();
-		decimal count;
-		count = (decimal) new NDOQuery<AgrBi1nOthpabsNoTblGuidLeft>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<AgrBi1nOthpabsNoTblGuidRightBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #2");
+		try
+		{
+			pm.UnloadCache();
+			var l = pm.Objects<AgrBi1nOthpabsNoTblGuidLeft>().ResultTable;
+			pm.Delete(l);
+			pm.Save();
+			pm.UnloadCache();
+			var m = pm.Objects<AgrBi1nOthpabsNoTblGuidRightBase>().ResultTable;
+			pm.Delete(m);
+			pm.Save();
+			pm.UnloadCache();
+			decimal count;
+			count = (decimal) new NDOQuery<AgrBi1nOthpabsNoTblGuidLeft>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #1");
+			count = (decimal) new NDOQuery<AgrBi1nOthpabsNoTblGuidRightBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #2");
+		}
+		catch (Exception)
+		{
+			var handler = pm.GetSqlPassThroughHandler( pm.NDOMapping.Connections.First() );
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( ownVar.GetType() ).TableName}");
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( otherVar.GetType() ).TableName}");
+		}
 	}
 	[Test]
 	public void TestSaveReload()
@@ -27430,10 +29321,6 @@ public class TestAgrBi1nOthpabsNoTblGuid
 		QueryOwn();
 		Assert.NotNull(ownVar, "No Query Result");
 		Assert.Null(ownVar.RelField, "There should be no object");
-	}
-	[Test]
-	public void TestSaveReloadRemove()
-	{
 	}
 	[Test]
 	public void TestChangeKeyHolderLeft()
@@ -27517,20 +29404,30 @@ public class TestAgrBi1nOthpabsTblGuid
 	[TearDown]
 	public void TearDown()
 	{
-		pm.UnloadCache();
-		var l = pm.Objects<AgrBi1nOthpabsTblGuidLeft>().ResultTable;
-		pm.Delete(l);
-		pm.Save();
-		pm.UnloadCache();
-		var m = pm.Objects<AgrBi1nOthpabsTblGuidRightBase>().ResultTable;
-		pm.Delete(m);
-		pm.Save();
-		pm.UnloadCache();
-		decimal count;
-		count = (decimal) new NDOQuery<AgrBi1nOthpabsTblGuidLeft>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<AgrBi1nOthpabsTblGuidRightBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #2");
+		try
+		{
+			pm.UnloadCache();
+			var l = pm.Objects<AgrBi1nOthpabsTblGuidLeft>().ResultTable;
+			pm.Delete(l);
+			pm.Save();
+			pm.UnloadCache();
+			var m = pm.Objects<AgrBi1nOthpabsTblGuidRightBase>().ResultTable;
+			pm.Delete(m);
+			pm.Save();
+			pm.UnloadCache();
+			decimal count;
+			count = (decimal) new NDOQuery<AgrBi1nOthpabsTblGuidLeft>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #1");
+			count = (decimal) new NDOQuery<AgrBi1nOthpabsTblGuidRightBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #2");
+		}
+		catch (Exception)
+		{
+			var handler = pm.GetSqlPassThroughHandler( pm.NDOMapping.Connections.First() );
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( ownVar.GetType() ).TableName}");
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( otherVar.GetType() ).TableName}");
+			handler.Execute( $"DELETE FROM {pm.NDOMapping.FindClass( ownVar.GetType() ).Relations.First().MappingTable.TableName}" );
+		}
 	}
 	[Test]
 	public void TestSaveReload()
@@ -27553,10 +29450,6 @@ public class TestAgrBi1nOthpabsTblGuid
 		QueryOwn();
 		Assert.NotNull(ownVar, "No Query Result");
 		Assert.Null(ownVar.RelField, "There should be no object");
-	}
-	[Test]
-	public void TestSaveReloadRemove()
-	{
 	}
 	[Test]
 	public void TestChangeKeyHolderLeft()
@@ -27640,20 +29533,30 @@ public class TestAgrBinnOthpabsTblGuid
 	[TearDown]
 	public void TearDown()
 	{
-		pm.UnloadCache();
-		var l = pm.Objects<AgrBinnOthpabsTblGuidLeft>().ResultTable;
-		pm.Delete(l);
-		pm.Save();
-		pm.UnloadCache();
-		var m = pm.Objects<AgrBinnOthpabsTblGuidRightBase>().ResultTable;
-		pm.Delete(m);
-		pm.Save();
-		pm.UnloadCache();
-		decimal count;
-		count = (decimal) new NDOQuery<AgrBinnOthpabsTblGuidLeft>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<AgrBinnOthpabsTblGuidRightBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #2");
+		try
+		{
+			pm.UnloadCache();
+			var l = pm.Objects<AgrBinnOthpabsTblGuidLeft>().ResultTable;
+			pm.Delete(l);
+			pm.Save();
+			pm.UnloadCache();
+			var m = pm.Objects<AgrBinnOthpabsTblGuidRightBase>().ResultTable;
+			pm.Delete(m);
+			pm.Save();
+			pm.UnloadCache();
+			decimal count;
+			count = (decimal) new NDOQuery<AgrBinnOthpabsTblGuidLeft>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #1");
+			count = (decimal) new NDOQuery<AgrBinnOthpabsTblGuidRightBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #2");
+		}
+		catch (Exception)
+		{
+			var handler = pm.GetSqlPassThroughHandler( pm.NDOMapping.Connections.First() );
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( ownVar.GetType() ).TableName}");
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( otherVar.GetType() ).TableName}");
+			handler.Execute( $"DELETE FROM {pm.NDOMapping.FindClass( ownVar.GetType() ).Relations.First().MappingTable.TableName}" );
+		}
 	}
 	[Test]
 	public void TestSaveReload()
@@ -27742,16 +29645,25 @@ public class TestCmpDir1OthpabsNoTblGuid
 	[TearDown]
 	public void TearDown()
 	{
-		pm.UnloadCache();
-		var l = pm.Objects<CmpDir1OthpabsNoTblGuidLeft>().ResultTable;
-		pm.Delete(l);
-		pm.Save();
-		pm.UnloadCache();
-		decimal count;
-		count = (decimal) new NDOQuery<CmpDir1OthpabsNoTblGuidLeft>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<CmpDir1OthpabsNoTblGuidRightBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #2");
+		try
+		{
+			pm.UnloadCache();
+			var l = pm.Objects<CmpDir1OthpabsNoTblGuidLeft>().ResultTable;
+			pm.Delete(l);
+			pm.Save();
+			pm.UnloadCache();
+			decimal count;
+			count = (decimal) new NDOQuery<CmpDir1OthpabsNoTblGuidLeft>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #1");
+			count = (decimal) new NDOQuery<CmpDir1OthpabsNoTblGuidRightBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #2");
+		}
+		catch (Exception)
+		{
+			var handler = pm.GetSqlPassThroughHandler( pm.NDOMapping.Connections.First() );
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( ownVar.GetType() ).TableName}");
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( otherVar.GetType() ).TableName}");
+		}
 	}
 	[Test]
 	public void TestSaveReload()
@@ -27774,10 +29686,6 @@ public class TestCmpDir1OthpabsNoTblGuid
 		QueryOwn();
 		Assert.NotNull(ownVar, "No Query Result");
 		Assert.Null(ownVar.RelField, "There should be no object");
-	}
-	[Test]
-	public void TestSaveReloadRemove()
-	{
 	}
 	[Test]
 	public void TestChangeKeyHolderLeft()
@@ -27846,16 +29754,26 @@ public class TestCmpDir1OthpabsTblGuid
 	[TearDown]
 	public void TearDown()
 	{
-		pm.UnloadCache();
-		var l = pm.Objects<CmpDir1OthpabsTblGuidLeft>().ResultTable;
-		pm.Delete(l);
-		pm.Save();
-		pm.UnloadCache();
-		decimal count;
-		count = (decimal) new NDOQuery<CmpDir1OthpabsTblGuidLeft>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<CmpDir1OthpabsTblGuidRightBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #2");
+		try
+		{
+			pm.UnloadCache();
+			var l = pm.Objects<CmpDir1OthpabsTblGuidLeft>().ResultTable;
+			pm.Delete(l);
+			pm.Save();
+			pm.UnloadCache();
+			decimal count;
+			count = (decimal) new NDOQuery<CmpDir1OthpabsTblGuidLeft>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #1");
+			count = (decimal) new NDOQuery<CmpDir1OthpabsTblGuidRightBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #2");
+		}
+		catch (Exception)
+		{
+			var handler = pm.GetSqlPassThroughHandler( pm.NDOMapping.Connections.First() );
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( ownVar.GetType() ).TableName}");
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( otherVar.GetType() ).TableName}");
+			handler.Execute( $"DELETE FROM {pm.NDOMapping.FindClass( ownVar.GetType() ).Relations.First().MappingTable.TableName}" );
+		}
 	}
 	[Test]
 	public void TestSaveReload()
@@ -27878,10 +29796,6 @@ public class TestCmpDir1OthpabsTblGuid
 		QueryOwn();
 		Assert.NotNull(ownVar, "No Query Result");
 		Assert.Null(ownVar.RelField, "There should be no object");
-	}
-	[Test]
-	public void TestSaveReloadRemove()
-	{
 	}
 	[Test]
 	public void TestChangeKeyHolderLeft()
@@ -27950,16 +29864,25 @@ public class TestCmpBi11OthpabsNoTblGuid
 	[TearDown]
 	public void TearDown()
 	{
-		pm.UnloadCache();
-		var l = pm.Objects<CmpBi11OthpabsNoTblGuidLeft>().ResultTable;
-		pm.Delete(l);
-		pm.Save();
-		pm.UnloadCache();
-		decimal count;
-		count = (decimal) new NDOQuery<CmpBi11OthpabsNoTblGuidLeft>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<CmpBi11OthpabsNoTblGuidRightBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #2");
+		try
+		{
+			pm.UnloadCache();
+			var l = pm.Objects<CmpBi11OthpabsNoTblGuidLeft>().ResultTable;
+			pm.Delete(l);
+			pm.Save();
+			pm.UnloadCache();
+			decimal count;
+			count = (decimal) new NDOQuery<CmpBi11OthpabsNoTblGuidLeft>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #1");
+			count = (decimal) new NDOQuery<CmpBi11OthpabsNoTblGuidRightBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #2");
+		}
+		catch (Exception)
+		{
+			var handler = pm.GetSqlPassThroughHandler( pm.NDOMapping.Connections.First() );
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( ownVar.GetType() ).TableName}");
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( otherVar.GetType() ).TableName}");
+		}
 	}
 	[Test]
 	public void TestSaveReload()
@@ -27982,10 +29905,6 @@ public class TestCmpBi11OthpabsNoTblGuid
 		QueryOwn();
 		Assert.NotNull(ownVar, "No Query Result");
 		Assert.Null(ownVar.RelField, "There should be no object");
-	}
-	[Test]
-	public void TestSaveReloadRemove()
-	{
 	}
 	[Test]
 	public void TestChangeKeyHolderLeft()
@@ -28099,16 +30018,26 @@ public class TestCmpBi11OthpabsTblGuid
 	[TearDown]
 	public void TearDown()
 	{
-		pm.UnloadCache();
-		var l = pm.Objects<CmpBi11OthpabsTblGuidLeft>().ResultTable;
-		pm.Delete(l);
-		pm.Save();
-		pm.UnloadCache();
-		decimal count;
-		count = (decimal) new NDOQuery<CmpBi11OthpabsTblGuidLeft>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<CmpBi11OthpabsTblGuidRightBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #2");
+		try
+		{
+			pm.UnloadCache();
+			var l = pm.Objects<CmpBi11OthpabsTblGuidLeft>().ResultTable;
+			pm.Delete(l);
+			pm.Save();
+			pm.UnloadCache();
+			decimal count;
+			count = (decimal) new NDOQuery<CmpBi11OthpabsTblGuidLeft>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #1");
+			count = (decimal) new NDOQuery<CmpBi11OthpabsTblGuidRightBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #2");
+		}
+		catch (Exception)
+		{
+			var handler = pm.GetSqlPassThroughHandler( pm.NDOMapping.Connections.First() );
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( ownVar.GetType() ).TableName}");
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( otherVar.GetType() ).TableName}");
+			handler.Execute( $"DELETE FROM {pm.NDOMapping.FindClass( ownVar.GetType() ).Relations.First().MappingTable.TableName}" );
+		}
 	}
 	[Test]
 	public void TestSaveReload()
@@ -28131,10 +30060,6 @@ public class TestCmpBi11OthpabsTblGuid
 		QueryOwn();
 		Assert.NotNull(ownVar, "No Query Result");
 		Assert.Null(ownVar.RelField, "There should be no object");
-	}
-	[Test]
-	public void TestSaveReloadRemove()
-	{
 	}
 	[Test]
 	public void TestChangeKeyHolderLeft()
@@ -28248,16 +30173,26 @@ public class TestCmpDirnOthpabsTblGuid
 	[TearDown]
 	public void TearDown()
 	{
-		pm.UnloadCache();
-		var l = pm.Objects<CmpDirnOthpabsTblGuidLeft>().ResultTable;
-		pm.Delete(l);
-		pm.Save();
-		pm.UnloadCache();
-		decimal count;
-		count = (decimal) new NDOQuery<CmpDirnOthpabsTblGuidLeft>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<CmpDirnOthpabsTblGuidRightBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #2");
+		try
+		{
+			pm.UnloadCache();
+			var l = pm.Objects<CmpDirnOthpabsTblGuidLeft>().ResultTable;
+			pm.Delete(l);
+			pm.Save();
+			pm.UnloadCache();
+			decimal count;
+			count = (decimal) new NDOQuery<CmpDirnOthpabsTblGuidLeft>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #1");
+			count = (decimal) new NDOQuery<CmpDirnOthpabsTblGuidRightBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #2");
+		}
+		catch (Exception)
+		{
+			var handler = pm.GetSqlPassThroughHandler( pm.NDOMapping.Connections.First() );
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( ownVar.GetType() ).TableName}");
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( otherVar.GetType() ).TableName}");
+			handler.Execute( $"DELETE FROM {pm.NDOMapping.FindClass( ownVar.GetType() ).Relations.First().MappingTable.TableName}" );
+		}
 	}
 	[Test]
 	public void TestSaveReload()
@@ -28331,16 +30266,26 @@ public class TestCmpBin1OthpabsTblGuid
 	[TearDown]
 	public void TearDown()
 	{
-		pm.UnloadCache();
-		var l = pm.Objects<CmpBin1OthpabsTblGuidLeft>().ResultTable;
-		pm.Delete(l);
-		pm.Save();
-		pm.UnloadCache();
-		decimal count;
-		count = (decimal) new NDOQuery<CmpBin1OthpabsTblGuidLeft>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<CmpBin1OthpabsTblGuidRightBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #2");
+		try
+		{
+			pm.UnloadCache();
+			var l = pm.Objects<CmpBin1OthpabsTblGuidLeft>().ResultTable;
+			pm.Delete(l);
+			pm.Save();
+			pm.UnloadCache();
+			decimal count;
+			count = (decimal) new NDOQuery<CmpBin1OthpabsTblGuidLeft>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #1");
+			count = (decimal) new NDOQuery<CmpBin1OthpabsTblGuidRightBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #2");
+		}
+		catch (Exception)
+		{
+			var handler = pm.GetSqlPassThroughHandler( pm.NDOMapping.Connections.First() );
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( ownVar.GetType() ).TableName}");
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( otherVar.GetType() ).TableName}");
+			handler.Execute( $"DELETE FROM {pm.NDOMapping.FindClass( ownVar.GetType() ).Relations.First().MappingTable.TableName}" );
+		}
 	}
 	[Test]
 	public void TestSaveReload()
@@ -28459,16 +30404,25 @@ public class TestCmpBi1nOthpabsNoTblGuid
 	[TearDown]
 	public void TearDown()
 	{
-		pm.UnloadCache();
-		var l = pm.Objects<CmpBi1nOthpabsNoTblGuidLeft>().ResultTable;
-		pm.Delete(l);
-		pm.Save();
-		pm.UnloadCache();
-		decimal count;
-		count = (decimal) new NDOQuery<CmpBi1nOthpabsNoTblGuidLeft>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<CmpBi1nOthpabsNoTblGuidRightBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #2");
+		try
+		{
+			pm.UnloadCache();
+			var l = pm.Objects<CmpBi1nOthpabsNoTblGuidLeft>().ResultTable;
+			pm.Delete(l);
+			pm.Save();
+			pm.UnloadCache();
+			decimal count;
+			count = (decimal) new NDOQuery<CmpBi1nOthpabsNoTblGuidLeft>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #1");
+			count = (decimal) new NDOQuery<CmpBi1nOthpabsNoTblGuidRightBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #2");
+		}
+		catch (Exception)
+		{
+			var handler = pm.GetSqlPassThroughHandler( pm.NDOMapping.Connections.First() );
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( ownVar.GetType() ).TableName}");
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( otherVar.GetType() ).TableName}");
+		}
 	}
 	[Test]
 	public void TestSaveReload()
@@ -28491,10 +30445,6 @@ public class TestCmpBi1nOthpabsNoTblGuid
 		QueryOwn();
 		Assert.NotNull(ownVar, "No Query Result");
 		Assert.Null(ownVar.RelField, "There should be no object");
-	}
-	[Test]
-	public void TestSaveReloadRemove()
-	{
 	}
 	[Test]
 	public void TestChangeKeyHolderLeft()
@@ -28577,16 +30527,26 @@ public class TestCmpBi1nOthpabsTblGuid
 	[TearDown]
 	public void TearDown()
 	{
-		pm.UnloadCache();
-		var l = pm.Objects<CmpBi1nOthpabsTblGuidLeft>().ResultTable;
-		pm.Delete(l);
-		pm.Save();
-		pm.UnloadCache();
-		decimal count;
-		count = (decimal) new NDOQuery<CmpBi1nOthpabsTblGuidLeft>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<CmpBi1nOthpabsTblGuidRightBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #2");
+		try
+		{
+			pm.UnloadCache();
+			var l = pm.Objects<CmpBi1nOthpabsTblGuidLeft>().ResultTable;
+			pm.Delete(l);
+			pm.Save();
+			pm.UnloadCache();
+			decimal count;
+			count = (decimal) new NDOQuery<CmpBi1nOthpabsTblGuidLeft>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #1");
+			count = (decimal) new NDOQuery<CmpBi1nOthpabsTblGuidRightBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #2");
+		}
+		catch (Exception)
+		{
+			var handler = pm.GetSqlPassThroughHandler( pm.NDOMapping.Connections.First() );
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( ownVar.GetType() ).TableName}");
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( otherVar.GetType() ).TableName}");
+			handler.Execute( $"DELETE FROM {pm.NDOMapping.FindClass( ownVar.GetType() ).Relations.First().MappingTable.TableName}" );
+		}
 	}
 	[Test]
 	public void TestSaveReload()
@@ -28609,10 +30569,6 @@ public class TestCmpBi1nOthpabsTblGuid
 		QueryOwn();
 		Assert.NotNull(ownVar, "No Query Result");
 		Assert.Null(ownVar.RelField, "There should be no object");
-	}
-	[Test]
-	public void TestSaveReloadRemove()
-	{
 	}
 	[Test]
 	public void TestChangeKeyHolderLeft()
@@ -28695,16 +30651,26 @@ public class TestCmpBinnOthpabsTblGuid
 	[TearDown]
 	public void TearDown()
 	{
-		pm.UnloadCache();
-		var l = pm.Objects<CmpBinnOthpabsTblGuidLeft>().ResultTable;
-		pm.Delete(l);
-		pm.Save();
-		pm.UnloadCache();
-		decimal count;
-		count = (decimal) new NDOQuery<CmpBinnOthpabsTblGuidLeft>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<CmpBinnOthpabsTblGuidRightBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #2");
+		try
+		{
+			pm.UnloadCache();
+			var l = pm.Objects<CmpBinnOthpabsTblGuidLeft>().ResultTable;
+			pm.Delete(l);
+			pm.Save();
+			pm.UnloadCache();
+			decimal count;
+			count = (decimal) new NDOQuery<CmpBinnOthpabsTblGuidLeft>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #1");
+			count = (decimal) new NDOQuery<CmpBinnOthpabsTblGuidRightBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #2");
+		}
+		catch (Exception)
+		{
+			var handler = pm.GetSqlPassThroughHandler( pm.NDOMapping.Connections.First() );
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( ownVar.GetType() ).TableName}");
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( otherVar.GetType() ).TableName}");
+			handler.Execute( $"DELETE FROM {pm.NDOMapping.FindClass( ownVar.GetType() ).Relations.First().MappingTable.TableName}" );
+		}
 	}
 	[Test]
 	public void TestSaveReload()
@@ -28792,20 +30758,29 @@ public class TestAgrDir1OwnpabsOthpabsNoTblGuid
 	[TearDown]
 	public void TearDown()
 	{
-		pm.UnloadCache();
-		var l = pm.Objects<AgrDir1OwnpabsOthpabsNoTblGuidLeftBase>().ResultTable;
-		pm.Delete(l);
-		pm.Save();
-		pm.UnloadCache();
-		var m = pm.Objects<AgrDir1OwnpabsOthpabsNoTblGuidRightBase>().ResultTable;
-		pm.Delete(m);
-		pm.Save();
-		pm.UnloadCache();
-		decimal count;
-		count = (decimal) new NDOQuery<AgrDir1OwnpabsOthpabsNoTblGuidLeftBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<AgrDir1OwnpabsOthpabsNoTblGuidRightBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #2");
+		try
+		{
+			pm.UnloadCache();
+			var l = pm.Objects<AgrDir1OwnpabsOthpabsNoTblGuidLeftBase>().ResultTable;
+			pm.Delete(l);
+			pm.Save();
+			pm.UnloadCache();
+			var m = pm.Objects<AgrDir1OwnpabsOthpabsNoTblGuidRightBase>().ResultTable;
+			pm.Delete(m);
+			pm.Save();
+			pm.UnloadCache();
+			decimal count;
+			count = (decimal) new NDOQuery<AgrDir1OwnpabsOthpabsNoTblGuidLeftBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #1");
+			count = (decimal) new NDOQuery<AgrDir1OwnpabsOthpabsNoTblGuidRightBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #2");
+		}
+		catch (Exception)
+		{
+			var handler = pm.GetSqlPassThroughHandler( pm.NDOMapping.Connections.First() );
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( ownVar.GetType() ).TableName}");
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( otherVar.GetType() ).TableName}");
+		}
 	}
 	[Test]
 	public void TestSaveReload()
@@ -28828,10 +30803,6 @@ public class TestAgrDir1OwnpabsOthpabsNoTblGuid
 		QueryOwn();
 		Assert.NotNull(ownVar, "No Query Result");
 		Assert.Null(ownVar.RelField, "There should be no object");
-	}
-	[Test]
-	public void TestSaveReloadRemove()
-	{
 	}
 	[Test]
 	public void TestChangeKeyHolderLeft()
@@ -28901,20 +30872,30 @@ public class TestAgrDir1OwnpabsOthpabsTblGuid
 	[TearDown]
 	public void TearDown()
 	{
-		pm.UnloadCache();
-		var l = pm.Objects<AgrDir1OwnpabsOthpabsTblGuidLeftBase>().ResultTable;
-		pm.Delete(l);
-		pm.Save();
-		pm.UnloadCache();
-		var m = pm.Objects<AgrDir1OwnpabsOthpabsTblGuidRightBase>().ResultTable;
-		pm.Delete(m);
-		pm.Save();
-		pm.UnloadCache();
-		decimal count;
-		count = (decimal) new NDOQuery<AgrDir1OwnpabsOthpabsTblGuidLeftBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<AgrDir1OwnpabsOthpabsTblGuidRightBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #2");
+		try
+		{
+			pm.UnloadCache();
+			var l = pm.Objects<AgrDir1OwnpabsOthpabsTblGuidLeftBase>().ResultTable;
+			pm.Delete(l);
+			pm.Save();
+			pm.UnloadCache();
+			var m = pm.Objects<AgrDir1OwnpabsOthpabsTblGuidRightBase>().ResultTable;
+			pm.Delete(m);
+			pm.Save();
+			pm.UnloadCache();
+			decimal count;
+			count = (decimal) new NDOQuery<AgrDir1OwnpabsOthpabsTblGuidLeftBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #1");
+			count = (decimal) new NDOQuery<AgrDir1OwnpabsOthpabsTblGuidRightBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #2");
+		}
+		catch (Exception)
+		{
+			var handler = pm.GetSqlPassThroughHandler( pm.NDOMapping.Connections.First() );
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( ownVar.GetType() ).TableName}");
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( otherVar.GetType() ).TableName}");
+			handler.Execute( $"DELETE FROM {pm.NDOMapping.FindClass( ownVar.GetType() ).Relations.First().MappingTable.TableName}" );
+		}
 	}
 	[Test]
 	public void TestSaveReload()
@@ -28937,10 +30918,6 @@ public class TestAgrDir1OwnpabsOthpabsTblGuid
 		QueryOwn();
 		Assert.NotNull(ownVar, "No Query Result");
 		Assert.Null(ownVar.RelField, "There should be no object");
-	}
-	[Test]
-	public void TestSaveReloadRemove()
-	{
 	}
 	[Test]
 	public void TestChangeKeyHolderLeft()
@@ -29010,20 +30987,29 @@ public class TestAgrBi11OwnpabsOthpabsNoTblGuid
 	[TearDown]
 	public void TearDown()
 	{
-		pm.UnloadCache();
-		var l = pm.Objects<AgrBi11OwnpabsOthpabsNoTblGuidLeftBase>().ResultTable;
-		pm.Delete(l);
-		pm.Save();
-		pm.UnloadCache();
-		var m = pm.Objects<AgrBi11OwnpabsOthpabsNoTblGuidRightBase>().ResultTable;
-		pm.Delete(m);
-		pm.Save();
-		pm.UnloadCache();
-		decimal count;
-		count = (decimal) new NDOQuery<AgrBi11OwnpabsOthpabsNoTblGuidLeftBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<AgrBi11OwnpabsOthpabsNoTblGuidRightBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #2");
+		try
+		{
+			pm.UnloadCache();
+			var l = pm.Objects<AgrBi11OwnpabsOthpabsNoTblGuidLeftBase>().ResultTable;
+			pm.Delete(l);
+			pm.Save();
+			pm.UnloadCache();
+			var m = pm.Objects<AgrBi11OwnpabsOthpabsNoTblGuidRightBase>().ResultTable;
+			pm.Delete(m);
+			pm.Save();
+			pm.UnloadCache();
+			decimal count;
+			count = (decimal) new NDOQuery<AgrBi11OwnpabsOthpabsNoTblGuidLeftBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #1");
+			count = (decimal) new NDOQuery<AgrBi11OwnpabsOthpabsNoTblGuidRightBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #2");
+		}
+		catch (Exception)
+		{
+			var handler = pm.GetSqlPassThroughHandler( pm.NDOMapping.Connections.First() );
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( ownVar.GetType() ).TableName}");
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( otherVar.GetType() ).TableName}");
+		}
 	}
 	[Test]
 	public void TestSaveReload()
@@ -29046,10 +31032,6 @@ public class TestAgrBi11OwnpabsOthpabsNoTblGuid
 		QueryOwn();
 		Assert.NotNull(ownVar, "No Query Result");
 		Assert.Null(ownVar.RelField, "There should be no object");
-	}
-	[Test]
-	public void TestSaveReloadRemove()
-	{
 	}
 	[Test]
 	public void TestChangeKeyHolderLeft()
@@ -29170,20 +31152,30 @@ public class TestAgrBi11OwnpabsOthpabsTblGuid
 	[TearDown]
 	public void TearDown()
 	{
-		pm.UnloadCache();
-		var l = pm.Objects<AgrBi11OwnpabsOthpabsTblGuidLeftBase>().ResultTable;
-		pm.Delete(l);
-		pm.Save();
-		pm.UnloadCache();
-		var m = pm.Objects<AgrBi11OwnpabsOthpabsTblGuidRightBase>().ResultTable;
-		pm.Delete(m);
-		pm.Save();
-		pm.UnloadCache();
-		decimal count;
-		count = (decimal) new NDOQuery<AgrBi11OwnpabsOthpabsTblGuidLeftBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<AgrBi11OwnpabsOthpabsTblGuidRightBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #2");
+		try
+		{
+			pm.UnloadCache();
+			var l = pm.Objects<AgrBi11OwnpabsOthpabsTblGuidLeftBase>().ResultTable;
+			pm.Delete(l);
+			pm.Save();
+			pm.UnloadCache();
+			var m = pm.Objects<AgrBi11OwnpabsOthpabsTblGuidRightBase>().ResultTable;
+			pm.Delete(m);
+			pm.Save();
+			pm.UnloadCache();
+			decimal count;
+			count = (decimal) new NDOQuery<AgrBi11OwnpabsOthpabsTblGuidLeftBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #1");
+			count = (decimal) new NDOQuery<AgrBi11OwnpabsOthpabsTblGuidRightBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #2");
+		}
+		catch (Exception)
+		{
+			var handler = pm.GetSqlPassThroughHandler( pm.NDOMapping.Connections.First() );
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( ownVar.GetType() ).TableName}");
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( otherVar.GetType() ).TableName}");
+			handler.Execute( $"DELETE FROM {pm.NDOMapping.FindClass( ownVar.GetType() ).Relations.First().MappingTable.TableName}" );
+		}
 	}
 	[Test]
 	public void TestSaveReload()
@@ -29206,10 +31198,6 @@ public class TestAgrBi11OwnpabsOthpabsTblGuid
 		QueryOwn();
 		Assert.NotNull(ownVar, "No Query Result");
 		Assert.Null(ownVar.RelField, "There should be no object");
-	}
-	[Test]
-	public void TestSaveReloadRemove()
-	{
 	}
 	[Test]
 	public void TestChangeKeyHolderLeft()
@@ -29330,20 +31318,30 @@ public class TestAgrDirnOwnpabsOthpabsTblGuid
 	[TearDown]
 	public void TearDown()
 	{
-		pm.UnloadCache();
-		var l = pm.Objects<AgrDirnOwnpabsOthpabsTblGuidLeftBase>().ResultTable;
-		pm.Delete(l);
-		pm.Save();
-		pm.UnloadCache();
-		var m = pm.Objects<AgrDirnOwnpabsOthpabsTblGuidRightBase>().ResultTable;
-		pm.Delete(m);
-		pm.Save();
-		pm.UnloadCache();
-		decimal count;
-		count = (decimal) new NDOQuery<AgrDirnOwnpabsOthpabsTblGuidLeftBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<AgrDirnOwnpabsOthpabsTblGuidRightBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #2");
+		try
+		{
+			pm.UnloadCache();
+			var l = pm.Objects<AgrDirnOwnpabsOthpabsTblGuidLeftBase>().ResultTable;
+			pm.Delete(l);
+			pm.Save();
+			pm.UnloadCache();
+			var m = pm.Objects<AgrDirnOwnpabsOthpabsTblGuidRightBase>().ResultTable;
+			pm.Delete(m);
+			pm.Save();
+			pm.UnloadCache();
+			decimal count;
+			count = (decimal) new NDOQuery<AgrDirnOwnpabsOthpabsTblGuidLeftBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #1");
+			count = (decimal) new NDOQuery<AgrDirnOwnpabsOthpabsTblGuidRightBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #2");
+		}
+		catch (Exception)
+		{
+			var handler = pm.GetSqlPassThroughHandler( pm.NDOMapping.Connections.First() );
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( ownVar.GetType() ).TableName}");
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( otherVar.GetType() ).TableName}");
+			handler.Execute( $"DELETE FROM {pm.NDOMapping.FindClass( ownVar.GetType() ).Relations.First().MappingTable.TableName}" );
+		}
 	}
 	[Test]
 	public void TestSaveReload()
@@ -29418,20 +31416,30 @@ public class TestAgrBin1OwnpabsOthpabsTblGuid
 	[TearDown]
 	public void TearDown()
 	{
-		pm.UnloadCache();
-		var l = pm.Objects<AgrBin1OwnpabsOthpabsTblGuidLeftBase>().ResultTable;
-		pm.Delete(l);
-		pm.Save();
-		pm.UnloadCache();
-		var m = pm.Objects<AgrBin1OwnpabsOthpabsTblGuidRightBase>().ResultTable;
-		pm.Delete(m);
-		pm.Save();
-		pm.UnloadCache();
-		decimal count;
-		count = (decimal) new NDOQuery<AgrBin1OwnpabsOthpabsTblGuidLeftBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<AgrBin1OwnpabsOthpabsTblGuidRightBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #2");
+		try
+		{
+			pm.UnloadCache();
+			var l = pm.Objects<AgrBin1OwnpabsOthpabsTblGuidLeftBase>().ResultTable;
+			pm.Delete(l);
+			pm.Save();
+			pm.UnloadCache();
+			var m = pm.Objects<AgrBin1OwnpabsOthpabsTblGuidRightBase>().ResultTable;
+			pm.Delete(m);
+			pm.Save();
+			pm.UnloadCache();
+			decimal count;
+			count = (decimal) new NDOQuery<AgrBin1OwnpabsOthpabsTblGuidLeftBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #1");
+			count = (decimal) new NDOQuery<AgrBin1OwnpabsOthpabsTblGuidRightBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #2");
+		}
+		catch (Exception)
+		{
+			var handler = pm.GetSqlPassThroughHandler( pm.NDOMapping.Connections.First() );
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( ownVar.GetType() ).TableName}");
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( otherVar.GetType() ).TableName}");
+			handler.Execute( $"DELETE FROM {pm.NDOMapping.FindClass( ownVar.GetType() ).Relations.First().MappingTable.TableName}" );
+		}
 	}
 	[Test]
 	public void TestSaveReload()
@@ -29557,20 +31565,30 @@ public class TestAgrBi1nOwnpabsOthpabsTblGuid
 	[TearDown]
 	public void TearDown()
 	{
-		pm.UnloadCache();
-		var l = pm.Objects<AgrBi1nOwnpabsOthpabsTblGuidLeftBase>().ResultTable;
-		pm.Delete(l);
-		pm.Save();
-		pm.UnloadCache();
-		var m = pm.Objects<AgrBi1nOwnpabsOthpabsTblGuidRightBase>().ResultTable;
-		pm.Delete(m);
-		pm.Save();
-		pm.UnloadCache();
-		decimal count;
-		count = (decimal) new NDOQuery<AgrBi1nOwnpabsOthpabsTblGuidLeftBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<AgrBi1nOwnpabsOthpabsTblGuidRightBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #2");
+		try
+		{
+			pm.UnloadCache();
+			var l = pm.Objects<AgrBi1nOwnpabsOthpabsTblGuidLeftBase>().ResultTable;
+			pm.Delete(l);
+			pm.Save();
+			pm.UnloadCache();
+			var m = pm.Objects<AgrBi1nOwnpabsOthpabsTblGuidRightBase>().ResultTable;
+			pm.Delete(m);
+			pm.Save();
+			pm.UnloadCache();
+			decimal count;
+			count = (decimal) new NDOQuery<AgrBi1nOwnpabsOthpabsTblGuidLeftBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #1");
+			count = (decimal) new NDOQuery<AgrBi1nOwnpabsOthpabsTblGuidRightBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #2");
+		}
+		catch (Exception)
+		{
+			var handler = pm.GetSqlPassThroughHandler( pm.NDOMapping.Connections.First() );
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( ownVar.GetType() ).TableName}");
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( otherVar.GetType() ).TableName}");
+			handler.Execute( $"DELETE FROM {pm.NDOMapping.FindClass( ownVar.GetType() ).Relations.First().MappingTable.TableName}" );
+		}
 	}
 	[Test]
 	public void TestSaveReload()
@@ -29593,10 +31611,6 @@ public class TestAgrBi1nOwnpabsOthpabsTblGuid
 		QueryOwn();
 		Assert.NotNull(ownVar, "No Query Result");
 		Assert.Null(ownVar.RelField, "There should be no object");
-	}
-	[Test]
-	public void TestSaveReloadRemove()
-	{
 	}
 	[Test]
 	public void TestChangeKeyHolderLeft()
@@ -29686,20 +31700,30 @@ public class TestAgrBinnOwnpabsOthpabsTblGuid
 	[TearDown]
 	public void TearDown()
 	{
-		pm.UnloadCache();
-		var l = pm.Objects<AgrBinnOwnpabsOthpabsTblGuidLeftBase>().ResultTable;
-		pm.Delete(l);
-		pm.Save();
-		pm.UnloadCache();
-		var m = pm.Objects<AgrBinnOwnpabsOthpabsTblGuidRightBase>().ResultTable;
-		pm.Delete(m);
-		pm.Save();
-		pm.UnloadCache();
-		decimal count;
-		count = (decimal) new NDOQuery<AgrBinnOwnpabsOthpabsTblGuidLeftBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<AgrBinnOwnpabsOthpabsTblGuidRightBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #2");
+		try
+		{
+			pm.UnloadCache();
+			var l = pm.Objects<AgrBinnOwnpabsOthpabsTblGuidLeftBase>().ResultTable;
+			pm.Delete(l);
+			pm.Save();
+			pm.UnloadCache();
+			var m = pm.Objects<AgrBinnOwnpabsOthpabsTblGuidRightBase>().ResultTable;
+			pm.Delete(m);
+			pm.Save();
+			pm.UnloadCache();
+			decimal count;
+			count = (decimal) new NDOQuery<AgrBinnOwnpabsOthpabsTblGuidLeftBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #1");
+			count = (decimal) new NDOQuery<AgrBinnOwnpabsOthpabsTblGuidRightBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #2");
+		}
+		catch (Exception)
+		{
+			var handler = pm.GetSqlPassThroughHandler( pm.NDOMapping.Connections.First() );
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( ownVar.GetType() ).TableName}");
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( otherVar.GetType() ).TableName}");
+			handler.Execute( $"DELETE FROM {pm.NDOMapping.FindClass( ownVar.GetType() ).Relations.First().MappingTable.TableName}" );
+		}
 	}
 	[Test]
 	public void TestSaveReload()
@@ -29794,16 +31818,25 @@ public class TestCmpDir1OwnpabsOthpabsNoTblGuid
 	[TearDown]
 	public void TearDown()
 	{
-		pm.UnloadCache();
-		var l = pm.Objects<CmpDir1OwnpabsOthpabsNoTblGuidLeftBase>().ResultTable;
-		pm.Delete(l);
-		pm.Save();
-		pm.UnloadCache();
-		decimal count;
-		count = (decimal) new NDOQuery<CmpDir1OwnpabsOthpabsNoTblGuidLeftBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<CmpDir1OwnpabsOthpabsNoTblGuidRightBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #2");
+		try
+		{
+			pm.UnloadCache();
+			var l = pm.Objects<CmpDir1OwnpabsOthpabsNoTblGuidLeftBase>().ResultTable;
+			pm.Delete(l);
+			pm.Save();
+			pm.UnloadCache();
+			decimal count;
+			count = (decimal) new NDOQuery<CmpDir1OwnpabsOthpabsNoTblGuidLeftBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #1");
+			count = (decimal) new NDOQuery<CmpDir1OwnpabsOthpabsNoTblGuidRightBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #2");
+		}
+		catch (Exception)
+		{
+			var handler = pm.GetSqlPassThroughHandler( pm.NDOMapping.Connections.First() );
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( ownVar.GetType() ).TableName}");
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( otherVar.GetType() ).TableName}");
+		}
 	}
 	[Test]
 	public void TestSaveReload()
@@ -29826,10 +31859,6 @@ public class TestCmpDir1OwnpabsOthpabsNoTblGuid
 		QueryOwn();
 		Assert.NotNull(ownVar, "No Query Result");
 		Assert.Null(ownVar.RelField, "There should be no object");
-	}
-	[Test]
-	public void TestSaveReloadRemove()
-	{
 	}
 	[Test]
 	public void TestChangeKeyHolderLeft()
@@ -29898,16 +31927,26 @@ public class TestCmpDir1OwnpabsOthpabsTblGuid
 	[TearDown]
 	public void TearDown()
 	{
-		pm.UnloadCache();
-		var l = pm.Objects<CmpDir1OwnpabsOthpabsTblGuidLeftBase>().ResultTable;
-		pm.Delete(l);
-		pm.Save();
-		pm.UnloadCache();
-		decimal count;
-		count = (decimal) new NDOQuery<CmpDir1OwnpabsOthpabsTblGuidLeftBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<CmpDir1OwnpabsOthpabsTblGuidRightBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #2");
+		try
+		{
+			pm.UnloadCache();
+			var l = pm.Objects<CmpDir1OwnpabsOthpabsTblGuidLeftBase>().ResultTable;
+			pm.Delete(l);
+			pm.Save();
+			pm.UnloadCache();
+			decimal count;
+			count = (decimal) new NDOQuery<CmpDir1OwnpabsOthpabsTblGuidLeftBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #1");
+			count = (decimal) new NDOQuery<CmpDir1OwnpabsOthpabsTblGuidRightBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #2");
+		}
+		catch (Exception)
+		{
+			var handler = pm.GetSqlPassThroughHandler( pm.NDOMapping.Connections.First() );
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( ownVar.GetType() ).TableName}");
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( otherVar.GetType() ).TableName}");
+			handler.Execute( $"DELETE FROM {pm.NDOMapping.FindClass( ownVar.GetType() ).Relations.First().MappingTable.TableName}" );
+		}
 	}
 	[Test]
 	public void TestSaveReload()
@@ -29930,10 +31969,6 @@ public class TestCmpDir1OwnpabsOthpabsTblGuid
 		QueryOwn();
 		Assert.NotNull(ownVar, "No Query Result");
 		Assert.Null(ownVar.RelField, "There should be no object");
-	}
-	[Test]
-	public void TestSaveReloadRemove()
-	{
 	}
 	[Test]
 	public void TestChangeKeyHolderLeft()
@@ -30002,16 +32037,25 @@ public class TestCmpBi11OwnpabsOthpabsNoTblGuid
 	[TearDown]
 	public void TearDown()
 	{
-		pm.UnloadCache();
-		var l = pm.Objects<CmpBi11OwnpabsOthpabsNoTblGuidLeftBase>().ResultTable;
-		pm.Delete(l);
-		pm.Save();
-		pm.UnloadCache();
-		decimal count;
-		count = (decimal) new NDOQuery<CmpBi11OwnpabsOthpabsNoTblGuidLeftBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<CmpBi11OwnpabsOthpabsNoTblGuidRightBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #2");
+		try
+		{
+			pm.UnloadCache();
+			var l = pm.Objects<CmpBi11OwnpabsOthpabsNoTblGuidLeftBase>().ResultTable;
+			pm.Delete(l);
+			pm.Save();
+			pm.UnloadCache();
+			decimal count;
+			count = (decimal) new NDOQuery<CmpBi11OwnpabsOthpabsNoTblGuidLeftBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #1");
+			count = (decimal) new NDOQuery<CmpBi11OwnpabsOthpabsNoTblGuidRightBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #2");
+		}
+		catch (Exception)
+		{
+			var handler = pm.GetSqlPassThroughHandler( pm.NDOMapping.Connections.First() );
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( ownVar.GetType() ).TableName}");
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( otherVar.GetType() ).TableName}");
+		}
 	}
 	[Test]
 	public void TestSaveReload()
@@ -30034,10 +32078,6 @@ public class TestCmpBi11OwnpabsOthpabsNoTblGuid
 		QueryOwn();
 		Assert.NotNull(ownVar, "No Query Result");
 		Assert.Null(ownVar.RelField, "There should be no object");
-	}
-	[Test]
-	public void TestSaveReloadRemove()
-	{
 	}
 	[Test]
 	public void TestChangeKeyHolderLeft()
@@ -30157,16 +32197,26 @@ public class TestCmpBi11OwnpabsOthpabsTblGuid
 	[TearDown]
 	public void TearDown()
 	{
-		pm.UnloadCache();
-		var l = pm.Objects<CmpBi11OwnpabsOthpabsTblGuidLeftBase>().ResultTable;
-		pm.Delete(l);
-		pm.Save();
-		pm.UnloadCache();
-		decimal count;
-		count = (decimal) new NDOQuery<CmpBi11OwnpabsOthpabsTblGuidLeftBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<CmpBi11OwnpabsOthpabsTblGuidRightBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #2");
+		try
+		{
+			pm.UnloadCache();
+			var l = pm.Objects<CmpBi11OwnpabsOthpabsTblGuidLeftBase>().ResultTable;
+			pm.Delete(l);
+			pm.Save();
+			pm.UnloadCache();
+			decimal count;
+			count = (decimal) new NDOQuery<CmpBi11OwnpabsOthpabsTblGuidLeftBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #1");
+			count = (decimal) new NDOQuery<CmpBi11OwnpabsOthpabsTblGuidRightBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #2");
+		}
+		catch (Exception)
+		{
+			var handler = pm.GetSqlPassThroughHandler( pm.NDOMapping.Connections.First() );
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( ownVar.GetType() ).TableName}");
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( otherVar.GetType() ).TableName}");
+			handler.Execute( $"DELETE FROM {pm.NDOMapping.FindClass( ownVar.GetType() ).Relations.First().MappingTable.TableName}" );
+		}
 	}
 	[Test]
 	public void TestSaveReload()
@@ -30189,10 +32239,6 @@ public class TestCmpBi11OwnpabsOthpabsTblGuid
 		QueryOwn();
 		Assert.NotNull(ownVar, "No Query Result");
 		Assert.Null(ownVar.RelField, "There should be no object");
-	}
-	[Test]
-	public void TestSaveReloadRemove()
-	{
 	}
 	[Test]
 	public void TestChangeKeyHolderLeft()
@@ -30312,16 +32358,26 @@ public class TestCmpDirnOwnpabsOthpabsTblGuid
 	[TearDown]
 	public void TearDown()
 	{
-		pm.UnloadCache();
-		var l = pm.Objects<CmpDirnOwnpabsOthpabsTblGuidLeftBase>().ResultTable;
-		pm.Delete(l);
-		pm.Save();
-		pm.UnloadCache();
-		decimal count;
-		count = (decimal) new NDOQuery<CmpDirnOwnpabsOthpabsTblGuidLeftBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<CmpDirnOwnpabsOthpabsTblGuidRightBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #2");
+		try
+		{
+			pm.UnloadCache();
+			var l = pm.Objects<CmpDirnOwnpabsOthpabsTblGuidLeftBase>().ResultTable;
+			pm.Delete(l);
+			pm.Save();
+			pm.UnloadCache();
+			decimal count;
+			count = (decimal) new NDOQuery<CmpDirnOwnpabsOthpabsTblGuidLeftBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #1");
+			count = (decimal) new NDOQuery<CmpDirnOwnpabsOthpabsTblGuidRightBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #2");
+		}
+		catch (Exception)
+		{
+			var handler = pm.GetSqlPassThroughHandler( pm.NDOMapping.Connections.First() );
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( ownVar.GetType() ).TableName}");
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( otherVar.GetType() ).TableName}");
+			handler.Execute( $"DELETE FROM {pm.NDOMapping.FindClass( ownVar.GetType() ).Relations.First().MappingTable.TableName}" );
+		}
 	}
 	[Test]
 	public void TestSaveReload()
@@ -30395,16 +32451,26 @@ public class TestCmpBin1OwnpabsOthpabsTblGuid
 	[TearDown]
 	public void TearDown()
 	{
-		pm.UnloadCache();
-		var l = pm.Objects<CmpBin1OwnpabsOthpabsTblGuidLeftBase>().ResultTable;
-		pm.Delete(l);
-		pm.Save();
-		pm.UnloadCache();
-		decimal count;
-		count = (decimal) new NDOQuery<CmpBin1OwnpabsOthpabsTblGuidLeftBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<CmpBin1OwnpabsOthpabsTblGuidRightBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #2");
+		try
+		{
+			pm.UnloadCache();
+			var l = pm.Objects<CmpBin1OwnpabsOthpabsTblGuidLeftBase>().ResultTable;
+			pm.Delete(l);
+			pm.Save();
+			pm.UnloadCache();
+			decimal count;
+			count = (decimal) new NDOQuery<CmpBin1OwnpabsOthpabsTblGuidLeftBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #1");
+			count = (decimal) new NDOQuery<CmpBin1OwnpabsOthpabsTblGuidRightBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #2");
+		}
+		catch (Exception)
+		{
+			var handler = pm.GetSqlPassThroughHandler( pm.NDOMapping.Connections.First() );
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( ownVar.GetType() ).TableName}");
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( otherVar.GetType() ).TableName}");
+			handler.Execute( $"DELETE FROM {pm.NDOMapping.FindClass( ownVar.GetType() ).Relations.First().MappingTable.TableName}" );
+		}
 	}
 	[Test]
 	public void TestSaveReload()
@@ -30529,16 +32595,26 @@ public class TestCmpBi1nOwnpabsOthpabsTblGuid
 	[TearDown]
 	public void TearDown()
 	{
-		pm.UnloadCache();
-		var l = pm.Objects<CmpBi1nOwnpabsOthpabsTblGuidLeftBase>().ResultTable;
-		pm.Delete(l);
-		pm.Save();
-		pm.UnloadCache();
-		decimal count;
-		count = (decimal) new NDOQuery<CmpBi1nOwnpabsOthpabsTblGuidLeftBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<CmpBi1nOwnpabsOthpabsTblGuidRightBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #2");
+		try
+		{
+			pm.UnloadCache();
+			var l = pm.Objects<CmpBi1nOwnpabsOthpabsTblGuidLeftBase>().ResultTable;
+			pm.Delete(l);
+			pm.Save();
+			pm.UnloadCache();
+			decimal count;
+			count = (decimal) new NDOQuery<CmpBi1nOwnpabsOthpabsTblGuidLeftBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #1");
+			count = (decimal) new NDOQuery<CmpBi1nOwnpabsOthpabsTblGuidRightBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #2");
+		}
+		catch (Exception)
+		{
+			var handler = pm.GetSqlPassThroughHandler( pm.NDOMapping.Connections.First() );
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( ownVar.GetType() ).TableName}");
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( otherVar.GetType() ).TableName}");
+			handler.Execute( $"DELETE FROM {pm.NDOMapping.FindClass( ownVar.GetType() ).Relations.First().MappingTable.TableName}" );
+		}
 	}
 	[Test]
 	public void TestSaveReload()
@@ -30561,10 +32637,6 @@ public class TestCmpBi1nOwnpabsOthpabsTblGuid
 		QueryOwn();
 		Assert.NotNull(ownVar, "No Query Result");
 		Assert.Null(ownVar.RelField, "There should be no object");
-	}
-	[Test]
-	public void TestSaveReloadRemove()
-	{
 	}
 	[Test]
 	public void TestChangeKeyHolderLeft()
@@ -30653,16 +32725,26 @@ public class TestCmpBinnOwnpabsOthpabsTblGuid
 	[TearDown]
 	public void TearDown()
 	{
-		pm.UnloadCache();
-		var l = pm.Objects<CmpBinnOwnpabsOthpabsTblGuidLeftBase>().ResultTable;
-		pm.Delete(l);
-		pm.Save();
-		pm.UnloadCache();
-		decimal count;
-		count = (decimal) new NDOQuery<CmpBinnOwnpabsOthpabsTblGuidLeftBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #1");
-		count = (decimal) new NDOQuery<CmpBinnOwnpabsOthpabsTblGuidRightBase>(pm).ExecuteAggregate("dummy", Query.AggregateType.Count);
-		Assert.AreEqual(0, count, "Count wrong #2");
+		try
+		{
+			pm.UnloadCache();
+			var l = pm.Objects<CmpBinnOwnpabsOthpabsTblGuidLeftBase>().ResultTable;
+			pm.Delete(l);
+			pm.Save();
+			pm.UnloadCache();
+			decimal count;
+			count = (decimal) new NDOQuery<CmpBinnOwnpabsOthpabsTblGuidLeftBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #1");
+			count = (decimal) new NDOQuery<CmpBinnOwnpabsOthpabsTblGuidRightBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
+			Assert.AreEqual(0, count, "Count wrong #2");
+		}
+		catch (Exception)
+		{
+			var handler = pm.GetSqlPassThroughHandler( pm.NDOMapping.Connections.First() );
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( ownVar.GetType() ).TableName}");
+			handler.Execute($"DELETE FROM {pm.NDOMapping.FindClass( otherVar.GetType() ).TableName}");
+			handler.Execute( $"DELETE FROM {pm.NDOMapping.FindClass( ownVar.GetType() ).Relations.First().MappingTable.TableName}" );
+		}
 	}
 	[Test]
 	public void TestSaveReload()

@@ -62,6 +62,12 @@ namespace NDO.Mapping.Attributes
             this.value = value;
         }
 
+        /// <summary>
+        /// Constructs a PropertyAttribute object
+        /// </summary>
+        /// <param name="name"></param>
+        /// <param name="type"></param>
+        /// <param name="value"></param>
         public PropertyAttribute(string name, Type type, string value)
         {
             this.name = name;
@@ -70,6 +76,10 @@ namespace NDO.Mapping.Attributes
         }
 
         string name;
+
+        /// <summary>
+        /// Gets or sets the Name of the property
+        /// </summary>
         public string Name
         {
             get { return name; }
@@ -77,6 +87,9 @@ namespace NDO.Mapping.Attributes
         }
 
         string type;
+        /// <summary>
+        /// Gets or sets the Type
+        /// </summary>
         public string Type
         {
             get { return type; }
@@ -84,12 +97,20 @@ namespace NDO.Mapping.Attributes
         }
 
         string value;
+        /// <summary>
+        /// Gets or sets the Value of the property
+        /// </summary>
         public string Value
         {
             get { return this.value; }
             set { this.value = value; }
         }
 
+        /// <summary>
+        /// Factory Method
+        /// </summary>
+        /// <param name="parent"></param>
+        /// <returns></returns>
         public Property CreateProperty(MappingNode parent)
         {
             Property prop = new Property(parent, name, type, value);

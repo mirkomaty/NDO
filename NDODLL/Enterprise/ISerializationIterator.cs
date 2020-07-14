@@ -38,6 +38,10 @@ namespace NDO
 	/// </remarks>
 	public interface ISerializationIterator
 	{
+		/// <summary>
+		/// Iterates throug a tree of relations
+		/// </summary>
+		/// <param name="root"></param>
 		void Iterate(IPersistenceCapable root);
 	}
 }

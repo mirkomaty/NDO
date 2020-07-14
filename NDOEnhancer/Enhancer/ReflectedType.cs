@@ -21,9 +21,6 @@
 
 
 using System;
-#if !NET11
-using System.Collections.Generic;
-#endif
 using System.Text;
 
 namespace NDOEnhancer
@@ -120,10 +117,13 @@ namespace NDOEnhancer
                 string assemblyName = t.Assembly.GetName().Name;
                 if (isQuoted)
                     assemblyName = QuotedName.Convert(assemblyName);
-                assPrefix = "[" + assemblyName + "]";
+				if (assemblyName == "mscorlib")
+					assPrefix = Corlib.Name;
+				else
+					assPrefix = "[" + assemblyName + "]";
             }
             string tn = t2.FullName;
-#if !NET11
+
             string genericArgs = string.Empty;
             if (t2.IsGenericType)
             {
@@ -161,11 +161,6 @@ namespace NDOEnhancer
             if (isQuoted)
                 tn = QuotedName.ConvertTypename(tn);
             return vtPrefix + assPrefix + tn + genericArgs + arrBrackets;
-#else
-            if (isQuoted)
-                tn = UmlautName.Convert(tn);
-			return vtPrefix + assPrefix + tn;
-#endif
         }
         public string ILName
         {

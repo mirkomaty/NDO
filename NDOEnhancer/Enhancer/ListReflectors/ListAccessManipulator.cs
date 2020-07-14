@@ -43,17 +43,17 @@ namespace NDOEnhancer
 		static ListAccessManipulator()
 		{
 			functions = new Hashtable(11);
-			functions.Add("AddRange", "AddRange(object,class [mscorlib]System.Collections.IEnumerable,class [mscorlib]System.Collections.Hashtable)");
-			functions.Add("InsertRange", "InsertRange(object,int32,class [mscorlib]System.Collections.IEnumerable,class [mscorlib]System.Collections.Hashtable)");
-			functions.Add("RemoveRange", "RemoveRange(object,int32,int32,class [mscorlib]System.Collections.Hashtable)");
-			functions.Add("SetRange", "SetRange(object,int32,class [mscorlib]System.Collections.ICollection,class [mscorlib]System.Collections.Hashtable)");
-			functions.Add("Add", "Add(object,object,class [mscorlib]System.Collections.Hashtable)");
-			functions.Add("Clear", "Clear(object,class [mscorlib]System.Collections.Hashtable)");
-			functions.Add("Insert", "Insert(object,int32,object,class [mscorlib]System.Collections.Hashtable)");
-			functions.Add("RemoveAt", "RemoveAt(object,int32,class [mscorlib]System.Collections.Hashtable)");
-			functions.Add("Remove", "Remove(object,object,class [mscorlib]System.Collections.Hashtable)");
-			functions.Add("set_Item", "SetItem(object,int32,object,class [mscorlib]System.Collections.Hashtable)");
-            functions.Add("RemoveAll", "RemoveAll(object,class [mscorlib]System.Delegate,class [mscorlib]System.Collections.Hashtable)");
+			functions.Add("AddRange", $"AddRange(object,class {Corlib.Name}System.Collections.IEnumerable,class {Corlib.Name}System.Collections.Hashtable)");
+			functions.Add("InsertRange", $"InsertRange(object,int32,class {Corlib.Name}System.Collections.IEnumerable,class {Corlib.Name}System.Collections.Hashtable)");
+			functions.Add("RemoveRange", $"RemoveRange(object,int32,int32,class {Corlib.Name}System.Collections.Hashtable)");
+			functions.Add("SetRange", $"SetRange(object,int32,class {Corlib.Name}System.Collections.ICollection,class {Corlib.Name}System.Collections.Hashtable)");
+			functions.Add("Add", $"Add(object,object,class {Corlib.Name}System.Collections.Hashtable)");
+			functions.Add("Clear", $"Clear(object,class {Corlib.Name}System.Collections.Hashtable)");
+			functions.Add("Insert", $"Insert(object,int32,object,class {Corlib.Name}System.Collections.Hashtable)");
+			functions.Add("RemoveAt", $"RemoveAt(object,int32,class {Corlib.Name}System.Collections.Hashtable)");
+			functions.Add("Remove", $"Remove(object,object,class {Corlib.Name}System.Collections.Hashtable)");
+			functions.Add("set_Item", $"SetItem(object,int32,object,class {Corlib.Name}System.Collections.Hashtable)");
+            functions.Add("RemoveAll", $"RemoveAll(object,class {Corlib.Name}System.Delegate,class {Corlib.Name}System.Collections.Hashtable)");
 		}
 
 		public bool Manipulate(Hashtable reflectors, ILStatementElement statementElement)
@@ -71,15 +71,12 @@ namespace NDOEnhancer
 				IListReflector reflector = de.Value as IListReflector;
 				foreach(MethodInfo mi in reflector.GetMethods())
 				{
-#if NET11
-					string toCompare = new ReflectedType(mi.ReturnType, ownAssemblyName).ILName + " " + new ReflectedType(mi.ReflectedType, ownAssemblyName).ILNameWithoutPrefix + "::" + mi.Name + "(";
-#else
                     string toCompare = null;
                     if (reflector.CallvirtNeedsClassPrefix)
                         toCompare = new ReflectedType(mi.ReturnType, ownAssemblyName).ILName + " " + new ReflectedType(mi.ReflectedType, ownAssemblyName).QuotedILName + "::" + mi.Name + "("; //RL 6-3-2008  QuotedIlName instead of ILName(Fix 'Relations with Umlaut')
                     else
                         toCompare = new ReflectedType(mi.ReturnType, ownAssemblyName).ILName + " " + new ReflectedType(mi.ReflectedType, ownAssemblyName).QuotedILNameWithoutPrefix + "::" + mi.Name + "(";  //RL 6-3-2008  QuotedIlNameWithoutPrefix instead of IlNameWithoutPrefix (Fix 'Relations mit Umlaut')
-#endif
+
 					if (line.StartsWith(toCompare))
 					{
 						foundMethod = mi;
@@ -104,17 +101,15 @@ namespace NDOEnhancer
 
             if (foundName == "Add")
                 retval = "int32";  // we use a return value anyway and pop it from the stack by generic containers
-#if !NET11
             else if (foundName == "Remove")
                 retval = "bool";   // we use a return value anyway and pop it from the stack by non generic containers        
-#endif
             else if (foundName == "RemoveAll")
                 retval = "int32";
 		
 			statementElement.insertBefore(new ILStatementElement("ldloc __ndocontainertable"));
 			statementElement.insertBefore(new ILStatementElement("call       " + retval + " [NDO]NDO._NDOContainerStack::" 
 				+ stackMethod));
-#if !NET11
+
             // The non generic IList.Add function has an int32 result.
             // The generic IList<T>.Add function has a void result.
             // To give the result of the non generic function back, our Add function has also an int32 result.
@@ -124,7 +119,6 @@ namespace NDOEnhancer
             if (foundName == "Remove" && !foundMethod.ReflectedType.IsGenericType)
                 statementElement.insertBefore(new ILStatementElement("pop"));
 
-#endif
 			statementElement.remove();
 			return true;
 		}

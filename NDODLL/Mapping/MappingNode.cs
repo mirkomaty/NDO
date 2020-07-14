@@ -26,9 +26,12 @@ using System.Xml;
 
 namespace NDO.Mapping
 {
+    /// <summary>
+    /// Base class for mapping
+    /// </summary>
     public abstract class MappingNode
     {
-        protected MappingNode nodeParent;
+        MappingNode nodeParent;
         Hashtable properties = new Hashtable();
 
         /// <summary>
@@ -95,6 +98,17 @@ namespace NDO.Mapping
             this.Changed = true;
         }
 
+		/// <summary>
+		/// Returns the parent of the node.
+		/// </summary>
+		/// <remarks>Note, that the concrete MappingNode classes may have a specialiced Parent property.</remarks>
+		[Browsable(false)]
+		public MappingNode NodeParent
+		{
+			get { return this.nodeParent; }
+			set { this.nodeParent = value; }
+		}
+
         /// <summary>
         /// Gets or sets a property with the given name.
         /// </summary>
@@ -128,17 +142,30 @@ namespace NDO.Mapping
             this.nodeParent = newParent;
         }
 
+        /// <summary>
+        /// Constructs a MappingNode
+        /// </summary>
+        /// <param name="parent"></param>
         public MappingNode(MappingNode parent)
         {
             this.nodeParent = parent;
         }
 
+        /// <summary>
+        /// Constructs a MappingNode
+        /// </summary>
+        /// <param name="node"></param>
+        /// <param name="parent"></param>
         public MappingNode(XmlNode node, MappingNode parent)
         {
             this.nodeParent = parent;
             LoadProperties(node);
         }
 
+        /// <summary>
+        /// Reads additional properties from the xml code
+        /// </summary>
+        /// <param name="node"></param>
         protected void LoadProperties(XmlNode node)
         {
             foreach (XmlNode propNode in node.SelectNodes("Property"))

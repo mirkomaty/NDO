@@ -149,7 +149,7 @@ namespace NDO.Mapping
         [Browsable(false)]
         public MappingNode Parent
         {
-            get { return nodeParent; }
+            get { return NodeParent; }
         }
 
         /// <summary>
@@ -245,6 +245,7 @@ namespace NDO.Mapping
 
         #endregion
 
+        /// <inheritdoc/>
         public override string ToString()
         {
             return this.name;

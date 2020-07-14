@@ -28,9 +28,9 @@
     <IsWebProject>False</IsWebProject>
     <KeyFile />
     <References>
-      <Reference AssemblyName="PureBusinessClasses" AssemblyPath="..\..\TestEnhancerVersion4\PureBusinessClasses\bin\Debug\PureBusinessClasses.dll">
+      <Reference AssemblyName="PureBusinessClasses" AssemblyPath="..\..\IntegrationTests\PureBusinessClasses\bin\Debug\PureBusinessClasses.dll">
       </Reference>
-      <Reference AssemblyName="NDO.JsonFormatter" AssemblyPath="..\NdoJsonFormatter\bin\Debug\NDO.JsonFormatter.dll" CheckThisDLL="False">
+      <Reference AssemblyName="NDO.JsonFormatter" AssemblyPath="..\NdoJsonFormatter\bin\Debug\netstandard2.0\NDO.JsonFormatter.dll" CheckThisDLL="False">
       </Reference>
     </References>
   </ProjectDescription>

@@ -1,5 +1,5 @@
 ﻿//
-// Copyright (c) 2002-2016 Mirko Matytschak 
+// Copyright (c) 2002-2019 Mirko Matytschak 
 // (www.netdataobjects.de)
 //
 // Author: Mirko Matytschak
@@ -107,7 +107,7 @@ namespace NETDataObjects.NDOVSPackage
                 throw new Exception("ConfigurationOptions.Save: file name is null");
         }
 
-        public string GetNdoProjFileName(Project project)
+        public static string GetNdoProjFileName(Project project)
         {
             string result;
             if (Directory.Exists(project.FullName)) // Web Projects have a directory as name

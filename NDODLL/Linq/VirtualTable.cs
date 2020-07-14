@@ -24,9 +24,7 @@ using System;
 using System.Linq;
 using System.Collections.Generic;
 using System.Collections;
-using System.Text;
-using System.Text.RegularExpressions;
-using NDO;
+using NDO.Query;
 using System.Linq.Expressions;
 
 namespace NDO.Linq
@@ -35,14 +33,15 @@ namespace NDO.Linq
 	/// This class represents a virtual table which allows for Linq queries against the NDO data store.
 	/// </summary>
 	/// <typeparam name="T">The type of the result element class.</typeparam>
-    public class VirtualTable<T> : IEnumerable<T>
+    public class VirtualTable<T> : IEnumerable<T> //where T: IPersistenceCapable
     {
         PersistenceManager pm;
         List<string> prefetches = new List<string>();
-        NDOQuery<T> ndoquery = null;
-        ArrayList parameters = new ArrayList();
 		int skip = -1;
 		int take = -1;
+		List<QueryOrder> orderings = new List<QueryOrder>();
+		string queryString = String.Empty;
+		List<object> queryParameters = new List<object>();
 
 		/// <summary>
 		/// Constructs a virtual table object
@@ -75,7 +74,7 @@ namespace NDO.Linq
             ExpressionTreeTransformer transformer = 
                 new ExpressionTreeTransformer((LambdaExpression)keySelector);
             string field = transformer.Transform();
-            Ndoquery.Orderings.Add(new Query.AscendingOrder(field));
+            this.orderings.Add(new Query.AscendingOrder(field));
             return this;
         }
 
@@ -90,7 +89,7 @@ namespace NDO.Linq
             ExpressionTreeTransformer transformer = 
                 new ExpressionTreeTransformer((LambdaExpression)keySelector);
             string field = transformer.Transform();
-            Ndoquery.Orderings.Add(new Query.DescendingOrder(field));
+            this.orderings.Add(new Query.DescendingOrder(field));
             return this;
         }
 
@@ -122,38 +121,134 @@ namespace NDO.Linq
 		/// <param name="expr"></param>
 		/// <returns></returns>
         public VirtualTable<T>Where(Expression<Func<T,bool>>expr)
-        {
-            // Determine the result type of the query.
-            // Construct a dummy instance of T to ask it.
-            T instance = (T) Activator.CreateInstance(typeof(T));
-            
+        { 
 			// Transform the expression to NDOql
             ExpressionTreeTransformer transformer = new ExpressionTreeTransformer((LambdaExpression)expr);
-            string query = transformer.Transform();
+            this.queryString = transformer.Transform();
 
-            // Create the NDO query
-            this.ndoquery = new NDOQuery<T>( pm, query);
-            
+			this.queryParameters.Clear();
 			// Add the parameters collected by the transformer
             foreach(object o in transformer.Parameters)
-                this.ndoquery.Parameters.Add(o);
+                this.queryParameters.Add(o);
 
-			// If we have a paged view
-			// define the take and skip parameters
-			if (this.take > -1)
-				ndoquery.Take = take;
-			if (this.skip > -1)
-				ndoquery.Skip = skip;
-			
-			// Add the prefetch definitions
-			this.ndoquery.Prefetches = new ArrayList( this.prefetches );
             return this;
         }
 
 		/// <summary>
+		/// Allows to reuse a VirtualTable with different parameters.
+		/// Parameters must have the same order, as they appear in the Linq query.
+		/// </summary>
+		/// <param name="newParameters"></param>
+		public void ReplaceParameters(IEnumerable<object> newParameters)
+		{
+			this.queryParameters.Clear();
+			foreach (var p in newParameters)
+			{
+				this.queryParameters.Add( p );
+			}
+		}
+
+		/// <summary>
+		/// Executes the COUNT aggregate query for the given virtual table.
+		/// </summary>
+		public int Count
+		{
+			get
+			{
+				var ndoQuery = Ndoquery;
+				return (int)(decimal)ndoQuery.ExecuteAggregate( "*", AggregateType.Count );
+			}
+		}
+
+		/// <summary>
+		/// Executes the MAX aggregate query for the given virtual table.
+		/// </summary>
+		/// <typeparam name="TP"></typeparam>
+		/// <param name="fieldSelector"></param>
+		/// <returns></returns>
+		public TP Max<TP>( Expression<Func<T, TP>> fieldSelector )
+		{
+			return ExecuteAggregate(fieldSelector, AggregateType.Max );
+		}
+
+		/// <summary>
+		/// Executes the MAX aggregate query for the given virtual table.
+		/// </summary>
+		/// <typeparam name="TP"></typeparam>
+		/// <param name="fieldSelector"></param>
+		/// <returns></returns>
+		public TP Min<TP>( Expression<Func<T, TP>> fieldSelector )
+		{
+			return ExecuteAggregate( fieldSelector, AggregateType.Min );
+		}
+
+		/// <summary>
+		/// Executes the MAX aggregate query for the given virtual table.
+		/// </summary>
+		/// <typeparam name="TP"></typeparam>
+		/// <param name="fieldSelector"></param>
+		/// <returns></returns>
+		public TP StandardDeviation<TP>( Expression<Func<T, TP>> fieldSelector )
+		{
+			return ExecuteAggregate( fieldSelector, AggregateType.StDev );
+		}
+
+		/// <summary>
+		/// Executes the MAX aggregate query for the given virtual table.
+		/// </summary>
+		/// <typeparam name="TP"></typeparam>
+		/// <param name="fieldSelector"></param>
+		/// <returns></returns>
+		public TP Average<TP>( Expression<Func<T, TP>> fieldSelector )
+		{
+			return ExecuteAggregate( fieldSelector, AggregateType.Avg );
+		}
+
+		/// <summary>
+		/// Executes the SUM aggregate query for the given virtual table.
+		/// </summary>
+		/// <typeparam name="TP"></typeparam>
+		/// <param name="fieldSelector"></param>
+		/// <returns></returns>
+		public TP Sum<TP>( Expression<Func<T, TP>> fieldSelector )
+		{
+			return ExecuteAggregate( fieldSelector, AggregateType.Sum );
+		}
+
+		/// <summary>
+		/// Executes the VAR aggregate query for the given virtual table.
+		/// </summary>
+		/// <typeparam name="TP"></typeparam>
+		/// <param name="fieldSelector"></param>
+		/// <returns></returns>
+		public TP Variance<TP>( Expression<Func<T, TP>> fieldSelector )
+		{
+			return ExecuteAggregate( fieldSelector, AggregateType.Var );
+		}
+
+		string GetField<TP>( Expression<Func<T, TP>> fieldSelector )
+		{
+			ExpressionTreeTransformer transformer =
+				new ExpressionTreeTransformer( fieldSelector );
+			return transformer.Transform();
+		}
+
+		/// <summary>
+		/// /// Executes the aggregate query for the given virtual table.
+		/// </summary>
+		/// <typeparam name="TP"></typeparam>
+		/// <param name="fieldSelector"></param>
+		/// <param name="aggregateType"></param>
+		/// <returns></returns>
+		TP ExecuteAggregate<TP>( Expression<Func<T, TP>> fieldSelector, AggregateType aggregateType )
+		{
+			return (TP)Ndoquery.ExecuteAggregate( GetField(fieldSelector), aggregateType );
+		}
+
+		/// <summary>
 		/// Executes the Query and returns the result table
 		/// </summary>
-        public List<T> ResultTable
+		public List<T> ResultTable
         {
             get 
             {
@@ -170,6 +265,19 @@ namespace NDO.Linq
         }
 
 		/// <summary>
+		/// Add an expression which represents a relation. The query will try to fetch these related objects together with the main resultset.
+		/// </summary>
+		/// <typeparam name="TP">The type of the property - will be automatically determined by the compiler.</typeparam>
+		/// <param name="expr"></param>
+		public void AddPrefetch<TP>( Expression<Func<T, TP>> expr )
+		{
+			ExpressionTreeTransformer transformer =
+				new ExpressionTreeTransformer( (LambdaExpression)expr );
+			string field = transformer.Transform();
+			this.prefetches.Add( field );
+		}
+
+		/// <summary>
 		/// Gets the Query String of the generated query.
 		/// </summary>
 		public string QueryString
@@ -180,20 +288,27 @@ namespace NDO.Linq
 			}
 		}
 
+		NDOQuery<T> CreateNDOQuery()
+		{
+			var ndoquery = new NDOQuery<T>( pm, this.queryString );
+			if (this.take > -1)
+				ndoquery.Take = take;
+			if (this.skip > -1)
+				ndoquery.Skip = skip;
+			ndoquery.Prefetches = this.prefetches;
+			foreach (var p in this.queryParameters)
+			{
+				ndoquery.Parameters.Add( p );
+			}
+			ndoquery.Orderings = this.orderings;
+			return ndoquery;
+		}
+
 		private NDOQuery<T> Ndoquery
 		{
 			get
 			{
-				if (this.ndoquery == null)
-				{
-					this.ndoquery = new NDOQuery<T>( pm );
-					if (this.take > -1)
-						ndoquery.Take = take;
-					if (this.skip > -1)
-						ndoquery.Skip = skip;
-					this.ndoquery.Prefetches = new ArrayList( this.prefetches );
-				}
-                return this.ndoquery;
+				return CreateNDOQuery();
 			}
 		}
 
@@ -209,14 +324,36 @@ namespace NDO.Linq
 			this.take = take;
 			return this;
 		}
-		
+
+		/// <summary>
+		/// Supports Take and Skip
+		/// </summary>
+		/// <param name="take"></param>
+		/// <returns></returns>
+		public VirtualTable<T> Take( int take )
+		{
+			this.take = take;
+			return this;
+		}
+
+		/// <summary>
+		/// Supports Take and Skip
+		/// </summary>
+		/// <param name="skip"></param>
+		/// <returns></returns>
+		public VirtualTable<T> Skip( int skip )
+		{
+			this.skip = skip;
+			return this;
+		}
+
 		/// <summary>
 		/// Converts the VirtualTable to a List.
 		/// </summary>
 		/// <remarks>This operator makes sure that the results of the Linq query are usable as List classes.</remarks>
 		/// <param name="table"></param>
 		/// <returns></returns>
-        public static implicit operator List<T>(VirtualTable<T> table)
+		public static implicit operator List<T>(VirtualTable<T> table)
         {
             return table.ResultTable;
         }

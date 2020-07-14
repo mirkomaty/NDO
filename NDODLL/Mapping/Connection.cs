@@ -25,6 +25,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Xml;
 
 namespace NDO.Mapping
@@ -36,10 +37,16 @@ namespace NDO.Mapping
     public class Connection : MappingNode
     {
         #region Standard Connection Stuff
+        /// <summary>
+        /// 
+        /// </summary>
         public const string DummyConnectionString = "Substitute this string with your connection string";
 
         static Connection standardConnection;
-
+        
+        /// <summary>
+        /// Creates a new, empty Connection object.
+        /// </summary>
         public static Connection StandardConnection
         {
             get { return standardConnection; }
@@ -51,48 +58,6 @@ namespace NDO.Mapping
             standardConnection.name = DummyConnectionString;
             standardConnection.type = "";
         }
-
-        //		public static void ImportOleDbConnectionString(string oleDbString)
-        //		{
-        //			if (oleDbString.StartsWith(sqlString))
-        //			{
-        //				standardConnection.type = "SqlServer";
-        //				standardConnection.name = oleDbString.Substring(sqlString.Length);
-        //			}
-        //			else if (oleDbString.StartsWith(oracleString1))
-        //			{
-        //				standardConnection.type = "Oracle";
-        //				standardConnection.name = oleDbString.Substring(oracleString1.Length);
-        //			}
-        //			else if (oleDbString.StartsWith(oracleString2))
-        //			{
-        //				standardConnection.type = "Oracle";
-        //				standardConnection.name = oleDbString.Substring(oracleString2.Length);
-        //			}
-        //			else if (oleDbString.StartsWith(jetString))
-        //			{
-        //				standardConnection.type = "Access";
-        //				// don't remove the provider part since Jet is an OleDb provider
-        //			}
-        //			else 
-        //			{
-        //				standardConnection.type = string.Empty;
-        //				standardConnection.name = oleDbString;
-        //			}
-        //		}
-        //
-        //		public static string GetTypeFromOleDbString(string oleDbString)
-        //		{
-        //			if (oleDbString.StartsWith(sqlString))
-        //				return "SqlServer";
-        //			if (oleDbString.StartsWith(oracleString1))
-        //				return "Oracle";
-        //			if (oleDbString.StartsWith(oracleString2))
-        //				return "Oracle";
-        //			if (oleDbString.StartsWith(jetString))
-        //				return "Access";
-        //			return string.Empty;
-        //		}
 
         #endregion
 
@@ -117,7 +82,21 @@ namespace NDO.Mapping
             get { return name; }
             set { name = value; this.Changed = true; }
         }
-        private string type = "Sql";
+
+        /// <summary>
+        /// This is used to log the connection without password.
+        /// </summary>
+		[Browsable( false )]
+		public string DisplayName
+		{
+			get
+			{
+				Regex regex = new Regex( "password=[^;]*" );
+				return regex.Replace( this.name, "password=***" );				
+			}
+		}
+
+		private string type = "Sql";
         /// <summary>
         /// Gets or sets the provider type string.
         /// </summary>
@@ -133,10 +112,13 @@ namespace NDO.Mapping
             set { type = value; this.Changed = true; }
         }
 
+        /// <summary>
+        /// Gets the parent of the Connection object
+        /// </summary>
         [Browsable(false)]
         public NDOMapping Parent
         {
-            get { return nodeParent as NDOMapping; }
+            get { return NodeParent as NDOMapping; }
             //			set { parent = value; }
         }
 
@@ -164,18 +146,6 @@ namespace NDO.Mapping
             : base(parent)
         {
         }
-
-#if NDO11
-		string owner;
-		/// <summary>
-		///  Don't use this property - it's obsolete.
-		/// </summary>
-		public string Owner
-		{
-			get { return owner; }
-			set { owner = value; }
-		}
-#endif
 
         /// <summary>
         /// Returns a connection type according to an OleDb connection string.

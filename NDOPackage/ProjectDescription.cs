@@ -1,5 +1,5 @@
 ﻿//
-// Copyright (c) 2002-2016 Mirko Matytschak 
+// Copyright (c) 2002-2019 Mirko Matytschak 
 // (www.netdataobjects.de)
 //
 // Author: Mirko Matytschak
@@ -21,6 +21,7 @@
 
 
 using System;
+using SD = System.Diagnostics;
 using System.Xml;
 using System.Collections;
 using System.Collections.Generic;
@@ -28,51 +29,20 @@ using System.IO;
 using VSLangProj;
 using EnvDTE;
 using VsWebSite;
-
+using Microsoft.VisualStudio.Shell.Interop;
+using Microsoft.VisualStudio.Shell;
+using System.Linq;
 
 namespace NETDataObjects.NDOVSPackage
 {
 
 	/// <summary>
-	/// 
-	/// </summary>
-	internal class NDOReference
-	{
-		public string Name;
-		public string Path;
-		public bool CheckThisDLL;
-
-		public NDOReference( string name, string path, bool checkThisDLL )
-		{
-			this.Name = name;
-			this.Path = path;
-			this.CheckThisDLL = checkThisDLL;
-		}
-
-		public override bool Equals( object obj )
-		{
-			NDOReference ndoRef = obj as NDOReference;
-			if ( obj == null )
-				return false;
-
-			return ndoRef.Name == this.Name;
-		}
-
-		public override int GetHashCode()
-		{
-			return this.Name.GetHashCode();
-		}
-	}
-
-	/// <summary>
-	/// Zusammenfassung für ProjectDescription.
+	/// ProjectDescription.
 	/// </summary>
 	internal class ProjectDescription
 	{
-#if !STANDALONE
 		Solution solution = null;
 		Project project = null;
-#endif
 		Dictionary<string, NDOReference> references = null;
 		bool debug;
 		string binFile;
@@ -128,11 +98,7 @@ namespace NETDataObjects.NDOVSPackage
 
 		public ConfigurationOptions NewConfigurationOptions()
 		{
-#if !STANDALONE
 			return new ConfigurationOptions(project);
-#else
-			return new ConfigurationOptions();
-#endif
 		}
 
 		public ProjectDescription()
@@ -237,86 +203,120 @@ namespace NETDataObjects.NDOVSPackage
 			}
 		}
 
-#if !STANDALONE
+		string GetBuildProperty(IVsBuildPropertyStorage propertyStorage, string key, string configuration = "")
+		{
+			string result = null;
+			if (propertyStorage != null)
+				propertyStorage.GetPropertyValue( key, configuration, (uint)_PersistStorageType.PST_PROJECT_FILE, out result );
+			return result;
+		}
+
 		public ProjectDescription(Solution solution, Project project)
 		{
 			this.solution = solution;
 			this.project = project;
 
-			Configuration		 conf = project.ConfigurationManager.ActiveConfiguration;
+			Configuration conf = project.ConfigurationManager.ActiveConfiguration;
+			//foreach (Property item in conf.Properties)
+			//{
+			//	SD.Debug.WriteLine( $"{item.Name} = {item.Value}" );
+			//}
+
+			// Get the MSBuild property storage
+			IVsBuildPropertyStorage propertyStorage = GetPropertyStorage( project );
 
 			try
 			{
-				this.platformTarget = (string) conf.Properties.Item( "PlatformTarget" ).Value;
-				this.targetFramework = (string) project.Properties.Item( "TargetFrameworkMoniker" ).Value;
+				this.platformTarget = (string)conf.Properties.Item( "PlatformTarget" ).Value;
+			}
+			catch { }
+			try
+			{
+				this.targetFramework = (string)project.Properties.Item( "TargetFrameworkMoniker" ).Value;
 			}
 			catch { }
 
-            // Web Projects don't have an assembly name.
-            // Since NDO computes some information from the 
-            // binFile, we produce a dummy binFile name.
-            if (project.Kind == "{E24C65DC-7377-472b-9ABA-BC803B73C61A}")
-            {
-                this.isWebProject = true;
-                binFile = project.Name;
-                projPath = binFile;
-                if (binFile.EndsWith("\\"))
-                    binFile = binFile.Substring(0, binFile.Length - 1);
-                int p = binFile.LastIndexOf("\\");
-                string fileName = binFile;
-                if (p > -1)
-                {
-                    fileName = binFile.Substring(p + 1);
-                }
-                objPath = Path.Combine(binFile, "bin");
-                // Dummy file name
-                binFile = Path.Combine(objPath, fileName + ".dll");
-            }
-            else
-            {
-                string outputPath = (string)conf.Properties.Item("OutputPath").Value;
-                string fullPath = project.Properties.Item("FullPath").Value as string;
-                string outputFileName = project.Properties.Item("OutputFileName").Value as string;
-                debug = (bool)conf.Properties.Item("DebugSymbols").Value;
-                objPath = Path.Combine(fullPath, conf.Properties.Item("IntermediatePath").Value as string);
-                binFile = Path.Combine(fullPath, outputPath);
-                binFile = Path.Combine(binFile, outputFileName);
-                projPath = Path.GetDirectoryName(project.FileName) + "\\";
-                Property prop = null;
-                try 
-                {
-                    prop = project.Properties.Item("AssemblyOriginatorKeyFile");
-                }
-                catch {}
-                if (prop != null)
-                {
-                    keyFile = prop.Value.ToString();
-                }
-                else
-                {
-                    try
-                    {
-                        prop = project.Properties.Item("AssemblyKeyContainerName");
-                    }
-                    catch { }
-                    if (prop != null)
-                    {
-                        keyFile = "@" + prop.Value.ToString();
-                    }
-                }
-            }
-			if (!Directory.Exists(objPath))
-				objPath = Path.GetDirectoryName(binFile) + "\\";
-			//solutionPath			= solution.Properties.Item( "Path" ).Value as string;
-			//solutionPath			= Path.GetDirectoryName( solutionPath ) + "\\";			
-		}
-#endif
+			// Web Projects don't have an assembly name.
+			// Since NDO computes some information from the 
+			// binFile, we produce a dummy binFile name.
+			if (project.Kind == "{E24C65DC-7377-472b-9ABA-BC803B73C61A}")
+			{
+				this.isWebProject = true;
+				binFile = project.Name;
+				projPath = binFile;
+				if (binFile.EndsWith( "\\" ))
+					binFile = binFile.Substring( 0, binFile.Length - 1 );
+				int p = binFile.LastIndexOf( "\\" );
+				string fileName = binFile;
+				if (p > -1)
+				{
+					fileName = binFile.Substring( p + 1 );
+				}
+				objPath = Path.Combine( binFile, "bin" );
+				// Dummy file name
+				binFile = Path.Combine( objPath, fileName + ".dll" );
+			}
+			else
+			{
+				string outputPath = (string)conf.Properties.Item( "OutputPath" ).Value;
+				string fullPath = project.Properties.Item( "FullPath" ).Value as string;
+				string outputFileName = GetBuildProperty( propertyStorage, "TargetFileName" );
 
-		//		public string SolutionPath
-		//		{
-		//			get { return solutionPath; }
-		//			set { solutionPath = value; }
-		//		}
+				if (String.IsNullOrEmpty( outputFileName ))
+				{
+					int outputType = (int)project.Properties.Item( "OutputType" ).Value;
+					// .NET Core Executables are dlls.
+					if (this.targetFramework.StartsWith( ".NETCoreApp" ))
+						outputType = 2;
+					outputFileName = (string)project.Properties.Item( "AssemblyName" ).Value + (outputType == 2 ? ".dll" : ".exe");
+				}
+
+				if (GetVsHierarchy( project ).IsCapabilityMatch( "CPS" ))
+				{
+					// new .csproj format
+					objPath = GetBuildProperty( propertyStorage, "IntermediateOutputPath" );
+					string configuration = GetBuildProperty( propertyStorage, "Configuration" );
+					debug = configuration == "Debug";
+				}
+				else
+				{
+					// old .csproj format
+					string debugInfo = (string)conf.Properties.Item( "DebugInfo" ).Value;
+					debug = debugInfo == "full";
+					objPath = (string)conf.Properties.Item( "IntermediatePath" ).Value;
+				}
+				binFile = Path.Combine( fullPath, outputPath );
+				binFile = Path.Combine( binFile, outputFileName );
+				projPath = Path.GetDirectoryName( project.FileName ) + "\\";
+				string sign = GetBuildProperty( propertyStorage, "SignAssembly" );
+				if (!String.IsNullOrEmpty( sign ) && String.Compare( sign, "true", true ) == 0)
+					keyFile = GetBuildProperty( propertyStorage, "AssemblyOriginatorKeyFile" );
+				else
+					keyFile = null;
+			}
+		}
+
+		private static IVsHierarchy GetVsHierarchy(Project project)
+		{
+			IVsHierarchy projectHierarchy = null;
+
+			((IVsSolution)Package.GetGlobalService( typeof( IVsSolution ) )).GetProjectOfUniqueName( project.UniqueName, out projectHierarchy );
+			return projectHierarchy;
+		}
+
+		private static IVsBuildPropertyStorage GetPropertyStorage( Project project )
+		{
+			IVsHierarchy projectHierarchy = GetVsHierarchy(project);
+
+			IVsBuildPropertyStorage propertyStorage = null;
+
+			if (projectHierarchy != null)
+			{
+				propertyStorage = (IVsBuildPropertyStorage)projectHierarchy;
+			}
+
+			return propertyStorage;
+		}
 
 		public string ObjPath
 		{
@@ -344,15 +344,6 @@ namespace NETDataObjects.NDOVSPackage
 
 		private void AddReference( string name, string path, bool checkThisDLL )
 		{
-			if ( path.IndexOf( @"Microsoft.NET\Framework" ) > -1 )
-				return;
-			if ( path.IndexOf( @"Reference Assemblies\Microsoft" ) > -1 )
-				return;
-			if ( name.ToUpper() == "NDO" )
-				return;
-			if ( name.ToUpper() == "NDOInterfaces" )
-				return;
-
 			if ( !references.ContainsKey( name ) )
 				references.Add( name, new NDOReference( name, path, checkThisDLL ) );
 		}
@@ -398,12 +389,12 @@ namespace NETDataObjects.NDOVSPackage
         }
 
 
-		private void BuildReferences()
+		public void BuildReferences()
 		{
 			if (references != null)
 				return;
 			references = new Dictionary<string,NDOReference>();
-			Hashtable allProjects = new Hashtable();
+			Dictionary<string,string> allProjects = new Dictionary<string, string>();
 			foreach(Project p in new ProjectIterator(solution).Projects)
 			{
 				if (p.Name == project.Name) continue;
@@ -417,9 +408,9 @@ namespace NETDataObjects.NDOVSPackage
                 {
                     string outputPath = (string)conf.Properties.Item("OutputPath").Value;
                     string fullPath = (string)p.Properties.Item("FullPath").Value;
-                    string outputFileName = (string)p.Properties.Item("OutputFileName").Value;
-                    //messages.Output(fullPath + outputPath + outputFileName);
-                    if (!allProjects.Contains(p.Name))
+					string outputFileName = GetBuildProperty( GetPropertyStorage(p), "TargetFileName" );
+					//messages.Output(fullPath + outputPath + outputFileName);
+					if (!allProjects.ContainsKey(p.Name))
                         allProjects.Add(p.Name, fullPath + outputPath + outputFileName);
                 }
                 catch { }
@@ -436,7 +427,7 @@ namespace NETDataObjects.NDOVSPackage
                         if (referencedProject != null)
                         {
                             string rname = referencedProject.Name;
-                            if (allProjects.Contains(rname))
+                            if (allProjects.ContainsKey(rname))
                                 AddReference(ar.Name, (string)allProjects[rname], true);
                             else
                             {
@@ -466,13 +457,13 @@ namespace NETDataObjects.NDOVSPackage
                         rname = r.Name;
                     if (rname == project.Name) continue;
 
-                    if (allProjects.Contains(rname))
-                        AddReference(r.Name, (string)allProjects[rname], true);
+                    if (allProjects.ContainsKey(rname))
+                        AddReference(r.Name, (string)allProjects[rname], false);
                     else
                     {
                         // Referenzen, die auf keine gültige DLL verweisen...
-                        if (r.Path != "")
-                            AddReference(rname, r.Path, true);
+                        if (!String.IsNullOrEmpty(r.Path) && NDOAssemblyChecker.IsEnhanced(r.Path))
+                            AddReference(rname, r.Path, false);
                     }
                 }
             }
@@ -500,6 +491,27 @@ namespace NETDataObjects.NDOVSPackage
             return result;
         }
 
+		public void FixDllState()
+		{
+			// The package works with a transient version of the ProjectDescription, which will be saved 
+			// after a successful Build. But we need the CheckThisDLL state from the saved version for the UI.
+
+			var fileName = ConfigurationOptions.GetNdoProjFileName( project );
+
+			if (!String.IsNullOrEmpty( fileName ) && File.Exists( fileName ))
+			{
+				ProjectDescription storedDescription = new ProjectDescription( fileName );
+				var storedReferences = storedDescription.references.Values.ToArray();
+				foreach (var reference in this.references.Values)
+				{
+					var storedReference = storedReferences.FirstOrDefault( r => r.Name == reference.Name );
+					if (storedReference != null)
+					{
+						reference.CheckThisDLL = storedReference.CheckThisDLL;
+					}
+				}
+			}
+		}
 
 		public void AddFileToProject(string fileName)
 		{
@@ -534,13 +546,8 @@ namespace NETDataObjects.NDOVSPackage
 		{
 			get
 			{
-#if !STANDALONE
-					BuildReferences();
-#else
-					if (references == null)
-						references = new Dictionary<string,NDOReference>();
-#endif
-					return references;
+				BuildReferences();
+				return references;
 			}
 		}
 

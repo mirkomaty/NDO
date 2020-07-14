@@ -24,6 +24,7 @@ using System;
 using System.Text;
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 
 namespace CodeGenerator
 {
@@ -32,17 +33,23 @@ namespace CodeGenerator
 	/// </summary>
 	public class Class
 	{
+		string name;
+		Class baseClass;
+		bool isAbstract;
+		private readonly string nameSpace;
+
 		List<string> statements = new List<string>();
 		List<string> attributes = new List<string>();
 
-		public Class(bool isAbstract, string name, Class baseClass)
+		public Class(bool isAbstract, string nameSpace, string name, Class baseClass)
 		{
 			this.name = name;
             this.baseClass = baseClass;
 			this.isAbstract = isAbstract;
+			this.nameSpace = nameSpace;
 		}
 
-		public Class(string name) : this(false, name, null)
+		public Class(string nameSpace, string name) : this(false, nameSpace, name, null)
 		{
 		}
 
@@ -103,8 +110,11 @@ namespace CodeGenerator
 
 		protected virtual void GenerateFunctions(StringBuilder sb)
 		{
-			foreach(Function f in functions)
-				AddStringCollection(sb, f.Text);
+			foreach (Function f in functions)
+			{
+				if (f.Statements.Count > 0)
+				AddStringCollection( sb, f.Text );
+			}
 		}
 
         protected virtual void GenerateFields(StringBuilder sb)
@@ -118,7 +128,7 @@ namespace CodeGenerator
 			sb.Append("}\n\n");
 		}
 
-		public override string ToString()
+		public override string  ToString()
 		{
 			StringBuilder sb = new StringBuilder();
 			if (attributes.Count > 0)
@@ -138,20 +148,14 @@ namespace CodeGenerator
 			GenerateProperties(sb);
 			GenerateFunctions(sb);
 			GenerateFooter(sb);
-			return sb.ToString ();
+			return sb.ToString();
 		}
 
-		string name;
-		public string Name
-		{
-			get { return name; }
-		}
-		Class baseClass;
-        //public string BaseName
-        //{
-        //    get { return baseName; }
-        //}
-		bool isAbstract;
+		public string Name => name;
+
+		public string FullName => nameSpace + '.' + name;
+
+
 		public bool IsAbstract
 		{
 			get { return isAbstract; }
@@ -215,6 +219,10 @@ namespace CodeGenerator
 			this.properties.Add(new Property(type, varName, true, true));
 		}
 
+		public void AddField(string type, string varName)
+		{
+			this.fields.Add( new Field( type, varName ) );
+		}
 
 	}
 }

@@ -41,15 +41,28 @@ namespace NDO
 	/// </remarks>
 	public class OfflinePersistenceManager : PersistenceManager
 	{
-		private List<RelationChangeRecord> relationChanges = new List<RelationChangeRecord>();
+        /// <summary>
+        /// Constructs an OfflinePersistenceManager object
+        /// </summary>
 		public OfflinePersistenceManager() : base ()
 		{
 		}
 
+        /// <summary>
+        /// Constructs an OfflinePersistenceManager object
+        /// </summary>
+        /// <param name="mappingFile"></param>
 		public OfflinePersistenceManager(string mappingFile) : base(mappingFile)
 		{
 		}
 
+        /// <summary>
+        /// Constructs an OfflinePersistenceManager object
+        /// </summary>
+        /// <param name="mapping"></param>
+		public OfflinePersistenceManager(NDOMapping mapping) : base(mapping)
+		{
+		}
 
 		#region IPersistenceManager Member
 
@@ -59,22 +72,27 @@ namespace NDO
 		/// </summary>
 		/// <param name="t">Type of the objects, which are searched for.</param>
 		/// <returns></returns>
-		public override System.Collections.IList GetClassExtent( Type t )
+		public override System.Collections.IList GetClassExtent(Type t)
 		{
-			ArrayList result = new ArrayList();
-			foreach (Cache.Entry ce in cache.LockedObjects)
+			var result = new List<IPersistenceCapable>();
+			foreach(var ce in cache.LockedObjects)
 			{
 				if (t == ce.pc.GetType())
-					result.Add( ce.pc );
+					result.Add(ce.pc);
 			}
-			foreach (object o in cache.UnlockedObjects)
+			foreach(var o in cache.UnlockedObjects)
 			{
 				if (t == o.GetType())
-					result.Add( o );
+					result.Add(o);
 			}
 			return result;
 		}
 
+
+        /// <summary>
+        /// Merges objects from an ObjectContainer into the Opm cache
+        /// </summary>
+        /// <param name="oc"></param>
 		public void MergeObjectContainer(ObjectContainer oc)
 		{
 			OfflineMergeIterator omi = new OfflineMergeIterator(this.sm, this.cache);
@@ -84,26 +102,13 @@ namespace NDO
 			}
 		}
 
-		internal override void AddRelatedObject(IPersistenceCapable pc, string fieldName, IPersistenceCapable relObj)
-		{
-			base.AddRelatedObject(pc, fieldName, relObj);
-			this.relationChanges.Add(new RelationChangeRecord(pc, relObj, fieldName, true));
-		}
-
-		internal override void RemoveRelatedObject(IPersistenceCapable pc, string fieldName, IPersistenceCapable relObj)
-		{
-			if (pc.NDOObjectState == NDOObjectState.Persistent)
-				MarkDirty(pc);
-			this.relationChanges.Add(new RelationChangeRecord(pc, relObj, fieldName, false));
-		}
-
 		ChangeSetContainer CreateChangeSet(bool acceptChanges)
 		{
 			ChangeSetContainer csc = new ChangeSetContainer();
 			var addedObjects = new List<IPersistenceCapable>();
 			var deletedObjects = new List<ObjectId>();
 			var changedObjects = new List<IPersistenceCapable>();
-			foreach(Cache.Entry cacheEntry in cache.LockedObjects)
+			foreach(var cacheEntry in cache.LockedObjects)
 			{
 				IPersistenceCapable pc = cacheEntry.pc;
 				if (pc.NDOObjectState == NDOObjectState.Created)
@@ -125,42 +130,45 @@ namespace NDO
 						pc.NDOObjectState = NDOObjectState.Persistent;
 				}
 			}
-			csc.RelationChanges = this.relationChanges.ToList();
+			csc.RelationChanges = RelationChanges.ToList();
 			csc.ChangedObjects = changedObjects;
 			csc.AddedObjects = addedObjects;
 			csc.DeletedObjects = deletedObjects;
 			if (acceptChanges)
 			{
 				cache.UnlockAll();
-				this.relationChanges.Clear();
+				RelationChanges.Clear();
 			}
 			return csc;
-		}
+		}      
 
-		protected override void InternalRemoveRelatedObject(IPersistenceCapable pc, NDO.Mapping.Relation r, IPersistenceCapable child, bool calledFromStateManager)
-		{
-			int delCount = cache.LockedObjects.Count;
-			NDOObjectState oldState = child.NDOObjectState;
-			base.InternalRemoveRelatedObject (pc, r, child, calledFromStateManager);
-			if (r.Composition && cache.LockedObjects.Count > delCount)
-			{
-				cache.Unlock(child);
-				child.NDOObjectState = oldState;
-			}
-		}
+  //      /// <inheritdoc/> 
+  //      protected override void InternalRemoveRelatedObject(IPersistenceCapable pc, NDO.Mapping.Relation r, IPersistenceCapable child, bool calledFromStateManager)
+		//{
+		//	int delCount = cache.LockedObjects.Count;
+		//	NDOObjectState oldState = child.NDOObjectState;
+		//	base.InternalRemoveRelatedObject (pc, r, child, calledFromStateManager);
+
+  //          if (r.Composition && cache.LockedObjects.Count > delCount)
+		//	{
+		//		cache.Unlock(child);
+		//		child.NDOObjectState = oldState;
+		//	}
+  //      }
 
 
-		/// <summary>
-		/// Determines, if any objects are new, changed or deleted.
-		/// </summary>
-		public override bool HasChanges
+        /// <summary>
+        /// Determines, if any objects are new, changed or deleted.
+        /// </summary>
+        public override bool HasChanges
 		{
 			get 
 			{
-				return cache.LockedObjects.Count > 0 || this.relationChanges.Count > 0;
+				return cache.LockedObjects.Count > 0 || RelationChanges.Count > 0;
 			}
 		}
 
+        /// <inheritdoc/> 
 		protected override void WriteLostForeignKeysToRow(NDO.Mapping.Class cl, IPersistenceCapable pc, DataRow row)
 		{
 			// We simply don't write the keys.

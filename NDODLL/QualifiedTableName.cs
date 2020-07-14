@@ -23,28 +23,52 @@
 using System;
 using System.Text;
 using NDOInterfaces;
+using NDO.Mapping;
 
 namespace NDO
 {
 	/// <summary>
 	/// Summary description for QualifiedTableName.
 	/// </summary>
-	internal class QualifiedTableName
+	internal static class QualifiedTableName
 	{
-		public static string Get(string name, IProvider p)
+		public static string GetQualifiedTableName( this Class cls)
 		{
-			if (name.IndexOf('.') == -1)
-				return p.GetQuotedName(name);
-			string[] strarr = name.Split('.');
+			return GetQualifiedTableName( cls.Provider, cls.TableName);
+		}
+
+		public static string GetQualifiedTableName( this MappingTable mappingTable)
+		{
+			return mappingTable.Parent.Parent.Provider.GetQualifiedTableName( mappingTable.TableName );
+		}
+
+		public static string GetQualifiedTableName(this IProvider p, string name)
+		{
+			if (name.IndexOf( '.' ) == -1)
+				return p.GetQuotedName( name );
+			string[] strarr = name.Split( '.' );
 			StringBuilder sb = new StringBuilder();
 
-			foreach(string n in strarr)
+			foreach (string n in strarr)
 			{
-				sb.Append(p.GetQuotedName(n));
-				sb.Append('.');
+				sb.Append( p.GetQuotedName( n ) );
+				sb.Append( '.' );
 			}
 			sb.Length--;
 			return sb.ToString();
+		}
+
+		public static string GetQualifiedName( this Column col )
+		{
+			var cls = (Class)col.NodeParent.NodeParent;
+			var provider = cls.Provider;
+			return $"{provider.GetQuotedName( cls.TableName )}.{provider.GetQuotedName( col.Name )}";
+		}
+
+		public static string GetQualifiedName( this ForeignKeyColumn col, Class relClass )
+		{
+			var provider = relClass.Provider;
+			return $"{provider.GetQuotedName( relClass.TableName )}.{provider.GetQuotedName( col.Name )}";
 		}
 	}
 }

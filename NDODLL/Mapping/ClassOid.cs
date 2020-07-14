@@ -70,17 +70,15 @@ namespace NDO.Mapping
             if (columnAttributes == null)  // No attrs defined
                 return;
 
+			// If there are no differences between attributes and mappings, 
+			// return
             bool remap = false;
             if (columnAttributes.Length == this.oidColumns.Count)
             {
                 for (int i = 0; i < columnAttributes.Length; i++)
                 {
                     OidColumn oidColumn = (OidColumn)this.oidColumns[i];
-                    if (!columnAttributes[i].MatchesOidColumn(oidColumn))
-                    {
-                        remap = true;
-                        break;
-                    }
+					columnAttributes[i].RemapColumn( oidColumn );
                 }
             }
             else
@@ -117,10 +115,12 @@ namespace NDO.Mapping
             return null;
         }
 
-
+        /// <summary>
+        /// Gets the parent object
+        /// </summary>
         public Class Parent
         {
-            get { return base.nodeParent as Class; }
+            get { return base.NodeParent as Class; }
         }
 
 

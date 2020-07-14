@@ -1,5 +1,5 @@
 ﻿//
-// Copyright (c) 2002-2016 Mirko Matytschak 
+// Copyright (c) 2002-2019 Mirko Matytschak 
 // (www.netdataobjects.de)
 //
 // Author: Mirko Matytschak
@@ -27,7 +27,6 @@ using System.Text;
 using System.Collections;
 using NDOInterfaces;
 using NDO;
-using System.Windows.Forms;
 
 namespace NDOInterfaces
 {
@@ -211,17 +210,10 @@ namespace NDOInterfaces
 		/// <summary>
 		/// See <see cref="IProvider">IProvider interface</see>.
 		/// </summary>
-#if NDO20
         public virtual string GetLastInsertedId(string tableName, string columnName)
 		{
 			return null;
 		}
-#else
-        public virtual string GetLastInsertedId
-        {
-            get { return null; }
-        }
-#endif
 
         /// <summary>
 		/// See <see cref="IProvider">IProvider interface</see>.
@@ -368,40 +360,17 @@ namespace NDOInterfaces
 		/// <summary>
 		/// See <see cref="IProvider">IProvider interface</see>.
 		/// </summary>
-		public virtual DialogResult ShowConnectionDialog(ref string connectionString)
+		public virtual string CreateDatabase(string databaseName, string connectionString, object additionalData = null)
 		{
-			GenericConnectionDialog dlg = new GenericConnectionDialog(connectionString);			
-			DialogResult result = dlg.ShowDialog();			
-			if (result != DialogResult.Cancel)
-				connectionString = dlg.ConnectionString;
-			return result;
-		}
+			if (databaseName == null)
+				throw new ArgumentException( nameof( databaseName ) );
+			if (connectionString == null)
+				throw new ArgumentException( nameof( connectionString ) );
 
-
-		/// <summary>
-		/// See <see cref="IProvider">IProvider interface</see>.
-		/// </summary>
-		public virtual DialogResult ShowCreateDbDialog(ref object necessaryData)
-		{
-			DefaultCreateDbDialog dlg = new DefaultCreateDbDialog(this, necessaryData as NDOCreateDbParameter);
-			DialogResult result = dlg.ShowDialog();
-			if (result != DialogResult.Cancel)
-				necessaryData = dlg.NecessaryData;
-			return result;
-		}
-
-		/// <summary>
-		/// See <see cref="IProvider">IProvider interface</see>.
-		/// </summary>
-		public virtual string CreateDatabase(object necessaryData)
-		{
-			NDOCreateDbParameter par = necessaryData as NDOCreateDbParameter;
-			if (par == null)
-				throw new ArgumentException("NDOAbstractProvider: parameter type " + necessaryData.GetType().FullName + " is wrong.", "necessaryData");
-			string dbName = this.GetQuotedName(par.DatabaseName);
+			string dbName = this.GetQuotedName(databaseName);
 			try
 			{
-				IDbConnection conn = this.NewConnection(par.Connection);
+				IDbConnection conn = this.NewConnection(connectionString);
 				IDbCommand cmd = this.NewSqlCommand(conn);
 				cmd.CommandText = "CREATE DATABASE " + dbName;
 				bool wasOpen = true;
@@ -418,6 +387,7 @@ namespace NDOInterfaces
 			{
 				throw new NDOException(19, "Error while attempting to create a database: Exception Type: " + ex.GetType().Name + " Message: " + ex.Message);
 			}
+
 			return string.Empty;
 		}
 
@@ -440,5 +410,18 @@ namespace NDOInterfaces
 			return t;
         }
 
+		/// <summary>
+		/// Gets the string representation of the provider specific parameter type.
+		/// </summary>
+		/// <param name="parameter">An IDbDataParameter implementation.</param>
+		/// <returns>The string Representation of the parameter.</returns>
+		/// <remarks>
+		/// Each ADO.NET implementation uses it's own parameter types, e.g. SqlDbType for SqlParameter. 
+		/// We need the names of this parameters to support the Loggin.
+		/// </remarks>
+		public virtual string GetDbTypeString( IDbDataParameter parameter )
+		{
+			return parameter.DbType.ToString();
+		}
 	}
 }

@@ -1,0 +1,31 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFrameworks>net452;netstandard2.0</TargetFrameworks>
+    <Version>4.0.1</Version>
+    <Authors>Mirko Matytschak</Authors>
+    <Company>Mirko Matytschak</Company>
+    <Product>.NET Data Objects (NDO)</Product>
+    <Copyright>Copyright (c) 2002-2020 Mirko Matytschak, Velden, Germany</Copyright>
+    <!--PackageLicenseUrl>https://opensource.org/licenses/MIT</PackageLicenseUrl-->
+    <PackageLicense>MIT</PackageLicense>
+    <PackageProjectUrl>https://www.netdataobjects.de</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/mirkomaty/NDO</RepositoryUrl>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <PackageId>ndo.oracle</PackageId>
+    <PackageReleaseNotes>Support of CLOBs</PackageReleaseNotes>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="NDOInterfaces" Version="4.0.1" />
+  </ItemGroup>
+
+  <ItemGroup Condition="'$(TargetFramework)'=='net452'">
+    <PackageReference Include="Oracle.ManagedDataAccess" Version="18.3.0" />
+  </ItemGroup>
+
+  <ItemGroup Condition="'$(TargetFramework)'=='netstandard2.0'">
+    <PackageReference Include="Oracle.ManagedDataAccess.Core" Version="2.18.3" />
+  </ItemGroup>
+ 
+</Project>

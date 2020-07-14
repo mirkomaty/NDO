@@ -34,11 +34,11 @@ namespace EnhancerTest
 	public class EnhancerTest
 	{
 	
-        bool verboseMode;
+        static bool verboseMode;
 
         void CopyFile(string source, string dest)
         {
-            if (this.verboseMode)
+            if (verboseMode)
 			    Console.WriteLine("Copying: " + source + "->" + dest);
 
             File.Copy(source, dest, true);
@@ -59,7 +59,7 @@ namespace EnhancerTest
 			if (!options.EnableAddIn)
 				return 0;
 
-			this.verboseMode = options.VerboseMode;
+			verboseMode = options.VerboseMode;
 			string appDomainDir = Path.GetDirectoryName(pd.BinFile);
 			AppDomain cd = AppDomain.CurrentDomain;
 			AppDomain ad = AppDomain.CreateDomain("NDOEnhancerDomain", cd.Evidence, appDomainDir, "", false);
@@ -109,6 +109,7 @@ namespace EnhancerTest
 
 		public void InternalStart(string arg)
 		{
+			Console.WriteLine("Runtime: " + typeof(string).Assembly.FullName);
 			ProjectDescription pd;
 			ConfigurationOptions options;
 
@@ -128,12 +129,12 @@ namespace EnhancerTest
 #if DEBUG
             Console.WriteLine("Loading Project Description ready.");
 
-			this.verboseMode = true;
+			verboseMode = true;
 #else
-            this.verboseMode = options.VerboseMode;
+            verboseMode = options.VerboseMode;
 
             // In Debug Mode the base directory is printed in the Main method
-            if (this.verboseMode)
+            if (verboseMode)
                 Console.WriteLine("Domain base directory is: " + AppDomain.CurrentDomain.BaseDirectory);
 #endif
 			Console.WriteLine( EnhDate.String, "NDO Enhancer", new AssemblyName( GetType().Assembly.FullName ).Version.ToString() );
@@ -197,23 +198,33 @@ namespace EnhancerTest
 
         static Assembly OnAssemblyResolve(object sender, ResolveEventArgs args)
         {
-            if (args.Name.ToUpper().StartsWith("NDO,"))
+			if (verboseMode)
+			Console.WriteLine($"AssemblyResolve: {args.Name}");
+			string path = Path.GetDirectoryName( Assembly.GetExecutingAssembly().Location );
+			Console.WriteLine("Location: " + path);
+			if (args.Name.StartsWith("NDO,", StringComparison.InvariantCultureIgnoreCase))
             {
-                string path = AppDomain.CurrentDomain.BaseDirectory;
                 string fileName = Path.Combine(path, "NDO.dll");
-                if (File.Exists(fileName))
-                    return Assembly.LoadFrom(fileName);
+				if (verboseMode)
+					Console.WriteLine( $"  -> {fileName}" );
+				if (File.Exists( fileName ))
+				{
+					return Assembly.LoadFrom( fileName );
+				}
                 return null;
             }
-			if (args.Name.ToUpper().StartsWith( "NDOInterfaces," ))
+			if (args.Name.StartsWith( "NDOInterfaces,", StringComparison.InvariantCultureIgnoreCase ))
 			{
-				string path = AppDomain.CurrentDomain.BaseDirectory;
 				string fileName = Path.Combine( path, "NDOInterfaces.dll" );
 				if (File.Exists( fileName ))
+				{
+					if (verboseMode)
+						Console.WriteLine( $"  -> {fileName}" );
 					return Assembly.LoadFrom( fileName );
+				}
 				return null;
 			}
-            Console.WriteLine("Warning: Can't resolve assembly: " + args.Name);
+			Console.WriteLine("Warning: Can't resolve assembly: " + args.Name);
             return null;
         }
 

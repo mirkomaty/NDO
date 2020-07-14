@@ -32,7 +32,7 @@ namespace TestGenerator
 	/// </summary>
 	public class PersistentClass : Class
 	{
-		public PersistentClass(bool isAbstract, string name, Class baseClass) : base (isAbstract, name, baseClass)
+		public PersistentClass(bool isAbstract, string nameSpace, string name, Class baseClass) : base (isAbstract, nameSpace, name, baseClass)
 		{			
 			this.Attributes.Add("NDOPersistent");
 		}

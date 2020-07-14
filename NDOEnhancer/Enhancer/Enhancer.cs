@@ -136,22 +136,22 @@ namespace NDOEnhancer
 
         void CheckNDO(Assembly ass)
         {
-            AssemblyName[] references = ass.GetReferencedAssemblies();
-            NDOAssemblyName refAn = null;
-            foreach (AssemblyName an in references)
-            {
-                if (an.Name == "NDO")
-                    refAn = new NDOAssemblyName(an.FullName);
-			}
-            if (refAn == null)
-                return;
-            NDOAssemblyName ndoAn = new NDOAssemblyName(typeof(NDOPersistentAttribute).Assembly.FullName);  // give us the NDO version the enhancer belongs to
-			Version refVersion = refAn.AssemblyVersion;
-			bool isRightVersion = refVersion.Major > 2 || refVersion.Major == 2 && refVersion.Minor >= 1;
-            if (refAn.PublicKeyToken != ndoAn.PublicKeyToken || !isRightVersion)
-            {
-                throw new Exception("Assembly " + ass.FullName + " references a wrong NDO.dll. Expected: " + ndoAn.FullName + ". Found: " + refAn.FullName + ".");
-            }
+   //         AssemblyName[] references = ass.GetReferencedAssemblies();
+   //         NDOAssemblyName refAn = null;
+   //         foreach (AssemblyName an in references)
+   //         {
+   //             if (an.Name == "NDO")
+   //                 refAn = new NDOAssemblyName(an.FullName);
+			//}
+   //         if (refAn == null)
+   //             return;
+   //         NDOAssemblyName ndoAn = new NDOAssemblyName(typeof(NDOPersistentAttribute).Assembly.FullName);  // give us the NDO version the enhancer belongs to
+			//Version refVersion = refAn.AssemblyVersion;
+			//bool isRightVersion = refVersion.Major > 2 || refVersion.Major == 2 && refVersion.Minor >= 1;
+   //         if (refAn.PublicKeyToken != ndoAn.PublicKeyToken || !isRightVersion)
+   //         {
+   //             throw new Exception("Assembly " + ass.FullName + " references a wrong NDO.dll. Expected: " + ndoAn.FullName + ". Found: " + refAn.FullName + ".");
+   //         }   
         }
 
 
@@ -160,18 +160,18 @@ namespace NDOEnhancer
 		{
 			Dictionary<string, NDOReference> references = projectDescription.References;
 			ArrayList ownClassList = null;
-			AssemblyName binaryAssemblyName = null;
+			string binaryAssemblyFullName = null;
 
             if (!projectDescription.IsWebProject)
             {
                 // Check, if we can load the project bin file.
                 try
                 {
-                    binaryAssemblyName = AssemblyName.GetAssemblyName(projectDescription.BinFile);
+                    binaryAssemblyFullName = NDOAssemblyChecker.GetAssemblyName(this.binFile);
                 }
                 catch (Exception ex)
                 {
-                    throw new Exception("Can't load referenced Assembly '" + projectDescription.BinFile + ". " + ex.Message);
+                    throw new Exception("Can't load referenced Assembly '" + this.binFile + ". " + ex.Message);
                 }
             }
 
@@ -182,10 +182,9 @@ namespace NDOEnhancer
 					continue;
 
 				string dllPath = reference.Path;
-				if (dllPath.IndexOf(@"Microsoft.NET\Framework") != -1
-                    || dllPath.IndexOf(@"Reference Assemblies\Microsoft") != -1
-					|| String.Compare(Path.GetFileName(dllPath), "NDO.dll") == 0
-                    || String.Compare(Path.GetFileName(dllPath), "NDOInterfaces.dll") == 0)
+				bool ownAssembly = (string.Compare( dllPath, this.binFile, true ) == 0);
+
+				if (!ownAssembly && !NDOAssemblyChecker.IsEnhanced( dllPath ))
 					continue;
 
 				AssemblyName assToLoad = null;
@@ -193,15 +192,11 @@ namespace NDOEnhancer
 				try
 				{
                     assToLoad = AssemblyName.GetAssemblyName(dllPath);
-                    NDOAssemblyName ndoAn = new NDOAssemblyName(assToLoad.FullName);
-                    // Don't need to analyze Microsofts assemblies.
-                    if (ndoAn.PublicKeyToken == "b03f5f7f11d50a3a" || ndoAn.PublicKeyToken == "b77a5c561934e089")
-                        continue;
                     ass = Assembly.Load(assToLoad);
                 }
 				catch (Exception ex)
 				{
-					if (assToLoad != null && (binaryAssemblyName == null || string.Compare(binaryAssemblyName.FullName, assToLoad.FullName, true) != 0))
+					if (assToLoad != null && (binaryAssemblyFullName == null || string.Compare(binaryAssemblyFullName, assToLoad.FullName, true) != 0))
 					{
 						// Not bin file - enhancer may work, if assembly doesn't contain
 						// persistent classes.
@@ -227,10 +222,10 @@ namespace NDOEnhancer
                     messages.WriteLine("Checking DLL: " + dllPath);
                     messages.WriteLine("BinFile: " + binFile);
                 }
-				bool ownAssembly = (string.Compare(dllPath, binFile, true) == 0);
+
 				AssemblyNode assemblyNode = null;
                 CheckNDO(ass);
-				//############## searcher neu #####################
+
 				try
 				{
 					assemblyNode = new AssemblyNode(ass, this.mappings);
@@ -242,13 +237,18 @@ namespace NDOEnhancer
                     else
 				    	messages.ShowError("Error while reflecting types of assembly " + dllPath + ". " + ex.Message);
 				}
+
 				if (ownAssembly)
 				{
 					ownClassList = assemblyNode.PersistentClasses;
 					this.isEnhanced = assemblyNode.IsEnhanced;
 					this.oidTypeName = assemblyNode.OidTypeName;
 					this.ownAssemblyName = assName;
+					Corlib.FxType = assemblyNode.TargetFramework == ".NETStandard,Version=v2.0" ? FxType.Standard2 : FxType.NetFx;
+					if (this.verboseMode)
+						messages.WriteLine( $"FxType: {ownAssemblyName}: {Corlib.FxType}" );
 				}
+
 				ArrayList classList = assemblyNode.PersistentClasses;
 				foreach(ClassNode classNode in classList)
 				{
@@ -328,7 +328,7 @@ namespace NDOEnhancer
                     continue;
                 }
                 ClassOid oid = cl.Oid;
-                if (oid.OidColumns.Count == 0)
+                if (oid.OidColumns.Count == 0 && !classNode.ColumnAttributes.Any())
                 {
                     OidColumn oidColumn = oid.NewOidColumn();
                     oidColumn.Name = "ID";
@@ -337,10 +337,7 @@ namespace NDOEnhancer
                 // Check, if the oid columns match the OidColumnAttributes, if any of them exist
                 // In case of NDOOidType the ClassNode constructor creates an OidColumnAttribute
 
-                // We decided, not to remap oid's since explicit entries for a certain class in the
-                // mapping file would be overwritten by assembly-wide attribute declarations.
-
-                // oid.RemapOidColumns(classNode.ColumnAttributes);
+                oid.RemapOidColumns(classNode.ColumnAttributes);
 
                 bool noNameError = false;
 
@@ -1055,8 +1052,12 @@ namespace NDOEnhancer
 
 		public void
 		mergeMappingFile(string absDllPath, ArrayList classList)
-		{			
-			string mapFileName = Path.Combine(Path.GetDirectoryName(absDllPath), "NDOMapping.xml");
+		{
+			var dir = Path.GetDirectoryName(absDllPath);
+			var mapFileName = Path.Combine(dir, Path.GetFileNameWithoutExtension(absDllPath) + ".ndo.mapping");
+			if (!File.Exists( mapFileName )) 
+				mapFileName = Path.Combine(dir, "NDOMapping.xml");
+
 			if (classList.Count > 0 && !File.Exists(mapFileName))
 			{
 				messages.WriteLine("Mapping file for assembly " + absDllPath + " not found.");
@@ -1256,7 +1257,7 @@ namespace NDOEnhancer
 			// will be merged here
 			searchPersistentBases();
 			bool doEnhance = options.EnableEnhancer && !this.isEnhanced;
-#if DEBUG
+#if xDEBUG
 			doEnhance = options.EnableEnhancer;
 #endif
             if (this.verboseMode)
@@ -1333,7 +1334,7 @@ namespace NDOEnhancer
 					messages.WriteLine( "Generating Binary" );
 					
 				// Hier wird der enhanced Elementbaum als IL-Datei geschrieben
-				ilfile.write( ilEnhFile );
+				ilfile.write( ilEnhFile, Corlib.FxType == FxType.Standard2 );
 
 				// ILAsm assembliert das Ganze
 				reassemble();

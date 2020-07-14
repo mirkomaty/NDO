@@ -57,8 +57,10 @@ namespace NDOEnhancer
 			
 			this.fieldType = isProperty ? ((PropertyInfo)mi).PropertyType : ((FieldInfo)mi).FieldType;
 			this.name = mi.Name;
+#pragma warning disable 0618
 			if (!isProperty)
 				this.isOid = mi.GetCustomAttributes(typeof(NDOObjectIdAttribute), false).Length > 0;
+#pragma warning restore 0618
 			this.dataType = new ReflectedType(this.fieldType).ILName;
 			if (!isProperty)
 			{

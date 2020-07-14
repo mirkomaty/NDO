@@ -19,6 +19,7 @@
 // CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER 
 // DEALINGS IN THE SOFTWARE.
 
+#pragma warning disable 1591 // No XML comments needed
 
 using System;
 using System.Threading;
@@ -58,7 +59,14 @@ namespace NDO
 		}
 
 
-
+		/// <summary>
+		/// Registers a child object
+		/// </summary>
+		/// <param name="parent"></param>
+		/// <param name="container"></param>
+		/// <param name="table"></param>
+		/// <param name="field"></param>
+		/// <returns></returns>
 		public static object RegisterContainer (object parent, object container, Hashtable table, string field)
 		{
 			IPersistenceCapable pc = parent as IPersistenceCapable;
@@ -148,8 +156,6 @@ exit:
                 ((IList)container).Insert(index, temp[i]);
 		}
 
-
-#if !NET11
         public static int RemoveAll(object container, Delegate pred, Hashtable table)
         {
 			if (container == null)
@@ -195,7 +201,6 @@ exit:
 
             return toDelete.Count;
         }
-#endif
 
 
         public static void SetRange(object container, int index, ICollection coll, Hashtable table)
@@ -407,26 +412,5 @@ exit:
 			exit:
 				((IList)container).Clear();			
 		}
-
-		// Maintaining old function names out of compatibility reasons.
-#if NDO11
-		public static int AddRelatedObject(object container, object element, Hashtable table)
-		{
-			return Add(container, element, table);
-		}
-		public static void RemoveRelatedObject(object container, object element, Hashtable table)
-		{
-			Remove(container, element, table);
-		}
-		public static void RemoveRelatedObjectAt(object container, int index, Hashtable table)
-		{
-			RemoveAt(container, index, table);
-		}
-		public static void RemoveRange(object container, Hashtable table)
-		{
-			Clear(container, table);
-		}
-#endif
-
 	}
 }

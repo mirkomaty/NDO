@@ -86,6 +86,7 @@ namespace NDO
 
 		#region ICloneable Member
 
+        ///<inheritdoc/>
 		public new object Clone()
 		{
 			return base.Clone();

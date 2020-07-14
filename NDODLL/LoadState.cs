@@ -36,7 +36,14 @@ namespace NDO
 		BitArray relationLoadState;
 		[NonSerialized]
 		IList lostRowInfo;
+		// We implement the field load state as an internal field instead of an array
+		// for faster access. There is a lot of code using this array.
+		[NonSerialized]
+		internal BitArray FieldLoadState;
 
+		/// <summary>
+		/// Max size of the relation count
+		/// </summary>
 		public const int RelationLoadStateSize = 64;
 
 		/// <summary>
@@ -66,23 +73,32 @@ namespace NDO
 			lostRowInfo = null;
 		}
 
-        public void ReplaceRowInfos(Relation r, Key key)
+		/// <summary>
+		/// Internal helper Method
+		/// </summary>
+		/// <param name="r"></param>
+		/// <param name="key"></param>
+		public void ReplaceRowInfos(Relation r, Key key)
         {
             int i = 0;
             foreach (ForeignKeyColumn fkColumn in r.ForeignKeyColumns)
             {
                 ReplaceRowInfo(fkColumn.Name, key[i]);
             }
-#if PRO
-            if (r.ForeignKeyTypeColumnName != null)
+
+			if (r.ForeignKeyTypeColumnName != null)
             {
                 ReplaceRowInfo(r.ForeignKeyTypeColumnName, key.TypeId);
             }
-#endif
         }
 
-
-        public bool LostRowsEqualsOid(Key oidKey, Relation r)
+		/// <summary>
+		/// Internal helper Method
+		/// </summary>
+		/// <param name="oidKey"></param>
+		/// <param name="r"></param>
+		/// <returns></returns>
+		public bool LostRowsEqualsOid(Key oidKey, Relation r)
         {
             int i = 0;
             bool result = true;
@@ -107,6 +123,11 @@ namespace NDO
             return result;
         }
 
+		/// <summary>
+		/// Internal helper Method
+		/// </summary>
+		/// <param name="key"></param>
+		/// <param name="value"></param>
 		public void ReplaceRowInfo(string key, object value)
 		{
 

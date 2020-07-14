@@ -34,7 +34,7 @@ namespace NDO
 	/// </summary>
 	internal class NDOMappingTableHandler : IMappingTableHandler
 	{
-		private Relation r;
+		private Relation relation;
 		private IDbCommand selectCommand;
 		private IDbCommand insertCommand;
 		//private IDbCommand updateCommand;
@@ -42,7 +42,6 @@ namespace NDO
 		private IDbConnection connection;
 		private DbDataAdapter dataAdapter;
 		private IProvider provider;
-		private DataSet ds;
 		private bool verboseMode;
 		private ILogAdapter logAdapter;
 
@@ -51,9 +50,8 @@ namespace NDO
 			return provider.UseNamedParams ? provider.GetNamedParameter(name) : "?";
 		}
 
-		public void Initialize(NDOMapping mappings, Relation r, DataSet ds)
+		public void Initialize(NDOMapping mappings, Relation r)
 		{
-			this.ds = ds;
 			Connection con = mappings.FindConnection(r.MappingTable.ConnectionId);
 			this.provider = mappings.GetProvider(con);
 
@@ -66,12 +64,12 @@ namespace NDO
 			insertCommand = provider.NewSqlCommand(connection);
 			deleteCommand = provider.NewSqlCommand(connection);
 			dataAdapter = provider.NewDataAdapter(selectCommand, null, insertCommand, deleteCommand);
-			this.r = r;
+			this.relation = r;
 
 			//
 			// select
 			//
-			string sql = string.Format("SELECT * FROM {0} WHERE ", QualifiedTableName.Get(r.MappingTable.TableName, provider));
+			string sql = string.Format("SELECT * FROM {0} WHERE ", provider.GetQualifiedTableName(r.MappingTable.TableName));
 			selectCommand.CommandText = sql;
 
 			//
@@ -128,7 +126,7 @@ namespace NDO
 				namedParameters += ", " + GetParameter(provider, r.MappingTable.ChildForeignKeyTypeColumnName);
                 provider.AddParameter(insertCommand, provider.GetNamedParameter(r.MappingTable.ChildForeignKeyTypeColumnName), provider.GetDbType(typeof(int)), provider.GetDefaultLength(typeof(int)), r.MappingTable.ChildForeignKeyTypeColumnName);
             }
-			insertCommand.CommandText = string.Format(sql, QualifiedTableName.Get(r.MappingTable.TableName, provider), columns, namedParameters);
+			insertCommand.CommandText = string.Format(sql, provider.GetQualifiedTableName(r.MappingTable.TableName), columns, namedParameters);
 
 			Class relatedClass = mappings.FindClass(r.ReferencedTypeName);
 
@@ -153,7 +151,7 @@ namespace NDO
                     provider.AddParameter(deleteCommand, provider.GetNamedParameter("Original_" + fkColumn.Name), provider.GetDbType(fkColumn.SystemType), fkColumn.Size, System.Data.ParameterDirection.Input, false, ((System.Byte)(0)), ((System.Byte)(0)), fkColumn.Name, System.Data.DataRowVersion.Original, null);
                 }
             );
-#if PRO
+
 			if (r.ForeignKeyTypeColumnName != null) 
             {
 				where += " AND " + provider.GetQuotedName(r.ForeignKeyTypeColumnName) + " = " + GetParameter(provider, "Original_" + r.ForeignKeyTypeColumnName);
@@ -164,9 +162,8 @@ namespace NDO
 				where += " AND " + provider.GetQuotedName(r.MappingTable.ChildForeignKeyTypeColumnName) + " = " + GetParameter(provider, "Original_" + r.MappingTable.ChildForeignKeyTypeColumnName);
                 provider.AddParameter(deleteCommand, provider.GetNamedParameter("Original_" + r.MappingTable.ChildForeignKeyTypeColumnName), provider.GetDbType(typeof(int)), 4, System.Data.ParameterDirection.Input, false, ((System.Byte)(0)), ((System.Byte)(0)), r.MappingTable.ChildForeignKeyTypeColumnName, System.Data.DataRowVersion.Original, null);
             }
-#endif
 
-            deleteCommand.CommandText = string.Format(sql, QualifiedTableName.Get(r.MappingTable.TableName, provider), where);
+            deleteCommand.CommandText = string.Format(sql, provider.GetQualifiedTableName(r.MappingTable.TableName), where);
 
 		}
 
@@ -197,23 +194,23 @@ namespace NDO
 			new SqlDumper(this.logAdapter, this.provider, insertCommand, selectCommand, null, deleteCommand).Dump(rows);
 		}
 
-		private DataTable GetTable(string name)
+		private DataTable GetTableTemplate(DataSet templateDataset, string name)
 		{
-			DataTable dt = ds.Tables[name];
+			DataTable dt = templateDataset.Tables[name];
 			if (dt == null)
 				throw new NDOException(24, "Can't find mapping table '" + name + "' in the schema. Check your mapping file.");
 			return dt;
 		}
 
 		
-		public DataTable FindRelatedObjects(ObjectId oid) 
+		public DataTable FindRelatedObjects(ObjectId oid, DataSet templateDataset) 
 		{
-			DataTable table = GetTable(r.MappingTable.TableName).Clone();
-            string sql = "SELECT * FROM " + QualifiedTableName.Get(r.MappingTable.TableName, provider) + " WHERE ";
+			DataTable table = GetTableTemplate(templateDataset, relation.MappingTable.TableName).Clone();
+            string sql = "SELECT * FROM " + provider.GetQualifiedTableName(relation.MappingTable.TableName) + " WHERE ";
             selectCommand.Parameters.Clear();
 
             int i = 0;
-            new ForeignKeyIterator(r).Iterate(delegate(ForeignKeyColumn fkColumn, bool isLastEntry)
+            new ForeignKeyIterator(relation).Iterate(delegate(ForeignKeyColumn fkColumn, bool isLastEntry)
             {                    
                 string parName = "p" + i;
                 sql += provider.GetQuotedName(fkColumn.Name) + " = " + provider.GetNamedParameter(parName);
@@ -228,17 +225,16 @@ namespace NDO
                 i++;
             });
             
-#if PRO
-			if (r.ForeignKeyTypeColumnName != null) 
+			if (relation.ForeignKeyTypeColumnName != null) 
 			{
                 //sql += " AND " + provider.GetQuotedName(r.ForeignKeyTypeColumnName) + " = " + oid.Id.TypeId;
-                sql += " AND " + provider.GetQuotedName(r.ForeignKeyTypeColumnName) + " = " + provider.GetNamedParameter("typeCode");
+                sql += " AND " + provider.GetQuotedName(relation.ForeignKeyTypeColumnName) + " = " + provider.GetNamedParameter("typeCode");
                 IDataParameter dataParameter = provider.AddParameter(selectCommand, provider.GetNamedParameter("typeCode"), provider.GetDbType(typeof(int)), provider.GetDefaultLength(typeof(int)), "typeCode");
                 dataParameter.Value = oid.Id.TypeId;
                 dataParameter.Direction = ParameterDirection.Input;                
 			}
-#endif
-            selectCommand.CommandText = sql;
+
+			selectCommand.CommandText = sql;
             try 
             {
 				Dump(null);
@@ -256,7 +252,7 @@ namespace NDO
 
 		public void Update(DataSet ds) 
 		{
-			DataTable dt = GetTable(r.MappingTable.TableName);
+			DataTable dt = ds.Tables[relation.MappingTable.TableName];
 			try 
 			{
 				DataRow[] rows = dt.Select(null, null, DataViewRowState.Added 
@@ -275,7 +271,11 @@ namespace NDO
 				throw new NDOException(26, "Exception in dataAdapter.Update: " + ex.Message + "\n");
 			}
 		}
-	
+
+		public void Dispose()
+		{
+		}
+
 		public IDbConnection Connection
 		{
 			get { return this.selectCommand.Connection; }
@@ -296,6 +296,11 @@ namespace NDO
 				this.deleteCommand.Transaction = value;
 				this.insertCommand.Transaction = value;
 			}
+		}
+
+		public Relation Relation
+		{
+			get { return this.relation; }
 		}
 	}
 }

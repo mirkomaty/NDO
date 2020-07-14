@@ -1,5 +1,5 @@
 ﻿//
-// Copyright (c) 2002-2016 Mirko Matytschak 
+// Copyright (c) 2002-2019 Mirko Matytschak 
 // (www.netdataobjects.de)
 //
 // Author: Mirko Matytschak
@@ -35,7 +35,7 @@ namespace NETDataObjects.NDOVSPackage
 
 		public static bool IsCsProject(Project project)
 		{
-			return project.Kind == ProjectKind.prjKindCSharpProject;
+			return project.Kind == ProjectKind.prjKindCSharpProject || project.Kind == ProjectKind.prjKindNewCSharpProject;  // prjKindNewCSharpProject can be removed after VS 17.8
 		}
 
 		public static bool IsVbProject(Project project)

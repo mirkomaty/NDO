@@ -1,5 +1,5 @@
 ﻿//
-// Copyright (c) 2002-2016 Mirko Matytschak 
+// Copyright (c) 2002-2019 Mirko Matytschak 
 // (www.netdataobjects.de)
 //
 // Author: Mirko Matytschak
@@ -22,29 +22,14 @@
 
 using System;
 using System.Linq;
-using System.Globalization;
-using System.Reflection;
-using System.Xml;
 using System.IO;
-using System.Resources;
-using System.Drawing;
-using System.Collections;
-using System.ComponentModel;
 using System.Windows.Forms;
-using System.Xml.Linq;
-using System.Collections.Generic;
 using EnvDTE;
-using EnvDTE80;
-using VSLangProj;
-using NDOInterfaces;
-using Microsoft.VisualStudio.Shell.Interop;
-
-using SD = System.Diagnostics;
 using System.Diagnostics;
-using System.Text.RegularExpressions;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.ComponentModelHost;
 using NuGet.VisualStudio;
+using NDO.UISupport;
 
 namespace NETDataObjects.NDOVSPackage
 {
@@ -93,6 +78,8 @@ namespace NETDataObjects.NDOVSPackage
 		private Label label6;
 		private CheckedListBox chlbAssemblies;
 		private ProjectDescription projectDescription;
+		private Button btnInstallProvider;
+		private NDOReference[] references;
 
 		public ConfigurationDialog(Project project, ProjectDescription projectDescription)
 		{
@@ -100,12 +87,52 @@ namespace NETDataObjects.NDOVSPackage
 			{
 				this.project = project;
 				this.projectDescription = projectDescription;
+				this.projectDescription.BuildReferences();
+				this.projectDescription.FixDllState();
 				InitializeComponent();
+				var lbAssemblies = (ListBox)this.chlbAssemblies;
+				this.references = projectDescription.References.Values.ToArray();
+				lbAssemblies.DataSource = this.references;
+				lbAssemblies.DisplayMember = nameof( NDOReference.Name );
+				lbAssemblies.ValueMember = nameof( NDOReference.CheckState );
+				int i = 0;
+				foreach (var item in this.references)
+				{
+					this.chlbAssemblies.SetItemCheckState( i++, item.CheckState );
+				}
 			}
 			catch (Exception ex)
 			{
 				Debug.WriteLine( ex.ToString() );
 			}
+		}
+
+		void CheckEnabledStateForLoadProviderButton()
+		{
+			string providerName = this.cbSqlDialect.Text;
+
+			if (string.IsNullOrEmpty( providerName ))
+			{
+				this.btnInstallProvider.Enabled = false;
+				return;
+			}
+
+			if (IsProviderInstalled(providerName))
+			{
+				this.btnInstallProvider.Enabled = false;
+				return;
+			}
+
+			this.btnInstallProvider.Enabled = true;
+		}
+
+		bool IsProviderInstalled(string providerName)
+		{
+			IComponentModel componentModel;
+			var installerService = GetInstallerService( out componentModel );
+
+			string packageName = $"ndo.{providerName.ToLower()}";
+			return installerService.IsPackageInstalled( this.project, packageName );
 		}
 
 		/// <summary>
@@ -133,46 +160,243 @@ namespace NETDataObjects.NDOVSPackage
 			this.components = new System.ComponentModel.Container();
 			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ConfigurationDialog));
 			this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
-			this.tabControl = new System.Windows.Forms.TabControl();
-			this.tabPageGeneral = new System.Windows.Forms.TabPage();
-			this.tabPageAssemblies = new System.Windows.Forms.TabPage();
-			this.txtTargetMappingFileName = new System.Windows.Forms.TextBox();
-			this.label1 = new System.Windows.Forms.Label();
 			this.chkVerboseMode = new System.Windows.Forms.CheckBox();
-			this.txtSchemaVersion = new System.Windows.Forms.TextBox();
-			this.label5 = new System.Windows.Forms.Label();
 			this.btnNewDatabase = new System.Windows.Forms.Button();
 			this.btnSaveAs = new System.Windows.Forms.Button();
 			this.btnPresetApp = new System.Windows.Forms.Button();
 			this.txtDbOwner = new System.Windows.Forms.TextBox();
 			this.txtConnectionString = new System.Windows.Forms.TextBox();
-			this.label3 = new System.Windows.Forms.Label();
-			this.groupBox1 = new System.Windows.Forms.GroupBox();
 			this.chkDropExistingElements = new System.Windows.Forms.CheckBox();
 			this.chkGenerateFkConstraints = new System.Windows.Forms.CheckBox();
 			this.chkIncludeTypecodes = new System.Windows.Forms.CheckBox();
 			this.radioDefaultEncoding = new System.Windows.Forms.RadioButton();
 			this.radioUtf8Encoding = new System.Windows.Forms.RadioButton();
-			this.label4 = new System.Windows.Forms.Label();
 			this.cbSqlDialect = new System.Windows.Forms.ComboBox();
 			this.chkGenerateSQLScript = new System.Windows.Forms.CheckBox();
 			this.chkUseTimeStamps = new System.Windows.Forms.CheckBox();
 			this.chkChangeEvents = new System.Windows.Forms.CheckBox();
-			this.label2 = new System.Windows.Forms.Label();
 			this.btnConnString = new System.Windows.Forms.Button();
-			this.btnOK = new System.Windows.Forms.Button();
 			this.btnPresetLibrary = new System.Windows.Forms.Button();
-			this.btnCancel = new System.Windows.Forms.Button();
 			this.chkMappingNew = new System.Windows.Forms.CheckBox();
 			this.chkActivateEnhancer = new System.Windows.Forms.CheckBox();
 			this.chkActivateAddIn = new System.Windows.Forms.CheckBox();
-			this.chlbAssemblies = new System.Windows.Forms.CheckedListBox();
+			this.tabControl = new System.Windows.Forms.TabControl();
+			this.tabPageGeneral = new System.Windows.Forms.TabPage();
+			this.txtTargetMappingFileName = new System.Windows.Forms.TextBox();
+			this.label1 = new System.Windows.Forms.Label();
+			this.txtSchemaVersion = new System.Windows.Forms.TextBox();
+			this.label5 = new System.Windows.Forms.Label();
+			this.label3 = new System.Windows.Forms.Label();
+			this.groupBox1 = new System.Windows.Forms.GroupBox();
+			this.btnInstallProvider = new System.Windows.Forms.Button();
+			this.label4 = new System.Windows.Forms.Label();
+			this.label2 = new System.Windows.Forms.Label();
+			this.btnOK = new System.Windows.Forms.Button();
+			this.btnCancel = new System.Windows.Forms.Button();
+			this.tabPageAssemblies = new System.Windows.Forms.TabPage();
 			this.label6 = new System.Windows.Forms.Label();
+			this.chlbAssemblies = new System.Windows.Forms.CheckedListBox();
 			this.tabControl.SuspendLayout();
 			this.tabPageGeneral.SuspendLayout();
-			this.tabPageAssemblies.SuspendLayout();
 			this.groupBox1.SuspendLayout();
+			this.tabPageAssemblies.SuspendLayout();
 			this.SuspendLayout();
+			// 
+			// chkVerboseMode
+			// 
+			this.chkVerboseMode.Location = new System.Drawing.Point(21, 72);
+			this.chkVerboseMode.Name = "chkVerboseMode";
+			this.chkVerboseMode.Size = new System.Drawing.Size(238, 21);
+			this.chkVerboseMode.TabIndex = 51;
+			this.chkVerboseMode.Text = "Add-in Verbose Mode";
+			this.toolTip1.SetToolTip(this.chkVerboseMode, "Causes the Add-in and the Enhancer to show more information for debugging purpose" +
+        "s.");
+			// 
+			// btnNewDatabase
+			// 
+			this.btnNewDatabase.Location = new System.Drawing.Point(583, 313);
+			this.btnNewDatabase.Name = "btnNewDatabase";
+			this.btnNewDatabase.Size = new System.Drawing.Size(42, 21);
+			this.btnNewDatabase.TabIndex = 48;
+			this.btnNewDatabase.Text = "New";
+			this.toolTip1.SetToolTip(this.btnNewDatabase, "Create new database");
+			this.btnNewDatabase.Click += new System.EventHandler(this.btnNewDatabase_Click);
+			// 
+			// btnSaveAs
+			// 
+			this.btnSaveAs.DialogResult = System.Windows.Forms.DialogResult.OK;
+			this.btnSaveAs.Location = new System.Drawing.Point(246, 350);
+			this.btnSaveAs.Name = "btnSaveAs";
+			this.btnSaveAs.Size = new System.Drawing.Size(100, 39);
+			this.btnSaveAs.TabIndex = 47;
+			this.btnSaveAs.Text = "Save as...";
+			this.toolTip1.SetToolTip(this.btnSaveAs, "Save the options to be used in unattended builds with the stand-alone enhancer.");
+			this.btnSaveAs.Click += new System.EventHandler(this.btnSaveAs_Click);
+			// 
+			// btnPresetApp
+			// 
+			this.btnPresetApp.Location = new System.Drawing.Point(132, 350);
+			this.btnPresetApp.Name = "btnPresetApp";
+			this.btnPresetApp.Size = new System.Drawing.Size(100, 39);
+			this.btnPresetApp.TabIndex = 46;
+			this.btnPresetApp.Text = "Preset for Application";
+			this.toolTip1.SetToolTip(this.btnPresetApp, "Selects all settings used for applications which don\'t contain but reference pers" +
+        "istent types.");
+			this.btnPresetApp.Click += new System.EventHandler(this.btnPresetApp_Click);
+			// 
+			// txtDbOwner
+			// 
+			this.txtDbOwner.Location = new System.Drawing.Point(145, 126);
+			this.txtDbOwner.Name = "txtDbOwner";
+			this.txtDbOwner.Size = new System.Drawing.Size(160, 20);
+			this.txtDbOwner.TabIndex = 45;
+			this.toolTip1.SetToolTip(this.txtDbOwner, "Enter an owner name, if you like your tables to be written like owner.tablename.");
+			// 
+			// txtConnectionString
+			// 
+			this.txtConnectionString.Location = new System.Drawing.Point(18, 313);
+			this.txtConnectionString.Name = "txtConnectionString";
+			this.txtConnectionString.Size = new System.Drawing.Size(514, 20);
+			this.txtConnectionString.TabIndex = 39;
+			this.toolTip1.SetToolTip(this.txtConnectionString, "This string will be copied into the mapping file, if there doesn\'t exist a valid " +
+        "connection string. Otherwise it will be ignored.");
+			// 
+			// chkDropExistingElements
+			// 
+			this.chkDropExistingElements.Location = new System.Drawing.Point(13, 202);
+			this.chkDropExistingElements.Name = "chkDropExistingElements";
+			this.chkDropExistingElements.Size = new System.Drawing.Size(235, 21);
+			this.chkDropExistingElements.TabIndex = 24;
+			this.chkDropExistingElements.Text = "Insert Drop Statements in the Script";
+			this.toolTip1.SetToolTip(this.chkDropExistingElements, "If checked, NDO generates instructions to remove existing tables and constraints." +
+        "");
+			// 
+			// chkGenerateFkConstraints
+			// 
+			this.chkGenerateFkConstraints.Location = new System.Drawing.Point(13, 152);
+			this.chkGenerateFkConstraints.Name = "chkGenerateFkConstraints";
+			this.chkGenerateFkConstraints.Size = new System.Drawing.Size(235, 21);
+			this.chkGenerateFkConstraints.TabIndex = 23;
+			this.chkGenerateFkConstraints.Text = "Generate Foreign Key Constraints";
+			this.toolTip1.SetToolTip(this.chkGenerateFkConstraints, "If checked, NDO generates foreign key constraints for the relations in the databa" +
+        "se.");
+			// 
+			// chkIncludeTypecodes
+			// 
+			this.chkIncludeTypecodes.Location = new System.Drawing.Point(13, 177);
+			this.chkIncludeTypecodes.Name = "chkIncludeTypecodes";
+			this.chkIncludeTypecodes.Size = new System.Drawing.Size(235, 21);
+			this.chkIncludeTypecodes.TabIndex = 22;
+			this.chkIncludeTypecodes.Text = "Include Typecodes in the Script";
+			this.toolTip1.SetToolTip(this.chkIncludeTypecodes, "If checked, NDO generates instructions to build an additional table with the type" +
+        " code information.");
+			// 
+			// radioDefaultEncoding
+			// 
+			this.radioDefaultEncoding.Location = new System.Drawing.Point(13, 121);
+			this.radioDefaultEncoding.Name = "radioDefaultEncoding";
+			this.radioDefaultEncoding.Size = new System.Drawing.Size(140, 20);
+			this.radioDefaultEncoding.TabIndex = 21;
+			this.radioDefaultEncoding.Text = "Default Encoding";
+			this.toolTip1.SetToolTip(this.radioDefaultEncoding, "Check this option, if the script files should use windows encoding.");
+			// 
+			// radioUtf8Encoding
+			// 
+			this.radioUtf8Encoding.Checked = true;
+			this.radioUtf8Encoding.Location = new System.Drawing.Point(13, 99);
+			this.radioUtf8Encoding.Name = "radioUtf8Encoding";
+			this.radioUtf8Encoding.Size = new System.Drawing.Size(140, 21);
+			this.radioUtf8Encoding.TabIndex = 20;
+			this.radioUtf8Encoding.TabStop = true;
+			this.radioUtf8Encoding.Text = "UTF-8 Encoding";
+			this.toolTip1.SetToolTip(this.radioUtf8Encoding, "Check this option, if the script files should be UTF-8 encoded.");
+			// 
+			// cbSqlDialect
+			// 
+			this.cbSqlDialect.Location = new System.Drawing.Point(13, 70);
+			this.cbSqlDialect.Name = "cbSqlDialect";
+			this.cbSqlDialect.Size = new System.Drawing.Size(220, 21);
+			this.cbSqlDialect.TabIndex = 18;
+			this.toolTip1.SetToolTip(this.cbSqlDialect, "Choose an available NDO provider.");
+			this.cbSqlDialect.SelectedIndexChanged += new System.EventHandler(this.cbSqlDialect_SelectedIndexChanged);
+			// 
+			// chkGenerateSQLScript
+			// 
+			this.chkGenerateSQLScript.Location = new System.Drawing.Point(13, 21);
+			this.chkGenerateSQLScript.Name = "chkGenerateSQLScript";
+			this.chkGenerateSQLScript.Size = new System.Drawing.Size(187, 21);
+			this.chkGenerateSQLScript.TabIndex = 13;
+			this.chkGenerateSQLScript.Text = "Generate SQL Script";
+			this.toolTip1.SetToolTip(this.chkGenerateSQLScript, "If checked, NDO will create a script with DDL code, which can be used to construc" +
+        "t a database structure.");
+			this.chkGenerateSQLScript.CheckedChanged += new System.EventHandler(this.chkGenerateSQLScript_CheckedChanged);
+			// 
+			// chkUseTimeStamps
+			// 
+			this.chkUseTimeStamps.Location = new System.Drawing.Point(21, 153);
+			this.chkUseTimeStamps.Name = "chkUseTimeStamps";
+			this.chkUseTimeStamps.Size = new System.Drawing.Size(302, 20);
+			this.chkUseTimeStamps.TabIndex = 42;
+			this.chkUseTimeStamps.Text = "Generate Time Stamp Columns for each class";
+			this.toolTip1.SetToolTip(this.chkUseTimeStamps, "Check this option, if all tables should be protected by collistion detection.");
+			// 
+			// chkChangeEvents
+			// 
+			this.chkChangeEvents.Location = new System.Drawing.Point(21, 179);
+			this.chkChangeEvents.Name = "chkChangeEvents";
+			this.chkChangeEvents.Size = new System.Drawing.Size(302, 21);
+			this.chkChangeEvents.TabIndex = 41;
+			this.chkChangeEvents.Text = "Generate change events with Add Accessor";
+			this.toolTip1.SetToolTip(this.chkChangeEvents, "Check this option, if you intend to bind the UI directly to the accessor properti" +
+        "es of your persistent classes.");
+			// 
+			// btnConnString
+			// 
+			this.btnConnString.Location = new System.Drawing.Point(538, 313);
+			this.btnConnString.Name = "btnConnString";
+			this.btnConnString.Size = new System.Drawing.Size(42, 21);
+			this.btnConnString.TabIndex = 38;
+			this.btnConnString.Text = "...";
+			this.toolTip1.SetToolTip(this.btnConnString, "Enter existing database connection");
+			this.btnConnString.Click += new System.EventHandler(this.btnConnString_Click);
+			// 
+			// btnPresetLibrary
+			// 
+			this.btnPresetLibrary.Location = new System.Drawing.Point(18, 350);
+			this.btnPresetLibrary.Name = "btnPresetLibrary";
+			this.btnPresetLibrary.Size = new System.Drawing.Size(100, 39);
+			this.btnPresetLibrary.TabIndex = 36;
+			this.btnPresetLibrary.Text = "Preset for Library";
+			this.toolTip1.SetToolTip(this.btnPresetLibrary, "Selects all settings necessary for projects containing persistent types.");
+			this.btnPresetLibrary.Click += new System.EventHandler(this.btnPresetLibrary_Click);
+			// 
+			// chkMappingNew
+			// 
+			this.chkMappingNew.Location = new System.Drawing.Point(21, 99);
+			this.chkMappingNew.Name = "chkMappingNew";
+			this.chkMappingNew.Size = new System.Drawing.Size(272, 21);
+			this.chkMappingNew.TabIndex = 34;
+			this.chkMappingNew.Text = "Always Generate a new mapping File";
+			this.toolTip1.SetToolTip(this.chkMappingNew, "Choose this options, if NDO should discard and rebuild all mapping information.");
+			// 
+			// chkActivateEnhancer
+			// 
+			this.chkActivateEnhancer.Location = new System.Drawing.Point(21, 46);
+			this.chkActivateEnhancer.Name = "chkActivateEnhancer";
+			this.chkActivateEnhancer.Size = new System.Drawing.Size(188, 20);
+			this.chkActivateEnhancer.TabIndex = 33;
+			this.chkActivateEnhancer.Text = "Activate enhancer";
+			this.toolTip1.SetToolTip(this.chkActivateEnhancer, "Choose this option, if your project contains persistent types.");
+			// 
+			// chkActivateAddIn
+			// 
+			this.chkActivateAddIn.Location = new System.Drawing.Point(21, 19);
+			this.chkActivateAddIn.Name = "chkActivateAddIn";
+			this.chkActivateAddIn.Size = new System.Drawing.Size(188, 21);
+			this.chkActivateAddIn.TabIndex = 32;
+			this.chkActivateAddIn.Text = "Activate NDO AddIn";
+			this.toolTip1.SetToolTip(this.chkActivateAddIn, "Choose this options, if your project contains or references persistent types.");
+			this.chkActivateAddIn.Click += new System.EventHandler(this.chkActivateAddIn_CheckedChanged);
 			// 
 			// tabControl
 			// 
@@ -217,18 +441,6 @@ namespace NETDataObjects.NDOVSPackage
 			this.tabPageGeneral.Text = "General";
 			this.tabPageGeneral.UseVisualStyleBackColor = true;
 			// 
-			// tabPageAssemblies
-			// 
-			this.tabPageAssemblies.Controls.Add(this.label6);
-			this.tabPageAssemblies.Controls.Add(this.chlbAssemblies);
-			this.tabPageAssemblies.Location = new System.Drawing.Point(4, 22);
-			this.tabPageAssemblies.Name = "tabPageAssemblies";
-			this.tabPageAssemblies.Padding = new System.Windows.Forms.Padding(3);
-			this.tabPageAssemblies.Size = new System.Drawing.Size(653, 413);
-			this.tabPageAssemblies.TabIndex = 1;
-			this.tabPageAssemblies.Text = "Assemblies";
-			this.tabPageAssemblies.UseVisualStyleBackColor = true;
-			// 
 			// txtTargetMappingFileName
 			// 
 			this.txtTargetMappingFileName.Location = new System.Drawing.Point(145, 245);
@@ -243,15 +455,6 @@ namespace NETDataObjects.NDOVSPackage
 			this.label1.Size = new System.Drawing.Size(121, 21);
 			this.label1.TabIndex = 52;
 			this.label1.Text = "Mapping File Name";
-			// 
-			// chkVerboseMode
-			// 
-			this.chkVerboseMode.Location = new System.Drawing.Point(21, 72);
-			this.chkVerboseMode.Name = "chkVerboseMode";
-			this.chkVerboseMode.Size = new System.Drawing.Size(238, 21);
-			this.chkVerboseMode.TabIndex = 51;
-			this.chkVerboseMode.Text = "Add-in Verbose Mode";
-			this.toolTip1.SetToolTip(this.chkVerboseMode, "Causes the Add-in and the Enhancer to show more information for debugging purposes.");
 			// 
 			// txtSchemaVersion
 			// 
@@ -268,53 +471,6 @@ namespace NETDataObjects.NDOVSPackage
 			this.label5.TabIndex = 49;
 			this.label5.Text = "Schema Version";
 			// 
-			// btnNewDatabase
-			// 
-			this.btnNewDatabase.Location = new System.Drawing.Point(583, 313);
-			this.btnNewDatabase.Name = "btnNewDatabase";
-			this.btnNewDatabase.Size = new System.Drawing.Size(42, 21);
-			this.btnNewDatabase.TabIndex = 48;
-			this.btnNewDatabase.Text = "New";
-			this.toolTip1.SetToolTip(this.btnNewDatabase, "Create new database");
-			this.btnNewDatabase.Click += new System.EventHandler(this.btnNewDatabase_Click);
-			// 
-			// btnSaveAs
-			// 
-			this.btnSaveAs.DialogResult = System.Windows.Forms.DialogResult.OK;
-			this.btnSaveAs.Location = new System.Drawing.Point(246, 350);
-			this.btnSaveAs.Name = "btnSaveAs";
-			this.btnSaveAs.Size = new System.Drawing.Size(100, 39);
-			this.btnSaveAs.TabIndex = 47;
-			this.btnSaveAs.Text = "Save as...";
-			this.toolTip1.SetToolTip(this.btnSaveAs, "Save the options to be used in unattended builds with the stand-alone enhancer.");
-			this.btnSaveAs.Click += new System.EventHandler(this.btnSaveAs_Click);
-			// 
-			// btnPresetApp
-			// 
-			this.btnPresetApp.Location = new System.Drawing.Point(132, 350);
-			this.btnPresetApp.Name = "btnPresetApp";
-			this.btnPresetApp.Size = new System.Drawing.Size(100, 39);
-			this.btnPresetApp.TabIndex = 46;
-			this.btnPresetApp.Text = "Preset for Application";
-			this.toolTip1.SetToolTip(this.btnPresetApp, "Selects all settings used for applications which don\'t contain but reference persistent types.");
-			this.btnPresetApp.Click += new System.EventHandler(this.btnPresetApp_Click);
-			// 
-			// txtDbOwner
-			// 
-			this.txtDbOwner.Location = new System.Drawing.Point(145, 126);
-			this.txtDbOwner.Name = "txtDbOwner";
-			this.txtDbOwner.Size = new System.Drawing.Size(160, 20);
-			this.txtDbOwner.TabIndex = 45;
-			this.toolTip1.SetToolTip( this.txtDbOwner, "Enter an owner name, if you like your tables to be written like owner.tablename." );
-			// 
-			// txtConnectionString
-			// 
-			this.txtConnectionString.Location = new System.Drawing.Point(18, 313);
-			this.txtConnectionString.Name = "txtConnectionString";
-			this.txtConnectionString.Size = new System.Drawing.Size(514, 20);
-			this.txtConnectionString.TabIndex = 39;
-			this.toolTip1.SetToolTip(this.txtConnectionString, "This string will be copied into the mapping file, if there doesn\'t exist a valid connection string. Otherwise it will be ignored.");
-			// 
 			// label3
 			// 
 			this.label3.Location = new System.Drawing.Point(18, 128);
@@ -325,6 +481,7 @@ namespace NETDataObjects.NDOVSPackage
 			// 
 			// groupBox1
 			// 
+			this.groupBox1.Controls.Add(this.btnInstallProvider);
 			this.groupBox1.Controls.Add(this.chkDropExistingElements);
 			this.groupBox1.Controls.Add(this.chkGenerateFkConstraints);
 			this.groupBox1.Controls.Add(this.chkIncludeTypecodes);
@@ -340,52 +497,15 @@ namespace NETDataObjects.NDOVSPackage
 			this.groupBox1.TabStop = false;
 			this.groupBox1.Text = " SQL ";
 			// 
-			// chkDropExistingElements
+			// btnInstallProvider
 			// 
-			this.chkDropExistingElements.Location = new System.Drawing.Point(13, 202);
-			this.chkDropExistingElements.Name = "chkDropExistingElements";
-			this.chkDropExistingElements.Size = new System.Drawing.Size(235, 21);
-			this.chkDropExistingElements.TabIndex = 24;
-			this.chkDropExistingElements.Text = "Insert Drop Statements in the Script";
-			this.toolTip1.SetToolTip(this.chkDropExistingElements, "If checked, NDO generates instructions to remove existing tables and constraints.");
-			// 
-			// chkGenerateFkConstraints
-			// 
-			this.chkGenerateFkConstraints.Location = new System.Drawing.Point(13, 152);
-			this.chkGenerateFkConstraints.Name = "chkGenerateFkConstraints";
-			this.chkGenerateFkConstraints.Size = new System.Drawing.Size(235, 21);
-			this.chkGenerateFkConstraints.TabIndex = 23;
-			this.chkGenerateFkConstraints.Text = "Generate Foreign Key Constraints";
-			this.toolTip1.SetToolTip(this.chkGenerateFkConstraints, "If checked, NDO generates foreign key constraints for the relations in the database.");
-			// 
-			// chkIncludeTypecodes
-			// 
-			this.chkIncludeTypecodes.Location = new System.Drawing.Point(13, 177);
-			this.chkIncludeTypecodes.Name = "chkIncludeTypecodes";
-			this.chkIncludeTypecodes.Size = new System.Drawing.Size(235, 21);
-			this.chkIncludeTypecodes.TabIndex = 22;
-			this.chkIncludeTypecodes.Text = "Include Typecodes in the Script";
-			this.toolTip1.SetToolTip(this.chkIncludeTypecodes, "If checked, NDO generates instructions to build an additional table with the type code information.");
-			// 
-			// radioDefaultEncoding
-			// 
-			this.radioDefaultEncoding.Location = new System.Drawing.Point(13, 121);
-			this.radioDefaultEncoding.Name = "radioDefaultEncoding";
-			this.radioDefaultEncoding.Size = new System.Drawing.Size(140, 20);
-			this.radioDefaultEncoding.TabIndex = 21;
-			this.radioDefaultEncoding.Text = "Default Encoding";
-			this.toolTip1.SetToolTip(this.radioDefaultEncoding, "Check this option, if the script files should use windows encoding.");
-			// 
-			// radioUtf8Encoding
-			// 
-			this.radioUtf8Encoding.Checked = true;
-			this.radioUtf8Encoding.Location = new System.Drawing.Point(13, 99);
-			this.radioUtf8Encoding.Name = "radioUtf8Encoding";
-			this.radioUtf8Encoding.Size = new System.Drawing.Size(140, 21);
-			this.radioUtf8Encoding.TabIndex = 20;
-			this.radioUtf8Encoding.TabStop = true;
-			this.radioUtf8Encoding.Text = "UTF-8 Encoding";
-			this.toolTip1.SetToolTip(this.radioUtf8Encoding, "Check this option, if the script files should be UTF-8 encoded.");
+			this.btnInstallProvider.Location = new System.Drawing.Point(142, 102);
+			this.btnInstallProvider.Name = "btnInstallProvider";
+			this.btnInstallProvider.Size = new System.Drawing.Size(91, 22);
+			this.btnInstallProvider.TabIndex = 25;
+			this.btnInstallProvider.Text = "Install Provider";
+			this.btnInstallProvider.UseVisualStyleBackColor = true;
+			this.btnInstallProvider.Click += new System.EventHandler(this.btnInstallProvider_Click);
 			// 
 			// label4
 			// 
@@ -395,42 +515,6 @@ namespace NETDataObjects.NDOVSPackage
 			this.label4.TabIndex = 19;
 			this.label4.Text = "SQL Dialect";
 			// 
-			// cbSqlDialect
-			// 
-			this.cbSqlDialect.Location = new System.Drawing.Point(13, 70);
-			this.cbSqlDialect.Name = "cbSqlDialect";
-			this.cbSqlDialect.Size = new System.Drawing.Size(220, 21);
-			this.cbSqlDialect.TabIndex = 18;
-			this.toolTip1.SetToolTip(this.cbSqlDialect, "Choose an available NDO provider.");
-			// 
-			// chkGenerateSQLScript
-			// 
-			this.chkGenerateSQLScript.Location = new System.Drawing.Point(13, 21);
-			this.chkGenerateSQLScript.Name = "chkGenerateSQLScript";
-			this.chkGenerateSQLScript.Size = new System.Drawing.Size(187, 21);
-			this.chkGenerateSQLScript.TabIndex = 13;
-			this.chkGenerateSQLScript.Text = "Generate SQL Script";
-			this.toolTip1.SetToolTip(this.chkGenerateSQLScript, "If checked, NDO will create a script with DDL code, which can be used to construct a database structure.");
-			this.chkGenerateSQLScript.CheckedChanged += new System.EventHandler(this.chkGenerateSQLScript_CheckedChanged);
-			// 
-			// chkUseTimeStamps
-			// 
-			this.chkUseTimeStamps.Location = new System.Drawing.Point(21, 153);
-			this.chkUseTimeStamps.Name = "chkUseTimeStamps";
-			this.chkUseTimeStamps.Size = new System.Drawing.Size(302, 20);
-			this.chkUseTimeStamps.TabIndex = 42;
-			this.chkUseTimeStamps.Text = "Generate Time Stamp Columns for each class";
-			this.toolTip1.SetToolTip(this.chkUseTimeStamps, "Check this option, if all tables should be protected by collistion detection.");
-			// 
-			// chkChangeEvents
-			// 
-			this.chkChangeEvents.Location = new System.Drawing.Point(21, 179);
-			this.chkChangeEvents.Name = "chkChangeEvents";
-			this.chkChangeEvents.Size = new System.Drawing.Size(302, 21);
-			this.chkChangeEvents.TabIndex = 41;
-			this.chkChangeEvents.Text = "Generate change events with Add Accessor";
-			this.toolTip1.SetToolTip(this.chkChangeEvents, "Check this option, if you intend to bind the UI directly to the accessor properties of your persistent classes.");
-			// 
 			// label2
 			// 
 			this.label2.Location = new System.Drawing.Point(18, 292);
@@ -438,16 +522,6 @@ namespace NETDataObjects.NDOVSPackage
 			this.label2.Size = new System.Drawing.Size(360, 21);
 			this.label2.TabIndex = 40;
 			this.label2.Text = "Default Connection String";
-			// 
-			// btnConnString
-			// 
-			this.btnConnString.Location = new System.Drawing.Point(538, 313);
-			this.btnConnString.Name = "btnConnString";
-			this.btnConnString.Size = new System.Drawing.Size(42, 21);
-			this.btnConnString.TabIndex = 38;
-			this.btnConnString.Text = "...";
-			this.toolTip1.SetToolTip(this.btnConnString, "Enter existing database connection");
-			this.btnConnString.Click += new System.EventHandler(this.btnConnString_Click);
 			// 
 			// btnOK
 			// 
@@ -459,16 +533,6 @@ namespace NETDataObjects.NDOVSPackage
 			this.btnOK.Text = "OK";
 			this.btnOK.Click += new System.EventHandler(this.btnOK_Click);
 			// 
-			// btnPresetLibrary
-			// 
-			this.btnPresetLibrary.Location = new System.Drawing.Point(18, 350);
-			this.btnPresetLibrary.Name = "btnPresetLibrary";
-			this.btnPresetLibrary.Size = new System.Drawing.Size(100, 39);
-			this.btnPresetLibrary.TabIndex = 36;
-			this.btnPresetLibrary.Text = "Preset for Library";
-			this.toolTip1.SetToolTip(this.btnPresetLibrary, "Selects all settings necessary for projects containing persistent types.");
-			this.btnPresetLibrary.Click += new System.EventHandler(this.btnPresetLibrary_Click);
-			// 
 			// btnCancel
 			// 
 			this.btnCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
@@ -478,34 +542,26 @@ namespace NETDataObjects.NDOVSPackage
 			this.btnCancel.TabIndex = 35;
 			this.btnCancel.Text = "Cancel";
 			// 
-			// chkMappingNew
+			// tabPageAssemblies
 			// 
-			this.chkMappingNew.Location = new System.Drawing.Point(21, 99);
-			this.chkMappingNew.Name = "chkMappingNew";
-			this.chkMappingNew.Size = new System.Drawing.Size(272, 21);
-			this.chkMappingNew.TabIndex = 34;
-			this.chkMappingNew.Text = "Always Generate a new mapping File";
-			this.toolTip1.SetToolTip(this.chkMappingNew, "Choose this options, if NDO should discard and rebuild all mapping information.");
+			this.tabPageAssemblies.Controls.Add(this.label6);
+			this.tabPageAssemblies.Controls.Add(this.chlbAssemblies);
+			this.tabPageAssemblies.Location = new System.Drawing.Point(4, 22);
+			this.tabPageAssemblies.Name = "tabPageAssemblies";
+			this.tabPageAssemblies.Padding = new System.Windows.Forms.Padding(3);
+			this.tabPageAssemblies.Size = new System.Drawing.Size(653, 413);
+			this.tabPageAssemblies.TabIndex = 1;
+			this.tabPageAssemblies.Text = "Assemblies";
+			this.tabPageAssemblies.UseVisualStyleBackColor = true;
 			// 
-			// chkActivateEnhancer
+			// label6
 			// 
-			this.chkActivateEnhancer.Location = new System.Drawing.Point(21, 46);
-			this.chkActivateEnhancer.Name = "chkActivateEnhancer";
-			this.chkActivateEnhancer.Size = new System.Drawing.Size(188, 20);
-			this.chkActivateEnhancer.TabIndex = 33;
-			this.chkActivateEnhancer.Text = "Activate enhancer";
-			this.toolTip1.SetToolTip(this.chkActivateEnhancer, "Choose this option, if your project contains persistent types.");
-			this.chkActivateEnhancer.CheckedChanged += new System.EventHandler(this.chkActivateEnhancer_CheckedChanged);
-			// 
-			// chkActivateAddIn
-			// 
-			this.chkActivateAddIn.Location = new System.Drawing.Point(21, 19);
-			this.chkActivateAddIn.Name = "chkActivateAddIn";
-			this.chkActivateAddIn.Size = new System.Drawing.Size(188, 21);
-			this.chkActivateAddIn.TabIndex = 32;
-			this.chkActivateAddIn.Text = "Activate NDO AddIn";
-			this.toolTip1.SetToolTip(this.chkActivateAddIn, "Choose this options, if your project contains or references persistent types.");
-			this.chkActivateAddIn.Click += new System.EventHandler(this.chkActivateAddIn_CheckedChanged);
+			this.label6.AutoSize = true;
+			this.label6.Location = new System.Drawing.Point(10, 12);
+			this.label6.Name = "label6";
+			this.label6.Size = new System.Drawing.Size(328, 13);
+			this.label6.TabIndex = 1;
+			this.label6.Text = "Choose Assemblies which should be analyzed by the NDOEnhancer";
 			// 
 			// chlbAssemblies
 			// 
@@ -517,19 +573,13 @@ namespace NETDataObjects.NDOVSPackage
 			this.chlbAssemblies.Name = "chlbAssemblies";
 			this.chlbAssemblies.Size = new System.Drawing.Size(631, 364);
 			this.chlbAssemblies.TabIndex = 0;
-			// 
-			// label6
-			// 
-			this.label6.AutoSize = true;
-			this.label6.Location = new System.Drawing.Point(10, 12);
-			this.label6.Name = "label6";
-			this.label6.Size = new System.Drawing.Size(209, 13);
-			this.label6.TabIndex = 1;
-			this.label6.Text = "Choose Assemblies having persistent types";
+			this.chlbAssemblies.ItemCheck += new System.Windows.Forms.ItemCheckEventHandler(this.chlbAssemblies_ItemCheck);
 			// 
 			// ConfigurationDialog
 			// 
+			this.AcceptButton = this.btnOK;
 			this.AutoScaleBaseSize = new System.Drawing.Size(5, 13);
+			this.CancelButton = this.btnCancel;
 			this.ClientSize = new System.Drawing.Size(661, 439);
 			this.Controls.Add(this.tabControl);
 			this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
@@ -539,9 +589,9 @@ namespace NETDataObjects.NDOVSPackage
 			this.tabControl.ResumeLayout(false);
 			this.tabPageGeneral.ResumeLayout(false);
 			this.tabPageGeneral.PerformLayout();
+			this.groupBox1.ResumeLayout(false);
 			this.tabPageAssemblies.ResumeLayout(false);
 			this.tabPageAssemblies.PerformLayout();
-			this.groupBox1.ResumeLayout(false);
 			this.ResumeLayout(false);
 
 		}
@@ -559,10 +609,7 @@ namespace NETDataObjects.NDOVSPackage
                 chkActivateEnhancer.Enabled = false;
             else
 			    chkActivateEnhancer.Enabled = enabled;
-            chkActivateEnhancer_CheckedChanged(null, EventArgs.Empty);
 		}
-
-
 
 		private void ConfigurationDialog_Load(object sender, System.EventArgs e)
 		{
@@ -588,17 +635,13 @@ namespace NETDataObjects.NDOVSPackage
                 int i = 0;
                 this.cbSqlDialect.Items.Clear();
                 int currentDialectIndex = -1;
-                NDO.NDOProviderFactory.Instance.SkipPrivatePath = true;
-                ProviderLoader.AddProviderDlls();
-                foreach (string s in NDO.NDOProviderFactory.Instance.ProviderNames) //GeneratorFactory.Instance.ProviderNames)
+
+                foreach (string s in NdoUIProviderFactory.Instance.Keys)
                 {
-                    if (NDO.NDOProviderFactory.Instance.Generators.ContainsKey(s))
-                    {
-                        this.cbSqlDialect.Items.Add(s);
-                        if (options.SQLScriptLanguage == s)
-                            currentDialectIndex = i;
-                        i++;
-                    }
+                    this.cbSqlDialect.Items.Add(s);
+                    if (options.SQLScriptLanguage == s)
+                        currentDialectIndex = i;
+                    i++;
                 }
                 if (currentDialectIndex > -1)
                     cbSqlDialect.SelectedIndex = currentDialectIndex;
@@ -608,7 +651,6 @@ namespace NETDataObjects.NDOVSPackage
 				txtTargetMappingFileName.Text = options.TargetMappingFileName;
                 txtDbOwner.Text = options.DatabaseOwner;
                 chkActivateAddIn_CheckedChanged(null, EventArgs.Empty);
-                chkActivateEnhancer_CheckedChanged(null, EventArgs.Empty);
                 chkGenerateSQLScript_CheckedChanged(null, EventArgs.Empty);
                 if (options.Utf8Encoding)
                     radioUtf8Encoding.Checked = true;
@@ -616,8 +658,10 @@ namespace NETDataObjects.NDOVSPackage
                     radioDefaultEncoding.Checked = true;
                 if (project.Kind == "{E24C65DC-7377-472b-9ABA-BC803B73C61A}")
                     this.chkActivateEnhancer.Enabled = false;
-            }
-            catch (Exception ex)
+
+				CheckEnabledStateForLoadProviderButton();
+			}
+			catch (Exception ex)
             {
 #if !DEBUG
                 MessageBox.Show(ex.Message, "NDO Configuration");
@@ -705,9 +749,8 @@ namespace NETDataObjects.NDOVSPackage
 					if ( !options.UseMsBuild )
 					{
 						options.UseMsBuild = true;
-						options.Save( this.projectDescription );
-						GeneratePackageReference();
 					}
+					GeneratePackageReference();
 				}
 
 				options.Save( this.projectDescription );
@@ -725,25 +768,29 @@ namespace NETDataObjects.NDOVSPackage
 
 		void GeneratePackageReference()
 		{
-
 			try
 			{
-				var componentModel = (IComponentModel) Package.GetGlobalService( typeof( SComponentModel ) );
-				IVsPackageInstallerServices installerServices = componentModel.GetService<IVsPackageInstallerServices>();
+				IComponentModel componentModel;
+				var installerService = GetInstallerService( out componentModel );
 
-				if (!installerServices.IsPackageInstalled( this.project, "ndo.dll" ))
+				if (!installerService.IsPackageInstalled( this.project, "ndo.dll" ))
 				{
 					var installer = componentModel.GetService<IVsPackageInstaller>();
-					installer.InstallPackage(null, this.project, "ndo.dll", (string)null, false );
+					installer.InstallPackage( null, this.project, "ndo.dll", (string)null, false );
 				}
 			}
-
 			catch (Exception ex)
 			{
 				MessageBox.Show( "Error while installing the ndo.dll package: " + ex.ToString() );
 			}
 		}
 
+		private static IVsPackageInstallerServices GetInstallerService( out IComponentModel componentModel )
+		{
+			componentModel = (IComponentModel)Package.GetGlobalService( typeof( SComponentModel ) );
+			var installerService = componentModel.GetService<IVsPackageInstallerServices>();
+			return installerService;
+		}
 
 		void ShowError(Exception ex)
 		{
@@ -754,21 +801,22 @@ namespace NETDataObjects.NDOVSPackage
 		{
 			try
 			{
-				string connType = cbSqlDialect.Text;
-				if (connType == string.Empty)
-					connType = "SqlServer";
-				IProvider provider = NDO.NDOProviderFactory.Instance[connType];
-				if (provider == null)
-				{
-					MessageBox.Show("Can't find a NDO provider for the sql dialect " + connType);
-					return;
-				}
-				string temp = this.txtConnectionString.Text;
-				DialogResult r = provider.ShowConnectionDialog(ref temp);
-				if (r == DialogResult.Cancel)
-					return;
-				this.txtConnectionString.Text = temp;
-			}
+                string connType = cbSqlDialect.Text;
+                if (connType == string.Empty)
+                    connType = "SqlServer";
+                var provider = NdoUIProviderFactory.Instance[connType];
+                if (provider == null)
+                {
+                    MessageBox.Show("Can't find a NDO UI provider for the sql dialect " + connType);
+                    return;
+                }
+
+                string temp = this.txtConnectionString.Text;
+                NdoDialogResult r = provider.ShowConnectionDialog(ref temp);
+                if (r == NdoDialogResult.Cancel)
+                    return;
+                this.txtConnectionString.Text = temp;
+            }
 			catch (Exception ex)
 			{
 				ShowError(ex);
@@ -883,6 +931,7 @@ namespace NETDataObjects.NDOVSPackage
 		private void cbSqlDialect_SelectedIndexChanged(object sender, System.EventArgs e)
 		{
 			this.txtConnectionString.Text = string.Empty;
+			CheckEnabledStateForLoadProviderButton();
 		}
 
 		private void btnNewDatabase_Click(object sender, System.EventArgs e)
@@ -890,19 +939,19 @@ namespace NETDataObjects.NDOVSPackage
 			string connType = cbSqlDialect.Text;
 			if (connType == string.Empty)
 				connType = "SqlServer";
-			IProvider provider = NDO.NDOProviderFactory.Instance[connType];
+			IDbUISupport provider = NdoUIProviderFactory.Instance[connType];
 			if (provider == null)
 			{
-				MessageBox.Show("Can't find a NDO provider for the sql dialect " + connType);
+				MessageBox.Show("Can't find a NDO UI provider for the sql dialect " + connType);
 				return;
 			}
 			object necessaryData = null;
 			try
 			{
-				if (provider.ShowCreateDbDialog(ref necessaryData) == DialogResult.Cancel)
-					return;
-				this.txtConnectionString.Text = provider.CreateDatabase(necessaryData);
-			}
+                if (provider.ShowCreateDbDialog(ref necessaryData) == NdoDialogResult.Cancel)
+                    return;
+                this.txtConnectionString.Text = provider.CreateDatabase(necessaryData);
+            }
 			catch (Exception ex)
 			{
 #if !DEBUG
@@ -913,10 +962,39 @@ namespace NETDataObjects.NDOVSPackage
 			}
 		}
 
-        private void chkActivateEnhancer_CheckedChanged(object sender, EventArgs e)
-        {
-            
-        }
+		private void chlbAssemblies_ItemCheck( object sender, ItemCheckEventArgs e )
+		{
+			this.references[e.Index].CheckState = e.NewValue;
+		}
 
+		private void btnInstallProvider_Click( object sender, EventArgs e )
+		{
+			try
+			{
+				string providerName = this.cbSqlDialect.Text;
+
+				if (string.IsNullOrEmpty( providerName ))
+				{
+					MessageBox.Show( "Please choose a provider" );
+					return;
+				}
+
+				IComponentModel componentModel;
+				var installerService = GetInstallerService( out componentModel );
+
+				string packageName = $"ndo.{providerName.ToLower()}";
+				if (!installerService.IsPackageInstalled( this.project, packageName ))
+				{
+					var installer = componentModel.GetService<IVsPackageInstaller>();
+					installer.InstallPackage( null, this.project, packageName, (string)null, false );
+				}
+
+				this.btnInstallProvider.Enabled = false;
+			}
+			catch (Exception ex)
+			{
+				MessageBox.Show( "Error while installing the ndo.dll package: " + ex.ToString() );
+			}
+		}
 	}
 }

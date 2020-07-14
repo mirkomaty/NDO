@@ -22,6 +22,7 @@
 
 using System;
 using System.Collections;
+using System.IO;
 using System.Xml;
 
 namespace NDOEnhancer
@@ -33,12 +34,11 @@ namespace NDOEnhancer
     /// </summary>
     internal class ConfigurationOptions
 	{
-		public ConfigurationOptions()
-		{
-		}
+		ProjectDescription projectDescription;
 
-		public ConfigurationOptions( XmlDocument doc )
+		public ConfigurationOptions( ProjectDescription projectDescription, XmlDocument doc )
 		{
+			this.projectDescription = projectDescription;
 			string pns = XmlHelper.Pns(doc);
 			XmlNode node = doc.SelectSingleNode("//" + pns + "Enhancer/" + pns + "Options", XmlHelper.Nsmgr);
 			if (node == null)
@@ -78,12 +78,16 @@ namespace NDOEnhancer
 		public string TargetMappingFileName 
 		{
 			get 
-			{ 
-				if (string.IsNullOrEmpty( this.targetMappingFileName) )
-					return "NDOMapping.xml"; 
+			{
+				if (string.IsNullOrEmpty( this.targetMappingFileName ))
+				{
+					var fileName = this.projectDescription.FileName;
+					return Path.GetFileNameWithoutExtension(fileName) + ".ndo.mapping";
+				}
 				return this.targetMappingFileName;
 			} 
 		}
+
 		public string DefaultConnection { get; set; }
 		public string SchemaVersion { get; set; }
 		public string SQLScriptLanguage { get; set; }

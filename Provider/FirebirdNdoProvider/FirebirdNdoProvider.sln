@@ -1,0 +1,30 @@
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.27703.2047
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NDO.Firebird", "NDO.Firebird\NDO.Firebird.csproj", "{273BB4ED-74C4-482F-ACE2-E1564ACBA210}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FirebirdUISupport", "FirebirdUISupport\FirebirdUISupport.csproj", "{83F1D317-A9F0-4990-AABC-8EDA7DA28EEC}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{273BB4ED-74C4-482F-ACE2-E1564ACBA210}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{273BB4ED-74C4-482F-ACE2-E1564ACBA210}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{273BB4ED-74C4-482F-ACE2-E1564ACBA210}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{273BB4ED-74C4-482F-ACE2-E1564ACBA210}.Release|Any CPU.Build.0 = Release|Any CPU
+		{83F1D317-A9F0-4990-AABC-8EDA7DA28EEC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{83F1D317-A9F0-4990-AABC-8EDA7DA28EEC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{83F1D317-A9F0-4990-AABC-8EDA7DA28EEC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{83F1D317-A9F0-4990-AABC-8EDA7DA28EEC}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {6F792ABB-DD20-488A-A60A-DB8988F24026}
+	EndGlobalSection
+EndGlobal

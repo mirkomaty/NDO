@@ -34,9 +34,13 @@ namespace NDO
     /// </summary>
     public class MultiKey : Key
     {
+		/// <summary>
+		/// The internal data of the key
+		/// </summary>
         protected object[] pm_keydata;
 
-        public object[] Keydata
+		/// <inheritdoc />
+		public object[] Keydata
         {
             get { return pm_keydata; }
         }
@@ -48,6 +52,7 @@ namespace NDO
         /// <param name="t">The type of the object.</param>
         /// <param name="cl">The class mapping of the type.</param>
         /// <param name="row">The DatasRow containing the object data.</param>
+		/// <param name="tm">The type manager</param>
         /// <remarks>
         /// We have an extra parameter t, because in case of generic types
         /// cl.SystemType is the GenericTypeDefinition.
@@ -62,6 +67,7 @@ namespace NDO
         /// This is used for the constructors of classes, which are derived from MultiKey
         /// </summary>
         /// <param name="t"></param>
+		/// <param name="tm"></param>
         internal MultiKey(Type t, TypeManager tm)
             : base(t, tm)
         {
@@ -79,11 +85,7 @@ namespace NDO
         {
         }
 
-        /// <summary>
-        /// Writes the keydata into the data row using the class mapping information.
-        /// </summary>
-        /// <param name="cl"></param>
-        /// <param name="row"></param>
+		/// <inheritdoc />
         public override void FromRow(Class cl, DataRow row)
         {
             int i = 0;
@@ -99,12 +101,8 @@ namespace NDO
             });
         }
 
-        /// <summary>
-        /// Initializes the keydata from the given datarow using the class mapping information.
-        /// </summary>
-        /// <param name="cl"></param>
-        /// <param name="row"></param>
-        public override void ToRow(Class cl, DataRow row)
+		/// <inheritdoc />
+		public override void ToRow(Class cl, DataRow row)
         {
             int i = 0;
             new OidColumnIterator(cl).Iterate(delegate(OidColumn oidColumn, bool isLastElement)
@@ -114,12 +112,8 @@ namespace NDO
         }
 
 
-        /// <summary>
-        /// Checks two keys for equality
-        /// </summary>
-        /// <param name="obj">Key object to compare with</param>
-        /// <returns>True if keys are equal</returns>
-        public override bool Equals(object obj)
+		/// <inheritdoc />
+		public override bool Equals(object obj)
         {
             if (base.Equals(obj))  // Key compares the types and checks for null
             {
@@ -161,6 +155,9 @@ namespace NDO
             return !(o1 == o2);
         }
 
+		/// <summary>
+		/// Determines, if the key is valid.
+		/// </summary>
         public bool IsValid
         {
             get 
@@ -176,11 +173,8 @@ namespace NDO
             }
         }
 
-        /// <summary>
-        /// Gets a hash code to be used in hash tables
-        /// </summary>
-        /// <returns>Hash code</returns>
-        public override int GetHashCode()
+		/// <inheritdoc />
+		public override int GetHashCode()
         {
             int hashcode = base.GetHashCode(); // Code of the type t
             for (int i = 0; i < pm_keydata.Length; i++)
@@ -206,26 +200,30 @@ namespace NDO
             return s;
         }
 
-        public override void Serialize(SerializationInfo info, StreamingContext context)
+		/// <inheritdoc />
+		public override void Serialize(SerializationInfo info, StreamingContext context)
         {
             info.AddValue("KeyData", this.pm_keydata);
             info.AddValue("KeyType", this.GetType());
-            info.AddValue("ObjectType", this.Type);            
+            info.AddValue("ObjectType", this.Type);
         }
 
-        public override void Deserialize(SerializationInfo info, StreamingContext context)
+		/// <inheritdoc />
+		public override void Deserialize(SerializationInfo info, StreamingContext context)
         {
             object[] keydata = (object[])info.GetValue("KeyData", typeof(object[]));
             this.pm_keydata = keydata;
         }
 
-        public override object this[int index]
+		/// <inheritdoc />
+		public override object this[int index]
         {
             get { return pm_keydata[index]; }
             set { pm_keydata[index] = value; }            
         }
 
-        public override void ToForeignKey(Relation relation, DataRow row)
+		/// <inheritdoc />
+		public override void ToForeignKey(Relation relation, DataRow row)
         {
             // The order of the ForeignKeyColumns is identical to the order
             // of the OidColumns.
@@ -238,57 +236,24 @@ namespace NDO
             }
 
             // This is not to be confused with the type id's stored in DependentKeys
-#if PRO
+
             if (relation.ForeignKeyTypeColumnName != null)
             {
                 row[relation.ForeignKeyTypeColumnName] = this.TypeId;
             }
-#endif
         }
 
-        public static Key OldDeserialization(SerializationInfo info, StreamingContext context)
-        {
-            string idType = info.GetString("IdType");
-            string key = (string)info.GetValue("Key", typeof(string));
-            Type t = (Type)info.GetValue("Type", typeof(System.Type));
-            MultiKey newKey = new MultiKey(t, null);
-            object[] keydata = new object[1];
-            switch (idType)
-            {
-                case ("String"):
-                    keydata[0] = key;
-                    break;
-                case ("Int32"):
-                    keydata[0] = int.Parse(key);
-                    break;
-                case ("Guid"):
-                    keydata[0] = new Guid(key);
-                    break;
-            }
-            newKey.pm_keydata = keydata;
-            return newKey;
-        }
-
-        /// <summary>
-        /// Gets or sets the Key value of the first oid column. This property is obsolete, since NDO supports multi-column primary keys and thus is
-        /// not limited to one value per oid.
-        /// </summary>
+		/// <inheritdoc />
         public override object Value
         {
             get
             {
                 return pm_keydata[0];
             }
-            set
-            {
-                pm_keydata[0] = value;
-            }
         }
 
-        /// <summary>
-        /// Gets a copy of the Key values.
-        /// </summary>
-        public override object[] Values
+		/// <inheritdoc />
+		public override object[] Values
         {
             get
             {
@@ -306,6 +271,5 @@ namespace NDO
             newKey.pm_keydata = this.pm_keydata;
             return newKey;
         }
-
     }
 }

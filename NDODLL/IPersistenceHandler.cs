@@ -22,10 +22,13 @@
 
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
 using NDO.Mapping;
+using NDO.SqlPersistenceHandling;
 using NDOInterfaces;
+using NDOql.Expressions;
 
 namespace NDO
 {
@@ -48,11 +51,6 @@ namespace NDO
 		/// </summary>
 		event ConcurrencyErrorHandler ConcurrencyError;
 
-//		/// <summary>
-//		/// Called by the NDO Framework. Get the data for the specified object.
-//		/// </summary>
-//		DataRow Fill(ObjectId id);
-
 		/// <summary>
 		/// Called by the NDO Framework. Write all changed rows back to DB
 		/// </summary>
@@ -64,7 +62,7 @@ namespace NDO
 		/// because deleted rows must be updated in reverse order as changed or created rows.
 		/// </summary>
 		/// <param name="dt">DataTable containing the rows to delete</param>
-		void UpdateDeleted0bjects(DataTable dt);
+		void UpdateDeletedObjects(DataTable dt);
 
 		/// <summary>
 		/// Executes a batch of sql statements.
@@ -78,18 +76,16 @@ namespace NDO
 		/// all subqueries. If parameters is an ordinary IList, NDO expects to find a NDOParameterCollection 
 		/// for each subquery. If an element is null, no parameters are submitted for the given query.
 		/// </remarks>
-		IList ExecuteBatch(string[] statements, IList parameters);
+		IList<Dictionary<string,object>> ExecuteBatch(string[] statements, IList parameters);
 
 		/// <summary>
-		/// Execute a SQL query. The query has to beginn with 'SELECT *' where '*' will be 
-		/// replaced with the correct field list depending on the mapping information and hollow state.
+		/// Execute a SQL query.
 		/// </summary>
 		/// <param name="expression">SQL expression</param>
-		/// <param name="hollow">True if only ids should be read, false if all fields should be read.</param>
-		/// <param name="dontTouch">True if expression should not be touched - i. e. if the expression is in sql language</param>
 		/// <param name="parameters">A collection of objects, corresponding to the query parameters.</param>
+		/// <param name="templateDataset">The DataSet from which the DataTable for the results is cloned</param>
 		/// <returns>A DataTable object, containing the query result.</returns>
-		DataTable SqlQuery(string expression, bool hollow, bool dontTouch, IList parameters);
+		DataTable PerformQuery( string expression, IList parameters, DataSet templateDataset );
 
 		/// <summary>
 		/// Gets a Handler which can store data in relation tables. The handler is an Implementation of IMappingTableHandler.
@@ -101,11 +97,9 @@ namespace NDO
 		/// <summary>
 		/// Called by the NDO Framework. Constructs a new handler in a polymorphic way. Each persistent class will have an own handler.
 		/// </summary>
-		/// <param name="mappings">Mapping information.</param>
+		/// <param name="ndoMapping">Mapping information.</param>
 		/// <param name="t">Type for which the Handler is constructed.</param>
-		/// <param name="ds">DataSet, which is used to clone tables.</param>
-		void Initialize(NDOMapping mappings, Type t, DataSet ds);
-
-
+		/// <param name="disposeCallback">Method to be called at the end of the usage. The method can be used to push back the object to the PersistenceHandlerPool.</param>
+		void Initialize(NDOMapping ndoMapping, Type t, Action<Type, IPersistenceHandler> disposeCallback );
 	}
 }

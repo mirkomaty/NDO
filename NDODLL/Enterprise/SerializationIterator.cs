@@ -36,6 +36,10 @@ namespace NDO
 	/// </remarks>
 	public class SerializationIterator : ISerializationIterator
 	{
+		/// <summary>
+		/// Gets or sets an action which can be used to mark all elements of a graph as transient
+		/// </summary>
+		/// <remarks>You can replace the action to add additional functionality</remarks>
         public static Action<IPersistenceCapable> MarkAsTransientAction;
         private readonly Predicate<Relation> relationSelector;
         private readonly Action<IPersistenceCapable> actionOnIncludedObject;

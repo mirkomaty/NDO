@@ -157,24 +157,27 @@ namespace NDOEnhancer
 			bool autoIncrement = false;
 			StringBuilder sb = new StringBuilder();
             bool allowNull = true;
+			int size = 0;
 
 			if (cl != null)
 			{
 				Field field = FindField(dc.ColumnName, cl);
-
 				if (null != field)
 				{
 					if (null != field.Column.DbType)
 						columnType = field.Column.DbType;
-					if (0 != field.Column.Size && !field.Column.IgnoreColumnSizeInDDL)
+					size = field.Column.Size;
+					var defaultDbType = concreteGenerator.DbTypeFromType(dc.DataType, size);
+					bool ignoreColumnSize = field.Column.IgnoreColumnSizeInDDL;
+					if (0 != size && !ignoreColumnSize)
 					{
 						int dl = field.Column.Size;
-						if (dl == -1)
+						if (dl == -1 && String.Compare(defaultDbType, "nvarchar", true) == 0 && concreteGenerator.ProviderName == "SqlServer" )
 							width = "max";
 						else
 							width = dl.ToString();
 					}
-                    if (0 != field.Column.Precision && !field.Column.IgnoreColumnSizeInDDL)
+                    if (0 != field.Column.Precision && !ignoreColumnSize)
 						precision = field.Column.Precision.ToString();
                     allowNull = field.Column.AllowDbNull;
 				}
@@ -192,7 +195,7 @@ namespace NDOEnhancer
 			{
                 try
                 {
-                    columnType = concreteGenerator.DbTypeFromType(dc.DataType);
+                    columnType = concreteGenerator.DbTypeFromType(dc.DataType, size);
                 }
                 catch 
                 {
@@ -205,10 +208,7 @@ namespace NDOEnhancer
 				int dl = provider.GetDefaultLength(dc.DataType);
 				if (dl != 0)
 				{
-					if (dl == -1)
-						width = "max";
-					else
-						width = dl.ToString();
+					width = dl.ToString();
 				}
 			}
 			

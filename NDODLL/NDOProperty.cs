@@ -49,7 +49,9 @@ namespace NDO
 			set { name = value; }
 		}
 
-
+		/// <summary>
+		/// Gets the names of all types, which are storable without conversion.
+		/// </summary>
 		public static readonly string[] BuiltInTypes = new string[] 
 		{
 			"System.Boolean",

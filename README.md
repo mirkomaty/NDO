@@ -2,7 +2,7 @@
 
 This is the source code of .NET Data Objects (NDO). See: https://www.netdataobjects.de.
 
-__The latest development__ happens in the branch MergeFor4.0.
+The newest development happens in the branch MergeFor4.0.
 
 ## Build
 

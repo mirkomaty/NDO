@@ -30,6 +30,8 @@ using System.Xml;
 using NDO;
 using NDO.Mapping;
 using NDO.Logging;
+using Unity;
+using NDO.SqlPersistenceHandling;
 
 namespace NDO 
 {
@@ -38,31 +40,16 @@ namespace NDO
 	/// </summary>
 	internal class Mappings : NDOMapping
 	{
-		private Hashtable persistenceHandler = new Hashtable();
+        private Dictionary<Type, IPersistenceHandler> persistenceHandler = new Dictionary<Type, IPersistenceHandler>();
 		private Dictionary<Type,int> updateOrder = new Dictionary<Type, int>();
-		private DataSet ds;
 		ILogAdapter logAdapter;
 		private bool verboseMode;
-		private Type defaultHandlerType;
-		public Type DefaultHandlerType
-		{
-			get { return defaultHandlerType; }
-			set { defaultHandlerType = value; }
-		}
+		private readonly IUnityContainer configContainer;
 
-
-		// Must be set after the schema is generated
-		public DataSet DataSet
-		{
-			get { return ds; }
-			set { ds = value; }
-		}
-
-
-		internal Mappings( string mappingFile, Type defaultHandlerType )
+		internal Mappings( string mappingFile, IUnityContainer configContainer )
 			: base( mappingFile )
 		{
-			this.defaultHandlerType = defaultHandlerType;
+			this.configContainer = configContainer;
 			InitClassFields();
 			this.updateOrder = new ClassRank().BuildUpdateRank( Classes );
 		}
@@ -99,9 +86,9 @@ namespace NDO
 			set
 			{
 				this.verboseMode = value;
-				foreach ( DictionaryEntry de in persistenceHandler )
+				foreach ( var de in persistenceHandler )
 				{
-					((IPersistenceHandler) de.Value).VerboseMode = value;
+					de.Value.VerboseMode = value;
 				}
 			}
 		}
@@ -114,9 +101,9 @@ namespace NDO
 			set
 			{
 				this.logAdapter = value;
-				foreach ( DictionaryEntry de in persistenceHandler )
+				foreach ( var de in persistenceHandler )
 				{
-					((IPersistenceHandler) de.Value).LogAdapter = value;
+					de.Value.LogAdapter = value;
 				}
 			}
 		}
@@ -231,59 +218,6 @@ namespace NDO
 		{
 			FieldInfo fi = GetFieldInfo( pc, fieldName );
 			return fi.GetValue( pc );
-		}
-
-
-		/// <summary>
-		/// Get a persistence handler for the given object.
-		/// </summary>
-		/// <param name="pc"></param>
-		/// <param name="useSelfGeneratedIds"></param>
-		/// <returns></returns>
-		public IPersistenceHandler GetPersistenceHandler( IPersistenceCapable pc, bool useSelfGeneratedIds )
-		{
-			Type t = pc.GetType();
-
-			if ( t.IsGenericType )
-				t = t.GetGenericTypeDefinition();
-
-			IPersistenceHandler handler;
-			if ( (handler = (IPersistenceHandler) persistenceHandler[t]) != null )
-				return handler;
-			// 1. Handler des Objekts versuchen
-			handler = pc.NDOHandler;
-			// 2. Standard-Handler des pm versuchen
-			if ( handler == null )
-			{
-				if ( defaultHandlerType != null )
-					handler = Activator.CreateInstance( defaultHandlerType )
-						as IPersistenceHandler;
-			}
-			// 3. NDOPersistenceHandler versuchen
-			if ( handler == null )
-				handler = new NDOPersistenceHandler();
-
-			handler.Initialize( this, t, ds );
-			handler.VerboseMode = this.verboseMode;
-			handler.LogAdapter = this.logAdapter;
-			persistenceHandler.Add( t, handler );
-			return handler;
-		}
-
-		public IPersistenceHandler GetPersistenceHandler( Type t, bool useSelfGeneratedIds )
-		{
-			IPersistenceHandler handler;
-			if ( (handler = (IPersistenceHandler) persistenceHandler[t]) != null )
-				return handler;
-			//Assembly ass = Assembly.GetAssembly(t);
-			//if (null == ass)
-			//    throw new NDOException(10, "Assembly for Type " + t.FullName + " not found.");
-
-			if ( t.IsGenericTypeDefinition )
-				t = t.MakeGenericType( typeof( int ) );
-
-			IPersistenceCapable pc = (IPersistenceCapable) Activator.CreateInstance( t );//ass.CreateInstance(t.FullName);
-			return GetPersistenceHandler( pc, useSelfGeneratedIds );
 		}
 
 		internal ICollection Get1to1Relations( Type t )

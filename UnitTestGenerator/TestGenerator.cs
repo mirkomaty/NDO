@@ -39,7 +39,7 @@ namespace TestGenerator
 		StreamWriter sw;
 		TestFixture fixture;
 		Test test;
-		const string nameSpace = "RelationUnitTests";
+		readonly string nameSpace = "RelationUnitTests";
 
 		public TestGenerator( List<RelInfo> relInfos )
 		{
@@ -67,7 +67,7 @@ namespace TestGenerator
 
 		string AssertEquals( string text, object o2, object o3 )
 		{
-			return "Assert.AreEqual(" + o2 + ", " + o3 + ", \"" + text + "\");";
+			return "Assert.AreEqual(" + o2.ToString().ToLower() + ", " + o3 + ", \"" + text + "\");";
 		}
 		string AssertNotNull( string text, object o )
 		{
@@ -131,10 +131,15 @@ namespace TestGenerator
 		{
 			Function func = fixture.NewFunction( "void", "TestSaveReload" );
 			func.Attributes.Add( "Test" );
-			if (IsForbiddenCase( ri ))
-				func.Attributes.Add( "ExpectedException(typeof(NDOException))" );
+			bool forbidden = IsForbiddenCase( ri );
 			func.AccessModifier = "public";
 
+			if (forbidden)
+			{
+				func.Statements.Add( "bool thrown = false;" );
+				func.Statements.Add( "try" );
+				func.Statements.Add( "{" );
+			}
 			func.Statements.Add( "CreateObjects();" );
 			func.Statements.Add( "QueryOwn();" );
 			func.Statements.Add( AssertNotNull( "No Query Result", "ownVar" ) );
@@ -142,16 +147,30 @@ namespace TestGenerator
 				func.Statements.Add( AssertEquals( "Count wrong", 1, "ownVar.RelField.Count" ) );
 			else
 				func.Statements.Add( AssertNotNull( "No related object", "ownVar.RelField" ) );
+			if (forbidden)
+			{
+				func.Statements.Add( "}" );
+				func.Statements.Add( "catch (NDOException)" );
+				func.Statements.Add( "{" );
+				func.Statements.Add( "thrown = true;" );
+				func.Statements.Add( "}" );
+				func.Statements.Add( AssertEquals( "NDOException should have been thrown", true, "thrown" ) );
+			}
 		}
 
 		void CreateTestSaveReloadNull( RelInfo ri )
 		{
 			Function func = fixture.NewFunction( "void", "TestSaveReloadNull" );
 			func.Attributes.Add( "Test" );
-			if (IsForbiddenCase( ri ))
-				func.Attributes.Add( "ExpectedException(typeof(NDOException))" );
+			bool forbidden = IsForbiddenCase( ri );
 			func.AccessModifier = "public";
 
+			if (forbidden)
+			{
+				func.Statements.Add( "bool thrown = false;" );
+				func.Statements.Add( "try" );
+				func.Statements.Add( "{" );
+			}
 			func.Statements.Add( "CreateObjects();" );
 			func.Statements.Add( "QueryOwn();" );
 			func.Statements.Add( AssertNotNull( "No Query Result", "ownVar" ) );
@@ -175,6 +194,16 @@ namespace TestGenerator
 				func.Statements.Add( AssertEquals( "Count wrong", 0, "ownVar.RelField.Count" ) );
 			else
 				func.Statements.Add( AssertNull( "There should be no object", "ownVar.RelField" ) );
+
+			if (forbidden)
+			{
+				func.Statements.Add( "}" );
+				func.Statements.Add( "catch (NDOException)" );
+				func.Statements.Add( "{" );
+				func.Statements.Add( "thrown = true;" );
+				func.Statements.Add( "}" );
+				func.Statements.Add( AssertEquals( "NDOException should have been thrown", true, "thrown" ) );
+			}
 		}
 
 		void CreateTestSaveReloadRemove( RelInfo ri )
@@ -184,9 +213,14 @@ namespace TestGenerator
 			func.Attributes.Add( "Test" );
 			if (!ri.IsList)
 				return;
-			if (IsForbiddenCase( ri ))
-				func.Attributes.Add( "ExpectedException(typeof(NDOException))" );
 
+			bool forbidden = IsForbiddenCase( ri );
+			if (forbidden)
+			{
+				func.Statements.Add( "bool thrown = false;" );
+				func.Statements.Add( "try" );
+				func.Statements.Add( "{" );
+			}
 			func.Statements.Add( "CreateObjects();" );
 			func.Statements.Add( "QueryOwn();" );
 			func.Statements.Add( AssertNotNull( "No Query Result", "ownVar" ) );
@@ -204,6 +238,15 @@ namespace TestGenerator
 			func.Statements.Add( AssertNotNull( "No Query Result", "ownVar" ) );
 
 			func.Statements.Add( AssertEquals( "Count wrong", 0, "ownVar.RelField.Count" ) );
+			if (forbidden)
+			{
+				func.Statements.Add( "}" );
+				func.Statements.Add( "catch (NDOException)" );
+				func.Statements.Add( "{" );
+				func.Statements.Add( "thrown = true;" );
+				func.Statements.Add( "}" );
+				func.Statements.Add( AssertEquals( "NDOException should have been thrown", true, "thrown" ) );
+			}
 		}
 
 		void CreateTestChangeKeyHolderLeft( RelInfo ri )
@@ -369,6 +412,8 @@ namespace TestGenerator
 		void GenerateTearDown( RelInfo ri )
 		{
 			Function func = fixture.TearDown;
+			func.Statements.Add( "try" );
+			func.Statements.Add( "{" );
 			func.Statements.Add( "pm.UnloadCache();" );
 			func.Statements.Add( "var l = pm.Objects<" + test.OwnClass.Name + ">().ResultTable;" );
 			func.Statements.Add( "pm.Delete(l);" );
@@ -382,16 +427,29 @@ namespace TestGenerator
 				func.Statements.Add( "pm.UnloadCache();" );
 			}
 			func.Statements.Add( "decimal count;" );
-			func.Statements.Add( "count = (decimal) new " + NDOQuery(test.OwnClass.Name) + ".ExecuteAggregate(\"dummy\", Query.AggregateType.Count);" );
+			func.Statements.Add( "count = (decimal) new " + NDOQuery( test.OwnClass.Name ) + ".ExecuteAggregate(\"dummy\", AggregateType.Count);" );
 			func.Statements.Add( "Assert.AreEqual(0, count, \"Count wrong #1\");" );
-			func.Statements.Add( "count = (decimal) new " + NDOQuery(test.OtherClass.Name) + ".ExecuteAggregate(\"dummy\", Query.AggregateType.Count);" );
+			func.Statements.Add( "count = (decimal) new " + NDOQuery( test.OtherClass.Name ) + ".ExecuteAggregate(\"dummy\", AggregateType.Count);" );
 			func.Statements.Add( "Assert.AreEqual(0, count, \"Count wrong #2\");" );
+			func.Statements.Add( "}" );
+			func.Statements.Add( "catch (Exception)" );
+			func.Statements.Add( "{" );
+			func.Statements.Add( "var handler = pm.GetSqlPassThroughHandler( pm.NDOMapping.Connections.First() );" );
+			
+			func.Statements.Add( "handler.Execute($\"DELETE FROM {pm.NDOMapping.FindClass( ownVar.GetType() ).TableName}\");" );
+			func.Statements.Add( "handler.Execute($\"DELETE FROM {pm.NDOMapping.FindClass( otherVar.GetType() ).TableName}\");" );
+			if (ri.HasTable)
+			{
+				func.Statements.Add( "handler.Execute( $\"DELETE FROM {pm.NDOMapping.FindClass( ownVar.GetType() ).Relations.First().MappingTable.TableName}\" );" );
+			}
+			func.Statements.Add( "}" );
+
 		}
 
 		void GenerateTestGroup( RelInfo ri )
 		{
-			fixture = new TestFixture( "Test" + ri.ToString() );
-			test = new Test( ri );
+			fixture = new TestFixture( this.nameSpace, "Test" + ri.ToString() );
+			test = new Test( ri, "RelationTestClasses" );
 			Class ownClass = null;
 			Class otherClass = null;
 			if (ri.OwnPoly)
@@ -424,12 +482,12 @@ namespace TestGenerator
 
 			CreateTests( ri );
 
-			sw.WriteLine( fixture.ToString() );
+			this.sw.WriteLine( fixture.ToString() );
 		}
 
 		void GeneratePmFactory()
 		{
-			Class cl = new Class( "PmFactory" );
+			Class cl = new Class( this.nameSpace, "PmFactory" );
 			string path = AppDomain.CurrentDomain.BaseDirectory;
 			path = Path.Combine( path, @"..\..\UnitTests\bin\Debug\NDOMapping.xml" );
 			path = Path.GetFullPath( path );
@@ -440,13 +498,13 @@ namespace TestGenerator
 
 			func.Statements.Add( "if (pm == null)" );
 			func.Statements.Add( "{" );
-			func.Statements.Add( "\tpm = new PersistenceManager(@\"" + path + "\");" );
+			func.Statements.Add( "pm = new PersistenceManager(@\"" + path + "\");" );
 			path = Path.GetFullPath( Path.Combine( path, @"..\..\.." ) );
-			func.Statements.Add( "\tpm.LogPath = @\"" + Path.GetDirectoryName( path ) + "\";" );
+			func.Statements.Add( "pm.LogPath = @\"" + Path.GetDirectoryName( path ) + "\";" );
 			func.Statements.Add( "}" );
 			func.Statements.Add( "else" );
 			func.Statements.Add( "{" );
-			func.Statements.Add( "\tpm.UnloadCache();" );
+			func.Statements.Add( "pm.UnloadCache();" );
 			func.Statements.Add( "}" );
 			func.Statements.Add( "return pm;" );
 			sw.WriteLine( cl.ToString() );
@@ -511,13 +569,37 @@ namespace TestGenerator
 		public void Generate()
 		{
 			sw = new StreamWriter( fileName );
+			sw.WriteLine( @"//
+// Copyright (c) 2002-2016 Mirko Matytschak 
+// (www.netdataobjects.de)
+//
+// Author: Mirko Matytschak
+//
+// Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated 
+// documentation files (the ""Software""), to deal in the Software without restriction, including without limitation 
+// the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the 
+// Software, and to permit persons to whom the Software is furnished to do so, subject to the following 
+// conditions:
+
+// The above copyright notice and this permission notice shall be included in all copies or substantial portions 
+// of the Software.
+//
+// THE SOFTWARE IS PROVIDED ""AS IS"", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED 
+// TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL 
+// THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF 
+// CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER 
+// DEALINGS IN THE SOFTWARE.
+
+");
 			sw.WriteLine( "using System;" );
+			sw.WriteLine( "using System.Linq;" );
 			sw.WriteLine( "using System.Reflection;" );
 			sw.WriteLine( "using System.Diagnostics;" );
 			sw.WriteLine( "using System.Collections;" );
 			sw.WriteLine( "using System.Collections.Generic;" );
 			sw.WriteLine( "using NDO;" );
 			sw.WriteLine( "using NDO.Mapping;" );
+			sw.WriteLine( "using NDO.Query;" );
 			sw.WriteLine( "using NUnit.Framework;" );
 			sw.WriteLine( "using RelationTestClasses;\n" );
 			sw.WriteLine( "namespace " + nameSpace );

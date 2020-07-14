@@ -115,12 +115,12 @@ namespace NDO
         }
 
         /// <summary>
-        /// Overloaded Operator ==, to make sure, that Equals is called.
+        /// Overloaded Operator ==
         /// </summary>
         /// <param name="o1">Value to compare with</param>
         /// <param name="o2">Value to compare with</param>
         /// <returns>True if the objects are equal.</returns>
-        public static bool operator ==(ObjectId o1, ObjectId o2)
+        public static bool operator ==(ObjectId o1, object o2)
         {
             if (((object)o1) == null && ((object)o2) == null)
                 return true;
@@ -135,7 +135,7 @@ namespace NDO
         /// <param name="o1">Value to compare with</param>
         /// <param name="o2">Value to compare with</param>
         /// <returns>True if the objects are equal.</returns>
-        public static bool operator !=(ObjectId o1, ObjectId o2)
+        public static bool operator !=(ObjectId o1, object o2)
         {
             return !(o1 == o2);
         }
@@ -155,9 +155,7 @@ namespace NDO
         /// <returns></returns>
         public override string ToString()
         {
-            return this.Dump();
-            //return id.Value.ToString();
-            //return string.Format("[Type = {0}|Id = {1}]", id.Type, id.Value);
+            return this.ToShortId();
         }
 
         /// <summary>
@@ -180,10 +178,36 @@ namespace NDO
 			return id.ToShortId();
 		}
 
+		/// <summary>
+		/// Gets the oid data for serialization purposes.
+		/// </summary>
+		/// <param name="info"></param>
+		/// <param name="context"></param>
         public void GetObjectData(SerializationInfo info, StreamingContext context)
         {
             this.id.Serialize(info, context);
         }
+
+		/// <summary>
+		/// Gets the key value of an oid.
+		/// </summary>
+		/// <remarks>
+		/// You can get the id value of an oid like that:
+		/// <code>
+		/// var key = pc.NDOObjectId[0];
+		/// </code>
+		/// Or use it in a Linq query:
+		/// <code>
+		/// var vt = pm.Objects&lt;YourType&gt;.Where(o=>o.NDOObjectId[0] == yourValue);
+		/// var yourObject = vt.ExecuteSingle();
+		/// </code>
+		/// </remarks>
+		/// <param name="i"></param>
+		/// <returns></returns>
+		public object this[int i]
+		{
+			get => Id.Values[i];
+		}
 
         /// <summary>
         /// Constructs an ObjectId from a deserialization stream
@@ -192,23 +216,8 @@ namespace NDO
         /// <param name="context"></param>
         public ObjectId(SerializationInfo info, StreamingContext context)
         {
-            bool isOldObject = false;
-            try
-            {
-                Type keyType = (Type)info.GetValue("KeyType", typeof(Type));
-            }
-            catch (SerializationException)
-            {
-                isOldObject = true;
-            }
-            if (!isOldObject)
-            {
-                this.id = Key.NewKey(info, context);
-            }
-            else
-            {
-                this.id = MultiKey.OldDeserialization(info, context);
-            }
+            Type keyType = (Type)info.GetValue("KeyType", typeof(Type));
+            this.id = Key.NewKey(info, context);
         }
     }
 }

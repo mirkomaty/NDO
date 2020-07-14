@@ -21,16 +21,16 @@
 
 
 using System;
-using System.Diagnostics;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
 using System.IO;
 using System.Data;
 using NDO.Logging;
 using NDO.Mapping;
-using System.Web;
+using Unity;
+using NDO.Configuration;
+using NDO.SqlPersistenceHandling;
+using System.Reflection;
 
 namespace NDO
 {
@@ -40,14 +40,21 @@ namespace NDO
 	public class PersistenceManagerBase : IPersistenceManagerBase
 	{
 		internal Cache cache = new Cache();
+		/// <summary>
+		/// The DataSet used as template for DataRows
+		/// </summary>
 		protected DataSet ds = null;
+		/// <summary>
+		/// The StateManager instance which will be used for all objects
+		/// </summary>
 		protected IStateManager sm;
 		internal Mappings mappings;  // protected will make the compiler complaining
-		protected string mappingPath = null;
 		private string logPath;
 		private ILogAdapter logAdapter;
 		private Type persistenceHandlerType = null;
-
+		private IUnityContainer configContainer;
+		private IPersistenceHandlerManager persistenceHandlerManager;
+		bool isClosing = false;
 
 		/// <summary>
 		/// Register a listener to this event, if you have to provide user generated ids. 
@@ -61,86 +68,82 @@ namespace NDO
 		/// </summary>
 		public PersistenceManagerBase() 
 		{
-			Assembly ass = Assembly.GetEntryAssembly();
-
-			if (ass == null)
+			string baseDir = AppDomain.CurrentDomain.BaseDirectory;
+            if (File.Exists( Path.Combine( baseDir, "Web.config" ) ))
+                baseDir = Path.Combine( baseDir, "bin" );
+			var entryAssemblyName = Assembly.GetEntryAssembly()?.GetName()?.Name;
+			List<string> paths = new List<string>();
+			if (entryAssemblyName != null)
+			paths.Add( Path.Combine( baseDir, $"{entryAssemblyName}.ndo.mapping" ) );
+			paths.Add( Path.Combine( baseDir, "NDOMapping.xml" ) );
+			
+			bool found = false;
+			foreach (var path in paths)
 			{
-				StackTrace st = new StackTrace();
-				Assembly ndoAss = this.GetType().Assembly;
-				for(int i = 0; i < st.FrameCount; i++)
+				if (File.Exists(path))
 				{
-					MethodBase mb = st.GetFrame(i).GetMethod();
-					MethodInfo mi = mb as MethodInfo;
-					Assembly frameAss = null;
-					if (mi != null)
-					{
-						frameAss = mi.ReflectedType.Assembly;
-					}
-					else
-					{
-						ConstructorInfo ci = mb as ConstructorInfo;
-						if (ci != null)
-						{
-							frameAss = ci.ReflectedType.Assembly;
-						}
-					}
-					if (frameAss != null && frameAss != ndoAss)
-					{
-						ass = frameAss;
-						break;
-					}
+					Init( path );
+					found = true;
+					break;
 				}
 			}
-			if (ass == null)
-				throw new NDOException(49, "Can't determine the path to the mapping file - please provide a mapping file path as argument to the PersistenceManager ctor.");
-
-			string baseDir;
-			if ( HttpContext.Current != null /*ass.Location.ToLower().IndexOf("temporary asp.net files") > -1*/)
-			{
-				/*
-				string localPath = HttpContext.Current.Request.Url.LocalPath;
-				int p; 
-				if ((p = localPath.ToLower().IndexOf(".asmx")) > -1)
-					localPath = localPath.Substring(0, p + 5);
-				 */
-				baseDir = HttpContext.Current.Request.MapPath("/");
-				//baseDir = Path.GetDirectoryName(localPath);
-				if (Directory.Exists(Path.Combine(baseDir, "bin")))
-					baseDir = Path.Combine( baseDir, "bin" );
-			}
-			else
-			{
-				baseDir = Path.GetDirectoryName(ass.Location);
-			}
-			string mappingFileName = Path.GetFileNameWithoutExtension(ass.Location) + ".ndo.xml";
-			string mp = null;
-#if PRO
-			mp = Path.Combine(baseDir, mappingFileName);
-			if (!File.Exists(mp))
-#endif
-				mp = Path.Combine(baseDir, "NDOMapping.xml");
-			Init(Path.Combine(baseDir, mp));
+			if (!found)
+                throw new NDOException( 49, $"Can't determine the path to the mapping file. Tried the following locations:\n{string.Join("\n", paths)}\nPlease provide a mapping file path as argument to the PersistenceManager ctor." );
 		}
 
-#if PRO
+		/// <summary>
+		/// Constructs a PersistenceManagerBase object using the path to a mapping file.
+		/// </summary>
+		/// <param name="mappingFile"></param>
 		public PersistenceManagerBase(string mappingFile)
 		{
 			Init(mappingFile);
 		}
-#endif
 
-		protected virtual void Init(string mappingFileName)
+		/// <summary>
+		/// Constructs a PersistenceManagerBase object using the mapping object.
+		/// </summary>
+		/// <param name="mapping"></param>
+		public PersistenceManagerBase(NDOMapping mapping)
 		{
-			string dir = Path.GetDirectoryName(mappingFileName);
-			this.mappingPath = mappingFileName;
+			var localMappings = mapping as Mappings;
+			if (localMappings == null)
+				throw new ArgumentException( "The mapping must be constructed by a PersistenceManager", nameof( mapping ) );
+
+			Init( localMappings );
+		}
+
+		/// <summary>
+		/// Initializes a PersistenceManager using the path to a mapping file
+		/// </summary>
+		/// <param name="mappingPath"></param>
+		protected virtual void Init(string mappingPath)
+		{
 			if (!File.Exists(mappingPath))
-				throw new NDOException(45, String.Format("Mapping File {0} doesn't exist.", mappingFileName));
-			mappings = new Mappings(mappingPath, this.persistenceHandlerType);
-			ds = new NDODataSet(mappings);
-			mappings.DataSet = ds;
+				throw new NDOException(45, String.Format("Mapping File {0} doesn't exist.", mappingPath));
+			Init( new Mappings( mappingPath, ConfigContainer ) );
+		}
+
+		/// <summary>
+		/// Initializes the persistence manager
+		/// </summary>
+		/// <remarks>
+		/// Note: This is the method, which will be called from all different ways to instantiate a PersistenceManagerBase.
+		/// </remarks>
+		/// <param name="mapping"></param>
+		internal virtual void Init( Mappings mapping )
+		{
+			this.mappings = mapping;
+
+			ConfigContainer.RegisterInstance( mappings );
+
+			this.ds = new NDODataSet( mappings );  // Each PersistenceManager instance must have it's own DataSet.
+
 			string logPath = AppDomain.CurrentDomain.BaseDirectory;
+
 			if (logPath == null)
-				logPath = dir;
+				logPath = Path.GetDirectoryName( mapping.FileName );
+
 			this.LogPath = logPath;
 		}
 
@@ -159,6 +162,9 @@ namespace NDO
 		Dictionary<string,Class> myClassesName;
         Dictionary<Type, Class> myClassesType;
 
+		/// <summary>
+		/// Initializes the class mappings
+		/// </summary>
 		protected void InitClasses()
 		{
             int cnt = mappings.Classes.Count();
@@ -273,18 +279,14 @@ namespace NDO
 		/// </summary>
 		public virtual bool VerboseMode 
 		{
-#if PRO
 			get {return mappings.VerboseMode;}
 			set {mappings.VerboseMode = value;}
-#else
-			get {return false;}
-			set {}
-#endif
 		}
 
 		/// <summary>
 		/// Gets or sets the type which is used to construct persistence handlers.
 		/// </summary>
+		[Obsolete("Use the ConfigContainer to register a handler type.")]
 		public Type PersistenceHandlerType
 		{
 			get { return persistenceHandlerType; }
@@ -292,13 +294,35 @@ namespace NDO
 			{ 
 				if (value != null && value.GetInterface("IPersistenceHandler") == null)
 					throw new NDOException(46, "Invalid PersistenceHandlerType: " + value.FullName);
-                this.persistenceHandlerType = value;
-                this.mappings.DefaultHandlerType = value;
+				ConfigContainer.RegisterType( typeof( IPersistenceHandler ), persistenceHandlerType );
             }
 		}
 
 		/// <summary>
-		/// Available only in the NDO Professional Edition or above. 
+		/// Gets or sets the container for the configuration of the system.
+		/// </summary>
+		public IUnityContainer ConfigContainer
+		{
+			get
+			{
+				if (this.configContainer == null)
+				{
+					this.configContainer = NDOContainer.Instance.CreateChildContainer();
+//					this.configContainer.RegisterInstance<IPersistenceHandlerPool>(new NDOPersistenceHandlerPool());
+					this.configContainer.RegisterType<IQueryGenerator, SqlQueryGenerator>();
+
+					// Currently the PersistenceManager instance is not used.
+					// But we are able to pull it from the container.
+					this.configContainer.RegisterInstance( typeof( PersistenceManager ), this );
+				}
+
+				return this.configContainer;
+			}
+			set { this.configContainer = value; }
+		}
+
+
+		/// <summary>
 		/// Sets or gets the logging Adapter, log information is written to.
 		/// </summary>
 		/// <remarks>
@@ -307,8 +331,6 @@ namespace NDO
 		/// </remarks>
 		public ILogAdapter LogAdapter
 		{
-#if PRO
-
 			get 
 			{ 
 				return this.logAdapter; 
@@ -323,15 +345,25 @@ namespace NDO
 					this.logPath = Path.GetDirectoryName(lfa.FileName);
 				}
 			}
-#else
-			get { return null; }
-			set {}
-#endif
-
 		}
 
 		/// <summary>
-		/// Available only in the NDO Professional Edition or above. 
+		/// Gets or sets an implementation of the PersistenceHandlerManager.
+		/// </summary>
+		public IPersistenceHandlerManager PersistenceHandlerManager
+		{
+			get
+			{
+				// (this.persistenceHandlerManager == null)
+				return this.persistenceHandlerManager = ConfigContainer.Resolve<IPersistenceHandlerManager>();
+
+				//return this.persistenceHandlerManager;
+			}
+			set { this.persistenceHandlerManager = value; }
+		}
+
+
+		/// <summary>
 		/// Gets or sets the directory, where NDO writes the sql log file to.
 		/// </summary>
 		/// <remarks>
@@ -342,7 +374,6 @@ namespace NDO
 		/// </remarks>
 		public string LogPath
 		{
-#if PRO
 			get { return logPath; }
 			set 
 			{ 
@@ -355,10 +386,6 @@ namespace NDO
 				// use the Property to invoke the additional logic
 				this.LogAdapter = new LogFileAdapter(fileName);
 			}
-#else
-			get { return null; }
-			set {}
-#endif
 		}
 
 		
@@ -373,7 +400,11 @@ namespace NDO
 			get { return this.mappings; }
 		}
 
-		internal DataSet DataSet
+		/// <summary>
+		/// Gets the DataSet behind the operations of the pm.
+		/// </summary>
+		/// <remarks>This property should't be used by user code. It exists only for test purposes.</remarks>
+		public DataSet DataSet
 		{
 			get { return this.ds; }
 		}
@@ -396,12 +427,21 @@ namespace NDO
 				this.LogAdapter.Clear();
 		}
 
+		/// <summary>
+		/// Determines, if a log message will actually be issued.
+		/// </summary>
 		public bool LoggingPossible
 		{
 			get { return (VerboseMode && this.logAdapter != null); }
 		}
 
-		protected IPersistenceCapable CheckPc(object o)
+		/// <summary>
+		/// Checks whether an object is an IPersistenceCapable and converts the object into an IPersistenceCapable.
+		/// </summary>
+		/// <param name="o"></param>
+		/// <returns></returns>
+		/// <remarks>Throws an NDOException, if the object can't be converted.</remarks>
+		protected internal IPersistenceCapable CheckPc(object o)
 		{
 			IPersistenceCapable pc = o as IPersistenceCapable;
 			if (pc == null && !(o == null))
@@ -409,10 +449,45 @@ namespace NDO
 			return pc;
 		}
 
+		/// <summary>
+		/// Closes the PersistenceManager and releases all resources.
+		/// </summary>
+		public virtual void Close()
+		{
+			if (isClosing)
+				return;
+			isClosing = true;
+			this.ds.Dispose();
+			this.ds = null;
+			this.configContainer.Dispose();  // Leads to another Disposal of the PM. therefore we query for isClosing.
+		}
 
+		/// <summary>
+		/// IDisposable implementation.
+		/// </summary>
+		/// <remarks>Note: The derived classes don't need to override the Dispose methods, since Close() is virtual. Just override Close() and call base.Close() in the overridden version.</remarks>
+		/// <param name="disposing"></param>
+		protected virtual void Dispose(bool disposing)
+		{
+			if (disposing)
+				Close();
+		}
 
+		/// <summary>
+		/// Disposes any Resources which might be held by the PersistenceManager implementation.
+		/// </summary>
+		public virtual void Dispose()
+		{
+			Dispose( true );
+			GC.SuppressFinalize( this );
+		}
 
-
-
+		/// <summary>
+		/// Finalizer.
+		/// </summary>
+		~PersistenceManagerBase()
+		{
+			Dispose( false );
+		}
 	}
 }

@@ -48,27 +48,56 @@ namespace NDO
 			this.forcedTransactionMode = true;
 			this.oldTransactionMode = this.pm.TransactionMode;
 			this.pm.TransactionMode = TransactionMode.Pessimistic;
-			this.pm.CheckTransaction( null, this.connection );
+			this.pm.TransactionScope.CheckTransaction();
 		}
 
 		public void CommitTransaction()
 		{
-			this.pm.CheckEndTransaction( true );
+			this.pm.TransactionScope.Complete();
+			if (this.forcedTransactionMode)
+				this.pm.TransactionMode = this.oldTransactionMode;
+			this.forcedTransactionMode = false;
 		}
 
-		public IDataReader Execute( string command, bool returnReader = false )
+		/// <summary>
+		/// Executes the given command.
+		/// </summary>
+		/// <param name="command">A SQL command string</param>
+		/// <param name="returnReader">Determines, if the command should return a reader</param>
+		/// <param name="parameters">Optional command parameters</param>
+		/// <returns>A DataReader object which may be empty.</returns>
+		/// <remarks>
+		/// The command string must be formatted for the given database. 
+		/// The names of the parameters in the query must have the names @px, 
+		/// where x is the index of the parameter in the parameters array.
+		/// </remarks>
+		public IDataReader Execute( string command, bool returnReader = false, params object[] parameters )
 		{
+			this.pm.TransactionScope.CheckTransaction();
 			if (this.pm.VerboseMode && this.pm.LogAdapter != null)
 				this.pm.LogAdapter.Info( command );
 
 			IProvider provider = this.pm.NDOMapping.GetProvider( this.connection );
-			TransactionInfo ti = this.pm.GetTransactionInfo( this.connection );
-			IDbConnection dbConnection = ti.Connection;
-			if (dbConnection.State == ConnectionState.Closed)
-				dbConnection.Open();
+
+			var dbConnection = this.pm.TransactionScope.GetConnection(this.connection.ID, () => provider.NewConnection(this.connection.Name) );
+
 			IDbCommand cmd = provider.NewSqlCommand( dbConnection );
 			cmd.CommandText = command;
-			cmd.Transaction = ti.Transaction;
+			var tx = this.pm.TransactionScope.GetTransaction(this.connection.ID);
+			if (tx != null)
+				cmd.Transaction = tx;
+
+			int pcount = 0;
+			foreach (var par in parameters)
+			{
+				var dbpar = cmd.CreateParameter();
+				dbpar.ParameterName = $"@p{pcount++}";
+				dbpar.Value = par ?? DBNull.Value;
+				cmd.Parameters.Add( dbpar );
+			}
+
+			if (dbConnection.State == ConnectionState.Closed)
+				dbConnection.Open();
 
 			if (returnReader)
 				return cmd.ExecuteReader();
@@ -87,8 +116,12 @@ namespace NDO
 
 		public void Dispose()
 		{
+			this.pm.TransactionScope.Dispose();
 			if (this.forcedTransactionMode)
+			{
 				this.pm.TransactionMode = this.oldTransactionMode;
+				this.forcedTransactionMode = false;
+			}
 		}
 	}
 }

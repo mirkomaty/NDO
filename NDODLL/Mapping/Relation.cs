@@ -44,7 +44,7 @@ namespace NDO.Mapping
         [Browsable(false)]
         public Class Parent
         {
-            get { return nodeParent as Class; }
+            get { return NodeParent as Class; }
         }
 
         /// <summary>
@@ -243,7 +243,7 @@ namespace NDO.Mapping
         /// <summary>
         /// For accessing the relation load state in the objects
         /// </summary>
-        internal int Ordinal;// If you ever change the name of this variable, change it in dotfuscator.xml too.
+        internal int Ordinal;
 
         private bool foreignRelationValid;
         private Relation foreignRelation;
@@ -273,10 +273,9 @@ namespace NDO.Mapping
         /// </summary>
         public void RemapForeignKeyColumns(ForeignKeyColumnAttribute[] fkAttributes, ChildForeignKeyColumnAttribute[] childFkAttributes)
         {
-#if ShouldBeImplemented
             bool remap = false;
             Class cl = this.RelatedClass;
-            if (this.mappingTable == null)
+            if (this.mappingTable == null && fkAttributes != null)
             {
                 if (cl.Oid.OidColumns.Count != this.foreignKeyColumns.Count)
                 {
@@ -285,17 +284,33 @@ namespace NDO.Mapping
                 else
                 {
                     int i = 0;
-                    new ForeignKeyIterator(this).Iterate(delegate(ForeignKeyColumn fkColumn, bool isLastElement)
-                    {
-
-                    });
-
-
+					foreach(var fkColumn in this.foreignKeyColumns)
+					{
+						fkAttributes[i].SetColumnValues( fkColumn );
+					}
                 }
+
+				if (!remap)
+					return;
+
+				this.foreignKeyColumns.Clear();
+				foreach(var attr in fkAttributes)
+				{
+					attr.CreateColum( this );
+				}
             }
-#endif
+			else
+			{
+#warning Hier muss noch der Mapping Table-Fall erzeugt werden.
+			}
         }
 
+        /// <summary>
+        /// Alter the MappingTable, if there are changed attributes in the mappingTableAttribute
+        /// </summary>
+        /// <param name="ownTypeIsPoly"></param>
+        /// <param name="otherTypeIsPoly"></param>
+        /// <param name="mappingTableAttribute"></param>
 		public void RemapMappingTable(bool ownTypeIsPoly, bool otherTypeIsPoly, MappingTableAttribute mappingTableAttribute )
 		{
 			if (mappingTableAttribute == null && (foreignRelation == null || foreignRelation.mappingTable == null))
@@ -328,15 +343,19 @@ namespace NDO.Mapping
 			if (foreignRelation.MappingTable == null)
 			{
 				foreignRelation.AddMappingTable( myShortName, refShortName, ownTypeIsPoly, mappingTableAttribute );
+				if (otherTypeIsPoly)
+				{
+					foreignRelation.ForeignKeyTypeColumnName = "TC" + refShortName;
+				}
 			}
 			string frFkcName = "ID" + refShortName;  // This is going to be the r.ForeignKeyColumnName of the foreign relation
 			string frFtcName = null;
-			if (otherTypeIsPoly)
+			if (ownTypeIsPoly)
 				frFtcName = "TC" + myShortName;   // This is going to be the r.MappingTable.ChildForeignKeyColumnName of the foreign relation
 			if (relationName != string.Empty)
 			{
 				frFkcName += "_" + relationName;
-				if (otherTypeIsPoly)
+				if (ownTypeIsPoly)
 					frFtcName += "_" + relationName;
 			}
 			ForeignKeyColumn forFkColumn = foreignRelation.ForeignKeyColumns.FirstOrDefault();
@@ -460,7 +479,7 @@ namespace NDO.Mapping
         {
             System.Diagnostics.Debug.Assert(this.Parent.RelationOrdinalBase > -1, "RelationOrdinalBase for type " + Parent.FullName + " not computed");
             Type t = Type.GetType(this.Parent.FullName + ", " + this.Parent.AssemblyName);
-            IMetaClass mc = Metaclasses.GetClass(t);
+            IMetaClass mc = Metaclasses.GetInnerClass(t);
             Ordinal = this.Parent.RelationOrdinalBase + mc.GetRelationOrdinal(this.FieldName);
             if (Ordinal > 63)
                 throw new NDOException(18, "Class " + Parent.FullName + " has too much relations.");
@@ -523,7 +542,6 @@ namespace NDO.Mapping
             }
 
 
-#if PRO
             // This could be easier, if we hadn't the choice whether to use
             // polymorphy or not.
             bool cond1 = this.Multiplicity == RelationMultiplicity.Element
@@ -532,20 +550,16 @@ namespace NDO.Mapping
                 && this.MappingTable != null && this.MappingTable.ChildForeignKeyTypeColumnName != null;
             hasSubclasses = (relatedClass.HasSubclasses)
                 && (cond1 || cond2);
-#else
-            hasSubclasses = false;
-#endif
 
 
             if (this.multiplicity == RelationMultiplicity.List)
             {
                 if (ra == null)
-                    throw new Exception("Kann Relationstyp für Feld " + Parent.FullName + "." + fi.Name + " nicht bestimmen.");
-#if !NDO11
+                    throw new NDOException(97, $"Can't determine relation type for relation {Parent.FullName}.{fi.Name}");
+
                 if (ra.RelationType == null && fi.FieldType.IsGenericType)
                     this.referencedType = fi.FieldType.GetGenericArguments()[0];
                 else
-#endif
                     this.referencedType = ra.RelationType;
                 if (referencedType == null)
                     throw new NDOException(101, "Can't determine referenced type in relation " + this.Parent.FullName + "." + this.fieldName + ". Provide a type parameter for the [NDORelation] attribute.");
@@ -684,7 +698,7 @@ namespace NDO.Mapping
                             }
                             status = 4;
                             // now check, if a relation targets our base class
-                            if (foreignRelation == null && definingClass != nodeParent)
+                            if (foreignRelation == null && definingClass != NodeParent)
                             {
                                 foreach (Relation fr in referencedClass.Relations)
                                 {
@@ -727,6 +741,7 @@ namespace NDO.Mapping
         }
 
         int hashCode = 0;
+        ///<inheritdoc/>
         public override int GetHashCode()
         {
             // This is a hack, because data binding to a property grid
@@ -745,6 +760,7 @@ namespace NDO.Mapping
             return hashCode;
         }
 
+        ///<inheritdoc/>
         public override bool Equals(object obj)
         {
             if (definingClass == null)
@@ -775,6 +791,7 @@ namespace NDO.Mapping
 
         #region IComparable Member
 
+        ///<inheritdoc/>
         public int CompareTo(object obj)
         {
             return this.FieldName.CompareTo(((Relation)obj).FieldName);

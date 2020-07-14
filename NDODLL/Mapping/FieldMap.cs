@@ -99,9 +99,6 @@ namespace NDO.Mapping
 		{
 			Type t = parent.FieldType;
 
-			if (t.FullName.IndexOf("+QueryHelper+") > -1)
-				return;
-
 			List<FieldInfo> publicFields = new List<FieldInfo>();
 			List<PropertyInfo> publicProps = new List<PropertyInfo>();
 
@@ -178,6 +175,9 @@ namespace NDO.Mapping
 					continue;
 
 				if (!fi.IsPrivate)
+					continue;
+
+				if (fi.IsInitOnly)
 					continue;
 
 				Type ft = fi.FieldType;
@@ -283,7 +283,7 @@ namespace NDO.Mapping
 
 		private void AddRelations(Type t)
 		{
-			FieldInfo[] fieldInfos = t.GetFields(BindingFlags.Instance | BindingFlags.NonPublic);
+			var fieldInfos = t.GetFields(BindingFlags.Instance | BindingFlags.NonPublic).Where(fi => !fi.IsInitOnly);
 			foreach(FieldInfo fi in fieldInfos)
 			{
 				if (fi.GetCustomAttributes(typeof(NDORelationAttribute), false).Length > 0)

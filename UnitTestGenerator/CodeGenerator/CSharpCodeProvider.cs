@@ -19,6 +19,7 @@
 // CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER 
 // DEALINGS IN THE SOFTWARE.
 
+#if notUsed  // This is currently not used
 
 using System;
 using System.Collections.Generic;
@@ -53,3 +54,4 @@ namespace CodeGenerator
           
     }
 }
+#endif

@@ -1,5 +1,5 @@
 ﻿//
-// Copyright (c) 2002-2016 Mirko Matytschak 
+// Copyright (c) 2002-2019 Mirko Matytschak 
 // (www.netdataobjects.de)
 //
 // Author: Mirko Matytschak
@@ -32,6 +32,8 @@ using Microsoft.VisualStudio.OLE.Interop;
 using Microsoft.VisualStudio.Shell;
 using System.Windows.Forms;
 using EnvDTE;
+using System.Threading;
+using ST=System.Threading.Tasks;
 
 namespace NETDataObjects.NDOVSPackage
 {
@@ -47,19 +49,20 @@ namespace NETDataObjects.NDOVSPackage
     /// </summary>
     // This attribute tells the PkgDef creation utility (CreatePkgDef.exe) that this class is
     // a package.
-    [PackageRegistration(UseManagedResourcesOnly = true)]
+    [PackageRegistration(UseManagedResourcesOnly = true, AllowsBackgroundLoading = true )]
     // This attribute is used to register the information needed to show this package
     // in the Help/About dialog of Visual Studio.
     [InstalledProductRegistration("#110", "#112", NDOPackage.Version, IconResourceID = 400)]
     // This attribute is needed to let the shell know that this package exposes some menus.
     [ProvideMenuResource("Menus.ctmenu", 1)]
     [Guid(GuidList.guidNDOPackagePkgString)]
-	[ProvideAutoLoad("f1536ef8-92ec-443c-9ed7-fdadf150da82")]
+	[ProvideAutoLoad( VSConstants.UICONTEXT.SolutionExistsAndFullyLoaded_string, PackageAutoLoadFlags.BackgroundLoad )]
 	[ProvideLoadKey("Standard", NDOPackage.Version, ".NET Data Objects (NDO)", "Mirko Matytschak", 104) ]
-    public sealed class NDOPackage : Package
+    public sealed class NDOPackage : AsyncPackage
     {
-		public const string Version = "3.0.1";
+		public const string Version = "4.0.0";
 		private BuildEventHandler		buildEventHandler;
+		public static IVsSolution SolutionService { get; private set; }
 
         /// <summary>
         /// Default constructor of the package.
@@ -83,21 +86,34 @@ namespace NETDataObjects.NDOVSPackage
         /// Initialization of the package; this method is called right after the package is sited, so this is the place
         /// where you can put all the initialization code that rely on services provided by VisualStudio.
         /// </summary>
-		protected override void Initialize()
+		protected override async ST.Task InitializeAsync(CancellationToken cancellationToken, IProgress<ServiceProgressData> progress)
 		{
 			Debug.WriteLine( string.Format( CultureInfo.CurrentCulture, "Entering Initialize() of: {0}", this.ToString() ) );
-			base.Initialize();
+
+			await base.InitializeAsync( cancellationToken, progress );
+
+			// Let the remainder of the InitializeAsync method run on the main thread,
+			// because it uses a lot of UI and Com stuff.
+
+			await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();			
 
 			_DTE dte = (_DTE)this.GetService( typeof( _DTE ) );
+			var serviceProvider = (Microsoft.VisualStudio.OLE.Interop.IServiceProvider)dte;
+			SolutionService = (IVsSolution)GetService(typeof( IVsSolution ) );
 
 			// Add our command handlers for menu (commands must exist in the .vsct file)
 			OleMenuCommandService mcs = GetService( typeof( IMenuCommandService ) ) as OleMenuCommandService;
 			if (null != mcs)
 			{
+				OleMenuCommand menuItem;
 				// Create the command for the menu items.
 				CommandID menuCommandID = new CommandID( GuidList.guidNDOPackageCmdSet, (int)PkgCmdIDList.cmdidNDOConfiguration );
-				OleMenuCommand menuItem = new Configure( dte, menuCommandID );
-				mcs.AddCommand( menuItem );
+				var cmd = mcs.FindCommand( menuCommandID );
+				if (cmd == null)
+				{
+					menuItem = new Configure( dte, menuCommandID );
+					mcs.AddCommand( menuItem );
+				}
 
 				menuCommandID = new CommandID( GuidList.guidNDOPackageCmdSet, (int)PkgCmdIDList.cmdidAddRelation );
 				menuItem = new AddRelation( dte, menuCommandID );
@@ -114,24 +130,13 @@ namespace NETDataObjects.NDOVSPackage
 				menuCommandID = new CommandID( GuidList.guidNDOPackageCmdSet, (int)PkgCmdIDList.cmdidOpenMappingTool );
 				menuItem = new OpenMappingTool( dte, menuCommandID );
 				mcs.AddCommand( menuItem );
-
-				//menuCommandID = new CommandID( GuidList.guidNDOPackageCmdSet, (int)PkgCmdIDList.cmdidOpenClassGenerator );
-				//menuItem = new OpenClassGenerator( dte, menuCommandID );
-				//mcs.AddCommand( menuItem );
 			}
 
 			this.buildEventHandler = new BuildEventHandler( dte );
-		}
-        #endregion
 
-		private void dummy()
-		{
-			SimpleMappingTool.AddPropertyDialog dlg = null;
-			dummy2( dlg );
+			//await ST.Task.CompletedTask;// Run( () => { } );
 		}
-		private void dummy2(object o)
-		{
-			Console.WriteLine( o.ToString() );
-		}
-    }
+		#endregion
+
+	}
 }

@@ -1,0 +1,369 @@
+using System.Collections.Generic;
+using System.Text;
+using System.Globalization; 
+using NDOql.Expressions; 
+
+COMPILER NDOQL
+
+
+OqlExpression rootExpression;
+public OqlExpression RootExpression
+{
+	get { return rootExpression; }
+}
+
+
+
+/*------------------------------------------------------------------------*
+ *----- SCANNER DESCRIPTION ----------------------------------------------*
+ *------------------------------------------------------------------------*/
+
+IGNORECASE
+
+CHARACTERS
+
+	tab                = '\u0009'. /*  9 = tabulator */
+	eol                = '\u000a'. /* 10 = line feed */
+	cr                 = '\u000d'. /* 13 = carriage return */
+	newLine            = cr + eol. /* Line separator character (U+2028) + Paragraph separator character (U+2029) */
+
+	/* see https://msdn.microsoft.com/de-de/library/aa664670(v=vs.71).aspx 
+	   and implementation in http://www.ssw.uni-linz.ac.at/Coco/CS/CSharp3.atg */
+
+	startletter        = 'A' .. 'Z' + 'a' .. 'z' + '_' + '\u00aa' + '\u00b5' + '\u00ba' + '\u00c0' .. '\u00d6' + '\u00d8' .. '\u00f6' + '\u00f8' .. '\u00ff'.
+	partletter         = '.' + '0' .. '9' + 'A' .. 'Z' + 'a' .. 'z' + '_' + '\u0080' + '\u00a0' .. '\u00b3' + '\u00b5' + '\u00ba' + '\u00c0' .. '\u00d6' + '\u00d8' .. '\u00f6' + '\u00f8' .. '\u00ff'.
+
+	digit              = "0123456789".
+	hexDigit           = digit + "ABCDEFabcdef".
+	notDigit           = ANY - digit.
+
+	regularStringChar  = ANY - "'" - newLine.
+	notNewLine         = ANY - newLine .
+	ws                 = " " + tab + '\u000b' + '\u000c'. /* Any character with Unicode class Zs */
+
+
+TOKENS
+
+  /* This definition is not exact, as it allows '_.x' or 'x..y' as valid identifiers. But we couldn't get a mapping to that kind of wrong identifiers anyway. */
+	ident = startletter { partletter }.	
+
+  /*--------------------------------------------------------------------------------*/
+	realCon =
+	['-'] [digit {digit}] "." digit {digit} 
+			[("e" | "E" ) ["+" | "-"] digit {digit} ] 					
+		.
+
+  /*--------------------------------------------------------------------------------*/
+	intCon =
+		['-'] (digit {digit} | digit {digit} )
+		.
+
+  /*--------------------------------------------------------------------------------*/
+	stringCon = "'"	{ regularStringChar } "'".
+
+
+	/*----- keyword names needed in LL(1) resolvers -----*/
+	AND      = "AND".
+	OR       = "OR".
+	NOT      = "NOT".
+	LIKE     = "LIKE".
+	ESCAPE   = "ESCAPE".
+	BETWEEN  = "BETWEEN".
+	IS       = "IS".
+	NULL     = "NULL".
+	TRUE      = "TRUE".
+	MOD	 = "MOD".
+	IN	 = "IN".
+
+
+	parameter =  "{" digit "}".
+
+
+
+COMMENTS FROM "--" TO eol
+
+IGNORE eol + cr + tab
+
+PRODUCTIONS
+
+/*------------------------------------------------------------------------*
+ *--------------------------- Declarations -------------------------------*
+ *------------------------------------------------------------------------*/
+
+NDOQL = RootExpr<out this.rootExpression> .
+
+/*------------------------------------------------------------------------*/
+
+RootExpr<out OqlExpression expression>
+	(.  OqlExpression child;
+		OqlExpression result = new OqlExpression(la.line, la.col);
+		bool negated = false; 
+	.)
+= 	[NOT (.negated = true; .)] OrExpr<out child> 
+(. 
+	if (negated) result.UnaryOp = "NOT"; 
+	result.Add(child); 
+	expression = result.Simplify(); 
+.)
+.
+
+/*------------------------------------------------------------------------*/
+OrExpr <out OqlExpression expression>   
+	(. 
+		OqlExpression child;
+		OqlExpression result = new OqlExpression(la.line, la.col);
+	.)
+
+= AndExpr 			<out child> (. result.Add(child); .)
+  { "OR" (. bool negated = false; .) [NOT (. negated = true; .)] 
+  AndExpr<out child> (. if (negated) child.UnaryOp = "NOT"; result.Add(child, "OR"); .) 
+  }
+
+(. expression = result.Simplify(); .)
+.
+
+
+/*------------------------------------------------------------------------*/
+AndExpr<out OqlExpression expression>  
+	(. 
+		OqlExpression child;
+		OqlExpression result = new OqlExpression(la.line, la.col);
+	.)
+= EqlExpr<out child> (. result.Add(child); .) {
+												"AND" (. bool negated = false; .) [NOT (. negated = true; .)] 
+											    EqlExpr<out child> (. if (negated) child.UnaryOp = "NOT"; result.Add(child, "AND"); .) 
+											  }
+(. expression = result.Simplify(); .)
+.
+
+
+/*------------------------------------------------------------------------*/
+EqlExpr<out OqlExpression expression>
+	(. 
+		OqlExpression child;
+		OqlExpression result = new OqlExpression(la.line, la.col);
+		string newOp = null;
+		bool negated = false;
+	.)
+	
+= (
+	IF(!(scanner.Peek().kind==_IN))
+	RelExpr<out child> (. result.Add(child); .)
+	{
+		(
+			"!=" (. newOp = "<>"; .) 
+			| "<>" (. newOp = "<>"; .) 
+			| "=" (. newOp = "="; .) [NOT (. negated = true; .)]
+			| "LIKE" (. newOp = "LIKE"; .) /*[ESCAPE stringCon]*/
+		) 
+		RelExpr<out child> (. if (negated) child.UnaryOp = "NOT"; result.Add(child, newOp); .)
+	}
+	|
+	Identifier <out child> (. result.Add(child); .)
+		IN "("
+		(
+			NumList <out child> (. child.HasBrackets = true; result.Add(child, "IN"); .)
+			| StringList <out child> (. child.HasBrackets = true; result.Add(child, "IN"); .)
+		)
+		")"
+   )
+(. expression = result.Simplify(); .)
+.
+
+/*------------------------------------------------------------------------*/
+RelExpr <out OqlExpression expression>
+	(. 
+		OqlExpression child;
+		OqlExpression result = new OqlExpression(la.line, la.col);
+		string newOp = null;
+		bool negated = false;
+	.)
+= BitOrExpr<out child> (. result.Add(child); .)
+  [
+	(
+		"<" (. newOp = "<"; .)
+		| ">" (. newOp = ">"; .)
+		| "<=" (. newOp = "<="; .)
+		| ">=" (. newOp = ">="; .)
+		| "!<" (. newOp = ">="; .)
+		| "!>" (. newOp = "<="; .)
+	) BitOrExpr <out child> (. result.Add(child, newOp); .)
+    | IS [NOT (. negated = true; .)] NULL (. result.Add(new NamedConstantExpression("NULL", negated, t.line, t.col), "IS"); .)
+    | [NOT (. negated = true; .)] BETWEEN BitOrExpr <out child> (. result.Add(child, "BETWEEN"); .) 
+								AND BitOrExpr <out child> (. result.Add(child, "BETWEEN"); .)
+  ]
+(. expression = result.Simplify(); .)
+.
+
+/*------------------------------------------------------------------------*/
+BitOrExpr<out OqlExpression expression>
+	(. 
+		OqlExpression child;
+		OqlExpression result = new OqlExpression(la.line, la.col);
+	.)
+= BitXorExpr <out child> (. result.Add(child); .) 
+  {"|" BitXorExpr <out child> (. result.Add(child, "|"); .) }
+(. expression = result.Simplify(); .)
+.
+
+
+/*------------------------------------------------------------------------*/
+BitXorExpr<out OqlExpression expression>
+	(. 
+		OqlExpression child;
+		OqlExpression result = new OqlExpression(la.line, la.col);
+	.)
+= BitAndExpr <out child> (. result.Add(child); .) 
+  {"^" BitAndExpr <out child> (. result.Add(child, "^"); .) }
+(. expression = result.Simplify(); .)
+.
+
+
+/*------------------------------------------------------------------------*/
+BitAndExpr<out OqlExpression expression>
+	(. 
+		OqlExpression child;
+		OqlExpression result = new OqlExpression(la.line, la.col);
+	.)
+= AddExpr <out child> (. result.Add(child); .) 
+  {"&" AddExpr <out child> (. result.Add(child, "&"); .) }
+(. expression = result.Simplify(); .)
+.
+
+
+/*------------------------------------------------------------------------*/
+AddExpr<out OqlExpression expression>
+	(. 
+		OqlExpression child;
+		OqlExpression result = new OqlExpression(la.line, la.col);
+		string newOp = null;
+	.)
+= MulExpr<out child> (. result.Add(child); .)
+	{
+		(
+			"+" (. newOp = "+"; .) 
+			| "-" (. newOp = "-"; .) 
+		) 
+		MulExpr<out child> (. result.Add(child, newOp); .)
+	}
+(. expression = result.Simplify(); .)
+.
+
+/*------------------------------------------------------------------------*/
+MulExpr<out OqlExpression expression>
+	(. 
+		OqlExpression child;
+		OqlExpression result = new OqlExpression(la.line, la.col);
+		string newOp = null;
+	.)
+= Unary<out child> (. result.Add(child); .)
+	{
+		(
+			"*" (. newOp = "*"; .) 
+			| "/" (. newOp = "/"; .) 
+			| "%" (. newOp = "%"; .) 
+			| "MOD" (. newOp = "MOD"; .)
+		) 
+		Unary<out child> (. result.Add(child, newOp); .)
+	}
+(. expression = result.Simplify(); .)
+.
+
+/*------------------------------------------------------------------------*/
+Unary <out OqlExpression expression>
+	(. 
+		OqlExpression child;
+		OqlExpression result = new OqlExpression(la.line, la.col);
+		string newOp = null;
+	.)
+
+= [	  "+" (. newOp = "+"; .)
+	| "-" (. newOp = "-"; .)
+	| "~" (. newOp = "~"; .)
+  ]   Primary<out child> (. result.Add(child); child.UnaryOp = newOp; .)
+(. expression = result.Simplify(); .)  
+.
+/*------------------------------------------------------------------------*/
+Primary <out OqlExpression expression>
+	(. 
+		OqlExpression result = null;
+	.)
+=   
+  ( 
+	  ident (. result = new IdentifierExpression(t.val, t.line, t.col); .) 
+			[ 
+				"(" intCon 
+					(. 
+					result.UnaryOp="";  // Index-Expression has Brackets, so no Op String is necessary
+					result.Add(new IndexExpression(int.Parse(t.val), t.line, t.col)); 
+					.) 
+				")" 
+			]
+	  | Literal <out result>
+	  | parameter (. result = new ParameterExpression(t.val, t.line, t.col); .)
+	  | "(" RootExpr <out result> (. result.HasBrackets = true; .) ")"
+  )
+(. expression = result.Simplify(); .)  
+.
+
+Identifier <out OqlExpression expression>
+	(. 
+		OqlExpression result = null;
+	.)
+=   
+	ident (. result = new IdentifierExpression(t.val, t.line, t.col); .)
+(. expression = result.Simplify(); .)  
+.
+
+NumList <out OqlExpression expression>
+	(. 		
+		OqlExpression result = new OqlExpression(la.line, la.col);
+	.)
+=
+	(
+		realCon (. result.Add(new NumberExpression(double.Parse(t.val, CultureInfo.InvariantCulture ), t.line, t.col)); .)
+		| intCon (. result.Add(new NumberExpression(int.Parse(t.val), t.line, t.col)); .)
+	)
+{
+	","
+	(
+		realCon (. result.Add(new NumberExpression(double.Parse(t.val, CultureInfo.InvariantCulture ), t.line, t.col), ","); .)
+		| intCon (. result.Add(new NumberExpression(int.Parse(t.val), t.line, t.col), ","); .)
+	)
+}
+(. expression = result.Simplify(); .)
+.
+
+StringList <out OqlExpression expression>
+	(. 
+		OqlExpression result = new OqlExpression(la.line, la.col);
+	.)
+=
+	stringCon (. result.Add(new StringLiteralExpression(t.val, t.line, t.col)); .)
+	{
+		","
+		stringCon (. result.Add(new StringLiteralExpression(t.val, t.line, t.col), ","); .)
+	}
+(. expression = result; /* Do not simplify here, because otherwise the brackets are missing */ .)
+.
+
+
+
+/*------------------------------------------------------------------------*/
+Literal <out OqlExpression expression>
+	(. 
+		OqlExpression result = null;
+	.)
+=
+(
+	 realCon (. result = new NumberExpression(double.Parse(t.val, CultureInfo.InvariantCulture ), t.line, t.col); .)
+	| intCon (. result = new NumberExpression(int.Parse(t.val), t.line, t.col); .)
+	| stringCon (. result = new StringLiteralExpression(t.val, t.line, t.col); .)
+	| "TRUE" (. result = new NamedConstantExpression("TRUE", t.line, t.col); .)
+	| "FALSE" (. result = new NamedConstantExpression("FALSE", t.line, t.col); .)
+	| "NULL" (. result = new NamedConstantExpression("NULL", t.line, t.col); .)
+)
+(. expression = result.Simplify(); .)  
+.
+
+END NDOQL.

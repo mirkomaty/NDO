@@ -1,11 +1,13 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 14
-VisualStudioVersion = 14.0.25420.1
+# Visual Studio 15
+VisualStudioVersion = 15.0.27703.2018
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NDO", "NDO.csproj", "{EF666155-B2DF-4A2F-9DE5-839B1B9DF98C}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NdoDllUnitTests", "..\NdoDllUnitTests\NdoDllUnitTests.csproj", "{D1CA4F05-14F3-44F7-AC5C-D305A4FA6A4A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "QueryTests", "..\QueryTests\QueryTests.csproj", "{B276FAE1-1A66-4032-B282-4DD45E47DBA3}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,8 +23,15 @@ Global
 		{D1CA4F05-14F3-44F7-AC5C-D305A4FA6A4A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D1CA4F05-14F3-44F7-AC5C-D305A4FA6A4A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D1CA4F05-14F3-44F7-AC5C-D305A4FA6A4A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B276FAE1-1A66-4032-B282-4DD45E47DBA3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B276FAE1-1A66-4032-B282-4DD45E47DBA3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B276FAE1-1A66-4032-B282-4DD45E47DBA3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B276FAE1-1A66-4032-B282-4DD45E47DBA3}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {4E19CF5F-5DB8-4FB2-8CB7-12CE5E22762B}
 	EndGlobalSection
 EndGlobal

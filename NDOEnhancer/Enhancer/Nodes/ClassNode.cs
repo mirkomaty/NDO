@@ -93,27 +93,32 @@ namespace NDOEnhancer
                 FieldInfo fi = de.Value as FieldInfo;
                 if (fi == null)
                     continue;
-                if (fi.GetCustomAttributes(typeof(NDOObjectIdAttribute), false).Length > 0)
+#pragma warning disable 0618
+				if (fi.GetCustomAttributes(typeof(NDOObjectIdAttribute), false).Length > 0)
                 {
                     OidColumnAttribute ca = new OidColumnAttribute();
                     ca.FieldName = fi.Name;
                     collectedAttributes.Add(ca);
                 }
-            }
+#pragma warning restore 0618
+			}
 
-            // If no attribute is assigned to the class, look for attributes assigned to the assembly
-            if (collectedAttributes.Count == 0)
+			// If no attribute is assigned to the class, look for attributes assigned to the assembly
+			if (collectedAttributes.Count == 0)
             {
                 attributes = this.classType.Assembly.GetCustomAttributes(typeof(OidColumnAttribute), false);
-                foreach (OidColumnAttribute ca in attributes)
-                    collectedAttributes.Add(ca);
+				foreach (OidColumnAttribute ca in attributes)
+				{
+					ca.IsAssemblyWideDefinition = true;
+					collectedAttributes.Add( ca );
+				}
             }
             if (collectedAttributes.Count == 0)
             {
                 attributes = this.classType.Assembly.GetCustomAttributes(typeof(NDOOidTypeAttribute), false);
-                // The old mapping only allowed 1 NDOOidAttribute, so let's take the first one found
-                if (attributes.Length > 0)
-                    collectedAttributes.Add(new OidColumnAttribute(((NDOOidTypeAttribute)attributes[0]).OidType));
+				// The old mapping only allowed 1 NDOOidAttribute, so let's take the first one found
+				if (attributes.Length > 0)
+					collectedAttributes.Add( new OidColumnAttribute( ((NDOOidTypeAttribute)attributes[0]).OidType ) { IsAssemblyWideDefinition = true } );
             }
             if (collectedAttributes.Count > 0)
             {
@@ -125,7 +130,7 @@ namespace NDOEnhancer
 		private void AnalyzeFields()
 		{
 			IList relations = new ArrayList();
-			FieldInfo[] fis = this.classType.GetFields(BindingFlags.NonPublic | BindingFlags.Instance);
+			var fis = this.classType.GetFields(BindingFlags.NonPublic | BindingFlags.Instance).Where(fi=>!fi.IsInitOnly);
 			foreach (FieldInfo fi in fis)
 			{
 				string fname = fi.Name;
@@ -159,7 +164,7 @@ namespace NDOEnhancer
 					this.relations.Add(new RelationNode(fi, nra, this));
 					continue;
 				}
-#if !NDO11
+
 				// Field is a collection - assume that it is either a relation or a transient field.
 				if (GenericIListReflector.IsGenericIList(fi.FieldType))
 				{
@@ -174,7 +179,7 @@ namespace NDOEnhancer
 					}
 					continue;
 				}
-#endif
+
 				if (!fi.FieldType.IsGenericParameter && fi.FieldType.IsClass && fi.FieldType != typeof(string) && fi.FieldType != typeof(byte[]))
 				{
 					this.embeddedTypes.Add(new EmbeddedTypeNode(fi));

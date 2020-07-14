@@ -44,6 +44,7 @@ namespace UnitTests
 				Console.WriteLine( s );
 			}
 			Console.WriteLine( "BuildDatabase ready." );
+			return;
 #endif
 			DateTime startTime = DateTime.Now;
 
@@ -91,13 +92,8 @@ namespace UnitTests
 								}
 								else
 								{
-									Type expectedException = null;
-
 									object[] attrs;
-									if ((attrs = mi.GetCustomAttributes( typeof( NUnit.Framework.ExpectedExceptionAttribute ), false )).Length > 0)
-									{
-										expectedException = ((ExpectedExceptionAttribute) attrs[0]).ExpectedException;
-									}
+
 									if (setUp != null)
 									{
 										try
@@ -119,18 +115,9 @@ namespace UnitTests
 									}
 									catch (TargetInvocationException ex)
 									{
-										if (ex.InnerException.GetType() == expectedException)
-										{
-											Console.Write( '.' );
-											passed++;
-										}
-										else
-										{
-											//Console.Write('-');
-											failed++;
-											Console.WriteLine( "\n===Test Failure===\n" + testName + "\n" + ex.InnerException.ToString() );
-											Debug.WriteLine( "\n===Test Failure===\n" + testName + "\n" + ex.InnerException.ToString() );
-										}
+										failed++;
+										Console.WriteLine( "\n===Test Failure===\n" + testName + "\n" + ex.InnerException.ToString() );
+										Debug.WriteLine( "\n===Test Failure===\n" + testName + "\n" + ex.InnerException.ToString() );
 									}
 									if (tearDown != null)
 									{

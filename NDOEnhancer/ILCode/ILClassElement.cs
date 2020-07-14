@@ -24,6 +24,7 @@ using System;
 using System.Diagnostics;
 using System.Collections;
 using System.Collections.Generic;
+using NDOEnhancer;
 
 namespace ILCode
 {
@@ -74,9 +75,6 @@ namespace ILCode
         private string                      m_genericArguments = string.Empty;
 		private string						m_fullName = null;
 		private string						m_baseFullName;
-#if NET11
-		private ILClassElement				m_forwardClassElement = null;
-#endif
 		private bool						m_isPublic			  = false;
 		private bool						m_isPrivate			  = false;
 		private bool						m_isSealed			  = false;
@@ -248,9 +246,9 @@ namespace ILCode
 				m_baseFullName = line.Substring( 7 );	//extends has 7 chars
 				m_baseFullName = stripComment( m_baseFullName );
 
-				if ( m_baseFullName.Equals( "[mscorlib]System.ValueType" ) )
+				if ( m_baseFullName.Equals( "[mscorlib]System.ValueType" ) || m_baseFullName.Equals( "[netstandard]System.ValueType" ))
 					m_isValueType = true;
-				else if ( m_baseFullName.Equals( "[mscorlib]System.Enum" ) )
+				else if ( m_baseFullName.Equals( "[mscorlib]System.Enum" ) || m_baseFullName.Equals( "[netstandard]System.Enum" ))
 					m_isEnum = true;
 			}
 
@@ -261,21 +259,6 @@ namespace ILCode
 		{
 			m_name = null;
 		}
-
-
-#if NET11
-		public void
-		setForwardClassElement( ILClassElement forwardClassElement )
-		{
-			m_forwardClassElement = forwardClassElement;
-		}
-
-		public ILClassElement
-		getForwardClassElement()
-		{
-			return m_forwardClassElement;
-		}
-#endif
 
 		public ILMethodElement getMethod(string name)
 		{

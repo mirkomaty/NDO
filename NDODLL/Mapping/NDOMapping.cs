@@ -60,6 +60,9 @@ namespace NDO.Mapping
             }
         }
 
+		/// <summary>
+		/// Determines if the mapping has changes.
+		/// </summary>
         [Browsable(false)]
         public bool HasChanges
         {
@@ -286,11 +289,12 @@ namespace NDO.Mapping
         /// Add an abstract class mapping.
         /// </summary>
         /// <param name="fullName">Fully qualified name of the class.</param>
-        /// <param name="AssemblyName">Assembly name of the assembly the class resides in.</param>
+        /// <param name="assemblyName">Assembly name of the assembly the class resides in.</param>
+        /// <param name="columnAttributes">If not null, the mapping values will be taken from the column attributes.</param>
         /// <returns>A new Class object.</returns>
-        public Class AddAbstractClass(string fullName, string AssemblyName, OidColumnAttribute[] columnAttributes)
+        public Class AddAbstractClass(string fullName, string assemblyName, OidColumnAttribute[] columnAttributes)
         {
-            Class c = AddStandardClass(fullName, AssemblyName, columnAttributes);
+            Class c = AddStandardClass(fullName, assemblyName, columnAttributes);
             c.TableName = unused;
             c.IsAbstract = true;
             ((OidColumn)c.Oid.OidColumns[0]).Name = unused;
@@ -302,6 +306,7 @@ namespace NDO.Mapping
         /// </summary>
         /// <param name="fullName">Fully qualified name of the class.</param>
         /// <param name="AssemblyName">Name of the assembly, the class resides in.</param>
+        /// <param name="columnAttributes">If not null, the mapping values will be taken from the column attributes.</param>
         /// <returns>A new Class object.</returns>
         public Class AddStandardClass(string fullName, string AssemblyName, OidColumnAttribute[] columnAttributes)
         {
@@ -406,7 +411,11 @@ namespace NDO.Mapping
             return GetProvider(conn.Type);
         }
 
-
+        /// <summary>
+        /// Gets the NDO provider for a specific connection.
+        /// </summary>
+        /// <param name="conn"></param>
+        /// <returns></returns>
         public IProvider GetProvider(Connection conn)
         {
             if (conn == null ||
@@ -458,7 +467,10 @@ namespace NDO.Mapping
             this.classes.Add(c.FullName,c);
         }
 
-
+        /// <summary>
+        /// Removes a class from the class list
+        /// </summary>
+        /// <param name="c"></param>
         public void RemoveClass(Class c)
         {
             if (this.classes.ContainsKey(c.FullName))

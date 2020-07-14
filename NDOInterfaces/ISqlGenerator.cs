@@ -1,5 +1,5 @@
 ﻿//
-// Copyright (c) 2002-2016 Mirko Matytschak 
+// Copyright (c) 2002-2019 Mirko Matytschak 
 // (www.netdataobjects.de)
 //
 // Author: Mirko Matytschak
@@ -130,8 +130,9 @@ namespace NDOInterfaces
 		/// Maps a certain System.Type to a database specific column type
 		/// </summary>
 		/// <param name="t">The System.Type to convert.</param>
+		/// <param name="size">The intended size of the type. If type is string, the value -1 means, that a CLOB type should be returned.</param>
 		/// <returns>A type string</returns>
-		string DbTypeFromType(Type t);
+		string DbTypeFromType(Type t, int size = 0);
 
 		/// <summary>
 		/// DDL for auto increment columns.

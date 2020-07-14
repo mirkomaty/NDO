@@ -20,14 +20,17 @@
 // DEALINGS IN THE SOFTWARE.
 
 
+using NDO.HttpUtil;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using System.Web;
 
 namespace NDO.ShortId
 {
+	/// <summary>
+	/// Extensions to support conversions from an to ShortIds
+	/// </summary>
 	public static class ShortIdExtensions
 	{
 		/// <summary>
@@ -37,6 +40,8 @@ namespace NDO.ShortId
 		/// <returns></returns>
 		public static string Encode(this string shortId)
 		{
+			if (shortId == null)
+				return null;
 			string[] arr = shortId.Split('-');
 			for (int i = 0; i < arr.Length; i++)
 				arr[i] = HttpUtility.UrlEncode( arr[i] );
@@ -50,6 +55,8 @@ namespace NDO.ShortId
 		/// <returns></returns>
 		public static string Decode(this string shortId)
 		{
+			if (shortId == null)
+				return null;
 			string[] arr = shortId.Split('-');
 			for (int i = 0; i < arr.Length; i++)
 				arr[i] = HttpUtility.UrlDecode( arr[i] );
@@ -60,9 +67,13 @@ namespace NDO.ShortId
 		/// Gets the type of the object denoted by the ShortId
 		/// </summary>
 		/// <param name="shortId"></param>
+		/// <param name="pm"></param>
 		/// <returns></returns>
 		public static Type GetObjectType(this string shortId, PersistenceManager pm)
 		{
+			if (!shortId.IsShortId())
+				return null;
+
 			string[] arr = shortId.Decode().Split('-');
 			int typeCode = 0;
 			if (int.TryParse(arr[1],System.Globalization.NumberStyles.HexNumber, System.Globalization.CultureInfo.InvariantCulture, out typeCode))
@@ -82,6 +93,9 @@ namespace NDO.ShortId
 		/// <returns></returns>
 		public static string GetEntityName(this string shortId)
 		{
+			if (!shortId.IsShortId())
+				return null;
+
 			string[] arr = shortId.Decode().Split('-');
 			int typeCode = 0;
 			if (int.TryParse(arr[1],System.Globalization.NumberStyles.HexNumber, System.Globalization.CultureInfo.InvariantCulture, out typeCode))
@@ -114,6 +128,8 @@ namespace NDO.ShortId
 		/// <returns></returns>
 		public static bool IsShortId(this string shortId)
 		{
+			if (shortId == null)
+				return false;
 			string[] arr = shortId.Split('-');
 			return arr.Length == 3;
 		}

@@ -87,7 +87,7 @@ namespace NDOEnhancer
 				|| string.Compare(dbType, "decimal", true) == 0;
 		}
 
-		public override string DbTypeFromType(Type t)
+		public override string DbTypeFromType(Type t, int size)
 		{
 			if ( t == typeof(bool) ||  t == typeof(byte) || t == typeof(sbyte) 
 				|| t == typeof(char) || t == typeof(short) || t == typeof(ushort) )

@@ -29,51 +29,66 @@ namespace NDO
 	/// <summary>
 	/// Summary description for NDOReadOnlyArrayList.
 	/// </summary>
+	[Obsolete("This class will be removed in the near future. Use generic lists instead.")]
 	public class NDOReadOnlyArrayList : IList, ITypedList
 	{
+		/// <summary/>
 		protected IList list;
 		const string readOnly = "Can't change this list because it's read only";
+
+		/// <summary>
+		/// This class is obsolete. Don't use it.
+		/// </summary>
+		/// <param name="list"></param>
 		public NDOReadOnlyArrayList(IList list)
 		{
 			this.list = list;
 		}
 
 		#region Implementation of IList
+		///<inheritdoc/>
 		public void RemoveAt(int index)
 		{
 			throw new NotImplementedException(readOnly);
 		}
 
+		///<inheritdoc/>
 		public void Insert(int index, object value)
 		{
 			throw new NotImplementedException(readOnly);		
 		}
 
+		///<inheritdoc/>
 		public void Remove(object value)
 		{
 			throw new NotImplementedException(readOnly);		
 		}
 
+		///<inheritdoc/>
 		public bool Contains(object value)
 		{
 			return this.list.Contains(value);
 		}
 
+		///<inheritdoc/>
 		public void Clear()
 		{
 			throw new NotImplementedException(readOnly);		
 		}
 
+		///<inheritdoc/>
 		public int IndexOf(object value)
 		{
 			return this.list.IndexOf(readOnly);
 		}
 
+		///<inheritdoc/>
 		public int Add(object value)
 		{
 			throw new NotImplementedException(readOnly);		
 		}
 
+		///<inheritdoc/>
 		public bool IsReadOnly
 		{
 			get
@@ -82,6 +97,7 @@ namespace NDO
 			}
 		}
 
+		///<inheritdoc/>
 		public object this[int index]
 		{
 			get
@@ -94,6 +110,7 @@ namespace NDO
 			}
 		}
 
+		///<inheritdoc/>
 		public bool IsFixedSize
 		{
 			get
@@ -104,11 +121,13 @@ namespace NDO
 		#endregion
 
 		#region Implementation of ICollection
+		///<inheritdoc/>
 		public void CopyTo(System.Array array, int index)
 		{
 			list.CopyTo(array, index);
 		}
 
+		///<inheritdoc/>
 		public bool IsSynchronized
 		{
 			get
@@ -117,6 +136,7 @@ namespace NDO
 			}
 		}
 
+		///<inheritdoc/>
 		public int Count
 		{
 			get
@@ -125,6 +145,7 @@ namespace NDO
 			}
 		}
 
+		///<inheritdoc/>
 		public object SyncRoot
 		{
 			get
@@ -135,6 +156,7 @@ namespace NDO
 		#endregion
 
 		#region Implementation of IEnumerable
+		///<inheritdoc/>
 		public System.Collections.IEnumerator GetEnumerator()
 		{
 			return list.GetEnumerator();
@@ -142,6 +164,7 @@ namespace NDO
 		#endregion
 
 		#region Implementation of ITypedList
+		///<inheritdoc/>
 		public System.ComponentModel.PropertyDescriptorCollection GetItemProperties(System.ComponentModel.PropertyDescriptor[] listAccessors)
 		{
 			ITypedList tlist = list as ITypedList;
@@ -151,6 +174,7 @@ namespace NDO
 				return tlist.GetItemProperties(listAccessors);
 		}
 
+		///<inheritdoc/>
 		public string GetListName(System.ComponentModel.PropertyDescriptor[] listAccessors)
 		{
 			ITypedList tlist = list as ITypedList;

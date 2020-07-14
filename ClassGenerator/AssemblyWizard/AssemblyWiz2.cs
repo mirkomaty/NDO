@@ -28,6 +28,7 @@ using System.Windows.Forms;
 using WizardBase;
 using NDOInterfaces;
 using NDO;
+using NDO.UISupport;
 
 namespace ClassGenerator.AssemblyWizard
 {
@@ -214,12 +215,13 @@ namespace ClassGenerator.AssemblyWizard
 
 		private void OpenDialog()
 		{
-			IProvider provider = NDOProviderFactory.Instance[model.ConnectionType];
+#error We must make sure, that the ui providers can be found
+			var provider = NdoUIProviderFactory.Instance[model.ConnectionType];
 			string text = txtConnectionString.Text;
 			this.txtOwner.DataBindings.Clear();
 			this.txtOwner.DataBindings.Add("Text", this.model, "OwnerName");
-			DialogResult result = provider.ShowConnectionDialog(ref text);
-			if (result != DialogResult.Cancel)
+			var result = provider.ShowConnectionDialog(ref text);
+			if (result != NdoDialogResult.Cancel)
 			{
 				txtConnectionString.Text = text;
 				this.model.ConnectionString = text;

@@ -21,6 +21,7 @@
 
 
 using System;
+using System.Linq;
 using System.Diagnostics;
 using System.IO;
 using Microsoft.Win32;
@@ -49,56 +50,58 @@ namespace NDOEnhancer
             }
         }
 
-		string GetIlAsmPath()
+		void CheckIlAsmPath()
 		{
-			string path = Path.Combine( Environment.GetFolderPath( Environment.SpecialFolder.Windows ), @"Microsoft.NET\Framework" );
+			string path = null;
+			//string path = Path.Combine( Path.GetDirectoryName( System.Reflection.Assembly.GetEntryAssembly().Location ), "ilasm.exe" );
+			//if (File.Exists( path ))
+			//{
+			//	this.ilAsmPath = path;
+			//	return;
+			//}
+
+			path = typeof( string ).Assembly.Location;
+			path = Path.Combine( Path.GetDirectoryName( path ), "ilasm.exe" );
+			if (File.Exists( path ))
+			{
+				this.ilAsmPath = path;
+				CheckVersion( "Enhancer Executable Directory" );
+				return;
+			}
+
+			path = Path.Combine( Environment.GetFolderPath( Environment.SpecialFolder.Windows ), @"Microsoft.NET\Framework" );
 			foreach ( string dir in Directory.GetDirectories( path ) )
 			{
 				if ( Path.GetFileName( dir ).StartsWith( "v4.0", true, CultureInfo.InvariantCulture ) )
 				{
-					return dir;
+					path = Path.Combine( Path.GetDirectoryName( ilAsmPath ), "ilasm.exe" );
+					if (File.Exists( path ))
+					{
+						this.ilAsmPath = path;
+						CheckVersion( ".Net Framework Folder" );
+						return;
+					}
 				}
 			}
 
-			return string.Empty;
+			string pathVar = Environment.GetEnvironmentVariable( "PATH" );
+			var thePaths = from pv in pathVar.Split( ';' ) select Path.Combine( pv.TrimEnd('\\'), "ILAsm.exe") ;
+			this.ilAsmPath = thePaths.FirstOrDefault( p => File.Exists( p ) );
+			if (this.ilAsmPath == null || !File.Exists( this.ilAsmPath ))
+			{
+				throw new Exception( "Path for ILAsm not found.\n  Add the path to ilasm.exe to the PATH environment variable." );
+			}
+			else
+			{
+				CheckVersion( "PATH Environment Variable" );
+			}
 		}
 
 		public Asm(MessageAdapter messages, bool verboseMode) : base(verboseMode)
 		{
             this.messages = messages;
 
-            this.ilAsmPath = typeof(string).Assembly.Location;
-			this.ilAsmPath = Path.Combine( Path.GetDirectoryName( ilAsmPath ), "ilasm.exe" );
-            CheckVersion("AssemblyLocation");
-			if ( !File.Exists( this.ilAsmPath ) )
-			{
-				this.ilAsmPath = Path.Combine( GetIlAsmPath(), "ilasm.exe" );
-				// Don't need a version check here.
-			}
-			if (!File.Exists(this.ilAsmPath))
-			{
-                string pathVar = Environment.GetEnvironmentVariable("PATH");
-                string[] thePaths = pathVar.Split(';');
-                for (int i = 0; i < thePaths.Length; i++)
-                {
-                    if (!thePaths[i].EndsWith("\\"))
-                        thePaths[i] += '\\';
-                }
-                foreach (string p in thePaths)
-				{
-					string pn = p + "ilasm.exe";
-					if (File.Exists(pn))
-					{
-						ilAsmPath = pn;
-						break;
-					}
-				}
-                CheckVersion("PathEnvironment");
-			}
-			if (!File.Exists(ilAsmPath))
-			{
-				throw new Exception("Path for ILAsm not found.\n  Add the path to ilasm.exe to the PATH environment variable.");
-			}
+			CheckIlAsmPath();
 		}
 
 		public void DoIt(string ilFileName, string dllFileName, string keyFileName, bool debug)
@@ -115,11 +118,13 @@ namespace NDOEnhancer
 			string debugMode = debug ? " /DEBUG /PDB" : string.Empty;
 #endif
 			string key = keyFileName != null ? " /KEY=\"" + keyFileName + '"' : string.Empty;
-
+#if NETCOREAPP2_0
+			string resource = String.Empty;
+#else
 			string resourceFile = Path.ChangeExtension(dllFileName, ".res");
 
-			string resource = File.Exists(resourceFile) ? " /RESOURCE=\"" + resourceFile + '"' : string.Empty;
-
+			string resource = File.Exists(resourceFile) && Corlib.FxType == FxType.NetFx ? " /RESOURCE=\"" + resourceFile + '"' : string.Empty;
+#endif
 			string parameters = 
 				libMode
 				+ debugMode
@@ -141,8 +146,10 @@ namespace NDOEnhancer
 					errorMessage += '\n';
 				errorMessage += Stdout.Substring(p + 7);
 			}
-			if (errorMessage != string.Empty)
-				throw new Exception("ILAsm: " + errorMessage);
+			if (errorMessage != string.Empty && errorMessage.IndexOf( "error", StringComparison.InvariantCultureIgnoreCase ) > -1)
+				throw new Exception( "ILAsm: " + errorMessage );
+			else
+				messages.WriteLine( errorMessage );
 		}
 	}
 }

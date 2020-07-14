@@ -131,9 +131,16 @@ namespace CodeGenerator
 				sb.Append(')');
 				result.Add(sb.ToString());
 				sb.Length = 0;
+				int level = 0;
 				result.Add("{");
-				foreach(string s in this.statements)
-					result.Add("\t" + s);
+				foreach (string s in this.statements)
+				{
+					if (s == "}")
+						level--;
+					result.Add( new String( '\t', level + 1 ) + s );
+					if (s == "{")
+						level++;
+				}
 				result.Add("}");
 				return result;
 			}

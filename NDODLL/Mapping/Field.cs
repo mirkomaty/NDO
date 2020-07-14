@@ -79,16 +79,22 @@ namespace NDO.Mapping
         private object columnDbType;
 
         Column column;
+        /// <summary>
+        /// Gets the column to which the field is associated.
+        /// </summary>
         [Browsable(false)]
         public Column Column
         {
             get { return this.column; }
         }
 
+        /// <summary>
+        /// Gets the parent object
+        /// </summary>
         [Browsable(false)]
         public Class Parent
         {
-            get { return nodeParent as Class; }
+            get { return NodeParent as Class; }
         }
 
         /// <summary>
@@ -185,6 +191,7 @@ namespace NDO.Mapping
 
         #region IComparable Member
 
+        ///<inheritdoc/>
         public int CompareTo(object obj)
         {
             return string.CompareOrdinal(this.Name, ((Field)obj).Name);

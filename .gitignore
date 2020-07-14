@@ -15,4 +15,9 @@ NDO.Sql.log
 *.nupkg
 logs.txt
 .vs
-/nuget
+NDOPackage/Backup
+/nuget/NDOEnhancer.exe
+/nuget/NDOEnhancer.pdb
+UsersGuide
+/QueryTests/NDOMapping.xml
+SourceRevisionId.props

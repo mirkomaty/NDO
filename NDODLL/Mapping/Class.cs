@@ -83,6 +83,10 @@ namespace NDO.Mapping
         /// This is for use of the NDO framework only. It will be initialized, if passed to an IPersistenceHandler.
         /// </summary>
         private List<Class> subclasses = new List<Class>();
+
+		/// <summary>
+		/// Gets the Subclasses of the current class
+		/// </summary>
         [Browsable(false)]
         public IEnumerable<Class> Subclasses
         {
@@ -179,7 +183,7 @@ namespace NDO.Mapping
         [Browsable(false)]
         public NDOMapping Parent
         {
-            get { return nodeParent as NDOMapping; }
+            get { return NodeParent as NDOMapping; }
         }
 
         /// <summary>
@@ -196,7 +200,7 @@ namespace NDO.Mapping
         /// <param name="parent">An object of type NDOMapping.</param>
         internal void SetParent(NDOMapping parent)
         {
-            this.nodeParent = parent;
+            this.NodeParent = parent;
         }
 
         /// <summary>
@@ -210,8 +214,12 @@ namespace NDO.Mapping
         internal IEnumerable<string>FKColumnNames;              // InitFields - collects all foreign key column names used in LoadState
 		private bool?				hasEncryptedFields;
 
+        /// <summary>
+        /// Determines, if the class has encrypted fields.
+        /// </summary>
 		[Browsable(false)]
-		public bool HasEncryptedFields
+		
+        public bool HasEncryptedFields
 		{
 			get 
 			{
@@ -225,6 +233,10 @@ namespace NDO.Mapping
 		}
 
         private Column typeNameColumn = null;
+
+        /// <summary>
+        /// Gets the TypeNameColumn, if one is present.
+        /// </summary>
         [ReadOnly(true)]
         public Column TypeNameColumn
         {
@@ -410,7 +422,7 @@ namespace NDO.Mapping
 				return ((FieldInfo) memberInfo).FieldType;
 			if (memberInfo.MemberType == MemberTypes.Property)
 				return ((PropertyInfo) memberInfo).PropertyType;
-			throw new NDOException( 117, String.Format( "InitFields: MemberInfo of the persistent field {0}.{1} should be a FieldInfo or a PropertyInfo", FullName, memberInfo.Name ) );
+			throw new NDOException( 117, $"InitFields: MemberInfo of the persistent field {FullName}.{memberInfo.Name} should be a FieldInfo or a PropertyInfo");
 		}
 
 		void IFieldInitializer.InitFields()
@@ -423,12 +435,16 @@ namespace NDO.Mapping
             FieldMap fieldMap = new FieldMap(this);
             myColumns = fieldMap.Fields;
             myEmbeddedTypes = fieldMap.EmbeddedTypes;
+			var persistentFields = fieldMap.PersistentFields;
             ((IFieldInitializer)this.oid).InitFields();
 			foreach (var field in this.fields)
 			{
-				var type = GetMemberType( fieldMap.PersistentFields[field.Name] );
+				var fieldName = field.Name;
+				if (!persistentFields.ContainsKey( fieldName ))
+					continue;  // The mapping file contains a needless field definition
+				var type = GetMemberType( persistentFields[fieldName] );
 				if (field.Encrypted && type != typeof( string ))
-					throw new NDOException( 117, String.Format( "Field {0} can't be encrypted. Encrypted fields must be of type string. Change the Encrypted attribute in your mapping file.", field.Name ) );
+					throw new NDOException( 118, $"Field {fieldName} can't be encrypted. Encrypted fields must be of type string. Change the 'Encrypted' attribute in your mapping file." );
 			}
         }
 
@@ -471,7 +487,6 @@ namespace NDO.Mapping
         }
 
 
-#if PRO
         private void AddSubClass(Class c)
         {
             if (!Subclasses.Contains(c))
@@ -499,7 +514,7 @@ namespace NDO.Mapping
                 }
             }
         }
-#endif
+
         #endregion
 
         #region Find Functions
@@ -550,6 +565,9 @@ namespace NDO.Mapping
             return null;
         }
 
+        /// <summary>
+        /// Gets the connection object
+        /// </summary>
 		[Browsable(false)]
 		public Connection Connection
 		{
@@ -655,12 +673,13 @@ namespace NDO.Mapping
         /// </summary>
         /// <param name="fieldName">Name of the field</param>
         /// <param name="referencedTypeName">Type name of the referenced class</param>
-        /// <param name="is1to1">True, if multiplicity is 1</param>
+        /// <param name="isElement">True, if multiplicity is 1</param>
         /// <param name="relationName">Optional relation name</param>
         /// <param name="ownTypeIsPoly">True, if the class, containing the field, has a persistent base class</param>
         /// <param name="otherTypeIsPoly">True, if the related type has a persistent base class</param>
+        /// <param name="mappingTableAttribute">If not null, the mapping information comes from this attribute.</param>
         /// <returns>A new constructed <code>Relation</code> object</returns>
-        public Relation AddStandardRelation(string fieldName, string referencedTypeName, bool is1to1, string relationName, bool ownTypeIsPoly, bool otherTypeIsPoly, MappingTableAttribute mappingTableAttribute)
+        public Relation AddStandardRelation(string fieldName, string referencedTypeName, bool isElement, string relationName, bool ownTypeIsPoly, bool otherTypeIsPoly, MappingTableAttribute mappingTableAttribute)
         {
             //			if (null != Parent)
             //				Parent.this.Changed = true;
@@ -670,7 +689,7 @@ namespace NDO.Mapping
             r.ReferencedTypeName = referencedTypeName;
             //r.parent = this;
             r.RelationName = relationName;
-            r.Multiplicity = is1to1 ? RelationMultiplicity.Element : RelationMultiplicity.List;
+            r.Multiplicity = isElement ? RelationMultiplicity.Element : RelationMultiplicity.List;
 
             int pos = referencedTypeName.LastIndexOf('.');
             string refShortName = referencedTypeName.Substring(pos + 1);
@@ -684,16 +703,17 @@ namespace NDO.Mapping
 
             ForeignKeyColumn fkColumn = r.NewForeignKeyColumn();
 
-            // Element->x?
-            if (is1to1
+            // Element->x AND no MappingTable
+            if (isElement
 				&& mappingTableAttribute == null
-                && !(otherTypeIsPoly && r.Multiplicity == RelationMultiplicity.List)
                 && !(foreignRelation != null && foreignRelation.MappingTable != null))
             {
                 r.MappingTable = null;
-                // Foreign Key is in the own table and points to rows of another table
+
+                // Foreign Key is in the own table and points to rows of the other table
                 fkColumn.Name = "ID" + refShortName;
-                if (otherTypeIsPoly)
+
+				if (otherTypeIsPoly)
                     r.ForeignKeyTypeColumnName = "TC" + refShortName;
 
                 if (relationName != string.Empty)
@@ -703,30 +723,40 @@ namespace NDO.Mapping
                         r.ForeignKeyTypeColumnName += "_" + relationName;
                 }
             }
-            else
-            {
-                // Liste->x
-                // Foreign Key points to rows of our own table
-                fkColumn.Name = "ID" + myShortName;
-                if (ownTypeIsPoly)
-                    r.ForeignKeyTypeColumnName = "TC" + myShortName;
+			else  // List or (Element with Mapping Table)
+			{
+				// These are the reasons for creating a mapping table:
+				// 1. The MappingTableAttribute demands it
+				// 2. We have a n:n relationship
+				// 3. We have a 1:n relationship and the other type is poly
+				// 4. The relation is bidirectional and the other side demands a mapping table
 
-                if (relationName != string.Empty)
+				bool needsMappingTable =
+					mappingTableAttribute != null
+					||
+					null != foreignRelation && (foreignRelation.Multiplicity == RelationMultiplicity.List && r.Multiplicity == RelationMultiplicity.List)
+					||
+					otherTypeIsPoly && r.Multiplicity == RelationMultiplicity.List
+					||
+					null != foreignRelation && foreignRelation.MappingTable != null;
+					
+				
+				// Foreign Key points to rows of our own table
+				fkColumn.Name = "ID" + myShortName;
+
+                if (ownTypeIsPoly && needsMappingTable)
+                    r.ForeignKeyTypeColumnName = "TC" + myShortName;
+				else if (otherTypeIsPoly && !needsMappingTable)
+					r.ForeignKeyTypeColumnName = "TC" + refShortName;
+
+				if (relationName != string.Empty)
                 {
                     fkColumn.Name += "_" + relationName;
                     if (ownTypeIsPoly)
                         r.ForeignKeyTypeColumnName += "_" + relationName;
                 }
 
-
-                if (mappingTableAttribute != null
-					||
-					null != foreignRelation && foreignRelation.Multiplicity == RelationMultiplicity.List
-                    ||
-                    (/*ownTypeIsPoly || */otherTypeIsPoly) && r.Multiplicity != RelationMultiplicity.Element
-                    ||
-                    foreignRelation != null && foreignRelation.MappingTable != null
-                    )
+                if (needsMappingTable)
                 {
                     r.AddMappingTable(refShortName, myShortName, otherTypeIsPoly, mappingTableAttribute);
 					r.RemapForeignMappingTable( myShortName, refShortName, ownTypeIsPoly, otherTypeIsPoly, mappingTableAttribute );
@@ -743,6 +773,7 @@ namespace NDO.Mapping
 
         #region IComparable Member
 
+        /// <inheritdoc/>
         public int CompareTo(object obj)
         {
             return this.FullName.CompareTo(((Class)obj).FullName);

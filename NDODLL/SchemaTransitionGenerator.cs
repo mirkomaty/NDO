@@ -83,7 +83,7 @@ namespace NDO
 			StringBuilder sb = new StringBuilder();
 
 			string rawTableName = actionElement.Attribute( "name" ).Value;
-			string tableName = QualifiedTableName.Get(rawTableName, this.provider);
+			string tableName = this.provider.GetQualifiedTableName(rawTableName);
 			string alterString = "ALTER TABLE " + tableName + ' ';
 
 			foreach(XElement columnElement in addedColumns)
@@ -147,7 +147,7 @@ namespace NDO
 
 		protected string DropTable(XElement actionElement)
 		{
-			string tableName = QualifiedTableName.Get( actionElement.Attribute( "name" ).Value, this.provider );
+			string tableName = this.provider .GetQualifiedTableName( actionElement.Attribute( "name" ).Value );
 			return concreteGenerator.DropTable( tableName );
 		}
 
@@ -160,7 +160,7 @@ namespace NDO
 
 			string dtTableName = actionElement.Attribute( "name" ).Value;
 
-			string tableName = QualifiedTableName.Get( dtTableName, this.provider );
+			string tableName = this.provider.GetQualifiedTableName( dtTableName );
 
 			Class cl = FindClass(dtTableName, mappings);
 
@@ -353,7 +353,7 @@ namespace NDO
 			string[] strArr = tableName.Split('.');
 			string constraintName = provider.GetQuotedName("PK_" + strArr[strArr.Length - 1]);
 			DataColumn[] pkColumns = (from pk in primaryKeyColumns select new DataColumn( pk.Attribute( "name" ).Value )).ToArray();
-			return concreteGenerator.CreatePrimaryKeyConstraint(pkColumns, constraintName, QualifiedTableName.Get(tableName, provider)) + '\n';
+			return concreteGenerator.CreatePrimaryKeyConstraint(pkColumns, constraintName, provider.GetQualifiedTableName(tableName)) + '\n';
 		}
 
 		protected Field FindField (string columnName, Class cl)
