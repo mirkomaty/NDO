@@ -29,6 +29,9 @@ using System.Linq;
 
 namespace NDO.Linq
 {
+	/// <summary>
+	/// This class transforms Linq queries to NDOql
+	/// </summary>
 	public class ExpressionTreeTransformer
 	{
 		class OperatorEntry
@@ -76,16 +79,27 @@ namespace NDO.Linq
 		int baseParameterLength;
 		Stack<Expression> expressionStack;
 
+		/// <summary>
+		/// Returns the generated parameters
+		/// </summary>
 		public IEnumerable<object> Parameters
 		{
 			get { return parameters; }
 		}
 
+		/// <summary>
+		/// Constructs an ExpressionTreeTransformer objct
+		/// </summary>
+		/// <param name="ex"></param>
 		public ExpressionTreeTransformer( LambdaExpression ex )
 		{
 			this.baseExpression = ex;
 		}
 
+		/// <summary>
+		/// Transforms the lambda expression passed to the constructor into an NDOql string.
+		/// </summary>
+		/// <returns></returns>
 		public string Transform()
 		{
 			baseParameterName = baseExpression.Parameters[0].Name;
@@ -415,7 +429,7 @@ namespace NDO.Linq
 					else if (mname == "get_Item")
 					{
 						string argStr = mcex.Arguments[0].ToString();
-						if (argStr == "Any.Index" || "Index.Any" == argStr)
+						if (argStr == "Any.Index")
 						{
 							Transform( mcex.Object );
 							return;

@@ -71,7 +71,11 @@ namespace NDO
 				}
 			}
         }
-		public IDictionary<string, ISqlGenerator> Generators
+		
+        /// <summary>
+        /// Gets all Sql DDL generators
+        /// </summary>
+        public IDictionary<string, ISqlGenerator> Generators
         {
             get 
             {
@@ -80,7 +84,11 @@ namespace NDO
             }
         }
 
-
+        /// <summary>
+        /// Adds provider dlls by path.
+        /// </summary>
+        /// <param name="path"></param>
+        /// <remarks>In most cases the providers are detected automatically.</remarks>
         public void AddProviderPlugIns(string path)
         {
             if (path == null || !Directory.Exists(path))

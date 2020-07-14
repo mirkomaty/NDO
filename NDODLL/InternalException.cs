@@ -30,6 +30,11 @@ namespace NDO
 	/// </summary>
 	public class InternalException : Exception
 	{
+		/// <summary>
+		/// Denotes internal errors
+		/// </summary>
+		/// <param name="val"></param>
+		/// <param name="message"></param>
 		public InternalException(int val, string message) : base ("Internal error #" + val + ": " + message)
 		{			
 		}

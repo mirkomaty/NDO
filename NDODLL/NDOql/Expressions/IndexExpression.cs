@@ -4,8 +4,17 @@ using System.Text;
 
 namespace NDOql.Expressions
 {
+    /// <summary>
+    /// Represents an index expression
+    /// </summary>
     public class IndexExpression : OqlExpression
     {
+        /// <summary>
+        /// Construcror
+        /// </summary>
+        /// <param name="value"></param>
+        /// <param name="line"></param>
+        /// <param name="col"></param>
         public IndexExpression(object value, int line, int col) : base (line, col)
         {
             base.Value = value;
@@ -13,6 +22,9 @@ namespace NDOql.Expressions
             HasBrackets = true;
         }
 
+        /// <summary>
+        /// Clones an IndexExpression object
+        /// </summary>
 		public override OqlExpression DeepClone
 		{
 			get

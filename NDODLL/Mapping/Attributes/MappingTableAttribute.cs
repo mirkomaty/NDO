@@ -49,12 +49,19 @@ namespace NDO.Mapping.Attributes
 			this.tableName = tableName;
         }
 
+        /// <summary>
+        /// Constructor
+        /// </summary>
         public MappingTableAttribute()
         {
             this.tableName = null;
         }
 
         string tableName;
+
+        /// <summary>
+        /// Gets or sets the table name
+        /// </summary>
         public string TableName
         {
             get { return tableName; }

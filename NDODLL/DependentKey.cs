@@ -29,6 +29,9 @@ using NDO.Mapping;
 
 namespace NDO
 {
+    /// <summary>
+    /// A key class that implements ObjectIds as foreign keys to other classes.
+    /// </summary>
     public class DependentKey : MultiKey
     {
         /// <summary>
@@ -36,6 +39,7 @@ namespace NDO
         /// </summary>
         /// <param name="t">The type of the object.</param>
         /// <param name="cl">The class mapping of the type.</param>
+        /// <param name="tm">The type manager.</param>
         /// <remarks>
         /// Note: In case of generic types t is not equal to cl.SystemType. That's why
         /// we need the extra parameter t.
@@ -77,6 +81,7 @@ namespace NDO
         /// <param name="t">The type of the object.</param>
         /// <param name="cl">The class mapping of the type.</param>
         /// <param name="row">A DataRow, containing the object data.</param>
+        /// <param name="tm">The type manager.</param>
         /// <remarks>
         /// Note: In case of generic types t is not equal to cl.SystemType. That's why
         /// we need the extra parameter t.
@@ -171,11 +176,13 @@ namespace NDO
             return !(o1 == o2);
         }
 
+        /// <inheritdoc/>
         public override bool Equals(object obj)
         {
             return base.Equals(obj);
         }
 
+        /// <inheritdoc/>
         public override int GetHashCode()
         {
             return base.GetHashCode();

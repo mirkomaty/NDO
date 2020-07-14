@@ -305,6 +305,12 @@ namespace NDO.Mapping
 			}
         }
 
+        /// <summary>
+        /// Alter the MappingTable, if there are changed attributes in the mappingTableAttribute
+        /// </summary>
+        /// <param name="ownTypeIsPoly"></param>
+        /// <param name="otherTypeIsPoly"></param>
+        /// <param name="mappingTableAttribute"></param>
 		public void RemapMappingTable(bool ownTypeIsPoly, bool otherTypeIsPoly, MappingTableAttribute mappingTableAttribute )
 		{
 			if (mappingTableAttribute == null && (foreignRelation == null || foreignRelation.mappingTable == null))
@@ -735,6 +741,7 @@ namespace NDO.Mapping
         }
 
         int hashCode = 0;
+        ///<inheritdoc/>
         public override int GetHashCode()
         {
             // This is a hack, because data binding to a property grid
@@ -753,6 +760,7 @@ namespace NDO.Mapping
             return hashCode;
         }
 
+        ///<inheritdoc/>
         public override bool Equals(object obj)
         {
             if (definingClass == null)
@@ -783,6 +791,7 @@ namespace NDO.Mapping
 
         #region IComparable Member
 
+        ///<inheritdoc/>
         public int CompareTo(object obj)
         {
             return this.FieldName.CompareTo(((Relation)obj).FieldName);

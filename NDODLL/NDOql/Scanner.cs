@@ -1,4 +1,10 @@
 
+//
+// This is generated code. Do not change it directly, change the Scanner.frame file and rebuild the grammar.
+//
+
+#pragma warning disable 1591 // No XML comments needed
+
 using System;
 using System.IO;
 using System.Collections;

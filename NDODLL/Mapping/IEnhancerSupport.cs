@@ -31,6 +31,9 @@ namespace NDO
     /// </summary>
     public interface IEnhancerSupport
     {
+        /// <summary>
+        /// Helper Property.
+        /// </summary>
         bool IsEnhancing { get; set; }
     }
 }

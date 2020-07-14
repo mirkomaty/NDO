@@ -54,11 +54,19 @@ namespace NDO
 	public class NDOOidTypeAttribute : Attribute
 	{
 		Type oidType;
+		/// <summary>
+		/// Gets or sets the oid type to be used for the class mapping
+		/// </summary>
 		public Type OidType
 		{
 			get { return oidType; }
 			set { oidType = value; }
 		}
+
+		/// <summary>
+		/// Constructur
+		/// </summary>
+		/// <param name="oidType"></param>
 		public NDOOidTypeAttribute(Type oidType)
 		{
 			this.oidType = oidType;

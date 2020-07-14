@@ -211,27 +211,55 @@ namespace NDO
 			get; set;
 		}
 
-
+		/// <summary>
+		/// Indicates, whether the PersistenceManager has changed objects in the cache
+		/// </summary>
 		bool HasChanges
 		{
 			get;
 		}
 
+		/// <summary>
+		/// Indicates, if there is a listener registered for the IdGenerationEvent.
+		/// </summary>
 		bool HasOwnerCreatedIds
 		{
 			get;
 		}
 
+		/// <summary>
+		/// Loads all fields of an object
+		/// </summary>
+		/// <param name="pc"></param>
 		void LoadData(object pc);
 
-        void LoadField(object pc, int fieldNumber);
-
+		/// <summary>
+		/// Loads a certain field of an object
+		/// </summary>
+		/// <param name="pc"></param>
+		/// <param name="fieldNumber"></param>
+		void LoadField(object pc, int fieldNumber);
+		
+		/// <summary>
+		/// Loads related objects
+		/// </summary>
+		/// <param name="pc"></param>
+		/// <param name="fieldName"></param>
+		/// <param name="hollow"></param>
 		void LoadRelation(object pc, string fieldName, bool hollow);
 		
+		/// <summary>
+		/// Creates an ObjectId
+		/// </summary>
+		/// <param name="oidToClone"></param>
+		/// <param name="t"></param>
+		/// <returns></returns>
 		ObjectId NewObjectId(ObjectId oidToClone, Type t);
 
-		//ObjectId NewObjectId(object keyData, Type t);
-		
+		/// <summary>
+		/// Resets an object to its previous state
+		/// </summary>
+		/// <param name="pc"></param>
 		void Restore(object pc);
 
 	}

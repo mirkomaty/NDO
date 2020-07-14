@@ -26,6 +26,9 @@ using System.Xml;
 
 namespace NDO.Mapping
 {
+    /// <summary>
+    /// Base class for mapping
+    /// </summary>
     public abstract class MappingNode
     {
         MappingNode nodeParent;
@@ -139,17 +142,30 @@ namespace NDO.Mapping
             this.nodeParent = newParent;
         }
 
+        /// <summary>
+        /// Constructs a MappingNode
+        /// </summary>
+        /// <param name="parent"></param>
         public MappingNode(MappingNode parent)
         {
             this.nodeParent = parent;
         }
 
+        /// <summary>
+        /// Constructs a MappingNode
+        /// </summary>
+        /// <param name="node"></param>
+        /// <param name="parent"></param>
         public MappingNode(XmlNode node, MappingNode parent)
         {
             this.nodeParent = parent;
             LoadProperties(node);
         }
 
+        /// <summary>
+        /// Reads additional properties from the xml code
+        /// </summary>
+        /// <param name="node"></param>
         protected void LoadProperties(XmlNode node)
         {
             foreach (XmlNode propNode in node.SelectNodes("Property"))

@@ -33,8 +33,16 @@ namespace NDO
 	/// obtain property information for the members of the list
 	/// even if the list is empty.
 	/// </summary>	
+	[Obsolete("This class will be removed in the near future")]
 	public class NDOArrayList 
 	{
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="list"></param>
+		/// <param name="parentType"></param>
+		/// <param name="propertyName"></param>
+		/// <returns></returns>
 		public static Type GetElementType(IList list, Type parentType, string propertyName)
 		{
 			Type t = list.GetType();

@@ -5,8 +5,12 @@ using NDOql.Expressions;
 
 
 
+//
+// This is generated code. Do not change it directly, change the Parser.frame file and rebuild the grammar.
+//
+
 using System;
-#pragma warning disable 3008
+#pragma warning disable 3008, 1591
 
 namespace NDOql {
 

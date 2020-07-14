@@ -28,6 +28,9 @@ using System.Reflection;
 
 namespace NDO.ShortId
 {
+	/// <summary>
+	/// Extensions to support conversions from an to ShortIds
+	/// </summary>
 	public static class ShortIdExtensions
 	{
 		/// <summary>

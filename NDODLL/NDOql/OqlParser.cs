@@ -6,8 +6,16 @@ using NDOql.Expressions;
 
 namespace NDOql
 {
+	/// <summary>
+	/// Wrapper class for the Qql language parser
+	/// </summary>
 	public class OqlParser
 	{
+		/// <summary>
+		/// Parses a given Oql string
+		/// </summary>
+		/// <param name="oql"></param>
+		/// <returns></returns>
 		public OqlExpression Parse( string oql )
 		{
 			if (String.IsNullOrEmpty( oql ))
@@ -36,6 +44,10 @@ namespace NDOql
 			return result;
 		}
 
+		/// <summary>
+		/// Sets the Parent property for each element in the tree
+		/// </summary>
+		/// <param name="exp"></param>
 		private void AddParents( OqlExpression exp )
 		{
 			foreach ( OqlExpression child in exp.Children )

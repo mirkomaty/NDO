@@ -32,6 +32,9 @@ namespace NDO.Logging
 	/// </remarks>
 	public class ConsoleLogAdapter : ILogAdapter
 	{
+		/// <summary>
+		/// Constructs a ConsoleLogAdapter object.
+		/// </summary>
 		public ConsoleLogAdapter()
 		{
 		}

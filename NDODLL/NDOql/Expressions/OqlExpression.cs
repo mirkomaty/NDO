@@ -10,6 +10,9 @@ namespace NDOql.Expressions
 		void SetParent( OqlExpression exp );
 	}
 
+    /// <summary>
+    /// Base class for Oql expressions
+    /// </summary>
     public class OqlExpression : IManageExpression
     {
         int line;
@@ -22,11 +25,22 @@ namespace NDOql.Expressions
         object value;
 		Dictionary<string, object> annotations = new Dictionary<string, object>();
 
+        /// <summary>
+        /// Sets an annotation for a certain experession node
+        /// </summary>
+        /// <param name="key"></param>
+        /// <param name="value"></param>
 		public void SetAnnotation(string key, object value)
 		{
 			annotations[key] = value;
 		}
 
+        /// <summary>
+        /// Gets an annotation for a node
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="key"></param>
+        /// <returns></returns>
 		public T GetAnnotation<T>( string key )
 		{
 			if (!annotations.ContainsKey( key ))
@@ -35,17 +49,26 @@ namespace NDOql.Expressions
 			return (T)annotations[key];
 		}
 
-
+        /// <summary>
+        /// Gets or sets the line number where the expression appears
+        /// </summary>
 		public int Line
         {
             get { return line; }
             set { line = value; }
         }
+        /// <summary>
+        /// Gets or sets the column in the line where the expression appears
+        /// </summary>
         public int Column
         {
             get { return col; }
             set { col = value; }
         }
+
+        /// <summary>
+        /// Gets or sets the expression type
+        /// </summary>
         public ExpressionType ExpressionType
         {
             get { return expressionType; }
@@ -57,6 +80,9 @@ namespace NDOql.Expressions
             throw new OqlExpressionException("Unary Operator doesn't fit to the type of the expression in '" + this.ToString() + "'. Line " + this.line + ", Col " + this.col);
         }
 
+        /// <summary>
+        /// Gets or sets an unary operator, if one exists
+        /// </summary>
         public string UnaryOp
         {
             get { return unaryOp; }
@@ -78,6 +104,9 @@ namespace NDOql.Expressions
             }
         }
 
+        /// <summary>
+        /// Gets or sets an operator
+        /// </summary>
         public string Operator
         {
             get { return op; }
@@ -85,17 +114,26 @@ namespace NDOql.Expressions
         }
 
         bool hasBrackets;
+        /// <summary>
+        /// Gets or sets a value, which determines, if an expression should be bracketed
+        /// </summary>
         public bool HasBrackets
         {
             get { return hasBrackets; }
             set { hasBrackets = value; }
         }
 
+        /// <summary>
+        /// Gets the child expressions
+        /// </summary>
         public List<OqlExpression> Children
         {
             get { return children; }
         }
 
+        /// <summary>
+        /// Gets the parent expression
+        /// </summary>
 		public OqlExpression Parent
 		{
 			get { return this.parent; }
@@ -113,29 +151,38 @@ namespace NDOql.Expressions
 			this.parent = exp;
 		}
 
+        /// <summary>
+        /// Gets the value of the expression
+        /// </summary>
         public object Value
         {
             get { return this.value; }
             set { this.value = value; }
         }
 
-/*
-        public OqlExpression(string op)
-        {
-            this.op = op;
-        }
-*/
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        /// <param name="line"></param>
+        /// <param name="col"></param>
         public OqlExpression(int line, int col)
         {
             this.line = line;
             this.col = col;
         }
 
+        /// <summary>
+        /// Determines, if an expression is a leaf in the tree.
+        /// </summary>
         public virtual bool IsTerminating
         {
             get { return this.children.Count == 0; }
         }
 
+        /// <summary>
+        /// Reduces an expression
+        /// </summary>
+        /// <returns></returns>
         public OqlExpression Simplify()
         {
             System.Diagnostics.Debug.Assert(this.children.Count != 0 || this.value != null);
@@ -156,11 +203,20 @@ namespace NDOql.Expressions
             return this.children[0];
         }
 
+        /// <summary>
+        /// Adds a child expressoin
+        /// </summary>
+        /// <param name="exp"></param>
         public virtual void Add(OqlExpression exp)
         {            
             this.children.Add(exp);
         }
 
+        /// <summary>
+        /// Adds a child expression and an operator
+        /// </summary>
+        /// <param name="exp"></param>
+        /// <param name="op"></param>
         public virtual void Add(OqlExpression exp, string op)
         {
             System.Diagnostics.Debug.Assert(this.children.Count > 0);
@@ -183,6 +239,9 @@ namespace NDOql.Expressions
             }
         }
 
+        /// <summary>
+        /// Gets all siblings of an expression
+        /// </summary>
 		public List<OqlExpression> Siblings
 		{
 			get
@@ -202,6 +261,9 @@ namespace NDOql.Expressions
 			}
 		}
 
+        /// <summary>
+        /// Gets the next sibling starting from the current expression
+        /// </summary>
         public OqlExpression NextSibling
         {
             get
@@ -222,6 +284,10 @@ namespace NDOql.Expressions
             }
         }
 
+        /// <summary>
+        /// Clones the expression
+        /// </summary>
+        /// <returns></returns>
         protected virtual OqlExpression Clone()
         {
             OqlExpression exp = new OqlExpression(this.line, this.col);
@@ -254,6 +320,7 @@ namespace NDOql.Expressions
 
 		//}
 
+        ///<inheritdoc/>
         public override string ToString()
         {
             StringBuilder sb = new StringBuilder();
@@ -312,6 +379,11 @@ namespace NDOql.Expressions
             return sb.ToString();
         }
 
+        /// <summary>
+        /// Visits all expressions of the tree and returns the expressions to which the predicate applies
+        /// </summary>
+        /// <param name="predicate"></param>
+        /// <returns></returns>
 		public IEnumerable<OqlExpression> GetAll(Func<OqlExpression, bool>predicate)
 		{
 			if (predicate(this)) 
@@ -325,6 +397,9 @@ namespace NDOql.Expressions
 			}
 		}
     
+        /// <summary>
+        /// Constructs a deep clone of the expression
+        /// </summary>
 		public virtual OqlExpression DeepClone
 		{
 			get

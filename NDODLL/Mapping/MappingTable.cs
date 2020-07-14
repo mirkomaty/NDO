@@ -138,6 +138,9 @@ namespace NDO.Mapping
         }
         #endregion
 
+        /// <summary>
+        /// Gets the connection object
+        /// </summary>
 		[Browsable( false )]
 		public Connection Connection
 		{

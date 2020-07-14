@@ -101,6 +101,10 @@ namespace NDO.Mapping.Attributes
         }
 
 
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        /// <param name="autoIncremented"></param>
         public OidColumnAttribute(bool autoIncremented)
             : this()
         {

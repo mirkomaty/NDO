@@ -19,6 +19,7 @@
 // CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER 
 // DEALINGS IN THE SOFTWARE.
 
+#pragma warning disable 1591 // No XML comments needed
 
 using System;
 using System.Threading;
@@ -58,7 +59,14 @@ namespace NDO
 		}
 
 
-
+		/// <summary>
+		/// Registers a child object
+		/// </summary>
+		/// <param name="parent"></param>
+		/// <param name="container"></param>
+		/// <param name="table"></param>
+		/// <param name="field"></param>
+		/// <returns></returns>
 		public static object RegisterContainer (object parent, object container, Hashtable table, string field)
 		{
 			IPersistenceCapable pc = parent as IPersistenceCapable;

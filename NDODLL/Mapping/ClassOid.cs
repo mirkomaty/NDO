@@ -115,7 +115,9 @@ namespace NDO.Mapping
             return null;
         }
 
-
+        /// <summary>
+        /// Gets the parent object
+        /// </summary>
         public Class Parent
         {
             get { return base.NodeParent as Class; }

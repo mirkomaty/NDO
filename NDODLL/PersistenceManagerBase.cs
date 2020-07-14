@@ -162,6 +162,9 @@ namespace NDO
 		Dictionary<string,Class> myClassesName;
         Dictionary<Type, Class> myClassesType;
 
+		/// <summary>
+		/// Initializes the class mappings
+		/// </summary>
 		protected void InitClasses()
 		{
             int cnt = mappings.Classes.Count();

@@ -27,12 +27,14 @@ using System.Text;
 
 namespace NDO.Linq
 {
-	public class Index
-	{
-		public static readonly int Any = 0;
-	}
+	/// <summary>
+	/// Helper class that allows you to formulate expressions for any element of an enumeration.
+	/// </summary>
 	public class Any
 	{
+		/// <summary>
+		/// Helps to formulate expressions like x[Any.Index].
+		/// </summary>
 		public static readonly int Index = 0;
 	}
 }

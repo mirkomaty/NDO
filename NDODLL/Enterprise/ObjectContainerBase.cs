@@ -120,6 +120,7 @@ namespace NDO
 		/// Deserializes the objects collection from a string.
 		/// </summary>
 		/// <param name="value">The string to deserialize.</param>
+		/// <param name="formatter">The formatter used for deserialization.</param>
 		/// <remarks>
 		/// The function determines, if the string is a base64 string. If that is the case,
 		/// the string will be decoded befor using the Formatter.
@@ -204,6 +205,7 @@ namespace NDO
 		/// Serializes the object container to the specified stream.
 		/// </summary>
 		/// <param name="stream">A stream instance.</param>
+		/// <param name="formatter">A formatter used for serialization.</param>
 		public virtual void Serialize(Stream stream, IFormatter formatter)
 		{
 			InnerSerialize(stream, formatter);
@@ -213,6 +215,7 @@ namespace NDO
 		/// Non overridable version of Serialize
 		/// </summary>
 		/// <param name="stream"></param>
+		/// <param name="formatter">A formatter used for serialization.</param>
 		void InnerSerialize( Stream stream, IFormatter formatter )
 		{
 			formatter.Serialize( stream, this.objects );

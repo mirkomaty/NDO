@@ -68,7 +68,7 @@ namespace NDO
 	/// <summary>
 	/// Delegate type of an handler, which can be registered by the ObjectNotPresentEvent of the PersistenceManager. The event will be called, if LoadData doesn't find an object with the given oid.
 	/// </summary>
-	/// <param name="ea"></param>
+	/// <param name="pc"></param>
 	/// <returns>A boolean value which determines, if the handler could solve the situation.</returns>
 	/// <remarks>If the handler returns false, NDO will throw an exception.</remarks>
 	public delegate bool ObjectNotPresentHandler( IPersistenceCapable pc );

@@ -8,6 +8,9 @@ using System.Text;
 
 namespace NDO.SqlPersistenceHandling
 {
+	/// <summary>
+	/// Helper class to generate lists of columns which can be used in Sql queries
+	/// </summary>
 	public class SqlColumnListGenerator
 	{
 		IProvider provider;
@@ -19,11 +22,19 @@ namespace NDO.SqlPersistenceHandling
 		string tableName;
 		Type resultType;
 
+		/// <summary>
+		/// Constructor
+		/// </summary>
+		/// <param name="cls"></param>
 		public SqlColumnListGenerator( Class cls )
 		{
 			Init( cls );
 		}
 
+		/// <summary>
+		/// Initializes the ColumnListGenerator
+		/// </summary>
+		/// <param name="cls"></param>
 		public void Init( Class cls )
 		{
 			this.tableName = cls.TableName;
@@ -117,12 +128,18 @@ namespace NDO.SqlPersistenceHandling
 
 		}
 
+		/// <summary/>
 		public string BaseList => Result( this.baseColumnList, false, false );
+		/// <summary/>
 		public string SelectList => Result( this.selectColumnList, false, false );
+		/// <summary/>
 		public string SelectListWithAlias => Result( this.selectColumnList, true, false );
+		/// <summary/>
 		public string HollowFields => Result( this.hollowList, false, false );
+		/// <summary/>
 		public string HollowFieldsWithAlias => Result( this.hollowList, true, false );
 
+		/// <summary/>
 		public string ParamList
 		{
 			get
@@ -154,6 +171,7 @@ namespace NDO.SqlPersistenceHandling
 			}
 		}
 
+		/// <summary/>
 		public string Result(bool hollow, bool generateAliasNames, bool useTableName)
 		{
 			return Result( hollow ? this.hollowList : this.selectColumnList, generateAliasNames, useTableName );

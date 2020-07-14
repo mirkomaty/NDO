@@ -641,23 +641,35 @@ namespace NDO.Query
 			get { return this.pm.ConfigContainer; }
 		}
 
+		/// <summary>
+		/// Gets the query parameters
+		/// </summary>
 		public ICollection<object> Parameters
 		{
 			get { return this.parameters; }
 		}
 
+		/// <summary>
+		/// Indicates whether subclasses are allowed in the query
+		/// </summary>
 		public bool AllowSubclasses
 		{
 			get { return this.allowSubclasses; }
 			set { this.allowSubclasses = value; }
 		}
 
+		/// <summary>
+		/// Gets or sets the relations to be queried in the query
+		/// </summary>
 		public IEnumerable<string> Prefetches
 		{
 			get { return this.prefetches; }
 			set { this.prefetches = value.ToList(); }
 		}
 
+		/// <summary>
+		/// Gets or sets orderings
+		/// </summary>
 		public List<QueryOrder> Orderings
 		{
 			get { return this.orderings; }

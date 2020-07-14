@@ -28,6 +28,9 @@ using System.Text;
 
 namespace NDO
 {
+	/// <summary>
+	/// Helper Class to compute a sort order for updates and deletes.
+	/// </summary>
 	public class ClassRank
 	{
 		Dictionary<Type, int> updateOrder;
@@ -36,7 +39,12 @@ namespace NDO
 		private List<Class> updateSearchedFor = new List<Class>();
 		IEnumerable<Class> classes;
 		Dictionary<string, Dictionary<string, int>> rankCache = new Dictionary<string, Dictionary<string, int>>();
-
+		
+		/// <summary>
+		/// Builds the class sort order
+		/// </summary>
+		/// <param name="classes"></param>
+		/// <returns></returns>
 		public Dictionary<Type, int> BuildUpdateRank( IEnumerable<Class> classes )
 		{
 			this.classes = classes;

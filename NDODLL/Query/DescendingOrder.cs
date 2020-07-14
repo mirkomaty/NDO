@@ -19,6 +19,7 @@ namespace NDO.Query
 		{
 		}
 
+		/// <inheritdoc/>
 		public override bool IsAscending
 		{
 			get { return false; }

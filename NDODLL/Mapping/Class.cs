@@ -214,8 +214,12 @@ namespace NDO.Mapping
         internal IEnumerable<string>FKColumnNames;              // InitFields - collects all foreign key column names used in LoadState
 		private bool?				hasEncryptedFields;
 
+        /// <summary>
+        /// Determines, if the class has encrypted fields.
+        /// </summary>
 		[Browsable(false)]
-		public bool HasEncryptedFields
+		
+        public bool HasEncryptedFields
 		{
 			get 
 			{
@@ -229,6 +233,10 @@ namespace NDO.Mapping
 		}
 
         private Column typeNameColumn = null;
+
+        /// <summary>
+        /// Gets the TypeNameColumn, if one is present.
+        /// </summary>
         [ReadOnly(true)]
         public Column TypeNameColumn
         {
@@ -557,6 +565,9 @@ namespace NDO.Mapping
             return null;
         }
 
+        /// <summary>
+        /// Gets the connection object
+        /// </summary>
 		[Browsable(false)]
 		public Connection Connection
 		{
@@ -666,6 +677,7 @@ namespace NDO.Mapping
         /// <param name="relationName">Optional relation name</param>
         /// <param name="ownTypeIsPoly">True, if the class, containing the field, has a persistent base class</param>
         /// <param name="otherTypeIsPoly">True, if the related type has a persistent base class</param>
+        /// <param name="mappingTableAttribute">If not null, the mapping information comes from this attribute.</param>
         /// <returns>A new constructed <code>Relation</code> object</returns>
         public Relation AddStandardRelation(string fieldName, string referencedTypeName, bool isElement, string relationName, bool ownTypeIsPoly, bool otherTypeIsPoly, MappingTableAttribute mappingTableAttribute)
         {
@@ -761,6 +773,7 @@ namespace NDO.Mapping
 
         #region IComparable Member
 
+        /// <inheritdoc/>
         public int CompareTo(object obj)
         {
             return this.FullName.CompareTo(((Class)obj).FullName);

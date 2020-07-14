@@ -39,6 +39,7 @@ namespace NDO.Query.JoinExpressions
 		/// This constructs the second INNER JOIN from the mapping table to the child class table.
 		/// </summary>
 		/// <param name="mappingTable"></param>
+		/// <param name="relationContext"></param>
 		internal ChildTableExpression( MappingTable mappingTable, Dictionary<Relation, Class> relationContext )
 			: base( null, 0, 0 )
 		{

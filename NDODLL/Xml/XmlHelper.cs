@@ -39,7 +39,9 @@ namespace NDO.Xml
         /// </summary>
         public enum StorageType
         {
+            /// <summary/>
             Element,
+            /// <summary/>
             Attribute
         }
 

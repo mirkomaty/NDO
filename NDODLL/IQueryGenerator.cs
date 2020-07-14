@@ -9,6 +9,10 @@ using System.Text;
 
 namespace NDO
 {
+	/// <summary>
+	/// DI interface for classes which generate query strings for different target systems.
+	/// </summary>
+	/// <remarks>You can inject an implementation of this class, if your system works with other languages other than Sql</remarks>
 	public interface IQueryGenerator
 	{
 		/// <summary>
@@ -42,6 +46,7 @@ namespace NDO
 		/// <summary>
 		/// Creates a query string, which can be passed to the IPersistenceHandler to fetch the results of an aggregate operation for a given concrete type
 		/// </summary>
+		/// <param name="field">The field name which will be translated to a column name. You can enter a * for arbitrary fields.</param>
 		/// <param name="queryContextsEntry">All contexts which define possible mutations of concrete classes in results and relations.</param>
 		/// <param name="expressionTree">The syntax tree of the NDOql query expression.</param>
 		/// <param name="hasSubclassResultsets">Determines, if this query is part of a composed query which spans over several tables.</param>

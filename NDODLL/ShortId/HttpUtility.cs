@@ -111,6 +111,11 @@ namespace NDO.HttpUtil
             return decodedBytes;
         }
 
+        /// <summary>
+        /// Converts a hex digit to an int value
+        /// </summary>
+        /// <param name="h"></param>
+        /// <returns></returns>
         public static int HexToInt( char h )
         {
             return (h >= '0' && h <= '9') ? h - '0' :
@@ -142,6 +147,11 @@ namespace NDO.HttpUtil
             return true;
         }
 
+        /// <summary>
+        /// Converts an int value to a hex digit
+        /// </summary>
+        /// <param name="n"></param>
+        /// <returns></returns>
         public static char IntToHex( int n )
         {
             Debug.Assert( n < 0x10 );
@@ -153,6 +163,11 @@ namespace NDO.HttpUtil
         }
 
         // Set of safe chars, from RFC 1738.4 minus '+'
+        /// <summary>
+        /// Checks, if a character is a valid URL char
+        /// </summary>
+        /// <param name="ch"></param>
+        /// <returns></returns>
         public static bool IsUrlSafeChar( char ch )
         {
             if ((ch >= 'a' && ch <= 'z') || (ch >= 'A' && ch <= 'Z') || (ch >= '0' && ch <= '9'))
@@ -173,6 +188,13 @@ namespace NDO.HttpUtil
             return false;
         }
 
+        /// <summary>
+        /// Encodes bytes to get a valid Url
+        /// </summary>
+        /// <param name="bytes"></param>
+        /// <param name="offset"></param>
+        /// <param name="count"></param>
+        /// <returns></returns>
         protected internal static byte[] UrlEncode( byte[] bytes, int offset, int count )
         {
             if (!ValidateUrlEncodingParameters( bytes, offset, count ))

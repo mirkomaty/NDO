@@ -7,6 +7,11 @@ using System.Xml.Linq;
 
 namespace NDO.Query
 {
+	/// <summary>
+	/// Represents a fetch group.
+	/// </summary>
+	/// <remarks>Note: This feature isn't yet implemented.</remarks>
+	/// <typeparam name="TModel"></typeparam>
 	public class FetchGroup<TModel> : List<string>
 	{
 		/// <summary>

@@ -245,6 +245,7 @@ namespace NDO.Mapping
 
         #endregion
 
+        /// <inheritdoc/>
         public override string ToString()
         {
             return this.name;

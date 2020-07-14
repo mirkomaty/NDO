@@ -112,6 +112,9 @@ namespace NDO.Mapping
             set { type = value; this.Changed = true; }
         }
 
+        /// <summary>
+        /// Gets the parent of the Connection object
+        /// </summary>
         [Browsable(false)]
         public NDOMapping Parent
         {

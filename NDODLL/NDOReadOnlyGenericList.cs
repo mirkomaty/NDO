@@ -33,6 +33,11 @@ namespace NDO
 	public class NDOReadOnlyGenericList<T> : List<T>, IList, ICollection<T>, IList<T>
 	{
 		const string readOnly = "Can't change this list because it's read only";
+
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        /// <param name="list"></param>
 		public NDOReadOnlyGenericList(IList<T> list) : base(list)
 		{
 		}

@@ -41,6 +41,9 @@ namespace NDO
 		[NonSerialized]
 		internal BitArray FieldLoadState;
 
+		/// <summary>
+		/// Max size of the relation count
+		/// </summary>
 		public const int RelationLoadStateSize = 64;
 
 		/// <summary>
@@ -70,7 +73,12 @@ namespace NDO
 			lostRowInfo = null;
 		}
 
-        public void ReplaceRowInfos(Relation r, Key key)
+		/// <summary>
+		/// Internal helper Method
+		/// </summary>
+		/// <param name="r"></param>
+		/// <param name="key"></param>
+		public void ReplaceRowInfos(Relation r, Key key)
         {
             int i = 0;
             foreach (ForeignKeyColumn fkColumn in r.ForeignKeyColumns)
@@ -84,8 +92,13 @@ namespace NDO
             }
         }
 
-
-        public bool LostRowsEqualsOid(Key oidKey, Relation r)
+		/// <summary>
+		/// Internal helper Method
+		/// </summary>
+		/// <param name="oidKey"></param>
+		/// <param name="r"></param>
+		/// <returns></returns>
+		public bool LostRowsEqualsOid(Key oidKey, Relation r)
         {
             int i = 0;
             bool result = true;
@@ -110,6 +123,11 @@ namespace NDO
             return result;
         }
 
+		/// <summary>
+		/// Internal helper Method
+		/// </summary>
+		/// <param name="key"></param>
+		/// <param name="value"></param>
 		public void ReplaceRowInfo(string key, object value)
 		{
 
