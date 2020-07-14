@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <PackageId>ndo.sqlce</PackageId>  
-    <TargetFrameworks>netstandard2.0;net452</TargetFrameworks>
+    <TargetFrameworks>net452</TargetFrameworks>
     <Version>4.0.1</Version>
     <Authors>Mirko Matytschak</Authors>
     <Company>Mirko Matytschak</Company>
