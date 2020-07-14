@@ -38,6 +38,7 @@ using NDOInterfaces;
 using NDO.Query;
 using System.Globalization;
 using Unity;
+using Unity.Resolution;
 
 namespace NDO.SqlPersistenceHandling
 {
@@ -445,16 +446,18 @@ namespace NDO.SqlPersistenceHandling
 
 		SqlColumnListGenerator CreateColumnListGenerator( Class cls )
 		{
-			var isRegistered = configContainer.IsRegistered<SqlColumnListGenerator>( cls.FullName );
+			var key = $"SqlColumnListGenerator-{cls.FullName}";
+			var isRegistered = configContainer.IsRegistered<SqlColumnListGenerator>( key );
 			if (!isRegistered)
 			{
 				var generator = new SqlColumnListGenerator( cls );
-				configContainer.RegisterInstance<SqlColumnListGenerator>( cls.FullName, generator );
+				configContainer.RegisterInstance<SqlColumnListGenerator>( key, generator );
 				return generator;
 			}
 
-			return configContainer.Resolve<SqlColumnListGenerator>( cls.FullName );
+			return configContainer.Resolve<SqlColumnListGenerator>( key, new ParameterOverride("cls", cls) );
 		}
+
 
 		/// <summary>
 		/// Initializes the PersistenceHandler

@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using Unity;
+using Unity.Resolution;
 
 namespace NDO.SqlPersistenceHandling
 {
@@ -156,15 +157,16 @@ namespace NDO.SqlPersistenceHandling
 
 		SqlColumnListGenerator CreateColumnListGenerator( Class cls )
 		{
-			var isRegistered = configContainer.IsRegistered<SqlColumnListGenerator>( cls.FullName );
+			var key = $"SqlColumnListGenerator-{cls.FullName}";
+			var isRegistered = configContainer.IsRegistered<SqlColumnListGenerator>( key );
 			if (!isRegistered)
 			{
 				var generator = new SqlColumnListGenerator( cls );
-				configContainer.RegisterInstance<SqlColumnListGenerator>( cls.FullName, generator );
+				configContainer.RegisterInstance<SqlColumnListGenerator>( key, generator );
 				return generator;
 			}
 
-			return configContainer.Resolve<SqlColumnListGenerator>( cls.FullName );
+			return configContainer.Resolve<SqlColumnListGenerator>( key, new ParameterOverride( "cls", cls ) );
 		}
 
 		string ConstructQueryString( 

@@ -22,16 +22,16 @@
     <DropExistingElements>True</DropExistingElements>
   </Options>
   <ProjectDescription>
-    <BinPath>bin\Release\QueryTests.dll</BinPath>
-    <ObjPath>obj\Release\</ObjPath>
+    <BinPath>bin\Debug\QueryTests.dll</BinPath>
+    <ObjPath>obj\Debug\</ObjPath>
     <AssemblyName />
-    <Debug>False</Debug>
+    <Debug>True</Debug>
     <IsWebProject>False</IsWebProject>
     <KeyFile />
     <References>
-      <Reference AssemblyName="PureBusinessClasses" AssemblyPath="bin\Release\PureBusinessClasses.dll">
+      <Reference AssemblyName="PureBusinessClasses" AssemblyPath="bin\Debug\PureBusinessClasses.dll">
       </Reference>
-      <Reference AssemblyName="NDO" AssemblyPath="..\NDODLL\bin\Release\netstandard2.0\NDO.dll" CheckThisDLL="False">
+      <Reference AssemblyName="NDO" AssemblyPath="..\NDODLL\bin\Debug\netstandard2.0\NDO.dll" CheckThisDLL="False">
       </Reference>
     </References>
   </ProjectDescription>
