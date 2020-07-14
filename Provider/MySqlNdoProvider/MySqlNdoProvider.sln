@@ -2,7 +2,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.27703.2047
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MySqlProvider", "MySqlProvider\MySqlProvider.csproj", "{273BB4ED-74C4-482F-ACE2-E1564ACBA210}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NDO.MySql", "NDO.MySql\NDO.MySql.csproj", "{273BB4ED-74C4-482F-ACE2-E1564ACBA210}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MySqlUISupport", "MySqlUISupport\MySqlUISupport.csproj", "{72019F18-193F-43F9-B955-61AA2ECDFA74}"
 EndProject
