@@ -219,7 +219,7 @@ namespace NDO.Query
 				}
 			}
 
-			GetPrefetches( result );
+			//GetPrefetches( result );
 			this.pm.CheckEndTransaction( !this.pm.DeferredMode && this.pm.TransactionMode == TransactionMode.Optimistic );
 			if (!this.pm.GetClass( resultType ).Provider.SupportsFetchLimit)
 			{
@@ -230,6 +230,7 @@ namespace NDO.Query
 			return result;
 		}
 
+#if MaskOutPrefetches
 		Type GetPrefetchResultType( Type t, string relation )
 		{
 			string[] parts = relation.Split( '.' );
@@ -341,7 +342,7 @@ namespace NDO.Query
 				}
 			}
 		}
-
+#endif
 
 		private object ExecuteAggregateQuery( QueryContextsEntry queryContextsEntry, string field, AggregateType aggregateType )
 		{
@@ -687,6 +688,7 @@ namespace NDO.Query
 		/// Adds a prefetch to the query
 		/// </summary>
 		/// <param name="s"></param>
+		[Obsolete("Prefetches are not yet implemented, but will be in future.")]
 		public void AddPrefetch( string s )
 		{
 			this.prefetches.Add( s );
@@ -702,7 +704,7 @@ namespace NDO.Query
 				this.prefetches.Remove( s );
 		}
 
-		#region IQuery Interface
+#region IQuery Interface
 
 		System.Collections.IList IQuery.Execute()
 		{
@@ -727,7 +729,7 @@ namespace NDO.Query
 		int IQuery.Take { get => this.take; set => this.take = value; }
 		string IQuery.GeneratedQuery { get { return this.GeneratedQuery; } }
 
-		#endregion
+#endregion
 
 	}
 }

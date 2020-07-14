@@ -291,7 +291,6 @@ namespace QueryTests
 			Assert.AreEqual( $"SELECT {fields} FROM [Land] WHERE [Land].[IsInEu] = 1 AND [Land].[Name] = {{0}}", vt.QueryString );
 		}
 
-
 		[Test]
 		public void LinqTestSuperclasses()
 		{

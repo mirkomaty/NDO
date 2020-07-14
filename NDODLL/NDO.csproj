@@ -7,7 +7,7 @@
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <IncludeSymbols>True</IncludeSymbols>
     <PackageId>NDO.dll</PackageId>
-    <Version>4.0.0.0-beta24</Version>
+    <Version>4.0.0.0</Version>
     <Authors>Mirko Matytschak</Authors>
     <Company>Mirko Matytschak</Company>
     <Description>Package to enable VS Solutions to compile and enhance persistent classes.</Description>
@@ -40,7 +40,9 @@ Json Serializing for the Containers</PackageReleaseNotes>
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="ndointerfaces" Version="4.0.1" />
-    <PackageReference Include="PatchProductVersion" Version="1.0.2" />
+		<PackageReference Include="PatchProductVersion" Version="1.0.2">
+			<PrivateAssets>all</PrivateAssets>
+		</PackageReference>
     <PackageReference Include="Unity.Container" Version="5.8.13" />
   </ItemGroup>
 	<ItemGroup Condition="'$(TargetFramework)'=='net452'">
