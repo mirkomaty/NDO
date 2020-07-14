@@ -210,7 +210,6 @@ namespace NdoUnitTests
 		{
 			m.Hinzufuegen( r );
 			pm.MakePersistent( m );
-			pm.UnloadCache();
 			Assert.AreSame( r, pm.FindObject( r.NDOObjectId ), "Getting same object twice should return same object" );
 			pm.Save();
 			pm.UnloadCache();

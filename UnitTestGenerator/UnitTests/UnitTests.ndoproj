@@ -28,18 +28,9 @@
     <AssemblyName />
     <Debug>True</Debug>
     <IsWebProject>False</IsWebProject>
-    <KeyFile>
-    </KeyFile>
+    <KeyFile />
     <References>
-      <Reference AssemblyName="NDOInterfaces" AssemblyPath="..\..\NDOInterfaces\bin\Debug\net452\NDOInterfaces.dll">
-      </Reference>
       <Reference AssemblyName="PersistentClasses" AssemblyPath="..\PersistentClasses\bin\Debug\PersistentClasses.dll">
-      </Reference>
-      <Reference AssemblyName="nunit.framework" AssemblyPath="..\packages\NUnit.3.11.0\lib\net45\nunit.framework.dll">
-      </Reference>
-      <Reference AssemblyName="Unity.Abstractions" AssemblyPath="..\packages\Unity.Abstractions.3.3.1\lib\net45\Unity.Abstractions.dll">
-      </Reference>
-      <Reference AssemblyName="SqlServerProvider" AssemblyPath="..\..\Provider\SqlServerProvider\SqlServerProvider\bin\Debug\net452\SqlServerProvider.dll">
       </Reference>
     </References>
   </ProjectDescription>

@@ -232,7 +232,6 @@ namespace NdoUnitTests
 		public void TestUnloadCache() 
 		{
 			pm.MakePersistent(m);
-			pm.UnloadCache();
 			Assert.AreSame(m, pm.FindObject(m.NDOObjectId), "Getting same object twice should return same object");
 			pm.Save();
 			pm.UnloadCache();
