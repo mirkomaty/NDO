@@ -93,7 +93,7 @@
     <Reference Include="Microsoft.VisualStudio.Shell.Interop" />
     <Reference Include="Microsoft.VisualStudio.Shell.Interop.8.0" />
     <Reference Include="Microsoft.VisualStudio.TextManager.Interop" />
-    <Reference Include="Microsoft.VisualStudio.Threading, Version=16.5.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
+    <Reference Include="Microsoft.VisualStudio.Threading, Version=16.6.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
     <Reference Include="Mono.Cecil, Version=0.10.1.0, Culture=neutral, PublicKeyToken=50cebf1cceb9d05e, processorArchitecture=MSIL">
       <HintPath>packages\Mono.Cecil.0.10.1\lib\net40\Mono.Cecil.dll</HintPath>
     </Reference>
@@ -113,49 +113,49 @@
       <HintPath>packages\NuGet.VisualStudio.4.0.0\lib\net45\NuGet.VisualStudio.dll</HintPath>
       <EmbedInteropTypes>True</EmbedInteropTypes>
     </Reference>
-    <Reference Include="FirebirdProvider, Version=4.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="NDO.Firebird, Version=4.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\Provider\FirebirdNdoProvider\FirebirdProvider\bin\$(Configuration)\net452\FirebirdProvider.dll</HintPath>
+      <HintPath>..\Provider\FirebirdNdoProvider\NDO.Firebird\bin\$(Configuration)\net452\NDO.Firebird.dll</HintPath>
     </Reference>
     <Reference Include="FirebirdSql.Data.FirebirdClient, Version=5.12.1.0, Culture=neutral, PublicKeyToken=3750abcc3150b00c, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\Provider\FirebirdNdoProvider\FirebirdProvider\bin\$(Configuration)\net452\FirebirdSql.Data.FirebirdClient.dll</HintPath>
+      <HintPath>..\Provider\FirebirdNdoProvider\NDO.Firebird\bin\$(Configuration)\net452\FirebirdSql.Data.FirebirdClient.dll</HintPath>
     </Reference>
     <Reference Include="FirebirdUISupport">
       <HintPath>..\Provider\FirebirdNdoProvider\FirebirdUISupport\bin\$(Configuration)\FirebirdUISupport.dll</HintPath>
     </Reference>
-    <Reference Include="MySqlProvider">
-      <HintPath>..\Provider\MySqlNdoProvider\MySqlProvider\bin\$(Configuration)\net452\MySqlProvider.dll</HintPath>
+    <Reference Include="NDO.MySql">
+      <HintPath>..\Provider\MySqlNdoProvider\NDO.MySql\bin\$(Configuration)\net452\NDO.MySql.dll</HintPath>
     </Reference>
-    <Reference Include="MySqlProvider">
+    <Reference Include="MySqlUISupport">
       <HintPath>..\Provider\MySqlNdoProvider\MySqlUISupport\bin\$(Configuration)\MySqlUISupport.dll</HintPath>
     </Reference>
-    <Reference Include="OracleProvider">
-      <HintPath>..\Provider\OracleProvider\OracleProvider\bin\$(Configuration)\net452\OracleProvider.dll</HintPath>
+    <Reference Include="NDO.Oracle">
+      <HintPath>..\Provider\OracleProvider\NDO.Oracle\bin\$(Configuration)\net452\NDO.Oracle.dll</HintPath>
     </Reference>
     <Reference Include="OracleUISupport">
       <HintPath>..\Provider\OracleProvider\OracleUISupport\bin\$(Configuration)\OracleUISupport.dll</HintPath>
     </Reference>
-    <Reference Include="PostGreProvider">
-      <HintPath>..\Provider\PostGresProvider\PostgreProvider\bin\$(Configuration)\net452\PostGreProvider.dll</HintPath>
+    <Reference Include="NDO.Postgre">
+      <HintPath>..\Provider\PostGresProvider\NDO.Postgre\bin\$(Configuration)\net452\NDO.Postgre.dll</HintPath>
     </Reference>
     <Reference Include="PostGresUISupport">
       <HintPath>..\Provider\PostGresProvider\PostGresUISupport\bin\$(Configuration)\PostGresUISupport.dll</HintPath>
     </Reference>
-    <Reference Include="SqlCeProvider">
-      <HintPath>..\Provider\SqlCEProvider\SqlCEProvider\bin\$(Configuration)\net452\SqlCEProvider.dll</HintPath>
+    <Reference Include="NDO.SqlCe">
+      <HintPath>..\Provider\SqlCEProvider\NDO.SqlCe\bin\$(Configuration)\net452\NDO.SqlCe.dll</HintPath>
     </Reference>
     <Reference Include="SqlCeUISupport">
       <HintPath>..\Provider\SqlCEProvider\SqlCeUISupport\bin\$(Configuration)\SqlCeUISupport.dll</HintPath>
     </Reference>
-    <Reference Include="SqliteProvider">
-      <HintPath>..\Provider\SqliteProvider\SqliteProvider\bin\$(Configuration)\net452\SqliteProvider.dll</HintPath>
+    <Reference Include="NDO.Sqlite">
+      <HintPath>..\Provider\SqliteProvider\NDO.Sqlite\bin\$(Configuration)\net452\NDO.Sqlite.dll</HintPath>
     </Reference>
     <Reference Include="SqliteUISupport">
       <HintPath>..\Provider\SqliteProvider\SqliteUISupport\bin\$(Configuration)\SqliteUISupport.dll</HintPath>
     </Reference>
-    <Reference Include="SqlServerProvider">
-      <HintPath>..\Provider\SqlServerProvider\SqlServerProvider\bin\$(Configuration)\net452\SqlServerProvider.dll</HintPath>
+    <Reference Include="NDO.Sqlserver">
+      <HintPath>..\Provider\SqlServerProvider\NDO.Sqlserver\bin\$(Configuration)\net452\NDO.Sqlserver.dll</HintPath>
     </Reference>
     <Reference Include="SqlServerUISupport">
       <HintPath>..\Provider\SqlServerProvider\SqlServerUISupport\bin\$(Configuration)\SqlServerUISupport.dll</HintPath>

@@ -27,13 +27,13 @@
     <Project Include="..\NDODLL\NDO.csproj" />	
     <Project Include="..\UISupport\NDO.UISupport\NDO.UISupport.csproj" />
 
-    <Project Include="..\Provider\MySqlNdoProvider\MySqlProvider\MySqlProvider.csproj" />
-    <Project Include="..\Provider\OracleProvider\OracleProvider\OracleProvider.csproj" />
-    <Project Include="..\Provider\FirebirdNdoProvider\FirebirdProvider\FirebirdProvider.csproj" />
-    <Project Include="..\Provider\SqlCeProvider\SqlCeProvider\SqlCeProvider.csproj" />
-    <Project Include="..\Provider\SqliteProvider\SqliteProvider\SqliteProvider.csproj" />	
-    <Project Include="..\Provider\SqlServerProvider\SqlServerProvider\SqlServerProvider.csproj" />	
-    <Project Include="..\Provider\PostgresProvider\PostgreProvider\PostgreProvider.csproj" />
+    <Project Include="..\Provider\MySqlNdoProvider\NDO.MySql\NDO.MySql.csproj" />
+    <Project Include="..\Provider\OracleProvider\NDO.Oracle\NDO.Oracle.csproj" />
+    <Project Include="..\Provider\FirebirdNdoProvider\NDO.Firebird\NDO.Firebird.csproj" />
+    <Project Include="..\Provider\SqlCeProvider\NDO.SqlCe\NDO.SqlCe.csproj" />
+    <Project Include="..\Provider\SqliteProvider\NDO.Sqlite\NDO.Sqlite.csproj" />	
+    <Project Include="..\Provider\SqlServerProvider\NDO.Sqlserver\NDO.Sqlserver.csproj" />	
+    <Project Include="..\Provider\PostgresProvider\NDO.Postgre\NDO.Postgre.csproj" />
 	
     <Project Include="..\Provider\MySqlNdoProvider\MySqlUISupport\MySqlUISupport.csproj" />
     <Project Include="..\Provider\OracleProvider\OracleUISupport\OracleUISupport.csproj" />

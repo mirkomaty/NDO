@@ -94,7 +94,7 @@ namespace NDO
             if (path == null || !Directory.Exists(path))
                 return;
             string[] dlls = new string[] { };
-            dlls = Directory.GetFiles(path, "*Provider.dll");
+            dlls = Directory.GetFiles(path, "NDO.*.dll");
             foreach (string dll in dlls)
             {
                 try
@@ -123,7 +123,7 @@ namespace NDO
                     ISqlGenerator generator;
                     foreach (Type t in types)
                     {
-                        if (t.IsClass && !t.IsAbstract && typeof(IProvider).IsAssignableFrom(t))
+                        if (t.IsClass && !t.IsAbstract && t.GetInterface("IProvider") != null)
                         {
                             provider = (IProvider)Activator.CreateInstance(t);
 							if (!this.providers.ContainsKey( provider.Name ))
