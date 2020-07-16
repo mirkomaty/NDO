@@ -94,7 +94,6 @@ namespace NDOEnhancer
 			foreach(DataColumn dc in addedColumns)
 			{
 				sw.Write(alterString);
-//				base.CreateColumn
 				sw.Write(concreteGenerator.AddColumn());
 				sw.Write(' ');
 				sw.Write(base.CreateColumn(dc, GetClassForTable(dt.TableName, this.mappings), this.provider, false));
@@ -161,32 +160,5 @@ namespace NDOEnhancer
 			sb.Append(';');
 			return sb.ToString();
 		}
-
-		/*			
-		 * StringBuilder sb = new StringBuilder("ALTER TABLE ");
-			sb.Append(tableName);
-			sb.Append(' ');
-			sb.Append(AddColumn());
-			sb.Append(' ');
-			sb.Append(newName);
-			sb.Append(' ');
-			sb.Append(typeName);
-			sb.Append(";\n");
-
-			sb.Append("UPDATE ");
-			sb.Append(tableName);
-			sb.Append(" SET ");
-			sb.Append(newName);
-			sb.Append('=');
-			sb.Append(oldName);
-			sb.Append(";\n");
-
-			sb.Append("ALTER TABLE ");
-			sb.Append(tableName);
-			sb.Append(' ');
-			sb.Append(RemoveColumn(oldName));	
-			return sb.ToString();
-*/
-
 	}
 }

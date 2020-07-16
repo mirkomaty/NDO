@@ -1,4 +1,5 @@
-﻿using NDO.Query;
+﻿using NDO.Provider;
+using NDO.Query;
 using NDO.SqlPersistenceHandling;
 using Unity;
 using Unity.Lifetime;
@@ -26,6 +27,7 @@ namespace NDO.Configuration
 					instance.RegisterType<RelationContextGenerator>();
 					instance.RegisterType<IQueryGenerator, SqlQueryGenerator>();
 					instance.RegisterType<IPersistenceHandlerManager, NDOPersistenceHandlerManager>();
+                    instance.RegisterType<IProviderPathFinder, NDOProviderPathFinder>();
 					// ContainerControlled means in this case, that there is only one instance per application, 
 					// but the registration can be overriden in child containers.
 					instance.RegisterType<IPersistenceHandlerPool, NDOPersistenceHandlerPool>(new ContainerControlledLifetimeManager());

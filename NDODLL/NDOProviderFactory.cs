@@ -30,6 +30,9 @@ using Cli;
 using NDOInterfaces;
 using System.Runtime.Versioning;
 using System.Linq;
+using NDO.Configuration;
+using NDO.Provider;
+using Unity;
 
 namespace NDO
 {
@@ -47,7 +50,6 @@ namespace NDO
         private static readonly NDOProviderFactory factory = new NDOProviderFactory();
         private Dictionary<string,IProvider> providers = null; // Marks the providers as not loaded
 		private Dictionary<string,ISqlGenerator> generators = new Dictionary<string,ISqlGenerator>();
-        private bool skipPrivatePath;
 
 		/// <summary>
 		/// Private constructor makes sure, that only one object can be instantiated.
@@ -155,45 +157,10 @@ namespace NDO
         {
             try
             {
-				//string path = NDOAddInPath.Instance;
-				//AddProviderPlugIns(path);
-				if (!skipPrivatePath)
+                var pathFinder = NDOContainer.Instance.Resolve<IProviderPathFinder>();
+				foreach (var path in pathFinder.GetPaths())
 				{
-					string path = AppDomain.CurrentDomain.BaseDirectory;
-					AddProviderPlugIns( path );
-					string binPath = Path.Combine( path, "bin" );
-					if (string.Compare( path, binPath, true ) != 0 && Directory.Exists( binPath ))
-						AddProviderPlugIns( binPath );
-
-					// This is a hack to determine any loaded provider packages.
-					var runtimeDir = System.Runtime.InteropServices.RuntimeEnvironment.GetRuntimeDirectory();
-
-					if (runtimeDir != null && runtimeDir.IndexOf( "Microsoft.NETCore.App" ) > -1)
-					{
-						path = typeof( PersistenceManager ).Assembly.Location;
-						var pattern = $".nuget{Path.DirectorySeparatorChar}packages";
-						int p;
-						if ((p = path.IndexOf( pattern )) > -1)
-						{
-							p += pattern.Length;
-							path = path.Substring( 0, p );
-							var majorVersion = GetType().Assembly.GetName().Version.Major.ToString();
-							var standardVersion = "netstandard2.0";
-
-							foreach (var subPath in Directory.GetDirectories( path, "ndo.*" ))
-							{
-								if (Path.GetFileName( subPath ) == "ndo.dll")
-									continue;
-								var versionDir = Directory.GetDirectories( subPath ).FirstOrDefault( s => Path.GetFileName( s ).StartsWith( majorVersion) );
-								if (versionDir == null)
-									continue;
-								var libDir = Path.Combine( versionDir, "lib", standardVersion );
-								if (!Directory.Exists( libDir ))
-									continue;
-								AddProviderPlugIns( libDir );
-							}
-						}
-					}
+                    AddProviderPlugIns( path );
 				}
             }
             catch
@@ -232,17 +199,6 @@ namespace NDO
             {
                 return factory;
             }
-        }
-
-        /// <summary>
-        /// If set to true, NDO doesn't search for NDO providers in the base directory of the app domain. 
-        /// If you use a built-in provider like SqlServer, Access of Oracle, this option can speed up the 
-        /// PersistenceManager creation.
-        /// </summary>
-        public bool SkipPrivatePath
-        {
-            get { return skipPrivatePath; }
-            set { skipPrivatePath = value; }
         }
 
         /// <summary>

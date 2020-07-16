@@ -191,6 +191,8 @@ namespace NDOEnhancer
 				Assembly ass = null; 
 				try
 				{
+					if (verboseMode)
+						messages.WriteLine($"Loading assembly {dllPath}");
                     assToLoad = AssemblyName.GetAssemblyName(dllPath);
                     ass = Assembly.Load(assToLoad);
                 }
@@ -1383,25 +1385,6 @@ namespace NDOEnhancer
 				new SQLGenerator().Generate(options.SQLScriptLanguage, options.Utf8Encoding, dsSchema, dsOld, sqlFileName, mappings, messages, tm, this.options.GenerateConstraints);
 			}
 
-		}
-
-
-		private string getAssemblyInfo(Assembly ass, string infoName, string defaultStr)
-		{
-			string assInfo = ass.ToString();
-			string result;
-			//NDO, Version=1.0.1003.28687, Culture=neutral, PublicKeyToken=null
-			int pos = assInfo.IndexOf(infoName);
-			if (-1 == pos)
-			{
-				result = defaultStr;
-			}
-			else
-			{
-				pos += infoName.Length;
-				result = assInfo.Substring(pos, assInfo.IndexOf(",", pos) - pos);
-			}
-			return result;
 		}
 
 		void analyzeAndEnhance( ILFile ilFile )

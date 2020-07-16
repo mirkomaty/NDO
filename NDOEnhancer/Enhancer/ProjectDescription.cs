@@ -25,6 +25,8 @@ using System.Xml;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
+using System.Xml.Linq;
 #if !STANDALONE
 using VSLangProj;
 using EnvDTE;
@@ -78,6 +80,7 @@ namespace NDOEnhancer
 		ConfigurationOptions options;
         bool isWebProject;
         string keyFile = string.Empty;
+		bool isSdkStyle = false;
 #if DEBUG
         IMessageAdapter messageAdapter;
         public IMessageAdapter MessageAdapter
@@ -108,15 +111,45 @@ namespace NDOEnhancer
 			get { return assemblyName; }
 			set { assemblyName = value; }
 		}
+		public bool IsSdkStyle
+		{
+			get { return this.isSdkStyle; }
+		}
 
 		public ProjectDescription()
 		{
+		}
+
+		/// <summary>
+		/// The project filename should come from the Build Task, but we don't want to change the Build Task at the moment.
+		/// </summary>
+		/// <param name="ndoProjPath"></param>
+		internal void GuessProjectFile(string ndoProjPath)
+		{
+			var dir = Path.GetDirectoryName(ndoProjPath);
+			var fnPattern = $"{Path.GetFileNameWithoutExtension(ndoProjPath)}.*proj";
+			var files = Directory.GetFiles( dir, fnPattern );
+			string file = null;
+			if (files.Length == 0)
+				return;
+			if (files.Length > -1)
+			{
+				file = files.FirstOrDefault( fn => fn.EndsWith( ".csproj" ) );
+				if (file == null)
+					file = files[0];
+			}
+			else
+				file = files[0];
+
+			XElement projectElement = XElement.Load(file);
+			this.isSdkStyle = projectElement.Attribute( "Sdk" ) != null;
 		}
 
 		public ProjectDescription(string fileName)
 		{
 			this.FileName = fileName;
 			this.projPath = Path.GetDirectoryName(fileName) + Path.DirectorySeparatorChar;
+			GuessProjectFile( fileName );
 			XmlDocument doc = new XmlDocument();
 			try
 			{

@@ -1,4 +1,5 @@
-﻿//
+﻿#if nix
+//
 // Copyright (c) 2002-2016 Mirko Matytschak 
 // (www.netdataobjects.de)
 //
@@ -23,7 +24,6 @@
 using System;
 using System.Collections;
 using System.Collections.Specialized;
-using NDO;
 using NDOInterfaces;
 
 namespace NDOEnhancer
@@ -38,8 +38,6 @@ namespace NDOEnhancer
 
 		private GeneratorFactory()
 		{
-			//TODO: Diese Logik muss überprüft werden
-#if STANDALONE
 			foreach (Type t in this.GetType().Assembly.GetTypes())
 			{
 				if (t.IsClass && !t.IsAbstract && t.Name != "StandardSqlGenerator" && (typeof(ISqlGenerator)).IsAssignableFrom(t))
@@ -53,25 +51,7 @@ namespace NDOEnhancer
 					catch {}
 				}
 			}
-			foreach(string name in NDOProviderFactory.Instance.ProviderNames)
-			{
-				foo (this[name]);
-			}
-#else
-            foreach (string name in NDOProviderFactory.Instance.ProviderNames)
-            {
-                generators.Add(name, null);
-            }
-#endif
 		}
-
-#if STANDALONE
-		// use dummy ISqlGenerator in a function call to avoid 
-		// optimization
-		protected virtual void foo(ISqlGenerator bar)
-		{
-		}
-#endif
 
 		public ISqlGenerator this[string providerName]
 		{
@@ -123,3 +103,4 @@ namespace NDOEnhancer
 
 	}
 }
+#endif

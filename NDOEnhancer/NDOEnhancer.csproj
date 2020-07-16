@@ -110,10 +110,19 @@
     <Reference Include="System.Data.OracleClient">
       <Name>System.Data.OracleClient</Name>
     </Reference>
+    <Reference Include="System.Runtime.CompilerServices.Unsafe, Version=4.0.4.1, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>packages\System.Runtime.CompilerServices.Unsafe.4.5.2\lib\netstandard2.0\System.Runtime.CompilerServices.Unsafe.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Threading.Tasks.Extensions, Version=4.2.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>packages\System.Threading.Tasks.Extensions.4.5.2\lib\netstandard2.0\System.Threading.Tasks.Extensions.dll</HintPath>
+    </Reference>
     <Reference Include="System.Xml">
       <Name>System.XML</Name>
     </Reference>
     <Reference Include="System.Xml.Linq" />
+    <Reference Include="Unity.Abstractions, Version=3.3.1.0, Culture=neutral, PublicKeyToken=6d32ff45e0ccc69f, processorArchitecture=MSIL">
+      <HintPath>packages\Unity.Abstractions.3.3.1\lib\net46\Unity.Abstractions.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AllBranches.cs">
@@ -161,14 +170,12 @@
     <Compile Include="Enhancer\Generator\AccessGenerator.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Enhancer\Generator\GeneratorFactory.cs">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="Enhancer\Generator\GenericDiffGenerator.cs" />
     <Compile Include="Enhancer\Generator\GenericSqlGenerator.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Enhancer\Generator\GenericSqlGeneratorBase.cs" />
+    <Compile Include="Enhancer\Generator\ProviderPathFinder.cs" />
     <Compile Include="Enhancer\Generator\NdoTransDiffGenerator.cs" />
     <Compile Include="Enhancer\Generator\SQLDiffGenerator.cs" />
     <Compile Include="Enhancer\Generator\SQLGenerator.cs">
@@ -318,6 +325,9 @@
     <Compile Include="ConfigurationOptions.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="NugetProps.cs" />
+    <Compile Include="ProjectAssets.cs" />
+    <Compile Include="TinyJSON\Json.cs" />
     <Compile Include="UmlautName.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -344,8 +354,8 @@
 copy NDOEnhancer.pdb ..\..\..\nuget
 copy NDO.dll ..\..\..\nuget
 copy NDOInterfaces.dll ..\..\..\nuget
-REM copy NDOEnhancer.exe "C:\Users\Mirko Matytschak\.nuget\packages\ndo.dll\4.0.0\build"
-REM copy NDOEnhancer.pdb "C:\Users\Mirko Matytschak\.nuget\packages\ndo.dll\4.0.0\build"
+copy NDOEnhancer.exe "C:\Users\Mirko Matytschak\.nuget\packages\ndo.dll\4.0.0\build"
+copy NDOEnhancer.pdb "C:\Users\Mirko Matytschak\.nuget\packages\ndo.dll\4.0.0\build"
 </PostBuildEvent>
   </PropertyGroup>
 </Project>

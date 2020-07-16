@@ -27,6 +27,12 @@ using NDOEnhancer;
 using System.IO;
 using System.Xml;
 using System.Reflection;
+using System.Linq;
+using System.Xml.Linq;
+using TinyJSON;
+using System.Text.RegularExpressions;
+using NDO.Configuration;
+using NDO.Provider;
 
 namespace EnhancerTest
 {
@@ -35,8 +41,9 @@ namespace EnhancerTest
 	{
 	
         static bool verboseMode;
+		ProjectDescription projectDescription;
 
-        void CopyFile(string source, string dest)
+		void CopyFile(string source, string dest)
         {
             if (verboseMode)
 			    Console.WriteLine("Copying: " + source + "->" + dest);
@@ -109,19 +116,24 @@ namespace EnhancerTest
 
 		public void InternalStart(string arg)
 		{
-			Console.WriteLine("Runtime: " + typeof(string).Assembly.FullName);
-			ProjectDescription pd;
+			Console.WriteLine("Runtime: " + typeof(string).Assembly.FullName);			
 			ConfigurationOptions options;
 
 			if (!File.Exists(arg))
 			{
 				throw new Exception("Can't find file '" + arg + "'");
 			}
+
+			this.projectDescription = new ProjectDescription( arg );
+			AppDomain.CurrentDomain.SetData( "ProjectDescription", this.projectDescription );
+
+			AppDomain.CurrentDomain.AssemblyResolve += OnAssemblyResolve;
+			NDOContainer.Instance.RegisterType( typeof( IProviderPathFinder ), typeof( ProviderPathFinder ), null, null );
+
 #if DEBUG
-            Console.WriteLine("Loading Project Description...");
+			Console.WriteLine("Loading Project Description...");
 #endif
-			pd = new ProjectDescription(arg);
-            options = pd.ConfigurationOptions;
+            options = projectDescription.ConfigurationOptions;
 
 			if (!options.EnableAddIn)
 				return;
@@ -133,18 +145,21 @@ namespace EnhancerTest
 #else
             verboseMode = options.VerboseMode;
 
-            // In Debug Mode the base directory is printed in the Main method
-            if (verboseMode)
-                Console.WriteLine("Domain base directory is: " + AppDomain.CurrentDomain.BaseDirectory);
+			// In Debug Mode the base directory is printed in the Main method
+			if (verboseMode)
+			{
+				Console.WriteLine( "Domain base directory is: " + AppDomain.CurrentDomain.BaseDirectory );
+				Console.WriteLine( $"Project Style: {(this.projectDescription.IsSdkStyle ? "Sdk" : "Old MSBuild")}" );
+			}
 #endif
-			Console.WriteLine( EnhDate.String, "NDO Enhancer", new AssemblyName( GetType().Assembly.FullName ).Version.ToString() );
+				Console.WriteLine( EnhDate.String, "NDO Enhancer", new AssemblyName( GetType().Assembly.FullName ).Version.ToString() );
 
-            if (!pd.IsWebProject && options.EnableEnhancer)
-			    pd.References.Add(pd.AssemblyName, new NDOReference(pd.AssemblyName, pd.BinFile, true));
+            if (!this.projectDescription.IsWebProject && options.EnableEnhancer)
+			    this.projectDescription.References.Add(projectDescription.AssemblyName, new NDOReference(projectDescription.AssemblyName, projectDescription.BinFile, true));
 
 			MessageAdapter messages = new MessageAdapter();
 
-			new NDOEnhancer.Enhancer(pd, messages).doIt();
+			new NDOEnhancer.Enhancer(this.projectDescription, messages).doIt();
 
 			if (options.EnableEnhancer)
 				Console.WriteLine("Enhancer ready");
@@ -178,7 +193,6 @@ namespace EnhancerTest
 					Console.WriteLine( "Domain base directory is: " + AppDomain.CurrentDomain.BaseDirectory );
 					Console.WriteLine( "Running as " + (IntPtr.Size * 8) + " bit app." );
 #endif
-                    AppDomain.CurrentDomain.AssemblyResolve += OnAssemblyResolve;
 
 					string newarg = (string) AppDomain.CurrentDomain.GetData("arg");
 					new EnhancerTest().InternalStart(newarg);
@@ -196,37 +210,47 @@ namespace EnhancerTest
 			return result;
 		}
 
-        static Assembly OnAssemblyResolve(object sender, ResolveEventArgs args)
-        {
-			if (verboseMode)
-			Console.WriteLine($"AssemblyResolve: {args.Name}");
-			string path = Path.GetDirectoryName( Assembly.GetExecutingAssembly().Location );
-			Console.WriteLine("Location: " + path);
-			if (args.Name.StartsWith("NDO,", StringComparison.InvariantCultureIgnoreCase))
-            {
-                string fileName = Path.Combine(path, "NDO.dll");
-				if (verboseMode)
-					Console.WriteLine( $"  -> {fileName}" );
-				if (File.Exists( fileName ))
-				{
-					return Assembly.LoadFrom( fileName );
-				}
-                return null;
-            }
-			if (args.Name.StartsWith( "NDOInterfaces,", StringComparison.InvariantCultureIgnoreCase ))
-			{
-				string fileName = Path.Combine( path, "NDOInterfaces.dll" );
-				if (File.Exists( fileName ))
-				{
-					if (verboseMode)
-						Console.WriteLine( $"  -> {fileName}" );
-					return Assembly.LoadFrom( fileName );
-				}
+		string GetPackageLibPath( string assName )
+		{
+
+
+			var packageName = assName.ToLowerInvariant();
+			if (assName.Equals( "NDO", StringComparison.OrdinalIgnoreCase ))
+				packageName = "ndo.dll";
+
+			var path = NugetProps.DefaultNugetPackageFolder;
+			if (path == null)
 				return null;
+
+			return Path.Combine( path, ProjectAssets.GetPackageDir( packageName ) );
+		}
+
+		Assembly OnAssemblyResolve( object sender, ResolveEventArgs args )
+		{
+			//if (verboseMode)
+				Console.WriteLine( $"AssemblyResolve: {args?.Name}" );
+
+			var assName = args.Name.Split(',').FirstOrDefault();
+			if (assName == null)
+				return null;
+
+			string path = null;
+			if (this.projectDescription.IsSdkStyle)
+				path = GetPackageLibPath( assName );
+			else
+				path = Path.Combine( Path.GetDirectoryName( Assembly.GetExecutingAssembly().Location ), assName + ".dll" );
+
+			if (path == null)
+				return null;
+
+			Console.WriteLine( "Location: " + path );
+			if (File.Exists( path ))
+			{
+				return Assembly.LoadFrom( path );
 			}
-			Console.WriteLine("Warning: Can't resolve assembly: " + args.Name);
-            return null;
-        }
+			return null;
+
+		}
 
 
 		public EnhancerTest()
