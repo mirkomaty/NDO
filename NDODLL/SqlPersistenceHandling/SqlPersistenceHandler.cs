@@ -37,8 +37,7 @@ using NDO.Logging;
 using NDOInterfaces;
 using NDO.Query;
 using System.Globalization;
-using Unity;
-using Unity.Resolution;
+using NDO.Configuration;
 
 namespace NDO.SqlPersistenceHandling
 {
@@ -88,14 +87,14 @@ namespace NDO.SqlPersistenceHandling
 		private string fieldList;
 		private string namedParamList;
 		private bool hasGuidOid;
-		private readonly IUnityContainer configContainer;
+		private readonly INDOContainer configContainer;
 		private Action<Type,IPersistenceHandler> disposeCallback;
 
 		/// <summary>
 		/// Constructs a SqlPersistenceHandler object
 		/// </summary>
 		/// <param name="configContainer"></param>
-		public SqlPersistenceHandler(IUnityContainer configContainer)
+		public SqlPersistenceHandler(INDOContainer configContainer)
 		{
 			this.configContainer = configContainer;
 		}
@@ -447,17 +446,8 @@ namespace NDO.SqlPersistenceHandling
 		SqlColumnListGenerator CreateColumnListGenerator( Class cls )
 		{
 			var key = $"{nameof(SqlColumnListGenerator)}-{cls.FullName}";
-			var isRegistered = configContainer.IsRegistered<SqlColumnListGenerator>( key );
-			if (!isRegistered)
-			{
-				var generator = new SqlColumnListGenerator( cls );
-				configContainer.RegisterInstance<SqlColumnListGenerator>( key, generator );
-				return generator;
-			}
-
-			return configContainer.Resolve<SqlColumnListGenerator>( key, new ParameterOverride("cls", cls) );
+			return configContainer.ResolveOrRegisterType<SqlColumnListGenerator>( key, new ParameterOverride( "cls", cls ) );
 		}
-
 
 		/// <summary>
 		/// Initializes the PersistenceHandler

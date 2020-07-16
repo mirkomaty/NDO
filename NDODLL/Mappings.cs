@@ -30,7 +30,7 @@ using System.Xml;
 using NDO;
 using NDO.Mapping;
 using NDO.Logging;
-using Unity;
+using NDO.Configuration;
 using NDO.SqlPersistenceHandling;
 
 namespace NDO 
@@ -44,9 +44,9 @@ namespace NDO
 		private Dictionary<Type,int> updateOrder = new Dictionary<Type, int>();
 		ILogAdapter logAdapter;
 		private bool verboseMode;
-		private readonly IUnityContainer configContainer;
+		private readonly INDOContainer configContainer;
 
-		internal Mappings( string mappingFile, IUnityContainer configContainer )
+		internal Mappings( string mappingFile, INDOContainer configContainer )
 			: base( mappingFile )
 		{
 			this.configContainer = configContainer;

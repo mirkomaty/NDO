@@ -3,7 +3,7 @@ using System.Linq;
 using System.Reflection;
 using System.Collections.Generic;
 using System.Text;
-using Unity;
+using NDO.Configuration;
 
 namespace NDO
 {
@@ -15,11 +15,11 @@ namespace NDO
 	{
 		private readonly Type t;
 		private readonly IMetaClass innerClass;
-		private readonly IUnityContainer configContainer;
+		private readonly INDOContainer configContainer;
 		private ConstructorInfo constructor = null;
 		private bool isDefaultConstructor = false;
 
-		public NDOMetaclass(Type t, IMetaClass innerClass, IUnityContainer configContainer)
+		public NDOMetaclass(Type t, IMetaClass innerClass, INDOContainer configContainer)
 		{
 			this.t = t;
 			this.innerClass = innerClass;
@@ -43,7 +43,7 @@ namespace NDO
 					
 					foreach (var p in constr.GetParameters())
 					{
-						if (!registrations.Any(r=>r.RegisteredType == p.ParameterType))
+						if (!registrations.Any(r=>r.Key == p.ParameterType))
 						{
 							canResolve = false;
 							break;

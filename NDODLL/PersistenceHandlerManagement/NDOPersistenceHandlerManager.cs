@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Unity;
+using NDO.Configuration;
 
 namespace NDO
 {
@@ -12,7 +12,7 @@ namespace NDO
 	/// </summary>
 	public class NDOPersistenceHandlerManager : IPersistenceHandlerManager
 	{
-		private readonly IUnityContainer configContainer;
+		private readonly INDOContainer configContainer;
 		private readonly IPersistenceHandlerPool persistenceHandlerPool;
 
 		/// <summary>
@@ -20,7 +20,7 @@ namespace NDO
 		/// </summary>
 		/// <param name="configContainer"></param>
 		/// <param name="persistenceHandlerPool"></param>
-		public NDOPersistenceHandlerManager(IUnityContainer configContainer, IPersistenceHandlerPool persistenceHandlerPool)
+		public NDOPersistenceHandlerManager(INDOContainer configContainer, IPersistenceHandlerPool persistenceHandlerPool)
 		{
 			this.configContainer = configContainer;
 			this.persistenceHandlerPool = persistenceHandlerPool;

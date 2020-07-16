@@ -6,20 +6,19 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
-using Unity;
-using Unity.Resolution;
+using NDO.Configuration;
 
 namespace NDO.SqlPersistenceHandling
 {
 	class SqlQueryGenerator : IQueryGenerator
 	{
-		private readonly IUnityContainer configContainer;
+		private readonly INDOContainer configContainer;
 		private List<QueryInfo> subQueries = new List<QueryInfo>();
 		private Func<Dictionary<Relation, Class>, bool, Class, bool, object, string> selectPartCreator;
 		private object additionalSelectPartData = null;
 		private Mappings mappings;
 
-		public SqlQueryGenerator(IUnityContainer configContainer)
+		public SqlQueryGenerator(INDOContainer configContainer)
 		{
 			this.configContainer = configContainer;
 			this.mappings = this.configContainer.Resolve<Mappings>();
@@ -158,15 +157,7 @@ namespace NDO.SqlPersistenceHandling
 		SqlColumnListGenerator CreateColumnListGenerator( Class cls )
 		{
 			var key = $"{nameof(SqlColumnListGenerator)}-{cls.FullName}";
-			var isRegistered = configContainer.IsRegistered<SqlColumnListGenerator>( key );
-			if (!isRegistered)
-			{
-				var generator = new SqlColumnListGenerator( cls );
-				configContainer.RegisterInstance<SqlColumnListGenerator>( key, generator );
-				return generator;
-			}
-
-			return configContainer.Resolve<SqlColumnListGenerator>( key, new ParameterOverride( "cls", cls ) );
+			return configContainer.ResolveOrRegisterType<SqlColumnListGenerator>( key, new ParameterOverride( "cls", cls ) );
 		}
 
 		string ConstructQueryString( 

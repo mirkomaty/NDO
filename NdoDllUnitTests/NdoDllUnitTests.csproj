@@ -58,6 +58,8 @@
   <ItemGroup>
     <Compile Include="MappingAttributeTests.cs" />
     <Compile Include="MockType.cs" />
+    <Compile Include="NDOContainerTestClasses.cs" />
+    <Compile Include="NDOContainerTests.cs" />
     <Compile Include="NDODllTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

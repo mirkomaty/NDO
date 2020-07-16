@@ -30,9 +30,8 @@ using Cli;
 using NDOInterfaces;
 using System.Runtime.Versioning;
 using System.Linq;
-using NDO.Configuration;
 using NDO.Provider;
-using Unity;
+using NDO.Configuration;
 
 namespace NDO
 {

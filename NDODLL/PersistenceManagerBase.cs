@@ -27,7 +27,6 @@ using System.IO;
 using System.Data;
 using NDO.Logging;
 using NDO.Mapping;
-using Unity;
 using NDO.Configuration;
 using NDO.SqlPersistenceHandling;
 using System.Reflection;
@@ -52,7 +51,7 @@ namespace NDO
 		private string logPath;
 		private ILogAdapter logAdapter;
 		private Type persistenceHandlerType = null;
-		private IUnityContainer configContainer;
+		private INDOContainer configContainer;
 		private IPersistenceHandlerManager persistenceHandlerManager;
 		bool isClosing = false;
 
@@ -301,14 +300,13 @@ namespace NDO
 		/// <summary>
 		/// Gets or sets the container for the configuration of the system.
 		/// </summary>
-		public IUnityContainer ConfigContainer
+		public INDOContainer ConfigContainer
 		{
 			get
 			{
 				if (this.configContainer == null)
 				{
 					this.configContainer = NDOContainer.Instance.CreateChildContainer();
-//					this.configContainer.RegisterInstance<IPersistenceHandlerPool>(new NDOPersistenceHandlerPool());
 					this.configContainer.RegisterType<IQueryGenerator, SqlQueryGenerator>();
 
 					// Currently the PersistenceManager instance is not used.

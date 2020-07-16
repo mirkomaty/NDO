@@ -11,7 +11,7 @@ using NDOInterfaces;
 using System.Text.RegularExpressions;
 using NDO.Linq;
 using LE=System.Linq.Expressions;
-using Unity;
+using NDO.Configuration;
 using NDO.SqlPersistenceHandling;
 
 namespace NDO.Query
@@ -636,7 +636,7 @@ namespace NDO.Query
 			CreateQueryContextsForTypes();
 		}
 
-		IUnityContainer ConfigContainer
+		INDOContainer ConfigContainer
 		{
 			get { return this.pm.ConfigContainer; }
 		}

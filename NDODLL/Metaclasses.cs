@@ -23,7 +23,7 @@
 using System;
 using System.Collections.Generic;
 using System.Reflection;
-using Unity;
+using NDO.Configuration;
 
 namespace NDO
 {
@@ -34,7 +34,7 @@ namespace NDO
 	{
 		private static Dictionary<Type, IMetaClass> theClasses = new Dictionary<Type, IMetaClass>();
 
-		internal static IMetaClass GetClass(Type t, IUnityContainer configContainer) 
+		internal static IMetaClass GetClass(Type t, INDOContainer configContainer) 
 		{
             if (t.IsGenericTypeDefinition)
                 return null;

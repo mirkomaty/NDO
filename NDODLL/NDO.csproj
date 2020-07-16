@@ -37,13 +37,13 @@ Json Serializing for the Containers</PackageReleaseNotes>
     <None Remove="packages\**" />
     <None Remove="TestRunner\**" />
     <None Remove="NDO.v12.suo" />
+    <None Remove="packages.config" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="ndointerfaces" Version="4.0.1" />
 		<PackageReference Include="PatchProductVersion" Version="1.0.2">
 			<PrivateAssets>all</PrivateAssets>
 		</PackageReference>
-    <PackageReference Include="Unity.Container" Version="5.8.13" />
   </ItemGroup>
 	<ItemGroup Condition="'$(TargetFramework)'=='net452'">
 		<Reference Include="System.Transactions" />

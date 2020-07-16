@@ -9,7 +9,7 @@ using Reisekosten.Personal;
 using PureBusinessClasses;
 using NDO.SqlPersistenceHandling;
 using Moq;
-using Unity;
+using NDO.Configuration;
 using NDO.Logging;
 using NDO.Mapping;
 using System.Collections;

@@ -40,7 +40,7 @@ using System.Globalization;
 using NDO.Linq;
 using NDO.Query;
 using ST = System.Transactions;
-using Unity;
+using NDO.Configuration;
 using NDO.ChangeLogging;
 
 namespace NDO

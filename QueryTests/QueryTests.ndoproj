@@ -29,7 +29,7 @@
     <IsWebProject>False</IsWebProject>
     <KeyFile />
     <References>
-      <Reference AssemblyName="NDO" AssemblyPath="..\NDODLL\bin\Debug\net452\NDO.dll" CheckThisDLL="False">
+      <Reference AssemblyName="NDO" AssemblyPath="..\NDODLL\bin\Debug\netstandard2.0\NDO.dll" CheckThisDLL="False">
       </Reference>
       <Reference AssemblyName="PureBusinessClasses" AssemblyPath="bin\Debug\PureBusinessClasses.dll">
       </Reference>
