@@ -17,17 +17,15 @@ namespace NDO.Configuration
 		private readonly Type tTo;
 		private readonly INDOContainer configContainer;
 		ConcurrentDictionary<string,object> values = new ConcurrentDictionary<string, object>();
-		string name;
 
 		/// <summary>
 		/// Constructs a TypeMappingResolver object
 		/// </summary>
-		public TypeMappingResolver(INDOContainer configContainer, Type tFrom, Type tTo, string name)
+		public TypeMappingResolver(INDOContainer configContainer, Type tFrom, Type tTo)
 		{
 			this.tFrom = tFrom;
 			this.tTo = tTo;
-			this.configContainer = configContainer;
-			this.name = name ?? string.Empty;
+			this.configContainer = configContainer;			
 		}
 
 		/// <summary>
@@ -38,7 +36,7 @@ namespace NDO.Configuration
 		/// <returns></returns>
 		public object Resolve( string name, ParameterOverride[] overrides )
 		{
-			var key = name ?? this.name;
+			var key = name ?? string.Empty;
 
 			var result = this.values.GetOrAdd( key, _ =>
 			{

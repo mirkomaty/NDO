@@ -20,27 +20,24 @@ namespace NDO.Configuration
 		/// </summary>
 		/// <param name="fFrom"></param>
 		/// <param name="tTo"></param>
-		/// <param name="name"></param>
 		/// <param name="injectionMembers">This parameter is currently unused</param>
-		void RegisterType( Type fFrom, Type tTo, string name = null, params object[] injectionMembers );
+		void RegisterType( Type fFrom, Type tTo, params object[] injectionMembers );
 
 		/// <summary>
 		/// Registers a type mapping with the container.
 		/// </summary>
 		/// <typeparam name="TFrom"></typeparam>
 		/// <typeparam name="TTo"></typeparam>
-		/// <param name="name"></param>
 		/// <param name="injectionMembers">This parameter is currently unused</param>
-		void RegisterType<TFrom, TTo>(string name = null, params object[] injectionMembers);
+		void RegisterType<TFrom, TTo>(params object[] injectionMembers);
 
 		/// <summary>
 		/// Registers a type mapping with the container.
 		/// </summary>
 		/// <typeparam name="T"></typeparam>
 		/// <remarks>The key type T is identical to the result type.</remarks>
-		/// <param name="name"></param>
 		/// <param name="injectionMembers">This parameter is currently unused</param>
-		void RegisterType<T>( string name = null, params object[] injectionMembers );
+		void RegisterType<T>( params object[] injectionMembers );
 
 		/// <summary>
 		/// Resolves an object

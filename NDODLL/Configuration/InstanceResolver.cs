@@ -15,9 +15,16 @@ namespace NDO.Configuration
 		/// <summary>
 		/// Constructs an InstanceResolver
 		/// </summary>
+		public InstanceResolver()
+		{
+		}
+
+		/// <summary>
+		/// Constructs an InstanceResolver
+		/// </summary>
 		/// <param name="name"></param>
 		/// <param name="o"></param>
-		public InstanceResolver(string name, object o)
+		public void AddOrUpdate(string name, object o)
 		{
 			if (name == null)
 				name = String.Empty;
@@ -30,7 +37,7 @@ namespace NDO.Configuration
 		///<inheritdoc/>
 		public object Resolve( string name, ParameterOverride[] overrides )
 		{
-			if (values.TryGetValue( name, out object result ))
+			if (values.TryGetValue( name ?? string.Empty, out object result ))
 				return result;
 
 			return null;

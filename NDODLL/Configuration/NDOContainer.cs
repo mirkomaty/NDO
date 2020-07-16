@@ -47,9 +47,9 @@ namespace NDO.Configuration
 		}
 
 		///<inheritdoc/>
-		public void RegisterType( Type tFrom, Type tTo, string name = null, params object[] injectionMembers )
+		public void RegisterType( Type tFrom, Type tTo, params object[] injectionMembers )
 		{
-			Func<Type, IResolver> valueFactory = _ => new TypeMappingResolver(this, tFrom, tTo, name);
+			Func<Type, IResolver> valueFactory = _ => new TypeMappingResolver(this, tFrom, tTo);
 
 			lock (lockObject)
 			{
@@ -58,22 +58,23 @@ namespace NDO.Configuration
 		}
 
 		///<inheritdoc/>
-		public void RegisterType<TFrom, TTo>( string name = null, params object[] injectionMembers )
+		public void RegisterType<TFrom, TTo>( params object[] injectionMembers )
 		{
-			RegisterType( typeof( TFrom ), typeof( TTo ), name, injectionMembers );
+			RegisterType( typeof( TFrom ), typeof( TTo ), injectionMembers );
 		}
 
 		///<inheritdoc/>
-		public void RegisterType<T>( string name = null, params object[] injectionMembers )
+		public void RegisterType<T>( params object[] injectionMembers )
 		{
-			RegisterType<T, T>( name, injectionMembers );
+			RegisterType<T, T>( injectionMembers );
 		}
 
 		void CollectRegistrations(IDictionary<Type,IResolver> result)
 		{
 			foreach (var item in values)
 			{
-				result.Add( item.Key, item.Value );
+				if (!result.ContainsKey(item.Key))
+					result.Add( item.Key, item.Value );
 			}
 
 			if (parent != null)
@@ -181,11 +182,12 @@ namespace NDO.Configuration
 		///<inheritdoc/>
 		public void RegisterInstance( Type t, object instance, string name = null )
 		{
-			Func<Type, IResolver> valueFactory = _ => new InstanceResolver(name, instance);
+			Func<Type, IResolver> valueFactory = _ => new InstanceResolver();
 
 			lock (lockObject)
 			{
-				this.values.AddOrUpdate( t, valueFactory, ( k, old ) => valueFactory( k ) );
+				var resolver = (InstanceResolver)this.values.GetOrAdd( t, valueFactory );
+				resolver.AddOrUpdate( name, instance );
 			}
 		}
 
@@ -200,10 +202,13 @@ namespace NDO.Configuration
 		{
 			lock (lockObject)
 			{
-				var result = Resolve(t, name);
+				var resolver = (InstanceResolver)this.values.GetOrAdd( t, _=>new InstanceResolver() );
+
+				var result = resolver.Resolve(name, null);
 				if (result == null)
-					RegisterInstance( t, factory( name ) );
-				return Resolve( t, name );
+					resolver.AddOrUpdate( name, factory( name ) );
+					
+				return resolver.Resolve( name, null );
 			}
 		}
 
