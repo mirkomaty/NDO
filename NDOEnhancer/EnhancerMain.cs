@@ -128,7 +128,7 @@ namespace EnhancerTest
 			AppDomain.CurrentDomain.SetData( "ProjectDescription", this.projectDescription );
 
 			AppDomain.CurrentDomain.AssemblyResolve += OnAssemblyResolve;
-			NDOContainer.Instance.RegisterType( typeof( IProviderPathFinder ), typeof( ProviderPathFinder ), null, null );
+			NDOContainer.Instance.RegisterType<IProviderPathFinder,ProviderPathFinder>();
 
 #if DEBUG
 			Console.WriteLine("Loading Project Description...");

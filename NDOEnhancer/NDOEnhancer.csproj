@@ -351,8 +351,8 @@
 copy NDOEnhancer.pdb ..\..\..\nuget
 copy NDO.dll ..\..\..\nuget
 copy NDOInterfaces.dll ..\..\..\nuget
-copy NDOEnhancer.exe "C:\Users\Mirko Matytschak\.nuget\packages\ndo.dll\4.0.0\build"
-copy NDOEnhancer.pdb "C:\Users\Mirko Matytschak\.nuget\packages\ndo.dll\4.0.0\build"
+REM copy NDOEnhancer.exe "C:\Users\Mirko Matytschak\.nuget\packages\ndo.dll\4.0.0\build"
+REM copy NDOEnhancer.pdb "C:\Users\Mirko Matytschak\.nuget\packages\ndo.dll\4.0.0\build"
 </PostBuildEvent>
   </PropertyGroup>
 </Project>

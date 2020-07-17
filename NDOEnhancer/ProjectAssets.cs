@@ -60,7 +60,12 @@ namespace NDOEnhancer
 				root = json.Parse( tr ).Value.AsObject();
 
 			var targets = root["targets"].AsObject();
-			var standardKey = targets.First(o=>o.StartsWith(".NETStandard,Version="));
+			var standardKey = targets.FirstOrDefault(o=>o.StartsWith(".NETStandard,Version=") || o.StartsWith(".NETCoreApp,Version="));
+			if (standardKey == null)
+			{
+				Console.WriteLine("Can't find any .NETStandard or .NETCoreApp target in the project.assets.json file");
+				return Enumerable.Empty<string>();
+			}
 			var standard = targets[standardKey].AsObject();
 			Regex regex = new Regex(pattern + '/');
 			var packageKeys = standard.Where(o=>regex.Match(o).Success);
