@@ -157,7 +157,7 @@ namespace NDO.SqlPersistenceHandling
 		SqlColumnListGenerator CreateColumnListGenerator( Class cls )
 		{
 			var key = $"{nameof(SqlColumnListGenerator)}-{cls.FullName}";
-			return configContainer.ResolveOrRegisterType<SqlColumnListGenerator>( key, new ParameterOverride( "cls", cls ) );
+			return configContainer.ResolveOrRegisterType<SqlColumnListGenerator>( new ContainerControlledLifetimeManager(), key, new ParameterOverride( "cls", cls ) );
 		}
 
 		string ConstructQueryString( 

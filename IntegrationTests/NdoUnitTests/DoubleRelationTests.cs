@@ -26,7 +26,6 @@ using System.Text;
 using NUnit.Framework;
 using NDO;
 using DoubleRelationClasses;
-using Unity;
 
 namespace NdoUnitTests
 {

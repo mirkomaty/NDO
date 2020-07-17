@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 namespace NDO.Configuration
@@ -35,12 +36,21 @@ namespace NDO.Configuration
 		}
 
 		///<inheritdoc/>
-		public object Resolve( string name, ParameterOverride[] overrides )
+		public object Resolve( INDOContainer resolvingContainer, string name, ParameterOverride[] overrides )
 		{
 			if (values.TryGetValue( name ?? string.Empty, out object result ))
 				return result;
 
 			return null;
+		}
+
+		///<inheritdoc/>
+		public void Dispose()
+		{
+			foreach (IDisposable d in values.Values.Where( o => o is IDisposable ))
+				d.Dispose();
+
+			values.Clear();
 		}
 	}
 }

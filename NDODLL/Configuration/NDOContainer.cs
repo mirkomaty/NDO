@@ -5,6 +5,7 @@ using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 
 namespace NDO.Configuration
 {
@@ -47,9 +48,12 @@ namespace NDO.Configuration
 		}
 
 		///<inheritdoc/>
-		public void RegisterType( Type tFrom, Type tTo, params object[] injectionMembers )
+		public void RegisterType( Type tFrom, Type tTo, ILifetimeManager lifetimeManager = null, params object[] injectionMembers )
 		{
-			Func<Type, IResolver> valueFactory = _ => new TypeMappingResolver(this, tFrom, tTo);
+			if (lifetimeManager == null)
+				lifetimeManager = new TransientLifetimeManager();
+
+			Func<Type, IResolver> valueFactory = _ => lifetimeManager.CreateResolver(tFrom, tTo);
 
 			lock (lockObject)
 			{
@@ -58,15 +62,15 @@ namespace NDO.Configuration
 		}
 
 		///<inheritdoc/>
-		public void RegisterType<TFrom, TTo>( params object[] injectionMembers )
+		public void RegisterType<TFrom, TTo>( ILifetimeManager lifetimeManager = null, params object[] injectionMembers )
 		{
-			RegisterType( typeof( TFrom ), typeof( TTo ), injectionMembers );
+			RegisterType( typeof( TFrom ), typeof( TTo ), lifetimeManager, injectionMembers );
 		}
 
 		///<inheritdoc/>
-		public void RegisterType<T>( params object[] injectionMembers )
+		public void RegisterType<T>( ILifetimeManager lifetimeManager = null, params object[] injectionMembers )
 		{
-			RegisterType<T, T>( injectionMembers );
+			RegisterType<T, T>( lifetimeManager, injectionMembers );
 		}
 
 		void CollectRegistrations(IDictionary<Type,IResolver> result)
@@ -118,7 +122,7 @@ namespace NDO.Configuration
 							instance.RegisterType<IProviderPathFinder, NDOProviderPathFinder>();
 							// ContainerControlled means in this case, that there is only one instance per application, 
 							// but the registration can be overriden in child containers.
-							instance.RegisterType<IPersistenceHandlerPool, NDOPersistenceHandlerPool>();
+							instance.RegisterType<IPersistenceHandlerPool, NDOPersistenceHandlerPool>(new ContainerControlledLifetimeManager());
 						}
 					}
                 }
@@ -128,16 +132,24 @@ namespace NDO.Configuration
         }
 
 		///<inheritdoc/>
-		public object Resolve( Type tFrom, string name = null, params ParameterOverride[] overrides )
+		object InternalResolve( INDOContainer resolvingContainer, Type tFrom, string name, ParameterOverride[] overrides )
 		{
 			lock (lockObject)
 			{
-				if (values.TryGetValue( tFrom, out IResolver resolver ))
-					return resolver.Resolve( name, overrides );
-				if (parent != null)
-					return parent.Resolve( tFrom, name, overrides );
+				var resolver = GetResolver(tFrom);
+				if (resolver == null)
+				{
+					RegisterType( tFrom, tFrom, null );
+					resolver = GetResolver( tFrom );
+				}
+				return resolver.Resolve( resolvingContainer, name, overrides );
 			}
-			return null;
+		}
+
+		///<inheritdoc/>
+		public object Resolve( Type tFrom, string name = null, params ParameterOverride[] overrides )
+		{
+			return InternalResolve( this, tFrom, name, overrides );
 		}
 
 		///<inheritdoc/>
@@ -197,18 +209,34 @@ namespace NDO.Configuration
 			RegisterInstance( typeof( T ), instance, name );
 		}
 
+		IResolver GetResolver(Type t)
+		{
+			if (this.values.TryGetValue( t, out IResolver resolver ))
+				return resolver;
+			if (this.parent != null)
+				return parent.GetResolver( t );
+			return null;
+		}
+
 		///<inheritdoc/>
 		public object ResolveOrRegisterInstance( Type t, string name, Func<string, object> factory )
 		{
 			lock (lockObject)
 			{
-				var resolver = (InstanceResolver)this.values.GetOrAdd( t, _=>new InstanceResolver() );
+				var resolver = (InstanceResolver)GetResolver(t);
+				if (resolver == null)
+				{
+					resolver = new InstanceResolver();
+					values.TryAdd( t, resolver );
+				}
 
-				var result = resolver.Resolve(name, null);
+				var result = resolver.Resolve(this, name, null);
 				if (result == null)
-					resolver.AddOrUpdate( name, factory( name ) );
-					
-				return resolver.Resolve( name, null );
+				{
+					result = factory( name );
+					resolver.AddOrUpdate( name, result );
+				}
+				return result;
 			}
 		}
 
@@ -219,30 +247,36 @@ namespace NDO.Configuration
 		}
 
 		///<inheritdoc/>
-		public object ResolveOrRegisterType( Type tFrom, Type tTo, string name = null, params ParameterOverride[] overrides )
+		public object ResolveOrRegisterType( Type tFrom, Type tTo, ILifetimeManager lifetimeManager = null, string name = null, params ParameterOverride[] overrides )
 		{
 			lock (lockObject)
 			{
-				var result = Resolve(tFrom, name, overrides);
-				if (result == null)
-				{
-					RegisterType( tFrom, tTo, name );
-				}
+				var resolver = GetResolver(tFrom);
+				if (resolver != null)
+					return resolver.Resolve( this, name, overrides );
+				
+				RegisterType( tFrom, tTo, lifetimeManager );
 
 				return Resolve( tFrom, name, overrides );
 			}
 		}
 
 		///<inheritdoc/>
-		public TFrom ResolveOrRegisterType<TFrom, TTo>( string name = null, params ParameterOverride[] overrides )
+		public TFrom ResolveOrRegisterType<TFrom, TTo>( ILifetimeManager lifetimeManager = null, string name = null, params ParameterOverride[] overrides )
 		{
-			return (TFrom) ResolveOrRegisterType( typeof( TFrom ), typeof( TTo ), name, overrides );
+			return (TFrom) ResolveOrRegisterType( typeof( TFrom ), typeof( TTo ), lifetimeManager, name, overrides );
 		}
 
 		///<inheritdoc/>
-		public TFrom ResolveOrRegisterType<TFrom>( string name = null, params ParameterOverride[] overrides )
+		public TFrom ResolveOrRegisterType<TFrom>( ILifetimeManager lifetimeManager = null, string name = null, params ParameterOverride[] overrides )
 		{
-			return (TFrom) ResolveOrRegisterType( typeof( TFrom ), typeof( TFrom ), name, overrides );
+			return (TFrom) ResolveOrRegisterType( typeof( TFrom ), typeof( TFrom ), lifetimeManager, name, overrides );
+		}
+
+		///<inheritdoc/>
+		public TFrom ResolveOrRegisterType<TFrom>( string name, params ParameterOverride[] overrides )
+		{
+			return (TFrom) ResolveOrRegisterType( typeof( TFrom ), typeof( TFrom ), null, name, overrides );
 		}
 	}
 }

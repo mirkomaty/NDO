@@ -8,7 +8,6 @@ using System.Threading.Tasks;
 namespace NdoDllUnitTests
 {
 
-
     public interface ICar
     {
         int Run();

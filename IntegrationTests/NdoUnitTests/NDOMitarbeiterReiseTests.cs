@@ -31,7 +31,6 @@ using NDO.Query;
 using Reisekosten;
 using Reisekosten.Personal;
 using NDO.Linq;
-using Unity;
 using NDO.Mapping;
 
 namespace NdoUnitTests
