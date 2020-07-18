@@ -191,11 +191,11 @@ namespace NETDataObjects.NDOVSPackage
 			this.btnInstallProvider = new System.Windows.Forms.Button();
 			this.label4 = new System.Windows.Forms.Label();
 			this.label2 = new System.Windows.Forms.Label();
-			this.btnOK = new System.Windows.Forms.Button();
-			this.btnCancel = new System.Windows.Forms.Button();
 			this.tabPageAssemblies = new System.Windows.Forms.TabPage();
 			this.label6 = new System.Windows.Forms.Label();
 			this.chlbAssemblies = new System.Windows.Forms.CheckedListBox();
+			this.btnOK = new System.Windows.Forms.Button();
+			this.btnCancel = new System.Windows.Forms.Button();
 			this.tabControl.SuspendLayout();
 			this.tabPageGeneral.SuspendLayout();
 			this.groupBox1.SuspendLayout();
@@ -225,7 +225,7 @@ namespace NETDataObjects.NDOVSPackage
 			// btnSaveAs
 			// 
 			this.btnSaveAs.DialogResult = System.Windows.Forms.DialogResult.OK;
-			this.btnSaveAs.Location = new System.Drawing.Point(246, 350);
+			this.btnSaveAs.Location = new System.Drawing.Point(249, 385);
 			this.btnSaveAs.Name = "btnSaveAs";
 			this.btnSaveAs.Size = new System.Drawing.Size(100, 39);
 			this.btnSaveAs.TabIndex = 47;
@@ -235,7 +235,7 @@ namespace NETDataObjects.NDOVSPackage
 			// 
 			// btnPresetApp
 			// 
-			this.btnPresetApp.Location = new System.Drawing.Point(132, 350);
+			this.btnPresetApp.Location = new System.Drawing.Point(135, 385);
 			this.btnPresetApp.Name = "btnPresetApp";
 			this.btnPresetApp.Size = new System.Drawing.Size(100, 39);
 			this.btnPresetApp.TabIndex = 46;
@@ -362,7 +362,7 @@ namespace NETDataObjects.NDOVSPackage
 			// 
 			// btnPresetLibrary
 			// 
-			this.btnPresetLibrary.Location = new System.Drawing.Point(18, 350);
+			this.btnPresetLibrary.Location = new System.Drawing.Point(21, 385);
 			this.btnPresetLibrary.Name = "btnPresetLibrary";
 			this.btnPresetLibrary.Size = new System.Drawing.Size(100, 39);
 			this.btnPresetLibrary.TabIndex = 36;
@@ -402,11 +402,11 @@ namespace NETDataObjects.NDOVSPackage
 			// 
 			this.tabControl.Controls.Add(this.tabPageGeneral);
 			this.tabControl.Controls.Add(this.tabPageAssemblies);
-			this.tabControl.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.tabControl.Dock = System.Windows.Forms.DockStyle.Top;
 			this.tabControl.Location = new System.Drawing.Point(0, 0);
 			this.tabControl.Name = "tabControl";
 			this.tabControl.SelectedIndex = 0;
-			this.tabControl.Size = new System.Drawing.Size(661, 439);
+			this.tabControl.Size = new System.Drawing.Size(661, 374);
 			this.tabControl.TabIndex = 0;
 			// 
 			// tabPageGeneral
@@ -417,8 +417,6 @@ namespace NETDataObjects.NDOVSPackage
 			this.tabPageGeneral.Controls.Add(this.txtSchemaVersion);
 			this.tabPageGeneral.Controls.Add(this.label5);
 			this.tabPageGeneral.Controls.Add(this.btnNewDatabase);
-			this.tabPageGeneral.Controls.Add(this.btnSaveAs);
-			this.tabPageGeneral.Controls.Add(this.btnPresetApp);
 			this.tabPageGeneral.Controls.Add(this.txtDbOwner);
 			this.tabPageGeneral.Controls.Add(this.txtConnectionString);
 			this.tabPageGeneral.Controls.Add(this.label3);
@@ -427,16 +425,13 @@ namespace NETDataObjects.NDOVSPackage
 			this.tabPageGeneral.Controls.Add(this.chkChangeEvents);
 			this.tabPageGeneral.Controls.Add(this.label2);
 			this.tabPageGeneral.Controls.Add(this.btnConnString);
-			this.tabPageGeneral.Controls.Add(this.btnOK);
-			this.tabPageGeneral.Controls.Add(this.btnPresetLibrary);
-			this.tabPageGeneral.Controls.Add(this.btnCancel);
 			this.tabPageGeneral.Controls.Add(this.chkMappingNew);
 			this.tabPageGeneral.Controls.Add(this.chkActivateEnhancer);
 			this.tabPageGeneral.Controls.Add(this.chkActivateAddIn);
 			this.tabPageGeneral.Location = new System.Drawing.Point(4, 22);
 			this.tabPageGeneral.Name = "tabPageGeneral";
 			this.tabPageGeneral.Padding = new System.Windows.Forms.Padding(3);
-			this.tabPageGeneral.Size = new System.Drawing.Size(653, 413);
+			this.tabPageGeneral.Size = new System.Drawing.Size(653, 348);
 			this.tabPageGeneral.TabIndex = 0;
 			this.tabPageGeneral.Text = "General";
 			this.tabPageGeneral.UseVisualStyleBackColor = true;
@@ -523,25 +518,6 @@ namespace NETDataObjects.NDOVSPackage
 			this.label2.TabIndex = 40;
 			this.label2.Text = "Default Connection String";
 			// 
-			// btnOK
-			// 
-			this.btnOK.DialogResult = System.Windows.Forms.DialogResult.OK;
-			this.btnOK.Location = new System.Drawing.Point(360, 350);
-			this.btnOK.Name = "btnOK";
-			this.btnOK.Size = new System.Drawing.Size(100, 39);
-			this.btnOK.TabIndex = 37;
-			this.btnOK.Text = "OK";
-			this.btnOK.Click += new System.EventHandler(this.btnOK_Click);
-			// 
-			// btnCancel
-			// 
-			this.btnCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-			this.btnCancel.Location = new System.Drawing.Point(474, 350);
-			this.btnCancel.Name = "btnCancel";
-			this.btnCancel.Size = new System.Drawing.Size(100, 39);
-			this.btnCancel.TabIndex = 35;
-			this.btnCancel.Text = "Cancel";
-			// 
 			// tabPageAssemblies
 			// 
 			this.tabPageAssemblies.Controls.Add(this.label6);
@@ -549,7 +525,7 @@ namespace NETDataObjects.NDOVSPackage
 			this.tabPageAssemblies.Location = new System.Drawing.Point(4, 22);
 			this.tabPageAssemblies.Name = "tabPageAssemblies";
 			this.tabPageAssemblies.Padding = new System.Windows.Forms.Padding(3);
-			this.tabPageAssemblies.Size = new System.Drawing.Size(653, 413);
+			this.tabPageAssemblies.Size = new System.Drawing.Size(653, 348);
 			this.tabPageAssemblies.TabIndex = 1;
 			this.tabPageAssemblies.Text = "Assemblies";
 			this.tabPageAssemblies.UseVisualStyleBackColor = true;
@@ -571,16 +547,38 @@ namespace NETDataObjects.NDOVSPackage
 			this.chlbAssemblies.FormattingEnabled = true;
 			this.chlbAssemblies.Location = new System.Drawing.Point(10, 39);
 			this.chlbAssemblies.Name = "chlbAssemblies";
-			this.chlbAssemblies.Size = new System.Drawing.Size(631, 364);
+			this.chlbAssemblies.Size = new System.Drawing.Size(631, 289);
 			this.chlbAssemblies.TabIndex = 0;
 			this.chlbAssemblies.ItemCheck += new System.Windows.Forms.ItemCheckEventHandler(this.chlbAssemblies_ItemCheck);
 			// 
+			// btnOK
+			// 
+			this.btnOK.DialogResult = System.Windows.Forms.DialogResult.OK;
+			this.btnOK.Location = new System.Drawing.Point(363, 385);
+			this.btnOK.Name = "btnOK";
+			this.btnOK.Size = new System.Drawing.Size(100, 39);
+			this.btnOK.TabIndex = 37;
+			this.btnOK.Text = "OK";
+			this.btnOK.Click += new System.EventHandler(this.btnOK_Click);
+			// 
+			// btnCancel
+			// 
+			this.btnCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
+			this.btnCancel.Location = new System.Drawing.Point(477, 385);
+			this.btnCancel.Name = "btnCancel";
+			this.btnCancel.Size = new System.Drawing.Size(100, 39);
+			this.btnCancel.TabIndex = 35;
+			this.btnCancel.Text = "Cancel";
+			// 
 			// ConfigurationDialog
 			// 
-			this.AcceptButton = this.btnOK;
 			this.AutoScaleBaseSize = new System.Drawing.Size(5, 13);
-			this.CancelButton = this.btnCancel;
 			this.ClientSize = new System.Drawing.Size(661, 439);
+			this.Controls.Add(this.btnSaveAs);
+			this.Controls.Add(this.btnPresetApp);
+			this.Controls.Add(this.btnOK);
+			this.Controls.Add(this.btnPresetLibrary);
+			this.Controls.Add(this.btnCancel);
 			this.Controls.Add(this.tabControl);
 			this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
 			this.Name = "ConfigurationDialog";
