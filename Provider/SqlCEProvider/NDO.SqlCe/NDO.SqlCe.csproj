@@ -8,12 +8,11 @@
     <Company>Mirko Matytschak</Company>
     <Product>.NET Data Objects (NDO)</Product>
     <Copyright>Copyright (c) 2002-2020 Mirko Matytschak, Velden, Germany</Copyright>
-    <!--PackageLicenseUrl>https://opensource.org/licenses/MIT</PackageLicenseUrl-->
-    <PackageLicense>MIT</PackageLicense>
     <PackageProjectUrl>https://www.netdataobjects.de</PackageProjectUrl>
     <RepositoryUrl>https://github.com/mirkomaty/NDO</RepositoryUrl>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <PackageReleaseNotes>Support for CLOBs (TEXT)</PackageReleaseNotes>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
   </PropertyGroup>
 
   <ItemGroup>

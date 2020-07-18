@@ -7,7 +7,7 @@
     <Authors>Mirko Matytschak</Authors>
     <Description>Interfaces and base implementations for NDO.</Description>
     <Copyright>Copyright (c) 2002-2020 Mirko Matytschak</Copyright>
-    <PackageLicense>MIT</PackageLicense>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageProjectUrl>https://www.netdatobjects.de</PackageProjectUrl>
     <RepositoryUrl>https://github.com/mirkomaty/NDO</RepositoryUrl>
     <RepositoryType>GIT</RepositoryType>
