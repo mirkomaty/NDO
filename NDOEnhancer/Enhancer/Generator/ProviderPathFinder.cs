@@ -36,7 +36,16 @@ namespace NDOEnhancer
                     paths.Add( assetPath );
                 }
             }
-
+            if (projectDescription.ConfigurationOptions.VerboseMode)
+            {
+                Console.WriteLine( "Provider probing paths: " );
+                foreach (var path in paths)
+                {
+                    Console.WriteLine( "  " + path );
+                }
+                if (paths.Count == 0)
+                    Console.WriteLine( "  None found" );
+            }
             return paths;
 		}
 

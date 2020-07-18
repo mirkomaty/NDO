@@ -18,7 +18,7 @@ namespace NDO.Provider
 			
 			string binPath = Path.Combine( path, "bin" );
 			if (Directory.Exists( binPath ))
-				paths.Add(path);
+				paths.Add(binPath);
 
 			// This is a hack to determine any loaded provider packages.
 			var runtimeDir = System.Runtime.InteropServices.RuntimeEnvironment.GetRuntimeDirectory();

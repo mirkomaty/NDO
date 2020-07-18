@@ -227,7 +227,7 @@ namespace EnhancerTest
 
 		Assembly OnAssemblyResolve( object sender, ResolveEventArgs args )
 		{
-			//if (verboseMode)
+			if (verboseMode)
 				Console.WriteLine( $"AssemblyResolve: {args?.Name}" );
 
 			var assName = args.Name.Split(',').FirstOrDefault();
@@ -249,7 +249,6 @@ namespace EnhancerTest
 				return Assembly.LoadFrom( path );
 			}
 			return null;
-
 		}
 
 
