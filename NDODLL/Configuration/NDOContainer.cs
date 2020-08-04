@@ -101,6 +101,18 @@ namespace NDO.Configuration
 			} 
 		}
 
+		///<inheritdoc/>
+		public bool IsRegistered(Type t)
+		{
+			return Registrations.ContainsKey( t );
+		}
+
+		///<inheritdoc/>
+		public bool IsRegistered<T>()
+		{
+			return Registrations.ContainsKey( typeof(T) );
+		}
+
 		/// <summary>
 		/// Gets the root instance of the container.
 		/// </summary>
@@ -194,12 +206,25 @@ namespace NDO.Configuration
 		///<inheritdoc/>
 		public void RegisterInstance( Type t, object instance, string name = null )
 		{
-			Func<Type, IResolver> valueFactory = _ => new InstanceResolver();
-
 			lock (lockObject)
 			{
-				var resolver = (InstanceResolver)this.values.GetOrAdd( t, valueFactory );
-				resolver.AddOrUpdate( name, instance );
+				IResolver resolver;
+				if (this.values.TryGetValue( t, out resolver ))
+				{
+					if (resolver is InstanceResolver instanceResolver)
+					{
+						instanceResolver.AddOrUpdate( name, instance );
+						return;
+					}
+					else
+					{
+						this.values.TryRemove( t, out resolver );
+					}
+				}
+
+				var instResolver = new InstanceResolver();
+					this.values.TryAdd( t, instResolver );
+				instResolver.AddOrUpdate( name, instance );
 			}
 		}
 

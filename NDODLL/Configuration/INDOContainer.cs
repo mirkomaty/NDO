@@ -65,6 +65,20 @@ namespace NDO.Configuration
 		IDictionary<Type, IResolver> Registrations { get; }
 
 		/// <summary>
+		/// Checks, if there is a registration for a certain type.
+		/// </summary>
+		/// <typeparam name="T"></typeparam>
+		/// <returns></returns>
+		bool IsRegistered<T>();
+
+		/// <summary>
+		/// Checks, if there is a registration for a certain type.
+		/// </summary>
+		/// <param name="t"></param>
+		/// <returns></returns>
+		bool IsRegistered( Type t );
+
+		/// <summary>
 		/// Resolves an object of a given type and registers a new instance, if the object is not present.
 		/// </summary>
 		/// <param name="t"></param>
