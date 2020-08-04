@@ -293,6 +293,14 @@ namespace NdoDllUnitTests
 			Assert.AreEqual( "Running BMW - 2 mile", driver2.RunCar() );
 		}
 
+		[Test]
+		public void TestNullInstance()
+		{
+			var container = new NDOContainer();
+			container.RegisterInstance<ICar>( null );
+			Assert.IsNull( container.Resolve<ICar>() );
+		}
+
 		class TestDisposable : IDisposable
 		{
 			public void Dispose()
