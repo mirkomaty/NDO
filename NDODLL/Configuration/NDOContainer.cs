@@ -151,9 +151,17 @@ namespace NDO.Configuration
 				var resolver = GetResolver(tFrom);
 				if (resolver == null)
 				{
-					RegisterType( tFrom, tFrom, null );
-					resolver = GetResolver( tFrom );
+					if (!tFrom.IsInterface && !tFrom.IsAbstract)
+					{
+						RegisterType( tFrom, tFrom, null );
+						resolver = GetResolver( tFrom );
+					}
+					else
+					{
+						return null;
+					}
 				}
+
 				return resolver.Resolve( resolvingContainer, name, overrides );
 			}
 		}

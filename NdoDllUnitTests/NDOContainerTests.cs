@@ -320,6 +320,29 @@ namespace NdoDllUnitTests
 			Assert.IsTrue( container.Resolve<ICar>() is Ford );
 		}
 
+		[Test]
+		public void OverwriteInstanceRegWithTypeReg()
+		{
+			var container = new NDOContainer();
+			container.RegisterInstance<ICar>( new Ford() );
+			container.RegisterType<ICar, BMW>();
+			Assert.IsTrue( container.Resolve<ICar>() is BMW );
+		}
+
+		[Test]
+		public void ResolveWithoutRegistration()
+		{
+			var container = new NDOContainer();
+			Assert.IsTrue( container.Resolve<BMW>() is BMW );
+		}
+
+		[Test]
+		public void ResolveInterfaceWithoutRegistrationIsNull()
+		{
+			var container = new NDOContainer();
+			Assert.IsNull( container.Resolve<ICar>() );
+		}
+
 		class TestDisposable : IDisposable
 		{
 			public void Dispose()
