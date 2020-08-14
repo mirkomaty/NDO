@@ -49,6 +49,18 @@ namespace NdoDllUnitTests
 		}
 
 		[Test]
+		public void RegistrationWithAnonymousOverride()
+		{
+			INDOContainer container = new NDOContainer();
+
+			container.RegisterType<Driver>();
+
+			//Resolves dependencies and returns the Driver object 
+			Driver drv = container.Resolve<Driver>(null, new ParameterOverride(new BMW()));
+			Assert.AreEqual( "Running BMW - 1 mile", drv.RunCar() );
+		}
+
+		[Test]
 		public void DoubleResolve()
 		{
 			INDOContainer container = new NDOContainer();
@@ -341,6 +353,15 @@ namespace NdoDllUnitTests
 		{
 			var container = new NDOContainer();
 			Assert.IsNull( container.Resolve<ICar>() );
+		}
+
+		[Test]
+		public void ResolveTypeWithInstanceDependency()
+		{
+			var container = new NDOContainer();
+			container.RegisterInstance<ICar>( new BMW() );
+			var drv = container.Resolve<Driver>();
+			Assert.NotNull( drv );
 		}
 
 		class TestDisposable : IDisposable

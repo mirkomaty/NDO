@@ -595,7 +595,7 @@ namespace NDO.Query
 				}
 			}
 
-			var contextGenerator = ConfigContainer.Resolve<RelationContextGenerator>();
+			var contextGenerator = ConfigContainer.Resolve<RelationContextGenerator>( null, new ParameterOverride( this.pm.mappings ) );
 			this.queryContextsForTypes = new List<QueryContextsEntry>();
 			// usedTables now contains all assignable classes of our result type
 			foreach (var de in usedTables)

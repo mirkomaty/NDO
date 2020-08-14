@@ -42,13 +42,14 @@ namespace NDO.Configuration
 			ConstructorInfo constructor = null;
 			foreach (var constr in tTo.GetConstructors().OrderBy( ci => ci.GetParameters().Length ))
 			{
-#warning Wir müssen hier die Konstruktoren nach overrides filtern.
 				bool canResolve = true;
 				parameters.Clear();
 
 				foreach (var p in constr.GetParameters())
 				{
-					if (p.ParameterType != typeof( INDOContainer ) && !overrides.Any( ov => ov.Name == p.Name ) && !registrations.Any( r => r.Key == p.ParameterType ))
+					if (p.ParameterType != typeof( INDOContainer ) 
+						&& !overrides.Any( ov => ov.Name == null && p.ParameterType.IsAssignableFrom(ov.Value.GetType()) || ov.Name == p.Name ) 
+						&& !registrations.Any( r => r.Key == p.ParameterType ))
 					{
 						canResolve = false;
 						break;
@@ -74,7 +75,7 @@ namespace NDO.Configuration
 					parameters.Add( resolvingContainer );
 					continue;
 				}
-				var overrde = overrides.FirstOrDefault(ov=>ov.Name == p.Name);
+				var overrde = overrides.FirstOrDefault(ov=> ov.Name == null && p.ParameterType.IsAssignableFrom(ov.Value.GetType()) || ov.Name == p.Name);
 				if (overrde != null)
 					parameters.Add( overrde.Value );
 				else

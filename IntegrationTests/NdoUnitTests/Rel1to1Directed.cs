@@ -27,6 +27,7 @@ using NUnit.Framework;
 using Reisekosten.Personal;
 using NDO;
 using NDO.Query;
+using NDO.Linq;
 
 namespace NdoUnitTests
 {
@@ -106,7 +107,7 @@ namespace NdoUnitTests
 			pm.MakePersistent( m );
 			pm.Save();
 			Assert.That( !m.NDOObjectId.Equals( a.NDOObjectId ), "Ids should be different" );
-			m = (Mitarbeiter)pm.FindObject( m.NDOObjectId );
+			m = pm.Objects<Mitarbeiter>().Where(e=>e.Oid() == m.NDOObjectId.Id.Value ).SingleOrDefault();
 			a = (Adresse)pm.FindObject( a.NDOObjectId );
 			Assert.NotNull( m, "1. Mitarbeiter not found" );
 			Assert.NotNull( a, "1. Adresse not found" );
@@ -116,9 +117,9 @@ namespace NdoUnitTests
 			a = null;
 
 			pm.UnloadCache();
-			m = (Mitarbeiter)pm.FindObject( moid );
+			m = pm.Objects<Mitarbeiter>().Where( e=>e.NDOObjectId == moid ).SingleOrDefault();
 			Adresse a2 = m.Adresse;
-			a = (Adresse)pm.FindObject( aoid );
+			a = pm.Objects<Adresse>().Where( x=>x.NDOObjectId == aoid ).SingleOrDefault();
 			Assert.NotNull( m, "2. Mitarbeiter not found" );
 			Assert.NotNull( a, "2. Adresse not found" );
 			Assert.AreSame( a, a2, "Address should match" );
