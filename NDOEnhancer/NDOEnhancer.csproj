@@ -94,10 +94,10 @@
     <Reference Include="Mono.Cecil, Version=0.10.1.0, Culture=neutral, PublicKeyToken=50cebf1cceb9d05e, processorArchitecture=MSIL">
       <HintPath>packages\Mono.Cecil.0.10.1\lib\net40\Mono.Cecil.dll</HintPath>
     </Reference>
-    <Reference Include="NDO, Version=4.0.2.0, Culture=neutral, PublicKeyToken=37bfdffa92a0cd24, processorArchitecture=MSIL">
+    <Reference Include="NDO">
       <HintPath>..\NDODLL\bin\$(Configuration)\net452\NDO.dll</HintPath>
     </Reference>
-    <Reference Include="NDOInterfaces, Version=4.0.1.0, Culture=neutral, PublicKeyToken=ff5e453a099b8326, processorArchitecture=MSIL">
+    <Reference Include="NDOInterfaces">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\NDOInterfaces\bin\$(Configuration)\net452\NDOInterfaces.dll</HintPath>
     </Reference>
