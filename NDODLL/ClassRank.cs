@@ -175,7 +175,7 @@ namespace NDO
 						// cls1 has the foreign key. So cls2 must be saved first.
 						order++;
 						// In case of a bidirectional relation the child of the composition should win,
-						// because the parent must be saved in an own transaction, anyway
+						// because the parent must be saved first anyway
 						if (rel.Composition && rel.Bidirectional && rel.ForeignRelation.Multiplicity == RelationMultiplicity.Element)
 							order++;  // give way to the counterpart of the relation
 					}

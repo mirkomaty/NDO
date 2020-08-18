@@ -706,33 +706,18 @@ namespace NDO
 					&& GetClass(pc).Oid.HasAutoincrementedColumn
 					&& !relClass.HasGuidOid)
 				{
-#warning Testcase!!!! // Das war vorher so: if (pc.NDOObjectState == NDOObjectState.Created && (relObj.NDOObjectState == NDOObjectState.Created || relObj.NDOObjectState == NDOObjectState.Transient))
-					if (pc.NDOObjectState == NDOObjectState.Created )  //TODO: Überprüfen!!!!
-						throw new NDOException(61, "Can't assign object of type " + relObj + " to relation " + pc.GetType().FullName + "." + r.FieldName + ". The parent object must be saved in an own transaction to retrieve the Id first. As an alternative you can use client generated Id's or a mapping table.");
+					if (pc.NDOObjectState == NDOObjectState.Created )
+						throw new NDOException(61, "Can't assign object of type " + relObj + " to relation " + pc.GetType().FullName + "." + r.FieldName + ". The parent object must be saved first to obtain the Id (for example with pm.Save(true)). As an alternative you can use client generated Id's or a mapping table.");
 					if (r.Composition)
 						throw new NDOException(62, "Can't assign object of type " + relObj + " to relation " + pc.GetType().FullName + "." + r.FieldName + ". Can't handle a polymorphic composite relation with cardinality 1 with autonumbered id's. Use a mapping table or client generated id's.");
 					if (relObj.NDOObjectState == NDOObjectState.Created || relObj.NDOObjectState == NDOObjectState.Transient)
-						throw new NDOException(63, "Can't assign an object of type " + relObj + " to relation " + pc.GetType().FullName + "." + r.FieldName + ". The child object must be saved in an own transaction to retrieve the Id first. As an alternative you can use client generated Id's or a mapping table.");
+						throw new NDOException(63, "Can't assign an object of type " + relObj + " to relation " + pc.GetType().FullName + "." + r.FieldName + ". The child object must be saved first to obtain the Id (for example with pm.Save(true)). As an alternative you can use client generated Id's or a mapping table." );
 				}
 
                 bool isDependent = relClass.Oid.IsDependent;
 
 				if (r.Multiplicity == RelationMultiplicity.Element && isDependent)
 					throw new NDOException(28, "Relations to intermediate classes must have RelationMultiplicity.List.");
-
-
-				//				if (pc.NDOObjectState == NDOObjectState.Created && (relObj.NDOObjectState == NDOObjectState.Created || relObj.NDOObjectState == NDOObjectState.Transient || relObj.NDOObjectState == NDOObjectState.Created))
-				//				{
-				//					Relation fr = r.ForeignRelation;
-				//					if (fr != null 
-				//						&& r.MappingTable == null
-				//						&& fr.Multiplicity	== RelationMultiplicity.Element
-				//						&& fr.HasSubclasses
-				//						&& GetClass(relObj).OidTypeHint == null
-				//						&& !this.HasOwnerCreatedIds)
-				//
-				//						throw new NDOException(61, "Can't assign object of type " + relObj + " to relation " + pc.GetType().FullName + "." + r.FieldName + ". The parent object must be saved in an own transaction to retrieve the Id first. As an alternative you can use client generated Id's or a mapping table.");
-				//				}
 
 				// Need to patch pc into the relation relObj->pc, because
 				// the oid is built on base of this information
@@ -790,18 +775,6 @@ namespace NDO
 							else
 								createdDirectObjects.Add( relObj );
 						}
-						//							else
-						//							{
-						//								if (pc.NDOObjectState == NDOObjectState.Created)
-						//									createdDirectObjects.Add(relObj);
-						//								else
-						//									createdDirectObjects.Add(pc);
-						//							}
-						//						}
-						//						if (pc.NDOObjectState == NDOObjectState.Created)
-						//						{
-						//							createdDirectObjects.Add(relObj);
-						//						}
 					}
 					if (r.Multiplicity == RelationMultiplicity.List)
 					{
@@ -924,86 +897,6 @@ namespace NDO
 			InternalRemoveRelatedObject(pc, r, relObj, true);
 		}
 
-#if nix
-		/// <summary>
-		/// Remove a related object from the specified object.
-		/// </summary>
-		/// <remarks>
-		/// If checkAssoziations it true, the related object cannot be deleted if it is part of a bidirectional assoziation.
-		/// This is the case if remove was called from user code. Internally, an object may be deleted because it is called from
-		/// the parent object.
-		/// </remarks>
-		/// <param name="pc">the parent object</param>
-		/// <param name="r">the relation mapping info</param>
-		/// <param name="relObj">the related object that should be removed</param>
-		/// <param name="updateFields">true if fields of bidirectional relations should be updated</param>
-		/// <param name="checkAssoziations">true if a check for assoziation should be made</param>
-		private void RemoveRelatedObject(IPersistenceCapable pc, Relation r, IPersistenceCapable relObj, bool updateFields, bool checkAssoziations) {
-			//Debug.WriteLine("RemoveRelatedObject " + pc.NDOObjectId.Dump() + relObj.NDOObjectId.Dump());
-			//Debug.Indent();
-			if(relObj.NDOObjectState == NDOObjectState.Transient) {
-				// Caution: relObj.NDOObjectId could be null
-//				throw new NDOException(65, "Cannot remove transient related object " + relObj.GetType().FullName + " from parent " + pc.NDOObjectId.Dump());
-			} else if(checkAssoziations && r.Bidirectional && r.ForeignRelation.Composition) {
-				throw new NDOException(66, "Cannot remove related object " + relObj.GetType().FullName + " from parent " + pc.NDOObjectId.Dump() + ". Object must be removed through the parent.");
-			}
-			if(!removeLock.IsLocked(pc)) {
-				removeLock.Lock(pc);
-				try {
-
-					// Handle mapping table  - UseBidirectionalLink uses IsLocked(r) - We don't lock relations furthermore
-					if(r.MappingTable != null /*&& (!r.Bidirectional || UseBidirectionalLink(r))*/) {
-						if(pc.NDOObjectState == NDOObjectState.Created || relObj.NDOObjectState == NDOObjectState.Created) {
-							// Remove existing elements
-							foreach(MappingTableEntry e in createdMappingTableObjects) {
-								if(e.ParentObject == pc && e.RelatedObject == relObj && e.RelationInfo == r) {
-									createdMappingTableObjects.Remove(e);
-									break;
-								}
-							}
-						} else {
-							// Delete persistent elements
-							if (!removeLock.IsLocked(relObj))
-								createdMappingTableObjects.Add(new MappingTableEntry(pc, relObj, r, true));
-						}
-					}
-
-//					if(UseBidirectionalLink(r)) {
-					if (r.Bidirectional) {
-						if(updateFields) {
-							switch(relObj.NDOObjectState) {
-								case NDOObjectState.Persistent:
-									MarkDirty(relObj);
-									break;
-								case NDOObjectState.Hollow:
-									LoadData(relObj);
-									MarkDirty(relObj);
-									break;
-							}
-							if(r.ForeignRelation.Multiplicity == RelationMultiplicity.Element) {
-								mappings.SetRelationField(relObj, r.ForeignRelation.FieldName, null);
-							} else {
-								IList l = mappings.GetRelationContainer(relObj, r.ForeignRelation);
-								if (l == null)
-									throw new NDOException(67, "Can't remove object from the list " + relObj.GetType().FullName + "." + r.FieldName + ". The list is null.");
-								l.Remove(pc);
-								//TODO: prüfen: ist das wirklich nötig?
-								//mappings.SetRelationContainer(relObj, r.ForeignRelation, l);
-							}
-						}
-						RemoveRelatedObject(relObj, r.ForeignRelation, pc, updateFields, false);
-					}
-
-					if(r.Composition) {
-						Delete(relObj, false);
-					}
-				} finally {
-					removeLock.Unlock(pc);
-				}
-			}
-			//Debug.Unindent();
-		}
-#endif		
 		/// <summary>
 		/// Registers a listener which will be notified, if a new connection is opened.
 		/// </summary>
@@ -1221,7 +1114,7 @@ namespace NDO
 		}
 
 		/// <summary>
-		/// Executes an sql script to generate the database tables. 
+		/// Executes a sql script to generate the database tables. 
 		/// The function will execute any sql statements in the script 
 		/// which are valid according to the
 		/// rules of the underlying database. Result sets are ignored.
@@ -1242,7 +1135,7 @@ namespace NDO
 		}
 
 		/// <summary>
-		/// Executes an sql script to generate the database tables. 
+		/// Executes a sql script to generate the database tables. 
 		/// The function will execute any sql statements in the script 
 		/// which are valid according to the
 		/// rules of the underlying database. Result sets are ignored.
@@ -1293,7 +1186,7 @@ namespace NDO
 		}
 
 		/// <summary>
-		/// Executes an sql script to generate the database tables. 
+		/// Executes a sql script to generate the database tables. 
 		/// The function will execute any sql statements in the script 
 		/// which are valid according to the
 		/// rules of the underlying database. Result sets are ignored.
@@ -1323,7 +1216,7 @@ namespace NDO
 		}
 
 		/// <summary>
-		/// Executes an sql script to generate the database tables. 
+		/// Executes a sql script to generate the database tables. 
 		/// The function will execute any sql statements in the script 
 		/// which are valid according to the
 		/// rules of the underlying database. Result sets are ignored.
