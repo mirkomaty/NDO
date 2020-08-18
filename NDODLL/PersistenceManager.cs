@@ -706,7 +706,7 @@ namespace NDO
 					&& GetClass(pc).Oid.HasAutoincrementedColumn
 					&& !relClass.HasGuidOid)
 				{
-					if (pc.NDOObjectState == NDOObjectState.Created )
+					if (pc.NDOObjectState == NDOObjectState.Created && (relObj.NDOObjectState == NDOObjectState.Created || relObj.NDOObjectState == NDOObjectState.Transient ))
 						throw new NDOException(61, "Can't assign object of type " + relObj + " to relation " + pc.GetType().FullName + "." + r.FieldName + ". The parent object must be saved first to obtain the Id (for example with pm.Save(true)). As an alternative you can use client generated Id's or a mapping table.");
 					if (r.Composition)
 						throw new NDOException(62, "Can't assign object of type " + relObj + " to relation " + pc.GetType().FullName + "." + r.FieldName + ". Can't handle a polymorphic composite relation with cardinality 1 with autonumbered id's. Use a mapping table or client generated id's.");

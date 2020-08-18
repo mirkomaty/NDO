@@ -26,13 +26,8 @@
     <AssemblyName />
     <Debug>True</Debug>
     <IsWebProject>False</IsWebProject>
-    <KeyFile>
-    </KeyFile>
+    <KeyFile />
     <References>
-      <Reference AssemblyName="NDOInterfaces" AssemblyPath="..\..\NDOInterfaces\bin\Debug\net452\NDOInterfaces.dll" CheckThisDLL="False">
-      </Reference>
-      <Reference AssemblyName="SqlServerProvider" AssemblyPath="..\..\Provider\SqlServerProvider\SqlServerProvider\bin\Debug\net452\SqlServerProvider.dll">
-      </Reference>
     </References>
   </ProjectDescription>
 </Enhancer>
