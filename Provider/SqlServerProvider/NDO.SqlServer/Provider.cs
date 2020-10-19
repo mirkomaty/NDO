@@ -213,6 +213,10 @@ namespace SqlServerProvider
 			if (String.Compare( typeName, "Variant", true ) == 0) return SqlDbType.Variant;
 			if (String.Compare( typeName, "BigInt", true ) == 0) return SqlDbType.BigInt;
 			if (typeNameLower.StartsWith( "xml" )) return SqlDbType.Xml;
+			if (String.Compare( typeName, "RowVersion", true ) == 0) return SqlDbType.Timestamp;
+			SqlDbType result;
+			if (Enum.TryParse( typeName, out result ))
+				return result;
 			throw new Exception( $"NDOSqlProvider.GetDbType: Type name {typeName} can't be converted into a SqlDbType." );
 		}
 
