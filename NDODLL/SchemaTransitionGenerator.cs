@@ -30,6 +30,7 @@ using System.Xml.Linq;
 using NDO.Mapping;
 using NDO;
 using NDOInterfaces;
+using System.Globalization;
 
 namespace NDO
 {
@@ -244,17 +245,47 @@ namespace NDO
 			return result;
 		}
 
+		static bool IsNumeric( Type type )
+		{
+			switch (Type.GetTypeCode( type ))
+			{
+				case TypeCode.Byte:
+				case TypeCode.SByte:
+				case TypeCode.UInt16:
+				case TypeCode.UInt32:
+				case TypeCode.UInt64:
+				case TypeCode.Int16:
+				case TypeCode.Int32:
+				case TypeCode.Int64:
+				case TypeCode.Decimal:
+				case TypeCode.Double:
+				case TypeCode.Single:
+					return true;
+				case TypeCode.Object:
+					if (type.IsGenericType && type.GetGenericTypeDefinition() == typeof( Nullable<> ))
+					{
+						return IsNumeric(Nullable.GetUnderlyingType( type ));
+					}
+					return false;
+				default:
+					return false;
+			}
+		}
+
 		protected string CreateColumn(XElement columnElement, Class cl, IProvider provider, bool isPrimary)
 		{
 			string rawName = columnElement.Attribute( "name" ).Value;
 			Type dcDataType = Type.GetType( columnElement.Attribute( "type" ).Value );
 			string name = provider.GetQuotedName(rawName);
-			string columnType = null;
+			string columnType = columnElement.Attribute( "dbtype" )?.Value;
+			if (columnType == String.Empty)  // Make sure the column type will be infered, if it is an empty string
+				columnType = null;
 			string width = columnElement.Attribute("size") == null ? null : columnElement.Attribute("size").Value;
 			string precision = null;
 			bool autoIncrement = false;
 			StringBuilder sb = new StringBuilder();
             bool allowNull = true;
+			string defaultValue = columnElement.Attribute( "default" )?.Value;
 
 			if (cl != null)
 			{
@@ -262,7 +293,7 @@ namespace NDO
 
 				if (null != field)
 				{
-					if (null != field.Column.DbType)
+					if ( !String.IsNullOrEmpty(columnType) && null != field.Column.DbType)
 						columnType = field.Column.DbType;
 					if (0 != field.Column.Size && !field.Column.IgnoreColumnSizeInDDL)
 					{
@@ -341,6 +372,20 @@ namespace NDO
 				sb.Append(name + " " + columnType);
 
 			sb.Append(" ");
+
+			if (defaultValue != null)
+			{
+				sb.Append( "DEFAULT " );
+				if (IsNumeric( dcDataType ))
+					sb.Append( defaultValue);
+				else
+				{
+					sb.Append( '\'' );
+					sb.Append( defaultValue.Replace( "'", "''" ) );
+					sb.Append( '\'' );
+				}
+				sb.Append( ' ' );
+			}
 
 			sb.Append( concreteGenerator.NullExpression( allowNull && columnElement.Attribute( "allowNull" ) != null && String.Compare( columnElement.Attribute( "allowNull" ).Value, "true", true ) == 0 ) );
 			return sb.ToString();
