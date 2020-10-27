@@ -7,7 +7,7 @@
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <IncludeSymbols>True</IncludeSymbols>
     <PackageId>NDO.dll</PackageId>
-    <Version>4.0.4.0</Version>
+    <Version>4.0.4.1</Version>
     <Authors>Mirko Matytschak</Authors>
     <Company>Mirko Matytschak</Company>
     <Description>Package to enable VS Solutions to compile and enhance persistent classes.</Description>
@@ -15,9 +15,7 @@
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageProjectUrl>https://www.netdataobjects.de</PackageProjectUrl>
     <PackageTags>NDO .NET Data Objects Persistence</PackageTags>
-    <PackageReleaseNotes>New Query Engine
-Support for .NET Standard
-Json Serializing for the Containers</PackageReleaseNotes>
+    <PackageReleaseNotes>New package version due to a packaging error. Technically it is identical to 4.0.4.0.</PackageReleaseNotes>
     <AssemblyVersion>4.0.4.0</AssemblyVersion>
     <FileVersion>4.0.4.0</FileVersion>
     <SignAssembly>true</SignAssembly>
