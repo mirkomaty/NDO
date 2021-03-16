@@ -88,6 +88,8 @@ namespace NDOEnhancer
 		private void CheckAndAddType(string typeFullName, string assName)
 		{
             Class cls = this.mapping.FindClass(typeFullName);
+            if (cls == null)
+                throw new Exception( $"Can't find class {typeFullName} in the mapping file" );
             if (ids.Contains(cls))  // we have already a type code.
                 return;
 			if(cls != null) 
