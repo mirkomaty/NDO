@@ -124,6 +124,7 @@ namespace NDO.Linq
 		/// <returns></returns>
 		public static bool GreaterThan( this string l, string r )
 		{
+#error GreaterThan only supports strings. Should support byte[] for rowversions.			
 			return String.Compare( l, r ) > 0;
 		}
 
