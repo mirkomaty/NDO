@@ -44,32 +44,35 @@ namespace NDO.ChangeLogging
 			IPersistenceCapable pc = pm.CheckPc( o );
 
 			// No changes
-			if (pc.NDOObjectState == NDOObjectState.Hollow || pc.NDOObjectState == NDOObjectState.Persistent)
+			if (pc.NDOObjectState == NDOObjectState.Hollow)
 			{
 				return;
 			}
 
-			DataRow row = pm.GetClonedDataRow( o );
-
-			NDO.Mapping.Class cls = pm.NDOMapping.FindClass(o.GetType());
-
-			foreach (Field field in cls.Fields)
+			if (pc.NDOObjectState != NDOObjectState.Persistent)
 			{
-				string colName = field.Column.Name;
-				object currentVal = row[colName, DataRowVersion.Current];
-				object originalVal = row[colName, DataRowVersion.Original];
+				DataRow row = pm.GetClonedDataRow( o );
 
-				if (!currentVal.Equals( originalVal ))
+				NDO.Mapping.Class cls = pm.NDOMapping.FindClass(o.GetType());
+
+				foreach (Field field in cls.Fields)
 				{
-					original.Add( field.Name, originalVal );
-					current.Add( field.Name, currentVal );
+					string colName = field.Column.Name;
+					object currentVal = row[colName, DataRowVersion.Current];
+					object originalVal = row[colName, DataRowVersion.Original];
+
+					if (!currentVal.Equals( originalVal ))
+					{
+						original.Add( field.Name, originalVal );
+						current.Add( field.Name, currentVal );
+					}
 				}
 			}
 
 			var objRelationChanges = pm.RelationChanges.Where( ce => ce.Parent.NDOObjectId == pc.NDOObjectId ).GroupBy(ce=>ce.RelationName).ToList();
 			if (objRelationChanges.Count > 0)
 			{
-				var relStates = pm.CollectRelationStates( pc, row );
+				var relStates = pm.CollectRelationStates( pc );
 				foreach (var group in objRelationChanges)
 				{
 					string fieldName = group.Key;

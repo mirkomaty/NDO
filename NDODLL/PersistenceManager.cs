@@ -537,7 +537,7 @@ namespace NDO
 				}
 			}
 
-			var relations  = CollectRelationStates(pc, row);
+			var relations  = CollectRelationStates(pc);
 			cache.Lock(pc, row, relations);
 		}
 
@@ -1701,7 +1701,7 @@ namespace NDO
 			table.Rows.Add(row);
 			row.AcceptChanges();
 			
-			var relations = CollectRelationStates(pc, row);
+			var relations = CollectRelationStates(pc);
 			cache.Lock(pc, row, relations);
 		}
 
@@ -1757,9 +1757,8 @@ namespace NDO
 		/// not duplicated.
 		/// </summary>
 		/// <param name="pc">the parent object of all relations</param>
-		/// <param name="row"></param>
 		/// <returns></returns>
-		protected internal virtual List<KeyValuePair<Relation,object>> CollectRelationStates(IPersistenceCapable pc, DataRow row) 
+		protected internal virtual List<KeyValuePair<Relation,object>> CollectRelationStates(IPersistenceCapable pc) 
 		{
 			// Save state of relations
 			Class c = GetClass(pc);
