@@ -117,6 +117,18 @@ namespace NDO.Linq
 		}
 
 		/// <summary>
+		/// Compares two byte arrays and converts the Method call to a Sql operator.
+		/// </summary>
+		/// <param name="l"></param>
+		/// <param name="r"></param>
+		/// <returns></returns>
+		public static bool GreaterEqual( this byte[] l, byte[] r )
+		{
+			return Compare( l, r ) >= 0;
+		}
+
+
+		/// <summary>
 		/// Compares two strings and converts the Method call to a Sql operator.
 		/// </summary>
 		/// <param name="l"></param>
@@ -124,8 +136,42 @@ namespace NDO.Linq
 		/// <returns></returns>
 		public static bool GreaterThan( this string l, string r )
 		{
-#error GreaterThan only supports strings. Should support byte[] for rowversions.			
 			return String.Compare( l, r ) > 0;
+		}
+
+		static int Compare(byte[] l, byte[] r)
+		{
+			// Note: This implementation won't be used in the most cases. Greater Than will be converted to SQL code.
+			// We try anyway to provide a working dummy.
+			int i = 0;
+			var end = r.Length - 1;
+			foreach (var b in l)
+			{
+				if (end < i)  // l has more elements
+					return 1;
+				if (b > r[i])
+					return 1;
+				if (b < r[i])
+					return -1;
+				// elements are identical, try the next
+				i++;
+			}
+			// if both arrays are identical, i == r.length
+			if (i == r.Length)
+				return 0;
+			// r is longer than l
+			return -1;
+		}
+
+		/// <summary>
+		/// Compares two byte arrays and converts the Method call to a Sql operator.
+		/// </summary>
+		/// <param name="l"></param>
+		/// <param name="r"></param>
+		/// <returns></returns>
+		public static bool GreaterThan( this byte[] l, byte[] r )
+		{
+			return Compare( l, r ) > 0;
 		}
 
 		/// <summary>
@@ -140,6 +186,18 @@ namespace NDO.Linq
 		}
 
 		/// <summary>
+		/// Compares two byte arrays and converts the Method call to a Sql operator.
+		/// </summary>
+		/// <param name="l"></param>
+		/// <param name="r"></param>
+		/// <returns></returns>
+		public static bool LowerEqual( this byte[] l, byte[] r )
+		{
+			return Compare( l, r ) <= 0;
+		}
+
+
+		/// <summary>
 		/// Compares two strings and converts the Method call to a Sql operator.
 		/// </summary>
 		/// <param name="l"></param>
@@ -149,6 +207,18 @@ namespace NDO.Linq
 		{
 			return String.Compare( l, r ) < 0;
 		}
+
+		/// <summary>
+		/// Compares two byte arrays and converts the Method call to a Sql operator.
+		/// </summary>
+		/// <param name="l"></param>
+		/// <param name="r"></param>
+		/// <returns></returns>
+		public static bool LowerThan( this byte[] l, byte[] r )
+		{
+			return Compare( l, r ) < 0;
+		}
+
 
 		/// <summary>
 		/// Overrides the Count() linq method to deliver the count using database queries.

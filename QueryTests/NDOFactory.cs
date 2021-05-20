@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using DataTypeTestClasses;
 using NDO;
 using NDO.Mapping;
 
@@ -38,7 +39,8 @@ namespace QueryTests
 						pm = new PersistenceManager( mapping );
 					}
 				}
-
+				// Setting an AccessorName to avoid changing the full chain of dependencies for PureBusinessClasses
+				pm.NDOMapping.FindClass( typeof( DataContainerDerived ) ).FindField( "byteArrVar" ).AccessorName = "ByteArrVar";
 				return pm;
 			}
 		}

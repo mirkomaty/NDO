@@ -719,5 +719,93 @@ namespace QueryTests
 			Assert.That( qs.IndexOf( "[Mitarbeiter].[Vorname] <= {0}" ) > -1 );
 		}
 
+		[Test]
+		public void GTWithByteArrayWorks()
+		{
+			var arr = new byte[] { 1, 2, 3 };
+			var vt = pm.Objects<DataContainer>().Where( m => m.ByteArrVar.GreaterThan( arr ) );
+			var qs = vt.QueryString;
+			Assert.That( qs.IndexOf( "[DataContainer].[ByteArrVar] > {0}" ) > -1 );
+		}
+
+		[Test]
+		public void GEWithByteArrayWorks()
+		{
+			var arr = new byte[] { 1, 2, 3 };
+			var vt = pm.Objects<DataContainer>().Where( m => m.ByteArrVar.GreaterEqual( arr ) );
+			var qs = vt.QueryString;
+			Assert.That( qs.IndexOf( "[DataContainer].[ByteArrVar] >= {0}" ) > -1 );
+		}
+		[Test]
+		public void LTWithByteArrayWorks()
+		{
+			var arr = new byte[] { 1, 2, 3 };
+			var vt = pm.Objects<DataContainer>().Where( m => m.ByteArrVar.LowerThan( arr ) );
+			var qs = vt.QueryString;
+			Assert.That( qs.IndexOf( "[DataContainer].[ByteArrVar] < {0}" ) > -1 );
+		}
+		[Test]
+		public void LEWithByteArrayWorks()
+		{
+			var arr = new byte[] { 1, 2, 3 };
+			var vt = pm.Objects<DataContainer>().Where( m => m.ByteArrVar.LowerEqual( arr ) );
+			var qs = vt.QueryString;
+			Assert.That( qs.IndexOf( "[DataContainer].[ByteArrVar] <= {0}" ) > -1 );
+		}
+
+		[Test]
+		public void GTDummyImplementationWithByteArrayWorks()
+		{
+			var arr1 = new byte[] { 1, 2, 3, 4 };
+			var arr2 = new byte[] { 1, 2, 3 };
+			Assert.That( arr1.GreaterThan( arr2 ) );
+			arr1 = new byte[] { 1, 3, 1 };
+			arr2 = new byte[] { 1, 2, 3 };
+			Assert.That( arr1.GreaterThan( arr2 ) );
+			arr1 = new byte[] { 1, 2, 3 };
+			arr2 = new byte[] { 1, 2, 3 };
+			Assert.False( arr1.GreaterThan( arr2 ) );
+		}
+
+		[Test]
+		public void GEDummyImplementationWithByteArrayWorks()
+		{
+			var arr1 = new byte[] { 1, 2, 3, 4 };
+			var arr2 = new byte[] { 1, 2, 3 };
+			Assert.That( arr1.GreaterEqual( arr2 ) );
+			arr1 = new byte[] { 1, 3, 1 };
+			arr2 = new byte[] { 1, 2, 3 };
+			Assert.That( arr1.GreaterEqual( arr2 ) );
+			arr1 = new byte[] { 1, 2, 3 };
+			arr2 = new byte[] { 1, 2, 3 };
+			Assert.That( arr1.GreaterEqual( arr2 ) );
+		}
+
+		[Test]
+		public void LTDummyImplementationWithByteArrayWorks()
+		{
+			var arr1 = new byte[] { 1, 2, 3 };
+			var arr2 = new byte[] { 1, 2, 3, 4 };
+			Assert.That( arr1.LowerThan( arr2 ) );
+			arr1 = new byte[] { 1, 2, 3 };
+			arr2 = new byte[] { 1, 3, 1 };
+			Assert.That( arr1.LowerThan( arr2 ) );
+			arr1 = new byte[] { 1, 2, 3 };
+			arr2 = new byte[] { 1, 2, 3 };
+			Assert.False( arr1.LowerThan( arr2 ) );
+		}
+		[Test]
+		public void LEDummyImplementationWithByteArrayWorks()
+		{
+			var arr1 = new byte[] { 1, 2, 3 };
+			var arr2 = new byte[] { 1, 2, 3, 4 };
+			Assert.That( arr1.LowerEqual( arr2 ) );
+			arr1 = new byte[] { 1, 2, 3 };
+			arr2 = new byte[] { 1, 3, 1 };
+			Assert.That( arr1.LowerEqual( arr2 ) );
+			arr1 = new byte[] { 1, 2, 3 };
+			arr2 = new byte[] { 1, 2, 3 };
+			Assert.That( arr1.LowerEqual( arr2 ) );
+		}
 	}
 }

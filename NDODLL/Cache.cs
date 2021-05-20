@@ -352,7 +352,9 @@ namespace NDO
 		{
 			foreach (Entry e in lockedObjects.Values)
 			{
-				objects.Add( e.pc.NDOObjectId, new WeakReference<IPersistenceCapable>( e.pc ) );
+				var oid = e.pc.NDOObjectId;
+				if (!objects.ContainsKey( oid ))
+					objects.Add( oid, new WeakReference<IPersistenceCapable>( e.pc ) );
 				if (e.relations != null)
 				{
 					// support GC
