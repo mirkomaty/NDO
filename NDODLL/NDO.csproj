@@ -7,17 +7,18 @@
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <IncludeSymbols>True</IncludeSymbols>
     <PackageId>NDO.dll</PackageId>
-    <Version>4.0.5.0</Version>
+    <Version>4.0.5.1</Version>
     <Authors>Mirko Matytschak</Authors>
     <Company>Mirko Matytschak</Company>
-    <Description>Package to enable VS Solutions to compile and enhance persistent classes.</Description>
+    <Description>Package to enable VS Solutions to compile and enhance persistent classes.
+4.0.5.1 is identical to 4.0.5, but Dll references in the enhancer are fixed.</Description>
     <Copyright>(c) 2002 - 2021, Mirko Matytschak, Velden, Germany</Copyright>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageProjectUrl>https://www.netdataobjects.de</PackageProjectUrl>
     <PackageTags>NDO .NET Data Objects Persistence</PackageTags>
     <PackageReleaseNotes>Bug Fixing. NDO.Linq: Operator functions like GreaterThan for byte[] to support RowVersions in SqlServer.</PackageReleaseNotes>
-    <AssemblyVersion>4.0.5.0</AssemblyVersion>
-    <FileVersion>4.0.5.0</FileVersion>
+    <AssemblyVersion>4.0.5.1</AssemblyVersion>
+    <FileVersion>4.0.5.1</FileVersion>
     <SignAssembly>true</SignAssembly>
     <AssemblyOriginatorKeyFile>ndo_ent.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
