@@ -502,8 +502,21 @@ namespace NDO.Linq
 							TransformOidIndex( mcex.Arguments[1] );
 						}
 					}
-					else
-						throw new Exception( "Method call not supported: " + mname );
+					else  // Assume, we have a server function here
+					{
+						sb.Append( mname );
+						sb.Append( '(' );
+						var end = arguments.Count - 1;
+						var i = 0;
+						foreach (var arg in arguments)
+						{
+							Transform( arg );
+							if (i < end)
+								sb.Append( ", " );
+							i++;
+						}
+						sb.Append( ')' );
+					}
 					return;
 					//-------
 				}

@@ -105,6 +105,10 @@ public class Parser {
 		}
 	}
 
+	bool IsOidIdentifier(OqlExpression iexp) {
+		return ((string)iexp.Value).EndsWith("oid");
+	}
+
 	
 -->productions
 

@@ -117,6 +117,10 @@ public OqlExpression RootExpression
 		}
 	}
 
+	bool IsOidIdentifier(OqlExpression iexp) {
+		return ((string)iexp.Value).EndsWith("oid");
+	}
+
 	
 	void NDOQL() {
 		RootExpr(out this.rootExpression);
@@ -449,17 +453,28 @@ public OqlExpression RootExpression
 
 	void Primary(out OqlExpression expression) {
 		OqlExpression result = null;
+		OqlExpression child;
 		
 		if (la.kind == 1) {
 			Get();
 			result = new IdentifierExpression(t.val, t.line, t.col); 
 			if (la.kind == 20) {
-				Get();
-				Expect(3);
-				result.UnaryOp="";  // Index-Expression has Brackets, so no Op String is necessary
-				result.Add(new IndexExpression(int.Parse(t.val), t.line, t.col)); 
-				
-				Expect(21);
+				if (IsOidIdentifier(result)) {
+					Expect(20);
+					Expect(3);
+					result.UnaryOp="";
+					result.Add(new IndexExpression(int.Parse(t.val), t.line, t.col)); 
+					
+					Expect(21);
+				} else {
+					Get();
+					ParameterList(out child);
+					result = new FunctionExpression(result.Value, t.line, t.col);
+					result.UnaryOp="";						
+					result.Add(child);
+					
+					Expect(21);
+				}
 			}
 		} else if (StartOf(5)) {
 			Literal(out result);
@@ -473,6 +488,22 @@ public OqlExpression RootExpression
 			Expect(21);
 		} else SynErr(44);
 		expression = result.Simplify(); 
+	}
+
+	void ParameterList(out OqlExpression expression) {
+		OqlExpression result = new ParameterListExpression(la.line, la.col);
+		OqlExpression child;
+		
+		if (StartOf(6)) {
+			Primary(out child);
+			result.Add(child); 
+			while (la.kind == 37) {
+				Get();
+				Primary(out child);
+				result.Add(child, ","); 
+			}
+		}
+		expression = result; /* Do not simplify here, because otherwise the brackets are missing */ 
 	}
 
 	void Literal(out OqlExpression expression) {
@@ -531,7 +562,8 @@ public OqlExpression RootExpression
 		{x,x,x,x, x,x,x,T, x,x,T,T, x,x,x,x, x,x,x,x, x,x,T,T, T,T,T,T, x,x,x,x, x,x,x,x, x,x,x,x, x},
 		{x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,T,T, T,T,T,T, x,x,x,x, x,x,x,x, x,x,x,x, x},
 		{x,x,x,x, x,x,x,x, x,x,x,x, x,x,T,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,T,T,T, x,x,x,x, x},
-		{x,x,T,T, T,x,x,x, x,x,x,x, T,T,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,T,x, x}
+		{x,x,T,T, T,x,x,x, x,x,x,x, T,T,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,T,x, x},
+		{x,T,T,T, T,x,x,x, x,x,x,x, T,T,x,x, T,x,x,x, T,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,T,x, x}
 
 	};
 } // end Parser

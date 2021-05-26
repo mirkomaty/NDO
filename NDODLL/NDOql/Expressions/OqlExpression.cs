@@ -183,7 +183,7 @@ namespace NDOql.Expressions
         /// Reduces an expression
         /// </summary>
         /// <returns></returns>
-        public OqlExpression Simplify()
+        public virtual OqlExpression Simplify()
         {
             System.Diagnostics.Debug.Assert(this.children.Count != 0 || this.value != null);
             if (this.children.Count > 1 || this.IsTerminating)

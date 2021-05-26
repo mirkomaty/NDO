@@ -122,6 +122,23 @@ namespace QueryTests
 			Assert.AreEqual( String.Format( "SELECT {0} FROM [Mitarbeiter] WHERE [Mitarbeiter].[Vorname] LIKE 'M*'", this.mitarbeiterFields ), q.GeneratedQuery );
 			q = new NDOQuery<Mitarbeiter>( pm, "oid = 1" );
 			Assert.AreEqual( String.Format( "SELECT {0} FROM [Mitarbeiter] WHERE [Mitarbeiter].[ID] = 1", this.mitarbeiterFields ), q.GeneratedQuery );
+			q = new NDOQuery<Mitarbeiter>( pm, "oid(0) = 1" );
+			Assert.AreEqual( String.Format( "SELECT {0} FROM [Mitarbeiter] WHERE [Mitarbeiter].[ID] = 1", this.mitarbeiterFields ), q.GeneratedQuery );
+		}
+
+		[Test]
+		public void CheckIfFunctionsWork()
+		{
+			NDOQuery<Mitarbeiter> q = new NDOQuery<Mitarbeiter>( pm, "vorname = SqlFunction('Mirko')" );
+			Assert.AreEqual( String.Format( "SELECT {0} FROM [Mitarbeiter] WHERE [Mitarbeiter].[Vorname] = SqlFunction('Mirko')", this.mitarbeiterFields ), q.GeneratedQuery );
+			q = new NDOQuery<Mitarbeiter>( pm, "vorname = SqlFunction('Mirko', 42)" );
+			Assert.AreEqual( String.Format( "SELECT {0} FROM [Mitarbeiter] WHERE [Mitarbeiter].[Vorname] = SqlFunction('Mirko', 42)", this.mitarbeiterFields ), q.GeneratedQuery );
+			q = new NDOQuery<Mitarbeiter>( pm, "vorname = SqlFunction()" );
+			Assert.AreEqual( String.Format( "SELECT {0} FROM [Mitarbeiter] WHERE [Mitarbeiter].[Vorname] = SqlFunction()", this.mitarbeiterFields ), q.GeneratedQuery );
+			q = new NDOQuery<Mitarbeiter>( pm, "vorname = SqlFunction(nachname)" );
+			Assert.AreEqual( String.Format( "SELECT {0} FROM [Mitarbeiter] WHERE [Mitarbeiter].[Vorname] = SqlFunction([Mitarbeiter].[Nachname])", this.mitarbeiterFields ), q.GeneratedQuery );
+			q = new NDOQuery<Mitarbeiter>( pm, "SqlFunction('Mirko', 42) > 3124" );
+			Assert.AreEqual( String.Format( "SELECT {0} FROM [Mitarbeiter] WHERE SqlFunction('Mirko', 42) > 3124", this.mitarbeiterFields ), q.GeneratedQuery );
 		}
 
 		[Test]

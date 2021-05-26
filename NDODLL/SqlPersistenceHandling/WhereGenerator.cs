@@ -273,6 +273,10 @@ namespace NDO.SqlPersistenceHandling
 					sb.Append( thisExpression.UnaryOp );
 					sb.Append( ' ' );
 				}
+				if (thisExpression is FunctionExpression)
+				{
+					sb.Append( thisExpression.Value );
+				}
 				if (thisExpression.HasBrackets)
                     sb.Append('(');
                 string op1 = thisExpression.Operator;

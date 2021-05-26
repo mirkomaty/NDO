@@ -697,6 +697,35 @@ namespace QueryTests
 			Assert.That( qs.IndexOf( "[Mitarbeiter].[Vorname] > {0}" ) > -1 );
 		}
 
+		/// <summary>
+		/// This class provides Signatures for Server Functions
+		/// </summary>
+		class ServerFunctions
+		{
+			public static string TestFunction(string name, int val)
+			{
+				return null;
+			}
+
+			public static int ParameterlessFunction()
+			{
+				return 0;
+			}
+
+		}
+
+		[Test]
+		public void CanCallServerFunctions()
+		{
+			var vt = pm.Objects<Mitarbeiter>().Where( m => m.Vorname.GreaterThan( ServerFunctions.TestFunction( m.Vorname, 42 ) ) );
+			var qs = vt.QueryString;
+			Assert.That( qs.IndexOf( "[Mitarbeiter].[Vorname] > TestFunction([Mitarbeiter].[Vorname], {0})" ) > -1 );
+			vt = pm.Objects<Mitarbeiter>().Where( m => ServerFunctions.ParameterlessFunction() > 2143 );
+			qs = vt.QueryString;
+			Assert.That( qs.IndexOf( "WHERE ParameterlessFunction() > {0}" ) > -1 );
+		}
+	
+
 		[Test]
 		public void GEWorks()
 		{
