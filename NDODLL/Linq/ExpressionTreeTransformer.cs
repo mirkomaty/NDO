@@ -504,6 +504,10 @@ namespace NDO.Linq
 					}
 					else  // Assume, we have a server function here
 					{
+						var method = mcex.Method;
+						var attrs = method.GetCustomAttributes( typeof( ServerFunctionAttribute ), true );
+						if (attrs.Length > 0)
+							mname = ((ServerFunctionAttribute) attrs[0]).Name;
 						sb.Append( mname );
 						sb.Append( '(' );
 						var end = arguments.Count - 1;

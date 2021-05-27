@@ -712,19 +712,41 @@ namespace QueryTests
 				return 0;
 			}
 
+			[ServerFunction("JSON_VALUE")]
+			public static int JsonValueAsInt(string json, string path)
+			{
+				return 0;
+			}
+
+			[ServerFunction( "JSON_VALUE" )]
+			public static string JsonValueAsString( string json, string path )
+			{
+				return null;
+			}
+
 		}
 
 		[Test]
 		public void CanCallServerFunctions()
 		{
-			var vt = pm.Objects<Mitarbeiter>().Where( m => m.Vorname.GreaterThan( ServerFunctions.TestFunction( m.Vorname, 42 ) ) );
+			var vt = pm.Objects<Reise>().Where( m => m.Zweck.GreaterThan( ServerFunctions.TestFunction( m.Zweck, 42 ) ) );
 			var qs = vt.QueryString;
-			Assert.That( qs.IndexOf( "[Mitarbeiter].[Vorname] > TestFunction([Mitarbeiter].[Vorname], {0})" ) > -1 );
-			vt = pm.Objects<Mitarbeiter>().Where( m => ServerFunctions.ParameterlessFunction() > 2143 );
+			Assert.AreEqual( qs, $"SELECT {this.reiseFields} FROM [Reise] WHERE [Reise].[Zweck] > TestFunction([Reise].[Zweck], {{0}})" );
+			vt = pm.Objects<Reise>().Where( m => ServerFunctions.ParameterlessFunction() > 2143 );
 			qs = vt.QueryString;
-			Assert.That( qs.IndexOf( "WHERE ParameterlessFunction() > {0}" ) > -1 );
+			Assert.AreEqual( qs, $"SELECT {this.reiseFields} FROM [Reise] WHERE ParameterlessFunction() > {{0}}" );
+			// Assume for a moment, that Reise.Zweck contains a Json string.
+			vt = pm.Objects<Reise>().Where( m => ServerFunctions.JsonValueAsInt(m.Zweck, "$.original.id") > 2143 );
+			qs = vt.QueryString;
+			Assert.AreEqual( qs, $"SELECT {this.reiseFields} FROM [Reise] WHERE JSON_VALUE([Reise].[Zweck], {{0}}) > {{1}}" );
+			vt = pm.Objects<Reise>().Where( m => ServerFunctions.JsonValueAsString( m.Zweck, "$.original.someString" ) == "Hello" );
+			qs = vt.QueryString;
+			Assert.AreEqual( qs, $"SELECT {this.reiseFields} FROM [Reise] WHERE JSON_VALUE([Reise].[Zweck], {{0}}) = {{1}}" );
+			vt = pm.Objects<Reise>().Where( m => ServerFunctions.JsonValueAsString( m.Zweck, "$.original.someString" ).Like("Hello") );
+			qs = vt.QueryString;
+			Assert.AreEqual( qs, $"SELECT {this.reiseFields} FROM [Reise] WHERE JSON_VALUE([Reise].[Zweck], {{0}}) LIKE {{1}}" );
 		}
-	
+
 
 		[Test]
 		public void GEWorks()
