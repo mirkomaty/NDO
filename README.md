@@ -20,4 +20,4 @@ If you need to debug the NDO.dll, open the NDO.sln in the directory /NDODLL. Rec
 
 ## Users Guide
 
-See the users guide here: https://www.netdataobjects.de/wie-funktioniert-ndo/ndo-users-guide/.
+See the users guide here: https://www.netdataobjects.de/en-us/how-ndo-works/ndo-users-guide/.
