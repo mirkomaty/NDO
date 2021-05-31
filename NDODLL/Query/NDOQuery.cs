@@ -196,11 +196,11 @@ namespace NDO.Query
 		{
 			var queryString = GeneratedQuery;
 			if (queryString.IndexOf( "UNION" ) > -1)
-				throw new QueryException( 10052, "This kind of query doesn't support DeleteDirect(). Please use pm.Delete(yourQueryResults)." );
+				throw new QueryException( 10052, $"This kind of query doesn't support {nameof(DeleteDirectly)}(). Please use pm.Delete(yourQueryResults)." );
 
 			var p = queryString.IndexOf( "FROM" );
 			if (p == -1)
-				throw new QueryException( 10051, "Can't find 'FROM' in generated query. It seems, as if your query doesn't support DeleteDirect()." );
+				throw new QueryException( 10051, $"Can't find 'FROM' in generated query. It seems, as if your query doesn't support {nameof( DeleteDirectly )}()." );
 
 			var sql = "DELETE " + queryString.Substring( p );
 
