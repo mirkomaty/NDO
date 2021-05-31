@@ -26,6 +26,7 @@ using TimeStampTestClasses;
 using NDO;
 using NUnit.Framework;
 using NDO.Query;
+using System.Linq;
 
 namespace NdoUnitTests
 {
@@ -54,6 +55,7 @@ namespace NdoUnitTests
 			if (pm2 == null)
 				pm2 = PmFactory.NewPersistenceManager();
 			pm2.UnloadCache();
+			pm2.Delete( pm2.Objects<RowVersionClass>().ResultTable );
 			IList l = pm2.GetClassExtent(typeof(TimeStampContainer), false);
 			if (l.Count > 0)
 			{
@@ -86,14 +88,6 @@ namespace NdoUnitTests
 			Assert.AreEqual(true, collisionHappened, "Kollision ist nicht erkannt worden");
 		}
 
-
-//		[Test]
-//		public void GetMappingFile()
-//		{
-//			PersistenceManager pm = PmFactory.NewPersistenceManager();
-//			System.Diagnostics.Debug.WriteLine(pm.NDOMapping.FileName);
-//		}
-
 		[Test]
 		public void TestDeleteHollow()
 		{
@@ -106,6 +100,24 @@ namespace NdoUnitTests
 			pm1.UnloadCache();
 			IList l = pm1.GetClassExtent(typeof(TimeStampContainer));
 			Assert.AreEqual(0, l.Count, "No object should be there");
+		}
+
+		[Test]
+		public void CanWorkWithRowversions()
+		{
+			RowVersionClass rwc = new RowVersionClass();
+			rwc.MyData = "Testdata";
+			pm1.MakePersistent( rwc );
+			pm1.Save();
+			rwc = pm1.Objects<RowVersionClass>().Single();
+			var oldVersion = rwc.RowVersion;
+			Assert.AreNotEqual( oldVersion, (ulong) 0 );
+			var changesSince = RowVersionClass.GetNewerThan( pm1, oldVersion );
+			Assert.IsFalse( changesSince.Any() );
+			rwc.MyData = "Testdata";	// Makes object dirty
+			pm1.Save();					// This creates a new version
+			changesSince = RowVersionClass.GetNewerThan( pm1, oldVersion );
+			Assert.IsTrue( changesSince.Any() );
 		}
 
 		private void OnCollisionEvent(object pc)

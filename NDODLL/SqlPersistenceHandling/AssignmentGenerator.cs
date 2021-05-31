@@ -19,11 +19,8 @@ namespace NDO.SqlPersistenceHandling
 			FieldMap fm = new FieldMap( cls );
 			foreach (var e in fm.PersistentFields)
 			{
-				Type memberType;
-				if (e.Value is FieldInfo)
-					memberType = ((FieldInfo)e.Value).FieldType;
-				else
-					memberType = ((PropertyInfo)e.Value).PropertyType;
+				if (e.Value.CustomAttributes.Any( c => c.AttributeType == typeof( NDOReadOnlyAttribute ) ))
+					continue;
 
 				var fieldMapping = cls.FindField( (string)e.Key );
 				if (fieldMapping != null)

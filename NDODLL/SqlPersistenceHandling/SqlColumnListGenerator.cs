@@ -44,6 +44,7 @@ namespace NDO.SqlPersistenceHandling
 			FieldMap fm = new FieldMap( cls );
 			var persistentFields = fm.PersistentFields;
 			var relationInfos = new RelationCollector( cls ).CollectRelations().ToList();
+			List<string> readOnlyColumns = new List<string>();
 
 			foreach (OidColumn oidColumn in cls.Oid.OidColumns)
 			{
@@ -69,6 +70,13 @@ namespace NDO.SqlPersistenceHandling
 					memberType = ((PropertyInfo)e.Value).PropertyType;
 
 				var fieldMapping = cls.FindField( (string)e.Key );
+				bool isReadOnly = false;
+
+				if (e.Value.CustomAttributes.Any( c => c.AttributeType == typeof( NDOReadOnlyAttribute ) ))
+				{
+					readOnlyColumns.Add( fieldMapping.Column.Name );
+					isReadOnly = true;
+				}
 
 				// Ignore fields without mapping.
 				if (null == fieldMapping)
@@ -83,8 +91,11 @@ namespace NDO.SqlPersistenceHandling
 					fieldMapping.ColumnDbType = (int)provider.GetDbType( fieldMapping.Column.DbType );
 				}
 
-				baseColumnList.Add( fieldMapping.Column.Name );
-				paramList.Add( fieldMapping.Column.Name );
+				if (!isReadOnly)
+				{
+					baseColumnList.Add( fieldMapping.Column.Name );
+					paramList.Add( fieldMapping.Column.Name );
+				}
 			}
 
 			foreach (RelationFieldInfo ri in relationInfos)
@@ -125,6 +136,7 @@ namespace NDO.SqlPersistenceHandling
 			}
 
 			selectColumnList.AddRange( baseColumnList );
+			selectColumnList.AddRange( readOnlyColumns );
 
 		}
 

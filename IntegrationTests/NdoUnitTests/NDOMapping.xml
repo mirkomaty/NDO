@@ -1621,6 +1621,20 @@
       </Fields>
       <Relations />
     </Class>
+    <Class AssemblyName="PureBusinessClasses" FullName="TimeStampTestClasses.RowVersionClass" TableName="RowVersionClass" ConnectionId="C0" TypeCode="713699689">
+      <Oid>
+        <OidColumn AutoIncremented="True" Name="ID" AllowDbNull="False" />
+      </Oid>
+      <Fields>
+        <Field Name="myData" AccessorName="MyData">
+          <Column Name="MyData" />
+        </Field>
+        <Field Name="rowVersion">
+          <Column Name="RowVersion" DbType="rowversion" />
+        </Field>
+      </Fields>
+      <Relations />
+    </Class>
     <Class AssemblyName="PureBusinessClasses" FullName="TimeStampTestClasses.TimeStampContainer" TableName="TimeStampContainer" ConnectionId="C0" TimeStampColumn="NDOTimeStamp" TypeCode="-1237936420">
       <Oid>
         <OidColumn AutoIncremented="True" Name="ID" />

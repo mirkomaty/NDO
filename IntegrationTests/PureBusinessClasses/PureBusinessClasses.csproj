@@ -231,6 +231,10 @@
     <Compile Include="Reisebüro.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="RowVersionClass.cs" />
+    <Compile Include="RowVersionClass.ndo.cs">
+      <DependentUpon>RowVersionClass.cs</DependentUpon>
+    </Compile>
     <Compile Include="SequenceValue.cs">
       <SubType>Code</SubType>
     </Compile>
