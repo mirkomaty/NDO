@@ -824,6 +824,33 @@ namespace NdoUnitTests
 			Assert.AreEqual( 123456.34m, m.Gehalt );
 		}
 
+		[Test]
+		public void CanPerformDirectDelete()
+		{
+			pm.MakePersistent( m );
+			pm.Save();
+			var firstName = m.Vorname;
+
+			Assert.IsTrue( pm.Objects<Mitarbeiter>().Where( m => m.Vorname == firstName ).Count > 0 );
+
+			var q = new NDOQuery<Mitarbeiter>( pm, "vorname = {0}" );
+			q.Parameters.Add( firstName );
+			q.DeleteDirectly();
+
+			Assert.AreEqual( 0, pm.Objects<Mitarbeiter>().Where( m => m.Vorname == firstName ).Count );
+
+			m = CreateMitarbeiter( "Mirko", "Matytschak" );
+			pm.MakePersistent( m );
+			pm.Save();
+			firstName = m.Vorname;
+
+			Assert.IsTrue( pm.Objects<Mitarbeiter>().Where( m => m.Vorname == firstName ).Count > 0 );
+
+			pm.Objects<Mitarbeiter>().Where( m => m.Vorname == firstName ).DeleteDirectly();
+
+			Assert.AreEqual( 0, pm.Objects<Mitarbeiter>().Where( m => m.Vorname == firstName ).Count );
+		}
+
 		private Mitarbeiter CreateMitarbeiter(string vorname, string nachname) 
 		{
 			Mitarbeiter m = new Mitarbeiter();

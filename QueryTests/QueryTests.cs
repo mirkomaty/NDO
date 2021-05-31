@@ -619,5 +619,13 @@ namespace QueryTests
 			Assert.That(query.GeneratedQuery.IndexOf( "[Mitarbeiter].[Vorname] >= {0}" ) > -1);
 			Assert.That( query.GeneratedQuery.IndexOf( "[Mitarbeiter].[Vorname] < {1}" ) > -1 );
 		}
+
+		[Test]
+		public void DirectDeleteQueryIsCorrect()
+		{
+			var q = new NDOQuery<Mitarbeiter>( NDOFactory.Instance.PersistenceManager, "vorname = 'Mirko'" );
+			var sql = q.GetDirectDeleteQuery();
+			Assert.AreEqual( "DELETE FROM [Mitarbeiter] WHERE [Mitarbeiter].[Vorname] = 'Mirko'", sql );
+		}
 	}
 }

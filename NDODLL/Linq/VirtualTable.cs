@@ -313,6 +313,15 @@ namespace NDO.Linq
 		}
 
 		/// <summary>
+		/// Deletes records directly without caring for composite relations.
+		/// </summary>
+		/// <remarks>Only use this method if your class does not use composite relations and you are sure that this will not be the case in the future either. If you are unsure about this, you better use PersistenceManager.Delete ().</remarks>
+		public void DeleteDirectly()
+		{
+			Ndoquery.DeleteDirectly();
+		}
+
+		/// <summary>
 		/// Supports getting a paged view with Linq
 		/// </summary>
 		/// <param name="skip"></param>

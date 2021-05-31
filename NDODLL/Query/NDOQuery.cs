@@ -166,6 +166,48 @@ namespace NDO.Query
 		}
 
 		/// <summary>
+		/// Deletes records directly without caring for composite relations.
+		/// </summary>
+		/// <remarks>Only use this method if your class does not use composite relations and you are sure that this will not be the case in the future either. If you are unsure about this, you better use PersistenceManager.Delete().</remarks>
+		public void DeleteDirectly()
+		{
+			string sql = GetDirectDeleteQuery();
+
+			using (IPersistenceHandler persistenceHandler = this.pm.PersistenceHandlerManager.GetPersistenceHandler( this.resultType ))
+			{
+				persistenceHandler.VerboseMode = this.pm.VerboseMode;
+				persistenceHandler.LogAdapter = this.pm.LogAdapter;
+				this.pm.CheckTransaction( persistenceHandler, this.resultType );
+				persistenceHandler.ExecuteBatch( new string[] { sql }, this.parameters );
+			}
+
+			//using (var handler = this.pm.GetSqlPassThroughHandler())
+			//{
+			//	handler.Execute( sql, false, this.parameters.ToArray() );
+			//	pm.Save(); // Commit
+			//}
+		}
+
+		/// <summary>
+		/// Computes the query used for DeleteDirectly().
+		/// </summary>
+		/// <returns></returns>
+		public string GetDirectDeleteQuery()
+		{
+			var queryString = GeneratedQuery;
+			if (queryString.IndexOf( "UNION" ) > -1)
+				throw new QueryException( 10052, "This kind of query doesn't support DeleteDirect(). Please use pm.Delete(yourQueryResults)." );
+
+			var p = queryString.IndexOf( "FROM" );
+			if (p == -1)
+				throw new QueryException( 10051, "Can't find 'FROM' in generated query. It seems, as if your query doesn't support DeleteDirect()." );
+
+			var sql = "DELETE " + queryString.Substring( p );
+
+			return sql;
+		}
+
+		/// <summary>
 		/// Executes the query and returns a list of result objects.
 		/// </summary>
 		/// <returns></returns>
