@@ -2,7 +2,9 @@
 using System;
 using System.Collections.Generic;
 using System.Data;
+using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 
 namespace NDO.UISupport
@@ -31,6 +33,36 @@ namespace NDO.UISupport
 		public virtual void Initialize(IProvider provider)
 		{
 			this.provider = provider;
+		}
+
+		/// <summary>
+		/// Tries to load a provider, if necessary
+		/// </summary>
+		protected IProvider EnsureProvider()
+		{
+			if (this.provider == null)
+			{
+				var dir = Path.GetDirectoryName( GetType().Assembly.Location );
+				var path = Path.Combine( dir, $"NDO.{Name}.dll" );
+				if (File.Exists(path))
+				{
+					var asm = Assembly.LoadFrom( path );
+					if (asm == null)
+						throw new Exception( $"Can't load provider DLL '{path}'" );
+					var providerType = asm.GetExportedTypes()
+						.FirstOrDefault( t => t.GetInterface( "IProvider" ) != null );
+
+					return this.provider = (IProvider) Activator.CreateInstance(providerType);
+				}
+				else
+				{
+					throw new Exception( $"Can't find provider DLL '{path}'" );
+				}
+			}
+			else
+			{
+				return this.provider;
+			}
 		}
 
 		/// <summary>
@@ -70,7 +102,7 @@ namespace NDO.UISupport
 				throw new ArgumentException( $"{nameof( DbUISupportBase )}: parameter type {necessaryData.GetType().FullName} is wrong.", nameof( necessaryData ) );
 			try
 			{
-				return this.provider.CreateDatabase( par.DatabaseName, par.ConnectionString, null );
+				return EnsureProvider().CreateDatabase( par.DatabaseName, par.ConnectionString, null );
 			}
 			catch (Exception ex)
 			{

@@ -395,7 +395,5 @@ namespace NDO.SqliteProvider
 
 			return connectionString;
 		}
-
-
 	}
 }

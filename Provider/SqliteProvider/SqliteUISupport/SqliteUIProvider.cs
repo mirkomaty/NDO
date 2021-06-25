@@ -48,7 +48,7 @@ namespace NDO.SqliteUISupport
 			string connectionString = (string)necessaryData;
 			string path = connectionString.Substring( connectionString.IndexOf( '=' ) + 1 ).Trim();
 
-			return Provider.CreateDatabase( path, connectionString );
+			return EnsureProvider().CreateDatabase( path, connectionString );
 		}
 	}
 }

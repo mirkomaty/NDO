@@ -45,7 +45,7 @@ namespace MySqlUISupport
 			// Don't need to check, if type is OK, since that happens in CreateDatabase
 			NDOCreateDbParameter par = necessaryData as NDOCreateDbParameter;
 
-			return Provider.CreateDatabase( par.DatabaseName, par.ConnectionString );
+			return EnsureProvider().CreateDatabase( par.DatabaseName, par.ConnectionString );
 		}
 	}
 }

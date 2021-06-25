@@ -19,5 +19,9 @@
     <PackageReference Include="NDOInterfaces" Version="4.0.1" />
     <PackageReference Include="System.Data.SQLite.Core.MSIL" Version="1.0.109" />
   </ItemGroup>
+
+  <Target Name="PostBuild" AfterTargets="PostBuildEvent">
+    <Exec Command="dir&#xD;&#xA;copy bin\Debug\net452\NDO.Sqlite.dll &quot;C:\Users\Mirko Matytschak\AppData\Local\Microsoft\VisualStudio\16.0_64e40aa8\Extensions\2lienvcf.z3s&quot;&#xD;&#xA;copy bin\Debug\net452\NDO.Sqlite.pdb &quot;C:\Users\Mirko Matytschak\AppData\Local\Microsoft\VisualStudio\16.0_64e40aa8\Extensions\2lienvcf.z3s&quot;&#xD;&#xA;" />
+  </Target>
  
 </Project>

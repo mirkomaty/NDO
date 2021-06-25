@@ -37,7 +37,7 @@ namespace NDO.SqlCeUISupport
         public override string CreateDatabase( object necessaryData )
         {
             // DataSource="c:\Sqltest\hallo.sdf"; Password='lucky'
-            return Provider.CreateDatabase( (string)necessaryData, (string)necessaryData );
+            return EnsureProvider().CreateDatabase( (string)necessaryData, (string)necessaryData );
         }
     }
 }
