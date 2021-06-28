@@ -2,22 +2,24 @@
 
   <PropertyGroup>
     <TargetFrameworks>netstandard2.0;net452</TargetFrameworks>
-    <Version>4.0.1</Version>
+    <Version>4.0.2</Version>
     <Authors>Mirko Matytschak</Authors>
     <Company>Mirko Matytschak</Company>
     <Product>.NET Data Objects (NDO)</Product>
-    <Copyright>Copyright (c) 2002-2019 Mirko Matytschak, Velden, Germany</Copyright>
+    <Copyright>Copyright (c) 2002-2021 Mirko Matytschak, Velden, Germany</Copyright>
     <PackageProjectUrl>https://www.netdataobjects.de</PackageProjectUrl>
     <RepositoryUrl>https://github.com/mirkomaty/NDO</RepositoryUrl>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <PackageId>ndo.sqlite</PackageId>
-    <PackageReleaseNotes>Support for NDOInterfaces 4.0.1</PackageReleaseNotes>
+    <PackageReleaseNotes>Add System.Data.Sqlite.Core to the dependencies</PackageReleaseNotes>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <AssemblyVersion>4.0.2.0</AssemblyVersion>
   </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="NDOInterfaces" Version="4.0.1" />
-    <PackageReference Include="System.Data.SQLite.Core.MSIL" Version="1.0.109" />
+    <PackageReference Include="System.Data.SQLite.Core.MSIL" Version="1.0.114.1" />
+    <PackageReference Include="System.Data.SQLite.Core" Version="1.0.114.3" />
   </ItemGroup>
 
   <Target Name="PostBuild" AfterTargets="PostBuildEvent">
