@@ -27,9 +27,6 @@ CHARACTERS
 	cr                 = '\u000d'. /* 13 = carriage return */
 	newLine            = cr + eol. /* Line separator character (U+2028) + Paragraph separator character (U+2029) */
 
-	/* see https://msdn.microsoft.com/de-de/library/aa664670(v=vs.71).aspx 
-	   and implementation in http://www.ssw.uni-linz.ac.at/Coco/CS/CSharp3.atg */
-
 	startletter        = 'A' .. 'Z' + 'a' .. 'z' + '_' + '\u00aa' + '\u00b5' + '\u00ba' + '\u00c0' .. '\u00d6' + '\u00d8' .. '\u00f6' + '\u00f8' .. '\u00ff'.
 	partletter         = '.' + '0' .. '9' + 'A' .. 'Z' + 'a' .. 'z' + '_' + '\u0080' + '\u00a0' .. '\u00b3' + '\u00b5' + '\u00ba' + '\u00c0' .. '\u00d6' + '\u00d8' .. '\u00f6' + '\u00f8' .. '\u00ff'.
 

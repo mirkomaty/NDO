@@ -1,0 +1,7 @@
+The Oql syntax is translated with the help of CoCo, 
+a project of the University of Linz on the initiative 
+of Hanspeter Mossenböck, whom we explicitly thank 
+for the great work.
+
+The Sources for Coco can be found here:
+https://github.com/SSW-CocoR/CocoR-CSharp
