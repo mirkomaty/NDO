@@ -240,11 +240,11 @@ public class Scanner {
 		for (int i = 192; i <= 214; ++i) start[i] = 1;
 		for (int i = 216; i <= 246; ++i) start[i] = 1;
 		for (int i = 248; i <= 255; ++i) start[i] = 1;
-		for (int i = 48; i <= 57; ++i) start[i] = 12;
+		for (int i = 48; i <= 57; ++i) start[i] = 11;
 		start[46] = 2; 
 		start[45] = 31; 
 		start[39] = 7; 
-		start[123] = 9; 
+		start[123] = 8; 
 		start[33] = 32; 
 		start[60] = 33; 
 		start[61] = 15; 
@@ -413,23 +413,25 @@ public class Scanner {
 				else {t.kind = 2; break;}
 			case 7:
 				if (ch <= 9 || ch >= 11 && ch <= 12 || ch >= 14 && ch <= '&' || ch >= '(' && ch <= 65535) {AddCh(); goto case 7;}
-				else if (ch == 39) {AddCh(); goto case 8;}
+				else if (ch == 39) {AddCh(); goto case 12;}
 				else {goto case 0;}
 			case 8:
-				{t.kind = 4; break;}
+				if (ch >= '0' && ch <= '9') {AddCh(); goto case 9;}
+				else {goto case 0;}
 			case 9:
-				if (ch >= '0' && ch <= '9') {AddCh(); goto case 10;}
+				if (ch == '}') {AddCh(); goto case 10;}
 				else {goto case 0;}
 			case 10:
-				if (ch == '}') {AddCh(); goto case 11;}
-				else {goto case 0;}
-			case 11:
 				{t.kind = 16; break;}
-			case 12:
+			case 11:
 				recEnd = pos; recKind = 3;
-				if (ch >= '0' && ch <= '9') {AddCh(); goto case 12;}
+				if (ch >= '0' && ch <= '9') {AddCh(); goto case 11;}
 				else if (ch == '.') {AddCh(); goto case 2;}
 				else {t.kind = 3; break;}
+			case 12:
+				recEnd = pos; recKind = 4;
+				if (ch == 39) {AddCh(); goto case 7;}
+				else {t.kind = 4; break;}
 			case 13:
 				{t.kind = 17; break;}
 			case 14:
@@ -468,7 +470,7 @@ public class Scanner {
 				{t.kind = 37; break;}
 			case 31:
 				recEnd = pos; recKind = 32;
-				if (ch >= '0' && ch <= '9') {AddCh(); goto case 12;}
+				if (ch >= '0' && ch <= '9') {AddCh(); goto case 11;}
 				else if (ch == '.') {AddCh(); goto case 2;}
 				else {t.kind = 32; break;}
 			case 32:

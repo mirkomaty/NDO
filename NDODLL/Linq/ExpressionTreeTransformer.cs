@@ -477,8 +477,13 @@ namespace NDO.Linq
 						var en = list.GetEnumerator();
 						en.MoveNext();
 						bool doQuote = en.Current is string || en.Current is Guid || en.Current is DateTime;
-						foreach (object obj in list)
+						foreach (object item in list)
 						{
+							var obj = item;
+							if (obj is string s)
+							{
+								obj = s.Replace( "'", "''" );
+							}
 							if (doQuote)
 								sb.Append( '\'' );
 							sb.Append( obj );

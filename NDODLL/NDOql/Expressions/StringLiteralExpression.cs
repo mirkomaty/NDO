@@ -17,12 +17,43 @@ namespace NDOql.Expressions
         /// <param name="col"></param>
         public StringLiteralExpression(string value, int line, int col) : base(line, col)
         {
-            base.Value = value;
+			//CheckForSingleQuotes( value );
+			base.Value = value;
             base.ExpressionType = ExpressionType.String;
         }
 
-        ///<inheritdoc/>
-        public override string ToString()
+		///// <summary>
+		///// Converts a string literal, so that it can't contain a single quote.
+		///// </summary>
+		///// <param name="value"></param>
+		///// <returns></returns>
+		//static void CheckForSingleQuotes( string value )
+		//{
+		//	var temp = value.Substring( 1, value.Length - 2 );
+		//	var sb = new StringBuilder( "'" );
+		//	var last = temp.Length - 1;
+		//	for (int i = 0; i <= last; i++)
+		//	{
+		//		var c = temp[i];
+		//		if (c == '\'')
+		//		{
+		//			if (i < last && temp[i + 1] == '\'')
+		//			{
+		//				i++; // Skip second '
+		//			}
+		//			sb.Append( "''" ); // Always append two quotes
+		//		}
+		//		else
+		//		{
+		//			sb.Append( c );
+		//		}
+		//	}
+		//	sb.Append( '\'' );
+		//	return sb.ToString();
+		//}
+
+		///<inheritdoc/>
+		public override string ToString()
         {
             return Value.ToString();
             // return "'" + Value + '\'';

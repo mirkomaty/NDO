@@ -586,6 +586,35 @@ namespace QueryTests
 		}
 
 		[Test]
+		public void TestIfSingleQuotesAreForbidden()
+		{
+			// -- will be interpreted as NDOql comment
+			NDOQuery<Mitarbeiter> q = new NDOQuery<Mitarbeiter>( pm, "vorname = 'lala'--SELECT * FROM Mitarbeiter'" );
+			var s = q.GeneratedQuery;
+			Assert.AreEqual( $"SELECT {this.mitarbeiterFields} FROM [Mitarbeiter] WHERE [Mitarbeiter].[Vorname] = 'lala'", s );
+
+			// -SELECT * FROM is a valid expression, it would result in a sql error
+			// Mitarbeiter is a syntax error, so the expression is recognized as incorrect from the 33rd character onwards
+			q = new NDOQuery<Mitarbeiter>( pm, "vorname = 'lala' -SELECT * FROM Mitarbeiter'" );
+			try
+			{
+				s = q.GeneratedQuery;
+			}
+			catch (OqlExpressionException)
+			{
+				// Expected outcome
+			}
+		}
+
+		[Test]
+		public void TestIfInClauseWithQuotesInStringsWorks()
+		{
+			NDOQuery<Mitarbeiter> q = new NDOQuery<Mitarbeiter>( pm, "vorname IN ('1''','2''3','''3','4','5')" );
+			var s = q.GeneratedQuery;
+			Assert.AreEqual( $"SELECT {this.mitarbeiterFields} FROM [Mitarbeiter] WHERE [Mitarbeiter].[Vorname] IN ('1''', '2''3', '''3', '4', '5')", s );
+		}
+
+		[Test]
 		public void TestIfRelationInInClauseWorks()
 		{
 			NDOQuery<Mitarbeiter> q = new NDOQuery<Mitarbeiter>( pm, "dieReisen.oid IN (1,2,3,4,5)" );

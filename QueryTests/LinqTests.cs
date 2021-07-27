@@ -1,17 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using NUnit.Framework;
 using NDO;
 using NDO.Query;
-using NDOql.Expressions;
 using NDO.Linq;
 using Reisekosten;
 using Reisekosten.Personal;
 using PureBusinessClasses;
 using NDO.SqlPersistenceHandling;
-using System.Diagnostics;
 using DataTypeTestClasses;
 using System.Linq.Expressions;
 
@@ -533,11 +530,12 @@ namespace QueryTests
 		[Test]
 		public void LinqTestIfInClauseWorks()
 		{
-            var arr = new[] { "Mirko", "Hans" };
+			// Note: Single quotes must be escaped to avoid Sql injection attacks
+            var arr = new[] { "Mirko", "Hans'" };
             var vt = pm.Objects<Mitarbeiter>().Where(m => m.Vorname.In(arr));            
-			Assert.AreEqual( $"SELECT {this.mitarbeiterFields} FROM [Mitarbeiter] WHERE [Mitarbeiter].[Vorname] IN ('Mirko', 'Hans')", vt.QueryString );
-            vt = pm.Objects<Mitarbeiter>().Where(m => m.Vorname.In(new[] { "Mirko", "Hans" }));
-            Assert.AreEqual($"SELECT {this.mitarbeiterFields} FROM [Mitarbeiter] WHERE [Mitarbeiter].[Vorname] IN ('Mirko', 'Hans')", vt.QueryString);
+			Assert.AreEqual( $"SELECT {this.mitarbeiterFields} FROM [Mitarbeiter] WHERE [Mitarbeiter].[Vorname] IN ('Mirko', 'Hans''')", vt.QueryString );
+            vt = pm.Objects<Mitarbeiter>().Where(m => m.Vorname.In(new[] { "Mirko", "Ha'ns" }));
+            Assert.AreEqual($"SELECT {this.mitarbeiterFields} FROM [Mitarbeiter] WHERE [Mitarbeiter].[Vorname] IN ('Mirko', 'Ha''ns')", vt.QueryString);
         }
 
         [Test]
