@@ -339,7 +339,7 @@ NumList <out OqlExpression expression>
 		| intCon (. result.Add(new NumberExpression(int.Parse(t.val), t.line, t.col), ","); .)
 	)
 }
-(. expression = result.Simplify(); .)
+(. expression = result; .)  /* Do not simplify here, because otherwise the brackets are missing */ 
 .
 
 StringList <out OqlExpression expression>
@@ -352,7 +352,7 @@ StringList <out OqlExpression expression>
 		","
 		stringCon (. result.Add(new StringLiteralExpression(t.val, t.line, t.col), ","); .)
 	}
-(. expression = result; /* Do not simplify here, because otherwise the brackets are missing */ .)
+(. expression = result; .) /* Do not simplify here, because otherwise the brackets are missing */
 .
 
 ParameterList <out OqlExpression expression>

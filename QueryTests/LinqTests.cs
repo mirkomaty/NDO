@@ -536,16 +536,24 @@ namespace QueryTests
 			Assert.AreEqual( $"SELECT {this.mitarbeiterFields} FROM [Mitarbeiter] WHERE [Mitarbeiter].[Vorname] IN ('Mirko', 'Hans''')", vt.QueryString );
             vt = pm.Objects<Mitarbeiter>().Where(m => m.Vorname.In(new[] { "Mirko", "Ha'ns" }));
             Assert.AreEqual($"SELECT {this.mitarbeiterFields} FROM [Mitarbeiter] WHERE [Mitarbeiter].[Vorname] IN ('Mirko', 'Ha''ns')", vt.QueryString);
-        }
+			arr = new[] { "Mirko" };
+			vt = pm.Objects<Mitarbeiter>().Where( m => m.Vorname.In( arr ) );
+			Assert.AreEqual( $"SELECT {this.mitarbeiterFields} FROM [Mitarbeiter] WHERE [Mitarbeiter].[Vorname] IN ('Mirko')", vt.QueryString );
+		}
 
-        [Test]
+		[Test]
 		public void LinqTestIfInClauseWithNumbersWorks()
 		{
             // NDO won't check, if the types match
             var arr = new[] { 1,2,3,4,5 };
             var vt = pm.Objects<Mitarbeiter>().Where(m => m.Vorname.In(arr));
-            Assert.AreEqual($"SELECT {this.mitarbeiterFields} FROM [Mitarbeiter] WHERE [Mitarbeiter].[Vorname] IN (1, 2, 3, 4, 5)", vt.QueryString);
-        }
+			Assert.AreEqual( $"SELECT {this.mitarbeiterFields} FROM [Mitarbeiter] WHERE [Mitarbeiter].[Vorname] IN (1, 2, 3, 4, 5)", vt.QueryString );
+			vt = pm.Objects<Mitarbeiter>().Where( m => !m.Oid().In( arr ) );
+			Assert.AreEqual( $"SELECT {this.mitarbeiterFields} FROM [Mitarbeiter] WHERE NOT [Mitarbeiter].[ID] IN (1, 2, 3, 4, 5)", vt.QueryString );
+			arr = new[] { 333 };
+			vt = pm.Objects<Mitarbeiter>().Where( m => !m.Oid().In( arr ) );
+			Assert.AreEqual( $"SELECT {this.mitarbeiterFields} FROM [Mitarbeiter] WHERE NOT [Mitarbeiter].[ID] IN (333)", vt.QueryString );
+		}
 
 		[Test]
 		public void LinqTestIfInClauseWithGuidsWorks()

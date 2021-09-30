@@ -323,7 +323,7 @@ public OqlExpression RootExpression
 				result.Add(new NumberExpression(int.Parse(t.val), t.line, t.col), ","); 
 			} else SynErr(43);
 		}
-		expression = result.Simplify(); 
+		expression = result; 
 	}
 
 	void StringList(out OqlExpression expression) {
@@ -336,7 +336,7 @@ public OqlExpression RootExpression
 			Expect(4);
 			result.Add(new StringLiteralExpression(t.val, t.line, t.col), ","); 
 		}
-		expression = result; /* Do not simplify here, because otherwise the brackets are missing */ 
+		expression = result; 
 	}
 
 	void BitOrExpr(out OqlExpression expression) {
