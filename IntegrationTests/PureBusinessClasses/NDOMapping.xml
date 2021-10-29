@@ -1364,6 +1364,15 @@
         <OidColumn AutoIncremented="True" Name="ID" />
       </Oid>
       <Fields>
+        <Field Name="hatCat6Anschluss" AccessorName="HatCat6Anschluss">
+          <Column Name="HatCat6Anschluss" />
+        </Field>
+        <Field Name="hatSchnellesInternet" AccessorName="HatSchnellesInternet">
+          <Column Name="HatSchnellesInternet" />
+        </Field>
+        <Field Name="nummer" AccessorName="Nummer">
+          <Column Name="Nummer" />
+        </Field>
         <Field Name="zimmer" AccessorName="Zimmer">
           <Column Name="Zimmer" />
         </Field>

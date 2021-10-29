@@ -777,6 +777,53 @@ namespace QueryTests
 		}
 
 		[Test]
+		public void BitwiseOperatorsWork()
+		{
+			var vt = pm.Objects<Buero>().Where( m => (m.Nummer | 2) == 0 );
+			var qs = vt.QueryString;
+			Assert.That( qs.IndexOf( "WHERE ([Buero].[Nummer] | {0}) = {1}" ) > -1 );
+			vt = pm.Objects<Buero>().Where( m => (m.Nummer & 2) == 0 );
+			qs = vt.QueryString;
+			Assert.That( qs.IndexOf( "WHERE ([Buero].[Nummer] & {0}) = {1}" ) > -1 );
+		}
+
+		[Test]
+		public void BoolOperatorsWork()
+		{
+			var b1 = true;
+			var vt = pm.Objects<Buero>().Where( m => m.HatSchnellesInternet || m.HatCat6Anschluss );
+			var qs = vt.QueryString;
+			var p = qs.IndexOf( "WHERE" );
+			Assert.AreEqual( "WHERE [Buero].[HatSchnellesInternet] = 1 OR [Buero].[HatCat6Anschluss] = 1", qs.Substring( p ) );
+
+			vt = pm.Objects<Buero>().Where( m => (m.HatSchnellesInternet || m.HatCat6Anschluss) == true );
+			qs = vt.QueryString;
+			p = qs.IndexOf( "WHERE" );
+			Assert.AreEqual( "WHERE ([Buero].[HatSchnellesInternet] = 1 OR [Buero].[HatCat6Anschluss] = 1) = {0}", qs.Substring( p ) );
+
+			vt = pm.Objects<Buero>().Where( m => (m.HatSchnellesInternet || m.HatCat6Anschluss) == b1 );
+			qs = vt.QueryString;
+			p = qs.IndexOf( "WHERE" );
+			Assert.AreEqual( "WHERE ([Buero].[HatSchnellesInternet] = 1 OR [Buero].[HatCat6Anschluss] = 1) = {0}", qs.Substring( p ) );
+
+			vt = pm.Objects<Buero>().Where( m => m.HatSchnellesInternet && m.HatCat6Anschluss );
+			qs = vt.QueryString;
+			p = qs.IndexOf( "WHERE" );
+			Assert.AreEqual( "WHERE [Buero].[HatSchnellesInternet] = 1 AND [Buero].[HatCat6Anschluss] = 1", qs.Substring( p ) );
+
+			vt = pm.Objects<Buero>().Where( m => (m.HatSchnellesInternet && m.HatCat6Anschluss) == true );
+			qs = vt.QueryString;
+			p = qs.IndexOf( "WHERE" );
+			Assert.AreEqual( "WHERE ([Buero].[HatSchnellesInternet] = 1 AND [Buero].[HatCat6Anschluss] = 1) = {0}", qs.Substring( p ) );
+
+			vt = pm.Objects<Buero>().Where( m => (m.HatSchnellesInternet && m.HatCat6Anschluss) == b1 );
+			qs = vt.QueryString;
+			p = qs.IndexOf( "WHERE" );
+			Assert.AreEqual( "WHERE ([Buero].[HatSchnellesInternet] = 1 AND [Buero].[HatCat6Anschluss] = 1) = {0}", qs.Substring( p ) );
+		}
+
+
+		[Test]
 		public void GTWithByteArrayWorks()
 		{
 			var arr = new byte[] { 1, 2, 3 };

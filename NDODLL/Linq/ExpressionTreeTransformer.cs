@@ -65,9 +65,9 @@ namespace NDO.Linq
 			new OperatorEntry(ExpressionType.LessThan, "<", 2),
 			new OperatorEntry(ExpressionType.NotEqual, "<>", 2),
 			new OperatorEntry(ExpressionType.Equal, "=", 3),
-			new OperatorEntry(ExpressionType.And, "AND", 4),
+			new OperatorEntry(ExpressionType.And, "&", 4),
 			new OperatorEntry(ExpressionType.AndAlso, "AND", 4),
-			new OperatorEntry(ExpressionType.Or, "OR", 5),
+			new OperatorEntry(ExpressionType.Or, "|", 5),
 			new OperatorEntry(ExpressionType.OrElse, "OR", 5),
 		};
 

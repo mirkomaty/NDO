@@ -31,7 +31,9 @@ namespace Reisekosten.Personal {
 	public class Buero : IPersistentObject
 	{
 		private string zimmer;
-		
+		private int nummer;
+		private bool hatSchnellesInternet;
+		private bool hatCat6Anschluss;
 		public Buero() {}  // wird für NDO laden benötigt.
 
 		public Buero(string zimmer)
@@ -44,6 +46,26 @@ namespace Reisekosten.Personal {
 			get { return zimmer; }
 			set { zimmer = value; }
 		}
+
+		public int Nummer
+		{
+			get { return this.nummer; }
+			set { this.nummer = value; }
+		}
+
+		public bool HatSchnellesInternet
+		{
+			get { return this.hatSchnellesInternet; }
+			set { this.hatSchnellesInternet = value; }
+		}
+
+		public bool HatCat6Anschluss
+		{
+			get { return this.hatCat6Anschluss; }
+			set { this.hatCat6Anschluss = value; }
+		}
+
+
 
 		public NDOObjectState NDOObjectState { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
 		public ObjectId NDOObjectId { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }

@@ -650,6 +650,16 @@ namespace QueryTests
 		}
 
 		[Test]
+		public void BitwiseOperatorsWork()
+		{
+			var pm = NDOFactory.Instance.PersistenceManager;
+			var query = new NDOQuery<Buero>( pm, "Nummer & 2 = 0" );
+			Assert.That( query.GeneratedQuery.IndexOf( "[Buero].[Nummer] & 2 = 0" ) > -1 );
+			query = new NDOQuery<Buero>( pm, "Nummer | 2 = 0" );
+			Assert.That( query.GeneratedQuery.IndexOf( "[Buero].[Nummer] | 2 = 0" ) > -1 );
+		}
+
+		[Test]
 		public void DirectDeleteQueryIsCorrect()
 		{
 			var q = new NDOQuery<Mitarbeiter>( NDOFactory.Instance.PersistenceManager, "vorname = 'Mirko'" );
