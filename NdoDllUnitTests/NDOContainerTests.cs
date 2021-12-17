@@ -179,6 +179,19 @@ namespace NdoDllUnitTests
 		}
 
 		[Test]
+		public void ResolveAndRegisterInstanceWithFactory()
+		{
+			INDOContainer container = new NDOContainer();
+			container.ResolveOrRegisterInstance( "bmw", _ => new BMW() );
+			var bmw = container.Resolve( typeof( BMW ), "bmw" );
+			Assert.IsNotNull( bmw );
+			Assert.AreEqual( typeof( BMW ), bmw.GetType() );
+			var bmw2 = container.Resolve( typeof( BMW ), "bmw" );
+			Assert.AreSame( bmw, bmw2 );
+		}
+
+
+		[Test]
 		public void ResolveWithChildContainer()
 		{
 			INDOContainer container1 = new NDOContainer();
