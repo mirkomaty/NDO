@@ -32,14 +32,14 @@ namespace NDO
 	/// </summary>
 	internal class Metaclasses
 	{
-		private static Dictionary<Type, IMetaClass> theClasses = new Dictionary<Type, IMetaClass>();
+		private static Dictionary<Type, IMetaClass2> theClasses = new Dictionary<Type, IMetaClass2>();
 
-		internal static IMetaClass GetClass(Type t, INDOContainer configContainer) 
+		internal static IMetaClass2 GetClass( Type t )
 		{
-            if (t.IsGenericTypeDefinition)
-                return null;
+			if (t.IsGenericTypeDefinition)
+				return null;
 
-			IMetaClass mc;
+			IMetaClass2 mc;
 
 			if (!theClasses.TryGetValue( t, out mc ))
 			{
@@ -53,33 +53,16 @@ namespace NDO
 						Type t2 = mcType;
 						if (t2.IsGenericTypeDefinition)
 							t2 = t2.MakeGenericType( t.GetGenericArguments() );
-						var innerMc = (IMetaClass)Activator.CreateInstance( t2 );
-						mc = new NDOMetaclass( t, innerMc, configContainer );
+						var o = Activator.CreateInstance( t2, t );
+						if (o is IMetaClass2 mc2)
+							mc = mc2;
+						else if (o is IMetaClass mc1)
+							mc = new NDOMetaclass( t, mc1 );
+						else
+							throw new NDOException( 101010, $"MetaClass for type '{t.FullName}' must implement IMetaClass or IMetaClass2, but doesn't." );
 						theClasses.Add( t, mc );
 					}
 				}
-			}
-
-			return mc;
-		}
-
-		internal static IMetaClass GetInnerClass( Type t )
-		{
-			if (t.IsGenericTypeDefinition)
-				return null;
-
-			IMetaClass mc;
-
-			if (!theClasses.TryGetValue( t, out mc ))
-			{
-				Type mcType = t.GetNestedType( "MetaClass", BindingFlags.NonPublic | BindingFlags.Public );
-				if (null == mcType)
-					throw new NDOException( 13, "Missing nested class 'MetaClass' for type '" + t.Name + "'; the type doesn't seem to be enhanced." );
-				Type t2 = mcType;
-				if (t2.IsGenericTypeDefinition)
-					t2 = t2.MakeGenericType( t.GetGenericArguments() );
-				var innerMc = (IMetaClass)Activator.CreateInstance( t2 );
-				return innerMc;
 			}
 
 			return mc;

@@ -1061,7 +1061,7 @@ namespace NDOEnhancer.Patcher
 		void addGetOrdinal(ILClassElement metaClass)
 		{
 			ILMethodElement methodElement = new ILMethodElement();
-			methodElement.addLine( ".method public hidebysig newslot final virtual instance int32 GetRelationOrdinal(string fieldName) cil managed" );
+			methodElement.addLine( ".method public hidebysig virtual instance int32 GetRelationOrdinal(string fieldName) cil managed" );
 
 			methodElement.addStatement(".maxstack  4");
 			addLocalVariable(methodElement, "result", "int32");
@@ -2739,7 +2739,7 @@ namespace NDOEnhancer.Patcher
 		void addCreateObject(ILClassElement parent)
 		{
 			ILMethodElement newMethod = new ILMethodElement();
-			newMethod.addLine(".method public hidebysig newslot final virtual instance class [NDO]NDO.IPersistenceCapable CreateObject() cil managed");
+			newMethod.addLine( ".method public hidebysig virtual instance class [NDO]NDO.IPersistenceCapable CreateObject() cil managed" );
 			newMethod.addElement(new ILMaxstackElement(".maxstack  1", newMethod));
             if (!this.m_classElement.isAbstract())
                 newMethod.addElement(new ILStatementElement("newobj     instance void " + m_refName + "::.ctor()"));
@@ -2753,10 +2753,11 @@ namespace NDOEnhancer.Patcher
 		{
 
 			ILMethodElement newMethod = new ILMethodElement();
-			newMethod.addLine(".method public hidebysig specialname rtspecialname instance void  .ctor() cil managed");
-			newMethod.addElement(new ILMaxstackElement(".maxstack  1", newMethod));
-			newMethod.addElement(new ILStatementElement(ldarg_0));
-			newMethod.addElement(new ILStatementElement($"call       instance void {Corlib.Name}System.Object::.ctor()"));
+			newMethod.addLine( $".method public hidebysig specialname rtspecialname instance void .ctor(class {Corlib.Name}System.Type t) cil managed" );
+			newMethod.addElement(new ILMaxstackElement(".maxstack  8", newMethod));
+			newMethod.addElement( new ILStatementElement( ldarg_0 ) );
+			newMethod.addElement( new ILStatementElement( ldarg_1 ) );
+			newMethod.addElement(new ILStatementElement($"call       instance void [NDO]NDO.MetaclassBase::.ctor(class {Corlib.Name}System.Type)" ));
 			newMethod.addElement(new ILStatementElement("ret"));
 			parent.addElement(newMethod);
 		}
@@ -2765,9 +2766,8 @@ namespace NDOEnhancer.Patcher
 		public void addMetaClass()
 		{
 			ILClassElement newClass = new ILClassElement();
-			newClass.addLine(".class auto ansi nested private beforefieldinit MetaClass " + this.m_classElement.getGenericArguments());
-			newClass.addLine($"extends {Corlib.Name}System.Object");
-			newClass.addLine("implements [NDO]NDO.IMetaClass");
+			newClass.addLine( ".class auto ansi nested private beforefieldinit MetaClass " + this.m_classElement.getGenericArguments() );
+			newClass.addLine( "extends [NDO]NDO.MetaclassBase" );
 			m_classElement.addElement(newClass);
 			addMetaClassCtor(newClass);
 			addCreateObject(newClass);

@@ -20,6 +20,7 @@
 // DEALINGS IN THE SOFTWARE.
 
 
+using NDO.Configuration;
 using System;
 using System.Data;
 
@@ -32,7 +33,7 @@ namespace NDO
 	{
 
 		/// <summary>
-		/// Create a new object.
+		/// Create a new object without constructor parameters.
 		/// </summary>
 		IPersistenceCapable CreateObject();
 
@@ -44,5 +45,18 @@ namespace NDO
 		/// <remarks>Throws a NDOException, if the field doesn't exist.</remarks>
 		int GetRelationOrdinal(string fieldName);
 
+	}
+
+	/// <summary>
+	/// This interface is for internal use of the NDO Framework. Don't use it in your application code.
+	/// </summary>
+	public interface IMetaClass2 : IMetaClass
+	{
+		/// <summary>
+		/// Create a new object.
+		/// </summary>
+		/// <param name="configContainer">The config container used to resolve constructor parameters</param>
+		/// <remarks>This method will be used for classes with constructor parameters</remarks>
+		IPersistenceCapable CreateObject( INDOContainer configContainer );
 	}
 }

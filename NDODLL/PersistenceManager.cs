@@ -3316,7 +3316,7 @@ namespace NDO
 		/// <returns></returns>
 		public IPersistenceCapable CreateObject(Type t) 
 		{
-			return Metaclasses.GetClass( t, this.ConfigContainer ).CreateObject();
+			return Metaclasses.GetClass( t ).CreateObject( this.ConfigContainer );
 		}
 
 		/// <summary>
@@ -3605,7 +3605,6 @@ namespace NDO
 
 			IList callbackObjects = new ArrayList();
 			Class cl = GetClass(t);
-			IMetaClass mc = null;
             if (t.IsGenericTypeDefinition)
             {
                 if (cl.TypeNameColumn == null)
@@ -3636,9 +3635,8 @@ namespace NDO
 				IPersistenceCapable pc = cache.GetObject(id);                
 				if(pc == null) 
 				{
-                    // redefine mc for each row, because we could have different generic types.
-                    mc = Metaclasses.GetClass(concreteType, this.ConfigContainer);
-                    pc = mc.CreateObject();
+                    var mc = Metaclasses.GetClass(concreteType);
+                    pc = mc.CreateObject( this.ConfigContainer );
                     pc.NDOObjectId = id;
 					pc.NDOStateManager = sm;
 					// If the object shouldn't be hollow, this will be overwritten later.
