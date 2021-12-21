@@ -666,5 +666,20 @@ namespace QueryTests
 			var sql = q.GetDirectDeleteQuery();
 			Assert.AreEqual( "DELETE FROM [Mitarbeiter] WHERE [Mitarbeiter].[Vorname] = 'Mirko'", sql );
 		}
+
+		[Test]
+		public void TransientDelete()
+		{
+			var pm = NDOFactory.Instance.PersistenceManager;
+			var m = new Mitarbeiter();
+			try
+			{
+				pm.Delete( m );
+			}
+			catch (NDOException ex)
+			{
+				Assert.AreEqual( 120, ex.ErrorNumber );
+			}
+		}
 	}
 }

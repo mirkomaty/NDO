@@ -2854,7 +2854,11 @@ namespace NDO
 		public void Delete(object o) 
 		{
 			IPersistenceCapable pc = CheckPc(o);
-			if(pc.NDOObjectState != NDOObjectState.Deleted) 
+			if (pc.NDOObjectState == NDOObjectState.Transient)
+			{
+				throw new NDOException( 120, "Can't delete transient object" );
+			}
+			if (pc.NDOObjectState != NDOObjectState.Deleted) 
 			{
 				Delete(pc, true);
 			}
