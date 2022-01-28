@@ -60,7 +60,7 @@ namespace NDOEnhancer
 				root = json.Parse( tr ).Value.AsObject();
 
 			var targets = root["targets"].AsObject();
-			var standardKey = targets.FirstOrDefault(o=>o.StartsWith(".NETStandard,Version=") || o.StartsWith(".NETCoreApp,Version="));
+			var standardKey = targets.FirstOrDefault( o => o.StartsWith( ".NETStandard,Version=" ) || o.StartsWith( ".NETCoreApp,Version=" ) || o.StartsWith( "net" ) );
 			if (standardKey == null)
 			{
 				Console.WriteLine("Can't find any .NETStandard or .NETCoreApp target in the project.assets.json file");
