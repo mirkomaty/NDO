@@ -36,12 +36,15 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="NDO, Version=4.0.0.0, Culture=neutral, PublicKeyToken=37bfdffa92a0cd24, processorArchitecture=MSIL">
+    <Reference Include="NDO">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\NDODLL\bin\Debug\net452\NDO.dll</HintPath>
     </Reference>
-    <Reference Include="NDOInterfaces, Version=4.0.0.0, Culture=neutral, PublicKeyToken=ff5e453a099b8326, processorArchitecture=MSIL">
-      <HintPath>..\packages\NDOInterfaces.4.0.0\lib\net452\NDOInterfaces.dll</HintPath>
+    <Reference Include="NDO.SqlServer, Version=4.0.2.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\ndo.sqlserver.4.0.2\lib\net452\NDO.SqlServer.dll</HintPath>
+    </Reference>
+    <Reference Include="NDOInterfaces, Version=4.0.1.0, Culture=neutral, PublicKeyToken=ff5e453a099b8326, processorArchitecture=MSIL">
+      <HintPath>..\packages\NDOInterfaces.4.0.1\lib\net452\NDOInterfaces.dll</HintPath>
     </Reference>
     <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.12.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
@@ -51,9 +54,6 @@
     </Reference>
     <Reference Include="PureBusinessClasses">
       <HintPath>..\..\IntegrationTests\PureBusinessClasses\bin\Debug\PureBusinessClasses.dll</HintPath>
-    </Reference>
-    <Reference Include="SqlServerProvider, Version=4.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\ndo.sqlserver.4.0.0\lib\net452\SqlServerProvider.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />

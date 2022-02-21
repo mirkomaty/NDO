@@ -232,29 +232,36 @@ namespace NDO.JsonFormatter
 			return new ArrayList( rootObjects );
 		}
 
-		class Metaclasses
+		internal class Metaclasses
 		{
-			private static Hashtable theClasses = new Hashtable();
+			private static Dictionary<Type, IMetaClass2> theClasses = new Dictionary<Type, IMetaClass2>();
 
-			internal static IMetaClass GetClass( Type t )
+			internal static IMetaClass2 GetClass( Type t )
 			{
 				if (t.IsGenericTypeDefinition)
 					return null;
 
-				IMetaClass mc;
+				IMetaClass2 mc;
 
-				lock (theClasses)
+				if (!theClasses.TryGetValue( t, out mc ))
 				{
-					if (null == ( mc = (IMetaClass) theClasses[t] ))
+					lock (theClasses)
 					{
-						Type mcType = t.GetNestedType("MetaClass", BindingFlags.NonPublic | BindingFlags.Public);
-						if (null == mcType)
-							throw new NDOException( 13, "Missing nested class 'MetaClass' for type '" + t.Name + "'; the type doesn't seem to be enhanced." );
-						Type t2 = mcType;
-						if (t2.IsGenericTypeDefinition)
-							t2 = t2.MakeGenericType( t.GetGenericArguments() );
-						mc = (IMetaClass) Activator.CreateInstance( t2 );
-						theClasses.Add( t, mc );
+						if (!theClasses.TryGetValue( t, out mc ))  // Threading double check
+						{
+							Type mcType = t.GetNestedType( "MetaClass", BindingFlags.NonPublic | BindingFlags.Public );
+							if (null == mcType)
+								throw new NDOException( 13, "Missing nested class 'MetaClass' for type '" + t.Name + "'; the type doesn't seem to be enhanced." );
+							Type t2 = mcType;
+							if (t2.IsGenericTypeDefinition)
+								t2 = t2.MakeGenericType( t.GetGenericArguments() );
+							var o = Activator.CreateInstance( t2, t );
+							if (o is IMetaClass2 mc2)
+								mc = mc2;
+							else
+								throw new NDOException( 101010, $"MetaClass for type '{t.FullName}' must implement IMetaClass2, but doesn't. Recompile the assembly with NDO v. >= 4.0.9" );
+							theClasses.Add( t, mc );
+						}
 					}
 				}
 
@@ -262,11 +269,12 @@ namespace NDO.JsonFormatter
 			}
 		}
 
-        /// <summary>
-        /// Deserializes a Container from a stream.
-        /// </summary>
-        /// <param name="serializationStream"></param>
-        /// <returns></returns>
+
+		/// <summary>
+		/// Deserializes a Container from a stream.
+		/// </summary>
+		/// <param name="serializationStream"></param>
+		/// <returns></returns>
 		public object Deserialize( Stream serializationStream )
 		{
 			if (this.pm == null)
