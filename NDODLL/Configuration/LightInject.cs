@@ -26,16 +26,7 @@
     http://twitter.com/bernhardrichter
 ******************************************************************************/
 
-[module: System.Diagnostics.CodeAnalysis.SuppressMessage( "StyleCop.CSharp.ReadabilityRules", "SA1126:PrefixCallsCorrectly", Justification = "Reviewed" )]
-[module: System.Diagnostics.CodeAnalysis.SuppressMessage( "StyleCop.CSharp.ReadabilityRules", "SA1101:PrefixLocalCallsWithThis", Justification = "No inheritance" )]
-[module: System.Diagnostics.CodeAnalysis.SuppressMessage( "StyleCop.CSharp.MaintainabilityRules", "SA1402:FileMayOnlyContainASingleClass", Justification = "Single source file deployment." )]
-[module: System.Diagnostics.CodeAnalysis.SuppressMessage( "StyleCop.CSharp.DocumentationRules", "SA1633:FileMustHaveHeader", Justification = "Custom header." )]
-[module: System.Diagnostics.CodeAnalysis.SuppressMessage( "StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented", Justification = "All public members are documented." )]
-[module: System.Diagnostics.CodeAnalysis.SuppressMessage( "StyleCop.CSharp.MaintainabilityRules", "SA1401:FieldsMustBePrivate", Justification = "Performance" )]
-[module: System.Diagnostics.CodeAnalysis.SuppressMessage( "MaintainabilityRules", "SA1403", Justification = "One source file" )]
-[module: System.Diagnostics.CodeAnalysis.SuppressMessage( "DocumentationRules", "SA1649", Justification = "One source file" )]
-
-namespace LightInject
+namespace NDO.LightInject
 {
     using System;
     using System.Collections.Concurrent;
@@ -91,7 +82,7 @@ namespace LightInject
         /// registered services.
         /// </summary>
         IEnumerable<ServiceRegistration> AvailableServices { get; }
-
+        
         /// <summary>
         /// Registers the <paramref name="serviceType"/> with the <paramref name="implementingType"/>.
         /// </summary>
@@ -701,6 +692,14 @@ namespace LightInject
         /// <param name="serviceName">The name of the service.</param>
         /// <returns><b>true</b> if the container can create the requested service, otherwise <b>false</b>.</returns>
         bool CanGetInstance( Type serviceType, string serviceName );
+
+        /// <summary>
+        /// Returns <b>true</b> if the container can create the requested service, otherwise <b>false</b>.
+        /// </summary>
+        /// <typeparam name="T">The type of the service</typeparam>
+        /// <param name="serviceName">The name of the service</param>
+        /// <returns></returns>
+        bool CanGetInstance<T>( string serviceName );
 
         /// <summary>
         /// Injects the property dependencies for a given <paramref name="instance"/>.
@@ -2736,7 +2735,7 @@ namespace LightInject
         private ILifetime DefaultLifetime => (ILifetime) (defaultLifetimeType != null ? Activator.CreateInstance( defaultLifetimeType ) : null);
 
         /// <inheritdoc/>
-        public bool CanGetInstance( Type serviceType, string serviceName )
+        public bool CanGetInstance( Type serviceType, string serviceName = "" )
         {
             if (serviceType.IsFuncRepresentingService() || serviceType.IsFuncRepresentingNamedService() || serviceType.IsFuncWithParameters() || serviceType.IsLazy())
             {
@@ -2746,6 +2745,12 @@ namespace LightInject
 
             return GetEmitMethod( serviceType, serviceName ) != null;
         }
+
+        /// <inheritdoc/>
+        public bool CanGetInstance<T>( string serviceName = "" )
+		{
+            return CanGetInstance( typeof( T ), serviceName );
+		}
 
         /// <inheritdoc/>
         public Scope BeginScope()

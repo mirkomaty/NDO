@@ -1,315 +1,156 @@
-﻿using NDO.Provider;
+﻿using NDO.LightInject;
+using NDO.Provider;
 using NDO.Query;
 using NDO.SqlPersistenceHandling;
 using System;
-using System.Collections.Concurrent;
-using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
 
 namespace NDO.Configuration
 {
 	/// <summary>
 	/// Application-wide IoC container
 	/// </summary>
-    public class NDOContainer : INDOContainer
-    {
-        static NDOContainer instance;
-		NDOContainer parent;
-		ConcurrentDictionary<Type, IResolver> values = new ConcurrentDictionary<Type, IResolver>();
-		// TODO: There is a little bit too much locking in the code. This could be optimized.
-		// We leave it as it is at the moment because in this context locking hardly takes any extra time.
+	public class NDOContainer : ServiceContainer, IDisposable, INDOContainer
+	{
+		static NDOContainer instance;
 		static object lockObject = new object();
-		List<INDOContainer> children = new List<INDOContainer>();
+		Scope rootScope;
 
 		/// <summary>
 		/// Creates an NDOContainer object
 		/// </summary>
-        public NDOContainer()
+		public NDOContainer()
 		{
+			SetDefaultLifetime<PerScopeLifetime>();
+			rootScope = BeginScope();
 		}
 
-        private NDOContainer(NDOContainer parent)
+		void IDisposable.Dispose()
 		{
-			this.parent = parent;
-		}
-
-		/// <inheritdoc/>
-		public INDOContainer CreateChildContainer()
-		{
-			var child = new NDOContainer( this );
-			this.children.Add( child );
-			return child;
-		}
-
-		void RemoveChildContainer(INDOContainer child)
-		{
-			this.children.Remove( child );
-		}
-
-		///<inheritdoc/>
-		public void RegisterType( Type tFrom, Type tTo, ILifetimeManager lifetimeManager = null, params object[] injectionMembers )
-		{
-			if (lifetimeManager == null)
-				lifetimeManager = new TransientLifetimeManager();
-
-			Func<Type, IResolver> valueFactory = _ => lifetimeManager.CreateResolver(tFrom, tTo);
-
-			lock (lockObject)
-			{
-				this.values.AddOrUpdate( tFrom, valueFactory, ( k, o ) => valueFactory( k ) );
-			}
-		}
-
-		///<inheritdoc/>
-		public void RegisterType<TFrom, TTo>( ILifetimeManager lifetimeManager = null, params object[] injectionMembers )
-		{
-			RegisterType( typeof( TFrom ), typeof( TTo ), lifetimeManager, injectionMembers );
-		}
-
-		///<inheritdoc/>
-		public void RegisterType<T>( ILifetimeManager lifetimeManager = null, params object[] injectionMembers )
-		{
-			RegisterType<T, T>( lifetimeManager, injectionMembers );
-		}
-
-		void CollectRegistrations(IDictionary<Type,IResolver> result)
-		{
-			foreach (var item in values)
-			{
-				if (!result.ContainsKey(item.Key))
-					result.Add( item.Key, item.Value );
-			}
-
-			if (parent != null)
-				parent.CollectRegistrations( result );
+			rootScope.Dispose();
+			base.Dispose();
 		}
 
 		/// <summary>
-		/// Returns a dictionary of all current Registrations
+		/// 
 		/// </summary>
-		public IDictionary<Type, IResolver> Registrations 
-		{ 
-			get 
-			{
-				Dictionary<Type,IResolver> result = new Dictionary<Type, IResolver>();
-				lock (lockObject)
-				{
-					CollectRegistrations( result );
-				}
-				return result;
-			} 
+		/// <param name="tFrom"></param>
+		/// <param name="tTo"></param>
+		/// <param name="lifetime"></param>
+		[Obsolete( "Use Register()" )]
+		public void RegisterType( Type tFrom, Type tTo, ILifetime lifetime = null )
+		{
+			base.Register( tFrom, tTo, lifetime );
 		}
 
-		///<inheritdoc/>
-		public bool IsRegistered(Type t)
+
+		/// <summary>
+		/// Obsolete
+		/// </summary>
+		/// <typeparam name="TFrom"></typeparam>
+		/// <typeparam name="TTo"></typeparam>
+		/// <param name="lifetimeManager"></param>
+		[Obsolete( "Use Register()" )]
+		public void RegisterType<TFrom, TTo>( ILifetime lifetimeManager = null )
 		{
-			return Registrations.ContainsKey( t );
+			RegisterType( typeof( TFrom ), typeof( TTo ), lifetimeManager );
 		}
 
-		///<inheritdoc/>
-		public bool IsRegistered<T>()
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <typeparam name="T"></typeparam>
+		/// <param name="lifetimeManager"></param>
+		[Obsolete( "Use Register()" )]
+		public void RegisterType<T>( ILifetime lifetimeManager = null )
 		{
-			return Registrations.ContainsKey( typeof(T) );
+			RegisterType<T, T>( lifetimeManager );
 		}
 
 		/// <summary>
 		/// Gets the root instance of the container.
 		/// </summary>
-		public static INDOContainer Instance
-        {
-            get
-            {
-                if (instance == null)
-                {
+		public static NDOContainer Instance
+		{
+			get
+			{
+				if (instance == null)
+				{
 					lock (lockObject)
 					{
 						if (instance == null) // Threading double check
 						{
 							instance = new NDOContainer();
-							instance.RegisterType<IPersistenceHandler, SqlPersistenceHandler>();
-							instance.RegisterType<RelationContextGenerator>();
-							instance.RegisterType<IQueryGenerator, SqlQueryGenerator>();
-							instance.RegisterType<IPersistenceHandlerManager, NDOPersistenceHandlerManager>();
-							instance.RegisterType<IProviderPathFinder, NDOProviderPathFinder>();
-							// ContainerControlled means in this case, that there is only one instance per application, 
-							// but the registration can be overriden in child containers.
-							instance.RegisterType<IPersistenceHandlerPool, NDOPersistenceHandlerPool>(new ContainerControlledLifetimeManager());
+							instance.Register<IPersistenceHandler, SqlPersistenceHandler>();
+							instance.Register<RelationContextGenerator>();
+							instance.Register<IQueryGenerator, SqlQueryGenerator>();
+							instance.Register<IPersistenceHandlerManager, NDOPersistenceHandlerManager>();
+							instance.Register<IProviderPathFinder, NDOProviderPathFinder>();
+							instance.Register<IPersistenceHandlerPool, NDOPersistenceHandlerPool>();
 						}
 					}
-                }
-
-                return instance;
-            }
-        }
-
-		///<inheritdoc/>
-		object InternalResolve( INDOContainer resolvingContainer, Type tFrom, string name, ParameterOverride[] overrides )
-		{
-			lock (lockObject)
-			{
-				var resolver = GetResolver(tFrom);
-				if (resolver == null)
-				{
-					if (!tFrom.IsInterface && !tFrom.IsAbstract)
-					{
-						RegisterType( tFrom, tFrom, null );
-						resolver = GetResolver( tFrom );
-					}
-					else
-					{
-						return null;
-					}
 				}
 
-				return resolver.Resolve( resolvingContainer, name, overrides );
+				return instance;
 			}
 		}
 
-		///<inheritdoc/>
-		public object Resolve( Type tFrom, string name = null, params ParameterOverride[] overrides )
+
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="tFrom"></param>
+		/// <param name="name"></param>
+		/// <returns></returns>
+		[Obsolete( "Use GetInstance" )]
+		public object Resolve( Type tFrom, string name = null )
 		{
-			return InternalResolve( this, tFrom, name, overrides );
+			return base.GetInstance( tFrom, name );
 		}
 
-		///<inheritdoc/>
-		public T Resolve<T>( string name = null, params ParameterOverride[] overrides )
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <typeparam name="T"></typeparam>
+		/// <param name="name"></param>
+		/// <returns></returns>
+		[Obsolete( "Use GetInstance" )]
+		public T Resolve<T>( string name = null )
 		{
-			return (T) Resolve( typeof( T ), name, overrides );
+			return (T) base.GetInstance( typeof( T ), name );
 		}
 
-		/// <inheritdoc/>
-		public void Dispose()
-		{
-			lock (lockObject)
-			{
-				if (parent != null)
-					parent.RemoveChildContainer( this );
-
-				// This scenario is very unlikely
-				// Child container should always be disposed by the child.
-				foreach (var child in this.children)
-				{
-					child.Dispose();
-				}
-
-				this.children.Clear();
-
-				// This is the actual task of the Dispose method
-				foreach (var disposable in values.Values.Where( v => v is IDisposable ).Select( v => (IDisposable) v ))
-				{
-					disposable.Dispose();
-				}
-
-				this.values.Clear();
-			}
-		}
-
-		///<inheritdoc/>
+		/// <summary>
+		/// Registers an instance of a given type
+		/// </summary>
+		/// <param name="instance"></param>
+		/// <param name="name"></param>
 		public void RegisterInstance( object instance, string name = null )
 		{
-			RegisterInstance( instance.GetType(), instance, name );
+			base.RegisterInstance( instance.GetType(), instance, name );
 		}
 
-		///<inheritdoc/>
-		public void RegisterInstance( Type t, object instance, string name = null )
+		/// <summary>
+		/// Tries to resolve an instance, and if it is not registered, register it and get a new instance.
+		/// </summary>
+		/// <typeparam name="T"></typeparam>
+		/// <param name="serviceName"></param>
+		/// <param name="factory"></param>
+		/// <param name="lifetime"></param>
+		/// <returns></returns>
+		public T ResolveOrRegisterInstance<T>( string serviceName = "", Func<T> factory = null, ILifetime lifetime = null )
 		{
-			lock (lockObject)
-			{
-				IResolver resolver;
-				if (this.values.TryGetValue( t, out resolver ))
-				{
-					if (resolver is InstanceResolver instanceResolver)
-					{
-						instanceResolver.AddOrUpdate( name, instance );
-						return;
-					}
-					else
-					{
-						this.values.TryRemove( t, out resolver );
-					}
-				}
+			if (lifetime == null)
+				lifetime = new PerScopeLifetime();
 
-				var instResolver = new InstanceResolver();
-					this.values.TryAdd( t, instResolver );
-				instResolver.AddOrUpdate( name, instance );
-			}
-		}
-
-		///<inheritdoc/>
-		public void RegisterInstance<T>( T instance, string name = null )
-		{
-			RegisterInstance( typeof( T ), instance, name );
-		}
-
-		IResolver GetResolver(Type t)
-		{
-			if (this.values.TryGetValue( t, out IResolver resolver ))
-				return resolver;
-			if (this.parent != null)
-				return parent.GetResolver( t );
-			return null;
-		}
-
-		///<inheritdoc/>
-		public object ResolveOrRegisterInstance( Type t, string name, Func<string, object> factory )
-		{
-			lock (lockObject)
-			{
-				var resolver = (InstanceResolver)GetResolver(t);
-				if (resolver == null)
-				{
-					resolver = new InstanceResolver();
-					values.TryAdd( t, resolver );
-				}
-
-				var result = resolver.Resolve(this, name, null);
-				if (result == null)
-				{
-					result = factory( name );
-					resolver.AddOrUpdate( name, result );
-				}
+			T result = (T) TryGetInstance( typeof( T ), serviceName );
+			if (result != null)
 				return result;
-			}
-		}
-
-		///<inheritdoc/>
-		public T ResolveOrRegisterInstance<T>( string name, Func<string, T> factory )
-		{
-			return (T) ResolveOrRegisterInstance( typeof( T ), name, s => factory( s ) );
-		}
-
-		///<inheritdoc/>
-		public object ResolveOrRegisterType( Type tFrom, Type tTo, ILifetimeManager lifetimeManager = null, string name = null, params ParameterOverride[] overrides )
-		{
-			lock (lockObject)
-			{
-				var resolver = GetResolver(tFrom);
-				if (resolver != null)
-					return resolver.Resolve( this, name, overrides );
-				
-				RegisterType( tFrom, tTo, lifetimeManager );
-
-				return Resolve( tFrom, name, overrides );
-			}
-		}
-
-		///<inheritdoc/>
-		public TFrom ResolveOrRegisterType<TFrom, TTo>( ILifetimeManager lifetimeManager = null, string name = null, params ParameterOverride[] overrides )
-		{
-			return (TFrom) ResolveOrRegisterType( typeof( TFrom ), typeof( TTo ), lifetimeManager, name, overrides );
-		}
-
-		///<inheritdoc/>
-		public TFrom ResolveOrRegisterType<TFrom>( ILifetimeManager lifetimeManager = null, string name = null, params ParameterOverride[] overrides )
-		{
-			return (TFrom) ResolveOrRegisterType( typeof( TFrom ), typeof( TFrom ), lifetimeManager, name, overrides );
-		}
-
-		///<inheritdoc/>
-		public TFrom ResolveOrRegisterType<TFrom>( string name, params ParameterOverride[] overrides )
-		{
-			return (TFrom) ResolveOrRegisterType( typeof( TFrom ), typeof( TFrom ), null, name, overrides );
+			if (factory == null)
+				Register<T, T>( serviceName, lifetime );
+			else
+				Register( ( sf ) => factory(), serviceName, lifetime );
+			return (T) GetInstance( typeof( T ), serviceName );
 		}
 	}
 }

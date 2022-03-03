@@ -1,16 +1,13 @@
-﻿using System;
+﻿using NDO.LightInject;
+using System;
 
 namespace NDO.Configuration
 {
 	/// <summary>
-	/// Creates one instance of a type during the lifetime of a controller
+	/// Obsolete ContainerControlledLifetime
 	/// </summary>
-	public class ContainerControlledLifetimeManager : ILifetimeManager
+	[Obsolete("Use PerContainerLifetime")]
+	public class ContainerControlledLifetimeManager : PerContainerLifetime
 	{
-		///<inheritdoc/>
-		public IResolver CreateResolver(Type tFrom, Type tTo)
-		{
-			return new ContainerControlledTypeMappingResolver( tFrom, tTo );
-		}
 	}
 }
