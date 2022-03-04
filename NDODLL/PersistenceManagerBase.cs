@@ -51,7 +51,7 @@ namespace NDO
 		private string logPath;
 		private ILogAdapter logAdapter;
 		private Type persistenceHandlerType = null;
-		private INDOContainer configContainer;
+		private Scope configScope;
 		private IPersistenceHandlerManager persistenceHandlerManager;
 		bool isClosing = false;
 
@@ -133,7 +133,7 @@ namespace NDO
 		internal virtual void Init( Mappings mapping )
 		{
 			this.mappings = mapping;
-
+			this.configScope = ConfigContainer.BeginScope();
 			ConfigContainer.RegisterInstance( mappings );
 
 			this.ds = new NDODataSet( mappings );  // Each PersistenceManager instance must have it's own DataSet.
@@ -298,25 +298,14 @@ namespace NDO
 		}
 
 		/// <summary>
-		/// Gets or sets the container for the configuration of the system.
+		/// Gets the DI container of the system.
 		/// </summary>
 		public INDOContainer ConfigContainer
 		{
 			get
 			{
-				if (this.configContainer == null)
-				{
-					this.configContainer = NDOContainer.Instance.CreateChildContainer();
-					this.configContainer.RegisterType<IQueryGenerator, SqlQueryGenerator>();
-
-					// Currently the PersistenceManager instance is not used.
-					// But we are able to pull it from the container.
-					this.configContainer.RegisterInstance( typeof( PersistenceManager ), this );
-				}
-
-				return this.configContainer;
-			}
-			set { this.configContainer = value; }
+				return NDOContainer.Instance;
+			}			
 		}
 
 
@@ -457,7 +446,7 @@ namespace NDO
 			isClosing = true;
 			this.ds.Dispose();
 			this.ds = null;
-			this.configContainer.Dispose();  // Leads to another Disposal of the PM. therefore we query for isClosing.
+			this.configScope.Dispose();
 		}
 
 		/// <summary>

@@ -1,11 +1,6 @@
-﻿using NDO.Configuration;
-using NUnit.Framework;
+﻿using NUnit.Framework;
 using System;
-using System.Collections.Concurrent;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using NDO.Configuration;
 
 namespace NdoDllUnitTests
 {
@@ -15,74 +10,78 @@ namespace NdoDllUnitTests
 		[Test]
 		public void SimpleRegistration()
 		{
-			INDOContainer container = new NDOContainer();
+			IServiceContainer container = new ServiceContainer();
 
-			container.RegisterType<ICar, BMW>();
-			container.RegisterType<Driver>();
+			container.Register<ICar, BMW>();
+			container.Register<Driver>();
 
 			//Resolves dependencies and returns the Driver object 
-			Driver drv = container.Resolve<Driver>();
+			Driver drv = container.GetInstance<Driver>();
 			Assert.AreEqual( "Running BMW - 1 mile", drv.RunCar() );
 		}
 
 		[Test]
 		public void SimpleRegistrationWithOneType()
 		{
-			INDOContainer container = new NDOContainer();
+			IServiceContainer container = new ServiceContainer();
 
-			container.RegisterType<BMW>();
+			container.Register<BMW>();
 
-			var car = container.Resolve<BMW>();
+			var car = container.GetInstance<BMW>();
 			Assert.AreEqual( typeof( BMW ), car.GetType() );
+		}
+
+		[Test]
+		public void GetUnregistered()
+		{
+			IServiceContainer container = new ServiceContainer();
+			var car = container.TryGetInstance<ICar>();
+			Assert.IsNull( car );
 		}
 
 		[Test]
 		public void SimpleRegistrationWithOverride()
 		{
-			INDOContainer container = new NDOContainer();
+			IServiceContainer container = new ServiceContainer();
 
-			container.RegisterType<Driver>();
+			container.Register<int, ICar>( ( factory, i ) => new Hyunday( i ) );
+			container.Register<Driver>();
 
-			//Resolves dependencies and returns the Driver object 
-			Driver drv = container.Resolve<Driver>(null, new ParameterOverride("car", new BMW()));
-			Assert.AreEqual( "Running BMW - 1 mile", drv.RunCar() );
-		}
+			var instanceFactory = container.GetInstance<Func<int, ICar>>();
+			var car = instanceFactory( 42 );
 
-		[Test]
-		public void RegistrationWithAnonymousOverride()
-		{
-			INDOContainer container = new NDOContainer();
 
-			container.RegisterType<Driver>();
 
 			//Resolves dependencies and returns the Driver object 
-			Driver drv = container.Resolve<Driver>(null, new ParameterOverride(new BMW()));
-			Assert.AreEqual( "Running BMW - 1 mile", drv.RunCar() );
+			Driver drv = new Driver( car );
+			Console.WriteLine( drv.RunCar() );
 		}
 
 		[Test]
 		public void DoubleResolve()
 		{
-			INDOContainer container = new NDOContainer();
+			IServiceContainer container = new ServiceContainer();
 
-			container.RegisterType<ICar, BMW>(new ContainerControlledLifetimeManager());
-
-			var car1 = container.Resolve<ICar>();
-			var car2 = container.Resolve<ICar>();
-
-			Assert.AreSame( car1, car2 );
+			container.Register<ICar, BMW>(new PerScopeLifetime());
+			using (container.BeginScope())
+			{
+				var car1 = container.GetInstance<ICar>();
+				var car2 = container.GetInstance<ICar>();
+				Assert.AreSame( car1, car2 );
+			}
 		}
 
 		[Test]
 		public void DoubleResolveWithName()
 		{
-			INDOContainer container = new NDOContainer();
+			IServiceContainer container = new ServiceContainer();
 
-			container.RegisterType<ICar, BMW>(new ContainerControlledLifetimeManager());
+			container.Register<ICar, BMW>( "car1", new PerContainerLifetime() );
+			container.Register<ICar, BMW>( "car2", new PerContainerLifetime() );
 
-			var car1 = container.Resolve<ICar>("car1");
-			var car2 = container.Resolve<ICar>("car1");
-			var car3 = container.Resolve<ICar>("car2");
+			var car1 = container.GetInstance<ICar>("car1");
+			var car2 = container.GetInstance<ICar>("car1");
+			var car3 = container.GetInstance<ICar>("car2");
 
 			Assert.AreSame( car1, car2 );
 			Assert.AreNotSame( car1, car3 );
@@ -91,14 +90,14 @@ namespace NdoDllUnitTests
 		[Test]
 		public void DoubleRegisterTypeWithName()
 		{
-			INDOContainer container = new NDOContainer();
+			IServiceContainer container = new ServiceContainer();
 
-			container.RegisterType<ICar, BMW>( new ContainerControlledLifetimeManager() );
-			container.RegisterType<ICar, Audi>( new ContainerControlledLifetimeManager() );
+			container.Register<ICar, BMW>( "bmw", new PerContainerLifetime() );
+			container.Register<ICar, Audi>( "audi", new PerContainerLifetime() );
 
-			var car1 = container.Resolve<ICar>( "bmw" );
-			var car2 = container.Resolve<ICar>( "bmw" );
-			var car3 = container.Resolve<ICar>( "audi" );
+			var car1 = container.GetInstance<ICar>( "bmw" );
+			var car2 = container.GetInstance<ICar>( "bmw" );
+			var car3 = container.GetInstance<ICar>( "audi" );
 
 			Assert.AreSame( car1, car2 );
 			Assert.AreNotSame( car1, car3 );
@@ -107,14 +106,14 @@ namespace NdoDllUnitTests
 		[Test]
 		public void DoubleRegisterTypeWithNameTransient()
 		{
-			INDOContainer container = new NDOContainer();
+			IServiceContainer container = new ServiceContainer();
 
-			container.RegisterType<ICar, BMW>();
-			container.RegisterType<ICar, Audi>();
+			container.Register<ICar, BMW>("bmw");
+			container.Register<ICar, Audi>("audi");
 
-			var car1 = container.Resolve<ICar>( "bmw" );
-			var car2 = container.Resolve<ICar>( "bmw" );
-			var car3 = container.Resolve<ICar>( "audi" );
+			var car1 = container.GetInstance<ICar>( "bmw" );
+			var car2 = container.GetInstance<ICar>( "bmw" );
+			var car3 = container.GetInstance<ICar>( "audi" );
 
 			Assert.AreNotSame( car1, car2 );
 			Assert.AreNotSame( car1, car3 );
@@ -123,43 +122,44 @@ namespace NdoDllUnitTests
 		[Test]
 		public void ResolveOrRegisterTypeWithOverride()
 		{
-			INDOContainer container = new NDOContainer();
+#warning If we need GetInstanceOrRegisterType we could write an extension using TryGetInstance<T>.
+			//IServiceContainer container = new ServiceContainer();
 
-			var drv1 = container.ResolveOrRegisterType<Driver>(new ContainerControlledLifetimeManager(), "bmw", new ParameterOverride("car", new BMW()));
-			var drv2 = container.ResolveOrRegisterType<Driver>(new ContainerControlledLifetimeManager(), "audi", new ParameterOverride("car", new Audi()));
-			Assert.AreEqual( "Running BMW - 1 mile", drv1.RunCar() );
-			Assert.AreEqual( "Running Audi - 1 mile", drv2.RunCar() );
-			drv1 = container.ResolveOrRegisterType<Driver>( new ContainerControlledLifetimeManager(), "bmw", new ParameterOverride( "car", new BMW() ) );
-			drv2 = container.ResolveOrRegisterType<Driver>( new ContainerControlledLifetimeManager(), "audi", new ParameterOverride( "car", new Audi() ) );
-			Assert.AreEqual( "Running BMW - 2 mile", drv1.RunCar() );
-			Assert.AreEqual( "Running Audi - 2 mile", drv2.RunCar() );
+			//var drv1 = container.GetInstanceOrRegisterType<Driver>(new PerContainerLifetime(), "bmw", new ParameterOverride("car", new BMW()));
+			//var drv2 = container.GetInstanceOrRegisterType<Driver>(new PerContainerLifetime(), "audi", new ParameterOverride("car", new Audi()));
+			//Assert.AreEqual( "Running BMW - 1 mile", drv1.RunCar() );
+			//Assert.AreEqual( "Running Audi - 1 mile", drv2.RunCar() );
+			//drv1 = container.GetInstanceOrRegisterType<Driver>( new PerContainerLifetime(), "bmw", new ParameterOverride( "car", new BMW() ) );
+			//drv2 = container.GetInstanceOrRegisterType<Driver>( new PerContainerLifetime(), "audi", new ParameterOverride( "car", new Audi() ) );
+			//Assert.AreEqual( "Running BMW - 2 mile", drv1.RunCar() );
+			//Assert.AreEqual( "Running Audi - 2 mile", drv2.RunCar() );
 		}
 
 		[Test]
 		public void RegisterInstance()
 		{
-			INDOContainer container = new NDOContainer();
+			IServiceContainer container = new ServiceContainer();
 
 			var car1 = new BMW();
 			container.RegisterInstance<ICar>( car1 );
 
-			var car2 = container.Resolve<ICar>();
+			var car2 = container.GetInstance<ICar>();
 			Assert.AreSame( car1, car2 );
 		}
 
 		[Test]
 		public void RegisterInstanceWithName()
 		{
-			INDOContainer container = new NDOContainer();
+			IServiceContainer container = new ServiceContainer();
 
 			var bmw1 = new BMW();
 			container.RegisterInstance<ICar>( bmw1, "bmw" );
 			var audi1 = new Audi();
 			container.RegisterInstance<ICar>( audi1, "audi" );
 
-			var bmw2 = container.Resolve<ICar>("bmw");
+			var bmw2 = container.GetInstance<ICar>("bmw");
 			Assert.AreSame( bmw1, bmw2 );
-			var audi2 = container.Resolve<ICar>("audi");
+			var audi2 = container.GetInstance<ICar>("audi");
 			Assert.AreSame( audi1, audi2 );
 		}
 
@@ -167,237 +167,289 @@ namespace NdoDllUnitTests
 		public void ResolveAndRegisterInstance()
 		{
 			INDOContainer container = new NDOContainer();
-			var car1 = container.ResolveOrRegisterInstance<ICar>("bmw", _=>new BMW());
-			var car2 = container.ResolveOrRegisterInstance<ICar>("bmw", _=>new BMW());
-			Assert.AreSame( car1, car2 );
+			using (container.BeginScope())
+			{
+				var car1 = container.ResolveOrRegisterInstance<ICar>( "bmw", () => new BMW() );
+				var car2 = container.ResolveOrRegisterInstance<ICar>( "bmw", () => new BMW() );
+				Assert.AreSame( car1, car2 );
 
-			var car3 = container.ResolveOrRegisterInstance<ICar>("ford", _=>new Ford());
-			Assert.AreNotSame( car1, car3 );
+				var car3 = container.ResolveOrRegisterInstance<ICar>( "ford", () => new Ford() );
+				Assert.AreNotSame( car1, car3 );
 
-			var car4 = container.ResolveOrRegisterInstance<ICar>("bmw2", _=>new BMW());
-			Assert.AreNotSame( car1, car4 );
+				var car4 = container.ResolveOrRegisterInstance<ICar>( "bmw2", () => new BMW() );
+				Assert.AreNotSame( car1, car4 );
+			}
+		}
+
+		[Test]
+		public void Foo()
+		{
+			INDOContainer container = new NDOContainer();
+			container.Register<ICar, BMW>();
+
+			using (container.BeginScope())
+			{
+				var car = container.Resolve<ICar>();
+				Assert.IsNotNull( car );
+			}
 		}
 
 		[Test]
 		public void ResolveAndRegisterInstanceWithFactory()
 		{
 			INDOContainer container = new NDOContainer();
-			container.ResolveOrRegisterInstance( "bmw", _ => new BMW() );
-			var bmw = container.Resolve( typeof( BMW ), "bmw" );
-			Assert.IsNotNull( bmw );
-			Assert.AreEqual( typeof( BMW ), bmw.GetType() );
-			var bmw2 = container.Resolve( typeof( BMW ), "bmw" );
-			Assert.AreSame( bmw, bmw2 );
+			using (container.BeginScope())
+			{
+				container.ResolveOrRegisterInstance( "bmw", () => new BMW() );
+				var bmw = container.GetInstance( typeof( BMW ), "bmw" );
+				Assert.IsNotNull( bmw );
+				Assert.AreEqual( typeof( BMW ), bmw.GetType() );
+				var bmw2 = container.GetInstance( typeof( BMW ), "bmw" );
+				Assert.AreSame( bmw, bmw2 );
+			}
 		}
 
 
 		[Test]
-		public void ResolveWithChildContainer()
+		public void ResolveWithNestedScopes()
 		{
-			INDOContainer container1 = new NDOContainer();
+			// This registration happens on static level
+			IServiceContainer container = new ServiceContainer();
+			
+			using (container.BeginScope())
+			{
+				container.Register<ICar, BMW>( new PerScopeLifetime() );
+				var car1 = container.GetInstance<ICar>();
+				var car2 = container.GetInstance<ICar>();
+				Assert.AreSame( car1, car2 );
 
-			container1.RegisterType<ICar, BMW>( new ContainerControlledLifetimeManager() );
+				// This registration happens on pm instance level
+				using (container.BeginScope())
+				{
+					container.Register<ICar, BMW>( new PerScopeLifetime() );
+					car2 = container.GetInstance<ICar>();
 
-			var car1 = container1.Resolve<ICar>();
+					Assert.AreNotSame( car1, car2 );
 
+					//container2.Dispose();
 
-			var container2 = container1.CreateChildContainer();
-			var car2 = container2.Resolve<ICar>();
+					//car2 = container1.Resolve<ICar>();
+					//Assert.AreSame( car1, car2 );
+				}
 
-			Assert.AreSame( car1, car2 );
-
-			container2.RegisterType<ICar, BMW>( new ContainerControlledLifetimeManager() );
-			car2 = container2.Resolve<ICar>();
-
-			Assert.AreNotSame( car1, car2 );
-
-			container2.Dispose();
-
-			car2 = container1.Resolve<ICar>();
-			Assert.AreSame( car1, car2 );
+				// Back in static level
+				car2 = container.GetInstance<ICar>();
+				Assert.AreSame( car1, car2 );
+			}
 		}
 
 		[Test]
-		public void ResolveWithChildContainer2()
+		public void ResolveWithNestedScope2()
 		{
-			INDOContainer container1 = new NDOContainer();
+			IServiceContainer container = new ServiceContainer();
+			using (container.BeginScope())
+			{
+				container.Register<ICar, BMW>( new PerScopeLifetime() );
+				container.Register<ICar, BMW>( "bmw", new PerScopeLifetime() );
 
-			container1.RegisterType<ICar, BMW>( new ContainerControlledLifetimeManager() );
+				var car1 = container.GetInstance<ICar>();
+				ICar car2;
 
-			var car1 = container1.Resolve<ICar>();
+				using (container.BeginScope())
+				{
+					car2 = container.GetInstance<ICar>();
 
+					Assert.AreNotSame( car1, car2 );
 
-			var container2 = container1.CreateChildContainer();
-			var car2 = container2.Resolve<ICar>();
+					container.Register<ICar, BMW>();
+					car2 = container.GetInstance<ICar>();
 
-			Assert.AreSame( car1, car2 );
+					Assert.AreNotSame( car1, car2 );
 
-			container2.RegisterType<ICar, BMW>(/* Transient */);
-			car2 = container2.Resolve<ICar>();
+				}
 
-			Assert.AreNotSame( car1, car2 );
-
-			container2.Dispose();
-
-			car2 = container1.Resolve<ICar>();
-			Assert.AreSame( car1, car2 );
+				car2 = container.GetInstance<ICar>();
+				Assert.AreSame( car1, car2 );
+				car2 = container.GetInstance<ICar>( "bmw" );
+				Assert.AreNotSame( car1, car2 );
+			}
 		}
 
 		[Test]
-		public void ResolveInstanceWithChildContainer()
+		public void ResolveInstanceNestedScope()
 		{
-			INDOContainer container1 = new NDOContainer();
+			IServiceContainer container = new ServiceContainer();
+			using (container.BeginScope())
+			{
+				container.Register<ICar>( _=> new BMW(), new PerContainerLifetime() );
 
-			container1.RegisterInstance<ICar>( new BMW() );
+				var car1 = container.GetInstance<ICar>();
+				ICar car2;
 
-			var car1 = container1.Resolve<ICar>();
+				using (container.BeginScope())
+				{
+					car2 = container.GetInstance<ICar>();
 
+					Assert.AreSame( car1, car2 );
 
-			var container2 = container1.CreateChildContainer();
-			var car2 = container2.Resolve<ICar>();
+					// PerContainer Registration can't be overridden
+					container.Register<ICar>( _=> new BMW(), new PerScopeLifetime() );
+					car2 = container.GetInstance<ICar>();
+					Assert.AreSame( car1, car2 );
 
-			Assert.AreSame( car1, car2 );
+					// If we want to override a Registration in the inner scope
+					// we have to use names
+					container.Register<ICar>(  _ => new BMW(), "bmw", new PerScopeLifetime() );
+					car2 = container.GetInstance<ICar>("bmw");
+					Assert.AreNotSame( car1, car2 );
+				}
 
-			container2.RegisterInstance<ICar>( new BMW() );
-			car2 = container2.Resolve<ICar>();
-
-			Assert.AreNotSame( car1, car2 );
-
-			container2.Dispose();
-
-			car2 = container1.Resolve<ICar>();
-			Assert.AreSame( car1, car2 );
+				car2 = container.GetInstance<ICar>();
+				Assert.AreSame( car1, car2 );
+			}
 		}
 
 		[Test]
 		public void ResolveWithParameterInParentContainer()
 		{
-			var container1 = new NDOContainer();
-			container1.RegisterType<Driver>();
-			var container2 = container1.CreateChildContainer();
-			container2.RegisterInstance<ICar>( new BMW() );
-			var drv = container2.Resolve<Driver>();
-			Assert.NotNull( drv );
-			Assert.AreEqual( "Running BMW - 1 mile", drv.RunCar() );
+			var container = new ServiceContainer();
+			container.SetDefaultLifetime<PerScopeLifetime>();
+			
+			using (container.BeginScope())
+			{
+				container.Register<Driver>();
+				using (container.BeginScope())
+				{
+					container.RegisterInstance<ICar>( new BMW() );
+					var drv = container.GetInstance<Driver>();
+					Assert.NotNull( drv );
+					Assert.AreEqual( "Running BMW - 1 mile", drv.RunCar() );
+				}
+			}
 
-			container1 = new NDOContainer();
-			container1.RegisterInstance<ICar>( new BMW() );
-			container2 = container1.CreateChildContainer();
-			container2.RegisterType<Driver>();
-			drv = container2.Resolve<Driver>();
-			Assert.NotNull( drv );
-			Assert.AreEqual( "Running BMW - 1 mile", drv.RunCar() );
+			container = new ServiceContainer();
+			container.SetDefaultLifetime<PerScopeLifetime>();
+
+			using (container.BeginScope())
+			{
+				container.RegisterInstance<ICar>( new BMW() );
+				using (container.BeginScope())
+				{
+					container.Register<Driver>();
+					var drv = container.GetInstance<Driver>();
+					Assert.NotNull( drv );
+					Assert.AreEqual( "Running BMW - 1 mile", drv.RunCar() );
+				}
+			}
 		}
 
-		[Test]
-		public void RegisterWithTransientLifetime()
-		{
-			var container = new NDOContainer();
-			container.RegisterType<ICar, BMW>( new TransientLifetimeManager() );
+		//[Test]
+		//public void RegisterWithTransientLifetime()
+		//{
+		//	var container = new ServiceContainer();
+		//	container.Register<ICar, BMW>( new TransientLifetimeManager() );
 
-			var driver1 = container.Resolve<Driver>();
+		//	var driver1 = container.GetInstance<Driver>();
 
-			Assert.AreEqual( "Running BMW - 1 mile", driver1.RunCar() );
+		//	Assert.AreEqual( "Running BMW - 1 mile", driver1.RunCar() );
 
-			var driver2 = container.Resolve<Driver>();
+		//	var driver2 = container.GetInstance<Driver>();
 
-			Assert.AreEqual( "Running BMW - 1 mile", driver2.RunCar() );
-		}
+		//	Assert.AreEqual( "Running BMW - 1 mile", driver2.RunCar() );
+		//}
 
-		[Test]
-		public void RegisterWithContainerLifetime()
-		{
-			var container = new NDOContainer();
-			container.RegisterType<ICar, BMW>( new ContainerControlledLifetimeManager() );
+		//[Test]
+		//public void RegisterWithContainerLifetime()
+		//{
+		//	var container = new ServiceContainer();
+		//	container.Register<ICar, BMW>( new PerContainerLifetime() );
 
-			var driver1 = container.Resolve<Driver>();
-			Assert.AreEqual( "Running BMW - 1 mile", driver1.RunCar() );
+		//	var driver1 = container.GetInstance<Driver>();
+		//	Assert.AreEqual( "Running BMW - 1 mile", driver1.RunCar() );
 
-			var driver2 = container.Resolve<Driver>();
+		//	var driver2 = container.GetInstance<Driver>();
 
-			Assert.AreEqual( "Running BMW - 2 mile", driver2.RunCar() );
-		}
+		//	Assert.AreEqual( "Running BMW - 2 mile", driver2.RunCar() );
+		//}
 
 		[Test]
 		public void TestNullInstance()
 		{
-			var container = new NDOContainer();
-			container.RegisterInstance<ICar>( null );
-			Assert.IsNull( container.Resolve<ICar>() );
+			var container = new ServiceContainer();
+			container.Register<ICar>( _ => default(ICar) );
+			Assert.IsNull( container.GetInstance<ICar>() );
 		}
 
 		[Test]
 		public void IsRegisteredWorks()
 		{
-			var container = new NDOContainer();
-			Assert.AreEqual( false, container.IsRegistered<ICar>() );
-			container.RegisterInstance<ICar>( null );
-			Assert.AreEqual( true, container.IsRegistered<ICar>() );
+			var container = new ServiceContainer();
+			Assert.AreEqual( false, container.CanGetInstance<ICar>() );
+			container.RegisterInstance<ICar>( new BMW() );
+			Assert.AreEqual( true, container.CanGetInstance<ICar>() );
+
+			container = new ServiceContainer();
+			container.Register<ICar, BMW>();
+			Assert.AreEqual( true, container.CanGetInstance<ICar>() );
 		}
 
 
 		[Test]
 		public void OverwriteTypeRegWithInstanceReg()
 		{
-			var container = new NDOContainer();
-			container.RegisterType<ICar, BMW>();
-			container.RegisterInstance<ICar>( new Ford() );
-			Assert.IsTrue( container.Resolve<ICar>() is Ford );
+			var container = new ServiceContainer();
+			container.SetDefaultLifetime<PerScopeLifetime>();
+			using (container.BeginScope())
+			{
+				container.Register<ICar, BMW>();
+				container.RegisterInstance<ICar>( new Ford() );
+				Assert.IsTrue( container.GetInstance<ICar>() is Ford );
+			}
 		}
 
 		[Test]
 		public void OverwriteInstanceRegWithTypeReg()
 		{
-			var container = new NDOContainer();
+			var container = new ServiceContainer();
 			container.RegisterInstance<ICar>( new Ford() );
-			container.RegisterType<ICar, BMW>();
-			Assert.IsTrue( container.Resolve<ICar>() is BMW );
+			container.Register<ICar, BMW>();
+			Assert.IsTrue( container.GetInstance<ICar>() is BMW );
 		}
 
-		[Test]
-		public void ResolveWithoutRegistration()
-		{
-			var container = new NDOContainer();
-			Assert.IsTrue( container.Resolve<BMW>() is BMW );
-		}
 
 		[Test]
 		public void ResolveInterfaceWithoutRegistrationIsNull()
 		{
-			var container = new NDOContainer();
-			Assert.IsNull( container.Resolve<ICar>() );
+			bool thrown = false;
+			var container = new ServiceContainer();
+			try
+			{
+				container.GetInstance<ICar>();
+			}
+			catch (InvalidOperationException)
+			{
+				thrown = true;
+			}
+			Assert.That( thrown );
 		}
 
 		[Test]
 		public void ResolveTypeWithInstanceDependency()
 		{
-			var container = new NDOContainer();
-			container.RegisterInstance<ICar>( new BMW() );
-			var drv = container.Resolve<Driver>();
-			Assert.NotNull( drv );
+			bool thrown = false;
+			try
+			{
+				var container = new ServiceContainer();
+				container.RegisterInstance<ICar>( new BMW() );
+				var drv = container.GetInstance<Driver>();  // Driver is not registered
+				Assert.NotNull( drv );
+			}
+			catch (InvalidOperationException)
+			{
+				thrown = true;
+			}
+			Assert.That( thrown );
 		}
 
-		class TestDisposable : IDisposable
-		{
-			public void Dispose()
-			{
-			}
-		}
-
-		[Test]
-		public void DisposeTest()
-		{
-			ConcurrentDictionary<string, object> dict = new ConcurrentDictionary<string, object>();
-			var o1 = new object();
-			var o2 = new TestDisposable();
-			dict.TryAdd( "o1", o1 );
-			dict.TryAdd( "o2", o2 );
-			int count = 0;
-			foreach (IDisposable d in dict.Values.Where( o => o is IDisposable )) 
-			{
-				count++;
-			}
-			Assert.AreEqual( 1, count );
-		}
 	}
 }

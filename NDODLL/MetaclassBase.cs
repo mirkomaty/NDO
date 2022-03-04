@@ -14,8 +14,6 @@ namespace NDO
 	public abstract class MetaclassBase : IMetaClass2
 	{
 		private readonly Type t;
-		private ConstructorInfo constructor = null;
-		private bool isDefaultConstructor = false;
 
 		/// <summary>
 		/// Constructs a NDOMetaclass object
@@ -26,14 +24,12 @@ namespace NDO
 			this.t = t;
 		}
 
-		// <summary>
-		// Determines, if the underlying type has a default constructor.
-		// </summary>
-		//protected bool IsDefaultConstructor => isDefaultConstructor;
-
 		/// <inheritdoc/>
 		public virtual IPersistenceCapable CreateObject(INDOContainer configContainer)
 		{
+			return (IPersistenceCapable) configContainer.ResolveOrRegisterType( t );
+
+#if maskedOut
 			if (isDefaultConstructor)
 				return CreateObject();
 
@@ -41,7 +37,6 @@ namespace NDO
 
 			if (this.constructor == null)
 			{
-				var registrations = configContainer.Registrations;
 				foreach (var constr in t.GetConstructors().OrderBy( c => c.GetParameters().Length ))
 				{
 					bool canResolve = true;
@@ -49,7 +44,7 @@ namespace NDO
 					
 					foreach (var p in constr.GetParameters())
 					{
-						if (!registrations.Any(r=>r.Key == p.ParameterType))
+						if (!configContainer.CanGetInstance(p.ParameterType, ""))
 						{
 							canResolve = false;
 							break;
@@ -75,6 +70,7 @@ namespace NDO
 			}
 
 			return (IPersistenceCapable)this.constructor.Invoke( parameters.ToArray() );
+#endif
 		}
 
 		/// <inheritdoc/>

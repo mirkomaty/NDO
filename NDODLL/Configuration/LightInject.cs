@@ -25,8 +25,8 @@
     http://www.lightinject.net/
     http://twitter.com/bernhardrichter
 ******************************************************************************/
-
-namespace NDO.LightInject
+#pragma warning disable 3001
+namespace NDO.Configuration
 {
     using System;
     using System.Collections.Concurrent;

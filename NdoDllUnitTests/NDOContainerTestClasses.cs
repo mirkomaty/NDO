@@ -43,6 +43,22 @@ namespace NdoDllUnitTests
         }
 
     }
+
+    public class Hyunday : ICar
+    {
+        public Hyunday( int value )
+        {
+            _miles = value;
+        }
+
+        private int _miles = 0;
+
+        public int Run()
+        {
+            return ++_miles;
+        }
+    }
+
     public class Driver
     {
         private ICar _car = null;

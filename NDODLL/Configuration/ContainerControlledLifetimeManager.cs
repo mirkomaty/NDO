@@ -1,5 +1,4 @@
-﻿using NDO.LightInject;
-using System;
+﻿using System;
 
 namespace NDO.Configuration
 {

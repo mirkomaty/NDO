@@ -445,8 +445,13 @@ namespace NDO.SqlPersistenceHandling
 
 		SqlColumnListGenerator CreateColumnListGenerator( Class cls )
 		{
+			// This code was originally intended as kind of instance cache.
+			// I don't think that this is a good way to achieve this goal.
 			var key = $"{nameof(SqlColumnListGenerator)}-{cls.FullName}";
-			return configContainer.ResolveOrRegisterType<SqlColumnListGenerator>( new ContainerControlledLifetimeManager(), key, new ParameterOverride( "cls", cls ) );
+			if (!configContainer.CanGetInstance(typeof(SqlColumnListGenerator), key ))
+				configContainer.Register<Class, SqlColumnListGenerator>( ( factory, i ) => new SqlColumnListGenerator(cls), key );
+			var instanceFactory = configContainer.GetInstance<Func<Class, SqlColumnListGenerator>>();
+			return instanceFactory(cls);
 		}
 
 		/// <summary>

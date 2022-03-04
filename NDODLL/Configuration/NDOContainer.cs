@@ -1,5 +1,4 @@
-﻿using NDO.LightInject;
-using NDO.Provider;
+﻿using NDO.Provider;
 using NDO.Query;
 using NDO.SqlPersistenceHandling;
 using System;
@@ -82,7 +81,7 @@ namespace NDO.Configuration
 						{
 							instance = new NDOContainer();
 							instance.Register<IPersistenceHandler, SqlPersistenceHandler>();
-							instance.Register<RelationContextGenerator>();
+							instance.Register<Mappings, RelationContextGenerator>( ( factory, mappings ) => new RelationContextGenerator( mappings ) );
 							instance.Register<IQueryGenerator, SqlQueryGenerator>();
 							instance.Register<IPersistenceHandlerManager, NDOPersistenceHandlerManager>();
 							instance.Register<IProviderPathFinder, NDOProviderPathFinder>();
@@ -105,7 +104,10 @@ namespace NDO.Configuration
 		[Obsolete( "Use GetInstance" )]
 		public object Resolve( Type tFrom, string name = null )
 		{
-			return base.GetInstance( tFrom, name );
+			if (name != null)
+				return base.GetInstance( tFrom, name );
+			else
+				return base.GetInstance( tFrom );
 		}
 
 		/// <summary>
@@ -117,7 +119,10 @@ namespace NDO.Configuration
 		[Obsolete( "Use GetInstance" )]
 		public T Resolve<T>( string name = null )
 		{
-			return (T) base.GetInstance( typeof( T ), name );
+			if (name != null)
+				return (T) base.GetInstance( typeof( T ), name );
+			else
+				return (T) base.GetInstance( typeof( T ) );
 		}
 
 		/// <summary>
@@ -125,7 +130,7 @@ namespace NDO.Configuration
 		/// </summary>
 		/// <param name="instance"></param>
 		/// <param name="name"></param>
-		public void RegisterInstance( object instance, string name = null )
+		public void RegisterInstance( object instance, string name = "" )
 		{
 			base.RegisterInstance( instance.GetType(), instance, name );
 		}
@@ -152,5 +157,37 @@ namespace NDO.Configuration
 				Register( ( sf ) => factory(), serviceName, lifetime );
 			return (T) GetInstance( typeof( T ), serviceName );
 		}
+
+		/// <summary>
+		/// Resolves an object of a type. If it isn't registered, register it.
+		/// </summary>
+		/// <param name="t"></param>
+		/// <param name="serviceName"></param>
+		/// <param name="lifetime"></param>
+		/// <returns></returns>
+		public object ResolveOrRegisterType( Type t, string serviceName = "", ILifetime lifetime = null )
+		{
+			if (lifetime == null)
+				lifetime = new PerScopeLifetime();
+
+			object result = TryGetInstance( t, serviceName );
+			if (result != null)
+				return result;
+			Register( t, t, serviceName, lifetime );
+			return GetInstance( t, serviceName );
+		}
+
+		/// <summary>
+		/// Resolves an object of a type. If it isn't registered, register it.
+		/// </summary>
+		/// <typeparam name="T"></typeparam>
+		/// <param name="serviceName"></param>
+		/// <param name="lifetime"></param>
+		/// <returns></returns>
+		public T ResolveOrRegisterType<T>( string serviceName = "", ILifetime lifetime = null )
+		{
+			return (T) ResolveOrRegisterType( typeof( T ), serviceName, lifetime );
+		}
+
 	}
 }
