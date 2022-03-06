@@ -658,7 +658,8 @@ namespace NDO.Query
 			//else if (this.queryLanguage == Language.NDOql)
 			if (this.queryLanguage == QueryLanguage.Sql)
 			{
-				var selectList = new SqlColumnListGenerator( pm.NDOMapping.FindClass( typeof( T ) ) ).SelectList;
+				var cls = pm.NDOMapping.FindClass( typeof( T ) );
+				var selectList = ConfigContainer.ResolveOrRegisterInstance( SqlColumnListGenerator.Key( cls ), () => new SqlColumnListGenerator( cls ) ).SelectList;
 				var sql = Regex.Replace( this.queryExpression, @"SELECT\s+\*", "SELECT " + selectList );
 				this.expressionTree = new RawIdentifierExpression( sql, 0, 0 );
 			}

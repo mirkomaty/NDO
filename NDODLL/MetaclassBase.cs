@@ -27,7 +27,7 @@ namespace NDO
 		/// <inheritdoc/>
 		public virtual IPersistenceCapable CreateObject(INDOContainer configContainer)
 		{
-			return (IPersistenceCapable) configContainer.ResolveOrRegisterType( t );
+			return (IPersistenceCapable) configContainer.ResolveOrRegisterType( t, lifetime: new TransientLifetime() );
 
 #if maskedOut
 			if (isDefaultConstructor)

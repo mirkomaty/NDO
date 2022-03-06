@@ -433,7 +433,7 @@ namespace QueryTests
 			var sql = $"SELECT {this.mitarbeiterFields} FROM [Mitarbeiter] WHERE [Mitarbeiter].[Vorname] = {{0}} AND [Mitarbeiter].[Nachname] = {{1}}";
 			Expression<Func<Mitarbeiter,bool>> expr1 = m=>m.Vorname == "Mirko";
 			Expression<Func<Mitarbeiter,bool>> expr2 = m=>m.Nachname == "Matytschak";
-			var combined = expr1.Combine(expr2, System.Linq.Expressions.ExpressionType.And);
+			var combined = expr1.Combine(expr2, System.Linq.Expressions.ExpressionType.AndAlso);
 			var vt = pm.Objects<Mitarbeiter>().Where( combined );
 			Assert.AreEqual( sql, vt.QueryString );
 		}

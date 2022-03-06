@@ -489,11 +489,13 @@ namespace QueryTests
 			Mock<IPersistenceHandlerManager> phManagerMock = new Mock<IPersistenceHandlerManager>();
 			phManagerMock.Setup( m => m.GetPersistenceHandler( It.IsAny<Type>() ) ).Returns( handler ).Callback<Type>( ( pc ) => { Console.WriteLine( "Test" ); } );
 			var container = pm.ConfigContainer;
-			container.RegisterInstance<IPersistenceHandlerManager>( phManagerMock.Object );
-			q.Execute();
-			Assert.NotNull( generatedParameters );
-			Assert.AreEqual( 0, generatedParameters.Count );
-			container.RegisterType<IPersistenceHandler, SqlPersistenceHandler>();
+			using (container.BeginScope())
+			{
+				container.RegisterInstance<IPersistenceHandlerManager>( phManagerMock.Object );
+				q.Execute();
+				Assert.NotNull( generatedParameters );
+				Assert.AreEqual( 0, generatedParameters.Count );
+			}
 		}
 
 		[Test]

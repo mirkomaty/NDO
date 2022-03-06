@@ -47,12 +47,11 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\NDODLL\bin\Debug\net452\NDO.dll</HintPath>
     </Reference>
-    <Reference Include="NDO.SqlServer">
-      <HintPath>..\Provider\SqlServerProvider\NDO.SqlServer\bin\Debug\net452\NDO.SqlServer.dll</HintPath>
+    <Reference Include="NDO.SqlServer, Version=4.0.2.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\NDODLL\packages\ndo.sqlserver.4.0.2\lib\net452\NDO.SqlServer.dll</HintPath>
     </Reference>
-    <Reference Include="NDOInterfaces, Version=4.0.0.0, Culture=neutral, PublicKeyToken=ff5e453a099b8326, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\NDOInterfaces\bin\$(Configuration)\net452\NDOInterfaces.dll</HintPath>
+    <Reference Include="NDOInterfaces, Version=4.0.1.0, Culture=neutral, PublicKeyToken=ff5e453a099b8326, processorArchitecture=MSIL">
+      <HintPath>..\NDODLL\packages\NDOInterfaces.4.0.1\lib\net452\NDOInterfaces.dll</HintPath>
     </Reference>
     <Reference Include="nunit.framework, Version=3.10.1.0, Culture=neutral, PublicKeyToken=2638cd05610744eb, processorArchitecture=MSIL">
       <HintPath>..\NDODLL\packages\NUnit.3.10.1\lib\net45\nunit.framework.dll</HintPath>
@@ -64,6 +63,9 @@
     <Reference Include="System" />
     <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Data.SqlClient, Version=4.5.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\NDODLL\packages\System.Data.SqlClient.4.6.0\lib\net461\System.Data.SqlClient.dll</HintPath>
+    </Reference>
     <Reference Include="System.Drawing" />
     <Reference Include="System.Threading.Tasks.Extensions, Version=4.1.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
       <HintPath>..\NDODLL\packages\System.Threading.Tasks.Extensions.4.3.0\lib\portable-net45+win8+wp8+wpa81\System.Threading.Tasks.Extensions.dll</HintPath>

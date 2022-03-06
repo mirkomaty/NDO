@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project Sdk="Microsoft.NET.Sdk">
-  <Import Project="SourceRevisionId.props" />
+  <Import Project="SourceRevisionId.props" Condition="Exists('SourceRevisionId.props')" />
   <PropertyGroup>
     <TargetFrameworks>netstandard2.0;net452</TargetFrameworks>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
@@ -39,7 +39,7 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="ndointerfaces" Version="4.0.1" />
-		<PackageReference Include="PatchProductVersion" Version="1.0.2">
+		<PackageReference Include="PatchProductVersion" Version="1.0.3">
 			<PrivateAssets>all</PrivateAssets>
 		</PackageReference>
   </ItemGroup>

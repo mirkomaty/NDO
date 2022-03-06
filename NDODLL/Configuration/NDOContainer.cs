@@ -18,7 +18,7 @@ namespace NDO.Configuration
 		/// <summary>
 		/// Creates an NDOContainer object
 		/// </summary>
-		public NDOContainer()
+		public NDOContainer() : base (new ContainerOptions { EnablePropertyInjection = false })
 		{
 			SetDefaultLifetime<PerScopeLifetime>();
 			rootScope = BeginScope();
@@ -80,12 +80,15 @@ namespace NDO.Configuration
 						if (instance == null) // Threading double check
 						{
 							instance = new NDOContainer();
-							instance.Register<IPersistenceHandler, SqlPersistenceHandler>();
+							// IPersistenceHandlers are cached individually for each type. So it's safe to create a new object with every resolve.
+							instance.Register<IPersistenceHandler, SqlPersistenceHandler>( new TransientLifetime() );
 							instance.Register<Mappings, RelationContextGenerator>( ( factory, mappings ) => new RelationContextGenerator( mappings ) );
-							instance.Register<IQueryGenerator, SqlQueryGenerator>();
+							instance.Register<IQueryGenerator, SqlQueryGenerator>( new TransientLifetime() );
 							instance.Register<IPersistenceHandlerManager, NDOPersistenceHandlerManager>();
 							instance.Register<IProviderPathFinder, NDOProviderPathFinder>();
 							instance.Register<IPersistenceHandlerPool, NDOPersistenceHandlerPool>();
+							instance.Register<INDOTransactionScope, NDOTransactionScope>();
+							instance.RegisterInstance<INDOContainer>( instance );
 						}
 					}
 				}
@@ -130,9 +133,12 @@ namespace NDO.Configuration
 		/// </summary>
 		/// <param name="instance"></param>
 		/// <param name="name"></param>
-		public void RegisterInstance( object instance, string name = "" )
+		public void RegisterInstance( object instance, string name = null )
 		{
-			base.RegisterInstance( instance.GetType(), instance, name );
+			if (name != null)
+				base.RegisterInstance( instance.GetType(), instance, name );
+			else
+				base.RegisterInstance( instance.GetType(), instance );
 		}
 
 		/// <summary>
@@ -143,19 +149,38 @@ namespace NDO.Configuration
 		/// <param name="factory"></param>
 		/// <param name="lifetime"></param>
 		/// <returns></returns>
-		public T ResolveOrRegisterInstance<T>( string serviceName = "", Func<T> factory = null, ILifetime lifetime = null )
+		public T ResolveOrRegisterInstance<T>( string serviceName = null, Func<T> factory = null, ILifetime lifetime = null )
 		{
 			if (lifetime == null)
 				lifetime = new PerScopeLifetime();
 
-			T result = (T) TryGetInstance( typeof( T ), serviceName );
+			T result;
+			if (serviceName == null)
+				result = (T) TryGetInstance( typeof( T ) );
+			else
+				result = (T) TryGetInstance( typeof( T ), serviceName );
+
 			if (result != null)
 				return result;
 			if (factory == null)
-				Register<T, T>( serviceName, lifetime );
+			{
+				if (serviceName == null)
+					Register<T, T>( lifetime );
+				else
+					Register<T, T>( serviceName, lifetime );
+			}
 			else
-				Register( ( sf ) => factory(), serviceName, lifetime );
-			return (T) GetInstance( typeof( T ), serviceName );
+			{
+				if (serviceName == null)
+					Register( ( sf ) => factory(), lifetime );
+				else
+					Register( ( sf ) => factory(), serviceName, lifetime );
+			}
+
+			if (serviceName == null)
+				return (T) GetInstance( typeof( T ) );
+			else
+				return (T) GetInstance( typeof( T ), serviceName );
 		}
 
 		/// <summary>
@@ -165,16 +190,28 @@ namespace NDO.Configuration
 		/// <param name="serviceName"></param>
 		/// <param name="lifetime"></param>
 		/// <returns></returns>
-		public object ResolveOrRegisterType( Type t, string serviceName = "", ILifetime lifetime = null )
+		public object ResolveOrRegisterType( Type t, string serviceName = null, ILifetime lifetime = null )
 		{
 			if (lifetime == null)
 				lifetime = new PerScopeLifetime();
 
-			object result = TryGetInstance( t, serviceName );
+			object result;
+			if (serviceName == null)
+				result = TryGetInstance( t );
+			else
+				result = TryGetInstance( t, serviceName );
+
 			if (result != null)
 				return result;
-			Register( t, t, serviceName, lifetime );
-			return GetInstance( t, serviceName );
+			if (serviceName == null)
+				Register( t, lifetime );
+			else
+				Register( t, t, serviceName, lifetime );
+
+			if (serviceName == null)
+				return GetInstance( t );
+			else
+				return GetInstance( t, serviceName );
 		}
 
 		/// <summary>
@@ -184,7 +221,7 @@ namespace NDO.Configuration
 		/// <param name="serviceName"></param>
 		/// <param name="lifetime"></param>
 		/// <returns></returns>
-		public T ResolveOrRegisterType<T>( string serviceName = "", ILifetime lifetime = null )
+		public T ResolveOrRegisterType<T>( string serviceName = null, ILifetime lifetime = null )
 		{
 			return (T) ResolveOrRegisterType( typeof( T ), serviceName, lifetime );
 		}

@@ -45,7 +45,8 @@
     <UseApplicationTrust>false</UseApplicationTrust>
     <BootstrapperEnabled>true</BootstrapperEnabled>
     <TargetFrameworkProfile />
-    <NuGetPackageImportStamp>50fc758b</NuGetPackageImportStamp>
+    <NuGetPackageImportStamp>
+    </NuGetPackageImportStamp>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <OutputPath>bin\Debug\</OutputPath>
@@ -96,16 +97,14 @@
     <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="NDO, Version=4.0.0.0, Culture=neutral, PublicKeyToken=37bfdffa92a0cd24, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\NDODLL\bin\Debug\net452\NDO.dll</HintPath>
+    <Reference Include="NDO, Version=4.0.10.0, Culture=neutral, PublicKeyToken=37bfdffa92a0cd24, processorArchitecture=MSIL">
+      <HintPath>..\packages\NDO.dll.4.0.10\lib\net452\NDO.dll</HintPath>
     </Reference>
-    <Reference Include="NDO.SqlServer">
-      <HintPath>..\..\Provider\SqlServerProvider\NDO.SqlServer\bin\Debug\net452\NDO.SqlServer.dll</HintPath>
+    <Reference Include="NDO.SqlServer, Version=4.0.2.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\ndo.sqlserver.4.0.2\lib\net452\NDO.SqlServer.dll</HintPath>
     </Reference>
     <Reference Include="NDOInterfaces, Version=4.0.1.0, Culture=neutral, PublicKeyToken=ff5e453a099b8326, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\NDOInterfaces\bin\Debug\net452\NDOInterfaces.dll</HintPath>
+      <HintPath>..\packages\NDOInterfaces.4.0.1\lib\net452\NDOInterfaces.dll</HintPath>
     </Reference>
     <Reference Include="System">
       <Name>System</Name>
@@ -113,12 +112,16 @@
     <Reference Include="System.Data">
       <Name>System.Data</Name>
     </Reference>
-    <Reference Include="System.Data.SqlServerCe">
-      <HintPath>..\..\SqlCEProvider\packages\Microsoft.SqlServer.Compact.4.0.8876.1\lib\net40\System.Data.SqlServerCe.dll</HintPath>
+    <Reference Include="System.Data.Common, Version=4.1.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Data.Common.4.3.0\lib\net451\System.Data.Common.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Data.SqlClient, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Data.SqlClient.4.6.0\lib\net451\System.Data.SqlClient.dll</HintPath>
     </Reference>
     <Reference Include="System.Drawing">
       <Name>System.Drawing</Name>
     </Reference>
+    <Reference Include="System.Transactions" />
     <Reference Include="System.Windows.Forms">
       <Name>System.Windows.Forms</Name>
     </Reference>
@@ -276,6 +279,7 @@
       <DependentUpon>PureBusinessClasses.ndo.xsd</DependentUpon>
     </None>
     <None Include="bin\Debug\PureBusinessClasses.ndodiff..sql" />
+    <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include="Microsoft.Net.Client.3.5">

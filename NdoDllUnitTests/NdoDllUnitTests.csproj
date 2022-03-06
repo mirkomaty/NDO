@@ -56,7 +56,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ContainerExtensions.cs" />
     <Compile Include="MappingAttributeTests.cs" />
     <Compile Include="MockType.cs" />
     <Compile Include="NDOContainerTestClasses.cs" />

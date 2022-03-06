@@ -13,7 +13,7 @@ namespace NDO.Configuration
 		/// </summary>
 		/// <param name="instance"></param>
 		/// <param name="name"></param>
-		void RegisterInstance( object instance, string name = "" );
+		void RegisterInstance( object instance, string name = null );
 
 		/// <summary>
 		/// Registers a Type
@@ -43,7 +43,7 @@ namespace NDO.Configuration
 		/// <param name="tFrom"></param>
 		/// <param name="name"></param>
 		/// <returns></returns>
-		object Resolve( Type tFrom, string name = "" );
+		object Resolve( Type tFrom, string name = null );
 
 		/// <summary>
 		/// Resolves an object of a certain type
@@ -51,7 +51,7 @@ namespace NDO.Configuration
 		/// <typeparam name="T"></typeparam>
 		/// <param name="name"></param>
 		/// <returns></returns>
-		T Resolve<T>( string name = "" );
+		T Resolve<T>( string name = null );
 
 		/// <summary>
 		/// Resolves an object of a given type and registers a new instance, if the object is not present.
@@ -61,7 +61,7 @@ namespace NDO.Configuration
 		/// <param name="factory"></param>
 		/// <param name="lifetime"></param>
 		/// <returns></returns>
-		T ResolveOrRegisterInstance<T>( string serviceName = "", Func<T> factory = null, ILifetime lifetime = null );
+		T ResolveOrRegisterInstance<T>( string serviceName = null, Func<T> factory = null, ILifetime lifetime = null );
 
 		/// <summary>
 		/// Resolves an object of a type. If it isn't registered, register it.
@@ -70,7 +70,7 @@ namespace NDO.Configuration
 		/// <param name="serviceName"></param>
 		/// <param name="lifetime"></param>
 		/// <returns></returns>
-		object ResolveOrRegisterType( Type t, string serviceName = "", ILifetime lifetime = null );
+		object ResolveOrRegisterType( Type t, string serviceName = null, ILifetime lifetime = null );
 
 		/// <summary>
 		/// Resolves an object of a type. If it isn't registered, register it.
@@ -79,6 +79,6 @@ namespace NDO.Configuration
 		/// <param name="serviceName"></param>
 		/// <param name="lifetime"></param>
 		/// <returns></returns>
-		T ResolveOrRegisterType<T>( string serviceName = "", ILifetime lifetime = null );
+		T ResolveOrRegisterType<T>( string serviceName = null, ILifetime lifetime = null );
 	}
 }

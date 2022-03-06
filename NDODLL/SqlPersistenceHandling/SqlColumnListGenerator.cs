@@ -22,6 +22,8 @@ namespace NDO.SqlPersistenceHandling
 		string tableName;
 		Type resultType;
 
+		internal static string Key(Class cls) => $"{nameof(SqlColumnListGenerator)}-{cls.FullName}";
+
 		/// <summary>
 		/// Constructor
 		/// </summary>
