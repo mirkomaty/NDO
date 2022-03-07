@@ -2,6 +2,7 @@
 using NDO.Query;
 using NDO.SqlPersistenceHandling;
 using System;
+using System.Diagnostics;
 using System.Linq;
 
 namespace NDO.Configuration
@@ -16,9 +17,45 @@ namespace NDO.Configuration
 		Scope rootScope;
 
 		/// <summary>
+		/// Gets the root instance of the container.
+		/// </summary>
+		public static NDOContainer Instance
+		{
+			get
+			{
+				if (instance == null)
+				{
+					lock (lockObject)
+					{
+						if (instance == null) // Threading double check
+						{
+							instance = new NDOContainer();
+							// IPersistenceHandlers are cached individually for each type. So it's safe to create a new object with every resolve.
+							instance.Register<IPersistenceHandler, SqlPersistenceHandler>( new TransientLifetime() );
+							instance.Register<Mappings, RelationContextGenerator>( ( factory, mappings ) => new RelationContextGenerator( mappings ) );
+							instance.Register<IQueryGenerator, SqlQueryGenerator>( new TransientLifetime() );
+							instance.Register<IPersistenceHandlerManager, NDOPersistenceHandlerManager>();
+							instance.Register<IProviderPathFinder, NDOProviderPathFinder>();
+							instance.Register<IPersistenceHandlerPool, NDOPersistenceHandlerPool>();
+							instance.Register<INDOTransactionScope, NDOTransactionScope>();
+							instance.RegisterInstance<INDOContainer>( instance );
+						}
+					}
+				}
+
+				return instance;
+			}
+		}
+
+		/// <summary>
 		/// Creates an NDOContainer object
 		/// </summary>
-		public NDOContainer() : base (new ContainerOptions { EnablePropertyInjection = false })
+		public NDOContainer() : base( new ContainerOptions
+			{
+				EnablePropertyInjection = false,
+				LogFactory = t => msg => Debug.WriteLine( $"{msg.Level}: {msg.Message}" )
+			}
+		)
 		{
 			SetDefaultLifetime<PerScopeLifetime>();
 			rootScope = BeginScope();
@@ -65,38 +102,6 @@ namespace NDO.Configuration
 		{
 			RegisterType<T, T>( lifetimeManager );
 		}
-
-		/// <summary>
-		/// Gets the root instance of the container.
-		/// </summary>
-		public static NDOContainer Instance
-		{
-			get
-			{
-				if (instance == null)
-				{
-					lock (lockObject)
-					{
-						if (instance == null) // Threading double check
-						{
-							instance = new NDOContainer();
-							// IPersistenceHandlers are cached individually for each type. So it's safe to create a new object with every resolve.
-							instance.Register<IPersistenceHandler, SqlPersistenceHandler>( new TransientLifetime() );
-							instance.Register<Mappings, RelationContextGenerator>( ( factory, mappings ) => new RelationContextGenerator( mappings ) );
-							instance.Register<IQueryGenerator, SqlQueryGenerator>( new TransientLifetime() );
-							instance.Register<IPersistenceHandlerManager, NDOPersistenceHandlerManager>();
-							instance.Register<IProviderPathFinder, NDOProviderPathFinder>();
-							instance.Register<IPersistenceHandlerPool, NDOPersistenceHandlerPool>();
-							instance.Register<INDOTransactionScope, NDOTransactionScope>();
-							instance.RegisterInstance<INDOContainer>( instance );
-						}
-					}
-				}
-
-				return instance;
-			}
-		}
-
 
 		/// <summary>
 		/// 
