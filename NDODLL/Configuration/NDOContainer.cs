@@ -15,6 +15,7 @@ namespace NDO.Configuration
 		static NDOContainer instance;
 		static object lockObject = new object();
 		Scope rootScope;
+		NDOContainer parent;
 
 		/// <summary>
 		/// Gets the root instance of the container.
@@ -51,14 +52,26 @@ namespace NDO.Configuration
 		/// Creates an NDOContainer object
 		/// </summary>
 		public NDOContainer() : base( new ContainerOptions
-			{
-				EnablePropertyInjection = false,
-				LogFactory = t => msg => Debug.WriteLine( $"{msg.Level}: {msg.Message}" )
-			}
+		{
+			EnablePropertyInjection = false,
+			LogFactory = t => msg => Debug.WriteLine( $"{msg.Level}: {msg.Message}" )
+		}
 		)
 		{
 			SetDefaultLifetime<PerScopeLifetime>();
 			rootScope = BeginScope();
+		}
+
+		private NDOContainer( NDOContainer template ) : base( template ) 
+		{
+		}
+
+		/// <inheritdoc/>
+		public INDOContainer CreateChildContainer()
+		{
+			var child = new NDOContainer(this);			
+			child.parent = this;
+			return child;
 		}
 
 		void IDisposable.Dispose()
@@ -113,9 +126,9 @@ namespace NDO.Configuration
 		public object Resolve( Type tFrom, string name = null )
 		{
 			if (name != null)
-				return base.GetInstance( tFrom, name );
+				return GetInstance( tFrom, name );
 			else
-				return base.GetInstance( tFrom );
+				return GetInstance( tFrom );
 		}
 
 		/// <summary>
@@ -128,9 +141,9 @@ namespace NDO.Configuration
 		public T Resolve<T>( string name = null )
 		{
 			if (name != null)
-				return (T) base.GetInstance( typeof( T ), name );
+				return (T) GetInstance( typeof( T ), name );
 			else
-				return (T) base.GetInstance( typeof( T ) );
+				return (T) GetInstance( typeof( T ) );
 		}
 
 		/// <summary>
@@ -231,5 +244,5 @@ namespace NDO.Configuration
 			return (T) ResolveOrRegisterType( typeof( T ), serviceName, lifetime );
 		}
 
-	}
-}
+		}
+		}

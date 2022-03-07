@@ -24,7 +24,13 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <DefineConstants>TRACE;DEBUG;</DefineConstants>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+	<PropertyGroup Condition="'$(TargetFramework)'=='net452'">
+		<DefineConstants>TRACE;DEBUG;NET452</DefineConstants>
+	</PropertyGroup>
+	<PropertyGroup Condition="'$(TargetFramework)'=='netstandard2.0'">
+		<DefineConstants>TRACE;DEBUG;NETSTANDARD1_6;NETSTANDARD2_0</DefineConstants>
+	</PropertyGroup>
+	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
     <DefineConstants>TRACE;RELEASE;</DefineConstants>
   </PropertyGroup>
   <ItemGroup>

@@ -80,5 +80,11 @@ namespace NDO.Configuration
 		/// <param name="lifetime"></param>
 		/// <returns></returns>
 		T ResolveOrRegisterType<T>( string serviceName = null, ILifetime lifetime = null );
+
+		/// <summary>
+		/// Creates a child container for PersistenceManager instance scope
+		/// </summary>
+		/// <returns></returns>
+		INDOContainer CreateChildContainer();
 	}
 }

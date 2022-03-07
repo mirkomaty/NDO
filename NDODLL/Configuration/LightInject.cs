@@ -3402,6 +3402,36 @@ namespace NDO.Configuration
                 ScopeManagerProvider );
         }
 
+        protected ServiceContainer(ServiceContainer master)
+		{
+            this.options = master.options;
+            this.constructorDependencyFactories = master.constructorDependencyFactories;
+            this.propertyDependencyFactories = master.propertyDependencyFactories;
+            this.availableServices = master.availableServices;
+            this.decorators = master.decorators;
+            this.overrides = master.overrides;
+            this.factoryRules = master.factoryRules;
+            this.initializers = master.initializers;
+            this.constructionInfoProvider = master.constructionInfoProvider;
+            this.methodSkeletonFactory = master.methodSkeletonFactory;
+            this.log = master.log;
+            CompositionRootExecutor = master.CompositionRootExecutor;
+            ServiceNameProvider = master.ServiceNameProvider;
+            PropertyDependencySelector = master.PropertyDependencySelector;
+            GenericArgumentMapper = master.GenericArgumentMapper;
+            AssemblyScanner = master.AssemblyScanner;
+            ConstructorDependencySelector = master.ConstructorDependencySelector;
+            ConstructorSelector = master.ConstructorSelector;
+            ScopeManagerProvider = master.ScopeManagerProvider;
+#if NET452 || NET46 || NETSTANDARD1_6 || NETCOREAPP2_0
+            AssemblyLoader = AssemblyLoader;
+#endif
+            foreach (var availableService in AvailableServices)
+            {
+                this.Register( availableService );
+            }
+        }
+
         internal static TService TrackInstance<TService>( TService instance, ServiceContainer container )
         {
             if (instance is IDisposable disposable)
