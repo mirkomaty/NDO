@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using NDO.Configuration;
+using System.Diagnostics;
 
 namespace NdoUnitTests
 {
@@ -25,7 +26,9 @@ namespace NdoUnitTests
 		[SetUp]
 		public void Setup()
 		{
-			NDO.Configuration.NDOContainer.Instance.RegisterType<IDIParameter, DIParameter>();
+			//var container = NDOContainer.Instance;
+			//if (!container.CanGetInstance<IDIParameter>())
+			//	container.RegisterType<IDIParameter, DIParameter>();
 		}
 		public void TearDown()
 		{
@@ -37,6 +40,11 @@ namespace NdoUnitTests
 		public void FindObject_provides_DIParameter()
 		{
 			var pm = PmFactory.NewPersistenceManager();
+			var container = pm.ConfigContainer;
+			Debug.WriteLine( "********* Registrierung *********" );
+			container.RegisterType<IDIParameter, DIParameter>();
+			var diPar = container.GetInstance<IDIParameter>();
+			//Assert.IsTrue( container.CanGetInstance<IDIParameter>() );
 			var testObject = (ClassWithDIConstructor)pm.FindObject( typeof( ClassWithDIConstructor ), 0 );
 			Assert.AreEqual( "Teststring", testObject.DiField );
 		}

@@ -36,7 +36,6 @@ namespace NdoUnitTests
 		PersistenceManager pm1;
 		PersistenceManager pm2;
 		TimeStampContainer tsc;
-		bool collisionHappened = false;
 
 		[SetUp]
 		public void Setup() 
@@ -52,18 +51,16 @@ namespace NdoUnitTests
 		[TearDown]
 		public void TearDown() 
 		{
-			if (pm2 == null)
-				pm2 = PmFactory.NewPersistenceManager();
-			pm2.UnloadCache();
-			pm2.Delete( pm2.Objects<RowVersionClass>().ResultTable );
-			IList l = pm2.GetClassExtent(typeof(TimeStampContainer), false);
-			if (l.Count > 0)
+			if (pm2 != null)
+				pm2.Close();
+
+			using (pm2 = PmFactory.NewPersistenceManager())
 			{
-				pm2.Delete(l);
+				pm2.Delete( pm2.Objects<RowVersionClass>().ResultTable );
+				pm2.Delete(pm2.Objects<TimeStampContainer>().ResultTable );
 				pm2.Save();
 			}
-			pm2.Close();
-			pm2 = null;
+
 			if (pm1 != null)
 			{
 				pm1.Close();
@@ -74,18 +71,19 @@ namespace NdoUnitTests
 		[Test]
 		public void TestTimeStampsNoException()
 		{
+			bool collisionHappened = false;
 			IList l1 = pm1.GetClassExtent(typeof(TimeStampContainer));
 			Assert.AreEqual(1, l1.Count, "Count sollte 1 sein");
 			IList l2 = pm2.GetClassExtent(typeof(TimeStampContainer));
 			Assert.AreEqual(1, l2.Count, "Count sollte 1 sein");
 			TimeStampContainer tsc1 = (TimeStampContainer) l1[0];
 			TimeStampContainer tsc2 = (TimeStampContainer) l2[0];
-			pm1.CollisionEvent += new CollisionHandler(OnCollisionEvent);
+			pm1.CollisionEvent += new CollisionHandler((pc)=>collisionHappened = true);
 			tsc1.Name = "Friedrich";
 			tsc2.Name = "Peter";
 			pm2.Save();
 			pm1.Save();
-			Assert.AreEqual(true, collisionHappened, "Kollision ist nicht erkannt worden");
+			Assert.IsTrue(collisionHappened, "Kollision ist nicht erkannt worden");
 		}
 
 		[Test]
@@ -120,9 +118,5 @@ namespace NdoUnitTests
 			Assert.IsTrue( changesSince.Any() );
 		}
 
-		private void OnCollisionEvent(object pc)
-		{
-			this.collisionHappened = true;
-		}
 	}
 }

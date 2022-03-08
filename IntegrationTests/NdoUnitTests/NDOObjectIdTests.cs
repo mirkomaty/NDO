@@ -190,7 +190,6 @@ namespace NdoUnitTests
 			dg.Myfield = "Test";
 			pm.MakePersistent(dg);
 			pm.Save();
-			dg = null;
 			pm.UnloadCache();
 			IQuery q = new NDOQuery<DerivedGuid>(pm);
 			dg = (DerivedGuid) q.ExecuteSingle(true);

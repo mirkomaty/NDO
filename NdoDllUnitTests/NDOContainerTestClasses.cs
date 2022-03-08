@@ -68,7 +68,12 @@ namespace NdoDllUnitTests
             _car = car;
         }
 
-        public string RunCar()
+		public Driver( string s )
+		{
+			Console.WriteLine( s );
+		}
+
+		public string RunCar()
         {
             var miles = _car.Run();
             var unit = miles == 1 ? "mile" : "miles";

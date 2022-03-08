@@ -60,7 +60,7 @@ namespace NdoUnitTests
 		public void TearDown() {
 			pm.Abort();
 			pm.UnloadCache();
-			IList mitarbeiterListe = pm.GetClassExtent(typeof(Mitarbeiter), true);
+			IList mitarbeiterListe = pm.GetClassExtent(typeof(Mitarbeiter));
 			pm.Delete(mitarbeiterListe);
 			pm.Save();
 			pm.Close();
@@ -115,7 +115,7 @@ namespace NdoUnitTests
 			Type mcType = t.GetNestedType( "MetaClass", BindingFlags.NonPublic | BindingFlags.Public );
 			if (null == mcType)
 				throw new NDOException( 13, "Missing nested class 'MetaClass' for type '" + t.Name + "'; the type doesn't seem to be enhanced." );
-			var mc = (IMetaClass)Activator.CreateInstance( mcType );
+			var mc = (IMetaClass)Activator.CreateInstance( mcType, (Type)null );
 			return mc.GetRelationOrdinal( r.FieldName );
 		}
 
