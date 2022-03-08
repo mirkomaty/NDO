@@ -51,7 +51,7 @@ namespace NdoDllUnitTests
             _miles = value;
         }
 
-        private int _miles = 0;
+        private int _miles;
 
         public int Run()
         {
@@ -70,7 +70,9 @@ namespace NdoDllUnitTests
 
         public string RunCar()
         {
-            return $"Running {_car.GetType().Name} - {_car.Run()} mile";
+            var miles = _car.Run();
+            var unit = miles == 1 ? "mile" : "miles";
+            return $"Running {_car.GetType().Name} - {miles} {unit}";
         }
     }
 

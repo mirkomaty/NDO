@@ -51,6 +51,7 @@ namespace NDO.Configuration
 		/// <typeparam name="T"></typeparam>
 		/// <param name="name"></param>
 		/// <returns></returns>
+		[Obsolete("Use GetInstance")]
 		T Resolve<T>( string name = null );
 
 		/// <summary>
@@ -80,6 +81,16 @@ namespace NDO.Configuration
 		/// <param name="lifetime"></param>
 		/// <returns></returns>
 		T ResolveOrRegisterType<T>( string serviceName = null, ILifetime lifetime = null );
+
+		/// <summary>
+		/// Resolves a type and registers it using a factory method, if the type is not yet registered
+		/// </summary>
+		/// <typeparam name="T"></typeparam>
+		/// <param name="factory"></param>
+		/// <param name="serviceName"></param>
+		/// <param name="lifetime"></param>
+		/// <returns></returns>
+		T ResolveOrRegisterType<T>( Func<IServiceFactory, T> factory, string serviceName = null, ILifetime lifetime = null );
 
 		/// <summary>
 		/// Creates a child container for PersistenceManager instance scope

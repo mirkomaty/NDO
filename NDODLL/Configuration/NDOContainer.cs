@@ -64,6 +64,7 @@ namespace NDO.Configuration
 
 		private NDOContainer( NDOContainer template ) : base( template ) 
 		{
+			rootScope = BeginScope();
 		}
 
 		/// <inheritdoc/>
@@ -200,6 +201,39 @@ namespace NDO.Configuration
 			else
 				return (T) GetInstance( typeof( T ), serviceName );
 		}
+
+		/// <summary>
+		/// Resolves a type and registers it using a factory method, if the type is not yet registered
+		/// </summary>
+		/// <typeparam name="T"></typeparam>
+		/// <param name="factory"></param>
+		/// <param name="serviceName"></param>
+		/// <param name="lifetime"></param>
+		/// <returns></returns>
+		public T ResolveOrRegisterType<T>( Func<IServiceFactory, T> factory, string serviceName = null, ILifetime lifetime = null )
+		{
+			T result;
+			if (serviceName == null)
+				result = (T) TryGetInstance( typeof( T ) );
+			else
+				result = (T) TryGetInstance( typeof( T ), serviceName );
+
+			if (result != null)
+				return result;
+
+			if (serviceName == null)
+				Register( factory, lifetime );
+			else
+				Register( factory, serviceName, lifetime );
+
+			if (serviceName == null)
+				result = (T) TryGetInstance( typeof( T ) );
+			else
+				result = (T) TryGetInstance( typeof( T ), serviceName );
+
+			return result;
+		}
+
 
 		/// <summary>
 		/// Resolves an object of a type. If it isn't registered, register it.

@@ -16,6 +16,7 @@ using System.Collections;
 using System.Data;
 using System.Data.Common;
 using DataTypeTestClasses;
+using System.Diagnostics;
 
 namespace QueryTests
 {
@@ -394,6 +395,7 @@ namespace QueryTests
 		[Test]
 		public void CheckIfMultiKeyArrayParametersAreProcessed()
 		{
+			var pm = NDOFactory.Instance.PersistenceManager;
 			NDOQuery<OrderDetail> q = new NDOQuery<OrderDetail>( pm, "oid = {0}" );
 			q.Parameters.Add( new object[] { 1, 2 } );
 
@@ -407,13 +409,13 @@ namespace QueryTests
 			Assert.AreEqual( 2, generatedParameters.Count );
 			Assert.AreEqual( 1, generatedParameters[0] );
 			Assert.AreEqual( 2, generatedParameters[1] );
-			container.RegisterType<IPersistenceHandler, SqlPersistenceHandler>();
 		}
 
 
 		[Test]
 		public void CheckIfSingleKeyOidParameterIsProcessed()
 		{
+			var pm = NDOFactory.Instance.PersistenceManager;
 			NDOQuery<Mitarbeiter> q = new NDOQuery<Mitarbeiter>( pm, "oid = {0}" );
 			q.Parameters.Add( 1 );
 
@@ -424,6 +426,7 @@ namespace QueryTests
 			Mock<IPersistenceHandlerManager> phManagerMock = new Mock<IPersistenceHandlerManager>();
 			phManagerMock.Setup( m => m.GetPersistenceHandler( It.IsAny<Type>() ) ).Returns( handler ).Callback<Type>( ( pc ) => { Console.WriteLine("Test"); });
 			var container = pm.ConfigContainer;
+			Debug.WriteLine( "RegisterInstance<IPersistenceHandlerManager>" );
 			container.RegisterInstance<IPersistenceHandlerManager>( phManagerMock.Object );
 			q.Execute();
 			Assert.NotNull( generatedParameters );
