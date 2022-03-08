@@ -147,7 +147,7 @@ namespace NDO.ChangeLogging
 		/// <returns></returns>
 		public override string ToString()
 		{
-			var changeLogConverter = pm.ConfigContainer.Resolve<IChangeLogConverter>();
+			var changeLogConverter = pm.ConfigContainer.GetInstance<IChangeLogConverter>();
 			if (changeLogConverter == null)
 				throw new Exception( "Can't serialize the ChangeLog. Please register an implementation of IChangeLogConverter" );
 

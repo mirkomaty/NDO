@@ -21,7 +21,7 @@ namespace NDO.SqlPersistenceHandling
 		public SqlQueryGenerator(INDOContainer configContainer)
 		{
 			this.configContainer = configContainer;
-			this.mappings = this.configContainer.Resolve<Mappings>();
+			this.mappings = this.configContainer.GetInstance<Mappings>();
 		}
 
 		/// <summary>

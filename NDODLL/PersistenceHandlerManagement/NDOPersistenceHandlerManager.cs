@@ -56,7 +56,7 @@ namespace NDO
 			IPersistenceHandler handler = persistenceHandlerPool.GetHandler( type, (t)=>
 			{
 				// 1. If a handler type is registered, use an instance of this handler
-				var newHandler = this.configContainer.Resolve<IPersistenceHandler>();
+				var newHandler = this.configContainer.GetInstance<IPersistenceHandler>();
 
 				// 2. try to use an NDOPersistenceHandler
 				if (newHandler == null)
@@ -65,7 +65,7 @@ namespace NDO
 				return newHandler;
 			});
 
-			Mappings mappings = configContainer.Resolve<Mappings>();
+			Mappings mappings = configContainer.GetInstance<Mappings>();
 			// The dataSet will be used as template to create a DataTable for the query results.
 			handler.Initialize( mappings, type, ReleaseHandler );
 

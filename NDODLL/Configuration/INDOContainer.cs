@@ -21,6 +21,7 @@ namespace NDO.Configuration
 		/// <param name="tFrom"></param>
 		/// <param name="tTo"></param>
 		/// <param name="lifetime"></param>
+		[Obsolete( "Use GetInstance" )]
 		void RegisterType( Type tFrom, Type tTo, ILifetime lifetime = null );
 		/// <summary>
 		/// Registers a Type with generic parameter
@@ -28,6 +29,7 @@ namespace NDO.Configuration
 		/// <typeparam name="T"></typeparam>
 		/// <param name="lifetimeManager"></param>
 
+		[Obsolete( "Use GetInstance" )]
 		void RegisterType<T>( ILifetime lifetimeManager = null );
 		/// <summary>
 		/// Registers a type for a target type
@@ -35,14 +37,16 @@ namespace NDO.Configuration
 		/// <typeparam name="TFrom"></typeparam>
 		/// <typeparam name="TTo"></typeparam>
 		/// <param name="lifetimeManager"></param>
+		[Obsolete( "Use GetInstance" )]
 		void RegisterType<TFrom, TTo>( ILifetime lifetimeManager = null );
-		
+
 		/// <summary>
 		/// Resolves an object of a certain type
 		/// </summary>
 		/// <param name="tFrom"></param>
 		/// <param name="name"></param>
 		/// <returns></returns>
+		[Obsolete( "Use GetInstance" )]
 		object Resolve( Type tFrom, string name = null );
 
 		/// <summary>

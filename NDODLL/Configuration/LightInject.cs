@@ -3402,6 +3402,10 @@ namespace NDO.Configuration
                 ScopeManagerProvider );
         }
 
+        /// <summary>
+        /// Constructor used to create a child container
+        /// </summary>
+        /// <param name="master"></param>
         protected ServiceContainer(ServiceContainer master)
 		{
             this.options = master.options;

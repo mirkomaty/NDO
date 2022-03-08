@@ -30,6 +30,7 @@ using NDO.Mapping;
 using NDO.Configuration;
 using NDO.SqlPersistenceHandling;
 using System.Reflection;
+using System.Diagnostics;
 
 namespace NDO
 {
@@ -51,7 +52,7 @@ namespace NDO
 		private string logPath;
 		private ILogAdapter logAdapter;
 		private Type persistenceHandlerType = null;
-		private Scope configScope;
+		private INDOContainer configContainer;
 		private IPersistenceHandlerManager persistenceHandlerManager;
 		bool isClosing = false;
 
@@ -133,7 +134,7 @@ namespace NDO
 		internal virtual void Init( Mappings mapping )
 		{
 			this.mappings = mapping;
-			this.configScope = ConfigContainer.BeginScope();
+
 			ConfigContainer.RegisterInstance( mappings );
 
 			this.ds = new NDODataSet( mappings );  // Each PersistenceManager instance must have it's own DataSet.
@@ -298,14 +299,23 @@ namespace NDO
 		}
 
 		/// <summary>
-		/// Gets the DI container of the system.
+		/// Gets or sets the container for the configuration of the system.
 		/// </summary>
 		public INDOContainer ConfigContainer
 		{
 			get
 			{
-				return NDOContainer.Instance;
-			}			
+				if (this.configContainer == null)
+				{
+					this.configContainer = NDOContainer.Instance.CreateChildContainer();
+					Debug.WriteLine( "***** Create Child Container" );
+					this.configContainer.RegisterInstance( typeof( PersistenceManager ), this );
+					this.configContainer.RegisterInstance<INDOContainer>( this.configContainer );
+				}
+
+				return this.configContainer;
+			}
+			set { this.configContainer = value; }
 		}
 
 
@@ -341,10 +351,7 @@ namespace NDO
 		{
 			get
 			{
-				// (this.persistenceHandlerManager == null)
-				return this.persistenceHandlerManager = ConfigContainer.Resolve<IPersistenceHandlerManager>();
-
-				//return this.persistenceHandlerManager;
+				return this.persistenceHandlerManager = ConfigContainer.GetInstance<IPersistenceHandlerManager>();
 			}
 			set { this.persistenceHandlerManager = value; }
 		}
@@ -446,7 +453,7 @@ namespace NDO
 			isClosing = true;
 			this.ds.Dispose();
 			this.ds = null;
-			this.configScope.Dispose();
+			this.configContainer.Dispose();
 		}
 
 		/// <summary>

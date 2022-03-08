@@ -39,7 +39,6 @@ namespace NDO.Configuration
 							instance.Register<IProviderPathFinder, NDOProviderPathFinder>();
 							instance.Register<IPersistenceHandlerPool, NDOPersistenceHandlerPool>();
 							instance.Register<INDOTransactionScope, NDOTransactionScope>();
-							instance.RegisterInstance<INDOContainer>( instance );
 						}
 					}
 				}

@@ -232,7 +232,7 @@ namespace NDO.Query
 					GenerateQueryContexts();
 
 				PrepareParameters();
-				IQueryGenerator queryGenerator = ConfigContainer.Resolve<IQueryGenerator>();
+				IQueryGenerator queryGenerator = ConfigContainer.GetInstance<IQueryGenerator>();
 				return queryGenerator.GenerateQueryStringForAllTypes( this.queryContextsForTypes, this.expressionTree, this.hollowResults, this.orderings, this.skip, this.take );
 			}
 		}
@@ -389,7 +389,7 @@ namespace NDO.Query
 		private object ExecuteAggregateQuery( QueryContextsEntry queryContextsEntry, string field, AggregateType aggregateType )
 		{
 			Type t = queryContextsEntry.Type;
-			IQueryGenerator queryGenerator = ConfigContainer.Resolve<IQueryGenerator>();
+			IQueryGenerator queryGenerator = ConfigContainer.GetInstance<IQueryGenerator>();
 			string generatedQuery = queryGenerator.GenerateAggregateQueryString( field, queryContextsEntry, this.expressionTree, this.queryContextsForTypes.Count > 1, aggregateType );
 
 			using (IPersistenceHandler persistenceHandler = this.pm.PersistenceHandlerManager.GetPersistenceHandler( t ))
@@ -459,7 +459,7 @@ namespace NDO.Query
 
 		private IList ExecuteSubQuery( Type t, QueryContextsEntry queryContextsEntry )
 		{
-			IQueryGenerator queryGenerator = ConfigContainer.Resolve<IQueryGenerator>();
+			IQueryGenerator queryGenerator = ConfigContainer.GetInstance<IQueryGenerator>();
 			bool hasBeenPrepared = PrepareParameters();
 			string generatedQuery;
 
@@ -527,7 +527,7 @@ namespace NDO.Query
 				this.pm.CheckTransaction( persistenceHandler, t );
 
 				bool hasBeenPrepared = PrepareParameters();
-				IQueryGenerator queryGenerator = ConfigContainer.Resolve<IQueryGenerator>();
+				IQueryGenerator queryGenerator = ConfigContainer.GetInstance<IQueryGenerator>();
 				string generatedQuery = queryGenerator.GenerateQueryString( queryContextsEntry, this.expressionTree, this.hollowResults, this.queryContextsForTypes.Count > 1, this.orderings, this.skip, this.take );
 
 				if (hasBeenPrepared)
@@ -637,7 +637,7 @@ namespace NDO.Query
 				}
 			}
 
-			var factory = ConfigContainer.Resolve<Func<Mappings, RelationContextGenerator>>();
+			var factory = ConfigContainer.GetInstance<Func<Mappings, RelationContextGenerator>>();
 			var contextGenerator = factory( this.pm.mappings );
 			this.queryContextsForTypes = new List<QueryContextsEntry>();
 			// usedTables now contains all assignable classes of our result type

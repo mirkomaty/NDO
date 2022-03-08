@@ -185,7 +185,7 @@ namespace NdoDllUnitTests
 
 			var container2 = container.CreateChildContainer();
 			
-			var car = container2.Resolve<ICar>();
+			var car = container2.GetInstance<ICar>();
 			Assert.IsNotNull( car );
 			
 		}

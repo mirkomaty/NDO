@@ -92,7 +92,7 @@ namespace NDO
 		private TypeManager typeManager;
 		internal bool DeferredMode { get; private set; }
 		private INDOTransactionScope transactionScope;
-		internal INDOTransactionScope TransactionScope => transactionScope ?? (transactionScope = ConfigContainer.Resolve<INDOTransactionScope>());
+		internal INDOTransactionScope TransactionScope => transactionScope ?? (transactionScope = ConfigContainer.GetInstance<INDOTransactionScope>());
 
 		private OpenConnectionListener openConnectionListener;
 
@@ -161,8 +161,6 @@ namespace NDO
 		internal override void Init( Mappings mapping )
 		{
 			base.Init( mapping );
-			ConfigContainer.RegisterInstance<PersistenceManager>( this );
-			this.transactionScope = ConfigContainer.GetInstance<INDOTransactionScope>();
 			string dir = Path.GetDirectoryName( mapping.FileName );
 
 			string typesFile = Path.Combine( dir, "NDOTypes.xml" );
