@@ -637,8 +637,7 @@ namespace NDO.Query
 				}
 			}
 
-			var factory = ConfigContainer.GetInstance<Func<Mappings, RelationContextGenerator>>();
-			var contextGenerator = factory( this.pm.mappings );
+			var contextGenerator = ConfigContainer.GetInstance<RelationContextGenerator>();
 			this.queryContextsForTypes = new List<QueryContextsEntry>();
 			// usedTables now contains all assignable classes of our result type
 			foreach (var de in usedTables)

@@ -156,7 +156,11 @@ namespace NDO
         {
             try
             {
-                var pathFinder = NDOContainer.Instance.GetInstance<IProviderPathFinder>();
+                IProviderPathFinder pathFinder;
+                using (var container = NDOContainer.Instance.CreateChildContainer())
+                {
+                    pathFinder = container.GetInstance<IProviderPathFinder>();
+                }
 				foreach (var path in pathFinder.GetPaths())
 				{
                     AddProviderPlugIns( path );

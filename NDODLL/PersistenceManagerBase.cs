@@ -31,6 +31,7 @@ using NDO.Configuration;
 using NDO.SqlPersistenceHandling;
 using System.Reflection;
 using System.Diagnostics;
+using NDO.Query;
 
 namespace NDO
 {
@@ -136,6 +137,7 @@ namespace NDO
 			this.mappings = mapping;
 
 			ConfigContainer.RegisterInstance( mappings );
+			ConfigContainer.Register( ( factory ) => new RelationContextGenerator( mappings ) );
 
 			this.ds = new NDODataSet( mappings );  // Each PersistenceManager instance must have it's own DataSet.
 
@@ -308,7 +310,6 @@ namespace NDO
 				if (this.configContainer == null)
 				{
 					this.configContainer = NDOContainer.Instance.CreateChildContainer();
-					Debug.WriteLine( "***** Create Child Container" );
 					this.configContainer.RegisterInstance( typeof( PersistenceManager ), this );
 					this.configContainer.RegisterInstance<INDOContainer>( this.configContainer );
 				}

@@ -33,8 +33,7 @@ namespace NDO.Configuration
 							instance = new NDOContainer();
 							// IPersistenceHandlers are cached individually for each type. So it's safe to create a new object with every resolve.
 							instance.Register<IPersistenceHandler, SqlPersistenceHandler>( new TransientLifetime() );
-							instance.Register<Mappings, RelationContextGenerator>( ( factory, mappings ) => new RelationContextGenerator( mappings ) );
-							instance.Register<IQueryGenerator, SqlQueryGenerator>( new TransientLifetime() );
+							instance.Register<IQueryGenerator, SqlQueryGenerator>( new TransientLifetime() );							
 							instance.Register<IPersistenceHandlerManager, NDOPersistenceHandlerManager>();
 							instance.Register<IProviderPathFinder, NDOProviderPathFinder>();
 							instance.Register<IPersistenceHandlerPool, NDOPersistenceHandlerPool>();
@@ -61,7 +60,7 @@ namespace NDO.Configuration
 			rootScope = BeginScope();
 		}
 
-		private NDOContainer( NDOContainer template ) : base( template ) 
+		private NDOContainer( NDOContainer template ) : base( template )
 		{
 			rootScope = BeginScope();
 		}
@@ -69,7 +68,7 @@ namespace NDO.Configuration
 		/// <inheritdoc/>
 		public INDOContainer CreateChildContainer()
 		{
-			var child = new NDOContainer(this);			
+			var child = new NDOContainer( this );
 			child.parent = this;
 			return child;
 		}
@@ -169,9 +168,6 @@ namespace NDO.Configuration
 		/// <returns></returns>
 		public T ResolveOrRegisterInstance<T>( string serviceName = null, Func<T> factory = null, ILifetime lifetime = null )
 		{
-			if (lifetime == null)
-				lifetime = new PerScopeLifetime();
-
 			T result;
 			if (serviceName == null)
 				result = (T) TryGetInstance( typeof( T ) );
@@ -243,9 +239,6 @@ namespace NDO.Configuration
 		/// <returns></returns>
 		public object ResolveOrRegisterType( Type t, string serviceName = null, ILifetime lifetime = null )
 		{
-			if (lifetime == null)
-				lifetime = new PerScopeLifetime();
-
 			object result;
 			if (serviceName == null)
 				result = TryGetInstance( t );
@@ -277,5 +270,5 @@ namespace NDO.Configuration
 			return (T) ResolveOrRegisterType( typeof( T ), serviceName, lifetime );
 		}
 
-		}
-		}
+	}
+}
