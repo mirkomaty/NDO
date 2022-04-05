@@ -23,9 +23,8 @@
 using System;
 using System.IO;
 using EnvDTE;
-using EnvDTE80;
-using Microsoft.Win32;
-namespace NETDataObjects.NDOVSPackage
+
+namespace NDOVsPackage
 {
 	/// <summary>
 	/// Zusammenfassung für ApplicationObject.

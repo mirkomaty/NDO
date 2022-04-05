@@ -28,14 +28,14 @@ using System.Collections;
 using System.Windows.Forms;
 using System.IO;
 using System.Runtime.InteropServices;
-using EnvDTE;
+using dte=EnvDTE;
 using EnvDTE80;
 using VSLangProj;
 using System.Collections.Generic;
 using NDOEnhancer;
 using System.Reflection;
 
-namespace NETDataObjects.NDOVSPackage
+namespace NDOVsPackage
 {
 	/// <summary>
 	/// Summary description for BuildEventHandler.
@@ -44,38 +44,15 @@ namespace NETDataObjects.NDOVSPackage
 	{
 		private MessageAdapter			messages = null;
 		private BuildEvents				buildEvents;
-		private _DTE					m_applicationObject;
 
-		public BuildEventHandler( _DTE applicationObject )
+		public BuildEventHandler()
 		{
-			m_applicationObject = applicationObject;
-			ApplicationObject.VisualStudioApplication = applicationObject;
 
-            Events events = applicationObject.Events;
-            buildEvents = events.BuildEvents;
+            VS.Events.BuildEvents.ProjectBuildDone += BuildEvents_ProjectBuildDone;
 
-            buildEvents.OnBuildBegin			+= OnBuildBegin;
-            buildEvents.OnBuildDone				+= OnBuildDone;
             buildEvents.OnBuildProjConfigDone	+= OnBuildProjConfigDone;
-//            buildEvents.OnBuildProjConfigBegin	+= OnBuildProjConfigBegin;  // If needed, activate this line and the according method
 		}
 
-		public void OnBuildBegin( vsBuildScope scope, vsBuildAction action )
-		{
-            if (messages == null)
-			{
-				messages = new MessageAdapter(); 
-			}
-			messages.Success = true;
-		}
-
-		public void OnBuildDone( vsBuildScope scope, vsBuildAction action )
-		{
-			if (!messages.Success)
-			{
-				messages.WriteLine("    Build failed");
-			}
-		}
 
         void IncludeFiles(ConfigurationOptions options, Project project, ProjectDescription projectDescription)
         {
@@ -108,35 +85,7 @@ namespace NETDataObjects.NDOVSPackage
             {
                 messages.WriteLine("Warning: Can't extract schema version from the mapping file. Error message: " + ex.Message);
             }
-//            if (options.GenerateSQL)
-//            {
-//                string sqlFileName = string.Empty;
-//#if DEBUG
-//                messages.WriteLine( "  main sql script..." );
-//#endif
-//                try
-//                {
-//                    sqlFileName = Path.ChangeExtension( projectDescription.BinFile, ".ndo.sql" );
-//                    projectDescription.AddFileToProject( sqlFileName );
-//                }
-//                catch (Exception ex)
-//                {
-//                    messages.WriteLine( "Warning: Can't add schema file '" + sqlFileName + "' to the project. " + ex.Message );
-//                }
 
-//#if DEBUG
-//                messages.WriteLine( "  diff sql script..." );
-//#endif
-//                try
-//                {
-//                    sqlFileName = Path.ChangeExtension( projectDescription.BinFile, ".ndodiff." + schemaVersion + ".sql" );
-//                    projectDescription.AddFileToProject( sqlFileName );
-//                }
-//                catch (Exception ex)
-//                {
-//                    messages.WriteLine( "Warning: Can't add schema diff file '" + sqlFileName + "' to the project. " + ex.Message );
-//                }
-//            }
 #if DEBUG
             messages.WriteLine("...ready");
 #endif
@@ -191,36 +140,20 @@ namespace NETDataObjects.NDOVSPackage
 			}
 		}
 
-		void PostProcess( ProjectDescription pd )
-		{
-		}
-
-		public void OnBuildProjConfigDone( string projectName, string projectConfig, string platform, string solutionConfig, bool success )
+		private void BuildEvents_ProjectBuildDone(ProjectBuildDoneEventArgs eventArgs)
 		{
 			if (messages == null)
 				messages = new MessageAdapter();
 
-			if ( ! success )
-			{
-				//messages.DumpTasks();
+			if (!eventArgs.IsSuccessful)
 				return;
-			}
 
             try
             {
-				Solution solution = m_applicationObject.Solution;
-                
-                // projectName can be like 'path\path\abc.def, where abc.def is the project name in the 
-                // solution explorer
-                Project  project = null;
-                try
-                {
-                    project = new ProjectIterator(solution)[projectName];
-                }
-                catch (Exception ex) 
-				{
-					messages.WriteLine(ex.ToString()); 
-				} // project remains null, exception will be thrown later
+
+				// projectName can be like 'path\path\abc.def, where abc.def is the project name in the 
+				// solution explorer
+				Project project = eventArgs.Project;
                 if (project == null)
                 {
                     messages.WriteLine("NDO: Project " + projectName + " skipped.");
@@ -235,7 +168,7 @@ namespace NETDataObjects.NDOVSPackage
 
 				messages.WriteLine(String.Format(EnhDate.String, "NDO Extension", new AssemblyName(GetType().Assembly.FullName).Version.ToString()));
 
-				ProjectDescription projectDescription = new ProjectDescription(solution, project);
+				ProjectDescription projectDescription = new ProjectDescription( project );
                 string projFileName = options.FileName;
                 CheckProjectDescription(options, projectDescription, projFileName);
 

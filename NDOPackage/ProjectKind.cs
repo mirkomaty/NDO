@@ -26,7 +26,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace NETDataObjects.NDOVSPackage
+namespace NDOVsPackage
 {
 	internal class ProjectKind
 	{

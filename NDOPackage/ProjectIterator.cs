@@ -23,17 +23,28 @@
 using System;
 using System.Globalization;
 using System.IO;
-using System.Collections;
+using System.Collections.Generic;
 using System.Text;
 using EnvDTE;
-using VSLangProj;
+using Project = EnvDTE.Project;
+using System.Linq;
 
-namespace NETDataObjects.NDOVSPackage
+namespace NDOVsPackage
 {
+    [System.Diagnostics.CodeAnalysis.SuppressMessage( "Usage", "VSTHRD010:Invoke single-threaded types on Main thread", Justification = "<Ausstehend>" )]
     internal class ProjectIterator
     {
-        Hashtable dictionary = new Hashtable();
+        Dictionary<string, Project> dictionary = new Dictionary<string, Project>();
         string solutionDir;
+
+
+        public ProjectIterator( EnvDTE.Solution solution )
+        {
+            ThreadHelper.ThrowIfNotOnUIThread();
+
+            this.solutionDir = Path.GetDirectoryName( solution.FileName );
+            FindProjects( solution.Projects );
+        }
 
         void FindProjects(ProjectItems projectItems)
         {
@@ -56,46 +67,32 @@ namespace NETDataObjects.NDOVSPackage
             }
         }
 
-        void FindProjects(Project project)
+		void FindProjects( Project project )
         {
-            string kindUpper = project.Kind.ToUpper();
-#warning Check, if we're able to support WebSite projects (E24C65DC...)
-			if (CodeGenHelper.IsCsProject(project)
-                || CodeGenHelper.IsVbProject(project)
-                || kindUpper == "{E24C65DC-7377-472B-9ABA-BC803B73C61A}")
-            dictionary.Add(ProjectName(project).ToLower(CultureInfo.InvariantCulture), project);
-            FindProjects(project.ProjectItems);
+            //string kindUpper = project.Kind.ToUpper();
+
+            if (CodeGenHelper.IsCsOrVbProject( project ))
+                dictionary.Add( ProjectName( project ).ToLower( CultureInfo.InvariantCulture ), project );
+
+            FindProjects( project.ProjectItems );
         }
 
 
 
-        string ProjectName(Project project)
+        string ProjectName(EnvDTE.Project project)
         {
-            string fileName = project.FileName;
-            if (fileName.EndsWith("\\"))
-                fileName = fileName.Substring(0, fileName.Length - 1);
-            if (project.Kind == "{E24C65DC-7377-472b-9ABA-BC803B73C61A}")
-                return fileName;
+            string fileName = project.FileName.TrimEnd( Path.DirectorySeparatorChar );
+
             fileName = ExtendedPath.GetRelativePath(this.solutionDir, fileName);
             return fileName;
-            //int p = fileName.LastIndexOf(Path.DirectorySeparatorChar);
-            //if (p > -1)
-            //    fileName = fileName.Substring(p + 1);
-            //return fileName;
         }
 
 
-        public ProjectIterator(Solution solution)
-        {
-            this.solutionDir = Path.GetDirectoryName(solution.FileName);
-            FindProjects(solution.Projects);
-        }
-
-        public Project this[string name]
+        public EnvDTE.Project this[string name]
         {
             get
             {
-                return dictionary[name.ToLower()] as Project;
+                return dictionary[name.ToLower()] as EnvDTE.Project;
             }
         }
 
@@ -103,11 +100,7 @@ namespace NETDataObjects.NDOVSPackage
         {
             get
             {
-                Project[] result = new Project[dictionary.Count];
-                int i = 0;
-                foreach (DictionaryEntry de in this.dictionary)
-                    result[i++] = (Project)de.Value;
-                return result;
+                return this.dictionary.Values.ToArray();
             }
         }
     }

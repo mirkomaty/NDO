@@ -25,8 +25,9 @@ using System.Text;
 using System.IO;
 using System.Windows.Forms;
 using EnvDTE;
+using Project = EnvDTE.Project;
 
-namespace NETDataObjects.NDOVSPackage
+namespace NDOVsPackage.Commands
 {
 	/// <summary>
 	/// Zusammenfassung für AddPersistentClassCs.

@@ -23,7 +23,7 @@
 using System;
 using System.Xml;
 
-namespace NETDataObjects.NDOVSPackage
+namespace NDOVsPackage
 {
 	/// <summary>
 	/// Zusammenfassung für XmlHelper.

@@ -21,7 +21,7 @@
 
 using System.Windows.Forms;
 
-namespace NETDataObjects.NDOVSPackage
+namespace NDOVsPackage
 {
 
 	/// <summary>

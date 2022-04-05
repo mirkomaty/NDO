@@ -24,9 +24,9 @@ using System;
 using System.IO;
 using System.Collections;
 using System.Xml;
-using EnvDTE;
+using Community.VisualStudio.Toolkit;
 
-namespace NETDataObjects.NDOVSPackage
+namespace NDOVsPackage
 {
     /// <summary>
     /// Attention!!!!! This code is essentially the same as in TestConfigurationOptions.cs 
@@ -110,19 +110,19 @@ namespace NETDataObjects.NDOVSPackage
         public static string GetNdoProjFileName(Project project)
         {
             string result;
-            if (Directory.Exists(project.FullName)) // Web Projects have a directory as name
+            if (Directory.Exists(project.FullPath)) // Web Projects have a directory as name
             {
-                string s = project.FullName;
+                string s = project.FullPath;
                 if (s.EndsWith("\\"))
                     s = s.Substring(0, s.Length - 1);
                 int p = s.LastIndexOf(Path.DirectorySeparatorChar);
                 if (p > -1)
                     s = s.Substring(p + 1);
                 s += ".ndoproj";
-                result = Path.Combine(project.FullName, s);
+                result = Path.Combine(project.FullPath, s);
             }
             else
-                result = Path.ChangeExtension(project.FullName, ".ndoproj");
+                result = Path.ChangeExtension(project.FullPath, ".ndoproj");
             return result;
         }
 

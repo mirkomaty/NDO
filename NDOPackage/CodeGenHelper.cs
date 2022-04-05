@@ -21,13 +21,14 @@
 
 
 using System;
+using System.Threading.Tasks;
 using System.IO;
 using System.Windows.Forms;
-using EnvDTE;
-using EnvDTE80;
 using Microsoft.VisualStudio.CommandBars;
+using Community.VisualStudio.Toolkit;
+using Microsoft.VisualStudio.Shell.Interop;
 
-namespace NETDataObjects.NDOVSPackage
+namespace NDOVsPackage
 {
 
 	internal class CodeGenHelper
@@ -35,42 +36,58 @@ namespace NETDataObjects.NDOVSPackage
 
 		public static bool IsCsProject(Project project)
 		{
-			return project.Kind == ProjectKind.prjKindCSharpProject || project.Kind == ProjectKind.prjKindNewCSharpProject;  // prjKindNewCSharpProject can be removed after VS 17.8
+			project.GetItemInfo(out IVsHierarchy hierarchy, out _, out _);
+			return hierarchy.IsCapabilityMatch("CSharp") || hierarchy.IsCapabilityMatch("VB");
 		}
 
 		public static bool IsVbProject(Project project)
 		{
-			return project.Kind == ProjectKind.prjKindVBProject;
+			project.GetItemInfo(out IVsHierarchy hierarchy, out _, out _);
+			return hierarchy.IsCapabilityMatch("VB");
 		}
 
 
-		public static ProjectItem FindProjectItemByName(Project prj, string strItemNameWithFileExtension)
+		public static bool IsCsOrVbProject(Project project)
 		{
-			if (prj.ProjectItems.Count < 1)
-				throw new Exception(string.Format("Project Item {0} not found. No project items in project {1}", strItemNameWithFileExtension, prj.Name));
-			if (strItemNameWithFileExtension == null)
-				return prj.ProjectItems.Item(1);
-			foreach (ProjectItem pri in prj.ProjectItems)
-				if (pri.Name == strItemNameWithFileExtension)
-					return pri;
-			return null;
+			project.GetItemInfo(out IVsHierarchy hierarchy, out _, out _);
+			return hierarchy.IsCapabilityMatch("CSharp") || hierarchy.IsCapabilityMatch("VB");
 		}
 
-		public static TextDocument ActivateAndGetTextDocument(Project prj, string strProjectItem)
+		public static bool IsCsOrVbProject( EnvDTE.Project project )
 		{
-			ProjectItem pri = FindProjectItemByName(prj, strProjectItem);
-			if (pri == null)
-				return null;
-
-			// we need to ensure that the item is open since we would not
-			// be able to get a text document otherwise
-			if (!pri.get_IsOpen(Constants.vsViewKindCode))
-				pri.Open(Constants.vsViewKindCode);
-			Document doc = pri.Document;
-			doc.Activate();
-			TextDocument txdoc = doc.DTE.ActiveDocument.Object("TextDocument") as TextDocument;
-			return txdoc;
+#pragma warning disable VSTHRD010 // Invoke single-threaded types on Main thread
+			return project.Kind == ProjectKind.prjKindVBProject || project.Kind == ProjectKind.prjKindCSharpProject;
+#pragma warning restore VSTHRD010 // Invoke single-threaded types on Main thread
 		}
+
+
+		//public static ProjectItem FindProjectItemByName(Project prj, string strItemNameWithFileExtension)
+		//{
+		//	if (prj.ProjectItems.Count < 1)
+		//		throw new Exception(string.Format("Project Item {0} not found. No project items in project {1}", strItemNameWithFileExtension, prj.Name));
+		//	if (strItemNameWithFileExtension == null)
+		//		return prj.ProjectItems.Item(1);
+		//	foreach (ProjectItem pri in prj.ProjectItems)
+		//		if (pri.Name == strItemNameWithFileExtension)
+		//			return pri;
+		//	return null;
+		//}
+
+		//public static TextDocument ActivateAndGetTextDocument(Project prj, string strProjectItem)
+		//{
+		//	ProjectItem pri = FindProjectItemByName(prj, strProjectItem);
+		//	if (pri == null)
+		//		return null;
+
+		//	// we need to ensure that the item is open since we would not
+		//	// be able to get a text document otherwise
+		//	if (!pri.get_IsOpen(Constants.vsViewKindCode))
+		//		pri.Open(Constants.vsViewKindCode);
+		//	Document doc = pri.Document;
+		//	doc.Activate();
+		//	TextDocument txdoc = doc.DTE.ActiveDocument.Object("TextDocument") as TextDocument;
+		//	return txdoc;
+		//}
 
 	}
 }

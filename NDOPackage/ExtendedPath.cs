@@ -23,7 +23,7 @@
 using System;
 using System.IO;
 
-namespace NETDataObjects.NDOVSPackage
+namespace NDOVsPackage
 {
 	/// <summary>
 	/// Zusammenfassung für ExtendedPath.
@@ -45,8 +45,10 @@ namespace NETDataObjects.NDOVSPackage
 
 			string rumpf1 = referencePath.Substring(pathRoot1.Length);
 			string rumpf2 = targetPath.Substring(pathRoot2.Length);
-			if (rumpf1.EndsWith("\\") || rumpf1.EndsWith("/"))
-				rumpf1 = rumpf1.Substring(0, rumpf1.Length - 1);
+			var dsc = Path.DirectorySeparatorChar;
+			var adsc = Path.AltDirectorySeparatorChar;
+
+			rumpf1 = rumpf1.TrimEnd(dsc, adsc);
 
 			char[] sepChars = new char[]{Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar};
 			string[] arr1 = rumpf1.Split(sepChars);

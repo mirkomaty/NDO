@@ -24,7 +24,7 @@ using System.IO;
 using System.Linq;
 using Mono.Cecil;
 
-namespace NETDataObjects.NDOVSPackage
+namespace NDOVsPackage
 {
 	public class NDOAssemblyChecker
 	{

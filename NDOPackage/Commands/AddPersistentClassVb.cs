@@ -27,7 +27,7 @@ using EnvDTE;
 using EnvDTE80;
 using Microsoft.VisualStudio.CommandBars;
 
-namespace NETDataObjects.NDOVSPackage
+namespace NDOVsPackage.Commands
 {
 	/// <summary>
 	/// Zusammenfassung für AddPersistentClassVb.

@@ -28,7 +28,7 @@ using EnvDTE80;
 using Microsoft.VisualStudio.CommandBars;
 using System.Text.RegularExpressions;
 
-namespace NETDataObjects.NDOVSPackage
+namespace NDOVsPackage.Commands
 {
 	/// <summary>
 	/// Zusammenfassung für AddAccessorCs.
