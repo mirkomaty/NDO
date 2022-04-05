@@ -2513,25 +2513,25 @@ namespace NDO.Configuration
     {
         private const string UnresolvedDependencyError = "Unresolved dependency {0}";
         private static readonly MethodInfo OpenGenericTrackInstanceMethod = typeof( ServiceContainer ).GetTypeInfo().GetDeclaredMethod( nameof( ServiceContainer.TrackInstance ) );
-        private readonly Action<LogEntry> log;
-        private readonly Func<Type, Type[], IMethodSkeleton> methodSkeletonFactory;
+/**/        private readonly Action<LogEntry> log;
+/**/        private readonly Func<Type, Type[], IMethodSkeleton> methodSkeletonFactory;
         private readonly ServiceRegistry<Action<IEmitter>> emitters = new ServiceRegistry<Action<IEmitter>>();
-        private readonly ServiceRegistry<Delegate> constructorDependencyFactories = new ServiceRegistry<Delegate>();
-        private readonly ServiceRegistry<Delegate> propertyDependencyFactories = new ServiceRegistry<Delegate>();
-        private readonly ServiceRegistry<ServiceRegistration> availableServices = new ServiceRegistry<ServiceRegistration>();
+/**/        private readonly ServiceRegistry<Delegate> constructorDependencyFactories = new ServiceRegistry<Delegate>();
+/**/        private readonly ServiceRegistry<Delegate> propertyDependencyFactories = new ServiceRegistry<Delegate>();
+/**/        private readonly ServiceRegistry<ServiceRegistration> availableServices = new ServiceRegistry<ServiceRegistration>();
 
         private readonly object lockObject = new object();
-        private readonly ContainerOptions options;
+/**/        private readonly ContainerOptions options;
         private readonly Storage<object> constants = new Storage<object>();
         private readonly Storage<ILifetime> disposableLifeTimes = new Storage<ILifetime>();
-        private readonly Storage<DecoratorRegistration> decorators = new Storage<DecoratorRegistration>();
-        private readonly Storage<ServiceOverride> overrides = new Storage<ServiceOverride>();
-        private readonly Storage<FactoryRule> factoryRules = new Storage<FactoryRule>();
-        private readonly Storage<Initializer> initializers = new Storage<Initializer>();
+/**/        private readonly Storage<DecoratorRegistration> decorators = new Storage<DecoratorRegistration>();
+/**/        private readonly Storage<ServiceOverride> overrides = new Storage<ServiceOverride>();
+/**/        private readonly Storage<FactoryRule> factoryRules = new Storage<FactoryRule>();
+/**/        private readonly Storage<Initializer> initializers = new Storage<Initializer>();
 
         private readonly Stack<Action<IEmitter>> dependencyStack = new Stack<Action<IEmitter>>();
 
-        private readonly Lazy<IConstructionInfoProvider> constructionInfoProvider;
+/**/        private readonly Lazy<IConstructionInfoProvider> constructionInfoProvider;
 
         private readonly List<IDisposable> disposableObjects = new List<IDisposable>();
 
@@ -2665,13 +2665,13 @@ namespace NDO.Configuration
         /// Gets or sets the <see cref="IScopeManagerProvider"/> that is responsible
         /// for providing the <see cref="IScopeManager"/> used to manage scopes.
         /// </summary>
-        public IScopeManagerProvider ScopeManagerProvider { get; set; }
+/**/        public IScopeManagerProvider ScopeManagerProvider { get; set; }
 
         /// <summary>
         /// Gets or sets the <see cref="IPropertyDependencySelector"/> instance that
         /// is responsible for selecting the property dependencies for a given type.
         /// </summary>
-        public IPropertyDependencySelector PropertyDependencySelector { get; set; }
+/**/        public IPropertyDependencySelector PropertyDependencySelector { get; set; }
 
         /// <summary>
         /// Gets or sets the <see cref="ITypeExtractor"/> that is responsible
@@ -2683,42 +2683,42 @@ namespace NDO.Configuration
         /// Gets or sets the <see cref="IServiceNameProvider"/> that is responsible
         /// for providing a service name for a given service during assembly scanning.
         /// </summary>
-        public IServiceNameProvider ServiceNameProvider { get; set; }
+/**/        public IServiceNameProvider ServiceNameProvider { get; set; }
 
         /// <summary>
         /// Gets or sets the <see cref="ICompositionRootExecutor"/> that is responsible
         /// for executing composition roots.
         /// </summary>
-        public ICompositionRootExecutor CompositionRootExecutor { get; set; }
+/**/        public ICompositionRootExecutor CompositionRootExecutor { get; set; }
 
         /// <summary>
         /// Gets or sets the <see cref="IConstructorDependencySelector"/> instance that
         /// is responsible for selecting the constructor dependencies for a given constructor.
         /// </summary>
-        public IConstructorDependencySelector ConstructorDependencySelector { get; set; }
+/**/        public IConstructorDependencySelector ConstructorDependencySelector { get; set; }
 
         /// <summary>
         /// Gets or sets the <see cref="IConstructorSelector"/> instance that is responsible
         /// for selecting the constructor to be used when creating new service instances.
         /// </summary>
-        public IConstructorSelector ConstructorSelector { get; set; }
+/**/        public IConstructorSelector ConstructorSelector { get; set; }
 
         /// <summary>
         /// Gets or sets the <see cref="IGenericArgumentMapper"/> that is responsible for
         /// mapping generic arguments.
         /// </summary>
-        public IGenericArgumentMapper GenericArgumentMapper { get; set; }
+/**/        public IGenericArgumentMapper GenericArgumentMapper { get; set; }
 
         /// <summary>
         /// Gets or sets the <see cref="IAssemblyScanner"/> instance that is responsible for scanning assemblies.
         /// </summary>
-        public IAssemblyScanner AssemblyScanner { get; set; }
+/**/        public IAssemblyScanner AssemblyScanner { get; set; }
 #if NET452 || NETSTANDARD1_6 || NETSTANDARD2_0 || NET46 || NETCOREAPP2_0
 
         /// <summary>
         /// Gets or sets the <see cref="IAssemblyLoader"/> instance that is responsible for loading assemblies during assembly scanning.
         /// </summary>
-        public IAssemblyLoader AssemblyLoader { get; set; }
+/**/        public IAssemblyLoader AssemblyLoader { get; set; }
 #endif
 
         /// <summary>
@@ -3255,7 +3255,7 @@ namespace NDO.Configuration
         }
 
         /// <inheritdoc/>
-        public object GetInstance( Type serviceType )
+        public virtual object GetInstance( Type serviceType )
         {
             var instanceDelegate = delegates.Search( serviceType );
             if (instanceDelegate == null)
@@ -3296,7 +3296,7 @@ namespace NDO.Configuration
         }
 
         /// <inheritdoc/>
-        public object TryGetInstance( Type serviceType )
+        public virtual object TryGetInstance( Type serviceType )
         {
             var instanceDelegate = delegates.Search( serviceType );
             if (instanceDelegate == null)
@@ -3308,7 +3308,7 @@ namespace NDO.Configuration
         }
 
         /// <inheritdoc/>
-        public object TryGetInstance( Type serviceType, string serviceName )
+        public virtual object TryGetInstance( Type serviceType, string serviceName )
         {
             var key = Tuple.Create( serviceType, serviceName );
             var instanceDelegate = namedDelegates.Search( key );
@@ -3321,7 +3321,7 @@ namespace NDO.Configuration
         }
 
         /// <inheritdoc/>
-        public object GetInstance( Type serviceType, string serviceName )
+        public virtual object GetInstance( Type serviceType, string serviceName )
         {
             var key = Tuple.Create( serviceType, serviceName );
             var instanceDelegate = namedDelegates.Search( key );
@@ -3428,9 +3428,9 @@ namespace NDO.Configuration
             ConstructorSelector = master.ConstructorSelector;
             ScopeManagerProvider = master.ScopeManagerProvider;
 #if NET452 || NET46 || NETSTANDARD1_6 || NETCOREAPP2_0
-            AssemblyLoader = AssemblyLoader;
+            AssemblyLoader = master.AssemblyLoader;
 #endif
-            foreach (var availableService in AvailableServices)
+            foreach (var availableService in master.AvailableServices)
             {
                 this.Register( availableService );
             }
