@@ -73,11 +73,15 @@ namespace NDOVsPackage
 		//	return null;
 		//}
 
-		//public static TextDocument ActivateAndGetTextDocument(Project prj, string strProjectItem)
-		//{
-		//	ProjectItem pri = FindProjectItemByName(prj, strProjectItem);
-		//	if (pri == null)
-		//		return null;
+		public static async Task<DocumentView> ActivateTextDocumentAsync( Project prj, string fileName )
+		{
+			var documentView = await VS.Documents.OpenAsync( fileName );
+			return documentView;
+		}
+
+	}
+}
+l;
 
 		//	// we need to ensure that the item is open since we would not
 		//	// be able to get a text document otherwise

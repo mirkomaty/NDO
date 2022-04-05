@@ -25,7 +25,7 @@ using System.Text;
 using System.IO;
 using System.Windows.Forms;
 using EnvDTE;
-using Project = EnvDTE.Project;
+using Project = Community.VisualStudio.Toolkit.Project;
 
 namespace NDOVsPackage.Commands
 {
@@ -52,10 +52,11 @@ namespace NDOVsPackage.Commands
 			try
 			{
 				StreamWriter sw;
-				string fileName = Path.GetDirectoryName(project.FileName) + "\\" + className + ".cs";
+				string fileName = Path.GetDirectoryName(project.FullPath) + "\\" + className + ".cs";
 				string partialFileName = fileName.Substring( 0, fileName.Length - 3 );
 				partialFileName += ".ndo.cs";
-				string namespc = (string) project.Properties.Item( "RootNamespace" ).Value;
+				var dteProject = project.DteProject();
+				string namespc = (string) dteProject.Properties.Item( "RootNamespace" ).Value;
 				using (sw = new StreamWriter( fileName, false, System.Text.Encoding.UTF8 ))
 				{
 					StringBuilder sb = new StringBuilder();
@@ -88,11 +89,7 @@ namespace NDOVsPackage.Commands
 					else
 						sw.Write( result );
 				}
-				ProjectItem pi = null;
-				if ( parentItem == null )
-					pi = project.ProjectItems.AddFromFile( fileName );
-				else
-					pi = parentItem.ProjectItems.AddFromFile( fileName );
+				project.AddExistingFilesAsync( new[] { fileName } ).Wait();
 
 				using (sw = new StreamWriter( partialFileName ))
 				{
@@ -101,8 +98,8 @@ namespace NDOVsPackage.Commands
 					sw.Write( newPartial );
 				}
 
-				pi.ProjectItems.AddFromFile( partialFileName );
-				CodeGenHelper.ActivateAndGetTextDocument(project, Path.GetFileName(fileName));
+				project.AddExistingFilesAsync( partialFileName );
+				CodeGenHelper.ActivateTextDocumentAsync(project, fileName);
 			}
 			catch(Exception ex)
 			{
@@ -160,6 +157,16 @@ namespace #ns#
 			set
 			{
 				throw new NotImplementedException();
+			}
+		}
+
+		#endregion
+	}
+}
+";
+	}
+}
+lementedException();
 			}
 		}
 

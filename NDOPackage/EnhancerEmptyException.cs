@@ -22,7 +22,7 @@
 
 using System;
 
-namespace NETDataObjects.NDOVSPackage
+namespace NDOVsPackage
 {
 	/// <summary>
 	/// Zusammenfassung für EnhancerEmptyException.
@@ -32,6 +32,10 @@ namespace NETDataObjects.NDOVSPackage
 	{
 		public EnhancerEmptyException()
 		{
+		}
+	}
+}
+{
 		}
 	}
 }

@@ -26,7 +26,7 @@ using System.Linq;
 using System.Text;
 using System.Xml.Linq;
 
-namespace NETDataObjects.NDOVSPackage
+namespace NDOVsPackage
 {
     /// <summary>
     /// This is a small version of NDOMapping to get the pieces of mapping information necessary for configuration
@@ -101,5 +101,8 @@ namespace NETDataObjects.NDOVSPackage
 			}
             this.ndoMappingElement.Save(this.fileName);
         }
+    }
+}
+  }
     }
 }

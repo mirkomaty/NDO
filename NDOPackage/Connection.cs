@@ -27,7 +27,7 @@ using System.Linq;
 using System.Text;
 using System.Xml.Linq;
 
-namespace NETDataObjects.NDOVSPackage
+namespace NDOVsPackage
 {
     /// <summary>
     /// This class encapsulates a connection string and makes it available with a short ID.
@@ -120,6 +120,10 @@ namespace NETDataObjects.NDOVSPackage
         {
             return Name;
         }
+    }
+
+}
+}
     }
 
 }

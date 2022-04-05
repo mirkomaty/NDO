@@ -21,3 +21,5 @@ NDOPackage/Backup
 UsersGuide
 /QueryTests/NDOMapping.xml
 SourceRevisionId.props
+/NDOPackage/source.extension.cs
+/NDOPackage/VSCommandTable.cs

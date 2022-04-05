@@ -21,19 +21,13 @@
 
 
 using System;
-using System.Globalization;
-using System.Text.RegularExpressions;
-using System.Xml;
-using System.Collections;
 using System.Windows.Forms;
 using System.IO;
-using System.Runtime.InteropServices;
 using dte=EnvDTE;
-using EnvDTE80;
-using VSLangProj;
 using System.Collections.Generic;
 using NDOEnhancer;
 using System.Reflection;
+using MessageBox = System.Windows.Forms.MessageBox;
 
 namespace NDOVsPackage
 {
@@ -50,7 +44,7 @@ namespace NDOVsPackage
 
             VS.Events.BuildEvents.ProjectBuildDone += BuildEvents_ProjectBuildDone;
 
-            buildEvents.OnBuildProjConfigDone	+= OnBuildProjConfigDone;
+            //buildEvents.OnBuildProjConfigDone	+= OnBuildProjConfigDone;
 		}
 
 
@@ -154,11 +148,6 @@ namespace NDOVsPackage
 				// projectName can be like 'path\path\abc.def, where abc.def is the project name in the 
 				// solution explorer
 				Project project = eventArgs.Project;
-                if (project == null)
-                {
-                    messages.WriteLine("NDO: Project " + projectName + " skipped.");
-                    return;
-                }
 				ConfigurationOptions options = new ConfigurationOptions(project);
                 if (!options.EnableAddIn)
 				{
@@ -183,15 +172,10 @@ namespace NDOVsPackage
 				//	return;
 				//}
 
-				// ------------------ MsBuild Support -----------------------
-				if (messages.Success || options.UseMsBuild)
+				// ------------------ MsBuild Support -----------------------				
+				if (eventArgs.IsSuccessful || options.UseMsBuild)
 				{
 					IncludeFiles(options, project, projectDescription);
-				}
-				else
-				{
-					project.DTE.ExecuteCommand("Build.Cancel", "");
-					messages.ActivateErrorList();
 				}
             }
             catch ( System.Exception ex )
@@ -199,11 +183,23 @@ namespace NDOVsPackage
                 messages.WriteLine( "*** Enhancer Add-in Error: ***" );
                 if (!(ex is EnhancerEmptyException))
                 {
-                    messages.ShowError( ex.ToString());
+                    messages.WriteLine( ex.ToString());
                 }
                 if (ex is System.Runtime.InteropServices.COMException)
                 {
-                    messages.ShowError("An error in the Visual Studio automation system occured. The error should disappear after a restart of Visual Studio.");
+                    messages.WriteLine("An error in the Visual Studio automation system occured. The error should disappear after a restart of Visual Studio.");
+                }
+                else
+                {
+                    messages.WriteLine("");
+                    messages.WriteLine("This is possibly a follow-up error. Look at error messages above this line.");
+                }				
+            }
+		}
+
+	}
+}
+          messages.ShowError("An error in the Visual Studio automation system occured. The error should disappear after a restart of Visual Studio.");
                 }
                 else
                 {

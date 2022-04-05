@@ -23,7 +23,7 @@
 using System;
 using EnvDTE;
 
-namespace NETDataObjects.NDOVSPackage
+namespace NDOVsPackage
 {
 	internal class TabProperty
 	{
@@ -103,6 +103,11 @@ namespace NETDataObjects.NDOVSPackage
 				System.Windows.Forms.MessageBox.Show(ex.ToString());
 			}
 		}
+	}
+
+	
+}
+}
 	}
 
 	

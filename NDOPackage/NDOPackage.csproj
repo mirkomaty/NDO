@@ -57,10 +57,14 @@
     <Compile Include="Commands\AddRelation.cs" />
     <Compile Include="Commands\AddPersistentClass.cs" />
     <Compile Include="ConfigurationOptions.cs" />
+    <Compile Include="Connection.cs" />
+    <Compile Include="ConsoleProcess.cs" />
+    <Compile Include="EnhancerEmptyException.cs" />
     <Compile Include="EnhDate.cs" />
     <Compile Include="ExtendedPath.cs" />
     <Compile Include="MessageAdapter.cs" />
     <Compile Include="NDOAssemblyChecker.cs" />
+    <Compile Include="NDOMapping.cs" />
     <Compile Include="NDOReference.cs" />
     <Compile Include="ProjectDescription.cs" />
     <Compile Include="ProjectExtensions.cs" />
@@ -74,6 +78,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>source.extension.vsixmanifest</DependentUpon>
     </Compile>
+    <Compile Include="TabProperties.cs" />
     <Compile Include="VSCommandTable.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>

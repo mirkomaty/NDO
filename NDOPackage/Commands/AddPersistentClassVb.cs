@@ -24,7 +24,7 @@ using System;
 using System.IO;
 using System.Windows.Forms;
 using EnvDTE;
-using EnvDTE80;
+using Project = EnvDTE.Project;
 using Microsoft.VisualStudio.CommandBars;
 
 namespace NDOVsPackage.Commands
