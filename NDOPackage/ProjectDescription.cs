@@ -1,5 +1,5 @@
 ﻿//
-// Copyright (c) 2002-2019 Mirko Matytschak 
+// Copyright (c) 2002-2022 Mirko Matytschak 
 // (www.netdataobjects.de)
 //
 // Author: Mirko Matytschak
@@ -413,59 +413,6 @@ namespace NDOVsPackage
 			if (!String.IsNullOrEmpty( fileName ) && File.Exists( fileName ))
 			{
 				ProjectDescription storedDescription = new ProjectDescription( fileName );
-				var storedReferences = storedDescription.references.Values.ToArray();
-				foreach (var reference in this.references.Values)
-				{
-					var storedReference = storedReferences.FirstOrDefault( r => r.Name == reference.Name );
-					if (storedReference != null)
-					{
-						reference.CheckThisDLL = storedReference.CheckThisDLL;
-					}
-				}
-			}
-		}
-
-		public void AddFileToProject(string fileName)
-		{
-            //TODO: Make the search hierarchical
-			if (project == null)
-				return;
-			if (!File.Exists(fileName))
-				return;
-			bool found = false;
-
-            ProjectItems itemCollection = GetItemCollection(fileName);
-
-			foreach (ProjectItem pi in itemCollection)
-			{
-				if (string.Compare(Path.GetFileName(pi.Name), Path.GetFileName(fileName), true) == 0)
-				{
-					found = true;
-					break;
-				}
-			}
-			if (!found)
-            {
-#if DEBUG
-                messageAdapter.WriteLine("  Adding file to project: " + fileName);
-#endif
-				this.project.DteProject().ProjectItems.AddFromFile(fileName);
-            }
-		}
-
-
-		public Dictionary<string, NDOReference> References
-		{
-			get
-			{
-				BuildReferences();
-				return references;
-			}
-		}
-
-	}
-}
-escription( fileName );
 				var storedReferences = storedDescription.references.Values.ToArray();
 				foreach (var reference in this.references.Values)
 				{

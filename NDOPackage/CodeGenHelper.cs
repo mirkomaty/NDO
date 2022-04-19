@@ -106,24 +106,3 @@ namespace NDOVsPackage
 }
 
 #pragma warning restore VSTHRD010 // Invoke single-threaded types on Main thread
-
-			TextDocument txdoc = doc.DTE.ActiveDocument.Object( "TextDocument" ) as TextDocument;
-			return txdoc;
-		}
-
-		public static async Task<DocumentView> ActivateTextDocumentAsync( Project prj, string fileName )
-		{
-			var documentView = await VS.Documents.OpenAsync( fileName );
-			return documentView;
-		}
-
-	}
-}
-
-
-			return documentView;
-		}
-
-	}
-}
-

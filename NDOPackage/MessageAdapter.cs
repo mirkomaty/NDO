@@ -1,5 +1,5 @@
 ﻿//
-// Copyright (c) 2002-2019 Mirko Matytschak 
+// Copyright (c) 2002-2022 Mirko Matytschak 
 // (www.netdataobjects.de)
 //
 // Author: Mirko Matytschak
@@ -31,7 +31,6 @@ namespace NDOVsPackage
     internal class MessageAdapter
 	{
 		int indent = 0;
-		bool success = true;
 		private OutputWindowPane		outputPane = null;
 
 		public MessageAdapter( )

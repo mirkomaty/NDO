@@ -199,8 +199,3 @@ namespace NDOVsPackage.Commands
         }
     }
 }
-abled = enabled;
-            });
-        }
-    }
-}

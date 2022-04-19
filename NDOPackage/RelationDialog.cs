@@ -395,6 +395,3 @@ namespace NDOVsPackage
         }
 	}
 }
-     }
-	}
-}

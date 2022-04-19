@@ -1,5 +1,5 @@
 ﻿//
-// Copyright (c) 2002-2019 Mirko Matytschak 
+// Copyright (c) 2002-2022 Mirko Matytschak 
 // (www.netdataobjects.de)
 //
 // Author: Mirko Matytschak
@@ -195,28 +195,6 @@ namespace NDOVsPackage
                 }				
             }
 		}
-
-	}
-}
-            }				
-            }
-		}
-
-	}
-}
-          messages.ShowError("An error in the Visual Studio automation system occured. The error should disappear after a restart of Visual Studio.");
-                }
-                else
-                {
-                    messages.WriteLine("");
-                    messages.WriteLine("This is possibly a follow-up error. Look at error messages above this line.");
-                }				
-            }
-		}
-
-		//public void OnBuildProjConfigBegin( string projectName, string projectConfig, string platform, string solutionConfig )
-		//{
-		//}
 
 	}
 }
