@@ -24,10 +24,10 @@ using System;
 using System.IO;
 using System.Windows.Forms;
 using EnvDTE;
-using Project = EnvDTE.Project;
+using EnvDTE80;
 using Microsoft.VisualStudio.CommandBars;
 
-namespace NDOVsPackage.Commands
+namespace NETDataObjects.NDOVSPackage
 {
 	/// <summary>
 	/// Zusammenfassung für AddPersistentClassVb.
@@ -36,14 +36,14 @@ namespace NDOVsPackage.Commands
 	{
 		Project project;
 		string className;
-        bool isSerializable;
+		bool isSerializable;
 		ProjectItem parentItem;
 
-		public AddPersistentClassVb(Project project, string className, bool isSerializable, ProjectItem parentItem)
+		public AddPersistentClassVb( Project project, string className, bool isSerializable, ProjectItem parentItem )
 		{
 			this.project = project;
 			this.className = className;
-            this.isSerializable = isSerializable;
+			this.isSerializable = isSerializable;
 			this.parentItem = parentItem;
 		}
 
@@ -74,7 +74,7 @@ namespace NDOVsPackage.Commands
 					sw.WriteLine( "End Class" );
 				}
 				ProjectItem pi = null;
-				if ( parentItem == null )
+				if (parentItem == null)
 					pi = project.ProjectItems.AddFromFile( fileName );
 				else
 					pi = parentItem.ProjectItems.AddFromFile( fileName );
@@ -84,11 +84,11 @@ namespace NDOVsPackage.Commands
 					sw.Write( newPartial );
 				}
 				pi.ProjectItems.AddFromFile( partialFileName );
-				CodeGenHelper.ActivateAndGetTextDocument(project, Path.GetFileName(fileName));
+				CodeGenHelper.ActivateAndGetTextDocument( project, Path.GetFileName( fileName ) );
 			}
-			catch(Exception ex)
+			catch (Exception ex)
 			{
-				MessageBox.Show(ex.Message);
+				MessageBox.Show( ex.Message );
 			}
 		}
 

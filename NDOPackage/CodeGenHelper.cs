@@ -60,18 +60,48 @@ namespace NDOVsPackage
 #pragma warning restore VSTHRD010 // Invoke single-threaded types on Main thread
 		}
 
+		public static bool IsCsProject( EnvDTE.Project project )
+		{
+#pragma warning disable VSTHRD010 // Invoke single-threaded types on Main thread
+			return project.Kind == ProjectKind.prjKindCSharpProject;
+#pragma warning restore VSTHRD010 // Invoke single-threaded types on Main thread
+		}
 
-		//public static ProjectItem FindProjectItemByName(Project prj, string strItemNameWithFileExtension)
-		//{
-		//	if (prj.ProjectItems.Count < 1)
-		//		throw new Exception(string.Format("Project Item {0} not found. No project items in project {1}", strItemNameWithFileExtension, prj.Name));
-		//	if (strItemNameWithFileExtension == null)
-		//		return prj.ProjectItems.Item(1);
-		//	foreach (ProjectItem pri in prj.ProjectItems)
-		//		if (pri.Name == strItemNameWithFileExtension)
-		//			return pri;
-		//	return null;
-		//}
+		public static bool IsVbProject( EnvDTE.Project project )
+		{
+#pragma warning disable VSTHRD010 // Invoke single-threaded types on Main thread
+			return project.Kind == ProjectKind.prjKindVBProject;
+#pragma warning restore VSTHRD010 // Invoke single-threaded types on Main thread
+		}
+
+
+		public static ProjectItem FindProjectItemByName( EnvDTE.Project prj, string strItemNameWithFileExtension )
+		{
+			if (prj.ProjectItems.Count < 1)
+				throw new Exception( string.Format( "Project Item {0} not found. No project items in project {1}", strItemNameWithFileExtension, prj.Name ) );
+			if (strItemNameWithFileExtension == null)
+				return prj.ProjectItems.Item( 1 );
+			foreach (ProjectItem pri in prj.ProjectItems)
+				if (pri.Name == strItemNameWithFileExtension)
+					return pri;
+			return null;
+		}
+
+		public static TextDocument ActivateAndGetTextDocument( EnvDTE.Project prj, string strProjectItem )
+		{
+			ProjectItem pri = FindProjectItemByName( prj, strProjectItem );
+			if (pri == null)
+				return null;
+
+			// we need to ensure that the item is open since we would not
+			// be able to get a text document otherwise
+			if (!pri.get_IsOpen( Constants.vsViewKindCode ))
+				pri.Open( Constants.vsViewKindCode );
+			Document doc = pri.Document;
+			doc.Activate();
+			TextDocument txdoc = doc.DTE.ActiveDocument.Object( "TextDocument" ) as TextDocument;
+			return txdoc;
+		}
 
 		public static async Task<DocumentView> ActivateTextDocumentAsync( Project prj, string fileName )
 		{
@@ -81,17 +111,4 @@ namespace NDOVsPackage
 
 	}
 }
-l;
 
-		//	// we need to ensure that the item is open since we would not
-		//	// be able to get a text document otherwise
-		//	if (!pri.get_IsOpen(Constants.vsViewKindCode))
-		//		pri.Open(Constants.vsViewKindCode);
-		//	Document doc = pri.Document;
-		//	doc.Activate();
-		//	TextDocument txdoc = doc.DTE.ActiveDocument.Object("TextDocument") as TextDocument;
-		//	return txdoc;
-		//}
-
-	}
-}

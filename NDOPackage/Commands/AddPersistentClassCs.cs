@@ -25,9 +25,8 @@ using System.Text;
 using System.IO;
 using System.Windows.Forms;
 using EnvDTE;
-using Project = Community.VisualStudio.Toolkit.Project;
 
-namespace NDOVsPackage.Commands
+namespace NETDataObjects.NDOVSPackage
 {
 	/// <summary>
 	/// Zusammenfassung für AddPersistentClassCs.
@@ -36,14 +35,14 @@ namespace NDOVsPackage.Commands
 	{
 		Project project;
 		string className;
-        bool isSerializable;
+		bool isSerializable;
 		ProjectItem parentItem;
 
-		public AddPersistentClassCs(Project project, string className, bool isSerializable, ProjectItem parentItem)
+		public AddPersistentClassCs( Project project, string className, bool isSerializable, ProjectItem parentItem )
 		{
 			this.project = project;
 			this.className = className;
-            this.isSerializable = isSerializable;
+			this.isSerializable = isSerializable;
 			this.parentItem = parentItem;
 		}
 
@@ -52,11 +51,10 @@ namespace NDOVsPackage.Commands
 			try
 			{
 				StreamWriter sw;
-				string fileName = Path.GetDirectoryName(project.FullPath) + "\\" + className + ".cs";
+				string fileName = Path.GetDirectoryName( project.FileName ) + "\\" + className + ".cs";
 				string partialFileName = fileName.Substring( 0, fileName.Length - 3 );
 				partialFileName += ".ndo.cs";
-				var dteProject = project.DteProject();
-				string namespc = (string) dteProject.Properties.Item( "RootNamespace" ).Value;
+				string namespc = (string) project.Properties.Item( "RootNamespace" ).Value;
 				using (sw = new StreamWriter( fileName, false, System.Text.Encoding.UTF8 ))
 				{
 					StringBuilder sb = new StringBuilder();
@@ -64,7 +62,7 @@ namespace NDOVsPackage.Commands
 					sb.Append( "using System;\n" );
 					sb.Append( "using System.Linq;\n" );
 					sb.Append( "using System.Collections.Generic;\n" );
-					sb.Append( "using NDO;\n\n" );					
+					sb.Append( "using NDO;\n\n" );
 					sb.Append( "namespace " + namespc + "\n" );
 					sb.Append( "{\n" );
 
@@ -89,7 +87,11 @@ namespace NDOVsPackage.Commands
 					else
 						sw.Write( result );
 				}
-				project.AddExistingFilesAsync( new[] { fileName } ).Wait();
+				ProjectItem pi = null;
+				if (parentItem == null)
+					pi = project.ProjectItems.AddFromFile( fileName );
+				else
+					pi = parentItem.ProjectItems.AddFromFile( fileName );
 
 				using (sw = new StreamWriter( partialFileName ))
 				{
@@ -98,12 +100,12 @@ namespace NDOVsPackage.Commands
 					sw.Write( newPartial );
 				}
 
-				project.AddExistingFilesAsync( partialFileName );
-				CodeGenHelper.ActivateTextDocumentAsync(project, fileName);
+				pi.ProjectItems.AddFromFile( partialFileName );
+				CodeGenHelper.ActivateAndGetTextDocument( project, Path.GetFileName( fileName ) );
 			}
-			catch(Exception ex)
+			catch (Exception ex)
 			{
-				MessageBox.Show(ex.Message);
+				MessageBox.Show( ex.Message );
 			}
 		}
 
@@ -157,16 +159,6 @@ namespace #ns#
 			set
 			{
 				throw new NotImplementedException();
-			}
-		}
-
-		#endregion
-	}
-}
-";
-	}
-}
-lementedException();
 			}
 		}
 
