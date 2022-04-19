@@ -325,45 +325,6 @@ namespace NDOVsPackage
 				references.Add( name, new NDOReference( name, path, checkThisDLL ) );
 		}
 
-        //public bool IsMappingFile(string pathToCompare)
-        //{
-        //    string dir = Path.GetDirectoryName(this.binFile);
-        //    return (string.Compare(Path.Combine(dir, this.assemblyName + "ndo.xml"), pathToCompare, true) == 0);
-        //}
-
-        public string DefaultMappingFileName
-        {
-            get
-            {
-                return Path.Combine(this.projPath, "NDOMapping.xml");
-            }
-        }
-
-        public bool MappingFileExists
-        {
-            get
-            {
-                return CheckedMappingFileName != null;
-            }
-        }
-
-        /// <summary>
-        /// Returns the mapping file, if the file exists, or null otherwise
-        /// </summary>
-        public string CheckedMappingFileName
-        {
-            get
-            {
-                if (File.Exists(DefaultMappingFileName))
-                    return DefaultMappingFileName;
-                if (assemblyName == null)
-                    return null;
-                string mappingFile = Path.Combine(projPath, this.assemblyName + "ndo.xml");
-                if (File.Exists(mappingFile))
-                    return mappingFile;
-                return null;
-            }
-        }
 
 		public void BuildReferences()
 		{
@@ -387,7 +348,7 @@ namespace NDOVsPackage
                 {
                     string outputPath = (string)conf.Properties.Item("OutputPath").Value;
                     string fullPath = (string)p.Properties.Item("FullPath").Value;
-					string outputFileName = GetBuildProperty( GetPropertyStorage(p), "TargetFileName" );
+					string outputFileName = GetBuildProperty( GetPropertyStorage(this.project), "TargetFileName" );
 					//messages.Output(fullPath + outputPath + outputFileName);
 					if (!allProjects.ContainsKey(p.Name))
                         allProjects.Add(p.Name, fullPath + outputPath + outputFileName);
@@ -447,11 +408,64 @@ namespace NDOVsPackage
 			// The package works with a transient version of the ProjectDescription, which will be saved 
 			// after a successful Build. But we need the CheckThisDLL state from the saved version for the UI.
 
-			var fileName = ConfigurationOptions.GetNdoProjFileName( project );
+			var fileName = ConfigurationOptions.GetNdoProjFileName( project.FullPath );
 
 			if (!String.IsNullOrEmpty( fileName ) && File.Exists( fileName ))
 			{
 				ProjectDescription storedDescription = new ProjectDescription( fileName );
+				var storedReferences = storedDescription.references.Values.ToArray();
+				foreach (var reference in this.references.Values)
+				{
+					var storedReference = storedReferences.FirstOrDefault( r => r.Name == reference.Name );
+					if (storedReference != null)
+					{
+						reference.CheckThisDLL = storedReference.CheckThisDLL;
+					}
+				}
+			}
+		}
+
+		public void AddFileToProject(string fileName)
+		{
+            //TODO: Make the search hierarchical
+			if (project == null)
+				return;
+			if (!File.Exists(fileName))
+				return;
+			bool found = false;
+
+            ProjectItems itemCollection = GetItemCollection(fileName);
+
+			foreach (ProjectItem pi in itemCollection)
+			{
+				if (string.Compare(Path.GetFileName(pi.Name), Path.GetFileName(fileName), true) == 0)
+				{
+					found = true;
+					break;
+				}
+			}
+			if (!found)
+            {
+#if DEBUG
+                messageAdapter.WriteLine("  Adding file to project: " + fileName);
+#endif
+				this.project.DteProject().ProjectItems.AddFromFile(fileName);
+            }
+		}
+
+
+		public Dictionary<string, NDOReference> References
+		{
+			get
+			{
+				BuildReferences();
+				return references;
+			}
+		}
+
+	}
+}
+escription( fileName );
 				var storedReferences = storedDescription.references.Values.ToArray();
 				foreach (var reference in this.references.Values)
 				{

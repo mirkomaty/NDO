@@ -23,22 +23,24 @@
 using System;
 using System.Text;
 using System.IO;
-using System.Windows.Forms;
+using MessageBox = System.Windows.Forms.MessageBox;
 using EnvDTE;
 
-namespace NETDataObjects.NDOVSPackage
+#pragma warning disable VSTHRD010 // Invoke single-threaded types on Main thread
+
+namespace NDOVsPackage.Commands
 {
 	/// <summary>
 	/// Zusammenfassung für AddPersistentClassCs.
 	/// </summary>
 	internal class AddPersistentClassCs
 	{
-		Project project;
+		EnvDTE.Project project;
 		string className;
 		bool isSerializable;
 		ProjectItem parentItem;
 
-		public AddPersistentClassCs( Project project, string className, bool isSerializable, ProjectItem parentItem )
+		public AddPersistentClassCs( EnvDTE.Project project, string className, bool isSerializable, ProjectItem parentItem )
 		{
 			this.project = project;
 			this.className = className;
@@ -168,3 +170,5 @@ namespace #ns#
 ";
 	}
 }
+
+#pragma warning restore VSTHRD010 // Invoke single-threaded types on Main thread

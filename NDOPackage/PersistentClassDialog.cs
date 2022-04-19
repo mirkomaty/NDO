@@ -1,5 +1,5 @@
 ﻿//
-// Copyright (c) 2002-2019 Mirko Matytschak 
+// Copyright (c) 2002-2022 Mirko Matytschak 
 // (www.netdataobjects.de)
 //
 // Author: Mirko Matytschak
@@ -26,7 +26,7 @@ using System.Collections;
 using System.ComponentModel;
 using System.Windows.Forms;
 
-namespace NETDataObjects.NDOVSPackage
+namespace NDOVsPackage
 {
 	/// <summary>
 	/// Zusammenfassung für PersistentClassDialog.
@@ -168,6 +168,11 @@ namespace NETDataObjects.NDOVSPackage
 		{
 			result = DialogResult.Cancel;
 			this.Close();
+		}
+
+	}
+}
+
 		}
 
 	}

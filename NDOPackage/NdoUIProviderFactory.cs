@@ -8,7 +8,7 @@ using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace NETDataObjects.NDOVSPackage
+namespace NDOVsPackage
 {
     internal class NdoUIProviderFactory
     {
@@ -85,5 +85,8 @@ namespace NETDataObjects.NDOVSPackage
                 return (from s in this.uiSupportProviders.Keys select s).ToArray();
             }
         }
+    }
+}
+  }
     }
 }

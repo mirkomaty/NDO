@@ -1,9 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Community.VisualStudio.Toolkit;
+using System.IO;
 using Microsoft.VisualStudio.Shell.Interop;
 
 namespace NDOVsPackage
@@ -26,6 +22,56 @@ namespace NDOVsPackage
             }
 
             return dteProj;
+        }
+
+        public static string DefaultMappingFileName( this Project project )
+        {
+            return Path.Combine( Path.GetDirectoryName(project.FullPath), "NDOMapping.xml" );
+        }
+
+
+        public static string MappingFilePath( this Project project )
+		{
+            string defaultFileName = project.DefaultMappingFileName();
+            if (File.Exists( defaultFileName ))
+                return defaultFileName;
+            ThreadHelper.ThrowIfNotOnUIThread();
+            var assemblyName = project.DteProject().Properties.Item( "AssemblyName" ).Value;
+            if (assemblyName == null)
+                return null;
+            string mappingFile = Path.Combine( project.FullPath, assemblyName + "ndo.xml" );
+            if (File.Exists( mappingFile ))
+                return mappingFile;
+            return null;
+        }
+
+
+        public static string DefaultMappingFileName( this EnvDTE.Project project )
+        {
+            ThreadHelper.ThrowIfNotOnUIThread();
+            return Path.Combine( Path.GetDirectoryName( project.FullName ), "NDOMapping.xml" );
+        }
+
+
+        public static string MappingFilePath( this EnvDTE.Project project )
+        {
+            string defaultFileName = project.DefaultMappingFileName();
+            if (File.Exists( defaultFileName ))
+                return defaultFileName;
+            ThreadHelper.ThrowIfNotOnUIThread();
+            var assemblyName = project.Properties.Item( "AssemblyName" ).Value;
+            if (assemblyName == null)
+                return null;
+            string mappingFile = Path.Combine( project.FullName, assemblyName + "ndo.xml" );
+            if (File.Exists( mappingFile ))
+                return mappingFile;
+            return null;
+        }
+
+
+        public static bool MappingFileExists(this Project project )
+        {
+            return project.MappingFilePath() != null;
         }
 
         public static IVsHierarchy GetVsHierarchy( this EnvDTE.Project project )

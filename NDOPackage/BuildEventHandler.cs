@@ -37,7 +37,6 @@ namespace NDOVsPackage
 	internal class BuildEventHandler
 	{
 		private MessageAdapter			messages = null;
-		private BuildEvents				buildEvents;
 
 		public BuildEventHandler()
 		{
@@ -63,7 +62,7 @@ namespace NDOVsPackage
 #if DEBUG
                 messages.WriteLine("  mapping...");
 #endif
-                mappingFile = projectDescription.DefaultMappingFileName;
+                mappingFile = project.DefaultMappingFileName();
                 projectDescription.AddFileToProject(mappingFile);
             }
             catch (Exception ex)
@@ -194,6 +193,12 @@ namespace NDOVsPackage
                     messages.WriteLine("");
                     messages.WriteLine("This is possibly a follow-up error. Look at error messages above this line.");
                 }				
+            }
+		}
+
+	}
+}
+            }				
             }
 		}
 

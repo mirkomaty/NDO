@@ -1,5 +1,5 @@
 ﻿//
-// Copyright (c) 2002-2019 Mirko Matytschak 
+// Copyright (c) 2002-2022 Mirko Matytschak 
 // (www.netdataobjects.de)
 //
 // Author: Mirko Matytschak
@@ -22,12 +22,11 @@
 
 using System;
 using System.Threading.Tasks;
-using System.IO;
-using System.Windows.Forms;
-using Microsoft.VisualStudio.CommandBars;
-using Community.VisualStudio.Toolkit;
 using Microsoft.VisualStudio.Shell.Interop;
+using Project = Community.VisualStudio.Toolkit.Project;
+using EnvDTE;
 
+#pragma warning disable VSTHRD010 // Invoke single-threaded types on Main thread
 namespace NDOVsPackage
 {
 
@@ -55,23 +54,17 @@ namespace NDOVsPackage
 
 		public static bool IsCsOrVbProject( EnvDTE.Project project )
 		{
-#pragma warning disable VSTHRD010 // Invoke single-threaded types on Main thread
 			return project.Kind == ProjectKind.prjKindVBProject || project.Kind == ProjectKind.prjKindCSharpProject;
-#pragma warning restore VSTHRD010 // Invoke single-threaded types on Main thread
 		}
 
 		public static bool IsCsProject( EnvDTE.Project project )
 		{
-#pragma warning disable VSTHRD010 // Invoke single-threaded types on Main thread
 			return project.Kind == ProjectKind.prjKindCSharpProject;
-#pragma warning restore VSTHRD010 // Invoke single-threaded types on Main thread
 		}
 
 		public static bool IsVbProject( EnvDTE.Project project )
 		{
-#pragma warning disable VSTHRD010 // Invoke single-threaded types on Main thread
 			return project.Kind == ProjectKind.prjKindVBProject;
-#pragma warning restore VSTHRD010 // Invoke single-threaded types on Main thread
 		}
 
 
@@ -95,8 +88,8 @@ namespace NDOVsPackage
 
 			// we need to ensure that the item is open since we would not
 			// be able to get a text document otherwise
-			if (!pri.get_IsOpen( Constants.vsViewKindCode ))
-				pri.Open( Constants.vsViewKindCode );
+			if (!pri.get_IsOpen( EnvDTE.Constants.vsViewKindCode ))
+				pri.Open( EnvDTE.Constants.vsViewKindCode );
 			Document doc = pri.Document;
 			doc.Activate();
 			TextDocument txdoc = doc.DTE.ActiveDocument.Object( "TextDocument" ) as TextDocument;
@@ -106,6 +99,28 @@ namespace NDOVsPackage
 		public static async Task<DocumentView> ActivateTextDocumentAsync( Project prj, string fileName )
 		{
 			var documentView = await VS.Documents.OpenAsync( fileName );
+			return documentView;
+		}
+
+	}
+}
+
+#pragma warning restore VSTHRD010 // Invoke single-threaded types on Main thread
+
+			TextDocument txdoc = doc.DTE.ActiveDocument.Object( "TextDocument" ) as TextDocument;
+			return txdoc;
+		}
+
+		public static async Task<DocumentView> ActivateTextDocumentAsync( Project prj, string fileName )
+		{
+			var documentView = await VS.Documents.OpenAsync( fileName );
+			return documentView;
+		}
+
+	}
+}
+
+
 			return documentView;
 		}
 

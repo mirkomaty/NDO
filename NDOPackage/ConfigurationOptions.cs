@@ -22,17 +22,15 @@
 
 using System;
 using System.IO;
-using System.Collections;
 using System.Xml;
-using Community.VisualStudio.Toolkit;
+
+#pragma warning disable VSTHRD010 // Invoke single-threaded types on Main thread
 
 namespace NDOVsPackage
 {
     /// <summary>
-    /// Attention!!!!! This code is essentially the same as in TestConfigurationOptions.cs 
-    /// in the project Enhancer.exe.
-    /// Because VSS makes Trouble with one file being in two VSS stores, we decided
-    /// to keep two versions.
+    /// Attention!!!!! This code is essentially the same as in ConfigurationOptions.cs 
+    /// in the project NDOEnhancer.
     /// So, if you change one of them, be aware to change the second.
     /// </summary>
     internal class ConfigurationOptions
@@ -42,16 +40,24 @@ namespace NDOVsPackage
         //void Anlegen() { }
 
 		// This is called to check the options in the Add-in
-        public ConfigurationOptions(Project project)
+        public ConfigurationOptions(Project project) : this( GetNdoProjFileName( project.FullPath ) )
         {
-            this.fileName = GetNdoProjFileName(project);
-			this.TargetMappingFileName = "NDOMapping.xml"; // Set the default name. Can be overridden by the configuration.
-			this.Utf8Encoding = true;
-            if (File.Exists(this.fileName))
+        }
+
+        public ConfigurationOptions(EnvDTE.Project project) : this (GetNdoProjFileName(project.FullName))
+		{
+		}
+
+        private ConfigurationOptions( string fileName )
+        {
+            this.fileName = fileName; 
+            this.TargetMappingFileName = "NDOMapping.xml"; // Set the default name. Can be overridden by the configuration.
+            this.Utf8Encoding = true;
+            if (File.Exists( this.fileName ))
             {
                 XmlDocument doc = new XmlDocument();
-                doc.Load(fileName);
-                Init(doc);
+                doc.Load( fileName );
+                Init( doc );
             }
         }
 
@@ -107,22 +113,22 @@ namespace NDOVsPackage
                 throw new Exception("ConfigurationOptions.Save: file name is null");
         }
 
-        public static string GetNdoProjFileName(Project project)
+        public static string GetNdoProjFileName(string fullPath)
         {
             string result;
-            if (Directory.Exists(project.FullPath)) // Web Projects have a directory as name
+            if (Directory.Exists(fullPath)) // Web Projects have a directory as name
             {
-                string s = project.FullPath;
+                string s = fullPath;
                 if (s.EndsWith("\\"))
                     s = s.Substring(0, s.Length - 1);
                 int p = s.LastIndexOf(Path.DirectorySeparatorChar);
                 if (p > -1)
                     s = s.Substring(p + 1);
                 s += ".ndoproj";
-                result = Path.Combine(project.FullPath, s);
+                result = Path.Combine(fullPath, s);
             }
             else
-                result = Path.ChangeExtension(project.FullPath, ".ndoproj");
+                result = Path.ChangeExtension(fullPath, ".ndoproj");
             return result;
         }
 
@@ -184,3 +190,4 @@ namespace NDOVsPackage
     }
 }
 
+#pragma warning restore VSTHRD010 // Invoke single-threaded types on Main thread

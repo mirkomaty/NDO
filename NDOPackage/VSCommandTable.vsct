@@ -19,7 +19,7 @@
 
 	<!--This header contains the command ids for the menus provided by the shell. -->
 	<Extern href="vsshlids.h"/>
-
+	<Include href="VSGlobals.vsct"/>
 
 
 

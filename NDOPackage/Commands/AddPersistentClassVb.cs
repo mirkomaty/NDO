@@ -1,5 +1,5 @@
 ﻿//
-// Copyright (c) 2002-2019 Mirko Matytschak 
+// Copyright (c) 2002-2022 Mirko Matytschak 
 // (www.netdataobjects.de)
 //
 // Author: Mirko Matytschak
@@ -22,24 +22,24 @@
 
 using System;
 using System.IO;
-using System.Windows.Forms;
+using MessageBox = System.Windows.Forms.MessageBox;
 using EnvDTE;
-using EnvDTE80;
-using Microsoft.VisualStudio.CommandBars;
 
-namespace NETDataObjects.NDOVSPackage
+#pragma warning disable VSTHRD010 // Invoke single-threaded types on Main thread
+
+namespace NDOVsPackage.Commands
 {
 	/// <summary>
 	/// Zusammenfassung für AddPersistentClassVb.
 	/// </summary>
 	internal class AddPersistentClassVb
 	{
-		Project project;
+		EnvDTE.Project project;
 		string className;
 		bool isSerializable;
 		ProjectItem parentItem;
 
-		public AddPersistentClassVb( Project project, string className, bool isSerializable, ProjectItem parentItem )
+		public AddPersistentClassVb( EnvDTE.Project project, string className, bool isSerializable, ProjectItem parentItem )
 		{
 			this.project = project;
 			this.className = className;
@@ -133,3 +133,5 @@ End Class
 ";
 	}
 }
+
+#pragma warning restore VSTHRD010 // Invoke single-threaded types on Main thread

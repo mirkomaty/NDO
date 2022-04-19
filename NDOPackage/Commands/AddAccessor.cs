@@ -1,4 +1,6 @@
 ﻿using System.Diagnostics;
+using EnvDTE;
+using MessageBox = System.Windows.Forms.MessageBox;
 
 namespace NDOVsPackage.Commands
 {
@@ -7,8 +9,33 @@ namespace NDOVsPackage.Commands
     {
         protected override async Task ExecuteAsync(OleMenuCmdEventArgs e)
         {
-            await VS.MessageBox.ShowWarningAsync("NDOPackage", "Button clicked");
-        }
+			try
+			{
+				Document document;
+				TextDocument textDoc;
+
+				await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
+
+				document = ApplicationObject.VisualStudioApplication.ActiveDocument;
+				if (document == null)
+					return;
+
+				textDoc = (TextDocument) document.Object( "TextDocument" );
+				if (textDoc == null)
+					return;
+
+				string fileName = document.FullName.ToLower();
+				if (fileName.EndsWith( ".cs" ))
+					new AddAccessorCs( textDoc, document ).DoIt();
+				else if (fileName.EndsWith( ".vb" ))
+					new AddAccessorVb( textDoc, document ).DoIt();
+			}
+			catch (Exception ex)
+			{
+				Debug.WriteLine( ex.ToString() );
+				MessageBox.Show( ex.Message, "Configure" );
+			}
+		}
         protected override void BeforeQueryStatus(EventArgs e)
         {
 			ThreadHelper.JoinableTaskFactory.Run(async () =>

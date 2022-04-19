@@ -24,7 +24,6 @@ global using Microsoft.VisualStudio.Shell;
 global using System;
 global using Task = System.Threading.Tasks.Task;
 using dte=EnvDTE;
-using Microsoft.VisualStudio;
 using Microsoft.VisualStudio.Shell.Interop;
 using System.Runtime.InteropServices;
 using System.Threading;
@@ -38,11 +37,12 @@ namespace NDOVsPackage
     [Guid(PackageGuids.NDOPackageString)]
     public sealed class NDOPackage : ToolkitPackage
     {
+        BuildEventHandler buildEventHandler;
         protected override async Task InitializeAsync(CancellationToken cancellationToken, IProgress<ServiceProgressData> progress)
         {
             await this.RegisterCommandsAsync();
             await JoinableTaskFactory.SwitchToMainThreadAsync();
-            var dte = (dte._DTE)this.GetService(typeof(dte._DTE));
+            var dte = (dte._DTE) await this.GetServiceAsync(typeof(dte._DTE));
             ApplicationObject.VisualStudioApplication = dte;
             this.buildEventHandler = new BuildEventHandler();
         }

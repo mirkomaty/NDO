@@ -22,11 +22,11 @@
 
 using System;
 using System.IO;
-using System.Windows.Forms;
+using MessageBox = System.Windows.Forms.MessageBox;
 using EnvDTE;
-using EnvDTE80;
-using Microsoft.VisualStudio.CommandBars;
 using System.Text.RegularExpressions;
+
+#pragma warning disable VSTHRD010 // Invoke single-threaded types on Main thread
 
 namespace NDOVsPackage.Commands
 {
@@ -237,3 +237,4 @@ namespace NDOVsPackage.Commands
 
 	}
 }
+#pragma warning restore VSTHRD010 // Invoke single-threaded types on Main thread

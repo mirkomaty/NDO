@@ -24,14 +24,16 @@ using System;
 using System.Linq;
 using System.IO;
 using System.Windows.Forms;
-using EnvDTE;
+using MessageBox = System.Windows.Forms.MessageBox;
+using Project = EnvDTE.Project;
 using System.Diagnostics;
-using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.ComponentModelHost;
 using NuGet.VisualStudio;
 using NDO.UISupport;
 
-namespace NETDataObjects.NDOVSPackage
+#pragma warning disable VSTHRD010 // Invoke single-threaded types on Main thread
+
+namespace NDOVsPackage
 {
 	/// <summary>
 	/// Summary description for ConfigurationDialog.
@@ -707,7 +709,7 @@ namespace NETDataObjects.NDOVSPackage
 				WriteBack(options);
                 if (options.SQLScriptLanguage != connType || options.DefaultConnection != connName)
                 {
-                    string mappingFileName = this.projectDescription.CheckedMappingFileName;
+                    string mappingFileName = this.project.MappingFilePath();
                     if (mappingFileName != null)
                     {
                         NDOMapping mapping = new NDOMapping(mappingFileName);
@@ -996,3 +998,5 @@ namespace NETDataObjects.NDOVSPackage
 		}
 	}
 }
+
+#pragma warning restore VSTHRD010 // Invoke single-threaded types on Main thread

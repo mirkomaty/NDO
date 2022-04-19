@@ -23,6 +23,8 @@
 using System;
 using EnvDTE;
 
+#pragma warning disable VSTHRD010 // Invoke single-threaded types on Main thread
+
 namespace NDOVsPackage
 {
 	internal class TabProperty
@@ -107,8 +109,5 @@ namespace NDOVsPackage
 
 	
 }
-}
-	}
 
-	
-}
+#pragma warning restore VSTHRD010 // Invoke single-threaded types on Main thread

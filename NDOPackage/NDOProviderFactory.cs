@@ -8,7 +8,7 @@ using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace NETDataObjects.NDOVSPackage
+namespace NDOVsPackage
 {
     class NDOProviderFactory
     {
@@ -62,5 +62,8 @@ namespace NETDataObjects.NDOVSPackage
                 return result;
             }
         }
+    }
+}
+  }
     }
 }
