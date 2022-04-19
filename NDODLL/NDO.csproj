@@ -52,7 +52,7 @@
       <PackageCopyToOutput>true</PackageCopyToOutput>
       <PackagePath>build</PackagePath>
     </Content>
-    <Content Include="..\nuget\NDOEnhancer.BuildTask.dll">
+    <Content Include="..\NDOEnhancer.BuildTask\NDOEnhancer.BuildTask\bin\Release\NdoEnhancer.BuildTask.dll">
       <Pack>true</Pack>
       <PackageCopyToOutput>true</PackageCopyToOutput>
       <PackagePath>build</PackagePath>

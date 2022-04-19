@@ -184,7 +184,7 @@ namespace NDOVsPackage.Commands
 					result += bl + "public " + typeStr + " " + bigname + '\n';
 				result += bl + "{\n";
 
-				result += bl + "\tget { return this." + name + "; }\n";
+				result += bl + "\tget => this." + name + "; \n";
 
 				if (genChangeEvent)  // Set Accessor in mehreren Zeilen
 				{
@@ -209,11 +209,11 @@ namespace NDOVsPackage.Commands
 				{
 					if (isContainer)
 						if (!isGenericList)
-							result += bl + "\tset { this." + name + " = new ArrayList( (ICollection)value ); }\n";
+							result += bl + "\tset => this." + name + " = new ArrayList( (ICollection)value );\n";
 						else
-							result += bl + "\tset { this." + name + " = value.ToList(); }\n";
+							result += bl + "\tset => this." + name + " = value.ToList();\n";
 					else
-						result += bl + "\tset { this." + name + " = value; }\n";
+						result += bl + "\tset => this." + name + " = value;\n";
 				}
 
 				result += bl + "}\n";

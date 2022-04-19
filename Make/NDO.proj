@@ -59,6 +59,7 @@
 
   <Target Name="Build">
 	<MSBuild Projects="@(Tools)" Targets="Rebuild" Properties="Configuration=$(Configuration);Platform=$(Platform)" />
+	<Exec Condition="!EXISTS('$(NDO_DIR)\SourceRevisionId.props')" Command="Copy $(NDO_DIR)\SourceRevisionId.props.sample $(NDO_DIR)\SourceRevisionId.props" />
 	<MSBuild Projects="@(Project)" Targets="restore" />
 	<MSBuild Projects="@(Project)" Targets="Rebuild" Properties="Configuration=$(Configuration);Platform=$(Platform)" />
 	<MSBuild Projects="@(Projectx86)" Targets="Rebuild" Properties="Configuration=$(Configuration);Platform=x86" />
