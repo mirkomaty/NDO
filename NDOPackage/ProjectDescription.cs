@@ -285,11 +285,24 @@ namespace NDOVsPackage
 			ThreadHelper.ThrowIfNotOnUIThread();
 			IVsHierarchy projectHierarchy = project.GetVsHierarchy();
 
+			return GetPropertyStorage( projectHierarchy );
+		}
+
+		private static IVsBuildPropertyStorage GetPropertyStorage( EnvDTE.Project project )
+		{
+			ThreadHelper.ThrowIfNotOnUIThread();
+			IVsHierarchy projectHierarchy = project.GetVsHierarchy();
+
+			return GetPropertyStorage( projectHierarchy );
+		}
+
+		private static IVsBuildPropertyStorage GetPropertyStorage( IVsHierarchy projectHierarchy )
+		{
 			IVsBuildPropertyStorage propertyStorage = null;
 
 			if (projectHierarchy != null)
 			{
-				propertyStorage = (IVsBuildPropertyStorage)projectHierarchy;
+				propertyStorage = (IVsBuildPropertyStorage) projectHierarchy;
 			}
 
 			return propertyStorage;
@@ -348,7 +361,7 @@ namespace NDOVsPackage
                 {
                     string outputPath = (string)conf.Properties.Item("OutputPath").Value;
                     string fullPath = (string)p.Properties.Item("FullPath").Value;
-					string outputFileName = GetBuildProperty( GetPropertyStorage(this.project), "TargetFileName" );
+					string outputFileName = GetBuildProperty( GetPropertyStorage(p), "TargetFileName" );
 					//messages.Output(fullPath + outputPath + outputFileName);
 					if (!allProjects.ContainsKey(p.Name))
                         allProjects.Add(p.Name, fullPath + outputPath + outputFileName);
