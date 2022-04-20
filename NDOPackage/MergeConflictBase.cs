@@ -1,5 +1,5 @@
 ﻿//
-// Copyright (c) 2002-2019 Mirko Matytschak 
+// Copyright (c) 2002-2022 Mirko Matytschak 
 // (www.netdataobjects.de)
 //
 // Author: Mirko Matytschak
@@ -34,7 +34,8 @@ using System.ComponentModel.Design;
 namespace NETDataObjects.NDOVSPackage
 {
 	/// <summary>
-	/// Zusammenfassung für MergeConflictBase.
+	/// MergeConflictBase is currently not used. It is intended for the ClassGenerator. In the event of conflicts, this produces marks in the 
+	/// code that can be resolved by this class.
 	/// </summary>
 	internal abstract class MergeConflictBase : AbstractCommand
 	{
