@@ -20,8 +20,6 @@
 	<!--This header contains the command ids for the menus provided by the shell. -->
 	<Extern href="vsshlids.h"/>
 	<Include href="VSGlobals.vsct"/>
-	<Include href="NDOPackage.vsct"/>
-
 
 
 	<!--The Commands section is where we the commands, menus and menu groups are defined.
