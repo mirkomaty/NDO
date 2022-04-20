@@ -9,7 +9,6 @@
 	<NDO_DLL>$(NDO_DIR)\bin\Release\NDO.dll</NDO_DLL>
 	<MAP_DIR>$(PERS_DIR)\SimpleMappingTool</MAP_DIR>
 	<GEN_DIR>$(PERS_DIR)\ClassGenerator</GEN_DIR>
-	<DEPLOY_DIR>$(PERS_DIR)\Deploy\Enterprise</DEPLOY_DIR>
 	<INTERF_DLL>$(PERS_DIR)\NDOInterfaces\bin\release\NDOInterfaces.dll</INTERF_DLL>
   </PropertyGroup>
 
