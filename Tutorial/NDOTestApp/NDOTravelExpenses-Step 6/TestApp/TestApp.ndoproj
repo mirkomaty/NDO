@@ -21,17 +21,15 @@
     <DropExistingElements>True</DropExistingElements>
   </Options>
   <ProjectDescription>
-    <BinPath>bin\Debug\TestApp.exe</BinPath>
-    <ObjPath>obj\Debug\</ObjPath>
+    <BinPath>bin\Debug\net6.0\TestApp.exe</BinPath>
+    <ObjPath>obj\Debug\net6.0</ObjPath>
     <AssemblyName />
     <Debug>True</Debug>
     <IsWebProject>False</IsWebProject>
     <KeyFile>
     </KeyFile>
     <References>
-      <Reference AssemblyName="BusinessClasses" AssemblyPath="..\BusinessClasses\bin\Debug\BusinessClasses.dll">
-      </Reference>
-      <Reference AssemblyName="System.Core" AssemblyPath="..\..\..\..\..\..\program files (x86)\reference assemblies\microsoft\framework\.netframework\v4.0\system.core.dll">
+      <Reference AssemblyName="PersistentClasses" AssemblyPath="..\PersistentClasses\bin\Debug\netstandard2.0\PersistentClasses.dll">
       </Reference>
     </References>
   </ProjectDescription>

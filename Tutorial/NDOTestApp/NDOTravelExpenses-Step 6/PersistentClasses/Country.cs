@@ -21,58 +21,42 @@
 
 
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using NDO;
 
 namespace BusinessClasses
 {
-	// Don't change this code.
-	// This interface implementation exists only for intellisense support.
-	// Any code in this file will be replaced by the enhancer.
-	public partial class PerDiemAllowance : IPersistentObject
-	{
-		#region IPersistentObject Members
+    [NDOPersistent]
+    public partial class Country
+    {
 
-		public void NDOMarkDirty()
-		{
-			throw new NotImplementedException();
-		}
+        string name;
+        public string Name
+        {
+            get { return name; }
+            set { name = value; }
+        }
 
-		public ObjectId NDOObjectId
-		{
-			get
-			{
-				throw new NotImplementedException();
-			}
-			set
-			{
-				throw new NotImplementedException();
-			}
-		}
+        [NDORelation(RelationInfo.Default)]
+        List<Travel> travels = new List<Travel>();
+        public IEnumerable<Travel> Travels
+        {
+        	get { return this.travels; }
+        	set { this.travels = value.ToList(); }
+        }
+        public void AddTravel(Travel t)
+        {
+        	this.travels.Add(t);
+        }
+        public void RemoveTravel(Travel t)
+        {
+        	if (this.travels.Contains(t))
+        		this.travels.Remove(t);
+        }
 
-		public NDOObjectState NDOObjectState
-		{
-			get
-			{
-				throw new NotImplementedException();
-			}
-			set
-			{
-				throw new NotImplementedException();
-			}
-		}
-
-		public Guid NDOTimeStamp
-		{
-			get
-			{
-				throw new NotImplementedException();
-			}
-			set
-			{
-				throw new NotImplementedException();
-			}
-		}
-
-		#endregion
-	}
+        public Country()
+        {
+        }
+    }
 }

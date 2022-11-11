@@ -4,7 +4,7 @@
     <Connection ID="C0" Name="Substitute this string with your connection string" Type="" />
   </Connections>
   <Classes>
-    <Class AssemblyName="BusinessClasses" FullName="BusinessClasses.Address" TableName="Address" ConnectionId="C0" TypeCode="297910061">
+    <Class AssemblyName="PersistentClasses" FullName="BusinessClasses.Address" TableName="Address" ConnectionId="C0" TypeCode="297910061">
       <Oid>
         <OidColumn AutoIncremented="True" Name="ID" AllowDbNull="False" />
       </Oid>
@@ -24,7 +24,7 @@
       </Fields>
       <Relations />
     </Class>
-    <Class AssemblyName="BusinessClasses" FullName="BusinessClasses.Country" TableName="Country" ConnectionId="C0" TypeCode="-1891534129">
+    <Class AssemblyName="PersistentClasses" FullName="BusinessClasses.Country" TableName="Country" ConnectionId="C0" TypeCode="-1891534129">
       <Oid>
         <OidColumn AutoIncremented="True" Name="ID" AllowDbNull="False" />
       </Oid>
@@ -42,7 +42,7 @@
         </Relation>
       </Relations>
     </Class>
-    <Class AssemblyName="BusinessClasses" FullName="BusinessClasses.Employee" TableName="Employee" ConnectionId="C0" TypeCode="-1237505387">
+    <Class AssemblyName="PersistentClasses" FullName="BusinessClasses.Employee" TableName="Employee" ConnectionId="C0" TypeCode="-1237505387">
       <Oid>
         <OidColumn AutoIncremented="True" Name="ID" AllowDbNull="False" />
       </Oid>
@@ -63,7 +63,7 @@
         </Relation>
       </Relations>
     </Class>
-    <Class AssemblyName="BusinessClasses" FullName="BusinessClasses.Expense" TableName="Unused" ConnectionId="C0">
+    <Class AssemblyName="PersistentClasses" FullName="BusinessClasses.Expense" TableName="Unused" ConnectionId="C0">
       <Oid>
         <OidColumn AutoIncremented="True" Name="Unused" AllowDbNull="False" />
       </Oid>
@@ -74,7 +74,7 @@
       </Fields>
       <Relations />
     </Class>
-    <Class AssemblyName="BusinessClasses" FullName="BusinessClasses.ExpenseVoucher" TableName="ExpenseVoucher" ConnectionId="C0" TypeCode="1312703965">
+    <Class AssemblyName="PersistentClasses" FullName="BusinessClasses.ExpenseVoucher" TableName="ExpenseVoucher" ConnectionId="C0" TypeCode="1312703965">
       <Oid>
         <OidColumn AutoIncremented="True" Name="ID" AllowDbNull="False" />
       </Oid>
@@ -91,7 +91,7 @@
       </Fields>
       <Relations />
     </Class>
-    <Class AssemblyName="BusinessClasses" FullName="BusinessClasses.MileageAllowance" TableName="MileageAllowance" ConnectionId="C0" TypeCode="1916143445">
+    <Class AssemblyName="PersistentClasses" FullName="BusinessClasses.MileageAllowance" TableName="MileageAllowance" ConnectionId="C0" TypeCode="1916143445">
       <Oid>
         <OidColumn AutoIncremented="True" Name="ID" AllowDbNull="False" />
       </Oid>
@@ -105,7 +105,7 @@
       </Fields>
       <Relations />
     </Class>
-    <Class AssemblyName="BusinessClasses" FullName="BusinessClasses.PerDiemAllowance" TableName="PerDiemAllowance" ConnectionId="C0" TypeCode="-237229707">
+    <Class AssemblyName="PersistentClasses" FullName="BusinessClasses.PerDiemAllowance" TableName="PerDiemAllowance" ConnectionId="C0" TypeCode="-237229707">
       <Oid>
         <OidColumn AutoIncremented="True" Name="ID" AllowDbNull="False" />
       </Oid>
@@ -119,7 +119,7 @@
       </Fields>
       <Relations />
     </Class>
-    <Class AssemblyName="BusinessClasses" FullName="BusinessClasses.Picture" TableName="Picture" ConnectionId="C0" TypeCode="867860535">
+    <Class AssemblyName="PersistentClasses" FullName="BusinessClasses.Picture" TableName="Picture" ConnectionId="C0" TypeCode="867860535">
       <Oid>
         <OidColumn AutoIncremented="True" Name="ID" AllowDbNull="False" />
       </Oid>
@@ -136,7 +136,7 @@
       </Fields>
       <Relations />
     </Class>
-    <Class AssemblyName="BusinessClasses" FullName="BusinessClasses.PictureHeader" TableName="Picture" ConnectionId="C0" TypeCode="-68482652">
+    <Class AssemblyName="PersistentClasses" FullName="BusinessClasses.PictureHeader" TableName="Picture" ConnectionId="C0" TypeCode="-68482652">
       <Oid>
         <OidColumn AutoIncremented="True" Name="ID" AllowDbNull="False" />
       </Oid>
@@ -150,7 +150,7 @@
       </Fields>
       <Relations />
     </Class>
-    <Class AssemblyName="BusinessClasses" FullName="BusinessClasses.Travel" TableName="Travel" ConnectionId="C0" TypeCode="289312961">
+    <Class AssemblyName="PersistentClasses" FullName="BusinessClasses.Travel" TableName="Travel" ConnectionId="C0" TypeCode="289312961">
       <Oid>
         <OidColumn AutoIncremented="True" Name="ID" AllowDbNull="False" />
       </Oid>

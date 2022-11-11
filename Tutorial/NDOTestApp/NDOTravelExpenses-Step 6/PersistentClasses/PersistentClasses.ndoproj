@@ -22,16 +22,13 @@
     <DropExistingElements>False</DropExistingElements>
   </Options>
   <ProjectDescription>
-    <BinPath>bin\Debug\BusinessClasses.dll</BinPath>
-    <ObjPath>obj\Debug\</ObjPath>
+    <BinPath>bin\Debug\netstandard2.0\PersistentClasses.dll</BinPath>
+    <ObjPath>obj\Debug\netstandard2.0\</ObjPath>
     <AssemblyName />
     <Debug>True</Debug>
     <IsWebProject>False</IsWebProject>
-    <KeyFile>
-    </KeyFile>
+    <KeyFile />
     <References>
-      <Reference AssemblyName="System.Core" AssemblyPath="..\..\..\..\..\..\program files (x86)\reference assemblies\microsoft\framework\.netframework\v4.0\system.core.dll">
-      </Reference>
     </References>
   </ProjectDescription>
 </Enhancer>
