@@ -68,14 +68,14 @@ namespace LoadAssemblyTest
 			if (assName.Equals( "NDO", StringComparison.OrdinalIgnoreCase ))
 				packageName = "ndo.dll";
 
-			string? path = new NugetProps(this.pathToLoad).DefaultNugetPackageFolder;
-			if (path == null)
+			string? nugetBasePath = new NugetProps(this.pathToLoad).DefaultNugetPackageFolder;
+			if (nugetBasePath == null)
 				throw new Exception("Nuget-Folder not found");
 
 			var packageDir = new ProjectAssets(this.projPath).GetPackageDir( packageName );
 			if (packageDir == null)
 				return null;
-			return Path.Combine( path, packageDir );
+			return Path.Combine( nugetBasePath, packageDir );
 		}
 	}
 }
