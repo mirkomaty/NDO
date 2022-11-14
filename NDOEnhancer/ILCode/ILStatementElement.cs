@@ -53,53 +53,17 @@ namespace ILCode
 			}
 		}
 
-		public class Iterator : ILElementIterator
-		{
-			public Iterator( ILElement element )
-				: base( element, typeof( ILStatementElement ) )
-			{
-			}
-
-			public Iterator( ILElement element, bool recursive )
-				: base( element, typeof( ILStatementElement ), recursive )
-			{
-			}
-
-			public new ILStatementElement
-			getNext()
-			{
-				return base.getNext() as ILStatementElement;
-			}
-		}
-
 		private static ILElementType		m_elementType = new ILStatementElementType();
 
 		private string						m_name;
 		private string						m_signature;
 		
-		public static void
-		initialize()
-		{
-		}
-
-		public static ILStatementElement.Iterator
-		getIterator( ILElement element )
-		{
-			return new Iterator( element );
-		}
-
-		public static ILStatementElement.Iterator
-		getIterator( ILElement element, bool recursive )
-		{
-			return new Iterator( element, recursive );
-		}
-
 		public void
 		setFirstLine( string firstLine )
 		{
-            string label = getLabel(this.getLine(0)) + "  ";
-			clearLines();
-			addLine( label + firstLine );
+            string label = GetLabel(this.GetLine(0)) + "  ";
+			ClearLines();
+			AddLine( label + firstLine );
 		}
 
 		private string[]
@@ -134,24 +98,24 @@ namespace ILCode
 		}
 
 		public override void
-		parse( ILFile ilfile )
+		Parse( ILFile ilfile )
 		{
-			string[] words = dropEmptyWords( getLine( 0 ).Split( new char[] { '\t', ' ' } ) );
+			string[] words = dropEmptyWords( GetLine( 0 ).Split( new char[] { '\t', ' ' } ) );
 
 			if ( 2 < words.Length && isMultilineStatement( words[1] ) )
 			{
-				string line = getLine( 0 );
+				string line = GetLine( 0 );
 
 				while ( -1 == line.IndexOf( ')' ) )
 				{
 					line = ilfile.popLine();
-					addLine( line );
+					AddLine( line );
 				}
 
 				return;
 			}
 
-			base.parse( ilfile );
+			base.Parse( ilfile );
 		}
 
 		public string
@@ -160,7 +124,7 @@ namespace ILCode
 			if ( null != m_name )
 				return m_name;
 
-			string[] words = dropEmptyWords( getLine( 0 ).Split( new char[] { '\t', ' ' } ) );
+			string[] words = dropEmptyWords( GetLine( 0 ).Split( new char[] { '\t', ' ' } ) );
 
 			if ( words[0].EndsWith( ":" ) )
 				m_name = words[1];
@@ -185,10 +149,10 @@ namespace ILCode
 				return m_signature;
 
 			string allLines = "";
-			for ( int i=0; i<getLineCount(); i++ )
-				allLines = allLines + " " + getLine( i );
+			for ( int i=0; i<GetLineCount(); i++ )
+				allLines = allLines + " " + GetLine( i );
 
-			string[] words = splitWords( allLines );
+			string[] words = SplitWords( allLines );
 			int		 count;
 			for ( count=0; count<words.Length; count++ )
 				if ( words[count].Equals( "(" ) )
@@ -224,7 +188,7 @@ namespace ILCode
 				if ( 0 < i )
 					m_signature = m_signature + ", ";
 
-				string type = makeFullType( parameterTypes[i] as string );
+				string type = MakeFullType( parameterTypes[i] as string );
 
 				m_signature = m_signature + type;
 			}
@@ -250,12 +214,12 @@ namespace ILCode
 				return;
 
 			string oldName = m_signature.Substring( pos1 + 2, pos2 - pos1 - 2 );
-			string newName = makeUpperCaseName( oldName );
+			string newName = MakeUpperCaseName( oldName );
 
 			if ( oldName == newName )
 				return;
 
-			replaceTextOnce( "::" + oldName + "(", "::" + newName + "(" );
+			ReplaceTextOnce( "::" + oldName + "(", "::" + newName + "(" );
 
 			m_signature = m_signature.Substring( 0, pos1 + 2 ) + newName + m_signature.Substring( pos2 );
 		}

@@ -53,20 +53,6 @@ namespace ILCode
 			}
 		}
 
-		public class Iterator : ILElementIterator
-		{
-			public Iterator( ILElement element )
-				: base( element, typeof( ILFieldElement ) )
-			{
-			}
-
-			public new ILFieldElement
-			getNext()
-			{
-				return base.getNext() as ILFieldElement;
-			}
-		}
-
 		private static ILElementType		m_elementType = new ILFieldElementType();
 
 		private bool						m_isPublic	  = false;
@@ -83,17 +69,6 @@ namespace ILCode
 		private string						m_javaType;
 		private string						m_javaClass;
 		private string						m_javaSignature;
-		
-		public static void
-		initialize()
-		{
-		}
-
-		public static ILFieldElement.Iterator
-		getIterator( ILElement element )
-		{
-			return new Iterator( element );
-		}
 
 		private void
 		resolve()
@@ -101,7 +76,7 @@ namespace ILCode
 			if ( null != m_name )
 				return;
 
-			string[] words = splitWords( getLine( 0 ) );
+			string[] words = SplitWords( GetLine( 0 ) );
 			int		 count;
 			for ( count=0; count<words.Length; count++ )
 				if ( words[count].Equals( "=" ) )
@@ -346,7 +321,7 @@ namespace ILCode
 		}
 
 		protected override void
-		unresolve()
+		Unresolve()
 		{
 			m_name = null;
 		}
@@ -358,29 +333,17 @@ namespace ILCode
 			resolve();
 
 			// Hole das nächste Element im IL-Quelltext
-			ILCustomElement cusElem = this.getSuccessor() as ILCustomElement;
+			ILCustomElement cusElem = this.GetSuccessor() as ILCustomElement;
 			while (null != cusElem)
 			{
-				if (cusElem.isAttribute( transientAttribute ) )
+				if (cusElem.IsAttribute( transientAttribute ) )
 				{
 					return false;
 				}
-				cusElem = cusElem.getSuccessor() as ILCustomElement;
+				cusElem = cusElem.GetSuccessor() as ILCustomElement;
 			}
 			return true;
 		}
-
-
-		public ILCustomElement.AttributeInfo
-		getAttributeInfo ( ILElementIterator allIter )
-		{
-			ILCustomElement cusElem = allIter.getNext() as ILCustomElement;
-			if (null == cusElem ) return null;
-			//TODO: Eigentlich müsste der Fall berücksichtigt werden,
-			// wenn ein Feld mehrere Attribute hat.
-			return cusElem.getAttributeInfo();
-		}
-
 
 		public bool
 		isPrivate()

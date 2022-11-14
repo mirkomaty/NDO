@@ -1,5 +1,5 @@
 ﻿//
-// Copyright (c) 2002-2016 Mirko Matytschak 
+// Copyright (c) 2002-2022 Mirko Matytschak 
 // (www.netdataobjects.de)
 //
 // Author: Mirko Matytschak
@@ -22,7 +22,7 @@
 
 using System;
 using System.Diagnostics;
-using System.Collections;
+using System.Collections.Generic;
 using System.Text;
 
 namespace ILCode
@@ -39,7 +39,7 @@ namespace ILCode
 		public ILElement( bool hasElements )
 		{
 			if ( hasElements )
-				m_elements = new ArrayList();
+				m_elements = new List<ILElement>();
 		}
 
 		public ILElement( string firstLine )
@@ -54,34 +54,34 @@ namespace ILCode
 		}
 
 		private ILElement				m_owner		= null;
-		private ArrayList				m_lines		= new ArrayList();
-		private ArrayList				m_elements	= null;
-		private ArrayList				m_classElements = null;
+		private List<string>			m_lines		= new List<string>();
+		private List<ILElement>			m_elements	= null;
+		private List<ILClassElement>	m_classElements = null;
 		private string					m_assemblyName;
 
-		private static ArrayList		m_elementTypes = new ArrayList();
+		private static List<ILElementType>  m_elementTypes = new List<ILElementType>();
 
 		private enum					Status{ normal, escape, quote, ccomment, cppcomment };
 
 		public static void
-		addElementType( ILElementType elementType )
+		AddElementType( ILElementType elementType )
 		{
 			m_elementTypes.Add( elementType );
 		}
 
 		public ILElement
-		getElement( string line )
+		GetElement( string line )
 		{
 			foreach ( ILElementType elementType in m_elementTypes )
 			{
-				if ( elementType.isElement( line ) )
-					return elementType.createElement( line, this );
+				if ( elementType.IsElement( line ) )
+					return elementType.CreateElement( line, this );
 			}
 
 			return null;
 		}
 
-		public string getAllLines()
+		public string GetAllLines()
 		{
 			string result = "";
 			foreach (string line in m_lines)
@@ -92,18 +92,18 @@ namespace ILCode
 		}
 
 		public ILElement
-		findElement(string pattern)
+		FindElement(string pattern)
 		{
 			foreach (ILElement el in m_elements)
 			{
-				if (el.getAllLines().IndexOf(pattern) > -1)
+				if (el.GetAllLines().IndexOf(pattern) > -1)
 					return el;
 			}
 			return null;
 		}
 
 
-		public ILLocalsElement getLocals()
+		public ILLocalsElement GetLocals()
 		{
 			foreach(ILElement el in this.m_elements)
 				if (el is ILLocalsElement)
@@ -113,27 +113,27 @@ namespace ILCode
 
 
 		public void
-		parseSubElements( ILFile ilfile )
+		ParseSubElements( ILFile ilfile )
 		{
-			m_elements = new ArrayList();
+			m_elements = new List<ILElement>();
 
 			for ( string line = ilfile.popLine(); null != line; line = ilfile.popLine() )
 			{
 				if ( line.StartsWith( "}" ) )
 					return;
 
-				ILElement element = getElement( line );
+				ILElement element = GetElement( line );
 
 				if ( null != element )
 				{
 					m_elements.Add( element );
-					element.parse( ilfile );
+					element.Parse( ilfile );
 				}
 			}
 		}
 
 		public virtual void
-		parse( ILFile ilfile )
+		Parse( ILFile ilfile )
 		{
 			string nextLine = ilfile.popLine();
 
@@ -150,7 +150,7 @@ namespace ILCode
 			}
 			else if ( nextLine.StartsWith( "{" ) )
 			{
-				parseSubElements( ilfile );
+				ParseSubElements( ilfile );
 			}
 			else if ( nextLine.StartsWith( "}" ) )
 			{
@@ -158,29 +158,29 @@ namespace ILCode
 			}
 			else if ( nextLine.StartsWith( "//" ) )
 			{
-				parse( ilfile );
+				Parse( ilfile );
 			}
 			else
 			{
 				m_lines.Add( nextLine );
-				parse( ilfile );
+				Parse( ilfile );
 			}
 		}
 
 		public void
-		writeSubElements( ILFile ilfile, int level, bool isNetStandard )
+		WriteSubElements( ILFile ilfile, int level, bool isNetStandard )
 		{
 			if ( null == m_elements )
 				return;
 
 			foreach ( ILElement element in m_elements )
 			{
-				element.write( ilfile, level, isNetStandard );
+				element.Write( ilfile, level, isNetStandard );
 			}
 		}
 
 		public void
-		write( ILFile ilfile, int level, bool isNetStandard )
+		Write( ILFile ilfile, int level, bool isNetStandard )
 		{
 			//			ilfile.writeLine( 0, "// " + GetType().Name );
 
@@ -199,64 +199,64 @@ namespace ILCode
 
 			ilfile.writeLine( level, "{" );
 
-			writeSubElements( ilfile, level + 1, isNetStandard );
+			WriteSubElements( ilfile, level + 1, isNetStandard );
 
 			ilfile.writeLine( level, "}" );
 		}
 
 		public ILElement
-		getOwner()
+		GetOwner()
 		{
 			return m_owner;
 		}
 
 		private void
-		setOwner( ILElement owner )
+		SetOwner( ILElement owner )
 		{
 			m_owner = owner;
 		}
 
 		internal ILElement
-		getRootOwner()
+		GetRootOwner()
 		{
 			if ( null != m_owner )
-				return m_owner.getRootOwner();
+				return m_owner.GetRootOwner();
 			else
 				return this;
 		}
 
 		public int
-		getLineCount()
+		GetLineCount()
 		{
 			return m_lines.Count;
 		}
 
 		public string
-		getLine( int index )
+		GetLine( int index )
 		{
 			return m_lines[index] as string;
 		}
 
 		protected void
-		clearLines()
+		ClearLines()
 		{
 			m_lines.Clear();
 		}
 
 		public void
-		clearElements()
+		ClearElements()
 		{
 			m_elements.Clear();
 		}
 
 		public void
-		addLine( string line )
+		AddLine( string line )
 		{
 			m_lines.Add( line );
 		}
 
 		public void
-		appendLastLine( string text )
+		AppendLastLine( string text )
 		{
 			int lastIndex = m_lines.Count - 1;
 			string line = m_lines[lastIndex] + text;
@@ -265,11 +265,11 @@ namespace ILCode
 		}
 
 		public void
-		replaceText( string oldText, string newText )
+		ReplaceText( string oldText, string newText )
 		{
-			for ( int i=0; i<getLineCount(); i++ )
+			for ( int i=0; i<GetLineCount(); i++ )
 			{
-				string oldLine = getLine( i );
+				string oldLine = GetLine( i );
 				string newLine = "";
 				int	   index;
 
@@ -297,27 +297,27 @@ namespace ILCode
 
 					m_lines[i] = newLine + oldLine;
 
-					unresolve();
+					Unresolve();
 				}
 			}
 
-			for ( int i=0; i<getSubElementCount(); i++ )
+			for ( int i=0; i<GetSubElementCount(); i++ )
 			{
-				getElement( i ).replaceText( oldText, newText );
+				GetElement( i ).ReplaceText( oldText, newText );
 			}
 		}
 
 		protected virtual void
-		unresolve()
+		Unresolve()
 		{
 		}
 
 		public void
-		replaceTextOnce( string oldText, string newText )
+		ReplaceTextOnce( string oldText, string newText )
 		{
-			for ( int i=0; i<getLineCount(); i++ )
+			for ( int i=0; i<GetLineCount(); i++ )
 			{
-				string line = getLine( i );
+				string line = GetLine( i );
 
 				int pos = line.IndexOf( oldText );
 
@@ -333,7 +333,7 @@ namespace ILCode
 		}
 
 		public int
-		getSubElementCount()
+		GetSubElementCount()
 		{
 			if ( null == m_elements )
 				return 0;
@@ -342,7 +342,7 @@ namespace ILCode
 		}
 
 		public ILElement
-		getElement( int index )
+		GetElement( int index )
 		{
 			if ( null == m_elements )
 				return null;
@@ -354,13 +354,13 @@ namespace ILCode
 		}
 
 		public bool
-		insertBefore( ILElement insertElement, ILElement existingElement )
+		InsertBefore( ILElement insertElement, ILElement existingElement )
 		{
 			for ( int i=0; i<m_elements.Count; i++ )
 			{
 				if ( m_elements[i] == existingElement )
 				{
-					insertElement.setOwner( this );
+					insertElement.SetOwner( this );
 					m_elements.Insert( i, insertElement );
 					return true;
 				}
@@ -370,22 +370,22 @@ namespace ILCode
 		}
 
 		public bool
-		insertBefore( ILElement insertElement )
+		InsertBefore( ILElement insertElement )
 		{
-			if ( null == getOwner() )
+			if ( null == GetOwner() )
 				return false;
 
-			return getOwner().insertBefore( insertElement, this );
+			return GetOwner().InsertBefore( insertElement, this );
 		}
 
 		protected bool
-		insertAfter( ILElement insertElement, ILElement existingElement )
+		InsertAfter( ILElement insertElement, ILElement existingElement )
 		{
 			for ( int i=0; i<m_elements.Count; i++ )
 			{
 				if ( m_elements[i] == existingElement )
 				{
-					insertElement.setOwner( this );
+					insertElement.SetOwner( this );
 					if ( (i + 1) < m_elements.Count )
 						m_elements.Insert( i + 1, insertElement );
 					else
@@ -399,255 +399,90 @@ namespace ILCode
 		}
 
 		public bool
-		insertAfter( ILElement insertElement )
+		InsertAfter( ILElement insertElement )
 		{
-			if ( null == getOwner() )
+			if ( null == GetOwner() )
 				return false;
 
-			return getOwner().insertAfter( insertElement, this );
+			return GetOwner().InsertAfter( insertElement, this );
 		}
 
 		protected void
-		remove( ILElement removeElement )
+		Remove( ILElement removeElement )
 		{
-			removeElement.setOwner( null );
+			removeElement.SetOwner( null );
 			m_elements.Remove( removeElement );
-			if (removeElement is ILClassElement)
-				m_classElements.Remove(removeElement);
+			if (removeElement is ILClassElement clel)
+				m_classElements.Remove(clel);
 		}
 
 		public void
-		remove()
+		Remove()
 		{
-			if ( null == getOwner() )
+			if ( null == GetOwner() )
 				return;
 
-			getOwner().remove( this );
+			GetOwner().Remove( this );
 		}
 
 		public void
-		addElement( ILElement insertElement )
+		AddElement( ILElement insertElement )
 		{
 			if ( null == m_elements )
-				m_elements = new ArrayList();
+				m_elements = new List<ILElement>();
 
-			insertElement.setOwner( this );
-			if (insertElement is ILClassElement)
+			insertElement.SetOwner( this );
+			if (insertElement is ILClassElement classElement)
 			{
 				if (m_classElements == null)
 				{
 					// Erst versuchen, vorhandene Elemente zu finden
-					this.getAllClassElements();
+					this.GetAllClassElements();
 					// Keine gefunden? Neue Arraylist anlegen
 					if (m_classElements == null)
-						m_classElements = new ArrayList();
+						m_classElements = new List<ILClassElement>();
 				}
-				m_classElements.Add(insertElement);
+				m_classElements.Add(classElement);
 			}
 			m_elements.Add( insertElement );
 		}
 
-		public IList
-		getAllClassElements()
+		public IEnumerable<ILClassElement>
+		GetAllClassElements()
 		{
 			if (m_classElements != null)
 				return m_classElements;
 
-			ArrayList forwardClasses = new ArrayList();
-			ArrayList classes		 = new ArrayList();
+			var classes		 = new List<ILClassElement>();
 
-			getAllClassElements( forwardClasses, classes );
+			GetAllClassElements( classes );
 			m_classElements = classes;
 			return classes;
 		}
 
 		internal void
-		getAllClassElements( ArrayList forwardClasses, ArrayList classes )
+		GetAllClassElements( List<ILClassElement> classes )
 		{
 			if ( null == m_elements )
 				return;
 
 //			Debug.WriteLine("Type: " + this.GetType().Name);
 //			Debug.Indent();
-			for ( int i = 0; i < m_elements.Count; i++ )
+			foreach ( var element in m_elements  )
 			{
-                ILClassElement classElement = m_elements[i] as ILClassElement;
+                ILClassElement classElement = element as ILClassElement;
                 if (classElement != null)
 				{
-#if NET20
                     classes.Add(classElement);
-#else
-					string classname = classElement.getClassFullName();
-//					Debug.Write(classname + " -> ");
-					for ( int j = 0; j < forwardClasses.Count; j++ )
-					{
-						ILClassElement forwardClassElement = forwardClasses[j] as ILClassElement;
-						string forwardClassname = forwardClassElement.getClassFullName();
-
-						if ( classname.Equals( forwardClassname ) )
-						{
-							forwardClasses.RemoveAt( j );
-							classElement.setForwardClassElement( forwardClassElement );
-//							Debug.WriteLine(forwardClassname);
-
-							break;
-						}
-					}
-
-					if ( null == classElement.getForwardClassElement() )
-					{
-//						Debug.WriteLine("nix");
-						forwardClasses.Add( classElement );
-					}
-					else
-						classes.Add( classElement );
-#endif
 				}
 				
-				(m_elements[i] as ILElement).getAllClassElements( forwardClasses, classes );
+				element.GetAllClassElements( classes );
 			}
 //			Debug.Unindent();
 		}
 
-		public ILStatementElement[]
-		getAllStatementElements()
-		{
-			ArrayList statements = new ArrayList();
-
-			getAllStatementElements( statements );
-
-			return statements.ToArray( typeof( ILStatementElement) ) as ILStatementElement[];
-		}
-
-		internal void
-		getAllStatementElements( ArrayList statements )
-		{
-			if ( null == m_elements )
-				return;
-
-			for ( int i=0; i<m_elements.Count; i++ )
-			{
-				ILClassElement classElement = m_elements[i] as ILClassElement;
-				if ( null != classElement )
-				{
-					continue;
-				}
-
-				ILStatementElement statementElement = m_elements[i] as ILStatementElement;
-				if ( null != statementElement )
-				{
-					statements.Add( statementElement );
-					continue;
-				}
-				
-				(m_elements[i] as ILElement).getAllStatementElements( statements );
-			}
-		}
-
-		public ILElementIterator
-		getAllIterator(bool recursive)
-		{
-			return new ILElementIterator( this, typeof( ILElement ), recursive );
-		}
-
-		public ILAssemblyElement.Iterator
-		getAssemblyIterator()
-		{
-			return ILAssemblyElement.getIterator( this );
-		}
-
-		public ILCustomElement.Iterator
-		getCustomIterator()
-		{
-			return ILCustomElement.getIterator( this );
-		}
-
-		public ILModuleElement.Iterator
-		getModuleIterator()
-		{
-			return ILModuleElement.getIterator( this );
-		}
-		
-		public ILPublickeytokenElement.Iterator
-		getPublickeytokenIterator()
-		{
-			return ILPublickeytokenElement.getIterator( this );
-		}
-		
-		public ILPublickeyElement.Iterator
-		getPublickeyIterator()
-		{
-			return ILPublickeyElement.getIterator( this );
-		}
-		
-		public ILNamespaceElement.Iterator
-		getNamespaceIterator()
-		{
-			return ILNamespaceElement.getIterator( this );
-		}
-
-		public ILClassElement.Iterator
-		getClassIterator()
-		{
-			return ILClassElement.getIterator( this );
-		}
-
-		public ILFieldElement.Iterator
-		getFieldIterator()
-		{
-			return ILFieldElement.getIterator( this );
-		}
-
-		public ILPropertyElement.Iterator
-		getPropertyIterator()
-		{
-			return ILPropertyElement.getIterator( this );
-		}
-
-		public ILMethodElement.Iterator
-		getMethodIterator()
-		{
-			return ILMethodElement.getIterator( this );
-		}
-
-		public ILTryElement.Iterator
-		getTryIterator()
-		{
-			return ILTryElement.getIterator( this );
-		}
-
-		public ILCatchElement.Iterator
-		getCatchIterator()
-		{
-			return ILCatchElement.getIterator( this );
-		}
-
-		public ILStatementElement.Iterator
-		getStatementIterator(bool recursive)
-		{
-			return ILStatementElement.getIterator( this, recursive );
-		}
-
-		public ILStatementElement.Iterator
-		getStatementIterator()
-		{
-			return ILStatementElement.getIterator( this );
-		}
-
-		public ILLineElement.Iterator
-		getLineIterator()
-		{
-			return ILLineElement.getIterator( this );
-		}
-
-		public ILUnknownElement.Iterator
-		getUnknownElement()
-		{
-			return ILUnknownElement.getIterator( this );
-		}
-
 		protected string
-		stripComment( string text )
+		StripComment( string text )
 		{
 			if ( text.IndexOf( "/*" ) < 0 && text.IndexOf( "//" ) < 0 )	// no comment
 			{
@@ -742,9 +577,9 @@ namespace ILCode
 
         
 		protected string[]
-		splitWords( string line )
+		SplitWords( string line )
 		{
-			line = stripComment( line );
+			line = StripComment( line );
 			line = line.Replace( "(", " ( " );
 			line = line.Replace( ")", " ) " );
 			line = line.Replace( "=", " = " );
@@ -770,7 +605,7 @@ namespace ILCode
 		}
         
 		protected Type
-		typeFromIL( string typeName )
+		TypeFromIL( string typeName )
 		{
 			typeName = typeName.Trim();
 
@@ -805,7 +640,7 @@ namespace ILCode
 			else if ( typeName[0] == '[' )
 			{
 				int	   end	   = typeName.IndexOf( "]", 1 );
-				string assName = stripComment( typeName.Substring( 1, end - 1 ) );
+				string assName = StripComment( typeName.Substring( 1, end - 1 ) );
 
 				return Type.GetType( typeName.Substring( end + 1 ) + ", " + assName );
 			}
@@ -816,7 +651,7 @@ namespace ILCode
 		}
 
 		public virtual string
-		makeUpperCaseName( string name )
+		MakeUpperCaseName( string name )
 		{
 			string oldName = name;
 
@@ -830,7 +665,7 @@ namespace ILCode
 		}
 
 		protected string
-		makeFullType( string type )
+		MakeFullType( string type )
 		{
 			string typetype;
 			string typename;
@@ -853,11 +688,11 @@ namespace ILCode
 			if ( typename[0] == '[' )
 				return type;
 
-			return typetype + " [" + getAssemblyName() + "]" + typename;
+			return typetype + " [" + GetAssemblyName() + "]" + typename;
 		}
 
 		public void
-		setAssemblyName( string assemblyName )
+		SetAssemblyName( string assemblyName )
 		{
 			m_assemblyName = assemblyName;
 
@@ -866,18 +701,18 @@ namespace ILCode
 
 			foreach ( ILElement element in m_elements )
 			{
-				element.setAssemblyName( assemblyName );
+				element.SetAssemblyName( assemblyName );
 			}
 		}
 
 		public string
-		getAssemblyName()
+		GetAssemblyName()
 		{
 			return m_assemblyName;
 		}
 
 		public virtual void
-		removeAssemblyReference( string assemblyName )
+		RemoveAssemblyReference( string assemblyName )
 		{
 			string reference = "[" + assemblyName + "]";
 
@@ -891,23 +726,23 @@ namespace ILCode
 
 			foreach ( ILElement element in m_elements )
 			{
-				element.removeAssemblyReference( assemblyName );
+				element.RemoveAssemblyReference( assemblyName );
 			}
 		}
 
-		public ILElement getSuccessor()
+		public ILElement GetSuccessor()
 		{
-			ILElement Owner = getOwner();
-			return Owner.getSuccessorOf(this);
+			ILElement Owner = GetOwner();
+			return Owner.GetSuccessorOf(this);
 		}
 
-		public ILElement getPredecessor()
+		public ILElement GetPredecessor()
 		{
-			ILElement Owner = getOwner();
-			return Owner.getPredecessorOf(this);
+			ILElement Owner = GetOwner();
+			return Owner.GetPredecessorOf(this);
 		}
 
-		public ILElement getPredecessorOf(ILElement elementToSearch)
+		public ILElement GetPredecessorOf(ILElement elementToSearch)
 		{
 			ILElement lastEl = null;
 			for (int i = 0; i < m_elements.Count; i++)
@@ -923,7 +758,7 @@ namespace ILCode
 
 
 		public ILElement 
-		getSuccessorOf( ILElement elementToSearch )
+		GetSuccessorOf( ILElement elementToSearch )
 		{
 			for (int i = 0; i < m_elements.Count; i++)
 			{
@@ -940,7 +775,7 @@ namespace ILCode
 
 
 		public static string 
-		stripLabel(string s)
+		StripLabel(string s)
 		{
 			if (s.Trim().StartsWith("IL_"))
 			{
@@ -952,7 +787,7 @@ namespace ILCode
 		}
 
         public static string
-        getLabel(string s)
+        GetLabel(string s)
         {
             if (!s.Trim().StartsWith("IL_"))
                 return string.Empty;
@@ -960,6 +795,23 @@ namespace ILCode
             return s.Substring(0, pos + 1);
         }
 
+		public IEnumerable<ILElement> Elements => m_elements;
+
+		public IEnumerable<ILElement> GetElementsRecursive()
+		{
+			List<ILElement> elements = new List<ILElement>();
+			GetElementsRecursive( elements );
+			return elements;
+		}
+
+		public void GetElementsRecursive(List<ILElement> elements)
+		{
+			elements.AddRange( m_elements );
+			foreach (var el in m_elements)
+			{
+				GetElementsRecursive( elements );
+			}
+		}
 
 	}
 }

@@ -47,43 +47,12 @@ namespace ILCode
 			}
 		}
 
-		internal class Iterator : ILElementIterator
-		{
-			public Iterator( ILElement element )
-				: base( element, typeof( ILNamespaceElement ) )
-			{
-			}
-
-			public new ILNamespaceElement
-			getFirst()
-			{
-				return base.getFirst() as ILNamespaceElement;
-			}
-
-			public new ILNamespaceElement
-			getNext()
-			{
-				return base.getNext() as ILNamespaceElement;
-			}
-		}
-
 		private static ILElementType		m_elementType = new ILNamespaceElementType();
-		
-		public static void
-		initialize()
-		{
-		}
-
-		public static ILNamespaceElement.Iterator
-		getIterator( ILElement element )
-		{
-			return new Iterator( element );
-		}
 
 		public string
 		getNamespaceName()
 		{
-			string firstLine = getLine( 0 );
+			string firstLine = GetLine( 0 );
 
 			string[] words = firstLine.Split( new char[] { ' ' } );
 

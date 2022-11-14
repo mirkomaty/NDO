@@ -42,31 +42,7 @@ namespace ILCode
 			}
 		}
 
-		internal class Iterator : ILElementIterator
-		{
-			public Iterator( ILElement element )
-				: base( element, Type.GetType( "com.poet.tools.util.bytecode.ilcode.ILLocalsElement" ) )
-			{
-			}
-
-			public new ILLocalsElement
-			getNext()
-			{
-				return base.getNext() as ILLocalsElement;
-			}
-		}
-
 		private static ILElementType		m_elementType = new ILLocalsElementType();
 		
-		public static void
-		initialize()
-		{
-		}
-
-		public static ILLocalsElement.Iterator
-		getIterator( ILElement element )
-		{
-			return new Iterator( element );
-		}
 	}
 }

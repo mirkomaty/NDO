@@ -58,7 +58,7 @@ namespace NDOEnhancer
 
 		public bool Manipulate(Hashtable reflectors, ILStatementElement statementElement)
 		{
-			string line = ILElement.stripLabel(statementElement.getAllLines());
+			string line = ILElement.StripLabel(statementElement.GetAllLines());
             string callvirtInstance = "callvirt   instance ";
             if (line.StartsWith(callvirtInstance))
                 line = line.Substring(callvirtInstance.Length);
@@ -106,8 +106,8 @@ namespace NDOEnhancer
             else if (foundName == "RemoveAll")
                 retval = "int32";
 		
-			statementElement.insertBefore(new ILStatementElement("ldloc __ndocontainertable"));
-			statementElement.insertBefore(new ILStatementElement("call       " + retval + " [NDO]NDO._NDOContainerStack::" 
+			statementElement.InsertBefore(new ILStatementElement("ldloc __ndocontainertable"));
+			statementElement.InsertBefore(new ILStatementElement("call       " + retval + " [NDO]NDO._NDOContainerStack::" 
 				+ stackMethod));
 
             // The non generic IList.Add function has an int32 result.
@@ -115,11 +115,11 @@ namespace NDOEnhancer
             // To give the result of the non generic function back, our Add function has also an int32 result.
             // If the call was to a generic version, we have to eliminate the result value with a pop instruction.
             if (foundName == "Add" && foundMethod.ReflectedType.IsGenericType)
-                statementElement.insertBefore(new ILStatementElement("pop"));
+                statementElement.InsertBefore(new ILStatementElement("pop"));
             if (foundName == "Remove" && !foundMethod.ReflectedType.IsGenericType)
-                statementElement.insertBefore(new ILStatementElement("pop"));
+                statementElement.InsertBefore(new ILStatementElement("pop"));
 
-			statementElement.remove();
+			statementElement.Remove();
 			return true;
 		}
 

@@ -35,14 +35,14 @@ namespace ILCode
 			m_keyWord = keyWord;
 			m_type	  = type;
 
-			ILFile.addElementType( this );
+			ILFile.AddElementType( this );
 		}
 
 		private string		m_keyWord;
 		private Type		m_type;
 
 		public virtual bool
-		isElement( string firstLine )
+		IsElement( string firstLine )
 		{
 			if ( ! firstLine.StartsWith( m_keyWord ) )
 				return false;
@@ -57,7 +57,7 @@ namespace ILCode
 		}
 
 		public ILElement
-		createElement( string firstLine, ILElement owner )
+		CreateElement( string firstLine, ILElement owner )
 		{
 			if ( null == m_type )
 				return null;

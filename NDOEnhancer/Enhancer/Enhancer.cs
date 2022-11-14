@@ -1281,23 +1281,22 @@ namespace NDOEnhancer
 				messages.Indent();
 
 				// Hier wird der Elementbaum erzeugt
-				ilfile.parse( ilFileName );
-				ILAssemblyElement.Iterator assit = ilfile.getAssemblyIterator();
-				ILAssemblyElement el;
+				ilfile.Parse( ilFileName );
+
                 if (projectDescription.KeyFile == string.Empty)
                     this.assemblyKeyFile = null;
                 else
                     this.assemblyKeyFile = projectDescription.KeyFile;
-				for (el = assit.getNext(); el != null; el = assit.getNext() )
+				foreach (var el in ilfile.AssemblyElements)
 				{
-					if (!el.isExtern())
+					if (!el.IsExtern)
 					{
-						ILCustomElement.Iterator cusit = el.getCustomIterator();
-						ILCustomElement custEl;
-						for (custEl = cusit.getNext(); custEl != null; custEl = cusit.getNext())
+						var customElements = el.CustomElements;
+
+						foreach (var custEl in customElements)
 						{
-							ILCustomElement.AttributeInfo ai = custEl.getAttributeInfo();
-							if (ai.Name == "System.Reflection.AssemblyKeyAttribute")
+							ILCustomElement.AttributeInfo ai = custEl.GetAttributeInfo();
+							if (ai.TypeName == "System.Reflection.AssemblyKeyAttribute")
 							{
 								string s = (string) ai.ParamValues[0];
 								if (s != null && s != string.Empty)
@@ -1306,7 +1305,7 @@ namespace NDOEnhancer
 									break;
 								}
 							}
-							if (ai.Name == "System.Reflection.AssemblyKeyFileAttribute")
+							if (ai.TypeName == "System.Reflection.AssemblyKeyFileAttribute")
 							{
 								string s = (string) ai.ParamValues[0];
 								if (s != null && s != string.Empty)
@@ -1389,29 +1388,30 @@ namespace NDOEnhancer
 
 		void analyzeAndEnhance( ILFile ilFile )
 		{			
-			IList classes = ilFile.getAllClassElements();
+			var classes = ilFile.GetAllClassElements();
 
 			if (!isEnhanced)
 			{
 				IList foreignAssemblies = checkRelationTargetAssemblies();
 
-				ILAssemblyElement.Iterator ai = ilFile.getAssemblyIterator();
 				bool insertData = true;
 				bool insertXml = true;
 				bool insertNdo = true;
 				bool insertNdoInterfaces = true;
 				bool insertSystem = true;
 
-				for ( ILAssemblyElement assElem = ai.getNext(); null != assElem; assElem = ai.getNext() )
+				foreach ( var assyElem in ilFile.AssemblyElements)
 				{ 
-					string nameLower = assElem.getName().ToLower();
-					if (foreignAssemblies.Contains(assElem.getName()))
-						foreignAssemblies.Remove(assElem.getName());
-					string line = assElem.getLine(0);
-					if (!assElem.isExtern())
+					string nameLower = assyElem.Name.ToLower();
+					if (foreignAssemblies.Contains(assyElem.Name))
+						foreignAssemblies.Remove(assyElem.Name);
+					string line = assyElem.GetLine(0);
+
+					// If it's the own assemblyElement, we add the NDOEnhanced attribute
+					if (!assyElem.IsExtern)
 					{
-                        ILElement lastEl = assElem.getCustomIterator().getLast();
-						lastEl.insertBefore(new ILCustomElement(".custom instance void [NDO]NDO.NDOEnhancedAttribute::.ctor() = ( 01 00 00 00 )", assElem));
+                        ILElement lastEl = assyElem.CustomElements.Last();
+						lastEl.InsertBefore(new ILCustomElement(".custom instance void [NDO]NDO.NDOEnhancedAttribute::.ctor() = ( 01 00 00 00 )", assyElem));
 					}
 					if (line.StartsWith(".assembly"))
 					{
@@ -1426,10 +1426,12 @@ namespace NDOEnhancer
                             if (this.verboseMode)
                             {
                                 messages.WriteLine("NDO Dll:");
-                                ILElementIterator it = assElem.getAllIterator(true);
-                                for (ILElement subEl = it.getFirst(); subEl != null; subEl = it.getNext())
-                                    messages.WriteInsertedLine(subEl.getAllLines());
+								foreach (var subEl in assyElem.Elements)
+								{
+									messages.WriteInsertedLine( subEl.GetAllLines() );
+								}
                             }
+
 							insertNdo = false;
 
 							/* We don't need a version check anymore. This might be necessary again, if it comes to .NET Version 5
@@ -1444,91 +1446,39 @@ namespace NDOEnhancer
                                     + ". This NDO enhancer only works with NDO.dll version " + version + ". Please correct your assembly reference and rebuild the assembly.");
                             }
 							*/
-#if NDO12
-                            if (assElem.Major != 1 && assElem.Minor != 2)
-                            {
-                                throw new Exception("This assembly is built with NDO.dll Version " + assElem.VersionString.Replace(':', '.')
-                                    + ". This NDO enhancer only works with NDO.dll version 1.2. Please correct your assembly reference and rebuild the assembly.");
-                            }
-#endif
-#if NDO11
-							if (assElem.Major != 1 && assElem.Minor != 1)
-							{
-								throw new Exception("This assembly is built with NDO.dll Version " + assElem.VersionString.Replace(':', '.')
-									+ ". This NDO enhancer only works with NDO.dll version 1.1. Please correct your assembly reference and rebuild the assembly.");
-							}                      
-#endif
-                        }
-						if (nameLower == "ndointerfaces")
-						{
-							insertNdoInterfaces = false;
-#if NDO12
-                            if (assElem.Major != 1 && assElem.Minor != 2)
-                            {
-                                throw new Exception("This assembly is built with NDOInterfaces.dll Version " + assElem.VersionString.Replace(':', '.')
-                                    + ". This NDO enhancer only works with NDOInterfaces.dll version > 1.2. Please correct your assembly reference and rebuild the assembly.");
-                            }
-#endif
-#if NDO11
-                            if (assElem.Major != 1 && assElem.Minor != 1)
-							{
-								throw new Exception("This assembly is built with NDOInterfaces.dll Version " + assElem.VersionString.Replace(':', '.')
-									+ ". This NDO enhancer only works with NDOInterfaces.dll version 1.1. Please correct your assembly reference and rebuild the assembly.");
-							}                      
-#endif
+
                         }
 					}
-#if DEBUG
 					else
 					{
 						throw new Exception("Assembly element doesn't start with .assembly.");
 					}
-#endif
 				}
 
-				ai = ilFile.getAssemblyIterator();
-				ILAssemblyElement ael = ai.getNext();
-				//				string verString;
+				ILAssemblyElement ael = ilFile.AssemblyElements.First();
 
-
+#warning Do we need this code, and if this is the case, we must adjust the version numbers
+				// We might need System.Data.Common as well.
 				if (insertData)
 				{
-#if NET20
 					string line = @".assembly extern System.Data
 {
 .publickeytoken = (B7 7A 5C 56 19 34 E0 89 )
 .ver 2:0:0:0
 }
 ";
-#else
-					string line = @".assembly extern System.Data
-{
-.publickeytoken = (B7 7A 5C 56 19 34 E0 89 )
-.ver 1:0:3300:0
-}
-";
-#endif
-					ael.insertBefore(new ILElement(line));
+					ael.InsertBefore(new ILElement(line));
 				}
 
 				if (insertSystem)
 				{
-#if NET20
 					string line = @".assembly extern System
 {
 .publickeytoken = (B7 7A 5C 56 19 34 E0 89 )
 .ver 2:0:0:0
 }
 ";
-#else
-					string line = @".assembly extern System
-{
-  .publickeytoken = (B7 7A 5C 56 19 34 E0 89 )
-  .ver 1:0:5000:0
-}
-";
-#endif
-					ael.insertBefore(new ILElement(line));
+					ael.InsertBefore(new ILElement(line));
 				}
 
 				if (insertXml)
@@ -1536,22 +1486,13 @@ namespace NDOEnhancer
 //					Assembly ass = Assembly.GetAssembly(typeof(System.Data.DataRow));
 //					verString = getAssemblyInfo(ass, "Version=", "");
 //					verString = ".ver " + verString.Replace(".", ":");
-#if NET20
                     string line = @".assembly extern System.Xml
 {
 .publickeytoken = (B7 7A 5C 56 19 34 E0 89 )
 .ver 2:0:0:0
 }
 ";
-#else
-					string line = @".assembly extern System.Xml
-{
-.publickeytoken = (B7 7A 5C 56 19 34 E0 89 )
-.ver 1:0:3300:0
-}
-";
-#endif
-					ael.insertBefore(new ILElement(line));
+					ael.InsertBefore(new ILElement(line));
 				}
 
 				if (insertNdo)
@@ -1566,7 +1507,7 @@ namespace NDOEnhancer
 }
 ";
 
-					ael.insertBefore(new ILElement(line));
+					ael.InsertBefore(new ILElement(line));
 				}
 
 				if (insertNdoInterfaces)
@@ -1579,7 +1520,7 @@ namespace NDOEnhancer
 }
 ";
 
-					ael.insertBefore(new ILElement(line));
+					ael.InsertBefore(new ILElement(line));
 				}
 
 				foreach(string s in foreignAssemblies)
@@ -1607,7 +1548,7 @@ namespace NDOEnhancer
 }
 ";
 
-					ael.insertBefore(new ILElement(line));
+					ael.InsertBefore(new ILElement(line));
 					
 				}
 
@@ -1616,7 +1557,7 @@ namespace NDOEnhancer
 			// Jetzt alle Klassen durchlaufen und ggf. Enhancen
 			foreach ( ILClassElement classElement in  classes )
 			{
-				if (classElement.isPersistent(typeof (NDOPersistentAttribute)))
+				if (classElement.IsPersistent(typeof (NDOPersistentAttribute)))
 				{
 					Dictionary<string, string> accessors = classElement.findAccessorProperties();
 					Class classMapping = mappings.FindClass( classElement.getMappingName() );

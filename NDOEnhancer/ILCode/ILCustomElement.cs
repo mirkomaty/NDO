@@ -34,6 +34,10 @@ namespace ILCode
 	/// </summary>
 	internal class ILCustomElement : ILElement
 	{
+		/*
+      .custom instance void [NDO]NDO.Linq.ServerFunctionAttribute::.ctor(string) = ( 01 00 15 4D 49 4E 5F 41 43 54 49 56 45 5F 52 4F   // ...MIN_ACTIVE_RO
+                                                                                     57 56 45 52 53 49 4F 4E 00 00 )                   // WVERSION..		 
+		 */
 		public ILCustomElement()
 			: base( false )
 		{
@@ -43,14 +47,7 @@ namespace ILCode
 			: base( firstLine, owner )
 		{
 		}
-/*
-		public ILCustomElement(string typeName, object[] parameters)
-			: base ( false )
-		{
-			string param = makeParameters(parameters);
-			//this.addLine
-		}
-*/
+
 		internal class ILCustomElementType : ILElementType
 		{
 			public ILCustomElementType()
@@ -59,53 +56,26 @@ namespace ILCode
 			}
 		}
 
-		internal class Iterator : ILElementIterator
-		{
-			public Iterator( ILElement element )
-				: base( element, typeof (ILCustomElement) )
-			{
-			}
-
-			public new ILCustomElement
-				getNext()
-			{
-				return base.getNext() as ILCustomElement;
-			}
-		}
-
 		private static ILElementType		m_elementType = new ILCustomElementType();
+		private AttributeInfo attributeInfo = null;
 		
-		public static void
-			initialize()
-		{
-		}
 
-		public static ILCustomElement.Iterator
-			getIterator( ILElement element )
+		private void Resolve()
 		{
-			return new Iterator( element );
+			if (this.attributeInfo == null)
+				this.attributeInfo = GetAttributeInfo();
 		}
 
 		public bool
-			isAttribute( Type type )
+		IsAttribute( Type type )
 		{
-			if ( null == type )
-				return false;
-
-			string firstLine = getLine( 0 );
-
-			return (-1 < firstLine.IndexOf( type.FullName ));
+			Resolve();
+			return this.attributeInfo.TypeName == type.FullName;
 		}
 
-/*
-		private string
-			makeParameters(object[] parameters)
-		{
-			return null;
-		}
-*/
+
 		private object
-			readParam( byte[] bytes, Type type, ref int pos )
+		ReadParam( byte[] bytes, Type type, ref int pos )
 		{
 			if ( type.FullName == "System.String" || type.FullName == "System.Type")
 			{
@@ -164,7 +134,7 @@ namespace ILCode
 
 		internal class AttributeInfo
 		{
-			public string Name;
+			public string TypeName;
 			public string AssemblyName;
 			public string[] ParamTypeNames = new string[]{};
 			public object[] ParamValues = new object[]{};
@@ -172,13 +142,13 @@ namespace ILCode
 
 
 		public AttributeInfo
-			getAttributeInfo()
+			GetAttributeInfo()
 		{
 			string text = "";
 
-			for ( int i=0; i<getLineCount(); i++ )
+			for ( int i=0; i<GetLineCount(); i++ )
 			{
-				string line = getLine( i );
+				string line = GetLine( i );
 				
 				int cmt = line.IndexOf( "//" );
 				if ( -1 < cmt )
@@ -193,19 +163,19 @@ namespace ILCode
 
 			start = text.IndexOf( "[" ) + 1;
 			end   = text.IndexOf( "]", start );
-			string assName = stripComment( text.Substring( start, end - start ) );
+			string assName = StripComment( text.Substring( start, end - start ) );
 
 			// type name
 
 			start = text.IndexOf( "]" ) + 1;
 			end	  = text.IndexOf( "::", start );
-			string typeName = stripComment( text.Substring( start, end - start ) );
+			string typeName = StripComment( text.Substring( start, end - start ) );
 
 			// constructor signature
 
 			start = text.IndexOf( "(" ) + 1;
 			end	  = text.IndexOf( ")", start );
-			string signature = stripComment( text.Substring( start, end - start ) );
+			string signature = StripComment( text.Substring( start, end - start ) );
 
 			// parameter bytes
 
@@ -285,18 +255,19 @@ namespace ILCode
 						throw new Exception("Relation Attribute: Unknown type in attribute parameter list: " + paramTypeName);
 
 					//paramTypes[i]  = Type.GetType( paramTypeNames[i] );
-					paramValues[i] = readParam( bytes, paramTypes[i], ref pos );
+					paramValues[i] = ReadParam( bytes, paramTypes[i], ref pos );
 				}
 			}
 			//			ConstructorInfo ci	 = attributeType.GetConstructor( paramTypes );
 			AttributeInfo	attr = new AttributeInfo();
-			attr.Name = typeName;
+			attr.TypeName = typeName;
 			attr.AssemblyName = assName;
 			attr.ParamTypeNames = paramTypeNames;
 			attr.ParamValues = paramValues;
 
-			//TODO: sollten jemals benannte Parameter dazukommen
-			//TODO: müssten wir hier einigen Code hinzufügen
+			//TODO: Should we ever need to analyze named parameters
+			// we'll have to add lots of code here.
+			// We'd be better off, if we analyzed the IL code using the ECMA spec.
 
 			//			short count = (short) readParam( bytes, chars, Type.GetType( "System.Int16" ), ref pos );
 			//
@@ -313,15 +284,16 @@ namespace ILCode
 			//				pi.SetValue( attr, propVal, null );
 			//			}
 
+			this.attributeInfo = attr;
 			return attr;
 		}
 
 		public void
 			replaceLines( string firstLine )
 		{
-			clearLines();
+			ClearLines();
 
-			addLine( firstLine );
+			AddLine( firstLine );
 		}
 
 	

@@ -42,7 +42,7 @@ namespace ILCode
 			}
 
 			public override bool
-			isElement( string firstLine )
+			IsElement( string firstLine )
 			{
 				return 0 == firstLine.Length;
 			}
@@ -50,9 +50,5 @@ namespace ILCode
 
 		private static ILElementType		m_elementType = new ILBlankElementType();
 		
-		public static void
-		initialize()
-		{
-		}
 	}
 }

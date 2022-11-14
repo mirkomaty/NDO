@@ -21,9 +21,10 @@
 
 
 using System;
+using System.Linq;
 using System.IO;
 using System.Text;
-using System.Collections;
+using System.Collections.Generic;
 
 namespace ILCode
 {
@@ -32,32 +33,6 @@ namespace ILCode
 	/// </summary>
 	internal class ILFile : ILElement
 	{
-		static ILFile()
-		{
-			ILBlankElement.initialize();
-			ILCommentElement.initialize();
-			ILAssemblyElement.initialize();
-			ILCustomElement.initialize();
-			ILModuleElement.initialize();
-			ILPublickeytokenElement.initialize();
-			ILPublickeyElement.initialize();
-			ILNamespaceElement.initialize();
-			ILClassElement.initialize();
-			ILFieldElement.initialize();
-			ILPropertyElement.initialize();
-			ILGetElement.initialize();
-			ILSetElement.initialize();
-			ILMethodElement.initialize();
-			ILTryElement.initialize();
-			ILCatchElement.initialize();
-			ILStatementElement.initialize();
-			ILLineElement.initialize();
-			ILLocalsElement.initialize();
-			ILMaxstackElement.initialize();
-			
-			ILUnknownElement.initialize();
-		}
-
 		public ILFile()
 			: base( "", null )
 		{
@@ -67,27 +42,28 @@ namespace ILCode
 		StreamWriter				m_streamOut;
 		string						m_lineBuffer = "";
 		string						m_filename;
+		List<ILAssemblyElement>		m_assemblyElements = null;
 
 		public void
-		parse( string filename )
+		Parse( string filename )
 		{
 			m_filename = filename;
 			m_streamIn = new StreamReader( filename, Encoding.UTF8 );
 
-			parseSubElements( this );
+			ParseSubElements( this );
 
 			m_streamIn.Close();
 			m_streamIn = null;
 
-			ILAssemblyElement.Iterator assIter = getAssemblyIterator();
-			for ( ILAssemblyElement assElem = assIter.getNext(); null != assElem; assElem = assIter.getNext() )
-			{
-				if ( ! assElem.isExtern() )
-				{
-					setAssemblyName( assElem.getName() );
-					break;
-				}
-			}
+			m_assemblyElements = ( from e in Elements
+								   let ae = e as ILAssemblyElement
+								   where ae != null select ae).ToList();
+
+			var externElement = (from ae in m_assemblyElements where !ae.IsExtern select ae).FirstOrDefault();
+			if (externElement == null)
+				throw new Exception( "ILFile doesn't have an assembly extern element" );
+
+			SetAssemblyName( externElement.Name );
 		}
 
 		public string
@@ -101,7 +77,7 @@ namespace ILCode
 		{
 			m_streamOut = new StreamWriter( file, false, Encoding.UTF8);
 
-			writeSubElements( this, 0, isNetStandard );
+			WriteSubElements( this, 0, isNetStandard );
 
 			m_streamOut.Close();
 			m_streamOut = null;
@@ -122,7 +98,7 @@ namespace ILCode
 				line = m_streamIn.ReadLine();
 				if ( null != line )
 				{
-					line = stripComment( line );
+					line = StripComment( line );
 				}
 			}
 
@@ -143,17 +119,16 @@ namespace ILCode
 		}
 
 		public override void
-		removeAssemblyReference( string assemblyName )
+		RemoveAssemblyReference( string assemblyName )
 		{
-			ILAssemblyElement.Iterator assIter = getAssemblyIterator();
+			var externElement = (from ae in m_assemblyElements 
+								 where ae.IsExtern && ae.Name == assemblyName 
+								 select ae).FirstOrDefault();
 
-			for ( ILAssemblyElement assElem = assIter.getFirst(); null != assElem; assElem = assIter.getNext() )
-			{
-				if ( assElem.isExtern() && assElem.getName() == assemblyName )
-					assElem.remove();
-			}
+			if (externElement == null)
+				return;
 
-			base.removeAssemblyReference( assemblyName );
+			externElement.Remove();
 		}
 
 		public bool
@@ -197,7 +172,7 @@ namespace ILCode
 			}
 		}
 
-
+		public IEnumerable<ILAssemblyElement> AssemblyElements => m_assemblyElements;
 	
 	}
 }

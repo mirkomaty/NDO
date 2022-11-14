@@ -49,26 +49,6 @@ namespace ILCode
 			}
 		}
 
-		public class Iterator : ILElementIterator
-		{
-			public Iterator( ILElement element )
-				: base( element, typeof( ILMethodElement ) )
-			{
-			}
-
-			public new ILMethodElement
-			getFirst()
-			{
-				return base.getFirst() as ILMethodElement;
-			}
-
-			public new ILMethodElement
-			getNext()
-			{
-				return base.getNext() as ILMethodElement;
-			}
-		}
-
 		private static ILElementType		m_elementType = new ILMethodElementType();
 		
 		private bool						m_isPrivate	  = false;
@@ -88,22 +68,10 @@ namespace ILCode
 		private ArrayList					m_parameterTypes = new ArrayList();
 		private ArrayList					m_parameterNames = new ArrayList();
 
-		public static void
-		initialize()
-		{
-		}
-
-		public static ILMethodElement.Iterator
-		getIterator( ILElement element )
-		{
-			return new Iterator( element );
-		}
-
-
 		public void
 		addStatement( string firstLine )
 		{
-			addElement( new ILStatementElement( firstLine ) );
+			AddElement( new ILStatementElement( firstLine ) );
 		}
 
 		public bool
@@ -128,14 +96,14 @@ namespace ILCode
 			if ( null != m_name )
 				return;
 
-			string allLines = this.getAllLines();
+			string allLines = this.GetAllLines();
 
             EcmaMethodHeader methodHeader = new EcmaMethodHeader();
             if (!methodHeader.Parse(allLines))
                 throw new Exception("Invalid Method Header: " + allLines);
 
             //TODO: This doesn't work well with generic types
-            string[] words = splitWords(methodHeader.ParameterList);
+            string[] words = SplitWords(methodHeader.ParameterList);
             int count;
             for (count = 0; count < words.Length; count++)
                 if (words[count].Equals("("))
@@ -228,30 +196,30 @@ namespace ILCode
 		}
 
 		protected override void
-		unresolve()
+		Unresolve()
 		{
 			m_name = null;
 		}
 
 		public override string
-		makeUpperCaseName( string name )
+		MakeUpperCaseName( string name )
 		{
 			if ( isSpecialName() )
 				return name;
 
-			return base.makeUpperCaseName( name );
+			return base.MakeUpperCaseName( name );
 		}
 
 		public void
 		makeUpperCaseName()
 		{
 			string oldName = getName();
-			string newName = makeUpperCaseName( oldName );
+			string newName = MakeUpperCaseName( oldName );
 
 			if ( oldName == newName )
 				return;
 
-			replaceTextOnce( oldName + "(", newName + "(" );
+			ReplaceTextOnce( oldName + "(", newName + "(" );
 
 			m_name		= newName;
 			m_signature	= newName + m_signature.Substring( m_signature.IndexOf( "(" ) );
@@ -388,7 +356,7 @@ namespace ILCode
 		public ILClassElement
 		getClass()
 		{
-			return getOwner() as ILClassElement;
+			return GetOwner() as ILClassElement;
 		}
 	}
 }

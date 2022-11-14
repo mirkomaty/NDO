@@ -47,31 +47,7 @@ namespace ILCode
 			}
 		}
 
-		internal class Iterator : ILElementIterator
-		{
-			public Iterator( ILElement element )
-				: base( element, typeof( ILSetElement ) )
-			{
-			}
+		private static ILElementType		m_elementType = new ILSetElementType();		
 
-			public new ILSetElement
-			getNext()
-			{
-				return base.getNext() as ILSetElement;
-			}
-		}
-
-		private static ILElementType		m_elementType = new ILSetElementType();
-		
-		public static void
-		initialize()
-		{
-		}
-
-		public static ILSetElement.Iterator
-		getIterator( ILElement element )
-		{
-			return new Iterator( element );
-		}
 	}
 }

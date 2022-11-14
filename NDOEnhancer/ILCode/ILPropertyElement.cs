@@ -49,39 +49,8 @@ namespace ILCode
 			}
 		}
 
-		internal class Iterator : ILElementIterator
-		{
-			public Iterator( ILElement element )
-				: base( element, typeof( ILPropertyElement ) )
-			{
-			}
-
-			public new ILPropertyElement
-			getFirst()
-			{
-				return base.getFirst() as ILPropertyElement;				
-			}
-
-			public new ILPropertyElement
-			getNext()
-			{
-				return base.getNext() as ILPropertyElement;
-			}
-		}
-
 		private static ILElementType		m_elementType = new ILPropertyElementType();
 		
-		public static void
-		initialize()
-		{
-		}
-
-		public static ILPropertyElement.Iterator
-		getIterator( ILElement element )
-		{
-			return new Iterator( element );
-		}
-
 		public string
 		getName()
 		{
@@ -96,7 +65,7 @@ namespace ILCode
 		{
 			if ( this.m_name == null )
 			{
-				string[] all = getAllLines().Split( ' ' );
+				string[] all = GetAllLines().Split( ' ' );
 				this.m_name = all[all.Length - 1].Replace( "()", string.Empty );
 			}
 		}
@@ -104,13 +73,13 @@ namespace ILCode
 		public void
 		addGetter( string firstLine )
 		{
-			addElement( new ILGetElement( firstLine ) );
+			AddElement( new ILGetElement( firstLine ) );
 		}
 
 		public void
 		addSetter( string firstLine )
 		{
-			addElement( new ILSetElement( firstLine ) );
+			AddElement( new ILSetElement( firstLine ) );
 		}
 	}
 }

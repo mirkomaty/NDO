@@ -44,9 +44,5 @@ namespace ILCode
 
 		private static ILElementType		m_elementType = new ILCommentElementType();
 		
-		public static void
-		initialize()
-		{
-		}
 	}
 }

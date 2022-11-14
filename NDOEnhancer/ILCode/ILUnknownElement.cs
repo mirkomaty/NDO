@@ -47,37 +47,13 @@ namespace ILCode
 			}
 
 			public override bool
-			isElement( string firstLine )
+			IsElement( string firstLine )
 			{
 				return true;
 			}
 		}
 
-		internal class Iterator : ILElementIterator
-		{
-			public Iterator( ILElement element )
-				: base( element, typeof( ILUnknownElement ) )
-			{
-			}
-
-			public new ILUnknownElement
-			getNext()
-			{
-				return base.getNext() as ILUnknownElement;
-			}
-		}
-
 		private static ILElementType		m_elementType = new ILUnknownElementType();
 		
-		public static void
-		initialize()
-		{
-		}
-
-		public static ILUnknownElement.Iterator
-		getIterator( ILElement element )
-		{
-			return new Iterator( element );
-		}
 	}
 }

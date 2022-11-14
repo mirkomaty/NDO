@@ -47,37 +47,7 @@ namespace ILCode
 			}
 		}
 
-		internal class Iterator : ILElementIterator
-		{
-			public Iterator( ILElement element )
-				: base( element, typeof( ILPublickeytokenElement ) )
-			{
-			}
-
-			public new ILPublickeytokenElement
-			getFirst()
-			{
-				return base.getFirst() as ILPublickeytokenElement;
-			}
-
-			public new ILPublickeytokenElement
-			getNext()
-			{
-				return base.getNext() as ILPublickeytokenElement;
-			}
-		}
-
 		private static ILElementType		m_elementType = new ILPublickeytokenElementType();
-		
-		public static void
-		initialize()
-		{
-		}
 
-		public static ILPublickeytokenElement.Iterator
-		getIterator( ILElement element )
-		{
-			return new Iterator( element );
-		}
 	}
 }

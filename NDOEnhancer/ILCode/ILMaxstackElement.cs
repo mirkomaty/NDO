@@ -42,31 +42,7 @@ namespace ILCode
 			}
 		}
 
-		internal class Iterator : ILElementIterator
-		{
-			public Iterator( ILElement element )
-				: base( element, typeof( ILMaxstackElement ) )
-			{
-			}
-
-			public new ILMaxstackElement
-			getNext()
-			{
-				return base.getNext() as ILMaxstackElement;
-			}
-		}
-
 		private static ILElementType		m_elementType = new ILMaxstackElementType();
-		
-		public static void
-		initialize()
-		{
-		}
 
-		public static ILMaxstackElement.Iterator
-		getIterator( ILElement element )
-		{
-			return new Iterator( element );
-		}
 	}
 }
