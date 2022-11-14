@@ -22,6 +22,7 @@
 
 using NDOEnhancer;
 using System;
+using System.Linq;
 
 namespace ILCode
 {
@@ -64,14 +65,8 @@ namespace ILCode
 		private string						m_ilType;
 		private string						m_name;
 
-		private string						m_poetSlotType;
-		private string						m_poetSlotName;
-		private string						m_javaType;
-		private string						m_javaClass;
-		private string						m_javaSignature;
-
 		private void
-		resolve()
+		Resolve()
 		{
 			if ( null != m_name )
 				return;
@@ -122,202 +117,6 @@ namespace ILCode
 					}
 				}
 			}
-
-//			// find .custom elements after this .field element in my container
-//			ILElementIterator iter = getOwner().getAllIterator();
-//			int state = 0;
-//			for ( ILElement elem = iter.getFirst(); null != elem && 2 != state; elem = iter.getNext() )
-//			{
-//				switch ( state )
-//				{
-//				case 0:
-//					if ( elem == this )
-//						state = 1;
-//
-//					break;
-//				case 1:
-//					ILCustomElement cusElem = elem as ILCustomElement;
-//					if ( null == cusElem )
-//					{
-//						state = 2;
-//					}
-//					else if ( cusElem.isAttribute( TransientAttribute.getType() ) )
-//					{
-//						m_isTransient = true;
-//						state = 2;
-//					}
-//					break;
-//				}
-//			}
-
-			if ( m_ilType == "bool" )
-			{
-				m_javaType	   	= "boolean";
-				m_javaSignature	= "Z";
-				m_javaClass	   	= "java.lang.Boolean";
-				m_poetSlotType	= "bool";
-				m_poetSlotName 	= "Boolean";
-			}
-			else if ( m_ilType == "bool[]" )
-			{
-				m_javaType		= "boolean[]";
-				m_javaSignature	= "[Z";
-				m_poetSlotType 	= "object";
-				m_poetSlotName	= "Object";
-			}
-			else if ( m_ilType == "int8" || m_ilType == "unsigned int8" )
-			{
-				m_javaType	   	= "byte";
-				m_javaSignature	= "B";
-				m_javaClass	   	= "java.lang.Byte";
-				m_poetSlotType	= "int8";
-				m_poetSlotName 	= "Byte";
-			}
-			else if ( m_ilType == "int8[]" || m_ilType == "unsigned int8[]" )
-			{
-				m_javaType	   	= "byte[]";
-				m_javaSignature	= "[B";
-				m_poetSlotType 	= "object";
-				m_poetSlotName 	= "Object";
-			}
-			else if ( m_ilType == "char" || m_ilType == "unsigned char" )
-			{
-				m_javaType	   	= "char";
-				m_javaSignature	= "C";
-				m_javaClass	   	= "java.lang.Character";
-				m_poetSlotType	= "char";
-				m_poetSlotName 	= "Char";
-			}
-			else if ( m_ilType == "char[]" || m_ilType == "unsigned char[]" )
-			{
-				m_javaType	   	= "char[]";
-				m_javaSignature	= "[C";
-				m_poetSlotType 	= "object";
-				m_poetSlotName 	= "Object";
-			}
-			else if ( m_ilType == "int16" || m_ilType == "unsigned int16" )
-			{
-				m_javaType	   	= "short";
-				m_javaSignature	= "S";
-				m_javaClass	   	= "java.lang.Short";
-				m_poetSlotType	= "int16";
-				m_poetSlotName 	= "Short";
-			}
-			else if ( m_ilType == "int16[]" || m_ilType == "unsigned int16[]" )
-			{
-				m_javaType	   	= "short[]";
-				m_javaSignature	= "[S";
-				m_poetSlotType 	= "object";
-				m_poetSlotName 	= "Object";
-			}
-			else if ( m_ilType == "int32" || m_ilType == "unsigned int32" )
-			{
-				m_javaType	   	= "int";
-				m_javaSignature	= "I";
-				m_javaClass	   	= "java.lang.Integer";
-				m_poetSlotType	= "int32";
-				m_poetSlotName 	= "Int";
-			}
-			else if ( m_ilType == "int32[]" || m_ilType == "unsigned int32[]" )
-			{
-				m_javaType	   	= "int[]";
-				m_javaSignature	= "[I";
-				m_poetSlotType 	= "object";
-				m_poetSlotName 	= "Object";
-			}
-			else if ( m_ilType == "int64" || m_ilType == "unsigned int64" )
-			{
-				m_javaType	   	= "long";
-				m_javaSignature	= "J";
-				m_javaClass	   	= "java.lang.Long";
-				m_poetSlotType	= "int64";
-				m_poetSlotName 	= "Long";
-			}
-			else if ( m_ilType == "int64[]" || m_ilType == "unsigned int64[]" )
-			{
-				m_javaType	   	= "long[]";
-				m_javaSignature	= "[J";
-				m_poetSlotType 	= "object";
-				m_poetSlotName 	= "Object";
-			}
-			else if ( m_ilType == "float32" )
-			{
-				m_javaType	   	= "float";
-				m_javaSignature	= "F";
-				m_javaClass		= "java.lang.Float";
-				m_poetSlotType	= "float32";
-				m_poetSlotName 	= "Float";
-			}
-			else if ( m_ilType == "float32[]" )
-			{
-				m_javaType	   	= "float[]";
-				m_javaSignature	= "[F";
-				m_poetSlotType 	= "object";
-				m_poetSlotName 	= "Object";
-			}
-			else if ( m_ilType == "float64" )
-			{
-				m_javaType	   	= "double";
-				m_javaSignature	= "D";
-				m_javaClass	   	= "java.lang.Double";
-				m_poetSlotType	= "float64";
-				m_poetSlotName 	= "Double";
-			}
-			else if ( m_ilType == "float64[]" )
-			{
-				m_javaType	   	= "double[]";
-				m_javaSignature	= "[D";
-				m_poetSlotType 	= "object";
-				m_poetSlotName 	= "Object";
-			}
-			else if ( m_ilType == "string" )
-			{
-				m_javaType	   	= "java.lang.String";
-				m_javaSignature	= "java.lang.String";
-				m_poetSlotType	= "string";
-				m_poetSlotName 	= "String";
-			}
-			else if ( m_ilType == "string[]" )
-			{
-				m_javaType	   	= "java.lang.String[]";
-				m_javaSignature	= "[Ljava.lang.String;";
-				m_poetSlotType 	= "object";
-				m_poetSlotName 	= "Object";
-			}
-			else if ( m_ilType == $"valuetype {Corlib.Name}System.DateTime" )
-			{
-				m_javaType	   	= "java.util.Date";
-				m_javaSignature	= "System.DateTime";
-				m_poetSlotType 	= "object";
-				m_poetSlotName 	= "Object";
-			}
-			else if ( m_ilType == $"valuetype {Corlib.Name}System.DateTime[]" )
-			{
-				m_javaType	   	= "java.util.Date[]";
-				m_javaSignature	= "[LSystem.DateTime;";
-				m_poetSlotType 	= "object";
-				m_poetSlotName 	= "Object";
-			}
-			else
-			{
-				m_javaType = m_ilType;
-
-				if ( m_javaType.StartsWith( "class " ) )
-					m_javaType = m_javaType.Substring( 6 ).Trim();
-				else if ( m_javaType.StartsWith( "valuetype " ) )
-					m_javaType = m_javaType.Substring( 10 ).Trim();
-
-				if ( 0 == m_javaType.IndexOf( "[" ) )
-					m_javaType = m_javaType.Substring( m_javaType.IndexOf( "]" ) + 1 ).Trim();
-
-				if ( m_javaType.EndsWith( "[]" ) )
-					m_javaSignature = "[L" + m_javaType.Substring( 0, m_javaType.Length - 2 ) + ";";
-				else
-					m_javaSignature = m_javaType;
-
-				m_poetSlotType = "object";
-				m_poetSlotName = "Object";
-			}
 		}
 
 		protected override void
@@ -328,27 +127,17 @@ namespace ILCode
 
 
 		public bool
-		isPersistent( Type transientAttribute )
+		IsPersistent()
 		{
-			resolve();
+			Resolve();
 
-			// Hole das nächste Element im IL-Quelltext
-			ILCustomElement cusElem = this.GetSuccessor() as ILCustomElement;
-			while (null != cusElem)
-			{
-				if (cusElem.IsAttribute( transientAttribute ) )
-				{
-					return false;
-				}
-				cusElem = cusElem.GetSuccessor() as ILCustomElement;
-			}
-			return true;
+			return CustomElements.Where( c => c.GetAttributeInfo().TypeName == "NDO.NDOTransientAttribute" ).Any();
 		}
 
 		public bool
 		isPrivate()
 		{
-			resolve();
+			Resolve();
 
 			return m_isPrivate;
 		}
@@ -356,7 +145,7 @@ namespace ILCode
 		public bool
 		isProtected()
 		{
-			resolve();
+			Resolve();
 
 			return m_isProtected;
 		}
@@ -364,7 +153,7 @@ namespace ILCode
 		public bool
 		isPublic()
 		{
-			resolve();
+			Resolve();
 
 			return m_isPublic;
 		}
@@ -372,7 +161,7 @@ namespace ILCode
 		public bool
 		isStatic()
 		{
-			resolve();
+			Resolve();
 
 			return m_isStatic;
 		}
@@ -380,7 +169,7 @@ namespace ILCode
 		public bool
 		isConst()
 		{
-			resolve();
+			Resolve();
 
 			return m_isConst;
 		}
@@ -388,7 +177,7 @@ namespace ILCode
 		public bool
 		isVolatile()
 		{
-			resolve();
+			Resolve();
 
 			return m_isVolatile;
 		}
@@ -396,23 +185,15 @@ namespace ILCode
 		public string
 		getName()
 		{
-			resolve();
+			Resolve();
 
 			return m_name;
-		}
-
-		public bool
-		isPrimitive()
-		{
-			resolve();
-
-			return (null != m_javaClass && 0 < m_javaClass.Length);
 		}
 
 		public string
 		getILType()
 		{
-			resolve();
+			Resolve();
 
 			return m_ilType;
 		}
@@ -420,7 +201,7 @@ namespace ILCode
 		public string
 		getILTypeName()
 		{
-			resolve();
+			Resolve();
 
 			if ( m_ilType.StartsWith( "class" ) )
 				return m_ilType.Substring( 5 ).Trim();
@@ -433,7 +214,7 @@ namespace ILCode
 		public string
 		getPureTypeName()
 		{
-			resolve();
+			Resolve();
 
 			int pos = m_ilType.IndexOf( ']' );
 
@@ -443,52 +224,5 @@ namespace ILCode
 			return getILTypeName();
 		}
 
-		public string
-		getPoetSlotType()
-		{
-			resolve();
-
-			return m_poetSlotType;
-		}
-
-		public string
-		getPoetSlotName()
-		{
-			resolve();
-
-			return m_poetSlotName;
-		}
-
-		public string
-		getJavaType()
-		{
-			resolve();
-
-			return m_javaType;
-		}
-
-		public string
-		getPoetType()
-		{
-			resolve();
-
-			return m_poetSlotName;
-		}
-
-		public string
-		getJavaClass()
-		{
-			resolve();
-
-			return m_javaClass;
-		}
-
-		public string
-		getJavaSignature()
-		{
-			resolve();
-
-			return m_javaSignature;
-		}
 	}
 }

@@ -21,6 +21,7 @@
 
 
 using System;
+using System.Linq;
 using System.Text.RegularExpressions;
 using System.Xml;
 using System.Collections;
@@ -31,6 +32,7 @@ using System.Data;
 
 using ILCode;
 using NDO;
+using System.Collections.Generic;
 
 namespace NDOEnhancer.Patcher
 {
@@ -287,31 +289,14 @@ namespace NDOEnhancer.Patcher
 		public void
 			addFieldsAndOidAttribute()
 		{
-			ILMethodElement.Iterator methodIter = m_classElement.getMethodIterator();
-			ILMethodElement firstMethod = methodIter.getNext();
-//			m_classElement.insertFieldBefore(".field private static string[] _ndoFieldNames", firstMethod);
-			
-            //if (this.oidTypeName != null)  // Assembly has an OidType
-            //{
-            //    if (MyClassNode.OidTypeName == null					// Class hasn't an OidType
-            //        && this.m_classMapping.Oid.FieldName == null)   // Class hasn't an oid field
-            //    {
-            //        ILElementIterator it = m_classElement.getAllIterator(false);
-            //        ILElement firstEl = it.getNext();
-            //        string bytes = ILString.CodeBytes(oidTypeName);
-            //        string line = string.Format($".custom instance void [NDO]NDO.NDOOidTypeAttribute::.ctor(class {Corlib.Name}System.Type) = ( 01 00 {0} 00 00 )", bytes);
-            //        firstEl.insertBefore(new ILCustomElement(line, m_classElement));
-            //    }
-            //}
-
 			if (  m_hasPersistentBase )
 				return;
 			
-			m_classElement.insertFieldBefore( ".field family class [NDO]NDO.LoadState _ndoLoadState", firstMethod);
-			m_classElement.insertFieldBefore( ".field family valuetype [NDO]NDO.NDOObjectState _ndoObjectState", firstMethod );
-			m_classElement.insertFieldBefore( ".field family class [NDO]NDO.ObjectId _ndoObjectId", firstMethod );
-			m_classElement.insertFieldBefore( ".field family notserialized class [NDO]NDO.IStateManager _ndoSm", firstMethod );
-			m_classElement.insertFieldBefore( $".field family notserialized valuetype {Corlib.Name}System.Guid _ndoTimeStamp", firstMethod );
+			m_classElement.AppendField( ".field family class [NDO]NDO.LoadState _ndoLoadState" );
+			m_classElement.AppendField( ".field family valuetype [NDO]NDO.NDOObjectState _ndoObjectState" );
+			m_classElement.AppendField( ".field family class [NDO]NDO.ObjectId _ndoObjectId" );
+			m_classElement.AppendField( ".field family notserialized class [NDO]NDO.IStateManager _ndoSm" );
+			m_classElement.AppendField( $".field family notserialized valuetype {Corlib.Name}System.Guid _ndoTimeStamp" );
 		}
 
 
@@ -319,9 +304,7 @@ namespace NDOEnhancer.Patcher
 		{
 			// Relations with generic containers and with multiplicity 1 can omit
 			// the NDORelation attribute. We insert the attribute here.
-			ILFieldElement.Iterator it = m_classElement.getFieldIterator();
-			ILFieldElement fieldElement;
-			for (fieldElement = (ILFieldElement)it.getFirst(); fieldElement != null; fieldElement = (ILFieldElement)it.getNext())
+			foreach (var fieldElement in m_classElement.Fields)
 			{
 				foreach (Patcher.ILReference reference in this.m_references)
 				{
@@ -430,25 +413,20 @@ namespace NDOEnhancer.Patcher
 		}
 	
 		private void
-			replaceLdfldAndStfld()
-		{
-			ILMethodElement.Iterator methodIter = m_classElement.getMethodIterator();
-				  
-			for ( ILMethodElement methodElement = methodIter.getNext(); null != methodElement; methodElement = methodIter.getNext() )
+		replaceLdfldAndStfld()
+		{				  
+			foreach ( ILMethodElement methodElement in m_classElement.Methods)
 			{
 				bool adjustMaxStack = false;
 
 				if ( methodElement.isConstructor() )
 					continue;
 
-				//string name = methodElement.getLine(methodElement.getLineCount() - 1);
-
-				ILStatementElement.Iterator statementIter = methodElement.getStatementIterator(true);
 
                 // We'll change the collection of statements, so we need a new collection
                 // to iterate through.
 				IList statements = new ArrayList();
-				for ( ILStatementElement statementElement = statementIter.getNext(); null != statementElement; statementElement = statementIter.getNext() )
+				foreach (var statementElement in methodElement.Statements)
 				{
 					statements.Add(statementElement);
 				}
@@ -470,7 +448,7 @@ namespace NDOEnhancer.Patcher
 				if (adjustMaxStack)
 				{
 					int newMaxStack = this.getMaxStackVal(methodElement) + 1;
-					this.adjustMaxStackVal(methodElement, newMaxStack);
+					this.AdjustMaxStackVal(methodElement, newMaxStack);
                     MakeLongBranches(methodElement);
 				}
 			} // ILMethodElement
@@ -550,12 +528,9 @@ namespace NDOEnhancer.Patcher
 		{
 			if (dirtyDone.Contains(methodElement))
 				return;
-			adjustMaxStackVal(methodElement, 2);
+			AdjustMaxStackVal(methodElement, 2);
 
-			ILStatementElement.Iterator statementIter = methodElement.getStatementIterator();
-			ILStatementElement beforeElement = statementIter.getNext();
-			while(!beforeElement.GetLine(0).StartsWith("IL"))
-				beforeElement = statementIter.getNext();
+			ILStatementElement beforeElement = methodElement.Statements.First( se => se.GetLine(0).StartsWith("IL"));
 			ILStatementElement el = new ILStatementElement();
 			el.AddLine("ldarg.0");
 			el.AddLine(loadStateManager());
@@ -586,163 +561,12 @@ namespace NDOEnhancer.Patcher
 			public ILElement e;
 		}
 
-
-
-		/*
-				void addAddCalls(IList addEntries, ref int lbl) 
-				{
-
-					foreach (ReferenceAndElement refEl in addEntries)
-					{
-						int mark = lbl++;
-						ILElement elToInsert = refEl.e.getPredecessor();
-						if (null == elToInsert)
-							throw new Exception("Ungültiger IL-Code bei IList.Add (kein Vorgänger)");
-						ILElement elParameter = refEl.e.getSuccessor();
-						if (null == elParameter)
-							throw new Exception("Ungültiger IL-Code bei IList.Add (kein Nachfolger)");
-
-						elToInsert.insertBefore(new ILStatementElement(ldarg_0));
-
-						elToInsert.insertBefore(new ILStatementElement(loadStateManager()));
-						elToInsert.insertBefore(new ILStatementElement("brfalse.s  Nosm" + mark.ToString()));
-
-						elToInsert.insertBefore(new ILStatementElement(ldarg_0));
-						elToInsert.insertBefore(new ILStatementElement(loadStateManager()));
-						elToInsert.insertBefore(new ILStatementElement(ldarg_0));
-						elToInsert.insertBefore(new ILStatementElement(@"ldstr      """ + refEl.r.CleanName + @""""));
-						elToInsert.insertBefore(new ILStatementElement(stripILx(elParameter.getLine(0))));
-						elToInsert.insertBefore(new ILStatementElement(@"callvirt   instance void [NDO]NDO.IStateManager::AddRelatedObject(class [NDO]NDO.IPersistenceCapable, string, class [NDO]NDO.IPersistenceCapable)"));
-						elToInsert.insertBefore(new ILStatementElement("Nosm" + mark.ToString() + ":"));
-					}
-
-				}
-		
-				void addRemoveCalls(IList removeEntries, ref int lbl)
-				{
-					foreach (ReferenceAndElement refEl in removeEntries)
-					{
-						int mark = lbl++;
-						ILElement elToInsert = refEl.e.getPredecessor();
-						if (null == elToInsert)
-							throw new Exception("Ungültiger IL-Code bei IList.Add (kein Vorgänger)");
-						ILElement elParameter = refEl.e.getSuccessor();
-						if (null == elParameter)
-							throw new Exception("Ungültiger IL-Code bei IList.Add (kein Nachfolger)");
-
-						elToInsert.insertBefore(new ILStatementElement(ldarg_0));
-						elToInsert.insertBefore(new ILStatementElement(loadStateManager()));
-						elToInsert.insertBefore(new ILStatementElement("brfalse.s  Nosm"+ mark.ToString()));
-
-						elToInsert.insertBefore(new ILStatementElement(ldarg_0));
-						elToInsert.insertBefore(new ILStatementElement(loadStateManager()));
-						elToInsert.insertBefore(new ILStatementElement(ldarg_0));
-						elToInsert.insertBefore(new ILStatementElement(@"ldstr      """ + refEl.r.CleanName + @""""));
-						elToInsert.insertBefore(new ILStatementElement(stripILx(elParameter.getLine(0))));
-						elToInsert.insertBefore(new ILStatementElement(@"callvirt   instance void [NDO]NDO.IStateManager::RemoveRelatedObject(class [NDO]NDO.IPersistenceCapable, string, class [NDO]NDO.IPersistenceCapable)"));
-						elToInsert.insertBefore(new ILStatementElement("Nosm"+ mark.ToString() + ":"));
-					}
-				}
-		
-				void addClearCalls(IList clearEntries, ref int lbl)
-				{
-					foreach (ReferenceAndElement refEl in clearEntries)
-					{
-						int mark = lbl++;
-						ILElement elToInsert = refEl.e.getPredecessor();
-						if (null == elToInsert)
-							throw new Exception("Ungültiger IL-Code bei IList.Clear (kein Vorgänger)");
-						ILElement elParameter = refEl.e;
-
-						elToInsert.insertBefore(new ILStatementElement(ldarg_0));
-
-						elToInsert.insertBefore(new ILStatementElement(loadStateManager()));
-						elToInsert.insertBefore(new ILStatementElement("brfalse.s  Nosm" + mark.ToString()));
-
-						elToInsert.insertBefore(new ILStatementElement(ldarg_0));
-						elToInsert.insertBefore(new ILStatementElement(loadStateManager()));
-						elToInsert.insertBefore(new ILStatementElement(ldarg_0));
-
-						elToInsert.insertBefore(new ILStatementElement(@"ldstr      """ + refEl.r.CleanName + @""""));
-						elToInsert.insertBefore(new ILStatementElement(ldarg_0));
-						elToInsert.insertBefore(new ILStatementElement(stripILx(elParameter.getLine(0))));
-						elToInsert.insertBefore(new ILStatementElement(@"callvirt   instance void [NDO]NDO.IStateManager::RemoveRangeRelatedObjects(class [NDO]NDO.IPersistenceCapable, string, class {Corlib.Name}System.Collections.IList)"));
-						elToInsert.insertBefore(new ILStatementElement("Nosm" + mark.ToString() + ":"));
-					}
-				}
-
-				void addRemoveAtCalls(IList removeAtEntries, ref int lbl)
-				{
-					foreach (ReferenceAndElement refEl in removeAtEntries)
-					{
-						int mark = lbl++;
-						ILElement elToInsert = refEl.e.getPredecessor();
-						if (null == elToInsert)
-							throw new Exception("Ungültiger IL-Code bei IList.RemoveAt (kein Vorgänger)");
-						ILElement elParameter = refEl.e.getSuccessor();
-						if (null == elParameter)
-							throw new Exception("Ungültiger IL-Code bei IList.RemoveAt (kein Nachfolger)");
-						elToInsert.insertBefore(new ILStatementElement(ldarg_0));
-
-						elToInsert.insertBefore(new ILStatementElement(loadStateManager()));
-						elToInsert.insertBefore(new ILStatementElement("brfalse.s  Nosm" + mark.ToString()));
-
-						elToInsert.insertBefore(new ILStatementElement(ldarg_0));
-						elToInsert.insertBefore(new ILStatementElement(loadStateManager()));
-						elToInsert.insertBefore(new ILStatementElement(ldarg_0));
-
-						elToInsert.insertBefore(new ILStatementElement(@"ldstr      """ + refEl.r.CleanName + @""""));
-
-						elToInsert.insertBefore(new ILStatementElement(ldarg_0));
-						elToInsert.insertBefore(new ILStatementElement(stripILx(refEl.e.getLine(0))));
-						elToInsert.insertBefore(new ILStatementElement(stripILx(elParameter.getLine(0))));
-						elToInsert.insertBefore(new ILStatementElement("callvirt   instance object {Corlib.Name}System.Collections.IList::get_Item(int32)"));
-						elToInsert.insertBefore(new ILStatementElement("castclass  [NDO]NDO.IPersistenceCapable"));
-						elToInsert.insertBefore(new ILStatementElement("callvirt   instance void [NDO]NDO.IStateManager::RemoveRelatedObject(class [NDO]NDO.IPersistenceCapable, string, class [NDO]NDO.IPersistenceCapable)"));
-						elToInsert.insertBefore(new ILStatementElement("Nosm" + mark.ToString() + ":"));
-					}
-				}
-
-		
-				void addInsertCalls(IList insertEntries, ref int lbl)
-				{
-					foreach (ReferenceAndElement refEl in insertEntries)
-					{
-						int mark = lbl++;
-						ILElement elToInsert = refEl.e.getPredecessor();
-						if (null == elToInsert)
-							throw new Exception("Ungültiger IL-Code bei IList.Add (kein Vorgänger)");
-						ILElement elParameter = refEl.e.getSuccessor();
-						if (null == elParameter)
-							throw new Exception("Ungültiger IL-Code bei IList.Add (kein Nachfolger 1)");
-						elParameter = elParameter.getSuccessor();
-						if (null == elParameter)
-							throw new Exception("Ungültiger IL-Code bei IList.Add (kein Nachfolger 2)");
-
-						elToInsert.insertBefore(new ILStatementElement(ldarg_0));
-
-						elToInsert.insertBefore(new ILStatementElement(loadStateManager()));
-						elToInsert.insertBefore(new ILStatementElement("brfalse.s  Nosm" + mark.ToString()));
-
-						elToInsert.insertBefore(new ILStatementElement(ldarg_0));
-						elToInsert.insertBefore(new ILStatementElement(loadStateManager()));
-						elToInsert.insertBefore(new ILStatementElement(ldarg_0));
-
-						elToInsert.insertBefore(new ILStatementElement(@"ldstr      """ + refEl.r.CleanName + @""""));
-						elToInsert.insertBefore(new ILStatementElement(stripILx(elParameter.getLine(0))));
-
-						elToInsert.insertBefore(new ILStatementElement("callvirt   instance void [NDO]NDO.IStateManager::AddRelatedObject(class [NDO]NDO.IPersistenceCapable, string, class [NDO]NDO.IPersistenceCapable)"));
-						elToInsert.insertBefore(new ILStatementElement("Nosm" + mark.ToString() + ":"));
-
-					}
-				}
-		*/
 		private void 
-			adjustMaxStackVal(ILMethodElement methodElement, int maxStackVal)
+		AdjustMaxStackVal(ILMethodElement methodElement, int maxStackVal)
 		{
 			ILElement msEl = methodElement.FindElement(".maxstack");
 			if (null == msEl)
-				throw new Exception("Method " + m_refName + "." + methodElement.getName() + " doesn't have a .maxstack statement.");
+				throw new Exception("Method " + m_refName + "." + methodElement.Name + " doesn't have a .maxstack statement.");
 			string msline = msEl.GetLine(0); 
 			string num = msline.Substring(msline.IndexOf(".maxstack") + 9);
 			if (int.Parse(num) < maxStackVal)
@@ -750,16 +574,16 @@ namespace NDOEnhancer.Patcher
 				msEl.Remove();
 				msEl = new ILStatementElement();
 				msEl.AddLine(".maxstack " + maxStackVal.ToString());
-				methodElement.getStatementIterator().getNext().insertBefore(msEl);
+				methodElement.Statements.First().InsertBefore(msEl);
 			}
 		}
 
 		private void 
-			addToMaxStackVal(ILMethodElement methodElement, int diff)
+		AddToMaxStackVal(ILMethodElement methodElement, int diff)
 		{
 			ILElement msEl = methodElement.FindElement(".maxstack");
 			if (null == msEl)
-                throw new Exception("Method " + m_refName + "." + methodElement.getName() + " doesn't have a .maxstack statement.");
+                throw new Exception("Method " + m_refName + "." + methodElement.Name + " doesn't have a .maxstack statement.");
             string msline = msEl.GetLine(0); 
 			string num = msline.Substring(msline.IndexOf(".maxstack") + 9);
 			int newNum = int.Parse(num) + diff;
@@ -774,7 +598,7 @@ namespace NDOEnhancer.Patcher
 		{
 			ILElement msEl = methodElement.FindElement(".maxstack");
 			if (null == msEl)
-                throw new Exception("Method " + m_refName + "." + methodElement.getName() + " doesn't have a .maxstack statement.");
+                throw new Exception("Method " + m_refName + "." + methodElement.Name + " doesn't have a .maxstack statement.");
             string msline = msEl.GetLine(0); 
 			string num = msline.Substring(msline.IndexOf(".maxstack") + 9);
 			return (int.Parse(num));
@@ -789,7 +613,7 @@ namespace NDOEnhancer.Patcher
 				localsElement = new ILLocalsElement(".locals init ([0] " + ilType + " " + name + ")", methodElement);
 				ILElement maxstackElement = methodElement.FindElement(".maxstack");
 				if (maxstackElement == null)
-                    throw new Exception("Method " + m_refName + "." + methodElement.getName() + " doesn't have a .maxstack statement.");
+                    throw new Exception("Method " + m_refName + "." + methodElement.Name + " doesn't have a .maxstack statement.");
                 maxstackElement.InsertAfter(localsElement);
 				return;
 			}
@@ -814,34 +638,31 @@ namespace NDOEnhancer.Patcher
 		}
 
 		public void
-			markRelations()
+		markRelations()
 		{
 			if (m_references.Count == 0)
 				return;
 
-            ILMethodElement.Iterator methodIter = m_classElement.getMethodIterator();
 			ListAccessManipulator accessManipulator = new ListAccessManipulator(this.m_classElement.GetAssemblyName());
 			
-			for ( ILMethodElement methodElement = methodIter.getNext(); null != methodElement; methodElement = methodIter.getNext() )
+			foreach ( ILMethodElement methodElement in m_classElement.Methods )
 			{
 				bool needsContainerStack = false;
 				bool methodTouched = false;
-                string mname = methodElement.getName();
+                string mname = methodElement.Name;
 				if ( methodElement.isConstructor() )
 					continue;
 
-				ILStatementElement.Iterator statementIter = methodElement.getStatementIterator(true);
-
-				ArrayList statements = new ArrayList(100);
+				List<ILStatementElement> statements = new List<ILStatementElement>(100);
 				ILElement firstElement = null;
 				ILLocalsElement localsElement = methodElement.GetLocals();
 				Hashtable listReflectors = new Hashtable();
 				string line;
 				int pos;
 
-				// Wir kopieren die Statements in eine extra ArrayList, weil die originale 
-				// Liste mit InsertBefore manipuliert wird.
-				for ( ILStatementElement statementElement = statementIter.getNext(); null != statementElement; statementElement = statementIter.getNext() )
+				// We copy the statements into an extra List because the original
+				// List is manipulated with InsertBefore.
+				foreach (ILStatementElement statementElement in methodElement.Statements)
 				{
 					statements.Add(statementElement);
 					line = statementElement.GetLine( 0 );
@@ -936,7 +757,7 @@ namespace NDOEnhancer.Patcher
 					addLocalVariable(methodElement, "__ndocontainertable", $"class {Corlib.Name}System.Collections.Hashtable");
 					firstElement.InsertBefore(new ILStatementElement($"newobj     instance void {Corlib.Name}System.Collections.Hashtable::.ctor()"));
 					firstElement.InsertBefore(new ILStatementElement("stloc __ndocontainertable"));
-					addToMaxStackVal(methodElement, 3);
+					AddToMaxStackVal(methodElement, 3);
 				}
 
 				//				if (needsContainerStack || readEntries)
@@ -949,9 +770,7 @@ namespace NDOEnhancer.Patcher
 
 		public void MakeLongBranches(ILMethodElement methodElement)
 		{
-			ILStatementElement.Iterator statementIter = methodElement.getStatementIterator(true);
-
-			for ( ILStatementElement statementElement = statementIter.getNext(); null != statementElement; statementElement = statementIter.getNext() )
+			foreach ( ILStatementElement statementElement in methodElement.Statements )
 			{
 				string line = statementElement.GetLine(0);
 				if (line.StartsWith("IL"))
@@ -973,10 +792,9 @@ namespace NDOEnhancer.Patcher
 		patchConstructor()
 		{
 			ArrayList constructors = new ArrayList();
-			ILMethodElement.Iterator methodIter = m_classElement.getMethodIterator();
 
 			bool hasDefaultConstructor = false;
-			for ( ILMethodElement methodElement = methodIter.getNext(); null != methodElement; methodElement = methodIter.getNext() )
+			foreach ( ILMethodElement methodElement in m_classElement.Methods )
 			{
 				if ( !methodElement.isConstructor() )
 					continue;
@@ -994,10 +812,10 @@ namespace NDOEnhancer.Patcher
 			
 			foreach(ILMethodElement me in constructors)
 			{
-				adjustMaxStackVal(me, maxStack);
+				AdjustMaxStackVal(me, maxStack);
 
-				ILStatementElement statementElement = (ILStatementElement) me.getStatementIterator().getLast();
-				string line = ILElement.StripLabel(statementElement.GetLine(0));
+				ILStatementElement lastStatement = me.Statements.Last();
+				string line = ILElement.StripLabel(lastStatement.GetLine(0));
 								
 				IList elements = new ArrayList();
 
@@ -1014,7 +832,7 @@ namespace NDOEnhancer.Patcher
 					messages.WriteLine("Can't find return statement of the constructor of class " + m_refName);
 
 				foreach (ILStatementElement el in elements)
-					statementElement.InsertBefore(el);
+					lastStatement.InsertBefore(el);
 			}
 
 
@@ -1090,8 +908,8 @@ namespace NDOEnhancer.Patcher
 
 		void addLoadStateProperty()
 		{
-			ILMethodElement methodElement = m_classElement.getMethod( "get_NDOLoadState" );
-			ILPropertyElement propElement = m_classElement.getProperty( "NDOLoadState" );
+			ILMethodElement methodElement = m_classElement.GetMethod( "get_NDOLoadState" );
+			ILPropertyElement propElement = m_classElement.GetProperty( "NDOLoadState" );
 
 			if ( m_hasPersistentBase )
 			{
@@ -1131,7 +949,7 @@ namespace NDOEnhancer.Patcher
 
 		void addGetLoadState()
 		{
-			ILMethodElement methodElement = m_classElement.getMethod( "NDOGetLoadState" );
+			ILMethodElement methodElement = m_classElement.GetMethod( "NDOGetLoadState" );
 			
 			if ( m_hasPersistentBase )
 			{
@@ -1163,7 +981,7 @@ namespace NDOEnhancer.Patcher
 
 		void addSetLoadState()
 		{
-			ILMethodElement methodElement = m_classElement.getMethod( "NDOSetLoadState" );
+			ILMethodElement methodElement = m_classElement.GetMethod( "NDOSetLoadState" );
 			if ( m_hasPersistentBase )
 			{
 				if ( methodElement != null )
@@ -1211,7 +1029,7 @@ namespace NDOEnhancer.Patcher
 				if (reference.IsInherited)
 					continue;
 				if (reference.Is1to1)
-					add1to1RelationAccessors(reference);
+					Add1to1RelationAccessors(reference);
 				else
 					add1toNRelationAccessors(reference);
 			}
@@ -1229,58 +1047,35 @@ namespace NDOEnhancer.Patcher
 		}
 
 		private void
-			add1to1RelationGetAccessor(ILReference reference)
+			Add1to1RelationGetAccessor(ILReference reference)
 		{
-			// Get-Methode nur für 1:1
+			// Get-Method only for 1:1
 			ILMethodElement method = new ILMethodElement();
 			method.AddLine( ".method private hidebysig instance " );
 			method.AddLine( reference.ILType + " " + getAccName("ndoget_", reference.Name) + "() cil managed");
-#if nix
-			method.addStatement(".maxstack  2");
-			method.addStatement(ldarg_0);
-			method.addStatement(loadStateManager());
-			method.addStatement("brfalse.s  noSm");
-			method.addStatement(ldarg_0);
-			method.addStatement(loadStateManager());
-			method.addStatement(ldarg_0);
-			method.addStatement("callvirt   instance void [NDO]NDO.IStateManager::LoadData(class [NDO]NDO.IPersistenceCapable)");
-			method.addStatement("noSm:");
-			method.addStatement(ldarg_0);
-			method.addStatement("ldfld      " + reference.ILType + " " + m_refName + "::" + reference.Name);
-			method.addStatement( "ret");
-#else
 			method.addStatement(".maxstack  5" );
 			method.addStatement(ldarg_0);
 			method.addStatement( loadStateManager() );
 			method.addStatement( "brfalse.s  noSm");
-			//			method.addStatement(ldarg_0);
-			//			method.addStatement("ldfld      bool[] " + m_refName + "::" + GetRelationStateName());
-			//			method.addStatement(loadIntConst(reference.Ordinal));
-			//			method.addStatement("ldelem.i1");
-			//			method.addStatement("brtrue.s   noSm");
+
 			method.addStatement(ldarg_0);
 			method.addStatement( loadStateManager() );
 			method.addStatement(ldarg_0);
 			method.addStatement(@"ldstr      """ + reference.CleanName + @"""");
 			method.addStatement($"callvirt   instance class {Corlib.Name}System.Collections.IList [NDO]NDO.IStateManager::LoadRelation(class [NDO]NDO.IPersistenceCapable,string)");
 			method.addStatement("pop");
-			//			method.addStatement(ldarg_0);
-			//			method.addStatement("ldfld      bool[] " + m_refName + "::" + GetRelationStateName());
-			//			method.addStatement(loadIntConst(reference.Ordinal));
-			//			method.addStatement("ldc.i4.1");
-			//			method.addStatement("stelem.i1");
+
 			method.addStatement("noSm:");
 			method.addStatement(ldarg_0);
 			method.addStatement("ldfld      " + reference.ILType + " " + m_refName + "::" + reference.Name);
 			method.addStatement( "ret");
-#endif
-			m_classElement.getMethodIterator().getLast().insertAfter( method );
+			m_classElement.AppendMethod( method );
 		}
 
 		private void
-			add1to1RelationAccessors(ILReference reference)
+			Add1to1RelationAccessors(ILReference reference)
 		{
-			add1to1RelationGetAccessor(reference);
+			Add1to1RelationGetAccessor(reference);
 
 			// Set-Methode
 			ILMethodElement method = new ILMethodElement();
@@ -1320,7 +1115,7 @@ namespace NDOEnhancer.Patcher
 			method.addStatement( ldarg_1);
 			method.addStatement( "stfld      " + reference.ILType + " "+ m_refName + "::" + reference.Name);
 			method.addStatement( "ret");
-			m_classElement.getMethodIterator().getLast().insertAfter( method );
+			m_classElement.AppendMethod( method );
 		}
 
 
@@ -1358,7 +1153,7 @@ namespace NDOEnhancer.Patcher
 			method.addStatement( "stfld      " + reference.ILType + " "+ m_refName + "::" + reference.Name);
 			method.addStatement( "ret");
 
-			m_classElement.getMethodIterator().getLast().insertAfter( method );
+			m_classElement.AppendMethod( method );
 		}
 
 		private void addFieldAccessors()
@@ -1393,9 +1188,9 @@ namespace NDOEnhancer.Patcher
 			method.addStatement("stfld      " + field.ILType + " " + m_refName + "::" + field.Name);
 			method.addStatement("ret");
 
-			m_classElement.getMethodIterator().getLast().insertAfter( method );
+			m_classElement.AppendMethod( method );
 
-            NDO.Mapping.Field fieldMapping = this.m_classMapping.FindField(field.CleanName);
+			NDO.Mapping.Field fieldMapping = this.m_classMapping.FindField(field.CleanName);
 
 			// We can't get Value Types with getter functions, because that would result in a
             // copy of the object. So the original object couldn't be manipulated.            
@@ -1414,18 +1209,18 @@ namespace NDOEnhancer.Patcher
                 method.addStatement(this.loadIntConst(fieldMapping.Ordinal)); 
 				method.addStatement("callvirt   instance void [NDO]NDO.IStateManager::LoadField(class [NDO]NDO.IPersistenceCapable,int32)");
                 method.addStatement("NoSm: ret");
-                // The original ldfld[a] statement remains in the code.
-                // method.addStatement("NoSm:  ldarg.0");
-                // method.addStatement("ldfld      " + field.ILType + " " + m_refName + "::" + field.Name);
+				// The original ldfld[a] statement remains in the code.
+				// method.addStatement("NoSm:  ldarg.0");
+				// method.addStatement("ldfld      " + field.ILType + " " + m_refName + "::" + field.Name);
 				// method.addStatement("ret"); 
-				m_classElement.getMethodIterator().getLast().insertAfter( method );
+				m_classElement.AppendMethod( method );
 			}
 		}
 
 		public void
 		removeMarkDirty()
 		{
-			ILMethodElement method = m_classElement.getMethod( "NDOMarkDirty" );
+			ILMethodElement method = m_classElement.GetMethod( "NDOMarkDirty" );
 
 			if ( method != null )
 				method.Remove();
@@ -1434,7 +1229,7 @@ namespace NDOEnhancer.Patcher
 		public void 
 		addMarkDirty()
 		{
-			ILMethodElement method = m_classElement.getMethod( "NDOMarkDirty" );
+			ILMethodElement method = m_classElement.GetMethod( "NDOMarkDirty" );
 
 			if ( method != null )
 			{
@@ -1445,16 +1240,15 @@ namespace NDOEnhancer.Patcher
 				method = new ILMethodElement();
 				method.AddLine( ".method public hidebysig newslot virtual final" );
 				method.AddLine( "instance void  NDOMarkDirty() cil managed" );
-				m_classElement.getMethodIterator().getLast().insertAfter( method );
+				m_classElement.AppendMethod( method );
 			}
+
 			method.addStatement( ".maxstack  2" );
 			method.addStatement( ldarg_0 );
 			method.addStatement( loadStateManager());
 			method.addStatement( "dup" );
 			method.addStatement( "brfalse.s  NoSm" );
 
-//			method.addStatement( ldarg_0);  // used dup instead
-//			method.addStatement( loadStateManager() );
 			method.addStatement( ldarg_0);
 			method.addStatement( "callvirt   instance void [NDO]NDO.IStateManager::MarkDirty(class [NDO]NDO.IPersistenceCapable)");
 			method.addStatement( "NoSm: ret");
@@ -1463,7 +1257,7 @@ namespace NDOEnhancer.Patcher
 		public void
 		removeLoadData()
 		{
-			ILMethodElement method = m_classElement.getMethod( "NDOLoadData" );
+			ILMethodElement method = m_classElement.GetMethod( "NDOLoadData" );
 			if ( method != null )
 				method.Remove();
 		}
@@ -1471,7 +1265,7 @@ namespace NDOEnhancer.Patcher
 		public void 
 		addLoadData()
 		{
-			ILMethodElement method = m_classElement.getMethod( "NDOLoadData" );
+			ILMethodElement method = m_classElement.GetMethod( "NDOLoadData" );
 			if ( method != null )
 			{
 				method.ClearElements();
@@ -1479,7 +1273,7 @@ namespace NDOEnhancer.Patcher
 			else
 			{
 				method = new ILMethodElement();
-				m_classElement.getMethodIterator().getLast().insertAfter( method );
+				m_classElement.AppendMethod( method );
 				method.AddLine( ".method family hidebysig newslot final virtual" );
 				method.AddLine( "instance void  NDOLoadData() cil managed" );
 			}
@@ -1499,13 +1293,13 @@ namespace NDOEnhancer.Patcher
 		public void
 		removeObjectId()
 		{
-			ILMethodElement method = m_classElement.getMethod( "get_NDOObjectId" );
+			ILMethodElement method = m_classElement.GetMethod( "get_NDOObjectId" );
 			if ( method != null )
 				method.Remove();
-			method = m_classElement.getMethod( "set_NDOObjectId" );
+			method = m_classElement.GetMethod( "set_NDOObjectId" );
 			if ( method != null )
 				method.Remove();
-			ILPropertyElement prop = m_classElement.getProperty( "NDOObjectId" );
+			ILPropertyElement prop = m_classElement.GetProperty( "NDOObjectId" );
 			if ( prop != null )
 				prop.Remove();
 		}
@@ -1513,7 +1307,7 @@ namespace NDOEnhancer.Patcher
 		public void 
 		addObjectId()
 		{
-			ILMethodElement method = m_classElement.getMethod( "get_NDOObjectId" );
+			ILMethodElement method = m_classElement.GetMethod( "get_NDOObjectId" );
 			if ( method != null )
 			{
 				method.ClearElements();
@@ -1523,7 +1317,7 @@ namespace NDOEnhancer.Patcher
 				method = new ILMethodElement();
 				method.AddLine( ".method public hidebysig newslot specialname final virtual" );
 				method.AddLine( "instance class [NDO]NDO.ObjectId get_NDOObjectId() cil managed" );
-				m_classElement.getMethodIterator().getLast().insertAfter( method );
+				m_classElement.AppendMethod( method );
 			}
 			method.addStatement( ".maxstack  1" );
             
@@ -1532,7 +1326,7 @@ namespace NDOEnhancer.Patcher
 			method.addStatement( "ret");
 
 
-			method = m_classElement.getMethod( "set_NDOObjectId" );
+			method = m_classElement.GetMethod( "set_NDOObjectId" );
 			if ( method != null )
 			{
 				method.ClearElements();
@@ -1540,7 +1334,7 @@ namespace NDOEnhancer.Patcher
 			else
 			{
 				method = new ILMethodElement();
-				m_classElement.getMethodIterator().getLast().insertAfter( method );
+				m_classElement.AppendMethod( method );
 				method.AddLine( ".method public hidebysig newslot specialname final virtual" );
 				method.AddLine( "instance void  set_NDOObjectId(class [NDO]NDO.ObjectId 'value') cil managed" );
 			}
@@ -1552,7 +1346,7 @@ namespace NDOEnhancer.Patcher
 			method.addStatement( "ret");
 
 
-			ILPropertyElement prop = m_classElement.getProperty( "NDOObjectId" );
+			ILPropertyElement prop = m_classElement.GetProperty( "NDOObjectId" );
 			if ( prop == null )
 			{
 				prop = new ILPropertyElement( ".property instance class [NDO]NDO.ObjectId NDOObjectId()", m_classElement );
@@ -1560,20 +1354,20 @@ namespace NDOEnhancer.Patcher
 				prop.AddElement( new ILCustomElement( ".custom instance void [System.Xml]System.Xml.Serialization.XmlIgnoreAttribute::.ctor() = ( 01 00 00 00 )", prop ) );
 				prop.AddElement( new ILSetElement( ".set instance void " + m_nonGenericRefName + "::set_NDOObjectId(class [NDO]NDO.ObjectId)" ) );
 				prop.AddElement( new ILGetElement( ".get instance class [NDO]NDO.ObjectId " + m_nonGenericRefName + "::get_NDOObjectId()" ) );
-				m_classElement.getMethodIterator().getLast().insertAfter( prop );
+				m_classElement.AppendProperty( prop );
 			}
 		}
 
 		public void
 		removeTimeStamp()
 		{
-			ILMethodElement method = m_classElement.getMethod( "get_NDOTimeStamp" );
+			ILMethodElement method = m_classElement.GetMethod( "get_NDOTimeStamp" );
 			if ( method != null )
 				method.Remove();
-			method = m_classElement.getMethod( "set_NDOTimeStamp" );
+			method = m_classElement.GetMethod( "set_NDOTimeStamp" );
 			if ( method != null )
 				method.Remove();
-			ILPropertyElement prop = m_classElement.getProperty( "NDOTimeStamp" );
+			ILPropertyElement prop = m_classElement.GetProperty( "NDOTimeStamp" );
 			if ( prop != null )
 				prop.Remove();
 		}
@@ -1581,7 +1375,7 @@ namespace NDOEnhancer.Patcher
 		public void 
 		addTimeStamp()
 		{
-			ILMethodElement method = m_classElement.getMethod( "get_NDOTimeStamp" );
+			ILMethodElement method = m_classElement.GetMethod( "get_NDOTimeStamp" );
 			if ( method != null )
 			{
 				method.ClearElements();
@@ -1591,7 +1385,7 @@ namespace NDOEnhancer.Patcher
 				method = new ILMethodElement();
 				method.AddLine( ".method public hidebysig newslot specialname final virtual" );
 				method.AddLine( $"instance valuetype {Corlib.Name}System.Guid get_NDOTimeStamp() cil managed" );
-				m_classElement.getMethodIterator().getLast().insertAfter( method );
+				m_classElement.AppendMethod( method );
 			}
 			method.addStatement( ".maxstack  1" );
             
@@ -1600,7 +1394,7 @@ namespace NDOEnhancer.Patcher
 			method.addStatement( "ret");
 
 
-			method = m_classElement.getMethod( "set_NDOTimeStamp" );
+			method = m_classElement.GetMethod( "set_NDOTimeStamp" );
 			if ( method != null )
 			{
 				method.ClearElements();
@@ -1610,7 +1404,7 @@ namespace NDOEnhancer.Patcher
 				method = new ILMethodElement();
 				method.AddLine( ".method public hidebysig newslot specialname final virtual" );
 				method.AddLine( $"instance void  set_NDOTimeStamp(valuetype {Corlib.Name}System.Guid 'value') cil managed" );
-				m_classElement.getMethodIterator().getLast().insertAfter( method );
+				m_classElement.AppendMethod( method );
 			}
 			method.addStatement( ".maxstack  2" );
             
@@ -1619,7 +1413,7 @@ namespace NDOEnhancer.Patcher
 			method.addStatement(storeTimeStamp());
 			method.addStatement( "ret");
 
-			ILPropertyElement prop = m_classElement.getProperty( "NDOTimeStamp" );
+			ILPropertyElement prop = m_classElement.GetProperty( "NDOTimeStamp" );
 			if ( prop == null )
 			{
 				prop = new ILPropertyElement( $".property instance valuetype {Corlib.Name}System.Guid NDOTimeStamp()", m_classElement );
@@ -1627,20 +1421,20 @@ namespace NDOEnhancer.Patcher
 				prop.AddElement( new ILCustomElement( ".custom instance void [System.Xml]System.Xml.Serialization.XmlIgnoreAttribute::.ctor() = ( 01 00 00 00 )", prop ) );
 				prop.AddElement( new ILSetElement( ".set instance void " + m_nonGenericRefName + $"::set_NDOTimeStamp(valuetype {Corlib.Name}System.Guid)" ) );
 				prop.AddElement( new ILGetElement( $".get instance valuetype {Corlib.Name}System.Guid " + m_nonGenericRefName + "::get_NDOTimeStamp()" ) );
-				m_classElement.getMethodIterator().getLast().insertAfter( prop );
+				m_classElement.AppendProperty( prop );
 			}
 		}
 
 		public void
 		removeObjectState()
 		{
-			ILMethodElement method = m_classElement.getMethod( "get_NDOObjectState" );
+			ILMethodElement method = m_classElement.GetMethod( "get_NDOObjectState" );
 			if ( method != null )
 				method.Remove();
-			method = m_classElement.getMethod( "set_NDOObjectState" );
+			method = m_classElement.GetMethod( "set_NDOObjectState" );
 			if ( method != null )
 				method.Remove();
-			ILPropertyElement prop = m_classElement.getProperty( "NDOObjectState" );
+			ILPropertyElement prop = m_classElement.GetProperty( "NDOObjectState" );
 			if ( prop != null )
 				prop.Remove();
 		}
@@ -1654,7 +1448,7 @@ namespace NDOEnhancer.Patcher
 			else
 				method.AddLine( ".method public hidebysig newslot virtual" );
 			method.AddLine( "instance int32 NDOGetObjectHashCode() cil managed" );
-			m_classElement.getMethodIterator().getLast().insertAfter( method );
+			m_classElement.AppendMethod( method );
 
 			method.addStatement(".maxstack  1");
 			method.addStatement(ldarg_0);
@@ -1665,7 +1459,7 @@ namespace NDOEnhancer.Patcher
 		public void 
 		addObjectState()
 		{
-			ILMethodElement method = m_classElement.getMethod( "get_NDOObjectState" );
+			ILMethodElement method = m_classElement.GetMethod( "get_NDOObjectState" );
 			if ( method != null )
 			{
 				method.ClearElements();
@@ -1675,7 +1469,7 @@ namespace NDOEnhancer.Patcher
 				method = new ILMethodElement();
 				method.AddLine( ".method public hidebysig newslot specialname final virtual" );
 				method.AddLine( "instance valuetype [NDO]NDO.NDOObjectState get_NDOObjectState() cil managed" );
-				m_classElement.getMethodIterator().getLast().insertAfter( method );
+				m_classElement.AppendMethod( method );
 			}
 			method.addStatement( ".maxstack  1" );
             
@@ -1684,7 +1478,7 @@ namespace NDOEnhancer.Patcher
 			method.addStatement( "ret");
 
 
-			method = m_classElement.getMethod( "set_NDOObjectState" );
+			method = m_classElement.GetMethod( "set_NDOObjectState" );
 			if ( method != null )
 			{
 				method.ClearElements();
@@ -1694,7 +1488,7 @@ namespace NDOEnhancer.Patcher
 				method = new ILMethodElement();
 				method.AddLine( ".method public hidebysig newslot specialname final virtual" );
 				method.AddLine( "instance void  set_NDOObjectState(valuetype [NDO]NDO.NDOObjectState 'value') cil managed" );
-				m_classElement.getMethodIterator().getLast().insertAfter( method );
+				m_classElement.AppendMethod( method );
 			}
 			method.addStatement( ".maxstack  2" );
             
@@ -1704,7 +1498,7 @@ namespace NDOEnhancer.Patcher
 			method.addStatement( "ret");
 
 
-			ILPropertyElement prop = m_classElement.getProperty( "NDOObjectState" );
+			ILPropertyElement prop = m_classElement.GetProperty( "NDOObjectState" );
 			if ( prop == null )
 			{
 				prop = new ILPropertyElement( ".property instance valuetype [NDO]NDO.NDOObjectState NDOObjectState()", m_classElement );
@@ -1713,7 +1507,7 @@ namespace NDOEnhancer.Patcher
 				prop.AddElement( new ILGetElement( ".get instance valuetype [NDO]NDO.NDOObjectState " + m_nonGenericRefName + "::get_NDOObjectState()" ) );
 				prop.AddElement( new ILSetElement( ".set instance void " + m_nonGenericRefName + "::set_NDOObjectState(valuetype [NDO]NDO.NDOObjectState)" ) );
 
-				m_classElement.getPropertyIterator().getLast().insertAfter( prop );
+				m_classElement.AppendProperty( prop );
 			}
 
 		}
@@ -1721,13 +1515,13 @@ namespace NDOEnhancer.Patcher
 		public void
 		removeStateManager()
 		{
-			ILMethodElement method = m_classElement.getMethod( "get_NDOStateManager" );
+			ILMethodElement method = m_classElement.GetMethod( "get_NDOStateManager" );
 			if ( method != null )
 				method.Remove();
-			method = m_classElement.getMethod( "set_NDOStateManager" );
+			method = m_classElement.GetMethod( "set_NDOStateManager" );
 			if ( method != null )
 				method.Remove();
-			ILPropertyElement prop = m_classElement.getProperty( "NDOStateManager" );
+			ILPropertyElement prop = m_classElement.GetProperty( "NDOStateManager" );
 			if ( prop != null )
 				prop.Remove();
 		}
@@ -1736,7 +1530,7 @@ namespace NDOEnhancer.Patcher
 		public void 
 		addStateManager()
 		{
-			ILMethodElement method = m_classElement.getMethod( "get_NDOStateManager" );
+			ILMethodElement method = m_classElement.GetMethod( "get_NDOStateManager" );
 			if ( method != null )
 			{
 				method.ClearElements();
@@ -1746,7 +1540,7 @@ namespace NDOEnhancer.Patcher
 				method = new ILMethodElement();
 				method.AddLine( ".method public hidebysig newslot specialname final virtual" );
 				method.AddLine( "instance class [NDO]NDO.IStateManager get_NDOStateManager() cil managed" );
-				m_classElement.getMethodIterator().getLast().insertAfter( method );
+				m_classElement.AppendMethod( method );
 			}
 			method.addStatement( ".maxstack  1" );
             
@@ -1755,7 +1549,7 @@ namespace NDOEnhancer.Patcher
 			method.addStatement( "ret");
 
 
-			method = m_classElement.getMethod( "set_NDOStateManager" );
+			method = m_classElement.GetMethod( "set_NDOStateManager" );
 			if ( method != null )
 			{
 				method.ClearElements();
@@ -1765,7 +1559,7 @@ namespace NDOEnhancer.Patcher
 				method = new ILMethodElement();
 				method.AddLine( ".method public hidebysig newslot specialname final virtual" );
 				method.AddLine( "instance void  set_NDOStateManager(class [NDO]NDO.IStateManager 'value') cil managed" );
-				m_classElement.getMethodIterator().getLast().insertAfter( method );
+				m_classElement.AppendMethod( method );
 			}
 			method.addStatement( ".maxstack  2" );
             
@@ -1776,7 +1570,7 @@ namespace NDOEnhancer.Patcher
 			method.addStatement( "ret");
 
 
-			ILPropertyElement prop = m_classElement.getProperty( "NDOStateManager" );
+			ILPropertyElement prop = m_classElement.GetProperty( "NDOStateManager" );
 			if ( prop == null )
 			{
 				prop = new ILPropertyElement( ".property instance class [NDO]NDO.IStateManager NDOStateManager()", m_classElement );
@@ -1785,7 +1579,7 @@ namespace NDOEnhancer.Patcher
 				prop.AddElement( new ILGetElement( ".get instance class [NDO]NDO.IStateManager " + m_nonGenericRefName + "::get_NDOStateManager()" ) );
 				prop.AddElement( new ILSetElement( ".set instance void " + m_nonGenericRefName + "::set_NDOStateManager(class [NDO]NDO.IStateManager)" ) );
 
-				m_classElement.getPropertyIterator().getLast().insertAfter( prop );
+				m_classElement.AppendProperty( prop );
 			}
 
 		}
@@ -2255,7 +2049,7 @@ namespace NDOEnhancer.Patcher
 		//
 		public void addRead()
 		{
-			ILMethodElement method = m_classElement.getMethod( "NDORead" );
+			ILMethodElement method = m_classElement.GetMethod( "NDORead" );
 			if ( method == null )
 			{
 				method = new ILMethodElement();
@@ -2265,7 +2059,7 @@ namespace NDOEnhancer.Patcher
 				else
 					method.AddLine( ".method public hidebysig newslot virtual" );
 				method.AddLine( "instance void  NDORead(class [System.Data]System.Data.DataRow dr, string[] fields, int32 startind) cil managed" );
-				m_classElement.getMethodIterator().getLast().insertAfter( method );
+				m_classElement.AppendMethod( method );
 			}
 			else
 			{
@@ -2570,7 +2364,7 @@ namespace NDOEnhancer.Patcher
 		public void
 		addWrite()
 		{
-			ILMethodElement method = m_classElement.getMethod( "NDOWrite" );
+			ILMethodElement method = m_classElement.GetMethod( "NDOWrite" );
 			if ( method == null )
 			{
 				method = new ILMethodElement();
@@ -2580,7 +2374,7 @@ namespace NDOEnhancer.Patcher
 				else
 					method.AddLine( ".method public hidebysig newslot virtual" );
 				method.AddLine( "instance void  NDOWrite(class [System.Data]System.Data.DataRow dr, string[] fields, int32 startind) cil managed" );
-				m_classElement.getMethodIterator().getLast().insertAfter( method );
+				m_classElement.AppendMethod( method );
 			}
 			else
 			{
@@ -2685,20 +2479,20 @@ namespace NDOEnhancer.Patcher
 
 		public void removeGetNDOHandler()
 		{
-			ILMethodElement method = m_classElement.getMethod( "get_NDOHandler" );
+			ILMethodElement method = m_classElement.GetMethod( "get_NDOHandler" );
 			if ( method != null )
 				method.Remove();
 
-			ILPropertyElement propEl = m_classElement.getProperty( "NDOHandler" );
+			ILPropertyElement propEl = m_classElement.GetProperty( "NDOHandler" );
 			if ( propEl != null )
 				propEl.Remove();
 		}
 
 		public void addGetNDOHandler()
 		{
-			ILMethodElement method = m_classElement.getMethod( "get_NDOHandler" );
+			ILMethodElement method = m_classElement.GetMethod( "get_NDOHandler" );
 
-			m_classElement.insertFieldBefore(".field family static class [NDO]NDO.IPersistenceHandler _ndoPersistenceHandler", m_classElement.getMethodIterator().getNext());
+			m_classElement.AppendField(".field family static class [NDO]NDO.IPersistenceHandler _ndoPersistenceHandler" );
 
 			if ( method == null )
 			{
@@ -2722,7 +2516,7 @@ namespace NDOEnhancer.Patcher
 			method.AddElement(new ILStatementElement("ret"));
 			m_classElement.AddElement(method);
 
-			ILPropertyElement propEl = m_classElement.getProperty( "NDOHandler" );
+			ILPropertyElement propEl = m_classElement.GetProperty( "NDOHandler" );
 			if ( propEl == null )
 			{
 				propEl = new ILPropertyElement();

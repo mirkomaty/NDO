@@ -50,7 +50,6 @@ namespace ILCode
 
         private string m_name;
         private bool m_extern;
-        private IEnumerable<ILCustomElement> m_customElements = null;
         private string versionString;
         private int major;
         private int minor;
@@ -149,22 +148,6 @@ namespace ILCode
             {
                 Resolve();
                 return m_extern;
-            }
-        }
-
-        public IEnumerable<ILCustomElement> CustomElements
-        {
-            get
-            {
-                if (m_customElements == null)
-                {
-                    m_customElements = from e in Elements
-                                       let ce = e as ILCustomElement
-                                       where ce != null
-                                       select ce;
-                }
-
-                return m_customElements;
             }
         }
 	}

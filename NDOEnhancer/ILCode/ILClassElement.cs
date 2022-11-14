@@ -1,5 +1,5 @@
 ﻿//
-// Copyright (c) 2002-2016 Mirko Matytschak 
+// Copyright (c) 2002-2022 Mirko Matytschak 
 // (www.netdataobjects.de)
 //
 // Author: Mirko Matytschak
@@ -21,10 +21,8 @@
 
 
 using System;
-using System.Diagnostics;
 using System.Collections;
 using System.Collections.Generic;
-using NDOEnhancer;
 using System.Linq;
 
 namespace ILCode
@@ -66,7 +64,9 @@ namespace ILCode
         private string                      internalNamespace     = string.Empty;
 
 		private static ILElementType		m_elementType		  = new ILClassElementType();
-		
+		private List<ILMethodElement>       m_methods;
+		private List<ILFieldElement>		m_fields;
+
 		public void AddImplements(string[] interfaceNames)
 		{
 			List<string> lines = new List<string>();
@@ -179,14 +179,14 @@ namespace ILCode
 
 			// fullname
 
-			ILNamespaceElement nsElement = GetOwner() as ILNamespaceElement;
+			ILNamespaceElement nsElement = Owner() as ILNamespaceElement;
 
             if (m_fullName == null) // In .NET > 2.0 .class contains the full name
             {
                 string nsName = (null == nsElement ? "" : nsElement.getNamespaceName());
                 if (nsName == "")
                 {
-                    ILClassElement clsElement = GetOwner() as ILClassElement;
+                    ILClassElement clsElement = Owner() as ILClassElement;
                     if (null == clsElement)
                         m_fullName = m_name;
                     else
@@ -229,39 +229,66 @@ namespace ILCode
 			m_name = null;
 		}
 
-		public ILMethodElement? getMethod(string name)
+		private void ComputeMethods()
 		{
-			return (from me in
-				( from e in Elements where e is ILMethodElement select (ILMethodElement) e )
-				where me.getName() == name select me).FirstOrDefault();
+			m_methods = (from e in Elements let me = e as ILMethodElement where me != null select me).ToList();
+		}
+
+		public IEnumerable<ILMethodElement> Methods
+		{
+			get
+			{
+				if (m_methods == null)
+				{
+					ComputeMethods();
+				}
+				return m_methods;
+			}
+		}
+
+		public void AppendMethod( ILMethodElement insertElement )
+		{
+			base.AppendElement( insertElement );
+				m_methods.Add( insertElement );
+		}
+
+		public void AppendProperty( ILPropertyElement insertElement )
+		{
+			base.AppendElement( insertElement );
+		}
+
+		private void ComputeFields()
+		{
+			m_fields = ( from e in Elements let me = e as ILFieldElement where me != null select me ).ToList();
+		}
+
+		public IEnumerable<ILFieldElement> Fields
+		{
+			get
+			{
+				if (m_fields == null)
+				{
+					ComputeFields();
+				}
+				return m_fields;
+			}
+		}
+
+		public ILMethodElement GetMethod(string name)
+		{
+			return (from me in Methods
+					where me.Name == name 
+					select me).FirstOrDefault();
 		}
 
 
-		public ILPropertyElement? getProperty( string name )
+		public ILPropertyElement GetProperty( string name )
 		{
 			return ( from me in
 				( from e in Elements where e is ILPropertyElement select (ILPropertyElement) e )
 					 where me.getName() == name
 					 select me ).FirstOrDefault();
 		}
-
-
-		public ILNamespaceElement
-		getNamespace()
-		{
-			ILNamespaceElement nsElem = GetOwner() as ILNamespaceElement;
-
-			if ( null != nsElem )
-				return nsElem;
-			
-            ILClassElement clsElem = GetOwner() as ILClassElement;
-			
-			if ( null == clsElem )
-				return null;
-
-			return clsElem.getNamespace();
-		}
-
 
 		public bool
 		IsPersistent(Type attrType)
@@ -410,27 +437,28 @@ namespace ILCode
 		}
 
 		public ILFieldElement
-		insertFieldBefore( string firstLine, ILMethodElement method )
+		AppendField( string firstLine )
 		{
+			var firstMethod = Methods.First();
 			ILFieldElement field = new ILFieldElement( firstLine );
-			method.InsertBefore( field );
+			firstMethod.InsertBefore( field );
+			m_fields.Add( field );
 
 			return field;
 		}
 
 		public Dictionary<string,string>
-		findAccessorProperties()
+		GetAccessorProperties()
 		{
-			ILMethodElement.Iterator iter = getMethodIterator();
 			Dictionary<string, string> result = new Dictionary<string, string>();
-			for ( ILMethodElement meth = iter.getFirst(); meth != null; meth = iter.getNext() )
+			foreach ( ILMethodElement methodElement in Methods )
 			{
-				string methodName = meth.getName();
+				string methodName = methodElement.Name;
 				if ( methodName.StartsWith ("get_") && !methodName.StartsWith ("get_NDO"))
 				{					
 					List<ILStatementElement> filteredStatements = new List<ILStatementElement>();
-					ILStatementElement.Iterator statementIter = meth.getStatementIterator(true);
-					for ( ILStatementElement statementElement = statementIter.getNext(); null != statementElement; statementElement = statementIter.getNext() )
+
+					foreach ( ILStatementElement statementElement in methodElement.Statements )
 					{
 						string line = statementElement.GetLine( 0 );
 						if (line.IndexOf( " nop" ) > -1)
@@ -464,12 +492,13 @@ namespace ILCode
 								key = key.Substring( 1, key.Length - 2 );
 							if (!result.ContainsKey( key ))
 								result.Add( key, methodName.Substring( 4 ) );
-							else
-								Console.WriteLine( key + " " + methodName.Substring( 4 ) );
+							//else
+							//	Console.WriteLine( key + " " + methodName.Substring( 4 ) );
 						}
 					}
 				}
 			}
+
 			return result;
 		}
 	}

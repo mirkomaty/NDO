@@ -21,6 +21,7 @@
 
 
 using System;
+using System.Linq;
 using System.Diagnostics;
 using System.Collections.Generic;
 using System.Text;
@@ -53,13 +54,14 @@ namespace ILCode
 			m_lines.Add( firstLine );
 		}
 
-		private ILElement				m_owner		= null;
-		private List<string>			m_lines		= new List<string>();
-		private List<ILElement>			m_elements	= null;
-		private List<ILClassElement>	m_classElements = null;
-		private string					m_assemblyName;
+		private ILElement						m_owner		= null;
+		private List<string>					m_lines		= new List<string>();
+		private List<ILElement>					m_elements	= null;
+		private List<ILClassElement>			m_classElements = null;
+		private string							m_assemblyName;
+		private IEnumerable<ILCustomElement>	m_customElements = null;
 
-		private static List<ILElementType>  m_elementTypes = new List<ILElementType>();
+		private static List<ILElementType>		m_elementTypes = new List<ILElementType>();
 
 		private enum					Status{ normal, escape, quote, ccomment, cppcomment };
 
@@ -205,7 +207,7 @@ namespace ILCode
 		}
 
 		public ILElement
-		GetOwner()
+		Owner()
 		{
 			return m_owner;
 		}
@@ -353,7 +355,7 @@ namespace ILCode
 			return m_elements[index] as ILElement;
 		}
 
-		public bool
+		public virtual bool
 		InsertBefore( ILElement insertElement, ILElement existingElement )
 		{
 			for ( int i=0; i<m_elements.Count; i++ )
@@ -372,13 +374,13 @@ namespace ILCode
 		public bool
 		InsertBefore( ILElement insertElement )
 		{
-			if ( null == GetOwner() )
+			if ( null == Owner() )
 				return false;
 
-			return GetOwner().InsertBefore( insertElement, this );
+			return Owner().InsertBefore( insertElement, this );
 		}
 
-		protected bool
+		protected virtual bool
 		InsertAfter( ILElement insertElement, ILElement existingElement )
 		{
 			for ( int i=0; i<m_elements.Count; i++ )
@@ -398,13 +400,18 @@ namespace ILCode
 			return false;
 		}
 
+		protected virtual void AppendElement(ILElement insertElement)
+		{
+			m_elements.Add( insertElement );
+		}
+
 		public bool
 		InsertAfter( ILElement insertElement )
 		{
-			if ( null == GetOwner() )
+			if ( null == Owner() )
 				return false;
 
-			return GetOwner().InsertAfter( insertElement, this );
+			return Owner().InsertAfter( insertElement, this );
 		}
 
 		protected void
@@ -419,10 +426,10 @@ namespace ILCode
 		public void
 		Remove()
 		{
-			if ( null == GetOwner() )
+			if ( null == Owner() )
 				return;
 
-			GetOwner().Remove( this );
+			Owner().Remove( this );
 		}
 
 		public void
@@ -732,13 +739,13 @@ namespace ILCode
 
 		public ILElement GetSuccessor()
 		{
-			ILElement Owner = GetOwner();
+			ILElement Owner = Owner();
 			return Owner.GetSuccessorOf(this);
 		}
 
 		public ILElement GetPredecessor()
 		{
-			ILElement Owner = GetOwner();
+			ILElement Owner = Owner();
 			return Owner.GetPredecessorOf(this);
 		}
 
@@ -813,5 +820,89 @@ namespace ILCode
 			}
 		}
 
+		//TODO .event elements currently don't have an own element type.
+		static Type[] childCustomOwners = {typeof(ILClassElement), typeof(ILAssemblyElement), typeof(ILPropertyElement) };
+		//TODO: parameters need to have an own ILParamElement, to manage custom attributes
+		//      currently we can omit this type because NDO doesnt use or alter custom attributes of params.
+		//		note: Return values are handled like params at position 0.
+		//		note: Generic params are special forms of params (.param type T)
+		static Type[] memberCustomOwners = {typeof(ILModuleElement), typeof(ILFieldElement)};
+
+		public IEnumerable<ILCustomElement> CustomElements
+		{
+			get
+			{
+				if (m_customElements != null)
+					return m_customElements;
+
+				Type t = GetType();
+				if (childCustomOwners.Contains( t ))
+					return ComputeChildCustomElements();
+				if (memberCustomOwners.Contains( t ))
+					return ComputeMemberCustomElements();
+
+				// return an empty list for owners, which cannot have CAs
+				return m_customElements = new List<ILCustomElement>();
+
+			}
+		}
+
+		/// <summary>
+		/// Compute all custom elements of an element, if custom elements
+		/// are defined as child elements of an element, as is in .assembly and .class.
+		/// </summary>
+		private IEnumerable<ILCustomElement> ComputeChildCustomElements()
+		{
+			var customElements = new List<ILCustomElement>();
+			m_customElements = customElements;
+			// custom elements are the very first child elements
+			// If there is a child element of another type, it may have
+			// its own custom element. The declaration follows immediately after
+			// the child element declaration.
+			foreach (var childElement in m_elements)
+			{
+				if (childElement is ILCustomElement customElement)
+				{
+					customElements.Add( customElement );
+				}
+				else
+				{
+					break;
+				}
+			}
+
+			return m_customElements;
+		}
+
+		/// <summary>
+		/// Get all custom elements of an element, if custom elements
+		/// are defined for class members like .field or .property.
+		/// </summary>
+		private IEnumerable<ILCustomElement> ComputeMemberCustomElements()
+		{
+			var customElements = new List<ILCustomElement>();
+			m_customElements = customElements;
+			// custom elements of members follow immediately after
+			// the element declaration.
+			IEnumerator<ILElement> elements = m_owner.Elements.GetEnumerator();
+			elements.MoveNext();
+			while (elements.Current != null && elements.Current != this)
+				elements.MoveNext();
+
+			if (elements.Current == null)
+				return m_customElements; // empty
+
+			// Current points now to the .field or .property declaration
+			elements.MoveNext();	// Move to the next element, which should be the first .custom element
+									// if there are any .custom elements
+
+			while (elements.Current != null && elements.Current is ILCustomElement customElement)
+			{
+				customElements.Add( customElement );
+				elements.MoveNext();
+			}
+
+			return m_customElements;
+		}
 	}
 }

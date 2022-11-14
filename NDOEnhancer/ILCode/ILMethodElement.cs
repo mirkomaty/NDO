@@ -21,7 +21,8 @@
 
 
 using System;
-using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
 using NDOEnhancer.Ecma335;
 
 namespace ILCode
@@ -65,8 +66,10 @@ namespace ILCode
 		private string						m_name;
 		private string						m_signature;
 
-		private ArrayList					m_parameterTypes = new ArrayList();
-		private ArrayList					m_parameterNames = new ArrayList();
+		private List<string>					m_parameterTypes = new List<string>();
+		private List<string>					m_parameterNames = new List<string>();
+
+		private List<ILStatementElement> m_statements;
 
 		public void
 		addStatement( string firstLine )
@@ -77,7 +80,7 @@ namespace ILCode
 		public bool
 		isConstructor()
 		{
-			resolve();
+			Resolve();
 
 			return m_name.Equals( ".ctor" );
 		}
@@ -85,13 +88,13 @@ namespace ILCode
 		public bool
 		isStaticConstructor()
 		{
-			resolve();
+			Resolve();
 
 			return m_name.Equals( ".cctor" );
 		}
 
 		private void
-		resolve()
+		Resolve()
 		{
 			if ( null != m_name )
 				return;
@@ -211,9 +214,9 @@ namespace ILCode
 		}
 
 		public void
-		makeUpperCaseName()
+		MakeUpperCaseName()
 		{
-			string oldName = getName();
+			string oldName = Name;
 			string newName = MakeUpperCaseName( oldName );
 
 			if ( oldName == newName )
@@ -228,7 +231,7 @@ namespace ILCode
 		public bool
 		isPrivate()
 		{
-			resolve();
+			Resolve();
 
 			return m_isPrivate;
 		}
@@ -236,7 +239,7 @@ namespace ILCode
 		public bool
 		isProtected()
 		{
-			resolve();
+			Resolve();
 
 			return m_isProtected;
 		}
@@ -244,7 +247,7 @@ namespace ILCode
 		public bool
 		isPublic()
 		{
-			resolve();
+			Resolve();
 
 			return m_isPublic;
 		}
@@ -252,7 +255,7 @@ namespace ILCode
 		public bool
 		isStatic()
 		{
-			resolve();
+			Resolve();
 
 			return m_isStatic;
 		}
@@ -260,7 +263,7 @@ namespace ILCode
 		public bool
 		isNative()
 		{
-			resolve();
+			Resolve();
 
 			return m_isNative;
 		}
@@ -269,14 +272,14 @@ namespace ILCode
         public bool
         isPinvoke()
         { 
-            resolve();
+            Resolve();
             return m_isPinvoke;
         }
 
 		public bool
 		isAbstract()
 		{
-			resolve();
+			Resolve();
 
 			return m_isAbstract;
 		}
@@ -284,7 +287,7 @@ namespace ILCode
 		public bool
 		isVirtual()
 		{
-			resolve();
+			Resolve();
 
 			return m_isVirtual;
 		}
@@ -292,7 +295,7 @@ namespace ILCode
 		public bool
 		isNew()
 		{
-			resolve();
+			Resolve();
 
 			return m_isNew;
 		}
@@ -300,23 +303,25 @@ namespace ILCode
 		public bool
 		isSpecialName()
 		{
-			resolve();
+			Resolve();
 
 			return m_specialName;
 		}
 
 		public string
-		getName()
+		Name
 		{
-			resolve();
-
-			return m_name;
+			get
+			{
+				Resolve();
+				return m_name;
+			}
 		}
 
 		public string
 		getILType()
 		{
-			resolve();
+			Resolve();
 
 			return m_ilType;
 		}
@@ -324,39 +329,70 @@ namespace ILCode
 		public int
 		getParameterCount()
 		{
-			resolve();
+			Resolve();
 
 			return m_parameterTypes.Count;
 		}
 
-        //public string
-        //getParameterType( int index )
-        //{
-        //    resolve();
-
-        //    return m_parameterTypes[index] as string;
-        //}
-
-        //public string
-        //getParameterName( int index )
-        //{
-        //    resolve();
-
-        //    return m_parameterNames[index] as string;
-        //}
-
 		public string
-		getSignature()
+		Signature
 		{
-			resolve();
-
-			return m_signature;
+			get
+			{
+				Resolve();
+				return m_signature;
+			}
 		}
 
 		public ILClassElement
-		getClass()
+		GetClass()
 		{
-			return GetOwner() as ILClassElement;
+			return Owner() as ILClassElement;
+		}
+
+		protected override bool InsertAfter( ILElement insertElement, ILElement existingElement )
+		{
+			if (base.InsertAfter( insertElement, existingElement ))
+			{
+				if (insertElement is ILStatementElement insStatement)
+					m_statements.Add( insStatement );
+
+				return true;
+			}
+
+			return false;
+		}
+
+		public override bool InsertBefore( ILElement insertElement, ILElement existingElement )
+		{
+			if (base.InsertBefore( insertElement, existingElement ))
+			{
+				if (insertElement is ILStatementElement insStatement)
+				{
+					var index = m_statements.IndexOf( insStatement );
+					m_statements.Insert( index, insStatement );
+				}
+
+				return true;
+			}
+
+			return false;
+		}
+
+		public IEnumerable<ILStatementElement> Statements
+		{
+			get
+			{
+				if (m_statements != null)
+					return m_statements;
+
+				m_statements = (from e in Elements 
+								let se = e as ILStatementElement 
+								where se != null 
+								select se).ToList();
+
+				return m_statements;
+			}
 		}
 	}
 }

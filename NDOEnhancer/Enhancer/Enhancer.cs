@@ -1559,7 +1559,7 @@ namespace NDOEnhancer
 			{
 				if (classElement.IsPersistent(typeof (NDOPersistentAttribute)))
 				{
-					Dictionary<string, string> accessors = classElement.findAccessorProperties();
+					Dictionary<string, string> accessors = classElement.GetAccessorProperties();
 					Class classMapping = mappings.FindClass( classElement.getMappingName() );
 					if (classMapping != null && accessors.Count > 0)
 					{
