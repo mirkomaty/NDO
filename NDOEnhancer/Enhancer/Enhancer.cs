@@ -1,5 +1,5 @@
 ﻿//
-// Copyright (c) 2002-2016 Mirko Matytschak 
+// Copyright (c) 2002-2022 Mirko Matytschak 
 // (www.netdataobjects.de)
 //
 // Author: Mirko Matytschak
@@ -35,7 +35,7 @@ using NDO;
 using NDO.Mapping;
 using NDO.Mapping.Attributes;
 
-using ILCode;
+using NDOEnhancer.ILCode;
 using System.Reflection;
 
 
@@ -103,9 +103,9 @@ namespace NDOEnhancer
 		private string				ownAssemblyName = null; 
 		private StreamWriter		sortedFieldsFile;
 
-		private ClassHashtable		allPersistentClasses = new ClassHashtable();
-		private Hashtable			allSortedFields = new ClassHashtable();
-		private Hashtable			allReferences = new ClassHashtable();
+		private ClassDictionary		allPersistentClasses = new ClassDictionary();
+		private ClassDictionary      allSortedFields = new ClassDictionary();
+		private ClassDictionary      allReferences = new ClassDictionary();
 		private Hashtable			assemblyFullNames = new Hashtable();
 		private IList				tabuClasses = new ArrayList();
 		private NDOMapping          mappings;
@@ -255,7 +255,7 @@ namespace NDOEnhancer
 				foreach(ClassNode classNode in classList)
 				{
 					string clName = classNode.Name;
-					if (!allPersistentClasses.Contains(clName))
+					if (!allPersistentClasses.ContainsKey(clName))
 						allPersistentClasses.Add(clName, classNode);
 					else if (verboseMode)
 						messages.WriteLine("Multiple definition of Class " + clName + '.');

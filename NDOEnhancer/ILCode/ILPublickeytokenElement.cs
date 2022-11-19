@@ -1,5 +1,5 @@
 ﻿//
-// Copyright (c) 2002-2016 Mirko Matytschak 
+// Copyright (c) 2002-2022 Mirko Matytschak 
 // (www.netdataobjects.de)
 //
 // Author: Mirko Matytschak
@@ -22,18 +22,13 @@
 
 using System;
 
-namespace ILCode
+namespace NDOEnhancer.ILCode
 {
 	/// <summary>
 	/// Summary description for ILPublickeytokenElement.
 	/// </summary>
 	internal class ILPublickeytokenElement : ILElement
 	{
-		public ILPublickeytokenElement()
-			: base( false )
-		{
-		}
-
 		public ILPublickeytokenElement( string firstLine, ILElement owner )
 			: base( firstLine, owner )
 		{

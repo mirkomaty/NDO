@@ -25,7 +25,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace ILCode
+namespace NDOEnhancer.ILCode
 {
 	/// <summary>
 	/// Summary description for ILClassElement.
@@ -33,7 +33,6 @@ namespace ILCode
 	internal class ILClassElement : ILElement
 	{
 		public ILClassElement()
-			: base( true )
 		{
 		}
 
@@ -71,7 +70,7 @@ namespace ILCode
 		{
 			List<string> lines = new List<string>();
 			int implPosition = -1;
-			for ( int i = 0; i < this.GetLineCount(); i++ )
+			for ( int i = 0; i < this.LineCount; i++ )
 			{
 				string s = this.GetLine( i );
 				if ( s.StartsWith( "implements" ) )
@@ -179,14 +178,14 @@ namespace ILCode
 
 			// fullname
 
-			ILNamespaceElement nsElement = Owner() as ILNamespaceElement;
+			ILNamespaceElement nsElement = Owner as ILNamespaceElement;
 
             if (m_fullName == null) // In .NET > 2.0 .class contains the full name
             {
                 string nsName = (null == nsElement ? "" : nsElement.getNamespaceName());
                 if (nsName == "")
                 {
-                    ILClassElement clsElement = Owner() as ILClassElement;
+                    ILClassElement clsElement = Owner as ILClassElement;
                     if (null == clsElement)
                         m_fullName = m_name;
                     else
@@ -202,7 +201,7 @@ namespace ILCode
 
 			string line = null;
 
-			for ( i=0; i<GetLineCount(); i++ )
+			for ( i=0; i<LineCount; i++ )
 			{
 				line = GetLine( i );
 
@@ -210,7 +209,7 @@ namespace ILCode
 					break;
 			}
 
-			if ( i < GetLineCount() )
+			if ( i < LineCount )
 			{
 				m_baseFullName = line.Substring( 7 );	//extends has 7 chars
 				m_baseFullName = StripComment( m_baseFullName );
@@ -410,7 +409,7 @@ namespace ILCode
 
 			bool start = false;
 			bool last  = false;
-			for ( int i=1; i<GetLineCount() && ! last; i++ )
+			for ( int i = 1; i < LineCount && ! last; i++ )
 			{
 				string line = GetLine( i ).Trim();
 				if ( ! start )

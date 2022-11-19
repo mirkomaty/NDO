@@ -1,5 +1,5 @@
 ﻿//
-// Copyright (c) 2002-2016 Mirko Matytschak 
+// Copyright (c) 2002-2022 Mirko Matytschak 
 // (www.netdataobjects.de)
 //
 // Author: Mirko Matytschak
@@ -26,7 +26,7 @@ using System.IO;
 using System.Text;
 using System.Collections.Generic;
 
-namespace ILCode
+namespace NDOEnhancer.ILCode
 {
 	/// <summary>
 	/// Summary description for ILFile.
@@ -63,7 +63,7 @@ namespace ILCode
 			if (externElement == null)
 				throw new Exception( "ILFile doesn't have an assembly extern element" );
 
-			SetAssemblyName( externElement.Name );
+			AssemblyName = externElement.Name;
 		}
 
 		public string

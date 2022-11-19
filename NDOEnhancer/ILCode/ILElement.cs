@@ -26,7 +26,7 @@ using System.Diagnostics;
 using System.Collections.Generic;
 using System.Text;
 
-namespace ILCode
+namespace NDOEnhancer.ILCode
 {
 	/// <summary>
 	/// Summary description for ILElement.
@@ -35,12 +35,6 @@ namespace ILCode
 	{
 		public ILElement()
 		{
-		}
-
-		public ILElement( bool hasElements )
-		{
-			if ( hasElements )
-				m_elements = new List<ILElement>();
 		}
 
 		public ILElement( string firstLine )
@@ -56,7 +50,7 @@ namespace ILCode
 
 		private ILElement						m_owner		= null;
 		private List<string>					m_lines		= new List<string>();
-		private List<ILElement>					m_elements	= null;
+		private List<ILElement>					m_elements  = new List<ILElement>();
 		private List<ILClassElement>			m_classElements = null;
 		private string							m_assemblyName;
 		private IEnumerable<ILCustomElement>	m_customElements = null;
@@ -172,9 +166,6 @@ namespace ILCode
 		public void
 		WriteSubElements( ILFile ilfile, int level, bool isNetStandard )
 		{
-			if ( null == m_elements )
-				return;
-
 			foreach ( ILElement element in m_elements )
 			{
 				element.Write( ilfile, level, isNetStandard );
@@ -196,7 +187,8 @@ namespace ILCode
 				ilfile.writeLine( level, outputLine );
 			}
 
-			if ( null == m_elements )
+			// each element having a block will have at least one subelement
+			if ( m_elements.Count == 0 )
 				return;
 
 			ilfile.writeLine( level, "{" );
@@ -206,32 +198,25 @@ namespace ILCode
 			ilfile.writeLine( level, "}" );
 		}
 
-		public ILElement
-		Owner()
+		public ILElement Owner
 		{
-			return m_owner;
-		}
-
-		private void
-		SetOwner( ILElement owner )
-		{
-			m_owner = owner;
+			get => this.m_owner;
+			set => this.m_owner = value;
 		}
 
 		internal ILElement
-		GetRootOwner()
+		RootOwner
 		{
-			if ( null != m_owner )
-				return m_owner.GetRootOwner();
-			else
-				return this;
+			get
+			{
+				if (null != m_owner)
+					return m_owner.RootOwner;
+				else
+					return this;
+			}
 		}
 
-		public int
-		GetLineCount()
-		{
-			return m_lines.Count;
-		}
+		public int LineCount => m_lines.Count;
 
 		public string
 		GetLine( int index )
@@ -269,7 +254,7 @@ namespace ILCode
 		public void
 		ReplaceText( string oldText, string newText )
 		{
-			for ( int i=0; i<GetLineCount(); i++ )
+			for ( int i = 0; i < LineCount; i++ )
 			{
 				string oldLine = GetLine( i );
 				string newLine = "";
@@ -317,7 +302,7 @@ namespace ILCode
 		public void
 		ReplaceTextOnce( string oldText, string newText )
 		{
-			for ( int i=0; i<GetLineCount(); i++ )
+			for ( int i = 0; i < LineCount; i++ )
 			{
 				string line = GetLine( i );
 
@@ -337,22 +322,13 @@ namespace ILCode
 		public int
 		GetSubElementCount()
 		{
-			if ( null == m_elements )
-				return 0;
-
 			return m_elements.Count;
 		}
 
 		public ILElement
 		GetElement( int index )
 		{
-			if ( null == m_elements )
-				return null;
-
-			if ( index < 0 || m_elements.Count <= index )
-				return null;
-
-			return m_elements[index] as ILElement;
+			return m_elements[index];
 		}
 
 		public virtual bool
@@ -362,7 +338,7 @@ namespace ILCode
 			{
 				if ( m_elements[i] == existingElement )
 				{
-					insertElement.SetOwner( this );
+					insertElement.Owner = this;
 					m_elements.Insert( i, insertElement );
 					return true;
 				}
@@ -374,10 +350,10 @@ namespace ILCode
 		public bool
 		InsertBefore( ILElement insertElement )
 		{
-			if ( null == Owner() )
+			if ( null == m_owner )
 				return false;
 
-			return Owner().InsertBefore( insertElement, this );
+			return m_owner.InsertBefore( insertElement, this );
 		}
 
 		protected virtual bool
@@ -387,7 +363,7 @@ namespace ILCode
 			{
 				if ( m_elements[i] == existingElement )
 				{
-					insertElement.SetOwner( this );
+					insertElement.Owner = this;
 					if ( (i + 1) < m_elements.Count )
 						m_elements.Insert( i + 1, insertElement );
 					else
@@ -408,16 +384,16 @@ namespace ILCode
 		public bool
 		InsertAfter( ILElement insertElement )
 		{
-			if ( null == Owner() )
+			if ( null == m_owner )
 				return false;
 
-			return Owner().InsertAfter( insertElement, this );
+			return m_owner.InsertAfter( insertElement, this );
 		}
 
 		protected void
 		Remove( ILElement removeElement )
 		{
-			removeElement.SetOwner( null );
+			removeElement.Owner = null;
 			m_elements.Remove( removeElement );
 			if (removeElement is ILClassElement clel)
 				m_classElements.Remove(clel);
@@ -426,28 +402,22 @@ namespace ILCode
 		public void
 		Remove()
 		{
-			if ( null == Owner() )
+			if ( null == m_owner )
 				return;
 
-			Owner().Remove( this );
+			m_owner.Remove( this );
 		}
 
 		public void
 		AddElement( ILElement insertElement )
 		{
-			if ( null == m_elements )
-				m_elements = new List<ILElement>();
-
-			insertElement.SetOwner( this );
+			insertElement.Owner = this;
 			if (insertElement is ILClassElement classElement)
 			{
 				if (m_classElements == null)
 				{
-					// Erst versuchen, vorhandene Elemente zu finden
-					this.GetAllClassElements();
-					// Keine gefunden? Neue Arraylist anlegen
-					if (m_classElements == null)
-						m_classElements = new List<ILClassElement>();
+					// try to get class elements from m_elements
+					GetAllClassElements();
 				}
 				m_classElements.Add(classElement);
 			}
@@ -470,9 +440,6 @@ namespace ILCode
 		internal void
 		GetAllClassElements( List<ILClassElement> classes )
 		{
-			if ( null == m_elements )
-				return;
-
 //			Debug.WriteLine("Type: " + this.GetType().Name);
 //			Debug.Indent();
 			foreach ( var element in m_elements  )
@@ -695,27 +662,23 @@ namespace ILCode
 			if ( typename[0] == '[' )
 				return type;
 
-			return typetype + " [" + GetAssemblyName() + "]" + typename;
-		}
-
-		public void
-		SetAssemblyName( string assemblyName )
-		{
-			m_assemblyName = assemblyName;
-
-			if ( null == m_elements )
-				return;
-
-			foreach ( ILElement element in m_elements )
-			{
-				element.SetAssemblyName( assemblyName );
-			}
+			return typetype + " [" + m_assemblyName + "]" + typename;
 		}
 
 		public string
-		GetAssemblyName()
+		AssemblyName
 		{
-			return m_assemblyName;
+			get=> m_assemblyName;
+			set
+			{
+				m_assemblyName = value;
+
+				foreach (ILElement element in m_elements)
+				{
+					element.AssemblyName = value;
+				}
+
+			}
 		}
 
 		public virtual void
@@ -728,9 +691,6 @@ namespace ILCode
 				m_lines[i] = (m_lines[i] as string).Replace( reference, "" );
 			}
 
-			if ( null == m_elements )
-				return;
-
 			foreach ( ILElement element in m_elements )
 			{
 				element.RemoveAssemblyReference( assemblyName );
@@ -739,14 +699,12 @@ namespace ILCode
 
 		public ILElement GetSuccessor()
 		{
-			ILElement Owner = Owner();
-			return Owner.GetSuccessorOf(this);
+			return m_owner.GetSuccessorOf(this);
 		}
 
 		public ILElement GetPredecessor()
 		{
-			ILElement Owner = Owner();
-			return Owner.GetPredecessorOf(this);
+			return m_owner.GetPredecessorOf(this);
 		}
 
 		public ILElement GetPredecessorOf(ILElement elementToSearch)

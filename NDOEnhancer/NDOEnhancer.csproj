@@ -142,9 +142,6 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Enhancer\Corlib.cs" />
-    <Compile Include="Enhancer\Decryptor.cs">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="Enhancer\Ecma335\EcmaArrayIndex.cs" />
     <Compile Include="Enhancer\Ecma335\EcmaCallConv.cs" />
     <Compile Include="Enhancer\Ecma335\EcmaDottedName.cs" />

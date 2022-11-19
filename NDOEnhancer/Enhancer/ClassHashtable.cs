@@ -1,10 +1,10 @@
 ﻿//
-// Copyright (c) 2002-2016 Mirko Matytschak 
+// Copyright (c) 2002-2022 Mirko Matytschak 
 // (www.netdataobjects.de)
 //
 // Author: Mirko Matytschak
 //
-// Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated 
+// Permission is hereby granted, frgee of charge, to any person obtaining a copy of this software and associated 
 // documentation files (the "Software"), to deal in the Software without restriction, including without limitation 
 // the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the 
 // Software, and to permit persons to whom the Software is furnished to do so, subject to the following 
@@ -20,49 +20,44 @@
 // DEALINGS IN THE SOFTWARE.
 
 
-using System;
-using System.Xml;
-using System.Collections;
+using System.Collections.Generic;
 
 namespace NDOEnhancer
 {
 	/// <summary>
 	/// Zusammenfassung für ClassHashtable.
 	/// </summary>
-	internal class ClassHashtable : Hashtable
+	internal class ClassDictionary<T> : Dictionary<string,T>
 	{
+		static string ComputeKey(string name)
+		{
+			return name.Substring( name.IndexOf( ']' ) + 1 ).Replace( "+", "/" );
+		}
 
-		public new ClassNode this[object key]
+		public new T this[string key]
 		{
 			get
 			{
-				if (!(key is string))
-					throw new InternalException(30, "ClassHashtable.cs");
-				string name = (string) key;
-				string clName = name.Substring(name.IndexOf(']') + 1).Replace("+", "/");
-				return (ClassNode)base[clName];
+				string clName = ComputeKey( key );
+				return base[clName];
 			}
 			set
 			{
-				string name = (string) key;
-				string clName = name.Substring(name.IndexOf(']') + 1).Replace("+", "/");
+				string clName = ComputeKey( key );
 				base[clName] = value;
 			}			
 		}
-		public override bool Contains(object key)
-		{
-			string name = (string) key;
-			string clName = name.Substring(name.IndexOf(']') + 1).Replace("+", "/");
-			return base.Contains(clName);
-		}
 
-		public override void Add(object key, object value)
+		public new bool ContainsKey(string key)
 		{
-			string name = (string) key;
-			string clName = name.Substring(name.IndexOf(']') + 1).Replace("+", "/");
+			string clName = ComputeKey( key );
+			return base.ContainsKey(clName);
+		}
+		
+		public new void Add(string key, T value)
+		{
+			string clName = ComputeKey( key );
 			base.Add (clName, value);
 		}
-
-
 	}
 }

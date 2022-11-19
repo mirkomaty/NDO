@@ -1,5 +1,5 @@
 ﻿//
-// Copyright (c) 2002-2016 Mirko Matytschak 
+// Copyright (c) 2002-2022 Mirko Matytschak 
 // (www.netdataobjects.de)
 //
 // Author: Mirko Matytschak
@@ -25,7 +25,7 @@ using System.Collections.Generic;
 using System.Linq;
 using NDOEnhancer.Ecma335;
 
-namespace ILCode
+namespace NDOEnhancer.ILCode
 {
 	/// <summary>
 	/// Summary description for ILMethodElement.
@@ -33,7 +33,6 @@ namespace ILCode
 	internal class ILMethodElement : ILElement
 	{
 		public ILMethodElement()
-			: base( true )
 		{
 		}
 
@@ -342,12 +341,6 @@ namespace ILCode
 				Resolve();
 				return m_signature;
 			}
-		}
-
-		public ILClassElement
-		GetClass()
-		{
-			return Owner() as ILClassElement;
 		}
 
 		protected override bool InsertAfter( ILElement insertElement, ILElement existingElement )

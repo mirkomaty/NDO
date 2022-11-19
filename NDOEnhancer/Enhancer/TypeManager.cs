@@ -1,5 +1,5 @@
 ﻿//
-// Copyright (c) 2002-2016 Mirko Matytschak 
+// Copyright (c) 2002-2022 Mirko Matytschak 
 // (www.netdataobjects.de)
 //
 // Author: Mirko Matytschak
@@ -58,11 +58,11 @@ namespace NDOEnhancer
 		}
 
 
-		public void CheckTypeList(Hashtable allTypes)
+		public void CheckTypeList(ClassDictionary allTypes)
 		{
-			foreach(DictionaryEntry e in allTypes)
+			foreach(var entry in allTypes)
 			{
-				ClassNode classNode = (ClassNode) e.Value;
+				ClassNode classNode = (ClassNode) entry.Value;
                 if (classNode.IsAbstractOrInterface)
                     classNode.IsPoly = true;    // Must be polymorphic
 
@@ -81,6 +81,7 @@ namespace NDOEnhancer
 
 				baseNode.IsPoly = true;
 			}
+
             this.Store();
 		}
 

@@ -1,5 +1,5 @@
 ﻿//
-// Copyright (c) 2002-2016 Mirko Matytschak 
+// Copyright (c) 2002-2022 Mirko Matytschak 
 // (www.netdataobjects.de)
 //
 // Author: Mirko Matytschak
@@ -30,7 +30,7 @@ using System.IO;
 using System.Diagnostics;
 using System.Data;
 
-using ILCode;
+using NDOEnhancer.ILCode;
 using NDO;
 using System.Collections.Generic;
 
@@ -60,8 +60,8 @@ namespace NDOEnhancer.Patcher
 
 		public ClassPatcher(	ILClassElement classElement, 
 			NDO.Mapping.NDOMapping mappings, 
-			ClassHashtable externalPersistentBases,
-			NDOEnhancer.MessageAdapter messages,
+			ClassDictionary<ClassNode> externalPersistentBases,
+			MessageAdapter messages,
 			IList sortedFields,
 			IList references,
 			string oidTypeName)
@@ -85,7 +85,7 @@ namespace NDOEnhancer.Patcher
 			if (null != externalPersistentBases)
 			{
 				//m_hasPersistentBase	= classElement.hasPersistentBase(temp, typeof(NDOPersistentAttribute));
-				m_hasPersistentBase	= (externalPersistentBases.Contains(m_persistentBase));
+				m_hasPersistentBase	= (externalPersistentBases.ContainsKey(m_persistentBase));
 			}
 
 			this.m_mappings				= mappings;
@@ -119,7 +119,7 @@ namespace NDOEnhancer.Patcher
 
 		const string ldarg_0 = "ldarg.0";
 		const string ldarg_1 = "ldarg.1";
-		private NDOEnhancer.MessageAdapter messages;
+		private MessageAdapter			messages;
 		private ILClassElement			m_classElement;
 		private string					m_name;
 		private string					m_refName;
@@ -133,7 +133,7 @@ namespace NDOEnhancer.Patcher
 		private ArrayList				ownFieldsHierarchical	= new ArrayList();
 		private IList					m_references;
 		private ArrayList				dirtyDone = new ArrayList();
-		private ClassHashtable			externalPersistentBases;
+		private ClassDictionary<ClassNode>		externalPersistentBases;
 		private string					persistentRoot = null;
 		private IList					sortedFields;
 		private int						mappedFieldCount;
@@ -170,7 +170,7 @@ namespace NDOEnhancer.Patcher
 				if (baseClass == null)
 					throw new Exception("Internal error #126 in Class.cs");
 			}
-			if (baseClass.AssemblyName != this.m_classElement.GetAssemblyName())
+			if (baseClass.AssemblyName != this.m_classElement.AssemblyName)
 				m_persistentBase = "[" + baseClass.AssemblyName + "]" + baseClass.Name;
 			else
 				m_persistentBase = baseClass.Name;
@@ -643,7 +643,7 @@ namespace NDOEnhancer.Patcher
 			if (m_references.Count == 0)
 				return;
 
-			ListAccessManipulator accessManipulator = new ListAccessManipulator(this.m_classElement.GetAssemblyName());
+			ListAccessManipulator accessManipulator = new ListAccessManipulator(this.m_classElement.AssemblyName);
 			
 			foreach ( ILMethodElement methodElement in m_classElement.Methods )
 			{
@@ -710,7 +710,7 @@ namespace NDOEnhancer.Patcher
 									elements.Add(new ILStatementElement("ldloc __ndocontainertable"));
 									elements.Add(new ILStatementElement(@"ldstr """ + reference.CleanName + @""""));
 									elements.Add(new ILStatementElement($"call       object [NDO]NDO._NDOContainerStack::RegisterContainer(object,object,class {Corlib.Name}System.Collections.Hashtable,string)"));
-                                    elements.Add(new ILStatementElement("castclass " + new ReflectedType(reference.FieldType, this.m_classElement.GetAssemblyName()).QuotedILName));
+                                    elements.Add(new ILStatementElement("castclass " + new ReflectedType(reference.FieldType, this.m_classElement.AssemblyName).QuotedILName));
 									// Achtung: insertAfter benötigt die Statements in umgekehrter Reihenfolge
 									for (int i = elements.Count - 1; i >=0; i--)
 										statementElement.InsertAfter((ILStatementElement)elements[i]);
@@ -1917,7 +1917,7 @@ namespace NDOEnhancer.Patcher
             {
                 isNullable = true;
                 argType = t.GetGenericArguments()[0];
-                argTypeName = new ReflectedType(argType, this.m_classElement.GetAssemblyName()).QuotedILName;
+                argTypeName = new ReflectedType(argType, this.m_classElement.AssemblyName).QuotedILName;
             }
 
 			method.addStatement("ldarg.1");
@@ -2228,7 +2228,7 @@ namespace NDOEnhancer.Patcher
 			string callInstance = "call       instance bool " + field.ILType + "::";
 			Type t = field.FieldType;
 			Type argType = t.GetGenericArguments()[0];
-			string argTypeName = new ReflectedType(argType, this.m_classElement.GetAssemblyName()).QuotedILName;
+			string argTypeName = new ReflectedType(argType, this.m_classElement.AssemblyName).QuotedILName;
 			if (!parentIsValueType) // Member
 			{
 				method.addStatement(ldarg_0);
