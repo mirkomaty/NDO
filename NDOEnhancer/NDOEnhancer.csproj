@@ -213,9 +213,6 @@
     <Compile Include="Enhancer\QualifiedTableName.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Enhancer\ReferenceArrayList.cs">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="Enhancer\SchemaGenerator.cs">
       <SubType>Code</SubType>
     </Compile>

@@ -23,6 +23,7 @@
 using System;
 using System.Reflection;
 using System.Collections;
+using System.Collections.Generic;
 using NDOEnhancer.ILCode;
 
 namespace NDOEnhancer
@@ -56,7 +57,7 @@ namespace NDOEnhancer
             functions.Add("RemoveAll", $"RemoveAll(object,class {Corlib.Name}System.Delegate,class {Corlib.Name}System.Collections.Hashtable)");
 		}
 
-		public bool Manipulate(Hashtable reflectors, ILStatementElement statementElement)
+		public bool Manipulate(Dictionary<Type,IListReflector> reflectors, ILStatementElement statementElement)
 		{
 			string line = ILElement.StripLabel(statementElement.GetAllLines());
             string callvirtInstance = "callvirt   instance ";
@@ -66,7 +67,7 @@ namespace NDOEnhancer
                 line = line.Substring(4).Trim();  // strip "call        "
 			MethodInfo foundMethod = null;
 			
-			foreach (DictionaryEntry de in reflectors)
+			foreach (var de in reflectors)
 			{
 				IListReflector reflector = de.Value as IListReflector;
 				foreach(MethodInfo mi in reflector.GetMethods())

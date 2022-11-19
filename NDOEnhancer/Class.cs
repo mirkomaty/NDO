@@ -23,16 +23,10 @@
 using System;
 using System.Linq;
 using System.Text.RegularExpressions;
-using System.Xml;
-using System.Collections;
-using System.Reflection;
-using System.IO;
-using System.Diagnostics;
-using System.Data;
+using System.Collections.Generic;
 
 using NDOEnhancer.ILCode;
 using NDO;
-using System.Collections.Generic;
 
 namespace NDOEnhancer.Patcher
 {
@@ -43,7 +37,7 @@ namespace NDOEnhancer.Patcher
 	{
 		static ClassPatcher()
 		{
-			indTypes = new Hashtable(12);
+			indTypes = new Dictionary<string,string>(12);
 			indTypes.Add("int32", "i4");
 			indTypes.Add("bool", "i1");
 			indTypes.Add("int8", "i1");
@@ -62,8 +56,8 @@ namespace NDOEnhancer.Patcher
 			NDO.Mapping.NDOMapping mappings, 
 			ClassDictionary<ClassNode> externalPersistentBases,
 			MessageAdapter messages,
-			IList sortedFields,
-			IList references,
+			IEnumerable<KeyValuePair<string,ILField>> sortedFields,
+			IEnumerable<ILReference> references,
 			string oidTypeName)
 		{
 			m_classElement			= classElement;
@@ -98,15 +92,16 @@ namespace NDOEnhancer.Patcher
 			this.sortedFields = sortedFields;
 			this.oidTypeName = oidTypeName;
 
-			for (int i = 0; i < m_references.Count; i++)
-				((ILReference) m_references[i]).Ordinal = i;
+			int i = 0;
+			foreach (var reference in m_references)
+				reference.Ordinal = i++;
 
 
 			// sortedFields ist eine flache Ansicht auf die Felder, wie 
 			// sie in der Datenbank sein werden.
 			// Wir benötigen aber auch die hierarchische Sicht, die die 
 			// Namen der ValueTypes und embedded Objects liefert.
-			ownFieldsHierarchical = getHierarchicalFieldList();
+			ownFieldsHierarchical = GetHierarchicalFieldList();
 
 			if (null != externalPersistentBases)
 			{
@@ -115,7 +110,7 @@ namespace NDOEnhancer.Patcher
 			}
 		}
 
-		static private Hashtable indTypes;
+		static private Dictionary<string,string> indTypes;
 
 		const string ldarg_0 = "ldarg.0";
 		const string ldarg_1 = "ldarg.1";
@@ -130,12 +125,12 @@ namespace NDOEnhancer.Patcher
 		private string					oidTypeName;
 		private NDO.Mapping.Class		m_classMapping;
 
-		private ArrayList				ownFieldsHierarchical	= new ArrayList();
-		private IList					m_references;
-		private ArrayList				dirtyDone = new ArrayList();
+		private List<ILField>				ownFieldsHierarchical	= new List<ILField>();
+		private IEnumerable<ILReference>		m_references;
+		private HashSet<ILMethodElement>		dirtyDone = new HashSet<ILMethodElement>();
 		private ClassDictionary<ClassNode>		externalPersistentBases;
 		private string					persistentRoot = null;
-		private IList					sortedFields;
+		private IEnumerable<KeyValuePair<string,ILField>>	sortedFields;
 		private int						mappedFieldCount;
 		private ClassNode				myClassNode;
 
@@ -176,19 +171,20 @@ namespace NDOEnhancer.Patcher
 				m_persistentBase = baseClass.Name;
 		}
 
-		private ArrayList getHierarchicalFieldList()
+		private List<ILField> GetHierarchicalFieldList()
 		{
 			this.mappedFieldCount = 0;  // count of the flat fields
-			ArrayList fields = new ArrayList();
+			var fields = new List<ILField>();
 
 			if (sortedFields != null)
 			{
                 // Sorted fields is an array of DictionaryEntries
-				foreach (DictionaryEntry e in sortedFields)
+				foreach (var e in sortedFields)
 				{
-					ILField field = (ILField) e.Value;
+					var field = e.Value;
 					if (field.IsInherited)
 						continue;
+
 					this.mappedFieldCount++;
 					if (field.Parent != null)
 					{
@@ -269,7 +265,7 @@ namespace NDOEnhancer.Patcher
 			addRelationAttributes();
 			addFieldsAndOidAttribute();
 			replaceLdfldAndStfld();
-			markRelations();
+			MarkRelations();
 			addFieldAccessors();
 			patchConstructor();
 			addMethods();
@@ -425,7 +421,7 @@ namespace NDOEnhancer.Patcher
 
                 // We'll change the collection of statements, so we need a new collection
                 // to iterate through.
-				IList statements = new ArrayList();
+				var statements = new List<ILStatementElement>();
 				foreach (var statementElement in methodElement.Statements)
 				{
 					statements.Add(statementElement);
@@ -637,10 +633,9 @@ namespace NDOEnhancer.Patcher
 			localsElement.Remove();
 		}
 
-		public void
-		markRelations()
+		public void MarkRelations()
 		{
-			if (m_references.Count == 0)
+			if (!m_references.Any())
 				return;
 
 			ListAccessManipulator accessManipulator = new ListAccessManipulator(this.m_classElement.AssemblyName);
@@ -656,7 +651,7 @@ namespace NDOEnhancer.Patcher
 				List<ILStatementElement> statements = new List<ILStatementElement>(100);
 				ILElement firstElement = null;
 				ILLocalsElement localsElement = methodElement.GetLocals();
-				Hashtable listReflectors = new Hashtable();
+				var listReflectors = new Dictionary<Type,IListReflector>();
 				string line;
 				int pos;
 
@@ -703,10 +698,10 @@ namespace NDOEnhancer.Patcher
 								}
 								else
 								{
-									if (!listReflectors.Contains(reference.FieldType))
+									if (!listReflectors.ContainsKey(reference.FieldType))
 										listReflectors.Add(reference.FieldType, ListReflectorFactory.CreateListReflector(reference.FieldType));
 									statementElement.InsertBefore(new ILStatementElement("dup"));
-									IList elements = new ArrayList();
+									var elements = new List<ILStatementElement>();
 									elements.Add(new ILStatementElement("ldloc __ndocontainertable"));
 									elements.Add(new ILStatementElement(@"ldstr """ + reference.CleanName + @""""));
 									elements.Add(new ILStatementElement($"call       object [NDO]NDO._NDOContainerStack::RegisterContainer(object,object,class {Corlib.Name}System.Collections.Hashtable,string)"));
@@ -791,7 +786,7 @@ namespace NDOEnhancer.Patcher
 		public void
 		patchConstructor()
 		{
-			ArrayList constructors = new ArrayList();
+			var constructors = new List<ILMethodElement>();
 
 			bool hasDefaultConstructor = false;
 			foreach ( ILMethodElement methodElement in m_classElement.Methods )
@@ -817,7 +812,7 @@ namespace NDOEnhancer.Patcher
 				ILStatementElement lastStatement = me.Statements.Last();
 				string line = ILElement.StripLabel(lastStatement.GetLine(0));
 								
-				IList elements = new ArrayList();
+				var elements = new List<ILStatementElement>();
 
 				if (!this.m_hasPersistentBase)
 				{
@@ -2112,15 +2107,15 @@ namespace NDOEnhancer.Patcher
 			method.addStatement(".try {");
 			int nr = 0;
 
-			for(int i = 0; i < this.mappedFieldCount; i++)
+			foreach(var e in sortedFields)
 			{
-				DictionaryEntry e = (DictionaryEntry) sortedFields[i];
-				ILField field = (ILField) e.Value;
+				ILField field = e.Value;
 				if (field.Parent != null && field.Parent.IsEmbeddedType)
 					continue;
 				addReadForField(method, field, nr);
 				nr++;
 			}
+
 			fixupElements[0].ReplaceText("##fieldcount", nr.ToString());
 			nr--;
 			fixupElements[1].ReplaceText("##fieldcount", nr.ToString());
@@ -2429,10 +2424,9 @@ namespace NDOEnhancer.Patcher
 			// SortedFields enthält auch die ererbten Felder
 			// Wir brauchen aber nur die eigenen. In ownFieldsHierarchical
 			// sind die eigenen, aber unsortiert
-			for(int i = 0; i < this.mappedFieldCount; i++)
+			foreach(var e in sortedFields)
 			{
-				DictionaryEntry e = (DictionaryEntry) sortedFields[i];
-				ILField field = (ILField) e.Value;
+				var field = e.Value;
 				if (field.Parent != null && field.Parent.IsEmbeddedType)
 					continue;
 				addWriteForField(method, field, nr);
@@ -2590,7 +2584,7 @@ namespace NDOEnhancer.Patcher
 		protected string		m_ilType;
 		private bool			isValueType;
         private string assemblyName;
-        public ArrayList Fields;
+        public List<ILField> Fields;
 		private ILField parent;
 		private bool isProperty = false;
 		string pureTypeName;
@@ -2669,7 +2663,7 @@ namespace NDOEnhancer.Patcher
 
 			if (isEmbeddedType)
 			{
-				Fields = new ArrayList();
+				Fields = new List<ILField>();
 				foreach(FieldNode fieldNode in embeddedFieldList)
 				{
 					quotedName = QuotedName.ConvertTypename(fieldNode.Name);
@@ -2682,9 +2676,11 @@ namespace NDOEnhancer.Patcher
 				if (null != vtn)
 				{
 					isValueType = true;
-					Fields = new ArrayList();
+					Fields = new List<ILField>();
+
 					if (vtn.Fields.Count == 0)
 						new MessageAdapter().WriteLine("Warning: Mapped value type " + type.FullName + " doesn't have any public member to store.");
+
 					foreach(FieldNode fn in vtn.Fields)
 					{
 						quotedName = QuotedName.ConvertTypename(fn.Name);
