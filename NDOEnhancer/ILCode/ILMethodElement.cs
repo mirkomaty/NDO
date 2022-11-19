@@ -347,8 +347,8 @@ namespace NDOEnhancer.ILCode
 		{
 			if (base.InsertAfter( insertElement, existingElement ))
 			{
-				if (insertElement is ILStatementElement insStatement)
-					m_statements.Add( insStatement );
+				if (insertElement is ILStatementElement)
+					ComputeStatements();
 
 				return true;
 			}
@@ -360,16 +360,21 @@ namespace NDOEnhancer.ILCode
 		{
 			if (base.InsertBefore( insertElement, existingElement ))
 			{
-				if (insertElement is ILStatementElement insStatement)
-				{
-					var index = m_statements.IndexOf( insStatement );
-					m_statements.Insert( index, insStatement );
-				}
+				if (insertElement is ILStatementElement)
+					ComputeStatements();
 
 				return true;
 			}
 
 			return false;
+		}
+
+		void ComputeStatements()
+		{
+			m_statements = ( from e in Elements
+							 let se = e as ILStatementElement
+							 where se != null
+							 select se ).ToList();
 		}
 
 		public IEnumerable<ILStatementElement> Statements
@@ -379,10 +384,7 @@ namespace NDOEnhancer.ILCode
 				if (m_statements != null)
 					return m_statements;
 
-				m_statements = (from e in Elements 
-								let se = e as ILStatementElement 
-								where se != null 
-								select se).ToList();
+				ComputeStatements();
 
 				return m_statements;
 			}

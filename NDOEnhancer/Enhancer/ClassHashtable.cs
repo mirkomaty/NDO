@@ -20,12 +20,14 @@
 // DEALINGS IN THE SOFTWARE.
 
 
+using System;
 using System.Collections.Generic;
 
 namespace NDOEnhancer
 {
 	/// <summary>
-	/// Zusammenfassung für ClassHashtable.
+	/// Implements a specific dictionary, which alters the key before storing or retrieving
+	/// data.
 	/// </summary>
 	internal class ClassDictionary<T> : Dictionary<string,T>
 	{
@@ -39,6 +41,8 @@ namespace NDOEnhancer
 			get
 			{
 				string clName = ComputeKey( key );
+				if (!base.ContainsKey( clName ))
+					return default(T);
 				return base[clName];
 			}
 			set

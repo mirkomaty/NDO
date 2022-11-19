@@ -59,10 +59,10 @@ namespace NDOEnhancer.ILCode
 
 		private enum					Status{ normal, escape, quote, ccomment, cppcomment };
 
-		public static void
-		AddElementType( ILElementType elementType )
+		public static void AddElementType( ILElementType elementType )
 		{
-			m_elementTypes.Add( elementType );
+			if (!m_elementTypes.Any( et => et.GetType() == elementType.GetType() ))
+				m_elementTypes.Add( elementType );
 		}
 
 		public ILElement
@@ -113,7 +113,7 @@ namespace NDOEnhancer.ILCode
 		{
 			m_elements = new List<ILElement>();
 
-			for ( string line = ilfile.popLine(); null != line; line = ilfile.popLine() )
+			for ( string line = ilfile.PopLine(); null != line; line = ilfile.PopLine() )
 			{
 				if ( line.StartsWith( "}" ) )
 					return;
@@ -131,18 +131,18 @@ namespace NDOEnhancer.ILCode
 		public virtual void
 		Parse( ILFile ilfile )
 		{
-			string nextLine = ilfile.popLine();
+			string nextLine = ilfile.PopLine();
 
 			if ( null == nextLine )
 				return;
 
 			if ( nextLine.StartsWith( "." ) )
 			{
-				ilfile.pushLine( nextLine );
+				ilfile.PushLine( nextLine );
 			}
 			else if ( nextLine.StartsWith( "IL_" ) )
 			{
-				ilfile.pushLine( nextLine );
+				ilfile.PushLine( nextLine );
 			}
 			else if ( nextLine.StartsWith( "{" ) )
 			{
@@ -150,7 +150,7 @@ namespace NDOEnhancer.ILCode
 			}
 			else if ( nextLine.StartsWith( "}" ) )
 			{
-				ilfile.pushLine( nextLine );
+				ilfile.PushLine( nextLine );
 			}
 			else if ( nextLine.StartsWith( "//" ) )
 			{
@@ -774,7 +774,7 @@ namespace NDOEnhancer.ILCode
 			elements.AddRange( m_elements );
 			foreach (var el in m_elements)
 			{
-				GetElementsRecursive( elements );
+				el.GetElementsRecursive( elements );
 			}
 		}
 

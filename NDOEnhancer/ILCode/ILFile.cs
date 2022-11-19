@@ -25,6 +25,7 @@ using System.Linq;
 using System.IO;
 using System.Text;
 using System.Collections.Generic;
+using System.Reflection;
 
 namespace NDOEnhancer.ILCode
 {
@@ -38,9 +39,30 @@ namespace NDOEnhancer.ILCode
 		{
 		}
 
+		/// <summary>
+		/// Static constructor. Registers all creatable element types.
+		/// </summary>
+		static ILFile()
+		{
+			var assembly = typeof(ILFile).Assembly;
+			var types = assembly.GetTypes()
+				.Where( t => typeof(ILElement).IsAssignableFrom(t) );
+
+			foreach(Type t in types)
+			{
+				var field = t.GetField( "m_elementType", BindingFlags.NonPublic | BindingFlags.Static );
+				if (field != null && field.FieldType == typeof(ILElementType))
+				{
+					var elementType = (ILElementType)field.GetValue(null);
+					if (elementType != null)
+						ILElement.AddElementType( elementType );
+				}
+			}
+		}
+
 		StreamReader				m_streamIn;
 		StreamWriter				m_streamOut;
-		string						m_lineBuffer = "";
+		string						m_lookAheadLine = String.Empty;
 		string						m_filename;
 		List<ILAssemblyElement>		m_assemblyElements = null;
 
@@ -61,7 +83,7 @@ namespace NDOEnhancer.ILCode
 
 			var externElement = (from ae in m_assemblyElements where !ae.IsExtern select ae).FirstOrDefault();
 			if (externElement == null)
-				throw new Exception( "ILFile doesn't have an assembly extern element" );
+				throw new Exception( "ILFile doesn't have an assembly element" );
 
 			AssemblyName = externElement.Name;
 		}
@@ -83,33 +105,33 @@ namespace NDOEnhancer.ILCode
 			m_streamOut = null;
 		}
 	
-		public string
-		popLine()
+		public string PopLine()
 		{
 			string line;
 
-			if ( 0 < m_lineBuffer.Length )
+			if ( m_lookAheadLine != String.Empty )
 			{
-				line = m_lineBuffer;
-				m_lineBuffer = "";
+				line = m_lookAheadLine;
+				m_lookAheadLine = String.Empty;
+				return line;
 			}
-			else
+
+			do
 			{
 				line = m_streamIn.ReadLine();
-				if ( null != line )
+				if (null != line)
 				{
 					line = StripComment( line );
 				}
-			}
+			} while (line != null && line == String.Empty);
 
 			return line;
 
 		}
 
-		public void
-		pushLine( string line )
+		public void PushLine( string line )
 		{
-			m_lineBuffer = line;
+			m_lookAheadLine = line;
 		}
 
 		public void
@@ -131,8 +153,7 @@ namespace NDOEnhancer.ILCode
 			externElement.Remove();
 		}
 
-		public bool
-		testPersistence( string file )
+		public bool TestPersistence( string file )
 		{
 			string info = "";
 			try
@@ -149,7 +170,7 @@ namespace NDOEnhancer.ILCode
 				else
 					info += "m_streamIn: non null ";
 
-				for ( string line = popLine(); null != line ; line = popLine() )
+				for ( string line = PopLine(); null != line ; line = PopLine() )
 				{
 					if ( line.IndexOf( "[NDO]NDO.IMetaClass" ) > -1)
 						return true;

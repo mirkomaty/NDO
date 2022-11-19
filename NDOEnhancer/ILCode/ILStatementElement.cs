@@ -104,7 +104,7 @@ namespace NDOEnhancer.ILCode
 
 				while ( -1 == line.IndexOf( ')' ) )
 				{
-					line = ilfile.popLine();
+					line = ilfile.PopLine();
 					AddLine( line );
 				}
 

@@ -49,6 +49,6 @@ namespace NDOEnhancer.ILCode
 		}
 
 		private static ILElementType		m_elementType = new ILBlankElementType();
-		
+
 	}
 }

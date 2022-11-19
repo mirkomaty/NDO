@@ -1014,10 +1014,6 @@ namespace NDOEnhancer
                     enhTime = File.GetLastWriteTime(enhFile);
                     ilEnhTime = File.GetLastWriteTime(ilEnhFile);
 
-                    // objFile   = obj\debug\xxx.dll
-                    // ilEnhFile = obj\ndotemp\xxx.il
-                    // enhFile   = obj\ndotemp\xxx.dll
-                    // binFile   = bin\debug\xxx.dll
                     if (objTime < ilEnhTime && ilEnhTime <= enhTime)
                     {
                         // Sicherstellen, dass das Binary existiert
@@ -1080,38 +1076,10 @@ namespace NDOEnhancer
                 if (this.verboseMode)
 				    messages.WriteLine("Mapping file is: " + mappingFile);
 
-#if !STD
-				try
-				{
-#endif
 					mappings = new NDOMapping(mappingFile);
 					mappings.SchemaVersion = options.SchemaVersion;
                     ((IEnhancerSupport)mappings).IsEnhancing = true;
-#if !STD
-				}
-				catch (ArgumentOutOfRangeException ex)
-				{
-					if (ex.Source == "System.Collections")
-						throw new Exception("Too much elements for Community edition: max. 1 connection, 10 classes, 500 objects, 8 relations per class, 8 fields per class are allowed.");
-					else
-						throw ex;
-				}
-#endif
-//#if !STD
-//				Type t = mappings.Classes.GetType();
-//				NDOAssemblyName an = new NDOAssemblyName(t.Assembly.FullName);
-//				if (an.Name != "System.Collections")
-//				{
-//					wrongDll = Decryptor.Decrypt(NDOErrors.WrongDll);
-//				}
-//#endif
 			}
-#if !STD
-			catch (ArgumentOutOfRangeException ex)
-			{
-				throw new Exception(Decryptor.Decrypt(NDOErrors.TooMuchElements));
-			}
-#endif
 			catch (Exception ex)
 			{
 				if (null != ex.Message)
