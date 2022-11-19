@@ -282,7 +282,7 @@ namespace NDOEnhancer.ILCode
 		{
 			return ( from me in
 				( from e in Elements where e is ILPropertyElement select (ILPropertyElement) e )
-					 where me.getName() == name
+					 where me.Name == name
 					 select me ).FirstOrDefault();
 		}
 

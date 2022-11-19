@@ -103,9 +103,6 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\NDODLL\bin\Debug\net452\NDO.dll</HintPath>
     </Reference>
-    <Reference Include="NDO.SqlCe">
-      <HintPath>..\..\Provider\SqlCEProvider\NDO.SqlCe\bin\Debug\net452\NDO.SqlCe.dll</HintPath>
-    </Reference>
     <Reference Include="NDO.SqlServer">
       <HintPath>..\..\Provider\SqlServerProvider\NDO.SqlServer\bin\Debug\net452\NDO.SqlServer.dll</HintPath>
     </Reference>
@@ -127,10 +124,6 @@
     </Reference>
     <Reference Include="System.Data.OracleClient">
       <Name>System.Data.OracleClient</Name>
-    </Reference>
-    <Reference Include="System.Data.SqlServerCe">
-      <HintPath>..\..\SqlCEProvider\packages\Microsoft.SqlServer.Compact.4.0.8876.1\lib\net40\System.Data.SqlServerCe.dll</HintPath>
-      <Private>True</Private>
     </Reference>
     <Reference Include="System.Drawing">
       <Name>System.Drawing</Name>

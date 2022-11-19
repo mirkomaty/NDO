@@ -51,17 +51,17 @@ namespace NDOEnhancer.ILCode
 		private static ILElementType		m_elementType = new ILPropertyElementType();
 		public override bool NeedsBlock => true;
 
-		public string
-		getName()
+		public string Name
 		{
-			resolve();
-
-			return m_name;
+			get
+			{
+				Resolve();
+				return m_name;
+			}
 		}
 
 
-		private void
-		resolve()
+		private void Resolve()
 		{
 			if ( this.m_name == null )
 			{
@@ -70,14 +70,12 @@ namespace NDOEnhancer.ILCode
 			}
 		}
 
-		public void
-		addGetter( string firstLine )
+		public void AddGetter( string firstLine )
 		{
 			AddElement( new ILGetElement( firstLine ) );
 		}
 
-		public void
-		addSetter( string firstLine )
+		public void AddSetter( string firstLine )
 		{
 			AddElement( new ILSetElement( firstLine ) );
 		}
