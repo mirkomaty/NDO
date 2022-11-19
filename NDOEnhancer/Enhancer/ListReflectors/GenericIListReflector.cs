@@ -22,7 +22,6 @@
 
 using System;
 using System.Reflection;
-using System.Collections;
 using System.Collections.Generic;
 using System.Text;
 
@@ -31,41 +30,41 @@ namespace NDOEnhancer
     internal class GenericIListReflector : IListReflector
     {
         Type t;
-        public GenericIListReflector(Type t)
+        public GenericIListReflector( Type t )
         {
             this.t = t;
         }
 
         readonly string[] funcNames = { "Add", "Clear", "Remove", "Insert", "RemoveAt", "set_Item"};
 
-		public Type ReflectedType
-		{
-			get { return this.t; }
-		}
-
-		public static bool IsGenericIList(Type t)
-		{
-			bool isGenericIList = false;
-			if (t.IsGenericType)
-			{
-				Type[] genericArgs = t.GetGenericArguments();
-				if (genericArgs.Length != 1)
-					genericArgs = new Type[] { genericArgs[0] };
-				
-				Type template = typeof(IList<object>).GetGenericTypeDefinition();
-				Type concrete = template.MakeGenericType(genericArgs);
-				isGenericIList = concrete.IsAssignableFrom(t);				
-			}
-			return isGenericIList;
-		}
-
-        public IList GetMethods()
+        public Type ReflectedType
         {
-            ArrayList result = new ArrayList();
+            get { return this.t; }
+        }
+
+        public static bool IsGenericIList( Type t )
+        {
+            bool isGenericIList = false;
+            if (t.IsGenericType)
+            {
+                Type[] genericArgs = t.GetGenericArguments();
+                if (genericArgs.Length != 1)
+                    genericArgs = new Type[] { genericArgs[0] };
+
+                Type template = typeof(IList<object>).GetGenericTypeDefinition();
+                Type concrete = template.MakeGenericType(genericArgs);
+                isGenericIList = concrete.IsAssignableFrom( t );
+            }
+            return isGenericIList;
+        }
+
+        public List<MethodInfo> GetMethods()
+        {
+            var result = new List<MethodInfo>();
             Type[] parameters = t.GetGenericArguments();
             Type t2 = typeof(IList<object>).GetGenericTypeDefinition().MakeGenericType(parameters);
-            if (!t2.IsAssignableFrom(t))
-                throw new Exception("Invalid generic relation field type " + t.FullName + ". The field type must be assignable to IList<T> and IList.");
+            if (!t2.IsAssignableFrom( t ))
+                throw new Exception( "Invalid generic relation field type " + t.FullName + ". The field type must be assignable to IList<T> and IList." );
 
             MethodInfo[] mis = t2.GetMethods();
             foreach (MethodInfo mi in mis)
@@ -74,13 +73,13 @@ namespace NDOEnhancer
                 {
                     if (mi.Name == fname)
                     {
-                        result.Add(mi);
+                        result.Add( mi );
                         break;
                     }
                 }
             }
 
-            t2 = typeof(ICollection<object>).GetGenericTypeDefinition().MakeGenericType(parameters);
+            t2 = typeof( ICollection<object> ).GetGenericTypeDefinition().MakeGenericType( parameters );
 
             mis = t2.GetMethods();
             foreach (MethodInfo mi in mis)
@@ -89,7 +88,7 @@ namespace NDOEnhancer
                 {
                     if (mi.Name == fname)
                     {
-                        result.Add(mi);
+                        result.Add( mi );
                         break;
                     }
                 }

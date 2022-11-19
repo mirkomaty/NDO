@@ -1431,7 +1431,7 @@ namespace NDOEnhancer
 				if (classElement.IsPersistent(typeof (NDOPersistentAttribute)))
 				{
 					Dictionary<string, string> accessors = classElement.GetAccessorProperties();
-					Class classMapping = mappings.FindClass( classElement.getMappingName() );
+					Class classMapping = mappings.FindClass( classElement.MappingName );
 					if (classMapping != null && accessors.Count > 0)
 					{
 						foreach (var item in accessors)
@@ -1449,7 +1449,7 @@ namespace NDOEnhancer
 							}
 						}
 					}
-					string mappingName = classElement.getMappingName();
+					string mappingName = classElement.MappingName;
 					var sortedFields = allSortedFields[mappingName];
 					var references = allReferences[mappingName];
 					Patcher.ClassPatcher cls = new Patcher.ClassPatcher( classElement, mappings, allPersistentClasses, messages, sortedFields, references, this.oidTypeName );

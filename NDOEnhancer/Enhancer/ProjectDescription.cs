@@ -22,20 +22,10 @@
 
 using System;
 using System.Xml;
-using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Xml.Linq;
-#if !STANDALONE
-using VSLangProj;
-using EnvDTE;
-#if !NDO11
-using VSLangProj80;
-using VSLangProj2;
-using VsWebSite;
-#endif
-#endif
 
 #if DEBUG
 using NDOInterfaces; // for IMessageAdapter

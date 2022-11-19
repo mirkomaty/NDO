@@ -21,7 +21,7 @@
 
 
 using System;
-using System.Collections;
+using System.Collections.Generic;
 using System.Reflection;
 
 namespace NDOEnhancer
@@ -43,8 +43,8 @@ namespace NDOEnhancer
 			get { return isValid; }
 		}
 
-		ArrayList fields = new ArrayList();
-		public ArrayList Fields
+		List<FieldNode> fields = new List<FieldNode>();
+		public IEnumerable<FieldNode> Fields
 		{
 			get { return fields; }
 		}
@@ -58,7 +58,7 @@ namespace NDOEnhancer
 		public ValueTypeNode(Type t)
 		{
 			this.type = t;
-			ArrayList publicFields = new ArrayList();
+			var publicFields = new List<MemberInfo>();
 			PropertyInfo[] mis = t.GetProperties(BindingFlags.Public | BindingFlags.Instance);
 			foreach(PropertyInfo mi in mis)
 			{

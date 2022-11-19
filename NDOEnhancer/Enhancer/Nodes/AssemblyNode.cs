@@ -22,12 +22,11 @@
 
 using System;
 using System.Linq;
-using System.Collections;
+using System.Collections.Generic;
 using System.Reflection;
 using NDO;
 using NDO.Mapping;
 using System.Runtime.Versioning;
-using System.Collections.Generic;
 
 namespace NDOEnhancer
 {
@@ -75,8 +74,8 @@ namespace NDOEnhancer
 
 		public string TargetFramework { get; set; }
 
-	
-		ArrayList analyzedTypes = new ArrayList();
+
+		List<string> analyzedTypes = new List<string>();
 
 		private void AnalyzeType(Type t)
 		{

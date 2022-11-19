@@ -61,7 +61,7 @@ namespace NDOEnhancer.Patcher
 			string oidTypeName)
 		{
 			m_classElement			= classElement;
-			m_name					= classElement.getClassFullName();
+			m_name					= classElement.ClassFullName;
             m_refName               = makeRefName();
             m_nonGenericRefName     = m_name;
 			m_references			= references;
@@ -73,7 +73,7 @@ namespace NDOEnhancer.Patcher
             if (p > -1)
                 m_nonGenericRefName = m_nonGenericRefName.Substring(0, p);
 
-			m_persistentBase		= classElement.getBaseFullName();
+			m_persistentBase		= classElement.BaseFullName;
 			this.externalPersistentBases = externalPersistentBases;
 
 			if (null != externalPersistentBases)
@@ -83,10 +83,10 @@ namespace NDOEnhancer.Patcher
 			}
 
 			this.m_mappings				= mappings;
-			this.m_classMapping			= mappings.FindClass(classElement.getMappingName());
+			this.m_classMapping			= mappings.FindClass(classElement.MappingName);
 
 			if (this.m_classMapping == null)
-                throw new Exception("Can't find mapping for class " + classElement.getMappingName());
+                throw new Exception("Can't find mapping for class " + classElement.MappingName);
 
 			this.messages			= messages;
 			this.sortedFields = sortedFields;
@@ -208,7 +208,7 @@ namespace NDOEnhancer.Patcher
 				if (myClassNode == null)
 				{
 					ILClassElement classEl = this.m_classElement;
-					string className = classEl.getMappingName();
+					string className = classEl.MappingName;
 					myClassNode = (ClassNode) externalPersistentBases[className];
 					if (myClassNode == null)
 					{
@@ -399,7 +399,7 @@ namespace NDOEnhancer.Patcher
 					}
                     else if (line.StartsWith("stfld"))
                     {
-                        statementElement.setFirstLine("call       instance void " + m_refName + "::" + getAccName("ndoset_", field.Name) + '(' + field.ILType + ')');
+                        statementElement.SetFirstLine("call       instance void " + m_refName + "::" + getAccName("ndoset_", field.Name) + '(' + field.ILType + ')');
                     }
 					return needsMaxstackAdjustment;
 				}
@@ -694,7 +694,7 @@ namespace NDOEnhancer.Patcher
 							{
 								if (reference.Is1to1)
 								{
-									statementElement.setFirstLine("call       instance " + reference.ILType + " " + m_refName + "::" + getAccName("ndoget_", reference.Name) + "()"); 
+									statementElement.SetFirstLine("call       instance " + reference.ILType + " " + m_refName + "::" + getAccName("ndoget_", reference.Name) + "()"); 
 								}
 								else
 								{
@@ -726,7 +726,7 @@ namespace NDOEnhancer.Patcher
 							{
 								if ( -1 < line.IndexOf( m_refName + "::"))
 								{
-									statementElement.setFirstLine("call       instance void " + m_refName + "::" + getAccName("ndoset_", reference.Name) + "(" + reference.ILType +")");
+									statementElement.SetFirstLine("call       instance void " + m_refName + "::" + getAccName("ndoset_", reference.Name) + "(" + reference.ILType +")");
 									break;
 								}
 							}
@@ -2529,7 +2529,7 @@ namespace NDOEnhancer.Patcher
 			ILMethodElement newMethod = new ILMethodElement();
 			newMethod.AddLine( ".method public hidebysig virtual instance class [NDO]NDO.IPersistenceCapable CreateObject() cil managed" );
 			newMethod.AddElement(new ILMaxstackElement(".maxstack  1", newMethod));
-            if (!this.m_classElement.isAbstract())
+            if (!this.m_classElement.IsAbstract)
                 newMethod.AddElement(new ILStatementElement("newobj     instance void " + m_refName + "::.ctor()"));
             else
                 newMethod.AddElement(new ILStatementElement("ldnull"));
@@ -2554,7 +2554,7 @@ namespace NDOEnhancer.Patcher
 		public void addMetaClass()
 		{
 			ILClassElement newClass = new ILClassElement();
-			newClass.AddLine( ".class auto ansi nested private beforefieldinit MetaClass " + this.m_classElement.getGenericArguments() );
+			newClass.AddLine( ".class auto ansi nested private beforefieldinit MetaClass " + this.m_classElement.GenericArguments );
 			newClass.AddLine( "extends [NDO]NDO.MetaclassBase" );
 			m_classElement.AddElement(newClass);
 			addMetaClassCtor(newClass);
@@ -2678,7 +2678,7 @@ namespace NDOEnhancer.Patcher
 					isValueType = true;
 					Fields = new List<ILField>();
 
-					if (vtn.Fields.Count == 0)
+					if (!vtn.Fields.Any())
 						new MessageAdapter().WriteLine("Warning: Mapped value type " + type.FullName + " doesn't have any public member to store.");
 
 					foreach(FieldNode fn in vtn.Fields)

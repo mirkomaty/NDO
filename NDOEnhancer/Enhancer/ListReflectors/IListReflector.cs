@@ -21,14 +21,14 @@
 
 
 using System;
-using System.Collections;
-using System.Text;
+using System.Collections.Generic;
+using System.Reflection;
 
 namespace NDOEnhancer
 {
     internal interface IListReflector
     {
-        IList GetMethods();
+        List<MethodInfo> GetMethods();
 		Type ReflectedType { get; }
         bool CallvirtNeedsClassPrefix { get; }
     }

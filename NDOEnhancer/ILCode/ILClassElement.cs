@@ -21,7 +21,6 @@
 
 
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -128,8 +127,7 @@ namespace NDOEnhancer.ILCode
 			}
 		}
 
-		private void
-		Resolve()
+		private void Resolve()
 		{
 			if ( null != m_name )
 				return;
@@ -189,7 +187,7 @@ namespace NDOEnhancer.ILCode
                     if (null == clsElement)
                         m_fullName = m_name;
                     else
-                        m_fullName = clsElement.getClassFullName() + "/" + m_name;
+                        m_fullName = clsElement.ClassFullName + "/" + m_name;
                 }
                 else
                 {
@@ -222,8 +220,7 @@ namespace NDOEnhancer.ILCode
 
 		}
 
-		protected override void
-		Unresolve()
+		protected override void Unresolve()
 		{
 			m_name = null;
 		}
@@ -300,112 +297,65 @@ namespace NDOEnhancer.ILCode
 		}
 
 
-		public bool
-		isPrivate()
-		{
-			Resolve();
+		public bool IsPrivate => m_isPrivate;		
+		public bool IsPublic=> m_isPublic;		
+		public bool IsSealed=> m_isSealed;
+		public bool IsInterface=> m_isInterface;
+		public bool IsValueType=>m_isValueType;
+		public bool IsEnum=>m_isEnum;
+		public bool IsAbstract=>m_isAbstract;
 
-			return m_isPrivate;
+		public string Name
+		{
+			get
+			{
+				Resolve();
+				return m_name;
+			}
 		}
 
-		public bool
-		isPublic()
-		{
-			Resolve();
-
-			return m_isPublic;
-		}
-
-		public bool
-		isSealed()
-		{
-			Resolve();
-
-			return m_isSealed;
-		}
-
-		public bool
-		isInterface()
-		{
-			Resolve();
-
-			return m_isInterface;
-		}
-
-		public bool
-		isValueType()
-		{
-			Resolve();
-
-			return m_isValueType;
-		}
-
-		public bool
-		isEnum()
-		{
-			Resolve();
-
-			return m_isEnum;
-		}
-
-		public bool
-		isAbstract()
-		{
-			Resolve();
-
-			return m_isAbstract;
-		}
-
-		public string
-		getName()
-		{
-			Resolve();
-
-			return m_name;
-		}
-
-        public string
-        getClassFullName()
+        public string ClassFullName
         {
-            Resolve();
-
-            return m_fullName;
+			get
+			{
+				Resolve();
+				return m_fullName;
+			}
         }
 
-        public string getGenericArguments()
+        public string GenericArguments => m_genericArguments;       
+
+        public string MappingName
         {
-            return m_genericArguments;
+			get
+			{
+				Resolve();
+				string pureName = m_fullName;
+				if (pureName.StartsWith( "class " ))
+					pureName = pureName.Substring( 6 );
+				if (pureName.StartsWith( "valuetype " ))
+					pureName = pureName.Substring( 10 );
+				pureName = pureName.Replace( "'", string.Empty );
+				int p = pureName.IndexOf('<');
+				if (p > -1)
+					return pureName.Substring( 0, p );
+
+				return pureName;
+			}
         }
 
-
-        public string getMappingName()
-        {
-            Resolve();
-            string pureName = m_fullName;
-            if (pureName.StartsWith("class "))
-                pureName = pureName.Substring(6);
-            if (pureName.StartsWith("valuetype "))
-                pureName = pureName.Substring(10);
-            pureName = pureName.Replace("'", string.Empty);
-            int p = pureName.IndexOf('<');
-            if (p > -1)
-                return pureName.Substring(0, p);
-
-            return pureName;
-        }
-
-		public string
-		getBaseFullName()
+		public string BaseFullName
 		{
-			Resolve();
-
-			return m_baseFullName;
+			get
+			{
+				Resolve();
+				return m_baseFullName;
+			}
 		}
 
-		public string[]
-		getInterfaceFullNames()
+		public string[] GetInterfaceFullNames()
 		{
-			ArrayList arr = new ArrayList();
+			var arr = new List<string>();
 
 			bool start = false;
 			bool last  = false;
@@ -432,7 +382,7 @@ namespace NDOEnhancer.ILCode
 				}
 			}
 
-			return arr.ToArray( typeof( string ) ) as string[];
+			return arr.ToArray();
 		}
 
 		public ILFieldElement

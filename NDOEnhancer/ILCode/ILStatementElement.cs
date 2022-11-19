@@ -21,7 +21,7 @@
 
 
 using System;
-using System.Collections;
+using System.Collections.Generic;
 
 namespace NDOEnhancer.ILCode
 {
@@ -58,16 +58,14 @@ namespace NDOEnhancer.ILCode
 		private string						m_name;
 		private string						m_signature;
 		
-		public void
-		setFirstLine( string firstLine )
+		public void SetFirstLine( string firstLine )
 		{
             string label = GetLabel(this.GetLine(0)) + "  ";
 			ClearLines();
 			AddLine( label + firstLine );
 		}
 
-		private string[]
-		dropEmptyWords( string[] words )
+		private string[] DropEmptyWords( string[] words )
 		{
 			int i;
 			int j = 0;
@@ -85,8 +83,7 @@ namespace NDOEnhancer.ILCode
 			return ret;
 		}
 
-		private bool
-		isMultilineStatement( string name )
+		private bool IsMultilineStatement( string name )
 		{
 			string[] names = { "switch", "call", "callvirt" };
 
@@ -97,12 +94,11 @@ namespace NDOEnhancer.ILCode
 			return false;
 		}
 
-		public override void
-		Parse( ILFile ilfile )
+		public override void Parse( ILFile ilfile )
 		{
-			string[] words = dropEmptyWords( GetLine( 0 ).Split( new char[] { '\t', ' ' } ) );
+			string[] words = DropEmptyWords( GetLine( 0 ).Split( new char[] { '\t', ' ' } ) );
 
-			if ( 2 < words.Length && isMultilineStatement( words[1] ) )
+			if ( 2 < words.Length && IsMultilineStatement( words[1] ) )
 			{
 				string line = GetLine( 0 );
 
@@ -118,92 +114,96 @@ namespace NDOEnhancer.ILCode
 			base.Parse( ilfile );
 		}
 
-		public string
-		getName()
+		public string Name
 		{
-			if ( null != m_name )
-				return m_name;
-
-			string[] words = dropEmptyWords( GetLine( 0 ).Split( new char[] { '\t', ' ' } ) );
-
-			if ( words[0].EndsWith( ":" ) )
-				m_name = words[1];
-			else
-				m_name = words[0];
-
-			return m_name;
-		}
-
-		public bool
-		isCallStatement()
-		{
-			string name = getName();
-
-			return (name == "call") || (name == "callvirt");
-		}
-
-		public string
-		getCallSignature()
-		{
-			if ( null != m_signature )
-				return m_signature;
-
-			string allLines = "";
-			for (int i = 0; i < LineCount; i++)
-				allLines = allLines + " " + GetLine( i );
-
-			string[] words = SplitWords( allLines );
-			int		 count;
-			for ( count=0; count<words.Length; count++ )
-				if ( words[count].Equals( "(" ) )
-					break;
-
-			string	  paramType		 = "";
-			ArrayList parameterTypes = new ArrayList();
-
-			for ( int i=count+1; i<words.Length; i++ )
+			get
 			{
-				if ( words[i] == "," || words[i] == ")" )
-				{
-					if ( 0 < paramType.Length )
-						parameterTypes.Add( paramType );
-					
-					if ( words[i] == ")" )
+				if (null != m_name)
+					return m_name;
+
+				string[] words = DropEmptyWords( GetLine( 0 ).Split( new char[] { '\t', ' ' } ) );
+
+				if (words[0].EndsWith( ":" ))
+					m_name = words[1];
+				else
+					m_name = words[0];
+
+				return m_name;
+			}
+		}
+
+		public bool IsCallStatement
+		{
+			get
+			{
+				string name = Name;
+				return ( name == "call" ) || ( name == "callvirt" );
+			}
+		}
+
+		public string CallSignature
+		{
+			get
+			{
+				if (null != m_signature)
+					return m_signature;
+
+				string allLines = "";
+				for (int i = 0; i < LineCount; i++)
+					allLines = allLines + " " + GetLine( i );
+
+				string[] words = SplitWords( allLines );
+				int      count;
+				for (count = 0; count < words.Length; count++)
+					if (words[count].Equals( "(" ))
 						break;
 
-					paramType = "";
-				}
-				else
+				string    paramType      = "";
+				var parameterTypes = new List<string>();
+
+				for (int i = count + 1; i < words.Length; i++)
 				{
-					paramType = (paramType + " " + words[i]).Trim();
+					if (words[i] == "," || words[i] == ")")
+					{
+						if (0 < paramType.Length)
+							parameterTypes.Add( paramType );
+
+						if (words[i] == ")")
+							break;
+
+						paramType = "";
+					}
+					else
+					{
+						paramType = ( paramType + " " + words[i] ).Trim();
+					}
 				}
+
+				string fullname = words[--count];
+
+				m_signature = fullname + "(";
+
+				for (int i = 0; i < parameterTypes.Count; i++)
+				{
+					if (0 < i)
+						m_signature = m_signature + ", ";
+
+					string type = MakeFullType( parameterTypes[i] as string );
+
+					m_signature = m_signature + type;
+				}
+
+				m_signature = m_signature + ")";
+
+				return m_signature;
 			}
-
-			string fullname = words[--count];
-
-			m_signature = fullname + "(";
-
-			for ( int i=0; i<parameterTypes.Count; i++ )
-			{
-				if ( 0 < i )
-					m_signature = m_signature + ", ";
-
-				string type = MakeFullType( parameterTypes[i] as string );
-
-				m_signature = m_signature + type;
-			}
-
-			m_signature = m_signature + ")";
-
-			return m_signature;
 		}
 
-		public void
-		makeUpperNameSignature()
+		public void MakeUpperNameSignature()
 		{
-			getCallSignature();		// let it resolve
+			var sig = CallSignature;		// let it resolve
 
-			int pos1 = m_signature.IndexOf( "::" );
+			int pos1 = sig.IndexOf( "::" );
 
 			if ( pos1 < 0 )
 				return;

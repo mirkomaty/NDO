@@ -161,9 +161,6 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Enhancer\ExtendedPath.cs" />
-    <Compile Include="Enhancer\Generator\AccessGenerator.cs">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="Enhancer\Generator\GenericDiffGenerator.cs" />
     <Compile Include="Enhancer\Generator\GenericSqlGenerator.cs">
       <SubType>Code</SubType>
@@ -211,9 +208,6 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Enhancer\QualifiedTableName.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Enhancer\SchemaGenerator.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Enhancer\TypeHashGenerator.cs" />

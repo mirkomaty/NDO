@@ -31,7 +31,7 @@ namespace NDOEnhancer
 	/// <summary>
 	/// Zusammenfassung für FieldNode.
 	/// </summary>
-	internal class FieldNode
+	public class FieldNode
 	{
 		string dataType;
 		string name;

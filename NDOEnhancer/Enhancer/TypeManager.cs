@@ -20,10 +20,8 @@
 // DEALINGS IN THE SOFTWARE.
 
 
-#if PRO
 using System;
-using System.Collections;
-using System.Collections.Specialized;
+using System.Collections.Generic;
 using System.IO;
 using System.Xml;
 using System.Xml.Serialization;
@@ -41,11 +39,11 @@ namespace NDOEnhancer
 		/// <summary>
 		/// Map from id to type.
 		/// </summary>
-		private Hashtable types = new Hashtable();
+		private Dictionary<int,Class> types = new Dictionary<int,Class>();
 		/// <summary>
 		/// Map from type to id.
 		/// </summary>
-        private Hashtable ids = new Hashtable();
+        private Dictionary<Class,int> ids = new Dictionary<Class,int>();
 
 		private string filename;
         private NDOMapping mapping;
@@ -89,10 +87,13 @@ namespace NDOEnhancer
 		private void CheckAndAddType(string typeFullName, string assName)
 		{
             Class cls = this.mapping.FindClass(typeFullName);
+            
             if (cls == null)
                 throw new Exception( $"Can't find class {typeFullName} in the mapping file" );
-            if (ids.Contains(cls))  // we have already a type code.
+            
+            if (ids.ContainsKey(cls))  // we have already a type code.
                 return;
+
 			if(cls != null) 
 			{
                 // We make sure, that a type of a given name has always the same id.
@@ -100,8 +101,10 @@ namespace NDOEnhancer
                 // In the rare case, that two types have the same HashCode, we must decline from
                 // this rule.
                 int newId = TypeHashGenerator.GetHash(typeFullName);
-                while (0 == newId || types.Contains(newId))
+                
+                while (0 == newId || types.ContainsKey(newId))
                     newId++;
+
                 cls.TypeCode = newId;
 				types[newId] = cls;
                 ids[cls] = newId;
@@ -114,8 +117,10 @@ namespace NDOEnhancer
             {
                 Class[] arr = new Class[types.Count];
                 int i = 0;
-                foreach (DictionaryEntry de in types)
+                
+                foreach (var de in types)
                     arr[i++] = (Class)de.Value;
+
                 return arr;
             }
         }
@@ -174,4 +179,3 @@ namespace NDOEnhancer
 		}
 	}
 }
-#endif
