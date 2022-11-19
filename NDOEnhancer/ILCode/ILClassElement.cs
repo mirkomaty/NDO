@@ -305,6 +305,8 @@ namespace NDOEnhancer.ILCode
 		public bool IsEnum=>m_isEnum;
 		public bool IsAbstract=>m_isAbstract;
 
+		public override bool NeedsBlock => true;
+
 		public string Name
 		{
 			get

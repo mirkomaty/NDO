@@ -49,7 +49,8 @@ namespace NDOEnhancer.ILCode
 		}
 
 		private static ILElementType		m_elementType = new ILPropertyElementType();
-		
+		public override bool NeedsBlock => true;
+
 		public string
 		getName()
 		{

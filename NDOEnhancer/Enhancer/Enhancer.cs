@@ -393,7 +393,8 @@ namespace NDOEnhancer
 
 		void GenerateAllSchemas()
 		{
-            dsSchema.Remap(mappings);
+			if (this.projectDescription.ConfigurationOptions.GenerateSQL)
+				dsSchema.Remap(mappings);
 		}
 
 

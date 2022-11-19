@@ -54,8 +54,9 @@ namespace NDOEnhancer.ILCode
 		private List<ILClassElement>			m_classElements = null;
 		private string							m_assemblyName;
 		private IEnumerable<ILCustomElement>	m_customElements = null;
-
 		private static List<ILElementType>		m_elementTypes = new List<ILElementType>();
+
+		public virtual bool NeedsBlock => false;
 
 		private enum					Status{ normal, escape, quote, ccomment, cppcomment };
 
@@ -188,7 +189,7 @@ namespace NDOEnhancer.ILCode
 			}
 
 			// each element having a block will have at least one subelement
-			if ( m_elements.Count == 0 )
+			if (m_elements.Count == 0 && !NeedsBlock )
 				return;
 
 			ilfile.writeLine( level, "{" );

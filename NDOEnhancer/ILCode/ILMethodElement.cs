@@ -70,6 +70,8 @@ namespace NDOEnhancer.ILCode
 
 		private List<ILStatementElement> m_statements;
 
+		public override bool NeedsBlock => true;
+
 		public void
 		addStatement( string firstLine )
 		{

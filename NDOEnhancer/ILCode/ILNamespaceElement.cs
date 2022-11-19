@@ -47,6 +47,7 @@ namespace NDOEnhancer.ILCode
 		}
 
 		private static ILElementType		m_elementType = new ILNamespaceElementType();
+		public override bool NeedsBlock => true;
 
 		public string
 		getNamespaceName()
