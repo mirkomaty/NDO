@@ -24,20 +24,16 @@ using System;
 using System.Text.RegularExpressions;
 using System.IO;
 using System.Diagnostics;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using System.Xml;
 using System.Data;
-using Microsoft.Win32;
+using System.Reflection;
 
 using NDO;
 using NDO.Mapping;
-using NDO.Mapping.Attributes;
 
 using NDOEnhancer.ILCode;
-using System.Reflection;
-
+using NDOEnhancer.Patcher;
 
 namespace NDOEnhancer
 {
@@ -46,8 +42,7 @@ namespace NDOEnhancer
 	/// </summary>
 	internal class Enhancer
 	{
-		public
-			Enhancer( ProjectDescription projectDescription, MessageAdapter messages )
+		public Enhancer( ProjectDescription projectDescription, MessageAdapter messages )
 		{
 			this.projectDescription	= projectDescription;
 			this.debug		= projectDescription.Debug;
@@ -103,63 +98,43 @@ namespace NDOEnhancer
 		private string				ownAssemblyName = null; 
 		private StreamWriter		sortedFieldsFile;
 
-		private ClassDictionary		allPersistentClasses = new ClassDictionary();
-		private ClassDictionary      allSortedFields = new ClassDictionary();
-		private ClassDictionary      allReferences = new ClassDictionary();
-		private Hashtable			assemblyFullNames = new Hashtable();
-		private IList				tabuClasses = new ArrayList();
+		private ClassDictionary<ClassNode> allPersistentClasses = new ClassDictionary<ClassNode>();
+		private ClassDictionary<List<KeyValuePair<string,ILField>>> allSortedFields = new ClassDictionary<List<KeyValuePair<string, ILField>>>();
+		private ClassDictionary<List<ILReference>>      allReferences = new ClassDictionary<List<ILReference>>();
+		private Dictionary<string,string> assemblyFullNames = new Dictionary<string,string>();
+		private List<string> tabuClasses = new List<string>();
 		private NDOMapping          mappings;
 		private MessageAdapter		messages;
 		private NDODataSet			dsSchema;
 		private ConfigurationOptions options;
 		private string				assemblyKeyFile = null;
 
-		private static string assemblyPath = null;
-
-
-		public static string AssemblyPath
-		{
-			get 
-			{
-				if (null == assemblyPath)
-				{
-					RegistryKey key = Registry.LocalMachine.OpenSubKey( @"SOFTWARE\NDO" );
-					if ( key == null )
-						throw new Exception( @"Can't find NDO in the registry at HKLM\SOFTWARE\NDO. Please reinstall NDO." );
-					assemblyPath = (string) key.GetValue( "InstallDir" );
-					if ( assemblyPath == null )
-						throw new Exception( @"Can't find InstallDir value in the registry at HKLM\SOFTWARE\NDO. Please reinstall NDO." );
-				}
-				return assemblyPath;
-			}
-		}
-
         void CheckNDO(Assembly ass)
         {
-   //         AssemblyName[] references = ass.GetReferencedAssemblies();
-   //         NDOAssemblyName refAn = null;
-   //         foreach (AssemblyName an in references)
-   //         {
-   //             if (an.Name == "NDO")
-   //                 refAn = new NDOAssemblyName(an.FullName);
+#warning we should implement a check for the wrong NDO dll referencde here
+			//         AssemblyName[] references = ass.GetReferencedAssemblies();
+			//         NDOAssemblyName refAn = null;
+			//         foreach (AssemblyName an in references)
+			//         {
+			//             if (an.Name == "NDO")
+			//                 refAn = new NDOAssemblyName(an.FullName);
 			//}
-   //         if (refAn == null)
-   //             return;
-   //         NDOAssemblyName ndoAn = new NDOAssemblyName(typeof(NDOPersistentAttribute).Assembly.FullName);  // give us the NDO version the enhancer belongs to
+			//         if (refAn == null)
+			//             return;
+			//         NDOAssemblyName ndoAn = new NDOAssemblyName(typeof(NDOPersistentAttribute).Assembly.FullName);  // give us the NDO version the enhancer belongs to
 			//Version refVersion = refAn.AssemblyVersion;
 			//bool isRightVersion = refVersion.Major > 2 || refVersion.Major == 2 && refVersion.Minor >= 1;
-   //         if (refAn.PublicKeyToken != ndoAn.PublicKeyToken || !isRightVersion)
-   //         {
-   //             throw new Exception("Assembly " + ass.FullName + " references a wrong NDO.dll. Expected: " + ndoAn.FullName + ". Found: " + refAn.FullName + ".");
-   //         }   
-        }
+			//         if (refAn.PublicKeyToken != ndoAn.PublicKeyToken || !isRightVersion)
+			//         {
+			//             throw new Exception("Assembly " + ass.FullName + " references a wrong NDO.dll. Expected: " + ndoAn.FullName + ". Found: " + refAn.FullName + ".");
+			//         }   
+		}
 
 
-		private void 
-			searchPersistentBases()
+		private void SearchPersistentBases()
 		{
 			Dictionary<string, NDOReference> references = projectDescription.References;
-			ArrayList ownClassList = null;
+			List<ClassNode> ownClassList = null;
 			string binaryAssemblyFullName = null;
 
             if (!projectDescription.IsWebProject)
@@ -212,7 +187,7 @@ namespace NDOEnhancer
 				}
 
 				string assName = assToLoad.Name;
-				if (this.assemblyFullNames.Contains(assName))
+				if (this.assemblyFullNames.ContainsKey(assName))
 				{
 					messages.WriteLine("Assembly '" + assName + "' analyzed twice. Check your .ndoproj file.");
 					continue;
@@ -251,7 +226,7 @@ namespace NDOEnhancer
 						messages.WriteLine( $"FxType: {ownAssemblyName}: {Corlib.FxType}" );
 				}
 
-				ArrayList classList = assemblyNode.PersistentClasses;
+				var classList = assemblyNode.PersistentClasses;
 				foreach(ClassNode classNode in classList)
 				{
 					string clName = classNode.Name;
@@ -264,9 +239,9 @@ namespace NDOEnhancer
 				// Wir haben externe persistente Klassen gefunden.
 				// Mapping-Info einlesen.
 				if (!ownAssembly)
-					mergeMappingFile(dllPath, classList);
+					MergeMappingFile(dllPath, classList);
 				if (!ownAssembly) 
-					mergeDataSet(dllPath, classList);
+					MergeDataSet(dllPath, classList);
 
 				if (ownAssembly)
 				{
@@ -280,7 +255,7 @@ namespace NDOEnhancer
 
             if (projectDescription.IsWebProject || !options.EnableEnhancer)
             {
-                ownClassList = new ArrayList();
+                ownClassList = new List<ClassNode>();
             }
             else
             {
@@ -288,18 +263,18 @@ namespace NDOEnhancer
                     throw new Exception("A reference to the assembly " + binFile + " is needed. Check your parameter file.");
             }
 
-			checkClassMappings(ownClassList);
-            checkTypeList();
-            checkOidColumnMappings(); // Incorporates the Attributes and NDOOidType.
-			checkAllRelationMappings(ownClassList); // Makes sure, that a mapping entry for each relation exists
-            determineOidTypes(); // needs the relation mappings, calls InitFields
-            checkRelationForeignKeyMappings(); // Calls r.InitFields, therefore requires, that InitFields for the Oid's was called
-			generateAllSchemas();
-            removeRedundantOidColumnNames();
+			CheckClassMappings(ownClassList);
+            CheckTypeList();
+            CheckOidColumnMappings(); // Incorporates the Attributes and NDOOidType.
+			CheckAllRelationMappings(ownClassList); // Makes sure, that a mapping entry for each relation exists
+            DetermineOidTypes(); // needs the relation mappings, calls InitFields
+            CheckRelationForeignKeyMappings(); // Calls r.InitFields, therefore requires, that InitFields for the Oid's was called
+			GenerateAllSchemas();
+            RemoveRedundantOidColumnNames();
 		}
 
 
-        private void removeRedundantOidColumnNames()
+        private void RemoveRedundantOidColumnNames()
         {
             foreach (Class cl in mappings.Classes)
             {
@@ -318,7 +293,7 @@ namespace NDOEnhancer
             }
         }
 
-        private void checkOidColumnMappings()
+        private void CheckOidColumnMappings()
         {
             foreach (Class cl in mappings.Classes)
             {
@@ -359,7 +334,7 @@ namespace NDOEnhancer
         /// <summary>
         /// Checks, if all foreign key mapping entries match the oid columns of the target types
         /// </summary>
-        private void checkRelationForeignKeyMappings()
+        private void CheckRelationForeignKeyMappings()
         {
             // Now check, if all relations have correct foreign keys
             foreach (Class cl in mappings.Classes)
@@ -388,9 +363,9 @@ namespace NDOEnhancer
             }
         }
 				
-		private IList checkRelationTargetAssemblies()
+		private List<string> CheckRelationTargetAssemblies()
 		{
-			ArrayList foreignAssemblies = new ArrayList();
+			List<string> foreignAssemblies = new List<string>();
 			foreach(Class cl in this.mappings.Classes)
 			{
 				foreach(Relation r in cl.Relations)
@@ -408,89 +383,23 @@ namespace NDOEnhancer
 			return foreignAssemblies;
 		}
 		
-#if nix   // should now be done in InitFields
-		private void checkAllMultiplicities()
-		{
-			foreach(Class cl in mappings.Classes)
-			{
-				foreach(Relation r in cl.Relations)
-				{
-					// Setting the class with reflection
-					RelationNode definingNode = getDefiningNodeForRelation(r);
-                    if (definingNode == null) // Relation might be deleted
-                        continue;
-					Class definingClass = allPersistentClasses[definingNode.Parent.Name].Class;
-					SetDefiningClass(r, definingClass);
 
-					r.Multiplicity = definingNode.IsElement 
-						? RelationMultiplicity.Element 
-						: RelationMultiplicity.List;
-				}
-			}
-		}
-
-		private RelationNode getDefiningNodeForRelation(Relation r)
-		{
-			ClassNode classNode = allPersistentClasses[r.Parent.FullName];
-			if (classNode == null)
-				throw new InternalException(239, "Enhancer: getDefiningClassForRelation; can't find ClassNode for " + r.Parent.FullName);
-
-			while (classNode != null)
-			{
-				foreach(RelationNode rn in classNode.Relations)
-					if (rn.Name == r.FieldName)
-						return rn;
-				classNode = this.allPersistentClasses[classNode.BaseName];
-			}
-			//throw new Exception("Can't find defining ClassNode for relation " + r.Parent.FullName + "." + r.FieldName + ". Check your mapping file for unnecessary Relation entries.");
-            return null; // Relation might be deleted
-		}
-
-#endif
-
-#if PRO
-
-		private void checkTypeList()
+		private void CheckTypeList()
 		{
 			string typeFile = Path.Combine(Path.GetDirectoryName(binFile), "NDOTypes.Xml");
 			TypeManager tm = new TypeManager(typeFile, this.mappings);
 			tm.CheckTypeList(allPersistentClasses);
 		}
-#endif
 
-		void generateAllSchemas()
+		void GenerateAllSchemas()
 		{
             dsSchema.Remap(mappings);
-#if nix
-			foreach(DictionaryEntry de in this.allPersistentClasses)
-			{
-				ClassNode classNode = (ClassNode) de.Value;
-				if (classNode.IsAbstractOrInterface)
-					continue;
-				if (!classNode.IsPersistent) // non persistent classes derived from persistent classes
-					continue;
-				string pureName = classNode.Name;
-				Class classMapping = classNode.Class;
-				new SchemaGenerator(classMapping, mappings, dsSchema, messages, allSortedFields, allPersistentClasses, verboseMode).GenerateTables();
-			}
-			foreach(DictionaryEntry de in this.allPersistentClasses)
-			{
-				ClassNode classNode = (ClassNode) de.Value;
-				if (classNode.IsAbstractOrInterface)
-					continue;
-				if (!classNode.IsPersistent) // non persistent classes derived from persistent classes
-					continue;
-				string pureName = classNode.Name;
-				Class classMapping = classNode.Class;
-				new SchemaGenerator(classMapping, mappings, dsSchema, messages, allSortedFields, allPersistentClasses, verboseMode).GenerateRelations();
-			}
-#endif
 		}
 
 
 
 		public void
-		mergeDataSet(string absDllPath, ArrayList classList)
+		MergeDataSet(string absDllPath, List<ClassNode> classList)
 		{			
 			string dsFile = Path.Combine(Path.GetDirectoryName(absDllPath), Path.GetFileNameWithoutExtension(absDllPath) + ".ndo.xsd");
 			if (!File.Exists(dsFile))
@@ -528,20 +437,7 @@ namespace NDOEnhancer
 			}
 		}
 
-#if nix
-		private void getOidType(FieldNode fieldNode, Class cls)
-		{
-			Type t = fieldNode.OidType;
-			if (t == null)
-			{
-				messages.WriteLine(String.Format("Invalid Oid type {0} in class {1} - using int instead.", fieldNode.DataType, cls.FullName));
-				t = typeof(int);
-			}
-			cls.Oid.FieldType = t;
-		}
-#endif
-		private void
-		determineOidTypes()
+		private void DetermineOidTypes()
 		{
             foreach (Class cl in mappings.Classes)
             {
@@ -576,7 +472,7 @@ namespace NDOEnhancer
 		}
 
 
-		private void checkMappingForField(string prefix, Patcher.ILField field, ArrayList sortedFields, Class classMapping, bool isOnlyChild, FieldNode fieldNode)
+		private void CheckMappingForField(string prefix, Patcher.ILField field, List<KeyValuePair<string,ILField>> sortedFields, Class classMapping, bool isOnlyChild, FieldNode fieldNode)
 		{
 			bool isOidField = fieldNode.IsOid;
 			if (field.CleanName.StartsWith("_ndo"))
@@ -591,21 +487,19 @@ namespace NDOEnhancer
 				bool oneChildOnly = field.Fields.Count == 1;
 				foreach(Patcher.ILField newf in field.Fields)
 				{
-					checkMappingForField(field.CleanName + ".", newf, sortedFields, classMapping, oneChildOnly, fieldNode);
+					CheckMappingForField(field.CleanName + ".", newf, sortedFields, classMapping, oneChildOnly, fieldNode);
 				}
 				return;
 			}
-			DictionaryEntry deToDelete = new DictionaryEntry(string.Empty, string.Empty);
+
 			if (field.IsInherited)
 			{
-				foreach(DictionaryEntry de in sortedFields)
-					if (de.Key.Equals(fname))
-						deToDelete = de;
+				foreach(var entry in sortedFields.ToList())
+					if (entry.Key == fname)
+						sortedFields.Remove(entry);
 			}
-			if (((string)deToDelete.Key) != string.Empty)
-				deToDelete.Value = field;
-			else
-				sortedFields.Add(new DictionaryEntry(fname, field));
+
+			sortedFields.Add(new KeyValuePair<string, ILField>( fname, field ));
 
 			if (classMapping != null)
 			{
@@ -626,22 +520,8 @@ namespace NDOEnhancer
 			}
 		}
 
-		/// <summary>
-		/// Helps sorting the fields
-		/// </summary>
-		private class FieldSorter : IComparer
-		{
-			public int Compare(object x, object y)
-			{
-				if (!(x is DictionaryEntry) || !(y is DictionaryEntry))
-					throw new Exception("Interner Fehler: FieldSorter.Compare: DictionaryEntry erwartet; x= " + x.GetType().FullName + " y = " + y.GetType().FullName);
-				return String.CompareOrdinal((string)((DictionaryEntry) x).Key, (string)((DictionaryEntry) y).Key);
-			}
-		}
-
-
-		private void IterateFieldNodeList(IList fieldList, bool isEmbeddedObject, 
-			List<FieldNode> oidFields, Class classMapping, ArrayList sortedFields, 
+		private void IterateFieldNodeList(IEnumerable<FieldNode> fieldList, bool isEmbeddedObject, 
+			List<FieldNode> oidFields, Class classMapping, List<KeyValuePair<string, ILField>> sortedFields, 
 			bool isInherited)
 		{
 			string tn;
@@ -660,7 +540,7 @@ namespace NDOEnhancer
 
 				if (!isEmbeddedObject && fieldNode.IsOid)
 					oidFields.Add(fieldNode);
-				IList subFieldList = null;
+				IEnumerable<FieldNode> subFieldList = null;
 				if (isEmbeddedObject)
 				{
 					subFieldList = fieldNode.Fields;
@@ -670,53 +550,51 @@ namespace NDOEnhancer
 				Patcher.ILField field = new Patcher.ILField(fieldNode.FieldType, tn, 
 					fieldNode.Name, this.ownAssemblyName, subFieldList, isEnum);
 				field.IsInherited = isInherited;
-				System.Diagnostics.Debug.Assert (field.Valid, "field.Valid is false");
+				Debug.Assert (field.Valid, "field.Valid is false");
 				if (classMapping != null)
-					checkMappingForField("", field, sortedFields, classMapping, false, fieldNode);
+					CheckMappingForField("", field, sortedFields, classMapping, false, fieldNode);
 			}
 		}
-			 
 
-		private void
-		checkFieldMappings(ClassNode classNode, Class classMapping)
+
+		private void CheckFieldMappings( ClassNode classNode, Class classMapping )
 		{
-			ArrayList sortedFields = new ArrayList();
+			var sortedFields = new List<KeyValuePair<string,ILField>>();
 			string className = classNode.Name;
-			allSortedFields.Add(className, sortedFields);
+			allSortedFields.Add( className, sortedFields );
 
 			List<FieldNode> oidFields = new List<FieldNode>();
 
 			// All own fields
-			IList fieldList = classNode.Fields;
-			IterateFieldNodeList(fieldList, false, oidFields, classMapping, sortedFields, false);
+			var fieldList = classNode.Fields;
+			IterateFieldNodeList( fieldList, false, oidFields, classMapping, sortedFields, false );
 
 			// All embedded objects
-			IList embeddedObjectsList = classNode.EmbeddedTypes;
-			IterateFieldNodeList(embeddedObjectsList, true, oidFields, classMapping, sortedFields, false);
+			var embeddedObjectsList = classNode.EmbeddedTypes;
+			IterateFieldNodeList( embeddedObjectsList, true, oidFields, classMapping, sortedFields, false );
 
-			FieldSorter fieldSorter = new FieldSorter();
-			sortedFields.Sort(fieldSorter);
+			sortedFields.Sort( ( x, y ) => String.CompareOrdinal( x.Key, y.Key ) );
 
 			// Alle ererbten Felder
 			ClassNode derivedclassNode = this.allPersistentClasses[classNode.BaseName];
-			
+
 			while (null != derivedclassNode)
 			{
 				if (derivedclassNode.IsPersistent)
 				{
 					int startind = sortedFields.Count;
 
-					IList nl = derivedclassNode.Fields;
-					IterateFieldNodeList(nl, false, oidFields, classMapping, sortedFields, true);
-				
-					IList enl = derivedclassNode.EmbeddedTypes;
-					IterateFieldNodeList(enl, true, oidFields, classMapping, sortedFields, true);
+					var nl = derivedclassNode.Fields;
+					IterateFieldNodeList( nl, false, oidFields, classMapping, sortedFields, true );
 
-					int len = sortedFields.Count - startind;
-					sortedFields.Sort(startind, len, fieldSorter);
+					var enl = derivedclassNode.EmbeddedTypes;
+					IterateFieldNodeList( enl, true, oidFields, classMapping, sortedFields, true );
+
 				}
 				derivedclassNode = this.allPersistentClasses[derivedclassNode.BaseName];
 			}
+
+			sortedFields.Sort( ( x, y ) => String.CompareOrdinal( x.Key, y.Key ) );
 
 			// Ab hier nur noch Zeug für die Mapping-Datei
 			if (classMapping == null)
@@ -725,51 +603,55 @@ namespace NDOEnhancer
 
 			if (oidFields.Count > 0)
 			{
-                foreach (FieldNode oidField in oidFields)
-                {
-                    OidColumn oidColumn = null;
-                    new OidColumnIterator(classMapping).Iterate(delegate(OidColumn oidCol, bool isLastElement)
-                    {
-                        if (oidCol.FieldName == oidField.Name)
-                            oidColumn = oidCol;
-                    });
-                    if (oidColumn == null)
-                    {
-                        oidColumn = classMapping.Oid.NewOidColumn();
-                        oidColumn.FieldName = oidField.Name;
-                        oidColumn.Name = classMapping.FindField(oidField.Name).Column.Name;
-                    }
-                }
+				foreach (FieldNode oidField in oidFields)
+				{
+					OidColumn oidColumn = null;
+					new OidColumnIterator( classMapping ).Iterate( delegate ( OidColumn oidCol, bool isLastElement )
+					{
+						if (oidCol.FieldName == oidField.Name)
+							oidColumn = oidCol;
+					} );
+					if (oidColumn == null)
+					{
+						oidColumn = classMapping.Oid.NewOidColumn();
+						oidColumn.FieldName = oidField.Name;
+						oidColumn.Name = classMapping.FindField( oidField.Name ).Column.Name;
+					}
+				}
 			}
 
-			foreach(DictionaryEntry de in sortedFields)
-				sortedFieldsFile.WriteLine((string)de.Key);
+			foreach (var de in sortedFields)
+				sortedFieldsFile.WriteLine( de.Key );
+
 			sortedFieldsFile.WriteLine();
 
 
 			// Und nun die überflüssigen entfernen
 			List<Field> fieldsToRemove = new List<Field>();
-			foreach(Field f in classMapping.Fields)
+			foreach (Field f in classMapping.Fields)
 			{
 				bool isExistent = false;
-				foreach(DictionaryEntry e in sortedFields)
+				foreach (var e in sortedFields)
 				{
-					if ((string)e.Key == f.Name)
+					if (e.Key == f.Name)
 					{
 						isExistent = true;
 						break;
 					}
 				}
-				if (!isExistent)
-					fieldsToRemove.Add(f);
-			}
-			foreach(Field field in fieldsToRemove)
-				classMapping.RemoveField(field);
 
-            List<Field> sortedFieldMappings = classMapping.Fields.ToList();
-			sortedFieldMappings.Sort( ( f1, f2 ) => string.CompareOrdinal( ((Field)f1).Name, ((Field)f2).Name ) );
-            for (int i = 0; i < sortedFieldMappings.Count; i++)
-                ((Field)sortedFieldMappings[i]).Ordinal = i;
+				if (!isExistent)
+					fieldsToRemove.Add( f );
+
+			}
+
+			foreach (Field field in fieldsToRemove)
+				classMapping.RemoveField( field );
+
+			List<Field> sortedFieldMappings = classMapping.Fields.ToList();
+			sortedFieldMappings.Sort( ( f1, f2 ) => string.CompareOrdinal( f1.Name, f2.Name ) );
+			for (int i = 0; i < sortedFieldMappings.Count; i++)
+				sortedFieldMappings[i].Ordinal = i;
 		}
 
 
@@ -780,12 +662,11 @@ namespace NDOEnhancer
 			fi.SetValue(r, parent);
 		}
 
-		public void
-		checkInheritedRelationMappings(ClassNode classNode, Class classMapping)
+		public void CheckInheritedRelationMappings(ClassNode classNode, Class classMapping)
 		{
 			string className = classNode.Name;
 
-			ReferenceArrayList references = (ReferenceArrayList) this.allReferences[className];
+			var references = this.allReferences[className];
 			// Alle ererbten Relationen
 			ClassNode baseClassNode = this.allPersistentClasses[classNode.BaseName];
 			
@@ -794,9 +675,8 @@ namespace NDOEnhancer
 				if (baseClassNode.IsPersistent)
 				{
 					Class baseClassMapping = baseClassNode.Class;
-					ArrayList temp = new ArrayList();
-					IList nl = baseClassNode.Relations;
-					foreach (RelationNode relNode in nl)
+					var nl = baseClassNode.Relations;
+					foreach (var relNode in nl)
 					{
 						// Relation nur aus der Klasse nehmen, die das Feld deklariert
 						if (relNode.DeclaringType != null)
@@ -804,15 +684,13 @@ namespace NDOEnhancer
 						//					string tn = relNode.Attributes["Type"].Value;
 						RelationInfo ri = relNode.RelationInfo;
 						string rname = relNode.Name;
-						
-						// Die Relation sollte wirklich am unteren Ende der
-						// Klassenhierarchie erzeugt werden.
-						//					if(references.Contains(rname))
-						//					Debug.Write("NDO635");
-						Debug.Assert(!references.Contains(rname));
+
+						// The Relation should be generated at the lowest end of
+						// the class hiearchy.
+						Debug.Assert( !references.Any( r => r.CleanName == rname ) );
 										
 
-						// relation wird als ererbte Reference in die Liste eingetragen.
+						// add the relation as inherited reference
 						bool is1To1 = relNode.IsElement;
 						string relTypeName = relNode.RelatedType;
 						string relName = relNode.RelationName;
@@ -856,14 +734,13 @@ namespace NDOEnhancer
 			}
 		}
 
-		public void
-		checkRelationMappings(ClassNode classNode, Class classMapping)
+		public void CheckRelationMappings(ClassNode classNode, Class classMapping)
 		{
-			IList references = new ReferenceArrayList();
+			var references = new List<ILReference>();
 			string className = (classNode.Name);
 			allReferences.Add(className, references);
-			IList refList = classNode.Relations;
-			foreach (RelationNode relationNode in refList)
+			var refList = classNode.Relations;
+			foreach (var relationNode in refList)
 			{
 				// Übernehme die Relation nur aus der deklarierenden Klasse,
 				// damit gleich die richtigen Mappings eingetragen werden.
@@ -908,13 +785,12 @@ namespace NDOEnhancer
 		}
 
 
-		private void
-		checkClassMappings(ArrayList classList)
+		private void CheckClassMappings(List<ClassNode> classList)
 		{
 			if (options.DatabaseOwner != string.Empty)
 				mappings.StandardDbOwner = options.DatabaseOwner;
 			sortedFieldsFile = new StreamWriter(Path.ChangeExtension(binFile, ".fields.txt"));
-			foreach(ClassNode classNode in classList)
+			foreach(var classNode in classList)
 			{
 				if (!classNode.IsPersistent) // non persistent classes derived from persistent classes
 					continue;
@@ -957,12 +833,12 @@ namespace NDOEnhancer
                     if (classNode.ClassType.IsGenericType && classMapping.TypeNameColumn == null)
                         classMapping.AddTypeNameColumn();
 				}
-				checkFieldMappings(classNode, classMapping);
+				CheckFieldMappings(classNode, classMapping);
 			}
 			sortedFieldsFile.Close();
 
 			// Lösche ungebrauchte Class Mappings
-			ArrayList classesToDelete = new ArrayList();
+			var classesToDelete = new List<Class>();
 			foreach(Class c in mappings.Classes)
 			{
 				if (!tabuClasses.Contains(c.FullName) 
@@ -976,14 +852,14 @@ namespace NDOEnhancer
 			}
 		}
 
-		private void checkAllRelationMappings(ArrayList classList)
+		private void CheckAllRelationMappings(List<ClassNode> classList)
 		{
 			foreach(ClassNode classNode in classList)
 			{
 				if (!classNode.IsPersistent) // non persistent classes derived from persistent classes
 					continue;
 				Class classMapping = classNode.Class;
-				checkRelationMappings(classNode, classMapping);
+				CheckRelationMappings(classNode, classMapping);
 			}
 
 			foreach(ClassNode classNode in classList)
@@ -991,7 +867,7 @@ namespace NDOEnhancer
 				if (!classNode.IsPersistent) // non persistent classes derived from persistent classes
 					continue;
 				Class classMapping = classNode.Class;
-				checkInheritedRelationMappings(classNode, classMapping);
+				CheckInheritedRelationMappings(classNode, classMapping);
 			}
 
 			foreach(ClassNode classNode in classList)
@@ -1003,20 +879,20 @@ namespace NDOEnhancer
 				Class classMapping = classNode.Class;
 				if (classMapping == null)
 					continue;
-				deleteUnusedRelationMappings(classMapping);
-				checkDoubleComposites(classMapping);
+				DeleteUnusedRelationMappings(classMapping);
+				CheckDoubleComposites(classMapping);
 			}
 		}
 
 
-		private void deleteUnusedRelationMappings(Class classMapping)
+		private void DeleteUnusedRelationMappings(Class classMapping)
 		{
-			ReferenceArrayList references = (ReferenceArrayList) this.allReferences[classMapping.FullName];
-			ArrayList relationsToDelete = new ArrayList();
+			var references = this.allReferences[classMapping.FullName];
+			var relationsToDelete = new List<Relation>();
 			foreach (Relation r in classMapping.Relations)
 			{
-				if (!references.Contains(r.FieldName))
-					relationsToDelete.Add(r);
+				if (!references.Any( x => x.CleanName == r.FieldName ))
+					relationsToDelete.Add( r );
 			}
 			foreach (Relation r in relationsToDelete)
 			{
@@ -1025,21 +901,21 @@ namespace NDOEnhancer
 			}
 		}
 
-		private void checkDoubleComposites(Class classMapping)
+		private void CheckDoubleComposites(Class classMapping)
 		{
-			ReferenceArrayList references = (ReferenceArrayList) this.allReferences[classMapping.FullName];
+			var references = this.allReferences[classMapping.FullName];
 			foreach (Relation r in classMapping.Relations)
 			{
-				Patcher.ILReference reference = references.FindReference(r.FieldName);
+				Patcher.ILReference reference = references.FirstOrDefault(x => x.CleanName == r.FieldName);
 				if (reference != null)
 				{
 					Relation r2 = r.ForeignRelation;
 					if (r2 != null)
 					{
-						ReferenceArrayList references2 = (ReferenceArrayList) this.allReferences[r.ReferencedTypeName];
+						var references2 = this.allReferences[r.ReferencedTypeName];
 						if(references2 == null)  // Type is not from our assembly
 							continue;
-						Patcher.ILReference reference2 = references2.FindReference(r2.FieldName);
+						Patcher.ILReference reference2 = references2.FirstOrDefault(x=>x.CleanName == r2.FieldName);
 						if (reference2 != null)
 						{
 							if (reference.ReferenceInfo == RelationInfo.Composite
@@ -1052,8 +928,7 @@ namespace NDOEnhancer
 		}
 
 
-		public void
-		mergeMappingFile(string absDllPath, ArrayList classList)
+		public void MergeMappingFile(string absDllPath, List<ClassNode> classList)
 		{
 			var dir = Path.GetDirectoryName(absDllPath);
 			var mapFileName = Path.Combine(dir, Path.GetFileNameWithoutExtension(absDllPath) + ".ndo.mapping");
@@ -1106,18 +981,14 @@ namespace NDOEnhancer
 			return p + "\\" + file;
 		}
 
-		public void
-			doIt()
+		/// <summary>
+		/// This is the Enhancer entry point
+		/// </summary>
+		/// <exception cref="Exception"></exception>
+		public void DoIt()
 		{
 
-#if BETA || TRIAL
-            expired = !NDOKey.CheckDate(new LicenceKey().TheKey, DateTime.Now);
-#endif
             bool sourcesUpToDate = !options.EnableEnhancer;
-#if BETA || TRIAL
-            if (expired)
-                throw new Exception("NDO Licence expired");
-#endif
 #if DEBUG
             this.verboseMode = true;
 #else
@@ -1257,7 +1128,7 @@ namespace NDOEnhancer
 
 			// The mapping und schema files
 			// will be merged here
-			searchPersistentBases();
+			SearchPersistentBases();
 			bool doEnhance = options.EnableEnhancer && !this.isEnhanced;
 #if xDEBUG
 			doEnhance = options.EnableEnhancer;
@@ -1273,7 +1144,7 @@ namespace NDOEnhancer
             if (doEnhance)
 			{
 				// Hier wird ILDasm bemüht, um einen Dump des Assemblies herzustellen
-				disassemble();
+				Disassemble();
 
 				ILFile ilfile = new ILFile();
 
@@ -1328,7 +1199,7 @@ namespace NDOEnhancer
 
 				//mergeValueTypes(ilfile);
 
-				analyzeAndEnhance(ilfile);
+				AnalyzeAndEnhance(ilfile);
 
 				messages.Unindent();
 				if (this.verboseMode)
@@ -1338,7 +1209,7 @@ namespace NDOEnhancer
 				ilfile.write( ilEnhFile, Corlib.FxType == FxType.Standard2 );
 
 				// ILAsm assembliert das Ganze
-				reassemble();
+				Reassemble();
 			}
 
 
@@ -1386,13 +1257,13 @@ namespace NDOEnhancer
 
 		}
 
-		void analyzeAndEnhance( ILFile ilFile )
+		void AnalyzeAndEnhance( ILFile ilFile )
 		{			
 			var classes = ilFile.GetAllClassElements();
 
 			if (!isEnhanced)
 			{
-				IList foreignAssemblies = checkRelationTargetAssemblies();
+				var foreignAssemblies = CheckRelationTargetAssemblies();
 
 				bool insertData = true;
 				bool insertXml = true;
@@ -1579,8 +1450,8 @@ namespace NDOEnhancer
 						}
 					}
 					string mappingName = classElement.getMappingName();
-					IList sortedFields = (IList) allSortedFields[mappingName];
-					IList references = (IList) allReferences[mappingName];
+					var sortedFields = allSortedFields[mappingName];
+					var references = allReferences[mappingName];
 					Patcher.ClassPatcher cls = new Patcher.ClassPatcher( classElement, mappings, allPersistentClasses, messages, sortedFields, references, this.oidTypeName );
 					if (!isEnhanced)
 					{
@@ -1592,10 +1463,7 @@ namespace NDOEnhancer
 		}
 
 
-
-
-		private void
-		disassemble()
+		private void Disassemble()
 		{
 			Dasm dasm = new Dasm(messages, this.verboseMode);
 			dasm.DoIt(objFile, ilFileName);
@@ -1606,8 +1474,7 @@ namespace NDOEnhancer
 			}
 		}
 
-		private void
-		reassemble()
+		private void Reassemble()
 		{
 			Asm asm = new Asm(messages, this.verboseMode);
             if (this.verboseMode)

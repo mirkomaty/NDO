@@ -159,7 +159,7 @@ namespace EnhancerTest
 
 			MessageAdapter messages = new MessageAdapter();
 
-			new NDOEnhancer.Enhancer(this.projectDescription, messages).doIt();
+			new NDOEnhancer.Enhancer(this.projectDescription, messages).DoIt();
 
 			if (options.EnableEnhancer)
 				Console.WriteLine("Enhancer ready");

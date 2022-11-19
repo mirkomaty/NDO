@@ -251,7 +251,7 @@ namespace NDOEnhancer
 			}
 		}
 
-		public IList Relations
+		public IEnumerable<RelationNode> Relations
 		{
 			get
 			{
@@ -259,7 +259,7 @@ namespace NDOEnhancer
 			}
 		}
 
-		public IList Fields
+		public IEnumerable<FieldNode> Fields
 		{
 			get 
 			{ 
@@ -267,11 +267,11 @@ namespace NDOEnhancer
 			}
 		}
 
-		public IList EmbeddedTypes
+		public IEnumerable<FieldNode> EmbeddedTypes
 		{
 			get 
 			{ 
-				return this.embeddedTypes;
+				return this.embeddedTypes.Cast<FieldNode>();
 			}
 		}
 

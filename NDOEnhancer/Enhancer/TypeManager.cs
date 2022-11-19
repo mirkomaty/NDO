@@ -58,7 +58,7 @@ namespace NDOEnhancer
 		}
 
 
-		public void CheckTypeList(ClassDictionary allTypes)
+		public void CheckTypeList(ClassDictionary<ClassNode> allTypes)
 		{
 			foreach(var entry in allTypes)
 			{

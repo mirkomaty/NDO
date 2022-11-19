@@ -27,6 +27,7 @@ using System.Reflection;
 using NDO;
 using NDO.Mapping;
 using System.Runtime.Versioning;
+using System.Collections.Generic;
 
 namespace NDOEnhancer
 {
@@ -54,8 +55,8 @@ namespace NDOEnhancer
 			get { return oidType; }
 		}
 
-		ArrayList persistentClasses = new ArrayList();
-		public ArrayList PersistentClasses
+		List<ClassNode> persistentClasses = new List<ClassNode>();
+		public List<ClassNode> PersistentClasses
 		{
 			get { return persistentClasses; }
 		}

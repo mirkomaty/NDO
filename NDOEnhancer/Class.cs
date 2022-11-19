@@ -2582,7 +2582,7 @@ namespace NDOEnhancer.Patcher
 
 
 	/// <summary>
-	/// Die Klasse repräsentiert ein persistentes Feld
+	/// The class represents a persistent field
 	/// </summary>
 	internal class ILField : IComparable
 	{
@@ -2597,7 +2597,7 @@ namespace NDOEnhancer.Patcher
 		bool valid = true;
 		private bool isEmbeddedType = false;
 		private bool isEnum = false;
-		private IList embeddedFieldList;
+		private IEnumerable<FieldNode> embeddedFieldList;
 		protected bool isInherited = false;
 		string m_ilTypeWithoutPrefix;
 		const string classPrefix = "class ";
@@ -2610,7 +2610,7 @@ namespace NDOEnhancer.Patcher
 			Init(type, iltype, name, declaringType, assemblyName);
 		}
 
-        public ILField(Type type, string iltype, string name, string assemblyName, IList embeddedFieldList, bool isEnum)
+        public ILField(Type type, string iltype, string name, string assemblyName, IEnumerable<FieldNode> embeddedFieldList, bool isEnum)
 		{
 			this.isEnum = isEnum;
 			isEmbeddedType = embeddedFieldList != null;
