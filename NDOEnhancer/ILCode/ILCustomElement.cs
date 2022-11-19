@@ -116,9 +116,15 @@ namespace NDOEnhancer.ILCode
 				pos += 2;
 				return (NDO.RelationInfo) para;
 			}
+			else if (typeof(System.Enum).IsAssignableFrom( type ) )
+			{
+				int para = ((bytes[pos+3] * 256 + bytes[pos+2]) * 256 + bytes[pos+1]) * 256 + bytes[pos];
+				pos += 4;
+				return Enum.ToObject( type, para );
+			}
 
-			NDOEnhancer.MessageAdapter ma = new NDOEnhancer.MessageAdapter();
-			ma.ShowError( "Unknown type in attribute parameter list: " + type.FullName );
+			MessageAdapter ma = new MessageAdapter();
+			ma.ShowError( $"Relation Attribute: Unknown type in attribute parameter list: {type.FullName}, owner type: {( this.Owner as ILClassElement )?.Name ?? "-"}" );
 
 			return null;
 		}
@@ -244,7 +250,17 @@ namespace NDOEnhancer.ILCode
 						paramTypeNames[i] = "NDO.RelationInfo, NDO";
 					}
 					else
-						throw new Exception( "Relation Attribute: Unknown type in attribute parameter list: " + paramTypeName );
+					{
+						var paramTypeString = paramTypeName.Substring(paramTypeName.IndexOf(']') + 1);
+						var t = Type.GetType( paramTypeString );
+						if (t != null)
+						{
+							paramTypes[i] = t;
+							paramTypeNames[i] = "paramTypeString";
+						}
+						else
+							throw new Exception( $"Relation Attribute: Unknown type in attribute parameter list: {paramTypeName}, type: {( this.Owner as ILClassElement )?.Name ?? ""}" );
+					}
 
 					//paramTypes[i]  = Type.GetType( paramTypeNames[i] );
 					paramValues[i] = ReadParam( bytes, paramTypes[i], ref pos );
