@@ -24,6 +24,7 @@ using System;
 using System.Globalization;
 using System.Diagnostics;
 using System.Reflection;
+using NDOEnhancer;
 
 // using com.poet.util;
 
@@ -162,7 +163,7 @@ namespace ILCode
 			}
 
 			MessageAdapter ma = new MessageAdapter();
-			ma.ShowError( $"Relation Attribute: Unknown type in attribute parameter list: {type.FullName}, owner type: {( this.Owner as ILClassElement )?.Name ?? "-"}" );
+			ma.ShowError( $"Relation Attribute: Unknown type in attribute parameter list: {type.FullName}, owner type: {( this.getOwner() as ILClassElement )?.getName() ?? "-"}" );
 
 			return null;
 		}
@@ -297,7 +298,7 @@ namespace ILCode
 							paramTypeNames[i] = "paramTypeString";
 						}
 						else
-							throw new Exception( $"Relation Attribute: Unknown type in attribute parameter list: {paramTypeName}, type: {( this.Owner as ILClassElement )?.Name ?? ""}" );
+							throw new Exception( $"Relation Attribute: Unknown type in attribute parameter list: {paramTypeName}, type: {( this.getOwner() as ILClassElement )?.getName() ?? ""}" );
 					}
 
 					//paramTypes[i]  = Type.GetType( paramTypeNames[i] );
