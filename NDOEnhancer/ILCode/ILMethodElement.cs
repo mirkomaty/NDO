@@ -1,5 +1,5 @@
 ﻿//
-// Copyright (c) 2002-2016 Mirko Matytschak 
+// Copyright (c) 2002-2022 Mirko Matytschak 
 // (www.netdataobjects.de)
 //
 // Author: Mirko Matytschak
@@ -21,10 +21,11 @@
 
 
 using System;
-using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
 using NDOEnhancer.Ecma335;
 
-namespace ILCode
+namespace NDOEnhancer.ILCode
 {
 	/// <summary>
 	/// Summary description for ILMethodElement.
@@ -32,7 +33,6 @@ namespace ILCode
 	internal class ILMethodElement : ILElement
 	{
 		public ILMethodElement()
-			: base( true )
 		{
 		}
 
@@ -46,26 +46,6 @@ namespace ILCode
 			public ILMethodElementType()
 				: base( ".method", typeof( ILMethodElement ) )
 			{
-			}
-		}
-
-		public class Iterator : ILElementIterator
-		{
-			public Iterator( ILElement element )
-				: base( element, typeof( ILMethodElement ) )
-			{
-			}
-
-			public new ILMethodElement
-			getFirst()
-			{
-				return base.getFirst() as ILMethodElement;
-			}
-
-			public new ILMethodElement
-			getNext()
-			{
-				return base.getNext() as ILMethodElement;
 			}
 		}
 
@@ -85,31 +65,23 @@ namespace ILCode
 		private string						m_name;
 		private string						m_signature;
 
-		private ArrayList					m_parameterTypes = new ArrayList();
-		private ArrayList					m_parameterNames = new ArrayList();
+		private List<string>					m_parameterTypes = new List<string>();
+		private List<string>					m_parameterNames = new List<string>();
 
-		public static void
-		initialize()
-		{
-		}
+		private List<ILStatementElement> m_statements;
 
-		public static ILMethodElement.Iterator
-		getIterator( ILElement element )
-		{
-			return new Iterator( element );
-		}
-
+		public override bool NeedsBlock => true;
 
 		public void
 		addStatement( string firstLine )
 		{
-			addElement( new ILStatementElement( firstLine ) );
+			AddElement( new ILStatementElement( firstLine ) );
 		}
 
 		public bool
 		isConstructor()
 		{
-			resolve();
+			Resolve();
 
 			return m_name.Equals( ".ctor" );
 		}
@@ -117,25 +89,25 @@ namespace ILCode
 		public bool
 		isStaticConstructor()
 		{
-			resolve();
+			Resolve();
 
 			return m_name.Equals( ".cctor" );
 		}
 
 		private void
-		resolve()
+		Resolve()
 		{
 			if ( null != m_name )
 				return;
 
-			string allLines = this.getAllLines();
+			string allLines = this.GetAllLines();
 
             EcmaMethodHeader methodHeader = new EcmaMethodHeader();
             if (!methodHeader.Parse(allLines))
                 throw new Exception("Invalid Method Header: " + allLines);
 
             //TODO: This doesn't work well with generic types
-            string[] words = splitWords(methodHeader.ParameterList);
+            string[] words = SplitWords(methodHeader.ParameterList);
             int count;
             for (count = 0; count < words.Length; count++)
                 if (words[count].Equals("("))
@@ -228,30 +200,30 @@ namespace ILCode
 		}
 
 		protected override void
-		unresolve()
+		Unresolve()
 		{
 			m_name = null;
 		}
 
 		public override string
-		makeUpperCaseName( string name )
+		MakeUpperCaseName( string name )
 		{
 			if ( isSpecialName() )
 				return name;
 
-			return base.makeUpperCaseName( name );
+			return base.MakeUpperCaseName( name );
 		}
 
 		public void
-		makeUpperCaseName()
+		MakeUpperCaseName()
 		{
-			string oldName = getName();
-			string newName = makeUpperCaseName( oldName );
+			string oldName = Name;
+			string newName = MakeUpperCaseName( oldName );
 
 			if ( oldName == newName )
 				return;
 
-			replaceTextOnce( oldName + "(", newName + "(" );
+			ReplaceTextOnce( oldName + "(", newName + "(" );
 
 			m_name		= newName;
 			m_signature	= newName + m_signature.Substring( m_signature.IndexOf( "(" ) );
@@ -260,7 +232,7 @@ namespace ILCode
 		public bool
 		isPrivate()
 		{
-			resolve();
+			Resolve();
 
 			return m_isPrivate;
 		}
@@ -268,7 +240,7 @@ namespace ILCode
 		public bool
 		isProtected()
 		{
-			resolve();
+			Resolve();
 
 			return m_isProtected;
 		}
@@ -276,7 +248,7 @@ namespace ILCode
 		public bool
 		isPublic()
 		{
-			resolve();
+			Resolve();
 
 			return m_isPublic;
 		}
@@ -284,7 +256,7 @@ namespace ILCode
 		public bool
 		isStatic()
 		{
-			resolve();
+			Resolve();
 
 			return m_isStatic;
 		}
@@ -292,7 +264,7 @@ namespace ILCode
 		public bool
 		isNative()
 		{
-			resolve();
+			Resolve();
 
 			return m_isNative;
 		}
@@ -301,14 +273,14 @@ namespace ILCode
         public bool
         isPinvoke()
         { 
-            resolve();
+            Resolve();
             return m_isPinvoke;
         }
 
 		public bool
 		isAbstract()
 		{
-			resolve();
+			Resolve();
 
 			return m_isAbstract;
 		}
@@ -316,7 +288,7 @@ namespace ILCode
 		public bool
 		isVirtual()
 		{
-			resolve();
+			Resolve();
 
 			return m_isVirtual;
 		}
@@ -324,7 +296,7 @@ namespace ILCode
 		public bool
 		isNew()
 		{
-			resolve();
+			Resolve();
 
 			return m_isNew;
 		}
@@ -332,23 +304,25 @@ namespace ILCode
 		public bool
 		isSpecialName()
 		{
-			resolve();
+			Resolve();
 
 			return m_specialName;
 		}
 
 		public string
-		getName()
+		Name
 		{
-			resolve();
-
-			return m_name;
+			get
+			{
+				Resolve();
+				return m_name;
+			}
 		}
 
 		public string
 		getILType()
 		{
-			resolve();
+			Resolve();
 
 			return m_ilType;
 		}
@@ -356,39 +330,80 @@ namespace ILCode
 		public int
 		getParameterCount()
 		{
-			resolve();
+			Resolve();
 
 			return m_parameterTypes.Count;
 		}
 
-        //public string
-        //getParameterType( int index )
-        //{
-        //    resolve();
-
-        //    return m_parameterTypes[index] as string;
-        //}
-
-        //public string
-        //getParameterName( int index )
-        //{
-        //    resolve();
-
-        //    return m_parameterNames[index] as string;
-        //}
-
 		public string
-		getSignature()
+		Signature
 		{
-			resolve();
-
-			return m_signature;
+			get
+			{
+				Resolve();
+				return m_signature;
+			}
 		}
 
-		public ILClassElement
-		getClass()
+		protected override bool InsertAfter( ILElement insertElement, ILElement existingElement )
 		{
-			return getOwner() as ILClassElement;
+			if (base.InsertAfter( insertElement, existingElement ))
+			{
+				if (insertElement is ILStatementElement)
+					ComputeStatements();
+
+				return true;
+			}
+
+			return false;
+		}
+
+		public override bool InsertBefore( ILElement insertElement, ILElement existingElement )
+		{
+			if (base.InsertBefore( insertElement, existingElement ))
+			{
+				if (insertElement is ILStatementElement)
+					ComputeStatements();
+
+				return true;
+			}
+
+			return false;
+		}
+
+		void ComputeStatements(ILElement element, List<ILStatementElement> statements )
+		{
+			if (element is ILStatementElement stel)
+				statements.Add( stel );
+
+			foreach (var child in element.Elements)
+			{
+				ComputeStatements( child, statements );
+			}
+		}
+
+		void ComputeStatements()
+		{
+			List<ILStatementElement> statements = new List<ILStatementElement>();
+			foreach (var element in Elements)
+			{
+				ComputeStatements(element, statements);
+			}
+
+			m_statements = statements;
+		}
+
+		public IEnumerable<ILStatementElement> Statements
+		{
+			get
+			{
+				if (m_statements != null)
+					return m_statements;
+
+				ComputeStatements();
+
+				return m_statements;
+			}
 		}
 	}
 }

@@ -1,5 +1,5 @@
 ﻿//
-// Copyright (c) 2002-2016 Mirko Matytschak 
+// Copyright (c) 2002-2022 Mirko Matytschak 
 // (www.netdataobjects.de)
 //
 // Author: Mirko Matytschak
@@ -22,20 +22,20 @@
 
 using System;
 using System.Reflection;
-using System.Collections;
 using NDO;
 using NDO.Mapping.Attributes;
+using System.Collections.Generic;
 
 namespace NDOEnhancer
 {
 	/// <summary>
 	/// Zusammenfassung für FieldNode.
 	/// </summary>
-	internal class FieldNode
+	public class FieldNode
 	{
 		string dataType;
 		string name;
-		IList fields = new ArrayList();
+		List<FieldNode> fields = new List<FieldNode>();
 		bool isEnum;
         Type fieldType;
 		string declaringType;
@@ -93,7 +93,7 @@ namespace NDOEnhancer
 			get { return isOid; }
 		}
 
-		public IList Fields
+		public IEnumerable<FieldNode> Fields
 		{
 			get { return fields; }
 		}
@@ -106,6 +106,15 @@ namespace NDOEnhancer
 		public string Name
 		{
 			get { return name; }
+		}
+
+		/// <summary>
+		/// Add a subfield in case of embedded fields
+		/// </summary>
+		/// <param name="fieldNode"></param>
+		public void AddField(FieldNode fieldNode)
+		{
+			this.fields.Add( fieldNode );
 		}
 
 		public Type OidType

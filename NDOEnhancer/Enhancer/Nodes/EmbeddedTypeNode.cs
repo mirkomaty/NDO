@@ -1,5 +1,5 @@
 ﻿//
-// Copyright (c) 2002-2016 Mirko Matytschak 
+// Copyright (c) 2002-2022 Mirko Matytschak 
 // (www.netdataobjects.de)
 //
 // Author: Mirko Matytschak
@@ -21,7 +21,6 @@
 
 
 using System;
-using System.Collections;
 using System.Reflection;
 using NDO;
 
@@ -40,19 +39,19 @@ namespace NDOEnhancer
 		}
 
 
-		public EmbeddedTypeNode(FieldInfo parentField) : base(parentField)
+		public EmbeddedTypeNode( FieldInfo parentField ) : base( parentField )
 		{
 			FieldInfo[] fis = this.FieldType.GetFields(BindingFlags.Instance | BindingFlags.NonPublic);
 			if (parentField.DeclaringType != parentField.ReflectedType)
-				this.declaringType = parentField.DeclaringType;				
+				this.declaringType = parentField.DeclaringType;
 			else
 				this.declaringType = null;
 			foreach (FieldInfo fi in fis)
 			{
 				string fname = fi.Name;
-				if (fname.StartsWith("_ndo"))
+				if (fname.StartsWith( "_ndo" ))
 					continue;
-				if (fi.FieldType.IsSubclassOf(typeof(System.Delegate)))
+				if (fi.FieldType.IsSubclassOf( typeof( System.Delegate ) ))
 					continue;
 
 				object[] attributes = fi.GetCustomAttributes(false);
@@ -66,9 +65,9 @@ namespace NDOEnhancer
 					}
 				}
 				if (cont) continue;
-				if (!new ReflectedType(fi.FieldType).IsStorable)
+				if (!new ReflectedType( fi.FieldType ).IsStorable)
 					return;  // Resultate verwerfen
-				this.Fields.Add(new FieldNode(fi));
+				AddField( new FieldNode( fi ) );
 			}
 		}
 

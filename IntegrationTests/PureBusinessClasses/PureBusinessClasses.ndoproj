@@ -5,7 +5,7 @@
     <EnableEnhancer>True</EnableEnhancer>
     <VerboseMode>False</VerboseMode>
     <NewMapping>False</NewMapping>
-    <GenerateSQL>True</GenerateSQL>
+    <GenerateSQL>False</GenerateSQL>
     <DefaultConnection>
     </DefaultConnection>
     <TargetMappingFileName>NDOMapping.xml</TargetMappingFileName>
@@ -13,8 +13,7 @@
     <UseTimeStamps>False</UseTimeStamps>
     <Utf8Encoding>True</Utf8Encoding>
     <SQLScriptLanguage>SqlServer</SQLScriptLanguage>
-    <SchemaVersion>
-    </SchemaVersion>
+    <SchemaVersion>1.0</SchemaVersion>
     <IncludeTypecodes>False</IncludeTypecodes>
     <DatabaseOwner>
     </DatabaseOwner>

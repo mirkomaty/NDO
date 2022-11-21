@@ -1,5 +1,5 @@
 ﻿//
-// Copyright (c) 2002-2016 Mirko Matytschak 
+// Copyright (c) 2002-2022 Mirko Matytschak 
 // (www.netdataobjects.de)
 //
 // Author: Mirko Matytschak
@@ -22,149 +22,128 @@
 
 using System;
 using System.Globalization;
-using System.Diagnostics;
-using System.Reflection;
+using System.Runtime.InteropServices;
 
-// using com.poet.util;
-
-namespace ILCode
+namespace NDOEnhancer.ILCode
 {
 	/// <summary>
 	/// Summary description for ILCustomElement.
 	/// </summary>
 	internal class ILCustomElement : ILElement
 	{
-		public ILCustomElement()
-			: base( false )
-		{
-		}
+		/*
+      .custom instance void [NDO]NDO.Linq.ServerFunctionAttribute::.ctor(string) = ( 01 00 15 4D 49 4E 5F 41 43 54 49 56 45 5F 52 4F   // ...MIN_ACTIVE_RO
+                                                                                     57 56 45 52 53 49 4F 4E 00 00 )                   // WVERSION..		 
+		 */
 
 		public ILCustomElement( string firstLine, ILElement owner )
 			: base( firstLine, owner )
 		{
 		}
-/*
-		public ILCustomElement(string typeName, object[] parameters)
-			: base ( false )
-		{
-			string param = makeParameters(parameters);
-			//this.addLine
-		}
-*/
+
 		internal class ILCustomElementType : ILElementType
 		{
 			public ILCustomElementType()
-				: base( ".custom", typeof (ILCustomElement) )
+				: base( ".custom", typeof( ILCustomElement ) )
 			{
 			}
 		}
 
-		internal class Iterator : ILElementIterator
-		{
-			public Iterator( ILElement element )
-				: base( element, typeof (ILCustomElement) )
-			{
-			}
+		private static ILElementType        m_elementType = new ILCustomElementType();
+		private AttributeInfo attributeInfo = null;
 
-			public new ILCustomElement
-				getNext()
-			{
-				return base.getNext() as ILCustomElement;
-			}
-		}
 
-		private static ILElementType		m_elementType = new ILCustomElementType();
-		
-		public static void
-			initialize()
+		private void Resolve()
 		{
-		}
-
-		public static ILCustomElement.Iterator
-			getIterator( ILElement element )
-		{
-			return new Iterator( element );
+			if (this.attributeInfo == null)
+				this.attributeInfo = GetAttributeInfo();
 		}
 
 		public bool
-			isAttribute( Type type )
+		IsAttribute( Type type )
 		{
-			if ( null == type )
-				return false;
-
-			string firstLine = getLine( 0 );
-
-			return (-1 < firstLine.IndexOf( type.FullName ));
+			Resolve();
+			return this.attributeInfo.TypeName == type.FullName;
 		}
 
-/*
-		private string
-			makeParameters(object[] parameters)
-		{
-			return null;
-		}
-*/
+
 		private object
-			readParam( byte[] bytes, Type type, ref int pos )
+		ReadParam( byte[] bytes, Type type, ref int pos )
 		{
-			if ( type.FullName == "System.String" || type.FullName == "System.Type")
+			if (type.FullName == "System.String" || type.FullName == "System.Type")
 			{
 				string para;
 				int len = PackedLength.Read(bytes, ref pos);
 				if (len == -1)
 					para = null;
 				else
-					para = new System.Text.UTF8Encoding().GetString(bytes, pos + 1, len);
-				//string para = new string( chars, pos + 1, bytes[pos]);
+					para = new System.Text.UTF8Encoding().GetString( bytes, pos + 1, len );
+
 				pos += 1 + bytes[pos];
+
 				if (para != null && para != string.Empty)
 				{
 					if (para[para.Length - 1] == '\0')
-						para = para.Substring(0, para.Length - 1);
+						para = para.Substring( 0, para.Length - 1 );
 				}
+
 				return para;
 			}
-			else if ( type == typeof(System.Boolean) )
+			else if (type == typeof( System.Boolean ))
 			{
 				bool para = Convert.ToBoolean( bytes[pos] );
 				pos += 1;
 				return para;
 			}
-			else if ( type == typeof(System.Char) )
+			else if (type == typeof( System.Char ))
 			{
 				char para = Convert.ToChar( bytes[pos+1] * 256 + bytes[pos] );
 				pos += 2;
 				return para;
 			}
-			else if ( type == typeof(System.Int16) )
+			else if (type == typeof( System.Int16 ))
 			{
 				short para = Convert.ToInt16( bytes[pos+1] * 256 + bytes[pos] );
 				pos += 2;
 				return para;
 			}
-			else if ( type == typeof(System.Int32) )
+			else if (type == typeof( System.Int32 ))
 			{
 				int para = ((bytes[pos+3] * 256 + bytes[pos+2]) * 256 + bytes[pos+1]) * 256 + bytes[pos];
 				pos += 4;
 				return para;
 			}
-			else if ( type.FullName == "NDO.RelationInfo" )
+			else if (typeof(System.Enum).IsAssignableFrom( type ) )
 			{
-				short para = Convert.ToInt16( bytes[pos+1] * 256 + bytes[pos] );
-				pos += 2;
-				return (NDO.RelationInfo) para;
+				// enums can be "derived" from any integral number type
+				var underlyingType = Enum.GetUnderlyingType(type);
+				var size = Marshal.SizeOf( underlyingType );
+
+				// fortunately we can use a long value for all types of enums
+				long integralValue = 0;
+				for (int i = size-1; i >= 0; i--)
+				{
+					integralValue += bytes[pos+i];
+					if (i > 0)
+						integralValue *= 256;
+				}
+
+				pos += size;
+
+				// convert the integral value into an enum of the given type
+				return Enum.ToObject( type, integralValue );
 			}
-			
-			NDOEnhancer.MessageAdapter ma = new NDOEnhancer.MessageAdapter();
-			ma.ShowError("Unknown type in attribute parameter list: " + type.FullName );
-			
+
+			MessageAdapter ma = new MessageAdapter();
+			ma.ShowError( $"Relation Attribute: Unknown type in attribute parameter list: {type.FullName}, owner type: {( this.Owner as ILClassElement )?.Name ?? "-"}" );
+
 			return null;
 		}
 
 
 		internal class AttributeInfo
 		{
-			public string Name;
+			public string TypeName;
 			public string AssemblyName;
 			public string[] ParamTypeNames = new string[]{};
 			public object[] ParamValues = new object[]{};
@@ -172,18 +151,18 @@ namespace ILCode
 
 
 		public AttributeInfo
-			getAttributeInfo()
+			GetAttributeInfo()
 		{
 			string text = "";
 
-			for ( int i=0; i<getLineCount(); i++ )
+			for (int i = 0; i < LineCount; i++)
 			{
-				string line = getLine( i );
-				
+				string line = GetLine( i );
+
 				int cmt = line.IndexOf( "//" );
-				if ( -1 < cmt )
+				if (-1 < cmt)
 					line = line.Substring( 0, cmt ).Trim();
-				
+
 				text += " " + line;
 			}
 
@@ -192,40 +171,40 @@ namespace ILCode
 			// assembly name
 
 			start = text.IndexOf( "[" ) + 1;
-			end   = text.IndexOf( "]", start );
-			string assName = stripComment( text.Substring( start, end - start ) );
+			end = text.IndexOf( "]", start );
+			string assName = StripComment( text.Substring( start, end - start ) );
 
 			// type name
 
 			start = text.IndexOf( "]" ) + 1;
-			end	  = text.IndexOf( "::", start );
-			string typeName = stripComment( text.Substring( start, end - start ) );
+			end = text.IndexOf( "::", start );
+			string typeName = StripComment( text.Substring( start, end - start ) );
 
 			// constructor signature
 
 			start = text.IndexOf( "(" ) + 1;
-			end	  = text.IndexOf( ")", start );
-			string signature = stripComment( text.Substring( start, end - start ) );
+			end = text.IndexOf( ")", start );
+			string signature = StripComment( text.Substring( start, end - start ) );
 
 			// parameter bytes
 
 			start = text.IndexOf( "= (" ) + 3;
-			end	  = text.IndexOf( ")", start );
-			string byteText	= text.Substring( start, end - start ).Trim();
+			end = text.IndexOf( ")", start );
+			string byteText = text.Substring( start, end - start ).Trim();
 
-			char[]   spc		 = { ' ' };
+			char[]   spc         = { ' ' };
 			string[] byteStrings = byteText.Split( spc );
-			byte[]   bytes		 = new byte[byteStrings.Length];
+			byte[]   bytes       = new byte[byteStrings.Length];
 			//			char[]	 chars		 = new char[byteStrings.Length];
 
-			for ( int i=0; i<byteStrings.Length; i++ )
+			for (int i = 0; i < byteStrings.Length; i++)
 			{
 				bytes[i] = Byte.Parse( byteStrings[i], NumberStyles.HexNumber );
 				//				chars[i] = Convert.ToChar( bytes[i] );
 			}
 
-//			char[] chars = new System.Text.UTF8Encoding().GetChars(bytes);
-			
+			//			char[] chars = new System.Text.UTF8Encoding().GetChars(bytes);
+
 			//			Type attributeType = Type.GetType( typeName + ", " + assName );
 			//			if ( null == attributeType )
 			//				return null;
@@ -233,70 +212,39 @@ namespace ILCode
 			char   comma =  ',';
 			string[] paramTypeNames = new string[]{};
 			object[] paramValues = new object[]{};
-			Type[] paramTypes = new Type[]{};
-			//CustomAttrib starts with a Prolog – an unsigned int16, with value 0x0001
+
+			//CustomAttrib starts with a Prolog – an unsigned int16 with the value 0x0001
 			int pos = 2;
+
 			if (signature != "")
 			{
 				paramTypeNames = signature.Split( comma );
-				paramTypes	   = new Type[paramTypeNames.Length];
-				paramValues	   = new Object[paramTypeNames.Length];
+				Type paramType;
+				paramValues = new Object[paramTypeNames.Length];
 
-				for ( int i=0; i<paramTypeNames.Length; i++ )
+				for (int i = 0; i < paramTypeNames.Length; i++)
 				{
 					string paramTypeName = paramTypeNames[i].Trim();
-					if ( paramTypeName == "string" || paramTypeName.IndexOf("System.String") > -1)
+					paramTypeNames[i] = ILType.GetNetTypeName( paramTypeName );
+					paramType = Type.GetType( paramTypeNames[i] );
+					if (paramType == null)
 					{
-						paramTypeNames[i] = "System.String";
-						paramTypes[i] = typeof(string);
+						throw new Exception( $"Relation Attribute: Unknown type in attribute parameter list: {paramTypeName}, type: {( this.Owner as ILClassElement )?.Name ?? ""}" );
 					}
-					else if ( paramTypeName == "bool" )
-					{
-						paramTypes[i] = typeof(bool);
-						paramTypeNames[i] = "System.Boolean";
-					}
-					else if ( paramTypeName == "char" )
-					{
-						paramTypes[i] = typeof(char);
-						paramTypeNames[i] = "System.Char";
-					}
-					else if ( paramTypeName == "short" || paramTypeName == "int16" )
-					{
-						paramTypeNames[i] = "System.Int16";
-						paramTypes[i] = typeof(System.Int16);
-					}
-					else if ( paramTypeName == "int" || paramTypeName == "int32")
-					{
-						paramTypeNames[i] = "System.Int32";
-						paramTypes[i] = typeof(System.Int32);
-					}
-						// Achtung: System.Type wird als string abgespeichert!!!
-					else if ( paramTypeName.IndexOf("[mscorlib") > -1 && paramTypeName.IndexOf("System.Type") > -1 )
-					{
-						paramTypes[i] = typeof(System.String);
-						paramTypeNames[i] = "System.Type";						
-					}
-					else if ( paramTypeName == "valuetype [NDO]NDO.RelationInfo" )
-					{
-						paramTypes[i] = typeof(NDO.RelationInfo);
-						paramTypeNames[i] = "NDO.RelationInfo, NDO";						
-					}
-					else
-						throw new Exception("Relation Attribute: Unknown type in attribute parameter list: " + paramTypeName);
 
-					//paramTypes[i]  = Type.GetType( paramTypeNames[i] );
-					paramValues[i] = readParam( bytes, paramTypes[i], ref pos );
+					paramValues[i] = ReadParam( bytes, paramType, ref pos );
 				}
 			}
-			//			ConstructorInfo ci	 = attributeType.GetConstructor( paramTypes );
-			AttributeInfo	attr = new AttributeInfo();
-			attr.Name = typeName;
+
+			AttributeInfo   attr = new AttributeInfo();
+			attr.TypeName = typeName;
 			attr.AssemblyName = assName;
 			attr.ParamTypeNames = paramTypeNames;
 			attr.ParamValues = paramValues;
 
-			//TODO: sollten jemals benannte Parameter dazukommen
-			//TODO: müssten wir hier einigen Code hinzufügen
+			//TODO: Should we ever need to analyze named parameters
+			// we'll have to add lots of code here.
+			// We'd be better off, if we analyzed the IL code using the ECMA spec.
 
 			//			short count = (short) readParam( bytes, chars, Type.GetType( "System.Int16" ), ref pos );
 			//
@@ -313,17 +261,18 @@ namespace ILCode
 			//				pi.SetValue( attr, propVal, null );
 			//			}
 
+			this.attributeInfo = attr;
 			return attr;
 		}
 
 		public void
 			replaceLines( string firstLine )
 		{
-			clearLines();
+			ClearLines();
 
-			addLine( firstLine );
+			AddLine( firstLine );
 		}
 
-	
+
 	}
 }

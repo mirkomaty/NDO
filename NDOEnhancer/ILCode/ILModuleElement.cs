@@ -1,5 +1,5 @@
 ﻿//
-// Copyright (c) 2002-2016 Mirko Matytschak 
+// Copyright (c) 2002-2022 Mirko Matytschak 
 // (www.netdataobjects.de)
 //
 // Author: Mirko Matytschak
@@ -22,7 +22,7 @@
 
 using System;
 
-namespace ILCode
+namespace NDOEnhancer.ILCode
 {
 	/// <summary>
 	/// Summary description for ILModuleElement.
@@ -42,49 +42,18 @@ namespace ILCode
 			}
 		}
 
-		internal class Iterator : ILElementIterator
-		{
-			public Iterator( ILElement element )
-				: base( element, typeof( ILModuleElement ) )
-			{
-			}
-
-			public new ILModuleElement
-			getFirst()
-			{
-				return base.getFirst() as ILModuleElement;
-			}
-
-			public new ILModuleElement
-			getNext()
-			{
-				return base.getNext() as ILModuleElement;
-			}
-		}
-
 		private static ILElementType		m_elementType = new ILModuleElementType();
 		
 		private string						m_name;
 		private bool						m_extern;
 
-		public static void
-		initialize()
-		{
-		}
-
-		public static ILModuleElement.Iterator
-		getIterator( ILElement element )
-		{
-			return new Iterator( element );
-		}
-
 		private void
-		resolve()
+		Resolve()
 		{
 			if ( null != m_name )
 				return;
 
-			string[] words = splitWords( getLine( 0 ) );
+			string[] words = SplitWords( GetLine( 0 ) );
 			int		 count = words.Length;
 
 			m_name = words[--count];
@@ -100,41 +69,17 @@ namespace ILCode
 		}
 
 		protected override void
-		unresolve()
+		Unresolve()
 		{
 			m_name = null;
-		}
-
-		public string
-		getName()
-		{
-			resolve();
-
-			return m_name;
 		}
 
 		public bool
 		isExtern()
 		{
-			resolve();
+			Resolve();
 		
 			return m_extern;
-		}
-
-		public void
-		setName( string name )
-		{
-			foreach ( char c in name )
-			{
-				if ( ! Char.IsLetterOrDigit( c ) )
-				{
-					name = "'" + name + "'";
-					break;
-				}
-			}
-
-			replaceText( m_name, name );
-			m_name = name;
 		}
 	}
 }

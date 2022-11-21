@@ -1,5 +1,5 @@
 ﻿//
-// Copyright (c) 2002-2016 Mirko Matytschak 
+// Copyright (c) 2002-2022 Mirko Matytschak 
 // (www.netdataobjects.de)
 //
 // Author: Mirko Matytschak
@@ -22,16 +22,14 @@
 
 using System;
 using System.Reflection;
-using System.Collections;
 using System.Collections.Generic;
-using System.Text;
 
 namespace NDOEnhancer
 {
     internal class GenericListReflector : IListReflector
     {
         Type t;
-        public GenericListReflector(Type t)
+        public GenericListReflector( Type t )
         {
             this.t = t;
         }
@@ -39,12 +37,12 @@ namespace NDOEnhancer
         readonly string[] funcNamesList = { "Add", "AddRange", "Clear", "Insert", "InsertRange", "Remove", "RemoveAll", "RemoveAt", "RemoveRange", "set_Item" };
         readonly string[] funcNamesIList = { "Add", "Clear", "Remove", "Insert", "RemoveAt", "set_Item" };
 
-		public Type ReflectedType
-		{
-			get { return this.t; }
-		}
+        public Type ReflectedType
+        {
+            get { return this.t; }
+        }
 
-        public IList GetMethods()
+        public List<MethodInfo> GetMethods()
         {
             string[] funcNames = funcNamesIList;
 
@@ -52,12 +50,12 @@ namespace NDOEnhancer
             Type[] parameters = t.GetGenericArguments();
             Type template = typeof(List<object>).GetGenericTypeDefinition();
             Type concrete = template.MakeGenericType(parameters);
-            if (concrete.IsAssignableFrom(t))
+            if (concrete.IsAssignableFrom( t ))
                 funcNames = funcNamesList;
 
-            ArrayList result = new ArrayList();
+            var result = new List<MethodInfo>();
             Type t2 = t;
-            while (t2 != null && t2 != typeof(object))
+            while (t2 != null && t2 != typeof( object ))
             {
                 MethodInfo[] mis = t2.GetMethods();
                 foreach (MethodInfo mi in mis)
@@ -66,7 +64,7 @@ namespace NDOEnhancer
                     {
                         if (mi.Name == fname)
                         {
-                            result.Add(mi);
+                            result.Add( mi );
                             break;
                         }
                     }

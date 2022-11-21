@@ -1,5 +1,5 @@
 ﻿//
-// Copyright (c) 2002-2016 Mirko Matytschak 
+// Copyright (c) 2002-2022 Mirko Matytschak 
 // (www.netdataobjects.de)
 //
 // Author: Mirko Matytschak
@@ -21,14 +21,14 @@
 
 
 using System;
-using System.Collections;
-using System.Text;
+using System.Collections.Generic;
+using System.Reflection;
 
 namespace NDOEnhancer
 {
     internal interface IListReflector
     {
-        IList GetMethods();
+        List<MethodInfo> GetMethods();
 		Type ReflectedType { get; }
         bool CallvirtNeedsClassPrefix { get; }
     }

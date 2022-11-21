@@ -1,5 +1,5 @@
 ﻿//
-// Copyright (c) 2002-2016 Mirko Matytschak 
+// Copyright (c) 2002-2022 Mirko Matytschak 
 // (www.netdataobjects.de)
 //
 // Author: Mirko Matytschak
@@ -21,9 +21,7 @@
 
 
 using System;
-using System.Diagnostics;
 using System.Reflection;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using NDO;
@@ -129,19 +127,20 @@ namespace NDOEnhancer
 
 		private void AnalyzeFields()
 		{
-			IList relations = new ArrayList();
+			var relations = new List<RelationNode>();
 			var fis = this.classType.GetFields(BindingFlags.NonPublic | BindingFlags.Instance).Where(fi=>!fi.IsInitOnly);
 			foreach (FieldInfo fi in fis)
 			{
 				string fname = fi.Name;
 				if (fname.StartsWith("_ndo"))
 					continue;
+
 				if (fi.FieldType.IsSubclassOf(typeof(System.Delegate)))
 					continue;
 
 				object[] attributes = fi.GetCustomAttributes(false);
 				bool cont = false;
-				foreach (System.Attribute attr in attributes)
+				foreach (Attribute attr in attributes)
 				{
 					if (attr is NDOTransientAttribute)
 					{
@@ -251,7 +250,7 @@ namespace NDOEnhancer
 			}
 		}
 
-		public IList Relations
+		public IEnumerable<RelationNode> Relations
 		{
 			get
 			{
@@ -259,7 +258,7 @@ namespace NDOEnhancer
 			}
 		}
 
-		public IList Fields
+		public IEnumerable<FieldNode> Fields
 		{
 			get 
 			{ 
@@ -267,11 +266,11 @@ namespace NDOEnhancer
 			}
 		}
 
-		public IList EmbeddedTypes
+		public IEnumerable<FieldNode> EmbeddedTypes
 		{
 			get 
 			{ 
-				return this.embeddedTypes;
+				return this.embeddedTypes.Cast<FieldNode>();
 			}
 		}
 

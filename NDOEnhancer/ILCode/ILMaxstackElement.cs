@@ -1,5 +1,5 @@
 ﻿//
-// Copyright (c) 2002-2016 Mirko Matytschak 
+// Copyright (c) 2002-2022 Mirko Matytschak 
 // (www.netdataobjects.de)
 //
 // Author: Mirko Matytschak
@@ -22,7 +22,7 @@
 
 using System;
 
-namespace ILCode
+namespace NDOEnhancer.ILCode
 {
 	/// <summary>
 	/// Summary description for ILMaxstackElement.
@@ -42,31 +42,7 @@ namespace ILCode
 			}
 		}
 
-		internal class Iterator : ILElementIterator
-		{
-			public Iterator( ILElement element )
-				: base( element, typeof( ILMaxstackElement ) )
-			{
-			}
-
-			public new ILMaxstackElement
-			getNext()
-			{
-				return base.getNext() as ILMaxstackElement;
-			}
-		}
-
 		private static ILElementType		m_elementType = new ILMaxstackElementType();
-		
-		public static void
-		initialize()
-		{
-		}
 
-		public static ILMaxstackElement.Iterator
-		getIterator( ILElement element )
-		{
-			return new Iterator( element );
-		}
 	}
 }

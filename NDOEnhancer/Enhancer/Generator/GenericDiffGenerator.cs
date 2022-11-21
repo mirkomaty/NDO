@@ -1,5 +1,5 @@
 ﻿//
-// Copyright (c) 2002-2016 Mirko Matytschak 
+// Copyright (c) 2002-2022 Mirko Matytschak 
 // (www.netdataobjects.de)
 //
 // Author: Mirko Matytschak
@@ -23,7 +23,7 @@
 using System;
 using System.Text;
 using System.IO;
-using System.Collections;
+using System.Collections.Generic;
 using System.Data;
 using NDO.Mapping;
 using NDO;
@@ -54,9 +54,9 @@ namespace NDOEnhancer
 				else
 				{
 					DataTable dtOld = dsOldSchema.Tables[dt.TableName];
-					ArrayList addedColumns = new ArrayList();
-					ArrayList removedColumns = new ArrayList();
-					ArrayList changedColumns = new ArrayList();
+					var addedColumns = new List<DataColumn>();
+					var removedColumns = new List<DataColumn>();
+					var changedColumns = new List<DataColumn>();
 					foreach(DataColumn dc in dt.Columns)
 					{
 						if (!dtOld.Columns.Contains(dc.ColumnName))
@@ -82,7 +82,7 @@ namespace NDOEnhancer
 			}
 		}
 
-		void ChangeTable(DataTable dt, ArrayList addedColumns, ArrayList removedColums, ArrayList changedColumns, StreamWriter sw)
+		void ChangeTable(DataTable dt, List<DataColumn> addedColumns, List<DataColumn> removedColums, List<DataColumn> changedColumns, StreamWriter sw)
 		{
 			if (addedColumns.Count == 0 && removedColums.Count == 0 && changedColumns.Count == 0)
 				return;

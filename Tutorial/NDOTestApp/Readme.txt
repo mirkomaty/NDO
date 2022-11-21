@@ -16,7 +16,7 @@ See the NDO documentation for the tutorial.
 After that, the TestApp should be able to run. 
 In case of any difficulties, drop me a mail:
  
-http://www.netdataobjects.de/SendMail.aspx
+https://www.netdataobjects.de/en-us/metaseiten/get-in-contact/
 
 Have fun with your tests!
 

@@ -1,5 +1,5 @@
 ﻿//
-// Copyright (c) 2002-2016 Mirko Matytschak 
+// Copyright (c) 2002-2022 Mirko Matytschak 
 // (www.netdataobjects.de)
 //
 // Author: Mirko Matytschak
@@ -22,7 +22,7 @@
 
 using System;
 
-namespace ILCode
+namespace NDOEnhancer.ILCode
 {
 	/// <summary>
 	/// Summary description for ILCommentElement.
@@ -44,9 +44,5 @@ namespace ILCode
 
 		private static ILElementType		m_elementType = new ILCommentElementType();
 		
-		public static void
-		initialize()
-		{
-		}
 	}
 }

@@ -1,5 +1,5 @@
 ﻿//
-// Copyright (c) 2002-2016 Mirko Matytschak 
+// Copyright (c) 2002-2022 Mirko Matytschak 
 // (www.netdataobjects.de)
 //
 // Author: Mirko Matytschak
@@ -23,7 +23,6 @@
 using System;
 using System.IO;
 using System.Data;
-using System.Collections;
 using NDO;
 using NDO.Mapping;
 using NDOInterfaces;

@@ -1,5 +1,5 @@
 ﻿//
-// Copyright (c) 2002-2016 Mirko Matytschak 
+// Copyright (c) 2002-2022 Mirko Matytschak 
 // (www.netdataobjects.de)
 //
 // Author: Mirko Matytschak
@@ -22,7 +22,7 @@
 
 using System;
 
-namespace ILCode
+namespace NDOEnhancer.ILCode
 {
 	/// <summary>
 	/// Summary description for ILPublickeyElement.
@@ -42,37 +42,7 @@ namespace ILCode
 			}
 		}
 
-		internal class Iterator : ILElementIterator
-		{
-			public Iterator( ILElement element )
-				: base( element, typeof( ILPublickeyElement ) )
-			{
-			}
-
-			public new ILPublickeyElement
-			getFirst()
-			{
-				return base.getFirst() as ILPublickeyElement;
-			}
-
-			public new ILPublickeyElement
-			getNext()
-			{
-				return base.getNext() as ILPublickeyElement;
-			}
-		}
-
 		private static ILElementType		m_elementType = new ILPublickeyElementType();
-		
-		public static void
-		initialize()
-		{
-		}
 
-		public static ILPublickeyElement.Iterator
-		getIterator( ILElement element )
-		{
-			return new Iterator( element );
-		}
 	}
 }

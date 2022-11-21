@@ -1,5 +1,5 @@
 ﻿//
-// Copyright (c) 2002-2016 Mirko Matytschak 
+// Copyright (c) 2002-2022 Mirko Matytschak 
 // (www.netdataobjects.de)
 //
 // Author: Mirko Matytschak
@@ -21,73 +21,71 @@
 
 
 using System;
+using System.Linq;
 using System.IO;
 using System.Text;
-using System.Collections;
+using System.Collections.Generic;
+using System.Reflection;
 
-namespace ILCode
+namespace NDOEnhancer.ILCode
 {
 	/// <summary>
 	/// Summary description for ILFile.
 	/// </summary>
 	internal class ILFile : ILElement
 	{
-		static ILFile()
-		{
-			ILBlankElement.initialize();
-			ILCommentElement.initialize();
-			ILAssemblyElement.initialize();
-			ILCustomElement.initialize();
-			ILModuleElement.initialize();
-			ILPublickeytokenElement.initialize();
-			ILPublickeyElement.initialize();
-			ILNamespaceElement.initialize();
-			ILClassElement.initialize();
-			ILFieldElement.initialize();
-			ILPropertyElement.initialize();
-			ILGetElement.initialize();
-			ILSetElement.initialize();
-			ILMethodElement.initialize();
-			ILTryElement.initialize();
-			ILCatchElement.initialize();
-			ILStatementElement.initialize();
-			ILLineElement.initialize();
-			ILLocalsElement.initialize();
-			ILMaxstackElement.initialize();
-			
-			ILUnknownElement.initialize();
-		}
-
 		public ILFile()
 			: base( "", null )
 		{
 		}
 
+		/// <summary>
+		/// Static constructor. Registers all creatable element types.
+		/// </summary>
+		static ILFile()
+		{
+			var assembly = typeof(ILFile).Assembly;
+			var types = assembly.GetTypes()
+				.Where( t => typeof(ILElement).IsAssignableFrom(t) );
+
+			foreach(Type t in types)
+			{
+				var field = t.GetField( "m_elementType", BindingFlags.NonPublic | BindingFlags.Static );
+				if (field != null && field.FieldType == typeof(ILElementType))
+				{
+					var elementType = (ILElementType)field.GetValue(null);
+					if (elementType != null)
+						ILElement.AddElementType( elementType );
+				}
+			}
+		}
+
 		StreamReader				m_streamIn;
 		StreamWriter				m_streamOut;
-		string						m_lineBuffer = "";
+		string						m_lookAheadLine = String.Empty;
 		string						m_filename;
+		List<ILAssemblyElement>		m_assemblyElements = null;
 
 		public void
-		parse( string filename )
+		Parse( string filename )
 		{
 			m_filename = filename;
 			m_streamIn = new StreamReader( filename, Encoding.UTF8 );
 
-			parseSubElements( this );
+			ParseSubElements( this );
 
 			m_streamIn.Close();
 			m_streamIn = null;
 
-			ILAssemblyElement.Iterator assIter = getAssemblyIterator();
-			for ( ILAssemblyElement assElem = assIter.getNext(); null != assElem; assElem = assIter.getNext() )
-			{
-				if ( ! assElem.isExtern() )
-				{
-					setAssemblyName( assElem.getName() );
-					break;
-				}
-			}
+			m_assemblyElements = ( from e in Elements
+								   let ae = e as ILAssemblyElement
+								   where ae != null select ae).ToList();
+
+			var externElement = (from ae in m_assemblyElements where !ae.IsExtern select ae).FirstOrDefault();
+			if (externElement == null)
+				throw new Exception( "ILFile doesn't have an assembly element" );
+
+			AssemblyName = externElement.Name;
 		}
 
 		public string
@@ -101,39 +99,39 @@ namespace ILCode
 		{
 			m_streamOut = new StreamWriter( file, false, Encoding.UTF8);
 
-			writeSubElements( this, 0, isNetStandard );
+			WriteSubElements( this, 0, isNetStandard );
 
 			m_streamOut.Close();
 			m_streamOut = null;
 		}
 	
-		public string
-		popLine()
+		public string PopLine()
 		{
 			string line;
 
-			if ( 0 < m_lineBuffer.Length )
+			if ( m_lookAheadLine != String.Empty )
 			{
-				line = m_lineBuffer;
-				m_lineBuffer = "";
+				line = m_lookAheadLine;
+				m_lookAheadLine = String.Empty;
+				return line;
 			}
-			else
+
+			do
 			{
 				line = m_streamIn.ReadLine();
-				if ( null != line )
+				if (null != line)
 				{
-					line = stripComment( line );
+					line = StripComment( line );
 				}
-			}
+			} while (line != null && line == String.Empty);
 
 			return line;
 
 		}
 
-		public void
-		pushLine( string line )
+		public void PushLine( string line )
 		{
-			m_lineBuffer = line;
+			m_lookAheadLine = line;
 		}
 
 		public void
@@ -143,21 +141,19 @@ namespace ILCode
 		}
 
 		public override void
-		removeAssemblyReference( string assemblyName )
+		RemoveAssemblyReference( string assemblyName )
 		{
-			ILAssemblyElement.Iterator assIter = getAssemblyIterator();
+			var externElement = (from ae in m_assemblyElements 
+								 where ae.IsExtern && ae.Name == assemblyName 
+								 select ae).FirstOrDefault();
 
-			for ( ILAssemblyElement assElem = assIter.getFirst(); null != assElem; assElem = assIter.getNext() )
-			{
-				if ( assElem.isExtern() && assElem.getName() == assemblyName )
-					assElem.remove();
-			}
+			if (externElement == null)
+				return;
 
-			base.removeAssemblyReference( assemblyName );
+			externElement.Remove();
 		}
 
-		public bool
-		testPersistence( string file )
+		public bool TestPersistence( string file )
 		{
 			string info = "";
 			try
@@ -174,7 +170,7 @@ namespace ILCode
 				else
 					info += "m_streamIn: non null ";
 
-				for ( string line = popLine(); null != line ; line = popLine() )
+				for ( string line = PopLine(); null != line ; line = PopLine() )
 				{
 					if ( line.IndexOf( "[NDO]NDO.IMetaClass" ) > -1)
 						return true;
@@ -197,7 +193,7 @@ namespace ILCode
 			}
 		}
 
-
+		public IEnumerable<ILAssemblyElement> AssemblyElements => m_assemblyElements;
 	
 	}
 }

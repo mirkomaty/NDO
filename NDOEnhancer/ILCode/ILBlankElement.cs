@@ -1,5 +1,5 @@
 ﻿//
-// Copyright (c) 2002-2016 Mirko Matytschak 
+// Copyright (c) 2002-2022 Mirko Matytschak 
 // (www.netdataobjects.de)
 //
 // Author: Mirko Matytschak
@@ -22,7 +22,7 @@
 
 using System;
 
-namespace ILCode
+namespace NDOEnhancer.ILCode
 {
 	/// <summary>
 	/// Summary description for ILBlankElement.
@@ -42,17 +42,13 @@ namespace ILCode
 			}
 
 			public override bool
-			isElement( string firstLine )
+			IsElement( string firstLine )
 			{
 				return 0 == firstLine.Length;
 			}
 		}
 
 		private static ILElementType		m_elementType = new ILBlankElementType();
-		
-		public static void
-		initialize()
-		{
-		}
+
 	}
 }

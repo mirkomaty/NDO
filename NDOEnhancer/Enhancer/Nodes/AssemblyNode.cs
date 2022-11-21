@@ -1,5 +1,5 @@
 ﻿//
-// Copyright (c) 2002-2016 Mirko Matytschak 
+// Copyright (c) 2002-2022 Mirko Matytschak 
 // (www.netdataobjects.de)
 //
 // Author: Mirko Matytschak
@@ -22,7 +22,7 @@
 
 using System;
 using System.Linq;
-using System.Collections;
+using System.Collections.Generic;
 using System.Reflection;
 using NDO;
 using NDO.Mapping;
@@ -54,8 +54,8 @@ namespace NDOEnhancer
 			get { return oidType; }
 		}
 
-		ArrayList persistentClasses = new ArrayList();
-		public ArrayList PersistentClasses
+		List<ClassNode> persistentClasses = new List<ClassNode>();
+		public List<ClassNode> PersistentClasses
 		{
 			get { return persistentClasses; }
 		}
@@ -74,8 +74,8 @@ namespace NDOEnhancer
 
 		public string TargetFramework { get; set; }
 
-	
-		ArrayList analyzedTypes = new ArrayList();
+
+		List<string> analyzedTypes = new List<string>();
 
 		private void AnalyzeType(Type t)
 		{

@@ -1,5 +1,5 @@
 ﻿//
-// Copyright (c) 2002-2016 Mirko Matytschak 
+// Copyright (c) 2002-2022 Mirko Matytschak 
 // (www.netdataobjects.de)
 //
 // Author: Mirko Matytschak
@@ -21,16 +21,10 @@
 
 
 using System;
-using System.Runtime.InteropServices;
-using System.Collections;
 using NDOEnhancer;
 using System.IO;
-using System.Xml;
 using System.Reflection;
 using System.Linq;
-using System.Xml.Linq;
-using TinyJSON;
-using System.Text.RegularExpressions;
 using NDO.Configuration;
 using NDO.Provider;
 
@@ -159,7 +153,7 @@ namespace EnhancerTest
 
 			MessageAdapter messages = new MessageAdapter();
 
-			new NDOEnhancer.Enhancer(this.projectDescription, messages).doIt();
+			new NDOEnhancer.Enhancer(this.projectDescription, messages).DoIt();
 
 			if (options.EnableEnhancer)
 				Console.WriteLine("Enhancer ready");

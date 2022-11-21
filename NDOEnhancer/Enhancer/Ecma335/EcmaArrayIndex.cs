@@ -1,5 +1,5 @@
 ﻿//
-// Copyright (c) 2002-2016 Mirko Matytschak 
+// Copyright (c) 2002-2022 Mirko Matytschak 
 // (www.netdataobjects.de)
 //
 // Author: Mirko Matytschak
@@ -20,32 +20,25 @@
 // DEALINGS IN THE SOFTWARE.
 
 
-using System;
-using System.Collections.Generic;
-using System.Text;
-
 namespace NDOEnhancer.Ecma335
 {
     class EcmaArrayIndex : IEcmaDefinition
     {
         int nextTokenPosition;
-        public int NextTokenPosition
-        {
-            get { return nextTokenPosition; }
-        }
         string content;
-        public string Content
-        {
-            get { return content; }
-        }
+
+        public int NextTokenPosition => nextTokenPosition;
+        public string Content => content;
 
         public bool Parse(string input)
         {
             int p = 1;
             while (input[p] != ']' && p < input.Length - 1)
                 p++;
+
             if (input[p] != ']')
                 return false;
+
             p++;
             content = input.Substring(0, p);
             nextTokenPosition = p;

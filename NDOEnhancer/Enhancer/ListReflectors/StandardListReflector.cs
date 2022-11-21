@@ -1,5 +1,5 @@
 ﻿//
-// Copyright (c) 2002-2016 Mirko Matytschak 
+// Copyright (c) 2002-2022 Mirko Matytschak 
 // (www.netdataobjects.de)
 //
 // Author: Mirko Matytschak
@@ -22,8 +22,8 @@
 
 using System;
 using System.Reflection;
+using System.Collections.Generic;
 using System.Collections;
-using System.Text;
 
 namespace NDOEnhancer
 {
@@ -37,42 +37,14 @@ namespace NDOEnhancer
 
         public bool CallvirtNeedsClassPrefix { get { return false; } }
 
-        /*
-        bool ParameterInfoEquals(ParameterInfo[] arr1, ParameterInfo[] arr2)
-        {
-            if (arr1.Length != arr2.Length)
-                return false;
-            for (int i = 0; i < arr1.Length; i++)
-            {
-                if (arr1[i].ParameterType != arr2[i].ParameterType)
-                    return false;
-            }
-            return true;
-        }
-
-
-        MethodInfo GetMethod(Type t, string name, ParameterInfo[] parameterInfos)
-        {
-            MethodInfo[] infos = t.GetMethods(BindingFlags.Instance | BindingFlags.Public);
-            foreach (MethodInfo mi in infos)
-            {
-                if (mi.Name == name
-                    && ParameterInfoEquals(parameterInfos, mi.GetParameters()))
-                {
-                    return mi;
-                }
-            }
-            return null;
-        }
-        */
         readonly string[] funcNamesList = { "Add", "AddRange", "Clear", "Insert", "InsertRange", "Remove", "SetRange", "RemoveAt", "RemoveRange", "set_Item" };
         readonly string[] funcNamesIList = { "Add", "Clear", "Remove", "Insert", "RemoveAt", "set_Item" };
 
-        public IList GetMethods()
+        public List<MethodInfo> GetMethods()
         {
             string[] funcNames = funcNamesIList;
 
-            ArrayList result = new ArrayList();
+            var result = new List<MethodInfo>();
             Type t2 = t;
             if (typeof(ArrayList).IsAssignableFrom(t))
                 funcNames = funcNamesList;

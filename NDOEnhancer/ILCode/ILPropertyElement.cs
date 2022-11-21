@@ -1,5 +1,5 @@
 ﻿//
-// Copyright (c) 2002-2016 Mirko Matytschak 
+// Copyright (c) 2002-2022 Mirko Matytschak 
 // (www.netdataobjects.de)
 //
 // Author: Mirko Matytschak
@@ -22,7 +22,7 @@
 
 using System;
 
-namespace ILCode
+namespace NDOEnhancer.ILCode
 {
 	/// <summary>
 	/// Summary description for ILPropertyElement.
@@ -30,7 +30,6 @@ namespace ILCode
 	internal class ILPropertyElement : ILElement
 	{
 		public ILPropertyElement()
-			: base( true )
 		{
 		}
 
@@ -49,68 +48,36 @@ namespace ILCode
 			}
 		}
 
-		internal class Iterator : ILElementIterator
-		{
-			public Iterator( ILElement element )
-				: base( element, typeof( ILPropertyElement ) )
-			{
-			}
-
-			public new ILPropertyElement
-			getFirst()
-			{
-				return base.getFirst() as ILPropertyElement;				
-			}
-
-			public new ILPropertyElement
-			getNext()
-			{
-				return base.getNext() as ILPropertyElement;
-			}
-		}
-
 		private static ILElementType		m_elementType = new ILPropertyElementType();
-		
-		public static void
-		initialize()
-		{
-		}
+		public override bool NeedsBlock => true;
 
-		public static ILPropertyElement.Iterator
-		getIterator( ILElement element )
+		public string Name
 		{
-			return new Iterator( element );
-		}
-
-		public string
-		getName()
-		{
-			resolve();
-
-			return m_name;
+			get
+			{
+				Resolve();
+				return m_name;
+			}
 		}
 
 
-		private void
-		resolve()
+		private void Resolve()
 		{
 			if ( this.m_name == null )
 			{
-				string[] all = getAllLines().Split( ' ' );
+				string[] all = GetAllLines().Split( ' ' );
 				this.m_name = all[all.Length - 1].Replace( "()", string.Empty );
 			}
 		}
 
-		public void
-		addGetter( string firstLine )
+		public void AddGetter( string firstLine )
 		{
-			addElement( new ILGetElement( firstLine ) );
+			AddElement( new ILGetElement( firstLine ) );
 		}
 
-		public void
-		addSetter( string firstLine )
+		public void AddSetter( string firstLine )
 		{
-			addElement( new ILSetElement( firstLine ) );
+			AddElement( new ILSetElement( firstLine ) );
 		}
 	}
 }

@@ -1,5 +1,5 @@
 ﻿//
-// Copyright (c) 2002-2016 Mirko Matytschak 
+// Copyright (c) 2002-2022 Mirko Matytschak 
 // (www.netdataobjects.de)
 //
 // Author: Mirko Matytschak
@@ -21,12 +21,10 @@
 
 
 using System;
-using System.Diagnostics;
-using System.Collections;
 using System.Collections.Generic;
-using NDOEnhancer;
+using System.Linq;
 
-namespace ILCode
+namespace NDOEnhancer.ILCode
 {
 	/// <summary>
 	/// Summary description for ILClassElement.
@@ -34,7 +32,6 @@ namespace ILCode
 	internal class ILClassElement : ILElement
 	{
 		public ILClassElement()
-			: base( true )
 		{
 		}
 
@@ -48,26 +45,6 @@ namespace ILCode
 			public ILClassElementType()
 				: base( ".class", typeof( ILClassElement ) )
 			{
-			}
-		}
-
-		internal class Iterator : ILElementIterator
-		{
-			public Iterator( ILElement element )
-				: base( element, typeof( ILClassElement ) )
-			{
-			}
-
-			public new ILClassElement
-			getFirst()
-			{
-				return base.getFirst() as ILClassElement;
-			}
-
-			public new ILClassElement
-			getNext()
-			{
-				return base.getNext() as ILClassElement;
 			}
 		}
 
@@ -85,25 +62,16 @@ namespace ILCode
         private string                      internalNamespace     = string.Empty;
 
 		private static ILElementType		m_elementType		  = new ILClassElementType();
-		
-		public static void
-		initialize()
-		{
-		}
-
-		public static ILClassElement.Iterator
-		getIterator( ILElement element )
-		{
-			return new Iterator( element );
-		}
+		private List<ILMethodElement>       m_methods;
+		private List<ILFieldElement>		m_fields;
 
 		public void AddImplements(string[] interfaceNames)
 		{
 			List<string> lines = new List<string>();
 			int implPosition = -1;
-			for ( int i = 0; i < this.getLineCount(); i++ )
+			for ( int i = 0; i < this.LineCount; i++ )
 			{
-				string s = this.getLine( i );
+				string s = this.GetLine( i );
 				if ( s.StartsWith( "implements" ) )
 					implPosition = i;
 				lines.Add( s );
@@ -112,7 +80,7 @@ namespace ILCode
 			if (implPosition == -1)
 			{
 				implPosition = lines.Count;
-				addLine("implements ");
+				AddLine("implements ");
 			}
 			
 			string implString = string.Empty;
@@ -143,9 +111,9 @@ namespace ILCode
 			if ( remainingImplements.Count == 0 )
 				return;
 
-			this.clearLines();
+			this.ClearLines();
 			for ( int i = 0; i < implPosition; i++ )
-				this.addLine( lines[i] );
+				this.AddLine( lines[i] );
 			remainingImplements.InsertRange( 0, existingImplements );
 			for ( int i = 0; i < remainingImplements.Count; i++ )
 			{
@@ -155,17 +123,16 @@ namespace ILCode
 				s += remainingImplements[i];
 				if ( i < remainingImplements.Count - 1 )
 					s += ", ";
-				this.addLine( s );
+				this.AddLine( s );
 			}
 		}
 
-		private void
-		resolve()
+		private void Resolve()
 		{
 			if ( null != m_name )
 				return;
 
-			string[] words = splitWords( getLine( 0 ) );
+			string[] words = SplitWords( GetLine( 0 ) );
 			int		 count = words.Length;
 
 			m_name = words[--count];
@@ -209,19 +176,18 @@ namespace ILCode
 
 			// fullname
 
-			ILNamespaceElement nsElement = getOwner() as ILNamespaceElement;
+			ILNamespaceElement nsElement = Owner as ILNamespaceElement;
 
-            //TODO: Check, how the full name should be determined for nested classes
-            if (m_fullName == null) // In .NET 2.0 .class contains the full name
+            if (m_fullName == null) // In .NET > 2.0 .class contains the full name
             {
                 string nsName = (null == nsElement ? "" : nsElement.getNamespaceName());
                 if (nsName == "")
                 {
-                    ILClassElement clsElement = getOwner() as ILClassElement;
+                    ILClassElement clsElement = Owner as ILClassElement;
                     if (null == clsElement)
                         m_fullName = m_name;
                     else
-                        m_fullName = clsElement.getClassFullName() + "/" + m_name;
+                        m_fullName = clsElement.ClassFullName + "/" + m_name;
                 }
                 else
                 {
@@ -233,18 +199,18 @@ namespace ILCode
 
 			string line = null;
 
-			for ( i=0; i<getLineCount(); i++ )
+			for ( i=0; i<LineCount; i++ )
 			{
-				line = getLine( i );
+				line = GetLine( i );
 
 				if ( line.StartsWith( "extends" ) )
 					break;
 			}
 
-			if ( i < getLineCount() )
+			if ( i < LineCount )
 			{
 				m_baseFullName = line.Substring( 7 );	//extends has 7 chars
-				m_baseFullName = stripComment( m_baseFullName );
+				m_baseFullName = StripComment( m_baseFullName );
 
 				if ( m_baseFullName.Equals( "[mscorlib]System.ValueType" ) || m_baseFullName.Equals( "[netstandard]System.ValueType" ))
 					m_isValueType = true;
@@ -254,182 +220,150 @@ namespace ILCode
 
 		}
 
-		protected override void
-		unresolve()
+		protected override void Unresolve()
 		{
 			m_name = null;
 		}
 
-		public ILMethodElement getMethod(string name)
+		private void ComputeMethods()
 		{
-			ILMethodElement.Iterator iter = getMethodIterator();
-			for ( ILMethodElement meth = iter.getFirst(); meth != null; meth = iter.getNext() )
+			m_methods = (from e in Elements let me = e as ILMethodElement where me != null select me).ToList();
+		}
+
+		public IEnumerable<ILMethodElement> Methods
+		{
+			get
 			{
-				if ( meth.getName() == name )
-					return meth;
+				if (m_methods == null)
+				{
+					ComputeMethods();
+				}
+				return m_methods;
 			}
-
-			return null;
 		}
 
-
-		public ILPropertyElement getProperty( string name )
+		public void AppendMethod( ILMethodElement insertElement )
 		{
-			ILPropertyElement.Iterator iter = getPropertyIterator();
-			for ( ILPropertyElement meth = iter.getFirst(); meth != null; meth = iter.getNext() )
+			base.AppendElement( insertElement );
+				m_methods.Add( insertElement );
+		}
+
+		public void AppendProperty( ILPropertyElement insertElement )
+		{
+			base.AppendElement( insertElement );
+		}
+
+		private void ComputeFields()
+		{
+			m_fields = ( from e in Elements let me = e as ILFieldElement where me != null select me ).ToList();
+		}
+
+		public IEnumerable<ILFieldElement> Fields
+		{
+			get
 			{
-				if ( meth.getName() == name )
-					return meth;
+				if (m_fields == null)
+				{
+					ComputeFields();
+				}
+				return m_fields;
 			}
-
-			return null;
 		}
 
-
-		public ILNamespaceElement
-		getNamespace()
+		public ILMethodElement GetMethod(string name)
 		{
-			ILNamespaceElement nsElem = getOwner() as ILNamespaceElement;
-
-			if ( null != nsElem )
-				return nsElem;
-			
-            ILClassElement clsElem = getOwner() as ILClassElement;
-			
-			if ( null == clsElem )
-				return null;
-
-			return clsElem.getNamespace();
+			return (from me in Methods
+					where me.Name == name 
+					select me).FirstOrDefault();
 		}
 
+
+		public ILPropertyElement GetProperty( string name )
+		{
+			return ( from me in
+				( from e in Elements where e is ILPropertyElement select (ILPropertyElement) e )
+					 where me.Name == name
+					 select me ).FirstOrDefault();
+		}
 
 		public bool
-		isPersistent(Type attrType)
+		IsPersistent(Type attrType)
 		{
-			ILCustomElement.Iterator cstmIter = getCustomIterator();
+			return 
+				( from me in
+					from e in Elements where e is ILCustomElement select (ILCustomElement) e
+					where me.IsAttribute( attrType )
+				select me ).Any();
+		}
 
-			// Durchlaufe alle Custom Elements der Klasse
-			for ( ILCustomElement cstmElem = cstmIter.getNext(); null != cstmElem; cstmElem = cstmIter.getNext() )
+
+		public bool IsPrivate => m_isPrivate;		
+		public bool IsPublic=> m_isPublic;		
+		public bool IsSealed=> m_isSealed;
+		public bool IsInterface=> m_isInterface;
+		public bool IsValueType=>m_isValueType;
+		public bool IsEnum=>m_isEnum;
+		public bool IsAbstract=>m_isAbstract;
+
+		public override bool NeedsBlock => true;
+
+		public string Name
+		{
+			get
 			{
-				if ( cstmElem.isAttribute( attrType ) )
-					return true;
+				Resolve();
+				return m_name;
 			}
-			return false;
 		}
 
-
-		public bool
-		isPrivate()
-		{
-			resolve();
-
-			return m_isPrivate;
-		}
-
-		public bool
-		isPublic()
-		{
-			resolve();
-
-			return m_isPublic;
-		}
-
-		public bool
-		isSealed()
-		{
-			resolve();
-
-			return m_isSealed;
-		}
-
-		public bool
-		isInterface()
-		{
-			resolve();
-
-			return m_isInterface;
-		}
-
-		public bool
-		isValueType()
-		{
-			resolve();
-
-			return m_isValueType;
-		}
-
-		public bool
-		isEnum()
-		{
-			resolve();
-
-			return m_isEnum;
-		}
-
-		public bool
-		isAbstract()
-		{
-			resolve();
-
-			return m_isAbstract;
-		}
-
-		public string
-		getName()
-		{
-			resolve();
-
-			return m_name;
-		}
-
-        public string
-        getClassFullName()
+        public string ClassFullName
         {
-            resolve();
-
-            return m_fullName;
+			get
+			{
+				Resolve();
+				return m_fullName;
+			}
         }
 
-        public string getGenericArguments()
+        public string GenericArguments => m_genericArguments;       
+
+        public string MappingName
         {
-            return m_genericArguments;
+			get
+			{
+				Resolve();
+				string pureName = m_fullName;
+				if (pureName.StartsWith( "class " ))
+					pureName = pureName.Substring( 6 );
+				if (pureName.StartsWith( "valuetype " ))
+					pureName = pureName.Substring( 10 );
+				pureName = pureName.Replace( "'", string.Empty );
+				int p = pureName.IndexOf('<');
+				if (p > -1)
+					return pureName.Substring( 0, p );
+
+				return pureName;
+			}
         }
 
-
-        public string getMappingName()
-        {
-            resolve();
-            string pureName = m_fullName;
-            if (pureName.StartsWith("class "))
-                pureName = pureName.Substring(6);
-            if (pureName.StartsWith("valuetype "))
-                pureName = pureName.Substring(10);
-            pureName = pureName.Replace("'", string.Empty);
-            int p = pureName.IndexOf('<');
-            if (p > -1)
-                return pureName.Substring(0, p);
-
-            return pureName;
-        }
-
-		public string
-		getBaseFullName()
+		public string BaseFullName
 		{
-			resolve();
-
-			return m_baseFullName;
+			get
+			{
+				Resolve();
+				return m_baseFullName;
+			}
 		}
 
-		public string[]
-		getInterfaceFullNames()
+		public string[] GetInterfaceFullNames()
 		{
-			ArrayList arr = new ArrayList();
+			var arr = new List<string>();
 
 			bool start = false;
 			bool last  = false;
-			for ( int i=1; i<getLineCount() && ! last; i++ )
+			for ( int i = 1; i < LineCount && ! last; i++ )
 			{
-				string line = getLine( i ).Trim();
+				string line = GetLine( i ).Trim();
 				if ( ! start )
 				{
 					if ( line.StartsWith( "implements" ) )
@@ -450,33 +384,34 @@ namespace ILCode
 				}
 			}
 
-			return arr.ToArray( typeof( string ) ) as string[];
+			return arr.ToArray();
 		}
 
 		public ILFieldElement
-		insertFieldBefore( string firstLine, ILMethodElement method )
+		AppendField( string firstLine )
 		{
+			var firstMethod = Methods.First();
 			ILFieldElement field = new ILFieldElement( firstLine );
-			method.insertBefore( field );
+			firstMethod.InsertBefore( field );
+			m_fields.Add( field );
 
 			return field;
 		}
 
 		public Dictionary<string,string>
-		findAccessorProperties()
+		GetAccessorProperties()
 		{
-			ILMethodElement.Iterator iter = getMethodIterator();
 			Dictionary<string, string> result = new Dictionary<string, string>();
-			for ( ILMethodElement meth = iter.getFirst(); meth != null; meth = iter.getNext() )
+			foreach ( ILMethodElement methodElement in Methods )
 			{
-				string methodName = meth.getName();
+				string methodName = methodElement.Name;
 				if ( methodName.StartsWith ("get_") && !methodName.StartsWith ("get_NDO"))
 				{					
 					List<ILStatementElement> filteredStatements = new List<ILStatementElement>();
-					ILStatementElement.Iterator statementIter = meth.getStatementIterator(true);
-					for ( ILStatementElement statementElement = statementIter.getNext(); null != statementElement; statementElement = statementIter.getNext() )
+
+					foreach ( ILStatementElement statementElement in methodElement.Statements )
 					{
-						string line = statementElement.getLine( 0 );
+						string line = statementElement.GetLine( 0 );
 						if (line.IndexOf( " nop" ) > -1)
 							continue;
 						if (line.IndexOf( " ldarg.0" ) > -1)
@@ -498,7 +433,7 @@ namespace ILCode
 					}
 					if (filteredStatements.Count == 1)
 					{
-						string line = filteredStatements[0].getLine(0);
+						string line = filteredStatements[0].GetLine(0);
 						int p = line.LastIndexOf( "::" );
 						if (p > -1)
 						{
@@ -508,12 +443,13 @@ namespace ILCode
 								key = key.Substring( 1, key.Length - 2 );
 							if (!result.ContainsKey( key ))
 								result.Add( key, methodName.Substring( 4 ) );
-							else
-								Console.WriteLine( key + " " + methodName.Substring( 4 ) );
+							//else
+							//	Console.WriteLine( key + " " + methodName.Substring( 4 ) );
 						}
 					}
 				}
 			}
+
 			return result;
 		}
 	}

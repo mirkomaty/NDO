@@ -1,5 +1,5 @@
 ﻿//
-// Copyright (c) 2002-2016 Mirko Matytschak 
+// Copyright (c) 2002-2022 Mirko Matytschak 
 // (www.netdataobjects.de)
 //
 // Author: Mirko Matytschak
@@ -21,13 +21,24 @@
 
 
 using System;
+using System.Linq;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
 
 namespace NDOEnhancer.Ecma335
 {
-    class EcmaDottedName : IEcmaDefinition
+    class EcmaDottedName
     {
+        static Regex firstCharRegex;
+        static Regex namePartRegex;
+
+        static EcmaDottedName()
+        {
+            firstCharRegex = new Regex( @"[A-Za-z_$@`?']", RegexOptions.Compiled );
+            namePartRegex = new Regex( @"[A-Za-z_$@`?][A-Za-z0-9_$@`?]*|'[^']+'", RegexOptions.Compiled );
+        }
+
+
         int nextTokenPosition;
         public int NextTokenPosition
         {
@@ -39,18 +50,32 @@ namespace NDOEnhancer.Ecma335
             get { return content; }
         }
 
-        public bool Parse(string input)
+        List<string> parts = new List<string>();
+        public string[] Parts
+        {
+            get
+            {
+                return parts.ToArray();
+            }
+        }
+
+        public string UnquotedName
+        {
+            get
+            {
+                return String.Join( ".", Parts.Select( p => p[0] == ( '\'' ) ? p.Substring( 1, p.Length - 2 ) : p ) );
+            }
+        }
+
+        public bool Parse( string input )
         {
             int p = 0;
             content = string.Empty;
             bool firstPassReady = false;
 
-            Regex regex = new Regex(@"[A-Za-z_$@`?']");
-            Match match = regex.Match(input.Substring(0, 1));
+            Match match = firstCharRegex.Match(input.Substring(0, 1));
             if (!match.Success)
                 return false;
-
-            regex = new Regex(@"[A-Za-z_$@`?][A-Za-z0-9_$@`?]*|'[^']+'");
 
             do
             {
@@ -59,16 +84,18 @@ namespace NDOEnhancer.Ecma335
                     content += '.';
                     p++;
                 }
-                match = regex.Match(input.Substring(p));
+                match = namePartRegex.Match( input.Substring( p ) );
                 if (match.Success && match.Index == 0)
                 {
-                    content += match.Value;
+                    this.content += match.Value;
+                    this.parts.Add( match.Value );
                     p += match.Value.Length;
                 }
                 firstPassReady = true;
             }
+
             while (p < input.Length && input[p] == '.');
-            nextTokenPosition = p;
+            this.nextTokenPosition = p;
             return true;
         }
     }

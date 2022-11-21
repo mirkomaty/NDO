@@ -1,5 +1,5 @@
 ﻿//
-// Copyright (c) 2002-2016 Mirko Matytschak 
+// Copyright (c) 2002-2022 Mirko Matytschak 
 // (www.netdataobjects.de)
 //
 // Author: Mirko Matytschak
@@ -22,20 +22,10 @@
 
 using System;
 using System.Xml;
-using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Xml.Linq;
-#if !STANDALONE
-using VSLangProj;
-using EnvDTE;
-#if !NDO11
-using VSLangProj80;
-using VSLangProj2;
-using VsWebSite;
-#endif
-#endif
 
 #if DEBUG
 using NDOInterfaces; // for IMessageAdapter

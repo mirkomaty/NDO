@@ -1,5 +1,5 @@
 ﻿//
-// Copyright (c) 2002-2016 Mirko Matytschak 
+// Copyright (c) 2002-2022 Mirko Matytschak 
 // (www.netdataobjects.de)
 //
 // Author: Mirko Matytschak
@@ -19,72 +19,39 @@
 // CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER 
 // DEALINGS IN THE SOFTWARE.
 
-
 using System;
 using System.Text.RegularExpressions;
 using NDOEnhancer.Ecma335;
 
-namespace ILCode
+namespace NDOEnhancer.ILCode
 {
-	/// <summary>
-	/// Summary description for ILAssemblyElement.
-	/// </summary>
-	internal class ILAssemblyElement : ILElement
-	{
-		public ILAssemblyElement( string firstLine, ILElement owner )
-			: base( firstLine, owner )
-		{
-		}
+    /// <summary>
+    /// Summary description for ILAssemblyElement.
+    /// </summary>
+    internal class ILAssemblyElement : ILElement
+    {
+        public ILAssemblyElement( string firstLine, ILElement owner )
+            : base( firstLine, owner )
+        {
+        }
 
-		internal class ILAssemblyElementType : ILElementType
-		{
-			public ILAssemblyElementType()
-				: base( ".assembly", typeof( ILAssemblyElement ) )
-			{
-			}
-		}
+        internal class ILAssemblyElementType : ILElementType
+        {
+            public ILAssemblyElementType()
+                : base( ".assembly", typeof( ILAssemblyElement ) )
+            {
+            }
+        }
 
-		internal class Iterator : ILElementIterator
-		{
-			public Iterator( ILElement element )
-				: base( element, typeof( ILAssemblyElement ) )
-			{
-			}
+        private static ILElementType m_elementType = new ILAssemblyElementType();
 
-			public new ILAssemblyElement
-			getFirst()
-			{
-				return base.getFirst() as ILAssemblyElement;
-			}
-
-			public new ILAssemblyElement
-			getNext()
-			{
-				return base.getNext() as ILAssemblyElement;
-			}
-		}
-
-		private static ILElementType m_elementType = new ILAssemblyElementType();
-		
-		private string m_name;
-		private bool m_extern;
+        private string m_name;
+        private bool m_extern;
         private string versionString;
         private int major;
         private int minor;
         private int build;
         private int revision;
-
-		public static void
-		initialize()
-		{
-		}
-
-		public static ILAssemblyElement.Iterator
-		getIterator( ILElement element )
-		{
-			return new Iterator( element );
-		}
-
 
         public string VersionString
         {
@@ -114,7 +81,7 @@ namespace ILCode
 
 
         private void
-        resolve()
+        Resolve()
         {
             /*
              .assembly extern System.Data { .publickeytoken = (B7 7A 5C 56 19 34 E0 89 ) .ver 2:0:0:0 }
@@ -122,77 +89,64 @@ namespace ILCode
             if (null != m_name)
                 return;
 
-            ILElementIterator it = this.getAllIterator(false);
-            ILElement el;
             Regex regex = new Regex(@"\.ver\s([\d:]+)");
             Match match;
 
-            for (el = it.getFirst(); el != null; el = it.getNext())
-            {                
-                match = regex.Match(el.getAllLines());
+            foreach (var el in Elements)
+            {
+                match = regex.Match( el.GetAllLines() );
                 if (match.Success)
                 {
                     versionString = match.Groups[1].Value;
-                    regex = new Regex(@"(\d+):(\d+):(\d+):(\d+)");
-                    match = regex.Match(versionString);
+                    regex = new Regex( @"(\d+):(\d+):(\d+):(\d+)" );
+                    match = regex.Match( versionString );
 
-                    major = int.Parse(match.Groups[1].Value);
-                    minor = int.Parse(match.Groups[2].Value);
-                    build = int.Parse(match.Groups[3].Value);
-                    revision = int.Parse(match.Groups[4].Value);
+                    major = int.Parse( match.Groups[1].Value );
+                    minor = int.Parse( match.Groups[2].Value );
+                    build = int.Parse( match.Groups[3].Value );
+                    revision = int.Parse( match.Groups[4].Value );
                 }
             }
 
-            string line = this.getAllLines();
+            string line = this.GetAllLines();
 
-            regex = new Regex(@"\.assembly\s+(extern|)");
-            match = regex.Match(line);
+            regex = new Regex( @"\.assembly\s+(extern|)" );
+            match = regex.Match( line );
 
             if (match.Groups[1].Value != string.Empty)
                 m_extern = true;
 
             string s = line.Substring(match.Length).Trim();
             EcmaDottedName dn = new EcmaDottedName();
-            dn.Parse(s);
+            dn.Parse( s );
             this.m_name = dn.Content;
         }
 
-		protected override void
-		unresolve()
-		{
-			m_name = null;
-		}
+        protected override void
+        Unresolve()
+        {
+            m_name = null;
+        }
 
-		public string
-		getName()
-		{
-			resolve();
+        public string
+        Name
+        {
+            get
+            {
+                Resolve();
+                return m_name;
+            }
+        }
 
-			return m_name;
-		}
-
-		public bool
-		isExtern()
-		{
-			resolve();
-		
-			return m_extern;
-		}
-
-		public void
-		setName( string name )
-		{
-			foreach ( char c in name )
-			{
-				if ( ! Char.IsLetterOrDigit( c ) )
-				{
-					name = "'" + name + "'";
-					break;
-				}
-			}
-
-			replaceText( m_name, name );
-			m_name = name;
-		}
+        public bool
+        IsExtern
+        {
+            get
+            {
+                Resolve();
+                return m_extern;
+            }
+        }
 	}
 }
+    

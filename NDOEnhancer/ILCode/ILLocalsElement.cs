@@ -1,5 +1,5 @@
 ﻿//
-// Copyright (c) 2002-2016 Mirko Matytschak 
+// Copyright (c) 2002-2022 Mirko Matytschak 
 // (www.netdataobjects.de)
 //
 // Author: Mirko Matytschak
@@ -22,7 +22,7 @@
 
 using System;
 
-namespace ILCode
+namespace NDOEnhancer.ILCode
 {
 	/// <summary>
 	/// Summary description for ILLocalsElement.
@@ -42,31 +42,7 @@ namespace ILCode
 			}
 		}
 
-		internal class Iterator : ILElementIterator
-		{
-			public Iterator( ILElement element )
-				: base( element, Type.GetType( "com.poet.tools.util.bytecode.ilcode.ILLocalsElement" ) )
-			{
-			}
-
-			public new ILLocalsElement
-			getNext()
-			{
-				return base.getNext() as ILLocalsElement;
-			}
-		}
-
 		private static ILElementType		m_elementType = new ILLocalsElementType();
 		
-		public static void
-		initialize()
-		{
-		}
-
-		public static ILLocalsElement.Iterator
-		getIterator( ILElement element )
-		{
-			return new Iterator( element );
-		}
 	}
 }
