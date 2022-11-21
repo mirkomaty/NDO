@@ -101,7 +101,7 @@ namespace NDOEnhancer.Patcher
 			// sie in der Datenbank sein werden.
 			// Wir benötigen aber auch die hierarchische Sicht, die die 
 			// Namen der ValueTypes und embedded Objects liefert.
-			ownFieldsHierarchical = GetHierarchicalFieldList();
+			this.ownFieldsHierarchical = GetHierarchicalFieldList();
 
 			if (null != externalPersistentBases)
 			{
@@ -2107,7 +2107,7 @@ namespace NDOEnhancer.Patcher
 			method.addStatement(".try {");
 			int nr = 0;
 
-			foreach(var e in sortedFields)
+			foreach(var e in this.sortedFields)
 			{
 				if (nr == this.mappedFieldCount)
 					break;

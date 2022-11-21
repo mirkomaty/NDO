@@ -371,12 +371,26 @@ namespace NDOEnhancer.ILCode
 			return false;
 		}
 
+		void ComputeStatements(ILElement element, List<ILStatementElement> statements )
+		{
+			if (element is ILStatementElement stel)
+				statements.Add( stel );
+
+			foreach (var child in element.Elements)
+			{
+				ComputeStatements( child, statements );
+			}
+		}
+
 		void ComputeStatements()
 		{
-			m_statements = ( from e in Elements
-							 let se = e as ILStatementElement
-							 where se != null
-							 select se ).ToList();
+			List<ILStatementElement> statements = new List<ILStatementElement>();
+			foreach (var element in Elements)
+			{
+				ComputeStatements(element, statements);
+			}
+
+			m_statements = statements;
 		}
 
 		public IEnumerable<ILStatementElement> Statements

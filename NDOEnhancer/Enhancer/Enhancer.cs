@@ -558,6 +558,17 @@ namespace NDOEnhancer
 		}
 
 
+		/// <summary>
+		/// Helps sorting the fields
+		/// </summary>
+		private class FieldComparer : IComparer<KeyValuePair<string,ILField>>
+		{
+			public int Compare( KeyValuePair<string, ILField> x, KeyValuePair<string, ILField> y )
+			{
+				return String.CompareOrdinal( x.Key, y.Key );
+			}
+		}
+
 		private void CheckFieldMappings( ClassNode classNode, Class classMapping )
 		{
 			var sortedFields = new List<KeyValuePair<string,ILField>>();
@@ -574,7 +585,8 @@ namespace NDOEnhancer
 			var embeddedObjectsList = classNode.EmbeddedTypes;
 			IterateFieldNodeList( embeddedObjectsList, true, oidFields, classMapping, sortedFields, false );
 
-			sortedFields.Sort( ( x, y ) => String.CompareOrdinal( x.Key, y.Key ) );
+			var fieldComparer = new FieldComparer();
+			sortedFields.Sort( fieldComparer );
 
 			// Alle ererbten Felder
 			ClassNode derivedclassNode = this.allPersistentClasses[classNode.BaseName];
@@ -591,11 +603,11 @@ namespace NDOEnhancer
 					var enl = derivedclassNode.EmbeddedTypes;
 					IterateFieldNodeList( enl, true, oidFields, classMapping, sortedFields, true );
 
+					int len = sortedFields.Count - startind;
+					sortedFields.Sort( startind, len, fieldComparer );
 				}
 				derivedclassNode = this.allPersistentClasses[derivedclassNode.BaseName];
 			}
-
-			sortedFields.Sort( ( x, y ) => String.CompareOrdinal( x.Key, y.Key ) );
 
 			// Ab hier nur noch Zeug für die Mapping-Datei
 			if (classMapping == null)
