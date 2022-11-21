@@ -2109,6 +2109,9 @@ namespace NDOEnhancer.Patcher
 
 			foreach(var e in sortedFields)
 			{
+				if (nr == this.mappedFieldCount)
+					break;
+
 				ILField field = e.Value;
 				if (field.Parent != null && field.Parent.IsEmbeddedType)
 					continue;
@@ -2419,13 +2422,16 @@ namespace NDOEnhancer.Patcher
 
 			method.addStatement(".try {");
  
-
 			int nr = 0;
-			// SortedFields enthält auch die ererbten Felder
-			// Wir brauchen aber nur die eigenen. In ownFieldsHierarchical
-			// sind die eigenen, aber unsortiert
+			// sortedFields contains the inherited fields.
+			// But we only need the fields declared in this class.
+			// The own fields are in ownFieldsHierarchical
+			// but they are not sorted.
+			// So we use the fields in the range 0..mappedFieldCount.
 			foreach(var e in sortedFields)
 			{
+				if (nr == this.mappedFieldCount)
+					break;
 				var field = e.Value;
 				if (field.Parent != null && field.Parent.IsEmbeddedType)
 					continue;
@@ -2779,18 +2785,6 @@ namespace NDOEnhancer.Patcher
 			get { return m_ilTypeWithoutPrefix; }
 		}
 
-		public string
-		CsType
-		{
-			get { return typeFromIL(m_ilType); }
-		}
-
-//		public string
-//		ILAsmType
-//		{
-//			get { return ILFromType(m_ilType); }
-//		}
-
 		protected bool isBuiltInType(string typeName)
 		{
 			typeName = typeName.Trim();
@@ -2829,65 +2823,6 @@ namespace NDOEnhancer.Patcher
 				return true;
 			else 
 				return false;
-		}
-
-		protected string
-		typeFromIL( string typeName )
-		{
-			typeName = typeName.Trim();
-			Regex regex = new Regex("System.Nullable`1<(.*)>");
-			Match match = regex.Match(typeName);
-			if (match.Success)
-				typeName = match.Groups[1].Value;
-
-			if ( typeName == "bool" )
-				return "System.Boolean";
-			else if ( typeName == "byte" )
-				return "System.Byte";
-			else if ( typeName == "sbyte" )
-				return "System.SByte";
-			else if ( typeName == "char" )
-				return "System.Char";
-			else if ( typeName == "unsigned char" )
-				return "System.UChar";
-			else if ( typeName == "short" || typeName == "int16" )
-				return "System.Int16";
-			else if ( typeName == "unsigned int16" )
-				return "System.UInt16";
-			else if ( typeName == "unsigned int8" )
-				return "System.Byte";
-			else if ( typeName == "unsigned int8[]" )
-				return "System.Byte[]";
-			else if ( typeName == "int" || typeName == "int32" )
-				return "System.Int32";
-			else if ( typeName == "unsigned int32" )
-				return "System.UInt32";
-			else if ( typeName == "long" || typeName == "int64" )
-				return "System.Int64";
-			else if ( typeName == "unsigned int64" )
-				return "System.UInt64";
-			else if ( typeName == "float32" || typeName == "float" || typeName == "single" )
-				return "System.Single";
-			else if ( typeName == "float64" || typeName == "double" )
-				return "System.Double";
-			else if ( typeName == "string" )
-				return "System.String";
-			else 
-			{
-				string tn = typeName;
-				if (tn.StartsWith(vtPrefix)) 
-					tn = tn.Substring(10);
-				else if (tn.StartsWith(classPrefix)) 
-					tn = tn.Substring(6);
-				tn = tn.Trim();
-				if (tn.StartsWith($"{Corlib.Name}"))
-					tn = tn.Substring(10).Trim();
-				if (!tn.StartsWith("["))
-					return tn;
-				tn = tn.Substring(1);
-				int pos = tn.IndexOf("]");
-				return (tn.Substring(pos + 1) + ", " + tn.Substring(0, pos));
-			}
 		}
 
 		private string
@@ -2968,7 +2903,7 @@ namespace NDOEnhancer.Patcher
 				referencedType = refType;
 			else
 			{
-				referencedType = CsType;
+				referencedType = ILCode.ILType.GetNetTypeName(m_ilType);
 				if (referencedType.StartsWith("class"))
 					referencedType = referencedType.Substring(6);
 				if (referencedType.StartsWith("valuetype"))

@@ -22,6 +22,7 @@
 
 using System;
 using System.Globalization;
+using System.Runtime.InteropServices;
 
 namespace NDOEnhancer.ILCode
 {
@@ -77,13 +78,15 @@ namespace NDOEnhancer.ILCode
 					para = null;
 				else
 					para = new System.Text.UTF8Encoding().GetString( bytes, pos + 1, len );
-				//string para = new string( chars, pos + 1, bytes[pos]);
+
 				pos += 1 + bytes[pos];
+
 				if (para != null && para != string.Empty)
 				{
 					if (para[para.Length - 1] == '\0')
 						para = para.Substring( 0, para.Length - 1 );
 				}
+
 				return para;
 			}
 			else if (type == typeof( System.Boolean ))
@@ -110,17 +113,25 @@ namespace NDOEnhancer.ILCode
 				pos += 4;
 				return para;
 			}
-			else if (type.FullName == "NDO.RelationInfo")
-			{
-				short para = Convert.ToInt16( bytes[pos+1] * 256 + bytes[pos] );
-				pos += 2;
-				return (NDO.RelationInfo) para;
-			}
 			else if (typeof(System.Enum).IsAssignableFrom( type ) )
 			{
-				int para = ((bytes[pos+3] * 256 + bytes[pos+2]) * 256 + bytes[pos+1]) * 256 + bytes[pos];
-				pos += 4;
-				return Enum.ToObject( type, para );
+				// enums can be "derived" from any integral number type
+				var underlyingType = Enum.GetUnderlyingType(type);
+				var size = Marshal.SizeOf( underlyingType );
+
+				// fortunately we can use a long value for all types of enums
+				long integralValue = 0;
+				for (int i = size-1; i >= 0; i--)
+				{
+					integralValue += bytes[pos+i];
+					if (i > 0)
+						integralValue *= 256;
+				}
+
+				pos += size;
+
+				// convert the integral value into an enum of the given type
+				return Enum.ToObject( type, integralValue );
 			}
 
 			MessageAdapter ma = new MessageAdapter();
@@ -201,72 +212,30 @@ namespace NDOEnhancer.ILCode
 			char   comma =  ',';
 			string[] paramTypeNames = new string[]{};
 			object[] paramValues = new object[]{};
-			Type[] paramTypes = new Type[]{};
-			//CustomAttrib starts with a Prolog – an unsigned int16, with value 0x0001
+
+			//CustomAttrib starts with a Prolog – an unsigned int16 with the value 0x0001
 			int pos = 2;
+
 			if (signature != "")
 			{
 				paramTypeNames = signature.Split( comma );
-				paramTypes = new Type[paramTypeNames.Length];
+				Type paramType;
 				paramValues = new Object[paramTypeNames.Length];
 
 				for (int i = 0; i < paramTypeNames.Length; i++)
 				{
 					string paramTypeName = paramTypeNames[i].Trim();
-					if (paramTypeName == "string" || paramTypeName.IndexOf( "System.String" ) > -1)
+					paramTypeNames[i] = ILType.GetNetTypeName( paramTypeName );
+					paramType = Type.GetType( paramTypeNames[i] );
+					if (paramType == null)
 					{
-						paramTypeNames[i] = "System.String";
-						paramTypes[i] = typeof( string );
-					}
-					else if (paramTypeName == "bool")
-					{
-						paramTypes[i] = typeof( bool );
-						paramTypeNames[i] = "System.Boolean";
-					}
-					else if (paramTypeName == "char")
-					{
-						paramTypes[i] = typeof( char );
-						paramTypeNames[i] = "System.Char";
-					}
-					else if (paramTypeName == "short" || paramTypeName == "int16")
-					{
-						paramTypeNames[i] = "System.Int16";
-						paramTypes[i] = typeof( System.Int16 );
-					}
-					else if (paramTypeName == "int" || paramTypeName == "int32")
-					{
-						paramTypeNames[i] = "System.Int32";
-						paramTypes[i] = typeof( System.Int32 );
-					}
-					// Achtung: System.Type wird als string abgespeichert!!!
-					else if (paramTypeName.IndexOf( "[mscorlib" ) > -1 && paramTypeName.IndexOf( "System.Type" ) > -1)
-					{
-						paramTypes[i] = typeof( System.String );
-						paramTypeNames[i] = "System.Type";
-					}
-					else if (paramTypeName == "valuetype [NDO]NDO.RelationInfo")
-					{
-						paramTypes[i] = typeof( NDO.RelationInfo );
-						paramTypeNames[i] = "NDO.RelationInfo, NDO";
-					}
-					else
-					{
-						var paramTypeString = paramTypeName.Substring(paramTypeName.IndexOf(']') + 1);
-						var t = Type.GetType( paramTypeString );
-						if (t != null)
-						{
-							paramTypes[i] = t;
-							paramTypeNames[i] = "paramTypeString";
-						}
-						else
-							throw new Exception( $"Relation Attribute: Unknown type in attribute parameter list: {paramTypeName}, type: {( this.Owner as ILClassElement )?.Name ?? ""}" );
+						throw new Exception( $"Relation Attribute: Unknown type in attribute parameter list: {paramTypeName}, type: {( this.Owner as ILClassElement )?.Name ?? ""}" );
 					}
 
-					//paramTypes[i]  = Type.GetType( paramTypeNames[i] );
-					paramValues[i] = ReadParam( bytes, paramTypes[i], ref pos );
+					paramValues[i] = ReadParam( bytes, paramType, ref pos );
 				}
 			}
-			//			ConstructorInfo ci	 = attributeType.GetConstructor( paramTypes );
+
 			AttributeInfo   attr = new AttributeInfo();
 			attr.TypeName = typeName;
 			attr.AssemblyName = assName;

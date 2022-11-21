@@ -298,6 +298,7 @@
     <Compile Include="ILCode\ILTryElement.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="ILCode\ILType.cs" />
     <Compile Include="ILCode\ILUnknownElement.cs">
       <SubType>Code</SubType>
     </Compile>

@@ -577,53 +577,7 @@ namespace NDOEnhancer.ILCode
 					realWords[count++] = words[i];
 
 			return realWords;
-		}
-        
-		protected Type
-		TypeFromIL( string typeName )
-		{
-			typeName = typeName.Trim();
-
-			if ( typeName == "bool" )
-				return Type.GetType( "System.Boolean" );
-			else if ( typeName == "byte" )
-				return Type.GetType( "System.Byte" );
-			else if ( typeName == "sbyte" )
-				return Type.GetType( "System.SByte" );
-			else if ( typeName == "char" )
-				return Type.GetType( "System.Char" );
-			else if ( typeName == "unsigned char" )
-				return Type.GetType( "System.UChar" );
-			else if ( typeName == "short" || typeName == "int16" )
-				return Type.GetType( "System.Int16" );
-			else if ( typeName == "unsigned int16" )
-				return Type.GetType( "System.UInt16" );
-			else if ( typeName == "int" || typeName == "int32" )
-				return Type.GetType( "System.Int32" );
-			else if ( typeName == "unsigned int32" )
-				return Type.GetType( "System.UInt32" );
-			else if ( typeName == "long" || typeName == "int64" )
-				return Type.GetType( "System.Int64" );
-			else if ( typeName == "unsigned int64" )
-				return Type.GetType( "System.UInt64" );
-			else if ( typeName == "float" || typeName == "single" )
-				return Type.GetType( "System.Single" );
-			else if ( typeName == "double" )
-				return Type.GetType( "System.Double" );
-			else if ( typeName == "string" )
-				return Type.GetType( "System.String" );
-			else if ( typeName[0] == '[' )
-			{
-				int	   end	   = typeName.IndexOf( "]", 1 );
-				string assName = StripComment( typeName.Substring( 1, end - 1 ) );
-
-				return Type.GetType( typeName.Substring( end + 1 ) + ", " + assName );
-			}
-			else
-			{
-				return Type.GetType( typeName );
-			}
-		}
+		}        
 
 		public virtual string
 		MakeUpperCaseName( string name )
