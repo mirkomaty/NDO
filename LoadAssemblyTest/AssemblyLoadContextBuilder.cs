@@ -28,9 +28,6 @@ namespace McMaster.NETCore.Plugins.Loader
 		private bool _preferDefaultLoadContext;
 		private bool _lazyLoadReferences;
 
-		private bool _isCollectible;
-		private bool _loadInMemory;
-		private bool _shadowCopyNativeLibraries;
 
 		/// <summary>
 		/// Creates an assembly load context using settings specified on the builder.
@@ -62,9 +59,7 @@ namespace McMaster.NETCore.Plugins.Loader
 				_defaultLoadContext,
 				_preferDefaultLoadContext,
 				_lazyLoadReferences,
-				_isCollectible,
-				_loadInMemory,
-				_shadowCopyNativeLibraries );
+				loadInMemory: false );
 		}
 
 		/// <summary>
@@ -283,39 +278,6 @@ namespace McMaster.NETCore.Plugins.Loader
 			return this;
 		}
 
-		/// <summary>
-		/// Enable unloading the assembly load context.
-		/// </summary>
-		/// <returns>The builder</returns>
-		public AssemblyLoadContextBuilder EnableUnloading()
-		{
-			_isCollectible = true;
-			return this;
-		}
-
-		/// <summary>
-		/// Read .dll files into memory to avoid locking the files.
-		/// This is not as efficient, so is not enabled by default, but is required for scenarios
-		/// like hot reloading.
-		/// </summary>
-		/// <returns>The builder</returns>
-		public AssemblyLoadContextBuilder PreloadAssembliesIntoMemory()
-		{
-			_loadInMemory = true; // required to prevent dotnet from locking loaded files
-			return this;
-		}
-
-		/// <summary>
-		/// Shadow copy native libraries (unmanaged DLLs) to avoid locking of these files.
-		/// This is not as efficient, so is not enabled by default, but is required for scenarios
-		/// like hot reloading of plugins dependent on native libraries.
-		/// </summary>
-		/// <returns>The builder</returns>
-		public AssemblyLoadContextBuilder ShadowCopyNativeLibraries()
-		{
-			_shadowCopyNativeLibraries = true;
-			return this;
-		}
 
 		/// <summary>
 		/// Add a <paramref name="path"/> that should be use to search for resource assemblies (aka satellite assemblies)

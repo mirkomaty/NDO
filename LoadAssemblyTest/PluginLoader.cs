@@ -26,53 +26,6 @@ namespace McMaster.NETCore.Plugins
 		/// Create a plugin loader for an assembly file.
 		/// </summary>
 		/// <param name="assemblyFile">The file path to the main assembly for the plugin.</param>
-		/// <param name="isUnloadable">Enable unloading the plugin from memory.</param>
-		/// <param name="sharedTypes">
-		/// <para>
-		/// A list of types which should be shared between the host and the plugin.
-		/// </para>
-		/// <para>
-		/// <seealso href="https://github.com/natemcmaster/DotNetCorePlugins/blob/main/docs/what-are-shared-types.md">
-		/// https://github.com/natemcmaster/DotNetCorePlugins/blob/main/docs/what-are-shared-types.md
-		/// </seealso>
-		/// </para>
-		/// </param>
-		/// <returns>A loader.</returns>
-		public static PluginLoader CreateFromAssemblyFile( string assemblyFile, bool isUnloadable, Type[] sharedTypes )
-			=> CreateFromAssemblyFile( assemblyFile, isUnloadable, sharedTypes, _ => { } );
-
-		/// <summary>
-		/// Create a plugin loader for an assembly file.
-		/// </summary>
-		/// <param name="assemblyFile">The file path to the main assembly for the plugin.</param>
-		/// <param name="isUnloadable">Enable unloading the plugin from memory.</param>
-		/// <param name="sharedTypes">
-		/// <para>
-		/// A list of types which should be shared between the host and the plugin.
-		/// </para>
-		/// <para>
-		/// <seealso href="https://github.com/natemcmaster/DotNetCorePlugins/blob/main/docs/what-are-shared-types.md">
-		/// https://github.com/natemcmaster/DotNetCorePlugins/blob/main/docs/what-are-shared-types.md
-		/// </seealso>
-		/// </para>
-		/// </param>
-		/// <param name="configure">A function which can be used to configure advanced options for the plugin loader.</param>
-		/// <returns>A loader.</returns>
-		public static PluginLoader CreateFromAssemblyFile( string assemblyFile, bool isUnloadable, Type[] sharedTypes, Action<PluginConfig> configure )
-		{
-			return CreateFromAssemblyFile( assemblyFile,
-					sharedTypes,
-					config =>
-					{
-						config.IsUnloadable = isUnloadable;
-						configure( config );
-					} );
-		}
-
-		/// <summary>
-		/// Create a plugin loader for an assembly file.
-		/// </summary>
-		/// <param name="assemblyFile">The file path to the main assembly for the plugin.</param>
 		/// <param name="sharedTypes">
 		/// <para>
 		/// A list of types which should be shared between the host and the plugin.
@@ -156,7 +109,6 @@ namespace McMaster.NETCore.Plugins
 		private readonly AssemblyLoadContextBuilder _contextBuilder;
 		private volatile bool _disposed;
 
-//		private Debouncer? _debouncer;
 
 		/// <summary>
 		/// Initialize an instance of <see cref="PluginLoader" />
@@ -167,8 +119,20 @@ namespace McMaster.NETCore.Plugins
 			_config = config ?? throw new ArgumentNullException( nameof( config ) );
 			_contextBuilder = CreateLoadContextBuilder( config );
 			_context = (ManagedLoadContext) _contextBuilder.Build();
-
 		}
+
+		/// <summary>
+		/// True when this plugin is capable of being unloaded.
+		/// </summary>
+		public bool IsUnloadable
+		{
+			get
+			{
+				return false;
+			}
+		}
+
+
 
 		internal AssemblyLoadContext LoadContext => _context;
 
@@ -211,6 +175,7 @@ namespace McMaster.NETCore.Plugins
 			return LoadAssembly( new AssemblyName( assemblyName ) );
 		}
 
+
 		/// <summary>
 		/// Sets the scope used by some System.Reflection APIs which might trigger assembly loading.
 		/// <para>
@@ -220,6 +185,7 @@ namespace McMaster.NETCore.Plugins
 		/// <returns></returns>
 		public AssemblyLoadContext.ContextualReflectionScope EnterContextualReflection()
 			=> _context.EnterContextualReflection();
+
 
 		/// <summary>
 		/// Disposes the plugin loader. This only does something if <see cref="IsUnloadable" /> is true.
@@ -234,7 +200,6 @@ namespace McMaster.NETCore.Plugins
 			}
 
 			_disposed = true;
-
 		}
 
 		private void EnsureNotDisposed()
@@ -262,42 +227,11 @@ namespace McMaster.NETCore.Plugins
 				builder.PreferDefaultLoadContext( true );
 			}
 
-			if (config.IsUnloadable || config.EnableHotReload)
-			{
-				builder.EnableUnloading();
-			}
-
-			if (config.LoadInMemory)
-			{
-				builder.PreloadAssembliesIntoMemory();
-				builder.ShadowCopyNativeLibraries();
-			}
 
 			builder.IsLazyLoaded( config.IsLazyLoaded );
 			foreach (var assemblyName in config.SharedAssemblies)
 			{
 				builder.PreferDefaultLoadContextAssembly( assemblyName );
-			}
-
-			var baseDir = Path.GetDirectoryName(config.MainAssemblyPath);
-			var assemblyFileName = Path.GetFileNameWithoutExtension(config.MainAssemblyPath);
-
-			if (baseDir == null)
-			{
-				throw new InvalidOperationException( "Could not determine which directory to watch. "
-				+ "Please set MainAssemblyPath to an absolute path so its parent directory can be discovered." );
-			}
-
-			var pluginRuntimeConfigFile = Path.Combine(baseDir, assemblyFileName + ".runtimeconfig.json");
-
-			builder.TryAddAdditionalProbingPathFromRuntimeConfig( pluginRuntimeConfigFile, includeDevConfig: true, out _ );
-
-			// Always include runtimeconfig.json from the host app.
-			// in some cases, like `dotnet test`, the entry assembly does not actually match with the
-			// runtime config file which is why we search for all files matching this extensions.
-			foreach (var runtimeconfig in Directory.GetFiles( AppContext.BaseDirectory, "*.runtimeconfig.json" ))
-			{
-				builder.TryAddAdditionalProbingPathFromRuntimeConfig( runtimeconfig, includeDevConfig: true, out _ );
 			}
 
 			return builder;

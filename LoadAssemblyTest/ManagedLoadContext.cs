@@ -31,9 +31,6 @@ namespace McMaster.NETCore.Plugins.Loader
 		private readonly bool _loadInMemory;
 		private readonly bool _lazyLoadReferences;
 		private readonly AssemblyLoadContext _defaultLoadContext;
-		private readonly AssemblyDependencyResolver _dependencyResolver;
-		private readonly bool _shadowCopyNativeLibraries;
-		private readonly string _unmanagedDllShadowCopyDirectoryPath;
 
 		public ManagedLoadContext( string mainAssemblyPath,
 			IReadOnlyDictionary<string, ManagedLibrary> managedAssemblies,
@@ -44,10 +41,7 @@ namespace McMaster.NETCore.Plugins.Loader
 			AssemblyLoadContext defaultLoadContext,
 			bool preferDefaultLoadContext,
 			bool lazyLoadReferences,
-			bool isCollectible,
-			bool loadInMemory,
-			bool shadowCopyNativeLibraries )
-			: base( Path.GetFileNameWithoutExtension( mainAssemblyPath ), isCollectible )
+			bool loadInMemory )
 		{
 			if (resourceProbingPaths == null)
 			{
@@ -55,7 +49,7 @@ namespace McMaster.NETCore.Plugins.Loader
 			}
 
 			_mainAssemblyPath = mainAssemblyPath ?? throw new ArgumentNullException( nameof( mainAssemblyPath ) );
-			_dependencyResolver = new AssemblyDependencyResolver( mainAssemblyPath );
+
 			_basePath = Path.GetDirectoryName( mainAssemblyPath ) ?? throw new ArgumentException( nameof( mainAssemblyPath ) );
 			_managedAssemblies = managedAssemblies ?? throw new ArgumentNullException( nameof( managedAssemblies ) );
 			_privateAssemblies = privateAssemblies ?? throw new ArgumentNullException( nameof( privateAssemblies ) );
@@ -69,110 +63,98 @@ namespace McMaster.NETCore.Plugins.Loader
 			_resourceRoots = new[] { _basePath }
 				.Concat( resourceProbingPaths )
 				.ToArray();
-
-			_shadowCopyNativeLibraries = shadowCopyNativeLibraries;
-			_unmanagedDllShadowCopyDirectoryPath = Path.Combine( Path.GetTempPath(), Path.GetRandomFileName() );
-
-			//if (shadowCopyNativeLibraries)
-			//{
-			//	Unloading += _ => OnUnloaded();
-			//}
 		}
 
-		///// <summary>
-		///// Load an assembly.
-		///// </summary>
-		///// <param name="assemblyName"></param>
-		///// <returns></returns>
-		//protected override Assembly? Load( AssemblyName assemblyName )
-		//{
-		//	if (assemblyName.Name == null)
-		//	{
-		//		// not sure how to handle this case. It's technically possible.
-		//		return null;
-		//	}
+		/// <summary>
+		/// Load an assembly.
+		/// </summary>
+		/// <param name="assemblyName"></param>
+		/// <returns></returns>
+		protected override Assembly? Load( AssemblyName assemblyName )
+		{
+			if (assemblyName.Name == null)
+			{
+				// not sure how to handle this case. It's technically possible.
+				return null;
+			}
 
-		//	if (( _preferDefaultLoadContext || _defaultAssemblies.Contains( assemblyName.Name ) ) && !_privateAssemblies.Contains( assemblyName.Name ))
-		//	{
-		//		// If default context is preferred, check first for types in the default context unless the dependency has been declared as private
-		//		try
-		//		{
-		//			var defaultAssembly = _defaultLoadContext.LoadFromAssemblyName(assemblyName);
-		//			if (defaultAssembly != null)
-		//			{
-		//				// Add referenced assemblies to the list of default assemblies.
-		//				// This is basically lazy loading
-		//				if (_lazyLoadReferences)
-		//				{
-		//					foreach (var reference in defaultAssembly.GetReferencedAssemblies())
-		//					{
-		//						if (reference.Name != null && !_defaultAssemblies.Contains( reference.Name ))
-		//						{
-		//							_defaultAssemblies.Add( reference.Name );
-		//						}
-		//					}
-		//				}
+			if (( _preferDefaultLoadContext || _defaultAssemblies.Contains( assemblyName.Name ) ) && !_privateAssemblies.Contains( assemblyName.Name ))
+			{
+				// If default context is preferred, check first for types in the default context unless the dependency has been declared as private
+				try
+				{
+					var defaultAssembly = _defaultLoadContext.LoadFromAssemblyName(assemblyName);
+					if (defaultAssembly != null)
+					{
+						// Add referenced assemblies to the list of default assemblies.
+						// This is basically lazy loading
+						if (_lazyLoadReferences)
+						{
+							foreach (var reference in defaultAssembly.GetReferencedAssemblies())
+							{
+								if (reference.Name != null && !_defaultAssemblies.Contains( reference.Name ))
+								{
+									_defaultAssemblies.Add( reference.Name );
+								}
+							}
+						}
 
-		//				// Older versions used to return null here such that returned assembly would be resolved from the default ALC.
-		//				// However, with the addition of custom default ALCs, the Default ALC may not be the user's chosen ALC when
-		//				// this context was built. As such, we simply return the Assembly from the user's chosen default load context.
-		//				return defaultAssembly;
-		//			}
-		//		}
-		//		catch
-		//		{
-		//			// Swallow errors in loading from the default context
-		//		}
-		//	}
+						// Older versions used to return null here such that returned assembly would be resolved from the default ALC.
+						// However, with the addition of custom default ALCs, the Default ALC may not be the user's chosen ALC when
+						// this context was built. As such, we simply return the Assembly from the user's chosen default load context.
+						return defaultAssembly;
+					}
+				}
+				catch
+				{
+					// Swallow errors in loading from the default context
+				}
+			}
 
-		//	var resolvedPath = _dependencyResolver.ResolveAssemblyToPath(assemblyName);
-		//	if (!string.IsNullOrEmpty( resolvedPath ) && File.Exists( resolvedPath ))
-		//	{
-		//		return LoadAssemblyFromFilePath( resolvedPath );
-		//	}
 
-		//	// Resource assembly binding does not use the TPA. Instead, it probes PLATFORM_RESOURCE_ROOTS (a list of folders)
-		//	// for $folder/$culture/$assemblyName.dll
-		//	// See https://github.com/dotnet/coreclr/blob/3fca50a36e62a7433d7601d805d38de6baee7951/src/binder/assemblybinder.cpp#L1232-L1290
 
-		//	if (!string.IsNullOrEmpty( assemblyName.CultureName ) && !string.Equals( "neutral", assemblyName.CultureName ))
-		//	{
-		//		foreach (var resourceRoot in _resourceRoots)
-		//		{
-		//			var resourcePath = Path.Combine(resourceRoot, assemblyName.CultureName, assemblyName.Name + ".dll");
-		//			if (File.Exists( resourcePath ))
-		//			{
-		//				return LoadAssemblyFromFilePath( resourcePath );
-		//			}
-		//		}
+			// Resource assembly binding does not use the TPA. Instead, it probes PLATFORM_RESOURCE_ROOTS (a list of folders)
+			// for $folder/$culture/$assemblyName.dll
+			// See https://github.com/dotnet/coreclr/blob/3fca50a36e62a7433d7601d805d38de6baee7951/src/binder/assemblybinder.cpp#L1232-L1290
 
-		//		return null;
-		//	}
+			if (!string.IsNullOrEmpty( assemblyName.CultureName ) && !string.Equals( "neutral", assemblyName.CultureName ))
+			{
+				foreach (var resourceRoot in _resourceRoots)
+				{
+					var resourcePath = Path.Combine(resourceRoot, assemblyName.CultureName, assemblyName.Name + ".dll");
+					if (File.Exists( resourcePath ))
+					{
+						return LoadAssemblyFromFilePath( resourcePath );
+					}
+				}
 
-		//	if (_managedAssemblies.TryGetValue( assemblyName.Name, out var library ) && library != null)
-		//	{
-		//		if (SearchForLibrary( library, out var path ) && path != null)
-		//		{
-		//			return LoadAssemblyFromFilePath( path );
-		//		}
-		//	}
-		//	else
-		//	{
-		//		// if an assembly was not listed in the list of known assemblies,
-		//		// fallback to the load context base directory
-		//		var dllName = assemblyName.Name + ".dll";
-		//		foreach (var probingPath in _additionalProbingPaths.Prepend( _basePath ))
-		//		{
-		//			var localFile = Path.Combine(probingPath, dllName);
-		//			if (File.Exists( localFile ))
-		//			{
-		//				return LoadAssemblyFromFilePath( localFile );
-		//			}
-		//		}
-		//	}
+				return null;
+			}
 
-		//	return null;
-		//}
+			if (_managedAssemblies.TryGetValue( assemblyName.Name, out var library ) && library != null)
+			{
+				if (SearchForLibrary( library, out var path ) && path != null)
+				{
+					return LoadAssemblyFromFilePath( path );
+				}
+			}
+			else
+			{
+				// if an assembly was not listed in the list of known assemblies,
+				// fallback to the load context base directory
+				var dllName = assemblyName.Name + ".dll";
+				foreach (var probingPath in _additionalProbingPaths.Prepend( _basePath ))
+				{
+					var localFile = Path.Combine(probingPath, dllName);
+					if (File.Exists( localFile ))
+					{
+						return LoadAssemblyFromFilePath( localFile );
+					}
+				}
+			}
+
+			return null;
+		}
 
 		public Assembly LoadAssemblyFromFilePath( string path )
 		{
@@ -191,7 +173,6 @@ namespace McMaster.NETCore.Plugins.Loader
 			return LoadFromStream( file );
 
 		}
-
 
 		private bool SearchForLibrary( ManagedLibrary library, out string? path )
 		{
@@ -229,7 +210,6 @@ namespace McMaster.NETCore.Plugins.Loader
 			return false;
 		}
 
-
 		public static readonly string[] ManagedAssemblyExtensions = new[]
 		{
 				".dll",
@@ -237,5 +217,7 @@ namespace McMaster.NETCore.Plugins.Loader
 				".exe",
 				".ni.exe"
 		};
+
+
 	}
 }

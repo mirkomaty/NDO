@@ -1,0 +1,11 @@
+{
+  "profiles": {
+
+    "Profil \"1\"": {
+      "commandName": "Executable",
+      "executablePath": "C:\\Projekte\\NDO\\NDOEnhancer\\bin\\Debug\\net6.0\\NDOEnhancer.exe",
+      "commandLineArgs": "G:\\Projekte\\NDONet60\\ClassLibrary1\\TestClasses.ndoproj",
+      "workingDirectory": "G:\\Projekte\\NDONet60\\ClassLibrary1"
+    }
+  }
+}
