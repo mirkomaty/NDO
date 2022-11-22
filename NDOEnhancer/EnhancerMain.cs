@@ -256,6 +256,5 @@ namespace NDOEnhancer
 		public EnhancerMain()
 		{
 		}
-
 	}
 }
