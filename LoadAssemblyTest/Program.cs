@@ -1,6 +1,9 @@
 ﻿using McMaster.NETCore.Plugins;
 using NDOEnhancer;
 using System.Reflection;
+using System.IO;
+using System;
+using System.Linq;
 
 namespace LoadAssemblyTest
 {
@@ -11,7 +14,7 @@ namespace LoadAssemblyTest
 
 		public Program()
 		{
-			this.pathToLoad = @"C:\Projekte\Laykit\BusinessClasses\bin\Debug\netstandard2.0\BusinessClasses.dll";
+			this.pathToLoad = @"C:\Projekte\Laykit 3\BusinessClasses\bin\Debug\netstandard2.0\BusinessClasses.dll";
 			this.projPath = Path.GetFullPath( Path.Combine( this.pathToLoad, @"..\..\..\.." ) );
 		}
 
