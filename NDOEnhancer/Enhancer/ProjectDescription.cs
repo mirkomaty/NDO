@@ -57,10 +57,6 @@ namespace NDOEnhancer
 	/// </summary>
 	internal class ProjectDescription
 	{
-#if !STANDALONE
-		Solution solution = null;
-		Project project = null;
-#endif
 		Dictionary<string, NDOReference> references = null;
 		bool debug;
 		string binFile;

@@ -821,25 +821,12 @@ namespace NDOEnhancer
 					classMapping = mappings.FindClass(className);
 					if (classMapping == null)
 					{
-#if !STD
-						try
-						{
-#endif
-							messages.WriteLine("Generating class mapping for class '" + className + "'");
+						messages.WriteLine("Generating class mapping for class '" + className + "'");
 
-							if (classNode.IsAbstract)
-								classMapping = mappings.AddAbstractClass(className, assName, classNode.ColumnAttributes);
-							else
-								classMapping = mappings.AddStandardClass(className, assName, classNode.ColumnAttributes);
-						
-#if !STD
-						}
-						catch (ArgumentOutOfRangeException ex)
-						{
-							throw new Exception(Decryptor.Decrypt(NDOErrors.TooMuchClasses));
-						} 
-#endif
-                            
+						if (classNode.IsAbstract)
+							classMapping = mappings.AddAbstractClass(className, assName, classNode.ColumnAttributes);
+						else
+							classMapping = mappings.AddStandardClass(className, assName, classNode.ColumnAttributes);					                            
 					}
 					if (options.UseTimeStamps && (classMapping.TimeStampColumn == null || classMapping.TimeStampColumn == string.Empty))
 						classMapping.TimeStampColumn = "NDOTimeStamp";

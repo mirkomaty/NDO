@@ -2,9 +2,23 @@
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
-    <TargetFramework>net6.0</TargetFramework>
-    <ImplicitUsings>enable</ImplicitUsings>
-    <Nullable>enable</Nullable>
+    <TargetFrameworks>net6.0;net48</TargetFrameworks>
+    <ImplicitUsings>disable</ImplicitUsings>
+    <Nullable Condition="'$(TargetFramework)'=='net6.0'">disable</Nullable>
+	<Nullable Condition="'$(TargetFramework)'=='net48'">disable</Nullable>
   </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="EnhancerParameters.xsd" />
+    <None Remove="NDOEnhancer.v12.suo" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="mono.cecil" Version="0.11.4" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\NDODLL\NDO.csproj" />
+  </ItemGroup>
 
 </Project>

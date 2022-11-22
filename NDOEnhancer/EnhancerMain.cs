@@ -21,21 +21,70 @@
 
 
 using System;
-using NDOEnhancer;
 using System.IO;
 using System.Reflection;
 using System.Linq;
 using NDO.Configuration;
 using NDO.Provider;
 
-namespace EnhancerTest
+namespace NDOEnhancer
 {
 	[Serializable]
-	public class EnhancerTest
+	public class EnhancerMain
 	{
 	
         static bool verboseMode;
 		ProjectDescription projectDescription;
+
+		public static int Main( string[] args )
+		{
+			int result = 0;
+
+			try
+			{
+				string locationDir = Path.GetDirectoryName(typeof(EnhancerMain).Assembly.Location);
+				string appDomainDir = AppDomain.CurrentDomain.BaseDirectory.TrimEnd(Path.DirectorySeparatorChar);
+
+				if (args.Length < 1)
+					throw new Exception( "usage: NDOEnhancer <file_name>\n" );
+
+				string arg = Path.GetFullPath( args[0] );
+				string newarg = arg;
+
+#if NET48_OR_GREATER
+				// If we are not in our own app domain, appDomainDir and location dir are the same.
+				// That means, we must create the app domain first.
+				if (string.Compare( appDomainDir, locationDir, true ) == 0)
+				{
+
+					Console.WriteLine( "Enhancer executable: " + typeof( EnhancerMain ).Assembly.Location );
+
+					result = new EnhancerMain().DomainLaunch( arg );
+				}
+				else
+				{
+					newarg = (string) AppDomain.CurrentDomain.GetData("arg");
+#endif
+
+#if DEBUG
+					Console.WriteLine( "Domain base directory is: " + AppDomain.CurrentDomain.BaseDirectory );
+					Console.WriteLine( "Running as " + ( IntPtr.Size * 8 ) + " bit app." );
+#endif
+
+					new EnhancerMain().InternalStart( newarg );
+#if NET48_OR_GREATER
+				}
+#endif
+			}
+			catch (Exception ex)
+			{
+				Console.Error.WriteLine( "Error: " + ex.ToString() );
+				result = -1;
+			}
+			return result;
+		}
+
+
 
 		void CopyFile(string source, string dest)
         {
@@ -45,6 +94,7 @@ namespace EnhancerTest
             File.Copy(source, dest, true);
         }
 
+#if NET48_OR_GREATER
 		int DomainLaunch(string arg)
 		{
 			ProjectDescription pd;
@@ -107,6 +157,7 @@ namespace EnhancerTest
 			}
 			return result;
 		}
+#endif
 
 		public void InternalStart(string arg)
 		{
@@ -134,6 +185,7 @@ namespace EnhancerTest
 
 #if DEBUG
             Console.WriteLine("Loading Project Description ready.");
+			Console.WriteLine( $"Project Style: {( this.projectDescription.IsSdkStyle ? "Sdk" : "Old MSBuild" )}" );
 
 			verboseMode = true;
 #else
@@ -157,51 +209,6 @@ namespace EnhancerTest
 
 			if (options.EnableEnhancer)
 				Console.WriteLine("Enhancer ready");
-		}
-
-		public static int Main(string[] args)
-		{
-			int result = 0;
-
-            try
-            {
-				string locationDir = Path.GetDirectoryName(typeof(EnhancerTest).Assembly.Location);
-				string appDomainDir = AppDomain.CurrentDomain.BaseDirectory;
-				if (appDomainDir.EndsWith("\\"))
-					appDomainDir = appDomainDir.Substring(0, appDomainDir.Length - 1);
-
-				if (string.Compare(appDomainDir, locationDir, true) == 0)
-				{
-					if (args.Length < 1)
-						throw new Exception("usage: NDOEnhancer <file_name>\n");
-					string arg = args[0];
-					arg = Path.GetFullPath(arg);
-
-					Console.WriteLine( "Enhancer executable: " + typeof(EnhancerTest).Assembly.Location );
-
-					result = new EnhancerTest().DomainLaunch(arg);
-				}
-				else
-				{
-#if DEBUG
-					Console.WriteLine( "Domain base directory is: " + AppDomain.CurrentDomain.BaseDirectory );
-					Console.WriteLine( "Running as " + (IntPtr.Size * 8) + " bit app." );
-#endif
-
-					string newarg = (string) AppDomain.CurrentDomain.GetData("arg");
-					new EnhancerTest().InternalStart(newarg);
-				}
-            }
-            catch(Exception ex)
-            {
-#if DEBUG
-                Console.Error.WriteLine("Error: " + ex.ToString());
-#else
-                Console.Error.WriteLine("Error: " + ex.Message);
-#endif
-                result = -1;
-            }
-			return result;
 		}
 
 		string GetPackageLibPath( string assName )
@@ -246,7 +253,7 @@ namespace EnhancerTest
 		}
 
 
-		public EnhancerTest()
+		public EnhancerMain()
 		{
 		}
 
