@@ -1,12 +1,13 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>netstandard2.0;net452</TargetFrameworks>
-    <AssemblyVersion>4.0.1.0</AssemblyVersion>
-    <Version>4.0.1</Version>
-    <Authors>Mirko Matytschak</Authors>
+    <TargetFrameworks>netstandard2.0;net452;net6.0</TargetFrameworks>
+    <AssemblyVersion>5.0.0.0</AssemblyVersion>
+    <Version>5.0.0</Version>
+	  <IncludeSymbols>True</IncludeSymbols>
+	  <Authors>Mirko Matytschak</Authors>
     <Description>Interfaces and base implementations for NDO.</Description>
-    <Copyright>Copyright (c) 2002-2020 Mirko Matytschak</Copyright>
+    <Copyright>Copyright (c) 2002-2022 Mirko Matytschak</Copyright>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageProjectUrl>https://www.netdatobjects.de</PackageProjectUrl>
     <RepositoryUrl>https://github.com/mirkomaty/NDO</RepositoryUrl>
@@ -14,7 +15,9 @@
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <SignAssembly>true</SignAssembly>
     <AssemblyOriginatorKeyFile>NDOInterfaces.snk</AssemblyOriginatorKeyFile>
-    <PackageReleaseNotes>Alter the ISqlGenerator interface to support CLOBs</PackageReleaseNotes>
+    <PackageReleaseNotes>Implement NDO as .NET 6.0 assemblies</PackageReleaseNotes>
+    <RunAnalyzersDuringBuild>False</RunAnalyzersDuringBuild>
+    <RunAnalyzersDuringLiveAnalysis>False</RunAnalyzersDuringLiveAnalysis>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
