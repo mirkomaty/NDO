@@ -148,6 +148,21 @@ namespace NDO.Query
 		/// Unsaved changes in your objects are not recognized.</remarks>
 		public object ExecuteAggregate( string field, AggregateType aggregateType )
 		{
+			return ExecuteAggregateAsync<object>( field, aggregateType ).GetAwaiter().GetResult();
+		}
+
+		/// <summary>
+		/// Execute an aggregation query.
+		/// </summary>
+		/// <param name="field">The field, which should be aggregated</param>
+		/// <param name="aggregateType">One of the <see cref="AggregateType">AggregateType</see> enum members.</param>
+		/// <returns>A single value, which represents the aggregate</returns>
+		/// <remarks>Before using this function, make sure, that your database product supports the aggregate function, as defined in aggregateType.
+		/// Polymorphy: StDev and Var only return the aggregate for the given class. All others return the aggregate for all subclasses.
+		/// Transactions: Please note, that the aggregate functions always work against the database.
+		/// Unsaved changes in your objects are not recognized.</remarks>
+		public async Task<T> ExecuteAggregateAsync<T>( string field, AggregateType aggregateType )
+		{
 			if (aggregateType == AggregateType.StDev || aggregateType == AggregateType.Var)
 				this.allowSubclasses = false;
 			if (this.queryContextsForTypes == null)
@@ -160,10 +175,10 @@ namespace NDO.Query
 			int i = 0;
 			foreach (var queryContextsEntry in this.queryContextsForTypes)
 			{
-				partResults[i++] = ExecuteAggregateQuery( queryContextsEntry, field, aggregateType );
+				partResults[i++] = await ExecuteAggregateQueryAsync( queryContextsEntry, field, aggregateType ).ConfigureAwait( false );
 			}
 			this.pm.CheckEndTransaction( !this.pm.DeferredMode && this.pm.TransactionMode == TransactionMode.Optimistic );
-			return func.ComputeResult( partResults );
+			return (T)func.ComputeResult( partResults );
 		}
 
 		/// <summary>
@@ -172,6 +187,15 @@ namespace NDO.Query
 		/// <remarks>Only use this method if your class does not use composite relations and you are sure that this will not be the case in the future either. If you are unsure about this, you better use PersistenceManager.Delete().</remarks>
 		public void DeleteDirectly()
 		{
+			DeleteDirectlyAsync().GetAwaiter().GetResult();
+		}
+
+		/// <summary>
+		/// Deletes records directly without caring for composite relations.
+		/// </summary>
+		/// <remarks>Only use this method if your class does not use composite relations and you are sure that this will not be the case in the future either. If you are unsure about this, you better use PersistenceManager.Delete().</remarks>
+		public async Task DeleteDirectlyAsync()
+		{
 			string sql = GetDirectDeleteQuery();
 
 			using (IPersistenceHandler persistenceHandler = this.pm.PersistenceHandlerManager.GetPersistenceHandler( this.resultType ))
@@ -179,14 +203,8 @@ namespace NDO.Query
 				persistenceHandler.VerboseMode = this.pm.VerboseMode;
 				persistenceHandler.LogAdapter = this.pm.LogAdapter;
 				this.pm.CheckTransaction( persistenceHandler, this.resultType );
-				persistenceHandler.ExecuteBatch( new string[] { sql }, this.parameters );
+				await persistenceHandler.ExecuteBatchAsync( new string[] { sql }, this.parameters ).ConfigureAwait( false );
 			}
-
-			//using (var handler = this.pm.GetSqlPassThroughHandler())
-			//{
-			//	handler.Execute( sql, false, this.parameters.ToArray() );
-			//	pm.Save(); // Commit
-			//}
 		}
 
 		/// <summary>
@@ -214,7 +232,7 @@ namespace NDO.Query
 		/// <returns></returns>
 		public List<T> Execute()
 		{
-			return GetResultListAsync().Result;
+			return GetResultListAsync().GetAwaiter().GetResult();
 		}
 
 		/// <summary>
@@ -258,13 +276,13 @@ namespace NDO.Query
 
 			if (this.queryContextsForTypes.Count > 1 && this.orderings.Count > 0)
 			{
-				result = await QueryOrderedPolymorphicList();
+				result = await QueryOrderedPolymorphicList().ConfigureAwait(false);
 			}
 			else
 			{
 				foreach (var queryContextsEntry in this.queryContextsForTypes)
 				{
-					foreach (var item in await ExecuteSubQueryAsync( queryContextsEntry.Type, queryContextsEntry ))
+					foreach (var item in await ExecuteSubQueryAsync( queryContextsEntry.Type, queryContextsEntry ).ConfigureAwait( false ))
 					{
 						result.Add( (T) item );
 					}
@@ -397,7 +415,7 @@ namespace NDO.Query
 		}
 #endif
 
-		private object ExecuteAggregateQuery( QueryContextsEntry queryContextsEntry, string field, AggregateType aggregateType )
+		private async Task<object> ExecuteAggregateQueryAsync( QueryContextsEntry queryContextsEntry, string field, AggregateType aggregateType )
 		{
 			Type t = queryContextsEntry.Type;
 			IQueryGenerator queryGenerator = ConfigContainer.Resolve<IQueryGenerator>();
@@ -413,7 +431,7 @@ namespace NDO.Query
 				// the subqueries could be executed against different connections.
 				// TODO: This could be optimized, if we made clear whether the involved tables
 				// can be reached with the same connection.
-				var l = persistenceHandler.ExecuteBatch( new string[] { generatedQuery }, this.parameters );
+				var l = await persistenceHandler.ExecuteBatchAsync( new string[] { generatedQuery }, this.parameters ).ConfigureAwait(false);
 				if (l.Count == 0)
 					return null;
 
@@ -517,7 +535,7 @@ namespace NDO.Query
 				persistenceHandler.LogAdapter = this.pm.LogAdapter;
 				this.pm.CheckTransaction( persistenceHandler, t );
 
-				DataTable table = await persistenceHandler.PerformQueryAsync( generatedQuery, this.parameters, this.pm.DataSet );
+				DataTable table = await persistenceHandler.PerformQueryAsync( generatedQuery, this.parameters, this.pm.DataSet ).ConfigureAwait(false);
 				return pm.DataTableToIList( t, table.Rows, this.hollowResults );
 			}
 		}
@@ -528,7 +546,7 @@ namespace NDO.Query
 			List<ObjectRowPair<T>> rowPairList = new List<ObjectRowPair<T>>();
 			foreach (var queryContextsEntry in this.queryContextsForTypes)
 			{
-				rowPairList.AddRange( await ExecuteOrderedSubQueryAsync( queryContextsEntry ) );
+				rowPairList.AddRange( await ExecuteOrderedSubQueryAsync( queryContextsEntry ).ConfigureAwait( false ) );
 			}
 
 			rowPairList.Sort();
@@ -569,7 +587,7 @@ namespace NDO.Query
 					WriteBackParameters();
 				}
 
-				table = await persistenceHandler.PerformQueryAsync( generatedQuery, this.parameters, this.pm.DataSet );
+				table = await persistenceHandler.PerformQueryAsync( generatedQuery, this.parameters, this.pm.DataSet ).ConfigureAwait( false );
 			}
 
 			DataRow[] rows = table.Select();
@@ -609,7 +627,7 @@ namespace NDO.Query
 		/// </remarks>
 		public T ExecuteSingle( bool throwIfResultCountIsWrong = false )
 		{
-			var resultList = GetResultListAsync().Result;
+			var resultList = GetResultListAsync().GetAwaiter().GetResult();
 			int count = resultList.Count;
 			if (count == 1 || (!throwIfResultCountIsWrong && count > 0))
 			{
@@ -635,7 +653,7 @@ namespace NDO.Query
 		/// </remarks>
 		public async Task<T> ExecuteSingleAsync( bool throwIfResultCountIsWrong = false )
 		{
-			var resultList = await GetResultListAsync();
+			var resultList = await GetResultListAsync().ConfigureAwait(false);
 			int count = resultList.Count;
 			if (count == 1 || ( !throwIfResultCountIsWrong && count > 0 ))
 			{

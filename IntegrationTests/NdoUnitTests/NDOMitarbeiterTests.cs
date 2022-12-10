@@ -179,6 +179,40 @@ namespace NdoUnitTests
 		}
 
 		[Test]
+		public async Task LinqQuerySingleUpdateAsync()
+		{
+			pm.MakePersistent( this.m );
+			pm.Save();
+			var m1 = await pm.Objects<Mitarbeiter>().SingleAsync();
+			Assert.NotNull( m1 );
+			m1.Nachname = "Matytschak";
+			pm.Save();
+			var m2 = await pm.Objects<Mitarbeiter>().SingleAsync();
+			Assert.NotNull( m2 );
+			Assert.AreEqual( "Matytschak", m2.Nachname );
+		}
+
+		[Test]
+		public async Task AsyncAggregateFunction()
+		{
+			pm.MakePersistent( this.m );
+			pm.Save();
+			NDOQuery<Mitarbeiter> q = new NDOQuery<Mitarbeiter>(pm);
+			var count = await q.ExecuteAggregateAsync<decimal>( "*", AggregateType.Count );
+			Assert.AreEqual( 1, count );
+		}
+
+		[Test]
+		public async Task LinqAsyncAggregateFunction()
+		{
+			pm.MakePersistent( this.m );
+			pm.Save();
+			var count = await pm.Objects<Mitarbeiter>().CountAsync();
+			Assert.AreEqual( 1, count );
+		}
+
+
+		[Test]
 		public async Task LinqQuerySingleNullAsync()
 		{
 			var m2 = await pm.Objects<Mitarbeiter>().SingleOrDefaultAsync();
@@ -623,7 +657,7 @@ namespace NdoUnitTests
 		}
 
 		[Test]
-		public void TestAggregateQuery()
+		public async Task TestAggregateQuery()
 		{
 			Mitarbeiter mm;
 			IList l = new ArrayList();
@@ -644,9 +678,9 @@ namespace NdoUnitTests
 				sum += m2.Position.Y;
 			}
 			NDOQuery<Mitarbeiter> q = new NDOQuery<Mitarbeiter>(pm, null);
-			decimal newsum = (decimal)q.ExecuteAggregate("position.Y", AggregateType.Sum);
+			decimal newsum = await q.ExecuteAggregateAsync<decimal>("position.Y", AggregateType.Sum);
 			Assert.AreEqual(sum, newsum, "Summe stimmt nicht");
-			decimal count = (decimal)q.ExecuteAggregate("position.X", AggregateType.Count);
+			decimal count = await q.ExecuteAggregateAsync<decimal>("position.X", AggregateType.Count);
 			Assert.AreEqual(20, count, "Count stimmt nicht");
 		}
 

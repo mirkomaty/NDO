@@ -66,7 +66,7 @@ namespace NDO
 		void UpdateDeletedObjects(DataTable dt);
 
 		/// <summary>
-		/// Executes a batch of sql statements.
+		/// Executes a batch of sql statements async.
 		/// </summary>
 		/// <param name="statements">Each element in the array is a sql statement.</param>
 		/// <param name="parameters">A list of parameters (see remarks).</param>
@@ -77,7 +77,7 @@ namespace NDO
 		/// all subqueries. If parameters is an ordinary IList, NDO expects to find a NDOParameterCollection 
 		/// for each subquery. If an element is null, no parameters are submitted for the given query.
 		/// </remarks>
-		IList<Dictionary<string,object>> ExecuteBatch(string[] statements, IList parameters);
+		Task<IList<Dictionary<string, object>>> ExecuteBatchAsync( string[] statements, IList parameters );
 
 		/// <summary>
 		/// Execute a SQL query.

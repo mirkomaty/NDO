@@ -645,11 +645,11 @@ namespace NDO.SqlPersistenceHandling
 		/// all subqueries. If parameters is an ordinary IList, NDO expects to find a NDOParameterCollection 
 		/// for each subquery. If an element is null, no parameters are submitted for the given query.
 		/// </remarks>
-		public IList<Dictionary<string, object>> ExecuteBatch( string[] statements, IList parameters )
+		public async Task<IList<Dictionary<string, object>>> ExecuteBatchAsync( string[] statements, IList parameters )
 		{
 			List<Dictionary<string, object>> result = new List<Dictionary<string, object>>();
 			bool closeIt = false;
-			IDataReader dr = null;
+			DbDataReader dr = null;
 			int i;
 			try
 			{
@@ -662,7 +662,8 @@ namespace NDO.SqlPersistenceHandling
 
 				if (this.provider.SupportsBulkCommands)
 				{
-					IDbCommand cmd = this.provider.NewSqlCommand( conn );
+					// cast is necessary here to get access to async methods
+					DbCommand cmd = (DbCommand)this.provider.NewSqlCommand( conn );
 					sql = this.provider.GenerateBulkCommand( statements );
 					cmd.CommandText = sql;
 					if (parameters != null && parameters.Count > 0)
@@ -682,24 +683,25 @@ namespace NDO.SqlPersistenceHandling
 					if (this.transaction != null)
 						cmd.Transaction = this.transaction;
 
-					dr = cmd.ExecuteReader();
-
-					for (; ; )
+					using (dr = await cmd.ExecuteReaderAsync().ConfigureAwait( false )) 
 					{
-						var dict = new Dictionary<string, object>();
-						while (dr.Read())
+						do
 						{
-							for (i = 0; i < dr.FieldCount; i++)
+							var dict = new Dictionary<string, object>();
+							while (await dr.ReadAsync().ConfigureAwait( false ))
 							{
-								dict.Add( dr.GetName( i ), dr.GetValue( i ) );
+								for (i = 0; i < dr.FieldCount; i++)
+								{
+									// GetFieldValueAsync uses just Task.FromResult(),
+									// so we don't gain anything with an async call here.
+									dict.Add( dr.GetName( i ), dr.GetValue( i ) );  
+								}
 							}
-						}
-						result.Add( dict );
-						if (!dr.NextResult())
-							break;
-					}
 
-					dr.Close();
+							result.Add( dict );
+
+						} while (await dr.NextResultAsync().ConfigureAwait( false ));
+					}
 				}
 				else
 				{
@@ -708,7 +710,8 @@ namespace NDO.SqlPersistenceHandling
 						string s = statements[i];
 						sql += s + ";\n"; // For DumpBatch only
 						var dict = new Dictionary<string, object>();
-						IDbCommand cmd = this.provider.NewSqlCommand( conn );
+						// cast is necessary here to get access to async methods
+						DbCommand cmd = (DbCommand)this.provider.NewSqlCommand( conn );
 
 						cmd.CommandText = s;
 						if (parameters != null && parameters.Count > 0)
@@ -719,17 +722,18 @@ namespace NDO.SqlPersistenceHandling
 						if (this.transaction != null)
 							cmd.Transaction = this.transaction;
 
-						dr = cmd.ExecuteReader();
-
-						while (dr.Read())
+						using (dr = await cmd.ExecuteReaderAsync().ConfigureAwait( false )) 
 						{
-							for (int j = 0; j < dr.FieldCount; j++)
+
+							while (await dr.ReadAsync().ConfigureAwait( false ))
 							{
-								dict.Add( dr.GetName( j ), dr.GetValue( j ) );
+								for (int j = 0; j < dr.FieldCount; j++)
+								{
+									dict.Add( dr.GetName( j ), dr.GetValue( j ) );
+								}
 							}
 						}
 
-						dr.Close();
 						result.Add( dict );
 					}
 
@@ -821,8 +825,6 @@ namespace NDO.SqlPersistenceHandling
 		}
 
 		/// <inheritdoc/>
-
-#warning Wir brauchen eine Version mit CancellationToken.
 		public async Task<DataTable> PerformQueryAsync( string sql, IList parameters, DataSet templateDataSet )
 		{
 			if (sql.Trim().StartsWith( "EXEC", StringComparison.InvariantCultureIgnoreCase ))
@@ -841,10 +843,10 @@ namespace NDO.SqlPersistenceHandling
             try
             {
 				var asyncConnection = this.selectCommand.Connection;
-				var reader = await this.selectCommand.ExecuteReaderAsync();
+				var reader = await this.selectCommand.ExecuteReaderAsync().ConfigureAwait(false);
 				using (reader)
 				{
-					while (await reader.ReadAsync())
+					while (await reader.ReadAsync().ConfigureAwait( false ))
 					{
 						var row = table.NewRow();
 						for (int i = 0; i < reader.FieldCount; i++)

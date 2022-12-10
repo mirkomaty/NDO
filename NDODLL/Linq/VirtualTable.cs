@@ -162,6 +162,15 @@ namespace NDO.Linq
 		}
 
 		/// <summary>
+		/// Executes the COUNT aggregate query for the given virtual table.
+		/// </summary>
+		public async Task<int> CountAsync()
+		{
+			var ndoQuery = Ndoquery;
+			return (int) await ndoQuery.ExecuteAggregateAsync<decimal>( "*", AggregateType.Count ).ConfigureAwait( false );
+		}
+
+		/// <summary>
 		/// Executes the MAX aggregate query for the given virtual table.
 		/// </summary>
 		/// <typeparam name="TP"></typeparam>
@@ -227,6 +236,72 @@ namespace NDO.Linq
 			return ExecuteAggregate( fieldSelector, AggregateType.Var );
 		}
 
+		/// <summary>
+		/// Executes the MAX aggregate query for the given virtual table.
+		/// </summary>
+		/// <typeparam name="TP"></typeparam>
+		/// <param name="fieldSelector"></param>
+		/// <returns></returns>
+		public Task<TP> MaxAsync<TP>( Expression<Func<T, TP>> fieldSelector )
+		{
+			return ExecuteAggregateAsync( fieldSelector, AggregateType.Max );
+		}
+
+		/// <summary>
+		/// Executes the MAX aggregate query for the given virtual table.
+		/// </summary>
+		/// <typeparam name="TP"></typeparam>
+		/// <param name="fieldSelector"></param>
+		/// <returns></returns>
+		public Task<TP> MinAsync<TP>( Expression<Func<T, TP>> fieldSelector )
+		{
+			return ExecuteAggregateAsync( fieldSelector, AggregateType.Min );
+		}
+
+		/// <summary>
+		/// Executes the MAX aggregate query for the given virtual table.
+		/// </summary>
+		/// <typeparam name="TP"></typeparam>
+		/// <param name="fieldSelector"></param>
+		/// <returns></returns>
+		public Task<TP> StandardDeviationAsync<TP>( Expression<Func<T, TP>> fieldSelector )
+		{
+			return ExecuteAggregateAsync( fieldSelector, AggregateType.StDev );
+		}
+
+		/// <summary>
+		/// Executes the MAX aggregate query for the given virtual table.
+		/// </summary>
+		/// <typeparam name="TP"></typeparam>
+		/// <param name="fieldSelector"></param>
+		/// <returns></returns>
+		public Task<TP> AverageAsync<TP>( Expression<Func<T, TP>> fieldSelector )
+		{
+			return ExecuteAggregateAsync( fieldSelector, AggregateType.Avg );
+		}
+
+		/// <summary>
+		/// Executes the SUM aggregate query for the given virtual table.
+		/// </summary>
+		/// <typeparam name="TP"></typeparam>
+		/// <param name="fieldSelector"></param>
+		/// <returns></returns>
+		public Task<TP> SumAsync<TP>( Expression<Func<T, TP>> fieldSelector )
+		{
+			return ExecuteAggregateAsync( fieldSelector, AggregateType.Sum );
+		}
+
+		/// <summary>
+		/// Executes the VAR aggregate query for the given virtual table.
+		/// </summary>
+		/// <typeparam name="TP"></typeparam>
+		/// <param name="fieldSelector"></param>
+		/// <returns></returns>
+		public Task<TP> VarianceAsync<TP>( Expression<Func<T, TP>> fieldSelector )
+		{
+			return ExecuteAggregateAsync( fieldSelector, AggregateType.Var );
+		}
+
 		string GetField<TP>( Expression<Func<T, TP>> fieldSelector )
 		{
 			ExpressionTreeTransformer transformer =
@@ -244,6 +319,18 @@ namespace NDO.Linq
 		TP ExecuteAggregate<TP>( Expression<Func<T, TP>> fieldSelector, AggregateType aggregateType )
 		{
 			return (TP)Ndoquery.ExecuteAggregate( GetField(fieldSelector), aggregateType );
+		}
+
+		/// <summary>
+		/// /// Executes the aggregate query for the given virtual table.
+		/// </summary>
+		/// <typeparam name="TP"></typeparam>
+		/// <param name="fieldSelector"></param>
+		/// <param name="aggregateType"></param>
+		/// <returns></returns>
+		async Task<TP> ExecuteAggregateAsync<TP>( Expression<Func<T, TP>> fieldSelector, AggregateType aggregateType )
+		{
+			return await Ndoquery.ExecuteAggregateAsync<TP>( GetField( fieldSelector ), aggregateType );
 		}
 
 		/// <summary>
@@ -328,6 +415,15 @@ namespace NDO.Linq
 		public void DeleteDirectly()
 		{
 			Ndoquery.DeleteDirectly();
+		}
+
+		/// <summary>
+		/// Deletes records directly without caring for composite relations.
+		/// </summary>
+		/// <remarks>Only use this method if your class does not use composite relations and you are sure that this will not be the case in the future either. If you are unsure about this, you better use PersistenceManager.Delete ().</remarks>
+		public Task DeleteDirectlyAsync()
+		{
+			return Ndoquery.DeleteDirectlyAsync();
 		}
 
 		/// <summary>
