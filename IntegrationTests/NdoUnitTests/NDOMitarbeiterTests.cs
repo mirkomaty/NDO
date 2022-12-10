@@ -197,8 +197,7 @@ namespace NdoUnitTests
 			}
 			catch (QueryException qex)
 			{
-				var n = qex.ErrorNumber;
-				thrown = true;
+				thrown = qex.ErrorNumber == 10002;
 			}
 
 			Assert.That( thrown );
