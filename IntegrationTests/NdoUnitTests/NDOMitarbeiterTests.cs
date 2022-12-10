@@ -32,6 +32,7 @@ using NDO;
 using Reisekosten.Personal;
 using NDO.Query;
 using NDO.Linq;
+using System.Threading.Tasks;
 
 namespace NdoUnitTests
 {
@@ -139,7 +140,72 @@ namespace NdoUnitTests
 			m2.Vorname = "Mirko";
 		}
 
-        [Test]
+		[Test]
+		public async Task AsyncQuery()
+		{
+			pm.MakePersistent( m );
+			pm.Save();
+			var q = new NDOQuery<Mitarbeiter>( pm );
+			var l = await q.ExecuteAsync();
+			Assert.AreEqual( 1, l.Count );
+		}
+
+		[Test]
+		public async Task AsyncQuerySingle()
+		{
+			pm.MakePersistent( this.m );
+			pm.Save();
+			var q = new NDOQuery<Mitarbeiter>( pm );
+			var m2 = await q.ExecuteSingleAsync( true );
+			Assert.NotNull( m2 );
+		}
+
+		[Test]
+		public async Task LinqQueryAsync()
+		{
+			pm.MakePersistent( this.m );
+			pm.Save();
+			var l = await pm.Objects<Mitarbeiter>().GetResultsAsync();
+			Assert.AreEqual( 1, l.Count );
+		}
+
+		[Test]
+		public async Task LinqQuerySingleAsync()
+		{
+			pm.MakePersistent( this.m );
+			pm.Save();
+			var m2 = await pm.Objects<Mitarbeiter>().SingleAsync();
+			Assert.NotNull( m2 );
+		}
+
+		[Test]
+		public async Task LinqQuerySingleNullAsync()
+		{
+			var m2 = await pm.Objects<Mitarbeiter>().SingleOrDefaultAsync();
+			Assert.IsNull( m2 );
+		}
+
+		[Test]
+		public async Task LinqQuerySingleNullThrowsAsync()
+		{
+			bool thrown = false;
+
+			try
+			{
+				var m2 = await pm.Objects<Mitarbeiter>().SingleAsync();
+				Assert.IsNull( m2 );
+			}
+			catch (QueryException qex)
+			{
+				var n = qex.ErrorNumber;
+				thrown = true;
+			}
+
+			Assert.That( thrown );
+		}
+
+
+		[Test]
 		public void TestObjectCreationSaveChanged() 
 		{
 			pm.MakePersistent(m);

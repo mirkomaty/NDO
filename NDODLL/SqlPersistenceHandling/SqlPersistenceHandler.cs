@@ -841,22 +841,19 @@ namespace NDO.SqlPersistenceHandling
             try
             {
 				var asyncConnection = this.selectCommand.Connection;
-				await asyncConnection.OpenAsync();
-				using(asyncConnection)
+				var reader = await this.selectCommand.ExecuteReaderAsync();
+				using (reader)
 				{
-					var reader = await this.selectCommand.ExecuteReaderAsync();
-					using (reader)
+					while (await reader.ReadAsync())
 					{
-						while (await reader.ReadAsync())
+						var row = table.NewRow();
+						for (int i = 0; i < reader.FieldCount; i++)
 						{
-							var row = table.NewRow();
-							for (int i = 0; i < reader.FieldCount; i++)
-							{
-								var name = reader.GetName(i);
-								row[name] = reader.GetValue( i );
-								table.Rows.Add( row );
-							}
+							var name = reader.GetName(i);
+							row[name] = reader.GetValue( i );
 						}
+
+						table.Rows.Add( row );
 					}
 				}
             }

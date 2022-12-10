@@ -214,7 +214,7 @@ namespace NDO.Query
 		/// <returns></returns>
 		public List<T> Execute()
 		{
-			return GetResultList();
+			return GetResultListAsync().Result;
 		}
 
 		/// <summary>
@@ -247,41 +247,6 @@ namespace NDO.Query
 			}
 		}
 
-		private List<T> GetResultList()
-		{
-			List<T> result = new List<T>();
-
-			if (this.queryContextsForTypes == null)
-				GenerateQueryContexts();
-
-			// this.pm.CheckTransaction happens in ExecuteOrderedSubQuery or in ExecuteSubQuery
-
-			if (this.queryContextsForTypes.Count > 1 && this.orderings.Count > 0)
-			{
-				result = QueryOrderedPolymorphicList();
-			}
-			else
-			{
-				foreach (var queryContextsEntry in this.queryContextsForTypes)
-				{
-					foreach (var item in ExecuteSubQuery( queryContextsEntry.Type, queryContextsEntry ))
-					{
-						result.Add( (T)item );
-					}
-				}
-			}
-
-			//GetPrefetches( result );
-			this.pm.CheckEndTransaction( !this.pm.DeferredMode && this.pm.TransactionMode == TransactionMode.Optimistic );
-			if (!this.pm.GetClass( resultType ).Provider.SupportsFetchLimit)
-			{
-				List<T> fetchResult = new List<T>();
-				for (int i = this.skip; i < Math.Min( result.Count, i + this.take ); i++)
-					fetchResult.Add( result[i] );
-			}
-			return result;
-		}
-
 		private async Task<List<T>> GetResultListAsync()
 		{
 			List<T> result = new List<T>();
@@ -293,7 +258,7 @@ namespace NDO.Query
 
 			if (this.queryContextsForTypes.Count > 1 && this.orderings.Count > 0)
 			{
-				result = QueryOrderedPolymorphicList();
+				result = await QueryOrderedPolymorphicList();
 			}
 			else
 			{
@@ -558,19 +523,23 @@ namespace NDO.Query
 		}
 
 
-		private List<T> QueryOrderedPolymorphicList()
+		private async Task<List<T>> QueryOrderedPolymorphicList()
 		{
 			List<ObjectRowPair<T>> rowPairList = new List<ObjectRowPair<T>>();
 			foreach (var queryContextsEntry in this.queryContextsForTypes)
-				rowPairList.AddRange( ExecuteOrderedSubQuery( queryContextsEntry ) );
+			{
+				rowPairList.AddRange( await ExecuteOrderedSubQueryAsync( queryContextsEntry ) );
+			}
+
 			rowPairList.Sort();
 			List<T> result = new List<T>( rowPairList.Count );
 			foreach (ObjectRowPair<T> orp in rowPairList)
 				result.Add( (T)orp.Obj );
+
 			return result;
 		}
 
-		private List<ObjectRowPair<T>> ExecuteOrderedSubQuery( QueryContextsEntry queryContextsEntry )
+		private async Task<List<ObjectRowPair<T>>> ExecuteOrderedSubQueryAsync( QueryContextsEntry queryContextsEntry )
 		{
 			Type t = queryContextsEntry.Type;
 			Class resultSubClass = this.pm.GetClass( t );
@@ -600,7 +569,7 @@ namespace NDO.Query
 					WriteBackParameters();
 				}
 
-				table = persistenceHandler.PerformQuery( generatedQuery, this.parameters, this.pm.DataSet );
+				table = await persistenceHandler.PerformQueryAsync( generatedQuery, this.parameters, this.pm.DataSet );
 			}
 
 			DataRow[] rows = table.Select();
@@ -640,7 +609,7 @@ namespace NDO.Query
 		/// </remarks>
 		public T ExecuteSingle( bool throwIfResultCountIsWrong = false )
 		{
-			var resultList = GetResultList();
+			var resultList = GetResultListAsync().Result;
 			int count = resultList.Count;
 			if (count == 1 || (!throwIfResultCountIsWrong && count > 0))
 			{
@@ -654,6 +623,33 @@ namespace NDO.Query
 					return default( T );
 			}
 		}
+
+		/// <summary>
+		/// Executes the query and returns a single object.
+		/// </summary>
+		/// <param name="throwIfResultCountIsWrong"></param>
+		/// <returns>The fetched object or null, if the object wasn't found and throwIfResultCountIsWrong is false.</returns>
+		/// <remarks>
+		/// If throwIfResultCountIsWrong is true, an Exception will be throwed, if the result count isn't exactly 1. 
+		/// If throwIfResultCountIsWrong is false and the query has more than one result, the first of the results will be returned.
+		/// </remarks>
+		public async Task<T> ExecuteSingleAsync( bool throwIfResultCountIsWrong = false )
+		{
+			var resultList = await GetResultListAsync();
+			int count = resultList.Count;
+			if (count == 1 || ( !throwIfResultCountIsWrong && count > 0 ))
+			{
+				return resultList[0];
+			}
+			else
+			{
+				if (throwIfResultCountIsWrong)
+					throw new QueryException( 10002, count.ToString() + " result objects in ExecuteSingle call" );
+				else
+					return default( T );
+			}
+		}
+
 
 		/// <summary>
 		/// Constructs the subqueries necessary to fetch all objects of a 

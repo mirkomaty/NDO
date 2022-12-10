@@ -26,6 +26,7 @@ using System.Collections.Generic;
 using System.Collections;
 using NDO.Query;
 using System.Linq.Expressions;
+using System.Threading.Tasks;
 
 namespace NDO.Linq
 {
@@ -257,6 +258,14 @@ namespace NDO.Linq
         }
 
 		/// <summary>
+		/// Executes the Query and returns an awaitable task
+		/// </summary>
+		public Task<List<T>> GetResultsAsync()
+		{
+			return Ndoquery.ExecuteAsync();
+		}
+
+		/// <summary>
 		/// Returns the prefetches.
 		/// </summary>
         public IEnumerable<string> Prefetches
@@ -403,6 +412,26 @@ namespace NDO.Linq
 		public T Single()
 		{
 			return Ndoquery.ExecuteSingle( true );
+		}
+
+		/// <summary>
+		/// Gets an awaitable task returning a single object
+		/// </summary>
+		/// <returns></returns>
+		/// <remarks>Throws a NDOException, if the query fetches an empty result set.</remarks>
+		public Task<T> SingleAsync()
+		{
+			return Ndoquery.ExecuteSingleAsync( true );
+		}
+
+		/// <summary>
+		/// Gets an awaitable task returning a single object
+		/// </summary>
+		/// <returns></returns>
+		/// <remarks>Throws a NDOException, if the query fetches an empty result set.</remarks>
+		public Task<T> SingleOrDefaultAsync()
+		{
+			return Ndoquery.ExecuteSingleAsync();
 		}
 
 		/// <summary>
