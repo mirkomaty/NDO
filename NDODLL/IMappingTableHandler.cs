@@ -22,6 +22,7 @@
 
 using System;
 using System.Data;
+using System.Threading.Tasks;
 using NDO.Mapping;
 
 namespace NDO
@@ -39,7 +40,7 @@ namespace NDO
 		/// in a relation table.
 		/// </summary>
 		/// <param name="ds">The DataSet to update. To extract the right table in your implementation, use <code>DataTable dt = ds.Tables[r.MappingTable.TableName];</code> where r is a NDO.Mapping.Relation.</param>
-		void Update(DataSet ds);
+		Task UpdateAsync(DataSet ds);
 
 		/// <summary>
 		/// Called by the NDO Framework. Searches for all DataRows which represent objects contained in a specific relation.

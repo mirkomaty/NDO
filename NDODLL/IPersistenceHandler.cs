@@ -56,14 +56,14 @@ namespace NDO
 		/// Called by the NDO Framework. Write all changed rows back to DB
 		/// </summary>
 		/// <param name="dt">The data table containing the rows to be updated</param>
-		void Update(DataTable dt);
+		Task UpdateAsync(DataTable dt);
 
 		/// <summary>
 		/// Called by the NDO Framework. Special Update function which processes only deleted rows. This is necessary, 
 		/// because deleted rows must be updated in reverse order as changed or created rows.
 		/// </summary>
 		/// <param name="dt">DataTable containing the rows to delete</param>
-		void UpdateDeletedObjects(DataTable dt);
+		Task UpdateDeletedObjectsAsync(DataTable dt);
 
 		/// <summary>
 		/// Executes a batch of sql statements async.

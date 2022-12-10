@@ -369,9 +369,9 @@ namespace NDO.SqlPersistenceHandling
 			string where = string.Empty;
 
             int oidCount = this.classMapping.Oid.OidColumns.Count;
-            for(int i = 0; i < oidCount; i++)
+			int i = 0;
+            foreach(var oidColumn in this.classMapping.Oid.OidColumns)
 			{
-                OidColumn oidColumn = (OidColumn)this.classMapping.Oid.OidColumns[i];
 				if (provider.UseNamedParams)
 					where += provider.GetQuotedName(oidColumn.Name) + " = " + provider.GetNamedParameter("D_Original_" + oidColumn.Name);
 				else
@@ -388,6 +388,8 @@ namespace NDO.SqlPersistenceHandling
 
                 if (i < oidCount - 1)
                     where += " AND ";
+
+				i++;
 			}
 
 			string whereTS = string.Empty;
@@ -522,7 +524,7 @@ namespace NDO.SqlPersistenceHandling
 		/// Saves Changes to a DataTable
 		/// </summary>
 		/// <param name="dt"></param>
-		public void Update(DataTable dt)
+		public void UpdateAsync(DataTable dt)
 		{
 			DataRow[] rows = null;
 			try
@@ -598,14 +600,30 @@ namespace NDO.SqlPersistenceHandling
 		/// Delets all rows of a DataTable marked as deleted
 		/// </summary>
 		/// <param name="dt"></param>
-        public void UpdateDeletedObjects(DataTable dt)
+        public async Task UpdateDeletedObjectsAsync(DataTable dt)
 		{
 			DataRow[] rows = Select(dt, DataViewRowState.Deleted);
 			if (rows.Length == 0) return;
-			Dump(rows);
+			var oidcolumns = this.classMapping.Oid.OidColumns.Select( c => c.Name );
+
+			Dump( rows);
 			try
 			{
-				dataAdapter.Update(rows);
+				var parameters = new List<object>();
+				var statements = new List<string>();
+				foreach (var row in rows)
+				{
+					statements.Add( this.deleteCommand.CommandText );
+					foreach (var col in oidcolumns)
+					{
+						parameters.Add( row[col] );
+					}
+
+					if (this.classMapping.TimeStampColumn != null)
+						parameters.Add( row[this.classMapping.TimeStampColumn] );
+				}
+
+				await ExecuteBatchAsync( statements, parameters ).ConfigureAwait( false );
 			}
 			catch (System.Data.DBConcurrencyException dbex)
 			{
@@ -638,6 +656,7 @@ namespace NDO.SqlPersistenceHandling
 		/// </summary>
 		/// <param name="statements">Each element in the array is a sql statement.</param>
 		/// <param name="parameters">A list of parameters (see remarks).</param>
+		/// <param name="isCommandArray">Determines, if statements contains identical commands which all need parameters</param>
 		/// <returns>An List of Hashtables, containing the Name/Value pairs of the results.</returns>
 		/// <remarks>
 		/// For emty resultsets an empty Hashtable will be returned. 
@@ -645,7 +664,7 @@ namespace NDO.SqlPersistenceHandling
 		/// all subqueries. If parameters is an ordinary IList, NDO expects to find a NDOParameterCollection 
 		/// for each subquery. If an element is null, no parameters are submitted for the given query.
 		/// </remarks>
-		public async Task<IList<Dictionary<string, object>>> ExecuteBatchAsync( string[] statements, IList parameters )
+		public async Task<IList<Dictionary<string, object>>> ExecuteBatchAsync( IEnumerable<string> statements, IList parameters, bool isCommandArray = false )
 		{
 			List<Dictionary<string, object>> result = new List<Dictionary<string, object>>();
 			bool closeIt = false;
@@ -664,12 +683,13 @@ namespace NDO.SqlPersistenceHandling
 				{
 					// cast is necessary here to get access to async methods
 					DbCommand cmd = (DbCommand)this.provider.NewSqlCommand( conn );
-					sql = this.provider.GenerateBulkCommand( statements );
+					sql = this.provider.GenerateBulkCommand( statements.ToArray() );
 					cmd.CommandText = sql;
+					int parameterIndex = 0;
 					if (parameters != null && parameters.Count > 0)
 					{
 						// Only the first command gets parameters
-						for (i = 0; i < statements.Length; i++)
+						for (i = 0; i < statements.Count(); i++)
 						{
 							if (i == 0)
 								CreateQueryParameters( cmd, parameters );
@@ -705,9 +725,8 @@ namespace NDO.SqlPersistenceHandling
 				}
 				else
 				{
-					for (i = 0; i < statements.Length; i++)
+					foreach (var s in statements)
 					{
-						string s = statements[i];
 						sql += s + ";\n"; // For DumpBatch only
 						var dict = new Dictionary<string, object>();
 						// cast is necessary here to get access to async methods

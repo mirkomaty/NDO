@@ -42,6 +42,7 @@ using NDO.Query;
 using ST = System.Transactions;
 using NDO.Configuration;
 using NDO.ChangeLogging;
+using System.Threading.Tasks;
 
 namespace NDO
 {
@@ -2257,7 +2258,7 @@ namespace NDO
 		/// <remarks>
 		/// Delete and Insert/Update operations are to be separated to maintain the type order.
 		/// </remarks>
-		private void UpdateTypes(IList types, bool delete)
+		private async Task UpdateTypesAsync(IList types, bool delete)
 		{
 			foreach(Type t in types) 
 			{
@@ -2273,9 +2274,9 @@ namespace NDO
 					{
 						DataTable dt = GetTable(t);
 						if (delete)
-							handler.UpdateDeletedObjects( dt );
+							await handler.UpdateDeletedObjectsAsync( dt ).ConfigureAwait(false);
 						else
-							handler.Update( dt );
+							await handler.UpdateAsync( dt ).ConfigureAwait(false);
 					}
 					finally
 					{
@@ -2285,7 +2286,7 @@ namespace NDO
 			}
 		}
 
-        internal void UpdateCreatedMappingTableEntries()
+        internal async Task UpdateCreatedMappingTableEntries()
         {
             foreach (MappingTableEntry e in createdMappingTableObjects)
             {
@@ -2298,11 +2299,11 @@ namespace NDO
 				handler.LogAdapter = this.LogAdapter;
 				handler.VerboseMode = this.VerboseMode;
 				CheckTransaction( handler, handler.Relation.MappingTable.Connection );
-                handler.Update(ds);
+                await handler.UpdateAsync(ds).ConfigureAwait(false);
             }
         }
 
-        internal void UpdateDeletedMappingTableEntries()
+        internal async Task UpdateDeletedMappingTableEntriesAsync()
         {
             foreach (MappingTableEntry e in createdMappingTableObjects)
             {
@@ -2315,7 +2316,7 @@ namespace NDO
 				handler.LogAdapter = this.LogAdapter;
 				handler.VerboseMode = this.VerboseMode;
 				CheckTransaction( handler, handler.Relation.MappingTable.Connection );
-				handler.Update(ds);
+				await handler.UpdateAsync(ds).ConfigureAwait(false);
             }
         }
 
@@ -2324,7 +2325,7 @@ namespace NDO
 		/// When a newly created object is written to DB, the key might change. Therefore,
 		/// the id is updated and the object is removed and re-inserted into the cache.
 		/// </summary>
-		public virtual void Save(bool deferCommit = false) 
+		public virtual async Task Save(bool deferCommit = false) 
 		{
 			this.DeferredMode = deferCommit;
 			var htOnSaving = new HashSet<ObjectId>();
@@ -2423,7 +2424,7 @@ namespace NDO
 
             // Before we delete any db rows, we have to make sure, to delete mapping
             // table entries first, which might have relations to the db rows to be deleted
-            UpdateDeletedMappingTableEntries();
+            await UpdateDeletedMappingTableEntriesAsync().ConfigureAwait(false);
 
 			// Update DB
 			if (ds.HasChanges()) 
@@ -2449,12 +2450,12 @@ namespace NDO
 
 				// Delete records first
 
-				UpdateTypes(types, true);
+				await UpdateTypesAsync( types, true ).ConfigureAwait( false );
 
 				// Now do all other updates in correct order.
 				types.Reverse();
 
-				UpdateTypes(types, false);
+				await UpdateTypesAsync( types, false ).ConfigureAwait( false );
 				
 				ds.AcceptChanges();
 				if(createdDirectObjects.Count > 0)
@@ -2470,7 +2471,7 @@ namespace NDO
 						r[fakeColumnName] = o;
 					}
 
-					UpdateTypes(types, false);
+					await UpdateTypesAsync( types, false ).ConfigureAwait( false );
 				}
 
 				// Because object id might have changed during DB insertion, re-register newly created objects in the cache.
