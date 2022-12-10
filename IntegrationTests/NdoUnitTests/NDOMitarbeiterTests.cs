@@ -924,30 +924,30 @@ namespace NdoUnitTests
 		}
 
 		[Test]
-		public void CanPerformDirectDelete()
+		public async Task CanPerformDirectDelete()
 		{
 			pm.MakePersistent( m );
 			pm.Save();
 			var firstName = m.Vorname;
 
-			Assert.IsTrue( pm.Objects<Mitarbeiter>().Where( m => m.Vorname == firstName ).Count > 0 );
+			Assert.IsTrue( await pm.Objects<Mitarbeiter>().Where( m => m.Vorname == firstName ).CountAsync() > 0 );
 
 			var q = new NDOQuery<Mitarbeiter>( pm, "vorname = {0}" );
 			q.Parameters.Add( firstName );
-			q.DeleteDirectly();
+			await q.DeleteDirectlyAsync();
 
-			Assert.AreEqual( 0, pm.Objects<Mitarbeiter>().Where( m => m.Vorname == firstName ).Count );
+			Assert.AreEqual( 0, await pm.Objects<Mitarbeiter>().Where( m => m.Vorname == firstName ).CountAsync() );
 
 			m = CreateMitarbeiter( "Mirko", "Matytschak" );
 			pm.MakePersistent( m );
 			pm.Save();
 			firstName = m.Vorname;
 
-			Assert.IsTrue( pm.Objects<Mitarbeiter>().Where( m => m.Vorname == firstName ).Count > 0 );
+			Assert.IsTrue( await pm.Objects<Mitarbeiter>().Where( m => m.Vorname == firstName ).CountAsync() > 0 );
 
-			pm.Objects<Mitarbeiter>().Where( m => m.Vorname == firstName ).DeleteDirectly();
+			await pm.Objects<Mitarbeiter>().Where( m => m.Vorname == firstName ).DeleteDirectlyAsync();
 
-			Assert.AreEqual( 0, pm.Objects<Mitarbeiter>().Where( m => m.Vorname == firstName ).Count );
+			Assert.AreEqual( 0, await pm.Objects<Mitarbeiter>().Where( m => m.Vorname == firstName ).CountAsync() );
 		}
 
 		private Mitarbeiter CreateMitarbeiter(string vorname, string nachname) 
