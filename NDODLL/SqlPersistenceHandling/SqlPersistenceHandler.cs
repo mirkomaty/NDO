@@ -38,6 +38,8 @@ using NDOInterfaces;
 using NDO.Query;
 using System.Globalization;
 using NDO.Configuration;
+using System.Threading.Tasks;
+using System.Threading;
 
 namespace NDO.SqlPersistenceHandling
 {
@@ -57,12 +59,12 @@ namespace NDO.SqlPersistenceHandling
 		/// </summary>
 		public event ConcurrencyErrorHandler ConcurrencyError;
 
-		private IDbCommand selectCommand;
-		private IDbCommand insertCommand;
-		private IDbCommand updateCommand;
-		private IDbCommand deleteCommand;
-		private IDbConnection conn;
-		private IDbTransaction transaction;
+		private DbCommand selectCommand;
+		private DbCommand insertCommand;
+		private DbCommand updateCommand;
+		private DbCommand deleteCommand;
+		private DbConnection conn;
+		private DbTransaction transaction;
 		private DbDataAdapter dataAdapter;
 		private Class classMapping;
 		private string selectFieldList;
@@ -494,10 +496,10 @@ namespace NDO.SqlPersistenceHandling
 			this.disposeCallback = disposeCallback;
 
 
-			this.selectCommand = provider.NewSqlCommand(conn);
-			this.insertCommand = provider.NewSqlCommand(conn);
-			this.updateCommand = provider.NewSqlCommand(conn);
-			this.deleteCommand = provider.NewSqlCommand(conn);
+			this.selectCommand = (DbCommand) provider.NewSqlCommand(conn);
+			this.insertCommand = (DbCommand) provider.NewSqlCommand(conn);
+			this.updateCommand = (DbCommand) provider.NewSqlCommand(conn);
+			this.deleteCommand = (DbCommand) provider.NewSqlCommand(conn);
 			this.dataAdapter = provider.NewDataAdapter(selectCommand, updateCommand, insertCommand, deleteCommand);
 			this.type = t;
 
@@ -622,7 +624,7 @@ namespace NDO.SqlPersistenceHandling
 
 		private DataTable GetTemplateTable(DataSet templateDataset, string name)
 		{
-			// The instance of ds is actually static,
+			// The instance of templateDataset is actually static,
 			// since the SqlPersistenceHandler lives as
 			// a static instance in the PersistenceHandlerCache.
 			DataTable dt = templateDataset.Tables[name];
@@ -818,14 +820,10 @@ namespace NDO.SqlPersistenceHandling
 			}
 		}
 
-		/// <summary>
-		/// Performs a query and returns a DataTable
-		/// </summary>
-		/// <param name="sql"></param>
-		/// <param name="parameters"></param>
-		/// <param name="templateDataSet"></param>
-		/// <returns></returns>
-		public DataTable PerformQuery( string sql, IList parameters, DataSet templateDataSet )
+		/// <inheritdoc/>
+
+#warning Wir brauchen eine Version mit CancellationToken.
+		public async Task<DataTable> PerformQueryAsync( string sql, IList parameters, DataSet templateDataSet )
 		{
 			if (sql.Trim().StartsWith( "EXEC", StringComparison.InvariantCultureIgnoreCase ))
 				this.selectCommand.CommandType = CommandType.StoredProcedure;
@@ -842,7 +840,25 @@ namespace NDO.SqlPersistenceHandling
 
             try
             {
-				dataAdapter.Fill(table);
+				var asyncConnection = this.selectCommand.Connection;
+				await asyncConnection.OpenAsync();
+				using(asyncConnection)
+				{
+					var reader = await this.selectCommand.ExecuteReaderAsync();
+					using (reader)
+					{
+						while (await reader.ReadAsync())
+						{
+							var row = table.NewRow();
+							for (int i = 0; i < reader.FieldCount; i++)
+							{
+								var name = reader.GetName(i);
+								row[name] = reader.GetValue( i );
+								table.Rows.Add( row );
+							}
+						}
+					}
+				}
             }
             catch (System.Exception ex)
             {
@@ -853,6 +869,37 @@ namespace NDO.SqlPersistenceHandling
 
 			return table;		
 		}
+
+		/// <inheritdoc/>
+		public DataTable PerformQuery( string sql, IList parameters, DataSet templateDataSet )
+		{
+			if (sql.Trim().StartsWith( "EXEC", StringComparison.InvariantCultureIgnoreCase ))
+				this.selectCommand.CommandType = CommandType.StoredProcedure;
+			else
+				this.selectCommand.CommandType = CommandType.Text;
+
+			DataTable table = GetTemplateTable(templateDataSet, this.tableName).Clone();
+
+			this.selectCommand.CommandText = sql;
+
+			CreateQueryParameters( this.selectCommand, parameters );
+
+			Dump( null ); // Dumps the Select Command
+
+			try
+			{
+				dataAdapter.Fill( table );
+			}
+			catch (System.Exception ex)
+			{
+				string text = "Exception of type " + ex.GetType().Name + " while executing a Query: " + ex.Message + "\n";
+				text += "Sql Statement: " + sql + "\n";
+				throw new NDOException( 40, text );
+			}
+
+			return table;
+		}
+
 
 		/// <summary>
 		/// Gets a Handler which can store data in relation tables
@@ -889,11 +936,12 @@ namespace NDO.SqlPersistenceHandling
 			get { return this.conn; }
 			set
 			{
-                this.conn = value;
-				this.selectCommand.Connection = value;
-				this.deleteCommand.Connection = value;
-				this.updateCommand.Connection = value;
-				this.insertCommand.Connection = value;
+#warning Das Property muss den Typ DbConnection bekommen
+				this.conn = (DbConnection)value;
+				this.selectCommand.Connection = this.conn;
+				this.deleteCommand.Connection = this.conn;
+				this.updateCommand.Connection = this.conn;
+				this.insertCommand.Connection = this.conn;
 			}
 		}
 
@@ -905,11 +953,11 @@ namespace NDO.SqlPersistenceHandling
 			get { return this.transaction; }
 			set
 			{
-				this.transaction = value;
-				this.selectCommand.Transaction = value;
-				this.deleteCommand.Transaction = value;
-				this.updateCommand.Transaction = value;
-				this.insertCommand.Transaction = value;
+				this.transaction = (DbTransaction)value;
+				this.selectCommand.Transaction = this.transaction;
+				this.deleteCommand.Transaction = this.transaction;
+				this.updateCommand.Transaction = this.transaction;
+				this.insertCommand.Transaction = this.transaction;
 			}
 		}
 

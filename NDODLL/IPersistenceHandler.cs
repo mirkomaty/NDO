@@ -25,6 +25,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
+using System.Threading.Tasks;
 using NDO.Mapping;
 using NDO.SqlPersistenceHandling;
 using NDOInterfaces;
@@ -86,6 +87,16 @@ namespace NDO
 		/// <param name="templateDataset">The DataSet from which the DataTable for the results is cloned</param>
 		/// <returns>A DataTable object, containing the query result.</returns>
 		DataTable PerformQuery( string expression, IList parameters, DataSet templateDataset );
+
+		/// <summary>
+		/// Execute a SQL query.
+		/// </summary>
+		/// <param name="expression">SQL expression</param>
+		/// <param name="parameters">A collection of objects, corresponding to the query parameters.</param>
+		/// <param name="templateDataset">The DataSet from which the DataTable for the results is cloned</param>
+		/// <returns>A DataTable object, containing the query result.</returns>
+		Task<DataTable> PerformQueryAsync( string expression, IList parameters, DataSet templateDataset );
+
 
 		/// <summary>
 		/// Gets a Handler which can store data in relation tables. The handler is an Implementation of IMappingTableHandler.

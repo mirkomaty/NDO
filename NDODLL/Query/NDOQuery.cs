@@ -13,6 +13,7 @@ using NDO.Linq;
 using LE=System.Linq.Expressions;
 using NDO.Configuration;
 using NDO.SqlPersistenceHandling;
+using System.Threading.Tasks;
 
 namespace NDO.Query
 {
@@ -217,6 +218,15 @@ namespace NDO.Query
 		}
 
 		/// <summary>
+		/// Executes the query and returns a list of result objects.
+		/// </summary>
+		/// <returns></returns>
+		public Task<List<T>> ExecuteAsync()
+		{
+			return GetResultListAsync();
+		}
+
+		/// <summary>
 		/// Retrieves the SQL code of a NDOql Query.
 		/// </summary>
 		public string GeneratedQuery
@@ -254,9 +264,9 @@ namespace NDO.Query
 			{
 				foreach (var queryContextsEntry in this.queryContextsForTypes)
 				{
-					foreach (var item in ExecuteSubQuery( queryContextsEntry ))
+					foreach (var item in ExecuteSubQuery( queryContextsEntry.Type, queryContextsEntry ))
 					{
-						result.Add( item );
+						result.Add( (T)item );
 					}
 				}
 			}
@@ -271,6 +281,42 @@ namespace NDO.Query
 			}
 			return result;
 		}
+
+		private async Task<List<T>> GetResultListAsync()
+		{
+			List<T> result = new List<T>();
+
+			if (this.queryContextsForTypes == null)
+				GenerateQueryContexts();
+
+			// this.pm.CheckTransaction happens in ExecuteOrderedSubQuery or in ExecuteSubQuery
+
+			if (this.queryContextsForTypes.Count > 1 && this.orderings.Count > 0)
+			{
+				result = QueryOrderedPolymorphicList();
+			}
+			else
+			{
+				foreach (var queryContextsEntry in this.queryContextsForTypes)
+				{
+					foreach (var item in await ExecuteSubQueryAsync( queryContextsEntry.Type, queryContextsEntry ))
+					{
+						result.Add( (T) item );
+					}
+				}
+			}
+
+			//GetPrefetches( result );
+			this.pm.CheckEndTransaction( !this.pm.DeferredMode && this.pm.TransactionMode == TransactionMode.Optimistic );
+			if (!this.pm.GetClass( resultType ).Provider.SupportsFetchLimit)
+			{
+				List<T> fetchResult = new List<T>();
+				for (int i = this.skip; i < Math.Min( result.Count, i + this.take ); i++)
+					fetchResult.Add( result[i] );
+			}
+			return result;
+		}
+
 
 #if MaskOutPrefetches
 		Type GetPrefetchResultType( Type t, string relation )
@@ -410,18 +456,18 @@ namespace NDO.Query
 			}
 		}
 
-		private List<T> ExecuteSqlQuery()
-		{
-			Type t = this.resultType;
-			using (IPersistenceHandler persistenceHandler = this.pm.PersistenceHandlerManager.GetPersistenceHandler( t ))
-			{
-				persistenceHandler.VerboseMode = this.pm.VerboseMode;
-				persistenceHandler.LogAdapter = this.pm.LogAdapter;
-				this.pm.CheckTransaction( persistenceHandler, t );
-				DataTable table = persistenceHandler.PerformQuery( this.queryExpression, this.parameters, this.pm.DataSet );
-				return (List<T>) pm.DataTableToIList( t, table.Rows, this.hollowResults );
-			}
-		}
+		//private List<T> ExecuteSqlQuery()
+		//{
+		//	Type t = this.resultType;
+		//	using (IPersistenceHandler persistenceHandler = this.pm.PersistenceHandlerManager.GetPersistenceHandler( t ))
+		//	{
+		//		persistenceHandler.VerboseMode = this.pm.VerboseMode;
+		//		persistenceHandler.LogAdapter = this.pm.LogAdapter;
+		//		this.pm.CheckTransaction( persistenceHandler, t );
+		//		DataTable table = persistenceHandler.PerformQuery( this.queryExpression, this.parameters, this.pm.DataSet );
+		//		return (List<T>) pm.DataTableToIList( t, table.Rows, this.hollowResults );
+		//	}
+		//}
 
 		private bool PrepareParameters()
 		{
@@ -484,14 +530,33 @@ namespace NDO.Query
 			}
 		}
 
-		private IEnumerable<T> ExecuteSubQuery( QueryContextsEntry queryContextsEntry )
+		private async Task<IList> ExecuteSubQueryAsync( Type t, QueryContextsEntry queryContextsEntry )
 		{
-			var subResult = ExecuteSubQuery( queryContextsEntry.Type, queryContextsEntry );
-			foreach (var item in subResult)
+			IQueryGenerator queryGenerator = ConfigContainer.Resolve<IQueryGenerator>();
+			bool hasBeenPrepared = PrepareParameters();
+			string generatedQuery;
+
+			if (this.queryLanguage == QueryLanguage.NDOql)
+				generatedQuery = queryGenerator.GenerateQueryString( queryContextsEntry, this.expressionTree, this.hollowResults, this.queryContextsForTypes.Count > 1, this.orderings, this.skip, this.take );
+			else
+				generatedQuery = (string) this.expressionTree.Value;
+
+			if (hasBeenPrepared)
 			{
-				yield return (T)item;
+				WriteBackParameters();
+			}
+
+			using (IPersistenceHandler persistenceHandler = this.pm.PersistenceHandlerManager.GetPersistenceHandler( t ))
+			{
+				persistenceHandler.VerboseMode = this.pm.VerboseMode;
+				persistenceHandler.LogAdapter = this.pm.LogAdapter;
+				this.pm.CheckTransaction( persistenceHandler, t );
+
+				DataTable table = await persistenceHandler.PerformQueryAsync( generatedQuery, this.parameters, this.pm.DataSet );
+				return pm.DataTableToIList( t, table.Rows, this.hollowResults );
 			}
 		}
+
 
 		private List<T> QueryOrderedPolymorphicList()
 		{
@@ -567,22 +632,13 @@ namespace NDO.Query
 		/// <summary>
 		/// Executes the query and returns a single object.
 		/// </summary>
-		/// <returns>The fetched object or null, if the object wasn't found. If the query has more than one result, the first of the results will be returned.</returns>
-		public T ExecuteSingle()
-		{
-			return ExecuteSingle( false );
-		}
-
-		/// <summary>
-		/// Executes the query and returns a single object.
-		/// </summary>
 		/// <param name="throwIfResultCountIsWrong"></param>
 		/// <returns>The fetched object or null, if the object wasn't found and throwIfResultCountIsWrong is false.</returns>
 		/// <remarks>
 		/// If throwIfResultCountIsWrong is true, an Exception will be throwed, if the result count isn't exactly 1. 
 		/// If throwIfResultCountIsWrong is false and the query has more than one result, the first of the results will be returned.
 		/// </remarks>
-		public T ExecuteSingle( bool throwIfResultCountIsWrong )
+		public T ExecuteSingle( bool throwIfResultCountIsWrong = false )
 		{
 			var resultList = GetResultList();
 			int count = resultList.Count;
