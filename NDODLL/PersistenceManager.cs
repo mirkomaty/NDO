@@ -1895,7 +1895,8 @@ namespace NDO
 			IPersistenceCapable pc = CheckPc(o);
 			var cls = this.mappings.FindClass(pc);
 			var name = ( (MemberExpression) memberSelector.Body ).Member.Name;
-			var rel = cls.Relations.FirstOrDefault(r=>r.FieldName.Equals(name, StringComparison.InvariantCultureIgnoreCase));
+			var rel = cls.Relations.FirstOrDefault(r=>r.AccessorName == name || r.FieldName == name);
+
 			if (rel == null)
 				throw new NDOException( 76, $"Error while loading related objects: Can't find relation mapping for the field {pc.GetType().FullName}.{name}. Check your mapping file." );
 
