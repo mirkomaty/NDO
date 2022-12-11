@@ -1,5 +1,5 @@
 //
-// Copyright (c) 2002-2016 Mirko Matytschak 
+// Copyright (c) 2002-2022 Mirko Matytschak 
 // (www.netdataobjects.de)
 //
 // Author: Mirko Matytschak
@@ -91,6 +91,7 @@ namespace NDO.SqlPersistenceHandling
 		private bool hasGuidOid;
 		private readonly INDOContainer configContainer;
 		private Action<Type,IPersistenceHandler> disposeCallback;
+		private SqlSelectBehavior sqlSelectBahavior = new SqlSelectBehavior();
 
 		/// <summary>
 		/// Constructs a SqlPersistenceHandler object
@@ -861,23 +862,8 @@ namespace NDO.SqlPersistenceHandling
 
             try
             {
-				var asyncConnection = this.selectCommand.Connection;
-				var reader = await this.selectCommand.ExecuteReaderAsync().ConfigureAwait(false);
-				using (reader)
-				{
-					while (await reader.ReadAsync().ConfigureAwait( false ))
-					{
-						var row = table.NewRow();
-						for (int i = 0; i < reader.FieldCount; i++)
-						{
-							var name = reader.GetName(i);
-							row[name] = reader.GetValue( i );
-						}
-
-						table.Rows.Add( row );
-					}
-				}
-            }
+				await this.sqlSelectBahavior.Select( this.selectCommand, table );
+			}
             catch (System.Exception ex)
             {
                 string text = "Exception of type " + ex.GetType().Name + " while executing a Query: " + ex.Message + "\n";

@@ -1,5 +1,5 @@
 ﻿//
-// Copyright (c) 2002-2016 Mirko Matytschak 
+// Copyright (c) 2002-2022 Mirko Matytschak 
 // (www.netdataobjects.de)
 //
 // Author: Mirko Matytschak
@@ -26,6 +26,8 @@ using System.Data.Common;
 using NDO.Mapping;
 using NDO.Logging;
 using NDOInterfaces;
+using NDO.SqlPersistenceHandling;
+using System.Threading.Tasks;
 
 namespace NDO
 {
@@ -35,15 +37,16 @@ namespace NDO
 	internal class NDOMappingTableHandler : IMappingTableHandler
 	{
 		private Relation relation;
-		private IDbCommand selectCommand;
-		private IDbCommand insertCommand;
+		private DbCommand selectCommand;
+		private DbCommand insertCommand;
 		//private IDbCommand updateCommand;
-		private IDbCommand deleteCommand;
-		private IDbConnection connection;
+		private DbCommand deleteCommand;
+		private DbConnection connection;
 		private DbDataAdapter dataAdapter;
 		private IProvider provider;
 		private bool verboseMode;
 		private ILogAdapter logAdapter;
+		private SqlSelectBehavior sqlSelectBehavior;
 
 		private string GetParameter(IProvider provider, string name)
 		{
@@ -60,9 +63,9 @@ namespace NDO
 			// CheckTransaction is the place, where this happens.
 			this.connection = null;   
 
-			selectCommand = provider.NewSqlCommand(connection);
-			insertCommand = provider.NewSqlCommand(connection);
-			deleteCommand = provider.NewSqlCommand(connection);
+			selectCommand = (DbCommand) provider.NewSqlCommand(connection);
+			insertCommand = (DbCommand) provider.NewSqlCommand(connection);
+			deleteCommand = (DbCommand) provider.NewSqlCommand(connection);
 			dataAdapter = provider.NewDataAdapter(selectCommand, null, insertCommand, deleteCommand);
 			this.relation = r;
 
@@ -201,9 +204,8 @@ namespace NDO
 				throw new NDOException(24, "Can't find mapping table '" + name + "' in the schema. Check your mapping file.");
 			return dt;
 		}
-
 		
-		public DataTable FindRelatedObjects(ObjectId oid, DataSet templateDataset) 
+		public async Task<DataTable> LoadRelatedObjects(ObjectId oid, DataSet templateDataset) 
 		{
 			DataTable table = GetTableTemplate(templateDataset, relation.MappingTable.TableName).Clone();
             string sql = "SELECT * FROM " + provider.GetQualifiedTableName(relation.MappingTable.TableName) + " WHERE ";
@@ -238,7 +240,7 @@ namespace NDO
             try 
             {
 				Dump(null);
-				dataAdapter.Fill(table);
+				await this.sqlSelectBehavior.Select( selectCommand, table );
             }
             catch (System.Exception ex)
             {
@@ -250,7 +252,7 @@ namespace NDO
 			return table;		
 		}
 
-		public void Update(DataSet ds) 
+		public async Task UpdateAsync(DataSet ds) 
 		{
 			DataTable dt = ds.Tables[relation.MappingTable.TableName];
 			try 
@@ -263,6 +265,7 @@ namespace NDO
 				{
 					if (this.verboseMode)
 						Dump(rows);
+#warning Updates müssen noch ohne da umgesetzt werden
 					dataAdapter.Update(dt);
 				}
 			}
@@ -276,7 +279,7 @@ namespace NDO
 		{
 		}
 
-		public IDbConnection Connection
+		public DbConnection Connection
 		{
 			get { return this.selectCommand.Connection; }
 			set
@@ -287,7 +290,7 @@ namespace NDO
 			}
 		}
 	
-		public IDbTransaction Transaction
+		public DbTransaction Transaction
 		{
 			get { return this.selectCommand.Transaction; }
 			set

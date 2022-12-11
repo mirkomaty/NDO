@@ -674,7 +674,7 @@ namespace QueryTests
 			var m = new Mitarbeiter();
 			try
 			{
-				pm.Delete( m );
+				pm.DeleteAsync( m );
 			}
 			catch (NDOException ex)
 			{

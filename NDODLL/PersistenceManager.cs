@@ -43,6 +43,7 @@ using ST = System.Transactions;
 using NDO.Configuration;
 using NDO.ChangeLogging;
 using System.Threading.Tasks;
+using System.Linq.Expressions;
 
 namespace NDO
 {
@@ -363,7 +364,7 @@ namespace NDO
 				Class pcClass = GetClass(parent);
 				Relation r = pcClass.FindRelation(rcr.RelationName);
 				if (!parent.NDOLoadState.RelationLoadState[r.Ordinal])
-					LoadRelation(parent, r, true);
+					LoadRelationAsync(parent, r, true).GetAwaiter().GetResult();
 				if (rcr.IsAdded)
 				{
 					InternalAddRelatedObject(parent, r, child, true);
@@ -635,8 +636,9 @@ namespace NDO
 			} 
 			else 
 			{
+#warning Das sollte async werden
 				if (!relObj.NDOGetLoadState(r.ForeignRelation.Ordinal))
-					LoadRelation(relObj, r.ForeignRelation, true);
+					LoadRelationAsync(relObj, r.ForeignRelation, true).GetAwaiter().GetResult();
 				IList l = mappings.GetRelationContainer(relObj, r.ForeignRelation);
 				if(l == null) 
 				{
@@ -829,14 +831,6 @@ namespace NDO
 		/// <param name="relObj">the related object that should be added</param>
 		protected virtual void AddRelatedObject(IPersistenceCapable pc, Relation r, IPersistenceCapable relObj) 
 		{
-			//			string idstr;
-			//			if (relObj.NDOObjectId == null)
-			//				idstr = relObj.GetType().ToString();
-			//			else
-			//				idstr = relObj.NDOObjectId.Dump();
-			//Debug.WriteLine("AddRelatedObject " + pc.NDOObjectId.Dump() + " " + idstr);
-			//Debug.Indent();
-
 			Class relClass = GetClass(relObj);
 			bool isDependent = relClass.Oid.IsDependent;
 
@@ -862,7 +856,6 @@ namespace NDO
 			}
 
 			InternalAddRelatedObject(pc, r, relObj, false);
-
 		}
 
 		private void CheckDependentKeyPreconditions(IPersistenceCapable pc, Relation r, IPersistenceCapable relObj, Class relClass)
@@ -1890,7 +1883,28 @@ namespace NDO
 
 
 		/// <summary>
-		/// Resolves an relation. The loaded objects will be hollow.
+		/// Resolves a relation selected by the keySelector.
+		/// </summary>
+		/// <typeparam name="T">The type of the pc</typeparam>
+		/// <typeparam name="K">Return type of the property</typeparam>
+		/// <param name="o">The persistent object</param>
+		/// <param name="memberSelector">A selector of a property or field containing the relation</param>
+		public virtual Task LoadRelationAsync<T,K>( T o, Expression<Func<T,K>> memberSelector )
+			where T: class
+		{
+			IPersistenceCapable pc = CheckPc(o);
+			var cls = this.mappings.FindClass(pc);
+			var name = ( (MemberExpression) memberSelector.Body ).Member.Name;
+			var rel = cls.Relations.FirstOrDefault(r=>r.FieldName.Equals(name, StringComparison.InvariantCultureIgnoreCase));
+			if (rel == null)
+				throw new NDOException( 76, $"Error while loading related objects: Can't find relation mapping for the field {pc.GetType().FullName}.{name}. Check your mapping file." );
+
+#warning We have to test, if hollow=false works with polymorphic relations. 
+			return LoadRelationAsync(pc, rel, false);
+		}
+
+		/// <summary>
+		/// Resolves a relation.
 		/// </summary>
 		/// <param name="o">The parent object.</param>
 		/// <param name="fieldName">The field name of the container or variable, which represents the relation.</param>
@@ -1899,12 +1913,24 @@ namespace NDO
 		public virtual void LoadRelation(object o, string fieldName, bool hollow)
 		{
 			IPersistenceCapable pc = CheckPc(o);
-			LoadRelationInternal(pc, fieldName, hollow);
+			LoadRelationInternalAsync(pc, fieldName, hollow).GetAwaiter().GetResult();
 		}
 
-		
+		/// <summary>
+		/// Resolves an relation. The loaded objects will be hollow.
+		/// </summary>
+		/// <param name="o">The parent object.</param>
+		/// <param name="fieldName">The field name of the container or variable, which represents the relation.</param>
+		/// <param name="hollow">True, if the fetched objects should be hollow.</param>
+		/// <remarks>Note: 1:1 relations without mapping table will be resolved during the transition from the hollow to the persistent state. To force this transition, use the <see cref="LoadData">LoadData</see> function.<seealso cref="LoadData"/></remarks>
+		public virtual async Task LoadRelationAsync( object o, string fieldName, bool hollow )
+		{
+			IPersistenceCapable pc = CheckPc(o);
+			await LoadRelationInternalAsync( pc, fieldName, hollow ).ConfigureAwait( false );
+		}
 
-		internal IList LoadRelation(IPersistenceCapable pc, Relation r, bool hollow)
+
+		internal async Task<IList> LoadRelationAsync(IPersistenceCapable pc, Relation r, bool hollow)
 		{
 			IList result = null;
 
@@ -1919,10 +1945,7 @@ namespace NDO
 				// 1:1 are loaded with LoadData
 				if (r.Multiplicity == RelationMultiplicity.List) 
 				{ 
-					// Help GC by clearing lists
 					IList l = mappings.GetRelationContainer(pc, r);
-					if(l != null)
-						l.Clear();
 					IList relatedObjects = QueryRelatedObjects(pc, r, l, hollow);
 					mappings.SetRelationContainer(pc, r, relatedObjects);
 					result = relatedObjects;
@@ -1937,7 +1960,7 @@ namespace NDO
 					handler.VerboseMode = VerboseMode;
 					handler.LogAdapter = LogAdapter;
 					CheckTransaction( handler, r.MappingTable.Connection );
-					dt = handler.FindRelatedObjects(pc.NDOObjectId, this.ds);
+					dt = await handler.LoadRelatedObjectsAsync(pc.NDOObjectId, this.ds).ConfigureAwait( false );
 				}
 
 				IList relatedObjects;
@@ -1999,7 +2022,7 @@ namespace NDO
 		/// <param name="pc">The object which needs to load the relation</param>
 		/// <param name="relationName">The name of the relation</param>
 		/// <param name="hollow">Determines, if the related objects should be hollow.</param>
-		internal IList LoadRelationInternal(IPersistenceCapable pc, string relationName, bool hollow)
+		internal async Task<IList> LoadRelationInternalAsync(IPersistenceCapable pc, string relationName, bool hollow)
 		{
 			if (pc.NDOObjectState == NDOObjectState.Created)
 				return null;
@@ -2013,7 +2036,7 @@ namespace NDO
 			if ( pc.NDOGetLoadState( r.Ordinal ) )
 				return null;
 
-			return LoadRelation(pc, r, hollow);
+			return await LoadRelationAsync(pc, r, hollow);
 		}
 
 		/// <summary>
@@ -2852,7 +2875,7 @@ namespace NDO
 		/// Remove an object from the DB. Note that the object itself is not destroyed and may still be used.
 		/// </summary>
 		/// <param name="o">The object to remove</param>
-		public void Delete(object o) 
+		public Task DeleteAsync(object o) 
 		{
 			IPersistenceCapable pc = CheckPc(o);
 			if (pc.NDOObjectState == NDOObjectState.Transient)
@@ -2861,19 +2884,21 @@ namespace NDO
 			}
 			if (pc.NDOObjectState != NDOObjectState.Deleted) 
 			{
-				Delete(pc, true);
+				return DeleteAsync(pc, true);
 			}
+
+			return Task.CompletedTask;
 		}
 
 
-		private void LoadAllRelations(object o)
+		private async Task LoadAllRelationsAsync(object o)
 		{
 			IPersistenceCapable pc = CheckPc(o);
 			Class cl = GetClass(pc);
 			foreach(Relation r in cl.Relations)
 			{
-				if (!pc.NDOGetLoadState(r.Ordinal))
-					LoadRelation(pc, r, true);
+				if (!pc.NDOGetLoadState( r.Ordinal ))
+					await LoadRelationAsync( pc, r, true ).ConfigureAwait( false );
 			}
 		}
 
@@ -2888,7 +2913,7 @@ namespace NDO
 		/// </remarks>
 		/// <param name="pc">the object to remove</param>
 		/// <param name="checkAssoziations">true if child of a composition can't be deleted</param>
-		private void Delete(IPersistenceCapable pc, bool checkAssoziations) 
+		private async Task DeleteAsync(IPersistenceCapable pc, bool checkAssoziations) 
 		{
 			//Debug.WriteLine("Delete " + pc.NDOObjectId.Dump());
 			//Debug.Indent();
@@ -2896,8 +2921,8 @@ namespace NDO
 			if (idn != null)
 				idn.OnDelete();
 
-			LoadAllRelations(pc);
-			DeleteRelatedObjects(pc, checkAssoziations);
+			await LoadAllRelationsAsync(pc);
+			DeleteRelatedObjectsAsync(pc, checkAssoziations);
 
 			switch(pc.NDOObjectState) 
 			{
@@ -2989,7 +3014,7 @@ namespace NDO
 				// r.ForeignRelation.Multiplicity == RelationMultiplicity.List)  
 			{
 				if (!child.NDOGetLoadState(r.ForeignRelation.Ordinal))
-					LoadRelation(child, r.ForeignRelation, true);
+					LoadRelationAsync(child, r.ForeignRelation, true).GetAwaiter().GetResult();
 				IList l = mappings.GetRelationContainer(child, r.ForeignRelation);
 				if (l == null)
 					throw new NDOException(67, "Can't remove object from the list " + child.GetType().FullName + "." + r.ForeignRelation.FieldName + ". The list is null.");
@@ -3049,7 +3074,7 @@ namespace NDO
 				// Deletes the foreign key in case of List multiplicity
 				// In case of Element multiplicity, the parent is either deleted,
 				// or RemoveRelatedObject is called because the relation has been nulled.
-				Delete(child);  
+				DeleteAsync(child);  
 			}
 		}
 

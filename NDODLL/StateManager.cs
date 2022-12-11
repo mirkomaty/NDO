@@ -1,5 +1,5 @@
 ﻿//
-// Copyright (c) 2002-2016 Mirko Matytschak 
+// Copyright (c) 2002-2022 Mirko Matytschak 
 // (www.netdataobjects.de)
 //
 // Author: Mirko Matytschak
@@ -102,7 +102,7 @@ namespace NDO
 
 		public IList LoadRelation(IPersistenceCapable pc, string fieldName)
 		{
-			return pm.LoadRelationInternal(pc, fieldName, true);
+			return pm.LoadRelationInternalAsync(pc, fieldName, true).GetAwaiter().GetResult();
 		}
 
 

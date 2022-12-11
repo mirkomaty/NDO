@@ -49,7 +49,7 @@ namespace NDO
 		/// <param name="id">ObjectId of the parent object.</param>
 		/// <param name="templateDataSet">The resulting table will be cloned from this DataSet</param>
 		/// <returns></returns>
-		DataTable FindRelatedObjects(ObjectId id, DataSet templateDataSet);
+		Task<DataTable> LoadRelatedObjectsAsync(ObjectId id, DataSet templateDataSet);
 
 		/// <summary>
 		/// Called by IPersistenceHandler implementations. Constructs a new handler in a polymorphic way.
