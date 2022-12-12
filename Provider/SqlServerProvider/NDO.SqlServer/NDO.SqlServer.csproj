@@ -2,18 +2,18 @@
 
   <PropertyGroup>
     <TargetFrameworks>netstandard2.0;net452</TargetFrameworks>
-    <Version>4.0.2</Version>
+    <Version>4.0.3</Version>
     <Authors>Mirko Matytschak</Authors>
     <Company>Mirko Matytschak</Company>
     <Product>.NET Data Objects (NDO)</Product>
-    <Copyright>Copyright (c) 2002-2020 Mirko Matytschak, Velden, Germany</Copyright>
+    <Copyright>Copyright (c) Mirko Matytschak, Velden, Germany</Copyright>
     <PackageProjectUrl>https://www.netdataobjects.de</PackageProjectUrl>
     <RepositoryUrl>https://github.com/mirkomaty/NDO</RepositoryUrl>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <PackageId>ndo.sqlserver</PackageId>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
-    <AssemblyVersion>4.0.2.0</AssemblyVersion>
-    <FileVersion>4.0.2.0</FileVersion>
+    <AssemblyVersion>4.0.3.0</AssemblyVersion>
+    <FileVersion>4.0.3.0</FileVersion>
     <PackageReleaseNotes></PackageReleaseNotes>
   </PropertyGroup>
 
