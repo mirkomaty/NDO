@@ -20,7 +20,7 @@
   <ItemGroup>
     <PackageReference Include="NDOInterfaces" Version="4.0.1" />
     <PackageReference Include="System.Data.Common" Version="4.3.0" Condition="'$(TargetFramwork)'=='netstandard2.0'" />
-    <PackageReference Include="System.Data.SqlClient" Version="4.6.0" />
+    <PackageReference Include="System.Data.SqlClient" Version="4.8.5" />
   </ItemGroup>
  
 </Project>
