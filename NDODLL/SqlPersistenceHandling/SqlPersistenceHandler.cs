@@ -92,6 +92,8 @@ namespace NDO.SqlPersistenceHandling
 		private readonly INDOContainer configContainer;
 		private Action<Type,IPersistenceHandler> disposeCallback;
 		private SqlSelectBehavior sqlSelectBahavior = new SqlSelectBehavior();
+		private static Regex parameterRegex = new Regex( @"\{(\d+)\}", RegexOptions.Compiled );
+
 
 		/// <summary>
 		/// Constructs a SqlPersistenceHandler object
@@ -731,33 +733,36 @@ namespace NDO.SqlPersistenceHandling
 				string sql = string.Empty;
 				var rearrangedStatements = new List<string>();
 
+				var dict = new Dictionary<string, object>();
+
+
 				if (this.provider.SupportsBulkCommands)
 				{
-					int parameterIndex = 0;
+					// cast is necessary here to get access to async methods
+					DbCommand cmd = (DbCommand)this.provider.NewSqlCommand( conn );
+
+					if (this.transaction != null)
+						cmd.Transaction = this.transaction;
+
 					if (parameters != null && parameters.Count > 0)
 					{
-						CreateQueryParameters( inputStatements, rearrangedStatements, parameters, isCommandArray, ref parameterIndex );
+						CreateQueryParameters( cmd, inputStatements, rearrangedStatements, parameters, isCommandArray );
 					}
 					else
 					{
 						rearrangedStatements = inputStatements.ToList();
 					}
 
-					// cast is necessary here to get access to async methods
-					DbCommand cmd = (DbCommand)this.provider.NewSqlCommand( conn );
-					sql = this.provider.GenerateBulkCommand( inputStatements.ToArray() );
+					sql = this.provider.GenerateBulkCommand( rearrangedStatements.ToArray() );
 					cmd.CommandText = sql;
 
 					// cmd.CommandText can be changed in CreateQueryParameters
 					DumpBatch( cmd.CommandText );
-					if (this.transaction != null)
-						cmd.Transaction = this.transaction;
 
 					using (dr = await cmd.ExecuteReaderAsync().ConfigureAwait( false )) 
 					{
 						do
 						{
-							var dict = new Dictionary<string, object>();
 							while (await dr.ReadAsync().ConfigureAwait( false ))
 							{
 								for (i = 0; i < dr.FieldCount; i++)
@@ -775,38 +780,19 @@ namespace NDO.SqlPersistenceHandling
 				}
 				else
 				{
-					foreach (var s in inputStatements)
+					if (isCommandArray)
 					{
-						sql += s + ";\n"; // For DumpBatch only
-						var dict = new Dictionary<string, object>();
-						// cast is necessary here to get access to async methods
-						DbCommand cmd = (DbCommand)this.provider.NewSqlCommand( conn );
-
-						cmd.CommandText = s;
-						if (parameters != null && parameters.Count > 0)
+						// A command array always has parameter sets, otherwise it wouldn't make any sense
+						// to work with a command array
+						foreach (IList parameterSet in parameters)
 						{
-							CreateQueryParameters( cmd, parameters );
+							result.AddRange( await ExecuteStatementSetAsync( inputStatements, rearrangedStatements, parameterSet ).ConfigureAwait( false ) );
 						}
-
-						if (this.transaction != null)
-							cmd.Transaction = this.transaction;
-
-						using (dr = await cmd.ExecuteReaderAsync().ConfigureAwait( false )) 
-						{
-
-							while (await dr.ReadAsync().ConfigureAwait( false ))
-							{
-								for (int j = 0; j < dr.FieldCount; j++)
-								{
-									dict.Add( dr.GetName( j ), dr.GetValue( j ) );
-								}
-							}
-						}
-
-						result.Add( dict );
 					}
-
-					DumpBatch( sql );
+					else
+					{
+						result.AddRange( await ExecuteStatementSetAsync( inputStatements, rearrangedStatements, parameters ).ConfigureAwait( false ) );
+					}
 				}
 			}
 			finally
@@ -820,76 +806,172 @@ namespace NDO.SqlPersistenceHandling
 			return result;
 		}
 
-		private void CreateQueryParameters(IEnumerable<string> inputStatements, List<string> rearrangedStatements, IList parameters, bool isCommandArray, ref int startIndex)
+		private async Task<List<Dictionary<string, object>>> ExecuteStatementSetAsync( IEnumerable<string> inputStatements, List<string> rearrangedStatements, IList parameterSet )
 		{
-			if (parameters == null || parameters.Count == 0)
-				return;
+			var result = new List<Dictionary<string, object>>();
 
-			Regex regex = new Regex( @"\{(\d+)\}" );
+			// cast is necessary here to get access to async methods
+			DbCommand cmd = (DbCommand)this.provider.NewSqlCommand( conn );
 
-			MatchCollection matches = regex.Matches( sql );
-			Dictionary<string, object> tcValues = new Dictionary<string, object>();
-			int endIndex = parameters.Count - 1;
-			foreach (Match match in matches)
+			if (this.transaction != null)
+				cmd.Transaction = this.transaction;
+
+			rearrangedStatements.Clear();
+			// we repeat rearranging for each parameterSet, just as if it were an ordinary Bulk statement set
+			CreateQueryParameters( cmd, inputStatements, rearrangedStatements, parameterSet, false );
+			foreach (var statement in rearrangedStatements)
 			{
-				var i = int.Parse( match.Groups[1].Value );
-				int nr = i + startIndex;
-				if (nr > endIndex)
-					throw new QueryException( 10009, "Parameter-Reference " + match.Value + " has no matching parameter." );
+				Dictionary<string,object> dict = new Dictionary<string, object>();
 
-				sql = sql.Replace( match.Value,
-					this.provider.GetNamedParameter( "p" + nr.ToString() ) );
-			}
+				using (var dr = await cmd.ExecuteReaderAsync().ConfigureAwait( false ))
+				{
 
-			command.CommandText = sql;
-
-			for (int i = 0; i < parameters.Count; i++)
-			{
-				object p = parameters[i];
-				if (p == null)
-					p = DBNull.Value;
-				Type type = p.GetType();
-                if (type.FullName.StartsWith("System.Nullable`1"))
-                    type = type.GetGenericArguments()[0];
-				if (type == typeof( Guid ) && Guid.Empty.Equals( p ) || type == typeof( DateTime ) && DateTime.MinValue.Equals( p ))
-				{
-					p = DBNull.Value;
-				}
-                if (type.IsEnum)
-                {
-                    type = Enum.GetUnderlyingType(type);
-                    p = ((IConvertible)p ).ToType(type, CultureInfo.CurrentCulture);
-                }
-				else if (type == typeof(Guid) && !provider.SupportsNativeGuidType)
-				{
-					type = typeof(string);
-					if (p != DBNull.Value)
-						p = p.ToString();
-				}
-				string name = "p" + i.ToString();
-				int length = this.provider.GetDefaultLength(type);
-				if (type == typeof(string))
-				{
-					length = ((string)p).Length;
-					if (provider.GetType().Name.IndexOf("Oracle") > -1)
+					while (await dr.ReadAsync().ConfigureAwait( false ))
 					{
-						if (length == 0)
-							throw new QueryException(10001, "Empty string parameters are not allowed in Oracle. Use IS NULL instead.");
+						for (int j = 0; j < dr.FieldCount; j++)
+						{
+							dict.Add( dr.GetName( j ), dr.GetValue( j ) );
+						}
 					}
 				}
-				else if (type == typeof(byte[]))
+
+				result.Add( dict );
+			}
+
+			DumpBatch( String.Join( "\r\n;", rearrangedStatements ) );
+			return result;
+		}
+
+		private void CreateQueryParameters( DbCommand command, IEnumerable<string> inputStatements, List<string> rearrangedStatements, IList parameters, bool isCommandArray )
+		{
+#warning TODO We need test cases for this method
+
+			var maxindex = -1;
+
+			foreach (var statement in inputStatements)
+			{
+				var matches = parameterRegex.Matches(statement);
+				foreach (Match match in matches)
 				{
-					length = ((byte[])p).Length;
+					var i = int.Parse( match.Groups[1].Value );
+					maxindex = Math.Max( i, maxindex );
 				}
-				IDataParameter par = provider.AddParameter(
-					command, 
+			}
+
+			// No parameters in the statements? Just return the statements
+			if (maxindex == -1)
+			{
+				rearrangedStatements.AddRange( inputStatements );
+				return;
+			}
+
+			if (isCommandArray)
+			{
+				var index = 0;
+
+				foreach (IList parameterSet in parameters)
+				{
+					if (parameterSet.Count <= maxindex)
+						throw new QueryException( 10009, $"Parameter-Reference {maxindex} has no matching parameter." );
+
+					// inputStatements contains kind-of a template
+					// which will be repeated for each parameterSet
+					foreach (var statement in inputStatements)
+					{
+						var rearrangedStatement = statement;
+						var matches = parameterRegex.Matches(statement);
+						foreach (Match match in matches)
+						{
+							var i = int.Parse( match.Groups[1].Value );
+							var parName = this.provider.GetNamedParameter( $"p{(i + index)}" );
+							rearrangedStatement = rearrangedStatement.Replace( match.Value, parName );
+						}
+
+						rearrangedStatements.Add( rearrangedStatement );
+					}
+
+					foreach (var par in parameterSet)
+					{
+						AddParameter( command, index++, par );
+					}
+
+					index += parameterSet.Count;
+				}
+			}
+			else
+			{
+				foreach (var statement in inputStatements)
+				{
+					var rearrangedStatement = statement;
+
+					MatchCollection matches = parameterRegex.Matches( statement );
+					Dictionary<string, object> tcValues = new Dictionary<string, object>();
+					if (maxindex > parameters.Count - 1)
+						throw new QueryException( 10009, $"Parameter-Reference {maxindex} has no matching parameter." );
+
+					foreach (Match match in matches)
+					{
+						var i = int.Parse( match.Groups[1].Value );
+						var parName = this.provider.GetNamedParameter( $"p{i}" );
+						rearrangedStatement = rearrangedStatement.Replace( match.Value, parName );
+					}
+
+					rearrangedStatements.Add( rearrangedStatement );
+				}
+
+				for (int i = 0; i < parameters.Count; i++)
+				{
+					AddParameter( command, i, parameters[i] );
+				}
+			}
+		}
+
+		private object AddParameter( DbCommand command, int index, object p )
+		{
+			if (p == null)
+				p = DBNull.Value;
+			Type type = p.GetType();
+			if (type.FullName.StartsWith( "System.Nullable`1" ))
+				type = type.GetGenericArguments()[0];
+			if (type == typeof( Guid ) && Guid.Empty.Equals( p ) || type == typeof( DateTime ) && DateTime.MinValue.Equals( p ))
+			{
+				p = DBNull.Value;
+			}
+			if (type.IsEnum)
+			{
+				type = Enum.GetUnderlyingType( type );
+				p = ( (IConvertible) p ).ToType( type, CultureInfo.CurrentCulture );
+			}
+			else if (type == typeof( Guid ) && !provider.SupportsNativeGuidType)
+			{
+				type = typeof( string );
+				if (p != DBNull.Value)
+					p = p.ToString();
+			}
+			string name = "p" + index.ToString();
+			int length = this.provider.GetDefaultLength(type);
+			if (type == typeof( string ))
+			{
+				length = ( (string) p ).Length;
+				if (provider.GetType().Name.IndexOf( "Oracle" ) > -1)
+				{
+					if (length == 0)
+						throw new QueryException( 10001, "Empty string parameters are not allowed in Oracle. Use IS NULL instead." );
+				}
+			}
+			else if (type == typeof( byte[] ))
+			{
+				length = ( (byte[]) p ).Length;
+			}
+			IDataParameter par = provider.AddParameter(
+					command,
 					this.provider.GetNamedParameter(name),
 					this.provider.GetDbType( type == typeof( DBNull ) ? typeof( string ) : type ),
-					length, 
-					this.provider.GetQuotedName(name)); 
-				par.Value = p;
-				par.Direction = ParameterDirection.Input;					
-			}
+					length,
+					this.provider.GetQuotedName(name));
+			par.Value = p;
+			par.Direction = ParameterDirection.Input;
+			return p;
 		}
 
 		/// <inheritdoc/>
