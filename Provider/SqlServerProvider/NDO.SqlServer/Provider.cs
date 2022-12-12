@@ -249,7 +249,7 @@ namespace SqlServerProvider
 		/// <returns></returns>        
 		public override string GetLastInsertedId( string tableName, string columnName )
 		{
-			return "@@IDENTITY";
+			return "SCOPE_IDENTITY()";
 		}
 
 		/// <summary>
