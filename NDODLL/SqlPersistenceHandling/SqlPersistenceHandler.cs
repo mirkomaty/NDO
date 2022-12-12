@@ -655,18 +655,67 @@ namespace NDO.SqlPersistenceHandling
 		/// <summary>
 		/// Executes a batch of sql statements.
 		/// </summary>
-		/// <param name="statements">Each element in the array is a sql statement.</param>
+		/// <param name="inputStatements">Each element in the array is a sql statement.</param>
 		/// <param name="parameters">A list of parameters (see remarks).</param>
 		/// <param name="isCommandArray">Determines, if statements contains identical commands which all need parameters</param>
 		/// <returns>An List of Hashtables, containing the Name/Value pairs of the results.</returns>
 		/// <remarks>
-		/// For emty resultsets an empty Hashtable will be returned. 
-		/// If parameters is a NDOParameterCollection, the parameters in the collection are valid for 
-		/// all subqueries. If parameters is an ordinary IList, NDO expects to find a NDOParameterCollection 
-		/// for each subquery. If an element is null, no parameters are submitted for the given query.
+		/// For emty resultsets an empty dictionary will be returned. 
+		/// If we have no command array, the parameters in the collection are for 
+		/// all subqueries. In case of a command array the statements will bei combined to a template. 
+		/// parameters contains a list of lists, with one entry per repetition of the template.
 		/// </remarks>
-		public async Task<IList<Dictionary<string, object>>> ExecuteBatchAsync( IEnumerable<string> statements, IList parameters, bool isCommandArray = false )
+		public async Task<IList<Dictionary<string, object>>> ExecuteBatchAsync( IEnumerable<string> inputStatements, IList parameters, bool isCommandArray = false )
 		{
+/*
+			These are examples of the two cases:
+
+			-------------- Non Array
+
+			INSERT INTO x (Col1, Col2) VALUES({0},{1})
+			SELECT SCOPE_IDENTITY()
+
+			Parameter 'abc', 4711
+
+			=>
+
+			Insert x values(@p0,@p1);
+			Select SCOPE_IDENTITY();
+
+			@p0 = 'abc'
+			@p1 = 4711
+
+			------------- Array
+
+			DELETE FROM x WHERE id1 = {0} AND tstamp = {1}
+
+			Parameter
+			12, '927D81A1-07AA-477B-9EA9-73F7C19E754F'
+			33, '9061A0EA-BB02-47DB-866F-04210546E493'
+			44, '2B9D2573-226E-4486-AEE7-A3DEFCEB48FC'
+			45, '3B9D2573-226E-4486-AEE7-A3DEFCEB48FD'
+			46, '4B9D2573-226E-4486-AEE7-A3DEFCEB48FE'
+
+			=>
+
+			DELETE FROM x WHERE id1 = @p0 AND tstamp = @p1;
+			DELETE FROM x WHERE id1 = @p2 AND tstamp = @p3;
+			DELETE FROM x WHERE id1 = @p4 AND tstamp = @p5;
+			DELETE FROM x WHERE id1 = @p6 AND tstamp = @p7;
+			DELETE FROM x WHERE id1 = @p8 AND tstamp = @p9;
+
+			@p0 = 12
+			@p1 = '927D81A1-07AA-477B-9EA9-73F7C19E754F'
+			@p2 = 33
+			@p3 = '9061A0EA-BB02-47DB-866F-04210546E493'
+			@p4 = 44, 
+			@p5 = '2B9D2573-226E-4486-AEE7-A3DEFCEB48FC'
+			@p6 = 45
+			@p7 = '3B9D2573-226E-4486-AEE7-A3DEFCEB48FD'
+			@p8 = 46
+			@p9 = '4B9D2573-226E-4486-AEE7-A3DEFCEB48FE'
+
+*/
 			List<Dictionary<string, object>> result = new List<Dictionary<string, object>>();
 			bool closeIt = false;
 			DbDataReader dr = null;
@@ -678,26 +727,26 @@ namespace NDO.SqlPersistenceHandling
 					closeIt = true;
 					this.conn.Open();
 				}
+
 				string sql = string.Empty;
+				var rearrangedStatements = new List<string>();
 
 				if (this.provider.SupportsBulkCommands)
 				{
-					// cast is necessary here to get access to async methods
-					DbCommand cmd = (DbCommand)this.provider.NewSqlCommand( conn );
-					sql = this.provider.GenerateBulkCommand( statements.ToArray() );
-					cmd.CommandText = sql;
 					int parameterIndex = 0;
 					if (parameters != null && parameters.Count > 0)
 					{
-						// Only the first command gets parameters
-						for (i = 0; i < statements.Count(); i++)
-						{
-							if (i == 0)
-								CreateQueryParameters( cmd, parameters );
-							else
-								CreateQueryParameters( null, null );
-						}
+						CreateQueryParameters( inputStatements, rearrangedStatements, parameters, isCommandArray, ref parameterIndex );
 					}
+					else
+					{
+						rearrangedStatements = inputStatements.ToList();
+					}
+
+					// cast is necessary here to get access to async methods
+					DbCommand cmd = (DbCommand)this.provider.NewSqlCommand( conn );
+					sql = this.provider.GenerateBulkCommand( inputStatements.ToArray() );
+					cmd.CommandText = sql;
 
 					// cmd.CommandText can be changed in CreateQueryParameters
 					DumpBatch( cmd.CommandText );
@@ -726,7 +775,7 @@ namespace NDO.SqlPersistenceHandling
 				}
 				else
 				{
-					foreach (var s in statements)
+					foreach (var s in inputStatements)
 					{
 						sql += s + ";\n"; // For DumpBatch only
 						var dict = new Dictionary<string, object>();
@@ -771,12 +820,10 @@ namespace NDO.SqlPersistenceHandling
 			return result;
 		}
 
-		private void CreateQueryParameters(IDbCommand command, IList parameters)
+		private void CreateQueryParameters(IEnumerable<string> inputStatements, List<string> rearrangedStatements, IList parameters, bool isCommandArray, ref int startIndex)
 		{
 			if (parameters == null || parameters.Count == 0)
 				return;
-
-			string sql = command.CommandText;
 
 			Regex regex = new Regex( @"\{(\d+)\}" );
 
@@ -785,7 +832,8 @@ namespace NDO.SqlPersistenceHandling
 			int endIndex = parameters.Count - 1;
 			foreach (Match match in matches)
 			{
-				int nr = int.Parse( match.Groups[1].Value );
+				var i = int.Parse( match.Groups[1].Value );
+				int nr = i + startIndex;
 				if (nr > endIndex)
 					throw new QueryException( 10009, "Parameter-Reference " + match.Value + " has no matching parameter." );
 
