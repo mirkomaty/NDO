@@ -162,7 +162,7 @@ namespace NDO.SqlPersistenceHandling
 				{
 					if (this.provider.UseNamedParams)
 					{
-						result.Append( this.provider.GetNamedParameter( this.paramList[i] ) );
+						result.Append( this.provider.GetNamedParameter( $"{{{i}}}" ) );
 						if (i < ende)
 						{
 							result.Append( ", " );

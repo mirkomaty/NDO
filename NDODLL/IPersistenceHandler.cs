@@ -70,23 +70,15 @@ namespace NDO
 		/// </summary>
 		/// <param name="statements">Each element in the array is a sql statement.</param>
 		/// <param name="parameters">A list of parameters (see remarks).</param>
+		/// <param name="isCommandArray">Determines, if template statements should be repeated for each parameter set</param>
 		/// <returns>An IList with Hashtables, containing the Name/Value pairs of the results.</returns>
 		/// <remarks>
-		/// For emty resultsets an empty Hashtable will be returned. 
-		/// If parameters is a NDOParameterCollection, the parameters in the collection are valid for 
-		/// all subqueries. If parameters is an ordinary IList, NDO expects to find a NDOParameterCollection 
-		/// for each subquery. If an element is null, no parameters are submitted for the given query.
+		/// For emty resultsets an empty List will be returned. 
+		/// If we have no command array, the parameters in the collection are for 
+		/// all subqueries. In case of a command array the statements will bei combined to a template. 
+		/// parameters contains a list of lists, with one entry per repetition of the template.
 		/// </remarks>
-		Task<IList<Dictionary<string, object>>> ExecuteBatchAsync( string[] statements, IList parameters );
-
-		/// <summary>
-		/// Execute a SQL query.
-		/// </summary>
-		/// <param name="expression">SQL expression</param>
-		/// <param name="parameters">A collection of objects, corresponding to the query parameters.</param>
-		/// <param name="templateDataset">The DataSet from which the DataTable for the results is cloned</param>
-		/// <returns>A DataTable object, containing the query result.</returns>
-		DataTable PerformQuery( string expression, IList parameters, DataSet templateDataset );
+		Task<IList<Dictionary<string, object>>> ExecuteBatchAsync( string[] statements, IList parameters, bool isCommandArray );
 
 		/// <summary>
 		/// Execute a SQL query.

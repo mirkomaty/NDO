@@ -1,5 +1,5 @@
 ﻿//
-// Copyright (c) 2002-2016 Mirko Matytschak 
+// Copyright (c) 2002-2022 Mirko Matytschak 
 // (www.netdataobjects.de)
 //
 // Author: Mirko Matytschak
@@ -21,12 +21,11 @@
 
 
 using System;
-using System.Reflection;
 using System.IO;
 using System.Data;
-using System.Data.Common;
 using NDO.Logging;
 using NDOInterfaces;
+using System.Collections.Generic;
 
 namespace NDO
 {
@@ -35,88 +34,33 @@ namespace NDO
 	/// </summary>
 	internal class SqlDumper
 	{
-		ILogAdapter logAdapter;
-		IDbCommand insertCommand;
-		IDbCommand selectCommand;
-		IDbCommand updateCommand;
-		IDbCommand deleteCommand;
-		IProvider provider;
+		private readonly ILogAdapter logAdapter;
+		private readonly IProvider provider;
 
-		public SqlDumper(ILogAdapter logAdapter, IProvider provider, IDbCommand insertCommand, IDbCommand selectCommand, IDbCommand updateCommand, IDbCommand deleteCommand)
+		public SqlDumper(ILogAdapter logAdapter, IProvider provider)
 		{
 			this.logAdapter = logAdapter;
 			this.provider = provider;
-			this.updateCommand = updateCommand;
-			this.insertCommand = insertCommand;
-			this.selectCommand = selectCommand;
-			this.deleteCommand = deleteCommand;
 		}
 
-		internal void Dump(DataRow[] rows)
+		internal void Dump(DataRow[] rows, IDbCommand cmd, IEnumerable<string> batch)
 		{
 			if (logAdapter == null)
 				return;
-
-			bool hasSelect = false;
-			bool hasInsert = false;
-			bool hasDelete = false;
-			bool hasUpdate = false;
-
-            if (rows == null || rows.Length == 0)
-            {
-                hasSelect = true;
-            }
-            else
-            {
-                for (int i = 0; i < rows.Length; i++)
-                {
-                    DataRow row = rows[i];
-                    if (row.RowState == System.Data.DataRowState.Added)
-                        hasInsert = true;
-                    if (row.RowState == System.Data.DataRowState.Modified)
-                        hasUpdate = true;
-                    if (row.RowState == System.Data.DataRowState.Deleted)
-                        hasDelete = true;
-                }
-            }
 
 			StringWriter sw = null;
 
 			try
 			{
 				sw = new StringWriter();
-				if (hasSelect)
+				if (batch != null)
 				{
-					sw.WriteLine("Select Command:");
-					sw.WriteLine(this.selectCommand.CommandText);
-					DumpParameters(selectCommand, sw);
+					sw.WriteLine( String.Join( ";\r\n", batch ) );
 				}
-
-				if (hasInsert)
+				if (cmd != null)
 				{
-					sw.WriteLine("Insert Command:");
-					sw.WriteLine(this.insertCommand.CommandText);
-					DumpParameters(insertCommand, sw);			
+					DumpParameters(cmd, sw);
 				}
-				if (hasDelete)
-				{
-					sw.WriteLine("Delete Command:");
-					sw.WriteLine(this.deleteCommand.CommandText);
-					DumpParameters(deleteCommand, sw);
-					sw.WriteLine(rows.Length.ToString() + " Zeilen zu löschen");
-				}
-				if (hasUpdate)
-				{
-					if (updateCommand != null)
-					{
-						sw.WriteLine("Update Command:");
-						sw.WriteLine(this.updateCommand.CommandText);
-						DumpParameters(updateCommand, sw);
-					}
-					else
-						sw.WriteLine("No Update Command");
-				}
-			
 				if (rows != null) 
 				{
                     for (int i = 0; i < rows.Length; i++)

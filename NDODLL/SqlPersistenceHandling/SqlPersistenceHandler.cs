@@ -23,15 +23,12 @@
 using System;
 using System.Text;
 using System.Text.RegularExpressions;
-using System.Diagnostics;
-using System.IO;
 using System.Reflection;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Data;
 using System.Data.Common;
-using NDO;
 using NDO.Mapping;
 using NDO.Logging;
 using NDOInterfaces;
@@ -39,7 +36,6 @@ using NDO.Query;
 using System.Globalization;
 using NDO.Configuration;
 using System.Threading.Tasks;
-using System.Threading;
 
 namespace NDO.SqlPersistenceHandling
 {
@@ -59,13 +55,14 @@ namespace NDO.SqlPersistenceHandling
 		/// </summary>
 		public event ConcurrencyErrorHandler ConcurrencyError;
 
-		private DbCommand selectCommand;
-		private DbCommand insertCommand;
-		private DbCommand updateCommand;
-		private DbCommand deleteCommand;
+		private List<string> insertCommands;
+		private List<string> updateCommands;
+		private List<string> deleteCommands;
+		private List<DbParameterInfo> insertParameterInfos;
+		private List<DbParameterInfo> updateParameterInfos;
+		private List<DbParameterInfo> deleteParameterInfos;
 		private DbConnection conn;
 		private DbTransaction transaction;
-		private DbDataAdapter dataAdapter;
 		private Class classMapping;
 		private string selectFieldList;
 		private string selectFieldListWithAlias;
@@ -93,6 +90,7 @@ namespace NDO.SqlPersistenceHandling
 		private Action<Type,IPersistenceHandler> disposeCallback;
 		private SqlSelectBehavior sqlSelectBahavior = new SqlSelectBehavior();
 		private static Regex parameterRegex = new Regex( @"\{(\d+)\}", RegexOptions.Compiled );
+		private SqlDumper sqlDumper;
 
 
 		/// <summary>
@@ -102,11 +100,6 @@ namespace NDO.SqlPersistenceHandling
 		public SqlPersistenceHandler(INDOContainer configContainer)
 		{
 			this.configContainer = configContainer;
-		}
-
-		private void GenerateSelectCommand()
-		{
-			this.selectCommand.CommandText = string.Empty;
 		}
 
 		private int ParameterLength(Mapping.Field fieldMapping, Type memberType)
@@ -124,7 +117,7 @@ namespace NDO.SqlPersistenceHandling
 			{
 				if (!oidColumn.AutoIncremented && oidColumn.FieldName == null && oidColumn.RelationName == null)
 				{
-					provider.AddParameter( insertCommand, provider.GetNamedParameter( oidColumn.Name ), provider.GetDbType( oidColumn.SystemType ), provider.GetDefaultLength( oidColumn.SystemType ), oidColumn.Name );
+					insertParameterInfos.Add( new DbParameterInfo( oidColumn.Name, provider.GetDbType( oidColumn.SystemType ), provider.GetDefaultLength( oidColumn.SystemType ), false ));
 				}
 			}
 
@@ -151,7 +144,7 @@ namespace NDO.SqlPersistenceHandling
 					fieldMapping.ColumnDbType = (int)provider.GetDbType( fieldMapping.Column.DbType );
 				}
 
-				provider.AddParameter( insertCommand, provider.GetNamedParameter( fieldMapping.Column.Name ), fieldMapping.ColumnDbType, ParameterLength( fieldMapping, memberType ), fieldMapping.Column.Name );
+				insertParameterInfos.Add( new DbParameterInfo( fieldMapping.Column.Name, fieldMapping.ColumnDbType, ParameterLength( fieldMapping, memberType ), true ) );
 			}
 
 			foreach (RelationFieldInfo ri in relationInfos)
@@ -159,54 +152,46 @@ namespace NDO.SqlPersistenceHandling
 				Relation r = ri.Rel;
 				foreach (ForeignKeyColumn fkColumn in r.ForeignKeyColumns)
 				{
-					provider.AddParameter( insertCommand, provider.GetNamedParameter( fkColumn.Name ), provider.GetDbType( fkColumn.SystemType ), provider.GetDefaultLength( fkColumn.SystemType ), fkColumn.Name );
+					insertParameterInfos.Add( new DbParameterInfo( fkColumn.Name, provider.GetDbType( fkColumn.SystemType ), provider.GetDefaultLength( fkColumn.SystemType ), true ) );
 				}
 				if (r.ForeignKeyTypeColumnName != null)
 				{
-					provider.AddParameter( insertCommand, provider.GetNamedParameter( r.ForeignKeyTypeColumnName ), provider.GetDbType( typeof( int ) ), provider.GetDefaultLength( typeof( int ) ), r.ForeignKeyTypeColumnName );
+					insertParameterInfos.Add( new DbParameterInfo( r.ForeignKeyTypeColumnName, provider.GetDbType( typeof( int ) ), provider.GetDefaultLength( typeof( int ) ), true ) );
 				}
 
 			}
 
 			if (this.timeStampColumn != null)
 			{
-				provider.AddParameter( insertCommand, provider.GetNamedParameter( timeStampColumn ), provider.GetDbType( typeof( Guid ) ), guidlength, this.timeStampColumn );
+				insertParameterInfos.Add( new DbParameterInfo( timeStampColumn, provider.GetDbType( typeof( Guid ) ), guidlength, false ) );
 			}
 
 			if (this.typeNameColumn != null)
 			{
 				Type tncType = Type.GetType( this.typeNameColumn.NetType );
-				provider.AddParameter( insertCommand, provider.GetNamedParameter( typeNameColumn.Name ), provider.GetDbType( tncType ), provider.GetDefaultLength( tncType ), this.typeNameColumn.Name );
+				insertParameterInfos.Add( new DbParameterInfo( this.typeNameColumn.Name, provider.GetDbType( tncType ), provider.GetDefaultLength( tncType ), false ) );
 			}
 
-			string sql;
-			//{0} = TableName: Mitarbeiter			
-			//{1} = FieldList: vorname, nachname
-			//{2} = NamedParamList mit @: @vorname, @nachname
-			//{3} = FieldList mit Id: id, vorname, nachname 
-			//{4} = Name der Id-Spalte
 			if (hasAutoincrementedColumn && provider.SupportsLastInsertedId && provider.SupportsInsertBatch)
 			{
-				sql = "INSERT INTO {0} ({1}) VALUES ({2}); SELECT {3} FROM {0} WHERE ({4} = " + provider.GetLastInsertedId(this.tableName, this.autoIncrementColumn.Name) + ")";
-                sql = string.Format(sql, qualifiedTableName, this.fieldList, this.namedParamList, selectFieldList, this.autoIncrementColumn.Name);
-				this.insertCommand.UpdatedRowSource = UpdateRowSource.FirstReturnedRecord;
+				this.insertCommands.Add( $"INSERT INTO {qualifiedTableName} ({this.fieldList}) VALUES ({this.namedParamList})" );
+				this.insertCommands.Add( $"SELECT {provider.GetLastInsertedId(this.tableName, this.autoIncrementColumn.Name)}" );
 			}
 			else
 			{
-				sql = "INSERT INTO {0} ({1}) VALUES ({2})";
-				sql = string.Format(sql, qualifiedTableName, this.fieldList, this.namedParamList);
+				this.insertCommands.Add( $"INSERT INTO {qualifiedTableName} ({this.fieldList}) VALUES ({this.namedParamList})" );				
 			}
 			if (hasAutoincrementedColumn && !provider.SupportsInsertBatch)
 			{
 				if (provider.SupportsLastInsertedId)
+#warning Das müssen wir noch implementieren, dass der Handler aufgerufen wird - überprüfen, welcher Provider das noch braucht.
 					provider.RegisterRowUpdateHandler(this);
 				else
 					throw new NDOException(32, "The provider of type " + provider.GetType().FullName + " doesn't support Autonumbered Ids. Use Self generated Ids instead.");
 			}
-			this.insertCommand.CommandText = sql;
-			this.insertCommand.Connection = this.conn;
 		}
 
+#if masked_out  // This code seems to be abundant
 		/// <summary>
 		/// Row update handler for providers that require Row Update Handling
 		/// </summary>
@@ -253,21 +238,20 @@ namespace NDO.SqlPersistenceHandling
 					throw new NDOException(33, "Can't read autonumbered id from the database.");
 			}
 		}
+#endif
 
 		private void GenerateUpdateCommand()
 		{
 			string sql;
 
 			NDO.Mapping.Field fieldMapping;
-
-			sql = @"UPDATE {0} SET {1} WHERE ({2})";
-
 		
 			//{0} = Tabellenname: Mitarbeiter
 			//{1} = Zuweisungsliste: vorname = @vorname, nachname = @nachname 
 			//{2} = Where-Bedingung: id = @Original_id [ AND TimeStamp = @Original_timestamp ]
 			AssignmentGenerator assignmentGenerator = new AssignmentGenerator(this.classMapping);
 			string zuwListe = assignmentGenerator.Result;
+			int pindex = 0;
 
 			foreach (var e in this.persistentFields)
 			{
@@ -277,10 +261,11 @@ namespace NDO.SqlPersistenceHandling
 				else
 					memberType = ((PropertyInfo)e.Value).PropertyType;
 
-				fieldMapping = classMapping.FindField( (string)e.Key );
+				fieldMapping = classMapping.FindField( e.Key );
 				if (fieldMapping != null)
 				{
-					provider.AddParameter( updateCommand, provider.GetNamedParameter( "U_" + fieldMapping.Column.Name ), fieldMapping.ColumnDbType, ParameterLength( fieldMapping, memberType ), fieldMapping.Column.Name );
+					this.updateParameterInfos.Add(new DbParameterInfo( fieldMapping.Column.Name, fieldMapping.ColumnDbType, ParameterLength( fieldMapping, memberType ), true ) );
+					pindex++;
 				}
 			}
 
@@ -293,120 +278,117 @@ namespace NDO.SqlPersistenceHandling
 					foreach (ForeignKeyColumn fkColumn in r.ForeignKeyColumns)
 					{
 						Type systemType = fkColumn.SystemType;
-						provider.AddParameter( updateCommand, provider.GetNamedParameter( "U_" + fkColumn.Name ), provider.GetDbType( systemType ), provider.GetDefaultLength( systemType ), fkColumn.Name );
+						this.updateParameterInfos.Add( new DbParameterInfo( fkColumn.Name, provider.GetDbType( systemType ), provider.GetDefaultLength( systemType ), true ) );
+						pindex++;
 					}
 					if (r.ForeignKeyTypeColumnName != null)
 					{
-						provider.AddParameter( updateCommand, provider.GetNamedParameter( "U_" + r.ForeignKeyTypeColumnName ), provider.GetDbType( typeof( int ) ), provider.GetDefaultLength( typeof( int ) ), r.ForeignKeyTypeColumnName );
+						this.updateParameterInfos.Add( new DbParameterInfo( r.ForeignKeyTypeColumnName, provider.GetDbType( typeof(int) ), provider.GetDefaultLength( typeof(int) ), true ) );
+						pindex++;
 					}
 				}
 			}
 
 			string where = string.Empty;
+			int whereStartIndex;
 
 			if (this.timeStampColumn != null)
 			{
+				// The new timestamp value as parameter
+				this.updateParameterInfos.Add( new DbParameterInfo( timeStampColumn, provider.GetDbType( typeof( Guid ) ), guidlength, false ) );
+				pindex++;
+				whereStartIndex = pindex;
+
+				// This is the first WHERE parameter. It's the original time stamp value
 				if (provider.UseNamedParams)
-					where += provider.GetQuotedName(timeStampColumn) + " = " + provider.GetNamedParameter("U_Original_" + timeStampColumn) + " AND ";
+					where += provider.GetQuotedName(timeStampColumn) + " = {" + pindex + "}" + " AND ";
 				else
 					where += provider.GetQuotedName(timeStampColumn) + " = ? AND ";
-				// The new timestamp value as parameter
-				provider.AddParameter(updateCommand, provider.GetNamedParameter("U_" + timeStampColumn), provider.GetDbType(typeof(Guid)), guidlength, timeStampColumn);
-				provider.AddParameter(updateCommand, provider.GetNamedParameter("U_Original_" + timeStampColumn), provider.GetDbType(typeof(Guid)), guidlength, System.Data.ParameterDirection.Input, false, ((System.Byte)(0)), ((System.Byte)(0)), timeStampColumn, System.Data.DataRowVersion.Original, null);
+
+				this.updateParameterInfos.Add( new DbParameterInfo( timeStampColumn, provider.GetDbType(typeof(Guid)), guidlength, false ) );
+				pindex++;
 			}
 
-            int oidCount = classMapping.Oid.OidColumns.Count;
+			int oidCount = classMapping.Oid.OidColumns.Count;
 			for (int i = 0; i < oidCount; i++)
 			{
                 OidColumn oidColumn = (OidColumn)classMapping.Oid.OidColumns[i];
 				// Oid as parameter
-				provider.AddParameter(updateCommand, provider.GetNamedParameter("U_Original_" + oidColumn.Name), provider.GetDbType(oidColumn.SystemType), oidColumn.TypeLength, System.Data.ParameterDirection.Input, false, ((System.Byte)(0)), ((System.Byte)(0)), oidColumn.Name, System.Data.DataRowVersion.Original, null);
+				this.updateParameterInfos.Add( new DbParameterInfo( oidColumn.Name, provider.GetDbType(oidColumn.SystemType), oidColumn.TypeLength, false ) );
+
 				if (provider.UseNamedParams)
-					where += provider.GetQuotedName(oidColumn.Name) + " = " + provider.GetNamedParameter("U_Original_" + oidColumn.Name);
+					where += provider.GetQuotedName(oidColumn.Name) + " = {" + pindex + "}";
 				else
 					where += provider.GetQuotedName(oidColumn.Name) + " = ?";
 
-                Relation r = oidColumn.Relation;
+				pindex++;
+
+				Relation r = oidColumn.Relation;
                 if (!this.hasGuidOid && r != null && r.ForeignKeyTypeColumnName != null)
                 {
-                    where += " AND " +
-                        provider.GetQuotedName(r.ForeignKeyTypeColumnName) + " = " + provider.GetNamedParameter("U_Original_" + r.ForeignKeyTypeColumnName);
-                    provider.AddParameter(updateCommand, provider.GetNamedParameter("U_Original_" + r.ForeignKeyTypeColumnName), provider.GetDbType(typeof(int)), provider.GetDefaultLength(typeof(int)), System.Data.ParameterDirection.Input, false, ((System.Byte)(0)), ((System.Byte)(0)), r.ForeignKeyTypeColumnName, System.Data.DataRowVersion.Original, null);
-                }
+                    where += " AND " + provider.GetQuotedName(r.ForeignKeyTypeColumnName) + " = {" + pindex + "}";
+					this.updateParameterInfos.Add( new DbParameterInfo( r.ForeignKeyTypeColumnName, provider.GetDbType(typeof(int)), provider.GetDefaultLength(typeof(int)), false ) );
+					pindex++;
+				}
 
-                if (i < oidCount - 1)
+				if (i < oidCount - 1)
                     where += " AND ";
 			}
-            //else
-            //{
-            //    // Dual oids are defined using two relations.
-            //    MultiKeyHandler dkh = new MultiKeyHandler(this.classMapping);
-				
-            //    for (int i = 0; i < 2; i++)
-            //    {
-            //        where += provider.GetQuotedName(dkh.ForeignKeyColumnName(i)) + " = " + provider.GetNamedParameter("U_Original_" + dkh.ForeignKeyColumnName(i));
-            //        provider.AddParameter(updateCommand, provider.GetNamedParameter("U_Original_" + dkh.ForeignKeyColumnName(i)), provider.GetDbType(dkh.GetClass(i).Oid.FieldType), dkh.GetClass(i).Oid.TypeLength, System.Data.ParameterDirection.Input, false, ((System.Byte)(0)), ((System.Byte)(0)), dkh.ForeignKeyColumnName(i), System.Data.DataRowVersion.Original, null);
-            //        if (dkh.ForeignKeyTypeColumnName(i) != null && dkh.GetClass(i).Oid.FieldType != typeof(Guid))
-            //        {
-            //            where += " AND " + 
-            //                provider.GetQuotedName(dkh.ForeignKeyTypeColumnName(i)) + " = " + provider.GetNamedParameter("U_Original_" + dkh.ForeignKeyTypeColumnName(i));
-            //            provider.AddParameter(updateCommand, provider.GetNamedParameter("U_Original_" + dkh.ForeignKeyTypeColumnName(i)), provider.GetDbType(typeof(int)), provider.GetDefaultLength(typeof(int)), System.Data.ParameterDirection.Input, false, ((System.Byte)(0)), ((System.Byte)(0)), dkh.ForeignKeyTypeColumnName(i), System.Data.DataRowVersion.Original, null);
-            //        }
-            //        if (i == 0)
-            //            where += " AND ";
-            //    }
-            //}
 
-			sql = string.Format(sql, qualifiedTableName, zuwListe, where);
+			sql = $"UPDATE {qualifiedTableName} SET {zuwListe} WHERE ({where})";
 			//Console.WriteLine(sql);
-			this.updateCommand.CommandText = sql;
+			this.updateCommands.Add(sql);
 		}
 
 
 		private void GenerateDeleteCommand()
 		{
-			string sql = "DELETE FROM {0} WHERE ({1})";
-			//{0} = Tabellenname: Mitarbeiter
-			//{1} = Where-Bedingung: id = @Original_id
+			this.deleteCommands = new List<string>();
 
-			string where = string.Empty;
+			var whereBuilder = new StringBuilder();
 
             int oidCount = this.classMapping.Oid.OidColumns.Count;
 			int i = 0;
             foreach(var oidColumn in this.classMapping.Oid.OidColumns)
 			{
 				if (provider.UseNamedParams)
-					where += provider.GetQuotedName(oidColumn.Name) + " = " + provider.GetNamedParameter("D_Original_" + oidColumn.Name);
+					whereBuilder.Append( provider.GetQuotedName( oidColumn.Name ) + " = {" + i + "}" );
 				else
-					where += provider.GetQuotedName(oidColumn.Name) + " = ?";
-				provider.AddParameter(deleteCommand, provider.GetNamedParameter("D_Original_" + oidColumn.Name), provider.GetDbType(oidColumn.SystemType), oidColumn.TypeLength, System.Data.ParameterDirection.Input, false, ((System.Byte)(0)), ((System.Byte)(0)), oidColumn.Name, System.Data.DataRowVersion.Original, null);
+					whereBuilder.Append( provider.GetQuotedName( oidColumn.Name ) + " = ?" );
+
+				deleteParameterInfos.Add( new DbParameterInfo( oidColumn.Name, provider.GetDbType( oidColumn.SystemType ), oidColumn.TypeLength, false ) );
 
                 Relation r = oidColumn.Relation;
                 if (!this.hasGuidOid && r != null && r.ForeignKeyTypeColumnName != null)
                 {
-                    where += " AND " +
-                        provider.GetQuotedName(r.ForeignKeyTypeColumnName) + " = " + provider.GetNamedParameter("D_Original_" + r.ForeignKeyTypeColumnName);
-                    provider.AddParameter(updateCommand, provider.GetNamedParameter("D_Original_" + r.ForeignKeyTypeColumnName), provider.GetDbType(typeof(int)), provider.GetDefaultLength(typeof(int)), System.Data.ParameterDirection.Input, false, ((System.Byte)(0)), ((System.Byte)(0)), r.ForeignKeyTypeColumnName, System.Data.DataRowVersion.Original, null);
-                }
+					whereBuilder.Append( " AND " +
+						provider.GetQuotedName( r.ForeignKeyTypeColumnName ) + " = {" + i + "}" );
 
-                if (i < oidCount - 1)
-                    where += " AND ";
+					deleteParameterInfos.Add( new DbParameterInfo( r.ForeignKeyTypeColumnName, provider.GetDbType( typeof(int) ), provider.GetDefaultLength( typeof(int) ), false ) );
+				}
+
+				if (i < oidCount - 1)
+					whereBuilder.Append( " AND " );
 
 				i++;
 			}
 
-			string whereTS = string.Empty;
 			if (this.timeStampColumn != null)
 			{
 				if (provider.UseNamedParams)
-					whereTS = " AND " + provider.GetQuotedName(timeStampColumn) + " = " + provider.GetNamedParameter("D_Original_" + timeStampColumn);
+					whereBuilder.Append( " AND " + provider.GetQuotedName( timeStampColumn ) + " = {" + i + "}" );
 				else
-					whereTS = " AND " + provider.GetQuotedName(timeStampColumn) + " = ?";
-				provider.AddParameter(deleteCommand, provider.GetNamedParameter("D_Original_" + timeStampColumn), provider.GetDbType(typeof(Guid)), guidlength, System.Data.ParameterDirection.Input, false, ((System.Byte)(0)), ((System.Byte)(0)), timeStampColumn, System.Data.DataRowVersion.Original, null);
+					whereBuilder.Append( " AND " + provider.GetQuotedName( timeStampColumn ) + " = ?" );
+
+				deleteParameterInfos.Add( new DbParameterInfo( timeStampColumn, provider.GetDbType( typeof( Guid ) ), guidlength, false ) );
 			}
 
-			sql = string.Format(sql, qualifiedTableName, where + whereTS);
-			this.deleteCommand.CommandText = sql;
+			string where = whereBuilder.ToString();
+
+			if (this.timeStampColumn != null) // we need collision detection
+				this.deleteCommands.Add( $"SELECT COUNT (*) FROM {qualifiedTableName} AS affected WHERE ({where})" );
+
+			this.deleteCommands.Add( $"DELETE FROM {qualifiedTableName} WHERE ({where})" );
 		}
 
 		private void CollectFields()
@@ -447,6 +429,9 @@ namespace NDO.SqlPersistenceHandling
 				{
 					mth.LogAdapter = value;
 				}
+
+				if (value != null)
+					this.sqlDumper = new SqlDumper( value, this.provider );
 			}
 		}
 
@@ -500,12 +485,6 @@ namespace NDO.SqlPersistenceHandling
                 this.guidlength = provider.SupportsNativeGuidType ? 16 : 36;
 			this.disposeCallback = disposeCallback;
 
-
-			this.selectCommand = (DbCommand) provider.NewSqlCommand(conn);
-			this.insertCommand = (DbCommand) provider.NewSqlCommand(conn);
-			this.updateCommand = (DbCommand) provider.NewSqlCommand(conn);
-			this.deleteCommand = (DbCommand) provider.NewSqlCommand(conn);
-			this.dataAdapter = provider.NewDataAdapter(selectCommand, updateCommand, insertCommand, deleteCommand);
 			this.type = t;
 
 			CollectFields();	// Alle Feldinformationen landen in persistentField
@@ -514,82 +493,116 @@ namespace NDO.SqlPersistenceHandling
 			relationInfos = new RelationCollector(this.classMapping)
 				.CollectRelations().ToList(); 
 
-
-			GenerateSelectCommand();
 			GenerateInsertCommand();
 			GenerateUpdateCommand();
 			GenerateDeleteCommand();
 		}
-	
-		#region Implementation of IPersistenceHandler
+
+		async Task InsertAsync( DataRow[] rows)
+		{
+			try
+			{
+				Log( "InsertAsync: Rows:" );
+				Dump( rows, null, null );
+
+			}
+			catch (Exception ex)
+			{
+				string text = "Exception of type " + ex.GetType().Name + " while updating or inserting data rows: " + ex.Message + "\n";
+				if (( ex.Message.IndexOf( "Die Variable" ) > -1 && ex.Message.IndexOf( "muss deklariert" ) > -1 ) || ( ex.Message.IndexOf( "Variable" ) > -1 && ex.Message.IndexOf( "declared" ) > -1 ))
+					text += "Check the field names in the mapping file.\n";
+				text += "Sql Insert statement: " + String.Join( "; ", this.insertCommands );
+				throw new NDOException( 37, text );
+			}
+		}
+
+		async Task UpdateAsync( DataRow[] rows )
+		{
+			try
+			{
+				Log( "UpdateAsync: Rows:" );
+				Dump( rows, null, null );
+			}
+			catch (Exception ex)
+			{
+				string text = "Exception of type " + ex.GetType().Name + " while updating or inserting data rows: " + ex.Message + "\n";
+				if (( ex.Message.IndexOf( "Die Variable" ) > -1 && ex.Message.IndexOf( "muss deklariert" ) > -1 ) || ( ex.Message.IndexOf( "Variable" ) > -1 && ex.Message.IndexOf( "declared" ) > -1 ))
+					text += "Check the field names in the mapping file.\n";
+				text += "Sql Update statement: " + String.Join( "; ", this.updateCommands );
+				throw new NDOException( 37, text );
+			}
+		}
+
 
 		/// <summary>
 		/// Saves Changes to a DataTable
 		/// </summary>
 		/// <param name="dt"></param>
-		public void UpdateAsync(DataTable dt)
+		public async Task UpdateAsync(DataTable dt)
 		{
 			DataRow[] rows = null;
-			try
+			if (this.timeStampColumn != null)
 			{
-				rows = Select(dt, DataViewRowState.Added | DataViewRowState.ModifiedCurrent);
-				if (rows.Length == 0)
-					return;
-				Dump(rows);
-				if (this.timeStampColumn != null)
-				{
-					Guid newTs = Guid.NewGuid();
-					foreach(DataRow r in rows)
-						r[timeStampColumn] = newTs;
-				}
-                dataAdapter.Update(rows);
+				foreach (DataRow r in rows)
+					r[timeStampColumn] = Guid.NewGuid(); ;
 			}
-			catch (System.Data.DBConcurrencyException dbex)
-			{
-				if (this.ConcurrencyError != null)
-				{
-					// This is a Firebird Hack because Fb doesn't set the row
-					if (dbex.Row == null)
-					{
-						foreach(DataRow r in rows)
-						{
-							if (r.RowState == DataRowState.Added ||
-								r.RowState == DataRowState.Modified)
-							{
-								dbex.Row = r;
-								break;
-							}
-						}
-					}
-					ConcurrencyError(dbex);
-				}
-				else
-					throw dbex;
-			}
-            catch (System.Exception ex)
-            {
-                string text = "Exception of type " + ex.GetType().Name + " while updating or inserting data rows: " + ex.Message + "\n";
-                if ((ex.Message.IndexOf("Die Variable") > -1 && ex.Message.IndexOf("muss deklariert") > -1) || (ex.Message.IndexOf("Variable") > -1 && ex.Message.IndexOf("declared") > -1))
-                    text += "Check the field names in the mapping file.\n";
-                text += "Sql Update statement: " + updateCommand.CommandText + "\n";
-                text += "Sql Insert statement: " + insertCommand.CommandText;
-                throw new NDOException(37, text);
-            }
+
+			rows = Select( dt, DataViewRowState.Added );
+			if (rows.Length > 0)
+				await InsertAsync( rows ).ConfigureAwait( false );
+
+			rows = Select( dt, DataViewRowState.ModifiedCurrent);
+			if (rows.Length > 0)
+				await UpdateAsync( rows ).ConfigureAwait( false );
+			
+#warning Error Handling should happen in UpdateAsync and InsertAsync
+			//catch (System.Data.DBConcurrencyException dbex)
+			//{
+			//	if (this.ConcurrencyError != null)
+			//	{
+			//		// This is a Firebird Hack because Fb doesn't set the row
+			//		if (dbex.Row == null)
+			//		{
+			//			foreach(DataRow r in rows)
+			//			{
+			//				if (r.RowState == DataRowState.Added ||
+			//					r.RowState == DataRowState.Modified)
+			//				{
+			//					dbex.Row = r;
+			//					break;
+			//				}
+			//			}
+			//		}
+			//		ConcurrencyError(dbex);
+			//	}
+			//	else
+			//		throw dbex;
+			//}
+   //         catch (System.Exception ex)
+   //         {
+   //             string text = "Exception of type " + ex.GetType().Name + " while updating or inserting data rows: " + ex.Message + "\n";
+   //             if ((ex.Message.IndexOf("Die Variable") > -1 && ex.Message.IndexOf("muss deklariert") > -1) || (ex.Message.IndexOf("Variable") > -1 && ex.Message.IndexOf("declared") > -1))
+   //                 text += "Check the field names in the mapping file.\n";
+   //             text += "Sql Update statement: " + updateCommands.CommandText + "\n";
+   //             text += "Sql Insert statement: " + insertCommands.CommandText;
+   //             throw new NDOException(37, text);
+   //         }
 		}
 
-
-		private void DumpBatch(string sql)
+		private void Log(string msg)
 		{
-			if (!this.verboseMode)
+			if (!this.verboseMode || this.logAdapter == null)
 				return;
-			this.logAdapter.Info("Batch: \r\n" + sql);
+
+			this.logAdapter.Info( msg );
 		}
 
-		private void Dump(DataRow[] rows)
+		private void Dump(DataRow[] rows, IDbCommand cmd, IEnumerable<string> batch)
 		{
-			if (!this.verboseMode)
+			if (!this.verboseMode || this.sqlDumper == null)
 				return;
-			new SqlDumper(this.logAdapter, this.provider, insertCommand, selectCommand, updateCommand, deleteCommand).Dump(rows);
+
+			this.sqlDumper.Dump( rows, cmd, batch );
 		}
 
         DataRow[] Select(DataTable dt, DataViewRowState rowState)
@@ -607,38 +620,42 @@ namespace NDO.SqlPersistenceHandling
 		{
 			DataRow[] rows = Select(dt, DataViewRowState.Deleted);
 			if (rows.Length == 0) return;
-			var oidcolumns = this.classMapping.Oid.OidColumns.Select( c => c.Name );
 
-			Dump( rows);
 			try
 			{
+				Log( nameof( UpdateDeletedObjectsAsync ) );
 				var parameters = new List<object>();
-				var statements = new List<string>();
 				foreach (var row in rows)
 				{
-					statements.Add( this.deleteCommand.CommandText );
-					foreach (var col in oidcolumns)
+					foreach (var info in this.deleteParameterInfos)
 					{
-						parameters.Add( row[col] );
+						parameters.Add( row[info.ColumnName] );
 					}
-
-					if (this.classMapping.TimeStampColumn != null)
-						parameters.Add( row[this.classMapping.TimeStampColumn] );
 				}
 
-				await ExecuteBatchAsync( statements, parameters ).ConfigureAwait( false );
-			}
-			catch (System.Data.DBConcurrencyException dbex)
-			{
-				if (this.ConcurrencyError != null)
-					ConcurrencyError(dbex);
-				else
-					throw dbex;
+				var results = await ExecuteBatchAsync( this.deleteCommands, parameters, true ).ConfigureAwait( false );
+
+				Dump( rows, null, null );
+
+				if (this.timeStampColumn != null) // we have to check for concurrency error
+				{
+					int sum = 0;
+					results.Select( d => (int) d.Values.First() ).Select(c => sum += c );
+					if (sum < rows.Length)
+					{
+						Log( $"Concurrency failure: row count: {rows.Length}, affected: {sum}" );
+						var ex = new DBConcurrencyException( "Concurrency failure: wasn't able to delete one or more rows.", null, rows );
+						if (this.ConcurrencyError != null)
+							this.ConcurrencyError( ex );
+						else
+							throw ex;
+					}
+				}
 			}
 			catch (System.Exception ex)
 			{
-				string text = "Exception of type " + ex.GetType().Name + " while deleting data rows: " + ex.Message + "\n";
-				text += "Sql statement: " + deleteCommand.CommandText + "\n";
+				string text = $"Exception of type {ex.GetType().Name} while deleting data rows: {ex.Message}\n";
+				text += $"Sql statement: {String.Join("; ", this.deleteCommands)}\n";
 				throw new NDOException(38, text);
 			}
 		}
@@ -757,7 +774,7 @@ namespace NDO.SqlPersistenceHandling
 					cmd.CommandText = sql;
 
 					// cmd.CommandText can be changed in CreateQueryParameters
-					DumpBatch( cmd.CommandText );
+					Dump( null, cmd, rearrangedStatements );
 
 					using (dr = await cmd.ExecuteReaderAsync().ConfigureAwait( false )) 
 					{
@@ -838,7 +855,7 @@ namespace NDO.SqlPersistenceHandling
 				result.Add( dict );
 			}
 
-			DumpBatch( String.Join( "\r\n;", rearrangedStatements ) );
+			Dump( null, cmd, rearrangedStatements );
 			return result;
 		}
 
@@ -977,22 +994,33 @@ namespace NDO.SqlPersistenceHandling
 		/// <inheritdoc/>
 		public async Task<DataTable> PerformQueryAsync( string sql, IList parameters, DataSet templateDataSet )
 		{
+			CommandType commandType;
 			if (sql.Trim().StartsWith( "EXEC", StringComparison.InvariantCultureIgnoreCase ))
-				this.selectCommand.CommandType = CommandType.StoredProcedure;
+				commandType = CommandType.StoredProcedure;
 			else
-				this.selectCommand.CommandType = CommandType.Text;
+				commandType = CommandType.Text;
 
 			DataTable table = GetTemplateTable(templateDataSet, this.tableName).Clone();
 
-			this.selectCommand.CommandText = sql;
+			var command = (DbCommand) this.provider.NewSqlCommand(this.conn);
+			command.CommandType = commandType;
 
-			CreateQueryParameters(this.selectCommand, parameters);
+			var rearrangedStatements = new List<string>();
+			List<string> inputStatements = new List<string>()
+			{
+				sql
+			};
 
-			Dump(null); // Dumps the Select Command
+			CreateQueryParameters( command, inputStatements, rearrangedStatements, parameters, false );
+
+			// We know, that we only have one statement to perform
+			command.CommandText = rearrangedStatements[0];
+
+			Dump(null, command, rearrangedStatements); // Dumps the Select Command
 
             try
             {
-				await this.sqlSelectBahavior.Select( this.selectCommand, table );
+				await this.sqlSelectBahavior.Select( command, table );
 			}
             catch (System.Exception ex)
             {
@@ -1004,35 +1032,35 @@ namespace NDO.SqlPersistenceHandling
 			return table;		
 		}
 
-		/// <inheritdoc/>
-		public DataTable PerformQuery( string sql, IList parameters, DataSet templateDataSet )
-		{
-			if (sql.Trim().StartsWith( "EXEC", StringComparison.InvariantCultureIgnoreCase ))
-				this.selectCommand.CommandType = CommandType.StoredProcedure;
-			else
-				this.selectCommand.CommandType = CommandType.Text;
+		///// <inheritdoc/>
+		//public DataTable PerformQuery( string sql, IList parameters, DataSet templateDataSet )
+		//{
+		//	if (sql.Trim().StartsWith( "EXEC", StringComparison.InvariantCultureIgnoreCase ))
+		//		this.selectCommands.CommandType = CommandType.StoredProcedure;
+		//	else
+		//		this.selectCommands.CommandType = CommandType.Text;
 
-			DataTable table = GetTemplateTable(templateDataSet, this.tableName).Clone();
+		//	DataTable table = GetTemplateTable(templateDataSet, this.tableName).Clone();
 
-			this.selectCommand.CommandText = sql;
+		//	this.selectCommands.CommandText = sql;
 
-			CreateQueryParameters( this.selectCommand, parameters );
+		//	CreateQueryParameters( this.selectCommands, parameters );
 
-			Dump( null ); // Dumps the Select Command
+		//	Dump( null ); // Dumps the Select Command
 
-			try
-			{
-				dataAdapter.Fill( table );
-			}
-			catch (System.Exception ex)
-			{
-				string text = "Exception of type " + ex.GetType().Name + " while executing a Query: " + ex.Message + "\n";
-				text += "Sql Statement: " + sql + "\n";
-				throw new NDOException( 40, text );
-			}
+		//	try
+		//	{
+		//		dataAdapter.Fill( table );
+		//	}
+		//	catch (System.Exception ex)
+		//	{
+		//		string text = "Exception of type " + ex.GetType().Name + " while executing a Query: " + ex.Message + "\n";
+		//		text += "Sql Statement: " + sql + "\n";
+		//		throw new NDOException( 40, text );
+		//	}
 
-			return table;
-		}
+		//	return table;
+		//}
 
 
 		/// <summary>
@@ -1072,10 +1100,6 @@ namespace NDO.SqlPersistenceHandling
 			{
 #warning Das Property muss den Typ DbConnection bekommen
 				this.conn = (DbConnection)value;
-				this.selectCommand.Connection = this.conn;
-				this.deleteCommand.Connection = this.conn;
-				this.updateCommand.Connection = this.conn;
-				this.insertCommand.Connection = this.conn;
 			}
 		}
 
@@ -1088,23 +1112,7 @@ namespace NDO.SqlPersistenceHandling
 			set
 			{
 				this.transaction = (DbTransaction)value;
-				this.selectCommand.Transaction = this.transaction;
-				this.deleteCommand.Transaction = this.transaction;
-				this.updateCommand.Transaction = this.transaction;
-				this.insertCommand.Transaction = this.transaction;
 			}
 		}
-
-
-		/// <summary>
-		/// Gets the current DataAdapter.
-		/// </summary>
-		/// <remarks>
-		/// This is needed by RegisterRowUpdateHandler.
-		/// See the comment in SqlCeProvider.
-		/// </remarks>
-		public DbDataAdapter DataAdapter => this.dataAdapter;
-
-		#endregion
 	}
 }
