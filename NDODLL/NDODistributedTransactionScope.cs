@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Data.Common;
 using System.Linq;
 using ST = System.Transactions;
 
@@ -19,7 +20,7 @@ namespace NDO
 		ST.TransactionScope innerScope;
 		private readonly PersistenceManager pm;
 
-		private Dictionary<string, IDbConnection> usedConnections = new Dictionary<string, IDbConnection>();
+		private Dictionary<string, DbConnection> usedConnections = new Dictionary<string, DbConnection>();
 
 		///<inheritdoc/>
 		public IsolationLevel IsolationLevel { get; set; }
@@ -69,7 +70,7 @@ namespace NDO
 		}
 
 		///<inheritdoc/>
-		public IDbConnection GetConnection( string id, Func<IDbConnection> factory )
+		public DbConnection GetConnection( string id, Func<DbConnection> factory )
 		{
 			if (this.usedConnections.ContainsKey( id ))
 			{
@@ -108,7 +109,7 @@ namespace NDO
 		}
 
 		///<inheritdoc/>
-		public IDbTransaction GetTransaction( string id )
+		public DbTransaction GetTransaction( string id )
 		{
 			return null;
 		}

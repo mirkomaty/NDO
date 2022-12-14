@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Data.Common;
 using System.Linq;
 using System.Text.RegularExpressions;
 
@@ -14,8 +15,8 @@ namespace NDO
 	{
 		private readonly PersistenceManager pm;
 
-		private Dictionary<string, IDbConnection> usedConnections = new Dictionary<string, IDbConnection>();
-		private Dictionary<string, IDbTransaction> usedTransactions = new Dictionary<string, IDbTransaction>();
+		private Dictionary<string, DbConnection> usedConnections = new Dictionary<string, DbConnection>();
+		private Dictionary<string, DbTransaction> usedTransactions = new Dictionary<string, DbTransaction>();
 
 		///<inheritdoc/>
 		public IsolationLevel IsolationLevel { get; set; }
@@ -54,7 +55,7 @@ namespace NDO
 			this.isInTransaction = true;
 		}
 
-		private void OpenConnAndStartTransaction( string connId, IDbConnection conn )
+		private void OpenConnAndStartTransaction( string connId, DbConnection conn )
 		{
 			conn.Open();
 			pm.LogIfVerbose( $"Opening connection {conn.DisplayName()}" );
@@ -78,7 +79,7 @@ namespace NDO
 				var tx = usedTransactions[id];
 				tx.Commit();
 
-				IDbConnection conn = null;
+				DbConnection conn = null;
 				usedConnections.TryGetValue( id, out conn );
 				this.pm.LogIfVerbose( String.Format( "Committing transaction {0:X} at connection '{1}'", tx.GetHashCode(), conn.DisplayName() ) );
 			}
@@ -87,7 +88,7 @@ namespace NDO
 		}
 
 		///<inheritdoc/>
-		public IDbConnection GetConnection( string id, Func<IDbConnection> factory )
+		public DbConnection GetConnection( string id, Func<DbConnection> factory )
 		{
 			if (this.usedConnections.ContainsKey( id ))
 			{
@@ -105,11 +106,11 @@ namespace NDO
 
 
 		///<inheritdoc/>
-		public IDbTransaction GetTransaction( string id )
+		public DbTransaction GetTransaction( string id )
 		{
 			if (isInTransaction)
 			{
-				IDbTransaction tx = null;
+				DbTransaction tx = null;
 				this.usedTransactions.TryGetValue( id, out tx );
 				return tx;
 			}
@@ -132,7 +133,7 @@ namespace NDO
 				var tx = this.usedTransactions[key];
 				var id = tx.GetHashCode();
 				tx.Rollback();
-				IDbConnection conn = null;
+				DbConnection conn = null;
 				this.usedConnections.TryGetValue( key, out conn );
 				pm.LogIfVerbose( $"Rollback transaction {id.ToString( "X" )} at connection '{conn.DisplayName()}'" );
 			}

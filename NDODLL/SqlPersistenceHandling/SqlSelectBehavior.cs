@@ -20,7 +20,9 @@ namespace NDO.SqlPersistenceHandling
 					var row = table.NewRow();
 					for (int i = 0; i < reader.FieldCount; i++)
 					{
-						var name = reader.GetName(i);
+						// We don't need to check, if the row defines all columns, the reader returns,
+						// since all column informations come from the mapping file.
+						var name = reader.GetName( i );
 						row[name] = reader.GetValue( i );
 					}
 

@@ -1,5 +1,5 @@
 ﻿//
-// Copyright (c) 2002-2016 Mirko Matytschak 
+// Copyright (c) 2002-2022 Mirko Matytschak 
 // (www.netdataobjects.de)
 //
 // Author: Mirko Matytschak
@@ -45,7 +45,7 @@ namespace NDO
 	/// The default implementation of this interface in NDO is the NDOPersistenceHandler class.
 	/// See also: <a href="Extensions.html">NDO extension interfaces</a>
 	/// </summary>
-	public interface IPersistenceHandler : IPersistenceHandlerBase, IRowUpdateListener
+	public interface IPersistenceHandler : IPersistenceHandlerBase
 	{
 		/// <summary>
 		/// Internal handler for concurrency situations
@@ -71,6 +71,7 @@ namespace NDO
 		/// <param name="statements">Each element in the array is a sql statement.</param>
 		/// <param name="parameters">A list of parameters (see remarks).</param>
 		/// <param name="isCommandArray">Determines, if template statements should be repeated for each parameter set</param>
+		/// <param name="parameterInfos">Information which helps building the correct parameter objects. Can be null.</param>
 		/// <returns>An IList with Hashtables, containing the Name/Value pairs of the results.</returns>
 		/// <remarks>
 		/// For emty resultsets an empty List will be returned. 
@@ -78,7 +79,7 @@ namespace NDO
 		/// all subqueries. In case of a command array the statements will bei combined to a template. 
 		/// parameters contains a list of lists, with one entry per repetition of the template.
 		/// </remarks>
-		Task<IList<Dictionary<string, object>>> ExecuteBatchAsync( string[] statements, IList parameters, bool isCommandArray );
+		Task<IList<Dictionary<string, object>>> ExecuteBatchAsync( IEnumerable<string> statements, IList parameters, IEnumerable<DbParameterInfo> parameterInfos = null, bool isCommandArray = false );
 
 		/// <summary>
 		/// Execute a SQL query.

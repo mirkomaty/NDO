@@ -1,5 +1,5 @@
 ﻿//
-// Copyright (c) 2002-2016 Mirko Matytschak 
+// Copyright (c) 2002-2022 Mirko Matytschak 
 // (www.netdataobjects.de)
 //
 // Author: Mirko Matytschak
@@ -23,7 +23,7 @@
 using System;
 using System.Data;
 using System.Collections;
-
+using System.Threading.Tasks;
 
 namespace NDO
 {
@@ -86,6 +86,20 @@ namespace NDO
 		/// </summary>
 		/// <param name="list"></param>
 		void Delete(IList list);
+
+		/// <summary>
+		/// Delete an object from the database.
+		/// </summary>
+		/// <param name="pc">An IPersistenceCapable </param>
+		Task DeleteAsync( object pc );
+
+
+		/// <summary>
+		/// Delete a list of objects from the database.
+		/// </summary>
+		/// <param name="list"></param>
+		Task DeleteAsync( IList list );
+
 
 		/// <summary>
 		/// Makes an object hollow. If it gets touched by code, it will get reloaded.
@@ -155,6 +169,13 @@ namespace NDO
 		/// </summary>
 		/// <param name="deferCommit">Determines, if the commit should be immediately or if it should be deferred to a later call to Save().</param>
 		void Save( bool deferCommit = false );
+
+		/// <summary>
+		/// Save all changes made to the objects.
+		/// </summary>
+		/// <param name="deferCommit">Determines, if the commit should be immediately or if it should be deferred to a later call to Save().</param>
+		/// <returns>An awaitable task</returns>
+		Task SaveAsync( bool deferCommit = false );
 
 		/// <summary>
 		/// Discard all changes and restore the state of all objects.

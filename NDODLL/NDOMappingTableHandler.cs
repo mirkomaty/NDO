@@ -28,6 +28,9 @@ using NDO.Logging;
 using NDOInterfaces;
 using NDO.SqlPersistenceHandling;
 using System.Threading.Tasks;
+using System.Collections.Generic;
+using System.Text;
+using System.Security.Cryptography;
 
 namespace NDO
 {
@@ -37,137 +40,167 @@ namespace NDO
 	internal class NDOMappingTableHandler : IMappingTableHandler
 	{
 		private Relation relation;
-		private DbCommand selectCommand;
-		private DbCommand insertCommand;
-		//private IDbCommand updateCommand;
-		private DbCommand deleteCommand;
+		private string insertCommand;
+		private string deleteCommand;
+		private string selectCommand;
+		private List<DbParameterInfo> selectParameterInfos = new List<DbParameterInfo>();
+		private List<DbParameterInfo> insertParameterInfos = new List<DbParameterInfo>();
+		private List<DbParameterInfo> deleteParameterInfos = new List<DbParameterInfo>();
 		private DbConnection connection;
-		private DbDataAdapter dataAdapter;
+		private DbTransaction transaction;
 		private IProvider provider;
 		private bool verboseMode;
 		private ILogAdapter logAdapter;
 		private SqlSelectBehavior sqlSelectBehavior;
+		private SqlDumper sqlDumper;
+		private NDOMapping mappings;
 
 		private string GetParameter(IProvider provider, string name)
 		{
 			return provider.UseNamedParams ? provider.GetNamedParameter(name) : "?";
 		}
 
-		public void Initialize(NDOMapping mappings, Relation r)
+		public void Initialize(NDOMapping mappings, Relation relation)
 		{
-			Connection con = mappings.FindConnection(r.MappingTable.ConnectionId);
-			this.provider = mappings.GetProvider(con);
+			this.mappings = mappings;
+			this.relation = relation;
+
+			Connection con = mappings.FindConnection(relation.MappingTable.ConnectionId);
+			this.provider = mappings.GetProvider( con );
 
 			// The connection object will be initialized in the pm, to 
 			// enable the callback for getting the real connection string.
 			// CheckTransaction is the place, where this happens.
-			this.connection = null;   
+			this.connection = null;
+			this.sqlSelectBehavior = new SqlSelectBehavior();
 
-			selectCommand = (DbCommand) provider.NewSqlCommand(connection);
-			insertCommand = (DbCommand) provider.NewSqlCommand(connection);
-			deleteCommand = (DbCommand) provider.NewSqlCommand(connection);
-			dataAdapter = provider.NewDataAdapter(selectCommand, null, insertCommand, deleteCommand);
-			this.relation = r;
+			GenerateSelectCommand();
+			GenerateInsertCommand();
+			GenerateDeleteCommand();
+		}
 
-			//
-			// select
-			//
-			string sql = string.Format("SELECT * FROM {0} WHERE ", provider.GetQualifiedTableName(r.MappingTable.TableName));
-			selectCommand.CommandText = sql;
 
-			//
-			// insert
-			//
-			sql = "INSERT INTO {0}({1}) VALUES ({2})";
-			//{0} = TableName: Mitarbeiter			
-			//{1} = FieldList: vorname, nachname
-			//{2} = FieldList mit @:
+		private void GenerateDeleteCommand()
+		{
+			int i = 0;
+
+			var whereBuilder = new StringBuilder();
+
+			new ForeignKeyIterator( relation ).Iterate( delegate ( ForeignKeyColumn fkColumn, bool isLastIndex )
+			{
+				whereBuilder.Append( provider.GetQuotedName( fkColumn.Name ) + " = {" + i++ + "} AND " );
+				this.deleteParameterInfos.Add(new DbParameterInfo( fkColumn.Name, provider.GetDbType( fkColumn.SystemType ), fkColumn.Size, false ) );
+			}
+			);
+
+			new ForeignKeyIterator( relation.MappingTable ).Iterate( delegate ( ForeignKeyColumn fkColumn, bool isLastIndex )
+			{
+				whereBuilder.Append( provider.GetQuotedName( fkColumn.Name ) + " = {" + i++ + "}" );
+				if (!isLastIndex)
+					whereBuilder.Append( " AND " );
+				this.deleteParameterInfos.Add( new DbParameterInfo( fkColumn.Name, provider.GetDbType( fkColumn.SystemType ), fkColumn.Size, false ) );
+			}
+			);
+
+			if (relation.ForeignKeyTypeColumnName != null)
+			{
+				whereBuilder.Append(" AND " + provider.GetQuotedName( relation.ForeignKeyTypeColumnName ) + " = {" + i++ + "}" );
+				this.deleteParameterInfos.Add( new DbParameterInfo( relation.ForeignKeyTypeColumnName, provider.GetDbType( typeof( int ) ), provider.GetDefaultLength(typeof(int)), false ) );
+			}
+
+			if (relation.MappingTable.ChildForeignKeyTypeColumnName != null)
+			{
+				whereBuilder.Append( " AND " + provider.GetQuotedName( relation.MappingTable.ChildForeignKeyTypeColumnName ) + " = {" + i++ + "}" );
+				this.deleteParameterInfos.Add( new DbParameterInfo( relation.MappingTable.ChildForeignKeyTypeColumnName, provider.GetDbType( typeof( int ) ), provider.GetDefaultLength( typeof( int ) ), false ) );
+			}
+
+			deleteCommand = $"DELETE FROM {provider.GetQualifiedTableName( relation.MappingTable.TableName )} WHERE ({whereBuilder.ToString()})";
+		}
+
+		private void GenerateInsertCommand()
+		{
+			int i = 0;
 
 			// IDOwn1, IDOwn2
-            string columns = string.Empty;
-            string namedParameters = string.Empty;
+			string columns = string.Empty;
+			string namedParameters = string.Empty;
 
-            new ForeignKeyIterator(r).Iterate
-            (
-                delegate(ForeignKeyColumn fkColumn, bool isLastElement)
-                {
-                    columns += provider.GetQuotedName(fkColumn.Name);
-                    namedParameters += GetParameter(provider, fkColumn.Name);
-                    provider.AddParameter(insertCommand, provider.GetNamedParameter(fkColumn.Name), provider.GetDbType(fkColumn.SystemType), provider.GetDefaultLength(fkColumn.SystemType), fkColumn.Name);
-                    columns += ", ";
-                    namedParameters += ", ";
-                }
-            );
+			new ForeignKeyIterator( this.relation ).Iterate
+			(
+				delegate ( ForeignKeyColumn fkColumn, bool isLastElement )
+				{
+					columns += provider.GetQuotedName( fkColumn.Name );
+					namedParameters += "{" + i++ + "}";
+					this.insertParameterInfos.Add(new DbParameterInfo( fkColumn.Name , provider.GetDbType( fkColumn.SystemType ), provider.GetDefaultLength( fkColumn.SystemType ), false ) );
+					columns += ", ";
+					namedParameters += ", ";
+				}
+			);
 
 
-            // IDOther1, IDOther2
-            new ForeignKeyIterator(r.MappingTable).Iterate
-            (
-                delegate(ForeignKeyColumn fkColumn, bool isLastElement)
-                {
-                    columns += provider.GetQuotedName(fkColumn.Name);
-                    namedParameters += GetParameter(provider, fkColumn.Name);
-                    provider.AddParameter(insertCommand, provider.GetNamedParameter(fkColumn.Name), provider.GetDbType(fkColumn.SystemType), provider.GetDefaultLength(fkColumn.SystemType), fkColumn.Name);
-                    if (!isLastElement)
-                    {
-                        columns += ", ";
-                        namedParameters += ", ";
-                    }
-                }
-            );
+			// IDOther1, IDOther2
+			new ForeignKeyIterator( this.relation.MappingTable ).Iterate
+			(
+				delegate ( ForeignKeyColumn fkColumn, bool isLastElement )
+				{
+					columns += provider.GetQuotedName( fkColumn.Name );
+					namedParameters += "{" + i++ + "}";
+					this.insertParameterInfos.Add( new DbParameterInfo( fkColumn.Name , provider.GetDbType( fkColumn.SystemType ), provider.GetDefaultLength( fkColumn.SystemType ), false ) );
+					if (!isLastElement)
+					{
+						columns += ", ";
+						namedParameters += ", ";
+					}
+				}
+			);
 
+			// Note: so far we've appended the commas, from here we'll prepend them
 
 			// TCOwn
-			if (r.ForeignKeyTypeColumnName != null) {
-				columns += ", " + provider.GetQuotedName(r.ForeignKeyTypeColumnName);
-				namedParameters += ", " + GetParameter(provider, r.ForeignKeyTypeColumnName);
-                provider.AddParameter(insertCommand, provider.GetNamedParameter(r.ForeignKeyTypeColumnName), provider.GetDbType(typeof(int)), provider.GetDefaultLength(typeof(int)), r.ForeignKeyTypeColumnName);
-            }
+			if (this.relation.ForeignKeyTypeColumnName != null)
+			{
+				columns += ", " + provider.GetQuotedName( this.relation.ForeignKeyTypeColumnName );
+				namedParameters += ", {" + i++ + "}";
+				this.insertParameterInfos.Add( new DbParameterInfo( this.relation.ForeignKeyTypeColumnName , provider.GetDbType( typeof( int ) ), provider.GetDefaultLength( typeof( int ) ), false ) );
+			}
+
 			// TCOther
-			if (r.MappingTable.ChildForeignKeyTypeColumnName != null) {
-				columns += ", " + provider.GetQuotedName(r.MappingTable.ChildForeignKeyTypeColumnName);
-				namedParameters += ", " + GetParameter(provider, r.MappingTable.ChildForeignKeyTypeColumnName);
-                provider.AddParameter(insertCommand, provider.GetNamedParameter(r.MappingTable.ChildForeignKeyTypeColumnName), provider.GetDbType(typeof(int)), provider.GetDefaultLength(typeof(int)), r.MappingTable.ChildForeignKeyTypeColumnName);
-            }
-			insertCommand.CommandText = string.Format(sql, provider.GetQualifiedTableName(r.MappingTable.TableName), columns, namedParameters);
+			if (this.relation.MappingTable.ChildForeignKeyTypeColumnName != null)
+			{
+				columns += ", " + provider.GetQuotedName( this.relation.MappingTable.ChildForeignKeyTypeColumnName );
+				namedParameters += ", {" + i++ + "}";
+				this.insertParameterInfos.Add( new DbParameterInfo( this.relation.MappingTable.ChildForeignKeyTypeColumnName, provider.GetDbType( typeof( int ) ), provider.GetDefaultLength( typeof( int ) ), false ) );
+			}
 
-			Class relatedClass = mappings.FindClass(r.ReferencedTypeName);
+			var tableName = provider.GetQualifiedTableName( this.relation.MappingTable.TableName );
 
-			// 
-			// delete
-			// 
-			sql = "DELETE FROM {0} WHERE ({1})";
-			//{0} = Tabellenname: Mitarbeiter
-			//{1} = Where-Bedingung: id = @Original_id
-            string where = string.Empty;
-            new ForeignKeyIterator(r).Iterate(delegate(ForeignKeyColumn fkColumn, bool isLastIndex)
-                {
-                    where += provider.GetQuotedName(fkColumn.Name) + " = " + GetParameter(provider, "Original_" + fkColumn.Name) + " AND ";
-                    provider.AddParameter(deleteCommand, provider.GetNamedParameter("Original_" + fkColumn.Name), provider.GetDbType(fkColumn.SystemType), fkColumn.Size, System.Data.ParameterDirection.Input, false, ((System.Byte)(0)), ((System.Byte)(0)), fkColumn.Name, System.Data.DataRowVersion.Original, null);
-                }
-            );
-            new ForeignKeyIterator(r.MappingTable).Iterate(delegate(ForeignKeyColumn fkColumn, bool isLastIndex)
-                {
-                    where += provider.GetQuotedName(fkColumn.Name) + " = " + GetParameter(provider, "Original_" + fkColumn.Name);
-                    if (!isLastIndex)
-                        where += " AND ";
-                    provider.AddParameter(deleteCommand, provider.GetNamedParameter("Original_" + fkColumn.Name), provider.GetDbType(fkColumn.SystemType), fkColumn.Size, System.Data.ParameterDirection.Input, false, ((System.Byte)(0)), ((System.Byte)(0)), fkColumn.Name, System.Data.DataRowVersion.Original, null);
-                }
-            );
+			insertCommand = $"INSERT INTO {tableName} ({columns}) VALUES ({namedParameters})";
 
-			if (r.ForeignKeyTypeColumnName != null) 
-            {
-				where += " AND " + provider.GetQuotedName(r.ForeignKeyTypeColumnName) + " = " + GetParameter(provider, "Original_" + r.ForeignKeyTypeColumnName);
-                provider.AddParameter(deleteCommand, provider.GetNamedParameter("Original_" + r.ForeignKeyTypeColumnName), provider.GetDbType(typeof(int)), 4, System.Data.ParameterDirection.Input, false, ((System.Byte)(0)), ((System.Byte)(0)), r.ForeignKeyTypeColumnName, System.Data.DataRowVersion.Original, null);
-            }
-			if (r.MappingTable.ChildForeignKeyTypeColumnName != null) 
-            {
-				where += " AND " + provider.GetQuotedName(r.MappingTable.ChildForeignKeyTypeColumnName) + " = " + GetParameter(provider, "Original_" + r.MappingTable.ChildForeignKeyTypeColumnName);
-                provider.AddParameter(deleteCommand, provider.GetNamedParameter("Original_" + r.MappingTable.ChildForeignKeyTypeColumnName), provider.GetDbType(typeof(int)), 4, System.Data.ParameterDirection.Input, false, ((System.Byte)(0)), ((System.Byte)(0)), r.MappingTable.ChildForeignKeyTypeColumnName, System.Data.DataRowVersion.Original, null);
-            }
+			Class relatedClass = this.mappings.FindClass(this.relation.ReferencedTypeName);
+		}
 
-            deleteCommand.CommandText = string.Format(sql, provider.GetQualifiedTableName(r.MappingTable.TableName), where);
+		private void GenerateSelectCommand()
+		{
+			StringBuilder whereBuilder = new StringBuilder();
 
+			int i = 0;
+			new ForeignKeyIterator( this.relation ).Iterate( delegate ( ForeignKeyColumn fkColumn, bool isLastEntry )
+			{
+				
+				whereBuilder.Append( provider.GetQuotedName( fkColumn.Name ) + " = {" + i++ + "}" );
+				this.selectParameterInfos.Add(new DbParameterInfo (fkColumn.Name, provider.GetDbType(fkColumn.SystemType), fkColumn.Size, false ) );
+				if (!isLastEntry)
+					whereBuilder.Append( " AND " );
+			} );
+
+			if (relation.ForeignKeyTypeColumnName != null)
+			{
+				//sql += " AND " + provider.GetQuotedName(r.ForeignKeyTypeColumnName) + " = " + oid.Id.TypeId;
+				whereBuilder.Append( " AND " + provider.GetQuotedName( relation.ForeignKeyTypeColumnName ) + " = {" + i + "}" );
+				this.selectParameterInfos.Add( new DbParameterInfo( relation.ForeignKeyTypeColumnName, provider.GetDbType( typeof( int ) ), provider.GetDefaultLength( typeof( int ) ), false ) );
+			}
+
+			this.selectCommand = $"SELECT * FROM {provider.GetQualifiedTableName( this.relation.MappingTable.TableName )} WHERE {whereBuilder.ToString()}";
 		}
 
 		/// <summary>
@@ -176,7 +209,12 @@ namespace NDO
 		public ILogAdapter LogAdapter
 		{
 			get { return logAdapter; }
-			set { logAdapter = value; }
+			set 
+			{ 
+				logAdapter = value;
+				if (value != null)
+					this.sqlDumper = new SqlDumper( value, this.provider );
+			}
 		}
 
 
@@ -190,12 +228,14 @@ namespace NDO
 		}
 
 
-		private void Dump(DataRow[] rows)
+		private void Dump( DataRow[] rows, IDbCommand cmd, IEnumerable<string> batch )
 		{
-			if (!this.verboseMode)
+			if (!this.verboseMode || this.sqlDumper == null)
 				return;
-			new SqlDumper(this.logAdapter, this.provider, insertCommand, selectCommand, null, deleteCommand).Dump(rows);
+
+			this.sqlDumper.Dump( rows, cmd, batch );
 		}
+
 
 		private DataTable GetTableTemplate(DataSet templateDataset, string name)
 		{
@@ -205,51 +245,85 @@ namespace NDO
 			return dt;
 		}
 		
-		public async Task<DataTable> LoadRelatedObjects(ObjectId oid, DataSet templateDataset) 
+		public async Task<DataTable> LoadRelatedObjectsAsync(ObjectId oid, DataSet templateDataset) 
 		{
 			DataTable table = GetTableTemplate(templateDataset, relation.MappingTable.TableName).Clone();
-            string sql = "SELECT * FROM " + provider.GetQualifiedTableName(relation.MappingTable.TableName) + " WHERE ";
-            selectCommand.Parameters.Clear();
+			var parameters = new List<object>();
 
             int i = 0;
             new ForeignKeyIterator(relation).Iterate(delegate(ForeignKeyColumn fkColumn, bool isLastEntry)
             {                    
-                string parName = "p" + i;
-                sql += provider.GetQuotedName(fkColumn.Name) + " = " + provider.GetNamedParameter(parName);
-                IDataParameter dataParameter = provider.AddParameter(selectCommand, provider.GetNamedParameter(parName), provider.GetDbType(fkColumn.SystemType), fkColumn.Size, parName);
 				object o = oid.Id[i];
-				if ( o is Guid && !provider.SupportsNativeGuidType )
+				if ( o is Guid && !this.provider.SupportsNativeGuidType )
 					o = ((Guid) o).ToString();
-                dataParameter.Value = o;
-                dataParameter.Direction = ParameterDirection.Input;
-                if (!isLastEntry)
-                    sql += " AND ";
+
+				parameters.Add( o );
                 i++;
             });
             
 			if (relation.ForeignKeyTypeColumnName != null) 
 			{
-                //sql += " AND " + provider.GetQuotedName(r.ForeignKeyTypeColumnName) + " = " + oid.Id.TypeId;
-                sql += " AND " + provider.GetQuotedName(relation.ForeignKeyTypeColumnName) + " = " + provider.GetNamedParameter("typeCode");
-                IDataParameter dataParameter = provider.AddParameter(selectCommand, provider.GetNamedParameter("typeCode"), provider.GetDbType(typeof(int)), provider.GetDefaultLength(typeof(int)), "typeCode");
-                dataParameter.Value = oid.Id.TypeId;
-                dataParameter.Direction = ParameterDirection.Input;                
+                parameters.Add( oid.Id.TypeId );
 			}
 
-			selectCommand.CommandText = sql;
-            try 
-            {
-				Dump(null);
-				await this.sqlSelectBehavior.Select( selectCommand, table );
+			var command = (DbCommand) this.provider.NewSqlCommand(this.connection);
+			command.Transaction = this.transaction;
+			var rearrangedStatements = new List<string>();
+
+			new BatchExecutor( this.provider, this.connection, this.transaction, Dump )
+				.CreateQueryParameters( command, new[] { this.selectCommand }, rearrangedStatements, parameters, this.selectParameterInfos, false );
+
+			command.CommandText = rearrangedStatements[0];  // There is only one statement to execute
+
+			try
+			{
+				Dump(null, command, rearrangedStatements );
+				await this.sqlSelectBehavior.Select( command, table ).ConfigureAwait( false );
             }
             catch (System.Exception ex)
             {
-                string text = "Exception in dataAdapter.Fill: " + ex.Message + "\n";
-                text += "Sql-Anweisung: " + selectCommand.CommandText + "\n";
+                string text = "Exception in LoadRelatedObjectsAsync: " + ex.Message + "\n";
+                text += "Sql-Anweisung: " + command.CommandText + "\n";
                 throw new NDOException(25, text);
             }
 
 			return table;		
+		}
+
+		public async Task InsertAsync( DataRow[] rows)
+		{
+			Dump( null, null, new[] { "MappingTableHandler.InsertAsync" } );
+			var parameters = new List<object>();
+			foreach (var row in rows)
+			{
+				foreach (var info in this.insertParameterInfos)
+				{
+					parameters.Add( row[info.ColumnName] );
+				}
+			}
+
+			var batchExecutor = new BatchExecutor( this.provider, this.connection, this.transaction, Dump );
+
+			var results = await batchExecutor.ExecuteBatchAsync( new[]{this.insertCommand }, parameters, insertParameterInfos, true ).ConfigureAwait( false );
+			Dump( rows, null, null );
+		}
+
+		public async Task DeleteAsync( DataRow[] rows )
+		{
+			Dump( null, null, new[] { "MappingTableHandler.DeleteAsync" } );
+			var parameters = new List<object>();
+			foreach (var row in rows)
+			{
+				foreach (var info in this.deleteParameterInfos)
+				{
+					parameters.Add( row[info.ColumnName] );
+				}
+			}
+
+			var batchExecutor = new BatchExecutor( this.provider, this.connection, this.transaction, Dump );
+
+			var results = await batchExecutor.ExecuteBatchAsync( new[]{this.deleteCommand }, parameters, deleteParameterInfos, true ).ConfigureAwait( false );
+			Dump( rows, null, null );
 		}
 
 		public async Task UpdateAsync(DataSet ds) 
@@ -257,17 +331,14 @@ namespace NDO
 			DataTable dt = ds.Tables[relation.MappingTable.TableName];
 			try 
 			{
-				DataRow[] rows = dt.Select(null, null, DataViewRowState.Added 
-					| DataViewRowState.ModifiedCurrent 
-					| DataViewRowState.Deleted);
-
+				DataRow[] rows = dt.Select( null, null, DataViewRowState.Added );
 				if (rows.Length > 0)
-				{
-					if (this.verboseMode)
-						Dump(rows);
-#warning Updates müssen noch ohne da umgesetzt werden
-					dataAdapter.Update(dt);
-				}
+					await InsertAsync( rows ).ConfigureAwait( false );
+
+				rows = dt.Select( null, null, DataViewRowState.Deleted );
+				if (rows.Length > 0)
+					await DeleteAsync( rows ).ConfigureAwait( false );
+
 			}
 			catch (System.Exception ex) 
 			{
@@ -275,31 +346,21 @@ namespace NDO
 			}
 		}
 
+		public DbTransaction Transaction
+		{
+			get => this.transaction;
+			set => this.transaction = value;
+		}
+		public DbConnection Connection
+		{
+			get => this.connection;
+			set => this.connection = value;
+		}
+
 		public void Dispose()
 		{
 		}
 
-		public DbConnection Connection
-		{
-			get { return this.selectCommand.Connection; }
-			set
-			{
-				this.selectCommand.Connection = value;
-				this.deleteCommand.Connection = value;
-				this.insertCommand.Connection = value;
-			}
-		}
-	
-		public DbTransaction Transaction
-		{
-			get { return this.selectCommand.Transaction; }
-			set
-			{
-				this.selectCommand.Transaction = value;
-				this.deleteCommand.Transaction = value;
-				this.insertCommand.Transaction = value;
-			}
-		}
 
 		public Relation Relation
 		{

@@ -27,6 +27,7 @@ using System.Text;
 using NDOInterfaces;
 using NDO.Mapping;
 using System.Data;
+using System.Data.Common;
 
 namespace NDO
 {
@@ -79,7 +80,7 @@ namespace NDO
 
 			IProvider provider = this.pm.NDOMapping.GetProvider( this.connection );
 
-			var dbConnection = this.pm.TransactionScope.GetConnection(this.connection.ID, () => provider.NewConnection(this.connection.Name) );
+			var dbConnection = this.pm.TransactionScope.GetConnection(this.connection.ID, () => (DbConnection)provider.NewConnection(this.connection.Name) );
 
 			IDbCommand cmd = provider.NewSqlCommand( dbConnection );
 			cmd.CommandText = command;

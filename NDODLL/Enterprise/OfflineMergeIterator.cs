@@ -1,5 +1,5 @@
 ﻿//
-// Copyright (c) 2002-2016 Mirko Matytschak 
+// Copyright (c) 2002-2022 Mirko Matytschak 
 // (www.netdataobjects.de)
 //
 // Author: Mirko Matytschak
@@ -33,7 +33,7 @@ namespace NDO
 	/// </summary>
 	/// <remarks>
 	/// You don't need to instantiate objects of this class. NDO will do it automatically,
-	/// if <see cref="OfflinePersistenceManager.MergeObjectContainer"/> is called.
+	/// if <see cref="OfflinePersistenceManager.MergeObjectContainerAsync"/> is called.
 	/// </remarks>
 	public class OfflineMergeIterator : ISerializationIterator
 	{
@@ -48,7 +48,7 @@ namespace NDO
 		/// </summary>
 		/// <remarks>
 		/// You don't need to instantiate objects of this class. NDO will do it automatically,
-		/// if the <see cref="PersistenceManager.MergeObjectContainer"/> is called.
+		/// if the <see cref="PersistenceManager.MergeObjectContainerAsync"/> is called.
 		/// </remarks>
 		/// <param name="stateManager">The standard state manager used by the PersistenceManager.</param>
 		/// <param name="cache">The cache used by the PersistenceManager.</param>

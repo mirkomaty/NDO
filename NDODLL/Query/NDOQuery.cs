@@ -460,19 +460,6 @@ namespace NDO.Query
 			}
 		}
 
-		//private List<T> ExecuteSqlQuery()
-		//{
-		//	Type t = this.resultType;
-		//	using (IPersistenceHandler persistenceHandler = this.pm.PersistenceHandlerManager.GetPersistenceHandler( t ))
-		//	{
-		//		persistenceHandler.VerboseMode = this.pm.VerboseMode;
-		//		persistenceHandler.LogAdapter = this.pm.LogAdapter;
-		//		this.pm.CheckTransaction( persistenceHandler, t );
-		//		DataTable table = persistenceHandler.PerformQuery( this.queryExpression, this.parameters, this.pm.DataSet );
-		//		return (List<T>) pm.DataTableToIList( t, table.Rows, this.hollowResults );
-		//	}
-		//}
-
 		private bool PrepareParameters()
 		{
 			if (this.expressionTree == null)
@@ -504,33 +491,6 @@ namespace NDO.Query
 			foreach (ParameterExpression item in expressions)
 			{
 				this.parameters[item.Ordinal] = item.ParameterValue;
-			}
-		}
-
-		private IList ExecuteSubQuery( Type t, QueryContextsEntry queryContextsEntry )
-		{
-			IQueryGenerator queryGenerator = ConfigContainer.Resolve<IQueryGenerator>();
-			bool hasBeenPrepared = PrepareParameters();
-			string generatedQuery;
-
-			if (this.queryLanguage == QueryLanguage.NDOql)
-				generatedQuery = queryGenerator.GenerateQueryString( queryContextsEntry, this.expressionTree, this.hollowResults, this.queryContextsForTypes.Count > 1, this.orderings, this.skip, this.take );
-			else
-				generatedQuery = (string)this.expressionTree.Value;
-
-			if (hasBeenPrepared)
-			{
-				WriteBackParameters();
-			}
-
-			using (IPersistenceHandler persistenceHandler = this.pm.PersistenceHandlerManager.GetPersistenceHandler( t ))
-			{
-				persistenceHandler.VerboseMode = this.pm.VerboseMode;
-				persistenceHandler.LogAdapter = this.pm.LogAdapter;
-				this.pm.CheckTransaction( persistenceHandler, t );
-
-				DataTable table = persistenceHandler.PerformQuery( generatedQuery, this.parameters, this.pm.DataSet );
-				return pm.DataTableToIList( t, table.Rows, this.hollowResults );
 			}
 		}
 

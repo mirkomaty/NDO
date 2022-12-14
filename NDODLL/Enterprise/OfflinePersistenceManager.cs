@@ -1,5 +1,5 @@
 ﻿//
-// Copyright (c) 2002-2016 Mirko Matytschak 
+// Copyright (c) 2002-2022 Mirko Matytschak 
 // (www.netdataobjects.de)
 //
 // Author: Mirko Matytschak
@@ -26,6 +26,7 @@ using System.Collections;
 using System.Collections.Generic;
 using NDO.Mapping;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace NDO
 {
@@ -338,7 +339,7 @@ namespace NDO
 		/// The function is not implemented. 
 		/// A NotImplementedException will be thrown after calling that function.
 		/// </summary>
-		public override void Save(bool deferCommit = false)
+		public override Task SaveAsync(bool deferCommit = false)
 		{
 			throw new NotImplementedException("This function isn't supported in offline mode");
 		}

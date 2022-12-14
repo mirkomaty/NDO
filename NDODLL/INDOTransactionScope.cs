@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Data;
+using System.Data.Common;
 
 namespace NDO
 {
@@ -34,13 +35,13 @@ namespace NDO
 		/// <param name="id">Connection id of the NDO.Mapping.Connection object for which the IDbConnection is created.</param>
 		/// <param name="factory">A lambda expression, which can create an IDbConnection object.</param>
 		/// <returns></returns>
-		IDbConnection GetConnection( string id, Func<IDbConnection> factory );
+		DbConnection GetConnection( string id, Func<DbConnection> factory );
 
 		/// <summary>
 		/// Gets a transaction, if one exists for the given connection id.
 		/// </summary>
 		/// <param name="id"></param>
 		/// <returns></returns>
-		IDbTransaction GetTransaction( string id );
+		DbTransaction GetTransaction( string id );
 	}
 }

@@ -330,7 +330,7 @@ namespace NDO.Linq
 		/// <returns></returns>
 		async Task<TP> ExecuteAggregateAsync<TP>( Expression<Func<T, TP>> fieldSelector, AggregateType aggregateType )
 		{
-			return await Ndoquery.ExecuteAggregateAsync<TP>( GetField( fieldSelector ), aggregateType );
+			return await Ndoquery.ExecuteAggregateAsync<TP>( GetField( fieldSelector ), aggregateType ).ConfigureAwait( false );
 		}
 
 		/// <summary>

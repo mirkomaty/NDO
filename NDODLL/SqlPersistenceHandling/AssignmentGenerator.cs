@@ -70,7 +70,7 @@ namespace NDO.SqlPersistenceHandling
 						result.Append( "?" );
 					else
 					{
-						result.Append( provider.GetNamedParameter( "U_" + fieldName ) );
+						result.Append( $"{{{i}}}" );
 					}
 					if (i < ende)
 					{

@@ -40,7 +40,7 @@ namespace QueryTests
 			pm.MakePersistent( m );
 			m = new Mitarbeiter() { Vorname = "Hans", Nachname = "Huber" };
 			pm.MakePersistent( m );
-			pm.Save();
+			pm.SaveAsync();
 		}
 
 		[TearDown]
@@ -48,7 +48,7 @@ namespace QueryTests
 		{
 			NDOQuery<Mitarbeiter> q = new NDOQuery<Mitarbeiter>( pm );
 			this.pm.Delete( q.Execute() );
-			this.pm.Save();
+			this.pm.SaveAsync();
 		}
 
 		[Test]

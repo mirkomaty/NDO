@@ -1,5 +1,5 @@
 //
-// Copyright (c) 2002-2016 Mirko Matytschak 
+// Copyright (c) 2002-2022 Mirko Matytschak 
 // (www.netdataobjects.de)
 //
 // Author: Mirko Matytschak
@@ -19,7 +19,6 @@
 // CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER 
 // DEALINGS IN THE SOFTWARE.
 
-
 using System;
 using System.Text;
 using System.IO;
@@ -28,7 +27,6 @@ using System.Collections.Generic;
 using System.Data;
 using System.Diagnostics;
 using System.Reflection;
-using System.Dynamic;
 using System.Text.RegularExpressions;
 using System.Linq;
 using System.Xml.Linq;
@@ -39,11 +37,10 @@ using NDO.ShortId;
 using System.Globalization;
 using NDO.Linq;
 using NDO.Query;
-using ST = System.Transactions;
-using NDO.Configuration;
 using NDO.ChangeLogging;
 using System.Threading.Tasks;
 using System.Linq.Expressions;
+using System.Data.Common;
 
 namespace NDO
 {
@@ -288,6 +285,17 @@ namespace NDO
 		/// Merges an object container to the active objects in the pm. All changes and the state
 		/// of the objects will be taken over by the pm.
 		/// </summary>
+		/// <param name="ocb">The object container to be merged.</param>
+		[Obsolete( "This is a wrapper around MergeObjectContainerAsync that blocks the current thread" )]
+		public void MergeObjectContainer( ObjectContainerBase ocb )
+		{
+			MergeObjectContainerAsync( ocb ).GetAwaiter().GetResult();
+		}
+
+		/// <summary>
+		/// Merges an object container to the active objects in the pm. All changes and the state
+		/// of the objects will be taken over by the pm.
+		/// </summary>
 		/// <remarks>
 		/// The parameter can be either an ObjectContainer or a ChangeSetContainer.
 		/// The flag MarkAsTransient can be used to perform a kind
@@ -301,12 +309,12 @@ namespace NDO
 		/// oids will be reused by the receiving PersistenceManager.
 		/// </remarks>
 		/// <param name="ocb">The object container to be merged.</param>
-		public void MergeObjectContainer(ObjectContainerBase ocb)
+		public async Task MergeObjectContainerAsync(ObjectContainerBase ocb)
 		{
 			ChangeSetContainer csc = ocb as ChangeSetContainer;
 			if (csc != null)
 			{
-				MergeChangeSet(csc);
+				await MergeChangeSetAsync( csc ).ConfigureAwait( false );
 				return;
 			}
 			ObjectContainer oc = ocb as ObjectContainer;
@@ -333,7 +341,7 @@ namespace NDO
 			}
 		}
 
-		void MergeChangeSet(ChangeSetContainer cs)
+		async Task MergeChangeSetAsync(ChangeSetContainer cs)
 		{
 			foreach(IPersistenceCapable pc in cs.AddedObjects)
 			{
@@ -342,7 +350,7 @@ namespace NDO
 			foreach(ObjectId oid in cs.DeletedObjects)
 			{
 				IPersistenceCapable pc2 = FindObject(oid);
-				Delete(pc2);
+				await DeleteAsync(pc2);
 			}
 			foreach(IPersistenceCapable pc in cs.ChangedObjects)
 			{
@@ -948,7 +956,7 @@ namespace NDO
 				{
 					IProvider p = ndoConn.Parent.GetProvider( ndoConn );
 					string connStr = this.OnNewConnection( ndoConn );
-					var connection = p.NewConnection( connStr );
+					var connection = (DbConnection)p.NewConnection( connStr );
 					if (connection == null)
 						throw new NDOException( 119, $"Can't construct connection for {connStr}. The provider returns null." );
 					LogIfVerbose( $"Creating a connection object for {ndoConn.DisplayName}" );
@@ -2037,7 +2045,7 @@ namespace NDO
 			if ( pc.NDOGetLoadState( r.Ordinal ) )
 				return null;
 
-			return await LoadRelationAsync(pc, r, hollow);
+			return await LoadRelationAsync( pc, r, hollow ).ConfigureAwait( false );
 		}
 
 		/// <summary>
@@ -2349,7 +2357,18 @@ namespace NDO
 		/// When a newly created object is written to DB, the key might change. Therefore,
 		/// the id is updated and the object is removed and re-inserted into the cache.
 		/// </summary>
-		public virtual async Task Save(bool deferCommit = false) 
+		[Obsolete( "This is a wrapper around SaveAsync that blocks the current thread." )]
+		public virtual void Save(bool deferCommit = false)
+		{
+			SaveAsync( deferCommit ).GetAwaiter().GetResult();
+		}
+
+		/// <summary>
+		/// Save all changed object into the DataSet and update the DB.
+		/// When a newly created object is written to DB, the key might change. Therefore,
+		/// the id is updated and the object is removed and re-inserted into the cache.
+		/// </summary>
+		public virtual async Task SaveAsync(bool deferCommit = false) 
 		{
 			this.DeferredMode = deferCommit;
 			var htOnSaving = new HashSet<ObjectId>();
@@ -2876,6 +2895,16 @@ namespace NDO
 		/// Remove an object from the DB. Note that the object itself is not destroyed and may still be used.
 		/// </summary>
 		/// <param name="o">The object to remove</param>
+		[Obsolete( "This is a wrapper around DeleteAsync that blocks the current thread" )]
+		public void Delete(object o)
+		{
+			DeleteAsync( o ).GetAwaiter().GetResult();
+		}
+
+		/// <summary>
+		/// Remove an object from the DB. Note that the object itself is not destroyed and may still be used.
+		/// </summary>
+		/// <param name="o">The object to remove</param>
 		public Task DeleteAsync(object o) 
 		{
 			IPersistenceCapable pc = CheckPc(o);
@@ -2888,7 +2917,7 @@ namespace NDO
 				return DeleteAsync(pc, true);
 			}
 
-			return Task.CompletedTask;
+			return Task.FromResult( 0 );
 		}
 
 
@@ -2922,8 +2951,8 @@ namespace NDO
 			if (idn != null)
 				idn.OnDelete();
 
-			await LoadAllRelationsAsync(pc);
-			DeleteRelatedObjectsAsync(pc, checkAssoziations);
+			await LoadAllRelationsAsync( pc ).ConfigureAwait( false );
+			await DeleteRelatedObjectsAsync( pc, checkAssoziations );
 
 			switch(pc.NDOObjectState) 
 			{
@@ -3130,7 +3159,7 @@ namespace NDO
 			this.relationChanges.Add( new RelationChangeRecord( pc, child, r.FieldName, false ) );
 		}
 
-		private void DeleteRelatedObjects2(IPersistenceCapable pc, Class parentClass, bool checkAssoziations, Relation r)
+		private async Task DeleteRelatedObjects2Async(IPersistenceCapable pc, Class parentClass, bool checkAssoziations, Relation r)
 		{
 			//			Debug.WriteLine("DeleteRelatedObjects2 " + pc.GetType().Name + " " + r.FieldName);
 			//			Debug.Indent();
@@ -3179,7 +3208,7 @@ namespace NDO
 		/// </summary>
 		/// <param name="pc">the parent object</param>
 		/// <param name="checkAssoziations"></param>
-		private void DeleteRelatedObjects(IPersistenceCapable pc, bool checkAssoziations) 
+		private async Task DeleteRelatedObjectsAsync(IPersistenceCapable pc, bool checkAssoziations) 
 		{
 			//			Debug.WriteLine("DeleteRelatedObjects " + pc.NDOObjectId.Dump());
 			//			Debug.Indent();
@@ -3189,12 +3218,12 @@ namespace NDO
 			foreach(Relation r in parentClass.Relations) 
 			{
 				if (!r.Composition)
-					DeleteRelatedObjects2(pc, parentClass, checkAssoziations, r);
+					await DeleteRelatedObjects2Async( pc, parentClass, checkAssoziations, r ).ConfigureAwait( false );
 			}
 			foreach(Relation r in parentClass.Relations) 
 			{
 				if (r.Composition)
-					DeleteRelatedObjects2(pc, parentClass, checkAssoziations, r);
+					await DeleteRelatedObjects2Async( pc, parentClass, checkAssoziations, r ).ConfigureAwait( false );
 			}
 
 			//			Debug.Unindent();
@@ -3204,13 +3233,23 @@ namespace NDO
 		/// Delete a list of objects
 		/// </summary>
 		/// <param name="list">the list of objects to remove</param>
+		[Obsolete("This is a wrapper around DeleteAsync that blocks the current thread")]
 		public void Delete(IList list) 
 		{
-            for (int i = 0; i < list.Count; i++)
-            {
-                IPersistenceCapable pc = (IPersistenceCapable) list[i];
-                Delete(pc);
-            }
+			DeleteAsync( list ).GetAwaiter().GetResult();
+		}
+
+		/// <summary>
+		/// Delete a list of objects
+		/// </summary>
+		/// <param name="list">the list of objects to remove</param>
+		public async Task DeleteAsync( IList list )
+		{
+			for (int i = 0; i < list.Count; i++)
+			{
+				IPersistenceCapable pc = (IPersistenceCapable) list[i];
+				await DeleteAsync( pc ).ConfigureAwait( false );
+			}
 		}
 
 		/// <summary>
