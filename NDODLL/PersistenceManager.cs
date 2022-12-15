@@ -1572,7 +1572,7 @@ namespace NDO
 					ls.FieldLoadState = new BitArray( GetClass( pc ).Fields.Count() );
 				}
                 LoadData(o);
-        }
+			}
         }
 
 #pragma warning disable 419
@@ -1582,18 +1582,31 @@ namespace NDO
 		/// <param name="o">The hollow object.</param>
 		/// <remarks>Note, that the relations won't be resolved with this function, with one Exception: 1:1 relations without mapping table will be resolved during LoadData. In all other cases, use <see cref="LoadRelation">LoadRelation</see>, to force resolving a relation.<seealso cref="NDOObjectState"/></remarks>
 #pragma warning restore 419
-		public virtual void LoadData( object o ) 
+		public virtual void LoadData( object o )
+		{
+			LoadDataAsync( o ).GetAwaiter().GetResult();
+		}
+
+#pragma warning disable 419
+			/// <summary>
+			/// Load the data of a persistent object. This forces the transition of the object state from hollow to persistent.
+			/// </summary>
+			/// <param name="o">The hollow object.</param>
+			/// <remarks>Note, that the relations won't be resolved with this function, with one Exception: 1:1 relations without mapping table will be resolved during LoadData. In all other cases, use <see cref="LoadRelation">LoadRelation</see>, to force resolving a relation.<seealso cref="NDOObjectState"/></remarks>
+#pragma warning restore 419
+		public async virtual Task	LoadDataAsync( object o ) 
 		{
 			IPersistenceCapable pc = CheckPc(o);
 			Debug.Assert(pc.NDOObjectState == NDOObjectState.Hollow, "Can only load hollow objects");
 			if (pc.NDOObjectState != NDOObjectState.Hollow)
 				return;
+
 			Class cl = GetClass(pc);
 			IQuery q;
             q = CreateOidQuery(pc, cl);
 			cache.UpdateCache(pc); // Make sure the object is in the cache
 
-			var objects = q.Execute();
+			var objects = await q.ExecuteAsync().ConfigureAwait( false );
 			var count = objects.Count;
 
 			if (count > 1)
@@ -1624,7 +1637,6 @@ namespace NDO
 
         private IQuery CreateOidQuery(IPersistenceCapable pc, Class cl) 
         {
-            ArrayList parameters = new ArrayList();
 			string oql = "oid = {0}";
 			IQuery q = NewQuery(pc.GetType(), oql, false);
 			q.Parameters.Add( pc.NDOObjectId );
@@ -1828,7 +1840,7 @@ namespace NDO
 		/// since they need a mapping table.
 		/// </summary>
 		/// <returns></returns>
-		IList QueryRelatedObjects(IPersistenceCapable pc, Relation r, IList l, bool hollow)
+		async Task<IList> QueryRelatedObjectsAsync(IPersistenceCapable pc, Relation r, IList l, bool hollow)
 		{
 			// At this point of execution we know,
 			// that the target type is not polymorphic and is not 1:1.
@@ -1881,7 +1893,7 @@ namespace NDO
 
 			q.AllowSubclasses = false;  // Remember: polymorphic relations always have a mapping table
 
-			IList l2 = q.Execute();
+			IList l2 = await q.ExecuteAsync().ConfigureAwait( false );
 
 			foreach (object o in l2)
 				relatedObjects.Add( o );
@@ -1947,7 +1959,7 @@ namespace NDO
 				return null;
 
 			if (pc.NDOObjectState == NDOObjectState.Hollow)
-				LoadData(pc);
+				await LoadDataAsync(pc).ConfigureAwait( false );
 
 			if(r.MappingTable == null) 
 			{
@@ -1955,7 +1967,7 @@ namespace NDO
 				if (r.Multiplicity == RelationMultiplicity.List) 
 				{ 
 					IList l = mappings.GetRelationContainer(pc, r);
-					IList relatedObjects = QueryRelatedObjects(pc, r, l, hollow);
+					IList relatedObjects = await QueryRelatedObjectsAsync(pc, r, l, hollow).ConfigureAwait( false );
 					mappings.SetRelationContainer(pc, r, relatedObjects);
 					result = relatedObjects;
 				}

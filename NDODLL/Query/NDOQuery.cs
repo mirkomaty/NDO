@@ -816,11 +816,6 @@ namespace NDO.Query
 			return this.Execute();
 		}
 
-		IPersistenceCapable IQuery.ExecuteSingle()
-		{
-			return (IPersistenceCapable)this.ExecuteSingle( false );
-		}
-
 		IPersistenceCapable IQuery.ExecuteSingle( bool throwIfResultCountIsWrong )
 		{
 			return (IPersistenceCapable)this.ExecuteSingle( throwIfResultCountIsWrong );
@@ -829,6 +824,23 @@ namespace NDO.Query
 		ICollection<object> IQuery.Parameters => this.parameters;
 		ICollection<QueryOrder> IQuery.Orderings => this.orderings;
 		object IQuery.ExecuteAggregate( string field, AggregateType aggregateType ) => ExecuteAggregate( field, aggregateType );
+
+		async Task<IList> IQuery.ExecuteAsync()
+		{
+			var result = await ExecuteAsync().ConfigureAwait(false);
+			return (IList) result;
+		}
+
+		async Task<IPersistenceCapable> IQuery.ExecuteSingleAsync( bool throwIfResultCountIsWrong )
+		{
+			return (IPersistenceCapable) await ExecuteSingleAsync( throwIfResultCountIsWrong ).ConfigureAwait( false );
+		}
+
+		Task<T> IQuery.ExecuteAggregateAsync<T>( string field, AggregateType aggregateType )
+		{
+			return ExecuteAggregateAsync<T>( field, aggregateType );
+		}
+
 		bool IQuery.AllowSubclasses { get => this.allowSubclasses; set => this.allowSubclasses = value; }
 		int IQuery.Skip { get => this.skip; set => this.skip = value; }
 		int IQuery.Take { get => this.take; set => this.take = value; }

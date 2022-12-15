@@ -16,6 +16,7 @@ using System.Collections;
 using System.Data;
 using System.Data.Common;
 using DataTypeTestClasses;
+using System.Threading.Tasks;
 
 namespace QueryTests
 {
@@ -49,11 +50,12 @@ namespace QueryTests
 		}
 
 		[TearDown]
-		public void TearDown()
+		public async Task TearDown()
 		{
 			var pm = NDOFactory.Instance.PersistenceManager;
-			pm.DeleteAsync( pm.Objects<Mitarbeiter>().ResultTable ).GetAwaiter().GetResult();
-			pm.SaveAsync().GetAwaiter().GetResult();
+			var list = await pm.Objects<Mitarbeiter>().GetResultsAsync();
+			await pm.DeleteAsync( list );
+			await pm.SaveAsync();
 		}
 
 		[Test]

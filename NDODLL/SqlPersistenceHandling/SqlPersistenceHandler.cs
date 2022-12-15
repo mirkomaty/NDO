@@ -472,7 +472,7 @@ namespace NDO.SqlPersistenceHandling
 
 				if (this.hasAutoincrementedColumn) // we need to retrieve the IDs
 				{
-					var ids = results.Where(d=>d.Values.Any()).Select( d => (int) d.Values.First() );
+					var ids = results.Where(d=>d.Count > 0).Select( d => (int) d.Values.First() );
 					if (ids.Count() != rows.Length)
 					{
 						Log( $"Concurrency failure: row count: {rows.Length}, affected: {ids.Count()}" );
@@ -670,9 +670,9 @@ namespace NDO.SqlPersistenceHandling
 				foreach (var row in rows)
 				{
 					var parameterSet = new List<object>();
-					foreach (var info in this.insertParameterInfos)
+					foreach (var info in this.deleteParameterInfos)
 					{
-						parameterSet.Add( row[info.ColumnName] );
+						parameterSet.Add( row[info.ColumnName, DataRowVersion.Original] );
 					}
 
 					parameters.Add( parameterSet );
@@ -729,8 +729,9 @@ namespace NDO.SqlPersistenceHandling
 			DataTable table = GetTemplateTable(templateDataSet, this.tableName).Clone();
 
 			var command = (DbCommand) this.provider.NewSqlCommand(this.connection);
-			command.Transaction = this.transaction;
 			command.CommandType = commandType;
+			if (this.transaction != null)
+				command.Transaction = this.transaction;
 
 			var rearrangedStatements = new List<string>();
 			List<string> inputStatements = new List<string>()

@@ -46,52 +46,52 @@ namespace NDO.SqlPersistenceHandling
 		public async Task<IList<Dictionary<string, object>>> ExecuteBatchAsync( IEnumerable<string> inputStatements, IList parameters, IEnumerable<DbParameterInfo> parameterInfos = null, bool isCommandArray = false )
 		{
 			/*
-						These are examples of the two cases:
+				These are examples of the two cases:
 
-						-------------- Non Array
+				-------------- Non Array
 
-						INSERT INTO x (Col1, Col2) VALUES({0},{1})
-						SELECT SCOPE_IDENTITY()
+				INSERT INTO x (Col1, Col2) VALUES({0},{1})
+				SELECT SCOPE_IDENTITY()
 
-						Parameter 'abc', 4711
+				Parameter 'abc', 4711
 
-						=>
+				=>
 
-						Insert x values(@p0,@p1);
-						Select SCOPE_IDENTITY();
+				Insert x values(@p0,@p1);
+				Select SCOPE_IDENTITY();
 
-						@p0 = 'abc'
-						@p1 = 4711
+				@p0 = 'abc'
+				@p1 = 4711
 
-						------------- Array
+				------------- Array
 
-						DELETE FROM x WHERE id1 = {0} AND tstamp = {1}
+				DELETE FROM x WHERE id1 = {0} AND tstamp = {1}
 
-						Parameter
-						12, '927D81A1-07AA-477B-9EA9-73F7C19E754F'
-						33, '9061A0EA-BB02-47DB-866F-04210546E493'
-						44, '2B9D2573-226E-4486-AEE7-A3DEFCEB48FC'
-						45, '3B9D2573-226E-4486-AEE7-A3DEFCEB48FD'
-						46, '4B9D2573-226E-4486-AEE7-A3DEFCEB48FE'
+				Parameter
+				12, '927D81A1-07AA-477B-9EA9-73F7C19E754F'
+				33, '9061A0EA-BB02-47DB-866F-04210546E493'
+				44, '2B9D2573-226E-4486-AEE7-A3DEFCEB48FC'
+				45, '3B9D2573-226E-4486-AEE7-A3DEFCEB48FD'
+				46, '4B9D2573-226E-4486-AEE7-A3DEFCEB48FE'
 
-						=>
+				=>
 
-						DELETE FROM x WHERE id1 = @p0 AND tstamp = @p1;
-						DELETE FROM x WHERE id1 = @p2 AND tstamp = @p3;
-						DELETE FROM x WHERE id1 = @p4 AND tstamp = @p5;
-						DELETE FROM x WHERE id1 = @p6 AND tstamp = @p7;
-						DELETE FROM x WHERE id1 = @p8 AND tstamp = @p9;
+				DELETE FROM x WHERE id1 = @p0 AND tstamp = @p1;
+				DELETE FROM x WHERE id1 = @p2 AND tstamp = @p3;
+				DELETE FROM x WHERE id1 = @p4 AND tstamp = @p5;
+				DELETE FROM x WHERE id1 = @p6 AND tstamp = @p7;
+				DELETE FROM x WHERE id1 = @p8 AND tstamp = @p9;
 
-						@p0 = 12
-						@p1 = '927D81A1-07AA-477B-9EA9-73F7C19E754F'
-						@p2 = 33
-						@p3 = '9061A0EA-BB02-47DB-866F-04210546E493'
-						@p4 = 44, 
-						@p5 = '2B9D2573-226E-4486-AEE7-A3DEFCEB48FC'
-						@p6 = 45
-						@p7 = '3B9D2573-226E-4486-AEE7-A3DEFCEB48FD'
-						@p8 = 46
-						@p9 = '4B9D2573-226E-4486-AEE7-A3DEFCEB48FE'
+				@p0 = 12
+				@p1 = '927D81A1-07AA-477B-9EA9-73F7C19E754F'
+				@p2 = 33
+				@p3 = '9061A0EA-BB02-47DB-866F-04210546E493'
+				@p4 = 44, 
+				@p5 = '2B9D2573-226E-4486-AEE7-A3DEFCEB48FC'
+				@p6 = 45
+				@p7 = '3B9D2573-226E-4486-AEE7-A3DEFCEB48FD'
+				@p8 = 46
+				@p9 = '4B9D2573-226E-4486-AEE7-A3DEFCEB48FE'
 
 			*/
 			List<Dictionary<string, object>> result = new List<Dictionary<string, object>>();
@@ -152,7 +152,8 @@ namespace NDO.SqlPersistenceHandling
 								}
 							}
 
-							result.Add( dict );
+							if (dict.Count > 0)
+								result.Add( dict );
 
 						} while (await dr.NextResultAsync().ConfigureAwait( false ));
 					}

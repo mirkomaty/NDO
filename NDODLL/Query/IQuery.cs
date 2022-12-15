@@ -1,8 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+using System.Threading.Tasks;
 
 namespace NDO.Query
 {
@@ -16,11 +15,12 @@ namespace NDO.Query
 		/// </summary>
 		/// <returns>A list of objects</returns>
 		IList Execute();
+
 		/// <summary>
-		/// Executes the query and returns a single object.
+		/// Executes the Query and returns a result set.
 		/// </summary>
-		/// <returns>A single object</returns>
-		IPersistenceCapable ExecuteSingle();
+		/// <returns>A list of objects</returns>
+		Task<IList> ExecuteAsync();
 
 		/// <summary>
         /// Executes the query and returns a single object.
@@ -31,8 +31,19 @@ namespace NDO.Query
         /// If throwIfResultCountIsWrong is true, an Exception will be throwed, if the result count isn't exactly 1. 
         /// If throwIfResultCountIsWrong is false and the query has more than one result, the first of the results will be returned.
         /// </remarks>
-		IPersistenceCapable ExecuteSingle(bool throwIfResultCountIsWrong);
-		
+		IPersistenceCapable ExecuteSingle(bool throwIfResultCountIsWrong = false);
+
+		/// <summary>
+		/// Executes the query and returns a single object.
+		/// </summary>
+		/// <param name="throwIfResultCountIsWrong"></param>
+		/// <returns>The fetched object or null, if the object wasn't found and throwIfResultCountIsWrong is false.</returns>
+		/// <remarks>
+		/// If throwIfResultCountIsWrong is true, an Exception will be throwed, if the result count isn't exactly 1. 
+		/// If throwIfResultCountIsWrong is false and the query has more than one result, the first of the results will be returned.
+		/// </remarks>
+		Task<IPersistenceCapable> ExecuteSingleAsync( bool throwIfResultCountIsWrong = false );
+
 		/// <summary>
 		/// Gets the Parameters Collection
 		/// </summary>
@@ -50,6 +61,15 @@ namespace NDO.Query
 		/// <param name="aggregateType"></param>
 		/// <returns></returns>
 		object ExecuteAggregate( string field, AggregateType aggregateType );
+
+		/// <summary>
+		/// Executes an aggregate operation
+		/// </summary>
+		/// <param name="field"></param>
+		/// <param name="aggregateType"></param>
+		/// <typeparam name="T">The result type of the aggregate query</typeparam>
+		/// <returns></returns>
+		Task<T> ExecuteAggregateAsync<T>( string field, AggregateType aggregateType );
 
 		/// <summary>
 		/// Defines, if the query should return subclasses of the given Query Type

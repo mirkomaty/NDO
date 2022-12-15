@@ -267,13 +267,14 @@ namespace NDO
 			}
 
 			var command = (DbCommand) this.provider.NewSqlCommand(this.connection);
-			command.Transaction = this.transaction;
 			var rearrangedStatements = new List<string>();
 
 			new BatchExecutor( this.provider, this.connection, this.transaction, Dump )
 				.CreateQueryParameters( command, new[] { this.selectCommand }, rearrangedStatements, parameters, this.selectParameterInfos, false );
 
 			command.CommandText = rearrangedStatements[0];  // There is only one statement to execute
+			if (this.transaction != null)
+				command.Transaction = transaction;
 
 			try
 			{
