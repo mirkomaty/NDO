@@ -959,7 +959,7 @@ namespace NDO
 					var connection = (DbConnection)p.NewConnection( connStr );
 					if (connection == null)
 						throw new NDOException( 119, $"Can't construct connection for {connStr}. The provider returns null." );
-					LogIfVerbose( $"Creating a connection object for {ndoConn.DisplayName}" );
+					PmLogAdapter.Debug( $"+ Creating a connection object for {ndoConn.DisplayName}" );
 					return connection;
 				} );
 			}
@@ -969,11 +969,11 @@ namespace NDO
 				handler.Transaction = TransactionScope.GetTransaction( ndoConn.ID );
 			}
 
-			// During the tests, we work with a handler mock that always returns zero for the Connection property.
+			// During the tests, we work with a handler mock that always returns null for the Connection property.
 			if (handler.Connection != null && handler.Connection.State != ConnectionState.Open)
 			{
 				handler.Connection.Open();
-				LogIfVerbose( $"Opening connection {ndoConn.DisplayName}" );
+				PmLogAdapter.Debug( $"+ Opening connection {ndoConn.DisplayName}" );
 			}
 		}
 
@@ -1953,6 +1953,7 @@ namespace NDO
 
 		internal async Task<IList> LoadRelationAsync(IPersistenceCapable pc, Relation r, bool hollow)
 		{
+			PmLogAdapter.Debug( $"PersistenceManager.{nameof( LoadRelationAsync )}, {r}" );
 			IList result = null;
 
 			if (pc.NDOObjectState == NDOObjectState.Created)
@@ -1978,8 +1979,6 @@ namespace NDO
 
 				using (IMappingTableHandler handler = PersistenceHandlerManager.GetPersistenceHandler( pc ).GetMappingTableHandler( r ))
 				{
-					handler.VerboseMode = VerboseMode;
-					handler.LogAdapter = LogAdapter;
 					CheckTransaction( handler, r.MappingTable.Connection );
 					dt = await handler.LoadRelatedObjectsAsync(pc.NDOObjectId, this.ds).ConfigureAwait( false );
 				}
@@ -2309,8 +2308,6 @@ namespace NDO
 				//Debug.WriteLine("Update Deleted Objects: "  + t.Name);
 				using (IPersistenceHandler handler = PersistenceHandlerManager.GetPersistenceHandler( t ))
 				{
-					handler.VerboseMode = VerboseMode;
-					handler.LogAdapter = LogAdapter;
 					CheckTransaction( handler, t );
 					ConcurrencyErrorHandler ceh = new ConcurrencyErrorHandler(this.OnConcurrencyError);
 					handler.ConcurrencyError += ceh;
@@ -2338,10 +2335,8 @@ namespace NDO
                     WriteMappingTableEntry(e);
             }
             // Now update all mapping tables
-            foreach (IMappingTableHandler handler in mappingHandler.Values)
+            foreach (IMappingTableHandler handler in this.mappingHandler.Values)
             {
-				handler.LogAdapter = this.LogAdapter;
-				handler.VerboseMode = this.VerboseMode;
 				CheckTransaction( handler, handler.Relation.MappingTable.Connection );
                 await handler.UpdateAsync(ds).ConfigureAwait(false);
             }
@@ -2355,10 +2350,8 @@ namespace NDO
                     WriteMappingTableEntry(e);
             }
             // Now update all mapping tables
-            foreach (IMappingTableHandler handler in mappingHandler.Values)
+            foreach (IMappingTableHandler handler in this.mappingHandler.Values)
             {
-				handler.LogAdapter = this.LogAdapter;
-				handler.VerboseMode = this.VerboseMode;
 				CheckTransaction( handler, handler.Relation.MappingTable.Connection );
 				await handler.UpdateAsync(ds).ConfigureAwait(false);
             }
@@ -2936,12 +2929,16 @@ namespace NDO
 		private async Task LoadAllRelationsAsync(object o)
 		{
 			IPersistenceCapable pc = CheckPc(o);
+			PmLogAdapter.Debug( $"{nameof( LoadAllRelationsAsync )}: {pc.NDOObjectId}" );
+			
 			Class cl = GetClass(pc);
 			foreach(Relation r in cl.Relations)
 			{
 				if (!pc.NDOGetLoadState( r.Ordinal ))
 					await LoadRelationAsync( pc, r, true ).ConfigureAwait( false );
 			}
+
+			PmLogAdapter.Debug( "/LoadAllRelationsAsync" );
 		}
 
 
@@ -3572,14 +3569,6 @@ namespace NDO
 			TransactionScope.Dispose();
 			UnloadCache();
 			base.Close();
-		}
-
-		internal void LogIfVerbose(string msg)
-		{
-			if (VerboseMode && LogAdapter != null)
-			{
-				this.LogAdapter.Info( msg );
-			}
 		}
 
 

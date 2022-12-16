@@ -82,7 +82,7 @@ namespace NDO
 				if (sw != null)
 				{					
 					sw.Close();
-					this.logAdapter.Info(sw.ToString());
+					this.logAdapter.Debug(sw.ToString());
 				}
 			}
 		}

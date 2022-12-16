@@ -22,7 +22,6 @@
 
 using System;
 using System.Data.Common;
-using NDO.Logging;
 
 namespace NDO
 {
@@ -31,11 +30,6 @@ namespace NDO
 	/// </summary>
 	public interface IPersistenceHandlerBase : IDisposable
 	{
-		/// <summary>
-		/// Gets or sets a value which determines, if database operations will be logged in a logging file.
-		/// </summary>
-		bool VerboseMode { get; set; }
-
 		/// <summary>
 		/// Called by the NDO Framework. Gets or sets the connection used in all commands. Allows the PersistenceManager to bring in an own open connection for use with transactions.
 		/// </summary>
@@ -51,14 +45,6 @@ namespace NDO
 		/// If the transaction object is null, nothing will be assigned.
 		/// </remarks>
 		DbTransaction Transaction
-		{
-			set; get;
-		}
-
-		/// <summary>
-		/// In verbose mode, the logs will be written into this file.
-		/// </summary>
-		ILogAdapter LogAdapter
 		{
 			set; get;
 		}

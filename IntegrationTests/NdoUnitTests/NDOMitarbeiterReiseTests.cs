@@ -655,8 +655,8 @@ namespace NdoUnitTests
 
 			FieldInfo fi = pm.NDOMapping.GetType().GetField( "persistenceHandler", BindingFlags.Instance | BindingFlags.NonPublic );
 
-			Dictionary<Type, IPersistenceHandler> ht = (Dictionary<Type, IPersistenceHandler>)fi.GetValue( pm.NDOMapping );
-			ht.Clear();
+			Dictionary<Type, IPersistenceHandler> dict = (Dictionary<Type, IPersistenceHandler>)fi.GetValue( pm.NDOMapping );
+			dict.Clear();
 			pm.NDOMapping.FindClass( typeof( Reise ) ).FindField( "zweck" ).Column.Name = "nix";
 
 			try
@@ -665,7 +665,7 @@ namespace NdoUnitTests
 			}
 			catch
 			{
-				ht.Clear();
+				dict.Clear();
 				pm.NDOMapping.FindClass( typeof( Reise ) ).FindField( "zweck" ).Column.Name = "Zweck";
 				pm.Abort();
 			}
@@ -673,7 +673,7 @@ namespace NdoUnitTests
 			pm.UnloadCache();
 			m = (Mitarbeiter)q.ExecuteSingle( true );
 			Assert.AreEqual( "Hartmut", m.Vorname, "Vorname falsch" );
-			Assert.AreEqual( "ADC", ((Reise)m.Reisen[0]).Zweck, "Vorname falsch" );
+			Assert.AreEqual( "ADC", ((Reise)m.Reisen[0]).Zweck, "Zweck falsch" );
 		}
 
 		[Test]

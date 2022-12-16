@@ -23,6 +23,7 @@
 using System;
 using System.Data;
 using System.Threading.Tasks;
+using NDO.Logging;
 using NDO.Mapping;
 
 namespace NDO
@@ -56,7 +57,8 @@ namespace NDO
 		/// </summary>
 		/// <param name="mappings">Mapping information. See <see cref="NDO.Mapping.NDOMapping"/> class.</param>
 		/// <param name="r">The Relation for which the handler is constructed</param>
-		void Initialize(NDOMapping mappings, Relation r);
+		/// <param name="logger">A logger to log debug information</param>
+		void Initialize(NDOMapping mappings, Relation r, ILogAdapter logger);
 
 		/// <summary>
 		/// Gets the underlying relation of the mapping table.

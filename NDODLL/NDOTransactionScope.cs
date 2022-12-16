@@ -1,4 +1,5 @@
-﻿using NDO.Mapping;
+﻿using NDO.Logging;
+using NDO.Mapping;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -13,8 +14,6 @@ namespace NDO
 	/// </summary>
 	public class NDOTransactionScope : INDOTransactionScope
 	{
-		private readonly PersistenceManager pm;
-
 		private Dictionary<string, DbConnection> usedConnections = new Dictionary<string, DbConnection>();
 		private Dictionary<string, DbTransaction> usedTransactions = new Dictionary<string, DbTransaction>();
 
@@ -24,16 +23,17 @@ namespace NDO
 		public TransactionMode TransactionMode { get; set; }
 
 		bool isInTransaction = false;
+		private readonly ILogAdapter logger;
 
 		/// <summary>
 		/// Constructs an NDOTransactionScope object.
 		/// </summary>
-		/// <param name="pm"></param>
-		public NDOTransactionScope( PersistenceManager pm )
+		/// <param name="logger"></param>
+		public NDOTransactionScope( ILogAdapter logger )
 		{
 			IsolationLevel = IsolationLevel.ReadCommitted;
 			TransactionMode = TransactionMode.Optimistic;
-			this.pm = pm;
+			this.logger = logger;
 		}
 
 		///<inheritdoc/>
@@ -58,10 +58,10 @@ namespace NDO
 		private void OpenConnAndStartTransaction( string connId, DbConnection conn )
 		{
 			conn.Open();
-			pm.LogIfVerbose( $"Opening connection {conn.DisplayName()}" );
+			this.logger.Debug( $"+ Opening connection {conn.DisplayName()}" );
 			var tx = conn.BeginTransaction(IsolationLevel);
 			usedTransactions.Add( connId, tx );
-			this.pm.LogIfVerbose( String.Format( "Starting transaction {0:X} at connection '{1}'", tx.GetHashCode(), conn.DisplayName() ) );
+			this.logger.Debug( $"+ Starting transaction {tx.GetHashCode():X} at connection '{conn.DisplayName()}'" );
 		}
 
 		///<inheritdoc/>
@@ -81,7 +81,7 @@ namespace NDO
 
 				DbConnection conn = null;
 				usedConnections.TryGetValue( id, out conn );
-				this.pm.LogIfVerbose( String.Format( "Committing transaction {0:X} at connection '{1}'", tx.GetHashCode(), conn.DisplayName() ) );
+				this.logger.Debug( String.Format( "- Committing transaction {0:X} at connection '{1}'", tx.GetHashCode(), conn.DisplayName() ) );
 			}
 
 			usedTransactions.Clear();
@@ -135,7 +135,7 @@ namespace NDO
 				tx.Rollback();
 				DbConnection conn = null;
 				this.usedConnections.TryGetValue( key, out conn );
-				pm.LogIfVerbose( $"Rollback transaction {id.ToString( "X" )} at connection '{conn.DisplayName()}'" );
+				this.logger.Debug( $"- Rollback transaction {id.ToString( "X" )} at connection '{conn.DisplayName()}'" );
 			}
 
 			usedTransactions.Clear();
@@ -145,8 +145,17 @@ namespace NDO
 		{
 			foreach (var conn in this.usedConnections.Values.Where( c => c.State == ConnectionState.Open ))
 			{
-				conn.Close();
-				pm.LogIfVerbose( $"Closed connection {conn.DisplayName()}" );
+				try
+				{
+					conn.Close();
+				}
+				catch (Exception ex)
+				{
+					this.logger.Error( ex.ToString() );
+					throw;
+				}
+
+				this.logger.Debug( $"- Closed connection {conn.DisplayName()}" );
 			}
 
 			this.usedConnections.Clear();

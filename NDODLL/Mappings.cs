@@ -83,14 +83,7 @@ namespace NDO
 		internal bool VerboseMode
 		{
 			get { return this.verboseMode; }
-			set
-			{
-				this.verboseMode = value;
-				foreach ( var de in persistenceHandler )
-				{
-					de.Value.VerboseMode = value;
-				}
-			}
+			set { this.verboseMode = value; }
 		}
 
 		/// <summary>
@@ -98,16 +91,8 @@ namespace NDO
 		/// </summary>
 		internal ILogAdapter LogAdapter
 		{
-			set
-			{
-				this.logAdapter = value;
-				foreach ( var de in persistenceHandler )
-				{
-					de.Value.LogAdapter = value;
-				}
-			}
+			set { this.logAdapter = value; }
 		}
-
 
 		/// <summary>
 		/// Find info about the specified class.

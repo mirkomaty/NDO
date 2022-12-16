@@ -50,8 +50,11 @@ namespace QueryTests
 			Mitarbeiter m = new Mitarbeiter() { Vorname = "Mirko", Nachname = "Matytschak" };
 			pm.MakePersistent( m );
 			m = new Mitarbeiter() { Vorname = "Hans", Nachname = "Huber" };
+			var r = m.ErzeugeReise();
+			r.Zweck = "ADC";
 			pm.MakePersistent( m );
 			await pm.SaveAsync();
+			pm.UnloadCache();
 
 			NDOQuery<Mitarbeiter> q = new NDOQuery<Mitarbeiter>( pm );
 			await this.pm.DeleteAsync( q.Execute() );

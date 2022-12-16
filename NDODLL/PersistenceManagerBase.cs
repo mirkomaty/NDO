@@ -47,6 +47,11 @@ namespace NDO
 		/// The StateManager instance which will be used for all objects
 		/// </summary>
 		protected IStateManager sm;
+		/// <summary>
+		///  This is a LogAdapter instance which checks automatically, if a log adapter is set in the pm.
+		/// </summary>
+		protected ILogAdapter PmLogAdapter { get; private set; }
+
 		internal Mappings mappings;  // protected will make the compiler complaining
 		private string logPath;
 		private ILogAdapter logAdapter;
@@ -135,6 +140,8 @@ namespace NDO
 			this.mappings = mapping;
 
 			ConfigContainer.RegisterInstance( mappings );
+			PmLogAdapter = new PmLogAdapter( this );
+			ConfigContainer.RegisterInstance( this.PmLogAdapter );
 
 			this.ds = new NDODataSet( mappings );  // Each PersistenceManager instance must have it's own DataSet.
 

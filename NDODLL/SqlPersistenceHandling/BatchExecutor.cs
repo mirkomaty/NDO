@@ -36,6 +36,8 @@ namespace NDO.SqlPersistenceHandling
 		/// <param name="inputStatements">Each element in the array is a sql statement.</param>
 		/// <param name="parameters">A list of parameters (see remarks).</param>
 		/// <param name="isCommandArray">Determines, if statements contains identical commands which all need parameters</param>
+		/// <param name="parameterInfos">Information about the command parameters or null</param>
+		/// <param name="useReader">Determines, if the query returns result sets</param>
 		/// <returns>An List of Hashtables, containing the Name/Value pairs of the results.</returns>
 		/// <remarks>
 		/// For emty resultsets an empty dictionary will be returned. 
@@ -43,7 +45,7 @@ namespace NDO.SqlPersistenceHandling
 		/// all subqueries. In case of a command array the statements will bei combined to a template. 
 		/// parameters contains a list of lists, with one entry per repetition of the template.
 		/// </remarks>
-		public async Task<IList<Dictionary<string, object>>> ExecuteBatchAsync( IEnumerable<string> inputStatements, IList parameters, IEnumerable<DbParameterInfo> parameterInfos = null, bool isCommandArray = false )
+		public async Task<IList<Dictionary<string, object>>> ExecuteBatchAsync( IEnumerable<string> inputStatements, IList parameters, IEnumerable<DbParameterInfo> parameterInfos = null, bool useReader = false, bool isCommandArray = false )
 		{
 			/*
 				These are examples of the two cases:
@@ -132,30 +134,40 @@ namespace NDO.SqlPersistenceHandling
 					// cmd.CommandText can be changed in CreateQueryParameters
 					Dump( null, cmd, rearrangedStatements );
 
-					using (dr = await cmd.ExecuteReaderAsync().ConfigureAwait( false ))
+					if (useReader)
 					{
-						do
+						using (dr = await cmd.ExecuteReaderAsync().ConfigureAwait( false ))
 						{
-							var dict = new Dictionary<string, object>();
-
-							while (await dr.ReadAsync().ConfigureAwait( false ))
+							do
 							{
-								for (i = 0; i < dr.FieldCount; i++)
+								var dict = new Dictionary<string, object>();
+
+								while (await dr.ReadAsync().ConfigureAwait( false ))
 								{
-									// GetFieldValueAsync uses just Task.FromResult(),
-									// so we don't gain anything with an async call here.
-									string name = dr.GetName( i );
-									if (name == "NdoInsertedId") // The result is an autoincremented id
-										dict.Add( name, (int)dr.GetDecimal( i ) );
-									else
-										dict.Add( name, dr.GetValue( i ) );
+									for (i = 0; i < dr.FieldCount; i++)
+									{
+										// GetFieldValueAsync uses just Task.FromResult(),
+										// so we don't gain anything with an async call here.
+										string name = dr.GetName( i );
+										if (name == "NdoInsertedId") // The result is an autoincremented id
+											dict.Add( name, (int) dr.GetDecimal( i ) );
+										else
+											dict.Add( name, dr.GetValue( i ) );
+									}
 								}
-							}
 
-							if (dict.Count > 0)
-								result.Add( dict );
+								if (dict.Count > 0)
+									result.Add( dict );
 
-						} while (await dr.NextResultAsync().ConfigureAwait( false ));
+							} while (await dr.NextResultAsync().ConfigureAwait( false ));
+						}
+					}
+					else
+					{
+						var countAffected = await cmd.ExecuteNonQueryAsync().ConfigureAwait(false);
+						var dict = new Dictionary<string, object>();
+						dict.Add( "NdoRecordCount", countAffected );
+						result.Add( dict );
 					}
 				}
 				else
@@ -166,12 +178,12 @@ namespace NDO.SqlPersistenceHandling
 						// to work with a command array
 						foreach (IList parameterSet in parameters)
 						{
-							result.AddRange( await ExecuteStatementSetAsync( inputStatements, rearrangedStatements, parameterSet, parameterInfos ).ConfigureAwait( false ) );
+							result.AddRange( await ExecuteStatementSetAsync( inputStatements, rearrangedStatements, parameterSet, parameterInfos, useReader ).ConfigureAwait( false ) );
 						}
 					}
 					else
 					{
-						result.AddRange( await ExecuteStatementSetAsync( inputStatements, rearrangedStatements, parameters, parameterInfos ).ConfigureAwait( false ) );
+						result.AddRange( await ExecuteStatementSetAsync( inputStatements, rearrangedStatements, parameters, parameterInfos, useReader ).ConfigureAwait( false ) );
 					}
 				}
 			}
@@ -186,7 +198,7 @@ namespace NDO.SqlPersistenceHandling
 			return result;
 		}
 
-		private async Task<List<Dictionary<string, object>>> ExecuteStatementSetAsync( IEnumerable<string> inputStatements, List<string> rearrangedStatements, IList parameterSet, IEnumerable<DbParameterInfo> parameterInfos )
+		private async Task<List<Dictionary<string, object>>> ExecuteStatementSetAsync( IEnumerable<string> inputStatements, List<string> rearrangedStatements, IList parameterSet, IEnumerable<DbParameterInfo> parameterInfos, bool useReader )
 		{
 			var result = new List<Dictionary<string, object>>();
 
@@ -204,20 +216,28 @@ namespace NDO.SqlPersistenceHandling
 				Dictionary<string,object> dict = new Dictionary<string, object>();				
 				cmd.CommandText = statement;
 
-				using (var dr = await cmd.ExecuteReaderAsync().ConfigureAwait( false ))
+				if (useReader)
 				{
-
-					while (await dr.ReadAsync().ConfigureAwait( false ))
+					using (var dr = await cmd.ExecuteReaderAsync().ConfigureAwait( false ))
 					{
-						for (int i = 0; i < dr.FieldCount; i++)
+
+						while (await dr.ReadAsync().ConfigureAwait( false ))
 						{
-							var name = dr.GetName(i);
-							if (name == "NdoInsertedId") // The result is an autoincremented id
-								dict.Add( name, (int) dr.GetDecimal( i ) );
-							else
-								dict.Add( name, dr.GetValue( i ) );
+							for (int i = 0; i < dr.FieldCount; i++)
+							{
+								var name = dr.GetName(i);
+								if (name == "NdoInsertedId") // The result is an autoincremented id
+									dict.Add( name, (int) dr.GetDecimal( i ) );
+								else
+									dict.Add( name, dr.GetValue( i ) );
+							}
 						}
 					}
+				}
+				else
+				{
+					var countAffected = await cmd.ExecuteNonQueryAsync().ConfigureAwait(false);
+					dict.Add( "NdoRecordCount", countAffected );
 				}
 
 				result.Add( dict );

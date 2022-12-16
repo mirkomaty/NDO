@@ -22,6 +22,7 @@
 
 using System;
 using System.Diagnostics;
+using System.Threading;
 
 namespace NDO.Logging
 {
@@ -39,6 +40,8 @@ namespace NDO.Logging
 
 		#region ILogAdapter Member
 
+		int ThreadId => Thread.CurrentThread.ManagedThreadId;
+
 		/// <summary>
 		/// This function is called by the framework, if an exception occured while
 		/// accessing the database.
@@ -47,7 +50,7 @@ namespace NDO.Logging
 		/// <remarks>Note, that the error message can consist of numerous lines.</remarks>
 		public void Error(string message)
 		{
-			Trace.WriteLine("Error-log: " + message);
+			Trace.WriteLine( $"[{ThreadId}] ERROR: {message}" );
 		}
 
 		/// <summary>
@@ -58,7 +61,7 @@ namespace NDO.Logging
 		/// <remarks>Note, that dump information could consist of numerous lines.</remarks>
 		public void Info(string message)
 		{
-			Trace.WriteLine(message);
+			Trace.WriteLine( $"[{ThreadId}] {message}" );
 		}
 
 		/// <summary>
@@ -69,7 +72,7 @@ namespace NDO.Logging
 		/// <remarks>Note, that dump information could consist of numerous lines.</remarks>
 		public void Debug(string message)
 		{
-			Trace.WriteLine(message);
+			Trace.WriteLine( $"[{ThreadId}] {message}" );
 		}
 
 		/// <summary>
@@ -80,7 +83,7 @@ namespace NDO.Logging
 		/// <remarks>Note, that the warning message can consist of numerous lines.</remarks>
 		public void Warn(string message)
 		{
-			Trace.WriteLine("Warning-log: " + message);
+			Trace.WriteLine( $"[{ThreadId}] WARN: {message}" );
 		}
 
 		/// <summary>

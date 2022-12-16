@@ -1,4 +1,5 @@
-﻿using NDO.Mapping;
+﻿using NDO.Logging;
+using NDO.Mapping;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -18,9 +19,10 @@ namespace NDO
 	public class NDODistributedTransactionScope : INDOTransactionScope
 	{
 		ST.TransactionScope innerScope;
-		private readonly PersistenceManager pm;
+		//private readonly PersistenceManager pm;
 
 		private Dictionary<string, DbConnection> usedConnections = new Dictionary<string, DbConnection>();
+		private readonly ILogAdapter logger;
 
 		///<inheritdoc/>
 		public IsolationLevel IsolationLevel { get; set; }
@@ -30,12 +32,12 @@ namespace NDO
 		/// <summary>
 		/// Constructs an NDOTransactionScope object.
 		/// </summary>
-		/// <param name="pm"></param>
-		public NDODistributedTransactionScope( PersistenceManager pm )
+		/// <param name="logger"></param>
+		public NDODistributedTransactionScope( ILogAdapter logger )
 		{
 			IsolationLevel = IsolationLevel.ReadCommitted;
 			TransactionMode = TransactionMode.Optimistic;
-			this.pm = pm;
+			this.logger = logger;
 		}
 
 		///<inheritdoc/>
@@ -50,7 +52,7 @@ namespace NDO
 			if (innerScope == null)
 			{
 				innerScope = new ST.TransactionScope( ST.TransactionScopeOption.Required, new ST.TransactionOptions() { IsolationLevel = (ST.IsolationLevel) Enum.Parse( typeof( ST.IsolationLevel ), this.IsolationLevel.ToString() ) } );
-				this.pm.LogIfVerbose( "Creating a new TransactionScope" );
+				this.logger.Debug( "Creating a new TransactionScope" );
 			}
 		}
 
@@ -59,7 +61,7 @@ namespace NDO
 		{
 			if (innerScope != null)
 			{
-				this.pm.LogIfVerbose( "Completing the TransactionScope" );
+				this.logger.Debug( "Completing the TransactionScope" );
 				innerScope.Complete();
 				innerScope.Dispose();
 			}
@@ -89,7 +91,7 @@ namespace NDO
 		{
 			if (innerScope != null)
 			{
-				this.pm.LogIfVerbose( "Disposing the TransactionScope" );
+				this.logger.Debug( "Disposing the TransactionScope" );
 				innerScope.Dispose();
 				innerScope = null;
 			}
@@ -102,7 +104,7 @@ namespace NDO
 			foreach (var conn in this.usedConnections.Values.Where( c => c.State == ConnectionState.Open ))
 			{
 				conn.Close();
-				pm.LogIfVerbose( $"Closed connection {new Connection( null ) { Name = conn.ConnectionString }.DisplayName }" );
+				this.logger.Debug( $"Closed connection {new Connection( null ) { Name = conn.ConnectionString }.DisplayName }" );
 			}
 
 			this.usedConnections.Clear();

@@ -221,8 +221,6 @@ namespace NDO.Query
 
 			using (IPersistenceHandler persistenceHandler = this.pm.PersistenceHandlerManager.GetPersistenceHandler( this.resultType ))
 			{
-				persistenceHandler.VerboseMode = this.pm.VerboseMode;
-				persistenceHandler.LogAdapter = this.pm.LogAdapter;
 				this.pm.CheckTransaction( persistenceHandler, this.resultType );
 				await persistenceHandler.ExecuteBatchAsync( new string[] { sql }, this.parameters ).ConfigureAwait( false );
 			}
@@ -444,8 +442,6 @@ namespace NDO.Query
 
 			using (IPersistenceHandler persistenceHandler = this.pm.PersistenceHandlerManager.GetPersistenceHandler( t ))
 			{
-				persistenceHandler.VerboseMode = this.pm.VerboseMode;
-				persistenceHandler.LogAdapter = this.pm.LogAdapter;
 				this.pm.CheckTransaction( persistenceHandler, t );
 
 				// Note, that we can't execute all subQueries in one batch, because
@@ -512,8 +508,6 @@ namespace NDO.Query
 
 			using (IPersistenceHandler persistenceHandler = this.pm.PersistenceHandlerManager.GetPersistenceHandler( t ))
 			{
-				persistenceHandler.VerboseMode = this.pm.VerboseMode;
-				persistenceHandler.LogAdapter = this.pm.LogAdapter;
 				this.pm.CheckTransaction( persistenceHandler, t );
 
 				DataTable table = await persistenceHandler.PerformQueryAsync( generatedQuery, this.parameters, this.pm.DataSet ).ConfigureAwait(false);
@@ -555,8 +549,6 @@ namespace NDO.Query
 			DataTable table = null;
 			using (IPersistenceHandler persistenceHandler = this.pm.PersistenceHandlerManager.GetPersistenceHandler( t ))
 			{
-				persistenceHandler.VerboseMode = this.pm.VerboseMode;
-				persistenceHandler.LogAdapter = this.pm.LogAdapter;
 				this.pm.CheckTransaction( persistenceHandler, t );
 
 				bool hasBeenPrepared = PrepareParameters();

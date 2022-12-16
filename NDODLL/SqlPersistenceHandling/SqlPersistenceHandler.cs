@@ -60,11 +60,10 @@ namespace NDO.SqlPersistenceHandling
 		private string selectFieldListWithAlias;
 		private string tableName;
 		private string qualifiedTableName;
-		private bool verboseMode;
-		private ILogAdapter logAdapter;
 		private Dictionary<string, IMappingTableHandler> mappingTableHandlers = new Dictionary<string, IMappingTableHandler>();
 		private IProvider provider;
 		private NDOMapping ndoMapping;
+		private ILogAdapter logger;
 		private string timeStampColumn = null;
         private Column typeNameColumn = null;
         private bool hasAutoincrementedColumn;
@@ -80,7 +79,7 @@ namespace NDO.SqlPersistenceHandling
 		private bool hasGuidOid;
 		private readonly INDOContainer configContainer;
 		private Action<Type,IPersistenceHandler> disposeCallback;
-		private SqlSelectBehavior sqlSelectBahavior = new SqlSelectBehavior();
+		private SqlSelectBehavior sqlSelectBahavior;
 		private SqlDumper sqlDumper;
 
 
@@ -282,11 +281,6 @@ namespace NDO.SqlPersistenceHandling
 			}
 
 			string sql;
-			if (this.timeStampColumn != null)
-			{
-				sql = $"SELECT COUNT(*) FROM {qualifiedTableName} WHERE ({where})";
-				this.updateCommands.Add( sql );
-			}
 
 			sql = $"UPDATE {qualifiedTableName} SET {zuwListe} WHERE ({where})";
 			//Console.WriteLine(sql);
@@ -337,9 +331,6 @@ namespace NDO.SqlPersistenceHandling
 
 			string where = whereBuilder.ToString();
 
-			if (this.timeStampColumn != null) // we need collision detection
-				this.deleteCommands.Add( $"SELECT COUNT (*) FROM {qualifiedTableName} AS affected WHERE ({where})" );
-
 			this.deleteCommands.Add( $"DELETE FROM {qualifiedTableName} WHERE ({where})" );
 		}
 
@@ -347,44 +338,6 @@ namespace NDO.SqlPersistenceHandling
 		{
 			FieldMap fm = new FieldMap(this.classMapping);
 			this.persistentFields = fm.PersistentFields;
-		}
-
-
-		/// <summary>
-		/// Gets or sets a value which determines, if database operations will be logged in a logging file.
-		/// </summary>
-		public bool VerboseMode
-		{
-			get { return this.verboseMode; }
-			set 
-			{ 
-				this.verboseMode = value; 
-				foreach(var mth in this.mappingTableHandlers.Values)
-				{
-					mth.VerboseMode = value;
-				}
-			}
-		}
-		/// <summary>
-		/// Gets or sets the log adapter to determine the sink where log entries are written to.
-		/// </summary>
-		public ILogAdapter LogAdapter
-		{
-			get 
-			{ 
-				return this.logAdapter; 
-			}
-			set 
-			{ 
-				this.logAdapter = value; 
-				foreach(var mth in this.mappingTableHandlers.Values)
-				{
-					mth.LogAdapter = value;
-				}
-
-				if (value != null)
-					this.sqlDumper = new SqlDumper( value, this.provider );
-			}
 		}
 
 		SqlColumnListGenerator CreateColumnListGenerator( Class cls )
@@ -399,8 +352,11 @@ namespace NDO.SqlPersistenceHandling
 		/// <param name="ndoMapping">Mapping information.</param>
 		/// <param name="t">Type for which the Handler is constructed.</param>
 		/// <param name="disposeCallback">Method to be called at the end of the usage. The method can be used to push back the object to the PersistenceHandlerPool.</param>
-		public void Initialize(NDOMapping ndoMapping, Type t, Action<Type,IPersistenceHandler> disposeCallback)
+		/// <param name="logger">A logger to log debug information.</param>
+		public void Initialize(NDOMapping ndoMapping, Type t, Action<Type,IPersistenceHandler> disposeCallback, ILogAdapter logger)
 		{
+			this.logger = logger;
+			this.sqlSelectBahavior = new SqlSelectBehavior( logger );
 			this.ndoMapping = ndoMapping;
 			this.classMapping = ndoMapping.FindClass(t);
 			this.timeStampColumn = classMapping.TimeStampColumn;
@@ -419,6 +375,7 @@ namespace NDO.SqlPersistenceHandling
 			this.tableName = classMapping.TableName;
 			Connection connInfo = ndoMapping.FindConnection(classMapping);
 			this.provider = ndoMapping.GetProvider(connInfo);
+			this.sqlDumper = new SqlDumper( this.logger, this.provider );
 			this.qualifiedTableName = provider.GetQualifiedTableName( tableName );
 			// The connection object will be initialized by the pm, to 
 			// enable connection string housekeeping.
@@ -454,7 +411,7 @@ namespace NDO.SqlPersistenceHandling
 		{
 			try
 			{
-				Log( "InsertAsync:" );
+				this.logger.Debug( "InsertAsync:" );
 				var parameters = new List<object>();
 				foreach (var row in rows)
 				{
@@ -467,15 +424,16 @@ namespace NDO.SqlPersistenceHandling
 					parameters.Add( parameterSet );
 				}
 
-				var results = await ExecuteBatchAsync( this.insertCommands, parameters, insertParameterInfos, true ).ConfigureAwait( false );
 				Dump( rows, null, null );
+				var results = await ExecuteBatchAsync( this.insertCommands, parameters, insertParameterInfos, true, true ).ConfigureAwait( false );
 
 				if (this.hasAutoincrementedColumn) // we need to retrieve the IDs
 				{
 					var ids = results.Where(d=>d.Count > 0).Select( d => (int) d.Values.First() );
+					this.logger.Debug( $"{ids.Count()} objects inserted" );
 					if (ids.Count() != rows.Length)
 					{
-						Log( $"Concurrency failure: row count: {rows.Length}, affected: {ids.Count()}" );
+						this.logger.Error( $"Concurrency failure: row count: {rows.Length}, affected: {ids.Count()}" );
 						var ex = new DBConcurrencyException( "Concurrency failure: wasn't able to insert one or more rows.", null, rows );
 						if (this.ConcurrencyError != null)
 							this.ConcurrencyError( ex );
@@ -512,13 +470,13 @@ namespace NDO.SqlPersistenceHandling
 		{
 			try
 			{
-				Log( "UpdateAsync:" );
+				this.logger.Debug( "UpdateAsync:" );
 
 				var parameters = new List<object>();
 				foreach (var row in rows)
 				{
 					var parameterSet = new List<object>();
-					foreach (var info in this.insertParameterInfos)
+					foreach (var info in this.updateParameterInfos)
 					{
 						parameterSet.Add( row[info.ColumnName] );
 					}
@@ -526,15 +484,18 @@ namespace NDO.SqlPersistenceHandling
 					parameters.Add( parameterSet );
 				}
 
-				var results = await ExecuteBatchAsync( this.updateCommands, parameters, updateParameterInfos, true ).ConfigureAwait( false );
+				Dump( rows, null, null );
+				var results = await ExecuteBatchAsync( this.updateCommands, parameters, updateParameterInfos, false, true ).ConfigureAwait( false );
+
+				int sum = 0;
+				results.Select( d => (int) d.Values.First() ).Select( c => sum += c );
+				this.logger.Debug( $"{sum} objects updated" );
 
 				if (this.timeStampColumn != null) // we have to check for concurrency error
 				{
-					int sum = 0;
-					results.Select( d => (int) d.Values.First() ).Select( c => sum += c );
 					if (sum != rows.Length)
 					{
-						Log( $"Concurrency failure: row count: {rows.Length}, affected: {sum}" );
+						this.logger.Error( $"Concurrency failure: row count: {rows.Length}, affected: {sum}" );
 						var ex = new DBConcurrencyException( "Concurrency failure: wasn't able to delete one or more rows.", null, rows );
 						if (this.ConcurrencyError != null)
 							this.ConcurrencyError( ex );
@@ -543,7 +504,6 @@ namespace NDO.SqlPersistenceHandling
 					}
 				}
 
-				Dump( rows, null, null );
 			}
 			catch (Exception ex)
 			{
@@ -611,19 +571,8 @@ namespace NDO.SqlPersistenceHandling
    //         }
 		}
 
-		private void Log(string msg)
-		{
-			if (!this.verboseMode || this.logAdapter == null)
-				return;
-
-			this.logAdapter.Info( msg );
-		}
-
 		private void Dump(DataRow[] rows, IDbCommand cmd, IEnumerable<string> batch)
 		{
-			if (!this.verboseMode || this.sqlDumper == null)
-				return;
-
 			this.sqlDumper.Dump( rows, cmd, batch );
 		}
 
@@ -640,6 +589,8 @@ namespace NDO.SqlPersistenceHandling
 		/// <param name="inputStatements">Each element in the array is a sql statement.</param>
 		/// <param name="parameters">A list of parameters (see remarks).</param>
 		/// <param name="isCommandArray">Determines, if statements contains identical commands which all need parameters</param>
+		/// <param name="parameterInfos">Information about the command parameters or null</param>
+		/// <param name="useReader">Determines, if the query returns result sets</param>
 		/// <returns>An List of Hashtables, containing the Name/Value pairs of the results.</returns>
 		/// <remarks>
 		/// For emty resultsets an empty dictionary will be returned. 
@@ -648,10 +599,10 @@ namespace NDO.SqlPersistenceHandling
 		/// parameters contains a list of lists, with one entry per repetition of the template.
 		/// </remarks>
 
-		public Task<IList<Dictionary<string, object>>> ExecuteBatchAsync( IEnumerable<string> inputStatements, IList parameters, IEnumerable<DbParameterInfo> parameterInfos = null, bool isCommandArray = false )
+		public Task<IList<Dictionary<string, object>>> ExecuteBatchAsync( IEnumerable<string> inputStatements, IList parameters, IEnumerable<DbParameterInfo> parameterInfos = null, bool useReader = false, bool isCommandArray = false )
 		{
 			return new BatchExecutor( this.provider, this.connection, this.transaction, this.Dump )
-				.ExecuteBatchAsync( inputStatements, parameters, parameterInfos, isCommandArray );
+				.ExecuteBatchAsync( inputStatements, parameters, parameterInfos, useReader, isCommandArray );
 		}
 
 		/// <summary>
@@ -660,12 +611,13 @@ namespace NDO.SqlPersistenceHandling
 		/// <param name="dt"></param>
 		public async Task UpdateDeletedObjectsAsync(DataTable dt)
 		{
+			this.logger.Debug( $"{nameof(UpdateDeletedObjectsAsync)}" );
 			DataRow[] rows = Select(dt, DataViewRowState.Deleted);
+			this.logger.Debug( $"{rows.Length} rows to delete" );
 			if (rows.Length == 0) return;
 
 			try
 			{
-				Log( nameof( UpdateDeletedObjectsAsync ) );
 				var parameters = new List<object>();
 				foreach (var row in rows)
 				{
@@ -678,17 +630,19 @@ namespace NDO.SqlPersistenceHandling
 					parameters.Add( parameterSet );
 				}
 
-				var results = await ExecuteBatchAsync( this.deleteCommands, parameters, deleteParameterInfos, true ).ConfigureAwait( false );
-
 				Dump( rows, null, null );
+
+				var results = await ExecuteBatchAsync( this.deleteCommands, parameters, deleteParameterInfos, false, true ).ConfigureAwait( false );
+
+				int sum = 0;
+				results.Select( d => (int) d.Values.First() ).Select( c => sum += c );
+				this.logger.Debug( $"{sum} objects deleted" );
 
 				if (this.timeStampColumn != null) // we have to check for concurrency error
 				{
-					int sum = 0;
-					results.Select( d => (int) d.Values.First() ).Select(c => sum += c );
 					if (sum < rows.Length)
 					{
-						Log( $"Concurrency failure: row count: {rows.Length}, affected: {sum}" );
+						this.logger.Error( $"Concurrency failure: row count: {rows.Length}, affected: {sum}" );
 						var ex = new DBConcurrencyException( "Concurrency failure: wasn't able to delete one or more rows.", null, rows );
 						if (this.ConcurrencyError != null)
 							this.ConcurrencyError( ex );
@@ -701,6 +655,7 @@ namespace NDO.SqlPersistenceHandling
 			{
 				string text = $"Exception of type {ex.GetType().Name} while deleting data rows: {ex.Message}\n";
 				text += $"Sql statement: {String.Join("; ", this.deleteCommands)}\n";
+				this.logger.Error( text );
 				throw new NDOException(38, text);
 			}
 		}
@@ -772,9 +727,7 @@ namespace NDO.SqlPersistenceHandling
 			if (!mappingTableHandlers.TryGetValue( r.FieldName, out handler ))
 			{
 				handler = new NDOMappingTableHandler();
-				handler.Initialize(ndoMapping, r);
-				handler.VerboseMode = this.verboseMode;
-				handler.LogAdapter = this.logAdapter;
+				handler.Initialize(ndoMapping, r, this.logger);
 				mappingTableHandlers[r.FieldName] = handler;
 			}
 			return handler;

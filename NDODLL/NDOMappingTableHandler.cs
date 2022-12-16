@@ -49,30 +49,26 @@ namespace NDO
 		private DbConnection connection;
 		private DbTransaction transaction;
 		private IProvider provider;
-		private bool verboseMode;
-		private ILogAdapter logAdapter;
 		private SqlSelectBehavior sqlSelectBehavior;
 		private SqlDumper sqlDumper;
 		private NDOMapping mappings;
+		private ILogAdapter logger;
 
-		private string GetParameter(IProvider provider, string name)
-		{
-			return provider.UseNamedParams ? provider.GetNamedParameter(name) : "?";
-		}
-
-		public void Initialize(NDOMapping mappings, Relation relation)
+		public void Initialize(NDOMapping mappings, Relation relation, ILogAdapter logger)
 		{
 			this.mappings = mappings;
 			this.relation = relation;
+			this.logger = logger;
 
 			Connection con = mappings.FindConnection(relation.MappingTable.ConnectionId);
 			this.provider = mappings.GetProvider( con );
+			this.sqlDumper = new SqlDumper( logger, this.provider );
 
 			// The connection object will be initialized in the pm, to 
 			// enable the callback for getting the real connection string.
 			// CheckTransaction is the place, where this happens.
 			this.connection = null;
-			this.sqlSelectBehavior = new SqlSelectBehavior();
+			this.sqlSelectBehavior = new SqlSelectBehavior( this.logger );
 
 			GenerateSelectCommand();
 			GenerateInsertCommand();
@@ -203,36 +199,8 @@ namespace NDO
 			this.selectCommand = $"SELECT * FROM {provider.GetQualifiedTableName( this.relation.MappingTable.TableName )} WHERE {whereBuilder.ToString()}";
 		}
 
-		/// <summary>
-		/// Helps Logging
-		/// </summary>
-		public ILogAdapter LogAdapter
-		{
-			get { return logAdapter; }
-			set 
-			{ 
-				logAdapter = value;
-				if (value != null)
-					this.sqlDumper = new SqlDumper( value, this.provider );
-			}
-		}
-
-
-		/// <summary>
-		/// Gets or sets a value which determines, if database operations will be logged in a logging file.
-		/// </summary>
-		public bool VerboseMode
-		{
-			get { return this.verboseMode; }
-			set { this.verboseMode = value; }
-		}
-
-
 		private void Dump( DataRow[] rows, IDbCommand cmd, IEnumerable<string> batch )
 		{
-			if (!this.verboseMode || this.sqlDumper == null)
-				return;
-
 			this.sqlDumper.Dump( rows, cmd, batch );
 		}
 
@@ -247,6 +215,8 @@ namespace NDO
 		
 		public async Task<DataTable> LoadRelatedObjectsAsync(ObjectId oid, DataSet templateDataset) 
 		{
+			this.logger.Debug( $"{nameof(NDOMappingTableHandler)}.{nameof( LoadRelatedObjectsAsync )}" );
+
 			DataTable table = GetTableTemplate(templateDataset, relation.MappingTable.TableName).Clone();
 			var parameters = new List<object>();
 
@@ -291,42 +261,56 @@ namespace NDO
 			return table;		
 		}
 
-		public async Task InsertAsync( DataRow[] rows)
+		async Task InsertAsync( DataRow[] rows)
 		{
-			Dump( null, null, new[] { "MappingTableHandler.InsertAsync" } );
+			this.logger.Debug( nameof( InsertAsync ) );
+
 			var parameters = new List<object>();
 			foreach (var row in rows)
 			{
+				List<object> parameterSet = new List<object>();
 				foreach (var info in this.insertParameterInfos)
 				{
-					parameters.Add( row[info.ColumnName] );
+					parameterSet.Add( row[info.ColumnName] );
 				}
+
+				parameters.Add( parameterSet );
 			}
 
 			var batchExecutor = new BatchExecutor( this.provider, this.connection, this.transaction, Dump );
 
-			var results = await batchExecutor.ExecuteBatchAsync( new[]{this.insertCommand }, parameters, insertParameterInfos, true ).ConfigureAwait( false );
+			var results = await batchExecutor.ExecuteBatchAsync( new[]{this.insertCommand }, parameters, insertParameterInfos, false, true ).ConfigureAwait( false );
 			Dump( rows, null, null );
 		}
 
-		public async Task DeleteAsync( DataRow[] rows )
+		async Task DeleteAsync( DataRow[] rows )
 		{
-			Dump( null, null, new[] { "MappingTableHandler.DeleteAsync" } );
+			this.logger.Debug( nameof( DeleteAsync ) );
+
 			var parameters = new List<object>();
 			foreach (var row in rows)
 			{
+				List<object> parameterSet = new List<object>();
 				foreach (var info in this.deleteParameterInfos)
 				{
-					parameters.Add( row[info.ColumnName] );
+					parameterSet.Add( row[info.ColumnName, DataRowVersion.Original] );
 				}
+
+				parameters.Add( parameterSet );
 			}
 
 			var batchExecutor = new BatchExecutor( this.provider, this.connection, this.transaction, Dump );
 
-			var results = await batchExecutor.ExecuteBatchAsync( new[]{this.deleteCommand }, parameters, deleteParameterInfos, true ).ConfigureAwait( false );
+			var results = await batchExecutor.ExecuteBatchAsync( new[]{this.deleteCommand }, parameters, deleteParameterInfos, false, true ).ConfigureAwait( false );
 			Dump( rows, null, null );
 		}
 
+		/// <summary>
+		/// This is the public method used by the PersistenceManager
+		/// </summary>
+		/// <param name="ds"></param>
+		/// <returns></returns>
+		/// <exception cref="NDOException"></exception>
 		public async Task UpdateAsync(DataSet ds) 
 		{
 			DataTable dt = ds.Tables[relation.MappingTable.TableName];

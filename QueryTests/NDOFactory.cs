@@ -2,6 +2,7 @@
 using System.IO;
 using DataTypeTestClasses;
 using NDO;
+using NDO.Logging;
 using NDO.Mapping;
 
 namespace QueryTests
@@ -41,6 +42,8 @@ namespace QueryTests
 				}
 				// Setting an AccessorName to avoid changing the full chain of dependencies for PureBusinessClasses
 				pm.NDOMapping.FindClass( typeof( DataContainerDerived ) ).FindField( "byteArrVar" ).AccessorName = "ByteArrVar";
+				pm.VerboseMode = true;
+				pm.LogAdapter = new DebugLogAdapter();
 				return pm;
 			}
 		}

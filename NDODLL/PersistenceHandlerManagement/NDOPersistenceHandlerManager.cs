@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using NDO.Configuration;
+using NDO.Logging;
 
 namespace NDO
 {
@@ -66,8 +67,10 @@ namespace NDO
 			});
 
 			Mappings mappings = configContainer.Resolve<Mappings>();
+			var logger = configContainer.Resolve<ILogAdapter>();
+
 			// The dataSet will be used as template to create a DataTable for the query results.
-			handler.Initialize( mappings, type, ReleaseHandler );
+			handler.Initialize( mappings, type, ReleaseHandler, logger );
 
 			return handler;
 		}
