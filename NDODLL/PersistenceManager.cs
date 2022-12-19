@@ -1981,6 +1981,7 @@ namespace NDO
 				{
 					CheckTransaction( handler, r.MappingTable.Connection );
 					dt = await handler.LoadRelatedObjectsAsync(pc.NDOObjectId, this.ds).ConfigureAwait( false );
+					CheckEndTransaction( true );
 				}
 
 				IList relatedObjects;

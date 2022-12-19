@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
 <Enhancer>
   <Options>
-    <EnableAddIn>False</EnableAddIn>
+    <EnableAddIn>True</EnableAddIn>
     <EnableEnhancer>False</EnableEnhancer>
     <VerboseMode>False</VerboseMode>
     <NewMapping>False</NewMapping>
@@ -25,10 +25,12 @@
     <BinPath>bin\Debug\QueryTests.dll</BinPath>
     <ObjPath>obj\Debug\</ObjPath>
     <AssemblyName />
-    <Debug>False</Debug>
+    <Debug>True</Debug>
     <IsWebProject>False</IsWebProject>
     <KeyFile />
     <References>
+      <Reference AssemblyName="NDO" AssemblyPath="..\NDODLL\bin\Debug\netstandard2.0\NDO.dll" CheckThisDLL="False">
+      </Reference>
       <Reference AssemblyName="PureBusinessClasses" AssemblyPath="..\IntegrationTests\PureBusinessClasses\bin\Debug\PureBusinessClasses.dll">
       </Reference>
     </References>

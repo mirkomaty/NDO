@@ -46,7 +46,7 @@
 	<ItemGroup Condition="'$(TargetFramework)'=='net452'">
 		<Reference Include="System.Transactions" />
 	</ItemGroup>	
-  <ItemGroup>
+  <ItemGroup Condition="'$(Configuration)'=='Release'">
     <Content Include="..\nuget\NDO.dll.targets">
       <Pack>true</Pack>
       <PackageCopyToOutput>true</PackageCopyToOutput>

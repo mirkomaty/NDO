@@ -9,6 +9,7 @@ namespace NDO.SqlPersistenceHandling
 	internal class SqlSelectBehavior
 	{
 		private readonly ILogAdapter logger;
+		Random random = new Random();
 
 		public SqlSelectBehavior( ILogAdapter logger )
 		{
@@ -18,11 +19,12 @@ namespace NDO.SqlPersistenceHandling
 		public async Task Select( DbCommand selectCommand, DataTable table )
 		{
 			DbDataReader reader = null;
+			var id = this.random.Next();
 
 			try
 			{
 
-				logger.Debug( $"{nameof( SqlSelectBehavior )}.{nameof( Select )} Table: {table.TableName}" );
+				logger.Debug( $"[{id:X}]{nameof( SqlSelectBehavior )}.{nameof( Select )} Table: {table.TableName}" );
 
 				reader = await selectCommand.ExecuteReaderAsync().ConfigureAwait(false);
 				using (reader)
@@ -42,11 +44,11 @@ namespace NDO.SqlPersistenceHandling
 					}
 				}
 
-				logger.Debug( $"{table.Rows.Count} rows selected." );
+				logger.Debug( $"[{id:X}]{table.Rows.Count} rows selected." );
 			}
 			catch (Exception ex)
 			{
-				logger.Error( ex.ToString() );
+				logger.Error( $"[{id:X}] {ex.ToString()}" );
 				if (reader != null && !reader.IsClosed)
 				{
 					reader.Close();
