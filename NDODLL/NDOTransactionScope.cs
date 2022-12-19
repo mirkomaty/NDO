@@ -22,7 +22,7 @@ namespace NDO
 		///<inheritdoc/>
 		public TransactionMode TransactionMode { get; set; }
 
-		bool isInTransaction = false;
+		bool isInTransaction;
 		private readonly ILogAdapter logger;
 
 		/// <summary>
@@ -81,7 +81,7 @@ namespace NDO
 
 				DbConnection conn = null;
 				usedConnections.TryGetValue( id, out conn );
-				this.logger.Debug( String.Format( "- Committing transaction {0:X} at connection '{1}'", tx.GetHashCode(), conn.DisplayName() ) );
+				this.logger.Debug( $"- Committing transaction {tx.GetHashCode():X} at connection '{conn.DisplayName()}'" );
 			}
 
 			usedTransactions.Clear();

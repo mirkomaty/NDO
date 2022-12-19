@@ -78,10 +78,9 @@ namespace NDO
 	/// </summary>
 	public class PersistenceManager : PersistenceManagerBase, IPersistenceManager
 	{		
-		private bool hollowMode = false;
+		private bool hollowMode;
 		private Dictionary<Relation, IMappingTableHandler> mappingHandler = new Dictionary<Relation,IMappingTableHandler>(); // currently used handlers
 
-		private Hashtable currentRelations = new Hashtable(); // Contains names of current bidirectional relations
 		private ObjectLock removeLock = new ObjectLock();
 		private ObjectLock addLock = new ObjectLock();
 		private ArrayList createdDirectObjects = new ArrayList(); // List of newly created objects that need to be stored twice to update foreign keys.
@@ -350,7 +349,7 @@ namespace NDO
 			foreach(ObjectId oid in cs.DeletedObjects)
 			{
 				IPersistenceCapable pc2 = FindObject(oid);
-				await DeleteAsync(pc2);
+				await DeleteAsync( pc2 ).ConfigureAwait( false );
 			}
 			foreach(IPersistenceCapable pc in cs.ChangedObjects)
 			{
@@ -358,7 +357,7 @@ namespace NDO
 				Class pcClass = GetClass(pc);
 				// Make sure, the object is loaded.
 				if (pc2.NDOObjectState == NDOObjectState.Hollow)
-					LoadData(pc2);
+					await LoadDataAsync( pc2 ).ConfigureAwait( false );
 				MarkDirty( pc2 );  // This locks the object and generates a LockEntry, which contains a row
 				var entry = cache.LockedObjects.FirstOrDefault( e => e.pc.NDOObjectId == pc.NDOObjectId );
 				DataRow row = entry.row;
@@ -2328,7 +2327,7 @@ namespace NDO
 			}
 		}
 
-        internal async Task UpdateCreatedMappingTableEntries()
+        internal async Task UpdateCreatedMappingTableEntriesAsync()
         {
             foreach (MappingTableEntry e in createdMappingTableObjects)
             {
@@ -2531,10 +2530,10 @@ namespace NDO
 					cache.RegisterLockedObject(e.pc, e.row, e.relations);
 				}
 
-                // Now update all mapping tables. Because of possible subclasses, there is no
-                // relation between keys in the dataset schema. Therefore, we can update mapping
-                // tables only after all other objects have been written to ensure correct foreign keys.
-                UpdateCreatedMappingTableEntries();
+				// Now update all mapping tables. Because of possible subclasses, there is no
+				// relation between keys in the dataset schema. Therefore, we can update mapping
+				// tables only after all other objects have been written to ensure correct foreign keys.
+				await UpdateCreatedMappingTableEntriesAsync().ConfigureAwait( false );
 
 				// The rows may contain now new Ids, which should be 
 				// stored in the lostRowInfo's before the rows get detached
@@ -2962,7 +2961,7 @@ namespace NDO
 				idn.OnDelete();
 
 			await LoadAllRelationsAsync( pc ).ConfigureAwait( false );
-			await DeleteRelatedObjectsAsync( pc, checkAssoziations );
+			DeleteRelatedObjects( pc, checkAssoziations );
 
 			switch(pc.NDOObjectState) 
 			{
@@ -3169,7 +3168,7 @@ namespace NDO
 			this.relationChanges.Add( new RelationChangeRecord( pc, child, r.FieldName, false ) );
 		}
 
-		private async Task DeleteRelatedObjects2Async(IPersistenceCapable pc, Class parentClass, bool checkAssoziations, Relation r)
+		private void DeleteRelatedObjects2(IPersistenceCapable pc, Class parentClass, bool checkAssoziations, Relation r)
 		{
 			//			Debug.WriteLine("DeleteRelatedObjects2 " + pc.GetType().Name + " " + r.FieldName);
 			//			Debug.Indent();
@@ -3218,7 +3217,7 @@ namespace NDO
 		/// </summary>
 		/// <param name="pc">the parent object</param>
 		/// <param name="checkAssoziations"></param>
-		private async Task DeleteRelatedObjectsAsync(IPersistenceCapable pc, bool checkAssoziations) 
+		private void DeleteRelatedObjects(IPersistenceCapable pc, bool checkAssoziations) 
 		{
 			//			Debug.WriteLine("DeleteRelatedObjects " + pc.NDOObjectId.Dump());
 			//			Debug.Indent();
@@ -3228,12 +3227,12 @@ namespace NDO
 			foreach(Relation r in parentClass.Relations) 
 			{
 				if (!r.Composition)
-					await DeleteRelatedObjects2Async( pc, parentClass, checkAssoziations, r ).ConfigureAwait( false );
+					DeleteRelatedObjects2( pc, parentClass, checkAssoziations, r );
 			}
 			foreach(Relation r in parentClass.Relations) 
 			{
 				if (r.Composition)
-					await DeleteRelatedObjects2Async( pc, parentClass, checkAssoziations, r ).ConfigureAwait( false );
+					DeleteRelatedObjects2( pc, parentClass, checkAssoziations, r );
 			}
 
 			//			Debug.Unindent();
@@ -3434,21 +3433,21 @@ namespace NDO
 			string shortId = encodedShortId.Decode();
 			string[] arr = shortId.Split( '-' );
 			if (arr.Length != 3)
-				throw new ArgumentException( "The format of the string is not valid", "shortId" );
+				throw new ArgumentException( "The format of the string is not valid", nameof(encodedShortId) );
 			Type t = shortId.GetObjectType(this);  // try readable format
 			if (t == null)
 			{
 				int typeCode = 0;
 				if (!int.TryParse( arr[2], NumberStyles.HexNumber, CultureInfo.InvariantCulture, out typeCode )) 
-					throw new ArgumentException( "The string doesn't represent a loadable type", "shortId" );
+					throw new ArgumentException( "The string doesn't represent a loadable type", nameof( encodedShortId ) );
 				t = this.typeManager[typeCode];
 				if (t == null) 
-					throw new ArgumentException( "The string doesn't represent a loadable type", "shortId" );
+					throw new ArgumentException( "The string doesn't represent a loadable type", nameof( encodedShortId ) );
 			}
 
 			Class cls = GetClass( t );
 			if (cls == null)
-				throw new ArgumentException( "The type identified by the string is not persistent or is not managed by the given mapping file", "shortId" );
+				throw new ArgumentException( "The type identified by the string is not persistent or is not managed by the given mapping file", nameof( encodedShortId ) );
 
 			object[] keydata = new object[cls.Oid.OidColumns.Count];
 			string[] oidValues = arr[2].Split( ' ' );

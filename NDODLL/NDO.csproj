@@ -3,6 +3,8 @@
   <Import Project="SourceRevisionId.props" />
   <PropertyGroup>
     <TargetFrameworks>netstandard2.0;net452</TargetFrameworks>
+	<EnableNETAnalyzers>false</EnableNETAnalyzers>
+	  <AnalysisMode>none</AnalysisMode>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <IncludeSymbols>True</IncludeSymbols>
@@ -38,6 +40,10 @@
     <None Remove="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <PackageReference Include="Microsoft.CodeAnalysis.NetAnalyzers" Version="7.0.0">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
     <PackageReference Include="ndointerfaces" Version="4.0.1" />
 		<PackageReference Include="PatchProductVersion" Version="1.0.2">
 			<PrivateAssets>all</PrivateAssets>

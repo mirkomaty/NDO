@@ -586,7 +586,7 @@ namespace NDO.SqlPersistenceHandling
 		/// <summary>
 		/// Executes a batch of sql statements.
 		/// </summary>
-		/// <param name="inputStatements">Each element in the array is a sql statement.</param>
+		/// <param name="statements">Each element in the array is a sql statement.</param>
 		/// <param name="parameters">A list of parameters (see remarks).</param>
 		/// <param name="isCommandArray">Determines, if statements contains identical commands which all need parameters</param>
 		/// <param name="parameterInfos">Information about the command parameters or null</param>
@@ -599,10 +599,10 @@ namespace NDO.SqlPersistenceHandling
 		/// parameters contains a list of lists, with one entry per repetition of the template.
 		/// </remarks>
 
-		public Task<IList<Dictionary<string, object>>> ExecuteBatchAsync( IEnumerable<string> inputStatements, IList parameters, IEnumerable<DbParameterInfo> parameterInfos = null, bool useReader = false, bool isCommandArray = false )
+		public Task<IList<Dictionary<string, object>>> ExecuteBatchAsync( IEnumerable<string> statements, IList parameters, IEnumerable<DbParameterInfo> parameterInfos = null, bool useReader = false, bool isCommandArray = false )
 		{
 			return new BatchExecutor( this.provider, this.connection, this.transaction, this.Dump )
-				.ExecuteBatchAsync( inputStatements, parameters, parameterInfos, useReader, isCommandArray );
+				.ExecuteBatchAsync( statements, parameters, parameterInfos, useReader, isCommandArray );
 		}
 
 		/// <summary>

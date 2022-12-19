@@ -101,10 +101,13 @@ namespace QueryTests
 		}
 
 		[Test]
+		[Ignore("Prefetches are not supported")]
 		public void CheckIfSimplePrefetchWorks()
 		{
 			NDOQuery<Mitarbeiter> q = new NDOQuery<Mitarbeiter>( pm );
+#pragma warning disable 618
 			q.AddPrefetch( "dieReisen" );
+#pragma warning restore 618
 			Assert.AreEqual( String.Format( "SELECT {0} FROM [Mitarbeiter]", this.mitarbeiterFields ), q.GeneratedQuery );
 		}
 

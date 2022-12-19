@@ -182,7 +182,7 @@ namespace NDO.Query
 		/// Polymorphy: StDev and Var only return the aggregate for the given class. All others return the aggregate for all subclasses.
 		/// Transactions: Please note, that the aggregate functions always work against the database.
 		/// Unsaved changes in your objects are not recognized.</remarks>
-		public async Task<T> ExecuteAggregateAsync<T>( string field, AggregateType aggregateType )
+		public async Task<TA> ExecuteAggregateAsync<TA>( string field, AggregateType aggregateType )
 		{
 			if (aggregateType == AggregateType.StDev || aggregateType == AggregateType.Var)
 				this.allowSubclasses = false;
@@ -199,7 +199,7 @@ namespace NDO.Query
 				partResults[i++] = await ExecuteAggregateQueryAsync( queryContextsEntry, field, aggregateType ).ConfigureAwait( false );
 			}
 			this.pm.CheckEndTransaction( !this.pm.DeferredMode && this.pm.TransactionMode == TransactionMode.Optimistic );
-			return (T)func.ComputeResult( partResults );
+			return (TA)func.ComputeResult( partResults );
 		}
 
 		/// <summary>
@@ -828,9 +828,9 @@ namespace NDO.Query
 			return (IPersistenceCapable) await ExecuteSingleAsync( throwIfResultCountIsWrong ).ConfigureAwait( false );
 		}
 
-		Task<T> IQuery.ExecuteAggregateAsync<T>( string field, AggregateType aggregateType )
+		Task<TA> IQuery.ExecuteAggregateAsync<TA>( string field, AggregateType aggregateType )
 		{
-			return ExecuteAggregateAsync<T>( field, aggregateType );
+			return ExecuteAggregateAsync<TA>( field, aggregateType );
 		}
 
 		bool IQuery.AllowSubclasses { get => this.allowSubclasses; set => this.allowSubclasses = value; }

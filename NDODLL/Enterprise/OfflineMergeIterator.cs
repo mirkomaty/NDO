@@ -33,7 +33,7 @@ namespace NDO
 	/// </summary>
 	/// <remarks>
 	/// You don't need to instantiate objects of this class. NDO will do it automatically,
-	/// if <see cref="OfflinePersistenceManager.MergeObjectContainerAsync"/> is called.
+	/// if <see cref="OfflinePersistenceManager.MergeObjectContainer"/> is called.
 	/// </remarks>
 	public class OfflineMergeIterator : ISerializationIterator
 	{
