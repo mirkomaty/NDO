@@ -55,6 +55,51 @@ namespace NdoDllUnitTests
 		}
 
 		[Test]
+		public void RemapColumnsWorks()
+		{
+			NDOMapping mapping = NDOMapping.Create( null );
+			var cls = mapping.AddStandardClass( "TestClass", "TestAssembly", null );
+			var field = cls.AddStandardField( "test", false );
+			Assert.AreEqual( "Test", field.Column.Name );
+			var attr = new ColumnAttribute() { Size = -1, Name = "XTest" };
+			attr.RemapColumn( field.Column );
+			Assert.AreEqual( "XTest", field.Column.Name );
+			Assert.AreEqual( -1, field.Column.Size );
+		}
+
+		[Test]
+		public void RemapFieldsWorks()
+		{
+			NDOMapping mapping = NDOMapping.Create( null );
+			var cls = mapping.AddStandardClass( "TestClass", "TestAssembly", null );
+			var field = cls.AddStandardField( "test", false );
+			Assert.AreEqual( false, field.Encrypted );
+			var attr = new FieldAttribute() { Encrypted = true };
+			attr.RemapField( field );
+			Assert.AreEqual( true, field.Encrypted );
+			attr = new FieldAttribute() { Encrypted = false };
+			attr.RemapField( field );
+			// Encrypted can only be rewritten, if the value is false
+			Assert.AreEqual( true, field.Encrypted );
+		}
+
+		[Test]
+		public void SetFieldValuesWorks()
+		{
+			NDOMapping mapping = NDOMapping.Create( null );
+			var cls = mapping.AddStandardClass( "TestClass", "TestAssembly", null );
+			var field = cls.AddStandardField( "test", false );
+			Assert.AreEqual( false, field.Encrypted );
+			var attr = new FieldAttribute() { Encrypted = true };
+			attr.SetFieldValues( field );
+			Assert.AreEqual( true, field.Encrypted );
+			attr = new FieldAttribute() { Encrypted = false };
+			attr.SetFieldValues( field );
+			// Encrypted can be set to false
+			Assert.AreEqual( false, field.Encrypted );
+		}
+
+		[Test]
 		public void OidColumnShouldntBeRemappedWithAssembyWideColumnAttribute()
 		{
 			NDOMapping mapping = NDOMapping.Create( null );

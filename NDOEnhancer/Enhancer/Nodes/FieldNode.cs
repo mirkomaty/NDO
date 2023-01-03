@@ -46,10 +46,10 @@ namespace NDOEnhancer
 		}
 
         ColumnAttribute columnAttribute;
-        public ColumnAttribute ColumnAttribute
-        {
-            get { return columnAttribute; }
-        }
+        public ColumnAttribute ColumnAttribute => columnAttribute;        
+
+		FieldAttribute fieldAttribute;
+		public FieldAttribute FieldAttribute => this.fieldAttribute; 
 
 		public FieldNode(MemberInfo mi)
 		{		
@@ -72,6 +72,10 @@ namespace NDOEnhancer
             object[] attrs = mi.GetCustomAttributes(typeof(ColumnAttribute), true);
             if (attrs.Length > 0) // since ColumnAttribute.AllowMultiple == false, we can only have max 1 attr.
                 this.columnAttribute = (ColumnAttribute)attrs[0];
+
+			attrs = mi.GetCustomAttributes( typeof(FieldAttribute), true );
+			if (attrs.Length > 0)
+				this.fieldAttribute = (FieldAttribute) attrs[0];
 		}
 
         public Type FieldType
