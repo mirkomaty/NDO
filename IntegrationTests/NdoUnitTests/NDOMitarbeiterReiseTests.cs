@@ -64,7 +64,7 @@ namespace NdoUnitTests
 			pm.Delete(mitarbeiterListe);
 			pm.Save();
 			pm.Close();
-			pm.GetSqlPassThroughHandler().Execute( "DELETE FROM " + pm.NDOMapping.FindClass( typeof( Reise ) ).TableName );
+			pm.Objects<Reise>().DeleteDirectly();
 			pm.Dispose();
 		}
 
