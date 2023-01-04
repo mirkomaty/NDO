@@ -11,7 +11,7 @@ namespace NDOVsPackage
         public const string Name = ".NET Data Objects 4";
         public const string Description = @"NDO Integration into Visual Studio.";
         public const string Language = "en-US";
-        public const string Version = "4.1.0";
+        public const string Version = "4.1.1";
         public const string Author = "Mirko Matytschak";
         public const string Tags = "Persistence";
     }
