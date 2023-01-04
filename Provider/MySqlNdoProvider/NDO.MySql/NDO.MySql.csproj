@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <TargetFrameworks>netstandard2.0;net452</TargetFrameworks>
-    <Version>4.0.1</Version>
+    <Version>4.0.2</Version>
     <Authors>Mirko Matytschak</Authors>
     <Company>Mirko Matytschak</Company>
     <Product>.NET Data Objects (NDO)</Product>
@@ -21,7 +21,7 @@
 
   <ItemGroup>
     <PackageReference Include="Mysql.data">
-      <Version>8.0.14</Version>
+      <Version>8.0.31</Version>
     </PackageReference>
   </ItemGroup>
  
