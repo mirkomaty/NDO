@@ -11,7 +11,7 @@
     <RepositoryUrl>https://github.com/mirkomaty/NDO</RepositoryUrl>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <PackageId>ndo.mysql</PackageId>
-    <PackageReleaseNotes>Support of CLOBs</PackageReleaseNotes>
+    <PackageReleaseNotes>Need to update MySql.Data because of CharSet errors in MariaDb 10.6</PackageReleaseNotes>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
   </PropertyGroup>
 
