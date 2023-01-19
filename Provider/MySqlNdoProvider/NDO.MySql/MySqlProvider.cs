@@ -137,54 +137,16 @@ namespace NDO.MySqlProvider
 		// ADO.NET provider and convert it to the respective enumeration type		
 		public override object GetDbType(string typeName) 
 		{
+			if (Enum.TryParse<MySqlDbType>( typeName, out var dbtype ))
+				return dbtype;
 			if (typeName == "BigInt")
-				return MySql.Data.MySqlClient.MySqlDbType.Int64;
-			if (typeName == "Blob")
-				return MySql.Data.MySqlClient.MySqlDbType.Blob;
-			if (typeName == "Byte")
-				return MySql.Data.MySqlClient.MySqlDbType.Byte;
-			if (typeName == "Date")
-				return MySql.Data.MySqlClient.MySqlDbType.Date;
+				return MySqlDbType.Int64;
 			if (typeName == "Datetime")
-				return MySql.Data.MySqlClient.MySqlDbType.DateTime;
-			if (typeName == "Decimal")
-				return MySql.Data.MySqlClient.MySqlDbType.Decimal;
-			if (typeName == "Double")
-				return MySql.Data.MySqlClient.MySqlDbType.Double;
-			if (typeName == "Enum")
-				return MySql.Data.MySqlClient.MySqlDbType.Enum;
-			if (typeName == "Float")
-				return MySql.Data.MySqlClient.MySqlDbType.Float;
-			if (typeName == "Int32")
-				return MySql.Data.MySqlClient.MySqlDbType.Int32;
-			if (typeName == "Int24")
-				return MySql.Data.MySqlClient.MySqlDbType.Int24;
+				return MySqlDbType.DateTime;
 			if (typeName == "Long")
-				return MySql.Data.MySqlClient.MySqlDbType.Int64;
-			if (typeName == "LongBlob")
-				return MySql.Data.MySqlClient.MySqlDbType.LongBlob;
+				return MySqlDbType.Int64;
 			if (typeName == "LongLong")
-				return MySql.Data.MySqlClient.MySqlDbType.Int64;
-			if (typeName == "MediumBlob")
-				return MySql.Data.MySqlClient.MySqlDbType.MediumBlob;
-			if (typeName == "Newdate")
-				return MySql.Data.MySqlClient.MySqlDbType.Newdate;
-			if (typeName == "Set")
-				return MySql.Data.MySqlClient.MySqlDbType.Set;
-			if (typeName == "Int16")
-				return MySql.Data.MySqlClient.MySqlDbType.Int16;
-			if (typeName == "String")
-				return MySql.Data.MySqlClient.MySqlDbType.String;
-			if (typeName == "Time")
-				return MySql.Data.MySqlClient.MySqlDbType.Time;
-			if (typeName == "Timestamp")
-				return MySql.Data.MySqlClient.MySqlDbType.Timestamp;
-			if (typeName == "TinyBlob")
-				return MySql.Data.MySqlClient.MySqlDbType.TinyBlob;
-			if (typeName == "VarChar")
-				return MySql.Data.MySqlClient.MySqlDbType.VarChar;
-			if (typeName == "Year")
-				return MySql.Data.MySqlClient.MySqlDbType.Year;			
+				return MySqlDbType.Int64;
 			throw new NDOException(27, "NDOMySql.Provider.GetDbType: Typname " + typeName + " kann nicht in MySql.Data.MySqlClient.MySqlDbType konvertiert werden");
 		}
 

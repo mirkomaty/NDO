@@ -136,54 +136,16 @@ namespace NDO.MySqlConnectorProvider
 		// ADO.NET provider and convert it to the respective enumeration type		
 		public override object GetDbType(string typeName) 
 		{
-			if (typeName == "BigInt")
+            if (Enum.TryParse<MySqlDbType>( typeName, out var dbtype ))
+                return dbtype;
+            if (typeName == "BigInt")
 				return MySqlDbType.Int64;
-			if (typeName == "Blob")
-				return MySqlDbType.Blob;
-			if (typeName == "Byte")
-				return MySqlDbType.Byte;
-			if (typeName == "Date")
-				return MySqlDbType.Date;
 			if (typeName == "Datetime")
 				return MySqlDbType.DateTime;
-			if (typeName == "Decimal")
-				return MySqlDbType.Decimal;
-			if (typeName == "Double")
-				return MySqlDbType.Double;
-			if (typeName == "Enum")
-				return MySqlDbType.Enum;
-			if (typeName == "Float")
-				return MySqlDbType.Float;
-			if (typeName == "Int32")
-				return MySqlDbType.Int32;
-			if (typeName == "Int24")
-				return MySqlDbType.Int24;
 			if (typeName == "Long")
 				return MySqlDbType.Int64;
-			if (typeName == "LongBlob")
-				return MySqlDbType.LongBlob;
 			if (typeName == "LongLong")
 				return MySqlDbType.Int64;
-			if (typeName == "MediumBlob")
-				return MySqlDbType.MediumBlob;
-			if (typeName == "Newdate")
-				return MySqlDbType.Newdate;
-			if (typeName == "Set")
-				return MySqlDbType.Set;
-			if (typeName == "Int16")
-				return MySqlDbType.Int16;
-			if (typeName == "String")
-				return MySqlDbType.String;
-			if (typeName == "Time")
-				return MySqlDbType.Time;
-			if (typeName == "Timestamp")
-				return MySqlDbType.Timestamp;
-			if (typeName == "TinyBlob")
-				return MySqlDbType.TinyBlob;
-			if (typeName == "VarChar")
-				return MySqlDbType.VarChar;
-			if (typeName == "Year")
-				return MySqlDbType.Year;			
 			throw new NDOException(27, "MySqlConnector.Provider.GetDbType: Typname " + typeName + " kann nicht in MySqlDbType konvertiert werden");
 		}
 
