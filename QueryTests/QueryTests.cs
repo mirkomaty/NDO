@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using NUnit.Framework;
 using NDO;
+using NDO.Application;
 using NDO.Query;
 using NDOql.Expressions;
 using Reisekosten;
@@ -9,13 +10,11 @@ using Reisekosten.Personal;
 using PureBusinessClasses;
 using NDO.SqlPersistenceHandling;
 using Moq;
-using NDO.Configuration;
-using NDO.Logging;
-using NDO.Mapping;
 using System.Collections;
 using System.Data;
-using System.Data.Common;
 using DataTypeTestClasses;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 
 namespace QueryTests
 {
@@ -29,10 +28,17 @@ namespace QueryTests
 		string pkwFahrtFields;
 		string reiseFields;
 		string reiseJoinFields;
+		IServiceCollection serviceCollection;
+		IServiceProvider serviceProvider;
 
 		[SetUp]
 		public void SetUp()
 		{
+			var startup = Startup();
+			this.serviceCollection = startup.serviceCollection;
+			this.serviceProvider = startup.serviceProvider;
+			serviceCollection.AddNdo( null, null );
+			serviceProvider.UseNdo();
 			this.pm = NDOFactory.Instance.PersistenceManager;
 
 			mitarbeiterFields = new SqlColumnListGenerator( pm.NDOMapping.FindClass( typeof( Mitarbeiter ) ) ).SelectList;
@@ -54,6 +60,21 @@ namespace QueryTests
 			var pm = NDOFactory.Instance.PersistenceManager;
 			pm.Delete( pm.Objects<Mitarbeiter>().ResultTable );
 			pm.Save();
+		}
+
+		(IServiceCollection serviceCollection, IServiceProvider serviceProvider) Startup()
+		{
+			IServiceCollection sc = null;
+			var builder = Host.CreateDefaultBuilder();
+			//builder.Environment.EnvironmentName = "Test2";
+			builder.ConfigureServices( services =>
+			{
+				services.AddNdo( null, null );
+				sc = services;
+			} );
+			var host = builder.Build();
+			IServiceProvider sp = host.Services;
+			return (sc, sp);
 		}
 
 		[Test]
@@ -377,7 +398,7 @@ namespace QueryTests
 			Mock<IPersistenceHandler> handlerMock = new Mock<IPersistenceHandler>();
 			handlerMock.Setup( h => h.PerformQuery( It.IsAny<string>(), It.IsAny<IList>(), It.IsAny<DataSet>() ) ).Returns( new DataTable() ).Callback<string, IList, DataSet>( ( s, l, d ) => generatedParameters = l );
 
-			pm.ConfigContainer.RegisterInstance<IPersistenceHandler>( handlerMock.Object );
+			this.serviceCollection.AddSingleton( handlerMock.Object );
 
 			NDOQuery<OrderDetail> q = new NDOQuery<OrderDetail>( pm, "oid = {0}" );
 			ObjectId oid = pm.FindObject( typeof( OrderDetail ), new object[] { 1, 2 } ).NDOObjectId;
@@ -400,14 +421,12 @@ namespace QueryTests
 			IList generatedParameters = null;
 			Mock<IPersistenceHandler> handlerMock = new Mock<IPersistenceHandler>();
 			handlerMock.Setup( h => h.PerformQuery( It.IsAny<string>(), It.IsAny<IList>(), It.IsAny<DataSet>() ) ).Returns( new DataTable() ).Callback<string, IList, DataSet>( ( s, l, d ) => generatedParameters = l );
-			var container = pm.ConfigContainer;
-			container.RegisterInstance<IPersistenceHandler>( handlerMock.Object );
+			this.serviceCollection.AddSingleton( handlerMock.Object );
 			q.Execute();
 			Assert.NotNull( generatedParameters );
 			Assert.AreEqual( 2, generatedParameters.Count );
 			Assert.AreEqual( 1, generatedParameters[0] );
 			Assert.AreEqual( 2, generatedParameters[1] );
-			container.RegisterType<IPersistenceHandler, SqlPersistenceHandler>();
 		}
 
 
@@ -423,13 +442,11 @@ namespace QueryTests
 			var handler = handlerMock.Object;
 			Mock<IPersistenceHandlerManager> phManagerMock = new Mock<IPersistenceHandlerManager>();
 			phManagerMock.Setup( m => m.GetPersistenceHandler( It.IsAny<Type>() ) ).Returns( handler ).Callback<Type>( ( pc ) => { Console.WriteLine("Test"); });
-			var container = pm.ConfigContainer;
-			container.RegisterInstance<IPersistenceHandlerManager>( phManagerMock.Object );
+			this.serviceCollection.AddSingleton( handlerMock.Object );
 			q.Execute();
 			Assert.NotNull( generatedParameters );
 			Assert.AreEqual( 1, generatedParameters.Count );
 			Assert.AreEqual( 1, generatedParameters[0] );
-			container.RegisterType<IPersistenceHandler, SqlPersistenceHandler>();
 		}
 
 		[Test]
@@ -445,14 +462,12 @@ namespace QueryTests
 			var handler = handlerMock.Object;
 			Mock<IPersistenceHandlerManager> phManagerMock = new Mock<IPersistenceHandlerManager>();
 			phManagerMock.Setup( m => m.GetPersistenceHandler( It.IsAny<Type>() ) ).Returns( handler );
-			var container = pm.ConfigContainer;
-			container.RegisterInstance<IPersistenceHandlerManager>( phManagerMock.Object );
+			this.serviceCollection.AddSingleton( handlerMock.Object );
 			q.Execute();
 			Assert.NotNull( generatedParameters );
 			Assert.AreEqual( 1, generatedParameters.Count );
 			Assert.AreEqual( 1, generatedParameters[0] );
 			Assert.AreEqual( $"SELECT {this.mitarbeiterFields} FROM Mitarbeiter WHERE ID = {{0}}", expression );
-			container.RegisterType<IPersistenceHandler, SqlPersistenceHandler>();
 		}
 
 		[Test]
@@ -468,13 +483,11 @@ namespace QueryTests
 			var handler = handlerMock.Object;
 			Mock<IPersistenceHandlerManager> phManagerMock = new Mock<IPersistenceHandlerManager>();
 			phManagerMock.Setup( m => m.GetPersistenceHandler( It.IsAny<Type>() ) ).Returns( handler ).Callback<Type>( ( pc ) => { Console.WriteLine( "Test" ); } );
-			var container = pm.ConfigContainer;
-			container.RegisterInstance<IPersistenceHandlerManager>( phManagerMock.Object );
+			this.serviceCollection.AddSingleton( handlerMock.Object );
 			q.Execute();
 			Assert.NotNull( generatedParameters );
 			Assert.AreEqual( 1, generatedParameters.Count );
 			Assert.AreEqual( 121, generatedParameters[0] );
-			container.RegisterType<IPersistenceHandler, SqlPersistenceHandler>();
 		}
 
 		[Test]
@@ -488,12 +501,10 @@ namespace QueryTests
 			var handler = handlerMock.Object;
 			Mock<IPersistenceHandlerManager> phManagerMock = new Mock<IPersistenceHandlerManager>();
 			phManagerMock.Setup( m => m.GetPersistenceHandler( It.IsAny<Type>() ) ).Returns( handler ).Callback<Type>( ( pc ) => { Console.WriteLine( "Test" ); } );
-			var container = pm.ConfigContainer;
-			container.RegisterInstance<IPersistenceHandlerManager>( phManagerMock.Object );
+			this.serviceCollection.AddSingleton( handlerMock.Object );
 			q.Execute();
 			Assert.NotNull( generatedParameters );
 			Assert.AreEqual( 0, generatedParameters.Count );
-			container.RegisterType<IPersistenceHandler, SqlPersistenceHandler>();
 		}
 
 		[Test]

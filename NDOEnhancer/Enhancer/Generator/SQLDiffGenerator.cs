@@ -60,13 +60,13 @@ namespace NDOEnhancer
 				return;
 			}
 
-			if (!NDOProviderFactory.Instance.Generators.ContainsKey(scriptLanguage))
+			if (!EnhancerProviderFactory.Instance.Generators.ContainsKey(scriptLanguage))
 			{
 				// The error message should have been written by the Sql generator
 				messages.WriteLine("NDOEnhancer: No Sql code generator for script language '" + scriptLanguage + "' found");
 				return;
 			}
-			concreteGenerator = (ISqlGenerator) NDOProviderFactory.Instance.Generators[scriptLanguage];
+			concreteGenerator = (ISqlGenerator) EnhancerProviderFactory.Instance.Generators[scriptLanguage];
 
 			new GenericDiffGenerator(concreteGenerator, messages, mappings).Generate(dsSchema, dsBak, sw);
 			sw.Close();

@@ -11,8 +11,8 @@ using NDOInterfaces;
 using System.Text.RegularExpressions;
 using NDO.Linq;
 using LE=System.Linq.Expressions;
-using NDO.Configuration;
 using NDO.SqlPersistenceHandling;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace NDO.Query
 {
@@ -175,8 +175,6 @@ namespace NDO.Query
 
 			using (IPersistenceHandler persistenceHandler = this.pm.PersistenceHandlerManager.GetPersistenceHandler( this.resultType ))
 			{
-				persistenceHandler.VerboseMode = this.pm.VerboseMode;
-				persistenceHandler.LogAdapter = this.pm.LogAdapter;
 				this.pm.CheckTransaction( persistenceHandler, this.resultType );
 				persistenceHandler.ExecuteBatch( new string[] { sql }, this.parameters );
 			}
@@ -228,11 +226,13 @@ namespace NDO.Query
 					return this.queryExpression;
 				}
 
-				if (this.queryContextsForTypes == null)
-					GenerateQueryContexts();
+				if (this.queryContextsForTypes != null)
+					this.queryContextsForTypes.Clear();
+
+				GenerateQueryContexts();
 
 				PrepareParameters();
-				IQueryGenerator queryGenerator = ConfigContainer.Resolve<IQueryGenerator>();
+				IQueryGenerator queryGenerator = ServiceProvider.GetRequiredService<IQueryGenerator>();
 				return queryGenerator.GenerateQueryStringForAllTypes( this.queryContextsForTypes, this.expressionTree, this.hollowResults, this.orderings, this.skip, this.take );
 			}
 		}
@@ -241,8 +241,7 @@ namespace NDO.Query
 		{
 			List<T> result = new List<T>();
 
-			if (this.queryContextsForTypes == null)
-				GenerateQueryContexts();
+			GenerateQueryContexts();
 
 			// this.pm.CheckTransaction happens in ExecuteOrderedSubQuery or in ExecuteSubQuery
 
@@ -389,13 +388,11 @@ namespace NDO.Query
 		private object ExecuteAggregateQuery( QueryContextsEntry queryContextsEntry, string field, AggregateType aggregateType )
 		{
 			Type t = queryContextsEntry.Type;
-			IQueryGenerator queryGenerator = ConfigContainer.Resolve<IQueryGenerator>();
+			IQueryGenerator queryGenerator = ServiceProvider.GetRequiredService<IQueryGenerator>();
 			string generatedQuery = queryGenerator.GenerateAggregateQueryString( field, queryContextsEntry, this.expressionTree, this.queryContextsForTypes.Count > 1, aggregateType );
 
 			using (IPersistenceHandler persistenceHandler = this.pm.PersistenceHandlerManager.GetPersistenceHandler( t ))
 			{
-				persistenceHandler.VerboseMode = this.pm.VerboseMode;
-				persistenceHandler.LogAdapter = this.pm.LogAdapter;
 				this.pm.CheckTransaction( persistenceHandler, t );
 
 				// Note, that we can't execute all subQueries in one batch, because
@@ -415,8 +412,6 @@ namespace NDO.Query
 			Type t = this.resultType;
 			using (IPersistenceHandler persistenceHandler = this.pm.PersistenceHandlerManager.GetPersistenceHandler( t ))
 			{
-				persistenceHandler.VerboseMode = this.pm.VerboseMode;
-				persistenceHandler.LogAdapter = this.pm.LogAdapter;
 				this.pm.CheckTransaction( persistenceHandler, t );
 				DataTable table = persistenceHandler.PerformQuery( this.queryExpression, this.parameters, this.pm.DataSet );
 				return (List<T>) pm.DataTableToIList( t, table.Rows, this.hollowResults );
@@ -459,7 +454,7 @@ namespace NDO.Query
 
 		private IList ExecuteSubQuery( Type t, QueryContextsEntry queryContextsEntry )
 		{
-			IQueryGenerator queryGenerator = ConfigContainer.Resolve<IQueryGenerator>();
+			IQueryGenerator queryGenerator = ServiceProvider.GetRequiredService<IQueryGenerator>();
 			bool hasBeenPrepared = PrepareParameters();
 			string generatedQuery;
 
@@ -475,8 +470,6 @@ namespace NDO.Query
 
 			using (IPersistenceHandler persistenceHandler = this.pm.PersistenceHandlerManager.GetPersistenceHandler( t ))
 			{
-				persistenceHandler.VerboseMode = this.pm.VerboseMode;
-				persistenceHandler.LogAdapter = this.pm.LogAdapter;
 				this.pm.CheckTransaction( persistenceHandler, t );
 
 				DataTable table = persistenceHandler.PerformQuery( generatedQuery, this.parameters, this.pm.DataSet );
@@ -522,12 +515,10 @@ namespace NDO.Query
 			DataTable table = null;
 			using (IPersistenceHandler persistenceHandler = this.pm.PersistenceHandlerManager.GetPersistenceHandler( t ))
 			{
-				persistenceHandler.VerboseMode = this.pm.VerboseMode;
-				persistenceHandler.LogAdapter = this.pm.LogAdapter;
 				this.pm.CheckTransaction( persistenceHandler, t );
 
 				bool hasBeenPrepared = PrepareParameters();
-				IQueryGenerator queryGenerator = ConfigContainer.Resolve<IQueryGenerator>();
+				IQueryGenerator queryGenerator = ServiceProvider.GetRequiredService<IQueryGenerator>();
 				string generatedQuery = queryGenerator.GenerateQueryString( queryContextsEntry, this.expressionTree, this.hollowResults, this.queryContextsForTypes.Count > 1, this.orderings, this.skip, this.take );
 
 				if (hasBeenPrepared)
@@ -637,7 +628,7 @@ namespace NDO.Query
 				}
 			}
 
-			var contextGenerator = ConfigContainer.Resolve<RelationContextGenerator>( null, new ParameterOverride( this.pm.mappings ) );
+			var contextGenerator = ServiceProvider.GetRequiredService<RelationContextGenerator>();
 			this.queryContextsForTypes = new List<QueryContextsEntry>();
 			// usedTables now contains all assignable classes of our result type
 			foreach (var de in usedTables)
@@ -678,9 +669,9 @@ namespace NDO.Query
 			CreateQueryContextsForTypes();
 		}
 
-		INDOContainer ConfigContainer
+		IServiceProvider ServiceProvider
 		{
-			get { return this.pm.ConfigContainer; }
+			get { return this.pm.ServiceProvider; }
 		}
 
 		/// <summary>

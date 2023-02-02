@@ -1,5 +1,5 @@
 ﻿//
-// Copyright (c) 2002-2016 Mirko Matytschak 
+// Copyright (c) 2002-2023 Mirko Matytschak 
 // (www.netdataobjects.de)
 //
 // Author: Mirko Matytschak
@@ -20,9 +20,7 @@
 // DEALINGS IN THE SOFTWARE.
 
 
-using NDO.Configuration;
 using System;
-using System.Data;
 
 namespace NDO
 {
@@ -55,8 +53,8 @@ namespace NDO
 		/// <summary>
 		/// Create a new object.
 		/// </summary>
-		/// <param name="configContainer">The config container used to resolve constructor parameters</param>
+		/// <param name="serviceProvider">The service provider used to resolve constructor parameters</param>
 		/// <remarks>This method will be used for classes with constructor parameters</remarks>
-		IPersistenceCapable CreateObject( INDOContainer configContainer );
+		IPersistenceCapable CreateObject( IServiceProvider serviceProvider );
 	}
 }

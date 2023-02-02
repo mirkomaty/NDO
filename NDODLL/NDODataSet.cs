@@ -66,7 +66,7 @@ namespace NDO
         /// are represented in the schema.
         /// </summary>
         /// <param name="mapping">A NDOMapping object.</param>
-        public void Remap(NDOMapping mapping)
+        internal void Remap(NDOMapping mapping)
         {
             foreach (Class cl in mapping.Classes)
             {

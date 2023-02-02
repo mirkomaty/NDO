@@ -19,17 +19,16 @@
 // CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER 
 // DEALINGS IN THE SOFTWARE.
 
-
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.IO;
 using System.Data;
-using NDO.Logging;
 using NDO.Mapping;
-using NDO.Configuration;
-using NDO.SqlPersistenceHandling;
 using System.Reflection;
+using NDO.Application;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 
 namespace NDO
 {
@@ -48,10 +47,12 @@ namespace NDO
 		/// </summary>
 		protected IStateManager sm;
 		internal Mappings mappings;  // protected will make the compiler complaining
-		private string logPath;
-		private ILogAdapter logAdapter;
-		private Type persistenceHandlerType = null;
-		private INDOContainer configContainer;
+		private IServiceProvider scopedServiceProvider;
+		private IServiceScope scope;
+		/// <summary>
+		/// Gets or sets the logger for the PersistenceManager instance
+		/// </summary>
+		protected ILogger Logger { get; set; }
 		private IPersistenceHandlerManager persistenceHandlerManager;
 		bool isClosing = false;
 
@@ -120,7 +121,7 @@ namespace NDO
 		{
 			if (!File.Exists(mappingPath))
 				throw new NDOException(45, String.Format("Mapping File {0} doesn't exist.", mappingPath));
-			Init( new Mappings( mappingPath, ConfigContainer ) );
+			Init( new Mappings( mappingPath ) );
 		}
 
 		/// <summary>
@@ -129,21 +130,16 @@ namespace NDO
 		/// <remarks>
 		/// Note: This is the method, which will be called from all different ways to instantiate a PersistenceManagerBase.
 		/// </remarks>
-		/// <param name="mapping"></param>
-		internal virtual void Init( Mappings mapping )
+		/// <param name="mappings"></param>
+		internal virtual void Init( Mappings mappings )
 		{
-			this.mappings = mapping;
+			Logger = NDOApplication.ServiceProvider.GetRequiredService<ILoggerFactory>().CreateLogger( GetType() );
+			this.mappings = mappings;
 
-			ConfigContainer.RegisterInstance( mappings );
+			var scopedMappingsAccessor = ServiceProvider.GetRequiredService<IMappingsAccessor>();
+			scopedMappingsAccessor.Mappings = mappings;
 
-			this.ds = new NDODataSet( mappings );  // Each PersistenceManager instance must have it's own DataSet.
-
-			string logPath = AppDomain.CurrentDomain.BaseDirectory;
-
-			if (logPath == null)
-				logPath = Path.GetDirectoryName( mapping.FileName );
-
-			this.LogPath = logPath;
+			this.ds = new NDODataSet( this.mappings );  // Each PersistenceManager instance must have it's own DataSet.
 		}
 
 		/// <summary>
@@ -261,8 +257,6 @@ namespace NDO
 			return null;
 		}
 
-
-
 		/// <summary>
 		/// Indicates, if there is a listener registered for the IdGenerationEvent.
 		/// </summary>
@@ -271,77 +265,17 @@ namespace NDO
 			get { return IdGenerationEvent != null; }
 		}
 
-		/// <summary>
-		/// If set, the PersistenceManager writes a log of all SQL statements issued to the databases. 
-		/// By default a LogFileAdapter to the file SqlIOLog.txt will be used. The log medium can be
-		/// changed using the <see cref="NDO.PersistenceManagerBase.LogAdapter">LogAdapter property</see>.
-		/// </summary>
-		public virtual bool VerboseMode 
-		{
-			get {return mappings.VerboseMode;}
-			set {mappings.VerboseMode = value;}
-		}
-
-		/// <summary>
-		/// Gets or sets the type which is used to construct persistence handlers.
-		/// </summary>
-		[Obsolete("Use the ConfigContainer to register a handler type.")]
-		public Type PersistenceHandlerType
-		{
-			get { return persistenceHandlerType; }
-			set 
-			{ 
-				if (value != null && value.GetInterface("IPersistenceHandler") == null)
-					throw new NDOException(46, "Invalid PersistenceHandlerType: " + value.FullName);
-				ConfigContainer.RegisterType( typeof( IPersistenceHandler ), persistenceHandlerType );
-            }
-		}
-
-		/// <summary>
-		/// Gets or sets the container for the configuration of the system.
-		/// </summary>
-		public INDOContainer ConfigContainer
+		internal IServiceProvider ServiceProvider
 		{
 			get
 			{
-				if (this.configContainer == null)
+				if (this.scopedServiceProvider == null)
 				{
-					this.configContainer = NDOContainer.Instance.CreateChildContainer();
-					this.configContainer.RegisterType<IQueryGenerator, SqlQueryGenerator>();
-
-					// Currently the PersistenceManager instance is not used.
-					// But we are able to pull it from the container.
-					this.configContainer.RegisterInstance( typeof( PersistenceManager ), this );
+					this.scope = NDOApplication.ServiceProvider.CreateScope();
+					this.scopedServiceProvider = scope.ServiceProvider;
 				}
 
-				return this.configContainer;
-			}
-			set { this.configContainer = value; }
-		}
-
-
-		/// <summary>
-		/// Sets or gets the logging Adapter, log information is written to.
-		/// </summary>
-		/// <remarks>
-		/// If LogPath is set, a LogFileAdapter object is created and attached to this property. 
-		/// <seealso cref="LogPath"/><seealso cref="ILogAdapter"/>
-		/// </remarks>
-		public ILogAdapter LogAdapter
-		{
-			get 
-			{ 
-				return this.logAdapter; 
-			}
-			set 
-			{ 
-				this.logAdapter = value; 
-				mappings.LogAdapter = this.logAdapter;
-				LogFileAdapter lfa = this.logAdapter as LogFileAdapter;
-				if (lfa != null)
-				{
-					this.logPath = Path.GetDirectoryName(lfa.FileName);
-				}
+				return this.scopedServiceProvider;
 			}
 		}
 
@@ -352,38 +286,9 @@ namespace NDO
 		{
 			get
 			{
-				// (this.persistenceHandlerManager == null)
-				return this.persistenceHandlerManager = ConfigContainer.Resolve<IPersistenceHandlerManager>();
-
-				//return this.persistenceHandlerManager;
+				return this.persistenceHandlerManager = ServiceProvider.GetRequiredService<IPersistenceHandlerManager>();
 			}
 			set { this.persistenceHandlerManager = value; }
-		}
-
-
-		/// <summary>
-		/// Gets or sets the directory, where NDO writes the sql log file to.
-		/// </summary>
-		/// <remarks>
-		/// A file with the name NDO.Sql.log will be generated in the LogPath, if 
-		/// verbose mode is set to true. Note, that a FileLogAdapter object is created, 
-		/// if LogPath is set. If a LogAdapter is set, LogPath might 
-		/// reflect an undefined state.<seealso cref="LogAdapter"/><seealso cref="ILogAdapter"/>
-		/// </remarks>
-		public string LogPath
-		{
-			get { return logPath; }
-			set 
-			{ 
-				logPath = value;
-				if (logPath == null)
-					return;
-				if (!Directory.Exists(value))
-					throw new NDOException(47, "Log path doesn't exist: " + value);
-				string fileName = Path.Combine(logPath, "NDO.Sql.log");
-				// use the Property to invoke the additional logic
-				this.LogAdapter = new LogFileAdapter(fileName);
-			}
 		}
 
 		
@@ -413,27 +318,6 @@ namespace NDO
 		}
 
 		/// <summary>
-		/// Clears any log file entries in the log file
-		/// </summary>
-		/// <remarks>
-		/// Note, that not all LogAdapters support this function. In that case, the 
-		/// call to ClearLogfile is ignored.
-		/// </remarks>
-		public void ClearLogfile()
-		{
-			if (this.logAdapter != null)
-				this.LogAdapter.Clear();
-		}
-
-		/// <summary>
-		/// Determines, if a log message will actually be issued.
-		/// </summary>
-		public bool LoggingPossible
-		{
-			get { return (VerboseMode && this.logAdapter != null); }
-		}
-
-		/// <summary>
 		/// Checks whether an object is an IPersistenceCapable and converts the object into an IPersistenceCapable.
 		/// </summary>
 		/// <param name="o"></param>
@@ -457,7 +341,7 @@ namespace NDO
 			isClosing = true;
 			this.ds.Dispose();
 			this.ds = null;
-			this.configContainer.Dispose();  // Leads to another Disposal of the PM. therefore we query for isClosing.
+			this.scope.Dispose();
 		}
 
 		/// <summary>

@@ -48,7 +48,7 @@ namespace NDOEnhancer
 		protected string CreateTable(DataTable dt)
 		{
 			StringBuilder sb = new StringBuilder();
-			IProvider provider = NDOProviderFactory.Instance[concreteGenerator.ProviderName];
+			IProvider provider = EnhancerProviderFactory.Instance[concreteGenerator.ProviderName];
 			if (provider == null)
 				throw new Exception("Can't find NDO provider '" + concreteGenerator.ProviderName + "'.");
 

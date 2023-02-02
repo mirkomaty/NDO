@@ -31,7 +31,6 @@ using System.Linq;
 using System.Xml.Linq;
 using TinyJSON;
 using System.Text.RegularExpressions;
-using NDO.Configuration;
 using NDO.Provider;
 
 namespace EnhancerTest
@@ -128,7 +127,6 @@ namespace EnhancerTest
 			AppDomain.CurrentDomain.SetData( "ProjectDescription", this.projectDescription );
 
 			AppDomain.CurrentDomain.AssemblyResolve += OnAssemblyResolve;
-			NDOContainer.Instance.RegisterType<IProviderPathFinder,ProviderPathFinder>();
 
 #if DEBUG
 			Console.WriteLine("Loading Project Description...");

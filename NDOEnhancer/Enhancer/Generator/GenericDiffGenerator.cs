@@ -40,7 +40,7 @@ namespace NDOEnhancer
 
 		public GenericDiffGenerator(ISqlGenerator concreteGenerator, MessageAdapter messages, NDO.Mapping.NDOMapping mappings) : base(concreteGenerator, messages, mappings)
 		{
-			provider = NDOProviderFactory.Instance[concreteGenerator.ProviderName];
+			provider = EnhancerProviderFactory.Instance[concreteGenerator.ProviderName];
 		}
 
 		public void Generate(System.Data.DataSet dsNewSchema, System.Data.DataSet dsOldSchema, System.IO.StreamWriter stream)

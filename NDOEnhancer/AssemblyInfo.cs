@@ -1,5 +1,5 @@
 ﻿//
-// Copyright (c) 2002-2016 Mirko Matytschak 
+// Copyright (c) 2002-2023 Mirko Matytschak 
 // (www.netdataobjects.de)
 //
 // Author: Mirko Matytschak
@@ -21,7 +21,6 @@
 
 
 using System.Reflection;
-using System.Runtime.CompilerServices;
 
 //
 // Allgemeine Informationen über eine Assembly werden über folgende Attribute 
@@ -37,6 +36,6 @@ using System.Runtime.CompilerServices;
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]		
 
-[assembly: AssemblyVersion("4.0.2.0")]
-[assembly: AssemblyFileVersion( "4.0.2.0" )]
+[assembly: AssemblyVersion("4.5.0.0")]
+[assembly: AssemblyFileVersion( "4.5.0.0" )]
 [assembly: AssemblyDelaySign(false)]

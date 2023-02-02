@@ -27,6 +27,8 @@ using System.Text;
 using NDOInterfaces;
 using NDO.Mapping;
 using System.Data;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace NDO
 {
@@ -74,8 +76,7 @@ namespace NDO
 		public IDataReader Execute( string command, bool returnReader = false, params object[] parameters )
 		{
 			this.pm.TransactionScope.CheckTransaction();
-			if (this.pm.VerboseMode && this.pm.LogAdapter != null)
-				this.pm.LogAdapter.Info( command );
+			this.pm.ServiceProvider.GetService<ILogger<SqlPassThroughHandler>>().LogDebug( command );
 
 			IProvider provider = this.pm.NDOMapping.GetProvider( this.connection );
 

@@ -1,5 +1,5 @@
 //
-// Copyright (c) 2002-2016 Mirko Matytschak 
+// Copyright (c) 2002-2023 Mirko Matytschak 
 // (www.netdataobjects.de)
 //
 // Author: Mirko Matytschak
@@ -28,7 +28,6 @@ using System.Collections.Generic;
 using System.Data;
 using System.Diagnostics;
 using System.Reflection;
-using System.Dynamic;
 using System.Text.RegularExpressions;
 using System.Linq;
 using System.Xml.Linq;
@@ -39,9 +38,9 @@ using NDO.ShortId;
 using System.Globalization;
 using NDO.Linq;
 using NDO.Query;
-using ST = System.Transactions;
-using NDO.Configuration;
 using NDO.ChangeLogging;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 
 namespace NDO
 {
@@ -92,7 +91,7 @@ namespace NDO
 		private TypeManager typeManager;
 		internal bool DeferredMode { get; private set; }
 		private INDOTransactionScope transactionScope;
-		internal INDOTransactionScope TransactionScope => transactionScope ?? (transactionScope = ConfigContainer.Resolve<INDOTransactionScope>());		
+		internal INDOTransactionScope TransactionScope => transactionScope ?? (transactionScope = ServiceProvider.GetRequiredService<INDOTransactionScope>());		
 
 		private OpenConnectionListener openConnectionListener;
 
@@ -160,9 +159,9 @@ namespace NDO
 		/// <param name="mapping"></param>
 		internal override void Init( Mappings mapping )
 		{
-			ConfigContainer.RegisterType<INDOTransactionScope, NDOTransactionScope>();
-
 			base.Init( mapping );
+
+			ServiceProvider.GetRequiredService<IPersistenceManagerAccessor>().PersistenceManager = this;
 
 			string dir = Path.GetDirectoryName( mapping.FileName );
 
@@ -225,11 +224,11 @@ namespace NDO
 			{
 				if (pc.NDOObjectState == NDOObjectState.PersistentDirty)
 				{
-					if (this.VerboseMode)
-						this.LogAdapter.Warn("Call to GetObjectContainer returns changed objects.");
+					Logger.LogWarning( "Call to GetObjectContainer returns changed objects." );
 					System.Diagnostics.Trace.WriteLine("NDO warning: Call to GetObjectContainer returns changed objects.");
 				}
 			}
+
 			ObjectContainer oc = new ObjectContainer();
 			oc.AddList(l);
 			return oc;
@@ -1933,8 +1932,6 @@ namespace NDO
 
 				using (IMappingTableHandler handler = PersistenceHandlerManager.GetPersistenceHandler( pc ).GetMappingTableHandler( r ))
 				{
-					handler.VerboseMode = VerboseMode;
-					handler.LogAdapter = LogAdapter;
 					CheckTransaction( handler, r.MappingTable.Connection );
 					dt = handler.FindRelatedObjects(pc.NDOObjectId, this.ds);
 				}
@@ -2264,8 +2261,6 @@ namespace NDO
 				//Debug.WriteLine("Update Deleted Objects: "  + t.Name);
 				using (IPersistenceHandler handler = PersistenceHandlerManager.GetPersistenceHandler( t ))
 				{
-					handler.VerboseMode = VerboseMode;
-					handler.LogAdapter = LogAdapter;
 					CheckTransaction( handler, t );
 					ConcurrencyErrorHandler ceh = new ConcurrencyErrorHandler(this.OnConcurrencyError);
 					handler.ConcurrencyError += ceh;
@@ -2295,8 +2290,6 @@ namespace NDO
             // Now update all mapping tables
             foreach (IMappingTableHandler handler in mappingHandler.Values)
             {
-				handler.LogAdapter = this.LogAdapter;
-				handler.VerboseMode = this.VerboseMode;
 				CheckTransaction( handler, handler.Relation.MappingTable.Connection );
                 handler.Update(ds);
             }
@@ -2312,8 +2305,6 @@ namespace NDO
             // Now update all mapping tables
             foreach (IMappingTableHandler handler in mappingHandler.Values)
             {
-				handler.LogAdapter = this.LogAdapter;
-				handler.VerboseMode = this.VerboseMode;
 				CheckTransaction( handler, handler.Relation.MappingTable.Connection );
 				handler.Update(ds);
             }
@@ -3320,7 +3311,7 @@ namespace NDO
 		/// <returns></returns>
 		public IPersistenceCapable CreateObject(Type t) 
 		{
-			return Metaclasses.GetClass( t ).CreateObject( this.ConfigContainer );
+			return (IPersistenceCapable) ActivatorUtilities.CreateInstance( ServiceProvider, t );
 		}
 
 		/// <summary>
@@ -3496,12 +3487,10 @@ namespace NDO
 			base.Close();
 		}
 
-		internal void LogIfVerbose(string msg)
+		internal void LogIfVerbose( string msg )
 		{
-			if (VerboseMode && LogAdapter != null)
-			{
-				this.LogAdapter.Info( msg );
-			}
+			if (Logger != null && Logger.IsEnabled( LogLevel.Information ))
+				Logger.LogInformation( msg );
 		}
 
 
@@ -3640,7 +3629,7 @@ namespace NDO
 				if(pc == null) 
 				{
                     var mc = Metaclasses.GetClass(concreteType);
-                    pc = mc.CreateObject( this.ConfigContainer );
+                    pc = mc.CreateObject( this.ServiceProvider );
                     pc.NDOObjectId = id;
 					pc.NDOStateManager = sm;
 					// If the object shouldn't be hollow, this will be overwritten later.

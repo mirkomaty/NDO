@@ -1,9 +1,8 @@
-﻿using NDO.Mapping;
+﻿using System;
+using NDO.Mapping;
 using NDOql.Expressions;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 
 namespace NDO.Query
 {
@@ -14,9 +13,9 @@ namespace NDO.Query
 		HashSet<Relation> allRelations;
 		List<Relation> relations;
 
-		public RelationContextGenerator(Mappings mappings)
+		public RelationContextGenerator(IMappingsAccessor mappingsAccessor)
 		{
-			this.mappings = mappings;
+			this.mappings = mappingsAccessor.Mappings;
 		}
 
 		/// <summary>

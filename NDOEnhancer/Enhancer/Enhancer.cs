@@ -460,31 +460,18 @@ namespace NDOEnhancer
 
 		void generateAllSchemas()
 		{
-            dsSchema.Remap(mappings);
-#if nix
-			foreach(DictionaryEntry de in this.allPersistentClasses)
+			foreach (Class cl in mappings.Classes)
 			{
-				ClassNode classNode = (ClassNode) de.Value;
-				if (classNode.IsAbstractOrInterface)
+				if (cl.IsAbstract)
 					continue;
-				if (!classNode.IsPersistent) // non persistent classes derived from persistent classes
-					continue;
-				string pureName = classNode.Name;
-				Class classMapping = classNode.Class;
-				new SchemaGenerator(classMapping, mappings, dsSchema, messages, allSortedFields, allPersistentClasses, verboseMode).GenerateTables();
+				new SchemaGenerator( cl, mappings, dsSchema ).GenerateTables();
 			}
-			foreach(DictionaryEntry de in this.allPersistentClasses)
+			foreach (Class cl in mappings.Classes)
 			{
-				ClassNode classNode = (ClassNode) de.Value;
-				if (classNode.IsAbstractOrInterface)
+				if (cl.IsAbstract)
 					continue;
-				if (!classNode.IsPersistent) // non persistent classes derived from persistent classes
-					continue;
-				string pureName = classNode.Name;
-				Class classMapping = classNode.Class;
-				new SchemaGenerator(classMapping, mappings, dsSchema, messages, allSortedFields, allPersistentClasses, verboseMode).GenerateRelations();
+				new SchemaGenerator( cl, mappings, dsSchema ).GenerateRelations();
 			}
-#endif
 		}
 
 
