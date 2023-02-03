@@ -15,6 +15,7 @@ using System.Data;
 using DataTypeTestClasses;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
 
 namespace QueryTests
 {
@@ -28,17 +29,36 @@ namespace QueryTests
 		string pkwFahrtFields;
 		string reiseFields;
 		string reiseJoinFields;
-		IServiceCollection serviceCollection;
+		//IServiceCollection serviceCollection;
+		IHostBuilder builder;
 		IServiceProvider serviceProvider;
 
 		[SetUp]
 		public void SetUp()
 		{
-			var startup = Startup();
-			this.serviceCollection = startup.serviceCollection;
-			this.serviceProvider = startup.serviceProvider;
-			serviceCollection.AddNdo( null, null );
-			serviceProvider.UseNdo();
+			this.builder = Host.CreateDefaultBuilder(); 
+		}
+
+
+		void Build( Action<IServiceCollection> configure = null )
+		{
+			this.builder.ConfigureServices( services =>
+			{
+				services.AddLogging( builder =>
+				{
+					builder.ClearProviders();
+					builder.AddConsole();
+				} );
+
+				services.AddNdo( null, null );
+				if (configure != null)
+					configure( services );
+			} );
+
+			var host = this.builder.Build();
+			this.serviceProvider = host.Services;
+			host.Services.UseNdo();
+
 			this.pm = NDOFactory.Instance.PersistenceManager;
 
 			mitarbeiterFields = new SqlColumnListGenerator( pm.NDOMapping.FindClass( typeof( Mitarbeiter ) ) ).SelectList;
@@ -47,12 +67,16 @@ namespace QueryTests
 			this.pkwFahrtFields = new SqlColumnListGenerator( pm.NDOMapping.FindClass( typeof( PKWFahrt ) ) ).SelectList;
 			this.reiseFields = new SqlColumnListGenerator( pm.NDOMapping.FindClass( typeof( Reise ) ) ).SelectList;
 			this.reiseJoinFields = new SqlColumnListGenerator( pm.NDOMapping.FindClass( typeof( Reise ) ) ).Result( false, false, true );
+
+#if nix
 			Mitarbeiter m = new Mitarbeiter() { Vorname = "Mirko", Nachname = "Matytschak" };
 			pm.MakePersistent( m );
 			m = new Mitarbeiter() { Vorname = "Hans", Nachname = "Huber" };
 			pm.MakePersistent( m );
 			pm.Save();
+#endif
 		}
+
 
 		[TearDown]
 		public void TearDown()
@@ -62,24 +86,11 @@ namespace QueryTests
 			pm.Save();
 		}
 
-		(IServiceCollection serviceCollection, IServiceProvider serviceProvider) Startup()
-		{
-			IServiceCollection sc = null;
-			var builder = Host.CreateDefaultBuilder();
-			//builder.Environment.EnvironmentName = "Test2";
-			builder.ConfigureServices( services =>
-			{
-				services.AddNdo( null, null );
-				sc = services;
-			} );
-			var host = builder.Build();
-			IServiceProvider sp = host.Services;
-			return (sc, sp);
-		}
 
 		[Test]
 		public void QueryWithEmptyGuidParameterSearchesForNull()
 		{
+			//Build();
 			// The query will fetch for DataContainerDerived objects, too.
 			// Hence we test with "StartsWith", because the query contains additional text, which doesn't matter here.
 			var q = new NDOQuery<DataContainer>(pm, "guidVar = {0}");
@@ -398,7 +409,7 @@ namespace QueryTests
 			Mock<IPersistenceHandler> handlerMock = new Mock<IPersistenceHandler>();
 			handlerMock.Setup( h => h.PerformQuery( It.IsAny<string>(), It.IsAny<IList>(), It.IsAny<DataSet>() ) ).Returns( new DataTable() ).Callback<string, IList, DataSet>( ( s, l, d ) => generatedParameters = l );
 
-			this.serviceCollection.AddSingleton( handlerMock.Object );
+			Build( serviceCollection => serviceCollection.AddSingleton( handlerMock.Object ) );
 
 			NDOQuery<OrderDetail> q = new NDOQuery<OrderDetail>( pm, "oid = {0}" );
 			ObjectId oid = pm.FindObject( typeof( OrderDetail ), new object[] { 1, 2 } ).NDOObjectId;
@@ -421,7 +432,7 @@ namespace QueryTests
 			IList generatedParameters = null;
 			Mock<IPersistenceHandler> handlerMock = new Mock<IPersistenceHandler>();
 			handlerMock.Setup( h => h.PerformQuery( It.IsAny<string>(), It.IsAny<IList>(), It.IsAny<DataSet>() ) ).Returns( new DataTable() ).Callback<string, IList, DataSet>( ( s, l, d ) => generatedParameters = l );
-			this.serviceCollection.AddSingleton( handlerMock.Object );
+			Build( serviceCollection => serviceCollection.AddSingleton( handlerMock.Object ) );
 			q.Execute();
 			Assert.NotNull( generatedParameters );
 			Assert.AreEqual( 2, generatedParameters.Count );
@@ -442,7 +453,7 @@ namespace QueryTests
 			var handler = handlerMock.Object;
 			Mock<IPersistenceHandlerManager> phManagerMock = new Mock<IPersistenceHandlerManager>();
 			phManagerMock.Setup( m => m.GetPersistenceHandler( It.IsAny<Type>() ) ).Returns( handler ).Callback<Type>( ( pc ) => { Console.WriteLine("Test"); });
-			this.serviceCollection.AddSingleton( handlerMock.Object );
+			Build( serviceCollection => serviceCollection.AddSingleton( handlerMock.Object ) );
 			q.Execute();
 			Assert.NotNull( generatedParameters );
 			Assert.AreEqual( 1, generatedParameters.Count );
@@ -462,7 +473,7 @@ namespace QueryTests
 			var handler = handlerMock.Object;
 			Mock<IPersistenceHandlerManager> phManagerMock = new Mock<IPersistenceHandlerManager>();
 			phManagerMock.Setup( m => m.GetPersistenceHandler( It.IsAny<Type>() ) ).Returns( handler );
-			this.serviceCollection.AddSingleton( handlerMock.Object );
+			Build( serviceCollection => serviceCollection.AddSingleton( handlerMock.Object ) );
 			q.Execute();
 			Assert.NotNull( generatedParameters );
 			Assert.AreEqual( 1, generatedParameters.Count );
@@ -483,7 +494,7 @@ namespace QueryTests
 			var handler = handlerMock.Object;
 			Mock<IPersistenceHandlerManager> phManagerMock = new Mock<IPersistenceHandlerManager>();
 			phManagerMock.Setup( m => m.GetPersistenceHandler( It.IsAny<Type>() ) ).Returns( handler ).Callback<Type>( ( pc ) => { Console.WriteLine( "Test" ); } );
-			this.serviceCollection.AddSingleton( handlerMock.Object );
+			Build( serviceCollection => serviceCollection.AddSingleton( handlerMock.Object ) );
 			q.Execute();
 			Assert.NotNull( generatedParameters );
 			Assert.AreEqual( 1, generatedParameters.Count );
@@ -501,7 +512,7 @@ namespace QueryTests
 			var handler = handlerMock.Object;
 			Mock<IPersistenceHandlerManager> phManagerMock = new Mock<IPersistenceHandlerManager>();
 			phManagerMock.Setup( m => m.GetPersistenceHandler( It.IsAny<Type>() ) ).Returns( handler ).Callback<Type>( ( pc ) => { Console.WriteLine( "Test" ); } );
-			this.serviceCollection.AddSingleton( handlerMock.Object );
+			Build( serviceCollection => serviceCollection.AddSingleton( handlerMock.Object ) );
 			q.Execute();
 			Assert.NotNull( generatedParameters );
 			Assert.AreEqual( 0, generatedParameters.Count );

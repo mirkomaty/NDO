@@ -57,13 +57,16 @@ namespace NDO
         {
             try
             {
-				if (NDOApplication.ServiceProvider != null)
-					ProviderPathFinder = NDOApplication.ServiceProvider.GetService<IProviderPathFinder>();
+                if (NDOApplication.ServiceProvider != null)
+                    ProviderPathFinder = NDOApplication.ServiceProvider.GetService<IProviderPathFinder>();
+                else
+                    ProviderPathFinder = new NDOProviderPathFinder();
 			}
 			catch // We try to continue here, even if we don't have the DependencyInjection available.
             {
-            }
-        }
+				ProviderPathFinder = new NDOProviderPathFinder();
+			}
+		}
 
 		/// <summary>
 		/// Private constructor makes sure, that only one object can be instantiated.

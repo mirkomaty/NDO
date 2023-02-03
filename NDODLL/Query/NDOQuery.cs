@@ -226,10 +226,8 @@ namespace NDO.Query
 					return this.queryExpression;
 				}
 
-				if (this.queryContextsForTypes != null)
-					this.queryContextsForTypes.Clear();
-
-				GenerateQueryContexts();
+				if (this.queryContextsForTypes == null)
+					GenerateQueryContexts();
 
 				PrepareParameters();
 				IQueryGenerator queryGenerator = ServiceProvider.GetRequiredService<IQueryGenerator>();

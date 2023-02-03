@@ -224,7 +224,8 @@ namespace NDO
 			{
 				if (pc.NDOObjectState == NDOObjectState.PersistentDirty)
 				{
-					Logger.LogWarning( "Call to GetObjectContainer returns changed objects." );
+					if (Logger != null)
+						Logger.LogWarning( "Call to GetObjectContainer returns changed objects." );
 					System.Diagnostics.Trace.WriteLine("NDO warning: Call to GetObjectContainer returns changed objects.");
 				}
 			}
