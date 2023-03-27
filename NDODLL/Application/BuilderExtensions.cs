@@ -55,8 +55,8 @@ namespace NDO.Application
 			NDOApplication.Configuration = config;
 			NDOApplication.HostEnvironment = hostEnvironment;
 			services.AddSingleton<IPersistenceHandler, SqlPersistenceHandler>();
-			services.AddSingleton<RelationContextGenerator>();
-			services.AddScoped<IQueryGenerator, SqlQueryGenerator>();
+			services.AddTransient<RelationContextGenerator>();
+			services.AddTransient<IQueryGenerator, SqlQueryGenerator>();
 			services.AddScoped<IPersistenceHandlerManager, NDOPersistenceHandlerManager>();
 			services.AddSingleton<IProviderPathFinder, NDOProviderPathFinder>();
 			services.AddSingleton<IPersistenceHandlerPool, NDOPersistenceHandlerPool>();

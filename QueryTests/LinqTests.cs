@@ -11,6 +11,10 @@ using PureBusinessClasses;
 using NDO.SqlPersistenceHandling;
 using DataTypeTestClasses;
 using System.Linq.Expressions;
+using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
+using NDO.Application;
 
 namespace QueryTests
 {
@@ -24,6 +28,27 @@ namespace QueryTests
 		string pkwFahrtFields;
 		string reiseFields;
 		string reiseJoinFields;
+		IHostBuilder builder = null;
+		IServiceProvider serviceProvider;
+
+		public NDOLinqTests()
+		{
+			this.builder = Host.CreateDefaultBuilder();
+			this.builder.ConfigureServices( services =>
+			{
+				services.AddLogging( builder =>
+				{
+					builder.ClearProviders();
+					builder.AddConsole();
+				} );
+
+				services.AddNdo( null, null );
+			} );
+
+			var host = this.builder.Build();
+			this.serviceProvider = host.Services;
+			host.Services.UseNdo();
+		}
 
 		[SetUp]
 		public void SetUp()
@@ -36,11 +61,7 @@ namespace QueryTests
 			this.pkwFahrtFields = new SqlColumnListGenerator( pm.NDOMapping.FindClass( typeof( PKWFahrt ) ) ).SelectList;
 			this.reiseFields = new SqlColumnListGenerator( pm.NDOMapping.FindClass( typeof( Reise ) ) ).SelectList;
 			this.reiseJoinFields = new SqlColumnListGenerator( pm.NDOMapping.FindClass( typeof( Reise ) ) ).Result( false, false, true );
-			Mitarbeiter m = new Mitarbeiter() { Vorname = "Mirko", Nachname = "Matytschak" };
-			pm.MakePersistent( m );
-			m = new Mitarbeiter() { Vorname = "Hans", Nachname = "Huber" };
-			pm.MakePersistent( m );
-			pm.Save();
+
 		}
 
 		[TearDown]
@@ -433,7 +454,8 @@ namespace QueryTests
 			var sql = $"SELECT {this.mitarbeiterFields} FROM [Mitarbeiter] WHERE [Mitarbeiter].[Vorname] = {{0}} AND [Mitarbeiter].[Nachname] = {{1}}";
 			Expression<Func<Mitarbeiter,bool>> expr1 = m=>m.Vorname == "Mirko";
 			Expression<Func<Mitarbeiter,bool>> expr2 = m=>m.Nachname == "Matytschak";
-			var combined = expr1.Combine(expr2, System.Linq.Expressions.ExpressionType.And);
+			// Don't use ExpressionType.And, because this means bitwise and (& - Operator in C#)
+			var combined = expr1.Combine(expr2, ExpressionType.AndAlso);
 			var vt = pm.Objects<Mitarbeiter>().Where( combined );
 			Assert.AreEqual( sql, vt.QueryString );
 		}

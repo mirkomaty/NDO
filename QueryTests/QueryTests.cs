@@ -27,27 +27,26 @@ namespace QueryTests
 		string mitarbeiterJoinFields;
 		string belegFields;
 		string pkwFahrtFields;
-		string reiseFields;
 		string reiseJoinFields;
-		//IServiceCollection serviceCollection;
-		IHostBuilder builder;
+		// Keep this variable, because it holds the serviceProvider during the test;
 		IServiceProvider serviceProvider;
+
 
 		[SetUp]
 		public void SetUp()
 		{
-			this.builder = Host.CreateDefaultBuilder(); 
 		}
 
 
 		void Build( Action<IServiceCollection> configure = null )
 		{
-			this.builder.ConfigureServices( services =>
+			var builder = Host.CreateDefaultBuilder();
+			builder.ConfigureServices( services =>
 			{
-				services.AddLogging( builder =>
+				services.AddLogging( b =>
 				{
-					builder.ClearProviders();
-					builder.AddConsole();
+					b.ClearProviders();
+					b.AddConsole();
 				} );
 
 				services.AddNdo( null, null );
@@ -55,7 +54,7 @@ namespace QueryTests
 					configure( services );
 			} );
 
-			var host = this.builder.Build();
+			var host = builder.Build();
 			this.serviceProvider = host.Services;
 			host.Services.UseNdo();
 
@@ -65,16 +64,7 @@ namespace QueryTests
 			mitarbeiterJoinFields = new SqlColumnListGenerator( pm.NDOMapping.FindClass( typeof( Mitarbeiter ) ) ).Result( false, false, true );
 			belegFields = new SqlColumnListGenerator( pm.NDOMapping.FindClass( typeof( Beleg ) ) ).SelectList;
 			this.pkwFahrtFields = new SqlColumnListGenerator( pm.NDOMapping.FindClass( typeof( PKWFahrt ) ) ).SelectList;
-			this.reiseFields = new SqlColumnListGenerator( pm.NDOMapping.FindClass( typeof( Reise ) ) ).SelectList;
 			this.reiseJoinFields = new SqlColumnListGenerator( pm.NDOMapping.FindClass( typeof( Reise ) ) ).Result( false, false, true );
-
-#if nix
-			Mitarbeiter m = new Mitarbeiter() { Vorname = "Mirko", Nachname = "Matytschak" };
-			pm.MakePersistent( m );
-			m = new Mitarbeiter() { Vorname = "Hans", Nachname = "Huber" };
-			pm.MakePersistent( m );
-			pm.Save();
-#endif
 		}
 
 
@@ -90,7 +80,7 @@ namespace QueryTests
 		[Test]
 		public void QueryWithEmptyGuidParameterSearchesForNull()
 		{
-			//Build();
+			Build();
 			// The query will fetch for DataContainerDerived objects, too.
 			// Hence we test with "StartsWith", because the query contains additional text, which doesn't matter here.
 			var q = new NDOQuery<DataContainer>(pm, "guidVar = {0}");
@@ -108,6 +98,7 @@ namespace QueryTests
 		[Test]
 		public void QueryWithDateTimeMinValueParameterSearchesForNull()
 		{
+			Build();
 			// The query will fetch for DataContainerDerived objects, too.
 			// Hence we test with "StartsWith", because the query contains additional text, which doesn't matter here.
 			var q = new NDOQuery<DataContainer>(pm, "dateTimeVar = {0}");
@@ -126,6 +117,7 @@ namespace QueryTests
 		[Test]
 		public void CheckIfQueryWithoutWhereClauseWorks()
 		{
+			Build();
 			NDOQuery<Mitarbeiter> q = new NDOQuery<Mitarbeiter>( pm );
 			Assert.AreEqual( String.Format( "SELECT {0} FROM [Mitarbeiter]", this.mitarbeiterFields ), q.GeneratedQuery );
 		}
@@ -161,6 +153,7 @@ namespace QueryTests
 		[Test]
 		public void CheckIfFunctionsWork()
 		{
+			Build();
 			NDOQuery<Mitarbeiter> q = new NDOQuery<Mitarbeiter>( pm, "vorname = SqlFunction('Mirko')" );
 			Assert.AreEqual( String.Format( "SELECT {0} FROM [Mitarbeiter] WHERE [Mitarbeiter].[Vorname] = SqlFunction('Mirko')", this.mitarbeiterFields ), q.GeneratedQuery );
 			q = new NDOQuery<Mitarbeiter>( pm, "vorname = SqlFunction('Mirko', 42)" );
@@ -176,6 +169,7 @@ namespace QueryTests
 		[Test]
 		public void CheckIfGeneratedQueryCanBeCalledTwice()
 		{
+			Build();
 			NDOQuery<Mitarbeiter> q = new NDOQuery<Mitarbeiter>( pm, "vorname = 'Mirko'" );
 			Assert.AreEqual( String.Format( "SELECT {0} FROM [Mitarbeiter] WHERE [Mitarbeiter].[Vorname] = 'Mirko'", this.mitarbeiterFields ), q.GeneratedQuery );
 			Assert.AreEqual( String.Format( "SELECT {0} FROM [Mitarbeiter] WHERE [Mitarbeiter].[Vorname] = 'Mirko'", this.mitarbeiterFields ), q.GeneratedQuery );
@@ -332,6 +326,7 @@ namespace QueryTests
 		[Test]
 		public void CheckBetween()
 		{
+			Build();
 			NDOQuery<Mitarbeiter> q = new NDOQuery<Mitarbeiter>( pm, "vorname BETWEEN 'A' AND 'B'" );
 			Assert.AreEqual( $"SELECT {this.mitarbeiterFields} FROM [Mitarbeiter] WHERE [Mitarbeiter].[Vorname] BETWEEN 'A' AND 'B'", q.GeneratedQuery );
 			q = new NDOQuery<Mitarbeiter>( pm, "NOT vorname BETWEEN 'A' AND 'B'" );
@@ -358,6 +353,7 @@ namespace QueryTests
 		[Test]
 		public void CheckFetchGroupInitializationWithExpressions()
 		{
+			Build();
 			FetchGroup<Mitarbeiter> fg = new FetchGroup<Mitarbeiter>( m => m.Vorname, m => m.Nachname );
 			Assert.AreEqual( fg.Count, 2, "Count should be 2" );
 			Assert.AreEqual( "Vorname", fg[0], "Name wrong #1" );
@@ -426,13 +422,13 @@ namespace QueryTests
 		[Test]
 		public void CheckIfMultiKeyArrayParametersAreProcessed()
 		{
-			NDOQuery<OrderDetail> q = new NDOQuery<OrderDetail>( pm, "oid = {0}" );
-			q.Parameters.Add( new object[] { 1, 2 } );
-
 			IList generatedParameters = null;
 			Mock<IPersistenceHandler> handlerMock = new Mock<IPersistenceHandler>();
 			handlerMock.Setup( h => h.PerformQuery( It.IsAny<string>(), It.IsAny<IList>(), It.IsAny<DataSet>() ) ).Returns( new DataTable() ).Callback<string, IList, DataSet>( ( s, l, d ) => generatedParameters = l );
 			Build( serviceCollection => serviceCollection.AddSingleton( handlerMock.Object ) );
+
+			NDOQuery<OrderDetail> q = new NDOQuery<OrderDetail>( pm, "oid = {0}" );
+			q.Parameters.Add( new object[] { 1, 2 } );
 			q.Execute();
 			Assert.NotNull( generatedParameters );
 			Assert.AreEqual( 2, generatedParameters.Count );
@@ -444,9 +440,6 @@ namespace QueryTests
 		[Test]
 		public void CheckIfSingleKeyOidParameterIsProcessed()
 		{
-			NDOQuery<Mitarbeiter> q = new NDOQuery<Mitarbeiter>( pm, "oid = {0}" );
-			q.Parameters.Add( 1 );
-
 			IList generatedParameters = null;
 			Mock<IPersistenceHandler> handlerMock = new Mock<IPersistenceHandler>();
 			handlerMock.Setup( h => h.PerformQuery( It.IsAny<string>(), It.IsAny<IList>(), It.IsAny<DataSet>() ) ).Returns( new DataTable() ).Callback<string, IList, DataSet>( ( s, l, d ) => generatedParameters = l );
@@ -454,6 +447,9 @@ namespace QueryTests
 			Mock<IPersistenceHandlerManager> phManagerMock = new Mock<IPersistenceHandlerManager>();
 			phManagerMock.Setup( m => m.GetPersistenceHandler( It.IsAny<Type>() ) ).Returns( handler ).Callback<Type>( ( pc ) => { Console.WriteLine("Test"); });
 			Build( serviceCollection => serviceCollection.AddSingleton( handlerMock.Object ) );
+
+			NDOQuery<Mitarbeiter> q = new NDOQuery<Mitarbeiter>( pm, "oid = {0}" );
+			q.Parameters.Add( 1 );
 			q.Execute();
 			Assert.NotNull( generatedParameters );
 			Assert.AreEqual( 1, generatedParameters.Count );
@@ -463,9 +459,6 @@ namespace QueryTests
 		[Test]
 		public void CheckIfSqlQueryIsProcessed()
 		{
-			NDOQuery<Mitarbeiter> q = new NDOQuery<Mitarbeiter>( pm, "SELECT * FROM Mitarbeiter WHERE ID = {0}", false, QueryLanguage.Sql );
-			q.Parameters.Add( 1 );
-
 			IList generatedParameters = null;
 			string expression = null;
 			Mock<IPersistenceHandler> handlerMock = new Mock<IPersistenceHandler>();
@@ -474,6 +467,9 @@ namespace QueryTests
 			Mock<IPersistenceHandlerManager> phManagerMock = new Mock<IPersistenceHandlerManager>();
 			phManagerMock.Setup( m => m.GetPersistenceHandler( It.IsAny<Type>() ) ).Returns( handler );
 			Build( serviceCollection => serviceCollection.AddSingleton( handlerMock.Object ) );
+
+			NDOQuery<Mitarbeiter> q = new NDOQuery<Mitarbeiter>( pm, "SELECT * FROM Mitarbeiter WHERE ID = {0}", false, QueryLanguage.Sql );
+			q.Parameters.Add( 1 );
 			q.Execute();
 			Assert.NotNull( generatedParameters );
 			Assert.AreEqual( 1, generatedParameters.Count );
@@ -484,10 +480,6 @@ namespace QueryTests
 		[Test]
 		public void CheckIfSingleKeyNDOObjectIdParameterIsProcessed()
 		{
-			NDOQuery<Mitarbeiter> q = new NDOQuery<Mitarbeiter>( pm, "oid = {0}" );
-			var dummy = (IPersistenceCapable) pm.FindObject( typeof( Mitarbeiter ), 121 );
-			q.Parameters.Add( dummy.NDOObjectId );
-
 			IList generatedParameters = null;
 			Mock<IPersistenceHandler> handlerMock = new Mock<IPersistenceHandler>();
 			handlerMock.Setup( h => h.PerformQuery( It.IsAny<string>(), It.IsAny<IList>(), It.IsAny<DataSet>() ) ).Returns( new DataTable() ).Callback<string, IList, DataSet>( ( s, l, d ) => generatedParameters = l );
@@ -495,6 +487,11 @@ namespace QueryTests
 			Mock<IPersistenceHandlerManager> phManagerMock = new Mock<IPersistenceHandlerManager>();
 			phManagerMock.Setup( m => m.GetPersistenceHandler( It.IsAny<Type>() ) ).Returns( handler ).Callback<Type>( ( pc ) => { Console.WriteLine( "Test" ); } );
 			Build( serviceCollection => serviceCollection.AddSingleton( handlerMock.Object ) );
+
+
+			NDOQuery<Mitarbeiter> q = new NDOQuery<Mitarbeiter>( pm, "oid = {0}" );
+			var dummy = (IPersistenceCapable) pm.FindObject( typeof( Mitarbeiter ), 121 );
+			q.Parameters.Add( dummy.NDOObjectId );
 			q.Execute();
 			Assert.NotNull( generatedParameters );
 			Assert.AreEqual( 1, generatedParameters.Count );
@@ -504,8 +501,6 @@ namespace QueryTests
 		[Test]
 		public void SimpleQueryWithHandler()
 		{
-			NDOQuery<Mitarbeiter> q = new NDOQuery<Mitarbeiter>( pm );
-
 			IList generatedParameters = null;
 			Mock<IPersistenceHandler> handlerMock = new Mock<IPersistenceHandler>();
 			handlerMock.Setup( h => h.PerformQuery( It.IsAny<string>(), It.IsAny<IList>(), It.IsAny<DataSet>() ) ).Returns( new DataTable() ).Callback<string, IList, DataSet>( ( s, l, d ) => generatedParameters = l );
@@ -513,6 +508,8 @@ namespace QueryTests
 			Mock<IPersistenceHandlerManager> phManagerMock = new Mock<IPersistenceHandlerManager>();
 			phManagerMock.Setup( m => m.GetPersistenceHandler( It.IsAny<Type>() ) ).Returns( handler ).Callback<Type>( ( pc ) => { Console.WriteLine( "Test" ); } );
 			Build( serviceCollection => serviceCollection.AddSingleton( handlerMock.Object ) );
+
+			NDOQuery<Mitarbeiter> q = new NDOQuery<Mitarbeiter>( pm );
 			q.Execute();
 			Assert.NotNull( generatedParameters );
 			Assert.AreEqual( 0, generatedParameters.Count );
@@ -674,6 +671,7 @@ namespace QueryTests
 		[Test]
 		public void BitwiseOperatorsWork()
 		{
+			Build();
 			var pm = NDOFactory.Instance.PersistenceManager;
 			var query = new NDOQuery<Buero>( pm, "Nummer & 2 = 0" );
 			Assert.That( query.GeneratedQuery.IndexOf( "[Buero].[Nummer] & 2 = 0" ) > -1 );
