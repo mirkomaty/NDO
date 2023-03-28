@@ -31,7 +31,7 @@ using NDO.Query;
 namespace NdoUnitTests
 {
 	[TestFixture]
-	public class DateTest
+	public class DateTest : NDOTest
 	{
 		
 		[SetUp]

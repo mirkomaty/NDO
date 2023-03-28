@@ -31,7 +31,7 @@ using NDO.Query;
 namespace NdoUnitTests
 {
 	[TestFixture]
-	public class Objektbäume
+	public class Objektbäume : NDOTest
 	{
 		PersistenceManager pm;
 

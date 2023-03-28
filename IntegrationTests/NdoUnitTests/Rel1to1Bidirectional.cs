@@ -29,6 +29,9 @@ using Reisekosten;
 using NDO;
 using NDO.Linq;
 using System.Linq;
+using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace NdoUnitTests
 {
@@ -38,7 +41,7 @@ namespace NdoUnitTests
 
 
 	[TestFixture]
-	public class Rel1to1Bidirectional
+	public class Rel1to1Bidirectional : NDOTest
 	{
 		public Rel1to1Bidirectional()
 		{
@@ -127,9 +130,7 @@ namespace NdoUnitTests
 		public void SimpleObjectSave()
 		{
 			var pm = PmFactory.NewPersistenceManager();
-			var testLogAdapter = new TestLogAdapter();
-			pm.LogAdapter = testLogAdapter;
-			pm.VerboseMode = true;
+			var logger = (TestLogger)Host.Services.GetRequiredService<ILoggerFactory>().CreateLogger("Test");
 			pm.MakePersistent( svn );
 			pm.Save();
 			pm.UnloadCache();
@@ -137,7 +138,7 @@ namespace NdoUnitTests
 			Assert.That( l.Count == 1, "Sozialversicherungsnummer sollte gespeichert sein" );
 			pm.Delete( l );
 			pm.Save();
-			var text = testLogAdapter.Text;
+			var text = logger.Text;
 			pm.UnloadCache();
 			l = pm.GetClassExtent( typeof( Sozialversicherungsnummer ) );
 			Assert.That( l.Count == 0, "Sozialversicherungsnummer sollte gelöscht sein" );

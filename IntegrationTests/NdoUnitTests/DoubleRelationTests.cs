@@ -30,7 +30,7 @@ using DoubleRelationClasses;
 namespace NdoUnitTests
 {
     [TestFixture]
-    public class DoubleRelationTests
+    public class DoubleRelationTests : NDOTest
     {
         [SetUp]
         public void Setup()

@@ -29,7 +29,7 @@ using System.Data.SqlClient;
 namespace NdoUnitTests
 {
 	[TestFixture]
-	public class PmFactoryTests
+	public class PmFactoryTests : NDOTest
 	{
 		[Test]
 		public void FactoryTest() 

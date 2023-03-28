@@ -1,5 +1,5 @@
 ﻿//
-// Copyright (c) 2002-2016 Mirko Matytschak 
+// Copyright (c) 2002-2023 Mirko Matytschak 
 // (www.netdataobjects.de)
 //
 // Author: Mirko Matytschak
@@ -31,7 +31,8 @@ using Reisekosten.Personal;
 
 namespace NdoUnitTests {
 	[TestFixture] 
-	public class NDOReiseLänderTests {
+	public class NDOReiseLänderTests : NDOTest
+	{
 
 		public NDOReiseLänderTests() {
 		}

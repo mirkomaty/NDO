@@ -35,7 +35,7 @@ using NDO.Query;
 namespace NdoUnitTests
 {
 	[TestFixture]
-	public class NDOObjectIdTests
+	public class NDOObjectIdTests : NDOTest
 	{
 		PersistenceManager pm;
 		Guid guid;

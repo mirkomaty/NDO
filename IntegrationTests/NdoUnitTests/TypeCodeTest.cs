@@ -31,7 +31,7 @@ using System.Text;
 namespace NdoUnitTests
 {
 	[TestFixture]
-	public class TypeCodeTest
+	public class TypeCodeTest : NDOTest
 	{
 		PersistenceManager pm;
 

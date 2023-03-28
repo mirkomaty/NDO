@@ -22,20 +22,18 @@
 
 using System;
 using System.Linq;
-using System.Data.Common;
-using System.Diagnostics;
 using System.Collections;
 using NUnit.Framework;
 using NDO;
-using NDO.Mapping;
-using NDOInterfaces;
 using PureBusinessClasses;
 using NDO.Query;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 
 namespace NdoUnitTests
 {
 	[TestFixture]
-	public class IntermediateClassTest
+	public class IntermediateClassTest : NDOTest
 	{
 		Order order;
 		Product pr;
@@ -86,9 +84,7 @@ namespace NdoUnitTests
 		public void CreateSave(PersistenceManager pm)
 		{
 			CreateProductAndOrder( pm );
-			var logAdapter = new TestLogAdapter();
-			pm.VerboseMode = true;
-			pm.LogAdapter = logAdapter;
+			var logger = (TestLogger)Host.Services.GetRequiredService<ILoggerFactory>().CreateLogger("Tests");
 			CreateOrderDetail();
 			pm.Save();
 			pm.UnloadCache();
@@ -96,7 +92,7 @@ namespace NdoUnitTests
 			Assert.AreEqual( 1, orders.Count );
 			Order o = (Order) orders[0];
 			Assert.AreEqual( 1, o.OrderDetails.Count() );
-			var text = logAdapter.Text;
+			var text = logger.Text;
 			OrderDetail od = (OrderDetail) o.OrderDetails.First();
 			Assert.NotNull(od.Product, "Product shouldn't be null");
 		}

@@ -31,7 +31,7 @@ using PureBusinessClasses;
 namespace NdoUnitTests
 {
     [TestFixture]
-    public class KeyTests
+    public class KeyTests : NDOTest
     {
         [SetUp]
         public void Setup()

@@ -34,7 +34,7 @@ using NDO.Query;
 namespace NdoUnitTests
 {
 	[TestFixture]
-	public class SelfReference
+	public class SelfReference : NDOTest
 	{
 		PersistenceManager pm;
 

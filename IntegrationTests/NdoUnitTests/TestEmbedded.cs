@@ -30,7 +30,7 @@ using NDO.Query;
 namespace NdoUnitTests
 {
 	[TestFixture]
-	public class TestEmbedded
+	public class TestEmbedded : NDOTest
 	{
 		PersistenceManager pm;
 

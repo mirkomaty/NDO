@@ -53,7 +53,7 @@ namespace NdoUnitTests
 	/// Summary description for TestMappingSchema.
 	/// </summary>
 	[TestFixture]
-	public class TestMappingSchema
+	public class TestMappingSchema : NDOTest
 	{
 		string classMitarbeiter = "Reisekosten.Personal.Mitarbeiter";
 		string assName = "MyAssembly";

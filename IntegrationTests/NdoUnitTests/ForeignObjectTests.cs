@@ -34,7 +34,7 @@ namespace NdoUnitTests
 	/// Zusammenfassung för ForeignObjectTests.
 	/// </summary>
 	[TestFixture]
-	public class ForeignObjectTests
+	public class ForeignObjectTests : NDOTest
 	{
 
 		[SetUp]

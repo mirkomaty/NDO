@@ -31,7 +31,7 @@ using System.Linq;
 namespace NdoUnitTests
 {
 	[TestFixture]
-	public class TimeStampTest
+	public class TimeStampTest : NDOTest
 	{
 		PersistenceManager pm1;
 		PersistenceManager pm2;

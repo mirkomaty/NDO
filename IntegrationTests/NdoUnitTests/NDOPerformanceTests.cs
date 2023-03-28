@@ -32,7 +32,7 @@ namespace NdoUnitTests
 	/// Do some performance tests.
 	/// </summary>
 	[TestFixture]
-	public class NDOPerformanceTests
+	public class NDOPerformanceTests : NDOTest
 	{
 		public NDOPerformanceTests()
 		{

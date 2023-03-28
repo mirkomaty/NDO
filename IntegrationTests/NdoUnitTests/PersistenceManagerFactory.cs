@@ -39,87 +39,34 @@ namespace NdoUnitTests
 	public class PmFactory
 	{
 		static object lockObject = new object();
-		static NDOMapping mapping;
-
-		static PmFactory()
-		{
-			//PersistenceManager pm = NewPersistenceManager();
-			//pm.TransactionMode = TransactionMode.None;
-			//var ndoConn = pm.NDOMapping.Connections.First();
-			//if (ndoConn.Type == "SqlServer")
-			//{
-			//	using (SqlConnection conn = new SqlConnection( "Integrated Security=SSPI;Persist Security Info=False;Data Source=localhost" ))
-			//	{
-			//		numOfPoolConnectionsCounter = new PerformanceCounter();
-			//		numOfPoolConnectionsCounter.CategoryName = ".NET-Datenanbieter für SqlServer";
-			//		numOfPoolConnectionsCounter.CounterName = "NumberOfPooledConnections";
-			//		var categories = PerformanceCounterCategory.GetCategories();
-			//		var categoryNames = categories.Select(c=>c.CategoryName);
-			//		PerformanceCounterCategory category = categories.FirstOrDefault(c => c.CategoryName == numOfPoolConnectionsCounter.CategoryName);
-			//		var instanceName = category.GetInstanceNames().FirstOrDefault(n=>n.IndexOf(GetCurrentProcessId().ToString()) > -1);
-			//		if (instanceName != null)
-			//			numOfPoolConnectionsCounter.InstanceName = instanceName;
-			//		numOfPoolConnectionsCounter.NextValue();  // Zähler starten.
-			//	}
-			//}
-			//else
-			//{
-			//	numOfPoolConnectionsCounter = null;
-			//}
-		}
-
-
-		[DllImport( "kernel32.dll", SetLastError = true )]
-		static extern int GetCurrentProcessId();
-
-		private static string GetAssemblyName()
-		{
-			string result = null;
-
-			// First try GetEntryAssembly name, then AppDomain.FriendlyName.
-			Assembly assembly = Assembly.GetEntryAssembly();
-
-			if (null != assembly)
-			{
-				AssemblyName name = assembly.GetName();
-				if (name != null)
-				{
-					result = name.Name; // MDAC 73469
-				}
-			}
-			return result;
-		}
+		static NDOMapping _mapping;
 
 		public static PersistenceManager NewPersistenceManager(TransactionMode transactionMode = TransactionMode.Optimistic)
 		{
 			//string path = Path.Combine( Path.GetDirectoryName( typeof( PmFactory ).Assembly.Location ), "NDOMapping.xml" );
-            string path = @"C:\Projekte\NDO\IntegrationTests\NDOUnitTests\bin\Debug\NDOMapping.xml";
+			var appPath = AppDomain.CurrentDomain.BaseDirectory;
+			string path = Path.Combine(appPath, "NDOMapping.xml");
 			
 			PersistenceManager pm;
 			
 			lock (lockObject)
 			{
-				if (mapping != null)
-					pm = new PersistenceManager( mapping );
+				if (_mapping != null)
+					pm = new PersistenceManager( _mapping );
 				else
 				{
 					pm = new PersistenceManager(path);
-					mapping = pm.NDOMapping;
+					_mapping = pm.NDOMapping;
 				}
 			}
 
 			pm.TransactionMode = transactionMode;
-            //PersistenceManager pm = new PersistenceManager();
-//			pm.LogPath = Path.GetDirectoryName(path);
-//			pm.RegisterConnectionListener(new OpenConnectionListener(ConnectionGenerator.OnConnection));
-			
-//			pm.TransactionMode = TransactionMode.Pessimistic;
+
 			Connection conn = (Connection)pm.NDOMapping.Connections.First();
 #if ORACLE || FIREBIRD || POSTGRE
 			pm.IdGenerationEvent += new NDO.IdGenerationHandler(IdGenerator.OnIdGenerationEvent);
 			IdGenerator.ConnectionString = ((Connection)pm.NDOMapping.Connections.First()).Name;
 #endif
-			pm.VerboseMode = false;
 			return pm;
 		}
 	}

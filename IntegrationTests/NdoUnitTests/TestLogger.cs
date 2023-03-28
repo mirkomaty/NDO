@@ -1,5 +1,5 @@
 ﻿//
-// Copyright (c) 2002-2016 Mirko Matytschak 
+// Copyright (c) 2002-2023 Mirko Matytschak 
 // (www.netdataobjects.de)
 //
 // Author: Mirko Matytschak
@@ -20,58 +20,66 @@
 // DEALINGS IN THE SOFTWARE.
 
 
+using Microsoft.Extensions.Logging;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Text;
-using NDO.Logging;
 
 namespace NdoUnitTests
 {
-	class TestLogAdapter : ILogAdapter
+	class TestLogger : ILogger, IDisposable
 	{
-		StringBuilder text = new StringBuilder();
+		StringBuilder sb = new StringBuilder();
+		private readonly string cat;
+		public override string ToString()
+		{
+			return base.ToString();
+		}
+
+		//public static event Action<string> EmitLog;
+
+		public TestLogger( string cat )
+		{
+			this.cat = cat;
+		}
+		public IDisposable BeginScope<TState>( TState state )
+		{
+			return this;
+		}
+
+		public void Dispose()
+		{
+		}
+
+		public bool IsEnabled( LogLevel logLevel )
+		{
+			return true;
+		}
+
+		public void Log<TState>( LogLevel logLevel, EventId eventId, TState state, Exception exception, Func<TState, Exception, string> formatter )
+		{
+			if (state == null)
+				return;
+
+			sb.Append( state.ToString() );
+			sb.Append( "\r\n" );
+			//var s = $"{logLevel}: {formatter( state, exception )}";
+			//Debug.WriteLine( $"{cat}: {s}" );
+			//if (EmitLog != null)
+			//	EmitLog( s );
+		}
 
 		public void Clear()
 		{
-			text = new StringBuilder();
+			this.sb = new StringBuilder();
 		}
 
-		public void Debug( string message )
-		{
-			this.text.Append( message );
-			this.text.Append( "\r\n" );
-		}
+		public string Text => this.sb.ToString();
+	}
 
-		public void Error( string message )
+	class TestLogger<T> : TestLogger, ILogger<T>
+	{
+		public TestLogger() : base( typeof( T ).ToString() )
 		{
-			this.text.Append( message );
-			this.text.Append( "\r\n" );
-		}
-
-		public void Info( string message )
-		{
-			this.text.Append( message );
-			this.text.Append( "\r\n" );
-		}
-
-		public void Warn( string message )
-		{
-			this.text.Append( message );
-			this.text.Append( "\r\n" );
-		}
-
-		public string Text
-		{
-			get
-			{
-				return this.text.ToString();
-			}
-		}
-
-		public override string ToString()
-		{
-			return Text;
 		}
 	}
 }

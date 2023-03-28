@@ -683,11 +683,7 @@ namespace NdoUnitTests {
 			pm.UnloadCache();
 			IQuery q = new NDOQuery<Kostenpunkt>(pm);
 			q.Orderings.Add(new AscendingOrder("datum"));
-			NDO.Logging.DebugLogAdapter la = new NDO.Logging.DebugLogAdapter();
-			pm.LogAdapter = la;
-			pm.VerboseMode= true;
 			IList l = q.Execute();
-			pm.VerboseMode = false;
 			Assert.AreEqual(2, l.Count, "Count wrong");
 			Assert.That(yesterday == ((Kostenpunkt)l[0]).Datum, "Order wrong");
 			Assert.That(DateTime.Today == ((Kostenpunkt)l[1]).Datum, "Wrong object");

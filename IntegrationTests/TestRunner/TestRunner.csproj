@@ -60,12 +60,12 @@
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="NDO, Version=3.0.0.8, Culture=neutral, PublicKeyToken=37bfdffa92a0cd24, processorArchitecture=MSIL">
+    <Reference Include="NDO, Version=4.5.0.0, Culture=neutral, PublicKeyToken=37bfdffa92a0cd24, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\NDODLL\bin\Debug\net452\NDO.dll</HintPath>
+      <HintPath>..\..\NDODLL\bin\Debug\netstandard2.0\NDO.dll</HintPath>
     </Reference>
     <Reference Include="NDO.SqlServer">
-      <HintPath>..\..\Provider\SqlServerProvider\NDO.SqlServer\bin\Debug\net452\NDO.SqlServer.dll</HintPath>
+      <HintPath>..\..\Provider\SqlServerProvider\NDO.SqlServer\bin\Debug\netstandard2.0\NDO.SqlServer.dll</HintPath>
     </Reference>
     <Reference Include="nunit.framework, Version=3.11.0.0, Culture=neutral, PublicKeyToken=2638cd05610744eb, processorArchitecture=MSIL">
       <HintPath>..\packages\NUnit.3.11.0\lib\net40\nunit.framework.dll</HintPath>
@@ -73,9 +73,6 @@
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
-    <Reference Include="Unity.Abstractions, Version=3.3.1.0, Culture=neutral, PublicKeyToken=6d32ff45e0ccc69f, processorArchitecture=MSIL">
-      <HintPath>..\packages\Unity.Abstractions.3.3.1\lib\net45\Unity.Abstractions.dll</HintPath>
-    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="TestRunner.cs" />

@@ -29,7 +29,7 @@ using TestBlocks;
 namespace NdoUnitTests
 {
 	[TestFixture]
-	public class TestWithBlock
+	public class TestWithBlock : NDOTest
 	{
 		PersistenceManager pm;
 		[SetUp]

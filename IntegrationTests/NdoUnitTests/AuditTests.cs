@@ -14,7 +14,7 @@ using Newtonsoft.Json;
 namespace NdoUnitTests
 {
 	[TestFixture]
-	public class AuditTests
+	public class AuditTests : NDOTest
 	{
 		Mitarbeiter m;
 		Reise r;

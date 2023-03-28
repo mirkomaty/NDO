@@ -30,7 +30,7 @@ using NDO.Query;
 namespace NdoUnitTests
 {
 	[TestFixture]
-	public class Rel1ToNBidirectional
+	public class Rel1ToNBidirectional : NDOTest
 	{
 		Peer p;
 		PersistenceManager pm;

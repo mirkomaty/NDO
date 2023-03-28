@@ -37,7 +37,7 @@ namespace NdoUnitTests
 
 
 	[TestFixture]
-	public class Rel1to1Directed
+	public class Rel1to1Directed : NDOTest
 	{
 		public Rel1to1Directed()
 		{
