@@ -3559,7 +3559,7 @@ namespace NDO
         /// <param name="row"></param>
 		void ReadLostForeignKeysFromRow(Class cl, IPersistenceCapable pc, DataRow row)
 		{
-			if (cl.FKColumnNames != null)
+			if (cl.FKColumnNames != null && pc.NDOLoadState != null)
 			{
                 //				Debug.WriteLine("GetLostForeignKeysFromRow " + pc.NDOObjectId.Dump());
 				KeyValueList kvl = new KeyValueList(cl.FKColumnNames.Count());

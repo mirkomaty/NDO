@@ -115,7 +115,7 @@ namespace NdoUnitTests
 			Type mcType = t.GetNestedType( "MetaClass", BindingFlags.NonPublic | BindingFlags.Public );
 			if (null == mcType)
 				throw new NDOException( 13, "Missing nested class 'MetaClass' for type '" + t.Name + "'; the type doesn't seem to be enhanced." );
-			var mc = (IMetaClass)Activator.CreateInstance( mcType );
+			var mc = (IMetaClass)Activator.CreateInstance( mcType, t );
 			return mc.GetRelationOrdinal( r.FieldName );
 		}
 
