@@ -86,7 +86,7 @@ namespace NDOEnhancer
                 if (attributes.Length > 0)
                     collectedAttributes.Add(new OidColumnAttribute(((NDOOidTypeAttribute)attributes[0]).OidType));
             }
-        
+
             FieldMap fieldMap = new FieldMap(this.classType);
             foreach (var de in fieldMap.PersistentFields)
             {
@@ -136,8 +136,6 @@ namespace NDOEnhancer
 				string fname = fi.Name;
 				if (fname.StartsWith("_ndo"))
 					continue;
-				if (fi.FieldType.IsSubclassOf(typeof(System.Delegate)))
-					continue;
 
 				object[] attributes = fi.GetCustomAttributes(false);
 				bool cont = false;
@@ -156,6 +154,9 @@ namespace NDOEnhancer
 					}
 				}
 				if (cont) continue;
+
+				if (fi.FieldType.IsSubclassOf( typeof( System.Delegate ) ))
+					continue;
 
 				// Field type is persistent - assume relation with element multiplicity.
 				if (typeof(IPersistenceCapable).IsAssignableFrom(fi.FieldType))
