@@ -1,12 +1,12 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>netstandard2.0;net452</TargetFrameworks>
+    <TargetFrameworks>netstandard2.0;net472</TargetFrameworks>
     <Version>4.0.3</Version>
     <Authors>Mirko Matytschak</Authors>
     <Company>Mirko Matytschak</Company>
     <Product>.NET Data Objects (NDO)</Product>
-    <Copyright>Copyright (c) 2002-2020 Mirko Matytschak, Velden, Germany</Copyright>
+    <Copyright>Copyright (c) 2002-2023 Mirko Matytschak, Velden, Germany</Copyright>
     <PackageProjectUrl>https://www.netdataobjects.de</PackageProjectUrl>
     <RepositoryUrl>https://github.com/mirkomaty/NDO</RepositoryUrl>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
@@ -21,7 +21,7 @@
 
   <ItemGroup>
     <PackageReference Include="Mysql.data">
-      <Version>8.0.31</Version>
+      <Version>8.2.0</Version>
     </PackageReference>
   </ItemGroup>
  

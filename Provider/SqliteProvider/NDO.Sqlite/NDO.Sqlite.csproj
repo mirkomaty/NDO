@@ -18,8 +18,8 @@
 
   <ItemGroup>
     <PackageReference Include="NDOInterfaces" Version="4.0.1" />
-    <PackageReference Include="System.Data.SQLite.Core.MSIL" Version="1.0.114.1" />
-    <PackageReference Include="System.Data.SQLite.Core" Version="1.0.114.3" />
+    <PackageReference Include="System.Data.SQLite.Core.MSIL" Version="1.0.118" />
+    <PackageReference Include="System.Data.SQLite.Core" Version="1.0.118" />
   </ItemGroup>
  
 </Project>
