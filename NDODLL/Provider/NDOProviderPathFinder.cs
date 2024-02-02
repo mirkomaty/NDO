@@ -40,7 +40,7 @@ namespace NDO.Provider
 							continue;
 						if (Path.GetFileName( subPath ).Equals( "ndo.jsonformatter", StringComparison.OrdinalIgnoreCase ) )
 							continue;
-#warning We must sort the versions here and take the last one of the same major version
+						//TODO We should sort the versions here and take the last one of the same major version
 						var versionDir = Directory.GetDirectories( subPath ).FirstOrDefault( s => Path.GetFileName( s ).StartsWith( majorVersion) );
 						if (versionDir == null)
 							continue;
