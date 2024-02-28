@@ -7,7 +7,7 @@
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <IncludeSymbols>True</IncludeSymbols>
     <PackageId>NDO.dll</PackageId>
-    <Version>4.0.14</Version>
+    <Version>4.0.15</Version>
     <Authors>Mirko Matytschak</Authors>
     <Company>Mirko Matytschak</Company>
     <Description>Package to enable VS Solutions to compile and enhance persistent classes.</Description>
@@ -16,8 +16,8 @@
     <PackageProjectUrl>https://www.netdataobjects.de</PackageProjectUrl>
     <PackageTags>NDO .NET Data Objects Persistence</PackageTags>
     <PackageReleaseNotes>Bug Fixes of the NDO Enhancer</PackageReleaseNotes>
-    <AssemblyVersion>4.0.14.0</AssemblyVersion>
-    <FileVersion>4.0.14.0</FileVersion>
+    <AssemblyVersion>4.0.15.0</AssemblyVersion>
+    <FileVersion>4.0.15.0</FileVersion>
     <SignAssembly>true</SignAssembly>
     <AssemblyOriginatorKeyFile>ndo_ent.snk</AssemblyOriginatorKeyFile>  
   </PropertyGroup>

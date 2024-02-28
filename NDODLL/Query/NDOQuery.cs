@@ -179,6 +179,7 @@ namespace NDO.Query
 				persistenceHandler.LogAdapter = this.pm.LogAdapter;
 				this.pm.CheckTransaction( persistenceHandler, this.resultType );
 				persistenceHandler.ExecuteBatch( new string[] { sql }, this.parameters );
+				this.pm.CheckEndTransaction( true );
 			}
 
 			//using (var handler = this.pm.GetSqlPassThroughHandler())
