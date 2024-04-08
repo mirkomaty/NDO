@@ -4,6 +4,7 @@ using System.Reflection;
 using System.IO;
 using System;
 using System.Linq;
+using System.Collections.Generic;
 
 namespace LoadAssemblyTest
 {
@@ -11,10 +12,11 @@ namespace LoadAssemblyTest
 	{
 		string pathToLoad;
 		string projPath;
+		List<Assembly> assemblies = new List<Assembly>();
 
 		public Program()
 		{
-			this.pathToLoad = @"C:\Projekte\Laykit 3\BusinessClasses\bin\Debug\netstandard2.0\BusinessClasses.dll";
+			this.pathToLoad = @"C:\Projekte\NDO\LoadAssemblyTest\NdoClasses\bin\Debug\netstandard2.0\NdoClasses.dll";
 			this.projPath = Path.GetFullPath( Path.Combine( this.pathToLoad, @"..\..\..\.." ) );
 		}
 
@@ -22,6 +24,27 @@ namespace LoadAssemblyTest
 		{
 			new Program().DoIt( args );
 		}
+
+		void ShowAssembly(Assembly assembly)
+		{
+			if (assemblies.Contains( assembly ))
+				return;
+
+			var types = assembly.GetTypes();
+			foreach (var type in types)
+			{
+				Console.WriteLine( type.FullName );
+				Console.WriteLine("-------------");
+
+				if (type.Name == "PersistentClass")
+					ShowAssembly( type.BaseType.Assembly );
+				//if (type.BaseType != typeof( object ))
+				//	Console.WriteLine( $"  Base: {type.BaseType.FullName}" );
+			}
+
+			assemblies.Add( assembly );
+		}
+
 
 		void DoIt( string[] args )
 		{
@@ -32,12 +55,8 @@ namespace LoadAssemblyTest
 			sharedTypes: new Type[] {});
 			using (loader.EnterContextualReflection())
 			{
-				var assembly = Assembly.Load("BusinessClasses");
-				var types = assembly.GetTypes();
-				foreach (var type in types)
-				{
-					Console.WriteLine( type.FullName );
-				}
+				var assembly = Assembly.Load("NdoClasses");
+				ShowAssembly( assembly );
 			}
 		}
 

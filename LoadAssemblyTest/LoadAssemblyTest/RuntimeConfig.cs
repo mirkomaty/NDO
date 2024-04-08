@@ -1,7 +1,9 @@
-﻿namespace McMaster.NETCore.Plugins
+﻿#if nix
+namespace McMaster.NETCore.Plugins
 {
 	internal class RuntimeConfig
 	{
 		public RuntimeOptions runtimeOptions { get; set; }
 	}
 }
+#endif

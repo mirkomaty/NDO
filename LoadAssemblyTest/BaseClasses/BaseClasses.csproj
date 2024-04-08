@@ -1,0 +1,15 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+	<AssemblyVersion>1.0.0</AssemblyVersion>
+	<AssemblyFileVersion>1.0.0</AssemblyFileVersion>
+	  <PackageVersion>1.0.0</PackageVersion>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="ndo.dll" Version="4.0.15" />
+  </ItemGroup>
+
+</Project>

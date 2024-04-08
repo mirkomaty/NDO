@@ -20,7 +20,7 @@ namespace McMaster.NETCore.Plugins
 	/// which satisfy the plugin's requirements.
 	/// </para>
 	/// </summary>
-	public class PluginLoader : IDisposable
+	public class PluginLoader //: IDisposable
 	{
 		/// <summary>
 		/// Create a plugin loader for an assembly file.
@@ -60,6 +60,7 @@ namespace McMaster.NETCore.Plugins
 		{
 			return CreateFromAssemblyFile( assemblyFile,
 					config =>
+#if nix
 					{
 						if (sharedTypes != null)
 						{
@@ -74,10 +75,11 @@ namespace McMaster.NETCore.Plugins
 								config.SharedAssemblies.Add( assembly.GetName() );
 							}
 						}
-						configure( config );
-					} );
+#endif
+						configure( config )
+					);
 		}
-
+#if nix
 		/// <summary>
 		/// Create a plugin loader for an assembly file.
 		/// </summary>
@@ -85,7 +87,7 @@ namespace McMaster.NETCore.Plugins
 		/// <returns>A loader.</returns>
 		public static PluginLoader CreateFromAssemblyFile( string assemblyFile )
 			=> CreateFromAssemblyFile( assemblyFile, _ => { } );
-
+#endif
 		/// <summary>
 		/// Create a plugin loader for an assembly file.
 		/// </summary>
@@ -121,6 +123,7 @@ namespace McMaster.NETCore.Plugins
 			_context = (ManagedLoadContext) _contextBuilder.Build();
 		}
 
+#if nix
 		/// <summary>
 		/// True when this plugin is capable of being unloaded.
 		/// </summary>
@@ -131,11 +134,11 @@ namespace McMaster.NETCore.Plugins
 				return false;
 			}
 		}
-
+#endif
 
 
 		internal AssemblyLoadContext LoadContext => _context;
-
+#if nix
 		/// <summary>
 		/// Load the main assembly for the plugin.
 		/// </summary>
@@ -174,7 +177,7 @@ namespace McMaster.NETCore.Plugins
 			EnsureNotDisposed();
 			return LoadAssembly( new AssemblyName( assemblyName ) );
 		}
-
+#endif
 
 		/// <summary>
 		/// Sets the scope used by some System.Reflection APIs which might trigger assembly loading.
@@ -186,7 +189,7 @@ namespace McMaster.NETCore.Plugins
 		public AssemblyLoadContext.ContextualReflectionScope EnterContextualReflection()
 			=> _context.EnterContextualReflection();
 
-
+#if nix
 		/// <summary>
 		/// Disposes the plugin loader. This only does something if <see cref="IsUnloadable" /> is true.
 		/// When true, this will unload assemblies which which were loaded during the lifetime
@@ -209,14 +212,14 @@ namespace McMaster.NETCore.Plugins
 				throw new ObjectDisposedException( nameof( PluginLoader ) );
 			}
 		}
-
+#endif
 		private static AssemblyLoadContextBuilder CreateLoadContextBuilder( PluginConfig config )
 		{
 			var builder = new AssemblyLoadContextBuilder();
 
 			builder.SetMainAssemblyPath( config.MainAssemblyPath );
 			builder.SetDefaultContext( config.DefaultContext );
-
+#if nix
 			foreach (var ext in config.PrivateAssemblies)
 			{
 				builder.PreferLoadContextAssembly( ext );
@@ -233,7 +236,7 @@ namespace McMaster.NETCore.Plugins
 			{
 				builder.PreferDefaultLoadContextAssembly( assemblyName );
 			}
-
+#endif
 			return builder;
 		}
 	}

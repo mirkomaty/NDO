@@ -8,7 +8,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.Loader;
-using McMaster.NETCore.Plugins.LibraryModel;
+//using McMaster.NETCore.Plugins.LibraryModel;
 
 namespace McMaster.NETCore.Plugins.Loader
 {
@@ -21,7 +21,7 @@ namespace McMaster.NETCore.Plugins.Loader
 	{
 		private readonly string _basePath;
 		private readonly string _mainAssemblyPath;
-		private readonly IReadOnlyDictionary<string, ManagedLibrary> _managedAssemblies;
+//		private readonly IReadOnlyDictionary<string, ManagedLibrary> _managedAssemblies;
 		private readonly IReadOnlyCollection<string> _privateAssemblies;
 		private readonly ICollection<string> _defaultAssemblies;
 		private readonly IReadOnlyCollection<string> _additionalProbingPaths;
@@ -32,7 +32,7 @@ namespace McMaster.NETCore.Plugins.Loader
 		private readonly AssemblyLoadContext _defaultLoadContext;
 
 		public ManagedLoadContext( string mainAssemblyPath,
-			IReadOnlyDictionary<string, ManagedLibrary> managedAssemblies,
+//			IReadOnlyDictionary<string, ManagedLibrary> managedAssemblies,
 			IReadOnlyCollection<string> privateAssemblies,
 			IReadOnlyCollection<string> defaultAssemblies,
 			IReadOnlyCollection<string> additionalProbingPaths,
@@ -50,7 +50,7 @@ namespace McMaster.NETCore.Plugins.Loader
 			_mainAssemblyPath = mainAssemblyPath ?? throw new ArgumentNullException( nameof( mainAssemblyPath ) );
 
 			_basePath = Path.GetDirectoryName( mainAssemblyPath ) ?? throw new ArgumentException( nameof( mainAssemblyPath ) );
-			_managedAssemblies = managedAssemblies ?? throw new ArgumentNullException( nameof( managedAssemblies ) );
+//			_managedAssemblies = managedAssemblies ?? throw new ArgumentNullException( nameof( managedAssemblies ) );
 			_privateAssemblies = privateAssemblies ?? throw new ArgumentNullException( nameof( privateAssemblies ) );
 			_defaultAssemblies = defaultAssemblies != null ? defaultAssemblies.ToList() : throw new ArgumentNullException( nameof( defaultAssemblies ) );
 			_additionalProbingPaths = additionalProbingPaths ?? throw new ArgumentNullException( nameof( additionalProbingPaths ) );
@@ -130,6 +130,7 @@ namespace McMaster.NETCore.Plugins.Loader
 				return null;
 			}
 
+#if nix
 			if (_managedAssemblies.TryGetValue( assemblyName.Name, out var library ) && library != null)
 			{
 				if (SearchForLibrary( library, out var path ) && path != null)
@@ -139,6 +140,7 @@ namespace McMaster.NETCore.Plugins.Loader
 			}
 			else
 			{
+#endif
 				// if an assembly was not listed in the list of known assemblies,
 				// fallback to the load context base directory
 				var dllName = assemblyName.Name + ".dll";
@@ -150,7 +152,7 @@ namespace McMaster.NETCore.Plugins.Loader
 						return LoadAssemblyFromFilePath( localFile );
 					}
 				}
-			}
+//			}
 
 			return null;
 		}
@@ -172,7 +174,7 @@ namespace McMaster.NETCore.Plugins.Loader
 			return LoadFromStream( file );
 
 		}
-
+#if nix
 		private bool SearchForLibrary( ManagedLibrary library, out string? path )
 		{
 			// 1. Check for in _basePath + app local path
@@ -195,7 +197,7 @@ namespace McMaster.NETCore.Plugins.Loader
 			}
 
 			// 3. Search in base path
-			foreach (var ext in ManagedAssemblyExtensions)
+			foreach (var ext in managedAssemblyExtensions)
 			{
 				var local = Path.Combine(_basePath, library.Name.Name + ext);
 				if (File.Exists( local ))
@@ -208,8 +210,8 @@ namespace McMaster.NETCore.Plugins.Loader
 			path = null;
 			return false;
 		}
-
-		public static readonly string[] ManagedAssemblyExtensions = new[]
+#endif
+		static readonly string[] managedAssemblyExtensions = new[]
 		{
 				".dll",
 				".ni.dll",

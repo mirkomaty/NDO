@@ -8,7 +8,7 @@ using System.Linq;
 using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Runtime.Loader;
-using McMaster.NETCore.Plugins.LibraryModel;
+//using McMaster.NETCore.Plugins.LibraryModel;
 
 namespace McMaster.NETCore.Plugins.Loader
 {
@@ -20,7 +20,7 @@ namespace McMaster.NETCore.Plugins.Loader
 		private readonly List<string> _additionalProbingPaths = new();
 		private readonly List<string> _resourceProbingPaths = new();
 		private readonly List<string> _resourceProbingSubpaths = new();
-		private readonly Dictionary<string, ManagedLibrary> _managedLibraries = new(StringComparer.Ordinal);
+		//private readonly Dictionary<string, ManagedLibrary> _managedLibraries = new(StringComparer.Ordinal);
 		private readonly HashSet<string> _privateAssemblies = new(StringComparer.Ordinal);
 		private readonly HashSet<string> _defaultAssemblies = new(StringComparer.Ordinal);
 		private AssemblyLoadContext _defaultLoadContext = AssemblyLoadContext.GetLoadContext(Assembly.GetExecutingAssembly()) ?? AssemblyLoadContext.Default;
@@ -51,7 +51,6 @@ namespace McMaster.NETCore.Plugins.Loader
 
 			return new ManagedLoadContext(
 				_mainAssemblyPath,
-				_managedLibraries,
 				_privateAssemblies,
 				_defaultAssemblies,
 				_additionalProbingPaths,
@@ -96,7 +95,7 @@ namespace McMaster.NETCore.Plugins.Loader
 			_defaultLoadContext = context ?? throw new ArgumentException( $"Bad Argument: AssemblyLoadContext in {nameof( AssemblyLoadContextBuilder )}.{nameof( SetDefaultContext )} is null." );
 			return this;
 		}
-
+#if nix
 		/// <summary>
 		/// Instructs the load context to prefer a private version of this assembly, even if that version is
 		/// different from the version used by the host application.
@@ -154,7 +153,6 @@ namespace McMaster.NETCore.Plugins.Loader
 
 				return this;
 			}
-
 			var names = new Queue<AssemblyName>();
 			names.Enqueue( assemblyName );
 			while (names.TryDequeue( out var name ))
@@ -180,7 +178,6 @@ namespace McMaster.NETCore.Plugins.Loader
 
 			return this;
 		}
-
 		/// <summary>
 		/// Instructs the load context to first search for binaries from the default app context, even
 		/// if other assemblies in this load context express a dependency on a higher or lower version.
@@ -199,6 +196,7 @@ namespace McMaster.NETCore.Plugins.Loader
 			_preferDefaultLoadContext = preferDefaultLoadContext;
 			return this;
 		}
+#endif
 
 		/// <summary>
 		/// Instructs the load context to lazy load dependencies of all shared assemblies.
@@ -217,7 +215,7 @@ namespace McMaster.NETCore.Plugins.Loader
 			_lazyLoadReferences = isLazyLoaded;
 			return this;
 		}
-
+#if nix
 		/// <summary>
 		/// Add a managed library to the load context.
 		/// </summary>
@@ -313,5 +311,6 @@ namespace McMaster.NETCore.Plugins.Loader
 				throw new ArgumentException( "Argument must be a relative path.", nameof( probingPath ) );
 			}
 		}
+#endif
 	}
 }

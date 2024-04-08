@@ -1,0 +1,19 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<NDOMapping SchemaVersion="1.0">
+  <Connections>
+    <Connection ID="C0" Name="Substitute this string with your connection string" Type="" />
+  </Connections>
+  <Classes>
+    <Class AssemblyName="BaseClasses" FullName="BaseClasses.PersistentBaseClass" TableName="PersistentBaseClass" ConnectionId="C0" TypeCode="-1500435240">
+      <Oid>
+        <OidColumn AutoIncremented="True" Name="ID" AllowDbNull="False" />
+      </Oid>
+      <Fields>
+        <Field Name="info1" AccessorName="Info1">
+          <Column Name="Info1" />
+        </Field>
+      </Fields>
+      <Relations />
+    </Class>
+  </Classes>
+</NDOMapping>
