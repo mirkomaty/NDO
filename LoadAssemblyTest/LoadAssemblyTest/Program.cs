@@ -1,5 +1,4 @@
-﻿using McMaster.NETCore.Plugins;
-using NDOEnhancer;
+﻿using NDOEnhancer;
 using System.Reflection;
 using System.IO;
 using System;
@@ -10,14 +9,13 @@ namespace LoadAssemblyTest
 {
 	internal class Program
 	{
-		string pathToLoad;
 		string projPath;
 		List<Assembly> assemblies = new List<Assembly>();
+		static readonly string pathToLoad = @"C:\Projekte\NDO\LoadAssemblyTest\NdoClasses\bin\Debug\netstandard2.0\NdoClasses.dll";
 
 		public Program()
 		{
-			this.pathToLoad = @"C:\Projekte\NDO\LoadAssemblyTest\NdoClasses\bin\Debug\netstandard2.0\NdoClasses.dll";
-			this.projPath = Path.GetFullPath( Path.Combine( this.pathToLoad, @"..\..\..\.." ) );
+			this.projPath = Path.GetFullPath( Path.Combine( pathToLoad, @"..\..\..\.." ) );
 		}
 
 		static void Main( string[] args )
@@ -50,10 +48,8 @@ namespace LoadAssemblyTest
 		{
 			AppDomain.CurrentDomain.AssemblyResolve += OnAssemblyResolve;
 
-			var loader = PluginLoader.CreateFromAssemblyFile(
-			this.pathToLoad,
-			sharedTypes: new Type[] {});
-			using (loader.EnterContextualReflection())
+			var context = new ManagedLoadContext( pathToLoad );
+			using (context.EnterContextualReflection())
 			{
 				var assembly = Assembly.Load("NdoClasses");
 				ShowAssembly( assembly );
@@ -90,7 +86,7 @@ namespace LoadAssemblyTest
 			if (assName.Equals( "NDO", StringComparison.OrdinalIgnoreCase ))
 				packageName = "ndo.dll";
 
-			string? nugetBasePath = new NugetProps(this.pathToLoad).DefaultNugetPackageFolder;
+			string? nugetBasePath = new NugetProps(pathToLoad).DefaultNugetPackageFolder;
 			if (nugetBasePath == null)
 				throw new Exception("Nuget-Folder not found");
 
