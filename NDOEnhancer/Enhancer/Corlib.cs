@@ -19,16 +19,12 @@
 // CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER 
 // DEALINGS IN THE SOFTWARE.
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace NDOEnhancer
 {
 	public enum FxType
 	{
-		NetFx,
+		Net,
 		Standard2
 	}
 
@@ -36,12 +32,13 @@ namespace NDOEnhancer
 	{
 		public static FxType FxType { get; set; }
 
-		public static string Name
-		{
-			get
-			{
-				return FxType == FxType.NetFx ? "[mscorlib]" : "[netstandard]";
-			}
-		}
+		public static string Name => FxType == FxType.Net ? "[System.Runtime]" : "[netstandard]";
+
+		public static string XmlIgnoreAssembly => FxType == FxType.Net ? "[System.Xml.ReaderWriter]" : "[netstandard]";
+		public static string SystemComponentModel => FxType == FxType.Net ? "[System.ComponentModel.Primitives]" : "[netstandard]";
+		public static string SystemDataCommon => FxType == FxType.Net ? "[System.Data.Common]" : "[netstandard]";
+
+		// We must determine the version instead of using a fixed value
+		public static string FxVersion { get; set; }
 	}
 }

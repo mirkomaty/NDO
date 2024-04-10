@@ -54,32 +54,31 @@ namespace NDOEnhancer
 
 		void CheckILDasmPath()
 		{
-			string path = null;
-			//path = Path.Combine( Path.GetDirectoryName( System.Reflection.Assembly.GetEntryAssembly().Location ), "ILDasm.exe" );
-			//if (File.Exists( path ))
+			var path = Path.Combine( Path.GetDirectoryName( System.Reflection.Assembly.GetEntryAssembly().Location ), "ILDasm.exe" );
+			if (File.Exists( path ))
+			{
+				this.ilDasmPath = path;
+				CheckVersion( "Search Enhancer Directory" );
+			}
+
+			//path = Path.Combine( Environment.GetFolderPath( Environment.SpecialFolder.ProgramFilesX86 ), @"Microsoft SDKs\Windows\v10.0A\Bin\NETFX 4.6 Tools" );
+			//if ( Directory.Exists( path ) )
 			//{
-			//	this.ilDasmPath = path;
-			//	CheckVersion( "Search Enhancer Directory" );
+			//	this.ilDasmPath = Path.Combine( path, "ILDasm.exe" );
+			//	CheckVersion( "Fx SDK v10.0A" );
+			//}		
+
+			//string pathVar = Environment.GetEnvironmentVariable( "PATH" );
+			//var thePaths = from pv in pathVar.Split( ';' ) select Path.Combine( pv.TrimEnd( '\\' ), "ILDasm.exe" );
+			//this.ilDasmPath = thePaths.FirstOrDefault( p => File.Exists( p ) );
+			//if (this.ilDasmPath == null || !File.Exists( this.ilDasmPath ))
+			//{
+			//	throw new Exception( "Path for ILDasm not found.\n  Add the path to ILDasm.exe to the PATH environment variable." );
 			//}
-
-			path = Path.Combine( Environment.GetFolderPath( Environment.SpecialFolder.ProgramFilesX86 ), @"Microsoft SDKs\Windows\v10.0A\Bin\NETFX 4.6 Tools" );
-			if ( Directory.Exists( path ) )
-			{
-				this.ilDasmPath = Path.Combine( path, "ILDasm.exe" );
-				CheckVersion( "Fx SDK v10.0A" );
-			}		
-
-			string pathVar = Environment.GetEnvironmentVariable( "PATH" );
-			var thePaths = from pv in pathVar.Split( ';' ) select Path.Combine( pv.TrimEnd( '\\' ), "ILDasm.exe" );
-			this.ilDasmPath = thePaths.FirstOrDefault( p => File.Exists( p ) );
-			if (this.ilDasmPath == null || !File.Exists( this.ilDasmPath ))
-			{
-				throw new Exception( "Path for ILDasm not found.\n  Add the path to ILDasm.exe to the PATH environment variable." );
-			}
-			else
-			{
-				CheckVersion( "PATH Environment Variable" );
-			}
+			//else
+			//{
+			//	CheckVersion( "PATH Environment Variable" );
+			//}
 		}
 
 		public Dasm(MessageAdapter messages, bool verboseMode)
@@ -98,7 +97,7 @@ namespace NDOEnhancer
 
 			ProcessStartInfo psi = new ProcessStartInfo( ilDasmPath, 
 				" /LINENUM"
-#if !NETCOREAPP2_0
+#if !NETCOREAPP2_0 && !NET6_0_OR_GREATER
 				+ " /NOBAR"
 #endif
 				+ " /UNICODE "

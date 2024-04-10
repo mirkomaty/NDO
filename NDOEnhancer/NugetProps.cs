@@ -1,28 +1,25 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Xml.Linq;
 
 namespace NDOEnhancer
 {
 	class NugetProps
 	{
-		static ProjectDescription projectDescription;
-		static NugetProps()
+		ProjectDescription projectDescription;
+		public NugetProps( ProjectDescription projectDescription )
 		{
-			projectDescription = (ProjectDescription) AppDomain.CurrentDomain.GetData( "ProjectDescription" );
+			this.projectDescription = projectDescription;
 		}
 
-		public static string DefaultNugetPackageFolder
+		public string DefaultNugetPackageFolder
 		{
 			get
 			{
-				var objPath = Path.Combine(projectDescription.ProjPath, "obj");
-				var fnwe = Path.GetFileNameWithoutExtension(projectDescription.FileName);
-				var propFileName = Path.Combine(objPath, $"{fnwe}.csproj.nuget.g.props");
+				var objPath = Path.Combine(this.projectDescription.ProjPath, "obj");
+				var projName = Path.GetFileNameWithoutExtension(projectDescription.FileName);
+				var propFileName = Path.Combine(objPath, $"{projName}.csproj.nuget.g.props");
 				if (!File.Exists( propFileName ))
 				{
 					Console.WriteLine( $"Can't find file {propFileName}" );

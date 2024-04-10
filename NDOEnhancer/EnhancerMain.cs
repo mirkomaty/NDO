@@ -42,36 +42,18 @@ namespace NDOEnhancer
 
 			try
 			{
-				string locationDir = Path.GetDirectoryName(typeof(EnhancerMain).Assembly.Location);
-				string appDomainDir = AppDomain.CurrentDomain.BaseDirectory.TrimEnd(Path.DirectorySeparatorChar);
-
 				if (args.Length < 1)
 					throw new Exception( "usage: NDOEnhancer <file_name>\n" );
 
 				string arg = Path.GetFullPath( args[0] );
-				string newarg = arg;
-
-#if NET48_OR_GREATER
-				// If we are not in our own app domain, appDomainDir and location dir are the same.
-				// That means, we must create the app domain first.
-				if (string.Compare( appDomainDir, locationDir, true ) == 0)
-				{
-
-					Console.WriteLine( "Enhancer executable: " + typeof( EnhancerMain ).Assembly.Location );
-
-					result = new EnhancerMain().DomainLaunch( arg );
-				}
-				else
-				{
-					newarg = (string) AppDomain.CurrentDomain.GetData("arg");
-#endif
+				string ndoProjFilePath = arg;
 
 #if DEBUG
 					Console.WriteLine( "Domain base directory is: " + AppDomain.CurrentDomain.BaseDirectory );
 					Console.WriteLine( "Running as " + ( IntPtr.Size * 8 ) + " bit app." );
 #endif
 
-					new EnhancerMain().InternalStart( newarg );
+					new EnhancerMain().InternalStart( ndoProjFilePath );
 #if NET48_OR_GREATER
 				}
 #endif
@@ -94,82 +76,18 @@ namespace NDOEnhancer
             File.Copy(source, dest, true);
         }
 
-#if NET48_OR_GREATER
-		int DomainLaunch(string arg)
-		{
-			ProjectDescription pd;
-			ConfigurationOptions options;
 
-			if (!File.Exists(arg))
-			{
-				throw new Exception("Can't find file '" + arg + "'");
-			}
-			pd = new ProjectDescription(arg);
-			options = pd.ConfigurationOptions;
-
-			if (!options.EnableAddIn)
-				return 0;
-
-			verboseMode = options.VerboseMode;
-			string appDomainDir = Path.GetDirectoryName(pd.BinFile);
-			AppDomain cd = AppDomain.CurrentDomain;
-			AppDomain ad = AppDomain.CreateDomain("NDOEnhancerDomain", cd.Evidence, appDomainDir, "", false);
-			ad.SetData("arg", arg);
-			string loadPath = this.GetType().Assembly.Location;
-			if (!File.Exists(loadPath))
-				throw new Exception("File not found: " + loadPath);
-			int result = ad.ExecuteAssembly(loadPath);
-			AppDomain.Unload(ad);
-			if (options.EnableEnhancer)
-			{
-                string tempDir = Path.Combine(pd.ObjPath, "ndotemp");
-				string enhObjFile = Path.Combine(tempDir, Path.GetFileName(pd.BinFile));
-				string enhPdbFile = Path.ChangeExtension(enhObjFile, ".pdb");
-				string binPdbFile = Path.ChangeExtension(pd.BinFile, ".pdb");
-				string objFile = Path.Combine(pd.ObjPath, Path.GetFileName(pd.BinFile));
-                string objPdbFile = Path.Combine(pd.ObjPath, Path.GetFileName(binPdbFile));
-                bool objPathDifferent = String.Compare(objFile, pd.BinFile, true) != 0;
-                if (File.Exists(enhObjFile))
-				{
-					CopyFile(enhObjFile, pd.BinFile);
-
-                    if (objPathDifferent)
-                        CopyFile(enhObjFile, objFile);
-                    File.Delete(enhObjFile);
-
-					if (File.Exists(enhPdbFile))
-					{
-                        CopyFile(enhPdbFile, binPdbFile);
-
-                        if (objPathDifferent)
-                            CopyFile(enhPdbFile, objPdbFile);
-                        try
-                        {
-                            File.Delete(enhPdbFile);
-                        }
-                        catch (Exception ex)
-                        {
-                            if (verboseMode)
-                                Console.WriteLine("Warning: Ignored Exception: " + ex.ToString());
-                        }
-					}
-				}
-			}
-			return result;
-		}
-#endif
-
-		public void InternalStart(string arg)
+		public void InternalStart(string ndoProjFilePath)
 		{
 			Console.WriteLine("Runtime: " + typeof(string).Assembly.FullName);			
 			ConfigurationOptions options;
 
-			if (!File.Exists(arg))
+			if (!File.Exists(ndoProjFilePath))
 			{
-				throw new Exception("Can't find file '" + arg + "'");
+				throw new Exception("Can't find file '" + ndoProjFilePath + "'");
 			}
 
-			this.projectDescription = new ProjectDescription( arg );
+			this.projectDescription = new ProjectDescription( ndoProjFilePath );
 			AppDomain.CurrentDomain.SetData( "ProjectDescription", this.projectDescription );
 
 			AppDomain.CurrentDomain.AssemblyResolve += OnAssemblyResolve;
@@ -185,7 +103,6 @@ namespace NDOEnhancer
 
 #if DEBUG
             Console.WriteLine("Loading Project Description ready.");
-			Console.WriteLine( $"Project Style: {( this.projectDescription.IsSdkStyle ? "Sdk" : "Old MSBuild" )}" );
 
 			verboseMode = true;
 #else
@@ -195,7 +112,6 @@ namespace NDOEnhancer
 			if (verboseMode)
 			{
 				Console.WriteLine( "Domain base directory is: " + AppDomain.CurrentDomain.BaseDirectory );
-				Console.WriteLine( $"Project Style: {(this.projectDescription.IsSdkStyle ? "Sdk" : "Old MSBuild")}" );
 			}
 #endif
 				Console.WriteLine( EnhDate.String, "NDO Enhancer", new AssemblyName( GetType().Assembly.FullName ).Version.ToString() );
@@ -205,41 +121,49 @@ namespace NDOEnhancer
 
 			MessageAdapter messages = new MessageAdapter();
 
-			new NDOEnhancer.Enhancer(this.projectDescription, messages).DoIt();
+			var basePath = Path.Combine(Path.GetDirectoryName(ndoProjFilePath), this.projectDescription.ObjPath);
+			using (new ManagedLoadContext( basePath ).EnterContextualReflection())
+			{
+				new NDOEnhancer.Enhancer( this.projectDescription, messages ).DoIt();
+			}
 
+			
 			if (options.EnableEnhancer)
 				Console.WriteLine("Enhancer ready");
 		}
 
-		string GetPackageLibPath( string assName )
+		string GetPackageLibPath( string assyName )
 		{
+			if (this.projectDescription == null)
+				throw new Exception( "Project Description is not defined" );
 
-
-			var packageName = assName.ToLowerInvariant();
-			if (assName.Equals( "NDO", StringComparison.OrdinalIgnoreCase ))
+			var packageName = assyName.ToLowerInvariant();
+			if (assyName.Equals( "NDO", StringComparison.OrdinalIgnoreCase ))
 				packageName = "ndo.dll";
 
-			var path = NugetProps.DefaultNugetPackageFolder;
+			var path = new NugetProps(this.projectDescription).DefaultNugetPackageFolder;
 			if (path == null)
 				return null;
 
-			return Path.Combine( path, ProjectAssets.GetPackageDir( packageName ) );
+			return Path.Combine( path, new ProjectAssets(this.projectDescription).GetPackageDir( packageName ) );
 		}
 
+		/// <summary>
+		/// This is called, if an assembly can't be found in the bin directory
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="args"></param>
+		/// <returns></returns>
 		Assembly OnAssemblyResolve( object sender, ResolveEventArgs args )
 		{
 			if (verboseMode)
 				Console.WriteLine( $"AssemblyResolve: {args?.Name}" );
 
-			var assName = args.Name.Split(',').FirstOrDefault();
-			if (assName == null)
+			var assyName = args?.Name?.Split(',').FirstOrDefault();
+			if (assyName == null)
 				return null;
 
-			string path = null;
-			if (this.projectDescription.IsSdkStyle)
-				path = GetPackageLibPath( assName );
-			else
-				path = Path.Combine( Path.GetDirectoryName( Assembly.GetExecutingAssembly().Location ), assName + ".dll" );
+			string path = GetPackageLibPath( assyName );
 
 			if (path == null)
 				return null;
@@ -249,6 +173,7 @@ namespace NDOEnhancer
 			{
 				return Assembly.LoadFrom( path );
 			}
+
 			return null;
 		}
 

@@ -74,11 +74,11 @@ namespace NDOEnhancer
 			psi.RedirectStandardOutput = true;
 			psi.RedirectStandardError  = true;
 
-			var codePage = CultureInfo.CurrentCulture.TextInfo.OEMCodePage;
-			if (codePage == 1)  // Windows Bug, der 65001 in 1 ersetzt
-				codePage = 437;
-			psi.StandardErrorEncoding = Encoding.GetEncoding( codePage );
-			psi.StandardOutputEncoding = Encoding.GetEncoding( codePage );
+			//var codePage = CultureInfo.CurrentCulture.TextInfo.ANSICodePage;
+			//if (codePage == 1)  // Windows Bug, der 65001 in 1 ersetzt
+			//	codePage = 437;
+			//psi.StandardErrorEncoding = Encoding.GetEncoding( codePage );
+			//psi.StandardOutputEncoding = Encoding.GetEncoding( codePage );
 
 			System.Diagnostics.Process proc = System.Diagnostics.Process.Start( psi );
 

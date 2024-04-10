@@ -162,18 +162,21 @@ namespace NDOEnhancer
 				if (!ownAssembly && !NDOAssemblyChecker.IsEnhanced( dllPath ))
 					continue;
 
-				AssemblyName assToLoad = null;
-				Assembly ass = null; 
+				AssemblyName assyToLoad = null;
+				Assembly assy = null;
+				string assyName;
 				try
 				{
 					if (verboseMode)
 						messages.WriteLine($"Loading assembly {dllPath}");
-                    assToLoad = AssemblyName.GetAssemblyName(dllPath);
-                    ass = Assembly.Load(assToLoad);
+                    assyToLoad = AssemblyName.GetAssemblyName(dllPath);
+					assyName = assyToLoad.Name;
+
+					assy = Assembly.Load(assyName);
                 }
 				catch (Exception ex)
 				{
-					if (assToLoad != null && (binaryAssemblyFullName == null || string.Compare(binaryAssemblyFullName, assToLoad.FullName, true) != 0))
+					if (assyToLoad != null && (binaryAssemblyFullName == null || string.Compare(binaryAssemblyFullName, assyToLoad.FullName, true) != 0))
 					{
 						// Not bin file - enhancer may work, if assembly doesn't contain
 						// persistent classes.
@@ -186,13 +189,12 @@ namespace NDOEnhancer
 					continue;
 				}
 
-				string assName = assToLoad.Name;
-				if (this.assemblyFullNames.ContainsKey(assName))
+				if (this.assemblyFullNames.ContainsKey(assyName))
 				{
-					messages.WriteLine("Assembly '" + assName + "' analyzed twice. Check your .ndoproj file.");
+					messages.WriteLine("Assembly '" + assyName + "' analyzed twice. Check your .ndoproj file.");
 					continue;
 				}
-				this.assemblyFullNames.Add(assName, assToLoad.FullName);
+				this.assemblyFullNames.Add(assyName, assyToLoad.FullName);
 
                 if (verboseMode)
                 {
@@ -201,11 +203,11 @@ namespace NDOEnhancer
                 }
 
 				AssemblyNode assemblyNode = null;
-                CheckNDO(ass);
+                CheckNDO(assy);
 
 				try
 				{
-					assemblyNode = new AssemblyNode(ass, this.mappings);
+					assemblyNode = new AssemblyNode(assy, this.mappings);
 				}
 				catch (Exception ex)
 				{
@@ -220,8 +222,28 @@ namespace NDOEnhancer
 					ownClassList = assemblyNode.PersistentClasses;
 					this.isEnhanced = assemblyNode.IsEnhanced;
 					this.oidTypeName = assemblyNode.OidTypeName;
-					this.ownAssemblyName = assName;
-					Corlib.FxType = assemblyNode.TargetFramework == ".NETStandard,Version=v2.0" ? FxType.Standard2 : FxType.NetFx;
+					this.ownAssemblyName = assyName;
+					Corlib.FxType = assemblyNode.TargetFramework == ".NETStandard,Version=" ? FxType.Standard2 : FxType.Net;
+					//.NETCoreApp,Version=v6.0
+					int p = assemblyNode.TargetFramework.IndexOf( "Version=v" );
+					if (p == -1)
+					{
+						throw new Exception( $"Target Framework doesn't contain version number: '{assemblyNode.TargetFramework}'" );
+					}
+					else
+					{
+						if (Version.TryParse( assemblyNode.TargetFramework.Substring( p + 9 ), out var v ))
+						{
+							var minor = Math.Max( 0, v.Minor );
+							var rev = Math.Max( 0, v.Revision );
+							var build = Math.Max( 0, v.Build );
+							Corlib.FxVersion = $"{v.Major}:{minor}:{build}:{rev}";
+						}
+						else
+						{
+							throw new Exception( $"Version number invalid in '{assemblyNode.TargetFramework}'" );
+						}
+					}
 					if (this.verboseMode)
 						messages.WriteLine( $"FxType: {ownAssemblyName}: {Corlib.FxType}" );
 				}
@@ -1233,11 +1255,11 @@ namespace NDOEnhancer
 			{
 				var foreignAssemblies = CheckRelationTargetAssemblies();
 
-				bool insertData = true;
+				bool insertSystemDataCommon = true;
 				bool insertXml = true;
 				bool insertNdo = true;
 				bool insertNdoInterfaces = true;
-				bool insertSystem = true;
+				bool insertSystemComponentmodelPrimitives = true;
 
 				foreach ( var assyElem in ilFile.AssemblyElements)
 				{ 
@@ -1255,11 +1277,11 @@ namespace NDOEnhancer
 					if (line.StartsWith(".assembly"))
 					{
 						if (nameLower == "system.data")
-							insertData = false;
+							insertSystemDataCommon = false;
 						if (nameLower == "system.xml")
 							insertXml = false;
-						if (nameLower == "system")
-							insertSystem = false;
+						if (nameLower == "system.componentmodel.primitives")
+							insertSystemComponentmodelPrimitives = false;
 						if (nameLower == "ndo")
 						{
                             if (this.verboseMode)
@@ -1296,40 +1318,38 @@ namespace NDOEnhancer
 
 				ILAssemblyElement ael = ilFile.AssemblyElements.First();
 
-#warning Do we need this code, and if this is the case, we must adjust the version numbers
-				// We might need System.Data.Common as well.
-				if (insertData)
+				if (insertSystemDataCommon && Corlib.FxType == FxType.Net)
 				{
-					string line = @".assembly extern System.Data
-{
+					string line = $@".assembly extern System.Data.Common
+{{
+  .publickeytoken = (B0 3F 5F 7F 11 D5 0A 3A )
+  .ver {Corlib.FxVersion}
+}}";
+					ael.InsertBefore(new ILElement(line));
+				}
+
+
+				if (insertSystemComponentmodelPrimitives && Corlib.FxType == FxType.Net)
+				{
+					string line = $@".assembly extern System.ComponentModel.Primitives
+{{
 .publickeytoken = (B7 7A 5C 56 19 34 E0 89 )
-.ver 2:0:0:0
-}
+.ver {Corlib.FxVersion}
+}}
 ";
 					ael.InsertBefore(new ILElement(line));
 				}
 
-				if (insertSystem)
-				{
-					string line = @".assembly extern System
-{
-.publickeytoken = (B7 7A 5C 56 19 34 E0 89 )
-.ver 2:0:0:0
-}
-";
-					ael.InsertBefore(new ILElement(line));
-				}
-
-				if (insertXml)
+				if (insertXml && Corlib.FxType == FxType.Net)
 				{
 //					Assembly ass = Assembly.GetAssembly(typeof(System.Data.DataRow));
 //					verString = getAssemblyInfo(ass, "Version=", "");
 //					verString = ".ver " + verString.Replace(".", ":");
-                    string line = @".assembly extern System.Xml
-{
+                    string line = $@".assembly extern System.Xml.ReaderWriter
+{{
 .publickeytoken = (B7 7A 5C 56 19 34 E0 89 )
-.ver 2:0:0:0
-}
+.ver {Corlib.FxVersion}
+}}
 ";
 					ael.InsertBefore(new ILElement(line));
 				}
@@ -1449,8 +1469,9 @@ namespace NDOEnhancer
 			    messages.WriteLine("KeyFile: " + this.assemblyKeyFile);
 
 			asm.DoIt(ilEnhFile, enhFile, this.assemblyKeyFile, debug);
+			
 			if (! File.Exists(enhFile))
-					throw new Exception("Codeerzeugung: temporäre Datei " + enhFile + " konnte nicht erstellt werden.");
+					throw new Exception("Temporary file " + enhFile + " could not be written.");
             string resFile = Path.ChangeExtension(enhFile, ".res");
             if (File.Exists(resFile))
                 File.Delete(resFile);
@@ -1462,16 +1483,16 @@ namespace NDOEnhancer
 			
 //			File.Copy( enhFile, objFile, true );
 
-			File.SetCreationTime(enhFile, ct);
-			File.SetLastAccessTime(enhFile, at);
-			File.SetLastWriteTime(enhFile, wt);
+			File.SetCreationTime( enhFile, ct);
+			File.SetLastAccessTime( enhFile, at);
+			File.SetLastWriteTime( enhFile, wt);
 
-//			if ( debug )
-//			{
-//				if (! File.Exists(enhPdbFile))
-//					throw new Exception("Codeerzeugung: temporäre Datei " + enhPdbFile + " konnte nicht erstellt werden.");
-//				File.Copy( enhPdbFile, binPdbFile, true );
-//			}
+			//if (debug)
+			//{
+			//	if (!File.Exists( enhPdbFile ))
+			//		throw new Exception( "Temporary file " + enhPdbFile + " could not be written." );
+			//	File.Copy( enhPdbFile, binPdbFile, true );
+			//}
 
 		}
 

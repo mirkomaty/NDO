@@ -935,8 +935,8 @@ namespace NDOEnhancer.Patcher
 			{
 				propElement = new ILPropertyElement();
 				propElement.AddLine( ".property instance class [NDO]NDO.LoadState NDOLoadState()" );
-				propElement.AddElement( new ILCustomElement( ".custom instance void [System]System.ComponentModel.BrowsableAttribute::.ctor(bool) = ( 01 00 00 00 00 )", propElement ) );
-				propElement.AddElement( new ILCustomElement( ".custom instance void [System.Xml]System.Xml.Serialization.XmlIgnoreAttribute::.ctor() = ( 01 00 00 00 )", propElement ) );
+				propElement.AddElement( new ILCustomElement( $".custom instance void {Corlib.SystemComponentModel}System.ComponentModel.BrowsableAttribute::.ctor(bool) = ( 01 00 00 00 00 )", propElement ) );
+				propElement.AddElement( new ILCustomElement( $".custom instance void {Corlib.XmlIgnoreAssembly}System.Xml.Serialization.XmlIgnoreAttribute::.ctor() = ( 01 00 00 00 )", propElement ) );
 				propElement.AddElement( new ILGetElement( ".get instance class [NDO]NDO.LoadState " + m_nonGenericRefName + "::get_NDOLoadState()" ) );
 				this.m_classElement.AddElement( propElement );
 			}
@@ -1345,8 +1345,8 @@ namespace NDOEnhancer.Patcher
 			if ( prop == null )
 			{
 				prop = new ILPropertyElement( ".property instance class [NDO]NDO.ObjectId NDOObjectId()", m_classElement );
-				prop.AddElement( new ILCustomElement( ".custom instance void [System]System.ComponentModel.CategoryAttribute::.ctor(string) = ( 01 00 03 4E 44 4F 00 00 )", prop ) );
-				prop.AddElement( new ILCustomElement( ".custom instance void [System.Xml]System.Xml.Serialization.XmlIgnoreAttribute::.ctor() = ( 01 00 00 00 )", prop ) );
+				prop.AddElement( new ILCustomElement( $".custom instance void {Corlib.SystemComponentModel}System.ComponentModel.CategoryAttribute::.ctor(string) = ( 01 00 03 4E 44 4F 00 00 )", prop ) );
+				prop.AddElement( new ILCustomElement( $".custom instance void {Corlib.XmlIgnoreAssembly}System.Xml.Serialization.XmlIgnoreAttribute::.ctor() = ( 01 00 00 00 )", prop ) );
 				prop.AddElement( new ILSetElement( ".set instance void " + m_nonGenericRefName + "::set_NDOObjectId(class [NDO]NDO.ObjectId)" ) );
 				prop.AddElement( new ILGetElement( ".get instance class [NDO]NDO.ObjectId " + m_nonGenericRefName + "::get_NDOObjectId()" ) );
 				m_classElement.AppendProperty( prop );
@@ -1412,8 +1412,8 @@ namespace NDOEnhancer.Patcher
 			if ( prop == null )
 			{
 				prop = new ILPropertyElement( $".property instance valuetype {Corlib.Name}System.Guid NDOTimeStamp()", m_classElement );
-				prop.AddElement( new ILCustomElement( ".custom instance void [System]System.ComponentModel.BrowsableAttribute::.ctor(bool) = ( 01 00 00 00 00 )", prop ) );
-				prop.AddElement( new ILCustomElement( ".custom instance void [System.Xml]System.Xml.Serialization.XmlIgnoreAttribute::.ctor() = ( 01 00 00 00 )", prop ) );
+				prop.AddElement( new ILCustomElement( $".custom instance void {Corlib.SystemComponentModel}System.ComponentModel.BrowsableAttribute::.ctor(bool) = ( 01 00 00 00 00 )", prop ) );
+				prop.AddElement( new ILCustomElement( $".custom instance void {Corlib.XmlIgnoreAssembly}System.Xml.Serialization.XmlIgnoreAttribute::.ctor() = ( 01 00 00 00 )", prop ) );
 				prop.AddElement( new ILSetElement( ".set instance void " + m_nonGenericRefName + $"::set_NDOTimeStamp(valuetype {Corlib.Name}System.Guid)" ) );
 				prop.AddElement( new ILGetElement( $".get instance valuetype {Corlib.Name}System.Guid " + m_nonGenericRefName + "::get_NDOTimeStamp()" ) );
 				m_classElement.AppendProperty( prop );
@@ -1497,8 +1497,8 @@ namespace NDOEnhancer.Patcher
 			if ( prop == null )
 			{
 				prop = new ILPropertyElement( ".property instance valuetype [NDO]NDO.NDOObjectState NDOObjectState()", m_classElement );
-				prop.AddElement( new ILCustomElement( ".custom instance void [System]System.ComponentModel.CategoryAttribute::.ctor(string) = ( 01 00 03 4E 44 4F 00 00 )", prop ) );
-				prop.AddElement( new ILCustomElement( ".custom instance void [System.Xml]System.Xml.Serialization.XmlIgnoreAttribute::.ctor() = ( 01 00 00 00 )", prop ) );
+				prop.AddElement( new ILCustomElement( $".custom instance void {Corlib.SystemComponentModel}System.ComponentModel.CategoryAttribute::.ctor(string) = ( 01 00 03 4E 44 4F 00 00 )", prop ) );
+				prop.AddElement( new ILCustomElement( $".custom instance void {Corlib.XmlIgnoreAssembly}System.Xml.Serialization.XmlIgnoreAttribute::.ctor() = ( 01 00 00 00 )", prop ) );
 				prop.AddElement( new ILGetElement( ".get instance valuetype [NDO]NDO.NDOObjectState " + m_nonGenericRefName + "::get_NDOObjectState()" ) );
 				prop.AddElement( new ILSetElement( ".set instance void " + m_nonGenericRefName + "::set_NDOObjectState(valuetype [NDO]NDO.NDOObjectState)" ) );
 
@@ -1569,8 +1569,8 @@ namespace NDOEnhancer.Patcher
 			if ( prop == null )
 			{
 				prop = new ILPropertyElement( ".property instance class [NDO]NDO.IStateManager NDOStateManager()", m_classElement );
-				prop.AddElement( new ILCustomElement( ".custom instance void [System]System.ComponentModel.BrowsableAttribute::.ctor(bool) = ( 01 00 00 00 00 )", prop ) );
-				prop.AddElement( new ILCustomElement( ".custom instance void [System.Xml]System.Xml.Serialization.XmlIgnoreAttribute::.ctor() = ( 01 00 00 00 )", prop ) );
+				prop.AddElement( new ILCustomElement( $".custom instance void {Corlib.SystemComponentModel}System.ComponentModel.BrowsableAttribute::.ctor(bool) = ( 01 00 00 00 00 )", prop ) );
+				prop.AddElement( new ILCustomElement( $".custom instance void {Corlib.XmlIgnoreAssembly}System.Xml.Serialization.XmlIgnoreAttribute::.ctor() = ( 01 00 00 00 )", prop ) );
 				prop.AddElement( new ILGetElement( ".get instance class [NDO]NDO.IStateManager " + m_nonGenericRefName + "::get_NDOStateManager()" ) );
 				prop.AddElement( new ILSetElement( ".set instance void " + m_nonGenericRefName + "::set_NDOStateManager(class [NDO]NDO.IStateManager)" ) );
 
@@ -1928,7 +1928,7 @@ namespace NDOEnhancer.Patcher
 			method.addStatement("stloc.1");
 
 			method.addStatement("ldelem.ref");
-			method.addStatement("callvirt   instance object [System.Data]System.Data.DataRow::get_Item(string)");
+			method.addStatement($"callvirt   instance object {Corlib.SystemDataCommon}System.Data.DataRow::get_Item(string)");
 			method.addStatement("dup");
 			method.addStatement("stloc.0");
 
@@ -2053,7 +2053,7 @@ namespace NDOEnhancer.Patcher
 					method.AddLine( ".method public hidebysig virtual" );
 				else
 					method.AddLine( ".method public hidebysig newslot virtual" );
-				method.AddLine( "instance void  NDORead(class [System.Data]System.Data.DataRow dr, string[] fields, int32 startind) cil managed" );
+				method.AddLine( $"instance void  NDORead(class {Corlib.SystemDataCommon}System.Data.DataRow dr, string[] fields, int32 startind) cil managed" );
 				m_classElement.AppendMethod( method );
 			}
 			else
@@ -2146,13 +2146,13 @@ namespace NDOEnhancer.Patcher
 
 			if (m_hasPersistentBase)
 			{
-				method.addStatement(ldarg_0);
-				method.addStatement(ldarg_1);
-				method.addStatement("ldarg.2");
-				method.addStatement("ldarg.3");
-				method.addStatement("ldc.i4.s " + nr.ToString());
-				method.addStatement("add");
-				method.addStatement("call       instance void " + m_persistentBase + "::NDORead(class [System.Data]System.Data.DataRow dr, string[] fields, int32 startind)");
+				method.addStatement( ldarg_0 );
+				method.addStatement( ldarg_1 );
+				method.addStatement( "ldarg.2" );
+				method.addStatement( "ldarg.3" );
+				method.addStatement( "ldc.i4.s " + nr.ToString() );
+				method.addStatement( "add" );
+				method.addStatement( $"call       instance void {m_persistentBase}::NDORead(class {Corlib.SystemDataCommon}System.Data.DataRow dr, string[] fields, int32 startind)");
 			}
 			method.addStatement("ret");
 		}
@@ -2355,7 +2355,7 @@ namespace NDOEnhancer.Patcher
 				if (!(tname == $"class {Corlib.Name}System.String" || tname == $"class {Corlib.Name}System.Byte[]" || tname == "string" || tname == "unsigned int8[]"))
 					method.addStatement("box  " + tname);
 			}
-			method.addStatement("callvirt   instance void [System.Data]System.Data.DataRow::set_Item(string, object)");
+			method.addStatement($"callvirt   instance void {Corlib.SystemDataCommon}System.Data.DataRow::set_Item(string, object)");
 		}
 
 
@@ -2371,7 +2371,7 @@ namespace NDOEnhancer.Patcher
 					method.AddLine( ".method public hidebysig virtual" );
 				else
 					method.AddLine( ".method public hidebysig newslot virtual" );
-				method.AddLine( "instance void  NDOWrite(class [System.Data]System.Data.DataRow dr, string[] fields, int32 startind) cil managed" );
+				method.AddLine( $"instance void  NDOWrite(class {Corlib.SystemDataCommon}System.Data.DataRow dr, string[] fields, int32 startind) cil managed" );
 				m_classElement.AppendMethod( method );
 			}
 			else
@@ -2471,7 +2471,7 @@ namespace NDOEnhancer.Patcher
 				method.addStatement("ldarg.3");
 				method.addStatement("ldc.i4.s " + nr.ToString());
 				method.addStatement("add");
-				method.addStatement("call       instance void " + m_persistentBase + "::NDOWrite(class [System.Data]System.Data.DataRow dr, string[] fields, int32 startind)");
+				method.addStatement($"call       instance void {m_persistentBase}::NDOWrite(class {Corlib.SystemDataCommon}System.Data.DataRow dr, string[] fields, int32 startind)" );
 			}
 
 			method.addStatement("ret");
@@ -2521,8 +2521,8 @@ namespace NDOEnhancer.Patcher
 			{
 				propEl = new ILPropertyElement();
 				propEl.AddLine( ".property instance class [NDO]NDO.IPersistenceHandler NDOHandler()" );
-				propEl.AddElement( new ILCustomElement( ".custom instance void [System]System.ComponentModel.BrowsableAttribute::.ctor(bool) = ( 01 00 00 00 00 )", propEl ) );
-				propEl.AddElement( new ILCustomElement( ".custom instance void [System.Xml]System.Xml.Serialization.XmlIgnoreAttribute::.ctor() = ( 01 00 00 00 )", propEl ) );
+				propEl.AddElement( new ILCustomElement( $".custom instance void {Corlib.SystemComponentModel}System.ComponentModel.BrowsableAttribute::.ctor(bool) = ( 01 00 00 00 00 )", propEl ) );
+				propEl.AddElement( new ILCustomElement( $".custom instance void {Corlib.XmlIgnoreAssembly}System.Xml.Serialization.XmlIgnoreAttribute::.ctor() = ( 01 00 00 00 )", propEl ) );
 				propEl.AddElement( new ILGetElement( ".get instance class [NDO]NDO.IPersistenceHandler " + m_nonGenericRefName + "::get_NDOHandler()" ) );
 				m_classElement.AddElement( propEl );
 			}

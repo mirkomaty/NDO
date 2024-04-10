@@ -2,8 +2,8 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <Import Project="SourceRevisionId.props" />
   <PropertyGroup>
-    <TargetFrameworks>netstandard2.0;net6.0;net472</TargetFrameworks>
-    <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
+    <TargetFrameworks>netstandard2.0;net6.0</TargetFrameworks>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <IncludeSymbols>True</IncludeSymbols>
     <PackageId>NDO.dll</PackageId>
@@ -46,7 +46,7 @@
 	<ItemGroup Condition="'$(TargetFramework)'=='net472'">
 		<Reference Include="System.Transactions" />
 	</ItemGroup>	
-  <ItemGroup>
+  <!--ItemGroup>
     <Content Include="..\nuget\NDO.dll.targets">
       <Pack>true</Pack>
       <PackageCopyToOutput>true</PackageCopyToOutput>
@@ -82,7 +82,7 @@
       <PackageCopyToOutput>true</PackageCopyToOutput>
       <PackagePath>build</PackagePath>
     </Content>
-  </ItemGroup>
+  </ItemGroup-->
   <Target Name="PostBuild" AfterTargets="Pack">
     <Exec Command="IF NOT EXIST ..\Nuget-Packages md ..\Nuget-Packages&#xD;&#xA;echo Copy package&#xD;&#xA;copy bin\$(Configuration)\NDO*.nupkg ..\Nuget-Packages /Y&#xD;&#xA;" />
   </Target>

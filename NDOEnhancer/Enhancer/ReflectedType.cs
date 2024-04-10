@@ -117,7 +117,7 @@ namespace NDOEnhancer
                 string assemblyName = t.Assembly.GetName().Name;
                 if (isQuoted)
                     assemblyName = QuotedName.Convert(assemblyName);
-				if (assemblyName == "mscorlib")
+				if (assemblyName == "mscorlib" || assemblyName == "System.Private.CoreLib")
 					assPrefix = Corlib.Name;
 				else
 					assPrefix = "[" + assemblyName + "]";

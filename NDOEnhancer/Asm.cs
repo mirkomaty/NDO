@@ -26,6 +26,7 @@ using System.Diagnostics;
 using System.IO;
 using Microsoft.Win32;
 using System.Globalization;
+using System.Reflection;
 
 namespace NDOEnhancer
 {
@@ -52,7 +53,11 @@ namespace NDOEnhancer
 
 		void CheckIlAsmPath()
 		{
-			string path = null;
+			string path = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "ILAsm");
+			this.ilAsmPath = path;
+
+
+#if nix
 			//string path = Path.Combine( Path.GetDirectoryName( System.Reflection.Assembly.GetEntryAssembly().Location ), "ilasm.exe" );
 			//if (File.Exists( path ))
 			//{
@@ -74,7 +79,7 @@ namespace NDOEnhancer
 			{
 				if ( Path.GetFileName( dir ).StartsWith( "v4.0", true, CultureInfo.InvariantCulture ) )
 				{
-					path = Path.Combine( Path.GetDirectoryName( ilAsmPath ), "ilasm.exe" );
+					path = Path.Combine( dir, "ilasm.exe" );
 					if (File.Exists( path ))
 					{
 						this.ilAsmPath = path;
@@ -95,6 +100,7 @@ namespace NDOEnhancer
 			{
 				CheckVersion( "PATH Environment Variable" );
 			}
+#endif
 		}
 
 		public Asm(MessageAdapter messages, bool verboseMode) : base(verboseMode)
@@ -111,25 +117,13 @@ namespace NDOEnhancer
 
 			// Dll or Exe?
 			string libMode = "/" + Path.GetExtension(dllFileName).Substring(1).ToUpper();
-
-#if NDO11
-			string debugMode = debug ? " /DEBUG" : string.Empty;
-#else
 			string debugMode = debug ? " /DEBUG /PDB" : string.Empty;
-#endif
 			string key = keyFileName != null ? " /KEY=\"" + keyFileName + '"' : string.Empty;
-#if NETCOREAPP2_0
-			string resource = String.Empty;
-#else
-			string resourceFile = Path.ChangeExtension(dllFileName, ".res");
 
-			string resource = File.Exists(resourceFile) && Corlib.FxType == FxType.NetFx ? " /RESOURCE=\"" + resourceFile + '"' : string.Empty;
-#endif
 			string parameters = 
 				libMode
 				+ debugMode
 				+ key
-				+ resource
 				+ " /QUIET"
                 + " /NOLOGO"
                 + " /OUTFILE=\"" + dllFileName + "\""

@@ -97,10 +97,6 @@ namespace NDOEnhancer
 			get { return assemblyName; }
 			set { assemblyName = value; }
 		}
-		public bool IsSdkStyle
-		{
-			get { return this.isSdkStyle; }
-		}
 
 		public ProjectDescription()
 		{
@@ -128,7 +124,6 @@ namespace NDOEnhancer
 				file = files[0];
 
 			XElement projectElement = XElement.Load(file);
-			this.isSdkStyle = projectElement.Attribute( "Sdk" ) != null;
 		}
 
 		public ProjectDescription(string fileName)

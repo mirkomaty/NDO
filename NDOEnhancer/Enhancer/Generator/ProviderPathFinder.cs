@@ -12,30 +12,25 @@ namespace NDOEnhancer
 	{
         ProjectDescription projectDescription;
 
-        public ProviderPathFinder()
+        public ProviderPathFinder(ProjectDescription projectDescription)
 		{
-            this.projectDescription = (ProjectDescription) AppDomain.CurrentDomain.GetData( "ProjectDescription" );
+            this.projectDescription = projectDescription;
         }
 
         public IEnumerable<string> GetPaths()
 		{
             List<string>paths = new List<string>();
-            if (!this.projectDescription.IsSdkStyle)
-            {
-                paths.Add( AppDomain.CurrentDomain.BaseDirectory );
-                paths.Add( Path.GetDirectoryName( Assembly.GetExecutingAssembly().Location ) );
+
+            var nugetFolder = new NugetProps(this.projectDescription).DefaultNugetPackageFolder;
+            var assetPaths = new ProjectAssets(this.projectDescription).GetPackageDirectories(@"ndo\..+")
+                .Where(p=>p.IndexOf("/ndo.dll/", StringComparison.OrdinalIgnoreCase) == -1).
+                Select(p=>Path.GetDirectoryName(Path.Combine(nugetFolder, p)));
+
+			foreach (var assetPath in assetPaths)
+			{
+                paths.Add( assetPath );
             }
-            else
-            {
-                var nugetFolder = NugetProps.DefaultNugetPackageFolder;
-                var assetPaths = ProjectAssets.GetPackageDirectories(@"ndo\..+")
-                    .Where(p=>p.IndexOf("/ndo.dll/", StringComparison.OrdinalIgnoreCase) == -1).
-                    Select(p=>Path.GetDirectoryName(Path.Combine(nugetFolder, p)));
-				foreach (var assetPath in assetPaths)
-				{
-                    paths.Add( assetPath );
-                }
-            }
+
             if (projectDescription.ConfigurationOptions.VerboseMode)
             {
                 Console.WriteLine( "Provider probing paths: " );
@@ -46,6 +41,7 @@ namespace NDOEnhancer
                 if (paths.Count == 0)
                     Console.WriteLine( "  None found" );
             }
+
             return paths;
 		}
 

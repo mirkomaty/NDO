@@ -11,17 +11,17 @@ namespace NDOEnhancer
 {
 	class ProjectAssets
 	{
-		static ProjectDescription projectDescription;
-		static ProjectAssets()
+		private readonly ProjectDescription projectDescription;
+		public ProjectAssets( ProjectDescription projectDescription )
 		{
-			projectDescription = (ProjectDescription) AppDomain.CurrentDomain.GetData( "ProjectDescription" );
+			this.projectDescription = projectDescription;
 		}
 
-		public static string GetPackageDir( string packageName )
+		public string GetPackageDir( string packageName )
 		{
 			var json = new JSON();
 			JSON.Object root;
-			var objPath = Path.Combine(projectDescription.ProjPath, "obj");
+			var objPath = Path.Combine(this.projectDescription.ProjPath, "obj");
 			var assetsPath = Path.Combine( objPath, "project.assets.json" );
 			if (assetsPath == null)
 			{
@@ -45,7 +45,7 @@ namespace NDOEnhancer
 			return relPath;
 		}
 
-		public static IEnumerable<string> GetPackageDirectories( string pattern )
+		public IEnumerable<string> GetPackageDirectories( string pattern )
 		{
 			var json = new JSON();
 			JSON.Object root;
