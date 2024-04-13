@@ -1,4 +1,5 @@
-﻿using NDO;
+﻿using System;
+using NDO;
 
 namespace PersistentEnhancerTestClasses
 {

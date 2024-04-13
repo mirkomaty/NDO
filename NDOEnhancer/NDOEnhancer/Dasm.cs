@@ -25,6 +25,7 @@ using System.Linq;
 using System.IO;
 using System.Diagnostics;
 using Microsoft.Win32;
+using System.Reflection;
 
 namespace NDOEnhancer
 {
@@ -37,48 +38,17 @@ namespace NDOEnhancer
 		MessageAdapter messages;
         bool verboseMode;
 
-        void CheckVersion(string method)
-        {
-            if (File.Exists(ilDasmPath))
-            {
-                FileVersionInfo fvi = FileVersionInfo.GetVersionInfo(ilDasmPath);
-                if (string.Compare(fvi.CompanyName, "Microsoft Corporation", true) != 0
-                    && fvi.FileVersion.StartsWith("4.0"))
-                {
-                    messages.WriteLine("Wrong ILDasm version in file: " + ilDasmPath + ". CompanyName='" + fvi.CompanyName + "'; Version='" + fvi.FileVersion + "' Method used='" + method + "'. Trying to find ILDasm with other methods.");
-                    ilDasmPath = string.Empty;
-                }
-            }
-        }
-
-
 		void CheckILDasmPath()
 		{
-			var path = Path.Combine( Path.GetDirectoryName( System.Reflection.Assembly.GetEntryAssembly().Location ), "ILDasm.exe" );
-			if (File.Exists( path ))
-			{
-				this.ilDasmPath = path;
-				CheckVersion( "Search Enhancer Directory" );
-			}
+			string path;
+			if (System.OperatingSystem.IsLinux())
+				path = Path.Combine( Path.GetDirectoryName( Assembly.GetExecutingAssembly().Location ), "runtimes", "linux-x64", "native", "ildasm" );
+			else if (System.OperatingSystem.IsWindows())
+				path = Path.Combine( Path.GetDirectoryName( Assembly.GetExecutingAssembly().Location ), "runtimes", "win-x64", "native", "ildasm.exe" );
+			else
+				throw new Exception( "Can't determine, if NDOEnhancer is running on Windows or Linux." );
 
-			//path = Path.Combine( Environment.GetFolderPath( Environment.SpecialFolder.ProgramFilesX86 ), @"Microsoft SDKs\Windows\v10.0A\Bin\NETFX 4.6 Tools" );
-			//if ( Directory.Exists( path ) )
-			//{
-			//	this.ilDasmPath = Path.Combine( path, "ILDasm.exe" );
-			//	CheckVersion( "Fx SDK v10.0A" );
-			//}		
-
-			//string pathVar = Environment.GetEnvironmentVariable( "PATH" );
-			//var thePaths = from pv in pathVar.Split( ';' ) select Path.Combine( pv.TrimEnd( '\\' ), "ILDasm.exe" );
-			//this.ilDasmPath = thePaths.FirstOrDefault( p => File.Exists( p ) );
-			//if (this.ilDasmPath == null || !File.Exists( this.ilDasmPath ))
-			//{
-			//	throw new Exception( "Path for ILDasm not found.\n  Add the path to ILDasm.exe to the PATH environment variable." );
-			//}
-			//else
-			//{
-			//	CheckVersion( "PATH Environment Variable" );
-			//}
+			this.ilDasmPath = path;
 		}
 
 		public Dasm(MessageAdapter messages, bool verboseMode)

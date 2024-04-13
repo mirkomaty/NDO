@@ -32,9 +32,11 @@ namespace NDOEnhancer
 				root = json.Parse( tr ).Value.AsObject();
 
 			var targets = root["targets"].AsObject();
-			var standardKey = targets.First(o=>o.StartsWith(".NETStandard,Version="));
+			var standardKey = targets.First(o => o.StartsWith( ".NETStandard,Version=" ) || o.StartsWith( ".NETCoreApp,Version=" ));
 			var standard = targets[standardKey].AsObject();
-			var packageKey = standard.First(o=>o.StartsWith(packageName + '/', StringComparison.OrdinalIgnoreCase));
+			var packageKey = standard.FirstOrDefault(o=>o.StartsWith(packageName + '/', StringComparison.OrdinalIgnoreCase));
+			if (packageKey == null)
+				return null;
 			var package = standard[packageKey].AsObject();
 			var compile = package["compile"].AsObject().First();
 			var relPath = packageKey + "/" + compile;

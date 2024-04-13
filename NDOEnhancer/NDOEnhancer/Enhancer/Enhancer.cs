@@ -223,7 +223,7 @@ namespace NDOEnhancer
 					this.isEnhanced = assemblyNode.IsEnhanced;
 					this.oidTypeName = assemblyNode.OidTypeName;
 					this.ownAssemblyName = assyName;
-					Corlib.FxType = assemblyNode.TargetFramework == ".NETStandard,Version=" ? FxType.Standard2 : FxType.Net;
+					Corlib.FxType = assemblyNode.TargetFramework.StartsWith(".NETStandard,Version=") ? FxType.Standard2 : FxType.Net;
 					//.NETCoreApp,Version=v6.0
 					int p = assemblyNode.TargetFramework.IndexOf( "Version=v" );
 					if (p == -1)
@@ -245,7 +245,10 @@ namespace NDOEnhancer
 						}
 					}
 					if (this.verboseMode)
+					{
 						messages.WriteLine( $"FxType: {ownAssemblyName}: {Corlib.FxType}" );
+						messages.WriteLine( $"Version: {Corlib.FxVersion}" );
+					}
 				}
 
 				var classList = assemblyNode.PersistentClasses;

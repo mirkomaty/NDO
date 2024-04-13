@@ -38,69 +38,17 @@ namespace NDOEnhancer
 		string ilAsmPath;
         MessageAdapter messages;
 
-        void CheckVersion(string method)
-        {
-            if (File.Exists(ilAsmPath))
-            {
-                FileVersionInfo fvi = FileVersionInfo.GetVersionInfo(ilAsmPath);
-                if (string.Compare(fvi.CompanyName, "Microsoft Corporation", true) != 0)
-                {
-                    messages.WriteLine("Wrong ILAsm version in file: " + ilAsmPath + ". CompanyName='" + fvi.CompanyName + "'; Version='" + fvi.FileVersion + "' Method used='" + method + "'. Trying to find ILAsm with other methods.");
-                    ilAsmPath = string.Empty;
-                }
-            }
-        }
-
 		void CheckIlAsmPath()
 		{
-			string path = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "ILAsm");
-			this.ilAsmPath = path;
-
-
-#if nix
-			//string path = Path.Combine( Path.GetDirectoryName( System.Reflection.Assembly.GetEntryAssembly().Location ), "ilasm.exe" );
-			//if (File.Exists( path ))
-			//{
-			//	this.ilAsmPath = path;
-			//	return;
-			//}
-
-			path = typeof( string ).Assembly.Location;
-			path = Path.Combine( Path.GetDirectoryName( path ), "ilasm.exe" );
-			if (File.Exists( path ))
-			{
-				this.ilAsmPath = path;
-				CheckVersion( "Enhancer Executable Directory" );
-				return;
-			}
-
-			path = Path.Combine( Environment.GetFolderPath( Environment.SpecialFolder.Windows ), @"Microsoft.NET\Framework" );
-			foreach ( string dir in Directory.GetDirectories( path ) )
-			{
-				if ( Path.GetFileName( dir ).StartsWith( "v4.0", true, CultureInfo.InvariantCulture ) )
-				{
-					path = Path.Combine( dir, "ilasm.exe" );
-					if (File.Exists( path ))
-					{
-						this.ilAsmPath = path;
-						CheckVersion( ".Net Framework Folder" );
-						return;
-					}
-				}
-			}
-
-			string pathVar = Environment.GetEnvironmentVariable( "PATH" );
-			var thePaths = from pv in pathVar.Split( ';' ) select Path.Combine( pv.TrimEnd('\\'), "ILAsm.exe") ;
-			this.ilAsmPath = thePaths.FirstOrDefault( p => File.Exists( p ) );
-			if (this.ilAsmPath == null || !File.Exists( this.ilAsmPath ))
-			{
-				throw new Exception( "Path for ILAsm not found.\n  Add the path to ilasm.exe to the PATH environment variable." );
-			}
+			string path;
+			if (System.OperatingSystem.IsLinux())
+				path = Path.Combine( Path.GetDirectoryName( Assembly.GetExecutingAssembly().Location ), "runtimes", "linux-x64", "native", "ilasm" );
+			else if (System.OperatingSystem.IsWindows())
+				path = Path.Combine( Path.GetDirectoryName( Assembly.GetExecutingAssembly().Location ), "runtimes", "win-x64", "native", "ilasm.exe" );
 			else
-			{
-				CheckVersion( "PATH Environment Variable" );
-			}
-#endif
+				throw new Exception( "Can't determine, if NDOEnhancer is running on Windows or Linux." );
+
+			this.ilAsmPath = path;
 		}
 
 		public Asm(MessageAdapter messages, bool verboseMode) : base(verboseMode)

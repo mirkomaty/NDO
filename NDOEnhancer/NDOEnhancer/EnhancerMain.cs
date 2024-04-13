@@ -26,6 +26,7 @@ using System.Reflection;
 using System.Linq;
 using NDO.Configuration;
 using NDO.Provider;
+using System.Globalization;
 
 namespace NDOEnhancer
 {
@@ -39,6 +40,9 @@ namespace NDOEnhancer
 		public static int Main( string[] args )
 		{
 			int result = 0;
+			// Make the culture invariant, otherwise .NET tries to load .resources assemblies.
+			System.Threading.Thread.CurrentThread.CurrentCulture = CultureInfo.InvariantCulture;
+			System.Threading.Thread.CurrentThread.CurrentUICulture = CultureInfo.InvariantCulture;
 
 			try
 			{
@@ -127,9 +131,44 @@ namespace NDOEnhancer
 				new NDOEnhancer.Enhancer( this.projectDescription, messages ).DoIt();
 			}
 
-			
 			if (options.EnableEnhancer)
-				Console.WriteLine("Enhancer ready");
+			{
+				string tempDir = Path.Combine(this.projectDescription.ObjPath, "ndotemp");
+				string enhObjFile = Path.Combine(tempDir, Path.GetFileName(this.projectDescription.BinFile));
+				string enhPdbFile = Path.ChangeExtension(enhObjFile, ".pdb");
+				string binPdbFile = Path.ChangeExtension(this.projectDescription.BinFile, ".pdb");
+				string objFile = Path.Combine(this.projectDescription.ObjPath, Path.GetFileName(this.projectDescription.BinFile));
+				string objPdbFile = Path.Combine(this.projectDescription.ObjPath, Path.GetFileName(binPdbFile));
+				bool objPathDifferent = String.Compare(objFile, this.projectDescription.BinFile, true) != 0;
+				if (File.Exists( enhObjFile ))
+				{
+					CopyFile( enhObjFile, this.projectDescription.BinFile );
+#warning We need to shadow copy the obj file
+					// Das ist die Datei, die untersucht wird.
+					//if (objPathDifferent)
+					//	CopyFile( enhObjFile, objFile );
+					//File.Delete( enhObjFile );
+
+					if (File.Exists( enhPdbFile ))
+					{
+						CopyFile( enhPdbFile, binPdbFile );
+
+						if (objPathDifferent)
+							CopyFile( enhPdbFile, objPdbFile );
+						try
+						{
+							File.Delete( enhPdbFile );
+						}
+						catch (Exception ex)
+						{
+							if (verboseMode)
+								Console.WriteLine( "Warning: Ignored Exception: " + ex.ToString() );
+						}
+					}
+				}
+
+				Console.WriteLine( "Enhancer ready" );
+			}
 		}
 
 		string GetPackageLibPath( string assyName )

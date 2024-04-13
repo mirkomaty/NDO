@@ -2,15 +2,16 @@
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
-    <TargetFrameworks>net6.0</TargetFrameworks>
+    <TargetFramework>net6.0</TargetFramework>
     <ImplicitUsings>disable</ImplicitUsings>
     <Nullable>disable</Nullable>
+	  <Version>5.0.0.0</Version>
+	  <AssemblyVersion>5.0.0.0</AssemblyVersion>
   </PropertyGroup>
 
   <Target Name="PrepareEnhDate" BeforeTargets="PrepareForBuild">
     <Exec Command="..\..\MakeEnhancerDate\bin\Release\MakeEnhancerDate.exe &gt; EnhDate.cs" />
   </Target>
-
 
 	<ItemGroup>
     <None Remove="EnhancerParameters.xsd" />
@@ -19,6 +20,10 @@
 
   <ItemGroup>
     <PackageReference Include="mono.cecil" Version="0.11.4" />
+	<PackageReference Include="runtime.linux-x64.Microsoft.NETCore.ILAsm" Version="8.0.0" />
+	<PackageReference Include="runtime.linux-x64.Microsoft.NETCore.ILDAsm" Version="8.0.0" />
+	<PackageReference Include="runtime.win-x64.Microsoft.NETCore.ILAsm" Version="8.0.0" />
+	<PackageReference Include="runtime.win-x64.Microsoft.NETCore.ILDAsm" Version="8.0.0" />
   </ItemGroup>
 
   <ItemGroup>
