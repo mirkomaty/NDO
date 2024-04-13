@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project Sdk="Microsoft.NET.Sdk">
-  <Import Project="SourceRevisionId.props" />
+  <Import Project="SourceRevisionId.props" Condition="Exists('SourceReviceionId.props')" />
   <PropertyGroup>
     <TargetFrameworks>netstandard2.0;net6.0</TargetFrameworks>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
@@ -38,15 +38,15 @@
     <None Remove="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="ndointerfaces" Version="5.0.0" />
-	<!--PackageReference Include="PatchProductVersion" Version="1.0.3" Condition="'$(TargetFramework)'=='netstandard2.0'">
+    <PackageReference Include="NDOInterfaces" Version="5.0.0" />
+	<PackageReference Include="PatchProductVersion" Version="1.0.3" Condition="'$(TargetFramework)'=='netstandard2.0'">
 		<PrivateAssets>all</PrivateAssets>
-	</PackageReference-->
+	</PackageReference>
   </ItemGroup>
-	<ItemGroup Condition="'$(TargetFramework)'=='net472'">
+	<!--ItemGroup Condition="'$(TargetFramework)'=='net472'">
 		<Reference Include="System.Transactions" />
 	</ItemGroup>	
-  <!--ItemGroup>
+  <ItemGroup>
     <Content Include="..\nuget\NDO.dll.targets">
       <Pack>true</Pack>
       <PackageCopyToOutput>true</PackageCopyToOutput>

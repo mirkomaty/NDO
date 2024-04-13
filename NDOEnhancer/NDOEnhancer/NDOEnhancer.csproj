@@ -7,7 +7,12 @@
     <Nullable>disable</Nullable>
   </PropertyGroup>
 
-  <ItemGroup>
+  <Target Name="PrepareEnhDate" BeforeTargets="PrepareForBuild">
+    <Exec Command="..\..\MakeEnhancerDate\bin\Release\MakeEnhancerDate.exe &gt; EnhDate.cs" />
+  </Target>
+
+
+	<ItemGroup>
     <None Remove="EnhancerParameters.xsd" />
     <None Remove="NDOEnhancer.v12.suo" />
   </ItemGroup>
@@ -17,7 +22,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\NDODLL\NDO.csproj" />
+    <ProjectReference Include="..\..\NDODLL\NDO.csproj" />
   </ItemGroup>
 
 </Project>

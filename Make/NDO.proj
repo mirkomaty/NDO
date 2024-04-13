@@ -4,7 +4,6 @@
 	<PERS_DIR>..</PERS_DIR>
 	<MAKE_DIR>$(PERS_DIR)\Make</MAKE_DIR>
 	<NDO_DIR>$(PERS_DIR)\ndodll</NDO_DIR>
-	<ENH_DIR>$(PERS_DIR)\NDOEnhancer</ENH_DIR>
 	<PACKAGE_DIR>$(PERS_DIR)\NDOPackage</PACKAGE_DIR>
 	<NDO_DLL>$(NDO_DIR)\bin\Release\NDO.dll</NDO_DLL>
 	<MAP_DIR>$(PERS_DIR)\SimpleMappingTool</MAP_DIR>
@@ -44,7 +43,7 @@
     
     <Project Include="..\SimpleMappingTool\Mapping.csproj" />
 	<Project Include="..\NDOPackage\NDOPackage.csproj" />
-    <Project Include="..\NDOEnhancer\NDOEnhancer.csproj" />
+    <Project Include="..\NDOEnhancer\NDOEnhancer\NDOEnhancer.csproj" />
     <Project Include="..\NDOEnhancer.BuildTask\NDOEnhancer.BuildTask\NDOEnhancer.BuildTask.csproj" />
   </ItemGroup>
   

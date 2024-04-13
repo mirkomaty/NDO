@@ -7,7 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\NDODLL\NDO.csproj" />
+    <ProjectReference Include="..\..\NDODLL\NDO.csproj" />
   </ItemGroup>
 
 </Project>
