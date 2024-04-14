@@ -23,8 +23,8 @@
     <DropExistingElements>False</DropExistingElements>
   </Options>
   <ProjectDescription>
-    <BinPath>bin\Debug\net6.0\PersistentEnhancerTestClasses.dll</BinPath>
-    <ObjPath>obj\Debug\net6.0\</ObjPath>
+    <BinPath>bin\Debug\net8.0\PersistentEnhancerTestClasses.dll</BinPath>
+    <ObjPath>obj\Debug\net8.0\</ObjPath>
     <AssemblyName />
     <Debug>True</Debug>
     <IsWebProject>False</IsWebProject>
