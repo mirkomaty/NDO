@@ -3,6 +3,11 @@ using NDO;
 
 namespace PersistentEnhancerTestClasses
 {
+	/// <summary>
+	/// Use this project to test the enhancer during development. 
+	/// The project compiles for several target framework versions.
+	/// Change BinPath and ObjPath .ndoproj file to test the different framework versions.
+	/// </summary>
 	[NDOPersistent]
 	public class Person
 	{
