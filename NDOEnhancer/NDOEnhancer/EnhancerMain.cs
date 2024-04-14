@@ -125,10 +125,12 @@ namespace NDOEnhancer
 
 			MessageAdapter messages = new MessageAdapter();
 
-			var basePath = Path.Combine(Path.GetDirectoryName(ndoProjFilePath), this.projectDescription.ObjPath);
-			using (new ManagedLoadContext( basePath ).EnterContextualReflection())
+			var basePath = Path.GetDirectoryName( this.projectDescription.BinFile );
+			var loadContext = new ManagedLoadContext( basePath, verboseMode );
+			using (loadContext.EnterContextualReflection())
 			{
 				new NDOEnhancer.Enhancer( this.projectDescription, messages ).DoIt();
+				loadContext.Unload();
 			}
 
 			if (options.EnableEnhancer)
@@ -143,11 +145,10 @@ namespace NDOEnhancer
 				if (File.Exists( enhObjFile ))
 				{
 					CopyFile( enhObjFile, this.projectDescription.BinFile );
-#warning We need to shadow copy the obj file
-					// Das ist die Datei, die untersucht wird.
-					//if (objPathDifferent)
-					//	CopyFile( enhObjFile, objFile );
-					//File.Delete( enhObjFile );
+
+					if (objPathDifferent)
+						CopyFile( enhObjFile, objFile );
+					File.Delete( enhObjFile );
 
 					if (File.Exists( enhPdbFile ))
 					{

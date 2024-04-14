@@ -60,7 +60,7 @@ namespace NDOEnhancer
             resEnhFile = Path.Combine(tempDir, fileWithoutExtension + ".res");
             ilEnhFile = Path.Combine(tempDir, fileWithoutExtension + ".il");
             objFile = Path.Combine(objPath, Path.GetFileName(binFile));
-            enhFile = Path.Combine(tempDir, Path.GetFileName(binFile));
+			enhFile = Path.Combine(tempDir, Path.GetFileName(binFile));
             enhPdbFile = Path.Combine(tempDir, fileWithoutExtension + ".pdb");
 			projPath = projectDescription.ProjPath;
             schemaFile = Path.Combine(Path.GetDirectoryName(binFile), fileWithoutExtension + ".ndo.xsd");
@@ -130,6 +130,24 @@ namespace NDOEnhancer
 			//         }   
 		}
 
+		string CreateShadowCopy(string dllPath)
+		{
+			var dir = Path.Combine( Path.GetDirectoryName( dllPath ), "org" );
+			if (!Directory.Exists( dir ))
+				Directory.CreateDirectory( dir );
+
+			var newPath = Path.Combine( dir, Path.GetFileName( dllPath ) );
+			File.Copy( dllPath, newPath, true );
+
+			if (this.debug)
+			{
+				var source = Path.ChangeExtension(dllPath, ".pdb");
+				var target = Path.Combine( dir, Path.ChangeExtension( Path.GetFileName( dllPath ), ".pdb" ) );
+				File.Copy( source, target, true );
+			}
+
+			return newPath;
+		}
 
 		private void SearchPersistentBases()
 		{
@@ -158,6 +176,12 @@ namespace NDOEnhancer
 
 				string dllPath = reference.Path;
 				bool ownAssembly = (string.Compare( dllPath, this.binFile, true ) == 0);
+				if (ownAssembly)
+				{
+					// We need to copy the assembly to another path, because we
+					// want to overwrite the assembly after enhancement.
+					dllPath = CreateShadowCopy( dllPath );
+				}
 
 				if (!ownAssembly && !NDOAssemblyChecker.IsEnhanced( dllPath ))
 					continue;
@@ -171,9 +195,8 @@ namespace NDOEnhancer
 						messages.WriteLine($"Loading assembly {dllPath}");
                     assyToLoad = AssemblyName.GetAssemblyName(dllPath);
 					assyName = assyToLoad.Name;
-
 					assy = Assembly.Load(assyName);
-                }
+				}
 				catch (Exception ex)
 				{
 					if (assyToLoad != null && (binaryAssemblyFullName == null || string.Compare(binaryAssemblyFullName, assyToLoad.FullName, true) != 0))
