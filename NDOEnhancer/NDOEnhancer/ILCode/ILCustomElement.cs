@@ -20,6 +20,7 @@
 // DEALINGS IN THE SOFTWARE.
 
 
+using NDOEnhancer.Ecma335;
 using System;
 using System.Globalization;
 using System.Runtime.InteropServices;
@@ -226,10 +227,12 @@ namespace NDOEnhancer.ILCode
 				{
 					string paramTypeName = paramTypeNames[i].Trim();
 					paramTypeNames[i] = ILType.GetNetTypeName( paramTypeName );
-					paramType = Type.GetType( paramTypeNames[i] );
+					paramType = Type.GetType( paramTypeName );
 					if (paramType == null)
 					{
-						throw new Exception( $"Relation Attribute: Unknown type in attribute parameter list: {paramTypeName}, type: {( this.Owner as ILClassElement )?.Name ?? ""}" );
+						EcmaType.BuiltInTypesDict.TryGetValue( paramTypeName, out paramType );
+						if (paramType == null)
+							throw new Exception( $"{typeName}: Unknown type in attribute parameter list: {paramTypeName}, type: {( this.Owner as ILClassElement )?.Name ?? ""}" );
 					}
 
 					paramValues[i] = ReadParam( bytes, paramType, ref pos );

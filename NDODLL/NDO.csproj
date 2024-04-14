@@ -11,7 +11,7 @@
     <Authors>Mirko Matytschak</Authors>
     <Company>Mirko Matytschak</Company>
     <Description>Package to enable VS Solutions to compile and enhance persistent classes.</Description>
-    <Copyright>(c) 2002 - 2022, Mirko Matytschak, Velden, Germany</Copyright>
+    <Copyright>(c) 2002 - 2024, Mirko Matytschak, Velden, Germany</Copyright>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageProjectUrl>https://www.netdataobjects.de</PackageProjectUrl>
     <PackageTags>NDO .NET Data Objects Persistence</PackageTags>
@@ -43,7 +43,7 @@
 		<PrivateAssets>all</PrivateAssets>
 	</PackageReference>
   </ItemGroup>
-	<!--ItemGroup>
+	<ItemGroup>
     <Content Include="..\nuget\NDO.dll.targets">
       <Pack>true</Pack>
       <PackageCopyToOutput>true</PackageCopyToOutput>
@@ -54,32 +54,12 @@
       <PackageCopyToOutput>true</PackageCopyToOutput>
       <PackagePath>build</PackagePath>
     </Content>
-    <Content Include="..\NDOEnhancer\bin\Release\NDOEnhancer.exe">
+    <Content Include="..\NDOEnhancer\NDOEnhancer\bin\Release\net8.0\**">
       <Pack>true</Pack>
       <PackageCopyToOutput>true</PackageCopyToOutput>
       <PackagePath>build</PackagePath>
     </Content>
-    <Content Include="..\NDOEnhancer\bin\Release\Mono.Cecil.dll">
-      <Pack>true</Pack>
-      <PackageCopyToOutput>true</PackageCopyToOutput>
-      <PackagePath>build</PackagePath>
-    </Content>
-    <Content Include="..\NDOEnhancer\bin\Release\NDOEnhancer.exe.config">
-      <Pack>true</Pack>
-      <PackageCopyToOutput>true</PackageCopyToOutput>
-      <PackagePath>build</PackagePath>
-    </Content>
-    <Content Include="..\EnhancerX86Stub\EnhancerX86Stub\bin\Release\EnhancerX86Stub.exe">
-      <Pack>true</Pack>
-      <PackageCopyToOutput>true</PackageCopyToOutput>
-      <PackagePath>build</PackagePath>
-    </Content>
-    <Content Include="bin/$(Configuration)/net452/NDO.dll">
-      <Pack>true</Pack>
-      <PackageCopyToOutput>true</PackageCopyToOutput>
-      <PackagePath>build</PackagePath>
-    </Content>
-  </ItemGroup-->
+  </ItemGroup>
   <Target Name="PostBuild" AfterTargets="Pack">
     <Exec Command="IF NOT EXIST ..\Nuget-Packages md ..\Nuget-Packages&#xD;&#xA;echo Copy package&#xD;&#xA;copy bin\$(Configuration)\NDO*.nupkg ..\Nuget-Packages /Y&#xD;&#xA;" />
   </Target>

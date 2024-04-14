@@ -45,7 +45,24 @@ namespace NDOEnhancer.Ecma335
             "float64",            "int8",            "int16",            "int32",            "int64",            "uint8",            "uint16",            "uint32",            "uint64",            "native int",            "native unsigned int",            "object",            "string",            "typedref",            "unsigned int8",            "unsigned int16",            "unsigned int32",            "unsigned int64",            "void"
         };
 
-        public bool Parse(string input)
+		public static Dictionary<string, Type> BuiltInTypesDict { get; set; } = new Dictionary<string, Type>()
+        {
+            {"bool", typeof(System.Boolean) },
+            {"char", typeof(System.Char) },
+            {"float32", typeof(System.Single) },
+            {"float64", typeof(System.Double) },
+            {"int8", typeof(System.Byte) },
+            {"int16", typeof(System.Int16) },
+            {"int32", typeof(System.Int32) },
+            {"int64", typeof(System.Int64) },
+            {"uint8", typeof(System.Byte) },
+            {"uint16", typeof(System.UInt16) },
+            {"uint32", typeof(System.UInt32) },
+            {"uint64", typeof(System.UInt64) },
+            {"string", typeof(System.String) }
+        };
+
+		public bool Parse(string input)
         {
             int p = 0;
             while (char.IsWhiteSpace(input[p]))
