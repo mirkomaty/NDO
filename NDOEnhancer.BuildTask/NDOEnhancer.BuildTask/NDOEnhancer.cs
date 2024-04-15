@@ -57,7 +57,8 @@ namespace NDO.BuildTask
 
 		void CreateNDOProjFile(string fileName)
 		{
-			string xml = @"<?xml version=""1.0"" encoding=""UTF-8""?>
+			var binFile = Path.ChangeExtension( Path.GetFileName( NdoProjectFile ), ".dll" );
+			string xml = $@"<?xml version=""1.0"" encoding=""UTF-8""?>
 <Enhancer>
   <Options>
     <EnableAddIn>True</EnableAddIn>
@@ -79,15 +80,13 @@ namespace NDO.BuildTask
     <DatabaseOwner>
     </DatabaseOwner>
     <GenerateConstraints>False</GenerateConstraints>
-    <UseMsBuild>True</UseMsBuild>
     <DropExistingElements>False</DropExistingElements>
   </Options>
   <ProjectDescription>
-    <BinPath>bin\Debug\YourAssemblyGoesHere.dll</BinPath>
-    <ObjPath>obj\Debug\</ObjPath>
+    <BinPath>bin\Debug\{TargetFramework}\{binFile}</BinPath>
+    <ObjPath>obj\Debug\{TargetFramework}</ObjPath>
     <AssemblyName />
     <Debug>True</Debug>
-    <IsWebProject>False</IsWebProject>
     <KeyFile>
     </KeyFile>
     <References>

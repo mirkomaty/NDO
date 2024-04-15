@@ -746,10 +746,6 @@ namespace NDOVsPackage
 
 				if ( options.EnableAddIn )
 				{
-					if ( !options.UseMsBuild )
-					{
-						options.UseMsBuild = true;
-					}
 					GeneratePackageReference();
 				}
 

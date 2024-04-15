@@ -172,10 +172,7 @@ namespace NDOVsPackage
 				//}
 
 				// ------------------ MsBuild Support -----------------------				
-				if (eventArgs.IsSuccessful || options.UseMsBuild)
-				{
-					IncludeFiles(options, project, projectDescription);
-				}
+				IncludeFiles(options, project, projectDescription);
             }
             catch ( System.Exception ex )
             {				

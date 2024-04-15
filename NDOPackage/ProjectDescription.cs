@@ -51,7 +51,6 @@ namespace NDOVsPackage
 		string projPath;
 		string assemblyName;
 		ConfigurationOptions options;
-        bool isWebProject;
         string keyFile = string.Empty;
 		string platformTarget;
 		string targetFramework;
@@ -79,11 +78,6 @@ namespace NDOVsPackage
         {
             get { return keyFile; }
             set { keyFile = value; }
-        }
-
-        public bool IsWebProject
-        {
-            get { return isWebProject; }
         }
 
 		public ConfigurationOptions ConfigurationOptions
@@ -146,7 +140,6 @@ namespace NDOVsPackage
                 keyFile = AbsolutePath(keyFile);
             assemblyName = (string)XmlHelper.GetNode(node, pns + "AssemblyName");
 			debug = (bool) XmlHelper.GetNode(node, pns + "Debug", false);
-            isWebProject = (bool) XmlHelper.GetNode(node, pns + "IsWebProject", false);
             XmlNodeList refList = doc.SelectNodes("//" + pns + "Enhancer/" + pns + "ProjectDescription/" + pns + "References/" + pns + "Reference", XmlHelper.Nsmgr);
 			references = new Dictionary<string, NDOReference>();
 			foreach ( XmlNode rnode in refList )
@@ -186,7 +179,6 @@ namespace NDOVsPackage
 			MakeNode("ObjPath", ExtendedPath.GetRelativePath(reference, objPath), node, doc);
 			MakeNode("AssemblyName", assemblyName, node, doc);
 			MakeNode("Debug", debug, node, doc);
-            MakeNode("IsWebProject", isWebProject, node, doc);
             MakeNode("KeyFile", keyFile, node, doc);
 			XmlNode refsNode = MakeNode("References", string.Empty, node, doc);
 			foreach ( string key in References.Keys )

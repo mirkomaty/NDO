@@ -103,7 +103,6 @@ namespace NDOVsPackage
                 MakeNode("IncludeTypecodes", this.IncludeTypecodes, optionsNode);
                 MakeNode("DatabaseOwner", this.DatabaseOwner, optionsNode);
 				MakeNode("GenerateConstraints", this.GenerateConstraints, optionsNode);
-				MakeNode("UseMsBuild", this.UseMsBuild, optionsNode);
 				MakeNode("DropExistingElements", this.DropExistingElements, optionsNode);
 
                 projectDescription.ToXml(docNode);
@@ -166,7 +165,6 @@ namespace NDOVsPackage
             this.Utf8Encoding = (bool)XmlHelper.GetNode(node, pns + "Utf8Encoding", true);
 			this.DropExistingElements = (bool)XmlHelper.GetNode(node, pns + "DropExistingElements", true);
 			this.GenerateConstraints = (bool)XmlHelper.GetNode(node, pns + "GenerateConstraints", false);
-			this.UseMsBuild = (bool) XmlHelper.GetNode(node, pns + "UseMsBuild", false);
 		}
 
 
@@ -180,7 +178,6 @@ namespace NDOVsPackage
 		public bool GenerateSQL { get; set; }
 		public bool GenerateConstraints { get; set; }
 		public bool DropExistingElements { get; set; }
-		public bool UseMsBuild { get; set; }
 		public bool NewMapping { get; set; }
 		public string DefaultConnection { get; set; }
 		public string TargetMappingFileName { get; set; }
