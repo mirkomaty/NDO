@@ -37,7 +37,10 @@ namespace NDO.BuildTask
 		public string NdoProjectFile {get; set;}
 
 		[Required]
-		public string NdoPlatformTarget {get; set;}		
+		public string NdoPlatformTarget {get; set;}
+
+		[Required]
+		public string TargetFramework { get; set; }
 
 		protected override string ToolName
 		{
@@ -46,7 +49,7 @@ namespace NDO.BuildTask
 				Console.WriteLine( "NDO BuildTask: " + NdoPlatformTarget );
 				if (NdoPlatformTarget == "x86")
 				{
-					return "EnhancerX86Stub.exe";
+					throw new Exception( $"Platform {NdoPlatformTarget} is not supported. Use NDO <= 4." );
 				}
 				return "NDOEnhancer.exe";
 			}
