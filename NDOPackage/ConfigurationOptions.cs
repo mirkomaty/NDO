@@ -1,5 +1,5 @@
 ﻿//
-// Copyright (c) 2002-2019 Mirko Matytschak 
+// Copyright (c) 2002-2024 Mirko Matytschak 
 // (www.netdataobjects.de)
 //
 // Author: Mirko Matytschak
@@ -20,6 +20,7 @@
 // DEALINGS IN THE SOFTWARE.
 
 
+using Microsoft.VisualStudio.Threading;
 using System;
 using System.IO;
 using System.Xml;
@@ -73,11 +74,11 @@ namespace NDOVsPackage
 		{
 			string oldFileName = this.fileName;  // just in case...
 			this.fileName = fileName;
-			Save(pd);
+            ThreadHelper.JoinableTaskFactory.Run( async () => await SaveAsync( pd ) );
 			this.fileName = oldFileName;
 		}
 
-        public void Save(ProjectDescription projectDescription)
+        public async Task SaveAsync(ProjectDescription projectDescription)
         {
             if (fileName != null)
             {
@@ -106,7 +107,7 @@ namespace NDOVsPackage
 				MakeNode("UseMsBuild", this.UseMsBuild, optionsNode);
 				MakeNode("DropExistingElements", this.DropExistingElements, optionsNode);
 
-                projectDescription.ToXml(docNode);
+                await projectDescription.ToXmlAsync(docNode);
                 doc.Save(fileName);
             }
             else

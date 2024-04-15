@@ -129,7 +129,8 @@ namespace NDOVsPackage
 					MessageBox.Show("The NDO project file '" + fileName + "' is write protected, probably due to your Source Code Control system. NDO needs to update this file now. NDO tries to remove the write protect attribute in order to update the file.", "NDO Add-in", MessageBoxButtons.OK, MessageBoxIcon.Warning);
 					fi.Attributes &= (~FileAttributes.ReadOnly);
 				}
-				options.Save(pd);
+
+				ThreadHelper.JoinableTaskFactory.Run( async () => await options.SaveAsync( pd ) );
 			}
 		}
 

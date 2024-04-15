@@ -753,7 +753,8 @@ namespace NDOVsPackage
 					GeneratePackageReference();
 				}
 
-				options.Save( this.projectDescription );
+				ThreadHelper.JoinableTaskFactory.Run( async () => await options.SaveAsync( this.projectDescription ) );
+				
 			}
 			catch (Exception ex)
 			{

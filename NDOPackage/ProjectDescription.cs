@@ -1,5 +1,5 @@
 ﻿//
-// Copyright (c) 2002-2022 Mirko Matytschak 
+// Copyright (c) 2002-2024 Mirko Matytschak 
 // (www.netdataobjects.de)
 //
 // Author: Mirko Matytschak
@@ -20,14 +20,11 @@
 // DEALINGS IN THE SOFTWARE.
 
 
-using System;
 using SD = System.Diagnostics;
 using System.Xml;
-using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using Microsoft.VisualStudio.Shell.Interop;
-using Microsoft.VisualStudio.Shell;
 using System.Linq;
 using EnvDTE;
 using Project = Community.VisualStudio.Toolkit.Project;
@@ -55,6 +52,7 @@ namespace NDOVsPackage
         string keyFile = string.Empty;
 		string platformTarget;
 		string targetFramework;
+		string version = "4.0";
 
 #if DEBUG
         MessageAdapter messageAdapter;
@@ -138,13 +136,19 @@ namespace NDOVsPackage
 			XmlNode node = doc.SelectSingleNode("//" + pns + "Enhancer/" + pns + "ProjectDescription", XmlHelper.Nsmgr);
 			if (node == null)
 				throw new Exception("Parameters must have at least one //Enhancer/ProjectDescription entry.");
-			
+
+			var vattr = ((XmlElement)node).Attributes["version"];
+			if (vattr != null)
+				this.version = vattr.Value;
+
 			binFile = AbsolutePath((string) XmlHelper.GetNode(node, pns + "BinPath"));
 			objPath = AbsolutePath((string) XmlHelper.GetNode(node, pns + "ObjPath"));
             keyFile = (string)XmlHelper.GetNode(node, pns + "KeyFile", string.Empty);
+
             if (keyFile != string.Empty)
                 keyFile = AbsolutePath(keyFile);
-            assemblyName = (string)XmlHelper.GetNode(node, pns + "AssemblyName");
+            
+			assemblyName = (string)XmlHelper.GetNode(node, pns + "AssemblyName");
 			debug = (bool) XmlHelper.GetNode(node, pns + "Debug", false);
             isWebProject = (bool) XmlHelper.GetNode(node, pns + "IsWebProject", false);
             XmlNodeList refList = doc.SelectNodes("//" + pns + "Enhancer/" + pns + "ProjectDescription/" + pns + "References/" + pns + "Reference", XmlHelper.Nsmgr);
@@ -172,11 +176,14 @@ namespace NDOVsPackage
 			return el;
 		}
 
-
-		public void ToXml(XmlNode parent)
+		public async Task ToXmlAsync(XmlNode parent)
 		{
 			XmlDocument doc = (XmlDocument) parent.ParentNode;
 			XmlNode node = doc.CreateElement("ProjectDescription");
+			this.version = await NDOPackage.Instance.GetNdoVersionAsync( this.project );
+
+			( (XmlElement) node ).SetAttribute( "version", this.version );
+
 			parent.AppendChild(node);
 			string reference = this.projPath;
 			if (reference.EndsWith("\\"))
