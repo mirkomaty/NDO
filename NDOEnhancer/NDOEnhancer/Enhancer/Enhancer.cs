@@ -1,5 +1,5 @@
 ﻿//
-// Copyright (c) 2002-2022 Mirko Matytschak 
+// Copyright (c) 2002-2024 Mirko Matytschak 
 // (www.netdataobjects.de)
 //
 // Author: Mirko Matytschak
@@ -155,17 +155,14 @@ namespace NDOEnhancer
 			List<ClassNode> ownClassList = null;
 			string binaryAssemblyFullName = null;
 
-            if (!projectDescription.IsWebProject)
+            // Check, if we can load the project bin file.
+            try
             {
-                // Check, if we can load the project bin file.
-                try
-                {
-                    binaryAssemblyFullName = NDOAssemblyChecker.GetAssemblyName(this.binFile);
-                }
-                catch (Exception ex)
-                {
-                    throw new Exception("Can't load referenced Assembly '" + this.binFile + ". " + ex.Message);
-                }
+                binaryAssemblyFullName = NDOAssemblyChecker.GetAssemblyName(this.binFile);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Can't load referenced Assembly '" + this.binFile + ". " + ex.Message);
             }
 
 			// Durchsuche alle referenzierten Assemblies
@@ -301,7 +298,7 @@ namespace NDOEnhancer
 //				ValueTypes.Instance.Merge(vtnl);
 			}
 
-            if (projectDescription.IsWebProject || !options.EnableEnhancer)
+            if (!options.EnableEnhancer)
             {
                 ownClassList = new List<ClassNode>();
             }
@@ -1082,7 +1079,7 @@ namespace NDOEnhancer
 					DateTime mapDestTime = File.GetLastWriteTime(mappingDestFile);
 					sourcesUpToDate = mapDestTime >= mapSourceTime && mapDestTime >= objTime;
                     // Mapping-Datei muss jünger sein als die bin-Datei
-                    if (!projectDescription.IsWebProject && !File.Exists(projectDescription.BinFile))
+                    if (!File.Exists(projectDescription.BinFile))
                         throw new Exception("Can't find binary " + projectDescription.BinFile);
                     DateTime binFileTime = File.GetLastWriteTime(projectDescription.BinFile);
                     if (binFileTime > mapSourceTime)

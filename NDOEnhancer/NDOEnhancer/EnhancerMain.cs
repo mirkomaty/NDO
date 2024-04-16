@@ -1,5 +1,5 @@
 ﻿//
-// Copyright (c) 2002-2022 Mirko Matytschak 
+// Copyright (c) 2002-2024 Mirko Matytschak 
 // (www.netdataobjects.de)
 //
 // Author: Mirko Matytschak
@@ -120,7 +120,7 @@ namespace NDOEnhancer
 #endif
 				Console.WriteLine( EnhDate.String, "NDO Enhancer", new AssemblyName( GetType().Assembly.FullName ).Version.ToString() );
 
-            if (!this.projectDescription.IsWebProject && options.EnableEnhancer)
+            if (options.EnableEnhancer)
 			    this.projectDescription.References.Add(projectDescription.AssemblyName, new NDOReference(projectDescription.AssemblyName, projectDescription.BinFile, true));
 
 			MessageAdapter messages = new MessageAdapter();
