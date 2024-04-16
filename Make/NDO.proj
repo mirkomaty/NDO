@@ -27,8 +27,6 @@
 	<Project Include="..\Provider\MySqlConnectorProvider\NDO.MySqlConnector\NDO.MySqlConnector.csproj" />
     <Project Include="..\Provider\MySqlNdoProvider\NDO.MySql\NDO.MySql.csproj" />
     <Project Include="..\Provider\OracleProvider\NDO.Oracle\NDO.Oracle.csproj" />
-    <Project Include="..\Provider\FirebirdNdoProvider\NDO.Firebird\NDO.Firebird.csproj" />
-    <Project Include="..\Provider\SqlCeProvider\NDO.SqlCe\NDO.SqlCe.csproj" />
     <Project Include="..\Provider\SqliteProvider\NDO.Sqlite\NDO.Sqlite.csproj" />	
     <Project Include="..\Provider\SqlServerProvider\NDO.Sqlserver\NDO.Sqlserver.csproj" />	
     <Project Include="..\Provider\PostgresProvider\NDO.Postgre\NDO.Postgre.csproj" />
@@ -36,8 +34,6 @@
     <Project Include="..\Provider\MySqlNdoProvider\MySqlUISupport\MySqlUISupport.csproj" />
 	<Project Include="..\Provider\MySqlConnectorProvider\MySqlConnectorUISupport\MySqlConnectorUISupport.csproj" />
     <Project Include="..\Provider\OracleProvider\OracleUISupport\OracleUISupport.csproj" />
-    <Project Include="..\Provider\FirebirdNdoProvider\FirebirdUISupport\FirebirdUISupport.csproj" />
-    <Project Include="..\Provider\SqlCeProvider\SqlCeUISupport\SqlCeUISupport.csproj" />
     <Project Include="..\Provider\SqliteProvider\SqliteUISupport\SqliteUISupport.csproj" />	
     <Project Include="..\Provider\SqlServerProvider\SqlServerUISupport\SqlServerUISupport.csproj" />	
     <Project Include="..\Provider\PostgresProvider\PostgresUISupport\PostgresUISupport.csproj" />	

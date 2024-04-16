@@ -1,13 +1,13 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>netstandard2.0;netstandard2.1;net6.0;net8.0</TargetFrameworks>
+    <TargetFrameworks>netstandard2.0;netstandard2.1;net6.0;net8.0;net4.8</TargetFrameworks>
     <AssemblyVersion>5.0.0.0</AssemblyVersion>
     <Version>5.0.0</Version>
 	  <IncludeSymbols>True</IncludeSymbols>
 	  <Authors>Mirko Matytschak</Authors>
     <Description>Interfaces and base implementations for NDO.</Description>
-    <Copyright>Copyright (c) 2002-2022 Mirko Matytschak</Copyright>
+    <Copyright>Copyright (c) 2002-2024 Mirko Matytschak</Copyright>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageProjectUrl>https://www.netdatobjects.de</PackageProjectUrl>
     <RepositoryUrl>https://github.com/mirkomaty/NDO</RepositoryUrl>
