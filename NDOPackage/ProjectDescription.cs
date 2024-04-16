@@ -227,13 +227,41 @@ namespace NDOVsPackage
 			ThreadHelper.ThrowIfNotOnUIThread();
 			var dteProj = project.DteProject();
 			EnvDTE.Configuration conf = dteProj.ConfigurationManager.ActiveConfiguration;
+			//var props = new Dictionary<string,object>();
 			//foreach (Property item in conf.Properties)
 			//{
-			//	SD.Debug.WriteLine( $"{item.Name} = {item.Value}" );
+			//	object value = "-";
+			//	try
+			//	{
+			//		value = item.Value;
+			//		props.Add( item.Name, value );
+			//	}
+			//	catch(Exception ex)
+			//	{ }
 			//}
 
+			//foreach (Property item in dteProj.Properties)
+			//{
+			//	object value = "-";
+			//	try
+			//	{
+			//		value = item.Value;
+			//		props.Add( item.Name, value );
+			//	}
+			//	catch (Exception ex)
+			//	{ }
+			//}
+
+			//foreach (var item in props)
+			//{
+			//	SD.Debug.WriteLine( $"{item.Key} = {item.Value}" );
+			//}
 
 			// Get the MSBuild property storage
+			ThreadHelper.JoinableTaskFactory.Run( async () => this.version = await NDOPackage.Instance.GetNdoVersionAsync( this.project ) );
+			Version.TryParse( this.version, out var ndoprojVersion );
+			var friendlyTargetFramework = (string)dteProj.Properties.Item("FriendlyTargetFramework").Value;
+
 			IVsBuildPropertyStorage propertyStorage = GetPropertyStorage( project );
 
 			try
@@ -246,7 +274,6 @@ namespace NDOVsPackage
 				this.targetFramework = (string) dteProj.Properties.Item( "TargetFrameworkMoniker" ).Value;
 			}
 			catch { }
-
 
 			string outputPath = (string) conf.Properties.Item( "OutputPath" ).Value;
 			string fullPath = dteProj.Properties.Item( "FullPath" ).Value as string;
@@ -264,7 +291,7 @@ namespace NDOVsPackage
 			if (project.GetVsHierarchy().IsCapabilityMatch( "CPS" ))
 			{
 				// new .csproj format
-				objPath = GetBuildProperty( propertyStorage, "IntermediateOutputPath" );
+				this.objPath = GetBuildProperty( propertyStorage, "IntermediateOutputPath" );
 				string configuration = GetBuildProperty( propertyStorage, "Configuration" );
 				debug = configuration == "Debug";
 			}
@@ -273,11 +300,18 @@ namespace NDOVsPackage
 				// old .csproj format
 				string debugInfo = (string) conf.Properties.Item( "DebugInfo" ).Value;
 				debug = debugInfo == "full";
-				objPath = (string) conf.Properties.Item( "IntermediatePath" ).Value;
+				this.objPath = (string) conf.Properties.Item( "IntermediatePath" ).Value;
 			}
-			binFile = Path.Combine( fullPath, outputPath );
-			binFile = Path.Combine( binFile, outputFileName );
-			projPath = Path.GetDirectoryName( dteProj.FileName ) + "\\";
+			this.binFile = Path.Combine( fullPath, outputPath );
+			this.binFile = Path.Combine( binFile, outputFileName );
+			this.projPath = Path.GetDirectoryName( dteProj.FileName ) + "\\";
+
+			if (ndoprojVersion.Major >= 5)
+			{
+				this.binFile = this.binFile.Replace( friendlyTargetFramework, "$(TargetFramework)" );
+				this.objPath = this.objPath.Replace(friendlyTargetFramework, "$(TargetFramework)" );
+			}
+
 			string sign = GetBuildProperty( propertyStorage, "SignAssembly" );
 			if (!String.IsNullOrEmpty( sign ) && String.Compare( sign, "true", true ) == 0)
 				keyFile = GetBuildProperty( propertyStorage, "AssemblyOriginatorKeyFile" );
