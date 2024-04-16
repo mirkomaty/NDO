@@ -180,12 +180,6 @@ namespace NDO.Mapping
 				if (fi.IsInitOnly)
 					continue;
 
-				Type ft = fi.FieldType;
-
-				// Typen, die nicht speicherbar sind.
-				if (ft.IsInterface)
-					continue;
-
 				object[] attributes = fi.GetCustomAttributes(false);
 				bool cont = false;
 				foreach (System.Attribute attr in attributes)
@@ -197,6 +191,12 @@ namespace NDO.Mapping
 						cont = true;
 				}
 				if (cont)
+					continue;
+
+				Type ft = fi.FieldType;
+
+				// Typen, die nicht speicherbar sind.
+				if (ft.IsInterface)
 					continue;
 
 				if (StorableTypes.Contains(ft))

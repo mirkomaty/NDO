@@ -559,6 +559,10 @@ namespace NDOEnhancer
 					if (classMapping.IsAbstract)
 						f.Column.Name = "Unused";
 				}
+				if (fieldNode.FieldAttribute != null)
+				{
+					fieldNode.FieldAttribute.SetFieldValues( f );
+				}
 				if (fieldNode.ColumnAttribute != null)
 				{
 					fieldNode.ColumnAttribute.SetColumnValues( f.Column );

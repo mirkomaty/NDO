@@ -1361,7 +1361,7 @@ namespace NDO
 			using (var handler = GetSqlPassThroughHandler())
 			{
 				string[] TableNames = provider.GetTableNames( connection );
-				if (TableNames.Any(t=>t=="NDOSchemaVersion"))
+				if (TableNames.Any( t => String.Compare( t, "NDOSchemaVersion", true ) == 0 ))
 				{
 					string sql = "SELECT Version from NDOSchemaVersion WHERE SchemaName ";
 					if (schemaName == null)
@@ -1387,7 +1387,10 @@ namespace NDO
 
 					string sql = schemaTransitionGenerator.Generate( transitionElement );
 					handler.Execute(sql);
-					sql = String.Format( "INSERT INTO NDOSchemaVersion([SchemaName],[Version]) VALUES({0},'0')", schemaName == null ? "NULL" : provider.GetSqlLiteral( schemaName ) );
+					var colSchemaName = provider.GetQuotedName("SchemaName");
+					var colVersion = provider.GetQuotedName("Version");
+					var schemaVal = schemaName == null ? "NULL" : provider.GetSqlLiteral( schemaName );
+					sql = String.Format( $"INSERT INTO NDOSchemaVersion({colSchemaName},{colVersion}) VALUES({schemaVal},'0')" );
 					handler.Execute( sql );
 					handler.CommitTransaction();
 				}
@@ -1451,32 +1454,29 @@ namespace NDO
 			string last = arr[arr.Length - 1];
 			bool lastInvalid = (last == null || last.Trim() == string.Empty);
 			string[] result = new string[arr.Length - (lastInvalid ? 1 : 0)];
-			IProvider provider = this.mappings.GetProvider( ndoConn );
-			//TransactionInfo ti = transactionTable[conn];
-			//IDbConnection cn = ti.Connection;
-			IDbConnection cn = provider.NewConnection( ndoConn.Name );
-			cn.Open();
-			IDbCommand cmd = provider.NewSqlCommand( cn );
 			int i = 0;
 			string ok = "OK";
-			foreach (string statement in arr)
+			using (var handler = GetSqlPassThroughHandler())
 			{
-				if (statement != null && statement.Trim() != string.Empty)
+				foreach (string statement in arr)
 				{
-					try
+					if (statement != null && statement.Trim() != string.Empty)
 					{
-						cmd.CommandText = statement;
-						cmd.ExecuteNonQuery();
-						result[i] = ok;
+						try
+						{
+							handler.Execute( statement );
+							result[i] = ok;
+						}
+						catch (Exception ex)
+						{
+							result[i] = ex.Message;
+						}
 					}
-					catch (Exception ex)
-					{
-						result[i] = ex.Message;
-					}
+					i++;
 				}
-				i++;
+
+				handler.CommitTransaction();
 			}
-			cn.Close();
 			return result;
 		}
 		
@@ -3559,7 +3559,7 @@ namespace NDO
         /// <param name="row"></param>
 		void ReadLostForeignKeysFromRow(Class cl, IPersistenceCapable pc, DataRow row)
 		{
-			if (cl.FKColumnNames != null)
+			if (cl.FKColumnNames != null && pc.NDOLoadState != null)
 			{
                 //				Debug.WriteLine("GetLostForeignKeysFromRow " + pc.NDOObjectId.Dump());
 				KeyValueList kvl = new KeyValueList(cl.FKColumnNames.Count());

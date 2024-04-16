@@ -44,12 +44,10 @@ namespace NDO
 		private Dictionary<Type,int> updateOrder = new Dictionary<Type, int>();
 		ILogAdapter logAdapter;
 		private bool verboseMode;
-		private readonly INDOContainer configContainer;
 
-		internal Mappings( string mappingFile, INDOContainer configContainer )
+		internal Mappings( string mappingFile )
 			: base( mappingFile )
 		{
-			this.configContainer = configContainer;
 			InitClassFields();
 			this.updateOrder = new ClassRank().BuildUpdateRank( Classes );
 		}

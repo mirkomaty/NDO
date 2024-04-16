@@ -120,7 +120,7 @@ namespace NDO
 		{
 			if (!File.Exists(mappingPath))
 				throw new NDOException(45, String.Format("Mapping File {0} doesn't exist.", mappingPath));
-			Init( new Mappings( mappingPath, ConfigContainer ) );
+			Init( new Mappings( mappingPath ) );
 		}
 
 		/// <summary>

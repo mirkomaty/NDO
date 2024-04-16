@@ -1,5 +1,5 @@
 ﻿//
-// Copyright (c) 2002-2016 Mirko Matytschak 
+// Copyright (c) 2002-2023 Mirko Matytschak 
 // (www.netdataobjects.de)
 //
 // Author: Mirko Matytschak
@@ -27,10 +27,9 @@ using System.Data;
 using System.Data.Common;
 using NDOInterfaces;
 using System.Collections;
-using MySql.Data.MySqlClient;
-using MySql.Data.Types;
+using MySqlConnector;
 
-namespace NDO.MySqlProvider
+namespace NDO.MySqlConnectorProvider
 {
 	/// <summary>
 	/// Sample adapter class to connect new ADO.NET Providers with NDO.
@@ -42,19 +41,19 @@ namespace NDO.MySqlProvider
 		// which implement common interfaces in .NET:
 		// IDbConnection, IDbCommand, DbDataAdapter and the Parameter objects
 		#region Provide specialized type objects
-		public override System.Data.IDbConnection NewConnection(string connectionString) 
+		public override IDbConnection NewConnection(string connectionString) 
 		{
 			return new MySqlConnection(connectionString);
 		}
 
-		public override System.Data.IDbCommand NewSqlCommand(System.Data.IDbConnection connection) 
+		public override IDbCommand NewSqlCommand(IDbConnection connection) 
 		{
 			MySqlCommand command = new MySqlCommand();
 			command.Connection = (MySqlConnection)connection;
 			return command;
 		}
 
-		public override DbDataAdapter NewDataAdapter(System.Data.IDbCommand select, System.Data.IDbCommand update, System.Data.IDbCommand insert, System.Data.IDbCommand delete) 
+		public override DbDataAdapter NewDataAdapter(IDbCommand select, IDbCommand update, IDbCommand insert, IDbCommand delete) 
 		{
 			MySqlDataAdapter da = new MySqlDataAdapter();
 			da.SelectCommand = (MySqlCommand)select;
@@ -73,73 +72,73 @@ namespace NDO.MySqlProvider
 		}
 
 
-		public override IDataParameter AddParameter(System.Data.IDbCommand command, string parameterName, object dbType, int size, string columnName) 
+		public override IDataParameter AddParameter(IDbCommand command, string parameterName, object dbType, int size, string columnName) 
 		{
-			return ((MySqlCommand)command).Parameters.Add(new MySqlParameter(parameterName, (MySql.Data.MySqlClient.MySqlDbType)dbType, size, columnName));			
+			return ((MySqlCommand)command).Parameters.Add(new MySqlParameter(parameterName, (MySqlDbType)dbType, size, columnName));			
 		}
 
 		public override IDataParameter AddParameter(IDbCommand command, string parameterName, object dbType, int size, ParameterDirection dir, bool isNullable, byte precision, byte scale, string srcColumn, DataRowVersion srcVersion, object value) 
 		{
-			return ((MySqlCommand)command).Parameters.Add(new MySqlParameter(parameterName, (MySql.Data.MySqlClient.MySqlDbType)dbType, size, dir, isNullable, precision, scale, srcColumn, srcVersion, value));
+			return ((MySqlCommand)command).Parameters.Add(new MySqlParameter(parameterName, (MySqlDbType)dbType, size, dir, isNullable, precision, scale, srcColumn, srcVersion, value));
 		}
 		#endregion
 
-		// The following method convert System.Type objects to MySql.Data.MySqlClient.MySqlDbType-Members
+		// The following method convert System.Type objects to MySqlDbType-Members
 		// For your own adapter use members of the database type emumeration 
 		// of your ADO.NET provider
-		#region Provide MySql.Data.MySqlClient.MySqlDbType members
+		#region Provide MySqlDbType members
 		public override object GetDbType(Type t) 
 		{
             t = base.ConvertNullableType(t);
 			if ( t == typeof(bool) )
-				return MySql.Data.MySqlClient.MySqlDbType.Byte;
+				return MySqlDbType.Byte;
 			else if ( t == typeof(byte) )
-				return MySql.Data.MySqlClient.MySqlDbType.Byte;
+				return MySqlDbType.Byte;
 			else if ( t == typeof(sbyte) )
-				return MySql.Data.MySqlClient.MySqlDbType.Byte;
+				return MySqlDbType.Byte;
 			else if ( t == typeof(char) )
-				return MySql.Data.MySqlClient.MySqlDbType.Int16;
+				return MySqlDbType.Int16;
 			else if ( t == typeof(short))
-				return MySql.Data.MySqlClient.MySqlDbType.Int16;
+				return MySqlDbType.Int16;
 			else if ( t == typeof(ushort))
-				return MySql.Data.MySqlClient.MySqlDbType.Int16;
+				return MySqlDbType.Int16;
 			else if ( t == typeof(int))
-				return MySql.Data.MySqlClient.MySqlDbType.Int32;
+				return MySqlDbType.Int32;
 			else if ( t == typeof(uint))
-				return MySql.Data.MySqlClient.MySqlDbType.Int32;
+				return MySqlDbType.Int32;
 			else if ( t == typeof(long))
-				return MySql.Data.MySqlClient.MySqlDbType.Int64;
+				return MySqlDbType.Int64;
 			else if ( t == typeof(System.Guid))
-				return MySql.Data.MySqlClient.MySqlDbType.VarChar;
+				return MySqlDbType.VarChar;
 			else if ( t == typeof(ulong))
-				return MySql.Data.MySqlClient.MySqlDbType.Int64;
+				return MySqlDbType.Int64;
 			else if ( t == typeof(float))
-				return MySql.Data.MySqlClient.MySqlDbType.Float;
+				return MySqlDbType.Float;
 			else if ( t == typeof(double))
-				return MySql.Data.MySqlClient.MySqlDbType.Double;
+				return MySqlDbType.Double;
 			else if ( t == typeof(string))
-				return MySql.Data.MySqlClient.MySqlDbType.VarChar;
+				return MySqlDbType.VarChar;
 			else if ( t == typeof(byte[]))
-				return MySql.Data.MySqlClient.MySqlDbType.MediumBlob;
+				return MySqlDbType.MediumBlob;
 			else if ( t == typeof(decimal))
-				return MySql.Data.MySqlClient.MySqlDbType.Decimal;
+				return MySqlDbType.Decimal;
 			else if ( t == typeof(System.DateTime))
-				return MySql.Data.MySqlClient.MySqlDbType.DateTime;
+				return MySqlDbType.DateTime;
 			else if ( t.IsSubclassOf(typeof(System.Enum)))
-				return MySql.Data.MySqlClient.MySqlDbType.Int32;
+				return MySqlDbType.Int32;
 			else
-				throw new NDOException(27, "NDO.MySqlProvider.GetDbType: Typ " + t.Name + " kann nicht in MySql.Data.MySqlClient.MySqlDbType konvertiert werden");
+				throw new NDOException(27, "NDO.MySqlProvider.GetDbType: Typ " + t.Name + " kann nicht in MySqlDbType konvertiert werden");
 		}
 
-		// The following method converts string representations of MySql.Data.MySqlClient.MySqlDbType-Members
-		// into MySql.Data.MySqlClient.MySqlDbType.
+		// The following method converts string representations of MySqlDbType-Members
+		// into MySqlDbType.
 		// For your own adapter use members of the database type emumeration of your 
 		// ADO.NET provider and convert it to the respective enumeration type		
 		public override object GetDbType(string typeName) 
 		{
-			if (Enum.TryParse<MySqlDbType>( typeName, out var dbtype ))
-				return dbtype;
-			if (typeName == "BigInt")
+            if (Enum.TryParse<MySqlDbType>( typeName, out var dbtype ))
+                return dbtype;
+            if (typeName == "BigInt")
 				return MySqlDbType.Int64;
 			if (typeName == "Datetime")
 				return MySqlDbType.DateTime;
@@ -147,7 +146,7 @@ namespace NDO.MySqlProvider
 				return MySqlDbType.Int64;
 			if (typeName == "LongLong")
 				return MySqlDbType.Int64;
-			throw new NDOException(27, "NDOMySql.Provider.GetDbType: Typname " + typeName + " kann nicht in MySql.Data.MySqlClient.MySqlDbType konvertiert werden");
+			throw new NDOException(27, "MySqlConnector.Provider.GetDbType: Typname " + typeName + " kann nicht in MySqlDbType konvertiert werden");
 		}
 
 		public override string GetDbTypeString( IDbDataParameter parameter )
@@ -311,11 +310,11 @@ namespace NDO.MySqlProvider
 		{
 			get
 			{				
-				return Enum.GetNames(typeof(MySql.Data.MySqlClient.MySqlDbType));
+				return Enum.GetNames(typeof(MySqlDbType));
 			}
 		}
 
-		public override string Name { get { return "MySql"; }  }
+		public override string Name { get { return "MySqlConnector"; }  }
 
 		public override bool SupportsInsertBatch
 		{

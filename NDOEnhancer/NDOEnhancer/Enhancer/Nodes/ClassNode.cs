@@ -135,9 +135,6 @@ namespace NDOEnhancer
 				if (fname.StartsWith("_ndo"))
 					continue;
 
-				if (fi.FieldType.IsSubclassOf(typeof(System.Delegate)))
-					continue;
-
 				object[] attributes = fi.GetCustomAttributes(false);
 				bool cont = false;
 				foreach (Attribute attr in attributes)
@@ -155,6 +152,9 @@ namespace NDOEnhancer
 					}
 				}
 				if (cont) continue;
+
+				if (fi.FieldType.IsSubclassOf( typeof( System.Delegate ) ))
+					continue;
 
 				// Field type is persistent - assume relation with element multiplicity.
 				if (typeof(IPersistenceCapable).IsAssignableFrom(fi.FieldType))
