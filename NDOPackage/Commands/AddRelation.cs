@@ -192,7 +192,7 @@ namespace NDOVsPackage.Commands
             ThreadHelper.JoinableTaskFactory.Run(async () =>
             {
                 var active = await VS.Documents.GetActiveDocumentViewAsync();
-                var enabled = active.FilePath.EndsWith(".cs") || active.FilePath.EndsWith(".vb");
+                var enabled = active != null && (active.FilePath.EndsWith(".cs") || active.FilePath.EndsWith(".vb"));
                 await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
                 Command.Enabled = enabled;
             });

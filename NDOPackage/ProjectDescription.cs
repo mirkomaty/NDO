@@ -1,5 +1,5 @@
 ﻿//
-// Copyright (c) 2002-2022 Mirko Matytschak 
+// Copyright (c) 2002-2024 Mirko Matytschak 
 // (www.netdataobjects.de)
 //
 // Author: Mirko Matytschak
@@ -20,14 +20,11 @@
 // DEALINGS IN THE SOFTWARE.
 
 
-using System;
 using SD = System.Diagnostics;
 using System.Xml;
-using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using Microsoft.VisualStudio.Shell.Interop;
-using Microsoft.VisualStudio.Shell;
 using System.Linq;
 using EnvDTE;
 using Project = Community.VisualStudio.Toolkit.Project;
@@ -54,6 +51,7 @@ namespace NDOVsPackage
         string keyFile = string.Empty;
 		string platformTarget;
 		string targetFramework;
+		string version = "4.0";
 
 #if DEBUG
         MessageAdapter messageAdapter;
@@ -132,13 +130,19 @@ namespace NDOVsPackage
 			XmlNode node = doc.SelectSingleNode("//" + pns + "Enhancer/" + pns + "ProjectDescription", XmlHelper.Nsmgr);
 			if (node == null)
 				throw new Exception("Parameters must have at least one //Enhancer/ProjectDescription entry.");
-			
+
+			var vattr = ((XmlElement)node).Attributes["version"];
+			if (vattr != null)
+				this.version = vattr.Value;
+
 			binFile = AbsolutePath((string) XmlHelper.GetNode(node, pns + "BinPath"));
 			objPath = AbsolutePath((string) XmlHelper.GetNode(node, pns + "ObjPath"));
             keyFile = (string)XmlHelper.GetNode(node, pns + "KeyFile", string.Empty);
+
             if (keyFile != string.Empty)
                 keyFile = AbsolutePath(keyFile);
-            assemblyName = (string)XmlHelper.GetNode(node, pns + "AssemblyName");
+            
+			assemblyName = (string)XmlHelper.GetNode(node, pns + "AssemblyName");
 			debug = (bool) XmlHelper.GetNode(node, pns + "Debug", false);
             XmlNodeList refList = doc.SelectNodes("//" + pns + "Enhancer/" + pns + "ProjectDescription/" + pns + "References/" + pns + "Reference", XmlHelper.Nsmgr);
 			references = new Dictionary<string, NDOReference>();
@@ -165,11 +169,14 @@ namespace NDOVsPackage
 			return el;
 		}
 
-
-		public void ToXml(XmlNode parent)
+		public async Task ToXmlAsync(XmlNode parent)
 		{
 			XmlDocument doc = (XmlDocument) parent.ParentNode;
 			XmlNode node = doc.CreateElement("ProjectDescription");
+			this.version = await NDOPackage.Instance.GetNdoVersionAsync( this.project );
+
+			( (XmlElement) node ).SetAttribute( "version", this.version );
+
 			parent.AppendChild(node);
 			string reference = this.projPath;
 			if (reference.EndsWith("\\"))
@@ -212,13 +219,41 @@ namespace NDOVsPackage
 			ThreadHelper.ThrowIfNotOnUIThread();
 			var dteProj = project.DteProject();
 			EnvDTE.Configuration conf = dteProj.ConfigurationManager.ActiveConfiguration;
+			//var props = new Dictionary<string,object>();
 			//foreach (Property item in conf.Properties)
 			//{
-			//	SD.Debug.WriteLine( $"{item.Name} = {item.Value}" );
+			//	object value = "-";
+			//	try
+			//	{
+			//		value = item.Value;
+			//		props.Add( item.Name, value );
+			//	}
+			//	catch(Exception ex)
+			//	{ }
 			//}
 
+			//foreach (Property item in dteProj.Properties)
+			//{
+			//	object value = "-";
+			//	try
+			//	{
+			//		value = item.Value;
+			//		props.Add( item.Name, value );
+			//	}
+			//	catch (Exception ex)
+			//	{ }
+			//}
+
+			//foreach (var item in props)
+			//{
+			//	SD.Debug.WriteLine( $"{item.Key} = {item.Value}" );
+			//}
 
 			// Get the MSBuild property storage
+			ThreadHelper.JoinableTaskFactory.Run( async () => this.version = await NDOPackage.Instance.GetNdoVersionAsync( this.project ) );
+			Version.TryParse( this.version, out var ndoprojVersion );
+			var friendlyTargetFramework = (string)dteProj.Properties.Item("FriendlyTargetFramework").Value;
+
 			IVsBuildPropertyStorage propertyStorage = GetPropertyStorage( project );
 
 			try
@@ -231,7 +266,6 @@ namespace NDOVsPackage
 				this.targetFramework = (string) dteProj.Properties.Item( "TargetFrameworkMoniker" ).Value;
 			}
 			catch { }
-
 
 			string outputPath = (string) conf.Properties.Item( "OutputPath" ).Value;
 			string fullPath = dteProj.Properties.Item( "FullPath" ).Value as string;
@@ -249,7 +283,7 @@ namespace NDOVsPackage
 			if (project.GetVsHierarchy().IsCapabilityMatch( "CPS" ))
 			{
 				// new .csproj format
-				objPath = GetBuildProperty( propertyStorage, "IntermediateOutputPath" );
+				this.objPath = GetBuildProperty( propertyStorage, "IntermediateOutputPath" );
 				string configuration = GetBuildProperty( propertyStorage, "Configuration" );
 				debug = configuration == "Debug";
 			}
@@ -258,11 +292,18 @@ namespace NDOVsPackage
 				// old .csproj format
 				string debugInfo = (string) conf.Properties.Item( "DebugInfo" ).Value;
 				debug = debugInfo == "full";
-				objPath = (string) conf.Properties.Item( "IntermediatePath" ).Value;
+				this.objPath = (string) conf.Properties.Item( "IntermediatePath" ).Value;
 			}
-			binFile = Path.Combine( fullPath, outputPath );
-			binFile = Path.Combine( binFile, outputFileName );
-			projPath = Path.GetDirectoryName( dteProj.FileName ) + "\\";
+			this.binFile = Path.Combine( fullPath, outputPath );
+			this.binFile = Path.Combine( binFile, outputFileName );
+			this.projPath = Path.GetDirectoryName( dteProj.FileName ) + "\\";
+
+			if (ndoprojVersion.Major >= 5)
+			{
+				this.binFile = this.binFile.Replace( friendlyTargetFramework, "$(TargetFramework)" );
+				this.objPath = this.objPath.Replace(friendlyTargetFramework, "$(TargetFramework)" );
+			}
+
 			string sign = GetBuildProperty( propertyStorage, "SignAssembly" );
 			if (!String.IsNullOrEmpty( sign ) && String.Compare( sign, "true", true ) == 0)
 				keyFile = GetBuildProperty( propertyStorage, "AssemblyOriginatorKeyFile" );

@@ -27,6 +27,12 @@ using dte=EnvDTE;
 using Microsoft.VisualStudio.Shell.Interop;
 using System.Runtime.InteropServices;
 using System.Threading;
+using Microsoft.VisualStudio.Shell.ServiceBroker;
+using Microsoft.VisualStudio;
+using NuGet.VisualStudio.Contracts;
+using System.Linq;
+using System.Threading.Tasks;
+using System.Text.RegularExpressions;
 
 namespace NDOVsPackage
 {
@@ -38,6 +44,8 @@ namespace NDOVsPackage
     public sealed class NDOPackage : ToolkitPackage
     {
         BuildEventHandler buildEventHandler;
+        public static NDOPackage Instance { get; set; }
+		static Regex regex = new Regex(@"(\d)\.(\d)", RegexOptions.Compiled);
         protected override async Task InitializeAsync(CancellationToken cancellationToken, IProgress<ServiceProgressData> progress)
         {
             await this.RegisterCommandsAsync();
@@ -45,6 +53,44 @@ namespace NDOVsPackage
             var dte = (dte._DTE) await this.GetServiceAsync(typeof(dte._DTE));
             ApplicationObject.VisualStudioApplication = dte;
             this.buildEventHandler = new BuildEventHandler();
+            Instance = this;
         }
-    }
+
+
+		public async Task<NuGetInstalledPackage> GetNdoPackageAsync( Project project )
+		{
+			var brokeredServiceContainer = await NDOPackage.Instance.GetServiceAsync<SVsBrokeredServiceContainer, IBrokeredServiceContainer>();
+			if (brokeredServiceContainer != null)
+			{
+				var serviceBroker = brokeredServiceContainer.GetFullAccessServiceBroker();
+				using (var disposable = await serviceBroker.GetProxyAsync<INuGetProjectService>( NuGetServices.NuGetProjectServiceV1 ) as IDisposable)
+				{
+					var nugetService = disposable as INuGetProjectService;
+					var hier = project.GetVsHierarchy();
+					hier.GetGuidProperty( VSConstants.VSITEMID_ROOT,
+												(int) __VSHPROPID.VSHPROPID_ProjectIDGuid,
+												out Guid projGuid );
+					var packagesResult = await nugetService.GetInstalledPackagesAsync( projGuid, CancellationToken.None );
+					return packagesResult.Packages.FirstOrDefault( p => String.Compare( "ndo.dll", p.Id, true ) == 0 );
+				}
+			}
+
+			return null;
+		}
+
+		public async Task<string> GetNdoVersionAsync( Project project )
+		{
+			var ndoPackage = await GetNdoPackageAsync(project);
+			if (ndoPackage != null)
+			{
+				var match = regex.Match(ndoPackage.Version);
+				var major = int.Parse(match.Groups[1].Value);
+				if (major >= 5)
+					return "5.0";
+			}
+
+			return "4.0";
+		}
+
+	}
 }
