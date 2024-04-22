@@ -8,10 +8,10 @@ namespace NDOVsPackage
     internal sealed partial class Vsix
     {
         public const string Id = "9a3bfde0-3b01-4a99-9ddc-1544345635fc";
-        public const string Name = ".NET Data Objects 4";
+        public const string Name = ".NET Data Objects 5";
         public const string Description = @"NDO Integration into Visual Studio.";
         public const string Language = "en-US";
-        public const string Version = "4.1.1";
+        public const string Version = "5.0.0";
         public const string Author = "Mirko Matytschak";
         public const string Tags = "Persistence";
     }

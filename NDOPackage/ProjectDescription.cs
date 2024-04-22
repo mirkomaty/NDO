@@ -174,8 +174,10 @@ namespace NDOVsPackage
 			XmlDocument doc = (XmlDocument) parent.ParentNode;
 			XmlNode node = doc.CreateElement("ProjectDescription");
 			this.version = await NDOPackage.Instance.GetNdoVersionAsync( this.project );
+            Version.TryParse( this.version, out var ndoprojVersion );
 
-			( (XmlElement) node ).SetAttribute( "version", this.version );
+            if (ndoprojVersion.Major >= 5)
+				( (XmlElement) node ).SetAttribute( "version", this.version );
 
 			parent.AppendChild(node);
 			string reference = this.projPath;
