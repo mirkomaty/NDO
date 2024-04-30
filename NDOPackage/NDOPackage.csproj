@@ -115,9 +115,9 @@
     <Reference Include="MySqlConnectorUISupport">
       <HintPath>..\Provider\MySqlConnectorProvider\MySqlConnectorUISupport\bin\Release\MySqlConnectorUISupport.dll</HintPath>
     </Reference>
-    <Reference Include="NDO, Version=4.0.10.0, Culture=neutral, PublicKeyToken=37bfdffa92a0cd24, processorArchitecture=MSIL">
+    <Reference Include="NDO, Version=5.0.0.0, Culture=neutral, PublicKeyToken=37bfdffa92a0cd24, processorArchitecture=MSIL">
       <SpecificVersion>false</SpecificVersion>
-      <HintPath>..\NDODLL\bin\$(Configuration)\net452\NDO.dll</HintPath>
+      <HintPath>..\NDODLL\bin\$(Configuration)\netstandard2.0\NDO.dll</HintPath>
     </Reference>
     <Reference Include="NDO.MySqlConnector">
       <HintPath>..\Provider\MySqlConnectorProvider\NDO.MySqlConnector\bin\Release\net472\NDO.MySqlConnector.dll</HintPath>
@@ -126,7 +126,7 @@
       <HintPath>..\UISupport\NDO.UISupport\bin\$(Configuration)\NDO.UISupport.dll</HintPath>
     </Reference>
     <Reference Include="NDOInterfaces">
-      <HintPath>..\NDOInterfaces\bin\$(Configuration)\net452\NDOInterfaces.dll</HintPath>
+      <HintPath>..\NDOInterfaces\bin\$(Configuration)\netstandard2.0\NDOInterfaces.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Design" />

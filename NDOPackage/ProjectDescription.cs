@@ -254,7 +254,11 @@ namespace NDOVsPackage
 			// Get the MSBuild property storage
 			ThreadHelper.JoinableTaskFactory.Run( async () => this.version = await NDOPackage.Instance.GetNdoVersionAsync( this.project ) );
 			Version.TryParse( this.version, out var ndoprojVersion );
-			var friendlyTargetFramework = (string)dteProj.Properties.Item("FriendlyTargetFramework").Value;
+			var names = dteProj.Properties.OfType<EnvDTE.Property>().Select(p=>p.Name).ToList();
+			string friendlyTargetFramework = "";
+
+            if (names.Contains( "FriendlyTargetFramework" ) )
+				friendlyTargetFramework = (string)dteProj.Properties.Item("FriendlyTargetFramework").Value;
 
 			IVsBuildPropertyStorage propertyStorage = GetPropertyStorage( project );
 
