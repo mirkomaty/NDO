@@ -21,18 +21,17 @@
 
 
 using System;
-using System.Linq;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
 
 namespace NDOEnhancer.Ecma335
 {
-    class EcmaDottedName
+    class EcmaSlashedName
     {
         static Regex firstCharRegex;
         static Regex namePartRegex;
 
-        static EcmaDottedName()
+        static EcmaSlashedName()
         {
             firstCharRegex = new Regex( @"[A-Za-z_$@`?']", RegexOptions.Compiled );
             namePartRegex = new Regex( @"^[A-Za-z_$@`?][A-Za-z0-9_$@`?]*|'[^']+'", RegexOptions.Compiled );
@@ -59,35 +58,6 @@ namespace NDOEnhancer.Ecma335
             }
         }
 
-        public string UnquotedName
-        {
-            get
-            {
-                return String.Join( ".", Parts.Select( p => p[0] == ( '\'' ) ? p.Substring( 1, p.Length - 2 ) : p ) );
-            }
-        }
-
-        public bool ParseId(string input)
-        {
-            Match match = firstCharRegex.Match(input.Substring(0, 1));
-            if (!match.Success)
-                return false;
-
-            int p = 0;
-
-            match = namePartRegex.Match( input.Substring( p ) );
-            if (match.Success && match.Index == 0)
-            {
-                this.content += match.Value;
-                this.parts.Add( match.Value );
-                content = match.Value;
-                nextTokenPosition = content.Length;
-                return true;
-            }
-
-            return false;
-        }
-
         public bool Parse( string input )
         {
             int p = 0;
@@ -101,7 +71,7 @@ namespace NDOEnhancer.Ecma335
             {
                 if (firstPassReady)
                 {
-                    content += '.';
+                    content += input[p]; // '.' or '/'
                     p++;
                 }
                 match = namePartRegex.Match( input.Substring( p ) );
@@ -113,7 +83,7 @@ namespace NDOEnhancer.Ecma335
                 }
                 firstPassReady = true;
             }
-            while (p < input.Length && input[p] == '.');
+            while (p < input.Length && (input[p] == '.' || input[p] == '/' ));
 
             this.nextTokenPosition = p;
             return true;
@@ -121,11 +91,14 @@ namespace NDOEnhancer.Ecma335
     }
 }
 /*
- DottedName ::= Id [‘.’ Id]*
- Id ::= 
-  ID
-| SQSTRING
+slashedName : name1
+| slashedName '/' name1
+;
 
+name1 : id 
+| DOTTEDNAME
+| name1 '.' name1
+;
 
  
  ID is a contiguous string of characters which starts with either 

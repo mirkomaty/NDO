@@ -1,5 +1,5 @@
 ﻿//
-// Copyright (c) 2002-2022 Mirko Matytschak 
+// Copyright (c) 2002-2024 Mirko Matytschak 
 // (www.netdataobjects.de)
 //
 // Author: Mirko Matytschak
@@ -22,6 +22,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Reflection.Metadata;
 using System.Text;
 
 namespace NDOEnhancer.Ecma335
@@ -66,3 +67,23 @@ namespace NDOEnhancer.Ecma335
 
     }
 }
+
+/*
+In case we need more information about the parameter list:
+
+sigArgs0 : // EMPTY
+| sigArgs1
+;
+
+sigArgs1: sigArg
+| sigArgs1 ',' sigArg
+;
+
+sigArg: '...'
+| paramAttr type
+| paramAttr type id
+| paramAttr type 'marshal' '(' nativeType ')'
+| paramAttr type 'marshal' '(' nativeType ')'
+
+paramAttr: { '[' 'in' | 'out' | 'opt'| int32 ']' }
+*/

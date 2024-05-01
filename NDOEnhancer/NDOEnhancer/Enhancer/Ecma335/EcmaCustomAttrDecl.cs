@@ -1,5 +1,5 @@
 ﻿//
-// Copyright (c) 2002-2022 Mirko Matytschak 
+// Copyright (c) 2002-2024 Mirko Matytschak 
 // (www.netdataobjects.de)
 //
 // Author: Mirko Matytschak
@@ -22,8 +22,6 @@
 
 using System.Globalization;
 using System;
-using static System.Net.Mime.MediaTypeNames;
-using System.Text.RegularExpressions;
 
 namespace NDOEnhancer.Ecma335
 {
@@ -44,9 +42,21 @@ namespace NDOEnhancer.Ecma335
 		public byte[] Bytes => bytes;
 
 		string parameterList;
-		public string ParameterList => parameterList;		
+		public string ParameterList => parameterList;
 
-		public bool Parse(string input)
+		public string OwnerType { get; private set; } = String.Empty;
+
+		void EatWhitespace(string input, ref int p)
+		{
+			char c;
+            while (p < input.Length && char.IsWhiteSpace( c = input[p] ))
+            {
+                content += c;
+                p++;
+            }
+        }
+
+        public bool Parse(string input)
         {
 			string methodKeyword = ".custom";
 			if (!input.StartsWith( methodKeyword ))
@@ -56,34 +66,88 @@ namespace NDOEnhancer.Ecma335
 
 			int p = 7;
 			char c;
-			while (char.IsWhiteSpace( c = input[p] ))
+
+			EatWhitespace( input, ref p );
+
+			if (input[p] == '(')
 			{
-				content += c;
+				content += '(';
 				p++;
-			}
+				var ownerTypeSpec = new EcmaTypeSpec();
+				if (!ownerTypeSpec.Parse( input.Substring( p ) ))
+					throw new EcmaILParserException( "TypeSpec", "(", input );
+				p += ownerTypeSpec.NextTokenPosition;
+				content += ownerTypeSpec.Content;
+				this.OwnerType = ownerTypeSpec.Content;
+				if (input[p] != ')')
+                    throw new EcmaILParserException( ")", "( TypeSpec", input );
+				content += ')';
+				p++;
+            }
 
+            EatWhitespace( input, ref p );
 
-			this.parameterList = methodHeader.ParameterList;
+            // usually 'instance'
+            EcmaCallConv callConv = new EcmaCallConv();
+			if (!callConv.Parse( input.Substring( p ) ))
+				throw new EcmaILParserException( "CallConv", ".custom", input );
 
-			p += methodHeader.NextTokenPosition;
+            content += callConv.Content;
+			p += callConv.NextTokenPosition;
 
-			while ( p < input.Length && char.IsWhiteSpace( c = input[p] ))
+            EatWhitespace( input, ref p );
+            
+			// This is the .ctor return type, which seems to be always void.
+            EcmaType returnType = new EcmaType();
+			if (!returnType.Parse( input.Substring( p ) ))
+                throw new EcmaILParserException( "Type", callConv.Content, input );
+
+			content += returnType.Content;
+			p += returnType.NextTokenPosition;
+
+            EatWhitespace( input, ref p );
+
+			if (input[p] != '.') // from .ctor
 			{
-				content += c;
-				p++;
-			}
+				EcmaTypeSpec typeSpec = new EcmaTypeSpec();
+				if (!typeSpec.Parse( input.Substring( p ) ))
+                    throw new EcmaILParserException( "TypeSpec", returnType.Content, input );
+
+				this.typeName = typeSpec.Content;
+				this.content += this.typeName;
+				p += typeSpec.NextTokenPosition;
+
+				if (input.Substring(p, 2) != "::")
+                    throw new EcmaILParserException( "::", typeSpec.Content, input );
+
+				p += 2;
+				this.content += "::";
+            }
+
+			if (input.Substring( p, 5 ) != ".ctor")
+				throw new Exception( "CustomAttribute must contain a .ctor declaration in: " + input );
+
+			p += 5;
+			content += ".ctor";
+
+			EatWhitespace( input, ref p );
+
+            EcmaParameterList parList = new EcmaParameterList();
+            if (!parList.Parse( input.Substring( p ) ))
+                throw new EcmaILParserException( "ParameterList", input.Substring( 0, p ), input );
+
+            content += parList.Content;
+            p += parList.NextTokenPosition;
+            this.parameterList = parList.Content;
+
+			EatWhitespace( input, ref p );
 
 			if (p < input.Length && ( c = input[p] ) == '=')
 			{
 				content += c;
 				p++;
 
-
-				while (p < input.Length && char.IsWhiteSpace( c = input[p] ))
-				{
-					content += c;
-					p++;
-				}
+				EatWhitespace( input, ref p );
 
 				var remainder = input.Substring(p);
 
@@ -116,8 +180,8 @@ namespace NDOEnhancer.Ecma335
 }
 
 /*
-Short definition in Partition II:
-CustomDecl := ctor [ '=' '(' bytes ')']
+Summary:
+'.custom' ['(' ownerType ')'] callConv type [typeSpec '::'] '.ctor' '(' sigArgs0 ')' ['=' '(' bytes ')' | compQstring]
 
 Complete definition
 
@@ -137,8 +201,7 @@ compQstring : QSTRING {'+' QSTRING}
 
 QSTRING : "c-style string"
 
-customHeadWithOwner : '.custom' '(' ownerType ')' customType '='
-'('
+customHeadWithOwner : '.custom' '(' ownerType ')' customType '=' '('
 ;
 
 customType : callConv type typeSpec '::' '.ctor' '(' sigArgs0 ')'
@@ -164,6 +227,9 @@ Sample:
 3 '.custom' callConv type typeSpec '::' '.ctor' '(' sigArgs0 ')' = '(' bytes ')'
 3 '.custom' callConv type '.ctor' '(' sigArgs0 ')' = '(' bytes ')'
 4 like 1, with optional '(' ownerType ')' after .custom
+5 like 2, with optional '(' ownerType ')' after .custom
+6 '.custom' '(' ownerType ')' callConv type typeSpec '::' '.ctor' '(' sigArgs0 ')' '=' '(' bytes ')'
+6 '.custom' '(' ownerType ')' callConv type '.ctor' '(' sigArgs0 ')' '=' '(' bytes ')'
 
 
 

@@ -206,8 +206,8 @@ namespace NDOEnhancer.Ecma335
             {
                 // This seems to be a Microsoft extension to the standard
                 // !Name instead of !int32
-                EcmaDottedName dn = new EcmaDottedName();  // Actually it's a simple name, but we don't have a special class for it
-                if (!dn.Parse(s.Substring(p)))
+                EcmaDottedName dn = new EcmaDottedName();
+                if (!dn.ParseId(s.Substring(p)))
                     throw new EcmaILParserException("Name", s.Substring(p), s);
                 p += dn.NextTokenPosition;
             }

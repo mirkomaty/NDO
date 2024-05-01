@@ -109,9 +109,9 @@ namespace NDOEnhancer
 		private ConfigurationOptions options;
 		private string				assemblyKeyFile = null;
 
-        void CheckNDO(Assembly ass)
+        void CheckNDO(Assembly assy)
         {
-#warning we should implement a check for the wrong NDO dll referencde here
+#warning we should implement a check for the wrong NDO dll referenced here
 			//         AssemblyName[] references = ass.GetReferencedAssemblies();
 			//         NDOAssemblyName refAn = null;
 			//         foreach (AssemblyName an in references)

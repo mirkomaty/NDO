@@ -1,14 +1,36 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace NDOEnhancer.Enhancer.Ecma335
+namespace NDOEnhancer.Ecma335
 {
-	internal class EcmaTypeSpec
-	{
-	}
+    internal class EcmaTypeSpec : IEcmaDefinition
+    {
+        public string Content { get; private set; } = String.Empty;
+        public string ResolutionScope { get; private set; } = String.Empty;
+
+        public int NextTokenPosition { get; private set; } = 0;
+    
+        public bool Parse( string input )
+        {
+            int p = 0;
+            if (input[0] == '[')
+            {
+                p = input.IndexOf(']');
+                if (p == -1)
+                    throw new EcmaILParserException( "]", "[", input );
+                p++;
+                Content = ResolutionScope = input.Substring( 0, p );
+            }
+
+            var slashedName = new EcmaSlashedName();
+            var success = slashedName.Parse( input.Substring( p ) );
+            if (!success)
+                throw new Exception( $"TypeSpec should contain a SlashedName in: {input}" );
+
+            Content += slashedName.Content;
+            NextTokenPosition = p + slashedName.NextTokenPosition;
+            return true;
+        }
+    }
 }
 
 /*
@@ -33,10 +55,5 @@ name1 : id => empty
 | DOTTEDNAME
 | name1 '.' name1
 ;
-
-slashedName: [id{/id}]id{.id}
-
-typeSpec: ['[' ['.module'] id ']']  [id{/id}]id{.id}
-
 
  */
