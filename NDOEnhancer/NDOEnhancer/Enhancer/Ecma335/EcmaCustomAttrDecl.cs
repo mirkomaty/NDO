@@ -153,7 +153,17 @@ namespace NDOEnhancer.Ecma335
 
 				var remainder = input.Substring(p);
 
-				var start = remainder.IndexOf( "(" );
+                // TODO: We should implement compQString as an alternative here.
+                // However, there is currently no application for it
+                //if (remainder[0] == '"')
+                //{
+                //	var compQString = new EcmaCompQString();
+                //	compQString.Parse( remainder );
+                //	var qstring = compQString.Content;
+                //	// don't know what to do with qstring.
+                //}
+
+                var start = remainder.IndexOf( "(" );
 				var end = remainder.IndexOf( ")", start );
 
 				if (start < 0)
