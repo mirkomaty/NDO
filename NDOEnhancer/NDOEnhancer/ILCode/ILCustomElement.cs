@@ -167,55 +167,66 @@ namespace NDOEnhancer.ILCode
 				text += " " + line;
 			}
 
-			int start, end;
+			text = text.Trim();
 
-			// assembly name
+			var ecmaCustomAttrDecl = new EcmaCustomAttrDecl();
+			ecmaCustomAttrDecl.Parse( text );
 
-			start = text.IndexOf( "[" ) + 1;
-			end = text.IndexOf( "]", start );
-			string assName = StripComment( text.Substring( start, end - start ) );
+			//int start, end;
 
-			// type name
+			//// assembly name
 
-			start = text.IndexOf( "]" ) + 1;
-			end = text.IndexOf( "::", start );
-			string typeName = StripComment( text.Substring( start, end - start ) );
+			//string assName = String.Empty;
+			//start = text.IndexOf( "[" ) + 1;
+			//if (start > 0)
+			//{
+			//	end = text.IndexOf( "]", start );
+			//	assName = StripComment( text.Substring( start, end - start ) );
+			//}
 
-			// constructor signature
+			//// type name
 
-			start = text.IndexOf( "(" ) + 1;
-			end = text.IndexOf( ")", start );
-			string signature = StripComment( text.Substring( start, end - start ) );
+			//start = text.IndexOf( "]" ) + 1;
+			//end = text.IndexOf( "::", start );
+			//string typeName = StripComment( text.Substring( start, end - start ) );
 
-			// parameter bytes
+			//// constructor signature
 
-			start = text.IndexOf( "= (" ) + 3;
-			end = text.IndexOf( ")", start );
-			string byteText = text.Substring( start, end - start ).Trim();
+			//start = text.IndexOf( "(" ) + 1;
+			//end = text.IndexOf( ")", start );
+			//string signature = StripComment( text.Substring( start, end - start ) );
 
-			char[]   spc         = { ' ' };
-			string[] byteStrings = byteText.Split( spc );
-			byte[]   bytes       = new byte[byteStrings.Length];
-			//			char[]	 chars		 = new char[byteStrings.Length];
+			//// parameter bytes
 
-			for (int i = 0; i < byteStrings.Length; i++)
-			{
-				bytes[i] = Byte.Parse( byteStrings[i], NumberStyles.HexNumber );
-				//				chars[i] = Convert.ToChar( bytes[i] );
-			}
+			//start = text.IndexOf( "= (" ) + 3;
+			//end = text.IndexOf( ")", start );
+			//string byteText = text.Substring( start, end - start ).Trim();
 
-			//			char[] chars = new System.Text.UTF8Encoding().GetChars(bytes);
+			//char[]   spc         = { ' ' };
+			//string[] byteStrings = byteText.Split( spc );
+			//byte[]   bytes       = new byte[byteStrings.Length];
+			////			char[]	 chars		 = new char[byteStrings.Length];
 
-			//			Type attributeType = Type.GetType( typeName + ", " + assName );
-			//			if ( null == attributeType )
-			//				return null;
+			//for (int i = 0; i < byteStrings.Length; i++)
+			//{
+			//	bytes[i] = Byte.Parse( byteStrings[i], NumberStyles.HexNumber );
+			//	//				chars[i] = Convert.ToChar( bytes[i] );
+			//}
+
+			////			char[] chars = new System.Text.UTF8Encoding().GetChars(bytes);
+
+			////			Type attributeType = Type.GetType( typeName + ", " + assName );
+			////			if ( null == attributeType )
+			////				return null;
 
 			char   comma =  ',';
 			string[] paramTypeNames = new string[]{};
 			object[] paramValues = new object[]{};
 
-			//CustomAttrib starts with a Prolog – an unsigned int16 with the value 0x0001
+			// CustomAttributes parameters start with a Prolog – an unsigned int16 with the value 0x0001
 			int pos = 2;
+			var bytes = ecmaCustomAttrDecl.Bytes;
+			var signature = ecmaCustomAttrDecl.ParameterList;
 
 			if (signature != "")
 			{
@@ -232,7 +243,7 @@ namespace NDOEnhancer.ILCode
 					{
 						EcmaType.BuiltInTypesDict.TryGetValue( paramTypeName, out paramType );
 						if (paramType == null)
-							throw new Exception( $"{typeName}: Unknown type in attribute parameter list: {paramTypeName}, type: {( this.Owner as ILClassElement )?.Name ?? ""}" );
+							throw new Exception( $"{ecmaCustomAttrDecl.TypeName}: Unknown type in attribute parameter list: {paramTypeName}, type: {( this.Owner as ILClassElement )?.Name ?? ""}" );
 					}
 
 					paramValues[i] = ReadParam( bytes, paramType, ref pos );
@@ -240,29 +251,10 @@ namespace NDOEnhancer.ILCode
 			}
 
 			AttributeInfo   attr = new AttributeInfo();
-			attr.TypeName = typeName;
-			attr.AssemblyName = assName;
+			attr.TypeName = ecmaCustomAttrDecl.TypeName;
+			attr.AssemblyName = ecmaCustomAttrDecl.ResolutionScope;
 			attr.ParamTypeNames = paramTypeNames;
 			attr.ParamValues = paramValues;
-
-			//TODO: Should we ever need to analyze named parameters
-			// we'll have to add lots of code here.
-			// We'd be better off, if we analyzed the IL code using the ECMA spec.
-
-			//			short count = (short) readParam( bytes, chars, Type.GetType( "System.Int16" ), ref pos );
-			//
-			//			for ( short i=0; i<count; i++ )
-			//			{
-			//				pos += 2;
-			//
-			//				string propName = readParam( bytes, chars, Type.GetType( "System.String" ), ref pos ) as string;
-			//
-			//				PropertyInfo pi = attributeType.GetProperty( propName );
-			//
-			//				object propVal = readParam( bytes, chars, pi.PropertyType, ref pos );
-			//
-			//				pi.SetValue( attr, propVal, null );
-			//			}
 
 			this.attributeInfo = attr;
 			return attr;

@@ -1,5 +1,5 @@
 ﻿//
-// Copyright (c) 2002-2022 Mirko Matytschak 
+// Copyright (c) 2002-2024 Mirko Matytschak 
 // (www.netdataobjects.de)
 //
 // Author: Mirko Matytschak
@@ -52,12 +52,6 @@ namespace NDOEnhancer.Ecma335
             get { return content; }
         }
 
-        List<string> methodAttrs;
-        public List<string> MethodAttrs
-        {
-            get { return methodAttrs; }
-        }
-
         List<string> implAttributes;
         public List<string> ImplAttributes
         {
@@ -82,6 +76,9 @@ namespace NDOEnhancer.Ecma335
             get { return ilType; }
         }
 
+        string resolutionScope;
+        public string ResolutionScope => resolutionScope;
+
         string signature;
         public string Signature
         {
@@ -94,36 +91,13 @@ namespace NDOEnhancer.Ecma335
             get { return genericParameterList; }
         }
 
+        List<string> callingConventions;
+        public IEnumerable<string> CallingConventions => callingConventions;
+
         public bool Parse(string input)
         {
-            string methodKeyword = ".method";
-            if (!input.StartsWith(methodKeyword))
-                throw new EcmaILParserException(methodKeyword, "begin of method declaration", input);
-
-            content = methodKeyword;
-
-            int p = 7;
+            int p = 0;
             char c;
-            while (char.IsWhiteSpace(c = input[p]))
-            {
-                content += c;
-                p++;
-            }
-
-            EcmaMethAttr methodAttr = new EcmaMethAttr();
-            if (!methodAttr.Parse(input.Substring(p)))
-                return false;
-
-            this.methodAttrs = methodAttr.MethodAttrs;
-
-            p += methodAttr.NextTokenPosition;
-            this.content += methodAttr.Content;
-
-            while (char.IsWhiteSpace(c = input[p]))
-            {
-                content += c;
-                p++;
-            }
 
             EcmaCallConv callConv = new EcmaCallConv();
 
@@ -134,7 +108,7 @@ namespace NDOEnhancer.Ecma335
                 if (callConv.Content.StartsWith("instance"))
                     this.isInstance = true;
 
-                this.methodAttrs.AddRange(callConv.FoundKeywords);
+                this.callingConventions = callConv.FoundKeywords;
 
                 while (char.IsWhiteSpace(c = input[p]))
                 {
@@ -143,14 +117,15 @@ namespace NDOEnhancer.Ecma335
                 }
             }
 
-            EcmaType type = new EcmaType();
+            EcmaType returnType = new EcmaType();
 
-            if (!type.Parse(input.Substring(p)))
-                throw new EcmaILParserException("Type in MethodHeader", input.Substring(0, p), input);
+            if (!returnType.Parse(input.Substring(p)))
+                throw new EcmaILParserException("return type in MethodHeader", input.Substring(0, p), input);
 
-            this.content += type.Content;
-            this.ilType = type.Content;
-            p += type.NextTokenPosition;
+            this.content += returnType.Content;
+            this.ilType = returnType.Content;
+            this.resolutionScope = returnType.ResolutionScope;
+            p += returnType.NextTokenPosition;
 
             while (char.IsWhiteSpace(c = input[p]))
             {

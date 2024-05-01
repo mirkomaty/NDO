@@ -23,6 +23,7 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Text.RegularExpressions;
 
 namespace NDOEnhancer.Ecma335
 {
@@ -38,6 +39,10 @@ namespace NDOEnhancer.Ecma335
         {
             get { return content; }
         }
+
+        string resolutionScope;
+
+        public string ResolutionScope => resolutionScope;
 
         static string[] builtInTypes = 
         {
@@ -61,6 +66,8 @@ namespace NDOEnhancer.Ecma335
             {"uint64", typeof(System.UInt64) },
             {"string", typeof(System.String) }
         };
+
+        static Regex arrayRegex = new Regex(@"^\[\d+\]", RegexOptions.Compiled);
 
 		public bool Parse(string input)
         {
@@ -87,7 +94,7 @@ namespace NDOEnhancer.Ecma335
             // standard defines recursively "Type ::= Type suffix", where suffix may be 
             // arbitrary valid code.
             // Don't touch nextTokenPosition or content if you're not sure,
-            // if a suffix appars.
+            // wether a suffix appears.
             p = this.nextTokenPosition;
             char c;
             while (char.IsWhiteSpace(c = input[p]))
@@ -108,10 +115,14 @@ namespace NDOEnhancer.Ecma335
             }
             else if (c == '[')
             {
-                content += input.Substring(nextTokenPosition, p - nextTokenPosition); // add blanks
-                nextTokenPosition = p;
-                if (!ParseArray(s))
-                    throw new EcmaILParserException("ArrayDimensionSpec", input.Substring(0, p), input);
+                var match = arrayRegex.Match(s);
+                if (match.Success)
+                {
+                    var value = match.Value;
+                    content += input.Substring( nextTokenPosition, p - nextTokenPosition ); // add blanks
+                    content += value;
+                    nextTokenPosition = p + value.Length;
+                }
             }
             else if (s.StartsWith("modopt") || s.StartsWith("modreq"))
             {
@@ -154,6 +165,7 @@ namespace NDOEnhancer.Ecma335
 
             content += typeRef.Content;
             p += typeRef.NextTokenPosition;
+            this.resolutionScope = typeRef.ResolutionScope;
 
             nextTokenPosition += p;
 
@@ -308,19 +320,6 @@ namespace NDOEnhancer.Ecma335
             nextTokenPosition += genPar.NextTokenPosition;
             return true;
         }
-
-
-        bool ParseArray(string s)
-        {
-            EcmaArrayIndex arrIndex = new EcmaArrayIndex();
-            if (!arrIndex.Parse(s))
-                return false;
-
-            content += arrIndex.Content;
-            nextTokenPosition += arrIndex.NextTokenPosition;
-            return true;
-        }
-
         
         public override string ToString()
         {

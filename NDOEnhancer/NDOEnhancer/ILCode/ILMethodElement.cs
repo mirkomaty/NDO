@@ -102,7 +102,7 @@ namespace NDOEnhancer.ILCode
 
 			string allLines = this.GetAllLines();
 
-            EcmaMethodHeader methodHeader = new EcmaMethodHeader();
+            var methodHeader = new EcmaMethodDecl();
             if (!methodHeader.Parse(allLines))
                 throw new Exception("Invalid Method Header: " + allLines);
 
