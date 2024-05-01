@@ -172,53 +172,6 @@ namespace NDOEnhancer.ILCode
 			var ecmaCustomAttrDecl = new EcmaCustomAttrDecl();
 			ecmaCustomAttrDecl.Parse( text );
 
-			//int start, end;
-
-			//// assembly name
-
-			//string assName = String.Empty;
-			//start = text.IndexOf( "[" ) + 1;
-			//if (start > 0)
-			//{
-			//	end = text.IndexOf( "]", start );
-			//	assName = StripComment( text.Substring( start, end - start ) );
-			//}
-
-			//// type name
-
-			//start = text.IndexOf( "]" ) + 1;
-			//end = text.IndexOf( "::", start );
-			//string typeName = StripComment( text.Substring( start, end - start ) );
-
-			//// constructor signature
-
-			//start = text.IndexOf( "(" ) + 1;
-			//end = text.IndexOf( ")", start );
-			//string signature = StripComment( text.Substring( start, end - start ) );
-
-			//// parameter bytes
-
-			//start = text.IndexOf( "= (" ) + 3;
-			//end = text.IndexOf( ")", start );
-			//string byteText = text.Substring( start, end - start ).Trim();
-
-			//char[]   spc         = { ' ' };
-			//string[] byteStrings = byteText.Split( spc );
-			//byte[]   bytes       = new byte[byteStrings.Length];
-			////			char[]	 chars		 = new char[byteStrings.Length];
-
-			//for (int i = 0; i < byteStrings.Length; i++)
-			//{
-			//	bytes[i] = Byte.Parse( byteStrings[i], NumberStyles.HexNumber );
-			//	//				chars[i] = Convert.ToChar( bytes[i] );
-			//}
-
-			////			char[] chars = new System.Text.UTF8Encoding().GetChars(bytes);
-
-			////			Type attributeType = Type.GetType( typeName + ", " + assName );
-			////			if ( null == attributeType )
-			////				return null;
-
 			char   comma =  ',';
 			string[] paramTypeNames = new string[]{};
 			object[] paramValues = new object[]{};

@@ -113,8 +113,9 @@ namespace NDOEnhancer.Ecma335
 				if (!typeSpec.Parse( input.Substring( p ) ))
                     throw new EcmaILParserException( "TypeSpec", returnType.Content, input );
 
-				this.typeName = typeSpec.Content;
-				this.content += this.typeName;
+				this.resolutionScope = typeSpec.ResolutionScope;
+				this.typeName = typeSpec.Content.Substring(this.resolutionScope.Length);
+				this.content += typeSpec.Content;
 				p += typeSpec.NextTokenPosition;
 
 				if (input.Substring(p, 2) != "::")
@@ -138,7 +139,8 @@ namespace NDOEnhancer.Ecma335
 
             content += parList.Content;
             p += parList.NextTokenPosition;
-            this.parameterList = parList.Content;
+			// strip off the brackets
+            this.parameterList = parList.Content.Substring(1, parList.Content.Length - 2);
 
 			EatWhitespace( input, ref p );
 
@@ -158,6 +160,8 @@ namespace NDOEnhancer.Ecma335
 					throw new EcmaILParserException( "(", "=", input );
 				if (end < 0)
 					throw new EcmaILParserException( ")", "(", input );
+
+				start++;
 
 				string byteText = remainder.Substring( start, end - start ).Trim();
 
