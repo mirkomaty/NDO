@@ -19,44 +19,17 @@
 // CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER 
 // DEALINGS IN THE SOFTWARE.
 
-#if nix
+
+using System;
+using System.Collections.Generic;
+using System.Text;
+
 namespace NDOEnhancer.Ecma335
 {
-    class EcmaArrayIndex : IEcmaDefinition
+    public interface IEcmaDefinition
     {
-        int nextTokenPosition;
-        string content;
-
-        public int NextTokenPosition => nextTokenPosition;
-        public string Content => content;
-
-        public bool Parse(string input)
-        {
-            int p = 1;
-            while (input[p] != ']' && p < input.Length - 1)
-                p++;
-
-            if (input[p] != ']')
-                return false;
-
-            p++;
-            content = input.Substring(0, p);
-            nextTokenPosition = p;
-
-            return true;
-        }
+        string Content { get; }
+        int NextTokenPosition { get; }
+        bool Parse(string input);
     }
 }
-
-/*
- ArrayIndex ::=
- ‘[’ [ Bound [ ‘,’ Bound ]*] ‘]’ 
-  
- Bound ::=
-  ‘...’
-| Int32
-| Int32 ‘...’
-| Int32 ‘...’ Int32
-
- */
-#endif

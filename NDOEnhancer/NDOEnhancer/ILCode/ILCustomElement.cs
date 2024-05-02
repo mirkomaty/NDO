@@ -1,5 +1,5 @@
 ﻿//
-// Copyright (c) 2002-2022 Mirko Matytschak 
+// Copyright (c) 2002-2024 Mirko Matytschak 
 // (www.netdataobjects.de)
 //
 // Author: Mirko Matytschak
@@ -21,9 +21,10 @@
 
 
 using NDOEnhancer.Ecma335;
+using NDOEnhancer.Ecma335.Bytes;
 using System;
-using System.Globalization;
-using System.IO;
+using System.Collections.Generic;
+using System.Linq;
 using System.Runtime.InteropServices;
 
 namespace NDOEnhancer.ILCode
@@ -159,10 +160,11 @@ namespace NDOEnhancer.ILCode
 
 		internal class AttributeInfo
 		{
-			public string TypeName;
-			public string AssemblyName;
-			public string[] ParamTypeNames = new string[]{};
-			public object[] ParamValues = new object[]{};
+			public string TypeName { get; set; }
+			public string AssemblyName { get; set; }
+            public string[] ParamTypeNames { get; set; } = new string[]{};
+			public object[] ParamValues { get; set; } = new object[]{};
+			public Dictionary<string, object> NamedParams { get; set; } = new Dictionary<string, object>();
 		}
 
 
@@ -189,25 +191,22 @@ namespace NDOEnhancer.ILCode
 
 			char   comma =  ',';
 			string[] paramTypeNames = new string[]{};
-			object[] paramValues = new object[]{};
+			IEnumerable<object> paramValues = new object[]{};
+			Dictionary<string, object> namedParams = new Dictionary<string, object>();
 
-			// CustomAttributes parameters start with a Prolog – an unsigned int16 with the value 0x0001
-			int pos = 2;
 			var bytes = ecmaCustomAttrDecl.Bytes;
 			var signature = ecmaCustomAttrDecl.ParameterList;
 
-			BinaryReader br = new BinaryReader(new MemoryStream());
 			if (signature != "")
 			{
 				paramTypeNames = signature.Split( comma );
-				Type paramType;
-				paramValues = new Object[paramTypeNames.Length];
+				Type[] paramTypes = new Type[paramTypeNames.Length];
 
 				for (int i = 0; i < paramTypeNames.Length; i++)
 				{
 					string paramTypeName = paramTypeNames[i].Trim();
 					paramTypeNames[i] = ILType.GetNetTypeName( paramTypeName );
-					paramType = Type.GetType( paramTypeNames[i] );
+					var paramType = Type.GetType( paramTypeNames[i] );
 					if (paramType == null)
 					{
 						EcmaType.BuiltInTypesDict.TryGetValue( paramTypeName, out paramType );
@@ -215,15 +214,20 @@ namespace NDOEnhancer.ILCode
 							throw new Exception( $"{ecmaCustomAttrDecl.TypeName}: Unknown type in attribute parameter list: {paramTypeName}, type: {( this.Owner as ILClassElement )?.Name ?? ""}" );
 					}
 
-					paramValues[i] = ReadParam( bytes, paramType, ref pos );
+					paramTypes[i] = paramType;
 				}
+
+				var ecmaBytes = new EcmaBytes();
+				ecmaBytes.Parse( bytes, paramTypes, out paramValues, out namedParams );				
+
 			}
 
 			AttributeInfo   attr = new AttributeInfo();
 			attr.TypeName = ecmaCustomAttrDecl.TypeName;
 			attr.AssemblyName = ecmaCustomAttrDecl.ResolutionScope;
 			attr.ParamTypeNames = paramTypeNames;
-			attr.ParamValues = paramValues;
+			attr.ParamValues = paramValues.ToArray();
+			attr.NamedParams = namedParams;
 
 			this.attributeInfo = attr;
 			return attr;

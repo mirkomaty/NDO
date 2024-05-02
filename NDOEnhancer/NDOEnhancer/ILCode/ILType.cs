@@ -57,30 +57,26 @@ namespace NDOEnhancer.ILCode
 				return "System.String";
 			else
 			{
-				var dottedName = new EcmaDottedName();
-				string tn = ilTypeName;
-				if (tn.StartsWith( vtPrefix ))
-					tn = tn.Substring( 10 );
-				else if (tn.StartsWith( classPrefix ))
-					tn = tn.Substring( 6 );
-				tn = tn.Trim();
-				if (tn.StartsWith( $"{Corlib.Name}" )) // Corlib.Name is inclosed in []
-					tn = tn.Substring( Corlib.Name.Length ).Trim();
-				if (!tn.StartsWith( "[" ))
-				{
-					dottedName.Parse( tn );
-					return dottedName.UnquotedName;
-				}
+                string tn = ilTypeName;
+                if (tn.StartsWith( vtPrefix ))
+                    tn = tn.Substring( 10 );
+                else if (tn.StartsWith( classPrefix ))
+                    tn = tn.Substring( 6 );
+                tn = tn.Trim();
 
-				tn = tn.Substring( 1 );
-				int pos = tn.IndexOf("]");
-				dottedName.Parse( tn.Substring( 0, pos ) );
-				var assyName = dottedName.UnquotedName;
-				dottedName = new EcmaDottedName();
-				dottedName.Parse( tn.Substring( pos + 1 ) );
-				var typeName = dottedName.UnquotedName;
-				return ( typeName + ", " + assyName );
-			}
+                var typeSpec = new EcmaTypeSpec();
+                typeSpec.Parse( tn );
+                var assyName = String.Empty;
+                if (typeSpec.ResolutionScope != String.Empty)
+					assyName = typeSpec.ResolutionScope.Substring(1, typeSpec.ResolutionScope.Length - 2);
+
+                var dottedName = new EcmaDottedName();
+                dottedName.Parse( typeSpec.TypenameWithoutScope );
+                var typeName = dottedName.UnquotedName;
+				if (assyName != "")
+					return typeName + ", " + assyName;
+				return typeName;
+            }
 		}
 	}
 }

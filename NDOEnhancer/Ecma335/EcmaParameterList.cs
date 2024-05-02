@@ -1,5 +1,5 @@
 ﻿//
-// Copyright (c) 2002-2022 Mirko Matytschak 
+// Copyright (c) 2002-2024 Mirko Matytschak 
 // (www.netdataobjects.de)
 //
 // Author: Mirko Matytschak
@@ -22,50 +22,68 @@
 
 using System;
 using System.Collections.Generic;
+using System.Reflection.Metadata;
 using System.Text;
 
 namespace NDOEnhancer.Ecma335
 {
-    class EcmaImplAttr : IEcmaDefinition
+    public class EcmaParameterList : IEcmaDefinition
     {
-        static string[] keywords = 
-            {
-                "cil",                "managed",                "forwardref",                "internalcall",                "managed",                "native",                "noinlining",                "runtime",                "synchronized",                "unmanaged",                "preservesig"            };
-
-        EcmaKeywordListParser kwListParser = new EcmaKeywordListParser(keywords);
-
+        int nextTokenPosition;
+        public int NextTokenPosition
+        {
+            get { return nextTokenPosition; }
+        }
+        string content;
+        public string Content
+        {
+            get { return content; }
+        }
 
         public bool Parse(string input)
         {
-            return kwListParser.Parse(input);
+            if (input[0] != '(')
+                return false;
+
+            int count = 1;
+            int p = 1;
+            char c;
+            while (count > 0)
+            {
+                if (p == input.Length)
+                    return false;
+                c = input[p];
+                if (c == '(')
+                    count++;
+                if (c == ')')
+                    count--;
+                p++;
+            }
+
+            content = input.Substring(0, p);
+            nextTokenPosition = p;
+            return true;
         }
 
-        List<string> implAttributes = new List<string>();
-        public List<string> ImplAttributes
-        {
-            get { return kwListParser.FoundKeywords;  }
-        }
-
-        public int NextTokenPosition
-        {
-            get { return kwListParser.NextTokenPosition; }
-        }
-
-        public string Content
-        {
-            get { return kwListParser.Content; }
-        }
     }
 }
+
 /*
-ImplAttr ::=
-  cil
-| forwardref
-| internalcall
-| managed
-| native
-| noinlining
-| runtime
-| synchronized
-| unmanaged| preservesig
+In case we need more information about the parameter list:
+
+sigArgs0 : // EMPTY
+| sigArgs1
+;
+
+sigArgs1: sigArg
+| sigArgs1 ',' sigArg
+;
+
+sigArg: '...'
+| paramAttr type
+| paramAttr type id
+| paramAttr type 'marshal' '(' nativeType ')'
+| paramAttr type 'marshal' '(' nativeType ')'
+
+paramAttr: { '[' 'in' | 'out' | 'opt'| int32 ']' }
 */

@@ -7,7 +7,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NDOEnhancer", "NDOEnhancer\
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NDO", "..\NDODLL\NDO.csproj", "{30C54F7D-DC3B-4C2A-9D96-37BAB6932FA0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PersistentEnhancerTestClasses", "PersistentEnhancerTestClasses\PersistentEnhancerTestClasses.csproj", "{5A81EB39-2C94-4B91-8DA8-7C4C8E68D96D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PersistentEnhancerTestClasses", "PersistentEnhancerTestClasses\PersistentEnhancerTestClasses.csproj", "{5A81EB39-2C94-4B91-8DA8-7C4C8E68D96D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ecma335", "Ecma335\Ecma335.csproj", "{3A53549B-AFDE-483E-87CB-9AD54BFF9A69}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -26,6 +28,10 @@ Global
 		{5A81EB39-2C94-4B91-8DA8-7C4C8E68D96D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5A81EB39-2C94-4B91-8DA8-7C4C8E68D96D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5A81EB39-2C94-4B91-8DA8-7C4C8E68D96D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3A53549B-AFDE-483E-87CB-9AD54BFF9A69}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3A53549B-AFDE-483E-87CB-9AD54BFF9A69}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3A53549B-AFDE-483E-87CB-9AD54BFF9A69}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3A53549B-AFDE-483E-87CB-9AD54BFF9A69}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

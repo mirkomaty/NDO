@@ -26,64 +26,29 @@ using System.Text;
 
 namespace NDOEnhancer.Ecma335
 {
-    class EcmaMethAttr : IEcmaDefinition
+    public class EcmaKeywordListParser : IEcmaDefinition
     {
-        static string[] keywords = 
-            {
-                "private",
-                "public",
-                "hidebysig",
-                "newslot",
-                "virtual",
-                "abstract",
-                "static",
-                "specialname",
-                "assembly",
-                "family",
-                "compilercontrolled",
-                "famandassem",
-                "famorassem",
-                "final",
-                "rtspecialname",
-                "unmanagedexp",
-                "reqsecobj",
-                "privatescope",
-                "pinvokeimpl",
-                "strict"   // Bug #1905682
-            };
+        string[] keywords;
 
-        List<string> methodAttrs = new List<string>();
-        public List<string> MethodAttrs
+        public EcmaKeywordListParser(string[] keywords)
         {
-            get { return methodAttrs; }
+            this.keywords = keywords;
         }
 
         public bool Parse(string input)
         {
-            int p = 0;
             string s = input;
             bool doContinue = true;
-
+            int p = 0;
             while (doContinue && s.Length > 0)
             {
                 doContinue = false;
-                for (int i = 0; i < keywords.Length; i++)
+                for (int i = 0; i < this.keywords.Length; i++)
                 {
-                    if (s.StartsWith(keywords[i]))
+                    if (s.StartsWith(this.keywords[i]))
                     {
-                        int methAttrStart = p;
-                        p += keywords[i].Length;
-                        if (keywords[i] == "pinvokeimpl")
-                        {
-                            while (char.IsWhiteSpace(input[p]))
-                                p++;
-                            if (input[p++] != '(')
-                                throw new EcmaILParserException("(", "pinvokeimpl", input);
-                            while (input[p] != ')')   // hopefully we'll have a closing bracket...
-                                p++;
-                            p++;
-                        }
-                        methodAttrs.Add(input.Substring(methAttrStart, p - methAttrStart));
+                        p += this.keywords[i].Length;
+                        foundKeywords.Add(this.keywords[i]);
                         while (p < input.Length && char.IsWhiteSpace(input[p]))
                             p++;
                         if (p < input.Length)
@@ -100,10 +65,15 @@ namespace NDOEnhancer.Ecma335
                 return false;
 
             content = input.Substring(0, p);
-            nextTokenPosition = p;
+            nextTokenPosition += p;
 
             return true;
+        }
 
+        List<string> foundKeywords = new List<string>();
+        public List<string> FoundKeywords
+        {
+            get { return this.foundKeywords; }
         }
 
         int nextTokenPosition;
@@ -111,6 +81,7 @@ namespace NDOEnhancer.Ecma335
         {
             get { return nextTokenPosition; }
         }
+
         string content;
         public string Content
         {
@@ -119,25 +90,3 @@ namespace NDOEnhancer.Ecma335
 
     }
 }
-/*
-MethAttr ::=
-  abstract | assembly | compilercontrolled | famandassem | family | famorassem | final | hidebysig | newslot | pinvokeimpl ‘(’
-    QSTRING [ as QSTRING ]
-    PinvAttr* ‘)’
-| private | public | rtspecialname | specialname | static | virtual | strict
-
-| unmanagedexp 
-| reqsecobj
-  
-  
-PinvAttr ::=
-  ansi
-| autochar
-| cdecl
-| fastcall
-| stdcall
-| thiscall
-| unicode
-| platformapi
-  
-*/

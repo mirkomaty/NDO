@@ -25,7 +25,7 @@ using System;
 
 namespace NDOEnhancer.Ecma335
 {
-    class EcmaCustomAttrDecl : IEcmaDefinition
+    public class EcmaCustomAttrDecl : IEcmaDefinition
     {
         int nextTokenPosition;
         string content;

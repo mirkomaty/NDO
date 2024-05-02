@@ -28,6 +28,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\NDODLL\NDO.csproj" />
+    <ProjectReference Include="..\Ecma335\Ecma335.csproj" />
   </ItemGroup>
 
 </Project>

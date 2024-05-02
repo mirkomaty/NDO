@@ -2,7 +2,7 @@
 
 namespace NDOEnhancer.Ecma335
 {
-    internal class EcmaCompQString : IEcmaDefinition
+    public class EcmaCompQString : IEcmaDefinition
     {
         int nextTokenPosition;
         public int NextTokenPosition

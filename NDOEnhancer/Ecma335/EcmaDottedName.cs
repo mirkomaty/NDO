@@ -27,7 +27,7 @@ using System.Text.RegularExpressions;
 
 namespace NDOEnhancer.Ecma335
 {
-    class EcmaDottedName
+    public class EcmaDottedName
     {
         static Regex firstCharRegex;
         static Regex namePartRegex;
@@ -69,9 +69,14 @@ namespace NDOEnhancer.Ecma335
 
         public bool ParseId(string input)
         {
-            Match match = firstCharRegex.Match(input.Substring(0, 1));
-            if (!match.Success)
-                return false;
+            Match match;
+
+            if (input[0] != '\'')
+            {
+                match = firstCharRegex.Match(input.Substring(0, 1));
+                if (!match.Success)
+                    return false;
+            }
 
             int p = 0;
 

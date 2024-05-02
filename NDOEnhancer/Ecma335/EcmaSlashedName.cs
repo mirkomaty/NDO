@@ -26,7 +26,7 @@ using System.Text.RegularExpressions;
 
 namespace NDOEnhancer.Ecma335
 {
-    class EcmaSlashedName
+    public class EcmaSlashedName
     {
         static Regex firstCharRegex;
         static Regex namePartRegex;

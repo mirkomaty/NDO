@@ -26,7 +26,7 @@ using System.Text;
 
 namespace NDOEnhancer.Ecma335
 {
-    class EcmaGenericParameter : IEcmaDefinition
+    public class EcmaTypeReferenceName : IEcmaDefinition
     {
         int nextTokenPosition;
         public int NextTokenPosition
@@ -39,50 +39,26 @@ namespace NDOEnhancer.Ecma335
             get { return content; }
         }
 
-        List<string> elements = new List<string>();
-        public List<string> Elements
-        {
-            get { return elements; }
-        }
-
         public bool Parse(string input)
         {
-            if (input[0] != '<')
+            int p = 0;
+            EcmaDottedName dottedName = new EcmaDottedName();
+            if (!dottedName.Parse(input))
                 return false;
 
-            int count = 1;
-            int p = 1;
-            char c;
-            int startpos = p;
-            while (count > 0)
-            {
-                if (p == input.Length)
-                    return false;
-                c = input[p];
-                if (c == ',' && count == 1)
-                {
-                    elements.Add(input.Substring(startpos, p - startpos).Trim());
-                    startpos = p + 1;
-                    while (char.IsWhiteSpace(input[startpos]))
-                        startpos++;
-                }
-                else if (c == '<')
-                {
-                    count++;
-                }
-                else if (c == '>')
-                {
-                    if (count == 1)
-                        elements.Add(input.Substring(startpos, p - startpos).Trim());
-                    count--;
-                }
-                p++;
-            }
+            p = dottedName.NextTokenPosition;
 
+            while (input[p] == '/')
+            {
+                p++;
+                if (!dottedName.Parse(input.Substring(p)))
+                    throw new EcmaILParserException("DottedName", input.Substring(0, p), input);
+                p += dottedName.NextTokenPosition;
+            }
             content = input.Substring(0, p);
             nextTokenPosition = p;
+
             return true;
         }
-
     }
 }

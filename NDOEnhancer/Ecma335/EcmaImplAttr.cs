@@ -26,10 +26,46 @@ using System.Text;
 
 namespace NDOEnhancer.Ecma335
 {
-    internal interface IEcmaDefinition
+    public class EcmaImplAttr : IEcmaDefinition
     {
-        string Content { get; }
-        int NextTokenPosition { get; }
-        bool Parse(string input);
+        static string[] keywords = 
+            {
+                "cil",                "managed",                "forwardref",                "internalcall",                "managed",                "native",                "noinlining",                "runtime",                "synchronized",                "unmanaged",                "preservesig"            };
+
+        EcmaKeywordListParser kwListParser = new EcmaKeywordListParser(keywords);
+
+
+        public bool Parse(string input)
+        {
+            return kwListParser.Parse(input);
+        }
+
+        List<string> implAttributes = new List<string>();
+        public List<string> ImplAttributes
+        {
+            get { return kwListParser.FoundKeywords;  }
+        }
+
+        public int NextTokenPosition
+        {
+            get { return kwListParser.NextTokenPosition; }
+        }
+
+        public string Content
+        {
+            get { return kwListParser.Content; }
+        }
     }
 }
+/*
+ImplAttr ::=
+  cil
+| forwardref
+| internalcall
+| managed
+| native
+| noinlining
+| runtime
+| synchronized
+| unmanaged| preservesig
+*/

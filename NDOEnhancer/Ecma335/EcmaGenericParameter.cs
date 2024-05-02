@@ -26,49 +26,63 @@ using System.Text;
 
 namespace NDOEnhancer.Ecma335
 {
-    class EcmaMethodName
+    public class EcmaGenericParameter : IEcmaDefinition
     {
         int nextTokenPosition;
         public int NextTokenPosition
         {
             get { return nextTokenPosition; }
         }
-
         string content;
         public string Content
         {
             get { return content; }
         }
 
+        List<string> elements = new List<string>();
+        public List<string> Elements
+        {
+            get { return elements; }
+        }
+
         public bool Parse(string input)
         {
-            if (input.StartsWith(".cctor"))
-            {
-                this.content = ".cctor";
-                this.nextTokenPosition = 6;
-                return true;
-            }
-            if (input.StartsWith(".ctor"))
-            {
-                this.content = ".ctor";
-                this.nextTokenPosition = 5;
-                return true;
-            }
-            EcmaDottedName dottedName = new EcmaDottedName();
-            if (!dottedName.Parse(input))
+            if (input[0] != '<')
                 return false;
 
-            this.content = dottedName.Content;
-            this.nextTokenPosition = dottedName.NextTokenPosition;
+            int count = 1;
+            int p = 1;
+            char c;
+            int startpos = p;
+            while (count > 0)
+            {
+                if (p == input.Length)
+                    return false;
+                c = input[p];
+                if (c == ',' && count == 1)
+                {
+                    elements.Add(input.Substring(startpos, p - startpos).Trim());
+                    startpos = p + 1;
+                    while (char.IsWhiteSpace(input[startpos]))
+                        startpos++;
+                }
+                else if (c == '<')
+                {
+                    count++;
+                }
+                else if (c == '>')
+                {
+                    if (count == 1)
+                        elements.Add(input.Substring(startpos, p - startpos).Trim());
+                    count--;
+                }
+                p++;
+            }
 
+            content = input.Substring(0, p);
+            nextTokenPosition = p;
             return true;
         }
+
     }
 }
-/*
-MethodName ::=
-  .cctor
-| .ctor
-| DottedName
- 
-*/

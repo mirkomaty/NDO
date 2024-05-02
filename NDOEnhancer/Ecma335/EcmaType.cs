@@ -27,7 +27,7 @@ using System.Text.RegularExpressions;
 
 namespace NDOEnhancer.Ecma335
 {
-    internal class EcmaType : IEcmaDefinition
+    public class EcmaType : IEcmaDefinition
     {
         int nextTokenPosition;
         public int NextTokenPosition

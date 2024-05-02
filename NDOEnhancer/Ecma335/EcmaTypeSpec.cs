@@ -2,10 +2,12 @@
 
 namespace NDOEnhancer.Ecma335
 {
-    internal class EcmaTypeSpec : IEcmaDefinition
+    public class EcmaTypeSpec : IEcmaDefinition
     {
         public string Content { get; private set; } = String.Empty;
         public string ResolutionScope { get; private set; } = String.Empty;
+
+        public string TypenameWithoutScope { get; private set; } = String.Empty;
 
         public int NextTokenPosition { get; private set; } = 0;
     
@@ -27,6 +29,7 @@ namespace NDOEnhancer.Ecma335
                 throw new Exception( $"TypeSpec should contain a SlashedName in: {input}" );
 
             Content += slashedName.Content;
+            TypenameWithoutScope = slashedName.Content;
             NextTokenPosition = p + slashedName.NextTokenPosition;
             return true;
         }

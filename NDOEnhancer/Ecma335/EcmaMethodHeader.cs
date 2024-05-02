@@ -26,7 +26,7 @@ using System.Text;
 
 namespace NDOEnhancer.Ecma335
 {
-    class EcmaMethodHeader : IEcmaDefinition
+    public class EcmaMethodHeader : IEcmaDefinition
     {
         bool isInstance;
         public bool IsInstance

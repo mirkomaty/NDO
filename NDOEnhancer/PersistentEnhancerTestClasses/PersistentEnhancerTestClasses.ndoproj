@@ -19,15 +19,13 @@
     <DatabaseOwner>
     </DatabaseOwner>
     <GenerateConstraints>False</GenerateConstraints>
-    <UseMsBuild>True</UseMsBuild>
     <DropExistingElements>False</DropExistingElements>
   </Options>
-  <ProjectDescription version="4.0">
+  <ProjectDescription>
     <BinPath>bin\Debug\net6.0\PersistentEnhancerTestClasses.dll</BinPath>
     <ObjPath>obj\Debug\net6.0\</ObjPath>
     <AssemblyName />
     <Debug>True</Debug>
-    <IsWebProject>False</IsWebProject>
     <KeyFile />
     <References>
       <Reference AssemblyName="NDO" AssemblyPath="..\..\NDODLL\bin\Debug\netstandard2.0\NDO.dll" CheckThisDLL="False">

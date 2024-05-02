@@ -26,13 +26,14 @@ using System.Text;
 
 namespace NDOEnhancer.Ecma335
 {
-    class EcmaTypeReferenceName : IEcmaDefinition
+    public class EcmaMethodName
     {
         int nextTokenPosition;
         public int NextTokenPosition
         {
             get { return nextTokenPosition; }
         }
+
         string content;
         public string Content
         {
@@ -41,24 +42,33 @@ namespace NDOEnhancer.Ecma335
 
         public bool Parse(string input)
         {
-            int p = 0;
+            if (input.StartsWith(".cctor"))
+            {
+                this.content = ".cctor";
+                this.nextTokenPosition = 6;
+                return true;
+            }
+            if (input.StartsWith(".ctor"))
+            {
+                this.content = ".ctor";
+                this.nextTokenPosition = 5;
+                return true;
+            }
             EcmaDottedName dottedName = new EcmaDottedName();
             if (!dottedName.Parse(input))
                 return false;
 
-            p = dottedName.NextTokenPosition;
-
-            while (input[p] == '/')
-            {
-                p++;
-                if (!dottedName.Parse(input.Substring(p)))
-                    throw new EcmaILParserException("DottedName", input.Substring(0, p), input);
-                p += dottedName.NextTokenPosition;
-            }
-            content = input.Substring(0, p);
-            nextTokenPosition = p;
+            this.content = dottedName.Content;
+            this.nextTokenPosition = dottedName.NextTokenPosition;
 
             return true;
         }
     }
 }
+/*
+MethodName ::=
+  .cctor
+| .ctor
+| DottedName
+ 
+*/

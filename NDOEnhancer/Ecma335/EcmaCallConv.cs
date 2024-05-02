@@ -25,7 +25,7 @@ using System.Collections.Generic;
 
 namespace NDOEnhancer.Ecma335
 {
-    internal class EcmaCallConv : IEcmaDefinition
+    public class EcmaCallConv : IEcmaDefinition
     {
         int nextTokenPosition;
         public int NextTokenPosition

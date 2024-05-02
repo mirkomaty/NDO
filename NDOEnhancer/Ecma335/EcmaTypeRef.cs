@@ -26,7 +26,7 @@ using System.Text;
 
 namespace NDOEnhancer.Ecma335
 {
-    internal class EcmaTypeRef : IEcmaDefinition
+    public class EcmaTypeRef : IEcmaDefinition
     {
         public bool Parse(string input)
         {
