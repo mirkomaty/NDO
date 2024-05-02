@@ -35,20 +35,13 @@ namespace NDOEnhancer
 
 			var dllName = assemblyName.Name + ".dll";
 
-			foreach (var dir in new[] { "org", String.Empty })
-			{
-				string localFile;
-				if (dir != String.Empty)
-					localFile = Path.Combine(_basePath, dir, dllName);
-				else
-					localFile = Path.Combine( _basePath, dllName );
+			var localFile = Path.Combine( _basePath, dllName );
 
-				if (File.Exists( localFile ))
-				{
-					if (this.verboseMode)
-						Console.WriteLine( $"ManagedLoadContext: Found: {localFile}" );
-					return LoadFromAssemblyPath( localFile );
-				}
+			if (File.Exists( localFile ))
+			{
+				if (this.verboseMode)
+					Console.WriteLine( $"ManagedLoadContext: Found: {localFile}" );
+				return LoadFromAssemblyPath( localFile );
 			}
 
 			return null;

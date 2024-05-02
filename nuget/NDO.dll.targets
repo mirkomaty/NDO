@@ -1,7 +1,11 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <NdoProjFullPath>$([System.IO.Path]::Combine($(MSBuildProjectDirectory),$(ProjectName).ndoproj)</NdoProjFullPath>
+  </PropertyGroup>
+  
   <Target Name="NDOEnhancer" AfterTargets="Build">
-    <NDOEnhancer NdoProjectFile="$(ProjectName).ndoproj" NdoPlatformTarget="$(Platform)" TargetFramework="$(TargetFramework)" />
+    <NDOEnhancer NdoProjectFile="$(NdoProjFullPath)" NdoPlatformTarget="$(Platform)" TargetFramework="$(TargetFramework)" />
   </Target>
   
   <UsingTask AssemblyFile="NDOEnhancer.BuildTask.dll" TaskName="NDO.BuildTask.NDOEnhancer" />

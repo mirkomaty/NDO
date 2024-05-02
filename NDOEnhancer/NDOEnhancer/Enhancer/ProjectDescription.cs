@@ -1,5 +1,5 @@
-﻿//
-// Copyright (c) 2002-2022 Mirko Matytschak 
+﻿
+// Copyright (c) 2002-2024 Mirko Matytschak 
 // (www.netdataobjects.de)
 //
 // Author: Mirko Matytschak
@@ -19,23 +19,13 @@
 // CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER 
 // DEALINGS IN THE SOFTWARE.
 
-
 using System;
 using System.Xml;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Xml.Linq;
-
-#if DEBUG
-using NDOInterfaces; // for IMessageAdapter
-#endif
 
 namespace NDOEnhancer
 {
-	/// <summary>
-	/// 
-	/// </summary>
 	internal class NDOReference
 	{
 		public string Name;
@@ -51,7 +41,6 @@ namespace NDOEnhancer
 
 	}
 
-
 	/// <summary>
 	/// Zusammenfassung für ProjectDescription.
 	/// </summary>
@@ -65,15 +54,7 @@ namespace NDOEnhancer
 		string assemblyName;
 		ConfigurationOptions options;
         string keyFile = string.Empty;
-		bool isSdkStyle = false;
-#if DEBUG
-        IMessageAdapter messageAdapter;
-        public IMessageAdapter MessageAdapter
-        {
-            get { return messageAdapter; }
-            set { messageAdapter = value; }
-        }
-#endif
+        public string FileName { get; set; }
 
         public string KeyFile
         {
@@ -92,39 +73,10 @@ namespace NDOEnhancer
 			set { assemblyName = value; }
 		}
 
-		public ProjectDescription()
-		{
-		}
-
-		/// <summary>
-		/// The project filename should come from the Build Task, but we don't want to change the Build Task at the moment.
-		/// </summary>
-		/// <param name="ndoProjPath"></param>
-		internal void GuessProjectFile(string ndoProjPath)
-		{
-			var dir = Path.GetDirectoryName(ndoProjPath);
-			var fnPattern = $"{Path.GetFileNameWithoutExtension(ndoProjPath)}.*proj";
-			var files = Directory.GetFiles( dir, fnPattern );
-			string file = null;
-			if (files.Length == 0)
-				return;
-			if (files.Length > -1)
-			{
-				file = files.FirstOrDefault( fn => fn.EndsWith( ".csproj" ) );
-				if (file == null)
-					file = files[0];
-			}
-			else
-				file = files[0];
-
-			XElement projectElement = XElement.Load(file);
-		}
-
-		public ProjectDescription(string fileName)
+		public ProjectDescription(string fileName, string targetFramework)
 		{
 			this.FileName = fileName;
 			this.projPath = Path.GetDirectoryName(fileName) + Path.DirectorySeparatorChar;
-			GuessProjectFile( fileName );
 			XmlDocument doc = new XmlDocument();
 			try
 			{
@@ -135,7 +87,7 @@ namespace NDOEnhancer
 				throw new Exception("Parameter file '" + fileName + "' is not a valid Xml file. Line: " + ex.LineNumber.ToString() + " Position: " + ex.LinePosition.ToString());
 			}
 			XmlHelper.AddNamespace(doc);
-			Load(doc);
+			Load(doc, targetFramework);
 			options = new ConfigurationOptions(this, doc);
 		}
 
@@ -147,7 +99,7 @@ namespace NDOEnhancer
 				return Path.GetFullPath(Path.Combine(projPath, path));
 		}
 
-		void Load(XmlDocument doc)
+		void Load(XmlDocument doc, string targetFramework)
 		{
 			string pns = XmlHelper.Pns(doc);
 
@@ -155,15 +107,19 @@ namespace NDOEnhancer
 			if (node == null)
 				throw new Exception("Parameters must have at least one //Enhancer/ProjectDescription entry.");
 			
-			binFile = AbsolutePath((string) XmlHelper.GetNode(node, pns + "BinPath"));
-			objPath = AbsolutePath((string) XmlHelper.GetNode(node, pns + "ObjPath"));
-            keyFile = (string)XmlHelper.GetNode(node, pns + "KeyFile", string.Empty);
-            if (keyFile != string.Empty)
-                keyFile = AbsolutePath(keyFile);
-            assemblyName = (string)XmlHelper.GetNode(node, pns + "AssemblyName");
-			debug = (bool) XmlHelper.GetNode(node, pns + "Debug", false);
+			this.binFile = AbsolutePath((string) XmlHelper.GetNode(node, pns + "BinPath"))
+                .Replace( "$(TargetFramework)", targetFramework );
+			this.objPath = AbsolutePath((string) XmlHelper.GetNode(node, pns + "ObjPath"))
+                .Replace( "$(TargetFramework)", targetFramework );
+
+            this.keyFile = (string)XmlHelper.GetNode(node, pns + "KeyFile", string.Empty);
+            if (this.keyFile != string.Empty)
+                this.keyFile = AbsolutePath(keyFile);
+
+            this.assemblyName = (string)XmlHelper.GetNode(node, pns + "AssemblyName");
+			this.debug = (bool) XmlHelper.GetNode(node, pns + "Debug", false);
             XmlNodeList refList = doc.SelectNodes("//" + pns + "Enhancer/" + pns + "ProjectDescription/" + pns + "References/" + pns + "Reference", XmlHelper.Nsmgr);
-			references = new Dictionary<string, NDOReference>();
+			this.references = new Dictionary<string, NDOReference>();
 			foreach(XmlNode rnode in refList)
 			{
 				string assName = (string) XmlHelper.GetAttribute(rnode, "AssemblyName");
@@ -176,54 +132,6 @@ namespace NDOEnhancer
 				AddReference(assName, assPath, processDLL);
 			}
 		}
-
-
-		private XmlNode MakeNode(string name, object value, XmlNode parentNode, XmlDocument doc)
-		{
-			XmlElement el = doc.CreateElement(name);
-			parentNode.AppendChild(el);
-			if (value != null)
-				el.InnerText = value.ToString();
-			return el;
-		}
-
-
-		public void ToXml(XmlNode parent)
-		{
-			XmlDocument doc = (XmlDocument) parent.ParentNode;
-			XmlNode node = doc.CreateElement("ProjectDescription");
-			parent.AppendChild(node);
-			string reference = this.projPath;
-			if (reference.EndsWith("\\"))
-				reference = reference.Substring(0, reference.Length - 1);
-
-			MakeNode("BinPath", ExtendedPath.GetRelativePath(reference, binFile), node, doc);
-			MakeNode("ObjPath", ExtendedPath.GetRelativePath(reference, objPath), node, doc);
-			MakeNode("AssemblyName", assemblyName, node, doc);
-			MakeNode("Debug", debug, node, doc);
-            MakeNode("KeyFile", keyFile, node, doc);
-			XmlNode refsNode = MakeNode("References", string.Empty, node, doc);
-			foreach(string key in References.Keys)
-			{
-				NDOReference ndoreference = References[key];
-				if ( ndoreference.Path == binFile )
-					continue;
-				XmlElement refNode = (XmlElement) MakeNode("Reference", "", refsNode, doc);
-				refNode.SetAttribute( "AssemblyName", ndoreference.Name );
-				refNode.SetAttribute( "AssemblyPath", ExtendedPath.GetRelativePath( reference, ndoreference.Path ) );
-				if ( !ndoreference.CheckThisDLL )
-				{
-					refNode.SetAttribute( "CheckThisDLL", "False" );
-				}
-			}
-		}
-
-
-		//		public string SolutionPath
-		//		{
-		//			get { return solutionPath; }
-		//			set { solutionPath = value; }
-		//		}
 
 		public string ObjPath
 		{
@@ -262,12 +170,6 @@ namespace NDOEnhancer
 				references.Add( name, new NDOReference( name, path, checkThisDLL ) );
 		}
 
-        //public bool IsMappingFile(string pathToCompare)
-        //{
-        //    string dir = Path.GetDirectoryName(this.binFile);
-        //    return (string.Compare(Path.Combine(dir, this.assemblyName + "ndo.xml"), pathToCompare, true) == 0);
-        //}
-
         public string DefaultMappingFileName
         {
             get
@@ -301,9 +203,6 @@ namespace NDOEnhancer
                 return null;
             }
         }
-
-		public string FileName { get; set; }
-
 
 		public Dictionary<string, NDOReference> References
 		{

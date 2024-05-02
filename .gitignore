@@ -23,3 +23,6 @@ UsersGuide
 SourceRevisionId.props
 /NDOPackage/source.extension.cs
 /NDOPackage/VSCommandTable.cs
+/NDOEnhancer.BuildTask/NDOEnhancer.BuildTask/ConfigurationOptions.cs
+/NDOEnhancer.BuildTask/NDOEnhancer.BuildTask/ProjectDescription.cs
+/NDOEnhancer.BuildTask/NDOEnhancer.BuildTask/XmlHelper.cs

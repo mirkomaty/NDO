@@ -77,7 +77,7 @@ namespace NDOEnhancer
                 + " /OUTFILE=\"" + dllFileName + "\""
 				+ " \"" + ilFileName + "\"" ;
 
-			Execute(ilAsmPath, parameters, Path.GetDirectoryName(dllFileName));
+			Execute(ilAsmPath, parameters/*, Path.GetDirectoryName(dllFileName)*/);
 			string errorMessage = string.Empty;
 			if (Stderr != string.Empty)
 				errorMessage = Stderr;
@@ -88,10 +88,18 @@ namespace NDOEnhancer
 					errorMessage += '\n';
 				errorMessage += Stdout.Substring(p + 7);
 			}
-			if (errorMessage != string.Empty && errorMessage.IndexOf( "error", StringComparison.InvariantCultureIgnoreCase ) > -1)
-				throw new Exception( "ILAsm: " + errorMessage );
-			else
-				messages.WriteLine( errorMessage );
+			if (errorMessage != string.Empty)
+			{
+				if (errorMessage.IndexOf( "error", StringComparison.InvariantCultureIgnoreCase ) > -1)
+				{
+					Console.WriteLine( errorMessage );
+					throw new Exception( "ILAsm failure" );
+				}
+				else
+				{
+					Console.WriteLine( errorMessage );
+				}
+			}
 		}
 	}
 }

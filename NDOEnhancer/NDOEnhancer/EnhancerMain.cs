@@ -46,21 +46,18 @@ namespace NDOEnhancer
 
 			try
 			{
-				if (args.Length < 1)
-					throw new Exception( "usage: NDOEnhancer <file_name>\n" );
+				if (args.Length < 2)
+					throw new Exception( "usage: NDOEnhancer <file_name> <target_framework>\n" );
 
-				string arg = Path.GetFullPath( args[0] );
-				string ndoProjFilePath = arg;
+				string ndoProjFilePath = args[0];
+				string targetFramework = args[1];
 
 #if DEBUG
 					Console.WriteLine( "Domain base directory is: " + AppDomain.CurrentDomain.BaseDirectory );
 					Console.WriteLine( "Running as " + ( IntPtr.Size * 8 ) + " bit app." );
 #endif
 
-					new EnhancerMain().InternalStart( ndoProjFilePath );
-#if NET48_OR_GREATER
-				}
-#endif
+					new EnhancerMain().InternalStart( ndoProjFilePath, targetFramework );
 			}
 			catch (Exception ex)
 			{
@@ -81,7 +78,7 @@ namespace NDOEnhancer
         }
 
 
-		public void InternalStart(string ndoProjFilePath)
+		public void InternalStart(string ndoProjFilePath, string targetFramework)
 		{
 			Console.WriteLine("Runtime: " + typeof(string).Assembly.FullName);			
 			ConfigurationOptions options;
@@ -91,15 +88,14 @@ namespace NDOEnhancer
 				throw new Exception("Can't find file '" + ndoProjFilePath + "'");
 			}
 
-			this.projectDescription = new ProjectDescription( ndoProjFilePath );
-			AppDomain.CurrentDomain.SetData( "ProjectDescription", this.projectDescription );
+#if DEBUG
+            Console.WriteLine( $"Loading Project Description from {ndoProjFilePath}..." );
+#endif
+            this.projectDescription = new ProjectDescription( ndoProjFilePath, targetFramework );
 
 			AppDomain.CurrentDomain.AssemblyResolve += OnAssemblyResolve;
 			NDOContainer.Instance.RegisterType<IProviderPathFinder,ProviderPathFinder>();
 
-#if DEBUG
-			Console.WriteLine("Loading Project Description...");
-#endif
             options = projectDescription.ConfigurationOptions;
 
 			if (!options.EnableAddIn)
@@ -144,11 +140,8 @@ namespace NDOEnhancer
 				bool objPathDifferent = String.Compare(objFile, this.projectDescription.BinFile, true) != 0;
 				if (File.Exists( enhObjFile ))
 				{
-					CopyFile( enhObjFile, this.projectDescription.BinFile );
-
 					if (objPathDifferent)
 						CopyFile( enhObjFile, objFile );
-					File.Delete( enhObjFile );
 
 					if (File.Exists( enhPdbFile ))
 					{

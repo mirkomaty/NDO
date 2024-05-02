@@ -130,25 +130,6 @@ namespace NDOEnhancer
 			//         }   
 		}
 
-		string CreateShadowCopy(string dllPath)
-		{
-			var dir = Path.Combine( Path.GetDirectoryName( dllPath ), "org" );
-			if (!Directory.Exists( dir ))
-				Directory.CreateDirectory( dir );
-
-			var newPath = Path.Combine( dir, Path.GetFileName( dllPath ) );
-			File.Copy( dllPath, newPath, true );
-
-			if (this.debug)
-			{
-				var source = Path.ChangeExtension(dllPath, ".pdb");
-				var target = Path.Combine( dir, Path.ChangeExtension( Path.GetFileName( dllPath ), ".pdb" ) );
-				File.Copy( source, target, true );
-			}
-
-			return newPath;
-		}
-
 		private void SearchPersistentBases()
 		{
 			Dictionary<string, NDOReference> references = projectDescription.References;
@@ -173,12 +154,6 @@ namespace NDOEnhancer
 
 				string dllPath = reference.Path;
 				bool ownAssembly = (string.Compare( dllPath, this.binFile, true ) == 0);
-				if (ownAssembly)
-				{
-					// We need to copy the assembly to another path, because we
-					// want to overwrite the assembly after enhancement.
-					dllPath = CreateShadowCopy( dllPath );
-				}
 
 				if (!ownAssembly && !NDOAssemblyChecker.IsEnhanced( dllPath ))
 					continue;
@@ -1052,7 +1027,7 @@ namespace NDOEnhancer
 
                 if (!File.Exists(objFile))
                 {
-                    messages.WriteLine("Enhancer: Kann Datei " + objFile + " nicht finden");
+                    messages.WriteLine("Enhancer: Can't find file " + objFile );
                     return;
                 }
 
@@ -1481,7 +1456,7 @@ namespace NDOEnhancer
 		private void Disassemble()
 		{
 			Dasm dasm = new Dasm(messages, this.verboseMode);
-			dasm.DoIt(objFile, ilFileName);
+			dasm.DoIt(binFile, ilFileName);
 			if (File.Exists(resFile))
 			{
 				File.Copy(resFile, resEnhFile, true);
