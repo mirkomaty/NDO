@@ -1,4 +1,4 @@
-﻿//
+﻿
 // Copyright (c) 2002-2024 Mirko Matytschak 
 // (www.netdataobjects.de)
 //
@@ -19,9 +19,6 @@
 // CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER 
 // DEALINGS IN THE SOFTWARE.
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
 
@@ -67,7 +64,7 @@ namespace NDOEnhancer.Ecma335.Bytes
                 {
                     len = PackedLength.Read( bytes, ref pos );
                 }
-                catch(IndexOutOfRangeException ex)
+                catch(IndexOutOfRangeException)
                 {
                     throw new Exception( $"Can't read string from CustomAttribute constructor parameters. The byte array is too short. Position: {pos}" );
                 }

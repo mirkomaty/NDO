@@ -1,5 +1,4 @@
-﻿using NDOEnhancer;
-using NDOEnhancer.Ecma335;
+﻿using NDOEnhancer.Ecma335;
 using System;
 using System.Text.RegularExpressions;
 

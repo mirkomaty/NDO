@@ -1,4 +1,4 @@
-﻿//
+﻿
 // Copyright (c) 2002-2024 Mirko Matytschak 
 // (www.netdataobjects.de)
 //
@@ -18,11 +18,6 @@
 // THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF 
 // CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER 
 // DEALINGS IN THE SOFTWARE.
-
-
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace NDOEnhancer.Ecma335
 {
@@ -46,40 +41,40 @@ namespace NDOEnhancer.Ecma335
             get { return nextTokenPosition; }
         }
 
-        string content;
+        string content = String.Empty;
         public string Content
         {
             get { return content; }
         }
 
-        List<string> implAttributes;
+        List<string> implAttributes = new List<string>();
         public List<string> ImplAttributes
         {
             get { return this.implAttributes; }
         }
 
-        string methodName;
+        string methodName = String.Empty;
         public string MethodName
         {
             get { return methodName; }
         }
 
-        string parameterList;
+        string parameterList = String.Empty;
         public string ParameterList
         {
             get { return parameterList; }
         }
 
-        string ilType;
+        string ilType = String.Empty;
         public string IlType
         {
             get { return ilType; }
         }
 
-        string resolutionScope;
+        string resolutionScope = String.Empty;
         public string ResolutionScope => resolutionScope;
 
-        string signature;
+        string signature = String.Empty;
         public string Signature
         {
             get { return signature; }
@@ -91,7 +86,7 @@ namespace NDOEnhancer.Ecma335
             get { return genericParameterList; }
         }
 
-        List<string> callingConventions;
+        List<string> callingConventions = new List<string>();
         public IEnumerable<string> CallingConventions => callingConventions;
 
         public bool Parse(string input)

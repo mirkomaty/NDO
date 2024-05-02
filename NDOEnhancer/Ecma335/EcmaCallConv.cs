@@ -1,5 +1,5 @@
-﻿//
-// Copyright (c) 2002-2022 Mirko Matytschak 
+﻿
+// Copyright (c) 2002-2024 Mirko Matytschak 
 // (www.netdataobjects.de)
 //
 // Author: Mirko Matytschak
@@ -19,10 +19,6 @@
 // CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER 
 // DEALINGS IN THE SOFTWARE.
 
-
-using System;
-using System.Collections.Generic;
-
 namespace NDOEnhancer.Ecma335
 {
     public class EcmaCallConv : IEcmaDefinition
@@ -32,7 +28,7 @@ namespace NDOEnhancer.Ecma335
         {
             get { return nextTokenPosition; }
         }
-        string content;
+        string content = String.Empty;
         public string Content
         {
             get { return content; }

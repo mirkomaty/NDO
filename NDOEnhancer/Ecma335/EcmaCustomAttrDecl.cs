@@ -1,4 +1,4 @@
-﻿//
+﻿
 // Copyright (c) 2002-2024 Mirko Matytschak 
 // (www.netdataobjects.de)
 //
@@ -19,19 +19,17 @@
 // CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER 
 // DEALINGS IN THE SOFTWARE.
 
-
 using System.Globalization;
-using System;
 
 namespace NDOEnhancer.Ecma335
 {
     public class EcmaCustomAttrDecl : IEcmaDefinition
     {
         int nextTokenPosition;
-        string content;
+        string content = String.Empty;
 		byte[] bytes = { };
-		string resolutionScope;
-		string typeName;
+		string resolutionScope = String.Empty;
+		string typeName = String.Empty;
 
         public int NextTokenPosition => nextTokenPosition;
         public string Content => content;
@@ -41,7 +39,7 @@ namespace NDOEnhancer.Ecma335
 
 		public byte[] Bytes => bytes;
 
-		string parameterList;
+		string parameterList = String.Empty;
 		public string ParameterList => parameterList;
 
 		public string OwnerType { get; private set; } = String.Empty;

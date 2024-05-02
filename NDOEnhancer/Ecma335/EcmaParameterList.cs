@@ -1,4 +1,4 @@
-﻿//
+﻿
 // Copyright (c) 2002-2024 Mirko Matytschak 
 // (www.netdataobjects.de)
 //
@@ -19,12 +19,6 @@
 // CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER 
 // DEALINGS IN THE SOFTWARE.
 
-
-using System;
-using System.Collections.Generic;
-using System.Reflection.Metadata;
-using System.Text;
-
 namespace NDOEnhancer.Ecma335
 {
     public class EcmaParameterList : IEcmaDefinition
@@ -34,7 +28,8 @@ namespace NDOEnhancer.Ecma335
         {
             get { return nextTokenPosition; }
         }
-        string content;
+
+        string content = string.Empty;
         public string Content
         {
             get { return content; }
