@@ -44,10 +44,9 @@ namespace NDOEnhancer
 				return;
 			}
 
-			concreteGenerator = (ISqlGenerator) NDOProviderFactory.Instance.Generators[scriptLanguage];
-			if (concreteGenerator == null)
+			if (! NDOProviderFactory.Instance.Generators.TryGetValue(scriptLanguage, out ISqlGenerator sqlGenerator ))
 			{
-				messages.WriteLine("NDOEnhancer: No Sql code generator for script language '" + scriptLanguage + "' found");
+				messages.WriteLine("NDOEnhancer: No Sql code generator available for script language '" + scriptLanguage + "' found");
 				return;
 			}
 
