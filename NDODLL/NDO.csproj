@@ -59,6 +59,11 @@
       <PackageCopyToOutput>true</PackageCopyToOutput>
       <PackagePath>build</PackagePath>
     </Content>
+    <Content Include="..\NDOEnhancer\NDOEnhancer\ILDAsm\ILDasm.exe.*">
+      <Pack>true</Pack>
+      <PackageCopyToOutput>true</PackageCopyToOutput>
+      <PackagePath>build\runtimes\win-x64\native</PackagePath>
+    </Content>	
   </ItemGroup>
   <Target Name="PostBuild" AfterTargets="Pack">
     <Exec Command="IF NOT EXIST ..\Nuget-Packages md ..\Nuget-Packages&#xD;&#xA;echo Copy package&#xD;&#xA;copy bin\$(Configuration)\NDO*.nupkg ..\Nuget-Packages /Y&#xD;&#xA;" />
