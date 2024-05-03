@@ -13,6 +13,12 @@
     <Exec Command="..\..\MakeEnhancerDate\bin\Release\MakeEnhancerDate.exe &gt; EnhDate.cs" />
   </Target>
 
+	<Target Name="CopyILDasm" AfterTargets="PrepareForBuild">
+		<MakeDir Condition="!Exists('$(OutputPath)\runtimes\win-x64')" Directories="$(OutputPath)\runtimes\win-x64" />
+		<MakeDir Condition="!Exists('$(OutputPath)\runtimes\win-x64\native')" Directories="$(OutputPath)\runtimes\win-x64\native" />
+		<Exec Command="Copy ILDasm\ILDasm.exe.* $(OutputPath)\runtimes\win-x64\native" />
+	</Target>
+
 	<ItemGroup>
     <None Remove="EnhancerParameters.xsd" />
     <None Remove="NDOEnhancer.v12.suo" />
@@ -23,12 +29,15 @@
 	<PackageReference Include="runtime.linux-x64.Microsoft.NETCore.ILAsm" Version="8.0.0" />
 	<PackageReference Include="runtime.linux-x64.Microsoft.NETCore.ILDAsm" Version="8.0.0" />
 	<PackageReference Include="runtime.win-x64.Microsoft.NETCore.ILAsm" Version="8.0.0" />
-	<PackageReference Include="runtime.win-x64.Microsoft.NETCore.ILDAsm" Version="8.0.0" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\..\NDODLL\NDO.csproj" />
     <ProjectReference Include="..\Ecma335\Ecma335.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="ILDasm\" />
   </ItemGroup>
 
 </Project>

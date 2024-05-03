@@ -166,7 +166,7 @@ namespace NDO.BuildTask
 					}
 				}
 
-                if (result == 0)
+                if (result == 0 && this.projectDescription.ConfigurationOptions.EnableEnhancer)
 					CopyBinFile();
 
 				return result;
