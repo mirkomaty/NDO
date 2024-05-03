@@ -94,8 +94,7 @@ namespace NDO
         {
             if (path == null || !Directory.Exists(path))
                 return;
-            string[] dlls = new string[] { };
-            dlls = Directory.GetFiles(path, "NDO.*.dll");
+            string[] dlls = Directory.GetFiles(path, "NDO.*.dll");
             foreach (string dll in dlls)
             {
                 try

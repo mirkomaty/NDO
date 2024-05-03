@@ -37,7 +37,6 @@ namespace NDOEnhancer
 		public void Generate(string scriptLanguage, bool utf8Encoding, DataSet dsSchema, DataSet dsOld, string filename, NDOMapping mappings, MessageAdapter messages, TypeManager typeManager, bool generateConstraints)
 		{
 			StreamWriter sw = new StreamWriter(filename, false, utf8Encoding ? System.Text.Encoding.UTF8 : System.Text.Encoding.Default);
-			ISqlGenerator concreteGenerator = null;
 			if (scriptLanguage == string.Empty)
 			{
 				messages.WriteLine("NDOEnhancer: No script language selected");
@@ -51,7 +50,7 @@ namespace NDOEnhancer
 			}
 
 
-			new GenericSqlGenerator(concreteGenerator, messages, mappings).Generate(dsSchema, dsOld, sw, typeManager, generateConstraints);
+			new GenericSqlGenerator(sqlGenerator, messages, mappings).Generate(dsSchema, dsOld, sw, typeManager, generateConstraints);
 			sw.Close();
 		}
 

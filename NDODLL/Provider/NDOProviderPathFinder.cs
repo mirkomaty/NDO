@@ -7,8 +7,11 @@ namespace NDO.Provider
 {
 	class NDOProviderPathFinder : IProviderPathFinder
 	{
-		readonly string[] netstandardVersions = {  "2.0", "2.1"};
-		readonly string standard = "netstandard";
+		public NDOProviderPathFinder() 
+		{
+		}
+
+		readonly string[] netVersions = { "net8.0", "net6.0", "netstandard2.0", "netstandard2.1" };
 
 		public IEnumerable<string> GetPaths()
 		{
@@ -45,9 +48,9 @@ namespace NDO.Provider
 						if (versionDir == null)
 							continue;
 
-						foreach (var v in netstandardVersions)
+						foreach (var v in netVersions)
 						{
-							var libDir = Path.Combine( versionDir, "lib", standard + v );
+							var libDir = Path.Combine( versionDir, "lib", v );
 							if (!Directory.Exists( libDir ))
 								continue;
 							paths.Add( libDir );

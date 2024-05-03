@@ -95,6 +95,8 @@ namespace NDOEnhancer
 
 			AppDomain.CurrentDomain.AssemblyResolve += OnAssemblyResolve;
 			NDOContainer.Instance.RegisterType<IProviderPathFinder,ProviderPathFinder>();
+			// This is needed as parameter for ProviderPathFinder
+			NDOContainer.Instance.RegisterInstance( this.projectDescription );
 
             options = projectDescription.ConfigurationOptions;
 
