@@ -17,17 +17,17 @@ namespace NdoDllUnitTests
 			NDOMapping mapping = NDOMapping.Create( null );
 			var cls = mapping.AddStandardClass( "TestClass", "TestAssembly", null );
 			var relation = cls.AddStandardRelation( "relField", "RefTypeName", false, "", false, false );
-			Assert.AreEqual( "IDTestClass", relation.ForeignKeyColumns.First().Name );
+			Assert.That( "IDTestClass", Is.EqualTo( relation.ForeignKeyColumns.First().Name ) );
 			var attr = new MappingTableAttribute();
 			relation.RemapMappingTable( false, false, attr );
 			Assert.That( relation.MappingTable != null );
-			Assert.AreEqual( "relRefTypeNameTestClass", relation.MappingTable.TableName );
-			Assert.AreEqual( "IDTestClass", relation.ForeignKeyColumns.First().Name );
-			Assert.AreEqual( "IDRefTypeName", relation.MappingTable.ChildForeignKeyColumns.First().Name );
+			Assert.That( "relRefTypeNameTestClass", Is.EqualTo(relation.MappingTable.TableName) );
+			Assert.That( "IDTestClass", Is.EqualTo( relation.ForeignKeyColumns.First().Name ) );
+			Assert.That( "IDRefTypeName", Is.EqualTo( relation.MappingTable.ChildForeignKeyColumns.First().Name ) );
 
 			attr.TableName = "newTableName";
 			relation.RemapMappingTable( false, false, attr );
-			Assert.AreEqual( "newTableName", relation.MappingTable.TableName );
+			Assert.That( "newTableName", Is.EqualTo(relation.MappingTable.TableName) );
 		}
 
 		[Test]
@@ -37,10 +37,10 @@ namespace NdoDllUnitTests
 			var cls = mapping.AddStandardClass( "TestClass", "TestAssembly", null );
 			mapping.AddStandardClass( "RefTypeName", "TestAssembly", null );
 			var relation = cls.AddStandardRelation( "relField", "RefTypeName", false, "", false, false );
-			Assert.AreEqual( "IDTestClass", relation.ForeignKeyColumns.First().Name );
+			Assert.That( "IDTestClass", Is.EqualTo( relation.ForeignKeyColumns.First().Name ) );
 			var attr = new ForeignKeyColumnAttribute() { Name = "newColumnName" };
 			relation.RemapForeignKeyColumns( new[] { attr }, new ChildForeignKeyColumnAttribute[] { } );
-			Assert.AreEqual( "newColumnName", relation.ForeignKeyColumns.First().Name );
+			Assert.That( "newColumnName", Is.EqualTo( relation.ForeignKeyColumns.First().Name ) );
 		}
 
 		[Test]
@@ -48,10 +48,10 @@ namespace NdoDllUnitTests
 		{
 			NDOMapping mapping = NDOMapping.Create( null );
 			var cls = mapping.AddStandardClass( "TestClass", "TestAssembly", null );
-			Assert.AreEqual( "ID", cls.Oid.OidColumns.First().Name );
+			Assert.That( "ID", Is.EqualTo( cls.Oid.OidColumns.First().Name ) );
 			var attr = new OidColumnAttribute() { Name = "newColumnName" };
 			cls.Oid.RemapOidColumns( new[] { attr } );
-			Assert.AreEqual( "newColumnName", cls.Oid.OidColumns.First().Name );
+			Assert.That( "newColumnName", Is.EqualTo( cls.Oid.OidColumns.First().Name ) );
 		}
 
 		[Test]
@@ -60,11 +60,11 @@ namespace NdoDllUnitTests
 			NDOMapping mapping = NDOMapping.Create( null );
 			var cls = mapping.AddStandardClass( "TestClass", "TestAssembly", null );
 			var field = cls.AddStandardField( "test", false );
-			Assert.AreEqual( "Test", field.Column.Name );
+			Assert.That( "Test", Is.EqualTo(field.Column.Name) );
 			var attr = new ColumnAttribute() { Size = -1, Name = "XTest" };
 			attr.RemapColumn( field.Column );
-			Assert.AreEqual( "XTest", field.Column.Name );
-			Assert.AreEqual( -1, field.Column.Size );
+			Assert.That( "XTest", Is.EqualTo(field.Column.Name) );
+			Assert.That( field.Column.Size == -1 );
 		}
 
 		[Test]
@@ -73,14 +73,14 @@ namespace NdoDllUnitTests
 			NDOMapping mapping = NDOMapping.Create( null );
 			var cls = mapping.AddStandardClass( "TestClass", "TestAssembly", null );
 			var field = cls.AddStandardField( "test", false );
-			Assert.AreEqual( false, field.Encrypted );
+			Assert.That( !field.Encrypted );
 			var attr = new FieldAttribute() { Encrypted = true };
 			attr.RemapField( field );
-			Assert.AreEqual( true, field.Encrypted );
+			Assert.That( field.Encrypted );
 			attr = new FieldAttribute() { Encrypted = false };
 			attr.RemapField( field );
 			// Encrypted can only be rewritten, if the value is false
-			Assert.AreEqual( true, field.Encrypted );
+			Assert.That( field.Encrypted );
 		}
 
 		[Test]
@@ -89,14 +89,14 @@ namespace NdoDllUnitTests
 			NDOMapping mapping = NDOMapping.Create( null );
 			var cls = mapping.AddStandardClass( "TestClass", "TestAssembly", null );
 			var field = cls.AddStandardField( "test", false );
-			Assert.AreEqual( false, field.Encrypted );
+			Assert.That( !field.Encrypted );
 			var attr = new FieldAttribute() { Encrypted = true };
 			attr.SetFieldValues( field );
-			Assert.AreEqual( true, field.Encrypted );
+			Assert.That( field.Encrypted );
 			attr = new FieldAttribute() { Encrypted = false };
 			attr.SetFieldValues( field );
 			// Encrypted can be set to false
-			Assert.AreEqual( false, field.Encrypted );
+			Assert.That( !field.Encrypted );
 		}
 
 		[Test]
@@ -104,10 +104,10 @@ namespace NdoDllUnitTests
 		{
 			NDOMapping mapping = NDOMapping.Create( null );
 			var cls = mapping.AddStandardClass( "TestClass", "TestAssembly", null );
-			Assert.AreEqual( "ID", cls.Oid.OidColumns.First().Name );
+			Assert.That( "ID", Is.EqualTo( cls.Oid.OidColumns.First().Name ) );
 			var attr = new OidColumnAttribute() { Name = "newColumnName", IsAssemblyWideDefinition=true };
 			cls.Oid.RemapOidColumns( new[] { attr } );
-			Assert.AreEqual( "ID", cls.Oid.OidColumns.First().Name );
+			Assert.That( "ID", Is.EqualTo( cls.Oid.OidColumns.First().Name ) );
 		}
 
         [Test]
@@ -115,10 +115,10 @@ namespace NdoDllUnitTests
         {
             NDOMapping mapping = NDOMapping.Create(null);
             var cls = mapping.AddStandardClass("TestClass", "TestAssembly", null);
-            Assert.AreEqual(1, cls.Oid.OidColumns.First().AutoIncrementStart);
+            Assert.That(1 == cls.Oid.OidColumns.First().AutoIncrementStart);
             var attr = new OidColumnAttribute() { Name = "newColumnName", AutoIncrementStart = 2, IsAssemblyWideDefinition = true };
             cls.Oid.RemapOidColumns(new[] { attr });
-            Assert.AreEqual(2, cls.Oid.OidColumns.First().AutoIncrementStart);
+            Assert.That(2 == cls.Oid.OidColumns.First().AutoIncrementStart);
         }
     }
 }

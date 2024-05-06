@@ -82,7 +82,7 @@ namespace NdoDllUnitTests
         {
             string s = "abc/d \\ üÜöÖäÄß";
             string encoded = NDO.HttpUtil.HttpUtility.UrlEncode( s );
-            Assert.AreEqual( s, NDO.HttpUtil.HttpUtility.UrlDecode( encoded ) );
+            Assert.That( s == NDO.HttpUtil.HttpUtility.UrlDecode( encoded ) );
         }
 
 		[Test]
