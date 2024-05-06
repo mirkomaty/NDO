@@ -277,7 +277,7 @@ namespace NdoUnitTests
 			string log = pm.LogAdapter.ToString();
 			Assert.That( log.IndexOf( "Committing transaction" ) == -1, "Transaction should be committed" );
 			Assert.That( log.IndexOf( "Starting transaction" ) == -1, "Transaction should be committed" );
-			Assert.Null( reader, "Reader should be null" );
+			Assert.That(reader == null, "Reader should be null" );
 		}
 
 		int FlughafenCount(PersistenceManager pm)
@@ -322,8 +322,8 @@ namespace NdoUnitTests
 			Assert.That( new Regex( "Rollback transaction" ).Matches( log ).Count == 1, "One Transactions should be rolled back" );
 
 			pm.TransactionMode = TransactionMode.None;
-			Assert.AreEqual( landCount, LänderCount( pm ) );
-			Assert.AreEqual( fhCount, FlughafenCount( pm ) );
+			Assert.That(landCount ==  LänderCount( pm ) );
+			Assert.That(fhCount ==  FlughafenCount( pm ) );
 		}
 
 		[Test]

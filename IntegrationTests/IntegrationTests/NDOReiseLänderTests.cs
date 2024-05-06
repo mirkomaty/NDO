@@ -103,17 +103,17 @@ namespace NdoUnitTests {
 			{
 				thrown = true;
 			}
-			Assert.AreEqual( true, thrown );
+			Assert.That(true ==  thrown );
 		}
 
 		[Test]
 		public void TestObjectCreation() {
 			CreateLänder();
 			r.LandHinzufügen(de);
-			Assert.AreEqual(1, r.Länder.Count, "Number of Länder");
-			Assert.AreEqual(NDOObjectState.Created, r.NDOObjectState, "Status wrong");
+			Assert.That(1 ==  r.Länder.Count, "Number of Länder");
+			Assert.That(NDOObjectState.Created ==  r.NDOObjectState, "Status wrong");
 			Land l = (Land)r.Länder[0];
-			Assert.AreEqual(NDOObjectState.Created, l.NDOObjectState, "Status wrong");
+			Assert.That(NDOObjectState.Created ==  l.NDOObjectState, "Status wrong");
 		}
 
 		[Test]
@@ -121,10 +121,10 @@ namespace NdoUnitTests {
 			CreateLänder();
 			r.LandHinzufügen(de);
 			pm.Save();
-			Assert.AreEqual(NDOObjectState.Persistent, r.NDOObjectState, "Status wrong");
-			Assert.AreEqual(NDOObjectState.Persistent, de.NDOObjectState, "Status wrong");
-			Assert.AreEqual(NDOObjectState.Persistent, usa.NDOObjectState, "Status wrong");
-			Assert.AreEqual(1, r.Länder.Count, "Number of Länder");
+			Assert.That(NDOObjectState.Persistent ==  r.NDOObjectState, "Status wrong");
+			Assert.That(NDOObjectState.Persistent ==  de.NDOObjectState, "Status wrong");
+			Assert.That(NDOObjectState.Persistent ==  usa.NDOObjectState, "Status wrong");
+			Assert.That(1 ==  r.Länder.Count, "Number of Länder");
 		}
 
 		[Test]
@@ -133,10 +133,10 @@ namespace NdoUnitTests {
 			r.LandHinzufügen(de);
 			r.LandHinzufügen(usa);
 			pm.Save();
-			Assert.AreEqual(NDOObjectState.Persistent, r.NDOObjectState, "Status wrong");
-			Assert.AreEqual(NDOObjectState.Persistent, de.NDOObjectState, "Status wrong");
-			Assert.AreEqual(NDOObjectState.Persistent, usa.NDOObjectState, "Status wrong");
-			Assert.AreEqual(2, r.Länder.Count, "Number of Länder");
+			Assert.That(NDOObjectState.Persistent ==  r.NDOObjectState, "Status wrong");
+			Assert.That(NDOObjectState.Persistent ==  de.NDOObjectState, "Status wrong");
+			Assert.That(NDOObjectState.Persistent ==  usa.NDOObjectState, "Status wrong");
+			Assert.That(2 ==  r.Länder.Count, "Number of Länder");
 		}
 
 
@@ -153,12 +153,12 @@ namespace NdoUnitTests {
 			decimal count = (decimal) q.ExecuteAggregate("*", AggregateType.Count);
 			Assert.That(count > 0m, "Count should be > 0");
 			usa = (Land) pm.FindObject(oid);
-			Assert.NotNull(usa, "USA nicht gefunden");
+			Assert.That(usa != null, "USA nicht gefunden");
 			r.LandLöschen(usa.Name);
 			pm.Save();
 			pm.UnloadCache();
 			count = (decimal) q.ExecuteAggregate("*", AggregateType.Count);
-			Assert.AreEqual(0m, count, "Count should be 0");
+			Assert.That(0m ==  count, "Count should be 0");
 		}
 
 		[Test]
@@ -167,7 +167,7 @@ namespace NdoUnitTests {
 			r.LandHinzufügen(de);
 			de.Name = "Deutschland";
 			pm.Save();
-			Assert.AreEqual("Deutschland", de.Name, "Name wrong");
+			Assert.That("Deutschland" ==  de.Name, "Name wrong");
 		}
 
 		[Test]
@@ -177,8 +177,8 @@ namespace NdoUnitTests {
 			r.LandHinzufügen(de);
 			de.Name = "Deutschland";
 			pm.Save();
-			Assert.AreEqual("Deutschland", de.Name, "Name wrong");
-			Assert.AreEqual(1, r.Länder.Count, "Number of Länder");
+			Assert.That("Deutschland" ==  de.Name, "Name wrong");
+			Assert.That(1 ==  r.Länder.Count, "Number of Länder");
 		}
 
 		[Test]
@@ -186,9 +186,9 @@ namespace NdoUnitTests {
 			CreateLänder();
 			r.LandHinzufügen(de);
 			pm.Abort();
-			Assert.Null(de.NDOObjectId, "Transient object shouldn't have ID");
-			Assert.Null( ((IPersistenceCapable)de).NDOStateManager, "Transient object shouldn't have state manager");
-			Assert.AreEqual(NDOObjectState.Transient, de.NDOObjectState, "Status wrong");
+			Assert.That(de.NDOObjectId == null, "Transient object shouldn't have ID");
+			Assert.That(((IPersistenceCapable)de).NDOStateManager == null, "Transient object shouldn't have state manager");
+			Assert.That(NDOObjectState.Transient ==  de.NDOObjectState, "Status wrong");
 		}
 
 		[Test]
@@ -196,14 +196,14 @@ namespace NdoUnitTests {
 			CreateLänder();
 			r.LandHinzufügen(de);
 			m.LöscheReisen();
-			Assert.AreEqual(NDOObjectState.Transient, r.NDOObjectState, "Reise should be transient");
-			Assert.Null(r.NDOObjectId, "Transient object shouldn't have ID");
-			Assert.Null(((IPersistenceCapable)r).NDOStateManager, "Transient object shouldn't have state manager");
-			Assert.AreEqual(NDOObjectState.Transient, r.NDOObjectState, "Status wrong");
+			Assert.That(NDOObjectState.Transient ==  r.NDOObjectState, "Reise should be transient");
+			Assert.That(r.NDOObjectId == null, "Transient object shouldn't have ID");
+			Assert.That(((IPersistenceCapable)r).NDOStateManager == null, "Transient object shouldn't have state manager");
+			Assert.That(NDOObjectState.Transient ==  r.NDOObjectState, "Status wrong");
 			pm.Save();
-			Assert.Null(r.NDOObjectId, "Transient object shouldn't have ID");
-			Assert.Null( ((IPersistenceCapable)r).NDOStateManager, "Transient object shouldn't have state manager");
-			Assert.AreEqual(NDOObjectState.Transient, r.NDOObjectState, "Status wrong");
+			Assert.That(r.NDOObjectId == null, "Transient object shouldn't have ID");
+			Assert.That(((IPersistenceCapable)r).NDOStateManager == null, "Transient object shouldn't have state manager");
+			Assert.That(NDOObjectState.Transient ==  r.NDOObjectState, "Status wrong");
 		}
 
 		[Test]
@@ -212,22 +212,22 @@ namespace NdoUnitTests {
 			CreateLänder();
 			r.LandHinzufügen(de);
 			pm.Save();
-			Assert.AreEqual(1, de.DieReisen.Count, "The Reise should still be in the container");
+			Assert.That(1 ==  de.DieReisen.Count, "The Reise should still be in the container");
 			pm.Delete(m);
 			pm.Save();
-//			Assert.AreEqual(1, de.DieReisen.Count, "The Reise should still be in the container");
-//			Assert.AreEqual(NDOObjectState.Transient, ((IPersistenceCapable)de.DieReisen[0]).NDOObjectState, "Wrong object state");
+//			Assert.That(1 ==  de.DieReisen.Count, "The Reise should still be in the container");
+//			Assert.That(NDOObjectState.Transient ==  ((IPersistenceCapable)de.DieReisen[0]).NDOObjectState, "Wrong object state");
 
 			//pm.MakeHollow(de);
 			IList l = pm.GetClassExtent(typeof(Reise), true);
-			Assert.AreEqual(0, l.Count, "l should be empty");
+			Assert.That(0 ==  l.Count, "l should be empty");
 			l = pm.GetClassExtent(typeof(Land), true);
 			foreach(Land land in l)
 			{
 				string z;
 				if (land.DieReisen.Count > 0)
 					z = ((Reise)land.DieReisen[0]).Zweck;
-				Assert.AreEqual(0, land.DieReisen.Count, "DieReisen should be empty");
+				Assert.That(0 ==  land.DieReisen.Count, "DieReisen should be empty");
 			}
 		}
 
@@ -236,20 +236,20 @@ namespace NdoUnitTests {
 			CreateLänder();
 			r.LandHinzufügen(de);
 			//pm.UnloadCache();
-			Assert.AreSame(de, pm.FindObject(((Land)r.Länder[0]).NDOObjectId), "Getting same object twice should return same object");
+			Assert.That(Object.ReferenceEquals(de, pm.FindObject(((Land)r.Länder[0]).NDOObjectId)), "Getting same object twice should return same object");
 			pm.Save();
 			pm.UnloadCache();
 			pm.MakeHollow(r);
-			Assert.AreEqual(1, r.Länder.Count, "Number of Länder");
+			Assert.That(1 ==  r.Länder.Count, "Number of Länder");
 			Land l = (Land)r.Länder[0];
 			Assert.That(l != de, "Getting same object twice should return different objects");
-			Assert.AreEqual(de.Name, l.Name, "Name should be same");
+			Assert.That(de.Name ==  l.Name, "Name should be same");
 			ObjectId id = l.NDOObjectId;
 			l = null;
 			pm.UnloadCache();
-			Assert.NotNull(pm.FindObject(id), "Should find object");
+			Assert.That(pm.FindObject(id) != null, "Should find object");
 			pm.UnloadCache();
-			Assert.AreEqual(1, r.Länder.Count, "Number of Länder");
+			Assert.That(1 ==  r.Länder.Count, "Number of Länder");
 		}
 
 		[Test]
@@ -259,13 +259,13 @@ namespace NdoUnitTests {
 			pm.Save();
 			ObjectId id = r.NDOObjectId;
 			pm.MakeTransient(r);
-			Assert.Null( ((IPersistenceCapable)r).NDOStateManager, "Transient object shouldn't have state manager");
-			Assert.AreEqual(NDOObjectState.Transient, r.NDOObjectState, "Wrong state #1");
+			Assert.That(((IPersistenceCapable)r).NDOStateManager == null, "Transient object shouldn't have state manager");
+			Assert.That(NDOObjectState.Transient ==  r.NDOObjectState, "Wrong state #1");
 			Assert.That(id.IsValid(), "Id should still be valid #1");
 			pm.Save();
 			Land l = (Land)r.Länder[0];
-			Assert.AreEqual(de.Name, l.Name, "Name is wrong");
-			Assert.AreSame(de, l, "Land is wrong");
+			Assert.That(de.Name ==  l.Name, "Name is wrong");
+			Assert.That(Object.ReferenceEquals(de, l), "Land is wrong");
 			pm.MakeHollow(m);  // make sure, Reise is loaded fresh during TearDown
 		}
 
@@ -290,9 +290,9 @@ namespace NdoUnitTests {
 			r.LandHinzufügen(de);
 			r.LandLöschen(de.Name);
 			pm.Save();
-			Assert.AreEqual(0, r.Länder.Count, "#1 Number of Länder");
+			Assert.That(0 ==  r.Länder.Count, "#1 Number of Länder");
 			pm.MakeHollow(r);
-			Assert.AreEqual(0, r.Länder.Count, "#2 Number of Länder");
+			Assert.That(0 ==  r.Länder.Count, "#2 Number of Länder");
 		}
 
 		[Test]
@@ -301,12 +301,12 @@ namespace NdoUnitTests {
 			r.LandHinzufügen(de);
 			r.LandHinzufügen(usa);
 			r.LandLöschen(de.Name);
-			Assert.AreEqual(1, r.Länder.Count, "#1 Number of Länder");
+			Assert.That(1 ==  r.Länder.Count, "#1 Number of Länder");
 			pm.Save();
-			Assert.AreSame(usa, r.Länder[0], "Land is wrong");
-			Assert.AreEqual(1, r.Länder.Count, "#2 Number of Länder");
+			Assert.That(Object.ReferenceEquals(usa, r.Länder[0]), "Land is wrong");
+			Assert.That(1 ==  r.Länder.Count, "#2 Number of Länder");
 			pm.MakeHollow(r);
-			Assert.AreEqual(1, r.Länder.Count, "#3 Number of Länder");
+			Assert.That(1 ==  r.Länder.Count, "#3 Number of Länder");
 		}
 
 		[Test]
@@ -315,9 +315,9 @@ namespace NdoUnitTests {
 			r.LandHinzufügen(de);
 			r.LandHinzufügen(usa);
 			m.LöscheReisen();
-			Assert.AreEqual(2, r.Länder.Count, "#1 Number of Länder");
+			Assert.That(2 ==  r.Länder.Count, "#1 Number of Länder");
 			pm.Save();
-			Assert.AreEqual(2, r.Länder.Count, "#2 Number of Länder");
+			Assert.That(2 ==  r.Länder.Count, "#2 Number of Länder");
 		}
 
 		[Test]
@@ -326,20 +326,20 @@ namespace NdoUnitTests {
 			CreateLänder();
 			r.LandHinzufügen(de);
 			r.LandHinzufügen(usa);
-			Assert.AreEqual(1, usa.DieReisen.Count, "#1 Number of Reisen");
-			Assert.AreEqual(1, de.DieReisen.Count, "#2 Number of Reisen");
+			Assert.That(1 ==  usa.DieReisen.Count, "#1 Number of Reisen");
+			Assert.That(1 ==  de.DieReisen.Count, "#2 Number of Reisen");
 			pm.Save();
 			pm.UnloadCache();
 			m.LöscheReisen();
-			Assert.AreEqual(2, r.Länder.Count, "#1 Number of Länder");
+			Assert.That(2 ==  r.Länder.Count, "#1 Number of Länder");
 			pm.Save();
-			Assert.AreEqual(2, r.Länder.Count, "#2 Number of Länder");
+			Assert.That(2 ==  r.Länder.Count, "#2 Number of Länder");
 			pm.UnloadCache();
 			IQuery q = new NDOQuery<Land>(pm, "name LIKE 'D%'");
 			IList list = q.Execute();
-			Assert.AreEqual(1, list.Count, "#3 Number of Länder");
+			Assert.That(1 ==  list.Count, "#3 Number of Länder");
 			de = (Land) list[0];
-			Assert.AreEqual(0, de.DieReisen.Count, "#3 Number of Reisen");
+			Assert.That(0 ==  de.DieReisen.Count, "#3 Number of Reisen");
 		}
 
 
@@ -351,9 +351,9 @@ namespace NdoUnitTests {
 			pm.Save();
 			r.LandLöschen(de.Name);
 			pm.Save();
-			Assert.AreEqual(1, r.Länder.Count, "#1 Number of Länder");
+			Assert.That(1 ==  r.Länder.Count, "#1 Number of Länder");
 			pm.MakeHollow(r);
-			Assert.AreEqual(1, r.Länder.Count, "#2 Number of Länder");
+			Assert.That(1 ==  r.Länder.Count, "#2 Number of Länder");
 		}
 
 		[Test]
@@ -364,9 +364,9 @@ namespace NdoUnitTests {
 			pm.Save();
 			r.LandLöschen(de.Name);
 			pm.Abort();
-			Assert.AreEqual(2, r.Länder.Count, "#1 Number of Länder");
+			Assert.That(2 ==  r.Länder.Count, "#1 Number of Länder");
 			pm.MakeHollow(r);
-			Assert.AreEqual(2, r.Länder.Count, "#2 Number of Länder");
+			Assert.That(2 ==  r.Länder.Count, "#2 Number of Länder");
 		}
 
 		[Test]
@@ -375,13 +375,13 @@ namespace NdoUnitTests {
 			r.LandHinzufügen(de);
 			pm.Save();
 			pm.MakeHollow(r);
-			Assert.AreEqual(NDOObjectState.Hollow, r.NDOObjectState, "Wrong state #1");
+			Assert.That(NDOObjectState.Hollow ==  r.NDOObjectState, "Wrong state #1");
 			Land l = (Land)r.Länder[0];
 			// Should be in Cache
-			Assert.AreEqual(NDOObjectState.Persistent, l.NDOObjectState, "Wrong state #2");
-			Assert.AreEqual(de.Name, l.Name, "Name is wrong");
-			Assert.AreSame(de, l, "Land is wrong");
-			Assert.AreEqual(1, r.Länder.Count, "#1 Number of Länder");
+			Assert.That(NDOObjectState.Persistent ==  l.NDOObjectState, "Wrong state #2");
+			Assert.That(de.Name ==  l.Name, "Name is wrong");
+			Assert.That(Object.ReferenceEquals(de, l), "Land is wrong");
+			Assert.That(1 ==  r.Länder.Count, "#1 Number of Länder");
 		}
 
 
@@ -392,7 +392,7 @@ namespace NdoUnitTests {
 			pm.Save();
 			pm.MakeHollow(r);
 			pm.Refresh(r);
-			Assert.AreEqual(NDOObjectState.Persistent, r.NDOObjectState, "Wrong state #1");
+			Assert.That(NDOObjectState.Persistent ==  r.NDOObjectState, "Wrong state #1");
 		}
 
 		[Test]
@@ -412,7 +412,7 @@ namespace NdoUnitTests {
 			NDOQuery<Reise> q = new NDOQuery<Reise>(pm, "dieLaender.name = {0}");
 			q.Parameters.Add( usa.Name );
 			IList l = q.Execute();
-			Assert.AreEqual(1, l.Count, "Wrong number of travels");
+			Assert.That(1 ==  l.Count, "Wrong number of travels");
 		}
 
         [Test]

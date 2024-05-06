@@ -38,7 +38,7 @@ namespace NdoUnitTests
 		{
 			var pm = PmFactory.NewPersistenceManager();
 			var testObject = (ClassWithDIConstructor)pm.FindObject( typeof( ClassWithDIConstructor ), 0 );
-			Assert.AreEqual( "Teststring", testObject.DiField );
+			Assert.That("Teststring" ==  testObject.DiField );
 		}
 
 		[Test]
@@ -51,8 +51,8 @@ namespace NdoUnitTests
 			pm.Save();
 			pm.UnloadCache();
 			testObject = pm.Objects<ClassWithDIConstructor>().Single();
-			Assert.AreEqual( "PersistentFieldValue", testObject.PersistentField );
-			Assert.AreEqual( "Teststring", testObject.DiField );
+			Assert.That("PersistentFieldValue" ==  testObject.PersistentField );
+			Assert.That("Teststring" ==  testObject.DiField );
 			pm.Delete( testObject );
 			pm.Save();
 		}

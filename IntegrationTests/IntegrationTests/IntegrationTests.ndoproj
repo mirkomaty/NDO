@@ -3,7 +3,7 @@
   <Options>
     <EnableAddIn>True</EnableAddIn>
     <EnableEnhancer>True</EnableEnhancer>
-    <VerboseMode>True</VerboseMode>
+    <VerboseMode>False</VerboseMode>
     <NewMapping>False</NewMapping>
     <GenerateSQL>False</GenerateSQL>
     <DefaultConnection>
@@ -12,21 +12,25 @@
     <GenerateChangeEvents>False</GenerateChangeEvents>
     <UseTimeStamps>False</UseTimeStamps>
     <Utf8Encoding>True</Utf8Encoding>
-    <SQLScriptLanguage>SqlServer</SQLScriptLanguage>
-    <SchemaVersion>1.0</SchemaVersion>
+    <SQLScriptLanguage>
+    </SQLScriptLanguage>
+    <SchemaVersion>
+    </SchemaVersion>
     <IncludeTypecodes>False</IncludeTypecodes>
     <DatabaseOwner>
     </DatabaseOwner>
     <GenerateConstraints>False</GenerateConstraints>
-    <DropExistingElements>True</DropExistingElements>
+    <DropExistingElements>False</DropExistingElements>
   </Options>
   <ProjectDescription version="5.0">
-    <BinPath>bin\Release\$(TargetFramework)\PureBusinessClasses.dll</BinPath>
-    <ObjPath>obj\Release\$(TargetFramework)\</ObjPath>
+    <BinPath>bin\Debug\$(TargetFramework)\IntegrationTests.dll</BinPath>
+    <ObjPath>obj\Debug\$(TargetFramework)\</ObjPath>
     <AssemblyName />
-    <Debug>False</Debug>
+    <Debug>True</Debug>
     <KeyFile />
     <References>
+      <Reference AssemblyName="PureBusinessClasses" AssemblyPath="..\PureBusinessClasses\bin\Debug\net8.0\PureBusinessClasses.dll" CheckThisDLL="False">
+      </Reference>
     </References>
   </ProjectDescription>
 </Enhancer>

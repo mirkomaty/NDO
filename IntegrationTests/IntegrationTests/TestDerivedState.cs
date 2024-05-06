@@ -58,7 +58,7 @@ namespace NdoUnitTests
 			pm.MakePersistent(derived);
 			pm.Save();
 			derived.ManipulateBase();
-			Assert.AreEqual(NDOObjectState.PersistentDirty, derived.NDOObjectState, "Status falsch");
+			Assert.That(NDOObjectState.PersistentDirty ==  derived.NDOObjectState, "Status falsch");
 		}
 	}
 }

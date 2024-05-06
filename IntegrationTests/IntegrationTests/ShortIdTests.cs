@@ -66,12 +66,12 @@ namespace NdoUnitTests
 			string shortId = ((IPersistenceCapable)m).ShortId();
 			Console.WriteLine(shortId);
 			string decodedShortId = shortId.Decode();
-			Assert.AreEqual( decodedShortId, shortId, "ShortIds should be equal. #1" );
+			Assert.That(decodedShortId ==  shortId, "ShortIds should be equal. #1" );
 			string encodedShortId = decodedShortId.Encode();
-			Assert.AreEqual( encodedShortId, decodedShortId, "ShortIds should be equal. #2" );
+			Assert.That(encodedShortId ==  decodedShortId, "ShortIds should be equal. #2" );
 			Type t = shortId.GetObjectType(pm);
-			Assert.AreEqual( t, typeof( Mitarbeiter ), "The Type should be Mitarbeiter." );
-			Assert.AreEqual( shortId.GetEntityName(), "Mitarbeiter", "The Entity Name should be Mitarbeiter." );
+			Assert.That(t ==  typeof( Mitarbeiter ), "The Type should be Mitarbeiter." );
+			Assert.That(shortId.GetEntityName() ==  "Mitarbeiter", "The Entity Name should be Mitarbeiter." );
 		}
 
 		[Test]
@@ -80,13 +80,13 @@ namespace NdoUnitTests
 			string shortId = ((IPersistenceCapable)this.reiseBüro).ShortId();
 			Console.WriteLine(shortId);
 			string decodedShortId = shortId.Decode();
-			Assert.AreNotEqual( decodedShortId, shortId, "The ShortIds should'nt be equal. #1" );
+			Assert.That( decodedShortId != shortId, "The ShortIds should'nt be equal. #1" );
 			string encodedShortId = decodedShortId.Encode();
-			Assert.AreNotEqual( encodedShortId, decodedShortId, "The ShortIds should'nt be equal. #2" );
-			Assert.AreEqual( encodedShortId, shortId, "The ShortId should be equal." );
+			Assert.That( encodedShortId != decodedShortId, "The ShortIds should'nt be equal. #2" );
+			Assert.That(encodedShortId ==  shortId, "The ShortId should be equal." );
 			Type t = shortId.GetObjectType(pm);
-			Assert.AreEqual( t, typeof( Reisebüro ), "The Type should be Reisebüro." );
-			Assert.AreEqual( shortId.GetEntityName(), "Reisebüro", "The Entity Name should be Reisebüro." );
+			Assert.That(t ==  typeof( Reisebüro ), "The Type should be Reisebüro." );
+			Assert.That(shortId.GetEntityName() ==  "Reisebüro", "The Entity Name should be Reisebüro." );
 		}
 
 		[Test]
@@ -102,7 +102,7 @@ namespace NdoUnitTests
 			Assert.That( shortId.GetEntityName() == "Reisebüro" );
 			Assert.That( shortId.GetObjectType( pm ) == typeof( Reisebüro ) );
 			Reisebüro rb = (Reisebüro)pm.FindObject( shortId );
-			Assert.NotNull( rb );
+			Assert.That(rb  != null);
 		}
 
 		[Test]
@@ -118,7 +118,7 @@ namespace NdoUnitTests
 			Assert.That( shortId.GetEntityName() == "Mitarbeiter" );
 			Assert.That( shortId.GetObjectType( pm ) == typeof( Mitarbeiter ) );
 			Mitarbeiter rb = (Mitarbeiter)pm.FindObject( shortId );
-			Assert.NotNull( rb );
+			Assert.That(rb  != null);
 		}
 
 		[Test]
@@ -132,10 +132,10 @@ namespace NdoUnitTests
 			Assert.That( shortId.GetEntityName() == "OrderDetail" );
 			Assert.That( shortId.GetObjectType( pm ) == typeof( OrderDetail ) );
 			string[] arr = shortId.Split( '-' );
-			Assert.AreEqual( $"{guidString}+{guidString}", arr[2] );
+			Assert.That($"{guidString}+{guidString}" ==  arr[2] );
 			var decodedShortId = shortId.Decode();
 			arr = decodedShortId.Split( '-' );
-			Assert.AreEqual( $"{guidString} {guidString}", arr[2] );
+			Assert.That($"{guidString} {guidString}" ==  arr[2] );
 
 #if !USEGUIDS
 			orderDetail = pm.FindObject( typeof(OrderDetail), new object[] { 1, 2 } );
@@ -143,11 +143,11 @@ namespace NdoUnitTests
 #endif
 			orderDetail = pm.FindObject( shortId );
 #if USEGUIDS
-			Assert.AreEqual( guid, orderDetail.NDOObjectId.Id.Values[0] );
-			Assert.AreEqual( guid, orderDetail.NDOObjectId.Id.Values[1] );
+			Assert.That(guid ==  orderDetail.NDOObjectId.Id.Values[0] );
+			Assert.That(guid ==  orderDetail.NDOObjectId.Id.Values[1] );
 #else
-			Assert.AreEqual( 1, orderDetail.NDOObjectId.Id.Values[0] );
-			Assert.AreEqual( 2, orderDetail.NDOObjectId.Id.Values[1] );
+			Assert.That(1 == (int) orderDetail.NDOObjectId.Id.Values[0] );
+			Assert.That(2 == (int) orderDetail.NDOObjectId.Id.Values[1] );
 #endif
 		}
 
@@ -171,7 +171,7 @@ namespace NdoUnitTests
 		//	var oid2 = ((IPersistenceCapable)pm.FindObject( typeof( Mitarbeiter ), 2 )).NDOObjectId;
 		//	ObjectIdList arr = new ObjectIdList { oid1, oid2 };
 		//	var json = JsonConvert.SerializeObject( arr, new ObjectIdConverter() );
-		//	Assert.AreEqual( "[\"Mitarbeiter-F33D0A6D-1\",\"Mitarbeiter-F33D0A6D-2\"]", json );
+		//	Assert.That("[\"Mitarbeiter-F33D0A6D-1\" == \"Mitarbeiter-F33D0A6D-2\"]", json );
 		//}
 
 		[Test]
@@ -180,8 +180,8 @@ namespace NdoUnitTests
 			string shortId = ((IPersistenceCapable)m).ShortId();
 			Assert.That( shortId.IsShortId(), "The string should be a wellformed ShortId" );
 			Mitarbeiter m2 = (Mitarbeiter)pm.FindObject( shortId );
-			Assert.NotNull( m2 );
-			Assert.AreEqual( this.m.NDOObjectId, m2.NDOObjectId );
+			Assert.That(m2  != null);
+			Assert.That(this.m.NDOObjectId ==  m2.NDOObjectId );
 		}
 
 		[TearDown]

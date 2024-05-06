@@ -75,9 +75,9 @@ namespace NdoUnitTests
 		public void TestTimeStampsNoException()
 		{
 			IList l1 = pm1.GetClassExtent(typeof(TimeStampContainer));
-			Assert.AreEqual(1, l1.Count, "Count sollte 1 sein");
+			Assert.That(1 ==  l1.Count, "Count sollte 1 sein");
 			IList l2 = pm2.GetClassExtent(typeof(TimeStampContainer));
-			Assert.AreEqual(1, l2.Count, "Count sollte 1 sein");
+			Assert.That(1 ==  l2.Count, "Count sollte 1 sein");
 			TimeStampContainer tsc1 = (TimeStampContainer) l1[0];
 			TimeStampContainer tsc2 = (TimeStampContainer) l2[0];
 			pm1.CollisionEvent += new CollisionHandler(OnCollisionEvent);
@@ -85,7 +85,7 @@ namespace NdoUnitTests
 			tsc2.Name = "Peter";
 			pm2.Save();
 			pm1.Save();
-			Assert.AreEqual(true, collisionHappened, "Kollision ist nicht erkannt worden");
+			Assert.That(true ==  collisionHappened, "Kollision ist nicht erkannt worden");
 		}
 
 		[Test]
@@ -93,13 +93,13 @@ namespace NdoUnitTests
 		{
 			IQuery q = new NDOQuery<TimeStampContainer>(pm1, null, true);
 			tsc = (TimeStampContainer) q.ExecuteSingle(true);
-			Assert.AreEqual(NDOObjectState.Hollow, tsc.NDOObjectState, "Object should be hollow");
+			Assert.That(NDOObjectState.Hollow ==  tsc.NDOObjectState, "Object should be hollow");
 			Assert.That(((IPersistenceCapable)tsc).NDOTimeStamp != Guid.Empty, "Time Stamp should be there");
 			pm1.Delete(tsc);
 			pm1.Save();
 			pm1.UnloadCache();
 			IList l = pm1.GetClassExtent(typeof(TimeStampContainer));
-			Assert.AreEqual(0, l.Count, "No object should be there");
+			Assert.That(0 ==  l.Count, "No object should be there");
 		}
 
 		[Test]
@@ -111,13 +111,13 @@ namespace NdoUnitTests
 			pm1.Save();
 			rwc = pm1.Objects<RowVersionClass>().Single();
 			var oldVersion = rwc.RowVersion;
-			Assert.AreNotEqual( oldVersion, (ulong) 0 );
+			Assert.That( oldVersion != (ulong) 0 );
 			var changesSince = RowVersionClass.GetNewerThan( pm1, oldVersion );
-			Assert.IsFalse( changesSince.Any() );
+			Assert.That( !changesSince.Any() );
 			rwc.MyData = "Testdata";	// Makes object dirty
 			pm1.Save();					// This creates a new version
 			changesSince = RowVersionClass.GetNewerThan( pm1, oldVersion );
-			Assert.IsTrue( changesSince.Any() );
+			Assert.That( changesSince.Any() );
 		}
 
 		private void OnCollisionEvent(object pc)

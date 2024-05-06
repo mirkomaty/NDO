@@ -76,13 +76,13 @@ namespace NdoUnitTests
 			if (t != null)
 			{
 				bool b = GetLock(m, r, svn);
-				Assert.AreEqual(true, b, "There shouldn't be a lock");
-				Assert.AreEqual(true, IsLocked(m, r, svn), "Objects should be locked #1");
-				Assert.AreEqual(true, IsLocked(svn, fr, m), "Objects should be locked #2");
-				Assert.AreEqual(false, GetLock(svn, fr, m), "Objects should be locked #3");
+				Assert.That(true ==  b, "There shouldn't be a lock");
+				Assert.That(true ==  IsLocked(m, r, svn), "Objects should be locked #1");
+				Assert.That(true ==  IsLocked(svn, fr, m), "Objects should be locked #2");
+				Assert.That(false ==  GetLock(svn, fr, m), "Objects should be locked #3");
 				Unlock(m, r, svn);
-				Assert.AreEqual(false, IsLocked(m, r, svn), "Objects shouldn't be locked #1");
-				Assert.AreEqual(false, IsLocked(svn, fr, m), "Objects shouldn't be locked #2");
+				Assert.That(false ==  IsLocked(m, r, svn), "Objects shouldn't be locked #1");
+				Assert.That(false ==  IsLocked(svn, fr, m), "Objects shouldn't be locked #2");
 			}
 		}
 
@@ -93,7 +93,7 @@ namespace NdoUnitTests
 			Class cl2 = pm.NDOMapping.FindClass(typeof(PKWFahrt));
 			Relation r1 = cl1.FindRelation("belege");
 			Relation r2 = cl2.FindRelation("reise");
-			Assert.AreEqual(r1.GetHashCode(), r2.GetHashCode(), "Hash should be equal");
+			Assert.That(r1.GetHashCode() ==  r2.GetHashCode(), "Hash should be equal");
 			Assert.That(r1.Equals(r2), "Relation should be the same");
 		}
 
@@ -110,26 +110,26 @@ namespace NdoUnitTests
 				pm.MakePersistent(reise);
 				Relation rel = pm.NDOMapping.FindClass(typeof(Reise)).FindRelation("belege");
 				Relation rel2 = pm.NDOMapping.FindClass(typeof(Beleg)).FindRelation("reise");
-				Assert.AreEqual(rel, rel2, "Relation should be considered the same");
+				Assert.That(rel ==  rel2, "Relation should be considered the same");
 				bool b = GetLock(reise, rel, kp);
-				Assert.AreEqual(true, b, "There shouldn't be a lock");
-				Assert.AreEqual(true, IsLocked(reise, rel, kp), "Objects should be locked #1");
-				Assert.AreEqual(true, IsLocked(kp, rel, reise), "Objects should be locked #2");
-				Assert.AreEqual(false, GetLock(kp, rel.ForeignRelation, reise), "Objects should be locked #3");
-				Assert.AreEqual(false, GetLock(reise, rel.ForeignRelation, kp), "Objects should be locked #4");
-				Assert.AreEqual(false, GetLock(kp, rel2, reise), "Objects should be locked #5");
-				Assert.AreEqual(false, GetLock(reise, rel2, kp), "Objects should be locked #6");
-				Assert.AreEqual(false, GetLock(kp, rel2.ForeignRelation, reise), "Objects should be locked #7");
-				Assert.AreEqual(false, GetLock(reise, rel2.ForeignRelation, kp), "Objects should be locked #8");
+				Assert.That(true ==  b, "There shouldn't be a lock");
+				Assert.That(true ==  IsLocked(reise, rel, kp), "Objects should be locked #1");
+				Assert.That(true ==  IsLocked(kp, rel, reise), "Objects should be locked #2");
+				Assert.That(false ==  GetLock(kp, rel.ForeignRelation, reise), "Objects should be locked #3");
+				Assert.That(false ==  GetLock(reise, rel.ForeignRelation, kp), "Objects should be locked #4");
+				Assert.That(false ==  GetLock(kp, rel2, reise), "Objects should be locked #5");
+				Assert.That(false ==  GetLock(reise, rel2, kp), "Objects should be locked #6");
+				Assert.That(false ==  GetLock(kp, rel2.ForeignRelation, reise), "Objects should be locked #7");
+				Assert.That(false ==  GetLock(reise, rel2.ForeignRelation, kp), "Objects should be locked #8");
 				Unlock(reise, rel, kp);
-				Assert.AreEqual(false, IsLocked(reise, rel, kp), "Objects should be locked #1");
-				Assert.AreEqual(false, IsLocked(kp, rel, reise), "Objects should be locked #2");
-				Assert.AreEqual(false, IsLocked(kp, rel.ForeignRelation, reise), "Objects should be locked #3");
-				Assert.AreEqual(false, IsLocked(reise, rel.ForeignRelation, kp), "Objects should be locked #4");
-				Assert.AreEqual(false, IsLocked(kp, rel2, reise), "Objects should be locked #5");
-				Assert.AreEqual(false, IsLocked(reise, rel2, kp), "Objects should be locked #6");
-				Assert.AreEqual(false, IsLocked(kp, rel2.ForeignRelation, reise), "Objects should be locked #7");
-				Assert.AreEqual(false, IsLocked(reise, rel2.ForeignRelation, kp), "Objects should be locked #8");
+				Assert.That(false ==  IsLocked(reise, rel, kp), "Objects should be locked #1");
+				Assert.That(false ==  IsLocked(kp, rel, reise), "Objects should be locked #2");
+				Assert.That(false ==  IsLocked(kp, rel.ForeignRelation, reise), "Objects should be locked #3");
+				Assert.That(false ==  IsLocked(reise, rel.ForeignRelation, kp), "Objects should be locked #4");
+				Assert.That(false ==  IsLocked(kp, rel2, reise), "Objects should be locked #5");
+				Assert.That(false ==  IsLocked(reise, rel2, kp), "Objects should be locked #6");
+				Assert.That(false ==  IsLocked(kp, rel2.ForeignRelation, reise), "Objects should be locked #7");
+				Assert.That(false ==  IsLocked(reise, rel2.ForeignRelation, kp), "Objects should be locked #8");
 			}
 		}
 
@@ -137,21 +137,21 @@ namespace NdoUnitTests
 		private bool GetLock(object pc, Relation r, object child)
 		{
 			MethodInfo mi = t.GetMethod("GetLock", new Type[]{typeof(IPersistenceCapable), typeof(Relation), typeof(IPersistenceCapable)});
-			Assert.NotNull(mi, "Method not found");
+			Assert.That(mi != null, "Method not found");
 			return (bool) mi.Invoke(theLock, new object[]{pc, r, child});
 		}
 
 		private bool IsLocked(object pc, Relation r, object child)
 		{
 			MethodInfo mi = t.GetMethod("IsLocked", new Type[]{typeof(IPersistenceCapable), typeof(Relation), typeof(IPersistenceCapable)});
-			Assert.NotNull(mi, "Method not found");
+			Assert.That(mi != null, "Method not found");
 			return (bool) mi.Invoke(theLock, new object[]{pc, r, child});
 		}
 
 		private void Unlock(object pc, Relation r, object child)
 		{
 			MethodInfo mi = t.GetMethod("Unlock", new Type[]{typeof(IPersistenceCapable), typeof(Relation), typeof(IPersistenceCapable)});
-			Assert.NotNull(mi, "Method not found");
+			Assert.That(mi != null, "Method not found");
 			mi.Invoke(theLock, new object[]{pc, r, child});
 		}
 

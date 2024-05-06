@@ -73,17 +73,17 @@ namespace NdoUnitTests
 			pm.Delete(l);
 			pm.Save();
 			pm.UnloadCache();
-			Assert.AreEqual(1, l.Count, "1 Peer muss da sein");
+			Assert.That(1 ==  l.Count, "1 Peer muss da sein");
 
 			Peer p2 = (Peer) l[0];
 
-			Assert.AreEqual(NDOObjectState.Transient, p2.NDOObjectState, "Peer muss transient sein");
+			Assert.That(NDOObjectState.Transient ==  p2.NDOObjectState, "Peer muss transient sein");
 
 			foreach(Track t2 in p2.Tracks)
 			{
-				Assert.AreEqual(NDOObjectState.Transient, t2.NDOObjectState, "Track muss transient sein");
+				Assert.That(NDOObjectState.Transient ==  t2.NDOObjectState, "Track muss transient sein");
 			}
-			Assert.AreEqual(NDOObjectState.Transient, p2.NDOObjectState, "Peer muss transient sein");
+			Assert.That(NDOObjectState.Transient ==  p2.NDOObjectState, "Peer muss transient sein");
 
 			pm.MakePersistent(p2);
 		}

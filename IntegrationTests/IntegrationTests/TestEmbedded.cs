@@ -63,16 +63,16 @@ namespace NdoUnitTests
 			pm.MakePersistent(pwe);
 			pm.Save();
 
-			Assert.AreEqual(NDOObjectState.Persistent, pwe.NDOObjectState, "Status falsch #1");
+			Assert.That(NDOObjectState.Persistent ==  pwe.NDOObjectState, "Status falsch #1");
 			pwe.Ewom = new EmbeddedWithOneMember("SecondEwom");
-			Assert.AreEqual(NDOObjectState.PersistentDirty, pwe.NDOObjectState, "Status falsch #2");
+			Assert.That(NDOObjectState.PersistentDirty ==  pwe.NDOObjectState, "Status falsch #2");
 			pm.Save();
 			pm.UnloadCache();
 
 			IQuery q = new NDOQuery<ParentWithEmbedded>(pm, null);
 			pwe = (ParentWithEmbedded) q.ExecuteSingle(true);
 
-			Assert.AreEqual("SecondEwom", pwe.Ewom.Member, "Inhalt falsch ");
+			Assert.That("SecondEwom" ==  pwe.Ewom.Member, "Inhalt falsch ");
 			
 		}
 	}

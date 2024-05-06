@@ -67,36 +67,36 @@ namespace NdoUnitTests
 			r.AddKostenpunkt(b);
 			m.Hinzufuegen(r);
 			
-			Assert.AreEqual(NDOObjectState.Transient, m.NDOObjectState, "Mitarbeiter muss Transient sein");
-			Assert.AreEqual(NDOObjectState.Transient, r.NDOObjectState, "Reise muss Transient sein");
-			Assert.AreEqual(NDOObjectState.Transient, b.NDOObjectState, "Beleg muss Transient sein");
+			Assert.That(NDOObjectState.Transient ==  m.NDOObjectState, "Mitarbeiter muss Transient sein");
+			Assert.That(NDOObjectState.Transient ==  r.NDOObjectState, "Reise muss Transient sein");
+			Assert.That(NDOObjectState.Transient ==  b.NDOObjectState, "Beleg muss Transient sein");
 
 
 			pm.MakePersistent(m);
 
-			Assert.AreEqual(NDOObjectState.Created, m.NDOObjectState, "Mitarbeiter muss Created sein");
-			Assert.AreEqual(NDOObjectState.Created, r.NDOObjectState, "Reise muss Created sein");
-			Assert.AreEqual(NDOObjectState.Created, b.NDOObjectState, "Beleg muss Created sein");
+			Assert.That(NDOObjectState.Created ==  m.NDOObjectState, "Mitarbeiter muss Created sein");
+			Assert.That(NDOObjectState.Created ==  r.NDOObjectState, "Reise muss Created sein");
+			Assert.That(NDOObjectState.Created ==  b.NDOObjectState, "Beleg muss Created sein");
 
 			pm.Save();
 
-			Assert.AreEqual(NDOObjectState.Persistent, m.NDOObjectState, "1 Mitarbeiter muss Persistent sein");
-			Assert.AreEqual(NDOObjectState.Persistent, r.NDOObjectState, "1 Reise muss Persistent sein");
-			Assert.AreEqual(NDOObjectState.Persistent, b.NDOObjectState, "1 Beleg muss Persistent sein");
+			Assert.That(NDOObjectState.Persistent ==  m.NDOObjectState, "1 Mitarbeiter muss Persistent sein");
+			Assert.That(NDOObjectState.Persistent ==  r.NDOObjectState, "1 Reise muss Persistent sein");
+			Assert.That(NDOObjectState.Persistent ==  b.NDOObjectState, "1 Beleg muss Persistent sein");
 
 			pm.UnloadCache();
 
 			NDOQuery<Mitarbeiter> q = new NDOQuery<Mitarbeiter>(pm, null);
 			m = (Mitarbeiter) q.ExecuteSingle(true);
-			Assert.AreEqual(1, m.Reisen.Count, "Reise nicht gefunden");
+			Assert.That(1 ==  m.Reisen.Count, "Reise nicht gefunden");
 			r = (Reise) m.Reisen[0];
-			Assert.AreEqual(1, r.Kostenpunkte.Count, "Kostenpunkt nicht gefunden");
+			Assert.That(1 ==  r.Kostenpunkte.Count, "Kostenpunkt nicht gefunden");
 			b = (Beleg) r.Kostenpunkte[0];
 			double k = b.Kosten;
 
-			Assert.AreEqual(NDOObjectState.Persistent, m.NDOObjectState, "2 Mitarbeiter muss Persistent sein");
-			Assert.AreEqual(NDOObjectState.Persistent, r.NDOObjectState, "2 Reise muss Persistent sein");
-			Assert.AreEqual(NDOObjectState.Persistent, b.NDOObjectState, "2 Beleg muss Persistent sein");
+			Assert.That(NDOObjectState.Persistent ==  m.NDOObjectState, "2 Mitarbeiter muss Persistent sein");
+			Assert.That(NDOObjectState.Persistent ==  r.NDOObjectState, "2 Reise muss Persistent sein");
+			Assert.That(NDOObjectState.Persistent ==  b.NDOObjectState, "2 Beleg muss Persistent sein");
 
 		}
 	}

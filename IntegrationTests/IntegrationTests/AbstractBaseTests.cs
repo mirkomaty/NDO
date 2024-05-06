@@ -66,7 +66,7 @@ namespace NdoUnitTests
 			pm.Save();
 			pm.UnloadCache();
 			b = (ABB) pm.FindObject(b.NDOObjectId);
-			Assert.AreEqual(1, b.MyA.Count, "Count wrong");
+			Assert.That(1 == b.MyA.Count, "Count wrong");
 		}
 
 		[Test]
@@ -83,7 +83,7 @@ namespace NdoUnitTests
 			pm.Save();
 			pm.UnloadCache();
 			left = (AbstractRelLeft) pm.FindObject(left.NDOObjectId);
-			Assert.AreEqual(1, left.TheBases.Count, "Count wrong");
+			Assert.That(1 == left.TheBases.Count, "Count wrong");
 		}
 
 

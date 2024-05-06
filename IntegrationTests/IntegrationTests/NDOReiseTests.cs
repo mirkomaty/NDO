@@ -99,8 +99,8 @@ namespace NdoUnitTests
 		{
 			m.Hinzufuegen( r );
 			pm.MakePersistent( m );
-			Assert.NotNull( r.NDOObjectId, "ObjectId should be valid" );
-			Assert.AreEqual( NDOObjectState.Created, r.NDOObjectState, "Status wrong" );
+			Assert.That(r.NDOObjectId != null, "ObjectId should be valid" );
+			Assert.That(NDOObjectState.Created ==  r.NDOObjectState, "Status wrong" );
 		}
 
 		[Test]
@@ -109,7 +109,7 @@ namespace NdoUnitTests
 			m.Hinzufuegen( r );
 			pm.MakePersistent( m );
 			pm.Save();
-			Assert.AreEqual( NDOObjectState.Persistent, r.NDOObjectState, "Status wrong" );
+			Assert.That(NDOObjectState.Persistent ==  r.NDOObjectState, "Status wrong" );
 		}
 
 		[Test]
@@ -119,7 +119,7 @@ namespace NdoUnitTests
 			pm.MakePersistent( m );
 			r.Zweck = "Test";
 			pm.Save();
-			Assert.AreEqual( "Test", r.Zweck, "Zweck wrong" );
+			Assert.That("Test" ==  r.Zweck, "Zweck wrong" );
 		}
 
 		[Test]
@@ -128,9 +128,9 @@ namespace NdoUnitTests
 			m.Hinzufuegen( r );
 			pm.MakePersistent( m );
 			pm.Abort();
-			Assert.Null( r.NDOObjectId, "Transient object shouldn't have ID" );
-			Assert.Null( ((IPersistenceCapable)r).NDOStateManager, "Transient object shouldn't have state manager" );
-			Assert.AreEqual( NDOObjectState.Transient, r.NDOObjectState, "Status wrong" );
+			Assert.That(r.NDOObjectId == null, "Transient object shouldn't have ID" );
+			Assert.That(((IPersistenceCapable)r).NDOStateManager == null, "Transient object shouldn't have state manager" );
+			Assert.That(NDOObjectState.Transient ==  r.NDOObjectState, "Status wrong" );
 		}
 
 		[Test]
@@ -140,7 +140,7 @@ namespace NdoUnitTests
 			pm.MakePersistent( m );
 			r.Zweck = "Möller";
 			pm.Abort();
-			Assert.AreEqual( "ADC", r.Zweck, "Nachname wrong" );
+			Assert.That("ADC" ==  r.Zweck, "Nachname wrong" );
 		}
 
 		[Test]
@@ -150,13 +150,13 @@ namespace NdoUnitTests
 			pm.MakePersistent( m );
 			ObjectId id = r.NDOObjectId;
 			ObjectId id2 = new ObjectId( id );
-			Assert.AreEqual( r.NDOObjectId, id, "IDs should be equal" );
-			Assert.AreEqual( r.NDOObjectId, id2, "IDs should be equal" );
+			Assert.That(r.NDOObjectId ==  id, "IDs should be equal" );
+			Assert.That(r.NDOObjectId ==  id2, "IDs should be equal" );
 			if (!pm.HasOwnerCreatedIds && r.NDOObjectId.Id[0] is Int32)
 				Assert.That( (int)id.Id[0] < 0, "Negative key in DS" );
 			pm.Save();
-			Assert.AreEqual( r.NDOObjectId, id, "IDs should be equal" );
-			Assert.AreEqual( r.NDOObjectId, id2, "IDs should be equal" );
+			Assert.That(r.NDOObjectId ==  id, "IDs should be equal" );
+			Assert.That(r.NDOObjectId ==  id2, "IDs should be equal" );
 			if (!pm.HasOwnerCreatedIds && r.NDOObjectId.Id[0] is Int32)
 				Assert.That( (int)id.Id[0] > 0, "Positive key in DB" );
 		}
@@ -167,13 +167,13 @@ namespace NdoUnitTests
 			m.Hinzufuegen( r );
 			pm.MakePersistent( m );
 			pm.Delete( m );
-			Assert.Null( r.NDOObjectId, "Transient object shouldn't have ID" );
-			Assert.Null( ((IPersistenceCapable)r).NDOStateManager, "Transient object shouldn't have state manager" );
-			Assert.AreEqual( NDOObjectState.Transient, r.NDOObjectState, "Status wrong" );
+			Assert.That(r.NDOObjectId == null, "Transient object shouldn't have ID" );
+			Assert.That(((IPersistenceCapable)r).NDOStateManager == null, "Transient object shouldn't have state manager" );
+			Assert.That(NDOObjectState.Transient ==  r.NDOObjectState, "Status wrong" );
 			pm.Save();
-			Assert.Null( r.NDOObjectId, "Transient object shouldn't have ID" );
-			Assert.Null( ((IPersistenceCapable)r).NDOStateManager, "Transient object shouldn't have state manager" );
-			Assert.AreEqual( NDOObjectState.Transient, r.NDOObjectState, "Status wrong" );
+			Assert.That(r.NDOObjectId == null, "Transient object shouldn't have ID" );
+			Assert.That(((IPersistenceCapable)r).NDOStateManager == null, "Transient object shouldn't have state manager" );
+			Assert.That(NDOObjectState.Transient ==  r.NDOObjectState, "Status wrong" );
 		}
 
 		[Test]
@@ -184,9 +184,9 @@ namespace NdoUnitTests
 			ObjectId id = m.NDOObjectId;
 			pm.Delete( m );
 			pm.Abort();
-			Assert.Null( r.NDOObjectId, "Transient object shouldn't have ID" );
-			Assert.Null( ((IPersistenceCapable)r).NDOStateManager, "Transient object shouldn't have state manager" );
-			Assert.AreEqual( NDOObjectState.Transient, r.NDOObjectState, "Status wrong" );
+			Assert.That(r.NDOObjectId == null, "Transient object shouldn't have ID" );
+			Assert.That(((IPersistenceCapable)r).NDOStateManager == null, "Transient object shouldn't have state manager" );
+			Assert.That(NDOObjectState.Transient ==  r.NDOObjectState, "Status wrong" );
 		}
 
 		[Test]
@@ -195,14 +195,14 @@ namespace NdoUnitTests
 			m.Hinzufuegen( r );
 			pm.MakePersistent( m );
 			pm.CleanupCache();
-			Assert.AreSame( r, pm.FindObject( r.NDOObjectId ), "Getting same object twice should return same object" );
+			Assert.That(Object.ReferenceEquals(r, pm.FindObject( r.NDOObjectId )), "Getting same object twice should return same object" );
 			pm.Save();
 			pm.CleanupCache();
-			Assert.AreSame( r, pm.FindObject( r.NDOObjectId ), "Getting same object twice should return same object" );
+			Assert.That(Object.ReferenceEquals(r, pm.FindObject( r.NDOObjectId )), "Getting same object twice should return same object" );
 			ObjectId id = r.NDOObjectId;
 			r = null;
 			pm.CleanupCache();
-			Assert.NotNull( pm.FindObject( id ), "Should find object" );
+			Assert.That(pm.FindObject( id ) != null, "Should find object" );
 		}
 
 		[Test]
@@ -210,14 +210,14 @@ namespace NdoUnitTests
 		{
 			m.Hinzufuegen( r );
 			pm.MakePersistent( m );
-			Assert.AreSame( r, pm.FindObject( r.NDOObjectId ), "Getting same object twice should return same object" );
+			Assert.That(Object.ReferenceEquals(r, pm.FindObject( r.NDOObjectId )), "Getting same object twice should return same object" );
 			pm.Save();
 			pm.UnloadCache();
 			Assert.That( r != pm.FindObject( r.NDOObjectId ), "Getting same object twice should return different objects" );
 			ObjectId id = r.NDOObjectId;
 			r = null;
 			pm.UnloadCache();
-			Assert.NotNull( pm.FindObject( id ), "Should find object" );
+			Assert.That(pm.FindObject( id ) != null, "Should find object" );
 		}
 
 		[Test]
@@ -233,15 +233,15 @@ namespace NdoUnitTests
 			pm.MakePersistent( m );
 
 			IList ReiseListe = pm.GetClassExtent( typeof( Reise ) );
-			Assert.AreEqual( 0, ReiseListe.Count, "Current extent should be empty" );
+			Assert.That(0 ==  ReiseListe.Count, "Current extent should be empty" );
 			pm.Save();
 
 			ReiseListe = pm.GetClassExtent( typeof( Reise ) );
-			Assert.AreEqual( 100, ReiseListe.Count, "Number of read objects is wrong" );
+			Assert.That(100 ==  ReiseListe.Count, "Number of read objects is wrong" );
 			// Check that all objects come from cache... 
 			foreach (Reise m1 in ReiseListe)
 			{
-				Assert.AreEqual( NDOObjectState.Persistent, m1.NDOObjectState, "Wrong state" );
+				Assert.That(NDOObjectState.Persistent ==  m1.NDOObjectState, "Wrong state" );
 			}
 
 			rliste.Clear();
@@ -251,11 +251,11 @@ namespace NdoUnitTests
 			//pm.CleanupCache();
 			pm.UnloadCache();
 			ReiseListe = pm.GetClassExtent( typeof( Reise ) );
-			Assert.AreEqual( 100, ReiseListe.Count, "Number of read objects is wrong" );
+			Assert.That(100 ==  ReiseListe.Count, "Number of read objects is wrong" );
 			// Check that all objects are reloaded 
 			foreach (Reise m1 in ReiseListe)
 			{
-				Assert.AreEqual( NDOObjectState.Hollow, m1.NDOObjectState, "Wrong state" );
+				Assert.That(NDOObjectState.Hollow ==  m1.NDOObjectState, "Wrong state" );
 			}
 		}
 
@@ -267,20 +267,20 @@ namespace NdoUnitTests
 			pm.Save();
 			pm.UnloadCache();
 			r = (Reise)pm.FindObject( r.NDOObjectId );
-			Assert.AreEqual( NDOObjectState.Hollow, r.NDOObjectState, "Wrong state #1" );
+			Assert.That(NDOObjectState.Hollow ==  r.NDOObjectState, "Wrong state #1" );
 			pm.Delete( r );
-			Assert.AreEqual( NDOObjectState.Deleted, r.NDOObjectState, "Wrong state #2" );
+			Assert.That(NDOObjectState.Deleted ==  r.NDOObjectState, "Wrong state #2" );
 			pm.Abort();
-			Assert.AreEqual( NDOObjectState.Persistent, r.NDOObjectState, "Wrong state #3" );
+			Assert.That(NDOObjectState.Persistent ==  r.NDOObjectState, "Wrong state #3" );
 			pm.UnloadCache();
 			r = (Reise)pm.FindObject( r.NDOObjectId );
-			Assert.AreEqual( NDOObjectState.Hollow, r.NDOObjectState, "Wrong state #4" );
+			Assert.That(NDOObjectState.Hollow ==  r.NDOObjectState, "Wrong state #4" );
 			pm.Delete( r );
 			pm.Save();
-			Assert.AreEqual( NDOObjectState.Transient, r.NDOObjectState, "Wrong state #5" );
+			Assert.That(NDOObjectState.Transient ==  r.NDOObjectState, "Wrong state #5" );
 
 			IList l = pm.GetClassExtent( typeof( Reise ) );
-			Assert.AreEqual( 0, l.Count, "Number of read objects is wrong" );
+			Assert.That(0 ==  l.Count, "Number of read objects is wrong" );
 		}
 
 		[Test]
@@ -290,12 +290,12 @@ namespace NdoUnitTests
 			pm.MakePersistent( m );
 			pm.Save();
 			pm.Delete( r );
-			Assert.AreEqual( NDOObjectState.Deleted, r.NDOObjectState, "Wrong state #1" );
+			Assert.That(NDOObjectState.Deleted ==  r.NDOObjectState, "Wrong state #1" );
 			IList l = pm.GetClassExtent( typeof( Reise ) );
-			Assert.AreEqual( 1, l.Count, "Number of read objects is wrong" );
+			Assert.That(1 ==  l.Count, "Number of read objects is wrong" );
 			pm.Save();
 			l = pm.GetClassExtent( typeof( Reise ) );
-			Assert.AreEqual( 0, l.Count, "Number of read objects is wrong" );
+			Assert.That(0 ==  l.Count, "Number of read objects is wrong" );
 			pm.MakeHollow( m );  // Reread during TearDown will not load Reise anymore.
 		}
 
@@ -306,15 +306,15 @@ namespace NdoUnitTests
 			pm.MakePersistent( m );
 			pm.Save();
 			r.Zweck = "Test";
-			Assert.AreEqual( NDOObjectState.PersistentDirty, r.NDOObjectState, "Wrong state #1" );
+			Assert.That(NDOObjectState.PersistentDirty ==  r.NDOObjectState, "Wrong state #1" );
 			pm.Delete( r );
-			Assert.AreEqual( NDOObjectState.Deleted, r.NDOObjectState, "Wrong state #1" );
+			Assert.That(NDOObjectState.Deleted ==  r.NDOObjectState, "Wrong state #1" );
 			pm.Abort();
-			Assert.AreEqual( "ADC", r.Zweck, "Name shouldn't be changed" );
+			Assert.That("ADC" ==  r.Zweck, "Name shouldn't be changed" );
 			pm.Delete( r );
 			pm.Save();
 			IList l = pm.GetClassExtent( typeof( Reise ) );
-			Assert.AreEqual( 0, l.Count, "Number of read objects is wrong" );
+			Assert.That(0 ==  l.Count, "Number of read objects is wrong" );
 			pm.MakeHollow( m );  // Reread during TearDown will not load Reise anymore.
 		}
 
@@ -325,10 +325,10 @@ namespace NdoUnitTests
 			pm.MakePersistent( m );
 			pm.Save();
 			r.Zweck = "Test";
-			Assert.AreEqual( NDOObjectState.PersistentDirty, r.NDOObjectState, "Wrong state #1" );
+			Assert.That(NDOObjectState.PersistentDirty ==  r.NDOObjectState, "Wrong state #1" );
 			pm.Abort();
-			Assert.AreEqual( NDOObjectState.Persistent, r.NDOObjectState, "Wrong state #2" );
-			Assert.AreEqual( "ADC", r.Zweck, "Name shouldn't be changed" );
+			Assert.That(NDOObjectState.Persistent ==  r.NDOObjectState, "Wrong state #2" );
+			Assert.That("ADC" ==  r.Zweck, "Name shouldn't be changed" );
 		}
 
 		[Test]
@@ -339,14 +339,14 @@ namespace NdoUnitTests
 			pm.Save();
 			ObjectId id = r.NDOObjectId;
 			pm.MakeTransient( r );
-			Assert.Null( ((IPersistenceCapable)r).NDOStateManager, "Transient object shouldn't have state manager" );
-			Assert.AreEqual( NDOObjectState.Transient, r.NDOObjectState, "Wrong state #1" );
+			Assert.That(((IPersistenceCapable)r).NDOStateManager == null, "Transient object shouldn't have state manager" );
+			Assert.That(NDOObjectState.Transient ==  r.NDOObjectState, "Wrong state #1" );
 			Assert.That( id.IsValid(), "Id should still be valid #1" );
 			r = (Reise)pm.FindObject( id );
-			Assert.AreEqual( NDOObjectState.Hollow, r.NDOObjectState, "Wrong state #2" );
+			Assert.That(NDOObjectState.Hollow ==  r.NDOObjectState, "Wrong state #2" );
 			pm.MakeTransient( r );
-			Assert.Null( ((IPersistenceCapable)r).NDOStateManager, "Transient object shouldn't have state manager" );
-			Assert.AreEqual( NDOObjectState.Transient, r.NDOObjectState, "Wrong state #3" );
+			Assert.That(((IPersistenceCapable)r).NDOStateManager == null, "Transient object shouldn't have state manager" );
+			Assert.That(NDOObjectState.Transient ==  r.NDOObjectState, "Wrong state #3" );
 			Assert.That( id.IsValid(), "Id should still be valid #2" );
 			r = (Reise)pm.FindObject( id );
 			pm.Delete( r );
@@ -361,11 +361,11 @@ namespace NdoUnitTests
 			pm.MakePersistent( m );
 			pm.Save();
 			pm.MakeHollow( r );
-			Assert.AreEqual( NDOObjectState.Hollow, r.NDOObjectState, "Wrong state #1" );
+			Assert.That(NDOObjectState.Hollow ==  r.NDOObjectState, "Wrong state #1" );
 			string access = r.Zweck;
-			Assert.AreEqual( NDOObjectState.Persistent, r.NDOObjectState, "Wrong state #2" );
+			Assert.That(NDOObjectState.Persistent ==  r.NDOObjectState, "Wrong state #2" );
 			pm.MakeAllHollow();
-			Assert.AreEqual( NDOObjectState.Hollow, r.NDOObjectState, "Wrong state #3" );
+			Assert.That(NDOObjectState.Hollow ==  r.NDOObjectState, "Wrong state #3" );
 		}
 
 		[Test]
@@ -377,11 +377,11 @@ namespace NdoUnitTests
 			pm.MakeHollow( r );
 			r.Zweck = "Test";
 			pm.Abort();
-			Assert.AreEqual( "ADC", r.Zweck, "Name shouldn't be changed" );
+			Assert.That("ADC" ==  r.Zweck, "Name shouldn't be changed" );
 			pm.MakeHollow( r );
 			r.Zweck = "Test";
 			pm.Save();
-			Assert.AreEqual( "Test", r.Zweck, "Name should be changed" );
+			Assert.That("Test" ==  r.Zweck, "Name should be changed" );
 		}
 
 		[Test]
@@ -393,13 +393,13 @@ namespace NdoUnitTests
 			pm.MakeHollow( r );
 			r.Zweck = "Test";
 			pm.Save();  // Bug would overwrite foreign key in database.
-			Assert.AreEqual( "Test", r.Zweck, "Name should be changed" );
+			Assert.That("Test" ==  r.Zweck, "Name should be changed" );
 			r = null;
 			ObjectId id = m.NDOObjectId;
 			m = null;
 			pm.UnloadCache();
 			m = (Mitarbeiter)pm.FindObject( id );
-			Assert.AreEqual( 1, m.Reisen.Count, "Number of children" );
+			Assert.That(1 ==  m.Reisen.Count, "Number of children" );
 		}
 
 		[Test]
@@ -414,7 +414,7 @@ namespace NdoUnitTests
 			{
 				thrown = true;
 			}
-			Assert.AreEqual( true, thrown );
+			Assert.That(true ==  thrown );
 		}
 
 		[Test]
@@ -425,22 +425,22 @@ namespace NdoUnitTests
 			pm.Save();
 			pm.MakeHollow( r );
 			pm.Refresh( r );
-			Assert.AreEqual( NDOObjectState.Persistent, r.NDOObjectState, "Wrong state #1" );
+			Assert.That(NDOObjectState.Persistent ==  r.NDOObjectState, "Wrong state #1" );
 			pm.Refresh( r );
-			Assert.AreEqual( NDOObjectState.Persistent, r.NDOObjectState, "Wrong state #2" );
+			Assert.That(NDOObjectState.Persistent ==  r.NDOObjectState, "Wrong state #2" );
 			ObjectId id = r.NDOObjectId;
 
 			PersistenceManager pm2 = PmFactory.NewPersistenceManager();
 			Reise m2 = (Reise)pm2.FindObject( id );
-			Assert.NotNull( m2, "Cannot load object" );
+			Assert.That(m2 != null, "Cannot load object" );
 			m2.Zweck = "Test";
 			pm2.Save();
 			pm2.Close();
 
-			Assert.AreEqual( "ADC", r.Zweck, "Wrong name #1" );
-			Assert.AreEqual( "Test", m2.Zweck, "Wrong name #2" );
+			Assert.That("ADC" ==  r.Zweck, "Wrong name #1" );
+			Assert.That("Test" ==  m2.Zweck, "Wrong name #2" );
 			pm.Refresh( r );
-			Assert.AreEqual( "Test", r.Zweck, "Wrong name #3" );
+			Assert.That("Test" ==  r.Zweck, "Wrong name #3" );
 		}
 
 		[Test]
@@ -450,13 +450,13 @@ namespace NdoUnitTests
 			pm.MakePersistent( m );
 			pm.HollowMode = true;
 			pm.Save();
-			Assert.AreEqual( NDOObjectState.Hollow, r.NDOObjectState, "Wrong state #1" );
+			Assert.That(NDOObjectState.Hollow ==  r.NDOObjectState, "Wrong state #1" );
 			r.Zweck = "Test";
 			pm.Abort();
-			Assert.AreEqual( NDOObjectState.Hollow, r.NDOObjectState, "Wrong state #2" );
+			Assert.That(NDOObjectState.Hollow ==  r.NDOObjectState, "Wrong state #2" );
 			r.Zweck = "Test";
 			pm.Save();
-			Assert.AreEqual( NDOObjectState.Hollow, r.NDOObjectState, "Wrong state #3" );
+			Assert.That(NDOObjectState.Hollow ==  r.NDOObjectState, "Wrong state #3" );
 		}
 
 		private Reise CreateReise( string zweck )

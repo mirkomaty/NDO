@@ -69,7 +69,7 @@ namespace NdoUnitTests
 
 			NDOQuery<DateTestClass> q = new NDOQuery<DateTestClass>(pm, null);
 			dtc = (DateTestClass) q.ExecuteSingle(true);
-			Assert.AreEqual(2002, dtc.InnerDate.Dt.Year, "DateTime konnte nicht richtig gelesen werden");
+			Assert.That(2002 ==  dtc.InnerDate.Dt.Year, "DateTime konnte nicht richtig gelesen werden");
 		}
 
 		[Test]
@@ -83,7 +83,7 @@ namespace NdoUnitTests
 			pm.UnloadCache();
 			id.SetInnerDate();
 			ObjectHelper.MarkDirty(id);
-			Assert.AreEqual(NDOObjectState.PersistentDirty, id.NDOObjectState, "Status falsch");
+			Assert.That(NDOObjectState.PersistentDirty ==  id.NDOObjectState, "Status falsch");
 			pm.Save();
 		}
 

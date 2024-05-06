@@ -61,10 +61,10 @@ namespace NdoUnitTests
 			m = pm.Objects<Mitarbeiter>().Single();
 			m.Vorname = "Hans";
 			var changeObject = pm.GetChangeSet( m );
-			Assert.AreEqual( 1, changeObject.original.Count );
-			Assert.AreEqual( 1, changeObject.current.Count );
-			Assert.AreEqual( "Mirko", changeObject.original["vorname"] );
-			Assert.AreEqual( "Hans", changeObject.current["vorname"] );
+			Assert.That(1 ==  changeObject.original.Count );
+			Assert.That(1 ==  changeObject.current.Count );
+			Assert.That("Mirko" ==  changeObject.original["vorname"] );
+			Assert.That("Hans" ==  changeObject.current["vorname"] );
 		}
 
 		[Test]
@@ -77,31 +77,31 @@ namespace NdoUnitTests
 			var changeObject = pm.GetChangeSet( m );
 			var original = changeObject.original;
 			var current = changeObject.current;
-			Assert.AreEqual( 1, original.Count );
-			Assert.AreEqual( 1, current.Count );
+			Assert.That(1 ==  original.Count );
+			Assert.That(1 ==  current.Count );
 			Assert.That( original.ContainsKey("dieReisen") );
 			Assert.That( current.ContainsKey( "dieReisen" ) );
-			Assert.AreEqual( 1, ((List<ObjectId>)original["dieReisen"]).Count );
-			Assert.AreEqual( 2, ((List<ObjectId>)current["dieReisen"]).Count );
-			Assert.AreEqual(r.NDOObjectId, ((List<ObjectId>)current["dieReisen"])[1] );
+			Assert.That(1 ==  ((List<ObjectId>)original["dieReisen"]).Count );
+			Assert.That(2 ==  ((List<ObjectId>)current["dieReisen"]).Count );
+			Assert.That(r.NDOObjectId ==  ((List<ObjectId>)current["dieReisen"])[1] );
 			// At this point it doesn't make any sense to serialize the changeObject,
 			// since the id of r is not yet determined.
 			Assert.That( (int)r.NDOObjectId.Id[0] < 0 );
 			pm.Save();
 			// Now the id of r is determined. Let's assert, that the list in current reflects the change.
 			Assert.That( (int)r.NDOObjectId.Id[0] > 0 );
-			Assert.AreEqual( r.NDOObjectId, ((List<ObjectId>)current["dieReisen"])[1] );
+			Assert.That(r.NDOObjectId ==  ((List<ObjectId>)current["dieReisen"])[1] );
 
 			changeObject = changeObject.SerializableClone();
 			original = changeObject.original;
 			current = changeObject.current;
-			Assert.AreEqual( 1, original.Count );
-			Assert.AreEqual( 1, current.Count );
+			Assert.That(1 ==  original.Count );
+			Assert.That(1 ==  current.Count );
 			Assert.That( original.ContainsKey( "dieReisen" ) );
 			Assert.That( current.ContainsKey( "dieReisen" ) );
-			Assert.AreEqual( 1, ( (List<string>) original["dieReisen"] ).Count );
-			Assert.AreEqual( 2, ( (List<string>) current["dieReisen"] ).Count );
-			Assert.AreEqual( r.NDOObjectId.ToShortId(), ( (List<string>) current["dieReisen"] )[1] );
+			Assert.That(1 ==  ( (List<string>) original["dieReisen"] ).Count );
+			Assert.That(2 ==  ( (List<string>) current["dieReisen"] ).Count );
+			Assert.That(r.NDOObjectId.ToShortId() ==  ( (List<string>) current["dieReisen"] )[1] );
 			string json = JsonConvert.SerializeObject(changeObject);
 		}
 
@@ -114,12 +114,12 @@ namespace NdoUnitTests
 			var changeObject = pm.GetChangeSet( m );
 			var original = changeObject.original;
 			var current = changeObject.current;
-			Assert.AreEqual( 1, original.Count );
-			Assert.AreEqual( 1, current.Count );
+			Assert.That(1 ==  original.Count );
+			Assert.That(1 ==  current.Count );
 			Assert.That( original.ContainsKey( "dieReisen" ) );
 			Assert.That( current.ContainsKey( "dieReisen" ) );
-			Assert.AreEqual( 1, ((List<ObjectId>)original["dieReisen"]).Count );
-			Assert.AreEqual( 0, ((List<ObjectId>)current["dieReisen"]).Count );
+			Assert.That(1 ==  ((List<ObjectId>)original["dieReisen"]).Count );
+			Assert.That(0 ==  ((List<ObjectId>)current["dieReisen"]).Count );
 		}
 
 		[Test]
@@ -132,11 +132,11 @@ namespace NdoUnitTests
 			var changeObject = pm.GetChangeSet( m );
 			var original = changeObject.original;
 			var current = changeObject.current;
-			Assert.AreEqual( 1, original.Count );
-			Assert.AreEqual( 1, current.Count );
+			Assert.That(1 ==  original.Count );
+			Assert.That(1 ==  current.Count );
 			Assert.That( original.ContainsKey( "adresse" ) );
 			Assert.That( current.ContainsKey( "adresse" ) );
-			Assert.AreEqual( a.NDOObjectId, ((List<ObjectId>) current["adresse"])[0] );
+			Assert.That(a.NDOObjectId ==  ((List<ObjectId>) current["adresse"])[0] );
 			// At this point it doesn't make any sense to serialize the changeObject,
 			// since the id of a is not yet determined.
 			Assert.That( (int)a.NDOObjectId.Id[0] < 0 );
@@ -144,7 +144,7 @@ namespace NdoUnitTests
 			var newChangeObject = changeObject.SerializableClone();
 			// Now the id of r is determined. Let's assert, that the list in current reflects the change.
 			Assert.That( (int)a.NDOObjectId.Id[0] > 0 );
-			Assert.AreEqual( a.NDOObjectId.ToShortId(), ((List<string>)newChangeObject.current["adresse"])[0] );
+			Assert.That(a.NDOObjectId.ToShortId() ==  ((List<string>)newChangeObject.current["adresse"])[0] );
 		}
 
 		[Test]
@@ -161,12 +161,12 @@ namespace NdoUnitTests
 			var changeObject = pm.GetChangeSet( m );
 			var original = changeObject.original;
 			var current = changeObject.current;
-			Assert.AreEqual( 1, original.Count );
-			Assert.AreEqual( 1, current.Count );
+			Assert.That(1 ==  original.Count );
+			Assert.That(1 ==  current.Count );
 			Assert.That( original.ContainsKey( "adresse" ) );
 			Assert.That( current.ContainsKey( "adresse" ) );
-			Assert.AreEqual( 1, ((List<ObjectId>)original["adresse"]).Count );
-			Assert.AreEqual( 0, ((List<ObjectId>)current["adresse"]).Count );
+			Assert.That(1 ==  ((List<ObjectId>)original["adresse"]).Count );
+			Assert.That(0 ==  ((List<ObjectId>)current["adresse"]).Count );
 		}
 	}
 }

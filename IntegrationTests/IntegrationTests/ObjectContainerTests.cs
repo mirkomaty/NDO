@@ -1,13 +1,9 @@
 ﻿using NDO;
+using NDOInterfaces;
 using NUnit.Framework;
 using Reisekosten;
 using Reisekosten.Personal;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.Serialization.Formatters.Binary;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace NdoUnitTests
 {
@@ -64,10 +60,15 @@ namespace NdoUnitTests
 			Assert.That( Object.ReferenceEquals( m, oc.RootObjects[0] ) );
 		}
 
+		INdoFormatter GetFormatter()
+		{
+			return new NDO.JsonFormatter.NdoJsonFormatter();
+		}
+
 		[Test]
 		public void ObjectContainerIsSerializable()
 		{
-			var binaryFormatter = new BinaryFormatter();
+			var binaryFormatter = GetFormatter();
 
 			pm.MakePersistent( m );
 			pm.Save();
@@ -80,25 +81,25 @@ namespace NdoUnitTests
 			pm.UnloadCache();
 
 			var oc2 = pm.GetObjectContainer();
-			Assert.AreEqual( 0, oc2.RootObjects.Count );
+			Assert.That(0 ==  oc2.RootObjects.Count );
 
 			oc = new ObjectContainer();
 			oc.Deserialize( serialized, binaryFormatter );
 			pm.MergeObjectContainer( oc );
 
 			oc2 = pm.GetObjectContainer();
-			Assert.AreEqual( 1, oc2.RootObjects.Count );
+			Assert.That(1 ==  oc2.RootObjects.Count );
 
 			m = (Mitarbeiter)oc2.RootObjects[0];
-			Assert.AreEqual( "Mirko", m.Vorname );
-			Assert.AreEqual( NDOObjectState.Persistent, m.NDOObjectState );
+			Assert.That("Mirko" ==  m.Vorname );
+			Assert.That(NDOObjectState.Persistent ==  m.NDOObjectState );
 		}
 
 		[Test]
 		public void CompleteTurnaroundWithChangeSetContainer()
 		{
 			// Create object and serialize it
-			var binaryFormatter = new BinaryFormatter();
+			var binaryFormatter = GetFormatter();
 
 			pm.MakePersistent( m );
 			pm.Save();
@@ -118,9 +119,9 @@ namespace NdoUnitTests
 			opm.MergeObjectContainer( oc );
 
 			var m2 = (Mitarbeiter)oc.RootObjects[0];
-			Assert.AreEqual( NDOObjectState.Persistent, m2.NDOObjectState );
+			Assert.That(NDOObjectState.Persistent ==  m2.NDOObjectState );
 			m2.Vorname = "Hans";
-			Assert.AreEqual( NDOObjectState.PersistentDirty, m2.NDOObjectState );
+			Assert.That(NDOObjectState.PersistentDirty ==  m2.NDOObjectState );
 
 			// Create a ChangeSetContainer and serialize it
 			var csc = opm.GetChangeSet();
@@ -133,20 +134,20 @@ namespace NdoUnitTests
 			m = (Mitarbeiter)csc.ChangedObjects[0];
 			pm.MergeObjectContainer( csc );
 			m2 = (Mitarbeiter)pm.FindObject( m.NDOObjectId );
-			Assert.AreEqual( NDOObjectState.PersistentDirty, m2.NDOObjectState );
-			Assert.AreEqual( "Hans", m.Vorname );
+			Assert.That(NDOObjectState.PersistentDirty ==  m2.NDOObjectState );
+			Assert.That("Hans" ==  m.Vorname );
 
 			// Save and Reload
 			pm.Save();
 			pm.UnloadCache();
 			m = pm.Objects<Mitarbeiter>().Single();
-			Assert.AreEqual( "Hans", m.Vorname );
+			Assert.That("Hans" ==  m.Vorname );
 		}
 
 		[Test]
 		public void CanSetObjectsToHollow()
 		{
-			var binaryFormatter = new BinaryFormatter();
+			var binaryFormatter = GetFormatter();
 			var serializationIterator = new NDO.SerializationIterator( r => r.ReferencedType == typeof( Reise ), pc => pc.NDOObjectState = NDOObjectState.Hollow );
 
 			pm.MakePersistent( m );
@@ -165,20 +166,20 @@ namespace NdoUnitTests
 			}
 			Assert.That( found );
 
-			Assert.AreEqual( NDOObjectState.Persistent, m.NDOObjectState );
+			Assert.That(NDOObjectState.Persistent ==  m.NDOObjectState );
 
 			oc.Formatter = binaryFormatter;
 			string serialized = oc.MarshalingString;
 
-			Assert.AreEqual( 2, oc.RootObjects.Count );
-			Assert.AreEqual( NDOObjectState.Hollow, m.NDOObjectState );
-			Assert.AreEqual( NDOObjectState.Hollow, reise.NDOObjectState );
+			Assert.That(2 ==  oc.RootObjects.Count );
+			Assert.That(NDOObjectState.Hollow ==  m.NDOObjectState );
+			Assert.That(NDOObjectState.Hollow ==  reise.NDOObjectState );
 		}
 
 		[Test]
 		public void ObjectContainerSerializesRelations()
 		{
-			var binaryFormatter = new BinaryFormatter();
+			var binaryFormatter = GetFormatter();
 			var serializationIterator = new NDO.SerializationIterator( r => r.ReferencedType == typeof( Reise ) );
 
 			pm.MakePersistent( m );
@@ -199,19 +200,19 @@ namespace NdoUnitTests
 			oc.Formatter = binaryFormatter;
 			string serialized = oc.MarshalingString;
 
-			Assert.AreEqual( 2, oc.RootObjects.Count );
+			Assert.That(2 ==  oc.RootObjects.Count );
 
 			pm.UnloadCache();
 
 			var oc2 = pm.GetObjectContainer();
-			Assert.AreEqual( 0, oc2.RootObjects.Count );
+			Assert.That(0 ==  oc2.RootObjects.Count );
 
 			oc = new ObjectContainer();
 			oc.Deserialize( serialized, binaryFormatter );
 			pm.MergeObjectContainer( oc );
 
 			oc2 = pm.GetObjectContainer();
-			Assert.AreEqual( 2, oc2.RootObjects.Count );
+			Assert.That(2 ==  oc2.RootObjects.Count );
 
 			Reise r2 = null;
 			Mitarbeiter m2 = null;
@@ -224,14 +225,14 @@ namespace NdoUnitTests
 					m2 = (Mitarbeiter)o;
 			}
 
-			Assert.NotNull( r2 );
-			Assert.NotNull( m2 );
+			Assert.That(r2  != null);
+			Assert.That(m2  != null);
 
-			Assert.AreEqual( "Mirko", m2.Vorname );
-			Assert.AreEqual( NDOObjectState.Persistent, m2.NDOObjectState );
+			Assert.That("Mirko" ==  m2.Vorname );
+			Assert.That(NDOObjectState.Persistent ==  m2.NDOObjectState );
 
-			Assert.AreEqual( "ADC", r2.Zweck );
-			Assert.AreEqual( NDOObjectState.Persistent, r2.NDOObjectState );
+			Assert.That("ADC" ==  r2.Zweck );
+			Assert.That(NDOObjectState.Persistent ==  r2.NDOObjectState );
 		}
 
 	}

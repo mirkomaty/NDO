@@ -62,8 +62,8 @@ namespace NdoUnitTests
 			pm.MakePersistent(p2);
 			pm.Save();			
 			p1.ManipulateString(p2, "test");
-			Assert.AreEqual(NDOObjectState.Persistent, p1.NDOObjectState, "Falscher Status 1");
-			Assert.AreEqual(NDOObjectState.PersistentDirty, p2.NDOObjectState, "Falscher Status 2");
+			Assert.That(NDOObjectState.Persistent ==  p1.NDOObjectState, "Falscher Status 1");
+			Assert.That(NDOObjectState.PersistentDirty ==  p2.NDOObjectState, "Falscher Status 2");
 		}
 
 		[Test]
@@ -77,8 +77,8 @@ namespace NdoUnitTests
 			pm.Save();
 
 			p1.ManipulatePoint(p2, new Point(0, 0));
-			Assert.AreEqual(NDOObjectState.Persistent, p1.NDOObjectState, "Falscher Status 1");
-			Assert.AreEqual(NDOObjectState.PersistentDirty, p2.NDOObjectState, "Falscher Status 2");
+			Assert.That(NDOObjectState.Persistent ==  p1.NDOObjectState, "Falscher Status 1");
+			Assert.That(NDOObjectState.PersistentDirty ==  p2.NDOObjectState, "Falscher Status 2");
 		}
 
 		[Test]
@@ -92,8 +92,8 @@ namespace NdoUnitTests
 			pm.Save();
 
 			p1.ManipulatePoint(p2);
-			Assert.AreEqual(NDOObjectState.Persistent, p1.NDOObjectState, "Falscher Status 1");
-			Assert.AreEqual(NDOObjectState.PersistentDirty, p2.NDOObjectState, "Falscher Status 2");
+			Assert.That(NDOObjectState.Persistent ==  p1.NDOObjectState, "Falscher Status 1");
+			Assert.That(NDOObjectState.PersistentDirty ==  p2.NDOObjectState, "Falscher Status 2");
 		}
 
 		[Test]
@@ -107,8 +107,8 @@ namespace NdoUnitTests
 			pm.Save();
 
 			p1.ManipulateOwnPoint(p2);
-			Assert.AreEqual(NDOObjectState.PersistentDirty, p1.NDOObjectState, "Falscher Status 1");
-			Assert.AreEqual(NDOObjectState.Persistent, p2.NDOObjectState, "Falscher Status 2");
+			Assert.That(NDOObjectState.PersistentDirty ==  p1.NDOObjectState, "Falscher Status 1");
+			Assert.That(NDOObjectState.Persistent ==  p2.NDOObjectState, "Falscher Status 2");
 		}
 
 		[Test]
@@ -120,7 +120,7 @@ namespace NdoUnitTests
 			pm.Save();
 
 			p1.Position = new Point(0,0);
-			Assert.AreEqual(NDOObjectState.PersistentDirty, p1.NDOObjectState, "Falscher Status 1");
+			Assert.That(NDOObjectState.PersistentDirty ==  p1.NDOObjectState, "Falscher Status 1");
 		}
 
 	
@@ -137,8 +137,8 @@ namespace NdoUnitTests
 			ChildList cl = new ChildList();
 			pm.MakePersistent(cl);
 			p1.ManipulateListElement(p2, cl);
-			Assert.AreEqual(NDOObjectState.Persistent, p1.NDOObjectState, "Falscher Status 1");
-			Assert.AreEqual(NDOObjectState.PersistentDirty, p2.NDOObjectState, "Falscher Status 2");
+			Assert.That(NDOObjectState.Persistent ==  p1.NDOObjectState, "Falscher Status 1");
+			Assert.That(NDOObjectState.PersistentDirty ==  p2.NDOObjectState, "Falscher Status 2");
 		}
 
 		[Test]
@@ -156,8 +156,8 @@ namespace NdoUnitTests
 			IList l = new ArrayList();
 			l.Add(cl);
 			p1.ManipulateList(p2, l);
-			Assert.AreEqual(NDOObjectState.Persistent, p1.NDOObjectState, "Falscher Status 1");
-			Assert.AreEqual(NDOObjectState.PersistentDirty, p2.NDOObjectState, "Falscher Status 2");
+			Assert.That(NDOObjectState.Persistent ==  p1.NDOObjectState, "Falscher Status 1");
+			Assert.That(NDOObjectState.PersistentDirty ==  p2.NDOObjectState, "Falscher Status 2");
 		}
 
 		[Test]
@@ -172,8 +172,8 @@ namespace NdoUnitTests
 
 			ChildEmbedded ce = new ChildEmbedded();
 			p1.ManipulateEmbedded(p2, ce);
-			Assert.AreEqual(NDOObjectState.Persistent, p1.NDOObjectState, "Falscher Status 1");
-			Assert.AreEqual(NDOObjectState.PersistentDirty, p2.NDOObjectState, "Falscher Status 2");
+			Assert.That(NDOObjectState.Persistent ==  p1.NDOObjectState, "Falscher Status 1");
+			Assert.That(NDOObjectState.PersistentDirty ==  p2.NDOObjectState, "Falscher Status 2");
 		}
 
 		[Test]
@@ -186,7 +186,7 @@ namespace NdoUnitTests
 
 			ChildEmbedded ce = new ChildEmbedded();
 			p1.ChildEmbedded = ce;
-			Assert.AreEqual(NDOObjectState.PersistentDirty, p1.NDOObjectState, "Falscher Status 1");
+			Assert.That(NDOObjectState.PersistentDirty ==  p1.NDOObjectState, "Falscher Status 1");
 		}
 
 
@@ -203,8 +203,8 @@ namespace NdoUnitTests
 			ChildElement ce = new ChildElement();
 			pm.MakePersistent(ce);
 			p1.ManipulateElement(p2, ce);
-			Assert.AreEqual(NDOObjectState.Persistent, p1.NDOObjectState, "Falscher Status 1");
-			Assert.AreEqual(NDOObjectState.PersistentDirty, p2.NDOObjectState, "Falscher Status 2");
+			Assert.That(NDOObjectState.Persistent ==  p1.NDOObjectState, "Falscher Status 1");
+			Assert.That(NDOObjectState.PersistentDirty ==  p2.NDOObjectState, "Falscher Status 2");
 		}
 
 /*
@@ -218,8 +218,8 @@ namespace NdoUnitTests
 			pm.Save();
 
 			p1.ManipulateValueTypeMember(p2);
-			Assert.AreEqual(NDOObjectState.Persistent, p1.NDOObjectState, "Falscher Status 1");
-			Assert.AreEqual(NDOObjectState.PersistentDirty, p2.NDOObjectState, "Falscher Status 2");
+			Assert.That(NDOObjectState.Persistent ==  p1.NDOObjectState, "Falscher Status 1");
+			Assert.That(NDOObjectState.PersistentDirty ==  p2.NDOObjectState, "Falscher Status 2");
 		}
 
 		[Test]
@@ -230,7 +230,7 @@ namespace NdoUnitTests
 			pm.Save();
 
 			p1.ManipulateOwnValueTypeMember(p1);
-			Assert.AreEqual(NDOObjectState.PersistentDirty, p1.NDOObjectState, "Falscher Status");
+			Assert.That(NDOObjectState.PersistentDirty ==  p1.NDOObjectState, "Falscher Status");
 		}
 */
 

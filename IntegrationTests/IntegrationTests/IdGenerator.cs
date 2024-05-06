@@ -1,4 +1,5 @@
-﻿//
+﻿#if nix // We should use the abstract NDO classes in order to compute the sequence values
+//
 // Copyright (c) 2002-2016 Mirko Matytschak 
 // (www.netdataobjects.de)
 //
@@ -125,3 +126,4 @@ CACHE 20 NOORDER";
 
 	}
 }
+#endif

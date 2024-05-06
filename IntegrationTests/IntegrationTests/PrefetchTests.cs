@@ -53,7 +53,7 @@ namespace NdoUnitTests
 			var m2 = q.ExecuteSingle();
 
 			var oc = pm.GetObjectContainer();
-			Assert.AreEqual( 2, oc.RootObjects.Count );
+			Assert.That(2 ==  oc.RootObjects.Count );
 		}
 	}
 }

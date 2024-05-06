@@ -81,15 +81,15 @@ namespace NdoUnitTests
 			IQuery q = new NDOQuery<NDOoidAndHandler>(pm);
 			testobj = null;
 			testobj = (NDOoidAndHandler) q.ExecuteSingle(true);
-			Assert.AreEqual(guid, testobj.MyId, "Wrong guid");
-			Assert.AreEqual("Test", testobj.Text, "Wrong text");
+			Assert.That(guid ==  testobj.MyId, "Wrong guid");
+			Assert.That("Test" ==  testobj.Text, "Wrong text");
 
 			testobj.Text = "Neuer Text";
 			pm.Save();
 			testobj = null;
 			testobj = (NDOoidAndHandler) q.ExecuteSingle(true);
-			Assert.AreEqual(guid, testobj.MyId, "Wrong guid");
-			Assert.AreEqual("Neuer Text", testobj.Text, "Wrong text");
+			Assert.That(guid ==  testobj.MyId, "Wrong guid");
+			Assert.That("Neuer Text" ==  testobj.Text, "Wrong text");
 			
 			pm.Delete(testobj);
 			pm.Save();
@@ -107,9 +107,9 @@ namespace NdoUnitTests
 			pm.UnloadCache();
 			IQuery q = new NDOQuery<ObjectOwner>(pm);
 			owner = (ObjectOwner) q.ExecuteSingle(true);
-			Assert.NotNull(owner.Element, "No element");
-			Assert.AreEqual(guid, owner.Element.MyId, "Wrong guid");
-			Assert.AreEqual("Text", owner.Element.Text, "Wrong text");
+			Assert.That(owner.Element != null, "No element");
+			Assert.That(guid ==  owner.Element.MyId, "Wrong guid");
+			Assert.That("Text" ==  owner.Element.Text, "Wrong text");
 		}
 
 
@@ -125,9 +125,9 @@ namespace NdoUnitTests
 			pm.UnloadCache();
 			IQuery q = new NDOQuery<HintOwner>(pm);
 			owner = (HintOwner) q.ExecuteSingle(true);
-			Assert.NotNull(owner.Element, "No element");
-			Assert.AreEqual(guid, owner.Element.NDOObjectId.Id[0], "Wrong guid");
-			Assert.AreEqual("Text", owner.Element.Text, "Wrong text");
+			Assert.That(owner.Element != null, "No element");
+			Assert.That(guid == (Guid) owner.Element.NDOObjectId.Id[0], "Wrong guid");
+			Assert.That("Text" == owner.Element.Text, "Wrong text");
 		}
 
 
@@ -136,23 +136,23 @@ namespace NdoUnitTests
 		{
 			Class cl = pm.NDOMapping.FindClass(typeof(ClassWithHint));
 			IProvider provider = NDOProviderFactory.Instance[((Connection)pm.NDOMapping.Connections.First()).Type];
-			Assert.NotNull(cl, "Class not found");
-			Assert.AreEqual(typeof(Guid), ((OidColumn)cl.Oid.OidColumns[0]).SystemType, "Wrong type");
+			Assert.That(cl != null, "Class not found");
+			Assert.That(typeof(Guid) ==  ((OidColumn)cl.Oid.OidColumns[0]).SystemType, "Wrong type");
 			Type t = pm.GetType();
 			FieldInfo fi = t.GetField("ds", BindingFlags.NonPublic | BindingFlags.Instance);
-			Assert.NotNull(fi, "Field 'ds' not found");
+			Assert.That(fi != null, "Field 'ds' not found");
 			DataSet ds = (DataSet) fi.GetValue(pm);
-			Assert.NotNull(ds, "DataSet is null");
+			Assert.That(ds != null, "DataSet is null");
 			DataTable dt = ds.Tables[cl.TableName];
-			Assert.NotNull(dt, "DataTable is null");
+			Assert.That(dt != null, "DataTable is null");
             OidColumn oidColumn = (OidColumn)cl.Oid.OidColumns[0];
 			DataColumn dc = dt.Columns[oidColumn.Name];
-			Assert.NotNull(dc, "DataColumn is null");
-			Assert.NotNull(provider, "Provider is null");
+			Assert.That(dc != null, "DataColumn is null");
+			Assert.That(provider != null, "Provider is null");
 			if (provider.SupportsNativeGuidType)
-				Assert.AreEqual(typeof(Guid), dc.DataType, "Wrong column type");
+				Assert.That(typeof(Guid) ==  dc.DataType, "Wrong column type");
 			else
-				Assert.AreEqual(typeof(string), dc.DataType, "Wrong column type");
+				Assert.That(typeof(string) ==  dc.DataType, "Wrong column type");
 		}
 
 
@@ -167,15 +167,15 @@ namespace NdoUnitTests
 			IQuery q = new NDOQuery<ClassWithHint>(pm);
 			testobj = null;
 			testobj = (ClassWithHint) q.ExecuteSingle(true);
-			Assert.AreEqual(guid, testobj.NDOObjectId.Id[0], "Wrong guid #1");
-			Assert.AreEqual("Test", testobj.Text, "Wrong text #1");
+			Assert.That(guid == (Guid) testobj.NDOObjectId.Id[0], "Wrong guid #1");
+			Assert.That("Test" ==  testobj.Text, "Wrong text #1");
 
 			testobj.Text = "Neuer Text";
 			pm.Save();
 			testobj = null;
 			testobj = (ClassWithHint) q.ExecuteSingle(true);
-			Assert.AreEqual(guid, testobj.NDOObjectId.Id[0], "Wrong guid #2");
-			Assert.AreEqual("Neuer Text", testobj.Text, "Wrong text #2");
+			Assert.That(guid == (Guid) testobj.NDOObjectId.Id[0], "Wrong guid #2");
+			Assert.That("Neuer Text" ==  testobj.Text, "Wrong text #2");
 			
 			pm.Delete(testobj);
 			pm.Save();
@@ -194,9 +194,9 @@ namespace NdoUnitTests
 			pm.UnloadCache();
 			IQuery q = new NDOQuery<DerivedGuid>(pm);
 			dg = (DerivedGuid) q.ExecuteSingle(true);
-			Assert.AreEqual(new Guid(5,5,5,5,5,5,5,5,5,5,5), dg.Guid, "Guid wrong");
-			Assert.AreEqual(new Guid(5,5,5,5,5,5,5,5,5,5,5), dg.NDOObjectId.Id[0], "Oid wrong");
-			Assert.AreEqual("Test", dg.Myfield, "Text wrong");
+			Assert.That(new Guid(5,5,5,5,5,5,5,5,5,5,5) == dg.Guid, "Guid wrong");
+			Assert.That(new Guid(5,5,5,5,5,5,5,5,5,5,5) == (Guid) dg.NDOObjectId.Id[0], "Oid wrong");
+			Assert.That("Test" ==  dg.Myfield, "Text wrong");
 			pm.Delete(dg);
 			pm.Save();
 		}
@@ -206,7 +206,7 @@ namespace NdoUnitTests
 			if (!t.FullName.StartsWith ("NDOObjectIdTestClasses."))
 				return;  // Use the other handler
             Class cl = pm.NDOMapping.FindClass(t);
-            Assert.NotNull(cl);
+            Assert.That(cl != null);
             OidColumn oidColumn = (OidColumn)cl.Oid.OidColumns[0];
             if (t == typeof(NDOoidAndHandler) || t == typeof(ClassWithHint))
             {

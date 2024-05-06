@@ -57,7 +57,7 @@ namespace NdoUnitTests
 			pm.MakePersistent(cwb);
 			pm.Save();
 			cwb.Testfeld = "def";
-			Assert.AreEqual(NDOObjectState.PersistentDirty, cwb.NDOObjectState, "Objekt sollte dirty sein");
+			Assert.That(NDOObjectState.PersistentDirty ==  cwb.NDOObjectState, "Objekt sollte dirty sein");
 		}
 	}
 }

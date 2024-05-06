@@ -93,12 +93,12 @@ namespace NdoUnitTests
 			pm.Save();
 			pm.UnloadCache();
 			IList orders = pm.GetClassExtent(typeof(Order));
-			Assert.AreEqual( 1, orders.Count );
+			Assert.That(1 ==  orders.Count );
 			Order o = (Order) orders[0];
-			Assert.AreEqual( 1, o.OrderDetails.Count() );
+			Assert.That(1 ==  o.OrderDetails.Count() );
 			var text = logAdapter.Text;
 			OrderDetail od = (OrderDetail) o.OrderDetails.First();
-			Assert.NotNull(od.Product, "Product shouldn't be null");
+			Assert.That(od.Product != null, "Product shouldn't be null");
 		}
 
 		[Test]
@@ -127,9 +127,9 @@ namespace NdoUnitTests
 			CreateProductAndOrder( pm );
 			CreateOrderDetail();
 			OrderDetail od = (OrderDetail)order.OrderDetails.First();
-			Assert.AreEqual( NDOObjectState.Created, od.NDOObjectState );
+			Assert.That(NDOObjectState.Created ==  od.NDOObjectState );
 			order.RemoveOrderDetail( od );
-			Assert.AreEqual( NDOObjectState.Transient, od.NDOObjectState );
+			Assert.That(NDOObjectState.Transient ==  od.NDOObjectState );
 		}
 
 		[Test]
@@ -161,8 +161,8 @@ namespace NdoUnitTests
 			pm.Save();
 			pm.UnloadCache();
 			order = pm.Objects<Order>().Single();
-			Assert.AreEqual( 0, order.OrderDetails.Count() );
-			Assert.AreEqual( 0, pm.Objects<OrderDetail>().Count );
+			Assert.That(0 ==  order.OrderDetails.Count() );
+			Assert.That(0 ==  pm.Objects<OrderDetail>().Count );
 
 		}
 
@@ -204,13 +204,13 @@ namespace NdoUnitTests
 			p2.Name = "Trouser";
 			pm.MakePersistent(p2);
 			OrderDetail od = order.NewOrderDetail(p2);
-			Assert.AreEqual(NDOObjectState.Created, od.NDOObjectState, "Wrong state");
+			Assert.That(NDOObjectState.Created ==  od.NDOObjectState, "Wrong state");
 			od.Price = 55;
 			pm.Save();
 			pm.UnloadCache();
 			IQuery q = new NDOQuery<Order>(pm);
 			order = (Order) q.ExecuteSingle(true);
-			Assert.AreEqual(2, order.OrderDetails.Count(), "Wrong count");
+			Assert.That(2 ==  order.OrderDetails.Count(), "Wrong count");
 		}
 
 
@@ -237,10 +237,10 @@ namespace NdoUnitTests
 			pm.Save();
 			pm.UnloadCache();
 			var count = pm.Objects<OrderDetail>().Count;
-			Assert.AreEqual( 0, count );
+			Assert.That(0 ==  count );
 
 			order = pm.Objects<Order>().Single(); // Throws, if count != 1
-			Assert.AreEqual( 0, order.OrderDetails.Count() );
+			Assert.That(0 ==  order.OrderDetails.Count() );
 		}
 
 		[Test]
@@ -255,9 +255,9 @@ namespace NdoUnitTests
 			pm.Save();
 			pm.UnloadCache();
 			IList l = pm.GetClassExtent(typeof(OrderDetail));
-			Assert.AreEqual(0, l.Count, "Wrong count #1");
+			Assert.That(0 ==  l.Count, "Wrong count #1");
 			l = pm.GetClassExtent(typeof(Order));
-			Assert.AreEqual(0, l.Count, "Wrong count #2");
+			Assert.That(0 ==  l.Count, "Wrong count #2");
 		}
 	}
 }

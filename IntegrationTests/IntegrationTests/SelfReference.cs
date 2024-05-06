@@ -76,23 +76,23 @@ namespace NdoUnitTests
 			m2.Nachname = "Galli";
 			pm.MakePersistent(m2);
 			m2.Vorgesetzter = m;
-			Assert.AreEqual(NDOObjectState.Created, m2.NDOObjectState, "m2 müsste Created sein");
-			Assert.AreEqual(1, m.Untergebene.Count, "m müsste einen Untergebenen in der Liste haben");
+			Assert.That(NDOObjectState.Created ==  m2.NDOObjectState, "m2 müsste Created sein");
+			Assert.That(1 ==  m.Untergebene.Count, "m müsste einen Untergebenen in der Liste haben");
 			Mitarbeiter m3 = new Mitarbeiter();
 			m3.Vorname = "m3";
 			m3.Nachname = "dummy";
 			pm.MakePersistent(m3);
 			m2.AddUntergebener(m3);
-			Assert.NotNull(m3.Vorgesetzter, "m3 müsste einen Chef haben");
+			Assert.That(m3.Vorgesetzter != null, "m3 müsste einen Chef haben");
 			pm.Save();
 			pm.UnloadCache();
 			m = (Mitarbeiter) pm.FindObject(m.NDOObjectId);
-			Assert.AreEqual(1, m.Untergebene.Count, "Anzahl untergebene falsch");
+			Assert.That(1 ==  m.Untergebene.Count, "Anzahl untergebene falsch");
 			m2 = (Mitarbeiter) m.Untergebene[0];
-			Assert.AreEqual(m2.Vorgesetzter, m, "Chef falsch");
-			Assert.AreEqual(1, m2.Untergebene.Count, "Anzahl untergebene falsch #2");
+			Assert.That(m2.Vorgesetzter ==  m, "Chef falsch");
+			Assert.That(1 ==  m2.Untergebene.Count, "Anzahl untergebene falsch #2");
 			m3 = (Mitarbeiter) m2.Untergebene[0];
-			Assert.AreEqual(m3.Vorgesetzter, m2, "Chef falsch");
+			Assert.That(m3.Vorgesetzter ==  m2, "Chef falsch");
 
 		}
 
@@ -104,13 +104,13 @@ namespace NdoUnitTests
 			pm.Save();
 
 			Topic t2 = t.NewSubTopic("Middle Topic");
-			Assert.AreEqual(NDOObjectState.Created, t2.NDOObjectState, "t2 müsste Created sein");
-			Assert.AreEqual(t, t2.Owner, "Owner stimmt nicht");
-			Assert.AreEqual(1, t.Subtopics.Count, "t müsste einen Untergebenen in der Liste haben");
+			Assert.That(NDOObjectState.Created ==  t2.NDOObjectState, "t2 müsste Created sein");
+			Assert.That(t ==  t2.Owner, "Owner stimmt nicht");
+			Assert.That(1 ==  t.Subtopics.Count, "t müsste einen Untergebenen in der Liste haben");
 
 			Topic t3 = t2.NewSubTopic("End Topic");
-			Assert.AreEqual(NDOObjectState.Created, t3.NDOObjectState, "t3 müsste Created sein");
-			Assert.NotNull(t3.Owner, "t3 müsste einen Owner haben");
+			Assert.That(NDOObjectState.Created ==  t3.NDOObjectState, "t3 müsste Created sein");
+			Assert.That(t3.Owner != null, "t3 müsste einen Owner haben");
 
 			pm.Save();
 
@@ -119,18 +119,18 @@ namespace NdoUnitTests
 			IQuery q = new NDOQuery<Topic>(pm, "oid = {0}");
             q.Parameters.Add(t.NDOObjectId.Id[0]);
 			t = (Topic) q.ExecuteSingle(true);
-			Assert.AreEqual(1, t.Subtopics.Count, "t müsste einen Untergebenen in der Liste haben");
+			Assert.That(1 ==  t.Subtopics.Count, "t müsste einen Untergebenen in der Liste haben");
 
 			t2 = (Topic) t.Subtopics[0];
-			Assert.NotNull(t2.Owner, "t2 müsste einen Owner haben");
-			Assert.AreEqual(1, t2.Subtopics.Count, "t2 müsste einen Untergebenen in der Liste haben");
+			Assert.That(t2.Owner != null, "t2 müsste einen Owner haben");
+			Assert.That(1 ==  t2.Subtopics.Count, "t2 müsste einen Untergebenen in der Liste haben");
 
 			t3 = (Topic) t2.Subtopics[0];
 			
 			t.RemoveSubTopic(t2);
-			Assert.Null(t2.Owner, "Owner muss null sein");
-			Assert.AreEqual(NDOObjectState.Deleted, t2.NDOObjectState, "t2 muss gelöscht sein");
-			Assert.AreEqual(NDOObjectState.Deleted, t3.NDOObjectState, "t3 muss gelöscht sein");
+			Assert.That(t2.Owner == null, "Owner muss null sein");
+			Assert.That(NDOObjectState.Deleted ==  t2.NDOObjectState, "t2 muss gelöscht sein");
+			Assert.That(NDOObjectState.Deleted ==  t3.NDOObjectState, "t3 muss gelöscht sein");
 			pm.Save();
 		}
 
@@ -144,11 +144,11 @@ namespace NdoUnitTests
 
 			Topic t3 = t2.NewSubTopic("End Topic");
 
-			Assert.AreEqual(NDOObjectState.Created, t2.NDOObjectState, "t2 müsste Created sein");
-			Assert.AreEqual(t, t2.Owner, "Owner stimmt nicht");
-			Assert.AreEqual(1, t.Subtopics.Count, "t müsste einen Untergebenen in der Liste haben");
-			Assert.AreEqual(NDOObjectState.Created, t3.NDOObjectState, "t3 müsste Created sein");
-			Assert.NotNull(t3.Owner, "t3 müsste einen Owner haben");
+			Assert.That(NDOObjectState.Created ==  t2.NDOObjectState, "t2 müsste Created sein");
+			Assert.That(t ==  t2.Owner, "Owner stimmt nicht");
+			Assert.That(1 ==  t.Subtopics.Count, "t müsste einen Untergebenen in der Liste haben");
+			Assert.That(NDOObjectState.Created ==  t3.NDOObjectState, "t3 müsste Created sein");
+			Assert.That(t3.Owner != null, "t3 müsste einen Owner haben");
 			pm.Save();
 
 			pm.UnloadCache();
@@ -156,18 +156,18 @@ namespace NdoUnitTests
 			IQuery q = new NDOQuery<Topic>(pm, "oid = {0}");
             q.Parameters.Add(t.NDOObjectId.Id[0]);
 			t = (Topic) q.ExecuteSingle(true);
-			Assert.AreEqual(1, t.Subtopics.Count, "t müsste einen Untergebenen in der Liste haben");
+			Assert.That(1 ==  t.Subtopics.Count, "t müsste einen Untergebenen in der Liste haben");
 
 			t2 = (Topic) t.Subtopics[0];
-			Assert.NotNull(t2.Owner, "t2 müsste einen Owner haben");
-			Assert.AreEqual(1, t2.Subtopics.Count, "t2 müsste einen Untergebenen in der Liste haben");
+			Assert.That(t2.Owner != null, "t2 müsste einen Owner haben");
+			Assert.That(1 ==  t2.Subtopics.Count, "t2 müsste einen Untergebenen in der Liste haben");
 
 			t3 = (Topic) t2.Subtopics[0];
 			
 			t.RemoveSubTopic(t2);
-			Assert.Null(t2.Owner, "Owner muss null sein");
-			Assert.AreEqual(NDOObjectState.Deleted, t2.NDOObjectState, "t2 muss gelöscht sein");
-			Assert.AreEqual(NDOObjectState.Deleted, t3.NDOObjectState, "t3 muss gelöscht sein");
+			Assert.That(t2.Owner == null, "Owner muss null sein");
+			Assert.That(NDOObjectState.Deleted ==  t2.NDOObjectState, "t2 muss gelöscht sein");
+			Assert.That(NDOObjectState.Deleted ==  t3.NDOObjectState, "t3 muss gelöscht sein");
 			pm.Save();
 		}
 
@@ -180,13 +180,13 @@ namespace NdoUnitTests
 			pm.Save();
 
 			Topic t2 = t.NewSubTopic("Middle Topic");
-			Assert.AreEqual(NDOObjectState.Created, t2.NDOObjectState, "t2 müsste Created sein");
-			Assert.AreEqual(t, t2.Owner, "Owner stimmt nicht");
-			Assert.AreEqual(1, t.Subtopics.Count, "t müsste einen Untergebenen in der Liste haben");
+			Assert.That(NDOObjectState.Created ==  t2.NDOObjectState, "t2 müsste Created sein");
+			Assert.That(t ==  t2.Owner, "Owner stimmt nicht");
+			Assert.That(1 ==  t.Subtopics.Count, "t müsste einen Untergebenen in der Liste haben");
 
 			Topic t3 = t2.NewSubTopic("End Topic");
-			Assert.AreEqual(NDOObjectState.Created, t3.NDOObjectState, "t3 müsste Created sein");
-			Assert.NotNull(t3.Owner, "t3 müsste einen Owner haben");
+			Assert.That(NDOObjectState.Created ==  t3.NDOObjectState, "t3 müsste Created sein");
+			Assert.That(t3.Owner != null, "t3 müsste einen Owner haben");
 
 			pm.Save();
 
@@ -195,34 +195,34 @@ namespace NdoUnitTests
 			IQuery q = new NDOQuery<Topic>(pm, "oid = {0}");
             q.Parameters.Add(t.NDOObjectId.Id[0]);
             t = (Topic)q.ExecuteSingle(true);
-			Assert.AreEqual(1, t.Subtopics.Count, "t müsste einen Untergebenen in der Liste haben");
+			Assert.That(1 ==  t.Subtopics.Count, "t müsste einen Untergebenen in der Liste haben");
 
 			t2 = (Topic) t.Subtopics[0];
 			ObjectId oid2 = t2.NDOObjectId;
-			Assert.NotNull(t2.Owner, "t2 müsste einen Owner haben");
-			Assert.AreEqual(1, t2.Subtopics.Count, "t2 müsste einen Untergebenen in der Liste haben");
+			Assert.That(t2.Owner != null, "t2 müsste einen Owner haben");
+			Assert.That(1 ==  t2.Subtopics.Count, "t2 müsste einen Untergebenen in der Liste haben");
 
 			t3 = (Topic) t2.Subtopics[0];
 			ObjectId oid3 = t3.NDOObjectId;
 			
 			t2.RemoveSubTopic(t3);
 			t.RemoveSubTopic(t2);
-			Assert.Null(t2.Owner, "Owner muss null sein");
-			Assert.AreEqual(NDOObjectState.Deleted, t2.NDOObjectState, "t2 muss gelöscht sein");
-			Assert.AreEqual(NDOObjectState.Deleted, t3.NDOObjectState, "t3 muss gelöscht sein");
+			Assert.That(t2.Owner == null, "Owner muss null sein");
+			Assert.That(NDOObjectState.Deleted ==  t2.NDOObjectState, "t2 muss gelöscht sein");
+			Assert.That(NDOObjectState.Deleted ==  t3.NDOObjectState, "t3 muss gelöscht sein");
 			pm.Delete(t);
 			pm.Save();
 			pm.UnloadCache();
 			IList l = q.Execute();
-			Assert.AreEqual(0, l.Count, "Liste muss leer sein 1");
+			Assert.That(0 ==  l.Count, "Liste muss leer sein 1");
 			q = new NDOQuery<Topic>(pm, "oid = {0}");
             q.Parameters.Add(oid2.Id[0]);
 			l = q.Execute();
-			Assert.AreEqual(0, l.Count, "Liste muss leer sein 2");
+			Assert.That(0 ==  l.Count, "Liste muss leer sein 2");
 			q = new NDOQuery<Topic>(pm, "oid = {0}");
             q.Parameters.Add(oid3.Id[0]);
             l = q.Execute();
-			Assert.AreEqual(0, l.Count, "Liste muss leer sein 3");
+			Assert.That(0 ==  l.Count, "Liste muss leer sein 3");
 		}
 
 	}

@@ -68,10 +68,10 @@ namespace NdoUnitTests
 			m.ReisenAddRange(l);
 			Assert.That(GetLoadState(), "Relation not loaded");
 			pm.Save();
-			Assert.AreEqual(NDOObjectState.Persistent, m.NDOObjectState, "Wrong state #1");
+			Assert.That(NDOObjectState.Persistent ==  m.NDOObjectState, "Wrong state #1");
 			pm.MakeAllHollow();
 			pm.UnloadCache();
-			Assert.AreEqual(NDOObjectState.Hollow, m.NDOObjectState, "Wrong state #2");
+			Assert.That(NDOObjectState.Hollow ==  m.NDOObjectState, "Wrong state #2");
 			Assert.That(!GetLoadState(), "Relation should not be loaded");
 		}
 
@@ -82,7 +82,7 @@ namespace NdoUnitTests
 			AddRange();
 			NDOQuery<Mitarbeiter> q = new NDOQuery<Mitarbeiter>(pm);
 			m = q.ExecuteSingle(true);
-			Assert.AreEqual(2, m.Reisen.Count, "Count of Reisen wrong");
+			Assert.That(2 ==  m.Reisen.Count, "Count of Reisen wrong");
 		}
 
 		[Test]
@@ -108,7 +108,7 @@ namespace NdoUnitTests
 			AddRange();
 			IList l = m.ReisenGetRange(0, 2);
 			Assert.That(GetLoadState(), "Relation not loaded");
-			Assert.AreEqual(2, l.Count, "Count is wrong");
+			Assert.That(2 ==  l.Count, "Count is wrong");
 		}
 
 		[Test]
@@ -120,9 +120,9 @@ namespace NdoUnitTests
 			range.Add(CreateReise("bar"));
 			m.ReisenInsertRange(1, range);
 			Assert.That(GetLoadState(), "Relation not loaded");
-			Assert.AreEqual(m.Reisen[1], (Reise)range[0], "Wrong order");
+			Assert.That(m.Reisen[1] ==  (Reise)range[0], "Wrong order");
 			SaveAndReload();
-			Assert.AreEqual(4, m.Reisen.Count, "Count of Reisen wrong");
+			Assert.That(4 ==  m.Reisen.Count, "Count of Reisen wrong");
 		}
 
 		[Test]
@@ -139,9 +139,9 @@ namespace NdoUnitTests
 			AddRange();
 			m.ReisenRemoveRange(0, 1);
 			Assert.That(GetLoadState(), "Relation not loaded");
-			Assert.AreEqual(1, m.Reisen.Count, "Count of Reisen wrong #1");
+			Assert.That(1 ==  m.Reisen.Count, "Count of Reisen wrong #1");
 			SaveAndReload();
-			Assert.AreEqual(1, m.Reisen.Count, "Count of Reisen wrong #2");
+			Assert.That(1 ==  m.Reisen.Count, "Count of Reisen wrong #2");
 		}
 
 		[Test]
@@ -161,15 +161,15 @@ namespace NdoUnitTests
         //    l.Add(CreateReise("bar"));
         //    m.ReisenSetRange(0, l);
 	//Assert.That(GetLoadState(), "Relation not loaded");
-	//Assert.AreEqual("foo", (m.Reisen[0] as Reise).Zweck, "Falsche Reise #1");
-	//Assert.AreEqual("bar", (m.Reisen[1] as Reise).Zweck, "Falsche Reise #2");
+	//Assert.That("foo" ==  (m.Reisen[0] as Reise).Zweck, "Falsche Reise #1");
+	//Assert.That("bar" ==  (m.Reisen[1] as Reise).Zweck, "Falsche Reise #2");
 	//    //    SaveAndReload();
-	//Assert.AreEqual(2, m.Reisen.Count, "Count of Reisen wrong");
+	//Assert.That(2 ==  m.Reisen.Count, "Count of Reisen wrong");
 	//    //    if (((Reise)m.Reisen[0]).NDOObjectId.Id[0] is Int32)
 	//    //    {
 	//    //        m.ReisenSort();
-	//    Assert.AreEqual("bar", (m.Reisen[0] as Reise).Zweck, "Falsche Reise #3");
-	//    Assert.AreEqual("foo", (m.Reisen[1] as Reise).Zweck, "Falsche Reise #4");
+	//    Assert.That("bar" ==  (m.Reisen[0] as Reise).Zweck, "Falsche Reise #3");
+	//    Assert.That("foo" ==  (m.Reisen[1] as Reise).Zweck, "Falsche Reise #4");
         //    }
         //}
 
@@ -309,8 +309,8 @@ namespace NdoUnitTests
 			string zweck = ((Reise)m.Reisen[0]).Zweck;
 			Assert.That(GetLoadState(), "Relation not loaded");
 			SaveAndReload();
-			Assert.AreEqual(1, m.Reisen.Count, "Wrong count");
-			Assert.AreEqual(zweck, ((Reise)m.Reisen[0]).Zweck, "Reise wrong");
+			Assert.That(1 ==  m.Reisen.Count, "Wrong count");
+			Assert.That(zweck ==  ((Reise)m.Reisen[0]).Zweck, "Reise wrong");
 		}
 
 		[Test]
@@ -340,9 +340,9 @@ namespace NdoUnitTests
 		{
 			NDO.Mapping.Relation r = pm.NDOMapping.FindClass(typeof(Mitarbeiter)).FindRelation("dieReisen");
 			FieldInfo fi = typeof(NDO.Mapping.Relation).GetField("Ordinal", BindingFlags.NonPublic | BindingFlags.Instance);
-			Assert.NotNull(fi);
+			Assert.That(fi != null);
 			object o = fi.GetValue(r);
-			Assert.NotNull(o);
+			Assert.That(o != null);
 			return ((IPersistenceCapable)m).NDOGetLoadState((int)o);
 		}
 

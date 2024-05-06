@@ -67,14 +67,14 @@ namespace NdoUnitTests
 			DfrAddressDescriptor descriptor = address.NewAddressDescriptor(contact);
 			descriptor.IsAdopted = true;
 
-			Assert.AreEqual(1, contact.Addresses.Count, "Count falsch");
+			Assert.That(1 ==  contact.Addresses.Count, "Count falsch");
 			Assert.That((contact.Addresses[0] as DfrAddressDescriptor) == descriptor, "Descriptor falsch");
 			pm.Save(); 
 
 			pm.MakeHollow(contact as IPersistenceCapable);
 
 			address.RemoveAddressDescriptor(descriptor);
-			Assert.AreEqual(NDOObjectState.Deleted, descriptor.NDOObjectState, "Status falsch");
+			Assert.That(NDOObjectState.Deleted ==  descriptor.NDOObjectState, "Status falsch");
 		}
 	}
 }

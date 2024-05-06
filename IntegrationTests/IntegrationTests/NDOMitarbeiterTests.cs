@@ -103,8 +103,8 @@ namespace NdoUnitTests
 		public void TestObjectCreation() 
 		{
 			pm.MakePersistent(m);
-            Assert.NotNull(m.NDOObjectId, "ObjectId should be valid");
-            Assert.AreEqual(NDOObjectState.Created, m.NDOObjectState, "Status wrong");
+            Assert.That(m.NDOObjectId != null, "ObjectId should be valid");
+            Assert.That(NDOObjectState.Created ==  m.NDOObjectState, "Status wrong");
 		}
 
 		[Test]
@@ -124,7 +124,7 @@ namespace NdoUnitTests
 		{
 			pm.MakePersistent(m);
 			pm.Save();
-			Assert.AreEqual(NDOObjectState.Persistent, m.NDOObjectState, "Status wrong");
+			Assert.That(NDOObjectState.Persistent ==  m.NDOObjectState, "Status wrong");
 		}
 
 		[Test]
@@ -135,7 +135,7 @@ namespace NdoUnitTests
 			Mitarbeiter m1 = new NDOQuery<Mitarbeiter>( pm ).ExecuteSingle();
 			m1.Nachname = "Matytschak";
 			Mitarbeiter m2 = new NDOQuery<Mitarbeiter>( pm ).ExecuteSingle();
-			Assert.AreEqual( "Matytschak", m2.Nachname, "Objekt nicht wiederverwendet" );
+			Assert.That("Matytschak" ==  m2.Nachname, "Objekt nicht wiederverwendet" );
 			m2.Vorname = "Mirko";
 		}
 
@@ -145,7 +145,7 @@ namespace NdoUnitTests
 			pm.MakePersistent(m);
 			m.Nachname = "Müller";
 			pm.Save();
-			Assert.AreEqual("Müller", m.Nachname, "Nachname wrong");
+			Assert.That("Müller" ==  m.Nachname, "Nachname wrong");
 		}
 
 		[Test]
@@ -153,9 +153,9 @@ namespace NdoUnitTests
 		{
 			pm.MakePersistent(m);
 			pm.Abort();
-			Assert.Null(m.NDOObjectId, "Transient object shouldn't have ID");
-			Assert.Null(((IPersistenceCapable)m).NDOStateManager, "Transient object shouldn't have state manager");
-			Assert.AreEqual(NDOObjectState.Transient, m.NDOObjectState, "Status wrong");
+			Assert.That(m.NDOObjectId == null, "Transient object shouldn't have ID");
+			Assert.That(((IPersistenceCapable)m).NDOStateManager == null, "Transient object shouldn't have state manager");
+			Assert.That(NDOObjectState.Transient ==  m.NDOObjectState, "Status wrong");
 		}
 
 		[Test]
@@ -164,7 +164,7 @@ namespace NdoUnitTests
 			pm.MakePersistent(m);
 			m.Nachname = "Müller";
 			pm.Abort();
-			Assert.AreEqual("Kocher", m.Nachname, "Nachname wrong");
+			Assert.That("Kocher" ==  m.Nachname, "Nachname wrong");
 		}
 
 		[Test]
@@ -173,13 +173,13 @@ namespace NdoUnitTests
 			pm.MakePersistent(m);
 			ObjectId id = m.NDOObjectId;
 			ObjectId id2 = new ObjectId(id);
-			Assert.AreEqual(m.NDOObjectId, id, "IDs should be equal");
-			Assert.AreEqual(m.NDOObjectId, id2, "IDs should be equal");
+			Assert.That(m.NDOObjectId ==  id, "IDs should be equal");
+			Assert.That(m.NDOObjectId ==  id2, "IDs should be equal");
 			if (!pm.HasOwnerCreatedIds && m.NDOObjectId.Id[0] is int)
                 Assert.That((int)m.NDOObjectId.Id[0] < 0, "Negative key in DS");
 			pm.Save();
-			Assert.AreEqual(m.NDOObjectId, id, "IDs should be equal");
-			Assert.AreEqual(m.NDOObjectId, id2, "IDs should be equal");
+			Assert.That(m.NDOObjectId ==  id, "IDs should be equal");
+			Assert.That(m.NDOObjectId ==  id2, "IDs should be equal");
             if (!pm.HasOwnerCreatedIds && m.NDOObjectId.Id[0] is int)
                 Assert.That((int)m.NDOObjectId.Id[0] > 0, "Positive key in DB");
 		}
@@ -189,13 +189,13 @@ namespace NdoUnitTests
 		{
 			pm.MakePersistent(m);
 			pm.Delete(m);
-			Assert.Null(m.NDOObjectId, "Transient object shouldn't have ID");
-			Assert.Null( ((IPersistenceCapable)m).NDOStateManager, "Transient object shouldn't have state manager");
-			Assert.AreEqual(NDOObjectState.Transient, m.NDOObjectState, "Status wrong");
+			Assert.That(m.NDOObjectId == null, "Transient object shouldn't have ID");
+			Assert.That(((IPersistenceCapable)m).NDOStateManager == null, "Transient object shouldn't have state manager");
+			Assert.That(NDOObjectState.Transient ==  m.NDOObjectState, "Status wrong");
 			pm.Save();
-			Assert.Null(m.NDOObjectId, "Transient object shouldn't have ID");
-			Assert.Null( ((IPersistenceCapable)m).NDOStateManager, "Transient object shouldn't have state manager");
-			Assert.AreEqual(NDOObjectState.Transient, m.NDOObjectState, "Status wrong");
+			Assert.That(m.NDOObjectId == null, "Transient object shouldn't have ID");
+			Assert.That(((IPersistenceCapable)m).NDOStateManager == null, "Transient object shouldn't have state manager");
+			Assert.That(NDOObjectState.Transient ==  m.NDOObjectState, "Status wrong");
 		}
 
 		[Test]
@@ -205,12 +205,12 @@ namespace NdoUnitTests
 			ObjectId id = m.NDOObjectId;
 			pm.Delete(m);
 			pm.Abort();
-			Assert.Null(m.NDOObjectId, "Transient object shouldn't have ID");
-			Assert.Null( ((IPersistenceCapable)m).NDOStateManager, "Transient object shouldn't have state manager");
-			Assert.AreEqual(NDOObjectState.Transient, m.NDOObjectState, "Status wrong");
+			Assert.That(m.NDOObjectId == null, "Transient object shouldn't have ID");
+			Assert.That(((IPersistenceCapable)m).NDOStateManager == null, "Transient object shouldn't have state manager");
+			Assert.That(NDOObjectState.Transient ==  m.NDOObjectState, "Status wrong");
 			IPersistenceCapable pc = pm.FindObject(id);
-			Assert.NotNull( pc, "There should be a hollow object." );
-			Assert.AreEqual(NDOObjectState.Hollow, pc.NDOObjectState, "Status wrong");
+			Assert.That(pc != null, "There should be a hollow object." );
+			Assert.That(NDOObjectState.Hollow ==  pc.NDOObjectState, "Status wrong");
 		}
 
 		[Test]
@@ -218,28 +218,28 @@ namespace NdoUnitTests
 		{
 			pm.MakePersistent(m);
 			pm.CleanupCache();
-			Assert.AreSame(m, pm.FindObject(m.NDOObjectId), "Getting same object twice should return same object");
+			Assert.That(Object.ReferenceEquals(m, pm.FindObject(m.NDOObjectId)), "Getting same object twice should return same object");
 			pm.Save();
 			pm.CleanupCache();
-			Assert.AreSame(m, pm.FindObject(m.NDOObjectId), "Getting same object twice should return same object");
+			Assert.That(Object.ReferenceEquals(m, pm.FindObject(m.NDOObjectId)), "Getting same object twice should return same object");
 			ObjectId id = m.NDOObjectId;
 			m = null;
 			pm.CleanupCache();
-			Assert.NotNull(pm.FindObject(id), "Should find object");
+			Assert.That(pm.FindObject(id) != null, "Should find object");
 		}
 
 		[Test]
 		public void TestUnloadCache() 
 		{
 			pm.MakePersistent(m);
-			Assert.AreSame(m, pm.FindObject(m.NDOObjectId), "Getting same object twice should return same object");
+			Assert.That(Object.ReferenceEquals(m, pm.FindObject(m.NDOObjectId)), "Getting same object twice should return same object");
 			pm.Save();
 			pm.UnloadCache();
 			Assert.That(m != pm.FindObject(m.NDOObjectId), "Getting same object twice should return different objects");
 			ObjectId id = m.NDOObjectId;
 			m = null;
 			pm.UnloadCache();
-			Assert.NotNull(pm.FindObject(id), "Should find object");
+			Assert.That(pm.FindObject(id) != null, "Should find object");
 		}
 
 		[Test]
@@ -252,7 +252,7 @@ namespace NdoUnitTests
 			pm2.UnloadCache();
 			var m2 = pm2.Objects<Mitarbeiter>().First();
 
-			Assert.AreEqual( m.NDOObjectId, m2.NDOObjectId );
+			Assert.That(m.NDOObjectId ==  m2.NDOObjectId );
 		}
 
 		[Test]
@@ -267,15 +267,15 @@ namespace NdoUnitTests
 			}
 
 			IList mitarbeiterListe = pm.GetClassExtent(typeof(Mitarbeiter));
-			Assert.AreEqual(0, mitarbeiterListe.Count, "Current extent should be empty");
+			Assert.That(0 ==  mitarbeiterListe.Count, "Current extent should be empty");
 			pm.Save();
 
 			mitarbeiterListe = pm.GetClassExtent(typeof(Mitarbeiter));
-			Assert.AreEqual(100, mitarbeiterListe.Count, "Number of read objects is wrong");
+			Assert.That(100 ==  mitarbeiterListe.Count, "Number of read objects is wrong");
 			// Check that all objects come from cache... 
 			foreach(Mitarbeiter m1 in mitarbeiterListe) 
 			{
-				Assert.AreEqual(NDOObjectState.Persistent, m1.NDOObjectState, "Wrong state");
+				Assert.That(NDOObjectState.Persistent ==  m1.NDOObjectState, "Wrong state");
 			}
 
 			mliste.Clear();
@@ -285,11 +285,11 @@ namespace NdoUnitTests
 			//pm.CleanupCache();
 			pm.UnloadCache();
 			mitarbeiterListe = pm.GetClassExtent(typeof(Mitarbeiter));
-			Assert.AreEqual(100, mitarbeiterListe.Count, "Number of read objects is wrong");
+			Assert.That(100 ==  mitarbeiterListe.Count, "Number of read objects is wrong");
 			// Check that all objects are reloaded 
 			foreach(Mitarbeiter m1 in mitarbeiterListe) 
 			{
-				Assert.AreEqual(NDOObjectState.Hollow, m1.NDOObjectState, "Wrong state");
+				Assert.That(NDOObjectState.Hollow ==  m1.NDOObjectState, "Wrong state");
 			}
 		}
 
@@ -301,17 +301,17 @@ namespace NdoUnitTests
 			m.Hinzufuegen(email);
 			email.Subject = new Reisekosten.Subject();
 			email.Subject.Text = "Test";
-			Assert.AreEqual(NDOObjectState.Transient, m.NDOObjectState, "Mitarbeiter muss transient sein");
-			Assert.AreEqual(NDOObjectState.Transient, email.NDOObjectState, "Email muss transient sein");
-			Assert.AreEqual(NDOObjectState.Transient, email.Subject.NDOObjectState, "Subject muss transient sein");
+			Assert.That(NDOObjectState.Transient ==  m.NDOObjectState, "Mitarbeiter muss transient sein");
+			Assert.That(NDOObjectState.Transient ==  email.NDOObjectState, "Email muss transient sein");
+			Assert.That(NDOObjectState.Transient ==  email.Subject.NDOObjectState, "Subject muss transient sein");
 			pm.MakePersistent(m);
-			Assert.AreEqual(NDOObjectState.Created, m.NDOObjectState, "Mitarbeiter muss Created sein");
-			Assert.AreEqual(NDOObjectState.Created, email.NDOObjectState, "Email muss Created sein");
-			Assert.AreEqual(NDOObjectState.Created, email.Subject.NDOObjectState, "Subject muss Created sein");
+			Assert.That(NDOObjectState.Created ==  m.NDOObjectState, "Mitarbeiter muss Created sein");
+			Assert.That(NDOObjectState.Created ==  email.NDOObjectState, "Email muss Created sein");
+			Assert.That(NDOObjectState.Created ==  email.Subject.NDOObjectState, "Subject muss Created sein");
 			pm.Save();
-			Assert.AreEqual(NDOObjectState.Persistent, m.NDOObjectState, "Mitarbeiter muss Persistent sein");
-			Assert.AreEqual(NDOObjectState.Persistent, email.NDOObjectState, "Email muss Persistent sein");
-			Assert.AreEqual(NDOObjectState.Persistent, email.Subject.NDOObjectState, "Subject muss Persistent sein");
+			Assert.That(NDOObjectState.Persistent ==  m.NDOObjectState, "Mitarbeiter muss Persistent sein");
+			Assert.That(NDOObjectState.Persistent ==  email.NDOObjectState, "Email muss Persistent sein");
+			Assert.That(NDOObjectState.Persistent ==  email.Subject.NDOObjectState, "Subject muss Persistent sein");
 			
 		}
 
@@ -330,12 +330,12 @@ namespace NdoUnitTests
 			// Empty query: just like class extent.
 			NDOQuery<Mitarbeiter> q = new NDOQuery<Mitarbeiter>(pm, null, true);
 			IList mitarbeiterListe = q.Execute();
-			Assert.AreEqual(100, mitarbeiterListe.Count, "Number of read objects is wrong");
+			Assert.That(100 ==  mitarbeiterListe.Count, "Number of read objects is wrong");
 
 			q = new NDOQuery<Mitarbeiter>(pm, "nachname = 'Test'", true);
 			//System.Diagnostics.Debug.WriteLine(q.GeneratedQuery);
 			mitarbeiterListe = q.Execute();
-			Assert.AreEqual(100/3, mitarbeiterListe.Count, "Number of read objects is wrong");
+			Assert.That(100/3 ==  mitarbeiterListe.Count, "Number of read objects is wrong");
 		}
 
 		[Test]
@@ -352,18 +352,18 @@ namespace NdoUnitTests
 			
 			List<Mitarbeiter> mitarbeiterListe = from m in pm.Objects<Mitarbeiter>() select m;
 
-			Assert.AreEqual(100, mitarbeiterListe.Count, "Number of read objects is wrong #1");
+			Assert.That(100 ==  mitarbeiterListe.Count, "Number of read objects is wrong #1");
 
 			mitarbeiterListe = from m in pm.Objects<Mitarbeiter>() where m.Nachname == "Test" select m;
-			Assert.AreEqual(100/3, mitarbeiterListe.Count, "Number of read objects is wrong #2");
+			Assert.That(100/3 ==  mitarbeiterListe.Count, "Number of read objects is wrong #2");
 
 			// Partial select
 			List<string> nameList = from m in pm.Objects<Mitarbeiter>() select m.Vorname;
 
-			Assert.AreEqual(100, nameList.Count, "Number of read objects is wrong #3");
+			Assert.That(100 ==  nameList.Count, "Number of read objects is wrong #3");
 
 			nameList = from m in pm.Objects<Mitarbeiter>() where m.Nachname == "Test" select m.Vorname;
-			Assert.AreEqual(100/3, mitarbeiterListe.Count, "Number of read objects is wrong #4");
+			Assert.That(100/3 ==  mitarbeiterListe.Count, "Number of read objects is wrong #4");
 		}
 
         [Test]
@@ -372,7 +372,7 @@ namespace NdoUnitTests
             pm.MakePersistent( m );
             pm.Save();
             Mitarbeiter m2 = Mitarbeiter.QueryByName(pm, "Hartmut");
-            Assert.NotNull( m2 );
+            Assert.That(m2  != null);
         }
 
         [Test]
@@ -381,7 +381,7 @@ namespace NdoUnitTests
             pm.MakePersistent( m );
             pm.Save();
             Mitarbeiter m2 = Mitarbeiter.QueryByName(pm, null);
-            Assert.IsNull( m2 );
+            Assert.That( m2 == null );
         }
 
         [Test]
@@ -392,20 +392,20 @@ namespace NdoUnitTests
 			pm.Save();
 			pm.UnloadCache();
 			m = (Mitarbeiter)pm.FindObject(m.NDOObjectId);
-			Assert.AreEqual(NDOObjectState.Hollow, m.NDOObjectState, "Wrong state #1");
+			Assert.That(NDOObjectState.Hollow ==  m.NDOObjectState, "Wrong state #1");
 			pm.Delete(m);
-			Assert.AreEqual(NDOObjectState.Deleted, m.NDOObjectState, "Wrong state #2");
+			Assert.That(NDOObjectState.Deleted ==  m.NDOObjectState, "Wrong state #2");
 			pm.Abort();
-			Assert.AreEqual(NDOObjectState.Persistent, m.NDOObjectState, "Wrong state #3");
+			Assert.That(NDOObjectState.Persistent ==  m.NDOObjectState, "Wrong state #3");
 			pm.UnloadCache();
 			m = (Mitarbeiter)pm.FindObject(m.NDOObjectId);
-			Assert.AreEqual(NDOObjectState.Hollow, m.NDOObjectState, "Wrong state #4");
+			Assert.That(NDOObjectState.Hollow ==  m.NDOObjectState, "Wrong state #4");
 			pm.Delete(m);
 			pm.Save();
-			Assert.AreEqual(NDOObjectState.Transient, m.NDOObjectState, "Wrong state #5");
+			Assert.That(NDOObjectState.Transient ==  m.NDOObjectState, "Wrong state #5");
 
 			IList l = pm.GetClassExtent(typeof(Mitarbeiter));
-			Assert.AreEqual(0, l.Count, "Number of read objects is wrong");
+			Assert.That(0 ==  l.Count, "Number of read objects is wrong");
 		}
 
 		[Test]
@@ -414,12 +414,12 @@ namespace NdoUnitTests
 			pm.MakePersistent(m);
 			pm.Save();
 			pm.Delete(m);
-			Assert.AreEqual(NDOObjectState.Deleted, m.NDOObjectState, "Wrong state #1");
+			Assert.That(NDOObjectState.Deleted ==  m.NDOObjectState, "Wrong state #1");
 			IList l = pm.GetClassExtent(typeof(Mitarbeiter));
-			Assert.AreEqual(1, l.Count, "Number of read objects is wrong");
+			Assert.That(1 ==  l.Count, "Number of read objects is wrong");
 			pm.Save();
 			l = pm.GetClassExtent(typeof(Mitarbeiter));
-			Assert.AreEqual(0, l.Count, "Number of read objects is wrong");
+			Assert.That(0 ==  l.Count, "Number of read objects is wrong");
 		}
 
 		[Test]
@@ -428,15 +428,15 @@ namespace NdoUnitTests
 			pm.MakePersistent(m);
 			pm.Save();
 			m.Nachname = "Test";
-			Assert.AreEqual(NDOObjectState.PersistentDirty, m.NDOObjectState, "Wrong state #1");
+			Assert.That(NDOObjectState.PersistentDirty ==  m.NDOObjectState, "Wrong state #1");
 			pm.Delete(m);
-			Assert.AreEqual(NDOObjectState.Deleted, m.NDOObjectState, "Wrong state #1");
+			Assert.That(NDOObjectState.Deleted ==  m.NDOObjectState, "Wrong state #1");
 			pm.Abort();
-			Assert.AreEqual("Kocher", m.Nachname, "Name shouldn't be changed");
+			Assert.That("Kocher" ==  m.Nachname, "Name shouldn't be changed");
 			pm.Delete(m);
 			pm.Save();
 			IList l = pm.GetClassExtent(typeof(Mitarbeiter));
-			Assert.AreEqual(0, l.Count, "Number of read objects is wrong");
+			Assert.That(0 ==  l.Count, "Number of read objects is wrong");
 		}
 
 		[Test]
@@ -445,10 +445,10 @@ namespace NdoUnitTests
 			pm.MakePersistent(m);
 			pm.Save();
 			m.Nachname = "Test";
-			Assert.AreEqual(NDOObjectState.PersistentDirty, m.NDOObjectState, "Wrong state #1");
+			Assert.That(NDOObjectState.PersistentDirty ==  m.NDOObjectState, "Wrong state #1");
 			pm.Abort();
-			Assert.AreEqual(NDOObjectState.Persistent, m.NDOObjectState, "Wrong state #2");
-			Assert.AreEqual("Kocher", m.Nachname, "Name shouldn't be changed");
+			Assert.That(NDOObjectState.Persistent ==  m.NDOObjectState, "Wrong state #2");
+			Assert.That("Kocher" ==  m.Nachname, "Name shouldn't be changed");
 		}
 
 		[Test]
@@ -458,15 +458,15 @@ namespace NdoUnitTests
 			pm.Save();
 			ObjectId id = m.NDOObjectId;
 			pm.MakeTransient(m);
-			Assert.NotNull(id.Id, "MakeTransient shouldn't remove the ID");			
-			Assert.Null( ((IPersistenceCapable)m).NDOStateManager, "Transient object shouldn't have state manager");
-			Assert.AreEqual(NDOObjectState.Transient, m.NDOObjectState, "Wrong state #1");
+			Assert.That(id.Id != null, "MakeTransient shouldn't remove the ID");			
+			Assert.That(((IPersistenceCapable)m).NDOStateManager == null, "Transient object shouldn't have state manager");
+			Assert.That(NDOObjectState.Transient ==  m.NDOObjectState, "Wrong state #1");
 			Assert.That(id.IsValid(), "Id should still be valid #1");
 			m = (Mitarbeiter)pm.FindObject(id);
-			Assert.AreEqual(NDOObjectState.Hollow, m.NDOObjectState, "Wrong state #2");
+			Assert.That(NDOObjectState.Hollow ==  m.NDOObjectState, "Wrong state #2");
 			pm.MakeTransient(m);
-			Assert.Null( ((IPersistenceCapable)m).NDOStateManager, "Transient object shouldn't have state manager");
-			Assert.AreEqual(NDOObjectState.Transient, m.NDOObjectState, "Wrong state #3");
+			Assert.That(((IPersistenceCapable)m).NDOStateManager == null, "Transient object shouldn't have state manager");
+			Assert.That(NDOObjectState.Transient ==  m.NDOObjectState, "Wrong state #3");
 			Assert.That(id.IsValid(), "Id should still be valid #2");
 			m = (Mitarbeiter)pm.FindObject(id);
 			pm.Delete(m);
@@ -480,11 +480,11 @@ namespace NdoUnitTests
 			pm.MakePersistent(m);
 			pm.Save();
 			pm.MakeHollow(m);
-			Assert.AreEqual(NDOObjectState.Hollow, m.NDOObjectState, "Wrong state #1");
+			Assert.That(NDOObjectState.Hollow ==  m.NDOObjectState, "Wrong state #1");
 			string access = m.Nachname;
-			Assert.AreEqual(NDOObjectState.Persistent, m.NDOObjectState, "Wrong state #2");
+			Assert.That(NDOObjectState.Persistent ==  m.NDOObjectState, "Wrong state #2");
 			pm.MakeAllHollow();
-			Assert.AreEqual(NDOObjectState.Hollow, m.NDOObjectState, "Wrong state #3");
+			Assert.That(NDOObjectState.Hollow ==  m.NDOObjectState, "Wrong state #3");
 		}
 
 		[Test]
@@ -495,11 +495,11 @@ namespace NdoUnitTests
 			pm.MakeHollow(m);
 			m.Nachname = "Test";
 			pm.Abort();
-			Assert.AreEqual("Kocher", m.Nachname, "Name shouldn't be changed");
+			Assert.That("Kocher" ==  m.Nachname, "Name shouldn't be changed");
 			pm.MakeHollow(m);
 			m.Nachname = "Test";
 			pm.Save();
-			Assert.AreEqual("Test", m.Nachname, "Name should be changed");
+			Assert.That("Test" ==  m.Nachname, "Name should be changed");
 		}
 
 		[Test]
@@ -514,7 +514,7 @@ namespace NdoUnitTests
 			{
 				thrown = true;
 			}
-			Assert.AreEqual( true, thrown );
+			Assert.That(true ==  thrown );
 		}
 
 		[Test]
@@ -524,22 +524,22 @@ namespace NdoUnitTests
 			pm.Save();
 			pm.MakeHollow(m);
 			pm.Refresh(m);
-			Assert.AreEqual(NDOObjectState.Persistent, m.NDOObjectState, "Wrong state #1");
+			Assert.That(NDOObjectState.Persistent ==  m.NDOObjectState, "Wrong state #1");
 			pm.Refresh(m);
-			Assert.AreEqual(NDOObjectState.Persistent, m.NDOObjectState, "Wrong state #2");
+			Assert.That(NDOObjectState.Persistent ==  m.NDOObjectState, "Wrong state #2");
 			ObjectId id = m.NDOObjectId;
 
 			PersistenceManager pm2 = PmFactory.NewPersistenceManager();
 			Mitarbeiter m2 = (Mitarbeiter)pm2.FindObject(id);
-			Assert.NotNull(m2, "Cannot load object");
+			Assert.That(m2 != null, "Cannot load object");
 			m2.Nachname = "Test";
 			pm2.Save();
 			pm2.Close();
 
-			Assert.AreEqual("Kocher", m.Nachname, "Wrong name #1");
-			Assert.AreEqual("Test", m2.Nachname, "Wrong name #2");
+			Assert.That("Kocher" ==  m.Nachname, "Wrong name #1");
+			Assert.That("Test" ==  m2.Nachname, "Wrong name #2");
 			pm.Refresh(m);
-			Assert.AreEqual("Test", m.Nachname, "Wrong name #3");
+			Assert.That("Test" ==  m.Nachname, "Wrong name #3");
 		}
 
 		[Test]
@@ -548,13 +548,13 @@ namespace NdoUnitTests
 			pm.MakePersistent(m);
 			pm.HollowMode = true;
 			pm.Save();			
-			Assert.AreEqual(NDOObjectState.Hollow, m.NDOObjectState, "Wrong state #1");
+			Assert.That(NDOObjectState.Hollow ==  m.NDOObjectState, "Wrong state #1");
 			m.Nachname = "Test";
 			pm.Abort();
-			Assert.AreEqual(NDOObjectState.Hollow, m.NDOObjectState, "Wrong state #2");
+			Assert.That(NDOObjectState.Hollow ==  m.NDOObjectState, "Wrong state #2");
 			m.Nachname = "Test";
 			pm.Save();
-			Assert.AreEqual(NDOObjectState.Hollow, m.NDOObjectState, "Wrong state #3");
+			Assert.That(NDOObjectState.Hollow ==  m.NDOObjectState, "Wrong state #3");
 		}
 
 		[Test]
@@ -580,9 +580,9 @@ namespace NdoUnitTests
 			}
 			NDOQuery<Mitarbeiter> q = new NDOQuery<Mitarbeiter>(pm, null);
 			decimal newsum = (decimal)q.ExecuteAggregate("position.Y", AggregateType.Sum);
-			Assert.AreEqual(sum, newsum, "Summe stimmt nicht");
+			Assert.That(sum ==  newsum, "Summe stimmt nicht");
 			decimal count = (decimal)q.ExecuteAggregate("position.X", AggregateType.Count);
-			Assert.AreEqual(20, count, "Count stimmt nicht");
+			Assert.That(20 ==  count, "Count stimmt nicht");
 		}
 
 
@@ -613,13 +613,13 @@ namespace NdoUnitTests
 			var virtualTable = pm.Objects<Mitarbeiter>();
 
 			decimal count = virtualTable.Count;
-			Assert.AreEqual( 20, count, "Count stimmt nicht" );
+			Assert.That(20 ==  count, "Count stimmt nicht" );
 
 			decimal newsum = virtualTable.Sum( m => m.Gehalt );
-			Assert.AreEqual( sum, newsum, "Summe stimmt nicht" );
+			Assert.That(sum ==  newsum, "Summe stimmt nicht" );
 
 			decimal newavg = virtualTable.Average( m => m.Gehalt );
-			Assert.AreEqual( avg, newavg, "Durchschnitt stimmt nicht" );
+			Assert.That(avg ==  newavg, "Durchschnitt stimmt nicht" );
 		}
 
 
@@ -634,14 +634,14 @@ namespace NdoUnitTests
 			pm.UnloadCache();
 			IQuery q = new NDOQuery<Mitarbeiter>(pm, null);
 			IList l = q.Execute();
-			Assert.AreEqual(1, l.Count, "Only one object should be returned");
-			Assert.AreEqual(typeof(Mitarbeiter), l[0].GetType(), "Object should be a Mitarbeiter");
+			Assert.That(1 ==  l.Count, "Only one object should be returned");
+			Assert.That(typeof(Mitarbeiter) ==  l[0].GetType(), "Object should be a Mitarbeiter");
 
 			// Fetch the same object as manager
 			q = new NDOQuery<Manager>(pm, null);
 			l = q.Execute();
-			Assert.AreEqual(1, l.Count, "Only one object should be returned");
-			Assert.AreEqual(typeof(Manager), l[0].GetType(), "Object should be a Manager");
+			Assert.That(1 ==  l.Count, "Only one object should be returned");
+			Assert.That(typeof(Manager) ==  l[0].GetType(), "Object should be a Manager");
 		}
 
 		[Test]
@@ -658,7 +658,7 @@ namespace NdoUnitTests
 			pm.UnloadCache();
 			NDOQuery<Mitarbeiter> q = new NDOQuery<Mitarbeiter>(pm);
 			Mitarbeiter m2 = (Mitarbeiter) q.ExecuteSingle(true);
-			Assert.AreEqual(255, m2.Vorname.Length, "Lönge des Vornamens falsch");
+			Assert.That(255 ==  m2.Vorname.Length, "Lönge des Vornamens falsch");
 		}
 
 
@@ -671,13 +671,13 @@ namespace NdoUnitTests
 			// Load hollow
 			NDOQuery<Mitarbeiter> q = new NDOQuery<Mitarbeiter>(pm, null, true);
 			IList l = q.Execute();
-			Assert.AreEqual(1, l.Count, "Anzahl Mitarbeiter falsch #1");
+			Assert.That(1 ==  l.Count, "Anzahl Mitarbeiter falsch #1");
 			pm.Delete(l);
 			pm.Save();
 			pm.UnloadCache();
 			q = new NDOQuery<Mitarbeiter>(pm);
 			l = q.Execute();
-			Assert.AreEqual(0, l.Count, "Anzahl Mitarbeiter falsch #2");
+			Assert.That(0 ==  l.Count, "Anzahl Mitarbeiter falsch #2");
 
 		}
 
@@ -690,13 +690,13 @@ namespace NdoUnitTests
 			// Load hollow
 			NDOQuery<Mitarbeiter> q = new NDOQuery<Mitarbeiter>(pm, null, true);
 			IList l = q.Execute();
-			Assert.AreEqual(1, l.Count, "Anzahl Mitarbeiter falsch #1");
+			Assert.That(1 ==  l.Count, "Anzahl Mitarbeiter falsch #1");
 			PersistenceManager pm2 = PmFactory.NewPersistenceManager();
 			pm2.Delete(l);
 			pm2.Save();
 			q = new NDOQuery<Mitarbeiter>(pm);
 			l = q.Execute();
-			Assert.AreEqual(0, l.Count, "Anzahl Mitarbeiter falsch #2");
+			Assert.That(0 ==  l.Count, "Anzahl Mitarbeiter falsch #2");
 		}
 
 
@@ -711,7 +711,7 @@ namespace NdoUnitTests
 //			m.Vorname = "Hallo";
 //
 //			m.NDOStateManager.PersistenceManager.LogPath = "C:\\Temp";
-//			Assert.AreEqual(m.NDOStateManager.PersistenceManager.LogPath, pm.LogPath, "LogPath falsch");
+//			Assert.That(m.NDOStateManager.PersistenceManager.LogPath ==  pm.LogPath, "LogPath falsch");
 //			if (File.Exists(pm.LogFile))
 //				....
 //			m.NDOStateManager.PersistenceManager.VerboseMode = true;
@@ -741,7 +741,7 @@ namespace NdoUnitTests
 			}
 			catch (NDOException ex)
 			{
-				Assert.AreEqual( 72, ex.ErrorNumber );
+				Assert.That(72 ==  ex.ErrorNumber );
 				thrown = true;
 			}
 
@@ -764,9 +764,9 @@ namespace NdoUnitTests
 			pm.Save();
 			pm.UnloadCache();
 			var m2 = pm.FindObject( oid );
-			Assert.AreEqual( NDOObjectState.Hollow, m2.NDOObjectState );
+			Assert.That(NDOObjectState.Hollow ==  m2.NDOObjectState );
 			pm.LoadData( m2 );
-			Assert.AreEqual( NDOObjectState.Persistent, m2.NDOObjectState );
+			Assert.That(NDOObjectState.Persistent ==  m2.NDOObjectState );
 		}
 
 		[Test]
@@ -780,10 +780,10 @@ namespace NdoUnitTests
 			pm.Save();
 			pm.UnloadCache();
 			var l = pm.Objects<Mitarbeiter>().Where(m=>m.Vorname.In(new []{ "Mirko" } )).ResultTable;
-			Assert.AreEqual( 1, l.Count );
+			Assert.That(1 ==  l.Count );
 			l = pm.Objects<Mitarbeiter>().Where(m=>m.Vorname.In(new []{ "Mirko", "Hans" } )).ResultTable;
-			Assert.AreEqual( 2, l.Count );
-			Assert.AreEqual( 0, QueryByGuid( new[] { Guid.NewGuid() } ).Count );
+			Assert.That(2 ==  l.Count );
+			Assert.That(0 ==  QueryByGuid( new[] { Guid.NewGuid() } ).Count );
 		}
 
 		List<Mitarbeiter> QueryByGuid(Guid[] guids)
@@ -802,10 +802,10 @@ namespace NdoUnitTests
 				handler.Execute( sql, false, "Fritz", "Müller", 123456.34m );
 			}
 			var m = pm.Objects<Mitarbeiter>().SingleOrDefault();
-			Assert.NotNull( m );
-			Assert.AreEqual( "Fritz", m.Vorname );
-			Assert.AreEqual( "Müller", m.Nachname );
-			Assert.AreEqual( 123456.34m, m.Gehalt );
+			Assert.That(m  != null);
+			Assert.That("Fritz" ==  m.Vorname );
+			Assert.That("Müller" ==  m.Nachname );
+			Assert.That(123456.34m ==  m.Gehalt );
 		}
 
 		[Test]
@@ -819,9 +819,9 @@ namespace NdoUnitTests
 				handler.Execute( sql, false, null, "Müller", 123456.34m );
 			}
 			var m = pm.Objects<Mitarbeiter>().SingleOrDefault();
-			Assert.NotNull( m );
-			Assert.AreEqual( "Müller", m.Nachname );
-			Assert.AreEqual( 123456.34m, m.Gehalt );
+			Assert.That(m  != null);
+			Assert.That("Müller" ==  m.Nachname );
+			Assert.That(123456.34m ==  m.Gehalt );
 		}
 
 		[Test]
@@ -831,24 +831,24 @@ namespace NdoUnitTests
 			pm.Save();
 			var firstName = m.Vorname;
 
-			Assert.IsTrue( pm.Objects<Mitarbeiter>().Where( m => m.Vorname == firstName ).Count > 0 );
+			Assert.That( pm.Objects<Mitarbeiter>().Where( m => m.Vorname == firstName ).Count > 0 );
 
 			var q = new NDOQuery<Mitarbeiter>( pm, "vorname = {0}" );
 			q.Parameters.Add( firstName );
 			q.DeleteDirectly();
 
-			Assert.AreEqual( 0, pm.Objects<Mitarbeiter>().Where( m => m.Vorname == firstName ).Count );
+			Assert.That(0 ==  pm.Objects<Mitarbeiter>().Where( m => m.Vorname == firstName ).Count );
 
 			m = CreateMitarbeiter( "Mirko", "Matytschak" );
 			pm.MakePersistent( m );
 			pm.Save();
 			firstName = m.Vorname;
 
-			Assert.IsTrue( pm.Objects<Mitarbeiter>().Where( m => m.Vorname == firstName ).Count > 0 );
+			Assert.That( pm.Objects<Mitarbeiter>().Where( m => m.Vorname == firstName ).Count > 0 );
 
 			pm.Objects<Mitarbeiter>().Where( m => m.Vorname == firstName ).DeleteDirectly();
 
-			Assert.AreEqual( 0, pm.Objects<Mitarbeiter>().Where( m => m.Vorname == firstName ).Count );
+			Assert.That(0 ==  pm.Objects<Mitarbeiter>().Where( m => m.Vorname == firstName ).Count );
 		}
 
 		private Mitarbeiter CreateMitarbeiter(string vorname, string nachname) 

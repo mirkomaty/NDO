@@ -84,11 +84,11 @@ namespace NdoUnitTests
 			if (!pm.HasOwnerCreatedIds)
 			{
 				if (m.NDOObjectId.Id[0] is Int32)
-					Assert.AreEqual( -1, m.NDOObjectId.Id[0], "Mitarbeiter key wrong" );
+					Assert.That(-1 == (int) m.NDOObjectId.Id[0], "Mitarbeiter key wrong" );
 				if (a.NDOObjectId.Id[0] is Int32)
-					Assert.AreEqual( -1, a.NDOObjectId.Id[0], "Adresse key wrong" );
+					Assert.That(-1 == (int) a.NDOObjectId.Id[0], "Adresse key wrong" );
 				if (b.NDOObjectId.Id[0] is Int32)
-					Assert.AreEqual( -1, b.NDOObjectId.Id[0], "Büro key wrong" );
+					Assert.That(-1 == (int) b.NDOObjectId.Id[0], "Büro key wrong" );
 			}
 			Assert.That( !m.NDOObjectId.Equals( a.NDOObjectId ), "Ids should be different m-a" );
 			Assert.That( !m.NDOObjectId.Equals( b.NDOObjectId ), "Ids should be different m-b" );
@@ -109,8 +109,8 @@ namespace NdoUnitTests
 			Assert.That( !m.NDOObjectId.Equals( a.NDOObjectId ), "Ids should be different" );
 			m = pm.Objects<Mitarbeiter>().Where(e=>e.Oid() == m.NDOObjectId.Id.Value ).SingleOrDefault();
 			a = (Adresse)pm.FindObject( a.NDOObjectId );
-			Assert.NotNull( m, "1. Mitarbeiter not found" );
-			Assert.NotNull( a, "1. Adresse not found" );
+			Assert.That(m != null, "1. Mitarbeiter not found" );
+			Assert.That(a != null, "1. Adresse not found" );
 			ObjectId moid = m.NDOObjectId;
 			ObjectId aoid = a.NDOObjectId;
 			m = null;
@@ -120,9 +120,9 @@ namespace NdoUnitTests
 			m = pm.Objects<Mitarbeiter>().Where( e=>e.NDOObjectId == moid ).SingleOrDefault();
 			Adresse a2 = m.Adresse;
 			a = pm.Objects<Adresse>().Where( x=>x.NDOObjectId == aoid ).SingleOrDefault();
-			Assert.NotNull( m, "2. Mitarbeiter not found" );
-			Assert.NotNull( a, "2. Adresse not found" );
-			Assert.AreSame( a, a2, "Address should match" );
+			Assert.That(m != null, "2. Mitarbeiter not found" );
+			Assert.That(a != null, "2. Adresse not found" );
+			Assert.That(Object.ReferenceEquals(a, a2), "Address should match" );
 		}
 
 		[Test]
@@ -131,13 +131,13 @@ namespace NdoUnitTests
 			pm.MakePersistent( m );
 			pm.Save();
 			m.Adresse = a;
-			Assert.AreEqual( NDOObjectState.Created, a.NDOObjectState, "1. Wrong state" );
+			Assert.That(NDOObjectState.Created ==  a.NDOObjectState, "1. Wrong state" );
 			pm.Save();
 			m = (Mitarbeiter)pm.FindObject( m.NDOObjectId );
 			a = (Adresse)pm.FindObject( a.NDOObjectId );
-			Assert.NotNull( m, "1. Mitarbeiter not found" );
-			Assert.NotNull( a, "1. Adresse not found" );
-			Assert.AreEqual( NDOObjectState.Persistent, a.NDOObjectState, "2. Wrong state" );
+			Assert.That(m != null, "1. Mitarbeiter not found" );
+			Assert.That(a != null, "1. Adresse not found" );
+			Assert.That(NDOObjectState.Persistent ==  a.NDOObjectState, "2. Wrong state" );
 		}
 
 		[Test]
@@ -146,11 +146,11 @@ namespace NdoUnitTests
 			pm.MakePersistent( m );
 			pm.Save();
 			m.Adresse = a;
-			Assert.AreEqual( NDOObjectState.Created, a.NDOObjectState, "1. Wrong state" );
-			Assert.NotNull( m.Adresse, "1. Adress not found" );
+			Assert.That(NDOObjectState.Created ==  a.NDOObjectState, "1. Wrong state" );
+			Assert.That(m.Adresse != null, "1. Adress not found" );
 			pm.Abort();
-			Assert.AreEqual( NDOObjectState.Transient, a.NDOObjectState, "2. Wrong state" );
-			Assert.Null( m.Adresse, "1. Adress should be null" );
+			Assert.That(NDOObjectState.Transient ==  a.NDOObjectState, "2. Wrong state" );
+			Assert.That(m.Adresse == null, "1. Adress should be null" );
 		}
 
 		[Test]
@@ -159,18 +159,18 @@ namespace NdoUnitTests
 			pm.MakePersistent( m );
 			m.Adresse = a;
 			pm.Save();
-			Assert.NotNull( m.Adresse, "1. Adress not found" );
+			Assert.That(m.Adresse != null, "1. Adress not found" );
 			m.Adresse = null;
-			Assert.AreEqual( NDOObjectState.Deleted, a.NDOObjectState, "1. Wrong state" );
-			Assert.Null( m.Adresse, "1. Adress should be null" );
+			Assert.That(NDOObjectState.Deleted ==  a.NDOObjectState, "1. Wrong state" );
+			Assert.That(m.Adresse == null, "1. Adress should be null" );
 			pm.Save();
-			Assert.Null( m.Adresse, "2. Adress should be null" );
-			Assert.AreEqual( NDOObjectState.Transient, a.NDOObjectState, "2. Wrong state" );
+			Assert.That(m.Adresse == null, "2. Adress should be null" );
+			Assert.That(NDOObjectState.Transient ==  a.NDOObjectState, "2. Wrong state" );
 			ObjectId moid = m.NDOObjectId;
 			pm.UnloadCache();
 			m = (Mitarbeiter)pm.FindObject( moid );
-			Assert.NotNull( m, "3. Mitarbeiter not found" );
-			Assert.Null( m.Adresse, "3. Adresse should be null" );
+			Assert.That(m != null, "3. Mitarbeiter not found" );
+			Assert.That(m.Adresse == null, "3. Adresse should be null" );
 		}
 
 		[Test]
@@ -179,13 +179,13 @@ namespace NdoUnitTests
 			pm.MakePersistent( m );
 			m.Adresse = a;
 			pm.Save();
-			Assert.NotNull( m.Adresse, "1. Adress not found" );
+			Assert.That(m.Adresse != null, "1. Adress not found" );
 			m.Adresse = null;
-			Assert.AreEqual( NDOObjectState.Deleted, a.NDOObjectState, "1. Wrong state" );
-			Assert.Null( m.Adresse, "2. Adress should be null" );
+			Assert.That(NDOObjectState.Deleted ==  a.NDOObjectState, "1. Wrong state" );
+			Assert.That(m.Adresse == null, "2. Adress should be null" );
 			pm.Abort();
-			Assert.NotNull( m.Adresse, "2. Adress not found" );
-			Assert.AreEqual( NDOObjectState.Persistent, a.NDOObjectState, "2. Wrong state" );
+			Assert.That(m.Adresse != null, "2. Adress not found" );
+			Assert.That(NDOObjectState.Persistent ==  a.NDOObjectState, "2. Wrong state" );
 		}
 
 		[Test]
@@ -195,11 +195,11 @@ namespace NdoUnitTests
 			m.Adresse = a;
 			pm.Save();
 			pm.Delete( m );
-			Assert.AreEqual( NDOObjectState.Deleted, m.NDOObjectState, "1. Wrong state" );
-			Assert.AreEqual( NDOObjectState.Deleted, a.NDOObjectState, "2. Wrong state" );
+			Assert.That(NDOObjectState.Deleted ==  m.NDOObjectState, "1. Wrong state" );
+			Assert.That(NDOObjectState.Deleted ==  a.NDOObjectState, "2. Wrong state" );
 			pm.Save();
-			Assert.AreEqual( NDOObjectState.Transient, m.NDOObjectState, "1. Wrong state" );
-			Assert.AreEqual( NDOObjectState.Transient, a.NDOObjectState, "2. Wrong state" );
+			Assert.That(NDOObjectState.Transient ==  m.NDOObjectState, "1. Wrong state" );
+			Assert.That(NDOObjectState.Transient ==  a.NDOObjectState, "2. Wrong state" );
 		}
 
 
@@ -211,11 +211,11 @@ namespace NdoUnitTests
 			m.Adresse = a;
 			pm.Save();
 			pm.Delete( m );
-			Assert.AreEqual( NDOObjectState.Deleted, m.NDOObjectState, "1. Wrong state" );
-			Assert.AreEqual( NDOObjectState.Deleted, a.NDOObjectState, "2. Wrong state" );
+			Assert.That(NDOObjectState.Deleted ==  m.NDOObjectState, "1. Wrong state" );
+			Assert.That(NDOObjectState.Deleted ==  a.NDOObjectState, "2. Wrong state" );
 			pm.Abort();
-			Assert.AreEqual( NDOObjectState.Persistent, m.NDOObjectState, "1. Wrong state" );
-			Assert.AreEqual( NDOObjectState.Persistent, a.NDOObjectState, "2. Wrong state" );
+			Assert.That(NDOObjectState.Persistent ==  m.NDOObjectState, "1. Wrong state" );
+			Assert.That(NDOObjectState.Persistent ==  a.NDOObjectState, "2. Wrong state" );
 		}
 
 		[Test]
@@ -225,9 +225,9 @@ namespace NdoUnitTests
 			pm.Save();
 			m.Adresse = a;
 			m.Adresse = null;
-			Assert.AreEqual( NDOObjectState.Transient, a.NDOObjectState, "1. Wrong state" );
+			Assert.That(NDOObjectState.Transient ==  a.NDOObjectState, "1. Wrong state" );
 			pm.Save();
-			Assert.AreEqual( NDOObjectState.Transient, a.NDOObjectState, "2. Wrong state" );
+			Assert.That(NDOObjectState.Transient ==  a.NDOObjectState, "2. Wrong state" );
 		}
 
 		[Test]
@@ -237,9 +237,9 @@ namespace NdoUnitTests
 			pm.Save();
 			m.Adresse = a;
 			m.Adresse = null;
-			Assert.AreEqual( NDOObjectState.Transient, a.NDOObjectState, "1. Wrong state" );
+			Assert.That(NDOObjectState.Transient ==  a.NDOObjectState, "1. Wrong state" );
 			pm.Abort();
-			Assert.AreEqual( NDOObjectState.Transient, a.NDOObjectState, "2. Wrong state" );
+			Assert.That(NDOObjectState.Transient ==  a.NDOObjectState, "2. Wrong state" );
 		}
 
 
@@ -252,22 +252,22 @@ namespace NdoUnitTests
 			pm.Save();
 			pm.MakeHollow( m ); // setzt m.adresse auf null
 
-			Assert.AreEqual( NDOObjectState.Hollow, m.NDOObjectState, "1: Mitarbeiter should be hollow" );
-			Assert.AreEqual( NDOObjectState.Persistent, a.NDOObjectState, "1: Adresse should be persistent" );
+			Assert.That(NDOObjectState.Hollow ==  m.NDOObjectState, "1: Mitarbeiter should be hollow" );
+			Assert.That(NDOObjectState.Persistent ==  a.NDOObjectState, "1: Adresse should be persistent" );
 
 			a = m.Adresse; // ruft LoadData för m auf. m.adresse liegt auf dem Cache und ist Persistent
-			Assert.AreEqual( NDOObjectState.Persistent, m.NDOObjectState, "1: Mitarbeiter should be persistent" );
-			Assert.AreEqual( NDOObjectState.Persistent, a.NDOObjectState, "2: Adresse should be persistent" );
+			Assert.That(NDOObjectState.Persistent ==  m.NDOObjectState, "1: Mitarbeiter should be persistent" );
+			Assert.That(NDOObjectState.Persistent ==  a.NDOObjectState, "2: Adresse should be persistent" );
 			ObjectId id = m.NDOObjectId;
 			pm.Close();
 			pm = PmFactory.NewPersistenceManager();
 			m = (Mitarbeiter)pm.FindObject( id );
-			Assert.NotNull( m, "Mitarbeiter not found" );
-			Assert.AreEqual( NDOObjectState.Hollow, m.NDOObjectState, "2: Mitarbeiter should be hollow" );
+			Assert.That(m != null, "Mitarbeiter not found" );
+			Assert.That(NDOObjectState.Hollow ==  m.NDOObjectState, "2: Mitarbeiter should be hollow" );
 			a = m.Adresse;
-			Assert.AreEqual( NDOObjectState.Persistent, m.NDOObjectState, "2: Mitarbeiter should be persistent" );
-			Assert.NotNull( a, "Adress not found" );
-			Assert.AreEqual( NDOObjectState.Hollow, a.NDOObjectState, "1: Adresse should be hollow" );
+			Assert.That(NDOObjectState.Persistent ==  m.NDOObjectState, "2: Mitarbeiter should be persistent" );
+			Assert.That(a != null, "Adress not found" );
+			Assert.That(NDOObjectState.Hollow ==  a.NDOObjectState, "1: Adresse should be hollow" );
 		}
 
 
@@ -278,8 +278,8 @@ namespace NdoUnitTests
 			pm.MakePersistent( m );
 			pm.Save();
 			pm.MakeAllHollow();
-			Assert.AreEqual( NDOObjectState.Hollow, m.NDOObjectState, "1: Mitarbeiter should be hollow" );
-			Assert.AreEqual( NDOObjectState.Hollow, a.NDOObjectState, "1: Adresse should be hollow" );
+			Assert.That(NDOObjectState.Hollow ==  m.NDOObjectState, "1: Mitarbeiter should be hollow" );
+			Assert.That(NDOObjectState.Hollow ==  a.NDOObjectState, "1: Adresse should be hollow" );
 		}
 
 		[Test]
@@ -288,8 +288,8 @@ namespace NdoUnitTests
 			m.Adresse = a;
 			pm.MakePersistent( m );
 			pm.MakeAllHollow();  // before save, objects cannot be made hollow. => in locked objects
-			Assert.AreEqual( NDOObjectState.Created, m.NDOObjectState, "1: Mitarbeiter should be created" );
-			Assert.AreEqual( NDOObjectState.Created, a.NDOObjectState, "1: Adresse should be created" );
+			Assert.That(NDOObjectState.Created ==  m.NDOObjectState, "1: Mitarbeiter should be created" );
+			Assert.That(NDOObjectState.Created ==  a.NDOObjectState, "1: Adresse should be created" );
 		}
 
 
@@ -301,23 +301,23 @@ namespace NdoUnitTests
 			pm.Save();
 			IList liste = pm.GetClassExtent( typeof( Mitarbeiter ) );
 			m = (Mitarbeiter)liste[0];
-			Assert.AreEqual( NDOObjectState.Persistent, m.NDOObjectState, "1: Mitarbeiter should be persistent" );
-			Assert.NotNull( m.Adresse, "2. Relation is missing" );
-			Assert.AreEqual( NDOObjectState.Persistent, m.Adresse.NDOObjectState, "4.: Adresse should be hollow" );
+			Assert.That(NDOObjectState.Persistent ==  m.NDOObjectState, "1: Mitarbeiter should be persistent" );
+			Assert.That(m.Adresse != null, "2. Relation is missing" );
+			Assert.That(NDOObjectState.Persistent ==  m.Adresse.NDOObjectState, "4.: Adresse should be hollow" );
 
 			pm.UnloadCache();
 			liste = pm.GetClassExtent( typeof( Mitarbeiter ) );
 			m = (Mitarbeiter)liste[0];
-			Assert.AreEqual( NDOObjectState.Hollow, m.NDOObjectState, "5: Mitarbeiter should be hollow" );
-			Assert.NotNull( m.Adresse, "6. Relation is missing" );
-			Assert.AreEqual( NDOObjectState.Hollow, m.Adresse.NDOObjectState, "8.: Adresse should be hollow" );
+			Assert.That(NDOObjectState.Hollow ==  m.NDOObjectState, "5: Mitarbeiter should be hollow" );
+			Assert.That(m.Adresse != null, "6. Relation is missing" );
+			Assert.That(NDOObjectState.Hollow ==  m.Adresse.NDOObjectState, "8.: Adresse should be hollow" );
 
 			pm.UnloadCache();
 			liste = pm.GetClassExtent( typeof( Mitarbeiter ), false );
 			m = (Mitarbeiter)liste[0];
-			Assert.AreEqual( NDOObjectState.Persistent, m.NDOObjectState, "9: Mitarbeiter should be persistent" );
-			Assert.NotNull( m.Adresse, "10. Relation is missing" );
-			Assert.AreEqual( NDOObjectState.Hollow, m.Adresse.NDOObjectState, "12.: Adresse should be hollow" );
+			Assert.That(NDOObjectState.Persistent ==  m.NDOObjectState, "9: Mitarbeiter should be persistent" );
+			Assert.That(m.Adresse != null, "10. Relation is missing" );
+			Assert.That(NDOObjectState.Hollow ==  m.Adresse.NDOObjectState, "12.: Adresse should be hollow" );
 		}
 
 		#endregion
@@ -337,7 +337,7 @@ namespace NdoUnitTests
 			{
 				thrown = true;
 			}
-			Assert.AreEqual( true, thrown );
+			Assert.That(true ==  thrown );
 		}
 
 		[Test]
@@ -353,7 +353,7 @@ namespace NdoUnitTests
 			{
 				thrown = true;
 			}
-			Assert.AreEqual( true, thrown );
+			Assert.That(true ==  thrown );
 		}
 
 		[Test]
@@ -366,8 +366,8 @@ namespace NdoUnitTests
 			Assert.That( !m.NDOObjectId.Equals( b.NDOObjectId ), "Ids should be different" );
 			m = (Mitarbeiter)pm.FindObject( m.NDOObjectId );
 			b = (Buero)pm.FindObject( b.NDOObjectId );
-			Assert.NotNull( m, "1. Mitarbeiter not found" );
-			Assert.NotNull( b, "1. Büro not found" );
+			Assert.That(m != null, "1. Mitarbeiter not found" );
+			Assert.That(b != null, "1. Büro not found" );
 			ObjectId moid = m.NDOObjectId;
 			ObjectId boid = b.NDOObjectId;
 			m = null;
@@ -377,9 +377,9 @@ namespace NdoUnitTests
 			m = (Mitarbeiter)pm.FindObject( moid );
 			Buero b2 = m.Zimmer;
 			b = (Buero)pm.FindObject( boid );
-			Assert.NotNull( m, "2. Mitarbeiter not found" );
-			Assert.NotNull( b, "2. Adresse not found" );
-			Assert.AreSame( b, b2, "Büro should match" );
+			Assert.That(m != null, "2. Mitarbeiter not found" );
+			Assert.That(b != null, "2. Adresse not found" );
+			Assert.That(Object.ReferenceEquals(b, b2), "Büro should match" );
 		}
 
 		[Test]
@@ -402,14 +402,14 @@ namespace NdoUnitTests
 			pm.MakePersistent( m );
 			pm.Save();
 			m.Zimmer = b;
-			Assert.AreEqual( NDOObjectState.Persistent, b.NDOObjectState, "1. Wrong state" );
-			Assert.AreEqual( NDOObjectState.PersistentDirty, m.NDOObjectState, "2. Wrong state" );
+			Assert.That(NDOObjectState.Persistent ==  b.NDOObjectState, "1. Wrong state" );
+			Assert.That(NDOObjectState.PersistentDirty ==  m.NDOObjectState, "2. Wrong state" );
 			pm.Save();
 			m = (Mitarbeiter)pm.FindObject( m.NDOObjectId );
 			b = (Buero)pm.FindObject( b.NDOObjectId );
-			Assert.NotNull( m, "1. Mitarbeiter not found" );
-			Assert.NotNull( b, "1. Büro not found" );
-			Assert.AreEqual( NDOObjectState.Persistent, m.NDOObjectState, "2. Wrong state" );
+			Assert.That(m != null, "1. Mitarbeiter not found" );
+			Assert.That(b != null, "1. Büro not found" );
+			Assert.That(NDOObjectState.Persistent ==  m.NDOObjectState, "2. Wrong state" );
 		}
 
 
@@ -431,7 +431,7 @@ namespace NdoUnitTests
 			pm.Save();
 			pm.UnloadCache();
 			count = (decimal)q.ExecuteAggregate( m => m.Nachname, AggregateType.Count );
-			Assert.AreEqual( 0m, count, "Count should be 0" );
+			Assert.That(0m ==  count, "Count should be 0" );
 		}
 
 		[Test]
@@ -441,11 +441,11 @@ namespace NdoUnitTests
 			pm.MakePersistent( m );
 			pm.Save();
 			m.Zimmer = b;
-			Assert.AreEqual( NDOObjectState.Persistent, b.NDOObjectState, "1. Wrong state" );
-			Assert.NotNull( m.Zimmer, "1. Büro not found" );
+			Assert.That(NDOObjectState.Persistent ==  b.NDOObjectState, "1. Wrong state" );
+			Assert.That(m.Zimmer != null, "1. Büro not found" );
 			pm.Abort();
-			Assert.AreEqual( NDOObjectState.Persistent, b.NDOObjectState, "2. Wrong state" );
-			Assert.Null( m.Zimmer, "1. Büro should be null" );
+			Assert.That(NDOObjectState.Persistent ==  b.NDOObjectState, "2. Wrong state" );
+			Assert.That(m.Zimmer == null, "1. Büro should be null" );
 		}
 
 		[Test]
@@ -455,21 +455,21 @@ namespace NdoUnitTests
 			pm.MakePersistent( m );
 			m.Zimmer = b;
 			pm.Save();
-			Assert.NotNull( m.Zimmer, "1. Büro not found" );
+			Assert.That(m.Zimmer != null, "1. Büro not found" );
 			m.Zimmer = null;
-			Assert.AreEqual( NDOObjectState.Persistent, b.NDOObjectState, "1. Wrong state" );
-			Assert.Null( m.Zimmer, "1. Büro should be null" );
+			Assert.That(NDOObjectState.Persistent ==  b.NDOObjectState, "1. Wrong state" );
+			Assert.That(m.Zimmer == null, "1. Büro should be null" );
 			pm.Save();
-			Assert.Null( m.Zimmer, "2. Büro should be null" );
-			Assert.AreEqual( NDOObjectState.Persistent, b.NDOObjectState, "2. Wrong state" );
+			Assert.That(m.Zimmer == null, "2. Büro should be null" );
+			Assert.That(NDOObjectState.Persistent ==  b.NDOObjectState, "2. Wrong state" );
 			ObjectId moid = m.NDOObjectId;
 			ObjectId boid = b.NDOObjectId;
 			pm.UnloadCache();
 			m = (Mitarbeiter)pm.FindObject( moid );
-			Assert.NotNull( m, "3. Mitarbeiter not found" );
-			Assert.Null( m.Zimmer, "3. Büro should be null" );
+			Assert.That(m != null, "3. Mitarbeiter not found" );
+			Assert.That(m.Zimmer == null, "3. Büro should be null" );
 			b = (Buero)pm.FindObject( boid );
-			Assert.NotNull( b, "3. Buero not found" );
+			Assert.That(b != null, "3. Buero not found" );
 		}
 
 		[Test]
@@ -479,13 +479,13 @@ namespace NdoUnitTests
 			pm.MakePersistent( m );
 			m.Zimmer = b;
 			pm.Save();
-			Assert.NotNull( m.Zimmer, "1. Büro not found" );
+			Assert.That(m.Zimmer != null, "1. Büro not found" );
 			m.Zimmer = null;
-			Assert.AreEqual( NDOObjectState.Persistent, b.NDOObjectState, "1. Wrong state" );
-			Assert.Null( m.Zimmer, "2. Büro should be null" );
+			Assert.That(NDOObjectState.Persistent ==  b.NDOObjectState, "1. Wrong state" );
+			Assert.That(m.Zimmer == null, "2. Büro should be null" );
 			pm.Abort();
-			Assert.NotNull( m.Zimmer, "2. Büro not found" );
-			Assert.AreEqual( NDOObjectState.Persistent, b.NDOObjectState, "2. Wrong state" );
+			Assert.That(m.Zimmer != null, "2. Büro not found" );
+			Assert.That(NDOObjectState.Persistent ==  b.NDOObjectState, "2. Wrong state" );
 		}
 
 		[Test]
@@ -496,11 +496,11 @@ namespace NdoUnitTests
 			m.Zimmer = b;
 			pm.Save();
 			pm.Delete( m );
-			Assert.AreEqual( NDOObjectState.Deleted, m.NDOObjectState, "1. Wrong state" );
-			Assert.AreEqual( NDOObjectState.Persistent, b.NDOObjectState, "2. Wrong state" );
+			Assert.That(NDOObjectState.Deleted ==  m.NDOObjectState, "1. Wrong state" );
+			Assert.That(NDOObjectState.Persistent ==  b.NDOObjectState, "2. Wrong state" );
 			pm.Save();
-			Assert.AreEqual( NDOObjectState.Transient, m.NDOObjectState, "1. Wrong state" );
-			Assert.AreEqual( NDOObjectState.Persistent, b.NDOObjectState, "2. Wrong state" );
+			Assert.That(NDOObjectState.Transient ==  m.NDOObjectState, "1. Wrong state" );
+			Assert.That(NDOObjectState.Persistent ==  b.NDOObjectState, "2. Wrong state" );
 		}
 
 
@@ -513,11 +513,11 @@ namespace NdoUnitTests
 			m.Zimmer = b;
 			pm.Save();
 			pm.Delete( m );
-			Assert.AreEqual( NDOObjectState.Deleted, m.NDOObjectState, "1. Wrong state" );
-			Assert.AreEqual( NDOObjectState.Persistent, b.NDOObjectState, "2. Wrong state" );
+			Assert.That(NDOObjectState.Deleted ==  m.NDOObjectState, "1. Wrong state" );
+			Assert.That(NDOObjectState.Persistent ==  b.NDOObjectState, "2. Wrong state" );
 			pm.Abort();
-			Assert.AreEqual( NDOObjectState.Persistent, m.NDOObjectState, "1. Wrong state" );
-			Assert.AreEqual( NDOObjectState.Persistent, b.NDOObjectState, "2. Wrong state" );
+			Assert.That(NDOObjectState.Persistent ==  m.NDOObjectState, "1. Wrong state" );
+			Assert.That(NDOObjectState.Persistent ==  b.NDOObjectState, "2. Wrong state" );
 		}
 
 		[Test]
@@ -528,9 +528,9 @@ namespace NdoUnitTests
 			pm.Save();
 			m.Zimmer = b;
 			m.Zimmer = null;
-			Assert.AreEqual( NDOObjectState.Persistent, b.NDOObjectState, "1. Wrong state" );
+			Assert.That(NDOObjectState.Persistent ==  b.NDOObjectState, "1. Wrong state" );
 			pm.Save();
-			Assert.AreEqual( NDOObjectState.Persistent, b.NDOObjectState, "2. Wrong state" );
+			Assert.That(NDOObjectState.Persistent ==  b.NDOObjectState, "2. Wrong state" );
 		}
 
 		[Test]
@@ -541,9 +541,9 @@ namespace NdoUnitTests
 			pm.Save();
 			m.Zimmer = b;
 			m.Zimmer = null;
-			Assert.AreEqual( NDOObjectState.Persistent, b.NDOObjectState, "1. Wrong state" );
+			Assert.That(NDOObjectState.Persistent ==  b.NDOObjectState, "1. Wrong state" );
 			pm.Abort();
-			Assert.AreEqual( NDOObjectState.Persistent, b.NDOObjectState, "2. Wrong state" );
+			Assert.That(NDOObjectState.Persistent ==  b.NDOObjectState, "2. Wrong state" );
 		}
 
 
@@ -557,22 +557,22 @@ namespace NdoUnitTests
 			pm.Save();
 			pm.MakeHollow( m ); // setzt m.Zimmer auf null
 
-			Assert.AreEqual( NDOObjectState.Hollow, m.NDOObjectState, "1: Mitarbeiter should be hollow" );
-			Assert.AreEqual( NDOObjectState.Persistent, b.NDOObjectState, "1: Büro should be persistent" );
+			Assert.That(NDOObjectState.Hollow ==  m.NDOObjectState, "1: Mitarbeiter should be hollow" );
+			Assert.That(NDOObjectState.Persistent ==  b.NDOObjectState, "1: Büro should be persistent" );
 
 			b = m.Zimmer; // ruft LoadData för m auf. m.Zimmer liegt im Cache und ist Persistent
-			Assert.AreEqual( NDOObjectState.Persistent, m.NDOObjectState, "1: Mitarbeiter should be persistent" );
-			Assert.AreEqual( NDOObjectState.Persistent, b.NDOObjectState, "2: Adresse should be persistent" );
+			Assert.That(NDOObjectState.Persistent ==  m.NDOObjectState, "1: Mitarbeiter should be persistent" );
+			Assert.That(NDOObjectState.Persistent ==  b.NDOObjectState, "2: Adresse should be persistent" );
 			ObjectId id = m.NDOObjectId;
 			pm.Close();
 			pm = PmFactory.NewPersistenceManager();
 			m = (Mitarbeiter)pm.FindObject( id );
-			Assert.NotNull( m, "Mitarbeiter not found" );
-			Assert.AreEqual( NDOObjectState.Hollow, m.NDOObjectState, "2: Mitarbeiter should be hollow" );
+			Assert.That(m != null, "Mitarbeiter not found" );
+			Assert.That(NDOObjectState.Hollow ==  m.NDOObjectState, "2: Mitarbeiter should be hollow" );
 			b = m.Zimmer;
-			Assert.AreEqual( NDOObjectState.Persistent, m.NDOObjectState, "2: Mitarbeiter should be persistent" );
-			Assert.NotNull( b, "Büro not found" );
-			Assert.AreEqual( NDOObjectState.Hollow, b.NDOObjectState, "1: Büro should be hollow" );
+			Assert.That(NDOObjectState.Persistent ==  m.NDOObjectState, "2: Mitarbeiter should be persistent" );
+			Assert.That(b != null, "Büro not found" );
+			Assert.That(NDOObjectState.Hollow ==  b.NDOObjectState, "1: Büro should be hollow" );
 		}
 
 
@@ -584,8 +584,8 @@ namespace NdoUnitTests
 			pm.MakePersistent( m );
 			pm.Save();
 			pm.MakeAllHollow();
-			Assert.AreEqual( NDOObjectState.Hollow, m.NDOObjectState, "1: Mitarbeiter should be hollow" );
-			Assert.AreEqual( NDOObjectState.Hollow, b.NDOObjectState, "1: Büro should be hollow" );
+			Assert.That(NDOObjectState.Hollow ==  m.NDOObjectState, "1: Mitarbeiter should be hollow" );
+			Assert.That(NDOObjectState.Hollow ==  b.NDOObjectState, "1: Büro should be hollow" );
 		}
 
 		[Test]
@@ -595,8 +595,8 @@ namespace NdoUnitTests
 			m.Zimmer = b;
 			pm.MakePersistent( m );
 			pm.MakeAllHollow();  // before save, objects cannot be made hollow. => in locked objects
-			Assert.AreEqual( NDOObjectState.Created, m.NDOObjectState, "1: Mitarbeiter should be created" );
-			Assert.AreEqual( NDOObjectState.Created, b.NDOObjectState, "1: Büro should be created" );
+			Assert.That(NDOObjectState.Created ==  m.NDOObjectState, "1: Mitarbeiter should be created" );
+			Assert.That(NDOObjectState.Created ==  b.NDOObjectState, "1: Büro should be created" );
 		}
 
 		[Test]
@@ -607,8 +607,8 @@ namespace NdoUnitTests
 			m.Zimmer = b;
 			pm.MakePersistent( m );
 			pm.MakeAllHollow();  // before save, objects cannot be made hollow. => in locked objects
-			Assert.AreEqual( NDOObjectState.Created, m.NDOObjectState, "1: Mitarbeiter should be created" );
-			Assert.AreEqual( NDOObjectState.Hollow, b.NDOObjectState, "1: Büro should be hollow" );
+			Assert.That(NDOObjectState.Created ==  m.NDOObjectState, "1: Mitarbeiter should be created" );
+			Assert.That(NDOObjectState.Hollow ==  b.NDOObjectState, "1: Büro should be hollow" );
 		}
 
 		[Test]
@@ -620,23 +620,23 @@ namespace NdoUnitTests
 			pm.Save();
 			IList liste = pm.GetClassExtent( typeof( Mitarbeiter ) );
 			m = (Mitarbeiter)liste[0];
-			Assert.AreEqual( NDOObjectState.Persistent, m.NDOObjectState, "1: Mitarbeiter should be persistent" );
-			Assert.NotNull( m.Zimmer, "2. Relation is missing" );
-			Assert.AreEqual( NDOObjectState.Persistent, m.Zimmer.NDOObjectState, "4.: Büro should be hollow" );
+			Assert.That(NDOObjectState.Persistent ==  m.NDOObjectState, "1: Mitarbeiter should be persistent" );
+			Assert.That(m.Zimmer != null, "2. Relation is missing" );
+			Assert.That(NDOObjectState.Persistent ==  m.Zimmer.NDOObjectState, "4.: Büro should be hollow" );
 
 			pm.UnloadCache();
 			liste = pm.GetClassExtent( typeof( Mitarbeiter ) );
 			m = (Mitarbeiter)liste[0];
-			Assert.AreEqual( NDOObjectState.Hollow, m.NDOObjectState, "5: Mitarbeiter should be hollow" );
-			Assert.NotNull( m.Zimmer, "6. Relation is missing" );
-			Assert.AreEqual( NDOObjectState.Hollow, m.Zimmer.NDOObjectState, "8.: Büro should be hollow" );
+			Assert.That(NDOObjectState.Hollow ==  m.NDOObjectState, "5: Mitarbeiter should be hollow" );
+			Assert.That(m.Zimmer != null, "6. Relation is missing" );
+			Assert.That(NDOObjectState.Hollow ==  m.Zimmer.NDOObjectState, "8.: Büro should be hollow" );
 
 			pm.UnloadCache();
 			liste = pm.GetClassExtent( typeof( Mitarbeiter ), false );
 			m = (Mitarbeiter)liste[0];
-			Assert.AreEqual( NDOObjectState.Persistent, m.NDOObjectState, "9: Mitarbeiter should be persistent" );
-			Assert.NotNull( m.Zimmer, "10. Relation is missing" );
-			Assert.AreEqual( NDOObjectState.Hollow, m.Zimmer.NDOObjectState, "12.: Büro should be hollow" );
+			Assert.That(NDOObjectState.Persistent ==  m.NDOObjectState, "9: Mitarbeiter should be persistent" );
+			Assert.That(m.Zimmer != null, "10. Relation is missing" );
+			Assert.That(NDOObjectState.Hollow ==  m.Zimmer.NDOObjectState, "12.: Büro should be hollow" );
 		}
 		#endregion
 
@@ -653,9 +653,9 @@ namespace NdoUnitTests
 			m = (Mitarbeiter)pm.FindObject( m.NDOObjectId );
 			a = (Adresse)pm.FindObject( a.NDOObjectId );
 			b = (Buero)pm.FindObject( b.NDOObjectId );
-			Assert.NotNull( m, "1. Mitarbeiter not found" );
-			Assert.NotNull( a, "1. Adresse not found" );
-			Assert.NotNull( b, "1. Büro not found" );
+			Assert.That(m != null, "1. Mitarbeiter not found" );
+			Assert.That(a != null, "1. Adresse not found" );
+			Assert.That(b != null, "1. Büro not found" );
 			ObjectId moid = m.NDOObjectId;
 			ObjectId aoid = a.NDOObjectId;
 			ObjectId boid = b.NDOObjectId;
@@ -665,9 +665,9 @@ namespace NdoUnitTests
 
 			pm.UnloadCache();
 			m = (Mitarbeiter)pm.FindObject( moid );
-			Assert.NotNull( m, "2. Mitarbeiter not found" );
-			Assert.NotNull( m.Adresse, "2. Adresse not found" );
-			Assert.NotNull( m.Zimmer, "2. Büro not found" );
+			Assert.That(m != null, "2. Mitarbeiter not found" );
+			Assert.That(m.Adresse != null, "2. Adresse not found" );
+			Assert.That(m.Zimmer != null, "2. Büro not found" );
 		}
 		[Test]
 		public void TestForeignKeyConstraint()
@@ -695,9 +695,9 @@ namespace NdoUnitTests
 
 			pm.UnloadCache();
 			m = (Mitarbeiter)pm.FindObject( moid );
-			Assert.NotNull( m, "2. Mitarbeiter not found" );
-			Assert.NotNull( m.Adresse, "2. Adresse not found" );
-			Assert.NotNull( m.Zimmer, "2. Büro not found" );
+			Assert.That(m != null, "2. Mitarbeiter not found" );
+			Assert.That(m.Adresse != null, "2. Adresse not found" );
+			Assert.That(m.Zimmer != null, "2. Büro not found" );
 		}
 
 		[Test]
@@ -718,11 +718,11 @@ namespace NdoUnitTests
 
 			pm.UnloadCache();
 			m = (Mitarbeiter)pm.FindObject( moid );
-			Assert.NotNull( m, "Mitarbeiter not found" );
-			Assert.NotNull( m.Adresse, "Adresse not found" );
-			Assert.Null( m.Zimmer, "Unexpected Büro" );
+			Assert.That(m != null, "Mitarbeiter not found" );
+			Assert.That(m.Adresse != null, "Adresse not found" );
+			Assert.That(m.Zimmer == null, "Unexpected Büro" );
 			b = (Buero)pm.FindObject( boid );
-			Assert.NotNull( b, "Büro not found" );
+			Assert.That(b != null, "Büro not found" );
 		}
 
 		[Test]
@@ -743,9 +743,9 @@ namespace NdoUnitTests
 
 			pm.UnloadCache();
 			m = (Mitarbeiter)pm.FindObject( moid );
-			Assert.NotNull( m, "Mitarbeiter not found" );
-			Assert.NotNull( m.Zimmer, "Büro not found" );
-			Assert.Null( m.Adresse, "Unexpected Adresse" );
+			Assert.That(m != null, "Mitarbeiter not found" );
+			Assert.That(m.Zimmer != null, "Büro not found" );
+			Assert.That(m.Adresse == null, "Unexpected Adresse" );
 			Assert.That( adr.NDOObjectState == NDOObjectState.Transient, "Adresse should be deleted" );
 		}
 
@@ -765,9 +765,9 @@ namespace NdoUnitTests
 
 			pm.UnloadCache();
 			m = (Mitarbeiter)pm.FindObject( moid );
-			Assert.NotNull( m, "Mitarbeiter not found" );
-			Assert.NotNull( m.Zimmer, "Büro not found" );
-			Assert.Null( m.Adresse, "Unexpected Adresse" );
+			Assert.That(m != null, "Mitarbeiter not found" );
+			Assert.That(m.Zimmer != null, "Büro not found" );
+			Assert.That(m.Adresse == null, "Unexpected Adresse" );
 		}
 
 		[Test]
@@ -786,9 +786,9 @@ namespace NdoUnitTests
 
 			pm.UnloadCache();
 			m = (Mitarbeiter)pm.FindObject( moid );
-			Assert.NotNull( m, "Mitarbeiter not found" );
-			Assert.NotNull( m.Adresse, "Adresse not found" );
-			Assert.Null( m.Zimmer, "Unexpected Büro" );
+			Assert.That(m != null, "Mitarbeiter not found" );
+			Assert.That(m.Adresse != null, "Adresse not found" );
+			Assert.That(m.Zimmer == null, "Unexpected Büro" );
 		}
 
 		[Test]
@@ -809,9 +809,9 @@ namespace NdoUnitTests
 
 			pm.UnloadCache();
 			m = (Mitarbeiter)pm.FindObject( moid );
-			Assert.NotNull( m, "Mitarbeiter not found" );
-			Assert.NotNull( m.Adresse, "Adresse not found" );
-			Assert.Null( m.Zimmer, "Unexpected Büro" );
+			Assert.That(m != null, "Mitarbeiter not found" );
+			Assert.That(m.Adresse != null, "Adresse not found" );
+			Assert.That(m.Zimmer == null, "Unexpected Büro" );
 		}
 
 		[Test]
@@ -825,9 +825,9 @@ namespace NdoUnitTests
 			m.Zimmer = b;
 			m.Adresse = null;
 			pm.Abort();
-			Assert.NotNull( m, "1. Mitarbeiter not found" );
-			Assert.NotNull( m.Adresse, "1. Adresse not found" );
-			Assert.Null( m.Zimmer, "1. Unexpected Büro" );
+			Assert.That(m != null, "1. Mitarbeiter not found" );
+			Assert.That(m.Adresse != null, "1. Adresse not found" );
+			Assert.That(m.Zimmer == null, "1. Unexpected Büro" );
 
 
 			ObjectId moid = m.NDOObjectId;
@@ -837,9 +837,9 @@ namespace NdoUnitTests
 
 			pm.UnloadCache();
 			m = (Mitarbeiter)pm.FindObject( moid );
-			Assert.NotNull( m, "2. Mitarbeiter not found" );
-			Assert.NotNull( m.Adresse, "2. Adresse not found" );
-			Assert.Null( m.Zimmer, "2. Unexpected Büro" );
+			Assert.That(m != null, "2. Mitarbeiter not found" );
+			Assert.That(m.Adresse != null, "2. Adresse not found" );
+			Assert.That(m.Zimmer == null, "2. Unexpected Büro" );
 		}
 		#endregion
 

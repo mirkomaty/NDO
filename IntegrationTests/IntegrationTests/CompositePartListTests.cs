@@ -84,14 +84,14 @@ namespace NdoUnitTests
             NDOQuery<Device> q = new NDOQuery<Device>(pm);
             decimal c = (decimal)q.ExecuteAggregate("name", AggregateType.Count);
 
-            Assert.AreEqual(7m, c, "Count wrong: ");
+            Assert.That(7m ==  c, "Count wrong: ");
 
             q = new NDOQuery<Device>(pm, "name = {0}");
             q.Parameters.Add("root");
 
             root = q.ExecuteSingle(true);
 
-            Assert.AreEqual(2, root.Subdevices.Count, "Child Count wrong #1: ");
+            Assert.That(2 ==  root.Subdevices.Count, "Child Count wrong #1: ");
             foreach (Device d in root.Subdevices)
             {
                 Assert.That(d.Name == "1" || d.Name == "2", "Name wrong #1");
@@ -103,7 +103,7 @@ namespace NdoUnitTests
 
             q = new NDOQuery<Device>(pm);
             c = (decimal)q.ExecuteAggregate("name", AggregateType.Count);
-            Assert.AreEqual(0m, c, "Count wrong: ");
+            Assert.That(0m ==  c, "Count wrong: ");
 
         }
 
@@ -142,14 +142,14 @@ namespace NdoUnitTests
             NDOQuery<Device> q = new NDOQuery<Device>(pm);
             decimal c = (decimal)q.ExecuteAggregate(AggregateType.Count);  // COUNT (*) FROM...
 
-            Assert.AreEqual(7m, c, "Count wrong: ");
+            Assert.That(7m ==  c, "Count wrong: ");
 
             q = new NDOQuery<Device>(pm, "name = {0}");
             q.Parameters.Add("root");
 
             root = q.ExecuteSingle(true);
 
-            Assert.AreEqual(2, root.Subdevices.Count, "Child Count wrong #1: ");
+            Assert.That(2 ==  root.Subdevices.Count, "Child Count wrong #1: ");
             foreach (Device d in root.Subdevices)
             {
                 Assert.That(d.Name == "1" || d.Name == "2", "Name wrong #1");
@@ -161,7 +161,7 @@ namespace NdoUnitTests
 
             q = new NDOQuery<Device>(pm);
             c = (decimal)q.ExecuteAggregate("name", AggregateType.Count);
-            Assert.AreEqual(0, c, "Count wrong: ");
+            Assert.That(0 ==  c, "Count wrong: ");
         }
 
 
@@ -199,14 +199,14 @@ namespace NdoUnitTests
             NDOQuery<Device> q = new NDOQuery<Device>(pm);
             decimal c = (decimal)q.ExecuteAggregate("name", AggregateType.Count);
 
-            Assert.AreEqual(7m, c, "Count wrong: ");
+            Assert.That(7m ==  c, "Count wrong: ");
 
             q = new NDOQuery<Device>(pm, "name = {0}");
             q.Parameters.Add("root");
 
             root = q.ExecuteSingle(true);
 
-            Assert.AreEqual(2, root.Subdevices.Count, "Child Count wrong #1: ");
+            Assert.That(2 ==  root.Subdevices.Count, "Child Count wrong #1: ");
             foreach (Device d in root.Subdevices)
             {
                 Assert.That(d.Name == "1" || d.Name == "2", "Name wrong #1");
@@ -218,7 +218,7 @@ namespace NdoUnitTests
 
             q = new NDOQuery<Device>(pm);
             c = (decimal)q.ExecuteAggregate("name", AggregateType.Count);
-            Assert.AreEqual(0m, c, "Count wrong: ");
+            Assert.That(0m ==  c, "Count wrong: ");
         }
 
 
@@ -229,11 +229,11 @@ namespace NdoUnitTests
             Class cl = pm.NDOMapping.FindClass(typeof(Device));
             Relation r = cl.FindRelation("subdevices");
             Assert.That(r.Bidirectional == false, "Relation shouldn't be bidirectional #1");
-            Assert.Null(r.ForeignRelation, "No foreign Relation should appear #1");
+            Assert.That(r.ForeignRelation == null, "No foreign Relation should appear #1");
             cl = pm.NDOMapping.FindClass(typeof(SnmpDevice));
             r = cl.FindRelation("subdevices");
             Assert.That(r.Bidirectional == false, "Relation shouldn't be bidirectional #1");
-            Assert.Null(r.ForeignRelation, "No foreign Relation should appear #1");
+            Assert.That(r.ForeignRelation == null, "No foreign Relation should appear #1");
         }
 
     }

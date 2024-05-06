@@ -87,18 +87,18 @@ namespace NdoUnitTests
 			mapping.Save();
 			mapping = new NDOMapping(testFile);
 
-			Assert.AreEqual(1, mapping.Connections.Count, "Keine Connection");
-			Assert.AreEqual(1, mapping.Classes.Count, "Keine Klasse");
+			Assert.That(1 ==  mapping.Connections.Count, "Keine Connection");
+			Assert.That(1 ==  mapping.Classes.Count, "Keine Klasse");
 
 			Class c = (Class) mapping.Classes[0];
 
-			Assert.AreEqual("Mitarbeiter", c.TableName, "TableName falsch");
-			Assert.NotNull(c.Oid, "Keine Oid");
-			Assert.AreEqual("C0", mapping.FindConnection(c).ID, "Connection C0 nicht gefunden");
+			Assert.That("Mitarbeiter" ==  c.TableName, "TableName falsch");
+			Assert.That(c.Oid != null, "Keine Oid");
+			Assert.That("C0" ==  mapping.FindConnection(c).ID, "Connection C0 nicht gefunden");
 
 			c = mapping.FindClass(classMitarbeiter);
 
-			Assert.NotNull(c, "FindClass fehlgeschlagen");
+			Assert.That(c != null, "FindClass fehlgeschlagen");
 
 			File.Delete(testFile);
 		}
@@ -115,10 +115,10 @@ namespace NdoUnitTests
 			mapping = new NDOMapping(testFile);
 
 			Class c = mapping.FindClass(classMitarbeiter);
-			Assert.NotNull(c, classMitarbeiter + " nicht gefunden");
+			Assert.That(c != null, classMitarbeiter + " nicht gefunden");
 
 			Class c2 = mapping.FindClass(newclassMitarbeiter);
-			Assert.NotNull(c, newclassMitarbeiter + " nicht gefunden");
+			Assert.That(c != null, newclassMitarbeiter + " nicht gefunden");
 
 			Assert.That(c.TableName != c2.TableName, "TableNames mössen ungleich sein");
 		}
@@ -133,18 +133,18 @@ namespace NdoUnitTests
 			mapping.Save();
 			mapping = new NDOMapping(testFile);
 
-			Assert.AreEqual(1, mapping.Connections.Count, "Keine Connection");
-			Assert.AreEqual(1, mapping.Classes.Count, "Keine Klasse");
+			Assert.That(1 ==  mapping.Connections.Count, "Keine Connection");
+			Assert.That(1 ==  mapping.Classes.Count, "Keine Klasse");
 
 			c = (Class) mapping.Classes[0];
 
-			Assert.AreEqual("Mitarbeiter", c.TableName, "TableName falsch");
-			Assert.NotNull(c.Oid, "Keine Oid");
-			Assert.AreEqual(1, c.Fields.Count, "Kein Field");
+			Assert.That("Mitarbeiter" ==  c.TableName, "TableName falsch");
+			Assert.That(c.Oid != null, "Keine Oid");
+			Assert.That(1 ==  c.Fields.Count, "Kein Field");
 
 			Field f = (Field) c.Fields[0];
 
-			Assert.AreEqual("Vorname", f.Column.Name, "ColumnName falsch");
+			Assert.That("Vorname" ==  f.Column.Name, "ColumnName falsch");
 		}
 
 
@@ -157,16 +157,16 @@ namespace NdoUnitTests
 			c.AddStandardRelation("dieReisen", "Reise", false,"", false, false);
 			mapping.Save();
 			mapping = new NDOMapping(testFile);
-			Assert.AreEqual(1, mapping.Connections.Count, "Keine Connection");
-			Assert.AreEqual(1, mapping.Classes.Count, "Keine Klasse");
+			Assert.That(1 ==  mapping.Connections.Count, "Keine Connection");
+			Assert.That(1 ==  mapping.Classes.Count, "Keine Klasse");
 			c = (Class) mapping.Classes[0];
-			Assert.AreEqual("Mitarbeiter", c.TableName, "TableName falsch");
-			Assert.NotNull(c.Oid, "Keine Oid");
-			Assert.AreEqual(1, c.Relations.Count, "Keine Relation");
+			Assert.That("Mitarbeiter" ==  c.TableName, "TableName falsch");
+			Assert.That(c.Oid != null, "Keine Oid");
+			Assert.That(1 ==  c.Relations.Count, "Keine Relation");
 			Relation r = (Relation) c.Relations[0];
-			Assert.AreEqual("dieReisen", r.FieldName, "FieldName falsch");
-			Assert.AreEqual("n", r.GetRelationType(), "Relationstyp falsch");
-			Assert.AreEqual("IDMitarbeiter", ((ForeignKeyColumn)r.ForeignKeyColumns[0]).Name, "ForeignKeyColumnName falsch");
+			Assert.That("dieReisen" ==  r.FieldName, "FieldName falsch");
+			Assert.That("n" ==  r.GetRelationType(), "Relationstyp falsch");
+			Assert.That("IDMitarbeiter" ==  ((ForeignKeyColumn)r.ForeignKeyColumns[0]).Name, "ForeignKeyColumnName falsch");
 		}
 
 
@@ -179,16 +179,16 @@ namespace NdoUnitTests
 			c.AddStandardRelation("dieReise", "Reise", true,"", false, false);
 			mapping.Save();
 			mapping = new NDOMapping(testFile);
-			Assert.AreEqual(1, mapping.Connections.Count, "Keine Connection");
-			Assert.AreEqual(1, mapping.Classes.Count, "Keine Klasse");
+			Assert.That(1 ==  mapping.Connections.Count, "Keine Connection");
+			Assert.That(1 ==  mapping.Classes.Count, "Keine Klasse");
 			c = (Class) mapping.Classes[0];
-			Assert.AreEqual("Mitarbeiter", c.TableName, "TableName falsch");
-			Assert.NotNull(c.Oid, "Keine Oid");
-			Assert.AreEqual(1, c.Relations.Count, "Keine Relation");
+			Assert.That("Mitarbeiter" ==  c.TableName, "TableName falsch");
+			Assert.That(c.Oid != null, "Keine Oid");
+			Assert.That(1 ==  c.Relations.Count, "Keine Relation");
 			Relation r = (Relation) c.Relations[0];
-			Assert.AreEqual("dieReise", r.FieldName, "FieldName falsch");
-			Assert.AreEqual("1:1", r.GetRelationType(), "Relationstyp falsch");
-			Assert.AreEqual("IDReise", ((ForeignKeyColumn)r.ForeignKeyColumns[0]).Name, "ForeignKeyColumnName falsch");
+			Assert.That("dieReise" ==  r.FieldName, "FieldName falsch");
+			Assert.That("1:1" ==  r.GetRelationType(), "Relationstyp falsch");
+			Assert.That("IDReise" ==  ((ForeignKeyColumn)r.ForeignKeyColumns[0]).Name, "ForeignKeyColumnName falsch");
 		}
 
 
@@ -203,25 +203,25 @@ namespace NdoUnitTests
 			c.AddStandardRelation("dieMitarbeiter", classMitarbeiter, false,"", false, false);
 			mapping.Save();
 			mapping = new NDOMapping(testFile);
-			Assert.AreEqual(1, mapping.Connections.Count, "Keine Connection");
-			Assert.AreEqual(2, mapping.Classes.Count, "Keine Klasse");
+			Assert.That(1 ==  mapping.Connections.Count, "Keine Connection");
+			Assert.That(2 ==  mapping.Classes.Count, "Keine Klasse");
 			c = (Class) mapping.FindClass(classMitarbeiter);
-			Assert.AreEqual("Mitarbeiter", c.TableName, "TableName falsch");
-			Assert.NotNull(c.Oid, "Keine Oid");
-			Assert.AreEqual(1, c.Relations.Count, "Keine Relation");
+			Assert.That("Mitarbeiter" ==  c.TableName, "TableName falsch");
+			Assert.That(c.Oid != null, "Keine Oid");
+			Assert.That(1 ==  c.Relations.Count, "Keine Relation");
 			Relation r = c.FindRelation("dieReisen");
-			Assert.NotNull(r, "Relation dieReisen nicht gefunden");
-			Assert.AreEqual("IDMitarbeiter", ((ForeignKeyColumn)r.ForeignKeyColumns[0]).Name, "ForeignKeyColumnName falsch");
-			Assert.AreEqual( "n:n", r.GetRelationType(), "Relationstyp falsch" );
-			Assert.AreEqual("IDReise", ((ForeignKeyColumn)r.MappingTable.ChildForeignKeyColumns[0]).Name, "ChildForeignKeyColumnName von MappingTable falsch");
-			Assert.AreEqual("relMitarbeiterReise", r.MappingTable.TableName, "TableName von MappingTable falsch");
+			Assert.That(r != null, "Relation dieReisen nicht gefunden");
+			Assert.That("IDMitarbeiter" ==  ((ForeignKeyColumn)r.ForeignKeyColumns[0]).Name, "ForeignKeyColumnName falsch");
+			Assert.That("n:n" ==  r.GetRelationType(), "Relationstyp falsch" );
+			Assert.That("IDReise" ==  ((ForeignKeyColumn)r.MappingTable.ChildForeignKeyColumns[0]).Name, "ChildForeignKeyColumnName von MappingTable falsch");
+			Assert.That("relMitarbeiterReise" ==  r.MappingTable.TableName, "TableName von MappingTable falsch");
 			c = mapping.FindClass("Reisekosten.Reise");
 			r = c.FindRelation("dieMitarbeiter");
-			Assert.NotNull(r, "Relation dieMitarbeiter nicht gefunden");
-			Assert.AreEqual("relMitarbeiterReise", r.MappingTable.TableName, "TableName von MappingTable falsch");
-			Assert.AreEqual( "n:n", r.GetRelationType(), "Relationstyp falsch" );
-			Assert.AreEqual("IDReise", ((ForeignKeyColumn)r.ForeignKeyColumns[0]).Name, "ForeignKeyColumnName falsch");
-			Assert.AreEqual("IDMitarbeiter", ((ForeignKeyColumn)r.MappingTable.ChildForeignKeyColumns[0]).Name, "ChildForeignKeyColumnName von MappingTable falsch");
+			Assert.That(r != null, "Relation dieMitarbeiter nicht gefunden");
+			Assert.That("relMitarbeiterReise" ==  r.MappingTable.TableName, "TableName von MappingTable falsch");
+			Assert.That("n:n" ==  r.GetRelationType(), "Relationstyp falsch" );
+			Assert.That("IDReise" ==  ((ForeignKeyColumn)r.ForeignKeyColumns[0]).Name, "ForeignKeyColumnName falsch");
+			Assert.That("IDMitarbeiter" ==  ((ForeignKeyColumn)r.MappingTable.ChildForeignKeyColumns[0]).Name, "ChildForeignKeyColumnName von MappingTable falsch");
 
 		}
 
@@ -244,8 +244,8 @@ namespace NdoUnitTests
 			map2 = new NDOMapping(file2);
 
 			map1.MergeMapping(map2);
-			Assert.AreEqual(1, map1.Classes.Count, "Falsche Anzahl Klassen");
-			Assert.AreEqual(1, map1.Connections.Count, "Falsche Anzahl Connections");
+			Assert.That(1 ==  map1.Classes.Count, "Falsche Anzahl Klassen");
+			Assert.That(1 ==  map1.Connections.Count, "Falsche Anzahl Connections");
 			
 			File.Delete(file1);
 			File.Delete(file2);
@@ -271,8 +271,8 @@ namespace NdoUnitTests
 			map2 = new NDOMapping(file2);
 
 			map1.MergeMapping(map2);
-			Assert.AreEqual(1, map1.Classes.Count, "Falsche Anzahl Klassen");
-			Assert.AreEqual(1, map1.Connections.Count, "Falsche Anzahl Connections");
+			Assert.That(1 ==  map1.Classes.Count, "Falsche Anzahl Klassen");
+			Assert.That(1 ==  map1.Connections.Count, "Falsche Anzahl Connections");
 			
 			File.Delete(file1);
 			File.Delete(file2);
@@ -298,11 +298,11 @@ namespace NdoUnitTests
 			map2 = new NDOMapping(file2);
 
 			map1.MergeMapping(map2);
-			Assert.AreEqual(2, map1.Connections.Count, "Falsche Anzahl Connections");
-			Assert.AreEqual(1, map1.Classes.Count, "Falsche Anzahl Klassen");
+			Assert.That(2 ==  map1.Connections.Count, "Falsche Anzahl Connections");
+			Assert.That(1 ==  map1.Classes.Count, "Falsche Anzahl Klassen");
 			Class c = map1.FindClass(classMitarbeiter);
-			Assert.NotNull(c, "Mitarbeiter nicht gefunden");
-			Assert.AreEqual("C0", c.ConnectionId, "Connection falsch");
+			Assert.That(c != null, "Mitarbeiter nicht gefunden");
+			Assert.That("C0" ==  c.ConnectionId, "Connection falsch");
 
 			File.Delete(file1);
 			File.Delete(file2);
@@ -326,15 +326,15 @@ namespace NdoUnitTests
 			map1 = new NDOMapping(file1);
 			map2 = new NDOMapping(file2);
 
-			Assert.AreEqual(Connection.DummyConnectionString, ((Connection)map1.Connections[0]).Name, "Must be dummy connection");
-			Assert.AreEqual(Connection.DummyConnectionString, ((Connection)map2.Connections[0]).Name, "Must be dummy connection");
+			Assert.That(Connection.DummyConnectionString ==  ((Connection)map1.Connections[0]).Name, "Must be dummy connection");
+			Assert.That(Connection.DummyConnectionString ==  ((Connection)map2.Connections[0]).Name, "Must be dummy connection");
 			((Connection)map2.Connections[0]).Name = "Some new string";
 
 			map1.MergeMapping(map2);
-			Assert.AreEqual(1, map1.Connections.Count, "Falsche Anzahl Connections");
+			Assert.That(1 ==  map1.Connections.Count, "Falsche Anzahl Connections");
 			Class c = map1.FindClass(classMitarbeiter);
-			Assert.NotNull(c, "Mitarbeiter nicht gefunden");
-			Assert.AreEqual("C0", c.ConnectionId, "Connection falsch");
+			Assert.That(c != null, "Mitarbeiter nicht gefunden");
+			Assert.That("C0" ==  c.ConnectionId, "Connection falsch");
 
 			File.Delete(file1);
 			File.Delete(file2);
@@ -359,15 +359,15 @@ namespace NdoUnitTests
 			map1 = new NDOMapping(file1);
 			map2 = new NDOMapping(file2);
 
-			Assert.AreEqual(Connection.DummyConnectionString, ((Connection)map1.Connections[0]).Name, "Must be dummy connection");
-			Assert.AreEqual(Connection.DummyConnectionString, ((Connection)map2.Connections[0]).Name, "Must be dummy connection");
+			Assert.That(Connection.DummyConnectionString ==  ((Connection)map1.Connections[0]).Name, "Must be dummy connection");
+			Assert.That(Connection.DummyConnectionString ==  ((Connection)map2.Connections[0]).Name, "Must be dummy connection");
 			((Connection)map1.Connections[0]).Name = "Some new string";
 
 			map1.MergeMapping(map2);
-			Assert.AreEqual(1, map1.Connections.Count, "Falsche Anzahl Connections");
+			Assert.That(1 ==  map1.Connections.Count, "Falsche Anzahl Connections");
 			Class c = map1.FindClass(classMitarbeiter);
-			Assert.NotNull(c, "Mitarbeiter nicht gefunden");
-			Assert.AreEqual("C0", c.ConnectionId, "Connection falsch");
+			Assert.That(c != null, "Mitarbeiter nicht gefunden");
+			Assert.That("C0" ==  c.ConnectionId, "Connection falsch");
 
 			File.Delete(file1);
 			File.Delete(file2);
@@ -396,11 +396,11 @@ namespace NdoUnitTests
 			map2 = new NDOMapping(file2);
 
 			map1.MergeMapping(map2);
-			Assert.AreEqual(2, map1.Connections.Count, "Falsche Anzahl Connections");
-			Assert.AreEqual(1, map1.Classes.Count, "Falsche Anzahl Klassen");
+			Assert.That(2 ==  map1.Connections.Count, "Falsche Anzahl Connections");
+			Assert.That(1 ==  map1.Classes.Count, "Falsche Anzahl Klassen");
 			Class c = map1.FindClass(classMitarbeiter);
-			Assert.NotNull(c, "Mitarbeiter nicht gefunden");
-			Assert.AreEqual("C1", c.ConnectionId, "Connection falsch");
+			Assert.That(c != null, "Mitarbeiter nicht gefunden");
+			Assert.That("C1" ==  c.ConnectionId, "Connection falsch");
 
 			File.Delete(file1);
 			File.Delete(file2);
@@ -427,15 +427,15 @@ namespace NdoUnitTests
 			map2 = new NDOMapping(file2);
 
 			map1.MergeMapping(map2);
-			Assert.AreEqual(2, map1.Connections.Count, "Falsche Anzahl Connections");
-			Assert.AreEqual(2, map1.Classes.Count, "Falsche Anzahl Klassen");
+			Assert.That(2 ==  map1.Connections.Count, "Falsche Anzahl Connections");
+			Assert.That(2 ==  map1.Classes.Count, "Falsche Anzahl Klassen");
 			Class c = map1.FindClass("Reisekosten.Reise");
-			Assert.NotNull(c, "Reise nicht gefunden");
-			Assert.AreEqual("C1", c.ConnectionId, "Connection falsch");
+			Assert.That(c != null, "Reise nicht gefunden");
+			Assert.That("C1" ==  c.ConnectionId, "Connection falsch");
 
 			c = map1.FindClass(classMitarbeiter);
-			Assert.NotNull(c, "Mitarbeiter nicht gefunden");
-			Assert.AreEqual("C0", c.ConnectionId, "Connection falsch");
+			Assert.That(c != null, "Mitarbeiter nicht gefunden");
+			Assert.That("C0" ==  c.ConnectionId, "Connection falsch");
 
 			File.Delete(file1);
 			File.Delete(file2);
