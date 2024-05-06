@@ -1,5 +1,5 @@
 ﻿//
-// Copyright (c) 2002-2020 Mirko Matytschak 
+// Copyright (c) 2002-2024 Mirko Matytschak 
 // (www.netdataobjects.de)
 //
 // Author: Mirko Matytschak
@@ -25,29 +25,20 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using System.Runtime.Serialization;
 using System.Text;
-using System.Threading.Tasks;
-using NDO;
 using NDO.ShortId;
 using NDO.Mapping;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using NDOInterfaces;
 
 namespace NDO.JsonFormatter
 {
     /// <summary>
     /// Formatter implementation which serializes NDO ObjectContainers and ChangeSetContainers into Json.
     /// </summary>
-	public class NdoJsonFormatter : IFormatter
+	public class NdoJsonFormatter : INdoFormatter
 	{
-        /// <inheritdoc/> 
-		public ISurrogateSelector SurrogateSelector { get; set; }
-        /// <inheritdoc/> 
-		public SerializationBinder Binder { get; set; }
-        /// <inheritdoc/> 
-		public StreamingContext Context { get; set; }
-
 		PersistenceManager pm;
 
         /// <summary>
