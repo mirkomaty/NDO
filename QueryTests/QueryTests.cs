@@ -95,7 +95,7 @@ namespace QueryTests
 		public void CheckIfQueryWithoutWhereClauseWorks()
 		{
 			NDOQuery<Mitarbeiter> q = new NDOQuery<Mitarbeiter>( pm );
-			Assert.AreEqual( String.Format( "SELECT {0} FROM [Mitarbeiter]", this.mitarbeiterFields ), q.GeneratedQuery );
+			Assert.That( String.Format( "SELECT {0} FROM [Mitarbeiter]", this.mitarbeiterFields ) == q.GeneratedQuery );
 		}
 
 		[Test]
@@ -103,50 +103,50 @@ namespace QueryTests
 		{
 			NDOQuery<Mitarbeiter> q = new NDOQuery<Mitarbeiter>( pm );
 			q.AddPrefetch( "dieReisen" );
-			Assert.AreEqual( String.Format( "SELECT {0} FROM [Mitarbeiter]", this.mitarbeiterFields ), q.GeneratedQuery );
+			Assert.That( String.Format( "SELECT {0} FROM [Mitarbeiter]", this.mitarbeiterFields ) == q.GeneratedQuery );
 		}
 
 		public void CheckMitarbeiterQuery()
 		{
 			NDOQuery<Mitarbeiter> q = new NDOQuery<Mitarbeiter>( pm );
 			List<Mitarbeiter> l = q.Execute();
-			Assert.AreEqual( 2, l.Count );
+			Assert.That( 2 == l.Count );
 		}
 
 		[Test]
 		public void CheckIfSimpleWhereClauseWorks()
 		{
 			NDOQuery<Mitarbeiter> q = new NDOQuery<Mitarbeiter>( pm, "vorname = 'Mirko'" );
-			Assert.AreEqual( String.Format( "SELECT {0} FROM [Mitarbeiter] WHERE [Mitarbeiter].[Vorname] = 'Mirko'", this.mitarbeiterFields ), q.GeneratedQuery );
+			Assert.That( String.Format( "SELECT {0} FROM [Mitarbeiter] WHERE [Mitarbeiter].[Vorname] = 'Mirko'", this.mitarbeiterFields ) == q.GeneratedQuery );
 			q = new NDOQuery<Mitarbeiter>( pm, "vorname LIKE 'M*'" );
-			Assert.AreEqual( String.Format( "SELECT {0} FROM [Mitarbeiter] WHERE [Mitarbeiter].[Vorname] LIKE 'M*'", this.mitarbeiterFields ), q.GeneratedQuery );
+			Assert.That( String.Format( "SELECT {0} FROM [Mitarbeiter] WHERE [Mitarbeiter].[Vorname] LIKE 'M*'", this.mitarbeiterFields ) == q.GeneratedQuery );
 			q = new NDOQuery<Mitarbeiter>( pm, "oid = 1" );
-			Assert.AreEqual( String.Format( "SELECT {0} FROM [Mitarbeiter] WHERE [Mitarbeiter].[ID] = 1", this.mitarbeiterFields ), q.GeneratedQuery );
+			Assert.That( String.Format( "SELECT {0} FROM [Mitarbeiter] WHERE [Mitarbeiter].[ID] = 1", this.mitarbeiterFields ) == q.GeneratedQuery );
 			q = new NDOQuery<Mitarbeiter>( pm, "oid(0) = 1" );
-			Assert.AreEqual( String.Format( "SELECT {0} FROM [Mitarbeiter] WHERE [Mitarbeiter].[ID] = 1", this.mitarbeiterFields ), q.GeneratedQuery );
+			Assert.That( String.Format( "SELECT {0} FROM [Mitarbeiter] WHERE [Mitarbeiter].[ID] = 1", this.mitarbeiterFields ) == q.GeneratedQuery );
 		}
 
 		[Test]
 		public void CheckIfFunctionsWork()
 		{
 			NDOQuery<Mitarbeiter> q = new NDOQuery<Mitarbeiter>( pm, "vorname = SqlFunction('Mirko')" );
-			Assert.AreEqual( String.Format( "SELECT {0} FROM [Mitarbeiter] WHERE [Mitarbeiter].[Vorname] = SqlFunction('Mirko')", this.mitarbeiterFields ), q.GeneratedQuery );
+			Assert.That( String.Format( "SELECT {0} FROM [Mitarbeiter] WHERE [Mitarbeiter].[Vorname] = SqlFunction('Mirko')", this.mitarbeiterFields ) == q.GeneratedQuery );
 			q = new NDOQuery<Mitarbeiter>( pm, "vorname = SqlFunction('Mirko', 42)" );
-			Assert.AreEqual( String.Format( "SELECT {0} FROM [Mitarbeiter] WHERE [Mitarbeiter].[Vorname] = SqlFunction('Mirko', 42)", this.mitarbeiterFields ), q.GeneratedQuery );
+			Assert.That( String.Format( "SELECT {0} FROM [Mitarbeiter] WHERE [Mitarbeiter].[Vorname] = SqlFunction('Mirko', 42)", this.mitarbeiterFields ) == q.GeneratedQuery );
 			q = new NDOQuery<Mitarbeiter>( pm, "vorname = SqlFunction()" );
-			Assert.AreEqual( String.Format( "SELECT {0} FROM [Mitarbeiter] WHERE [Mitarbeiter].[Vorname] = SqlFunction()", this.mitarbeiterFields ), q.GeneratedQuery );
+			Assert.That( String.Format( "SELECT {0} FROM [Mitarbeiter] WHERE [Mitarbeiter].[Vorname] = SqlFunction()", this.mitarbeiterFields ) == q.GeneratedQuery );
 			q = new NDOQuery<Mitarbeiter>( pm, "vorname = SqlFunction(nachname)" );
-			Assert.AreEqual( String.Format( "SELECT {0} FROM [Mitarbeiter] WHERE [Mitarbeiter].[Vorname] = SqlFunction([Mitarbeiter].[Nachname])", this.mitarbeiterFields ), q.GeneratedQuery );
+			Assert.That( String.Format( "SELECT {0} FROM [Mitarbeiter] WHERE [Mitarbeiter].[Vorname] = SqlFunction([Mitarbeiter].[Nachname])", this.mitarbeiterFields ) == q.GeneratedQuery );
 			q = new NDOQuery<Mitarbeiter>( pm, "SqlFunction('Mirko', 42) > 3124" );
-			Assert.AreEqual( String.Format( "SELECT {0} FROM [Mitarbeiter] WHERE SqlFunction('Mirko', 42) > 3124", this.mitarbeiterFields ), q.GeneratedQuery );
+			Assert.That( String.Format( "SELECT {0} FROM [Mitarbeiter] WHERE SqlFunction('Mirko', 42) > 3124", this.mitarbeiterFields ) == q.GeneratedQuery );
 		}
 
 		[Test]
 		public void CheckIfGeneratedQueryCanBeCalledTwice()
 		{
 			NDOQuery<Mitarbeiter> q = new NDOQuery<Mitarbeiter>( pm, "vorname = 'Mirko'" );
-			Assert.AreEqual( String.Format( "SELECT {0} FROM [Mitarbeiter] WHERE [Mitarbeiter].[Vorname] = 'Mirko'", this.mitarbeiterFields ), q.GeneratedQuery );
-			Assert.AreEqual( String.Format( "SELECT {0} FROM [Mitarbeiter] WHERE [Mitarbeiter].[Vorname] = 'Mirko'", this.mitarbeiterFields ), q.GeneratedQuery );
+			Assert.That( String.Format( "SELECT {0} FROM [Mitarbeiter] WHERE [Mitarbeiter].[Vorname] = 'Mirko'", this.mitarbeiterFields ) == q.GeneratedQuery );
+			Assert.That( String.Format( "SELECT {0} FROM [Mitarbeiter] WHERE [Mitarbeiter].[Vorname] = 'Mirko'", this.mitarbeiterFields ) == q.GeneratedQuery );
 		}
 
 		[Test]
@@ -162,10 +162,10 @@ namespace QueryTests
 				q.Orderings.Add( new DescendingOrder( "vorname" ) );
 			q.Take = 10;
 			var desc = asc ? "" : "DESC ";
-			Assert.AreEqual( $"SELECT {this.mitarbeiterFields} FROM [Mitarbeiter] WHERE [Mitarbeiter].[Vorname] = {{0}} ORDER BY [Mitarbeiter].[Vorname] {desc}OFFSET 0 ROWS FETCH NEXT 10 ROWS ONLY", q.GeneratedQuery );
+			Assert.That( $"SELECT {this.mitarbeiterFields} FROM [Mitarbeiter] WHERE [Mitarbeiter].[Vorname] = {{0}} ORDER BY [Mitarbeiter].[Vorname] {desc}OFFSET 0 ROWS FETCH NEXT 10 ROWS ONLY" == q.GeneratedQuery );
 			q.Skip = 10;
 			q.Take = 10;
-			Assert.AreEqual( $"SELECT {this.mitarbeiterFields} FROM [Mitarbeiter] WHERE [Mitarbeiter].[Vorname] = {{0}} ORDER BY [Mitarbeiter].[Vorname] {desc}OFFSET 10 ROWS FETCH NEXT 10 ROWS ONLY", q.GeneratedQuery );
+			Assert.That( $"SELECT {this.mitarbeiterFields} FROM [Mitarbeiter] WHERE [Mitarbeiter].[Vorname] = {{0}} ORDER BY [Mitarbeiter].[Vorname] {desc}OFFSET 10 ROWS FETCH NEXT 10 ROWS ONLY" == q.GeneratedQuery );
 		}
 
 		[Test]
@@ -176,10 +176,10 @@ namespace QueryTests
 			q.Orderings.Add( new AscendingOrder( "vorname" ) );
 			q.Orderings.Add( new DescendingOrder( "nachname" ) );
 			q.Take = 10;
-			Assert.AreEqual( $"SELECT {this.mitarbeiterFields} FROM [Mitarbeiter] WHERE [Mitarbeiter].[Vorname] = {{0}} ORDER BY [Mitarbeiter].[Vorname] ASC, [Mitarbeiter].[Nachname] DESC OFFSET 0 ROWS FETCH NEXT 10 ROWS ONLY", q.GeneratedQuery );
+			Assert.That( $"SELECT {this.mitarbeiterFields} FROM [Mitarbeiter] WHERE [Mitarbeiter].[Vorname] = {{0}} ORDER BY [Mitarbeiter].[Vorname] ASC, [Mitarbeiter].[Nachname] DESC OFFSET 0 ROWS FETCH NEXT 10 ROWS ONLY" == q.GeneratedQuery );
 			q.Skip = 10;
 			q.Take = 10;
-			Assert.AreEqual( $"SELECT {this.mitarbeiterFields} FROM [Mitarbeiter] WHERE [Mitarbeiter].[Vorname] = {{0}} ORDER BY [Mitarbeiter].[Vorname] ASC, [Mitarbeiter].[Nachname] DESC OFFSET 10 ROWS FETCH NEXT 10 ROWS ONLY", q.GeneratedQuery );
+			Assert.That( $"SELECT {this.mitarbeiterFields} FROM [Mitarbeiter] WHERE [Mitarbeiter].[Vorname] = {{0}} ORDER BY [Mitarbeiter].[Vorname] ASC, [Mitarbeiter].[Nachname] DESC OFFSET 10 ROWS FETCH NEXT 10 ROWS ONLY" == q.GeneratedQuery );
 		}
 
 		[Test]
@@ -189,19 +189,19 @@ namespace QueryTests
 			q.Parameters.Add( "Mirko" );
 			q.Orderings.Add( new AscendingOrder( "oid" ) );
 			q.Take = 10;
-			Assert.AreEqual( $"SELECT {this.mitarbeiterFields} FROM [Mitarbeiter] WHERE [Mitarbeiter].[Vorname] = {{0}} ORDER BY [Mitarbeiter].[ID] OFFSET 0 ROWS FETCH NEXT 10 ROWS ONLY", q.GeneratedQuery );
+			Assert.That( $"SELECT {this.mitarbeiterFields} FROM [Mitarbeiter] WHERE [Mitarbeiter].[Vorname] = {{0}} ORDER BY [Mitarbeiter].[ID] OFFSET 0 ROWS FETCH NEXT 10 ROWS ONLY" == q.GeneratedQuery );
 			q.Skip = 10;
 			q.Take = 10;
-			Assert.AreEqual( $"SELECT {this.mitarbeiterFields} FROM [Mitarbeiter] WHERE [Mitarbeiter].[Vorname] = {{0}} ORDER BY [Mitarbeiter].[ID] OFFSET 10 ROWS FETCH NEXT 10 ROWS ONLY", q.GeneratedQuery );
+			Assert.That( $"SELECT {this.mitarbeiterFields} FROM [Mitarbeiter] WHERE [Mitarbeiter].[Vorname] = {{0}} ORDER BY [Mitarbeiter].[ID] OFFSET 10 ROWS FETCH NEXT 10 ROWS ONLY" == q.GeneratedQuery );
 
 			q = new NDOQuery<Mitarbeiter>( pm, "vorname = {0}" );
 			q.Parameters.Add( "Mirko" );
 			q.Orderings.Add( new DescendingOrder( "oid" ) );
 			q.Take = 10;
-			Assert.AreEqual( $"SELECT {this.mitarbeiterFields} FROM [Mitarbeiter] WHERE [Mitarbeiter].[Vorname] = {{0}} ORDER BY [Mitarbeiter].[ID] DESC OFFSET 0 ROWS FETCH NEXT 10 ROWS ONLY", q.GeneratedQuery );
+			Assert.That( $"SELECT {this.mitarbeiterFields} FROM [Mitarbeiter] WHERE [Mitarbeiter].[Vorname] = {{0}} ORDER BY [Mitarbeiter].[ID] DESC OFFSET 0 ROWS FETCH NEXT 10 ROWS ONLY" == q.GeneratedQuery );
 			q.Skip = 10;
 			q.Take = 10;
-			Assert.AreEqual( $"SELECT {this.mitarbeiterFields} FROM [Mitarbeiter] WHERE [Mitarbeiter].[Vorname] = {{0}} ORDER BY [Mitarbeiter].[ID] DESC OFFSET 10 ROWS FETCH NEXT 10 ROWS ONLY", q.GeneratedQuery );
+			Assert.That( $"SELECT {this.mitarbeiterFields} FROM [Mitarbeiter] WHERE [Mitarbeiter].[Vorname] = {{0}} ORDER BY [Mitarbeiter].[ID] DESC OFFSET 10 ROWS FETCH NEXT 10 ROWS ONLY" == q.GeneratedQuery );
 		}
 
 		[Test]
@@ -217,33 +217,33 @@ namespace QueryTests
 			q.Take = 10;
 			q.Parameters.Add( "Mirko" );
 			var desc = asc ? "" : "DESC ";
-			Assert.AreEqual( $"SELECT {this.mitarbeiterFields} FROM [Mitarbeiter] WHERE [Mitarbeiter].[Vorname] = {{0}} ORDER BY [Mitarbeiter].[Vorname] {desc}OFFSET 0 ROWS FETCH NEXT 10 ROWS ONLY", q.GeneratedQuery );
+			Assert.That( $"SELECT {this.mitarbeiterFields} FROM [Mitarbeiter] WHERE [Mitarbeiter].[Vorname] = {{0}} ORDER BY [Mitarbeiter].[Vorname] {desc}OFFSET 0 ROWS FETCH NEXT 10 ROWS ONLY" == q.GeneratedQuery );
 			q.Parameters.Add( "Hans" );
-			Assert.AreEqual( $"SELECT {this.mitarbeiterFields} FROM [Mitarbeiter] WHERE [Mitarbeiter].[Vorname] = {{0}} ORDER BY [Mitarbeiter].[Vorname] {desc}OFFSET 0 ROWS FETCH NEXT 10 ROWS ONLY", q.GeneratedQuery );
+			Assert.That( $"SELECT {this.mitarbeiterFields} FROM [Mitarbeiter] WHERE [Mitarbeiter].[Vorname] = {{0}} ORDER BY [Mitarbeiter].[Vorname] {desc}OFFSET 0 ROWS FETCH NEXT 10 ROWS ONLY" == q.GeneratedQuery );
 		}
 
 		[Test]
 		public void CheckIfWhereClauseWith1nRelationWorks()
 		{
 			NDOQuery<Mitarbeiter> q = new NDOQuery<Mitarbeiter>( pm, "dieReisen.zweck = 'ADC'" );
-			Assert.AreEqual( String.Format( "SELECT {0} FROM [Mitarbeiter] INNER JOIN [Reise] ON [Mitarbeiter].[ID] = [Reise].[IDMitarbeiter] WHERE [Reise].[Zweck] = 'ADC'", this.mitarbeiterJoinFields ), q.GeneratedQuery );
+			Assert.That( String.Format( "SELECT {0} FROM [Mitarbeiter] INNER JOIN [Reise] ON [Mitarbeiter].[ID] = [Reise].[IDMitarbeiter] WHERE [Reise].[Zweck] = 'ADC'", this.mitarbeiterJoinFields ) == q.GeneratedQuery );
 			q = new NDOQuery<Mitarbeiter>( pm, "dieReisen.oid = {0}" );
 			q.Parameters.Add( 1 );
-			Assert.AreEqual( String.Format( "SELECT {0} FROM [Mitarbeiter] INNER JOIN [Reise] ON [Mitarbeiter].[ID] = [Reise].[IDMitarbeiter] WHERE [Reise].[ID] = {{0}}", this.mitarbeiterJoinFields ), q.GeneratedQuery );
+			Assert.That( String.Format( "SELECT {0} FROM [Mitarbeiter] INNER JOIN [Reise] ON [Mitarbeiter].[ID] = [Reise].[IDMitarbeiter] WHERE [Reise].[ID] = {{0}}", this.mitarbeiterJoinFields ) == q.GeneratedQuery );
 		}
 
 		[Test]
 		public void CheckIfWhereClauseWith11RelationWorks()
 		{
 			NDOQuery<Mitarbeiter> q = new NDOQuery<Mitarbeiter>( pm, "adresse.lkz LIKE 'D%'" );
-			Assert.AreEqual( String.Format( "SELECT {0} FROM [Mitarbeiter] INNER JOIN [Adresse] ON [Adresse].[ID] = [Mitarbeiter].[IDAdresse] WHERE [Adresse].[Lkz] LIKE 'D%'", this.mitarbeiterJoinFields ), q.GeneratedQuery );
+			Assert.That( String.Format( "SELECT {0} FROM [Mitarbeiter] INNER JOIN [Adresse] ON [Adresse].[ID] = [Mitarbeiter].[IDAdresse] WHERE [Adresse].[Lkz] LIKE 'D%'", this.mitarbeiterJoinFields ) == q.GeneratedQuery );
 		}
 
 		[Test]
 		public void CheckIfMultipleRelationsWork()
 		{
 			NDOQuery<Mitarbeiter> q = new NDOQuery<Mitarbeiter>( pm, "adresse.lkz LIKE 'D%' AND dieReisen.dieLaender.name = 'D'" );
-			Assert.AreEqual( String.Format( "SELECT {0} FROM [Mitarbeiter] INNER JOIN [Adresse] ON [Adresse].[ID] = [Mitarbeiter].[IDAdresse] INNER JOIN [Reise] ON [Mitarbeiter].[ID] = [Reise].[IDMitarbeiter] INNER JOIN [relLandReise] ON [Reise].[ID] = [relLandReise].[IDReise] INNER JOIN [Land] ON [Land].[ID] = [relLandReise].[IDLand] WHERE [Adresse].[Lkz] LIKE 'D%' AND [Land].[Name] = 'D'", this.mitarbeiterJoinFields ), q.GeneratedQuery );
+			Assert.That( String.Format( "SELECT {0} FROM [Mitarbeiter] INNER JOIN [Adresse] ON [Adresse].[ID] = [Mitarbeiter].[IDAdresse] INNER JOIN [Reise] ON [Mitarbeiter].[ID] = [Reise].[IDMitarbeiter] INNER JOIN [relLandReise] ON [Reise].[ID] = [relLandReise].[IDReise] INNER JOIN [Land] ON [Land].[ID] = [relLandReise].[IDLand] WHERE [Adresse].[Lkz] LIKE 'D%' AND [Land].[Name] = 'D'", this.mitarbeiterJoinFields ) == q.GeneratedQuery );
 		}
 
 		[Test]
@@ -251,31 +251,31 @@ namespace QueryTests
 		{
 			NDOQuery<Mitarbeiter> q = new NDOQuery<Mitarbeiter>( pm, "dieReisen.dieLaender.oid = {0}" );
 			q.Parameters.Add( 1 );
-			Assert.AreEqual( String.Format( "SELECT {0} FROM [Mitarbeiter] INNER JOIN [Reise] ON [Mitarbeiter].[ID] = [Reise].[IDMitarbeiter] INNER JOIN [relLandReise] ON [Reise].[ID] = [relLandReise].[IDReise] WHERE [relLandReise].[IDLand] = {{0}}", this.mitarbeiterJoinFields ), q.GeneratedQuery );
+			Assert.That( String.Format( "SELECT {0} FROM [Mitarbeiter] INNER JOIN [Reise] ON [Mitarbeiter].[ID] = [Reise].[IDMitarbeiter] INNER JOIN [relLandReise] ON [Reise].[ID] = [relLandReise].[IDReise] WHERE [relLandReise].[IDLand] = {{0}}", this.mitarbeiterJoinFields ) == q.GeneratedQuery );
 		}
 
 		[Test]
 		public void CheckThatOneJoinAppearsOnlyOneTime()
 		{
 			NDOQuery<Mitarbeiter> q = new NDOQuery<Mitarbeiter>( pm, "adresse.lkz LIKE 'D%' AND adresse.ort <> 'Bad Tölz'" );
-			Assert.AreEqual( String.Format( "SELECT {0} FROM [Mitarbeiter] INNER JOIN [Adresse] ON [Adresse].[ID] = [Mitarbeiter].[IDAdresse] WHERE [Adresse].[Lkz] LIKE 'D%' AND [Adresse].[Ort] <> 'Bad Tölz'", this.mitarbeiterJoinFields ), q.GeneratedQuery );
+			Assert.That( String.Format( "SELECT {0} FROM [Mitarbeiter] INNER JOIN [Adresse] ON [Adresse].[ID] = [Mitarbeiter].[IDAdresse] WHERE [Adresse].[Lkz] LIKE 'D%' AND [Adresse].[Ort] <> 'Bad Tölz'", this.mitarbeiterJoinFields ) == q.GeneratedQuery );
 			q = new NDOQuery<Mitarbeiter>( pm, "dieReisen.zweck = 'ADC' OR dieReisen.zweck = 'ADW'" );
-			Assert.AreEqual( String.Format( "SELECT {0} FROM [Mitarbeiter] INNER JOIN [Reise] ON [Mitarbeiter].[ID] = [Reise].[IDMitarbeiter] WHERE [Reise].[Zweck] = 'ADC' OR [Reise].[Zweck] = 'ADW'", this.mitarbeiterJoinFields ), q.GeneratedQuery );
+			Assert.That( String.Format( "SELECT {0} FROM [Mitarbeiter] INNER JOIN [Reise] ON [Mitarbeiter].[ID] = [Reise].[IDMitarbeiter] WHERE [Reise].[Zweck] = 'ADC' OR [Reise].[Zweck] = 'ADW'", this.mitarbeiterJoinFields ) == q.GeneratedQuery );
 		}
 
 		[Test]
 		public void CheckNotOperator()
 		{
 			NDOQuery<Mitarbeiter> q = new NDOQuery<Mitarbeiter>( pm, "NOT (vorname LIKE 'M%')" );
-			Assert.AreEqual( String.Format( "SELECT {0} FROM [Mitarbeiter] WHERE NOT ([Mitarbeiter].[Vorname] LIKE 'M%')", this.mitarbeiterFields ), q.GeneratedQuery );
+			Assert.That( String.Format( "SELECT {0} FROM [Mitarbeiter] WHERE NOT ([Mitarbeiter].[Vorname] LIKE 'M%')", this.mitarbeiterFields ) == q.GeneratedQuery );
 			q = new NDOQuery<Mitarbeiter>( pm, "vorname LIKE 'M%' AND NOT nachname = 'Matytschak'" );
-			Assert.AreEqual( String.Format( "SELECT {0} FROM [Mitarbeiter] WHERE [Mitarbeiter].[Vorname] LIKE 'M%' AND NOT [Mitarbeiter].[Nachname] = 'Matytschak'", this.mitarbeiterFields ), q.GeneratedQuery );
+			Assert.That( String.Format( "SELECT {0} FROM [Mitarbeiter] WHERE [Mitarbeiter].[Vorname] LIKE 'M%' AND NOT [Mitarbeiter].[Nachname] = 'Matytschak'", this.mitarbeiterFields ) == q.GeneratedQuery );
 			q = new NDOQuery<Mitarbeiter>( pm, "NOT (vorname LIKE 'M%' AND nachname = 'Matytschak')" );
-			Assert.AreEqual( String.Format( "SELECT {0} FROM [Mitarbeiter] WHERE NOT ([Mitarbeiter].[Vorname] LIKE 'M%' AND [Mitarbeiter].[Nachname] = 'Matytschak')", this.mitarbeiterFields ), q.GeneratedQuery );
+			Assert.That( String.Format( "SELECT {0} FROM [Mitarbeiter] WHERE NOT ([Mitarbeiter].[Vorname] LIKE 'M%' AND [Mitarbeiter].[Nachname] = 'Matytschak')", this.mitarbeiterFields ) == q.GeneratedQuery );
 			q = new NDOQuery<Mitarbeiter>( pm, "dieReisen.zweck = 'ADC' OR NOT dieReisen.zweck = 'ADW'" );
-			Assert.AreEqual( String.Format( "SELECT {0} FROM [Mitarbeiter] INNER JOIN [Reise] ON [Mitarbeiter].[ID] = [Reise].[IDMitarbeiter] WHERE [Reise].[Zweck] = 'ADC' OR NOT [Reise].[Zweck] = 'ADW'", this.mitarbeiterJoinFields ), q.GeneratedQuery );
+			Assert.That( String.Format( "SELECT {0} FROM [Mitarbeiter] INNER JOIN [Reise] ON [Mitarbeiter].[ID] = [Reise].[IDMitarbeiter] WHERE [Reise].[Zweck] = 'ADC' OR NOT [Reise].[Zweck] = 'ADW'", this.mitarbeiterJoinFields ) == q.GeneratedQuery );
 			q = new NDOQuery<Mitarbeiter>( pm, "NOT (dieReisen.zweck = 'ADC' OR dieReisen.zweck = 'ADW')" );
-			Assert.AreEqual( String.Format( "SELECT {0} FROM [Mitarbeiter] INNER JOIN [Reise] ON [Mitarbeiter].[ID] = [Reise].[IDMitarbeiter] WHERE NOT ([Reise].[Zweck] = 'ADC' OR [Reise].[Zweck] = 'ADW')", this.mitarbeiterJoinFields ), q.GeneratedQuery );
+			Assert.That( String.Format( "SELECT {0} FROM [Mitarbeiter] INNER JOIN [Reise] ON [Mitarbeiter].[ID] = [Reise].[IDMitarbeiter] WHERE NOT ([Reise].[Zweck] = 'ADC' OR [Reise].[Zweck] = 'ADW')", this.mitarbeiterJoinFields ) == q.GeneratedQuery );
 			bool thrown = false;
 			try
 			{
@@ -286,7 +286,7 @@ namespace QueryTests
 			{
 				thrown = true;
 			}
-			Assert.AreEqual( true, thrown );
+			Assert.That( thrown );
 
 			// TODO: This is a wrong expression which passes the syntax check.
 			// Mysql allows WHERE NOT True but disallows nachname = NOT True
@@ -294,25 +294,25 @@ namespace QueryTests
 			q = new NDOQuery<Mitarbeiter>( pm, "vorname LIKE 'M%' AND nachname = NOT True" );
 			string t = q.GeneratedQuery; // Make sure, GeneratedQuery ist called twice.
 			Console.WriteLine(t);
-			Assert.AreEqual( $"SELECT {this.mitarbeiterFields} FROM [Mitarbeiter] WHERE [Mitarbeiter].[Vorname] LIKE 'M%' AND [Mitarbeiter].[Nachname] = NOT TRUE", q.GeneratedQuery );
+			Assert.That( $"SELECT {this.mitarbeiterFields} FROM [Mitarbeiter] WHERE [Mitarbeiter].[Vorname] LIKE 'M%' AND [Mitarbeiter].[Nachname] = NOT TRUE" == q.GeneratedQuery );
 		}
 
 		[Test]
 		public void CheckBetween()
 		{
 			NDOQuery<Mitarbeiter> q = new NDOQuery<Mitarbeiter>( pm, "vorname BETWEEN 'A' AND 'B'" );
-			Assert.AreEqual( $"SELECT {this.mitarbeiterFields} FROM [Mitarbeiter] WHERE [Mitarbeiter].[Vorname] BETWEEN 'A' AND 'B'", q.GeneratedQuery );
+			Assert.That( $"SELECT {this.mitarbeiterFields} FROM [Mitarbeiter] WHERE [Mitarbeiter].[Vorname] BETWEEN 'A' AND 'B'" == q.GeneratedQuery );
 			q = new NDOQuery<Mitarbeiter>( pm, "NOT vorname BETWEEN 'A' AND 'B'" );
-			Assert.AreEqual( $"SELECT {this.mitarbeiterFields} FROM [Mitarbeiter] WHERE NOT [Mitarbeiter].[Vorname] BETWEEN 'A' AND 'B'", q.GeneratedQuery );
+			Assert.That( $"SELECT {this.mitarbeiterFields} FROM [Mitarbeiter] WHERE NOT [Mitarbeiter].[Vorname] BETWEEN 'A' AND 'B'" == q.GeneratedQuery );
 			q = new NDOQuery<Mitarbeiter>( pm, "NOT (vorname BETWEEN 'A' AND 'B')" );
-			Assert.AreEqual( $"SELECT {this.mitarbeiterFields} FROM [Mitarbeiter] WHERE NOT ([Mitarbeiter].[Vorname] BETWEEN 'A' AND 'B')", q.GeneratedQuery );
+			Assert.That( $"SELECT {this.mitarbeiterFields} FROM [Mitarbeiter] WHERE NOT ([Mitarbeiter].[Vorname] BETWEEN 'A' AND 'B')" == q.GeneratedQuery );
 		}
 
 		[Test]
 		public void TestValueType()
 		{
 			NDOQuery<Mitarbeiter> q = new NDOQuery<Mitarbeiter>( pm, "position.X > 2 AND position.Y < 5" );
-			Assert.AreEqual( $"SELECT {this.mitarbeiterFields} FROM [Mitarbeiter] WHERE [Mitarbeiter].[Position_X] > 2 AND [Mitarbeiter].[Position_Y] < 5", q.GeneratedQuery );
+			Assert.That( $"SELECT {this.mitarbeiterFields} FROM [Mitarbeiter] WHERE [Mitarbeiter].[Position_X] > 2 AND [Mitarbeiter].[Position_Y] < 5" == q.GeneratedQuery );
 		}
 
 		[Test]
@@ -320,16 +320,16 @@ namespace QueryTests
 		{
 			NDOQuery<Sozialversicherungsnummer> q = new NDOQuery<Sozialversicherungsnummer>( pm, "arbeiter.position.X > 2 AND arbeiter.position.Y < 5" );
 			var fields = new SqlColumnListGenerator( pm.NDOMapping.FindClass( typeof( Sozialversicherungsnummer ) ) ).Result( false, false, true );
-			Assert.AreEqual( String.Format( $"SELECT {fields} FROM [Sozialversicherungsnummer] INNER JOIN [Mitarbeiter] ON [Mitarbeiter].[ID] = [Sozialversicherungsnummer].[IDSozial] WHERE [Mitarbeiter].[Position_X] > 2 AND [Mitarbeiter].[Position_Y] < 5", this.mitarbeiterFields ), q.GeneratedQuery );
+			Assert.That( String.Format( $"SELECT {fields} FROM [Sozialversicherungsnummer] INNER JOIN [Mitarbeiter] ON [Mitarbeiter].[ID] = [Sozialversicherungsnummer].[IDSozial] WHERE [Mitarbeiter].[Position_X] > 2 AND [Mitarbeiter].[Position_Y] < 5", this.mitarbeiterFields ) == q.GeneratedQuery );
 		}
 
 		[Test]
 		public void CheckFetchGroupInitializationWithExpressions()
 		{
 			FetchGroup<Mitarbeiter> fg = new FetchGroup<Mitarbeiter>( m => m.Vorname, m => m.Nachname );
-			Assert.AreEqual( fg.Count, 2, "Count should be 2" );
-			Assert.AreEqual( "Vorname", fg[0], "Name wrong #1" );
-			Assert.AreEqual( "Nachname", fg[1], "Name wrong #2" );
+			Assert.That( fg.Count == 2, "Count should be 2" );
+			Assert.That( "Vorname" == fg[0], "Name wrong #1" );
+			Assert.That( "Nachname" == fg[1], "Name wrong #2" );
 		}
 
 		[Test]
@@ -356,7 +356,7 @@ namespace QueryTests
 			var od = pm.FindObject(typeof(OrderDetail), new object[]{ 1, 2 } );
 			q.Parameters.Add( od.NDOObjectId );
 			var fields = new SqlColumnListGenerator( pm.NDOMapping.FindClass( typeof( OrderDetail ) ) ).SelectList;
-			Assert.AreEqual( $"SELECT {fields} FROM [OrderDetail] WHERE [OrderDetail].[IDProduct] = {{0}} AND [OrderDetail].[IDOrder] = {{1}}", q.GeneratedQuery );
+			Assert.That( $"SELECT {fields} FROM [OrderDetail] WHERE [OrderDetail].[IDProduct] = {{0}} AND [OrderDetail].[IDOrder] = {{1}}" == q.GeneratedQuery );
 			bool thrown = false;
 			try
 			{
@@ -367,7 +367,7 @@ namespace QueryTests
 			{
 				thrown = true;
 			}
-			Assert.AreEqual( true, thrown );
+			Assert.That( thrown );
 		}
 
 		[Test]
@@ -385,10 +385,10 @@ namespace QueryTests
 
 			q.Execute();
 
-			Assert.NotNull( generatedParameters );
-			Assert.AreEqual( 2, generatedParameters.Count );
-			Assert.AreEqual( 1, generatedParameters[0] );
-			Assert.AreEqual( 2, generatedParameters[1] );
+			Assert.That( generatedParameters != null );
+			Assert.That( 2 == generatedParameters.Count );
+			Assert.That( 1 == (int) generatedParameters[0] );
+			Assert.That( 2 == (int) generatedParameters[1] );
 		}
 
 		[Test]
@@ -403,10 +403,10 @@ namespace QueryTests
 			var container = pm.ConfigContainer;
 			container.RegisterInstance<IPersistenceHandler>( handlerMock.Object );
 			q.Execute();
-			Assert.NotNull( generatedParameters );
-			Assert.AreEqual( 2, generatedParameters.Count );
-			Assert.AreEqual( 1, generatedParameters[0] );
-			Assert.AreEqual( 2, generatedParameters[1] );
+			Assert.That( generatedParameters != null );
+			Assert.That( 2 == generatedParameters.Count );
+			Assert.That( 1 == (int) generatedParameters[0] );
+			Assert.That( 2 == (int) generatedParameters[1] );
 			container.RegisterType<IPersistenceHandler, SqlPersistenceHandler>();
 		}
 
@@ -426,9 +426,9 @@ namespace QueryTests
 			var container = pm.ConfigContainer;
 			container.RegisterInstance<IPersistenceHandlerManager>( phManagerMock.Object );
 			q.Execute();
-			Assert.NotNull( generatedParameters );
-			Assert.AreEqual( 1, generatedParameters.Count );
-			Assert.AreEqual( 1, generatedParameters[0] );
+			Assert.That( generatedParameters  != null );
+			Assert.That( 1 == generatedParameters.Count );
+			Assert.That( 1 == (int) generatedParameters[0] );
 			container.RegisterType<IPersistenceHandler, SqlPersistenceHandler>();
 		}
 
@@ -448,10 +448,10 @@ namespace QueryTests
 			var container = pm.ConfigContainer;
 			container.RegisterInstance<IPersistenceHandlerManager>( phManagerMock.Object );
 			q.Execute();
-			Assert.NotNull( generatedParameters );
-			Assert.AreEqual( 1, generatedParameters.Count );
-			Assert.AreEqual( 1, generatedParameters[0] );
-			Assert.AreEqual( $"SELECT {this.mitarbeiterFields} FROM Mitarbeiter WHERE ID = {{0}}", expression );
+			Assert.That( generatedParameters  != null );
+			Assert.That( 1 == generatedParameters.Count );
+			Assert.That( 1 == (int) generatedParameters[0] );
+			Assert.That( $"SELECT {this.mitarbeiterFields} FROM Mitarbeiter WHERE ID = {{0}}" == expression );
 			container.RegisterType<IPersistenceHandler, SqlPersistenceHandler>();
 		}
 
@@ -471,9 +471,9 @@ namespace QueryTests
 			var container = pm.ConfigContainer;
 			container.RegisterInstance<IPersistenceHandlerManager>( phManagerMock.Object );
 			q.Execute();
-			Assert.NotNull( generatedParameters );
-			Assert.AreEqual( 1, generatedParameters.Count );
-			Assert.AreEqual( 121, generatedParameters[0] );
+			Assert.That( generatedParameters  != null );
+			Assert.That( 1 == generatedParameters.Count );
+			Assert.That( 121 == (int) generatedParameters[0] );
 			container.RegisterType<IPersistenceHandler, SqlPersistenceHandler>();
 		}
 
@@ -491,8 +491,8 @@ namespace QueryTests
 			var container = pm.ConfigContainer;
 			container.RegisterInstance<IPersistenceHandlerManager>( phManagerMock.Object );
 			q.Execute();
-			Assert.NotNull( generatedParameters );
-			Assert.AreEqual( 0, generatedParameters.Count );
+			Assert.That( generatedParameters  != null );
+			Assert.That( 0 == generatedParameters.Count );
 			container.RegisterType<IPersistenceHandler, SqlPersistenceHandler>();
 		}
 
@@ -500,7 +500,7 @@ namespace QueryTests
 		public void TestSuperclasses()
 		{
 			NDOQuery<Kostenpunkt> qk = new NDOQuery<Kostenpunkt>( pm );
-			Assert.AreEqual( $"SELECT {this.belegFields} FROM [Beleg];\r\nSELECT {this.pkwFahrtFields} FROM [PKWFahrt]", qk.GeneratedQuery );
+			Assert.That( $"SELECT {this.belegFields} FROM [Beleg];\r\nSELECT {this.pkwFahrtFields} FROM [PKWFahrt]" == qk.GeneratedQuery );
 		}
 
 		[Test]
@@ -508,14 +508,14 @@ namespace QueryTests
 		{
 			NDOQuery<Reise> q = new NDOQuery<Reise>( pm, "belege.datum = {0}" );
 			q.Parameters.Add( DateTime.Now );
-			Assert.AreEqual( $"SELECT {reiseJoinFields} FROM [Reise] INNER JOIN [relBelegKostenpunkt] ON [Reise].[ID] = [relBelegKostenpunkt].[IDReise] INNER JOIN [Beleg] ON [Beleg].[ID] = [relBelegKostenpunkt].[IDBeleg] AND [relBelegKostenpunkt].[TCBeleg] = 926149172 WHERE [Beleg].[Datum] = {{0}} UNION \r\nSELECT {reiseJoinFields} FROM [Reise] INNER JOIN [relBelegKostenpunkt] ON [Reise].[ID] = [relBelegKostenpunkt].[IDReise] INNER JOIN [PKWFahrt] ON [PKWFahrt].[ID] = [relBelegKostenpunkt].[IDBeleg] AND [relBelegKostenpunkt].[TCBeleg] = 734406058 WHERE [PKWFahrt].[Datum] = {{0}}", q.GeneratedQuery );
+			Assert.That( $"SELECT {reiseJoinFields} FROM [Reise] INNER JOIN [relBelegKostenpunkt] ON [Reise].[ID] = [relBelegKostenpunkt].[IDReise] INNER JOIN [Beleg] ON [Beleg].[ID] = [relBelegKostenpunkt].[IDBeleg] AND [relBelegKostenpunkt].[TCBeleg] = 926149172 WHERE [Beleg].[Datum] = {{0}} UNION \r\nSELECT {reiseJoinFields} FROM [Reise] INNER JOIN [relBelegKostenpunkt] ON [Reise].[ID] = [relBelegKostenpunkt].[IDReise] INNER JOIN [PKWFahrt] ON [PKWFahrt].[ID] = [relBelegKostenpunkt].[IDBeleg] AND [relBelegKostenpunkt].[TCBeleg] = 734406058 WHERE [PKWFahrt].[Datum] = {{0}}" == q.GeneratedQuery );
 		}
 
 		[Test]
 		public void Test1To1()
 		{
 			NDOQuery<Mitarbeiter> q = new NDOQuery<Mitarbeiter>( pm, "meinBuero.zimmer = 'abc'" );
-			Assert.AreEqual( String.Format( "SELECT {0} FROM [Mitarbeiter] INNER JOIN [Buero] ON [Buero].[ID] = [Mitarbeiter].[IDBuero] WHERE [Buero].[Zimmer] = 'abc'", this.mitarbeiterJoinFields ), q.GeneratedQuery );
+			Assert.That( String.Format( "SELECT {0} FROM [Mitarbeiter] INNER JOIN [Buero] ON [Buero].[ID] = [Mitarbeiter].[IDBuero] WHERE [Buero].[Zimmer] = 'abc'", this.mitarbeiterJoinFields ) == q.GeneratedQuery );
 		}
 
 
@@ -523,10 +523,10 @@ namespace QueryTests
 		public void Test1To1Bidirectional()
 		{
 			NDOQuery<Mitarbeiter> q = new NDOQuery<Mitarbeiter>( pm, "sn.nummer = 4711" );
-			Assert.AreEqual( String.Format( "SELECT {0} FROM [Mitarbeiter] INNER JOIN [Sozialversicherungsnummer] ON [Sozialversicherungsnummer].[ID] = [Mitarbeiter].[IDSozial] WHERE [Sozialversicherungsnummer].[Nummer] = 4711", this.mitarbeiterJoinFields ), q.GeneratedQuery );
+			Assert.That( String.Format( "SELECT {0} FROM [Mitarbeiter] INNER JOIN [Sozialversicherungsnummer] ON [Sozialversicherungsnummer].[ID] = [Mitarbeiter].[IDSozial] WHERE [Sozialversicherungsnummer].[Nummer] = 4711", this.mitarbeiterJoinFields ) == q.GeneratedQuery );
 			NDOQuery<Sozialversicherungsnummer> qs = new NDOQuery<Sozialversicherungsnummer>( pm, "arbeiter.vorname = 'Mirko'" );
 			var fields = new SqlColumnListGenerator( pm.NDOMapping.FindClass( typeof( Sozialversicherungsnummer ) ) ).Result( false, false, true );
-			Assert.AreEqual( $"SELECT {fields} FROM [Sozialversicherungsnummer] INNER JOIN [Mitarbeiter] ON [Mitarbeiter].[ID] = [Sozialversicherungsnummer].[IDSozial] WHERE [Mitarbeiter].[Vorname] = 'Mirko'", qs.GeneratedQuery );
+			Assert.That( $"SELECT {fields} FROM [Sozialversicherungsnummer] INNER JOIN [Mitarbeiter] ON [Mitarbeiter].[ID] = [Sozialversicherungsnummer].[IDSozial] WHERE [Mitarbeiter].[Vorname] = 'Mirko'" == qs.GeneratedQuery );
 		}
 
 		[Test]
@@ -534,39 +534,39 @@ namespace QueryTests
 		{
 			NDOQuery<Zertifikat> qz = new NDOQuery<Zertifikat>( pm, "sgn.signature = 'abc'" );
 			var fields = new SqlColumnListGenerator( pm.NDOMapping.FindClass( typeof( Zertifikat ) ) ).Result( false, false, true );
-			Assert.AreEqual( $"SELECT {fields} FROM [Zertifikat] INNER JOIN [relSignaturZertifikat] ON [Zertifikat].[ID] = [relSignaturZertifikat].[IDZertifikat] INNER JOIN [Signatur] ON [Signatur].[ID] = [relSignaturZertifikat].[IDSignatur] WHERE [Signatur].[Signature] = 'abc'", qz.GeneratedQuery );
+			Assert.That( $"SELECT {fields} FROM [Zertifikat] INNER JOIN [relSignaturZertifikat] ON [Zertifikat].[ID] = [relSignaturZertifikat].[IDZertifikat] INNER JOIN [Signatur] ON [Signatur].[ID] = [relSignaturZertifikat].[IDSignatur] WHERE [Signatur].[Signature] = 'abc'" == qz.GeneratedQuery );
 			NDOQuery<Signatur> qs = new NDOQuery<Signatur>( pm, "owner.schlüssel = -4" );
 			string s = qs.GeneratedQuery;
 			fields = new SqlColumnListGenerator( pm.NDOMapping.FindClass( typeof( Signatur ) ) ).Result( false, false, true );
-			Assert.AreEqual( $"SELECT {fields} FROM [Signatur] INNER JOIN [relSignaturZertifikat] ON [Signatur].[ID] = [relSignaturZertifikat].[IDSignatur] INNER JOIN [Zertifikat] ON [Zertifikat].[ID] = [relSignaturZertifikat].[IDZertifikat] WHERE [Zertifikat].[Schlüssel] = -4", qs.GeneratedQuery );
+			Assert.That( $"SELECT {fields} FROM [Signatur] INNER JOIN [relSignaturZertifikat] ON [Signatur].[ID] = [relSignaturZertifikat].[IDSignatur] INNER JOIN [Zertifikat] ON [Zertifikat].[ID] = [relSignaturZertifikat].[IDZertifikat] WHERE [Zertifikat].[Schlüssel] = -4" == qs.GeneratedQuery );
 		}
 
 		[Test]
 		public void Test1ToNWithTable()
 		{
 			NDOQuery<Mitarbeiter> q = new NDOQuery<Mitarbeiter>( pm, "reiseBüros.name = 'abc'" );
-			Assert.AreEqual( String.Format( "SELECT {0} FROM [Mitarbeiter] INNER JOIN [relMitarbeiterReisebuero] ON [Mitarbeiter].[ID] = [relMitarbeiterReisebuero].[IDMitarbeiter] INNER JOIN [Reisebuero] ON [Reisebuero].[ID] = [relMitarbeiterReisebuero].[IDReisebuero] WHERE [Reisebuero].[Name] = 'abc'", this.mitarbeiterJoinFields ), q.GeneratedQuery );
+			Assert.That( String.Format( "SELECT {0} FROM [Mitarbeiter] INNER JOIN [relMitarbeiterReisebuero] ON [Mitarbeiter].[ID] = [relMitarbeiterReisebuero].[IDMitarbeiter] INNER JOIN [Reisebuero] ON [Reisebuero].[ID] = [relMitarbeiterReisebuero].[IDReisebuero] WHERE [Reisebuero].[Name] = 'abc'", this.mitarbeiterJoinFields ) == q.GeneratedQuery );
 		}
 
 		[Test]
 		public void TestIfQueryForNonNullOidsWorks()
 		{
 			NDOQuery<Mitarbeiter> q = new NDOQuery<Mitarbeiter>( pm, "dieReisen.dieLaender.oid IS NOT NULL" );
-			Assert.AreEqual( $"SELECT {this.mitarbeiterJoinFields} FROM [Mitarbeiter] INNER JOIN [Reise] ON [Mitarbeiter].[ID] = [Reise].[IDMitarbeiter] INNER JOIN [relLandReise] ON [Reise].[ID] = [relLandReise].[IDReise] WHERE [relLandReise].[IDLand] IS NOT NULL", q.GeneratedQuery );
+			Assert.That( $"SELECT {this.mitarbeiterJoinFields} FROM [Mitarbeiter] INNER JOIN [Reise] ON [Mitarbeiter].[ID] = [Reise].[IDMitarbeiter] INNER JOIN [relLandReise] ON [Reise].[ID] = [relLandReise].[IDReise] WHERE [relLandReise].[IDLand] IS NOT NULL" == q.GeneratedQuery );
 		}
 
 		[Test]
 		public void TestIfQueryWithNonNullRelationWorks()
 		{
 			NDOQuery<Mitarbeiter> q = new NDOQuery<Mitarbeiter>( pm, "adresse IS NOT NULL" );
-			Assert.AreEqual( $"SELECT {this.mitarbeiterFields} FROM [Mitarbeiter] WHERE [Mitarbeiter].[IDAdresse] IS NOT NULL", q.GeneratedQuery );
+			Assert.That( $"SELECT {this.mitarbeiterFields} FROM [Mitarbeiter] WHERE [Mitarbeiter].[IDAdresse] IS NOT NULL" == q.GeneratedQuery );
 		}
 
 		[Test]
 		public void TestIfQueryWithNullRelationWorks()
 		{
 			NDOQuery<Mitarbeiter> q = new NDOQuery<Mitarbeiter>( pm, "adresse IS NULL" );
-			Assert.AreEqual( $"SELECT {this.mitarbeiterFields} FROM [Mitarbeiter] WHERE [Mitarbeiter].[IDAdresse] IS NULL", q.GeneratedQuery );
+			Assert.That( $"SELECT {this.mitarbeiterFields} FROM [Mitarbeiter] WHERE [Mitarbeiter].[IDAdresse] IS NULL" == q.GeneratedQuery );
 		}
 
 		[Test]
@@ -574,7 +574,7 @@ namespace QueryTests
 		{
 			NDOQuery<Mitarbeiter> q = new NDOQuery<Mitarbeiter>( pm, "vorname IN (1,2,3,4,5)" );
 			var s = q.GeneratedQuery;
-			Assert.AreEqual( $"SELECT {this.mitarbeiterFields} FROM [Mitarbeiter] WHERE [Mitarbeiter].[Vorname] IN (1, 2, 3, 4, 5)", s );
+			Assert.That( $"SELECT {this.mitarbeiterFields} FROM [Mitarbeiter] WHERE [Mitarbeiter].[Vorname] IN (1, 2, 3, 4, 5)" == s );
 		}
 
 		[Test]
@@ -582,7 +582,7 @@ namespace QueryTests
 		{
 			NDOQuery<Mitarbeiter> q = new NDOQuery<Mitarbeiter>( pm, "vorname IN ('1','2','3','4','5')" );
 			var s = q.GeneratedQuery;
-			Assert.AreEqual( $"SELECT {this.mitarbeiterFields} FROM [Mitarbeiter] WHERE [Mitarbeiter].[Vorname] IN ('1', '2', '3', '4', '5')", s );
+			Assert.That( $"SELECT {this.mitarbeiterFields} FROM [Mitarbeiter] WHERE [Mitarbeiter].[Vorname] IN ('1', '2', '3', '4', '5')" == s );
 		}
 
 		[Test]
@@ -591,7 +591,7 @@ namespace QueryTests
 			// -- will be interpreted as NDOql comment
 			NDOQuery<Mitarbeiter> q = new NDOQuery<Mitarbeiter>( pm, "vorname = 'lala'--SELECT * FROM Mitarbeiter'" );
 			var s = q.GeneratedQuery;
-			Assert.AreEqual( $"SELECT {this.mitarbeiterFields} FROM [Mitarbeiter] WHERE [Mitarbeiter].[Vorname] = 'lala'", s );
+			Assert.That( $"SELECT {this.mitarbeiterFields} FROM [Mitarbeiter] WHERE [Mitarbeiter].[Vorname] = 'lala'" == s );
 
 			// -SELECT * FROM is a valid expression, it would result in a sql error
 			// Mitarbeiter is a syntax error, so the expression is recognized as incorrect from the 33rd character onwards
@@ -611,7 +611,7 @@ namespace QueryTests
 		{
 			NDOQuery<Mitarbeiter> q = new NDOQuery<Mitarbeiter>( pm, "vorname IN ('1''','2''3','''3','4','5')" );
 			var s = q.GeneratedQuery;
-			Assert.AreEqual( $"SELECT {this.mitarbeiterFields} FROM [Mitarbeiter] WHERE [Mitarbeiter].[Vorname] IN ('1''', '2''3', '''3', '4', '5')", s );
+			Assert.That( $"SELECT {this.mitarbeiterFields} FROM [Mitarbeiter] WHERE [Mitarbeiter].[Vorname] IN ('1''', '2''3', '''3', '4', '5')" == s );
 		}
 
 		[Test]
@@ -619,7 +619,7 @@ namespace QueryTests
 		{
 			NDOQuery<Mitarbeiter> q = new NDOQuery<Mitarbeiter>( pm, "dieReisen.oid IN (1,2,3,4,5)" );
 			var s = q.GeneratedQuery;
-			Assert.AreEqual( $"SELECT {this.mitarbeiterJoinFields} FROM [Mitarbeiter] INNER JOIN [Reise] ON [Mitarbeiter].[ID] = [Reise].[IDMitarbeiter] WHERE [Reise].[ID] IN (1, 2, 3, 4, 5)", s );
+			Assert.That( $"SELECT {this.mitarbeiterJoinFields} FROM [Mitarbeiter] INNER JOIN [Reise] ON [Mitarbeiter].[ID] = [Reise].[IDMitarbeiter] WHERE [Reise].[ID] IN (1, 2, 3, 4, 5)" == s );
 		}
 
 		[Test]
@@ -627,7 +627,7 @@ namespace QueryTests
 		{
 			NDOQuery<Mitarbeiter> q = new NDOQuery<Mitarbeiter>( pm, "oid IN (1,2,3,4,5)" );
 			var s = q.GeneratedQuery;
-			Assert.AreEqual( $"SELECT {this.mitarbeiterFields} FROM [Mitarbeiter] WHERE [Mitarbeiter].[ID] IN (1, 2, 3, 4, 5)", s );
+			Assert.That( $"SELECT {this.mitarbeiterFields} FROM [Mitarbeiter] WHERE [Mitarbeiter].[ID] IN (1, 2, 3, 4, 5)" == s );
 		}
 
 		[Test]
@@ -635,7 +635,7 @@ namespace QueryTests
 		{
 			var expression = "SELECT * FROM Mitarbeiter WHERE Vorname = 'Mirko'";
 			NDOQuery<Mitarbeiter> q = new NDOQuery<Mitarbeiter>( this.pm, expression, false, QueryLanguage.Sql );
-			Assert.AreEqual( expression, q.GeneratedQuery );
+			Assert.That( expression == q.GeneratedQuery );
 		}
 
 		[Test]
@@ -664,7 +664,7 @@ namespace QueryTests
 		{
 			var q = new NDOQuery<Mitarbeiter>( NDOFactory.Instance.PersistenceManager, "vorname = 'Mirko'" );
 			var sql = q.GetDirectDeleteQuery();
-			Assert.AreEqual( "DELETE FROM [Mitarbeiter] WHERE [Mitarbeiter].[Vorname] = 'Mirko'", sql );
+			Assert.That( "DELETE FROM [Mitarbeiter] WHERE [Mitarbeiter].[Vorname] = 'Mirko'" == sql );
 		}
 
 		[Test]
@@ -678,7 +678,7 @@ namespace QueryTests
 			}
 			catch (NDOException ex)
 			{
-				Assert.AreEqual( 120, ex.ErrorNumber );
+				Assert.That( 120 == ex.ErrorNumber );
 			}
 		}
 	}

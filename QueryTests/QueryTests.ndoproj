@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
 <Enhancer>
   <Options>
-    <EnableAddIn>False</EnableAddIn>
+    <EnableAddIn>True</EnableAddIn>
     <EnableEnhancer>False</EnableEnhancer>
     <VerboseMode>False</VerboseMode>
     <NewMapping>False</NewMapping>
@@ -18,18 +18,18 @@
     <DatabaseOwner>
     </DatabaseOwner>
     <GenerateConstraints>False</GenerateConstraints>
-    <UseMsBuild>True</UseMsBuild>
     <DropExistingElements>True</DropExistingElements>
   </Options>
   <ProjectDescription>
-    <BinPath>bin\Debug\QueryTests.dll</BinPath>
-    <ObjPath>obj\Debug\</ObjPath>
+    <BinPath>bin\Debug\net8.0\QueryTests.dll</BinPath>
+    <ObjPath>obj\Debug\net8.0\</ObjPath>
     <AssemblyName />
-    <Debug>False</Debug>
-    <IsWebProject>False</IsWebProject>
+    <Debug>True</Debug>
     <KeyFile />
     <References>
-      <Reference AssemblyName="PureBusinessClasses" AssemblyPath="..\IntegrationTests\PureBusinessClasses\bin\Debug\PureBusinessClasses.dll">
+      <Reference AssemblyName="NDO" AssemblyPath="..\NDODLL\bin\Debug\netstandard2.0\NDO.dll" CheckThisDLL="False">
+      </Reference>
+      <Reference AssemblyName="PureBusinessClasses" AssemblyPath="..\IntegrationTests\PureBusinessClasses\bin\Debug\net8.0\PureBusinessClasses.dll">
       </Reference>
     </References>
   </ProjectDescription>
