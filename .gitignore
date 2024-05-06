@@ -26,3 +26,9 @@ SourceRevisionId.props
 /NDOEnhancer.BuildTask/NDOEnhancer.BuildTask/ConfigurationOptions.cs
 /NDOEnhancer.BuildTask/NDOEnhancer.BuildTask/ProjectDescription.cs
 /NDOEnhancer.BuildTask/NDOEnhancer.BuildTask/XmlHelper.cs
+/nuget/runtimes
+/nuget/Ecma335.pdb
+/nuget/NDO.pdb
+/nuget/NDOEnhancer.BuildTask.pdb
+/nuget/NDOEnhancer.deps.json
+/nuget/NDOEnhancer.runtimeconfig.json

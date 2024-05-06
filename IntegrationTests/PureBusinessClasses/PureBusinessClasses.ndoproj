@@ -3,7 +3,7 @@
   <Options>
     <EnableAddIn>True</EnableAddIn>
     <EnableEnhancer>True</EnableEnhancer>
-    <VerboseMode>False</VerboseMode>
+    <VerboseMode>True</VerboseMode>
     <NewMapping>False</NewMapping>
     <GenerateSQL>False</GenerateSQL>
     <DefaultConnection>
@@ -22,8 +22,8 @@
     <DropExistingElements>True</DropExistingElements>
   </Options>
   <ProjectDescription>
-    <BinPath>bin\Debug\PureBusinessClasses.dll</BinPath>
-    <ObjPath>obj\Debug\</ObjPath>
+    <BinPath>bin\Debug\net8.0\PureBusinessClasses.dll</BinPath>
+    <ObjPath>obj\Debug\net8.0</ObjPath>
     <AssemblyName />
     <Debug>True</Debug>
     <IsWebProject>False</IsWebProject>

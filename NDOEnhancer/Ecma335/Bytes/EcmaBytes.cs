@@ -105,7 +105,6 @@ namespace NDOEnhancer.Ecma335.Bytes
                 if (pos >= bytes.Length - 4)
                     throw new Exception( $"Can't read int from CustomAttribute constructor parameters. The byte array is too short. Position: {pos}" );
                 int para = (int)ReadParam(bytes, typeof(int), ref pos)!; //((bytes[pos+3] * 256 + bytes[pos+2]) * 256 + bytes[pos+1]) * 256 + bytes[pos];
-                pos += 4;
                 return Enum.ToObject( type, para );
             }
 
