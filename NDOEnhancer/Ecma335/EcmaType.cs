@@ -63,7 +63,7 @@ namespace NDOEnhancer.Ecma335
             {"string", typeof(System.String) }
         };
 
-        static Regex arrayRegex = new Regex(@"^\[\d+\]", RegexOptions.Compiled);
+        static Regex arrayRegex = new Regex(@"^\[(\d+|)\]", RegexOptions.Compiled);
 
 		public bool Parse(string input)
         {
