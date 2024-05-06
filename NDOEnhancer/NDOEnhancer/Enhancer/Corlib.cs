@@ -37,6 +37,7 @@ namespace NDOEnhancer
 		public static string XmlIgnoreAssembly => FxType == FxType.Net ? "[System.Xml.ReaderWriter]" : "[netstandard]";
 		public static string SystemComponentModel => FxType == FxType.Net ? "[System.ComponentModel.Primitives]" : "[netstandard]";
 		public static string SystemDataCommon => FxType == FxType.Net ? "[System.Data.Common]" : "[netstandard]";
+		public static string SystemCollections => FxType == FxType.Net ? "[System.Collections]" : "[netstandard]";
 
 		// We must determine the version instead of using a fixed value
 		public static string FxVersion { get; set; }

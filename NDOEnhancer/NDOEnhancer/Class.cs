@@ -704,7 +704,7 @@ namespace NDOEnhancer.Patcher
 									var elements = new List<ILStatementElement>();
 									elements.Add(new ILStatementElement("ldloc __ndocontainertable"));
 									elements.Add(new ILStatementElement(@"ldstr """ + reference.CleanName + @""""));
-									elements.Add(new ILStatementElement($"call       object [NDO]NDO._NDOContainerStack::RegisterContainer(object,object,class {Corlib.Name}System.Collections.Hashtable,string)"));
+									elements.Add(new ILStatementElement($"call       object [NDO]NDO._NDOContainerStack::RegisterContainer(object,object,class {Corlib.SystemCollections}System.Collections.Hashtable,string)"));
                                     elements.Add(new ILStatementElement("castclass " + new ReflectedType(reference.FieldType, this.m_classElement.AssemblyName).QuotedILName));
 									// Achtung: insertAfter benötigt die Statements in umgekehrter Reihenfolge
 									for (int i = elements.Count - 1; i >=0; i--)
@@ -749,8 +749,8 @@ namespace NDOEnhancer.Patcher
 
 				if (needsContainerStack)
 				{
-					addLocalVariable(methodElement, "__ndocontainertable", $"class {Corlib.Name}System.Collections.Hashtable");
-					firstElement.InsertBefore(new ILStatementElement($"newobj     instance void {Corlib.Name}System.Collections.Hashtable::.ctor()"));
+					addLocalVariable(methodElement, "__ndocontainertable", $"class {Corlib.SystemCollections}System.Collections.Hashtable");
+					firstElement.InsertBefore(new ILStatementElement($"newobj     instance void {Corlib.SystemCollections}System.Collections.Hashtable::.ctor()"));
 					firstElement.InsertBefore(new ILStatementElement("stloc __ndocontainertable"));
 					AddToMaxStackVal(methodElement, 3);
 				}
@@ -968,9 +968,9 @@ namespace NDOEnhancer.Patcher
 
 			methodElement.addStatement(ldarg_0);
 			methodElement.addStatement("ldfld      class [NDO]NDO.LoadState " + m_refName + "::_ndoLoadState");
-			methodElement.addStatement($"callvirt   instance class {Corlib.Name}System.Collections.BitArray [NDO]NDO.LoadState::get_RelationLoadState()");
+			methodElement.addStatement($"callvirt   instance class {Corlib.SystemCollections}System.Collections.BitArray [NDO]NDO.LoadState::get_RelationLoadState()");
 			methodElement.addStatement(ldarg_1);
-			methodElement.addStatement($"callvirt instance bool {Corlib.Name}System.Collections.BitArray::get_Item(int32)");
+			methodElement.addStatement($"callvirt instance bool {Corlib.SystemCollections}System.Collections.BitArray::get_Item(int32)");
 			methodElement.addStatement("ret");
 		}
 
@@ -998,10 +998,10 @@ namespace NDOEnhancer.Patcher
 
 			methodElement.addStatement(ldarg_0);
 			methodElement.addStatement("ldfld      class [NDO]NDO.LoadState "  + m_refName + "::_ndoLoadState");
-			methodElement.addStatement($"callvirt   instance class {Corlib.Name}System.Collections.BitArray [NDO]NDO.LoadState::get_RelationLoadState()");
+			methodElement.addStatement($"callvirt   instance class {Corlib.SystemCollections}System.Collections.BitArray [NDO]NDO.LoadState::get_RelationLoadState()");
 			methodElement.addStatement("ldarg.1");
 			methodElement.addStatement("ldarg.2");
-			methodElement.addStatement($"callvirt instance void {Corlib.Name}System.Collections.BitArray::set_Item(int32, bool)");
+			methodElement.addStatement($"callvirt instance void {Corlib.SystemCollections}System.Collections.BitArray::set_Item(int32, bool)");
 			methodElement.addStatement("ret");
 		}
 
@@ -1057,7 +1057,7 @@ namespace NDOEnhancer.Patcher
 			method.addStatement( loadStateManager() );
 			method.addStatement(ldarg_0);
 			method.addStatement(@"ldstr      """ + reference.CleanName + @"""");
-			method.addStatement($"callvirt   instance class {Corlib.Name}System.Collections.IList [NDO]NDO.IStateManager::LoadRelation(class [NDO]NDO.IPersistenceCapable,string)");
+			method.addStatement($"callvirt   instance class {Corlib.SystemCollections}System.Collections.IList [NDO]NDO.IStateManager::LoadRelation(class [NDO]NDO.IPersistenceCapable,string)");
 			method.addStatement("pop");
 
 			method.addStatement("noSm:");
@@ -1140,7 +1140,7 @@ namespace NDOEnhancer.Patcher
 
 			method.addStatement( ldarg_1 );
 
-			method.addStatement( $"callvirt   instance void [NDO]NDO.IStateManager::AssignRelation(class [NDO]NDO.IPersistenceCapable, string, class {Corlib.Name}System.Collections.IList, class {Corlib.Name}System.Collections.IList)");
+			method.addStatement( $"callvirt   instance void [NDO]NDO.IStateManager::AssignRelation(class [NDO]NDO.IPersistenceCapable, string, class {Corlib.SystemCollections}System.Collections.IList, class {Corlib.SystemCollections}System.Collections.IList)");
 
 			method.addStatement( "NoSm:");
 			method.addStatement(ldarg_0);
