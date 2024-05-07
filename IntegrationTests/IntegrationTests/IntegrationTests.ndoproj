@@ -2,7 +2,7 @@
 <Enhancer>
   <Options>
     <EnableAddIn>True</EnableAddIn>
-    <EnableEnhancer>True</EnableEnhancer>
+    <EnableEnhancer>False</EnableEnhancer>
     <VerboseMode>False</VerboseMode>
     <NewMapping>False</NewMapping>
     <GenerateSQL>False</GenerateSQL>
@@ -14,8 +14,7 @@
     <Utf8Encoding>True</Utf8Encoding>
     <SQLScriptLanguage>
     </SQLScriptLanguage>
-    <SchemaVersion>
-    </SchemaVersion>
+    <SchemaVersion>1.0</SchemaVersion>
     <IncludeTypecodes>False</IncludeTypecodes>
     <DatabaseOwner>
     </DatabaseOwner>
@@ -29,7 +28,7 @@
     <Debug>True</Debug>
     <KeyFile />
     <References>
-      <Reference AssemblyName="PureBusinessClasses" AssemblyPath="..\PureBusinessClasses\bin\Debug\net8.0\PureBusinessClasses.dll" CheckThisDLL="False">
+      <Reference AssemblyName="PureBusinessClasses" AssemblyPath="..\PureBusinessClasses\bin\Debug\net8.0\PureBusinessClasses.dll">
       </Reference>
     </References>
   </ProjectDescription>

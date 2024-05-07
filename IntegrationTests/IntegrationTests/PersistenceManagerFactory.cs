@@ -92,8 +92,7 @@ namespace NdoUnitTests
 
 		public static PersistenceManager NewPersistenceManager(TransactionMode transactionMode = TransactionMode.Optimistic)
 		{
-			//string path = Path.Combine( Path.GetDirectoryName( typeof( PmFactory ).Assembly.Location ), "NDOMapping.xml" );
-            string path = @"C:\Projekte\NDO\IntegrationTests\NDOUnitTests\bin\Debug\NDOMapping.xml";
+			string path = Path.Combine( Path.GetDirectoryName( typeof( PmFactory ).Assembly.Location ), "NDOMapping.xml" );
 			
 			PersistenceManager pm;
 			
