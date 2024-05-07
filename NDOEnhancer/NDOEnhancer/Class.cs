@@ -1057,7 +1057,7 @@ namespace NDOEnhancer.Patcher
 			method.addStatement( loadStateManager() );
 			method.addStatement(ldarg_0);
 			method.addStatement(@"ldstr      """ + reference.CleanName + @"""");
-			method.addStatement($"callvirt   instance class {Corlib.SystemCollections}System.Collections.IList [NDO]NDO.IStateManager::LoadRelation(class [NDO]NDO.IPersistenceCapable,string)");
+			method.addStatement($"callvirt   instance class {Corlib.Name}System.Collections.IList [NDO]NDO.IStateManager::LoadRelation(class [NDO]NDO.IPersistenceCapable,string)");
 			method.addStatement("pop");
 
 			method.addStatement("noSm:");
@@ -1140,7 +1140,7 @@ namespace NDOEnhancer.Patcher
 
 			method.addStatement( ldarg_1 );
 
-			method.addStatement( $"callvirt   instance void [NDO]NDO.IStateManager::AssignRelation(class [NDO]NDO.IPersistenceCapable, string, class {Corlib.SystemCollections}System.Collections.IList, class {Corlib.SystemCollections}System.Collections.IList)");
+			method.addStatement( $"callvirt   instance void [NDO]NDO.IStateManager::AssignRelation(class [NDO]NDO.IPersistenceCapable, string, class {Corlib.Name}System.Collections.IList, class {Corlib.Name}System.Collections.IList)");
 
 			method.addStatement( "NoSm:");
 			method.addStatement(ldarg_0);

@@ -110,7 +110,7 @@ namespace NdoUnitTests
 				pm.MakePersistent(reise);
 				Relation rel = pm.NDOMapping.FindClass(typeof(Reise)).FindRelation("belege");
 				Relation rel2 = pm.NDOMapping.FindClass(typeof(Beleg)).FindRelation("reise");
-				Assert.That(rel ==  rel2, "Relation should be considered the same");
+				Assert.That(rel, Is.EqualTo( rel2 ), "Relation should be considered the same");
 				bool b = GetLock(reise, rel, kp);
 				Assert.That(true ==  b, "There shouldn't be a lock");
 				Assert.That(true ==  IsLocked(reise, rel, kp), "Objects should be locked #1");

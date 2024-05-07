@@ -118,9 +118,21 @@ namespace NDOEnhancer
                 if (isQuoted)
                     assemblyName = QuotedName.Convert(assemblyName);
 				if (assemblyName == "mscorlib" || assemblyName == "System.Private.CoreLib")
-					assPrefix = Corlib.Name;
+				{
+                    // This is a hack which might concern only the collections.
+                    // We determine the Type t of container classes using reflection.
+                    // In Reflection the assembly name for the generic collections is System.Runtime.Private.
+                    // But in IL the assembly name is [System.Collections] or - for netstandard - [netstandard];
+                    // If it concerns more data types, then we have to find a more generic solution.
+                    if (t2.FullName.StartsWith( "System.Collections.Generic" ) && !t2.IsInterface)
+						assPrefix = Corlib.SystemCollections;
+					else
+						assPrefix = Corlib.Name;
+				}
 				else
+				{
 					assPrefix = "[" + assemblyName + "]";
+				}
             }
             string tn = t2.FullName;
 

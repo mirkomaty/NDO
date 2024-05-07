@@ -63,8 +63,8 @@ namespace NdoUnitTests
 			var changeObject = pm.GetChangeSet( m );
 			Assert.That(1 ==  changeObject.original.Count );
 			Assert.That(1 ==  changeObject.current.Count );
-			Assert.That("Mirko" ==  changeObject.original["vorname"] );
-			Assert.That("Hans" ==  changeObject.current["vorname"] );
+			Assert.That("Mirko", Is.EqualTo( changeObject.original["vorname"] ) );
+			Assert.That("Hans", Is.EqualTo( changeObject.current["vorname"] ) );
 		}
 
 		[Test]
