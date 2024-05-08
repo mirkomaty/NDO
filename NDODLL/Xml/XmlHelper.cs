@@ -1,5 +1,5 @@
 ﻿//
-// Copyright (c) 2002-2016 Mirko Matytschak 
+// Copyright (c) 2002-2023 Mirko Matytschak 
 // (www.netdataobjects.de)
 //
 // Author: Mirko Matytschak
@@ -20,12 +20,14 @@
 // DEALINGS IN THE SOFTWARE.
 
 
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
+using NDO.Application;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Text.RegularExpressions;
 using System.Xml;
-using NDO.Logging;
 
 namespace NDO.Xml
 {
@@ -85,18 +87,6 @@ namespace NDO.Xml
         /// </summary>
         public static event SetValueHandler SetValueEvent;
 
-
-		static ILogAdapter logger;
-
-        /// <summary>
-		/// Gets or sets a logging object.
-		/// </summary>
-		public static ILogAdapter Logger
-		{
-			get { return logger; }
-			set { logger = value; }
-		}
-
 		static CultureInfo cultureInfo;
 
 		/// <summary>
@@ -122,13 +112,8 @@ namespace NDO.Xml
 
 		static void LogError( Exception ex, string method, string attributeOrElementName )
 		{
-			if ( logger == null )
-				throw ex;
-#if DEBUG
-			logger.Error(method + ": Attribute or element: " + attributeOrElementName + ": " + ex.ToString());
-#else
-			logger.Error(method + ": Attribute or element: " + attributeOrElementName + ": " + ex.Message);
-#endif
+            var logger = NDOApplication.ServiceProvider.GetRequiredService<ILoggerFactory>().CreateLogger<XmlHelper>();
+			logger.LogError(method + ": Attribute or element: " + attributeOrElementName + ": " + ex.ToString());
         }
 
         enum TimeSig { pm, none }  // am results to the same time as none

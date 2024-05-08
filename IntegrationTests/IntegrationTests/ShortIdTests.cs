@@ -36,7 +36,7 @@ using System.Text;
 namespace NdoUnitTests
 {
 	[TestFixture]
-	public class ShortIdTests
+	public class ShortIdTests : NDOTest
 	{
 		PersistenceManager pm;
 		Mitarbeiter m;

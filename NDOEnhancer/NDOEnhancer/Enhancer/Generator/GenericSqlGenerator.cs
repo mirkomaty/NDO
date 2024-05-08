@@ -40,7 +40,7 @@ namespace NDOEnhancer
 
 		public void Generate(DataSet dsSchema, DataSet dsOld, System.IO.StreamWriter stream, TypeManager typeManager, bool generateConstraints)
 		{
-			IProvider provider = NDOProviderFactory.Instance[concreteGenerator.ProviderName];
+			IProvider provider = EnhancerProviderFactory.Instance[concreteGenerator.ProviderName];
 
 			if ( dsOld != null )
 			{

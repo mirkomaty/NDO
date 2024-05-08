@@ -32,6 +32,7 @@ using Reisekosten;
 using Reisekosten.Personal;
 using NDO.Linq;
 using NDO.Mapping;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace NdoUnitTests
 {
@@ -39,7 +40,7 @@ namespace NdoUnitTests
 	/// Combined Tests of Mitarbeiter and Reise to test uniqueness of object ids.
 	/// </summary>
 	[TestFixture]
-	public class NDOMitarbeiterReiseTests
+	public class NDOMitarbeiterReiseTests : NDOTest
 	{
 		public NDOMitarbeiterReiseTests()
 		{
@@ -592,9 +593,7 @@ namespace NdoUnitTests
 			NDOQuery<Reise> q = new NDOQuery<Reise>(pm, $"zweck LIKE 'A{provider.Wildcard}'");
 			r = (Reise) q.ExecuteSingle(true);
 			r.Zweck = "NewPurpose";
-			pm.VerboseMode = true;
 			pm.Save();
-			pm.VerboseMode= false;
 			NDOQuery<Mitarbeiter> qm = new NDOQuery<Mitarbeiter>(pm);
 			m = qm.ExecuteSingle(true);
 			Assert.That(1 ==  m.Reisen.Count, "Count wrong");
@@ -681,8 +680,8 @@ namespace NdoUnitTests
 		public void ResolveTest()
 		{
 			// This makes sure, that each resolve delivers a new PersistenceHandler.
-			var h1 = pm.ConfigContainer.Resolve<IPersistenceHandler>();
-			var h2 = pm.ConfigContainer.Resolve<IPersistenceHandler>();
+			var h1 = Host.Services.GetRequiredService<IPersistenceHandler>();
+			var h2 = Host.Services.GetRequiredService<IPersistenceHandler>();
 			Assert.That( !object.ReferenceEquals( h1, h2 ) );
 		}
 

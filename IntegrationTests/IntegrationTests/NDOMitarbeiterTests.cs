@@ -36,26 +36,25 @@ using NDO.Linq;
 namespace NdoUnitTests
 {
 	[TestFixture] 
-	public class NDOMitarbeiterTests 
+	public class NDOMitarbeiterTests : NDOTest
 	{
 		public NDOMitarbeiterTests() 
 		{
 		}
 
-		private PersistenceManager pm;
 		private Mitarbeiter m;
 
 
 		[SetUp]
 		public void Setup() 
 		{
-			pm = PmFactory.NewPersistenceManager();
 			m = CreateMitarbeiter("Hartmut", "Kocher");
 		}
 
 		[TearDown]
 		public void TearDown() 
 		{
+			var pm = PmFactory.NewPersistenceManager();
 			if ( null != pm )
 			{
 				IList mitarbeiterListe = pm.GetClassExtent( typeof( Mitarbeiter ), true );
@@ -71,6 +70,7 @@ namespace NdoUnitTests
 		[Test]
 		public void TestMappingFileName()
 		{
+			var pm = PmFactory.NewPersistenceManager();
 			Debug.WriteLine("Mapping file = " + pm.NDOMapping.FileName);
 		}
 
@@ -78,12 +78,14 @@ namespace NdoUnitTests
 		[Test]
 		public void TestEmptyTransactionSave() 
 		{
+			var pm = PmFactory.NewPersistenceManager();
 			pm.Save();
 		}
 
 		[Test]
 		public void TestEmptyTransactionAbort() 
 		{
+			var pm = PmFactory.NewPersistenceManager();
 			pm.Abort();
 		}
 
@@ -93,6 +95,7 @@ namespace NdoUnitTests
 		[Test]
 		public void EmptyDB() 
 		{
+			var pm = PmFactory.NewPersistenceManager();
 			IList mitarbeiterListe = pm.GetClassExtent(typeof(Mitarbeiter), true);
 			pm.Delete(mitarbeiterListe);
 			pm.Save();
@@ -102,6 +105,7 @@ namespace NdoUnitTests
 		[Test]
 		public void TestObjectCreation() 
 		{
+			var pm = PmFactory.NewPersistenceManager();
 			pm.MakePersistent(m);
             Assert.That(m.NDOObjectId != null, "ObjectId should be valid");
             Assert.That(NDOObjectState.Created ==  m.NDOObjectState, "Status wrong");
@@ -122,6 +126,7 @@ namespace NdoUnitTests
 		[Test]
 		public void TestObjectCreationSave() 
 		{
+			var pm = PmFactory.NewPersistenceManager();
 			pm.MakePersistent(m);
 			pm.Save();
 			Assert.That(NDOObjectState.Persistent ==  m.NDOObjectState, "Status wrong");
@@ -130,6 +135,7 @@ namespace NdoUnitTests
 		[Test]
 		public void TestRequery() 
 		{
+			var pm = PmFactory.NewPersistenceManager();
 			pm.MakePersistent(m);
 			pm.Save();
 			Mitarbeiter m1 = new NDOQuery<Mitarbeiter>( pm ).ExecuteSingle();
@@ -142,6 +148,7 @@ namespace NdoUnitTests
         [Test]
 		public void TestObjectCreationSaveChanged() 
 		{
+			var pm = PmFactory.NewPersistenceManager();
 			pm.MakePersistent(m);
 			m.Nachname = "Müller";
 			pm.Save();
@@ -151,6 +158,7 @@ namespace NdoUnitTests
 		[Test]
 		public void TestObjectCreationAbort() 
 		{
+			var pm = PmFactory.NewPersistenceManager();
 			pm.MakePersistent(m);
 			pm.Abort();
 			Assert.That(m.NDOObjectId == null, "Transient object shouldn't have ID");
@@ -161,6 +169,7 @@ namespace NdoUnitTests
 		[Test]
 		public void TestObjectCreationAbortChanged() 
 		{
+			var pm = PmFactory.NewPersistenceManager();
 			pm.MakePersistent(m);
 			m.Nachname = "Müller";
 			pm.Abort();
@@ -170,6 +179,7 @@ namespace NdoUnitTests
 		[Test]
 		public void TestObjectId() 
 		{
+			var pm = PmFactory.NewPersistenceManager();
 			pm.MakePersistent(m);
 			ObjectId id = m.NDOObjectId;
 			ObjectId id2 = new ObjectId(id);
@@ -187,6 +197,7 @@ namespace NdoUnitTests
 		[Test]
 		public void TestCreateDeleteTransitionSave() 
 		{
+			var pm = PmFactory.NewPersistenceManager();
 			pm.MakePersistent(m);
 			pm.Delete(m);
 			Assert.That(m.NDOObjectId == null, "Transient object shouldn't have ID");
@@ -201,6 +212,7 @@ namespace NdoUnitTests
 		[Test]
 		public void TestCreateDeleteTransitionAbort() 
 		{
+			var pm = PmFactory.NewPersistenceManager();
 			pm.MakePersistent(m);
 			ObjectId id = m.NDOObjectId;
 			pm.Delete(m);
@@ -216,6 +228,7 @@ namespace NdoUnitTests
 		[Test]
 		public void TestCleanupCache() 
 		{
+			var pm = PmFactory.NewPersistenceManager();
 			pm.MakePersistent(m);
 			pm.CleanupCache();
 			Assert.That(Object.ReferenceEquals(m, pm.FindObject(m.NDOObjectId)), "Getting same object twice should return same object");
@@ -231,6 +244,7 @@ namespace NdoUnitTests
 		[Test]
 		public void TestUnloadCache() 
 		{
+			var pm = PmFactory.NewPersistenceManager();
 			pm.MakePersistent(m);
 			Assert.That(Object.ReferenceEquals(m, pm.FindObject(m.NDOObjectId)), "Getting same object twice should return same object");
 			pm.Save();
@@ -245,6 +259,7 @@ namespace NdoUnitTests
 		[Test]
 		public void PmWithCachedMappingsWorks()
 		{
+			var pm = PmFactory.NewPersistenceManager();
 			PersistenceManager pm2 = new PersistenceManager( pm.NDOMapping );
 
 			pm2.MakePersistent( m );
@@ -258,6 +273,7 @@ namespace NdoUnitTests
 		[Test]
 		public void TestClassExtent() 
 		{
+			var pm = PmFactory.NewPersistenceManager();
 			ArrayList  mliste = new ArrayList();
 			for(int i = 0; i < 100; i++) 
 			{
@@ -297,6 +313,7 @@ namespace NdoUnitTests
 		[Test]
 		public void TestMakePersistentHierarchy() 
 		{
+			var pm = PmFactory.NewPersistenceManager();
 			Reisekosten.Email email = new Reisekosten.Email();
 			m.Hinzufuegen(email);
 			email.Subject = new Reisekosten.Subject();
@@ -318,6 +335,7 @@ namespace NdoUnitTests
 		[Test]
 		public void TestQuery() 
 		{
+			var pm = PmFactory.NewPersistenceManager();
 			ArrayList  mliste = new ArrayList();
 			for(int i = 1; i <= 100; i++) 
 			{
@@ -341,6 +359,7 @@ namespace NdoUnitTests
 		[Test]
 		public void TestLinqQuery() 
 		{
+			var pm = PmFactory.NewPersistenceManager();
 			ArrayList  mliste = new ArrayList();
 			for(int i = 1; i <= 100; i++) 
 			{
@@ -369,7 +388,8 @@ namespace NdoUnitTests
         [Test]
         public void LinqQueryWithParameterWorks()
         {
-            pm.MakePersistent( m );
+			var pm = PmFactory.NewPersistenceManager();
+			pm.MakePersistent( m );
             pm.Save();
             Mitarbeiter m2 = Mitarbeiter.QueryByName(pm, "Hartmut");
             Assert.That(m2  != null);
@@ -378,7 +398,8 @@ namespace NdoUnitTests
         [Test]
         public void LinqQueryWithNullParameterWorks()
         {
-            pm.MakePersistent( m );
+			var pm = PmFactory.NewPersistenceManager();
+			pm.MakePersistent( m );
             pm.Save();
             Mitarbeiter m2 = Mitarbeiter.QueryByName(pm, null);
             Assert.That( m2 == null );
@@ -387,7 +408,8 @@ namespace NdoUnitTests
         [Test]
 		public void TestDeleteHollow() 
 		{
-//			System.Diagnostics.Debug.WriteLine("TestDeleteHollow");
+			//			System.Diagnostics.Debug.WriteLine("TestDeleteHollow");
+			var pm = PmFactory.NewPersistenceManager();
 			pm.MakePersistent(m);
 			pm.Save();
 			pm.UnloadCache();
@@ -411,6 +433,7 @@ namespace NdoUnitTests
 		[Test]
 		public void TestDeletePersistent() 
 		{
+			var pm = PmFactory.NewPersistenceManager();
 			pm.MakePersistent(m);
 			pm.Save();
 			pm.Delete(m);
@@ -425,6 +448,7 @@ namespace NdoUnitTests
 		[Test]
 		public void TestDeletePersistentDirty() 
 		{
+			var pm = PmFactory.NewPersistenceManager();
 			pm.MakePersistent(m);
 			pm.Save();
 			m.Nachname = "Test";
@@ -442,6 +466,7 @@ namespace NdoUnitTests
 		[Test]
 		public void TestPersistentDirty() 
 		{
+			var pm = PmFactory.NewPersistenceManager();
 			pm.MakePersistent(m);
 			pm.Save();
 			m.Nachname = "Test";
@@ -454,6 +479,7 @@ namespace NdoUnitTests
 		[Test]
 		public void TestMakeTransient() 
 		{
+			var pm = PmFactory.NewPersistenceManager();
 			pm.MakePersistent(m);
 			pm.Save();
 			ObjectId id = m.NDOObjectId;
@@ -477,6 +503,7 @@ namespace NdoUnitTests
 		[Test]
 		public void TestMakeHollow() 
 		{
+			var pm = PmFactory.NewPersistenceManager();
 			pm.MakePersistent(m);
 			pm.Save();
 			pm.MakeHollow(m);
@@ -490,6 +517,7 @@ namespace NdoUnitTests
 		[Test]
 		public void TestChangeHollow() 
 		{
+			var pm = PmFactory.NewPersistenceManager();
 			pm.MakePersistent(m);
 			pm.Save();
 			pm.MakeHollow(m);
@@ -505,6 +533,7 @@ namespace NdoUnitTests
 		[Test]
 		public void TestRefreshFailed() 
 		{
+			var pm = PmFactory.NewPersistenceManager();
 			bool thrown = false;
 			try
 			{
@@ -520,6 +549,7 @@ namespace NdoUnitTests
 		[Test]
 		public void TestRefresh() 
 		{
+			var pm = PmFactory.NewPersistenceManager();
 			pm.MakePersistent(m);
 			pm.Save();
 			pm.MakeHollow(m);
@@ -545,6 +575,7 @@ namespace NdoUnitTests
 		[Test]
 		public void TestHollowMode() 
 		{
+			var pm = PmFactory.NewPersistenceManager();
 			pm.MakePersistent(m);
 			pm.HollowMode = true;
 			pm.Save();			
@@ -560,6 +591,7 @@ namespace NdoUnitTests
 		[Test]
 		public void TestAggregateQuery()
 		{
+			var pm = PmFactory.NewPersistenceManager();
 			Mitarbeiter mm;
 			IList l = new ArrayList();
 
@@ -589,6 +621,7 @@ namespace NdoUnitTests
 		[Test]
 		public void LinqTestAggregateQuery()
 		{
+			var pm = PmFactory.NewPersistenceManager();
 			Mitarbeiter mm;
 			var l = new List<Mitarbeiter>();
 
@@ -628,6 +661,7 @@ namespace NdoUnitTests
 		{
 			// If two classes are mapped to the same table, the query
 			// should give us the class which is given as parameter
+			var pm = PmFactory.NewPersistenceManager();
 
 			pm.MakePersistent(m); // Manager with privilegstufe 0
 			pm.Save();
@@ -647,6 +681,7 @@ namespace NdoUnitTests
 		[Test]
 		public void TestStringLen()
 		{
+			var pm = PmFactory.NewPersistenceManager();
 			string s = string.Empty;
 			for (int i = 0; i < 255; i++)
 			{
@@ -665,6 +700,7 @@ namespace NdoUnitTests
 		[Test]
 		public void TestHollowDelete()
 		{
+			var pm = PmFactory.NewPersistenceManager();
 			pm.MakePersistent(m);
 			pm.Save();
 			pm.UnloadCache();
@@ -684,6 +720,7 @@ namespace NdoUnitTests
 		[Test]
 		public void TestHollowDelete2Pm()
 		{
+			var pm = PmFactory.NewPersistenceManager();
 			pm.MakePersistent(m);
 			pm.Save();
 			pm.UnloadCache();
@@ -723,8 +760,7 @@ namespace NdoUnitTests
 		[Test]
 		public void Angriff()
 		{
-//			pm.MakePersistent(m);
-//			pm.Save();
+			var pm = PmFactory.NewPersistenceManager();
 			NDOQuery<Mitarbeiter> q = new NDOQuery<Mitarbeiter>(pm, "nachname LIKE {0}");
 			q.Parameters.Add("dummy';SELECT * from Mitarbeiter; --");
 			IList l = q.Execute();
@@ -733,6 +769,7 @@ namespace NdoUnitTests
 		[Test]
 		public void LoadDataOnUnknownObjectThrows()
 		{
+			var pm = PmFactory.NewPersistenceManager();
 			Mitarbeiter m = (Mitarbeiter)pm.FindObject( typeof( Mitarbeiter ), 1000000 );
 			bool thrown = false;
 			try
@@ -751,6 +788,7 @@ namespace NdoUnitTests
 		[Test]
 		public void LoadDataOnUnknownObjectCallsEventHandler()
 		{
+			var pm = PmFactory.NewPersistenceManager();
 			pm.ObjectNotPresentEvent += ea => true;  // prevents throwing an exception
 			Mitarbeiter m = (Mitarbeiter)pm.FindObject( typeof( Mitarbeiter ), 1000000 );
 			pm.LoadData( m );
@@ -759,6 +797,7 @@ namespace NdoUnitTests
 		[Test]
 		public void LoadDataReturnsPersistentObject()
 		{
+			var pm = PmFactory.NewPersistenceManager();
 			pm.MakePersistent( m );
 			var oid = m.NDOObjectId;
 			pm.Save();
@@ -788,6 +827,7 @@ namespace NdoUnitTests
 
 		List<Mitarbeiter> QueryByGuid(Guid[] guids)
 		{
+			var pm = PmFactory.NewPersistenceManager();
 			return pm.Objects<Mitarbeiter>().Where( m => m.Vorname.In( guids ) );
 		}
 
@@ -827,6 +867,7 @@ namespace NdoUnitTests
 		[Test]
 		public void CanPerformDirectDelete()
 		{
+			var pm = PmFactory.NewPersistenceManager();
 			pm.MakePersistent( m );
 			pm.Save();
 			var firstName = m.Vorname;

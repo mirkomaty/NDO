@@ -30,7 +30,7 @@ using Reisekosten.Personal;
 namespace NdoUnitTests
 {
 	[TestFixture]
-	public class NDOReiseTests
+	public class NDOReiseTests : NDOTest
 	{
 
 		public NDOReiseTests()

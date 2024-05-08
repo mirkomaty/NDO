@@ -1,5 +1,5 @@
 ﻿//
-// Copyright (c) 2002-2016 Mirko Matytschak 
+// Copyright (c) 2002-2023 Mirko Matytschak 
 // (www.netdataobjects.de)
 //
 // Author: Mirko Matytschak
@@ -20,13 +20,10 @@
 // DEALINGS IN THE SOFTWARE.
 
 
-using System;
-using System.Reflection;
 using System.IO;
 using System.Data;
-using System.Data.Common;
-using NDO.Logging;
 using NDOInterfaces;
+using Microsoft.Extensions.Logging;
 
 namespace NDO
 {
@@ -35,16 +32,16 @@ namespace NDO
 	/// </summary>
 	internal class SqlDumper
 	{
-		ILogAdapter logAdapter;
+		ILogger logger;
 		IDbCommand insertCommand;
 		IDbCommand selectCommand;
 		IDbCommand updateCommand;
 		IDbCommand deleteCommand;
 		IProvider provider;
 
-		public SqlDumper(ILogAdapter logAdapter, IProvider provider, IDbCommand insertCommand, IDbCommand selectCommand, IDbCommand updateCommand, IDbCommand deleteCommand)
+		public SqlDumper(ILoggerFactory loggerFactopry, IProvider provider, IDbCommand insertCommand, IDbCommand selectCommand, IDbCommand updateCommand, IDbCommand deleteCommand)
 		{
-			this.logAdapter = logAdapter;
+			this.logger = loggerFactopry.CreateLogger<SqlDumper>();
 			this.provider = provider;
 			this.updateCommand = updateCommand;
 			this.insertCommand = insertCommand;
@@ -54,7 +51,7 @@ namespace NDO
 
 		internal void Dump(DataRow[] rows)
 		{
-			if (logAdapter == null)
+			if (logger == null)
 				return;
 
 			bool hasSelect = false;
@@ -138,7 +135,7 @@ namespace NDO
 				if (sw != null)
 				{					
 					sw.Close();
-					this.logAdapter.Info(sw.ToString());
+					this.logger.LogDebug( sw.ToString() );
 				}
 			}
 		}

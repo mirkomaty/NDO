@@ -1,9 +1,26 @@
-﻿using System;
-using System.Linq;
-using System.Reflection;
-using System.Collections.Generic;
-using System.Text;
-using NDO.Configuration;
+﻿//
+// Copyright (c) 2002-2023 Mirko Matytschak 
+// (www.netdataobjects.de)
+//
+// Author: Mirko Matytschak
+//
+// Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated 
+// documentation files (the "Software"), to deal in the Software without restriction, including without limitation 
+// the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the 
+// Software, and to permit persons to whom the Software is furnished to do so, subject to the following 
+// conditions:
+
+// The above copyright notice and this permission notice shall be included in all copies or substantial portions 
+// of the Software.
+//
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED 
+// TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL 
+// THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF 
+// CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER 
+// DEALINGS IN THE SOFTWARE.
+
+using System;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace NDO
 {
@@ -14,8 +31,6 @@ namespace NDO
 	public abstract class MetaclassBase : IMetaClass2
 	{
 		private readonly Type t;
-		private ConstructorInfo constructor = null;
-		private bool isDefaultConstructor = false;
 
 		/// <summary>
 		/// Constructs a NDOMetaclass object
@@ -32,49 +47,9 @@ namespace NDO
 		//protected bool IsDefaultConstructor => isDefaultConstructor;
 
 		/// <inheritdoc/>
-		public virtual IPersistenceCapable CreateObject(INDOContainer configContainer)
+		public virtual IPersistenceCapable CreateObject(IServiceProvider serviceProvider)
 		{
-			if (isDefaultConstructor)
-				return CreateObject();
-
-			List<object> parameters = new List<object>();
-
-			if (this.constructor == null)
-			{
-				var registrations = configContainer.Registrations;
-				foreach (var constr in t.GetConstructors().OrderBy( c => c.GetParameters().Length ))
-				{
-					bool canResolve = true;
-					parameters.Clear();
-					
-					foreach (var p in constr.GetParameters())
-					{
-						if (!registrations.Any(r=>r.Key == p.ParameterType))
-						{
-							canResolve = false;
-							break;
-						}
-					}
-
-					if (canResolve)
-					{
-						this.constructor = constr;
-						isDefaultConstructor = constr.GetParameters().Length == 0;
-						break;
-					}
-				}
-			}
-
-			if (constructor == null)
-				throw new NDOException( 116, $"Cant find a resolvable constructor for class '{t.FullName}'" );
-
-			foreach (var p in this.constructor.GetParameters())
-			{
-				var o = configContainer.Resolve( p.ParameterType );
-				parameters.Add( o );
-			}
-
-			return (IPersistenceCapable)this.constructor.Invoke( parameters.ToArray() );
+			return (IPersistenceCapable) ActivatorUtilities.CreateInstance( serviceProvider, this.t );
 		}
 
 		/// <inheritdoc/>

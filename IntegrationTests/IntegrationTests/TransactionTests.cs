@@ -30,11 +30,14 @@ using Reisekosten.Personal;
 using System.Text.RegularExpressions;
 using NDO.Query;
 using Reisekosten;
+using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 
 namespace NdoUnitTests
 {
 	[TestFixture]
-	public class TransactionTests
+	public class TransactionTests : NDOTest
 	{
 		public void Setup() { }
 
@@ -65,10 +68,9 @@ namespace NdoUnitTests
 		{
 			var pm = PmFactory.NewPersistenceManager();
 			pm.TransactionMode = TransactionMode.None;
-			pm.LogAdapter = new TestLogAdapter();
-			pm.VerboseMode = true;
+			var logger = (TestLogger)Host.Services.GetRequiredService<ILoggerFactory>().CreateLogger("Test");
 			new NDOQuery<Mitarbeiter>( pm ).Execute();
-			string log = pm.LogAdapter.ToString();
+			string log = logger.Text;
 			Assert.That( log.IndexOf( "Committing transaction" ) == -1, "Transaction should be committed" );
 			Assert.That( log.IndexOf( "Starting transaction" ) == -1, "Transaction should be committed" );
 		}
@@ -79,10 +81,9 @@ namespace NdoUnitTests
 		{
 			var pm = PmFactory.NewPersistenceManager();
 			pm.TransactionMode = TransactionMode.Optimistic;
-			pm.LogAdapter = new TestLogAdapter();
-			pm.VerboseMode = true;
+			var logger = (TestLogger)Host.Services.GetRequiredService<ILoggerFactory>().CreateLogger("Test");
 			new NDOQuery<Mitarbeiter>( pm ).Execute();
-			Assert.That( pm.LogAdapter.ToString().IndexOf( "Committing transaction" ) > -1, "Transaction should be committed" );
+			Assert.That( logger.Text.IndexOf( "Committing transaction" ) > -1, "Transaction should be committed" );
 		}
 
 		[Test]
@@ -90,10 +91,9 @@ namespace NdoUnitTests
 		{
 			var pm = PmFactory.NewPersistenceManager();
 			pm.TransactionMode = TransactionMode.Pessimistic;
-			pm.LogAdapter = new TestLogAdapter();
-			pm.VerboseMode = true;
+			var logger = (TestLogger)Host.Services.GetRequiredService<ILoggerFactory>().CreateLogger("Test");
 			new NDOQuery<Mitarbeiter>( pm ).Execute();
-			string log = pm.LogAdapter.ToString();
+			string log = logger.Text;
 			Assert.That( log.IndexOf( "Starting transaction" ) > -1, "Transaction should be started" );
 			Assert.That( log.IndexOf( "Committing transaction" ) == -1, "Transaction shouldn't be committed" );
 			pm.Abort();
@@ -104,12 +104,11 @@ namespace NdoUnitTests
 		{
 			var pm = PmFactory.NewPersistenceManager();
 			pm.TransactionMode = TransactionMode.Optimistic;
-			pm.LogAdapter = new TestLogAdapter();
-			pm.VerboseMode = true;
+			var logger = (TestLogger)Host.Services.GetRequiredService<ILoggerFactory>().CreateLogger("Test");
 			Mitarbeiter m = new Mitarbeiter();
 			pm.MakePersistent( m );
 			pm.Save();
-			string log = pm.LogAdapter.ToString();
+			string log = logger.Text;
 			Assert.That( log.IndexOf( "Starting transaction" ) > -1, "Transaction should be started" );
 			Assert.That( log.IndexOf( "Committing transaction" ) > -1, "Transaction should be committed" );
 		}
@@ -119,12 +118,11 @@ namespace NdoUnitTests
 		{
 			var pm = PmFactory.NewPersistenceManager();
 			pm.TransactionMode = TransactionMode.Pessimistic;
-			pm.LogAdapter = new TestLogAdapter();
-			pm.VerboseMode = true;
+			var logger = (TestLogger)Host.Services.GetRequiredService<ILoggerFactory>().CreateLogger("Test");
 			Mitarbeiter m = new Mitarbeiter();
 			pm.MakePersistent( m );
 			pm.Save();
-			string log = pm.LogAdapter.ToString();
+			string log = logger.Text;
 			Assert.That( log.IndexOf( "Starting transaction" ) > -1, "Transaction should be started" );
 			Assert.That( log.IndexOf( "Committing transaction" ) > -1, "Transaction should be committed" );
 		}
@@ -134,13 +132,12 @@ namespace NdoUnitTests
 		{
 			var pm = PmFactory.NewPersistenceManager();
 			pm.TransactionMode = TransactionMode.Optimistic;
-			pm.LogAdapter = new TestLogAdapter();
-			pm.VerboseMode = true;
+			var logger = (TestLogger)Host.Services.GetRequiredService<ILoggerFactory>().CreateLogger("Test");
 			new NDOQuery<Mitarbeiter>( pm ).Execute();
 			Mitarbeiter m = new Mitarbeiter();
 			pm.MakePersistent( m );
 			pm.Save();
-			string log = pm.LogAdapter.ToString();
+			string log = logger.Text;
 			Assert.That( new Regex( "Starting transaction" ).Matches(log).Count == 2, "Two Transactions should be started" );
 			Assert.That( new Regex( "Committing transaction" ).Matches(log).Count == 2, "Two Transactions should be committed" );
 		}
@@ -150,13 +147,12 @@ namespace NdoUnitTests
 		{
 			var pm = PmFactory.NewPersistenceManager();
 			pm.TransactionMode = TransactionMode.Pessimistic;
-			pm.LogAdapter = new TestLogAdapter();
-			pm.VerboseMode = true;
+			var logger = (TestLogger)Host.Services.GetRequiredService<ILoggerFactory>().CreateLogger("Test");
 			new NDOQuery<Mitarbeiter>( pm ).Execute();
 			Mitarbeiter m = new Mitarbeiter();
 			pm.MakePersistent( m );
 			pm.Save();
-			string log = pm.LogAdapter.ToString();
+			string log = logger.Text;
 			Console.WriteLine( log );
 			Assert.That( new Regex( "Starting transaction" ).Matches( log ).Count == 1, "One Transactions should be started" );
 			Assert.That( new Regex( "Committing transaction" ).Matches( log ).Count == 1, "One Transactions should be committed" );
@@ -167,12 +163,11 @@ namespace NdoUnitTests
 		{
 			var pm = PmFactory.NewPersistenceManager();
 			pm.TransactionMode = TransactionMode.Optimistic;
-			pm.LogAdapter = new TestLogAdapter();
-			pm.VerboseMode = true;
+			var logger = (TestLogger)Host.Services.GetRequiredService<ILoggerFactory>().CreateLogger("Test");
 			Mitarbeiter m = new Mitarbeiter();
 			pm.MakePersistent( m );
 			pm.Save(true);
-			string log = pm.LogAdapter.ToString();
+			string log = logger.Text;
 			Assert.That( log.IndexOf( "Starting transaction" ) > -1, "Transaction should be started" );
 			Assert.That( log.IndexOf( "Committing transaction" ) == -1, "Transaction should be committed" );
 			pm.Abort();
@@ -183,12 +178,11 @@ namespace NdoUnitTests
 		{
 			var pm = PmFactory.NewPersistenceManager();
 			pm.TransactionMode = TransactionMode.Pessimistic;
-			pm.LogAdapter = new TestLogAdapter();
-			pm.VerboseMode = true;
+			var logger = (TestLogger)Host.Services.GetRequiredService<ILoggerFactory>().CreateLogger("Test");
 			Mitarbeiter m = new Mitarbeiter();
 			pm.MakePersistent( m );
 			pm.Save(true);
-			string log = pm.LogAdapter.ToString();
+			string log = logger.Text;
 			Assert.That( log.IndexOf( "Starting transaction" ) > -1, "Transaction should be started" );
 			Assert.That( log.IndexOf( "Committing transaction" ) == -1, "Transaction should be committed" );
 			pm.Abort();
@@ -199,13 +193,12 @@ namespace NdoUnitTests
 		{
 			var pm = PmFactory.NewPersistenceManager();
 			pm.TransactionMode = TransactionMode.Optimistic;
-			pm.LogAdapter = new TestLogAdapter();
-			pm.VerboseMode = true;
+			var logger = (TestLogger)Host.Services.GetRequiredService<ILoggerFactory>().CreateLogger("Test");
 			Mitarbeiter m = new Mitarbeiter();
 			pm.MakePersistent( m );
 			pm.Save( true );
 			new NDOQuery<Mitarbeiter>( pm ).Execute();
-			string log = pm.LogAdapter.ToString();
+			string log = logger.Text;
 			Assert.That( log.IndexOf( "Starting transaction" ) > -1, "Transaction should be started" );
 			Assert.That( log.IndexOf( "Committing transaction" ) == -1, "Transaction should not be committed" );
 			pm.Abort();
@@ -216,13 +209,12 @@ namespace NdoUnitTests
 		{
 			var pm = PmFactory.NewPersistenceManager();
 			pm.TransactionMode = TransactionMode.Pessimistic;
-			pm.LogAdapter = new TestLogAdapter();
-			pm.VerboseMode = true;
+			var logger = (TestLogger)Host.Services.GetRequiredService<ILoggerFactory>().CreateLogger("Test");
 			Mitarbeiter m = new Mitarbeiter();
 			pm.MakePersistent( m );
 			pm.Save( true );
 			new NDOQuery<Mitarbeiter>( pm ).Execute();
-			string log = pm.LogAdapter.ToString();
+			string log = logger.Text;
 			Assert.That( log.IndexOf( "Starting transaction" ) > -1, "Transaction should be started" );
 			Assert.That( log.IndexOf( "Committing transaction" ) == -1, "Transaction should not be committed" );
 			pm.Abort();
@@ -233,14 +225,13 @@ namespace NdoUnitTests
 		{
 			var pm = PmFactory.NewPersistenceManager();
 			pm.TransactionMode = TransactionMode.Optimistic;
-			pm.LogAdapter = new TestLogAdapter();
-			pm.VerboseMode = true;
+			var logger = (TestLogger)Host.Services.GetRequiredService<ILoggerFactory>().CreateLogger("Test");
 			Mitarbeiter m = new Mitarbeiter();
 			pm.MakePersistent( m );
 			pm.Save( true );
 			m.Nachname = "Test";
 			pm.Save();
-			string log = pm.LogAdapter.ToString();
+			string log = logger.Text;
 			Assert.That( new Regex( "Starting transaction" ).Matches( log ).Count == 1, "One Transactions should be started" );
 			Assert.That( new Regex( "Committing transaction" ).Matches( log ).Count == 1, "One Transactions should be committed" );
 			pm.Abort();
@@ -251,14 +242,13 @@ namespace NdoUnitTests
 		{
 			var pm = PmFactory.NewPersistenceManager();
 			pm.TransactionMode = TransactionMode.Pessimistic;
-			pm.LogAdapter = new TestLogAdapter();
-			pm.VerboseMode = true;
+			var logger = (TestLogger)Host.Services.GetRequiredService<ILoggerFactory>().CreateLogger("Test");
 			Mitarbeiter m = new Mitarbeiter();
 			pm.MakePersistent( m );
 			pm.Save( true );
 			m.Nachname = "Test";
 			pm.Save();
-			string log = pm.LogAdapter.ToString();
+			string log = logger.Text;
 			Assert.That( new Regex( "Starting transaction" ).Matches( log ).Count == 1, "One Transactions should be started" );
 			Assert.That( new Regex( "Committing transaction" ).Matches( log ).Count == 1, "One Transactions should be committed" );
 			pm.Abort();
@@ -270,11 +260,10 @@ namespace NdoUnitTests
 		{
 			var pm = PmFactory.NewPersistenceManager();
 			pm.TransactionMode = TransactionMode.None;
-			pm.LogAdapter = new TestLogAdapter();
-			pm.VerboseMode = true;
+			var logger = (TestLogger)Host.Services.GetRequiredService<ILoggerFactory>().CreateLogger("Test");
 			ISqlPassThroughHandler sqlHandler = pm.GetSqlPassThroughHandler();
 			var reader = sqlHandler.Execute( "DELETE FROM Mitarbeiter" );
-			string log = pm.LogAdapter.ToString();
+			string log = logger.Text;
 			Assert.That( log.IndexOf( "Committing transaction" ) == -1, "Transaction should be committed" );
 			Assert.That( log.IndexOf( "Starting transaction" ) == -1, "Transaction should be committed" );
 			Assert.That(reader == null, "Reader should be null" );
@@ -299,8 +288,7 @@ namespace NdoUnitTests
 			var landCount = LänderCount( pm );
 			var fhCount = FlughafenCount( pm );
 
-			pm.LogAdapter = new TestLogAdapter();
-			pm.VerboseMode = true;
+			var logger = (TestLogger)Host.Services.GetRequiredService<ILoggerFactory>().CreateLogger("Test");
 			pm.TransactionMode = TransactionMode.Optimistic;
 
 			Land land = new Land();
@@ -316,7 +304,7 @@ namespace NdoUnitTests
 
 			pm.Abort();
 
-			string log = pm.LogAdapter.ToString();
+			string log = logger.Text;
 			Assert.That( new Regex( "Starting transaction" ).Matches( log ).Count == 1, "One Transactions should be started" );
 			Assert.That( log.IndexOf( "Committing transaction" ) == -1, "Transaction should be committed" );
 			Assert.That( new Regex( "Rollback transaction" ).Matches( log ).Count == 1, "One Transactions should be rolled back" );
@@ -330,14 +318,13 @@ namespace NdoUnitTests
 		public void DirectSqlPassThroughWithTransactionShouldCommit()
 		{
 			var pm = PmFactory.NewPersistenceManager();
-			pm.LogAdapter = new TestLogAdapter();
-			pm.VerboseMode = true;
+			var logger = (TestLogger)Host.Services.GetRequiredService<ILoggerFactory>().CreateLogger("Test");
 			ISqlPassThroughHandler sqlHandler = pm.GetSqlPassThroughHandler();
 			sqlHandler.BeginTransaction();
 			sqlHandler.Execute( "DELETE FROM Mitarbeiter" );
 			sqlHandler.Execute( "DELETE FROM Reise" );
 			sqlHandler.CommitTransaction();
-			string log = pm.LogAdapter.ToString();
+			string log = logger.Text;
 			Assert.That( new Regex( "Starting transaction" ).Matches( log ).Count == 1, "One Transactions should be started" );
 			Assert.That( new Regex( "Committing transaction" ).Matches( log ).Count == 1, "One Transactions should be committed" );
 		}
@@ -347,14 +334,13 @@ namespace NdoUnitTests
 		{
 			var pm = PmFactory.NewPersistenceManager();
 			pm.TransactionMode = TransactionMode.None;
-			pm.LogAdapter = new TestLogAdapter();
-			pm.VerboseMode = true;
+			var logger = (TestLogger)Host.Services.GetRequiredService<ILoggerFactory>().CreateLogger("Test");
 			using (ISqlPassThroughHandler sqlHandler = pm.GetSqlPassThroughHandler())
 			{
 				sqlHandler.Execute( "DELETE FROM Mitarbeiter" );
 				sqlHandler.Execute( "DELETE FROM Reise" );
 			}
-			string log = pm.LogAdapter.ToString();
+			string log = logger.Text;
 			Assert.That( log.IndexOf( "Committing transaction" ) == -1, "Transaction should not be started" );
 			Assert.That( log.IndexOf( "Starting transaction" ) == -1, "Transaction should not be committed" );
 		}
@@ -367,8 +353,6 @@ namespace NdoUnitTests
 			pm.MakePersistent( m );
 			pm.Save();
 			pm.UnloadCache();
-			pm.LogAdapter = new TestLogAdapter();
-			pm.VerboseMode = true;
 			using (ISqlPassThroughHandler sqlHandler = pm.GetSqlPassThroughHandler())
 			{
 				sqlHandler.BeginTransaction();

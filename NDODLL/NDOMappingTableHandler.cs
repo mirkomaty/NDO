@@ -19,12 +19,11 @@
 // CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER 
 // DEALINGS IN THE SOFTWARE.
 
-
 using System;
 using System.Data;
 using System.Data.Common;
+using Microsoft.Extensions.Logging;
 using NDO.Mapping;
-using NDO.Logging;
 using NDOInterfaces;
 
 namespace NDO
@@ -42,8 +41,14 @@ namespace NDO
 		private IDbConnection connection;
 		private DbDataAdapter dataAdapter;
 		private IProvider provider;
-		private bool verboseMode;
-		private ILogAdapter logAdapter;
+		private readonly ILogger logger;
+		private readonly ILoggerFactory loggerFactory;
+
+		public NDOMappingTableHandler(ILoggerFactory loggerFactory)
+		{
+			this.logger = loggerFactory.CreateLogger<NDOMappingTableHandler>();
+			this.loggerFactory = loggerFactory;
+		}
 
 		private string GetParameter(IProvider provider, string name)
 		{
@@ -167,31 +172,9 @@ namespace NDO
 
 		}
 
-		/// <summary>
-		/// Helps Logging
-		/// </summary>
-		public ILogAdapter LogAdapter
-		{
-			get { return logAdapter; }
-			set { logAdapter = value; }
-		}
-
-
-		/// <summary>
-		/// Gets or sets a value which determines, if database operations will be logged in a logging file.
-		/// </summary>
-		public bool VerboseMode
-		{
-			get { return this.verboseMode; }
-			set { this.verboseMode = value; }
-		}
-
-
 		private void Dump(DataRow[] rows)
 		{
-			if (!this.verboseMode)
-				return;
-			new SqlDumper(this.logAdapter, this.provider, insertCommand, selectCommand, null, deleteCommand).Dump(rows);
+			new SqlDumper(this.loggerFactory, this.provider, insertCommand, selectCommand, null, deleteCommand).Dump(rows);
 		}
 
 		private DataTable GetTableTemplate(DataSet templateDataset, string name)
@@ -261,8 +244,7 @@ namespace NDO
 
 				if (rows.Length > 0)
 				{
-					if (this.verboseMode)
-						Dump(rows);
+					Dump(rows);
 					dataAdapter.Update(dt);
 				}
 			}

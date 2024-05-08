@@ -34,7 +34,7 @@ namespace NdoUnitTests
 	/// This class contains all tests for 1:n directed relations with an intermediate mapping table.
 	/// </summary>
 	[TestFixture]
-	public class Rel1toNDirectedWTable
+	public class Rel1toNDirectedWTable : NDOTest
 	{
 
 		public Rel1toNDirectedWTable()

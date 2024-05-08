@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 namespace NdoUnitTests
 {
 	[TestFixture]
-	public class PrefetchTests
+	public class PrefetchTests : NDOTest
 	{
 		PersistenceManager pm;
 

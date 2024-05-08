@@ -23,15 +23,13 @@
 using System;
 using System.Reflection;
 using System.IO;
-using System.Data;
-using System.Data.Common;
 using System.Collections.Generic;
-using Cli;
 using NDOInterfaces;
-using System.Runtime.Versioning;
 using System.Linq;
 using NDO.Provider;
-using NDO.Configuration;
+using NDO.Application;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 
 namespace NDO
 {
@@ -49,6 +47,26 @@ namespace NDO
         private static readonly NDOProviderFactory factory = new NDOProviderFactory();
         private Dictionary<string,IProvider> providers = null; // Marks the providers as not loaded
 		private Dictionary<string,ISqlGenerator> generators = new Dictionary<string,ISqlGenerator>();
+
+        /// <summary>
+        /// Gets or Sets the object which helps finding directories with NDOProviders.
+        /// </summary>
+        public static IProviderPathFinder ProviderPathFinder { get; set; }
+
+        static NDOProviderFactory()
+        {
+            try
+            {
+                if (NDOApplication.ServiceProvider != null)
+                    ProviderPathFinder = NDOApplication.ServiceProvider.GetService<IProviderPathFinder>();
+                else
+                    ProviderPathFinder = new NDOProviderPathFinder();
+			}
+			catch // We try to continue here, even if we don't have the DependencyInjection available.
+            {
+				ProviderPathFinder = new NDOProviderPathFinder();
+			}
+		}
 
 		/// <summary>
 		/// Private constructor makes sure, that only one object can be instantiated.
@@ -153,17 +171,27 @@ namespace NDO
 
         private void SearchProviderPlugIns()
         {
-            try
+            var serviceProvider = NDOApplication.ServiceProvider;
+
+			try
             {
-                var pathFinder = NDOContainer.Instance.Resolve<IProviderPathFinder>();
-				foreach (var path in pathFinder.GetPaths())
-				{
-                    AddProviderPlugIns( path );
-				}
+                if (ProviderPathFinder != null)
+                {
+                    foreach (var path in ProviderPathFinder.GetPaths())
+                    {
+                        AddProviderPlugIns( path );
+                    }
+                }
             }
-            catch
+            catch (Exception ex)
             {
-                // Simply don't add the Plugins
+                // Simply don't add any Plugins
+                if (serviceProvider != null) // If NDOProviderFactory is used from the Enhancer, no ServiceProvider exists.
+                {
+                    var logger = serviceProvider.GetService<ILogger<NDOProviderFactory>>();
+                    if (logger != null)  // Could be null during tests
+                        logger.LogError( ex, nameof( SearchProviderPlugIns ) );
+                }
             }
         }
 

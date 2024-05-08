@@ -416,6 +416,13 @@ namespace NDOEnhancer
 			if (this.projectDescription.ConfigurationOptions.GenerateSQL)
 				dsSchema.Remap(mappings);
 		}
+			foreach (Class cl in mappings.Classes)
+			{
+				if (cl.IsAbstract)
+					continue;
+				new SchemaGenerator( cl, mappings, dsSchema ).GenerateRelations();
+			}
+		}
 
 
 

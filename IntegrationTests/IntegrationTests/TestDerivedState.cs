@@ -31,7 +31,7 @@ namespace NdoUnitTests
 {
 
 	[TestFixture]
-	public class TestDerivedState
+	public class TestDerivedState : NDOTest
 	{
 		PersistenceManager pm; 
 

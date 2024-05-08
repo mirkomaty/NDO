@@ -1,4 +1,5 @@
-﻿using NDO.Mapping;
+﻿using Microsoft.Extensions.DependencyInjection;
+using NDO.Mapping;
 using NDO.Query;
 using NDOql.Expressions;
 using System;
@@ -6,22 +7,21 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
-using NDO.Configuration;
 
 namespace NDO.SqlPersistenceHandling
 {
 	class SqlQueryGenerator : IQueryGenerator
 	{
-		private readonly INDOContainer configContainer;
+		private readonly IMappingsAccessor mappingsAccessor;
 		private List<QueryInfo> subQueries = new List<QueryInfo>();
 		private Func<Dictionary<Relation, Class>, bool, Class, bool, object, string> selectPartCreator;
 		private object additionalSelectPartData = null;
 		private Mappings mappings;
 
-		public SqlQueryGenerator(INDOContainer configContainer)
+		public SqlQueryGenerator( IMappingsAccessor mappingsAccessor )
 		{
-			this.configContainer = configContainer;
-			this.mappings = this.configContainer.Resolve<Mappings>();
+			this.mappingsAccessor = mappingsAccessor;
+			this.mappings = mappingsAccessor.Mappings;
 		}
 
 		/// <summary>
@@ -154,12 +154,6 @@ namespace NDO.SqlPersistenceHandling
 			}
 		}
 
-		SqlColumnListGenerator CreateColumnListGenerator( Class cls )
-		{
-			var key = $"{nameof(SqlColumnListGenerator)}-{cls.FullName}";
-			return configContainer.ResolveOrRegisterType<SqlColumnListGenerator>( new ContainerControlledLifetimeManager(), key, new ParameterOverride( "cls", cls ) );
-		}
-
 		string ConstructQueryString( 
 			Type resultType, 
 			Dictionary<Relation, Class> relationContext, 
@@ -208,7 +202,7 @@ namespace NDO.SqlPersistenceHandling
 
 		private string CreateQuerySelectPart( Dictionary<Relation, Class> relationContext, bool hollow, Class cls, bool qualifyWithTableName, object additionalData )
 		{
-			var generator = CreateColumnListGenerator( cls );
+			var generator = SqlColumnListGenerator.Get( cls );
 
 			// We have to hack around a special behavior of SQLite, generating
 			// new columns with fully specified column names, if the query
@@ -271,14 +265,14 @@ namespace NDO.SqlPersistenceHandling
 					relations.Add( rel );
 			}
 
-			new RelationContextGenerator( this.mappings ).CreateContextForName( parentCls, prefetch, relations );
+			new RelationContextGenerator( this.mappingsAccessor ).CreateContextForName( parentCls, prefetch, relations );
 
 			if (relations.Count == 0)
 				throw new NDOException( 76, $"Prefetch: Can't find relation mapping with name {prefetch} in class {parentCls.FullName}" );
 
 			Class cls = mappings.FindClass( relations[relations.Count - 1].ReferencedTypeName );
 			var relationContext = new Dictionary<Relation, Class>();
-#warning Hier fehlt der INNER JOIN
+#warning Note: This code is not complete. The INNER JOIN is missing here.
 			string columnList = CreateQuerySelectPart( relationContext, false, cls, true, null );
 			sb.Append( columnList );
 

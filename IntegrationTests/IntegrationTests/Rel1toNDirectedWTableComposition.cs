@@ -33,7 +33,7 @@ namespace NdoUnitTests
 	/// This class contains all tests for 1:n directed relations with an intermediate mapping table and composition.
 	/// </summary>
 	[TestFixture]
-	public class Rel1toNDirectedWTableComposition
+	public class Rel1toNDirectedWTableComposition : NDOTest
 	{
 
 		public Rel1toNDirectedWTableComposition()

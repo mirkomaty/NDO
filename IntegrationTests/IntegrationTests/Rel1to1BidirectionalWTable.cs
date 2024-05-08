@@ -36,7 +36,7 @@ namespace NdoUnitTests
 
 
 	[TestFixture]
-	public class Rel1to1BidirectionalWTable
+	public class Rel1to1BidirectionalWTable : NDOTest
 	{
 		public Rel1to1BidirectionalWTable()
 		{
