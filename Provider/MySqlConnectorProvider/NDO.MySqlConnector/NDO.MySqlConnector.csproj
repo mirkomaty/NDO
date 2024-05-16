@@ -2,11 +2,11 @@
 
   <PropertyGroup>
     <TargetFrameworks>netstandard2.0;net472</TargetFrameworks>
-    <Version>4.0.1</Version>
+    <Version>4.0.2</Version>
     <Authors>Mirko Matytschak</Authors>
     <Company>Mirko Matytschak</Company>
     <Product>.NET Data Objects (NDO)</Product>
-    <Copyright>Copyright (c) 2002-2023 Mirko Matytschak, Velden, Germany</Copyright>
+    <Copyright>Copyright (c) 2002-2024 Mirko Matytschak, Velden, Germany</Copyright>
     <PackageProjectUrl>https://www.netdataobjects.de</PackageProjectUrl>
     <RepositoryUrl>https://github.com/mirkomaty/NDO</RepositoryUrl>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
@@ -21,7 +21,7 @@
 
   <ItemGroup>
     <PackageReference Include="mysqlconnector">
-      <Version>2.2.5</Version>
+      <Version>2.3.7</Version>
     </PackageReference>
   </ItemGroup>
  
