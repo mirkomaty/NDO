@@ -1,5 +1,5 @@
 ﻿//
-// Copyright (c) 2002-2023 Mirko Matytschak 
+// Copyright (c) 2002-2024 Mirko Matytschak 
 // (www.netdataobjects.de)
 //
 // Author: Mirko Matytschak
@@ -27,8 +27,8 @@ namespace NDO.Application
 {
 	internal class NDOApplication
 	{
-		internal static IHostEnvironment HostEnvironment { get; set; }
-		internal static IConfiguration Configuration { get; set; }
-		internal static IServiceProvider ServiceProvider { get; set; }
+		public static IHostEnvironment HostEnvironment { get; set; }
+		public static IConfiguration Configuration { get; set; }
+		public static IServiceProvider ServiceProvider { get; set; }
 	}
 }

@@ -1,5 +1,5 @@
 ﻿//
-// Copyright (c) 2002-2016 Mirko Matytschak 
+// Copyright (c) 2002-2024 Mirko Matytschak 
 // (www.netdataobjects.de)
 //
 // Author: Mirko Matytschak
@@ -66,8 +66,9 @@ namespace NDO
 		/// <summary>
 		/// Constructor
 		/// </summary>
-		public PersistenceManagerBase() 
+		public PersistenceManagerBase( IServiceProvider scopedServiceProvider ) 
 		{
+			this.scopedServiceProvider = scopedServiceProvider;
 			string baseDir = AppDomain.CurrentDomain.BaseDirectory;
             if (File.Exists( Path.Combine( baseDir, "Web.config" ) ))
                 baseDir = Path.Combine( baseDir, "bin" );
@@ -91,27 +92,31 @@ namespace NDO
                 throw new NDOException( 49, $"Can't determine the path to the mapping file. Tried the following locations:\n{string.Join("\n", paths)}\nPlease provide a mapping file path as argument to the PersistenceManager ctor." );
 		}
 
-		/// <summary>
-		/// Constructs a PersistenceManagerBase object using the path to a mapping file.
-		/// </summary>
-		/// <param name="mappingFile"></param>
-		public PersistenceManagerBase(string mappingFile)
+        /// <summary>
+        /// Constructs a PersistenceManagerBase object using the path to a mapping file.
+        /// </summary>
+        /// <param name="scopedServiceProvider">An IServiceProvider instance, which represents a scope (e.g. a request in an AspNet application)</param>
+        /// <param name="mappingFile"></param>
+        public PersistenceManagerBase(string mappingFile, IServiceProvider scopedServiceProvider)
 		{
+			this.scopedServiceProvider = scopedServiceProvider;
 			Init(mappingFile);
 		}
 
-		/// <summary>
-		/// Constructs a PersistenceManagerBase object using the mapping object.
-		/// </summary>
-		/// <param name="mapping"></param>
-		public PersistenceManagerBase(NDOMapping mapping)
+        /// <summary>
+        /// Constructs a PersistenceManagerBase object using the mapping object.
+        /// </summary>
+        /// <param name="mapping"></param>
+        /// <param name="scopedServiceProvider">An IServiceProvider instance, which represents a scope (e.g. a request in an AspNet application)</param>
+        public PersistenceManagerBase(NDOMapping mapping, IServiceProvider scopedServiceProvider)
 		{
-			var localMappings = mapping as Mappings;
+            this.scopedServiceProvider = scopedServiceProvider;
+            var localMappings = mapping as Mappings;
 			if (localMappings == null)
 				throw new ArgumentException( "The mapping must be constructed by a PersistenceManager", nameof( mapping ) );
 
 			Init( localMappings );
-		}
+        }
 
 		/// <summary>
 		/// Initializes a PersistenceManager using the path to a mapping file
@@ -268,7 +273,11 @@ namespace NDO
 			get { return IdGenerationEvent != null; }
 		}
 
-		internal IServiceProvider ServiceProvider
+        /// <summary>
+        /// Gets the IServiceProvider instance of the current scope.
+        /// If no ServiceProvider was passed in the constructor, a new scope is created.
+        /// </summary>
+        internal IServiceProvider ServiceProvider
 		{
 			get
 			{

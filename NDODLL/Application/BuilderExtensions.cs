@@ -1,5 +1,5 @@
 ﻿//
-// Copyright (c) 2002-2023 Mirko Matytschak 
+// Copyright (c) 2002-2024 Mirko Matytschak 
 // (www.netdataobjects.de)
 //
 // Author: Mirko Matytschak
@@ -23,6 +23,7 @@ using System;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using NDO.Application;
 using NDO.Provider;
 using NDO.Query;
 using NDO.SqlPersistenceHandling;

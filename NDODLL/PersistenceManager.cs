@@ -1,5 +1,5 @@
 //
-// Copyright (c) 2002-2023 Mirko Matytschak 
+// Copyright (c) 2002-2024 Mirko Matytschak 
 // (www.netdataobjects.de)
 //
 // Author: Mirko Matytschak
@@ -54,10 +54,16 @@ namespace NDO
 	/// <see cref="NDO.PersistenceManagerBase.IdGenerationEvent"/>
 	/// </summary>
 	public delegate void IdGenerationHandler(Type t, ObjectId oid);
-	/// <summary>
-	/// Delegate type of an handler, which can be registered by the OnSaving event of the PersistenceManager.
-	/// </summary>
-	public delegate void OnSavingHandler(ICollection l);
+    /// <summary>
+    /// Delegate type of an handler, which can be registered by the ServiceScopeEvent event of the PersistenceManager.
+    /// <see cref="NDO.PersistenceManagerBase.IdGenerationEvent"/>
+    /// </summary>
+    public delegate IServiceProvider ServiceScopeHandler( Type t, ObjectId oid );
+
+    /// <summary>
+    /// Delegate type of an handler, which can be registered by the OnSaving event of the PersistenceManager.
+    /// </summary>
+    public delegate void OnSavingHandler(ICollection l);
 	/// <summary>
 	/// Delegate type for the OnSavedEvent.
 	/// </summary>
@@ -177,32 +183,35 @@ namespace NDO
 		/// <summary>
 		/// Standard Constructor.
 		/// </summary>
+		/// <param name="scopedServiceProvider">An IServiceProvider instance, which represents a scope (e.g. a request in an AspNet application)</param>
 		/// <remarks>
 		/// Searches for a mapping file in the application directory. 
 		/// The constructor tries to find a file with the same name as
 		/// the assembly, but with the extension .ndo.xml. If the file is not found the constructor tries to find a
 		/// file called AssemblyName.ndo.mapping in the application directory.
 		/// </remarks>
-		public PersistenceManager() : base()
+		public PersistenceManager( IServiceProvider scopedServiceProvider = null ) : base( scopedServiceProvider )
 		{
 		}
 
-		/// <summary>
-		/// Loads the mapping file from the specified location. This allows to use
-		/// different mapping files with different classes mapped in it.
-		/// </summary>
-		/// <param name="mappingFile">Path to the mapping file.</param>
-		/// <remarks>Only the Professional and Enterprise
-		/// Editions can handle more than one mapping file.</remarks>
-		public PersistenceManager(string mappingFile) : base (mappingFile)
+        /// <summary>
+        /// Loads the mapping file from the specified location. This allows to use
+        /// different mapping files with different classes mapped in it.
+        /// </summary>
+        /// <param name="mappingFile">Path to the mapping file.</param>
+        /// <param name="scopedServiceProvider">An IServiceProvider instance, which represents a scope (e.g. a request in an AspNet application)</param>
+        /// <remarks>Only the Professional and Enterprise
+        /// Editions can handle more than one mapping file.</remarks>
+        public PersistenceManager(string mappingFile, IServiceProvider scopedServiceProvider = null) : base (mappingFile, scopedServiceProvider)
 		{
 		}
 
-		/// <summary>
-		/// Constructs a PersistenceManager and reuses a cached NDOMapping.
-		/// </summary>
-		/// <param name="mapping">The cached mapping object</param>
-		public PersistenceManager(NDOMapping mapping) : base (mapping)
+        /// <summary>
+        /// Constructs a PersistenceManager and reuses a cached NDOMapping.
+        /// </summary>
+        /// <param name="mapping">The cached mapping object</param>
+        /// <param name="scopedServiceProvider">An IServiceProvider instance, which represents a scope (e.g. a request in an AspNet application)</param>
+        public PersistenceManager(NDOMapping mapping, IServiceProvider scopedServiceProvider) : base (mapping, scopedServiceProvider)
 		{
 		}
 

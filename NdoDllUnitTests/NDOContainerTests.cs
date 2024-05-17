@@ -51,8 +51,8 @@ namespace NdoDllUnitTests
 
 			//Resolves dependencies and returns the Driver object 
 			Driver drv = this.ndoServiceProvider.GetService<Driver>();
-			Assert.AreEqual( "Running BMW - 1 mile", drv.RunCar() );
-		}
+            Assert.That( "Running BMW - 1 mile", Is.EqualTo( drv.RunCar() ) );
+        }
 
 		[Test]
 		public void SimpleRegistrationWithOneType()
@@ -63,8 +63,8 @@ namespace NdoDllUnitTests
 			} );
 
 			var car = this.ndoServiceProvider.GetService<BMW>();
-			Assert.AreEqual( typeof( BMW ), car.GetType() );
-		}
+            Assert.That( typeof( BMW ), Is.EqualTo( car.GetType() ) );
+        }
 
 		[Test]
 		public void SimpleRegistrationWithResolveParameter()
@@ -83,8 +83,8 @@ namespace NdoDllUnitTests
 
 			//Resolves dependencies and returns the Driver object 
 			Driver drv = this.ndoServiceProvider.GetService<Driver>();
-			Assert.AreEqual( "Running BMW - 1 mile", drv.RunCar() );
-		}
+            Assert.That( "Running BMW - 1 mile", Is.EqualTo( drv.RunCar() ) );
+        }
 
 
 		[Test]
@@ -97,9 +97,10 @@ namespace NdoDllUnitTests
 			var car1 = this.ndoServiceProvider.GetService<ICar>();
 			var car2 = this.ndoServiceProvider.GetService<ICar>();
 
-			Assert.AreSame( car1, car2 );
-		}
+            Assert.That( Object.ReferenceEquals( car1, car2 ) );
+        }
 
+#if nix
 
 		[Test]
 		public void DoubleRegisterType()
@@ -180,7 +181,6 @@ namespace NdoDllUnitTests
 			Assert.AreSame( car1, car2 );
 		}
 
-#if nix
 
 		[Test]
 		public void ResolveWithScopedContainer()
@@ -392,5 +392,5 @@ namespace NdoDllUnitTests
 			Assert.AreEqual( 1, count );
 		}
 #endif
-	}
+    }
 }

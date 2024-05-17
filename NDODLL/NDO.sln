@@ -5,9 +5,9 @@ VisualStudioVersion = 17.9.34723.18
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NDO", "NDO.csproj", "{EF666155-B2DF-4A2F-9DE5-839B1B9DF98C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NdoDllUnitTests", "..\NdoDllUnitTests\NdoDllUnitTests.csproj", "{D1CA4F05-14F3-44F7-AC5C-D305A4FA6A4A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NdoDllUnitTests", "..\NdoDllUnitTests\NdoDllUnitTests.csproj", "{D1CA4F05-14F3-44F7-AC5C-D305A4FA6A4A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "QueryTests", "..\QueryTests\QueryTests.csproj", "{B276FAE1-1A66-4032-B282-4DD45E47DBA3}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "QueryTests", "..\QueryTests\QueryTests.csproj", "{B276FAE1-1A66-4032-B282-4DD45E47DBA3}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PureBusinessClasses", "..\IntegrationTests\PureBusinessClasses\PureBusinessClasses.csproj", "{D62C1D14-2582-43B0-BCD4-06FAF319A9DF}"
 EndProject
