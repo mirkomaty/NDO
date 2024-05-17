@@ -243,9 +243,8 @@ namespace NDO.SqlPersistenceHandling
 
 			var provider = cls.Provider;
 			var colName = isStar ? "*" : column.GetQualifiedName();
-			//var tableName = qualifyWithTableName ? cls.GetQualifiedTableName() + "." : String.Empty;
 
-			return $"{aggregateType.ToString().ToUpper()} ({colName}) AS {provider.GetQuotedName( "AggrResult" )}";
+			return $"{aggregateType.ToString().ToUpper()}({colName}) AS {provider.GetQuotedName( "AggrResult" )}";
 		}
 
 		public string GenerateAggregateQueryString( string field, QueryContextsEntry queryContextsEntry, OqlExpression expressionTree, bool hasSubclassResultsets, AggregateType aggregateType )
