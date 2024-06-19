@@ -13,11 +13,12 @@ using NDO.Linq;
 using LE=System.Linq.Expressions;
 using NDO.Configuration;
 using NDO.SqlPersistenceHandling;
-
+using System.IO;
+using System.Security.Cryptography;
 namespace NDO.Query
 {
-	internal class FieldMarker
-	{
+    internal class FieldMarker
+    {
 		public static string Instance
 		{
 			get { return "##FIELDS##"; }
@@ -45,15 +46,19 @@ namespace NDO.Query
 		private int skip;
 		private int take;
 
-		/// <summary>
-		/// Constructs a NDOQuery object
-		/// </summary>
-		/// <param name="pm">The PersistenceManager used to manage the objects.</param>
-		/// <remarks>
-		/// The query will return all available objects of the given type and it's subtypes. 
-		/// The objects won't be hollow.
-		/// </remarks>
-		public NDOQuery( PersistenceManager pm )
+		internal bool UseQueryCache => this.pm.UseQueryCache;
+		internal Dictionary<string, object> QueryCache => this.pm.QueryCache;
+
+
+        /// <summary>
+        /// Constructs a NDOQuery object
+        /// </summary>
+        /// <param name="pm">The PersistenceManager used to manage the objects.</param>
+        /// <remarks>
+        /// The query will return all available objects of the given type and it's subtypes. 
+        /// The objects won't be hollow.
+        /// </remarks>
+        public NDOQuery( PersistenceManager pm )
 			: this( pm, null )
 		{
 		}
@@ -208,13 +213,80 @@ namespace NDO.Query
 			return sql;
 		}
 
-		/// <summary>
-		/// Executes the query and returns a list of result objects.
-		/// </summary>
-		/// <returns></returns>
-		public List<T> Execute()
+		private string GetSha()
 		{
-			return GetResultList();
+            MemoryStream ms = new MemoryStream();
+            var sw = new StreamWriter(ms);
+            
+			foreach (var item in parameters)
+            {
+                if (item is byte[] bytes)
+                {
+                    foreach (var b in bytes)
+                    {
+                        sw.Write( b );
+                    }
+                    sw.Write( '|' );
+                }
+                else
+                {
+                    sw.Write( item );
+                    sw.Write( '|' );
+                }
+            }
+
+			foreach (var item in orderings)
+			{
+				sw.Write( item.FieldName );
+				sw.Write( item.IsAscending );
+                sw.Write( '|' );
+            }
+
+            foreach (var item in prefetches)
+            {
+                sw.Write( item );
+                sw.Write( '|' );
+            }
+
+			sw.Write( $"skip{this.skip}|" );
+            sw.Write( $"take{this.take}" );
+
+            sw.Flush();
+            ms.Seek( 0L, SeekOrigin.Begin );
+            var sr = new StreamReader(ms);
+            var q = (this.queryExpression ?? "") + '|' + sr.ReadToEnd();
+			var qbytes = Encoding.UTF8.GetBytes(q);
+			var sha = SHA256.Create();
+			var hash = sha.ComputeHash( qbytes );
+			return Convert.ToBase64String( hash );
+        }
+
+        /// <summary>
+        /// Executes the query and returns a list of result objects.
+        /// </summary>
+        /// <returns></returns>
+        public List<T> Execute() 
+		{
+			string sha = null;
+			if (UseQueryCache)
+			{
+				sha = GetSha();
+				if (QueryCache.ContainsKey( sha ))
+				{
+					if (this.pm.VerboseMode)
+						this.pm.LogAdapter.Info( "Getting results from QueryCache" );
+					return (List<T>) QueryCache[sha];
+				}
+			}
+
+			var result = GetResultList();
+
+			if (UseQueryCache)
+			{
+				QueryCache[sha] = result;
+			}
+
+			return result;
 		}
 
 		/// <summary>
@@ -585,7 +657,7 @@ namespace NDO.Query
 		/// </remarks>
 		public T ExecuteSingle( bool throwIfResultCountIsWrong )
 		{
-			var resultList = GetResultList();
+			var resultList = Execute();
 			int count = resultList.Count;
 			if (count == 1 || (!throwIfResultCountIsWrong && count > 0))
 			{
