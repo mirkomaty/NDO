@@ -217,6 +217,9 @@ namespace NDO.Query
 		{
             MemoryStream ms = new MemoryStream();
             var sw = new StreamWriter(ms);
+
+            sw.Write( typeof( T ).FullName );
+            sw.Write( '|' );
             
 			foreach (var item in parameters)
             {
