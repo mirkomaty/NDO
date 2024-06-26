@@ -275,10 +275,9 @@ namespace NDO.Query
 				sha = GetSha();
 				if (QueryCache.ContainsKey( sha ))
 				{
-					if (this.pm.VerboseMode)
-						this.pm.LogAdapter.Info( "Getting results from QueryCache" );
+					this.pm.LogIfVerbose( "Getting results from QueryCache" );
 					return (List<T>) QueryCache[sha];
-		}
+				}
 			}
 
 			var result = GetResultList();
