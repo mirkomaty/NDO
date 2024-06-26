@@ -54,14 +54,14 @@ namespace NDO.Application
 		{
 			NDOApplication.Configuration = config;
 			NDOApplication.HostEnvironment = hostEnvironment;
-			services.AddSingleton<IPersistenceHandler, SqlPersistenceHandler>();
+			services.AddTransient<IPersistenceHandler, SqlPersistenceHandler>();
 			services.AddTransient<RelationContextGenerator>();
 			services.AddTransient<IQueryGenerator, SqlQueryGenerator>();
 			services.AddScoped<IPersistenceHandlerManager, NDOPersistenceHandlerManager>();
 			services.AddSingleton<IProviderPathFinder, NDOProviderPathFinder>();
 			services.AddSingleton<IPersistenceHandlerPool, NDOPersistenceHandlerPool>();
 			services.AddScoped<IMappingsAccessor, MappingsAccessor>();
-			services.AddScoped<INDOTransactionScope, NDOTransactionScope>();
+			services.AddTransient<INDOTransactionScope, NDOTransactionScope>();
 			services.AddScoped<IPersistenceManagerAccessor, PersistenceManagerAccessor>();
 		}
 

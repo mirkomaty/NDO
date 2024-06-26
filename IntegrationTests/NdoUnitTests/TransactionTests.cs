@@ -69,6 +69,7 @@ namespace NdoUnitTests
 			var pm = PmFactory.NewPersistenceManager();
 			pm.TransactionMode = TransactionMode.None;
 			var logger = (TestLogger)Host.Services.GetRequiredService<ILoggerFactory>().CreateLogger("Test");
+			logger.Clear();
 			new NDOQuery<Mitarbeiter>( pm ).Execute();
 			string log = logger.Text;
 			Assert.That( log.IndexOf( "Committing transaction" ) == -1, "Transaction should be committed" );
@@ -82,6 +83,7 @@ namespace NdoUnitTests
 			var pm = PmFactory.NewPersistenceManager();
 			pm.TransactionMode = TransactionMode.Optimistic;
 			var logger = (TestLogger)Host.Services.GetRequiredService<ILoggerFactory>().CreateLogger("Test");
+			logger.Clear();
 			new NDOQuery<Mitarbeiter>( pm ).Execute();
 			Assert.That( logger.Text.IndexOf( "Committing transaction" ) > -1, "Transaction should be committed" );
 		}
@@ -92,6 +94,7 @@ namespace NdoUnitTests
 			var pm = PmFactory.NewPersistenceManager();
 			pm.TransactionMode = TransactionMode.Pessimistic;
 			var logger = (TestLogger)Host.Services.GetRequiredService<ILoggerFactory>().CreateLogger("Test");
+			logger.Clear();
 			new NDOQuery<Mitarbeiter>( pm ).Execute();
 			string log = logger.Text;
 			Assert.That( log.IndexOf( "Starting transaction" ) > -1, "Transaction should be started" );
@@ -105,6 +108,7 @@ namespace NdoUnitTests
 			var pm = PmFactory.NewPersistenceManager();
 			pm.TransactionMode = TransactionMode.Optimistic;
 			var logger = (TestLogger)Host.Services.GetRequiredService<ILoggerFactory>().CreateLogger("Test");
+			logger.Clear();
 			Mitarbeiter m = new Mitarbeiter();
 			pm.MakePersistent( m );
 			pm.Save();
@@ -119,6 +123,7 @@ namespace NdoUnitTests
 			var pm = PmFactory.NewPersistenceManager();
 			pm.TransactionMode = TransactionMode.Pessimistic;
 			var logger = (TestLogger)Host.Services.GetRequiredService<ILoggerFactory>().CreateLogger("Test");
+			logger.Clear();
 			Mitarbeiter m = new Mitarbeiter();
 			pm.MakePersistent( m );
 			pm.Save();
@@ -133,6 +138,7 @@ namespace NdoUnitTests
 			var pm = PmFactory.NewPersistenceManager();
 			pm.TransactionMode = TransactionMode.Optimistic;
 			var logger = (TestLogger)Host.Services.GetRequiredService<ILoggerFactory>().CreateLogger("Test");
+			logger.Clear();
 			new NDOQuery<Mitarbeiter>( pm ).Execute();
 			Mitarbeiter m = new Mitarbeiter();
 			pm.MakePersistent( m );
@@ -148,6 +154,7 @@ namespace NdoUnitTests
 			var pm = PmFactory.NewPersistenceManager();
 			pm.TransactionMode = TransactionMode.Pessimistic;
 			var logger = (TestLogger)Host.Services.GetRequiredService<ILoggerFactory>().CreateLogger("Test");
+			logger.Clear();
 			new NDOQuery<Mitarbeiter>( pm ).Execute();
 			Mitarbeiter m = new Mitarbeiter();
 			pm.MakePersistent( m );
@@ -164,6 +171,7 @@ namespace NdoUnitTests
 			var pm = PmFactory.NewPersistenceManager();
 			pm.TransactionMode = TransactionMode.Optimistic;
 			var logger = (TestLogger)Host.Services.GetRequiredService<ILoggerFactory>().CreateLogger("Test");
+			logger.Clear();
 			Mitarbeiter m = new Mitarbeiter();
 			pm.MakePersistent( m );
 			pm.Save(true);
@@ -179,6 +187,7 @@ namespace NdoUnitTests
 			var pm = PmFactory.NewPersistenceManager();
 			pm.TransactionMode = TransactionMode.Pessimistic;
 			var logger = (TestLogger)Host.Services.GetRequiredService<ILoggerFactory>().CreateLogger("Test");
+			logger.Clear();
 			Mitarbeiter m = new Mitarbeiter();
 			pm.MakePersistent( m );
 			pm.Save(true);
@@ -194,6 +203,7 @@ namespace NdoUnitTests
 			var pm = PmFactory.NewPersistenceManager();
 			pm.TransactionMode = TransactionMode.Optimistic;
 			var logger = (TestLogger)Host.Services.GetRequiredService<ILoggerFactory>().CreateLogger("Test");
+			logger.Clear();
 			Mitarbeiter m = new Mitarbeiter();
 			pm.MakePersistent( m );
 			pm.Save( true );
@@ -210,6 +220,7 @@ namespace NdoUnitTests
 			var pm = PmFactory.NewPersistenceManager();
 			pm.TransactionMode = TransactionMode.Pessimistic;
 			var logger = (TestLogger)Host.Services.GetRequiredService<ILoggerFactory>().CreateLogger("Test");
+			logger.Clear();
 			Mitarbeiter m = new Mitarbeiter();
 			pm.MakePersistent( m );
 			pm.Save( true );
@@ -226,6 +237,7 @@ namespace NdoUnitTests
 			var pm = PmFactory.NewPersistenceManager();
 			pm.TransactionMode = TransactionMode.Optimistic;
 			var logger = (TestLogger)Host.Services.GetRequiredService<ILoggerFactory>().CreateLogger("Test");
+			logger.Clear();
 			Mitarbeiter m = new Mitarbeiter();
 			pm.MakePersistent( m );
 			pm.Save( true );
@@ -243,6 +255,7 @@ namespace NdoUnitTests
 			var pm = PmFactory.NewPersistenceManager();
 			pm.TransactionMode = TransactionMode.Pessimistic;
 			var logger = (TestLogger)Host.Services.GetRequiredService<ILoggerFactory>().CreateLogger("Test");
+			logger.Clear();
 			Mitarbeiter m = new Mitarbeiter();
 			pm.MakePersistent( m );
 			pm.Save( true );
@@ -261,6 +274,7 @@ namespace NdoUnitTests
 			var pm = PmFactory.NewPersistenceManager();
 			pm.TransactionMode = TransactionMode.None;
 			var logger = (TestLogger)Host.Services.GetRequiredService<ILoggerFactory>().CreateLogger("Test");
+			logger.Clear();
 			ISqlPassThroughHandler sqlHandler = pm.GetSqlPassThroughHandler();
 			var reader = sqlHandler.Execute( "DELETE FROM Mitarbeiter" );
 			string log = logger.Text;
@@ -289,6 +303,7 @@ namespace NdoUnitTests
 			var fhCount = FlughafenCount( pm );
 
 			var logger = (TestLogger)Host.Services.GetRequiredService<ILoggerFactory>().CreateLogger("Test");
+			logger.Clear();
 			pm.TransactionMode = TransactionMode.Optimistic;
 
 			Land land = new Land();
@@ -319,6 +334,7 @@ namespace NdoUnitTests
 		{
 			var pm = PmFactory.NewPersistenceManager();
 			var logger = (TestLogger)Host.Services.GetRequiredService<ILoggerFactory>().CreateLogger("Test");
+			logger.Clear();
 			ISqlPassThroughHandler sqlHandler = pm.GetSqlPassThroughHandler();
 			sqlHandler.BeginTransaction();
 			sqlHandler.Execute( "DELETE FROM Mitarbeiter" );
@@ -335,6 +351,7 @@ namespace NdoUnitTests
 			var pm = PmFactory.NewPersistenceManager();
 			pm.TransactionMode = TransactionMode.None;
 			var logger = (TestLogger)Host.Services.GetRequiredService<ILoggerFactory>().CreateLogger("Test");
+			logger.Clear();
 			using (ISqlPassThroughHandler sqlHandler = pm.GetSqlPassThroughHandler())
 			{
 				sqlHandler.Execute( "DELETE FROM Mitarbeiter" );

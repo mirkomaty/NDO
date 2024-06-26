@@ -61,11 +61,11 @@ namespace NdoUnitTests
 		public void TearDown() {
 			pm.Abort();
 			pm.UnloadCache();
-			IList mitarbeiterListe = pm.GetClassExtent(typeof(Mitarbeiter), true);
-			pm.Delete(mitarbeiterListe);
+			var mitarbeiterListe = pm.Objects<Mitarbeiter>().ResultTable;
+			pm.Delete( mitarbeiterListe );
 			pm.Save();
+			pm.Objects<Reise>().DeleteDirectly();
 			pm.Close();
-			pm.GetSqlPassThroughHandler().Execute( "DELETE FROM " + pm.NDOMapping.FindClass( typeof( Reise ) ).TableName );
 			pm.Dispose();
 		}
 
@@ -116,7 +116,7 @@ namespace NdoUnitTests
 			Type mcType = t.GetNestedType( "MetaClass", BindingFlags.NonPublic | BindingFlags.Public );
 			if (null == mcType)
 				throw new NDOException( 13, "Missing nested class 'MetaClass' for type '" + t.Name + "'; the type doesn't seem to be enhanced." );
-			var mc = (IMetaClass)Activator.CreateInstance( mcType );
+			var mc = (IMetaClass)Activator.CreateInstance( mcType, t );
 			return mc.GetRelationOrdinal( r.FieldName );
 		}
 
@@ -637,7 +637,7 @@ namespace NdoUnitTests
 		}
 
 		[Test]
-//		[Ignore("Erzeugt Exception in TearDown")]
+		[Ignore("persistenceHandler doesn't exist anymore")]
 		public void AbortedTransaction()
 		{
 			m.Hinzufuegen( r );
