@@ -57,6 +57,25 @@ namespace NDO
 		bool isClosing = false;
 
 		/// <summary>
+		/// If set to true, the resultset of each query is stored, so that results of an identical query 
+		/// can be read from the cache.
+		/// </summary>
+		/// <remarks>
+		/// NDO computes an SHA256 hash for each query including the query parameters. The hash is the key to the query cache.
+		/// Do not use the QueryCache in applications, which work with one PersistenceManager 
+		/// over a long time with multiple transactions.
+		/// </remarks>
+		public bool UseQueryCache { get; set; }
+
+		private Dictionary<string, object> queryCache = new Dictionary<string, object>();
+
+        /// <summary>
+		/// This is the query cache in which resultsets can be stored.
+		/// </summary>
+		/// <remarks>Usually you won't have to access the query cache.</remarks>
+		public Dictionary<string, object> QueryCache => this.queryCache; 
+
+		/// <summary>
 		/// Register a listener to this event, if you have to provide user generated ids. 
 		/// This event is usefull for databases, which doesn't provide auto-incremented ids, like the Oracle Db. 
 		/// The event will be fired if a new id is needed.
@@ -354,6 +373,7 @@ namespace NDO
 			this.ds.Dispose();
 			this.ds = null;
 			this.scope.Dispose();
+			this.queryCache.Clear();
 		}
 
 		/// <summary>

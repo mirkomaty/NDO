@@ -134,19 +134,19 @@ namespace NDO.MySqlConnectorProvider
 		// into MySqlDbType.
 		// For your own adapter use members of the database type emumeration of your 
 		// ADO.NET provider and convert it to the respective enumeration type		
-		public override object GetDbType(string typeName) 
+		public override object GetDbType( string typeName )
 		{
-            if (Enum.TryParse<MySqlDbType>( typeName, out var dbtype ))
-                return dbtype;
-            if (typeName == "BigInt")
+			if (Enum.TryParse<MySqlDbType>( typeName, true, out var dbtype ))
+				return dbtype;
+			if (typeName.Equals( "BigInt", StringComparison.InvariantCultureIgnoreCase ))
 				return MySqlDbType.Int64;
-			if (typeName == "Datetime")
+			if (typeName.Equals( "Datetime", StringComparison.InvariantCultureIgnoreCase ))
 				return MySqlDbType.DateTime;
-			if (typeName == "Long")
+			if (typeName.Equals( "Long", StringComparison.InvariantCultureIgnoreCase ))
 				return MySqlDbType.Int64;
-			if (typeName == "LongLong")
+			if (typeName.Equals( "LongLong", StringComparison.InvariantCultureIgnoreCase ))
 				return MySqlDbType.Int64;
-			throw new NDOException(27, "MySqlConnector.Provider.GetDbType: Typname " + typeName + " kann nicht in MySqlDbType konvertiert werden");
+			throw new NDOException( 27, "MySqlConnector.Provider.GetDbType: Typname " + typeName + " kann nicht in MySqlDbType konvertiert werden" );
 		}
 
 		public override string GetDbTypeString( IDbDataParameter parameter )
