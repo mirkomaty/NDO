@@ -38,18 +38,17 @@ namespace NdoUnitTests {
 	/// Polymorphic tests.
 	/// </summary>
 	[TestFixture]
-	public class PolymorphicWTable {
+	public class PolymorphicWTable : NDOTest
+	{
 		public PolymorphicWTable() {
 		}
 
-		private PersistenceManager pm;
 		private Reise r;
 		private Kostenpunkt kp;
 		private ICollection onSavingCollection = null;
 
 		[SetUp]
 		public void Setup() {
-			pm = PmFactory.NewPersistenceManager();
 			r = CreateReise("ADC");
 			kp = CreateBeleg();
 		}
@@ -87,6 +86,7 @@ namespace NdoUnitTests {
 
 		[Test]
 		public void TestCreateObjects() {
+			var pm = PmFactory.NewPersistenceManager();
 			pm.MakePersistent(r);
 			r.AddKostenpunkt(kp);
 			Assert.That(NDOObjectState.Created ==  kp.NDOObjectState, "Beleg should be Created: ");
@@ -95,6 +95,7 @@ namespace NdoUnitTests {
 
 		[Test]
 		public void TestCreateObjects2() {
+			var pm = PmFactory.NewPersistenceManager();
 			r.AddKostenpunkt(kp);
 			pm.MakePersistent(r);
 			Assert.That(NDOObjectState.Created ==  kp.NDOObjectState, "Beleg should be Created: ");
@@ -102,6 +103,7 @@ namespace NdoUnitTests {
 
 		[Test]
 		public void TestCreateObjectsSave() {
+			var pm = PmFactory.NewPersistenceManager();
 			r.AddKostenpunkt(kp);
 			pm.MakePersistent(r);
 			pm.Save();
@@ -115,6 +117,7 @@ namespace NdoUnitTests {
 
 		[Test]
 		public void TestCreateManyObjectsSave() {
+			var pm = PmFactory.NewPersistenceManager();
 			r.AddKostenpunkt(kp);
 			pm.MakePersistent(r);
 			pm.Save();
@@ -131,7 +134,7 @@ namespace NdoUnitTests {
 		}
 		[Test]
 		public void TestCreatePolymorphicObjectsSave() {
-//			Debug.WriteLine("TestCreatePolymorphicObjectsSave");
+			var pm = PmFactory.NewPersistenceManager();
 			r.AddKostenpunkt(kp);
 			pm.MakePersistent(r);
 			pm.Save();
@@ -155,6 +158,7 @@ namespace NdoUnitTests {
 		public void TestPolymorphicQuery() 
 		{
 //			Debug.WriteLine("TestPolymorphicQuery");
+			var pm = PmFactory.NewPersistenceManager();
 			r.AddKostenpunkt(kp);
 			r.AddKostenpunkt(CreatePkw(100));
 			r.AddKostenpunkt(CreateBeleg(50));
@@ -172,6 +176,7 @@ namespace NdoUnitTests {
 		public void TestPolymorphicAggregateQuery() 
 		{
 //			Debug.WriteLine("TestPolymorphicAggregateQuery");
+			var pm = PmFactory.NewPersistenceManager();
 			r.AddKostenpunkt(kp);
 			r.AddKostenpunkt(CreatePkw(100));
 			r.AddKostenpunkt(CreateBeleg(50));
@@ -197,6 +202,7 @@ namespace NdoUnitTests {
 		public void TestOnSavingEvent() 
 		{
 //			Debug.WriteLine("TestOnSavingEvent");
+			var pm = PmFactory.NewPersistenceManager();
 			r.AddKostenpunkt(kp);
 			r.AddKostenpunkt(CreatePkw(100));
 			r.AddKostenpunkt(CreateBeleg(50));
@@ -217,6 +223,7 @@ namespace NdoUnitTests {
 		[Test]
 		public void TestPolymorphicQueryWithSql() 
 		{
+			var pm = PmFactory.NewPersistenceManager();
 			r.AddKostenpunkt(kp);
 			r.AddKostenpunkt(CreatePkw(100));
 			r.AddKostenpunkt(CreateBeleg(50));
@@ -238,6 +245,7 @@ namespace NdoUnitTests {
 		
 		[Test]
 		public void TestAddObjectSave() {
+			var pm = PmFactory.NewPersistenceManager();
 			pm.MakePersistent(r);
 			pm.Save();
 			r.AddKostenpunkt(kp);
@@ -253,6 +261,7 @@ namespace NdoUnitTests {
 			
 		[Test]
 		public void TestAddObjectAbort() {
+			var pm = PmFactory.NewPersistenceManager();
 			pm.MakePersistent(r);
 			pm.Save();
 			r.AddKostenpunkt(kp);
@@ -264,6 +273,7 @@ namespace NdoUnitTests {
 		}
 		[Test]
 		public void TestRemoveObjectSave() {
+			var pm = PmFactory.NewPersistenceManager();
 			pm.MakePersistent(r);
 			r.AddKostenpunkt(kp);
 			pm.Save();
@@ -278,6 +288,7 @@ namespace NdoUnitTests {
 			
 		[Test]
 		public void TestRemoveObjectAbort() {
+			var pm = PmFactory.NewPersistenceManager();
 			pm.MakePersistent(r);
 			r.AddKostenpunkt(kp);
 			pm.Save();
@@ -292,6 +303,7 @@ namespace NdoUnitTests {
 
 		[Test]
 		public void TestDeleteSave() {
+			var pm = PmFactory.NewPersistenceManager();
 			pm.MakePersistent(r);
 			r.AddKostenpunkt(kp);
 			pm.Save();
@@ -307,6 +319,7 @@ namespace NdoUnitTests {
 
 		[Test]
 		public void TestDeleteAbort() {
+			var pm = PmFactory.NewPersistenceManager();
 			pm.MakePersistent(r);
 			r.AddKostenpunkt(kp);
 			pm.Save();
@@ -320,6 +333,7 @@ namespace NdoUnitTests {
 
 		[Test]
 		public void TestAddRemoveSave() {
+			var pm = PmFactory.NewPersistenceManager();
 			pm.MakePersistent(r);
 			pm.Save();
 			r.AddKostenpunkt(kp);
@@ -331,6 +345,7 @@ namespace NdoUnitTests {
 
 		[Test]
 		public void TestAddRemoveAbort() {
+			var pm = PmFactory.NewPersistenceManager();
 			pm.MakePersistent(r);
 			pm.Save();
 			r.AddKostenpunkt(kp);
@@ -342,7 +357,8 @@ namespace NdoUnitTests {
 
 		[Test]
 		public void TestClearRelatedObjectsSave() {
-			for(int i = 0; i < 10; i++) {
+			var pm = PmFactory.NewPersistenceManager();
+			for (int i = 0; i < 10; i++) {
 				r.AddKostenpunkt(CreateBeleg(i*10+100));
 			}
 			pm.MakePersistent(r);
@@ -365,6 +381,7 @@ namespace NdoUnitTests {
 			for(int i = 0; i < 10; i++) {
 				r.AddKostenpunkt(CreateBeleg(i*10+100));
 			}
+			var pm = PmFactory.NewPersistenceManager();
 			pm.MakePersistent(r);
 			pm.Save();
             IList rr = r.Kostenpunkte.ToList();
@@ -385,6 +402,7 @@ namespace NdoUnitTests {
 			for(int i = 0; i < 3; i++) {
 				r.AddKostenpunkt(CreateBeleg(i*10+100));
 			}
+			var pm = PmFactory.NewPersistenceManager();
 			pm.MakePersistent(r);
 			pm.Save();
             IList rr = r.Kostenpunkte.ToList();
@@ -405,6 +423,7 @@ namespace NdoUnitTests {
 			for(int i = 0; i < 3; i++) {
 				r.AddKostenpunkt(CreateBeleg(i*10+100));
 			}
+			var pm = PmFactory.NewPersistenceManager();
 			pm.MakePersistent(r);
 			pm.Save();
             IList rr = r.Kostenpunkte.ToList();
@@ -425,6 +444,7 @@ namespace NdoUnitTests {
 			for(int i = 0; i < 3; i++) {
 				r.AddKostenpunkt(CreateBeleg(i*10+100));
 			}
+			var pm = PmFactory.NewPersistenceManager();
 			pm.MakePersistent(r);
 			pm.Save();
 			List<Kostenpunkt> neueKostenpunkte = new List<Kostenpunkt>();
@@ -452,6 +472,7 @@ namespace NdoUnitTests {
 			for(int i = 0; i < 3; i++) {
 				r.AddKostenpunkt(CreateBeleg(i*10+100));
 			}
+			var pm = PmFactory.NewPersistenceManager();
 			pm.MakePersistent(r);
 			pm.Save();
             List<Kostenpunkt> neueKostenpunkte = new List<Kostenpunkt>();
@@ -478,6 +499,7 @@ namespace NdoUnitTests {
 		[Test]
 		public void TestHollow() {
 			r.AddKostenpunkt(kp);
+			var pm = PmFactory.NewPersistenceManager();
 			pm.MakePersistent(r);
 			pm.Save();
 			pm.MakeHollow(r);
@@ -499,6 +521,7 @@ namespace NdoUnitTests {
 		[Test]
 		public void  TestMakeAllHollow() {
 			r.AddKostenpunkt(kp);
+			var pm = PmFactory.NewPersistenceManager();
 			pm.MakePersistent(r);
 			pm.Save();
 			pm.MakeAllHollow();
@@ -508,6 +531,7 @@ namespace NdoUnitTests {
 
 		[Test]
 		public void  TestMakeAllHollowUnsaved() {
+			var pm = PmFactory.NewPersistenceManager();
 			r.AddKostenpunkt(kp);
 			pm.MakePersistent(r);
 			pm.MakeAllHollow();  // before save, objects cannot be made hollow. => in locked objects
@@ -520,6 +544,7 @@ namespace NdoUnitTests {
 			for(int i = 0; i < 10; i++) {
 				r.AddKostenpunkt(CreateBeleg(i*10+100));
 			}
+			var pm = PmFactory.NewPersistenceManager();
 			pm.MakePersistent(r);
 			pm.Save();
 			pm.MakeHollow(r, true);
@@ -551,6 +576,7 @@ namespace NdoUnitTests {
 
 		[Test]
 		public void TestLoadRelatedObjectsSave() {
+			var pm = PmFactory.NewPersistenceManager();
 			pm.MakePersistent(r);
 			pm.Save();
 			for(int i = 0; i < 10; i++) {
@@ -586,6 +612,7 @@ namespace NdoUnitTests {
 		[Test]
 		public void TestExtentRelatedObjects() {
 			r.AddKostenpunkt(kp);
+			var pm = PmFactory.NewPersistenceManager();
 			pm.MakePersistent(r);
 			pm.Save();
 			Assert.That(NDOObjectState.Persistent ==  r.NDOObjectState, "0: Reise should be persistent");
@@ -617,6 +644,8 @@ namespace NdoUnitTests {
 		[Test]
 		public void TestJoinQuery()
 		{
+			var pm = PmFactory.NewPersistenceManager();
+
 			Person p = new Person();
 			p.FirstName = "Mirko";
 			p.LastName = "Matytschak";
@@ -657,6 +686,7 @@ namespace NdoUnitTests {
 		public void TestPolymorphicCondition() 
 		{
 			r.AddKostenpunkt(kp);
+			var pm = PmFactory.NewPersistenceManager();
 			pm.MakePersistent(r);
 			pm.Save();
 
@@ -672,6 +702,8 @@ namespace NdoUnitTests {
 		[Test]
 		public void TestSortedQueryAsc() 
 		{
+			var pm = PmFactory.NewPersistenceManager();
+
 			r.AddKostenpunkt(kp);
 			DateTime yesterday = DateTime.Today - new TimeSpan(1, 0, 0, 0);
 			kp.Datum = yesterday;
@@ -692,6 +724,8 @@ namespace NdoUnitTests {
 		[Test]
 		public void TestSortedQueryDesc() 
 		{
+			var pm = PmFactory.NewPersistenceManager();
+
 			r.AddKostenpunkt(kp);
 			DateTime yesterday = DateTime.Today - new TimeSpan(1, 0, 0, 0);
 			kp.Datum = yesterday;
@@ -713,6 +747,8 @@ namespace NdoUnitTests {
 		[Test]
 		public void TestSortedQueryAscOneNull() 
 		{
+			var pm = PmFactory.NewPersistenceManager();
+
 			r.AddKostenpunkt(kp);
 			kp.Datum = DateTime.MinValue;  // DbNull
 			r.AddKostenpunkt(kp = CreatePkw());
@@ -733,6 +769,8 @@ namespace NdoUnitTests {
 		[Test]
 		public void TestSortedQueryBothNull() 
 		{
+			var pm = PmFactory.NewPersistenceManager();
+
 			r.AddKostenpunkt(kp);
 			kp.Datum = DateTime.MinValue;  // DbNull
 			r.AddKostenpunkt(kp = CreatePkw());
@@ -753,6 +791,7 @@ namespace NdoUnitTests {
 		[Test]
 		public void TestSortedQueryDescOneNull() 
 		{
+			var pm = PmFactory.NewPersistenceManager();
 			r.AddKostenpunkt(kp);
 			kp.Datum = DateTime.MinValue;
 			r.AddKostenpunkt(kp = CreatePkw());
@@ -774,6 +813,7 @@ namespace NdoUnitTests {
 		[Test]
 		public void TestQueryForSingleObject()
 		{
+			var pm = PmFactory.NewPersistenceManager();
 			Kostenpunkt kp2 = CreatePkw(100);
 			r.AddKostenpunkt(kp);
 			r.AddKostenpunkt(kp2);
@@ -790,6 +830,7 @@ namespace NdoUnitTests {
 		[Test]
 		public void TestPolyDelete()
 		{
+			var pm = PmFactory.NewPersistenceManager();
 			Kostenpunkt kp2 = CreatePkw(100);
 			r.AddKostenpunkt(kp);
 			r.AddKostenpunkt(kp2);
@@ -809,6 +850,7 @@ namespace NdoUnitTests {
 		[Test]
 		public void RelationTest()
 		{
+			var pm = PmFactory.NewPersistenceManager();
 			NDOMapping mapping = pm.NDOMapping;
 			Class reiseClass = mapping.FindClass(typeof(Reise));
 			Class pkwClass = mapping.FindClass(typeof(PKWFahrt));

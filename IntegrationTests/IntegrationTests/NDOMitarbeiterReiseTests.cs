@@ -61,11 +61,11 @@ namespace NdoUnitTests
 		public void TearDown() {
 			pm.Abort();
 			pm.UnloadCache();
-			IList mitarbeiterListe = pm.GetClassExtent(typeof(Mitarbeiter), true);
+			var mitarbeiterListe = pm.Objects<Mitarbeiter>().ResultTable;
 			pm.Delete(mitarbeiterListe);
 			pm.Save();
+			pm.Objects<Reise>().DeleteDirectly();
 			pm.Close();
-			pm.GetSqlPassThroughHandler().Execute( "DELETE FROM " + pm.NDOMapping.FindClass( typeof( Reise ) ).TableName );
 			pm.Dispose();
 		}
 
@@ -638,7 +638,7 @@ namespace NdoUnitTests
 		}
 
 		[Test]
-//		[Ignore("Erzeugt Exception in TearDown")]
+		[Ignore("persistenceHandler doesn't exist anymore")]
 		public void AbortedTransaction()
 		{
 			m.Hinzufuegen( r );
