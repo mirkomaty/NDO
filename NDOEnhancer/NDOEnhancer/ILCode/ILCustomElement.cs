@@ -209,7 +209,7 @@ namespace NDOEnhancer.ILCode
 					var paramType = Type.GetType( paramTypeNames[i] );
 					if (paramType == null)
 					{
-						EcmaType.BuiltInTypesDict.TryGetValue( paramTypeName, out paramType );
+						EcmaType.TryGetBuiltInType( paramTypeName, out paramType );
 						if (paramType == null)
 							throw new Exception( $"{ecmaCustomAttrDecl.TypeName}: Unknown type in attribute parameter list: {paramTypeName}, type: {( this.Owner as ILClassElement )?.Name ?? ""}" );
 					}
