@@ -24,9 +24,11 @@ using System;
 using System.IO;
 using System.Reflection;
 using System.Linq;
-using NDO.Configuration;
 using NDO.Provider;
 using System.Globalization;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
+using NDO.SqlPersistenceHandling;
 
 namespace NDOEnhancer
 {
@@ -63,13 +65,33 @@ namespace NDOEnhancer
 			{
 				Console.Error.WriteLine( "Error: " + ex.ToString() );
 				result = -1;
-			}
-			return result;
-		}
+            }
+            return result;
+        }
 
+        void Build( Action<IServiceCollection> configure = null )
+        {
+            var builder = Host.CreateDefaultBuilder();
+            builder.ConfigureServices( services =>
+            {
+                services.AddLogging( b =>
+                {
+                    b.ClearProviders();
+                    b.AddConsole();
+                } );
 
+                services.AddNdo( null, null );
+                if (configure != null)
+                    configure( services );
+            } );
 
-		void CopyFile(string source, string dest)
+            var host = builder.Build();
+            this.serviceProvider = host.Services;
+            host.Services.UseNdo();
+
+        }
+
+        void CopyFile(string source, string dest)
         {
             if (verboseMode)
 			    Console.WriteLine("Copying: " + source + "->" + dest);
