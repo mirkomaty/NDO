@@ -290,10 +290,12 @@ namespace NDOEnhancer.ILCode
 		IsPersistent(Type attrType)
 		{
 			return 
-				( from me in
-					from e in Elements where e is ILCustomElement select (ILCustomElement) e
-					where me.IsAttribute( attrType )
-				select me ).Any();
+			( 
+				from e in Elements 
+					let me = e as ILCustomElement 
+					where me != null && me.IsAttribute(attrType)  
+					select me
+			).Any();
 		}
 
 
