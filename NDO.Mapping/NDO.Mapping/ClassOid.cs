@@ -1,5 +1,5 @@
 ﻿//
-// Copyright (c) 2002-2016 Mirko Matytschak 
+// Copyright (c) 2002-2024 Mirko Matytschak 
 // (www.netdataobjects.de)
 //
 // Author: Mirko Matytschak
@@ -237,10 +237,10 @@ namespace NDO.Mapping
             }
         }
 
-        Type? oidType = null;
+        Type oidType = null;
 
         [Browsable(false)]
-        private Type? OidTypeHint
+        private Type OidTypeHint
         {
             get
             {

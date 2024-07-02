@@ -1,5 +1,5 @@
 ﻿//
-// Copyright (c) 2002-2016 Mirko Matytschak 
+// Copyright (c) 2002-2024 Mirko Matytschak 
 // (www.netdataobjects.de)
 //
 // Author: Mirko Matytschak
@@ -20,15 +20,15 @@
 // DEALINGS IN THE SOFTWARE.
 
 
-using NDO.Mapping.Attributes;
-using NDOInterfaces;
 using System;
-using System.Linq;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
+using System.Linq;
 using System.Text.RegularExpressions;
 using System.Xml;
+using NDO.Mapping.Attributes;
+using NDOInterfaces;
 
 namespace NDO.Mapping
 {
@@ -42,6 +42,7 @@ namespace NDO.Mapping
     public class NDOMapping : MappingNode, IEnhancerSupport
     {
         private string mappingFile;
+        private readonly INDOProviderFactory providerFactory;
         private string schemaVersion = string.Empty;  // Version always has a value
         bool changed;
         bool isEnhancing;
@@ -132,13 +133,12 @@ namespace NDO.Mapping
         /// Constructor for opening a NDO Mapping file.
         /// </summary>
         /// <param name="mappingFile">Mapping file to open. This file must be existent.</param>
-        /// <remarks>To construct a new Mapping file, use the static function <see cref="Create">Create</see>.</remarks>
-        public NDOMapping(string mappingFile)
+        public NDOMapping(string mappingFile, INDOProviderFactory providerFactory)
             : base(null)
         {
             this.mappingFile = mappingFile;
-
-            if (!File.Exists(mappingFile))
+            this.providerFactory = providerFactory;
+            if (!File.Exists( mappingFile ))
                 return;
 
             XmlDocument doc = new XmlDocument();
@@ -183,24 +183,6 @@ namespace NDO.Mapping
             }
             changed = false;
         }
-
-        private NDOMapping()
-            : base(null)
-        {
-        }
-
-        /// <summary>
-        /// Create a new mapping file. 
-        /// </summary>
-        /// <param name="mappingFile">Path of the file to create.</param>
-        /// <returns>NDOMapping object, which represents the new file.</returns>
-        public static NDOMapping Create(string mappingFile)
-        {
-            NDOMapping m = new NDOMapping();
-            m.mappingFile = mappingFile;
-            return m;
-        }
-
 
         /// <summary>
         /// Gets the file name of the mapping file.
@@ -392,7 +374,6 @@ namespace NDO.Mapping
             return FindClass(name);
         }
 
-#if nix
         /// <summary>
         /// Find the NDO provider for the connection associated with the given class mapping.
         /// Throws an Exception if no connection for the type is found.
@@ -435,9 +416,12 @@ namespace NDO.Mapping
         /// <returns>If found, the provider will be returned. Else a NDOException with ErrorNumber 34 will be thrown.</returns>
         public IProvider GetProvider(string providerShortName)
         {
-            IProvider p = NDOProviderFactory.Instance[providerShortName];
+            if (this.providerFactory == null)
+                throw new NDOException( 34, "There is no provider factory defined. Can't determine a suitable provider." );
+
+            IProvider p = this.providerFactory[providerShortName];
             if (p == null)
-                throw new NDOException(34, "There is no provider of Type " + providerShortName + " in the NDOProviderFactory. Check, if you have to add a NDO provider plug-in, or use [SqlServer|Oracle|Access] as Connection Type");
+                throw new NDOException(34, "There is no provider of Type " + providerShortName + " in the NDOProviderFactory. Check, if you need to add a package reference to the NDO provider plug-in.");
             return p;
         }
 
@@ -455,7 +439,7 @@ namespace NDO.Mapping
                 throw new NDOException(17, "Can't find mapping information for class " + t.FullName);
             return GetProvider(cl);
         }
-#endif
+
         /// <summary>
         /// Add a Class object to the Classes list.
         /// </summary>

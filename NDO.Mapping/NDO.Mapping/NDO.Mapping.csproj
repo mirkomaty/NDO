@@ -1,13 +1,33 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net6.0</TargetFramework>
-    <ImplicitUsings>enable</ImplicitUsings>
-    <Nullable>enable</Nullable>
+    <TargetFrameworks>netstandard2.0;netstandard2.1;net6.0;net8.0</TargetFrameworks>
+    <ImplicitUsings>disable</ImplicitUsings>
+    <Nullable>disable</Nullable>
+	<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+	<GenerateDocumentationFile>true</GenerateDocumentationFile>
+	<IncludeSymbols>True</IncludeSymbols>
+	<PackageId>NDO.Mapping</PackageId>
+	<Version>5.0.0</Version>
+	<Authors>Mirko Matytschak</Authors>
+	<Company>Mirko Matytschak</Company>
+	<Description>Package to read and create NDO mapping files.</Description>
+	<Copyright>(c) 2002 - 2024, Mirko Matytschak, Velden, Germany</Copyright>
+	<PackageLicenseExpression>MIT</PackageLicenseExpression>
+	<PackageProjectUrl>https://www.netdataobjects.de</PackageProjectUrl>
+	<PackageTags>NDO .NET Data Objects Persistence Mapping</PackageTags>
+	<PackageReleaseNotes>Extract mapping code from NDO.dll</PackageReleaseNotes>
+	<AssemblyVersion>5.0.0.0</AssemblyVersion>
+	<FileVersion>5.0.0.0</FileVersion>
+	<SignAssembly>true</SignAssembly>
+	<AssemblyOriginatorKeyFile>ndo_ent.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="NDOInterfaces" Version="5.0.0" />
+	<PackageReference Include="PatchProductVersion" Version="1.0.3" Condition="'$(TargetFramework)'=='netstandard2.0'">
+	  <PrivateAssets>all</PrivateAssets>
+	</PackageReference>
   </ItemGroup>
 
 </Project>

@@ -1,5 +1,5 @@
 ﻿//
-// Copyright (c) 2002-2016 Mirko Matytschak 
+// Copyright (c) 2002-2024 Mirko Matytschak 
 // (www.netdataobjects.de)
 //
 // Author: Mirko Matytschak
@@ -477,12 +477,15 @@ namespace NDO.Mapping
 
         internal void GetOrdinal()
         {
+#if nix
             System.Diagnostics.Debug.Assert(this.Parent.RelationOrdinalBase > -1, "RelationOrdinalBase for type " + Parent.FullName + " not computed");
             Type t = Type.GetType(this.Parent.FullName + ", " + this.Parent.AssemblyName);
             IMetaClass2 mc = Metaclasses.GetClass(t);
             Ordinal = this.Parent.RelationOrdinalBase + mc.GetRelationOrdinal(this.FieldName);
             if (Ordinal > 63)
                 throw new NDOException(18, "Class " + Parent.FullName + " has too much relations.");
+#endif
+            throw new NotImplementedException();
         }
 
         Class RelatedClass
@@ -576,7 +579,7 @@ namespace NDO.Mapping
             }
 
             this.definingClass = this.Parent;
-            Type? bt = this.Parent.SystemType.BaseType;
+            Type bt = this.Parent.SystemType.BaseType;
             
             while ( bt != null && bt.GetInterfaces().Any( i => i.FullName == "NDO.IPersistenceCapable" ) )
             {
