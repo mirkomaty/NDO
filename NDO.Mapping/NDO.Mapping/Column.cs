@@ -157,7 +157,7 @@ namespace NDO.Mapping
         /// </summary>
         public override void Remove()
         {
-            throw new InternalException(2994, "Column.Remove should be called by override. Type: " + this.GetType().FullName);
+            throw new MappingException(2994, "Column.Remove should be called by override. Type: " + this.GetType().FullName);
         }
 
         #endregion

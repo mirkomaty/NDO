@@ -237,21 +237,19 @@ namespace NDO.Mapping
             }
         }
 
-        Type oidType = null;
+        Type? oidType = null;
 
         [Browsable(false)]
-        private Type OidTypeHint
+        private Type? OidTypeHint
         {
             get
             {
                 if (oidType != null)
                     return oidType;
-#pragma warning disable 618
-                object[] attrs = Parent.SystemType.GetCustomAttributes(typeof(NDOOidTypeAttribute), true);
+                object[] attrs = Parent.SystemType.GetCustomAttributes(typeof(ColumnAttribute), true);
                 if (attrs.Length == 0)
                     return null;
-                return oidType = ((NDOOidTypeAttribute)attrs[0]).OidType;
-#pragma warning restore 618
+                return oidType = ((ColumnAttribute)attrs[0]).NetType;
             }
         }
 

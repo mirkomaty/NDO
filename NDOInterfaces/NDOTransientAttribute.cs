@@ -1,5 +1,5 @@
 ﻿//
-// Copyright (c) 2002-2016 Mirko Matytschak 
+// Copyright (c) 2002-2024 Mirko Matytschak 
 // (www.netdataobjects.de)
 //
 // Author: Mirko Matytschak
@@ -25,34 +25,21 @@ using System;
 namespace NDO
 {
 	/// <summary>
-	/// This user defined attribute is used to mark a class as persistent. 
-	/// Classes with this attribute will be enhanced.
+	/// Markierung einer Klasse oder eines Felds als nicht Persistent
+	/// Alle privaten Felder einer persistenten Klasse sind automatisch persistent,
+	/// es sei denn, man markiert sie als Transient.
 	/// </summary>
-	[AttributeUsage(AttributeTargets.Class, AllowMultiple = false)]	
-	public class NDOPersistentAttribute : System.Attribute
+	[AttributeUsage(AttributeTargets.Field, AllowMultiple = true)]	
+	public class NDOTransientAttribute : Attribute
 	{
 		/// <summary>
-		/// Standard Constructor
+		/// Empty constructor
 		/// </summary>
-		public NDOPersistentAttribute()
+		public NDOTransientAttribute()
 		{
+			//
+			// TODO: Add constructor logic here
+			//
 		}
 	}
-
-	/// <summary>
-	/// This attribute is used to mark assemblies as enhanced. 
-	/// Don't use this attribute.
-	/// </summary>
-	[AttributeUsage(AttributeTargets.Assembly, AllowMultiple = false)]	
-	public class NDOEnhancedAttribute : System.Attribute
-	{
-		/// <summary>
-		/// Standard Constructor
-		/// </summary>
-		public NDOEnhancedAttribute()
-		{
-		}
-	}
-
-
 }

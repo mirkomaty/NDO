@@ -22,24 +22,30 @@
 
 using System;
 
-namespace NDO
+namespace NDO.Mapping
 {
 	/// <summary>
-	/// Markierung einer Klasse oder eines Felds als nicht Persistent
-	/// Alle privaten Felder einer persistenten Klasse sind automatisch persistent,
-	/// es sei denn, man markiert sie als Transient.
+	/// Helper class to determine if a type is a storable field type.
 	/// </summary>
-	[AttributeUsage(AttributeTargets.Field, AllowMultiple = true)]	
-	public class NDOTransientAttribute : Attribute
+	public class StorableTypes
 	{
 		/// <summary>
-		/// Empty constructor
+		/// Determines if a type is a storable field type.
 		/// </summary>
-		public NDOTransientAttribute()
+		/// <param name="t">The type to check.</param>
+		/// <returns>True, if the type is storable.</returns>
+		public static bool Contains(Type t)
 		{
-			//
-			// TODO: Add constructor logic here
-			//
+            if (t == null)
+                return false;
+			if (t == typeof(System.IntPtr))
+				return false;
+            if (t.IsGenericParameter)
+                return true;
+			if (t.FullName.StartsWith("System.Nullable`1"))
+				return true;
+
+			return t.IsPrimitive || t == typeof(string) || t == typeof(decimal) || t == typeof(DateTime) || t == typeof(Guid) || t == typeof(byte[]) || t.IsSubclassOf(typeof(System.Enum));
 		}
 	}
 }

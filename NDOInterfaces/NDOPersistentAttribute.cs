@@ -22,38 +22,37 @@
 
 using System;
 
-namespace NDOInterfaces
+namespace NDO
 {
 	/// <summary>
-	/// Use this interface to output messages, while generating DDL code.
+	/// This user defined attribute is used to mark a class as persistent. 
+	/// Classes with this attribute will be enhanced.
 	/// </summary>
-	public interface IMessageAdapter
+	[AttributeUsage(AttributeTargets.Class, AllowMultiple = false)]	
+	public class NDOPersistentAttribute : System.Attribute
 	{
 		/// <summary>
-		/// Increases the current indent level.
+		/// Standard Constructor
 		/// </summary>
-		void Indent();
-		/// <summary>
-		/// Decreases the current indent level.
-		/// </summary>
-		void Unindent();
-		/// <summary>
-		/// Writes the given text to the output device.
-		/// </summary>
-		/// <param name="text">A message to write.</param>
-		/// <remarks>
-		/// The text will be written to the Visual Studio Output pane, if the enhancer runs in visual studio.
-		/// The stand-alone enhancer writes to the console.
-		/// </remarks>
-		void Write(String text);
-		/// <summary>
-		/// Writes the given text to the output device.
-		/// </summary>
-		/// <param name="text">A message to write.</param>
-		/// <remarks>
-		/// The text will be written to the Visual Studio Output pane, if the enhancer runs in visual studio.
-		/// The stand-alone enhancer writes to the console.
-		/// </remarks>
-		void WriteLine(String text);
+		public NDOPersistentAttribute()
+		{
+		}
 	}
+
+	/// <summary>
+	/// This attribute is used to mark assemblies as enhanced. 
+	/// Don't use this attribute.
+	/// </summary>
+	[AttributeUsage(AttributeTargets.Assembly, AllowMultiple = false)]	
+	public class NDOEnhancedAttribute : System.Attribute
+	{
+		/// <summary>
+		/// Standard Constructor
+		/// </summary>
+		public NDOEnhancedAttribute()
+		{
+		}
+	}
+
+
 }

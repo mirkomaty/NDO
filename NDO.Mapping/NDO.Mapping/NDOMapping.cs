@@ -392,7 +392,7 @@ namespace NDO.Mapping
             return FindClass(name);
         }
 
-
+#if nix
         /// <summary>
         /// Find the NDO provider for the connection associated with the given class mapping.
         /// Throws an Exception if no connection for the type is found.
@@ -455,7 +455,7 @@ namespace NDO.Mapping
                 throw new NDOException(17, "Can't find mapping information for class " + t.FullName);
             return GetProvider(cl);
         }
-
+#endif
         /// <summary>
         /// Add a Class object to the Classes list.
         /// </summary>

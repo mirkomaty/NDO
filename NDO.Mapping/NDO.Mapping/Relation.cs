@@ -508,7 +508,7 @@ namespace NDO.Mapping
             Type t = Parent.SystemType;
 
             if (t == null)
-                throw new InternalException(1155, "Relation.InitFields");
+                throw new MappingException(1155, "Relation.InitFields");
 
             FieldInfo fi = null;
 
@@ -576,8 +576,9 @@ namespace NDO.Mapping
             }
 
             this.definingClass = this.Parent;
-            Type bt = this.Parent.SystemType.BaseType;
-            while (typeof(IPersistenceCapable).IsAssignableFrom(bt))
+            Type? bt = this.Parent.SystemType.BaseType;
+            
+            while ( bt != null && bt.GetInterfaces().Any( i => i.FullName == "NDO.IPersistenceCapable" ) )
             {
                 Class pcl = this.Parent.Parent.FindClass(bt);
                 if (pcl.FindRelation(this.fieldName) != null)
@@ -724,7 +725,7 @@ namespace NDO.Mapping
                 }
                 catch (Exception ex)
                 {
-                    throw new InternalException(1379, "Relation.ForeignRelation:" + ex.Message + " Status: " + status.ToString());
+                    throw new MappingException(1379, "Relation.ForeignRelation:" + ex.Message + " Status: " + status.ToString());
                 }
             }
         }

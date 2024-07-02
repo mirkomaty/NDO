@@ -1,5 +1,5 @@
 ﻿//
-// Copyright (c) 2002-2016 Mirko Matytschak 
+// Copyright (c) 2002-2024 Mirko Matytschak 
 // (www.netdataobjects.de)
 //
 // Author: Mirko Matytschak
@@ -22,30 +22,21 @@
 
 using System;
 
-namespace NDO
+namespace NDO.Mapping
 {
-	/// <summary>
-	/// Helper class to determine if a type is a storable field type.
-	/// </summary>
-	public class StorableTypes
-	{
-		/// <summary>
-		/// Determines if a type is a storable field type.
-		/// </summary>
-		/// <param name="t">The type to check.</param>
-		/// <returns>True, if the type is storable.</returns>
-		public static bool Contains(Type t)
-		{
-            if (t == null)
-                return false;
-			if (t == typeof(System.IntPtr))
-				return false;
-            if (t.IsGenericParameter)
-                return true;
-			if (t.FullName.StartsWith("System.Nullable`1"))
-				return true;
-
-			return t.IsPrimitive || t == typeof(string) || t == typeof(decimal) || t == typeof(DateTime) || t == typeof(Guid) || t == typeof(byte[]) || t.IsSubclassOf(typeof(System.Enum));
-		}
-	}
+    /// <summary>
+    /// Exception for sever state errors in NDO. If such an error occurs, please send
+    /// a bug report to us.
+    /// </summary>
+    public class MappingException : Exception
+    {
+        /// <summary>
+        /// Denotes internal errors
+        /// </summary>
+        /// <param name="val"></param>
+        /// <param name="message"></param>
+        public MappingException( int val, string message ) : base( "Mapping error #" + val + ": " + message )
+        {
+        }
+    }
 }
