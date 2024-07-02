@@ -107,6 +107,19 @@ namespace NDOEnhancer.Ecma335.Bytes
                 int para = (int)ReadParam(bytes, typeof(int), ref pos)!; //((bytes[pos+3] * 256 + bytes[pos+2]) * 256 + bytes[pos+1]) * 256 + bytes[pos];
                 return Enum.ToObject( type, para );
             }
+            else if (type.FullName == "System.Byte[]")
+            {
+                // NumElem is an unsigned int32 specifying the number of elements in the SZARRAY, or 0xFFFFFFFF to indicate
+                // that the value is null
+                var numElements = (Int32)ReadParam( bytes, typeof( Int32 ), ref pos )!;
+                if (numElements == -1)
+                    return null;
+                byte[] result = new byte[numElements];
+                for (int i = 0; i < numElements; i++)
+                    result[i] = bytes[pos + i];
+                pos += numElements;
+                return result;
+            }
 
             var size = Marshal.SizeOf( type );
             

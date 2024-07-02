@@ -46,7 +46,7 @@ namespace NDOEnhancer.Ecma335
             "float64",            "int8",            "int16",            "int32",            "int64",            "uint8",            "uint16",            "uint32",            "uint64",            "native int",            "native unsigned int",            "object",            "string",            "typedref",            "unsigned int8",            "unsigned int16",            "unsigned int32",            "unsigned int64",            "void"
         };
 
-		public static Dictionary<string, Type> BuiltInTypesDict { get; set; } = new Dictionary<string, Type>()
+		private static Dictionary<string, Type> builtInTypesDict { get; set; } = new Dictionary<string, Type>()
         {
             {"bool", typeof(System.Boolean) },
             {"char", typeof(System.Char) },
@@ -62,6 +62,25 @@ namespace NDOEnhancer.Ecma335
             {"uint64", typeof(System.UInt64) },
             {"string", typeof(System.String) }
         };
+
+        public static bool TryGetBuiltInType(string typeName, out Type? resultType)
+        {
+            var match = arrayRegex.Match(typeName);
+            if (match.Success && match.Index + match.Value.Length == typeName.Length)
+            {
+                var baseTypeStr = typeName.Substring( 0, match.Index );
+                if (!builtInTypesDict.TryGetValue(baseTypeStr, out Type? baseType))
+                {
+                    resultType = null;
+                    return false;
+                }
+
+                resultType = Type.GetType( baseType.FullName + "[]" );
+                return true;
+            }
+
+            return builtInTypesDict.TryGetValue( typeName, out resultType );
+        }
 
         static Regex arrayRegex = new Regex(@"^\[(\d+|)\]", RegexOptions.Compiled);
 

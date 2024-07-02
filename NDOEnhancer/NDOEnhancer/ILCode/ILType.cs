@@ -24,7 +24,7 @@ namespace NDOEnhancer.ILCode
 
 			if (ilTypeName == "bool")
 				return "System.Boolean";
-			else if (ilTypeName == "byte")
+			else if (ilTypeName == "byte" || ilTypeName == "uint8")
 				return "System.Byte";
 			else if (ilTypeName == "sbyte")
 				return "System.SByte";
@@ -38,7 +38,7 @@ namespace NDOEnhancer.ILCode
 				return "System.UInt16";
 			else if (ilTypeName == "unsigned int8")
 				return "System.Byte";
-			else if (ilTypeName == "unsigned int8[]")
+			else if (ilTypeName == "unsigned int8[]" || ilTypeName == "uint8[]")
 				return "System.Byte[]";
 			else if (ilTypeName == "int" || ilTypeName == "int32")
 				return "System.Int32";

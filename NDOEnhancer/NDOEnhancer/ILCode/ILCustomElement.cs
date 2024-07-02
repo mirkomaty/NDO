@@ -69,95 +69,6 @@ namespace NDOEnhancer.ILCode
 			return this.attributeInfo.TypeName == type.FullName;
 		}
 
-
-		private object
-		ReadParam( byte[] bytes, Type type, ref int pos )
-		{
-			if (type.FullName == "System.String" || type.FullName == "System.Type")
-			{
-				string para;
-				int len = PackedLength.Read(bytes, ref pos);
-				if (len == -1)
-					para = null;
-				else
-					para = new System.Text.UTF8Encoding().GetString( bytes, pos + 1, len );
-
-				pos += 1 + bytes[pos];
-
-				if (para != null && para != string.Empty)
-				{
-					if (para[para.Length - 1] == '\0')
-						para = para.Substring( 0, para.Length - 1 );
-				}
-
-				return para;
-			}
-
-
-			GCHandle handle = GCHandle.Alloc(bytes, GCHandleType.Pinned);
-			IntPtr addressInPinnedObject = (handle.AddrOfPinnedObject() + pos);
-			object returnedObject = Marshal.PtrToStructure(addressInPinnedObject, type);
-			handle.Free();
-			pos += Marshal.SizeOf( type );
-			return returnedObject;
-			//else if (type == typeof( System.Boolean ))
-			//{
-			//	bool para = Convert.ToBoolean( bytes[pos] );
-			//	pos += 1;
-			//	return para;
-			//}
-			//else if (type == typeof( System.Byte ))
-			//{
-			//	byte para = bytes[pos];
-			//	pos += 1;
-			//	return para;
-			//}
-			//else if (type == typeof( System.Char ))
-			//{
-			//	char para = Convert.ToChar( bytes[pos+1] * 256 + bytes[pos] );
-			//	pos += 2;
-			//	return para;
-			//}
-			//else if (type == typeof( System.Int16 ))
-			//{
-			//	short para = Convert.ToInt16( bytes[pos+1] * 256 + bytes[pos] );
-			//	pos += 2;
-			//	return para;
-			//}
-			//else if (type == typeof( System.Int32 ))
-			//{
-			//	int para = ((bytes[pos+3] * 256 + bytes[pos+2]) * 256 + bytes[pos+1]) * 256 + bytes[pos];
-			//	pos += 4;
-			//	return para;
-			//}
-			//else if (typeof(System.Enum).IsAssignableFrom( type ) )
-			//{
-			//	// enums can be "derived" from any integral number type
-			//	var underlyingType = Enum.GetUnderlyingType(type);
-			//	var size = Marshal.SizeOf( underlyingType );
-
-			//	// fortunately we can use a long value for all types of enums
-			//	long integralValue = 0;
-			//	for (int i = size-1; i >= 0; i--)
-			//	{
-			//		integralValue += bytes[pos+i];
-			//		if (i > 0)
-			//			integralValue *= 256;
-			//	}
-
-			//	pos += size;
-
-			//	// convert the integral value into an enum of the given type
-			//	return Enum.ToObject( type, integralValue );
-			//}
-
-			//MessageAdapter ma = new MessageAdapter();
-			//ma.ShowError( $"Relation Attribute: Unknown type in attribute parameter list: {type.FullName}, owner type: {( this.Owner as ILClassElement )?.Name ?? "-"}" );
-
-			//return null;
-		}
-
-
 		internal class AttributeInfo
 		{
 			public string TypeName { get; set; }
@@ -209,7 +120,7 @@ namespace NDOEnhancer.ILCode
 					var paramType = Type.GetType( paramTypeNames[i] );
 					if (paramType == null)
 					{
-						EcmaType.BuiltInTypesDict.TryGetValue( paramTypeName, out paramType );
+						EcmaType.TryGetBuiltInType( paramTypeName, out paramType );
 						if (paramType == null)
 							throw new Exception( $"{ecmaCustomAttrDecl.TypeName}: Unknown type in attribute parameter list: {paramTypeName}, type: {( this.Owner as ILClassElement )?.Name ?? ""}" );
 					}

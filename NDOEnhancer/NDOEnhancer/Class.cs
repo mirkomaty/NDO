@@ -27,6 +27,7 @@ using System.Collections.Generic;
 
 using NDOEnhancer.ILCode;
 using NDO;
+using NDO.Mapping;
 
 namespace NDOEnhancer.Patcher
 {
@@ -53,7 +54,7 @@ namespace NDOEnhancer.Patcher
 		}
 
 		public ClassPatcher(	ILClassElement classElement, 
-			NDO.Mapping.NDOMapping mappings, 
+			NDOMapping mappings, 
 			ClassDictionary<ClassNode> externalPersistentBases,
 			MessageAdapter messages,
 			IEnumerable<KeyValuePair<string,ILField>> sortedFields,
@@ -121,9 +122,9 @@ namespace NDOEnhancer.Patcher
 		private string					m_nonGenericRefName;
 		private string					m_persistentBase;
 		private bool					m_hasPersistentBase;
-		private NDO.Mapping.NDOMapping	m_mappings;
+		private NDOMapping				m_mappings;
 		private string					oidTypeName;
-		private NDO.Mapping.Class		m_classMapping;
+		private Class					m_classMapping;
 
 		private List<ILField>				ownFieldsHierarchical	= new List<ILField>();
 		private IEnumerable<ILReference>		m_references;
@@ -380,7 +381,7 @@ namespace NDOEnhancer.Patcher
 				{
 					if ( line.StartsWith( "ldfld" ) )
 					{
-                        NDO.Mapping.Field fieldMapping = this.m_classMapping.FindField(nameInLine);
+                        Field fieldMapping = this.m_classMapping.FindField(nameInLine);
                         if (fieldMapping == null)
                         {
                             messages.WriteLine("Warning: can't determine ordinal for field " + m_name + "." + nameInLine);
@@ -1185,7 +1186,7 @@ namespace NDOEnhancer.Patcher
 
 			m_classElement.AppendMethod( method );
 
-			NDO.Mapping.Field fieldMapping = this.m_classMapping.FindField(field.CleanName);
+			Field fieldMapping = this.m_classMapping.FindField(field.CleanName);
 
 			// We can't get Value Types with getter functions, because that would result in a
             // copy of the object. So the original object couldn't be manipulated.            
