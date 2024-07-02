@@ -15,7 +15,7 @@
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageProjectUrl>https://www.netdataobjects.de</PackageProjectUrl>
     <PackageTags>NDO .NET Data Objects Persistence</PackageTags>
-    <PackageReleaseNotes>NDO Enhancer Fix.</PackageReleaseNotes>
+    <PackageReleaseNotes>NDO 5.0</PackageReleaseNotes>
     <AssemblyVersion>5.0.0.0</AssemblyVersion>
     <FileVersion>5.0.0.0</FileVersion>
     <SignAssembly>true</SignAssembly>
@@ -40,7 +40,8 @@
 		<PackageReference Include="Microsoft.Extensions.Hosting.Abstractions" Version="6.0.0" />
 	</ItemGroup>
 	<ItemGroup>
-    <PackageReference Include="NDOInterfaces" Version="5.0.0" />
+		<PackageReference Include="NDOInterfaces" Version="5.0.0" />
+		<PackageReference Include="NDO.Mapping" Version="5.0.0" />
 	<PackageReference Include="PatchProductVersion" Version="1.0.3" Condition="'$(TargetFramework)'=='netstandard2.0'">
 		<PrivateAssets>all</PrivateAssets>
 	</PackageReference>

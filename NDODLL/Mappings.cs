@@ -25,6 +25,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Reflection;
 using NDO.Mapping;
+using NDOInterfaces;
 
 namespace NDO 
 {
@@ -35,8 +36,8 @@ namespace NDO
 	{
 		private Dictionary<Type,int> updateOrder = new Dictionary<Type, int>();
 
-		internal Mappings( string mappingFile )
-			: base( mappingFile )
+		internal Mappings( string mappingFile, INDOProviderFactory providerFactory )
+			: base( mappingFile, providerFactory )
 		{
 			InitClassFields();
 			this.updateOrder = new ClassRank().BuildUpdateRank( Classes );
