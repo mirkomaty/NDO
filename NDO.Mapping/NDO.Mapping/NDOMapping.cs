@@ -37,7 +37,7 @@ namespace NDO.Mapping
     /// </summary>
     /// <remarks>
     /// If you use this class to manipulate Mapping files, please note, that not all members of the classes contained in the namespace NDO.Mapping will be initialized. If you write your own persistence handler, you'll get an instance of this class
-    /// as a parameter of the <see cref="NDO.IPersistenceHandler.Initialize">Initialize function</see>. In this case all fields are properly initialized.
+    /// as a parameter of the IPersistenceHandler.Init function. In this case all fields are properly initialized.
     /// </remarks>
     public class NDOMapping : MappingNode, IEnhancerSupport
     {
@@ -133,6 +133,7 @@ namespace NDO.Mapping
         /// Constructor for opening a NDO Mapping file.
         /// </summary>
         /// <param name="mappingFile">Mapping file to open. This file must be existent.</param>
+        /// <param name="providerFactory">A factory which provides IProvider instances</param>
         public NDOMapping(string mappingFile, INDOProviderFactory providerFactory)
             : base(null)
         {

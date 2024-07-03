@@ -103,7 +103,7 @@ namespace NDO.Mapping
         /// <remarks>
         /// This string sould match the Name property of a 
         /// provider registered in the NDOProviderFactory.
-        /// <seealso cref="NDOProviderFactory"/>
+        /// <seealso cref="NDOInterfaces.INDOProviderFactory"/>
         /// </remarks>
         [Description("The provider type string.")]
         public string Type

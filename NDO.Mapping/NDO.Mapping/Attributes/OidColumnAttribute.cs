@@ -33,7 +33,7 @@ namespace NDO.Mapping.Attributes
     /// product doesn't support autoincremented columns, an integer column is used.
     /// </summary>
     /// <remarks>
-    /// You can set the value of an Oid column using an <see cref="NDO.IdGenerationHandler">IdGenerationHandler</see> 
+    /// You can set the value of an Oid column using an IdGenerationHandler
     /// or you can map a field of your class to an Oid.
     /// The following sample shows, how to define a Guid Oid.
     /// <code>
