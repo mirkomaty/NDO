@@ -23,11 +23,9 @@ using System;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using NDO.Application;
-using NDO.Provider;
+using NDO.ProviderFactory;
 using NDO.Query;
 using NDO.SqlPersistenceHandling;
-using NDOInterfaces;
 
 namespace NDO.Application
 {
@@ -54,18 +52,17 @@ namespace NDO.Application
 		/// <param name="config"></param>
 		public static void AddNdo( this IServiceCollection services, IHostEnvironment hostEnvironment, IConfiguration config )
 		{
+			services.AddNdoProviderFactory( hostEnvironment, config );
 			NDOApplication.Configuration = config;
 			NDOApplication.HostEnvironment = hostEnvironment;
 			services.AddTransient<IPersistenceHandler, SqlPersistenceHandler>();
 			services.AddTransient<RelationContextGenerator>();
 			services.AddTransient<IQueryGenerator, SqlQueryGenerator>();
 			services.AddScoped<IPersistenceHandlerManager, NDOPersistenceHandlerManager>();
-			services.AddSingleton<IProviderPathFinder, NDOProviderPathFinder>();
 			services.AddSingleton<IPersistenceHandlerPool, NDOPersistenceHandlerPool>();
 			services.AddScoped<IMappingsAccessor, MappingsAccessor>();
 			services.AddTransient<INDOTransactionScope, NDOTransactionScope>();
 			services.AddScoped<IPersistenceManagerAccessor, PersistenceManagerAccessor>();
-			services.AddSingleton<INDOProviderFactory>( NDOProviderFactory.Instance );
 		}
 
 		/// <summary>
@@ -102,6 +99,7 @@ namespace NDO.Application
 		/// <returns>The IServiceProvider instance, passed as parameter.</returns>
 		public static IServiceProvider UseNdo( this IServiceProvider serviceProvider )
 		{
+			serviceProvider.UseNdoProviderFactory();
 			NDOApplication.ServiceProvider = serviceProvider;
 			return serviceProvider;
 		}

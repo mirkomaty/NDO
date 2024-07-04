@@ -1,5 +1,5 @@
 ﻿//
-// Copyright (c) 2002-2016 Mirko Matytschak 
+// Copyright (c) 2002-2024 Mirko Matytschak 
 // (www.netdataobjects.de)
 //
 // Author: Mirko Matytschak
@@ -22,15 +22,13 @@
 
 using System;
 using System.Text;
-using System.IO;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using System.Xml.Linq;
 using NDO.Mapping;
-using NDO;
 using NDOInterfaces;
-using System.Globalization;
+using NDO.ProviderFactory;
 
 namespace NDO
 {
@@ -39,14 +37,13 @@ namespace NDO
 	/// </summary>
 	internal class SchemaTransitionGenerator
 	{
-		IProvider provider;
-		ISqlGenerator concreteGenerator;
-		//MessageAdapter messages;
-		NDO.Mapping.NDOMapping mappings;
-		public SchemaTransitionGenerator(ISqlGenerator concreteGenerator, NDO.Mapping.NDOMapping mappings) 
+		private readonly IProvider provider;
+        private readonly ISqlGenerator concreteGenerator;
+        private readonly NDOMapping mappings;
+		public SchemaTransitionGenerator( INDOProviderFactory providerFactory, string providerName, NDOMapping mappings ) 
 		{
-			provider = NDOProviderFactory.Instance[concreteGenerator.ProviderName];
-			this.concreteGenerator = concreteGenerator;
+			this.provider = providerFactory[providerName];
+			this.concreteGenerator = providerFactory.Generators[providerName];
 			this.mappings = mappings;
 		}
 

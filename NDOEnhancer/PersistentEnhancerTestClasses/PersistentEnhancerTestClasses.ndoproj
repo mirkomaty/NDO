@@ -28,8 +28,6 @@
     <Debug>True</Debug>
     <KeyFile />
     <References>
-      <Reference AssemblyName="NDO" AssemblyPath="..\..\NDODLL\bin\Debug\netstandard2.0\NDO.dll" CheckThisDLL="False">
-      </Reference>
     </References>
   </ProjectDescription>
 </Enhancer>

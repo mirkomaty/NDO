@@ -31,6 +31,7 @@ using NDO.SchemaGenerator;
 using System.Reflection;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using NDO.ProviderFactory;
 
 namespace NDO
 {
@@ -58,7 +59,11 @@ namespace NDO
 		private IPersistenceHandlerManager persistenceHandlerManager;
 		bool isClosing = false;
 		private INDOProviderFactory providerFactory;
-		private INDOProviderFactory ProviderFactory
+
+		/// <summary>
+		/// Provides the ProviderFactory to inherited persistence managers;
+		/// </summary>
+		protected INDOProviderFactory ProviderFactory
 		{
 			get
 			{

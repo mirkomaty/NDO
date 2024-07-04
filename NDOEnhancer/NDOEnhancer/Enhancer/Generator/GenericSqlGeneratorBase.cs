@@ -34,13 +34,15 @@ namespace NDOEnhancer
 	/// </summary>
 	internal class GenericSqlGeneratorBase
 	{
-		protected ISqlGenerator concreteGenerator;
+        private readonly IProvider provider;
+        protected ISqlGenerator concreteGenerator;
 		protected MessageAdapter messages;
 		protected NDOMapping mappings;
 
-		public GenericSqlGeneratorBase(ISqlGenerator concreteGenerator, MessageAdapter messages, NDOMapping mappings)
+		public GenericSqlGeneratorBase(IProvider provider, ISqlGenerator concreteGenerator, MessageAdapter messages, NDOMapping mappings)
 		{
-			this.concreteGenerator = concreteGenerator;
+            this.provider = provider;
+            this.concreteGenerator = concreteGenerator;
 			this.messages = messages;
 			this.mappings = mappings;
 		}
@@ -48,9 +50,6 @@ namespace NDOEnhancer
 		protected string CreateTable(DataTable dt)
 		{
 			StringBuilder sb = new StringBuilder();
-			IProvider provider = EnhancerProviderFactory.Instance[concreteGenerator.ProviderName];
-			if (provider == null)
-				throw new Exception("Can't find NDO provider '" + concreteGenerator.ProviderName + "'.");
 
 			string tableName = QualifiedTableName.Get(dt.TableName, provider);
 

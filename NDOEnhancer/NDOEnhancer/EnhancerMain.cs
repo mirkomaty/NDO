@@ -24,11 +24,14 @@ using System;
 using System.IO;
 using System.Reflection;
 using System.Linq;
-using NDO.Provider;
+//using NDO.Provider;
 using System.Globalization;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using NDO.SqlPersistenceHandling;
+using Microsoft.Extensions.Logging;
+using NDO.ProviderFactory;
+using NDOInterfaces;
+//using NDO.SqlPersistenceHandling;
 
 namespace NDOEnhancer
 {
@@ -38,8 +41,9 @@ namespace NDOEnhancer
 	
         static bool verboseMode;
 		ProjectDescription projectDescription;
+        private IServiceProvider serviceProvider;
 
-		public static int Main( string[] args )
+        public static int Main( string[] args )
 		{
 			int result = 0;
 			// Make the culture invariant, otherwise .NET tries to load .resources assemblies.
@@ -80,15 +84,14 @@ namespace NDOEnhancer
                     b.AddConsole();
                 } );
 
-                services.AddNdo( null, null );
+				services.AddSingleton<INDOProviderFactory, NDOProviderFactory>();
+				services.AddSingleton<IProviderPathFinder, ProviderPathFinder>();
                 if (configure != null)
                     configure( services );
             } );
 
             var host = builder.Build();
             this.serviceProvider = host.Services;
-            host.Services.UseNdo();
-
         }
 
         void CopyFile(string source, string dest)
@@ -116,9 +119,9 @@ namespace NDOEnhancer
             this.projectDescription = new ProjectDescription( ndoProjFilePath, targetFramework );
 
 			AppDomain.CurrentDomain.AssemblyResolve += OnAssemblyResolve;
-			NDOContainer.Instance.RegisterType<IProviderPathFinder,ProviderPathFinder>();
-			// This is needed as parameter for ProviderPathFinder
-			NDOContainer.Instance.RegisterInstance( this.projectDescription );
+			//NDOContainer.Instance.RegisterType<IProviderPathFinder,ProviderPathFinder>();
+			//// This is needed as parameter for ProviderPathFinder
+			//NDOContainer.Instance.RegisterInstance( this.projectDescription );
 
             options = projectDescription.ConfigurationOptions;
 
@@ -149,7 +152,7 @@ namespace NDOEnhancer
 			var loadContext = new ManagedLoadContext( basePath, verboseMode );
 			using (loadContext.EnterContextualReflection())
 			{
-				new NDOEnhancer.Enhancer( this.projectDescription, messages ).DoIt();
+				new Enhancer( this.projectDescription, messages, NDOProviderFactory.Instance ).DoIt();
 				loadContext.Unload();
 			}
 

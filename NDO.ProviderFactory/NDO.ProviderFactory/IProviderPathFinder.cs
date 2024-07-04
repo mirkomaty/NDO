@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace NDO.Provider
+namespace NDO.ProviderFactory
 {
 	/// <summary>
 	/// DI Interface for the NDOProviderFactory

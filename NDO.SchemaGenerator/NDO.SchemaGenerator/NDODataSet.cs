@@ -66,7 +66,7 @@ namespace NDO.SchemaGenerator
         /// </summary>
         /// <param name="mapping">A NDOMapping object.</param>
         /// <param name="providerFactory">The provider factory</param>
-        internal void Remap( NDOMapping mapping, INDOProviderFactory providerFactory )
+        public void Remap( NDOMapping mapping, INDOProviderFactory providerFactory )
         {
             foreach (Class cl in mapping.Classes)
             {

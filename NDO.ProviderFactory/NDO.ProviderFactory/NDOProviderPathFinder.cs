@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 
-namespace NDO.Provider
+namespace NDO.ProviderFactory
 {
 	class NDOProviderPathFinder : IProviderPathFinder
 	{
@@ -28,7 +28,7 @@ namespace NDO.Provider
 
 			if (runtimeDir != null && runtimeDir.IndexOf( "Microsoft.NETCore.App" ) > -1)
 			{
-				path = typeof( PersistenceManager ).Assembly.Location;
+				path = typeof( NDOProviderFactory ).Assembly.Location;
 				var pattern = $".nuget{Path.DirectorySeparatorChar}packages";
 				int p;
 				if (( p = path.IndexOf( pattern ) ) > -1)

@@ -26,12 +26,10 @@ using System.IO;
 using System.Collections.Generic;
 using NDOInterfaces;
 using System.Linq;
-using NDO.Provider;
-using NDO.Application;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 
-namespace NDO
+namespace NDO.ProviderFactory
 {
     /// <summary>
     /// This singleton class is a factory for NDO providers and generators. 

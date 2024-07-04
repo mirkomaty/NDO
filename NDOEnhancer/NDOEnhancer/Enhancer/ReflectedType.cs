@@ -20,6 +20,7 @@
 // DEALINGS IN THE SOFTWARE.
 
 
+using NDO.Mapping;
 using System;
 using System.Text;
 
@@ -46,10 +47,7 @@ namespace NDOEnhancer
 			// Die Logik ist auch in NDO -> FieldMap.cs, und im Mapping Tool enthalten.
 			get					
 			{
-				return NDO.StorableTypes.Contains(t);
-				//if (t == typeof(System.IntPtr))
-				//    return false;
-				//return t.IsPrimitive || t == typeof(string) || t == typeof(decimal) || t == typeof(DateTime) || t == typeof(Guid) || t.IsSubclassOf(typeof(System.Enum));
+				return StorableTypes.Contains(t);
 			}
 		}
 

@@ -1385,7 +1385,7 @@ namespace NDO
 				}
 				else
 				{
-					SchemaTransitionGenerator schemaTransitionGenerator = new SchemaTransitionGenerator( NDOProviderFactory.Instance.Generators[ndoConn.Type], this.mappings );
+					SchemaTransitionGenerator schemaTransitionGenerator = new SchemaTransitionGenerator( ProviderFactory, ndoConn.Type, this.mappings );
 					string transition = @"<NdoSchemaTransition>
     <CreateTable name=""NDOSchemaVersion"">
       <CreateColumn name=""SchemaName"" type=""System.String,mscorlib"" allowNull=""True"" />
@@ -1425,7 +1425,7 @@ namespace NDO
 			if (transitionElements.Attribute( "schemaName" ) != null)
 				schemaName = transitionElements.Attribute( "schemaName" ).Value;
 			Version version = new Version( GetSchemaVersion( ndoConn, schemaName ) );
-			SchemaTransitionGenerator schemaTransitionGenerator = new SchemaTransitionGenerator( NDOProviderFactory.Instance.Generators[ndoConn.Type], this.mappings );
+			SchemaTransitionGenerator schemaTransitionGenerator = new SchemaTransitionGenerator( ProviderFactory, ndoConn.Type, this.mappings );
 			MemoryStream ms = new MemoryStream();
 			StreamWriter sw = new StreamWriter(ms, System.Text.Encoding.UTF8);
 			bool hasChanges = false;

@@ -1,5 +1,5 @@
 ﻿//
-// Copyright (c) 2002-2022 Mirko Matytschak 
+// Copyright (c) 2002-2024 Mirko Matytschak 
 // (www.netdataobjects.de)
 //
 // Author: Mirko Matytschak
@@ -23,7 +23,6 @@
 using System;
 using System.Data;
 using NDO.Mapping;
-using NDO;
 using NDOInterfaces;
 
 namespace NDOEnhancer
@@ -33,15 +32,16 @@ namespace NDOEnhancer
 	/// </summary>
 	internal class GenericSqlGenerator : GenericSqlGeneratorBase
 	{
+        private readonly IProvider provider;
 
-		public GenericSqlGenerator(ISqlGenerator concreteGenerator, MessageAdapter messages, NDO.Mapping.NDOMapping mappings) : base(concreteGenerator, messages, mappings)
+        public GenericSqlGenerator(IProvider provider, ISqlGenerator concreteGenerator, MessageAdapter messages, NDOMapping mappings) 
+			: base(provider, concreteGenerator, messages, mappings)
 		{
-		}
+            this.provider = provider;
+        }
 
 		public void Generate(DataSet dsSchema, DataSet dsOld, System.IO.StreamWriter stream, TypeManager typeManager, bool generateConstraints)
-		{
-			IProvider provider = EnhancerProviderFactory.Instance[concreteGenerator.ProviderName];
-
+		{			
 			if ( dsOld != null )
 			{
 				foreach ( DataTable dt in dsOld.Tables )
