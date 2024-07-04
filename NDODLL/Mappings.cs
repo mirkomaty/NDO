@@ -23,6 +23,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
 using NDO.Mapping;
 using NDOInterfaces;
@@ -49,15 +50,24 @@ namespace NDO
 			{
 				((IFieldInitializer) c).InitFields();
 			}
+
 			// New loop, because we need the SystemType entries of all classes
 			foreach ( Class c in Classes )
 			{
 				c.ComputeRelationOrdinalBase();
+				var ordinal = c.RelationOrdinalBase;
 				foreach ( Relation r in c.Relations )
 				{
-					((IFieldInitializer) r).InitFields();
+					var fieldInitializer = (IFieldInitializer) r;
+
+					if (ordinal > 63)
+						throw new NDOException( 18, $"Class {c.FullName} has too much relations. Relation count: {c.Relations.Count()}" );
+
+					r.Ordinal = ordinal++;
+                    fieldInitializer.InitFields();
 				}
 			}
+
 			// New loop, we need all relations initialized
 			foreach ( Class c in Classes )
 			{

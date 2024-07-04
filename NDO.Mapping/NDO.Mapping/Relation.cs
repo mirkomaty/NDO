@@ -243,7 +243,7 @@ namespace NDO.Mapping
         /// <summary>
         /// For accessing the relation load state in the objects
         /// </summary>
-        internal int Ordinal;
+        internal int Ordinal { get; set; }
 
         private bool foreignRelationValid;
         private Relation foreignRelation;
@@ -475,19 +475,6 @@ namespace NDO.Mapping
             get { return ForeignRelation != null; }
         }
 
-        internal void GetOrdinal()
-        {
-#if nix
-            System.Diagnostics.Debug.Assert(this.Parent.RelationOrdinalBase > -1, "RelationOrdinalBase for type " + Parent.FullName + " not computed");
-            Type t = Type.GetType(this.Parent.FullName + ", " + this.Parent.AssemblyName);
-            IMetaClass2 mc = Metaclasses.GetClass(t);
-            Ordinal = this.Parent.RelationOrdinalBase + mc.GetRelationOrdinal(this.FieldName);
-            if (Ordinal > 63)
-                throw new NDOException(18, "Class " + Parent.FullName + " has too much relations.");
-#endif
-            throw new NotImplementedException();
-        }
-
         Class RelatedClass
         {
             get
@@ -499,12 +486,14 @@ namespace NDO.Mapping
             }
         }
 
+        void IFieldInitializer.SetOrdinal( int ordinal )
+        {
+            Ordinal = ordinal;
+        }
+
         void IFieldInitializer.InitFields()
         {
             bool isEnhancing = ((IEnhancerSupport)Parent.Parent).IsEnhancing;
-
-            if (!isEnhancing)
-                GetOrdinal();
 
             Class relatedClass = this.RelatedClass;
 

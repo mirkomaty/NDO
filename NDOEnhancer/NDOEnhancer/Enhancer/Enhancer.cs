@@ -364,6 +364,9 @@ namespace NDOEnhancer
             {
                 foreach (Relation r in cl.Relations)
                 {
+					// There should be some code to remap foreign key columns based on
+					// attributes. But it causes problems, so we masked this code out
+					// and clarify the situation later.
                     /*
                      * 1. klären, ob ForeignKeyColumns oder ChildForeignKeyColumns relevant sind
                      *      - Multiplicity  Ist die schon bekannt?

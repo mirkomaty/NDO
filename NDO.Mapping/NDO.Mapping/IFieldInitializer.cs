@@ -35,5 +35,11 @@ namespace NDO
         /// Called the NDO framework to initialize some state variables.
         /// </summary>
         void InitFields();
+
+        /// <summary>
+        /// Sets a value which can be used as an index to the Relation Load State array.
+        /// </summary>
+        /// <param name="ordinal"></param>
+        void SetOrdinal( int ordinal );
     }
 }

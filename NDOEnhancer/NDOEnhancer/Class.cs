@@ -270,7 +270,6 @@ namespace NDOEnhancer.Patcher
 			addFieldAccessors();
 			patchConstructor();
 			addMethods();
-			addMetaClass();
 		}
 
 
@@ -870,36 +869,6 @@ namespace NDOEnhancer.Patcher
 		string createNDOException()
 		{
 			return "newobj instance void [NDOInterfaces]NDO.NDOException::.ctor(int32, string)";
-		}
-
-		void addGetOrdinal(ILClassElement metaClass)
-		{
-			ILMethodElement methodElement = new ILMethodElement();
-			methodElement.AddLine( ".method public hidebysig virtual instance int32 GetRelationOrdinal(string fieldName) cil managed" );
-
-			methodElement.addStatement(".maxstack  4");
-			addLocalVariable(methodElement, "result", "int32");
-			foreach(ILReference r in m_references)
-			{
-				methodElement.addStatement(ldarg_1);
-				methodElement.addStatement(@"ldstr      """ + r.CleanName + @"""");
-				methodElement.addStatement($"call       bool {Corlib.Name}System.String::op_Equality(string,string)");
-				methodElement.addStatement("brfalse.s  notthis" + r.Ordinal.ToString());
-				methodElement.addStatement(loadIntConst(r.Ordinal));
-				methodElement.addStatement("stloc.0");
-				methodElement.addStatement("br       exit");
-				methodElement.addStatement("notthis" + r.Ordinal.ToString() + ":");
-			}
-			methodElement.addStatement(loadIntConst(20));
-			methodElement.addStatement(@"ldstr      ""GetRelationOrdinal: Can't find field " + m_refName + @".""");
-			methodElement.addStatement(ldarg_1);
-			methodElement.addStatement($"call       string {Corlib.Name}System.String::Concat(string,string)");
-			methodElement.addStatement(createNDOException());
-			methodElement.addStatement("throw");
-			methodElement.addStatement("exit:  ldloc.0");
-			methodElement.addStatement("ret");
-
-			metaClass.AddElement(methodElement);
 		}
 
 		void addLoadStateProperty()
@@ -2527,46 +2496,6 @@ namespace NDOEnhancer.Patcher
 				propEl.AddElement( new ILGetElement( ".get instance class [NDO]NDO.IPersistenceHandler " + m_nonGenericRefName + "::get_NDOHandler()" ) );
 				m_classElement.AddElement( propEl );
 			}
-		}
-
-
-
-		void addCreateObject(ILClassElement parent)
-		{
-			ILMethodElement newMethod = new ILMethodElement();
-			newMethod.AddLine( ".method public hidebysig virtual instance class [NDO]NDO.IPersistenceCapable CreateObject() cil managed" );
-			newMethod.AddElement(new ILMaxstackElement(".maxstack  1", newMethod));
-            if (!this.m_classElement.IsAbstract)
-                newMethod.AddElement(new ILStatementElement("newobj     instance void " + m_refName + "::.ctor()"));
-            else
-                newMethod.AddElement(new ILStatementElement("ldnull"));
-			newMethod.AddElement(new ILStatementElement("ret"));
-			parent.AddElement(newMethod);
-		}
-
-		void addMetaClassCtor(ILClassElement parent)
-		{
-
-			ILMethodElement newMethod = new ILMethodElement();
-			newMethod.AddLine( $".method public hidebysig specialname rtspecialname instance void .ctor(class {Corlib.Name}System.Type t) cil managed" );
-			newMethod.AddElement(new ILMaxstackElement(".maxstack  8", newMethod));
-			newMethod.AddElement( new ILStatementElement( ldarg_0 ) );
-			newMethod.AddElement( new ILStatementElement( ldarg_1 ) );
-			newMethod.AddElement(new ILStatementElement($"call       instance void [NDO]NDO.MetaclassBase::.ctor(class {Corlib.Name}System.Type)" ));
-			newMethod.AddElement(new ILStatementElement("ret"));
-			parent.AddElement(newMethod);
-		}
-
-
-		public void addMetaClass()
-		{
-			ILClassElement newClass = new ILClassElement();
-			newClass.AddLine( ".class auto ansi nested private beforefieldinit MetaClass " + this.m_classElement.GenericArguments );
-			newClass.AddLine( "extends [NDO]NDO.MetaclassBase" );
-			m_classElement.AddElement(newClass);
-			addMetaClassCtor(newClass);
-			addCreateObject(newClass);
-			addGetOrdinal(newClass);
 		}
 
         private string getGenericRefParameters()

@@ -208,10 +208,10 @@ namespace NDO.Mapping
         /// </summary>
         public bool IsAbstract = false;  // true for abstract classes and interfaces
 
-        private string[]            myColumns;                   // wird in InitFields angelegt
+        private string[]            myColumns;                  // wird in InitFields angelegt
         private IEnumerable<string> myEmbeddedTypes;            // wird in InitFields angelegt
-        internal int                RelationOrdinalBase = -1;   // wird in InitFields angelegt
-        internal IEnumerable<string>FKColumnNames;              // InitFields - collects all foreign key column names used in LoadState
+        internal int RelationOrdinalBase { get; set; } = -1;    // wird in InitFields angelegt
+        internal IEnumerable<string> FKColumnNames { get; set; }// InitFields - collects all foreign key column names used in LoadState
 		private bool?				hasEncryptedFields;
 
         /// <summary>
@@ -425,7 +425,13 @@ namespace NDO.Mapping
 			throw new NDOException( 117, $"InitFields: MemberInfo of the persistent field {FullName}.{memberInfo.Name} should be a FieldInfo or a PropertyInfo");
 		}
 
-		void IFieldInitializer.InitFields()
+
+        void IFieldInitializer.SetOrdinal( int ordinal )
+        {            
+            throw new NotImplementedException("This method is currently not used by the Class mapping");
+        }
+
+        void IFieldInitializer.InitFields()
         {
             this.systemType = Type.GetType(FullName + ", " + AssemblyName);
             if (this.systemType == null) throw new NDOException(22, "Can't load type: " + FullName + ", " + AssemblyName);

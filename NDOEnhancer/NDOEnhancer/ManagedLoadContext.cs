@@ -21,7 +21,7 @@ namespace NDOEnhancer
 		/// </summary>
 		/// <param name="assemblyName"></param>
 		/// <returns></returns>
-		protected override Assembly? Load( AssemblyName assemblyName )
+		protected override Assembly Load( AssemblyName assemblyName )
 		{
 			if (this.verboseMode)
 				Console.WriteLine($"ManagedLoadContext: Loading: {assemblyName}");

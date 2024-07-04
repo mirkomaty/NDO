@@ -253,6 +253,10 @@ namespace NDO.Mapping
             }
         }
 
+        void IFieldInitializer.SetOrdinal( int ordinal )
+        {
+            throw new NotImplementedException( "This method is currently not used by the ClassOid mapping" );
+        }
 
         void IFieldInitializer.InitFields()
         {
