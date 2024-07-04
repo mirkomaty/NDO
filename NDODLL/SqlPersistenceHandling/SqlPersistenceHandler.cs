@@ -499,7 +499,7 @@ namespace NDO.SqlPersistenceHandling
 					// This is a Firebird Hack because Fb doesn't set the row
 					if (dbex.Row == null)
 					{
-						foreach(DataRow r in rows)
+						foreach (DataRow r in rows)
 						{
 							if (r.RowState == DataRowState.Added ||
 								r.RowState == DataRowState.Modified)
@@ -509,10 +509,12 @@ namespace NDO.SqlPersistenceHandling
 							}
 						}
 					}
-					ConcurrencyError(dbex);
+					ConcurrencyError( dbex );
 				}
 				else
-					throw dbex;
+				{
+					throw;
+				}
 			}
             catch (System.Exception ex)
             {
@@ -561,7 +563,7 @@ namespace NDO.SqlPersistenceHandling
 				if (this.ConcurrencyError != null)
 					ConcurrencyError(dbex);
 				else
-					throw dbex;
+					throw;
 			}
 			catch (System.Exception ex)
 			{

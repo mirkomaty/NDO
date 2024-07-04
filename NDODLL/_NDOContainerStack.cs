@@ -33,7 +33,7 @@ namespace NDO
 	/// If you call any of the functions of this class, an immediate disfunction of the
 	/// NDO framework will occur.
 	/// </summary>
-	[CLSCompliant(false)]
+	//[CLSCompliant(false)]
 	public class _NDOContainerStack
 	{
 		private class Triple

@@ -27,7 +27,7 @@ namespace NDO
 		/// <summary>
 		/// Constructs an NDOTransactionScope object.
 		/// </summary>
-		/// <param name="pm"></param>
+		/// <param name="pmAccessor"></param>
 		public NDOTransactionScope( IPersistenceManagerAccessor pmAccessor )
 		{
 			IsolationLevel = IsolationLevel.ReadCommitted;

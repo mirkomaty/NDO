@@ -27,6 +27,7 @@ using NDO.Application;
 using NDO.Provider;
 using NDO.Query;
 using NDO.SqlPersistenceHandling;
+using NDOInterfaces;
 
 namespace NDO.Application
 {
@@ -64,6 +65,7 @@ namespace NDO.Application
 			services.AddScoped<IMappingsAccessor, MappingsAccessor>();
 			services.AddTransient<INDOTransactionScope, NDOTransactionScope>();
 			services.AddScoped<IPersistenceManagerAccessor, PersistenceManagerAccessor>();
+			services.AddSingleton<INDOProviderFactory>( NDOProviderFactory.Instance );
 		}
 
 		/// <summary>

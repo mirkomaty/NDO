@@ -29,6 +29,7 @@ using System.Reflection;
 using NDO.Application;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using NDOInterfaces;
 
 namespace NDO
 {
@@ -55,6 +56,29 @@ namespace NDO
 		protected ILogger Logger { get; set; }
 		private IPersistenceHandlerManager persistenceHandlerManager;
 		bool isClosing = false;
+		private INDOProviderFactory providerFactory;
+		private INDOProviderFactory ProviderFactory
+		{
+			get
+			{
+				if (this.providerFactory == null)
+				{
+					var serviceProvider = NDOApplication.ServiceProvider;
+
+					if (serviceProvider != null && serviceProvider.GetService<INDOProviderFactory>() != null)
+					{
+						this.providerFactory = serviceProvider.GetService<INDOProviderFactory>();
+					}
+					else
+					{
+						this.providerFactory = NDOProviderFactory.Instance;
+					}
+				}
+
+				return this.providerFactory;
+			} 
+		}
+
 
 		/// <summary>
 		/// If set to true, the resultset of each query is stored, so that results of an identical query 
@@ -145,7 +169,8 @@ namespace NDO
 		{
 			if (!File.Exists(mappingPath))
 				throw new NDOException(45, String.Format("Mapping File {0} doesn't exist.", mappingPath));
-			Init( new Mappings( mappingPath ) );
+
+			Init( new Mappings( mappingPath, ProviderFactory ) );
 		}
 
 		/// <summary>

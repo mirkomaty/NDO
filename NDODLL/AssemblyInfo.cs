@@ -23,6 +23,6 @@
 using System;
 using System.Security;
 
-[assembly: CLSCompliant( true )]
+//[assembly: CLSCompliant( true )]
 [assembly: AllowPartiallyTrustedCallers]
 [assembly: SecurityRules( SecurityRuleSet.Level1 )]

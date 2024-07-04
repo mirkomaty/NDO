@@ -41,7 +41,7 @@ namespace NDO
     /// All managed dllsin the base directory of the running AppDomain
     /// will be scanned for implementations of the IProvider interface.
     /// </remarks>
-    public class NDOProviderFactory
+    public class NDOProviderFactory : INDOProviderFactory
     {
 		private static readonly object lockObject = new object();
         private static readonly NDOProviderFactory factory = new NDOProviderFactory();
