@@ -3638,8 +3638,7 @@ namespace NDO
 				IPersistenceCapable pc = cache.GetObject(id);                
 				if(pc == null) 
 				{
-                    var mc = Metaclasses.GetClass(concreteType);
-                    pc = mc.CreateObject( this.ServiceProvider );
+                    pc = CreateObject( concreteType );
                     pc.NDOObjectId = id;
 					pc.NDOStateManager = sm;
 					// If the object shouldn't be hollow, this will be overwritten later.

@@ -24,12 +24,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.IO;
 using System.Data;
+using NDOInterfaces;
 using NDO.Mapping;
-using System.Reflection;
 using NDO.Application;
+using NDO.SchemaGenerator;
+using System.Reflection;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using NDOInterfaces;
 
 namespace NDO
 {
@@ -65,12 +66,13 @@ namespace NDO
 				{
 					var serviceProvider = NDOApplication.ServiceProvider;
 
-					if (serviceProvider != null && serviceProvider.GetService<INDOProviderFactory>() != null)
+					if (serviceProvider != null)
 					{
 						this.providerFactory = serviceProvider.GetService<INDOProviderFactory>();
 					}
-					else
-					{
+
+                    if (this.providerFactory == null)
+                    {
 						this.providerFactory = NDOProviderFactory.Instance;
 					}
 				}
@@ -139,11 +141,11 @@ namespace NDO
         /// Constructs a PersistenceManagerBase object using the path to a mapping file.
         /// </summary>
         /// <param name="scopedServiceProvider">An IServiceProvider instance, which represents a scope (e.g. a request in an AspNet application)</param>
-        /// <param name="mappingFile"></param>
-        public PersistenceManagerBase(string mappingFile, IServiceProvider scopedServiceProvider)
+        /// <param name="pathToMappingFile"></param>
+        public PersistenceManagerBase(string pathToMappingFile, IServiceProvider scopedServiceProvider)
 		{
 			this.scopedServiceProvider = scopedServiceProvider;
-			Init(mappingFile);
+			Init(pathToMappingFile);
 		}
 
         /// <summary>
@@ -191,7 +193,7 @@ namespace NDO
 			var scopedMappingsAccessor = ServiceProvider.GetRequiredService<IMappingsAccessor>();
 			scopedMappingsAccessor.Mappings = mappings;
 
-			this.ds = new NDODataSet( this.mappings );  // Each PersistenceManager instance must have it's own DataSet.
+			this.ds = new NDODataSet( this.mappings, ProviderFactory );  // Each PersistenceManager instance must have it's own DataSet.
 		}
 
 		/// <summary>

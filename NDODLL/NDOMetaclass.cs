@@ -1,4 +1,5 @@
-﻿using System;
+﻿#if nix
+using System;
 
 namespace NDO
 {
@@ -30,3 +31,4 @@ namespace NDO
 		}
 	}
 }
+#endif
