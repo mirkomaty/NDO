@@ -1,5 +1,5 @@
 ﻿//
-// Copyright (c) 2002-2016 Mirko Matytschak 
+// Copyright (c) 2002-2024 Mirko Matytschak 
 // (www.netdataobjects.de)
 //
 // Author: Mirko Matytschak
@@ -21,18 +21,16 @@
 
 
 using System;
-using System.IO;
-using System.Reflection;
 using NDO.Mapping;
-using NDO;
+using NDOInterfaces;
 
-namespace NDO
+namespace NDO.SchemaGenerator
 {
-	/// <summary>
-	/// This class is used by the NDO Enhancer.
-	/// </summary>
-	public class NDODataSet : System.Data.DataSet, ICloneable
-	{
+    /// <summary>
+    /// This class is used by the NDO Enhancer.
+    /// </summary>
+    public class NDODataSet : System.Data.DataSet, ICloneable
+    {
         /// <summary>
         /// Constructs an uninitialized NDODataSet object. Needed by Clone() and the Enhancer.
         /// </summary>
@@ -40,58 +38,60 @@ namespace NDO
         {
         }
 
-		/// <summary>
-		/// Creates a NDODataSet object from an Xml Schema.
-		/// </summary>
-		/// <param name="path"></param>
-        public NDODataSet(String path)
-		{
-			this.ReadXmlSchema(path);
-			this.EnforceConstraints = false;
-		}
+        /// <summary>
+        /// Creates a NDODataSet object from an Xml Schema.
+        /// </summary>
+        /// <param name="path"></param>
+        public NDODataSet( String path )
+        {
+            this.ReadXmlSchema( path );
+            this.EnforceConstraints = false;
+        }
 
-		/// <summary>
-		/// Creates a NDODataSet object from a mapping file. 
+        /// <summary>
+        /// Creates a NDODataSet object from a mapping file. 
         /// Note: The mapping file must be initialized, all assemblies of all mapped types must be loadable. 
         /// This constructor works with NDOMapping objects returned by the PersistenceManager.NDOMapping property.
-		/// </summary>
+        /// </summary>
         /// <param name="mapping">A NDOMapping object.</param>
-        public NDODataSet(NDOMapping mapping)
-		{
-            Remap(mapping);
-		}
+        /// <param name="providerFactory">The provider factory</param>
+        public NDODataSet( NDOMapping mapping, INDOProviderFactory providerFactory )
+        {
+            Remap( mapping, providerFactory );
+        }
 
         /// <summary>
         /// Used by the NDO Enhancer. Makes sure, that all classes of a certain mapping file 
         /// are represented in the schema.
         /// </summary>
         /// <param name="mapping">A NDOMapping object.</param>
-        internal void Remap(NDOMapping mapping)
+        /// <param name="providerFactory">The provider factory</param>
+        internal void Remap( NDOMapping mapping, INDOProviderFactory providerFactory )
         {
             foreach (Class cl in mapping.Classes)
             {
                 if (cl.IsAbstract)
                     continue;
-                new SchemaGenerator(cl, mapping, this).GenerateTables();
+                new SchemaGenerator( providerFactory, cl, mapping, this ).GenerateTables();
             }
             foreach (Class cl in mapping.Classes)
             {
                 if (cl.IsAbstract)
                     continue;
-                new SchemaGenerator(cl, mapping, this).GenerateRelations();
+                new SchemaGenerator( providerFactory, cl, mapping, this ).GenerateRelations();
             }
             this.EnforceConstraints = false;
         }
 
 
-		#region ICloneable Member
+        #region ICloneable Member
 
         ///<inheritdoc/>
-		public new object Clone()
-		{
-			return base.Clone();
-		}
+        public new object Clone()
+        {
+            return base.Clone();
+        }
 
-		#endregion
-	}
+        #endregion
+    }
 }
