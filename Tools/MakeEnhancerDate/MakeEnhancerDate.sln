@@ -1,8 +1,9 @@
+﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
-VisualStudioVersion = 17.0.32014.148
+VisualStudioVersion = 17.12.35707.178 d17.12
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MakeEnhancerDate", "MakeEnhancerDate.csproj", "{330DB362-3A9B-4663-BED6-F94FF9F26D36}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MakeEnhancerDate", "MakeEnhancerDate.csproj", "{6588BC44-8F73-41D2-91F3-D7EA682BAD03}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -10,15 +11,12 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{330DB362-3A9B-4663-BED6-F94FF9F26D36}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{330DB362-3A9B-4663-BED6-F94FF9F26D36}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{330DB362-3A9B-4663-BED6-F94FF9F26D36}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{330DB362-3A9B-4663-BED6-F94FF9F26D36}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6588BC44-8F73-41D2-91F3-D7EA682BAD03}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6588BC44-8F73-41D2-91F3-D7EA682BAD03}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6588BC44-8F73-41D2-91F3-D7EA682BAD03}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6588BC44-8F73-41D2-91F3-D7EA682BAD03}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
-	EndGlobalSection
-	GlobalSection(ExtensibilityGlobals) = postSolution
-		SolutionGuid = {08A50708-A21A-45DC-B571-32AB5CF133F9}
 	EndGlobalSection
 EndGlobal
