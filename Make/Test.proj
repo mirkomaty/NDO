@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+	<!-- You need to adjust these values, otherwise the build will not work -->
+	<PropertyGroup Label="Adjustable properties">
+		<NDO_DIR>..</NDO_DIR>
+		<Version>5.0.0</Version>
+		<!-- 
+			NDO generates packages which should be present in the package source
+			during the build process.
+			This folder should be defined as package source in Visual Studio.
+		-->
+		<PackageSourceFolder>$(NDO_DIR)\BuiltPackages</PackageSourceFolder>
+	</PropertyGroup>
+	
+  <PropertyGroup>
+	<Configuration Condition="'$(Configuration)'==''">Release</Configuration>
+	<Platform>AnyCPU</Platform>
+	<PackagesDir>$(userprofile)\.nuget\packages</PackagesDir>
+  
+	<MAKE_DIR>$(NDO_DIR)\Make</MAKE_DIR>
+	<NDO_DLL>$(NDO_DIR)\bin\Release\NDO.dll</NDO_DLL>
+	<MAP_DIR>$(NDO_DIR)\SimpleMappingTool</MAP_DIR>
+	<GEN_DIR>$(NDO_DIR)\ClassGenerator</GEN_DIR>
+	<INTERF_DLL>$(NDO_DIR)\NDOInterfaces\bin\release\NDOInterfaces.dll</INTERF_DLL>
+  </PropertyGroup>
+	
+	<ItemGroup>
+		<PackProject Include="ndointerfaces"></PackProject>
+		<PackProject Include="ndo.dll"></PackProject>
+		<PackProject Include="ndo.core"></PackProject>
+		<PackProject Include="ndo.mapping"></PackProject>
+		<PackProject Include="ndo.jsonformatter"></PackProject>
+		<PackProject Include="ndo.providerfactory"></PackProject>
+		<PackProject Include="ndo.schemagenerator"></PackProject>
+	</ItemGroup>
+	
+	<Target Name="DeletePackages" BeforeTargets="CreatePackageDir">
+		<RemoveDir Condition="Exists('$(PackagesDir)\%(PackProject.Identity)\$(Version)')" Directories="$(PackagesDir)\%(PackProject.Identity)\$(Version)" />
+	</Target>
+	
+	<Target Name="CreatePackageDir" BeforeTargets="Build">
+		<MakeDir Condition="!Exists('$(PackageSourceFolder)')" Directories="$(PackageSourceFolder)" />
+	</Target>
+	<Target Name="RestoreMsg" BeforeTargets="Restore">
+		<Message Text="$(Lala)"></Message>
+	</Target>
+
+		<Target Name="Build">
+	  <Message Text="Build..."></Message>
+  </Target>
+  
+</Project>
