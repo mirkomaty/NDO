@@ -10,7 +10,7 @@
   </PropertyGroup>
 
   <Target Name="PrepareEnhDate" BeforeTargets="PrepareForBuild">
-    <Exec Command="..\..\MakeEnhancerDate\bin\Release\MakeEnhancerDate.exe &gt; EnhDate.cs" />
+    <Exec Command="..\..\Tools\MakeEnhancerDate\bin\Release\net8.0\MakeEnhancerDate.exe &gt; EnhDate.cs" />
   </Target>
 
 	<Target Name="CopyILDasm" AfterTargets="PrepareForBuild">

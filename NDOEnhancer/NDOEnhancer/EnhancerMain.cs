@@ -116,7 +116,16 @@ namespace NDOEnhancer
 				Console.WriteLine( "Domain base directory is: " + AppDomain.CurrentDomain.BaseDirectory );
 			}
 #endif
-				Console.WriteLine( EnhDate.String, "NDO Enhancer", new AssemblyName( GetType().Assembly.FullName ).Version.ToString() );
+			// We should consider using the following code to determine the version:
+			//public static string? GetInformationalVersion() =>
+			//	Assembly
+			//		.GetEntryAssembly()
+			//		?.GetCustomAttribute<AssemblyInformationalVersionAttribute>()
+			//		?.InformationalVersion;
+			// The PatchNdoVersion tool is able to enter the informational version.
+
+
+			Console.WriteLine( EnhDate.String, "NDO Enhancer", new AssemblyName( GetType().Assembly.FullName ).Version.ToString() );
 
             if (options.EnableEnhancer)
 			    this.projectDescription.References.Add(projectDescription.AssemblyName, new NDOReference(projectDescription.AssemblyName, projectDescription.BinFile, true));

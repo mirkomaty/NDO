@@ -7,7 +7,8 @@
 		<!-- 
 			NDO generates packages which should be present in the package source
 			during the build process.
-			This folder should be defined as package source in Visual Studio.
+			The PackageSourceFolder folder should be defined as 
+			package source in Visual Studio.
 		-->
 		<PackageSourceFolder>$(NDO_DIR)\BuiltPackages</PackageSourceFolder>
 	</PropertyGroup>
@@ -18,11 +19,15 @@
 	<PackagesDir>$(userprofile)\.nuget\packages</PackagesDir>
   
 	<MAKE_DIR>$(NDO_DIR)\Make</MAKE_DIR>
-	<NDO_DLL>$(NDO_DIR)\bin\Release\NDO.dll</NDO_DLL>
+	<TOOLS_DIR>$(NDO_DIR)\Tools</TOOLS_DIR>
 	<MAP_DIR>$(NDO_DIR)\SimpleMappingTool</MAP_DIR>
 	<GEN_DIR>$(NDO_DIR)\ClassGenerator</GEN_DIR>
-	<INTERF_DLL>$(NDO_DIR)\NDOInterfaces\bin\release\NDOInterfaces.dll</INTERF_DLL>
   </PropertyGroup>
+
+	<ItemGroup>
+		<Tools Include="$(TOOLS_DIR)\MakeEnhancerDate\MakeEnhancerDate.csproj" />	
+		<Tools Include="$(TOOLS_DIR)\PatchNdoVersion\PatchNdoVersion.csproj" />	
+	</ItemGroup>
 	
 	<ItemGroup>
 		<PackProject Include="ndointerfaces"></PackProject>
@@ -34,8 +39,17 @@
 		<PackProject Include="ndo.schemagenerator"></PackProject>
 	</ItemGroup>
 	
+	<ItemGroup>
+		<ProjectsToPatch Include="$(NDO_DIR)\NDOInterfaces\NDOInterfaces.csproj" ></ProjectsToPatch>
+		<ProjectsToPatch Include="$(NDO_DIR)\NDODLL\NDO.csproj" ></ProjectsToPatch>
+	</ItemGroup>
+	
 	<Target Name="DeletePackages" BeforeTargets="CreatePackageDir">
 		<RemoveDir Condition="Exists('$(PackagesDir)\%(PackProject.Identity)\$(Version)')" Directories="$(PackagesDir)\%(PackProject.Identity)\$(Version)" />
+	</Target>
+	
+	<Target Name="PatchNdoVersion" AfterTargets="DeletePackages">
+		<Exec Command="$(TOOLS_DIR)\PatchNdoVersion\bin\Release\net8.0\PatchNdoVersion"
 	</Target>
 	
 	<Target Name="CreatePackageDir" BeforeTargets="Build">
@@ -45,8 +59,9 @@
 		<Message Text="$(Lala)"></Message>
 	</Target>
 
-		<Target Name="Build">
-	  <Message Text="Build..."></Message>
-  </Target>
+	<Target Name="Build">
+		<Message Text="Build..."></Message>
+	  	<MSBuild Projects="@(Tools)" BuildInParallel="True" Targets="Rebuild" Properties="Configuration=Release;Platform=AnyCPU" />
+	</Target>
   
 </Project>

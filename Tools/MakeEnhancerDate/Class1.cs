@@ -49,7 +49,7 @@ namespace MakeEnhancerDate
 				gitDir = Path.Combine( ndoRootPath, ".git" );
 			} while (!Directory.Exists( gitDir ));
 
-				string head = null;
+			string? head = null;
 			char[] buf = new char[7];
 			using (StreamReader sr = new StreamReader( Path.Combine( gitDir, "HEAD" ) ))
 			{
@@ -57,7 +57,7 @@ namespace MakeEnhancerDate
 				head = sr.ReadToEnd().Trim();
 			}
 
-			var refHeadPath = Path.Combine( gitDir, head.Replace( "/", "\\" ) );
+			var refHeadPath = Path.Combine( gitDir, head!.Replace( "/", "\\" ) );
 			if (!File.Exists( refHeadPath ))
 				throw new Exception( "Ref head doesn't exist: " + refHeadPath );
 

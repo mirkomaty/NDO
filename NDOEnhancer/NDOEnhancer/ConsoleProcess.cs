@@ -26,6 +26,7 @@ using System.Globalization;
 using System.IO;
 using System.Threading;
 using System.Diagnostics;
+using System.Threading.Tasks;
 
 namespace NDOEnhancer
 {
@@ -34,8 +35,6 @@ namespace NDOEnhancer
 	/// </summary>
 	public class ConsoleProcess
 	{
-		StreamReader outReader;
-		StreamReader errReader;
 		string stdout = string.Empty;
         bool verboseMode;
 
@@ -80,32 +79,17 @@ namespace NDOEnhancer
 			//psi.StandardErrorEncoding = Encoding.GetEncoding( codePage );
 			//psi.StandardOutputEncoding = Encoding.GetEncoding( codePage );
 
-			System.Diagnostics.Process proc = System.Diagnostics.Process.Start( psi );
+			Process proc = Process.Start( psi );
 
-			this.errReader = proc.StandardError;
-			this.outReader = proc.StandardOutput;
+			var tasks = new Task[3];
 
-			Thread threadOut = new Thread(new ThreadStart(ReadStdOut));
-			Thread threadErr = new Thread(new ThreadStart(ReadStdErr));
-			threadOut.Start();
-			threadErr.Start();
-			proc.WaitForExit();
-			while (threadOut.ThreadState != System.Threading.ThreadState.Stopped
-				|| threadErr.ThreadState != System.Threading.ThreadState.Stopped)
-				Thread.Sleep(1);
+			tasks[0] = proc.StandardError.ReadToEndAsync();
+			tasks[1] = proc.StandardOutput.ReadToEndAsync();
+			tasks[3] = proc.WaitForExitAsync();
+
+			Task.WaitAll( tasks );
 			return proc.ExitCode;
 		}
-
-		void ReadStdOut()
-		{
-			stdout = outReader.ReadToEnd();
-		}
-
-		void ReadStdErr()
-		{
-			stderr = errReader.ReadToEnd();
-		}
-
 
 	}
 }

@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "PatchNdoVersion": {
+      "commandName": "Project",
+      "commandLineArgs": "\"C:\\Projekte\\NDO5\\NDODLL\\NDO - Kopie.csproj\" 5.1.0"
+    }
+  }
+}
