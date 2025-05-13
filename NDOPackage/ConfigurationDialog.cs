@@ -30,6 +30,7 @@ using System.Diagnostics;
 using Microsoft.VisualStudio.ComponentModelHost;
 using NuGet.VisualStudio;
 using NDO.UISupport;
+using System.Drawing;
 
 #pragma warning disable VSTHRD010 // Invoke single-threaded types on Main thread
 
@@ -92,6 +93,8 @@ namespace NDOVsPackage
 				this.projectDescription.BuildReferences();
 				this.projectDescription.FixDllState();
 				InitializeComponent();
+				if (Screen.FromControl( this ).Bounds.Width >= 2600)
+					Font = new Font( "Segoe UI", 11f, FontStyle.Regular, GraphicsUnit.Point, 0 );
 				var lbAssemblies = (ListBox)this.chlbAssemblies;
 				this.references = projectDescription.References.Values.ToArray();
 				lbAssemblies.DataSource = this.references;
@@ -571,10 +574,11 @@ namespace NDOVsPackage
             this.btnCancel.Size = new System.Drawing.Size(100, 39);
             this.btnCancel.TabIndex = 35;
             this.btnCancel.Text = "Cancel";
-            // 
-            // ConfigurationDialog
-            // 
-            this.AutoScaleBaseSize = new System.Drawing.Size(5, 13);
+			// 
+			// ConfigurationDialog
+			// 
+			this.AutoScaleMode = AutoScaleMode.Font;
+			this.AutoScaleBaseSize = new System.Drawing.Size(5, 13);
             this.CancelButton = this.btnCancel;
             this.ClientSize = new System.Drawing.Size(661, 439);
             this.Controls.Add(this.btnSaveAs);

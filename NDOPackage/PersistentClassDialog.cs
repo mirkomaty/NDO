@@ -57,9 +57,8 @@ namespace NDOVsPackage
 			//
 			InitializeComponent();
 
-			//
-			// TODO: Fügen Sie den Konstruktorcode nach dem Aufruf von InitializeComponent hinzu
-			//
+			if (Screen.FromControl( this ).Bounds.Width >= 2600)
+				Font = new Font( "Segoe UI", 11f, FontStyle.Regular, GraphicsUnit.Point, 0 );
 		}
 
 		/// <summary>
@@ -140,6 +139,7 @@ namespace NDOVsPackage
 			// 
 			this.AcceptButton = this.btnOK;
 			this.AutoScaleBaseSize = new System.Drawing.Size(6, 15);
+			this.AutoScaleMode = AutoScaleMode.Font;
 			this.CancelButton = this.btnCancel;
 			this.ClientSize = new System.Drawing.Size(440, 208);
 			this.Controls.Add(this.chkSerializable);
