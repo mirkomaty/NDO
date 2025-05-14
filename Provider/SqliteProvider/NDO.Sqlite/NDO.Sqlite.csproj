@@ -1,5 +1,6 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project Sdk="Microsoft.NET.Sdk">
-
+  <Import Project="SourceRevisionId.props" Condition="Exists('SourceRevisionId.props')" />
   <PropertyGroup>
     <TargetFrameworks>netstandard2.0;netstandard2.1;net6.0;net8.0</TargetFrameworks>
     <Version>5.0.0</Version>
@@ -14,12 +15,11 @@
     <PackageReleaseNotes>Add System.Data.Sqlite.Core to the dependencies</PackageReleaseNotes>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <AssemblyVersion>5.0.0.0</AssemblyVersion>
+    <FileVersion>5.0.0.0</FileVersion>
   </PropertyGroup>
-
   <ItemGroup>
     <PackageReference Include="NDOInterfaces" Version="5.0.0" />
     <PackageReference Include="System.Data.SQLite.Core.MSIL" Version="1.0.118" />
     <PackageReference Include="System.Data.SQLite.Core" Version="1.0.118" />
   </ItemGroup>
- 
 </Project>

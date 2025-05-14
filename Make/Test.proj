@@ -2,7 +2,7 @@
 <Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
 	<!-- You need to adjust these values, otherwise the build will not work -->
 	<PropertyGroup Label="Adjustable properties">
-		<NDO_DIR>..</NDO_DIR>
+		<NDO_DIR>$([System.IO.Path]::GetFullPath('$(MSBuildProjectDirectory)\..'))</NDO_DIR>
 		<Version>5.0.0</Version>
 		<!-- 
 			NDO generates packages which should be present in the package source
@@ -38,6 +38,30 @@
 		<PackProject Include="ndo.providerfactory"></PackProject>
 		<PackProject Include="ndo.schemagenerator"></PackProject>
 	</ItemGroup>
+
+	<ItemGroup>
+		<Project Include="$(NDO_DIR)\NDOInterfaces\NDOInterfaces.csproj" />
+		<Project Include="$(NDO_DIR)\NDODLL\NDO.csproj" />
+		<Project Include="$(NDO_DIR)\Provider\MySqlConnectorProvider\NDO.MySqlConnector\NDO.MySqlConnector.csproj" />
+		<Project Include="$(NDO_DIR)\Provider\MySqlNdoProvider\NDO.MySql\NDO.MySql.csproj" />
+		<Project Include="$(NDO_DIR)\Provider\OracleProvider\NDO.Oracle\NDO.Oracle.csproj" />
+		<Project Include="$(NDO_DIR)\Provider\SqliteProvider\NDO.Sqlite\NDO.Sqlite.csproj" />
+		<Project Include="$(NDO_DIR)\Provider\SqlServerProvider\NDO.Sqlserver\NDO.Sqlserver.csproj" />
+		<Project Include="$(NDO_DIR)\Provider\PostgresProvider\NDO.Postgre\NDO.Postgre.csproj" />
+
+		<!--Project Include="..\Provider\MySqlNdoProvider\MySqlUISupport\MySqlUISupport.csproj" />
+		<Project Include="$(NDO_DIR)\UISupport\NDO.UISupport\NDO.UISupport.csproj" />
+		<Project Include="..\Provider\MySqlConnectorProvider\MySqlConnectorUISupport\MySqlConnectorUISupport.csproj" />
+		<Project Include="..\Provider\OracleProvider\OracleUISupport\OracleUISupport.csproj" />
+		<Project Include="..\Provider\SqliteProvider\SqliteUISupport\SqliteUISupport.csproj" />
+		<Project Include="..\Provider\SqlServerProvider\SqlServerUISupport\SqlServerUISupport.csproj" />
+		<Project Include="..\Provider\PostgresProvider\PostgresUISupport\PostgresUISupport.csproj" />
+
+		<Project Include="..\SimpleMappingTool\Mapping.csproj" />
+		<Project Include="..\NDOPackage\NDOPackage.csproj" />
+		<Project Include="..\NDOEnhancer\NDOEnhancer\NDOEnhancer.csproj" />
+		<Project Include="..\NDOEnhancer.BuildTask\NDOEnhancer.BuildTask\NDOEnhancer.BuildTask.csproj" -->
+	</ItemGroup>	
 	
 	<ItemGroup>
 		<ProjectsToPatch Include="$(NDO_DIR)\NDOInterfaces\NDOInterfaces.csproj" ></ProjectsToPatch>
@@ -47,21 +71,29 @@
 	<Target Name="DeletePackages" BeforeTargets="CreatePackageDir">
 		<RemoveDir Condition="Exists('$(PackagesDir)\%(PackProject.Identity)\$(Version)')" Directories="$(PackagesDir)\%(PackProject.Identity)\$(Version)" />
 	</Target>
-	
-	<Target Name="PatchNdoVersion" AfterTargets="DeletePackages">
-		<Exec Command="$(TOOLS_DIR)\PatchNdoVersion\bin\Release\net8.0\PatchNdoVersion"
-	</Target>
-	
-	<Target Name="CreatePackageDir" BeforeTargets="Build">
+
+	<Target Name="CreatePackageDir" BeforeTargets="BuildTools">
 		<MakeDir Condition="!Exists('$(PackageSourceFolder)')" Directories="$(PackageSourceFolder)" />
 	</Target>
+
+	<Target Name="BuildTools" BeforeTargets="PatchNdoVersion">
+		<Message Text="Build Tools..."></Message>
+		<MSBuild Projects="@(Tools)" BuildInParallel="True" Targets="Rebuild" Properties="Configuration=Release;Platform=AnyCPU" />
+	</Target>
+
+	<Target Name="PatchNdoVersion" BeforeTargets="Build">
+		<Message Text="$(TOOLS_DIR)\PatchNdoVersion\bin\Release\net8.0\PatchNdoVersion %(Project.Identity) $(Version)"></Message>
+		<Exec Command="$(TOOLS_DIR)\PatchNdoVersion\bin\Release\net8.0\PatchNdoVersion %(Project.Identity) $(Version)" />
+	</Target>
+	
 	<Target Name="RestoreMsg" BeforeTargets="Restore">
 		<Message Text="$(Lala)"></Message>
 	</Target>
 
+
 	<Target Name="Build">
 		<Message Text="Build..."></Message>
-	  	<MSBuild Projects="@(Tools)" BuildInParallel="True" Targets="Rebuild" Properties="Configuration=Release;Platform=AnyCPU" />
+
 	</Target>
   
 </Project>

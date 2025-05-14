@@ -1,5 +1,6 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
-
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project Sdk="Microsoft.NET.Sdk">
+  <Import Project="SourceRevisionId.props" Condition="Exists('SourceRevisionId.props')" />
   <PropertyGroup>
     <TargetFrameworks>netstandard2.0;net6.0;net8.0</TargetFrameworks>
     <Version>5.0.0</Version>
@@ -13,16 +14,15 @@
     <PackageId>ndo.mysqlconnector</PackageId>
     <PackageReleaseNotes>NDO Provider for MySqlConnector</PackageReleaseNotes>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <AssemblyVersion>5.0.0.0</AssemblyVersion>
+    <FileVersion>5.0.0.0</FileVersion>
   </PropertyGroup>
-
   <ItemGroup>
     <PackageReference Include="NDOInterfaces" Version="5.0.0" />
   </ItemGroup>
-
   <ItemGroup>
     <PackageReference Include="MySqlConnector">
       <Version>2.3.7</Version>
     </PackageReference>
   </ItemGroup>
- 
 </Project>

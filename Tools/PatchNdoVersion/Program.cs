@@ -1,10 +1,18 @@
-﻿using System.Text.RegularExpressions;
+﻿using System.Text;
+using System.Text.RegularExpressions;
 using System.Xml.Linq;
 
 namespace PatchNdoVersion
 {
     internal class Program
     {
+		static readonly string sourceRevisionTemplate = @"<?xml version=""1.0"" encoding=""utf-8""?>
+<Project>
+  <PropertyGroup>
+    <SourceRevisionId>{0}</SourceRevisionId>
+  </PropertyGroup>
+</Project>";
+
         static int Main(string[] args)
         {
 			if (args.Length < 2)
@@ -48,9 +56,15 @@ namespace PatchNdoVersion
 				//FileVersion 5.0.0.0
 				//AssemblyVersion 5.0.0.0
 				//SourceRevisionId abc0123
+
+				var pgElement = project.Elements("PropertyGroup").First();
+				var element = pgElement.Element("Version");
+				if (element == null)
+					pgElement.Add( new XElement( "Version", version ) );
+
 				foreach (var pg in project.Elements("PropertyGroup"))
 				{
-					var element = pg.Element("Version");
+					element = pg.Element("Version");
 					if (element != null)  // We are in the right property group
 					{
 						hasVersionElement = true;
@@ -69,12 +83,6 @@ namespace PatchNdoVersion
 						else
 							pg.Add( new XElement( "FileVersion", longVersion ) );
 
-						var sourceRevisionId = pg.Element("SourceRevisionId");
-						if (sourceRevisionId != null)
-							sourceRevisionId.Value = revision;
-						else
-							pg.Add( new XElement( "SourceRevisionId", revision ) );
-
 						break;
 					}
 				}
@@ -83,6 +91,13 @@ namespace PatchNdoVersion
 					throw new Exception( "Project file. doesn't have a Version tag. Add a version tag to the first PropertyGroup element in the project file." );
 
 				doc.Save(projFile);
+
+				var sourceRevFile = Path.Combine( Path.GetDirectoryName(projFile)!, "SourceRevisionId.props" );
+				using (StreamWriter sw = new StreamWriter( sourceRevFile, false, Encoding.UTF8 ))
+				{
+					sw.Write( sourceRevisionTemplate.Replace( "{0}", revision ) );
+				}
+
 				return 0;
 			}
 			catch (Exception ex)

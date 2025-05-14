@@ -1,5 +1,6 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project Sdk="Microsoft.NET.Sdk">
-
+  <Import Project="SourceRevisionId.props" Condition="Exists('SourceRevisionId.props')" />
   <PropertyGroup>
     <TargetFrameworks>netstandard2.0;netstandard2.1;net6.0;net8.0</TargetFrameworks>
     <Version>5.0.0</Version>
@@ -13,16 +14,15 @@
     <PackageId>ndo.mysql</PackageId>
     <PackageReleaseNotes>Upgrade for NDO 5.0</PackageReleaseNotes>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <AssemblyVersion>5.0.0.0</AssemblyVersion>
+    <FileVersion>5.0.0.0</FileVersion>
   </PropertyGroup>
-
   <ItemGroup>
     <PackageReference Include="NDOInterfaces" Version="5.0.0" />
   </ItemGroup>
-
   <ItemGroup>
     <PackageReference Include="Mysql.data">
       <Version>8.3.0</Version>
     </PackageReference>
   </ItemGroup>
- 
 </Project>
