@@ -78,7 +78,7 @@
 
 	<Target Name="BuildTools" BeforeTargets="PatchNdoVersion">
 		<Message Text="Build Tools..."></Message>
-		<MSBuild Projects="@(Tools)" BuildInParallel="True" Targets="Rebuild" Properties="Configuration=Release;Platform=AnyCPU" />
+		<MSBuild Projects="@(Tools)" BuildInParallel="True" Targets="Build" Properties="Configuration=Release;Platform=AnyCPU" />
 	</Target>
 
 	<Target Name="PatchNdoVersion" BeforeTargets="Build">
@@ -93,7 +93,8 @@
 
 	<Target Name="Build">
 		<Message Text="Build..."></Message>
-
+		<MSBuild Projects="@(Project)" Targets="restore" />
+		<MSBuild Projects="@(Project)" Targets="Rebuild" Properties="Configuration=$(Configuration);Platform=$(Platform)" />
 	</Target>
   
 </Project>
