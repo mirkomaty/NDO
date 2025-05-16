@@ -21,10 +21,10 @@
     <DropExistingElements>True</DropExistingElements>
   </Options>
   <ProjectDescription version="5.0">
-    <BinPath>bin\Debug\$(TargetFramework)\PureBusinessClasses.dll</BinPath>
-    <ObjPath>obj\Debug\$(TargetFramework)\</ObjPath>
+    <BinPath>bin\Release\$(TargetFramework)\PureBusinessClasses.dll</BinPath>
+    <ObjPath>obj\Release\$(TargetFramework)\</ObjPath>
     <AssemblyName />
-    <Debug>True</Debug>
+    <Debug>False</Debug>
     <KeyFile />
     <References>
     </References>

@@ -29,6 +29,7 @@
 		<Tools Include="$(TOOLS_DIR)\PatchNdoVersion\PatchNdoVersion.csproj" />	
 	</ItemGroup>
 	
+	<!-- These are the names of packages beeing built for NDO -->
 	<ItemGroup>
 		<PackProject Include="ndointerfaces"></PackProject>
 		<PackProject Include="ndo.dll"></PackProject>
@@ -39,29 +40,39 @@
 		<PackProject Include="ndo.schemagenerator"></PackProject>
 	</ItemGroup>
 
+	<!--These are the projects using the classic .NET framework-->
 	<ItemGroup>
-		<Project Include="$(NDO_DIR)\NDOInterfaces\NDOInterfaces.csproj" />
-		<Project Include="$(NDO_DIR)\NDODLL\NDO.csproj" />
-		<Project Include="$(NDO_DIR)\Provider\MySqlConnectorProvider\NDO.MySqlConnector\NDO.MySqlConnector.csproj" />
-		<Project Include="$(NDO_DIR)\Provider\MySqlNdoProvider\NDO.MySql\NDO.MySql.csproj" />
-		<Project Include="$(NDO_DIR)\Provider\OracleProvider\NDO.Oracle\NDO.Oracle.csproj" />
-		<Project Include="$(NDO_DIR)\Provider\SqliteProvider\NDO.Sqlite\NDO.Sqlite.csproj" />
-		<Project Include="$(NDO_DIR)\Provider\SqlServerProvider\NDO.Sqlserver\NDO.Sqlserver.csproj" />
-		<Project Include="$(NDO_DIR)\Provider\PostgresProvider\NDO.Postgre\NDO.Postgre.csproj" />
+		<FwProject Include="..\Provider\MySqlNdoProvider\MySqlUISupport\MySqlUISupport.csproj" />
+		<!--FwProject Include="$(NDO_DIR)\UISupport\NDO.UISupport\NDO.UISupport.csproj" />
+		<FwProject Include="..\Provider\MySqlConnectorProvider\MySqlConnectorUISupport\MySqlConnectorUISupport.csproj" />
+		<FwProject Include="..\Provider\OracleProvider\OracleUISupport\OracleUISupport.csproj" />
+		<FwProject Include="..\Provider\SqliteProvider\SqliteUISupport\SqliteUISupport.csproj" />
+		<FwProject Include="..\Provider\SqlServerProvider\SqlServerUISupport\SqlServerUISupport.csproj" />
+		<FwProject Include="..\Provider\PostgresProvider\PostgresUISupport\PostgresUISupport.csproj" />
 
-		<!--Project Include="..\Provider\MySqlNdoProvider\MySqlUISupport\MySqlUISupport.csproj" />
-		<Project Include="$(NDO_DIR)\UISupport\NDO.UISupport\NDO.UISupport.csproj" />
-		<Project Include="..\Provider\MySqlConnectorProvider\MySqlConnectorUISupport\MySqlConnectorUISupport.csproj" />
-		<Project Include="..\Provider\OracleProvider\OracleUISupport\OracleUISupport.csproj" />
-		<Project Include="..\Provider\SqliteProvider\SqliteUISupport\SqliteUISupport.csproj" />
-		<Project Include="..\Provider\SqlServerProvider\SqlServerUISupport\SqlServerUISupport.csproj" />
-		<Project Include="..\Provider\PostgresProvider\PostgresUISupport\PostgresUISupport.csproj" />
+		<FwProject Include="..\NDOPackage\NDOPackage.csproj" />
+		<FwProject Include="..\NDOEnhancer\NDOEnhancer\NDOEnhancer.csproj" />
+		<FwProject Include="..\NDOEnhancer.BuildTask\NDOEnhancer.BuildTask\NDOEnhancer.BuildTask.csproj"/-->
+	</ItemGroup>
 
-		<Project Include="..\SimpleMappingTool\Mapping.csproj" />
-		<Project Include="..\NDOPackage\NDOPackage.csproj" />
-		<Project Include="..\NDOEnhancer\NDOEnhancer\NDOEnhancer.csproj" />
-		<Project Include="..\NDOEnhancer.BuildTask\NDOEnhancer.BuildTask\NDOEnhancer.BuildTask.csproj" -->
-	</ItemGroup>	
+
+	<ItemGroup>
+		<NdoCore Include="$(NDO_DIR)\NDOInterfaces\NDOInterfaces.csproj" />
+		<NdoCore Include="$(NDO_DIR)\NDODLL\NDO.csproj" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<NdoTools Include="$(NDO_DIR)\SimpleMappingTool\Mapping.csproj" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<Provider Include="$(NDO_DIR)\Provider\MySqlConnectorProvider\NDO.MySqlConnector\NDO.MySqlConnector.csproj" />
+		<!--Provider Include="$(NDO_DIR)\Provider\MySqlNdoProvider\NDO.MySql\NDO.MySql.csproj" />
+		<Provider Include="$(NDO_DIR)\Provider\OracleProvider\NDO.Oracle\NDO.Oracle.csproj" />
+		<Provider Include="$(NDO_DIR)\Provider\SqliteProvider\NDO.Sqlite\NDO.Sqlite.csproj" />
+		<Provider Include="$(NDO_DIR)\Provider\SqlServerProvider\NDO.Sqlserver\NDO.Sqlserver.csproj" />
+		<Provider Include="$(NDO_DIR)\Provider\PostgresProvider\NDO.Postgre\NDO.Postgre.csproj" /!-->		
+	</ItemGroup>
 	
 	<ItemGroup>
 		<ProjectsToPatch Include="$(NDO_DIR)\NDOInterfaces\NDOInterfaces.csproj" ></ProjectsToPatch>
@@ -82,8 +93,7 @@
 	</Target>
 
 	<Target Name="PatchNdoVersion" BeforeTargets="Build">
-		<Message Text="$(TOOLS_DIR)\PatchNdoVersion\bin\Release\net8.0\PatchNdoVersion %(Project.Identity) $(Version)"></Message>
-		<Exec Command="$(TOOLS_DIR)\PatchNdoVersion\bin\Release\net8.0\PatchNdoVersion %(Project.Identity) $(Version)" />
+		<Exec Command="$(TOOLS_DIR)\PatchNdoVersion\bin\Release\net8.0\PatchNdoVersion %(NdoTools.Identity) $(Version)" />
 	</Target>
 	
 	<Target Name="RestoreMsg" BeforeTargets="Restore">
@@ -93,8 +103,10 @@
 
 	<Target Name="Build">
 		<Message Text="Build..."></Message>
-		<MSBuild Projects="@(Project)" Targets="restore" />
-		<MSBuild Projects="@(Project)" Targets="Rebuild" Properties="Configuration=$(Configuration);Platform=$(Platform)" />
+		<MSBuild Projects="@(NdoCore)" Targets="restore" />
+		<MSBuild Projects="@(NdoCore)" Targets="Rebuild" Properties="Configuration=$(Configuration);Platform=$(Platform)" />
+		<MSBuild Projects="@(FwProject)" Targets="Rebuild" Properties="Configuration=$(Configuration);Platform=$(Platform)" />
+		<MSBuild Projects="@(Provider)" Targets="Rebuild" Properties="Configuration=$(Configuration);Platform=$(Platform)" />
 	</Target>
   
 </Project>

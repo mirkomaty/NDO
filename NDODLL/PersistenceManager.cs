@@ -145,7 +145,7 @@ namespace NDO
             catch (Exception ex)
             {
                 if (ex is NDOException)
-                    throw ex;
+                    throw;
                 throw new NDOException(30, "Persistence manager initialization error: " + ex.ToString());
             }
 

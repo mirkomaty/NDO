@@ -29,7 +29,7 @@ namespace NDO
 	/// This exception type will be thrown by the NDO framework, if errors occure.
 	/// </summary>
 	[Serializable]
-	public class NDOException : Exception, ISerializable
+	public class NDOException : Exception
 	{
 		int errorNumber;
 
@@ -61,28 +61,6 @@ namespace NDO
 		public NDOException(int errorNumber, string s, Exception innerException) : base(s, innerException) 
 		{
 			this.errorNumber = errorNumber;
-		}
-
-		/// <summary>
-		/// This constructor is used while deserializing an NDOException object.
-		/// </summary>
-		/// <param name="info">The SerializationInfo containing the data, the object is serialized from.</param>
-		/// <param name="context">The source if this serialization.</param>
-		protected NDOException(SerializationInfo info, StreamingContext context) : base(info, context)
-		{
-			//			string key = (string) info.GetValue("Key", typeof(string));
-			this.errorNumber = (int) info.GetValue("errorNumber", typeof(int));
-		}
-
-		/// <summary>
-		/// Populates a SerializationInfo with the data needed to serialize the target object.
-		/// </summary>
-		/// <param name="info">The SerializationInfo to populate with data. </param>
-		/// <param name="context">The destination for this serialization.</param>
-		public override void GetObjectData(SerializationInfo info, StreamingContext context)
-		{
-			base.GetObjectData(info, context);
-			info.AddValue("errorNumber", this.errorNumber);
 		}
 
 		/// <summary>

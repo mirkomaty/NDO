@@ -537,7 +537,7 @@ namespace NDO.SqlPersistenceHandling
 				}
                 dataAdapter.Update(rows);
 			}
-			catch (System.Data.DBConcurrencyException dbex)
+			catch (DBConcurrencyException dbex)
 			{
 				if (this.ConcurrencyError != null)
 				{
@@ -557,9 +557,9 @@ namespace NDO.SqlPersistenceHandling
 					ConcurrencyError(dbex);
 				}
 				else
-					throw dbex;
+					throw;
 			}
-            catch (System.Exception ex)
+            catch (Exception ex)
             {
                 string text = "Exception of type " + ex.GetType().Name + " while updating or inserting data rows: " + ex.Message + "\n";
                 if ((ex.Message.IndexOf("Die Variable") > -1 && ex.Message.IndexOf("muss deklariert") > -1) || (ex.Message.IndexOf("Variable") > -1 && ex.Message.IndexOf("declared") > -1))
@@ -605,14 +605,14 @@ namespace NDO.SqlPersistenceHandling
 			{
 				dataAdapter.Update(rows);
 			}
-			catch (System.Data.DBConcurrencyException dbex)
+			catch (DBConcurrencyException dbex)
 			{
 				if (this.ConcurrencyError != null)
 					ConcurrencyError(dbex);
 				else
-					throw dbex;
+					throw;
 			}
-			catch (System.Exception ex)
+			catch (Exception ex)
 			{
 				string text = "Exception of type " + ex.GetType().Name + " while deleting data rows: " + ex.Message + "\n";
 				text += "Sql statement: " + deleteCommand.CommandText + "\n";
