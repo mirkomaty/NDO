@@ -1,133 +1,129 @@
 ﻿using System.Text;
 using System.Text.RegularExpressions;
 using System.Xml.Linq;
+using System.Linq;
 
 namespace PatchNdoVersion
 {
     internal class Program
     {
-		static readonly string sourceRevisionTemplate = @"<?xml version=""1.0"" encoding=""utf-8""?>
-<Project>
-  <PropertyGroup>
-    <SourceRevisionId>{0}</SourceRevisionId>
-  </PropertyGroup>
-</Project>";
-
         static int Main(string[] args)
         {
-			if (args.Length < 2)
+			if (args.Length < 3)
 			{
-				Console.WriteLine( "usage: PatchNdoVersion <ProjFile> <Version>" );
+				Console.WriteLine( "usage: PatchNdoVersion <ProjFile> -i <NDOInterfaces-Version> -n <NDO-Version> -e <NDOEnhancer-Version>" );
 				return -1;
 			}
 
 			var projFile = args[0];
-			var version = args[1];
+			string? iVersion = null;
+            string? eVersion = null;
+            string? nVersion = null;
 
-			Regex regex = new Regex(@"\d+\.\d+\.\d+");
-			if (!regex.Match(version).Success)
-			{
-				Console.WriteLine( "Version must be \\d+\\.\\d+\\.\\d+" );
-				return -2;
-			}
 
-			if (!File.Exists(projFile))
+            if (!File.Exists(projFile))
 			{
 				Console.WriteLine( $"File doesn't exist: '{projFile}'" );
 				return -3;
 			}
 
-			try
-			{
-				string ndoRootPath = AppDomain.CurrentDomain.BaseDirectory;
 
-				do
+            try
+            {
+				Regex regex = new Regex(@"^\d+\.\d+\.\d+");
+                var i = Array.IndexOf(args, "-i");
+				if (i > 0)
 				{
-					ndoRootPath = Path.GetFullPath( Path.Combine( ndoRootPath, ".." ) );
-				} while (!Directory.Exists( Path.Combine( ndoRootPath, ".git" ) ));
+					if (args.Length < i + 2)
+                        throw new Exception( "Option -i needs a parameter." );
+					
+					iVersion = args[i + 1];
 
-				var revision = GetRevision(ndoRootPath);
+					if (!regex.Match( iVersion ).Success)
+						throw new Exception( "Parameter of -i must be a version string" );
+				}
+
+                var e = Array.IndexOf(args, "-e");
+                if (e > 0)
+                {
+                    if (args.Length < e + 2)
+                        throw new Exception( "Option -e needs a parameter." );
+
+                    eVersion = args[e + 1];
+
+                    if (!regex.Match( eVersion ).Success)
+                        throw new Exception( "Parameter of -e must be a version string" );
+                }
+
+                var n = Array.IndexOf(args, "-n");
+                if (n > 0)
+                {
+                    if (args.Length < n + 2)
+                        throw new Exception( "Option -n needs a parameter." );
+
+                    nVersion = args[n + 1];
+
+                    if (!regex.Match( nVersion ).Success)
+                        throw new Exception( "Parameter of -n must be a version string" );
+                }
+                
+				string ndoRootPath = AppDomain.CurrentDomain.BaseDirectory;
 
 				XDocument doc = XDocument.Load( projFile );
 				var project = doc.Root!;
-				bool hasVersionElement = false;
 
-				//Version 5.0.0
-				//FileVersion 5.0.0.0
-				//AssemblyVersion 5.0.0.0
-				//SourceRevisionId abc0123
+				var prElement = project.Elements("ItemGroup").FirstOrDefault(pg => pg.Element("PackageReference") != null); ;
+				if (prElement == null)
+					throw new Exception( "Project file doesn't have PackageReference items" );
 
-				var pgElement = project.Elements("PropertyGroup").First();
-				var element = pgElement.Element("Version");
-				if (element == null)
-					pgElement.Add( new XElement( "Version", version ) );
-
-				foreach (var pg in project.Elements("PropertyGroup"))
+				if (iVersion != null)
 				{
-					element = pg.Element("Version");
-					if (element != null)  // We are in the right property group
+					var iElement = prElement.Elements("PackageReference").FirstOrDefault(el => el.Attribute("Include")?.Value == "NDOInterfaces");
+					if (iElement != null)
 					{
-						hasVersionElement = true;
-
-						element.Value = version;
-						var assemblyVersion = pg.Element("AssemblyVersion");
-						var longVersion = version + ".0";
-						if (assemblyVersion != null)
-							assemblyVersion.Value = longVersion;
-						else
-							pg.Add( new XElement( "AssemblyVersion", longVersion ) );
-
-						var fileVersion = pg.Element("FileVersion");
-						if (fileVersion != null)
-							fileVersion.Value = longVersion;
-						else
-							pg.Add( new XElement( "FileVersion", longVersion ) );
-
-						break;
+						iElement.Attribute( "Version" )!.Value = iVersion;
+					}
+					else
+					{
+						throw new Exception( "Project needs a PackageReference to NDOInterfaces" );
 					}
 				}
 
-				if (!hasVersionElement)
-					throw new Exception( "Project file. doesn't have a Version tag. Add a version tag to the first PropertyGroup element in the project file." );
+                if (eVersion != null)
+                {
+                    var eElement = prElement.Elements("PackageReference").FirstOrDefault(el => el.Attribute("Include")?.Value == "NDOEnhancer");
+                    if (eElement != null)
+                    {
+                        eElement.Attribute( "Version" )!.Value = eVersion;
+                    }
+                    else
+                    {
+                        throw new Exception( "Project needs a PackageReference to NDOEnhancer" );
+                    }
+                }
+
+                if (nVersion != null)
+                {
+                    var element = prElement.Elements("PackageReference").FirstOrDefault(el => el.Attribute("Include")?.Value.ToLower() == "ndo.dll");
+                    if (element != null)
+                    {
+                        element.Attribute( "Version" )!.Value = nVersion;
+                    }
+                    else
+                    {
+                        throw new Exception( "Project needs a PackageReference to NDO.dll" );
+                    }
+                }
 
 				doc.Save(projFile);
-
-				var sourceRevFile = Path.Combine( Path.GetDirectoryName(projFile)!, "SourceRevisionId.props" );
-				using (StreamWriter sw = new StreamWriter( sourceRevFile, false, Encoding.UTF8 ))
-				{
-					sw.Write( sourceRevisionTemplate.Replace( "{0}", revision ) );
-				}
 
 				return 0;
 			}
 			catch (Exception ex)
 			{
 				Console.WriteLine( ex.ToString() );
-				return -4;
+				return -1;
 			}
-		}
-
-		static string GetRevision(string ndoPath)
-        {
-			string? head = null;
-			char[] buf = new char[7];
-			var gitDir = Path.Combine(ndoPath, ".git");
-			using (StreamReader sr = new StreamReader( Path.Combine( gitDir, "HEAD" ) ))
-			{
-				sr.Read( buf, 0, 5 );
-				head = sr.ReadToEnd().Trim();
-			}
-
-			var refHeadPath = Path.Combine( gitDir, head!.Replace( "/", "\\" ) );
-			if (!File.Exists( refHeadPath ))
-				throw new Exception( "Ref head doesn't exist: " + refHeadPath );
-
-			using (StreamReader sr = new StreamReader( refHeadPath ))
-			{
-				sr.Read( buf, 0, 7 );  // first 7 chars of the head				
-			}
-
-			return new string( buf );
 		}
     }
 }

@@ -38,8 +38,8 @@ namespace SimpleMappingTool
 	internal class MainForm : System.Windows.Forms.Form
 	{
 		private System.ComponentModel.IContainer components;
-		private System.Windows.Forms.MainMenu mainMenu;
-		private System.Windows.Forms.MenuItem menuItem1;
+		private MainMenu mainMenu;
+		private MenuItem menuItem1;
 		private System.Windows.Forms.MenuItem menuOpen;
 		private System.Windows.Forms.MenuItem menuSave;
 		private System.Windows.Forms.MenuItem menuSaveAs;

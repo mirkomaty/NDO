@@ -7,6 +7,26 @@
     <Nullable>disable</Nullable>
 	  <Version>5.0.0.0</Version>
 	  <AssemblyVersion>5.0.0.0</AssemblyVersion>
+	  <PackageId>NDO.Build</PackageId>
+	  <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+	  <Authors>Mirko Matytschak</Authors>
+	  <Company>Mirko Matytschak</Company>
+	  <Product>NDO.Build</Product>
+	  <PackageReadmeFile>Readme.md</PackageReadmeFile>
+	  <PackageProjectUrl>https://www.netdataobjects.de</PackageProjectUrl>
+	  <RepositoryUrl>https://github.com/mirkomaty/NDO</RepositoryUrl>
+	  <RepositoryType>git</RepositoryType>
+	  <PackageTags>NDO;NDOEnhancer;Persistence</PackageTags>
+	  <PackageOutputPath></PackageOutputPath>
+	  <ProduceReferenceAssembly>False</ProduceReferenceAssembly>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <IsPublishable>False</IsPublishable>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <IsPublishable>False</IsPublishable>
   </PropertyGroup>
 
   <Target Name="PrepareEnhDate" BeforeTargets="PrepareForBuild">
@@ -29,15 +49,22 @@
 	<PackageReference Include="runtime.linux-x64.Microsoft.NETCore.ILAsm" Version="8.0.0" />
 	<PackageReference Include="runtime.linux-x64.Microsoft.NETCore.ILDAsm" Version="8.0.0" />
 	<PackageReference Include="runtime.win-x64.Microsoft.NETCore.ILAsm" Version="8.0.0" />
+	<PackageReference Include="NDO.dll" Version="5.0.0" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\NDODLL\NDO.csproj" />
     <ProjectReference Include="..\Ecma335\Ecma335.csproj" />
   </ItemGroup>
 
   <ItemGroup>
     <Folder Include="ILDasm\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="Readme.md">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
   </ItemGroup>
 
 </Project>
