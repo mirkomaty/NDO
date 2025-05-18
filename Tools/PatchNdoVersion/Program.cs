@@ -31,6 +31,7 @@ namespace PatchNdoVersion
             try
             {
 				Regex regex = new Regex(@"^\d+\.\d+\.\d+");
+                var changed = false;
                 var i = Array.IndexOf(args, "-i");
 				if (i > 0)
 				{
@@ -79,9 +80,10 @@ namespace PatchNdoVersion
 				if (iVersion != null)
 				{
 					var iElement = prElement.Elements("PackageReference").FirstOrDefault(el => el.Attribute("Include")?.Value == "NDOInterfaces");
-					if (iElement != null)
+					if (iElement != null && iElement.Attribute("Version")?.Value != iVersion)
 					{
 						iElement.Attribute( "Version" )!.Value = iVersion;
+                        changed = true;
 					}
 					else
 					{
@@ -92,9 +94,10 @@ namespace PatchNdoVersion
                 if (eVersion != null)
                 {
                     var eElement = prElement.Elements("PackageReference").FirstOrDefault(el => el.Attribute("Include")?.Value == "NDOEnhancer");
-                    if (eElement != null)
+                    if (eElement != null && eElement.Attribute( "Version" )?.Value != eVersion)
                     {
                         eElement.Attribute( "Version" )!.Value = eVersion;
+                        changed = true;
                     }
                     else
                     {
@@ -105,9 +108,10 @@ namespace PatchNdoVersion
                 if (nVersion != null)
                 {
                     var element = prElement.Elements("PackageReference").FirstOrDefault(el => el.Attribute("Include")?.Value.ToLower() == "ndo.dll");
-                    if (element != null)
+                    if (element != null && element.Attribute( "Version" )?.Value != nVersion)
                     {
                         element.Attribute( "Version" )!.Value = nVersion;
+                        changed = true;
                     }
                     else
                     {
@@ -115,7 +119,8 @@ namespace PatchNdoVersion
                     }
                 }
 
-				doc.Save(projFile);
+                if (changed)
+    				doc.Save(projFile);
 
 				return 0;
 			}
