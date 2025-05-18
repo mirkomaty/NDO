@@ -80,10 +80,13 @@ namespace PatchNdoVersion
 				if (iVersion != null)
 				{
 					var iElement = prElement.Elements("PackageReference").FirstOrDefault(el => el.Attribute("Include")?.Value == "NDOInterfaces");
-					if (iElement != null && iElement.Attribute("Version")?.Value != iVersion)
+					if (iElement != null)
 					{
-						iElement.Attribute( "Version" )!.Value = iVersion;
-                        changed = true;
+                        if (iElement.Attribute( "Version" )?.Value != iVersion)
+                        {
+                            iElement.Attribute( "Version" )!.Value = iVersion;
+                            changed = true;
+                        }
 					}
 					else
 					{
@@ -94,10 +97,13 @@ namespace PatchNdoVersion
                 if (eVersion != null)
                 {
                     var eElement = prElement.Elements("PackageReference").FirstOrDefault(el => el.Attribute("Include")?.Value == "NDOEnhancer");
-                    if (eElement != null && eElement.Attribute( "Version" )?.Value != eVersion)
+                    if (eElement != null)
                     {
-                        eElement.Attribute( "Version" )!.Value = eVersion;
-                        changed = true;
+                        if (eElement.Attribute( "Version" )?.Value != eVersion)
+                        {
+                            eElement.Attribute( "Version" )!.Value = eVersion;
+                            changed = true;
+                        }
                     }
                     else
                     {
@@ -108,10 +114,13 @@ namespace PatchNdoVersion
                 if (nVersion != null)
                 {
                     var element = prElement.Elements("PackageReference").FirstOrDefault(el => el.Attribute("Include")?.Value.ToLower() == "ndo.dll");
-                    if (element != null && element.Attribute( "Version" )?.Value != nVersion)
+                    if (element != null)
                     {
-                        element.Attribute( "Version" )!.Value = nVersion;
-                        changed = true;
+                        if (element.Attribute( "Version" )?.Value != nVersion)
+                        {
+                            element.Attribute( "Version" )!.Value = nVersion;
+                            changed = true;
+                        }
                     }
                     else
                     {
