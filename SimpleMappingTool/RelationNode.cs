@@ -22,6 +22,7 @@
 
 using System;
 using System.Windows.Forms;
+using NDO;
 using NDO.Mapping;
 
 namespace SimpleMappingTool
@@ -41,29 +42,36 @@ namespace SimpleMappingTool
                 this.Nodes.Add(new ColumnNode(this, fkCol));
 		}
 
-		Relation MyRelation
+		Relation? MyRelation
 		{
 			get { return o as Relation; }
 		}
-		public override ContextMenu GetContextMenu()
+
+        public override ContextMenuStrip GetContextMenu()
 		{
-			ContextMenu menu = base.GetContextMenu();
-			if (MyRelation.MappingTable == null)
-				menu.MenuItems.Add(new MenuItem("Add mapping table", new EventHandler(AddMappingTable)));
-			else
-				menu.MenuItems.Add(new MenuItem("Delete mapping table", new EventHandler(DeleteMappingTable)));
+            ContextMenuStrip menu = base.GetContextMenu();
+			if (MyRelation != null)
+			{
+				if (MyRelation.MappingTable == null)
+					menu.Items.Add( new ToolStripMenuItem( "Add mapping table", null, AddMappingTable ) );
+				else
+					menu.Items.Add( new ToolStripMenuItem( "Delete mapping table", null, new EventHandler( DeleteMappingTable ) ) );
+			}
 			return menu;
 		}
 
-		void DeleteMappingTable(object sender, EventArgs ea)
+		void DeleteMappingTable(object? sender, EventArgs ea)
 		{
-			MyRelation.MappingTable = null;
-			while (this.Nodes.Count > 0)
-				this.Nodes.RemoveAt(0);
-			this.TreeView.Refresh();
+			if (MyRelation != null)
+			{
+				MyRelation.MappingTable = null;
+				while (this.Nodes.Count > 0)
+					this.Nodes.RemoveAt( 0 );
+				this.TreeView.Refresh();
+			}
 		}
 
-		void AddMappingTable(object sender, EventArgs ea)
+		void AddMappingTable(object? sender, EventArgs ea)
 		{
             MessageBox.Show("Sorry, we didn't implement this part yet.");
 #if nix

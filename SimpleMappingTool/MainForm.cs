@@ -32,350 +32,364 @@ using NDO.Mapping;
 
 namespace SimpleMappingTool
 {
-	/// <summary>
-	/// Zusammenfassung für MainForm.
-	/// </summary>
-	internal class MainForm : System.Windows.Forms.Form
-	{
-		private System.ComponentModel.IContainer components;
-		private MainMenu mainMenu;
-		private MenuItem menuItem1;
-		private System.Windows.Forms.MenuItem menuOpen;
-		private System.Windows.Forms.MenuItem menuSave;
-		private System.Windows.Forms.MenuItem menuSaveAs;
+    /// <summary>
+    /// Zusammenfassung für MainForm.
+    /// </summary>
+    internal class MainForm : Form
+    {
+        private IContainer components;
+        private MenuStrip mainMenu;
+        private ToolStripMenuItem fileToolStripMenuItem;
+        private ToolStripMenuItem menuOpen;
+        private ToolStripMenuItem menuSave;
+        private ToolStripMenuItem menuSaveAs;
+        private bool saveOnClose = false;
+        private Splitter splitter1;
+        private PropertyGrid propertyGrid1;
+        private TreeView allObjects;
+        private ImageList imageList1;
 
-		private bool saveOnClose = false;
+        NDOMapping? mapping = null;
 
-        public MainForm(string[] args)
+#pragma warning disable 8618
+        public MainForm( string[] args )
         {
             try
             {
                 InitializeComponent();
-                ScanArgs(args);
-                Application.Idle += new EventHandler(OnIdle);
+                ScanArgs( args );
+                Application.Idle += new EventHandler( OnIdle );
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.ToString(), "Mapping tool error");
+                MessageBox.Show( ex.ToString(), "Mapping tool error" );
             }
         }
+#pragma warning restore 8618
 
-		/// <summary>
-		/// Die verwendeten Ressourcen bereinigen.
-		/// </summary>
-		protected override void Dispose( bool disposing )
-		{
-			if( disposing )
-			{
-				if (components != null) 
-				{
-					components.Dispose();
-				}
-			}
-			base.Dispose( disposing );
-		}
+        /// <summary>
+        /// Die verwendeten Ressourcen bereinigen.
+        /// </summary>
+        protected override void Dispose( bool disposing )
+        {
+            if (disposing)
+            {
+                if (components != null)
+                {
+                    components.Dispose();
+                }
+            }
+            base.Dispose( disposing );
+        }
 
-		#region Vom Windows Form-Designer generierter Code
-		/// <summary>
-		/// Erforderliche Methode für die Designerunterstützung. 
-		/// Der Inhalt der Methode darf nicht mit dem Code-Editor geändert werden.
-		/// </summary>
-		private void InitializeComponent()
-		{
-            this.components = new System.ComponentModel.Container();
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
-            this.allObjects = new System.Windows.Forms.TreeView();
-            this.imageList1 = new System.Windows.Forms.ImageList(this.components);
-            this.splitter1 = new System.Windows.Forms.Splitter();
-            this.propertyGrid1 = new System.Windows.Forms.PropertyGrid();
-            this.mainMenu = new System.Windows.Forms.MainMenu(this.components);
-            this.menuItem1 = new System.Windows.Forms.MenuItem();
-            this.menuOpen = new System.Windows.Forms.MenuItem();
-            this.menuSave = new System.Windows.Forms.MenuItem();
-            this.menuSaveAs = new System.Windows.Forms.MenuItem();
-            this.SuspendLayout();
+        #region Vom Windows Form-Designer generierter Code
+        /// <summary>
+        /// Erforderliche Methode für die Designerunterstützung. 
+        /// Der Inhalt der Methode darf nicht mit dem Code-Editor geändert werden.
+        /// </summary>
+        private void InitializeComponent()
+        {
+            components = new Container();
+            ComponentResourceManager resources = new ComponentResourceManager(typeof(MainForm));
+            allObjects = new TreeView();
+            imageList1 = new ImageList( components );
+            splitter1 = new Splitter();
+            propertyGrid1 = new PropertyGrid();
+            mainMenu = new MenuStrip();
+            fileToolStripMenuItem = new ToolStripMenuItem();
+            menuOpen = new ToolStripMenuItem();
+            menuSave = new ToolStripMenuItem();
+            menuSaveAs = new ToolStripMenuItem();
+            mainMenu.SuspendLayout();
+            SuspendLayout();
             // 
             // allObjects
             // 
-            this.allObjects.Dock = System.Windows.Forms.DockStyle.Left;
-            this.allObjects.ImageIndex = 0;
-            this.allObjects.ImageList = this.imageList1;
-            this.allObjects.Location = new System.Drawing.Point(0, 0);
-            this.allObjects.Name = "allObjects";
-            this.allObjects.SelectedImageIndex = 0;
-            this.allObjects.Size = new System.Drawing.Size(387, 432);
-            this.allObjects.TabIndex = 0;
-            this.allObjects.MouseUp += new System.Windows.Forms.MouseEventHandler(this.allObjects_MouseUp);
-            this.allObjects.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.allObjects_AfterSelect);
+            allObjects.Dock = DockStyle.Left;
+            allObjects.ImageIndex = 0;
+            allObjects.ImageList = imageList1;
+            allObjects.Location = new Point( 0, 24 );
+            allObjects.Name = "allObjects";
+            allObjects.SelectedImageIndex = 0;
+            allObjects.Size = new Size( 464, 408 );
+            allObjects.TabIndex = 0;
+            allObjects.AfterSelect +=  allObjects_AfterSelect ;
+            allObjects.MouseUp +=  allObjects_MouseUp ;
             // 
             // imageList1
             // 
-            this.imageList1.ImageStream = ((System.Windows.Forms.ImageListStreamer)(resources.GetObject("imageList1.ImageStream")));
-            this.imageList1.TransparentColor = System.Drawing.Color.Transparent;
-            this.imageList1.Images.SetKeyName(0, "");
-            this.imageList1.Images.SetKeyName(1, "");
-            this.imageList1.Images.SetKeyName(2, "");
-            this.imageList1.Images.SetKeyName(3, "");
-            this.imageList1.Images.SetKeyName(4, "");
-            this.imageList1.Images.SetKeyName(5, "");
-            this.imageList1.Images.SetKeyName(6, "");
-            this.imageList1.Images.SetKeyName(7, "");
-            this.imageList1.Images.SetKeyName(8, "");
-            this.imageList1.Images.SetKeyName(9, "");
-            this.imageList1.Images.SetKeyName(10, "");
-            this.imageList1.Images.SetKeyName(11, "");
-            this.imageList1.Images.SetKeyName(12, "");
-            this.imageList1.Images.SetKeyName(13, "");
+            imageList1.ColorDepth = ColorDepth.Depth8Bit;
+            imageList1.ImageStream = (ImageListStreamer) resources.GetObject( "imageList1.ImageStream" )!;
+            imageList1.TransparentColor = Color.Transparent;
+            imageList1.Images.SetKeyName( 0, "" );
+            imageList1.Images.SetKeyName( 1, "" );
+            imageList1.Images.SetKeyName( 2, "" );
+            imageList1.Images.SetKeyName( 3, "" );
+            imageList1.Images.SetKeyName( 4, "" );
+            imageList1.Images.SetKeyName( 5, "" );
+            imageList1.Images.SetKeyName( 6, "" );
+            imageList1.Images.SetKeyName( 7, "" );
+            imageList1.Images.SetKeyName( 8, "" );
+            imageList1.Images.SetKeyName( 9, "" );
+            imageList1.Images.SetKeyName( 10, "" );
+            imageList1.Images.SetKeyName( 11, "" );
+            imageList1.Images.SetKeyName( 12, "" );
+            imageList1.Images.SetKeyName( 13, "" );
             // 
             // splitter1
             // 
-            this.splitter1.Location = new System.Drawing.Point(387, 0);
-            this.splitter1.Name = "splitter1";
-            this.splitter1.Size = new System.Drawing.Size(2, 432);
-            this.splitter1.TabIndex = 1;
-            this.splitter1.TabStop = false;
+            splitter1.Location = new Point( 464, 24 );
+            splitter1.Name = "splitter1";
+            splitter1.Size = new Size( 3, 408 );
+            splitter1.TabIndex = 1;
+            splitter1.TabStop = false;
             // 
             // propertyGrid1
             // 
-            this.propertyGrid1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.propertyGrid1.LineColor = System.Drawing.SystemColors.ScrollBar;
-            this.propertyGrid1.Location = new System.Drawing.Point(389, 0);
-            this.propertyGrid1.Name = "propertyGrid1";
-            this.propertyGrid1.Size = new System.Drawing.Size(395, 432);
-            this.propertyGrid1.TabIndex = 2;
+            propertyGrid1.Dock = DockStyle.Fill;
+            propertyGrid1.LineColor = SystemColors.ScrollBar;
+            propertyGrid1.Location = new Point( 467, 24 );
+            propertyGrid1.Name = "propertyGrid1";
+            propertyGrid1.Size = new Size( 317, 408 );
+            propertyGrid1.TabIndex = 2;
             // 
             // mainMenu
             // 
-            this.mainMenu.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
-            this.menuItem1});
+            mainMenu.Items.AddRange( new ToolStripItem[] { fileToolStripMenuItem } );
+            mainMenu.Location = new Point( 0, 0 );
+            mainMenu.Name = "mainMenu";
+            mainMenu.Size = new Size( 784, 24 );
+            mainMenu.TabIndex = 0;
+            mainMenu.Text = "mainMenu";
             // 
-            // menuItem1
+            // fileToolStripMenuItem
             // 
-            this.menuItem1.Index = 0;
-            this.menuItem1.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
-            this.menuOpen,
-            this.menuSave,
-            this.menuSaveAs});
-            this.menuItem1.Text = "&File";
+            fileToolStripMenuItem.DropDownItems.AddRange( new ToolStripItem[] { menuOpen, menuSave, menuSaveAs } );
+            fileToolStripMenuItem.Name = "fileToolStripMenuItem";
+            fileToolStripMenuItem.Size = new Size( 37, 20 );
+            fileToolStripMenuItem.Text = "&File";
             // 
             // menuOpen
             // 
-            this.menuOpen.Index = 0;
-            this.menuOpen.Shortcut = System.Windows.Forms.Shortcut.CtrlO;
-            this.menuOpen.Text = "&Open...";
-            this.menuOpen.Click += new System.EventHandler(this.menuOpen_Click);
+            menuOpen.Name = "menuOpen";
+            menuOpen.Size = new Size( 180, 22 );
+            menuOpen.Text = "&Open";
+            menuOpen.Click +=  menuOpen_Click ;
             // 
             // menuSave
             // 
-            this.menuSave.Index = 1;
-            this.menuSave.Shortcut = System.Windows.Forms.Shortcut.CtrlS;
-            this.menuSave.Text = "&Save";
-            this.menuSave.Click += new System.EventHandler(this.menuSave_Click);
+            menuSave.Name = "menuSave";
+            menuSave.Size = new Size( 180, 22 );
+            menuSave.Text = "&Save";
+            menuSave.Click +=  menuSave_Click ;
             // 
             // menuSaveAs
             // 
-            this.menuSaveAs.Index = 2;
-            this.menuSaveAs.Text = "Save &as...";
-            this.menuSaveAs.Click += new System.EventHandler(this.menuSaveAs_Click);
+            menuSaveAs.Name = "menuSaveAs";
+            menuSaveAs.Size = new Size( 180, 22 );
+            menuSaveAs.Text = "Save &as...";
+            menuSaveAs.Click +=  menuSaveAs_Click ;
             // 
             // MainForm
             // 
-            this.AutoScaleBaseSize = new System.Drawing.Size(5, 13);
-            this.ClientSize = new System.Drawing.Size(784, 432);
-            this.Controls.Add(this.propertyGrid1);
-            this.Controls.Add(this.splitter1);
-            this.Controls.Add(this.allObjects);
-            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
-            this.Menu = this.mainMenu;
-            this.Name = "MainForm";
-            this.Text = "NDO Mapping Tool";
-            this.Load += new System.EventHandler(this.MainForm_Load);
-            this.Closing += new System.ComponentModel.CancelEventHandler(this.MainForm_Closing);
-            this.ResumeLayout(false);
+            AutoScaleBaseSize = new Size( 6, 16 );
+            ClientSize = new Size( 784, 432 );
+            Controls.Add( propertyGrid1 );
+            Controls.Add( splitter1 );
+            Controls.Add( allObjects );
+            Controls.Add( mainMenu );
+            Icon = (Icon) resources.GetObject( "$this.Icon" )!;
+            MainMenuStrip = mainMenu;
+            Name = "MainForm";
+            Text = "NDO Mapping Tool";
+            Closing +=  MainForm_Closing ;
+            Load +=  MainForm_Load ;
+            mainMenu.ResumeLayout( false );
+            mainMenu.PerformLayout();
+            ResumeLayout( false );
+            PerformLayout();
+        }
+        #endregion
 
-		}
-		#endregion
+        /// <summary>
+        /// Der Haupteinstiegspunkt für die Anwendung.
+        /// </summary>
+        [STAThread]
+        static void Main( string[] args )
+        {
+            Application.Run( new MainForm( args ) );
+        }
 
-		/// <summary>
-		/// Der Haupteinstiegspunkt für die Anwendung.
-		/// </summary>
-		[STAThread]
-		static void Main(string[] args) 
-		{
-			Application.Run(new MainForm(args));
-		}
-		private System.Windows.Forms.Splitter splitter1;
-		private System.Windows.Forms.PropertyGrid propertyGrid1;
-		private System.Windows.Forms.TreeView allObjects;
-
-		private System.Windows.Forms.ImageList imageList1;
-		NDOMapping mapping = null;			
-
-
-
-		private void LoadMapping(string fileName)
-		{
-			allObjects.Nodes.Clear();
-			try
-			{
-				mapping = new NDOMapping(fileName);
+        private void LoadMapping( string fileName )
+        {
+            allObjects.Nodes.Clear();
+            try
+            {
+                mapping = new NDOMapping( fileName );
                 PrepareRelations();
             }
-			catch (Exception ex)
-			{
-				mapping = null;
-				this.Text = string.Empty;
+            catch (Exception ex)
+            {
+                mapping = null;
+                this.Text = string.Empty;
 #if DEBUG
-				MessageBox.Show(ex.ToString(), "Error");
+                MessageBox.Show( ex.ToString(), "Error" );
 #else
 				MessageBox.Show(ex.Message, "Error");
 #endif
                 return;
-			}
-			this.Text = fileName;
-			FillNodes();
-		}
+            }
+            this.Text = fileName;
+            if (mapping != null)
+                FillNodes();
+        }
 
 
-		private void FillNodes()
-		{
-            NDOMappingNode mn = new NDOMappingNode(this.mapping);
-            allObjects.Nodes.Add(mn);
-		}
+        private void FillNodes()
+        {
+            NDOMappingNode mn = new NDOMappingNode(this.mapping!);
+            allObjects.Nodes.Add( mn );
+        }
 
-		private void ScanArgs(string[] args)
-		{
+        private void ScanArgs( string[] args )
+        {
             Regex regexm = new Regex(@"-m:(.*)");
             foreach (string arg in args)
             {
                 Match matchm = regexm.Match(arg);
                 if (matchm.Success)
                 {
-                    LoadMapping(matchm.Groups[1].Value);
+                    LoadMapping( matchm.Groups[1].Value );
                     saveOnClose = true;
                 }
             }
-		}
+        }
 
 
-		private void MainForm_Load(object sender, System.EventArgs e)
-		{
-			//ScanArgs(new string[] {@"-m:C:\Projekte\Persistenz\v4\TestEnhancerVersion4\PureBusinessClasses\NDOMapping.xml"});
-		}
+        private void MainForm_Load( object? sender, System.EventArgs e )
+        {
+        }
 
-		private void allObjects_AfterSelect(object sender, System.Windows.Forms.TreeViewEventArgs e)
-		{
-			NDOTreeNode tn = e.Node as NDOTreeNode;
+        private void allObjects_AfterSelect( object? sender, TreeViewEventArgs e )
+        {
+            var tn = e.Node as NDOTreeNode;
             if (tn != null)
                 this.propertyGrid1.SelectedObject = tn.Object;
             else
                 this.propertyGrid1.SelectedObject = null;
-		}
+        }
 
-		private void MainForm_Closing(object sender, System.ComponentModel.CancelEventArgs e)
-		{
-			if (saveOnClose && mapping != null)
-				mapping.Save();
-			else if (mapping != null && mapping.HasChanges)
-			{
-				if (MessageBox.Show("Save changes?", "NDO Mapping Tool", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
-				{
-					mapping.Save();
-				}				
-			}
-		}
+        private void MainForm_Closing( object? sender, System.ComponentModel.CancelEventArgs e )
+        {
+            if (saveOnClose && mapping != null)
+                mapping.Save();
+            else if (mapping != null && mapping.HasChanges)
+            {
+                if (MessageBox.Show( "Save changes?", "NDO Mapping Tool", MessageBoxButtons.YesNo, MessageBoxIcon.Question ) == DialogResult.Yes)
+                {
+                    mapping.Save();
+                }
+            }
+        }
 
-		private void menuOpen_Click(object sender, System.EventArgs e)
-		{
-			if (mapping != null && mapping.HasChanges)
-			{
-				if (MessageBox.Show("Save changes?", "Mapping Tool", MessageBoxButtons.YesNo) == DialogResult.Yes)
-				{
-					mapping.Save();
-					mapping = null;
-				}
-			}
+        private void menuOpen_Click( object? sender, System.EventArgs e )
+        {
+            if (mapping != null && mapping.HasChanges)
+            {
+                if (MessageBox.Show( "Save changes?", "Mapping Tool", MessageBoxButtons.YesNo ) == DialogResult.Yes)
+                {
+                    mapping.Save();
+                    mapping = null;
+                }
+            }
 
-			OpenFileDialog ofd = new OpenFileDialog();
-			ofd.CheckFileExists = true;
-			ofd.DefaultExt = "xml";
-			ofd.Multiselect = false;
-			ofd.Filter = "Mapping Files (*.xml)|*.xml";
-			ofd.FileName = "NDOMapping.xml";
-			if (ofd.ShowDialog() == DialogResult.Cancel)
-				return;
-			LoadMapping(ofd.FileName);
-		}
+            OpenFileDialog ofd = new OpenFileDialog();
+            ofd.CheckFileExists = true;
+            ofd.DefaultExt = "xml";
+            ofd.Multiselect = false;
+            ofd.Filter = "Mapping Files (*.xml)|*.xml";
+            ofd.FileName = "NDOMapping.xml";
+            if (ofd.ShowDialog() == DialogResult.Cancel)
+                return;
+            LoadMapping( ofd.FileName );
+        }
 
 
         bool PrepareRelations()
         {
             bool result = false;
-            foreach (Class cl in mapping.Classes)
+            if (mapping != null)
             {
-                foreach (Relation r in cl.Relations)
+                foreach (Class cl in mapping.Classes)
                 {
-                    // This computes the foreign relation, which is
-                    // needed to avoid a null pointer exception
-                    // while binding to the property grid.
-                    result = result || r.Bidirectional;
+                    foreach (Relation r in cl.Relations)
+                    {
+                        // This computes the foreign relation, which is
+                        // needed to avoid a null pointer exception
+                        // while binding to the property grid.
+                        result = result || r.Bidirectional;
+                    }
                 }
             }
+
             return result;  // Nobody reads this value, but we make shure, that the code won't get removed by the optimizer.
         }
 
 
-		private void menuSave_Click(object sender, System.EventArgs e)
-		{
-			mapping.Save();
-		}
+        private void menuSave_Click( object? sender, System.EventArgs e )
+        {
+            if (mapping != null)
+                mapping.Save();
+        }
 
-		private void menuSaveAs_Click(object sender, System.EventArgs e)
-		{
-			SaveFileDialog sfd = new SaveFileDialog();
-			if (mapping != null && mapping.FileName != string.Empty)
-				sfd.InitialDirectory = Path.GetDirectoryName(mapping.FileName);
-			sfd.CheckFileExists = false;
-			sfd.DefaultExt = "xml";
-			sfd.Filter = "Mapping Files (*.xml)|*.xml";
-			sfd.FileName = "NDOMapping.xml";
-			if (sfd.ShowDialog(this) != DialogResult.OK)
-				return;
-            mapping.SaveAs(sfd.FileName);
-            this.Text = sfd.FileName;
-		}
+        private void menuSaveAs_Click( object? sender, System.EventArgs e )
+        {
+            if (mapping != null)
+            {
+                SaveFileDialog sfd = new SaveFileDialog();
+                if (mapping.FileName != string.Empty)
+                    sfd.InitialDirectory = Path.GetDirectoryName( mapping.FileName );
+                sfd.CheckFileExists = false;
+                sfd.DefaultExt = "xml";
+                sfd.Filter = "Mapping Files (*.xml)|*.xml";
+                sfd.FileName = "NDOMapping.xml";
+                if (sfd.ShowDialog( this ) != DialogResult.OK)
+                    return;
+                mapping.SaveAs( sfd.FileName );
+                this.Text = sfd.FileName;
+            }
+        }
 
-		private void OnIdle(object sender, EventArgs e)
-		{
-			menuSave.Enabled = mapping != null && mapping.HasChanges;
-			menuOpen.Enabled = !saveOnClose;
-		}
+        private void OnIdle( object? sender, EventArgs e )
+        {
+            menuSave.Enabled = mapping != null && mapping.HasChanges;
+            menuOpen.Enabled = !saveOnClose;
+        }
 
 #if DEBUG
-		private void MainForm_KeyPress(object sender, System.Windows.Forms.KeyPressEventArgs e)
-		{
+        private void MainForm_KeyPress( object? sender, KeyPressEventArgs e )
+        {
 
-			if ((int) e.KeyChar == 27)
-				MessageBox.Show("Escape");
-		}
+            if ((int) e.KeyChar == 27)
+                MessageBox.Show( "Escape" );
+        }
 #endif
 
-		private void allObjects_MouseUp(object sender, System.Windows.Forms.MouseEventArgs e)
-		{
-			
-			if (e.Button == MouseButtons.Right)
-			{
-				NDOTreeNode tn = this.allObjects.GetNodeAt(e.X, e.Y) as NDOTreeNode;
-				if (tn != null)
-				{
-					allObjects.SelectedNode = tn;
-					ContextMenu menu = tn.GetContextMenu();
-					if (menu.MenuItems.Count > 0)
-						menu.Show(allObjects, new Point(e.X, e.Y));
-					this.propertyGrid1.SelectedObject = tn.Object;
-				}
-			}
-		}
+        private void allObjects_MouseUp( object? sender, MouseEventArgs e )
+        {
 
-	}
+            if (e.Button == MouseButtons.Right)
+            {
+                var tn = this.allObjects.GetNodeAt(e.X, e.Y) as NDOTreeNode;
+                if (tn != null)
+                {
+                    allObjects.SelectedNode = tn;
+                    var menu = tn.GetContextMenu();
+                    if (menu.Items.Count > 0)
+                        menu.Show(allObjects, new Point(e.X, e.Y));
+                    this.propertyGrid1.SelectedObject = tn.Object;
+                }
+            }
+        }
+    }
 }
