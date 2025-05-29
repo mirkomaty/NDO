@@ -138,7 +138,7 @@ namespace NDOInterfaces
 		/// DDL for auto increment columns.
 		/// </summary>
 		/// <returns>A DDL string</returns>
-		string AutoIncrementColumn(string columnName, Type dataType, string columnType, string width);
+		string AutoIncrementColumn(string columnName, Type dataType, string columnType, string width, bool isPrimary);
 
 		/// <summary>
 		/// DDL for primary key columns, which are not autoincremented.

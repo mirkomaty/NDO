@@ -361,7 +361,7 @@ namespace NDO
 
 
 			if (autoIncrement && concreteGenerator.HasSpecialAutoIncrementColumnFormat)
-				sb.Append(concreteGenerator.AutoIncrementColumn(name, dcDataType, columnType, width));
+				sb.Append(concreteGenerator.AutoIncrementColumn(name, dcDataType, columnType, width, isPrimary));
 			else if(isPrimary && concreteGenerator.PrimaryConstraintPlacement == PrimaryConstraintPlacement.InColumn)
 				sb.Append(concreteGenerator.PrimaryKeyColumn(name, dcDataType, columnType, width));
 			else if (width != null && precision != null)

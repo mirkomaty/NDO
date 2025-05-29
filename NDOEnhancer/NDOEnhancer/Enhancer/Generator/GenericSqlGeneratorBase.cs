@@ -232,7 +232,7 @@ namespace NDOEnhancer
 
 
 			if (autoIncrement && concreteGenerator.HasSpecialAutoIncrementColumnFormat)
-				sb.Append(concreteGenerator.AutoIncrementColumn(name, dc.DataType, columnType, width));
+				sb.Append(concreteGenerator.AutoIncrementColumn(name, dc.DataType, columnType, width, isPrimary));
 			else if(isPrimary && concreteGenerator.PrimaryConstraintPlacement == PrimaryConstraintPlacement.InColumn)
 				sb.Append(concreteGenerator.PrimaryKeyColumn(name, dc.DataType, columnType, width));
 			else if (width != null && precision != null)

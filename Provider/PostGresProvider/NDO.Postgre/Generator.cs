@@ -93,7 +93,7 @@ namespace NDO.PostGreProvider
 			throw new Exception("Can't resolve type " + t.FullName + " as storable.");
 		}
 
-		public override string AutoIncrementColumn(string columnName, Type dataType, string columnType, string width)
+		public override string AutoIncrementColumn(string columnName, Type dataType, string columnType, string width, bool isPrimary)
 		{
 			//return columnName + " serial NOT NULL";
             return null;

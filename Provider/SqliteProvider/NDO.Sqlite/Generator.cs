@@ -66,9 +66,10 @@ namespace NDO.SqliteProvider
 			return NDO.SqliteProvider.Provider.GetInternalDbType( t ).ToString();
 		}
 
-		public override string AutoIncrementColumn(string columnName, Type dataType, string columnType, string width)
+		public override string AutoIncrementColumn(string columnName, Type dataType, string columnType, string width, bool isPrimary)
 		{
-			return columnName + " Integer PRIMARY KEY AUTOINCREMENT";
+			string primary = "PRIMARY KEY ";
+			return $"{columnName} Integer {primary}AUTOINCREMENT";
 		}
 
 		public override bool HasSpecialAutoIncrementColumnFormat

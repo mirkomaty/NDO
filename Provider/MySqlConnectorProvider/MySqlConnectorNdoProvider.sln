@@ -1,10 +1,10 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.27703.2047
+# Visual Studio Version 17
+VisualStudioVersion = 17.14.36109.1 d17.14
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NDO.MySqlConnector", "NDO.MySqlConnector\NDO.MySqlConnector.csproj", "{273BB4ED-74C4-482F-ACE2-E1564ACBA222}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MySqlConnectorUISupport", "MySqlConnectorUISupport\MySqlConnectorUISupport.csproj", "{72019F18-193F-43F9-B955-61AA2ECDEF74}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MySqlConnectorUISupport", "MySqlConnectorUISupport\MySqlConnectorUISupport.csproj", "{72019F18-193F-43F9-B955-61AA2ECDFA74}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -16,10 +16,10 @@ Global
 		{273BB4ED-74C4-482F-ACE2-E1564ACBA222}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{273BB4ED-74C4-482F-ACE2-E1564ACBA222}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{273BB4ED-74C4-482F-ACE2-E1564ACBA222}.Release|Any CPU.Build.0 = Release|Any CPU
-		{72019F18-193F-43F9-B955-61AA2ECDEF74}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{72019F18-193F-43F9-B955-61AA2ECDEF74}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{72019F18-193F-43F9-B955-61AA2ECDEF74}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{72019F18-193F-43F9-B955-61AA2ECDEF74}.Release|Any CPU.Build.0 = Release|Any CPU
+		{72019F18-193F-43F9-B955-61AA2ECDFA74}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{72019F18-193F-43F9-B955-61AA2ECDFA74}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{72019F18-193F-43F9-B955-61AA2ECDFA74}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{72019F18-193F-43F9-B955-61AA2ECDFA74}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

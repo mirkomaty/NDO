@@ -99,9 +99,10 @@ namespace MySqlConnectorProvider
             throw new Exception("Can't resolve type " + t.FullName + " as storable.");
 		}
 
-		public override string AutoIncrementColumn(string columnName, Type dataType, string columnType, string width)
+		public override string AutoIncrementColumn(string columnName, Type dataType, string columnType, string width, bool isPrimary)
 		{
-			return columnName + " Int AUTO_INCREMENT";
+			string primary = isPrimary ? " PRIMARY KEY" : "";
+			return $"{columnName} Int AUTO_INCREMENT{primary}";
 		}
 
 		public override bool HasSpecialAutoIncrementColumnFormat
@@ -109,23 +110,7 @@ namespace MySqlConnectorProvider
 			get { return true; }
 		}
 
-		public string CreateConstraint(DataColumn[] primaryKeyColumns, string constraintName, string tableName)
-		{
-			StringBuilder sb = new StringBuilder("CONSTRAINT ");
-			sb.Append(constraintName);
-			sb.Append(" PRIMARY KEY (");
-			int lastIndex = primaryKeyColumns.Length - 1;
-			for (int i = 0; i < primaryKeyColumns.Length; i++)
-			{
-				DataColumn dc = primaryKeyColumns[i];
-				sb.Append(Provider.GetQuotedName(dc.ColumnName));
-				if (i < lastIndex)
-					sb.Append(",");
-			}
-			sb.Append(")");
-			return sb.ToString();
-		}
-
+		public override PrimaryConstraintPlacement PrimaryConstraintPlacement => PrimaryConstraintPlacement.InColumn;
 
 		public override string RemoveColumn(string colName)
 		{

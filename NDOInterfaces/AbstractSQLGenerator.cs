@@ -155,7 +155,7 @@ namespace NDOInterfaces
 		/// <param name="columnType"></param>
 		/// <param name="width"></param>
 		/// <returns></returns>
-		public virtual string AutoIncrementColumn(string columnName, Type dataType, string columnType, string width)
+		public virtual string AutoIncrementColumn(string columnName, Type dataType, string columnType, string width, bool isPrimary)
 		{
 			return string.Empty;
 		}

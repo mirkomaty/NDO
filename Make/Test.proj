@@ -102,6 +102,11 @@
 		<MSBuild Projects="@(NdoCore)" Targets="Rebuild" Properties="Configuration=$(Configuration);Platform=$(Platform)" />
 		<MSBuild Projects="@(FwProject)" Targets="Rebuild" Properties="Configuration=$(Configuration);Platform=$(Platform)" />
 		<MSBuild Projects="@(Provider)" Targets="Rebuild" Properties="Configuration=$(Configuration);Platform=$(Platform)" />
+		<MSBuild Projects="$(NDO_DIR)\NDOEnhancer\Ecma335\Ecma335.csproj" Targets="Rebuild" Properties="Configuration=$(Configuration);Platform=$(Platform)" />
+		<MSBuild Projects="$(NDO_DIR)\NDOEnhancer\NDOEnhancer\NDOEnhancer.csproj" Targets="Restore" />
+		<MSBuild Projects="$(NDO_DIR)\NDOEnhancer\NDOEnhancer\NDOEnhancer.csproj" Targets="Rebuild" Properties="Configuration=$(Configuration);Platform=$(Platform)" />
+		<MSBuild Projects="$(NDO_DIR)\NDOEnhancer\NDO.Build\NDO.Build.csproj" Targets="Restore" Properties="Configuration=$(Configuration);Platform=$(Platform)" />
+		<MSBuild Projects="$(NDO_DIR)\NDOEnhancer\NDO.Build\NDO.Build.csproj" Targets="Pack" Properties="Configuration=$(Configuration);Platform=$(Platform)" />
 	</Target>
   
 </Project>
