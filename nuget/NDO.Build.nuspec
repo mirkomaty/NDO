@@ -14,6 +14,7 @@
     <tags>NDO .NET Data Objects Persistence</tags>
     <dependencies>		
     </dependencies>
+	<readme>readme.md</readme>
   </metadata>
 	<files>
 		<file src="..\NDOEnhancer\NDOEnhancer\bin\release\net8.0\NDOEnhancer.exe" target="build" />
@@ -29,7 +30,8 @@
 		<file src="..\NDOEnhancer\NDOEnhancer\bin\release\net8.0\Mono.Cecil.Pdb.dll" target="build" />
 		<file src="..\NDOEnhancer\NDOEnhancer\bin\release\net8.0\Mono.Cecil.Rocks.dll" target="build" />
 		<file src="..\NDOEnhancer.BuildTask\NDOEnhancer.BuildTask\bin\Release\NDOEnhancer.BuildTask.dll" target="/build" />
-		<file src="ndo.dll.targets" target="/build" />
+		<file src="NDO.Build.targets" target="/build" />
 		<file src="license.txt" target="/license/license.txt" />
+		<file src="readme.md" target="" />		
   </files>  
 </package>
