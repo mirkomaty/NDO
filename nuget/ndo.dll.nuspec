@@ -1,28 +1,35 @@
 <?xml version="1.0"?>
 <package >
   <metadata>
-    <id>ndo.dll</id>
-    <version>3.1.0.0</version>
+    <id>NDO.Build</id>
+    <version>5.0.0.0</version>
     <authors>Mirko Matytschak</authors>
     <owners>Mirko Matytschak</owners>
     <license type="file">license\license.txt</license>
     <projectUrl>https://www.netdataobjects.de</projectUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>Package to enable VS Solutions to compile and enhance persistent classes</description>
-    <releaseNotes>This release breaks existing ObjectContainer and ChangeSet code. Allows to replace the standard formatter for the generation of ObjectContainers and ChangeSetContainers.</releaseNotes>
-    <copyright>Copyright 2020 (c) Mirko Matytschak</copyright>
+    <releaseNotes>From v5.0 on NDO.Build contains the NDOEnhancer, while NDO.dll only contains the NDO framework.</releaseNotes>
+    <copyright>Copyright 2016-2025 (c) Mirko Matytschak</copyright>
     <tags>NDO .NET Data Objects Persistence</tags>
     <dependencies>		
     </dependencies>
   </metadata>
 	<files>
-		<file src="..\NDODLL\bin\release\NDO.dll" target="/lib/net40" />
-		<file src="..\NDOInterfaces\bin\release\NDOInterfaces.dll" target="/lib/net40" />
+		<file src="..\NDOEnhancer\NDOEnhancer\bin\release\net8.0\NDOEnhancer.exe" target="build" />
+		<file src="..\NDOEnhancer\NDOEnhancer\bin\release\net8.0\NDOEnhancer.dll" target="build" />
+		<file src="..\NDOEnhancer\NDOEnhancer\bin\release\net8.0\NDOEnhancer.pdb" target="build" />
+		<file src="..\NDOEnhancer\NDOEnhancer\bin\release\net8.0\NDOEnhancer.runtimeconfig.json" target="build" />
+		<file src="..\NDOEnhancer\NDOEnhancer\bin\release\net8.0\NDOEnhancer.deps.json" target="build" />
+		<file src="..\NDOEnhancer\NDOEnhancer\bin\release\net8.0\NDO.dll" target="build" />
+		<file src="..\NDOEnhancer\NDOEnhancer\bin\release\net8.0\NDOInterfaces.dll" target="build" />
+		<file src="..\NDOEnhancer\NDOEnhancer\bin\release\net8.0\Ecma335.dll" target="build" />
+		<file src="..\NDOEnhancer\NDOEnhancer\bin\release\net8.0\Mono.Cecil.dll" target="build" />
+		<file src="..\NDOEnhancer\NDOEnhancer\bin\release\net8.0\Mono.Cecil.Mdb.dll" target="build" />
+		<file src="..\NDOEnhancer\NDOEnhancer\bin\release\net8.0\Mono.Cecil.Pdb.dll" target="build" />
+		<file src="..\NDOEnhancer\NDOEnhancer\bin\release\net8.0\Mono.Cecil.Rocks.dll" target="build" />
 		<file src="..\NDOEnhancer.BuildTask\NDOEnhancer.BuildTask\bin\Release\NDOEnhancer.BuildTask.dll" target="/build" />
 		<file src="ndo.dll.targets" target="/build" />
-    <file src="..\NDOEnhancer\bin\Release\NDOEnhancer.exe" target="build" />
-    <file src="..\NDOEnhancer\bin\Release\NDOEnhancer.exe.config" target="build" />
-    <file src="..\EnhancerX86Stub\EnhancerX86Stub\bin\Release\EnhancerX86Stub.exe" target="build" />
-    <file src="license.txt" target="/license/license.txt" />
+		<file src="license.txt" target="/license/license.txt" />
   </files>  
 </package>
