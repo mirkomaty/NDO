@@ -37,7 +37,6 @@
 	<ItemGroup>
 		<PackProject Include="ndointerfaces"></PackProject>
 		<PackProject Include="ndo.dll"></PackProject>
-		<PackProject Include="ndo.core"></PackProject>
 		<PackProject Include="ndo.mapping"></PackProject>
 		<PackProject Include="ndo.jsonformatter"></PackProject>
 		<PackProject Include="ndo.providerfactory"></PackProject>
@@ -109,10 +108,12 @@
 		<Exec Command="$(PatchNdoVersion) &quot;$(NDO_DIR)\Provider\PostGresProvider\PostGresUISupport\PostGresUISupport.csproj&quot; -i $(InterfacesVersion)" />
 		<Exec Command="$(PatchNdoVersion) &quot;$(NDO_DIR)\Provider\SqliteProvider\SqliteUISupport\SqliteUISupport.csproj&quot; -i $(InterfacesVersion)" />
 		<Exec Command="$(PatchNdoVersion) &quot;$(NDO_DIR)\Provider\SqlServerProvider\SqlServerUISupport\SqlServerUISupport.csproj&quot; -i $(InterfacesVersion)" />
+
+		<Exec Command="$(PatchNdoVersion) &quot;$(NDO_DIR)\NDOEnhancer\NDOEnhancer\NDOEnhancer.csproj&quot; -i $(InterfacesVersion)  -n $(Version)" />
 	</Target>
 
 	<Target Name="NDOBuild" AfterTargets="Build">
-		<!--Exec WorkingDirectory="$(NDO_DIR)\nuget" Condition="'$(Configuration)'=='Release'" Command="nuget.exe pack NDO.Build.nuspec" /-->
+		<Exec WorkingDirectory="$(NDO_DIR)\nuget" Condition="'$(Configuration)'=='Release'" Command="nuget.exe pack NDO.Build.nuspec" />
 	</Target>
 
 
@@ -120,11 +121,11 @@
 		<Message Text="Build..."></Message>
 		<MSBuild Projects="@(NdoCore)" Targets="restore" />
 		<MSBuild Projects="@(NdoCore)" Targets="Rebuild" Properties="Configuration=$(Configuration);Platform=$(Platform)" />
-		<!--MSBuild Projects="@(FwProject)" Targets="Rebuild" Properties="Configuration=$(Configuration);Platform=$(Platform)" />
+		<MSBuild Projects="@(FwProject)" Targets="Rebuild" Properties="Configuration=$(Configuration);Platform=$(Platform)" />
 		<MSBuild Projects="@(Provider)" Targets="Rebuild" Properties="Configuration=$(Configuration);Platform=$(Platform)" />
 		<MSBuild Projects="$(NDO_DIR)\NDOEnhancer\Ecma335\Ecma335.csproj" Targets="Rebuild" Properties="Configuration=$(Configuration);Platform=$(Platform)" />
 		<MSBuild Projects="$(NDO_DIR)\NDOEnhancer\NDOEnhancer\NDOEnhancer.csproj" Targets="Restore" Properties="Configuration=$(Configuration);Platform=$(Platform)" />
-		<MSBuild Projects="$(NDO_DIR)\NDOEnhancer\NDOEnhancer\NDOEnhancer.csproj" Targets="Rebuild" Properties="Configuration=$(Configuration);Platform=$(Platform)" /-->
+		<MSBuild Projects="$(NDO_DIR)\NDOEnhancer\NDOEnhancer\NDOEnhancer.csproj" Targets="Rebuild" Properties="Configuration=$(Configuration);Platform=$(Platform)" />
 	</Target>
   
 </Project>

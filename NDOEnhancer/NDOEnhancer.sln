@@ -7,6 +7,10 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NDOEnhancer", "NDOEnhancer\
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Ecma335", "Ecma335\Ecma335.csproj", "{777DEF1E-B5FB-4C6A-8F3D-6AD5AED1B1B2}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NDO.Mapping", "..\NDO.Mapping\NDO.Mapping\NDO.Mapping.csproj", "{A8F870F1-9959-C336-962C-31AEFF62A9BC}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NDO.SchemaGenerator", "..\NDO.SchemaGenerator\NDO.SchemaGenerator\NDO.SchemaGenerator.csproj", "{FCFB3405-DD09-6804-603F-2677AB384A8C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +25,14 @@ Global
 		{777DEF1E-B5FB-4C6A-8F3D-6AD5AED1B1B2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{777DEF1E-B5FB-4C6A-8F3D-6AD5AED1B1B2}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{777DEF1E-B5FB-4C6A-8F3D-6AD5AED1B1B2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A8F870F1-9959-C336-962C-31AEFF62A9BC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A8F870F1-9959-C336-962C-31AEFF62A9BC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A8F870F1-9959-C336-962C-31AEFF62A9BC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A8F870F1-9959-C336-962C-31AEFF62A9BC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FCFB3405-DD09-6804-603F-2677AB384A8C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FCFB3405-DD09-6804-603F-2677AB384A8C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FCFB3405-DD09-6804-603F-2677AB384A8C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FCFB3405-DD09-6804-603F-2677AB384A8C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

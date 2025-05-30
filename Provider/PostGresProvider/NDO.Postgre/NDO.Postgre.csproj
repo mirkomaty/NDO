@@ -20,8 +20,24 @@
 	</PropertyGroup>
 	<ItemGroup>
 		<PackageReference Include="NDOInterfaces" Version="5.0.0" />
+	</ItemGroup>
+	
+	<ItemGroup Condition="'$(TargetFramework)'=='net9.0'">
+		<PackageReference Include="npgsql" Version="9.0.3" />
+	</ItemGroup>
+	<ItemGroup Condition="'$(TargetFramework)'=='net8.0'">
+		<PackageReference Include="npgsql" Version="9.0.3" />
+	</ItemGroup>
+	<ItemGroup Condition="'$(TargetFramework)'=='net6.0'">
+		<PackageReference Include="npgsql" Version="9.0.3" />
+	</ItemGroup>
+	<ItemGroup Condition="'$(TargetFramework)'=='netstandard2.0'">
 		<PackageReference Include="npgsql" Version="8.0.7" />
 	</ItemGroup>
+	<ItemGroup Condition="'$(TargetFramework)'=='netstandard2.1'">
+		<PackageReference Include="npgsql" Version="8.0.7" />
+	</ItemGroup>
+
 	<ItemGroup>
 		<None Include="readme.md" Pack="true" PackagePath="\" />
 	</ItemGroup>

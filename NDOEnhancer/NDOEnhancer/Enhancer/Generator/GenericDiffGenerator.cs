@@ -26,7 +26,6 @@ using System.IO;
 using System.Collections.Generic;
 using System.Data;
 using NDO.Mapping;
-using NDO;
 using NDOInterfaces;
 
 namespace NDOEnhancer
