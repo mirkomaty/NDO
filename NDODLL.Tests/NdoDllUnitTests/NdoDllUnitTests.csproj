@@ -16,12 +16,12 @@
     <PackageReference Include="Moq" Version="4.20.70" />
     <PackageReference Include="NUnit" Version="4.1.0" />
     <PackageReference Include="NUnit3TestAdapter" Version="4.5.0" />
-	<PackageReference Include="NDOInterfaces" Version="5.0.0" />
+	  <PackageReference Include="NDOInterfaces" Version="5.0.0" />
+	  <PackageReference Include="NDO.Mapping" Version="5.0.0" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\IntegrationTests\PureBusinessClasses\PureBusinessClasses.csproj" />
-    <ProjectReference Include="..\NDODLL\NDO.csproj" />
+    <ProjectReference Include="..\..\NDODLL\NDO.csproj" />
   </ItemGroup>
 
   <!--ItemGroup>

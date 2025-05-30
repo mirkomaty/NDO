@@ -3,7 +3,31 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.14.36109.1 d17.14
 MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NdoDllUnitTests", "NdoDllUnitTests\NdoDllUnitTests.csproj", "{1E1DF313-F3E8-C439-CEB8-D1080D2B0B65}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NDO", "..\NDODLL\NDO.csproj", "{C95E9F23-CC01-37B1-E521-818394E9AFA4}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "QueryTests", "QueryTests\QueryTests.csproj", "{981629D3-DEF8-E1FC-26AA-B3AAC703C9BC}"
+EndProject
 Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{1E1DF313-F3E8-C439-CEB8-D1080D2B0B65}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1E1DF313-F3E8-C439-CEB8-D1080D2B0B65}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1E1DF313-F3E8-C439-CEB8-D1080D2B0B65}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1E1DF313-F3E8-C439-CEB8-D1080D2B0B65}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C95E9F23-CC01-37B1-E521-818394E9AFA4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C95E9F23-CC01-37B1-E521-818394E9AFA4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C95E9F23-CC01-37B1-E521-818394E9AFA4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C95E9F23-CC01-37B1-E521-818394E9AFA4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{981629D3-DEF8-E1FC-26AA-B3AAC703C9BC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{981629D3-DEF8-E1FC-26AA-B3AAC703C9BC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{981629D3-DEF8-E1FC-26AA-B3AAC703C9BC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{981629D3-DEF8-E1FC-26AA-B3AAC703C9BC}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection

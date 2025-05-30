@@ -14,7 +14,7 @@ namespace NdoDllUnitTests
 		[Test]
 		public void MappingTableAttributeWorks()
 		{
-			NDOMapping mapping = NDOMapping.Create( null );
+			NDOMapping mapping = new NDOMapping(null,null); //NDOMapping.Create( null );
 			var cls = mapping.AddStandardClass( "TestClass", "TestAssembly", null );
 			var relation = cls.AddStandardRelation( "relField", "RefTypeName", false, "", false, false );
 			Assert.That( "IDTestClass", Is.EqualTo( relation.ForeignKeyColumns.First().Name ) );
@@ -33,7 +33,7 @@ namespace NdoDllUnitTests
 		[Test]
 		public void RemapForeignKeyColumnsWorks()
 		{
-			NDOMapping mapping = NDOMapping.Create( null );
+			NDOMapping mapping = new NDOMapping(null,null); //NDOMapping.Create( null );
 			var cls = mapping.AddStandardClass( "TestClass", "TestAssembly", null );
 			mapping.AddStandardClass( "RefTypeName", "TestAssembly", null );
 			var relation = cls.AddStandardRelation( "relField", "RefTypeName", false, "", false, false );
@@ -46,7 +46,7 @@ namespace NdoDllUnitTests
 		[Test]
 		public void RemapOidColumnsWorks()
 		{
-			NDOMapping mapping = NDOMapping.Create( null );
+			NDOMapping mapping = new NDOMapping(null,null); //NDOMapping.Create( null );
 			var cls = mapping.AddStandardClass( "TestClass", "TestAssembly", null );
 			Assert.That( "ID", Is.EqualTo( cls.Oid.OidColumns.First().Name ) );
 			var attr = new OidColumnAttribute() { Name = "newColumnName" };
@@ -57,7 +57,7 @@ namespace NdoDllUnitTests
 		[Test]
 		public void RemapColumnsWorks()
 		{
-			NDOMapping mapping = NDOMapping.Create( null );
+			NDOMapping mapping = new NDOMapping(null,null); //NDOMapping.Create( null );
 			var cls = mapping.AddStandardClass( "TestClass", "TestAssembly", null );
 			var field = cls.AddStandardField( "test", false );
 			Assert.That( "Test", Is.EqualTo(field.Column.Name) );
@@ -70,7 +70,7 @@ namespace NdoDllUnitTests
 		[Test]
 		public void RemapFieldsWorks()
 		{
-			NDOMapping mapping = NDOMapping.Create( null );
+			NDOMapping mapping = new NDOMapping(null,null); //NDOMapping.Create( null );
 			var cls = mapping.AddStandardClass( "TestClass", "TestAssembly", null );
 			var field = cls.AddStandardField( "test", false );
 			Assert.That( !field.Encrypted );
@@ -86,7 +86,7 @@ namespace NdoDllUnitTests
 		[Test]
 		public void SetFieldValuesWorks()
 		{
-			NDOMapping mapping = NDOMapping.Create( null );
+			NDOMapping mapping = new NDOMapping(null,null); //NDOMapping.Create( null );
 			var cls = mapping.AddStandardClass( "TestClass", "TestAssembly", null );
 			var field = cls.AddStandardField( "test", false );
 			Assert.That( !field.Encrypted );
@@ -102,7 +102,7 @@ namespace NdoDllUnitTests
 		[Test]
 		public void OidColumnShouldntBeRemappedWithAssembyWideColumnAttribute()
 		{
-			NDOMapping mapping = NDOMapping.Create( null );
+			NDOMapping mapping = new NDOMapping(null,null); //NDOMapping.Create( null );
 			var cls = mapping.AddStandardClass( "TestClass", "TestAssembly", null );
 			Assert.That( "ID", Is.EqualTo( cls.Oid.OidColumns.First().Name ) );
 			var attr = new OidColumnAttribute() { Name = "newColumnName", IsAssemblyWideDefinition=true };
@@ -113,8 +113,8 @@ namespace NdoDllUnitTests
         [Test]
         public void AssembyWideColumnAttributeOverwritesDefaultValues()
         {
-            NDOMapping mapping = NDOMapping.Create(null);
-            var cls = mapping.AddStandardClass("TestClass", "TestAssembly", null);
+			NDOMapping mapping = new NDOMapping(null,null); //NDOMapping.Create( null );
+			var cls = mapping.AddStandardClass("TestClass", "TestAssembly", null);
             Assert.That(1 == cls.Oid.OidColumns.First().AutoIncrementStart);
             var attr = new OidColumnAttribute() { Name = "newColumnName", AutoIncrementStart = 2, IsAssemblyWideDefinition = true };
             cls.Oid.RemapOidColumns(new[] { attr });
