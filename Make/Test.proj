@@ -109,7 +109,7 @@
 		<Exec Command="$(PatchNdoVersion) &quot;$(NDO_DIR)\Provider\SqliteProvider\SqliteUISupport\SqliteUISupport.csproj&quot; -i $(InterfacesVersion)" />
 		<Exec Command="$(PatchNdoVersion) &quot;$(NDO_DIR)\Provider\SqlServerProvider\SqlServerUISupport\SqlServerUISupport.csproj&quot; -i $(InterfacesVersion)" />
 
-		<Exec Command="$(PatchNdoVersion) &quot;$(NDO_DIR)\NDOEnhancer\NDOEnhancer\NDOEnhancer.csproj&quot; -i $(InterfacesVersion)  -n $(Version)" />
+		<Exec Command="$(PatchNdoVersion) &quot;$(NDO_DIR)\NDOEnhancer\NDOEnhancer\NDOEnhancer.csproj&quot; -i $(InterfacesVersion)" />
 	</Target>
 
 	<Target Name="NDOBuild" AfterTargets="Build">

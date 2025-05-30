@@ -17,20 +17,10 @@
 	<readme>readme.md</readme>
   </metadata>
 	<files>
-		<file src="..\NDOEnhancer\NDOEnhancer\bin\release\net8.0\NDOEnhancer.exe" target="build" />
-		<file src="..\NDOEnhancer\NDOEnhancer\bin\release\net8.0\NDOEnhancer.dll" target="build" />
-		<file src="..\NDOEnhancer\NDOEnhancer\bin\release\net8.0\NDOEnhancer.pdb" target="build" />
-		<file src="..\NDOEnhancer\NDOEnhancer\bin\release\net8.0\NDOEnhancer.runtimeconfig.json" target="build" />
-		<file src="..\NDOEnhancer\NDOEnhancer\bin\release\net8.0\NDOEnhancer.deps.json" target="build" />
-		<file src="..\NDOEnhancer\NDOEnhancer\bin\release\net8.0\NDO.dll" target="build" />
-		<file src="..\NDOEnhancer\NDOEnhancer\bin\release\net8.0\NDOInterfaces.dll" target="build" />
-		<file src="..\NDOEnhancer\NDOEnhancer\bin\release\net8.0\Ecma335.dll" target="build" />
-		<file src="..\NDOEnhancer\NDOEnhancer\bin\release\net8.0\Mono.Cecil.dll" target="build" />
-		<file src="..\NDOEnhancer\NDOEnhancer\bin\release\net8.0\Mono.Cecil.Mdb.dll" target="build" />
-		<file src="..\NDOEnhancer\NDOEnhancer\bin\release\net8.0\Mono.Cecil.Pdb.dll" target="build" />
-		<file src="..\NDOEnhancer\NDOEnhancer\bin\release\net8.0\Mono.Cecil.Rocks.dll" target="build" />
+		<file src="..\NDOEnhancer\NDOEnhancer\bin\release\net8.0\**" target="build" />
+
 		<file src="..\NDOEnhancer.BuildTask\NDOEnhancer.BuildTask\bin\Release\NDOEnhancer.BuildTask.dll" target="/build" />
-		<file src="..\NDOEnhancer\NDOEnhancer\ILDAsm\ILDasm.exe.*" target="\build\runtimes\win-x64\native" />
+		<!--file src="..\NDOEnhancer\NDOEnhancer\ILDAsm\ILDasm.exe.*" target="\build\runtimes\win-x64\native" /-->
 		<file src="NDO.Build.targets" target="/build" />
 		<file src="license.txt" target="/license/license.txt" />
 		<file src="readme.md" target="" />		

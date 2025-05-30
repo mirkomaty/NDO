@@ -46,7 +46,6 @@
 	<PackageReference Include="runtime.linux-x64.Microsoft.NETCore.ILAsm" Version="8.0.0" />
 	<PackageReference Include="runtime.linux-x64.Microsoft.NETCore.ILDAsm" Version="8.0.0" />
 	<PackageReference Include="runtime.win-x64.Microsoft.NETCore.ILAsm" Version="8.0.0" />
-	<PackageReference Include="NDO.dll" Version="5.0.0" />
   </ItemGroup>
 
   <ItemGroup>

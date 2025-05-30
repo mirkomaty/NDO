@@ -67,7 +67,8 @@ namespace NDO.SqlPersistenceHandling
 				allJoins.Add( rel );
 				// We know, that this must be a prefetch, so the direction
 				// of the relation is reversed.
-#warning Hier muss noch die Annotation rein
+
+				//TODO: We need to implement the annotation here.
 			}
 
 			if (expressionTree == null)
