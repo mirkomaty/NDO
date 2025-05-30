@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.9.34723.18
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NDO.dll", "NDO.dll.csproj", "{EF666155-B2DF-4A2F-9DE5-839B1B9DF98C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NDO", "NDO.csproj", "{EF666155-B2DF-4A2F-9DE5-839B1B9DF98C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

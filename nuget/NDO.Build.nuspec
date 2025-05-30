@@ -30,6 +30,7 @@
 		<file src="..\NDOEnhancer\NDOEnhancer\bin\release\net8.0\Mono.Cecil.Pdb.dll" target="build" />
 		<file src="..\NDOEnhancer\NDOEnhancer\bin\release\net8.0\Mono.Cecil.Rocks.dll" target="build" />
 		<file src="..\NDOEnhancer.BuildTask\NDOEnhancer.BuildTask\bin\Release\NDOEnhancer.BuildTask.dll" target="/build" />
+		<file src="..\NDOEnhancer\NDOEnhancer\ILDAsm\ILDasm.exe.*" target="\build\runtimes\win-x64\native" />
 		<file src="NDO.Build.targets" target="/build" />
 		<file src="license.txt" target="/license/license.txt" />
 		<file src="readme.md" target="" />		

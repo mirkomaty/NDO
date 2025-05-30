@@ -13,7 +13,7 @@
     <Authors>Mirko Matytschak</Authors>
     <Company>Mirko Matytschak</Company>
     <Description>Package to read and create NDO mapping files.</Description>
-    <Copyright>(c) 2002 - 2024, Mirko Matytschak, Velden, Germany</Copyright>
+    <Copyright>(c) 2002 - 2025, Mirko Matytschak, Velden, Germany</Copyright>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageProjectUrl>https://www.netdataobjects.de</PackageProjectUrl>
     <PackageTags>NDO .NET Data Objects Persistence Mapping</PackageTags>
@@ -25,6 +25,7 @@
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
     <RunAnalyzersDuringBuild>False</RunAnalyzersDuringBuild>
     <RunAnalyzersDuringLiveAnalysis>False</RunAnalyzersDuringLiveAnalysis>
+    <PackageReadmeFile>readme.md</PackageReadmeFile>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|netstandard2.0|AnyCPU'">
     <IsPublishable>False</IsPublishable>
@@ -56,4 +57,13 @@
         <PrivateAssets>all</PrivateAssets>
       </PackageReference>
   </ItemGroup>
+  <ItemGroup>
+    <None Include="readme.md">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
+  </ItemGroup>
+  <Target Name="PostBuild" AfterTargets="Pack">
+    <Exec Command="IF NOT EXIST ..\..\BuiltPackages md ..\..\BuiltPackages&#xD;&#xA;echo Copy package&#xD;&#xA;copy bin\$(Configuration)\NDO.Mapping.*.nupkg ..\..\BuiltPackages /Y&#xD;&#xA;copy bin\$(Configuration)\NDO.Mapping.*.snupkg ..\..\BuiltPackages /Y&#xD;&#xA;" />
+  </Target>  
 </Project>

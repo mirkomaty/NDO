@@ -62,6 +62,9 @@
 
 	<ItemGroup>
 		<NdoCore Include="$(NDO_DIR)\NDOInterfaces\NDOInterfaces.csproj" />
+		<NdoCore Include="$(NDO_DIR)\NDO.Mapping\NDO.Mapping\NDO.Mapping.csproj" />
+		<NdoCore Include="$(NDO_DIR)\NDO.ProviderFactory\NDO.ProviderFactory\NDO.ProviderFactory.csproj" />
+		<NdoCore Include="$(NDO_DIR)\NDO.SchemaGenerator\NDO.SchemaGenerator\NDO.SchemaGenerator.csproj" />
 		<NdoCore Include="$(NDO_DIR)\NDODLL\NDO.csproj" />
 	</ItemGroup>
 
@@ -89,6 +92,9 @@
 
 	<Target Name="PatchNdoVersion" BeforeTargets="Build">
 		<Exec Command="$(PatchNdoVersion) &quot;$(NDO_DIR)\SimpleMappingTool\Mapping.csproj&quot; -n $(Version)" />
+
+		<Exec Command="$(PatchNdoVersion) &quot;$(NDO_DIR)\NDO.Mapping\NDO.Mapping\NDO.Mapping.csproj&quot; -i $(InterfacesVersion)" />
+		<Exec Command="$(PatchNdoVersion) &quot;$(NDO_DIR)\NDO.ProviderFactory\NDO.ProviderFactory\NDO.ProviderFactory.csproj&quot; -i $(InterfacesVersion)" />
 		
 		<Exec Command="$(PatchNdoVersion) &quot;$(NDO_DIR)\Provider\MySqlConnectorProvider\NDO.MySqlConnector\NDO.MySqlConnector.csproj&quot; -i $(InterfacesVersion)" />
 		<Exec Command="$(PatchNdoVersion) &quot;$(NDO_DIR)\Provider\MySqlNdoProvider\NDO.MySql\NDO.MySql.csproj&quot; -i $(InterfacesVersion)" />
@@ -106,7 +112,7 @@
 	</Target>
 
 	<Target Name="NDOBuild" AfterTargets="Build">
-		<Exec WorkingDirectory="$(NDO_DIR)\nuget" Condition="'$(Configuration)'=='Release'" Command="nuget.exe pack NDO.Build.nuspec" />
+		<!--Exec WorkingDirectory="$(NDO_DIR)\nuget" Condition="'$(Configuration)'=='Release'" Command="nuget.exe pack NDO.Build.nuspec" /-->
 	</Target>
 
 
@@ -114,11 +120,11 @@
 		<Message Text="Build..."></Message>
 		<MSBuild Projects="@(NdoCore)" Targets="restore" />
 		<MSBuild Projects="@(NdoCore)" Targets="Rebuild" Properties="Configuration=$(Configuration);Platform=$(Platform)" />
-		<MSBuild Projects="@(FwProject)" Targets="Rebuild" Properties="Configuration=$(Configuration);Platform=$(Platform)" />
+		<!--MSBuild Projects="@(FwProject)" Targets="Rebuild" Properties="Configuration=$(Configuration);Platform=$(Platform)" />
 		<MSBuild Projects="@(Provider)" Targets="Rebuild" Properties="Configuration=$(Configuration);Platform=$(Platform)" />
 		<MSBuild Projects="$(NDO_DIR)\NDOEnhancer\Ecma335\Ecma335.csproj" Targets="Rebuild" Properties="Configuration=$(Configuration);Platform=$(Platform)" />
 		<MSBuild Projects="$(NDO_DIR)\NDOEnhancer\NDOEnhancer\NDOEnhancer.csproj" Targets="Restore" Properties="Configuration=$(Configuration);Platform=$(Platform)" />
-		<MSBuild Projects="$(NDO_DIR)\NDOEnhancer\NDOEnhancer\NDOEnhancer.csproj" Targets="Rebuild" Properties="Configuration=$(Configuration);Platform=$(Platform)" />
+		<MSBuild Projects="$(NDO_DIR)\NDOEnhancer\NDOEnhancer\NDOEnhancer.csproj" Targets="Rebuild" Properties="Configuration=$(Configuration);Platform=$(Platform)" /-->
 	</Target>
   
 </Project>

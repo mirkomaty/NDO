@@ -32,3 +32,4 @@ SourceRevisionId.props
 /nuget/NDOEnhancer.BuildTask.pdb
 /nuget/NDOEnhancer.deps.json
 /nuget/NDOEnhancer.runtimeconfig.json
+/BuiltPackages

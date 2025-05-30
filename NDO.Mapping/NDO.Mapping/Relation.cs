@@ -301,7 +301,7 @@ namespace NDO.Mapping
             }
 			else
 			{
-#warning Hier muss noch der Mapping Table-Fall erzeugt werden.
+                //Hier muss noch der Mapping Table-Fall erzeugt werden.
 			}
         }
 
