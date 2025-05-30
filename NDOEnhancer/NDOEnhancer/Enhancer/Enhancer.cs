@@ -1368,9 +1368,10 @@ namespace NDOEnhancer
 
 				if (insertNdo)
 				{
-                    string fullName = typeof(NDOPersistentAttribute).Assembly.FullName;
+					var pmType = Type.GetType( "NDO.PersistenceManager, NDO" );
+					string fullName = pmType.Assembly.FullName;
 					NDOAssemblyName assName = new NDOAssemblyName(fullName);
-                    messages.WriteLine("Inserting reference to NDO assembly: " + fullName);
+					messages.WriteLine( "Inserting reference to NDO assembly: " + fullName );
 					string line = @".assembly extern NDO
 {
 .publickeytoken = (" + assName.PublicKeyTokenBytes + @")
@@ -1378,7 +1379,7 @@ namespace NDOEnhancer
 }
 ";
 
-					ael.InsertBefore(new ILElement(line));
+					ael.InsertBefore( new ILElement( line ) );
 				}
 
 				if (insertNdoInterfaces)

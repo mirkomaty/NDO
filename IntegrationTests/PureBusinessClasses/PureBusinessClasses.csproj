@@ -5,10 +5,13 @@
 	  <ImplicitUsings>disable</ImplicitUsings>
 	  <Nullable>disable</Nullable>
   </PropertyGroup>
-<Import Project="..\..\nuget\ndo.dll.targets" />
 <ItemGroup>
   <PackageReference Include="ndo.dll" Version="5.0.0" />
 </ItemGroup>
+
+	<Target Name="nix" AfterTargets="Build">
+		<Exec WorkingDirectory="bin\Debug\net8.0" Command="..\..\..\..\..\NDOEnhancer\NDOEnhancer\bin\debug\net8.0\NDOEnhancer ..\..\..\PureBusinessClasses.ndoproj $(TargetFramework)" />
+	</Target>
 
 </Project>
 
