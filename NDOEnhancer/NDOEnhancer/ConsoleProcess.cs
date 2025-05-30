@@ -85,7 +85,7 @@ namespace NDOEnhancer
 
 			tasks[0] = proc.StandardError.ReadToEndAsync();
 			tasks[1] = proc.StandardOutput.ReadToEndAsync();
-			tasks[3] = proc.WaitForExitAsync();
+			tasks[2] = proc.WaitForExitAsync();
 
 			Task.WaitAll( tasks );
 			return proc.ExitCode;

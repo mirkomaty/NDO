@@ -3,7 +3,7 @@
     "Profil \"1\"": {
       "commandName": "Executable",
       "executablePath": "C:\\Projekte\\NDO5\\NDOEnhancer\\NDOEnhancer\\bin\\Debug\\net8.0\\NDOEnhancer.exe",
-      "commandLineArgs": "C:\\Projekte\\NDO5\\IntegrationTests\\IntegrationTests\\IntegrationTests.ndoproj net8.0"
+      "commandLineArgs": "C:\\Projekte\\NDO5\\IntegrationTests\\PureBusinessClasses\\PureBusinessClasses.ndoproj net8.0"
     }
   }
 }
