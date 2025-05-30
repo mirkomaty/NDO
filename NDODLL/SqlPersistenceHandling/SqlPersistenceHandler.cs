@@ -21,23 +21,19 @@
 
 
 using System;
-using System.Text;
 using System.Text.RegularExpressions;
-using System.Diagnostics;
-using System.IO;
 using System.Reflection;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Data;
 using System.Data.Common;
-using NDO;
 using NDO.Mapping;
-using NDO.Logging;
 using NDOInterfaces;
 using NDO.Query;
 using System.Globalization;
-using NDO.Configuration;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace NDO.SqlPersistenceHandling
 {
@@ -69,8 +65,7 @@ namespace NDO.SqlPersistenceHandling
 		private string selectFieldListWithAlias;
 		private string tableName;
 		private string qualifiedTableName;
-		private bool verboseMode;
-		private ILogAdapter logAdapter;
+		private ILogger logger;
 		private Dictionary<string, IMappingTableHandler> mappingTableHandlers = new Dictionary<string, IMappingTableHandler>();
 		private IProvider provider;
 		private NDOMapping ndoMapping;
@@ -87,16 +82,19 @@ namespace NDO.SqlPersistenceHandling
 		private string fieldList;
 		private string namedParamList;
 		private bool hasGuidOid;
-		private readonly INDOContainer configContainer;
+		private readonly IServiceProvider serviceProvider;
+		private readonly ILoggerFactory loggerFactory;
 		private Action<Type,IPersistenceHandler> disposeCallback;
 
 		/// <summary>
 		/// Constructs a SqlPersistenceHandler object
 		/// </summary>
-		/// <param name="configContainer"></param>
-		public SqlPersistenceHandler(INDOContainer configContainer)
+		/// <param name="serviceProvider"></param>
+		public SqlPersistenceHandler(IServiceProvider serviceProvider)
 		{
-			this.configContainer = configContainer;
+			this.serviceProvider = serviceProvider;
+			this.logger = serviceProvider.GetRequiredService<ILogger<SqlPersistenceHandler>>();
+			this.loggerFactory = serviceProvider.GetRequiredService<ILoggerFactory>();
 		}
 
 		private void GenerateSelectCommand()
@@ -233,13 +231,11 @@ namespace NDO.SqlPersistenceHandling
 				if (reader.Read())
 				{
 					object oidValue = reader.GetValue(0);
-					if ( this.verboseMode )
-					{
-						if ( oidValue == DBNull.Value )
-							LogAdapter.Info( oidColumnName + " = DbNull" );
-						else
-							LogAdapter.Info( oidColumnName + " = " + oidValue );
-					}
+					if ( oidValue == DBNull.Value )
+						this.logger.LogDebug( oidColumnName + " = DbNull" );
+					else
+						this.logger.LogDebug( oidColumnName + " = " + oidValue );
+
 					row[oidColumnName] = oidValue;
 					if (unchanged)
 						row.AcceptChanges();
@@ -408,47 +404,6 @@ namespace NDO.SqlPersistenceHandling
 			this.persistentFields = fm.PersistentFields;
 		}
 
-
-		/// <summary>
-		/// Gets or sets a value which determines, if database operations will be logged in a logging file.
-		/// </summary>
-		public bool VerboseMode
-		{
-			get { return this.verboseMode; }
-			set 
-			{ 
-				this.verboseMode = value; 
-				foreach(var mth in this.mappingTableHandlers.Values)
-				{
-					mth.VerboseMode = value;
-				}
-			}
-		}
-		/// <summary>
-		/// Gets or sets the log adapter to determine the sink where log entries are written to.
-		/// </summary>
-		public ILogAdapter LogAdapter
-		{
-			get 
-			{ 
-				return this.logAdapter; 
-			}
-			set 
-			{ 
-				this.logAdapter = value; 
-				foreach(var mth in this.mappingTableHandlers.Values)
-				{
-					mth.LogAdapter = value;
-				}
-			}
-		}
-
-		SqlColumnListGenerator CreateColumnListGenerator( Class cls )
-		{
-			var key = $"{nameof(SqlColumnListGenerator)}-{cls.FullName}";
-			return configContainer.ResolveOrRegisterType<SqlColumnListGenerator>( new ContainerControlledLifetimeManager(), key, new ParameterOverride( "cls", cls ) );
-		}
-
 		/// <summary>
 		/// Initializes the PersistenceHandler
 		/// </summary>
@@ -481,7 +436,7 @@ namespace NDO.SqlPersistenceHandling
 			// CheckTransaction is the place, where this happens.
 			this.conn = null;
 
-			var columnListGenerator = CreateColumnListGenerator( classMapping );	
+			var columnListGenerator = SqlColumnListGenerator.Get( classMapping );	
 			this.hollowFields = columnListGenerator.HollowFields;
 			this.hollowFieldsWithAlias = columnListGenerator.HollowFieldsWithAlias;
 			this.namedParamList = columnListGenerator.ParamList;
@@ -537,14 +492,14 @@ namespace NDO.SqlPersistenceHandling
 				}
                 dataAdapter.Update(rows);
 			}
-			catch (DBConcurrencyException dbex)
+			catch (System.Data.DBConcurrencyException dbex)
 			{
 				if (this.ConcurrencyError != null)
 				{
 					// This is a Firebird Hack because Fb doesn't set the row
 					if (dbex.Row == null)
 					{
-						foreach(DataRow r in rows)
+						foreach (DataRow r in rows)
 						{
 							if (r.RowState == DataRowState.Added ||
 								r.RowState == DataRowState.Modified)
@@ -554,12 +509,14 @@ namespace NDO.SqlPersistenceHandling
 							}
 						}
 					}
-					ConcurrencyError(dbex);
+					ConcurrencyError( dbex );
 				}
 				else
+				{
 					throw;
+				}
 			}
-            catch (Exception ex)
+            catch (System.Exception ex)
             {
                 string text = "Exception of type " + ex.GetType().Name + " while updating or inserting data rows: " + ex.Message + "\n";
                 if ((ex.Message.IndexOf("Die Variable") > -1 && ex.Message.IndexOf("muss deklariert") > -1) || (ex.Message.IndexOf("Variable") > -1 && ex.Message.IndexOf("declared") > -1))
@@ -573,16 +530,12 @@ namespace NDO.SqlPersistenceHandling
 
 		private void DumpBatch(string sql)
 		{
-			if (!this.verboseMode)
-				return;
-			this.logAdapter.Info("Batch: \r\n" + sql);
+			this.logger.LogDebug( "Batch: \r\n" + sql );
 		}
 
 		private void Dump(DataRow[] rows)
 		{
-			if (!this.verboseMode)
-				return;
-			new SqlDumper(this.logAdapter, this.provider, insertCommand, selectCommand, updateCommand, deleteCommand).Dump(rows);
+			new SqlDumper(this.loggerFactory, this.provider, insertCommand, selectCommand, updateCommand, deleteCommand).Dump(rows);
 		}
 
         DataRow[] Select(DataTable dt, DataViewRowState rowState)
@@ -605,14 +558,14 @@ namespace NDO.SqlPersistenceHandling
 			{
 				dataAdapter.Update(rows);
 			}
-			catch (DBConcurrencyException dbex)
+			catch (System.Data.DBConcurrencyException dbex)
 			{
 				if (this.ConcurrencyError != null)
 					ConcurrencyError(dbex);
 				else
 					throw;
 			}
-			catch (Exception ex)
+			catch (System.Exception ex)
 			{
 				string text = "Exception of type " + ex.GetType().Name + " while deleting data rows: " + ex.Message + "\n";
 				text += "Sql statement: " + deleteCommand.CommandText + "\n";
@@ -864,10 +817,8 @@ namespace NDO.SqlPersistenceHandling
 			IMappingTableHandler handler;
 			if (!mappingTableHandlers.TryGetValue( r.FieldName, out handler ))
 			{
-				handler = new NDOMappingTableHandler();
+				handler = new NDOMappingTableHandler( this.loggerFactory );
 				handler.Initialize(ndoMapping, r);
-				handler.VerboseMode = this.verboseMode;
-				handler.LogAdapter = this.logAdapter;
 				mappingTableHandlers[r.FieldName] = handler;
 			}
 			return handler;

@@ -1,5 +1,5 @@
 //
-// Copyright (c) 2002-2016 Mirko Matytschak 
+// Copyright (c) 2002-2024 Mirko Matytschak 
 // (www.netdataobjects.de)
 //
 // Author: Mirko Matytschak
@@ -28,7 +28,6 @@ using System.Collections.Generic;
 using System.Data;
 using System.Diagnostics;
 using System.Reflection;
-using System.Dynamic;
 using System.Text.RegularExpressions;
 using System.Linq;
 using System.Xml.Linq;
@@ -39,9 +38,9 @@ using NDO.ShortId;
 using System.Globalization;
 using NDO.Linq;
 using NDO.Query;
-using ST = System.Transactions;
-using NDO.Configuration;
 using NDO.ChangeLogging;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 
 namespace NDO
 {
@@ -55,10 +54,16 @@ namespace NDO
 	/// <see cref="NDO.PersistenceManagerBase.IdGenerationEvent"/>
 	/// </summary>
 	public delegate void IdGenerationHandler(Type t, ObjectId oid);
-	/// <summary>
-	/// Delegate type of an handler, which can be registered by the OnSaving event of the PersistenceManager.
-	/// </summary>
-	public delegate void OnSavingHandler(ICollection l);
+    /// <summary>
+    /// Delegate type of an handler, which can be registered by the ServiceScopeEvent event of the PersistenceManager.
+    /// <see cref="NDO.PersistenceManagerBase.IdGenerationEvent"/>
+    /// </summary>
+    public delegate IServiceProvider ServiceScopeHandler( Type t, ObjectId oid );
+
+    /// <summary>
+    /// Delegate type of an handler, which can be registered by the OnSaving event of the PersistenceManager.
+    /// </summary>
+    public delegate void OnSavingHandler(ICollection l);
 	/// <summary>
 	/// Delegate type for the OnSavedEvent.
 	/// </summary>
@@ -92,7 +97,7 @@ namespace NDO
 		private TypeManager typeManager;
 		internal bool DeferredMode { get; private set; }
 		private INDOTransactionScope transactionScope;
-		internal INDOTransactionScope TransactionScope => transactionScope ?? (transactionScope = ConfigContainer.Resolve<INDOTransactionScope>());		
+		internal INDOTransactionScope TransactionScope => transactionScope ?? (transactionScope = ServiceProvider.GetRequiredService<INDOTransactionScope>());		
 
 		private OpenConnectionListener openConnectionListener;
 
@@ -160,9 +165,9 @@ namespace NDO
 		/// <param name="mapping"></param>
 		internal override void Init( Mappings mapping )
 		{
-			ConfigContainer.RegisterType<INDOTransactionScope, NDOTransactionScope>();
-
 			base.Init( mapping );
+
+			ServiceProvider.GetRequiredService<IPersistenceManagerAccessor>().PersistenceManager = this;
 
 			string dir = Path.GetDirectoryName( mapping.FileName );
 
@@ -178,32 +183,35 @@ namespace NDO
 		/// <summary>
 		/// Standard Constructor.
 		/// </summary>
+		/// <param name="scopedServiceProvider">An IServiceProvider instance, which represents a scope (e.g. a request in an AspNet application)</param>
 		/// <remarks>
 		/// Searches for a mapping file in the application directory. 
 		/// The constructor tries to find a file with the same name as
 		/// the assembly, but with the extension .ndo.xml. If the file is not found the constructor tries to find a
 		/// file called AssemblyName.ndo.mapping in the application directory.
 		/// </remarks>
-		public PersistenceManager() : base()
+		public PersistenceManager( IServiceProvider scopedServiceProvider = null ) : base( scopedServiceProvider )
 		{
 		}
 
-		/// <summary>
-		/// Loads the mapping file from the specified location. This allows to use
-		/// different mapping files with different classes mapped in it.
-		/// </summary>
-		/// <param name="mappingFile">Path to the mapping file.</param>
-		/// <remarks>Only the Professional and Enterprise
-		/// Editions can handle more than one mapping file.</remarks>
-		public PersistenceManager(string mappingFile) : base (mappingFile)
+        /// <summary>
+        /// Loads the mapping file from the specified location. This allows to use
+        /// different mapping files with different classes mapped in it.
+        /// </summary>
+        /// <param name="mappingFile">Path to the mapping file.</param>
+        /// <param name="scopedServiceProvider">An IServiceProvider instance, which represents a scope (e.g. a request in an AspNet application)</param>
+        /// <remarks>Only the Professional and Enterprise
+        /// Editions can handle more than one mapping file.</remarks>
+        public PersistenceManager(string mappingFile, IServiceProvider scopedServiceProvider = null) : base (mappingFile, scopedServiceProvider)
 		{
 		}
 
-		/// <summary>
-		/// Constructs a PersistenceManager and reuses a cached NDOMapping.
-		/// </summary>
-		/// <param name="mapping">The cached mapping object</param>
-		public PersistenceManager(NDOMapping mapping) : base (mapping)
+        /// <summary>
+        /// Constructs a PersistenceManager and reuses a cached NDOMapping.
+        /// </summary>
+        /// <param name="mapping">The cached mapping object</param>
+        /// <param name="scopedServiceProvider">An IServiceProvider instance, which represents a scope (e.g. a request in an AspNet application)</param>
+        public PersistenceManager(NDOMapping mapping, IServiceProvider scopedServiceProvider) : base (mapping, scopedServiceProvider)
 		{
 		}
 
@@ -225,11 +233,12 @@ namespace NDO
 			{
 				if (pc.NDOObjectState == NDOObjectState.PersistentDirty)
 				{
-					if (this.VerboseMode)
-						this.LogAdapter.Warn("Call to GetObjectContainer returns changed objects.");
+					if (Logger != null)
+						Logger.LogWarning( "Call to GetObjectContainer returns changed objects." );
 					System.Diagnostics.Trace.WriteLine("NDO warning: Call to GetObjectContainer returns changed objects.");
 				}
 			}
+
 			ObjectContainer oc = new ObjectContainer();
 			oc.AddList(l);
 			return oc;
@@ -1376,7 +1385,7 @@ namespace NDO
 				}
 				else
 				{
-					SchemaTransitionGenerator schemaTransitionGenerator = new SchemaTransitionGenerator( NDOProviderFactory.Instance.Generators[ndoConn.Type], this.mappings );
+					SchemaTransitionGenerator schemaTransitionGenerator = new SchemaTransitionGenerator( ProviderFactory, ndoConn.Type, this.mappings );
 					string transition = @"<NdoSchemaTransition>
     <CreateTable name=""NDOSchemaVersion"">
       <CreateColumn name=""SchemaName"" type=""System.String,mscorlib"" allowNull=""True"" />
@@ -1416,7 +1425,7 @@ namespace NDO
 			if (transitionElements.Attribute( "schemaName" ) != null)
 				schemaName = transitionElements.Attribute( "schemaName" ).Value;
 			Version version = new Version( GetSchemaVersion( ndoConn, schemaName ) );
-			SchemaTransitionGenerator schemaTransitionGenerator = new SchemaTransitionGenerator( NDOProviderFactory.Instance.Generators[ndoConn.Type], this.mappings );
+			SchemaTransitionGenerator schemaTransitionGenerator = new SchemaTransitionGenerator( ProviderFactory, ndoConn.Type, this.mappings );
 			MemoryStream ms = new MemoryStream();
 			StreamWriter sw = new StreamWriter(ms, System.Text.Encoding.UTF8);
 			bool hasChanges = false;
@@ -1933,8 +1942,6 @@ namespace NDO
 
 				using (IMappingTableHandler handler = PersistenceHandlerManager.GetPersistenceHandler( pc ).GetMappingTableHandler( r ))
 				{
-					handler.VerboseMode = VerboseMode;
-					handler.LogAdapter = LogAdapter;
 					CheckTransaction( handler, r.MappingTable.Connection );
 					dt = handler.FindRelatedObjects(pc.NDOObjectId, this.ds);
 				}
@@ -2264,8 +2271,6 @@ namespace NDO
 				//Debug.WriteLine("Update Deleted Objects: "  + t.Name);
 				using (IPersistenceHandler handler = PersistenceHandlerManager.GetPersistenceHandler( t ))
 				{
-					handler.VerboseMode = VerboseMode;
-					handler.LogAdapter = LogAdapter;
 					CheckTransaction( handler, t );
 					ConcurrencyErrorHandler ceh = new ConcurrencyErrorHandler(this.OnConcurrencyError);
 					handler.ConcurrencyError += ceh;
@@ -2295,8 +2300,6 @@ namespace NDO
             // Now update all mapping tables
             foreach (IMappingTableHandler handler in mappingHandler.Values)
             {
-				handler.LogAdapter = this.LogAdapter;
-				handler.VerboseMode = this.VerboseMode;
 				CheckTransaction( handler, handler.Relation.MappingTable.Connection );
                 handler.Update(ds);
             }
@@ -2312,8 +2315,6 @@ namespace NDO
             // Now update all mapping tables
             foreach (IMappingTableHandler handler in mappingHandler.Values)
             {
-				handler.LogAdapter = this.LogAdapter;
-				handler.VerboseMode = this.VerboseMode;
 				CheckTransaction( handler, handler.Relation.MappingTable.Connection );
 				handler.Update(ds);
             }
@@ -3320,7 +3321,7 @@ namespace NDO
 		/// <returns></returns>
 		public IPersistenceCapable CreateObject(Type t) 
 		{
-			return Metaclasses.GetClass( t ).CreateObject( this.ConfigContainer );
+			return (IPersistenceCapable) ActivatorUtilities.CreateInstance( ServiceProvider, t );
 		}
 
 		/// <summary>
@@ -3496,12 +3497,10 @@ namespace NDO
 			base.Close();
 		}
 
-		internal void LogIfVerbose(string msg)
+		internal void LogIfVerbose( string msg )
 		{
-			if (VerboseMode && LogAdapter != null)
-			{
-				this.LogAdapter.Info( msg );
-			}
+			if (Logger != null && Logger.IsEnabled( LogLevel.Information ))
+				Logger.LogInformation( msg );
 		}
 
 
@@ -3639,8 +3638,7 @@ namespace NDO
 				IPersistenceCapable pc = cache.GetObject(id);                
 				if(pc == null) 
 				{
-                    var mc = Metaclasses.GetClass(concreteType);
-                    pc = mc.CreateObject( this.ConfigContainer );
+                    pc = CreateObject( concreteType );
                     pc.NDOObjectId = id;
 					pc.NDOStateManager = sm;
 					// If the object shouldn't be hollow, this will be overwritten later.

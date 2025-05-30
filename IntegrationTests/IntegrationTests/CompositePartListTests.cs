@@ -32,7 +32,7 @@ using NDO.Query;
 namespace NdoUnitTests
 {
     [TestFixture]
-    public class CompositePartListTests
+    public class CompositePartListTests : NDOTest
     {
         [SetUp]
         public void Setup()

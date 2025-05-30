@@ -38,12 +38,13 @@ namespace NDOEnhancer
 	{
 		IProvider provider;
 
-		public GenericDiffGenerator(ISqlGenerator concreteGenerator, MessageAdapter messages, NDO.Mapping.NDOMapping mappings) : base(concreteGenerator, messages, mappings)
+		public GenericDiffGenerator(IProvider provider, ISqlGenerator concreteGenerator, MessageAdapter messages, NDOMapping mappings) 
+			: base(provider, concreteGenerator, messages, mappings)
 		{
-			provider = NDOProviderFactory.Instance[concreteGenerator.ProviderName];
+			this.provider = provider;
 		}
 
-		public void Generate(System.Data.DataSet dsNewSchema, System.Data.DataSet dsOldSchema, System.IO.StreamWriter stream)
+		public void Generate(DataSet dsNewSchema, DataSet dsOldSchema, StreamWriter stream)
 		{
 			foreach(DataTable dt in dsNewSchema.Tables)
 			{

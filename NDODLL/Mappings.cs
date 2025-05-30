@@ -1,5 +1,5 @@
 ﻿//
-// Copyright (c) 2002-2016 Mirko Matytschak 
+// Copyright (c) 2002-2023 Mirko Matytschak 
 // (www.netdataobjects.de)
 //
 // Author: Mirko Matytschak
@@ -21,17 +21,12 @@
 
 
 using System;
-using System.Diagnostics;
-using System.Data;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
-using System.Xml;
-using NDO;
 using NDO.Mapping;
-using NDO.Logging;
-using NDO.Configuration;
-using NDO.SqlPersistenceHandling;
+using NDOInterfaces;
 
 namespace NDO 
 {
@@ -40,13 +35,10 @@ namespace NDO
 	/// </summary>
 	internal class Mappings : NDOMapping
 	{
-        private Dictionary<Type, IPersistenceHandler> persistenceHandler = new Dictionary<Type, IPersistenceHandler>();
 		private Dictionary<Type,int> updateOrder = new Dictionary<Type, int>();
-		ILogAdapter logAdapter;
-		private bool verboseMode;
 
-		internal Mappings( string mappingFile )
-			: base( mappingFile )
+		internal Mappings( string mappingFile, INDOProviderFactory providerFactory )
+			: base( mappingFile, providerFactory )
 		{
 			InitClassFields();
 			this.updateOrder = new ClassRank().BuildUpdateRank( Classes );
@@ -58,54 +50,30 @@ namespace NDO
 			{
 				((IFieldInitializer) c).InitFields();
 			}
+
 			// New loop, because we need the SystemType entries of all classes
 			foreach ( Class c in Classes )
 			{
 				c.ComputeRelationOrdinalBase();
+				var ordinal = c.RelationOrdinalBase;
 				foreach ( Relation r in c.Relations )
 				{
-					((IFieldInitializer) r).InitFields();
+					var fieldInitializer = (IFieldInitializer) r;
+
+					if (ordinal > 63)
+						throw new NDOException( 18, $"Class {c.FullName} has too much relations. Relation count: {c.Relations.Count()}" );
+
+					r.Ordinal = ordinal++;
+                    fieldInitializer.InitFields();
 				}
 			}
+
 			// New loop, we need all relations initialized
 			foreach ( Class c in Classes )
 			{
 				c.CollectForeignKeyNames();
 			}
 		}
-
-
-		/// <summary>
-		/// Gets or sets a value which determines, if database operations will be logged in a logging file.
-		/// </summary>
-		internal bool VerboseMode
-		{
-			get { return this.verboseMode; }
-			set
-			{
-				this.verboseMode = value;
-				foreach ( var de in persistenceHandler )
-				{
-					de.Value.VerboseMode = value;
-				}
-			}
-		}
-
-		/// <summary>
-		/// Gets or sets the Adapter, log entries are written to, if VerboseMode is true.
-		/// </summary>
-		internal ILogAdapter LogAdapter
-		{
-			set
-			{
-				this.logAdapter = value;
-				foreach ( var de in persistenceHandler )
-				{
-					de.Value.LogAdapter = value;
-				}
-			}
-		}
-
 
 		/// <summary>
 		/// Find info about the specified class.

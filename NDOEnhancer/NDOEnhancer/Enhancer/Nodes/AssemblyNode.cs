@@ -27,6 +27,7 @@ using System.Reflection;
 using NDO;
 using NDO.Mapping;
 using System.Runtime.Versioning;
+using NDO.Mapping.Attributes;
 
 namespace NDOEnhancer
 {
@@ -146,13 +147,14 @@ namespace NDOEnhancer
 		{
 			foreach (System.Attribute attr in attributes)
 			{
-				NDOOidTypeAttribute oidAttr = attr as NDOOidTypeAttribute;
-				if (oidAttr != null)
+				OidColumnAttribute oidAttr = attr as OidColumnAttribute;
+				if (oidAttr != null && oidAttr.NetType != null)
 				{
-					this.oidType = oidAttr.OidType;
+					this.oidType = oidAttr.NetType;
 					return oidType.FullName;
 				}
 			}
+
 			return null;
 		}
 

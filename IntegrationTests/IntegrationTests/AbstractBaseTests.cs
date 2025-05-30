@@ -30,7 +30,7 @@ namespace NdoUnitTests
 {
 
 	[TestFixture]
-	public class AbstractBaseTests
+	public class AbstractBaseTests : NDOTest
 	{
 		PersistenceManager pm;
 

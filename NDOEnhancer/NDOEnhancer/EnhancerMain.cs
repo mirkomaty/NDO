@@ -24,9 +24,14 @@ using System;
 using System.IO;
 using System.Reflection;
 using System.Linq;
-using NDO.Configuration;
-using NDO.Provider;
+//using NDO.Provider;
 using System.Globalization;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
+using NDO.ProviderFactory;
+using NDOInterfaces;
+//using NDO.SqlPersistenceHandling;
 
 namespace NDOEnhancer
 {
@@ -36,8 +41,9 @@ namespace NDOEnhancer
 	
         static bool verboseMode;
 		ProjectDescription projectDescription;
+        private IServiceProvider serviceProvider;
 
-		public static int Main( string[] args )
+        public static int Main( string[] args )
 		{
 			int result = 0;
 			// Make the culture invariant, otherwise .NET tries to load .resources assemblies.
@@ -63,13 +69,32 @@ namespace NDOEnhancer
 			{
 				Console.Error.WriteLine( "Error: " + ex.ToString() );
 				result = -1;
-			}
-			return result;
-		}
+            }
+            return result;
+        }
 
+        void Build( Action<IServiceCollection> configure = null )
+        {
+            var builder = Host.CreateDefaultBuilder();
+            builder.ConfigureServices( services =>
+            {
+                services.AddLogging( b =>
+                {
+                    b.ClearProviders();
+                    b.AddConsole();
+                } );
 
+				services.AddSingleton<INDOProviderFactory, NDOProviderFactory>();
+				services.AddSingleton<IProviderPathFinder, ProviderPathFinder>();
+                if (configure != null)
+                    configure( services );
+            } );
 
-		void CopyFile(string source, string dest)
+            var host = builder.Build();
+            this.serviceProvider = host.Services;
+        }
+
+        void CopyFile(string source, string dest)
         {
             if (verboseMode)
 			    Console.WriteLine("Copying: " + source + "->" + dest);
@@ -94,9 +119,9 @@ namespace NDOEnhancer
             this.projectDescription = new ProjectDescription( ndoProjFilePath, targetFramework );
 
 			AppDomain.CurrentDomain.AssemblyResolve += OnAssemblyResolve;
-			NDOContainer.Instance.RegisterType<IProviderPathFinder,ProviderPathFinder>();
-			// This is needed as parameter for ProviderPathFinder
-			NDOContainer.Instance.RegisterInstance( this.projectDescription );
+			//NDOContainer.Instance.RegisterType<IProviderPathFinder,ProviderPathFinder>();
+			//// This is needed as parameter for ProviderPathFinder
+			//NDOContainer.Instance.RegisterInstance( this.projectDescription );
 
             options = projectDescription.ConfigurationOptions;
 
@@ -136,7 +161,7 @@ namespace NDOEnhancer
 			var loadContext = new ManagedLoadContext( basePath, verboseMode );
 			using (loadContext.EnterContextualReflection())
 			{
-				new NDOEnhancer.Enhancer( this.projectDescription, messages ).DoIt();
+				new Enhancer( this.projectDescription, messages, NDOProviderFactory.Instance ).DoIt();
 				loadContext.Unload();
 			}
 

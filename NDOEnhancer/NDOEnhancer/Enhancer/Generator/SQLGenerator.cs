@@ -1,5 +1,5 @@
 ﻿//
-// Copyright (c) 2002-2022 Mirko Matytschak 
+// Copyright (c) 2002-2024 Mirko Matytschak 
 // (www.netdataobjects.de)
 //
 // Author: Mirko Matytschak
@@ -34,6 +34,13 @@ namespace NDOEnhancer
 	/// </summary>
 	internal class SQLGenerator
 	{
+        private readonly INDOProviderFactory providerFactory;
+
+        public SQLGenerator( INDOProviderFactory providerFactory )
+		{
+            this.providerFactory = providerFactory;
+        }
+
 		public void Generate(string scriptLanguage, bool utf8Encoding, DataSet dsSchema, DataSet dsOld, string filename, NDOMapping mappings, MessageAdapter messages, TypeManager typeManager, bool generateConstraints)
 		{
 			StreamWriter sw = new StreamWriter(filename, false, utf8Encoding ? System.Text.Encoding.UTF8 : System.Text.Encoding.Default);
@@ -43,14 +50,16 @@ namespace NDOEnhancer
 				return;
 			}
 
-			if (! NDOProviderFactory.Instance.Generators.TryGetValue(scriptLanguage, out ISqlGenerator sqlGenerator ))
+			var provider = this.providerFactory[scriptLanguage];
+			var concreteGenerator = (ISqlGenerator) this.providerFactory.Generators[scriptLanguage];
+			if (concreteGenerator == null)
 			{
 				messages.WriteLine("NDOEnhancer: No Sql code generator available for script language '" + scriptLanguage + "' found");
 				return;
 			}
 
 
-			new GenericSqlGenerator(sqlGenerator, messages, mappings).Generate(dsSchema, dsOld, sw, typeManager, generateConstraints);
+			new GenericSqlGenerator(provider, concreteGenerator, messages, mappings).Generate(dsSchema, dsOld, sw, typeManager, generateConstraints);
 			sw.Close();
 		}
 

@@ -23,9 +23,9 @@
 using System;
 using System.IO;
 using System.Data;
-using NDO;
 using NDO.Mapping;
 using NDOInterfaces;
+using NDO.ProviderFactory;
 
 namespace NDOEnhancer
 {
@@ -34,6 +34,13 @@ namespace NDOEnhancer
 	/// </summary>
 	internal class SQLDiffGenerator
 	{
+        private readonly INDOProviderFactory providerFactory;
+
+        public SQLDiffGenerator( INDOProviderFactory providerFactory )
+		{
+            this.providerFactory = providerFactory;
+        }
+
 		public void Generate(string scriptLanguage, bool utf8Encoding, DataSet dsSchema, DataSet dsBak, string filename, NDOMapping mappings, MessageAdapter messages)
 		{
 			string diffFile = filename.Replace(".ndo.sql", ".ndodiff." + mappings.SchemaVersion + ".sqltemp");
@@ -59,15 +66,16 @@ namespace NDOEnhancer
 				return;
 			}
 
-			if (!NDOProviderFactory.Instance.Generators.ContainsKey(scriptLanguage))
+			if (!this.providerFactory.Generators.ContainsKey(scriptLanguage))
 			{
-				// The error message should have been written by the Sql generator
 				messages.WriteLine("NDOEnhancer: No Sql code generator for script language '" + scriptLanguage + "' found");
 				return;
 			}
-			concreteGenerator = (ISqlGenerator) NDOProviderFactory.Instance.Generators[scriptLanguage];
 
-			new GenericDiffGenerator(concreteGenerator, messages, mappings).Generate(dsSchema, dsBak, sw);
+			var provider = this.providerFactory[scriptLanguage];
+			concreteGenerator = (ISqlGenerator) this.providerFactory.Generators[scriptLanguage];
+
+			new GenericDiffGenerator(provider, concreteGenerator, messages, mappings).Generate(dsSchema, dsBak, sw);
 			sw.Close();
             bool delete = false;
             if (isNewDiffFile)

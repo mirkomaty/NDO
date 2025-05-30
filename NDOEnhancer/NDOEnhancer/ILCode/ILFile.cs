@@ -153,46 +153,6 @@ namespace NDOEnhancer.ILCode
 			externElement.Remove();
 		}
 
-		public bool TestPersistence( string file )
-		{
-			string info = "";
-			try
-			{
-				if (file == null)
-					info = "file: null ";
-				else
-					info += "file: " + file + " ";
-
-				m_streamIn = new StreamReader( file, Encoding.UTF8 );
-
-				if (m_streamIn == null)
-					info += "m_streamIn: null ";
-				else
-					info += "m_streamIn: non null ";
-
-				for ( string line = PopLine(); null != line ; line = PopLine() )
-				{
-					if ( line.IndexOf( "[NDO]NDO.IMetaClass" ) > -1)
-						return true;
-				}
-
-				return false;
-			}
-			catch (Exception ex)
-			{
-				string message = ex.Message + "\n" + info;
-				throw new Exception(message);
-			}
-			finally
-			{
-				if (null != m_streamIn)
-				{
-					m_streamIn.Close();
-					m_streamIn = null;
-				}
-			}
-		}
-
 		public IEnumerable<ILAssemblyElement> AssemblyElements => m_assemblyElements;
 	
 	}

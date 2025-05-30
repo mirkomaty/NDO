@@ -1,0 +1,5 @@
+﻿using System;
+using System.Runtime.CompilerServices;
+
+[assembly: InternalsVisibleTo( "NDO.Core, PublicKey=0024000004800000940000000602000000240000525341310004000001000100334e181b6a00842c8477a769519685f1dae6b74fffe08153579efe20f9cabaf056dba4dda0dbec06866fb41bfacb9a8de9f2f162ddf0117718adf3569dcdf34813de0272ad43ccd3c719eaa876fe30d2b83aeb6a3996d56d936bafbf8f60c4ac3ec55eff179dd7596836dafb8605ca15895862bbc369b8431be42126b1d943c1", AllInternalsVisible = true )]
+[assembly:CLSCompliant(true)]

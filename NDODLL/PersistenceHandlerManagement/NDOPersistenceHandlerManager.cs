@@ -1,9 +1,6 @@
 ﻿using NDO.SqlPersistenceHandling;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using NDO.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace NDO
 {
@@ -12,7 +9,7 @@ namespace NDO
 	/// </summary>
 	public class NDOPersistenceHandlerManager : IPersistenceHandlerManager
 	{
-		private readonly INDOContainer configContainer;
+		private readonly IServiceProvider configContainer;
 		private readonly IPersistenceHandlerPool persistenceHandlerPool;
 
 		/// <summary>
@@ -20,7 +17,7 @@ namespace NDO
 		/// </summary>
 		/// <param name="configContainer"></param>
 		/// <param name="persistenceHandlerPool"></param>
-		public NDOPersistenceHandlerManager(INDOContainer configContainer, IPersistenceHandlerPool persistenceHandlerPool)
+		public NDOPersistenceHandlerManager(IServiceProvider configContainer, IPersistenceHandlerPool persistenceHandlerPool)
 		{
 			this.configContainer = configContainer;
 			this.persistenceHandlerPool = persistenceHandlerPool;
@@ -56,7 +53,7 @@ namespace NDO
 			IPersistenceHandler handler = persistenceHandlerPool.GetHandler( type, (t)=>
 			{
 				// 1. If a handler type is registered, use an instance of this handler
-				var newHandler = this.configContainer.Resolve<IPersistenceHandler>();
+				var newHandler = this.configContainer.GetService<IPersistenceHandler>();
 
 				// 2. try to use an NDOPersistenceHandler
 				if (newHandler == null)
@@ -65,7 +62,8 @@ namespace NDO
 				return newHandler;
 			});
 
-			Mappings mappings = configContainer.Resolve<Mappings>();
+			var mappingsAccessor = configContainer.GetRequiredService<IMappingsAccessor>();
+			Mappings mappings = mappingsAccessor.Mappings;
 			// The dataSet will be used as template to create a DataTable for the query results.
 			handler.Initialize( mappings, type, ReleaseHandler );
 

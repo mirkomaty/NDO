@@ -27,12 +27,12 @@ namespace NDO
 		/// <summary>
 		/// Constructs an NDOTransactionScope object.
 		/// </summary>
-		/// <param name="pm"></param>
-		public NDOTransactionScope( PersistenceManager pm )
+		/// <param name="pmAccessor"></param>
+		public NDOTransactionScope( IPersistenceManagerAccessor pmAccessor )
 		{
 			IsolationLevel = IsolationLevel.ReadCommitted;
 			TransactionMode = TransactionMode.Optimistic;
-			this.pm = pm;
+			this.pm = pmAccessor.PersistenceManager;
 		}
 
 		///<inheritdoc/>

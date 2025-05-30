@@ -8,7 +8,7 @@ using System;
 namespace NdoUnitTests
 {
 	[TestFixture]
-	public class ObjectContainerTests
+	public class ObjectContainerTests : NDOTest
 	{
 		private PersistenceManager pm;
 		private Mitarbeiter m;

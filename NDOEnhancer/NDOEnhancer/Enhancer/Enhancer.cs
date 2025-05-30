@@ -34,6 +34,8 @@ using NDO.Mapping;
 
 using NDOEnhancer.ILCode;
 using NDOEnhancer.Patcher;
+using NDO.SchemaGenerator;
+using NDOInterfaces;
 
 namespace NDOEnhancer
 {
@@ -42,15 +44,15 @@ namespace NDOEnhancer
 	/// </summary>
 	internal class Enhancer
 	{
-		public Enhancer( ProjectDescription projectDescription, MessageAdapter messages )
+		public Enhancer( ProjectDescription projectDescription, MessageAdapter messages, INDOProviderFactory providerFactory )
 		{
 			this.projectDescription	= projectDescription;
 			this.debug		= projectDescription.Debug;
 			this.binFile	= projectDescription.BinFile;
 			this.objPath	= projectDescription.ObjPath;
 			this.messages	= messages;
-
-			binPdbFile = Path.Combine(Path.GetDirectoryName( binFile ), Path.GetFileNameWithoutExtension( binFile ) + ".pdb");
+            this.providerFactory = providerFactory;
+            binPdbFile = Path.Combine(Path.GetDirectoryName( binFile ), Path.GetFileNameWithoutExtension( binFile ) + ".pdb");
             tempDir = Path.Combine(objPath, "ndotemp");
             if (!Directory.Exists(tempDir))
                 Directory.CreateDirectory(tempDir);
@@ -105,7 +107,8 @@ namespace NDOEnhancer
 		private List<string> tabuClasses = new List<string>();
 		private NDOMapping          mappings;
 		private MessageAdapter		messages;
-		private NDODataSet			dsSchema;
+        private readonly INDOProviderFactory providerFactory;
+        private NDODataSet			dsSchema;
 		private ConfigurationOptions options;
 		private string				assemblyKeyFile = null;
 
@@ -361,6 +364,9 @@ namespace NDOEnhancer
             {
                 foreach (Relation r in cl.Relations)
                 {
+					// There should be some code to remap foreign key columns based on
+					// attributes. But it causes problems, so we masked this code out
+					// and clarify the situation later.
                     /*
                      * 1. klären, ob ForeignKeyColumns oder ChildForeignKeyColumns relevant sind
                      *      - Multiplicity  Ist die schon bekannt?
@@ -414,7 +420,7 @@ namespace NDOEnhancer
 		void GenerateAllSchemas()
 		{
 			if (this.projectDescription.ConfigurationOptions.GenerateSQL)
-				dsSchema.Remap(mappings);
+				dsSchema.Remap(mappings, this.providerFactory);
 		}
 
 
@@ -969,7 +975,7 @@ namespace NDOEnhancer
 
 			try
 			{
-				mergeMapping = new NDOMapping(mapFileName);
+				mergeMapping = new NDOMapping(mapFileName, this.providerFactory);
 			}
 			catch (Exception ex)
 			{
@@ -1100,7 +1106,7 @@ namespace NDOEnhancer
                 if (this.verboseMode)
 				    messages.WriteLine("Mapping file is: " + mappingFile);
 
-					mappings = new NDOMapping(mappingFile);
+					mappings = new NDOMapping(mappingFile, this.providerFactory);
 					mappings.SchemaVersion = options.SchemaVersion;
                     ((IEnhancerSupport)mappings).IsEnhancing = true;
 			}
@@ -1232,19 +1238,23 @@ namespace NDOEnhancer
                 }
 				string oldSchemaFile = schemaFile.Replace(".ndo.xsd", ".ndo.xsd.bak");
 				NDODataSet dsOld = null;
+				
 				if (File.Exists(oldSchemaFile))
 				{
                     dsOld = new NDODataSet(oldSchemaFile);
-					new SQLDiffGenerator().Generate(options.SQLScriptLanguage, options.Utf8Encoding, dsSchema, dsOld, sqlFileName, mappings, messages);
+					new SQLDiffGenerator( this.providerFactory ).Generate(options.SQLScriptLanguage, options.Utf8Encoding, dsSchema, dsOld, sqlFileName, mappings, messages);
 					new NdoTransDiffGenerator().Generate(dsSchema, dsOld, sqlFileName, mappings, messages);
 				}
 				else
 				{
 					new NdoTransDiffGenerator().Generate( dsSchema, new DataSet(), sqlFileName, mappings, messages );
 				}
+				
 				if (!this.options.DropExistingElements)
 					dsOld = null;  // causes, that no drop statements will be generated.
-				new SQLGenerator().Generate(options.SQLScriptLanguage, options.Utf8Encoding, dsSchema, dsOld, sqlFileName, mappings, messages, tm, this.options.GenerateConstraints);
+
+				new SQLGenerator( this.providerFactory )
+					.Generate( options.SQLScriptLanguage, options.Utf8Encoding, dsSchema, dsOld, sqlFileName, mappings, messages, tm, this.options.GenerateConstraints );
 			}
 
 		}

@@ -32,7 +32,7 @@ using NDO.Query;
 namespace NdoUnitTests
 {
 	[TestFixture]
-	public class ArrayListTests
+	public class ArrayListTests : NDOTest
 	{
 		private PersistenceManager pm;
 		private Mitarbeiter m;

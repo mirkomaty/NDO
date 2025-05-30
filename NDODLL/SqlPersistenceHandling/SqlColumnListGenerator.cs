@@ -1,6 +1,7 @@
 ﻿using NDO.Mapping;
 using NDOInterfaces;
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
@@ -13,6 +14,8 @@ namespace NDO.SqlPersistenceHandling
 	/// </summary>
 	public class SqlColumnListGenerator
 	{
+		static ConcurrentDictionary<string,SqlColumnListGenerator> instances = new ConcurrentDictionary<string, SqlColumnListGenerator>();
+
 		IProvider provider;
 		List<string> baseColumnList = new List<string>();
 		List<string> selectColumnList = new List<string>();
@@ -29,6 +32,17 @@ namespace NDO.SqlPersistenceHandling
 		public SqlColumnListGenerator( Class cls )
 		{
 			Init( cls );
+		}
+
+		/// <summary>
+		/// Gets the SqlColumnListGenerator instance for a given class.
+		/// </summary>
+		/// <param name="cls"></param>
+		/// <returns></returns>
+		public static SqlColumnListGenerator Get(Class cls)
+		{
+			var key = $"{nameof(SqlColumnListGenerator)}-{cls.FullName}";
+			return instances.GetOrAdd( key, _ => new SqlColumnListGenerator( cls ) );
 		}
 
 		/// <summary>

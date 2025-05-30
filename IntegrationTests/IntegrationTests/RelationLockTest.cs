@@ -34,7 +34,7 @@ namespace NdoUnitTests
 {
 
 	[TestFixture]
-	public class RelationLockTest
+	public class RelationLockTest : NDOTest
 	{
 		PersistenceManager pm;
 		private Mitarbeiter m;

@@ -50,7 +50,6 @@ namespace NDOEnhancer
 		{
             this.mapping = mapping;
             this.filename = filename;
-            this.Load();
 		}
 
 
@@ -77,8 +76,6 @@ namespace NDOEnhancer
 
 				baseNode.IsPoly = true;
 			}
-
-            this.Store();
 		}
 
 
@@ -122,58 +119,5 @@ namespace NDOEnhancer
                 return arr;
             }
         }
-
-		public void Load() 
-		{
-            foreach (Class cls in mapping.Classes)
-            {
-                if (cls.TypeCode != 0)
-                {
-                    this.types[cls.TypeCode] = cls;
-                    ids[cls] = cls.TypeCode;
-                }
-            }
-            if (this.types.Count == 0)
-            {
-                FileInfo fi = new FileInfo(filename);
-                if (fi.Exists)
-                {
-                    XmlSerializer xs = new XmlSerializer(typeof(NDOTypeMapping));
-                    using (FileStream fs =
-                               fi.Open(FileMode.Open, FileAccess.Read, FileShare.Read))
-                    {
-                        NDOTypeMapping typeMapping = (NDOTypeMapping)xs.Deserialize(fs);
-                        if (typeMapping.TypeDescriptor != null)
-                        {
-                            foreach (NDOTypeDescriptor d in typeMapping.TypeDescriptor)
-                            {
-                                Class cls = this.mapping.FindClass(d.TypeName);
-                                if (cls == null)  // NDOTypes.xml describes types which don't exist in this context
-                                    continue;
-                                cls.TypeCode = d.TypeId;
-                                types[d.TypeId] = cls;
-                                ids[cls] = d.TypeId;
-                            }
-                        }
-                    }
-                }
-            }
-		}
-
-		public void Store() 
-		{
-            if (File.Exists(this.filename))
-            {
-                if (!File.Exists(this.filename + ".deprecated"))
-                    File.Move(this.filename, this.filename + ".deprecated");
-                else
-                    File.Delete(this.filename);
-            }
-		}
-
-		public void Update() 
-		{
-			Store();
-		}
 	}
 }

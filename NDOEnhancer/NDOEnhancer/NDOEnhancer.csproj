@@ -38,7 +38,11 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="6.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Hosting" Version="6.0.0" />
     <PackageReference Include="mono.cecil" Version="0.11.4" />
+    <PackageReference Include="NDO.ProviderFactory" Version="5.0.0" />
+    <PackageReference Include="NDOInterfaces" Version="5.0.0" />
 	<PackageReference Include="runtime.linux-x64.Microsoft.NETCore.ILAsm" Version="8.0.0" />
 	<PackageReference Include="runtime.linux-x64.Microsoft.NETCore.ILDAsm" Version="8.0.0" />
 	<PackageReference Include="runtime.win-x64.Microsoft.NETCore.ILAsm" Version="8.0.0" />
@@ -46,6 +50,8 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\NDO.Mapping\NDO.Mapping\NDO.Mapping.csproj" />
+    <ProjectReference Include="..\..\NDO.SchemaGenerator\NDO.SchemaGenerator\NDO.SchemaGenerator.csproj" />
     <ProjectReference Include="..\Ecma335\Ecma335.csproj" />
   </ItemGroup>
 

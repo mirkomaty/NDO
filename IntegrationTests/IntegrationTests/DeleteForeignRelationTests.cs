@@ -29,7 +29,7 @@ using DeleteForeignRelation;
 namespace NdoUnitTests
 {
 	[TestFixture]
-	public class DeleteForeignRelationTests
+	public class DeleteForeignRelationTests : NDOTest
 	{
 		[SetUp]
 		public void Setup()

@@ -31,7 +31,7 @@ using PureBusinessClasses;
 namespace NdoUnitTests
 {
 	[TestFixture]
-	public class TestHashCode
+	public class TestHashCode : NDOTest
 	{
 		private PersistenceManager pm;
 

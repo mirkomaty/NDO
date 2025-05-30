@@ -72,35 +72,10 @@ namespace NDOEnhancer
             object[] attributes = this.classType.GetCustomAttributes(typeof(OidColumnAttribute), true);
             if (attributes.Length > 0)
             {
-                if (this.classType.GetCustomAttributes(typeof(NDOOidTypeAttribute), true).Length > 0)
-                    new MessageAdapter().WriteLine("Warning: Can't mix OidColumnAttribute and NDOOidTypeAttribute in type " + this.name + ". The NDOOidTypeAttribute is ignored.");
                 foreach (OidColumnAttribute ca in attributes)
                     collectedAttributes.Add(ca);
             }
-            else // Try to implement the old mapping
-            {
-                // The attribute is collected from the first base class defining it
-                attributes = this.classType.GetCustomAttributes(typeof(NDOOidTypeAttribute), true);
-                if (attributes.Length > 0)
-                    collectedAttributes.Add(new OidColumnAttribute(((NDOOidTypeAttribute)attributes[0]).OidType));
-            }
         
-            FieldMap fieldMap = new FieldMap(this.classType);
-            foreach (var de in fieldMap.PersistentFields)
-            {
-                FieldInfo fi = de.Value as FieldInfo;
-                if (fi == null)
-                    continue;
-#pragma warning disable 0618
-				if (fi.GetCustomAttributes(typeof(NDOObjectIdAttribute), false).Length > 0)
-                {
-                    OidColumnAttribute ca = new OidColumnAttribute();
-                    ca.FieldName = fi.Name;
-                    collectedAttributes.Add(ca);
-                }
-#pragma warning restore 0618
-			}
-
 			// If no attribute is assigned to the class, look for attributes assigned to the assembly
 			if (collectedAttributes.Count == 0)
             {
@@ -110,13 +85,6 @@ namespace NDOEnhancer
 					ca.IsAssemblyWideDefinition = true;
 					collectedAttributes.Add( ca );
 				}
-            }
-            if (collectedAttributes.Count == 0)
-            {
-                attributes = this.classType.Assembly.GetCustomAttributes(typeof(NDOOidTypeAttribute), false);
-				// The old mapping only allowed 1 NDOOidAttribute, so let's take the first one found
-				if (attributes.Length > 0)
-					collectedAttributes.Add( new OidColumnAttribute( ((NDOOidTypeAttribute)attributes[0]).OidType ) { IsAssemblyWideDefinition = true } );
             }
             if (collectedAttributes.Count > 0)
             {
@@ -157,7 +125,7 @@ namespace NDOEnhancer
 					continue;
 
 				// Field type is persistent - assume relation with element multiplicity.
-				if (typeof(IPersistenceCapable).IsAssignableFrom(fi.FieldType))
+				if (fi.FieldType.GetInterface( "IPersistenceCapable" ) != null)
 				{
 					NDORelationAttribute nra = new NDORelationAttribute(fi.FieldType, RelationInfo.Default);
 					this.relations.Add(new RelationNode(fi, nra, this));
@@ -167,7 +135,7 @@ namespace NDOEnhancer
 				// Field is a collection - assume that it is either a relation or a transient field.
 				if (GenericIListReflector.IsGenericIList(fi.FieldType))
 				{
-					if (typeof(IPersistenceCapable).IsAssignableFrom(fi.FieldType.GetGenericArguments()[0]))
+					if (fi.FieldType.GetGenericArguments()[0].GetInterface( "IPersistenceCapable" ) != null)
 					{
 						NDORelationAttribute nra = new NDORelationAttribute(fi.FieldType.GetGenericArguments()[0], RelationInfo.Default);
 						this.relations.Add(new RelationNode(fi, nra, this));

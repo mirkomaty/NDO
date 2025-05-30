@@ -60,7 +60,8 @@ namespace NDO
         /// Constructs an OfflinePersistenceManager object
         /// </summary>
         /// <param name="mapping"></param>
-		public OfflinePersistenceManager(NDOMapping mapping) : base(mapping)
+		/// <param name="scopedServiceProvider"></param>
+		public OfflinePersistenceManager( NDOMapping mapping, IServiceProvider scopedServiceProvider ) : base( mapping, scopedServiceProvider )
 		{
 		}
 
