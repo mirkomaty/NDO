@@ -90,19 +90,19 @@
 	<Target Name="PatchNdoVersion" BeforeTargets="Build">
 		<Exec Command="$(PatchNdoVersion) &quot;$(NDO_DIR)\SimpleMappingTool\Mapping.csproj&quot; -n $(Version)" />
 		
-		<Exec Command="$(PatchNdoVersion) &quot;$(NDO_DIR)\Provider\MySqlConnectorProvider\NDO.MySqlConnector\NDO.MySqlConnector.csproj&quot; -i $(Version)" />
-		<Exec Command="$(PatchNdoVersion) &quot;$(NDO_DIR)\Provider\MySqlNdoProvider\NDO.MySql\NDO.MySql.csproj&quot; -i $(Version)" />
-		<Exec Command="$(PatchNdoVersion) &quot;$(NDO_DIR)\Provider\OracleProvider\NDO.Oracle\NDO.Oracle.csproj&quot; -i $(Version)" />
-		<Exec Command="$(PatchNdoVersion) &quot;$(NDO_DIR)\Provider\PostGresProvider\NDO.Postgre\NDO.Postgre.csproj&quot; -i $(Version)" />
-		<Exec Command="$(PatchNdoVersion) &quot;$(NDO_DIR)\Provider\SqliteProvider\NDO.Sqlite\NDO.Sqlite.csproj&quot; -i $(Version)" />
-		<Exec Command="$(PatchNdoVersion) &quot;$(NDO_DIR)\Provider\SqlServerProvider\NDO.SqlServer\NDO.SqlServer.csproj&quot; -i $(Version)" />
+		<Exec Command="$(PatchNdoVersion) &quot;$(NDO_DIR)\Provider\MySqlConnectorProvider\NDO.MySqlConnector\NDO.MySqlConnector.csproj&quot; -i $(InterfacesVersion)" />
+		<Exec Command="$(PatchNdoVersion) &quot;$(NDO_DIR)\Provider\MySqlNdoProvider\NDO.MySql\NDO.MySql.csproj&quot; -i $(InterfacesVersion)" />
+		<Exec Command="$(PatchNdoVersion) &quot;$(NDO_DIR)\Provider\OracleProvider\NDO.Oracle\NDO.Oracle.csproj&quot; -i $(InterfacesVersion)" />
+		<Exec Command="$(PatchNdoVersion) &quot;$(NDO_DIR)\Provider\PostGresProvider\NDO.Postgre\NDO.Postgre.csproj&quot; -i $(InterfacesVersion)" />
+		<Exec Command="$(PatchNdoVersion) &quot;$(NDO_DIR)\Provider\SqliteProvider\NDO.Sqlite\NDO.Sqlite.csproj&quot; -i $(InterfacesVersion)" />
+		<Exec Command="$(PatchNdoVersion) &quot;$(NDO_DIR)\Provider\SqlServerProvider\NDO.SqlServer\NDO.SqlServer.csproj&quot; -i $(InterfacesVersion)" />
 		
-		<Exec Command="$(PatchNdoVersion) &quot;$(NDO_DIR)\Provider\MySqlConnectorProvider\MySqlConnectorUISupport\MySqlConnectorUISupport.csproj&quot; -i $(Version)" />
-		<Exec Command="$(PatchNdoVersion) &quot;$(NDO_DIR)\Provider\MySqlNdoProvider\MySqlUISupport\MySqlUISupport.csproj&quot; -i $(Version)" />
-		<Exec Command="$(PatchNdoVersion) &quot;$(NDO_DIR)\Provider\OracleProvider\OracleUISupport\OracleUISupport.csproj&quot; -i $(Version)" />
-		<Exec Command="$(PatchNdoVersion) &quot;$(NDO_DIR)\Provider\PostGresProvider\PostGresUISupport\PostGresUISupport.csproj&quot; -i $(Version)" />
-		<Exec Command="$(PatchNdoVersion) &quot;$(NDO_DIR)\Provider\SqliteProvider\SqliteUISupport\SqliteUISupport.csproj&quot; -i $(Version)" />
-		<Exec Command="$(PatchNdoVersion) &quot;$(NDO_DIR)\Provider\SqlServerProvider\SqlServerUISupport\SqlServerUISupport.csproj&quot; -i $(Version)" />
+		<Exec Command="$(PatchNdoVersion) &quot;$(NDO_DIR)\Provider\MySqlConnectorProvider\MySqlConnectorUISupport\MySqlConnectorUISupport.csproj&quot; -i $(InterfacesVersion)" />
+		<Exec Command="$(PatchNdoVersion) &quot;$(NDO_DIR)\Provider\MySqlNdoProvider\MySqlUISupport\MySqlUISupport.csproj&quot; -i $(InterfacesVersion)" />
+		<Exec Command="$(PatchNdoVersion) &quot;$(NDO_DIR)\Provider\OracleProvider\OracleUISupport\OracleUISupport.csproj&quot; -i $(InterfacesVersion)" />
+		<Exec Command="$(PatchNdoVersion) &quot;$(NDO_DIR)\Provider\PostGresProvider\PostGresUISupport\PostGresUISupport.csproj&quot; -i $(InterfacesVersion)" />
+		<Exec Command="$(PatchNdoVersion) &quot;$(NDO_DIR)\Provider\SqliteProvider\SqliteUISupport\SqliteUISupport.csproj&quot; -i $(InterfacesVersion)" />
+		<Exec Command="$(PatchNdoVersion) &quot;$(NDO_DIR)\Provider\SqlServerProvider\SqlServerUISupport\SqlServerUISupport.csproj&quot; -i $(InterfacesVersion)" />
 	</Target>
 
 	<Target Name="NDOBuild" AfterTargets="Build">
@@ -117,7 +117,7 @@
 		<MSBuild Projects="@(FwProject)" Targets="Rebuild" Properties="Configuration=$(Configuration);Platform=$(Platform)" />
 		<MSBuild Projects="@(Provider)" Targets="Rebuild" Properties="Configuration=$(Configuration);Platform=$(Platform)" />
 		<MSBuild Projects="$(NDO_DIR)\NDOEnhancer\Ecma335\Ecma335.csproj" Targets="Rebuild" Properties="Configuration=$(Configuration);Platform=$(Platform)" />
-		<MSBuild Projects="$(NDO_DIR)\NDOEnhancer\NDOEnhancer\NDOEnhancer.csproj" Targets="Restore" />
+		<MSBuild Projects="$(NDO_DIR)\NDOEnhancer\NDOEnhancer\NDOEnhancer.csproj" Targets="Restore" Properties="Configuration=$(Configuration);Platform=$(Platform)" />
 		<MSBuild Projects="$(NDO_DIR)\NDOEnhancer\NDOEnhancer\NDOEnhancer.csproj" Targets="Rebuild" Properties="Configuration=$(Configuration);Platform=$(Platform)" />
 	</Target>
   
