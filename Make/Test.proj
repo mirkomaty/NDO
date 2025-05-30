@@ -46,8 +46,8 @@
 
 	<!--These are the projects using the classic .NET framework-->
 	<ItemGroup>
+		<FwProject Include="$(NDO_DIR)\UISupport\NDO.UISupport\NDO.UISupport.csproj" />
 		<FwProject Include="..\Provider\MySqlNdoProvider\MySqlUISupport\MySqlUISupport.csproj" />
-		<!--FwProject Include="$(NDO_DIR)\UISupport\NDO.UISupport\NDO.UISupport.csproj" />
 		<FwProject Include="..\Provider\MySqlConnectorProvider\MySqlConnectorUISupport\MySqlConnectorUISupport.csproj" />
 		<FwProject Include="..\Provider\OracleProvider\OracleUISupport\OracleUISupport.csproj" />
 		<FwProject Include="..\Provider\SqliteProvider\SqliteUISupport\SqliteUISupport.csproj" />
@@ -56,7 +56,7 @@
 
 		<FwProject Include="..\NDOPackage\NDOPackage.csproj" />
 		<FwProject Include="..\NDOEnhancer\NDOEnhancer\NDOEnhancer.csproj" />
-		<FwProject Include="..\NDOEnhancer.BuildTask\NDOEnhancer.BuildTask\NDOEnhancer.BuildTask.csproj"/-->
+		<FwProject Include="..\NDOEnhancer.BuildTask\NDOEnhancer.BuildTask\NDOEnhancer.BuildTask.csproj" />
 	</ItemGroup>
 
 
@@ -67,11 +67,11 @@
 
 	<ItemGroup>
 		<Provider Include="$(NDO_DIR)\Provider\MySqlConnectorProvider\NDO.MySqlConnector\NDO.MySqlConnector.csproj" />
-		<!--Provider Include="$(NDO_DIR)\Provider\MySqlNdoProvider\NDO.MySql\NDO.MySql.csproj" />
+		<Provider Include="$(NDO_DIR)\Provider\MySqlNdoProvider\NDO.MySql\NDO.MySql.csproj" />
 		<Provider Include="$(NDO_DIR)\Provider\OracleProvider\NDO.Oracle\NDO.Oracle.csproj" />
 		<Provider Include="$(NDO_DIR)\Provider\SqliteProvider\NDO.Sqlite\NDO.Sqlite.csproj" />
 		<Provider Include="$(NDO_DIR)\Provider\SqlServerProvider\NDO.Sqlserver\NDO.Sqlserver.csproj" />
-		<Provider Include="$(NDO_DIR)\Provider\PostgresProvider\NDO.Postgre\NDO.Postgre.csproj" /!-->		
+		<Provider Include="$(NDO_DIR)\Provider\PostgresProvider\NDO.Postgre\NDO.Postgre.csproj" />		
 	</ItemGroup>
 		
 	<Target Name="DeletePackages" BeforeTargets="CreatePackageDir">
@@ -89,10 +89,24 @@
 
 	<Target Name="PatchNdoVersion" BeforeTargets="Build">
 		<Exec Command="$(PatchNdoVersion) &quot;$(NDO_DIR)\SimpleMappingTool\Mapping.csproj&quot; -n $(Version)" />
+		
+		<Exec Command="$(PatchNdoVersion) &quot;$(NDO_DIR)\Provider\MySqlConnectorProvider\NDO.MySqlConnector\NDO.MySqlConnector.csproj&quot; -i $(Version)" />
+		<Exec Command="$(PatchNdoVersion) &quot;$(NDO_DIR)\Provider\MySqlNdoProvider\NDO.MySql\NDO.MySql.csproj&quot; -i $(Version)" />
+		<Exec Command="$(PatchNdoVersion) &quot;$(NDO_DIR)\Provider\OracleProvider\NDO.Oracle\NDO.Oracle.csproj&quot; -i $(Version)" />
+		<Exec Command="$(PatchNdoVersion) &quot;$(NDO_DIR)\Provider\PostGresProvider\NDO.Postgre\NDO.Postgre.csproj&quot; -i $(Version)" />
+		<Exec Command="$(PatchNdoVersion) &quot;$(NDO_DIR)\Provider\SqliteProvider\NDO.Sqlite\NDO.Sqlite.csproj&quot; -i $(Version)" />
+		<Exec Command="$(PatchNdoVersion) &quot;$(NDO_DIR)\Provider\SqlServerProvider\NDO.SqlServer\NDO.SqlServer.csproj&quot; -i $(Version)" />
+		
+		<Exec Command="$(PatchNdoVersion) &quot;$(NDO_DIR)\Provider\MySqlConnectorProvider\MySqlConnectorUISupport\MySqlConnectorUISupport.csproj&quot; -i $(Version)" />
+		<Exec Command="$(PatchNdoVersion) &quot;$(NDO_DIR)\Provider\MySqlNdoProvider\MySqlUISupport\MySqlUISupport.csproj&quot; -i $(Version)" />
+		<Exec Command="$(PatchNdoVersion) &quot;$(NDO_DIR)\Provider\OracleProvider\OracleUISupport\OracleUISupport.csproj&quot; -i $(Version)" />
+		<Exec Command="$(PatchNdoVersion) &quot;$(NDO_DIR)\Provider\PostGresProvider\PostGresUISupport\PostGresUISupport.csproj&quot; -i $(Version)" />
+		<Exec Command="$(PatchNdoVersion) &quot;$(NDO_DIR)\Provider\SqliteProvider\SqliteUISupport\SqliteUISupport.csproj&quot; -i $(Version)" />
+		<Exec Command="$(PatchNdoVersion) &quot;$(NDO_DIR)\Provider\SqlServerProvider\SqlServerUISupport\SqlServerUISupport.csproj&quot; -i $(Version)" />
 	</Target>
-	
-	<Target Name="RestoreMsg" BeforeTargets="Restore">
-		<Message Text="$(Lala)"></Message>
+
+	<Target Name="NDOBuild" AfterTargets="Build">
+		<Exec WorkingDirectory="$(NDO_DIR)\nuget" Condition="'$(Configuration)'=='Release'" Command="nuget.exe pack NDO.Build.nuspec" />
 	</Target>
 
 
@@ -105,8 +119,6 @@
 		<MSBuild Projects="$(NDO_DIR)\NDOEnhancer\Ecma335\Ecma335.csproj" Targets="Rebuild" Properties="Configuration=$(Configuration);Platform=$(Platform)" />
 		<MSBuild Projects="$(NDO_DIR)\NDOEnhancer\NDOEnhancer\NDOEnhancer.csproj" Targets="Restore" />
 		<MSBuild Projects="$(NDO_DIR)\NDOEnhancer\NDOEnhancer\NDOEnhancer.csproj" Targets="Rebuild" Properties="Configuration=$(Configuration);Platform=$(Platform)" />
-		<MSBuild Projects="$(NDO_DIR)\NDOEnhancer\NDO.Build\NDO.Build.csproj" Targets="Restore" Properties="Configuration=$(Configuration);Platform=$(Platform)" />
-		<MSBuild Projects="$(NDO_DIR)\NDOEnhancer\NDO.Build\NDO.Build.csproj" Targets="Pack" Properties="Configuration=$(Configuration);Platform=$(Platform)" />
 	</Target>
   
 </Project>
