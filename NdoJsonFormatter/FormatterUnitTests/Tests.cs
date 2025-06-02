@@ -19,17 +19,22 @@
 // CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER 
 // DEALINGS IN THE SOFTWARE.
 
-using NDO.JsonFormatter;
-using NUnit.Framework;
-using System;
-using System.Linq;
-using Reisekosten;
-using Reisekosten.Personal;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
 using NDO;
-using System.IO;
+using NDO.Application;
+using NDO.JsonFormatter;
+using NDO.SqlPersistenceHandling;
+using NDOInterfaces;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using NDOInterfaces;
+using NUnit.Framework;
+using Reisekosten;
+using Reisekosten.Personal;
+using System;
+using System.IO;
+using System.Linq;
 
 namespace FormatterUnitTests
 {
@@ -37,10 +42,12 @@ namespace FormatterUnitTests
     public class Tests
     {
 		PersistenceManager pm;
+		IServiceProvider serviceProvider;
 
 		[SetUp]
 		public void SetUp()
 		{
+			Build();
 			this.pm = new PersistenceManager();
 		}
 
@@ -60,6 +67,29 @@ namespace FormatterUnitTests
 			this.pm.Save();
 
 		}
+
+		void Build( Action<IServiceCollection> configure = null )
+		{
+			var builder = Host.CreateDefaultBuilder();
+			builder.ConfigureServices( services =>
+			{
+				services.AddLogging( b =>
+				{
+					b.ClearProviders();
+					b.AddConsole();
+				} );
+
+				services.AddNdo( null, null );
+				if (configure != null)
+					configure( services );
+			} );
+
+			var host = builder.Build();
+			this.serviceProvider = host.Services;
+			host.Services.UseNdo();
+
+		}
+
 
 		Mitarbeiter CreatePersistentMitarbeiter()
 		{

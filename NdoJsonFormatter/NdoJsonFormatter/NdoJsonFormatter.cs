@@ -103,7 +103,7 @@ namespace NDO.JsonFormatter
 		{
 			var t = e.GetType();
 			FieldMap fm = new FieldMap(t);
-			var mc = Metaclasses.GetClass(t);
+
 			foreach (var fi in fm.Relations)
 			{
 				var token = jObj[fi.Name];
@@ -223,43 +223,6 @@ namespace NDO.JsonFormatter
 			return new ArrayList( rootObjects );
 		}
 
-		internal class Metaclasses
-		{
-			private static Dictionary<Type, IMetaClass2> theClasses = new Dictionary<Type, IMetaClass2>();
-
-			internal static IMetaClass2 GetClass( Type t )
-			{
-				if (t.IsGenericTypeDefinition)
-					return null;
-
-				IMetaClass2 mc;
-
-				if (!theClasses.TryGetValue( t, out mc ))
-				{
-					lock (theClasses)
-					{
-						if (!theClasses.TryGetValue( t, out mc ))  // Threading double check
-						{
-							Type mcType = t.GetNestedType( "MetaClass", BindingFlags.NonPublic | BindingFlags.Public );
-							if (null == mcType)
-								throw new NDOException( 13, "Missing nested class 'MetaClass' for type '" + t.Name + "'; the type doesn't seem to be enhanced." );
-							Type t2 = mcType;
-							if (t2.IsGenericTypeDefinition)
-								t2 = t2.MakeGenericType( t.GetGenericArguments() );
-							var o = Activator.CreateInstance( t2, t );
-							if (o is IMetaClass2 mc2)
-								mc = mc2;
-							else
-								throw new NDOException( 101010, $"MetaClass for type '{t.FullName}' must implement IMetaClass2, but doesn't. Recompile the assembly with NDO v. >= 4.0.9" );
-							theClasses.Add( t, mc );
-						}
-					}
-				}
-
-				return mc;
-			}
-		}
-
 
 		/// <summary>
 		/// Deserializes a Container from a stream.
@@ -283,15 +246,27 @@ namespace NDO.JsonFormatter
 
 		IDictionary<string, object> MakeDict( IPersistenceCapable pc )
 		{
-			var dict = pc.ToDictionary(pm);
-			var shortId = ((IPersistenceCapable)pc).ShortId();
 			var t = pc.GetType();
+			if (pc.NDOObjectState == NDOObjectState.Transient)
+				throw new Exception( $"Object of type {t.FullName} is transient. It can't be serialized by NDO." );
+			var dict = pc.ToDictionary(pm);
+			var shortId = pc.ShortId();
 			FieldMap fm = new FieldMap(t);
-			var mc = Metaclasses.GetClass(t);
+
+			var mapping = pc.NDOStateManager?.PersistenceManager?.NDOMapping;
+			if (mapping == null)
+				throw new Exception( $"Can't determine mapping information of class {t.FullName}." );
+
+			var cls = mapping.FindClass(t);			
+			if (cls == null)
+				throw new Exception( $"Can't find class mapping of class {t.FullName}. Check your mapping file." );
+
 			foreach (var fi in fm.Relations)
 			{
                 var fiName = fi.Name;
-				if (( (IPersistenceCapable) pc ).NDOGetLoadState( mc.GetRelationOrdinal( fiName ) ))
+				var r = cls.FindRelation( fiName );
+				var ordinal = ((ILoadStateSupport) r).Ordinal;
+				if (pc.NDOGetLoadState( ordinal ))
 				{
 					object relationObj = fi.GetValue(pc);
 					if (relationObj is IList list)
@@ -345,10 +320,13 @@ namespace NDO.JsonFormatter
 		{
 			var t = e.GetType();
 			FieldMap fm = new FieldMap(t);
-			var mc = Metaclasses.GetClass(t);
+			var cls = e.NDOStateManager.PersistenceManager.NDOMapping.FindClass(t);
 			foreach (var fi in fm.Relations)
 			{
-				if (( (IPersistenceCapable) e ).NDOGetLoadState( mc.GetRelationOrdinal( fi.Name ) ))
+				var r = cls.FindRelation(fi.Name);
+				if (r == null)
+					throw new Exception( $"Can't find relation {fi.Name} in class {t.FullName}" );
+				if (e.NDOGetLoadState( ( (ILoadStateSupport) r ).Ordinal ))
 				{
 					object relationObj = fi.GetValue(e);
 					if (relationObj is IList list)

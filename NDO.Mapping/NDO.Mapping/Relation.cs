@@ -35,7 +35,7 @@ namespace NDO.Mapping
     /// This class encapsulates a relation between classes
     /// </summary>
     /// <remarks>This class is equivalent to the Relation element of the mapping file schema.</remarks>
-    public class Relation : MappingNode, IFieldInitializer, IComparable
+    public class Relation : MappingNode, IFieldInitializer, ILoadStateSupport, IComparable
     {
         #region State variables and accessors
         /// <summary>
@@ -244,8 +244,9 @@ namespace NDO.Mapping
         /// For accessing the relation load state in the objects
         /// </summary>
         internal int Ordinal { get; set; }
+		int ILoadStateSupport.Ordinal => Ordinal;
 
-        private bool foreignRelationValid;
+		private bool foreignRelationValid;
         private Relation foreignRelation;
         private Class definingClass;
 
@@ -722,11 +723,11 @@ namespace NDO.Mapping
             }
         }
 
-        /// <summary>
-        /// String representation of the relation for debugging and tracing purposes
-        /// </summary>
-        /// <returns>A string representation of the Relation object</returns>
-        public override string ToString()
+		/// <summary>
+		/// String representation of the relation for debugging and tracing purposes
+		/// </summary>
+		/// <returns>A string representation of the Relation object</returns>
+		public override string ToString()
         {
             return "Relation " + this.RelationName + " for field " + this.FieldName + " of class " + Parent.FullName + ":\n" +
                 "    Type: " + FieldType + " [" + Multiplicity + "] RelationType: " + (Composition ? "Composition" : "Assoziation") +

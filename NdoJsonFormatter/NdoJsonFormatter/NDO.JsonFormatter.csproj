@@ -10,7 +10,7 @@
     <Authors>Mirko Matytschak</Authors>
     <Company>Mirko Matytschak</Company>
     <Description>Json Formatter for serializing and deserializing ObjectContainers in NDO.</Description>
-    <Copyright>(c) 2002 - 2024, Mirko Matytschak, Velden, Germany</Copyright>
+    <Copyright>(c) 2002 - 2025, Mirko Matytschak, Velden, Germany</Copyright>
     <PackageLicense>MIT</PackageLicense>
     <PackageProjectUrl>https://www.netdataobjects.de</PackageProjectUrl>
     <PackageTags>NDO .NET Data Objects Persistence JsonFormatter</PackageTags>
@@ -19,6 +19,7 @@
     <FileVersion>5.0.0.0</FileVersion>
     <SignAssembly>true</SignAssembly>
     <AssemblyOriginatorKeyFile>ndo_ent.snk</AssemblyOriginatorKeyFile>
+    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
