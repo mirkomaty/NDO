@@ -71,9 +71,9 @@ namespace QueryTests
 		[TearDown]
 		public void TearDown()
 		{
-			var pm = NDOFactory.Instance.PersistenceManager;
-			pm.Delete( pm.Objects<Mitarbeiter>().ResultTable );
-			pm.Save();
+			//var pm = NDOFactory.Instance.PersistenceManager;
+			//pm.Delete( pm.Objects<Mitarbeiter>().ResultTable );
+			//pm.Save();
 		}
 
 

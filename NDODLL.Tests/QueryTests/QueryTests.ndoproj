@@ -27,9 +27,9 @@
     <Debug>True</Debug>
     <KeyFile />
     <References>
-      <Reference AssemblyName="NDO" AssemblyPath="..\NDODLL\bin\Debug\netstandard2.0\NDO.dll" CheckThisDLL="False">
+      <Reference AssemblyName="NDO" AssemblyPath="..\..\NDODLL\bin\Debug\netstandard2.0\NDO.dll" CheckThisDLL="False">
       </Reference>
-      <Reference AssemblyName="PureBusinessClasses" AssemblyPath="..\IntegrationTests\PureBusinessClasses\bin\Debug\net8.0\PureBusinessClasses.dll">
+      <Reference AssemblyName="PureBusinessClasses" AssemblyPath="..\..\IntegrationTests\PureBusinessClasses\bin\Debug\net8.0\PureBusinessClasses.dll">
       </Reference>
     </References>
   </ProjectDescription>

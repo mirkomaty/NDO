@@ -36,7 +36,7 @@ namespace QueryTests
 					}
 					else
 					{
-						pm = new PersistenceManager( mapping );
+						pm = new PersistenceManager( mapping, null );
 					}
 				}
 				// Setting an AccessorName to avoid changing the full chain of dependencies for PureBusinessClasses
