@@ -1284,7 +1284,7 @@ namespace NDOEnhancer
 					if (!assyElem.IsExtern)
 					{
                         ILElement lastEl = assyElem.CustomElements.Last();
-						lastEl.InsertBefore(new ILCustomElement(".custom instance void [NDO]NDO.NDOEnhancedAttribute::.ctor() = ( 01 00 00 00 )", assyElem));
+						lastEl.InsertBefore(new ILCustomElement(".custom instance void [NDOInterfaces]NDO.NDOEnhancedAttribute::.ctor() = ( 01 00 00 00 )", assyElem));
 					}
 					if (line.StartsWith(".assembly"))
 					{

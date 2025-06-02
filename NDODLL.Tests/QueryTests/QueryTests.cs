@@ -380,6 +380,7 @@ namespace QueryTests
 		[Test]
 		public void CheckIfMultiKeysWork()
 		{
+			Build();
 			NDOQuery<OrderDetail> q = new NDOQuery<OrderDetail>( pm, "oid = {0}" );
 			var od = pm.FindObject(typeof(OrderDetail), new object[]{ 1, 2 } );
 			q.Parameters.Add( od.NDOObjectId );
