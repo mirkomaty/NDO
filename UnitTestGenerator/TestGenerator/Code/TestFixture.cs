@@ -56,7 +56,8 @@ namespace TestGenerator
 
 		protected override string GenerateHeader(bool isAbstract, string name, Class baseClass)
 		{
-			return "[TestFixture]\n" + base.GenerateHeader (isAbstract, name, baseClass);
+			var cls = new Class(this.nameSpace, "NDOTest");
+			return "[TestFixture]\n" + base.GenerateHeader (isAbstract, name, cls);
 		}
 
 	}

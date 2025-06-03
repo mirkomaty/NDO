@@ -28,6 +28,8 @@ using System.Collections.Generic;
 using NDO;
 using NDO.Mapping;
 using NUnit.Framework;
+using NdoUnitTests;
+
 namespace MappingUnitTests
 {
 
@@ -38,7 +40,7 @@ public class PmFactory
 	{
 		if (pm == null)
 		{
-			pm = new PersistenceManager(@"C:\Projekte\NDO\UnitTestGenerator\UnitTests\bin\Debug\NDOMapping.xml");
+			pm = new PersistenceManager(@"C:\Projekte\NDO5\UnitTestGenerator\TestGenerator\bin\UnitTests\bin\Debug\NDOMapping.xml");
 		}
 		else
 		{
@@ -50,7 +52,7 @@ public class PmFactory
 
 
 [TestFixture]
-public class MappingTestAgrDir1NoTblAuto
+public class MappingTestAgrDir1NoTblAuto : NDOTest
 {
 	PersistenceManager pm;
 	NDOMapping mapping;
@@ -67,12 +69,12 @@ public class MappingTestAgrDir1NoTblAuto
 	[Test]
 	public void HasMappingTable()
 	{
-		Assert.Null(ownClass.Relations.First().MappingTable, "Relation shouldn't have a MappingTable #5");
+		Assert.That(ownClass.Relations.First().MappingTable, Is.Null, "Relation shouldn't have a MappingTable #5");
 	}
 	[Test]
 	public void HasTypeColumn()
 	{
-		Assert.Null(ownClass.Relations.First().ForeignKeyTypeColumnName, "Relation shouldn't have a TypeColumn #1");
+		Assert.That(ownClass.Relations.First().ForeignKeyTypeColumnName, Is.Null, "Relation shouldn't have a TypeColumn #1");
 	}
 	[Test]
 	public void HasTypeCode()
@@ -84,7 +86,7 @@ public class MappingTestAgrDir1NoTblAuto
 
 
 [TestFixture]
-public class MappingTestAgrDir1TblAuto
+public class MappingTestAgrDir1TblAuto : NDOTest
 {
 	PersistenceManager pm;
 	NDOMapping mapping;
@@ -101,13 +103,13 @@ public class MappingTestAgrDir1TblAuto
 	[Test]
 	public void HasMappingTable()
 	{
-		Assert.NotNull(ownClass.Relations.First().MappingTable, "Relation should have a MappingTable #1");
+		Assert.That(ownClass.Relations.First().MappingTable, Is.Not.Null, "Relation should have a MappingTable #1");
 	}
 	[Test]
 	public void HasTypeColumn()
 	{
-		Assert.Null(ownClass.Relations.First().ForeignKeyTypeColumnName, "Relation shouldn't have a TypeColumn #1");
-		Assert.Null(ownClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, "Relation shouldn't have a TypeColumn #3");
+		Assert.That(ownClass.Relations.First().ForeignKeyTypeColumnName, Is.Null, "Relation shouldn't have a TypeColumn #1");
+		Assert.That(ownClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, Is.Null, "Relation shouldn't have a TypeColumn #3");
 	}
 	[Test]
 	public void HasTypeCode()
@@ -119,7 +121,7 @@ public class MappingTestAgrDir1TblAuto
 
 
 [TestFixture]
-public class MappingTestAgrBi11NoTblAuto
+public class MappingTestAgrBi11NoTblAuto : NDOTest
 {
 	PersistenceManager pm;
 	NDOMapping mapping;
@@ -136,13 +138,13 @@ public class MappingTestAgrBi11NoTblAuto
 	[Test]
 	public void HasMappingTable()
 	{
-		Assert.Null(ownClass.Relations.First().MappingTable, "Relation shouldn't have a MappingTable #5");
-		Assert.Null(otherClass.Relations.First().MappingTable, "Relation shouldn't have a MappingTable #7");
+		Assert.That(ownClass.Relations.First().MappingTable, Is.Null, "Relation shouldn't have a MappingTable #5");
+		Assert.That(otherClass.Relations.First().MappingTable, Is.Null, "Relation shouldn't have a MappingTable #7");
 	}
 	[Test]
 	public void HasTypeColumn()
 	{
-		Assert.Null(ownClass.Relations.First().ForeignKeyTypeColumnName, "Relation shouldn't have a TypeColumn #1");
+		Assert.That(ownClass.Relations.First().ForeignKeyTypeColumnName, Is.Null, "Relation shouldn't have a TypeColumn #1");
 	}
 	[Test]
 	public void HasTypeCode()
@@ -154,7 +156,7 @@ public class MappingTestAgrBi11NoTblAuto
 
 
 [TestFixture]
-public class MappingTestAgrBi11TblAuto
+public class MappingTestAgrBi11TblAuto : NDOTest
 {
 	PersistenceManager pm;
 	NDOMapping mapping;
@@ -171,16 +173,16 @@ public class MappingTestAgrBi11TblAuto
 	[Test]
 	public void HasMappingTable()
 	{
-		Assert.NotNull(ownClass.Relations.First().MappingTable, "Relation should have a MappingTable #1");
-		Assert.NotNull(otherClass.Relations.First().MappingTable, "Relation should have a MappingTable #3");
+		Assert.That(ownClass.Relations.First().MappingTable, Is.Not.Null, "Relation should have a MappingTable #1");
+		Assert.That(otherClass.Relations.First().MappingTable, Is.Not.Null, "Relation should have a MappingTable #3");
 	}
 	[Test]
 	public void HasTypeColumn()
 	{
-		Assert.Null(ownClass.Relations.First().ForeignKeyTypeColumnName, "Relation shouldn't have a TypeColumn #1");
-		Assert.Null(otherClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, "Relation shouldn't have a TypeColumn #2");
-		Assert.Null(ownClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, "Relation shouldn't have a TypeColumn #3");
-		Assert.Null(otherClass.Relations.First().ForeignKeyTypeColumnName, "Relation shouldn't have a TypeColumn #4");
+		Assert.That(ownClass.Relations.First().ForeignKeyTypeColumnName, Is.Null, "Relation shouldn't have a TypeColumn #1");
+		Assert.That(otherClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, Is.Null, "Relation shouldn't have a TypeColumn #2");
+		Assert.That(ownClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, Is.Null, "Relation shouldn't have a TypeColumn #3");
+		Assert.That(otherClass.Relations.First().ForeignKeyTypeColumnName, Is.Null, "Relation shouldn't have a TypeColumn #4");
 	}
 	[Test]
 	public void HasTypeCode()
@@ -192,7 +194,7 @@ public class MappingTestAgrBi11TblAuto
 
 
 [TestFixture]
-public class MappingTestAgrDirnNoTblAuto
+public class MappingTestAgrDirnNoTblAuto : NDOTest
 {
 	PersistenceManager pm;
 	NDOMapping mapping;
@@ -209,12 +211,12 @@ public class MappingTestAgrDirnNoTblAuto
 	[Test]
 	public void HasMappingTable()
 	{
-		Assert.Null(ownClass.Relations.First().MappingTable, "Relation shouldn't have a MappingTable #5");
+		Assert.That(ownClass.Relations.First().MappingTable, Is.Null, "Relation shouldn't have a MappingTable #5");
 	}
 	[Test]
 	public void HasTypeColumn()
 	{
-		Assert.Null(ownClass.Relations.First().ForeignKeyTypeColumnName, "Relation shouldn't have a TypeColumn #1");
+		Assert.That(ownClass.Relations.First().ForeignKeyTypeColumnName, Is.Null, "Relation shouldn't have a TypeColumn #1");
 	}
 	[Test]
 	public void HasTypeCode()
@@ -226,7 +228,7 @@ public class MappingTestAgrDirnNoTblAuto
 
 
 [TestFixture]
-public class MappingTestAgrDirnTblAuto
+public class MappingTestAgrDirnTblAuto : NDOTest
 {
 	PersistenceManager pm;
 	NDOMapping mapping;
@@ -243,13 +245,13 @@ public class MappingTestAgrDirnTblAuto
 	[Test]
 	public void HasMappingTable()
 	{
-		Assert.NotNull(ownClass.Relations.First().MappingTable, "Relation should have a MappingTable #1");
+		Assert.That(ownClass.Relations.First().MappingTable, Is.Not.Null, "Relation should have a MappingTable #1");
 	}
 	[Test]
 	public void HasTypeColumn()
 	{
-		Assert.Null(ownClass.Relations.First().ForeignKeyTypeColumnName, "Relation shouldn't have a TypeColumn #1");
-		Assert.Null(ownClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, "Relation shouldn't have a TypeColumn #3");
+		Assert.That(ownClass.Relations.First().ForeignKeyTypeColumnName, Is.Null, "Relation shouldn't have a TypeColumn #1");
+		Assert.That(ownClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, Is.Null, "Relation shouldn't have a TypeColumn #3");
 	}
 	[Test]
 	public void HasTypeCode()
@@ -261,7 +263,7 @@ public class MappingTestAgrDirnTblAuto
 
 
 [TestFixture]
-public class MappingTestAgrBin1NoTblAuto
+public class MappingTestAgrBin1NoTblAuto : NDOTest
 {
 	PersistenceManager pm;
 	NDOMapping mapping;
@@ -278,13 +280,13 @@ public class MappingTestAgrBin1NoTblAuto
 	[Test]
 	public void HasMappingTable()
 	{
-		Assert.Null(ownClass.Relations.First().MappingTable, "Relation shouldn't have a MappingTable #5");
-		Assert.Null(otherClass.Relations.First().MappingTable, "Relation shouldn't have a MappingTable #7");
+		Assert.That(ownClass.Relations.First().MappingTable, Is.Null, "Relation shouldn't have a MappingTable #5");
+		Assert.That(otherClass.Relations.First().MappingTable, Is.Null, "Relation shouldn't have a MappingTable #7");
 	}
 	[Test]
 	public void HasTypeColumn()
 	{
-		Assert.Null(ownClass.Relations.First().ForeignKeyTypeColumnName, "Relation shouldn't have a TypeColumn #1");
+		Assert.That(ownClass.Relations.First().ForeignKeyTypeColumnName, Is.Null, "Relation shouldn't have a TypeColumn #1");
 	}
 	[Test]
 	public void HasTypeCode()
@@ -296,7 +298,7 @@ public class MappingTestAgrBin1NoTblAuto
 
 
 [TestFixture]
-public class MappingTestAgrBin1TblAuto
+public class MappingTestAgrBin1TblAuto : NDOTest
 {
 	PersistenceManager pm;
 	NDOMapping mapping;
@@ -313,16 +315,16 @@ public class MappingTestAgrBin1TblAuto
 	[Test]
 	public void HasMappingTable()
 	{
-		Assert.NotNull(ownClass.Relations.First().MappingTable, "Relation should have a MappingTable #1");
-		Assert.NotNull(otherClass.Relations.First().MappingTable, "Relation should have a MappingTable #3");
+		Assert.That(ownClass.Relations.First().MappingTable, Is.Not.Null, "Relation should have a MappingTable #1");
+		Assert.That(otherClass.Relations.First().MappingTable, Is.Not.Null, "Relation should have a MappingTable #3");
 	}
 	[Test]
 	public void HasTypeColumn()
 	{
-		Assert.Null(ownClass.Relations.First().ForeignKeyTypeColumnName, "Relation shouldn't have a TypeColumn #1");
-		Assert.Null(otherClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, "Relation shouldn't have a TypeColumn #2");
-		Assert.Null(ownClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, "Relation shouldn't have a TypeColumn #3");
-		Assert.Null(otherClass.Relations.First().ForeignKeyTypeColumnName, "Relation shouldn't have a TypeColumn #4");
+		Assert.That(ownClass.Relations.First().ForeignKeyTypeColumnName, Is.Null, "Relation shouldn't have a TypeColumn #1");
+		Assert.That(otherClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, Is.Null, "Relation shouldn't have a TypeColumn #2");
+		Assert.That(ownClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, Is.Null, "Relation shouldn't have a TypeColumn #3");
+		Assert.That(otherClass.Relations.First().ForeignKeyTypeColumnName, Is.Null, "Relation shouldn't have a TypeColumn #4");
 	}
 	[Test]
 	public void HasTypeCode()
@@ -334,7 +336,7 @@ public class MappingTestAgrBin1TblAuto
 
 
 [TestFixture]
-public class MappingTestAgrBi1nNoTblAuto
+public class MappingTestAgrBi1nNoTblAuto : NDOTest
 {
 	PersistenceManager pm;
 	NDOMapping mapping;
@@ -351,13 +353,13 @@ public class MappingTestAgrBi1nNoTblAuto
 	[Test]
 	public void HasMappingTable()
 	{
-		Assert.Null(ownClass.Relations.First().MappingTable, "Relation shouldn't have a MappingTable #5");
-		Assert.Null(otherClass.Relations.First().MappingTable, "Relation shouldn't have a MappingTable #7");
+		Assert.That(ownClass.Relations.First().MappingTable, Is.Null, "Relation shouldn't have a MappingTable #5");
+		Assert.That(otherClass.Relations.First().MappingTable, Is.Null, "Relation shouldn't have a MappingTable #7");
 	}
 	[Test]
 	public void HasTypeColumn()
 	{
-		Assert.Null(ownClass.Relations.First().ForeignKeyTypeColumnName, "Relation shouldn't have a TypeColumn #1");
+		Assert.That(ownClass.Relations.First().ForeignKeyTypeColumnName, Is.Null, "Relation shouldn't have a TypeColumn #1");
 	}
 	[Test]
 	public void HasTypeCode()
@@ -369,7 +371,7 @@ public class MappingTestAgrBi1nNoTblAuto
 
 
 [TestFixture]
-public class MappingTestAgrBi1nTblAuto
+public class MappingTestAgrBi1nTblAuto : NDOTest
 {
 	PersistenceManager pm;
 	NDOMapping mapping;
@@ -386,16 +388,16 @@ public class MappingTestAgrBi1nTblAuto
 	[Test]
 	public void HasMappingTable()
 	{
-		Assert.NotNull(ownClass.Relations.First().MappingTable, "Relation should have a MappingTable #1");
-		Assert.NotNull(otherClass.Relations.First().MappingTable, "Relation should have a MappingTable #3");
+		Assert.That(ownClass.Relations.First().MappingTable, Is.Not.Null, "Relation should have a MappingTable #1");
+		Assert.That(otherClass.Relations.First().MappingTable, Is.Not.Null, "Relation should have a MappingTable #3");
 	}
 	[Test]
 	public void HasTypeColumn()
 	{
-		Assert.Null(ownClass.Relations.First().ForeignKeyTypeColumnName, "Relation shouldn't have a TypeColumn #1");
-		Assert.Null(otherClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, "Relation shouldn't have a TypeColumn #2");
-		Assert.Null(ownClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, "Relation shouldn't have a TypeColumn #3");
-		Assert.Null(otherClass.Relations.First().ForeignKeyTypeColumnName, "Relation shouldn't have a TypeColumn #4");
+		Assert.That(ownClass.Relations.First().ForeignKeyTypeColumnName, Is.Null, "Relation shouldn't have a TypeColumn #1");
+		Assert.That(otherClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, Is.Null, "Relation shouldn't have a TypeColumn #2");
+		Assert.That(ownClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, Is.Null, "Relation shouldn't have a TypeColumn #3");
+		Assert.That(otherClass.Relations.First().ForeignKeyTypeColumnName, Is.Null, "Relation shouldn't have a TypeColumn #4");
 	}
 	[Test]
 	public void HasTypeCode()
@@ -407,7 +409,7 @@ public class MappingTestAgrBi1nTblAuto
 
 
 [TestFixture]
-public class MappingTestAgrBinnTblAuto
+public class MappingTestAgrBinnTblAuto : NDOTest
 {
 	PersistenceManager pm;
 	NDOMapping mapping;
@@ -424,16 +426,16 @@ public class MappingTestAgrBinnTblAuto
 	[Test]
 	public void HasMappingTable()
 	{
-		Assert.NotNull(ownClass.Relations.First().MappingTable, "Relation should have a MappingTable #1");
-		Assert.NotNull(otherClass.Relations.First().MappingTable, "Relation should have a MappingTable #3");
+		Assert.That(ownClass.Relations.First().MappingTable, Is.Not.Null, "Relation should have a MappingTable #1");
+		Assert.That(otherClass.Relations.First().MappingTable, Is.Not.Null, "Relation should have a MappingTable #3");
 	}
 	[Test]
 	public void HasTypeColumn()
 	{
-		Assert.Null(ownClass.Relations.First().ForeignKeyTypeColumnName, "Relation shouldn't have a TypeColumn #1");
-		Assert.Null(otherClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, "Relation shouldn't have a TypeColumn #2");
-		Assert.Null(ownClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, "Relation shouldn't have a TypeColumn #3");
-		Assert.Null(otherClass.Relations.First().ForeignKeyTypeColumnName, "Relation shouldn't have a TypeColumn #4");
+		Assert.That(ownClass.Relations.First().ForeignKeyTypeColumnName, Is.Null, "Relation shouldn't have a TypeColumn #1");
+		Assert.That(otherClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, Is.Null, "Relation shouldn't have a TypeColumn #2");
+		Assert.That(ownClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, Is.Null, "Relation shouldn't have a TypeColumn #3");
+		Assert.That(otherClass.Relations.First().ForeignKeyTypeColumnName, Is.Null, "Relation shouldn't have a TypeColumn #4");
 	}
 	[Test]
 	public void HasTypeCode()
@@ -445,7 +447,7 @@ public class MappingTestAgrBinnTblAuto
 
 
 [TestFixture]
-public class MappingTestCmpDir1NoTblAuto
+public class MappingTestCmpDir1NoTblAuto : NDOTest
 {
 	PersistenceManager pm;
 	NDOMapping mapping;
@@ -462,12 +464,12 @@ public class MappingTestCmpDir1NoTblAuto
 	[Test]
 	public void HasMappingTable()
 	{
-		Assert.Null(ownClass.Relations.First().MappingTable, "Relation shouldn't have a MappingTable #5");
+		Assert.That(ownClass.Relations.First().MappingTable, Is.Null, "Relation shouldn't have a MappingTable #5");
 	}
 	[Test]
 	public void HasTypeColumn()
 	{
-		Assert.Null(ownClass.Relations.First().ForeignKeyTypeColumnName, "Relation shouldn't have a TypeColumn #1");
+		Assert.That(ownClass.Relations.First().ForeignKeyTypeColumnName, Is.Null, "Relation shouldn't have a TypeColumn #1");
 	}
 	[Test]
 	public void HasTypeCode()
@@ -479,7 +481,7 @@ public class MappingTestCmpDir1NoTblAuto
 
 
 [TestFixture]
-public class MappingTestCmpDir1TblAuto
+public class MappingTestCmpDir1TblAuto : NDOTest
 {
 	PersistenceManager pm;
 	NDOMapping mapping;
@@ -496,13 +498,13 @@ public class MappingTestCmpDir1TblAuto
 	[Test]
 	public void HasMappingTable()
 	{
-		Assert.NotNull(ownClass.Relations.First().MappingTable, "Relation should have a MappingTable #1");
+		Assert.That(ownClass.Relations.First().MappingTable, Is.Not.Null, "Relation should have a MappingTable #1");
 	}
 	[Test]
 	public void HasTypeColumn()
 	{
-		Assert.Null(ownClass.Relations.First().ForeignKeyTypeColumnName, "Relation shouldn't have a TypeColumn #1");
-		Assert.Null(ownClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, "Relation shouldn't have a TypeColumn #3");
+		Assert.That(ownClass.Relations.First().ForeignKeyTypeColumnName, Is.Null, "Relation shouldn't have a TypeColumn #1");
+		Assert.That(ownClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, Is.Null, "Relation shouldn't have a TypeColumn #3");
 	}
 	[Test]
 	public void HasTypeCode()
@@ -514,7 +516,7 @@ public class MappingTestCmpDir1TblAuto
 
 
 [TestFixture]
-public class MappingTestCmpBi11NoTblAuto
+public class MappingTestCmpBi11NoTblAuto : NDOTest
 {
 	PersistenceManager pm;
 	NDOMapping mapping;
@@ -531,13 +533,13 @@ public class MappingTestCmpBi11NoTblAuto
 	[Test]
 	public void HasMappingTable()
 	{
-		Assert.Null(ownClass.Relations.First().MappingTable, "Relation shouldn't have a MappingTable #5");
-		Assert.Null(otherClass.Relations.First().MappingTable, "Relation shouldn't have a MappingTable #7");
+		Assert.That(ownClass.Relations.First().MappingTable, Is.Null, "Relation shouldn't have a MappingTable #5");
+		Assert.That(otherClass.Relations.First().MappingTable, Is.Null, "Relation shouldn't have a MappingTable #7");
 	}
 	[Test]
 	public void HasTypeColumn()
 	{
-		Assert.Null(ownClass.Relations.First().ForeignKeyTypeColumnName, "Relation shouldn't have a TypeColumn #1");
+		Assert.That(ownClass.Relations.First().ForeignKeyTypeColumnName, Is.Null, "Relation shouldn't have a TypeColumn #1");
 	}
 	[Test]
 	public void HasTypeCode()
@@ -549,7 +551,7 @@ public class MappingTestCmpBi11NoTblAuto
 
 
 [TestFixture]
-public class MappingTestCmpBi11TblAuto
+public class MappingTestCmpBi11TblAuto : NDOTest
 {
 	PersistenceManager pm;
 	NDOMapping mapping;
@@ -566,16 +568,16 @@ public class MappingTestCmpBi11TblAuto
 	[Test]
 	public void HasMappingTable()
 	{
-		Assert.NotNull(ownClass.Relations.First().MappingTable, "Relation should have a MappingTable #1");
-		Assert.NotNull(otherClass.Relations.First().MappingTable, "Relation should have a MappingTable #3");
+		Assert.That(ownClass.Relations.First().MappingTable, Is.Not.Null, "Relation should have a MappingTable #1");
+		Assert.That(otherClass.Relations.First().MappingTable, Is.Not.Null, "Relation should have a MappingTable #3");
 	}
 	[Test]
 	public void HasTypeColumn()
 	{
-		Assert.Null(ownClass.Relations.First().ForeignKeyTypeColumnName, "Relation shouldn't have a TypeColumn #1");
-		Assert.Null(otherClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, "Relation shouldn't have a TypeColumn #2");
-		Assert.Null(ownClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, "Relation shouldn't have a TypeColumn #3");
-		Assert.Null(otherClass.Relations.First().ForeignKeyTypeColumnName, "Relation shouldn't have a TypeColumn #4");
+		Assert.That(ownClass.Relations.First().ForeignKeyTypeColumnName, Is.Null, "Relation shouldn't have a TypeColumn #1");
+		Assert.That(otherClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, Is.Null, "Relation shouldn't have a TypeColumn #2");
+		Assert.That(ownClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, Is.Null, "Relation shouldn't have a TypeColumn #3");
+		Assert.That(otherClass.Relations.First().ForeignKeyTypeColumnName, Is.Null, "Relation shouldn't have a TypeColumn #4");
 	}
 	[Test]
 	public void HasTypeCode()
@@ -587,7 +589,7 @@ public class MappingTestCmpBi11TblAuto
 
 
 [TestFixture]
-public class MappingTestCmpDirnNoTblAuto
+public class MappingTestCmpDirnNoTblAuto : NDOTest
 {
 	PersistenceManager pm;
 	NDOMapping mapping;
@@ -604,12 +606,12 @@ public class MappingTestCmpDirnNoTblAuto
 	[Test]
 	public void HasMappingTable()
 	{
-		Assert.Null(ownClass.Relations.First().MappingTable, "Relation shouldn't have a MappingTable #5");
+		Assert.That(ownClass.Relations.First().MappingTable, Is.Null, "Relation shouldn't have a MappingTable #5");
 	}
 	[Test]
 	public void HasTypeColumn()
 	{
-		Assert.Null(ownClass.Relations.First().ForeignKeyTypeColumnName, "Relation shouldn't have a TypeColumn #1");
+		Assert.That(ownClass.Relations.First().ForeignKeyTypeColumnName, Is.Null, "Relation shouldn't have a TypeColumn #1");
 	}
 	[Test]
 	public void HasTypeCode()
@@ -621,7 +623,7 @@ public class MappingTestCmpDirnNoTblAuto
 
 
 [TestFixture]
-public class MappingTestCmpDirnTblAuto
+public class MappingTestCmpDirnTblAuto : NDOTest
 {
 	PersistenceManager pm;
 	NDOMapping mapping;
@@ -638,13 +640,13 @@ public class MappingTestCmpDirnTblAuto
 	[Test]
 	public void HasMappingTable()
 	{
-		Assert.NotNull(ownClass.Relations.First().MappingTable, "Relation should have a MappingTable #1");
+		Assert.That(ownClass.Relations.First().MappingTable, Is.Not.Null, "Relation should have a MappingTable #1");
 	}
 	[Test]
 	public void HasTypeColumn()
 	{
-		Assert.Null(ownClass.Relations.First().ForeignKeyTypeColumnName, "Relation shouldn't have a TypeColumn #1");
-		Assert.Null(ownClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, "Relation shouldn't have a TypeColumn #3");
+		Assert.That(ownClass.Relations.First().ForeignKeyTypeColumnName, Is.Null, "Relation shouldn't have a TypeColumn #1");
+		Assert.That(ownClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, Is.Null, "Relation shouldn't have a TypeColumn #3");
 	}
 	[Test]
 	public void HasTypeCode()
@@ -656,7 +658,7 @@ public class MappingTestCmpDirnTblAuto
 
 
 [TestFixture]
-public class MappingTestCmpBin1NoTblAuto
+public class MappingTestCmpBin1NoTblAuto : NDOTest
 {
 	PersistenceManager pm;
 	NDOMapping mapping;
@@ -673,13 +675,13 @@ public class MappingTestCmpBin1NoTblAuto
 	[Test]
 	public void HasMappingTable()
 	{
-		Assert.Null(ownClass.Relations.First().MappingTable, "Relation shouldn't have a MappingTable #5");
-		Assert.Null(otherClass.Relations.First().MappingTable, "Relation shouldn't have a MappingTable #7");
+		Assert.That(ownClass.Relations.First().MappingTable, Is.Null, "Relation shouldn't have a MappingTable #5");
+		Assert.That(otherClass.Relations.First().MappingTable, Is.Null, "Relation shouldn't have a MappingTable #7");
 	}
 	[Test]
 	public void HasTypeColumn()
 	{
-		Assert.Null(ownClass.Relations.First().ForeignKeyTypeColumnName, "Relation shouldn't have a TypeColumn #1");
+		Assert.That(ownClass.Relations.First().ForeignKeyTypeColumnName, Is.Null, "Relation shouldn't have a TypeColumn #1");
 	}
 	[Test]
 	public void HasTypeCode()
@@ -691,7 +693,7 @@ public class MappingTestCmpBin1NoTblAuto
 
 
 [TestFixture]
-public class MappingTestCmpBin1TblAuto
+public class MappingTestCmpBin1TblAuto : NDOTest
 {
 	PersistenceManager pm;
 	NDOMapping mapping;
@@ -708,16 +710,16 @@ public class MappingTestCmpBin1TblAuto
 	[Test]
 	public void HasMappingTable()
 	{
-		Assert.NotNull(ownClass.Relations.First().MappingTable, "Relation should have a MappingTable #1");
-		Assert.NotNull(otherClass.Relations.First().MappingTable, "Relation should have a MappingTable #3");
+		Assert.That(ownClass.Relations.First().MappingTable, Is.Not.Null, "Relation should have a MappingTable #1");
+		Assert.That(otherClass.Relations.First().MappingTable, Is.Not.Null, "Relation should have a MappingTable #3");
 	}
 	[Test]
 	public void HasTypeColumn()
 	{
-		Assert.Null(ownClass.Relations.First().ForeignKeyTypeColumnName, "Relation shouldn't have a TypeColumn #1");
-		Assert.Null(otherClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, "Relation shouldn't have a TypeColumn #2");
-		Assert.Null(ownClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, "Relation shouldn't have a TypeColumn #3");
-		Assert.Null(otherClass.Relations.First().ForeignKeyTypeColumnName, "Relation shouldn't have a TypeColumn #4");
+		Assert.That(ownClass.Relations.First().ForeignKeyTypeColumnName, Is.Null, "Relation shouldn't have a TypeColumn #1");
+		Assert.That(otherClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, Is.Null, "Relation shouldn't have a TypeColumn #2");
+		Assert.That(ownClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, Is.Null, "Relation shouldn't have a TypeColumn #3");
+		Assert.That(otherClass.Relations.First().ForeignKeyTypeColumnName, Is.Null, "Relation shouldn't have a TypeColumn #4");
 	}
 	[Test]
 	public void HasTypeCode()
@@ -729,7 +731,7 @@ public class MappingTestCmpBin1TblAuto
 
 
 [TestFixture]
-public class MappingTestCmpBi1nNoTblAuto
+public class MappingTestCmpBi1nNoTblAuto : NDOTest
 {
 	PersistenceManager pm;
 	NDOMapping mapping;
@@ -746,13 +748,13 @@ public class MappingTestCmpBi1nNoTblAuto
 	[Test]
 	public void HasMappingTable()
 	{
-		Assert.Null(ownClass.Relations.First().MappingTable, "Relation shouldn't have a MappingTable #5");
-		Assert.Null(otherClass.Relations.First().MappingTable, "Relation shouldn't have a MappingTable #7");
+		Assert.That(ownClass.Relations.First().MappingTable, Is.Null, "Relation shouldn't have a MappingTable #5");
+		Assert.That(otherClass.Relations.First().MappingTable, Is.Null, "Relation shouldn't have a MappingTable #7");
 	}
 	[Test]
 	public void HasTypeColumn()
 	{
-		Assert.Null(ownClass.Relations.First().ForeignKeyTypeColumnName, "Relation shouldn't have a TypeColumn #1");
+		Assert.That(ownClass.Relations.First().ForeignKeyTypeColumnName, Is.Null, "Relation shouldn't have a TypeColumn #1");
 	}
 	[Test]
 	public void HasTypeCode()
@@ -764,7 +766,7 @@ public class MappingTestCmpBi1nNoTblAuto
 
 
 [TestFixture]
-public class MappingTestCmpBi1nTblAuto
+public class MappingTestCmpBi1nTblAuto : NDOTest
 {
 	PersistenceManager pm;
 	NDOMapping mapping;
@@ -781,16 +783,16 @@ public class MappingTestCmpBi1nTblAuto
 	[Test]
 	public void HasMappingTable()
 	{
-		Assert.NotNull(ownClass.Relations.First().MappingTable, "Relation should have a MappingTable #1");
-		Assert.NotNull(otherClass.Relations.First().MappingTable, "Relation should have a MappingTable #3");
+		Assert.That(ownClass.Relations.First().MappingTable, Is.Not.Null, "Relation should have a MappingTable #1");
+		Assert.That(otherClass.Relations.First().MappingTable, Is.Not.Null, "Relation should have a MappingTable #3");
 	}
 	[Test]
 	public void HasTypeColumn()
 	{
-		Assert.Null(ownClass.Relations.First().ForeignKeyTypeColumnName, "Relation shouldn't have a TypeColumn #1");
-		Assert.Null(otherClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, "Relation shouldn't have a TypeColumn #2");
-		Assert.Null(ownClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, "Relation shouldn't have a TypeColumn #3");
-		Assert.Null(otherClass.Relations.First().ForeignKeyTypeColumnName, "Relation shouldn't have a TypeColumn #4");
+		Assert.That(ownClass.Relations.First().ForeignKeyTypeColumnName, Is.Null, "Relation shouldn't have a TypeColumn #1");
+		Assert.That(otherClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, Is.Null, "Relation shouldn't have a TypeColumn #2");
+		Assert.That(ownClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, Is.Null, "Relation shouldn't have a TypeColumn #3");
+		Assert.That(otherClass.Relations.First().ForeignKeyTypeColumnName, Is.Null, "Relation shouldn't have a TypeColumn #4");
 	}
 	[Test]
 	public void HasTypeCode()
@@ -802,7 +804,7 @@ public class MappingTestCmpBi1nTblAuto
 
 
 [TestFixture]
-public class MappingTestCmpBinnTblAuto
+public class MappingTestCmpBinnTblAuto : NDOTest
 {
 	PersistenceManager pm;
 	NDOMapping mapping;
@@ -819,16 +821,16 @@ public class MappingTestCmpBinnTblAuto
 	[Test]
 	public void HasMappingTable()
 	{
-		Assert.NotNull(ownClass.Relations.First().MappingTable, "Relation should have a MappingTable #1");
-		Assert.NotNull(otherClass.Relations.First().MappingTable, "Relation should have a MappingTable #3");
+		Assert.That(ownClass.Relations.First().MappingTable, Is.Not.Null, "Relation should have a MappingTable #1");
+		Assert.That(otherClass.Relations.First().MappingTable, Is.Not.Null, "Relation should have a MappingTable #3");
 	}
 	[Test]
 	public void HasTypeColumn()
 	{
-		Assert.Null(ownClass.Relations.First().ForeignKeyTypeColumnName, "Relation shouldn't have a TypeColumn #1");
-		Assert.Null(otherClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, "Relation shouldn't have a TypeColumn #2");
-		Assert.Null(ownClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, "Relation shouldn't have a TypeColumn #3");
-		Assert.Null(otherClass.Relations.First().ForeignKeyTypeColumnName, "Relation shouldn't have a TypeColumn #4");
+		Assert.That(ownClass.Relations.First().ForeignKeyTypeColumnName, Is.Null, "Relation shouldn't have a TypeColumn #1");
+		Assert.That(otherClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, Is.Null, "Relation shouldn't have a TypeColumn #2");
+		Assert.That(ownClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, Is.Null, "Relation shouldn't have a TypeColumn #3");
+		Assert.That(otherClass.Relations.First().ForeignKeyTypeColumnName, Is.Null, "Relation shouldn't have a TypeColumn #4");
 	}
 	[Test]
 	public void HasTypeCode()
@@ -840,7 +842,7 @@ public class MappingTestCmpBinnTblAuto
 
 
 [TestFixture]
-public class MappingTestAgrDir1OwnpconNoTblAuto
+public class MappingTestAgrDir1OwnpconNoTblAuto : NDOTest
 {
 	PersistenceManager pm;
 	NDOMapping mapping;
@@ -859,13 +861,13 @@ public class MappingTestAgrDir1OwnpconNoTblAuto
 	[Test]
 	public void HasMappingTable()
 	{
-		Assert.Null(ownClass.Relations.First().MappingTable, "Relation shouldn't have a MappingTable #5");
-		Assert.Null(ownDerivedClass.Relations.First().MappingTable, "Relation shouldn't have a MappingTable #6");
+		Assert.That(ownClass.Relations.First().MappingTable, Is.Null, "Relation shouldn't have a MappingTable #5");
+		Assert.That(ownDerivedClass.Relations.First().MappingTable, Is.Null, "Relation shouldn't have a MappingTable #6");
 	}
 	[Test]
 	public void HasTypeColumn()
 	{
-		Assert.Null(ownClass.Relations.First().ForeignKeyTypeColumnName, "Relation shouldn't have a TypeColumn #1");
+		Assert.That(ownClass.Relations.First().ForeignKeyTypeColumnName, Is.Null, "Relation shouldn't have a TypeColumn #1");
 	}
 	[Test]
 	public void HasTypeCode()
@@ -878,7 +880,7 @@ public class MappingTestAgrDir1OwnpconNoTblAuto
 
 
 [TestFixture]
-public class MappingTestAgrDir1OwnpconTblAuto
+public class MappingTestAgrDir1OwnpconTblAuto : NDOTest
 {
 	PersistenceManager pm;
 	NDOMapping mapping;
@@ -897,15 +899,15 @@ public class MappingTestAgrDir1OwnpconTblAuto
 	[Test]
 	public void HasMappingTable()
 	{
-		Assert.NotNull(ownClass.Relations.First().MappingTable, "Relation should have a MappingTable #1");
-		Assert.NotNull(ownDerivedClass.Relations.First().MappingTable, "Relation should have a MappingTable #2");
+		Assert.That(ownClass.Relations.First().MappingTable, Is.Not.Null, "Relation should have a MappingTable #1");
+		Assert.That(ownDerivedClass.Relations.First().MappingTable, Is.Not.Null, "Relation should have a MappingTable #2");
 	}
 	[Test]
 	public void HasTypeColumn()
 	{
-		Assert.NotNull(ownClass.Relations.First().ForeignKeyTypeColumnName, "Relation should have a TypeColumn #1");
-		Assert.NotNull(ownDerivedClass.Relations.First().ForeignKeyTypeColumnName, "Relation should have a TypeColumn #2");
-		Assert.Null(ownClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, "Relation shouldn't have a TypeColumn #3");
+		Assert.That(ownClass.Relations.First().ForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #1");
+		Assert.That(ownDerivedClass.Relations.First().ForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #2");
+		Assert.That(ownClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, Is.Null, "Relation shouldn't have a TypeColumn #3");
 	}
 	[Test]
 	public void HasTypeCode()
@@ -918,7 +920,7 @@ public class MappingTestAgrDir1OwnpconTblAuto
 
 
 [TestFixture]
-public class MappingTestAgrBi11OwnpconNoTblAuto
+public class MappingTestAgrBi11OwnpconNoTblAuto : NDOTest
 {
 	PersistenceManager pm;
 	NDOMapping mapping;
@@ -937,15 +939,15 @@ public class MappingTestAgrBi11OwnpconNoTblAuto
 	[Test]
 	public void HasMappingTable()
 	{
-		Assert.Null(ownClass.Relations.First().MappingTable, "Relation shouldn't have a MappingTable #5");
-		Assert.Null(ownDerivedClass.Relations.First().MappingTable, "Relation shouldn't have a MappingTable #6");
-		Assert.Null(otherClass.Relations.First().MappingTable, "Relation shouldn't have a MappingTable #7");
+		Assert.That(ownClass.Relations.First().MappingTable, Is.Null, "Relation shouldn't have a MappingTable #5");
+		Assert.That(ownDerivedClass.Relations.First().MappingTable, Is.Null, "Relation shouldn't have a MappingTable #6");
+		Assert.That(otherClass.Relations.First().MappingTable, Is.Null, "Relation shouldn't have a MappingTable #7");
 	}
 	[Test]
 	public void HasTypeColumn()
 	{
-		Assert.Null(ownClass.Relations.First().ForeignKeyTypeColumnName, "Relation shouldn't have a TypeColumn #1");
-		Assert.NotNull(otherClass.Relations.First().ForeignKeyTypeColumnName, "Relation should have a TypeColumn #10");
+		Assert.That(ownClass.Relations.First().ForeignKeyTypeColumnName, Is.Null, "Relation shouldn't have a TypeColumn #1");
+		Assert.That(otherClass.Relations.First().ForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #10");
 	}
 	[Test]
 	public void HasTypeCode()
@@ -958,7 +960,7 @@ public class MappingTestAgrBi11OwnpconNoTblAuto
 
 
 [TestFixture]
-public class MappingTestAgrBi11OwnpconTblAuto
+public class MappingTestAgrBi11OwnpconTblAuto : NDOTest
 {
 	PersistenceManager pm;
 	NDOMapping mapping;
@@ -977,18 +979,18 @@ public class MappingTestAgrBi11OwnpconTblAuto
 	[Test]
 	public void HasMappingTable()
 	{
-		Assert.NotNull(ownClass.Relations.First().MappingTable, "Relation should have a MappingTable #1");
-		Assert.NotNull(ownDerivedClass.Relations.First().MappingTable, "Relation should have a MappingTable #2");
-		Assert.NotNull(otherClass.Relations.First().MappingTable, "Relation should have a MappingTable #3");
+		Assert.That(ownClass.Relations.First().MappingTable, Is.Not.Null, "Relation should have a MappingTable #1");
+		Assert.That(ownDerivedClass.Relations.First().MappingTable, Is.Not.Null, "Relation should have a MappingTable #2");
+		Assert.That(otherClass.Relations.First().MappingTable, Is.Not.Null, "Relation should have a MappingTable #3");
 	}
 	[Test]
 	public void HasTypeColumn()
 	{
-		Assert.NotNull(ownClass.Relations.First().ForeignKeyTypeColumnName, "Relation should have a TypeColumn #1");
-		Assert.NotNull(ownDerivedClass.Relations.First().ForeignKeyTypeColumnName, "Relation should have a TypeColumn #2");
-		Assert.NotNull(otherClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, "Relation should have a TypeColumn #7");
-		Assert.Null(ownClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, "Relation shouldn't have a TypeColumn #3");
-		Assert.Null(otherClass.Relations.First().ForeignKeyTypeColumnName, "Relation shouldn't have a TypeColumn #4");
+		Assert.That(ownClass.Relations.First().ForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #1");
+		Assert.That(ownDerivedClass.Relations.First().ForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #2");
+		Assert.That(otherClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #7");
+		Assert.That(ownClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, Is.Null, "Relation shouldn't have a TypeColumn #3");
+		Assert.That(otherClass.Relations.First().ForeignKeyTypeColumnName, Is.Null, "Relation shouldn't have a TypeColumn #4");
 	}
 	[Test]
 	public void HasTypeCode()
@@ -1001,7 +1003,7 @@ public class MappingTestAgrBi11OwnpconTblAuto
 
 
 [TestFixture]
-public class MappingTestAgrDirnOwnpconNoTblAuto
+public class MappingTestAgrDirnOwnpconNoTblAuto : NDOTest
 {
 	PersistenceManager pm;
 	NDOMapping mapping;
@@ -1020,13 +1022,13 @@ public class MappingTestAgrDirnOwnpconNoTblAuto
 	[Test]
 	public void HasMappingTable()
 	{
-		Assert.Null(ownClass.Relations.First().MappingTable, "Relation shouldn't have a MappingTable #5");
-		Assert.Null(ownDerivedClass.Relations.First().MappingTable, "Relation shouldn't have a MappingTable #6");
+		Assert.That(ownClass.Relations.First().MappingTable, Is.Null, "Relation shouldn't have a MappingTable #5");
+		Assert.That(ownDerivedClass.Relations.First().MappingTable, Is.Null, "Relation shouldn't have a MappingTable #6");
 	}
 	[Test]
 	public void HasTypeColumn()
 	{
-		Assert.Null(ownClass.Relations.First().ForeignKeyTypeColumnName, "Relation shouldn't have a TypeColumn #1");
+		Assert.That(ownClass.Relations.First().ForeignKeyTypeColumnName, Is.Null, "Relation shouldn't have a TypeColumn #1");
 	}
 	[Test]
 	public void HasTypeCode()
@@ -1039,7 +1041,7 @@ public class MappingTestAgrDirnOwnpconNoTblAuto
 
 
 [TestFixture]
-public class MappingTestAgrDirnOwnpconTblAuto
+public class MappingTestAgrDirnOwnpconTblAuto : NDOTest
 {
 	PersistenceManager pm;
 	NDOMapping mapping;
@@ -1058,15 +1060,15 @@ public class MappingTestAgrDirnOwnpconTblAuto
 	[Test]
 	public void HasMappingTable()
 	{
-		Assert.NotNull(ownClass.Relations.First().MappingTable, "Relation should have a MappingTable #1");
-		Assert.NotNull(ownDerivedClass.Relations.First().MappingTable, "Relation should have a MappingTable #2");
+		Assert.That(ownClass.Relations.First().MappingTable, Is.Not.Null, "Relation should have a MappingTable #1");
+		Assert.That(ownDerivedClass.Relations.First().MappingTable, Is.Not.Null, "Relation should have a MappingTable #2");
 	}
 	[Test]
 	public void HasTypeColumn()
 	{
-		Assert.NotNull(ownClass.Relations.First().ForeignKeyTypeColumnName, "Relation should have a TypeColumn #1");
-		Assert.NotNull(ownDerivedClass.Relations.First().ForeignKeyTypeColumnName, "Relation should have a TypeColumn #2");
-		Assert.Null(ownClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, "Relation shouldn't have a TypeColumn #3");
+		Assert.That(ownClass.Relations.First().ForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #1");
+		Assert.That(ownDerivedClass.Relations.First().ForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #2");
+		Assert.That(ownClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, Is.Null, "Relation shouldn't have a TypeColumn #3");
 	}
 	[Test]
 	public void HasTypeCode()
@@ -1079,7 +1081,7 @@ public class MappingTestAgrDirnOwnpconTblAuto
 
 
 [TestFixture]
-public class MappingTestAgrBin1OwnpconNoTblAuto
+public class MappingTestAgrBin1OwnpconNoTblAuto : NDOTest
 {
 	PersistenceManager pm;
 	NDOMapping mapping;
@@ -1098,14 +1100,14 @@ public class MappingTestAgrBin1OwnpconNoTblAuto
 	[Test]
 	public void HasMappingTable()
 	{
-		Assert.Null(ownClass.Relations.First().MappingTable, "Relation shouldn't have a MappingTable #5");
-		Assert.Null(ownDerivedClass.Relations.First().MappingTable, "Relation shouldn't have a MappingTable #6");
-		Assert.Null(otherClass.Relations.First().MappingTable, "Relation shouldn't have a MappingTable #7");
+		Assert.That(ownClass.Relations.First().MappingTable, Is.Null, "Relation shouldn't have a MappingTable #5");
+		Assert.That(ownDerivedClass.Relations.First().MappingTable, Is.Null, "Relation shouldn't have a MappingTable #6");
+		Assert.That(otherClass.Relations.First().MappingTable, Is.Null, "Relation shouldn't have a MappingTable #7");
 	}
 	[Test]
 	public void HasTypeColumn()
 	{
-		Assert.Null(ownClass.Relations.First().ForeignKeyTypeColumnName, "Relation shouldn't have a TypeColumn #1");
+		Assert.That(ownClass.Relations.First().ForeignKeyTypeColumnName, Is.Null, "Relation shouldn't have a TypeColumn #1");
 	}
 	[Test]
 	public void HasTypeCode()
@@ -1118,7 +1120,7 @@ public class MappingTestAgrBin1OwnpconNoTblAuto
 
 
 [TestFixture]
-public class MappingTestAgrBin1OwnpconTblAuto
+public class MappingTestAgrBin1OwnpconTblAuto : NDOTest
 {
 	PersistenceManager pm;
 	NDOMapping mapping;
@@ -1137,18 +1139,18 @@ public class MappingTestAgrBin1OwnpconTblAuto
 	[Test]
 	public void HasMappingTable()
 	{
-		Assert.NotNull(ownClass.Relations.First().MappingTable, "Relation should have a MappingTable #1");
-		Assert.NotNull(ownDerivedClass.Relations.First().MappingTable, "Relation should have a MappingTable #2");
-		Assert.NotNull(otherClass.Relations.First().MappingTable, "Relation should have a MappingTable #3");
+		Assert.That(ownClass.Relations.First().MappingTable, Is.Not.Null, "Relation should have a MappingTable #1");
+		Assert.That(ownDerivedClass.Relations.First().MappingTable, Is.Not.Null, "Relation should have a MappingTable #2");
+		Assert.That(otherClass.Relations.First().MappingTable, Is.Not.Null, "Relation should have a MappingTable #3");
 	}
 	[Test]
 	public void HasTypeColumn()
 	{
-		Assert.NotNull(ownClass.Relations.First().ForeignKeyTypeColumnName, "Relation should have a TypeColumn #1");
-		Assert.NotNull(ownDerivedClass.Relations.First().ForeignKeyTypeColumnName, "Relation should have a TypeColumn #2");
-		Assert.NotNull(otherClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, "Relation should have a TypeColumn #7");
-		Assert.Null(ownClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, "Relation shouldn't have a TypeColumn #3");
-		Assert.Null(otherClass.Relations.First().ForeignKeyTypeColumnName, "Relation shouldn't have a TypeColumn #4");
+		Assert.That(ownClass.Relations.First().ForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #1");
+		Assert.That(ownDerivedClass.Relations.First().ForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #2");
+		Assert.That(otherClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #7");
+		Assert.That(ownClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, Is.Null, "Relation shouldn't have a TypeColumn #3");
+		Assert.That(otherClass.Relations.First().ForeignKeyTypeColumnName, Is.Null, "Relation shouldn't have a TypeColumn #4");
 	}
 	[Test]
 	public void HasTypeCode()
@@ -1161,7 +1163,7 @@ public class MappingTestAgrBin1OwnpconTblAuto
 
 
 [TestFixture]
-public class MappingTestAgrBi1nOwnpconTblAuto
+public class MappingTestAgrBi1nOwnpconTblAuto : NDOTest
 {
 	PersistenceManager pm;
 	NDOMapping mapping;
@@ -1180,18 +1182,18 @@ public class MappingTestAgrBi1nOwnpconTblAuto
 	[Test]
 	public void HasMappingTable()
 	{
-		Assert.NotNull(ownClass.Relations.First().MappingTable, "Relation should have a MappingTable #1");
-		Assert.NotNull(ownDerivedClass.Relations.First().MappingTable, "Relation should have a MappingTable #2");
-		Assert.NotNull(otherClass.Relations.First().MappingTable, "Relation should have a MappingTable #3");
+		Assert.That(ownClass.Relations.First().MappingTable, Is.Not.Null, "Relation should have a MappingTable #1");
+		Assert.That(ownDerivedClass.Relations.First().MappingTable, Is.Not.Null, "Relation should have a MappingTable #2");
+		Assert.That(otherClass.Relations.First().MappingTable, Is.Not.Null, "Relation should have a MappingTable #3");
 	}
 	[Test]
 	public void HasTypeColumn()
 	{
-		Assert.NotNull(ownClass.Relations.First().ForeignKeyTypeColumnName, "Relation should have a TypeColumn #1");
-		Assert.NotNull(ownDerivedClass.Relations.First().ForeignKeyTypeColumnName, "Relation should have a TypeColumn #2");
-		Assert.NotNull(otherClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, "Relation should have a TypeColumn #7");
-		Assert.Null(ownClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, "Relation shouldn't have a TypeColumn #3");
-		Assert.Null(otherClass.Relations.First().ForeignKeyTypeColumnName, "Relation shouldn't have a TypeColumn #4");
+		Assert.That(ownClass.Relations.First().ForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #1");
+		Assert.That(ownDerivedClass.Relations.First().ForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #2");
+		Assert.That(otherClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #7");
+		Assert.That(ownClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, Is.Null, "Relation shouldn't have a TypeColumn #3");
+		Assert.That(otherClass.Relations.First().ForeignKeyTypeColumnName, Is.Null, "Relation shouldn't have a TypeColumn #4");
 	}
 	[Test]
 	public void HasTypeCode()
@@ -1204,7 +1206,7 @@ public class MappingTestAgrBi1nOwnpconTblAuto
 
 
 [TestFixture]
-public class MappingTestAgrBinnOwnpconTblAuto
+public class MappingTestAgrBinnOwnpconTblAuto : NDOTest
 {
 	PersistenceManager pm;
 	NDOMapping mapping;
@@ -1223,18 +1225,18 @@ public class MappingTestAgrBinnOwnpconTblAuto
 	[Test]
 	public void HasMappingTable()
 	{
-		Assert.NotNull(ownClass.Relations.First().MappingTable, "Relation should have a MappingTable #1");
-		Assert.NotNull(ownDerivedClass.Relations.First().MappingTable, "Relation should have a MappingTable #2");
-		Assert.NotNull(otherClass.Relations.First().MappingTable, "Relation should have a MappingTable #3");
+		Assert.That(ownClass.Relations.First().MappingTable, Is.Not.Null, "Relation should have a MappingTable #1");
+		Assert.That(ownDerivedClass.Relations.First().MappingTable, Is.Not.Null, "Relation should have a MappingTable #2");
+		Assert.That(otherClass.Relations.First().MappingTable, Is.Not.Null, "Relation should have a MappingTable #3");
 	}
 	[Test]
 	public void HasTypeColumn()
 	{
-		Assert.NotNull(ownClass.Relations.First().ForeignKeyTypeColumnName, "Relation should have a TypeColumn #1");
-		Assert.NotNull(ownDerivedClass.Relations.First().ForeignKeyTypeColumnName, "Relation should have a TypeColumn #2");
-		Assert.NotNull(otherClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, "Relation should have a TypeColumn #7");
-		Assert.Null(ownClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, "Relation shouldn't have a TypeColumn #3");
-		Assert.Null(otherClass.Relations.First().ForeignKeyTypeColumnName, "Relation shouldn't have a TypeColumn #4");
+		Assert.That(ownClass.Relations.First().ForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #1");
+		Assert.That(ownDerivedClass.Relations.First().ForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #2");
+		Assert.That(otherClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #7");
+		Assert.That(ownClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, Is.Null, "Relation shouldn't have a TypeColumn #3");
+		Assert.That(otherClass.Relations.First().ForeignKeyTypeColumnName, Is.Null, "Relation shouldn't have a TypeColumn #4");
 	}
 	[Test]
 	public void HasTypeCode()
@@ -1247,7 +1249,7 @@ public class MappingTestAgrBinnOwnpconTblAuto
 
 
 [TestFixture]
-public class MappingTestCmpDir1OwnpconNoTblAuto
+public class MappingTestCmpDir1OwnpconNoTblAuto : NDOTest
 {
 	PersistenceManager pm;
 	NDOMapping mapping;
@@ -1266,13 +1268,13 @@ public class MappingTestCmpDir1OwnpconNoTblAuto
 	[Test]
 	public void HasMappingTable()
 	{
-		Assert.Null(ownClass.Relations.First().MappingTable, "Relation shouldn't have a MappingTable #5");
-		Assert.Null(ownDerivedClass.Relations.First().MappingTable, "Relation shouldn't have a MappingTable #6");
+		Assert.That(ownClass.Relations.First().MappingTable, Is.Null, "Relation shouldn't have a MappingTable #5");
+		Assert.That(ownDerivedClass.Relations.First().MappingTable, Is.Null, "Relation shouldn't have a MappingTable #6");
 	}
 	[Test]
 	public void HasTypeColumn()
 	{
-		Assert.Null(ownClass.Relations.First().ForeignKeyTypeColumnName, "Relation shouldn't have a TypeColumn #1");
+		Assert.That(ownClass.Relations.First().ForeignKeyTypeColumnName, Is.Null, "Relation shouldn't have a TypeColumn #1");
 	}
 	[Test]
 	public void HasTypeCode()
@@ -1285,7 +1287,7 @@ public class MappingTestCmpDir1OwnpconNoTblAuto
 
 
 [TestFixture]
-public class MappingTestCmpDir1OwnpconTblAuto
+public class MappingTestCmpDir1OwnpconTblAuto : NDOTest
 {
 	PersistenceManager pm;
 	NDOMapping mapping;
@@ -1304,15 +1306,15 @@ public class MappingTestCmpDir1OwnpconTblAuto
 	[Test]
 	public void HasMappingTable()
 	{
-		Assert.NotNull(ownClass.Relations.First().MappingTable, "Relation should have a MappingTable #1");
-		Assert.NotNull(ownDerivedClass.Relations.First().MappingTable, "Relation should have a MappingTable #2");
+		Assert.That(ownClass.Relations.First().MappingTable, Is.Not.Null, "Relation should have a MappingTable #1");
+		Assert.That(ownDerivedClass.Relations.First().MappingTable, Is.Not.Null, "Relation should have a MappingTable #2");
 	}
 	[Test]
 	public void HasTypeColumn()
 	{
-		Assert.NotNull(ownClass.Relations.First().ForeignKeyTypeColumnName, "Relation should have a TypeColumn #1");
-		Assert.NotNull(ownDerivedClass.Relations.First().ForeignKeyTypeColumnName, "Relation should have a TypeColumn #2");
-		Assert.Null(ownClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, "Relation shouldn't have a TypeColumn #3");
+		Assert.That(ownClass.Relations.First().ForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #1");
+		Assert.That(ownDerivedClass.Relations.First().ForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #2");
+		Assert.That(ownClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, Is.Null, "Relation shouldn't have a TypeColumn #3");
 	}
 	[Test]
 	public void HasTypeCode()
@@ -1325,7 +1327,7 @@ public class MappingTestCmpDir1OwnpconTblAuto
 
 
 [TestFixture]
-public class MappingTestCmpBi11OwnpconNoTblAuto
+public class MappingTestCmpBi11OwnpconNoTblAuto : NDOTest
 {
 	PersistenceManager pm;
 	NDOMapping mapping;
@@ -1344,15 +1346,15 @@ public class MappingTestCmpBi11OwnpconNoTblAuto
 	[Test]
 	public void HasMappingTable()
 	{
-		Assert.Null(ownClass.Relations.First().MappingTable, "Relation shouldn't have a MappingTable #5");
-		Assert.Null(ownDerivedClass.Relations.First().MappingTable, "Relation shouldn't have a MappingTable #6");
-		Assert.Null(otherClass.Relations.First().MappingTable, "Relation shouldn't have a MappingTable #7");
+		Assert.That(ownClass.Relations.First().MappingTable, Is.Null, "Relation shouldn't have a MappingTable #5");
+		Assert.That(ownDerivedClass.Relations.First().MappingTable, Is.Null, "Relation shouldn't have a MappingTable #6");
+		Assert.That(otherClass.Relations.First().MappingTable, Is.Null, "Relation shouldn't have a MappingTable #7");
 	}
 	[Test]
 	public void HasTypeColumn()
 	{
-		Assert.Null(ownClass.Relations.First().ForeignKeyTypeColumnName, "Relation shouldn't have a TypeColumn #1");
-		Assert.NotNull(otherClass.Relations.First().ForeignKeyTypeColumnName, "Relation should have a TypeColumn #10");
+		Assert.That(ownClass.Relations.First().ForeignKeyTypeColumnName, Is.Null, "Relation shouldn't have a TypeColumn #1");
+		Assert.That(otherClass.Relations.First().ForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #10");
 	}
 	[Test]
 	public void HasTypeCode()
@@ -1365,7 +1367,7 @@ public class MappingTestCmpBi11OwnpconNoTblAuto
 
 
 [TestFixture]
-public class MappingTestCmpBi11OwnpconTblAuto
+public class MappingTestCmpBi11OwnpconTblAuto : NDOTest
 {
 	PersistenceManager pm;
 	NDOMapping mapping;
@@ -1384,18 +1386,18 @@ public class MappingTestCmpBi11OwnpconTblAuto
 	[Test]
 	public void HasMappingTable()
 	{
-		Assert.NotNull(ownClass.Relations.First().MappingTable, "Relation should have a MappingTable #1");
-		Assert.NotNull(ownDerivedClass.Relations.First().MappingTable, "Relation should have a MappingTable #2");
-		Assert.NotNull(otherClass.Relations.First().MappingTable, "Relation should have a MappingTable #3");
+		Assert.That(ownClass.Relations.First().MappingTable, Is.Not.Null, "Relation should have a MappingTable #1");
+		Assert.That(ownDerivedClass.Relations.First().MappingTable, Is.Not.Null, "Relation should have a MappingTable #2");
+		Assert.That(otherClass.Relations.First().MappingTable, Is.Not.Null, "Relation should have a MappingTable #3");
 	}
 	[Test]
 	public void HasTypeColumn()
 	{
-		Assert.NotNull(ownClass.Relations.First().ForeignKeyTypeColumnName, "Relation should have a TypeColumn #1");
-		Assert.NotNull(ownDerivedClass.Relations.First().ForeignKeyTypeColumnName, "Relation should have a TypeColumn #2");
-		Assert.NotNull(otherClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, "Relation should have a TypeColumn #7");
-		Assert.Null(ownClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, "Relation shouldn't have a TypeColumn #3");
-		Assert.Null(otherClass.Relations.First().ForeignKeyTypeColumnName, "Relation shouldn't have a TypeColumn #4");
+		Assert.That(ownClass.Relations.First().ForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #1");
+		Assert.That(ownDerivedClass.Relations.First().ForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #2");
+		Assert.That(otherClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #7");
+		Assert.That(ownClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, Is.Null, "Relation shouldn't have a TypeColumn #3");
+		Assert.That(otherClass.Relations.First().ForeignKeyTypeColumnName, Is.Null, "Relation shouldn't have a TypeColumn #4");
 	}
 	[Test]
 	public void HasTypeCode()
@@ -1408,7 +1410,7 @@ public class MappingTestCmpBi11OwnpconTblAuto
 
 
 [TestFixture]
-public class MappingTestCmpDirnOwnpconNoTblAuto
+public class MappingTestCmpDirnOwnpconNoTblAuto : NDOTest
 {
 	PersistenceManager pm;
 	NDOMapping mapping;
@@ -1427,13 +1429,13 @@ public class MappingTestCmpDirnOwnpconNoTblAuto
 	[Test]
 	public void HasMappingTable()
 	{
-		Assert.Null(ownClass.Relations.First().MappingTable, "Relation shouldn't have a MappingTable #5");
-		Assert.Null(ownDerivedClass.Relations.First().MappingTable, "Relation shouldn't have a MappingTable #6");
+		Assert.That(ownClass.Relations.First().MappingTable, Is.Null, "Relation shouldn't have a MappingTable #5");
+		Assert.That(ownDerivedClass.Relations.First().MappingTable, Is.Null, "Relation shouldn't have a MappingTable #6");
 	}
 	[Test]
 	public void HasTypeColumn()
 	{
-		Assert.Null(ownClass.Relations.First().ForeignKeyTypeColumnName, "Relation shouldn't have a TypeColumn #1");
+		Assert.That(ownClass.Relations.First().ForeignKeyTypeColumnName, Is.Null, "Relation shouldn't have a TypeColumn #1");
 	}
 	[Test]
 	public void HasTypeCode()
@@ -1446,7 +1448,7 @@ public class MappingTestCmpDirnOwnpconNoTblAuto
 
 
 [TestFixture]
-public class MappingTestCmpDirnOwnpconTblAuto
+public class MappingTestCmpDirnOwnpconTblAuto : NDOTest
 {
 	PersistenceManager pm;
 	NDOMapping mapping;
@@ -1465,15 +1467,15 @@ public class MappingTestCmpDirnOwnpconTblAuto
 	[Test]
 	public void HasMappingTable()
 	{
-		Assert.NotNull(ownClass.Relations.First().MappingTable, "Relation should have a MappingTable #1");
-		Assert.NotNull(ownDerivedClass.Relations.First().MappingTable, "Relation should have a MappingTable #2");
+		Assert.That(ownClass.Relations.First().MappingTable, Is.Not.Null, "Relation should have a MappingTable #1");
+		Assert.That(ownDerivedClass.Relations.First().MappingTable, Is.Not.Null, "Relation should have a MappingTable #2");
 	}
 	[Test]
 	public void HasTypeColumn()
 	{
-		Assert.NotNull(ownClass.Relations.First().ForeignKeyTypeColumnName, "Relation should have a TypeColumn #1");
-		Assert.NotNull(ownDerivedClass.Relations.First().ForeignKeyTypeColumnName, "Relation should have a TypeColumn #2");
-		Assert.Null(ownClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, "Relation shouldn't have a TypeColumn #3");
+		Assert.That(ownClass.Relations.First().ForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #1");
+		Assert.That(ownDerivedClass.Relations.First().ForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #2");
+		Assert.That(ownClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, Is.Null, "Relation shouldn't have a TypeColumn #3");
 	}
 	[Test]
 	public void HasTypeCode()
@@ -1486,7 +1488,7 @@ public class MappingTestCmpDirnOwnpconTblAuto
 
 
 [TestFixture]
-public class MappingTestCmpBin1OwnpconNoTblAuto
+public class MappingTestCmpBin1OwnpconNoTblAuto : NDOTest
 {
 	PersistenceManager pm;
 	NDOMapping mapping;
@@ -1505,14 +1507,14 @@ public class MappingTestCmpBin1OwnpconNoTblAuto
 	[Test]
 	public void HasMappingTable()
 	{
-		Assert.Null(ownClass.Relations.First().MappingTable, "Relation shouldn't have a MappingTable #5");
-		Assert.Null(ownDerivedClass.Relations.First().MappingTable, "Relation shouldn't have a MappingTable #6");
-		Assert.Null(otherClass.Relations.First().MappingTable, "Relation shouldn't have a MappingTable #7");
+		Assert.That(ownClass.Relations.First().MappingTable, Is.Null, "Relation shouldn't have a MappingTable #5");
+		Assert.That(ownDerivedClass.Relations.First().MappingTable, Is.Null, "Relation shouldn't have a MappingTable #6");
+		Assert.That(otherClass.Relations.First().MappingTable, Is.Null, "Relation shouldn't have a MappingTable #7");
 	}
 	[Test]
 	public void HasTypeColumn()
 	{
-		Assert.Null(ownClass.Relations.First().ForeignKeyTypeColumnName, "Relation shouldn't have a TypeColumn #1");
+		Assert.That(ownClass.Relations.First().ForeignKeyTypeColumnName, Is.Null, "Relation shouldn't have a TypeColumn #1");
 	}
 	[Test]
 	public void HasTypeCode()
@@ -1525,7 +1527,7 @@ public class MappingTestCmpBin1OwnpconNoTblAuto
 
 
 [TestFixture]
-public class MappingTestCmpBin1OwnpconTblAuto
+public class MappingTestCmpBin1OwnpconTblAuto : NDOTest
 {
 	PersistenceManager pm;
 	NDOMapping mapping;
@@ -1544,18 +1546,18 @@ public class MappingTestCmpBin1OwnpconTblAuto
 	[Test]
 	public void HasMappingTable()
 	{
-		Assert.NotNull(ownClass.Relations.First().MappingTable, "Relation should have a MappingTable #1");
-		Assert.NotNull(ownDerivedClass.Relations.First().MappingTable, "Relation should have a MappingTable #2");
-		Assert.NotNull(otherClass.Relations.First().MappingTable, "Relation should have a MappingTable #3");
+		Assert.That(ownClass.Relations.First().MappingTable, Is.Not.Null, "Relation should have a MappingTable #1");
+		Assert.That(ownDerivedClass.Relations.First().MappingTable, Is.Not.Null, "Relation should have a MappingTable #2");
+		Assert.That(otherClass.Relations.First().MappingTable, Is.Not.Null, "Relation should have a MappingTable #3");
 	}
 	[Test]
 	public void HasTypeColumn()
 	{
-		Assert.NotNull(ownClass.Relations.First().ForeignKeyTypeColumnName, "Relation should have a TypeColumn #1");
-		Assert.NotNull(ownDerivedClass.Relations.First().ForeignKeyTypeColumnName, "Relation should have a TypeColumn #2");
-		Assert.NotNull(otherClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, "Relation should have a TypeColumn #7");
-		Assert.Null(ownClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, "Relation shouldn't have a TypeColumn #3");
-		Assert.Null(otherClass.Relations.First().ForeignKeyTypeColumnName, "Relation shouldn't have a TypeColumn #4");
+		Assert.That(ownClass.Relations.First().ForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #1");
+		Assert.That(ownDerivedClass.Relations.First().ForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #2");
+		Assert.That(otherClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #7");
+		Assert.That(ownClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, Is.Null, "Relation shouldn't have a TypeColumn #3");
+		Assert.That(otherClass.Relations.First().ForeignKeyTypeColumnName, Is.Null, "Relation shouldn't have a TypeColumn #4");
 	}
 	[Test]
 	public void HasTypeCode()
@@ -1568,7 +1570,7 @@ public class MappingTestCmpBin1OwnpconTblAuto
 
 
 [TestFixture]
-public class MappingTestCmpBi1nOwnpconTblAuto
+public class MappingTestCmpBi1nOwnpconTblAuto : NDOTest
 {
 	PersistenceManager pm;
 	NDOMapping mapping;
@@ -1587,18 +1589,18 @@ public class MappingTestCmpBi1nOwnpconTblAuto
 	[Test]
 	public void HasMappingTable()
 	{
-		Assert.NotNull(ownClass.Relations.First().MappingTable, "Relation should have a MappingTable #1");
-		Assert.NotNull(ownDerivedClass.Relations.First().MappingTable, "Relation should have a MappingTable #2");
-		Assert.NotNull(otherClass.Relations.First().MappingTable, "Relation should have a MappingTable #3");
+		Assert.That(ownClass.Relations.First().MappingTable, Is.Not.Null, "Relation should have a MappingTable #1");
+		Assert.That(ownDerivedClass.Relations.First().MappingTable, Is.Not.Null, "Relation should have a MappingTable #2");
+		Assert.That(otherClass.Relations.First().MappingTable, Is.Not.Null, "Relation should have a MappingTable #3");
 	}
 	[Test]
 	public void HasTypeColumn()
 	{
-		Assert.NotNull(ownClass.Relations.First().ForeignKeyTypeColumnName, "Relation should have a TypeColumn #1");
-		Assert.NotNull(ownDerivedClass.Relations.First().ForeignKeyTypeColumnName, "Relation should have a TypeColumn #2");
-		Assert.NotNull(otherClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, "Relation should have a TypeColumn #7");
-		Assert.Null(ownClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, "Relation shouldn't have a TypeColumn #3");
-		Assert.Null(otherClass.Relations.First().ForeignKeyTypeColumnName, "Relation shouldn't have a TypeColumn #4");
+		Assert.That(ownClass.Relations.First().ForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #1");
+		Assert.That(ownDerivedClass.Relations.First().ForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #2");
+		Assert.That(otherClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #7");
+		Assert.That(ownClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, Is.Null, "Relation shouldn't have a TypeColumn #3");
+		Assert.That(otherClass.Relations.First().ForeignKeyTypeColumnName, Is.Null, "Relation shouldn't have a TypeColumn #4");
 	}
 	[Test]
 	public void HasTypeCode()
@@ -1611,7 +1613,7 @@ public class MappingTestCmpBi1nOwnpconTblAuto
 
 
 [TestFixture]
-public class MappingTestCmpBinnOwnpconTblAuto
+public class MappingTestCmpBinnOwnpconTblAuto : NDOTest
 {
 	PersistenceManager pm;
 	NDOMapping mapping;
@@ -1630,18 +1632,18 @@ public class MappingTestCmpBinnOwnpconTblAuto
 	[Test]
 	public void HasMappingTable()
 	{
-		Assert.NotNull(ownClass.Relations.First().MappingTable, "Relation should have a MappingTable #1");
-		Assert.NotNull(ownDerivedClass.Relations.First().MappingTable, "Relation should have a MappingTable #2");
-		Assert.NotNull(otherClass.Relations.First().MappingTable, "Relation should have a MappingTable #3");
+		Assert.That(ownClass.Relations.First().MappingTable, Is.Not.Null, "Relation should have a MappingTable #1");
+		Assert.That(ownDerivedClass.Relations.First().MappingTable, Is.Not.Null, "Relation should have a MappingTable #2");
+		Assert.That(otherClass.Relations.First().MappingTable, Is.Not.Null, "Relation should have a MappingTable #3");
 	}
 	[Test]
 	public void HasTypeColumn()
 	{
-		Assert.NotNull(ownClass.Relations.First().ForeignKeyTypeColumnName, "Relation should have a TypeColumn #1");
-		Assert.NotNull(ownDerivedClass.Relations.First().ForeignKeyTypeColumnName, "Relation should have a TypeColumn #2");
-		Assert.NotNull(otherClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, "Relation should have a TypeColumn #7");
-		Assert.Null(ownClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, "Relation shouldn't have a TypeColumn #3");
-		Assert.Null(otherClass.Relations.First().ForeignKeyTypeColumnName, "Relation shouldn't have a TypeColumn #4");
+		Assert.That(ownClass.Relations.First().ForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #1");
+		Assert.That(ownDerivedClass.Relations.First().ForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #2");
+		Assert.That(otherClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #7");
+		Assert.That(ownClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, Is.Null, "Relation shouldn't have a TypeColumn #3");
+		Assert.That(otherClass.Relations.First().ForeignKeyTypeColumnName, Is.Null, "Relation shouldn't have a TypeColumn #4");
 	}
 	[Test]
 	public void HasTypeCode()
@@ -1654,7 +1656,7 @@ public class MappingTestCmpBinnOwnpconTblAuto
 
 
 [TestFixture]
-public class MappingTestAgrDir1OthpconNoTblAuto
+public class MappingTestAgrDir1OthpconNoTblAuto : NDOTest
 {
 	PersistenceManager pm;
 	NDOMapping mapping;
@@ -1673,12 +1675,12 @@ public class MappingTestAgrDir1OthpconNoTblAuto
 	[Test]
 	public void HasMappingTable()
 	{
-		Assert.Null(ownClass.Relations.First().MappingTable, "Relation shouldn't have a MappingTable #5");
+		Assert.That(ownClass.Relations.First().MappingTable, Is.Null, "Relation shouldn't have a MappingTable #5");
 	}
 	[Test]
 	public void HasTypeColumn()
 	{
-		Assert.NotNull(ownClass.Relations.First().ForeignKeyTypeColumnName, "Relation should have a TypeColumn #9");
+		Assert.That(ownClass.Relations.First().ForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #9");
 	}
 	[Test]
 	public void HasTypeCode()
@@ -1691,7 +1693,7 @@ public class MappingTestAgrDir1OthpconNoTblAuto
 
 
 [TestFixture]
-public class MappingTestAgrDir1OthpconTblAuto
+public class MappingTestAgrDir1OthpconTblAuto : NDOTest
 {
 	PersistenceManager pm;
 	NDOMapping mapping;
@@ -1710,13 +1712,13 @@ public class MappingTestAgrDir1OthpconTblAuto
 	[Test]
 	public void HasMappingTable()
 	{
-		Assert.NotNull(ownClass.Relations.First().MappingTable, "Relation should have a MappingTable #1");
+		Assert.That(ownClass.Relations.First().MappingTable, Is.Not.Null, "Relation should have a MappingTable #1");
 	}
 	[Test]
 	public void HasTypeColumn()
 	{
-		Assert.NotNull(ownClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, "Relation should have a TypeColumn #3");
-		Assert.Null(ownClass.Relations.First().ForeignKeyTypeColumnName, "Relation shouldn't have a TypeColumn #1");
+		Assert.That(ownClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #3");
+		Assert.That(ownClass.Relations.First().ForeignKeyTypeColumnName, Is.Null, "Relation shouldn't have a TypeColumn #1");
 	}
 	[Test]
 	public void HasTypeCode()
@@ -1729,7 +1731,7 @@ public class MappingTestAgrDir1OthpconTblAuto
 
 
 [TestFixture]
-public class MappingTestAgrBi11OthpconNoTblAuto
+public class MappingTestAgrBi11OthpconNoTblAuto : NDOTest
 {
 	PersistenceManager pm;
 	NDOMapping mapping;
@@ -1748,14 +1750,14 @@ public class MappingTestAgrBi11OthpconNoTblAuto
 	[Test]
 	public void HasMappingTable()
 	{
-		Assert.Null(ownClass.Relations.First().MappingTable, "Relation shouldn't have a MappingTable #5");
-		Assert.Null(otherClass.Relations.First().MappingTable, "Relation shouldn't have a MappingTable #7");
-		Assert.Null(otherDerivedClass.Relations.First().MappingTable, "Relation shouldn't have a MappingTable #8");
+		Assert.That(ownClass.Relations.First().MappingTable, Is.Null, "Relation shouldn't have a MappingTable #5");
+		Assert.That(otherClass.Relations.First().MappingTable, Is.Null, "Relation shouldn't have a MappingTable #7");
+		Assert.That(otherDerivedClass.Relations.First().MappingTable, Is.Null, "Relation shouldn't have a MappingTable #8");
 	}
 	[Test]
 	public void HasTypeColumn()
 	{
-		Assert.NotNull(ownClass.Relations.First().ForeignKeyTypeColumnName, "Relation should have a TypeColumn #9");
+		Assert.That(ownClass.Relations.First().ForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #9");
 	}
 	[Test]
 	public void HasTypeCode()
@@ -1768,7 +1770,7 @@ public class MappingTestAgrBi11OthpconNoTblAuto
 
 
 [TestFixture]
-public class MappingTestAgrBi11OthpconTblAuto
+public class MappingTestAgrBi11OthpconTblAuto : NDOTest
 {
 	PersistenceManager pm;
 	NDOMapping mapping;
@@ -1787,18 +1789,18 @@ public class MappingTestAgrBi11OthpconTblAuto
 	[Test]
 	public void HasMappingTable()
 	{
-		Assert.NotNull(ownClass.Relations.First().MappingTable, "Relation should have a MappingTable #1");
-		Assert.NotNull(otherClass.Relations.First().MappingTable, "Relation should have a MappingTable #3");
-		Assert.NotNull(otherDerivedClass.Relations.First().MappingTable, "Relation should have a MappingTable #4");
+		Assert.That(ownClass.Relations.First().MappingTable, Is.Not.Null, "Relation should have a MappingTable #1");
+		Assert.That(otherClass.Relations.First().MappingTable, Is.Not.Null, "Relation should have a MappingTable #3");
+		Assert.That(otherDerivedClass.Relations.First().MappingTable, Is.Not.Null, "Relation should have a MappingTable #4");
 	}
 	[Test]
 	public void HasTypeColumn()
 	{
-		Assert.NotNull(ownClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, "Relation should have a TypeColumn #3");
-		Assert.NotNull(otherClass.Relations.First().ForeignKeyTypeColumnName, "Relation should have a TypeColumn #5");
-		Assert.NotNull(otherDerivedClass.Relations.First().ForeignKeyTypeColumnName, "Relation should have a TypeColumn #6");
-		Assert.Null(ownClass.Relations.First().ForeignKeyTypeColumnName, "Relation shouldn't have a TypeColumn #1");
-		Assert.Null(otherClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, "Relation shouldn't have a TypeColumn #2");
+		Assert.That(ownClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #3");
+		Assert.That(otherClass.Relations.First().ForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #5");
+		Assert.That(otherDerivedClass.Relations.First().ForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #6");
+		Assert.That(ownClass.Relations.First().ForeignKeyTypeColumnName, Is.Null, "Relation shouldn't have a TypeColumn #1");
+		Assert.That(otherClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, Is.Null, "Relation shouldn't have a TypeColumn #2");
 	}
 	[Test]
 	public void HasTypeCode()
@@ -1811,7 +1813,7 @@ public class MappingTestAgrBi11OthpconTblAuto
 
 
 [TestFixture]
-public class MappingTestAgrDirnOthpconTblAuto
+public class MappingTestAgrDirnOthpconTblAuto : NDOTest
 {
 	PersistenceManager pm;
 	NDOMapping mapping;
@@ -1830,13 +1832,13 @@ public class MappingTestAgrDirnOthpconTblAuto
 	[Test]
 	public void HasMappingTable()
 	{
-		Assert.NotNull(ownClass.Relations.First().MappingTable, "Relation should have a MappingTable #1");
+		Assert.That(ownClass.Relations.First().MappingTable, Is.Not.Null, "Relation should have a MappingTable #1");
 	}
 	[Test]
 	public void HasTypeColumn()
 	{
-		Assert.NotNull(ownClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, "Relation should have a TypeColumn #3");
-		Assert.Null(ownClass.Relations.First().ForeignKeyTypeColumnName, "Relation shouldn't have a TypeColumn #1");
+		Assert.That(ownClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #3");
+		Assert.That(ownClass.Relations.First().ForeignKeyTypeColumnName, Is.Null, "Relation shouldn't have a TypeColumn #1");
 	}
 	[Test]
 	public void HasTypeCode()
@@ -1849,7 +1851,7 @@ public class MappingTestAgrDirnOthpconTblAuto
 
 
 [TestFixture]
-public class MappingTestAgrBin1OthpconTblAuto
+public class MappingTestAgrBin1OthpconTblAuto : NDOTest
 {
 	PersistenceManager pm;
 	NDOMapping mapping;
@@ -1868,18 +1870,18 @@ public class MappingTestAgrBin1OthpconTblAuto
 	[Test]
 	public void HasMappingTable()
 	{
-		Assert.NotNull(ownClass.Relations.First().MappingTable, "Relation should have a MappingTable #1");
-		Assert.NotNull(otherClass.Relations.First().MappingTable, "Relation should have a MappingTable #3");
-		Assert.NotNull(otherDerivedClass.Relations.First().MappingTable, "Relation should have a MappingTable #4");
+		Assert.That(ownClass.Relations.First().MappingTable, Is.Not.Null, "Relation should have a MappingTable #1");
+		Assert.That(otherClass.Relations.First().MappingTable, Is.Not.Null, "Relation should have a MappingTable #3");
+		Assert.That(otherDerivedClass.Relations.First().MappingTable, Is.Not.Null, "Relation should have a MappingTable #4");
 	}
 	[Test]
 	public void HasTypeColumn()
 	{
-		Assert.NotNull(ownClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, "Relation should have a TypeColumn #3");
-		Assert.NotNull(otherClass.Relations.First().ForeignKeyTypeColumnName, "Relation should have a TypeColumn #5");
-		Assert.NotNull(otherDerivedClass.Relations.First().ForeignKeyTypeColumnName, "Relation should have a TypeColumn #6");
-		Assert.Null(ownClass.Relations.First().ForeignKeyTypeColumnName, "Relation shouldn't have a TypeColumn #1");
-		Assert.Null(otherClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, "Relation shouldn't have a TypeColumn #2");
+		Assert.That(ownClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #3");
+		Assert.That(otherClass.Relations.First().ForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #5");
+		Assert.That(otherDerivedClass.Relations.First().ForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #6");
+		Assert.That(ownClass.Relations.First().ForeignKeyTypeColumnName, Is.Null, "Relation shouldn't have a TypeColumn #1");
+		Assert.That(otherClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, Is.Null, "Relation shouldn't have a TypeColumn #2");
 	}
 	[Test]
 	public void HasTypeCode()
@@ -1892,7 +1894,7 @@ public class MappingTestAgrBin1OthpconTblAuto
 
 
 [TestFixture]
-public class MappingTestAgrBi1nOthpconNoTblAuto
+public class MappingTestAgrBi1nOthpconNoTblAuto : NDOTest
 {
 	PersistenceManager pm;
 	NDOMapping mapping;
@@ -1911,14 +1913,14 @@ public class MappingTestAgrBi1nOthpconNoTblAuto
 	[Test]
 	public void HasMappingTable()
 	{
-		Assert.Null(ownClass.Relations.First().MappingTable, "Relation shouldn't have a MappingTable #5");
-		Assert.Null(otherClass.Relations.First().MappingTable, "Relation shouldn't have a MappingTable #7");
-		Assert.Null(otherDerivedClass.Relations.First().MappingTable, "Relation shouldn't have a MappingTable #8");
+		Assert.That(ownClass.Relations.First().MappingTable, Is.Null, "Relation shouldn't have a MappingTable #5");
+		Assert.That(otherClass.Relations.First().MappingTable, Is.Null, "Relation shouldn't have a MappingTable #7");
+		Assert.That(otherDerivedClass.Relations.First().MappingTable, Is.Null, "Relation shouldn't have a MappingTable #8");
 	}
 	[Test]
 	public void HasTypeColumn()
 	{
-		Assert.NotNull(ownClass.Relations.First().ForeignKeyTypeColumnName, "Relation should have a TypeColumn #9");
+		Assert.That(ownClass.Relations.First().ForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #9");
 	}
 	[Test]
 	public void HasTypeCode()
@@ -1931,7 +1933,7 @@ public class MappingTestAgrBi1nOthpconNoTblAuto
 
 
 [TestFixture]
-public class MappingTestAgrBi1nOthpconTblAuto
+public class MappingTestAgrBi1nOthpconTblAuto : NDOTest
 {
 	PersistenceManager pm;
 	NDOMapping mapping;
@@ -1950,18 +1952,18 @@ public class MappingTestAgrBi1nOthpconTblAuto
 	[Test]
 	public void HasMappingTable()
 	{
-		Assert.NotNull(ownClass.Relations.First().MappingTable, "Relation should have a MappingTable #1");
-		Assert.NotNull(otherClass.Relations.First().MappingTable, "Relation should have a MappingTable #3");
-		Assert.NotNull(otherDerivedClass.Relations.First().MappingTable, "Relation should have a MappingTable #4");
+		Assert.That(ownClass.Relations.First().MappingTable, Is.Not.Null, "Relation should have a MappingTable #1");
+		Assert.That(otherClass.Relations.First().MappingTable, Is.Not.Null, "Relation should have a MappingTable #3");
+		Assert.That(otherDerivedClass.Relations.First().MappingTable, Is.Not.Null, "Relation should have a MappingTable #4");
 	}
 	[Test]
 	public void HasTypeColumn()
 	{
-		Assert.NotNull(ownClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, "Relation should have a TypeColumn #3");
-		Assert.NotNull(otherClass.Relations.First().ForeignKeyTypeColumnName, "Relation should have a TypeColumn #5");
-		Assert.NotNull(otherDerivedClass.Relations.First().ForeignKeyTypeColumnName, "Relation should have a TypeColumn #6");
-		Assert.Null(ownClass.Relations.First().ForeignKeyTypeColumnName, "Relation shouldn't have a TypeColumn #1");
-		Assert.Null(otherClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, "Relation shouldn't have a TypeColumn #2");
+		Assert.That(ownClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #3");
+		Assert.That(otherClass.Relations.First().ForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #5");
+		Assert.That(otherDerivedClass.Relations.First().ForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #6");
+		Assert.That(ownClass.Relations.First().ForeignKeyTypeColumnName, Is.Null, "Relation shouldn't have a TypeColumn #1");
+		Assert.That(otherClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, Is.Null, "Relation shouldn't have a TypeColumn #2");
 	}
 	[Test]
 	public void HasTypeCode()
@@ -1974,7 +1976,7 @@ public class MappingTestAgrBi1nOthpconTblAuto
 
 
 [TestFixture]
-public class MappingTestAgrBinnOthpconTblAuto
+public class MappingTestAgrBinnOthpconTblAuto : NDOTest
 {
 	PersistenceManager pm;
 	NDOMapping mapping;
@@ -1993,18 +1995,18 @@ public class MappingTestAgrBinnOthpconTblAuto
 	[Test]
 	public void HasMappingTable()
 	{
-		Assert.NotNull(ownClass.Relations.First().MappingTable, "Relation should have a MappingTable #1");
-		Assert.NotNull(otherClass.Relations.First().MappingTable, "Relation should have a MappingTable #3");
-		Assert.NotNull(otherDerivedClass.Relations.First().MappingTable, "Relation should have a MappingTable #4");
+		Assert.That(ownClass.Relations.First().MappingTable, Is.Not.Null, "Relation should have a MappingTable #1");
+		Assert.That(otherClass.Relations.First().MappingTable, Is.Not.Null, "Relation should have a MappingTable #3");
+		Assert.That(otherDerivedClass.Relations.First().MappingTable, Is.Not.Null, "Relation should have a MappingTable #4");
 	}
 	[Test]
 	public void HasTypeColumn()
 	{
-		Assert.NotNull(ownClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, "Relation should have a TypeColumn #3");
-		Assert.NotNull(otherClass.Relations.First().ForeignKeyTypeColumnName, "Relation should have a TypeColumn #5");
-		Assert.NotNull(otherDerivedClass.Relations.First().ForeignKeyTypeColumnName, "Relation should have a TypeColumn #6");
-		Assert.Null(ownClass.Relations.First().ForeignKeyTypeColumnName, "Relation shouldn't have a TypeColumn #1");
-		Assert.Null(otherClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, "Relation shouldn't have a TypeColumn #2");
+		Assert.That(ownClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #3");
+		Assert.That(otherClass.Relations.First().ForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #5");
+		Assert.That(otherDerivedClass.Relations.First().ForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #6");
+		Assert.That(ownClass.Relations.First().ForeignKeyTypeColumnName, Is.Null, "Relation shouldn't have a TypeColumn #1");
+		Assert.That(otherClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, Is.Null, "Relation shouldn't have a TypeColumn #2");
 	}
 	[Test]
 	public void HasTypeCode()
@@ -2017,7 +2019,7 @@ public class MappingTestAgrBinnOthpconTblAuto
 
 
 [TestFixture]
-public class MappingTestCmpDir1OthpconTblAuto
+public class MappingTestCmpDir1OthpconTblAuto : NDOTest
 {
 	PersistenceManager pm;
 	NDOMapping mapping;
@@ -2036,13 +2038,13 @@ public class MappingTestCmpDir1OthpconTblAuto
 	[Test]
 	public void HasMappingTable()
 	{
-		Assert.NotNull(ownClass.Relations.First().MappingTable, "Relation should have a MappingTable #1");
+		Assert.That(ownClass.Relations.First().MappingTable, Is.Not.Null, "Relation should have a MappingTable #1");
 	}
 	[Test]
 	public void HasTypeColumn()
 	{
-		Assert.NotNull(ownClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, "Relation should have a TypeColumn #3");
-		Assert.Null(ownClass.Relations.First().ForeignKeyTypeColumnName, "Relation shouldn't have a TypeColumn #1");
+		Assert.That(ownClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #3");
+		Assert.That(ownClass.Relations.First().ForeignKeyTypeColumnName, Is.Null, "Relation shouldn't have a TypeColumn #1");
 	}
 	[Test]
 	public void HasTypeCode()
@@ -2055,7 +2057,7 @@ public class MappingTestCmpDir1OthpconTblAuto
 
 
 [TestFixture]
-public class MappingTestCmpBi11OthpconTblAuto
+public class MappingTestCmpBi11OthpconTblAuto : NDOTest
 {
 	PersistenceManager pm;
 	NDOMapping mapping;
@@ -2074,18 +2076,18 @@ public class MappingTestCmpBi11OthpconTblAuto
 	[Test]
 	public void HasMappingTable()
 	{
-		Assert.NotNull(ownClass.Relations.First().MappingTable, "Relation should have a MappingTable #1");
-		Assert.NotNull(otherClass.Relations.First().MappingTable, "Relation should have a MappingTable #3");
-		Assert.NotNull(otherDerivedClass.Relations.First().MappingTable, "Relation should have a MappingTable #4");
+		Assert.That(ownClass.Relations.First().MappingTable, Is.Not.Null, "Relation should have a MappingTable #1");
+		Assert.That(otherClass.Relations.First().MappingTable, Is.Not.Null, "Relation should have a MappingTable #3");
+		Assert.That(otherDerivedClass.Relations.First().MappingTable, Is.Not.Null, "Relation should have a MappingTable #4");
 	}
 	[Test]
 	public void HasTypeColumn()
 	{
-		Assert.NotNull(ownClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, "Relation should have a TypeColumn #3");
-		Assert.NotNull(otherClass.Relations.First().ForeignKeyTypeColumnName, "Relation should have a TypeColumn #5");
-		Assert.NotNull(otherDerivedClass.Relations.First().ForeignKeyTypeColumnName, "Relation should have a TypeColumn #6");
-		Assert.Null(ownClass.Relations.First().ForeignKeyTypeColumnName, "Relation shouldn't have a TypeColumn #1");
-		Assert.Null(otherClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, "Relation shouldn't have a TypeColumn #2");
+		Assert.That(ownClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #3");
+		Assert.That(otherClass.Relations.First().ForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #5");
+		Assert.That(otherDerivedClass.Relations.First().ForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #6");
+		Assert.That(ownClass.Relations.First().ForeignKeyTypeColumnName, Is.Null, "Relation shouldn't have a TypeColumn #1");
+		Assert.That(otherClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, Is.Null, "Relation shouldn't have a TypeColumn #2");
 	}
 	[Test]
 	public void HasTypeCode()
@@ -2098,7 +2100,7 @@ public class MappingTestCmpBi11OthpconTblAuto
 
 
 [TestFixture]
-public class MappingTestCmpDirnOthpconTblAuto
+public class MappingTestCmpDirnOthpconTblAuto : NDOTest
 {
 	PersistenceManager pm;
 	NDOMapping mapping;
@@ -2117,13 +2119,13 @@ public class MappingTestCmpDirnOthpconTblAuto
 	[Test]
 	public void HasMappingTable()
 	{
-		Assert.NotNull(ownClass.Relations.First().MappingTable, "Relation should have a MappingTable #1");
+		Assert.That(ownClass.Relations.First().MappingTable, Is.Not.Null, "Relation should have a MappingTable #1");
 	}
 	[Test]
 	public void HasTypeColumn()
 	{
-		Assert.NotNull(ownClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, "Relation should have a TypeColumn #3");
-		Assert.Null(ownClass.Relations.First().ForeignKeyTypeColumnName, "Relation shouldn't have a TypeColumn #1");
+		Assert.That(ownClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #3");
+		Assert.That(ownClass.Relations.First().ForeignKeyTypeColumnName, Is.Null, "Relation shouldn't have a TypeColumn #1");
 	}
 	[Test]
 	public void HasTypeCode()
@@ -2136,7 +2138,7 @@ public class MappingTestCmpDirnOthpconTblAuto
 
 
 [TestFixture]
-public class MappingTestCmpBin1OthpconTblAuto
+public class MappingTestCmpBin1OthpconTblAuto : NDOTest
 {
 	PersistenceManager pm;
 	NDOMapping mapping;
@@ -2155,18 +2157,18 @@ public class MappingTestCmpBin1OthpconTblAuto
 	[Test]
 	public void HasMappingTable()
 	{
-		Assert.NotNull(ownClass.Relations.First().MappingTable, "Relation should have a MappingTable #1");
-		Assert.NotNull(otherClass.Relations.First().MappingTable, "Relation should have a MappingTable #3");
-		Assert.NotNull(otherDerivedClass.Relations.First().MappingTable, "Relation should have a MappingTable #4");
+		Assert.That(ownClass.Relations.First().MappingTable, Is.Not.Null, "Relation should have a MappingTable #1");
+		Assert.That(otherClass.Relations.First().MappingTable, Is.Not.Null, "Relation should have a MappingTable #3");
+		Assert.That(otherDerivedClass.Relations.First().MappingTable, Is.Not.Null, "Relation should have a MappingTable #4");
 	}
 	[Test]
 	public void HasTypeColumn()
 	{
-		Assert.NotNull(ownClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, "Relation should have a TypeColumn #3");
-		Assert.NotNull(otherClass.Relations.First().ForeignKeyTypeColumnName, "Relation should have a TypeColumn #5");
-		Assert.NotNull(otherDerivedClass.Relations.First().ForeignKeyTypeColumnName, "Relation should have a TypeColumn #6");
-		Assert.Null(ownClass.Relations.First().ForeignKeyTypeColumnName, "Relation shouldn't have a TypeColumn #1");
-		Assert.Null(otherClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, "Relation shouldn't have a TypeColumn #2");
+		Assert.That(ownClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #3");
+		Assert.That(otherClass.Relations.First().ForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #5");
+		Assert.That(otherDerivedClass.Relations.First().ForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #6");
+		Assert.That(ownClass.Relations.First().ForeignKeyTypeColumnName, Is.Null, "Relation shouldn't have a TypeColumn #1");
+		Assert.That(otherClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, Is.Null, "Relation shouldn't have a TypeColumn #2");
 	}
 	[Test]
 	public void HasTypeCode()
@@ -2179,7 +2181,7 @@ public class MappingTestCmpBin1OthpconTblAuto
 
 
 [TestFixture]
-public class MappingTestCmpBi1nOthpconTblAuto
+public class MappingTestCmpBi1nOthpconTblAuto : NDOTest
 {
 	PersistenceManager pm;
 	NDOMapping mapping;
@@ -2198,18 +2200,18 @@ public class MappingTestCmpBi1nOthpconTblAuto
 	[Test]
 	public void HasMappingTable()
 	{
-		Assert.NotNull(ownClass.Relations.First().MappingTable, "Relation should have a MappingTable #1");
-		Assert.NotNull(otherClass.Relations.First().MappingTable, "Relation should have a MappingTable #3");
-		Assert.NotNull(otherDerivedClass.Relations.First().MappingTable, "Relation should have a MappingTable #4");
+		Assert.That(ownClass.Relations.First().MappingTable, Is.Not.Null, "Relation should have a MappingTable #1");
+		Assert.That(otherClass.Relations.First().MappingTable, Is.Not.Null, "Relation should have a MappingTable #3");
+		Assert.That(otherDerivedClass.Relations.First().MappingTable, Is.Not.Null, "Relation should have a MappingTable #4");
 	}
 	[Test]
 	public void HasTypeColumn()
 	{
-		Assert.NotNull(ownClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, "Relation should have a TypeColumn #3");
-		Assert.NotNull(otherClass.Relations.First().ForeignKeyTypeColumnName, "Relation should have a TypeColumn #5");
-		Assert.NotNull(otherDerivedClass.Relations.First().ForeignKeyTypeColumnName, "Relation should have a TypeColumn #6");
-		Assert.Null(ownClass.Relations.First().ForeignKeyTypeColumnName, "Relation shouldn't have a TypeColumn #1");
-		Assert.Null(otherClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, "Relation shouldn't have a TypeColumn #2");
+		Assert.That(ownClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #3");
+		Assert.That(otherClass.Relations.First().ForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #5");
+		Assert.That(otherDerivedClass.Relations.First().ForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #6");
+		Assert.That(ownClass.Relations.First().ForeignKeyTypeColumnName, Is.Null, "Relation shouldn't have a TypeColumn #1");
+		Assert.That(otherClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, Is.Null, "Relation shouldn't have a TypeColumn #2");
 	}
 	[Test]
 	public void HasTypeCode()
@@ -2222,7 +2224,7 @@ public class MappingTestCmpBi1nOthpconTblAuto
 
 
 [TestFixture]
-public class MappingTestCmpBinnOthpconTblAuto
+public class MappingTestCmpBinnOthpconTblAuto : NDOTest
 {
 	PersistenceManager pm;
 	NDOMapping mapping;
@@ -2241,18 +2243,18 @@ public class MappingTestCmpBinnOthpconTblAuto
 	[Test]
 	public void HasMappingTable()
 	{
-		Assert.NotNull(ownClass.Relations.First().MappingTable, "Relation should have a MappingTable #1");
-		Assert.NotNull(otherClass.Relations.First().MappingTable, "Relation should have a MappingTable #3");
-		Assert.NotNull(otherDerivedClass.Relations.First().MappingTable, "Relation should have a MappingTable #4");
+		Assert.That(ownClass.Relations.First().MappingTable, Is.Not.Null, "Relation should have a MappingTable #1");
+		Assert.That(otherClass.Relations.First().MappingTable, Is.Not.Null, "Relation should have a MappingTable #3");
+		Assert.That(otherDerivedClass.Relations.First().MappingTable, Is.Not.Null, "Relation should have a MappingTable #4");
 	}
 	[Test]
 	public void HasTypeColumn()
 	{
-		Assert.NotNull(ownClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, "Relation should have a TypeColumn #3");
-		Assert.NotNull(otherClass.Relations.First().ForeignKeyTypeColumnName, "Relation should have a TypeColumn #5");
-		Assert.NotNull(otherDerivedClass.Relations.First().ForeignKeyTypeColumnName, "Relation should have a TypeColumn #6");
-		Assert.Null(ownClass.Relations.First().ForeignKeyTypeColumnName, "Relation shouldn't have a TypeColumn #1");
-		Assert.Null(otherClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, "Relation shouldn't have a TypeColumn #2");
+		Assert.That(ownClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #3");
+		Assert.That(otherClass.Relations.First().ForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #5");
+		Assert.That(otherDerivedClass.Relations.First().ForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #6");
+		Assert.That(ownClass.Relations.First().ForeignKeyTypeColumnName, Is.Null, "Relation shouldn't have a TypeColumn #1");
+		Assert.That(otherClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, Is.Null, "Relation shouldn't have a TypeColumn #2");
 	}
 	[Test]
 	public void HasTypeCode()
@@ -2265,7 +2267,7 @@ public class MappingTestCmpBinnOthpconTblAuto
 
 
 [TestFixture]
-public class MappingTestAgrDir1OwnpconOthpconNoTblAuto
+public class MappingTestAgrDir1OwnpconOthpconNoTblAuto : NDOTest
 {
 	PersistenceManager pm;
 	NDOMapping mapping;
@@ -2286,13 +2288,13 @@ public class MappingTestAgrDir1OwnpconOthpconNoTblAuto
 	[Test]
 	public void HasMappingTable()
 	{
-		Assert.Null(ownClass.Relations.First().MappingTable, "Relation shouldn't have a MappingTable #5");
-		Assert.Null(ownDerivedClass.Relations.First().MappingTable, "Relation shouldn't have a MappingTable #6");
+		Assert.That(ownClass.Relations.First().MappingTable, Is.Null, "Relation shouldn't have a MappingTable #5");
+		Assert.That(ownDerivedClass.Relations.First().MappingTable, Is.Null, "Relation shouldn't have a MappingTable #6");
 	}
 	[Test]
 	public void HasTypeColumn()
 	{
-		Assert.NotNull(ownClass.Relations.First().ForeignKeyTypeColumnName, "Relation should have a TypeColumn #9");
+		Assert.That(ownClass.Relations.First().ForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #9");
 	}
 	[Test]
 	public void HasTypeCode()
@@ -2306,7 +2308,7 @@ public class MappingTestAgrDir1OwnpconOthpconNoTblAuto
 
 
 [TestFixture]
-public class MappingTestAgrDir1OwnpconOthpconTblAuto
+public class MappingTestAgrDir1OwnpconOthpconTblAuto : NDOTest
 {
 	PersistenceManager pm;
 	NDOMapping mapping;
@@ -2327,16 +2329,16 @@ public class MappingTestAgrDir1OwnpconOthpconTblAuto
 	[Test]
 	public void HasMappingTable()
 	{
-		Assert.NotNull(ownClass.Relations.First().MappingTable, "Relation should have a MappingTable #1");
-		Assert.NotNull(ownDerivedClass.Relations.First().MappingTable, "Relation should have a MappingTable #2");
+		Assert.That(ownClass.Relations.First().MappingTable, Is.Not.Null, "Relation should have a MappingTable #1");
+		Assert.That(ownDerivedClass.Relations.First().MappingTable, Is.Not.Null, "Relation should have a MappingTable #2");
 	}
 	[Test]
 	public void HasTypeColumn()
 	{
-		Assert.NotNull(ownClass.Relations.First().ForeignKeyTypeColumnName, "Relation should have a TypeColumn #1");
-		Assert.NotNull(ownDerivedClass.Relations.First().ForeignKeyTypeColumnName, "Relation should have a TypeColumn #2");
-		Assert.NotNull(ownClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, "Relation should have a TypeColumn #3");
-		Assert.NotNull(ownDerivedClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, "Relation should have a TypeColumn #4");
+		Assert.That(ownClass.Relations.First().ForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #1");
+		Assert.That(ownDerivedClass.Relations.First().ForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #2");
+		Assert.That(ownClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #3");
+		Assert.That(ownDerivedClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #4");
 	}
 	[Test]
 	public void HasTypeCode()
@@ -2350,7 +2352,7 @@ public class MappingTestAgrDir1OwnpconOthpconTblAuto
 
 
 [TestFixture]
-public class MappingTestAgrBi11OwnpconOthpconNoTblAuto
+public class MappingTestAgrBi11OwnpconOthpconNoTblAuto : NDOTest
 {
 	PersistenceManager pm;
 	NDOMapping mapping;
@@ -2371,16 +2373,16 @@ public class MappingTestAgrBi11OwnpconOthpconNoTblAuto
 	[Test]
 	public void HasMappingTable()
 	{
-		Assert.Null(ownClass.Relations.First().MappingTable, "Relation shouldn't have a MappingTable #5");
-		Assert.Null(ownDerivedClass.Relations.First().MappingTable, "Relation shouldn't have a MappingTable #6");
-		Assert.Null(otherClass.Relations.First().MappingTable, "Relation shouldn't have a MappingTable #7");
-		Assert.Null(otherDerivedClass.Relations.First().MappingTable, "Relation shouldn't have a MappingTable #8");
+		Assert.That(ownClass.Relations.First().MappingTable, Is.Null, "Relation shouldn't have a MappingTable #5");
+		Assert.That(ownDerivedClass.Relations.First().MappingTable, Is.Null, "Relation shouldn't have a MappingTable #6");
+		Assert.That(otherClass.Relations.First().MappingTable, Is.Null, "Relation shouldn't have a MappingTable #7");
+		Assert.That(otherDerivedClass.Relations.First().MappingTable, Is.Null, "Relation shouldn't have a MappingTable #8");
 	}
 	[Test]
 	public void HasTypeColumn()
 	{
-		Assert.NotNull(ownClass.Relations.First().ForeignKeyTypeColumnName, "Relation should have a TypeColumn #9");
-		Assert.NotNull(otherClass.Relations.First().ForeignKeyTypeColumnName, "Relation should have a TypeColumn #10");
+		Assert.That(ownClass.Relations.First().ForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #9");
+		Assert.That(otherClass.Relations.First().ForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #10");
 	}
 	[Test]
 	public void HasTypeCode()
@@ -2394,7 +2396,7 @@ public class MappingTestAgrBi11OwnpconOthpconNoTblAuto
 
 
 [TestFixture]
-public class MappingTestAgrBi11OwnpconOthpconTblAuto
+public class MappingTestAgrBi11OwnpconOthpconTblAuto : NDOTest
 {
 	PersistenceManager pm;
 	NDOMapping mapping;
@@ -2415,22 +2417,22 @@ public class MappingTestAgrBi11OwnpconOthpconTblAuto
 	[Test]
 	public void HasMappingTable()
 	{
-		Assert.NotNull(ownClass.Relations.First().MappingTable, "Relation should have a MappingTable #1");
-		Assert.NotNull(ownDerivedClass.Relations.First().MappingTable, "Relation should have a MappingTable #2");
-		Assert.NotNull(otherClass.Relations.First().MappingTable, "Relation should have a MappingTable #3");
-		Assert.NotNull(otherDerivedClass.Relations.First().MappingTable, "Relation should have a MappingTable #4");
+		Assert.That(ownClass.Relations.First().MappingTable, Is.Not.Null, "Relation should have a MappingTable #1");
+		Assert.That(ownDerivedClass.Relations.First().MappingTable, Is.Not.Null, "Relation should have a MappingTable #2");
+		Assert.That(otherClass.Relations.First().MappingTable, Is.Not.Null, "Relation should have a MappingTable #3");
+		Assert.That(otherDerivedClass.Relations.First().MappingTable, Is.Not.Null, "Relation should have a MappingTable #4");
 	}
 	[Test]
 	public void HasTypeColumn()
 	{
-		Assert.NotNull(ownClass.Relations.First().ForeignKeyTypeColumnName, "Relation should have a TypeColumn #1");
-		Assert.NotNull(ownDerivedClass.Relations.First().ForeignKeyTypeColumnName, "Relation should have a TypeColumn #2");
-		Assert.NotNull(ownClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, "Relation should have a TypeColumn #3");
-		Assert.NotNull(ownDerivedClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, "Relation should have a TypeColumn #4");
-		Assert.NotNull(otherClass.Relations.First().ForeignKeyTypeColumnName, "Relation should have a TypeColumn #5");
-		Assert.NotNull(otherDerivedClass.Relations.First().ForeignKeyTypeColumnName, "Relation should have a TypeColumn #6");
-		Assert.NotNull(otherClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, "Relation should have a TypeColumn #7");
-		Assert.NotNull(otherDerivedClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, "Relation should have a TypeColumn #8");
+		Assert.That(ownClass.Relations.First().ForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #1");
+		Assert.That(ownDerivedClass.Relations.First().ForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #2");
+		Assert.That(ownClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #3");
+		Assert.That(ownDerivedClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #4");
+		Assert.That(otherClass.Relations.First().ForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #5");
+		Assert.That(otherDerivedClass.Relations.First().ForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #6");
+		Assert.That(otherClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #7");
+		Assert.That(otherDerivedClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #8");
 	}
 	[Test]
 	public void HasTypeCode()
@@ -2444,7 +2446,7 @@ public class MappingTestAgrBi11OwnpconOthpconTblAuto
 
 
 [TestFixture]
-public class MappingTestAgrDirnOwnpconOthpconTblAuto
+public class MappingTestAgrDirnOwnpconOthpconTblAuto : NDOTest
 {
 	PersistenceManager pm;
 	NDOMapping mapping;
@@ -2465,16 +2467,16 @@ public class MappingTestAgrDirnOwnpconOthpconTblAuto
 	[Test]
 	public void HasMappingTable()
 	{
-		Assert.NotNull(ownClass.Relations.First().MappingTable, "Relation should have a MappingTable #1");
-		Assert.NotNull(ownDerivedClass.Relations.First().MappingTable, "Relation should have a MappingTable #2");
+		Assert.That(ownClass.Relations.First().MappingTable, Is.Not.Null, "Relation should have a MappingTable #1");
+		Assert.That(ownDerivedClass.Relations.First().MappingTable, Is.Not.Null, "Relation should have a MappingTable #2");
 	}
 	[Test]
 	public void HasTypeColumn()
 	{
-		Assert.NotNull(ownClass.Relations.First().ForeignKeyTypeColumnName, "Relation should have a TypeColumn #1");
-		Assert.NotNull(ownDerivedClass.Relations.First().ForeignKeyTypeColumnName, "Relation should have a TypeColumn #2");
-		Assert.NotNull(ownClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, "Relation should have a TypeColumn #3");
-		Assert.NotNull(ownDerivedClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, "Relation should have a TypeColumn #4");
+		Assert.That(ownClass.Relations.First().ForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #1");
+		Assert.That(ownDerivedClass.Relations.First().ForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #2");
+		Assert.That(ownClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #3");
+		Assert.That(ownDerivedClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #4");
 	}
 	[Test]
 	public void HasTypeCode()
@@ -2488,7 +2490,7 @@ public class MappingTestAgrDirnOwnpconOthpconTblAuto
 
 
 [TestFixture]
-public class MappingTestAgrBin1OwnpconOthpconTblAuto
+public class MappingTestAgrBin1OwnpconOthpconTblAuto : NDOTest
 {
 	PersistenceManager pm;
 	NDOMapping mapping;
@@ -2509,22 +2511,22 @@ public class MappingTestAgrBin1OwnpconOthpconTblAuto
 	[Test]
 	public void HasMappingTable()
 	{
-		Assert.NotNull(ownClass.Relations.First().MappingTable, "Relation should have a MappingTable #1");
-		Assert.NotNull(ownDerivedClass.Relations.First().MappingTable, "Relation should have a MappingTable #2");
-		Assert.NotNull(otherClass.Relations.First().MappingTable, "Relation should have a MappingTable #3");
-		Assert.NotNull(otherDerivedClass.Relations.First().MappingTable, "Relation should have a MappingTable #4");
+		Assert.That(ownClass.Relations.First().MappingTable, Is.Not.Null, "Relation should have a MappingTable #1");
+		Assert.That(ownDerivedClass.Relations.First().MappingTable, Is.Not.Null, "Relation should have a MappingTable #2");
+		Assert.That(otherClass.Relations.First().MappingTable, Is.Not.Null, "Relation should have a MappingTable #3");
+		Assert.That(otherDerivedClass.Relations.First().MappingTable, Is.Not.Null, "Relation should have a MappingTable #4");
 	}
 	[Test]
 	public void HasTypeColumn()
 	{
-		Assert.NotNull(ownClass.Relations.First().ForeignKeyTypeColumnName, "Relation should have a TypeColumn #1");
-		Assert.NotNull(ownDerivedClass.Relations.First().ForeignKeyTypeColumnName, "Relation should have a TypeColumn #2");
-		Assert.NotNull(ownClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, "Relation should have a TypeColumn #3");
-		Assert.NotNull(ownDerivedClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, "Relation should have a TypeColumn #4");
-		Assert.NotNull(otherClass.Relations.First().ForeignKeyTypeColumnName, "Relation should have a TypeColumn #5");
-		Assert.NotNull(otherDerivedClass.Relations.First().ForeignKeyTypeColumnName, "Relation should have a TypeColumn #6");
-		Assert.NotNull(otherClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, "Relation should have a TypeColumn #7");
-		Assert.NotNull(otherDerivedClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, "Relation should have a TypeColumn #8");
+		Assert.That(ownClass.Relations.First().ForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #1");
+		Assert.That(ownDerivedClass.Relations.First().ForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #2");
+		Assert.That(ownClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #3");
+		Assert.That(ownDerivedClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #4");
+		Assert.That(otherClass.Relations.First().ForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #5");
+		Assert.That(otherDerivedClass.Relations.First().ForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #6");
+		Assert.That(otherClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #7");
+		Assert.That(otherDerivedClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #8");
 	}
 	[Test]
 	public void HasTypeCode()
@@ -2538,7 +2540,7 @@ public class MappingTestAgrBin1OwnpconOthpconTblAuto
 
 
 [TestFixture]
-public class MappingTestAgrBi1nOwnpconOthpconTblAuto
+public class MappingTestAgrBi1nOwnpconOthpconTblAuto : NDOTest
 {
 	PersistenceManager pm;
 	NDOMapping mapping;
@@ -2559,22 +2561,22 @@ public class MappingTestAgrBi1nOwnpconOthpconTblAuto
 	[Test]
 	public void HasMappingTable()
 	{
-		Assert.NotNull(ownClass.Relations.First().MappingTable, "Relation should have a MappingTable #1");
-		Assert.NotNull(ownDerivedClass.Relations.First().MappingTable, "Relation should have a MappingTable #2");
-		Assert.NotNull(otherClass.Relations.First().MappingTable, "Relation should have a MappingTable #3");
-		Assert.NotNull(otherDerivedClass.Relations.First().MappingTable, "Relation should have a MappingTable #4");
+		Assert.That(ownClass.Relations.First().MappingTable, Is.Not.Null, "Relation should have a MappingTable #1");
+		Assert.That(ownDerivedClass.Relations.First().MappingTable, Is.Not.Null, "Relation should have a MappingTable #2");
+		Assert.That(otherClass.Relations.First().MappingTable, Is.Not.Null, "Relation should have a MappingTable #3");
+		Assert.That(otherDerivedClass.Relations.First().MappingTable, Is.Not.Null, "Relation should have a MappingTable #4");
 	}
 	[Test]
 	public void HasTypeColumn()
 	{
-		Assert.NotNull(ownClass.Relations.First().ForeignKeyTypeColumnName, "Relation should have a TypeColumn #1");
-		Assert.NotNull(ownDerivedClass.Relations.First().ForeignKeyTypeColumnName, "Relation should have a TypeColumn #2");
-		Assert.NotNull(ownClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, "Relation should have a TypeColumn #3");
-		Assert.NotNull(ownDerivedClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, "Relation should have a TypeColumn #4");
-		Assert.NotNull(otherClass.Relations.First().ForeignKeyTypeColumnName, "Relation should have a TypeColumn #5");
-		Assert.NotNull(otherDerivedClass.Relations.First().ForeignKeyTypeColumnName, "Relation should have a TypeColumn #6");
-		Assert.NotNull(otherClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, "Relation should have a TypeColumn #7");
-		Assert.NotNull(otherDerivedClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, "Relation should have a TypeColumn #8");
+		Assert.That(ownClass.Relations.First().ForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #1");
+		Assert.That(ownDerivedClass.Relations.First().ForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #2");
+		Assert.That(ownClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #3");
+		Assert.That(ownDerivedClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #4");
+		Assert.That(otherClass.Relations.First().ForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #5");
+		Assert.That(otherDerivedClass.Relations.First().ForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #6");
+		Assert.That(otherClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #7");
+		Assert.That(otherDerivedClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #8");
 	}
 	[Test]
 	public void HasTypeCode()
@@ -2588,7 +2590,7 @@ public class MappingTestAgrBi1nOwnpconOthpconTblAuto
 
 
 [TestFixture]
-public class MappingTestAgrBinnOwnpconOthpconTblAuto
+public class MappingTestAgrBinnOwnpconOthpconTblAuto : NDOTest
 {
 	PersistenceManager pm;
 	NDOMapping mapping;
@@ -2609,22 +2611,22 @@ public class MappingTestAgrBinnOwnpconOthpconTblAuto
 	[Test]
 	public void HasMappingTable()
 	{
-		Assert.NotNull(ownClass.Relations.First().MappingTable, "Relation should have a MappingTable #1");
-		Assert.NotNull(ownDerivedClass.Relations.First().MappingTable, "Relation should have a MappingTable #2");
-		Assert.NotNull(otherClass.Relations.First().MappingTable, "Relation should have a MappingTable #3");
-		Assert.NotNull(otherDerivedClass.Relations.First().MappingTable, "Relation should have a MappingTable #4");
+		Assert.That(ownClass.Relations.First().MappingTable, Is.Not.Null, "Relation should have a MappingTable #1");
+		Assert.That(ownDerivedClass.Relations.First().MappingTable, Is.Not.Null, "Relation should have a MappingTable #2");
+		Assert.That(otherClass.Relations.First().MappingTable, Is.Not.Null, "Relation should have a MappingTable #3");
+		Assert.That(otherDerivedClass.Relations.First().MappingTable, Is.Not.Null, "Relation should have a MappingTable #4");
 	}
 	[Test]
 	public void HasTypeColumn()
 	{
-		Assert.NotNull(ownClass.Relations.First().ForeignKeyTypeColumnName, "Relation should have a TypeColumn #1");
-		Assert.NotNull(ownDerivedClass.Relations.First().ForeignKeyTypeColumnName, "Relation should have a TypeColumn #2");
-		Assert.NotNull(ownClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, "Relation should have a TypeColumn #3");
-		Assert.NotNull(ownDerivedClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, "Relation should have a TypeColumn #4");
-		Assert.NotNull(otherClass.Relations.First().ForeignKeyTypeColumnName, "Relation should have a TypeColumn #5");
-		Assert.NotNull(otherDerivedClass.Relations.First().ForeignKeyTypeColumnName, "Relation should have a TypeColumn #6");
-		Assert.NotNull(otherClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, "Relation should have a TypeColumn #7");
-		Assert.NotNull(otherDerivedClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, "Relation should have a TypeColumn #8");
+		Assert.That(ownClass.Relations.First().ForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #1");
+		Assert.That(ownDerivedClass.Relations.First().ForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #2");
+		Assert.That(ownClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #3");
+		Assert.That(ownDerivedClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #4");
+		Assert.That(otherClass.Relations.First().ForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #5");
+		Assert.That(otherDerivedClass.Relations.First().ForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #6");
+		Assert.That(otherClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #7");
+		Assert.That(otherDerivedClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #8");
 	}
 	[Test]
 	public void HasTypeCode()
@@ -2638,7 +2640,7 @@ public class MappingTestAgrBinnOwnpconOthpconTblAuto
 
 
 [TestFixture]
-public class MappingTestCmpDir1OwnpconOthpconTblAuto
+public class MappingTestCmpDir1OwnpconOthpconTblAuto : NDOTest
 {
 	PersistenceManager pm;
 	NDOMapping mapping;
@@ -2659,16 +2661,16 @@ public class MappingTestCmpDir1OwnpconOthpconTblAuto
 	[Test]
 	public void HasMappingTable()
 	{
-		Assert.NotNull(ownClass.Relations.First().MappingTable, "Relation should have a MappingTable #1");
-		Assert.NotNull(ownDerivedClass.Relations.First().MappingTable, "Relation should have a MappingTable #2");
+		Assert.That(ownClass.Relations.First().MappingTable, Is.Not.Null, "Relation should have a MappingTable #1");
+		Assert.That(ownDerivedClass.Relations.First().MappingTable, Is.Not.Null, "Relation should have a MappingTable #2");
 	}
 	[Test]
 	public void HasTypeColumn()
 	{
-		Assert.NotNull(ownClass.Relations.First().ForeignKeyTypeColumnName, "Relation should have a TypeColumn #1");
-		Assert.NotNull(ownDerivedClass.Relations.First().ForeignKeyTypeColumnName, "Relation should have a TypeColumn #2");
-		Assert.NotNull(ownClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, "Relation should have a TypeColumn #3");
-		Assert.NotNull(ownDerivedClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, "Relation should have a TypeColumn #4");
+		Assert.That(ownClass.Relations.First().ForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #1");
+		Assert.That(ownDerivedClass.Relations.First().ForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #2");
+		Assert.That(ownClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #3");
+		Assert.That(ownDerivedClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #4");
 	}
 	[Test]
 	public void HasTypeCode()
@@ -2682,7 +2684,7 @@ public class MappingTestCmpDir1OwnpconOthpconTblAuto
 
 
 [TestFixture]
-public class MappingTestCmpBi11OwnpconOthpconTblAuto
+public class MappingTestCmpBi11OwnpconOthpconTblAuto : NDOTest
 {
 	PersistenceManager pm;
 	NDOMapping mapping;
@@ -2703,22 +2705,22 @@ public class MappingTestCmpBi11OwnpconOthpconTblAuto
 	[Test]
 	public void HasMappingTable()
 	{
-		Assert.NotNull(ownClass.Relations.First().MappingTable, "Relation should have a MappingTable #1");
-		Assert.NotNull(ownDerivedClass.Relations.First().MappingTable, "Relation should have a MappingTable #2");
-		Assert.NotNull(otherClass.Relations.First().MappingTable, "Relation should have a MappingTable #3");
-		Assert.NotNull(otherDerivedClass.Relations.First().MappingTable, "Relation should have a MappingTable #4");
+		Assert.That(ownClass.Relations.First().MappingTable, Is.Not.Null, "Relation should have a MappingTable #1");
+		Assert.That(ownDerivedClass.Relations.First().MappingTable, Is.Not.Null, "Relation should have a MappingTable #2");
+		Assert.That(otherClass.Relations.First().MappingTable, Is.Not.Null, "Relation should have a MappingTable #3");
+		Assert.That(otherDerivedClass.Relations.First().MappingTable, Is.Not.Null, "Relation should have a MappingTable #4");
 	}
 	[Test]
 	public void HasTypeColumn()
 	{
-		Assert.NotNull(ownClass.Relations.First().ForeignKeyTypeColumnName, "Relation should have a TypeColumn #1");
-		Assert.NotNull(ownDerivedClass.Relations.First().ForeignKeyTypeColumnName, "Relation should have a TypeColumn #2");
-		Assert.NotNull(ownClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, "Relation should have a TypeColumn #3");
-		Assert.NotNull(ownDerivedClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, "Relation should have a TypeColumn #4");
-		Assert.NotNull(otherClass.Relations.First().ForeignKeyTypeColumnName, "Relation should have a TypeColumn #5");
-		Assert.NotNull(otherDerivedClass.Relations.First().ForeignKeyTypeColumnName, "Relation should have a TypeColumn #6");
-		Assert.NotNull(otherClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, "Relation should have a TypeColumn #7");
-		Assert.NotNull(otherDerivedClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, "Relation should have a TypeColumn #8");
+		Assert.That(ownClass.Relations.First().ForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #1");
+		Assert.That(ownDerivedClass.Relations.First().ForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #2");
+		Assert.That(ownClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #3");
+		Assert.That(ownDerivedClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #4");
+		Assert.That(otherClass.Relations.First().ForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #5");
+		Assert.That(otherDerivedClass.Relations.First().ForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #6");
+		Assert.That(otherClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #7");
+		Assert.That(otherDerivedClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #8");
 	}
 	[Test]
 	public void HasTypeCode()
@@ -2732,7 +2734,7 @@ public class MappingTestCmpBi11OwnpconOthpconTblAuto
 
 
 [TestFixture]
-public class MappingTestCmpDirnOwnpconOthpconTblAuto
+public class MappingTestCmpDirnOwnpconOthpconTblAuto : NDOTest
 {
 	PersistenceManager pm;
 	NDOMapping mapping;
@@ -2753,16 +2755,16 @@ public class MappingTestCmpDirnOwnpconOthpconTblAuto
 	[Test]
 	public void HasMappingTable()
 	{
-		Assert.NotNull(ownClass.Relations.First().MappingTable, "Relation should have a MappingTable #1");
-		Assert.NotNull(ownDerivedClass.Relations.First().MappingTable, "Relation should have a MappingTable #2");
+		Assert.That(ownClass.Relations.First().MappingTable, Is.Not.Null, "Relation should have a MappingTable #1");
+		Assert.That(ownDerivedClass.Relations.First().MappingTable, Is.Not.Null, "Relation should have a MappingTable #2");
 	}
 	[Test]
 	public void HasTypeColumn()
 	{
-		Assert.NotNull(ownClass.Relations.First().ForeignKeyTypeColumnName, "Relation should have a TypeColumn #1");
-		Assert.NotNull(ownDerivedClass.Relations.First().ForeignKeyTypeColumnName, "Relation should have a TypeColumn #2");
-		Assert.NotNull(ownClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, "Relation should have a TypeColumn #3");
-		Assert.NotNull(ownDerivedClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, "Relation should have a TypeColumn #4");
+		Assert.That(ownClass.Relations.First().ForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #1");
+		Assert.That(ownDerivedClass.Relations.First().ForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #2");
+		Assert.That(ownClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #3");
+		Assert.That(ownDerivedClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #4");
 	}
 	[Test]
 	public void HasTypeCode()
@@ -2776,7 +2778,7 @@ public class MappingTestCmpDirnOwnpconOthpconTblAuto
 
 
 [TestFixture]
-public class MappingTestCmpBin1OwnpconOthpconTblAuto
+public class MappingTestCmpBin1OwnpconOthpconTblAuto : NDOTest
 {
 	PersistenceManager pm;
 	NDOMapping mapping;
@@ -2797,22 +2799,22 @@ public class MappingTestCmpBin1OwnpconOthpconTblAuto
 	[Test]
 	public void HasMappingTable()
 	{
-		Assert.NotNull(ownClass.Relations.First().MappingTable, "Relation should have a MappingTable #1");
-		Assert.NotNull(ownDerivedClass.Relations.First().MappingTable, "Relation should have a MappingTable #2");
-		Assert.NotNull(otherClass.Relations.First().MappingTable, "Relation should have a MappingTable #3");
-		Assert.NotNull(otherDerivedClass.Relations.First().MappingTable, "Relation should have a MappingTable #4");
+		Assert.That(ownClass.Relations.First().MappingTable, Is.Not.Null, "Relation should have a MappingTable #1");
+		Assert.That(ownDerivedClass.Relations.First().MappingTable, Is.Not.Null, "Relation should have a MappingTable #2");
+		Assert.That(otherClass.Relations.First().MappingTable, Is.Not.Null, "Relation should have a MappingTable #3");
+		Assert.That(otherDerivedClass.Relations.First().MappingTable, Is.Not.Null, "Relation should have a MappingTable #4");
 	}
 	[Test]
 	public void HasTypeColumn()
 	{
-		Assert.NotNull(ownClass.Relations.First().ForeignKeyTypeColumnName, "Relation should have a TypeColumn #1");
-		Assert.NotNull(ownDerivedClass.Relations.First().ForeignKeyTypeColumnName, "Relation should have a TypeColumn #2");
-		Assert.NotNull(ownClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, "Relation should have a TypeColumn #3");
-		Assert.NotNull(ownDerivedClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, "Relation should have a TypeColumn #4");
-		Assert.NotNull(otherClass.Relations.First().ForeignKeyTypeColumnName, "Relation should have a TypeColumn #5");
-		Assert.NotNull(otherDerivedClass.Relations.First().ForeignKeyTypeColumnName, "Relation should have a TypeColumn #6");
-		Assert.NotNull(otherClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, "Relation should have a TypeColumn #7");
-		Assert.NotNull(otherDerivedClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, "Relation should have a TypeColumn #8");
+		Assert.That(ownClass.Relations.First().ForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #1");
+		Assert.That(ownDerivedClass.Relations.First().ForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #2");
+		Assert.That(ownClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #3");
+		Assert.That(ownDerivedClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #4");
+		Assert.That(otherClass.Relations.First().ForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #5");
+		Assert.That(otherDerivedClass.Relations.First().ForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #6");
+		Assert.That(otherClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #7");
+		Assert.That(otherDerivedClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #8");
 	}
 	[Test]
 	public void HasTypeCode()
@@ -2826,7 +2828,7 @@ public class MappingTestCmpBin1OwnpconOthpconTblAuto
 
 
 [TestFixture]
-public class MappingTestCmpBi1nOwnpconOthpconTblAuto
+public class MappingTestCmpBi1nOwnpconOthpconTblAuto : NDOTest
 {
 	PersistenceManager pm;
 	NDOMapping mapping;
@@ -2847,22 +2849,22 @@ public class MappingTestCmpBi1nOwnpconOthpconTblAuto
 	[Test]
 	public void HasMappingTable()
 	{
-		Assert.NotNull(ownClass.Relations.First().MappingTable, "Relation should have a MappingTable #1");
-		Assert.NotNull(ownDerivedClass.Relations.First().MappingTable, "Relation should have a MappingTable #2");
-		Assert.NotNull(otherClass.Relations.First().MappingTable, "Relation should have a MappingTable #3");
-		Assert.NotNull(otherDerivedClass.Relations.First().MappingTable, "Relation should have a MappingTable #4");
+		Assert.That(ownClass.Relations.First().MappingTable, Is.Not.Null, "Relation should have a MappingTable #1");
+		Assert.That(ownDerivedClass.Relations.First().MappingTable, Is.Not.Null, "Relation should have a MappingTable #2");
+		Assert.That(otherClass.Relations.First().MappingTable, Is.Not.Null, "Relation should have a MappingTable #3");
+		Assert.That(otherDerivedClass.Relations.First().MappingTable, Is.Not.Null, "Relation should have a MappingTable #4");
 	}
 	[Test]
 	public void HasTypeColumn()
 	{
-		Assert.NotNull(ownClass.Relations.First().ForeignKeyTypeColumnName, "Relation should have a TypeColumn #1");
-		Assert.NotNull(ownDerivedClass.Relations.First().ForeignKeyTypeColumnName, "Relation should have a TypeColumn #2");
-		Assert.NotNull(ownClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, "Relation should have a TypeColumn #3");
-		Assert.NotNull(ownDerivedClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, "Relation should have a TypeColumn #4");
-		Assert.NotNull(otherClass.Relations.First().ForeignKeyTypeColumnName, "Relation should have a TypeColumn #5");
-		Assert.NotNull(otherDerivedClass.Relations.First().ForeignKeyTypeColumnName, "Relation should have a TypeColumn #6");
-		Assert.NotNull(otherClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, "Relation should have a TypeColumn #7");
-		Assert.NotNull(otherDerivedClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, "Relation should have a TypeColumn #8");
+		Assert.That(ownClass.Relations.First().ForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #1");
+		Assert.That(ownDerivedClass.Relations.First().ForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #2");
+		Assert.That(ownClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #3");
+		Assert.That(ownDerivedClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #4");
+		Assert.That(otherClass.Relations.First().ForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #5");
+		Assert.That(otherDerivedClass.Relations.First().ForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #6");
+		Assert.That(otherClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #7");
+		Assert.That(otherDerivedClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #8");
 	}
 	[Test]
 	public void HasTypeCode()
@@ -2876,7 +2878,7 @@ public class MappingTestCmpBi1nOwnpconOthpconTblAuto
 
 
 [TestFixture]
-public class MappingTestCmpBinnOwnpconOthpconTblAuto
+public class MappingTestCmpBinnOwnpconOthpconTblAuto : NDOTest
 {
 	PersistenceManager pm;
 	NDOMapping mapping;
@@ -2897,22 +2899,22 @@ public class MappingTestCmpBinnOwnpconOthpconTblAuto
 	[Test]
 	public void HasMappingTable()
 	{
-		Assert.NotNull(ownClass.Relations.First().MappingTable, "Relation should have a MappingTable #1");
-		Assert.NotNull(ownDerivedClass.Relations.First().MappingTable, "Relation should have a MappingTable #2");
-		Assert.NotNull(otherClass.Relations.First().MappingTable, "Relation should have a MappingTable #3");
-		Assert.NotNull(otherDerivedClass.Relations.First().MappingTable, "Relation should have a MappingTable #4");
+		Assert.That(ownClass.Relations.First().MappingTable, Is.Not.Null, "Relation should have a MappingTable #1");
+		Assert.That(ownDerivedClass.Relations.First().MappingTable, Is.Not.Null, "Relation should have a MappingTable #2");
+		Assert.That(otherClass.Relations.First().MappingTable, Is.Not.Null, "Relation should have a MappingTable #3");
+		Assert.That(otherDerivedClass.Relations.First().MappingTable, Is.Not.Null, "Relation should have a MappingTable #4");
 	}
 	[Test]
 	public void HasTypeColumn()
 	{
-		Assert.NotNull(ownClass.Relations.First().ForeignKeyTypeColumnName, "Relation should have a TypeColumn #1");
-		Assert.NotNull(ownDerivedClass.Relations.First().ForeignKeyTypeColumnName, "Relation should have a TypeColumn #2");
-		Assert.NotNull(ownClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, "Relation should have a TypeColumn #3");
-		Assert.NotNull(ownDerivedClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, "Relation should have a TypeColumn #4");
-		Assert.NotNull(otherClass.Relations.First().ForeignKeyTypeColumnName, "Relation should have a TypeColumn #5");
-		Assert.NotNull(otherDerivedClass.Relations.First().ForeignKeyTypeColumnName, "Relation should have a TypeColumn #6");
-		Assert.NotNull(otherClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, "Relation should have a TypeColumn #7");
-		Assert.NotNull(otherDerivedClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, "Relation should have a TypeColumn #8");
+		Assert.That(ownClass.Relations.First().ForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #1");
+		Assert.That(ownDerivedClass.Relations.First().ForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #2");
+		Assert.That(ownClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #3");
+		Assert.That(ownDerivedClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #4");
+		Assert.That(otherClass.Relations.First().ForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #5");
+		Assert.That(otherDerivedClass.Relations.First().ForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #6");
+		Assert.That(otherClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #7");
+		Assert.That(otherDerivedClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #8");
 	}
 	[Test]
 	public void HasTypeCode()
@@ -2926,7 +2928,7 @@ public class MappingTestCmpBinnOwnpconOthpconTblAuto
 
 
 [TestFixture]
-public class MappingTestAgrDir1NoTblGuid
+public class MappingTestAgrDir1NoTblGuid : NDOTest
 {
 	PersistenceManager pm;
 	NDOMapping mapping;
@@ -2943,12 +2945,12 @@ public class MappingTestAgrDir1NoTblGuid
 	[Test]
 	public void HasMappingTable()
 	{
-		Assert.Null(ownClass.Relations.First().MappingTable, "Relation shouldn't have a MappingTable #5");
+		Assert.That(ownClass.Relations.First().MappingTable, Is.Null, "Relation shouldn't have a MappingTable #5");
 	}
 	[Test]
 	public void HasTypeColumn()
 	{
-		Assert.Null(ownClass.Relations.First().ForeignKeyTypeColumnName, "Relation shouldn't have a TypeColumn #1");
+		Assert.That(ownClass.Relations.First().ForeignKeyTypeColumnName, Is.Null, "Relation shouldn't have a TypeColumn #1");
 	}
 	[Test]
 	public void HasTypeCode()
@@ -2960,7 +2962,7 @@ public class MappingTestAgrDir1NoTblGuid
 
 
 [TestFixture]
-public class MappingTestAgrDir1TblGuid
+public class MappingTestAgrDir1TblGuid : NDOTest
 {
 	PersistenceManager pm;
 	NDOMapping mapping;
@@ -2977,13 +2979,13 @@ public class MappingTestAgrDir1TblGuid
 	[Test]
 	public void HasMappingTable()
 	{
-		Assert.NotNull(ownClass.Relations.First().MappingTable, "Relation should have a MappingTable #1");
+		Assert.That(ownClass.Relations.First().MappingTable, Is.Not.Null, "Relation should have a MappingTable #1");
 	}
 	[Test]
 	public void HasTypeColumn()
 	{
-		Assert.Null(ownClass.Relations.First().ForeignKeyTypeColumnName, "Relation shouldn't have a TypeColumn #1");
-		Assert.Null(ownClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, "Relation shouldn't have a TypeColumn #3");
+		Assert.That(ownClass.Relations.First().ForeignKeyTypeColumnName, Is.Null, "Relation shouldn't have a TypeColumn #1");
+		Assert.That(ownClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, Is.Null, "Relation shouldn't have a TypeColumn #3");
 	}
 	[Test]
 	public void HasTypeCode()
@@ -2995,7 +2997,7 @@ public class MappingTestAgrDir1TblGuid
 
 
 [TestFixture]
-public class MappingTestAgrBi11NoTblGuid
+public class MappingTestAgrBi11NoTblGuid : NDOTest
 {
 	PersistenceManager pm;
 	NDOMapping mapping;
@@ -3012,13 +3014,13 @@ public class MappingTestAgrBi11NoTblGuid
 	[Test]
 	public void HasMappingTable()
 	{
-		Assert.Null(ownClass.Relations.First().MappingTable, "Relation shouldn't have a MappingTable #5");
-		Assert.Null(otherClass.Relations.First().MappingTable, "Relation shouldn't have a MappingTable #7");
+		Assert.That(ownClass.Relations.First().MappingTable, Is.Null, "Relation shouldn't have a MappingTable #5");
+		Assert.That(otherClass.Relations.First().MappingTable, Is.Null, "Relation shouldn't have a MappingTable #7");
 	}
 	[Test]
 	public void HasTypeColumn()
 	{
-		Assert.Null(ownClass.Relations.First().ForeignKeyTypeColumnName, "Relation shouldn't have a TypeColumn #1");
+		Assert.That(ownClass.Relations.First().ForeignKeyTypeColumnName, Is.Null, "Relation shouldn't have a TypeColumn #1");
 	}
 	[Test]
 	public void HasTypeCode()
@@ -3030,7 +3032,7 @@ public class MappingTestAgrBi11NoTblGuid
 
 
 [TestFixture]
-public class MappingTestAgrBi11TblGuid
+public class MappingTestAgrBi11TblGuid : NDOTest
 {
 	PersistenceManager pm;
 	NDOMapping mapping;
@@ -3047,16 +3049,16 @@ public class MappingTestAgrBi11TblGuid
 	[Test]
 	public void HasMappingTable()
 	{
-		Assert.NotNull(ownClass.Relations.First().MappingTable, "Relation should have a MappingTable #1");
-		Assert.NotNull(otherClass.Relations.First().MappingTable, "Relation should have a MappingTable #3");
+		Assert.That(ownClass.Relations.First().MappingTable, Is.Not.Null, "Relation should have a MappingTable #1");
+		Assert.That(otherClass.Relations.First().MappingTable, Is.Not.Null, "Relation should have a MappingTable #3");
 	}
 	[Test]
 	public void HasTypeColumn()
 	{
-		Assert.Null(ownClass.Relations.First().ForeignKeyTypeColumnName, "Relation shouldn't have a TypeColumn #1");
-		Assert.Null(otherClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, "Relation shouldn't have a TypeColumn #2");
-		Assert.Null(ownClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, "Relation shouldn't have a TypeColumn #3");
-		Assert.Null(otherClass.Relations.First().ForeignKeyTypeColumnName, "Relation shouldn't have a TypeColumn #4");
+		Assert.That(ownClass.Relations.First().ForeignKeyTypeColumnName, Is.Null, "Relation shouldn't have a TypeColumn #1");
+		Assert.That(otherClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, Is.Null, "Relation shouldn't have a TypeColumn #2");
+		Assert.That(ownClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, Is.Null, "Relation shouldn't have a TypeColumn #3");
+		Assert.That(otherClass.Relations.First().ForeignKeyTypeColumnName, Is.Null, "Relation shouldn't have a TypeColumn #4");
 	}
 	[Test]
 	public void HasTypeCode()
@@ -3068,7 +3070,7 @@ public class MappingTestAgrBi11TblGuid
 
 
 [TestFixture]
-public class MappingTestAgrDirnNoTblGuid
+public class MappingTestAgrDirnNoTblGuid : NDOTest
 {
 	PersistenceManager pm;
 	NDOMapping mapping;
@@ -3085,12 +3087,12 @@ public class MappingTestAgrDirnNoTblGuid
 	[Test]
 	public void HasMappingTable()
 	{
-		Assert.Null(ownClass.Relations.First().MappingTable, "Relation shouldn't have a MappingTable #5");
+		Assert.That(ownClass.Relations.First().MappingTable, Is.Null, "Relation shouldn't have a MappingTable #5");
 	}
 	[Test]
 	public void HasTypeColumn()
 	{
-		Assert.Null(ownClass.Relations.First().ForeignKeyTypeColumnName, "Relation shouldn't have a TypeColumn #1");
+		Assert.That(ownClass.Relations.First().ForeignKeyTypeColumnName, Is.Null, "Relation shouldn't have a TypeColumn #1");
 	}
 	[Test]
 	public void HasTypeCode()
@@ -3102,7 +3104,7 @@ public class MappingTestAgrDirnNoTblGuid
 
 
 [TestFixture]
-public class MappingTestAgrDirnTblGuid
+public class MappingTestAgrDirnTblGuid : NDOTest
 {
 	PersistenceManager pm;
 	NDOMapping mapping;
@@ -3119,13 +3121,13 @@ public class MappingTestAgrDirnTblGuid
 	[Test]
 	public void HasMappingTable()
 	{
-		Assert.NotNull(ownClass.Relations.First().MappingTable, "Relation should have a MappingTable #1");
+		Assert.That(ownClass.Relations.First().MappingTable, Is.Not.Null, "Relation should have a MappingTable #1");
 	}
 	[Test]
 	public void HasTypeColumn()
 	{
-		Assert.Null(ownClass.Relations.First().ForeignKeyTypeColumnName, "Relation shouldn't have a TypeColumn #1");
-		Assert.Null(ownClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, "Relation shouldn't have a TypeColumn #3");
+		Assert.That(ownClass.Relations.First().ForeignKeyTypeColumnName, Is.Null, "Relation shouldn't have a TypeColumn #1");
+		Assert.That(ownClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, Is.Null, "Relation shouldn't have a TypeColumn #3");
 	}
 	[Test]
 	public void HasTypeCode()
@@ -3137,7 +3139,7 @@ public class MappingTestAgrDirnTblGuid
 
 
 [TestFixture]
-public class MappingTestAgrBin1NoTblGuid
+public class MappingTestAgrBin1NoTblGuid : NDOTest
 {
 	PersistenceManager pm;
 	NDOMapping mapping;
@@ -3154,13 +3156,13 @@ public class MappingTestAgrBin1NoTblGuid
 	[Test]
 	public void HasMappingTable()
 	{
-		Assert.Null(ownClass.Relations.First().MappingTable, "Relation shouldn't have a MappingTable #5");
-		Assert.Null(otherClass.Relations.First().MappingTable, "Relation shouldn't have a MappingTable #7");
+		Assert.That(ownClass.Relations.First().MappingTable, Is.Null, "Relation shouldn't have a MappingTable #5");
+		Assert.That(otherClass.Relations.First().MappingTable, Is.Null, "Relation shouldn't have a MappingTable #7");
 	}
 	[Test]
 	public void HasTypeColumn()
 	{
-		Assert.Null(ownClass.Relations.First().ForeignKeyTypeColumnName, "Relation shouldn't have a TypeColumn #1");
+		Assert.That(ownClass.Relations.First().ForeignKeyTypeColumnName, Is.Null, "Relation shouldn't have a TypeColumn #1");
 	}
 	[Test]
 	public void HasTypeCode()
@@ -3172,7 +3174,7 @@ public class MappingTestAgrBin1NoTblGuid
 
 
 [TestFixture]
-public class MappingTestAgrBin1TblGuid
+public class MappingTestAgrBin1TblGuid : NDOTest
 {
 	PersistenceManager pm;
 	NDOMapping mapping;
@@ -3189,16 +3191,16 @@ public class MappingTestAgrBin1TblGuid
 	[Test]
 	public void HasMappingTable()
 	{
-		Assert.NotNull(ownClass.Relations.First().MappingTable, "Relation should have a MappingTable #1");
-		Assert.NotNull(otherClass.Relations.First().MappingTable, "Relation should have a MappingTable #3");
+		Assert.That(ownClass.Relations.First().MappingTable, Is.Not.Null, "Relation should have a MappingTable #1");
+		Assert.That(otherClass.Relations.First().MappingTable, Is.Not.Null, "Relation should have a MappingTable #3");
 	}
 	[Test]
 	public void HasTypeColumn()
 	{
-		Assert.Null(ownClass.Relations.First().ForeignKeyTypeColumnName, "Relation shouldn't have a TypeColumn #1");
-		Assert.Null(otherClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, "Relation shouldn't have a TypeColumn #2");
-		Assert.Null(ownClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, "Relation shouldn't have a TypeColumn #3");
-		Assert.Null(otherClass.Relations.First().ForeignKeyTypeColumnName, "Relation shouldn't have a TypeColumn #4");
+		Assert.That(ownClass.Relations.First().ForeignKeyTypeColumnName, Is.Null, "Relation shouldn't have a TypeColumn #1");
+		Assert.That(otherClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, Is.Null, "Relation shouldn't have a TypeColumn #2");
+		Assert.That(ownClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, Is.Null, "Relation shouldn't have a TypeColumn #3");
+		Assert.That(otherClass.Relations.First().ForeignKeyTypeColumnName, Is.Null, "Relation shouldn't have a TypeColumn #4");
 	}
 	[Test]
 	public void HasTypeCode()
@@ -3210,7 +3212,7 @@ public class MappingTestAgrBin1TblGuid
 
 
 [TestFixture]
-public class MappingTestAgrBi1nNoTblGuid
+public class MappingTestAgrBi1nNoTblGuid : NDOTest
 {
 	PersistenceManager pm;
 	NDOMapping mapping;
@@ -3227,13 +3229,13 @@ public class MappingTestAgrBi1nNoTblGuid
 	[Test]
 	public void HasMappingTable()
 	{
-		Assert.Null(ownClass.Relations.First().MappingTable, "Relation shouldn't have a MappingTable #5");
-		Assert.Null(otherClass.Relations.First().MappingTable, "Relation shouldn't have a MappingTable #7");
+		Assert.That(ownClass.Relations.First().MappingTable, Is.Null, "Relation shouldn't have a MappingTable #5");
+		Assert.That(otherClass.Relations.First().MappingTable, Is.Null, "Relation shouldn't have a MappingTable #7");
 	}
 	[Test]
 	public void HasTypeColumn()
 	{
-		Assert.Null(ownClass.Relations.First().ForeignKeyTypeColumnName, "Relation shouldn't have a TypeColumn #1");
+		Assert.That(ownClass.Relations.First().ForeignKeyTypeColumnName, Is.Null, "Relation shouldn't have a TypeColumn #1");
 	}
 	[Test]
 	public void HasTypeCode()
@@ -3245,7 +3247,7 @@ public class MappingTestAgrBi1nNoTblGuid
 
 
 [TestFixture]
-public class MappingTestAgrBi1nTblGuid
+public class MappingTestAgrBi1nTblGuid : NDOTest
 {
 	PersistenceManager pm;
 	NDOMapping mapping;
@@ -3262,16 +3264,16 @@ public class MappingTestAgrBi1nTblGuid
 	[Test]
 	public void HasMappingTable()
 	{
-		Assert.NotNull(ownClass.Relations.First().MappingTable, "Relation should have a MappingTable #1");
-		Assert.NotNull(otherClass.Relations.First().MappingTable, "Relation should have a MappingTable #3");
+		Assert.That(ownClass.Relations.First().MappingTable, Is.Not.Null, "Relation should have a MappingTable #1");
+		Assert.That(otherClass.Relations.First().MappingTable, Is.Not.Null, "Relation should have a MappingTable #3");
 	}
 	[Test]
 	public void HasTypeColumn()
 	{
-		Assert.Null(ownClass.Relations.First().ForeignKeyTypeColumnName, "Relation shouldn't have a TypeColumn #1");
-		Assert.Null(otherClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, "Relation shouldn't have a TypeColumn #2");
-		Assert.Null(ownClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, "Relation shouldn't have a TypeColumn #3");
-		Assert.Null(otherClass.Relations.First().ForeignKeyTypeColumnName, "Relation shouldn't have a TypeColumn #4");
+		Assert.That(ownClass.Relations.First().ForeignKeyTypeColumnName, Is.Null, "Relation shouldn't have a TypeColumn #1");
+		Assert.That(otherClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, Is.Null, "Relation shouldn't have a TypeColumn #2");
+		Assert.That(ownClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, Is.Null, "Relation shouldn't have a TypeColumn #3");
+		Assert.That(otherClass.Relations.First().ForeignKeyTypeColumnName, Is.Null, "Relation shouldn't have a TypeColumn #4");
 	}
 	[Test]
 	public void HasTypeCode()
@@ -3283,7 +3285,7 @@ public class MappingTestAgrBi1nTblGuid
 
 
 [TestFixture]
-public class MappingTestAgrBinnTblGuid
+public class MappingTestAgrBinnTblGuid : NDOTest
 {
 	PersistenceManager pm;
 	NDOMapping mapping;
@@ -3300,16 +3302,16 @@ public class MappingTestAgrBinnTblGuid
 	[Test]
 	public void HasMappingTable()
 	{
-		Assert.NotNull(ownClass.Relations.First().MappingTable, "Relation should have a MappingTable #1");
-		Assert.NotNull(otherClass.Relations.First().MappingTable, "Relation should have a MappingTable #3");
+		Assert.That(ownClass.Relations.First().MappingTable, Is.Not.Null, "Relation should have a MappingTable #1");
+		Assert.That(otherClass.Relations.First().MappingTable, Is.Not.Null, "Relation should have a MappingTable #3");
 	}
 	[Test]
 	public void HasTypeColumn()
 	{
-		Assert.Null(ownClass.Relations.First().ForeignKeyTypeColumnName, "Relation shouldn't have a TypeColumn #1");
-		Assert.Null(otherClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, "Relation shouldn't have a TypeColumn #2");
-		Assert.Null(ownClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, "Relation shouldn't have a TypeColumn #3");
-		Assert.Null(otherClass.Relations.First().ForeignKeyTypeColumnName, "Relation shouldn't have a TypeColumn #4");
+		Assert.That(ownClass.Relations.First().ForeignKeyTypeColumnName, Is.Null, "Relation shouldn't have a TypeColumn #1");
+		Assert.That(otherClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, Is.Null, "Relation shouldn't have a TypeColumn #2");
+		Assert.That(ownClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, Is.Null, "Relation shouldn't have a TypeColumn #3");
+		Assert.That(otherClass.Relations.First().ForeignKeyTypeColumnName, Is.Null, "Relation shouldn't have a TypeColumn #4");
 	}
 	[Test]
 	public void HasTypeCode()
@@ -3321,7 +3323,7 @@ public class MappingTestAgrBinnTblGuid
 
 
 [TestFixture]
-public class MappingTestCmpDir1NoTblGuid
+public class MappingTestCmpDir1NoTblGuid : NDOTest
 {
 	PersistenceManager pm;
 	NDOMapping mapping;
@@ -3338,12 +3340,12 @@ public class MappingTestCmpDir1NoTblGuid
 	[Test]
 	public void HasMappingTable()
 	{
-		Assert.Null(ownClass.Relations.First().MappingTable, "Relation shouldn't have a MappingTable #5");
+		Assert.That(ownClass.Relations.First().MappingTable, Is.Null, "Relation shouldn't have a MappingTable #5");
 	}
 	[Test]
 	public void HasTypeColumn()
 	{
-		Assert.Null(ownClass.Relations.First().ForeignKeyTypeColumnName, "Relation shouldn't have a TypeColumn #1");
+		Assert.That(ownClass.Relations.First().ForeignKeyTypeColumnName, Is.Null, "Relation shouldn't have a TypeColumn #1");
 	}
 	[Test]
 	public void HasTypeCode()
@@ -3355,7 +3357,7 @@ public class MappingTestCmpDir1NoTblGuid
 
 
 [TestFixture]
-public class MappingTestCmpDir1TblGuid
+public class MappingTestCmpDir1TblGuid : NDOTest
 {
 	PersistenceManager pm;
 	NDOMapping mapping;
@@ -3372,13 +3374,13 @@ public class MappingTestCmpDir1TblGuid
 	[Test]
 	public void HasMappingTable()
 	{
-		Assert.NotNull(ownClass.Relations.First().MappingTable, "Relation should have a MappingTable #1");
+		Assert.That(ownClass.Relations.First().MappingTable, Is.Not.Null, "Relation should have a MappingTable #1");
 	}
 	[Test]
 	public void HasTypeColumn()
 	{
-		Assert.Null(ownClass.Relations.First().ForeignKeyTypeColumnName, "Relation shouldn't have a TypeColumn #1");
-		Assert.Null(ownClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, "Relation shouldn't have a TypeColumn #3");
+		Assert.That(ownClass.Relations.First().ForeignKeyTypeColumnName, Is.Null, "Relation shouldn't have a TypeColumn #1");
+		Assert.That(ownClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, Is.Null, "Relation shouldn't have a TypeColumn #3");
 	}
 	[Test]
 	public void HasTypeCode()
@@ -3390,7 +3392,7 @@ public class MappingTestCmpDir1TblGuid
 
 
 [TestFixture]
-public class MappingTestCmpBi11NoTblGuid
+public class MappingTestCmpBi11NoTblGuid : NDOTest
 {
 	PersistenceManager pm;
 	NDOMapping mapping;
@@ -3407,13 +3409,13 @@ public class MappingTestCmpBi11NoTblGuid
 	[Test]
 	public void HasMappingTable()
 	{
-		Assert.Null(ownClass.Relations.First().MappingTable, "Relation shouldn't have a MappingTable #5");
-		Assert.Null(otherClass.Relations.First().MappingTable, "Relation shouldn't have a MappingTable #7");
+		Assert.That(ownClass.Relations.First().MappingTable, Is.Null, "Relation shouldn't have a MappingTable #5");
+		Assert.That(otherClass.Relations.First().MappingTable, Is.Null, "Relation shouldn't have a MappingTable #7");
 	}
 	[Test]
 	public void HasTypeColumn()
 	{
-		Assert.Null(ownClass.Relations.First().ForeignKeyTypeColumnName, "Relation shouldn't have a TypeColumn #1");
+		Assert.That(ownClass.Relations.First().ForeignKeyTypeColumnName, Is.Null, "Relation shouldn't have a TypeColumn #1");
 	}
 	[Test]
 	public void HasTypeCode()
@@ -3425,7 +3427,7 @@ public class MappingTestCmpBi11NoTblGuid
 
 
 [TestFixture]
-public class MappingTestCmpBi11TblGuid
+public class MappingTestCmpBi11TblGuid : NDOTest
 {
 	PersistenceManager pm;
 	NDOMapping mapping;
@@ -3442,16 +3444,16 @@ public class MappingTestCmpBi11TblGuid
 	[Test]
 	public void HasMappingTable()
 	{
-		Assert.NotNull(ownClass.Relations.First().MappingTable, "Relation should have a MappingTable #1");
-		Assert.NotNull(otherClass.Relations.First().MappingTable, "Relation should have a MappingTable #3");
+		Assert.That(ownClass.Relations.First().MappingTable, Is.Not.Null, "Relation should have a MappingTable #1");
+		Assert.That(otherClass.Relations.First().MappingTable, Is.Not.Null, "Relation should have a MappingTable #3");
 	}
 	[Test]
 	public void HasTypeColumn()
 	{
-		Assert.Null(ownClass.Relations.First().ForeignKeyTypeColumnName, "Relation shouldn't have a TypeColumn #1");
-		Assert.Null(otherClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, "Relation shouldn't have a TypeColumn #2");
-		Assert.Null(ownClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, "Relation shouldn't have a TypeColumn #3");
-		Assert.Null(otherClass.Relations.First().ForeignKeyTypeColumnName, "Relation shouldn't have a TypeColumn #4");
+		Assert.That(ownClass.Relations.First().ForeignKeyTypeColumnName, Is.Null, "Relation shouldn't have a TypeColumn #1");
+		Assert.That(otherClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, Is.Null, "Relation shouldn't have a TypeColumn #2");
+		Assert.That(ownClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, Is.Null, "Relation shouldn't have a TypeColumn #3");
+		Assert.That(otherClass.Relations.First().ForeignKeyTypeColumnName, Is.Null, "Relation shouldn't have a TypeColumn #4");
 	}
 	[Test]
 	public void HasTypeCode()
@@ -3463,7 +3465,7 @@ public class MappingTestCmpBi11TblGuid
 
 
 [TestFixture]
-public class MappingTestCmpDirnNoTblGuid
+public class MappingTestCmpDirnNoTblGuid : NDOTest
 {
 	PersistenceManager pm;
 	NDOMapping mapping;
@@ -3480,12 +3482,12 @@ public class MappingTestCmpDirnNoTblGuid
 	[Test]
 	public void HasMappingTable()
 	{
-		Assert.Null(ownClass.Relations.First().MappingTable, "Relation shouldn't have a MappingTable #5");
+		Assert.That(ownClass.Relations.First().MappingTable, Is.Null, "Relation shouldn't have a MappingTable #5");
 	}
 	[Test]
 	public void HasTypeColumn()
 	{
-		Assert.Null(ownClass.Relations.First().ForeignKeyTypeColumnName, "Relation shouldn't have a TypeColumn #1");
+		Assert.That(ownClass.Relations.First().ForeignKeyTypeColumnName, Is.Null, "Relation shouldn't have a TypeColumn #1");
 	}
 	[Test]
 	public void HasTypeCode()
@@ -3497,7 +3499,7 @@ public class MappingTestCmpDirnNoTblGuid
 
 
 [TestFixture]
-public class MappingTestCmpDirnTblGuid
+public class MappingTestCmpDirnTblGuid : NDOTest
 {
 	PersistenceManager pm;
 	NDOMapping mapping;
@@ -3514,13 +3516,13 @@ public class MappingTestCmpDirnTblGuid
 	[Test]
 	public void HasMappingTable()
 	{
-		Assert.NotNull(ownClass.Relations.First().MappingTable, "Relation should have a MappingTable #1");
+		Assert.That(ownClass.Relations.First().MappingTable, Is.Not.Null, "Relation should have a MappingTable #1");
 	}
 	[Test]
 	public void HasTypeColumn()
 	{
-		Assert.Null(ownClass.Relations.First().ForeignKeyTypeColumnName, "Relation shouldn't have a TypeColumn #1");
-		Assert.Null(ownClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, "Relation shouldn't have a TypeColumn #3");
+		Assert.That(ownClass.Relations.First().ForeignKeyTypeColumnName, Is.Null, "Relation shouldn't have a TypeColumn #1");
+		Assert.That(ownClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, Is.Null, "Relation shouldn't have a TypeColumn #3");
 	}
 	[Test]
 	public void HasTypeCode()
@@ -3532,7 +3534,7 @@ public class MappingTestCmpDirnTblGuid
 
 
 [TestFixture]
-public class MappingTestCmpBin1NoTblGuid
+public class MappingTestCmpBin1NoTblGuid : NDOTest
 {
 	PersistenceManager pm;
 	NDOMapping mapping;
@@ -3549,13 +3551,13 @@ public class MappingTestCmpBin1NoTblGuid
 	[Test]
 	public void HasMappingTable()
 	{
-		Assert.Null(ownClass.Relations.First().MappingTable, "Relation shouldn't have a MappingTable #5");
-		Assert.Null(otherClass.Relations.First().MappingTable, "Relation shouldn't have a MappingTable #7");
+		Assert.That(ownClass.Relations.First().MappingTable, Is.Null, "Relation shouldn't have a MappingTable #5");
+		Assert.That(otherClass.Relations.First().MappingTable, Is.Null, "Relation shouldn't have a MappingTable #7");
 	}
 	[Test]
 	public void HasTypeColumn()
 	{
-		Assert.Null(ownClass.Relations.First().ForeignKeyTypeColumnName, "Relation shouldn't have a TypeColumn #1");
+		Assert.That(ownClass.Relations.First().ForeignKeyTypeColumnName, Is.Null, "Relation shouldn't have a TypeColumn #1");
 	}
 	[Test]
 	public void HasTypeCode()
@@ -3567,7 +3569,7 @@ public class MappingTestCmpBin1NoTblGuid
 
 
 [TestFixture]
-public class MappingTestCmpBin1TblGuid
+public class MappingTestCmpBin1TblGuid : NDOTest
 {
 	PersistenceManager pm;
 	NDOMapping mapping;
@@ -3584,16 +3586,16 @@ public class MappingTestCmpBin1TblGuid
 	[Test]
 	public void HasMappingTable()
 	{
-		Assert.NotNull(ownClass.Relations.First().MappingTable, "Relation should have a MappingTable #1");
-		Assert.NotNull(otherClass.Relations.First().MappingTable, "Relation should have a MappingTable #3");
+		Assert.That(ownClass.Relations.First().MappingTable, Is.Not.Null, "Relation should have a MappingTable #1");
+		Assert.That(otherClass.Relations.First().MappingTable, Is.Not.Null, "Relation should have a MappingTable #3");
 	}
 	[Test]
 	public void HasTypeColumn()
 	{
-		Assert.Null(ownClass.Relations.First().ForeignKeyTypeColumnName, "Relation shouldn't have a TypeColumn #1");
-		Assert.Null(otherClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, "Relation shouldn't have a TypeColumn #2");
-		Assert.Null(ownClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, "Relation shouldn't have a TypeColumn #3");
-		Assert.Null(otherClass.Relations.First().ForeignKeyTypeColumnName, "Relation shouldn't have a TypeColumn #4");
+		Assert.That(ownClass.Relations.First().ForeignKeyTypeColumnName, Is.Null, "Relation shouldn't have a TypeColumn #1");
+		Assert.That(otherClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, Is.Null, "Relation shouldn't have a TypeColumn #2");
+		Assert.That(ownClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, Is.Null, "Relation shouldn't have a TypeColumn #3");
+		Assert.That(otherClass.Relations.First().ForeignKeyTypeColumnName, Is.Null, "Relation shouldn't have a TypeColumn #4");
 	}
 	[Test]
 	public void HasTypeCode()
@@ -3605,7 +3607,7 @@ public class MappingTestCmpBin1TblGuid
 
 
 [TestFixture]
-public class MappingTestCmpBi1nNoTblGuid
+public class MappingTestCmpBi1nNoTblGuid : NDOTest
 {
 	PersistenceManager pm;
 	NDOMapping mapping;
@@ -3622,13 +3624,13 @@ public class MappingTestCmpBi1nNoTblGuid
 	[Test]
 	public void HasMappingTable()
 	{
-		Assert.Null(ownClass.Relations.First().MappingTable, "Relation shouldn't have a MappingTable #5");
-		Assert.Null(otherClass.Relations.First().MappingTable, "Relation shouldn't have a MappingTable #7");
+		Assert.That(ownClass.Relations.First().MappingTable, Is.Null, "Relation shouldn't have a MappingTable #5");
+		Assert.That(otherClass.Relations.First().MappingTable, Is.Null, "Relation shouldn't have a MappingTable #7");
 	}
 	[Test]
 	public void HasTypeColumn()
 	{
-		Assert.Null(ownClass.Relations.First().ForeignKeyTypeColumnName, "Relation shouldn't have a TypeColumn #1");
+		Assert.That(ownClass.Relations.First().ForeignKeyTypeColumnName, Is.Null, "Relation shouldn't have a TypeColumn #1");
 	}
 	[Test]
 	public void HasTypeCode()
@@ -3640,7 +3642,7 @@ public class MappingTestCmpBi1nNoTblGuid
 
 
 [TestFixture]
-public class MappingTestCmpBi1nTblGuid
+public class MappingTestCmpBi1nTblGuid : NDOTest
 {
 	PersistenceManager pm;
 	NDOMapping mapping;
@@ -3657,16 +3659,16 @@ public class MappingTestCmpBi1nTblGuid
 	[Test]
 	public void HasMappingTable()
 	{
-		Assert.NotNull(ownClass.Relations.First().MappingTable, "Relation should have a MappingTable #1");
-		Assert.NotNull(otherClass.Relations.First().MappingTable, "Relation should have a MappingTable #3");
+		Assert.That(ownClass.Relations.First().MappingTable, Is.Not.Null, "Relation should have a MappingTable #1");
+		Assert.That(otherClass.Relations.First().MappingTable, Is.Not.Null, "Relation should have a MappingTable #3");
 	}
 	[Test]
 	public void HasTypeColumn()
 	{
-		Assert.Null(ownClass.Relations.First().ForeignKeyTypeColumnName, "Relation shouldn't have a TypeColumn #1");
-		Assert.Null(otherClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, "Relation shouldn't have a TypeColumn #2");
-		Assert.Null(ownClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, "Relation shouldn't have a TypeColumn #3");
-		Assert.Null(otherClass.Relations.First().ForeignKeyTypeColumnName, "Relation shouldn't have a TypeColumn #4");
+		Assert.That(ownClass.Relations.First().ForeignKeyTypeColumnName, Is.Null, "Relation shouldn't have a TypeColumn #1");
+		Assert.That(otherClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, Is.Null, "Relation shouldn't have a TypeColumn #2");
+		Assert.That(ownClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, Is.Null, "Relation shouldn't have a TypeColumn #3");
+		Assert.That(otherClass.Relations.First().ForeignKeyTypeColumnName, Is.Null, "Relation shouldn't have a TypeColumn #4");
 	}
 	[Test]
 	public void HasTypeCode()
@@ -3678,7 +3680,7 @@ public class MappingTestCmpBi1nTblGuid
 
 
 [TestFixture]
-public class MappingTestCmpBinnTblGuid
+public class MappingTestCmpBinnTblGuid : NDOTest
 {
 	PersistenceManager pm;
 	NDOMapping mapping;
@@ -3695,16 +3697,16 @@ public class MappingTestCmpBinnTblGuid
 	[Test]
 	public void HasMappingTable()
 	{
-		Assert.NotNull(ownClass.Relations.First().MappingTable, "Relation should have a MappingTable #1");
-		Assert.NotNull(otherClass.Relations.First().MappingTable, "Relation should have a MappingTable #3");
+		Assert.That(ownClass.Relations.First().MappingTable, Is.Not.Null, "Relation should have a MappingTable #1");
+		Assert.That(otherClass.Relations.First().MappingTable, Is.Not.Null, "Relation should have a MappingTable #3");
 	}
 	[Test]
 	public void HasTypeColumn()
 	{
-		Assert.Null(ownClass.Relations.First().ForeignKeyTypeColumnName, "Relation shouldn't have a TypeColumn #1");
-		Assert.Null(otherClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, "Relation shouldn't have a TypeColumn #2");
-		Assert.Null(ownClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, "Relation shouldn't have a TypeColumn #3");
-		Assert.Null(otherClass.Relations.First().ForeignKeyTypeColumnName, "Relation shouldn't have a TypeColumn #4");
+		Assert.That(ownClass.Relations.First().ForeignKeyTypeColumnName, Is.Null, "Relation shouldn't have a TypeColumn #1");
+		Assert.That(otherClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, Is.Null, "Relation shouldn't have a TypeColumn #2");
+		Assert.That(ownClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, Is.Null, "Relation shouldn't have a TypeColumn #3");
+		Assert.That(otherClass.Relations.First().ForeignKeyTypeColumnName, Is.Null, "Relation shouldn't have a TypeColumn #4");
 	}
 	[Test]
 	public void HasTypeCode()
@@ -3716,7 +3718,7 @@ public class MappingTestCmpBinnTblGuid
 
 
 [TestFixture]
-public class MappingTestAgrDir1OwnpconNoTblGuid
+public class MappingTestAgrDir1OwnpconNoTblGuid : NDOTest
 {
 	PersistenceManager pm;
 	NDOMapping mapping;
@@ -3735,13 +3737,13 @@ public class MappingTestAgrDir1OwnpconNoTblGuid
 	[Test]
 	public void HasMappingTable()
 	{
-		Assert.Null(ownClass.Relations.First().MappingTable, "Relation shouldn't have a MappingTable #5");
-		Assert.Null(ownDerivedClass.Relations.First().MappingTable, "Relation shouldn't have a MappingTable #6");
+		Assert.That(ownClass.Relations.First().MappingTable, Is.Null, "Relation shouldn't have a MappingTable #5");
+		Assert.That(ownDerivedClass.Relations.First().MappingTable, Is.Null, "Relation shouldn't have a MappingTable #6");
 	}
 	[Test]
 	public void HasTypeColumn()
 	{
-		Assert.Null(ownClass.Relations.First().ForeignKeyTypeColumnName, "Relation shouldn't have a TypeColumn #1");
+		Assert.That(ownClass.Relations.First().ForeignKeyTypeColumnName, Is.Null, "Relation shouldn't have a TypeColumn #1");
 	}
 	[Test]
 	public void HasTypeCode()
@@ -3754,7 +3756,7 @@ public class MappingTestAgrDir1OwnpconNoTblGuid
 
 
 [TestFixture]
-public class MappingTestAgrDir1OwnpconTblGuid
+public class MappingTestAgrDir1OwnpconTblGuid : NDOTest
 {
 	PersistenceManager pm;
 	NDOMapping mapping;
@@ -3773,15 +3775,15 @@ public class MappingTestAgrDir1OwnpconTblGuid
 	[Test]
 	public void HasMappingTable()
 	{
-		Assert.NotNull(ownClass.Relations.First().MappingTable, "Relation should have a MappingTable #1");
-		Assert.NotNull(ownDerivedClass.Relations.First().MappingTable, "Relation should have a MappingTable #2");
+		Assert.That(ownClass.Relations.First().MappingTable, Is.Not.Null, "Relation should have a MappingTable #1");
+		Assert.That(ownDerivedClass.Relations.First().MappingTable, Is.Not.Null, "Relation should have a MappingTable #2");
 	}
 	[Test]
 	public void HasTypeColumn()
 	{
-		Assert.NotNull(ownClass.Relations.First().ForeignKeyTypeColumnName, "Relation should have a TypeColumn #1");
-		Assert.NotNull(ownDerivedClass.Relations.First().ForeignKeyTypeColumnName, "Relation should have a TypeColumn #2");
-		Assert.Null(ownClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, "Relation shouldn't have a TypeColumn #3");
+		Assert.That(ownClass.Relations.First().ForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #1");
+		Assert.That(ownDerivedClass.Relations.First().ForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #2");
+		Assert.That(ownClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, Is.Null, "Relation shouldn't have a TypeColumn #3");
 	}
 	[Test]
 	public void HasTypeCode()
@@ -3794,7 +3796,7 @@ public class MappingTestAgrDir1OwnpconTblGuid
 
 
 [TestFixture]
-public class MappingTestAgrBi11OwnpconNoTblGuid
+public class MappingTestAgrBi11OwnpconNoTblGuid : NDOTest
 {
 	PersistenceManager pm;
 	NDOMapping mapping;
@@ -3813,15 +3815,15 @@ public class MappingTestAgrBi11OwnpconNoTblGuid
 	[Test]
 	public void HasMappingTable()
 	{
-		Assert.Null(ownClass.Relations.First().MappingTable, "Relation shouldn't have a MappingTable #5");
-		Assert.Null(ownDerivedClass.Relations.First().MappingTable, "Relation shouldn't have a MappingTable #6");
-		Assert.Null(otherClass.Relations.First().MappingTable, "Relation shouldn't have a MappingTable #7");
+		Assert.That(ownClass.Relations.First().MappingTable, Is.Null, "Relation shouldn't have a MappingTable #5");
+		Assert.That(ownDerivedClass.Relations.First().MappingTable, Is.Null, "Relation shouldn't have a MappingTable #6");
+		Assert.That(otherClass.Relations.First().MappingTable, Is.Null, "Relation shouldn't have a MappingTable #7");
 	}
 	[Test]
 	public void HasTypeColumn()
 	{
-		Assert.Null(ownClass.Relations.First().ForeignKeyTypeColumnName, "Relation shouldn't have a TypeColumn #1");
-		Assert.NotNull(otherClass.Relations.First().ForeignKeyTypeColumnName, "Relation should have a TypeColumn #10");
+		Assert.That(ownClass.Relations.First().ForeignKeyTypeColumnName, Is.Null, "Relation shouldn't have a TypeColumn #1");
+		Assert.That(otherClass.Relations.First().ForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #10");
 	}
 	[Test]
 	public void HasTypeCode()
@@ -3834,7 +3836,7 @@ public class MappingTestAgrBi11OwnpconNoTblGuid
 
 
 [TestFixture]
-public class MappingTestAgrBi11OwnpconTblGuid
+public class MappingTestAgrBi11OwnpconTblGuid : NDOTest
 {
 	PersistenceManager pm;
 	NDOMapping mapping;
@@ -3853,18 +3855,18 @@ public class MappingTestAgrBi11OwnpconTblGuid
 	[Test]
 	public void HasMappingTable()
 	{
-		Assert.NotNull(ownClass.Relations.First().MappingTable, "Relation should have a MappingTable #1");
-		Assert.NotNull(ownDerivedClass.Relations.First().MappingTable, "Relation should have a MappingTable #2");
-		Assert.NotNull(otherClass.Relations.First().MappingTable, "Relation should have a MappingTable #3");
+		Assert.That(ownClass.Relations.First().MappingTable, Is.Not.Null, "Relation should have a MappingTable #1");
+		Assert.That(ownDerivedClass.Relations.First().MappingTable, Is.Not.Null, "Relation should have a MappingTable #2");
+		Assert.That(otherClass.Relations.First().MappingTable, Is.Not.Null, "Relation should have a MappingTable #3");
 	}
 	[Test]
 	public void HasTypeColumn()
 	{
-		Assert.NotNull(ownClass.Relations.First().ForeignKeyTypeColumnName, "Relation should have a TypeColumn #1");
-		Assert.NotNull(ownDerivedClass.Relations.First().ForeignKeyTypeColumnName, "Relation should have a TypeColumn #2");
-		Assert.NotNull(otherClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, "Relation should have a TypeColumn #7");
-		Assert.Null(ownClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, "Relation shouldn't have a TypeColumn #3");
-		Assert.Null(otherClass.Relations.First().ForeignKeyTypeColumnName, "Relation shouldn't have a TypeColumn #4");
+		Assert.That(ownClass.Relations.First().ForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #1");
+		Assert.That(ownDerivedClass.Relations.First().ForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #2");
+		Assert.That(otherClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #7");
+		Assert.That(ownClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, Is.Null, "Relation shouldn't have a TypeColumn #3");
+		Assert.That(otherClass.Relations.First().ForeignKeyTypeColumnName, Is.Null, "Relation shouldn't have a TypeColumn #4");
 	}
 	[Test]
 	public void HasTypeCode()
@@ -3877,7 +3879,7 @@ public class MappingTestAgrBi11OwnpconTblGuid
 
 
 [TestFixture]
-public class MappingTestAgrDirnOwnpconNoTblGuid
+public class MappingTestAgrDirnOwnpconNoTblGuid : NDOTest
 {
 	PersistenceManager pm;
 	NDOMapping mapping;
@@ -3896,13 +3898,13 @@ public class MappingTestAgrDirnOwnpconNoTblGuid
 	[Test]
 	public void HasMappingTable()
 	{
-		Assert.Null(ownClass.Relations.First().MappingTable, "Relation shouldn't have a MappingTable #5");
-		Assert.Null(ownDerivedClass.Relations.First().MappingTable, "Relation shouldn't have a MappingTable #6");
+		Assert.That(ownClass.Relations.First().MappingTable, Is.Null, "Relation shouldn't have a MappingTable #5");
+		Assert.That(ownDerivedClass.Relations.First().MappingTable, Is.Null, "Relation shouldn't have a MappingTable #6");
 	}
 	[Test]
 	public void HasTypeColumn()
 	{
-		Assert.Null(ownClass.Relations.First().ForeignKeyTypeColumnName, "Relation shouldn't have a TypeColumn #1");
+		Assert.That(ownClass.Relations.First().ForeignKeyTypeColumnName, Is.Null, "Relation shouldn't have a TypeColumn #1");
 	}
 	[Test]
 	public void HasTypeCode()
@@ -3915,7 +3917,7 @@ public class MappingTestAgrDirnOwnpconNoTblGuid
 
 
 [TestFixture]
-public class MappingTestAgrDirnOwnpconTblGuid
+public class MappingTestAgrDirnOwnpconTblGuid : NDOTest
 {
 	PersistenceManager pm;
 	NDOMapping mapping;
@@ -3934,15 +3936,15 @@ public class MappingTestAgrDirnOwnpconTblGuid
 	[Test]
 	public void HasMappingTable()
 	{
-		Assert.NotNull(ownClass.Relations.First().MappingTable, "Relation should have a MappingTable #1");
-		Assert.NotNull(ownDerivedClass.Relations.First().MappingTable, "Relation should have a MappingTable #2");
+		Assert.That(ownClass.Relations.First().MappingTable, Is.Not.Null, "Relation should have a MappingTable #1");
+		Assert.That(ownDerivedClass.Relations.First().MappingTable, Is.Not.Null, "Relation should have a MappingTable #2");
 	}
 	[Test]
 	public void HasTypeColumn()
 	{
-		Assert.NotNull(ownClass.Relations.First().ForeignKeyTypeColumnName, "Relation should have a TypeColumn #1");
-		Assert.NotNull(ownDerivedClass.Relations.First().ForeignKeyTypeColumnName, "Relation should have a TypeColumn #2");
-		Assert.Null(ownClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, "Relation shouldn't have a TypeColumn #3");
+		Assert.That(ownClass.Relations.First().ForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #1");
+		Assert.That(ownDerivedClass.Relations.First().ForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #2");
+		Assert.That(ownClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, Is.Null, "Relation shouldn't have a TypeColumn #3");
 	}
 	[Test]
 	public void HasTypeCode()
@@ -3955,7 +3957,7 @@ public class MappingTestAgrDirnOwnpconTblGuid
 
 
 [TestFixture]
-public class MappingTestAgrBin1OwnpconNoTblGuid
+public class MappingTestAgrBin1OwnpconNoTblGuid : NDOTest
 {
 	PersistenceManager pm;
 	NDOMapping mapping;
@@ -3974,14 +3976,14 @@ public class MappingTestAgrBin1OwnpconNoTblGuid
 	[Test]
 	public void HasMappingTable()
 	{
-		Assert.Null(ownClass.Relations.First().MappingTable, "Relation shouldn't have a MappingTable #5");
-		Assert.Null(ownDerivedClass.Relations.First().MappingTable, "Relation shouldn't have a MappingTable #6");
-		Assert.Null(otherClass.Relations.First().MappingTable, "Relation shouldn't have a MappingTable #7");
+		Assert.That(ownClass.Relations.First().MappingTable, Is.Null, "Relation shouldn't have a MappingTable #5");
+		Assert.That(ownDerivedClass.Relations.First().MappingTable, Is.Null, "Relation shouldn't have a MappingTable #6");
+		Assert.That(otherClass.Relations.First().MappingTable, Is.Null, "Relation shouldn't have a MappingTable #7");
 	}
 	[Test]
 	public void HasTypeColumn()
 	{
-		Assert.Null(ownClass.Relations.First().ForeignKeyTypeColumnName, "Relation shouldn't have a TypeColumn #1");
+		Assert.That(ownClass.Relations.First().ForeignKeyTypeColumnName, Is.Null, "Relation shouldn't have a TypeColumn #1");
 	}
 	[Test]
 	public void HasTypeCode()
@@ -3994,7 +3996,7 @@ public class MappingTestAgrBin1OwnpconNoTblGuid
 
 
 [TestFixture]
-public class MappingTestAgrBin1OwnpconTblGuid
+public class MappingTestAgrBin1OwnpconTblGuid : NDOTest
 {
 	PersistenceManager pm;
 	NDOMapping mapping;
@@ -4013,18 +4015,18 @@ public class MappingTestAgrBin1OwnpconTblGuid
 	[Test]
 	public void HasMappingTable()
 	{
-		Assert.NotNull(ownClass.Relations.First().MappingTable, "Relation should have a MappingTable #1");
-		Assert.NotNull(ownDerivedClass.Relations.First().MappingTable, "Relation should have a MappingTable #2");
-		Assert.NotNull(otherClass.Relations.First().MappingTable, "Relation should have a MappingTable #3");
+		Assert.That(ownClass.Relations.First().MappingTable, Is.Not.Null, "Relation should have a MappingTable #1");
+		Assert.That(ownDerivedClass.Relations.First().MappingTable, Is.Not.Null, "Relation should have a MappingTable #2");
+		Assert.That(otherClass.Relations.First().MappingTable, Is.Not.Null, "Relation should have a MappingTable #3");
 	}
 	[Test]
 	public void HasTypeColumn()
 	{
-		Assert.NotNull(ownClass.Relations.First().ForeignKeyTypeColumnName, "Relation should have a TypeColumn #1");
-		Assert.NotNull(ownDerivedClass.Relations.First().ForeignKeyTypeColumnName, "Relation should have a TypeColumn #2");
-		Assert.NotNull(otherClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, "Relation should have a TypeColumn #7");
-		Assert.Null(ownClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, "Relation shouldn't have a TypeColumn #3");
-		Assert.Null(otherClass.Relations.First().ForeignKeyTypeColumnName, "Relation shouldn't have a TypeColumn #4");
+		Assert.That(ownClass.Relations.First().ForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #1");
+		Assert.That(ownDerivedClass.Relations.First().ForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #2");
+		Assert.That(otherClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #7");
+		Assert.That(ownClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, Is.Null, "Relation shouldn't have a TypeColumn #3");
+		Assert.That(otherClass.Relations.First().ForeignKeyTypeColumnName, Is.Null, "Relation shouldn't have a TypeColumn #4");
 	}
 	[Test]
 	public void HasTypeCode()
@@ -4037,7 +4039,7 @@ public class MappingTestAgrBin1OwnpconTblGuid
 
 
 [TestFixture]
-public class MappingTestAgrBi1nOwnpconTblGuid
+public class MappingTestAgrBi1nOwnpconTblGuid : NDOTest
 {
 	PersistenceManager pm;
 	NDOMapping mapping;
@@ -4056,18 +4058,18 @@ public class MappingTestAgrBi1nOwnpconTblGuid
 	[Test]
 	public void HasMappingTable()
 	{
-		Assert.NotNull(ownClass.Relations.First().MappingTable, "Relation should have a MappingTable #1");
-		Assert.NotNull(ownDerivedClass.Relations.First().MappingTable, "Relation should have a MappingTable #2");
-		Assert.NotNull(otherClass.Relations.First().MappingTable, "Relation should have a MappingTable #3");
+		Assert.That(ownClass.Relations.First().MappingTable, Is.Not.Null, "Relation should have a MappingTable #1");
+		Assert.That(ownDerivedClass.Relations.First().MappingTable, Is.Not.Null, "Relation should have a MappingTable #2");
+		Assert.That(otherClass.Relations.First().MappingTable, Is.Not.Null, "Relation should have a MappingTable #3");
 	}
 	[Test]
 	public void HasTypeColumn()
 	{
-		Assert.NotNull(ownClass.Relations.First().ForeignKeyTypeColumnName, "Relation should have a TypeColumn #1");
-		Assert.NotNull(ownDerivedClass.Relations.First().ForeignKeyTypeColumnName, "Relation should have a TypeColumn #2");
-		Assert.NotNull(otherClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, "Relation should have a TypeColumn #7");
-		Assert.Null(ownClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, "Relation shouldn't have a TypeColumn #3");
-		Assert.Null(otherClass.Relations.First().ForeignKeyTypeColumnName, "Relation shouldn't have a TypeColumn #4");
+		Assert.That(ownClass.Relations.First().ForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #1");
+		Assert.That(ownDerivedClass.Relations.First().ForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #2");
+		Assert.That(otherClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #7");
+		Assert.That(ownClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, Is.Null, "Relation shouldn't have a TypeColumn #3");
+		Assert.That(otherClass.Relations.First().ForeignKeyTypeColumnName, Is.Null, "Relation shouldn't have a TypeColumn #4");
 	}
 	[Test]
 	public void HasTypeCode()
@@ -4080,7 +4082,7 @@ public class MappingTestAgrBi1nOwnpconTblGuid
 
 
 [TestFixture]
-public class MappingTestAgrBinnOwnpconTblGuid
+public class MappingTestAgrBinnOwnpconTblGuid : NDOTest
 {
 	PersistenceManager pm;
 	NDOMapping mapping;
@@ -4099,18 +4101,18 @@ public class MappingTestAgrBinnOwnpconTblGuid
 	[Test]
 	public void HasMappingTable()
 	{
-		Assert.NotNull(ownClass.Relations.First().MappingTable, "Relation should have a MappingTable #1");
-		Assert.NotNull(ownDerivedClass.Relations.First().MappingTable, "Relation should have a MappingTable #2");
-		Assert.NotNull(otherClass.Relations.First().MappingTable, "Relation should have a MappingTable #3");
+		Assert.That(ownClass.Relations.First().MappingTable, Is.Not.Null, "Relation should have a MappingTable #1");
+		Assert.That(ownDerivedClass.Relations.First().MappingTable, Is.Not.Null, "Relation should have a MappingTable #2");
+		Assert.That(otherClass.Relations.First().MappingTable, Is.Not.Null, "Relation should have a MappingTable #3");
 	}
 	[Test]
 	public void HasTypeColumn()
 	{
-		Assert.NotNull(ownClass.Relations.First().ForeignKeyTypeColumnName, "Relation should have a TypeColumn #1");
-		Assert.NotNull(ownDerivedClass.Relations.First().ForeignKeyTypeColumnName, "Relation should have a TypeColumn #2");
-		Assert.NotNull(otherClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, "Relation should have a TypeColumn #7");
-		Assert.Null(ownClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, "Relation shouldn't have a TypeColumn #3");
-		Assert.Null(otherClass.Relations.First().ForeignKeyTypeColumnName, "Relation shouldn't have a TypeColumn #4");
+		Assert.That(ownClass.Relations.First().ForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #1");
+		Assert.That(ownDerivedClass.Relations.First().ForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #2");
+		Assert.That(otherClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #7");
+		Assert.That(ownClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, Is.Null, "Relation shouldn't have a TypeColumn #3");
+		Assert.That(otherClass.Relations.First().ForeignKeyTypeColumnName, Is.Null, "Relation shouldn't have a TypeColumn #4");
 	}
 	[Test]
 	public void HasTypeCode()
@@ -4123,7 +4125,7 @@ public class MappingTestAgrBinnOwnpconTblGuid
 
 
 [TestFixture]
-public class MappingTestCmpDir1OwnpconNoTblGuid
+public class MappingTestCmpDir1OwnpconNoTblGuid : NDOTest
 {
 	PersistenceManager pm;
 	NDOMapping mapping;
@@ -4142,13 +4144,13 @@ public class MappingTestCmpDir1OwnpconNoTblGuid
 	[Test]
 	public void HasMappingTable()
 	{
-		Assert.Null(ownClass.Relations.First().MappingTable, "Relation shouldn't have a MappingTable #5");
-		Assert.Null(ownDerivedClass.Relations.First().MappingTable, "Relation shouldn't have a MappingTable #6");
+		Assert.That(ownClass.Relations.First().MappingTable, Is.Null, "Relation shouldn't have a MappingTable #5");
+		Assert.That(ownDerivedClass.Relations.First().MappingTable, Is.Null, "Relation shouldn't have a MappingTable #6");
 	}
 	[Test]
 	public void HasTypeColumn()
 	{
-		Assert.Null(ownClass.Relations.First().ForeignKeyTypeColumnName, "Relation shouldn't have a TypeColumn #1");
+		Assert.That(ownClass.Relations.First().ForeignKeyTypeColumnName, Is.Null, "Relation shouldn't have a TypeColumn #1");
 	}
 	[Test]
 	public void HasTypeCode()
@@ -4161,7 +4163,7 @@ public class MappingTestCmpDir1OwnpconNoTblGuid
 
 
 [TestFixture]
-public class MappingTestCmpDir1OwnpconTblGuid
+public class MappingTestCmpDir1OwnpconTblGuid : NDOTest
 {
 	PersistenceManager pm;
 	NDOMapping mapping;
@@ -4180,15 +4182,15 @@ public class MappingTestCmpDir1OwnpconTblGuid
 	[Test]
 	public void HasMappingTable()
 	{
-		Assert.NotNull(ownClass.Relations.First().MappingTable, "Relation should have a MappingTable #1");
-		Assert.NotNull(ownDerivedClass.Relations.First().MappingTable, "Relation should have a MappingTable #2");
+		Assert.That(ownClass.Relations.First().MappingTable, Is.Not.Null, "Relation should have a MappingTable #1");
+		Assert.That(ownDerivedClass.Relations.First().MappingTable, Is.Not.Null, "Relation should have a MappingTable #2");
 	}
 	[Test]
 	public void HasTypeColumn()
 	{
-		Assert.NotNull(ownClass.Relations.First().ForeignKeyTypeColumnName, "Relation should have a TypeColumn #1");
-		Assert.NotNull(ownDerivedClass.Relations.First().ForeignKeyTypeColumnName, "Relation should have a TypeColumn #2");
-		Assert.Null(ownClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, "Relation shouldn't have a TypeColumn #3");
+		Assert.That(ownClass.Relations.First().ForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #1");
+		Assert.That(ownDerivedClass.Relations.First().ForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #2");
+		Assert.That(ownClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, Is.Null, "Relation shouldn't have a TypeColumn #3");
 	}
 	[Test]
 	public void HasTypeCode()
@@ -4201,7 +4203,7 @@ public class MappingTestCmpDir1OwnpconTblGuid
 
 
 [TestFixture]
-public class MappingTestCmpBi11OwnpconNoTblGuid
+public class MappingTestCmpBi11OwnpconNoTblGuid : NDOTest
 {
 	PersistenceManager pm;
 	NDOMapping mapping;
@@ -4220,15 +4222,15 @@ public class MappingTestCmpBi11OwnpconNoTblGuid
 	[Test]
 	public void HasMappingTable()
 	{
-		Assert.Null(ownClass.Relations.First().MappingTable, "Relation shouldn't have a MappingTable #5");
-		Assert.Null(ownDerivedClass.Relations.First().MappingTable, "Relation shouldn't have a MappingTable #6");
-		Assert.Null(otherClass.Relations.First().MappingTable, "Relation shouldn't have a MappingTable #7");
+		Assert.That(ownClass.Relations.First().MappingTable, Is.Null, "Relation shouldn't have a MappingTable #5");
+		Assert.That(ownDerivedClass.Relations.First().MappingTable, Is.Null, "Relation shouldn't have a MappingTable #6");
+		Assert.That(otherClass.Relations.First().MappingTable, Is.Null, "Relation shouldn't have a MappingTable #7");
 	}
 	[Test]
 	public void HasTypeColumn()
 	{
-		Assert.Null(ownClass.Relations.First().ForeignKeyTypeColumnName, "Relation shouldn't have a TypeColumn #1");
-		Assert.NotNull(otherClass.Relations.First().ForeignKeyTypeColumnName, "Relation should have a TypeColumn #10");
+		Assert.That(ownClass.Relations.First().ForeignKeyTypeColumnName, Is.Null, "Relation shouldn't have a TypeColumn #1");
+		Assert.That(otherClass.Relations.First().ForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #10");
 	}
 	[Test]
 	public void HasTypeCode()
@@ -4241,7 +4243,7 @@ public class MappingTestCmpBi11OwnpconNoTblGuid
 
 
 [TestFixture]
-public class MappingTestCmpBi11OwnpconTblGuid
+public class MappingTestCmpBi11OwnpconTblGuid : NDOTest
 {
 	PersistenceManager pm;
 	NDOMapping mapping;
@@ -4260,18 +4262,18 @@ public class MappingTestCmpBi11OwnpconTblGuid
 	[Test]
 	public void HasMappingTable()
 	{
-		Assert.NotNull(ownClass.Relations.First().MappingTable, "Relation should have a MappingTable #1");
-		Assert.NotNull(ownDerivedClass.Relations.First().MappingTable, "Relation should have a MappingTable #2");
-		Assert.NotNull(otherClass.Relations.First().MappingTable, "Relation should have a MappingTable #3");
+		Assert.That(ownClass.Relations.First().MappingTable, Is.Not.Null, "Relation should have a MappingTable #1");
+		Assert.That(ownDerivedClass.Relations.First().MappingTable, Is.Not.Null, "Relation should have a MappingTable #2");
+		Assert.That(otherClass.Relations.First().MappingTable, Is.Not.Null, "Relation should have a MappingTable #3");
 	}
 	[Test]
 	public void HasTypeColumn()
 	{
-		Assert.NotNull(ownClass.Relations.First().ForeignKeyTypeColumnName, "Relation should have a TypeColumn #1");
-		Assert.NotNull(ownDerivedClass.Relations.First().ForeignKeyTypeColumnName, "Relation should have a TypeColumn #2");
-		Assert.NotNull(otherClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, "Relation should have a TypeColumn #7");
-		Assert.Null(ownClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, "Relation shouldn't have a TypeColumn #3");
-		Assert.Null(otherClass.Relations.First().ForeignKeyTypeColumnName, "Relation shouldn't have a TypeColumn #4");
+		Assert.That(ownClass.Relations.First().ForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #1");
+		Assert.That(ownDerivedClass.Relations.First().ForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #2");
+		Assert.That(otherClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #7");
+		Assert.That(ownClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, Is.Null, "Relation shouldn't have a TypeColumn #3");
+		Assert.That(otherClass.Relations.First().ForeignKeyTypeColumnName, Is.Null, "Relation shouldn't have a TypeColumn #4");
 	}
 	[Test]
 	public void HasTypeCode()
@@ -4284,7 +4286,7 @@ public class MappingTestCmpBi11OwnpconTblGuid
 
 
 [TestFixture]
-public class MappingTestCmpDirnOwnpconNoTblGuid
+public class MappingTestCmpDirnOwnpconNoTblGuid : NDOTest
 {
 	PersistenceManager pm;
 	NDOMapping mapping;
@@ -4303,13 +4305,13 @@ public class MappingTestCmpDirnOwnpconNoTblGuid
 	[Test]
 	public void HasMappingTable()
 	{
-		Assert.Null(ownClass.Relations.First().MappingTable, "Relation shouldn't have a MappingTable #5");
-		Assert.Null(ownDerivedClass.Relations.First().MappingTable, "Relation shouldn't have a MappingTable #6");
+		Assert.That(ownClass.Relations.First().MappingTable, Is.Null, "Relation shouldn't have a MappingTable #5");
+		Assert.That(ownDerivedClass.Relations.First().MappingTable, Is.Null, "Relation shouldn't have a MappingTable #6");
 	}
 	[Test]
 	public void HasTypeColumn()
 	{
-		Assert.Null(ownClass.Relations.First().ForeignKeyTypeColumnName, "Relation shouldn't have a TypeColumn #1");
+		Assert.That(ownClass.Relations.First().ForeignKeyTypeColumnName, Is.Null, "Relation shouldn't have a TypeColumn #1");
 	}
 	[Test]
 	public void HasTypeCode()
@@ -4322,7 +4324,7 @@ public class MappingTestCmpDirnOwnpconNoTblGuid
 
 
 [TestFixture]
-public class MappingTestCmpDirnOwnpconTblGuid
+public class MappingTestCmpDirnOwnpconTblGuid : NDOTest
 {
 	PersistenceManager pm;
 	NDOMapping mapping;
@@ -4341,15 +4343,15 @@ public class MappingTestCmpDirnOwnpconTblGuid
 	[Test]
 	public void HasMappingTable()
 	{
-		Assert.NotNull(ownClass.Relations.First().MappingTable, "Relation should have a MappingTable #1");
-		Assert.NotNull(ownDerivedClass.Relations.First().MappingTable, "Relation should have a MappingTable #2");
+		Assert.That(ownClass.Relations.First().MappingTable, Is.Not.Null, "Relation should have a MappingTable #1");
+		Assert.That(ownDerivedClass.Relations.First().MappingTable, Is.Not.Null, "Relation should have a MappingTable #2");
 	}
 	[Test]
 	public void HasTypeColumn()
 	{
-		Assert.NotNull(ownClass.Relations.First().ForeignKeyTypeColumnName, "Relation should have a TypeColumn #1");
-		Assert.NotNull(ownDerivedClass.Relations.First().ForeignKeyTypeColumnName, "Relation should have a TypeColumn #2");
-		Assert.Null(ownClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, "Relation shouldn't have a TypeColumn #3");
+		Assert.That(ownClass.Relations.First().ForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #1");
+		Assert.That(ownDerivedClass.Relations.First().ForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #2");
+		Assert.That(ownClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, Is.Null, "Relation shouldn't have a TypeColumn #3");
 	}
 	[Test]
 	public void HasTypeCode()
@@ -4362,7 +4364,7 @@ public class MappingTestCmpDirnOwnpconTblGuid
 
 
 [TestFixture]
-public class MappingTestCmpBin1OwnpconNoTblGuid
+public class MappingTestCmpBin1OwnpconNoTblGuid : NDOTest
 {
 	PersistenceManager pm;
 	NDOMapping mapping;
@@ -4381,14 +4383,14 @@ public class MappingTestCmpBin1OwnpconNoTblGuid
 	[Test]
 	public void HasMappingTable()
 	{
-		Assert.Null(ownClass.Relations.First().MappingTable, "Relation shouldn't have a MappingTable #5");
-		Assert.Null(ownDerivedClass.Relations.First().MappingTable, "Relation shouldn't have a MappingTable #6");
-		Assert.Null(otherClass.Relations.First().MappingTable, "Relation shouldn't have a MappingTable #7");
+		Assert.That(ownClass.Relations.First().MappingTable, Is.Null, "Relation shouldn't have a MappingTable #5");
+		Assert.That(ownDerivedClass.Relations.First().MappingTable, Is.Null, "Relation shouldn't have a MappingTable #6");
+		Assert.That(otherClass.Relations.First().MappingTable, Is.Null, "Relation shouldn't have a MappingTable #7");
 	}
 	[Test]
 	public void HasTypeColumn()
 	{
-		Assert.Null(ownClass.Relations.First().ForeignKeyTypeColumnName, "Relation shouldn't have a TypeColumn #1");
+		Assert.That(ownClass.Relations.First().ForeignKeyTypeColumnName, Is.Null, "Relation shouldn't have a TypeColumn #1");
 	}
 	[Test]
 	public void HasTypeCode()
@@ -4401,7 +4403,7 @@ public class MappingTestCmpBin1OwnpconNoTblGuid
 
 
 [TestFixture]
-public class MappingTestCmpBin1OwnpconTblGuid
+public class MappingTestCmpBin1OwnpconTblGuid : NDOTest
 {
 	PersistenceManager pm;
 	NDOMapping mapping;
@@ -4420,18 +4422,18 @@ public class MappingTestCmpBin1OwnpconTblGuid
 	[Test]
 	public void HasMappingTable()
 	{
-		Assert.NotNull(ownClass.Relations.First().MappingTable, "Relation should have a MappingTable #1");
-		Assert.NotNull(ownDerivedClass.Relations.First().MappingTable, "Relation should have a MappingTable #2");
-		Assert.NotNull(otherClass.Relations.First().MappingTable, "Relation should have a MappingTable #3");
+		Assert.That(ownClass.Relations.First().MappingTable, Is.Not.Null, "Relation should have a MappingTable #1");
+		Assert.That(ownDerivedClass.Relations.First().MappingTable, Is.Not.Null, "Relation should have a MappingTable #2");
+		Assert.That(otherClass.Relations.First().MappingTable, Is.Not.Null, "Relation should have a MappingTable #3");
 	}
 	[Test]
 	public void HasTypeColumn()
 	{
-		Assert.NotNull(ownClass.Relations.First().ForeignKeyTypeColumnName, "Relation should have a TypeColumn #1");
-		Assert.NotNull(ownDerivedClass.Relations.First().ForeignKeyTypeColumnName, "Relation should have a TypeColumn #2");
-		Assert.NotNull(otherClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, "Relation should have a TypeColumn #7");
-		Assert.Null(ownClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, "Relation shouldn't have a TypeColumn #3");
-		Assert.Null(otherClass.Relations.First().ForeignKeyTypeColumnName, "Relation shouldn't have a TypeColumn #4");
+		Assert.That(ownClass.Relations.First().ForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #1");
+		Assert.That(ownDerivedClass.Relations.First().ForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #2");
+		Assert.That(otherClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #7");
+		Assert.That(ownClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, Is.Null, "Relation shouldn't have a TypeColumn #3");
+		Assert.That(otherClass.Relations.First().ForeignKeyTypeColumnName, Is.Null, "Relation shouldn't have a TypeColumn #4");
 	}
 	[Test]
 	public void HasTypeCode()
@@ -4444,7 +4446,7 @@ public class MappingTestCmpBin1OwnpconTblGuid
 
 
 [TestFixture]
-public class MappingTestCmpBi1nOwnpconTblGuid
+public class MappingTestCmpBi1nOwnpconTblGuid : NDOTest
 {
 	PersistenceManager pm;
 	NDOMapping mapping;
@@ -4463,18 +4465,18 @@ public class MappingTestCmpBi1nOwnpconTblGuid
 	[Test]
 	public void HasMappingTable()
 	{
-		Assert.NotNull(ownClass.Relations.First().MappingTable, "Relation should have a MappingTable #1");
-		Assert.NotNull(ownDerivedClass.Relations.First().MappingTable, "Relation should have a MappingTable #2");
-		Assert.NotNull(otherClass.Relations.First().MappingTable, "Relation should have a MappingTable #3");
+		Assert.That(ownClass.Relations.First().MappingTable, Is.Not.Null, "Relation should have a MappingTable #1");
+		Assert.That(ownDerivedClass.Relations.First().MappingTable, Is.Not.Null, "Relation should have a MappingTable #2");
+		Assert.That(otherClass.Relations.First().MappingTable, Is.Not.Null, "Relation should have a MappingTable #3");
 	}
 	[Test]
 	public void HasTypeColumn()
 	{
-		Assert.NotNull(ownClass.Relations.First().ForeignKeyTypeColumnName, "Relation should have a TypeColumn #1");
-		Assert.NotNull(ownDerivedClass.Relations.First().ForeignKeyTypeColumnName, "Relation should have a TypeColumn #2");
-		Assert.NotNull(otherClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, "Relation should have a TypeColumn #7");
-		Assert.Null(ownClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, "Relation shouldn't have a TypeColumn #3");
-		Assert.Null(otherClass.Relations.First().ForeignKeyTypeColumnName, "Relation shouldn't have a TypeColumn #4");
+		Assert.That(ownClass.Relations.First().ForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #1");
+		Assert.That(ownDerivedClass.Relations.First().ForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #2");
+		Assert.That(otherClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #7");
+		Assert.That(ownClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, Is.Null, "Relation shouldn't have a TypeColumn #3");
+		Assert.That(otherClass.Relations.First().ForeignKeyTypeColumnName, Is.Null, "Relation shouldn't have a TypeColumn #4");
 	}
 	[Test]
 	public void HasTypeCode()
@@ -4487,7 +4489,7 @@ public class MappingTestCmpBi1nOwnpconTblGuid
 
 
 [TestFixture]
-public class MappingTestCmpBinnOwnpconTblGuid
+public class MappingTestCmpBinnOwnpconTblGuid : NDOTest
 {
 	PersistenceManager pm;
 	NDOMapping mapping;
@@ -4506,18 +4508,18 @@ public class MappingTestCmpBinnOwnpconTblGuid
 	[Test]
 	public void HasMappingTable()
 	{
-		Assert.NotNull(ownClass.Relations.First().MappingTable, "Relation should have a MappingTable #1");
-		Assert.NotNull(ownDerivedClass.Relations.First().MappingTable, "Relation should have a MappingTable #2");
-		Assert.NotNull(otherClass.Relations.First().MappingTable, "Relation should have a MappingTable #3");
+		Assert.That(ownClass.Relations.First().MappingTable, Is.Not.Null, "Relation should have a MappingTable #1");
+		Assert.That(ownDerivedClass.Relations.First().MappingTable, Is.Not.Null, "Relation should have a MappingTable #2");
+		Assert.That(otherClass.Relations.First().MappingTable, Is.Not.Null, "Relation should have a MappingTable #3");
 	}
 	[Test]
 	public void HasTypeColumn()
 	{
-		Assert.NotNull(ownClass.Relations.First().ForeignKeyTypeColumnName, "Relation should have a TypeColumn #1");
-		Assert.NotNull(ownDerivedClass.Relations.First().ForeignKeyTypeColumnName, "Relation should have a TypeColumn #2");
-		Assert.NotNull(otherClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, "Relation should have a TypeColumn #7");
-		Assert.Null(ownClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, "Relation shouldn't have a TypeColumn #3");
-		Assert.Null(otherClass.Relations.First().ForeignKeyTypeColumnName, "Relation shouldn't have a TypeColumn #4");
+		Assert.That(ownClass.Relations.First().ForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #1");
+		Assert.That(ownDerivedClass.Relations.First().ForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #2");
+		Assert.That(otherClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #7");
+		Assert.That(ownClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, Is.Null, "Relation shouldn't have a TypeColumn #3");
+		Assert.That(otherClass.Relations.First().ForeignKeyTypeColumnName, Is.Null, "Relation shouldn't have a TypeColumn #4");
 	}
 	[Test]
 	public void HasTypeCode()
@@ -4530,7 +4532,7 @@ public class MappingTestCmpBinnOwnpconTblGuid
 
 
 [TestFixture]
-public class MappingTestAgrDir1OthpconNoTblGuid
+public class MappingTestAgrDir1OthpconNoTblGuid : NDOTest
 {
 	PersistenceManager pm;
 	NDOMapping mapping;
@@ -4549,12 +4551,12 @@ public class MappingTestAgrDir1OthpconNoTblGuid
 	[Test]
 	public void HasMappingTable()
 	{
-		Assert.Null(ownClass.Relations.First().MappingTable, "Relation shouldn't have a MappingTable #5");
+		Assert.That(ownClass.Relations.First().MappingTable, Is.Null, "Relation shouldn't have a MappingTable #5");
 	}
 	[Test]
 	public void HasTypeColumn()
 	{
-		Assert.NotNull(ownClass.Relations.First().ForeignKeyTypeColumnName, "Relation should have a TypeColumn #9");
+		Assert.That(ownClass.Relations.First().ForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #9");
 	}
 	[Test]
 	public void HasTypeCode()
@@ -4567,7 +4569,7 @@ public class MappingTestAgrDir1OthpconNoTblGuid
 
 
 [TestFixture]
-public class MappingTestAgrDir1OthpconTblGuid
+public class MappingTestAgrDir1OthpconTblGuid : NDOTest
 {
 	PersistenceManager pm;
 	NDOMapping mapping;
@@ -4586,13 +4588,13 @@ public class MappingTestAgrDir1OthpconTblGuid
 	[Test]
 	public void HasMappingTable()
 	{
-		Assert.NotNull(ownClass.Relations.First().MappingTable, "Relation should have a MappingTable #1");
+		Assert.That(ownClass.Relations.First().MappingTable, Is.Not.Null, "Relation should have a MappingTable #1");
 	}
 	[Test]
 	public void HasTypeColumn()
 	{
-		Assert.NotNull(ownClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, "Relation should have a TypeColumn #3");
-		Assert.Null(ownClass.Relations.First().ForeignKeyTypeColumnName, "Relation shouldn't have a TypeColumn #1");
+		Assert.That(ownClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #3");
+		Assert.That(ownClass.Relations.First().ForeignKeyTypeColumnName, Is.Null, "Relation shouldn't have a TypeColumn #1");
 	}
 	[Test]
 	public void HasTypeCode()
@@ -4605,7 +4607,7 @@ public class MappingTestAgrDir1OthpconTblGuid
 
 
 [TestFixture]
-public class MappingTestAgrBi11OthpconNoTblGuid
+public class MappingTestAgrBi11OthpconNoTblGuid : NDOTest
 {
 	PersistenceManager pm;
 	NDOMapping mapping;
@@ -4624,14 +4626,14 @@ public class MappingTestAgrBi11OthpconNoTblGuid
 	[Test]
 	public void HasMappingTable()
 	{
-		Assert.Null(ownClass.Relations.First().MappingTable, "Relation shouldn't have a MappingTable #5");
-		Assert.Null(otherClass.Relations.First().MappingTable, "Relation shouldn't have a MappingTable #7");
-		Assert.Null(otherDerivedClass.Relations.First().MappingTable, "Relation shouldn't have a MappingTable #8");
+		Assert.That(ownClass.Relations.First().MappingTable, Is.Null, "Relation shouldn't have a MappingTable #5");
+		Assert.That(otherClass.Relations.First().MappingTable, Is.Null, "Relation shouldn't have a MappingTable #7");
+		Assert.That(otherDerivedClass.Relations.First().MappingTable, Is.Null, "Relation shouldn't have a MappingTable #8");
 	}
 	[Test]
 	public void HasTypeColumn()
 	{
-		Assert.NotNull(ownClass.Relations.First().ForeignKeyTypeColumnName, "Relation should have a TypeColumn #9");
+		Assert.That(ownClass.Relations.First().ForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #9");
 	}
 	[Test]
 	public void HasTypeCode()
@@ -4644,7 +4646,7 @@ public class MappingTestAgrBi11OthpconNoTblGuid
 
 
 [TestFixture]
-public class MappingTestAgrBi11OthpconTblGuid
+public class MappingTestAgrBi11OthpconTblGuid : NDOTest
 {
 	PersistenceManager pm;
 	NDOMapping mapping;
@@ -4663,18 +4665,18 @@ public class MappingTestAgrBi11OthpconTblGuid
 	[Test]
 	public void HasMappingTable()
 	{
-		Assert.NotNull(ownClass.Relations.First().MappingTable, "Relation should have a MappingTable #1");
-		Assert.NotNull(otherClass.Relations.First().MappingTable, "Relation should have a MappingTable #3");
-		Assert.NotNull(otherDerivedClass.Relations.First().MappingTable, "Relation should have a MappingTable #4");
+		Assert.That(ownClass.Relations.First().MappingTable, Is.Not.Null, "Relation should have a MappingTable #1");
+		Assert.That(otherClass.Relations.First().MappingTable, Is.Not.Null, "Relation should have a MappingTable #3");
+		Assert.That(otherDerivedClass.Relations.First().MappingTable, Is.Not.Null, "Relation should have a MappingTable #4");
 	}
 	[Test]
 	public void HasTypeColumn()
 	{
-		Assert.NotNull(ownClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, "Relation should have a TypeColumn #3");
-		Assert.NotNull(otherClass.Relations.First().ForeignKeyTypeColumnName, "Relation should have a TypeColumn #5");
-		Assert.NotNull(otherDerivedClass.Relations.First().ForeignKeyTypeColumnName, "Relation should have a TypeColumn #6");
-		Assert.Null(ownClass.Relations.First().ForeignKeyTypeColumnName, "Relation shouldn't have a TypeColumn #1");
-		Assert.Null(otherClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, "Relation shouldn't have a TypeColumn #2");
+		Assert.That(ownClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #3");
+		Assert.That(otherClass.Relations.First().ForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #5");
+		Assert.That(otherDerivedClass.Relations.First().ForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #6");
+		Assert.That(ownClass.Relations.First().ForeignKeyTypeColumnName, Is.Null, "Relation shouldn't have a TypeColumn #1");
+		Assert.That(otherClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, Is.Null, "Relation shouldn't have a TypeColumn #2");
 	}
 	[Test]
 	public void HasTypeCode()
@@ -4687,7 +4689,7 @@ public class MappingTestAgrBi11OthpconTblGuid
 
 
 [TestFixture]
-public class MappingTestAgrDirnOthpconTblGuid
+public class MappingTestAgrDirnOthpconTblGuid : NDOTest
 {
 	PersistenceManager pm;
 	NDOMapping mapping;
@@ -4706,13 +4708,13 @@ public class MappingTestAgrDirnOthpconTblGuid
 	[Test]
 	public void HasMappingTable()
 	{
-		Assert.NotNull(ownClass.Relations.First().MappingTable, "Relation should have a MappingTable #1");
+		Assert.That(ownClass.Relations.First().MappingTable, Is.Not.Null, "Relation should have a MappingTable #1");
 	}
 	[Test]
 	public void HasTypeColumn()
 	{
-		Assert.NotNull(ownClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, "Relation should have a TypeColumn #3");
-		Assert.Null(ownClass.Relations.First().ForeignKeyTypeColumnName, "Relation shouldn't have a TypeColumn #1");
+		Assert.That(ownClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #3");
+		Assert.That(ownClass.Relations.First().ForeignKeyTypeColumnName, Is.Null, "Relation shouldn't have a TypeColumn #1");
 	}
 	[Test]
 	public void HasTypeCode()
@@ -4725,7 +4727,7 @@ public class MappingTestAgrDirnOthpconTblGuid
 
 
 [TestFixture]
-public class MappingTestAgrBin1OthpconTblGuid
+public class MappingTestAgrBin1OthpconTblGuid : NDOTest
 {
 	PersistenceManager pm;
 	NDOMapping mapping;
@@ -4744,18 +4746,18 @@ public class MappingTestAgrBin1OthpconTblGuid
 	[Test]
 	public void HasMappingTable()
 	{
-		Assert.NotNull(ownClass.Relations.First().MappingTable, "Relation should have a MappingTable #1");
-		Assert.NotNull(otherClass.Relations.First().MappingTable, "Relation should have a MappingTable #3");
-		Assert.NotNull(otherDerivedClass.Relations.First().MappingTable, "Relation should have a MappingTable #4");
+		Assert.That(ownClass.Relations.First().MappingTable, Is.Not.Null, "Relation should have a MappingTable #1");
+		Assert.That(otherClass.Relations.First().MappingTable, Is.Not.Null, "Relation should have a MappingTable #3");
+		Assert.That(otherDerivedClass.Relations.First().MappingTable, Is.Not.Null, "Relation should have a MappingTable #4");
 	}
 	[Test]
 	public void HasTypeColumn()
 	{
-		Assert.NotNull(ownClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, "Relation should have a TypeColumn #3");
-		Assert.NotNull(otherClass.Relations.First().ForeignKeyTypeColumnName, "Relation should have a TypeColumn #5");
-		Assert.NotNull(otherDerivedClass.Relations.First().ForeignKeyTypeColumnName, "Relation should have a TypeColumn #6");
-		Assert.Null(ownClass.Relations.First().ForeignKeyTypeColumnName, "Relation shouldn't have a TypeColumn #1");
-		Assert.Null(otherClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, "Relation shouldn't have a TypeColumn #2");
+		Assert.That(ownClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #3");
+		Assert.That(otherClass.Relations.First().ForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #5");
+		Assert.That(otherDerivedClass.Relations.First().ForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #6");
+		Assert.That(ownClass.Relations.First().ForeignKeyTypeColumnName, Is.Null, "Relation shouldn't have a TypeColumn #1");
+		Assert.That(otherClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, Is.Null, "Relation shouldn't have a TypeColumn #2");
 	}
 	[Test]
 	public void HasTypeCode()
@@ -4768,7 +4770,7 @@ public class MappingTestAgrBin1OthpconTblGuid
 
 
 [TestFixture]
-public class MappingTestAgrBi1nOthpconNoTblGuid
+public class MappingTestAgrBi1nOthpconNoTblGuid : NDOTest
 {
 	PersistenceManager pm;
 	NDOMapping mapping;
@@ -4787,14 +4789,14 @@ public class MappingTestAgrBi1nOthpconNoTblGuid
 	[Test]
 	public void HasMappingTable()
 	{
-		Assert.Null(ownClass.Relations.First().MappingTable, "Relation shouldn't have a MappingTable #5");
-		Assert.Null(otherClass.Relations.First().MappingTable, "Relation shouldn't have a MappingTable #7");
-		Assert.Null(otherDerivedClass.Relations.First().MappingTable, "Relation shouldn't have a MappingTable #8");
+		Assert.That(ownClass.Relations.First().MappingTable, Is.Null, "Relation shouldn't have a MappingTable #5");
+		Assert.That(otherClass.Relations.First().MappingTable, Is.Null, "Relation shouldn't have a MappingTable #7");
+		Assert.That(otherDerivedClass.Relations.First().MappingTable, Is.Null, "Relation shouldn't have a MappingTable #8");
 	}
 	[Test]
 	public void HasTypeColumn()
 	{
-		Assert.NotNull(ownClass.Relations.First().ForeignKeyTypeColumnName, "Relation should have a TypeColumn #9");
+		Assert.That(ownClass.Relations.First().ForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #9");
 	}
 	[Test]
 	public void HasTypeCode()
@@ -4807,7 +4809,7 @@ public class MappingTestAgrBi1nOthpconNoTblGuid
 
 
 [TestFixture]
-public class MappingTestAgrBi1nOthpconTblGuid
+public class MappingTestAgrBi1nOthpconTblGuid : NDOTest
 {
 	PersistenceManager pm;
 	NDOMapping mapping;
@@ -4826,18 +4828,18 @@ public class MappingTestAgrBi1nOthpconTblGuid
 	[Test]
 	public void HasMappingTable()
 	{
-		Assert.NotNull(ownClass.Relations.First().MappingTable, "Relation should have a MappingTable #1");
-		Assert.NotNull(otherClass.Relations.First().MappingTable, "Relation should have a MappingTable #3");
-		Assert.NotNull(otherDerivedClass.Relations.First().MappingTable, "Relation should have a MappingTable #4");
+		Assert.That(ownClass.Relations.First().MappingTable, Is.Not.Null, "Relation should have a MappingTable #1");
+		Assert.That(otherClass.Relations.First().MappingTable, Is.Not.Null, "Relation should have a MappingTable #3");
+		Assert.That(otherDerivedClass.Relations.First().MappingTable, Is.Not.Null, "Relation should have a MappingTable #4");
 	}
 	[Test]
 	public void HasTypeColumn()
 	{
-		Assert.NotNull(ownClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, "Relation should have a TypeColumn #3");
-		Assert.NotNull(otherClass.Relations.First().ForeignKeyTypeColumnName, "Relation should have a TypeColumn #5");
-		Assert.NotNull(otherDerivedClass.Relations.First().ForeignKeyTypeColumnName, "Relation should have a TypeColumn #6");
-		Assert.Null(ownClass.Relations.First().ForeignKeyTypeColumnName, "Relation shouldn't have a TypeColumn #1");
-		Assert.Null(otherClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, "Relation shouldn't have a TypeColumn #2");
+		Assert.That(ownClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #3");
+		Assert.That(otherClass.Relations.First().ForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #5");
+		Assert.That(otherDerivedClass.Relations.First().ForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #6");
+		Assert.That(ownClass.Relations.First().ForeignKeyTypeColumnName, Is.Null, "Relation shouldn't have a TypeColumn #1");
+		Assert.That(otherClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, Is.Null, "Relation shouldn't have a TypeColumn #2");
 	}
 	[Test]
 	public void HasTypeCode()
@@ -4850,7 +4852,7 @@ public class MappingTestAgrBi1nOthpconTblGuid
 
 
 [TestFixture]
-public class MappingTestAgrBinnOthpconTblGuid
+public class MappingTestAgrBinnOthpconTblGuid : NDOTest
 {
 	PersistenceManager pm;
 	NDOMapping mapping;
@@ -4869,18 +4871,18 @@ public class MappingTestAgrBinnOthpconTblGuid
 	[Test]
 	public void HasMappingTable()
 	{
-		Assert.NotNull(ownClass.Relations.First().MappingTable, "Relation should have a MappingTable #1");
-		Assert.NotNull(otherClass.Relations.First().MappingTable, "Relation should have a MappingTable #3");
-		Assert.NotNull(otherDerivedClass.Relations.First().MappingTable, "Relation should have a MappingTable #4");
+		Assert.That(ownClass.Relations.First().MappingTable, Is.Not.Null, "Relation should have a MappingTable #1");
+		Assert.That(otherClass.Relations.First().MappingTable, Is.Not.Null, "Relation should have a MappingTable #3");
+		Assert.That(otherDerivedClass.Relations.First().MappingTable, Is.Not.Null, "Relation should have a MappingTable #4");
 	}
 	[Test]
 	public void HasTypeColumn()
 	{
-		Assert.NotNull(ownClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, "Relation should have a TypeColumn #3");
-		Assert.NotNull(otherClass.Relations.First().ForeignKeyTypeColumnName, "Relation should have a TypeColumn #5");
-		Assert.NotNull(otherDerivedClass.Relations.First().ForeignKeyTypeColumnName, "Relation should have a TypeColumn #6");
-		Assert.Null(ownClass.Relations.First().ForeignKeyTypeColumnName, "Relation shouldn't have a TypeColumn #1");
-		Assert.Null(otherClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, "Relation shouldn't have a TypeColumn #2");
+		Assert.That(ownClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #3");
+		Assert.That(otherClass.Relations.First().ForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #5");
+		Assert.That(otherDerivedClass.Relations.First().ForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #6");
+		Assert.That(ownClass.Relations.First().ForeignKeyTypeColumnName, Is.Null, "Relation shouldn't have a TypeColumn #1");
+		Assert.That(otherClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, Is.Null, "Relation shouldn't have a TypeColumn #2");
 	}
 	[Test]
 	public void HasTypeCode()
@@ -4893,7 +4895,7 @@ public class MappingTestAgrBinnOthpconTblGuid
 
 
 [TestFixture]
-public class MappingTestCmpDir1OthpconNoTblGuid
+public class MappingTestCmpDir1OthpconNoTblGuid : NDOTest
 {
 	PersistenceManager pm;
 	NDOMapping mapping;
@@ -4912,12 +4914,12 @@ public class MappingTestCmpDir1OthpconNoTblGuid
 	[Test]
 	public void HasMappingTable()
 	{
-		Assert.Null(ownClass.Relations.First().MappingTable, "Relation shouldn't have a MappingTable #5");
+		Assert.That(ownClass.Relations.First().MappingTable, Is.Null, "Relation shouldn't have a MappingTable #5");
 	}
 	[Test]
 	public void HasTypeColumn()
 	{
-		Assert.NotNull(ownClass.Relations.First().ForeignKeyTypeColumnName, "Relation should have a TypeColumn #9");
+		Assert.That(ownClass.Relations.First().ForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #9");
 	}
 	[Test]
 	public void HasTypeCode()
@@ -4930,7 +4932,7 @@ public class MappingTestCmpDir1OthpconNoTblGuid
 
 
 [TestFixture]
-public class MappingTestCmpDir1OthpconTblGuid
+public class MappingTestCmpDir1OthpconTblGuid : NDOTest
 {
 	PersistenceManager pm;
 	NDOMapping mapping;
@@ -4949,13 +4951,13 @@ public class MappingTestCmpDir1OthpconTblGuid
 	[Test]
 	public void HasMappingTable()
 	{
-		Assert.NotNull(ownClass.Relations.First().MappingTable, "Relation should have a MappingTable #1");
+		Assert.That(ownClass.Relations.First().MappingTable, Is.Not.Null, "Relation should have a MappingTable #1");
 	}
 	[Test]
 	public void HasTypeColumn()
 	{
-		Assert.NotNull(ownClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, "Relation should have a TypeColumn #3");
-		Assert.Null(ownClass.Relations.First().ForeignKeyTypeColumnName, "Relation shouldn't have a TypeColumn #1");
+		Assert.That(ownClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #3");
+		Assert.That(ownClass.Relations.First().ForeignKeyTypeColumnName, Is.Null, "Relation shouldn't have a TypeColumn #1");
 	}
 	[Test]
 	public void HasTypeCode()
@@ -4968,7 +4970,7 @@ public class MappingTestCmpDir1OthpconTblGuid
 
 
 [TestFixture]
-public class MappingTestCmpBi11OthpconNoTblGuid
+public class MappingTestCmpBi11OthpconNoTblGuid : NDOTest
 {
 	PersistenceManager pm;
 	NDOMapping mapping;
@@ -4987,14 +4989,14 @@ public class MappingTestCmpBi11OthpconNoTblGuid
 	[Test]
 	public void HasMappingTable()
 	{
-		Assert.Null(ownClass.Relations.First().MappingTable, "Relation shouldn't have a MappingTable #5");
-		Assert.Null(otherClass.Relations.First().MappingTable, "Relation shouldn't have a MappingTable #7");
-		Assert.Null(otherDerivedClass.Relations.First().MappingTable, "Relation shouldn't have a MappingTable #8");
+		Assert.That(ownClass.Relations.First().MappingTable, Is.Null, "Relation shouldn't have a MappingTable #5");
+		Assert.That(otherClass.Relations.First().MappingTable, Is.Null, "Relation shouldn't have a MappingTable #7");
+		Assert.That(otherDerivedClass.Relations.First().MappingTable, Is.Null, "Relation shouldn't have a MappingTable #8");
 	}
 	[Test]
 	public void HasTypeColumn()
 	{
-		Assert.NotNull(ownClass.Relations.First().ForeignKeyTypeColumnName, "Relation should have a TypeColumn #9");
+		Assert.That(ownClass.Relations.First().ForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #9");
 	}
 	[Test]
 	public void HasTypeCode()
@@ -5007,7 +5009,7 @@ public class MappingTestCmpBi11OthpconNoTblGuid
 
 
 [TestFixture]
-public class MappingTestCmpBi11OthpconTblGuid
+public class MappingTestCmpBi11OthpconTblGuid : NDOTest
 {
 	PersistenceManager pm;
 	NDOMapping mapping;
@@ -5026,18 +5028,18 @@ public class MappingTestCmpBi11OthpconTblGuid
 	[Test]
 	public void HasMappingTable()
 	{
-		Assert.NotNull(ownClass.Relations.First().MappingTable, "Relation should have a MappingTable #1");
-		Assert.NotNull(otherClass.Relations.First().MappingTable, "Relation should have a MappingTable #3");
-		Assert.NotNull(otherDerivedClass.Relations.First().MappingTable, "Relation should have a MappingTable #4");
+		Assert.That(ownClass.Relations.First().MappingTable, Is.Not.Null, "Relation should have a MappingTable #1");
+		Assert.That(otherClass.Relations.First().MappingTable, Is.Not.Null, "Relation should have a MappingTable #3");
+		Assert.That(otherDerivedClass.Relations.First().MappingTable, Is.Not.Null, "Relation should have a MappingTable #4");
 	}
 	[Test]
 	public void HasTypeColumn()
 	{
-		Assert.NotNull(ownClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, "Relation should have a TypeColumn #3");
-		Assert.NotNull(otherClass.Relations.First().ForeignKeyTypeColumnName, "Relation should have a TypeColumn #5");
-		Assert.NotNull(otherDerivedClass.Relations.First().ForeignKeyTypeColumnName, "Relation should have a TypeColumn #6");
-		Assert.Null(ownClass.Relations.First().ForeignKeyTypeColumnName, "Relation shouldn't have a TypeColumn #1");
-		Assert.Null(otherClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, "Relation shouldn't have a TypeColumn #2");
+		Assert.That(ownClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #3");
+		Assert.That(otherClass.Relations.First().ForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #5");
+		Assert.That(otherDerivedClass.Relations.First().ForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #6");
+		Assert.That(ownClass.Relations.First().ForeignKeyTypeColumnName, Is.Null, "Relation shouldn't have a TypeColumn #1");
+		Assert.That(otherClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, Is.Null, "Relation shouldn't have a TypeColumn #2");
 	}
 	[Test]
 	public void HasTypeCode()
@@ -5050,7 +5052,7 @@ public class MappingTestCmpBi11OthpconTblGuid
 
 
 [TestFixture]
-public class MappingTestCmpDirnOthpconTblGuid
+public class MappingTestCmpDirnOthpconTblGuid : NDOTest
 {
 	PersistenceManager pm;
 	NDOMapping mapping;
@@ -5069,13 +5071,13 @@ public class MappingTestCmpDirnOthpconTblGuid
 	[Test]
 	public void HasMappingTable()
 	{
-		Assert.NotNull(ownClass.Relations.First().MappingTable, "Relation should have a MappingTable #1");
+		Assert.That(ownClass.Relations.First().MappingTable, Is.Not.Null, "Relation should have a MappingTable #1");
 	}
 	[Test]
 	public void HasTypeColumn()
 	{
-		Assert.NotNull(ownClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, "Relation should have a TypeColumn #3");
-		Assert.Null(ownClass.Relations.First().ForeignKeyTypeColumnName, "Relation shouldn't have a TypeColumn #1");
+		Assert.That(ownClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #3");
+		Assert.That(ownClass.Relations.First().ForeignKeyTypeColumnName, Is.Null, "Relation shouldn't have a TypeColumn #1");
 	}
 	[Test]
 	public void HasTypeCode()
@@ -5088,7 +5090,7 @@ public class MappingTestCmpDirnOthpconTblGuid
 
 
 [TestFixture]
-public class MappingTestCmpBin1OthpconTblGuid
+public class MappingTestCmpBin1OthpconTblGuid : NDOTest
 {
 	PersistenceManager pm;
 	NDOMapping mapping;
@@ -5107,18 +5109,18 @@ public class MappingTestCmpBin1OthpconTblGuid
 	[Test]
 	public void HasMappingTable()
 	{
-		Assert.NotNull(ownClass.Relations.First().MappingTable, "Relation should have a MappingTable #1");
-		Assert.NotNull(otherClass.Relations.First().MappingTable, "Relation should have a MappingTable #3");
-		Assert.NotNull(otherDerivedClass.Relations.First().MappingTable, "Relation should have a MappingTable #4");
+		Assert.That(ownClass.Relations.First().MappingTable, Is.Not.Null, "Relation should have a MappingTable #1");
+		Assert.That(otherClass.Relations.First().MappingTable, Is.Not.Null, "Relation should have a MappingTable #3");
+		Assert.That(otherDerivedClass.Relations.First().MappingTable, Is.Not.Null, "Relation should have a MappingTable #4");
 	}
 	[Test]
 	public void HasTypeColumn()
 	{
-		Assert.NotNull(ownClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, "Relation should have a TypeColumn #3");
-		Assert.NotNull(otherClass.Relations.First().ForeignKeyTypeColumnName, "Relation should have a TypeColumn #5");
-		Assert.NotNull(otherDerivedClass.Relations.First().ForeignKeyTypeColumnName, "Relation should have a TypeColumn #6");
-		Assert.Null(ownClass.Relations.First().ForeignKeyTypeColumnName, "Relation shouldn't have a TypeColumn #1");
-		Assert.Null(otherClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, "Relation shouldn't have a TypeColumn #2");
+		Assert.That(ownClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #3");
+		Assert.That(otherClass.Relations.First().ForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #5");
+		Assert.That(otherDerivedClass.Relations.First().ForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #6");
+		Assert.That(ownClass.Relations.First().ForeignKeyTypeColumnName, Is.Null, "Relation shouldn't have a TypeColumn #1");
+		Assert.That(otherClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, Is.Null, "Relation shouldn't have a TypeColumn #2");
 	}
 	[Test]
 	public void HasTypeCode()
@@ -5131,7 +5133,7 @@ public class MappingTestCmpBin1OthpconTblGuid
 
 
 [TestFixture]
-public class MappingTestCmpBi1nOthpconNoTblGuid
+public class MappingTestCmpBi1nOthpconNoTblGuid : NDOTest
 {
 	PersistenceManager pm;
 	NDOMapping mapping;
@@ -5150,14 +5152,14 @@ public class MappingTestCmpBi1nOthpconNoTblGuid
 	[Test]
 	public void HasMappingTable()
 	{
-		Assert.Null(ownClass.Relations.First().MappingTable, "Relation shouldn't have a MappingTable #5");
-		Assert.Null(otherClass.Relations.First().MappingTable, "Relation shouldn't have a MappingTable #7");
-		Assert.Null(otherDerivedClass.Relations.First().MappingTable, "Relation shouldn't have a MappingTable #8");
+		Assert.That(ownClass.Relations.First().MappingTable, Is.Null, "Relation shouldn't have a MappingTable #5");
+		Assert.That(otherClass.Relations.First().MappingTable, Is.Null, "Relation shouldn't have a MappingTable #7");
+		Assert.That(otherDerivedClass.Relations.First().MappingTable, Is.Null, "Relation shouldn't have a MappingTable #8");
 	}
 	[Test]
 	public void HasTypeColumn()
 	{
-		Assert.NotNull(ownClass.Relations.First().ForeignKeyTypeColumnName, "Relation should have a TypeColumn #9");
+		Assert.That(ownClass.Relations.First().ForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #9");
 	}
 	[Test]
 	public void HasTypeCode()
@@ -5170,7 +5172,7 @@ public class MappingTestCmpBi1nOthpconNoTblGuid
 
 
 [TestFixture]
-public class MappingTestCmpBi1nOthpconTblGuid
+public class MappingTestCmpBi1nOthpconTblGuid : NDOTest
 {
 	PersistenceManager pm;
 	NDOMapping mapping;
@@ -5189,18 +5191,18 @@ public class MappingTestCmpBi1nOthpconTblGuid
 	[Test]
 	public void HasMappingTable()
 	{
-		Assert.NotNull(ownClass.Relations.First().MappingTable, "Relation should have a MappingTable #1");
-		Assert.NotNull(otherClass.Relations.First().MappingTable, "Relation should have a MappingTable #3");
-		Assert.NotNull(otherDerivedClass.Relations.First().MappingTable, "Relation should have a MappingTable #4");
+		Assert.That(ownClass.Relations.First().MappingTable, Is.Not.Null, "Relation should have a MappingTable #1");
+		Assert.That(otherClass.Relations.First().MappingTable, Is.Not.Null, "Relation should have a MappingTable #3");
+		Assert.That(otherDerivedClass.Relations.First().MappingTable, Is.Not.Null, "Relation should have a MappingTable #4");
 	}
 	[Test]
 	public void HasTypeColumn()
 	{
-		Assert.NotNull(ownClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, "Relation should have a TypeColumn #3");
-		Assert.NotNull(otherClass.Relations.First().ForeignKeyTypeColumnName, "Relation should have a TypeColumn #5");
-		Assert.NotNull(otherDerivedClass.Relations.First().ForeignKeyTypeColumnName, "Relation should have a TypeColumn #6");
-		Assert.Null(ownClass.Relations.First().ForeignKeyTypeColumnName, "Relation shouldn't have a TypeColumn #1");
-		Assert.Null(otherClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, "Relation shouldn't have a TypeColumn #2");
+		Assert.That(ownClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #3");
+		Assert.That(otherClass.Relations.First().ForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #5");
+		Assert.That(otherDerivedClass.Relations.First().ForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #6");
+		Assert.That(ownClass.Relations.First().ForeignKeyTypeColumnName, Is.Null, "Relation shouldn't have a TypeColumn #1");
+		Assert.That(otherClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, Is.Null, "Relation shouldn't have a TypeColumn #2");
 	}
 	[Test]
 	public void HasTypeCode()
@@ -5213,7 +5215,7 @@ public class MappingTestCmpBi1nOthpconTblGuid
 
 
 [TestFixture]
-public class MappingTestCmpBinnOthpconTblGuid
+public class MappingTestCmpBinnOthpconTblGuid : NDOTest
 {
 	PersistenceManager pm;
 	NDOMapping mapping;
@@ -5232,18 +5234,18 @@ public class MappingTestCmpBinnOthpconTblGuid
 	[Test]
 	public void HasMappingTable()
 	{
-		Assert.NotNull(ownClass.Relations.First().MappingTable, "Relation should have a MappingTable #1");
-		Assert.NotNull(otherClass.Relations.First().MappingTable, "Relation should have a MappingTable #3");
-		Assert.NotNull(otherDerivedClass.Relations.First().MappingTable, "Relation should have a MappingTable #4");
+		Assert.That(ownClass.Relations.First().MappingTable, Is.Not.Null, "Relation should have a MappingTable #1");
+		Assert.That(otherClass.Relations.First().MappingTable, Is.Not.Null, "Relation should have a MappingTable #3");
+		Assert.That(otherDerivedClass.Relations.First().MappingTable, Is.Not.Null, "Relation should have a MappingTable #4");
 	}
 	[Test]
 	public void HasTypeColumn()
 	{
-		Assert.NotNull(ownClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, "Relation should have a TypeColumn #3");
-		Assert.NotNull(otherClass.Relations.First().ForeignKeyTypeColumnName, "Relation should have a TypeColumn #5");
-		Assert.NotNull(otherDerivedClass.Relations.First().ForeignKeyTypeColumnName, "Relation should have a TypeColumn #6");
-		Assert.Null(ownClass.Relations.First().ForeignKeyTypeColumnName, "Relation shouldn't have a TypeColumn #1");
-		Assert.Null(otherClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, "Relation shouldn't have a TypeColumn #2");
+		Assert.That(ownClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #3");
+		Assert.That(otherClass.Relations.First().ForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #5");
+		Assert.That(otherDerivedClass.Relations.First().ForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #6");
+		Assert.That(ownClass.Relations.First().ForeignKeyTypeColumnName, Is.Null, "Relation shouldn't have a TypeColumn #1");
+		Assert.That(otherClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, Is.Null, "Relation shouldn't have a TypeColumn #2");
 	}
 	[Test]
 	public void HasTypeCode()
@@ -5256,7 +5258,7 @@ public class MappingTestCmpBinnOthpconTblGuid
 
 
 [TestFixture]
-public class MappingTestAgrDir1OwnpconOthpconNoTblGuid
+public class MappingTestAgrDir1OwnpconOthpconNoTblGuid : NDOTest
 {
 	PersistenceManager pm;
 	NDOMapping mapping;
@@ -5277,13 +5279,13 @@ public class MappingTestAgrDir1OwnpconOthpconNoTblGuid
 	[Test]
 	public void HasMappingTable()
 	{
-		Assert.Null(ownClass.Relations.First().MappingTable, "Relation shouldn't have a MappingTable #5");
-		Assert.Null(ownDerivedClass.Relations.First().MappingTable, "Relation shouldn't have a MappingTable #6");
+		Assert.That(ownClass.Relations.First().MappingTable, Is.Null, "Relation shouldn't have a MappingTable #5");
+		Assert.That(ownDerivedClass.Relations.First().MappingTable, Is.Null, "Relation shouldn't have a MappingTable #6");
 	}
 	[Test]
 	public void HasTypeColumn()
 	{
-		Assert.NotNull(ownClass.Relations.First().ForeignKeyTypeColumnName, "Relation should have a TypeColumn #9");
+		Assert.That(ownClass.Relations.First().ForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #9");
 	}
 	[Test]
 	public void HasTypeCode()
@@ -5297,7 +5299,7 @@ public class MappingTestAgrDir1OwnpconOthpconNoTblGuid
 
 
 [TestFixture]
-public class MappingTestAgrDir1OwnpconOthpconTblGuid
+public class MappingTestAgrDir1OwnpconOthpconTblGuid : NDOTest
 {
 	PersistenceManager pm;
 	NDOMapping mapping;
@@ -5318,16 +5320,16 @@ public class MappingTestAgrDir1OwnpconOthpconTblGuid
 	[Test]
 	public void HasMappingTable()
 	{
-		Assert.NotNull(ownClass.Relations.First().MappingTable, "Relation should have a MappingTable #1");
-		Assert.NotNull(ownDerivedClass.Relations.First().MappingTable, "Relation should have a MappingTable #2");
+		Assert.That(ownClass.Relations.First().MappingTable, Is.Not.Null, "Relation should have a MappingTable #1");
+		Assert.That(ownDerivedClass.Relations.First().MappingTable, Is.Not.Null, "Relation should have a MappingTable #2");
 	}
 	[Test]
 	public void HasTypeColumn()
 	{
-		Assert.NotNull(ownClass.Relations.First().ForeignKeyTypeColumnName, "Relation should have a TypeColumn #1");
-		Assert.NotNull(ownDerivedClass.Relations.First().ForeignKeyTypeColumnName, "Relation should have a TypeColumn #2");
-		Assert.NotNull(ownClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, "Relation should have a TypeColumn #3");
-		Assert.NotNull(ownDerivedClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, "Relation should have a TypeColumn #4");
+		Assert.That(ownClass.Relations.First().ForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #1");
+		Assert.That(ownDerivedClass.Relations.First().ForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #2");
+		Assert.That(ownClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #3");
+		Assert.That(ownDerivedClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #4");
 	}
 	[Test]
 	public void HasTypeCode()
@@ -5341,7 +5343,7 @@ public class MappingTestAgrDir1OwnpconOthpconTblGuid
 
 
 [TestFixture]
-public class MappingTestAgrBi11OwnpconOthpconNoTblGuid
+public class MappingTestAgrBi11OwnpconOthpconNoTblGuid : NDOTest
 {
 	PersistenceManager pm;
 	NDOMapping mapping;
@@ -5362,16 +5364,16 @@ public class MappingTestAgrBi11OwnpconOthpconNoTblGuid
 	[Test]
 	public void HasMappingTable()
 	{
-		Assert.Null(ownClass.Relations.First().MappingTable, "Relation shouldn't have a MappingTable #5");
-		Assert.Null(ownDerivedClass.Relations.First().MappingTable, "Relation shouldn't have a MappingTable #6");
-		Assert.Null(otherClass.Relations.First().MappingTable, "Relation shouldn't have a MappingTable #7");
-		Assert.Null(otherDerivedClass.Relations.First().MappingTable, "Relation shouldn't have a MappingTable #8");
+		Assert.That(ownClass.Relations.First().MappingTable, Is.Null, "Relation shouldn't have a MappingTable #5");
+		Assert.That(ownDerivedClass.Relations.First().MappingTable, Is.Null, "Relation shouldn't have a MappingTable #6");
+		Assert.That(otherClass.Relations.First().MappingTable, Is.Null, "Relation shouldn't have a MappingTable #7");
+		Assert.That(otherDerivedClass.Relations.First().MappingTable, Is.Null, "Relation shouldn't have a MappingTable #8");
 	}
 	[Test]
 	public void HasTypeColumn()
 	{
-		Assert.NotNull(ownClass.Relations.First().ForeignKeyTypeColumnName, "Relation should have a TypeColumn #9");
-		Assert.NotNull(otherClass.Relations.First().ForeignKeyTypeColumnName, "Relation should have a TypeColumn #10");
+		Assert.That(ownClass.Relations.First().ForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #9");
+		Assert.That(otherClass.Relations.First().ForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #10");
 	}
 	[Test]
 	public void HasTypeCode()
@@ -5385,7 +5387,7 @@ public class MappingTestAgrBi11OwnpconOthpconNoTblGuid
 
 
 [TestFixture]
-public class MappingTestAgrBi11OwnpconOthpconTblGuid
+public class MappingTestAgrBi11OwnpconOthpconTblGuid : NDOTest
 {
 	PersistenceManager pm;
 	NDOMapping mapping;
@@ -5406,22 +5408,22 @@ public class MappingTestAgrBi11OwnpconOthpconTblGuid
 	[Test]
 	public void HasMappingTable()
 	{
-		Assert.NotNull(ownClass.Relations.First().MappingTable, "Relation should have a MappingTable #1");
-		Assert.NotNull(ownDerivedClass.Relations.First().MappingTable, "Relation should have a MappingTable #2");
-		Assert.NotNull(otherClass.Relations.First().MappingTable, "Relation should have a MappingTable #3");
-		Assert.NotNull(otherDerivedClass.Relations.First().MappingTable, "Relation should have a MappingTable #4");
+		Assert.That(ownClass.Relations.First().MappingTable, Is.Not.Null, "Relation should have a MappingTable #1");
+		Assert.That(ownDerivedClass.Relations.First().MappingTable, Is.Not.Null, "Relation should have a MappingTable #2");
+		Assert.That(otherClass.Relations.First().MappingTable, Is.Not.Null, "Relation should have a MappingTable #3");
+		Assert.That(otherDerivedClass.Relations.First().MappingTable, Is.Not.Null, "Relation should have a MappingTable #4");
 	}
 	[Test]
 	public void HasTypeColumn()
 	{
-		Assert.NotNull(ownClass.Relations.First().ForeignKeyTypeColumnName, "Relation should have a TypeColumn #1");
-		Assert.NotNull(ownDerivedClass.Relations.First().ForeignKeyTypeColumnName, "Relation should have a TypeColumn #2");
-		Assert.NotNull(ownClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, "Relation should have a TypeColumn #3");
-		Assert.NotNull(ownDerivedClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, "Relation should have a TypeColumn #4");
-		Assert.NotNull(otherClass.Relations.First().ForeignKeyTypeColumnName, "Relation should have a TypeColumn #5");
-		Assert.NotNull(otherDerivedClass.Relations.First().ForeignKeyTypeColumnName, "Relation should have a TypeColumn #6");
-		Assert.NotNull(otherClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, "Relation should have a TypeColumn #7");
-		Assert.NotNull(otherDerivedClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, "Relation should have a TypeColumn #8");
+		Assert.That(ownClass.Relations.First().ForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #1");
+		Assert.That(ownDerivedClass.Relations.First().ForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #2");
+		Assert.That(ownClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #3");
+		Assert.That(ownDerivedClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #4");
+		Assert.That(otherClass.Relations.First().ForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #5");
+		Assert.That(otherDerivedClass.Relations.First().ForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #6");
+		Assert.That(otherClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #7");
+		Assert.That(otherDerivedClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #8");
 	}
 	[Test]
 	public void HasTypeCode()
@@ -5435,7 +5437,7 @@ public class MappingTestAgrBi11OwnpconOthpconTblGuid
 
 
 [TestFixture]
-public class MappingTestAgrDirnOwnpconOthpconTblGuid
+public class MappingTestAgrDirnOwnpconOthpconTblGuid : NDOTest
 {
 	PersistenceManager pm;
 	NDOMapping mapping;
@@ -5456,16 +5458,16 @@ public class MappingTestAgrDirnOwnpconOthpconTblGuid
 	[Test]
 	public void HasMappingTable()
 	{
-		Assert.NotNull(ownClass.Relations.First().MappingTable, "Relation should have a MappingTable #1");
-		Assert.NotNull(ownDerivedClass.Relations.First().MappingTable, "Relation should have a MappingTable #2");
+		Assert.That(ownClass.Relations.First().MappingTable, Is.Not.Null, "Relation should have a MappingTable #1");
+		Assert.That(ownDerivedClass.Relations.First().MappingTable, Is.Not.Null, "Relation should have a MappingTable #2");
 	}
 	[Test]
 	public void HasTypeColumn()
 	{
-		Assert.NotNull(ownClass.Relations.First().ForeignKeyTypeColumnName, "Relation should have a TypeColumn #1");
-		Assert.NotNull(ownDerivedClass.Relations.First().ForeignKeyTypeColumnName, "Relation should have a TypeColumn #2");
-		Assert.NotNull(ownClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, "Relation should have a TypeColumn #3");
-		Assert.NotNull(ownDerivedClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, "Relation should have a TypeColumn #4");
+		Assert.That(ownClass.Relations.First().ForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #1");
+		Assert.That(ownDerivedClass.Relations.First().ForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #2");
+		Assert.That(ownClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #3");
+		Assert.That(ownDerivedClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #4");
 	}
 	[Test]
 	public void HasTypeCode()
@@ -5479,7 +5481,7 @@ public class MappingTestAgrDirnOwnpconOthpconTblGuid
 
 
 [TestFixture]
-public class MappingTestAgrBin1OwnpconOthpconTblGuid
+public class MappingTestAgrBin1OwnpconOthpconTblGuid : NDOTest
 {
 	PersistenceManager pm;
 	NDOMapping mapping;
@@ -5500,22 +5502,22 @@ public class MappingTestAgrBin1OwnpconOthpconTblGuid
 	[Test]
 	public void HasMappingTable()
 	{
-		Assert.NotNull(ownClass.Relations.First().MappingTable, "Relation should have a MappingTable #1");
-		Assert.NotNull(ownDerivedClass.Relations.First().MappingTable, "Relation should have a MappingTable #2");
-		Assert.NotNull(otherClass.Relations.First().MappingTable, "Relation should have a MappingTable #3");
-		Assert.NotNull(otherDerivedClass.Relations.First().MappingTable, "Relation should have a MappingTable #4");
+		Assert.That(ownClass.Relations.First().MappingTable, Is.Not.Null, "Relation should have a MappingTable #1");
+		Assert.That(ownDerivedClass.Relations.First().MappingTable, Is.Not.Null, "Relation should have a MappingTable #2");
+		Assert.That(otherClass.Relations.First().MappingTable, Is.Not.Null, "Relation should have a MappingTable #3");
+		Assert.That(otherDerivedClass.Relations.First().MappingTable, Is.Not.Null, "Relation should have a MappingTable #4");
 	}
 	[Test]
 	public void HasTypeColumn()
 	{
-		Assert.NotNull(ownClass.Relations.First().ForeignKeyTypeColumnName, "Relation should have a TypeColumn #1");
-		Assert.NotNull(ownDerivedClass.Relations.First().ForeignKeyTypeColumnName, "Relation should have a TypeColumn #2");
-		Assert.NotNull(ownClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, "Relation should have a TypeColumn #3");
-		Assert.NotNull(ownDerivedClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, "Relation should have a TypeColumn #4");
-		Assert.NotNull(otherClass.Relations.First().ForeignKeyTypeColumnName, "Relation should have a TypeColumn #5");
-		Assert.NotNull(otherDerivedClass.Relations.First().ForeignKeyTypeColumnName, "Relation should have a TypeColumn #6");
-		Assert.NotNull(otherClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, "Relation should have a TypeColumn #7");
-		Assert.NotNull(otherDerivedClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, "Relation should have a TypeColumn #8");
+		Assert.That(ownClass.Relations.First().ForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #1");
+		Assert.That(ownDerivedClass.Relations.First().ForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #2");
+		Assert.That(ownClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #3");
+		Assert.That(ownDerivedClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #4");
+		Assert.That(otherClass.Relations.First().ForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #5");
+		Assert.That(otherDerivedClass.Relations.First().ForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #6");
+		Assert.That(otherClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #7");
+		Assert.That(otherDerivedClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #8");
 	}
 	[Test]
 	public void HasTypeCode()
@@ -5529,7 +5531,7 @@ public class MappingTestAgrBin1OwnpconOthpconTblGuid
 
 
 [TestFixture]
-public class MappingTestAgrBi1nOwnpconOthpconTblGuid
+public class MappingTestAgrBi1nOwnpconOthpconTblGuid : NDOTest
 {
 	PersistenceManager pm;
 	NDOMapping mapping;
@@ -5550,22 +5552,22 @@ public class MappingTestAgrBi1nOwnpconOthpconTblGuid
 	[Test]
 	public void HasMappingTable()
 	{
-		Assert.NotNull(ownClass.Relations.First().MappingTable, "Relation should have a MappingTable #1");
-		Assert.NotNull(ownDerivedClass.Relations.First().MappingTable, "Relation should have a MappingTable #2");
-		Assert.NotNull(otherClass.Relations.First().MappingTable, "Relation should have a MappingTable #3");
-		Assert.NotNull(otherDerivedClass.Relations.First().MappingTable, "Relation should have a MappingTable #4");
+		Assert.That(ownClass.Relations.First().MappingTable, Is.Not.Null, "Relation should have a MappingTable #1");
+		Assert.That(ownDerivedClass.Relations.First().MappingTable, Is.Not.Null, "Relation should have a MappingTable #2");
+		Assert.That(otherClass.Relations.First().MappingTable, Is.Not.Null, "Relation should have a MappingTable #3");
+		Assert.That(otherDerivedClass.Relations.First().MappingTable, Is.Not.Null, "Relation should have a MappingTable #4");
 	}
 	[Test]
 	public void HasTypeColumn()
 	{
-		Assert.NotNull(ownClass.Relations.First().ForeignKeyTypeColumnName, "Relation should have a TypeColumn #1");
-		Assert.NotNull(ownDerivedClass.Relations.First().ForeignKeyTypeColumnName, "Relation should have a TypeColumn #2");
-		Assert.NotNull(ownClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, "Relation should have a TypeColumn #3");
-		Assert.NotNull(ownDerivedClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, "Relation should have a TypeColumn #4");
-		Assert.NotNull(otherClass.Relations.First().ForeignKeyTypeColumnName, "Relation should have a TypeColumn #5");
-		Assert.NotNull(otherDerivedClass.Relations.First().ForeignKeyTypeColumnName, "Relation should have a TypeColumn #6");
-		Assert.NotNull(otherClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, "Relation should have a TypeColumn #7");
-		Assert.NotNull(otherDerivedClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, "Relation should have a TypeColumn #8");
+		Assert.That(ownClass.Relations.First().ForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #1");
+		Assert.That(ownDerivedClass.Relations.First().ForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #2");
+		Assert.That(ownClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #3");
+		Assert.That(ownDerivedClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #4");
+		Assert.That(otherClass.Relations.First().ForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #5");
+		Assert.That(otherDerivedClass.Relations.First().ForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #6");
+		Assert.That(otherClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #7");
+		Assert.That(otherDerivedClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #8");
 	}
 	[Test]
 	public void HasTypeCode()
@@ -5579,7 +5581,7 @@ public class MappingTestAgrBi1nOwnpconOthpconTblGuid
 
 
 [TestFixture]
-public class MappingTestAgrBinnOwnpconOthpconTblGuid
+public class MappingTestAgrBinnOwnpconOthpconTblGuid : NDOTest
 {
 	PersistenceManager pm;
 	NDOMapping mapping;
@@ -5600,22 +5602,22 @@ public class MappingTestAgrBinnOwnpconOthpconTblGuid
 	[Test]
 	public void HasMappingTable()
 	{
-		Assert.NotNull(ownClass.Relations.First().MappingTable, "Relation should have a MappingTable #1");
-		Assert.NotNull(ownDerivedClass.Relations.First().MappingTable, "Relation should have a MappingTable #2");
-		Assert.NotNull(otherClass.Relations.First().MappingTable, "Relation should have a MappingTable #3");
-		Assert.NotNull(otherDerivedClass.Relations.First().MappingTable, "Relation should have a MappingTable #4");
+		Assert.That(ownClass.Relations.First().MappingTable, Is.Not.Null, "Relation should have a MappingTable #1");
+		Assert.That(ownDerivedClass.Relations.First().MappingTable, Is.Not.Null, "Relation should have a MappingTable #2");
+		Assert.That(otherClass.Relations.First().MappingTable, Is.Not.Null, "Relation should have a MappingTable #3");
+		Assert.That(otherDerivedClass.Relations.First().MappingTable, Is.Not.Null, "Relation should have a MappingTable #4");
 	}
 	[Test]
 	public void HasTypeColumn()
 	{
-		Assert.NotNull(ownClass.Relations.First().ForeignKeyTypeColumnName, "Relation should have a TypeColumn #1");
-		Assert.NotNull(ownDerivedClass.Relations.First().ForeignKeyTypeColumnName, "Relation should have a TypeColumn #2");
-		Assert.NotNull(ownClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, "Relation should have a TypeColumn #3");
-		Assert.NotNull(ownDerivedClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, "Relation should have a TypeColumn #4");
-		Assert.NotNull(otherClass.Relations.First().ForeignKeyTypeColumnName, "Relation should have a TypeColumn #5");
-		Assert.NotNull(otherDerivedClass.Relations.First().ForeignKeyTypeColumnName, "Relation should have a TypeColumn #6");
-		Assert.NotNull(otherClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, "Relation should have a TypeColumn #7");
-		Assert.NotNull(otherDerivedClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, "Relation should have a TypeColumn #8");
+		Assert.That(ownClass.Relations.First().ForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #1");
+		Assert.That(ownDerivedClass.Relations.First().ForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #2");
+		Assert.That(ownClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #3");
+		Assert.That(ownDerivedClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #4");
+		Assert.That(otherClass.Relations.First().ForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #5");
+		Assert.That(otherDerivedClass.Relations.First().ForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #6");
+		Assert.That(otherClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #7");
+		Assert.That(otherDerivedClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #8");
 	}
 	[Test]
 	public void HasTypeCode()
@@ -5629,7 +5631,7 @@ public class MappingTestAgrBinnOwnpconOthpconTblGuid
 
 
 [TestFixture]
-public class MappingTestCmpDir1OwnpconOthpconNoTblGuid
+public class MappingTestCmpDir1OwnpconOthpconNoTblGuid : NDOTest
 {
 	PersistenceManager pm;
 	NDOMapping mapping;
@@ -5650,13 +5652,13 @@ public class MappingTestCmpDir1OwnpconOthpconNoTblGuid
 	[Test]
 	public void HasMappingTable()
 	{
-		Assert.Null(ownClass.Relations.First().MappingTable, "Relation shouldn't have a MappingTable #5");
-		Assert.Null(ownDerivedClass.Relations.First().MappingTable, "Relation shouldn't have a MappingTable #6");
+		Assert.That(ownClass.Relations.First().MappingTable, Is.Null, "Relation shouldn't have a MappingTable #5");
+		Assert.That(ownDerivedClass.Relations.First().MappingTable, Is.Null, "Relation shouldn't have a MappingTable #6");
 	}
 	[Test]
 	public void HasTypeColumn()
 	{
-		Assert.NotNull(ownClass.Relations.First().ForeignKeyTypeColumnName, "Relation should have a TypeColumn #9");
+		Assert.That(ownClass.Relations.First().ForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #9");
 	}
 	[Test]
 	public void HasTypeCode()
@@ -5670,7 +5672,7 @@ public class MappingTestCmpDir1OwnpconOthpconNoTblGuid
 
 
 [TestFixture]
-public class MappingTestCmpDir1OwnpconOthpconTblGuid
+public class MappingTestCmpDir1OwnpconOthpconTblGuid : NDOTest
 {
 	PersistenceManager pm;
 	NDOMapping mapping;
@@ -5691,16 +5693,16 @@ public class MappingTestCmpDir1OwnpconOthpconTblGuid
 	[Test]
 	public void HasMappingTable()
 	{
-		Assert.NotNull(ownClass.Relations.First().MappingTable, "Relation should have a MappingTable #1");
-		Assert.NotNull(ownDerivedClass.Relations.First().MappingTable, "Relation should have a MappingTable #2");
+		Assert.That(ownClass.Relations.First().MappingTable, Is.Not.Null, "Relation should have a MappingTable #1");
+		Assert.That(ownDerivedClass.Relations.First().MappingTable, Is.Not.Null, "Relation should have a MappingTable #2");
 	}
 	[Test]
 	public void HasTypeColumn()
 	{
-		Assert.NotNull(ownClass.Relations.First().ForeignKeyTypeColumnName, "Relation should have a TypeColumn #1");
-		Assert.NotNull(ownDerivedClass.Relations.First().ForeignKeyTypeColumnName, "Relation should have a TypeColumn #2");
-		Assert.NotNull(ownClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, "Relation should have a TypeColumn #3");
-		Assert.NotNull(ownDerivedClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, "Relation should have a TypeColumn #4");
+		Assert.That(ownClass.Relations.First().ForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #1");
+		Assert.That(ownDerivedClass.Relations.First().ForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #2");
+		Assert.That(ownClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #3");
+		Assert.That(ownDerivedClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #4");
 	}
 	[Test]
 	public void HasTypeCode()
@@ -5714,7 +5716,7 @@ public class MappingTestCmpDir1OwnpconOthpconTblGuid
 
 
 [TestFixture]
-public class MappingTestCmpBi11OwnpconOthpconNoTblGuid
+public class MappingTestCmpBi11OwnpconOthpconNoTblGuid : NDOTest
 {
 	PersistenceManager pm;
 	NDOMapping mapping;
@@ -5735,16 +5737,16 @@ public class MappingTestCmpBi11OwnpconOthpconNoTblGuid
 	[Test]
 	public void HasMappingTable()
 	{
-		Assert.Null(ownClass.Relations.First().MappingTable, "Relation shouldn't have a MappingTable #5");
-		Assert.Null(ownDerivedClass.Relations.First().MappingTable, "Relation shouldn't have a MappingTable #6");
-		Assert.Null(otherClass.Relations.First().MappingTable, "Relation shouldn't have a MappingTable #7");
-		Assert.Null(otherDerivedClass.Relations.First().MappingTable, "Relation shouldn't have a MappingTable #8");
+		Assert.That(ownClass.Relations.First().MappingTable, Is.Null, "Relation shouldn't have a MappingTable #5");
+		Assert.That(ownDerivedClass.Relations.First().MappingTable, Is.Null, "Relation shouldn't have a MappingTable #6");
+		Assert.That(otherClass.Relations.First().MappingTable, Is.Null, "Relation shouldn't have a MappingTable #7");
+		Assert.That(otherDerivedClass.Relations.First().MappingTable, Is.Null, "Relation shouldn't have a MappingTable #8");
 	}
 	[Test]
 	public void HasTypeColumn()
 	{
-		Assert.NotNull(ownClass.Relations.First().ForeignKeyTypeColumnName, "Relation should have a TypeColumn #9");
-		Assert.NotNull(otherClass.Relations.First().ForeignKeyTypeColumnName, "Relation should have a TypeColumn #10");
+		Assert.That(ownClass.Relations.First().ForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #9");
+		Assert.That(otherClass.Relations.First().ForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #10");
 	}
 	[Test]
 	public void HasTypeCode()
@@ -5758,7 +5760,7 @@ public class MappingTestCmpBi11OwnpconOthpconNoTblGuid
 
 
 [TestFixture]
-public class MappingTestCmpBi11OwnpconOthpconTblGuid
+public class MappingTestCmpBi11OwnpconOthpconTblGuid : NDOTest
 {
 	PersistenceManager pm;
 	NDOMapping mapping;
@@ -5779,22 +5781,22 @@ public class MappingTestCmpBi11OwnpconOthpconTblGuid
 	[Test]
 	public void HasMappingTable()
 	{
-		Assert.NotNull(ownClass.Relations.First().MappingTable, "Relation should have a MappingTable #1");
-		Assert.NotNull(ownDerivedClass.Relations.First().MappingTable, "Relation should have a MappingTable #2");
-		Assert.NotNull(otherClass.Relations.First().MappingTable, "Relation should have a MappingTable #3");
-		Assert.NotNull(otherDerivedClass.Relations.First().MappingTable, "Relation should have a MappingTable #4");
+		Assert.That(ownClass.Relations.First().MappingTable, Is.Not.Null, "Relation should have a MappingTable #1");
+		Assert.That(ownDerivedClass.Relations.First().MappingTable, Is.Not.Null, "Relation should have a MappingTable #2");
+		Assert.That(otherClass.Relations.First().MappingTable, Is.Not.Null, "Relation should have a MappingTable #3");
+		Assert.That(otherDerivedClass.Relations.First().MappingTable, Is.Not.Null, "Relation should have a MappingTable #4");
 	}
 	[Test]
 	public void HasTypeColumn()
 	{
-		Assert.NotNull(ownClass.Relations.First().ForeignKeyTypeColumnName, "Relation should have a TypeColumn #1");
-		Assert.NotNull(ownDerivedClass.Relations.First().ForeignKeyTypeColumnName, "Relation should have a TypeColumn #2");
-		Assert.NotNull(ownClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, "Relation should have a TypeColumn #3");
-		Assert.NotNull(ownDerivedClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, "Relation should have a TypeColumn #4");
-		Assert.NotNull(otherClass.Relations.First().ForeignKeyTypeColumnName, "Relation should have a TypeColumn #5");
-		Assert.NotNull(otherDerivedClass.Relations.First().ForeignKeyTypeColumnName, "Relation should have a TypeColumn #6");
-		Assert.NotNull(otherClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, "Relation should have a TypeColumn #7");
-		Assert.NotNull(otherDerivedClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, "Relation should have a TypeColumn #8");
+		Assert.That(ownClass.Relations.First().ForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #1");
+		Assert.That(ownDerivedClass.Relations.First().ForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #2");
+		Assert.That(ownClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #3");
+		Assert.That(ownDerivedClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #4");
+		Assert.That(otherClass.Relations.First().ForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #5");
+		Assert.That(otherDerivedClass.Relations.First().ForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #6");
+		Assert.That(otherClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #7");
+		Assert.That(otherDerivedClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #8");
 	}
 	[Test]
 	public void HasTypeCode()
@@ -5808,7 +5810,7 @@ public class MappingTestCmpBi11OwnpconOthpconTblGuid
 
 
 [TestFixture]
-public class MappingTestCmpDirnOwnpconOthpconTblGuid
+public class MappingTestCmpDirnOwnpconOthpconTblGuid : NDOTest
 {
 	PersistenceManager pm;
 	NDOMapping mapping;
@@ -5829,16 +5831,16 @@ public class MappingTestCmpDirnOwnpconOthpconTblGuid
 	[Test]
 	public void HasMappingTable()
 	{
-		Assert.NotNull(ownClass.Relations.First().MappingTable, "Relation should have a MappingTable #1");
-		Assert.NotNull(ownDerivedClass.Relations.First().MappingTable, "Relation should have a MappingTable #2");
+		Assert.That(ownClass.Relations.First().MappingTable, Is.Not.Null, "Relation should have a MappingTable #1");
+		Assert.That(ownDerivedClass.Relations.First().MappingTable, Is.Not.Null, "Relation should have a MappingTable #2");
 	}
 	[Test]
 	public void HasTypeColumn()
 	{
-		Assert.NotNull(ownClass.Relations.First().ForeignKeyTypeColumnName, "Relation should have a TypeColumn #1");
-		Assert.NotNull(ownDerivedClass.Relations.First().ForeignKeyTypeColumnName, "Relation should have a TypeColumn #2");
-		Assert.NotNull(ownClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, "Relation should have a TypeColumn #3");
-		Assert.NotNull(ownDerivedClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, "Relation should have a TypeColumn #4");
+		Assert.That(ownClass.Relations.First().ForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #1");
+		Assert.That(ownDerivedClass.Relations.First().ForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #2");
+		Assert.That(ownClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #3");
+		Assert.That(ownDerivedClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #4");
 	}
 	[Test]
 	public void HasTypeCode()
@@ -5852,7 +5854,7 @@ public class MappingTestCmpDirnOwnpconOthpconTblGuid
 
 
 [TestFixture]
-public class MappingTestCmpBin1OwnpconOthpconTblGuid
+public class MappingTestCmpBin1OwnpconOthpconTblGuid : NDOTest
 {
 	PersistenceManager pm;
 	NDOMapping mapping;
@@ -5873,22 +5875,22 @@ public class MappingTestCmpBin1OwnpconOthpconTblGuid
 	[Test]
 	public void HasMappingTable()
 	{
-		Assert.NotNull(ownClass.Relations.First().MappingTable, "Relation should have a MappingTable #1");
-		Assert.NotNull(ownDerivedClass.Relations.First().MappingTable, "Relation should have a MappingTable #2");
-		Assert.NotNull(otherClass.Relations.First().MappingTable, "Relation should have a MappingTable #3");
-		Assert.NotNull(otherDerivedClass.Relations.First().MappingTable, "Relation should have a MappingTable #4");
+		Assert.That(ownClass.Relations.First().MappingTable, Is.Not.Null, "Relation should have a MappingTable #1");
+		Assert.That(ownDerivedClass.Relations.First().MappingTable, Is.Not.Null, "Relation should have a MappingTable #2");
+		Assert.That(otherClass.Relations.First().MappingTable, Is.Not.Null, "Relation should have a MappingTable #3");
+		Assert.That(otherDerivedClass.Relations.First().MappingTable, Is.Not.Null, "Relation should have a MappingTable #4");
 	}
 	[Test]
 	public void HasTypeColumn()
 	{
-		Assert.NotNull(ownClass.Relations.First().ForeignKeyTypeColumnName, "Relation should have a TypeColumn #1");
-		Assert.NotNull(ownDerivedClass.Relations.First().ForeignKeyTypeColumnName, "Relation should have a TypeColumn #2");
-		Assert.NotNull(ownClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, "Relation should have a TypeColumn #3");
-		Assert.NotNull(ownDerivedClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, "Relation should have a TypeColumn #4");
-		Assert.NotNull(otherClass.Relations.First().ForeignKeyTypeColumnName, "Relation should have a TypeColumn #5");
-		Assert.NotNull(otherDerivedClass.Relations.First().ForeignKeyTypeColumnName, "Relation should have a TypeColumn #6");
-		Assert.NotNull(otherClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, "Relation should have a TypeColumn #7");
-		Assert.NotNull(otherDerivedClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, "Relation should have a TypeColumn #8");
+		Assert.That(ownClass.Relations.First().ForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #1");
+		Assert.That(ownDerivedClass.Relations.First().ForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #2");
+		Assert.That(ownClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #3");
+		Assert.That(ownDerivedClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #4");
+		Assert.That(otherClass.Relations.First().ForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #5");
+		Assert.That(otherDerivedClass.Relations.First().ForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #6");
+		Assert.That(otherClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #7");
+		Assert.That(otherDerivedClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #8");
 	}
 	[Test]
 	public void HasTypeCode()
@@ -5902,7 +5904,7 @@ public class MappingTestCmpBin1OwnpconOthpconTblGuid
 
 
 [TestFixture]
-public class MappingTestCmpBi1nOwnpconOthpconTblGuid
+public class MappingTestCmpBi1nOwnpconOthpconTblGuid : NDOTest
 {
 	PersistenceManager pm;
 	NDOMapping mapping;
@@ -5923,22 +5925,22 @@ public class MappingTestCmpBi1nOwnpconOthpconTblGuid
 	[Test]
 	public void HasMappingTable()
 	{
-		Assert.NotNull(ownClass.Relations.First().MappingTable, "Relation should have a MappingTable #1");
-		Assert.NotNull(ownDerivedClass.Relations.First().MappingTable, "Relation should have a MappingTable #2");
-		Assert.NotNull(otherClass.Relations.First().MappingTable, "Relation should have a MappingTable #3");
-		Assert.NotNull(otherDerivedClass.Relations.First().MappingTable, "Relation should have a MappingTable #4");
+		Assert.That(ownClass.Relations.First().MappingTable, Is.Not.Null, "Relation should have a MappingTable #1");
+		Assert.That(ownDerivedClass.Relations.First().MappingTable, Is.Not.Null, "Relation should have a MappingTable #2");
+		Assert.That(otherClass.Relations.First().MappingTable, Is.Not.Null, "Relation should have a MappingTable #3");
+		Assert.That(otherDerivedClass.Relations.First().MappingTable, Is.Not.Null, "Relation should have a MappingTable #4");
 	}
 	[Test]
 	public void HasTypeColumn()
 	{
-		Assert.NotNull(ownClass.Relations.First().ForeignKeyTypeColumnName, "Relation should have a TypeColumn #1");
-		Assert.NotNull(ownDerivedClass.Relations.First().ForeignKeyTypeColumnName, "Relation should have a TypeColumn #2");
-		Assert.NotNull(ownClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, "Relation should have a TypeColumn #3");
-		Assert.NotNull(ownDerivedClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, "Relation should have a TypeColumn #4");
-		Assert.NotNull(otherClass.Relations.First().ForeignKeyTypeColumnName, "Relation should have a TypeColumn #5");
-		Assert.NotNull(otherDerivedClass.Relations.First().ForeignKeyTypeColumnName, "Relation should have a TypeColumn #6");
-		Assert.NotNull(otherClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, "Relation should have a TypeColumn #7");
-		Assert.NotNull(otherDerivedClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, "Relation should have a TypeColumn #8");
+		Assert.That(ownClass.Relations.First().ForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #1");
+		Assert.That(ownDerivedClass.Relations.First().ForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #2");
+		Assert.That(ownClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #3");
+		Assert.That(ownDerivedClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #4");
+		Assert.That(otherClass.Relations.First().ForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #5");
+		Assert.That(otherDerivedClass.Relations.First().ForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #6");
+		Assert.That(otherClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #7");
+		Assert.That(otherDerivedClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #8");
 	}
 	[Test]
 	public void HasTypeCode()
@@ -5952,7 +5954,7 @@ public class MappingTestCmpBi1nOwnpconOthpconTblGuid
 
 
 [TestFixture]
-public class MappingTestCmpBinnOwnpconOthpconTblGuid
+public class MappingTestCmpBinnOwnpconOthpconTblGuid : NDOTest
 {
 	PersistenceManager pm;
 	NDOMapping mapping;
@@ -5973,22 +5975,22 @@ public class MappingTestCmpBinnOwnpconOthpconTblGuid
 	[Test]
 	public void HasMappingTable()
 	{
-		Assert.NotNull(ownClass.Relations.First().MappingTable, "Relation should have a MappingTable #1");
-		Assert.NotNull(ownDerivedClass.Relations.First().MappingTable, "Relation should have a MappingTable #2");
-		Assert.NotNull(otherClass.Relations.First().MappingTable, "Relation should have a MappingTable #3");
-		Assert.NotNull(otherDerivedClass.Relations.First().MappingTable, "Relation should have a MappingTable #4");
+		Assert.That(ownClass.Relations.First().MappingTable, Is.Not.Null, "Relation should have a MappingTable #1");
+		Assert.That(ownDerivedClass.Relations.First().MappingTable, Is.Not.Null, "Relation should have a MappingTable #2");
+		Assert.That(otherClass.Relations.First().MappingTable, Is.Not.Null, "Relation should have a MappingTable #3");
+		Assert.That(otherDerivedClass.Relations.First().MappingTable, Is.Not.Null, "Relation should have a MappingTable #4");
 	}
 	[Test]
 	public void HasTypeColumn()
 	{
-		Assert.NotNull(ownClass.Relations.First().ForeignKeyTypeColumnName, "Relation should have a TypeColumn #1");
-		Assert.NotNull(ownDerivedClass.Relations.First().ForeignKeyTypeColumnName, "Relation should have a TypeColumn #2");
-		Assert.NotNull(ownClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, "Relation should have a TypeColumn #3");
-		Assert.NotNull(ownDerivedClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, "Relation should have a TypeColumn #4");
-		Assert.NotNull(otherClass.Relations.First().ForeignKeyTypeColumnName, "Relation should have a TypeColumn #5");
-		Assert.NotNull(otherDerivedClass.Relations.First().ForeignKeyTypeColumnName, "Relation should have a TypeColumn #6");
-		Assert.NotNull(otherClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, "Relation should have a TypeColumn #7");
-		Assert.NotNull(otherDerivedClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, "Relation should have a TypeColumn #8");
+		Assert.That(ownClass.Relations.First().ForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #1");
+		Assert.That(ownDerivedClass.Relations.First().ForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #2");
+		Assert.That(ownClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #3");
+		Assert.That(ownDerivedClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #4");
+		Assert.That(otherClass.Relations.First().ForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #5");
+		Assert.That(otherDerivedClass.Relations.First().ForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #6");
+		Assert.That(otherClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #7");
+		Assert.That(otherDerivedClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #8");
 	}
 	[Test]
 	public void HasTypeCode()
@@ -6002,7 +6004,7 @@ public class MappingTestCmpBinnOwnpconOthpconTblGuid
 
 
 [TestFixture]
-public class MappingTestAgrDir1OwnpabsNoTblAuto
+public class MappingTestAgrDir1OwnpabsNoTblAuto : NDOTest
 {
 	PersistenceManager pm;
 	NDOMapping mapping;
@@ -6021,13 +6023,13 @@ public class MappingTestAgrDir1OwnpabsNoTblAuto
 	[Test]
 	public void HasMappingTable()
 	{
-		Assert.Null(ownClass.Relations.First().MappingTable, "Relation shouldn't have a MappingTable #5");
-		Assert.Null(ownDerivedClass.Relations.First().MappingTable, "Relation shouldn't have a MappingTable #6");
+		Assert.That(ownClass.Relations.First().MappingTable, Is.Null, "Relation shouldn't have a MappingTable #5");
+		Assert.That(ownDerivedClass.Relations.First().MappingTable, Is.Null, "Relation shouldn't have a MappingTable #6");
 	}
 	[Test]
 	public void HasTypeColumn()
 	{
-		Assert.Null(ownClass.Relations.First().ForeignKeyTypeColumnName, "Relation shouldn't have a TypeColumn #1");
+		Assert.That(ownClass.Relations.First().ForeignKeyTypeColumnName, Is.Null, "Relation shouldn't have a TypeColumn #1");
 	}
 	[Test]
 	public void HasTypeCode()
@@ -6039,7 +6041,7 @@ public class MappingTestAgrDir1OwnpabsNoTblAuto
 
 
 [TestFixture]
-public class MappingTestAgrDir1OwnpabsTblAuto
+public class MappingTestAgrDir1OwnpabsTblAuto : NDOTest
 {
 	PersistenceManager pm;
 	NDOMapping mapping;
@@ -6058,15 +6060,15 @@ public class MappingTestAgrDir1OwnpabsTblAuto
 	[Test]
 	public void HasMappingTable()
 	{
-		Assert.NotNull(ownClass.Relations.First().MappingTable, "Relation should have a MappingTable #1");
-		Assert.NotNull(ownDerivedClass.Relations.First().MappingTable, "Relation should have a MappingTable #2");
+		Assert.That(ownClass.Relations.First().MappingTable, Is.Not.Null, "Relation should have a MappingTable #1");
+		Assert.That(ownDerivedClass.Relations.First().MappingTable, Is.Not.Null, "Relation should have a MappingTable #2");
 	}
 	[Test]
 	public void HasTypeColumn()
 	{
-		Assert.NotNull(ownClass.Relations.First().ForeignKeyTypeColumnName, "Relation should have a TypeColumn #1");
-		Assert.NotNull(ownDerivedClass.Relations.First().ForeignKeyTypeColumnName, "Relation should have a TypeColumn #2");
-		Assert.Null(ownClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, "Relation shouldn't have a TypeColumn #3");
+		Assert.That(ownClass.Relations.First().ForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #1");
+		Assert.That(ownDerivedClass.Relations.First().ForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #2");
+		Assert.That(ownClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, Is.Null, "Relation shouldn't have a TypeColumn #3");
 	}
 	[Test]
 	public void HasTypeCode()
@@ -6078,7 +6080,7 @@ public class MappingTestAgrDir1OwnpabsTblAuto
 
 
 [TestFixture]
-public class MappingTestAgrBi11OwnpabsNoTblAuto
+public class MappingTestAgrBi11OwnpabsNoTblAuto : NDOTest
 {
 	PersistenceManager pm;
 	NDOMapping mapping;
@@ -6097,15 +6099,15 @@ public class MappingTestAgrBi11OwnpabsNoTblAuto
 	[Test]
 	public void HasMappingTable()
 	{
-		Assert.Null(ownClass.Relations.First().MappingTable, "Relation shouldn't have a MappingTable #5");
-		Assert.Null(ownDerivedClass.Relations.First().MappingTable, "Relation shouldn't have a MappingTable #6");
-		Assert.Null(otherClass.Relations.First().MappingTable, "Relation shouldn't have a MappingTable #7");
+		Assert.That(ownClass.Relations.First().MappingTable, Is.Null, "Relation shouldn't have a MappingTable #5");
+		Assert.That(ownDerivedClass.Relations.First().MappingTable, Is.Null, "Relation shouldn't have a MappingTable #6");
+		Assert.That(otherClass.Relations.First().MappingTable, Is.Null, "Relation shouldn't have a MappingTable #7");
 	}
 	[Test]
 	public void HasTypeColumn()
 	{
-		Assert.Null(ownClass.Relations.First().ForeignKeyTypeColumnName, "Relation shouldn't have a TypeColumn #1");
-		Assert.NotNull(otherClass.Relations.First().ForeignKeyTypeColumnName, "Relation should have a TypeColumn #10");
+		Assert.That(ownClass.Relations.First().ForeignKeyTypeColumnName, Is.Null, "Relation shouldn't have a TypeColumn #1");
+		Assert.That(otherClass.Relations.First().ForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #10");
 	}
 	[Test]
 	public void HasTypeCode()
@@ -6117,7 +6119,7 @@ public class MappingTestAgrBi11OwnpabsNoTblAuto
 
 
 [TestFixture]
-public class MappingTestAgrBi11OwnpabsTblAuto
+public class MappingTestAgrBi11OwnpabsTblAuto : NDOTest
 {
 	PersistenceManager pm;
 	NDOMapping mapping;
@@ -6136,18 +6138,18 @@ public class MappingTestAgrBi11OwnpabsTblAuto
 	[Test]
 	public void HasMappingTable()
 	{
-		Assert.NotNull(ownClass.Relations.First().MappingTable, "Relation should have a MappingTable #1");
-		Assert.NotNull(ownDerivedClass.Relations.First().MappingTable, "Relation should have a MappingTable #2");
-		Assert.NotNull(otherClass.Relations.First().MappingTable, "Relation should have a MappingTable #3");
+		Assert.That(ownClass.Relations.First().MappingTable, Is.Not.Null, "Relation should have a MappingTable #1");
+		Assert.That(ownDerivedClass.Relations.First().MappingTable, Is.Not.Null, "Relation should have a MappingTable #2");
+		Assert.That(otherClass.Relations.First().MappingTable, Is.Not.Null, "Relation should have a MappingTable #3");
 	}
 	[Test]
 	public void HasTypeColumn()
 	{
-		Assert.NotNull(ownClass.Relations.First().ForeignKeyTypeColumnName, "Relation should have a TypeColumn #1");
-		Assert.NotNull(ownDerivedClass.Relations.First().ForeignKeyTypeColumnName, "Relation should have a TypeColumn #2");
-		Assert.NotNull(otherClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, "Relation should have a TypeColumn #7");
-		Assert.Null(ownClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, "Relation shouldn't have a TypeColumn #3");
-		Assert.Null(otherClass.Relations.First().ForeignKeyTypeColumnName, "Relation shouldn't have a TypeColumn #4");
+		Assert.That(ownClass.Relations.First().ForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #1");
+		Assert.That(ownDerivedClass.Relations.First().ForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #2");
+		Assert.That(otherClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #7");
+		Assert.That(ownClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, Is.Null, "Relation shouldn't have a TypeColumn #3");
+		Assert.That(otherClass.Relations.First().ForeignKeyTypeColumnName, Is.Null, "Relation shouldn't have a TypeColumn #4");
 	}
 	[Test]
 	public void HasTypeCode()
@@ -6159,7 +6161,7 @@ public class MappingTestAgrBi11OwnpabsTblAuto
 
 
 [TestFixture]
-public class MappingTestAgrDirnOwnpabsNoTblAuto
+public class MappingTestAgrDirnOwnpabsNoTblAuto : NDOTest
 {
 	PersistenceManager pm;
 	NDOMapping mapping;
@@ -6178,13 +6180,13 @@ public class MappingTestAgrDirnOwnpabsNoTblAuto
 	[Test]
 	public void HasMappingTable()
 	{
-		Assert.Null(ownClass.Relations.First().MappingTable, "Relation shouldn't have a MappingTable #5");
-		Assert.Null(ownDerivedClass.Relations.First().MappingTable, "Relation shouldn't have a MappingTable #6");
+		Assert.That(ownClass.Relations.First().MappingTable, Is.Null, "Relation shouldn't have a MappingTable #5");
+		Assert.That(ownDerivedClass.Relations.First().MappingTable, Is.Null, "Relation shouldn't have a MappingTable #6");
 	}
 	[Test]
 	public void HasTypeColumn()
 	{
-		Assert.Null(ownClass.Relations.First().ForeignKeyTypeColumnName, "Relation shouldn't have a TypeColumn #1");
+		Assert.That(ownClass.Relations.First().ForeignKeyTypeColumnName, Is.Null, "Relation shouldn't have a TypeColumn #1");
 	}
 	[Test]
 	public void HasTypeCode()
@@ -6196,7 +6198,7 @@ public class MappingTestAgrDirnOwnpabsNoTblAuto
 
 
 [TestFixture]
-public class MappingTestAgrDirnOwnpabsTblAuto
+public class MappingTestAgrDirnOwnpabsTblAuto : NDOTest
 {
 	PersistenceManager pm;
 	NDOMapping mapping;
@@ -6215,15 +6217,15 @@ public class MappingTestAgrDirnOwnpabsTblAuto
 	[Test]
 	public void HasMappingTable()
 	{
-		Assert.NotNull(ownClass.Relations.First().MappingTable, "Relation should have a MappingTable #1");
-		Assert.NotNull(ownDerivedClass.Relations.First().MappingTable, "Relation should have a MappingTable #2");
+		Assert.That(ownClass.Relations.First().MappingTable, Is.Not.Null, "Relation should have a MappingTable #1");
+		Assert.That(ownDerivedClass.Relations.First().MappingTable, Is.Not.Null, "Relation should have a MappingTable #2");
 	}
 	[Test]
 	public void HasTypeColumn()
 	{
-		Assert.NotNull(ownClass.Relations.First().ForeignKeyTypeColumnName, "Relation should have a TypeColumn #1");
-		Assert.NotNull(ownDerivedClass.Relations.First().ForeignKeyTypeColumnName, "Relation should have a TypeColumn #2");
-		Assert.Null(ownClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, "Relation shouldn't have a TypeColumn #3");
+		Assert.That(ownClass.Relations.First().ForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #1");
+		Assert.That(ownDerivedClass.Relations.First().ForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #2");
+		Assert.That(ownClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, Is.Null, "Relation shouldn't have a TypeColumn #3");
 	}
 	[Test]
 	public void HasTypeCode()
@@ -6235,7 +6237,7 @@ public class MappingTestAgrDirnOwnpabsTblAuto
 
 
 [TestFixture]
-public class MappingTestAgrBin1OwnpabsNoTblAuto
+public class MappingTestAgrBin1OwnpabsNoTblAuto : NDOTest
 {
 	PersistenceManager pm;
 	NDOMapping mapping;
@@ -6254,14 +6256,14 @@ public class MappingTestAgrBin1OwnpabsNoTblAuto
 	[Test]
 	public void HasMappingTable()
 	{
-		Assert.Null(ownClass.Relations.First().MappingTable, "Relation shouldn't have a MappingTable #5");
-		Assert.Null(ownDerivedClass.Relations.First().MappingTable, "Relation shouldn't have a MappingTable #6");
-		Assert.Null(otherClass.Relations.First().MappingTable, "Relation shouldn't have a MappingTable #7");
+		Assert.That(ownClass.Relations.First().MappingTable, Is.Null, "Relation shouldn't have a MappingTable #5");
+		Assert.That(ownDerivedClass.Relations.First().MappingTable, Is.Null, "Relation shouldn't have a MappingTable #6");
+		Assert.That(otherClass.Relations.First().MappingTable, Is.Null, "Relation shouldn't have a MappingTable #7");
 	}
 	[Test]
 	public void HasTypeColumn()
 	{
-		Assert.Null(ownClass.Relations.First().ForeignKeyTypeColumnName, "Relation shouldn't have a TypeColumn #1");
+		Assert.That(ownClass.Relations.First().ForeignKeyTypeColumnName, Is.Null, "Relation shouldn't have a TypeColumn #1");
 	}
 	[Test]
 	public void HasTypeCode()
@@ -6273,7 +6275,7 @@ public class MappingTestAgrBin1OwnpabsNoTblAuto
 
 
 [TestFixture]
-public class MappingTestAgrBin1OwnpabsTblAuto
+public class MappingTestAgrBin1OwnpabsTblAuto : NDOTest
 {
 	PersistenceManager pm;
 	NDOMapping mapping;
@@ -6292,18 +6294,18 @@ public class MappingTestAgrBin1OwnpabsTblAuto
 	[Test]
 	public void HasMappingTable()
 	{
-		Assert.NotNull(ownClass.Relations.First().MappingTable, "Relation should have a MappingTable #1");
-		Assert.NotNull(ownDerivedClass.Relations.First().MappingTable, "Relation should have a MappingTable #2");
-		Assert.NotNull(otherClass.Relations.First().MappingTable, "Relation should have a MappingTable #3");
+		Assert.That(ownClass.Relations.First().MappingTable, Is.Not.Null, "Relation should have a MappingTable #1");
+		Assert.That(ownDerivedClass.Relations.First().MappingTable, Is.Not.Null, "Relation should have a MappingTable #2");
+		Assert.That(otherClass.Relations.First().MappingTable, Is.Not.Null, "Relation should have a MappingTable #3");
 	}
 	[Test]
 	public void HasTypeColumn()
 	{
-		Assert.NotNull(ownClass.Relations.First().ForeignKeyTypeColumnName, "Relation should have a TypeColumn #1");
-		Assert.NotNull(ownDerivedClass.Relations.First().ForeignKeyTypeColumnName, "Relation should have a TypeColumn #2");
-		Assert.NotNull(otherClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, "Relation should have a TypeColumn #7");
-		Assert.Null(ownClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, "Relation shouldn't have a TypeColumn #3");
-		Assert.Null(otherClass.Relations.First().ForeignKeyTypeColumnName, "Relation shouldn't have a TypeColumn #4");
+		Assert.That(ownClass.Relations.First().ForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #1");
+		Assert.That(ownDerivedClass.Relations.First().ForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #2");
+		Assert.That(otherClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #7");
+		Assert.That(ownClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, Is.Null, "Relation shouldn't have a TypeColumn #3");
+		Assert.That(otherClass.Relations.First().ForeignKeyTypeColumnName, Is.Null, "Relation shouldn't have a TypeColumn #4");
 	}
 	[Test]
 	public void HasTypeCode()
@@ -6315,7 +6317,7 @@ public class MappingTestAgrBin1OwnpabsTblAuto
 
 
 [TestFixture]
-public class MappingTestAgrBi1nOwnpabsTblAuto
+public class MappingTestAgrBi1nOwnpabsTblAuto : NDOTest
 {
 	PersistenceManager pm;
 	NDOMapping mapping;
@@ -6334,18 +6336,18 @@ public class MappingTestAgrBi1nOwnpabsTblAuto
 	[Test]
 	public void HasMappingTable()
 	{
-		Assert.NotNull(ownClass.Relations.First().MappingTable, "Relation should have a MappingTable #1");
-		Assert.NotNull(ownDerivedClass.Relations.First().MappingTable, "Relation should have a MappingTable #2");
-		Assert.NotNull(otherClass.Relations.First().MappingTable, "Relation should have a MappingTable #3");
+		Assert.That(ownClass.Relations.First().MappingTable, Is.Not.Null, "Relation should have a MappingTable #1");
+		Assert.That(ownDerivedClass.Relations.First().MappingTable, Is.Not.Null, "Relation should have a MappingTable #2");
+		Assert.That(otherClass.Relations.First().MappingTable, Is.Not.Null, "Relation should have a MappingTable #3");
 	}
 	[Test]
 	public void HasTypeColumn()
 	{
-		Assert.NotNull(ownClass.Relations.First().ForeignKeyTypeColumnName, "Relation should have a TypeColumn #1");
-		Assert.NotNull(ownDerivedClass.Relations.First().ForeignKeyTypeColumnName, "Relation should have a TypeColumn #2");
-		Assert.NotNull(otherClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, "Relation should have a TypeColumn #7");
-		Assert.Null(ownClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, "Relation shouldn't have a TypeColumn #3");
-		Assert.Null(otherClass.Relations.First().ForeignKeyTypeColumnName, "Relation shouldn't have a TypeColumn #4");
+		Assert.That(ownClass.Relations.First().ForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #1");
+		Assert.That(ownDerivedClass.Relations.First().ForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #2");
+		Assert.That(otherClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #7");
+		Assert.That(ownClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, Is.Null, "Relation shouldn't have a TypeColumn #3");
+		Assert.That(otherClass.Relations.First().ForeignKeyTypeColumnName, Is.Null, "Relation shouldn't have a TypeColumn #4");
 	}
 	[Test]
 	public void HasTypeCode()
@@ -6357,7 +6359,7 @@ public class MappingTestAgrBi1nOwnpabsTblAuto
 
 
 [TestFixture]
-public class MappingTestAgrBinnOwnpabsTblAuto
+public class MappingTestAgrBinnOwnpabsTblAuto : NDOTest
 {
 	PersistenceManager pm;
 	NDOMapping mapping;
@@ -6376,18 +6378,18 @@ public class MappingTestAgrBinnOwnpabsTblAuto
 	[Test]
 	public void HasMappingTable()
 	{
-		Assert.NotNull(ownClass.Relations.First().MappingTable, "Relation should have a MappingTable #1");
-		Assert.NotNull(ownDerivedClass.Relations.First().MappingTable, "Relation should have a MappingTable #2");
-		Assert.NotNull(otherClass.Relations.First().MappingTable, "Relation should have a MappingTable #3");
+		Assert.That(ownClass.Relations.First().MappingTable, Is.Not.Null, "Relation should have a MappingTable #1");
+		Assert.That(ownDerivedClass.Relations.First().MappingTable, Is.Not.Null, "Relation should have a MappingTable #2");
+		Assert.That(otherClass.Relations.First().MappingTable, Is.Not.Null, "Relation should have a MappingTable #3");
 	}
 	[Test]
 	public void HasTypeColumn()
 	{
-		Assert.NotNull(ownClass.Relations.First().ForeignKeyTypeColumnName, "Relation should have a TypeColumn #1");
-		Assert.NotNull(ownDerivedClass.Relations.First().ForeignKeyTypeColumnName, "Relation should have a TypeColumn #2");
-		Assert.NotNull(otherClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, "Relation should have a TypeColumn #7");
-		Assert.Null(ownClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, "Relation shouldn't have a TypeColumn #3");
-		Assert.Null(otherClass.Relations.First().ForeignKeyTypeColumnName, "Relation shouldn't have a TypeColumn #4");
+		Assert.That(ownClass.Relations.First().ForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #1");
+		Assert.That(ownDerivedClass.Relations.First().ForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #2");
+		Assert.That(otherClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #7");
+		Assert.That(ownClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, Is.Null, "Relation shouldn't have a TypeColumn #3");
+		Assert.That(otherClass.Relations.First().ForeignKeyTypeColumnName, Is.Null, "Relation shouldn't have a TypeColumn #4");
 	}
 	[Test]
 	public void HasTypeCode()
@@ -6399,7 +6401,7 @@ public class MappingTestAgrBinnOwnpabsTblAuto
 
 
 [TestFixture]
-public class MappingTestCmpDir1OwnpabsNoTblAuto
+public class MappingTestCmpDir1OwnpabsNoTblAuto : NDOTest
 {
 	PersistenceManager pm;
 	NDOMapping mapping;
@@ -6418,13 +6420,13 @@ public class MappingTestCmpDir1OwnpabsNoTblAuto
 	[Test]
 	public void HasMappingTable()
 	{
-		Assert.Null(ownClass.Relations.First().MappingTable, "Relation shouldn't have a MappingTable #5");
-		Assert.Null(ownDerivedClass.Relations.First().MappingTable, "Relation shouldn't have a MappingTable #6");
+		Assert.That(ownClass.Relations.First().MappingTable, Is.Null, "Relation shouldn't have a MappingTable #5");
+		Assert.That(ownDerivedClass.Relations.First().MappingTable, Is.Null, "Relation shouldn't have a MappingTable #6");
 	}
 	[Test]
 	public void HasTypeColumn()
 	{
-		Assert.Null(ownClass.Relations.First().ForeignKeyTypeColumnName, "Relation shouldn't have a TypeColumn #1");
+		Assert.That(ownClass.Relations.First().ForeignKeyTypeColumnName, Is.Null, "Relation shouldn't have a TypeColumn #1");
 	}
 	[Test]
 	public void HasTypeCode()
@@ -6436,7 +6438,7 @@ public class MappingTestCmpDir1OwnpabsNoTblAuto
 
 
 [TestFixture]
-public class MappingTestCmpDir1OwnpabsTblAuto
+public class MappingTestCmpDir1OwnpabsTblAuto : NDOTest
 {
 	PersistenceManager pm;
 	NDOMapping mapping;
@@ -6455,15 +6457,15 @@ public class MappingTestCmpDir1OwnpabsTblAuto
 	[Test]
 	public void HasMappingTable()
 	{
-		Assert.NotNull(ownClass.Relations.First().MappingTable, "Relation should have a MappingTable #1");
-		Assert.NotNull(ownDerivedClass.Relations.First().MappingTable, "Relation should have a MappingTable #2");
+		Assert.That(ownClass.Relations.First().MappingTable, Is.Not.Null, "Relation should have a MappingTable #1");
+		Assert.That(ownDerivedClass.Relations.First().MappingTable, Is.Not.Null, "Relation should have a MappingTable #2");
 	}
 	[Test]
 	public void HasTypeColumn()
 	{
-		Assert.NotNull(ownClass.Relations.First().ForeignKeyTypeColumnName, "Relation should have a TypeColumn #1");
-		Assert.NotNull(ownDerivedClass.Relations.First().ForeignKeyTypeColumnName, "Relation should have a TypeColumn #2");
-		Assert.Null(ownClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, "Relation shouldn't have a TypeColumn #3");
+		Assert.That(ownClass.Relations.First().ForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #1");
+		Assert.That(ownDerivedClass.Relations.First().ForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #2");
+		Assert.That(ownClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, Is.Null, "Relation shouldn't have a TypeColumn #3");
 	}
 	[Test]
 	public void HasTypeCode()
@@ -6475,7 +6477,7 @@ public class MappingTestCmpDir1OwnpabsTblAuto
 
 
 [TestFixture]
-public class MappingTestCmpBi11OwnpabsNoTblAuto
+public class MappingTestCmpBi11OwnpabsNoTblAuto : NDOTest
 {
 	PersistenceManager pm;
 	NDOMapping mapping;
@@ -6494,15 +6496,15 @@ public class MappingTestCmpBi11OwnpabsNoTblAuto
 	[Test]
 	public void HasMappingTable()
 	{
-		Assert.Null(ownClass.Relations.First().MappingTable, "Relation shouldn't have a MappingTable #5");
-		Assert.Null(ownDerivedClass.Relations.First().MappingTable, "Relation shouldn't have a MappingTable #6");
-		Assert.Null(otherClass.Relations.First().MappingTable, "Relation shouldn't have a MappingTable #7");
+		Assert.That(ownClass.Relations.First().MappingTable, Is.Null, "Relation shouldn't have a MappingTable #5");
+		Assert.That(ownDerivedClass.Relations.First().MappingTable, Is.Null, "Relation shouldn't have a MappingTable #6");
+		Assert.That(otherClass.Relations.First().MappingTable, Is.Null, "Relation shouldn't have a MappingTable #7");
 	}
 	[Test]
 	public void HasTypeColumn()
 	{
-		Assert.Null(ownClass.Relations.First().ForeignKeyTypeColumnName, "Relation shouldn't have a TypeColumn #1");
-		Assert.NotNull(otherClass.Relations.First().ForeignKeyTypeColumnName, "Relation should have a TypeColumn #10");
+		Assert.That(ownClass.Relations.First().ForeignKeyTypeColumnName, Is.Null, "Relation shouldn't have a TypeColumn #1");
+		Assert.That(otherClass.Relations.First().ForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #10");
 	}
 	[Test]
 	public void HasTypeCode()
@@ -6514,7 +6516,7 @@ public class MappingTestCmpBi11OwnpabsNoTblAuto
 
 
 [TestFixture]
-public class MappingTestCmpBi11OwnpabsTblAuto
+public class MappingTestCmpBi11OwnpabsTblAuto : NDOTest
 {
 	PersistenceManager pm;
 	NDOMapping mapping;
@@ -6533,18 +6535,18 @@ public class MappingTestCmpBi11OwnpabsTblAuto
 	[Test]
 	public void HasMappingTable()
 	{
-		Assert.NotNull(ownClass.Relations.First().MappingTable, "Relation should have a MappingTable #1");
-		Assert.NotNull(ownDerivedClass.Relations.First().MappingTable, "Relation should have a MappingTable #2");
-		Assert.NotNull(otherClass.Relations.First().MappingTable, "Relation should have a MappingTable #3");
+		Assert.That(ownClass.Relations.First().MappingTable, Is.Not.Null, "Relation should have a MappingTable #1");
+		Assert.That(ownDerivedClass.Relations.First().MappingTable, Is.Not.Null, "Relation should have a MappingTable #2");
+		Assert.That(otherClass.Relations.First().MappingTable, Is.Not.Null, "Relation should have a MappingTable #3");
 	}
 	[Test]
 	public void HasTypeColumn()
 	{
-		Assert.NotNull(ownClass.Relations.First().ForeignKeyTypeColumnName, "Relation should have a TypeColumn #1");
-		Assert.NotNull(ownDerivedClass.Relations.First().ForeignKeyTypeColumnName, "Relation should have a TypeColumn #2");
-		Assert.NotNull(otherClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, "Relation should have a TypeColumn #7");
-		Assert.Null(ownClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, "Relation shouldn't have a TypeColumn #3");
-		Assert.Null(otherClass.Relations.First().ForeignKeyTypeColumnName, "Relation shouldn't have a TypeColumn #4");
+		Assert.That(ownClass.Relations.First().ForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #1");
+		Assert.That(ownDerivedClass.Relations.First().ForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #2");
+		Assert.That(otherClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #7");
+		Assert.That(ownClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, Is.Null, "Relation shouldn't have a TypeColumn #3");
+		Assert.That(otherClass.Relations.First().ForeignKeyTypeColumnName, Is.Null, "Relation shouldn't have a TypeColumn #4");
 	}
 	[Test]
 	public void HasTypeCode()
@@ -6556,7 +6558,7 @@ public class MappingTestCmpBi11OwnpabsTblAuto
 
 
 [TestFixture]
-public class MappingTestCmpDirnOwnpabsNoTblAuto
+public class MappingTestCmpDirnOwnpabsNoTblAuto : NDOTest
 {
 	PersistenceManager pm;
 	NDOMapping mapping;
@@ -6575,13 +6577,13 @@ public class MappingTestCmpDirnOwnpabsNoTblAuto
 	[Test]
 	public void HasMappingTable()
 	{
-		Assert.Null(ownClass.Relations.First().MappingTable, "Relation shouldn't have a MappingTable #5");
-		Assert.Null(ownDerivedClass.Relations.First().MappingTable, "Relation shouldn't have a MappingTable #6");
+		Assert.That(ownClass.Relations.First().MappingTable, Is.Null, "Relation shouldn't have a MappingTable #5");
+		Assert.That(ownDerivedClass.Relations.First().MappingTable, Is.Null, "Relation shouldn't have a MappingTable #6");
 	}
 	[Test]
 	public void HasTypeColumn()
 	{
-		Assert.Null(ownClass.Relations.First().ForeignKeyTypeColumnName, "Relation shouldn't have a TypeColumn #1");
+		Assert.That(ownClass.Relations.First().ForeignKeyTypeColumnName, Is.Null, "Relation shouldn't have a TypeColumn #1");
 	}
 	[Test]
 	public void HasTypeCode()
@@ -6593,7 +6595,7 @@ public class MappingTestCmpDirnOwnpabsNoTblAuto
 
 
 [TestFixture]
-public class MappingTestCmpDirnOwnpabsTblAuto
+public class MappingTestCmpDirnOwnpabsTblAuto : NDOTest
 {
 	PersistenceManager pm;
 	NDOMapping mapping;
@@ -6612,15 +6614,15 @@ public class MappingTestCmpDirnOwnpabsTblAuto
 	[Test]
 	public void HasMappingTable()
 	{
-		Assert.NotNull(ownClass.Relations.First().MappingTable, "Relation should have a MappingTable #1");
-		Assert.NotNull(ownDerivedClass.Relations.First().MappingTable, "Relation should have a MappingTable #2");
+		Assert.That(ownClass.Relations.First().MappingTable, Is.Not.Null, "Relation should have a MappingTable #1");
+		Assert.That(ownDerivedClass.Relations.First().MappingTable, Is.Not.Null, "Relation should have a MappingTable #2");
 	}
 	[Test]
 	public void HasTypeColumn()
 	{
-		Assert.NotNull(ownClass.Relations.First().ForeignKeyTypeColumnName, "Relation should have a TypeColumn #1");
-		Assert.NotNull(ownDerivedClass.Relations.First().ForeignKeyTypeColumnName, "Relation should have a TypeColumn #2");
-		Assert.Null(ownClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, "Relation shouldn't have a TypeColumn #3");
+		Assert.That(ownClass.Relations.First().ForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #1");
+		Assert.That(ownDerivedClass.Relations.First().ForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #2");
+		Assert.That(ownClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, Is.Null, "Relation shouldn't have a TypeColumn #3");
 	}
 	[Test]
 	public void HasTypeCode()
@@ -6632,7 +6634,7 @@ public class MappingTestCmpDirnOwnpabsTblAuto
 
 
 [TestFixture]
-public class MappingTestCmpBin1OwnpabsNoTblAuto
+public class MappingTestCmpBin1OwnpabsNoTblAuto : NDOTest
 {
 	PersistenceManager pm;
 	NDOMapping mapping;
@@ -6651,14 +6653,14 @@ public class MappingTestCmpBin1OwnpabsNoTblAuto
 	[Test]
 	public void HasMappingTable()
 	{
-		Assert.Null(ownClass.Relations.First().MappingTable, "Relation shouldn't have a MappingTable #5");
-		Assert.Null(ownDerivedClass.Relations.First().MappingTable, "Relation shouldn't have a MappingTable #6");
-		Assert.Null(otherClass.Relations.First().MappingTable, "Relation shouldn't have a MappingTable #7");
+		Assert.That(ownClass.Relations.First().MappingTable, Is.Null, "Relation shouldn't have a MappingTable #5");
+		Assert.That(ownDerivedClass.Relations.First().MappingTable, Is.Null, "Relation shouldn't have a MappingTable #6");
+		Assert.That(otherClass.Relations.First().MappingTable, Is.Null, "Relation shouldn't have a MappingTable #7");
 	}
 	[Test]
 	public void HasTypeColumn()
 	{
-		Assert.Null(ownClass.Relations.First().ForeignKeyTypeColumnName, "Relation shouldn't have a TypeColumn #1");
+		Assert.That(ownClass.Relations.First().ForeignKeyTypeColumnName, Is.Null, "Relation shouldn't have a TypeColumn #1");
 	}
 	[Test]
 	public void HasTypeCode()
@@ -6670,7 +6672,7 @@ public class MappingTestCmpBin1OwnpabsNoTblAuto
 
 
 [TestFixture]
-public class MappingTestCmpBin1OwnpabsTblAuto
+public class MappingTestCmpBin1OwnpabsTblAuto : NDOTest
 {
 	PersistenceManager pm;
 	NDOMapping mapping;
@@ -6689,18 +6691,18 @@ public class MappingTestCmpBin1OwnpabsTblAuto
 	[Test]
 	public void HasMappingTable()
 	{
-		Assert.NotNull(ownClass.Relations.First().MappingTable, "Relation should have a MappingTable #1");
-		Assert.NotNull(ownDerivedClass.Relations.First().MappingTable, "Relation should have a MappingTable #2");
-		Assert.NotNull(otherClass.Relations.First().MappingTable, "Relation should have a MappingTable #3");
+		Assert.That(ownClass.Relations.First().MappingTable, Is.Not.Null, "Relation should have a MappingTable #1");
+		Assert.That(ownDerivedClass.Relations.First().MappingTable, Is.Not.Null, "Relation should have a MappingTable #2");
+		Assert.That(otherClass.Relations.First().MappingTable, Is.Not.Null, "Relation should have a MappingTable #3");
 	}
 	[Test]
 	public void HasTypeColumn()
 	{
-		Assert.NotNull(ownClass.Relations.First().ForeignKeyTypeColumnName, "Relation should have a TypeColumn #1");
-		Assert.NotNull(ownDerivedClass.Relations.First().ForeignKeyTypeColumnName, "Relation should have a TypeColumn #2");
-		Assert.NotNull(otherClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, "Relation should have a TypeColumn #7");
-		Assert.Null(ownClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, "Relation shouldn't have a TypeColumn #3");
-		Assert.Null(otherClass.Relations.First().ForeignKeyTypeColumnName, "Relation shouldn't have a TypeColumn #4");
+		Assert.That(ownClass.Relations.First().ForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #1");
+		Assert.That(ownDerivedClass.Relations.First().ForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #2");
+		Assert.That(otherClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #7");
+		Assert.That(ownClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, Is.Null, "Relation shouldn't have a TypeColumn #3");
+		Assert.That(otherClass.Relations.First().ForeignKeyTypeColumnName, Is.Null, "Relation shouldn't have a TypeColumn #4");
 	}
 	[Test]
 	public void HasTypeCode()
@@ -6712,7 +6714,7 @@ public class MappingTestCmpBin1OwnpabsTblAuto
 
 
 [TestFixture]
-public class MappingTestCmpBi1nOwnpabsTblAuto
+public class MappingTestCmpBi1nOwnpabsTblAuto : NDOTest
 {
 	PersistenceManager pm;
 	NDOMapping mapping;
@@ -6731,18 +6733,18 @@ public class MappingTestCmpBi1nOwnpabsTblAuto
 	[Test]
 	public void HasMappingTable()
 	{
-		Assert.NotNull(ownClass.Relations.First().MappingTable, "Relation should have a MappingTable #1");
-		Assert.NotNull(ownDerivedClass.Relations.First().MappingTable, "Relation should have a MappingTable #2");
-		Assert.NotNull(otherClass.Relations.First().MappingTable, "Relation should have a MappingTable #3");
+		Assert.That(ownClass.Relations.First().MappingTable, Is.Not.Null, "Relation should have a MappingTable #1");
+		Assert.That(ownDerivedClass.Relations.First().MappingTable, Is.Not.Null, "Relation should have a MappingTable #2");
+		Assert.That(otherClass.Relations.First().MappingTable, Is.Not.Null, "Relation should have a MappingTable #3");
 	}
 	[Test]
 	public void HasTypeColumn()
 	{
-		Assert.NotNull(ownClass.Relations.First().ForeignKeyTypeColumnName, "Relation should have a TypeColumn #1");
-		Assert.NotNull(ownDerivedClass.Relations.First().ForeignKeyTypeColumnName, "Relation should have a TypeColumn #2");
-		Assert.NotNull(otherClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, "Relation should have a TypeColumn #7");
-		Assert.Null(ownClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, "Relation shouldn't have a TypeColumn #3");
-		Assert.Null(otherClass.Relations.First().ForeignKeyTypeColumnName, "Relation shouldn't have a TypeColumn #4");
+		Assert.That(ownClass.Relations.First().ForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #1");
+		Assert.That(ownDerivedClass.Relations.First().ForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #2");
+		Assert.That(otherClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #7");
+		Assert.That(ownClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, Is.Null, "Relation shouldn't have a TypeColumn #3");
+		Assert.That(otherClass.Relations.First().ForeignKeyTypeColumnName, Is.Null, "Relation shouldn't have a TypeColumn #4");
 	}
 	[Test]
 	public void HasTypeCode()
@@ -6754,7 +6756,7 @@ public class MappingTestCmpBi1nOwnpabsTblAuto
 
 
 [TestFixture]
-public class MappingTestCmpBinnOwnpabsTblAuto
+public class MappingTestCmpBinnOwnpabsTblAuto : NDOTest
 {
 	PersistenceManager pm;
 	NDOMapping mapping;
@@ -6773,18 +6775,18 @@ public class MappingTestCmpBinnOwnpabsTblAuto
 	[Test]
 	public void HasMappingTable()
 	{
-		Assert.NotNull(ownClass.Relations.First().MappingTable, "Relation should have a MappingTable #1");
-		Assert.NotNull(ownDerivedClass.Relations.First().MappingTable, "Relation should have a MappingTable #2");
-		Assert.NotNull(otherClass.Relations.First().MappingTable, "Relation should have a MappingTable #3");
+		Assert.That(ownClass.Relations.First().MappingTable, Is.Not.Null, "Relation should have a MappingTable #1");
+		Assert.That(ownDerivedClass.Relations.First().MappingTable, Is.Not.Null, "Relation should have a MappingTable #2");
+		Assert.That(otherClass.Relations.First().MappingTable, Is.Not.Null, "Relation should have a MappingTable #3");
 	}
 	[Test]
 	public void HasTypeColumn()
 	{
-		Assert.NotNull(ownClass.Relations.First().ForeignKeyTypeColumnName, "Relation should have a TypeColumn #1");
-		Assert.NotNull(ownDerivedClass.Relations.First().ForeignKeyTypeColumnName, "Relation should have a TypeColumn #2");
-		Assert.NotNull(otherClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, "Relation should have a TypeColumn #7");
-		Assert.Null(ownClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, "Relation shouldn't have a TypeColumn #3");
-		Assert.Null(otherClass.Relations.First().ForeignKeyTypeColumnName, "Relation shouldn't have a TypeColumn #4");
+		Assert.That(ownClass.Relations.First().ForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #1");
+		Assert.That(ownDerivedClass.Relations.First().ForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #2");
+		Assert.That(otherClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #7");
+		Assert.That(ownClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, Is.Null, "Relation shouldn't have a TypeColumn #3");
+		Assert.That(otherClass.Relations.First().ForeignKeyTypeColumnName, Is.Null, "Relation shouldn't have a TypeColumn #4");
 	}
 	[Test]
 	public void HasTypeCode()
@@ -6796,7 +6798,7 @@ public class MappingTestCmpBinnOwnpabsTblAuto
 
 
 [TestFixture]
-public class MappingTestAgrDir1OthpabsNoTblAuto
+public class MappingTestAgrDir1OthpabsNoTblAuto : NDOTest
 {
 	PersistenceManager pm;
 	NDOMapping mapping;
@@ -6815,12 +6817,12 @@ public class MappingTestAgrDir1OthpabsNoTblAuto
 	[Test]
 	public void HasMappingTable()
 	{
-		Assert.Null(ownClass.Relations.First().MappingTable, "Relation shouldn't have a MappingTable #5");
+		Assert.That(ownClass.Relations.First().MappingTable, Is.Null, "Relation shouldn't have a MappingTable #5");
 	}
 	[Test]
 	public void HasTypeColumn()
 	{
-		Assert.NotNull(ownClass.Relations.First().ForeignKeyTypeColumnName, "Relation should have a TypeColumn #9");
+		Assert.That(ownClass.Relations.First().ForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #9");
 	}
 	[Test]
 	public void HasTypeCode()
@@ -6832,7 +6834,7 @@ public class MappingTestAgrDir1OthpabsNoTblAuto
 
 
 [TestFixture]
-public class MappingTestAgrDir1OthpabsTblAuto
+public class MappingTestAgrDir1OthpabsTblAuto : NDOTest
 {
 	PersistenceManager pm;
 	NDOMapping mapping;
@@ -6851,13 +6853,13 @@ public class MappingTestAgrDir1OthpabsTblAuto
 	[Test]
 	public void HasMappingTable()
 	{
-		Assert.NotNull(ownClass.Relations.First().MappingTable, "Relation should have a MappingTable #1");
+		Assert.That(ownClass.Relations.First().MappingTable, Is.Not.Null, "Relation should have a MappingTable #1");
 	}
 	[Test]
 	public void HasTypeColumn()
 	{
-		Assert.NotNull(ownClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, "Relation should have a TypeColumn #3");
-		Assert.Null(ownClass.Relations.First().ForeignKeyTypeColumnName, "Relation shouldn't have a TypeColumn #1");
+		Assert.That(ownClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #3");
+		Assert.That(ownClass.Relations.First().ForeignKeyTypeColumnName, Is.Null, "Relation shouldn't have a TypeColumn #1");
 	}
 	[Test]
 	public void HasTypeCode()
@@ -6869,7 +6871,7 @@ public class MappingTestAgrDir1OthpabsTblAuto
 
 
 [TestFixture]
-public class MappingTestAgrBi11OthpabsNoTblAuto
+public class MappingTestAgrBi11OthpabsNoTblAuto : NDOTest
 {
 	PersistenceManager pm;
 	NDOMapping mapping;
@@ -6888,14 +6890,14 @@ public class MappingTestAgrBi11OthpabsNoTblAuto
 	[Test]
 	public void HasMappingTable()
 	{
-		Assert.Null(ownClass.Relations.First().MappingTable, "Relation shouldn't have a MappingTable #5");
-		Assert.Null(otherClass.Relations.First().MappingTable, "Relation shouldn't have a MappingTable #7");
-		Assert.Null(otherDerivedClass.Relations.First().MappingTable, "Relation shouldn't have a MappingTable #8");
+		Assert.That(ownClass.Relations.First().MappingTable, Is.Null, "Relation shouldn't have a MappingTable #5");
+		Assert.That(otherClass.Relations.First().MappingTable, Is.Null, "Relation shouldn't have a MappingTable #7");
+		Assert.That(otherDerivedClass.Relations.First().MappingTable, Is.Null, "Relation shouldn't have a MappingTable #8");
 	}
 	[Test]
 	public void HasTypeColumn()
 	{
-		Assert.NotNull(ownClass.Relations.First().ForeignKeyTypeColumnName, "Relation should have a TypeColumn #9");
+		Assert.That(ownClass.Relations.First().ForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #9");
 	}
 	[Test]
 	public void HasTypeCode()
@@ -6907,7 +6909,7 @@ public class MappingTestAgrBi11OthpabsNoTblAuto
 
 
 [TestFixture]
-public class MappingTestAgrBi11OthpabsTblAuto
+public class MappingTestAgrBi11OthpabsTblAuto : NDOTest
 {
 	PersistenceManager pm;
 	NDOMapping mapping;
@@ -6926,18 +6928,18 @@ public class MappingTestAgrBi11OthpabsTblAuto
 	[Test]
 	public void HasMappingTable()
 	{
-		Assert.NotNull(ownClass.Relations.First().MappingTable, "Relation should have a MappingTable #1");
-		Assert.NotNull(otherClass.Relations.First().MappingTable, "Relation should have a MappingTable #3");
-		Assert.NotNull(otherDerivedClass.Relations.First().MappingTable, "Relation should have a MappingTable #4");
+		Assert.That(ownClass.Relations.First().MappingTable, Is.Not.Null, "Relation should have a MappingTable #1");
+		Assert.That(otherClass.Relations.First().MappingTable, Is.Not.Null, "Relation should have a MappingTable #3");
+		Assert.That(otherDerivedClass.Relations.First().MappingTable, Is.Not.Null, "Relation should have a MappingTable #4");
 	}
 	[Test]
 	public void HasTypeColumn()
 	{
-		Assert.NotNull(ownClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, "Relation should have a TypeColumn #3");
-		Assert.NotNull(otherClass.Relations.First().ForeignKeyTypeColumnName, "Relation should have a TypeColumn #5");
-		Assert.NotNull(otherDerivedClass.Relations.First().ForeignKeyTypeColumnName, "Relation should have a TypeColumn #6");
-		Assert.Null(ownClass.Relations.First().ForeignKeyTypeColumnName, "Relation shouldn't have a TypeColumn #1");
-		Assert.Null(otherClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, "Relation shouldn't have a TypeColumn #2");
+		Assert.That(ownClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #3");
+		Assert.That(otherClass.Relations.First().ForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #5");
+		Assert.That(otherDerivedClass.Relations.First().ForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #6");
+		Assert.That(ownClass.Relations.First().ForeignKeyTypeColumnName, Is.Null, "Relation shouldn't have a TypeColumn #1");
+		Assert.That(otherClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, Is.Null, "Relation shouldn't have a TypeColumn #2");
 	}
 	[Test]
 	public void HasTypeCode()
@@ -6949,7 +6951,7 @@ public class MappingTestAgrBi11OthpabsTblAuto
 
 
 [TestFixture]
-public class MappingTestAgrDirnOthpabsTblAuto
+public class MappingTestAgrDirnOthpabsTblAuto : NDOTest
 {
 	PersistenceManager pm;
 	NDOMapping mapping;
@@ -6968,13 +6970,13 @@ public class MappingTestAgrDirnOthpabsTblAuto
 	[Test]
 	public void HasMappingTable()
 	{
-		Assert.NotNull(ownClass.Relations.First().MappingTable, "Relation should have a MappingTable #1");
+		Assert.That(ownClass.Relations.First().MappingTable, Is.Not.Null, "Relation should have a MappingTable #1");
 	}
 	[Test]
 	public void HasTypeColumn()
 	{
-		Assert.NotNull(ownClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, "Relation should have a TypeColumn #3");
-		Assert.Null(ownClass.Relations.First().ForeignKeyTypeColumnName, "Relation shouldn't have a TypeColumn #1");
+		Assert.That(ownClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #3");
+		Assert.That(ownClass.Relations.First().ForeignKeyTypeColumnName, Is.Null, "Relation shouldn't have a TypeColumn #1");
 	}
 	[Test]
 	public void HasTypeCode()
@@ -6986,7 +6988,7 @@ public class MappingTestAgrDirnOthpabsTblAuto
 
 
 [TestFixture]
-public class MappingTestAgrBin1OthpabsTblAuto
+public class MappingTestAgrBin1OthpabsTblAuto : NDOTest
 {
 	PersistenceManager pm;
 	NDOMapping mapping;
@@ -7005,18 +7007,18 @@ public class MappingTestAgrBin1OthpabsTblAuto
 	[Test]
 	public void HasMappingTable()
 	{
-		Assert.NotNull(ownClass.Relations.First().MappingTable, "Relation should have a MappingTable #1");
-		Assert.NotNull(otherClass.Relations.First().MappingTable, "Relation should have a MappingTable #3");
-		Assert.NotNull(otherDerivedClass.Relations.First().MappingTable, "Relation should have a MappingTable #4");
+		Assert.That(ownClass.Relations.First().MappingTable, Is.Not.Null, "Relation should have a MappingTable #1");
+		Assert.That(otherClass.Relations.First().MappingTable, Is.Not.Null, "Relation should have a MappingTable #3");
+		Assert.That(otherDerivedClass.Relations.First().MappingTable, Is.Not.Null, "Relation should have a MappingTable #4");
 	}
 	[Test]
 	public void HasTypeColumn()
 	{
-		Assert.NotNull(ownClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, "Relation should have a TypeColumn #3");
-		Assert.NotNull(otherClass.Relations.First().ForeignKeyTypeColumnName, "Relation should have a TypeColumn #5");
-		Assert.NotNull(otherDerivedClass.Relations.First().ForeignKeyTypeColumnName, "Relation should have a TypeColumn #6");
-		Assert.Null(ownClass.Relations.First().ForeignKeyTypeColumnName, "Relation shouldn't have a TypeColumn #1");
-		Assert.Null(otherClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, "Relation shouldn't have a TypeColumn #2");
+		Assert.That(ownClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #3");
+		Assert.That(otherClass.Relations.First().ForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #5");
+		Assert.That(otherDerivedClass.Relations.First().ForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #6");
+		Assert.That(ownClass.Relations.First().ForeignKeyTypeColumnName, Is.Null, "Relation shouldn't have a TypeColumn #1");
+		Assert.That(otherClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, Is.Null, "Relation shouldn't have a TypeColumn #2");
 	}
 	[Test]
 	public void HasTypeCode()
@@ -7028,7 +7030,7 @@ public class MappingTestAgrBin1OthpabsTblAuto
 
 
 [TestFixture]
-public class MappingTestAgrBi1nOthpabsNoTblAuto
+public class MappingTestAgrBi1nOthpabsNoTblAuto : NDOTest
 {
 	PersistenceManager pm;
 	NDOMapping mapping;
@@ -7047,14 +7049,14 @@ public class MappingTestAgrBi1nOthpabsNoTblAuto
 	[Test]
 	public void HasMappingTable()
 	{
-		Assert.Null(ownClass.Relations.First().MappingTable, "Relation shouldn't have a MappingTable #5");
-		Assert.Null(otherClass.Relations.First().MappingTable, "Relation shouldn't have a MappingTable #7");
-		Assert.Null(otherDerivedClass.Relations.First().MappingTable, "Relation shouldn't have a MappingTable #8");
+		Assert.That(ownClass.Relations.First().MappingTable, Is.Null, "Relation shouldn't have a MappingTable #5");
+		Assert.That(otherClass.Relations.First().MappingTable, Is.Null, "Relation shouldn't have a MappingTable #7");
+		Assert.That(otherDerivedClass.Relations.First().MappingTable, Is.Null, "Relation shouldn't have a MappingTable #8");
 	}
 	[Test]
 	public void HasTypeColumn()
 	{
-		Assert.NotNull(ownClass.Relations.First().ForeignKeyTypeColumnName, "Relation should have a TypeColumn #9");
+		Assert.That(ownClass.Relations.First().ForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #9");
 	}
 	[Test]
 	public void HasTypeCode()
@@ -7066,7 +7068,7 @@ public class MappingTestAgrBi1nOthpabsNoTblAuto
 
 
 [TestFixture]
-public class MappingTestAgrBi1nOthpabsTblAuto
+public class MappingTestAgrBi1nOthpabsTblAuto : NDOTest
 {
 	PersistenceManager pm;
 	NDOMapping mapping;
@@ -7085,18 +7087,18 @@ public class MappingTestAgrBi1nOthpabsTblAuto
 	[Test]
 	public void HasMappingTable()
 	{
-		Assert.NotNull(ownClass.Relations.First().MappingTable, "Relation should have a MappingTable #1");
-		Assert.NotNull(otherClass.Relations.First().MappingTable, "Relation should have a MappingTable #3");
-		Assert.NotNull(otherDerivedClass.Relations.First().MappingTable, "Relation should have a MappingTable #4");
+		Assert.That(ownClass.Relations.First().MappingTable, Is.Not.Null, "Relation should have a MappingTable #1");
+		Assert.That(otherClass.Relations.First().MappingTable, Is.Not.Null, "Relation should have a MappingTable #3");
+		Assert.That(otherDerivedClass.Relations.First().MappingTable, Is.Not.Null, "Relation should have a MappingTable #4");
 	}
 	[Test]
 	public void HasTypeColumn()
 	{
-		Assert.NotNull(ownClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, "Relation should have a TypeColumn #3");
-		Assert.NotNull(otherClass.Relations.First().ForeignKeyTypeColumnName, "Relation should have a TypeColumn #5");
-		Assert.NotNull(otherDerivedClass.Relations.First().ForeignKeyTypeColumnName, "Relation should have a TypeColumn #6");
-		Assert.Null(ownClass.Relations.First().ForeignKeyTypeColumnName, "Relation shouldn't have a TypeColumn #1");
-		Assert.Null(otherClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, "Relation shouldn't have a TypeColumn #2");
+		Assert.That(ownClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #3");
+		Assert.That(otherClass.Relations.First().ForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #5");
+		Assert.That(otherDerivedClass.Relations.First().ForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #6");
+		Assert.That(ownClass.Relations.First().ForeignKeyTypeColumnName, Is.Null, "Relation shouldn't have a TypeColumn #1");
+		Assert.That(otherClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, Is.Null, "Relation shouldn't have a TypeColumn #2");
 	}
 	[Test]
 	public void HasTypeCode()
@@ -7108,7 +7110,7 @@ public class MappingTestAgrBi1nOthpabsTblAuto
 
 
 [TestFixture]
-public class MappingTestAgrBinnOthpabsTblAuto
+public class MappingTestAgrBinnOthpabsTblAuto : NDOTest
 {
 	PersistenceManager pm;
 	NDOMapping mapping;
@@ -7127,18 +7129,18 @@ public class MappingTestAgrBinnOthpabsTblAuto
 	[Test]
 	public void HasMappingTable()
 	{
-		Assert.NotNull(ownClass.Relations.First().MappingTable, "Relation should have a MappingTable #1");
-		Assert.NotNull(otherClass.Relations.First().MappingTable, "Relation should have a MappingTable #3");
-		Assert.NotNull(otherDerivedClass.Relations.First().MappingTable, "Relation should have a MappingTable #4");
+		Assert.That(ownClass.Relations.First().MappingTable, Is.Not.Null, "Relation should have a MappingTable #1");
+		Assert.That(otherClass.Relations.First().MappingTable, Is.Not.Null, "Relation should have a MappingTable #3");
+		Assert.That(otherDerivedClass.Relations.First().MappingTable, Is.Not.Null, "Relation should have a MappingTable #4");
 	}
 	[Test]
 	public void HasTypeColumn()
 	{
-		Assert.NotNull(ownClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, "Relation should have a TypeColumn #3");
-		Assert.NotNull(otherClass.Relations.First().ForeignKeyTypeColumnName, "Relation should have a TypeColumn #5");
-		Assert.NotNull(otherDerivedClass.Relations.First().ForeignKeyTypeColumnName, "Relation should have a TypeColumn #6");
-		Assert.Null(ownClass.Relations.First().ForeignKeyTypeColumnName, "Relation shouldn't have a TypeColumn #1");
-		Assert.Null(otherClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, "Relation shouldn't have a TypeColumn #2");
+		Assert.That(ownClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #3");
+		Assert.That(otherClass.Relations.First().ForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #5");
+		Assert.That(otherDerivedClass.Relations.First().ForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #6");
+		Assert.That(ownClass.Relations.First().ForeignKeyTypeColumnName, Is.Null, "Relation shouldn't have a TypeColumn #1");
+		Assert.That(otherClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, Is.Null, "Relation shouldn't have a TypeColumn #2");
 	}
 	[Test]
 	public void HasTypeCode()
@@ -7150,7 +7152,7 @@ public class MappingTestAgrBinnOthpabsTblAuto
 
 
 [TestFixture]
-public class MappingTestCmpDir1OthpabsTblAuto
+public class MappingTestCmpDir1OthpabsTblAuto : NDOTest
 {
 	PersistenceManager pm;
 	NDOMapping mapping;
@@ -7169,13 +7171,13 @@ public class MappingTestCmpDir1OthpabsTblAuto
 	[Test]
 	public void HasMappingTable()
 	{
-		Assert.NotNull(ownClass.Relations.First().MappingTable, "Relation should have a MappingTable #1");
+		Assert.That(ownClass.Relations.First().MappingTable, Is.Not.Null, "Relation should have a MappingTable #1");
 	}
 	[Test]
 	public void HasTypeColumn()
 	{
-		Assert.NotNull(ownClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, "Relation should have a TypeColumn #3");
-		Assert.Null(ownClass.Relations.First().ForeignKeyTypeColumnName, "Relation shouldn't have a TypeColumn #1");
+		Assert.That(ownClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #3");
+		Assert.That(ownClass.Relations.First().ForeignKeyTypeColumnName, Is.Null, "Relation shouldn't have a TypeColumn #1");
 	}
 	[Test]
 	public void HasTypeCode()
@@ -7187,7 +7189,7 @@ public class MappingTestCmpDir1OthpabsTblAuto
 
 
 [TestFixture]
-public class MappingTestCmpBi11OthpabsTblAuto
+public class MappingTestCmpBi11OthpabsTblAuto : NDOTest
 {
 	PersistenceManager pm;
 	NDOMapping mapping;
@@ -7206,18 +7208,18 @@ public class MappingTestCmpBi11OthpabsTblAuto
 	[Test]
 	public void HasMappingTable()
 	{
-		Assert.NotNull(ownClass.Relations.First().MappingTable, "Relation should have a MappingTable #1");
-		Assert.NotNull(otherClass.Relations.First().MappingTable, "Relation should have a MappingTable #3");
-		Assert.NotNull(otherDerivedClass.Relations.First().MappingTable, "Relation should have a MappingTable #4");
+		Assert.That(ownClass.Relations.First().MappingTable, Is.Not.Null, "Relation should have a MappingTable #1");
+		Assert.That(otherClass.Relations.First().MappingTable, Is.Not.Null, "Relation should have a MappingTable #3");
+		Assert.That(otherDerivedClass.Relations.First().MappingTable, Is.Not.Null, "Relation should have a MappingTable #4");
 	}
 	[Test]
 	public void HasTypeColumn()
 	{
-		Assert.NotNull(ownClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, "Relation should have a TypeColumn #3");
-		Assert.NotNull(otherClass.Relations.First().ForeignKeyTypeColumnName, "Relation should have a TypeColumn #5");
-		Assert.NotNull(otherDerivedClass.Relations.First().ForeignKeyTypeColumnName, "Relation should have a TypeColumn #6");
-		Assert.Null(ownClass.Relations.First().ForeignKeyTypeColumnName, "Relation shouldn't have a TypeColumn #1");
-		Assert.Null(otherClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, "Relation shouldn't have a TypeColumn #2");
+		Assert.That(ownClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #3");
+		Assert.That(otherClass.Relations.First().ForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #5");
+		Assert.That(otherDerivedClass.Relations.First().ForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #6");
+		Assert.That(ownClass.Relations.First().ForeignKeyTypeColumnName, Is.Null, "Relation shouldn't have a TypeColumn #1");
+		Assert.That(otherClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, Is.Null, "Relation shouldn't have a TypeColumn #2");
 	}
 	[Test]
 	public void HasTypeCode()
@@ -7229,7 +7231,7 @@ public class MappingTestCmpBi11OthpabsTblAuto
 
 
 [TestFixture]
-public class MappingTestCmpDirnOthpabsTblAuto
+public class MappingTestCmpDirnOthpabsTblAuto : NDOTest
 {
 	PersistenceManager pm;
 	NDOMapping mapping;
@@ -7248,13 +7250,13 @@ public class MappingTestCmpDirnOthpabsTblAuto
 	[Test]
 	public void HasMappingTable()
 	{
-		Assert.NotNull(ownClass.Relations.First().MappingTable, "Relation should have a MappingTable #1");
+		Assert.That(ownClass.Relations.First().MappingTable, Is.Not.Null, "Relation should have a MappingTable #1");
 	}
 	[Test]
 	public void HasTypeColumn()
 	{
-		Assert.NotNull(ownClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, "Relation should have a TypeColumn #3");
-		Assert.Null(ownClass.Relations.First().ForeignKeyTypeColumnName, "Relation shouldn't have a TypeColumn #1");
+		Assert.That(ownClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #3");
+		Assert.That(ownClass.Relations.First().ForeignKeyTypeColumnName, Is.Null, "Relation shouldn't have a TypeColumn #1");
 	}
 	[Test]
 	public void HasTypeCode()
@@ -7266,7 +7268,7 @@ public class MappingTestCmpDirnOthpabsTblAuto
 
 
 [TestFixture]
-public class MappingTestCmpBin1OthpabsTblAuto
+public class MappingTestCmpBin1OthpabsTblAuto : NDOTest
 {
 	PersistenceManager pm;
 	NDOMapping mapping;
@@ -7285,18 +7287,18 @@ public class MappingTestCmpBin1OthpabsTblAuto
 	[Test]
 	public void HasMappingTable()
 	{
-		Assert.NotNull(ownClass.Relations.First().MappingTable, "Relation should have a MappingTable #1");
-		Assert.NotNull(otherClass.Relations.First().MappingTable, "Relation should have a MappingTable #3");
-		Assert.NotNull(otherDerivedClass.Relations.First().MappingTable, "Relation should have a MappingTable #4");
+		Assert.That(ownClass.Relations.First().MappingTable, Is.Not.Null, "Relation should have a MappingTable #1");
+		Assert.That(otherClass.Relations.First().MappingTable, Is.Not.Null, "Relation should have a MappingTable #3");
+		Assert.That(otherDerivedClass.Relations.First().MappingTable, Is.Not.Null, "Relation should have a MappingTable #4");
 	}
 	[Test]
 	public void HasTypeColumn()
 	{
-		Assert.NotNull(ownClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, "Relation should have a TypeColumn #3");
-		Assert.NotNull(otherClass.Relations.First().ForeignKeyTypeColumnName, "Relation should have a TypeColumn #5");
-		Assert.NotNull(otherDerivedClass.Relations.First().ForeignKeyTypeColumnName, "Relation should have a TypeColumn #6");
-		Assert.Null(ownClass.Relations.First().ForeignKeyTypeColumnName, "Relation shouldn't have a TypeColumn #1");
-		Assert.Null(otherClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, "Relation shouldn't have a TypeColumn #2");
+		Assert.That(ownClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #3");
+		Assert.That(otherClass.Relations.First().ForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #5");
+		Assert.That(otherDerivedClass.Relations.First().ForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #6");
+		Assert.That(ownClass.Relations.First().ForeignKeyTypeColumnName, Is.Null, "Relation shouldn't have a TypeColumn #1");
+		Assert.That(otherClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, Is.Null, "Relation shouldn't have a TypeColumn #2");
 	}
 	[Test]
 	public void HasTypeCode()
@@ -7308,7 +7310,7 @@ public class MappingTestCmpBin1OthpabsTblAuto
 
 
 [TestFixture]
-public class MappingTestCmpBi1nOthpabsTblAuto
+public class MappingTestCmpBi1nOthpabsTblAuto : NDOTest
 {
 	PersistenceManager pm;
 	NDOMapping mapping;
@@ -7327,18 +7329,18 @@ public class MappingTestCmpBi1nOthpabsTblAuto
 	[Test]
 	public void HasMappingTable()
 	{
-		Assert.NotNull(ownClass.Relations.First().MappingTable, "Relation should have a MappingTable #1");
-		Assert.NotNull(otherClass.Relations.First().MappingTable, "Relation should have a MappingTable #3");
-		Assert.NotNull(otherDerivedClass.Relations.First().MappingTable, "Relation should have a MappingTable #4");
+		Assert.That(ownClass.Relations.First().MappingTable, Is.Not.Null, "Relation should have a MappingTable #1");
+		Assert.That(otherClass.Relations.First().MappingTable, Is.Not.Null, "Relation should have a MappingTable #3");
+		Assert.That(otherDerivedClass.Relations.First().MappingTable, Is.Not.Null, "Relation should have a MappingTable #4");
 	}
 	[Test]
 	public void HasTypeColumn()
 	{
-		Assert.NotNull(ownClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, "Relation should have a TypeColumn #3");
-		Assert.NotNull(otherClass.Relations.First().ForeignKeyTypeColumnName, "Relation should have a TypeColumn #5");
-		Assert.NotNull(otherDerivedClass.Relations.First().ForeignKeyTypeColumnName, "Relation should have a TypeColumn #6");
-		Assert.Null(ownClass.Relations.First().ForeignKeyTypeColumnName, "Relation shouldn't have a TypeColumn #1");
-		Assert.Null(otherClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, "Relation shouldn't have a TypeColumn #2");
+		Assert.That(ownClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #3");
+		Assert.That(otherClass.Relations.First().ForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #5");
+		Assert.That(otherDerivedClass.Relations.First().ForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #6");
+		Assert.That(ownClass.Relations.First().ForeignKeyTypeColumnName, Is.Null, "Relation shouldn't have a TypeColumn #1");
+		Assert.That(otherClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, Is.Null, "Relation shouldn't have a TypeColumn #2");
 	}
 	[Test]
 	public void HasTypeCode()
@@ -7350,7 +7352,7 @@ public class MappingTestCmpBi1nOthpabsTblAuto
 
 
 [TestFixture]
-public class MappingTestCmpBinnOthpabsTblAuto
+public class MappingTestCmpBinnOthpabsTblAuto : NDOTest
 {
 	PersistenceManager pm;
 	NDOMapping mapping;
@@ -7369,18 +7371,18 @@ public class MappingTestCmpBinnOthpabsTblAuto
 	[Test]
 	public void HasMappingTable()
 	{
-		Assert.NotNull(ownClass.Relations.First().MappingTable, "Relation should have a MappingTable #1");
-		Assert.NotNull(otherClass.Relations.First().MappingTable, "Relation should have a MappingTable #3");
-		Assert.NotNull(otherDerivedClass.Relations.First().MappingTable, "Relation should have a MappingTable #4");
+		Assert.That(ownClass.Relations.First().MappingTable, Is.Not.Null, "Relation should have a MappingTable #1");
+		Assert.That(otherClass.Relations.First().MappingTable, Is.Not.Null, "Relation should have a MappingTable #3");
+		Assert.That(otherDerivedClass.Relations.First().MappingTable, Is.Not.Null, "Relation should have a MappingTable #4");
 	}
 	[Test]
 	public void HasTypeColumn()
 	{
-		Assert.NotNull(ownClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, "Relation should have a TypeColumn #3");
-		Assert.NotNull(otherClass.Relations.First().ForeignKeyTypeColumnName, "Relation should have a TypeColumn #5");
-		Assert.NotNull(otherDerivedClass.Relations.First().ForeignKeyTypeColumnName, "Relation should have a TypeColumn #6");
-		Assert.Null(ownClass.Relations.First().ForeignKeyTypeColumnName, "Relation shouldn't have a TypeColumn #1");
-		Assert.Null(otherClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, "Relation shouldn't have a TypeColumn #2");
+		Assert.That(ownClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #3");
+		Assert.That(otherClass.Relations.First().ForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #5");
+		Assert.That(otherDerivedClass.Relations.First().ForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #6");
+		Assert.That(ownClass.Relations.First().ForeignKeyTypeColumnName, Is.Null, "Relation shouldn't have a TypeColumn #1");
+		Assert.That(otherClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, Is.Null, "Relation shouldn't have a TypeColumn #2");
 	}
 	[Test]
 	public void HasTypeCode()
@@ -7392,7 +7394,7 @@ public class MappingTestCmpBinnOthpabsTblAuto
 
 
 [TestFixture]
-public class MappingTestAgrDir1OwnpabsOthpabsNoTblAuto
+public class MappingTestAgrDir1OwnpabsOthpabsNoTblAuto : NDOTest
 {
 	PersistenceManager pm;
 	NDOMapping mapping;
@@ -7413,13 +7415,13 @@ public class MappingTestAgrDir1OwnpabsOthpabsNoTblAuto
 	[Test]
 	public void HasMappingTable()
 	{
-		Assert.Null(ownClass.Relations.First().MappingTable, "Relation shouldn't have a MappingTable #5");
-		Assert.Null(ownDerivedClass.Relations.First().MappingTable, "Relation shouldn't have a MappingTable #6");
+		Assert.That(ownClass.Relations.First().MappingTable, Is.Null, "Relation shouldn't have a MappingTable #5");
+		Assert.That(ownDerivedClass.Relations.First().MappingTable, Is.Null, "Relation shouldn't have a MappingTable #6");
 	}
 	[Test]
 	public void HasTypeColumn()
 	{
-		Assert.NotNull(ownClass.Relations.First().ForeignKeyTypeColumnName, "Relation should have a TypeColumn #9");
+		Assert.That(ownClass.Relations.First().ForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #9");
 	}
 	[Test]
 	public void HasTypeCode()
@@ -7431,7 +7433,7 @@ public class MappingTestAgrDir1OwnpabsOthpabsNoTblAuto
 
 
 [TestFixture]
-public class MappingTestAgrDir1OwnpabsOthpabsTblAuto
+public class MappingTestAgrDir1OwnpabsOthpabsTblAuto : NDOTest
 {
 	PersistenceManager pm;
 	NDOMapping mapping;
@@ -7452,16 +7454,16 @@ public class MappingTestAgrDir1OwnpabsOthpabsTblAuto
 	[Test]
 	public void HasMappingTable()
 	{
-		Assert.NotNull(ownClass.Relations.First().MappingTable, "Relation should have a MappingTable #1");
-		Assert.NotNull(ownDerivedClass.Relations.First().MappingTable, "Relation should have a MappingTable #2");
+		Assert.That(ownClass.Relations.First().MappingTable, Is.Not.Null, "Relation should have a MappingTable #1");
+		Assert.That(ownDerivedClass.Relations.First().MappingTable, Is.Not.Null, "Relation should have a MappingTable #2");
 	}
 	[Test]
 	public void HasTypeColumn()
 	{
-		Assert.NotNull(ownClass.Relations.First().ForeignKeyTypeColumnName, "Relation should have a TypeColumn #1");
-		Assert.NotNull(ownDerivedClass.Relations.First().ForeignKeyTypeColumnName, "Relation should have a TypeColumn #2");
-		Assert.NotNull(ownClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, "Relation should have a TypeColumn #3");
-		Assert.NotNull(ownDerivedClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, "Relation should have a TypeColumn #4");
+		Assert.That(ownClass.Relations.First().ForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #1");
+		Assert.That(ownDerivedClass.Relations.First().ForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #2");
+		Assert.That(ownClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #3");
+		Assert.That(ownDerivedClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #4");
 	}
 	[Test]
 	public void HasTypeCode()
@@ -7473,7 +7475,7 @@ public class MappingTestAgrDir1OwnpabsOthpabsTblAuto
 
 
 [TestFixture]
-public class MappingTestAgrBi11OwnpabsOthpabsNoTblAuto
+public class MappingTestAgrBi11OwnpabsOthpabsNoTblAuto : NDOTest
 {
 	PersistenceManager pm;
 	NDOMapping mapping;
@@ -7494,16 +7496,16 @@ public class MappingTestAgrBi11OwnpabsOthpabsNoTblAuto
 	[Test]
 	public void HasMappingTable()
 	{
-		Assert.Null(ownClass.Relations.First().MappingTable, "Relation shouldn't have a MappingTable #5");
-		Assert.Null(ownDerivedClass.Relations.First().MappingTable, "Relation shouldn't have a MappingTable #6");
-		Assert.Null(otherClass.Relations.First().MappingTable, "Relation shouldn't have a MappingTable #7");
-		Assert.Null(otherDerivedClass.Relations.First().MappingTable, "Relation shouldn't have a MappingTable #8");
+		Assert.That(ownClass.Relations.First().MappingTable, Is.Null, "Relation shouldn't have a MappingTable #5");
+		Assert.That(ownDerivedClass.Relations.First().MappingTable, Is.Null, "Relation shouldn't have a MappingTable #6");
+		Assert.That(otherClass.Relations.First().MappingTable, Is.Null, "Relation shouldn't have a MappingTable #7");
+		Assert.That(otherDerivedClass.Relations.First().MappingTable, Is.Null, "Relation shouldn't have a MappingTable #8");
 	}
 	[Test]
 	public void HasTypeColumn()
 	{
-		Assert.NotNull(ownClass.Relations.First().ForeignKeyTypeColumnName, "Relation should have a TypeColumn #9");
-		Assert.NotNull(otherClass.Relations.First().ForeignKeyTypeColumnName, "Relation should have a TypeColumn #10");
+		Assert.That(ownClass.Relations.First().ForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #9");
+		Assert.That(otherClass.Relations.First().ForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #10");
 	}
 	[Test]
 	public void HasTypeCode()
@@ -7515,7 +7517,7 @@ public class MappingTestAgrBi11OwnpabsOthpabsNoTblAuto
 
 
 [TestFixture]
-public class MappingTestAgrBi11OwnpabsOthpabsTblAuto
+public class MappingTestAgrBi11OwnpabsOthpabsTblAuto : NDOTest
 {
 	PersistenceManager pm;
 	NDOMapping mapping;
@@ -7536,22 +7538,22 @@ public class MappingTestAgrBi11OwnpabsOthpabsTblAuto
 	[Test]
 	public void HasMappingTable()
 	{
-		Assert.NotNull(ownClass.Relations.First().MappingTable, "Relation should have a MappingTable #1");
-		Assert.NotNull(ownDerivedClass.Relations.First().MappingTable, "Relation should have a MappingTable #2");
-		Assert.NotNull(otherClass.Relations.First().MappingTable, "Relation should have a MappingTable #3");
-		Assert.NotNull(otherDerivedClass.Relations.First().MappingTable, "Relation should have a MappingTable #4");
+		Assert.That(ownClass.Relations.First().MappingTable, Is.Not.Null, "Relation should have a MappingTable #1");
+		Assert.That(ownDerivedClass.Relations.First().MappingTable, Is.Not.Null, "Relation should have a MappingTable #2");
+		Assert.That(otherClass.Relations.First().MappingTable, Is.Not.Null, "Relation should have a MappingTable #3");
+		Assert.That(otherDerivedClass.Relations.First().MappingTable, Is.Not.Null, "Relation should have a MappingTable #4");
 	}
 	[Test]
 	public void HasTypeColumn()
 	{
-		Assert.NotNull(ownClass.Relations.First().ForeignKeyTypeColumnName, "Relation should have a TypeColumn #1");
-		Assert.NotNull(ownDerivedClass.Relations.First().ForeignKeyTypeColumnName, "Relation should have a TypeColumn #2");
-		Assert.NotNull(ownClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, "Relation should have a TypeColumn #3");
-		Assert.NotNull(ownDerivedClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, "Relation should have a TypeColumn #4");
-		Assert.NotNull(otherClass.Relations.First().ForeignKeyTypeColumnName, "Relation should have a TypeColumn #5");
-		Assert.NotNull(otherDerivedClass.Relations.First().ForeignKeyTypeColumnName, "Relation should have a TypeColumn #6");
-		Assert.NotNull(otherClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, "Relation should have a TypeColumn #7");
-		Assert.NotNull(otherDerivedClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, "Relation should have a TypeColumn #8");
+		Assert.That(ownClass.Relations.First().ForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #1");
+		Assert.That(ownDerivedClass.Relations.First().ForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #2");
+		Assert.That(ownClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #3");
+		Assert.That(ownDerivedClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #4");
+		Assert.That(otherClass.Relations.First().ForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #5");
+		Assert.That(otherDerivedClass.Relations.First().ForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #6");
+		Assert.That(otherClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #7");
+		Assert.That(otherDerivedClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #8");
 	}
 	[Test]
 	public void HasTypeCode()
@@ -7563,7 +7565,7 @@ public class MappingTestAgrBi11OwnpabsOthpabsTblAuto
 
 
 [TestFixture]
-public class MappingTestAgrDirnOwnpabsOthpabsTblAuto
+public class MappingTestAgrDirnOwnpabsOthpabsTblAuto : NDOTest
 {
 	PersistenceManager pm;
 	NDOMapping mapping;
@@ -7584,16 +7586,16 @@ public class MappingTestAgrDirnOwnpabsOthpabsTblAuto
 	[Test]
 	public void HasMappingTable()
 	{
-		Assert.NotNull(ownClass.Relations.First().MappingTable, "Relation should have a MappingTable #1");
-		Assert.NotNull(ownDerivedClass.Relations.First().MappingTable, "Relation should have a MappingTable #2");
+		Assert.That(ownClass.Relations.First().MappingTable, Is.Not.Null, "Relation should have a MappingTable #1");
+		Assert.That(ownDerivedClass.Relations.First().MappingTable, Is.Not.Null, "Relation should have a MappingTable #2");
 	}
 	[Test]
 	public void HasTypeColumn()
 	{
-		Assert.NotNull(ownClass.Relations.First().ForeignKeyTypeColumnName, "Relation should have a TypeColumn #1");
-		Assert.NotNull(ownDerivedClass.Relations.First().ForeignKeyTypeColumnName, "Relation should have a TypeColumn #2");
-		Assert.NotNull(ownClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, "Relation should have a TypeColumn #3");
-		Assert.NotNull(ownDerivedClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, "Relation should have a TypeColumn #4");
+		Assert.That(ownClass.Relations.First().ForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #1");
+		Assert.That(ownDerivedClass.Relations.First().ForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #2");
+		Assert.That(ownClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #3");
+		Assert.That(ownDerivedClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #4");
 	}
 	[Test]
 	public void HasTypeCode()
@@ -7605,7 +7607,7 @@ public class MappingTestAgrDirnOwnpabsOthpabsTblAuto
 
 
 [TestFixture]
-public class MappingTestAgrBin1OwnpabsOthpabsTblAuto
+public class MappingTestAgrBin1OwnpabsOthpabsTblAuto : NDOTest
 {
 	PersistenceManager pm;
 	NDOMapping mapping;
@@ -7626,22 +7628,22 @@ public class MappingTestAgrBin1OwnpabsOthpabsTblAuto
 	[Test]
 	public void HasMappingTable()
 	{
-		Assert.NotNull(ownClass.Relations.First().MappingTable, "Relation should have a MappingTable #1");
-		Assert.NotNull(ownDerivedClass.Relations.First().MappingTable, "Relation should have a MappingTable #2");
-		Assert.NotNull(otherClass.Relations.First().MappingTable, "Relation should have a MappingTable #3");
-		Assert.NotNull(otherDerivedClass.Relations.First().MappingTable, "Relation should have a MappingTable #4");
+		Assert.That(ownClass.Relations.First().MappingTable, Is.Not.Null, "Relation should have a MappingTable #1");
+		Assert.That(ownDerivedClass.Relations.First().MappingTable, Is.Not.Null, "Relation should have a MappingTable #2");
+		Assert.That(otherClass.Relations.First().MappingTable, Is.Not.Null, "Relation should have a MappingTable #3");
+		Assert.That(otherDerivedClass.Relations.First().MappingTable, Is.Not.Null, "Relation should have a MappingTable #4");
 	}
 	[Test]
 	public void HasTypeColumn()
 	{
-		Assert.NotNull(ownClass.Relations.First().ForeignKeyTypeColumnName, "Relation should have a TypeColumn #1");
-		Assert.NotNull(ownDerivedClass.Relations.First().ForeignKeyTypeColumnName, "Relation should have a TypeColumn #2");
-		Assert.NotNull(ownClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, "Relation should have a TypeColumn #3");
-		Assert.NotNull(ownDerivedClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, "Relation should have a TypeColumn #4");
-		Assert.NotNull(otherClass.Relations.First().ForeignKeyTypeColumnName, "Relation should have a TypeColumn #5");
-		Assert.NotNull(otherDerivedClass.Relations.First().ForeignKeyTypeColumnName, "Relation should have a TypeColumn #6");
-		Assert.NotNull(otherClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, "Relation should have a TypeColumn #7");
-		Assert.NotNull(otherDerivedClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, "Relation should have a TypeColumn #8");
+		Assert.That(ownClass.Relations.First().ForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #1");
+		Assert.That(ownDerivedClass.Relations.First().ForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #2");
+		Assert.That(ownClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #3");
+		Assert.That(ownDerivedClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #4");
+		Assert.That(otherClass.Relations.First().ForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #5");
+		Assert.That(otherDerivedClass.Relations.First().ForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #6");
+		Assert.That(otherClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #7");
+		Assert.That(otherDerivedClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #8");
 	}
 	[Test]
 	public void HasTypeCode()
@@ -7653,7 +7655,7 @@ public class MappingTestAgrBin1OwnpabsOthpabsTblAuto
 
 
 [TestFixture]
-public class MappingTestAgrBi1nOwnpabsOthpabsTblAuto
+public class MappingTestAgrBi1nOwnpabsOthpabsTblAuto : NDOTest
 {
 	PersistenceManager pm;
 	NDOMapping mapping;
@@ -7674,22 +7676,22 @@ public class MappingTestAgrBi1nOwnpabsOthpabsTblAuto
 	[Test]
 	public void HasMappingTable()
 	{
-		Assert.NotNull(ownClass.Relations.First().MappingTable, "Relation should have a MappingTable #1");
-		Assert.NotNull(ownDerivedClass.Relations.First().MappingTable, "Relation should have a MappingTable #2");
-		Assert.NotNull(otherClass.Relations.First().MappingTable, "Relation should have a MappingTable #3");
-		Assert.NotNull(otherDerivedClass.Relations.First().MappingTable, "Relation should have a MappingTable #4");
+		Assert.That(ownClass.Relations.First().MappingTable, Is.Not.Null, "Relation should have a MappingTable #1");
+		Assert.That(ownDerivedClass.Relations.First().MappingTable, Is.Not.Null, "Relation should have a MappingTable #2");
+		Assert.That(otherClass.Relations.First().MappingTable, Is.Not.Null, "Relation should have a MappingTable #3");
+		Assert.That(otherDerivedClass.Relations.First().MappingTable, Is.Not.Null, "Relation should have a MappingTable #4");
 	}
 	[Test]
 	public void HasTypeColumn()
 	{
-		Assert.NotNull(ownClass.Relations.First().ForeignKeyTypeColumnName, "Relation should have a TypeColumn #1");
-		Assert.NotNull(ownDerivedClass.Relations.First().ForeignKeyTypeColumnName, "Relation should have a TypeColumn #2");
-		Assert.NotNull(ownClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, "Relation should have a TypeColumn #3");
-		Assert.NotNull(ownDerivedClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, "Relation should have a TypeColumn #4");
-		Assert.NotNull(otherClass.Relations.First().ForeignKeyTypeColumnName, "Relation should have a TypeColumn #5");
-		Assert.NotNull(otherDerivedClass.Relations.First().ForeignKeyTypeColumnName, "Relation should have a TypeColumn #6");
-		Assert.NotNull(otherClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, "Relation should have a TypeColumn #7");
-		Assert.NotNull(otherDerivedClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, "Relation should have a TypeColumn #8");
+		Assert.That(ownClass.Relations.First().ForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #1");
+		Assert.That(ownDerivedClass.Relations.First().ForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #2");
+		Assert.That(ownClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #3");
+		Assert.That(ownDerivedClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #4");
+		Assert.That(otherClass.Relations.First().ForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #5");
+		Assert.That(otherDerivedClass.Relations.First().ForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #6");
+		Assert.That(otherClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #7");
+		Assert.That(otherDerivedClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #8");
 	}
 	[Test]
 	public void HasTypeCode()
@@ -7701,7 +7703,7 @@ public class MappingTestAgrBi1nOwnpabsOthpabsTblAuto
 
 
 [TestFixture]
-public class MappingTestAgrBinnOwnpabsOthpabsTblAuto
+public class MappingTestAgrBinnOwnpabsOthpabsTblAuto : NDOTest
 {
 	PersistenceManager pm;
 	NDOMapping mapping;
@@ -7722,22 +7724,22 @@ public class MappingTestAgrBinnOwnpabsOthpabsTblAuto
 	[Test]
 	public void HasMappingTable()
 	{
-		Assert.NotNull(ownClass.Relations.First().MappingTable, "Relation should have a MappingTable #1");
-		Assert.NotNull(ownDerivedClass.Relations.First().MappingTable, "Relation should have a MappingTable #2");
-		Assert.NotNull(otherClass.Relations.First().MappingTable, "Relation should have a MappingTable #3");
-		Assert.NotNull(otherDerivedClass.Relations.First().MappingTable, "Relation should have a MappingTable #4");
+		Assert.That(ownClass.Relations.First().MappingTable, Is.Not.Null, "Relation should have a MappingTable #1");
+		Assert.That(ownDerivedClass.Relations.First().MappingTable, Is.Not.Null, "Relation should have a MappingTable #2");
+		Assert.That(otherClass.Relations.First().MappingTable, Is.Not.Null, "Relation should have a MappingTable #3");
+		Assert.That(otherDerivedClass.Relations.First().MappingTable, Is.Not.Null, "Relation should have a MappingTable #4");
 	}
 	[Test]
 	public void HasTypeColumn()
 	{
-		Assert.NotNull(ownClass.Relations.First().ForeignKeyTypeColumnName, "Relation should have a TypeColumn #1");
-		Assert.NotNull(ownDerivedClass.Relations.First().ForeignKeyTypeColumnName, "Relation should have a TypeColumn #2");
-		Assert.NotNull(ownClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, "Relation should have a TypeColumn #3");
-		Assert.NotNull(ownDerivedClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, "Relation should have a TypeColumn #4");
-		Assert.NotNull(otherClass.Relations.First().ForeignKeyTypeColumnName, "Relation should have a TypeColumn #5");
-		Assert.NotNull(otherDerivedClass.Relations.First().ForeignKeyTypeColumnName, "Relation should have a TypeColumn #6");
-		Assert.NotNull(otherClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, "Relation should have a TypeColumn #7");
-		Assert.NotNull(otherDerivedClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, "Relation should have a TypeColumn #8");
+		Assert.That(ownClass.Relations.First().ForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #1");
+		Assert.That(ownDerivedClass.Relations.First().ForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #2");
+		Assert.That(ownClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #3");
+		Assert.That(ownDerivedClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #4");
+		Assert.That(otherClass.Relations.First().ForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #5");
+		Assert.That(otherDerivedClass.Relations.First().ForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #6");
+		Assert.That(otherClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #7");
+		Assert.That(otherDerivedClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #8");
 	}
 	[Test]
 	public void HasTypeCode()
@@ -7749,7 +7751,7 @@ public class MappingTestAgrBinnOwnpabsOthpabsTblAuto
 
 
 [TestFixture]
-public class MappingTestCmpDir1OwnpabsOthpabsTblAuto
+public class MappingTestCmpDir1OwnpabsOthpabsTblAuto : NDOTest
 {
 	PersistenceManager pm;
 	NDOMapping mapping;
@@ -7770,16 +7772,16 @@ public class MappingTestCmpDir1OwnpabsOthpabsTblAuto
 	[Test]
 	public void HasMappingTable()
 	{
-		Assert.NotNull(ownClass.Relations.First().MappingTable, "Relation should have a MappingTable #1");
-		Assert.NotNull(ownDerivedClass.Relations.First().MappingTable, "Relation should have a MappingTable #2");
+		Assert.That(ownClass.Relations.First().MappingTable, Is.Not.Null, "Relation should have a MappingTable #1");
+		Assert.That(ownDerivedClass.Relations.First().MappingTable, Is.Not.Null, "Relation should have a MappingTable #2");
 	}
 	[Test]
 	public void HasTypeColumn()
 	{
-		Assert.NotNull(ownClass.Relations.First().ForeignKeyTypeColumnName, "Relation should have a TypeColumn #1");
-		Assert.NotNull(ownDerivedClass.Relations.First().ForeignKeyTypeColumnName, "Relation should have a TypeColumn #2");
-		Assert.NotNull(ownClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, "Relation should have a TypeColumn #3");
-		Assert.NotNull(ownDerivedClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, "Relation should have a TypeColumn #4");
+		Assert.That(ownClass.Relations.First().ForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #1");
+		Assert.That(ownDerivedClass.Relations.First().ForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #2");
+		Assert.That(ownClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #3");
+		Assert.That(ownDerivedClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #4");
 	}
 	[Test]
 	public void HasTypeCode()
@@ -7791,7 +7793,7 @@ public class MappingTestCmpDir1OwnpabsOthpabsTblAuto
 
 
 [TestFixture]
-public class MappingTestCmpBi11OwnpabsOthpabsTblAuto
+public class MappingTestCmpBi11OwnpabsOthpabsTblAuto : NDOTest
 {
 	PersistenceManager pm;
 	NDOMapping mapping;
@@ -7812,22 +7814,22 @@ public class MappingTestCmpBi11OwnpabsOthpabsTblAuto
 	[Test]
 	public void HasMappingTable()
 	{
-		Assert.NotNull(ownClass.Relations.First().MappingTable, "Relation should have a MappingTable #1");
-		Assert.NotNull(ownDerivedClass.Relations.First().MappingTable, "Relation should have a MappingTable #2");
-		Assert.NotNull(otherClass.Relations.First().MappingTable, "Relation should have a MappingTable #3");
-		Assert.NotNull(otherDerivedClass.Relations.First().MappingTable, "Relation should have a MappingTable #4");
+		Assert.That(ownClass.Relations.First().MappingTable, Is.Not.Null, "Relation should have a MappingTable #1");
+		Assert.That(ownDerivedClass.Relations.First().MappingTable, Is.Not.Null, "Relation should have a MappingTable #2");
+		Assert.That(otherClass.Relations.First().MappingTable, Is.Not.Null, "Relation should have a MappingTable #3");
+		Assert.That(otherDerivedClass.Relations.First().MappingTable, Is.Not.Null, "Relation should have a MappingTable #4");
 	}
 	[Test]
 	public void HasTypeColumn()
 	{
-		Assert.NotNull(ownClass.Relations.First().ForeignKeyTypeColumnName, "Relation should have a TypeColumn #1");
-		Assert.NotNull(ownDerivedClass.Relations.First().ForeignKeyTypeColumnName, "Relation should have a TypeColumn #2");
-		Assert.NotNull(ownClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, "Relation should have a TypeColumn #3");
-		Assert.NotNull(ownDerivedClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, "Relation should have a TypeColumn #4");
-		Assert.NotNull(otherClass.Relations.First().ForeignKeyTypeColumnName, "Relation should have a TypeColumn #5");
-		Assert.NotNull(otherDerivedClass.Relations.First().ForeignKeyTypeColumnName, "Relation should have a TypeColumn #6");
-		Assert.NotNull(otherClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, "Relation should have a TypeColumn #7");
-		Assert.NotNull(otherDerivedClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, "Relation should have a TypeColumn #8");
+		Assert.That(ownClass.Relations.First().ForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #1");
+		Assert.That(ownDerivedClass.Relations.First().ForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #2");
+		Assert.That(ownClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #3");
+		Assert.That(ownDerivedClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #4");
+		Assert.That(otherClass.Relations.First().ForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #5");
+		Assert.That(otherDerivedClass.Relations.First().ForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #6");
+		Assert.That(otherClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #7");
+		Assert.That(otherDerivedClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #8");
 	}
 	[Test]
 	public void HasTypeCode()
@@ -7839,7 +7841,7 @@ public class MappingTestCmpBi11OwnpabsOthpabsTblAuto
 
 
 [TestFixture]
-public class MappingTestCmpDirnOwnpabsOthpabsTblAuto
+public class MappingTestCmpDirnOwnpabsOthpabsTblAuto : NDOTest
 {
 	PersistenceManager pm;
 	NDOMapping mapping;
@@ -7860,16 +7862,16 @@ public class MappingTestCmpDirnOwnpabsOthpabsTblAuto
 	[Test]
 	public void HasMappingTable()
 	{
-		Assert.NotNull(ownClass.Relations.First().MappingTable, "Relation should have a MappingTable #1");
-		Assert.NotNull(ownDerivedClass.Relations.First().MappingTable, "Relation should have a MappingTable #2");
+		Assert.That(ownClass.Relations.First().MappingTable, Is.Not.Null, "Relation should have a MappingTable #1");
+		Assert.That(ownDerivedClass.Relations.First().MappingTable, Is.Not.Null, "Relation should have a MappingTable #2");
 	}
 	[Test]
 	public void HasTypeColumn()
 	{
-		Assert.NotNull(ownClass.Relations.First().ForeignKeyTypeColumnName, "Relation should have a TypeColumn #1");
-		Assert.NotNull(ownDerivedClass.Relations.First().ForeignKeyTypeColumnName, "Relation should have a TypeColumn #2");
-		Assert.NotNull(ownClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, "Relation should have a TypeColumn #3");
-		Assert.NotNull(ownDerivedClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, "Relation should have a TypeColumn #4");
+		Assert.That(ownClass.Relations.First().ForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #1");
+		Assert.That(ownDerivedClass.Relations.First().ForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #2");
+		Assert.That(ownClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #3");
+		Assert.That(ownDerivedClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #4");
 	}
 	[Test]
 	public void HasTypeCode()
@@ -7881,7 +7883,7 @@ public class MappingTestCmpDirnOwnpabsOthpabsTblAuto
 
 
 [TestFixture]
-public class MappingTestCmpBin1OwnpabsOthpabsTblAuto
+public class MappingTestCmpBin1OwnpabsOthpabsTblAuto : NDOTest
 {
 	PersistenceManager pm;
 	NDOMapping mapping;
@@ -7902,22 +7904,22 @@ public class MappingTestCmpBin1OwnpabsOthpabsTblAuto
 	[Test]
 	public void HasMappingTable()
 	{
-		Assert.NotNull(ownClass.Relations.First().MappingTable, "Relation should have a MappingTable #1");
-		Assert.NotNull(ownDerivedClass.Relations.First().MappingTable, "Relation should have a MappingTable #2");
-		Assert.NotNull(otherClass.Relations.First().MappingTable, "Relation should have a MappingTable #3");
-		Assert.NotNull(otherDerivedClass.Relations.First().MappingTable, "Relation should have a MappingTable #4");
+		Assert.That(ownClass.Relations.First().MappingTable, Is.Not.Null, "Relation should have a MappingTable #1");
+		Assert.That(ownDerivedClass.Relations.First().MappingTable, Is.Not.Null, "Relation should have a MappingTable #2");
+		Assert.That(otherClass.Relations.First().MappingTable, Is.Not.Null, "Relation should have a MappingTable #3");
+		Assert.That(otherDerivedClass.Relations.First().MappingTable, Is.Not.Null, "Relation should have a MappingTable #4");
 	}
 	[Test]
 	public void HasTypeColumn()
 	{
-		Assert.NotNull(ownClass.Relations.First().ForeignKeyTypeColumnName, "Relation should have a TypeColumn #1");
-		Assert.NotNull(ownDerivedClass.Relations.First().ForeignKeyTypeColumnName, "Relation should have a TypeColumn #2");
-		Assert.NotNull(ownClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, "Relation should have a TypeColumn #3");
-		Assert.NotNull(ownDerivedClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, "Relation should have a TypeColumn #4");
-		Assert.NotNull(otherClass.Relations.First().ForeignKeyTypeColumnName, "Relation should have a TypeColumn #5");
-		Assert.NotNull(otherDerivedClass.Relations.First().ForeignKeyTypeColumnName, "Relation should have a TypeColumn #6");
-		Assert.NotNull(otherClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, "Relation should have a TypeColumn #7");
-		Assert.NotNull(otherDerivedClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, "Relation should have a TypeColumn #8");
+		Assert.That(ownClass.Relations.First().ForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #1");
+		Assert.That(ownDerivedClass.Relations.First().ForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #2");
+		Assert.That(ownClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #3");
+		Assert.That(ownDerivedClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #4");
+		Assert.That(otherClass.Relations.First().ForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #5");
+		Assert.That(otherDerivedClass.Relations.First().ForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #6");
+		Assert.That(otherClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #7");
+		Assert.That(otherDerivedClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #8");
 	}
 	[Test]
 	public void HasTypeCode()
@@ -7929,7 +7931,7 @@ public class MappingTestCmpBin1OwnpabsOthpabsTblAuto
 
 
 [TestFixture]
-public class MappingTestCmpBi1nOwnpabsOthpabsTblAuto
+public class MappingTestCmpBi1nOwnpabsOthpabsTblAuto : NDOTest
 {
 	PersistenceManager pm;
 	NDOMapping mapping;
@@ -7950,22 +7952,22 @@ public class MappingTestCmpBi1nOwnpabsOthpabsTblAuto
 	[Test]
 	public void HasMappingTable()
 	{
-		Assert.NotNull(ownClass.Relations.First().MappingTable, "Relation should have a MappingTable #1");
-		Assert.NotNull(ownDerivedClass.Relations.First().MappingTable, "Relation should have a MappingTable #2");
-		Assert.NotNull(otherClass.Relations.First().MappingTable, "Relation should have a MappingTable #3");
-		Assert.NotNull(otherDerivedClass.Relations.First().MappingTable, "Relation should have a MappingTable #4");
+		Assert.That(ownClass.Relations.First().MappingTable, Is.Not.Null, "Relation should have a MappingTable #1");
+		Assert.That(ownDerivedClass.Relations.First().MappingTable, Is.Not.Null, "Relation should have a MappingTable #2");
+		Assert.That(otherClass.Relations.First().MappingTable, Is.Not.Null, "Relation should have a MappingTable #3");
+		Assert.That(otherDerivedClass.Relations.First().MappingTable, Is.Not.Null, "Relation should have a MappingTable #4");
 	}
 	[Test]
 	public void HasTypeColumn()
 	{
-		Assert.NotNull(ownClass.Relations.First().ForeignKeyTypeColumnName, "Relation should have a TypeColumn #1");
-		Assert.NotNull(ownDerivedClass.Relations.First().ForeignKeyTypeColumnName, "Relation should have a TypeColumn #2");
-		Assert.NotNull(ownClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, "Relation should have a TypeColumn #3");
-		Assert.NotNull(ownDerivedClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, "Relation should have a TypeColumn #4");
-		Assert.NotNull(otherClass.Relations.First().ForeignKeyTypeColumnName, "Relation should have a TypeColumn #5");
-		Assert.NotNull(otherDerivedClass.Relations.First().ForeignKeyTypeColumnName, "Relation should have a TypeColumn #6");
-		Assert.NotNull(otherClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, "Relation should have a TypeColumn #7");
-		Assert.NotNull(otherDerivedClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, "Relation should have a TypeColumn #8");
+		Assert.That(ownClass.Relations.First().ForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #1");
+		Assert.That(ownDerivedClass.Relations.First().ForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #2");
+		Assert.That(ownClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #3");
+		Assert.That(ownDerivedClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #4");
+		Assert.That(otherClass.Relations.First().ForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #5");
+		Assert.That(otherDerivedClass.Relations.First().ForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #6");
+		Assert.That(otherClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #7");
+		Assert.That(otherDerivedClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #8");
 	}
 	[Test]
 	public void HasTypeCode()
@@ -7977,7 +7979,7 @@ public class MappingTestCmpBi1nOwnpabsOthpabsTblAuto
 
 
 [TestFixture]
-public class MappingTestCmpBinnOwnpabsOthpabsTblAuto
+public class MappingTestCmpBinnOwnpabsOthpabsTblAuto : NDOTest
 {
 	PersistenceManager pm;
 	NDOMapping mapping;
@@ -7998,22 +8000,22 @@ public class MappingTestCmpBinnOwnpabsOthpabsTblAuto
 	[Test]
 	public void HasMappingTable()
 	{
-		Assert.NotNull(ownClass.Relations.First().MappingTable, "Relation should have a MappingTable #1");
-		Assert.NotNull(ownDerivedClass.Relations.First().MappingTable, "Relation should have a MappingTable #2");
-		Assert.NotNull(otherClass.Relations.First().MappingTable, "Relation should have a MappingTable #3");
-		Assert.NotNull(otherDerivedClass.Relations.First().MappingTable, "Relation should have a MappingTable #4");
+		Assert.That(ownClass.Relations.First().MappingTable, Is.Not.Null, "Relation should have a MappingTable #1");
+		Assert.That(ownDerivedClass.Relations.First().MappingTable, Is.Not.Null, "Relation should have a MappingTable #2");
+		Assert.That(otherClass.Relations.First().MappingTable, Is.Not.Null, "Relation should have a MappingTable #3");
+		Assert.That(otherDerivedClass.Relations.First().MappingTable, Is.Not.Null, "Relation should have a MappingTable #4");
 	}
 	[Test]
 	public void HasTypeColumn()
 	{
-		Assert.NotNull(ownClass.Relations.First().ForeignKeyTypeColumnName, "Relation should have a TypeColumn #1");
-		Assert.NotNull(ownDerivedClass.Relations.First().ForeignKeyTypeColumnName, "Relation should have a TypeColumn #2");
-		Assert.NotNull(ownClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, "Relation should have a TypeColumn #3");
-		Assert.NotNull(ownDerivedClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, "Relation should have a TypeColumn #4");
-		Assert.NotNull(otherClass.Relations.First().ForeignKeyTypeColumnName, "Relation should have a TypeColumn #5");
-		Assert.NotNull(otherDerivedClass.Relations.First().ForeignKeyTypeColumnName, "Relation should have a TypeColumn #6");
-		Assert.NotNull(otherClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, "Relation should have a TypeColumn #7");
-		Assert.NotNull(otherDerivedClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, "Relation should have a TypeColumn #8");
+		Assert.That(ownClass.Relations.First().ForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #1");
+		Assert.That(ownDerivedClass.Relations.First().ForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #2");
+		Assert.That(ownClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #3");
+		Assert.That(ownDerivedClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #4");
+		Assert.That(otherClass.Relations.First().ForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #5");
+		Assert.That(otherDerivedClass.Relations.First().ForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #6");
+		Assert.That(otherClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #7");
+		Assert.That(otherDerivedClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #8");
 	}
 	[Test]
 	public void HasTypeCode()
@@ -8025,7 +8027,7 @@ public class MappingTestCmpBinnOwnpabsOthpabsTblAuto
 
 
 [TestFixture]
-public class MappingTestAgrDir1OwnpabsNoTblGuid
+public class MappingTestAgrDir1OwnpabsNoTblGuid : NDOTest
 {
 	PersistenceManager pm;
 	NDOMapping mapping;
@@ -8044,13 +8046,13 @@ public class MappingTestAgrDir1OwnpabsNoTblGuid
 	[Test]
 	public void HasMappingTable()
 	{
-		Assert.Null(ownClass.Relations.First().MappingTable, "Relation shouldn't have a MappingTable #5");
-		Assert.Null(ownDerivedClass.Relations.First().MappingTable, "Relation shouldn't have a MappingTable #6");
+		Assert.That(ownClass.Relations.First().MappingTable, Is.Null, "Relation shouldn't have a MappingTable #5");
+		Assert.That(ownDerivedClass.Relations.First().MappingTable, Is.Null, "Relation shouldn't have a MappingTable #6");
 	}
 	[Test]
 	public void HasTypeColumn()
 	{
-		Assert.Null(ownClass.Relations.First().ForeignKeyTypeColumnName, "Relation shouldn't have a TypeColumn #1");
+		Assert.That(ownClass.Relations.First().ForeignKeyTypeColumnName, Is.Null, "Relation shouldn't have a TypeColumn #1");
 	}
 	[Test]
 	public void HasTypeCode()
@@ -8062,7 +8064,7 @@ public class MappingTestAgrDir1OwnpabsNoTblGuid
 
 
 [TestFixture]
-public class MappingTestAgrDir1OwnpabsTblGuid
+public class MappingTestAgrDir1OwnpabsTblGuid : NDOTest
 {
 	PersistenceManager pm;
 	NDOMapping mapping;
@@ -8081,15 +8083,15 @@ public class MappingTestAgrDir1OwnpabsTblGuid
 	[Test]
 	public void HasMappingTable()
 	{
-		Assert.NotNull(ownClass.Relations.First().MappingTable, "Relation should have a MappingTable #1");
-		Assert.NotNull(ownDerivedClass.Relations.First().MappingTable, "Relation should have a MappingTable #2");
+		Assert.That(ownClass.Relations.First().MappingTable, Is.Not.Null, "Relation should have a MappingTable #1");
+		Assert.That(ownDerivedClass.Relations.First().MappingTable, Is.Not.Null, "Relation should have a MappingTable #2");
 	}
 	[Test]
 	public void HasTypeColumn()
 	{
-		Assert.NotNull(ownClass.Relations.First().ForeignKeyTypeColumnName, "Relation should have a TypeColumn #1");
-		Assert.NotNull(ownDerivedClass.Relations.First().ForeignKeyTypeColumnName, "Relation should have a TypeColumn #2");
-		Assert.Null(ownClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, "Relation shouldn't have a TypeColumn #3");
+		Assert.That(ownClass.Relations.First().ForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #1");
+		Assert.That(ownDerivedClass.Relations.First().ForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #2");
+		Assert.That(ownClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, Is.Null, "Relation shouldn't have a TypeColumn #3");
 	}
 	[Test]
 	public void HasTypeCode()
@@ -8101,7 +8103,7 @@ public class MappingTestAgrDir1OwnpabsTblGuid
 
 
 [TestFixture]
-public class MappingTestAgrBi11OwnpabsNoTblGuid
+public class MappingTestAgrBi11OwnpabsNoTblGuid : NDOTest
 {
 	PersistenceManager pm;
 	NDOMapping mapping;
@@ -8120,15 +8122,15 @@ public class MappingTestAgrBi11OwnpabsNoTblGuid
 	[Test]
 	public void HasMappingTable()
 	{
-		Assert.Null(ownClass.Relations.First().MappingTable, "Relation shouldn't have a MappingTable #5");
-		Assert.Null(ownDerivedClass.Relations.First().MappingTable, "Relation shouldn't have a MappingTable #6");
-		Assert.Null(otherClass.Relations.First().MappingTable, "Relation shouldn't have a MappingTable #7");
+		Assert.That(ownClass.Relations.First().MappingTable, Is.Null, "Relation shouldn't have a MappingTable #5");
+		Assert.That(ownDerivedClass.Relations.First().MappingTable, Is.Null, "Relation shouldn't have a MappingTable #6");
+		Assert.That(otherClass.Relations.First().MappingTable, Is.Null, "Relation shouldn't have a MappingTable #7");
 	}
 	[Test]
 	public void HasTypeColumn()
 	{
-		Assert.Null(ownClass.Relations.First().ForeignKeyTypeColumnName, "Relation shouldn't have a TypeColumn #1");
-		Assert.NotNull(otherClass.Relations.First().ForeignKeyTypeColumnName, "Relation should have a TypeColumn #10");
+		Assert.That(ownClass.Relations.First().ForeignKeyTypeColumnName, Is.Null, "Relation shouldn't have a TypeColumn #1");
+		Assert.That(otherClass.Relations.First().ForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #10");
 	}
 	[Test]
 	public void HasTypeCode()
@@ -8140,7 +8142,7 @@ public class MappingTestAgrBi11OwnpabsNoTblGuid
 
 
 [TestFixture]
-public class MappingTestAgrBi11OwnpabsTblGuid
+public class MappingTestAgrBi11OwnpabsTblGuid : NDOTest
 {
 	PersistenceManager pm;
 	NDOMapping mapping;
@@ -8159,18 +8161,18 @@ public class MappingTestAgrBi11OwnpabsTblGuid
 	[Test]
 	public void HasMappingTable()
 	{
-		Assert.NotNull(ownClass.Relations.First().MappingTable, "Relation should have a MappingTable #1");
-		Assert.NotNull(ownDerivedClass.Relations.First().MappingTable, "Relation should have a MappingTable #2");
-		Assert.NotNull(otherClass.Relations.First().MappingTable, "Relation should have a MappingTable #3");
+		Assert.That(ownClass.Relations.First().MappingTable, Is.Not.Null, "Relation should have a MappingTable #1");
+		Assert.That(ownDerivedClass.Relations.First().MappingTable, Is.Not.Null, "Relation should have a MappingTable #2");
+		Assert.That(otherClass.Relations.First().MappingTable, Is.Not.Null, "Relation should have a MappingTable #3");
 	}
 	[Test]
 	public void HasTypeColumn()
 	{
-		Assert.NotNull(ownClass.Relations.First().ForeignKeyTypeColumnName, "Relation should have a TypeColumn #1");
-		Assert.NotNull(ownDerivedClass.Relations.First().ForeignKeyTypeColumnName, "Relation should have a TypeColumn #2");
-		Assert.NotNull(otherClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, "Relation should have a TypeColumn #7");
-		Assert.Null(ownClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, "Relation shouldn't have a TypeColumn #3");
-		Assert.Null(otherClass.Relations.First().ForeignKeyTypeColumnName, "Relation shouldn't have a TypeColumn #4");
+		Assert.That(ownClass.Relations.First().ForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #1");
+		Assert.That(ownDerivedClass.Relations.First().ForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #2");
+		Assert.That(otherClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #7");
+		Assert.That(ownClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, Is.Null, "Relation shouldn't have a TypeColumn #3");
+		Assert.That(otherClass.Relations.First().ForeignKeyTypeColumnName, Is.Null, "Relation shouldn't have a TypeColumn #4");
 	}
 	[Test]
 	public void HasTypeCode()
@@ -8182,7 +8184,7 @@ public class MappingTestAgrBi11OwnpabsTblGuid
 
 
 [TestFixture]
-public class MappingTestAgrDirnOwnpabsNoTblGuid
+public class MappingTestAgrDirnOwnpabsNoTblGuid : NDOTest
 {
 	PersistenceManager pm;
 	NDOMapping mapping;
@@ -8201,13 +8203,13 @@ public class MappingTestAgrDirnOwnpabsNoTblGuid
 	[Test]
 	public void HasMappingTable()
 	{
-		Assert.Null(ownClass.Relations.First().MappingTable, "Relation shouldn't have a MappingTable #5");
-		Assert.Null(ownDerivedClass.Relations.First().MappingTable, "Relation shouldn't have a MappingTable #6");
+		Assert.That(ownClass.Relations.First().MappingTable, Is.Null, "Relation shouldn't have a MappingTable #5");
+		Assert.That(ownDerivedClass.Relations.First().MappingTable, Is.Null, "Relation shouldn't have a MappingTable #6");
 	}
 	[Test]
 	public void HasTypeColumn()
 	{
-		Assert.Null(ownClass.Relations.First().ForeignKeyTypeColumnName, "Relation shouldn't have a TypeColumn #1");
+		Assert.That(ownClass.Relations.First().ForeignKeyTypeColumnName, Is.Null, "Relation shouldn't have a TypeColumn #1");
 	}
 	[Test]
 	public void HasTypeCode()
@@ -8219,7 +8221,7 @@ public class MappingTestAgrDirnOwnpabsNoTblGuid
 
 
 [TestFixture]
-public class MappingTestAgrDirnOwnpabsTblGuid
+public class MappingTestAgrDirnOwnpabsTblGuid : NDOTest
 {
 	PersistenceManager pm;
 	NDOMapping mapping;
@@ -8238,15 +8240,15 @@ public class MappingTestAgrDirnOwnpabsTblGuid
 	[Test]
 	public void HasMappingTable()
 	{
-		Assert.NotNull(ownClass.Relations.First().MappingTable, "Relation should have a MappingTable #1");
-		Assert.NotNull(ownDerivedClass.Relations.First().MappingTable, "Relation should have a MappingTable #2");
+		Assert.That(ownClass.Relations.First().MappingTable, Is.Not.Null, "Relation should have a MappingTable #1");
+		Assert.That(ownDerivedClass.Relations.First().MappingTable, Is.Not.Null, "Relation should have a MappingTable #2");
 	}
 	[Test]
 	public void HasTypeColumn()
 	{
-		Assert.NotNull(ownClass.Relations.First().ForeignKeyTypeColumnName, "Relation should have a TypeColumn #1");
-		Assert.NotNull(ownDerivedClass.Relations.First().ForeignKeyTypeColumnName, "Relation should have a TypeColumn #2");
-		Assert.Null(ownClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, "Relation shouldn't have a TypeColumn #3");
+		Assert.That(ownClass.Relations.First().ForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #1");
+		Assert.That(ownDerivedClass.Relations.First().ForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #2");
+		Assert.That(ownClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, Is.Null, "Relation shouldn't have a TypeColumn #3");
 	}
 	[Test]
 	public void HasTypeCode()
@@ -8258,7 +8260,7 @@ public class MappingTestAgrDirnOwnpabsTblGuid
 
 
 [TestFixture]
-public class MappingTestAgrBin1OwnpabsNoTblGuid
+public class MappingTestAgrBin1OwnpabsNoTblGuid : NDOTest
 {
 	PersistenceManager pm;
 	NDOMapping mapping;
@@ -8277,14 +8279,14 @@ public class MappingTestAgrBin1OwnpabsNoTblGuid
 	[Test]
 	public void HasMappingTable()
 	{
-		Assert.Null(ownClass.Relations.First().MappingTable, "Relation shouldn't have a MappingTable #5");
-		Assert.Null(ownDerivedClass.Relations.First().MappingTable, "Relation shouldn't have a MappingTable #6");
-		Assert.Null(otherClass.Relations.First().MappingTable, "Relation shouldn't have a MappingTable #7");
+		Assert.That(ownClass.Relations.First().MappingTable, Is.Null, "Relation shouldn't have a MappingTable #5");
+		Assert.That(ownDerivedClass.Relations.First().MappingTable, Is.Null, "Relation shouldn't have a MappingTable #6");
+		Assert.That(otherClass.Relations.First().MappingTable, Is.Null, "Relation shouldn't have a MappingTable #7");
 	}
 	[Test]
 	public void HasTypeColumn()
 	{
-		Assert.Null(ownClass.Relations.First().ForeignKeyTypeColumnName, "Relation shouldn't have a TypeColumn #1");
+		Assert.That(ownClass.Relations.First().ForeignKeyTypeColumnName, Is.Null, "Relation shouldn't have a TypeColumn #1");
 	}
 	[Test]
 	public void HasTypeCode()
@@ -8296,7 +8298,7 @@ public class MappingTestAgrBin1OwnpabsNoTblGuid
 
 
 [TestFixture]
-public class MappingTestAgrBin1OwnpabsTblGuid
+public class MappingTestAgrBin1OwnpabsTblGuid : NDOTest
 {
 	PersistenceManager pm;
 	NDOMapping mapping;
@@ -8315,18 +8317,18 @@ public class MappingTestAgrBin1OwnpabsTblGuid
 	[Test]
 	public void HasMappingTable()
 	{
-		Assert.NotNull(ownClass.Relations.First().MappingTable, "Relation should have a MappingTable #1");
-		Assert.NotNull(ownDerivedClass.Relations.First().MappingTable, "Relation should have a MappingTable #2");
-		Assert.NotNull(otherClass.Relations.First().MappingTable, "Relation should have a MappingTable #3");
+		Assert.That(ownClass.Relations.First().MappingTable, Is.Not.Null, "Relation should have a MappingTable #1");
+		Assert.That(ownDerivedClass.Relations.First().MappingTable, Is.Not.Null, "Relation should have a MappingTable #2");
+		Assert.That(otherClass.Relations.First().MappingTable, Is.Not.Null, "Relation should have a MappingTable #3");
 	}
 	[Test]
 	public void HasTypeColumn()
 	{
-		Assert.NotNull(ownClass.Relations.First().ForeignKeyTypeColumnName, "Relation should have a TypeColumn #1");
-		Assert.NotNull(ownDerivedClass.Relations.First().ForeignKeyTypeColumnName, "Relation should have a TypeColumn #2");
-		Assert.NotNull(otherClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, "Relation should have a TypeColumn #7");
-		Assert.Null(ownClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, "Relation shouldn't have a TypeColumn #3");
-		Assert.Null(otherClass.Relations.First().ForeignKeyTypeColumnName, "Relation shouldn't have a TypeColumn #4");
+		Assert.That(ownClass.Relations.First().ForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #1");
+		Assert.That(ownDerivedClass.Relations.First().ForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #2");
+		Assert.That(otherClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #7");
+		Assert.That(ownClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, Is.Null, "Relation shouldn't have a TypeColumn #3");
+		Assert.That(otherClass.Relations.First().ForeignKeyTypeColumnName, Is.Null, "Relation shouldn't have a TypeColumn #4");
 	}
 	[Test]
 	public void HasTypeCode()
@@ -8338,7 +8340,7 @@ public class MappingTestAgrBin1OwnpabsTblGuid
 
 
 [TestFixture]
-public class MappingTestAgrBi1nOwnpabsTblGuid
+public class MappingTestAgrBi1nOwnpabsTblGuid : NDOTest
 {
 	PersistenceManager pm;
 	NDOMapping mapping;
@@ -8357,18 +8359,18 @@ public class MappingTestAgrBi1nOwnpabsTblGuid
 	[Test]
 	public void HasMappingTable()
 	{
-		Assert.NotNull(ownClass.Relations.First().MappingTable, "Relation should have a MappingTable #1");
-		Assert.NotNull(ownDerivedClass.Relations.First().MappingTable, "Relation should have a MappingTable #2");
-		Assert.NotNull(otherClass.Relations.First().MappingTable, "Relation should have a MappingTable #3");
+		Assert.That(ownClass.Relations.First().MappingTable, Is.Not.Null, "Relation should have a MappingTable #1");
+		Assert.That(ownDerivedClass.Relations.First().MappingTable, Is.Not.Null, "Relation should have a MappingTable #2");
+		Assert.That(otherClass.Relations.First().MappingTable, Is.Not.Null, "Relation should have a MappingTable #3");
 	}
 	[Test]
 	public void HasTypeColumn()
 	{
-		Assert.NotNull(ownClass.Relations.First().ForeignKeyTypeColumnName, "Relation should have a TypeColumn #1");
-		Assert.NotNull(ownDerivedClass.Relations.First().ForeignKeyTypeColumnName, "Relation should have a TypeColumn #2");
-		Assert.NotNull(otherClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, "Relation should have a TypeColumn #7");
-		Assert.Null(ownClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, "Relation shouldn't have a TypeColumn #3");
-		Assert.Null(otherClass.Relations.First().ForeignKeyTypeColumnName, "Relation shouldn't have a TypeColumn #4");
+		Assert.That(ownClass.Relations.First().ForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #1");
+		Assert.That(ownDerivedClass.Relations.First().ForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #2");
+		Assert.That(otherClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #7");
+		Assert.That(ownClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, Is.Null, "Relation shouldn't have a TypeColumn #3");
+		Assert.That(otherClass.Relations.First().ForeignKeyTypeColumnName, Is.Null, "Relation shouldn't have a TypeColumn #4");
 	}
 	[Test]
 	public void HasTypeCode()
@@ -8380,7 +8382,7 @@ public class MappingTestAgrBi1nOwnpabsTblGuid
 
 
 [TestFixture]
-public class MappingTestAgrBinnOwnpabsTblGuid
+public class MappingTestAgrBinnOwnpabsTblGuid : NDOTest
 {
 	PersistenceManager pm;
 	NDOMapping mapping;
@@ -8399,18 +8401,18 @@ public class MappingTestAgrBinnOwnpabsTblGuid
 	[Test]
 	public void HasMappingTable()
 	{
-		Assert.NotNull(ownClass.Relations.First().MappingTable, "Relation should have a MappingTable #1");
-		Assert.NotNull(ownDerivedClass.Relations.First().MappingTable, "Relation should have a MappingTable #2");
-		Assert.NotNull(otherClass.Relations.First().MappingTable, "Relation should have a MappingTable #3");
+		Assert.That(ownClass.Relations.First().MappingTable, Is.Not.Null, "Relation should have a MappingTable #1");
+		Assert.That(ownDerivedClass.Relations.First().MappingTable, Is.Not.Null, "Relation should have a MappingTable #2");
+		Assert.That(otherClass.Relations.First().MappingTable, Is.Not.Null, "Relation should have a MappingTable #3");
 	}
 	[Test]
 	public void HasTypeColumn()
 	{
-		Assert.NotNull(ownClass.Relations.First().ForeignKeyTypeColumnName, "Relation should have a TypeColumn #1");
-		Assert.NotNull(ownDerivedClass.Relations.First().ForeignKeyTypeColumnName, "Relation should have a TypeColumn #2");
-		Assert.NotNull(otherClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, "Relation should have a TypeColumn #7");
-		Assert.Null(ownClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, "Relation shouldn't have a TypeColumn #3");
-		Assert.Null(otherClass.Relations.First().ForeignKeyTypeColumnName, "Relation shouldn't have a TypeColumn #4");
+		Assert.That(ownClass.Relations.First().ForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #1");
+		Assert.That(ownDerivedClass.Relations.First().ForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #2");
+		Assert.That(otherClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #7");
+		Assert.That(ownClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, Is.Null, "Relation shouldn't have a TypeColumn #3");
+		Assert.That(otherClass.Relations.First().ForeignKeyTypeColumnName, Is.Null, "Relation shouldn't have a TypeColumn #4");
 	}
 	[Test]
 	public void HasTypeCode()
@@ -8422,7 +8424,7 @@ public class MappingTestAgrBinnOwnpabsTblGuid
 
 
 [TestFixture]
-public class MappingTestCmpDir1OwnpabsNoTblGuid
+public class MappingTestCmpDir1OwnpabsNoTblGuid : NDOTest
 {
 	PersistenceManager pm;
 	NDOMapping mapping;
@@ -8441,13 +8443,13 @@ public class MappingTestCmpDir1OwnpabsNoTblGuid
 	[Test]
 	public void HasMappingTable()
 	{
-		Assert.Null(ownClass.Relations.First().MappingTable, "Relation shouldn't have a MappingTable #5");
-		Assert.Null(ownDerivedClass.Relations.First().MappingTable, "Relation shouldn't have a MappingTable #6");
+		Assert.That(ownClass.Relations.First().MappingTable, Is.Null, "Relation shouldn't have a MappingTable #5");
+		Assert.That(ownDerivedClass.Relations.First().MappingTable, Is.Null, "Relation shouldn't have a MappingTable #6");
 	}
 	[Test]
 	public void HasTypeColumn()
 	{
-		Assert.Null(ownClass.Relations.First().ForeignKeyTypeColumnName, "Relation shouldn't have a TypeColumn #1");
+		Assert.That(ownClass.Relations.First().ForeignKeyTypeColumnName, Is.Null, "Relation shouldn't have a TypeColumn #1");
 	}
 	[Test]
 	public void HasTypeCode()
@@ -8459,7 +8461,7 @@ public class MappingTestCmpDir1OwnpabsNoTblGuid
 
 
 [TestFixture]
-public class MappingTestCmpDir1OwnpabsTblGuid
+public class MappingTestCmpDir1OwnpabsTblGuid : NDOTest
 {
 	PersistenceManager pm;
 	NDOMapping mapping;
@@ -8478,15 +8480,15 @@ public class MappingTestCmpDir1OwnpabsTblGuid
 	[Test]
 	public void HasMappingTable()
 	{
-		Assert.NotNull(ownClass.Relations.First().MappingTable, "Relation should have a MappingTable #1");
-		Assert.NotNull(ownDerivedClass.Relations.First().MappingTable, "Relation should have a MappingTable #2");
+		Assert.That(ownClass.Relations.First().MappingTable, Is.Not.Null, "Relation should have a MappingTable #1");
+		Assert.That(ownDerivedClass.Relations.First().MappingTable, Is.Not.Null, "Relation should have a MappingTable #2");
 	}
 	[Test]
 	public void HasTypeColumn()
 	{
-		Assert.NotNull(ownClass.Relations.First().ForeignKeyTypeColumnName, "Relation should have a TypeColumn #1");
-		Assert.NotNull(ownDerivedClass.Relations.First().ForeignKeyTypeColumnName, "Relation should have a TypeColumn #2");
-		Assert.Null(ownClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, "Relation shouldn't have a TypeColumn #3");
+		Assert.That(ownClass.Relations.First().ForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #1");
+		Assert.That(ownDerivedClass.Relations.First().ForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #2");
+		Assert.That(ownClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, Is.Null, "Relation shouldn't have a TypeColumn #3");
 	}
 	[Test]
 	public void HasTypeCode()
@@ -8498,7 +8500,7 @@ public class MappingTestCmpDir1OwnpabsTblGuid
 
 
 [TestFixture]
-public class MappingTestCmpBi11OwnpabsNoTblGuid
+public class MappingTestCmpBi11OwnpabsNoTblGuid : NDOTest
 {
 	PersistenceManager pm;
 	NDOMapping mapping;
@@ -8517,15 +8519,15 @@ public class MappingTestCmpBi11OwnpabsNoTblGuid
 	[Test]
 	public void HasMappingTable()
 	{
-		Assert.Null(ownClass.Relations.First().MappingTable, "Relation shouldn't have a MappingTable #5");
-		Assert.Null(ownDerivedClass.Relations.First().MappingTable, "Relation shouldn't have a MappingTable #6");
-		Assert.Null(otherClass.Relations.First().MappingTable, "Relation shouldn't have a MappingTable #7");
+		Assert.That(ownClass.Relations.First().MappingTable, Is.Null, "Relation shouldn't have a MappingTable #5");
+		Assert.That(ownDerivedClass.Relations.First().MappingTable, Is.Null, "Relation shouldn't have a MappingTable #6");
+		Assert.That(otherClass.Relations.First().MappingTable, Is.Null, "Relation shouldn't have a MappingTable #7");
 	}
 	[Test]
 	public void HasTypeColumn()
 	{
-		Assert.Null(ownClass.Relations.First().ForeignKeyTypeColumnName, "Relation shouldn't have a TypeColumn #1");
-		Assert.NotNull(otherClass.Relations.First().ForeignKeyTypeColumnName, "Relation should have a TypeColumn #10");
+		Assert.That(ownClass.Relations.First().ForeignKeyTypeColumnName, Is.Null, "Relation shouldn't have a TypeColumn #1");
+		Assert.That(otherClass.Relations.First().ForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #10");
 	}
 	[Test]
 	public void HasTypeCode()
@@ -8537,7 +8539,7 @@ public class MappingTestCmpBi11OwnpabsNoTblGuid
 
 
 [TestFixture]
-public class MappingTestCmpBi11OwnpabsTblGuid
+public class MappingTestCmpBi11OwnpabsTblGuid : NDOTest
 {
 	PersistenceManager pm;
 	NDOMapping mapping;
@@ -8556,18 +8558,18 @@ public class MappingTestCmpBi11OwnpabsTblGuid
 	[Test]
 	public void HasMappingTable()
 	{
-		Assert.NotNull(ownClass.Relations.First().MappingTable, "Relation should have a MappingTable #1");
-		Assert.NotNull(ownDerivedClass.Relations.First().MappingTable, "Relation should have a MappingTable #2");
-		Assert.NotNull(otherClass.Relations.First().MappingTable, "Relation should have a MappingTable #3");
+		Assert.That(ownClass.Relations.First().MappingTable, Is.Not.Null, "Relation should have a MappingTable #1");
+		Assert.That(ownDerivedClass.Relations.First().MappingTable, Is.Not.Null, "Relation should have a MappingTable #2");
+		Assert.That(otherClass.Relations.First().MappingTable, Is.Not.Null, "Relation should have a MappingTable #3");
 	}
 	[Test]
 	public void HasTypeColumn()
 	{
-		Assert.NotNull(ownClass.Relations.First().ForeignKeyTypeColumnName, "Relation should have a TypeColumn #1");
-		Assert.NotNull(ownDerivedClass.Relations.First().ForeignKeyTypeColumnName, "Relation should have a TypeColumn #2");
-		Assert.NotNull(otherClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, "Relation should have a TypeColumn #7");
-		Assert.Null(ownClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, "Relation shouldn't have a TypeColumn #3");
-		Assert.Null(otherClass.Relations.First().ForeignKeyTypeColumnName, "Relation shouldn't have a TypeColumn #4");
+		Assert.That(ownClass.Relations.First().ForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #1");
+		Assert.That(ownDerivedClass.Relations.First().ForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #2");
+		Assert.That(otherClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #7");
+		Assert.That(ownClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, Is.Null, "Relation shouldn't have a TypeColumn #3");
+		Assert.That(otherClass.Relations.First().ForeignKeyTypeColumnName, Is.Null, "Relation shouldn't have a TypeColumn #4");
 	}
 	[Test]
 	public void HasTypeCode()
@@ -8579,7 +8581,7 @@ public class MappingTestCmpBi11OwnpabsTblGuid
 
 
 [TestFixture]
-public class MappingTestCmpDirnOwnpabsNoTblGuid
+public class MappingTestCmpDirnOwnpabsNoTblGuid : NDOTest
 {
 	PersistenceManager pm;
 	NDOMapping mapping;
@@ -8598,13 +8600,13 @@ public class MappingTestCmpDirnOwnpabsNoTblGuid
 	[Test]
 	public void HasMappingTable()
 	{
-		Assert.Null(ownClass.Relations.First().MappingTable, "Relation shouldn't have a MappingTable #5");
-		Assert.Null(ownDerivedClass.Relations.First().MappingTable, "Relation shouldn't have a MappingTable #6");
+		Assert.That(ownClass.Relations.First().MappingTable, Is.Null, "Relation shouldn't have a MappingTable #5");
+		Assert.That(ownDerivedClass.Relations.First().MappingTable, Is.Null, "Relation shouldn't have a MappingTable #6");
 	}
 	[Test]
 	public void HasTypeColumn()
 	{
-		Assert.Null(ownClass.Relations.First().ForeignKeyTypeColumnName, "Relation shouldn't have a TypeColumn #1");
+		Assert.That(ownClass.Relations.First().ForeignKeyTypeColumnName, Is.Null, "Relation shouldn't have a TypeColumn #1");
 	}
 	[Test]
 	public void HasTypeCode()
@@ -8616,7 +8618,7 @@ public class MappingTestCmpDirnOwnpabsNoTblGuid
 
 
 [TestFixture]
-public class MappingTestCmpDirnOwnpabsTblGuid
+public class MappingTestCmpDirnOwnpabsTblGuid : NDOTest
 {
 	PersistenceManager pm;
 	NDOMapping mapping;
@@ -8635,15 +8637,15 @@ public class MappingTestCmpDirnOwnpabsTblGuid
 	[Test]
 	public void HasMappingTable()
 	{
-		Assert.NotNull(ownClass.Relations.First().MappingTable, "Relation should have a MappingTable #1");
-		Assert.NotNull(ownDerivedClass.Relations.First().MappingTable, "Relation should have a MappingTable #2");
+		Assert.That(ownClass.Relations.First().MappingTable, Is.Not.Null, "Relation should have a MappingTable #1");
+		Assert.That(ownDerivedClass.Relations.First().MappingTable, Is.Not.Null, "Relation should have a MappingTable #2");
 	}
 	[Test]
 	public void HasTypeColumn()
 	{
-		Assert.NotNull(ownClass.Relations.First().ForeignKeyTypeColumnName, "Relation should have a TypeColumn #1");
-		Assert.NotNull(ownDerivedClass.Relations.First().ForeignKeyTypeColumnName, "Relation should have a TypeColumn #2");
-		Assert.Null(ownClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, "Relation shouldn't have a TypeColumn #3");
+		Assert.That(ownClass.Relations.First().ForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #1");
+		Assert.That(ownDerivedClass.Relations.First().ForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #2");
+		Assert.That(ownClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, Is.Null, "Relation shouldn't have a TypeColumn #3");
 	}
 	[Test]
 	public void HasTypeCode()
@@ -8655,7 +8657,7 @@ public class MappingTestCmpDirnOwnpabsTblGuid
 
 
 [TestFixture]
-public class MappingTestCmpBin1OwnpabsNoTblGuid
+public class MappingTestCmpBin1OwnpabsNoTblGuid : NDOTest
 {
 	PersistenceManager pm;
 	NDOMapping mapping;
@@ -8674,14 +8676,14 @@ public class MappingTestCmpBin1OwnpabsNoTblGuid
 	[Test]
 	public void HasMappingTable()
 	{
-		Assert.Null(ownClass.Relations.First().MappingTable, "Relation shouldn't have a MappingTable #5");
-		Assert.Null(ownDerivedClass.Relations.First().MappingTable, "Relation shouldn't have a MappingTable #6");
-		Assert.Null(otherClass.Relations.First().MappingTable, "Relation shouldn't have a MappingTable #7");
+		Assert.That(ownClass.Relations.First().MappingTable, Is.Null, "Relation shouldn't have a MappingTable #5");
+		Assert.That(ownDerivedClass.Relations.First().MappingTable, Is.Null, "Relation shouldn't have a MappingTable #6");
+		Assert.That(otherClass.Relations.First().MappingTable, Is.Null, "Relation shouldn't have a MappingTable #7");
 	}
 	[Test]
 	public void HasTypeColumn()
 	{
-		Assert.Null(ownClass.Relations.First().ForeignKeyTypeColumnName, "Relation shouldn't have a TypeColumn #1");
+		Assert.That(ownClass.Relations.First().ForeignKeyTypeColumnName, Is.Null, "Relation shouldn't have a TypeColumn #1");
 	}
 	[Test]
 	public void HasTypeCode()
@@ -8693,7 +8695,7 @@ public class MappingTestCmpBin1OwnpabsNoTblGuid
 
 
 [TestFixture]
-public class MappingTestCmpBin1OwnpabsTblGuid
+public class MappingTestCmpBin1OwnpabsTblGuid : NDOTest
 {
 	PersistenceManager pm;
 	NDOMapping mapping;
@@ -8712,18 +8714,18 @@ public class MappingTestCmpBin1OwnpabsTblGuid
 	[Test]
 	public void HasMappingTable()
 	{
-		Assert.NotNull(ownClass.Relations.First().MappingTable, "Relation should have a MappingTable #1");
-		Assert.NotNull(ownDerivedClass.Relations.First().MappingTable, "Relation should have a MappingTable #2");
-		Assert.NotNull(otherClass.Relations.First().MappingTable, "Relation should have a MappingTable #3");
+		Assert.That(ownClass.Relations.First().MappingTable, Is.Not.Null, "Relation should have a MappingTable #1");
+		Assert.That(ownDerivedClass.Relations.First().MappingTable, Is.Not.Null, "Relation should have a MappingTable #2");
+		Assert.That(otherClass.Relations.First().MappingTable, Is.Not.Null, "Relation should have a MappingTable #3");
 	}
 	[Test]
 	public void HasTypeColumn()
 	{
-		Assert.NotNull(ownClass.Relations.First().ForeignKeyTypeColumnName, "Relation should have a TypeColumn #1");
-		Assert.NotNull(ownDerivedClass.Relations.First().ForeignKeyTypeColumnName, "Relation should have a TypeColumn #2");
-		Assert.NotNull(otherClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, "Relation should have a TypeColumn #7");
-		Assert.Null(ownClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, "Relation shouldn't have a TypeColumn #3");
-		Assert.Null(otherClass.Relations.First().ForeignKeyTypeColumnName, "Relation shouldn't have a TypeColumn #4");
+		Assert.That(ownClass.Relations.First().ForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #1");
+		Assert.That(ownDerivedClass.Relations.First().ForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #2");
+		Assert.That(otherClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #7");
+		Assert.That(ownClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, Is.Null, "Relation shouldn't have a TypeColumn #3");
+		Assert.That(otherClass.Relations.First().ForeignKeyTypeColumnName, Is.Null, "Relation shouldn't have a TypeColumn #4");
 	}
 	[Test]
 	public void HasTypeCode()
@@ -8735,7 +8737,7 @@ public class MappingTestCmpBin1OwnpabsTblGuid
 
 
 [TestFixture]
-public class MappingTestCmpBi1nOwnpabsTblGuid
+public class MappingTestCmpBi1nOwnpabsTblGuid : NDOTest
 {
 	PersistenceManager pm;
 	NDOMapping mapping;
@@ -8754,18 +8756,18 @@ public class MappingTestCmpBi1nOwnpabsTblGuid
 	[Test]
 	public void HasMappingTable()
 	{
-		Assert.NotNull(ownClass.Relations.First().MappingTable, "Relation should have a MappingTable #1");
-		Assert.NotNull(ownDerivedClass.Relations.First().MappingTable, "Relation should have a MappingTable #2");
-		Assert.NotNull(otherClass.Relations.First().MappingTable, "Relation should have a MappingTable #3");
+		Assert.That(ownClass.Relations.First().MappingTable, Is.Not.Null, "Relation should have a MappingTable #1");
+		Assert.That(ownDerivedClass.Relations.First().MappingTable, Is.Not.Null, "Relation should have a MappingTable #2");
+		Assert.That(otherClass.Relations.First().MappingTable, Is.Not.Null, "Relation should have a MappingTable #3");
 	}
 	[Test]
 	public void HasTypeColumn()
 	{
-		Assert.NotNull(ownClass.Relations.First().ForeignKeyTypeColumnName, "Relation should have a TypeColumn #1");
-		Assert.NotNull(ownDerivedClass.Relations.First().ForeignKeyTypeColumnName, "Relation should have a TypeColumn #2");
-		Assert.NotNull(otherClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, "Relation should have a TypeColumn #7");
-		Assert.Null(ownClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, "Relation shouldn't have a TypeColumn #3");
-		Assert.Null(otherClass.Relations.First().ForeignKeyTypeColumnName, "Relation shouldn't have a TypeColumn #4");
+		Assert.That(ownClass.Relations.First().ForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #1");
+		Assert.That(ownDerivedClass.Relations.First().ForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #2");
+		Assert.That(otherClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #7");
+		Assert.That(ownClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, Is.Null, "Relation shouldn't have a TypeColumn #3");
+		Assert.That(otherClass.Relations.First().ForeignKeyTypeColumnName, Is.Null, "Relation shouldn't have a TypeColumn #4");
 	}
 	[Test]
 	public void HasTypeCode()
@@ -8777,7 +8779,7 @@ public class MappingTestCmpBi1nOwnpabsTblGuid
 
 
 [TestFixture]
-public class MappingTestCmpBinnOwnpabsTblGuid
+public class MappingTestCmpBinnOwnpabsTblGuid : NDOTest
 {
 	PersistenceManager pm;
 	NDOMapping mapping;
@@ -8796,18 +8798,18 @@ public class MappingTestCmpBinnOwnpabsTblGuid
 	[Test]
 	public void HasMappingTable()
 	{
-		Assert.NotNull(ownClass.Relations.First().MappingTable, "Relation should have a MappingTable #1");
-		Assert.NotNull(ownDerivedClass.Relations.First().MappingTable, "Relation should have a MappingTable #2");
-		Assert.NotNull(otherClass.Relations.First().MappingTable, "Relation should have a MappingTable #3");
+		Assert.That(ownClass.Relations.First().MappingTable, Is.Not.Null, "Relation should have a MappingTable #1");
+		Assert.That(ownDerivedClass.Relations.First().MappingTable, Is.Not.Null, "Relation should have a MappingTable #2");
+		Assert.That(otherClass.Relations.First().MappingTable, Is.Not.Null, "Relation should have a MappingTable #3");
 	}
 	[Test]
 	public void HasTypeColumn()
 	{
-		Assert.NotNull(ownClass.Relations.First().ForeignKeyTypeColumnName, "Relation should have a TypeColumn #1");
-		Assert.NotNull(ownDerivedClass.Relations.First().ForeignKeyTypeColumnName, "Relation should have a TypeColumn #2");
-		Assert.NotNull(otherClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, "Relation should have a TypeColumn #7");
-		Assert.Null(ownClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, "Relation shouldn't have a TypeColumn #3");
-		Assert.Null(otherClass.Relations.First().ForeignKeyTypeColumnName, "Relation shouldn't have a TypeColumn #4");
+		Assert.That(ownClass.Relations.First().ForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #1");
+		Assert.That(ownDerivedClass.Relations.First().ForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #2");
+		Assert.That(otherClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #7");
+		Assert.That(ownClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, Is.Null, "Relation shouldn't have a TypeColumn #3");
+		Assert.That(otherClass.Relations.First().ForeignKeyTypeColumnName, Is.Null, "Relation shouldn't have a TypeColumn #4");
 	}
 	[Test]
 	public void HasTypeCode()
@@ -8819,7 +8821,7 @@ public class MappingTestCmpBinnOwnpabsTblGuid
 
 
 [TestFixture]
-public class MappingTestAgrDir1OthpabsNoTblGuid
+public class MappingTestAgrDir1OthpabsNoTblGuid : NDOTest
 {
 	PersistenceManager pm;
 	NDOMapping mapping;
@@ -8838,12 +8840,12 @@ public class MappingTestAgrDir1OthpabsNoTblGuid
 	[Test]
 	public void HasMappingTable()
 	{
-		Assert.Null(ownClass.Relations.First().MappingTable, "Relation shouldn't have a MappingTable #5");
+		Assert.That(ownClass.Relations.First().MappingTable, Is.Null, "Relation shouldn't have a MappingTable #5");
 	}
 	[Test]
 	public void HasTypeColumn()
 	{
-		Assert.NotNull(ownClass.Relations.First().ForeignKeyTypeColumnName, "Relation should have a TypeColumn #9");
+		Assert.That(ownClass.Relations.First().ForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #9");
 	}
 	[Test]
 	public void HasTypeCode()
@@ -8855,7 +8857,7 @@ public class MappingTestAgrDir1OthpabsNoTblGuid
 
 
 [TestFixture]
-public class MappingTestAgrDir1OthpabsTblGuid
+public class MappingTestAgrDir1OthpabsTblGuid : NDOTest
 {
 	PersistenceManager pm;
 	NDOMapping mapping;
@@ -8874,13 +8876,13 @@ public class MappingTestAgrDir1OthpabsTblGuid
 	[Test]
 	public void HasMappingTable()
 	{
-		Assert.NotNull(ownClass.Relations.First().MappingTable, "Relation should have a MappingTable #1");
+		Assert.That(ownClass.Relations.First().MappingTable, Is.Not.Null, "Relation should have a MappingTable #1");
 	}
 	[Test]
 	public void HasTypeColumn()
 	{
-		Assert.NotNull(ownClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, "Relation should have a TypeColumn #3");
-		Assert.Null(ownClass.Relations.First().ForeignKeyTypeColumnName, "Relation shouldn't have a TypeColumn #1");
+		Assert.That(ownClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #3");
+		Assert.That(ownClass.Relations.First().ForeignKeyTypeColumnName, Is.Null, "Relation shouldn't have a TypeColumn #1");
 	}
 	[Test]
 	public void HasTypeCode()
@@ -8892,7 +8894,7 @@ public class MappingTestAgrDir1OthpabsTblGuid
 
 
 [TestFixture]
-public class MappingTestAgrBi11OthpabsNoTblGuid
+public class MappingTestAgrBi11OthpabsNoTblGuid : NDOTest
 {
 	PersistenceManager pm;
 	NDOMapping mapping;
@@ -8911,14 +8913,14 @@ public class MappingTestAgrBi11OthpabsNoTblGuid
 	[Test]
 	public void HasMappingTable()
 	{
-		Assert.Null(ownClass.Relations.First().MappingTable, "Relation shouldn't have a MappingTable #5");
-		Assert.Null(otherClass.Relations.First().MappingTable, "Relation shouldn't have a MappingTable #7");
-		Assert.Null(otherDerivedClass.Relations.First().MappingTable, "Relation shouldn't have a MappingTable #8");
+		Assert.That(ownClass.Relations.First().MappingTable, Is.Null, "Relation shouldn't have a MappingTable #5");
+		Assert.That(otherClass.Relations.First().MappingTable, Is.Null, "Relation shouldn't have a MappingTable #7");
+		Assert.That(otherDerivedClass.Relations.First().MappingTable, Is.Null, "Relation shouldn't have a MappingTable #8");
 	}
 	[Test]
 	public void HasTypeColumn()
 	{
-		Assert.NotNull(ownClass.Relations.First().ForeignKeyTypeColumnName, "Relation should have a TypeColumn #9");
+		Assert.That(ownClass.Relations.First().ForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #9");
 	}
 	[Test]
 	public void HasTypeCode()
@@ -8930,7 +8932,7 @@ public class MappingTestAgrBi11OthpabsNoTblGuid
 
 
 [TestFixture]
-public class MappingTestAgrBi11OthpabsTblGuid
+public class MappingTestAgrBi11OthpabsTblGuid : NDOTest
 {
 	PersistenceManager pm;
 	NDOMapping mapping;
@@ -8949,18 +8951,18 @@ public class MappingTestAgrBi11OthpabsTblGuid
 	[Test]
 	public void HasMappingTable()
 	{
-		Assert.NotNull(ownClass.Relations.First().MappingTable, "Relation should have a MappingTable #1");
-		Assert.NotNull(otherClass.Relations.First().MappingTable, "Relation should have a MappingTable #3");
-		Assert.NotNull(otherDerivedClass.Relations.First().MappingTable, "Relation should have a MappingTable #4");
+		Assert.That(ownClass.Relations.First().MappingTable, Is.Not.Null, "Relation should have a MappingTable #1");
+		Assert.That(otherClass.Relations.First().MappingTable, Is.Not.Null, "Relation should have a MappingTable #3");
+		Assert.That(otherDerivedClass.Relations.First().MappingTable, Is.Not.Null, "Relation should have a MappingTable #4");
 	}
 	[Test]
 	public void HasTypeColumn()
 	{
-		Assert.NotNull(ownClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, "Relation should have a TypeColumn #3");
-		Assert.NotNull(otherClass.Relations.First().ForeignKeyTypeColumnName, "Relation should have a TypeColumn #5");
-		Assert.NotNull(otherDerivedClass.Relations.First().ForeignKeyTypeColumnName, "Relation should have a TypeColumn #6");
-		Assert.Null(ownClass.Relations.First().ForeignKeyTypeColumnName, "Relation shouldn't have a TypeColumn #1");
-		Assert.Null(otherClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, "Relation shouldn't have a TypeColumn #2");
+		Assert.That(ownClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #3");
+		Assert.That(otherClass.Relations.First().ForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #5");
+		Assert.That(otherDerivedClass.Relations.First().ForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #6");
+		Assert.That(ownClass.Relations.First().ForeignKeyTypeColumnName, Is.Null, "Relation shouldn't have a TypeColumn #1");
+		Assert.That(otherClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, Is.Null, "Relation shouldn't have a TypeColumn #2");
 	}
 	[Test]
 	public void HasTypeCode()
@@ -8972,7 +8974,7 @@ public class MappingTestAgrBi11OthpabsTblGuid
 
 
 [TestFixture]
-public class MappingTestAgrDirnOthpabsTblGuid
+public class MappingTestAgrDirnOthpabsTblGuid : NDOTest
 {
 	PersistenceManager pm;
 	NDOMapping mapping;
@@ -8991,13 +8993,13 @@ public class MappingTestAgrDirnOthpabsTblGuid
 	[Test]
 	public void HasMappingTable()
 	{
-		Assert.NotNull(ownClass.Relations.First().MappingTable, "Relation should have a MappingTable #1");
+		Assert.That(ownClass.Relations.First().MappingTable, Is.Not.Null, "Relation should have a MappingTable #1");
 	}
 	[Test]
 	public void HasTypeColumn()
 	{
-		Assert.NotNull(ownClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, "Relation should have a TypeColumn #3");
-		Assert.Null(ownClass.Relations.First().ForeignKeyTypeColumnName, "Relation shouldn't have a TypeColumn #1");
+		Assert.That(ownClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #3");
+		Assert.That(ownClass.Relations.First().ForeignKeyTypeColumnName, Is.Null, "Relation shouldn't have a TypeColumn #1");
 	}
 	[Test]
 	public void HasTypeCode()
@@ -9009,7 +9011,7 @@ public class MappingTestAgrDirnOthpabsTblGuid
 
 
 [TestFixture]
-public class MappingTestAgrBin1OthpabsTblGuid
+public class MappingTestAgrBin1OthpabsTblGuid : NDOTest
 {
 	PersistenceManager pm;
 	NDOMapping mapping;
@@ -9028,18 +9030,18 @@ public class MappingTestAgrBin1OthpabsTblGuid
 	[Test]
 	public void HasMappingTable()
 	{
-		Assert.NotNull(ownClass.Relations.First().MappingTable, "Relation should have a MappingTable #1");
-		Assert.NotNull(otherClass.Relations.First().MappingTable, "Relation should have a MappingTable #3");
-		Assert.NotNull(otherDerivedClass.Relations.First().MappingTable, "Relation should have a MappingTable #4");
+		Assert.That(ownClass.Relations.First().MappingTable, Is.Not.Null, "Relation should have a MappingTable #1");
+		Assert.That(otherClass.Relations.First().MappingTable, Is.Not.Null, "Relation should have a MappingTable #3");
+		Assert.That(otherDerivedClass.Relations.First().MappingTable, Is.Not.Null, "Relation should have a MappingTable #4");
 	}
 	[Test]
 	public void HasTypeColumn()
 	{
-		Assert.NotNull(ownClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, "Relation should have a TypeColumn #3");
-		Assert.NotNull(otherClass.Relations.First().ForeignKeyTypeColumnName, "Relation should have a TypeColumn #5");
-		Assert.NotNull(otherDerivedClass.Relations.First().ForeignKeyTypeColumnName, "Relation should have a TypeColumn #6");
-		Assert.Null(ownClass.Relations.First().ForeignKeyTypeColumnName, "Relation shouldn't have a TypeColumn #1");
-		Assert.Null(otherClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, "Relation shouldn't have a TypeColumn #2");
+		Assert.That(ownClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #3");
+		Assert.That(otherClass.Relations.First().ForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #5");
+		Assert.That(otherDerivedClass.Relations.First().ForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #6");
+		Assert.That(ownClass.Relations.First().ForeignKeyTypeColumnName, Is.Null, "Relation shouldn't have a TypeColumn #1");
+		Assert.That(otherClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, Is.Null, "Relation shouldn't have a TypeColumn #2");
 	}
 	[Test]
 	public void HasTypeCode()
@@ -9051,7 +9053,7 @@ public class MappingTestAgrBin1OthpabsTblGuid
 
 
 [TestFixture]
-public class MappingTestAgrBi1nOthpabsNoTblGuid
+public class MappingTestAgrBi1nOthpabsNoTblGuid : NDOTest
 {
 	PersistenceManager pm;
 	NDOMapping mapping;
@@ -9070,14 +9072,14 @@ public class MappingTestAgrBi1nOthpabsNoTblGuid
 	[Test]
 	public void HasMappingTable()
 	{
-		Assert.Null(ownClass.Relations.First().MappingTable, "Relation shouldn't have a MappingTable #5");
-		Assert.Null(otherClass.Relations.First().MappingTable, "Relation shouldn't have a MappingTable #7");
-		Assert.Null(otherDerivedClass.Relations.First().MappingTable, "Relation shouldn't have a MappingTable #8");
+		Assert.That(ownClass.Relations.First().MappingTable, Is.Null, "Relation shouldn't have a MappingTable #5");
+		Assert.That(otherClass.Relations.First().MappingTable, Is.Null, "Relation shouldn't have a MappingTable #7");
+		Assert.That(otherDerivedClass.Relations.First().MappingTable, Is.Null, "Relation shouldn't have a MappingTable #8");
 	}
 	[Test]
 	public void HasTypeColumn()
 	{
-		Assert.NotNull(ownClass.Relations.First().ForeignKeyTypeColumnName, "Relation should have a TypeColumn #9");
+		Assert.That(ownClass.Relations.First().ForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #9");
 	}
 	[Test]
 	public void HasTypeCode()
@@ -9089,7 +9091,7 @@ public class MappingTestAgrBi1nOthpabsNoTblGuid
 
 
 [TestFixture]
-public class MappingTestAgrBi1nOthpabsTblGuid
+public class MappingTestAgrBi1nOthpabsTblGuid : NDOTest
 {
 	PersistenceManager pm;
 	NDOMapping mapping;
@@ -9108,18 +9110,18 @@ public class MappingTestAgrBi1nOthpabsTblGuid
 	[Test]
 	public void HasMappingTable()
 	{
-		Assert.NotNull(ownClass.Relations.First().MappingTable, "Relation should have a MappingTable #1");
-		Assert.NotNull(otherClass.Relations.First().MappingTable, "Relation should have a MappingTable #3");
-		Assert.NotNull(otherDerivedClass.Relations.First().MappingTable, "Relation should have a MappingTable #4");
+		Assert.That(ownClass.Relations.First().MappingTable, Is.Not.Null, "Relation should have a MappingTable #1");
+		Assert.That(otherClass.Relations.First().MappingTable, Is.Not.Null, "Relation should have a MappingTable #3");
+		Assert.That(otherDerivedClass.Relations.First().MappingTable, Is.Not.Null, "Relation should have a MappingTable #4");
 	}
 	[Test]
 	public void HasTypeColumn()
 	{
-		Assert.NotNull(ownClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, "Relation should have a TypeColumn #3");
-		Assert.NotNull(otherClass.Relations.First().ForeignKeyTypeColumnName, "Relation should have a TypeColumn #5");
-		Assert.NotNull(otherDerivedClass.Relations.First().ForeignKeyTypeColumnName, "Relation should have a TypeColumn #6");
-		Assert.Null(ownClass.Relations.First().ForeignKeyTypeColumnName, "Relation shouldn't have a TypeColumn #1");
-		Assert.Null(otherClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, "Relation shouldn't have a TypeColumn #2");
+		Assert.That(ownClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #3");
+		Assert.That(otherClass.Relations.First().ForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #5");
+		Assert.That(otherDerivedClass.Relations.First().ForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #6");
+		Assert.That(ownClass.Relations.First().ForeignKeyTypeColumnName, Is.Null, "Relation shouldn't have a TypeColumn #1");
+		Assert.That(otherClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, Is.Null, "Relation shouldn't have a TypeColumn #2");
 	}
 	[Test]
 	public void HasTypeCode()
@@ -9131,7 +9133,7 @@ public class MappingTestAgrBi1nOthpabsTblGuid
 
 
 [TestFixture]
-public class MappingTestAgrBinnOthpabsTblGuid
+public class MappingTestAgrBinnOthpabsTblGuid : NDOTest
 {
 	PersistenceManager pm;
 	NDOMapping mapping;
@@ -9150,18 +9152,18 @@ public class MappingTestAgrBinnOthpabsTblGuid
 	[Test]
 	public void HasMappingTable()
 	{
-		Assert.NotNull(ownClass.Relations.First().MappingTable, "Relation should have a MappingTable #1");
-		Assert.NotNull(otherClass.Relations.First().MappingTable, "Relation should have a MappingTable #3");
-		Assert.NotNull(otherDerivedClass.Relations.First().MappingTable, "Relation should have a MappingTable #4");
+		Assert.That(ownClass.Relations.First().MappingTable, Is.Not.Null, "Relation should have a MappingTable #1");
+		Assert.That(otherClass.Relations.First().MappingTable, Is.Not.Null, "Relation should have a MappingTable #3");
+		Assert.That(otherDerivedClass.Relations.First().MappingTable, Is.Not.Null, "Relation should have a MappingTable #4");
 	}
 	[Test]
 	public void HasTypeColumn()
 	{
-		Assert.NotNull(ownClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, "Relation should have a TypeColumn #3");
-		Assert.NotNull(otherClass.Relations.First().ForeignKeyTypeColumnName, "Relation should have a TypeColumn #5");
-		Assert.NotNull(otherDerivedClass.Relations.First().ForeignKeyTypeColumnName, "Relation should have a TypeColumn #6");
-		Assert.Null(ownClass.Relations.First().ForeignKeyTypeColumnName, "Relation shouldn't have a TypeColumn #1");
-		Assert.Null(otherClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, "Relation shouldn't have a TypeColumn #2");
+		Assert.That(ownClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #3");
+		Assert.That(otherClass.Relations.First().ForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #5");
+		Assert.That(otherDerivedClass.Relations.First().ForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #6");
+		Assert.That(ownClass.Relations.First().ForeignKeyTypeColumnName, Is.Null, "Relation shouldn't have a TypeColumn #1");
+		Assert.That(otherClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, Is.Null, "Relation shouldn't have a TypeColumn #2");
 	}
 	[Test]
 	public void HasTypeCode()
@@ -9173,7 +9175,7 @@ public class MappingTestAgrBinnOthpabsTblGuid
 
 
 [TestFixture]
-public class MappingTestCmpDir1OthpabsNoTblGuid
+public class MappingTestCmpDir1OthpabsNoTblGuid : NDOTest
 {
 	PersistenceManager pm;
 	NDOMapping mapping;
@@ -9192,12 +9194,12 @@ public class MappingTestCmpDir1OthpabsNoTblGuid
 	[Test]
 	public void HasMappingTable()
 	{
-		Assert.Null(ownClass.Relations.First().MappingTable, "Relation shouldn't have a MappingTable #5");
+		Assert.That(ownClass.Relations.First().MappingTable, Is.Null, "Relation shouldn't have a MappingTable #5");
 	}
 	[Test]
 	public void HasTypeColumn()
 	{
-		Assert.NotNull(ownClass.Relations.First().ForeignKeyTypeColumnName, "Relation should have a TypeColumn #9");
+		Assert.That(ownClass.Relations.First().ForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #9");
 	}
 	[Test]
 	public void HasTypeCode()
@@ -9209,7 +9211,7 @@ public class MappingTestCmpDir1OthpabsNoTblGuid
 
 
 [TestFixture]
-public class MappingTestCmpDir1OthpabsTblGuid
+public class MappingTestCmpDir1OthpabsTblGuid : NDOTest
 {
 	PersistenceManager pm;
 	NDOMapping mapping;
@@ -9228,13 +9230,13 @@ public class MappingTestCmpDir1OthpabsTblGuid
 	[Test]
 	public void HasMappingTable()
 	{
-		Assert.NotNull(ownClass.Relations.First().MappingTable, "Relation should have a MappingTable #1");
+		Assert.That(ownClass.Relations.First().MappingTable, Is.Not.Null, "Relation should have a MappingTable #1");
 	}
 	[Test]
 	public void HasTypeColumn()
 	{
-		Assert.NotNull(ownClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, "Relation should have a TypeColumn #3");
-		Assert.Null(ownClass.Relations.First().ForeignKeyTypeColumnName, "Relation shouldn't have a TypeColumn #1");
+		Assert.That(ownClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #3");
+		Assert.That(ownClass.Relations.First().ForeignKeyTypeColumnName, Is.Null, "Relation shouldn't have a TypeColumn #1");
 	}
 	[Test]
 	public void HasTypeCode()
@@ -9246,7 +9248,7 @@ public class MappingTestCmpDir1OthpabsTblGuid
 
 
 [TestFixture]
-public class MappingTestCmpBi11OthpabsNoTblGuid
+public class MappingTestCmpBi11OthpabsNoTblGuid : NDOTest
 {
 	PersistenceManager pm;
 	NDOMapping mapping;
@@ -9265,14 +9267,14 @@ public class MappingTestCmpBi11OthpabsNoTblGuid
 	[Test]
 	public void HasMappingTable()
 	{
-		Assert.Null(ownClass.Relations.First().MappingTable, "Relation shouldn't have a MappingTable #5");
-		Assert.Null(otherClass.Relations.First().MappingTable, "Relation shouldn't have a MappingTable #7");
-		Assert.Null(otherDerivedClass.Relations.First().MappingTable, "Relation shouldn't have a MappingTable #8");
+		Assert.That(ownClass.Relations.First().MappingTable, Is.Null, "Relation shouldn't have a MappingTable #5");
+		Assert.That(otherClass.Relations.First().MappingTable, Is.Null, "Relation shouldn't have a MappingTable #7");
+		Assert.That(otherDerivedClass.Relations.First().MappingTable, Is.Null, "Relation shouldn't have a MappingTable #8");
 	}
 	[Test]
 	public void HasTypeColumn()
 	{
-		Assert.NotNull(ownClass.Relations.First().ForeignKeyTypeColumnName, "Relation should have a TypeColumn #9");
+		Assert.That(ownClass.Relations.First().ForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #9");
 	}
 	[Test]
 	public void HasTypeCode()
@@ -9284,7 +9286,7 @@ public class MappingTestCmpBi11OthpabsNoTblGuid
 
 
 [TestFixture]
-public class MappingTestCmpBi11OthpabsTblGuid
+public class MappingTestCmpBi11OthpabsTblGuid : NDOTest
 {
 	PersistenceManager pm;
 	NDOMapping mapping;
@@ -9303,18 +9305,18 @@ public class MappingTestCmpBi11OthpabsTblGuid
 	[Test]
 	public void HasMappingTable()
 	{
-		Assert.NotNull(ownClass.Relations.First().MappingTable, "Relation should have a MappingTable #1");
-		Assert.NotNull(otherClass.Relations.First().MappingTable, "Relation should have a MappingTable #3");
-		Assert.NotNull(otherDerivedClass.Relations.First().MappingTable, "Relation should have a MappingTable #4");
+		Assert.That(ownClass.Relations.First().MappingTable, Is.Not.Null, "Relation should have a MappingTable #1");
+		Assert.That(otherClass.Relations.First().MappingTable, Is.Not.Null, "Relation should have a MappingTable #3");
+		Assert.That(otherDerivedClass.Relations.First().MappingTable, Is.Not.Null, "Relation should have a MappingTable #4");
 	}
 	[Test]
 	public void HasTypeColumn()
 	{
-		Assert.NotNull(ownClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, "Relation should have a TypeColumn #3");
-		Assert.NotNull(otherClass.Relations.First().ForeignKeyTypeColumnName, "Relation should have a TypeColumn #5");
-		Assert.NotNull(otherDerivedClass.Relations.First().ForeignKeyTypeColumnName, "Relation should have a TypeColumn #6");
-		Assert.Null(ownClass.Relations.First().ForeignKeyTypeColumnName, "Relation shouldn't have a TypeColumn #1");
-		Assert.Null(otherClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, "Relation shouldn't have a TypeColumn #2");
+		Assert.That(ownClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #3");
+		Assert.That(otherClass.Relations.First().ForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #5");
+		Assert.That(otherDerivedClass.Relations.First().ForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #6");
+		Assert.That(ownClass.Relations.First().ForeignKeyTypeColumnName, Is.Null, "Relation shouldn't have a TypeColumn #1");
+		Assert.That(otherClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, Is.Null, "Relation shouldn't have a TypeColumn #2");
 	}
 	[Test]
 	public void HasTypeCode()
@@ -9326,7 +9328,7 @@ public class MappingTestCmpBi11OthpabsTblGuid
 
 
 [TestFixture]
-public class MappingTestCmpDirnOthpabsTblGuid
+public class MappingTestCmpDirnOthpabsTblGuid : NDOTest
 {
 	PersistenceManager pm;
 	NDOMapping mapping;
@@ -9345,13 +9347,13 @@ public class MappingTestCmpDirnOthpabsTblGuid
 	[Test]
 	public void HasMappingTable()
 	{
-		Assert.NotNull(ownClass.Relations.First().MappingTable, "Relation should have a MappingTable #1");
+		Assert.That(ownClass.Relations.First().MappingTable, Is.Not.Null, "Relation should have a MappingTable #1");
 	}
 	[Test]
 	public void HasTypeColumn()
 	{
-		Assert.NotNull(ownClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, "Relation should have a TypeColumn #3");
-		Assert.Null(ownClass.Relations.First().ForeignKeyTypeColumnName, "Relation shouldn't have a TypeColumn #1");
+		Assert.That(ownClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #3");
+		Assert.That(ownClass.Relations.First().ForeignKeyTypeColumnName, Is.Null, "Relation shouldn't have a TypeColumn #1");
 	}
 	[Test]
 	public void HasTypeCode()
@@ -9363,7 +9365,7 @@ public class MappingTestCmpDirnOthpabsTblGuid
 
 
 [TestFixture]
-public class MappingTestCmpBin1OthpabsTblGuid
+public class MappingTestCmpBin1OthpabsTblGuid : NDOTest
 {
 	PersistenceManager pm;
 	NDOMapping mapping;
@@ -9382,18 +9384,18 @@ public class MappingTestCmpBin1OthpabsTblGuid
 	[Test]
 	public void HasMappingTable()
 	{
-		Assert.NotNull(ownClass.Relations.First().MappingTable, "Relation should have a MappingTable #1");
-		Assert.NotNull(otherClass.Relations.First().MappingTable, "Relation should have a MappingTable #3");
-		Assert.NotNull(otherDerivedClass.Relations.First().MappingTable, "Relation should have a MappingTable #4");
+		Assert.That(ownClass.Relations.First().MappingTable, Is.Not.Null, "Relation should have a MappingTable #1");
+		Assert.That(otherClass.Relations.First().MappingTable, Is.Not.Null, "Relation should have a MappingTable #3");
+		Assert.That(otherDerivedClass.Relations.First().MappingTable, Is.Not.Null, "Relation should have a MappingTable #4");
 	}
 	[Test]
 	public void HasTypeColumn()
 	{
-		Assert.NotNull(ownClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, "Relation should have a TypeColumn #3");
-		Assert.NotNull(otherClass.Relations.First().ForeignKeyTypeColumnName, "Relation should have a TypeColumn #5");
-		Assert.NotNull(otherDerivedClass.Relations.First().ForeignKeyTypeColumnName, "Relation should have a TypeColumn #6");
-		Assert.Null(ownClass.Relations.First().ForeignKeyTypeColumnName, "Relation shouldn't have a TypeColumn #1");
-		Assert.Null(otherClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, "Relation shouldn't have a TypeColumn #2");
+		Assert.That(ownClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #3");
+		Assert.That(otherClass.Relations.First().ForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #5");
+		Assert.That(otherDerivedClass.Relations.First().ForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #6");
+		Assert.That(ownClass.Relations.First().ForeignKeyTypeColumnName, Is.Null, "Relation shouldn't have a TypeColumn #1");
+		Assert.That(otherClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, Is.Null, "Relation shouldn't have a TypeColumn #2");
 	}
 	[Test]
 	public void HasTypeCode()
@@ -9405,7 +9407,7 @@ public class MappingTestCmpBin1OthpabsTblGuid
 
 
 [TestFixture]
-public class MappingTestCmpBi1nOthpabsNoTblGuid
+public class MappingTestCmpBi1nOthpabsNoTblGuid : NDOTest
 {
 	PersistenceManager pm;
 	NDOMapping mapping;
@@ -9424,14 +9426,14 @@ public class MappingTestCmpBi1nOthpabsNoTblGuid
 	[Test]
 	public void HasMappingTable()
 	{
-		Assert.Null(ownClass.Relations.First().MappingTable, "Relation shouldn't have a MappingTable #5");
-		Assert.Null(otherClass.Relations.First().MappingTable, "Relation shouldn't have a MappingTable #7");
-		Assert.Null(otherDerivedClass.Relations.First().MappingTable, "Relation shouldn't have a MappingTable #8");
+		Assert.That(ownClass.Relations.First().MappingTable, Is.Null, "Relation shouldn't have a MappingTable #5");
+		Assert.That(otherClass.Relations.First().MappingTable, Is.Null, "Relation shouldn't have a MappingTable #7");
+		Assert.That(otherDerivedClass.Relations.First().MappingTable, Is.Null, "Relation shouldn't have a MappingTable #8");
 	}
 	[Test]
 	public void HasTypeColumn()
 	{
-		Assert.NotNull(ownClass.Relations.First().ForeignKeyTypeColumnName, "Relation should have a TypeColumn #9");
+		Assert.That(ownClass.Relations.First().ForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #9");
 	}
 	[Test]
 	public void HasTypeCode()
@@ -9443,7 +9445,7 @@ public class MappingTestCmpBi1nOthpabsNoTblGuid
 
 
 [TestFixture]
-public class MappingTestCmpBi1nOthpabsTblGuid
+public class MappingTestCmpBi1nOthpabsTblGuid : NDOTest
 {
 	PersistenceManager pm;
 	NDOMapping mapping;
@@ -9462,18 +9464,18 @@ public class MappingTestCmpBi1nOthpabsTblGuid
 	[Test]
 	public void HasMappingTable()
 	{
-		Assert.NotNull(ownClass.Relations.First().MappingTable, "Relation should have a MappingTable #1");
-		Assert.NotNull(otherClass.Relations.First().MappingTable, "Relation should have a MappingTable #3");
-		Assert.NotNull(otherDerivedClass.Relations.First().MappingTable, "Relation should have a MappingTable #4");
+		Assert.That(ownClass.Relations.First().MappingTable, Is.Not.Null, "Relation should have a MappingTable #1");
+		Assert.That(otherClass.Relations.First().MappingTable, Is.Not.Null, "Relation should have a MappingTable #3");
+		Assert.That(otherDerivedClass.Relations.First().MappingTable, Is.Not.Null, "Relation should have a MappingTable #4");
 	}
 	[Test]
 	public void HasTypeColumn()
 	{
-		Assert.NotNull(ownClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, "Relation should have a TypeColumn #3");
-		Assert.NotNull(otherClass.Relations.First().ForeignKeyTypeColumnName, "Relation should have a TypeColumn #5");
-		Assert.NotNull(otherDerivedClass.Relations.First().ForeignKeyTypeColumnName, "Relation should have a TypeColumn #6");
-		Assert.Null(ownClass.Relations.First().ForeignKeyTypeColumnName, "Relation shouldn't have a TypeColumn #1");
-		Assert.Null(otherClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, "Relation shouldn't have a TypeColumn #2");
+		Assert.That(ownClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #3");
+		Assert.That(otherClass.Relations.First().ForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #5");
+		Assert.That(otherDerivedClass.Relations.First().ForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #6");
+		Assert.That(ownClass.Relations.First().ForeignKeyTypeColumnName, Is.Null, "Relation shouldn't have a TypeColumn #1");
+		Assert.That(otherClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, Is.Null, "Relation shouldn't have a TypeColumn #2");
 	}
 	[Test]
 	public void HasTypeCode()
@@ -9485,7 +9487,7 @@ public class MappingTestCmpBi1nOthpabsTblGuid
 
 
 [TestFixture]
-public class MappingTestCmpBinnOthpabsTblGuid
+public class MappingTestCmpBinnOthpabsTblGuid : NDOTest
 {
 	PersistenceManager pm;
 	NDOMapping mapping;
@@ -9504,18 +9506,18 @@ public class MappingTestCmpBinnOthpabsTblGuid
 	[Test]
 	public void HasMappingTable()
 	{
-		Assert.NotNull(ownClass.Relations.First().MappingTable, "Relation should have a MappingTable #1");
-		Assert.NotNull(otherClass.Relations.First().MappingTable, "Relation should have a MappingTable #3");
-		Assert.NotNull(otherDerivedClass.Relations.First().MappingTable, "Relation should have a MappingTable #4");
+		Assert.That(ownClass.Relations.First().MappingTable, Is.Not.Null, "Relation should have a MappingTable #1");
+		Assert.That(otherClass.Relations.First().MappingTable, Is.Not.Null, "Relation should have a MappingTable #3");
+		Assert.That(otherDerivedClass.Relations.First().MappingTable, Is.Not.Null, "Relation should have a MappingTable #4");
 	}
 	[Test]
 	public void HasTypeColumn()
 	{
-		Assert.NotNull(ownClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, "Relation should have a TypeColumn #3");
-		Assert.NotNull(otherClass.Relations.First().ForeignKeyTypeColumnName, "Relation should have a TypeColumn #5");
-		Assert.NotNull(otherDerivedClass.Relations.First().ForeignKeyTypeColumnName, "Relation should have a TypeColumn #6");
-		Assert.Null(ownClass.Relations.First().ForeignKeyTypeColumnName, "Relation shouldn't have a TypeColumn #1");
-		Assert.Null(otherClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, "Relation shouldn't have a TypeColumn #2");
+		Assert.That(ownClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #3");
+		Assert.That(otherClass.Relations.First().ForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #5");
+		Assert.That(otherDerivedClass.Relations.First().ForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #6");
+		Assert.That(ownClass.Relations.First().ForeignKeyTypeColumnName, Is.Null, "Relation shouldn't have a TypeColumn #1");
+		Assert.That(otherClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, Is.Null, "Relation shouldn't have a TypeColumn #2");
 	}
 	[Test]
 	public void HasTypeCode()
@@ -9527,7 +9529,7 @@ public class MappingTestCmpBinnOthpabsTblGuid
 
 
 [TestFixture]
-public class MappingTestAgrDir1OwnpabsOthpabsNoTblGuid
+public class MappingTestAgrDir1OwnpabsOthpabsNoTblGuid : NDOTest
 {
 	PersistenceManager pm;
 	NDOMapping mapping;
@@ -9548,13 +9550,13 @@ public class MappingTestAgrDir1OwnpabsOthpabsNoTblGuid
 	[Test]
 	public void HasMappingTable()
 	{
-		Assert.Null(ownClass.Relations.First().MappingTable, "Relation shouldn't have a MappingTable #5");
-		Assert.Null(ownDerivedClass.Relations.First().MappingTable, "Relation shouldn't have a MappingTable #6");
+		Assert.That(ownClass.Relations.First().MappingTable, Is.Null, "Relation shouldn't have a MappingTable #5");
+		Assert.That(ownDerivedClass.Relations.First().MappingTable, Is.Null, "Relation shouldn't have a MappingTable #6");
 	}
 	[Test]
 	public void HasTypeColumn()
 	{
-		Assert.NotNull(ownClass.Relations.First().ForeignKeyTypeColumnName, "Relation should have a TypeColumn #9");
+		Assert.That(ownClass.Relations.First().ForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #9");
 	}
 	[Test]
 	public void HasTypeCode()
@@ -9566,7 +9568,7 @@ public class MappingTestAgrDir1OwnpabsOthpabsNoTblGuid
 
 
 [TestFixture]
-public class MappingTestAgrDir1OwnpabsOthpabsTblGuid
+public class MappingTestAgrDir1OwnpabsOthpabsTblGuid : NDOTest
 {
 	PersistenceManager pm;
 	NDOMapping mapping;
@@ -9587,16 +9589,16 @@ public class MappingTestAgrDir1OwnpabsOthpabsTblGuid
 	[Test]
 	public void HasMappingTable()
 	{
-		Assert.NotNull(ownClass.Relations.First().MappingTable, "Relation should have a MappingTable #1");
-		Assert.NotNull(ownDerivedClass.Relations.First().MappingTable, "Relation should have a MappingTable #2");
+		Assert.That(ownClass.Relations.First().MappingTable, Is.Not.Null, "Relation should have a MappingTable #1");
+		Assert.That(ownDerivedClass.Relations.First().MappingTable, Is.Not.Null, "Relation should have a MappingTable #2");
 	}
 	[Test]
 	public void HasTypeColumn()
 	{
-		Assert.NotNull(ownClass.Relations.First().ForeignKeyTypeColumnName, "Relation should have a TypeColumn #1");
-		Assert.NotNull(ownDerivedClass.Relations.First().ForeignKeyTypeColumnName, "Relation should have a TypeColumn #2");
-		Assert.NotNull(ownClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, "Relation should have a TypeColumn #3");
-		Assert.NotNull(ownDerivedClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, "Relation should have a TypeColumn #4");
+		Assert.That(ownClass.Relations.First().ForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #1");
+		Assert.That(ownDerivedClass.Relations.First().ForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #2");
+		Assert.That(ownClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #3");
+		Assert.That(ownDerivedClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #4");
 	}
 	[Test]
 	public void HasTypeCode()
@@ -9608,7 +9610,7 @@ public class MappingTestAgrDir1OwnpabsOthpabsTblGuid
 
 
 [TestFixture]
-public class MappingTestAgrBi11OwnpabsOthpabsNoTblGuid
+public class MappingTestAgrBi11OwnpabsOthpabsNoTblGuid : NDOTest
 {
 	PersistenceManager pm;
 	NDOMapping mapping;
@@ -9629,16 +9631,16 @@ public class MappingTestAgrBi11OwnpabsOthpabsNoTblGuid
 	[Test]
 	public void HasMappingTable()
 	{
-		Assert.Null(ownClass.Relations.First().MappingTable, "Relation shouldn't have a MappingTable #5");
-		Assert.Null(ownDerivedClass.Relations.First().MappingTable, "Relation shouldn't have a MappingTable #6");
-		Assert.Null(otherClass.Relations.First().MappingTable, "Relation shouldn't have a MappingTable #7");
-		Assert.Null(otherDerivedClass.Relations.First().MappingTable, "Relation shouldn't have a MappingTable #8");
+		Assert.That(ownClass.Relations.First().MappingTable, Is.Null, "Relation shouldn't have a MappingTable #5");
+		Assert.That(ownDerivedClass.Relations.First().MappingTable, Is.Null, "Relation shouldn't have a MappingTable #6");
+		Assert.That(otherClass.Relations.First().MappingTable, Is.Null, "Relation shouldn't have a MappingTable #7");
+		Assert.That(otherDerivedClass.Relations.First().MappingTable, Is.Null, "Relation shouldn't have a MappingTable #8");
 	}
 	[Test]
 	public void HasTypeColumn()
 	{
-		Assert.NotNull(ownClass.Relations.First().ForeignKeyTypeColumnName, "Relation should have a TypeColumn #9");
-		Assert.NotNull(otherClass.Relations.First().ForeignKeyTypeColumnName, "Relation should have a TypeColumn #10");
+		Assert.That(ownClass.Relations.First().ForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #9");
+		Assert.That(otherClass.Relations.First().ForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #10");
 	}
 	[Test]
 	public void HasTypeCode()
@@ -9650,7 +9652,7 @@ public class MappingTestAgrBi11OwnpabsOthpabsNoTblGuid
 
 
 [TestFixture]
-public class MappingTestAgrBi11OwnpabsOthpabsTblGuid
+public class MappingTestAgrBi11OwnpabsOthpabsTblGuid : NDOTest
 {
 	PersistenceManager pm;
 	NDOMapping mapping;
@@ -9671,22 +9673,22 @@ public class MappingTestAgrBi11OwnpabsOthpabsTblGuid
 	[Test]
 	public void HasMappingTable()
 	{
-		Assert.NotNull(ownClass.Relations.First().MappingTable, "Relation should have a MappingTable #1");
-		Assert.NotNull(ownDerivedClass.Relations.First().MappingTable, "Relation should have a MappingTable #2");
-		Assert.NotNull(otherClass.Relations.First().MappingTable, "Relation should have a MappingTable #3");
-		Assert.NotNull(otherDerivedClass.Relations.First().MappingTable, "Relation should have a MappingTable #4");
+		Assert.That(ownClass.Relations.First().MappingTable, Is.Not.Null, "Relation should have a MappingTable #1");
+		Assert.That(ownDerivedClass.Relations.First().MappingTable, Is.Not.Null, "Relation should have a MappingTable #2");
+		Assert.That(otherClass.Relations.First().MappingTable, Is.Not.Null, "Relation should have a MappingTable #3");
+		Assert.That(otherDerivedClass.Relations.First().MappingTable, Is.Not.Null, "Relation should have a MappingTable #4");
 	}
 	[Test]
 	public void HasTypeColumn()
 	{
-		Assert.NotNull(ownClass.Relations.First().ForeignKeyTypeColumnName, "Relation should have a TypeColumn #1");
-		Assert.NotNull(ownDerivedClass.Relations.First().ForeignKeyTypeColumnName, "Relation should have a TypeColumn #2");
-		Assert.NotNull(ownClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, "Relation should have a TypeColumn #3");
-		Assert.NotNull(ownDerivedClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, "Relation should have a TypeColumn #4");
-		Assert.NotNull(otherClass.Relations.First().ForeignKeyTypeColumnName, "Relation should have a TypeColumn #5");
-		Assert.NotNull(otherDerivedClass.Relations.First().ForeignKeyTypeColumnName, "Relation should have a TypeColumn #6");
-		Assert.NotNull(otherClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, "Relation should have a TypeColumn #7");
-		Assert.NotNull(otherDerivedClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, "Relation should have a TypeColumn #8");
+		Assert.That(ownClass.Relations.First().ForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #1");
+		Assert.That(ownDerivedClass.Relations.First().ForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #2");
+		Assert.That(ownClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #3");
+		Assert.That(ownDerivedClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #4");
+		Assert.That(otherClass.Relations.First().ForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #5");
+		Assert.That(otherDerivedClass.Relations.First().ForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #6");
+		Assert.That(otherClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #7");
+		Assert.That(otherDerivedClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #8");
 	}
 	[Test]
 	public void HasTypeCode()
@@ -9698,7 +9700,7 @@ public class MappingTestAgrBi11OwnpabsOthpabsTblGuid
 
 
 [TestFixture]
-public class MappingTestAgrDirnOwnpabsOthpabsTblGuid
+public class MappingTestAgrDirnOwnpabsOthpabsTblGuid : NDOTest
 {
 	PersistenceManager pm;
 	NDOMapping mapping;
@@ -9719,16 +9721,16 @@ public class MappingTestAgrDirnOwnpabsOthpabsTblGuid
 	[Test]
 	public void HasMappingTable()
 	{
-		Assert.NotNull(ownClass.Relations.First().MappingTable, "Relation should have a MappingTable #1");
-		Assert.NotNull(ownDerivedClass.Relations.First().MappingTable, "Relation should have a MappingTable #2");
+		Assert.That(ownClass.Relations.First().MappingTable, Is.Not.Null, "Relation should have a MappingTable #1");
+		Assert.That(ownDerivedClass.Relations.First().MappingTable, Is.Not.Null, "Relation should have a MappingTable #2");
 	}
 	[Test]
 	public void HasTypeColumn()
 	{
-		Assert.NotNull(ownClass.Relations.First().ForeignKeyTypeColumnName, "Relation should have a TypeColumn #1");
-		Assert.NotNull(ownDerivedClass.Relations.First().ForeignKeyTypeColumnName, "Relation should have a TypeColumn #2");
-		Assert.NotNull(ownClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, "Relation should have a TypeColumn #3");
-		Assert.NotNull(ownDerivedClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, "Relation should have a TypeColumn #4");
+		Assert.That(ownClass.Relations.First().ForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #1");
+		Assert.That(ownDerivedClass.Relations.First().ForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #2");
+		Assert.That(ownClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #3");
+		Assert.That(ownDerivedClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #4");
 	}
 	[Test]
 	public void HasTypeCode()
@@ -9740,7 +9742,7 @@ public class MappingTestAgrDirnOwnpabsOthpabsTblGuid
 
 
 [TestFixture]
-public class MappingTestAgrBin1OwnpabsOthpabsTblGuid
+public class MappingTestAgrBin1OwnpabsOthpabsTblGuid : NDOTest
 {
 	PersistenceManager pm;
 	NDOMapping mapping;
@@ -9761,22 +9763,22 @@ public class MappingTestAgrBin1OwnpabsOthpabsTblGuid
 	[Test]
 	public void HasMappingTable()
 	{
-		Assert.NotNull(ownClass.Relations.First().MappingTable, "Relation should have a MappingTable #1");
-		Assert.NotNull(ownDerivedClass.Relations.First().MappingTable, "Relation should have a MappingTable #2");
-		Assert.NotNull(otherClass.Relations.First().MappingTable, "Relation should have a MappingTable #3");
-		Assert.NotNull(otherDerivedClass.Relations.First().MappingTable, "Relation should have a MappingTable #4");
+		Assert.That(ownClass.Relations.First().MappingTable, Is.Not.Null, "Relation should have a MappingTable #1");
+		Assert.That(ownDerivedClass.Relations.First().MappingTable, Is.Not.Null, "Relation should have a MappingTable #2");
+		Assert.That(otherClass.Relations.First().MappingTable, Is.Not.Null, "Relation should have a MappingTable #3");
+		Assert.That(otherDerivedClass.Relations.First().MappingTable, Is.Not.Null, "Relation should have a MappingTable #4");
 	}
 	[Test]
 	public void HasTypeColumn()
 	{
-		Assert.NotNull(ownClass.Relations.First().ForeignKeyTypeColumnName, "Relation should have a TypeColumn #1");
-		Assert.NotNull(ownDerivedClass.Relations.First().ForeignKeyTypeColumnName, "Relation should have a TypeColumn #2");
-		Assert.NotNull(ownClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, "Relation should have a TypeColumn #3");
-		Assert.NotNull(ownDerivedClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, "Relation should have a TypeColumn #4");
-		Assert.NotNull(otherClass.Relations.First().ForeignKeyTypeColumnName, "Relation should have a TypeColumn #5");
-		Assert.NotNull(otherDerivedClass.Relations.First().ForeignKeyTypeColumnName, "Relation should have a TypeColumn #6");
-		Assert.NotNull(otherClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, "Relation should have a TypeColumn #7");
-		Assert.NotNull(otherDerivedClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, "Relation should have a TypeColumn #8");
+		Assert.That(ownClass.Relations.First().ForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #1");
+		Assert.That(ownDerivedClass.Relations.First().ForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #2");
+		Assert.That(ownClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #3");
+		Assert.That(ownDerivedClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #4");
+		Assert.That(otherClass.Relations.First().ForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #5");
+		Assert.That(otherDerivedClass.Relations.First().ForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #6");
+		Assert.That(otherClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #7");
+		Assert.That(otherDerivedClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #8");
 	}
 	[Test]
 	public void HasTypeCode()
@@ -9788,7 +9790,7 @@ public class MappingTestAgrBin1OwnpabsOthpabsTblGuid
 
 
 [TestFixture]
-public class MappingTestAgrBi1nOwnpabsOthpabsTblGuid
+public class MappingTestAgrBi1nOwnpabsOthpabsTblGuid : NDOTest
 {
 	PersistenceManager pm;
 	NDOMapping mapping;
@@ -9809,22 +9811,22 @@ public class MappingTestAgrBi1nOwnpabsOthpabsTblGuid
 	[Test]
 	public void HasMappingTable()
 	{
-		Assert.NotNull(ownClass.Relations.First().MappingTable, "Relation should have a MappingTable #1");
-		Assert.NotNull(ownDerivedClass.Relations.First().MappingTable, "Relation should have a MappingTable #2");
-		Assert.NotNull(otherClass.Relations.First().MappingTable, "Relation should have a MappingTable #3");
-		Assert.NotNull(otherDerivedClass.Relations.First().MappingTable, "Relation should have a MappingTable #4");
+		Assert.That(ownClass.Relations.First().MappingTable, Is.Not.Null, "Relation should have a MappingTable #1");
+		Assert.That(ownDerivedClass.Relations.First().MappingTable, Is.Not.Null, "Relation should have a MappingTable #2");
+		Assert.That(otherClass.Relations.First().MappingTable, Is.Not.Null, "Relation should have a MappingTable #3");
+		Assert.That(otherDerivedClass.Relations.First().MappingTable, Is.Not.Null, "Relation should have a MappingTable #4");
 	}
 	[Test]
 	public void HasTypeColumn()
 	{
-		Assert.NotNull(ownClass.Relations.First().ForeignKeyTypeColumnName, "Relation should have a TypeColumn #1");
-		Assert.NotNull(ownDerivedClass.Relations.First().ForeignKeyTypeColumnName, "Relation should have a TypeColumn #2");
-		Assert.NotNull(ownClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, "Relation should have a TypeColumn #3");
-		Assert.NotNull(ownDerivedClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, "Relation should have a TypeColumn #4");
-		Assert.NotNull(otherClass.Relations.First().ForeignKeyTypeColumnName, "Relation should have a TypeColumn #5");
-		Assert.NotNull(otherDerivedClass.Relations.First().ForeignKeyTypeColumnName, "Relation should have a TypeColumn #6");
-		Assert.NotNull(otherClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, "Relation should have a TypeColumn #7");
-		Assert.NotNull(otherDerivedClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, "Relation should have a TypeColumn #8");
+		Assert.That(ownClass.Relations.First().ForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #1");
+		Assert.That(ownDerivedClass.Relations.First().ForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #2");
+		Assert.That(ownClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #3");
+		Assert.That(ownDerivedClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #4");
+		Assert.That(otherClass.Relations.First().ForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #5");
+		Assert.That(otherDerivedClass.Relations.First().ForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #6");
+		Assert.That(otherClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #7");
+		Assert.That(otherDerivedClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #8");
 	}
 	[Test]
 	public void HasTypeCode()
@@ -9836,7 +9838,7 @@ public class MappingTestAgrBi1nOwnpabsOthpabsTblGuid
 
 
 [TestFixture]
-public class MappingTestAgrBinnOwnpabsOthpabsTblGuid
+public class MappingTestAgrBinnOwnpabsOthpabsTblGuid : NDOTest
 {
 	PersistenceManager pm;
 	NDOMapping mapping;
@@ -9857,22 +9859,22 @@ public class MappingTestAgrBinnOwnpabsOthpabsTblGuid
 	[Test]
 	public void HasMappingTable()
 	{
-		Assert.NotNull(ownClass.Relations.First().MappingTable, "Relation should have a MappingTable #1");
-		Assert.NotNull(ownDerivedClass.Relations.First().MappingTable, "Relation should have a MappingTable #2");
-		Assert.NotNull(otherClass.Relations.First().MappingTable, "Relation should have a MappingTable #3");
-		Assert.NotNull(otherDerivedClass.Relations.First().MappingTable, "Relation should have a MappingTable #4");
+		Assert.That(ownClass.Relations.First().MappingTable, Is.Not.Null, "Relation should have a MappingTable #1");
+		Assert.That(ownDerivedClass.Relations.First().MappingTable, Is.Not.Null, "Relation should have a MappingTable #2");
+		Assert.That(otherClass.Relations.First().MappingTable, Is.Not.Null, "Relation should have a MappingTable #3");
+		Assert.That(otherDerivedClass.Relations.First().MappingTable, Is.Not.Null, "Relation should have a MappingTable #4");
 	}
 	[Test]
 	public void HasTypeColumn()
 	{
-		Assert.NotNull(ownClass.Relations.First().ForeignKeyTypeColumnName, "Relation should have a TypeColumn #1");
-		Assert.NotNull(ownDerivedClass.Relations.First().ForeignKeyTypeColumnName, "Relation should have a TypeColumn #2");
-		Assert.NotNull(ownClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, "Relation should have a TypeColumn #3");
-		Assert.NotNull(ownDerivedClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, "Relation should have a TypeColumn #4");
-		Assert.NotNull(otherClass.Relations.First().ForeignKeyTypeColumnName, "Relation should have a TypeColumn #5");
-		Assert.NotNull(otherDerivedClass.Relations.First().ForeignKeyTypeColumnName, "Relation should have a TypeColumn #6");
-		Assert.NotNull(otherClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, "Relation should have a TypeColumn #7");
-		Assert.NotNull(otherDerivedClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, "Relation should have a TypeColumn #8");
+		Assert.That(ownClass.Relations.First().ForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #1");
+		Assert.That(ownDerivedClass.Relations.First().ForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #2");
+		Assert.That(ownClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #3");
+		Assert.That(ownDerivedClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #4");
+		Assert.That(otherClass.Relations.First().ForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #5");
+		Assert.That(otherDerivedClass.Relations.First().ForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #6");
+		Assert.That(otherClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #7");
+		Assert.That(otherDerivedClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #8");
 	}
 	[Test]
 	public void HasTypeCode()
@@ -9884,7 +9886,7 @@ public class MappingTestAgrBinnOwnpabsOthpabsTblGuid
 
 
 [TestFixture]
-public class MappingTestCmpDir1OwnpabsOthpabsNoTblGuid
+public class MappingTestCmpDir1OwnpabsOthpabsNoTblGuid : NDOTest
 {
 	PersistenceManager pm;
 	NDOMapping mapping;
@@ -9905,13 +9907,13 @@ public class MappingTestCmpDir1OwnpabsOthpabsNoTblGuid
 	[Test]
 	public void HasMappingTable()
 	{
-		Assert.Null(ownClass.Relations.First().MappingTable, "Relation shouldn't have a MappingTable #5");
-		Assert.Null(ownDerivedClass.Relations.First().MappingTable, "Relation shouldn't have a MappingTable #6");
+		Assert.That(ownClass.Relations.First().MappingTable, Is.Null, "Relation shouldn't have a MappingTable #5");
+		Assert.That(ownDerivedClass.Relations.First().MappingTable, Is.Null, "Relation shouldn't have a MappingTable #6");
 	}
 	[Test]
 	public void HasTypeColumn()
 	{
-		Assert.NotNull(ownClass.Relations.First().ForeignKeyTypeColumnName, "Relation should have a TypeColumn #9");
+		Assert.That(ownClass.Relations.First().ForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #9");
 	}
 	[Test]
 	public void HasTypeCode()
@@ -9923,7 +9925,7 @@ public class MappingTestCmpDir1OwnpabsOthpabsNoTblGuid
 
 
 [TestFixture]
-public class MappingTestCmpDir1OwnpabsOthpabsTblGuid
+public class MappingTestCmpDir1OwnpabsOthpabsTblGuid : NDOTest
 {
 	PersistenceManager pm;
 	NDOMapping mapping;
@@ -9944,16 +9946,16 @@ public class MappingTestCmpDir1OwnpabsOthpabsTblGuid
 	[Test]
 	public void HasMappingTable()
 	{
-		Assert.NotNull(ownClass.Relations.First().MappingTable, "Relation should have a MappingTable #1");
-		Assert.NotNull(ownDerivedClass.Relations.First().MappingTable, "Relation should have a MappingTable #2");
+		Assert.That(ownClass.Relations.First().MappingTable, Is.Not.Null, "Relation should have a MappingTable #1");
+		Assert.That(ownDerivedClass.Relations.First().MappingTable, Is.Not.Null, "Relation should have a MappingTable #2");
 	}
 	[Test]
 	public void HasTypeColumn()
 	{
-		Assert.NotNull(ownClass.Relations.First().ForeignKeyTypeColumnName, "Relation should have a TypeColumn #1");
-		Assert.NotNull(ownDerivedClass.Relations.First().ForeignKeyTypeColumnName, "Relation should have a TypeColumn #2");
-		Assert.NotNull(ownClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, "Relation should have a TypeColumn #3");
-		Assert.NotNull(ownDerivedClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, "Relation should have a TypeColumn #4");
+		Assert.That(ownClass.Relations.First().ForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #1");
+		Assert.That(ownDerivedClass.Relations.First().ForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #2");
+		Assert.That(ownClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #3");
+		Assert.That(ownDerivedClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #4");
 	}
 	[Test]
 	public void HasTypeCode()
@@ -9965,7 +9967,7 @@ public class MappingTestCmpDir1OwnpabsOthpabsTblGuid
 
 
 [TestFixture]
-public class MappingTestCmpBi11OwnpabsOthpabsNoTblGuid
+public class MappingTestCmpBi11OwnpabsOthpabsNoTblGuid : NDOTest
 {
 	PersistenceManager pm;
 	NDOMapping mapping;
@@ -9986,16 +9988,16 @@ public class MappingTestCmpBi11OwnpabsOthpabsNoTblGuid
 	[Test]
 	public void HasMappingTable()
 	{
-		Assert.Null(ownClass.Relations.First().MappingTable, "Relation shouldn't have a MappingTable #5");
-		Assert.Null(ownDerivedClass.Relations.First().MappingTable, "Relation shouldn't have a MappingTable #6");
-		Assert.Null(otherClass.Relations.First().MappingTable, "Relation shouldn't have a MappingTable #7");
-		Assert.Null(otherDerivedClass.Relations.First().MappingTable, "Relation shouldn't have a MappingTable #8");
+		Assert.That(ownClass.Relations.First().MappingTable, Is.Null, "Relation shouldn't have a MappingTable #5");
+		Assert.That(ownDerivedClass.Relations.First().MappingTable, Is.Null, "Relation shouldn't have a MappingTable #6");
+		Assert.That(otherClass.Relations.First().MappingTable, Is.Null, "Relation shouldn't have a MappingTable #7");
+		Assert.That(otherDerivedClass.Relations.First().MappingTable, Is.Null, "Relation shouldn't have a MappingTable #8");
 	}
 	[Test]
 	public void HasTypeColumn()
 	{
-		Assert.NotNull(ownClass.Relations.First().ForeignKeyTypeColumnName, "Relation should have a TypeColumn #9");
-		Assert.NotNull(otherClass.Relations.First().ForeignKeyTypeColumnName, "Relation should have a TypeColumn #10");
+		Assert.That(ownClass.Relations.First().ForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #9");
+		Assert.That(otherClass.Relations.First().ForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #10");
 	}
 	[Test]
 	public void HasTypeCode()
@@ -10007,7 +10009,7 @@ public class MappingTestCmpBi11OwnpabsOthpabsNoTblGuid
 
 
 [TestFixture]
-public class MappingTestCmpBi11OwnpabsOthpabsTblGuid
+public class MappingTestCmpBi11OwnpabsOthpabsTblGuid : NDOTest
 {
 	PersistenceManager pm;
 	NDOMapping mapping;
@@ -10028,22 +10030,22 @@ public class MappingTestCmpBi11OwnpabsOthpabsTblGuid
 	[Test]
 	public void HasMappingTable()
 	{
-		Assert.NotNull(ownClass.Relations.First().MappingTable, "Relation should have a MappingTable #1");
-		Assert.NotNull(ownDerivedClass.Relations.First().MappingTable, "Relation should have a MappingTable #2");
-		Assert.NotNull(otherClass.Relations.First().MappingTable, "Relation should have a MappingTable #3");
-		Assert.NotNull(otherDerivedClass.Relations.First().MappingTable, "Relation should have a MappingTable #4");
+		Assert.That(ownClass.Relations.First().MappingTable, Is.Not.Null, "Relation should have a MappingTable #1");
+		Assert.That(ownDerivedClass.Relations.First().MappingTable, Is.Not.Null, "Relation should have a MappingTable #2");
+		Assert.That(otherClass.Relations.First().MappingTable, Is.Not.Null, "Relation should have a MappingTable #3");
+		Assert.That(otherDerivedClass.Relations.First().MappingTable, Is.Not.Null, "Relation should have a MappingTable #4");
 	}
 	[Test]
 	public void HasTypeColumn()
 	{
-		Assert.NotNull(ownClass.Relations.First().ForeignKeyTypeColumnName, "Relation should have a TypeColumn #1");
-		Assert.NotNull(ownDerivedClass.Relations.First().ForeignKeyTypeColumnName, "Relation should have a TypeColumn #2");
-		Assert.NotNull(ownClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, "Relation should have a TypeColumn #3");
-		Assert.NotNull(ownDerivedClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, "Relation should have a TypeColumn #4");
-		Assert.NotNull(otherClass.Relations.First().ForeignKeyTypeColumnName, "Relation should have a TypeColumn #5");
-		Assert.NotNull(otherDerivedClass.Relations.First().ForeignKeyTypeColumnName, "Relation should have a TypeColumn #6");
-		Assert.NotNull(otherClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, "Relation should have a TypeColumn #7");
-		Assert.NotNull(otherDerivedClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, "Relation should have a TypeColumn #8");
+		Assert.That(ownClass.Relations.First().ForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #1");
+		Assert.That(ownDerivedClass.Relations.First().ForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #2");
+		Assert.That(ownClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #3");
+		Assert.That(ownDerivedClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #4");
+		Assert.That(otherClass.Relations.First().ForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #5");
+		Assert.That(otherDerivedClass.Relations.First().ForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #6");
+		Assert.That(otherClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #7");
+		Assert.That(otherDerivedClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #8");
 	}
 	[Test]
 	public void HasTypeCode()
@@ -10055,7 +10057,7 @@ public class MappingTestCmpBi11OwnpabsOthpabsTblGuid
 
 
 [TestFixture]
-public class MappingTestCmpDirnOwnpabsOthpabsTblGuid
+public class MappingTestCmpDirnOwnpabsOthpabsTblGuid : NDOTest
 {
 	PersistenceManager pm;
 	NDOMapping mapping;
@@ -10076,16 +10078,16 @@ public class MappingTestCmpDirnOwnpabsOthpabsTblGuid
 	[Test]
 	public void HasMappingTable()
 	{
-		Assert.NotNull(ownClass.Relations.First().MappingTable, "Relation should have a MappingTable #1");
-		Assert.NotNull(ownDerivedClass.Relations.First().MappingTable, "Relation should have a MappingTable #2");
+		Assert.That(ownClass.Relations.First().MappingTable, Is.Not.Null, "Relation should have a MappingTable #1");
+		Assert.That(ownDerivedClass.Relations.First().MappingTable, Is.Not.Null, "Relation should have a MappingTable #2");
 	}
 	[Test]
 	public void HasTypeColumn()
 	{
-		Assert.NotNull(ownClass.Relations.First().ForeignKeyTypeColumnName, "Relation should have a TypeColumn #1");
-		Assert.NotNull(ownDerivedClass.Relations.First().ForeignKeyTypeColumnName, "Relation should have a TypeColumn #2");
-		Assert.NotNull(ownClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, "Relation should have a TypeColumn #3");
-		Assert.NotNull(ownDerivedClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, "Relation should have a TypeColumn #4");
+		Assert.That(ownClass.Relations.First().ForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #1");
+		Assert.That(ownDerivedClass.Relations.First().ForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #2");
+		Assert.That(ownClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #3");
+		Assert.That(ownDerivedClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #4");
 	}
 	[Test]
 	public void HasTypeCode()
@@ -10097,7 +10099,7 @@ public class MappingTestCmpDirnOwnpabsOthpabsTblGuid
 
 
 [TestFixture]
-public class MappingTestCmpBin1OwnpabsOthpabsTblGuid
+public class MappingTestCmpBin1OwnpabsOthpabsTblGuid : NDOTest
 {
 	PersistenceManager pm;
 	NDOMapping mapping;
@@ -10118,22 +10120,22 @@ public class MappingTestCmpBin1OwnpabsOthpabsTblGuid
 	[Test]
 	public void HasMappingTable()
 	{
-		Assert.NotNull(ownClass.Relations.First().MappingTable, "Relation should have a MappingTable #1");
-		Assert.NotNull(ownDerivedClass.Relations.First().MappingTable, "Relation should have a MappingTable #2");
-		Assert.NotNull(otherClass.Relations.First().MappingTable, "Relation should have a MappingTable #3");
-		Assert.NotNull(otherDerivedClass.Relations.First().MappingTable, "Relation should have a MappingTable #4");
+		Assert.That(ownClass.Relations.First().MappingTable, Is.Not.Null, "Relation should have a MappingTable #1");
+		Assert.That(ownDerivedClass.Relations.First().MappingTable, Is.Not.Null, "Relation should have a MappingTable #2");
+		Assert.That(otherClass.Relations.First().MappingTable, Is.Not.Null, "Relation should have a MappingTable #3");
+		Assert.That(otherDerivedClass.Relations.First().MappingTable, Is.Not.Null, "Relation should have a MappingTable #4");
 	}
 	[Test]
 	public void HasTypeColumn()
 	{
-		Assert.NotNull(ownClass.Relations.First().ForeignKeyTypeColumnName, "Relation should have a TypeColumn #1");
-		Assert.NotNull(ownDerivedClass.Relations.First().ForeignKeyTypeColumnName, "Relation should have a TypeColumn #2");
-		Assert.NotNull(ownClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, "Relation should have a TypeColumn #3");
-		Assert.NotNull(ownDerivedClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, "Relation should have a TypeColumn #4");
-		Assert.NotNull(otherClass.Relations.First().ForeignKeyTypeColumnName, "Relation should have a TypeColumn #5");
-		Assert.NotNull(otherDerivedClass.Relations.First().ForeignKeyTypeColumnName, "Relation should have a TypeColumn #6");
-		Assert.NotNull(otherClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, "Relation should have a TypeColumn #7");
-		Assert.NotNull(otherDerivedClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, "Relation should have a TypeColumn #8");
+		Assert.That(ownClass.Relations.First().ForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #1");
+		Assert.That(ownDerivedClass.Relations.First().ForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #2");
+		Assert.That(ownClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #3");
+		Assert.That(ownDerivedClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #4");
+		Assert.That(otherClass.Relations.First().ForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #5");
+		Assert.That(otherDerivedClass.Relations.First().ForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #6");
+		Assert.That(otherClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #7");
+		Assert.That(otherDerivedClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #8");
 	}
 	[Test]
 	public void HasTypeCode()
@@ -10145,7 +10147,7 @@ public class MappingTestCmpBin1OwnpabsOthpabsTblGuid
 
 
 [TestFixture]
-public class MappingTestCmpBi1nOwnpabsOthpabsTblGuid
+public class MappingTestCmpBi1nOwnpabsOthpabsTblGuid : NDOTest
 {
 	PersistenceManager pm;
 	NDOMapping mapping;
@@ -10166,22 +10168,22 @@ public class MappingTestCmpBi1nOwnpabsOthpabsTblGuid
 	[Test]
 	public void HasMappingTable()
 	{
-		Assert.NotNull(ownClass.Relations.First().MappingTable, "Relation should have a MappingTable #1");
-		Assert.NotNull(ownDerivedClass.Relations.First().MappingTable, "Relation should have a MappingTable #2");
-		Assert.NotNull(otherClass.Relations.First().MappingTable, "Relation should have a MappingTable #3");
-		Assert.NotNull(otherDerivedClass.Relations.First().MappingTable, "Relation should have a MappingTable #4");
+		Assert.That(ownClass.Relations.First().MappingTable, Is.Not.Null, "Relation should have a MappingTable #1");
+		Assert.That(ownDerivedClass.Relations.First().MappingTable, Is.Not.Null, "Relation should have a MappingTable #2");
+		Assert.That(otherClass.Relations.First().MappingTable, Is.Not.Null, "Relation should have a MappingTable #3");
+		Assert.That(otherDerivedClass.Relations.First().MappingTable, Is.Not.Null, "Relation should have a MappingTable #4");
 	}
 	[Test]
 	public void HasTypeColumn()
 	{
-		Assert.NotNull(ownClass.Relations.First().ForeignKeyTypeColumnName, "Relation should have a TypeColumn #1");
-		Assert.NotNull(ownDerivedClass.Relations.First().ForeignKeyTypeColumnName, "Relation should have a TypeColumn #2");
-		Assert.NotNull(ownClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, "Relation should have a TypeColumn #3");
-		Assert.NotNull(ownDerivedClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, "Relation should have a TypeColumn #4");
-		Assert.NotNull(otherClass.Relations.First().ForeignKeyTypeColumnName, "Relation should have a TypeColumn #5");
-		Assert.NotNull(otherDerivedClass.Relations.First().ForeignKeyTypeColumnName, "Relation should have a TypeColumn #6");
-		Assert.NotNull(otherClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, "Relation should have a TypeColumn #7");
-		Assert.NotNull(otherDerivedClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, "Relation should have a TypeColumn #8");
+		Assert.That(ownClass.Relations.First().ForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #1");
+		Assert.That(ownDerivedClass.Relations.First().ForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #2");
+		Assert.That(ownClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #3");
+		Assert.That(ownDerivedClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #4");
+		Assert.That(otherClass.Relations.First().ForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #5");
+		Assert.That(otherDerivedClass.Relations.First().ForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #6");
+		Assert.That(otherClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #7");
+		Assert.That(otherDerivedClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #8");
 	}
 	[Test]
 	public void HasTypeCode()
@@ -10193,7 +10195,7 @@ public class MappingTestCmpBi1nOwnpabsOthpabsTblGuid
 
 
 [TestFixture]
-public class MappingTestCmpBinnOwnpabsOthpabsTblGuid
+public class MappingTestCmpBinnOwnpabsOthpabsTblGuid : NDOTest
 {
 	PersistenceManager pm;
 	NDOMapping mapping;
@@ -10214,22 +10216,22 @@ public class MappingTestCmpBinnOwnpabsOthpabsTblGuid
 	[Test]
 	public void HasMappingTable()
 	{
-		Assert.NotNull(ownClass.Relations.First().MappingTable, "Relation should have a MappingTable #1");
-		Assert.NotNull(ownDerivedClass.Relations.First().MappingTable, "Relation should have a MappingTable #2");
-		Assert.NotNull(otherClass.Relations.First().MappingTable, "Relation should have a MappingTable #3");
-		Assert.NotNull(otherDerivedClass.Relations.First().MappingTable, "Relation should have a MappingTable #4");
+		Assert.That(ownClass.Relations.First().MappingTable, Is.Not.Null, "Relation should have a MappingTable #1");
+		Assert.That(ownDerivedClass.Relations.First().MappingTable, Is.Not.Null, "Relation should have a MappingTable #2");
+		Assert.That(otherClass.Relations.First().MappingTable, Is.Not.Null, "Relation should have a MappingTable #3");
+		Assert.That(otherDerivedClass.Relations.First().MappingTable, Is.Not.Null, "Relation should have a MappingTable #4");
 	}
 	[Test]
 	public void HasTypeColumn()
 	{
-		Assert.NotNull(ownClass.Relations.First().ForeignKeyTypeColumnName, "Relation should have a TypeColumn #1");
-		Assert.NotNull(ownDerivedClass.Relations.First().ForeignKeyTypeColumnName, "Relation should have a TypeColumn #2");
-		Assert.NotNull(ownClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, "Relation should have a TypeColumn #3");
-		Assert.NotNull(ownDerivedClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, "Relation should have a TypeColumn #4");
-		Assert.NotNull(otherClass.Relations.First().ForeignKeyTypeColumnName, "Relation should have a TypeColumn #5");
-		Assert.NotNull(otherDerivedClass.Relations.First().ForeignKeyTypeColumnName, "Relation should have a TypeColumn #6");
-		Assert.NotNull(otherClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, "Relation should have a TypeColumn #7");
-		Assert.NotNull(otherDerivedClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, "Relation should have a TypeColumn #8");
+		Assert.That(ownClass.Relations.First().ForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #1");
+		Assert.That(ownDerivedClass.Relations.First().ForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #2");
+		Assert.That(ownClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #3");
+		Assert.That(ownDerivedClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #4");
+		Assert.That(otherClass.Relations.First().ForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #5");
+		Assert.That(otherDerivedClass.Relations.First().ForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #6");
+		Assert.That(otherClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #7");
+		Assert.That(otherDerivedClass.Relations.First().MappingTable.ChildForeignKeyTypeColumnName, Is.Not.Null, "Relation should have a TypeColumn #8");
 	}
 	[Test]
 	public void HasTypeCode()

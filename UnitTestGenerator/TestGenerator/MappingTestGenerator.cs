@@ -44,7 +44,7 @@ namespace TestGenerator
 		public MappingTestGenerator( List<RelInfo> relInfos )
 		{
 			this.relInfos = relInfos;
-			fileName = Path.Combine( AppDomain.CurrentDomain.BaseDirectory, @"..\..\..\UnitTests\MappingUnitTests.cs" );
+			fileName = Path.Combine( AppDomain.CurrentDomain.BaseDirectory, @"..\..\..\..\UnitTests\MappingUnitTests.cs" );
 		}
 
 
@@ -58,15 +58,15 @@ namespace TestGenerator
 
 		string AssertEquals( string text, object o2, object o3 )
 		{
-			return "Assert.AreEqual(" + o2.ToString().ToLower() + ", " + o3 + ", \"" + text + "\");";
+			return $"Assert.That({o2.ToString().ToLower()}, Is.EqualTo({o3}), \"{text}\");";
 		}
 		string AssertNotNull( string text, object o )
 		{
-			return "Assert.NotNull(" + o + ", \"" + text + "\");";
+			return "Assert.That(" + o + ", Is.Not.Null, \"" + text + "\");";
 		}
 		string AssertNull( string text, object o )
 		{
-			return "Assert.Null(" + o + ", \"" + text + "\");";
+			return "Assert.That(" + o + ", Is.Null, \"" + text + "\");";
 		}
 
 		string Assert( string text, object o )
@@ -230,6 +230,8 @@ namespace TestGenerator
 			sw.WriteLine( "using NDO;" );
 			sw.WriteLine( "using NDO.Mapping;" );
 			sw.WriteLine( "using NUnit.Framework;" );
+			sw.WriteLine( "using NdoUnitTests;\n" );
+
 			sw.WriteLine( "namespace " + nameSpace );
 			sw.WriteLine( "{\n" );
 			GeneratePmFactory();

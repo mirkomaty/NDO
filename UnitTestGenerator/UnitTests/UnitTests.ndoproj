@@ -19,18 +19,16 @@
     <DatabaseOwner>
     </DatabaseOwner>
     <GenerateConstraints>False</GenerateConstraints>
-    <UseMsBuild>True</UseMsBuild>
     <DropExistingElements>True</DropExistingElements>
   </Options>
-  <ProjectDescription>
-    <BinPath>bin\Debug\UnitTests.exe</BinPath>
-    <ObjPath>obj\Debug\</ObjPath>
+  <ProjectDescription version="5.0">
+    <BinPath>bin\Debug\$(TargetFramework)\UnitTests.dll</BinPath>
+    <ObjPath>obj\Debug\$(TargetFramework)\</ObjPath>
     <AssemblyName />
     <Debug>True</Debug>
-    <IsWebProject>False</IsWebProject>
     <KeyFile />
     <References>
-      <Reference AssemblyName="PersistentClasses" AssemblyPath="..\PersistentClasses\bin\Debug\PersistentClasses.dll">
+      <Reference AssemblyName="PersistentClasses" AssemblyPath="..\PersistentClasses\bin\Debug\net8.0\PersistentClasses.dll">
       </Reference>
     </References>
   </ProjectDescription>

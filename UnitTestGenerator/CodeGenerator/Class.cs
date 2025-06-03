@@ -36,7 +36,7 @@ namespace CodeGenerator
 		string name;
 		Class baseClass;
 		bool isAbstract;
-		private readonly string nameSpace;
+		protected readonly string nameSpace;
 
 		List<string> statements = new List<string>();
 		List<string> attributes = new List<string>();

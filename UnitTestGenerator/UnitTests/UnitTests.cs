@@ -31,6 +31,7 @@ using NDO.Mapping;
 using NDO.Query;
 using NUnit.Framework;
 using RelationTestClasses;
+using NdoUnitTests;
 
 namespace RelationUnitTests
 {
@@ -42,8 +43,7 @@ public class PmFactory
 	{
 		if (pm == null)
 		{
-			pm = new PersistenceManager(@"C:\Projekte\NDO\UnitTestGenerator\UnitTests\bin\Debug\NDOMapping.xml");
-			pm.LogPath = @"C:\Projekte\NDO\UnitTestGenerator";
+			pm = new PersistenceManager(@"C:\Projekte\NDO5\UnitTestGenerator\TestGenerator\bin\UnitTests\bin\Debug\NDOMapping.xml");
 		}
 		else
 		{
@@ -55,7 +55,7 @@ public class PmFactory
 
 
 [TestFixture]
-public class TestAgrDir1NoTblAuto
+public class TestAgrDir1NoTblAuto : NDOTest
 {
 	AgrDir1NoTblAutoLeft ownVar;
 	AgrDir1NoTblAutoRight otherVar;
@@ -83,9 +83,9 @@ public class TestAgrDir1NoTblAuto
 			pm.UnloadCache();
 			decimal count;
 			count = (decimal) new NDOQuery<AgrDir1NoTblAutoLeft>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #1");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #1");
 			count = (decimal) new NDOQuery<AgrDir1NoTblAutoRight>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #2");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #2");
 		}
 		catch (Exception)
 		{
@@ -99,53 +99,53 @@ public class TestAgrDir1NoTblAuto
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestSaveReloadNull()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 		ownVar.RelField = null;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.Null(ownVar.RelField, "There should be no object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Null, "There should be no object");
 	}
 	[Test]
 	public void TestChangeKeyHolderLeft()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 		int x = ownVar.RelField.Dummy;
 		ownVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestChangeKeyHolderLeftNoTouch()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 		ownVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestUpdateOrder()
@@ -178,7 +178,7 @@ public class TestAgrDir1NoTblAuto
 
 
 [TestFixture]
-public class TestAgrDir1TblAuto
+public class TestAgrDir1TblAuto : NDOTest
 {
 	AgrDir1TblAutoLeft ownVar;
 	AgrDir1TblAutoRight otherVar;
@@ -206,9 +206,9 @@ public class TestAgrDir1TblAuto
 			pm.UnloadCache();
 			decimal count;
 			count = (decimal) new NDOQuery<AgrDir1TblAutoLeft>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #1");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #1");
 			count = (decimal) new NDOQuery<AgrDir1TblAutoRight>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #2");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #2");
 		}
 		catch (Exception)
 		{
@@ -223,53 +223,53 @@ public class TestAgrDir1TblAuto
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestSaveReloadNull()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 		ownVar.RelField = null;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.Null(ownVar.RelField, "There should be no object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Null, "There should be no object");
 	}
 	[Test]
 	public void TestChangeKeyHolderLeft()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 		int x = ownVar.RelField.Dummy;
 		ownVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestChangeKeyHolderLeftNoTouch()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 		ownVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 	}
 	void CreateObjects()
 	{
@@ -293,7 +293,7 @@ public class TestAgrDir1TblAuto
 
 
 [TestFixture]
-public class TestAgrBi11NoTblAuto
+public class TestAgrBi11NoTblAuto : NDOTest
 {
 	AgrBi11NoTblAutoLeft ownVar;
 	AgrBi11NoTblAutoRight otherVar;
@@ -321,9 +321,9 @@ public class TestAgrBi11NoTblAuto
 			pm.UnloadCache();
 			decimal count;
 			count = (decimal) new NDOQuery<AgrBi11NoTblAutoLeft>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #1");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #1");
 			count = (decimal) new NDOQuery<AgrBi11NoTblAutoRight>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #2");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #2");
 		}
 		catch (Exception)
 		{
@@ -337,84 +337,84 @@ public class TestAgrBi11NoTblAuto
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestSaveReloadNull()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 		ownVar.RelField = null;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.Null(ownVar.RelField, "There should be no object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Null, "There should be no object");
 	}
 	[Test]
 	public void TestChangeKeyHolderLeft()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 		int x = ownVar.RelField.Dummy;
 		ownVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestChangeKeyHolderRight()
 	{
 		CreateObjects();
 		QueryOther();
-		Assert.NotNull(otherVar, "No Query Result");
-		Assert.NotNull(otherVar.RelField, "No related object");
+		Assert.That(otherVar, Is.Not.Null, "No Query Result");
+		Assert.That(otherVar.RelField, Is.Not.Null, "No related object");
 		int x = otherVar.RelField.Dummy;
 		otherVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOther();
-		Assert.NotNull(otherVar, "No Query Result");
-		Assert.NotNull(otherVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(otherVar.RelField, "No related object");
+		Assert.That(otherVar, Is.Not.Null, "No Query Result");
+		Assert.That(otherVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(otherVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestChangeKeyHolderLeftNoTouch()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 		ownVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestChangeKeyHolderRightNoTouch()
 	{
 		CreateObjects();
 		QueryOther();
-		Assert.NotNull(otherVar, "No Query Result");
-		Assert.NotNull(otherVar.RelField, "No related object");
+		Assert.That(otherVar, Is.Not.Null, "No Query Result");
+		Assert.That(otherVar.RelField, Is.Not.Null, "No related object");
 		otherVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOther();
-		Assert.NotNull(otherVar, "No Query Result");
-		Assert.NotNull(otherVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(otherVar.RelField, "No related object");
+		Assert.That(otherVar, Is.Not.Null, "No Query Result");
+		Assert.That(otherVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(otherVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestRelationHash()
@@ -448,7 +448,7 @@ public class TestAgrBi11NoTblAuto
 
 
 [TestFixture]
-public class TestAgrBi11TblAuto
+public class TestAgrBi11TblAuto : NDOTest
 {
 	AgrBi11TblAutoLeft ownVar;
 	AgrBi11TblAutoRight otherVar;
@@ -476,9 +476,9 @@ public class TestAgrBi11TblAuto
 			pm.UnloadCache();
 			decimal count;
 			count = (decimal) new NDOQuery<AgrBi11TblAutoLeft>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #1");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #1");
 			count = (decimal) new NDOQuery<AgrBi11TblAutoRight>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #2");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #2");
 		}
 		catch (Exception)
 		{
@@ -493,84 +493,84 @@ public class TestAgrBi11TblAuto
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestSaveReloadNull()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 		ownVar.RelField = null;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.Null(ownVar.RelField, "There should be no object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Null, "There should be no object");
 	}
 	[Test]
 	public void TestChangeKeyHolderLeft()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 		int x = ownVar.RelField.Dummy;
 		ownVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestChangeKeyHolderRight()
 	{
 		CreateObjects();
 		QueryOther();
-		Assert.NotNull(otherVar, "No Query Result");
-		Assert.NotNull(otherVar.RelField, "No related object");
+		Assert.That(otherVar, Is.Not.Null, "No Query Result");
+		Assert.That(otherVar.RelField, Is.Not.Null, "No related object");
 		int x = otherVar.RelField.Dummy;
 		otherVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOther();
-		Assert.NotNull(otherVar, "No Query Result");
-		Assert.NotNull(otherVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(otherVar.RelField, "No related object");
+		Assert.That(otherVar, Is.Not.Null, "No Query Result");
+		Assert.That(otherVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(otherVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestChangeKeyHolderLeftNoTouch()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 		ownVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestChangeKeyHolderRightNoTouch()
 	{
 		CreateObjects();
 		QueryOther();
-		Assert.NotNull(otherVar, "No Query Result");
-		Assert.NotNull(otherVar.RelField, "No related object");
+		Assert.That(otherVar, Is.Not.Null, "No Query Result");
+		Assert.That(otherVar.RelField, Is.Not.Null, "No related object");
 		otherVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOther();
-		Assert.NotNull(otherVar, "No Query Result");
-		Assert.NotNull(otherVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(otherVar.RelField, "No related object");
+		Assert.That(otherVar, Is.Not.Null, "No Query Result");
+		Assert.That(otherVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(otherVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestRelationHash()
@@ -604,7 +604,7 @@ public class TestAgrBi11TblAuto
 
 
 [TestFixture]
-public class TestAgrDirnNoTblAuto
+public class TestAgrDirnNoTblAuto : NDOTest
 {
 	AgrDirnNoTblAutoLeft ownVar;
 	AgrDirnNoTblAutoRight otherVar;
@@ -632,9 +632,9 @@ public class TestAgrDirnNoTblAuto
 			pm.UnloadCache();
 			decimal count;
 			count = (decimal) new NDOQuery<AgrDirnNoTblAutoLeft>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #1");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #1");
 			count = (decimal) new NDOQuery<AgrDirnNoTblAutoRight>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #2");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #2");
 		}
 		catch (Exception)
 		{
@@ -648,36 +648,36 @@ public class TestAgrDirnNoTblAuto
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(1, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(1, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 	}
 	[Test]
 	public void TestSaveReloadNull()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(1, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(1, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 		ownVar.RelField = new List<AgrDirnNoTblAutoRight>();
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(0, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(0, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 	}
 	[Test]
 	public void TestSaveReloadRemove()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(1, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(1, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 		ownVar.RemoveRelatedObject();
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(0, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(0, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 	}
 	[Test]
 	public void TestUpdateOrder()
@@ -710,7 +710,7 @@ public class TestAgrDirnNoTblAuto
 
 
 [TestFixture]
-public class TestAgrDirnTblAuto
+public class TestAgrDirnTblAuto : NDOTest
 {
 	AgrDirnTblAutoLeft ownVar;
 	AgrDirnTblAutoRight otherVar;
@@ -738,9 +738,9 @@ public class TestAgrDirnTblAuto
 			pm.UnloadCache();
 			decimal count;
 			count = (decimal) new NDOQuery<AgrDirnTblAutoLeft>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #1");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #1");
 			count = (decimal) new NDOQuery<AgrDirnTblAutoRight>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #2");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #2");
 		}
 		catch (Exception)
 		{
@@ -755,36 +755,36 @@ public class TestAgrDirnTblAuto
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(1, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(1, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 	}
 	[Test]
 	public void TestSaveReloadNull()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(1, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(1, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 		ownVar.RelField = new List<AgrDirnTblAutoRight>();
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(0, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(0, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 	}
 	[Test]
 	public void TestSaveReloadRemove()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(1, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(1, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 		ownVar.RemoveRelatedObject();
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(0, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(0, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 	}
 	void CreateObjects()
 	{
@@ -808,7 +808,7 @@ public class TestAgrDirnTblAuto
 
 
 [TestFixture]
-public class TestAgrBin1NoTblAuto
+public class TestAgrBin1NoTblAuto : NDOTest
 {
 	AgrBin1NoTblAutoLeft ownVar;
 	AgrBin1NoTblAutoRight otherVar;
@@ -836,9 +836,9 @@ public class TestAgrBin1NoTblAuto
 			pm.UnloadCache();
 			decimal count;
 			count = (decimal) new NDOQuery<AgrBin1NoTblAutoLeft>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #1");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #1");
 			count = (decimal) new NDOQuery<AgrBin1NoTblAutoRight>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #2");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #2");
 		}
 		catch (Exception)
 		{
@@ -852,67 +852,67 @@ public class TestAgrBin1NoTblAuto
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(1, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(1, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 	}
 	[Test]
 	public void TestSaveReloadNull()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(1, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(1, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 		ownVar.RelField = new List<AgrBin1NoTblAutoRight>();
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(0, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(0, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 	}
 	[Test]
 	public void TestSaveReloadRemove()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(1, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(1, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 		ownVar.RemoveRelatedObject();
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(0, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(0, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 	}
 	[Test]
 	public void TestChangeKeyHolderRight()
 	{
 		CreateObjects();
 		QueryOther();
-		Assert.NotNull(otherVar, "No Query Result");
-		Assert.NotNull(otherVar.RelField, "No related object");
+		Assert.That(otherVar, Is.Not.Null, "No Query Result");
+		Assert.That(otherVar.RelField, Is.Not.Null, "No related object");
 		int x = otherVar.RelField.Dummy;
 		otherVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOther();
-		Assert.NotNull(otherVar, "No Query Result");
-		Assert.NotNull(otherVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(otherVar.RelField, "No related object");
+		Assert.That(otherVar, Is.Not.Null, "No Query Result");
+		Assert.That(otherVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(otherVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestChangeKeyHolderRightNoTouch()
 	{
 		CreateObjects();
 		QueryOther();
-		Assert.NotNull(otherVar, "No Query Result");
-		Assert.NotNull(otherVar.RelField, "No related object");
+		Assert.That(otherVar, Is.Not.Null, "No Query Result");
+		Assert.That(otherVar.RelField, Is.Not.Null, "No related object");
 		otherVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOther();
-		Assert.NotNull(otherVar, "No Query Result");
-		Assert.NotNull(otherVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(otherVar.RelField, "No related object");
+		Assert.That(otherVar, Is.Not.Null, "No Query Result");
+		Assert.That(otherVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(otherVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestUpdateOrder()
@@ -955,7 +955,7 @@ public class TestAgrBin1NoTblAuto
 
 
 [TestFixture]
-public class TestAgrBin1TblAuto
+public class TestAgrBin1TblAuto : NDOTest
 {
 	AgrBin1TblAutoLeft ownVar;
 	AgrBin1TblAutoRight otherVar;
@@ -983,9 +983,9 @@ public class TestAgrBin1TblAuto
 			pm.UnloadCache();
 			decimal count;
 			count = (decimal) new NDOQuery<AgrBin1TblAutoLeft>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #1");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #1");
 			count = (decimal) new NDOQuery<AgrBin1TblAutoRight>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #2");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #2");
 		}
 		catch (Exception)
 		{
@@ -1000,67 +1000,67 @@ public class TestAgrBin1TblAuto
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(1, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(1, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 	}
 	[Test]
 	public void TestSaveReloadNull()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(1, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(1, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 		ownVar.RelField = new List<AgrBin1TblAutoRight>();
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(0, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(0, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 	}
 	[Test]
 	public void TestSaveReloadRemove()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(1, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(1, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 		ownVar.RemoveRelatedObject();
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(0, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(0, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 	}
 	[Test]
 	public void TestChangeKeyHolderRight()
 	{
 		CreateObjects();
 		QueryOther();
-		Assert.NotNull(otherVar, "No Query Result");
-		Assert.NotNull(otherVar.RelField, "No related object");
+		Assert.That(otherVar, Is.Not.Null, "No Query Result");
+		Assert.That(otherVar.RelField, Is.Not.Null, "No related object");
 		int x = otherVar.RelField.Dummy;
 		otherVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOther();
-		Assert.NotNull(otherVar, "No Query Result");
-		Assert.NotNull(otherVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(otherVar.RelField, "No related object");
+		Assert.That(otherVar, Is.Not.Null, "No Query Result");
+		Assert.That(otherVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(otherVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestChangeKeyHolderRightNoTouch()
 	{
 		CreateObjects();
 		QueryOther();
-		Assert.NotNull(otherVar, "No Query Result");
-		Assert.NotNull(otherVar.RelField, "No related object");
+		Assert.That(otherVar, Is.Not.Null, "No Query Result");
+		Assert.That(otherVar.RelField, Is.Not.Null, "No related object");
 		otherVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOther();
-		Assert.NotNull(otherVar, "No Query Result");
-		Assert.NotNull(otherVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(otherVar.RelField, "No related object");
+		Assert.That(otherVar, Is.Not.Null, "No Query Result");
+		Assert.That(otherVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(otherVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestRelationHash()
@@ -1094,7 +1094,7 @@ public class TestAgrBin1TblAuto
 
 
 [TestFixture]
-public class TestAgrBi1nNoTblAuto
+public class TestAgrBi1nNoTblAuto : NDOTest
 {
 	AgrBi1nNoTblAutoLeft ownVar;
 	AgrBi1nNoTblAutoRight otherVar;
@@ -1122,9 +1122,9 @@ public class TestAgrBi1nNoTblAuto
 			pm.UnloadCache();
 			decimal count;
 			count = (decimal) new NDOQuery<AgrBi1nNoTblAutoLeft>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #1");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #1");
 			count = (decimal) new NDOQuery<AgrBi1nNoTblAutoRight>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #2");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #2");
 		}
 		catch (Exception)
 		{
@@ -1138,53 +1138,53 @@ public class TestAgrBi1nNoTblAuto
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestSaveReloadNull()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 		ownVar.RelField = null;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.Null(ownVar.RelField, "There should be no object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Null, "There should be no object");
 	}
 	[Test]
 	public void TestChangeKeyHolderLeft()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 		int x = ownVar.RelField.Dummy;
 		ownVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestChangeKeyHolderLeftNoTouch()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 		ownVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestUpdateOrder()
@@ -1227,7 +1227,7 @@ public class TestAgrBi1nNoTblAuto
 
 
 [TestFixture]
-public class TestAgrBi1nTblAuto
+public class TestAgrBi1nTblAuto : NDOTest
 {
 	AgrBi1nTblAutoLeft ownVar;
 	AgrBi1nTblAutoRight otherVar;
@@ -1255,9 +1255,9 @@ public class TestAgrBi1nTblAuto
 			pm.UnloadCache();
 			decimal count;
 			count = (decimal) new NDOQuery<AgrBi1nTblAutoLeft>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #1");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #1");
 			count = (decimal) new NDOQuery<AgrBi1nTblAutoRight>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #2");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #2");
 		}
 		catch (Exception)
 		{
@@ -1272,53 +1272,53 @@ public class TestAgrBi1nTblAuto
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestSaveReloadNull()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 		ownVar.RelField = null;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.Null(ownVar.RelField, "There should be no object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Null, "There should be no object");
 	}
 	[Test]
 	public void TestChangeKeyHolderLeft()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 		int x = ownVar.RelField.Dummy;
 		ownVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestChangeKeyHolderLeftNoTouch()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 		ownVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestRelationHash()
@@ -1352,7 +1352,7 @@ public class TestAgrBi1nTblAuto
 
 
 [TestFixture]
-public class TestAgrBinnTblAuto
+public class TestAgrBinnTblAuto : NDOTest
 {
 	AgrBinnTblAutoLeft ownVar;
 	AgrBinnTblAutoRight otherVar;
@@ -1380,9 +1380,9 @@ public class TestAgrBinnTblAuto
 			pm.UnloadCache();
 			decimal count;
 			count = (decimal) new NDOQuery<AgrBinnTblAutoLeft>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #1");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #1");
 			count = (decimal) new NDOQuery<AgrBinnTblAutoRight>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #2");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #2");
 		}
 		catch (Exception)
 		{
@@ -1397,36 +1397,36 @@ public class TestAgrBinnTblAuto
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(1, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(1, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 	}
 	[Test]
 	public void TestSaveReloadNull()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(1, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(1, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 		ownVar.RelField = new List<AgrBinnTblAutoRight>();
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(0, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(0, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 	}
 	[Test]
 	public void TestSaveReloadRemove()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(1, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(1, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 		ownVar.RemoveRelatedObject();
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(0, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(0, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 	}
 	[Test]
 	public void TestRelationHash()
@@ -1460,7 +1460,7 @@ public class TestAgrBinnTblAuto
 
 
 [TestFixture]
-public class TestCmpDir1NoTblAuto
+public class TestCmpDir1NoTblAuto : NDOTest
 {
 	CmpDir1NoTblAutoLeft ownVar;
 	CmpDir1NoTblAutoRight otherVar;
@@ -1484,9 +1484,9 @@ public class TestCmpDir1NoTblAuto
 			pm.UnloadCache();
 			decimal count;
 			count = (decimal) new NDOQuery<CmpDir1NoTblAutoLeft>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #1");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #1");
 			count = (decimal) new NDOQuery<CmpDir1NoTblAutoRight>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #2");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #2");
 		}
 		catch (Exception)
 		{
@@ -1500,53 +1500,53 @@ public class TestCmpDir1NoTblAuto
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestSaveReloadNull()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 		ownVar.RelField = null;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.Null(ownVar.RelField, "There should be no object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Null, "There should be no object");
 	}
 	[Test]
 	public void TestChangeKeyHolderLeft()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 		int x = ownVar.RelField.Dummy;
 		ownVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestChangeKeyHolderLeftNoTouch()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 		ownVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestUpdateOrder()
@@ -1578,7 +1578,7 @@ public class TestCmpDir1NoTblAuto
 
 
 [TestFixture]
-public class TestCmpDir1TblAuto
+public class TestCmpDir1TblAuto : NDOTest
 {
 	CmpDir1TblAutoLeft ownVar;
 	CmpDir1TblAutoRight otherVar;
@@ -1602,9 +1602,9 @@ public class TestCmpDir1TblAuto
 			pm.UnloadCache();
 			decimal count;
 			count = (decimal) new NDOQuery<CmpDir1TblAutoLeft>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #1");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #1");
 			count = (decimal) new NDOQuery<CmpDir1TblAutoRight>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #2");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #2");
 		}
 		catch (Exception)
 		{
@@ -1619,53 +1619,53 @@ public class TestCmpDir1TblAuto
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestSaveReloadNull()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 		ownVar.RelField = null;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.Null(ownVar.RelField, "There should be no object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Null, "There should be no object");
 	}
 	[Test]
 	public void TestChangeKeyHolderLeft()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 		int x = ownVar.RelField.Dummy;
 		ownVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestChangeKeyHolderLeftNoTouch()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 		ownVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 	}
 	void CreateObjects()
 	{
@@ -1688,7 +1688,7 @@ public class TestCmpDir1TblAuto
 
 
 [TestFixture]
-public class TestCmpBi11NoTblAuto
+public class TestCmpBi11NoTblAuto : NDOTest
 {
 	CmpBi11NoTblAutoLeft ownVar;
 	CmpBi11NoTblAutoRight otherVar;
@@ -1712,9 +1712,9 @@ public class TestCmpBi11NoTblAuto
 			pm.UnloadCache();
 			decimal count;
 			count = (decimal) new NDOQuery<CmpBi11NoTblAutoLeft>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #1");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #1");
 			count = (decimal) new NDOQuery<CmpBi11NoTblAutoRight>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #2");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #2");
 		}
 		catch (Exception)
 		{
@@ -1728,84 +1728,84 @@ public class TestCmpBi11NoTblAuto
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestSaveReloadNull()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 		ownVar.RelField = null;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.Null(ownVar.RelField, "There should be no object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Null, "There should be no object");
 	}
 	[Test]
 	public void TestChangeKeyHolderLeft()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 		int x = ownVar.RelField.Dummy;
 		ownVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestChangeKeyHolderRight()
 	{
 		CreateObjects();
 		QueryOther();
-		Assert.NotNull(otherVar, "No Query Result");
-		Assert.NotNull(otherVar.RelField, "No related object");
+		Assert.That(otherVar, Is.Not.Null, "No Query Result");
+		Assert.That(otherVar.RelField, Is.Not.Null, "No related object");
 		int x = otherVar.RelField.Dummy;
 		otherVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOther();
-		Assert.NotNull(otherVar, "No Query Result");
-		Assert.NotNull(otherVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(otherVar.RelField, "No related object");
+		Assert.That(otherVar, Is.Not.Null, "No Query Result");
+		Assert.That(otherVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(otherVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestChangeKeyHolderLeftNoTouch()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 		ownVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestChangeKeyHolderRightNoTouch()
 	{
 		CreateObjects();
 		QueryOther();
-		Assert.NotNull(otherVar, "No Query Result");
-		Assert.NotNull(otherVar.RelField, "No related object");
+		Assert.That(otherVar, Is.Not.Null, "No Query Result");
+		Assert.That(otherVar.RelField, Is.Not.Null, "No related object");
 		otherVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOther();
-		Assert.NotNull(otherVar, "No Query Result");
-		Assert.NotNull(otherVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(otherVar.RelField, "No related object");
+		Assert.That(otherVar, Is.Not.Null, "No Query Result");
+		Assert.That(otherVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(otherVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestRelationHash()
@@ -1838,7 +1838,7 @@ public class TestCmpBi11NoTblAuto
 
 
 [TestFixture]
-public class TestCmpBi11TblAuto
+public class TestCmpBi11TblAuto : NDOTest
 {
 	CmpBi11TblAutoLeft ownVar;
 	CmpBi11TblAutoRight otherVar;
@@ -1862,9 +1862,9 @@ public class TestCmpBi11TblAuto
 			pm.UnloadCache();
 			decimal count;
 			count = (decimal) new NDOQuery<CmpBi11TblAutoLeft>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #1");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #1");
 			count = (decimal) new NDOQuery<CmpBi11TblAutoRight>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #2");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #2");
 		}
 		catch (Exception)
 		{
@@ -1879,84 +1879,84 @@ public class TestCmpBi11TblAuto
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestSaveReloadNull()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 		ownVar.RelField = null;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.Null(ownVar.RelField, "There should be no object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Null, "There should be no object");
 	}
 	[Test]
 	public void TestChangeKeyHolderLeft()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 		int x = ownVar.RelField.Dummy;
 		ownVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestChangeKeyHolderRight()
 	{
 		CreateObjects();
 		QueryOther();
-		Assert.NotNull(otherVar, "No Query Result");
-		Assert.NotNull(otherVar.RelField, "No related object");
+		Assert.That(otherVar, Is.Not.Null, "No Query Result");
+		Assert.That(otherVar.RelField, Is.Not.Null, "No related object");
 		int x = otherVar.RelField.Dummy;
 		otherVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOther();
-		Assert.NotNull(otherVar, "No Query Result");
-		Assert.NotNull(otherVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(otherVar.RelField, "No related object");
+		Assert.That(otherVar, Is.Not.Null, "No Query Result");
+		Assert.That(otherVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(otherVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestChangeKeyHolderLeftNoTouch()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 		ownVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestChangeKeyHolderRightNoTouch()
 	{
 		CreateObjects();
 		QueryOther();
-		Assert.NotNull(otherVar, "No Query Result");
-		Assert.NotNull(otherVar.RelField, "No related object");
+		Assert.That(otherVar, Is.Not.Null, "No Query Result");
+		Assert.That(otherVar.RelField, Is.Not.Null, "No related object");
 		otherVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOther();
-		Assert.NotNull(otherVar, "No Query Result");
-		Assert.NotNull(otherVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(otherVar.RelField, "No related object");
+		Assert.That(otherVar, Is.Not.Null, "No Query Result");
+		Assert.That(otherVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(otherVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestRelationHash()
@@ -1989,7 +1989,7 @@ public class TestCmpBi11TblAuto
 
 
 [TestFixture]
-public class TestCmpDirnNoTblAuto
+public class TestCmpDirnNoTblAuto : NDOTest
 {
 	CmpDirnNoTblAutoLeft ownVar;
 	CmpDirnNoTblAutoRight otherVar;
@@ -2013,9 +2013,9 @@ public class TestCmpDirnNoTblAuto
 			pm.UnloadCache();
 			decimal count;
 			count = (decimal) new NDOQuery<CmpDirnNoTblAutoLeft>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #1");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #1");
 			count = (decimal) new NDOQuery<CmpDirnNoTblAutoRight>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #2");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #2");
 		}
 		catch (Exception)
 		{
@@ -2029,36 +2029,36 @@ public class TestCmpDirnNoTblAuto
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(1, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(1, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 	}
 	[Test]
 	public void TestSaveReloadNull()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(1, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(1, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 		ownVar.RelField = new List<CmpDirnNoTblAutoRight>();
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(0, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(0, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 	}
 	[Test]
 	public void TestSaveReloadRemove()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(1, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(1, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 		ownVar.RemoveRelatedObject();
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(0, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(0, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 	}
 	[Test]
 	public void TestUpdateOrder()
@@ -2090,7 +2090,7 @@ public class TestCmpDirnNoTblAuto
 
 
 [TestFixture]
-public class TestCmpDirnTblAuto
+public class TestCmpDirnTblAuto : NDOTest
 {
 	CmpDirnTblAutoLeft ownVar;
 	CmpDirnTblAutoRight otherVar;
@@ -2114,9 +2114,9 @@ public class TestCmpDirnTblAuto
 			pm.UnloadCache();
 			decimal count;
 			count = (decimal) new NDOQuery<CmpDirnTblAutoLeft>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #1");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #1");
 			count = (decimal) new NDOQuery<CmpDirnTblAutoRight>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #2");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #2");
 		}
 		catch (Exception)
 		{
@@ -2131,36 +2131,36 @@ public class TestCmpDirnTblAuto
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(1, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(1, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 	}
 	[Test]
 	public void TestSaveReloadNull()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(1, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(1, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 		ownVar.RelField = new List<CmpDirnTblAutoRight>();
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(0, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(0, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 	}
 	[Test]
 	public void TestSaveReloadRemove()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(1, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(1, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 		ownVar.RemoveRelatedObject();
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(0, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(0, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 	}
 	void CreateObjects()
 	{
@@ -2183,7 +2183,7 @@ public class TestCmpDirnTblAuto
 
 
 [TestFixture]
-public class TestCmpBin1NoTblAuto
+public class TestCmpBin1NoTblAuto : NDOTest
 {
 	CmpBin1NoTblAutoLeft ownVar;
 	CmpBin1NoTblAutoRight otherVar;
@@ -2207,9 +2207,9 @@ public class TestCmpBin1NoTblAuto
 			pm.UnloadCache();
 			decimal count;
 			count = (decimal) new NDOQuery<CmpBin1NoTblAutoLeft>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #1");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #1");
 			count = (decimal) new NDOQuery<CmpBin1NoTblAutoRight>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #2");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #2");
 		}
 		catch (Exception)
 		{
@@ -2223,67 +2223,67 @@ public class TestCmpBin1NoTblAuto
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(1, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(1, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 	}
 	[Test]
 	public void TestSaveReloadNull()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(1, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(1, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 		ownVar.RelField = new List<CmpBin1NoTblAutoRight>();
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(0, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(0, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 	}
 	[Test]
 	public void TestSaveReloadRemove()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(1, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(1, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 		ownVar.RemoveRelatedObject();
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(0, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(0, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 	}
 	[Test]
 	public void TestChangeKeyHolderRight()
 	{
 		CreateObjects();
 		QueryOther();
-		Assert.NotNull(otherVar, "No Query Result");
-		Assert.NotNull(otherVar.RelField, "No related object");
+		Assert.That(otherVar, Is.Not.Null, "No Query Result");
+		Assert.That(otherVar.RelField, Is.Not.Null, "No related object");
 		int x = otherVar.RelField.Dummy;
 		otherVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOther();
-		Assert.NotNull(otherVar, "No Query Result");
-		Assert.NotNull(otherVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(otherVar.RelField, "No related object");
+		Assert.That(otherVar, Is.Not.Null, "No Query Result");
+		Assert.That(otherVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(otherVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestChangeKeyHolderRightNoTouch()
 	{
 		CreateObjects();
 		QueryOther();
-		Assert.NotNull(otherVar, "No Query Result");
-		Assert.NotNull(otherVar.RelField, "No related object");
+		Assert.That(otherVar, Is.Not.Null, "No Query Result");
+		Assert.That(otherVar.RelField, Is.Not.Null, "No related object");
 		otherVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOther();
-		Assert.NotNull(otherVar, "No Query Result");
-		Assert.NotNull(otherVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(otherVar.RelField, "No related object");
+		Assert.That(otherVar, Is.Not.Null, "No Query Result");
+		Assert.That(otherVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(otherVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestUpdateOrder()
@@ -2325,7 +2325,7 @@ public class TestCmpBin1NoTblAuto
 
 
 [TestFixture]
-public class TestCmpBin1TblAuto
+public class TestCmpBin1TblAuto : NDOTest
 {
 	CmpBin1TblAutoLeft ownVar;
 	CmpBin1TblAutoRight otherVar;
@@ -2349,9 +2349,9 @@ public class TestCmpBin1TblAuto
 			pm.UnloadCache();
 			decimal count;
 			count = (decimal) new NDOQuery<CmpBin1TblAutoLeft>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #1");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #1");
 			count = (decimal) new NDOQuery<CmpBin1TblAutoRight>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #2");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #2");
 		}
 		catch (Exception)
 		{
@@ -2366,67 +2366,67 @@ public class TestCmpBin1TblAuto
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(1, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(1, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 	}
 	[Test]
 	public void TestSaveReloadNull()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(1, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(1, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 		ownVar.RelField = new List<CmpBin1TblAutoRight>();
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(0, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(0, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 	}
 	[Test]
 	public void TestSaveReloadRemove()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(1, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(1, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 		ownVar.RemoveRelatedObject();
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(0, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(0, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 	}
 	[Test]
 	public void TestChangeKeyHolderRight()
 	{
 		CreateObjects();
 		QueryOther();
-		Assert.NotNull(otherVar, "No Query Result");
-		Assert.NotNull(otherVar.RelField, "No related object");
+		Assert.That(otherVar, Is.Not.Null, "No Query Result");
+		Assert.That(otherVar.RelField, Is.Not.Null, "No related object");
 		int x = otherVar.RelField.Dummy;
 		otherVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOther();
-		Assert.NotNull(otherVar, "No Query Result");
-		Assert.NotNull(otherVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(otherVar.RelField, "No related object");
+		Assert.That(otherVar, Is.Not.Null, "No Query Result");
+		Assert.That(otherVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(otherVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestChangeKeyHolderRightNoTouch()
 	{
 		CreateObjects();
 		QueryOther();
-		Assert.NotNull(otherVar, "No Query Result");
-		Assert.NotNull(otherVar.RelField, "No related object");
+		Assert.That(otherVar, Is.Not.Null, "No Query Result");
+		Assert.That(otherVar.RelField, Is.Not.Null, "No related object");
 		otherVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOther();
-		Assert.NotNull(otherVar, "No Query Result");
-		Assert.NotNull(otherVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(otherVar.RelField, "No related object");
+		Assert.That(otherVar, Is.Not.Null, "No Query Result");
+		Assert.That(otherVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(otherVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestRelationHash()
@@ -2459,7 +2459,7 @@ public class TestCmpBin1TblAuto
 
 
 [TestFixture]
-public class TestCmpBi1nNoTblAuto
+public class TestCmpBi1nNoTblAuto : NDOTest
 {
 	CmpBi1nNoTblAutoLeft ownVar;
 	CmpBi1nNoTblAutoRight otherVar;
@@ -2483,9 +2483,9 @@ public class TestCmpBi1nNoTblAuto
 			pm.UnloadCache();
 			decimal count;
 			count = (decimal) new NDOQuery<CmpBi1nNoTblAutoLeft>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #1");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #1");
 			count = (decimal) new NDOQuery<CmpBi1nNoTblAutoRight>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #2");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #2");
 		}
 		catch (Exception)
 		{
@@ -2499,53 +2499,53 @@ public class TestCmpBi1nNoTblAuto
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestSaveReloadNull()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 		ownVar.RelField = null;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.Null(ownVar.RelField, "There should be no object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Null, "There should be no object");
 	}
 	[Test]
 	public void TestChangeKeyHolderLeft()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 		int x = ownVar.RelField.Dummy;
 		ownVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestChangeKeyHolderLeftNoTouch()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 		ownVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestUpdateOrder()
@@ -2587,7 +2587,7 @@ public class TestCmpBi1nNoTblAuto
 
 
 [TestFixture]
-public class TestCmpBi1nTblAuto
+public class TestCmpBi1nTblAuto : NDOTest
 {
 	CmpBi1nTblAutoLeft ownVar;
 	CmpBi1nTblAutoRight otherVar;
@@ -2611,9 +2611,9 @@ public class TestCmpBi1nTblAuto
 			pm.UnloadCache();
 			decimal count;
 			count = (decimal) new NDOQuery<CmpBi1nTblAutoLeft>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #1");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #1");
 			count = (decimal) new NDOQuery<CmpBi1nTblAutoRight>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #2");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #2");
 		}
 		catch (Exception)
 		{
@@ -2628,53 +2628,53 @@ public class TestCmpBi1nTblAuto
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestSaveReloadNull()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 		ownVar.RelField = null;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.Null(ownVar.RelField, "There should be no object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Null, "There should be no object");
 	}
 	[Test]
 	public void TestChangeKeyHolderLeft()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 		int x = ownVar.RelField.Dummy;
 		ownVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestChangeKeyHolderLeftNoTouch()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 		ownVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestRelationHash()
@@ -2707,7 +2707,7 @@ public class TestCmpBi1nTblAuto
 
 
 [TestFixture]
-public class TestCmpBinnTblAuto
+public class TestCmpBinnTblAuto : NDOTest
 {
 	CmpBinnTblAutoLeft ownVar;
 	CmpBinnTblAutoRight otherVar;
@@ -2731,9 +2731,9 @@ public class TestCmpBinnTblAuto
 			pm.UnloadCache();
 			decimal count;
 			count = (decimal) new NDOQuery<CmpBinnTblAutoLeft>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #1");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #1");
 			count = (decimal) new NDOQuery<CmpBinnTblAutoRight>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #2");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #2");
 		}
 		catch (Exception)
 		{
@@ -2748,36 +2748,36 @@ public class TestCmpBinnTblAuto
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(1, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(1, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 	}
 	[Test]
 	public void TestSaveReloadNull()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(1, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(1, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 		ownVar.RelField = new List<CmpBinnTblAutoRight>();
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(0, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(0, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 	}
 	[Test]
 	public void TestSaveReloadRemove()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(1, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(1, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 		ownVar.RemoveRelatedObject();
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(0, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(0, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 	}
 	[Test]
 	public void TestRelationHash()
@@ -2810,7 +2810,7 @@ public class TestCmpBinnTblAuto
 
 
 [TestFixture]
-public class TestAgrDir1OwnpconNoTblAuto
+public class TestAgrDir1OwnpconNoTblAuto : NDOTest
 {
 	AgrDir1OwnpconNoTblAutoLeftBase ownVar;
 	AgrDir1OwnpconNoTblAutoRight otherVar;
@@ -2838,9 +2838,9 @@ public class TestAgrDir1OwnpconNoTblAuto
 			pm.UnloadCache();
 			decimal count;
 			count = (decimal) new NDOQuery<AgrDir1OwnpconNoTblAutoLeftBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #1");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #1");
 			count = (decimal) new NDOQuery<AgrDir1OwnpconNoTblAutoRight>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #2");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #2");
 		}
 		catch (Exception)
 		{
@@ -2854,53 +2854,53 @@ public class TestAgrDir1OwnpconNoTblAuto
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestSaveReloadNull()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 		ownVar.RelField = null;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.Null(ownVar.RelField, "There should be no object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Null, "There should be no object");
 	}
 	[Test]
 	public void TestChangeKeyHolderLeft()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 		int x = ownVar.RelField.Dummy;
 		ownVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestChangeKeyHolderLeftNoTouch()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 		ownVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestUpdateOrder()
@@ -2935,7 +2935,7 @@ public class TestAgrDir1OwnpconNoTblAuto
 
 
 [TestFixture]
-public class TestAgrDir1OwnpconTblAuto
+public class TestAgrDir1OwnpconTblAuto : NDOTest
 {
 	AgrDir1OwnpconTblAutoLeftBase ownVar;
 	AgrDir1OwnpconTblAutoRight otherVar;
@@ -2963,9 +2963,9 @@ public class TestAgrDir1OwnpconTblAuto
 			pm.UnloadCache();
 			decimal count;
 			count = (decimal) new NDOQuery<AgrDir1OwnpconTblAutoLeftBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #1");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #1");
 			count = (decimal) new NDOQuery<AgrDir1OwnpconTblAutoRight>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #2");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #2");
 		}
 		catch (Exception)
 		{
@@ -2980,53 +2980,53 @@ public class TestAgrDir1OwnpconTblAuto
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestSaveReloadNull()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 		ownVar.RelField = null;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.Null(ownVar.RelField, "There should be no object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Null, "There should be no object");
 	}
 	[Test]
 	public void TestChangeKeyHolderLeft()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 		int x = ownVar.RelField.Dummy;
 		ownVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestChangeKeyHolderLeftNoTouch()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 		ownVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 	}
 	void CreateObjects()
 	{
@@ -3050,7 +3050,7 @@ public class TestAgrDir1OwnpconTblAuto
 
 
 [TestFixture]
-public class TestAgrBi11OwnpconNoTblAuto
+public class TestAgrBi11OwnpconNoTblAuto : NDOTest
 {
 	AgrBi11OwnpconNoTblAutoLeftBase ownVar;
 	AgrBi11OwnpconNoTblAutoRight otherVar;
@@ -3078,9 +3078,9 @@ public class TestAgrBi11OwnpconNoTblAuto
 			pm.UnloadCache();
 			decimal count;
 			count = (decimal) new NDOQuery<AgrBi11OwnpconNoTblAutoLeftBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #1");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #1");
 			count = (decimal) new NDOQuery<AgrBi11OwnpconNoTblAutoRight>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #2");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #2");
 		}
 		catch (Exception)
 		{
@@ -3094,84 +3094,84 @@ public class TestAgrBi11OwnpconNoTblAuto
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestSaveReloadNull()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 		ownVar.RelField = null;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.Null(ownVar.RelField, "There should be no object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Null, "There should be no object");
 	}
 	[Test]
 	public void TestChangeKeyHolderLeft()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 		int x = ownVar.RelField.Dummy;
 		ownVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestChangeKeyHolderRight()
 	{
 		CreateObjects();
 		QueryOther();
-		Assert.NotNull(otherVar, "No Query Result");
-		Assert.NotNull(otherVar.RelField, "No related object");
+		Assert.That(otherVar, Is.Not.Null, "No Query Result");
+		Assert.That(otherVar.RelField, Is.Not.Null, "No related object");
 		int x = otherVar.RelField.Dummy;
 		otherVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOther();
-		Assert.NotNull(otherVar, "No Query Result");
-		Assert.NotNull(otherVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(otherVar.RelField, "No related object");
+		Assert.That(otherVar, Is.Not.Null, "No Query Result");
+		Assert.That(otherVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(otherVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestChangeKeyHolderLeftNoTouch()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 		ownVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestChangeKeyHolderRightNoTouch()
 	{
 		CreateObjects();
 		QueryOther();
-		Assert.NotNull(otherVar, "No Query Result");
-		Assert.NotNull(otherVar.RelField, "No related object");
+		Assert.That(otherVar, Is.Not.Null, "No Query Result");
+		Assert.That(otherVar.RelField, Is.Not.Null, "No related object");
 		otherVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOther();
-		Assert.NotNull(otherVar, "No Query Result");
-		Assert.NotNull(otherVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(otherVar.RelField, "No related object");
+		Assert.That(otherVar, Is.Not.Null, "No Query Result");
+		Assert.That(otherVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(otherVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestRelationHash()
@@ -3210,7 +3210,7 @@ public class TestAgrBi11OwnpconNoTblAuto
 
 
 [TestFixture]
-public class TestAgrBi11OwnpconTblAuto
+public class TestAgrBi11OwnpconTblAuto : NDOTest
 {
 	AgrBi11OwnpconTblAutoLeftBase ownVar;
 	AgrBi11OwnpconTblAutoRight otherVar;
@@ -3238,9 +3238,9 @@ public class TestAgrBi11OwnpconTblAuto
 			pm.UnloadCache();
 			decimal count;
 			count = (decimal) new NDOQuery<AgrBi11OwnpconTblAutoLeftBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #1");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #1");
 			count = (decimal) new NDOQuery<AgrBi11OwnpconTblAutoRight>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #2");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #2");
 		}
 		catch (Exception)
 		{
@@ -3255,84 +3255,84 @@ public class TestAgrBi11OwnpconTblAuto
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestSaveReloadNull()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 		ownVar.RelField = null;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.Null(ownVar.RelField, "There should be no object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Null, "There should be no object");
 	}
 	[Test]
 	public void TestChangeKeyHolderLeft()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 		int x = ownVar.RelField.Dummy;
 		ownVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestChangeKeyHolderRight()
 	{
 		CreateObjects();
 		QueryOther();
-		Assert.NotNull(otherVar, "No Query Result");
-		Assert.NotNull(otherVar.RelField, "No related object");
+		Assert.That(otherVar, Is.Not.Null, "No Query Result");
+		Assert.That(otherVar.RelField, Is.Not.Null, "No related object");
 		int x = otherVar.RelField.Dummy;
 		otherVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOther();
-		Assert.NotNull(otherVar, "No Query Result");
-		Assert.NotNull(otherVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(otherVar.RelField, "No related object");
+		Assert.That(otherVar, Is.Not.Null, "No Query Result");
+		Assert.That(otherVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(otherVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestChangeKeyHolderLeftNoTouch()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 		ownVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestChangeKeyHolderRightNoTouch()
 	{
 		CreateObjects();
 		QueryOther();
-		Assert.NotNull(otherVar, "No Query Result");
-		Assert.NotNull(otherVar.RelField, "No related object");
+		Assert.That(otherVar, Is.Not.Null, "No Query Result");
+		Assert.That(otherVar.RelField, Is.Not.Null, "No related object");
 		otherVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOther();
-		Assert.NotNull(otherVar, "No Query Result");
-		Assert.NotNull(otherVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(otherVar.RelField, "No related object");
+		Assert.That(otherVar, Is.Not.Null, "No Query Result");
+		Assert.That(otherVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(otherVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestRelationHash()
@@ -3371,7 +3371,7 @@ public class TestAgrBi11OwnpconTblAuto
 
 
 [TestFixture]
-public class TestAgrDirnOwnpconNoTblAuto
+public class TestAgrDirnOwnpconNoTblAuto : NDOTest
 {
 	AgrDirnOwnpconNoTblAutoLeftBase ownVar;
 	AgrDirnOwnpconNoTblAutoRight otherVar;
@@ -3399,9 +3399,9 @@ public class TestAgrDirnOwnpconNoTblAuto
 			pm.UnloadCache();
 			decimal count;
 			count = (decimal) new NDOQuery<AgrDirnOwnpconNoTblAutoLeftBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #1");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #1");
 			count = (decimal) new NDOQuery<AgrDirnOwnpconNoTblAutoRight>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #2");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #2");
 		}
 		catch (Exception)
 		{
@@ -3415,36 +3415,36 @@ public class TestAgrDirnOwnpconNoTblAuto
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(1, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(1, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 	}
 	[Test]
 	public void TestSaveReloadNull()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(1, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(1, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 		ownVar.RelField = new List<AgrDirnOwnpconNoTblAutoRight>();
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(0, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(0, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 	}
 	[Test]
 	public void TestSaveReloadRemove()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(1, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(1, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 		ownVar.RemoveRelatedObject();
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(0, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(0, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 	}
 	[Test]
 	public void TestUpdateOrder()
@@ -3479,7 +3479,7 @@ public class TestAgrDirnOwnpconNoTblAuto
 
 
 [TestFixture]
-public class TestAgrDirnOwnpconTblAuto
+public class TestAgrDirnOwnpconTblAuto : NDOTest
 {
 	AgrDirnOwnpconTblAutoLeftBase ownVar;
 	AgrDirnOwnpconTblAutoRight otherVar;
@@ -3507,9 +3507,9 @@ public class TestAgrDirnOwnpconTblAuto
 			pm.UnloadCache();
 			decimal count;
 			count = (decimal) new NDOQuery<AgrDirnOwnpconTblAutoLeftBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #1");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #1");
 			count = (decimal) new NDOQuery<AgrDirnOwnpconTblAutoRight>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #2");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #2");
 		}
 		catch (Exception)
 		{
@@ -3524,36 +3524,36 @@ public class TestAgrDirnOwnpconTblAuto
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(1, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(1, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 	}
 	[Test]
 	public void TestSaveReloadNull()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(1, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(1, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 		ownVar.RelField = new List<AgrDirnOwnpconTblAutoRight>();
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(0, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(0, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 	}
 	[Test]
 	public void TestSaveReloadRemove()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(1, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(1, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 		ownVar.RemoveRelatedObject();
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(0, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(0, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 	}
 	void CreateObjects()
 	{
@@ -3577,7 +3577,7 @@ public class TestAgrDirnOwnpconTblAuto
 
 
 [TestFixture]
-public class TestAgrBin1OwnpconNoTblAuto
+public class TestAgrBin1OwnpconNoTblAuto : NDOTest
 {
 	AgrBin1OwnpconNoTblAutoLeftBase ownVar;
 	AgrBin1OwnpconNoTblAutoRight otherVar;
@@ -3605,9 +3605,9 @@ public class TestAgrBin1OwnpconNoTblAuto
 			pm.UnloadCache();
 			decimal count;
 			count = (decimal) new NDOQuery<AgrBin1OwnpconNoTblAutoLeftBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #1");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #1");
 			count = (decimal) new NDOQuery<AgrBin1OwnpconNoTblAutoRight>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #2");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #2");
 		}
 		catch (Exception)
 		{
@@ -3621,67 +3621,67 @@ public class TestAgrBin1OwnpconNoTblAuto
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(1, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(1, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 	}
 	[Test]
 	public void TestSaveReloadNull()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(1, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(1, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 		ownVar.RelField = new List<AgrBin1OwnpconNoTblAutoRight>();
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(0, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(0, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 	}
 	[Test]
 	public void TestSaveReloadRemove()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(1, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(1, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 		ownVar.RemoveRelatedObject();
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(0, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(0, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 	}
 	[Test]
 	public void TestChangeKeyHolderRight()
 	{
 		CreateObjects();
 		QueryOther();
-		Assert.NotNull(otherVar, "No Query Result");
-		Assert.NotNull(otherVar.RelField, "No related object");
+		Assert.That(otherVar, Is.Not.Null, "No Query Result");
+		Assert.That(otherVar.RelField, Is.Not.Null, "No related object");
 		int x = otherVar.RelField.Dummy;
 		otherVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOther();
-		Assert.NotNull(otherVar, "No Query Result");
-		Assert.NotNull(otherVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(otherVar.RelField, "No related object");
+		Assert.That(otherVar, Is.Not.Null, "No Query Result");
+		Assert.That(otherVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(otherVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestChangeKeyHolderRightNoTouch()
 	{
 		CreateObjects();
 		QueryOther();
-		Assert.NotNull(otherVar, "No Query Result");
-		Assert.NotNull(otherVar.RelField, "No related object");
+		Assert.That(otherVar, Is.Not.Null, "No Query Result");
+		Assert.That(otherVar.RelField, Is.Not.Null, "No related object");
 		otherVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOther();
-		Assert.NotNull(otherVar, "No Query Result");
-		Assert.NotNull(otherVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(otherVar.RelField, "No related object");
+		Assert.That(otherVar, Is.Not.Null, "No Query Result");
+		Assert.That(otherVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(otherVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestUpdateOrder()
@@ -3731,7 +3731,7 @@ public class TestAgrBin1OwnpconNoTblAuto
 
 
 [TestFixture]
-public class TestAgrBin1OwnpconTblAuto
+public class TestAgrBin1OwnpconTblAuto : NDOTest
 {
 	AgrBin1OwnpconTblAutoLeftBase ownVar;
 	AgrBin1OwnpconTblAutoRight otherVar;
@@ -3759,9 +3759,9 @@ public class TestAgrBin1OwnpconTblAuto
 			pm.UnloadCache();
 			decimal count;
 			count = (decimal) new NDOQuery<AgrBin1OwnpconTblAutoLeftBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #1");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #1");
 			count = (decimal) new NDOQuery<AgrBin1OwnpconTblAutoRight>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #2");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #2");
 		}
 		catch (Exception)
 		{
@@ -3776,67 +3776,67 @@ public class TestAgrBin1OwnpconTblAuto
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(1, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(1, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 	}
 	[Test]
 	public void TestSaveReloadNull()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(1, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(1, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 		ownVar.RelField = new List<AgrBin1OwnpconTblAutoRight>();
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(0, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(0, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 	}
 	[Test]
 	public void TestSaveReloadRemove()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(1, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(1, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 		ownVar.RemoveRelatedObject();
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(0, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(0, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 	}
 	[Test]
 	public void TestChangeKeyHolderRight()
 	{
 		CreateObjects();
 		QueryOther();
-		Assert.NotNull(otherVar, "No Query Result");
-		Assert.NotNull(otherVar.RelField, "No related object");
+		Assert.That(otherVar, Is.Not.Null, "No Query Result");
+		Assert.That(otherVar.RelField, Is.Not.Null, "No related object");
 		int x = otherVar.RelField.Dummy;
 		otherVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOther();
-		Assert.NotNull(otherVar, "No Query Result");
-		Assert.NotNull(otherVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(otherVar.RelField, "No related object");
+		Assert.That(otherVar, Is.Not.Null, "No Query Result");
+		Assert.That(otherVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(otherVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestChangeKeyHolderRightNoTouch()
 	{
 		CreateObjects();
 		QueryOther();
-		Assert.NotNull(otherVar, "No Query Result");
-		Assert.NotNull(otherVar.RelField, "No related object");
+		Assert.That(otherVar, Is.Not.Null, "No Query Result");
+		Assert.That(otherVar.RelField, Is.Not.Null, "No related object");
 		otherVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOther();
-		Assert.NotNull(otherVar, "No Query Result");
-		Assert.NotNull(otherVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(otherVar.RelField, "No related object");
+		Assert.That(otherVar, Is.Not.Null, "No Query Result");
+		Assert.That(otherVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(otherVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestRelationHash()
@@ -3875,7 +3875,7 @@ public class TestAgrBin1OwnpconTblAuto
 
 
 [TestFixture]
-public class TestAgrBi1nOwnpconTblAuto
+public class TestAgrBi1nOwnpconTblAuto : NDOTest
 {
 	AgrBi1nOwnpconTblAutoLeftBase ownVar;
 	AgrBi1nOwnpconTblAutoRight otherVar;
@@ -3903,9 +3903,9 @@ public class TestAgrBi1nOwnpconTblAuto
 			pm.UnloadCache();
 			decimal count;
 			count = (decimal) new NDOQuery<AgrBi1nOwnpconTblAutoLeftBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #1");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #1");
 			count = (decimal) new NDOQuery<AgrBi1nOwnpconTblAutoRight>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #2");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #2");
 		}
 		catch (Exception)
 		{
@@ -3920,53 +3920,53 @@ public class TestAgrBi1nOwnpconTblAuto
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestSaveReloadNull()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 		ownVar.RelField = null;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.Null(ownVar.RelField, "There should be no object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Null, "There should be no object");
 	}
 	[Test]
 	public void TestChangeKeyHolderLeft()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 		int x = ownVar.RelField.Dummy;
 		ownVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestChangeKeyHolderLeftNoTouch()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 		ownVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestRelationHash()
@@ -4004,7 +4004,7 @@ public class TestAgrBi1nOwnpconTblAuto
 
 
 [TestFixture]
-public class TestAgrBinnOwnpconTblAuto
+public class TestAgrBinnOwnpconTblAuto : NDOTest
 {
 	AgrBinnOwnpconTblAutoLeftBase ownVar;
 	AgrBinnOwnpconTblAutoRight otherVar;
@@ -4032,9 +4032,9 @@ public class TestAgrBinnOwnpconTblAuto
 			pm.UnloadCache();
 			decimal count;
 			count = (decimal) new NDOQuery<AgrBinnOwnpconTblAutoLeftBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #1");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #1");
 			count = (decimal) new NDOQuery<AgrBinnOwnpconTblAutoRight>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #2");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #2");
 		}
 		catch (Exception)
 		{
@@ -4049,36 +4049,36 @@ public class TestAgrBinnOwnpconTblAuto
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(1, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(1, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 	}
 	[Test]
 	public void TestSaveReloadNull()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(1, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(1, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 		ownVar.RelField = new List<AgrBinnOwnpconTblAutoRight>();
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(0, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(0, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 	}
 	[Test]
 	public void TestSaveReloadRemove()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(1, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(1, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 		ownVar.RemoveRelatedObject();
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(0, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(0, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 	}
 	[Test]
 	public void TestRelationHash()
@@ -4116,7 +4116,7 @@ public class TestAgrBinnOwnpconTblAuto
 
 
 [TestFixture]
-public class TestCmpDir1OwnpconNoTblAuto
+public class TestCmpDir1OwnpconNoTblAuto : NDOTest
 {
 	CmpDir1OwnpconNoTblAutoLeftBase ownVar;
 	CmpDir1OwnpconNoTblAutoRight otherVar;
@@ -4140,9 +4140,9 @@ public class TestCmpDir1OwnpconNoTblAuto
 			pm.UnloadCache();
 			decimal count;
 			count = (decimal) new NDOQuery<CmpDir1OwnpconNoTblAutoLeftBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #1");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #1");
 			count = (decimal) new NDOQuery<CmpDir1OwnpconNoTblAutoRight>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #2");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #2");
 		}
 		catch (Exception)
 		{
@@ -4156,53 +4156,53 @@ public class TestCmpDir1OwnpconNoTblAuto
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestSaveReloadNull()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 		ownVar.RelField = null;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.Null(ownVar.RelField, "There should be no object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Null, "There should be no object");
 	}
 	[Test]
 	public void TestChangeKeyHolderLeft()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 		int x = ownVar.RelField.Dummy;
 		ownVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestChangeKeyHolderLeftNoTouch()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 		ownVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestUpdateOrder()
@@ -4237,7 +4237,7 @@ public class TestCmpDir1OwnpconNoTblAuto
 
 
 [TestFixture]
-public class TestCmpDir1OwnpconTblAuto
+public class TestCmpDir1OwnpconTblAuto : NDOTest
 {
 	CmpDir1OwnpconTblAutoLeftBase ownVar;
 	CmpDir1OwnpconTblAutoRight otherVar;
@@ -4261,9 +4261,9 @@ public class TestCmpDir1OwnpconTblAuto
 			pm.UnloadCache();
 			decimal count;
 			count = (decimal) new NDOQuery<CmpDir1OwnpconTblAutoLeftBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #1");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #1");
 			count = (decimal) new NDOQuery<CmpDir1OwnpconTblAutoRight>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #2");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #2");
 		}
 		catch (Exception)
 		{
@@ -4278,53 +4278,53 @@ public class TestCmpDir1OwnpconTblAuto
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestSaveReloadNull()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 		ownVar.RelField = null;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.Null(ownVar.RelField, "There should be no object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Null, "There should be no object");
 	}
 	[Test]
 	public void TestChangeKeyHolderLeft()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 		int x = ownVar.RelField.Dummy;
 		ownVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestChangeKeyHolderLeftNoTouch()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 		ownVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 	}
 	void CreateObjects()
 	{
@@ -4347,7 +4347,7 @@ public class TestCmpDir1OwnpconTblAuto
 
 
 [TestFixture]
-public class TestCmpBi11OwnpconNoTblAuto
+public class TestCmpBi11OwnpconNoTblAuto : NDOTest
 {
 	CmpBi11OwnpconNoTblAutoLeftBase ownVar;
 	CmpBi11OwnpconNoTblAutoRight otherVar;
@@ -4371,9 +4371,9 @@ public class TestCmpBi11OwnpconNoTblAuto
 			pm.UnloadCache();
 			decimal count;
 			count = (decimal) new NDOQuery<CmpBi11OwnpconNoTblAutoLeftBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #1");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #1");
 			count = (decimal) new NDOQuery<CmpBi11OwnpconNoTblAutoRight>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #2");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #2");
 		}
 		catch (Exception)
 		{
@@ -4387,84 +4387,84 @@ public class TestCmpBi11OwnpconNoTblAuto
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestSaveReloadNull()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 		ownVar.RelField = null;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.Null(ownVar.RelField, "There should be no object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Null, "There should be no object");
 	}
 	[Test]
 	public void TestChangeKeyHolderLeft()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 		int x = ownVar.RelField.Dummy;
 		ownVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestChangeKeyHolderRight()
 	{
 		CreateObjects();
 		QueryOther();
-		Assert.NotNull(otherVar, "No Query Result");
-		Assert.NotNull(otherVar.RelField, "No related object");
+		Assert.That(otherVar, Is.Not.Null, "No Query Result");
+		Assert.That(otherVar.RelField, Is.Not.Null, "No related object");
 		int x = otherVar.RelField.Dummy;
 		otherVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOther();
-		Assert.NotNull(otherVar, "No Query Result");
-		Assert.NotNull(otherVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(otherVar.RelField, "No related object");
+		Assert.That(otherVar, Is.Not.Null, "No Query Result");
+		Assert.That(otherVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(otherVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestChangeKeyHolderLeftNoTouch()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 		ownVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestChangeKeyHolderRightNoTouch()
 	{
 		CreateObjects();
 		QueryOther();
-		Assert.NotNull(otherVar, "No Query Result");
-		Assert.NotNull(otherVar.RelField, "No related object");
+		Assert.That(otherVar, Is.Not.Null, "No Query Result");
+		Assert.That(otherVar.RelField, Is.Not.Null, "No related object");
 		otherVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOther();
-		Assert.NotNull(otherVar, "No Query Result");
-		Assert.NotNull(otherVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(otherVar.RelField, "No related object");
+		Assert.That(otherVar, Is.Not.Null, "No Query Result");
+		Assert.That(otherVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(otherVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestRelationHash()
@@ -4502,7 +4502,7 @@ public class TestCmpBi11OwnpconNoTblAuto
 
 
 [TestFixture]
-public class TestCmpBi11OwnpconTblAuto
+public class TestCmpBi11OwnpconTblAuto : NDOTest
 {
 	CmpBi11OwnpconTblAutoLeftBase ownVar;
 	CmpBi11OwnpconTblAutoRight otherVar;
@@ -4526,9 +4526,9 @@ public class TestCmpBi11OwnpconTblAuto
 			pm.UnloadCache();
 			decimal count;
 			count = (decimal) new NDOQuery<CmpBi11OwnpconTblAutoLeftBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #1");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #1");
 			count = (decimal) new NDOQuery<CmpBi11OwnpconTblAutoRight>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #2");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #2");
 		}
 		catch (Exception)
 		{
@@ -4543,84 +4543,84 @@ public class TestCmpBi11OwnpconTblAuto
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestSaveReloadNull()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 		ownVar.RelField = null;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.Null(ownVar.RelField, "There should be no object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Null, "There should be no object");
 	}
 	[Test]
 	public void TestChangeKeyHolderLeft()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 		int x = ownVar.RelField.Dummy;
 		ownVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestChangeKeyHolderRight()
 	{
 		CreateObjects();
 		QueryOther();
-		Assert.NotNull(otherVar, "No Query Result");
-		Assert.NotNull(otherVar.RelField, "No related object");
+		Assert.That(otherVar, Is.Not.Null, "No Query Result");
+		Assert.That(otherVar.RelField, Is.Not.Null, "No related object");
 		int x = otherVar.RelField.Dummy;
 		otherVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOther();
-		Assert.NotNull(otherVar, "No Query Result");
-		Assert.NotNull(otherVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(otherVar.RelField, "No related object");
+		Assert.That(otherVar, Is.Not.Null, "No Query Result");
+		Assert.That(otherVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(otherVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestChangeKeyHolderLeftNoTouch()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 		ownVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestChangeKeyHolderRightNoTouch()
 	{
 		CreateObjects();
 		QueryOther();
-		Assert.NotNull(otherVar, "No Query Result");
-		Assert.NotNull(otherVar.RelField, "No related object");
+		Assert.That(otherVar, Is.Not.Null, "No Query Result");
+		Assert.That(otherVar.RelField, Is.Not.Null, "No related object");
 		otherVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOther();
-		Assert.NotNull(otherVar, "No Query Result");
-		Assert.NotNull(otherVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(otherVar.RelField, "No related object");
+		Assert.That(otherVar, Is.Not.Null, "No Query Result");
+		Assert.That(otherVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(otherVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestRelationHash()
@@ -4657,7 +4657,7 @@ public class TestCmpBi11OwnpconTblAuto
 
 
 [TestFixture]
-public class TestCmpDirnOwnpconNoTblAuto
+public class TestCmpDirnOwnpconNoTblAuto : NDOTest
 {
 	CmpDirnOwnpconNoTblAutoLeftBase ownVar;
 	CmpDirnOwnpconNoTblAutoRight otherVar;
@@ -4681,9 +4681,9 @@ public class TestCmpDirnOwnpconNoTblAuto
 			pm.UnloadCache();
 			decimal count;
 			count = (decimal) new NDOQuery<CmpDirnOwnpconNoTblAutoLeftBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #1");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #1");
 			count = (decimal) new NDOQuery<CmpDirnOwnpconNoTblAutoRight>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #2");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #2");
 		}
 		catch (Exception)
 		{
@@ -4697,36 +4697,36 @@ public class TestCmpDirnOwnpconNoTblAuto
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(1, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(1, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 	}
 	[Test]
 	public void TestSaveReloadNull()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(1, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(1, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 		ownVar.RelField = new List<CmpDirnOwnpconNoTblAutoRight>();
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(0, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(0, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 	}
 	[Test]
 	public void TestSaveReloadRemove()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(1, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(1, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 		ownVar.RemoveRelatedObject();
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(0, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(0, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 	}
 	[Test]
 	public void TestUpdateOrder()
@@ -4760,7 +4760,7 @@ public class TestCmpDirnOwnpconNoTblAuto
 
 
 [TestFixture]
-public class TestCmpDirnOwnpconTblAuto
+public class TestCmpDirnOwnpconTblAuto : NDOTest
 {
 	CmpDirnOwnpconTblAutoLeftBase ownVar;
 	CmpDirnOwnpconTblAutoRight otherVar;
@@ -4784,9 +4784,9 @@ public class TestCmpDirnOwnpconTblAuto
 			pm.UnloadCache();
 			decimal count;
 			count = (decimal) new NDOQuery<CmpDirnOwnpconTblAutoLeftBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #1");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #1");
 			count = (decimal) new NDOQuery<CmpDirnOwnpconTblAutoRight>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #2");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #2");
 		}
 		catch (Exception)
 		{
@@ -4801,36 +4801,36 @@ public class TestCmpDirnOwnpconTblAuto
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(1, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(1, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 	}
 	[Test]
 	public void TestSaveReloadNull()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(1, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(1, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 		ownVar.RelField = new List<CmpDirnOwnpconTblAutoRight>();
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(0, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(0, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 	}
 	[Test]
 	public void TestSaveReloadRemove()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(1, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(1, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 		ownVar.RemoveRelatedObject();
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(0, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(0, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 	}
 	void CreateObjects()
 	{
@@ -4853,7 +4853,7 @@ public class TestCmpDirnOwnpconTblAuto
 
 
 [TestFixture]
-public class TestCmpBin1OwnpconNoTblAuto
+public class TestCmpBin1OwnpconNoTblAuto : NDOTest
 {
 	CmpBin1OwnpconNoTblAutoLeftBase ownVar;
 	CmpBin1OwnpconNoTblAutoRight otherVar;
@@ -4877,9 +4877,9 @@ public class TestCmpBin1OwnpconNoTblAuto
 			pm.UnloadCache();
 			decimal count;
 			count = (decimal) new NDOQuery<CmpBin1OwnpconNoTblAutoLeftBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #1");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #1");
 			count = (decimal) new NDOQuery<CmpBin1OwnpconNoTblAutoRight>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #2");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #2");
 		}
 		catch (Exception)
 		{
@@ -4893,67 +4893,67 @@ public class TestCmpBin1OwnpconNoTblAuto
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(1, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(1, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 	}
 	[Test]
 	public void TestSaveReloadNull()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(1, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(1, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 		ownVar.RelField = new List<CmpBin1OwnpconNoTblAutoRight>();
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(0, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(0, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 	}
 	[Test]
 	public void TestSaveReloadRemove()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(1, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(1, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 		ownVar.RemoveRelatedObject();
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(0, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(0, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 	}
 	[Test]
 	public void TestChangeKeyHolderRight()
 	{
 		CreateObjects();
 		QueryOther();
-		Assert.NotNull(otherVar, "No Query Result");
-		Assert.NotNull(otherVar.RelField, "No related object");
+		Assert.That(otherVar, Is.Not.Null, "No Query Result");
+		Assert.That(otherVar.RelField, Is.Not.Null, "No related object");
 		int x = otherVar.RelField.Dummy;
 		otherVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOther();
-		Assert.NotNull(otherVar, "No Query Result");
-		Assert.NotNull(otherVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(otherVar.RelField, "No related object");
+		Assert.That(otherVar, Is.Not.Null, "No Query Result");
+		Assert.That(otherVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(otherVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestChangeKeyHolderRightNoTouch()
 	{
 		CreateObjects();
 		QueryOther();
-		Assert.NotNull(otherVar, "No Query Result");
-		Assert.NotNull(otherVar.RelField, "No related object");
+		Assert.That(otherVar, Is.Not.Null, "No Query Result");
+		Assert.That(otherVar.RelField, Is.Not.Null, "No related object");
 		otherVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOther();
-		Assert.NotNull(otherVar, "No Query Result");
-		Assert.NotNull(otherVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(otherVar.RelField, "No related object");
+		Assert.That(otherVar, Is.Not.Null, "No Query Result");
+		Assert.That(otherVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(otherVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestUpdateOrder()
@@ -5001,7 +5001,7 @@ public class TestCmpBin1OwnpconNoTblAuto
 
 
 [TestFixture]
-public class TestCmpBin1OwnpconTblAuto
+public class TestCmpBin1OwnpconTblAuto : NDOTest
 {
 	CmpBin1OwnpconTblAutoLeftBase ownVar;
 	CmpBin1OwnpconTblAutoRight otherVar;
@@ -5025,9 +5025,9 @@ public class TestCmpBin1OwnpconTblAuto
 			pm.UnloadCache();
 			decimal count;
 			count = (decimal) new NDOQuery<CmpBin1OwnpconTblAutoLeftBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #1");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #1");
 			count = (decimal) new NDOQuery<CmpBin1OwnpconTblAutoRight>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #2");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #2");
 		}
 		catch (Exception)
 		{
@@ -5042,67 +5042,67 @@ public class TestCmpBin1OwnpconTblAuto
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(1, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(1, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 	}
 	[Test]
 	public void TestSaveReloadNull()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(1, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(1, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 		ownVar.RelField = new List<CmpBin1OwnpconTblAutoRight>();
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(0, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(0, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 	}
 	[Test]
 	public void TestSaveReloadRemove()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(1, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(1, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 		ownVar.RemoveRelatedObject();
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(0, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(0, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 	}
 	[Test]
 	public void TestChangeKeyHolderRight()
 	{
 		CreateObjects();
 		QueryOther();
-		Assert.NotNull(otherVar, "No Query Result");
-		Assert.NotNull(otherVar.RelField, "No related object");
+		Assert.That(otherVar, Is.Not.Null, "No Query Result");
+		Assert.That(otherVar.RelField, Is.Not.Null, "No related object");
 		int x = otherVar.RelField.Dummy;
 		otherVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOther();
-		Assert.NotNull(otherVar, "No Query Result");
-		Assert.NotNull(otherVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(otherVar.RelField, "No related object");
+		Assert.That(otherVar, Is.Not.Null, "No Query Result");
+		Assert.That(otherVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(otherVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestChangeKeyHolderRightNoTouch()
 	{
 		CreateObjects();
 		QueryOther();
-		Assert.NotNull(otherVar, "No Query Result");
-		Assert.NotNull(otherVar.RelField, "No related object");
+		Assert.That(otherVar, Is.Not.Null, "No Query Result");
+		Assert.That(otherVar.RelField, Is.Not.Null, "No related object");
 		otherVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOther();
-		Assert.NotNull(otherVar, "No Query Result");
-		Assert.NotNull(otherVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(otherVar.RelField, "No related object");
+		Assert.That(otherVar, Is.Not.Null, "No Query Result");
+		Assert.That(otherVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(otherVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestRelationHash()
@@ -5139,7 +5139,7 @@ public class TestCmpBin1OwnpconTblAuto
 
 
 [TestFixture]
-public class TestCmpBi1nOwnpconTblAuto
+public class TestCmpBi1nOwnpconTblAuto : NDOTest
 {
 	CmpBi1nOwnpconTblAutoLeftBase ownVar;
 	CmpBi1nOwnpconTblAutoRight otherVar;
@@ -5163,9 +5163,9 @@ public class TestCmpBi1nOwnpconTblAuto
 			pm.UnloadCache();
 			decimal count;
 			count = (decimal) new NDOQuery<CmpBi1nOwnpconTblAutoLeftBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #1");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #1");
 			count = (decimal) new NDOQuery<CmpBi1nOwnpconTblAutoRight>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #2");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #2");
 		}
 		catch (Exception)
 		{
@@ -5180,53 +5180,53 @@ public class TestCmpBi1nOwnpconTblAuto
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestSaveReloadNull()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 		ownVar.RelField = null;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.Null(ownVar.RelField, "There should be no object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Null, "There should be no object");
 	}
 	[Test]
 	public void TestChangeKeyHolderLeft()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 		int x = ownVar.RelField.Dummy;
 		ownVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestChangeKeyHolderLeftNoTouch()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 		ownVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestRelationHash()
@@ -5263,7 +5263,7 @@ public class TestCmpBi1nOwnpconTblAuto
 
 
 [TestFixture]
-public class TestCmpBinnOwnpconTblAuto
+public class TestCmpBinnOwnpconTblAuto : NDOTest
 {
 	CmpBinnOwnpconTblAutoLeftBase ownVar;
 	CmpBinnOwnpconTblAutoRight otherVar;
@@ -5287,9 +5287,9 @@ public class TestCmpBinnOwnpconTblAuto
 			pm.UnloadCache();
 			decimal count;
 			count = (decimal) new NDOQuery<CmpBinnOwnpconTblAutoLeftBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #1");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #1");
 			count = (decimal) new NDOQuery<CmpBinnOwnpconTblAutoRight>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #2");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #2");
 		}
 		catch (Exception)
 		{
@@ -5304,36 +5304,36 @@ public class TestCmpBinnOwnpconTblAuto
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(1, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(1, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 	}
 	[Test]
 	public void TestSaveReloadNull()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(1, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(1, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 		ownVar.RelField = new List<CmpBinnOwnpconTblAutoRight>();
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(0, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(0, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 	}
 	[Test]
 	public void TestSaveReloadRemove()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(1, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(1, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 		ownVar.RemoveRelatedObject();
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(0, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(0, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 	}
 	[Test]
 	public void TestRelationHash()
@@ -5370,7 +5370,7 @@ public class TestCmpBinnOwnpconTblAuto
 
 
 [TestFixture]
-public class TestAgrDir1OthpconNoTblAuto
+public class TestAgrDir1OthpconNoTblAuto : NDOTest
 {
 	AgrDir1OthpconNoTblAutoLeft ownVar;
 	AgrDir1OthpconNoTblAutoRightBase otherVar;
@@ -5398,9 +5398,9 @@ public class TestAgrDir1OthpconNoTblAuto
 			pm.UnloadCache();
 			decimal count;
 			count = (decimal) new NDOQuery<AgrDir1OthpconNoTblAutoLeft>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #1");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #1");
 			count = (decimal) new NDOQuery<AgrDir1OthpconNoTblAutoRightBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #2");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #2");
 		}
 		catch (Exception)
 		{
@@ -5414,53 +5414,53 @@ public class TestAgrDir1OthpconNoTblAuto
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestSaveReloadNull()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 		ownVar.RelField = null;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.Null(ownVar.RelField, "There should be no object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Null, "There should be no object");
 	}
 	[Test]
 	public void TestChangeKeyHolderLeft()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 		int x = ownVar.RelField.Dummy;
 		ownVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestChangeKeyHolderLeftNoTouch()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 		ownVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestUpdateOrder()
@@ -5497,7 +5497,7 @@ public class TestAgrDir1OthpconNoTblAuto
 
 
 [TestFixture]
-public class TestAgrDir1OthpconTblAuto
+public class TestAgrDir1OthpconTblAuto : NDOTest
 {
 	AgrDir1OthpconTblAutoLeft ownVar;
 	AgrDir1OthpconTblAutoRightBase otherVar;
@@ -5525,9 +5525,9 @@ public class TestAgrDir1OthpconTblAuto
 			pm.UnloadCache();
 			decimal count;
 			count = (decimal) new NDOQuery<AgrDir1OthpconTblAutoLeft>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #1");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #1");
 			count = (decimal) new NDOQuery<AgrDir1OthpconTblAutoRightBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #2");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #2");
 		}
 		catch (Exception)
 		{
@@ -5542,53 +5542,53 @@ public class TestAgrDir1OthpconTblAuto
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestSaveReloadNull()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 		ownVar.RelField = null;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.Null(ownVar.RelField, "There should be no object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Null, "There should be no object");
 	}
 	[Test]
 	public void TestChangeKeyHolderLeft()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 		int x = ownVar.RelField.Dummy;
 		ownVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestChangeKeyHolderLeftNoTouch()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 		ownVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 	}
 	void CreateObjects()
 	{
@@ -5612,7 +5612,7 @@ public class TestAgrDir1OthpconTblAuto
 
 
 [TestFixture]
-public class TestAgrBi11OthpconNoTblAuto
+public class TestAgrBi11OthpconNoTblAuto : NDOTest
 {
 	AgrBi11OthpconNoTblAutoLeft ownVar;
 	AgrBi11OthpconNoTblAutoRightBase otherVar;
@@ -5640,9 +5640,9 @@ public class TestAgrBi11OthpconNoTblAuto
 			pm.UnloadCache();
 			decimal count;
 			count = (decimal) new NDOQuery<AgrBi11OthpconNoTblAutoLeft>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #1");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #1");
 			count = (decimal) new NDOQuery<AgrBi11OthpconNoTblAutoRightBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #2");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #2");
 		}
 		catch (Exception)
 		{
@@ -5656,84 +5656,84 @@ public class TestAgrBi11OthpconNoTblAuto
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestSaveReloadNull()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 		ownVar.RelField = null;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.Null(ownVar.RelField, "There should be no object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Null, "There should be no object");
 	}
 	[Test]
 	public void TestChangeKeyHolderLeft()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 		int x = ownVar.RelField.Dummy;
 		ownVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestChangeKeyHolderRight()
 	{
 		CreateObjects();
 		QueryOther();
-		Assert.NotNull(otherVar, "No Query Result");
-		Assert.NotNull(otherVar.RelField, "No related object");
+		Assert.That(otherVar, Is.Not.Null, "No Query Result");
+		Assert.That(otherVar.RelField, Is.Not.Null, "No related object");
 		int x = otherVar.RelField.Dummy;
 		otherVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOther();
-		Assert.NotNull(otherVar, "No Query Result");
-		Assert.NotNull(otherVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(otherVar.RelField, "No related object");
+		Assert.That(otherVar, Is.Not.Null, "No Query Result");
+		Assert.That(otherVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(otherVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestChangeKeyHolderLeftNoTouch()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 		ownVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestChangeKeyHolderRightNoTouch()
 	{
 		CreateObjects();
 		QueryOther();
-		Assert.NotNull(otherVar, "No Query Result");
-		Assert.NotNull(otherVar.RelField, "No related object");
+		Assert.That(otherVar, Is.Not.Null, "No Query Result");
+		Assert.That(otherVar.RelField, Is.Not.Null, "No related object");
 		otherVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOther();
-		Assert.NotNull(otherVar, "No Query Result");
-		Assert.NotNull(otherVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(otherVar.RelField, "No related object");
+		Assert.That(otherVar, Is.Not.Null, "No Query Result");
+		Assert.That(otherVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(otherVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestRelationHash()
@@ -5773,7 +5773,7 @@ public class TestAgrBi11OthpconNoTblAuto
 
 
 [TestFixture]
-public class TestAgrBi11OthpconTblAuto
+public class TestAgrBi11OthpconTblAuto : NDOTest
 {
 	AgrBi11OthpconTblAutoLeft ownVar;
 	AgrBi11OthpconTblAutoRightBase otherVar;
@@ -5801,9 +5801,9 @@ public class TestAgrBi11OthpconTblAuto
 			pm.UnloadCache();
 			decimal count;
 			count = (decimal) new NDOQuery<AgrBi11OthpconTblAutoLeft>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #1");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #1");
 			count = (decimal) new NDOQuery<AgrBi11OthpconTblAutoRightBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #2");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #2");
 		}
 		catch (Exception)
 		{
@@ -5818,84 +5818,84 @@ public class TestAgrBi11OthpconTblAuto
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestSaveReloadNull()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 		ownVar.RelField = null;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.Null(ownVar.RelField, "There should be no object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Null, "There should be no object");
 	}
 	[Test]
 	public void TestChangeKeyHolderLeft()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 		int x = ownVar.RelField.Dummy;
 		ownVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestChangeKeyHolderRight()
 	{
 		CreateObjects();
 		QueryOther();
-		Assert.NotNull(otherVar, "No Query Result");
-		Assert.NotNull(otherVar.RelField, "No related object");
+		Assert.That(otherVar, Is.Not.Null, "No Query Result");
+		Assert.That(otherVar.RelField, Is.Not.Null, "No related object");
 		int x = otherVar.RelField.Dummy;
 		otherVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOther();
-		Assert.NotNull(otherVar, "No Query Result");
-		Assert.NotNull(otherVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(otherVar.RelField, "No related object");
+		Assert.That(otherVar, Is.Not.Null, "No Query Result");
+		Assert.That(otherVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(otherVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestChangeKeyHolderLeftNoTouch()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 		ownVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestChangeKeyHolderRightNoTouch()
 	{
 		CreateObjects();
 		QueryOther();
-		Assert.NotNull(otherVar, "No Query Result");
-		Assert.NotNull(otherVar.RelField, "No related object");
+		Assert.That(otherVar, Is.Not.Null, "No Query Result");
+		Assert.That(otherVar.RelField, Is.Not.Null, "No related object");
 		otherVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOther();
-		Assert.NotNull(otherVar, "No Query Result");
-		Assert.NotNull(otherVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(otherVar.RelField, "No related object");
+		Assert.That(otherVar, Is.Not.Null, "No Query Result");
+		Assert.That(otherVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(otherVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestRelationHash()
@@ -5933,7 +5933,7 @@ public class TestAgrBi11OthpconTblAuto
 
 
 [TestFixture]
-public class TestAgrDirnOthpconTblAuto
+public class TestAgrDirnOthpconTblAuto : NDOTest
 {
 	AgrDirnOthpconTblAutoLeft ownVar;
 	AgrDirnOthpconTblAutoRightBase otherVar;
@@ -5961,9 +5961,9 @@ public class TestAgrDirnOthpconTblAuto
 			pm.UnloadCache();
 			decimal count;
 			count = (decimal) new NDOQuery<AgrDirnOthpconTblAutoLeft>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #1");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #1");
 			count = (decimal) new NDOQuery<AgrDirnOthpconTblAutoRightBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #2");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #2");
 		}
 		catch (Exception)
 		{
@@ -5978,36 +5978,36 @@ public class TestAgrDirnOthpconTblAuto
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(1, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(1, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 	}
 	[Test]
 	public void TestSaveReloadNull()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(1, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(1, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 		ownVar.RelField = new List<AgrDirnOthpconTblAutoRightBase>();
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(0, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(0, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 	}
 	[Test]
 	public void TestSaveReloadRemove()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(1, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(1, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 		ownVar.RemoveRelatedObject();
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(0, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(0, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 	}
 	void CreateObjects()
 	{
@@ -6031,7 +6031,7 @@ public class TestAgrDirnOthpconTblAuto
 
 
 [TestFixture]
-public class TestAgrBin1OthpconTblAuto
+public class TestAgrBin1OthpconTblAuto : NDOTest
 {
 	AgrBin1OthpconTblAutoLeft ownVar;
 	AgrBin1OthpconTblAutoRightBase otherVar;
@@ -6059,9 +6059,9 @@ public class TestAgrBin1OthpconTblAuto
 			pm.UnloadCache();
 			decimal count;
 			count = (decimal) new NDOQuery<AgrBin1OthpconTblAutoLeft>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #1");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #1");
 			count = (decimal) new NDOQuery<AgrBin1OthpconTblAutoRightBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #2");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #2");
 		}
 		catch (Exception)
 		{
@@ -6076,67 +6076,67 @@ public class TestAgrBin1OthpconTblAuto
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(1, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(1, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 	}
 	[Test]
 	public void TestSaveReloadNull()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(1, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(1, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 		ownVar.RelField = new List<AgrBin1OthpconTblAutoRightBase>();
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(0, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(0, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 	}
 	[Test]
 	public void TestSaveReloadRemove()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(1, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(1, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 		ownVar.RemoveRelatedObject();
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(0, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(0, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 	}
 	[Test]
 	public void TestChangeKeyHolderRight()
 	{
 		CreateObjects();
 		QueryOther();
-		Assert.NotNull(otherVar, "No Query Result");
-		Assert.NotNull(otherVar.RelField, "No related object");
+		Assert.That(otherVar, Is.Not.Null, "No Query Result");
+		Assert.That(otherVar.RelField, Is.Not.Null, "No related object");
 		int x = otherVar.RelField.Dummy;
 		otherVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOther();
-		Assert.NotNull(otherVar, "No Query Result");
-		Assert.NotNull(otherVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(otherVar.RelField, "No related object");
+		Assert.That(otherVar, Is.Not.Null, "No Query Result");
+		Assert.That(otherVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(otherVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestChangeKeyHolderRightNoTouch()
 	{
 		CreateObjects();
 		QueryOther();
-		Assert.NotNull(otherVar, "No Query Result");
-		Assert.NotNull(otherVar.RelField, "No related object");
+		Assert.That(otherVar, Is.Not.Null, "No Query Result");
+		Assert.That(otherVar.RelField, Is.Not.Null, "No related object");
 		otherVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOther();
-		Assert.NotNull(otherVar, "No Query Result");
-		Assert.NotNull(otherVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(otherVar.RelField, "No related object");
+		Assert.That(otherVar, Is.Not.Null, "No Query Result");
+		Assert.That(otherVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(otherVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestRelationHash()
@@ -6174,7 +6174,7 @@ public class TestAgrBin1OthpconTblAuto
 
 
 [TestFixture]
-public class TestAgrBi1nOthpconNoTblAuto
+public class TestAgrBi1nOthpconNoTblAuto : NDOTest
 {
 	AgrBi1nOthpconNoTblAutoLeft ownVar;
 	AgrBi1nOthpconNoTblAutoRightBase otherVar;
@@ -6202,9 +6202,9 @@ public class TestAgrBi1nOthpconNoTblAuto
 			pm.UnloadCache();
 			decimal count;
 			count = (decimal) new NDOQuery<AgrBi1nOthpconNoTblAutoLeft>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #1");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #1");
 			count = (decimal) new NDOQuery<AgrBi1nOthpconNoTblAutoRightBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #2");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #2");
 		}
 		catch (Exception)
 		{
@@ -6218,53 +6218,53 @@ public class TestAgrBi1nOthpconNoTblAuto
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestSaveReloadNull()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 		ownVar.RelField = null;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.Null(ownVar.RelField, "There should be no object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Null, "There should be no object");
 	}
 	[Test]
 	public void TestChangeKeyHolderLeft()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 		int x = ownVar.RelField.Dummy;
 		ownVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestChangeKeyHolderLeftNoTouch()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 		ownVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestUpdateOrder()
@@ -6315,7 +6315,7 @@ public class TestAgrBi1nOthpconNoTblAuto
 
 
 [TestFixture]
-public class TestAgrBi1nOthpconTblAuto
+public class TestAgrBi1nOthpconTblAuto : NDOTest
 {
 	AgrBi1nOthpconTblAutoLeft ownVar;
 	AgrBi1nOthpconTblAutoRightBase otherVar;
@@ -6343,9 +6343,9 @@ public class TestAgrBi1nOthpconTblAuto
 			pm.UnloadCache();
 			decimal count;
 			count = (decimal) new NDOQuery<AgrBi1nOthpconTblAutoLeft>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #1");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #1");
 			count = (decimal) new NDOQuery<AgrBi1nOthpconTblAutoRightBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #2");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #2");
 		}
 		catch (Exception)
 		{
@@ -6360,53 +6360,53 @@ public class TestAgrBi1nOthpconTblAuto
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestSaveReloadNull()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 		ownVar.RelField = null;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.Null(ownVar.RelField, "There should be no object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Null, "There should be no object");
 	}
 	[Test]
 	public void TestChangeKeyHolderLeft()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 		int x = ownVar.RelField.Dummy;
 		ownVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestChangeKeyHolderLeftNoTouch()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 		ownVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestRelationHash()
@@ -6444,7 +6444,7 @@ public class TestAgrBi1nOthpconTblAuto
 
 
 [TestFixture]
-public class TestAgrBinnOthpconTblAuto
+public class TestAgrBinnOthpconTblAuto : NDOTest
 {
 	AgrBinnOthpconTblAutoLeft ownVar;
 	AgrBinnOthpconTblAutoRightBase otherVar;
@@ -6472,9 +6472,9 @@ public class TestAgrBinnOthpconTblAuto
 			pm.UnloadCache();
 			decimal count;
 			count = (decimal) new NDOQuery<AgrBinnOthpconTblAutoLeft>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #1");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #1");
 			count = (decimal) new NDOQuery<AgrBinnOthpconTblAutoRightBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #2");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #2");
 		}
 		catch (Exception)
 		{
@@ -6489,36 +6489,36 @@ public class TestAgrBinnOthpconTblAuto
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(1, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(1, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 	}
 	[Test]
 	public void TestSaveReloadNull()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(1, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(1, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 		ownVar.RelField = new List<AgrBinnOthpconTblAutoRightBase>();
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(0, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(0, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 	}
 	[Test]
 	public void TestSaveReloadRemove()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(1, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(1, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 		ownVar.RemoveRelatedObject();
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(0, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(0, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 	}
 	[Test]
 	public void TestRelationHash()
@@ -6556,7 +6556,7 @@ public class TestAgrBinnOthpconTblAuto
 
 
 [TestFixture]
-public class TestCmpDir1OthpconNoTblAuto
+public class TestCmpDir1OthpconNoTblAuto : NDOTest
 {
 	CmpDir1OthpconNoTblAutoLeft ownVar;
 	CmpDir1OthpconNoTblAutoRightBase otherVar;
@@ -6580,9 +6580,9 @@ public class TestCmpDir1OthpconNoTblAuto
 			pm.UnloadCache();
 			decimal count;
 			count = (decimal) new NDOQuery<CmpDir1OthpconNoTblAutoLeft>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #1");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #1");
 			count = (decimal) new NDOQuery<CmpDir1OthpconNoTblAutoRightBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #2");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #2");
 		}
 		catch (Exception)
 		{
@@ -6599,14 +6599,14 @@ public class TestCmpDir1OthpconNoTblAuto
 		{
 			CreateObjects();
 			QueryOwn();
-			Assert.NotNull(ownVar, "No Query Result");
-			Assert.NotNull(ownVar.RelField, "No related object");
+			Assert.That(ownVar, Is.Not.Null, "No Query Result");
+			Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 		}
 		catch (NDOException)
 		{
 			thrown = true;
 		}
-		Assert.AreEqual(true, thrown, "NDOException should have been thrown");
+		Assert.That(true, Is.EqualTo(thrown), "NDOException should have been thrown");
 	}
 	[Test]
 	public void TestSaveReloadNull()
@@ -6616,20 +6616,20 @@ public class TestCmpDir1OthpconNoTblAuto
 		{
 			CreateObjects();
 			QueryOwn();
-			Assert.NotNull(ownVar, "No Query Result");
-			Assert.NotNull(ownVar.RelField, "No related object");
+			Assert.That(ownVar, Is.Not.Null, "No Query Result");
+			Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 			ownVar.RelField = null;
 			pm.Save();
 			pm.UnloadCache();
 			QueryOwn();
-			Assert.NotNull(ownVar, "No Query Result");
-			Assert.Null(ownVar.RelField, "There should be no object");
+			Assert.That(ownVar, Is.Not.Null, "No Query Result");
+			Assert.That(ownVar.RelField, Is.Null, "There should be no object");
 		}
 		catch (NDOException)
 		{
 			thrown = true;
 		}
-		Assert.AreEqual(true, thrown, "NDOException should have been thrown");
+		Assert.That(true, Is.EqualTo(thrown), "NDOException should have been thrown");
 	}
 	void CreateObjects()
 	{
@@ -6653,7 +6653,7 @@ public class TestCmpDir1OthpconNoTblAuto
 
 
 [TestFixture]
-public class TestCmpDir1OthpconTblAuto
+public class TestCmpDir1OthpconTblAuto : NDOTest
 {
 	CmpDir1OthpconTblAutoLeft ownVar;
 	CmpDir1OthpconTblAutoRightBase otherVar;
@@ -6677,9 +6677,9 @@ public class TestCmpDir1OthpconTblAuto
 			pm.UnloadCache();
 			decimal count;
 			count = (decimal) new NDOQuery<CmpDir1OthpconTblAutoLeft>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #1");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #1");
 			count = (decimal) new NDOQuery<CmpDir1OthpconTblAutoRightBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #2");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #2");
 		}
 		catch (Exception)
 		{
@@ -6694,53 +6694,53 @@ public class TestCmpDir1OthpconTblAuto
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestSaveReloadNull()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 		ownVar.RelField = null;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.Null(ownVar.RelField, "There should be no object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Null, "There should be no object");
 	}
 	[Test]
 	public void TestChangeKeyHolderLeft()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 		int x = ownVar.RelField.Dummy;
 		ownVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestChangeKeyHolderLeftNoTouch()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 		ownVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 	}
 	void CreateObjects()
 	{
@@ -6763,7 +6763,7 @@ public class TestCmpDir1OthpconTblAuto
 
 
 [TestFixture]
-public class TestCmpBi11OthpconNoTblAuto
+public class TestCmpBi11OthpconNoTblAuto : NDOTest
 {
 	CmpBi11OthpconNoTblAutoLeft ownVar;
 	CmpBi11OthpconNoTblAutoRightBase otherVar;
@@ -6787,9 +6787,9 @@ public class TestCmpBi11OthpconNoTblAuto
 			pm.UnloadCache();
 			decimal count;
 			count = (decimal) new NDOQuery<CmpBi11OthpconNoTblAutoLeft>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #1");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #1");
 			count = (decimal) new NDOQuery<CmpBi11OthpconNoTblAutoRightBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #2");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #2");
 		}
 		catch (Exception)
 		{
@@ -6806,14 +6806,14 @@ public class TestCmpBi11OthpconNoTblAuto
 		{
 			CreateObjects();
 			QueryOwn();
-			Assert.NotNull(ownVar, "No Query Result");
-			Assert.NotNull(ownVar.RelField, "No related object");
+			Assert.That(ownVar, Is.Not.Null, "No Query Result");
+			Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 		}
 		catch (NDOException)
 		{
 			thrown = true;
 		}
-		Assert.AreEqual(true, thrown, "NDOException should have been thrown");
+		Assert.That(true, Is.EqualTo(thrown), "NDOException should have been thrown");
 	}
 	[Test]
 	public void TestSaveReloadNull()
@@ -6823,20 +6823,20 @@ public class TestCmpBi11OthpconNoTblAuto
 		{
 			CreateObjects();
 			QueryOwn();
-			Assert.NotNull(ownVar, "No Query Result");
-			Assert.NotNull(ownVar.RelField, "No related object");
+			Assert.That(ownVar, Is.Not.Null, "No Query Result");
+			Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 			ownVar.RelField = null;
 			pm.Save();
 			pm.UnloadCache();
 			QueryOwn();
-			Assert.NotNull(ownVar, "No Query Result");
-			Assert.Null(ownVar.RelField, "There should be no object");
+			Assert.That(ownVar, Is.Not.Null, "No Query Result");
+			Assert.That(ownVar.RelField, Is.Null, "There should be no object");
 		}
 		catch (NDOException)
 		{
 			thrown = true;
 		}
-		Assert.AreEqual(true, thrown, "NDOException should have been thrown");
+		Assert.That(true, Is.EqualTo(thrown), "NDOException should have been thrown");
 	}
 	[Test]
 	public void TestRelationHash()
@@ -6874,7 +6874,7 @@ public class TestCmpBi11OthpconNoTblAuto
 
 
 [TestFixture]
-public class TestCmpBi11OthpconTblAuto
+public class TestCmpBi11OthpconTblAuto : NDOTest
 {
 	CmpBi11OthpconTblAutoLeft ownVar;
 	CmpBi11OthpconTblAutoRightBase otherVar;
@@ -6898,9 +6898,9 @@ public class TestCmpBi11OthpconTblAuto
 			pm.UnloadCache();
 			decimal count;
 			count = (decimal) new NDOQuery<CmpBi11OthpconTblAutoLeft>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #1");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #1");
 			count = (decimal) new NDOQuery<CmpBi11OthpconTblAutoRightBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #2");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #2");
 		}
 		catch (Exception)
 		{
@@ -6915,84 +6915,84 @@ public class TestCmpBi11OthpconTblAuto
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestSaveReloadNull()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 		ownVar.RelField = null;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.Null(ownVar.RelField, "There should be no object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Null, "There should be no object");
 	}
 	[Test]
 	public void TestChangeKeyHolderLeft()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 		int x = ownVar.RelField.Dummy;
 		ownVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestChangeKeyHolderRight()
 	{
 		CreateObjects();
 		QueryOther();
-		Assert.NotNull(otherVar, "No Query Result");
-		Assert.NotNull(otherVar.RelField, "No related object");
+		Assert.That(otherVar, Is.Not.Null, "No Query Result");
+		Assert.That(otherVar.RelField, Is.Not.Null, "No related object");
 		int x = otherVar.RelField.Dummy;
 		otherVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOther();
-		Assert.NotNull(otherVar, "No Query Result");
-		Assert.NotNull(otherVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(otherVar.RelField, "No related object");
+		Assert.That(otherVar, Is.Not.Null, "No Query Result");
+		Assert.That(otherVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(otherVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestChangeKeyHolderLeftNoTouch()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 		ownVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestChangeKeyHolderRightNoTouch()
 	{
 		CreateObjects();
 		QueryOther();
-		Assert.NotNull(otherVar, "No Query Result");
-		Assert.NotNull(otherVar.RelField, "No related object");
+		Assert.That(otherVar, Is.Not.Null, "No Query Result");
+		Assert.That(otherVar.RelField, Is.Not.Null, "No related object");
 		otherVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOther();
-		Assert.NotNull(otherVar, "No Query Result");
-		Assert.NotNull(otherVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(otherVar.RelField, "No related object");
+		Assert.That(otherVar, Is.Not.Null, "No Query Result");
+		Assert.That(otherVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(otherVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestRelationHash()
@@ -7029,7 +7029,7 @@ public class TestCmpBi11OthpconTblAuto
 
 
 [TestFixture]
-public class TestCmpDirnOthpconTblAuto
+public class TestCmpDirnOthpconTblAuto : NDOTest
 {
 	CmpDirnOthpconTblAutoLeft ownVar;
 	CmpDirnOthpconTblAutoRightBase otherVar;
@@ -7053,9 +7053,9 @@ public class TestCmpDirnOthpconTblAuto
 			pm.UnloadCache();
 			decimal count;
 			count = (decimal) new NDOQuery<CmpDirnOthpconTblAutoLeft>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #1");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #1");
 			count = (decimal) new NDOQuery<CmpDirnOthpconTblAutoRightBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #2");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #2");
 		}
 		catch (Exception)
 		{
@@ -7070,36 +7070,36 @@ public class TestCmpDirnOthpconTblAuto
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(1, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(1, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 	}
 	[Test]
 	public void TestSaveReloadNull()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(1, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(1, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 		ownVar.RelField = new List<CmpDirnOthpconTblAutoRightBase>();
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(0, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(0, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 	}
 	[Test]
 	public void TestSaveReloadRemove()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(1, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(1, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 		ownVar.RemoveRelatedObject();
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(0, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(0, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 	}
 	void CreateObjects()
 	{
@@ -7122,7 +7122,7 @@ public class TestCmpDirnOthpconTblAuto
 
 
 [TestFixture]
-public class TestCmpBin1OthpconTblAuto
+public class TestCmpBin1OthpconTblAuto : NDOTest
 {
 	CmpBin1OthpconTblAutoLeft ownVar;
 	CmpBin1OthpconTblAutoRightBase otherVar;
@@ -7146,9 +7146,9 @@ public class TestCmpBin1OthpconTblAuto
 			pm.UnloadCache();
 			decimal count;
 			count = (decimal) new NDOQuery<CmpBin1OthpconTblAutoLeft>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #1");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #1");
 			count = (decimal) new NDOQuery<CmpBin1OthpconTblAutoRightBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #2");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #2");
 		}
 		catch (Exception)
 		{
@@ -7163,67 +7163,67 @@ public class TestCmpBin1OthpconTblAuto
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(1, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(1, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 	}
 	[Test]
 	public void TestSaveReloadNull()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(1, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(1, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 		ownVar.RelField = new List<CmpBin1OthpconTblAutoRightBase>();
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(0, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(0, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 	}
 	[Test]
 	public void TestSaveReloadRemove()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(1, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(1, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 		ownVar.RemoveRelatedObject();
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(0, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(0, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 	}
 	[Test]
 	public void TestChangeKeyHolderRight()
 	{
 		CreateObjects();
 		QueryOther();
-		Assert.NotNull(otherVar, "No Query Result");
-		Assert.NotNull(otherVar.RelField, "No related object");
+		Assert.That(otherVar, Is.Not.Null, "No Query Result");
+		Assert.That(otherVar.RelField, Is.Not.Null, "No related object");
 		int x = otherVar.RelField.Dummy;
 		otherVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOther();
-		Assert.NotNull(otherVar, "No Query Result");
-		Assert.NotNull(otherVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(otherVar.RelField, "No related object");
+		Assert.That(otherVar, Is.Not.Null, "No Query Result");
+		Assert.That(otherVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(otherVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestChangeKeyHolderRightNoTouch()
 	{
 		CreateObjects();
 		QueryOther();
-		Assert.NotNull(otherVar, "No Query Result");
-		Assert.NotNull(otherVar.RelField, "No related object");
+		Assert.That(otherVar, Is.Not.Null, "No Query Result");
+		Assert.That(otherVar.RelField, Is.Not.Null, "No related object");
 		otherVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOther();
-		Assert.NotNull(otherVar, "No Query Result");
-		Assert.NotNull(otherVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(otherVar.RelField, "No related object");
+		Assert.That(otherVar, Is.Not.Null, "No Query Result");
+		Assert.That(otherVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(otherVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestRelationHash()
@@ -7260,7 +7260,7 @@ public class TestCmpBin1OthpconTblAuto
 
 
 [TestFixture]
-public class TestCmpBi1nOthpconNoTblAuto
+public class TestCmpBi1nOthpconNoTblAuto : NDOTest
 {
 	CmpBi1nOthpconNoTblAutoLeft ownVar;
 	CmpBi1nOthpconNoTblAutoRightBase otherVar;
@@ -7284,9 +7284,9 @@ public class TestCmpBi1nOthpconNoTblAuto
 			pm.UnloadCache();
 			decimal count;
 			count = (decimal) new NDOQuery<CmpBi1nOthpconNoTblAutoLeft>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #1");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #1");
 			count = (decimal) new NDOQuery<CmpBi1nOthpconNoTblAutoRightBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #2");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #2");
 		}
 		catch (Exception)
 		{
@@ -7303,14 +7303,14 @@ public class TestCmpBi1nOthpconNoTblAuto
 		{
 			CreateObjects();
 			QueryOwn();
-			Assert.NotNull(ownVar, "No Query Result");
-			Assert.NotNull(ownVar.RelField, "No related object");
+			Assert.That(ownVar, Is.Not.Null, "No Query Result");
+			Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 		}
 		catch (NDOException)
 		{
 			thrown = true;
 		}
-		Assert.AreEqual(true, thrown, "NDOException should have been thrown");
+		Assert.That(true, Is.EqualTo(thrown), "NDOException should have been thrown");
 	}
 	[Test]
 	public void TestSaveReloadNull()
@@ -7320,20 +7320,20 @@ public class TestCmpBi1nOthpconNoTblAuto
 		{
 			CreateObjects();
 			QueryOwn();
-			Assert.NotNull(ownVar, "No Query Result");
-			Assert.NotNull(ownVar.RelField, "No related object");
+			Assert.That(ownVar, Is.Not.Null, "No Query Result");
+			Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 			ownVar.RelField = null;
 			pm.Save();
 			pm.UnloadCache();
 			QueryOwn();
-			Assert.NotNull(ownVar, "No Query Result");
-			Assert.Null(ownVar.RelField, "There should be no object");
+			Assert.That(ownVar, Is.Not.Null, "No Query Result");
+			Assert.That(ownVar.RelField, Is.Null, "There should be no object");
 		}
 		catch (NDOException)
 		{
 			thrown = true;
 		}
-		Assert.AreEqual(true, thrown, "NDOException should have been thrown");
+		Assert.That(true, Is.EqualTo(thrown), "NDOException should have been thrown");
 	}
 	[Test]
 	public void TestRelationHash()
@@ -7371,7 +7371,7 @@ public class TestCmpBi1nOthpconNoTblAuto
 
 
 [TestFixture]
-public class TestCmpBi1nOthpconTblAuto
+public class TestCmpBi1nOthpconTblAuto : NDOTest
 {
 	CmpBi1nOthpconTblAutoLeft ownVar;
 	CmpBi1nOthpconTblAutoRightBase otherVar;
@@ -7395,9 +7395,9 @@ public class TestCmpBi1nOthpconTblAuto
 			pm.UnloadCache();
 			decimal count;
 			count = (decimal) new NDOQuery<CmpBi1nOthpconTblAutoLeft>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #1");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #1");
 			count = (decimal) new NDOQuery<CmpBi1nOthpconTblAutoRightBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #2");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #2");
 		}
 		catch (Exception)
 		{
@@ -7412,53 +7412,53 @@ public class TestCmpBi1nOthpconTblAuto
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestSaveReloadNull()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 		ownVar.RelField = null;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.Null(ownVar.RelField, "There should be no object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Null, "There should be no object");
 	}
 	[Test]
 	public void TestChangeKeyHolderLeft()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 		int x = ownVar.RelField.Dummy;
 		ownVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestChangeKeyHolderLeftNoTouch()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 		ownVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestRelationHash()
@@ -7495,7 +7495,7 @@ public class TestCmpBi1nOthpconTblAuto
 
 
 [TestFixture]
-public class TestCmpBinnOthpconTblAuto
+public class TestCmpBinnOthpconTblAuto : NDOTest
 {
 	CmpBinnOthpconTblAutoLeft ownVar;
 	CmpBinnOthpconTblAutoRightBase otherVar;
@@ -7519,9 +7519,9 @@ public class TestCmpBinnOthpconTblAuto
 			pm.UnloadCache();
 			decimal count;
 			count = (decimal) new NDOQuery<CmpBinnOthpconTblAutoLeft>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #1");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #1");
 			count = (decimal) new NDOQuery<CmpBinnOthpconTblAutoRightBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #2");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #2");
 		}
 		catch (Exception)
 		{
@@ -7536,36 +7536,36 @@ public class TestCmpBinnOthpconTblAuto
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(1, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(1, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 	}
 	[Test]
 	public void TestSaveReloadNull()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(1, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(1, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 		ownVar.RelField = new List<CmpBinnOthpconTblAutoRightBase>();
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(0, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(0, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 	}
 	[Test]
 	public void TestSaveReloadRemove()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(1, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(1, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 		ownVar.RemoveRelatedObject();
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(0, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(0, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 	}
 	[Test]
 	public void TestRelationHash()
@@ -7602,7 +7602,7 @@ public class TestCmpBinnOthpconTblAuto
 
 
 [TestFixture]
-public class TestAgrDir1OwnpconOthpconNoTblAuto
+public class TestAgrDir1OwnpconOthpconNoTblAuto : NDOTest
 {
 	AgrDir1OwnpconOthpconNoTblAutoLeftBase ownVar;
 	AgrDir1OwnpconOthpconNoTblAutoRightBase otherVar;
@@ -7630,9 +7630,9 @@ public class TestAgrDir1OwnpconOthpconNoTblAuto
 			pm.UnloadCache();
 			decimal count;
 			count = (decimal) new NDOQuery<AgrDir1OwnpconOthpconNoTblAutoLeftBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #1");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #1");
 			count = (decimal) new NDOQuery<AgrDir1OwnpconOthpconNoTblAutoRightBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #2");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #2");
 		}
 		catch (Exception)
 		{
@@ -7646,53 +7646,53 @@ public class TestAgrDir1OwnpconOthpconNoTblAuto
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestSaveReloadNull()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 		ownVar.RelField = null;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.Null(ownVar.RelField, "There should be no object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Null, "There should be no object");
 	}
 	[Test]
 	public void TestChangeKeyHolderLeft()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 		int x = ownVar.RelField.Dummy;
 		ownVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestChangeKeyHolderLeftNoTouch()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 		ownVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestUpdateOrder()
@@ -7729,7 +7729,7 @@ public class TestAgrDir1OwnpconOthpconNoTblAuto
 
 
 [TestFixture]
-public class TestAgrDir1OwnpconOthpconTblAuto
+public class TestAgrDir1OwnpconOthpconTblAuto : NDOTest
 {
 	AgrDir1OwnpconOthpconTblAutoLeftBase ownVar;
 	AgrDir1OwnpconOthpconTblAutoRightBase otherVar;
@@ -7757,9 +7757,9 @@ public class TestAgrDir1OwnpconOthpconTblAuto
 			pm.UnloadCache();
 			decimal count;
 			count = (decimal) new NDOQuery<AgrDir1OwnpconOthpconTblAutoLeftBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #1");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #1");
 			count = (decimal) new NDOQuery<AgrDir1OwnpconOthpconTblAutoRightBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #2");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #2");
 		}
 		catch (Exception)
 		{
@@ -7774,53 +7774,53 @@ public class TestAgrDir1OwnpconOthpconTblAuto
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestSaveReloadNull()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 		ownVar.RelField = null;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.Null(ownVar.RelField, "There should be no object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Null, "There should be no object");
 	}
 	[Test]
 	public void TestChangeKeyHolderLeft()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 		int x = ownVar.RelField.Dummy;
 		ownVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestChangeKeyHolderLeftNoTouch()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 		ownVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 	}
 	void CreateObjects()
 	{
@@ -7844,7 +7844,7 @@ public class TestAgrDir1OwnpconOthpconTblAuto
 
 
 [TestFixture]
-public class TestAgrBi11OwnpconOthpconNoTblAuto
+public class TestAgrBi11OwnpconOthpconNoTblAuto : NDOTest
 {
 	AgrBi11OwnpconOthpconNoTblAutoLeftBase ownVar;
 	AgrBi11OwnpconOthpconNoTblAutoRightBase otherVar;
@@ -7872,9 +7872,9 @@ public class TestAgrBi11OwnpconOthpconNoTblAuto
 			pm.UnloadCache();
 			decimal count;
 			count = (decimal) new NDOQuery<AgrBi11OwnpconOthpconNoTblAutoLeftBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #1");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #1");
 			count = (decimal) new NDOQuery<AgrBi11OwnpconOthpconNoTblAutoRightBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #2");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #2");
 		}
 		catch (Exception)
 		{
@@ -7888,84 +7888,84 @@ public class TestAgrBi11OwnpconOthpconNoTblAuto
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestSaveReloadNull()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 		ownVar.RelField = null;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.Null(ownVar.RelField, "There should be no object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Null, "There should be no object");
 	}
 	[Test]
 	public void TestChangeKeyHolderLeft()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 		int x = ownVar.RelField.Dummy;
 		ownVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestChangeKeyHolderRight()
 	{
 		CreateObjects();
 		QueryOther();
-		Assert.NotNull(otherVar, "No Query Result");
-		Assert.NotNull(otherVar.RelField, "No related object");
+		Assert.That(otherVar, Is.Not.Null, "No Query Result");
+		Assert.That(otherVar.RelField, Is.Not.Null, "No related object");
 		int x = otherVar.RelField.Dummy;
 		otherVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOther();
-		Assert.NotNull(otherVar, "No Query Result");
-		Assert.NotNull(otherVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(otherVar.RelField, "No related object");
+		Assert.That(otherVar, Is.Not.Null, "No Query Result");
+		Assert.That(otherVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(otherVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestChangeKeyHolderLeftNoTouch()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 		ownVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestChangeKeyHolderRightNoTouch()
 	{
 		CreateObjects();
 		QueryOther();
-		Assert.NotNull(otherVar, "No Query Result");
-		Assert.NotNull(otherVar.RelField, "No related object");
+		Assert.That(otherVar, Is.Not.Null, "No Query Result");
+		Assert.That(otherVar.RelField, Is.Not.Null, "No related object");
 		otherVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOther();
-		Assert.NotNull(otherVar, "No Query Result");
-		Assert.NotNull(otherVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(otherVar.RelField, "No related object");
+		Assert.That(otherVar, Is.Not.Null, "No Query Result");
+		Assert.That(otherVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(otherVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestRelationHash()
@@ -8012,7 +8012,7 @@ public class TestAgrBi11OwnpconOthpconNoTblAuto
 
 
 [TestFixture]
-public class TestAgrBi11OwnpconOthpconTblAuto
+public class TestAgrBi11OwnpconOthpconTblAuto : NDOTest
 {
 	AgrBi11OwnpconOthpconTblAutoLeftBase ownVar;
 	AgrBi11OwnpconOthpconTblAutoRightBase otherVar;
@@ -8040,9 +8040,9 @@ public class TestAgrBi11OwnpconOthpconTblAuto
 			pm.UnloadCache();
 			decimal count;
 			count = (decimal) new NDOQuery<AgrBi11OwnpconOthpconTblAutoLeftBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #1");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #1");
 			count = (decimal) new NDOQuery<AgrBi11OwnpconOthpconTblAutoRightBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #2");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #2");
 		}
 		catch (Exception)
 		{
@@ -8057,84 +8057,84 @@ public class TestAgrBi11OwnpconOthpconTblAuto
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestSaveReloadNull()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 		ownVar.RelField = null;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.Null(ownVar.RelField, "There should be no object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Null, "There should be no object");
 	}
 	[Test]
 	public void TestChangeKeyHolderLeft()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 		int x = ownVar.RelField.Dummy;
 		ownVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestChangeKeyHolderRight()
 	{
 		CreateObjects();
 		QueryOther();
-		Assert.NotNull(otherVar, "No Query Result");
-		Assert.NotNull(otherVar.RelField, "No related object");
+		Assert.That(otherVar, Is.Not.Null, "No Query Result");
+		Assert.That(otherVar.RelField, Is.Not.Null, "No related object");
 		int x = otherVar.RelField.Dummy;
 		otherVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOther();
-		Assert.NotNull(otherVar, "No Query Result");
-		Assert.NotNull(otherVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(otherVar.RelField, "No related object");
+		Assert.That(otherVar, Is.Not.Null, "No Query Result");
+		Assert.That(otherVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(otherVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestChangeKeyHolderLeftNoTouch()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 		ownVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestChangeKeyHolderRightNoTouch()
 	{
 		CreateObjects();
 		QueryOther();
-		Assert.NotNull(otherVar, "No Query Result");
-		Assert.NotNull(otherVar.RelField, "No related object");
+		Assert.That(otherVar, Is.Not.Null, "No Query Result");
+		Assert.That(otherVar.RelField, Is.Not.Null, "No related object");
 		otherVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOther();
-		Assert.NotNull(otherVar, "No Query Result");
-		Assert.NotNull(otherVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(otherVar.RelField, "No related object");
+		Assert.That(otherVar, Is.Not.Null, "No Query Result");
+		Assert.That(otherVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(otherVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestRelationHash()
@@ -8179,7 +8179,7 @@ public class TestAgrBi11OwnpconOthpconTblAuto
 
 
 [TestFixture]
-public class TestAgrDirnOwnpconOthpconTblAuto
+public class TestAgrDirnOwnpconOthpconTblAuto : NDOTest
 {
 	AgrDirnOwnpconOthpconTblAutoLeftBase ownVar;
 	AgrDirnOwnpconOthpconTblAutoRightBase otherVar;
@@ -8207,9 +8207,9 @@ public class TestAgrDirnOwnpconOthpconTblAuto
 			pm.UnloadCache();
 			decimal count;
 			count = (decimal) new NDOQuery<AgrDirnOwnpconOthpconTblAutoLeftBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #1");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #1");
 			count = (decimal) new NDOQuery<AgrDirnOwnpconOthpconTblAutoRightBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #2");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #2");
 		}
 		catch (Exception)
 		{
@@ -8224,36 +8224,36 @@ public class TestAgrDirnOwnpconOthpconTblAuto
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(1, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(1, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 	}
 	[Test]
 	public void TestSaveReloadNull()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(1, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(1, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 		ownVar.RelField = new List<AgrDirnOwnpconOthpconTblAutoRightBase>();
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(0, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(0, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 	}
 	[Test]
 	public void TestSaveReloadRemove()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(1, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(1, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 		ownVar.RemoveRelatedObject();
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(0, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(0, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 	}
 	void CreateObjects()
 	{
@@ -8277,7 +8277,7 @@ public class TestAgrDirnOwnpconOthpconTblAuto
 
 
 [TestFixture]
-public class TestAgrBin1OwnpconOthpconTblAuto
+public class TestAgrBin1OwnpconOthpconTblAuto : NDOTest
 {
 	AgrBin1OwnpconOthpconTblAutoLeftBase ownVar;
 	AgrBin1OwnpconOthpconTblAutoRightBase otherVar;
@@ -8305,9 +8305,9 @@ public class TestAgrBin1OwnpconOthpconTblAuto
 			pm.UnloadCache();
 			decimal count;
 			count = (decimal) new NDOQuery<AgrBin1OwnpconOthpconTblAutoLeftBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #1");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #1");
 			count = (decimal) new NDOQuery<AgrBin1OwnpconOthpconTblAutoRightBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #2");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #2");
 		}
 		catch (Exception)
 		{
@@ -8322,67 +8322,67 @@ public class TestAgrBin1OwnpconOthpconTblAuto
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(1, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(1, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 	}
 	[Test]
 	public void TestSaveReloadNull()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(1, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(1, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 		ownVar.RelField = new List<AgrBin1OwnpconOthpconTblAutoRightBase>();
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(0, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(0, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 	}
 	[Test]
 	public void TestSaveReloadRemove()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(1, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(1, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 		ownVar.RemoveRelatedObject();
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(0, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(0, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 	}
 	[Test]
 	public void TestChangeKeyHolderRight()
 	{
 		CreateObjects();
 		QueryOther();
-		Assert.NotNull(otherVar, "No Query Result");
-		Assert.NotNull(otherVar.RelField, "No related object");
+		Assert.That(otherVar, Is.Not.Null, "No Query Result");
+		Assert.That(otherVar.RelField, Is.Not.Null, "No related object");
 		int x = otherVar.RelField.Dummy;
 		otherVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOther();
-		Assert.NotNull(otherVar, "No Query Result");
-		Assert.NotNull(otherVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(otherVar.RelField, "No related object");
+		Assert.That(otherVar, Is.Not.Null, "No Query Result");
+		Assert.That(otherVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(otherVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestChangeKeyHolderRightNoTouch()
 	{
 		CreateObjects();
 		QueryOther();
-		Assert.NotNull(otherVar, "No Query Result");
-		Assert.NotNull(otherVar.RelField, "No related object");
+		Assert.That(otherVar, Is.Not.Null, "No Query Result");
+		Assert.That(otherVar.RelField, Is.Not.Null, "No related object");
 		otherVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOther();
-		Assert.NotNull(otherVar, "No Query Result");
-		Assert.NotNull(otherVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(otherVar.RelField, "No related object");
+		Assert.That(otherVar, Is.Not.Null, "No Query Result");
+		Assert.That(otherVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(otherVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestRelationHash()
@@ -8427,7 +8427,7 @@ public class TestAgrBin1OwnpconOthpconTblAuto
 
 
 [TestFixture]
-public class TestAgrBi1nOwnpconOthpconTblAuto
+public class TestAgrBi1nOwnpconOthpconTblAuto : NDOTest
 {
 	AgrBi1nOwnpconOthpconTblAutoLeftBase ownVar;
 	AgrBi1nOwnpconOthpconTblAutoRightBase otherVar;
@@ -8455,9 +8455,9 @@ public class TestAgrBi1nOwnpconOthpconTblAuto
 			pm.UnloadCache();
 			decimal count;
 			count = (decimal) new NDOQuery<AgrBi1nOwnpconOthpconTblAutoLeftBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #1");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #1");
 			count = (decimal) new NDOQuery<AgrBi1nOwnpconOthpconTblAutoRightBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #2");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #2");
 		}
 		catch (Exception)
 		{
@@ -8472,53 +8472,53 @@ public class TestAgrBi1nOwnpconOthpconTblAuto
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestSaveReloadNull()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 		ownVar.RelField = null;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.Null(ownVar.RelField, "There should be no object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Null, "There should be no object");
 	}
 	[Test]
 	public void TestChangeKeyHolderLeft()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 		int x = ownVar.RelField.Dummy;
 		ownVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestChangeKeyHolderLeftNoTouch()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 		ownVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestRelationHash()
@@ -8562,7 +8562,7 @@ public class TestAgrBi1nOwnpconOthpconTblAuto
 
 
 [TestFixture]
-public class TestAgrBinnOwnpconOthpconTblAuto
+public class TestAgrBinnOwnpconOthpconTblAuto : NDOTest
 {
 	AgrBinnOwnpconOthpconTblAutoLeftBase ownVar;
 	AgrBinnOwnpconOthpconTblAutoRightBase otherVar;
@@ -8590,9 +8590,9 @@ public class TestAgrBinnOwnpconOthpconTblAuto
 			pm.UnloadCache();
 			decimal count;
 			count = (decimal) new NDOQuery<AgrBinnOwnpconOthpconTblAutoLeftBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #1");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #1");
 			count = (decimal) new NDOQuery<AgrBinnOwnpconOthpconTblAutoRightBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #2");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #2");
 		}
 		catch (Exception)
 		{
@@ -8607,36 +8607,36 @@ public class TestAgrBinnOwnpconOthpconTblAuto
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(1, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(1, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 	}
 	[Test]
 	public void TestSaveReloadNull()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(1, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(1, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 		ownVar.RelField = new List<AgrBinnOwnpconOthpconTblAutoRightBase>();
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(0, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(0, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 	}
 	[Test]
 	public void TestSaveReloadRemove()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(1, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(1, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 		ownVar.RemoveRelatedObject();
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(0, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(0, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 	}
 	[Test]
 	public void TestRelationHash()
@@ -8680,7 +8680,7 @@ public class TestAgrBinnOwnpconOthpconTblAuto
 
 
 [TestFixture]
-public class TestCmpDir1OwnpconOthpconNoTblAuto
+public class TestCmpDir1OwnpconOthpconNoTblAuto : NDOTest
 {
 	CmpDir1OwnpconOthpconNoTblAutoLeftBase ownVar;
 	CmpDir1OwnpconOthpconNoTblAutoRightBase otherVar;
@@ -8704,9 +8704,9 @@ public class TestCmpDir1OwnpconOthpconNoTblAuto
 			pm.UnloadCache();
 			decimal count;
 			count = (decimal) new NDOQuery<CmpDir1OwnpconOthpconNoTblAutoLeftBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #1");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #1");
 			count = (decimal) new NDOQuery<CmpDir1OwnpconOthpconNoTblAutoRightBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #2");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #2");
 		}
 		catch (Exception)
 		{
@@ -8723,14 +8723,14 @@ public class TestCmpDir1OwnpconOthpconNoTblAuto
 		{
 			CreateObjects();
 			QueryOwn();
-			Assert.NotNull(ownVar, "No Query Result");
-			Assert.NotNull(ownVar.RelField, "No related object");
+			Assert.That(ownVar, Is.Not.Null, "No Query Result");
+			Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 		}
 		catch (NDOException)
 		{
 			thrown = true;
 		}
-		Assert.AreEqual(true, thrown, "NDOException should have been thrown");
+		Assert.That(true, Is.EqualTo(thrown), "NDOException should have been thrown");
 	}
 	[Test]
 	public void TestSaveReloadNull()
@@ -8740,20 +8740,20 @@ public class TestCmpDir1OwnpconOthpconNoTblAuto
 		{
 			CreateObjects();
 			QueryOwn();
-			Assert.NotNull(ownVar, "No Query Result");
-			Assert.NotNull(ownVar.RelField, "No related object");
+			Assert.That(ownVar, Is.Not.Null, "No Query Result");
+			Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 			ownVar.RelField = null;
 			pm.Save();
 			pm.UnloadCache();
 			QueryOwn();
-			Assert.NotNull(ownVar, "No Query Result");
-			Assert.Null(ownVar.RelField, "There should be no object");
+			Assert.That(ownVar, Is.Not.Null, "No Query Result");
+			Assert.That(ownVar.RelField, Is.Null, "There should be no object");
 		}
 		catch (NDOException)
 		{
 			thrown = true;
 		}
-		Assert.AreEqual(true, thrown, "NDOException should have been thrown");
+		Assert.That(true, Is.EqualTo(thrown), "NDOException should have been thrown");
 	}
 	void CreateObjects()
 	{
@@ -8777,7 +8777,7 @@ public class TestCmpDir1OwnpconOthpconNoTblAuto
 
 
 [TestFixture]
-public class TestCmpDir1OwnpconOthpconTblAuto
+public class TestCmpDir1OwnpconOthpconTblAuto : NDOTest
 {
 	CmpDir1OwnpconOthpconTblAutoLeftBase ownVar;
 	CmpDir1OwnpconOthpconTblAutoRightBase otherVar;
@@ -8801,9 +8801,9 @@ public class TestCmpDir1OwnpconOthpconTblAuto
 			pm.UnloadCache();
 			decimal count;
 			count = (decimal) new NDOQuery<CmpDir1OwnpconOthpconTblAutoLeftBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #1");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #1");
 			count = (decimal) new NDOQuery<CmpDir1OwnpconOthpconTblAutoRightBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #2");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #2");
 		}
 		catch (Exception)
 		{
@@ -8818,53 +8818,53 @@ public class TestCmpDir1OwnpconOthpconTblAuto
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestSaveReloadNull()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 		ownVar.RelField = null;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.Null(ownVar.RelField, "There should be no object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Null, "There should be no object");
 	}
 	[Test]
 	public void TestChangeKeyHolderLeft()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 		int x = ownVar.RelField.Dummy;
 		ownVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestChangeKeyHolderLeftNoTouch()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 		ownVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 	}
 	void CreateObjects()
 	{
@@ -8887,7 +8887,7 @@ public class TestCmpDir1OwnpconOthpconTblAuto
 
 
 [TestFixture]
-public class TestCmpBi11OwnpconOthpconNoTblAuto
+public class TestCmpBi11OwnpconOthpconNoTblAuto : NDOTest
 {
 	CmpBi11OwnpconOthpconNoTblAutoLeftBase ownVar;
 	CmpBi11OwnpconOthpconNoTblAutoRightBase otherVar;
@@ -8911,9 +8911,9 @@ public class TestCmpBi11OwnpconOthpconNoTblAuto
 			pm.UnloadCache();
 			decimal count;
 			count = (decimal) new NDOQuery<CmpBi11OwnpconOthpconNoTblAutoLeftBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #1");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #1");
 			count = (decimal) new NDOQuery<CmpBi11OwnpconOthpconNoTblAutoRightBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #2");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #2");
 		}
 		catch (Exception)
 		{
@@ -8930,14 +8930,14 @@ public class TestCmpBi11OwnpconOthpconNoTblAuto
 		{
 			CreateObjects();
 			QueryOwn();
-			Assert.NotNull(ownVar, "No Query Result");
-			Assert.NotNull(ownVar.RelField, "No related object");
+			Assert.That(ownVar, Is.Not.Null, "No Query Result");
+			Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 		}
 		catch (NDOException)
 		{
 			thrown = true;
 		}
-		Assert.AreEqual(true, thrown, "NDOException should have been thrown");
+		Assert.That(true, Is.EqualTo(thrown), "NDOException should have been thrown");
 	}
 	[Test]
 	public void TestSaveReloadNull()
@@ -8947,20 +8947,20 @@ public class TestCmpBi11OwnpconOthpconNoTblAuto
 		{
 			CreateObjects();
 			QueryOwn();
-			Assert.NotNull(ownVar, "No Query Result");
-			Assert.NotNull(ownVar.RelField, "No related object");
+			Assert.That(ownVar, Is.Not.Null, "No Query Result");
+			Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 			ownVar.RelField = null;
 			pm.Save();
 			pm.UnloadCache();
 			QueryOwn();
-			Assert.NotNull(ownVar, "No Query Result");
-			Assert.Null(ownVar.RelField, "There should be no object");
+			Assert.That(ownVar, Is.Not.Null, "No Query Result");
+			Assert.That(ownVar.RelField, Is.Null, "There should be no object");
 		}
 		catch (NDOException)
 		{
 			thrown = true;
 		}
-		Assert.AreEqual(true, thrown, "NDOException should have been thrown");
+		Assert.That(true, Is.EqualTo(thrown), "NDOException should have been thrown");
 	}
 	[Test]
 	public void TestRelationHash()
@@ -9004,7 +9004,7 @@ public class TestCmpBi11OwnpconOthpconNoTblAuto
 
 
 [TestFixture]
-public class TestCmpBi11OwnpconOthpconTblAuto
+public class TestCmpBi11OwnpconOthpconTblAuto : NDOTest
 {
 	CmpBi11OwnpconOthpconTblAutoLeftBase ownVar;
 	CmpBi11OwnpconOthpconTblAutoRightBase otherVar;
@@ -9028,9 +9028,9 @@ public class TestCmpBi11OwnpconOthpconTblAuto
 			pm.UnloadCache();
 			decimal count;
 			count = (decimal) new NDOQuery<CmpBi11OwnpconOthpconTblAutoLeftBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #1");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #1");
 			count = (decimal) new NDOQuery<CmpBi11OwnpconOthpconTblAutoRightBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #2");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #2");
 		}
 		catch (Exception)
 		{
@@ -9045,84 +9045,84 @@ public class TestCmpBi11OwnpconOthpconTblAuto
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestSaveReloadNull()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 		ownVar.RelField = null;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.Null(ownVar.RelField, "There should be no object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Null, "There should be no object");
 	}
 	[Test]
 	public void TestChangeKeyHolderLeft()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 		int x = ownVar.RelField.Dummy;
 		ownVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestChangeKeyHolderRight()
 	{
 		CreateObjects();
 		QueryOther();
-		Assert.NotNull(otherVar, "No Query Result");
-		Assert.NotNull(otherVar.RelField, "No related object");
+		Assert.That(otherVar, Is.Not.Null, "No Query Result");
+		Assert.That(otherVar.RelField, Is.Not.Null, "No related object");
 		int x = otherVar.RelField.Dummy;
 		otherVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOther();
-		Assert.NotNull(otherVar, "No Query Result");
-		Assert.NotNull(otherVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(otherVar.RelField, "No related object");
+		Assert.That(otherVar, Is.Not.Null, "No Query Result");
+		Assert.That(otherVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(otherVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestChangeKeyHolderLeftNoTouch()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 		ownVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestChangeKeyHolderRightNoTouch()
 	{
 		CreateObjects();
 		QueryOther();
-		Assert.NotNull(otherVar, "No Query Result");
-		Assert.NotNull(otherVar.RelField, "No related object");
+		Assert.That(otherVar, Is.Not.Null, "No Query Result");
+		Assert.That(otherVar.RelField, Is.Not.Null, "No related object");
 		otherVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOther();
-		Assert.NotNull(otherVar, "No Query Result");
-		Assert.NotNull(otherVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(otherVar.RelField, "No related object");
+		Assert.That(otherVar, Is.Not.Null, "No Query Result");
+		Assert.That(otherVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(otherVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestRelationHash()
@@ -9165,7 +9165,7 @@ public class TestCmpBi11OwnpconOthpconTblAuto
 
 
 [TestFixture]
-public class TestCmpDirnOwnpconOthpconTblAuto
+public class TestCmpDirnOwnpconOthpconTblAuto : NDOTest
 {
 	CmpDirnOwnpconOthpconTblAutoLeftBase ownVar;
 	CmpDirnOwnpconOthpconTblAutoRightBase otherVar;
@@ -9189,9 +9189,9 @@ public class TestCmpDirnOwnpconOthpconTblAuto
 			pm.UnloadCache();
 			decimal count;
 			count = (decimal) new NDOQuery<CmpDirnOwnpconOthpconTblAutoLeftBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #1");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #1");
 			count = (decimal) new NDOQuery<CmpDirnOwnpconOthpconTblAutoRightBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #2");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #2");
 		}
 		catch (Exception)
 		{
@@ -9206,36 +9206,36 @@ public class TestCmpDirnOwnpconOthpconTblAuto
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(1, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(1, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 	}
 	[Test]
 	public void TestSaveReloadNull()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(1, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(1, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 		ownVar.RelField = new List<CmpDirnOwnpconOthpconTblAutoRightBase>();
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(0, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(0, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 	}
 	[Test]
 	public void TestSaveReloadRemove()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(1, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(1, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 		ownVar.RemoveRelatedObject();
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(0, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(0, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 	}
 	void CreateObjects()
 	{
@@ -9258,7 +9258,7 @@ public class TestCmpDirnOwnpconOthpconTblAuto
 
 
 [TestFixture]
-public class TestCmpBin1OwnpconOthpconTblAuto
+public class TestCmpBin1OwnpconOthpconTblAuto : NDOTest
 {
 	CmpBin1OwnpconOthpconTblAutoLeftBase ownVar;
 	CmpBin1OwnpconOthpconTblAutoRightBase otherVar;
@@ -9282,9 +9282,9 @@ public class TestCmpBin1OwnpconOthpconTblAuto
 			pm.UnloadCache();
 			decimal count;
 			count = (decimal) new NDOQuery<CmpBin1OwnpconOthpconTblAutoLeftBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #1");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #1");
 			count = (decimal) new NDOQuery<CmpBin1OwnpconOthpconTblAutoRightBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #2");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #2");
 		}
 		catch (Exception)
 		{
@@ -9299,67 +9299,67 @@ public class TestCmpBin1OwnpconOthpconTblAuto
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(1, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(1, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 	}
 	[Test]
 	public void TestSaveReloadNull()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(1, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(1, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 		ownVar.RelField = new List<CmpBin1OwnpconOthpconTblAutoRightBase>();
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(0, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(0, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 	}
 	[Test]
 	public void TestSaveReloadRemove()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(1, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(1, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 		ownVar.RemoveRelatedObject();
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(0, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(0, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 	}
 	[Test]
 	public void TestChangeKeyHolderRight()
 	{
 		CreateObjects();
 		QueryOther();
-		Assert.NotNull(otherVar, "No Query Result");
-		Assert.NotNull(otherVar.RelField, "No related object");
+		Assert.That(otherVar, Is.Not.Null, "No Query Result");
+		Assert.That(otherVar.RelField, Is.Not.Null, "No related object");
 		int x = otherVar.RelField.Dummy;
 		otherVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOther();
-		Assert.NotNull(otherVar, "No Query Result");
-		Assert.NotNull(otherVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(otherVar.RelField, "No related object");
+		Assert.That(otherVar, Is.Not.Null, "No Query Result");
+		Assert.That(otherVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(otherVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestChangeKeyHolderRightNoTouch()
 	{
 		CreateObjects();
 		QueryOther();
-		Assert.NotNull(otherVar, "No Query Result");
-		Assert.NotNull(otherVar.RelField, "No related object");
+		Assert.That(otherVar, Is.Not.Null, "No Query Result");
+		Assert.That(otherVar.RelField, Is.Not.Null, "No related object");
 		otherVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOther();
-		Assert.NotNull(otherVar, "No Query Result");
-		Assert.NotNull(otherVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(otherVar.RelField, "No related object");
+		Assert.That(otherVar, Is.Not.Null, "No Query Result");
+		Assert.That(otherVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(otherVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestRelationHash()
@@ -9402,7 +9402,7 @@ public class TestCmpBin1OwnpconOthpconTblAuto
 
 
 [TestFixture]
-public class TestCmpBi1nOwnpconOthpconTblAuto
+public class TestCmpBi1nOwnpconOthpconTblAuto : NDOTest
 {
 	CmpBi1nOwnpconOthpconTblAutoLeftBase ownVar;
 	CmpBi1nOwnpconOthpconTblAutoRightBase otherVar;
@@ -9426,9 +9426,9 @@ public class TestCmpBi1nOwnpconOthpconTblAuto
 			pm.UnloadCache();
 			decimal count;
 			count = (decimal) new NDOQuery<CmpBi1nOwnpconOthpconTblAutoLeftBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #1");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #1");
 			count = (decimal) new NDOQuery<CmpBi1nOwnpconOthpconTblAutoRightBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #2");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #2");
 		}
 		catch (Exception)
 		{
@@ -9443,53 +9443,53 @@ public class TestCmpBi1nOwnpconOthpconTblAuto
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestSaveReloadNull()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 		ownVar.RelField = null;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.Null(ownVar.RelField, "There should be no object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Null, "There should be no object");
 	}
 	[Test]
 	public void TestChangeKeyHolderLeft()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 		int x = ownVar.RelField.Dummy;
 		ownVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestChangeKeyHolderLeftNoTouch()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 		ownVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestRelationHash()
@@ -9532,7 +9532,7 @@ public class TestCmpBi1nOwnpconOthpconTblAuto
 
 
 [TestFixture]
-public class TestCmpBinnOwnpconOthpconTblAuto
+public class TestCmpBinnOwnpconOthpconTblAuto : NDOTest
 {
 	CmpBinnOwnpconOthpconTblAutoLeftBase ownVar;
 	CmpBinnOwnpconOthpconTblAutoRightBase otherVar;
@@ -9556,9 +9556,9 @@ public class TestCmpBinnOwnpconOthpconTblAuto
 			pm.UnloadCache();
 			decimal count;
 			count = (decimal) new NDOQuery<CmpBinnOwnpconOthpconTblAutoLeftBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #1");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #1");
 			count = (decimal) new NDOQuery<CmpBinnOwnpconOthpconTblAutoRightBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #2");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #2");
 		}
 		catch (Exception)
 		{
@@ -9573,36 +9573,36 @@ public class TestCmpBinnOwnpconOthpconTblAuto
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(1, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(1, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 	}
 	[Test]
 	public void TestSaveReloadNull()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(1, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(1, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 		ownVar.RelField = new List<CmpBinnOwnpconOthpconTblAutoRightBase>();
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(0, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(0, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 	}
 	[Test]
 	public void TestSaveReloadRemove()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(1, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(1, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 		ownVar.RemoveRelatedObject();
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(0, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(0, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 	}
 	[Test]
 	public void TestRelationHash()
@@ -9645,7 +9645,7 @@ public class TestCmpBinnOwnpconOthpconTblAuto
 
 
 [TestFixture]
-public class TestAgrDir1NoTblGuid
+public class TestAgrDir1NoTblGuid : NDOTest
 {
 	AgrDir1NoTblGuidLeft ownVar;
 	AgrDir1NoTblGuidRight otherVar;
@@ -9673,9 +9673,9 @@ public class TestAgrDir1NoTblGuid
 			pm.UnloadCache();
 			decimal count;
 			count = (decimal) new NDOQuery<AgrDir1NoTblGuidLeft>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #1");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #1");
 			count = (decimal) new NDOQuery<AgrDir1NoTblGuidRight>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #2");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #2");
 		}
 		catch (Exception)
 		{
@@ -9689,53 +9689,53 @@ public class TestAgrDir1NoTblGuid
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestSaveReloadNull()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 		ownVar.RelField = null;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.Null(ownVar.RelField, "There should be no object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Null, "There should be no object");
 	}
 	[Test]
 	public void TestChangeKeyHolderLeft()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 		int x = ownVar.RelField.Dummy;
 		ownVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestChangeKeyHolderLeftNoTouch()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 		ownVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 	}
 	void CreateObjects()
 	{
@@ -9759,7 +9759,7 @@ public class TestAgrDir1NoTblGuid
 
 
 [TestFixture]
-public class TestAgrDir1TblGuid
+public class TestAgrDir1TblGuid : NDOTest
 {
 	AgrDir1TblGuidLeft ownVar;
 	AgrDir1TblGuidRight otherVar;
@@ -9787,9 +9787,9 @@ public class TestAgrDir1TblGuid
 			pm.UnloadCache();
 			decimal count;
 			count = (decimal) new NDOQuery<AgrDir1TblGuidLeft>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #1");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #1");
 			count = (decimal) new NDOQuery<AgrDir1TblGuidRight>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #2");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #2");
 		}
 		catch (Exception)
 		{
@@ -9804,53 +9804,53 @@ public class TestAgrDir1TblGuid
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestSaveReloadNull()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 		ownVar.RelField = null;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.Null(ownVar.RelField, "There should be no object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Null, "There should be no object");
 	}
 	[Test]
 	public void TestChangeKeyHolderLeft()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 		int x = ownVar.RelField.Dummy;
 		ownVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestChangeKeyHolderLeftNoTouch()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 		ownVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 	}
 	void CreateObjects()
 	{
@@ -9874,7 +9874,7 @@ public class TestAgrDir1TblGuid
 
 
 [TestFixture]
-public class TestAgrBi11NoTblGuid
+public class TestAgrBi11NoTblGuid : NDOTest
 {
 	AgrBi11NoTblGuidLeft ownVar;
 	AgrBi11NoTblGuidRight otherVar;
@@ -9902,9 +9902,9 @@ public class TestAgrBi11NoTblGuid
 			pm.UnloadCache();
 			decimal count;
 			count = (decimal) new NDOQuery<AgrBi11NoTblGuidLeft>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #1");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #1");
 			count = (decimal) new NDOQuery<AgrBi11NoTblGuidRight>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #2");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #2");
 		}
 		catch (Exception)
 		{
@@ -9918,84 +9918,84 @@ public class TestAgrBi11NoTblGuid
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestSaveReloadNull()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 		ownVar.RelField = null;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.Null(ownVar.RelField, "There should be no object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Null, "There should be no object");
 	}
 	[Test]
 	public void TestChangeKeyHolderLeft()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 		int x = ownVar.RelField.Dummy;
 		ownVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestChangeKeyHolderRight()
 	{
 		CreateObjects();
 		QueryOther();
-		Assert.NotNull(otherVar, "No Query Result");
-		Assert.NotNull(otherVar.RelField, "No related object");
+		Assert.That(otherVar, Is.Not.Null, "No Query Result");
+		Assert.That(otherVar.RelField, Is.Not.Null, "No related object");
 		int x = otherVar.RelField.Dummy;
 		otherVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOther();
-		Assert.NotNull(otherVar, "No Query Result");
-		Assert.NotNull(otherVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(otherVar.RelField, "No related object");
+		Assert.That(otherVar, Is.Not.Null, "No Query Result");
+		Assert.That(otherVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(otherVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestChangeKeyHolderLeftNoTouch()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 		ownVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestChangeKeyHolderRightNoTouch()
 	{
 		CreateObjects();
 		QueryOther();
-		Assert.NotNull(otherVar, "No Query Result");
-		Assert.NotNull(otherVar.RelField, "No related object");
+		Assert.That(otherVar, Is.Not.Null, "No Query Result");
+		Assert.That(otherVar.RelField, Is.Not.Null, "No related object");
 		otherVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOther();
-		Assert.NotNull(otherVar, "No Query Result");
-		Assert.NotNull(otherVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(otherVar.RelField, "No related object");
+		Assert.That(otherVar, Is.Not.Null, "No Query Result");
+		Assert.That(otherVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(otherVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestRelationHash()
@@ -10029,7 +10029,7 @@ public class TestAgrBi11NoTblGuid
 
 
 [TestFixture]
-public class TestAgrBi11TblGuid
+public class TestAgrBi11TblGuid : NDOTest
 {
 	AgrBi11TblGuidLeft ownVar;
 	AgrBi11TblGuidRight otherVar;
@@ -10057,9 +10057,9 @@ public class TestAgrBi11TblGuid
 			pm.UnloadCache();
 			decimal count;
 			count = (decimal) new NDOQuery<AgrBi11TblGuidLeft>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #1");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #1");
 			count = (decimal) new NDOQuery<AgrBi11TblGuidRight>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #2");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #2");
 		}
 		catch (Exception)
 		{
@@ -10074,84 +10074,84 @@ public class TestAgrBi11TblGuid
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestSaveReloadNull()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 		ownVar.RelField = null;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.Null(ownVar.RelField, "There should be no object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Null, "There should be no object");
 	}
 	[Test]
 	public void TestChangeKeyHolderLeft()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 		int x = ownVar.RelField.Dummy;
 		ownVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestChangeKeyHolderRight()
 	{
 		CreateObjects();
 		QueryOther();
-		Assert.NotNull(otherVar, "No Query Result");
-		Assert.NotNull(otherVar.RelField, "No related object");
+		Assert.That(otherVar, Is.Not.Null, "No Query Result");
+		Assert.That(otherVar.RelField, Is.Not.Null, "No related object");
 		int x = otherVar.RelField.Dummy;
 		otherVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOther();
-		Assert.NotNull(otherVar, "No Query Result");
-		Assert.NotNull(otherVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(otherVar.RelField, "No related object");
+		Assert.That(otherVar, Is.Not.Null, "No Query Result");
+		Assert.That(otherVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(otherVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestChangeKeyHolderLeftNoTouch()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 		ownVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestChangeKeyHolderRightNoTouch()
 	{
 		CreateObjects();
 		QueryOther();
-		Assert.NotNull(otherVar, "No Query Result");
-		Assert.NotNull(otherVar.RelField, "No related object");
+		Assert.That(otherVar, Is.Not.Null, "No Query Result");
+		Assert.That(otherVar.RelField, Is.Not.Null, "No related object");
 		otherVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOther();
-		Assert.NotNull(otherVar, "No Query Result");
-		Assert.NotNull(otherVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(otherVar.RelField, "No related object");
+		Assert.That(otherVar, Is.Not.Null, "No Query Result");
+		Assert.That(otherVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(otherVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestRelationHash()
@@ -10185,7 +10185,7 @@ public class TestAgrBi11TblGuid
 
 
 [TestFixture]
-public class TestAgrDirnNoTblGuid
+public class TestAgrDirnNoTblGuid : NDOTest
 {
 	AgrDirnNoTblGuidLeft ownVar;
 	AgrDirnNoTblGuidRight otherVar;
@@ -10213,9 +10213,9 @@ public class TestAgrDirnNoTblGuid
 			pm.UnloadCache();
 			decimal count;
 			count = (decimal) new NDOQuery<AgrDirnNoTblGuidLeft>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #1");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #1");
 			count = (decimal) new NDOQuery<AgrDirnNoTblGuidRight>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #2");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #2");
 		}
 		catch (Exception)
 		{
@@ -10229,36 +10229,36 @@ public class TestAgrDirnNoTblGuid
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(1, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(1, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 	}
 	[Test]
 	public void TestSaveReloadNull()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(1, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(1, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 		ownVar.RelField = new List<AgrDirnNoTblGuidRight>();
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(0, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(0, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 	}
 	[Test]
 	public void TestSaveReloadRemove()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(1, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(1, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 		ownVar.RemoveRelatedObject();
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(0, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(0, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 	}
 	void CreateObjects()
 	{
@@ -10282,7 +10282,7 @@ public class TestAgrDirnNoTblGuid
 
 
 [TestFixture]
-public class TestAgrDirnTblGuid
+public class TestAgrDirnTblGuid : NDOTest
 {
 	AgrDirnTblGuidLeft ownVar;
 	AgrDirnTblGuidRight otherVar;
@@ -10310,9 +10310,9 @@ public class TestAgrDirnTblGuid
 			pm.UnloadCache();
 			decimal count;
 			count = (decimal) new NDOQuery<AgrDirnTblGuidLeft>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #1");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #1");
 			count = (decimal) new NDOQuery<AgrDirnTblGuidRight>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #2");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #2");
 		}
 		catch (Exception)
 		{
@@ -10327,36 +10327,36 @@ public class TestAgrDirnTblGuid
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(1, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(1, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 	}
 	[Test]
 	public void TestSaveReloadNull()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(1, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(1, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 		ownVar.RelField = new List<AgrDirnTblGuidRight>();
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(0, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(0, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 	}
 	[Test]
 	public void TestSaveReloadRemove()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(1, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(1, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 		ownVar.RemoveRelatedObject();
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(0, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(0, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 	}
 	void CreateObjects()
 	{
@@ -10380,7 +10380,7 @@ public class TestAgrDirnTblGuid
 
 
 [TestFixture]
-public class TestAgrBin1NoTblGuid
+public class TestAgrBin1NoTblGuid : NDOTest
 {
 	AgrBin1NoTblGuidLeft ownVar;
 	AgrBin1NoTblGuidRight otherVar;
@@ -10408,9 +10408,9 @@ public class TestAgrBin1NoTblGuid
 			pm.UnloadCache();
 			decimal count;
 			count = (decimal) new NDOQuery<AgrBin1NoTblGuidLeft>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #1");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #1");
 			count = (decimal) new NDOQuery<AgrBin1NoTblGuidRight>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #2");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #2");
 		}
 		catch (Exception)
 		{
@@ -10424,67 +10424,67 @@ public class TestAgrBin1NoTblGuid
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(1, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(1, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 	}
 	[Test]
 	public void TestSaveReloadNull()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(1, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(1, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 		ownVar.RelField = new List<AgrBin1NoTblGuidRight>();
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(0, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(0, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 	}
 	[Test]
 	public void TestSaveReloadRemove()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(1, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(1, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 		ownVar.RemoveRelatedObject();
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(0, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(0, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 	}
 	[Test]
 	public void TestChangeKeyHolderRight()
 	{
 		CreateObjects();
 		QueryOther();
-		Assert.NotNull(otherVar, "No Query Result");
-		Assert.NotNull(otherVar.RelField, "No related object");
+		Assert.That(otherVar, Is.Not.Null, "No Query Result");
+		Assert.That(otherVar.RelField, Is.Not.Null, "No related object");
 		int x = otherVar.RelField.Dummy;
 		otherVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOther();
-		Assert.NotNull(otherVar, "No Query Result");
-		Assert.NotNull(otherVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(otherVar.RelField, "No related object");
+		Assert.That(otherVar, Is.Not.Null, "No Query Result");
+		Assert.That(otherVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(otherVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestChangeKeyHolderRightNoTouch()
 	{
 		CreateObjects();
 		QueryOther();
-		Assert.NotNull(otherVar, "No Query Result");
-		Assert.NotNull(otherVar.RelField, "No related object");
+		Assert.That(otherVar, Is.Not.Null, "No Query Result");
+		Assert.That(otherVar.RelField, Is.Not.Null, "No related object");
 		otherVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOther();
-		Assert.NotNull(otherVar, "No Query Result");
-		Assert.NotNull(otherVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(otherVar.RelField, "No related object");
+		Assert.That(otherVar, Is.Not.Null, "No Query Result");
+		Assert.That(otherVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(otherVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestRelationHash()
@@ -10518,7 +10518,7 @@ public class TestAgrBin1NoTblGuid
 
 
 [TestFixture]
-public class TestAgrBin1TblGuid
+public class TestAgrBin1TblGuid : NDOTest
 {
 	AgrBin1TblGuidLeft ownVar;
 	AgrBin1TblGuidRight otherVar;
@@ -10546,9 +10546,9 @@ public class TestAgrBin1TblGuid
 			pm.UnloadCache();
 			decimal count;
 			count = (decimal) new NDOQuery<AgrBin1TblGuidLeft>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #1");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #1");
 			count = (decimal) new NDOQuery<AgrBin1TblGuidRight>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #2");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #2");
 		}
 		catch (Exception)
 		{
@@ -10563,67 +10563,67 @@ public class TestAgrBin1TblGuid
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(1, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(1, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 	}
 	[Test]
 	public void TestSaveReloadNull()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(1, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(1, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 		ownVar.RelField = new List<AgrBin1TblGuidRight>();
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(0, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(0, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 	}
 	[Test]
 	public void TestSaveReloadRemove()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(1, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(1, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 		ownVar.RemoveRelatedObject();
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(0, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(0, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 	}
 	[Test]
 	public void TestChangeKeyHolderRight()
 	{
 		CreateObjects();
 		QueryOther();
-		Assert.NotNull(otherVar, "No Query Result");
-		Assert.NotNull(otherVar.RelField, "No related object");
+		Assert.That(otherVar, Is.Not.Null, "No Query Result");
+		Assert.That(otherVar.RelField, Is.Not.Null, "No related object");
 		int x = otherVar.RelField.Dummy;
 		otherVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOther();
-		Assert.NotNull(otherVar, "No Query Result");
-		Assert.NotNull(otherVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(otherVar.RelField, "No related object");
+		Assert.That(otherVar, Is.Not.Null, "No Query Result");
+		Assert.That(otherVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(otherVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestChangeKeyHolderRightNoTouch()
 	{
 		CreateObjects();
 		QueryOther();
-		Assert.NotNull(otherVar, "No Query Result");
-		Assert.NotNull(otherVar.RelField, "No related object");
+		Assert.That(otherVar, Is.Not.Null, "No Query Result");
+		Assert.That(otherVar.RelField, Is.Not.Null, "No related object");
 		otherVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOther();
-		Assert.NotNull(otherVar, "No Query Result");
-		Assert.NotNull(otherVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(otherVar.RelField, "No related object");
+		Assert.That(otherVar, Is.Not.Null, "No Query Result");
+		Assert.That(otherVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(otherVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestRelationHash()
@@ -10657,7 +10657,7 @@ public class TestAgrBin1TblGuid
 
 
 [TestFixture]
-public class TestAgrBi1nNoTblGuid
+public class TestAgrBi1nNoTblGuid : NDOTest
 {
 	AgrBi1nNoTblGuidLeft ownVar;
 	AgrBi1nNoTblGuidRight otherVar;
@@ -10685,9 +10685,9 @@ public class TestAgrBi1nNoTblGuid
 			pm.UnloadCache();
 			decimal count;
 			count = (decimal) new NDOQuery<AgrBi1nNoTblGuidLeft>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #1");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #1");
 			count = (decimal) new NDOQuery<AgrBi1nNoTblGuidRight>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #2");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #2");
 		}
 		catch (Exception)
 		{
@@ -10701,53 +10701,53 @@ public class TestAgrBi1nNoTblGuid
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestSaveReloadNull()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 		ownVar.RelField = null;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.Null(ownVar.RelField, "There should be no object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Null, "There should be no object");
 	}
 	[Test]
 	public void TestChangeKeyHolderLeft()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 		int x = ownVar.RelField.Dummy;
 		ownVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestChangeKeyHolderLeftNoTouch()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 		ownVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestRelationHash()
@@ -10781,7 +10781,7 @@ public class TestAgrBi1nNoTblGuid
 
 
 [TestFixture]
-public class TestAgrBi1nTblGuid
+public class TestAgrBi1nTblGuid : NDOTest
 {
 	AgrBi1nTblGuidLeft ownVar;
 	AgrBi1nTblGuidRight otherVar;
@@ -10809,9 +10809,9 @@ public class TestAgrBi1nTblGuid
 			pm.UnloadCache();
 			decimal count;
 			count = (decimal) new NDOQuery<AgrBi1nTblGuidLeft>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #1");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #1");
 			count = (decimal) new NDOQuery<AgrBi1nTblGuidRight>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #2");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #2");
 		}
 		catch (Exception)
 		{
@@ -10826,53 +10826,53 @@ public class TestAgrBi1nTblGuid
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestSaveReloadNull()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 		ownVar.RelField = null;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.Null(ownVar.RelField, "There should be no object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Null, "There should be no object");
 	}
 	[Test]
 	public void TestChangeKeyHolderLeft()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 		int x = ownVar.RelField.Dummy;
 		ownVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestChangeKeyHolderLeftNoTouch()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 		ownVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestRelationHash()
@@ -10906,7 +10906,7 @@ public class TestAgrBi1nTblGuid
 
 
 [TestFixture]
-public class TestAgrBinnTblGuid
+public class TestAgrBinnTblGuid : NDOTest
 {
 	AgrBinnTblGuidLeft ownVar;
 	AgrBinnTblGuidRight otherVar;
@@ -10934,9 +10934,9 @@ public class TestAgrBinnTblGuid
 			pm.UnloadCache();
 			decimal count;
 			count = (decimal) new NDOQuery<AgrBinnTblGuidLeft>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #1");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #1");
 			count = (decimal) new NDOQuery<AgrBinnTblGuidRight>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #2");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #2");
 		}
 		catch (Exception)
 		{
@@ -10951,36 +10951,36 @@ public class TestAgrBinnTblGuid
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(1, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(1, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 	}
 	[Test]
 	public void TestSaveReloadNull()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(1, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(1, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 		ownVar.RelField = new List<AgrBinnTblGuidRight>();
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(0, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(0, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 	}
 	[Test]
 	public void TestSaveReloadRemove()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(1, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(1, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 		ownVar.RemoveRelatedObject();
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(0, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(0, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 	}
 	[Test]
 	public void TestRelationHash()
@@ -11014,7 +11014,7 @@ public class TestAgrBinnTblGuid
 
 
 [TestFixture]
-public class TestCmpDir1NoTblGuid
+public class TestCmpDir1NoTblGuid : NDOTest
 {
 	CmpDir1NoTblGuidLeft ownVar;
 	CmpDir1NoTblGuidRight otherVar;
@@ -11038,9 +11038,9 @@ public class TestCmpDir1NoTblGuid
 			pm.UnloadCache();
 			decimal count;
 			count = (decimal) new NDOQuery<CmpDir1NoTblGuidLeft>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #1");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #1");
 			count = (decimal) new NDOQuery<CmpDir1NoTblGuidRight>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #2");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #2");
 		}
 		catch (Exception)
 		{
@@ -11054,53 +11054,53 @@ public class TestCmpDir1NoTblGuid
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestSaveReloadNull()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 		ownVar.RelField = null;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.Null(ownVar.RelField, "There should be no object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Null, "There should be no object");
 	}
 	[Test]
 	public void TestChangeKeyHolderLeft()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 		int x = ownVar.RelField.Dummy;
 		ownVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestChangeKeyHolderLeftNoTouch()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 		ownVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 	}
 	void CreateObjects()
 	{
@@ -11123,7 +11123,7 @@ public class TestCmpDir1NoTblGuid
 
 
 [TestFixture]
-public class TestCmpDir1TblGuid
+public class TestCmpDir1TblGuid : NDOTest
 {
 	CmpDir1TblGuidLeft ownVar;
 	CmpDir1TblGuidRight otherVar;
@@ -11147,9 +11147,9 @@ public class TestCmpDir1TblGuid
 			pm.UnloadCache();
 			decimal count;
 			count = (decimal) new NDOQuery<CmpDir1TblGuidLeft>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #1");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #1");
 			count = (decimal) new NDOQuery<CmpDir1TblGuidRight>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #2");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #2");
 		}
 		catch (Exception)
 		{
@@ -11164,53 +11164,53 @@ public class TestCmpDir1TblGuid
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestSaveReloadNull()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 		ownVar.RelField = null;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.Null(ownVar.RelField, "There should be no object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Null, "There should be no object");
 	}
 	[Test]
 	public void TestChangeKeyHolderLeft()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 		int x = ownVar.RelField.Dummy;
 		ownVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestChangeKeyHolderLeftNoTouch()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 		ownVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 	}
 	void CreateObjects()
 	{
@@ -11233,7 +11233,7 @@ public class TestCmpDir1TblGuid
 
 
 [TestFixture]
-public class TestCmpBi11NoTblGuid
+public class TestCmpBi11NoTblGuid : NDOTest
 {
 	CmpBi11NoTblGuidLeft ownVar;
 	CmpBi11NoTblGuidRight otherVar;
@@ -11257,9 +11257,9 @@ public class TestCmpBi11NoTblGuid
 			pm.UnloadCache();
 			decimal count;
 			count = (decimal) new NDOQuery<CmpBi11NoTblGuidLeft>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #1");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #1");
 			count = (decimal) new NDOQuery<CmpBi11NoTblGuidRight>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #2");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #2");
 		}
 		catch (Exception)
 		{
@@ -11273,84 +11273,84 @@ public class TestCmpBi11NoTblGuid
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestSaveReloadNull()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 		ownVar.RelField = null;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.Null(ownVar.RelField, "There should be no object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Null, "There should be no object");
 	}
 	[Test]
 	public void TestChangeKeyHolderLeft()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 		int x = ownVar.RelField.Dummy;
 		ownVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestChangeKeyHolderRight()
 	{
 		CreateObjects();
 		QueryOther();
-		Assert.NotNull(otherVar, "No Query Result");
-		Assert.NotNull(otherVar.RelField, "No related object");
+		Assert.That(otherVar, Is.Not.Null, "No Query Result");
+		Assert.That(otherVar.RelField, Is.Not.Null, "No related object");
 		int x = otherVar.RelField.Dummy;
 		otherVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOther();
-		Assert.NotNull(otherVar, "No Query Result");
-		Assert.NotNull(otherVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(otherVar.RelField, "No related object");
+		Assert.That(otherVar, Is.Not.Null, "No Query Result");
+		Assert.That(otherVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(otherVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestChangeKeyHolderLeftNoTouch()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 		ownVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestChangeKeyHolderRightNoTouch()
 	{
 		CreateObjects();
 		QueryOther();
-		Assert.NotNull(otherVar, "No Query Result");
-		Assert.NotNull(otherVar.RelField, "No related object");
+		Assert.That(otherVar, Is.Not.Null, "No Query Result");
+		Assert.That(otherVar.RelField, Is.Not.Null, "No related object");
 		otherVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOther();
-		Assert.NotNull(otherVar, "No Query Result");
-		Assert.NotNull(otherVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(otherVar.RelField, "No related object");
+		Assert.That(otherVar, Is.Not.Null, "No Query Result");
+		Assert.That(otherVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(otherVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestRelationHash()
@@ -11383,7 +11383,7 @@ public class TestCmpBi11NoTblGuid
 
 
 [TestFixture]
-public class TestCmpBi11TblGuid
+public class TestCmpBi11TblGuid : NDOTest
 {
 	CmpBi11TblGuidLeft ownVar;
 	CmpBi11TblGuidRight otherVar;
@@ -11407,9 +11407,9 @@ public class TestCmpBi11TblGuid
 			pm.UnloadCache();
 			decimal count;
 			count = (decimal) new NDOQuery<CmpBi11TblGuidLeft>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #1");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #1");
 			count = (decimal) new NDOQuery<CmpBi11TblGuidRight>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #2");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #2");
 		}
 		catch (Exception)
 		{
@@ -11424,84 +11424,84 @@ public class TestCmpBi11TblGuid
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestSaveReloadNull()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 		ownVar.RelField = null;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.Null(ownVar.RelField, "There should be no object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Null, "There should be no object");
 	}
 	[Test]
 	public void TestChangeKeyHolderLeft()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 		int x = ownVar.RelField.Dummy;
 		ownVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestChangeKeyHolderRight()
 	{
 		CreateObjects();
 		QueryOther();
-		Assert.NotNull(otherVar, "No Query Result");
-		Assert.NotNull(otherVar.RelField, "No related object");
+		Assert.That(otherVar, Is.Not.Null, "No Query Result");
+		Assert.That(otherVar.RelField, Is.Not.Null, "No related object");
 		int x = otherVar.RelField.Dummy;
 		otherVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOther();
-		Assert.NotNull(otherVar, "No Query Result");
-		Assert.NotNull(otherVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(otherVar.RelField, "No related object");
+		Assert.That(otherVar, Is.Not.Null, "No Query Result");
+		Assert.That(otherVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(otherVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestChangeKeyHolderLeftNoTouch()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 		ownVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestChangeKeyHolderRightNoTouch()
 	{
 		CreateObjects();
 		QueryOther();
-		Assert.NotNull(otherVar, "No Query Result");
-		Assert.NotNull(otherVar.RelField, "No related object");
+		Assert.That(otherVar, Is.Not.Null, "No Query Result");
+		Assert.That(otherVar.RelField, Is.Not.Null, "No related object");
 		otherVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOther();
-		Assert.NotNull(otherVar, "No Query Result");
-		Assert.NotNull(otherVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(otherVar.RelField, "No related object");
+		Assert.That(otherVar, Is.Not.Null, "No Query Result");
+		Assert.That(otherVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(otherVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestRelationHash()
@@ -11534,7 +11534,7 @@ public class TestCmpBi11TblGuid
 
 
 [TestFixture]
-public class TestCmpDirnNoTblGuid
+public class TestCmpDirnNoTblGuid : NDOTest
 {
 	CmpDirnNoTblGuidLeft ownVar;
 	CmpDirnNoTblGuidRight otherVar;
@@ -11558,9 +11558,9 @@ public class TestCmpDirnNoTblGuid
 			pm.UnloadCache();
 			decimal count;
 			count = (decimal) new NDOQuery<CmpDirnNoTblGuidLeft>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #1");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #1");
 			count = (decimal) new NDOQuery<CmpDirnNoTblGuidRight>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #2");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #2");
 		}
 		catch (Exception)
 		{
@@ -11574,36 +11574,36 @@ public class TestCmpDirnNoTblGuid
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(1, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(1, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 	}
 	[Test]
 	public void TestSaveReloadNull()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(1, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(1, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 		ownVar.RelField = new List<CmpDirnNoTblGuidRight>();
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(0, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(0, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 	}
 	[Test]
 	public void TestSaveReloadRemove()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(1, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(1, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 		ownVar.RemoveRelatedObject();
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(0, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(0, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 	}
 	void CreateObjects()
 	{
@@ -11626,7 +11626,7 @@ public class TestCmpDirnNoTblGuid
 
 
 [TestFixture]
-public class TestCmpDirnTblGuid
+public class TestCmpDirnTblGuid : NDOTest
 {
 	CmpDirnTblGuidLeft ownVar;
 	CmpDirnTblGuidRight otherVar;
@@ -11650,9 +11650,9 @@ public class TestCmpDirnTblGuid
 			pm.UnloadCache();
 			decimal count;
 			count = (decimal) new NDOQuery<CmpDirnTblGuidLeft>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #1");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #1");
 			count = (decimal) new NDOQuery<CmpDirnTblGuidRight>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #2");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #2");
 		}
 		catch (Exception)
 		{
@@ -11667,36 +11667,36 @@ public class TestCmpDirnTblGuid
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(1, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(1, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 	}
 	[Test]
 	public void TestSaveReloadNull()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(1, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(1, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 		ownVar.RelField = new List<CmpDirnTblGuidRight>();
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(0, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(0, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 	}
 	[Test]
 	public void TestSaveReloadRemove()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(1, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(1, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 		ownVar.RemoveRelatedObject();
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(0, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(0, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 	}
 	void CreateObjects()
 	{
@@ -11719,7 +11719,7 @@ public class TestCmpDirnTblGuid
 
 
 [TestFixture]
-public class TestCmpBin1NoTblGuid
+public class TestCmpBin1NoTblGuid : NDOTest
 {
 	CmpBin1NoTblGuidLeft ownVar;
 	CmpBin1NoTblGuidRight otherVar;
@@ -11743,9 +11743,9 @@ public class TestCmpBin1NoTblGuid
 			pm.UnloadCache();
 			decimal count;
 			count = (decimal) new NDOQuery<CmpBin1NoTblGuidLeft>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #1");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #1");
 			count = (decimal) new NDOQuery<CmpBin1NoTblGuidRight>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #2");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #2");
 		}
 		catch (Exception)
 		{
@@ -11759,67 +11759,67 @@ public class TestCmpBin1NoTblGuid
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(1, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(1, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 	}
 	[Test]
 	public void TestSaveReloadNull()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(1, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(1, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 		ownVar.RelField = new List<CmpBin1NoTblGuidRight>();
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(0, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(0, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 	}
 	[Test]
 	public void TestSaveReloadRemove()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(1, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(1, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 		ownVar.RemoveRelatedObject();
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(0, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(0, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 	}
 	[Test]
 	public void TestChangeKeyHolderRight()
 	{
 		CreateObjects();
 		QueryOther();
-		Assert.NotNull(otherVar, "No Query Result");
-		Assert.NotNull(otherVar.RelField, "No related object");
+		Assert.That(otherVar, Is.Not.Null, "No Query Result");
+		Assert.That(otherVar.RelField, Is.Not.Null, "No related object");
 		int x = otherVar.RelField.Dummy;
 		otherVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOther();
-		Assert.NotNull(otherVar, "No Query Result");
-		Assert.NotNull(otherVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(otherVar.RelField, "No related object");
+		Assert.That(otherVar, Is.Not.Null, "No Query Result");
+		Assert.That(otherVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(otherVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestChangeKeyHolderRightNoTouch()
 	{
 		CreateObjects();
 		QueryOther();
-		Assert.NotNull(otherVar, "No Query Result");
-		Assert.NotNull(otherVar.RelField, "No related object");
+		Assert.That(otherVar, Is.Not.Null, "No Query Result");
+		Assert.That(otherVar.RelField, Is.Not.Null, "No related object");
 		otherVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOther();
-		Assert.NotNull(otherVar, "No Query Result");
-		Assert.NotNull(otherVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(otherVar.RelField, "No related object");
+		Assert.That(otherVar, Is.Not.Null, "No Query Result");
+		Assert.That(otherVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(otherVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestRelationHash()
@@ -11852,7 +11852,7 @@ public class TestCmpBin1NoTblGuid
 
 
 [TestFixture]
-public class TestCmpBin1TblGuid
+public class TestCmpBin1TblGuid : NDOTest
 {
 	CmpBin1TblGuidLeft ownVar;
 	CmpBin1TblGuidRight otherVar;
@@ -11876,9 +11876,9 @@ public class TestCmpBin1TblGuid
 			pm.UnloadCache();
 			decimal count;
 			count = (decimal) new NDOQuery<CmpBin1TblGuidLeft>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #1");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #1");
 			count = (decimal) new NDOQuery<CmpBin1TblGuidRight>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #2");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #2");
 		}
 		catch (Exception)
 		{
@@ -11893,67 +11893,67 @@ public class TestCmpBin1TblGuid
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(1, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(1, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 	}
 	[Test]
 	public void TestSaveReloadNull()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(1, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(1, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 		ownVar.RelField = new List<CmpBin1TblGuidRight>();
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(0, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(0, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 	}
 	[Test]
 	public void TestSaveReloadRemove()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(1, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(1, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 		ownVar.RemoveRelatedObject();
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(0, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(0, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 	}
 	[Test]
 	public void TestChangeKeyHolderRight()
 	{
 		CreateObjects();
 		QueryOther();
-		Assert.NotNull(otherVar, "No Query Result");
-		Assert.NotNull(otherVar.RelField, "No related object");
+		Assert.That(otherVar, Is.Not.Null, "No Query Result");
+		Assert.That(otherVar.RelField, Is.Not.Null, "No related object");
 		int x = otherVar.RelField.Dummy;
 		otherVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOther();
-		Assert.NotNull(otherVar, "No Query Result");
-		Assert.NotNull(otherVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(otherVar.RelField, "No related object");
+		Assert.That(otherVar, Is.Not.Null, "No Query Result");
+		Assert.That(otherVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(otherVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestChangeKeyHolderRightNoTouch()
 	{
 		CreateObjects();
 		QueryOther();
-		Assert.NotNull(otherVar, "No Query Result");
-		Assert.NotNull(otherVar.RelField, "No related object");
+		Assert.That(otherVar, Is.Not.Null, "No Query Result");
+		Assert.That(otherVar.RelField, Is.Not.Null, "No related object");
 		otherVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOther();
-		Assert.NotNull(otherVar, "No Query Result");
-		Assert.NotNull(otherVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(otherVar.RelField, "No related object");
+		Assert.That(otherVar, Is.Not.Null, "No Query Result");
+		Assert.That(otherVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(otherVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestRelationHash()
@@ -11986,7 +11986,7 @@ public class TestCmpBin1TblGuid
 
 
 [TestFixture]
-public class TestCmpBi1nNoTblGuid
+public class TestCmpBi1nNoTblGuid : NDOTest
 {
 	CmpBi1nNoTblGuidLeft ownVar;
 	CmpBi1nNoTblGuidRight otherVar;
@@ -12010,9 +12010,9 @@ public class TestCmpBi1nNoTblGuid
 			pm.UnloadCache();
 			decimal count;
 			count = (decimal) new NDOQuery<CmpBi1nNoTblGuidLeft>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #1");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #1");
 			count = (decimal) new NDOQuery<CmpBi1nNoTblGuidRight>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #2");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #2");
 		}
 		catch (Exception)
 		{
@@ -12026,53 +12026,53 @@ public class TestCmpBi1nNoTblGuid
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestSaveReloadNull()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 		ownVar.RelField = null;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.Null(ownVar.RelField, "There should be no object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Null, "There should be no object");
 	}
 	[Test]
 	public void TestChangeKeyHolderLeft()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 		int x = ownVar.RelField.Dummy;
 		ownVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestChangeKeyHolderLeftNoTouch()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 		ownVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestRelationHash()
@@ -12105,7 +12105,7 @@ public class TestCmpBi1nNoTblGuid
 
 
 [TestFixture]
-public class TestCmpBi1nTblGuid
+public class TestCmpBi1nTblGuid : NDOTest
 {
 	CmpBi1nTblGuidLeft ownVar;
 	CmpBi1nTblGuidRight otherVar;
@@ -12129,9 +12129,9 @@ public class TestCmpBi1nTblGuid
 			pm.UnloadCache();
 			decimal count;
 			count = (decimal) new NDOQuery<CmpBi1nTblGuidLeft>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #1");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #1");
 			count = (decimal) new NDOQuery<CmpBi1nTblGuidRight>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #2");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #2");
 		}
 		catch (Exception)
 		{
@@ -12146,53 +12146,53 @@ public class TestCmpBi1nTblGuid
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestSaveReloadNull()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 		ownVar.RelField = null;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.Null(ownVar.RelField, "There should be no object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Null, "There should be no object");
 	}
 	[Test]
 	public void TestChangeKeyHolderLeft()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 		int x = ownVar.RelField.Dummy;
 		ownVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestChangeKeyHolderLeftNoTouch()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 		ownVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestRelationHash()
@@ -12225,7 +12225,7 @@ public class TestCmpBi1nTblGuid
 
 
 [TestFixture]
-public class TestCmpBinnTblGuid
+public class TestCmpBinnTblGuid : NDOTest
 {
 	CmpBinnTblGuidLeft ownVar;
 	CmpBinnTblGuidRight otherVar;
@@ -12249,9 +12249,9 @@ public class TestCmpBinnTblGuid
 			pm.UnloadCache();
 			decimal count;
 			count = (decimal) new NDOQuery<CmpBinnTblGuidLeft>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #1");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #1");
 			count = (decimal) new NDOQuery<CmpBinnTblGuidRight>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #2");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #2");
 		}
 		catch (Exception)
 		{
@@ -12266,36 +12266,36 @@ public class TestCmpBinnTblGuid
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(1, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(1, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 	}
 	[Test]
 	public void TestSaveReloadNull()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(1, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(1, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 		ownVar.RelField = new List<CmpBinnTblGuidRight>();
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(0, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(0, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 	}
 	[Test]
 	public void TestSaveReloadRemove()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(1, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(1, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 		ownVar.RemoveRelatedObject();
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(0, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(0, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 	}
 	[Test]
 	public void TestRelationHash()
@@ -12328,7 +12328,7 @@ public class TestCmpBinnTblGuid
 
 
 [TestFixture]
-public class TestAgrDir1OwnpconNoTblGuid
+public class TestAgrDir1OwnpconNoTblGuid : NDOTest
 {
 	AgrDir1OwnpconNoTblGuidLeftBase ownVar;
 	AgrDir1OwnpconNoTblGuidRight otherVar;
@@ -12356,9 +12356,9 @@ public class TestAgrDir1OwnpconNoTblGuid
 			pm.UnloadCache();
 			decimal count;
 			count = (decimal) new NDOQuery<AgrDir1OwnpconNoTblGuidLeftBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #1");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #1");
 			count = (decimal) new NDOQuery<AgrDir1OwnpconNoTblGuidRight>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #2");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #2");
 		}
 		catch (Exception)
 		{
@@ -12372,53 +12372,53 @@ public class TestAgrDir1OwnpconNoTblGuid
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestSaveReloadNull()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 		ownVar.RelField = null;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.Null(ownVar.RelField, "There should be no object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Null, "There should be no object");
 	}
 	[Test]
 	public void TestChangeKeyHolderLeft()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 		int x = ownVar.RelField.Dummy;
 		ownVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestChangeKeyHolderLeftNoTouch()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 		ownVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 	}
 	void CreateObjects()
 	{
@@ -12442,7 +12442,7 @@ public class TestAgrDir1OwnpconNoTblGuid
 
 
 [TestFixture]
-public class TestAgrDir1OwnpconTblGuid
+public class TestAgrDir1OwnpconTblGuid : NDOTest
 {
 	AgrDir1OwnpconTblGuidLeftBase ownVar;
 	AgrDir1OwnpconTblGuidRight otherVar;
@@ -12470,9 +12470,9 @@ public class TestAgrDir1OwnpconTblGuid
 			pm.UnloadCache();
 			decimal count;
 			count = (decimal) new NDOQuery<AgrDir1OwnpconTblGuidLeftBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #1");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #1");
 			count = (decimal) new NDOQuery<AgrDir1OwnpconTblGuidRight>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #2");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #2");
 		}
 		catch (Exception)
 		{
@@ -12487,53 +12487,53 @@ public class TestAgrDir1OwnpconTblGuid
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestSaveReloadNull()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 		ownVar.RelField = null;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.Null(ownVar.RelField, "There should be no object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Null, "There should be no object");
 	}
 	[Test]
 	public void TestChangeKeyHolderLeft()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 		int x = ownVar.RelField.Dummy;
 		ownVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestChangeKeyHolderLeftNoTouch()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 		ownVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 	}
 	void CreateObjects()
 	{
@@ -12557,7 +12557,7 @@ public class TestAgrDir1OwnpconTblGuid
 
 
 [TestFixture]
-public class TestAgrBi11OwnpconNoTblGuid
+public class TestAgrBi11OwnpconNoTblGuid : NDOTest
 {
 	AgrBi11OwnpconNoTblGuidLeftBase ownVar;
 	AgrBi11OwnpconNoTblGuidRight otherVar;
@@ -12585,9 +12585,9 @@ public class TestAgrBi11OwnpconNoTblGuid
 			pm.UnloadCache();
 			decimal count;
 			count = (decimal) new NDOQuery<AgrBi11OwnpconNoTblGuidLeftBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #1");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #1");
 			count = (decimal) new NDOQuery<AgrBi11OwnpconNoTblGuidRight>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #2");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #2");
 		}
 		catch (Exception)
 		{
@@ -12601,84 +12601,84 @@ public class TestAgrBi11OwnpconNoTblGuid
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestSaveReloadNull()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 		ownVar.RelField = null;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.Null(ownVar.RelField, "There should be no object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Null, "There should be no object");
 	}
 	[Test]
 	public void TestChangeKeyHolderLeft()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 		int x = ownVar.RelField.Dummy;
 		ownVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestChangeKeyHolderRight()
 	{
 		CreateObjects();
 		QueryOther();
-		Assert.NotNull(otherVar, "No Query Result");
-		Assert.NotNull(otherVar.RelField, "No related object");
+		Assert.That(otherVar, Is.Not.Null, "No Query Result");
+		Assert.That(otherVar.RelField, Is.Not.Null, "No related object");
 		int x = otherVar.RelField.Dummy;
 		otherVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOther();
-		Assert.NotNull(otherVar, "No Query Result");
-		Assert.NotNull(otherVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(otherVar.RelField, "No related object");
+		Assert.That(otherVar, Is.Not.Null, "No Query Result");
+		Assert.That(otherVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(otherVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestChangeKeyHolderLeftNoTouch()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 		ownVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestChangeKeyHolderRightNoTouch()
 	{
 		CreateObjects();
 		QueryOther();
-		Assert.NotNull(otherVar, "No Query Result");
-		Assert.NotNull(otherVar.RelField, "No related object");
+		Assert.That(otherVar, Is.Not.Null, "No Query Result");
+		Assert.That(otherVar.RelField, Is.Not.Null, "No related object");
 		otherVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOther();
-		Assert.NotNull(otherVar, "No Query Result");
-		Assert.NotNull(otherVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(otherVar.RelField, "No related object");
+		Assert.That(otherVar, Is.Not.Null, "No Query Result");
+		Assert.That(otherVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(otherVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestRelationHash()
@@ -12716,7 +12716,7 @@ public class TestAgrBi11OwnpconNoTblGuid
 
 
 [TestFixture]
-public class TestAgrBi11OwnpconTblGuid
+public class TestAgrBi11OwnpconTblGuid : NDOTest
 {
 	AgrBi11OwnpconTblGuidLeftBase ownVar;
 	AgrBi11OwnpconTblGuidRight otherVar;
@@ -12744,9 +12744,9 @@ public class TestAgrBi11OwnpconTblGuid
 			pm.UnloadCache();
 			decimal count;
 			count = (decimal) new NDOQuery<AgrBi11OwnpconTblGuidLeftBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #1");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #1");
 			count = (decimal) new NDOQuery<AgrBi11OwnpconTblGuidRight>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #2");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #2");
 		}
 		catch (Exception)
 		{
@@ -12761,84 +12761,84 @@ public class TestAgrBi11OwnpconTblGuid
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestSaveReloadNull()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 		ownVar.RelField = null;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.Null(ownVar.RelField, "There should be no object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Null, "There should be no object");
 	}
 	[Test]
 	public void TestChangeKeyHolderLeft()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 		int x = ownVar.RelField.Dummy;
 		ownVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestChangeKeyHolderRight()
 	{
 		CreateObjects();
 		QueryOther();
-		Assert.NotNull(otherVar, "No Query Result");
-		Assert.NotNull(otherVar.RelField, "No related object");
+		Assert.That(otherVar, Is.Not.Null, "No Query Result");
+		Assert.That(otherVar.RelField, Is.Not.Null, "No related object");
 		int x = otherVar.RelField.Dummy;
 		otherVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOther();
-		Assert.NotNull(otherVar, "No Query Result");
-		Assert.NotNull(otherVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(otherVar.RelField, "No related object");
+		Assert.That(otherVar, Is.Not.Null, "No Query Result");
+		Assert.That(otherVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(otherVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestChangeKeyHolderLeftNoTouch()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 		ownVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestChangeKeyHolderRightNoTouch()
 	{
 		CreateObjects();
 		QueryOther();
-		Assert.NotNull(otherVar, "No Query Result");
-		Assert.NotNull(otherVar.RelField, "No related object");
+		Assert.That(otherVar, Is.Not.Null, "No Query Result");
+		Assert.That(otherVar.RelField, Is.Not.Null, "No related object");
 		otherVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOther();
-		Assert.NotNull(otherVar, "No Query Result");
-		Assert.NotNull(otherVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(otherVar.RelField, "No related object");
+		Assert.That(otherVar, Is.Not.Null, "No Query Result");
+		Assert.That(otherVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(otherVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestRelationHash()
@@ -12876,7 +12876,7 @@ public class TestAgrBi11OwnpconTblGuid
 
 
 [TestFixture]
-public class TestAgrDirnOwnpconNoTblGuid
+public class TestAgrDirnOwnpconNoTblGuid : NDOTest
 {
 	AgrDirnOwnpconNoTblGuidLeftBase ownVar;
 	AgrDirnOwnpconNoTblGuidRight otherVar;
@@ -12904,9 +12904,9 @@ public class TestAgrDirnOwnpconNoTblGuid
 			pm.UnloadCache();
 			decimal count;
 			count = (decimal) new NDOQuery<AgrDirnOwnpconNoTblGuidLeftBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #1");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #1");
 			count = (decimal) new NDOQuery<AgrDirnOwnpconNoTblGuidRight>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #2");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #2");
 		}
 		catch (Exception)
 		{
@@ -12920,36 +12920,36 @@ public class TestAgrDirnOwnpconNoTblGuid
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(1, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(1, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 	}
 	[Test]
 	public void TestSaveReloadNull()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(1, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(1, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 		ownVar.RelField = new List<AgrDirnOwnpconNoTblGuidRight>();
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(0, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(0, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 	}
 	[Test]
 	public void TestSaveReloadRemove()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(1, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(1, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 		ownVar.RemoveRelatedObject();
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(0, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(0, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 	}
 	void CreateObjects()
 	{
@@ -12973,7 +12973,7 @@ public class TestAgrDirnOwnpconNoTblGuid
 
 
 [TestFixture]
-public class TestAgrDirnOwnpconTblGuid
+public class TestAgrDirnOwnpconTblGuid : NDOTest
 {
 	AgrDirnOwnpconTblGuidLeftBase ownVar;
 	AgrDirnOwnpconTblGuidRight otherVar;
@@ -13001,9 +13001,9 @@ public class TestAgrDirnOwnpconTblGuid
 			pm.UnloadCache();
 			decimal count;
 			count = (decimal) new NDOQuery<AgrDirnOwnpconTblGuidLeftBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #1");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #1");
 			count = (decimal) new NDOQuery<AgrDirnOwnpconTblGuidRight>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #2");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #2");
 		}
 		catch (Exception)
 		{
@@ -13018,36 +13018,36 @@ public class TestAgrDirnOwnpconTblGuid
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(1, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(1, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 	}
 	[Test]
 	public void TestSaveReloadNull()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(1, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(1, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 		ownVar.RelField = new List<AgrDirnOwnpconTblGuidRight>();
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(0, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(0, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 	}
 	[Test]
 	public void TestSaveReloadRemove()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(1, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(1, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 		ownVar.RemoveRelatedObject();
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(0, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(0, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 	}
 	void CreateObjects()
 	{
@@ -13071,7 +13071,7 @@ public class TestAgrDirnOwnpconTblGuid
 
 
 [TestFixture]
-public class TestAgrBin1OwnpconNoTblGuid
+public class TestAgrBin1OwnpconNoTblGuid : NDOTest
 {
 	AgrBin1OwnpconNoTblGuidLeftBase ownVar;
 	AgrBin1OwnpconNoTblGuidRight otherVar;
@@ -13099,9 +13099,9 @@ public class TestAgrBin1OwnpconNoTblGuid
 			pm.UnloadCache();
 			decimal count;
 			count = (decimal) new NDOQuery<AgrBin1OwnpconNoTblGuidLeftBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #1");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #1");
 			count = (decimal) new NDOQuery<AgrBin1OwnpconNoTblGuidRight>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #2");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #2");
 		}
 		catch (Exception)
 		{
@@ -13115,67 +13115,67 @@ public class TestAgrBin1OwnpconNoTblGuid
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(1, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(1, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 	}
 	[Test]
 	public void TestSaveReloadNull()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(1, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(1, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 		ownVar.RelField = new List<AgrBin1OwnpconNoTblGuidRight>();
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(0, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(0, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 	}
 	[Test]
 	public void TestSaveReloadRemove()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(1, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(1, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 		ownVar.RemoveRelatedObject();
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(0, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(0, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 	}
 	[Test]
 	public void TestChangeKeyHolderRight()
 	{
 		CreateObjects();
 		QueryOther();
-		Assert.NotNull(otherVar, "No Query Result");
-		Assert.NotNull(otherVar.RelField, "No related object");
+		Assert.That(otherVar, Is.Not.Null, "No Query Result");
+		Assert.That(otherVar.RelField, Is.Not.Null, "No related object");
 		int x = otherVar.RelField.Dummy;
 		otherVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOther();
-		Assert.NotNull(otherVar, "No Query Result");
-		Assert.NotNull(otherVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(otherVar.RelField, "No related object");
+		Assert.That(otherVar, Is.Not.Null, "No Query Result");
+		Assert.That(otherVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(otherVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestChangeKeyHolderRightNoTouch()
 	{
 		CreateObjects();
 		QueryOther();
-		Assert.NotNull(otherVar, "No Query Result");
-		Assert.NotNull(otherVar.RelField, "No related object");
+		Assert.That(otherVar, Is.Not.Null, "No Query Result");
+		Assert.That(otherVar.RelField, Is.Not.Null, "No related object");
 		otherVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOther();
-		Assert.NotNull(otherVar, "No Query Result");
-		Assert.NotNull(otherVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(otherVar.RelField, "No related object");
+		Assert.That(otherVar, Is.Not.Null, "No Query Result");
+		Assert.That(otherVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(otherVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestRelationHash()
@@ -13213,7 +13213,7 @@ public class TestAgrBin1OwnpconNoTblGuid
 
 
 [TestFixture]
-public class TestAgrBin1OwnpconTblGuid
+public class TestAgrBin1OwnpconTblGuid : NDOTest
 {
 	AgrBin1OwnpconTblGuidLeftBase ownVar;
 	AgrBin1OwnpconTblGuidRight otherVar;
@@ -13241,9 +13241,9 @@ public class TestAgrBin1OwnpconTblGuid
 			pm.UnloadCache();
 			decimal count;
 			count = (decimal) new NDOQuery<AgrBin1OwnpconTblGuidLeftBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #1");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #1");
 			count = (decimal) new NDOQuery<AgrBin1OwnpconTblGuidRight>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #2");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #2");
 		}
 		catch (Exception)
 		{
@@ -13258,67 +13258,67 @@ public class TestAgrBin1OwnpconTblGuid
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(1, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(1, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 	}
 	[Test]
 	public void TestSaveReloadNull()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(1, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(1, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 		ownVar.RelField = new List<AgrBin1OwnpconTblGuidRight>();
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(0, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(0, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 	}
 	[Test]
 	public void TestSaveReloadRemove()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(1, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(1, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 		ownVar.RemoveRelatedObject();
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(0, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(0, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 	}
 	[Test]
 	public void TestChangeKeyHolderRight()
 	{
 		CreateObjects();
 		QueryOther();
-		Assert.NotNull(otherVar, "No Query Result");
-		Assert.NotNull(otherVar.RelField, "No related object");
+		Assert.That(otherVar, Is.Not.Null, "No Query Result");
+		Assert.That(otherVar.RelField, Is.Not.Null, "No related object");
 		int x = otherVar.RelField.Dummy;
 		otherVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOther();
-		Assert.NotNull(otherVar, "No Query Result");
-		Assert.NotNull(otherVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(otherVar.RelField, "No related object");
+		Assert.That(otherVar, Is.Not.Null, "No Query Result");
+		Assert.That(otherVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(otherVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestChangeKeyHolderRightNoTouch()
 	{
 		CreateObjects();
 		QueryOther();
-		Assert.NotNull(otherVar, "No Query Result");
-		Assert.NotNull(otherVar.RelField, "No related object");
+		Assert.That(otherVar, Is.Not.Null, "No Query Result");
+		Assert.That(otherVar.RelField, Is.Not.Null, "No related object");
 		otherVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOther();
-		Assert.NotNull(otherVar, "No Query Result");
-		Assert.NotNull(otherVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(otherVar.RelField, "No related object");
+		Assert.That(otherVar, Is.Not.Null, "No Query Result");
+		Assert.That(otherVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(otherVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestRelationHash()
@@ -13356,7 +13356,7 @@ public class TestAgrBin1OwnpconTblGuid
 
 
 [TestFixture]
-public class TestAgrBi1nOwnpconTblGuid
+public class TestAgrBi1nOwnpconTblGuid : NDOTest
 {
 	AgrBi1nOwnpconTblGuidLeftBase ownVar;
 	AgrBi1nOwnpconTblGuidRight otherVar;
@@ -13384,9 +13384,9 @@ public class TestAgrBi1nOwnpconTblGuid
 			pm.UnloadCache();
 			decimal count;
 			count = (decimal) new NDOQuery<AgrBi1nOwnpconTblGuidLeftBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #1");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #1");
 			count = (decimal) new NDOQuery<AgrBi1nOwnpconTblGuidRight>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #2");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #2");
 		}
 		catch (Exception)
 		{
@@ -13401,53 +13401,53 @@ public class TestAgrBi1nOwnpconTblGuid
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestSaveReloadNull()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 		ownVar.RelField = null;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.Null(ownVar.RelField, "There should be no object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Null, "There should be no object");
 	}
 	[Test]
 	public void TestChangeKeyHolderLeft()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 		int x = ownVar.RelField.Dummy;
 		ownVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestChangeKeyHolderLeftNoTouch()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 		ownVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestRelationHash()
@@ -13485,7 +13485,7 @@ public class TestAgrBi1nOwnpconTblGuid
 
 
 [TestFixture]
-public class TestAgrBinnOwnpconTblGuid
+public class TestAgrBinnOwnpconTblGuid : NDOTest
 {
 	AgrBinnOwnpconTblGuidLeftBase ownVar;
 	AgrBinnOwnpconTblGuidRight otherVar;
@@ -13513,9 +13513,9 @@ public class TestAgrBinnOwnpconTblGuid
 			pm.UnloadCache();
 			decimal count;
 			count = (decimal) new NDOQuery<AgrBinnOwnpconTblGuidLeftBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #1");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #1");
 			count = (decimal) new NDOQuery<AgrBinnOwnpconTblGuidRight>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #2");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #2");
 		}
 		catch (Exception)
 		{
@@ -13530,36 +13530,36 @@ public class TestAgrBinnOwnpconTblGuid
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(1, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(1, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 	}
 	[Test]
 	public void TestSaveReloadNull()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(1, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(1, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 		ownVar.RelField = new List<AgrBinnOwnpconTblGuidRight>();
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(0, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(0, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 	}
 	[Test]
 	public void TestSaveReloadRemove()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(1, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(1, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 		ownVar.RemoveRelatedObject();
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(0, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(0, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 	}
 	[Test]
 	public void TestRelationHash()
@@ -13597,7 +13597,7 @@ public class TestAgrBinnOwnpconTblGuid
 
 
 [TestFixture]
-public class TestCmpDir1OwnpconNoTblGuid
+public class TestCmpDir1OwnpconNoTblGuid : NDOTest
 {
 	CmpDir1OwnpconNoTblGuidLeftBase ownVar;
 	CmpDir1OwnpconNoTblGuidRight otherVar;
@@ -13621,9 +13621,9 @@ public class TestCmpDir1OwnpconNoTblGuid
 			pm.UnloadCache();
 			decimal count;
 			count = (decimal) new NDOQuery<CmpDir1OwnpconNoTblGuidLeftBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #1");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #1");
 			count = (decimal) new NDOQuery<CmpDir1OwnpconNoTblGuidRight>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #2");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #2");
 		}
 		catch (Exception)
 		{
@@ -13637,53 +13637,53 @@ public class TestCmpDir1OwnpconNoTblGuid
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestSaveReloadNull()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 		ownVar.RelField = null;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.Null(ownVar.RelField, "There should be no object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Null, "There should be no object");
 	}
 	[Test]
 	public void TestChangeKeyHolderLeft()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 		int x = ownVar.RelField.Dummy;
 		ownVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestChangeKeyHolderLeftNoTouch()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 		ownVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 	}
 	void CreateObjects()
 	{
@@ -13706,7 +13706,7 @@ public class TestCmpDir1OwnpconNoTblGuid
 
 
 [TestFixture]
-public class TestCmpDir1OwnpconTblGuid
+public class TestCmpDir1OwnpconTblGuid : NDOTest
 {
 	CmpDir1OwnpconTblGuidLeftBase ownVar;
 	CmpDir1OwnpconTblGuidRight otherVar;
@@ -13730,9 +13730,9 @@ public class TestCmpDir1OwnpconTblGuid
 			pm.UnloadCache();
 			decimal count;
 			count = (decimal) new NDOQuery<CmpDir1OwnpconTblGuidLeftBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #1");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #1");
 			count = (decimal) new NDOQuery<CmpDir1OwnpconTblGuidRight>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #2");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #2");
 		}
 		catch (Exception)
 		{
@@ -13747,53 +13747,53 @@ public class TestCmpDir1OwnpconTblGuid
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestSaveReloadNull()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 		ownVar.RelField = null;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.Null(ownVar.RelField, "There should be no object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Null, "There should be no object");
 	}
 	[Test]
 	public void TestChangeKeyHolderLeft()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 		int x = ownVar.RelField.Dummy;
 		ownVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestChangeKeyHolderLeftNoTouch()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 		ownVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 	}
 	void CreateObjects()
 	{
@@ -13816,7 +13816,7 @@ public class TestCmpDir1OwnpconTblGuid
 
 
 [TestFixture]
-public class TestCmpBi11OwnpconNoTblGuid
+public class TestCmpBi11OwnpconNoTblGuid : NDOTest
 {
 	CmpBi11OwnpconNoTblGuidLeftBase ownVar;
 	CmpBi11OwnpconNoTblGuidRight otherVar;
@@ -13840,9 +13840,9 @@ public class TestCmpBi11OwnpconNoTblGuid
 			pm.UnloadCache();
 			decimal count;
 			count = (decimal) new NDOQuery<CmpBi11OwnpconNoTblGuidLeftBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #1");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #1");
 			count = (decimal) new NDOQuery<CmpBi11OwnpconNoTblGuidRight>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #2");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #2");
 		}
 		catch (Exception)
 		{
@@ -13856,84 +13856,84 @@ public class TestCmpBi11OwnpconNoTblGuid
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestSaveReloadNull()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 		ownVar.RelField = null;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.Null(ownVar.RelField, "There should be no object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Null, "There should be no object");
 	}
 	[Test]
 	public void TestChangeKeyHolderLeft()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 		int x = ownVar.RelField.Dummy;
 		ownVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestChangeKeyHolderRight()
 	{
 		CreateObjects();
 		QueryOther();
-		Assert.NotNull(otherVar, "No Query Result");
-		Assert.NotNull(otherVar.RelField, "No related object");
+		Assert.That(otherVar, Is.Not.Null, "No Query Result");
+		Assert.That(otherVar.RelField, Is.Not.Null, "No related object");
 		int x = otherVar.RelField.Dummy;
 		otherVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOther();
-		Assert.NotNull(otherVar, "No Query Result");
-		Assert.NotNull(otherVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(otherVar.RelField, "No related object");
+		Assert.That(otherVar, Is.Not.Null, "No Query Result");
+		Assert.That(otherVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(otherVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestChangeKeyHolderLeftNoTouch()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 		ownVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestChangeKeyHolderRightNoTouch()
 	{
 		CreateObjects();
 		QueryOther();
-		Assert.NotNull(otherVar, "No Query Result");
-		Assert.NotNull(otherVar.RelField, "No related object");
+		Assert.That(otherVar, Is.Not.Null, "No Query Result");
+		Assert.That(otherVar.RelField, Is.Not.Null, "No related object");
 		otherVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOther();
-		Assert.NotNull(otherVar, "No Query Result");
-		Assert.NotNull(otherVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(otherVar.RelField, "No related object");
+		Assert.That(otherVar, Is.Not.Null, "No Query Result");
+		Assert.That(otherVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(otherVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestRelationHash()
@@ -13970,7 +13970,7 @@ public class TestCmpBi11OwnpconNoTblGuid
 
 
 [TestFixture]
-public class TestCmpBi11OwnpconTblGuid
+public class TestCmpBi11OwnpconTblGuid : NDOTest
 {
 	CmpBi11OwnpconTblGuidLeftBase ownVar;
 	CmpBi11OwnpconTblGuidRight otherVar;
@@ -13994,9 +13994,9 @@ public class TestCmpBi11OwnpconTblGuid
 			pm.UnloadCache();
 			decimal count;
 			count = (decimal) new NDOQuery<CmpBi11OwnpconTblGuidLeftBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #1");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #1");
 			count = (decimal) new NDOQuery<CmpBi11OwnpconTblGuidRight>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #2");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #2");
 		}
 		catch (Exception)
 		{
@@ -14011,84 +14011,84 @@ public class TestCmpBi11OwnpconTblGuid
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestSaveReloadNull()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 		ownVar.RelField = null;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.Null(ownVar.RelField, "There should be no object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Null, "There should be no object");
 	}
 	[Test]
 	public void TestChangeKeyHolderLeft()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 		int x = ownVar.RelField.Dummy;
 		ownVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestChangeKeyHolderRight()
 	{
 		CreateObjects();
 		QueryOther();
-		Assert.NotNull(otherVar, "No Query Result");
-		Assert.NotNull(otherVar.RelField, "No related object");
+		Assert.That(otherVar, Is.Not.Null, "No Query Result");
+		Assert.That(otherVar.RelField, Is.Not.Null, "No related object");
 		int x = otherVar.RelField.Dummy;
 		otherVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOther();
-		Assert.NotNull(otherVar, "No Query Result");
-		Assert.NotNull(otherVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(otherVar.RelField, "No related object");
+		Assert.That(otherVar, Is.Not.Null, "No Query Result");
+		Assert.That(otherVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(otherVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestChangeKeyHolderLeftNoTouch()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 		ownVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestChangeKeyHolderRightNoTouch()
 	{
 		CreateObjects();
 		QueryOther();
-		Assert.NotNull(otherVar, "No Query Result");
-		Assert.NotNull(otherVar.RelField, "No related object");
+		Assert.That(otherVar, Is.Not.Null, "No Query Result");
+		Assert.That(otherVar.RelField, Is.Not.Null, "No related object");
 		otherVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOther();
-		Assert.NotNull(otherVar, "No Query Result");
-		Assert.NotNull(otherVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(otherVar.RelField, "No related object");
+		Assert.That(otherVar, Is.Not.Null, "No Query Result");
+		Assert.That(otherVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(otherVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestRelationHash()
@@ -14125,7 +14125,7 @@ public class TestCmpBi11OwnpconTblGuid
 
 
 [TestFixture]
-public class TestCmpDirnOwnpconNoTblGuid
+public class TestCmpDirnOwnpconNoTblGuid : NDOTest
 {
 	CmpDirnOwnpconNoTblGuidLeftBase ownVar;
 	CmpDirnOwnpconNoTblGuidRight otherVar;
@@ -14149,9 +14149,9 @@ public class TestCmpDirnOwnpconNoTblGuid
 			pm.UnloadCache();
 			decimal count;
 			count = (decimal) new NDOQuery<CmpDirnOwnpconNoTblGuidLeftBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #1");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #1");
 			count = (decimal) new NDOQuery<CmpDirnOwnpconNoTblGuidRight>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #2");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #2");
 		}
 		catch (Exception)
 		{
@@ -14165,36 +14165,36 @@ public class TestCmpDirnOwnpconNoTblGuid
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(1, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(1, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 	}
 	[Test]
 	public void TestSaveReloadNull()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(1, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(1, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 		ownVar.RelField = new List<CmpDirnOwnpconNoTblGuidRight>();
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(0, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(0, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 	}
 	[Test]
 	public void TestSaveReloadRemove()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(1, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(1, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 		ownVar.RemoveRelatedObject();
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(0, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(0, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 	}
 	void CreateObjects()
 	{
@@ -14217,7 +14217,7 @@ public class TestCmpDirnOwnpconNoTblGuid
 
 
 [TestFixture]
-public class TestCmpDirnOwnpconTblGuid
+public class TestCmpDirnOwnpconTblGuid : NDOTest
 {
 	CmpDirnOwnpconTblGuidLeftBase ownVar;
 	CmpDirnOwnpconTblGuidRight otherVar;
@@ -14241,9 +14241,9 @@ public class TestCmpDirnOwnpconTblGuid
 			pm.UnloadCache();
 			decimal count;
 			count = (decimal) new NDOQuery<CmpDirnOwnpconTblGuidLeftBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #1");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #1");
 			count = (decimal) new NDOQuery<CmpDirnOwnpconTblGuidRight>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #2");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #2");
 		}
 		catch (Exception)
 		{
@@ -14258,36 +14258,36 @@ public class TestCmpDirnOwnpconTblGuid
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(1, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(1, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 	}
 	[Test]
 	public void TestSaveReloadNull()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(1, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(1, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 		ownVar.RelField = new List<CmpDirnOwnpconTblGuidRight>();
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(0, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(0, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 	}
 	[Test]
 	public void TestSaveReloadRemove()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(1, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(1, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 		ownVar.RemoveRelatedObject();
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(0, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(0, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 	}
 	void CreateObjects()
 	{
@@ -14310,7 +14310,7 @@ public class TestCmpDirnOwnpconTblGuid
 
 
 [TestFixture]
-public class TestCmpBin1OwnpconNoTblGuid
+public class TestCmpBin1OwnpconNoTblGuid : NDOTest
 {
 	CmpBin1OwnpconNoTblGuidLeftBase ownVar;
 	CmpBin1OwnpconNoTblGuidRight otherVar;
@@ -14334,9 +14334,9 @@ public class TestCmpBin1OwnpconNoTblGuid
 			pm.UnloadCache();
 			decimal count;
 			count = (decimal) new NDOQuery<CmpBin1OwnpconNoTblGuidLeftBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #1");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #1");
 			count = (decimal) new NDOQuery<CmpBin1OwnpconNoTblGuidRight>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #2");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #2");
 		}
 		catch (Exception)
 		{
@@ -14350,67 +14350,67 @@ public class TestCmpBin1OwnpconNoTblGuid
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(1, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(1, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 	}
 	[Test]
 	public void TestSaveReloadNull()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(1, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(1, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 		ownVar.RelField = new List<CmpBin1OwnpconNoTblGuidRight>();
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(0, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(0, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 	}
 	[Test]
 	public void TestSaveReloadRemove()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(1, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(1, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 		ownVar.RemoveRelatedObject();
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(0, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(0, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 	}
 	[Test]
 	public void TestChangeKeyHolderRight()
 	{
 		CreateObjects();
 		QueryOther();
-		Assert.NotNull(otherVar, "No Query Result");
-		Assert.NotNull(otherVar.RelField, "No related object");
+		Assert.That(otherVar, Is.Not.Null, "No Query Result");
+		Assert.That(otherVar.RelField, Is.Not.Null, "No related object");
 		int x = otherVar.RelField.Dummy;
 		otherVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOther();
-		Assert.NotNull(otherVar, "No Query Result");
-		Assert.NotNull(otherVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(otherVar.RelField, "No related object");
+		Assert.That(otherVar, Is.Not.Null, "No Query Result");
+		Assert.That(otherVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(otherVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestChangeKeyHolderRightNoTouch()
 	{
 		CreateObjects();
 		QueryOther();
-		Assert.NotNull(otherVar, "No Query Result");
-		Assert.NotNull(otherVar.RelField, "No related object");
+		Assert.That(otherVar, Is.Not.Null, "No Query Result");
+		Assert.That(otherVar.RelField, Is.Not.Null, "No related object");
 		otherVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOther();
-		Assert.NotNull(otherVar, "No Query Result");
-		Assert.NotNull(otherVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(otherVar.RelField, "No related object");
+		Assert.That(otherVar, Is.Not.Null, "No Query Result");
+		Assert.That(otherVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(otherVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestRelationHash()
@@ -14447,7 +14447,7 @@ public class TestCmpBin1OwnpconNoTblGuid
 
 
 [TestFixture]
-public class TestCmpBin1OwnpconTblGuid
+public class TestCmpBin1OwnpconTblGuid : NDOTest
 {
 	CmpBin1OwnpconTblGuidLeftBase ownVar;
 	CmpBin1OwnpconTblGuidRight otherVar;
@@ -14471,9 +14471,9 @@ public class TestCmpBin1OwnpconTblGuid
 			pm.UnloadCache();
 			decimal count;
 			count = (decimal) new NDOQuery<CmpBin1OwnpconTblGuidLeftBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #1");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #1");
 			count = (decimal) new NDOQuery<CmpBin1OwnpconTblGuidRight>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #2");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #2");
 		}
 		catch (Exception)
 		{
@@ -14488,67 +14488,67 @@ public class TestCmpBin1OwnpconTblGuid
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(1, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(1, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 	}
 	[Test]
 	public void TestSaveReloadNull()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(1, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(1, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 		ownVar.RelField = new List<CmpBin1OwnpconTblGuidRight>();
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(0, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(0, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 	}
 	[Test]
 	public void TestSaveReloadRemove()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(1, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(1, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 		ownVar.RemoveRelatedObject();
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(0, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(0, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 	}
 	[Test]
 	public void TestChangeKeyHolderRight()
 	{
 		CreateObjects();
 		QueryOther();
-		Assert.NotNull(otherVar, "No Query Result");
-		Assert.NotNull(otherVar.RelField, "No related object");
+		Assert.That(otherVar, Is.Not.Null, "No Query Result");
+		Assert.That(otherVar.RelField, Is.Not.Null, "No related object");
 		int x = otherVar.RelField.Dummy;
 		otherVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOther();
-		Assert.NotNull(otherVar, "No Query Result");
-		Assert.NotNull(otherVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(otherVar.RelField, "No related object");
+		Assert.That(otherVar, Is.Not.Null, "No Query Result");
+		Assert.That(otherVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(otherVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestChangeKeyHolderRightNoTouch()
 	{
 		CreateObjects();
 		QueryOther();
-		Assert.NotNull(otherVar, "No Query Result");
-		Assert.NotNull(otherVar.RelField, "No related object");
+		Assert.That(otherVar, Is.Not.Null, "No Query Result");
+		Assert.That(otherVar.RelField, Is.Not.Null, "No related object");
 		otherVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOther();
-		Assert.NotNull(otherVar, "No Query Result");
-		Assert.NotNull(otherVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(otherVar.RelField, "No related object");
+		Assert.That(otherVar, Is.Not.Null, "No Query Result");
+		Assert.That(otherVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(otherVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestRelationHash()
@@ -14585,7 +14585,7 @@ public class TestCmpBin1OwnpconTblGuid
 
 
 [TestFixture]
-public class TestCmpBi1nOwnpconTblGuid
+public class TestCmpBi1nOwnpconTblGuid : NDOTest
 {
 	CmpBi1nOwnpconTblGuidLeftBase ownVar;
 	CmpBi1nOwnpconTblGuidRight otherVar;
@@ -14609,9 +14609,9 @@ public class TestCmpBi1nOwnpconTblGuid
 			pm.UnloadCache();
 			decimal count;
 			count = (decimal) new NDOQuery<CmpBi1nOwnpconTblGuidLeftBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #1");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #1");
 			count = (decimal) new NDOQuery<CmpBi1nOwnpconTblGuidRight>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #2");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #2");
 		}
 		catch (Exception)
 		{
@@ -14626,53 +14626,53 @@ public class TestCmpBi1nOwnpconTblGuid
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestSaveReloadNull()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 		ownVar.RelField = null;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.Null(ownVar.RelField, "There should be no object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Null, "There should be no object");
 	}
 	[Test]
 	public void TestChangeKeyHolderLeft()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 		int x = ownVar.RelField.Dummy;
 		ownVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestChangeKeyHolderLeftNoTouch()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 		ownVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestRelationHash()
@@ -14709,7 +14709,7 @@ public class TestCmpBi1nOwnpconTblGuid
 
 
 [TestFixture]
-public class TestCmpBinnOwnpconTblGuid
+public class TestCmpBinnOwnpconTblGuid : NDOTest
 {
 	CmpBinnOwnpconTblGuidLeftBase ownVar;
 	CmpBinnOwnpconTblGuidRight otherVar;
@@ -14733,9 +14733,9 @@ public class TestCmpBinnOwnpconTblGuid
 			pm.UnloadCache();
 			decimal count;
 			count = (decimal) new NDOQuery<CmpBinnOwnpconTblGuidLeftBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #1");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #1");
 			count = (decimal) new NDOQuery<CmpBinnOwnpconTblGuidRight>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #2");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #2");
 		}
 		catch (Exception)
 		{
@@ -14750,36 +14750,36 @@ public class TestCmpBinnOwnpconTblGuid
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(1, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(1, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 	}
 	[Test]
 	public void TestSaveReloadNull()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(1, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(1, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 		ownVar.RelField = new List<CmpBinnOwnpconTblGuidRight>();
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(0, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(0, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 	}
 	[Test]
 	public void TestSaveReloadRemove()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(1, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(1, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 		ownVar.RemoveRelatedObject();
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(0, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(0, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 	}
 	[Test]
 	public void TestRelationHash()
@@ -14816,7 +14816,7 @@ public class TestCmpBinnOwnpconTblGuid
 
 
 [TestFixture]
-public class TestAgrDir1OthpconNoTblGuid
+public class TestAgrDir1OthpconNoTblGuid : NDOTest
 {
 	AgrDir1OthpconNoTblGuidLeft ownVar;
 	AgrDir1OthpconNoTblGuidRightBase otherVar;
@@ -14844,9 +14844,9 @@ public class TestAgrDir1OthpconNoTblGuid
 			pm.UnloadCache();
 			decimal count;
 			count = (decimal) new NDOQuery<AgrDir1OthpconNoTblGuidLeft>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #1");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #1");
 			count = (decimal) new NDOQuery<AgrDir1OthpconNoTblGuidRightBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #2");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #2");
 		}
 		catch (Exception)
 		{
@@ -14860,53 +14860,53 @@ public class TestAgrDir1OthpconNoTblGuid
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestSaveReloadNull()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 		ownVar.RelField = null;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.Null(ownVar.RelField, "There should be no object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Null, "There should be no object");
 	}
 	[Test]
 	public void TestChangeKeyHolderLeft()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 		int x = ownVar.RelField.Dummy;
 		ownVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestChangeKeyHolderLeftNoTouch()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 		ownVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 	}
 	void CreateObjects()
 	{
@@ -14930,7 +14930,7 @@ public class TestAgrDir1OthpconNoTblGuid
 
 
 [TestFixture]
-public class TestAgrDir1OthpconTblGuid
+public class TestAgrDir1OthpconTblGuid : NDOTest
 {
 	AgrDir1OthpconTblGuidLeft ownVar;
 	AgrDir1OthpconTblGuidRightBase otherVar;
@@ -14958,9 +14958,9 @@ public class TestAgrDir1OthpconTblGuid
 			pm.UnloadCache();
 			decimal count;
 			count = (decimal) new NDOQuery<AgrDir1OthpconTblGuidLeft>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #1");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #1");
 			count = (decimal) new NDOQuery<AgrDir1OthpconTblGuidRightBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #2");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #2");
 		}
 		catch (Exception)
 		{
@@ -14975,53 +14975,53 @@ public class TestAgrDir1OthpconTblGuid
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestSaveReloadNull()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 		ownVar.RelField = null;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.Null(ownVar.RelField, "There should be no object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Null, "There should be no object");
 	}
 	[Test]
 	public void TestChangeKeyHolderLeft()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 		int x = ownVar.RelField.Dummy;
 		ownVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestChangeKeyHolderLeftNoTouch()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 		ownVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 	}
 	void CreateObjects()
 	{
@@ -15045,7 +15045,7 @@ public class TestAgrDir1OthpconTblGuid
 
 
 [TestFixture]
-public class TestAgrBi11OthpconNoTblGuid
+public class TestAgrBi11OthpconNoTblGuid : NDOTest
 {
 	AgrBi11OthpconNoTblGuidLeft ownVar;
 	AgrBi11OthpconNoTblGuidRightBase otherVar;
@@ -15073,9 +15073,9 @@ public class TestAgrBi11OthpconNoTblGuid
 			pm.UnloadCache();
 			decimal count;
 			count = (decimal) new NDOQuery<AgrBi11OthpconNoTblGuidLeft>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #1");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #1");
 			count = (decimal) new NDOQuery<AgrBi11OthpconNoTblGuidRightBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #2");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #2");
 		}
 		catch (Exception)
 		{
@@ -15089,84 +15089,84 @@ public class TestAgrBi11OthpconNoTblGuid
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestSaveReloadNull()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 		ownVar.RelField = null;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.Null(ownVar.RelField, "There should be no object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Null, "There should be no object");
 	}
 	[Test]
 	public void TestChangeKeyHolderLeft()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 		int x = ownVar.RelField.Dummy;
 		ownVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestChangeKeyHolderRight()
 	{
 		CreateObjects();
 		QueryOther();
-		Assert.NotNull(otherVar, "No Query Result");
-		Assert.NotNull(otherVar.RelField, "No related object");
+		Assert.That(otherVar, Is.Not.Null, "No Query Result");
+		Assert.That(otherVar.RelField, Is.Not.Null, "No related object");
 		int x = otherVar.RelField.Dummy;
 		otherVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOther();
-		Assert.NotNull(otherVar, "No Query Result");
-		Assert.NotNull(otherVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(otherVar.RelField, "No related object");
+		Assert.That(otherVar, Is.Not.Null, "No Query Result");
+		Assert.That(otherVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(otherVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestChangeKeyHolderLeftNoTouch()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 		ownVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestChangeKeyHolderRightNoTouch()
 	{
 		CreateObjects();
 		QueryOther();
-		Assert.NotNull(otherVar, "No Query Result");
-		Assert.NotNull(otherVar.RelField, "No related object");
+		Assert.That(otherVar, Is.Not.Null, "No Query Result");
+		Assert.That(otherVar.RelField, Is.Not.Null, "No related object");
 		otherVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOther();
-		Assert.NotNull(otherVar, "No Query Result");
-		Assert.NotNull(otherVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(otherVar.RelField, "No related object");
+		Assert.That(otherVar, Is.Not.Null, "No Query Result");
+		Assert.That(otherVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(otherVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestRelationHash()
@@ -15204,7 +15204,7 @@ public class TestAgrBi11OthpconNoTblGuid
 
 
 [TestFixture]
-public class TestAgrBi11OthpconTblGuid
+public class TestAgrBi11OthpconTblGuid : NDOTest
 {
 	AgrBi11OthpconTblGuidLeft ownVar;
 	AgrBi11OthpconTblGuidRightBase otherVar;
@@ -15232,9 +15232,9 @@ public class TestAgrBi11OthpconTblGuid
 			pm.UnloadCache();
 			decimal count;
 			count = (decimal) new NDOQuery<AgrBi11OthpconTblGuidLeft>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #1");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #1");
 			count = (decimal) new NDOQuery<AgrBi11OthpconTblGuidRightBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #2");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #2");
 		}
 		catch (Exception)
 		{
@@ -15249,84 +15249,84 @@ public class TestAgrBi11OthpconTblGuid
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestSaveReloadNull()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 		ownVar.RelField = null;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.Null(ownVar.RelField, "There should be no object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Null, "There should be no object");
 	}
 	[Test]
 	public void TestChangeKeyHolderLeft()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 		int x = ownVar.RelField.Dummy;
 		ownVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestChangeKeyHolderRight()
 	{
 		CreateObjects();
 		QueryOther();
-		Assert.NotNull(otherVar, "No Query Result");
-		Assert.NotNull(otherVar.RelField, "No related object");
+		Assert.That(otherVar, Is.Not.Null, "No Query Result");
+		Assert.That(otherVar.RelField, Is.Not.Null, "No related object");
 		int x = otherVar.RelField.Dummy;
 		otherVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOther();
-		Assert.NotNull(otherVar, "No Query Result");
-		Assert.NotNull(otherVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(otherVar.RelField, "No related object");
+		Assert.That(otherVar, Is.Not.Null, "No Query Result");
+		Assert.That(otherVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(otherVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestChangeKeyHolderLeftNoTouch()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 		ownVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestChangeKeyHolderRightNoTouch()
 	{
 		CreateObjects();
 		QueryOther();
-		Assert.NotNull(otherVar, "No Query Result");
-		Assert.NotNull(otherVar.RelField, "No related object");
+		Assert.That(otherVar, Is.Not.Null, "No Query Result");
+		Assert.That(otherVar.RelField, Is.Not.Null, "No related object");
 		otherVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOther();
-		Assert.NotNull(otherVar, "No Query Result");
-		Assert.NotNull(otherVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(otherVar.RelField, "No related object");
+		Assert.That(otherVar, Is.Not.Null, "No Query Result");
+		Assert.That(otherVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(otherVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestRelationHash()
@@ -15364,7 +15364,7 @@ public class TestAgrBi11OthpconTblGuid
 
 
 [TestFixture]
-public class TestAgrDirnOthpconTblGuid
+public class TestAgrDirnOthpconTblGuid : NDOTest
 {
 	AgrDirnOthpconTblGuidLeft ownVar;
 	AgrDirnOthpconTblGuidRightBase otherVar;
@@ -15392,9 +15392,9 @@ public class TestAgrDirnOthpconTblGuid
 			pm.UnloadCache();
 			decimal count;
 			count = (decimal) new NDOQuery<AgrDirnOthpconTblGuidLeft>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #1");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #1");
 			count = (decimal) new NDOQuery<AgrDirnOthpconTblGuidRightBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #2");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #2");
 		}
 		catch (Exception)
 		{
@@ -15409,36 +15409,36 @@ public class TestAgrDirnOthpconTblGuid
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(1, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(1, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 	}
 	[Test]
 	public void TestSaveReloadNull()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(1, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(1, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 		ownVar.RelField = new List<AgrDirnOthpconTblGuidRightBase>();
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(0, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(0, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 	}
 	[Test]
 	public void TestSaveReloadRemove()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(1, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(1, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 		ownVar.RemoveRelatedObject();
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(0, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(0, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 	}
 	void CreateObjects()
 	{
@@ -15462,7 +15462,7 @@ public class TestAgrDirnOthpconTblGuid
 
 
 [TestFixture]
-public class TestAgrBin1OthpconTblGuid
+public class TestAgrBin1OthpconTblGuid : NDOTest
 {
 	AgrBin1OthpconTblGuidLeft ownVar;
 	AgrBin1OthpconTblGuidRightBase otherVar;
@@ -15490,9 +15490,9 @@ public class TestAgrBin1OthpconTblGuid
 			pm.UnloadCache();
 			decimal count;
 			count = (decimal) new NDOQuery<AgrBin1OthpconTblGuidLeft>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #1");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #1");
 			count = (decimal) new NDOQuery<AgrBin1OthpconTblGuidRightBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #2");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #2");
 		}
 		catch (Exception)
 		{
@@ -15507,67 +15507,67 @@ public class TestAgrBin1OthpconTblGuid
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(1, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(1, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 	}
 	[Test]
 	public void TestSaveReloadNull()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(1, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(1, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 		ownVar.RelField = new List<AgrBin1OthpconTblGuidRightBase>();
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(0, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(0, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 	}
 	[Test]
 	public void TestSaveReloadRemove()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(1, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(1, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 		ownVar.RemoveRelatedObject();
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(0, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(0, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 	}
 	[Test]
 	public void TestChangeKeyHolderRight()
 	{
 		CreateObjects();
 		QueryOther();
-		Assert.NotNull(otherVar, "No Query Result");
-		Assert.NotNull(otherVar.RelField, "No related object");
+		Assert.That(otherVar, Is.Not.Null, "No Query Result");
+		Assert.That(otherVar.RelField, Is.Not.Null, "No related object");
 		int x = otherVar.RelField.Dummy;
 		otherVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOther();
-		Assert.NotNull(otherVar, "No Query Result");
-		Assert.NotNull(otherVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(otherVar.RelField, "No related object");
+		Assert.That(otherVar, Is.Not.Null, "No Query Result");
+		Assert.That(otherVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(otherVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestChangeKeyHolderRightNoTouch()
 	{
 		CreateObjects();
 		QueryOther();
-		Assert.NotNull(otherVar, "No Query Result");
-		Assert.NotNull(otherVar.RelField, "No related object");
+		Assert.That(otherVar, Is.Not.Null, "No Query Result");
+		Assert.That(otherVar.RelField, Is.Not.Null, "No related object");
 		otherVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOther();
-		Assert.NotNull(otherVar, "No Query Result");
-		Assert.NotNull(otherVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(otherVar.RelField, "No related object");
+		Assert.That(otherVar, Is.Not.Null, "No Query Result");
+		Assert.That(otherVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(otherVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestRelationHash()
@@ -15605,7 +15605,7 @@ public class TestAgrBin1OthpconTblGuid
 
 
 [TestFixture]
-public class TestAgrBi1nOthpconNoTblGuid
+public class TestAgrBi1nOthpconNoTblGuid : NDOTest
 {
 	AgrBi1nOthpconNoTblGuidLeft ownVar;
 	AgrBi1nOthpconNoTblGuidRightBase otherVar;
@@ -15633,9 +15633,9 @@ public class TestAgrBi1nOthpconNoTblGuid
 			pm.UnloadCache();
 			decimal count;
 			count = (decimal) new NDOQuery<AgrBi1nOthpconNoTblGuidLeft>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #1");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #1");
 			count = (decimal) new NDOQuery<AgrBi1nOthpconNoTblGuidRightBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #2");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #2");
 		}
 		catch (Exception)
 		{
@@ -15649,53 +15649,53 @@ public class TestAgrBi1nOthpconNoTblGuid
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestSaveReloadNull()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 		ownVar.RelField = null;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.Null(ownVar.RelField, "There should be no object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Null, "There should be no object");
 	}
 	[Test]
 	public void TestChangeKeyHolderLeft()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 		int x = ownVar.RelField.Dummy;
 		ownVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestChangeKeyHolderLeftNoTouch()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 		ownVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestRelationHash()
@@ -15733,7 +15733,7 @@ public class TestAgrBi1nOthpconNoTblGuid
 
 
 [TestFixture]
-public class TestAgrBi1nOthpconTblGuid
+public class TestAgrBi1nOthpconTblGuid : NDOTest
 {
 	AgrBi1nOthpconTblGuidLeft ownVar;
 	AgrBi1nOthpconTblGuidRightBase otherVar;
@@ -15761,9 +15761,9 @@ public class TestAgrBi1nOthpconTblGuid
 			pm.UnloadCache();
 			decimal count;
 			count = (decimal) new NDOQuery<AgrBi1nOthpconTblGuidLeft>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #1");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #1");
 			count = (decimal) new NDOQuery<AgrBi1nOthpconTblGuidRightBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #2");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #2");
 		}
 		catch (Exception)
 		{
@@ -15778,53 +15778,53 @@ public class TestAgrBi1nOthpconTblGuid
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestSaveReloadNull()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 		ownVar.RelField = null;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.Null(ownVar.RelField, "There should be no object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Null, "There should be no object");
 	}
 	[Test]
 	public void TestChangeKeyHolderLeft()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 		int x = ownVar.RelField.Dummy;
 		ownVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestChangeKeyHolderLeftNoTouch()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 		ownVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestRelationHash()
@@ -15862,7 +15862,7 @@ public class TestAgrBi1nOthpconTblGuid
 
 
 [TestFixture]
-public class TestAgrBinnOthpconTblGuid
+public class TestAgrBinnOthpconTblGuid : NDOTest
 {
 	AgrBinnOthpconTblGuidLeft ownVar;
 	AgrBinnOthpconTblGuidRightBase otherVar;
@@ -15890,9 +15890,9 @@ public class TestAgrBinnOthpconTblGuid
 			pm.UnloadCache();
 			decimal count;
 			count = (decimal) new NDOQuery<AgrBinnOthpconTblGuidLeft>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #1");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #1");
 			count = (decimal) new NDOQuery<AgrBinnOthpconTblGuidRightBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #2");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #2");
 		}
 		catch (Exception)
 		{
@@ -15907,36 +15907,36 @@ public class TestAgrBinnOthpconTblGuid
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(1, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(1, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 	}
 	[Test]
 	public void TestSaveReloadNull()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(1, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(1, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 		ownVar.RelField = new List<AgrBinnOthpconTblGuidRightBase>();
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(0, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(0, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 	}
 	[Test]
 	public void TestSaveReloadRemove()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(1, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(1, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 		ownVar.RemoveRelatedObject();
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(0, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(0, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 	}
 	[Test]
 	public void TestRelationHash()
@@ -15974,7 +15974,7 @@ public class TestAgrBinnOthpconTblGuid
 
 
 [TestFixture]
-public class TestCmpDir1OthpconNoTblGuid
+public class TestCmpDir1OthpconNoTblGuid : NDOTest
 {
 	CmpDir1OthpconNoTblGuidLeft ownVar;
 	CmpDir1OthpconNoTblGuidRightBase otherVar;
@@ -15998,9 +15998,9 @@ public class TestCmpDir1OthpconNoTblGuid
 			pm.UnloadCache();
 			decimal count;
 			count = (decimal) new NDOQuery<CmpDir1OthpconNoTblGuidLeft>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #1");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #1");
 			count = (decimal) new NDOQuery<CmpDir1OthpconNoTblGuidRightBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #2");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #2");
 		}
 		catch (Exception)
 		{
@@ -16014,53 +16014,53 @@ public class TestCmpDir1OthpconNoTblGuid
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestSaveReloadNull()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 		ownVar.RelField = null;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.Null(ownVar.RelField, "There should be no object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Null, "There should be no object");
 	}
 	[Test]
 	public void TestChangeKeyHolderLeft()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 		int x = ownVar.RelField.Dummy;
 		ownVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestChangeKeyHolderLeftNoTouch()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 		ownVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 	}
 	void CreateObjects()
 	{
@@ -16083,7 +16083,7 @@ public class TestCmpDir1OthpconNoTblGuid
 
 
 [TestFixture]
-public class TestCmpDir1OthpconTblGuid
+public class TestCmpDir1OthpconTblGuid : NDOTest
 {
 	CmpDir1OthpconTblGuidLeft ownVar;
 	CmpDir1OthpconTblGuidRightBase otherVar;
@@ -16107,9 +16107,9 @@ public class TestCmpDir1OthpconTblGuid
 			pm.UnloadCache();
 			decimal count;
 			count = (decimal) new NDOQuery<CmpDir1OthpconTblGuidLeft>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #1");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #1");
 			count = (decimal) new NDOQuery<CmpDir1OthpconTblGuidRightBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #2");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #2");
 		}
 		catch (Exception)
 		{
@@ -16124,53 +16124,53 @@ public class TestCmpDir1OthpconTblGuid
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestSaveReloadNull()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 		ownVar.RelField = null;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.Null(ownVar.RelField, "There should be no object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Null, "There should be no object");
 	}
 	[Test]
 	public void TestChangeKeyHolderLeft()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 		int x = ownVar.RelField.Dummy;
 		ownVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestChangeKeyHolderLeftNoTouch()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 		ownVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 	}
 	void CreateObjects()
 	{
@@ -16193,7 +16193,7 @@ public class TestCmpDir1OthpconTblGuid
 
 
 [TestFixture]
-public class TestCmpBi11OthpconNoTblGuid
+public class TestCmpBi11OthpconNoTblGuid : NDOTest
 {
 	CmpBi11OthpconNoTblGuidLeft ownVar;
 	CmpBi11OthpconNoTblGuidRightBase otherVar;
@@ -16217,9 +16217,9 @@ public class TestCmpBi11OthpconNoTblGuid
 			pm.UnloadCache();
 			decimal count;
 			count = (decimal) new NDOQuery<CmpBi11OthpconNoTblGuidLeft>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #1");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #1");
 			count = (decimal) new NDOQuery<CmpBi11OthpconNoTblGuidRightBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #2");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #2");
 		}
 		catch (Exception)
 		{
@@ -16233,84 +16233,84 @@ public class TestCmpBi11OthpconNoTblGuid
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestSaveReloadNull()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 		ownVar.RelField = null;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.Null(ownVar.RelField, "There should be no object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Null, "There should be no object");
 	}
 	[Test]
 	public void TestChangeKeyHolderLeft()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 		int x = ownVar.RelField.Dummy;
 		ownVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestChangeKeyHolderRight()
 	{
 		CreateObjects();
 		QueryOther();
-		Assert.NotNull(otherVar, "No Query Result");
-		Assert.NotNull(otherVar.RelField, "No related object");
+		Assert.That(otherVar, Is.Not.Null, "No Query Result");
+		Assert.That(otherVar.RelField, Is.Not.Null, "No related object");
 		int x = otherVar.RelField.Dummy;
 		otherVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOther();
-		Assert.NotNull(otherVar, "No Query Result");
-		Assert.NotNull(otherVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(otherVar.RelField, "No related object");
+		Assert.That(otherVar, Is.Not.Null, "No Query Result");
+		Assert.That(otherVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(otherVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestChangeKeyHolderLeftNoTouch()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 		ownVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestChangeKeyHolderRightNoTouch()
 	{
 		CreateObjects();
 		QueryOther();
-		Assert.NotNull(otherVar, "No Query Result");
-		Assert.NotNull(otherVar.RelField, "No related object");
+		Assert.That(otherVar, Is.Not.Null, "No Query Result");
+		Assert.That(otherVar.RelField, Is.Not.Null, "No related object");
 		otherVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOther();
-		Assert.NotNull(otherVar, "No Query Result");
-		Assert.NotNull(otherVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(otherVar.RelField, "No related object");
+		Assert.That(otherVar, Is.Not.Null, "No Query Result");
+		Assert.That(otherVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(otherVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestRelationHash()
@@ -16347,7 +16347,7 @@ public class TestCmpBi11OthpconNoTblGuid
 
 
 [TestFixture]
-public class TestCmpBi11OthpconTblGuid
+public class TestCmpBi11OthpconTblGuid : NDOTest
 {
 	CmpBi11OthpconTblGuidLeft ownVar;
 	CmpBi11OthpconTblGuidRightBase otherVar;
@@ -16371,9 +16371,9 @@ public class TestCmpBi11OthpconTblGuid
 			pm.UnloadCache();
 			decimal count;
 			count = (decimal) new NDOQuery<CmpBi11OthpconTblGuidLeft>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #1");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #1");
 			count = (decimal) new NDOQuery<CmpBi11OthpconTblGuidRightBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #2");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #2");
 		}
 		catch (Exception)
 		{
@@ -16388,84 +16388,84 @@ public class TestCmpBi11OthpconTblGuid
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestSaveReloadNull()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 		ownVar.RelField = null;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.Null(ownVar.RelField, "There should be no object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Null, "There should be no object");
 	}
 	[Test]
 	public void TestChangeKeyHolderLeft()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 		int x = ownVar.RelField.Dummy;
 		ownVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestChangeKeyHolderRight()
 	{
 		CreateObjects();
 		QueryOther();
-		Assert.NotNull(otherVar, "No Query Result");
-		Assert.NotNull(otherVar.RelField, "No related object");
+		Assert.That(otherVar, Is.Not.Null, "No Query Result");
+		Assert.That(otherVar.RelField, Is.Not.Null, "No related object");
 		int x = otherVar.RelField.Dummy;
 		otherVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOther();
-		Assert.NotNull(otherVar, "No Query Result");
-		Assert.NotNull(otherVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(otherVar.RelField, "No related object");
+		Assert.That(otherVar, Is.Not.Null, "No Query Result");
+		Assert.That(otherVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(otherVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestChangeKeyHolderLeftNoTouch()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 		ownVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestChangeKeyHolderRightNoTouch()
 	{
 		CreateObjects();
 		QueryOther();
-		Assert.NotNull(otherVar, "No Query Result");
-		Assert.NotNull(otherVar.RelField, "No related object");
+		Assert.That(otherVar, Is.Not.Null, "No Query Result");
+		Assert.That(otherVar.RelField, Is.Not.Null, "No related object");
 		otherVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOther();
-		Assert.NotNull(otherVar, "No Query Result");
-		Assert.NotNull(otherVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(otherVar.RelField, "No related object");
+		Assert.That(otherVar, Is.Not.Null, "No Query Result");
+		Assert.That(otherVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(otherVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestRelationHash()
@@ -16502,7 +16502,7 @@ public class TestCmpBi11OthpconTblGuid
 
 
 [TestFixture]
-public class TestCmpDirnOthpconTblGuid
+public class TestCmpDirnOthpconTblGuid : NDOTest
 {
 	CmpDirnOthpconTblGuidLeft ownVar;
 	CmpDirnOthpconTblGuidRightBase otherVar;
@@ -16526,9 +16526,9 @@ public class TestCmpDirnOthpconTblGuid
 			pm.UnloadCache();
 			decimal count;
 			count = (decimal) new NDOQuery<CmpDirnOthpconTblGuidLeft>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #1");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #1");
 			count = (decimal) new NDOQuery<CmpDirnOthpconTblGuidRightBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #2");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #2");
 		}
 		catch (Exception)
 		{
@@ -16543,36 +16543,36 @@ public class TestCmpDirnOthpconTblGuid
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(1, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(1, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 	}
 	[Test]
 	public void TestSaveReloadNull()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(1, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(1, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 		ownVar.RelField = new List<CmpDirnOthpconTblGuidRightBase>();
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(0, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(0, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 	}
 	[Test]
 	public void TestSaveReloadRemove()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(1, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(1, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 		ownVar.RemoveRelatedObject();
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(0, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(0, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 	}
 	void CreateObjects()
 	{
@@ -16595,7 +16595,7 @@ public class TestCmpDirnOthpconTblGuid
 
 
 [TestFixture]
-public class TestCmpBin1OthpconTblGuid
+public class TestCmpBin1OthpconTblGuid : NDOTest
 {
 	CmpBin1OthpconTblGuidLeft ownVar;
 	CmpBin1OthpconTblGuidRightBase otherVar;
@@ -16619,9 +16619,9 @@ public class TestCmpBin1OthpconTblGuid
 			pm.UnloadCache();
 			decimal count;
 			count = (decimal) new NDOQuery<CmpBin1OthpconTblGuidLeft>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #1");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #1");
 			count = (decimal) new NDOQuery<CmpBin1OthpconTblGuidRightBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #2");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #2");
 		}
 		catch (Exception)
 		{
@@ -16636,67 +16636,67 @@ public class TestCmpBin1OthpconTblGuid
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(1, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(1, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 	}
 	[Test]
 	public void TestSaveReloadNull()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(1, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(1, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 		ownVar.RelField = new List<CmpBin1OthpconTblGuidRightBase>();
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(0, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(0, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 	}
 	[Test]
 	public void TestSaveReloadRemove()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(1, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(1, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 		ownVar.RemoveRelatedObject();
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(0, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(0, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 	}
 	[Test]
 	public void TestChangeKeyHolderRight()
 	{
 		CreateObjects();
 		QueryOther();
-		Assert.NotNull(otherVar, "No Query Result");
-		Assert.NotNull(otherVar.RelField, "No related object");
+		Assert.That(otherVar, Is.Not.Null, "No Query Result");
+		Assert.That(otherVar.RelField, Is.Not.Null, "No related object");
 		int x = otherVar.RelField.Dummy;
 		otherVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOther();
-		Assert.NotNull(otherVar, "No Query Result");
-		Assert.NotNull(otherVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(otherVar.RelField, "No related object");
+		Assert.That(otherVar, Is.Not.Null, "No Query Result");
+		Assert.That(otherVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(otherVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestChangeKeyHolderRightNoTouch()
 	{
 		CreateObjects();
 		QueryOther();
-		Assert.NotNull(otherVar, "No Query Result");
-		Assert.NotNull(otherVar.RelField, "No related object");
+		Assert.That(otherVar, Is.Not.Null, "No Query Result");
+		Assert.That(otherVar.RelField, Is.Not.Null, "No related object");
 		otherVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOther();
-		Assert.NotNull(otherVar, "No Query Result");
-		Assert.NotNull(otherVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(otherVar.RelField, "No related object");
+		Assert.That(otherVar, Is.Not.Null, "No Query Result");
+		Assert.That(otherVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(otherVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestRelationHash()
@@ -16733,7 +16733,7 @@ public class TestCmpBin1OthpconTblGuid
 
 
 [TestFixture]
-public class TestCmpBi1nOthpconNoTblGuid
+public class TestCmpBi1nOthpconNoTblGuid : NDOTest
 {
 	CmpBi1nOthpconNoTblGuidLeft ownVar;
 	CmpBi1nOthpconNoTblGuidRightBase otherVar;
@@ -16757,9 +16757,9 @@ public class TestCmpBi1nOthpconNoTblGuid
 			pm.UnloadCache();
 			decimal count;
 			count = (decimal) new NDOQuery<CmpBi1nOthpconNoTblGuidLeft>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #1");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #1");
 			count = (decimal) new NDOQuery<CmpBi1nOthpconNoTblGuidRightBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #2");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #2");
 		}
 		catch (Exception)
 		{
@@ -16773,53 +16773,53 @@ public class TestCmpBi1nOthpconNoTblGuid
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestSaveReloadNull()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 		ownVar.RelField = null;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.Null(ownVar.RelField, "There should be no object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Null, "There should be no object");
 	}
 	[Test]
 	public void TestChangeKeyHolderLeft()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 		int x = ownVar.RelField.Dummy;
 		ownVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestChangeKeyHolderLeftNoTouch()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 		ownVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestRelationHash()
@@ -16856,7 +16856,7 @@ public class TestCmpBi1nOthpconNoTblGuid
 
 
 [TestFixture]
-public class TestCmpBi1nOthpconTblGuid
+public class TestCmpBi1nOthpconTblGuid : NDOTest
 {
 	CmpBi1nOthpconTblGuidLeft ownVar;
 	CmpBi1nOthpconTblGuidRightBase otherVar;
@@ -16880,9 +16880,9 @@ public class TestCmpBi1nOthpconTblGuid
 			pm.UnloadCache();
 			decimal count;
 			count = (decimal) new NDOQuery<CmpBi1nOthpconTblGuidLeft>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #1");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #1");
 			count = (decimal) new NDOQuery<CmpBi1nOthpconTblGuidRightBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #2");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #2");
 		}
 		catch (Exception)
 		{
@@ -16897,53 +16897,53 @@ public class TestCmpBi1nOthpconTblGuid
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestSaveReloadNull()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 		ownVar.RelField = null;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.Null(ownVar.RelField, "There should be no object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Null, "There should be no object");
 	}
 	[Test]
 	public void TestChangeKeyHolderLeft()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 		int x = ownVar.RelField.Dummy;
 		ownVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestChangeKeyHolderLeftNoTouch()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 		ownVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestRelationHash()
@@ -16980,7 +16980,7 @@ public class TestCmpBi1nOthpconTblGuid
 
 
 [TestFixture]
-public class TestCmpBinnOthpconTblGuid
+public class TestCmpBinnOthpconTblGuid : NDOTest
 {
 	CmpBinnOthpconTblGuidLeft ownVar;
 	CmpBinnOthpconTblGuidRightBase otherVar;
@@ -17004,9 +17004,9 @@ public class TestCmpBinnOthpconTblGuid
 			pm.UnloadCache();
 			decimal count;
 			count = (decimal) new NDOQuery<CmpBinnOthpconTblGuidLeft>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #1");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #1");
 			count = (decimal) new NDOQuery<CmpBinnOthpconTblGuidRightBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #2");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #2");
 		}
 		catch (Exception)
 		{
@@ -17021,36 +17021,36 @@ public class TestCmpBinnOthpconTblGuid
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(1, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(1, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 	}
 	[Test]
 	public void TestSaveReloadNull()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(1, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(1, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 		ownVar.RelField = new List<CmpBinnOthpconTblGuidRightBase>();
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(0, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(0, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 	}
 	[Test]
 	public void TestSaveReloadRemove()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(1, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(1, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 		ownVar.RemoveRelatedObject();
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(0, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(0, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 	}
 	[Test]
 	public void TestRelationHash()
@@ -17087,7 +17087,7 @@ public class TestCmpBinnOthpconTblGuid
 
 
 [TestFixture]
-public class TestAgrDir1OwnpconOthpconNoTblGuid
+public class TestAgrDir1OwnpconOthpconNoTblGuid : NDOTest
 {
 	AgrDir1OwnpconOthpconNoTblGuidLeftBase ownVar;
 	AgrDir1OwnpconOthpconNoTblGuidRightBase otherVar;
@@ -17115,9 +17115,9 @@ public class TestAgrDir1OwnpconOthpconNoTblGuid
 			pm.UnloadCache();
 			decimal count;
 			count = (decimal) new NDOQuery<AgrDir1OwnpconOthpconNoTblGuidLeftBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #1");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #1");
 			count = (decimal) new NDOQuery<AgrDir1OwnpconOthpconNoTblGuidRightBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #2");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #2");
 		}
 		catch (Exception)
 		{
@@ -17131,53 +17131,53 @@ public class TestAgrDir1OwnpconOthpconNoTblGuid
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestSaveReloadNull()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 		ownVar.RelField = null;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.Null(ownVar.RelField, "There should be no object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Null, "There should be no object");
 	}
 	[Test]
 	public void TestChangeKeyHolderLeft()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 		int x = ownVar.RelField.Dummy;
 		ownVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestChangeKeyHolderLeftNoTouch()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 		ownVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 	}
 	void CreateObjects()
 	{
@@ -17201,7 +17201,7 @@ public class TestAgrDir1OwnpconOthpconNoTblGuid
 
 
 [TestFixture]
-public class TestAgrDir1OwnpconOthpconTblGuid
+public class TestAgrDir1OwnpconOthpconTblGuid : NDOTest
 {
 	AgrDir1OwnpconOthpconTblGuidLeftBase ownVar;
 	AgrDir1OwnpconOthpconTblGuidRightBase otherVar;
@@ -17229,9 +17229,9 @@ public class TestAgrDir1OwnpconOthpconTblGuid
 			pm.UnloadCache();
 			decimal count;
 			count = (decimal) new NDOQuery<AgrDir1OwnpconOthpconTblGuidLeftBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #1");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #1");
 			count = (decimal) new NDOQuery<AgrDir1OwnpconOthpconTblGuidRightBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #2");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #2");
 		}
 		catch (Exception)
 		{
@@ -17246,53 +17246,53 @@ public class TestAgrDir1OwnpconOthpconTblGuid
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestSaveReloadNull()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 		ownVar.RelField = null;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.Null(ownVar.RelField, "There should be no object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Null, "There should be no object");
 	}
 	[Test]
 	public void TestChangeKeyHolderLeft()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 		int x = ownVar.RelField.Dummy;
 		ownVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestChangeKeyHolderLeftNoTouch()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 		ownVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 	}
 	void CreateObjects()
 	{
@@ -17316,7 +17316,7 @@ public class TestAgrDir1OwnpconOthpconTblGuid
 
 
 [TestFixture]
-public class TestAgrBi11OwnpconOthpconNoTblGuid
+public class TestAgrBi11OwnpconOthpconNoTblGuid : NDOTest
 {
 	AgrBi11OwnpconOthpconNoTblGuidLeftBase ownVar;
 	AgrBi11OwnpconOthpconNoTblGuidRightBase otherVar;
@@ -17344,9 +17344,9 @@ public class TestAgrBi11OwnpconOthpconNoTblGuid
 			pm.UnloadCache();
 			decimal count;
 			count = (decimal) new NDOQuery<AgrBi11OwnpconOthpconNoTblGuidLeftBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #1");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #1");
 			count = (decimal) new NDOQuery<AgrBi11OwnpconOthpconNoTblGuidRightBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #2");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #2");
 		}
 		catch (Exception)
 		{
@@ -17360,84 +17360,84 @@ public class TestAgrBi11OwnpconOthpconNoTblGuid
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestSaveReloadNull()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 		ownVar.RelField = null;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.Null(ownVar.RelField, "There should be no object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Null, "There should be no object");
 	}
 	[Test]
 	public void TestChangeKeyHolderLeft()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 		int x = ownVar.RelField.Dummy;
 		ownVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestChangeKeyHolderRight()
 	{
 		CreateObjects();
 		QueryOther();
-		Assert.NotNull(otherVar, "No Query Result");
-		Assert.NotNull(otherVar.RelField, "No related object");
+		Assert.That(otherVar, Is.Not.Null, "No Query Result");
+		Assert.That(otherVar.RelField, Is.Not.Null, "No related object");
 		int x = otherVar.RelField.Dummy;
 		otherVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOther();
-		Assert.NotNull(otherVar, "No Query Result");
-		Assert.NotNull(otherVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(otherVar.RelField, "No related object");
+		Assert.That(otherVar, Is.Not.Null, "No Query Result");
+		Assert.That(otherVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(otherVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestChangeKeyHolderLeftNoTouch()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 		ownVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestChangeKeyHolderRightNoTouch()
 	{
 		CreateObjects();
 		QueryOther();
-		Assert.NotNull(otherVar, "No Query Result");
-		Assert.NotNull(otherVar.RelField, "No related object");
+		Assert.That(otherVar, Is.Not.Null, "No Query Result");
+		Assert.That(otherVar.RelField, Is.Not.Null, "No related object");
 		otherVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOther();
-		Assert.NotNull(otherVar, "No Query Result");
-		Assert.NotNull(otherVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(otherVar.RelField, "No related object");
+		Assert.That(otherVar, Is.Not.Null, "No Query Result");
+		Assert.That(otherVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(otherVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestRelationHash()
@@ -17481,7 +17481,7 @@ public class TestAgrBi11OwnpconOthpconNoTblGuid
 
 
 [TestFixture]
-public class TestAgrBi11OwnpconOthpconTblGuid
+public class TestAgrBi11OwnpconOthpconTblGuid : NDOTest
 {
 	AgrBi11OwnpconOthpconTblGuidLeftBase ownVar;
 	AgrBi11OwnpconOthpconTblGuidRightBase otherVar;
@@ -17509,9 +17509,9 @@ public class TestAgrBi11OwnpconOthpconTblGuid
 			pm.UnloadCache();
 			decimal count;
 			count = (decimal) new NDOQuery<AgrBi11OwnpconOthpconTblGuidLeftBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #1");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #1");
 			count = (decimal) new NDOQuery<AgrBi11OwnpconOthpconTblGuidRightBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #2");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #2");
 		}
 		catch (Exception)
 		{
@@ -17526,84 +17526,84 @@ public class TestAgrBi11OwnpconOthpconTblGuid
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestSaveReloadNull()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 		ownVar.RelField = null;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.Null(ownVar.RelField, "There should be no object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Null, "There should be no object");
 	}
 	[Test]
 	public void TestChangeKeyHolderLeft()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 		int x = ownVar.RelField.Dummy;
 		ownVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestChangeKeyHolderRight()
 	{
 		CreateObjects();
 		QueryOther();
-		Assert.NotNull(otherVar, "No Query Result");
-		Assert.NotNull(otherVar.RelField, "No related object");
+		Assert.That(otherVar, Is.Not.Null, "No Query Result");
+		Assert.That(otherVar.RelField, Is.Not.Null, "No related object");
 		int x = otherVar.RelField.Dummy;
 		otherVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOther();
-		Assert.NotNull(otherVar, "No Query Result");
-		Assert.NotNull(otherVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(otherVar.RelField, "No related object");
+		Assert.That(otherVar, Is.Not.Null, "No Query Result");
+		Assert.That(otherVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(otherVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestChangeKeyHolderLeftNoTouch()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 		ownVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestChangeKeyHolderRightNoTouch()
 	{
 		CreateObjects();
 		QueryOther();
-		Assert.NotNull(otherVar, "No Query Result");
-		Assert.NotNull(otherVar.RelField, "No related object");
+		Assert.That(otherVar, Is.Not.Null, "No Query Result");
+		Assert.That(otherVar.RelField, Is.Not.Null, "No related object");
 		otherVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOther();
-		Assert.NotNull(otherVar, "No Query Result");
-		Assert.NotNull(otherVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(otherVar.RelField, "No related object");
+		Assert.That(otherVar, Is.Not.Null, "No Query Result");
+		Assert.That(otherVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(otherVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestRelationHash()
@@ -17647,7 +17647,7 @@ public class TestAgrBi11OwnpconOthpconTblGuid
 
 
 [TestFixture]
-public class TestAgrDirnOwnpconOthpconTblGuid
+public class TestAgrDirnOwnpconOthpconTblGuid : NDOTest
 {
 	AgrDirnOwnpconOthpconTblGuidLeftBase ownVar;
 	AgrDirnOwnpconOthpconTblGuidRightBase otherVar;
@@ -17675,9 +17675,9 @@ public class TestAgrDirnOwnpconOthpconTblGuid
 			pm.UnloadCache();
 			decimal count;
 			count = (decimal) new NDOQuery<AgrDirnOwnpconOthpconTblGuidLeftBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #1");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #1");
 			count = (decimal) new NDOQuery<AgrDirnOwnpconOthpconTblGuidRightBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #2");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #2");
 		}
 		catch (Exception)
 		{
@@ -17692,36 +17692,36 @@ public class TestAgrDirnOwnpconOthpconTblGuid
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(1, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(1, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 	}
 	[Test]
 	public void TestSaveReloadNull()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(1, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(1, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 		ownVar.RelField = new List<AgrDirnOwnpconOthpconTblGuidRightBase>();
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(0, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(0, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 	}
 	[Test]
 	public void TestSaveReloadRemove()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(1, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(1, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 		ownVar.RemoveRelatedObject();
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(0, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(0, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 	}
 	void CreateObjects()
 	{
@@ -17745,7 +17745,7 @@ public class TestAgrDirnOwnpconOthpconTblGuid
 
 
 [TestFixture]
-public class TestAgrBin1OwnpconOthpconTblGuid
+public class TestAgrBin1OwnpconOthpconTblGuid : NDOTest
 {
 	AgrBin1OwnpconOthpconTblGuidLeftBase ownVar;
 	AgrBin1OwnpconOthpconTblGuidRightBase otherVar;
@@ -17773,9 +17773,9 @@ public class TestAgrBin1OwnpconOthpconTblGuid
 			pm.UnloadCache();
 			decimal count;
 			count = (decimal) new NDOQuery<AgrBin1OwnpconOthpconTblGuidLeftBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #1");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #1");
 			count = (decimal) new NDOQuery<AgrBin1OwnpconOthpconTblGuidRightBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #2");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #2");
 		}
 		catch (Exception)
 		{
@@ -17790,67 +17790,67 @@ public class TestAgrBin1OwnpconOthpconTblGuid
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(1, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(1, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 	}
 	[Test]
 	public void TestSaveReloadNull()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(1, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(1, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 		ownVar.RelField = new List<AgrBin1OwnpconOthpconTblGuidRightBase>();
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(0, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(0, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 	}
 	[Test]
 	public void TestSaveReloadRemove()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(1, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(1, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 		ownVar.RemoveRelatedObject();
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(0, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(0, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 	}
 	[Test]
 	public void TestChangeKeyHolderRight()
 	{
 		CreateObjects();
 		QueryOther();
-		Assert.NotNull(otherVar, "No Query Result");
-		Assert.NotNull(otherVar.RelField, "No related object");
+		Assert.That(otherVar, Is.Not.Null, "No Query Result");
+		Assert.That(otherVar.RelField, Is.Not.Null, "No related object");
 		int x = otherVar.RelField.Dummy;
 		otherVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOther();
-		Assert.NotNull(otherVar, "No Query Result");
-		Assert.NotNull(otherVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(otherVar.RelField, "No related object");
+		Assert.That(otherVar, Is.Not.Null, "No Query Result");
+		Assert.That(otherVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(otherVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestChangeKeyHolderRightNoTouch()
 	{
 		CreateObjects();
 		QueryOther();
-		Assert.NotNull(otherVar, "No Query Result");
-		Assert.NotNull(otherVar.RelField, "No related object");
+		Assert.That(otherVar, Is.Not.Null, "No Query Result");
+		Assert.That(otherVar.RelField, Is.Not.Null, "No related object");
 		otherVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOther();
-		Assert.NotNull(otherVar, "No Query Result");
-		Assert.NotNull(otherVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(otherVar.RelField, "No related object");
+		Assert.That(otherVar, Is.Not.Null, "No Query Result");
+		Assert.That(otherVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(otherVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestRelationHash()
@@ -17894,7 +17894,7 @@ public class TestAgrBin1OwnpconOthpconTblGuid
 
 
 [TestFixture]
-public class TestAgrBi1nOwnpconOthpconTblGuid
+public class TestAgrBi1nOwnpconOthpconTblGuid : NDOTest
 {
 	AgrBi1nOwnpconOthpconTblGuidLeftBase ownVar;
 	AgrBi1nOwnpconOthpconTblGuidRightBase otherVar;
@@ -17922,9 +17922,9 @@ public class TestAgrBi1nOwnpconOthpconTblGuid
 			pm.UnloadCache();
 			decimal count;
 			count = (decimal) new NDOQuery<AgrBi1nOwnpconOthpconTblGuidLeftBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #1");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #1");
 			count = (decimal) new NDOQuery<AgrBi1nOwnpconOthpconTblGuidRightBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #2");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #2");
 		}
 		catch (Exception)
 		{
@@ -17939,53 +17939,53 @@ public class TestAgrBi1nOwnpconOthpconTblGuid
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestSaveReloadNull()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 		ownVar.RelField = null;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.Null(ownVar.RelField, "There should be no object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Null, "There should be no object");
 	}
 	[Test]
 	public void TestChangeKeyHolderLeft()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 		int x = ownVar.RelField.Dummy;
 		ownVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestChangeKeyHolderLeftNoTouch()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 		ownVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestRelationHash()
@@ -18029,7 +18029,7 @@ public class TestAgrBi1nOwnpconOthpconTblGuid
 
 
 [TestFixture]
-public class TestAgrBinnOwnpconOthpconTblGuid
+public class TestAgrBinnOwnpconOthpconTblGuid : NDOTest
 {
 	AgrBinnOwnpconOthpconTblGuidLeftBase ownVar;
 	AgrBinnOwnpconOthpconTblGuidRightBase otherVar;
@@ -18057,9 +18057,9 @@ public class TestAgrBinnOwnpconOthpconTblGuid
 			pm.UnloadCache();
 			decimal count;
 			count = (decimal) new NDOQuery<AgrBinnOwnpconOthpconTblGuidLeftBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #1");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #1");
 			count = (decimal) new NDOQuery<AgrBinnOwnpconOthpconTblGuidRightBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #2");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #2");
 		}
 		catch (Exception)
 		{
@@ -18074,36 +18074,36 @@ public class TestAgrBinnOwnpconOthpconTblGuid
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(1, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(1, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 	}
 	[Test]
 	public void TestSaveReloadNull()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(1, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(1, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 		ownVar.RelField = new List<AgrBinnOwnpconOthpconTblGuidRightBase>();
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(0, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(0, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 	}
 	[Test]
 	public void TestSaveReloadRemove()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(1, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(1, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 		ownVar.RemoveRelatedObject();
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(0, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(0, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 	}
 	[Test]
 	public void TestRelationHash()
@@ -18147,7 +18147,7 @@ public class TestAgrBinnOwnpconOthpconTblGuid
 
 
 [TestFixture]
-public class TestCmpDir1OwnpconOthpconNoTblGuid
+public class TestCmpDir1OwnpconOthpconNoTblGuid : NDOTest
 {
 	CmpDir1OwnpconOthpconNoTblGuidLeftBase ownVar;
 	CmpDir1OwnpconOthpconNoTblGuidRightBase otherVar;
@@ -18171,9 +18171,9 @@ public class TestCmpDir1OwnpconOthpconNoTblGuid
 			pm.UnloadCache();
 			decimal count;
 			count = (decimal) new NDOQuery<CmpDir1OwnpconOthpconNoTblGuidLeftBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #1");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #1");
 			count = (decimal) new NDOQuery<CmpDir1OwnpconOthpconNoTblGuidRightBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #2");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #2");
 		}
 		catch (Exception)
 		{
@@ -18187,53 +18187,53 @@ public class TestCmpDir1OwnpconOthpconNoTblGuid
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestSaveReloadNull()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 		ownVar.RelField = null;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.Null(ownVar.RelField, "There should be no object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Null, "There should be no object");
 	}
 	[Test]
 	public void TestChangeKeyHolderLeft()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 		int x = ownVar.RelField.Dummy;
 		ownVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestChangeKeyHolderLeftNoTouch()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 		ownVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 	}
 	void CreateObjects()
 	{
@@ -18256,7 +18256,7 @@ public class TestCmpDir1OwnpconOthpconNoTblGuid
 
 
 [TestFixture]
-public class TestCmpDir1OwnpconOthpconTblGuid
+public class TestCmpDir1OwnpconOthpconTblGuid : NDOTest
 {
 	CmpDir1OwnpconOthpconTblGuidLeftBase ownVar;
 	CmpDir1OwnpconOthpconTblGuidRightBase otherVar;
@@ -18280,9 +18280,9 @@ public class TestCmpDir1OwnpconOthpconTblGuid
 			pm.UnloadCache();
 			decimal count;
 			count = (decimal) new NDOQuery<CmpDir1OwnpconOthpconTblGuidLeftBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #1");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #1");
 			count = (decimal) new NDOQuery<CmpDir1OwnpconOthpconTblGuidRightBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #2");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #2");
 		}
 		catch (Exception)
 		{
@@ -18297,53 +18297,53 @@ public class TestCmpDir1OwnpconOthpconTblGuid
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestSaveReloadNull()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 		ownVar.RelField = null;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.Null(ownVar.RelField, "There should be no object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Null, "There should be no object");
 	}
 	[Test]
 	public void TestChangeKeyHolderLeft()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 		int x = ownVar.RelField.Dummy;
 		ownVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestChangeKeyHolderLeftNoTouch()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 		ownVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 	}
 	void CreateObjects()
 	{
@@ -18366,7 +18366,7 @@ public class TestCmpDir1OwnpconOthpconTblGuid
 
 
 [TestFixture]
-public class TestCmpBi11OwnpconOthpconNoTblGuid
+public class TestCmpBi11OwnpconOthpconNoTblGuid : NDOTest
 {
 	CmpBi11OwnpconOthpconNoTblGuidLeftBase ownVar;
 	CmpBi11OwnpconOthpconNoTblGuidRightBase otherVar;
@@ -18390,9 +18390,9 @@ public class TestCmpBi11OwnpconOthpconNoTblGuid
 			pm.UnloadCache();
 			decimal count;
 			count = (decimal) new NDOQuery<CmpBi11OwnpconOthpconNoTblGuidLeftBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #1");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #1");
 			count = (decimal) new NDOQuery<CmpBi11OwnpconOthpconNoTblGuidRightBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #2");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #2");
 		}
 		catch (Exception)
 		{
@@ -18406,84 +18406,84 @@ public class TestCmpBi11OwnpconOthpconNoTblGuid
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestSaveReloadNull()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 		ownVar.RelField = null;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.Null(ownVar.RelField, "There should be no object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Null, "There should be no object");
 	}
 	[Test]
 	public void TestChangeKeyHolderLeft()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 		int x = ownVar.RelField.Dummy;
 		ownVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestChangeKeyHolderRight()
 	{
 		CreateObjects();
 		QueryOther();
-		Assert.NotNull(otherVar, "No Query Result");
-		Assert.NotNull(otherVar.RelField, "No related object");
+		Assert.That(otherVar, Is.Not.Null, "No Query Result");
+		Assert.That(otherVar.RelField, Is.Not.Null, "No related object");
 		int x = otherVar.RelField.Dummy;
 		otherVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOther();
-		Assert.NotNull(otherVar, "No Query Result");
-		Assert.NotNull(otherVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(otherVar.RelField, "No related object");
+		Assert.That(otherVar, Is.Not.Null, "No Query Result");
+		Assert.That(otherVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(otherVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestChangeKeyHolderLeftNoTouch()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 		ownVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestChangeKeyHolderRightNoTouch()
 	{
 		CreateObjects();
 		QueryOther();
-		Assert.NotNull(otherVar, "No Query Result");
-		Assert.NotNull(otherVar.RelField, "No related object");
+		Assert.That(otherVar, Is.Not.Null, "No Query Result");
+		Assert.That(otherVar.RelField, Is.Not.Null, "No related object");
 		otherVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOther();
-		Assert.NotNull(otherVar, "No Query Result");
-		Assert.NotNull(otherVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(otherVar.RelField, "No related object");
+		Assert.That(otherVar, Is.Not.Null, "No Query Result");
+		Assert.That(otherVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(otherVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestRelationHash()
@@ -18526,7 +18526,7 @@ public class TestCmpBi11OwnpconOthpconNoTblGuid
 
 
 [TestFixture]
-public class TestCmpBi11OwnpconOthpconTblGuid
+public class TestCmpBi11OwnpconOthpconTblGuid : NDOTest
 {
 	CmpBi11OwnpconOthpconTblGuidLeftBase ownVar;
 	CmpBi11OwnpconOthpconTblGuidRightBase otherVar;
@@ -18550,9 +18550,9 @@ public class TestCmpBi11OwnpconOthpconTblGuid
 			pm.UnloadCache();
 			decimal count;
 			count = (decimal) new NDOQuery<CmpBi11OwnpconOthpconTblGuidLeftBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #1");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #1");
 			count = (decimal) new NDOQuery<CmpBi11OwnpconOthpconTblGuidRightBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #2");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #2");
 		}
 		catch (Exception)
 		{
@@ -18567,84 +18567,84 @@ public class TestCmpBi11OwnpconOthpconTblGuid
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestSaveReloadNull()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 		ownVar.RelField = null;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.Null(ownVar.RelField, "There should be no object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Null, "There should be no object");
 	}
 	[Test]
 	public void TestChangeKeyHolderLeft()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 		int x = ownVar.RelField.Dummy;
 		ownVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestChangeKeyHolderRight()
 	{
 		CreateObjects();
 		QueryOther();
-		Assert.NotNull(otherVar, "No Query Result");
-		Assert.NotNull(otherVar.RelField, "No related object");
+		Assert.That(otherVar, Is.Not.Null, "No Query Result");
+		Assert.That(otherVar.RelField, Is.Not.Null, "No related object");
 		int x = otherVar.RelField.Dummy;
 		otherVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOther();
-		Assert.NotNull(otherVar, "No Query Result");
-		Assert.NotNull(otherVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(otherVar.RelField, "No related object");
+		Assert.That(otherVar, Is.Not.Null, "No Query Result");
+		Assert.That(otherVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(otherVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestChangeKeyHolderLeftNoTouch()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 		ownVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestChangeKeyHolderRightNoTouch()
 	{
 		CreateObjects();
 		QueryOther();
-		Assert.NotNull(otherVar, "No Query Result");
-		Assert.NotNull(otherVar.RelField, "No related object");
+		Assert.That(otherVar, Is.Not.Null, "No Query Result");
+		Assert.That(otherVar.RelField, Is.Not.Null, "No related object");
 		otherVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOther();
-		Assert.NotNull(otherVar, "No Query Result");
-		Assert.NotNull(otherVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(otherVar.RelField, "No related object");
+		Assert.That(otherVar, Is.Not.Null, "No Query Result");
+		Assert.That(otherVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(otherVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestRelationHash()
@@ -18687,7 +18687,7 @@ public class TestCmpBi11OwnpconOthpconTblGuid
 
 
 [TestFixture]
-public class TestCmpDirnOwnpconOthpconTblGuid
+public class TestCmpDirnOwnpconOthpconTblGuid : NDOTest
 {
 	CmpDirnOwnpconOthpconTblGuidLeftBase ownVar;
 	CmpDirnOwnpconOthpconTblGuidRightBase otherVar;
@@ -18711,9 +18711,9 @@ public class TestCmpDirnOwnpconOthpconTblGuid
 			pm.UnloadCache();
 			decimal count;
 			count = (decimal) new NDOQuery<CmpDirnOwnpconOthpconTblGuidLeftBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #1");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #1");
 			count = (decimal) new NDOQuery<CmpDirnOwnpconOthpconTblGuidRightBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #2");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #2");
 		}
 		catch (Exception)
 		{
@@ -18728,36 +18728,36 @@ public class TestCmpDirnOwnpconOthpconTblGuid
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(1, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(1, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 	}
 	[Test]
 	public void TestSaveReloadNull()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(1, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(1, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 		ownVar.RelField = new List<CmpDirnOwnpconOthpconTblGuidRightBase>();
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(0, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(0, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 	}
 	[Test]
 	public void TestSaveReloadRemove()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(1, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(1, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 		ownVar.RemoveRelatedObject();
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(0, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(0, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 	}
 	void CreateObjects()
 	{
@@ -18780,7 +18780,7 @@ public class TestCmpDirnOwnpconOthpconTblGuid
 
 
 [TestFixture]
-public class TestCmpBin1OwnpconOthpconTblGuid
+public class TestCmpBin1OwnpconOthpconTblGuid : NDOTest
 {
 	CmpBin1OwnpconOthpconTblGuidLeftBase ownVar;
 	CmpBin1OwnpconOthpconTblGuidRightBase otherVar;
@@ -18804,9 +18804,9 @@ public class TestCmpBin1OwnpconOthpconTblGuid
 			pm.UnloadCache();
 			decimal count;
 			count = (decimal) new NDOQuery<CmpBin1OwnpconOthpconTblGuidLeftBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #1");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #1");
 			count = (decimal) new NDOQuery<CmpBin1OwnpconOthpconTblGuidRightBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #2");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #2");
 		}
 		catch (Exception)
 		{
@@ -18821,67 +18821,67 @@ public class TestCmpBin1OwnpconOthpconTblGuid
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(1, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(1, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 	}
 	[Test]
 	public void TestSaveReloadNull()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(1, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(1, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 		ownVar.RelField = new List<CmpBin1OwnpconOthpconTblGuidRightBase>();
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(0, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(0, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 	}
 	[Test]
 	public void TestSaveReloadRemove()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(1, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(1, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 		ownVar.RemoveRelatedObject();
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(0, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(0, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 	}
 	[Test]
 	public void TestChangeKeyHolderRight()
 	{
 		CreateObjects();
 		QueryOther();
-		Assert.NotNull(otherVar, "No Query Result");
-		Assert.NotNull(otherVar.RelField, "No related object");
+		Assert.That(otherVar, Is.Not.Null, "No Query Result");
+		Assert.That(otherVar.RelField, Is.Not.Null, "No related object");
 		int x = otherVar.RelField.Dummy;
 		otherVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOther();
-		Assert.NotNull(otherVar, "No Query Result");
-		Assert.NotNull(otherVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(otherVar.RelField, "No related object");
+		Assert.That(otherVar, Is.Not.Null, "No Query Result");
+		Assert.That(otherVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(otherVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestChangeKeyHolderRightNoTouch()
 	{
 		CreateObjects();
 		QueryOther();
-		Assert.NotNull(otherVar, "No Query Result");
-		Assert.NotNull(otherVar.RelField, "No related object");
+		Assert.That(otherVar, Is.Not.Null, "No Query Result");
+		Assert.That(otherVar.RelField, Is.Not.Null, "No related object");
 		otherVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOther();
-		Assert.NotNull(otherVar, "No Query Result");
-		Assert.NotNull(otherVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(otherVar.RelField, "No related object");
+		Assert.That(otherVar, Is.Not.Null, "No Query Result");
+		Assert.That(otherVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(otherVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestRelationHash()
@@ -18924,7 +18924,7 @@ public class TestCmpBin1OwnpconOthpconTblGuid
 
 
 [TestFixture]
-public class TestCmpBi1nOwnpconOthpconTblGuid
+public class TestCmpBi1nOwnpconOthpconTblGuid : NDOTest
 {
 	CmpBi1nOwnpconOthpconTblGuidLeftBase ownVar;
 	CmpBi1nOwnpconOthpconTblGuidRightBase otherVar;
@@ -18948,9 +18948,9 @@ public class TestCmpBi1nOwnpconOthpconTblGuid
 			pm.UnloadCache();
 			decimal count;
 			count = (decimal) new NDOQuery<CmpBi1nOwnpconOthpconTblGuidLeftBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #1");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #1");
 			count = (decimal) new NDOQuery<CmpBi1nOwnpconOthpconTblGuidRightBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #2");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #2");
 		}
 		catch (Exception)
 		{
@@ -18965,53 +18965,53 @@ public class TestCmpBi1nOwnpconOthpconTblGuid
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestSaveReloadNull()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 		ownVar.RelField = null;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.Null(ownVar.RelField, "There should be no object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Null, "There should be no object");
 	}
 	[Test]
 	public void TestChangeKeyHolderLeft()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 		int x = ownVar.RelField.Dummy;
 		ownVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestChangeKeyHolderLeftNoTouch()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 		ownVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestRelationHash()
@@ -19054,7 +19054,7 @@ public class TestCmpBi1nOwnpconOthpconTblGuid
 
 
 [TestFixture]
-public class TestCmpBinnOwnpconOthpconTblGuid
+public class TestCmpBinnOwnpconOthpconTblGuid : NDOTest
 {
 	CmpBinnOwnpconOthpconTblGuidLeftBase ownVar;
 	CmpBinnOwnpconOthpconTblGuidRightBase otherVar;
@@ -19078,9 +19078,9 @@ public class TestCmpBinnOwnpconOthpconTblGuid
 			pm.UnloadCache();
 			decimal count;
 			count = (decimal) new NDOQuery<CmpBinnOwnpconOthpconTblGuidLeftBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #1");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #1");
 			count = (decimal) new NDOQuery<CmpBinnOwnpconOthpconTblGuidRightBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #2");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #2");
 		}
 		catch (Exception)
 		{
@@ -19095,36 +19095,36 @@ public class TestCmpBinnOwnpconOthpconTblGuid
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(1, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(1, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 	}
 	[Test]
 	public void TestSaveReloadNull()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(1, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(1, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 		ownVar.RelField = new List<CmpBinnOwnpconOthpconTblGuidRightBase>();
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(0, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(0, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 	}
 	[Test]
 	public void TestSaveReloadRemove()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(1, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(1, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 		ownVar.RemoveRelatedObject();
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(0, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(0, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 	}
 	[Test]
 	public void TestRelationHash()
@@ -19167,7 +19167,7 @@ public class TestCmpBinnOwnpconOthpconTblGuid
 
 
 [TestFixture]
-public class TestAgrDir1OwnpabsNoTblAuto
+public class TestAgrDir1OwnpabsNoTblAuto : NDOTest
 {
 	AgrDir1OwnpabsNoTblAutoLeftBase ownVar;
 	AgrDir1OwnpabsNoTblAutoRight otherVar;
@@ -19195,9 +19195,9 @@ public class TestAgrDir1OwnpabsNoTblAuto
 			pm.UnloadCache();
 			decimal count;
 			count = (decimal) new NDOQuery<AgrDir1OwnpabsNoTblAutoLeftBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #1");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #1");
 			count = (decimal) new NDOQuery<AgrDir1OwnpabsNoTblAutoRight>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #2");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #2");
 		}
 		catch (Exception)
 		{
@@ -19211,53 +19211,53 @@ public class TestAgrDir1OwnpabsNoTblAuto
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestSaveReloadNull()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 		ownVar.RelField = null;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.Null(ownVar.RelField, "There should be no object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Null, "There should be no object");
 	}
 	[Test]
 	public void TestChangeKeyHolderLeft()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 		int x = ownVar.RelField.Dummy;
 		ownVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestChangeKeyHolderLeftNoTouch()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 		ownVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestUpdateOrder()
@@ -19290,7 +19290,7 @@ public class TestAgrDir1OwnpabsNoTblAuto
 
 
 [TestFixture]
-public class TestAgrDir1OwnpabsTblAuto
+public class TestAgrDir1OwnpabsTblAuto : NDOTest
 {
 	AgrDir1OwnpabsTblAutoLeftBase ownVar;
 	AgrDir1OwnpabsTblAutoRight otherVar;
@@ -19318,9 +19318,9 @@ public class TestAgrDir1OwnpabsTblAuto
 			pm.UnloadCache();
 			decimal count;
 			count = (decimal) new NDOQuery<AgrDir1OwnpabsTblAutoLeftBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #1");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #1");
 			count = (decimal) new NDOQuery<AgrDir1OwnpabsTblAutoRight>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #2");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #2");
 		}
 		catch (Exception)
 		{
@@ -19335,53 +19335,53 @@ public class TestAgrDir1OwnpabsTblAuto
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestSaveReloadNull()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 		ownVar.RelField = null;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.Null(ownVar.RelField, "There should be no object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Null, "There should be no object");
 	}
 	[Test]
 	public void TestChangeKeyHolderLeft()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 		int x = ownVar.RelField.Dummy;
 		ownVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestChangeKeyHolderLeftNoTouch()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 		ownVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 	}
 	void CreateObjects()
 	{
@@ -19405,7 +19405,7 @@ public class TestAgrDir1OwnpabsTblAuto
 
 
 [TestFixture]
-public class TestAgrBi11OwnpabsNoTblAuto
+public class TestAgrBi11OwnpabsNoTblAuto : NDOTest
 {
 	AgrBi11OwnpabsNoTblAutoLeftBase ownVar;
 	AgrBi11OwnpabsNoTblAutoRight otherVar;
@@ -19433,9 +19433,9 @@ public class TestAgrBi11OwnpabsNoTblAuto
 			pm.UnloadCache();
 			decimal count;
 			count = (decimal) new NDOQuery<AgrBi11OwnpabsNoTblAutoLeftBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #1");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #1");
 			count = (decimal) new NDOQuery<AgrBi11OwnpabsNoTblAutoRight>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #2");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #2");
 		}
 		catch (Exception)
 		{
@@ -19449,84 +19449,84 @@ public class TestAgrBi11OwnpabsNoTblAuto
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestSaveReloadNull()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 		ownVar.RelField = null;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.Null(ownVar.RelField, "There should be no object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Null, "There should be no object");
 	}
 	[Test]
 	public void TestChangeKeyHolderLeft()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 		int x = ownVar.RelField.Dummy;
 		ownVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestChangeKeyHolderRight()
 	{
 		CreateObjects();
 		QueryOther();
-		Assert.NotNull(otherVar, "No Query Result");
-		Assert.NotNull(otherVar.RelField, "No related object");
+		Assert.That(otherVar, Is.Not.Null, "No Query Result");
+		Assert.That(otherVar.RelField, Is.Not.Null, "No related object");
 		int x = otherVar.RelField.Dummy;
 		otherVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOther();
-		Assert.NotNull(otherVar, "No Query Result");
-		Assert.NotNull(otherVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(otherVar.RelField, "No related object");
+		Assert.That(otherVar, Is.Not.Null, "No Query Result");
+		Assert.That(otherVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(otherVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestChangeKeyHolderLeftNoTouch()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 		ownVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestChangeKeyHolderRightNoTouch()
 	{
 		CreateObjects();
 		QueryOther();
-		Assert.NotNull(otherVar, "No Query Result");
-		Assert.NotNull(otherVar.RelField, "No related object");
+		Assert.That(otherVar, Is.Not.Null, "No Query Result");
+		Assert.That(otherVar.RelField, Is.Not.Null, "No related object");
 		otherVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOther();
-		Assert.NotNull(otherVar, "No Query Result");
-		Assert.NotNull(otherVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(otherVar.RelField, "No related object");
+		Assert.That(otherVar, Is.Not.Null, "No Query Result");
+		Assert.That(otherVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(otherVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestRelationHash()
@@ -19565,7 +19565,7 @@ public class TestAgrBi11OwnpabsNoTblAuto
 
 
 [TestFixture]
-public class TestAgrBi11OwnpabsTblAuto
+public class TestAgrBi11OwnpabsTblAuto : NDOTest
 {
 	AgrBi11OwnpabsTblAutoLeftBase ownVar;
 	AgrBi11OwnpabsTblAutoRight otherVar;
@@ -19593,9 +19593,9 @@ public class TestAgrBi11OwnpabsTblAuto
 			pm.UnloadCache();
 			decimal count;
 			count = (decimal) new NDOQuery<AgrBi11OwnpabsTblAutoLeftBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #1");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #1");
 			count = (decimal) new NDOQuery<AgrBi11OwnpabsTblAutoRight>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #2");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #2");
 		}
 		catch (Exception)
 		{
@@ -19610,84 +19610,84 @@ public class TestAgrBi11OwnpabsTblAuto
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestSaveReloadNull()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 		ownVar.RelField = null;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.Null(ownVar.RelField, "There should be no object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Null, "There should be no object");
 	}
 	[Test]
 	public void TestChangeKeyHolderLeft()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 		int x = ownVar.RelField.Dummy;
 		ownVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestChangeKeyHolderRight()
 	{
 		CreateObjects();
 		QueryOther();
-		Assert.NotNull(otherVar, "No Query Result");
-		Assert.NotNull(otherVar.RelField, "No related object");
+		Assert.That(otherVar, Is.Not.Null, "No Query Result");
+		Assert.That(otherVar.RelField, Is.Not.Null, "No related object");
 		int x = otherVar.RelField.Dummy;
 		otherVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOther();
-		Assert.NotNull(otherVar, "No Query Result");
-		Assert.NotNull(otherVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(otherVar.RelField, "No related object");
+		Assert.That(otherVar, Is.Not.Null, "No Query Result");
+		Assert.That(otherVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(otherVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestChangeKeyHolderLeftNoTouch()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 		ownVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestChangeKeyHolderRightNoTouch()
 	{
 		CreateObjects();
 		QueryOther();
-		Assert.NotNull(otherVar, "No Query Result");
-		Assert.NotNull(otherVar.RelField, "No related object");
+		Assert.That(otherVar, Is.Not.Null, "No Query Result");
+		Assert.That(otherVar.RelField, Is.Not.Null, "No related object");
 		otherVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOther();
-		Assert.NotNull(otherVar, "No Query Result");
-		Assert.NotNull(otherVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(otherVar.RelField, "No related object");
+		Assert.That(otherVar, Is.Not.Null, "No Query Result");
+		Assert.That(otherVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(otherVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestRelationHash()
@@ -19726,7 +19726,7 @@ public class TestAgrBi11OwnpabsTblAuto
 
 
 [TestFixture]
-public class TestAgrDirnOwnpabsNoTblAuto
+public class TestAgrDirnOwnpabsNoTblAuto : NDOTest
 {
 	AgrDirnOwnpabsNoTblAutoLeftBase ownVar;
 	AgrDirnOwnpabsNoTblAutoRight otherVar;
@@ -19754,9 +19754,9 @@ public class TestAgrDirnOwnpabsNoTblAuto
 			pm.UnloadCache();
 			decimal count;
 			count = (decimal) new NDOQuery<AgrDirnOwnpabsNoTblAutoLeftBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #1");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #1");
 			count = (decimal) new NDOQuery<AgrDirnOwnpabsNoTblAutoRight>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #2");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #2");
 		}
 		catch (Exception)
 		{
@@ -19770,36 +19770,36 @@ public class TestAgrDirnOwnpabsNoTblAuto
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(1, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(1, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 	}
 	[Test]
 	public void TestSaveReloadNull()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(1, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(1, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 		ownVar.RelField = new List<AgrDirnOwnpabsNoTblAutoRight>();
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(0, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(0, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 	}
 	[Test]
 	public void TestSaveReloadRemove()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(1, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(1, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 		ownVar.RemoveRelatedObject();
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(0, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(0, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 	}
 	[Test]
 	public void TestUpdateOrder()
@@ -19832,7 +19832,7 @@ public class TestAgrDirnOwnpabsNoTblAuto
 
 
 [TestFixture]
-public class TestAgrDirnOwnpabsTblAuto
+public class TestAgrDirnOwnpabsTblAuto : NDOTest
 {
 	AgrDirnOwnpabsTblAutoLeftBase ownVar;
 	AgrDirnOwnpabsTblAutoRight otherVar;
@@ -19860,9 +19860,9 @@ public class TestAgrDirnOwnpabsTblAuto
 			pm.UnloadCache();
 			decimal count;
 			count = (decimal) new NDOQuery<AgrDirnOwnpabsTblAutoLeftBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #1");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #1");
 			count = (decimal) new NDOQuery<AgrDirnOwnpabsTblAutoRight>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #2");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #2");
 		}
 		catch (Exception)
 		{
@@ -19877,36 +19877,36 @@ public class TestAgrDirnOwnpabsTblAuto
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(1, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(1, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 	}
 	[Test]
 	public void TestSaveReloadNull()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(1, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(1, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 		ownVar.RelField = new List<AgrDirnOwnpabsTblAutoRight>();
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(0, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(0, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 	}
 	[Test]
 	public void TestSaveReloadRemove()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(1, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(1, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 		ownVar.RemoveRelatedObject();
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(0, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(0, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 	}
 	void CreateObjects()
 	{
@@ -19930,7 +19930,7 @@ public class TestAgrDirnOwnpabsTblAuto
 
 
 [TestFixture]
-public class TestAgrBin1OwnpabsNoTblAuto
+public class TestAgrBin1OwnpabsNoTblAuto : NDOTest
 {
 	AgrBin1OwnpabsNoTblAutoLeftBase ownVar;
 	AgrBin1OwnpabsNoTblAutoRight otherVar;
@@ -19958,9 +19958,9 @@ public class TestAgrBin1OwnpabsNoTblAuto
 			pm.UnloadCache();
 			decimal count;
 			count = (decimal) new NDOQuery<AgrBin1OwnpabsNoTblAutoLeftBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #1");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #1");
 			count = (decimal) new NDOQuery<AgrBin1OwnpabsNoTblAutoRight>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #2");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #2");
 		}
 		catch (Exception)
 		{
@@ -19974,67 +19974,67 @@ public class TestAgrBin1OwnpabsNoTblAuto
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(1, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(1, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 	}
 	[Test]
 	public void TestSaveReloadNull()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(1, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(1, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 		ownVar.RelField = new List<AgrBin1OwnpabsNoTblAutoRight>();
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(0, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(0, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 	}
 	[Test]
 	public void TestSaveReloadRemove()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(1, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(1, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 		ownVar.RemoveRelatedObject();
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(0, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(0, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 	}
 	[Test]
 	public void TestChangeKeyHolderRight()
 	{
 		CreateObjects();
 		QueryOther();
-		Assert.NotNull(otherVar, "No Query Result");
-		Assert.NotNull(otherVar.RelField, "No related object");
+		Assert.That(otherVar, Is.Not.Null, "No Query Result");
+		Assert.That(otherVar.RelField, Is.Not.Null, "No related object");
 		int x = otherVar.RelField.Dummy;
 		otherVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOther();
-		Assert.NotNull(otherVar, "No Query Result");
-		Assert.NotNull(otherVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(otherVar.RelField, "No related object");
+		Assert.That(otherVar, Is.Not.Null, "No Query Result");
+		Assert.That(otherVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(otherVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestChangeKeyHolderRightNoTouch()
 	{
 		CreateObjects();
 		QueryOther();
-		Assert.NotNull(otherVar, "No Query Result");
-		Assert.NotNull(otherVar.RelField, "No related object");
+		Assert.That(otherVar, Is.Not.Null, "No Query Result");
+		Assert.That(otherVar.RelField, Is.Not.Null, "No related object");
 		otherVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOther();
-		Assert.NotNull(otherVar, "No Query Result");
-		Assert.NotNull(otherVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(otherVar.RelField, "No related object");
+		Assert.That(otherVar, Is.Not.Null, "No Query Result");
+		Assert.That(otherVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(otherVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestUpdateOrder()
@@ -20082,7 +20082,7 @@ public class TestAgrBin1OwnpabsNoTblAuto
 
 
 [TestFixture]
-public class TestAgrBin1OwnpabsTblAuto
+public class TestAgrBin1OwnpabsTblAuto : NDOTest
 {
 	AgrBin1OwnpabsTblAutoLeftBase ownVar;
 	AgrBin1OwnpabsTblAutoRight otherVar;
@@ -20110,9 +20110,9 @@ public class TestAgrBin1OwnpabsTblAuto
 			pm.UnloadCache();
 			decimal count;
 			count = (decimal) new NDOQuery<AgrBin1OwnpabsTblAutoLeftBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #1");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #1");
 			count = (decimal) new NDOQuery<AgrBin1OwnpabsTblAutoRight>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #2");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #2");
 		}
 		catch (Exception)
 		{
@@ -20127,67 +20127,67 @@ public class TestAgrBin1OwnpabsTblAuto
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(1, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(1, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 	}
 	[Test]
 	public void TestSaveReloadNull()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(1, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(1, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 		ownVar.RelField = new List<AgrBin1OwnpabsTblAutoRight>();
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(0, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(0, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 	}
 	[Test]
 	public void TestSaveReloadRemove()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(1, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(1, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 		ownVar.RemoveRelatedObject();
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(0, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(0, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 	}
 	[Test]
 	public void TestChangeKeyHolderRight()
 	{
 		CreateObjects();
 		QueryOther();
-		Assert.NotNull(otherVar, "No Query Result");
-		Assert.NotNull(otherVar.RelField, "No related object");
+		Assert.That(otherVar, Is.Not.Null, "No Query Result");
+		Assert.That(otherVar.RelField, Is.Not.Null, "No related object");
 		int x = otherVar.RelField.Dummy;
 		otherVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOther();
-		Assert.NotNull(otherVar, "No Query Result");
-		Assert.NotNull(otherVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(otherVar.RelField, "No related object");
+		Assert.That(otherVar, Is.Not.Null, "No Query Result");
+		Assert.That(otherVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(otherVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestChangeKeyHolderRightNoTouch()
 	{
 		CreateObjects();
 		QueryOther();
-		Assert.NotNull(otherVar, "No Query Result");
-		Assert.NotNull(otherVar.RelField, "No related object");
+		Assert.That(otherVar, Is.Not.Null, "No Query Result");
+		Assert.That(otherVar.RelField, Is.Not.Null, "No related object");
 		otherVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOther();
-		Assert.NotNull(otherVar, "No Query Result");
-		Assert.NotNull(otherVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(otherVar.RelField, "No related object");
+		Assert.That(otherVar, Is.Not.Null, "No Query Result");
+		Assert.That(otherVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(otherVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestRelationHash()
@@ -20226,7 +20226,7 @@ public class TestAgrBin1OwnpabsTblAuto
 
 
 [TestFixture]
-public class TestAgrBi1nOwnpabsTblAuto
+public class TestAgrBi1nOwnpabsTblAuto : NDOTest
 {
 	AgrBi1nOwnpabsTblAutoLeftBase ownVar;
 	AgrBi1nOwnpabsTblAutoRight otherVar;
@@ -20254,9 +20254,9 @@ public class TestAgrBi1nOwnpabsTblAuto
 			pm.UnloadCache();
 			decimal count;
 			count = (decimal) new NDOQuery<AgrBi1nOwnpabsTblAutoLeftBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #1");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #1");
 			count = (decimal) new NDOQuery<AgrBi1nOwnpabsTblAutoRight>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #2");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #2");
 		}
 		catch (Exception)
 		{
@@ -20271,53 +20271,53 @@ public class TestAgrBi1nOwnpabsTblAuto
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestSaveReloadNull()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 		ownVar.RelField = null;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.Null(ownVar.RelField, "There should be no object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Null, "There should be no object");
 	}
 	[Test]
 	public void TestChangeKeyHolderLeft()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 		int x = ownVar.RelField.Dummy;
 		ownVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestChangeKeyHolderLeftNoTouch()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 		ownVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestRelationHash()
@@ -20355,7 +20355,7 @@ public class TestAgrBi1nOwnpabsTblAuto
 
 
 [TestFixture]
-public class TestAgrBinnOwnpabsTblAuto
+public class TestAgrBinnOwnpabsTblAuto : NDOTest
 {
 	AgrBinnOwnpabsTblAutoLeftBase ownVar;
 	AgrBinnOwnpabsTblAutoRight otherVar;
@@ -20383,9 +20383,9 @@ public class TestAgrBinnOwnpabsTblAuto
 			pm.UnloadCache();
 			decimal count;
 			count = (decimal) new NDOQuery<AgrBinnOwnpabsTblAutoLeftBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #1");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #1");
 			count = (decimal) new NDOQuery<AgrBinnOwnpabsTblAutoRight>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #2");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #2");
 		}
 		catch (Exception)
 		{
@@ -20400,36 +20400,36 @@ public class TestAgrBinnOwnpabsTblAuto
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(1, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(1, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 	}
 	[Test]
 	public void TestSaveReloadNull()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(1, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(1, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 		ownVar.RelField = new List<AgrBinnOwnpabsTblAutoRight>();
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(0, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(0, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 	}
 	[Test]
 	public void TestSaveReloadRemove()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(1, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(1, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 		ownVar.RemoveRelatedObject();
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(0, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(0, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 	}
 	[Test]
 	public void TestRelationHash()
@@ -20467,7 +20467,7 @@ public class TestAgrBinnOwnpabsTblAuto
 
 
 [TestFixture]
-public class TestCmpDir1OwnpabsNoTblAuto
+public class TestCmpDir1OwnpabsNoTblAuto : NDOTest
 {
 	CmpDir1OwnpabsNoTblAutoLeftBase ownVar;
 	CmpDir1OwnpabsNoTblAutoRight otherVar;
@@ -20491,9 +20491,9 @@ public class TestCmpDir1OwnpabsNoTblAuto
 			pm.UnloadCache();
 			decimal count;
 			count = (decimal) new NDOQuery<CmpDir1OwnpabsNoTblAutoLeftBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #1");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #1");
 			count = (decimal) new NDOQuery<CmpDir1OwnpabsNoTblAutoRight>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #2");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #2");
 		}
 		catch (Exception)
 		{
@@ -20507,53 +20507,53 @@ public class TestCmpDir1OwnpabsNoTblAuto
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestSaveReloadNull()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 		ownVar.RelField = null;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.Null(ownVar.RelField, "There should be no object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Null, "There should be no object");
 	}
 	[Test]
 	public void TestChangeKeyHolderLeft()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 		int x = ownVar.RelField.Dummy;
 		ownVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestChangeKeyHolderLeftNoTouch()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 		ownVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestUpdateOrder()
@@ -20586,7 +20586,7 @@ public class TestCmpDir1OwnpabsNoTblAuto
 
 
 [TestFixture]
-public class TestCmpDir1OwnpabsTblAuto
+public class TestCmpDir1OwnpabsTblAuto : NDOTest
 {
 	CmpDir1OwnpabsTblAutoLeftBase ownVar;
 	CmpDir1OwnpabsTblAutoRight otherVar;
@@ -20610,9 +20610,9 @@ public class TestCmpDir1OwnpabsTblAuto
 			pm.UnloadCache();
 			decimal count;
 			count = (decimal) new NDOQuery<CmpDir1OwnpabsTblAutoLeftBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #1");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #1");
 			count = (decimal) new NDOQuery<CmpDir1OwnpabsTblAutoRight>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #2");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #2");
 		}
 		catch (Exception)
 		{
@@ -20627,53 +20627,53 @@ public class TestCmpDir1OwnpabsTblAuto
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestSaveReloadNull()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 		ownVar.RelField = null;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.Null(ownVar.RelField, "There should be no object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Null, "There should be no object");
 	}
 	[Test]
 	public void TestChangeKeyHolderLeft()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 		int x = ownVar.RelField.Dummy;
 		ownVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestChangeKeyHolderLeftNoTouch()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 		ownVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 	}
 	void CreateObjects()
 	{
@@ -20696,7 +20696,7 @@ public class TestCmpDir1OwnpabsTblAuto
 
 
 [TestFixture]
-public class TestCmpBi11OwnpabsNoTblAuto
+public class TestCmpBi11OwnpabsNoTblAuto : NDOTest
 {
 	CmpBi11OwnpabsNoTblAutoLeftBase ownVar;
 	CmpBi11OwnpabsNoTblAutoRight otherVar;
@@ -20720,9 +20720,9 @@ public class TestCmpBi11OwnpabsNoTblAuto
 			pm.UnloadCache();
 			decimal count;
 			count = (decimal) new NDOQuery<CmpBi11OwnpabsNoTblAutoLeftBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #1");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #1");
 			count = (decimal) new NDOQuery<CmpBi11OwnpabsNoTblAutoRight>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #2");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #2");
 		}
 		catch (Exception)
 		{
@@ -20736,84 +20736,84 @@ public class TestCmpBi11OwnpabsNoTblAuto
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestSaveReloadNull()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 		ownVar.RelField = null;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.Null(ownVar.RelField, "There should be no object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Null, "There should be no object");
 	}
 	[Test]
 	public void TestChangeKeyHolderLeft()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 		int x = ownVar.RelField.Dummy;
 		ownVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestChangeKeyHolderRight()
 	{
 		CreateObjects();
 		QueryOther();
-		Assert.NotNull(otherVar, "No Query Result");
-		Assert.NotNull(otherVar.RelField, "No related object");
+		Assert.That(otherVar, Is.Not.Null, "No Query Result");
+		Assert.That(otherVar.RelField, Is.Not.Null, "No related object");
 		int x = otherVar.RelField.Dummy;
 		otherVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOther();
-		Assert.NotNull(otherVar, "No Query Result");
-		Assert.NotNull(otherVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(otherVar.RelField, "No related object");
+		Assert.That(otherVar, Is.Not.Null, "No Query Result");
+		Assert.That(otherVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(otherVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestChangeKeyHolderLeftNoTouch()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 		ownVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestChangeKeyHolderRightNoTouch()
 	{
 		CreateObjects();
 		QueryOther();
-		Assert.NotNull(otherVar, "No Query Result");
-		Assert.NotNull(otherVar.RelField, "No related object");
+		Assert.That(otherVar, Is.Not.Null, "No Query Result");
+		Assert.That(otherVar.RelField, Is.Not.Null, "No related object");
 		otherVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOther();
-		Assert.NotNull(otherVar, "No Query Result");
-		Assert.NotNull(otherVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(otherVar.RelField, "No related object");
+		Assert.That(otherVar, Is.Not.Null, "No Query Result");
+		Assert.That(otherVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(otherVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestRelationHash()
@@ -20851,7 +20851,7 @@ public class TestCmpBi11OwnpabsNoTblAuto
 
 
 [TestFixture]
-public class TestCmpBi11OwnpabsTblAuto
+public class TestCmpBi11OwnpabsTblAuto : NDOTest
 {
 	CmpBi11OwnpabsTblAutoLeftBase ownVar;
 	CmpBi11OwnpabsTblAutoRight otherVar;
@@ -20875,9 +20875,9 @@ public class TestCmpBi11OwnpabsTblAuto
 			pm.UnloadCache();
 			decimal count;
 			count = (decimal) new NDOQuery<CmpBi11OwnpabsTblAutoLeftBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #1");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #1");
 			count = (decimal) new NDOQuery<CmpBi11OwnpabsTblAutoRight>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #2");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #2");
 		}
 		catch (Exception)
 		{
@@ -20892,84 +20892,84 @@ public class TestCmpBi11OwnpabsTblAuto
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestSaveReloadNull()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 		ownVar.RelField = null;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.Null(ownVar.RelField, "There should be no object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Null, "There should be no object");
 	}
 	[Test]
 	public void TestChangeKeyHolderLeft()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 		int x = ownVar.RelField.Dummy;
 		ownVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestChangeKeyHolderRight()
 	{
 		CreateObjects();
 		QueryOther();
-		Assert.NotNull(otherVar, "No Query Result");
-		Assert.NotNull(otherVar.RelField, "No related object");
+		Assert.That(otherVar, Is.Not.Null, "No Query Result");
+		Assert.That(otherVar.RelField, Is.Not.Null, "No related object");
 		int x = otherVar.RelField.Dummy;
 		otherVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOther();
-		Assert.NotNull(otherVar, "No Query Result");
-		Assert.NotNull(otherVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(otherVar.RelField, "No related object");
+		Assert.That(otherVar, Is.Not.Null, "No Query Result");
+		Assert.That(otherVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(otherVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestChangeKeyHolderLeftNoTouch()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 		ownVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestChangeKeyHolderRightNoTouch()
 	{
 		CreateObjects();
 		QueryOther();
-		Assert.NotNull(otherVar, "No Query Result");
-		Assert.NotNull(otherVar.RelField, "No related object");
+		Assert.That(otherVar, Is.Not.Null, "No Query Result");
+		Assert.That(otherVar.RelField, Is.Not.Null, "No related object");
 		otherVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOther();
-		Assert.NotNull(otherVar, "No Query Result");
-		Assert.NotNull(otherVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(otherVar.RelField, "No related object");
+		Assert.That(otherVar, Is.Not.Null, "No Query Result");
+		Assert.That(otherVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(otherVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestRelationHash()
@@ -21006,7 +21006,7 @@ public class TestCmpBi11OwnpabsTblAuto
 
 
 [TestFixture]
-public class TestCmpDirnOwnpabsNoTblAuto
+public class TestCmpDirnOwnpabsNoTblAuto : NDOTest
 {
 	CmpDirnOwnpabsNoTblAutoLeftBase ownVar;
 	CmpDirnOwnpabsNoTblAutoRight otherVar;
@@ -21030,9 +21030,9 @@ public class TestCmpDirnOwnpabsNoTblAuto
 			pm.UnloadCache();
 			decimal count;
 			count = (decimal) new NDOQuery<CmpDirnOwnpabsNoTblAutoLeftBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #1");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #1");
 			count = (decimal) new NDOQuery<CmpDirnOwnpabsNoTblAutoRight>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #2");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #2");
 		}
 		catch (Exception)
 		{
@@ -21046,36 +21046,36 @@ public class TestCmpDirnOwnpabsNoTblAuto
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(1, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(1, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 	}
 	[Test]
 	public void TestSaveReloadNull()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(1, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(1, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 		ownVar.RelField = new List<CmpDirnOwnpabsNoTblAutoRight>();
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(0, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(0, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 	}
 	[Test]
 	public void TestSaveReloadRemove()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(1, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(1, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 		ownVar.RemoveRelatedObject();
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(0, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(0, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 	}
 	[Test]
 	public void TestUpdateOrder()
@@ -21107,7 +21107,7 @@ public class TestCmpDirnOwnpabsNoTblAuto
 
 
 [TestFixture]
-public class TestCmpDirnOwnpabsTblAuto
+public class TestCmpDirnOwnpabsTblAuto : NDOTest
 {
 	CmpDirnOwnpabsTblAutoLeftBase ownVar;
 	CmpDirnOwnpabsTblAutoRight otherVar;
@@ -21131,9 +21131,9 @@ public class TestCmpDirnOwnpabsTblAuto
 			pm.UnloadCache();
 			decimal count;
 			count = (decimal) new NDOQuery<CmpDirnOwnpabsTblAutoLeftBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #1");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #1");
 			count = (decimal) new NDOQuery<CmpDirnOwnpabsTblAutoRight>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #2");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #2");
 		}
 		catch (Exception)
 		{
@@ -21148,36 +21148,36 @@ public class TestCmpDirnOwnpabsTblAuto
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(1, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(1, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 	}
 	[Test]
 	public void TestSaveReloadNull()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(1, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(1, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 		ownVar.RelField = new List<CmpDirnOwnpabsTblAutoRight>();
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(0, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(0, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 	}
 	[Test]
 	public void TestSaveReloadRemove()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(1, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(1, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 		ownVar.RemoveRelatedObject();
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(0, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(0, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 	}
 	void CreateObjects()
 	{
@@ -21200,7 +21200,7 @@ public class TestCmpDirnOwnpabsTblAuto
 
 
 [TestFixture]
-public class TestCmpBin1OwnpabsNoTblAuto
+public class TestCmpBin1OwnpabsNoTblAuto : NDOTest
 {
 	CmpBin1OwnpabsNoTblAutoLeftBase ownVar;
 	CmpBin1OwnpabsNoTblAutoRight otherVar;
@@ -21224,9 +21224,9 @@ public class TestCmpBin1OwnpabsNoTblAuto
 			pm.UnloadCache();
 			decimal count;
 			count = (decimal) new NDOQuery<CmpBin1OwnpabsNoTblAutoLeftBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #1");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #1");
 			count = (decimal) new NDOQuery<CmpBin1OwnpabsNoTblAutoRight>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #2");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #2");
 		}
 		catch (Exception)
 		{
@@ -21240,67 +21240,67 @@ public class TestCmpBin1OwnpabsNoTblAuto
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(1, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(1, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 	}
 	[Test]
 	public void TestSaveReloadNull()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(1, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(1, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 		ownVar.RelField = new List<CmpBin1OwnpabsNoTblAutoRight>();
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(0, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(0, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 	}
 	[Test]
 	public void TestSaveReloadRemove()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(1, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(1, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 		ownVar.RemoveRelatedObject();
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(0, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(0, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 	}
 	[Test]
 	public void TestChangeKeyHolderRight()
 	{
 		CreateObjects();
 		QueryOther();
-		Assert.NotNull(otherVar, "No Query Result");
-		Assert.NotNull(otherVar.RelField, "No related object");
+		Assert.That(otherVar, Is.Not.Null, "No Query Result");
+		Assert.That(otherVar.RelField, Is.Not.Null, "No related object");
 		int x = otherVar.RelField.Dummy;
 		otherVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOther();
-		Assert.NotNull(otherVar, "No Query Result");
-		Assert.NotNull(otherVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(otherVar.RelField, "No related object");
+		Assert.That(otherVar, Is.Not.Null, "No Query Result");
+		Assert.That(otherVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(otherVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestChangeKeyHolderRightNoTouch()
 	{
 		CreateObjects();
 		QueryOther();
-		Assert.NotNull(otherVar, "No Query Result");
-		Assert.NotNull(otherVar.RelField, "No related object");
+		Assert.That(otherVar, Is.Not.Null, "No Query Result");
+		Assert.That(otherVar.RelField, Is.Not.Null, "No related object");
 		otherVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOther();
-		Assert.NotNull(otherVar, "No Query Result");
-		Assert.NotNull(otherVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(otherVar.RelField, "No related object");
+		Assert.That(otherVar, Is.Not.Null, "No Query Result");
+		Assert.That(otherVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(otherVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestUpdateOrder()
@@ -21346,7 +21346,7 @@ public class TestCmpBin1OwnpabsNoTblAuto
 
 
 [TestFixture]
-public class TestCmpBin1OwnpabsTblAuto
+public class TestCmpBin1OwnpabsTblAuto : NDOTest
 {
 	CmpBin1OwnpabsTblAutoLeftBase ownVar;
 	CmpBin1OwnpabsTblAutoRight otherVar;
@@ -21370,9 +21370,9 @@ public class TestCmpBin1OwnpabsTblAuto
 			pm.UnloadCache();
 			decimal count;
 			count = (decimal) new NDOQuery<CmpBin1OwnpabsTblAutoLeftBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #1");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #1");
 			count = (decimal) new NDOQuery<CmpBin1OwnpabsTblAutoRight>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #2");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #2");
 		}
 		catch (Exception)
 		{
@@ -21387,67 +21387,67 @@ public class TestCmpBin1OwnpabsTblAuto
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(1, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(1, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 	}
 	[Test]
 	public void TestSaveReloadNull()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(1, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(1, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 		ownVar.RelField = new List<CmpBin1OwnpabsTblAutoRight>();
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(0, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(0, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 	}
 	[Test]
 	public void TestSaveReloadRemove()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(1, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(1, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 		ownVar.RemoveRelatedObject();
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(0, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(0, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 	}
 	[Test]
 	public void TestChangeKeyHolderRight()
 	{
 		CreateObjects();
 		QueryOther();
-		Assert.NotNull(otherVar, "No Query Result");
-		Assert.NotNull(otherVar.RelField, "No related object");
+		Assert.That(otherVar, Is.Not.Null, "No Query Result");
+		Assert.That(otherVar.RelField, Is.Not.Null, "No related object");
 		int x = otherVar.RelField.Dummy;
 		otherVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOther();
-		Assert.NotNull(otherVar, "No Query Result");
-		Assert.NotNull(otherVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(otherVar.RelField, "No related object");
+		Assert.That(otherVar, Is.Not.Null, "No Query Result");
+		Assert.That(otherVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(otherVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestChangeKeyHolderRightNoTouch()
 	{
 		CreateObjects();
 		QueryOther();
-		Assert.NotNull(otherVar, "No Query Result");
-		Assert.NotNull(otherVar.RelField, "No related object");
+		Assert.That(otherVar, Is.Not.Null, "No Query Result");
+		Assert.That(otherVar.RelField, Is.Not.Null, "No related object");
 		otherVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOther();
-		Assert.NotNull(otherVar, "No Query Result");
-		Assert.NotNull(otherVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(otherVar.RelField, "No related object");
+		Assert.That(otherVar, Is.Not.Null, "No Query Result");
+		Assert.That(otherVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(otherVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestRelationHash()
@@ -21484,7 +21484,7 @@ public class TestCmpBin1OwnpabsTblAuto
 
 
 [TestFixture]
-public class TestCmpBi1nOwnpabsTblAuto
+public class TestCmpBi1nOwnpabsTblAuto : NDOTest
 {
 	CmpBi1nOwnpabsTblAutoLeftBase ownVar;
 	CmpBi1nOwnpabsTblAutoRight otherVar;
@@ -21508,9 +21508,9 @@ public class TestCmpBi1nOwnpabsTblAuto
 			pm.UnloadCache();
 			decimal count;
 			count = (decimal) new NDOQuery<CmpBi1nOwnpabsTblAutoLeftBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #1");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #1");
 			count = (decimal) new NDOQuery<CmpBi1nOwnpabsTblAutoRight>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #2");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #2");
 		}
 		catch (Exception)
 		{
@@ -21525,53 +21525,53 @@ public class TestCmpBi1nOwnpabsTblAuto
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestSaveReloadNull()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 		ownVar.RelField = null;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.Null(ownVar.RelField, "There should be no object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Null, "There should be no object");
 	}
 	[Test]
 	public void TestChangeKeyHolderLeft()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 		int x = ownVar.RelField.Dummy;
 		ownVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestChangeKeyHolderLeftNoTouch()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 		ownVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestRelationHash()
@@ -21608,7 +21608,7 @@ public class TestCmpBi1nOwnpabsTblAuto
 
 
 [TestFixture]
-public class TestCmpBinnOwnpabsTblAuto
+public class TestCmpBinnOwnpabsTblAuto : NDOTest
 {
 	CmpBinnOwnpabsTblAutoLeftBase ownVar;
 	CmpBinnOwnpabsTblAutoRight otherVar;
@@ -21632,9 +21632,9 @@ public class TestCmpBinnOwnpabsTblAuto
 			pm.UnloadCache();
 			decimal count;
 			count = (decimal) new NDOQuery<CmpBinnOwnpabsTblAutoLeftBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #1");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #1");
 			count = (decimal) new NDOQuery<CmpBinnOwnpabsTblAutoRight>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #2");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #2");
 		}
 		catch (Exception)
 		{
@@ -21649,36 +21649,36 @@ public class TestCmpBinnOwnpabsTblAuto
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(1, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(1, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 	}
 	[Test]
 	public void TestSaveReloadNull()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(1, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(1, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 		ownVar.RelField = new List<CmpBinnOwnpabsTblAutoRight>();
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(0, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(0, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 	}
 	[Test]
 	public void TestSaveReloadRemove()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(1, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(1, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 		ownVar.RemoveRelatedObject();
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(0, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(0, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 	}
 	[Test]
 	public void TestRelationHash()
@@ -21715,7 +21715,7 @@ public class TestCmpBinnOwnpabsTblAuto
 
 
 [TestFixture]
-public class TestAgrDir1OthpabsNoTblAuto
+public class TestAgrDir1OthpabsNoTblAuto : NDOTest
 {
 	AgrDir1OthpabsNoTblAutoLeft ownVar;
 	AgrDir1OthpabsNoTblAutoRightBase otherVar;
@@ -21743,9 +21743,9 @@ public class TestAgrDir1OthpabsNoTblAuto
 			pm.UnloadCache();
 			decimal count;
 			count = (decimal) new NDOQuery<AgrDir1OthpabsNoTblAutoLeft>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #1");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #1");
 			count = (decimal) new NDOQuery<AgrDir1OthpabsNoTblAutoRightBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #2");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #2");
 		}
 		catch (Exception)
 		{
@@ -21759,53 +21759,53 @@ public class TestAgrDir1OthpabsNoTblAuto
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestSaveReloadNull()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 		ownVar.RelField = null;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.Null(ownVar.RelField, "There should be no object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Null, "There should be no object");
 	}
 	[Test]
 	public void TestChangeKeyHolderLeft()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 		int x = ownVar.RelField.Dummy;
 		ownVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestChangeKeyHolderLeftNoTouch()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 		ownVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestUpdateOrder()
@@ -21840,7 +21840,7 @@ public class TestAgrDir1OthpabsNoTblAuto
 
 
 [TestFixture]
-public class TestAgrDir1OthpabsTblAuto
+public class TestAgrDir1OthpabsTblAuto : NDOTest
 {
 	AgrDir1OthpabsTblAutoLeft ownVar;
 	AgrDir1OthpabsTblAutoRightBase otherVar;
@@ -21868,9 +21868,9 @@ public class TestAgrDir1OthpabsTblAuto
 			pm.UnloadCache();
 			decimal count;
 			count = (decimal) new NDOQuery<AgrDir1OthpabsTblAutoLeft>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #1");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #1");
 			count = (decimal) new NDOQuery<AgrDir1OthpabsTblAutoRightBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #2");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #2");
 		}
 		catch (Exception)
 		{
@@ -21885,53 +21885,53 @@ public class TestAgrDir1OthpabsTblAuto
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestSaveReloadNull()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 		ownVar.RelField = null;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.Null(ownVar.RelField, "There should be no object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Null, "There should be no object");
 	}
 	[Test]
 	public void TestChangeKeyHolderLeft()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 		int x = ownVar.RelField.Dummy;
 		ownVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestChangeKeyHolderLeftNoTouch()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 		ownVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 	}
 	void CreateObjects()
 	{
@@ -21955,7 +21955,7 @@ public class TestAgrDir1OthpabsTblAuto
 
 
 [TestFixture]
-public class TestAgrBi11OthpabsNoTblAuto
+public class TestAgrBi11OthpabsNoTblAuto : NDOTest
 {
 	AgrBi11OthpabsNoTblAutoLeft ownVar;
 	AgrBi11OthpabsNoTblAutoRightBase otherVar;
@@ -21983,9 +21983,9 @@ public class TestAgrBi11OthpabsNoTblAuto
 			pm.UnloadCache();
 			decimal count;
 			count = (decimal) new NDOQuery<AgrBi11OthpabsNoTblAutoLeft>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #1");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #1");
 			count = (decimal) new NDOQuery<AgrBi11OthpabsNoTblAutoRightBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #2");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #2");
 		}
 		catch (Exception)
 		{
@@ -21999,84 +21999,84 @@ public class TestAgrBi11OthpabsNoTblAuto
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestSaveReloadNull()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 		ownVar.RelField = null;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.Null(ownVar.RelField, "There should be no object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Null, "There should be no object");
 	}
 	[Test]
 	public void TestChangeKeyHolderLeft()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 		int x = ownVar.RelField.Dummy;
 		ownVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestChangeKeyHolderRight()
 	{
 		CreateObjects();
 		QueryOther();
-		Assert.NotNull(otherVar, "No Query Result");
-		Assert.NotNull(otherVar.RelField, "No related object");
+		Assert.That(otherVar, Is.Not.Null, "No Query Result");
+		Assert.That(otherVar.RelField, Is.Not.Null, "No related object");
 		int x = otherVar.RelField.Dummy;
 		otherVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOther();
-		Assert.NotNull(otherVar, "No Query Result");
-		Assert.NotNull(otherVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(otherVar.RelField, "No related object");
+		Assert.That(otherVar, Is.Not.Null, "No Query Result");
+		Assert.That(otherVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(otherVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestChangeKeyHolderLeftNoTouch()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 		ownVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestChangeKeyHolderRightNoTouch()
 	{
 		CreateObjects();
 		QueryOther();
-		Assert.NotNull(otherVar, "No Query Result");
-		Assert.NotNull(otherVar.RelField, "No related object");
+		Assert.That(otherVar, Is.Not.Null, "No Query Result");
+		Assert.That(otherVar.RelField, Is.Not.Null, "No related object");
 		otherVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOther();
-		Assert.NotNull(otherVar, "No Query Result");
-		Assert.NotNull(otherVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(otherVar.RelField, "No related object");
+		Assert.That(otherVar, Is.Not.Null, "No Query Result");
+		Assert.That(otherVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(otherVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestRelationHash()
@@ -22116,7 +22116,7 @@ public class TestAgrBi11OthpabsNoTblAuto
 
 
 [TestFixture]
-public class TestAgrBi11OthpabsTblAuto
+public class TestAgrBi11OthpabsTblAuto : NDOTest
 {
 	AgrBi11OthpabsTblAutoLeft ownVar;
 	AgrBi11OthpabsTblAutoRightBase otherVar;
@@ -22144,9 +22144,9 @@ public class TestAgrBi11OthpabsTblAuto
 			pm.UnloadCache();
 			decimal count;
 			count = (decimal) new NDOQuery<AgrBi11OthpabsTblAutoLeft>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #1");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #1");
 			count = (decimal) new NDOQuery<AgrBi11OthpabsTblAutoRightBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #2");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #2");
 		}
 		catch (Exception)
 		{
@@ -22161,84 +22161,84 @@ public class TestAgrBi11OthpabsTblAuto
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestSaveReloadNull()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 		ownVar.RelField = null;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.Null(ownVar.RelField, "There should be no object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Null, "There should be no object");
 	}
 	[Test]
 	public void TestChangeKeyHolderLeft()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 		int x = ownVar.RelField.Dummy;
 		ownVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestChangeKeyHolderRight()
 	{
 		CreateObjects();
 		QueryOther();
-		Assert.NotNull(otherVar, "No Query Result");
-		Assert.NotNull(otherVar.RelField, "No related object");
+		Assert.That(otherVar, Is.Not.Null, "No Query Result");
+		Assert.That(otherVar.RelField, Is.Not.Null, "No related object");
 		int x = otherVar.RelField.Dummy;
 		otherVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOther();
-		Assert.NotNull(otherVar, "No Query Result");
-		Assert.NotNull(otherVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(otherVar.RelField, "No related object");
+		Assert.That(otherVar, Is.Not.Null, "No Query Result");
+		Assert.That(otherVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(otherVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestChangeKeyHolderLeftNoTouch()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 		ownVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestChangeKeyHolderRightNoTouch()
 	{
 		CreateObjects();
 		QueryOther();
-		Assert.NotNull(otherVar, "No Query Result");
-		Assert.NotNull(otherVar.RelField, "No related object");
+		Assert.That(otherVar, Is.Not.Null, "No Query Result");
+		Assert.That(otherVar.RelField, Is.Not.Null, "No related object");
 		otherVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOther();
-		Assert.NotNull(otherVar, "No Query Result");
-		Assert.NotNull(otherVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(otherVar.RelField, "No related object");
+		Assert.That(otherVar, Is.Not.Null, "No Query Result");
+		Assert.That(otherVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(otherVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestRelationHash()
@@ -22276,7 +22276,7 @@ public class TestAgrBi11OthpabsTblAuto
 
 
 [TestFixture]
-public class TestAgrDirnOthpabsTblAuto
+public class TestAgrDirnOthpabsTblAuto : NDOTest
 {
 	AgrDirnOthpabsTblAutoLeft ownVar;
 	AgrDirnOthpabsTblAutoRightBase otherVar;
@@ -22304,9 +22304,9 @@ public class TestAgrDirnOthpabsTblAuto
 			pm.UnloadCache();
 			decimal count;
 			count = (decimal) new NDOQuery<AgrDirnOthpabsTblAutoLeft>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #1");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #1");
 			count = (decimal) new NDOQuery<AgrDirnOthpabsTblAutoRightBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #2");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #2");
 		}
 		catch (Exception)
 		{
@@ -22321,36 +22321,36 @@ public class TestAgrDirnOthpabsTblAuto
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(1, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(1, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 	}
 	[Test]
 	public void TestSaveReloadNull()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(1, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(1, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 		ownVar.RelField = new List<AgrDirnOthpabsTblAutoRightBase>();
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(0, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(0, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 	}
 	[Test]
 	public void TestSaveReloadRemove()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(1, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(1, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 		ownVar.RemoveRelatedObject();
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(0, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(0, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 	}
 	void CreateObjects()
 	{
@@ -22374,7 +22374,7 @@ public class TestAgrDirnOthpabsTblAuto
 
 
 [TestFixture]
-public class TestAgrBin1OthpabsTblAuto
+public class TestAgrBin1OthpabsTblAuto : NDOTest
 {
 	AgrBin1OthpabsTblAutoLeft ownVar;
 	AgrBin1OthpabsTblAutoRightBase otherVar;
@@ -22402,9 +22402,9 @@ public class TestAgrBin1OthpabsTblAuto
 			pm.UnloadCache();
 			decimal count;
 			count = (decimal) new NDOQuery<AgrBin1OthpabsTblAutoLeft>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #1");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #1");
 			count = (decimal) new NDOQuery<AgrBin1OthpabsTblAutoRightBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #2");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #2");
 		}
 		catch (Exception)
 		{
@@ -22419,67 +22419,67 @@ public class TestAgrBin1OthpabsTblAuto
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(1, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(1, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 	}
 	[Test]
 	public void TestSaveReloadNull()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(1, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(1, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 		ownVar.RelField = new List<AgrBin1OthpabsTblAutoRightBase>();
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(0, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(0, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 	}
 	[Test]
 	public void TestSaveReloadRemove()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(1, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(1, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 		ownVar.RemoveRelatedObject();
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(0, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(0, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 	}
 	[Test]
 	public void TestChangeKeyHolderRight()
 	{
 		CreateObjects();
 		QueryOther();
-		Assert.NotNull(otherVar, "No Query Result");
-		Assert.NotNull(otherVar.RelField, "No related object");
+		Assert.That(otherVar, Is.Not.Null, "No Query Result");
+		Assert.That(otherVar.RelField, Is.Not.Null, "No related object");
 		int x = otherVar.RelField.Dummy;
 		otherVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOther();
-		Assert.NotNull(otherVar, "No Query Result");
-		Assert.NotNull(otherVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(otherVar.RelField, "No related object");
+		Assert.That(otherVar, Is.Not.Null, "No Query Result");
+		Assert.That(otherVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(otherVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestChangeKeyHolderRightNoTouch()
 	{
 		CreateObjects();
 		QueryOther();
-		Assert.NotNull(otherVar, "No Query Result");
-		Assert.NotNull(otherVar.RelField, "No related object");
+		Assert.That(otherVar, Is.Not.Null, "No Query Result");
+		Assert.That(otherVar.RelField, Is.Not.Null, "No related object");
 		otherVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOther();
-		Assert.NotNull(otherVar, "No Query Result");
-		Assert.NotNull(otherVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(otherVar.RelField, "No related object");
+		Assert.That(otherVar, Is.Not.Null, "No Query Result");
+		Assert.That(otherVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(otherVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestRelationHash()
@@ -22517,7 +22517,7 @@ public class TestAgrBin1OthpabsTblAuto
 
 
 [TestFixture]
-public class TestAgrBi1nOthpabsNoTblAuto
+public class TestAgrBi1nOthpabsNoTblAuto : NDOTest
 {
 	AgrBi1nOthpabsNoTblAutoLeft ownVar;
 	AgrBi1nOthpabsNoTblAutoRightBase otherVar;
@@ -22545,9 +22545,9 @@ public class TestAgrBi1nOthpabsNoTblAuto
 			pm.UnloadCache();
 			decimal count;
 			count = (decimal) new NDOQuery<AgrBi1nOthpabsNoTblAutoLeft>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #1");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #1");
 			count = (decimal) new NDOQuery<AgrBi1nOthpabsNoTblAutoRightBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #2");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #2");
 		}
 		catch (Exception)
 		{
@@ -22561,53 +22561,53 @@ public class TestAgrBi1nOthpabsNoTblAuto
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestSaveReloadNull()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 		ownVar.RelField = null;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.Null(ownVar.RelField, "There should be no object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Null, "There should be no object");
 	}
 	[Test]
 	public void TestChangeKeyHolderLeft()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 		int x = ownVar.RelField.Dummy;
 		ownVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestChangeKeyHolderLeftNoTouch()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 		ownVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestUpdateOrder()
@@ -22656,7 +22656,7 @@ public class TestAgrBi1nOthpabsNoTblAuto
 
 
 [TestFixture]
-public class TestAgrBi1nOthpabsTblAuto
+public class TestAgrBi1nOthpabsTblAuto : NDOTest
 {
 	AgrBi1nOthpabsTblAutoLeft ownVar;
 	AgrBi1nOthpabsTblAutoRightBase otherVar;
@@ -22684,9 +22684,9 @@ public class TestAgrBi1nOthpabsTblAuto
 			pm.UnloadCache();
 			decimal count;
 			count = (decimal) new NDOQuery<AgrBi1nOthpabsTblAutoLeft>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #1");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #1");
 			count = (decimal) new NDOQuery<AgrBi1nOthpabsTblAutoRightBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #2");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #2");
 		}
 		catch (Exception)
 		{
@@ -22701,53 +22701,53 @@ public class TestAgrBi1nOthpabsTblAuto
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestSaveReloadNull()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 		ownVar.RelField = null;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.Null(ownVar.RelField, "There should be no object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Null, "There should be no object");
 	}
 	[Test]
 	public void TestChangeKeyHolderLeft()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 		int x = ownVar.RelField.Dummy;
 		ownVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestChangeKeyHolderLeftNoTouch()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 		ownVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestRelationHash()
@@ -22785,7 +22785,7 @@ public class TestAgrBi1nOthpabsTblAuto
 
 
 [TestFixture]
-public class TestAgrBinnOthpabsTblAuto
+public class TestAgrBinnOthpabsTblAuto : NDOTest
 {
 	AgrBinnOthpabsTblAutoLeft ownVar;
 	AgrBinnOthpabsTblAutoRightBase otherVar;
@@ -22813,9 +22813,9 @@ public class TestAgrBinnOthpabsTblAuto
 			pm.UnloadCache();
 			decimal count;
 			count = (decimal) new NDOQuery<AgrBinnOthpabsTblAutoLeft>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #1");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #1");
 			count = (decimal) new NDOQuery<AgrBinnOthpabsTblAutoRightBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #2");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #2");
 		}
 		catch (Exception)
 		{
@@ -22830,36 +22830,36 @@ public class TestAgrBinnOthpabsTblAuto
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(1, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(1, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 	}
 	[Test]
 	public void TestSaveReloadNull()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(1, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(1, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 		ownVar.RelField = new List<AgrBinnOthpabsTblAutoRightBase>();
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(0, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(0, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 	}
 	[Test]
 	public void TestSaveReloadRemove()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(1, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(1, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 		ownVar.RemoveRelatedObject();
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(0, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(0, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 	}
 	[Test]
 	public void TestRelationHash()
@@ -22897,7 +22897,7 @@ public class TestAgrBinnOthpabsTblAuto
 
 
 [TestFixture]
-public class TestCmpDir1OthpabsNoTblAuto
+public class TestCmpDir1OthpabsNoTblAuto : NDOTest
 {
 	CmpDir1OthpabsNoTblAutoLeft ownVar;
 	CmpDir1OthpabsNoTblAutoRightBase otherVar;
@@ -22921,9 +22921,9 @@ public class TestCmpDir1OthpabsNoTblAuto
 			pm.UnloadCache();
 			decimal count;
 			count = (decimal) new NDOQuery<CmpDir1OthpabsNoTblAutoLeft>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #1");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #1");
 			count = (decimal) new NDOQuery<CmpDir1OthpabsNoTblAutoRightBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #2");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #2");
 		}
 		catch (Exception)
 		{
@@ -22940,14 +22940,14 @@ public class TestCmpDir1OthpabsNoTblAuto
 		{
 			CreateObjects();
 			QueryOwn();
-			Assert.NotNull(ownVar, "No Query Result");
-			Assert.NotNull(ownVar.RelField, "No related object");
+			Assert.That(ownVar, Is.Not.Null, "No Query Result");
+			Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 		}
 		catch (NDOException)
 		{
 			thrown = true;
 		}
-		Assert.AreEqual(true, thrown, "NDOException should have been thrown");
+		Assert.That(true, Is.EqualTo(thrown), "NDOException should have been thrown");
 	}
 	[Test]
 	public void TestSaveReloadNull()
@@ -22957,20 +22957,20 @@ public class TestCmpDir1OthpabsNoTblAuto
 		{
 			CreateObjects();
 			QueryOwn();
-			Assert.NotNull(ownVar, "No Query Result");
-			Assert.NotNull(ownVar.RelField, "No related object");
+			Assert.That(ownVar, Is.Not.Null, "No Query Result");
+			Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 			ownVar.RelField = null;
 			pm.Save();
 			pm.UnloadCache();
 			QueryOwn();
-			Assert.NotNull(ownVar, "No Query Result");
-			Assert.Null(ownVar.RelField, "There should be no object");
+			Assert.That(ownVar, Is.Not.Null, "No Query Result");
+			Assert.That(ownVar.RelField, Is.Null, "There should be no object");
 		}
 		catch (NDOException)
 		{
 			thrown = true;
 		}
-		Assert.AreEqual(true, thrown, "NDOException should have been thrown");
+		Assert.That(true, Is.EqualTo(thrown), "NDOException should have been thrown");
 	}
 	void CreateObjects()
 	{
@@ -22994,7 +22994,7 @@ public class TestCmpDir1OthpabsNoTblAuto
 
 
 [TestFixture]
-public class TestCmpDir1OthpabsTblAuto
+public class TestCmpDir1OthpabsTblAuto : NDOTest
 {
 	CmpDir1OthpabsTblAutoLeft ownVar;
 	CmpDir1OthpabsTblAutoRightBase otherVar;
@@ -23018,9 +23018,9 @@ public class TestCmpDir1OthpabsTblAuto
 			pm.UnloadCache();
 			decimal count;
 			count = (decimal) new NDOQuery<CmpDir1OthpabsTblAutoLeft>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #1");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #1");
 			count = (decimal) new NDOQuery<CmpDir1OthpabsTblAutoRightBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #2");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #2");
 		}
 		catch (Exception)
 		{
@@ -23035,53 +23035,53 @@ public class TestCmpDir1OthpabsTblAuto
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestSaveReloadNull()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 		ownVar.RelField = null;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.Null(ownVar.RelField, "There should be no object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Null, "There should be no object");
 	}
 	[Test]
 	public void TestChangeKeyHolderLeft()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 		int x = ownVar.RelField.Dummy;
 		ownVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestChangeKeyHolderLeftNoTouch()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 		ownVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 	}
 	void CreateObjects()
 	{
@@ -23104,7 +23104,7 @@ public class TestCmpDir1OthpabsTblAuto
 
 
 [TestFixture]
-public class TestCmpBi11OthpabsNoTblAuto
+public class TestCmpBi11OthpabsNoTblAuto : NDOTest
 {
 	CmpBi11OthpabsNoTblAutoLeft ownVar;
 	CmpBi11OthpabsNoTblAutoRightBase otherVar;
@@ -23128,9 +23128,9 @@ public class TestCmpBi11OthpabsNoTblAuto
 			pm.UnloadCache();
 			decimal count;
 			count = (decimal) new NDOQuery<CmpBi11OthpabsNoTblAutoLeft>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #1");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #1");
 			count = (decimal) new NDOQuery<CmpBi11OthpabsNoTblAutoRightBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #2");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #2");
 		}
 		catch (Exception)
 		{
@@ -23147,14 +23147,14 @@ public class TestCmpBi11OthpabsNoTblAuto
 		{
 			CreateObjects();
 			QueryOwn();
-			Assert.NotNull(ownVar, "No Query Result");
-			Assert.NotNull(ownVar.RelField, "No related object");
+			Assert.That(ownVar, Is.Not.Null, "No Query Result");
+			Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 		}
 		catch (NDOException)
 		{
 			thrown = true;
 		}
-		Assert.AreEqual(true, thrown, "NDOException should have been thrown");
+		Assert.That(true, Is.EqualTo(thrown), "NDOException should have been thrown");
 	}
 	[Test]
 	public void TestSaveReloadNull()
@@ -23164,20 +23164,20 @@ public class TestCmpBi11OthpabsNoTblAuto
 		{
 			CreateObjects();
 			QueryOwn();
-			Assert.NotNull(ownVar, "No Query Result");
-			Assert.NotNull(ownVar.RelField, "No related object");
+			Assert.That(ownVar, Is.Not.Null, "No Query Result");
+			Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 			ownVar.RelField = null;
 			pm.Save();
 			pm.UnloadCache();
 			QueryOwn();
-			Assert.NotNull(ownVar, "No Query Result");
-			Assert.Null(ownVar.RelField, "There should be no object");
+			Assert.That(ownVar, Is.Not.Null, "No Query Result");
+			Assert.That(ownVar.RelField, Is.Null, "There should be no object");
 		}
 		catch (NDOException)
 		{
 			thrown = true;
 		}
-		Assert.AreEqual(true, thrown, "NDOException should have been thrown");
+		Assert.That(true, Is.EqualTo(thrown), "NDOException should have been thrown");
 	}
 	[Test]
 	public void TestRelationHash()
@@ -23215,7 +23215,7 @@ public class TestCmpBi11OthpabsNoTblAuto
 
 
 [TestFixture]
-public class TestCmpBi11OthpabsTblAuto
+public class TestCmpBi11OthpabsTblAuto : NDOTest
 {
 	CmpBi11OthpabsTblAutoLeft ownVar;
 	CmpBi11OthpabsTblAutoRightBase otherVar;
@@ -23239,9 +23239,9 @@ public class TestCmpBi11OthpabsTblAuto
 			pm.UnloadCache();
 			decimal count;
 			count = (decimal) new NDOQuery<CmpBi11OthpabsTblAutoLeft>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #1");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #1");
 			count = (decimal) new NDOQuery<CmpBi11OthpabsTblAutoRightBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #2");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #2");
 		}
 		catch (Exception)
 		{
@@ -23256,84 +23256,84 @@ public class TestCmpBi11OthpabsTblAuto
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestSaveReloadNull()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 		ownVar.RelField = null;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.Null(ownVar.RelField, "There should be no object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Null, "There should be no object");
 	}
 	[Test]
 	public void TestChangeKeyHolderLeft()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 		int x = ownVar.RelField.Dummy;
 		ownVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestChangeKeyHolderRight()
 	{
 		CreateObjects();
 		QueryOther();
-		Assert.NotNull(otherVar, "No Query Result");
-		Assert.NotNull(otherVar.RelField, "No related object");
+		Assert.That(otherVar, Is.Not.Null, "No Query Result");
+		Assert.That(otherVar.RelField, Is.Not.Null, "No related object");
 		int x = otherVar.RelField.Dummy;
 		otherVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOther();
-		Assert.NotNull(otherVar, "No Query Result");
-		Assert.NotNull(otherVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(otherVar.RelField, "No related object");
+		Assert.That(otherVar, Is.Not.Null, "No Query Result");
+		Assert.That(otherVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(otherVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestChangeKeyHolderLeftNoTouch()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 		ownVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestChangeKeyHolderRightNoTouch()
 	{
 		CreateObjects();
 		QueryOther();
-		Assert.NotNull(otherVar, "No Query Result");
-		Assert.NotNull(otherVar.RelField, "No related object");
+		Assert.That(otherVar, Is.Not.Null, "No Query Result");
+		Assert.That(otherVar.RelField, Is.Not.Null, "No related object");
 		otherVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOther();
-		Assert.NotNull(otherVar, "No Query Result");
-		Assert.NotNull(otherVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(otherVar.RelField, "No related object");
+		Assert.That(otherVar, Is.Not.Null, "No Query Result");
+		Assert.That(otherVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(otherVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestRelationHash()
@@ -23370,7 +23370,7 @@ public class TestCmpBi11OthpabsTblAuto
 
 
 [TestFixture]
-public class TestCmpDirnOthpabsTblAuto
+public class TestCmpDirnOthpabsTblAuto : NDOTest
 {
 	CmpDirnOthpabsTblAutoLeft ownVar;
 	CmpDirnOthpabsTblAutoRightBase otherVar;
@@ -23394,9 +23394,9 @@ public class TestCmpDirnOthpabsTblAuto
 			pm.UnloadCache();
 			decimal count;
 			count = (decimal) new NDOQuery<CmpDirnOthpabsTblAutoLeft>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #1");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #1");
 			count = (decimal) new NDOQuery<CmpDirnOthpabsTblAutoRightBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #2");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #2");
 		}
 		catch (Exception)
 		{
@@ -23411,36 +23411,36 @@ public class TestCmpDirnOthpabsTblAuto
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(1, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(1, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 	}
 	[Test]
 	public void TestSaveReloadNull()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(1, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(1, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 		ownVar.RelField = new List<CmpDirnOthpabsTblAutoRightBase>();
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(0, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(0, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 	}
 	[Test]
 	public void TestSaveReloadRemove()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(1, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(1, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 		ownVar.RemoveRelatedObject();
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(0, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(0, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 	}
 	void CreateObjects()
 	{
@@ -23463,7 +23463,7 @@ public class TestCmpDirnOthpabsTblAuto
 
 
 [TestFixture]
-public class TestCmpBin1OthpabsTblAuto
+public class TestCmpBin1OthpabsTblAuto : NDOTest
 {
 	CmpBin1OthpabsTblAutoLeft ownVar;
 	CmpBin1OthpabsTblAutoRightBase otherVar;
@@ -23487,9 +23487,9 @@ public class TestCmpBin1OthpabsTblAuto
 			pm.UnloadCache();
 			decimal count;
 			count = (decimal) new NDOQuery<CmpBin1OthpabsTblAutoLeft>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #1");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #1");
 			count = (decimal) new NDOQuery<CmpBin1OthpabsTblAutoRightBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #2");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #2");
 		}
 		catch (Exception)
 		{
@@ -23504,67 +23504,67 @@ public class TestCmpBin1OthpabsTblAuto
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(1, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(1, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 	}
 	[Test]
 	public void TestSaveReloadNull()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(1, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(1, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 		ownVar.RelField = new List<CmpBin1OthpabsTblAutoRightBase>();
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(0, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(0, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 	}
 	[Test]
 	public void TestSaveReloadRemove()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(1, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(1, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 		ownVar.RemoveRelatedObject();
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(0, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(0, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 	}
 	[Test]
 	public void TestChangeKeyHolderRight()
 	{
 		CreateObjects();
 		QueryOther();
-		Assert.NotNull(otherVar, "No Query Result");
-		Assert.NotNull(otherVar.RelField, "No related object");
+		Assert.That(otherVar, Is.Not.Null, "No Query Result");
+		Assert.That(otherVar.RelField, Is.Not.Null, "No related object");
 		int x = otherVar.RelField.Dummy;
 		otherVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOther();
-		Assert.NotNull(otherVar, "No Query Result");
-		Assert.NotNull(otherVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(otherVar.RelField, "No related object");
+		Assert.That(otherVar, Is.Not.Null, "No Query Result");
+		Assert.That(otherVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(otherVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestChangeKeyHolderRightNoTouch()
 	{
 		CreateObjects();
 		QueryOther();
-		Assert.NotNull(otherVar, "No Query Result");
-		Assert.NotNull(otherVar.RelField, "No related object");
+		Assert.That(otherVar, Is.Not.Null, "No Query Result");
+		Assert.That(otherVar.RelField, Is.Not.Null, "No related object");
 		otherVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOther();
-		Assert.NotNull(otherVar, "No Query Result");
-		Assert.NotNull(otherVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(otherVar.RelField, "No related object");
+		Assert.That(otherVar, Is.Not.Null, "No Query Result");
+		Assert.That(otherVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(otherVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestRelationHash()
@@ -23601,7 +23601,7 @@ public class TestCmpBin1OthpabsTblAuto
 
 
 [TestFixture]
-public class TestCmpBi1nOthpabsNoTblAuto
+public class TestCmpBi1nOthpabsNoTblAuto : NDOTest
 {
 	CmpBi1nOthpabsNoTblAutoLeft ownVar;
 	CmpBi1nOthpabsNoTblAutoRightBase otherVar;
@@ -23625,9 +23625,9 @@ public class TestCmpBi1nOthpabsNoTblAuto
 			pm.UnloadCache();
 			decimal count;
 			count = (decimal) new NDOQuery<CmpBi1nOthpabsNoTblAutoLeft>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #1");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #1");
 			count = (decimal) new NDOQuery<CmpBi1nOthpabsNoTblAutoRightBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #2");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #2");
 		}
 		catch (Exception)
 		{
@@ -23644,14 +23644,14 @@ public class TestCmpBi1nOthpabsNoTblAuto
 		{
 			CreateObjects();
 			QueryOwn();
-			Assert.NotNull(ownVar, "No Query Result");
-			Assert.NotNull(ownVar.RelField, "No related object");
+			Assert.That(ownVar, Is.Not.Null, "No Query Result");
+			Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 		}
 		catch (NDOException)
 		{
 			thrown = true;
 		}
-		Assert.AreEqual(true, thrown, "NDOException should have been thrown");
+		Assert.That(true, Is.EqualTo(thrown), "NDOException should have been thrown");
 	}
 	[Test]
 	public void TestSaveReloadNull()
@@ -23661,20 +23661,20 @@ public class TestCmpBi1nOthpabsNoTblAuto
 		{
 			CreateObjects();
 			QueryOwn();
-			Assert.NotNull(ownVar, "No Query Result");
-			Assert.NotNull(ownVar.RelField, "No related object");
+			Assert.That(ownVar, Is.Not.Null, "No Query Result");
+			Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 			ownVar.RelField = null;
 			pm.Save();
 			pm.UnloadCache();
 			QueryOwn();
-			Assert.NotNull(ownVar, "No Query Result");
-			Assert.Null(ownVar.RelField, "There should be no object");
+			Assert.That(ownVar, Is.Not.Null, "No Query Result");
+			Assert.That(ownVar.RelField, Is.Null, "There should be no object");
 		}
 		catch (NDOException)
 		{
 			thrown = true;
 		}
-		Assert.AreEqual(true, thrown, "NDOException should have been thrown");
+		Assert.That(true, Is.EqualTo(thrown), "NDOException should have been thrown");
 	}
 	[Test]
 	public void TestRelationHash()
@@ -23712,7 +23712,7 @@ public class TestCmpBi1nOthpabsNoTblAuto
 
 
 [TestFixture]
-public class TestCmpBi1nOthpabsTblAuto
+public class TestCmpBi1nOthpabsTblAuto : NDOTest
 {
 	CmpBi1nOthpabsTblAutoLeft ownVar;
 	CmpBi1nOthpabsTblAutoRightBase otherVar;
@@ -23736,9 +23736,9 @@ public class TestCmpBi1nOthpabsTblAuto
 			pm.UnloadCache();
 			decimal count;
 			count = (decimal) new NDOQuery<CmpBi1nOthpabsTblAutoLeft>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #1");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #1");
 			count = (decimal) new NDOQuery<CmpBi1nOthpabsTblAutoRightBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #2");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #2");
 		}
 		catch (Exception)
 		{
@@ -23753,53 +23753,53 @@ public class TestCmpBi1nOthpabsTblAuto
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestSaveReloadNull()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 		ownVar.RelField = null;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.Null(ownVar.RelField, "There should be no object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Null, "There should be no object");
 	}
 	[Test]
 	public void TestChangeKeyHolderLeft()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 		int x = ownVar.RelField.Dummy;
 		ownVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestChangeKeyHolderLeftNoTouch()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 		ownVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestRelationHash()
@@ -23836,7 +23836,7 @@ public class TestCmpBi1nOthpabsTblAuto
 
 
 [TestFixture]
-public class TestCmpBinnOthpabsTblAuto
+public class TestCmpBinnOthpabsTblAuto : NDOTest
 {
 	CmpBinnOthpabsTblAutoLeft ownVar;
 	CmpBinnOthpabsTblAutoRightBase otherVar;
@@ -23860,9 +23860,9 @@ public class TestCmpBinnOthpabsTblAuto
 			pm.UnloadCache();
 			decimal count;
 			count = (decimal) new NDOQuery<CmpBinnOthpabsTblAutoLeft>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #1");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #1");
 			count = (decimal) new NDOQuery<CmpBinnOthpabsTblAutoRightBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #2");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #2");
 		}
 		catch (Exception)
 		{
@@ -23877,36 +23877,36 @@ public class TestCmpBinnOthpabsTblAuto
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(1, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(1, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 	}
 	[Test]
 	public void TestSaveReloadNull()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(1, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(1, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 		ownVar.RelField = new List<CmpBinnOthpabsTblAutoRightBase>();
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(0, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(0, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 	}
 	[Test]
 	public void TestSaveReloadRemove()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(1, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(1, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 		ownVar.RemoveRelatedObject();
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(0, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(0, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 	}
 	[Test]
 	public void TestRelationHash()
@@ -23943,7 +23943,7 @@ public class TestCmpBinnOthpabsTblAuto
 
 
 [TestFixture]
-public class TestAgrDir1OwnpabsOthpabsNoTblAuto
+public class TestAgrDir1OwnpabsOthpabsNoTblAuto : NDOTest
 {
 	AgrDir1OwnpabsOthpabsNoTblAutoLeftBase ownVar;
 	AgrDir1OwnpabsOthpabsNoTblAutoRightBase otherVar;
@@ -23971,9 +23971,9 @@ public class TestAgrDir1OwnpabsOthpabsNoTblAuto
 			pm.UnloadCache();
 			decimal count;
 			count = (decimal) new NDOQuery<AgrDir1OwnpabsOthpabsNoTblAutoLeftBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #1");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #1");
 			count = (decimal) new NDOQuery<AgrDir1OwnpabsOthpabsNoTblAutoRightBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #2");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #2");
 		}
 		catch (Exception)
 		{
@@ -23987,53 +23987,53 @@ public class TestAgrDir1OwnpabsOthpabsNoTblAuto
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestSaveReloadNull()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 		ownVar.RelField = null;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.Null(ownVar.RelField, "There should be no object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Null, "There should be no object");
 	}
 	[Test]
 	public void TestChangeKeyHolderLeft()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 		int x = ownVar.RelField.Dummy;
 		ownVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestChangeKeyHolderLeftNoTouch()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 		ownVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestUpdateOrder()
@@ -24068,7 +24068,7 @@ public class TestAgrDir1OwnpabsOthpabsNoTblAuto
 
 
 [TestFixture]
-public class TestAgrDir1OwnpabsOthpabsTblAuto
+public class TestAgrDir1OwnpabsOthpabsTblAuto : NDOTest
 {
 	AgrDir1OwnpabsOthpabsTblAutoLeftBase ownVar;
 	AgrDir1OwnpabsOthpabsTblAutoRightBase otherVar;
@@ -24096,9 +24096,9 @@ public class TestAgrDir1OwnpabsOthpabsTblAuto
 			pm.UnloadCache();
 			decimal count;
 			count = (decimal) new NDOQuery<AgrDir1OwnpabsOthpabsTblAutoLeftBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #1");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #1");
 			count = (decimal) new NDOQuery<AgrDir1OwnpabsOthpabsTblAutoRightBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #2");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #2");
 		}
 		catch (Exception)
 		{
@@ -24113,53 +24113,53 @@ public class TestAgrDir1OwnpabsOthpabsTblAuto
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestSaveReloadNull()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 		ownVar.RelField = null;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.Null(ownVar.RelField, "There should be no object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Null, "There should be no object");
 	}
 	[Test]
 	public void TestChangeKeyHolderLeft()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 		int x = ownVar.RelField.Dummy;
 		ownVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestChangeKeyHolderLeftNoTouch()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 		ownVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 	}
 	void CreateObjects()
 	{
@@ -24183,7 +24183,7 @@ public class TestAgrDir1OwnpabsOthpabsTblAuto
 
 
 [TestFixture]
-public class TestAgrBi11OwnpabsOthpabsNoTblAuto
+public class TestAgrBi11OwnpabsOthpabsNoTblAuto : NDOTest
 {
 	AgrBi11OwnpabsOthpabsNoTblAutoLeftBase ownVar;
 	AgrBi11OwnpabsOthpabsNoTblAutoRightBase otherVar;
@@ -24211,9 +24211,9 @@ public class TestAgrBi11OwnpabsOthpabsNoTblAuto
 			pm.UnloadCache();
 			decimal count;
 			count = (decimal) new NDOQuery<AgrBi11OwnpabsOthpabsNoTblAutoLeftBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #1");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #1");
 			count = (decimal) new NDOQuery<AgrBi11OwnpabsOthpabsNoTblAutoRightBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #2");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #2");
 		}
 		catch (Exception)
 		{
@@ -24227,84 +24227,84 @@ public class TestAgrBi11OwnpabsOthpabsNoTblAuto
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestSaveReloadNull()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 		ownVar.RelField = null;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.Null(ownVar.RelField, "There should be no object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Null, "There should be no object");
 	}
 	[Test]
 	public void TestChangeKeyHolderLeft()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 		int x = ownVar.RelField.Dummy;
 		ownVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestChangeKeyHolderRight()
 	{
 		CreateObjects();
 		QueryOther();
-		Assert.NotNull(otherVar, "No Query Result");
-		Assert.NotNull(otherVar.RelField, "No related object");
+		Assert.That(otherVar, Is.Not.Null, "No Query Result");
+		Assert.That(otherVar.RelField, Is.Not.Null, "No related object");
 		int x = otherVar.RelField.Dummy;
 		otherVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOther();
-		Assert.NotNull(otherVar, "No Query Result");
-		Assert.NotNull(otherVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(otherVar.RelField, "No related object");
+		Assert.That(otherVar, Is.Not.Null, "No Query Result");
+		Assert.That(otherVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(otherVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestChangeKeyHolderLeftNoTouch()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 		ownVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestChangeKeyHolderRightNoTouch()
 	{
 		CreateObjects();
 		QueryOther();
-		Assert.NotNull(otherVar, "No Query Result");
-		Assert.NotNull(otherVar.RelField, "No related object");
+		Assert.That(otherVar, Is.Not.Null, "No Query Result");
+		Assert.That(otherVar.RelField, Is.Not.Null, "No related object");
 		otherVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOther();
-		Assert.NotNull(otherVar, "No Query Result");
-		Assert.NotNull(otherVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(otherVar.RelField, "No related object");
+		Assert.That(otherVar, Is.Not.Null, "No Query Result");
+		Assert.That(otherVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(otherVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestRelationHash()
@@ -24351,7 +24351,7 @@ public class TestAgrBi11OwnpabsOthpabsNoTblAuto
 
 
 [TestFixture]
-public class TestAgrBi11OwnpabsOthpabsTblAuto
+public class TestAgrBi11OwnpabsOthpabsTblAuto : NDOTest
 {
 	AgrBi11OwnpabsOthpabsTblAutoLeftBase ownVar;
 	AgrBi11OwnpabsOthpabsTblAutoRightBase otherVar;
@@ -24379,9 +24379,9 @@ public class TestAgrBi11OwnpabsOthpabsTblAuto
 			pm.UnloadCache();
 			decimal count;
 			count = (decimal) new NDOQuery<AgrBi11OwnpabsOthpabsTblAutoLeftBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #1");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #1");
 			count = (decimal) new NDOQuery<AgrBi11OwnpabsOthpabsTblAutoRightBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #2");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #2");
 		}
 		catch (Exception)
 		{
@@ -24396,84 +24396,84 @@ public class TestAgrBi11OwnpabsOthpabsTblAuto
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestSaveReloadNull()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 		ownVar.RelField = null;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.Null(ownVar.RelField, "There should be no object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Null, "There should be no object");
 	}
 	[Test]
 	public void TestChangeKeyHolderLeft()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 		int x = ownVar.RelField.Dummy;
 		ownVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestChangeKeyHolderRight()
 	{
 		CreateObjects();
 		QueryOther();
-		Assert.NotNull(otherVar, "No Query Result");
-		Assert.NotNull(otherVar.RelField, "No related object");
+		Assert.That(otherVar, Is.Not.Null, "No Query Result");
+		Assert.That(otherVar.RelField, Is.Not.Null, "No related object");
 		int x = otherVar.RelField.Dummy;
 		otherVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOther();
-		Assert.NotNull(otherVar, "No Query Result");
-		Assert.NotNull(otherVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(otherVar.RelField, "No related object");
+		Assert.That(otherVar, Is.Not.Null, "No Query Result");
+		Assert.That(otherVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(otherVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestChangeKeyHolderLeftNoTouch()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 		ownVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestChangeKeyHolderRightNoTouch()
 	{
 		CreateObjects();
 		QueryOther();
-		Assert.NotNull(otherVar, "No Query Result");
-		Assert.NotNull(otherVar.RelField, "No related object");
+		Assert.That(otherVar, Is.Not.Null, "No Query Result");
+		Assert.That(otherVar.RelField, Is.Not.Null, "No related object");
 		otherVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOther();
-		Assert.NotNull(otherVar, "No Query Result");
-		Assert.NotNull(otherVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(otherVar.RelField, "No related object");
+		Assert.That(otherVar, Is.Not.Null, "No Query Result");
+		Assert.That(otherVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(otherVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestRelationHash()
@@ -24518,7 +24518,7 @@ public class TestAgrBi11OwnpabsOthpabsTblAuto
 
 
 [TestFixture]
-public class TestAgrDirnOwnpabsOthpabsTblAuto
+public class TestAgrDirnOwnpabsOthpabsTblAuto : NDOTest
 {
 	AgrDirnOwnpabsOthpabsTblAutoLeftBase ownVar;
 	AgrDirnOwnpabsOthpabsTblAutoRightBase otherVar;
@@ -24546,9 +24546,9 @@ public class TestAgrDirnOwnpabsOthpabsTblAuto
 			pm.UnloadCache();
 			decimal count;
 			count = (decimal) new NDOQuery<AgrDirnOwnpabsOthpabsTblAutoLeftBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #1");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #1");
 			count = (decimal) new NDOQuery<AgrDirnOwnpabsOthpabsTblAutoRightBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #2");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #2");
 		}
 		catch (Exception)
 		{
@@ -24563,36 +24563,36 @@ public class TestAgrDirnOwnpabsOthpabsTblAuto
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(1, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(1, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 	}
 	[Test]
 	public void TestSaveReloadNull()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(1, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(1, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 		ownVar.RelField = new List<AgrDirnOwnpabsOthpabsTblAutoRightBase>();
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(0, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(0, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 	}
 	[Test]
 	public void TestSaveReloadRemove()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(1, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(1, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 		ownVar.RemoveRelatedObject();
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(0, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(0, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 	}
 	void CreateObjects()
 	{
@@ -24616,7 +24616,7 @@ public class TestAgrDirnOwnpabsOthpabsTblAuto
 
 
 [TestFixture]
-public class TestAgrBin1OwnpabsOthpabsTblAuto
+public class TestAgrBin1OwnpabsOthpabsTblAuto : NDOTest
 {
 	AgrBin1OwnpabsOthpabsTblAutoLeftBase ownVar;
 	AgrBin1OwnpabsOthpabsTblAutoRightBase otherVar;
@@ -24644,9 +24644,9 @@ public class TestAgrBin1OwnpabsOthpabsTblAuto
 			pm.UnloadCache();
 			decimal count;
 			count = (decimal) new NDOQuery<AgrBin1OwnpabsOthpabsTblAutoLeftBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #1");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #1");
 			count = (decimal) new NDOQuery<AgrBin1OwnpabsOthpabsTblAutoRightBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #2");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #2");
 		}
 		catch (Exception)
 		{
@@ -24661,67 +24661,67 @@ public class TestAgrBin1OwnpabsOthpabsTblAuto
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(1, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(1, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 	}
 	[Test]
 	public void TestSaveReloadNull()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(1, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(1, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 		ownVar.RelField = new List<AgrBin1OwnpabsOthpabsTblAutoRightBase>();
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(0, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(0, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 	}
 	[Test]
 	public void TestSaveReloadRemove()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(1, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(1, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 		ownVar.RemoveRelatedObject();
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(0, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(0, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 	}
 	[Test]
 	public void TestChangeKeyHolderRight()
 	{
 		CreateObjects();
 		QueryOther();
-		Assert.NotNull(otherVar, "No Query Result");
-		Assert.NotNull(otherVar.RelField, "No related object");
+		Assert.That(otherVar, Is.Not.Null, "No Query Result");
+		Assert.That(otherVar.RelField, Is.Not.Null, "No related object");
 		int x = otherVar.RelField.Dummy;
 		otherVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOther();
-		Assert.NotNull(otherVar, "No Query Result");
-		Assert.NotNull(otherVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(otherVar.RelField, "No related object");
+		Assert.That(otherVar, Is.Not.Null, "No Query Result");
+		Assert.That(otherVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(otherVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestChangeKeyHolderRightNoTouch()
 	{
 		CreateObjects();
 		QueryOther();
-		Assert.NotNull(otherVar, "No Query Result");
-		Assert.NotNull(otherVar.RelField, "No related object");
+		Assert.That(otherVar, Is.Not.Null, "No Query Result");
+		Assert.That(otherVar.RelField, Is.Not.Null, "No related object");
 		otherVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOther();
-		Assert.NotNull(otherVar, "No Query Result");
-		Assert.NotNull(otherVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(otherVar.RelField, "No related object");
+		Assert.That(otherVar, Is.Not.Null, "No Query Result");
+		Assert.That(otherVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(otherVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestRelationHash()
@@ -24766,7 +24766,7 @@ public class TestAgrBin1OwnpabsOthpabsTblAuto
 
 
 [TestFixture]
-public class TestAgrBi1nOwnpabsOthpabsTblAuto
+public class TestAgrBi1nOwnpabsOthpabsTblAuto : NDOTest
 {
 	AgrBi1nOwnpabsOthpabsTblAutoLeftBase ownVar;
 	AgrBi1nOwnpabsOthpabsTblAutoRightBase otherVar;
@@ -24794,9 +24794,9 @@ public class TestAgrBi1nOwnpabsOthpabsTblAuto
 			pm.UnloadCache();
 			decimal count;
 			count = (decimal) new NDOQuery<AgrBi1nOwnpabsOthpabsTblAutoLeftBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #1");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #1");
 			count = (decimal) new NDOQuery<AgrBi1nOwnpabsOthpabsTblAutoRightBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #2");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #2");
 		}
 		catch (Exception)
 		{
@@ -24811,53 +24811,53 @@ public class TestAgrBi1nOwnpabsOthpabsTblAuto
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestSaveReloadNull()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 		ownVar.RelField = null;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.Null(ownVar.RelField, "There should be no object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Null, "There should be no object");
 	}
 	[Test]
 	public void TestChangeKeyHolderLeft()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 		int x = ownVar.RelField.Dummy;
 		ownVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestChangeKeyHolderLeftNoTouch()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 		ownVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestRelationHash()
@@ -24901,7 +24901,7 @@ public class TestAgrBi1nOwnpabsOthpabsTblAuto
 
 
 [TestFixture]
-public class TestAgrBinnOwnpabsOthpabsTblAuto
+public class TestAgrBinnOwnpabsOthpabsTblAuto : NDOTest
 {
 	AgrBinnOwnpabsOthpabsTblAutoLeftBase ownVar;
 	AgrBinnOwnpabsOthpabsTblAutoRightBase otherVar;
@@ -24929,9 +24929,9 @@ public class TestAgrBinnOwnpabsOthpabsTblAuto
 			pm.UnloadCache();
 			decimal count;
 			count = (decimal) new NDOQuery<AgrBinnOwnpabsOthpabsTblAutoLeftBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #1");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #1");
 			count = (decimal) new NDOQuery<AgrBinnOwnpabsOthpabsTblAutoRightBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #2");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #2");
 		}
 		catch (Exception)
 		{
@@ -24946,36 +24946,36 @@ public class TestAgrBinnOwnpabsOthpabsTblAuto
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(1, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(1, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 	}
 	[Test]
 	public void TestSaveReloadNull()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(1, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(1, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 		ownVar.RelField = new List<AgrBinnOwnpabsOthpabsTblAutoRightBase>();
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(0, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(0, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 	}
 	[Test]
 	public void TestSaveReloadRemove()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(1, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(1, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 		ownVar.RemoveRelatedObject();
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(0, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(0, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 	}
 	[Test]
 	public void TestRelationHash()
@@ -25019,7 +25019,7 @@ public class TestAgrBinnOwnpabsOthpabsTblAuto
 
 
 [TestFixture]
-public class TestCmpDir1OwnpabsOthpabsNoTblAuto
+public class TestCmpDir1OwnpabsOthpabsNoTblAuto : NDOTest
 {
 	CmpDir1OwnpabsOthpabsNoTblAutoLeftBase ownVar;
 	CmpDir1OwnpabsOthpabsNoTblAutoRightBase otherVar;
@@ -25043,9 +25043,9 @@ public class TestCmpDir1OwnpabsOthpabsNoTblAuto
 			pm.UnloadCache();
 			decimal count;
 			count = (decimal) new NDOQuery<CmpDir1OwnpabsOthpabsNoTblAutoLeftBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #1");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #1");
 			count = (decimal) new NDOQuery<CmpDir1OwnpabsOthpabsNoTblAutoRightBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #2");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #2");
 		}
 		catch (Exception)
 		{
@@ -25062,14 +25062,14 @@ public class TestCmpDir1OwnpabsOthpabsNoTblAuto
 		{
 			CreateObjects();
 			QueryOwn();
-			Assert.NotNull(ownVar, "No Query Result");
-			Assert.NotNull(ownVar.RelField, "No related object");
+			Assert.That(ownVar, Is.Not.Null, "No Query Result");
+			Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 		}
 		catch (NDOException)
 		{
 			thrown = true;
 		}
-		Assert.AreEqual(true, thrown, "NDOException should have been thrown");
+		Assert.That(true, Is.EqualTo(thrown), "NDOException should have been thrown");
 	}
 	[Test]
 	public void TestSaveReloadNull()
@@ -25079,20 +25079,20 @@ public class TestCmpDir1OwnpabsOthpabsNoTblAuto
 		{
 			CreateObjects();
 			QueryOwn();
-			Assert.NotNull(ownVar, "No Query Result");
-			Assert.NotNull(ownVar.RelField, "No related object");
+			Assert.That(ownVar, Is.Not.Null, "No Query Result");
+			Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 			ownVar.RelField = null;
 			pm.Save();
 			pm.UnloadCache();
 			QueryOwn();
-			Assert.NotNull(ownVar, "No Query Result");
-			Assert.Null(ownVar.RelField, "There should be no object");
+			Assert.That(ownVar, Is.Not.Null, "No Query Result");
+			Assert.That(ownVar.RelField, Is.Null, "There should be no object");
 		}
 		catch (NDOException)
 		{
 			thrown = true;
 		}
-		Assert.AreEqual(true, thrown, "NDOException should have been thrown");
+		Assert.That(true, Is.EqualTo(thrown), "NDOException should have been thrown");
 	}
 	void CreateObjects()
 	{
@@ -25116,7 +25116,7 @@ public class TestCmpDir1OwnpabsOthpabsNoTblAuto
 
 
 [TestFixture]
-public class TestCmpDir1OwnpabsOthpabsTblAuto
+public class TestCmpDir1OwnpabsOthpabsTblAuto : NDOTest
 {
 	CmpDir1OwnpabsOthpabsTblAutoLeftBase ownVar;
 	CmpDir1OwnpabsOthpabsTblAutoRightBase otherVar;
@@ -25140,9 +25140,9 @@ public class TestCmpDir1OwnpabsOthpabsTblAuto
 			pm.UnloadCache();
 			decimal count;
 			count = (decimal) new NDOQuery<CmpDir1OwnpabsOthpabsTblAutoLeftBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #1");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #1");
 			count = (decimal) new NDOQuery<CmpDir1OwnpabsOthpabsTblAutoRightBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #2");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #2");
 		}
 		catch (Exception)
 		{
@@ -25157,53 +25157,53 @@ public class TestCmpDir1OwnpabsOthpabsTblAuto
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestSaveReloadNull()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 		ownVar.RelField = null;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.Null(ownVar.RelField, "There should be no object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Null, "There should be no object");
 	}
 	[Test]
 	public void TestChangeKeyHolderLeft()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 		int x = ownVar.RelField.Dummy;
 		ownVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestChangeKeyHolderLeftNoTouch()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 		ownVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 	}
 	void CreateObjects()
 	{
@@ -25226,7 +25226,7 @@ public class TestCmpDir1OwnpabsOthpabsTblAuto
 
 
 [TestFixture]
-public class TestCmpBi11OwnpabsOthpabsNoTblAuto
+public class TestCmpBi11OwnpabsOthpabsNoTblAuto : NDOTest
 {
 	CmpBi11OwnpabsOthpabsNoTblAutoLeftBase ownVar;
 	CmpBi11OwnpabsOthpabsNoTblAutoRightBase otherVar;
@@ -25250,9 +25250,9 @@ public class TestCmpBi11OwnpabsOthpabsNoTblAuto
 			pm.UnloadCache();
 			decimal count;
 			count = (decimal) new NDOQuery<CmpBi11OwnpabsOthpabsNoTblAutoLeftBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #1");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #1");
 			count = (decimal) new NDOQuery<CmpBi11OwnpabsOthpabsNoTblAutoRightBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #2");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #2");
 		}
 		catch (Exception)
 		{
@@ -25269,14 +25269,14 @@ public class TestCmpBi11OwnpabsOthpabsNoTblAuto
 		{
 			CreateObjects();
 			QueryOwn();
-			Assert.NotNull(ownVar, "No Query Result");
-			Assert.NotNull(ownVar.RelField, "No related object");
+			Assert.That(ownVar, Is.Not.Null, "No Query Result");
+			Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 		}
 		catch (NDOException)
 		{
 			thrown = true;
 		}
-		Assert.AreEqual(true, thrown, "NDOException should have been thrown");
+		Assert.That(true, Is.EqualTo(thrown), "NDOException should have been thrown");
 	}
 	[Test]
 	public void TestSaveReloadNull()
@@ -25286,20 +25286,20 @@ public class TestCmpBi11OwnpabsOthpabsNoTblAuto
 		{
 			CreateObjects();
 			QueryOwn();
-			Assert.NotNull(ownVar, "No Query Result");
-			Assert.NotNull(ownVar.RelField, "No related object");
+			Assert.That(ownVar, Is.Not.Null, "No Query Result");
+			Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 			ownVar.RelField = null;
 			pm.Save();
 			pm.UnloadCache();
 			QueryOwn();
-			Assert.NotNull(ownVar, "No Query Result");
-			Assert.Null(ownVar.RelField, "There should be no object");
+			Assert.That(ownVar, Is.Not.Null, "No Query Result");
+			Assert.That(ownVar.RelField, Is.Null, "There should be no object");
 		}
 		catch (NDOException)
 		{
 			thrown = true;
 		}
-		Assert.AreEqual(true, thrown, "NDOException should have been thrown");
+		Assert.That(true, Is.EqualTo(thrown), "NDOException should have been thrown");
 	}
 	[Test]
 	public void TestRelationHash()
@@ -25343,7 +25343,7 @@ public class TestCmpBi11OwnpabsOthpabsNoTblAuto
 
 
 [TestFixture]
-public class TestCmpBi11OwnpabsOthpabsTblAuto
+public class TestCmpBi11OwnpabsOthpabsTblAuto : NDOTest
 {
 	CmpBi11OwnpabsOthpabsTblAutoLeftBase ownVar;
 	CmpBi11OwnpabsOthpabsTblAutoRightBase otherVar;
@@ -25367,9 +25367,9 @@ public class TestCmpBi11OwnpabsOthpabsTblAuto
 			pm.UnloadCache();
 			decimal count;
 			count = (decimal) new NDOQuery<CmpBi11OwnpabsOthpabsTblAutoLeftBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #1");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #1");
 			count = (decimal) new NDOQuery<CmpBi11OwnpabsOthpabsTblAutoRightBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #2");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #2");
 		}
 		catch (Exception)
 		{
@@ -25384,84 +25384,84 @@ public class TestCmpBi11OwnpabsOthpabsTblAuto
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestSaveReloadNull()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 		ownVar.RelField = null;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.Null(ownVar.RelField, "There should be no object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Null, "There should be no object");
 	}
 	[Test]
 	public void TestChangeKeyHolderLeft()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 		int x = ownVar.RelField.Dummy;
 		ownVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestChangeKeyHolderRight()
 	{
 		CreateObjects();
 		QueryOther();
-		Assert.NotNull(otherVar, "No Query Result");
-		Assert.NotNull(otherVar.RelField, "No related object");
+		Assert.That(otherVar, Is.Not.Null, "No Query Result");
+		Assert.That(otherVar.RelField, Is.Not.Null, "No related object");
 		int x = otherVar.RelField.Dummy;
 		otherVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOther();
-		Assert.NotNull(otherVar, "No Query Result");
-		Assert.NotNull(otherVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(otherVar.RelField, "No related object");
+		Assert.That(otherVar, Is.Not.Null, "No Query Result");
+		Assert.That(otherVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(otherVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestChangeKeyHolderLeftNoTouch()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 		ownVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestChangeKeyHolderRightNoTouch()
 	{
 		CreateObjects();
 		QueryOther();
-		Assert.NotNull(otherVar, "No Query Result");
-		Assert.NotNull(otherVar.RelField, "No related object");
+		Assert.That(otherVar, Is.Not.Null, "No Query Result");
+		Assert.That(otherVar.RelField, Is.Not.Null, "No related object");
 		otherVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOther();
-		Assert.NotNull(otherVar, "No Query Result");
-		Assert.NotNull(otherVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(otherVar.RelField, "No related object");
+		Assert.That(otherVar, Is.Not.Null, "No Query Result");
+		Assert.That(otherVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(otherVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestRelationHash()
@@ -25504,7 +25504,7 @@ public class TestCmpBi11OwnpabsOthpabsTblAuto
 
 
 [TestFixture]
-public class TestCmpDirnOwnpabsOthpabsTblAuto
+public class TestCmpDirnOwnpabsOthpabsTblAuto : NDOTest
 {
 	CmpDirnOwnpabsOthpabsTblAutoLeftBase ownVar;
 	CmpDirnOwnpabsOthpabsTblAutoRightBase otherVar;
@@ -25528,9 +25528,9 @@ public class TestCmpDirnOwnpabsOthpabsTblAuto
 			pm.UnloadCache();
 			decimal count;
 			count = (decimal) new NDOQuery<CmpDirnOwnpabsOthpabsTblAutoLeftBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #1");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #1");
 			count = (decimal) new NDOQuery<CmpDirnOwnpabsOthpabsTblAutoRightBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #2");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #2");
 		}
 		catch (Exception)
 		{
@@ -25545,36 +25545,36 @@ public class TestCmpDirnOwnpabsOthpabsTblAuto
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(1, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(1, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 	}
 	[Test]
 	public void TestSaveReloadNull()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(1, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(1, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 		ownVar.RelField = new List<CmpDirnOwnpabsOthpabsTblAutoRightBase>();
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(0, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(0, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 	}
 	[Test]
 	public void TestSaveReloadRemove()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(1, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(1, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 		ownVar.RemoveRelatedObject();
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(0, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(0, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 	}
 	void CreateObjects()
 	{
@@ -25597,7 +25597,7 @@ public class TestCmpDirnOwnpabsOthpabsTblAuto
 
 
 [TestFixture]
-public class TestCmpBin1OwnpabsOthpabsTblAuto
+public class TestCmpBin1OwnpabsOthpabsTblAuto : NDOTest
 {
 	CmpBin1OwnpabsOthpabsTblAutoLeftBase ownVar;
 	CmpBin1OwnpabsOthpabsTblAutoRightBase otherVar;
@@ -25621,9 +25621,9 @@ public class TestCmpBin1OwnpabsOthpabsTblAuto
 			pm.UnloadCache();
 			decimal count;
 			count = (decimal) new NDOQuery<CmpBin1OwnpabsOthpabsTblAutoLeftBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #1");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #1");
 			count = (decimal) new NDOQuery<CmpBin1OwnpabsOthpabsTblAutoRightBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #2");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #2");
 		}
 		catch (Exception)
 		{
@@ -25638,67 +25638,67 @@ public class TestCmpBin1OwnpabsOthpabsTblAuto
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(1, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(1, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 	}
 	[Test]
 	public void TestSaveReloadNull()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(1, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(1, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 		ownVar.RelField = new List<CmpBin1OwnpabsOthpabsTblAutoRightBase>();
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(0, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(0, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 	}
 	[Test]
 	public void TestSaveReloadRemove()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(1, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(1, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 		ownVar.RemoveRelatedObject();
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(0, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(0, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 	}
 	[Test]
 	public void TestChangeKeyHolderRight()
 	{
 		CreateObjects();
 		QueryOther();
-		Assert.NotNull(otherVar, "No Query Result");
-		Assert.NotNull(otherVar.RelField, "No related object");
+		Assert.That(otherVar, Is.Not.Null, "No Query Result");
+		Assert.That(otherVar.RelField, Is.Not.Null, "No related object");
 		int x = otherVar.RelField.Dummy;
 		otherVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOther();
-		Assert.NotNull(otherVar, "No Query Result");
-		Assert.NotNull(otherVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(otherVar.RelField, "No related object");
+		Assert.That(otherVar, Is.Not.Null, "No Query Result");
+		Assert.That(otherVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(otherVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestChangeKeyHolderRightNoTouch()
 	{
 		CreateObjects();
 		QueryOther();
-		Assert.NotNull(otherVar, "No Query Result");
-		Assert.NotNull(otherVar.RelField, "No related object");
+		Assert.That(otherVar, Is.Not.Null, "No Query Result");
+		Assert.That(otherVar.RelField, Is.Not.Null, "No related object");
 		otherVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOther();
-		Assert.NotNull(otherVar, "No Query Result");
-		Assert.NotNull(otherVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(otherVar.RelField, "No related object");
+		Assert.That(otherVar, Is.Not.Null, "No Query Result");
+		Assert.That(otherVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(otherVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestRelationHash()
@@ -25741,7 +25741,7 @@ public class TestCmpBin1OwnpabsOthpabsTblAuto
 
 
 [TestFixture]
-public class TestCmpBi1nOwnpabsOthpabsTblAuto
+public class TestCmpBi1nOwnpabsOthpabsTblAuto : NDOTest
 {
 	CmpBi1nOwnpabsOthpabsTblAutoLeftBase ownVar;
 	CmpBi1nOwnpabsOthpabsTblAutoRightBase otherVar;
@@ -25765,9 +25765,9 @@ public class TestCmpBi1nOwnpabsOthpabsTblAuto
 			pm.UnloadCache();
 			decimal count;
 			count = (decimal) new NDOQuery<CmpBi1nOwnpabsOthpabsTblAutoLeftBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #1");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #1");
 			count = (decimal) new NDOQuery<CmpBi1nOwnpabsOthpabsTblAutoRightBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #2");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #2");
 		}
 		catch (Exception)
 		{
@@ -25782,53 +25782,53 @@ public class TestCmpBi1nOwnpabsOthpabsTblAuto
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestSaveReloadNull()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 		ownVar.RelField = null;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.Null(ownVar.RelField, "There should be no object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Null, "There should be no object");
 	}
 	[Test]
 	public void TestChangeKeyHolderLeft()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 		int x = ownVar.RelField.Dummy;
 		ownVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestChangeKeyHolderLeftNoTouch()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 		ownVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestRelationHash()
@@ -25871,7 +25871,7 @@ public class TestCmpBi1nOwnpabsOthpabsTblAuto
 
 
 [TestFixture]
-public class TestCmpBinnOwnpabsOthpabsTblAuto
+public class TestCmpBinnOwnpabsOthpabsTblAuto : NDOTest
 {
 	CmpBinnOwnpabsOthpabsTblAutoLeftBase ownVar;
 	CmpBinnOwnpabsOthpabsTblAutoRightBase otherVar;
@@ -25895,9 +25895,9 @@ public class TestCmpBinnOwnpabsOthpabsTblAuto
 			pm.UnloadCache();
 			decimal count;
 			count = (decimal) new NDOQuery<CmpBinnOwnpabsOthpabsTblAutoLeftBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #1");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #1");
 			count = (decimal) new NDOQuery<CmpBinnOwnpabsOthpabsTblAutoRightBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #2");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #2");
 		}
 		catch (Exception)
 		{
@@ -25912,36 +25912,36 @@ public class TestCmpBinnOwnpabsOthpabsTblAuto
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(1, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(1, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 	}
 	[Test]
 	public void TestSaveReloadNull()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(1, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(1, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 		ownVar.RelField = new List<CmpBinnOwnpabsOthpabsTblAutoRightBase>();
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(0, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(0, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 	}
 	[Test]
 	public void TestSaveReloadRemove()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(1, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(1, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 		ownVar.RemoveRelatedObject();
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(0, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(0, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 	}
 	[Test]
 	public void TestRelationHash()
@@ -25984,7 +25984,7 @@ public class TestCmpBinnOwnpabsOthpabsTblAuto
 
 
 [TestFixture]
-public class TestAgrDir1OwnpabsNoTblGuid
+public class TestAgrDir1OwnpabsNoTblGuid : NDOTest
 {
 	AgrDir1OwnpabsNoTblGuidLeftBase ownVar;
 	AgrDir1OwnpabsNoTblGuidRight otherVar;
@@ -26012,9 +26012,9 @@ public class TestAgrDir1OwnpabsNoTblGuid
 			pm.UnloadCache();
 			decimal count;
 			count = (decimal) new NDOQuery<AgrDir1OwnpabsNoTblGuidLeftBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #1");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #1");
 			count = (decimal) new NDOQuery<AgrDir1OwnpabsNoTblGuidRight>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #2");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #2");
 		}
 		catch (Exception)
 		{
@@ -26028,53 +26028,53 @@ public class TestAgrDir1OwnpabsNoTblGuid
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestSaveReloadNull()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 		ownVar.RelField = null;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.Null(ownVar.RelField, "There should be no object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Null, "There should be no object");
 	}
 	[Test]
 	public void TestChangeKeyHolderLeft()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 		int x = ownVar.RelField.Dummy;
 		ownVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestChangeKeyHolderLeftNoTouch()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 		ownVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 	}
 	void CreateObjects()
 	{
@@ -26098,7 +26098,7 @@ public class TestAgrDir1OwnpabsNoTblGuid
 
 
 [TestFixture]
-public class TestAgrDir1OwnpabsTblGuid
+public class TestAgrDir1OwnpabsTblGuid : NDOTest
 {
 	AgrDir1OwnpabsTblGuidLeftBase ownVar;
 	AgrDir1OwnpabsTblGuidRight otherVar;
@@ -26126,9 +26126,9 @@ public class TestAgrDir1OwnpabsTblGuid
 			pm.UnloadCache();
 			decimal count;
 			count = (decimal) new NDOQuery<AgrDir1OwnpabsTblGuidLeftBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #1");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #1");
 			count = (decimal) new NDOQuery<AgrDir1OwnpabsTblGuidRight>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #2");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #2");
 		}
 		catch (Exception)
 		{
@@ -26143,53 +26143,53 @@ public class TestAgrDir1OwnpabsTblGuid
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestSaveReloadNull()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 		ownVar.RelField = null;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.Null(ownVar.RelField, "There should be no object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Null, "There should be no object");
 	}
 	[Test]
 	public void TestChangeKeyHolderLeft()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 		int x = ownVar.RelField.Dummy;
 		ownVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestChangeKeyHolderLeftNoTouch()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 		ownVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 	}
 	void CreateObjects()
 	{
@@ -26213,7 +26213,7 @@ public class TestAgrDir1OwnpabsTblGuid
 
 
 [TestFixture]
-public class TestAgrBi11OwnpabsNoTblGuid
+public class TestAgrBi11OwnpabsNoTblGuid : NDOTest
 {
 	AgrBi11OwnpabsNoTblGuidLeftBase ownVar;
 	AgrBi11OwnpabsNoTblGuidRight otherVar;
@@ -26241,9 +26241,9 @@ public class TestAgrBi11OwnpabsNoTblGuid
 			pm.UnloadCache();
 			decimal count;
 			count = (decimal) new NDOQuery<AgrBi11OwnpabsNoTblGuidLeftBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #1");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #1");
 			count = (decimal) new NDOQuery<AgrBi11OwnpabsNoTblGuidRight>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #2");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #2");
 		}
 		catch (Exception)
 		{
@@ -26257,84 +26257,84 @@ public class TestAgrBi11OwnpabsNoTblGuid
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestSaveReloadNull()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 		ownVar.RelField = null;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.Null(ownVar.RelField, "There should be no object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Null, "There should be no object");
 	}
 	[Test]
 	public void TestChangeKeyHolderLeft()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 		int x = ownVar.RelField.Dummy;
 		ownVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestChangeKeyHolderRight()
 	{
 		CreateObjects();
 		QueryOther();
-		Assert.NotNull(otherVar, "No Query Result");
-		Assert.NotNull(otherVar.RelField, "No related object");
+		Assert.That(otherVar, Is.Not.Null, "No Query Result");
+		Assert.That(otherVar.RelField, Is.Not.Null, "No related object");
 		int x = otherVar.RelField.Dummy;
 		otherVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOther();
-		Assert.NotNull(otherVar, "No Query Result");
-		Assert.NotNull(otherVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(otherVar.RelField, "No related object");
+		Assert.That(otherVar, Is.Not.Null, "No Query Result");
+		Assert.That(otherVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(otherVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestChangeKeyHolderLeftNoTouch()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 		ownVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestChangeKeyHolderRightNoTouch()
 	{
 		CreateObjects();
 		QueryOther();
-		Assert.NotNull(otherVar, "No Query Result");
-		Assert.NotNull(otherVar.RelField, "No related object");
+		Assert.That(otherVar, Is.Not.Null, "No Query Result");
+		Assert.That(otherVar.RelField, Is.Not.Null, "No related object");
 		otherVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOther();
-		Assert.NotNull(otherVar, "No Query Result");
-		Assert.NotNull(otherVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(otherVar.RelField, "No related object");
+		Assert.That(otherVar, Is.Not.Null, "No Query Result");
+		Assert.That(otherVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(otherVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestRelationHash()
@@ -26372,7 +26372,7 @@ public class TestAgrBi11OwnpabsNoTblGuid
 
 
 [TestFixture]
-public class TestAgrBi11OwnpabsTblGuid
+public class TestAgrBi11OwnpabsTblGuid : NDOTest
 {
 	AgrBi11OwnpabsTblGuidLeftBase ownVar;
 	AgrBi11OwnpabsTblGuidRight otherVar;
@@ -26400,9 +26400,9 @@ public class TestAgrBi11OwnpabsTblGuid
 			pm.UnloadCache();
 			decimal count;
 			count = (decimal) new NDOQuery<AgrBi11OwnpabsTblGuidLeftBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #1");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #1");
 			count = (decimal) new NDOQuery<AgrBi11OwnpabsTblGuidRight>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #2");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #2");
 		}
 		catch (Exception)
 		{
@@ -26417,84 +26417,84 @@ public class TestAgrBi11OwnpabsTblGuid
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestSaveReloadNull()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 		ownVar.RelField = null;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.Null(ownVar.RelField, "There should be no object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Null, "There should be no object");
 	}
 	[Test]
 	public void TestChangeKeyHolderLeft()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 		int x = ownVar.RelField.Dummy;
 		ownVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestChangeKeyHolderRight()
 	{
 		CreateObjects();
 		QueryOther();
-		Assert.NotNull(otherVar, "No Query Result");
-		Assert.NotNull(otherVar.RelField, "No related object");
+		Assert.That(otherVar, Is.Not.Null, "No Query Result");
+		Assert.That(otherVar.RelField, Is.Not.Null, "No related object");
 		int x = otherVar.RelField.Dummy;
 		otherVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOther();
-		Assert.NotNull(otherVar, "No Query Result");
-		Assert.NotNull(otherVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(otherVar.RelField, "No related object");
+		Assert.That(otherVar, Is.Not.Null, "No Query Result");
+		Assert.That(otherVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(otherVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestChangeKeyHolderLeftNoTouch()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 		ownVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestChangeKeyHolderRightNoTouch()
 	{
 		CreateObjects();
 		QueryOther();
-		Assert.NotNull(otherVar, "No Query Result");
-		Assert.NotNull(otherVar.RelField, "No related object");
+		Assert.That(otherVar, Is.Not.Null, "No Query Result");
+		Assert.That(otherVar.RelField, Is.Not.Null, "No related object");
 		otherVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOther();
-		Assert.NotNull(otherVar, "No Query Result");
-		Assert.NotNull(otherVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(otherVar.RelField, "No related object");
+		Assert.That(otherVar, Is.Not.Null, "No Query Result");
+		Assert.That(otherVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(otherVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestRelationHash()
@@ -26532,7 +26532,7 @@ public class TestAgrBi11OwnpabsTblGuid
 
 
 [TestFixture]
-public class TestAgrDirnOwnpabsNoTblGuid
+public class TestAgrDirnOwnpabsNoTblGuid : NDOTest
 {
 	AgrDirnOwnpabsNoTblGuidLeftBase ownVar;
 	AgrDirnOwnpabsNoTblGuidRight otherVar;
@@ -26560,9 +26560,9 @@ public class TestAgrDirnOwnpabsNoTblGuid
 			pm.UnloadCache();
 			decimal count;
 			count = (decimal) new NDOQuery<AgrDirnOwnpabsNoTblGuidLeftBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #1");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #1");
 			count = (decimal) new NDOQuery<AgrDirnOwnpabsNoTblGuidRight>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #2");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #2");
 		}
 		catch (Exception)
 		{
@@ -26576,36 +26576,36 @@ public class TestAgrDirnOwnpabsNoTblGuid
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(1, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(1, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 	}
 	[Test]
 	public void TestSaveReloadNull()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(1, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(1, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 		ownVar.RelField = new List<AgrDirnOwnpabsNoTblGuidRight>();
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(0, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(0, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 	}
 	[Test]
 	public void TestSaveReloadRemove()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(1, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(1, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 		ownVar.RemoveRelatedObject();
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(0, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(0, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 	}
 	void CreateObjects()
 	{
@@ -26629,7 +26629,7 @@ public class TestAgrDirnOwnpabsNoTblGuid
 
 
 [TestFixture]
-public class TestAgrDirnOwnpabsTblGuid
+public class TestAgrDirnOwnpabsTblGuid : NDOTest
 {
 	AgrDirnOwnpabsTblGuidLeftBase ownVar;
 	AgrDirnOwnpabsTblGuidRight otherVar;
@@ -26657,9 +26657,9 @@ public class TestAgrDirnOwnpabsTblGuid
 			pm.UnloadCache();
 			decimal count;
 			count = (decimal) new NDOQuery<AgrDirnOwnpabsTblGuidLeftBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #1");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #1");
 			count = (decimal) new NDOQuery<AgrDirnOwnpabsTblGuidRight>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #2");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #2");
 		}
 		catch (Exception)
 		{
@@ -26674,36 +26674,36 @@ public class TestAgrDirnOwnpabsTblGuid
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(1, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(1, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 	}
 	[Test]
 	public void TestSaveReloadNull()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(1, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(1, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 		ownVar.RelField = new List<AgrDirnOwnpabsTblGuidRight>();
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(0, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(0, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 	}
 	[Test]
 	public void TestSaveReloadRemove()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(1, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(1, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 		ownVar.RemoveRelatedObject();
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(0, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(0, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 	}
 	void CreateObjects()
 	{
@@ -26727,7 +26727,7 @@ public class TestAgrDirnOwnpabsTblGuid
 
 
 [TestFixture]
-public class TestAgrBin1OwnpabsNoTblGuid
+public class TestAgrBin1OwnpabsNoTblGuid : NDOTest
 {
 	AgrBin1OwnpabsNoTblGuidLeftBase ownVar;
 	AgrBin1OwnpabsNoTblGuidRight otherVar;
@@ -26755,9 +26755,9 @@ public class TestAgrBin1OwnpabsNoTblGuid
 			pm.UnloadCache();
 			decimal count;
 			count = (decimal) new NDOQuery<AgrBin1OwnpabsNoTblGuidLeftBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #1");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #1");
 			count = (decimal) new NDOQuery<AgrBin1OwnpabsNoTblGuidRight>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #2");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #2");
 		}
 		catch (Exception)
 		{
@@ -26771,67 +26771,67 @@ public class TestAgrBin1OwnpabsNoTblGuid
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(1, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(1, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 	}
 	[Test]
 	public void TestSaveReloadNull()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(1, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(1, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 		ownVar.RelField = new List<AgrBin1OwnpabsNoTblGuidRight>();
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(0, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(0, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 	}
 	[Test]
 	public void TestSaveReloadRemove()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(1, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(1, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 		ownVar.RemoveRelatedObject();
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(0, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(0, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 	}
 	[Test]
 	public void TestChangeKeyHolderRight()
 	{
 		CreateObjects();
 		QueryOther();
-		Assert.NotNull(otherVar, "No Query Result");
-		Assert.NotNull(otherVar.RelField, "No related object");
+		Assert.That(otherVar, Is.Not.Null, "No Query Result");
+		Assert.That(otherVar.RelField, Is.Not.Null, "No related object");
 		int x = otherVar.RelField.Dummy;
 		otherVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOther();
-		Assert.NotNull(otherVar, "No Query Result");
-		Assert.NotNull(otherVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(otherVar.RelField, "No related object");
+		Assert.That(otherVar, Is.Not.Null, "No Query Result");
+		Assert.That(otherVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(otherVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestChangeKeyHolderRightNoTouch()
 	{
 		CreateObjects();
 		QueryOther();
-		Assert.NotNull(otherVar, "No Query Result");
-		Assert.NotNull(otherVar.RelField, "No related object");
+		Assert.That(otherVar, Is.Not.Null, "No Query Result");
+		Assert.That(otherVar.RelField, Is.Not.Null, "No related object");
 		otherVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOther();
-		Assert.NotNull(otherVar, "No Query Result");
-		Assert.NotNull(otherVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(otherVar.RelField, "No related object");
+		Assert.That(otherVar, Is.Not.Null, "No Query Result");
+		Assert.That(otherVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(otherVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestRelationHash()
@@ -26869,7 +26869,7 @@ public class TestAgrBin1OwnpabsNoTblGuid
 
 
 [TestFixture]
-public class TestAgrBin1OwnpabsTblGuid
+public class TestAgrBin1OwnpabsTblGuid : NDOTest
 {
 	AgrBin1OwnpabsTblGuidLeftBase ownVar;
 	AgrBin1OwnpabsTblGuidRight otherVar;
@@ -26897,9 +26897,9 @@ public class TestAgrBin1OwnpabsTblGuid
 			pm.UnloadCache();
 			decimal count;
 			count = (decimal) new NDOQuery<AgrBin1OwnpabsTblGuidLeftBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #1");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #1");
 			count = (decimal) new NDOQuery<AgrBin1OwnpabsTblGuidRight>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #2");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #2");
 		}
 		catch (Exception)
 		{
@@ -26914,67 +26914,67 @@ public class TestAgrBin1OwnpabsTblGuid
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(1, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(1, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 	}
 	[Test]
 	public void TestSaveReloadNull()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(1, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(1, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 		ownVar.RelField = new List<AgrBin1OwnpabsTblGuidRight>();
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(0, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(0, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 	}
 	[Test]
 	public void TestSaveReloadRemove()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(1, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(1, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 		ownVar.RemoveRelatedObject();
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(0, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(0, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 	}
 	[Test]
 	public void TestChangeKeyHolderRight()
 	{
 		CreateObjects();
 		QueryOther();
-		Assert.NotNull(otherVar, "No Query Result");
-		Assert.NotNull(otherVar.RelField, "No related object");
+		Assert.That(otherVar, Is.Not.Null, "No Query Result");
+		Assert.That(otherVar.RelField, Is.Not.Null, "No related object");
 		int x = otherVar.RelField.Dummy;
 		otherVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOther();
-		Assert.NotNull(otherVar, "No Query Result");
-		Assert.NotNull(otherVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(otherVar.RelField, "No related object");
+		Assert.That(otherVar, Is.Not.Null, "No Query Result");
+		Assert.That(otherVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(otherVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestChangeKeyHolderRightNoTouch()
 	{
 		CreateObjects();
 		QueryOther();
-		Assert.NotNull(otherVar, "No Query Result");
-		Assert.NotNull(otherVar.RelField, "No related object");
+		Assert.That(otherVar, Is.Not.Null, "No Query Result");
+		Assert.That(otherVar.RelField, Is.Not.Null, "No related object");
 		otherVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOther();
-		Assert.NotNull(otherVar, "No Query Result");
-		Assert.NotNull(otherVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(otherVar.RelField, "No related object");
+		Assert.That(otherVar, Is.Not.Null, "No Query Result");
+		Assert.That(otherVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(otherVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestRelationHash()
@@ -27012,7 +27012,7 @@ public class TestAgrBin1OwnpabsTblGuid
 
 
 [TestFixture]
-public class TestAgrBi1nOwnpabsTblGuid
+public class TestAgrBi1nOwnpabsTblGuid : NDOTest
 {
 	AgrBi1nOwnpabsTblGuidLeftBase ownVar;
 	AgrBi1nOwnpabsTblGuidRight otherVar;
@@ -27040,9 +27040,9 @@ public class TestAgrBi1nOwnpabsTblGuid
 			pm.UnloadCache();
 			decimal count;
 			count = (decimal) new NDOQuery<AgrBi1nOwnpabsTblGuidLeftBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #1");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #1");
 			count = (decimal) new NDOQuery<AgrBi1nOwnpabsTblGuidRight>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #2");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #2");
 		}
 		catch (Exception)
 		{
@@ -27057,53 +27057,53 @@ public class TestAgrBi1nOwnpabsTblGuid
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestSaveReloadNull()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 		ownVar.RelField = null;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.Null(ownVar.RelField, "There should be no object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Null, "There should be no object");
 	}
 	[Test]
 	public void TestChangeKeyHolderLeft()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 		int x = ownVar.RelField.Dummy;
 		ownVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestChangeKeyHolderLeftNoTouch()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 		ownVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestRelationHash()
@@ -27141,7 +27141,7 @@ public class TestAgrBi1nOwnpabsTblGuid
 
 
 [TestFixture]
-public class TestAgrBinnOwnpabsTblGuid
+public class TestAgrBinnOwnpabsTblGuid : NDOTest
 {
 	AgrBinnOwnpabsTblGuidLeftBase ownVar;
 	AgrBinnOwnpabsTblGuidRight otherVar;
@@ -27169,9 +27169,9 @@ public class TestAgrBinnOwnpabsTblGuid
 			pm.UnloadCache();
 			decimal count;
 			count = (decimal) new NDOQuery<AgrBinnOwnpabsTblGuidLeftBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #1");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #1");
 			count = (decimal) new NDOQuery<AgrBinnOwnpabsTblGuidRight>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #2");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #2");
 		}
 		catch (Exception)
 		{
@@ -27186,36 +27186,36 @@ public class TestAgrBinnOwnpabsTblGuid
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(1, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(1, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 	}
 	[Test]
 	public void TestSaveReloadNull()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(1, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(1, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 		ownVar.RelField = new List<AgrBinnOwnpabsTblGuidRight>();
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(0, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(0, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 	}
 	[Test]
 	public void TestSaveReloadRemove()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(1, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(1, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 		ownVar.RemoveRelatedObject();
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(0, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(0, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 	}
 	[Test]
 	public void TestRelationHash()
@@ -27253,7 +27253,7 @@ public class TestAgrBinnOwnpabsTblGuid
 
 
 [TestFixture]
-public class TestCmpDir1OwnpabsNoTblGuid
+public class TestCmpDir1OwnpabsNoTblGuid : NDOTest
 {
 	CmpDir1OwnpabsNoTblGuidLeftBase ownVar;
 	CmpDir1OwnpabsNoTblGuidRight otherVar;
@@ -27277,9 +27277,9 @@ public class TestCmpDir1OwnpabsNoTblGuid
 			pm.UnloadCache();
 			decimal count;
 			count = (decimal) new NDOQuery<CmpDir1OwnpabsNoTblGuidLeftBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #1");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #1");
 			count = (decimal) new NDOQuery<CmpDir1OwnpabsNoTblGuidRight>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #2");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #2");
 		}
 		catch (Exception)
 		{
@@ -27293,53 +27293,53 @@ public class TestCmpDir1OwnpabsNoTblGuid
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestSaveReloadNull()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 		ownVar.RelField = null;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.Null(ownVar.RelField, "There should be no object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Null, "There should be no object");
 	}
 	[Test]
 	public void TestChangeKeyHolderLeft()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 		int x = ownVar.RelField.Dummy;
 		ownVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestChangeKeyHolderLeftNoTouch()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 		ownVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 	}
 	void CreateObjects()
 	{
@@ -27362,7 +27362,7 @@ public class TestCmpDir1OwnpabsNoTblGuid
 
 
 [TestFixture]
-public class TestCmpDir1OwnpabsTblGuid
+public class TestCmpDir1OwnpabsTblGuid : NDOTest
 {
 	CmpDir1OwnpabsTblGuidLeftBase ownVar;
 	CmpDir1OwnpabsTblGuidRight otherVar;
@@ -27386,9 +27386,9 @@ public class TestCmpDir1OwnpabsTblGuid
 			pm.UnloadCache();
 			decimal count;
 			count = (decimal) new NDOQuery<CmpDir1OwnpabsTblGuidLeftBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #1");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #1");
 			count = (decimal) new NDOQuery<CmpDir1OwnpabsTblGuidRight>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #2");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #2");
 		}
 		catch (Exception)
 		{
@@ -27403,53 +27403,53 @@ public class TestCmpDir1OwnpabsTblGuid
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestSaveReloadNull()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 		ownVar.RelField = null;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.Null(ownVar.RelField, "There should be no object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Null, "There should be no object");
 	}
 	[Test]
 	public void TestChangeKeyHolderLeft()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 		int x = ownVar.RelField.Dummy;
 		ownVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestChangeKeyHolderLeftNoTouch()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 		ownVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 	}
 	void CreateObjects()
 	{
@@ -27472,7 +27472,7 @@ public class TestCmpDir1OwnpabsTblGuid
 
 
 [TestFixture]
-public class TestCmpBi11OwnpabsNoTblGuid
+public class TestCmpBi11OwnpabsNoTblGuid : NDOTest
 {
 	CmpBi11OwnpabsNoTblGuidLeftBase ownVar;
 	CmpBi11OwnpabsNoTblGuidRight otherVar;
@@ -27496,9 +27496,9 @@ public class TestCmpBi11OwnpabsNoTblGuid
 			pm.UnloadCache();
 			decimal count;
 			count = (decimal) new NDOQuery<CmpBi11OwnpabsNoTblGuidLeftBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #1");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #1");
 			count = (decimal) new NDOQuery<CmpBi11OwnpabsNoTblGuidRight>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #2");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #2");
 		}
 		catch (Exception)
 		{
@@ -27512,84 +27512,84 @@ public class TestCmpBi11OwnpabsNoTblGuid
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestSaveReloadNull()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 		ownVar.RelField = null;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.Null(ownVar.RelField, "There should be no object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Null, "There should be no object");
 	}
 	[Test]
 	public void TestChangeKeyHolderLeft()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 		int x = ownVar.RelField.Dummy;
 		ownVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestChangeKeyHolderRight()
 	{
 		CreateObjects();
 		QueryOther();
-		Assert.NotNull(otherVar, "No Query Result");
-		Assert.NotNull(otherVar.RelField, "No related object");
+		Assert.That(otherVar, Is.Not.Null, "No Query Result");
+		Assert.That(otherVar.RelField, Is.Not.Null, "No related object");
 		int x = otherVar.RelField.Dummy;
 		otherVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOther();
-		Assert.NotNull(otherVar, "No Query Result");
-		Assert.NotNull(otherVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(otherVar.RelField, "No related object");
+		Assert.That(otherVar, Is.Not.Null, "No Query Result");
+		Assert.That(otherVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(otherVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestChangeKeyHolderLeftNoTouch()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 		ownVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestChangeKeyHolderRightNoTouch()
 	{
 		CreateObjects();
 		QueryOther();
-		Assert.NotNull(otherVar, "No Query Result");
-		Assert.NotNull(otherVar.RelField, "No related object");
+		Assert.That(otherVar, Is.Not.Null, "No Query Result");
+		Assert.That(otherVar.RelField, Is.Not.Null, "No related object");
 		otherVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOther();
-		Assert.NotNull(otherVar, "No Query Result");
-		Assert.NotNull(otherVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(otherVar.RelField, "No related object");
+		Assert.That(otherVar, Is.Not.Null, "No Query Result");
+		Assert.That(otherVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(otherVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestRelationHash()
@@ -27626,7 +27626,7 @@ public class TestCmpBi11OwnpabsNoTblGuid
 
 
 [TestFixture]
-public class TestCmpBi11OwnpabsTblGuid
+public class TestCmpBi11OwnpabsTblGuid : NDOTest
 {
 	CmpBi11OwnpabsTblGuidLeftBase ownVar;
 	CmpBi11OwnpabsTblGuidRight otherVar;
@@ -27650,9 +27650,9 @@ public class TestCmpBi11OwnpabsTblGuid
 			pm.UnloadCache();
 			decimal count;
 			count = (decimal) new NDOQuery<CmpBi11OwnpabsTblGuidLeftBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #1");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #1");
 			count = (decimal) new NDOQuery<CmpBi11OwnpabsTblGuidRight>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #2");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #2");
 		}
 		catch (Exception)
 		{
@@ -27667,84 +27667,84 @@ public class TestCmpBi11OwnpabsTblGuid
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestSaveReloadNull()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 		ownVar.RelField = null;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.Null(ownVar.RelField, "There should be no object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Null, "There should be no object");
 	}
 	[Test]
 	public void TestChangeKeyHolderLeft()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 		int x = ownVar.RelField.Dummy;
 		ownVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestChangeKeyHolderRight()
 	{
 		CreateObjects();
 		QueryOther();
-		Assert.NotNull(otherVar, "No Query Result");
-		Assert.NotNull(otherVar.RelField, "No related object");
+		Assert.That(otherVar, Is.Not.Null, "No Query Result");
+		Assert.That(otherVar.RelField, Is.Not.Null, "No related object");
 		int x = otherVar.RelField.Dummy;
 		otherVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOther();
-		Assert.NotNull(otherVar, "No Query Result");
-		Assert.NotNull(otherVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(otherVar.RelField, "No related object");
+		Assert.That(otherVar, Is.Not.Null, "No Query Result");
+		Assert.That(otherVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(otherVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestChangeKeyHolderLeftNoTouch()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 		ownVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestChangeKeyHolderRightNoTouch()
 	{
 		CreateObjects();
 		QueryOther();
-		Assert.NotNull(otherVar, "No Query Result");
-		Assert.NotNull(otherVar.RelField, "No related object");
+		Assert.That(otherVar, Is.Not.Null, "No Query Result");
+		Assert.That(otherVar.RelField, Is.Not.Null, "No related object");
 		otherVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOther();
-		Assert.NotNull(otherVar, "No Query Result");
-		Assert.NotNull(otherVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(otherVar.RelField, "No related object");
+		Assert.That(otherVar, Is.Not.Null, "No Query Result");
+		Assert.That(otherVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(otherVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestRelationHash()
@@ -27781,7 +27781,7 @@ public class TestCmpBi11OwnpabsTblGuid
 
 
 [TestFixture]
-public class TestCmpDirnOwnpabsNoTblGuid
+public class TestCmpDirnOwnpabsNoTblGuid : NDOTest
 {
 	CmpDirnOwnpabsNoTblGuidLeftBase ownVar;
 	CmpDirnOwnpabsNoTblGuidRight otherVar;
@@ -27805,9 +27805,9 @@ public class TestCmpDirnOwnpabsNoTblGuid
 			pm.UnloadCache();
 			decimal count;
 			count = (decimal) new NDOQuery<CmpDirnOwnpabsNoTblGuidLeftBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #1");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #1");
 			count = (decimal) new NDOQuery<CmpDirnOwnpabsNoTblGuidRight>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #2");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #2");
 		}
 		catch (Exception)
 		{
@@ -27821,36 +27821,36 @@ public class TestCmpDirnOwnpabsNoTblGuid
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(1, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(1, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 	}
 	[Test]
 	public void TestSaveReloadNull()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(1, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(1, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 		ownVar.RelField = new List<CmpDirnOwnpabsNoTblGuidRight>();
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(0, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(0, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 	}
 	[Test]
 	public void TestSaveReloadRemove()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(1, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(1, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 		ownVar.RemoveRelatedObject();
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(0, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(0, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 	}
 	void CreateObjects()
 	{
@@ -27873,7 +27873,7 @@ public class TestCmpDirnOwnpabsNoTblGuid
 
 
 [TestFixture]
-public class TestCmpDirnOwnpabsTblGuid
+public class TestCmpDirnOwnpabsTblGuid : NDOTest
 {
 	CmpDirnOwnpabsTblGuidLeftBase ownVar;
 	CmpDirnOwnpabsTblGuidRight otherVar;
@@ -27897,9 +27897,9 @@ public class TestCmpDirnOwnpabsTblGuid
 			pm.UnloadCache();
 			decimal count;
 			count = (decimal) new NDOQuery<CmpDirnOwnpabsTblGuidLeftBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #1");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #1");
 			count = (decimal) new NDOQuery<CmpDirnOwnpabsTblGuidRight>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #2");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #2");
 		}
 		catch (Exception)
 		{
@@ -27914,36 +27914,36 @@ public class TestCmpDirnOwnpabsTblGuid
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(1, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(1, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 	}
 	[Test]
 	public void TestSaveReloadNull()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(1, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(1, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 		ownVar.RelField = new List<CmpDirnOwnpabsTblGuidRight>();
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(0, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(0, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 	}
 	[Test]
 	public void TestSaveReloadRemove()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(1, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(1, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 		ownVar.RemoveRelatedObject();
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(0, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(0, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 	}
 	void CreateObjects()
 	{
@@ -27966,7 +27966,7 @@ public class TestCmpDirnOwnpabsTblGuid
 
 
 [TestFixture]
-public class TestCmpBin1OwnpabsNoTblGuid
+public class TestCmpBin1OwnpabsNoTblGuid : NDOTest
 {
 	CmpBin1OwnpabsNoTblGuidLeftBase ownVar;
 	CmpBin1OwnpabsNoTblGuidRight otherVar;
@@ -27990,9 +27990,9 @@ public class TestCmpBin1OwnpabsNoTblGuid
 			pm.UnloadCache();
 			decimal count;
 			count = (decimal) new NDOQuery<CmpBin1OwnpabsNoTblGuidLeftBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #1");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #1");
 			count = (decimal) new NDOQuery<CmpBin1OwnpabsNoTblGuidRight>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #2");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #2");
 		}
 		catch (Exception)
 		{
@@ -28006,67 +28006,67 @@ public class TestCmpBin1OwnpabsNoTblGuid
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(1, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(1, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 	}
 	[Test]
 	public void TestSaveReloadNull()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(1, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(1, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 		ownVar.RelField = new List<CmpBin1OwnpabsNoTblGuidRight>();
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(0, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(0, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 	}
 	[Test]
 	public void TestSaveReloadRemove()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(1, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(1, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 		ownVar.RemoveRelatedObject();
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(0, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(0, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 	}
 	[Test]
 	public void TestChangeKeyHolderRight()
 	{
 		CreateObjects();
 		QueryOther();
-		Assert.NotNull(otherVar, "No Query Result");
-		Assert.NotNull(otherVar.RelField, "No related object");
+		Assert.That(otherVar, Is.Not.Null, "No Query Result");
+		Assert.That(otherVar.RelField, Is.Not.Null, "No related object");
 		int x = otherVar.RelField.Dummy;
 		otherVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOther();
-		Assert.NotNull(otherVar, "No Query Result");
-		Assert.NotNull(otherVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(otherVar.RelField, "No related object");
+		Assert.That(otherVar, Is.Not.Null, "No Query Result");
+		Assert.That(otherVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(otherVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestChangeKeyHolderRightNoTouch()
 	{
 		CreateObjects();
 		QueryOther();
-		Assert.NotNull(otherVar, "No Query Result");
-		Assert.NotNull(otherVar.RelField, "No related object");
+		Assert.That(otherVar, Is.Not.Null, "No Query Result");
+		Assert.That(otherVar.RelField, Is.Not.Null, "No related object");
 		otherVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOther();
-		Assert.NotNull(otherVar, "No Query Result");
-		Assert.NotNull(otherVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(otherVar.RelField, "No related object");
+		Assert.That(otherVar, Is.Not.Null, "No Query Result");
+		Assert.That(otherVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(otherVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestRelationHash()
@@ -28103,7 +28103,7 @@ public class TestCmpBin1OwnpabsNoTblGuid
 
 
 [TestFixture]
-public class TestCmpBin1OwnpabsTblGuid
+public class TestCmpBin1OwnpabsTblGuid : NDOTest
 {
 	CmpBin1OwnpabsTblGuidLeftBase ownVar;
 	CmpBin1OwnpabsTblGuidRight otherVar;
@@ -28127,9 +28127,9 @@ public class TestCmpBin1OwnpabsTblGuid
 			pm.UnloadCache();
 			decimal count;
 			count = (decimal) new NDOQuery<CmpBin1OwnpabsTblGuidLeftBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #1");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #1");
 			count = (decimal) new NDOQuery<CmpBin1OwnpabsTblGuidRight>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #2");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #2");
 		}
 		catch (Exception)
 		{
@@ -28144,67 +28144,67 @@ public class TestCmpBin1OwnpabsTblGuid
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(1, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(1, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 	}
 	[Test]
 	public void TestSaveReloadNull()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(1, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(1, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 		ownVar.RelField = new List<CmpBin1OwnpabsTblGuidRight>();
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(0, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(0, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 	}
 	[Test]
 	public void TestSaveReloadRemove()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(1, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(1, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 		ownVar.RemoveRelatedObject();
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(0, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(0, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 	}
 	[Test]
 	public void TestChangeKeyHolderRight()
 	{
 		CreateObjects();
 		QueryOther();
-		Assert.NotNull(otherVar, "No Query Result");
-		Assert.NotNull(otherVar.RelField, "No related object");
+		Assert.That(otherVar, Is.Not.Null, "No Query Result");
+		Assert.That(otherVar.RelField, Is.Not.Null, "No related object");
 		int x = otherVar.RelField.Dummy;
 		otherVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOther();
-		Assert.NotNull(otherVar, "No Query Result");
-		Assert.NotNull(otherVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(otherVar.RelField, "No related object");
+		Assert.That(otherVar, Is.Not.Null, "No Query Result");
+		Assert.That(otherVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(otherVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestChangeKeyHolderRightNoTouch()
 	{
 		CreateObjects();
 		QueryOther();
-		Assert.NotNull(otherVar, "No Query Result");
-		Assert.NotNull(otherVar.RelField, "No related object");
+		Assert.That(otherVar, Is.Not.Null, "No Query Result");
+		Assert.That(otherVar.RelField, Is.Not.Null, "No related object");
 		otherVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOther();
-		Assert.NotNull(otherVar, "No Query Result");
-		Assert.NotNull(otherVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(otherVar.RelField, "No related object");
+		Assert.That(otherVar, Is.Not.Null, "No Query Result");
+		Assert.That(otherVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(otherVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestRelationHash()
@@ -28241,7 +28241,7 @@ public class TestCmpBin1OwnpabsTblGuid
 
 
 [TestFixture]
-public class TestCmpBi1nOwnpabsTblGuid
+public class TestCmpBi1nOwnpabsTblGuid : NDOTest
 {
 	CmpBi1nOwnpabsTblGuidLeftBase ownVar;
 	CmpBi1nOwnpabsTblGuidRight otherVar;
@@ -28265,9 +28265,9 @@ public class TestCmpBi1nOwnpabsTblGuid
 			pm.UnloadCache();
 			decimal count;
 			count = (decimal) new NDOQuery<CmpBi1nOwnpabsTblGuidLeftBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #1");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #1");
 			count = (decimal) new NDOQuery<CmpBi1nOwnpabsTblGuidRight>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #2");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #2");
 		}
 		catch (Exception)
 		{
@@ -28282,53 +28282,53 @@ public class TestCmpBi1nOwnpabsTblGuid
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestSaveReloadNull()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 		ownVar.RelField = null;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.Null(ownVar.RelField, "There should be no object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Null, "There should be no object");
 	}
 	[Test]
 	public void TestChangeKeyHolderLeft()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 		int x = ownVar.RelField.Dummy;
 		ownVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestChangeKeyHolderLeftNoTouch()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 		ownVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestRelationHash()
@@ -28365,7 +28365,7 @@ public class TestCmpBi1nOwnpabsTblGuid
 
 
 [TestFixture]
-public class TestCmpBinnOwnpabsTblGuid
+public class TestCmpBinnOwnpabsTblGuid : NDOTest
 {
 	CmpBinnOwnpabsTblGuidLeftBase ownVar;
 	CmpBinnOwnpabsTblGuidRight otherVar;
@@ -28389,9 +28389,9 @@ public class TestCmpBinnOwnpabsTblGuid
 			pm.UnloadCache();
 			decimal count;
 			count = (decimal) new NDOQuery<CmpBinnOwnpabsTblGuidLeftBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #1");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #1");
 			count = (decimal) new NDOQuery<CmpBinnOwnpabsTblGuidRight>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #2");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #2");
 		}
 		catch (Exception)
 		{
@@ -28406,36 +28406,36 @@ public class TestCmpBinnOwnpabsTblGuid
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(1, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(1, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 	}
 	[Test]
 	public void TestSaveReloadNull()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(1, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(1, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 		ownVar.RelField = new List<CmpBinnOwnpabsTblGuidRight>();
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(0, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(0, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 	}
 	[Test]
 	public void TestSaveReloadRemove()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(1, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(1, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 		ownVar.RemoveRelatedObject();
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(0, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(0, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 	}
 	[Test]
 	public void TestRelationHash()
@@ -28472,7 +28472,7 @@ public class TestCmpBinnOwnpabsTblGuid
 
 
 [TestFixture]
-public class TestAgrDir1OthpabsNoTblGuid
+public class TestAgrDir1OthpabsNoTblGuid : NDOTest
 {
 	AgrDir1OthpabsNoTblGuidLeft ownVar;
 	AgrDir1OthpabsNoTblGuidRightBase otherVar;
@@ -28500,9 +28500,9 @@ public class TestAgrDir1OthpabsNoTblGuid
 			pm.UnloadCache();
 			decimal count;
 			count = (decimal) new NDOQuery<AgrDir1OthpabsNoTblGuidLeft>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #1");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #1");
 			count = (decimal) new NDOQuery<AgrDir1OthpabsNoTblGuidRightBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #2");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #2");
 		}
 		catch (Exception)
 		{
@@ -28516,53 +28516,53 @@ public class TestAgrDir1OthpabsNoTblGuid
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestSaveReloadNull()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 		ownVar.RelField = null;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.Null(ownVar.RelField, "There should be no object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Null, "There should be no object");
 	}
 	[Test]
 	public void TestChangeKeyHolderLeft()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 		int x = ownVar.RelField.Dummy;
 		ownVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestChangeKeyHolderLeftNoTouch()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 		ownVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 	}
 	void CreateObjects()
 	{
@@ -28586,7 +28586,7 @@ public class TestAgrDir1OthpabsNoTblGuid
 
 
 [TestFixture]
-public class TestAgrDir1OthpabsTblGuid
+public class TestAgrDir1OthpabsTblGuid : NDOTest
 {
 	AgrDir1OthpabsTblGuidLeft ownVar;
 	AgrDir1OthpabsTblGuidRightBase otherVar;
@@ -28614,9 +28614,9 @@ public class TestAgrDir1OthpabsTblGuid
 			pm.UnloadCache();
 			decimal count;
 			count = (decimal) new NDOQuery<AgrDir1OthpabsTblGuidLeft>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #1");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #1");
 			count = (decimal) new NDOQuery<AgrDir1OthpabsTblGuidRightBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #2");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #2");
 		}
 		catch (Exception)
 		{
@@ -28631,53 +28631,53 @@ public class TestAgrDir1OthpabsTblGuid
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestSaveReloadNull()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 		ownVar.RelField = null;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.Null(ownVar.RelField, "There should be no object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Null, "There should be no object");
 	}
 	[Test]
 	public void TestChangeKeyHolderLeft()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 		int x = ownVar.RelField.Dummy;
 		ownVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestChangeKeyHolderLeftNoTouch()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 		ownVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 	}
 	void CreateObjects()
 	{
@@ -28701,7 +28701,7 @@ public class TestAgrDir1OthpabsTblGuid
 
 
 [TestFixture]
-public class TestAgrBi11OthpabsNoTblGuid
+public class TestAgrBi11OthpabsNoTblGuid : NDOTest
 {
 	AgrBi11OthpabsNoTblGuidLeft ownVar;
 	AgrBi11OthpabsNoTblGuidRightBase otherVar;
@@ -28729,9 +28729,9 @@ public class TestAgrBi11OthpabsNoTblGuid
 			pm.UnloadCache();
 			decimal count;
 			count = (decimal) new NDOQuery<AgrBi11OthpabsNoTblGuidLeft>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #1");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #1");
 			count = (decimal) new NDOQuery<AgrBi11OthpabsNoTblGuidRightBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #2");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #2");
 		}
 		catch (Exception)
 		{
@@ -28745,84 +28745,84 @@ public class TestAgrBi11OthpabsNoTblGuid
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestSaveReloadNull()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 		ownVar.RelField = null;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.Null(ownVar.RelField, "There should be no object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Null, "There should be no object");
 	}
 	[Test]
 	public void TestChangeKeyHolderLeft()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 		int x = ownVar.RelField.Dummy;
 		ownVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestChangeKeyHolderRight()
 	{
 		CreateObjects();
 		QueryOther();
-		Assert.NotNull(otherVar, "No Query Result");
-		Assert.NotNull(otherVar.RelField, "No related object");
+		Assert.That(otherVar, Is.Not.Null, "No Query Result");
+		Assert.That(otherVar.RelField, Is.Not.Null, "No related object");
 		int x = otherVar.RelField.Dummy;
 		otherVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOther();
-		Assert.NotNull(otherVar, "No Query Result");
-		Assert.NotNull(otherVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(otherVar.RelField, "No related object");
+		Assert.That(otherVar, Is.Not.Null, "No Query Result");
+		Assert.That(otherVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(otherVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestChangeKeyHolderLeftNoTouch()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 		ownVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestChangeKeyHolderRightNoTouch()
 	{
 		CreateObjects();
 		QueryOther();
-		Assert.NotNull(otherVar, "No Query Result");
-		Assert.NotNull(otherVar.RelField, "No related object");
+		Assert.That(otherVar, Is.Not.Null, "No Query Result");
+		Assert.That(otherVar.RelField, Is.Not.Null, "No related object");
 		otherVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOther();
-		Assert.NotNull(otherVar, "No Query Result");
-		Assert.NotNull(otherVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(otherVar.RelField, "No related object");
+		Assert.That(otherVar, Is.Not.Null, "No Query Result");
+		Assert.That(otherVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(otherVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestRelationHash()
@@ -28860,7 +28860,7 @@ public class TestAgrBi11OthpabsNoTblGuid
 
 
 [TestFixture]
-public class TestAgrBi11OthpabsTblGuid
+public class TestAgrBi11OthpabsTblGuid : NDOTest
 {
 	AgrBi11OthpabsTblGuidLeft ownVar;
 	AgrBi11OthpabsTblGuidRightBase otherVar;
@@ -28888,9 +28888,9 @@ public class TestAgrBi11OthpabsTblGuid
 			pm.UnloadCache();
 			decimal count;
 			count = (decimal) new NDOQuery<AgrBi11OthpabsTblGuidLeft>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #1");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #1");
 			count = (decimal) new NDOQuery<AgrBi11OthpabsTblGuidRightBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #2");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #2");
 		}
 		catch (Exception)
 		{
@@ -28905,84 +28905,84 @@ public class TestAgrBi11OthpabsTblGuid
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestSaveReloadNull()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 		ownVar.RelField = null;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.Null(ownVar.RelField, "There should be no object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Null, "There should be no object");
 	}
 	[Test]
 	public void TestChangeKeyHolderLeft()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 		int x = ownVar.RelField.Dummy;
 		ownVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestChangeKeyHolderRight()
 	{
 		CreateObjects();
 		QueryOther();
-		Assert.NotNull(otherVar, "No Query Result");
-		Assert.NotNull(otherVar.RelField, "No related object");
+		Assert.That(otherVar, Is.Not.Null, "No Query Result");
+		Assert.That(otherVar.RelField, Is.Not.Null, "No related object");
 		int x = otherVar.RelField.Dummy;
 		otherVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOther();
-		Assert.NotNull(otherVar, "No Query Result");
-		Assert.NotNull(otherVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(otherVar.RelField, "No related object");
+		Assert.That(otherVar, Is.Not.Null, "No Query Result");
+		Assert.That(otherVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(otherVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestChangeKeyHolderLeftNoTouch()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 		ownVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestChangeKeyHolderRightNoTouch()
 	{
 		CreateObjects();
 		QueryOther();
-		Assert.NotNull(otherVar, "No Query Result");
-		Assert.NotNull(otherVar.RelField, "No related object");
+		Assert.That(otherVar, Is.Not.Null, "No Query Result");
+		Assert.That(otherVar.RelField, Is.Not.Null, "No related object");
 		otherVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOther();
-		Assert.NotNull(otherVar, "No Query Result");
-		Assert.NotNull(otherVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(otherVar.RelField, "No related object");
+		Assert.That(otherVar, Is.Not.Null, "No Query Result");
+		Assert.That(otherVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(otherVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestRelationHash()
@@ -29020,7 +29020,7 @@ public class TestAgrBi11OthpabsTblGuid
 
 
 [TestFixture]
-public class TestAgrDirnOthpabsTblGuid
+public class TestAgrDirnOthpabsTblGuid : NDOTest
 {
 	AgrDirnOthpabsTblGuidLeft ownVar;
 	AgrDirnOthpabsTblGuidRightBase otherVar;
@@ -29048,9 +29048,9 @@ public class TestAgrDirnOthpabsTblGuid
 			pm.UnloadCache();
 			decimal count;
 			count = (decimal) new NDOQuery<AgrDirnOthpabsTblGuidLeft>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #1");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #1");
 			count = (decimal) new NDOQuery<AgrDirnOthpabsTblGuidRightBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #2");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #2");
 		}
 		catch (Exception)
 		{
@@ -29065,36 +29065,36 @@ public class TestAgrDirnOthpabsTblGuid
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(1, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(1, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 	}
 	[Test]
 	public void TestSaveReloadNull()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(1, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(1, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 		ownVar.RelField = new List<AgrDirnOthpabsTblGuidRightBase>();
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(0, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(0, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 	}
 	[Test]
 	public void TestSaveReloadRemove()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(1, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(1, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 		ownVar.RemoveRelatedObject();
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(0, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(0, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 	}
 	void CreateObjects()
 	{
@@ -29118,7 +29118,7 @@ public class TestAgrDirnOthpabsTblGuid
 
 
 [TestFixture]
-public class TestAgrBin1OthpabsTblGuid
+public class TestAgrBin1OthpabsTblGuid : NDOTest
 {
 	AgrBin1OthpabsTblGuidLeft ownVar;
 	AgrBin1OthpabsTblGuidRightBase otherVar;
@@ -29146,9 +29146,9 @@ public class TestAgrBin1OthpabsTblGuid
 			pm.UnloadCache();
 			decimal count;
 			count = (decimal) new NDOQuery<AgrBin1OthpabsTblGuidLeft>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #1");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #1");
 			count = (decimal) new NDOQuery<AgrBin1OthpabsTblGuidRightBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #2");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #2");
 		}
 		catch (Exception)
 		{
@@ -29163,67 +29163,67 @@ public class TestAgrBin1OthpabsTblGuid
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(1, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(1, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 	}
 	[Test]
 	public void TestSaveReloadNull()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(1, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(1, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 		ownVar.RelField = new List<AgrBin1OthpabsTblGuidRightBase>();
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(0, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(0, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 	}
 	[Test]
 	public void TestSaveReloadRemove()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(1, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(1, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 		ownVar.RemoveRelatedObject();
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(0, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(0, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 	}
 	[Test]
 	public void TestChangeKeyHolderRight()
 	{
 		CreateObjects();
 		QueryOther();
-		Assert.NotNull(otherVar, "No Query Result");
-		Assert.NotNull(otherVar.RelField, "No related object");
+		Assert.That(otherVar, Is.Not.Null, "No Query Result");
+		Assert.That(otherVar.RelField, Is.Not.Null, "No related object");
 		int x = otherVar.RelField.Dummy;
 		otherVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOther();
-		Assert.NotNull(otherVar, "No Query Result");
-		Assert.NotNull(otherVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(otherVar.RelField, "No related object");
+		Assert.That(otherVar, Is.Not.Null, "No Query Result");
+		Assert.That(otherVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(otherVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestChangeKeyHolderRightNoTouch()
 	{
 		CreateObjects();
 		QueryOther();
-		Assert.NotNull(otherVar, "No Query Result");
-		Assert.NotNull(otherVar.RelField, "No related object");
+		Assert.That(otherVar, Is.Not.Null, "No Query Result");
+		Assert.That(otherVar.RelField, Is.Not.Null, "No related object");
 		otherVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOther();
-		Assert.NotNull(otherVar, "No Query Result");
-		Assert.NotNull(otherVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(otherVar.RelField, "No related object");
+		Assert.That(otherVar, Is.Not.Null, "No Query Result");
+		Assert.That(otherVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(otherVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestRelationHash()
@@ -29261,7 +29261,7 @@ public class TestAgrBin1OthpabsTblGuid
 
 
 [TestFixture]
-public class TestAgrBi1nOthpabsNoTblGuid
+public class TestAgrBi1nOthpabsNoTblGuid : NDOTest
 {
 	AgrBi1nOthpabsNoTblGuidLeft ownVar;
 	AgrBi1nOthpabsNoTblGuidRightBase otherVar;
@@ -29289,9 +29289,9 @@ public class TestAgrBi1nOthpabsNoTblGuid
 			pm.UnloadCache();
 			decimal count;
 			count = (decimal) new NDOQuery<AgrBi1nOthpabsNoTblGuidLeft>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #1");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #1");
 			count = (decimal) new NDOQuery<AgrBi1nOthpabsNoTblGuidRightBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #2");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #2");
 		}
 		catch (Exception)
 		{
@@ -29305,53 +29305,53 @@ public class TestAgrBi1nOthpabsNoTblGuid
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestSaveReloadNull()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 		ownVar.RelField = null;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.Null(ownVar.RelField, "There should be no object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Null, "There should be no object");
 	}
 	[Test]
 	public void TestChangeKeyHolderLeft()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 		int x = ownVar.RelField.Dummy;
 		ownVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestChangeKeyHolderLeftNoTouch()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 		ownVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestRelationHash()
@@ -29389,7 +29389,7 @@ public class TestAgrBi1nOthpabsNoTblGuid
 
 
 [TestFixture]
-public class TestAgrBi1nOthpabsTblGuid
+public class TestAgrBi1nOthpabsTblGuid : NDOTest
 {
 	AgrBi1nOthpabsTblGuidLeft ownVar;
 	AgrBi1nOthpabsTblGuidRightBase otherVar;
@@ -29417,9 +29417,9 @@ public class TestAgrBi1nOthpabsTblGuid
 			pm.UnloadCache();
 			decimal count;
 			count = (decimal) new NDOQuery<AgrBi1nOthpabsTblGuidLeft>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #1");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #1");
 			count = (decimal) new NDOQuery<AgrBi1nOthpabsTblGuidRightBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #2");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #2");
 		}
 		catch (Exception)
 		{
@@ -29434,53 +29434,53 @@ public class TestAgrBi1nOthpabsTblGuid
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestSaveReloadNull()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 		ownVar.RelField = null;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.Null(ownVar.RelField, "There should be no object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Null, "There should be no object");
 	}
 	[Test]
 	public void TestChangeKeyHolderLeft()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 		int x = ownVar.RelField.Dummy;
 		ownVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestChangeKeyHolderLeftNoTouch()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 		ownVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestRelationHash()
@@ -29518,7 +29518,7 @@ public class TestAgrBi1nOthpabsTblGuid
 
 
 [TestFixture]
-public class TestAgrBinnOthpabsTblGuid
+public class TestAgrBinnOthpabsTblGuid : NDOTest
 {
 	AgrBinnOthpabsTblGuidLeft ownVar;
 	AgrBinnOthpabsTblGuidRightBase otherVar;
@@ -29546,9 +29546,9 @@ public class TestAgrBinnOthpabsTblGuid
 			pm.UnloadCache();
 			decimal count;
 			count = (decimal) new NDOQuery<AgrBinnOthpabsTblGuidLeft>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #1");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #1");
 			count = (decimal) new NDOQuery<AgrBinnOthpabsTblGuidRightBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #2");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #2");
 		}
 		catch (Exception)
 		{
@@ -29563,36 +29563,36 @@ public class TestAgrBinnOthpabsTblGuid
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(1, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(1, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 	}
 	[Test]
 	public void TestSaveReloadNull()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(1, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(1, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 		ownVar.RelField = new List<AgrBinnOthpabsTblGuidRightBase>();
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(0, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(0, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 	}
 	[Test]
 	public void TestSaveReloadRemove()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(1, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(1, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 		ownVar.RemoveRelatedObject();
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(0, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(0, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 	}
 	[Test]
 	public void TestRelationHash()
@@ -29630,7 +29630,7 @@ public class TestAgrBinnOthpabsTblGuid
 
 
 [TestFixture]
-public class TestCmpDir1OthpabsNoTblGuid
+public class TestCmpDir1OthpabsNoTblGuid : NDOTest
 {
 	CmpDir1OthpabsNoTblGuidLeft ownVar;
 	CmpDir1OthpabsNoTblGuidRightBase otherVar;
@@ -29654,9 +29654,9 @@ public class TestCmpDir1OthpabsNoTblGuid
 			pm.UnloadCache();
 			decimal count;
 			count = (decimal) new NDOQuery<CmpDir1OthpabsNoTblGuidLeft>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #1");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #1");
 			count = (decimal) new NDOQuery<CmpDir1OthpabsNoTblGuidRightBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #2");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #2");
 		}
 		catch (Exception)
 		{
@@ -29670,53 +29670,53 @@ public class TestCmpDir1OthpabsNoTblGuid
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestSaveReloadNull()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 		ownVar.RelField = null;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.Null(ownVar.RelField, "There should be no object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Null, "There should be no object");
 	}
 	[Test]
 	public void TestChangeKeyHolderLeft()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 		int x = ownVar.RelField.Dummy;
 		ownVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestChangeKeyHolderLeftNoTouch()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 		ownVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 	}
 	void CreateObjects()
 	{
@@ -29739,7 +29739,7 @@ public class TestCmpDir1OthpabsNoTblGuid
 
 
 [TestFixture]
-public class TestCmpDir1OthpabsTblGuid
+public class TestCmpDir1OthpabsTblGuid : NDOTest
 {
 	CmpDir1OthpabsTblGuidLeft ownVar;
 	CmpDir1OthpabsTblGuidRightBase otherVar;
@@ -29763,9 +29763,9 @@ public class TestCmpDir1OthpabsTblGuid
 			pm.UnloadCache();
 			decimal count;
 			count = (decimal) new NDOQuery<CmpDir1OthpabsTblGuidLeft>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #1");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #1");
 			count = (decimal) new NDOQuery<CmpDir1OthpabsTblGuidRightBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #2");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #2");
 		}
 		catch (Exception)
 		{
@@ -29780,53 +29780,53 @@ public class TestCmpDir1OthpabsTblGuid
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestSaveReloadNull()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 		ownVar.RelField = null;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.Null(ownVar.RelField, "There should be no object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Null, "There should be no object");
 	}
 	[Test]
 	public void TestChangeKeyHolderLeft()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 		int x = ownVar.RelField.Dummy;
 		ownVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestChangeKeyHolderLeftNoTouch()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 		ownVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 	}
 	void CreateObjects()
 	{
@@ -29849,7 +29849,7 @@ public class TestCmpDir1OthpabsTblGuid
 
 
 [TestFixture]
-public class TestCmpBi11OthpabsNoTblGuid
+public class TestCmpBi11OthpabsNoTblGuid : NDOTest
 {
 	CmpBi11OthpabsNoTblGuidLeft ownVar;
 	CmpBi11OthpabsNoTblGuidRightBase otherVar;
@@ -29873,9 +29873,9 @@ public class TestCmpBi11OthpabsNoTblGuid
 			pm.UnloadCache();
 			decimal count;
 			count = (decimal) new NDOQuery<CmpBi11OthpabsNoTblGuidLeft>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #1");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #1");
 			count = (decimal) new NDOQuery<CmpBi11OthpabsNoTblGuidRightBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #2");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #2");
 		}
 		catch (Exception)
 		{
@@ -29889,84 +29889,84 @@ public class TestCmpBi11OthpabsNoTblGuid
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestSaveReloadNull()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 		ownVar.RelField = null;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.Null(ownVar.RelField, "There should be no object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Null, "There should be no object");
 	}
 	[Test]
 	public void TestChangeKeyHolderLeft()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 		int x = ownVar.RelField.Dummy;
 		ownVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestChangeKeyHolderRight()
 	{
 		CreateObjects();
 		QueryOther();
-		Assert.NotNull(otherVar, "No Query Result");
-		Assert.NotNull(otherVar.RelField, "No related object");
+		Assert.That(otherVar, Is.Not.Null, "No Query Result");
+		Assert.That(otherVar.RelField, Is.Not.Null, "No related object");
 		int x = otherVar.RelField.Dummy;
 		otherVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOther();
-		Assert.NotNull(otherVar, "No Query Result");
-		Assert.NotNull(otherVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(otherVar.RelField, "No related object");
+		Assert.That(otherVar, Is.Not.Null, "No Query Result");
+		Assert.That(otherVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(otherVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestChangeKeyHolderLeftNoTouch()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 		ownVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestChangeKeyHolderRightNoTouch()
 	{
 		CreateObjects();
 		QueryOther();
-		Assert.NotNull(otherVar, "No Query Result");
-		Assert.NotNull(otherVar.RelField, "No related object");
+		Assert.That(otherVar, Is.Not.Null, "No Query Result");
+		Assert.That(otherVar.RelField, Is.Not.Null, "No related object");
 		otherVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOther();
-		Assert.NotNull(otherVar, "No Query Result");
-		Assert.NotNull(otherVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(otherVar.RelField, "No related object");
+		Assert.That(otherVar, Is.Not.Null, "No Query Result");
+		Assert.That(otherVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(otherVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestRelationHash()
@@ -30003,7 +30003,7 @@ public class TestCmpBi11OthpabsNoTblGuid
 
 
 [TestFixture]
-public class TestCmpBi11OthpabsTblGuid
+public class TestCmpBi11OthpabsTblGuid : NDOTest
 {
 	CmpBi11OthpabsTblGuidLeft ownVar;
 	CmpBi11OthpabsTblGuidRightBase otherVar;
@@ -30027,9 +30027,9 @@ public class TestCmpBi11OthpabsTblGuid
 			pm.UnloadCache();
 			decimal count;
 			count = (decimal) new NDOQuery<CmpBi11OthpabsTblGuidLeft>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #1");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #1");
 			count = (decimal) new NDOQuery<CmpBi11OthpabsTblGuidRightBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #2");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #2");
 		}
 		catch (Exception)
 		{
@@ -30044,84 +30044,84 @@ public class TestCmpBi11OthpabsTblGuid
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestSaveReloadNull()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 		ownVar.RelField = null;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.Null(ownVar.RelField, "There should be no object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Null, "There should be no object");
 	}
 	[Test]
 	public void TestChangeKeyHolderLeft()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 		int x = ownVar.RelField.Dummy;
 		ownVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestChangeKeyHolderRight()
 	{
 		CreateObjects();
 		QueryOther();
-		Assert.NotNull(otherVar, "No Query Result");
-		Assert.NotNull(otherVar.RelField, "No related object");
+		Assert.That(otherVar, Is.Not.Null, "No Query Result");
+		Assert.That(otherVar.RelField, Is.Not.Null, "No related object");
 		int x = otherVar.RelField.Dummy;
 		otherVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOther();
-		Assert.NotNull(otherVar, "No Query Result");
-		Assert.NotNull(otherVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(otherVar.RelField, "No related object");
+		Assert.That(otherVar, Is.Not.Null, "No Query Result");
+		Assert.That(otherVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(otherVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestChangeKeyHolderLeftNoTouch()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 		ownVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestChangeKeyHolderRightNoTouch()
 	{
 		CreateObjects();
 		QueryOther();
-		Assert.NotNull(otherVar, "No Query Result");
-		Assert.NotNull(otherVar.RelField, "No related object");
+		Assert.That(otherVar, Is.Not.Null, "No Query Result");
+		Assert.That(otherVar.RelField, Is.Not.Null, "No related object");
 		otherVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOther();
-		Assert.NotNull(otherVar, "No Query Result");
-		Assert.NotNull(otherVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(otherVar.RelField, "No related object");
+		Assert.That(otherVar, Is.Not.Null, "No Query Result");
+		Assert.That(otherVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(otherVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestRelationHash()
@@ -30158,7 +30158,7 @@ public class TestCmpBi11OthpabsTblGuid
 
 
 [TestFixture]
-public class TestCmpDirnOthpabsTblGuid
+public class TestCmpDirnOthpabsTblGuid : NDOTest
 {
 	CmpDirnOthpabsTblGuidLeft ownVar;
 	CmpDirnOthpabsTblGuidRightBase otherVar;
@@ -30182,9 +30182,9 @@ public class TestCmpDirnOthpabsTblGuid
 			pm.UnloadCache();
 			decimal count;
 			count = (decimal) new NDOQuery<CmpDirnOthpabsTblGuidLeft>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #1");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #1");
 			count = (decimal) new NDOQuery<CmpDirnOthpabsTblGuidRightBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #2");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #2");
 		}
 		catch (Exception)
 		{
@@ -30199,36 +30199,36 @@ public class TestCmpDirnOthpabsTblGuid
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(1, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(1, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 	}
 	[Test]
 	public void TestSaveReloadNull()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(1, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(1, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 		ownVar.RelField = new List<CmpDirnOthpabsTblGuidRightBase>();
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(0, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(0, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 	}
 	[Test]
 	public void TestSaveReloadRemove()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(1, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(1, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 		ownVar.RemoveRelatedObject();
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(0, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(0, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 	}
 	void CreateObjects()
 	{
@@ -30251,7 +30251,7 @@ public class TestCmpDirnOthpabsTblGuid
 
 
 [TestFixture]
-public class TestCmpBin1OthpabsTblGuid
+public class TestCmpBin1OthpabsTblGuid : NDOTest
 {
 	CmpBin1OthpabsTblGuidLeft ownVar;
 	CmpBin1OthpabsTblGuidRightBase otherVar;
@@ -30275,9 +30275,9 @@ public class TestCmpBin1OthpabsTblGuid
 			pm.UnloadCache();
 			decimal count;
 			count = (decimal) new NDOQuery<CmpBin1OthpabsTblGuidLeft>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #1");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #1");
 			count = (decimal) new NDOQuery<CmpBin1OthpabsTblGuidRightBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #2");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #2");
 		}
 		catch (Exception)
 		{
@@ -30292,67 +30292,67 @@ public class TestCmpBin1OthpabsTblGuid
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(1, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(1, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 	}
 	[Test]
 	public void TestSaveReloadNull()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(1, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(1, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 		ownVar.RelField = new List<CmpBin1OthpabsTblGuidRightBase>();
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(0, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(0, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 	}
 	[Test]
 	public void TestSaveReloadRemove()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(1, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(1, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 		ownVar.RemoveRelatedObject();
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(0, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(0, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 	}
 	[Test]
 	public void TestChangeKeyHolderRight()
 	{
 		CreateObjects();
 		QueryOther();
-		Assert.NotNull(otherVar, "No Query Result");
-		Assert.NotNull(otherVar.RelField, "No related object");
+		Assert.That(otherVar, Is.Not.Null, "No Query Result");
+		Assert.That(otherVar.RelField, Is.Not.Null, "No related object");
 		int x = otherVar.RelField.Dummy;
 		otherVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOther();
-		Assert.NotNull(otherVar, "No Query Result");
-		Assert.NotNull(otherVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(otherVar.RelField, "No related object");
+		Assert.That(otherVar, Is.Not.Null, "No Query Result");
+		Assert.That(otherVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(otherVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestChangeKeyHolderRightNoTouch()
 	{
 		CreateObjects();
 		QueryOther();
-		Assert.NotNull(otherVar, "No Query Result");
-		Assert.NotNull(otherVar.RelField, "No related object");
+		Assert.That(otherVar, Is.Not.Null, "No Query Result");
+		Assert.That(otherVar.RelField, Is.Not.Null, "No related object");
 		otherVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOther();
-		Assert.NotNull(otherVar, "No Query Result");
-		Assert.NotNull(otherVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(otherVar.RelField, "No related object");
+		Assert.That(otherVar, Is.Not.Null, "No Query Result");
+		Assert.That(otherVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(otherVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestRelationHash()
@@ -30389,7 +30389,7 @@ public class TestCmpBin1OthpabsTblGuid
 
 
 [TestFixture]
-public class TestCmpBi1nOthpabsNoTblGuid
+public class TestCmpBi1nOthpabsNoTblGuid : NDOTest
 {
 	CmpBi1nOthpabsNoTblGuidLeft ownVar;
 	CmpBi1nOthpabsNoTblGuidRightBase otherVar;
@@ -30413,9 +30413,9 @@ public class TestCmpBi1nOthpabsNoTblGuid
 			pm.UnloadCache();
 			decimal count;
 			count = (decimal) new NDOQuery<CmpBi1nOthpabsNoTblGuidLeft>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #1");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #1");
 			count = (decimal) new NDOQuery<CmpBi1nOthpabsNoTblGuidRightBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #2");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #2");
 		}
 		catch (Exception)
 		{
@@ -30429,53 +30429,53 @@ public class TestCmpBi1nOthpabsNoTblGuid
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestSaveReloadNull()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 		ownVar.RelField = null;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.Null(ownVar.RelField, "There should be no object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Null, "There should be no object");
 	}
 	[Test]
 	public void TestChangeKeyHolderLeft()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 		int x = ownVar.RelField.Dummy;
 		ownVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestChangeKeyHolderLeftNoTouch()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 		ownVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestRelationHash()
@@ -30512,7 +30512,7 @@ public class TestCmpBi1nOthpabsNoTblGuid
 
 
 [TestFixture]
-public class TestCmpBi1nOthpabsTblGuid
+public class TestCmpBi1nOthpabsTblGuid : NDOTest
 {
 	CmpBi1nOthpabsTblGuidLeft ownVar;
 	CmpBi1nOthpabsTblGuidRightBase otherVar;
@@ -30536,9 +30536,9 @@ public class TestCmpBi1nOthpabsTblGuid
 			pm.UnloadCache();
 			decimal count;
 			count = (decimal) new NDOQuery<CmpBi1nOthpabsTblGuidLeft>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #1");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #1");
 			count = (decimal) new NDOQuery<CmpBi1nOthpabsTblGuidRightBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #2");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #2");
 		}
 		catch (Exception)
 		{
@@ -30553,53 +30553,53 @@ public class TestCmpBi1nOthpabsTblGuid
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestSaveReloadNull()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 		ownVar.RelField = null;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.Null(ownVar.RelField, "There should be no object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Null, "There should be no object");
 	}
 	[Test]
 	public void TestChangeKeyHolderLeft()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 		int x = ownVar.RelField.Dummy;
 		ownVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestChangeKeyHolderLeftNoTouch()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 		ownVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestRelationHash()
@@ -30636,7 +30636,7 @@ public class TestCmpBi1nOthpabsTblGuid
 
 
 [TestFixture]
-public class TestCmpBinnOthpabsTblGuid
+public class TestCmpBinnOthpabsTblGuid : NDOTest
 {
 	CmpBinnOthpabsTblGuidLeft ownVar;
 	CmpBinnOthpabsTblGuidRightBase otherVar;
@@ -30660,9 +30660,9 @@ public class TestCmpBinnOthpabsTblGuid
 			pm.UnloadCache();
 			decimal count;
 			count = (decimal) new NDOQuery<CmpBinnOthpabsTblGuidLeft>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #1");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #1");
 			count = (decimal) new NDOQuery<CmpBinnOthpabsTblGuidRightBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #2");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #2");
 		}
 		catch (Exception)
 		{
@@ -30677,36 +30677,36 @@ public class TestCmpBinnOthpabsTblGuid
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(1, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(1, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 	}
 	[Test]
 	public void TestSaveReloadNull()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(1, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(1, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 		ownVar.RelField = new List<CmpBinnOthpabsTblGuidRightBase>();
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(0, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(0, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 	}
 	[Test]
 	public void TestSaveReloadRemove()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(1, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(1, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 		ownVar.RemoveRelatedObject();
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(0, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(0, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 	}
 	[Test]
 	public void TestRelationHash()
@@ -30743,7 +30743,7 @@ public class TestCmpBinnOthpabsTblGuid
 
 
 [TestFixture]
-public class TestAgrDir1OwnpabsOthpabsNoTblGuid
+public class TestAgrDir1OwnpabsOthpabsNoTblGuid : NDOTest
 {
 	AgrDir1OwnpabsOthpabsNoTblGuidLeftBase ownVar;
 	AgrDir1OwnpabsOthpabsNoTblGuidRightBase otherVar;
@@ -30771,9 +30771,9 @@ public class TestAgrDir1OwnpabsOthpabsNoTblGuid
 			pm.UnloadCache();
 			decimal count;
 			count = (decimal) new NDOQuery<AgrDir1OwnpabsOthpabsNoTblGuidLeftBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #1");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #1");
 			count = (decimal) new NDOQuery<AgrDir1OwnpabsOthpabsNoTblGuidRightBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #2");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #2");
 		}
 		catch (Exception)
 		{
@@ -30787,53 +30787,53 @@ public class TestAgrDir1OwnpabsOthpabsNoTblGuid
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestSaveReloadNull()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 		ownVar.RelField = null;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.Null(ownVar.RelField, "There should be no object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Null, "There should be no object");
 	}
 	[Test]
 	public void TestChangeKeyHolderLeft()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 		int x = ownVar.RelField.Dummy;
 		ownVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestChangeKeyHolderLeftNoTouch()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 		ownVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 	}
 	void CreateObjects()
 	{
@@ -30857,7 +30857,7 @@ public class TestAgrDir1OwnpabsOthpabsNoTblGuid
 
 
 [TestFixture]
-public class TestAgrDir1OwnpabsOthpabsTblGuid
+public class TestAgrDir1OwnpabsOthpabsTblGuid : NDOTest
 {
 	AgrDir1OwnpabsOthpabsTblGuidLeftBase ownVar;
 	AgrDir1OwnpabsOthpabsTblGuidRightBase otherVar;
@@ -30885,9 +30885,9 @@ public class TestAgrDir1OwnpabsOthpabsTblGuid
 			pm.UnloadCache();
 			decimal count;
 			count = (decimal) new NDOQuery<AgrDir1OwnpabsOthpabsTblGuidLeftBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #1");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #1");
 			count = (decimal) new NDOQuery<AgrDir1OwnpabsOthpabsTblGuidRightBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #2");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #2");
 		}
 		catch (Exception)
 		{
@@ -30902,53 +30902,53 @@ public class TestAgrDir1OwnpabsOthpabsTblGuid
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestSaveReloadNull()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 		ownVar.RelField = null;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.Null(ownVar.RelField, "There should be no object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Null, "There should be no object");
 	}
 	[Test]
 	public void TestChangeKeyHolderLeft()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 		int x = ownVar.RelField.Dummy;
 		ownVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestChangeKeyHolderLeftNoTouch()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 		ownVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 	}
 	void CreateObjects()
 	{
@@ -30972,7 +30972,7 @@ public class TestAgrDir1OwnpabsOthpabsTblGuid
 
 
 [TestFixture]
-public class TestAgrBi11OwnpabsOthpabsNoTblGuid
+public class TestAgrBi11OwnpabsOthpabsNoTblGuid : NDOTest
 {
 	AgrBi11OwnpabsOthpabsNoTblGuidLeftBase ownVar;
 	AgrBi11OwnpabsOthpabsNoTblGuidRightBase otherVar;
@@ -31000,9 +31000,9 @@ public class TestAgrBi11OwnpabsOthpabsNoTblGuid
 			pm.UnloadCache();
 			decimal count;
 			count = (decimal) new NDOQuery<AgrBi11OwnpabsOthpabsNoTblGuidLeftBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #1");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #1");
 			count = (decimal) new NDOQuery<AgrBi11OwnpabsOthpabsNoTblGuidRightBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #2");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #2");
 		}
 		catch (Exception)
 		{
@@ -31016,84 +31016,84 @@ public class TestAgrBi11OwnpabsOthpabsNoTblGuid
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestSaveReloadNull()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 		ownVar.RelField = null;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.Null(ownVar.RelField, "There should be no object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Null, "There should be no object");
 	}
 	[Test]
 	public void TestChangeKeyHolderLeft()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 		int x = ownVar.RelField.Dummy;
 		ownVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestChangeKeyHolderRight()
 	{
 		CreateObjects();
 		QueryOther();
-		Assert.NotNull(otherVar, "No Query Result");
-		Assert.NotNull(otherVar.RelField, "No related object");
+		Assert.That(otherVar, Is.Not.Null, "No Query Result");
+		Assert.That(otherVar.RelField, Is.Not.Null, "No related object");
 		int x = otherVar.RelField.Dummy;
 		otherVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOther();
-		Assert.NotNull(otherVar, "No Query Result");
-		Assert.NotNull(otherVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(otherVar.RelField, "No related object");
+		Assert.That(otherVar, Is.Not.Null, "No Query Result");
+		Assert.That(otherVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(otherVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestChangeKeyHolderLeftNoTouch()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 		ownVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestChangeKeyHolderRightNoTouch()
 	{
 		CreateObjects();
 		QueryOther();
-		Assert.NotNull(otherVar, "No Query Result");
-		Assert.NotNull(otherVar.RelField, "No related object");
+		Assert.That(otherVar, Is.Not.Null, "No Query Result");
+		Assert.That(otherVar.RelField, Is.Not.Null, "No related object");
 		otherVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOther();
-		Assert.NotNull(otherVar, "No Query Result");
-		Assert.NotNull(otherVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(otherVar.RelField, "No related object");
+		Assert.That(otherVar, Is.Not.Null, "No Query Result");
+		Assert.That(otherVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(otherVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestRelationHash()
@@ -31137,7 +31137,7 @@ public class TestAgrBi11OwnpabsOthpabsNoTblGuid
 
 
 [TestFixture]
-public class TestAgrBi11OwnpabsOthpabsTblGuid
+public class TestAgrBi11OwnpabsOthpabsTblGuid : NDOTest
 {
 	AgrBi11OwnpabsOthpabsTblGuidLeftBase ownVar;
 	AgrBi11OwnpabsOthpabsTblGuidRightBase otherVar;
@@ -31165,9 +31165,9 @@ public class TestAgrBi11OwnpabsOthpabsTblGuid
 			pm.UnloadCache();
 			decimal count;
 			count = (decimal) new NDOQuery<AgrBi11OwnpabsOthpabsTblGuidLeftBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #1");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #1");
 			count = (decimal) new NDOQuery<AgrBi11OwnpabsOthpabsTblGuidRightBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #2");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #2");
 		}
 		catch (Exception)
 		{
@@ -31182,84 +31182,84 @@ public class TestAgrBi11OwnpabsOthpabsTblGuid
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestSaveReloadNull()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 		ownVar.RelField = null;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.Null(ownVar.RelField, "There should be no object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Null, "There should be no object");
 	}
 	[Test]
 	public void TestChangeKeyHolderLeft()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 		int x = ownVar.RelField.Dummy;
 		ownVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestChangeKeyHolderRight()
 	{
 		CreateObjects();
 		QueryOther();
-		Assert.NotNull(otherVar, "No Query Result");
-		Assert.NotNull(otherVar.RelField, "No related object");
+		Assert.That(otherVar, Is.Not.Null, "No Query Result");
+		Assert.That(otherVar.RelField, Is.Not.Null, "No related object");
 		int x = otherVar.RelField.Dummy;
 		otherVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOther();
-		Assert.NotNull(otherVar, "No Query Result");
-		Assert.NotNull(otherVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(otherVar.RelField, "No related object");
+		Assert.That(otherVar, Is.Not.Null, "No Query Result");
+		Assert.That(otherVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(otherVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestChangeKeyHolderLeftNoTouch()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 		ownVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestChangeKeyHolderRightNoTouch()
 	{
 		CreateObjects();
 		QueryOther();
-		Assert.NotNull(otherVar, "No Query Result");
-		Assert.NotNull(otherVar.RelField, "No related object");
+		Assert.That(otherVar, Is.Not.Null, "No Query Result");
+		Assert.That(otherVar.RelField, Is.Not.Null, "No related object");
 		otherVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOther();
-		Assert.NotNull(otherVar, "No Query Result");
-		Assert.NotNull(otherVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(otherVar.RelField, "No related object");
+		Assert.That(otherVar, Is.Not.Null, "No Query Result");
+		Assert.That(otherVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(otherVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestRelationHash()
@@ -31303,7 +31303,7 @@ public class TestAgrBi11OwnpabsOthpabsTblGuid
 
 
 [TestFixture]
-public class TestAgrDirnOwnpabsOthpabsTblGuid
+public class TestAgrDirnOwnpabsOthpabsTblGuid : NDOTest
 {
 	AgrDirnOwnpabsOthpabsTblGuidLeftBase ownVar;
 	AgrDirnOwnpabsOthpabsTblGuidRightBase otherVar;
@@ -31331,9 +31331,9 @@ public class TestAgrDirnOwnpabsOthpabsTblGuid
 			pm.UnloadCache();
 			decimal count;
 			count = (decimal) new NDOQuery<AgrDirnOwnpabsOthpabsTblGuidLeftBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #1");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #1");
 			count = (decimal) new NDOQuery<AgrDirnOwnpabsOthpabsTblGuidRightBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #2");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #2");
 		}
 		catch (Exception)
 		{
@@ -31348,36 +31348,36 @@ public class TestAgrDirnOwnpabsOthpabsTblGuid
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(1, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(1, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 	}
 	[Test]
 	public void TestSaveReloadNull()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(1, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(1, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 		ownVar.RelField = new List<AgrDirnOwnpabsOthpabsTblGuidRightBase>();
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(0, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(0, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 	}
 	[Test]
 	public void TestSaveReloadRemove()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(1, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(1, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 		ownVar.RemoveRelatedObject();
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(0, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(0, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 	}
 	void CreateObjects()
 	{
@@ -31401,7 +31401,7 @@ public class TestAgrDirnOwnpabsOthpabsTblGuid
 
 
 [TestFixture]
-public class TestAgrBin1OwnpabsOthpabsTblGuid
+public class TestAgrBin1OwnpabsOthpabsTblGuid : NDOTest
 {
 	AgrBin1OwnpabsOthpabsTblGuidLeftBase ownVar;
 	AgrBin1OwnpabsOthpabsTblGuidRightBase otherVar;
@@ -31429,9 +31429,9 @@ public class TestAgrBin1OwnpabsOthpabsTblGuid
 			pm.UnloadCache();
 			decimal count;
 			count = (decimal) new NDOQuery<AgrBin1OwnpabsOthpabsTblGuidLeftBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #1");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #1");
 			count = (decimal) new NDOQuery<AgrBin1OwnpabsOthpabsTblGuidRightBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #2");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #2");
 		}
 		catch (Exception)
 		{
@@ -31446,67 +31446,67 @@ public class TestAgrBin1OwnpabsOthpabsTblGuid
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(1, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(1, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 	}
 	[Test]
 	public void TestSaveReloadNull()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(1, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(1, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 		ownVar.RelField = new List<AgrBin1OwnpabsOthpabsTblGuidRightBase>();
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(0, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(0, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 	}
 	[Test]
 	public void TestSaveReloadRemove()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(1, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(1, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 		ownVar.RemoveRelatedObject();
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(0, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(0, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 	}
 	[Test]
 	public void TestChangeKeyHolderRight()
 	{
 		CreateObjects();
 		QueryOther();
-		Assert.NotNull(otherVar, "No Query Result");
-		Assert.NotNull(otherVar.RelField, "No related object");
+		Assert.That(otherVar, Is.Not.Null, "No Query Result");
+		Assert.That(otherVar.RelField, Is.Not.Null, "No related object");
 		int x = otherVar.RelField.Dummy;
 		otherVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOther();
-		Assert.NotNull(otherVar, "No Query Result");
-		Assert.NotNull(otherVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(otherVar.RelField, "No related object");
+		Assert.That(otherVar, Is.Not.Null, "No Query Result");
+		Assert.That(otherVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(otherVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestChangeKeyHolderRightNoTouch()
 	{
 		CreateObjects();
 		QueryOther();
-		Assert.NotNull(otherVar, "No Query Result");
-		Assert.NotNull(otherVar.RelField, "No related object");
+		Assert.That(otherVar, Is.Not.Null, "No Query Result");
+		Assert.That(otherVar.RelField, Is.Not.Null, "No related object");
 		otherVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOther();
-		Assert.NotNull(otherVar, "No Query Result");
-		Assert.NotNull(otherVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(otherVar.RelField, "No related object");
+		Assert.That(otherVar, Is.Not.Null, "No Query Result");
+		Assert.That(otherVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(otherVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestRelationHash()
@@ -31550,7 +31550,7 @@ public class TestAgrBin1OwnpabsOthpabsTblGuid
 
 
 [TestFixture]
-public class TestAgrBi1nOwnpabsOthpabsTblGuid
+public class TestAgrBi1nOwnpabsOthpabsTblGuid : NDOTest
 {
 	AgrBi1nOwnpabsOthpabsTblGuidLeftBase ownVar;
 	AgrBi1nOwnpabsOthpabsTblGuidRightBase otherVar;
@@ -31578,9 +31578,9 @@ public class TestAgrBi1nOwnpabsOthpabsTblGuid
 			pm.UnloadCache();
 			decimal count;
 			count = (decimal) new NDOQuery<AgrBi1nOwnpabsOthpabsTblGuidLeftBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #1");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #1");
 			count = (decimal) new NDOQuery<AgrBi1nOwnpabsOthpabsTblGuidRightBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #2");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #2");
 		}
 		catch (Exception)
 		{
@@ -31595,53 +31595,53 @@ public class TestAgrBi1nOwnpabsOthpabsTblGuid
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestSaveReloadNull()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 		ownVar.RelField = null;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.Null(ownVar.RelField, "There should be no object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Null, "There should be no object");
 	}
 	[Test]
 	public void TestChangeKeyHolderLeft()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 		int x = ownVar.RelField.Dummy;
 		ownVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestChangeKeyHolderLeftNoTouch()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 		ownVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestRelationHash()
@@ -31685,7 +31685,7 @@ public class TestAgrBi1nOwnpabsOthpabsTblGuid
 
 
 [TestFixture]
-public class TestAgrBinnOwnpabsOthpabsTblGuid
+public class TestAgrBinnOwnpabsOthpabsTblGuid : NDOTest
 {
 	AgrBinnOwnpabsOthpabsTblGuidLeftBase ownVar;
 	AgrBinnOwnpabsOthpabsTblGuidRightBase otherVar;
@@ -31713,9 +31713,9 @@ public class TestAgrBinnOwnpabsOthpabsTblGuid
 			pm.UnloadCache();
 			decimal count;
 			count = (decimal) new NDOQuery<AgrBinnOwnpabsOthpabsTblGuidLeftBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #1");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #1");
 			count = (decimal) new NDOQuery<AgrBinnOwnpabsOthpabsTblGuidRightBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #2");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #2");
 		}
 		catch (Exception)
 		{
@@ -31730,36 +31730,36 @@ public class TestAgrBinnOwnpabsOthpabsTblGuid
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(1, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(1, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 	}
 	[Test]
 	public void TestSaveReloadNull()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(1, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(1, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 		ownVar.RelField = new List<AgrBinnOwnpabsOthpabsTblGuidRightBase>();
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(0, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(0, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 	}
 	[Test]
 	public void TestSaveReloadRemove()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(1, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(1, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 		ownVar.RemoveRelatedObject();
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(0, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(0, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 	}
 	[Test]
 	public void TestRelationHash()
@@ -31803,7 +31803,7 @@ public class TestAgrBinnOwnpabsOthpabsTblGuid
 
 
 [TestFixture]
-public class TestCmpDir1OwnpabsOthpabsNoTblGuid
+public class TestCmpDir1OwnpabsOthpabsNoTblGuid : NDOTest
 {
 	CmpDir1OwnpabsOthpabsNoTblGuidLeftBase ownVar;
 	CmpDir1OwnpabsOthpabsNoTblGuidRightBase otherVar;
@@ -31827,9 +31827,9 @@ public class TestCmpDir1OwnpabsOthpabsNoTblGuid
 			pm.UnloadCache();
 			decimal count;
 			count = (decimal) new NDOQuery<CmpDir1OwnpabsOthpabsNoTblGuidLeftBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #1");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #1");
 			count = (decimal) new NDOQuery<CmpDir1OwnpabsOthpabsNoTblGuidRightBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #2");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #2");
 		}
 		catch (Exception)
 		{
@@ -31843,53 +31843,53 @@ public class TestCmpDir1OwnpabsOthpabsNoTblGuid
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestSaveReloadNull()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 		ownVar.RelField = null;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.Null(ownVar.RelField, "There should be no object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Null, "There should be no object");
 	}
 	[Test]
 	public void TestChangeKeyHolderLeft()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 		int x = ownVar.RelField.Dummy;
 		ownVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestChangeKeyHolderLeftNoTouch()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 		ownVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 	}
 	void CreateObjects()
 	{
@@ -31912,7 +31912,7 @@ public class TestCmpDir1OwnpabsOthpabsNoTblGuid
 
 
 [TestFixture]
-public class TestCmpDir1OwnpabsOthpabsTblGuid
+public class TestCmpDir1OwnpabsOthpabsTblGuid : NDOTest
 {
 	CmpDir1OwnpabsOthpabsTblGuidLeftBase ownVar;
 	CmpDir1OwnpabsOthpabsTblGuidRightBase otherVar;
@@ -31936,9 +31936,9 @@ public class TestCmpDir1OwnpabsOthpabsTblGuid
 			pm.UnloadCache();
 			decimal count;
 			count = (decimal) new NDOQuery<CmpDir1OwnpabsOthpabsTblGuidLeftBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #1");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #1");
 			count = (decimal) new NDOQuery<CmpDir1OwnpabsOthpabsTblGuidRightBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #2");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #2");
 		}
 		catch (Exception)
 		{
@@ -31953,53 +31953,53 @@ public class TestCmpDir1OwnpabsOthpabsTblGuid
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestSaveReloadNull()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 		ownVar.RelField = null;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.Null(ownVar.RelField, "There should be no object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Null, "There should be no object");
 	}
 	[Test]
 	public void TestChangeKeyHolderLeft()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 		int x = ownVar.RelField.Dummy;
 		ownVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestChangeKeyHolderLeftNoTouch()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 		ownVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 	}
 	void CreateObjects()
 	{
@@ -32022,7 +32022,7 @@ public class TestCmpDir1OwnpabsOthpabsTblGuid
 
 
 [TestFixture]
-public class TestCmpBi11OwnpabsOthpabsNoTblGuid
+public class TestCmpBi11OwnpabsOthpabsNoTblGuid : NDOTest
 {
 	CmpBi11OwnpabsOthpabsNoTblGuidLeftBase ownVar;
 	CmpBi11OwnpabsOthpabsNoTblGuidRightBase otherVar;
@@ -32046,9 +32046,9 @@ public class TestCmpBi11OwnpabsOthpabsNoTblGuid
 			pm.UnloadCache();
 			decimal count;
 			count = (decimal) new NDOQuery<CmpBi11OwnpabsOthpabsNoTblGuidLeftBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #1");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #1");
 			count = (decimal) new NDOQuery<CmpBi11OwnpabsOthpabsNoTblGuidRightBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #2");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #2");
 		}
 		catch (Exception)
 		{
@@ -32062,84 +32062,84 @@ public class TestCmpBi11OwnpabsOthpabsNoTblGuid
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestSaveReloadNull()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 		ownVar.RelField = null;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.Null(ownVar.RelField, "There should be no object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Null, "There should be no object");
 	}
 	[Test]
 	public void TestChangeKeyHolderLeft()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 		int x = ownVar.RelField.Dummy;
 		ownVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestChangeKeyHolderRight()
 	{
 		CreateObjects();
 		QueryOther();
-		Assert.NotNull(otherVar, "No Query Result");
-		Assert.NotNull(otherVar.RelField, "No related object");
+		Assert.That(otherVar, Is.Not.Null, "No Query Result");
+		Assert.That(otherVar.RelField, Is.Not.Null, "No related object");
 		int x = otherVar.RelField.Dummy;
 		otherVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOther();
-		Assert.NotNull(otherVar, "No Query Result");
-		Assert.NotNull(otherVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(otherVar.RelField, "No related object");
+		Assert.That(otherVar, Is.Not.Null, "No Query Result");
+		Assert.That(otherVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(otherVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestChangeKeyHolderLeftNoTouch()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 		ownVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestChangeKeyHolderRightNoTouch()
 	{
 		CreateObjects();
 		QueryOther();
-		Assert.NotNull(otherVar, "No Query Result");
-		Assert.NotNull(otherVar.RelField, "No related object");
+		Assert.That(otherVar, Is.Not.Null, "No Query Result");
+		Assert.That(otherVar.RelField, Is.Not.Null, "No related object");
 		otherVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOther();
-		Assert.NotNull(otherVar, "No Query Result");
-		Assert.NotNull(otherVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(otherVar.RelField, "No related object");
+		Assert.That(otherVar, Is.Not.Null, "No Query Result");
+		Assert.That(otherVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(otherVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestRelationHash()
@@ -32182,7 +32182,7 @@ public class TestCmpBi11OwnpabsOthpabsNoTblGuid
 
 
 [TestFixture]
-public class TestCmpBi11OwnpabsOthpabsTblGuid
+public class TestCmpBi11OwnpabsOthpabsTblGuid : NDOTest
 {
 	CmpBi11OwnpabsOthpabsTblGuidLeftBase ownVar;
 	CmpBi11OwnpabsOthpabsTblGuidRightBase otherVar;
@@ -32206,9 +32206,9 @@ public class TestCmpBi11OwnpabsOthpabsTblGuid
 			pm.UnloadCache();
 			decimal count;
 			count = (decimal) new NDOQuery<CmpBi11OwnpabsOthpabsTblGuidLeftBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #1");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #1");
 			count = (decimal) new NDOQuery<CmpBi11OwnpabsOthpabsTblGuidRightBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #2");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #2");
 		}
 		catch (Exception)
 		{
@@ -32223,84 +32223,84 @@ public class TestCmpBi11OwnpabsOthpabsTblGuid
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestSaveReloadNull()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 		ownVar.RelField = null;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.Null(ownVar.RelField, "There should be no object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Null, "There should be no object");
 	}
 	[Test]
 	public void TestChangeKeyHolderLeft()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 		int x = ownVar.RelField.Dummy;
 		ownVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestChangeKeyHolderRight()
 	{
 		CreateObjects();
 		QueryOther();
-		Assert.NotNull(otherVar, "No Query Result");
-		Assert.NotNull(otherVar.RelField, "No related object");
+		Assert.That(otherVar, Is.Not.Null, "No Query Result");
+		Assert.That(otherVar.RelField, Is.Not.Null, "No related object");
 		int x = otherVar.RelField.Dummy;
 		otherVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOther();
-		Assert.NotNull(otherVar, "No Query Result");
-		Assert.NotNull(otherVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(otherVar.RelField, "No related object");
+		Assert.That(otherVar, Is.Not.Null, "No Query Result");
+		Assert.That(otherVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(otherVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestChangeKeyHolderLeftNoTouch()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 		ownVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestChangeKeyHolderRightNoTouch()
 	{
 		CreateObjects();
 		QueryOther();
-		Assert.NotNull(otherVar, "No Query Result");
-		Assert.NotNull(otherVar.RelField, "No related object");
+		Assert.That(otherVar, Is.Not.Null, "No Query Result");
+		Assert.That(otherVar.RelField, Is.Not.Null, "No related object");
 		otherVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOther();
-		Assert.NotNull(otherVar, "No Query Result");
-		Assert.NotNull(otherVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(otherVar.RelField, "No related object");
+		Assert.That(otherVar, Is.Not.Null, "No Query Result");
+		Assert.That(otherVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(otherVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestRelationHash()
@@ -32343,7 +32343,7 @@ public class TestCmpBi11OwnpabsOthpabsTblGuid
 
 
 [TestFixture]
-public class TestCmpDirnOwnpabsOthpabsTblGuid
+public class TestCmpDirnOwnpabsOthpabsTblGuid : NDOTest
 {
 	CmpDirnOwnpabsOthpabsTblGuidLeftBase ownVar;
 	CmpDirnOwnpabsOthpabsTblGuidRightBase otherVar;
@@ -32367,9 +32367,9 @@ public class TestCmpDirnOwnpabsOthpabsTblGuid
 			pm.UnloadCache();
 			decimal count;
 			count = (decimal) new NDOQuery<CmpDirnOwnpabsOthpabsTblGuidLeftBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #1");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #1");
 			count = (decimal) new NDOQuery<CmpDirnOwnpabsOthpabsTblGuidRightBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #2");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #2");
 		}
 		catch (Exception)
 		{
@@ -32384,36 +32384,36 @@ public class TestCmpDirnOwnpabsOthpabsTblGuid
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(1, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(1, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 	}
 	[Test]
 	public void TestSaveReloadNull()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(1, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(1, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 		ownVar.RelField = new List<CmpDirnOwnpabsOthpabsTblGuidRightBase>();
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(0, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(0, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 	}
 	[Test]
 	public void TestSaveReloadRemove()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(1, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(1, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 		ownVar.RemoveRelatedObject();
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(0, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(0, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 	}
 	void CreateObjects()
 	{
@@ -32436,7 +32436,7 @@ public class TestCmpDirnOwnpabsOthpabsTblGuid
 
 
 [TestFixture]
-public class TestCmpBin1OwnpabsOthpabsTblGuid
+public class TestCmpBin1OwnpabsOthpabsTblGuid : NDOTest
 {
 	CmpBin1OwnpabsOthpabsTblGuidLeftBase ownVar;
 	CmpBin1OwnpabsOthpabsTblGuidRightBase otherVar;
@@ -32460,9 +32460,9 @@ public class TestCmpBin1OwnpabsOthpabsTblGuid
 			pm.UnloadCache();
 			decimal count;
 			count = (decimal) new NDOQuery<CmpBin1OwnpabsOthpabsTblGuidLeftBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #1");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #1");
 			count = (decimal) new NDOQuery<CmpBin1OwnpabsOthpabsTblGuidRightBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #2");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #2");
 		}
 		catch (Exception)
 		{
@@ -32477,67 +32477,67 @@ public class TestCmpBin1OwnpabsOthpabsTblGuid
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(1, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(1, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 	}
 	[Test]
 	public void TestSaveReloadNull()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(1, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(1, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 		ownVar.RelField = new List<CmpBin1OwnpabsOthpabsTblGuidRightBase>();
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(0, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(0, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 	}
 	[Test]
 	public void TestSaveReloadRemove()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(1, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(1, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 		ownVar.RemoveRelatedObject();
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(0, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(0, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 	}
 	[Test]
 	public void TestChangeKeyHolderRight()
 	{
 		CreateObjects();
 		QueryOther();
-		Assert.NotNull(otherVar, "No Query Result");
-		Assert.NotNull(otherVar.RelField, "No related object");
+		Assert.That(otherVar, Is.Not.Null, "No Query Result");
+		Assert.That(otherVar.RelField, Is.Not.Null, "No related object");
 		int x = otherVar.RelField.Dummy;
 		otherVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOther();
-		Assert.NotNull(otherVar, "No Query Result");
-		Assert.NotNull(otherVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(otherVar.RelField, "No related object");
+		Assert.That(otherVar, Is.Not.Null, "No Query Result");
+		Assert.That(otherVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(otherVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestChangeKeyHolderRightNoTouch()
 	{
 		CreateObjects();
 		QueryOther();
-		Assert.NotNull(otherVar, "No Query Result");
-		Assert.NotNull(otherVar.RelField, "No related object");
+		Assert.That(otherVar, Is.Not.Null, "No Query Result");
+		Assert.That(otherVar.RelField, Is.Not.Null, "No related object");
 		otherVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOther();
-		Assert.NotNull(otherVar, "No Query Result");
-		Assert.NotNull(otherVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(otherVar.RelField, "No related object");
+		Assert.That(otherVar, Is.Not.Null, "No Query Result");
+		Assert.That(otherVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(otherVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestRelationHash()
@@ -32580,7 +32580,7 @@ public class TestCmpBin1OwnpabsOthpabsTblGuid
 
 
 [TestFixture]
-public class TestCmpBi1nOwnpabsOthpabsTblGuid
+public class TestCmpBi1nOwnpabsOthpabsTblGuid : NDOTest
 {
 	CmpBi1nOwnpabsOthpabsTblGuidLeftBase ownVar;
 	CmpBi1nOwnpabsOthpabsTblGuidRightBase otherVar;
@@ -32604,9 +32604,9 @@ public class TestCmpBi1nOwnpabsOthpabsTblGuid
 			pm.UnloadCache();
 			decimal count;
 			count = (decimal) new NDOQuery<CmpBi1nOwnpabsOthpabsTblGuidLeftBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #1");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #1");
 			count = (decimal) new NDOQuery<CmpBi1nOwnpabsOthpabsTblGuidRightBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #2");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #2");
 		}
 		catch (Exception)
 		{
@@ -32621,53 +32621,53 @@ public class TestCmpBi1nOwnpabsOthpabsTblGuid
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestSaveReloadNull()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 		ownVar.RelField = null;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.Null(ownVar.RelField, "There should be no object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Null, "There should be no object");
 	}
 	[Test]
 	public void TestChangeKeyHolderLeft()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 		int x = ownVar.RelField.Dummy;
 		ownVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestChangeKeyHolderLeftNoTouch()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 		ownVar.Dummy = 4711;
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.NotNull(ownVar.Dummy == 4711, "Wrong value");
-		Assert.NotNull(ownVar.RelField, "No related object");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(ownVar.Dummy == 4711, Is.Not.Null, "Wrong value");
+		Assert.That(ownVar.RelField, Is.Not.Null, "No related object");
 	}
 	[Test]
 	public void TestRelationHash()
@@ -32710,7 +32710,7 @@ public class TestCmpBi1nOwnpabsOthpabsTblGuid
 
 
 [TestFixture]
-public class TestCmpBinnOwnpabsOthpabsTblGuid
+public class TestCmpBinnOwnpabsOthpabsTblGuid : NDOTest
 {
 	CmpBinnOwnpabsOthpabsTblGuidLeftBase ownVar;
 	CmpBinnOwnpabsOthpabsTblGuidRightBase otherVar;
@@ -32734,9 +32734,9 @@ public class TestCmpBinnOwnpabsOthpabsTblGuid
 			pm.UnloadCache();
 			decimal count;
 			count = (decimal) new NDOQuery<CmpBinnOwnpabsOthpabsTblGuidLeftBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #1");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #1");
 			count = (decimal) new NDOQuery<CmpBinnOwnpabsOthpabsTblGuidRightBase>(pm).ExecuteAggregate("dummy", AggregateType.Count);
-			Assert.AreEqual(0, count, "Count wrong #2");
+			Assert.That(0, Is.EqualTo(count), "Count wrong #2");
 		}
 		catch (Exception)
 		{
@@ -32751,36 +32751,36 @@ public class TestCmpBinnOwnpabsOthpabsTblGuid
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(1, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(1, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 	}
 	[Test]
 	public void TestSaveReloadNull()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(1, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(1, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 		ownVar.RelField = new List<CmpBinnOwnpabsOthpabsTblGuidRightBase>();
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(0, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(0, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 	}
 	[Test]
 	public void TestSaveReloadRemove()
 	{
 		CreateObjects();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(1, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(1, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 		ownVar.RemoveRelatedObject();
 		pm.Save();
 		pm.UnloadCache();
 		QueryOwn();
-		Assert.NotNull(ownVar, "No Query Result");
-		Assert.AreEqual(0, ownVar.RelField.Count, "Count wrong");
+		Assert.That(ownVar, Is.Not.Null, "No Query Result");
+		Assert.That(0, Is.EqualTo(ownVar.RelField.Count), "Count wrong");
 	}
 	[Test]
 	public void TestRelationHash()

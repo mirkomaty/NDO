@@ -42,7 +42,7 @@ namespace TestGenerator
 		public MappingGenerator(ArrayList relInfos)
 		{
 			this.relInfos = relInfos;
-			fileName = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"..\..\..\PersistentClasses\NDOMapping.xml");
+			fileName = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"..\..\..\..\PersistentClasses\NDOMapping.xml");
 		}
 
 		void CheckRelation(Test test, RelInfo ri)

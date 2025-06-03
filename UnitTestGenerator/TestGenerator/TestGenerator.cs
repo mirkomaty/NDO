@@ -44,7 +44,7 @@ namespace TestGenerator
 		public TestGenerator( List<RelInfo> relInfos )
 		{
 			this.relInfos = relInfos;
-			fileName = Path.Combine( AppDomain.CurrentDomain.BaseDirectory, @"..\..\..\UnitTests\UnitTests.cs" );
+			fileName = Path.Combine( AppDomain.CurrentDomain.BaseDirectory, @"..\..\..\..\UnitTests\UnitTests.cs" );
 		}
 
 
@@ -64,18 +64,17 @@ namespace TestGenerator
 			GenerateQueryOther( ri );
 		}
 
-
 		string AssertEquals( string text, object o2, object o3 )
 		{
-			return "Assert.AreEqual(" + o2.ToString().ToLower() + ", " + o3 + ", \"" + text + "\");";
+			return $"Assert.That({o2.ToString().ToLower()}, Is.EqualTo({o3}), \"{text}\");";
 		}
 		string AssertNotNull( string text, object o )
 		{
-			return "Assert.NotNull(" + o + ", \"" + text + "\");";
+			return "Assert.That(" + o + ", Is.Not.Null, \"" + text + "\");";
 		}
 		string AssertNull( string text, object o )
 		{
-			return "Assert.Null(" + o + ", \"" + text + "\");";
+			return "Assert.That(" + o + ", Is.Null, \"" + text + "\");";
 		}
 
 		string Assert( string text, object o )
@@ -428,9 +427,9 @@ namespace TestGenerator
 			}
 			func.Statements.Add( "decimal count;" );
 			func.Statements.Add( "count = (decimal) new " + NDOQuery( test.OwnClass.Name ) + ".ExecuteAggregate(\"dummy\", AggregateType.Count);" );
-			func.Statements.Add( "Assert.AreEqual(0, count, \"Count wrong #1\");" );
+			func.Statements.Add( "Assert.That(0, Is.EqualTo(count), \"Count wrong #1\");" );
 			func.Statements.Add( "count = (decimal) new " + NDOQuery( test.OtherClass.Name ) + ".ExecuteAggregate(\"dummy\", AggregateType.Count);" );
-			func.Statements.Add( "Assert.AreEqual(0, count, \"Count wrong #2\");" );
+			func.Statements.Add( "Assert.That(0, Is.EqualTo(count), \"Count wrong #2\");" );
 			func.Statements.Add( "}" );
 			func.Statements.Add( "catch (Exception)" );
 			func.Statements.Add( "{" );
@@ -499,8 +498,6 @@ namespace TestGenerator
 			func.Statements.Add( "if (pm == null)" );
 			func.Statements.Add( "{" );
 			func.Statements.Add( "pm = new PersistenceManager(@\"" + path + "\");" );
-			path = Path.GetFullPath( Path.Combine( path, @"..\..\.." ) );
-			func.Statements.Add( "pm.LogPath = @\"" + Path.GetDirectoryName( path ) + "\";" );
 			func.Statements.Add( "}" );
 			func.Statements.Add( "else" );
 			func.Statements.Add( "{" );
@@ -601,7 +598,8 @@ namespace TestGenerator
 			sw.WriteLine( "using NDO.Mapping;" );
 			sw.WriteLine( "using NDO.Query;" );
 			sw.WriteLine( "using NUnit.Framework;" );
-			sw.WriteLine( "using RelationTestClasses;\n" );
+			sw.WriteLine( "using RelationTestClasses;" );
+			sw.WriteLine( "using NdoUnitTests;\n" );
 			sw.WriteLine( "namespace " + nameSpace );
 			sw.WriteLine( "{\n" );
 			GeneratePmFactory();
