@@ -63,6 +63,11 @@ namespace NdoUnitTests
 			IList rbListe = pm.GetClassExtent( typeof( Reisebüro ), false );
 			pm.Delete( rbListe );
 			pm.Save();
+		}
+
+		[OneTimeTearDown]
+		public void OneTimeTearDown()
+		{
 			pm.Close();
 			pm = null;
 		}

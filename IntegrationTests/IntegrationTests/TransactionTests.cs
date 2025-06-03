@@ -30,13 +30,15 @@ using Formfakten.TestLogger;
 namespace NdoUnitTests
 {
     [TestFixture]
-    public class TransactionScopeTests : NDOTest
+    public class TransactionTests : NDOTest
     {
+        [SetUp]
         public void Setup()
         {
             Logger.ClearTestLogs();
         }
 
+        [TearDown]
         public void TearDown()
         {
             Logger.ClearTestLogs();

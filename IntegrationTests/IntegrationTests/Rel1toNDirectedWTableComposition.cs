@@ -62,6 +62,12 @@ namespace NdoUnitTests
 			IList eListe = pm.GetClassExtent( typeof( Email ), false );
 			pm.Delete( eListe );
 			pm.Save();
+		}
+
+
+		[OneTimeTearDown]
+		public void OneTimeTearDown()
+		{
 			pm.Close();
 			pm = null;
 		}
