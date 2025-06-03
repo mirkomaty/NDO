@@ -21,4 +21,10 @@
     <ProjectReference Include="..\PureBusinessClasses\PureBusinessClasses.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Update="NDOMapping.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
 </Project>

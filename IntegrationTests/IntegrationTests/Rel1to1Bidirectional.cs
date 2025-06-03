@@ -137,7 +137,6 @@ namespace NdoUnitTests
 			Assert.That( l.Count == 1, "Sozialversicherungsnummer sollte gespeichert sein" );
 			pm.Delete( l );
 			pm.Save();
-			var text = logger.Text;
 			pm.UnloadCache();
 			l = pm.GetClassExtent( typeof( Sozialversicherungsnummer ) );
 			Assert.That( l.Count == 0, "Sozialversicherungsnummer sollte gelöscht sein" );

@@ -19,6 +19,12 @@
 // CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER 
 // DEALINGS IN THE SOFTWARE.
 
+/*
+This Code should test the TransactionScopes. Actually the tests in this file are copy & paste from TransactionTests.
+*/
+
+
+#if nix
 
 using NUnit.Framework;
 using System;
@@ -35,7 +41,10 @@ namespace NdoUnitTests
 	[TestFixture]
 	public class TransactionScopeTests : NDOTest
 	{
-		public void Setup() { }
+		public void Setup() 
+		{
+			Logger.ClearTestLogs();
+		}
 
 		public void TearDown() 
 		{
@@ -140,7 +149,6 @@ namespace NdoUnitTests
 		{
 			using (var pm = PmFactory.NewPersistenceManager())
 			{
-				Logger.ClearTestLogs();
 				pm.TransactionMode = TransactionMode.Optimistic;
 				new NDOQuery<Mitarbeiter>( pm ).Execute();
 				Mitarbeiter m = new Mitarbeiter();
@@ -159,7 +167,6 @@ namespace NdoUnitTests
 		{
 			using (var pm = PmFactory.NewPersistenceManager())
 			{
-				Logger.ClearTestLogs();
 				pm.TransactionMode = TransactionMode.Pessimistic;
 				new NDOQuery<Mitarbeiter>( pm ).Execute();
 				Mitarbeiter m = new Mitarbeiter();
@@ -179,14 +186,14 @@ namespace NdoUnitTests
 			using (var pm = PmFactory.NewPersistenceManager())
 			{
 				pm.TransactionMode = TransactionMode.Optimistic;
-				pm.LogAdapter = new TestLogAdapter();
-				pm.VerboseMode = true;
 				Mitarbeiter m = new Mitarbeiter();
 				pm.MakePersistent( m );
 				pm.Save( true );
-				string log = pm.LogAdapter.ToString();
-				Assert.That( log.IndexOf( "Starting transaction" ) > -1, "Transaction should be started" );
-				Assert.That( log.IndexOf( "Committing transaction" ) == -1, "Transaction should be committed" );
+
+                var startCount = Logger.FindLogsWith("Starting transaction").Count;
+                var commitCount = Logger.FindLogsWith("Committing transaction").Count;
+                Assert.That( startCount > 0, "Transaction should be started" );
+                Assert.That( commitCount == 0, "Transaction shouldn't be committed" );
 			}
 		}
 
@@ -196,14 +203,13 @@ namespace NdoUnitTests
 			using (var pm = PmFactory.NewPersistenceManager())
 			{
 				pm.TransactionMode = TransactionMode.Pessimistic;
-				pm.LogAdapter = new TestLogAdapter();
-				pm.VerboseMode = true;
 				Mitarbeiter m = new Mitarbeiter();
 				pm.MakePersistent( m );
 				pm.Save( true );
-				string log = pm.LogAdapter.ToString();
-				Assert.That( log.IndexOf( "Starting transaction" ) > -1, "Transaction should be started" );
-				Assert.That( log.IndexOf( "Committing transaction" ) == -1, "Transaction should be committed" );
+                var startCount = Logger.FindLogsWith("Starting transaction").Count;
+                var commitCount = Logger.FindLogsWith("Committing transaction").Count;
+                Assert.That( startCount > 0, "Transaction should be started" );
+                Assert.That( commitCount == 0, "Transaction shouldn't be committed" );
 			}
 		}
 
@@ -213,15 +219,15 @@ namespace NdoUnitTests
 			using (var pm = PmFactory.NewPersistenceManager())
 			{
 				pm.TransactionMode = TransactionMode.Optimistic;
-				pm.LogAdapter = new TestLogAdapter();
-				pm.VerboseMode = true;
 				Mitarbeiter m = new Mitarbeiter();
 				pm.MakePersistent( m );
 				pm.Save( true );
 				new NDOQuery<Mitarbeiter>( pm ).Execute();
-				string log = pm.LogAdapter.ToString();
-				Assert.That( log.IndexOf( "Starting transaction" ) > -1, "Transaction should be started" );
-				Assert.That( log.IndexOf( "Committing transaction" ) == -1, "Transaction should not be committed" );
+
+                var startCount = Logger.FindLogsWith("Starting transaction").Count;
+                var commitCount = Logger.FindLogsWith("Committing transaction").Count;
+                Assert.That( startCount > 0, "Transaction should be started" );
+                Assert.That( commitCount == 0, "Transaction shouldn't be committed" );
 			}
 		}
 
@@ -231,15 +237,15 @@ namespace NdoUnitTests
 			using (var pm = PmFactory.NewPersistenceManager())
 			{
 				pm.TransactionMode = TransactionMode.Pessimistic;
-				pm.LogAdapter = new TestLogAdapter();
-				pm.VerboseMode = true;
 				Mitarbeiter m = new Mitarbeiter();
 				pm.MakePersistent( m );
 				pm.Save( true );
 				new NDOQuery<Mitarbeiter>( pm ).Execute();
-				string log = pm.LogAdapter.ToString();
-				Assert.That( log.IndexOf( "Starting transaction" ) > -1, "Transaction should be started" );
-				Assert.That( log.IndexOf( "Committing transaction" ) == -1, "Transaction should not be committed" );
+
+                var startCount = Logger.FindLogsWith("Starting transaction").Count;
+                var commitCount = Logger.FindLogsWith("Committing transaction").Count;
+                Assert.That( startCount > 0, "Transaction should be started" );
+                Assert.That( commitCount == 0, "Transaction shouldn't be committed" );
 			}
 		}
 
@@ -249,16 +255,16 @@ namespace NdoUnitTests
 			using (var pm = PmFactory.NewPersistenceManager())
 			{
 				pm.TransactionMode = TransactionMode.Optimistic;
-				pm.LogAdapter = new TestLogAdapter();
-				pm.VerboseMode = true;
 				Mitarbeiter m = new Mitarbeiter();
 				pm.MakePersistent( m );
 				pm.Save( true );
 				m.Nachname = "Test";
 				pm.Save();
-				string log = pm.LogAdapter.ToString();
-                Assert.That( new Regex( "Starting transaction" ).Matches( log ).Count == 1, "One Transaction should be started" );
-                Assert.That( new Regex( "Committing transaction" ).Matches( log ).Count == 1, "One Transaction should be committed" );
+
+                var startCount = Logger.FindLogsWith("Starting transaction").Count;
+                var commitCount = Logger.FindLogsWith("Committing transaction").Count;
+                Assert.That( startCount == 1, "Transaction should be started" );
+                Assert.That( commitCount == 1, "Transaction should be committed" );				
             }
         }
 
@@ -268,16 +274,16 @@ namespace NdoUnitTests
 			using (var pm = PmFactory.NewPersistenceManager())
 			{
 				pm.TransactionMode = TransactionMode.Pessimistic;
-				pm.LogAdapter = new TestLogAdapter();
-				pm.VerboseMode = true;
 				Mitarbeiter m = new Mitarbeiter();
 				pm.MakePersistent( m );
 				pm.Save( true );
 				m.Nachname = "Test";
 				pm.Save();
-				string log = pm.LogAdapter.ToString();
-				Assert.That( new Regex( "Starting transaction" ).Matches( log ).Count == 1, "One Transaction should be started" );
-				Assert.That( new Regex( "Committing transaction" ).Matches( log ).Count == 1, "One Transaction should be committed" );
+
+                var startCount = Logger.FindLogsWith("Starting transaction").Count;
+                var commitCount = Logger.FindLogsWith("Committing transaction").Count;
+                Assert.That( startCount == 1, "Transaction should be started" );
+                Assert.That( commitCount == 1, "Transaction should be committed" );
 			}
 		}
 
@@ -288,18 +294,18 @@ namespace NdoUnitTests
 			using (var pm = PmFactory.NewPersistenceManager())
 			{
 				pm.TransactionMode = TransactionMode.None;
-				pm.LogAdapter = new TestLogAdapter();
-				pm.VerboseMode = true;
 				using (ISqlPassThroughHandler sqlHandler = pm.GetSqlPassThroughHandler())
 				{
 					var reader = sqlHandler.Execute( "DELETE FROM Mitarbeiter" );
-					string log = pm.LogAdapter.ToString();
-					Assert.That( log.IndexOf( "Starting transaction" ) == -1, "Transaction should be committed" );
-					Assert.That( log.IndexOf( "Committing transaction" ) == -1, "Transaction should be committed" );
 					Assert.That( reader == null, "Reader should be null" );
 				}
-			}
-		}
+            
+				var startCount = Logger.FindLogsWith("Starting transaction").Count;
+                var commitCount = Logger.FindLogsWith("Committing transaction").Count;
+                Assert.That( startCount == 0, "Transaction shouldn't be started" );
+                Assert.That( commitCount == 0, "Transaction shouldn't be committed" );
+            }
+        }
 
 		int FlughafenCount(PersistenceManager pm)
 		{
@@ -321,8 +327,6 @@ namespace NdoUnitTests
 				var landCount = LänderCount( pm );
 				var fhCount = FlughafenCount( pm );
 
-				pm.LogAdapter = new TestLogAdapter();
-				pm.VerboseMode = true;
 				pm.TransactionMode = TransactionMode.Optimistic;
 
 				Land land = new Land();
@@ -338,7 +342,6 @@ namespace NdoUnitTests
 
 				pm.Abort();
 
-				string log = pm.LogAdapter.ToString();
 				Assert.That( landCount == LänderCount( pm ) );
 				Assert.That( fhCount == FlughafenCount( pm ) );
 			}
@@ -349,9 +352,6 @@ namespace NdoUnitTests
 		{
 			using (var pm = PmFactory.NewPersistenceManager())
 			{
-
-				pm.LogAdapter = new TestLogAdapter();
-				pm.VerboseMode = true;
 				using (ISqlPassThroughHandler sqlHandler = pm.GetSqlPassThroughHandler())
 				{
 					sqlHandler.BeginTransaction();
@@ -359,9 +359,10 @@ namespace NdoUnitTests
 					sqlHandler.Execute( "DELETE FROM Reise" );
 					sqlHandler.CommitTransaction();
 				}
-				string log = pm.LogAdapter.ToString();
-				Assert.That( new Regex( "Starting transaction" ).Matches( log ).Count == 1, "One Transaction should be started" );
-				Assert.That( new Regex( "Committing transaction" ).Matches( log ).Count == 1, "One Transaction should be committed" );
+                var startCount = Logger.FindLogsWith("Starting transaction").Count;
+                var commitCount = Logger.FindLogsWith("Committing transaction").Count;
+                Assert.That( startCount == 1, "1 Transaction should be started" );
+                Assert.That( commitCount == 1, "1 Transaction should be committed" );
 			}
 		}
 
@@ -369,15 +370,15 @@ namespace NdoUnitTests
 		public void DirectSqlPassThroughWithCombinedStatementsDoesNotCommit()
 		{
 			var pm = PmFactory.NewPersistenceManager();
-			pm.LogAdapter = new TestLogAdapter();
-			pm.VerboseMode = true;
+
 			using (ISqlPassThroughHandler sqlHandler = pm.GetSqlPassThroughHandler())
 			{
 				sqlHandler.Execute( "DELETE FROM Mitarbeiter" );
 				sqlHandler.Execute( "DELETE FROM Reise" );
 			}
-			string log = pm.LogAdapter.ToString();
-			Assert.That( log.IndexOf( "Committing transaction" ) == -1, "Transaction should not be committed" );
+
+            var commitCount = Logger.FindLogsWith("Committing transaction").Count;
+            Assert.That( commitCount == 0, "Transaction shouldn't be committed" );
 		}
 
 		[Test]
@@ -388,18 +389,18 @@ namespace NdoUnitTests
 			pm.MakePersistent( m );
 			pm.Save();
 			pm.UnloadCache();
-			//pm.LogAdapter = new TestLogAdapter();
-			//pm.VerboseMode = true;
+
 			using (ISqlPassThroughHandler sqlHandler = pm.GetSqlPassThroughHandler())
 			{
 				sqlHandler.BeginTransaction();
 				sqlHandler.Execute( "DELETE FROM Mitarbeiter" );
 				pm.Abort();
 			}
-            //string log = pm.LogAdapter.ToString();
+
             pm = PmFactory.NewPersistenceManager();
             bool hasRecords = new NDOQuery<Mitarbeiter>( pm ).Execute().Count > 0;
 			Assert.That( hasRecords, "At least one record should be present" );
 		}
 	}
 }
+#endif
