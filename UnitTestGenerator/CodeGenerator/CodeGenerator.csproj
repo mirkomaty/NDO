@@ -4,6 +4,7 @@
     <TargetFramework>net8.0</TargetFramework>
     <ImplicitUsings>disable</ImplicitUsings>
     <Nullable>disable</Nullable>
+    <Copyright>(c) 2007-2025 Mirko Matytschak</Copyright>
   </PropertyGroup>
 
 </Project>

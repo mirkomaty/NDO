@@ -44,7 +44,7 @@ namespace TestGenerator
 		public TestGenerator( List<RelInfo> relInfos )
 		{
 			this.relInfos = relInfos;
-			fileName = Path.Combine( AppDomain.CurrentDomain.BaseDirectory, @"..\..\UnitTests\UnitTests.cs" );
+			fileName = Path.Combine( AppDomain.CurrentDomain.BaseDirectory, @"..\..\..\UnitTests\UnitTests.cs" );
 		}
 
 

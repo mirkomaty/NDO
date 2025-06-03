@@ -2,8 +2,14 @@
 
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
-    <ImplicitUsings>enable</ImplicitUsings>
-    <Nullable>enable</Nullable>
+    <ImplicitUsings>disable</ImplicitUsings>
+    <Nullable>disable</Nullable>
   </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="NDO.Build" Version="5.0.0" />
+    <PackageReference Include="NDO.dll" Version="5.0.0" />
+    <PackageReference Include="NDO.SqlServer" Version="5.0.0" />
+  </ItemGroup>
 
 </Project>

@@ -36,7 +36,7 @@
     </Class>
     <Class AssemblyName="PersistentClasses" FullName="RelationTestClasses.AgrBi11NoTblGuidLeft" TableName="AgrBi11NoTblGuidLeft" ConnectionId="C0" TypeCode="2133574735">
       <Oid>
-        <OidColumn Name="ID" NetType="System.Guid,mscorlib" AllowDbNull="False" />
+        <OidColumn AutoIncremented="True" Name="ID" AllowDbNull="False" />
       </Oid>
       <Fields>
         <Field Name="dummy" AccessorName="Dummy">
@@ -51,7 +51,7 @@
     </Class>
     <Class AssemblyName="PersistentClasses" FullName="RelationTestClasses.AgrBi11NoTblGuidRight" TableName="AgrBi11NoTblGuidRight" ConnectionId="C0" TypeCode="1721968340">
       <Oid>
-        <OidColumn Name="ID" NetType="System.Guid,mscorlib" AllowDbNull="False" />
+        <OidColumn AutoIncremented="True" Name="ID" AllowDbNull="False" />
       </Oid>
       <Fields>
         <Field Name="dummy" AccessorName="Dummy">
@@ -111,7 +111,7 @@
     </Class>
     <Class AssemblyName="PersistentClasses" FullName="RelationTestClasses.AgrBi11OthpabsNoTblGuidLeft" TableName="AgrBi11OthpabsNoTblGuidLeft" ConnectionId="C0" TypeCode="1765855462">
       <Oid>
-        <OidColumn Name="ID" NetType="System.Guid,mscorlib" AllowDbNull="False" />
+        <OidColumn AutoIncremented="True" Name="ID" AllowDbNull="False" />
       </Oid>
       <Fields>
         <Field Name="dummy" AccessorName="Dummy">
@@ -126,7 +126,7 @@
     </Class>
     <Class AssemblyName="PersistentClasses" FullName="RelationTestClasses.AgrBi11OthpabsNoTblGuidRightBase" TableName="Unused" ConnectionId="C0">
       <Oid>
-        <OidColumn Name="Unused" NetType="System.Guid,mscorlib" AllowDbNull="False" />
+        <OidColumn AutoIncremented="True" Name="Unused" AllowDbNull="False" />
       </Oid>
       <Fields>
         <Field Name="dummy" AccessorName="Dummy">
@@ -141,7 +141,7 @@
     </Class>
     <Class AssemblyName="PersistentClasses" FullName="RelationTestClasses.AgrBi11OthpabsNoTblGuidRightDerived" TableName="AgrBi11OthpabsNoTblGuidRightDerived" ConnectionId="C0" TypeCode="1304360512">
       <Oid>
-        <OidColumn Name="ID" NetType="System.Guid,mscorlib" AllowDbNull="False" />
+        <OidColumn AutoIncremented="True" Name="ID" AllowDbNull="False" />
       </Oid>
       <Fields>
         <Field Name="dummy">
@@ -210,7 +210,7 @@
     </Class>
     <Class AssemblyName="PersistentClasses" FullName="RelationTestClasses.AgrBi11OthpabsTblGuidLeft" TableName="AgrBi11OthpabsTblGuidLeft" ConnectionId="C0" TypeCode="-826332249">
       <Oid>
-        <OidColumn Name="ID" NetType="System.Guid,mscorlib" AllowDbNull="False" />
+        <OidColumn AutoIncremented="True" Name="ID" AllowDbNull="False" />
       </Oid>
       <Fields>
         <Field Name="dummy" AccessorName="Dummy">
@@ -228,7 +228,7 @@
     </Class>
     <Class AssemblyName="PersistentClasses" FullName="RelationTestClasses.AgrBi11OthpabsTblGuidRightBase" TableName="Unused" ConnectionId="C0">
       <Oid>
-        <OidColumn Name="Unused" NetType="System.Guid,mscorlib" AllowDbNull="False" />
+        <OidColumn AutoIncremented="True" Name="Unused" AllowDbNull="False" />
       </Oid>
       <Fields>
         <Field Name="dummy" AccessorName="Dummy">
@@ -246,7 +246,7 @@
     </Class>
     <Class AssemblyName="PersistentClasses" FullName="RelationTestClasses.AgrBi11OthpabsTblGuidRightDerived" TableName="AgrBi11OthpabsTblGuidRightDerived" ConnectionId="C0" TypeCode="735772673">
       <Oid>
-        <OidColumn Name="ID" NetType="System.Guid,mscorlib" AllowDbNull="False" />
+        <OidColumn AutoIncremented="True" Name="ID" AllowDbNull="False" />
       </Oid>
       <Fields>
         <Field Name="dummy">
@@ -309,7 +309,7 @@
     </Class>
     <Class AssemblyName="PersistentClasses" FullName="RelationTestClasses.AgrBi11OthpconNoTblGuidLeft" TableName="AgrBi11OthpconNoTblGuidLeft" ConnectionId="C0" TypeCode="1395917270">
       <Oid>
-        <OidColumn Name="ID" NetType="System.Guid,mscorlib" AllowDbNull="False" />
+        <OidColumn AutoIncremented="True" Name="ID" AllowDbNull="False" />
       </Oid>
       <Fields>
         <Field Name="dummy" AccessorName="Dummy">
@@ -324,7 +324,7 @@
     </Class>
     <Class AssemblyName="PersistentClasses" FullName="RelationTestClasses.AgrBi11OthpconNoTblGuidRightBase" TableName="AgrBi11OthpconNoTblGuidRightBase" ConnectionId="C0" TypeCode="-278972770">
       <Oid>
-        <OidColumn Name="ID" NetType="System.Guid,mscorlib" AllowDbNull="False" />
+        <OidColumn AutoIncremented="True" Name="ID" AllowDbNull="False" />
       </Oid>
       <Fields>
         <Field Name="dummy" AccessorName="Dummy">
@@ -339,7 +339,7 @@
     </Class>
     <Class AssemblyName="PersistentClasses" FullName="RelationTestClasses.AgrBi11OthpconNoTblGuidRightDerived" TableName="AgrBi11OthpconNoTblGuidRightDerived" ConnectionId="C0" TypeCode="1772762928">
       <Oid>
-        <OidColumn Name="ID" NetType="System.Guid,mscorlib" AllowDbNull="False" />
+        <OidColumn AutoIncremented="True" Name="ID" AllowDbNull="False" />
       </Oid>
       <Fields>
         <Field Name="dummy">
@@ -408,7 +408,7 @@
     </Class>
     <Class AssemblyName="PersistentClasses" FullName="RelationTestClasses.AgrBi11OthpconTblGuidLeft" TableName="AgrBi11OthpconTblGuidLeft" ConnectionId="C0" TypeCode="-2002134889">
       <Oid>
-        <OidColumn Name="ID" NetType="System.Guid,mscorlib" AllowDbNull="False" />
+        <OidColumn AutoIncremented="True" Name="ID" AllowDbNull="False" />
       </Oid>
       <Fields>
         <Field Name="dummy" AccessorName="Dummy">
@@ -426,7 +426,7 @@
     </Class>
     <Class AssemblyName="PersistentClasses" FullName="RelationTestClasses.AgrBi11OthpconTblGuidRightBase" TableName="AgrBi11OthpconTblGuidRightBase" ConnectionId="C0" TypeCode="1366716541">
       <Oid>
-        <OidColumn Name="ID" NetType="System.Guid,mscorlib" AllowDbNull="False" />
+        <OidColumn AutoIncremented="True" Name="ID" AllowDbNull="False" />
       </Oid>
       <Fields>
         <Field Name="dummy" AccessorName="Dummy">
@@ -444,7 +444,7 @@
     </Class>
     <Class AssemblyName="PersistentClasses" FullName="RelationTestClasses.AgrBi11OthpconTblGuidRightDerived" TableName="AgrBi11OthpconTblGuidRightDerived" ConnectionId="C0" TypeCode="1451343089">
       <Oid>
-        <OidColumn Name="ID" NetType="System.Guid,mscorlib" AllowDbNull="False" />
+        <OidColumn AutoIncremented="True" Name="ID" AllowDbNull="False" />
       </Oid>
       <Fields>
         <Field Name="dummy">
@@ -507,7 +507,7 @@
     </Class>
     <Class AssemblyName="PersistentClasses" FullName="RelationTestClasses.AgrBi11OwnpabsNoTblGuidLeftBase" TableName="Unused" ConnectionId="C0">
       <Oid>
-        <OidColumn Name="Unused" NetType="System.Guid,mscorlib" AllowDbNull="False" />
+        <OidColumn AutoIncremented="True" Name="Unused" AllowDbNull="False" />
       </Oid>
       <Fields>
         <Field Name="dummy" AccessorName="Dummy">
@@ -522,7 +522,7 @@
     </Class>
     <Class AssemblyName="PersistentClasses" FullName="RelationTestClasses.AgrBi11OwnpabsNoTblGuidLeftDerived" TableName="AgrBi11OwnpabsNoTblGuidLeftDerived" ConnectionId="C0" TypeCode="-701860422">
       <Oid>
-        <OidColumn Name="ID" NetType="System.Guid,mscorlib" AllowDbNull="False" />
+        <OidColumn AutoIncremented="True" Name="ID" AllowDbNull="False" />
       </Oid>
       <Fields>
         <Field Name="dummy">
@@ -537,7 +537,7 @@
     </Class>
     <Class AssemblyName="PersistentClasses" FullName="RelationTestClasses.AgrBi11OwnpabsNoTblGuidRight" TableName="AgrBi11OwnpabsNoTblGuidRight" ConnectionId="C0" TypeCode="1209236160">
       <Oid>
-        <OidColumn Name="ID" NetType="System.Guid,mscorlib" AllowDbNull="False" />
+        <OidColumn AutoIncremented="True" Name="ID" AllowDbNull="False" />
       </Oid>
       <Fields>
         <Field Name="dummy" AccessorName="Dummy">
@@ -612,7 +612,7 @@
     </Class>
     <Class AssemblyName="PersistentClasses" FullName="RelationTestClasses.AgrBi11OwnpabsOthpabsNoTblGuidLeftBase" TableName="Unused" ConnectionId="C0">
       <Oid>
-        <OidColumn Name="Unused" NetType="System.Guid,mscorlib" AllowDbNull="False" />
+        <OidColumn AutoIncremented="True" Name="Unused" AllowDbNull="False" />
       </Oid>
       <Fields>
         <Field Name="dummy" AccessorName="Dummy">
@@ -627,7 +627,7 @@
     </Class>
     <Class AssemblyName="PersistentClasses" FullName="RelationTestClasses.AgrBi11OwnpabsOthpabsNoTblGuidLeftDerived" TableName="AgrBi11OwnpabsOthpabsNoTblGuidLeftDerived" ConnectionId="C0" TypeCode="-857662997">
       <Oid>
-        <OidColumn Name="ID" NetType="System.Guid,mscorlib" AllowDbNull="False" />
+        <OidColumn AutoIncremented="True" Name="ID" AllowDbNull="False" />
       </Oid>
       <Fields>
         <Field Name="dummy">
@@ -642,7 +642,7 @@
     </Class>
     <Class AssemblyName="PersistentClasses" FullName="RelationTestClasses.AgrBi11OwnpabsOthpabsNoTblGuidRightBase" TableName="Unused" ConnectionId="C0">
       <Oid>
-        <OidColumn Name="Unused" NetType="System.Guid,mscorlib" AllowDbNull="False" />
+        <OidColumn AutoIncremented="True" Name="Unused" AllowDbNull="False" />
       </Oid>
       <Fields>
         <Field Name="dummy" AccessorName="Dummy">
@@ -657,7 +657,7 @@
     </Class>
     <Class AssemblyName="PersistentClasses" FullName="RelationTestClasses.AgrBi11OwnpabsOthpabsNoTblGuidRightDerived" TableName="AgrBi11OwnpabsOthpabsNoTblGuidRightDerived" ConnectionId="C0" TypeCode="-454558420">
       <Oid>
-        <OidColumn Name="ID" NetType="System.Guid,mscorlib" AllowDbNull="False" />
+        <OidColumn AutoIncremented="True" Name="ID" AllowDbNull="False" />
       </Oid>
       <Fields>
         <Field Name="dummy">
@@ -744,7 +744,7 @@
     </Class>
     <Class AssemblyName="PersistentClasses" FullName="RelationTestClasses.AgrBi11OwnpabsOthpabsTblGuidLeftBase" TableName="Unused" ConnectionId="C0">
       <Oid>
-        <OidColumn Name="Unused" NetType="System.Guid,mscorlib" AllowDbNull="False" />
+        <OidColumn AutoIncremented="True" Name="Unused" AllowDbNull="False" />
       </Oid>
       <Fields>
         <Field Name="dummy" AccessorName="Dummy">
@@ -762,7 +762,7 @@
     </Class>
     <Class AssemblyName="PersistentClasses" FullName="RelationTestClasses.AgrBi11OwnpabsOthpabsTblGuidLeftDerived" TableName="AgrBi11OwnpabsOthpabsTblGuidLeftDerived" ConnectionId="C0" TypeCode="-876992246">
       <Oid>
-        <OidColumn Name="ID" NetType="System.Guid,mscorlib" AllowDbNull="False" />
+        <OidColumn AutoIncremented="True" Name="ID" AllowDbNull="False" />
       </Oid>
       <Fields>
         <Field Name="dummy">
@@ -780,7 +780,7 @@
     </Class>
     <Class AssemblyName="PersistentClasses" FullName="RelationTestClasses.AgrBi11OwnpabsOthpabsTblGuidRightBase" TableName="Unused" ConnectionId="C0">
       <Oid>
-        <OidColumn Name="Unused" NetType="System.Guid,mscorlib" AllowDbNull="False" />
+        <OidColumn AutoIncremented="True" Name="Unused" AllowDbNull="False" />
       </Oid>
       <Fields>
         <Field Name="dummy" AccessorName="Dummy">
@@ -798,7 +798,7 @@
     </Class>
     <Class AssemblyName="PersistentClasses" FullName="RelationTestClasses.AgrBi11OwnpabsOthpabsTblGuidRightDerived" TableName="AgrBi11OwnpabsOthpabsTblGuidRightDerived" ConnectionId="C0" TypeCode="-1053765139">
       <Oid>
-        <OidColumn Name="ID" NetType="System.Guid,mscorlib" AllowDbNull="False" />
+        <OidColumn AutoIncremented="True" Name="ID" AllowDbNull="False" />
       </Oid>
       <Fields>
         <Field Name="dummy">
@@ -870,7 +870,7 @@
     </Class>
     <Class AssemblyName="PersistentClasses" FullName="RelationTestClasses.AgrBi11OwnpabsTblGuidLeftBase" TableName="Unused" ConnectionId="C0">
       <Oid>
-        <OidColumn Name="Unused" NetType="System.Guid,mscorlib" AllowDbNull="False" />
+        <OidColumn AutoIncremented="True" Name="Unused" AllowDbNull="False" />
       </Oid>
       <Fields>
         <Field Name="dummy" AccessorName="Dummy">
@@ -888,7 +888,7 @@
     </Class>
     <Class AssemblyName="PersistentClasses" FullName="RelationTestClasses.AgrBi11OwnpabsTblGuidLeftDerived" TableName="AgrBi11OwnpabsTblGuidLeftDerived" ConnectionId="C0" TypeCode="-201970535">
       <Oid>
-        <OidColumn Name="ID" NetType="System.Guid,mscorlib" AllowDbNull="False" />
+        <OidColumn AutoIncremented="True" Name="ID" AllowDbNull="False" />
       </Oid>
       <Fields>
         <Field Name="dummy">
@@ -906,7 +906,7 @@
     </Class>
     <Class AssemblyName="PersistentClasses" FullName="RelationTestClasses.AgrBi11OwnpabsTblGuidRight" TableName="AgrBi11OwnpabsTblGuidRight" ConnectionId="C0" TypeCode="992838879">
       <Oid>
-        <OidColumn Name="ID" NetType="System.Guid,mscorlib" AllowDbNull="False" />
+        <OidColumn AutoIncremented="True" Name="ID" AllowDbNull="False" />
       </Oid>
       <Fields>
         <Field Name="dummy" AccessorName="Dummy">
@@ -969,7 +969,7 @@
     </Class>
     <Class AssemblyName="PersistentClasses" FullName="RelationTestClasses.AgrBi11OwnpconNoTblGuidLeftBase" TableName="AgrBi11OwnpconNoTblGuidLeftBase" ConnectionId="C0" TypeCode="-1192637116">
       <Oid>
-        <OidColumn Name="ID" NetType="System.Guid,mscorlib" AllowDbNull="False" />
+        <OidColumn AutoIncremented="True" Name="ID" AllowDbNull="False" />
       </Oid>
       <Fields>
         <Field Name="dummy" AccessorName="Dummy">
@@ -984,7 +984,7 @@
     </Class>
     <Class AssemblyName="PersistentClasses" FullName="RelationTestClasses.AgrBi11OwnpconNoTblGuidLeftDerived" TableName="AgrBi11OwnpconNoTblGuidLeftDerived" ConnectionId="C0" TypeCode="5985994">
       <Oid>
-        <OidColumn Name="ID" NetType="System.Guid,mscorlib" AllowDbNull="False" />
+        <OidColumn AutoIncremented="True" Name="ID" AllowDbNull="False" />
       </Oid>
       <Fields>
         <Field Name="dummy">
@@ -999,7 +999,7 @@
     </Class>
     <Class AssemblyName="PersistentClasses" FullName="RelationTestClasses.AgrBi11OwnpconNoTblGuidRight" TableName="AgrBi11OwnpconNoTblGuidRight" ConnectionId="C0" TypeCode="-1668913200">
       <Oid>
-        <OidColumn Name="ID" NetType="System.Guid,mscorlib" AllowDbNull="False" />
+        <OidColumn AutoIncremented="True" Name="ID" AllowDbNull="False" />
       </Oid>
       <Fields>
         <Field Name="dummy" AccessorName="Dummy">
@@ -1074,7 +1074,7 @@
     </Class>
     <Class AssemblyName="PersistentClasses" FullName="RelationTestClasses.AgrBi11OwnpconOthpconNoTblGuidLeftBase" TableName="AgrBi11OwnpconOthpconNoTblGuidLeftBase" ConnectionId="C0" TypeCode="-416950333">
       <Oid>
-        <OidColumn Name="ID" NetType="System.Guid,mscorlib" AllowDbNull="False" />
+        <OidColumn AutoIncremented="True" Name="ID" AllowDbNull="False" />
       </Oid>
       <Fields>
         <Field Name="dummy" AccessorName="Dummy">
@@ -1089,7 +1089,7 @@
     </Class>
     <Class AssemblyName="PersistentClasses" FullName="RelationTestClasses.AgrBi11OwnpconOthpconNoTblGuidLeftDerived" TableName="AgrBi11OwnpconOthpconNoTblGuidLeftDerived" ConnectionId="C0" TypeCode="1566885867">
       <Oid>
-        <OidColumn Name="ID" NetType="System.Guid,mscorlib" AllowDbNull="False" />
+        <OidColumn AutoIncremented="True" Name="ID" AllowDbNull="False" />
       </Oid>
       <Fields>
         <Field Name="dummy">
@@ -1104,7 +1104,7 @@
     </Class>
     <Class AssemblyName="PersistentClasses" FullName="RelationTestClasses.AgrBi11OwnpconOthpconNoTblGuidRightBase" TableName="AgrBi11OwnpconOthpconNoTblGuidRightBase" ConnectionId="C0" TypeCode="970113058">
       <Oid>
-        <OidColumn Name="ID" NetType="System.Guid,mscorlib" AllowDbNull="False" />
+        <OidColumn AutoIncremented="True" Name="ID" AllowDbNull="False" />
       </Oid>
       <Fields>
         <Field Name="dummy" AccessorName="Dummy">
@@ -1119,7 +1119,7 @@
     </Class>
     <Class AssemblyName="PersistentClasses" FullName="RelationTestClasses.AgrBi11OwnpconOthpconNoTblGuidRightDerived" TableName="AgrBi11OwnpconOthpconNoTblGuidRightDerived" ConnectionId="C0" TypeCode="1692012332">
       <Oid>
-        <OidColumn Name="ID" NetType="System.Guid,mscorlib" AllowDbNull="False" />
+        <OidColumn AutoIncremented="True" Name="ID" AllowDbNull="False" />
       </Oid>
       <Fields>
         <Field Name="dummy">
@@ -1206,7 +1206,7 @@
     </Class>
     <Class AssemblyName="PersistentClasses" FullName="RelationTestClasses.AgrBi11OwnpconOthpconTblGuidLeftBase" TableName="AgrBi11OwnpconOthpconTblGuidLeftBase" ConnectionId="C0" TypeCode="-1435650812">
       <Oid>
-        <OidColumn Name="ID" NetType="System.Guid,mscorlib" AllowDbNull="False" />
+        <OidColumn AutoIncremented="True" Name="ID" AllowDbNull="False" />
       </Oid>
       <Fields>
         <Field Name="dummy" AccessorName="Dummy">
@@ -1224,7 +1224,7 @@
     </Class>
     <Class AssemblyName="PersistentClasses" FullName="RelationTestClasses.AgrBi11OwnpconOthpconTblGuidLeftDerived" TableName="AgrBi11OwnpconOthpconTblGuidLeftDerived" ConnectionId="C0" TypeCode="1699829514">
       <Oid>
-        <OidColumn Name="ID" NetType="System.Guid,mscorlib" AllowDbNull="False" />
+        <OidColumn AutoIncremented="True" Name="ID" AllowDbNull="False" />
       </Oid>
       <Fields>
         <Field Name="dummy">
@@ -1242,7 +1242,7 @@
     </Class>
     <Class AssemblyName="PersistentClasses" FullName="RelationTestClasses.AgrBi11OwnpconOthpconTblGuidRightBase" TableName="AgrBi11OwnpconOthpconTblGuidRightBase" ConnectionId="C0" TypeCode="-544830719">
       <Oid>
-        <OidColumn Name="ID" NetType="System.Guid,mscorlib" AllowDbNull="False" />
+        <OidColumn AutoIncremented="True" Name="ID" AllowDbNull="False" />
       </Oid>
       <Fields>
         <Field Name="dummy" AccessorName="Dummy">
@@ -1260,7 +1260,7 @@
     </Class>
     <Class AssemblyName="PersistentClasses" FullName="RelationTestClasses.AgrBi11OwnpconOthpconTblGuidRightDerived" TableName="AgrBi11OwnpconOthpconTblGuidRightDerived" ConnectionId="C0" TypeCode="1518298093">
       <Oid>
-        <OidColumn Name="ID" NetType="System.Guid,mscorlib" AllowDbNull="False" />
+        <OidColumn AutoIncremented="True" Name="ID" AllowDbNull="False" />
       </Oid>
       <Fields>
         <Field Name="dummy">
@@ -1332,7 +1332,7 @@
     </Class>
     <Class AssemblyName="PersistentClasses" FullName="RelationTestClasses.AgrBi11OwnpconTblGuidLeftBase" TableName="AgrBi11OwnpconTblGuidLeftBase" ConnectionId="C0" TypeCode="-1945954619">
       <Oid>
-        <OidColumn Name="ID" NetType="System.Guid,mscorlib" AllowDbNull="False" />
+        <OidColumn AutoIncremented="True" Name="ID" AllowDbNull="False" />
       </Oid>
       <Fields>
         <Field Name="dummy" AccessorName="Dummy">
@@ -1350,7 +1350,7 @@
     </Class>
     <Class AssemblyName="PersistentClasses" FullName="RelationTestClasses.AgrBi11OwnpconTblGuidLeftDerived" TableName="AgrBi11OwnpconTblGuidLeftDerived" ConnectionId="C0" TypeCode="-871624279">
       <Oid>
-        <OidColumn Name="ID" NetType="System.Guid,mscorlib" AllowDbNull="False" />
+        <OidColumn AutoIncremented="True" Name="ID" AllowDbNull="False" />
       </Oid>
       <Fields>
         <Field Name="dummy">
@@ -1368,7 +1368,7 @@
     </Class>
     <Class AssemblyName="PersistentClasses" FullName="RelationTestClasses.AgrBi11OwnpconTblGuidRight" TableName="AgrBi11OwnpconTblGuidRight" ConnectionId="C0" TypeCode="-1097304593">
       <Oid>
-        <OidColumn Name="ID" NetType="System.Guid,mscorlib" AllowDbNull="False" />
+        <OidColumn AutoIncremented="True" Name="ID" AllowDbNull="False" />
       </Oid>
       <Fields>
         <Field Name="dummy" AccessorName="Dummy">
@@ -1422,7 +1422,7 @@
     </Class>
     <Class AssemblyName="PersistentClasses" FullName="RelationTestClasses.AgrBi11TblGuidLeft" TableName="AgrBi11TblGuidLeft" ConnectionId="C0" TypeCode="108127568">
       <Oid>
-        <OidColumn Name="ID" NetType="System.Guid,mscorlib" AllowDbNull="False" />
+        <OidColumn AutoIncremented="True" Name="ID" AllowDbNull="False" />
       </Oid>
       <Fields>
         <Field Name="dummy" AccessorName="Dummy">
@@ -1440,7 +1440,7 @@
     </Class>
     <Class AssemblyName="PersistentClasses" FullName="RelationTestClasses.AgrBi11TblGuidRight" TableName="AgrBi11TblGuidRight" ConnectionId="C0" TypeCode="-937351693">
       <Oid>
-        <OidColumn Name="ID" NetType="System.Guid,mscorlib" AllowDbNull="False" />
+        <OidColumn AutoIncremented="True" Name="ID" AllowDbNull="False" />
       </Oid>
       <Fields>
         <Field Name="dummy" AccessorName="Dummy">
@@ -1488,7 +1488,7 @@
     </Class>
     <Class AssemblyName="PersistentClasses" FullName="RelationTestClasses.AgrBi1nNoTblGuidLeft" TableName="AgrBi1nNoTblGuidLeft" ConnectionId="C0" TypeCode="1359269682">
       <Oid>
-        <OidColumn Name="ID" NetType="System.Guid,mscorlib" AllowDbNull="False" />
+        <OidColumn AutoIncremented="True" Name="ID" AllowDbNull="False" />
       </Oid>
       <Fields>
         <Field Name="dummy" AccessorName="Dummy">
@@ -1503,7 +1503,7 @@
     </Class>
     <Class AssemblyName="PersistentClasses" FullName="RelationTestClasses.AgrBi1nNoTblGuidRight" TableName="AgrBi1nNoTblGuidRight" ConnectionId="C0" TypeCode="-806651823">
       <Oid>
-        <OidColumn Name="ID" NetType="System.Guid,mscorlib" AllowDbNull="False" />
+        <OidColumn AutoIncremented="True" Name="ID" AllowDbNull="False" />
       </Oid>
       <Fields>
         <Field Name="dummy" AccessorName="Dummy">
@@ -1563,7 +1563,7 @@
     </Class>
     <Class AssemblyName="PersistentClasses" FullName="RelationTestClasses.AgrBi1nOthpabsNoTblGuidLeft" TableName="AgrBi1nOthpabsNoTblGuidLeft" ConnectionId="C0" TypeCode="1773359267">
       <Oid>
-        <OidColumn Name="ID" NetType="System.Guid,mscorlib" AllowDbNull="False" />
+        <OidColumn AutoIncremented="True" Name="ID" AllowDbNull="False" />
       </Oid>
       <Fields>
         <Field Name="dummy" AccessorName="Dummy">
@@ -1578,7 +1578,7 @@
     </Class>
     <Class AssemblyName="PersistentClasses" FullName="RelationTestClasses.AgrBi1nOthpabsNoTblGuidRightBase" TableName="Unused" ConnectionId="C0">
       <Oid>
-        <OidColumn Name="Unused" NetType="System.Guid,mscorlib" AllowDbNull="False" />
+        <OidColumn AutoIncremented="True" Name="Unused" AllowDbNull="False" />
       </Oid>
       <Fields>
         <Field Name="dummy" AccessorName="Dummy">
@@ -1593,7 +1593,7 @@
     </Class>
     <Class AssemblyName="PersistentClasses" FullName="RelationTestClasses.AgrBi1nOthpabsNoTblGuidRightDerived" TableName="AgrBi1nOthpabsNoTblGuidRightDerived" ConnectionId="C0" TypeCode="633891069">
       <Oid>
-        <OidColumn Name="ID" NetType="System.Guid,mscorlib" AllowDbNull="False" />
+        <OidColumn AutoIncremented="True" Name="ID" AllowDbNull="False" />
       </Oid>
       <Fields>
         <Field Name="dummy">
@@ -1662,7 +1662,7 @@
     </Class>
     <Class AssemblyName="PersistentClasses" FullName="RelationTestClasses.AgrBi1nOthpabsTblGuidLeft" TableName="AgrBi1nOthpabsTblGuidLeft" ConnectionId="C0" TypeCode="-799508828">
       <Oid>
-        <OidColumn Name="ID" NetType="System.Guid,mscorlib" AllowDbNull="False" />
+        <OidColumn AutoIncremented="True" Name="ID" AllowDbNull="False" />
       </Oid>
       <Fields>
         <Field Name="dummy" AccessorName="Dummy">
@@ -1680,7 +1680,7 @@
     </Class>
     <Class AssemblyName="PersistentClasses" FullName="RelationTestClasses.AgrBi1nOthpabsTblGuidRightBase" TableName="Unused" ConnectionId="C0">
       <Oid>
-        <OidColumn Name="Unused" NetType="System.Guid,mscorlib" AllowDbNull="False" />
+        <OidColumn AutoIncremented="True" Name="Unused" AllowDbNull="False" />
       </Oid>
       <Fields>
         <Field Name="dummy" AccessorName="Dummy">
@@ -1698,7 +1698,7 @@
     </Class>
     <Class AssemblyName="PersistentClasses" FullName="RelationTestClasses.AgrBi1nOthpabsTblGuidRightDerived" TableName="AgrBi1nOthpabsTblGuidRightDerived" ConnectionId="C0" TypeCode="-735314434">
       <Oid>
-        <OidColumn Name="ID" NetType="System.Guid,mscorlib" AllowDbNull="False" />
+        <OidColumn AutoIncremented="True" Name="ID" AllowDbNull="False" />
       </Oid>
       <Fields>
         <Field Name="dummy">
@@ -1761,7 +1761,7 @@
     </Class>
     <Class AssemblyName="PersistentClasses" FullName="RelationTestClasses.AgrBi1nOthpconNoTblGuidLeft" TableName="AgrBi1nOthpconNoTblGuidLeft" ConnectionId="C0" TypeCode="1403421075">
       <Oid>
-        <OidColumn Name="ID" NetType="System.Guid,mscorlib" AllowDbNull="False" />
+        <OidColumn AutoIncremented="True" Name="ID" AllowDbNull="False" />
       </Oid>
       <Fields>
         <Field Name="dummy" AccessorName="Dummy">
@@ -1776,7 +1776,7 @@
     </Class>
     <Class AssemblyName="PersistentClasses" FullName="RelationTestClasses.AgrBi1nOthpconNoTblGuidRightBase" TableName="AgrBi1nOthpconNoTblGuidRightBase" ConnectionId="C0" TypeCode="1613235457">
       <Oid>
-        <OidColumn Name="ID" NetType="System.Guid,mscorlib" AllowDbNull="False" />
+        <OidColumn AutoIncremented="True" Name="ID" AllowDbNull="False" />
       </Oid>
       <Fields>
         <Field Name="dummy" AccessorName="Dummy">
@@ -1791,7 +1791,7 @@
     </Class>
     <Class AssemblyName="PersistentClasses" FullName="RelationTestClasses.AgrBi1nOthpconNoTblGuidRightDerived" TableName="AgrBi1nOthpconNoTblGuidRightDerived" ConnectionId="C0" TypeCode="1102293485">
       <Oid>
-        <OidColumn Name="ID" NetType="System.Guid,mscorlib" AllowDbNull="False" />
+        <OidColumn AutoIncremented="True" Name="ID" AllowDbNull="False" />
       </Oid>
       <Fields>
         <Field Name="dummy">
@@ -1860,7 +1860,7 @@
     </Class>
     <Class AssemblyName="PersistentClasses" FullName="RelationTestClasses.AgrBi1nOthpconTblGuidLeft" TableName="AgrBi1nOthpconTblGuidLeft" ConnectionId="C0" TypeCode="-1975311468">
       <Oid>
-        <OidColumn Name="ID" NetType="System.Guid,mscorlib" AllowDbNull="False" />
+        <OidColumn AutoIncremented="True" Name="ID" AllowDbNull="False" />
       </Oid>
       <Fields>
         <Field Name="dummy" AccessorName="Dummy">
@@ -1878,7 +1878,7 @@
     </Class>
     <Class AssemblyName="PersistentClasses" FullName="RelationTestClasses.AgrBi1nOthpconTblGuidRightBase" TableName="AgrBi1nOthpconTblGuidRightBase" ConnectionId="C0" TypeCode="1574271904">
       <Oid>
-        <OidColumn Name="ID" NetType="System.Guid,mscorlib" AllowDbNull="False" />
+        <OidColumn AutoIncremented="True" Name="ID" AllowDbNull="False" />
       </Oid>
       <Fields>
         <Field Name="dummy" AccessorName="Dummy">
@@ -1896,7 +1896,7 @@
     </Class>
     <Class AssemblyName="PersistentClasses" FullName="RelationTestClasses.AgrBi1nOthpconTblGuidRightDerived" TableName="AgrBi1nOthpconTblGuidRightDerived" ConnectionId="C0" TypeCode="-19744018">
       <Oid>
-        <OidColumn Name="ID" NetType="System.Guid,mscorlib" AllowDbNull="False" />
+        <OidColumn AutoIncremented="True" Name="ID" AllowDbNull="False" />
       </Oid>
       <Fields>
         <Field Name="dummy">
@@ -1986,7 +1986,7 @@
     </Class>
     <Class AssemblyName="PersistentClasses" FullName="RelationTestClasses.AgrBi1nOwnpabsOthpabsTblGuidLeftBase" TableName="Unused" ConnectionId="C0">
       <Oid>
-        <OidColumn Name="Unused" NetType="System.Guid,mscorlib" AllowDbNull="False" />
+        <OidColumn AutoIncremented="True" Name="Unused" AllowDbNull="False" />
       </Oid>
       <Fields>
         <Field Name="dummy" AccessorName="Dummy">
@@ -2004,7 +2004,7 @@
     </Class>
     <Class AssemblyName="PersistentClasses" FullName="RelationTestClasses.AgrBi1nOwnpabsOthpabsTblGuidLeftDerived" TableName="AgrBi1nOwnpabsOthpabsTblGuidLeftDerived" ConnectionId="C0" TypeCode="-937298617">
       <Oid>
-        <OidColumn Name="ID" NetType="System.Guid,mscorlib" AllowDbNull="False" />
+        <OidColumn AutoIncremented="True" Name="ID" AllowDbNull="False" />
       </Oid>
       <Fields>
         <Field Name="dummy">
@@ -2022,7 +2022,7 @@
     </Class>
     <Class AssemblyName="PersistentClasses" FullName="RelationTestClasses.AgrBi1nOwnpabsOthpabsTblGuidRightBase" TableName="Unused" ConnectionId="C0">
       <Oid>
-        <OidColumn Name="Unused" NetType="System.Guid,mscorlib" AllowDbNull="False" />
+        <OidColumn AutoIncremented="True" Name="Unused" AllowDbNull="False" />
       </Oid>
       <Fields>
         <Field Name="dummy" AccessorName="Dummy">
@@ -2040,7 +2040,7 @@
     </Class>
     <Class AssemblyName="PersistentClasses" FullName="RelationTestClasses.AgrBi1nOwnpabsOthpabsTblGuidRightDerived" TableName="AgrBi1nOwnpabsOthpabsTblGuidRightDerived" ConnectionId="C0" TypeCode="1371704656">
       <Oid>
-        <OidColumn Name="ID" NetType="System.Guid,mscorlib" AllowDbNull="False" />
+        <OidColumn AutoIncremented="True" Name="ID" AllowDbNull="False" />
       </Oid>
       <Fields>
         <Field Name="dummy">
@@ -2112,7 +2112,7 @@
     </Class>
     <Class AssemblyName="PersistentClasses" FullName="RelationTestClasses.AgrBi1nOwnpabsTblGuidLeftBase" TableName="Unused" ConnectionId="C0">
       <Oid>
-        <OidColumn Name="Unused" NetType="System.Guid,mscorlib" AllowDbNull="False" />
+        <OidColumn AutoIncremented="True" Name="Unused" AllowDbNull="False" />
       </Oid>
       <Fields>
         <Field Name="dummy" AccessorName="Dummy">
@@ -2130,7 +2130,7 @@
     </Class>
     <Class AssemblyName="PersistentClasses" FullName="RelationTestClasses.AgrBi1nOwnpabsTblGuidLeftDerived" TableName="AgrBi1nOwnpabsTblGuidLeftDerived" ConnectionId="C0" TypeCode="1690237692">
       <Oid>
-        <OidColumn Name="ID" NetType="System.Guid,mscorlib" AllowDbNull="False" />
+        <OidColumn AutoIncremented="True" Name="ID" AllowDbNull="False" />
       </Oid>
       <Fields>
         <Field Name="dummy">
@@ -2148,7 +2148,7 @@
     </Class>
     <Class AssemblyName="PersistentClasses" FullName="RelationTestClasses.AgrBi1nOwnpabsTblGuidRight" TableName="AgrBi1nOwnpabsTblGuidRight" ConnectionId="C0" TypeCode="1824364930">
       <Oid>
-        <OidColumn Name="ID" NetType="System.Guid,mscorlib" AllowDbNull="False" />
+        <OidColumn AutoIncremented="True" Name="ID" AllowDbNull="False" />
       </Oid>
       <Fields>
         <Field Name="dummy" AccessorName="Dummy">
@@ -2238,7 +2238,7 @@
     </Class>
     <Class AssemblyName="PersistentClasses" FullName="RelationTestClasses.AgrBi1nOwnpconOthpconTblGuidLeftBase" TableName="AgrBi1nOwnpconOthpconTblGuidLeftBase" ConnectionId="C0" TypeCode="-745367065">
       <Oid>
-        <OidColumn Name="ID" NetType="System.Guid,mscorlib" AllowDbNull="False" />
+        <OidColumn AutoIncremented="True" Name="ID" AllowDbNull="False" />
       </Oid>
       <Fields>
         <Field Name="dummy" AccessorName="Dummy">
@@ -2256,7 +2256,7 @@
     </Class>
     <Class AssemblyName="PersistentClasses" FullName="RelationTestClasses.AgrBi1nOwnpconOthpconTblGuidLeftDerived" TableName="AgrBi1nOwnpconOthpconTblGuidLeftDerived" ConnectionId="C0" TypeCode="1639523143">
       <Oid>
-        <OidColumn Name="ID" NetType="System.Guid,mscorlib" AllowDbNull="False" />
+        <OidColumn AutoIncremented="True" Name="ID" AllowDbNull="False" />
       </Oid>
       <Fields>
         <Field Name="dummy">
@@ -2274,7 +2274,7 @@
     </Class>
     <Class AssemblyName="PersistentClasses" FullName="RelationTestClasses.AgrBi1nOwnpconOthpconTblGuidRightBase" TableName="AgrBi1nOwnpconOthpconTblGuidRightBase" ConnectionId="C0" TypeCode="-620871042">
       <Oid>
-        <OidColumn Name="ID" NetType="System.Guid,mscorlib" AllowDbNull="False" />
+        <OidColumn AutoIncremented="True" Name="ID" AllowDbNull="False" />
       </Oid>
       <Fields>
         <Field Name="dummy" AccessorName="Dummy">
@@ -2292,7 +2292,7 @@
     </Class>
     <Class AssemblyName="PersistentClasses" FullName="RelationTestClasses.AgrBi1nOwnpconOthpconTblGuidRightDerived" TableName="AgrBi1nOwnpconOthpconTblGuidRightDerived" ConnectionId="C0" TypeCode="-351199408">
       <Oid>
-        <OidColumn Name="ID" NetType="System.Guid,mscorlib" AllowDbNull="False" />
+        <OidColumn AutoIncremented="True" Name="ID" AllowDbNull="False" />
       </Oid>
       <Fields>
         <Field Name="dummy">
@@ -2364,7 +2364,7 @@
     </Class>
     <Class AssemblyName="PersistentClasses" FullName="RelationTestClasses.AgrBi1nOwnpconTblGuidLeftBase" TableName="AgrBi1nOwnpconTblGuidLeftBase" ConnectionId="C0" TypeCode="970234690">
       <Oid>
-        <OidColumn Name="ID" NetType="System.Guid,mscorlib" AllowDbNull="False" />
+        <OidColumn AutoIncremented="True" Name="ID" AllowDbNull="False" />
       </Oid>
       <Fields>
         <Field Name="dummy" AccessorName="Dummy">
@@ -2382,7 +2382,7 @@
     </Class>
     <Class AssemblyName="PersistentClasses" FullName="RelationTestClasses.AgrBi1nOwnpconTblGuidLeftDerived" TableName="AgrBi1nOwnpconTblGuidLeftDerived" ConnectionId="C0" TypeCode="1020583948">
       <Oid>
-        <OidColumn Name="ID" NetType="System.Guid,mscorlib" AllowDbNull="False" />
+        <OidColumn AutoIncremented="True" Name="ID" AllowDbNull="False" />
       </Oid>
       <Fields>
         <Field Name="dummy">
@@ -2400,7 +2400,7 @@
     </Class>
     <Class AssemblyName="PersistentClasses" FullName="RelationTestClasses.AgrBi1nOwnpconTblGuidRight" TableName="AgrBi1nOwnpconTblGuidRight" ConnectionId="C0" TypeCode="-265778542">
       <Oid>
-        <OidColumn Name="ID" NetType="System.Guid,mscorlib" AllowDbNull="False" />
+        <OidColumn AutoIncremented="True" Name="ID" AllowDbNull="False" />
       </Oid>
       <Fields>
         <Field Name="dummy" AccessorName="Dummy">
@@ -2454,7 +2454,7 @@
     </Class>
     <Class AssemblyName="PersistentClasses" FullName="RelationTestClasses.AgrBi1nTblGuidLeft" TableName="AgrBi1nTblGuidLeft" ConnectionId="C0" TypeCode="-607761165">
       <Oid>
-        <OidColumn Name="ID" NetType="System.Guid,mscorlib" AllowDbNull="False" />
+        <OidColumn AutoIncremented="True" Name="ID" AllowDbNull="False" />
       </Oid>
       <Fields>
         <Field Name="dummy" AccessorName="Dummy">
@@ -2472,7 +2472,7 @@
     </Class>
     <Class AssemblyName="PersistentClasses" FullName="RelationTestClasses.AgrBi1nTblGuidRight" TableName="AgrBi1nTblGuidRight" ConnectionId="C0" TypeCode="-1655065936">
       <Oid>
-        <OidColumn Name="ID" NetType="System.Guid,mscorlib" AllowDbNull="False" />
+        <OidColumn AutoIncremented="True" Name="ID" AllowDbNull="False" />
       </Oid>
       <Fields>
         <Field Name="dummy" AccessorName="Dummy">
@@ -2520,7 +2520,7 @@
     </Class>
     <Class AssemblyName="PersistentClasses" FullName="RelationTestClasses.AgrBin1NoTblGuidLeft" TableName="AgrBin1NoTblGuidLeft" ConnectionId="C0" TypeCode="-395045428">
       <Oid>
-        <OidColumn Name="ID" NetType="System.Guid,mscorlib" AllowDbNull="False" />
+        <OidColumn AutoIncremented="True" Name="ID" AllowDbNull="False" />
       </Oid>
       <Fields>
         <Field Name="dummy" AccessorName="Dummy">
@@ -2535,7 +2535,7 @@
     </Class>
     <Class AssemblyName="PersistentClasses" FullName="RelationTestClasses.AgrBin1NoTblGuidRight" TableName="AgrBin1NoTblGuidRight" ConnectionId="C0" TypeCode="644154615">
       <Oid>
-        <OidColumn Name="ID" NetType="System.Guid,mscorlib" AllowDbNull="False" />
+        <OidColumn AutoIncremented="True" Name="ID" AllowDbNull="False" />
       </Oid>
       <Fields>
         <Field Name="dummy" AccessorName="Dummy">
@@ -2604,7 +2604,7 @@
     </Class>
     <Class AssemblyName="PersistentClasses" FullName="RelationTestClasses.AgrBin1OthpabsTblGuidLeft" TableName="AgrBin1OthpabsTblGuidLeft" ConnectionId="C0" TypeCode="5193802">
       <Oid>
-        <OidColumn Name="ID" NetType="System.Guid,mscorlib" AllowDbNull="False" />
+        <OidColumn AutoIncremented="True" Name="ID" AllowDbNull="False" />
       </Oid>
       <Fields>
         <Field Name="dummy" AccessorName="Dummy">
@@ -2622,7 +2622,7 @@
     </Class>
     <Class AssemblyName="PersistentClasses" FullName="RelationTestClasses.AgrBin1OthpabsTblGuidRightBase" TableName="Unused" ConnectionId="C0">
       <Oid>
-        <OidColumn Name="Unused" NetType="System.Guid,mscorlib" AllowDbNull="False" />
+        <OidColumn AutoIncremented="True" Name="Unused" AllowDbNull="False" />
       </Oid>
       <Fields>
         <Field Name="dummy" AccessorName="Dummy">
@@ -2640,7 +2640,7 @@
     </Class>
     <Class AssemblyName="PersistentClasses" FullName="RelationTestClasses.AgrBin1OthpabsTblGuidRightDerived" TableName="AgrBin1OthpabsTblGuidRightDerived" ConnectionId="C0" TypeCode="-1918254684">
       <Oid>
-        <OidColumn Name="ID" NetType="System.Guid,mscorlib" AllowDbNull="False" />
+        <OidColumn AutoIncremented="True" Name="ID" AllowDbNull="False" />
       </Oid>
       <Fields>
         <Field Name="dummy">
@@ -2712,7 +2712,7 @@
     </Class>
     <Class AssemblyName="PersistentClasses" FullName="RelationTestClasses.AgrBin1OthpconTblGuidLeft" TableName="AgrBin1OthpconTblGuidLeft" ConnectionId="C0" TypeCode="-1170608838">
       <Oid>
-        <OidColumn Name="ID" NetType="System.Guid,mscorlib" AllowDbNull="False" />
+        <OidColumn AutoIncremented="True" Name="ID" AllowDbNull="False" />
       </Oid>
       <Fields>
         <Field Name="dummy" AccessorName="Dummy">
@@ -2730,7 +2730,7 @@
     </Class>
     <Class AssemblyName="PersistentClasses" FullName="RelationTestClasses.AgrBin1OthpconTblGuidRightBase" TableName="AgrBin1OthpconTblGuidRightBase" ConnectionId="C0" TypeCode="-789001798">
       <Oid>
-        <OidColumn Name="ID" NetType="System.Guid,mscorlib" AllowDbNull="False" />
+        <OidColumn AutoIncremented="True" Name="ID" AllowDbNull="False" />
       </Oid>
       <Fields>
         <Field Name="dummy" AccessorName="Dummy">
@@ -2748,7 +2748,7 @@
     </Class>
     <Class AssemblyName="PersistentClasses" FullName="RelationTestClasses.AgrBin1OthpconTblGuidRightDerived" TableName="AgrBin1OthpconTblGuidRightDerived" ConnectionId="C0" TypeCode="-1202684268">
       <Oid>
-        <OidColumn Name="ID" NetType="System.Guid,mscorlib" AllowDbNull="False" />
+        <OidColumn AutoIncremented="True" Name="ID" AllowDbNull="False" />
       </Oid>
       <Fields>
         <Field Name="dummy">
@@ -2811,7 +2811,7 @@
     </Class>
     <Class AssemblyName="PersistentClasses" FullName="RelationTestClasses.AgrBin1OwnpabsNoTblGuidLeftBase" TableName="Unused" ConnectionId="C0">
       <Oid>
-        <OidColumn Name="Unused" NetType="System.Guid,mscorlib" AllowDbNull="False" />
+        <OidColumn AutoIncremented="True" Name="Unused" AllowDbNull="False" />
       </Oid>
       <Fields>
         <Field Name="dummy" AccessorName="Dummy">
@@ -2826,7 +2826,7 @@
     </Class>
     <Class AssemblyName="PersistentClasses" FullName="RelationTestClasses.AgrBin1OwnpabsNoTblGuidLeftDerived" TableName="AgrBin1OwnpabsNoTblGuidLeftDerived" ConnectionId="C0" TypeCode="-1372329865">
       <Oid>
-        <OidColumn Name="ID" NetType="System.Guid,mscorlib" AllowDbNull="False" />
+        <OidColumn AutoIncremented="True" Name="ID" AllowDbNull="False" />
       </Oid>
       <Fields>
         <Field Name="dummy">
@@ -2841,7 +2841,7 @@
     </Class>
     <Class AssemblyName="PersistentClasses" FullName="RelationTestClasses.AgrBin1OwnpabsNoTblGuidRight" TableName="AgrBin1OwnpabsNoTblGuidRight" ConnectionId="C0" TypeCode="-169541827">
       <Oid>
-        <OidColumn Name="ID" NetType="System.Guid,mscorlib" AllowDbNull="False" />
+        <OidColumn AutoIncremented="True" Name="ID" AllowDbNull="False" />
       </Oid>
       <Fields>
         <Field Name="dummy" AccessorName="Dummy">
@@ -2928,7 +2928,7 @@
     </Class>
     <Class AssemblyName="PersistentClasses" FullName="RelationTestClasses.AgrBin1OwnpabsOthpabsTblGuidLeftBase" TableName="Unused" ConnectionId="C0">
       <Oid>
-        <OidColumn Name="Unused" NetType="System.Guid,mscorlib" AllowDbNull="False" />
+        <OidColumn AutoIncremented="True" Name="Unused" AllowDbNull="False" />
       </Oid>
       <Fields>
         <Field Name="dummy" AccessorName="Dummy">
@@ -2946,7 +2946,7 @@
     </Class>
     <Class AssemblyName="PersistentClasses" FullName="RelationTestClasses.AgrBin1OwnpabsOthpabsTblGuidLeftDerived" TableName="AgrBin1OwnpabsOthpabsTblGuidLeftDerived" ConnectionId="C0" TypeCode="1548477549">
       <Oid>
-        <OidColumn Name="ID" NetType="System.Guid,mscorlib" AllowDbNull="False" />
+        <OidColumn AutoIncremented="True" Name="ID" AllowDbNull="False" />
       </Oid>
       <Fields>
         <Field Name="dummy">
@@ -2964,7 +2964,7 @@
     </Class>
     <Class AssemblyName="PersistentClasses" FullName="RelationTestClasses.AgrBin1OwnpabsOthpabsTblGuidRightBase" TableName="Unused" ConnectionId="C0">
       <Oid>
-        <OidColumn Name="Unused" NetType="System.Guid,mscorlib" AllowDbNull="False" />
+        <OidColumn AutoIncremented="True" Name="Unused" AllowDbNull="False" />
       </Oid>
       <Fields>
         <Field Name="dummy" AccessorName="Dummy">
@@ -2982,7 +2982,7 @@
     </Class>
     <Class AssemblyName="PersistentClasses" FullName="RelationTestClasses.AgrBin1OwnpabsOthpabsTblGuidRightDerived" TableName="AgrBin1OwnpabsOthpabsTblGuidRightDerived" ConnectionId="C0" TypeCode="1121354474">
       <Oid>
-        <OidColumn Name="ID" NetType="System.Guid,mscorlib" AllowDbNull="False" />
+        <OidColumn AutoIncremented="True" Name="ID" AllowDbNull="False" />
       </Oid>
       <Fields>
         <Field Name="dummy">
@@ -3054,7 +3054,7 @@
     </Class>
     <Class AssemblyName="PersistentClasses" FullName="RelationTestClasses.AgrBin1OwnpabsTblGuidLeftBase" TableName="Unused" ConnectionId="C0">
       <Oid>
-        <OidColumn Name="Unused" NetType="System.Guid,mscorlib" AllowDbNull="False" />
+        <OidColumn AutoIncremented="True" Name="Unused" AllowDbNull="False" />
       </Oid>
       <Fields>
         <Field Name="dummy" AccessorName="Dummy">
@@ -3072,7 +3072,7 @@
     </Class>
     <Class AssemblyName="PersistentClasses" FullName="RelationTestClasses.AgrBin1OwnpabsTblGuidLeftDerived" TableName="AgrBin1OwnpabsTblGuidLeftDerived" ConnectionId="C0" TypeCode="-1673057642">
       <Oid>
-        <OidColumn Name="ID" NetType="System.Guid,mscorlib" AllowDbNull="False" />
+        <OidColumn AutoIncremented="True" Name="ID" AllowDbNull="False" />
       </Oid>
       <Fields>
         <Field Name="dummy">
@@ -3090,7 +3090,7 @@
     </Class>
     <Class AssemblyName="PersistentClasses" FullName="RelationTestClasses.AgrBin1OwnpabsTblGuidRight" TableName="AgrBin1OwnpabsTblGuidRight" ConnectionId="C0" TypeCode="1000342684">
       <Oid>
-        <OidColumn Name="ID" NetType="System.Guid,mscorlib" AllowDbNull="False" />
+        <OidColumn AutoIncremented="True" Name="ID" AllowDbNull="False" />
       </Oid>
       <Fields>
         <Field Name="dummy" AccessorName="Dummy">
@@ -3153,7 +3153,7 @@
     </Class>
     <Class AssemblyName="PersistentClasses" FullName="RelationTestClasses.AgrBin1OwnpconNoTblGuidLeftBase" TableName="AgrBin1OwnpconNoTblGuidLeftBase" ConnectionId="C0" TypeCode="699571111">
       <Oid>
-        <OidColumn Name="ID" NetType="System.Guid,mscorlib" AllowDbNull="False" />
+        <OidColumn AutoIncremented="True" Name="ID" AllowDbNull="False" />
       </Oid>
       <Fields>
         <Field Name="dummy" AccessorName="Dummy">
@@ -3168,7 +3168,7 @@
     </Class>
     <Class AssemblyName="PersistentClasses" FullName="RelationTestClasses.AgrBin1OwnpconNoTblGuidLeftDerived" TableName="AgrBin1OwnpconNoTblGuidLeftDerived" ConnectionId="C0" TypeCode="-664483449">
       <Oid>
-        <OidColumn Name="ID" NetType="System.Guid,mscorlib" AllowDbNull="False" />
+        <OidColumn AutoIncremented="True" Name="ID" AllowDbNull="False" />
       </Oid>
       <Fields>
         <Field Name="dummy">
@@ -3183,7 +3183,7 @@
     </Class>
     <Class AssemblyName="PersistentClasses" FullName="RelationTestClasses.AgrBin1OwnpconNoTblGuidRight" TableName="AgrBin1OwnpconNoTblGuidRight" ConnectionId="C0" TypeCode="1247276109">
       <Oid>
-        <OidColumn Name="ID" NetType="System.Guid,mscorlib" AllowDbNull="False" />
+        <OidColumn AutoIncremented="True" Name="ID" AllowDbNull="False" />
       </Oid>
       <Fields>
         <Field Name="dummy" AccessorName="Dummy">
@@ -3270,7 +3270,7 @@
     </Class>
     <Class AssemblyName="PersistentClasses" FullName="RelationTestClasses.AgrBin1OwnpconOthpconTblGuidLeftBase" TableName="AgrBin1OwnpconOthpconTblGuidLeftBase" ConnectionId="C0" TypeCode="-1511691135">
       <Oid>
-        <OidColumn Name="ID" NetType="System.Guid,mscorlib" AllowDbNull="False" />
+        <OidColumn AutoIncremented="True" Name="ID" AllowDbNull="False" />
       </Oid>
       <Fields>
         <Field Name="dummy" AccessorName="Dummy">
@@ -3288,7 +3288,7 @@
     </Class>
     <Class AssemblyName="PersistentClasses" FullName="RelationTestClasses.AgrBin1OwnpconOthpconTblGuidLeftDerived" TableName="AgrBin1OwnpconOthpconTblGuidLeftDerived" ConnectionId="C0" TypeCode="-169667987">
       <Oid>
-        <OidColumn Name="ID" NetType="System.Guid,mscorlib" AllowDbNull="False" />
+        <OidColumn AutoIncremented="True" Name="ID" AllowDbNull="False" />
       </Oid>
       <Fields>
         <Field Name="dummy">
@@ -3306,7 +3306,7 @@
     </Class>
     <Class AssemblyName="PersistentClasses" FullName="RelationTestClasses.AgrBin1OwnpconOthpconTblGuidRightBase" TableName="AgrBin1OwnpconOthpconTblGuidRightBase" ConnectionId="C0" TypeCode="1392886564">
       <Oid>
-        <OidColumn Name="ID" NetType="System.Guid,mscorlib" AllowDbNull="False" />
+        <OidColumn AutoIncremented="True" Name="ID" AllowDbNull="False" />
       </Oid>
       <Fields>
         <Field Name="dummy" AccessorName="Dummy">
@@ -3324,7 +3324,7 @@
     </Class>
     <Class AssemblyName="PersistentClasses" FullName="RelationTestClasses.AgrBin1OwnpconOthpconTblGuidRightDerived" TableName="AgrBin1OwnpconOthpconTblGuidRightDerived" ConnectionId="C0" TypeCode="-601549590">
       <Oid>
-        <OidColumn Name="ID" NetType="System.Guid,mscorlib" AllowDbNull="False" />
+        <OidColumn AutoIncremented="True" Name="ID" AllowDbNull="False" />
       </Oid>
       <Fields>
         <Field Name="dummy">
@@ -3396,7 +3396,7 @@
     </Class>
     <Class AssemblyName="PersistentClasses" FullName="RelationTestClasses.AgrBin1OwnpconTblGuidLeftBase" TableName="AgrBin1OwnpconTblGuidLeftBase" ConnectionId="C0" TypeCode="-1738399256">
       <Oid>
-        <OidColumn Name="ID" NetType="System.Guid,mscorlib" AllowDbNull="False" />
+        <OidColumn AutoIncremented="True" Name="ID" AllowDbNull="False" />
       </Oid>
       <Fields>
         <Field Name="dummy" AccessorName="Dummy">
@@ -3414,7 +3414,7 @@
     </Class>
     <Class AssemblyName="PersistentClasses" FullName="RelationTestClasses.AgrBin1OwnpconTblGuidLeftDerived" TableName="AgrBin1OwnpconTblGuidLeftDerived" ConnectionId="C0" TypeCode="1952255910">
       <Oid>
-        <OidColumn Name="ID" NetType="System.Guid,mscorlib" AllowDbNull="False" />
+        <OidColumn AutoIncremented="True" Name="ID" AllowDbNull="False" />
       </Oid>
       <Fields>
         <Field Name="dummy">
@@ -3432,7 +3432,7 @@
     </Class>
     <Class AssemblyName="PersistentClasses" FullName="RelationTestClasses.AgrBin1OwnpconTblGuidRight" TableName="AgrBin1OwnpconTblGuidRight" ConnectionId="C0" TypeCode="-1089800788">
       <Oid>
-        <OidColumn Name="ID" NetType="System.Guid,mscorlib" AllowDbNull="False" />
+        <OidColumn AutoIncremented="True" Name="ID" AllowDbNull="False" />
       </Oid>
       <Fields>
         <Field Name="dummy" AccessorName="Dummy">
@@ -3486,7 +3486,7 @@
     </Class>
     <Class AssemblyName="PersistentClasses" FullName="RelationTestClasses.AgrBin1TblGuidLeft" TableName="AgrBin1TblGuidLeft" ConnectionId="C0" TypeCode="-609586675">
       <Oid>
-        <OidColumn Name="ID" NetType="System.Guid,mscorlib" AllowDbNull="False" />
+        <OidColumn AutoIncremented="True" Name="ID" AllowDbNull="False" />
       </Oid>
       <Fields>
         <Field Name="dummy" AccessorName="Dummy">
@@ -3504,7 +3504,7 @@
     </Class>
     <Class AssemblyName="PersistentClasses" FullName="RelationTestClasses.AgrBin1TblGuidRight" TableName="AgrBin1TblGuidRight" ConnectionId="C0" TypeCode="-1711656746">
       <Oid>
-        <OidColumn Name="ID" NetType="System.Guid,mscorlib" AllowDbNull="False" />
+        <OidColumn AutoIncremented="True" Name="ID" AllowDbNull="False" />
       </Oid>
       <Fields>
         <Field Name="dummy" AccessorName="Dummy">
@@ -3576,7 +3576,7 @@
     </Class>
     <Class AssemblyName="PersistentClasses" FullName="RelationTestClasses.AgrBinnOthpabsTblGuidLeft" TableName="AgrBinnOthpabsTblGuidLeft" ConnectionId="C0" TypeCode="32017223">
       <Oid>
-        <OidColumn Name="ID" NetType="System.Guid,mscorlib" AllowDbNull="False" />
+        <OidColumn AutoIncremented="True" Name="ID" AllowDbNull="False" />
       </Oid>
       <Fields>
         <Field Name="dummy" AccessorName="Dummy">
@@ -3594,7 +3594,7 @@
     </Class>
     <Class AssemblyName="PersistentClasses" FullName="RelationTestClasses.AgrBinnOthpabsTblGuidRightBase" TableName="Unused" ConnectionId="C0">
       <Oid>
-        <OidColumn Name="Unused" NetType="System.Guid,mscorlib" AllowDbNull="False" />
+        <OidColumn AutoIncremented="True" Name="Unused" AllowDbNull="False" />
       </Oid>
       <Fields>
         <Field Name="dummy" AccessorName="Dummy">
@@ -3612,7 +3612,7 @@
     </Class>
     <Class AssemblyName="PersistentClasses" FullName="RelationTestClasses.AgrBinnOthpabsTblGuidRightDerived" TableName="AgrBinnOthpabsTblGuidRightDerived" ConnectionId="C0" TypeCode="905625505">
       <Oid>
-        <OidColumn Name="ID" NetType="System.Guid,mscorlib" AllowDbNull="False" />
+        <OidColumn AutoIncremented="True" Name="ID" AllowDbNull="False" />
       </Oid>
       <Fields>
         <Field Name="dummy">
@@ -3684,7 +3684,7 @@
     </Class>
     <Class AssemblyName="PersistentClasses" FullName="RelationTestClasses.AgrBinnOthpconTblGuidLeft" TableName="AgrBinnOthpconTblGuidLeft" ConnectionId="C0" TypeCode="-1143785417">
       <Oid>
-        <OidColumn Name="ID" NetType="System.Guid,mscorlib" AllowDbNull="False" />
+        <OidColumn AutoIncremented="True" Name="ID" AllowDbNull="False" />
       </Oid>
       <Fields>
         <Field Name="dummy" AccessorName="Dummy">
@@ -3702,7 +3702,7 @@
     </Class>
     <Class AssemblyName="PersistentClasses" FullName="RelationTestClasses.AgrBinnOthpconTblGuidRightBase" TableName="AgrBinnOthpconTblGuidRightBase" ConnectionId="C0" TypeCode="-581446435">
       <Oid>
-        <OidColumn Name="ID" NetType="System.Guid,mscorlib" AllowDbNull="False" />
+        <OidColumn AutoIncremented="True" Name="ID" AllowDbNull="False" />
       </Oid>
       <Fields>
         <Field Name="dummy" AccessorName="Dummy">
@@ -3720,7 +3720,7 @@
     </Class>
     <Class AssemblyName="PersistentClasses" FullName="RelationTestClasses.AgrBinnOthpconTblGuidRightDerived" TableName="AgrBinnOthpconTblGuidRightDerived" ConnectionId="C0" TypeCode="1621195921">
       <Oid>
-        <OidColumn Name="ID" NetType="System.Guid,mscorlib" AllowDbNull="False" />
+        <OidColumn AutoIncremented="True" Name="ID" AllowDbNull="False" />
       </Oid>
       <Fields>
         <Field Name="dummy">
@@ -3810,7 +3810,7 @@
     </Class>
     <Class AssemblyName="PersistentClasses" FullName="RelationTestClasses.AgrBinnOwnpabsOthpabsTblGuidLeftBase" TableName="Unused" ConnectionId="C0">
       <Oid>
-        <OidColumn Name="Unused" NetType="System.Guid,mscorlib" AllowDbNull="False" />
+        <OidColumn AutoIncremented="True" Name="Unused" AllowDbNull="False" />
       </Oid>
       <Fields>
         <Field Name="dummy" AccessorName="Dummy">
@@ -3828,7 +3828,7 @@
     </Class>
     <Class AssemblyName="PersistentClasses" FullName="RelationTestClasses.AgrBinnOwnpabsOthpabsTblGuidLeftDerived" TableName="AgrBinnOwnpabsOthpabsTblGuidLeftDerived" ConnectionId="C0" TypeCode="1488171178">
       <Oid>
-        <OidColumn Name="ID" NetType="System.Guid,mscorlib" AllowDbNull="False" />
+        <OidColumn AutoIncremented="True" Name="ID" AllowDbNull="False" />
       </Oid>
       <Fields>
         <Field Name="dummy">
@@ -3846,7 +3846,7 @@
     </Class>
     <Class AssemblyName="PersistentClasses" FullName="RelationTestClasses.AgrBinnOwnpabsOthpabsTblGuidRightBase" TableName="Unused" ConnectionId="C0">
       <Oid>
-        <OidColumn Name="Unused" NetType="System.Guid,mscorlib" AllowDbNull="False" />
+        <OidColumn AutoIncremented="True" Name="Unused" AllowDbNull="False" />
       </Oid>
       <Fields>
         <Field Name="dummy" AccessorName="Dummy">
@@ -3864,7 +3864,7 @@
     </Class>
     <Class AssemblyName="PersistentClasses" FullName="RelationTestClasses.AgrBinnOwnpabsOthpabsTblGuidRightDerived" TableName="AgrBinnOwnpabsOthpabsTblGuidRightDerived" ConnectionId="C0" TypeCode="-748143027">
       <Oid>
-        <OidColumn Name="ID" NetType="System.Guid,mscorlib" AllowDbNull="False" />
+        <OidColumn AutoIncremented="True" Name="ID" AllowDbNull="False" />
       </Oid>
       <Fields>
         <Field Name="dummy">
@@ -3936,7 +3936,7 @@
     </Class>
     <Class AssemblyName="PersistentClasses" FullName="RelationTestClasses.AgrBinnOwnpabsTblGuidLeftBase" TableName="Unused" ConnectionId="C0">
       <Oid>
-        <OidColumn Name="Unused" NetType="System.Guid,mscorlib" AllowDbNull="False" />
+        <OidColumn AutoIncremented="True" Name="Unused" AllowDbNull="False" />
       </Oid>
       <Fields>
         <Field Name="dummy" AccessorName="Dummy">
@@ -3954,7 +3954,7 @@
     </Class>
     <Class AssemblyName="PersistentClasses" FullName="RelationTestClasses.AgrBinnOwnpabsTblGuidLeftDerived" TableName="AgrBinnOwnpabsTblGuidLeftDerived" ConnectionId="C0" TypeCode="219150585">
       <Oid>
-        <OidColumn Name="ID" NetType="System.Guid,mscorlib" AllowDbNull="False" />
+        <OidColumn AutoIncremented="True" Name="ID" AllowDbNull="False" />
       </Oid>
       <Fields>
         <Field Name="dummy">
@@ -3972,7 +3972,7 @@
     </Class>
     <Class AssemblyName="PersistentClasses" FullName="RelationTestClasses.AgrBinnOwnpabsTblGuidRight" TableName="AgrBinnOwnpabsTblGuidRight" ConnectionId="C0" TypeCode="1831868735">
       <Oid>
-        <OidColumn Name="ID" NetType="System.Guid,mscorlib" AllowDbNull="False" />
+        <OidColumn AutoIncremented="True" Name="ID" AllowDbNull="False" />
       </Oid>
       <Fields>
         <Field Name="dummy" AccessorName="Dummy">
@@ -4062,7 +4062,7 @@
     </Class>
     <Class AssemblyName="PersistentClasses" FullName="RelationTestClasses.AgrBinnOwnpconOthpconTblGuidLeftBase" TableName="AgrBinnOwnpconOthpconTblGuidLeftBase" ConnectionId="C0" TypeCode="-821407388">
       <Oid>
-        <OidColumn Name="ID" NetType="System.Guid,mscorlib" AllowDbNull="False" />
+        <OidColumn AutoIncremented="True" Name="ID" AllowDbNull="False" />
       </Oid>
       <Fields>
         <Field Name="dummy" AccessorName="Dummy">
@@ -4080,7 +4080,7 @@
     </Class>
     <Class AssemblyName="PersistentClasses" FullName="RelationTestClasses.AgrBinnOwnpconOthpconTblGuidLeftDerived" TableName="AgrBinnOwnpconOthpconTblGuidLeftDerived" ConnectionId="C0" TypeCode="-229974358">
       <Oid>
-        <OidColumn Name="ID" NetType="System.Guid,mscorlib" AllowDbNull="False" />
+        <OidColumn AutoIncremented="True" Name="ID" AllowDbNull="False" />
       </Oid>
       <Fields>
         <Field Name="dummy">
@@ -4098,7 +4098,7 @@
     </Class>
     <Class AssemblyName="PersistentClasses" FullName="RelationTestClasses.AgrBinnOwnpconOthpconTblGuidRightBase" TableName="AgrBinnOwnpconOthpconTblGuidRightBase" ConnectionId="C0" TypeCode="1316846241">
       <Oid>
-        <OidColumn Name="ID" NetType="System.Guid,mscorlib" AllowDbNull="False" />
+        <OidColumn AutoIncremented="True" Name="ID" AllowDbNull="False" />
       </Oid>
       <Fields>
         <Field Name="dummy" AccessorName="Dummy">
@@ -4116,7 +4116,7 @@
     </Class>
     <Class AssemblyName="PersistentClasses" FullName="RelationTestClasses.AgrBinnOwnpconOthpconTblGuidRightDerived" TableName="AgrBinnOwnpconOthpconTblGuidRightDerived" ConnectionId="C0" TypeCode="1823920205">
       <Oid>
-        <OidColumn Name="ID" NetType="System.Guid,mscorlib" AllowDbNull="False" />
+        <OidColumn AutoIncremented="True" Name="ID" AllowDbNull="False" />
       </Oid>
       <Fields>
         <Field Name="dummy">
@@ -4188,7 +4188,7 @@
     </Class>
     <Class AssemblyName="PersistentClasses" FullName="RelationTestClasses.AgrBinnOwnpconTblGuidLeftBase" TableName="AgrBinnOwnpconTblGuidLeftBase" ConnectionId="C0" TypeCode="1177790053">
       <Oid>
-        <OidColumn Name="ID" NetType="System.Guid,mscorlib" AllowDbNull="False" />
+        <OidColumn AutoIncremented="True" Name="ID" AllowDbNull="False" />
       </Oid>
       <Fields>
         <Field Name="dummy" AccessorName="Dummy">
@@ -4206,7 +4206,7 @@
     </Class>
     <Class AssemblyName="PersistentClasses" FullName="RelationTestClasses.AgrBinnOwnpconTblGuidLeftDerived" TableName="AgrBinnOwnpconTblGuidLeftDerived" ConnectionId="C0" TypeCode="-450503159">
       <Oid>
-        <OidColumn Name="ID" NetType="System.Guid,mscorlib" AllowDbNull="False" />
+        <OidColumn AutoIncremented="True" Name="ID" AllowDbNull="False" />
       </Oid>
       <Fields>
         <Field Name="dummy">
@@ -4224,7 +4224,7 @@
     </Class>
     <Class AssemblyName="PersistentClasses" FullName="RelationTestClasses.AgrBinnOwnpconTblGuidRight" TableName="AgrBinnOwnpconTblGuidRight" ConnectionId="C0" TypeCode="-258274737">
       <Oid>
-        <OidColumn Name="ID" NetType="System.Guid,mscorlib" AllowDbNull="False" />
+        <OidColumn AutoIncremented="True" Name="ID" AllowDbNull="False" />
       </Oid>
       <Fields>
         <Field Name="dummy" AccessorName="Dummy">
@@ -4278,7 +4278,7 @@
     </Class>
     <Class AssemblyName="PersistentClasses" FullName="RelationTestClasses.AgrBinnTblGuidLeft" TableName="AgrBinnTblGuidLeft" ConnectionId="C0" TypeCode="-1325475408">
       <Oid>
-        <OidColumn Name="ID" NetType="System.Guid,mscorlib" AllowDbNull="False" />
+        <OidColumn AutoIncremented="True" Name="ID" AllowDbNull="False" />
       </Oid>
       <Fields>
         <Field Name="dummy" AccessorName="Dummy">
@@ -4296,7 +4296,7 @@
     </Class>
     <Class AssemblyName="PersistentClasses" FullName="RelationTestClasses.AgrBinnTblGuidRight" TableName="AgrBinnTblGuidRight" ConnectionId="C0" TypeCode="1865596307">
       <Oid>
-        <OidColumn Name="ID" NetType="System.Guid,mscorlib" AllowDbNull="False" />
+        <OidColumn AutoIncremented="True" Name="ID" AllowDbNull="False" />
       </Oid>
       <Fields>
         <Field Name="dummy" AccessorName="Dummy">
@@ -4340,7 +4340,7 @@
     </Class>
     <Class AssemblyName="PersistentClasses" FullName="RelationTestClasses.AgrDir1NoTblGuidLeft" TableName="AgrDir1NoTblGuidLeft" ConnectionId="C0" TypeCode="-248153390">
       <Oid>
-        <OidColumn Name="ID" NetType="System.Guid,mscorlib" AllowDbNull="False" />
+        <OidColumn AutoIncremented="True" Name="ID" AllowDbNull="False" />
       </Oid>
       <Fields>
         <Field Name="dummy" AccessorName="Dummy">
@@ -4355,7 +4355,7 @@
     </Class>
     <Class AssemblyName="PersistentClasses" FullName="RelationTestClasses.AgrDir1NoTblGuidRight" TableName="AgrDir1NoTblGuidRight" ConnectionId="C0" TypeCode="902840497">
       <Oid>
-        <OidColumn Name="ID" NetType="System.Guid,mscorlib" AllowDbNull="False" />
+        <OidColumn AutoIncremented="True" Name="ID" AllowDbNull="False" />
       </Oid>
       <Fields>
         <Field Name="dummy" AccessorName="Dummy">
@@ -4403,7 +4403,7 @@
     </Class>
     <Class AssemblyName="PersistentClasses" FullName="RelationTestClasses.AgrDir1OthpabsNoTblGuidLeft" TableName="AgrDir1OthpabsNoTblGuidLeft" ConnectionId="C0" TypeCode="-1992797949">
       <Oid>
-        <OidColumn Name="ID" NetType="System.Guid,mscorlib" AllowDbNull="False" />
+        <OidColumn AutoIncremented="True" Name="ID" AllowDbNull="False" />
       </Oid>
       <Fields>
         <Field Name="dummy" AccessorName="Dummy">
@@ -4418,7 +4418,7 @@
     </Class>
     <Class AssemblyName="PersistentClasses" FullName="RelationTestClasses.AgrDir1OthpabsNoTblGuidRightBase" TableName="Unused" ConnectionId="C0">
       <Oid>
-        <OidColumn Name="Unused" NetType="System.Guid,mscorlib" AllowDbNull="False" />
+        <OidColumn AutoIncremented="True" Name="Unused" AllowDbNull="False" />
       </Oid>
       <Fields>
         <Field Name="dummy" AccessorName="Dummy">
@@ -4429,7 +4429,7 @@
     </Class>
     <Class AssemblyName="PersistentClasses" FullName="RelationTestClasses.AgrDir1OthpabsNoTblGuidRightDerived" TableName="AgrDir1OthpabsNoTblGuidRightDerived" ConnectionId="C0" TypeCode="-1980298915">
       <Oid>
-        <OidColumn Name="ID" NetType="System.Guid,mscorlib" AllowDbNull="False" />
+        <OidColumn AutoIncremented="True" Name="ID" AllowDbNull="False" />
       </Oid>
       <Fields>
         <Field Name="dummy">
@@ -4480,7 +4480,7 @@
     </Class>
     <Class AssemblyName="PersistentClasses" FullName="RelationTestClasses.AgrDir1OthpabsTblGuidLeft" TableName="AgrDir1OthpabsTblGuidLeft" ConnectionId="C0" TypeCode="-1411248380">
       <Oid>
-        <OidColumn Name="ID" NetType="System.Guid,mscorlib" AllowDbNull="False" />
+        <OidColumn AutoIncremented="True" Name="ID" AllowDbNull="False" />
       </Oid>
       <Fields>
         <Field Name="dummy" AccessorName="Dummy">
@@ -4498,7 +4498,7 @@
     </Class>
     <Class AssemblyName="PersistentClasses" FullName="RelationTestClasses.AgrDir1OthpabsTblGuidRightBase" TableName="Unused" ConnectionId="C0">
       <Oid>
-        <OidColumn Name="Unused" NetType="System.Guid,mscorlib" AllowDbNull="False" />
+        <OidColumn AutoIncremented="True" Name="Unused" AllowDbNull="False" />
       </Oid>
       <Fields>
         <Field Name="dummy" AccessorName="Dummy">
@@ -4509,7 +4509,7 @@
     </Class>
     <Class AssemblyName="PersistentClasses" FullName="RelationTestClasses.AgrDir1OthpabsTblGuidRightDerived" TableName="AgrDir1OthpabsTblGuidRightDerived" ConnectionId="C0" TypeCode="1380398686">
       <Oid>
-        <OidColumn Name="ID" NetType="System.Guid,mscorlib" AllowDbNull="False" />
+        <OidColumn AutoIncremented="True" Name="ID" AllowDbNull="False" />
       </Oid>
       <Fields>
         <Field Name="dummy">
@@ -4557,7 +4557,7 @@
     </Class>
     <Class AssemblyName="PersistentClasses" FullName="RelationTestClasses.AgrDir1OthpconNoTblGuidLeft" TableName="AgrDir1OthpconNoTblGuidLeft" ConnectionId="C0" TypeCode="1932231155">
       <Oid>
-        <OidColumn Name="ID" NetType="System.Guid,mscorlib" AllowDbNull="False" />
+        <OidColumn AutoIncremented="True" Name="ID" AllowDbNull="False" />
       </Oid>
       <Fields>
         <Field Name="dummy" AccessorName="Dummy">
@@ -4572,7 +4572,7 @@
     </Class>
     <Class AssemblyName="PersistentClasses" FullName="RelationTestClasses.AgrDir1OthpconNoTblGuidRightBase" TableName="AgrDir1OthpconNoTblGuidRightBase" ConnectionId="C0" TypeCode="-812367711">
       <Oid>
-        <OidColumn Name="ID" NetType="System.Guid,mscorlib" AllowDbNull="False" />
+        <OidColumn AutoIncremented="True" Name="ID" AllowDbNull="False" />
       </Oid>
       <Fields>
         <Field Name="dummy" AccessorName="Dummy">
@@ -4583,7 +4583,7 @@
     </Class>
     <Class AssemblyName="PersistentClasses" FullName="RelationTestClasses.AgrDir1OthpconNoTblGuidRightDerived" TableName="AgrDir1OthpconNoTblGuidRightDerived" ConnectionId="C0" TypeCode="-1511896499">
       <Oid>
-        <OidColumn Name="ID" NetType="System.Guid,mscorlib" AllowDbNull="False" />
+        <OidColumn AutoIncremented="True" Name="ID" AllowDbNull="False" />
       </Oid>
       <Fields>
         <Field Name="dummy">
@@ -4634,7 +4634,7 @@
     </Class>
     <Class AssemblyName="PersistentClasses" FullName="RelationTestClasses.AgrDir1OthpconTblGuidLeft" TableName="AgrDir1OthpconTblGuidLeft" ConnectionId="C0" TypeCode="1707916276">
       <Oid>
-        <OidColumn Name="ID" NetType="System.Guid,mscorlib" AllowDbNull="False" />
+        <OidColumn AutoIncremented="True" Name="ID" AllowDbNull="False" />
       </Oid>
       <Fields>
         <Field Name="dummy" AccessorName="Dummy">
@@ -4652,7 +4652,7 @@
     </Class>
     <Class AssemblyName="PersistentClasses" FullName="RelationTestClasses.AgrDir1OthpconTblGuidRightBase" TableName="AgrDir1OthpconTblGuidRightBase" ConnectionId="C0" TypeCode="1415323456">
       <Oid>
-        <OidColumn Name="ID" NetType="System.Guid,mscorlib" AllowDbNull="False" />
+        <OidColumn AutoIncremented="True" Name="ID" AllowDbNull="False" />
       </Oid>
       <Fields>
         <Field Name="dummy" AccessorName="Dummy">
@@ -4663,7 +4663,7 @@
     </Class>
     <Class AssemblyName="PersistentClasses" FullName="RelationTestClasses.AgrDir1OthpconTblGuidRightDerived" TableName="AgrDir1OthpconTblGuidRightDerived" ConnectionId="C0" TypeCode="2095969102">
       <Oid>
-        <OidColumn Name="ID" NetType="System.Guid,mscorlib" AllowDbNull="False" />
+        <OidColumn AutoIncremented="True" Name="ID" AllowDbNull="False" />
       </Oid>
       <Fields>
         <Field Name="dummy">
@@ -4715,7 +4715,7 @@
     </Class>
     <Class AssemblyName="PersistentClasses" FullName="RelationTestClasses.AgrDir1OwnpabsNoTblGuidLeftBase" TableName="Unused" ConnectionId="C0">
       <Oid>
-        <OidColumn Name="Unused" NetType="System.Guid,mscorlib" AllowDbNull="False" />
+        <OidColumn AutoIncremented="True" Name="Unused" AllowDbNull="False" />
       </Oid>
       <Fields>
         <Field Name="dummy" AccessorName="Dummy">
@@ -4730,7 +4730,7 @@
     </Class>
     <Class AssemblyName="PersistentClasses" FullName="RelationTestClasses.AgrDir1OwnpabsNoTblGuidLeftDerived" TableName="AgrDir1OwnpabsNoTblGuidLeftDerived" ConnectionId="C0" TypeCode="2101676797">
       <Oid>
-        <OidColumn Name="ID" NetType="System.Guid,mscorlib" AllowDbNull="False" />
+        <OidColumn AutoIncremented="True" Name="ID" AllowDbNull="False" />
       </Oid>
       <Fields>
         <Field Name="dummy">
@@ -4745,7 +4745,7 @@
     </Class>
     <Class AssemblyName="PersistentClasses" FullName="RelationTestClasses.AgrDir1OwnpabsNoTblGuidRight" TableName="AgrDir1OwnpabsNoTblGuidRight" ConnectionId="C0" TypeCode="655097411">
       <Oid>
-        <OidColumn Name="ID" NetType="System.Guid,mscorlib" AllowDbNull="False" />
+        <OidColumn AutoIncremented="True" Name="ID" AllowDbNull="False" />
       </Oid>
       <Fields>
         <Field Name="dummy" AccessorName="Dummy">
@@ -4808,7 +4808,7 @@
     </Class>
     <Class AssemblyName="PersistentClasses" FullName="RelationTestClasses.AgrDir1OwnpabsOthpabsNoTblGuidLeftBase" TableName="Unused" ConnectionId="C0">
       <Oid>
-        <OidColumn Name="Unused" NetType="System.Guid,mscorlib" AllowDbNull="False" />
+        <OidColumn AutoIncremented="True" Name="Unused" AllowDbNull="False" />
       </Oid>
       <Fields>
         <Field Name="dummy" AccessorName="Dummy">
@@ -4823,7 +4823,7 @@
     </Class>
     <Class AssemblyName="PersistentClasses" FullName="RelationTestClasses.AgrDir1OwnpabsOthpabsNoTblGuidLeftDerived" TableName="AgrDir1OwnpabsOthpabsNoTblGuidLeftDerived" ConnectionId="C0" TypeCode="328442696">
       <Oid>
-        <OidColumn Name="ID" NetType="System.Guid,mscorlib" AllowDbNull="False" />
+        <OidColumn AutoIncremented="True" Name="ID" AllowDbNull="False" />
       </Oid>
       <Fields>
         <Field Name="dummy">
@@ -4838,7 +4838,7 @@
     </Class>
     <Class AssemblyName="PersistentClasses" FullName="RelationTestClasses.AgrDir1OwnpabsOthpabsNoTblGuidRightBase" TableName="Unused" ConnectionId="C0">
       <Oid>
-        <OidColumn Name="Unused" NetType="System.Guid,mscorlib" AllowDbNull="False" />
+        <OidColumn AutoIncremented="True" Name="Unused" AllowDbNull="False" />
       </Oid>
       <Fields>
         <Field Name="dummy" AccessorName="Dummy">
@@ -4849,7 +4849,7 @@
     </Class>
     <Class AssemblyName="PersistentClasses" FullName="RelationTestClasses.AgrDir1OwnpabsOthpabsNoTblGuidRightDerived" TableName="AgrDir1OwnpabsOthpabsNoTblGuidRightDerived" ConnectionId="C0" TypeCode="1954979695">
       <Oid>
-        <OidColumn Name="ID" NetType="System.Guid,mscorlib" AllowDbNull="False" />
+        <OidColumn AutoIncremented="True" Name="ID" AllowDbNull="False" />
       </Oid>
       <Fields>
         <Field Name="dummy">
@@ -4918,7 +4918,7 @@
     </Class>
     <Class AssemblyName="PersistentClasses" FullName="RelationTestClasses.AgrDir1OwnpabsOthpabsTblGuidLeftBase" TableName="Unused" ConnectionId="C0">
       <Oid>
-        <OidColumn Name="Unused" NetType="System.Guid,mscorlib" AllowDbNull="False" />
+        <OidColumn AutoIncremented="True" Name="Unused" AllowDbNull="False" />
       </Oid>
       <Fields>
         <Field Name="dummy" AccessorName="Dummy">
@@ -4936,7 +4936,7 @@
     </Class>
     <Class AssemblyName="PersistentClasses" FullName="RelationTestClasses.AgrDir1OwnpabsOthpabsTblGuidLeftDerived" TableName="AgrDir1OwnpabsOthpabsTblGuidLeftDerived" ConnectionId="C0" TypeCode="961111463">
       <Oid>
-        <OidColumn Name="ID" NetType="System.Guid,mscorlib" AllowDbNull="False" />
+        <OidColumn AutoIncremented="True" Name="ID" AllowDbNull="False" />
       </Oid>
       <Fields>
         <Field Name="dummy">
@@ -4954,7 +4954,7 @@
     </Class>
     <Class AssemblyName="PersistentClasses" FullName="RelationTestClasses.AgrDir1OwnpabsOthpabsTblGuidRightBase" TableName="Unused" ConnectionId="C0">
       <Oid>
-        <OidColumn Name="Unused" NetType="System.Guid,mscorlib" AllowDbNull="False" />
+        <OidColumn AutoIncremented="True" Name="Unused" AllowDbNull="False" />
       </Oid>
       <Fields>
         <Field Name="dummy" AccessorName="Dummy">
@@ -4965,7 +4965,7 @@
     </Class>
     <Class AssemblyName="PersistentClasses" FullName="RelationTestClasses.AgrDir1OwnpabsOthpabsTblGuidRightDerived" TableName="AgrDir1OwnpabsOthpabsTblGuidRightDerived" ConnectionId="C0" TypeCode="92874992">
       <Oid>
-        <OidColumn Name="ID" NetType="System.Guid,mscorlib" AllowDbNull="False" />
+        <OidColumn AutoIncremented="True" Name="ID" AllowDbNull="False" />
       </Oid>
       <Fields>
         <Field Name="dummy">
@@ -5023,7 +5023,7 @@
     </Class>
     <Class AssemblyName="PersistentClasses" FullName="RelationTestClasses.AgrDir1OwnpabsTblGuidLeftBase" TableName="Unused" ConnectionId="C0">
       <Oid>
-        <OidColumn Name="Unused" NetType="System.Guid,mscorlib" AllowDbNull="False" />
+        <OidColumn AutoIncremented="True" Name="Unused" AllowDbNull="False" />
       </Oid>
       <Fields>
         <Field Name="dummy" AccessorName="Dummy">
@@ -5041,7 +5041,7 @@
     </Class>
     <Class AssemblyName="PersistentClasses" FullName="RelationTestClasses.AgrDir1OwnpabsTblGuidLeftDerived" TableName="AgrDir1OwnpabsTblGuidLeftDerived" ConnectionId="C0" TypeCode="-735365476">
       <Oid>
-        <OidColumn Name="ID" NetType="System.Guid,mscorlib" AllowDbNull="False" />
+        <OidColumn AutoIncremented="True" Name="ID" AllowDbNull="False" />
       </Oid>
       <Fields>
         <Field Name="dummy">
@@ -5059,7 +5059,7 @@
     </Class>
     <Class AssemblyName="PersistentClasses" FullName="RelationTestClasses.AgrDir1OwnpabsTblGuidRight" TableName="AgrDir1OwnpabsTblGuidRight" ConnectionId="C0" TypeCode="40308002">
       <Oid>
-        <OidColumn Name="ID" NetType="System.Guid,mscorlib" AllowDbNull="False" />
+        <OidColumn AutoIncremented="True" Name="ID" AllowDbNull="False" />
       </Oid>
       <Fields>
         <Field Name="dummy" AccessorName="Dummy">
@@ -5111,7 +5111,7 @@
     </Class>
     <Class AssemblyName="PersistentClasses" FullName="RelationTestClasses.AgrDir1OwnpconNoTblGuidLeftBase" TableName="AgrDir1OwnpconNoTblGuidLeftBase" ConnectionId="C0" TypeCode="314177249">
       <Oid>
-        <OidColumn Name="ID" NetType="System.Guid,mscorlib" AllowDbNull="False" />
+        <OidColumn AutoIncremented="True" Name="ID" AllowDbNull="False" />
       </Oid>
       <Fields>
         <Field Name="dummy" AccessorName="Dummy">
@@ -5126,7 +5126,7 @@
     </Class>
     <Class AssemblyName="PersistentClasses" FullName="RelationTestClasses.AgrDir1OwnpconNoTblGuidLeftDerived" TableName="AgrDir1OwnpconNoTblGuidLeftDerived" ConnectionId="C0" TypeCode="-1485444083">
       <Oid>
-        <OidColumn Name="ID" NetType="System.Guid,mscorlib" AllowDbNull="False" />
+        <OidColumn AutoIncremented="True" Name="ID" AllowDbNull="False" />
       </Oid>
       <Fields>
         <Field Name="dummy">
@@ -5141,7 +5141,7 @@
     </Class>
     <Class AssemblyName="PersistentClasses" FullName="RelationTestClasses.AgrDir1OwnpconNoTblGuidRight" TableName="AgrDir1OwnpconNoTblGuidRight" ConnectionId="C0" TypeCode="2071915347">
       <Oid>
-        <OidColumn Name="ID" NetType="System.Guid,mscorlib" AllowDbNull="False" />
+        <OidColumn AutoIncremented="True" Name="ID" AllowDbNull="False" />
       </Oid>
       <Fields>
         <Field Name="dummy" AccessorName="Dummy">
@@ -5204,7 +5204,7 @@
     </Class>
     <Class AssemblyName="PersistentClasses" FullName="RelationTestClasses.AgrDir1OwnpconOthpconNoTblGuidLeftBase" TableName="AgrDir1OwnpconOthpconNoTblGuidLeftBase" ConnectionId="C0" TypeCode="-1466035322">
       <Oid>
-        <OidColumn Name="ID" NetType="System.Guid,mscorlib" AllowDbNull="False" />
+        <OidColumn AutoIncremented="True" Name="ID" AllowDbNull="False" />
       </Oid>
       <Fields>
         <Field Name="dummy" AccessorName="Dummy">
@@ -5219,7 +5219,7 @@
     </Class>
     <Class AssemblyName="PersistentClasses" FullName="RelationTestClasses.AgrDir1OwnpconOthpconNoTblGuidLeftDerived" TableName="AgrDir1OwnpconOthpconNoTblGuidLeftDerived" ConnectionId="C0" TypeCode="-1541975736">
       <Oid>
-        <OidColumn Name="ID" NetType="System.Guid,mscorlib" AllowDbNull="False" />
+        <OidColumn AutoIncremented="True" Name="ID" AllowDbNull="False" />
       </Oid>
       <Fields>
         <Field Name="dummy">
@@ -5234,7 +5234,7 @@
     </Class>
     <Class AssemblyName="PersistentClasses" FullName="RelationTestClasses.AgrDir1OwnpconOthpconNoTblGuidRightBase" TableName="AgrDir1OwnpconOthpconNoTblGuidRightBase" ConnectionId="C0" TypeCode="-1486750529">
       <Oid>
-        <OidColumn Name="ID" NetType="System.Guid,mscorlib" AllowDbNull="False" />
+        <OidColumn AutoIncremented="True" Name="ID" AllowDbNull="False" />
       </Oid>
       <Fields>
         <Field Name="dummy" AccessorName="Dummy">
@@ -5245,7 +5245,7 @@
     </Class>
     <Class AssemblyName="PersistentClasses" FullName="RelationTestClasses.AgrDir1OwnpconOthpconNoTblGuidRightDerived" TableName="AgrDir1OwnpconOthpconNoTblGuidRightDerived" ConnectionId="C0" TypeCode="-193416849">
       <Oid>
-        <OidColumn Name="ID" NetType="System.Guid,mscorlib" AllowDbNull="False" />
+        <OidColumn AutoIncremented="True" Name="ID" AllowDbNull="False" />
       </Oid>
       <Fields>
         <Field Name="dummy">
@@ -5314,7 +5314,7 @@
     </Class>
     <Class AssemblyName="PersistentClasses" FullName="RelationTestClasses.AgrDir1OwnpconOthpconTblGuidLeftBase" TableName="AgrDir1OwnpconOthpconTblGuidLeftBase" ConnectionId="C0" TypeCode="-180877945">
       <Oid>
-        <OidColumn Name="ID" NetType="System.Guid,mscorlib" AllowDbNull="False" />
+        <OidColumn AutoIncremented="True" Name="ID" AllowDbNull="False" />
       </Oid>
       <Fields>
         <Field Name="dummy" AccessorName="Dummy">
@@ -5332,7 +5332,7 @@
     </Class>
     <Class AssemblyName="PersistentClasses" FullName="RelationTestClasses.AgrDir1OwnpconOthpconTblGuidLeftDerived" TableName="AgrDir1OwnpconOthpconTblGuidLeftDerived" ConnectionId="C0" TypeCode="-757034073">
       <Oid>
-        <OidColumn Name="ID" NetType="System.Guid,mscorlib" AllowDbNull="False" />
+        <OidColumn AutoIncremented="True" Name="ID" AllowDbNull="False" />
       </Oid>
       <Fields>
         <Field Name="dummy">
@@ -5350,7 +5350,7 @@
     </Class>
     <Class AssemblyName="PersistentClasses" FullName="RelationTestClasses.AgrDir1OwnpconOthpconTblGuidRightBase" TableName="AgrDir1OwnpconOthpconTblGuidRightBase" ConnectionId="C0" TypeCode="-301577506">
       <Oid>
-        <OidColumn Name="ID" NetType="System.Guid,mscorlib" AllowDbNull="False" />
+        <OidColumn AutoIncremented="True" Name="ID" AllowDbNull="False" />
       </Oid>
       <Fields>
         <Field Name="dummy" AccessorName="Dummy">
@@ -5361,7 +5361,7 @@
     </Class>
     <Class AssemblyName="PersistentClasses" FullName="RelationTestClasses.AgrDir1OwnpconOthpconTblGuidRightDerived" TableName="AgrDir1OwnpconOthpconTblGuidRightDerived" ConnectionId="C0" TypeCode="-1630029072">
       <Oid>
-        <OidColumn Name="ID" NetType="System.Guid,mscorlib" AllowDbNull="False" />
+        <OidColumn AutoIncremented="True" Name="ID" AllowDbNull="False" />
       </Oid>
       <Fields>
         <Field Name="dummy">
@@ -5419,7 +5419,7 @@
     </Class>
     <Class AssemblyName="PersistentClasses" FullName="RelationTestClasses.AgrDir1OwnpconTblGuidLeftBase" TableName="AgrDir1OwnpconTblGuidLeftBase" ConnectionId="C0" TypeCode="-1944386654">
       <Oid>
-        <OidColumn Name="ID" NetType="System.Guid,mscorlib" AllowDbNull="False" />
+        <OidColumn AutoIncremented="True" Name="ID" AllowDbNull="False" />
       </Oid>
       <Fields>
         <Field Name="dummy" AccessorName="Dummy">
@@ -5437,7 +5437,7 @@
     </Class>
     <Class AssemblyName="PersistentClasses" FullName="RelationTestClasses.AgrDir1OwnpconTblGuidLeftDerived" TableName="AgrDir1OwnpconTblGuidLeftDerived" ConnectionId="C0" TypeCode="-1405019220">
       <Oid>
-        <OidColumn Name="ID" NetType="System.Guid,mscorlib" AllowDbNull="False" />
+        <OidColumn AutoIncremented="True" Name="ID" AllowDbNull="False" />
       </Oid>
       <Fields>
         <Field Name="dummy">
@@ -5455,7 +5455,7 @@
     </Class>
     <Class AssemblyName="PersistentClasses" FullName="RelationTestClasses.AgrDir1OwnpconTblGuidRight" TableName="AgrDir1OwnpconTblGuidRight" ConnectionId="C0" TypeCode="-2049835470">
       <Oid>
-        <OidColumn Name="ID" NetType="System.Guid,mscorlib" AllowDbNull="False" />
+        <OidColumn AutoIncremented="True" Name="ID" AllowDbNull="False" />
       </Oid>
       <Fields>
         <Field Name="dummy" AccessorName="Dummy">
@@ -5495,7 +5495,7 @@
     </Class>
     <Class AssemblyName="PersistentClasses" FullName="RelationTestClasses.AgrDir1TblGuidLeft" TableName="AgrDir1TblGuidLeft" ConnectionId="C0" TypeCode="1231904915">
       <Oid>
-        <OidColumn Name="ID" NetType="System.Guid,mscorlib" AllowDbNull="False" />
+        <OidColumn AutoIncremented="True" Name="ID" AllowDbNull="False" />
       </Oid>
       <Fields>
         <Field Name="dummy" AccessorName="Dummy">
@@ -5513,7 +5513,7 @@
     </Class>
     <Class AssemblyName="PersistentClasses" FullName="RelationTestClasses.AgrDir1TblGuidRight" TableName="AgrDir1TblGuidRight" ConnectionId="C0" TypeCode="-459992304">
       <Oid>
-        <OidColumn Name="ID" NetType="System.Guid,mscorlib" AllowDbNull="False" />
+        <OidColumn AutoIncremented="True" Name="ID" AllowDbNull="False" />
       </Oid>
       <Fields>
         <Field Name="dummy" AccessorName="Dummy">
@@ -5550,7 +5550,7 @@
     </Class>
     <Class AssemblyName="PersistentClasses" FullName="RelationTestClasses.AgrDirnNoTblGuidLeft" TableName="AgrDirnNoTblGuidLeft" ConnectionId="C0" TypeCode="-1022458443">
       <Oid>
-        <OidColumn Name="ID" NetType="System.Guid,mscorlib" AllowDbNull="False" />
+        <OidColumn AutoIncremented="True" Name="ID" AllowDbNull="False" />
       </Oid>
       <Fields>
         <Field Name="dummy" AccessorName="Dummy">
@@ -5565,7 +5565,7 @@
     </Class>
     <Class AssemblyName="PersistentClasses" FullName="RelationTestClasses.AgrDirnNoTblGuidRight" TableName="AgrDirnNoTblGuidRight" ConnectionId="C0" TypeCode="-1625779666">
       <Oid>
-        <OidColumn Name="ID" NetType="System.Guid,mscorlib" AllowDbNull="False" />
+        <OidColumn AutoIncremented="True" Name="ID" AllowDbNull="False" />
       </Oid>
       <Fields>
         <Field Name="dummy" AccessorName="Dummy">
@@ -5616,7 +5616,7 @@
     </Class>
     <Class AssemblyName="PersistentClasses" FullName="RelationTestClasses.AgrDirnOthpabsTblGuidLeft" TableName="AgrDirnOthpabsTblGuidLeft" ConnectionId="C0" TypeCode="-1384424959">
       <Oid>
-        <OidColumn Name="ID" NetType="System.Guid,mscorlib" AllowDbNull="False" />
+        <OidColumn AutoIncremented="True" Name="ID" AllowDbNull="False" />
       </Oid>
       <Fields>
         <Field Name="dummy" AccessorName="Dummy">
@@ -5634,7 +5634,7 @@
     </Class>
     <Class AssemblyName="PersistentClasses" FullName="RelationTestClasses.AgrDirnOthpabsTblGuidRightBase" TableName="Unused" ConnectionId="C0">
       <Oid>
-        <OidColumn Name="Unused" NetType="System.Guid,mscorlib" AllowDbNull="False" />
+        <OidColumn AutoIncremented="True" Name="Unused" AllowDbNull="False" />
       </Oid>
       <Fields>
         <Field Name="dummy" AccessorName="Dummy">
@@ -5645,7 +5645,7 @@
     </Class>
     <Class AssemblyName="PersistentClasses" FullName="RelationTestClasses.AgrDirnOthpabsTblGuidRightDerived" TableName="AgrDirnOthpabsTblGuidRightDerived" ConnectionId="C0" TypeCode="-90688421">
       <Oid>
-        <OidColumn Name="ID" NetType="System.Guid,mscorlib" AllowDbNull="False" />
+        <OidColumn AutoIncremented="True" Name="ID" AllowDbNull="False" />
       </Oid>
       <Fields>
         <Field Name="dummy">
@@ -5696,7 +5696,7 @@
     </Class>
     <Class AssemblyName="PersistentClasses" FullName="RelationTestClasses.AgrDirnOthpconTblGuidLeft" TableName="AgrDirnOthpconTblGuidLeft" ConnectionId="C0" TypeCode="1734739697">
       <Oid>
-        <OidColumn Name="ID" NetType="System.Guid,mscorlib" AllowDbNull="False" />
+        <OidColumn AutoIncremented="True" Name="ID" AllowDbNull="False" />
       </Oid>
       <Fields>
         <Field Name="dummy" AccessorName="Dummy">
@@ -5714,7 +5714,7 @@
     </Class>
     <Class AssemblyName="PersistentClasses" FullName="RelationTestClasses.AgrDirnOthpconTblGuidRightBase" TableName="AgrDirnOthpconTblGuidRightBase" ConnectionId="C0" TypeCode="1622878819">
       <Oid>
-        <OidColumn Name="ID" NetType="System.Guid,mscorlib" AllowDbNull="False" />
+        <OidColumn AutoIncremented="True" Name="ID" AllowDbNull="False" />
       </Oid>
       <Fields>
         <Field Name="dummy" AccessorName="Dummy">
@@ -5725,7 +5725,7 @@
     </Class>
     <Class AssemblyName="PersistentClasses" FullName="RelationTestClasses.AgrDirnOthpconTblGuidRightDerived" TableName="AgrDirnOthpconTblGuidRightDerived" ConnectionId="C0" TypeCode="624881995">
       <Oid>
-        <OidColumn Name="ID" NetType="System.Guid,mscorlib" AllowDbNull="False" />
+        <OidColumn AutoIncremented="True" Name="ID" AllowDbNull="False" />
       </Oid>
       <Fields>
         <Field Name="dummy">
@@ -5777,7 +5777,7 @@
     </Class>
     <Class AssemblyName="PersistentClasses" FullName="RelationTestClasses.AgrDirnOwnpabsNoTblGuidLeftBase" TableName="Unused" ConnectionId="C0">
       <Oid>
-        <OidColumn Name="Unused" NetType="System.Guid,mscorlib" AllowDbNull="False" />
+        <OidColumn AutoIncremented="True" Name="Unused" AllowDbNull="False" />
       </Oid>
       <Fields>
         <Field Name="dummy" AccessorName="Dummy">
@@ -5792,7 +5792,7 @@
     </Class>
     <Class AssemblyName="PersistentClasses" FullName="RelationTestClasses.AgrDirnOwnpabsNoTblGuidLeftDerived" TableName="AgrDirnOwnpabsNoTblGuidLeftDerived" ConnectionId="C0" TypeCode="-552350560">
       <Oid>
-        <OidColumn Name="ID" NetType="System.Guid,mscorlib" AllowDbNull="False" />
+        <OidColumn AutoIncremented="True" Name="ID" AllowDbNull="False" />
       </Oid>
       <Fields>
         <Field Name="dummy">
@@ -5807,7 +5807,7 @@
     </Class>
     <Class AssemblyName="PersistentClasses" FullName="RelationTestClasses.AgrDirnOwnpabsNoTblGuidRight" TableName="AgrDirnOwnpabsNoTblGuidRight" ConnectionId="C0" TypeCode="887715366">
       <Oid>
-        <OidColumn Name="ID" NetType="System.Guid,mscorlib" AllowDbNull="False" />
+        <OidColumn AutoIncremented="True" Name="ID" AllowDbNull="False" />
       </Oid>
       <Fields>
         <Field Name="dummy" AccessorName="Dummy">
@@ -5876,7 +5876,7 @@
     </Class>
     <Class AssemblyName="PersistentClasses" FullName="RelationTestClasses.AgrDirnOwnpabsOthpabsTblGuidLeftBase" TableName="Unused" ConnectionId="C0">
       <Oid>
-        <OidColumn Name="Unused" NetType="System.Guid,mscorlib" AllowDbNull="False" />
+        <OidColumn AutoIncremented="True" Name="Unused" AllowDbNull="False" />
       </Oid>
       <Fields>
         <Field Name="dummy" AccessorName="Dummy">
@@ -5894,7 +5894,7 @@
     </Class>
     <Class AssemblyName="PersistentClasses" FullName="RelationTestClasses.AgrDirnOwnpabsOthpabsTblGuidLeftDerived" TableName="AgrDirnOwnpabsOthpabsTblGuidLeftDerived" ConnectionId="C0" TypeCode="900805092">
       <Oid>
-        <OidColumn Name="ID" NetType="System.Guid,mscorlib" AllowDbNull="False" />
+        <OidColumn AutoIncremented="True" Name="ID" AllowDbNull="False" />
       </Oid>
       <Fields>
         <Field Name="dummy">
@@ -5912,7 +5912,7 @@
     </Class>
     <Class AssemblyName="PersistentClasses" FullName="RelationTestClasses.AgrDirnOwnpabsOthpabsTblGuidRightBase" TableName="Unused" ConnectionId="C0">
       <Oid>
-        <OidColumn Name="Unused" NetType="System.Guid,mscorlib" AllowDbNull="False" />
+        <OidColumn AutoIncremented="True" Name="Unused" AllowDbNull="False" />
       </Oid>
       <Fields>
         <Field Name="dummy" AccessorName="Dummy">
@@ -5923,7 +5923,7 @@
     </Class>
     <Class AssemblyName="PersistentClasses" FullName="RelationTestClasses.AgrDirnOwnpabsOthpabsTblGuidRightDerived" TableName="AgrDirnOwnpabsOthpabsTblGuidRightDerived" ConnectionId="C0" TypeCode="-1776622509">
       <Oid>
-        <OidColumn Name="ID" NetType="System.Guid,mscorlib" AllowDbNull="False" />
+        <OidColumn AutoIncremented="True" Name="ID" AllowDbNull="False" />
       </Oid>
       <Fields>
         <Field Name="dummy">
@@ -5981,7 +5981,7 @@
     </Class>
     <Class AssemblyName="PersistentClasses" FullName="RelationTestClasses.AgrDirnOwnpabsTblGuidLeftBase" TableName="Unused" ConnectionId="C0">
       <Oid>
-        <OidColumn Name="Unused" NetType="System.Guid,mscorlib" AllowDbNull="False" />
+        <OidColumn AutoIncremented="True" Name="Unused" AllowDbNull="False" />
       </Oid>
       <Fields>
         <Field Name="dummy" AccessorName="Dummy">
@@ -5999,7 +5999,7 @@
     </Class>
     <Class AssemblyName="PersistentClasses" FullName="RelationTestClasses.AgrDirnOwnpabsTblGuidLeftDerived" TableName="AgrDirnOwnpabsTblGuidLeftDerived" ConnectionId="C0" TypeCode="1156842751">
       <Oid>
-        <OidColumn Name="ID" NetType="System.Guid,mscorlib" AllowDbNull="False" />
+        <OidColumn AutoIncremented="True" Name="ID" AllowDbNull="False" />
       </Oid>
       <Fields>
         <Field Name="dummy">
@@ -6017,7 +6017,7 @@
     </Class>
     <Class AssemblyName="PersistentClasses" FullName="RelationTestClasses.AgrDirnOwnpabsTblGuidRight" TableName="AgrDirnOwnpabsTblGuidRight" ConnectionId="C0" TypeCode="871834053">
       <Oid>
-        <OidColumn Name="ID" NetType="System.Guid,mscorlib" AllowDbNull="False" />
+        <OidColumn AutoIncremented="True" Name="ID" AllowDbNull="False" />
       </Oid>
       <Fields>
         <Field Name="dummy" AccessorName="Dummy">
@@ -6069,7 +6069,7 @@
     </Class>
     <Class AssemblyName="PersistentClasses" FullName="RelationTestClasses.AgrDirnOwnpconNoTblGuidLeftBase" TableName="AgrDirnOwnpconNoTblGuidLeftBase" ConnectionId="C0" TypeCode="-1841541090">
       <Oid>
-        <OidColumn Name="ID" NetType="System.Guid,mscorlib" AllowDbNull="False" />
+        <OidColumn AutoIncremented="True" Name="ID" AllowDbNull="False" />
       </Oid>
       <Fields>
         <Field Name="dummy" AccessorName="Dummy">
@@ -6084,7 +6084,7 @@
     </Class>
     <Class AssemblyName="PersistentClasses" FullName="RelationTestClasses.AgrDirnOwnpconNoTblGuidLeftDerived" TableName="AgrDirnOwnpconNoTblGuidLeftDerived" ConnectionId="C0" TypeCode="155495856">
       <Oid>
-        <OidColumn Name="ID" NetType="System.Guid,mscorlib" AllowDbNull="False" />
+        <OidColumn AutoIncremented="True" Name="ID" AllowDbNull="False" />
       </Oid>
       <Fields>
         <Field Name="dummy">
@@ -6099,7 +6099,7 @@
     </Class>
     <Class AssemblyName="PersistentClasses" FullName="RelationTestClasses.AgrDirnOwnpconNoTblGuidRight" TableName="AgrDirnOwnpconNoTblGuidRight" ConnectionId="C0" TypeCode="-1990433994">
       <Oid>
-        <OidColumn Name="ID" NetType="System.Guid,mscorlib" AllowDbNull="False" />
+        <OidColumn AutoIncremented="True" Name="ID" AllowDbNull="False" />
       </Oid>
       <Fields>
         <Field Name="dummy" AccessorName="Dummy">
@@ -6168,7 +6168,7 @@
     </Class>
     <Class AssemblyName="PersistentClasses" FullName="RelationTestClasses.AgrDirnOwnpconOthpconTblGuidLeftBase" TableName="AgrDirnOwnpconOthpconTblGuidLeftBase" ConnectionId="C0" TypeCode="509405802">
       <Oid>
-        <OidColumn Name="ID" NetType="System.Guid,mscorlib" AllowDbNull="False" />
+        <OidColumn AutoIncremented="True" Name="ID" AllowDbNull="False" />
       </Oid>
       <Fields>
         <Field Name="dummy" AccessorName="Dummy">
@@ -6186,7 +6186,7 @@
     </Class>
     <Class AssemblyName="PersistentClasses" FullName="RelationTestClasses.AgrDirnOwnpconOthpconTblGuidLeftDerived" TableName="AgrDirnOwnpconOthpconTblGuidLeftDerived" ConnectionId="C0" TypeCode="-817340444">
       <Oid>
-        <OidColumn Name="ID" NetType="System.Guid,mscorlib" AllowDbNull="False" />
+        <OidColumn AutoIncremented="True" Name="ID" AllowDbNull="False" />
       </Oid>
       <Fields>
         <Field Name="dummy">
@@ -6204,7 +6204,7 @@
     </Class>
     <Class AssemblyName="PersistentClasses" FullName="RelationTestClasses.AgrDirnOwnpconOthpconTblGuidRightBase" TableName="AgrDirnOwnpconOthpconTblGuidRightBase" ConnectionId="C0" TypeCode="-377617829">
       <Oid>
-        <OidColumn Name="ID" NetType="System.Guid,mscorlib" AllowDbNull="False" />
+        <OidColumn AutoIncremented="True" Name="ID" AllowDbNull="False" />
       </Oid>
       <Fields>
         <Field Name="dummy" AccessorName="Dummy">
@@ -6215,7 +6215,7 @@
     </Class>
     <Class AssemblyName="PersistentClasses" FullName="RelationTestClasses.AgrDirnOwnpconOthpconTblGuidRightDerived" TableName="AgrDirnOwnpconOthpconTblGuidRightDerived" ConnectionId="C0" TypeCode="795440723">
       <Oid>
-        <OidColumn Name="ID" NetType="System.Guid,mscorlib" AllowDbNull="False" />
+        <OidColumn AutoIncremented="True" Name="ID" AllowDbNull="False" />
       </Oid>
       <Fields>
         <Field Name="dummy">
@@ -6273,7 +6273,7 @@
     </Class>
     <Class AssemblyName="PersistentClasses" FullName="RelationTestClasses.AgrDirnOwnpconTblGuidLeftBase" TableName="AgrDirnOwnpconTblGuidLeftBase" ConnectionId="C0" TypeCode="971802655">
       <Oid>
-        <OidColumn Name="ID" NetType="System.Guid,mscorlib" AllowDbNull="False" />
+        <OidColumn AutoIncremented="True" Name="ID" AllowDbNull="False" />
       </Oid>
       <Fields>
         <Field Name="dummy" AccessorName="Dummy">
@@ -6291,7 +6291,7 @@
     </Class>
     <Class AssemblyName="PersistentClasses" FullName="RelationTestClasses.AgrDirnOwnpconTblGuidLeftDerived" TableName="AgrDirnOwnpconTblGuidLeftDerived" ConnectionId="C0" TypeCode="487189007">
       <Oid>
-        <OidColumn Name="ID" NetType="System.Guid,mscorlib" AllowDbNull="False" />
+        <OidColumn AutoIncremented="True" Name="ID" AllowDbNull="False" />
       </Oid>
       <Fields>
         <Field Name="dummy">
@@ -6309,7 +6309,7 @@
     </Class>
     <Class AssemblyName="PersistentClasses" FullName="RelationTestClasses.AgrDirnOwnpconTblGuidRight" TableName="AgrDirnOwnpconTblGuidRight" ConnectionId="C0" TypeCode="-1218309419">
       <Oid>
-        <OidColumn Name="ID" NetType="System.Guid,mscorlib" AllowDbNull="False" />
+        <OidColumn AutoIncremented="True" Name="ID" AllowDbNull="False" />
       </Oid>
       <Fields>
         <Field Name="dummy" AccessorName="Dummy">
@@ -6349,7 +6349,7 @@
     </Class>
     <Class AssemblyName="PersistentClasses" FullName="RelationTestClasses.AgrDirnTblGuidLeft" TableName="AgrDirnTblGuidLeft" ConnectionId="C0" TypeCode="516016182">
       <Oid>
-        <OidColumn Name="ID" NetType="System.Guid,mscorlib" AllowDbNull="False" />
+        <OidColumn AutoIncremented="True" Name="ID" AllowDbNull="False" />
       </Oid>
       <Fields>
         <Field Name="dummy" AccessorName="Dummy">
@@ -6367,7 +6367,7 @@
     </Class>
     <Class AssemblyName="PersistentClasses" FullName="RelationTestClasses.AgrDirnTblGuidRight" TableName="AgrDirnTblGuidRight" ConnectionId="C0" TypeCode="-1177706547">
       <Oid>
-        <OidColumn Name="ID" NetType="System.Guid,mscorlib" AllowDbNull="False" />
+        <OidColumn AutoIncremented="True" Name="ID" AllowDbNull="False" />
       </Oid>
       <Fields>
         <Field Name="dummy" AccessorName="Dummy">
@@ -6408,7 +6408,7 @@
     </Class>
     <Class AssemblyName="PersistentClasses" FullName="RelationTestClasses.CmpBi11NoTblGuidLeft" TableName="CmpBi11NoTblGuidLeft" ConnectionId="C0" TypeCode="-1756760235">
       <Oid>
-        <OidColumn Name="ID" NetType="System.Guid,mscorlib" AllowDbNull="False" />
+        <OidColumn AutoIncremented="True" Name="ID" AllowDbNull="False" />
       </Oid>
       <Fields>
         <Field Name="dummy" AccessorName="Dummy">
@@ -6423,7 +6423,7 @@
     </Class>
     <Class AssemblyName="PersistentClasses" FullName="RelationTestClasses.CmpBi11NoTblGuidRight" TableName="CmpBi11NoTblGuidRight" ConnectionId="C0" TypeCode="1380668558">
       <Oid>
-        <OidColumn Name="ID" NetType="System.Guid,mscorlib" AllowDbNull="False" />
+        <OidColumn AutoIncremented="True" Name="ID" AllowDbNull="False" />
       </Oid>
       <Fields>
         <Field Name="dummy" AccessorName="Dummy">
@@ -6483,7 +6483,7 @@
     </Class>
     <Class AssemblyName="PersistentClasses" FullName="RelationTestClasses.CmpBi11OthpabsNoTblGuidLeft" TableName="CmpBi11OthpabsNoTblGuidLeft" ConnectionId="C0" TypeCode="-560313568">
       <Oid>
-        <OidColumn Name="ID" NetType="System.Guid,mscorlib" AllowDbNull="False" />
+        <OidColumn AutoIncremented="True" Name="ID" AllowDbNull="False" />
       </Oid>
       <Fields>
         <Field Name="dummy" AccessorName="Dummy">
@@ -6498,7 +6498,7 @@
     </Class>
     <Class AssemblyName="PersistentClasses" FullName="RelationTestClasses.CmpBi11OthpabsNoTblGuidRightBase" TableName="Unused" ConnectionId="C0">
       <Oid>
-        <OidColumn Name="Unused" NetType="System.Guid,mscorlib" AllowDbNull="False" />
+        <OidColumn AutoIncremented="True" Name="Unused" AllowDbNull="False" />
       </Oid>
       <Fields>
         <Field Name="dummy" AccessorName="Dummy">
@@ -6513,7 +6513,7 @@
     </Class>
     <Class AssemblyName="PersistentClasses" FullName="RelationTestClasses.CmpBi11OthpabsNoTblGuidRightDerived" TableName="CmpBi11OthpabsNoTblGuidRightDerived" ConnectionId="C0" TypeCode="-1904241030">
       <Oid>
-        <OidColumn Name="ID" NetType="System.Guid,mscorlib" AllowDbNull="False" />
+        <OidColumn AutoIncremented="True" Name="ID" AllowDbNull="False" />
       </Oid>
       <Fields>
         <Field Name="dummy">
@@ -6582,7 +6582,7 @@
     </Class>
     <Class AssemblyName="PersistentClasses" FullName="RelationTestClasses.CmpBi11OthpabsTblGuidLeft" TableName="CmpBi11OthpabsTblGuidLeft" ConnectionId="C0" TypeCode="717614177">
       <Oid>
-        <OidColumn Name="ID" NetType="System.Guid,mscorlib" AllowDbNull="False" />
+        <OidColumn AutoIncremented="True" Name="ID" AllowDbNull="False" />
       </Oid>
       <Fields>
         <Field Name="dummy" AccessorName="Dummy">
@@ -6600,7 +6600,7 @@
     </Class>
     <Class AssemblyName="PersistentClasses" FullName="RelationTestClasses.CmpBi11OthpabsTblGuidRightBase" TableName="Unused" ConnectionId="C0">
       <Oid>
-        <OidColumn Name="Unused" NetType="System.Guid,mscorlib" AllowDbNull="False" />
+        <OidColumn AutoIncremented="True" Name="Unused" AllowDbNull="False" />
       </Oid>
       <Fields>
         <Field Name="dummy" AccessorName="Dummy">
@@ -6618,7 +6618,7 @@
     </Class>
     <Class AssemblyName="PersistentClasses" FullName="RelationTestClasses.CmpBi11OthpabsTblGuidRightDerived" TableName="CmpBi11OthpabsTblGuidRightDerived" ConnectionId="C0" TypeCode="786065083">
       <Oid>
-        <OidColumn Name="ID" NetType="System.Guid,mscorlib" AllowDbNull="False" />
+        <OidColumn AutoIncremented="True" Name="ID" AllowDbNull="False" />
       </Oid>
       <Fields>
         <Field Name="dummy">
@@ -6681,7 +6681,7 @@
     </Class>
     <Class AssemblyName="PersistentClasses" FullName="RelationTestClasses.CmpBi11OthpconNoTblGuidLeft" TableName="CmpBi11OthpconNoTblGuidLeft" ConnectionId="C0" TypeCode="-930251760">
       <Oid>
-        <OidColumn Name="ID" NetType="System.Guid,mscorlib" AllowDbNull="False" />
+        <OidColumn AutoIncremented="True" Name="ID" AllowDbNull="False" />
       </Oid>
       <Fields>
         <Field Name="dummy" AccessorName="Dummy">
@@ -6696,7 +6696,7 @@
     </Class>
     <Class AssemblyName="PersistentClasses" FullName="RelationTestClasses.CmpBi11OthpconNoTblGuidRightBase" TableName="CmpBi11OthpconNoTblGuidRightBase" ConnectionId="C0" TypeCode="2077954212">
       <Oid>
-        <OidColumn Name="ID" NetType="System.Guid,mscorlib" AllowDbNull="False" />
+        <OidColumn AutoIncremented="True" Name="ID" AllowDbNull="False" />
       </Oid>
       <Fields>
         <Field Name="dummy" AccessorName="Dummy">
@@ -6711,7 +6711,7 @@
     </Class>
     <Class AssemblyName="PersistentClasses" FullName="RelationTestClasses.CmpBi11OthpconNoTblGuidRightDerived" TableName="CmpBi11OthpconNoTblGuidRightDerived" ConnectionId="C0" TypeCode="-1435838614">
       <Oid>
-        <OidColumn Name="ID" NetType="System.Guid,mscorlib" AllowDbNull="False" />
+        <OidColumn AutoIncremented="True" Name="ID" AllowDbNull="False" />
       </Oid>
       <Fields>
         <Field Name="dummy">
@@ -6780,7 +6780,7 @@
     </Class>
     <Class AssemblyName="PersistentClasses" FullName="RelationTestClasses.CmpBi11OthpconTblGuidLeft" TableName="CmpBi11OthpconTblGuidLeft" ConnectionId="C0" TypeCode="-458188463">
       <Oid>
-        <OidColumn Name="ID" NetType="System.Guid,mscorlib" AllowDbNull="False" />
+        <OidColumn AutoIncremented="True" Name="ID" AllowDbNull="False" />
       </Oid>
       <Fields>
         <Field Name="dummy" AccessorName="Dummy">
@@ -6798,7 +6798,7 @@
     </Class>
     <Class AssemblyName="PersistentClasses" FullName="RelationTestClasses.CmpBi11OthpconTblGuidRightBase" TableName="CmpBi11OthpconTblGuidRightBase" ConnectionId="C0" TypeCode="1762464771">
       <Oid>
-        <OidColumn Name="ID" NetType="System.Guid,mscorlib" AllowDbNull="False" />
+        <OidColumn AutoIncremented="True" Name="ID" AllowDbNull="False" />
       </Oid>
       <Fields>
         <Field Name="dummy" AccessorName="Dummy">
@@ -6816,7 +6816,7 @@
     </Class>
     <Class AssemblyName="PersistentClasses" FullName="RelationTestClasses.CmpBi11OthpconTblGuidRightDerived" TableName="CmpBi11OthpconTblGuidRightDerived" ConnectionId="C0" TypeCode="1501635499">
       <Oid>
-        <OidColumn Name="ID" NetType="System.Guid,mscorlib" AllowDbNull="False" />
+        <OidColumn AutoIncremented="True" Name="ID" AllowDbNull="False" />
       </Oid>
       <Fields>
         <Field Name="dummy">
@@ -6879,7 +6879,7 @@
     </Class>
     <Class AssemblyName="PersistentClasses" FullName="RelationTestClasses.CmpBi11OwnpabsNoTblGuidLeftBase" TableName="Unused" ConnectionId="C0">
       <Oid>
-        <OidColumn Name="Unused" NetType="System.Guid,mscorlib" AllowDbNull="False" />
+        <OidColumn AutoIncremented="True" Name="Unused" AllowDbNull="False" />
       </Oid>
       <Fields>
         <Field Name="dummy" AccessorName="Dummy">
@@ -6894,7 +6894,7 @@
     </Class>
     <Class AssemblyName="PersistentClasses" FullName="RelationTestClasses.CmpBi11OwnpabsNoTblGuidLeftDerived" TableName="CmpBi11OwnpabsNoTblGuidLeftDerived" ConnectionId="C0" TypeCode="857204288">
       <Oid>
-        <OidColumn Name="ID" NetType="System.Guid,mscorlib" AllowDbNull="False" />
+        <OidColumn AutoIncremented="True" Name="ID" AllowDbNull="False" />
       </Oid>
       <Fields>
         <Field Name="dummy">
@@ -6909,7 +6909,7 @@
     </Class>
     <Class AssemblyName="PersistentClasses" FullName="RelationTestClasses.CmpBi11OwnpabsNoTblGuidRight" TableName="CmpBi11OwnpabsNoTblGuidRight" ConnectionId="C0" TypeCode="2112440262">
       <Oid>
-        <OidColumn Name="ID" NetType="System.Guid,mscorlib" AllowDbNull="False" />
+        <OidColumn AutoIncremented="True" Name="ID" AllowDbNull="False" />
       </Oid>
       <Fields>
         <Field Name="dummy" AccessorName="Dummy">
@@ -6984,7 +6984,7 @@
     </Class>
     <Class AssemblyName="PersistentClasses" FullName="RelationTestClasses.CmpBi11OwnpabsOthpabsNoTblGuidLeftBase" TableName="Unused" ConnectionId="C0">
       <Oid>
-        <OidColumn Name="Unused" NetType="System.Guid,mscorlib" AllowDbNull="False" />
+        <OidColumn AutoIncremented="True" Name="Unused" AllowDbNull="False" />
       </Oid>
       <Fields>
         <Field Name="dummy" AccessorName="Dummy">
@@ -6999,7 +6999,7 @@
     </Class>
     <Class AssemblyName="PersistentClasses" FullName="RelationTestClasses.CmpBi11OwnpabsOthpabsNoTblGuidLeftDerived" TableName="CmpBi11OwnpabsOthpabsNoTblGuidLeftDerived" ConnectionId="C0" TypeCode="1590896293">
       <Oid>
-        <OidColumn Name="ID" NetType="System.Guid,mscorlib" AllowDbNull="False" />
+        <OidColumn AutoIncremented="True" Name="ID" AllowDbNull="False" />
       </Oid>
       <Fields>
         <Field Name="dummy">
@@ -7014,7 +7014,7 @@
     </Class>
     <Class AssemblyName="PersistentClasses" FullName="RelationTestClasses.CmpBi11OwnpabsOthpabsNoTblGuidRightBase" TableName="Unused" ConnectionId="C0">
       <Oid>
-        <OidColumn Name="Unused" NetType="System.Guid,mscorlib" AllowDbNull="False" />
+        <OidColumn AutoIncremented="True" Name="Unused" AllowDbNull="False" />
       </Oid>
       <Fields>
         <Field Name="dummy" AccessorName="Dummy">
@@ -7029,7 +7029,7 @@
     </Class>
     <Class AssemblyName="PersistentClasses" FullName="RelationTestClasses.CmpBi11OwnpabsOthpabsNoTblGuidRightDerived" TableName="CmpBi11OwnpabsOthpabsNoTblGuidRightDerived" ConnectionId="C0" TypeCode="-1858631758">
       <Oid>
-        <OidColumn Name="ID" NetType="System.Guid,mscorlib" AllowDbNull="False" />
+        <OidColumn AutoIncremented="True" Name="ID" AllowDbNull="False" />
       </Oid>
       <Fields>
         <Field Name="dummy">
@@ -7116,7 +7116,7 @@
     </Class>
     <Class AssemblyName="PersistentClasses" FullName="RelationTestClasses.CmpBi11OwnpabsOthpabsTblGuidLeftBase" TableName="Unused" ConnectionId="C0">
       <Oid>
-        <OidColumn Name="Unused" NetType="System.Guid,mscorlib" AllowDbNull="False" />
+        <OidColumn AutoIncremented="True" Name="Unused" AllowDbNull="False" />
       </Oid>
       <Fields>
         <Field Name="dummy" AccessorName="Dummy">
@@ -7134,7 +7134,7 @@
     </Class>
     <Class AssemblyName="PersistentClasses" FullName="RelationTestClasses.CmpBi11OwnpabsOthpabsTblGuidLeftDerived" TableName="CmpBi11OwnpabsOthpabsTblGuidLeftDerived" ConnectionId="C0" TypeCode="2119965764">
       <Oid>
-        <OidColumn Name="ID" NetType="System.Guid,mscorlib" AllowDbNull="False" />
+        <OidColumn AutoIncremented="True" Name="ID" AllowDbNull="False" />
       </Oid>
       <Fields>
         <Field Name="dummy">
@@ -7152,7 +7152,7 @@
     </Class>
     <Class AssemblyName="PersistentClasses" FullName="RelationTestClasses.CmpBi11OwnpabsOthpabsTblGuidRightBase" TableName="Unused" ConnectionId="C0">
       <Oid>
-        <OidColumn Name="Unused" NetType="System.Guid,mscorlib" AllowDbNull="False" />
+        <OidColumn AutoIncremented="True" Name="Unused" AllowDbNull="False" />
       </Oid>
       <Fields>
         <Field Name="dummy" AccessorName="Dummy">
@@ -7170,7 +7170,7 @@
     </Class>
     <Class AssemblyName="PersistentClasses" FullName="RelationTestClasses.CmpBi11OwnpabsOthpabsTblGuidRightDerived" TableName="CmpBi11OwnpabsOthpabsTblGuidRightDerived" ConnectionId="C0" TypeCode="1657619955">
       <Oid>
-        <OidColumn Name="ID" NetType="System.Guid,mscorlib" AllowDbNull="False" />
+        <OidColumn AutoIncremented="True" Name="ID" AllowDbNull="False" />
       </Oid>
       <Fields>
         <Field Name="dummy">
@@ -7242,7 +7242,7 @@
     </Class>
     <Class AssemblyName="PersistentClasses" FullName="RelationTestClasses.CmpBi11OwnpabsTblGuidLeftBase" TableName="Unused" ConnectionId="C0">
       <Oid>
-        <OidColumn Name="Unused" NetType="System.Guid,mscorlib" AllowDbNull="False" />
+        <OidColumn AutoIncremented="True" Name="Unused" AllowDbNull="False" />
       </Oid>
       <Fields>
         <Field Name="dummy" AccessorName="Dummy">
@@ -7260,7 +7260,7 @@
     </Class>
     <Class AssemblyName="PersistentClasses" FullName="RelationTestClasses.CmpBi11OwnpabsTblGuidLeftDerived" TableName="CmpBi11OwnpabsTblGuidLeftDerived" ConnectionId="C0" TypeCode="-2140010849">
       <Oid>
-        <OidColumn Name="ID" NetType="System.Guid,mscorlib" AllowDbNull="False" />
+        <OidColumn AutoIncremented="True" Name="ID" AllowDbNull="False" />
       </Oid>
       <Fields>
         <Field Name="dummy">
@@ -7278,7 +7278,7 @@
     </Class>
     <Class AssemblyName="PersistentClasses" FullName="RelationTestClasses.CmpBi11OwnpabsTblGuidRight" TableName="CmpBi11OwnpabsTblGuidRight" ConnectionId="C0" TypeCode="1610537829">
       <Oid>
-        <OidColumn Name="ID" NetType="System.Guid,mscorlib" AllowDbNull="False" />
+        <OidColumn AutoIncremented="True" Name="ID" AllowDbNull="False" />
       </Oid>
       <Fields>
         <Field Name="dummy" AccessorName="Dummy">
@@ -7341,7 +7341,7 @@
     </Class>
     <Class AssemblyName="PersistentClasses" FullName="RelationTestClasses.CmpBi11OwnpconNoTblGuidLeftBase" TableName="CmpBi11OwnpconNoTblGuidLeftBase" ConnectionId="C0" TypeCode="-1809343874">
       <Oid>
-        <OidColumn Name="ID" NetType="System.Guid,mscorlib" AllowDbNull="False" />
+        <OidColumn AutoIncremented="True" Name="ID" AllowDbNull="False" />
       </Oid>
       <Fields>
         <Field Name="dummy" AccessorName="Dummy">
@@ -7356,7 +7356,7 @@
     </Class>
     <Class AssemblyName="PersistentClasses" FullName="RelationTestClasses.CmpBi11OwnpconNoTblGuidLeftDerived" TableName="CmpBi11OwnpconNoTblGuidLeftDerived" ConnectionId="C0" TypeCode="1565050704">
       <Oid>
-        <OidColumn Name="ID" NetType="System.Guid,mscorlib" AllowDbNull="False" />
+        <OidColumn AutoIncremented="True" Name="ID" AllowDbNull="False" />
       </Oid>
       <Fields>
         <Field Name="dummy">
@@ -7371,7 +7371,7 @@
     </Class>
     <Class AssemblyName="PersistentClasses" FullName="RelationTestClasses.CmpBi11OwnpconNoTblGuidRight" TableName="CmpBi11OwnpconNoTblGuidRight" ConnectionId="C0" TypeCode="-765709098">
       <Oid>
-        <OidColumn Name="ID" NetType="System.Guid,mscorlib" AllowDbNull="False" />
+        <OidColumn AutoIncremented="True" Name="ID" AllowDbNull="False" />
       </Oid>
       <Fields>
         <Field Name="dummy" AccessorName="Dummy">
@@ -7446,7 +7446,7 @@
     </Class>
     <Class AssemblyName="PersistentClasses" FullName="RelationTestClasses.CmpBi11OwnpconOthpconNoTblGuidLeftBase" TableName="CmpBi11OwnpconOthpconNoTblGuidLeftBase" ConnectionId="C0" TypeCode="926651721">
       <Oid>
-        <OidColumn Name="ID" NetType="System.Guid,mscorlib" AllowDbNull="False" />
+        <OidColumn AutoIncremented="True" Name="ID" AllowDbNull="False" />
       </Oid>
       <Fields>
         <Field Name="dummy" AccessorName="Dummy">
@@ -7461,7 +7461,7 @@
     </Class>
     <Class AssemblyName="PersistentClasses" FullName="RelationTestClasses.CmpBi11OwnpconOthpconNoTblGuidLeftDerived" TableName="CmpBi11OwnpconOthpconNoTblGuidLeftDerived" ConnectionId="C0" TypeCode="-279522139">
       <Oid>
-        <OidColumn Name="ID" NetType="System.Guid,mscorlib" AllowDbNull="False" />
+        <OidColumn AutoIncremented="True" Name="ID" AllowDbNull="False" />
       </Oid>
       <Fields>
         <Field Name="dummy">
@@ -7476,7 +7476,7 @@
     </Class>
     <Class AssemblyName="PersistentClasses" FullName="RelationTestClasses.CmpBi11OwnpconOthpconNoTblGuidRightBase" TableName="CmpBi11OwnpconOthpconNoTblGuidRightBase" ConnectionId="C0" TypeCode="-327896228">
       <Oid>
-        <OidColumn Name="ID" NetType="System.Guid,mscorlib" AllowDbNull="False" />
+        <OidColumn AutoIncremented="True" Name="ID" AllowDbNull="False" />
       </Oid>
       <Fields>
         <Field Name="dummy" AccessorName="Dummy">
@@ -7491,7 +7491,7 @@
     </Class>
     <Class AssemblyName="PersistentClasses" FullName="RelationTestClasses.CmpBi11OwnpconOthpconNoTblGuidRightDerived" TableName="CmpBi11OwnpconOthpconNoTblGuidRightDerived" ConnectionId="C0" TypeCode="287938994">
       <Oid>
-        <OidColumn Name="ID" NetType="System.Guid,mscorlib" AllowDbNull="False" />
+        <OidColumn AutoIncremented="True" Name="ID" AllowDbNull="False" />
       </Oid>
       <Fields>
         <Field Name="dummy">
@@ -7578,7 +7578,7 @@
     </Class>
     <Class AssemblyName="PersistentClasses" FullName="RelationTestClasses.CmpBi11OwnpconOthpconTblGuidLeftBase" TableName="CmpBi11OwnpconOthpconTblGuidLeftBase" ConnectionId="C0" TypeCode="-2118050806">
       <Oid>
-        <OidColumn Name="ID" NetType="System.Guid,mscorlib" AllowDbNull="False" />
+        <OidColumn AutoIncremented="True" Name="ID" AllowDbNull="False" />
       </Oid>
       <Fields>
         <Field Name="dummy" AccessorName="Dummy">
@@ -7596,7 +7596,7 @@
     </Class>
     <Class AssemblyName="PersistentClasses" FullName="RelationTestClasses.CmpBi11OwnpconOthpconTblGuidLeftDerived" TableName="CmpBi11OwnpconOthpconTblGuidLeftDerived" ConnectionId="C0" TypeCode="401820228">
       <Oid>
-        <OidColumn Name="ID" NetType="System.Guid,mscorlib" AllowDbNull="False" />
+        <OidColumn AutoIncremented="True" Name="ID" AllowDbNull="False" />
       </Oid>
       <Fields>
         <Field Name="dummy">
@@ -7614,7 +7614,7 @@
     </Class>
     <Class AssemblyName="PersistentClasses" FullName="RelationTestClasses.CmpBi11OwnpconOthpconTblGuidRightBase" TableName="CmpBi11OwnpconOthpconTblGuidRightBase" ConnectionId="C0" TypeCode="-224394053">
       <Oid>
-        <OidColumn Name="ID" NetType="System.Guid,mscorlib" AllowDbNull="False" />
+        <OidColumn AutoIncremented="True" Name="ID" AllowDbNull="False" />
       </Oid>
       <Fields>
         <Field Name="dummy" AccessorName="Dummy">
@@ -7632,7 +7632,7 @@
     </Class>
     <Class AssemblyName="PersistentClasses" FullName="RelationTestClasses.CmpBi11OwnpconOthpconTblGuidRightDerived" TableName="CmpBi11OwnpconOthpconTblGuidRightDerived" ConnectionId="C0" TypeCode="-65284109">
       <Oid>
-        <OidColumn Name="ID" NetType="System.Guid,mscorlib" AllowDbNull="False" />
+        <OidColumn AutoIncremented="True" Name="ID" AllowDbNull="False" />
       </Oid>
       <Fields>
         <Field Name="dummy">
@@ -7704,7 +7704,7 @@
     </Class>
     <Class AssemblyName="PersistentClasses" FullName="RelationTestClasses.CmpBi11OwnpconTblGuidLeftBase" TableName="CmpBi11OwnpconTblGuidLeftBase" ConnectionId="C0" TypeCode="283568767">
       <Oid>
-        <OidColumn Name="ID" NetType="System.Guid,mscorlib" AllowDbNull="False" />
+        <OidColumn AutoIncremented="True" Name="ID" AllowDbNull="False" />
       </Oid>
       <Fields>
         <Field Name="dummy" AccessorName="Dummy">
@@ -7722,7 +7722,7 @@
     </Class>
     <Class AssemblyName="PersistentClasses" FullName="RelationTestClasses.CmpBi11OwnpconTblGuidLeftDerived" TableName="CmpBi11OwnpconTblGuidLeftDerived" ConnectionId="C0" TypeCode="1485302703">
       <Oid>
-        <OidColumn Name="ID" NetType="System.Guid,mscorlib" AllowDbNull="False" />
+        <OidColumn AutoIncremented="True" Name="ID" AllowDbNull="False" />
       </Oid>
       <Fields>
         <Field Name="dummy">
@@ -7740,7 +7740,7 @@
     </Class>
     <Class AssemblyName="PersistentClasses" FullName="RelationTestClasses.CmpBi11OwnpconTblGuidRight" TableName="CmpBi11OwnpconTblGuidRight" ConnectionId="C0" TypeCode="-479605643">
       <Oid>
-        <OidColumn Name="ID" NetType="System.Guid,mscorlib" AllowDbNull="False" />
+        <OidColumn AutoIncremented="True" Name="ID" AllowDbNull="False" />
       </Oid>
       <Fields>
         <Field Name="dummy" AccessorName="Dummy">
@@ -7794,7 +7794,7 @@
     </Class>
     <Class AssemblyName="PersistentClasses" FullName="RelationTestClasses.CmpBi11TblGuidLeft" TableName="CmpBi11TblGuidLeft" ConnectionId="C0" TypeCode="-1335025194">
       <Oid>
-        <OidColumn Name="ID" NetType="System.Guid,mscorlib" AllowDbNull="False" />
+        <OidColumn AutoIncremented="True" Name="ID" AllowDbNull="False" />
       </Oid>
       <Fields>
         <Field Name="dummy" AccessorName="Dummy">
@@ -7812,7 +7812,7 @@
     </Class>
     <Class AssemblyName="PersistentClasses" FullName="RelationTestClasses.CmpBi11TblGuidRight" TableName="CmpBi11TblGuidRight" ConnectionId="C0" TypeCode="1569552941">
       <Oid>
-        <OidColumn Name="ID" NetType="System.Guid,mscorlib" AllowDbNull="False" />
+        <OidColumn AutoIncremented="True" Name="ID" AllowDbNull="False" />
       </Oid>
       <Fields>
         <Field Name="dummy" AccessorName="Dummy">
@@ -7860,7 +7860,7 @@
     </Class>
     <Class AssemblyName="PersistentClasses" FullName="RelationTestClasses.CmpBi1nNoTblGuidLeft" TableName="CmpBi1nNoTblGuidLeft" ConnectionId="C0" TypeCode="1763902008">
       <Oid>
-        <OidColumn Name="ID" NetType="System.Guid,mscorlib" AllowDbNull="False" />
+        <OidColumn AutoIncremented="True" Name="ID" AllowDbNull="False" />
       </Oid>
       <Fields>
         <Field Name="dummy" AccessorName="Dummy">
@@ -7875,7 +7875,7 @@
     </Class>
     <Class AssemblyName="PersistentClasses" FullName="RelationTestClasses.CmpBi1nNoTblGuidRight" TableName="CmpBi1nNoTblGuidRight" ConnectionId="C0" TypeCode="-1147951605">
       <Oid>
-        <OidColumn Name="ID" NetType="System.Guid,mscorlib" AllowDbNull="False" />
+        <OidColumn AutoIncremented="True" Name="ID" AllowDbNull="False" />
       </Oid>
       <Fields>
         <Field Name="dummy" AccessorName="Dummy">
@@ -7935,7 +7935,7 @@
     </Class>
     <Class AssemblyName="PersistentClasses" FullName="RelationTestClasses.CmpBi1nOthpabsNoTblGuidLeft" TableName="CmpBi1nOthpabsNoTblGuidLeft" ConnectionId="C0" TypeCode="-552809763">
       <Oid>
-        <OidColumn Name="ID" NetType="System.Guid,mscorlib" AllowDbNull="False" />
+        <OidColumn AutoIncremented="True" Name="ID" AllowDbNull="False" />
       </Oid>
       <Fields>
         <Field Name="dummy" AccessorName="Dummy">
@@ -7950,7 +7950,7 @@
     </Class>
     <Class AssemblyName="PersistentClasses" FullName="RelationTestClasses.CmpBi1nOthpabsNoTblGuidRightBase" TableName="Unused" ConnectionId="C0">
       <Oid>
-        <OidColumn Name="Unused" NetType="System.Guid,mscorlib" AllowDbNull="False" />
+        <OidColumn AutoIncremented="True" Name="Unused" AllowDbNull="False" />
       </Oid>
       <Fields>
         <Field Name="dummy" AccessorName="Dummy">
@@ -7965,7 +7965,7 @@
     </Class>
     <Class AssemblyName="PersistentClasses" FullName="RelationTestClasses.CmpBi1nOthpabsNoTblGuidRightDerived" TableName="CmpBi1nOthpabsNoTblGuidRightDerived" ConnectionId="C0" TypeCode="1720256823">
       <Oid>
-        <OidColumn Name="ID" NetType="System.Guid,mscorlib" AllowDbNull="False" />
+        <OidColumn AutoIncremented="True" Name="ID" AllowDbNull="False" />
       </Oid>
       <Fields>
         <Field Name="dummy">
@@ -8034,7 +8034,7 @@
     </Class>
     <Class AssemblyName="PersistentClasses" FullName="RelationTestClasses.CmpBi1nOthpabsTblGuidLeft" TableName="CmpBi1nOthpabsTblGuidLeft" ConnectionId="C0" TypeCode="744437598">
       <Oid>
-        <OidColumn Name="ID" NetType="System.Guid,mscorlib" AllowDbNull="False" />
+        <OidColumn AutoIncremented="True" Name="ID" AllowDbNull="False" />
       </Oid>
       <Fields>
         <Field Name="dummy" AccessorName="Dummy">
@@ -8052,7 +8052,7 @@
     </Class>
     <Class AssemblyName="PersistentClasses" FullName="RelationTestClasses.CmpBi1nOthpabsTblGuidRightBase" TableName="Unused" ConnectionId="C0">
       <Oid>
-        <OidColumn Name="Unused" NetType="System.Guid,mscorlib" AllowDbNull="False" />
+        <OidColumn AutoIncremented="True" Name="Unused" AllowDbNull="False" />
       </Oid>
       <Fields>
         <Field Name="dummy" AccessorName="Dummy">
@@ -8070,7 +8070,7 @@
     </Class>
     <Class AssemblyName="PersistentClasses" FullName="RelationTestClasses.CmpBi1nOthpabsTblGuidRightDerived" TableName="CmpBi1nOthpabsTblGuidRightDerived" ConnectionId="C0" TypeCode="-685022024">
       <Oid>
-        <OidColumn Name="ID" NetType="System.Guid,mscorlib" AllowDbNull="False" />
+        <OidColumn AutoIncremented="True" Name="ID" AllowDbNull="False" />
       </Oid>
       <Fields>
         <Field Name="dummy">
@@ -8133,7 +8133,7 @@
     </Class>
     <Class AssemblyName="PersistentClasses" FullName="RelationTestClasses.CmpBi1nOthpconNoTblGuidLeft" TableName="CmpBi1nOthpconNoTblGuidLeft" ConnectionId="C0" TypeCode="-922747955">
       <Oid>
-        <OidColumn Name="ID" NetType="System.Guid,mscorlib" AllowDbNull="False" />
+        <OidColumn AutoIncremented="True" Name="ID" AllowDbNull="False" />
       </Oid>
       <Fields>
         <Field Name="dummy" AccessorName="Dummy">
@@ -8148,7 +8148,7 @@
     </Class>
     <Class AssemblyName="PersistentClasses" FullName="RelationTestClasses.CmpBi1nOthpconNoTblGuidRightBase" TableName="CmpBi1nOthpconNoTblGuidRightBase" ConnectionId="C0" TypeCode="-324804857">
       <Oid>
-        <OidColumn Name="ID" NetType="System.Guid,mscorlib" AllowDbNull="False" />
+        <OidColumn AutoIncremented="True" Name="ID" AllowDbNull="False" />
       </Oid>
       <Fields>
         <Field Name="dummy" AccessorName="Dummy">
@@ -8163,7 +8163,7 @@
     </Class>
     <Class AssemblyName="PersistentClasses" FullName="RelationTestClasses.CmpBi1nOthpconNoTblGuidRightDerived" TableName="CmpBi1nOthpconNoTblGuidRightDerived" ConnectionId="C0" TypeCode="-2106308057">
       <Oid>
-        <OidColumn Name="ID" NetType="System.Guid,mscorlib" AllowDbNull="False" />
+        <OidColumn AutoIncremented="True" Name="ID" AllowDbNull="False" />
       </Oid>
       <Fields>
         <Field Name="dummy">
@@ -8232,7 +8232,7 @@
     </Class>
     <Class AssemblyName="PersistentClasses" FullName="RelationTestClasses.CmpBi1nOthpconTblGuidLeft" TableName="CmpBi1nOthpconTblGuidLeft" ConnectionId="C0" TypeCode="-431365042">
       <Oid>
-        <OidColumn Name="ID" NetType="System.Guid,mscorlib" AllowDbNull="False" />
+        <OidColumn AutoIncremented="True" Name="ID" AllowDbNull="False" />
       </Oid>
       <Fields>
         <Field Name="dummy" AccessorName="Dummy">
@@ -8250,7 +8250,7 @@
     </Class>
     <Class AssemblyName="PersistentClasses" FullName="RelationTestClasses.CmpBi1nOthpconTblGuidRightBase" TableName="CmpBi1nOthpconTblGuidRightBase" ConnectionId="C0" TypeCode="1970020134">
       <Oid>
-        <OidColumn Name="ID" NetType="System.Guid,mscorlib" AllowDbNull="False" />
+        <OidColumn AutoIncremented="True" Name="ID" AllowDbNull="False" />
       </Oid>
       <Fields>
         <Field Name="dummy" AccessorName="Dummy">
@@ -8268,7 +8268,7 @@
     </Class>
     <Class AssemblyName="PersistentClasses" FullName="RelationTestClasses.CmpBi1nOthpconTblGuidRightDerived" TableName="CmpBi1nOthpconTblGuidRightDerived" ConnectionId="C0" TypeCode="30548392">
       <Oid>
-        <OidColumn Name="ID" NetType="System.Guid,mscorlib" AllowDbNull="False" />
+        <OidColumn AutoIncremented="True" Name="ID" AllowDbNull="False" />
       </Oid>
       <Fields>
         <Field Name="dummy">
@@ -8358,7 +8358,7 @@
     </Class>
     <Class AssemblyName="PersistentClasses" FullName="RelationTestClasses.CmpBi1nOwnpabsOthpabsTblGuidLeftBase" TableName="Unused" ConnectionId="C0">
       <Oid>
-        <OidColumn Name="Unused" NetType="System.Guid,mscorlib" AllowDbNull="False" />
+        <OidColumn AutoIncremented="True" Name="Unused" AllowDbNull="False" />
       </Oid>
       <Fields>
         <Field Name="dummy" AccessorName="Dummy">
@@ -8376,7 +8376,7 @@
     </Class>
     <Class AssemblyName="PersistentClasses" FullName="RelationTestClasses.CmpBi1nOwnpabsOthpabsTblGuidLeftDerived" TableName="CmpBi1nOwnpabsOthpabsTblGuidLeftDerived" ConnectionId="C0" TypeCode="2059659393">
       <Oid>
-        <OidColumn Name="ID" NetType="System.Guid,mscorlib" AllowDbNull="False" />
+        <OidColumn AutoIncremented="True" Name="ID" AllowDbNull="False" />
       </Oid>
       <Fields>
         <Field Name="dummy">
@@ -8394,7 +8394,7 @@
     </Class>
     <Class AssemblyName="PersistentClasses" FullName="RelationTestClasses.CmpBi1nOwnpabsOthpabsTblGuidRightBase" TableName="Unused" ConnectionId="C0">
       <Oid>
-        <OidColumn Name="Unused" NetType="System.Guid,mscorlib" AllowDbNull="False" />
+        <OidColumn AutoIncremented="True" Name="Unused" AllowDbNull="False" />
       </Oid>
       <Fields>
         <Field Name="dummy" AccessorName="Dummy">
@@ -8412,7 +8412,7 @@
     </Class>
     <Class AssemblyName="PersistentClasses" FullName="RelationTestClasses.CmpBi1nOwnpabsOthpabsTblGuidRightDerived" TableName="CmpBi1nOwnpabsOthpabsTblGuidRightDerived" ConnectionId="C0" TypeCode="-211877546">
       <Oid>
-        <OidColumn Name="ID" NetType="System.Guid,mscorlib" AllowDbNull="False" />
+        <OidColumn AutoIncremented="True" Name="ID" AllowDbNull="False" />
       </Oid>
       <Fields>
         <Field Name="dummy">
@@ -8484,7 +8484,7 @@
     </Class>
     <Class AssemblyName="PersistentClasses" FullName="RelationTestClasses.CmpBi1nOwnpabsTblGuidLeftBase" TableName="Unused" ConnectionId="C0">
       <Oid>
-        <OidColumn Name="Unused" NetType="System.Guid,mscorlib" AllowDbNull="False" />
+        <OidColumn AutoIncremented="True" Name="Unused" AllowDbNull="False" />
       </Oid>
       <Fields>
         <Field Name="dummy" AccessorName="Dummy">
@@ -8502,7 +8502,7 @@
     </Class>
     <Class AssemblyName="PersistentClasses" FullName="RelationTestClasses.CmpBi1nOwnpabsTblGuidLeftDerived" TableName="CmpBi1nOwnpabsTblGuidLeftDerived" ConnectionId="C0" TypeCode="-247802622">
       <Oid>
-        <OidColumn Name="ID" NetType="System.Guid,mscorlib" AllowDbNull="False" />
+        <OidColumn AutoIncremented="True" Name="ID" AllowDbNull="False" />
       </Oid>
       <Fields>
         <Field Name="dummy">
@@ -8520,7 +8520,7 @@
     </Class>
     <Class AssemblyName="PersistentClasses" FullName="RelationTestClasses.CmpBi1nOwnpabsTblGuidRight" TableName="CmpBi1nOwnpabsTblGuidRight" ConnectionId="C0" TypeCode="-1852903416">
       <Oid>
-        <OidColumn Name="ID" NetType="System.Guid,mscorlib" AllowDbNull="False" />
+        <OidColumn AutoIncremented="True" Name="ID" AllowDbNull="False" />
       </Oid>
       <Fields>
         <Field Name="dummy" AccessorName="Dummy">
@@ -8610,7 +8610,7 @@
     </Class>
     <Class AssemblyName="PersistentClasses" FullName="RelationTestClasses.CmpBi1nOwnpconOthpconTblGuidLeftBase" TableName="CmpBi1nOwnpconOthpconTblGuidLeftBase" ConnectionId="C0" TypeCode="-1427767059">
       <Oid>
-        <OidColumn Name="ID" NetType="System.Guid,mscorlib" AllowDbNull="False" />
+        <OidColumn AutoIncremented="True" Name="ID" AllowDbNull="False" />
       </Oid>
       <Fields>
         <Field Name="dummy" AccessorName="Dummy">
@@ -8628,7 +8628,7 @@
     </Class>
     <Class AssemblyName="PersistentClasses" FullName="RelationTestClasses.CmpBi1nOwnpconOthpconTblGuidLeftDerived" TableName="CmpBi1nOwnpconOthpconTblGuidLeftDerived" ConnectionId="C0" TypeCode="341513857">
       <Oid>
-        <OidColumn Name="ID" NetType="System.Guid,mscorlib" AllowDbNull="False" />
+        <OidColumn AutoIncremented="True" Name="ID" AllowDbNull="False" />
       </Oid>
       <Fields>
         <Field Name="dummy">
@@ -8646,7 +8646,7 @@
     </Class>
     <Class AssemblyName="PersistentClasses" FullName="RelationTestClasses.CmpBi1nOwnpconOthpconTblGuidRightBase" TableName="CmpBi1nOwnpconOthpconTblGuidRightBase" ConnectionId="C0" TypeCode="-300434376">
       <Oid>
-        <OidColumn Name="ID" NetType="System.Guid,mscorlib" AllowDbNull="False" />
+        <OidColumn AutoIncremented="True" Name="ID" AllowDbNull="False" />
       </Oid>
       <Fields>
         <Field Name="dummy" AccessorName="Dummy">
@@ -8664,7 +8664,7 @@
     </Class>
     <Class AssemblyName="PersistentClasses" FullName="RelationTestClasses.CmpBi1nOwnpconOthpconTblGuidRightDerived" TableName="CmpBi1nOwnpconOthpconTblGuidRightDerived" ConnectionId="C0" TypeCode="-1934781610">
       <Oid>
-        <OidColumn Name="ID" NetType="System.Guid,mscorlib" AllowDbNull="False" />
+        <OidColumn AutoIncremented="True" Name="ID" AllowDbNull="False" />
       </Oid>
       <Fields>
         <Field Name="dummy">
@@ -8736,7 +8736,7 @@
     </Class>
     <Class AssemblyName="PersistentClasses" FullName="RelationTestClasses.CmpBi1nOwnpconTblGuidLeftBase" TableName="CmpBi1nOwnpconTblGuidLeftBase" ConnectionId="C0" TypeCode="-1095209220">
       <Oid>
-        <OidColumn Name="ID" NetType="System.Guid,mscorlib" AllowDbNull="False" />
+        <OidColumn AutoIncremented="True" Name="ID" AllowDbNull="False" />
       </Oid>
       <Fields>
         <Field Name="dummy" AccessorName="Dummy">
@@ -8754,7 +8754,7 @@
     </Class>
     <Class AssemblyName="PersistentClasses" FullName="RelationTestClasses.CmpBi1nOwnpconTblGuidLeftDerived" TableName="CmpBi1nOwnpconTblGuidLeftDerived" ConnectionId="C0" TypeCode="-917456366">
       <Oid>
-        <OidColumn Name="ID" NetType="System.Guid,mscorlib" AllowDbNull="False" />
+        <OidColumn AutoIncremented="True" Name="ID" AllowDbNull="False" />
       </Oid>
       <Fields>
         <Field Name="dummy">
@@ -8772,7 +8772,7 @@
     </Class>
     <Class AssemblyName="PersistentClasses" FullName="RelationTestClasses.CmpBi1nOwnpconTblGuidRight" TableName="CmpBi1nOwnpconTblGuidRight" ConnectionId="C0" TypeCode="351920408">
       <Oid>
-        <OidColumn Name="ID" NetType="System.Guid,mscorlib" AllowDbNull="False" />
+        <OidColumn AutoIncremented="True" Name="ID" AllowDbNull="False" />
       </Oid>
       <Fields>
         <Field Name="dummy" AccessorName="Dummy">
@@ -8826,7 +8826,7 @@
     </Class>
     <Class AssemblyName="PersistentClasses" FullName="RelationTestClasses.CmpBi1nTblGuidLeft" TableName="CmpBi1nTblGuidLeft" ConnectionId="C0" TypeCode="-2050913927">
       <Oid>
-        <OidColumn Name="ID" NetType="System.Guid,mscorlib" AllowDbNull="False" />
+        <OidColumn AutoIncremented="True" Name="ID" AllowDbNull="False" />
       </Oid>
       <Fields>
         <Field Name="dummy" AccessorName="Dummy">
@@ -8844,7 +8844,7 @@
     </Class>
     <Class AssemblyName="PersistentClasses" FullName="RelationTestClasses.CmpBi1nTblGuidRight" TableName="CmpBi1nTblGuidRight" ConnectionId="C0" TypeCode="851838698">
       <Oid>
-        <OidColumn Name="ID" NetType="System.Guid,mscorlib" AllowDbNull="False" />
+        <OidColumn AutoIncremented="True" Name="ID" AllowDbNull="False" />
       </Oid>
       <Fields>
         <Field Name="dummy" AccessorName="Dummy">
@@ -8892,7 +8892,7 @@
     </Class>
     <Class AssemblyName="PersistentClasses" FullName="RelationTestClasses.CmpBin1NoTblGuidLeft" TableName="CmpBin1NoTblGuidLeft" ConnectionId="C0" TypeCode="9586898">
       <Oid>
-        <OidColumn Name="ID" NetType="System.Guid,mscorlib" AllowDbNull="False" />
+        <OidColumn AutoIncremented="True" Name="ID" AllowDbNull="False" />
       </Oid>
       <Fields>
         <Field Name="dummy" AccessorName="Dummy">
@@ -8907,7 +8907,7 @@
     </Class>
     <Class AssemblyName="PersistentClasses" FullName="RelationTestClasses.CmpBin1NoTblGuidRight" TableName="CmpBin1NoTblGuidRight" ConnectionId="C0" TypeCode="302854833">
       <Oid>
-        <OidColumn Name="ID" NetType="System.Guid,mscorlib" AllowDbNull="False" />
+        <OidColumn AutoIncremented="True" Name="ID" AllowDbNull="False" />
       </Oid>
       <Fields>
         <Field Name="dummy" AccessorName="Dummy">
@@ -8976,7 +8976,7 @@
     </Class>
     <Class AssemblyName="PersistentClasses" FullName="RelationTestClasses.CmpBin1OthpabsTblGuidLeft" TableName="CmpBin1OthpabsTblGuidLeft" ConnectionId="C0" TypeCode="1549140228">
       <Oid>
-        <OidColumn Name="ID" NetType="System.Guid,mscorlib" AllowDbNull="False" />
+        <OidColumn AutoIncremented="True" Name="ID" AllowDbNull="False" />
       </Oid>
       <Fields>
         <Field Name="dummy" AccessorName="Dummy">
@@ -8994,7 +8994,7 @@
     </Class>
     <Class AssemblyName="PersistentClasses" FullName="RelationTestClasses.CmpBin1OthpabsTblGuidRightBase" TableName="Unused" ConnectionId="C0">
       <Oid>
-        <OidColumn Name="Unused" NetType="System.Guid,mscorlib" AllowDbNull="False" />
+        <OidColumn AutoIncremented="True" Name="Unused" AllowDbNull="False" />
       </Oid>
       <Fields>
         <Field Name="dummy" AccessorName="Dummy">
@@ -9012,7 +9012,7 @@
     </Class>
     <Class AssemblyName="PersistentClasses" FullName="RelationTestClasses.CmpBin1OthpabsTblGuidRightDerived" TableName="CmpBin1OthpabsTblGuidRightDerived" ConnectionId="C0" TypeCode="-1867962274">
       <Oid>
-        <OidColumn Name="ID" NetType="System.Guid,mscorlib" AllowDbNull="False" />
+        <OidColumn AutoIncremented="True" Name="ID" AllowDbNull="False" />
       </Oid>
       <Fields>
         <Field Name="dummy">
@@ -9084,7 +9084,7 @@
     </Class>
     <Class AssemblyName="PersistentClasses" FullName="RelationTestClasses.CmpBin1OthpconTblGuidLeft" TableName="CmpBin1OthpconTblGuidLeft" ConnectionId="C0" TypeCode="373337588">
       <Oid>
-        <OidColumn Name="ID" NetType="System.Guid,mscorlib" AllowDbNull="False" />
+        <OidColumn AutoIncremented="True" Name="ID" AllowDbNull="False" />
       </Oid>
       <Fields>
         <Field Name="dummy" AccessorName="Dummy">
@@ -9102,7 +9102,7 @@
     </Class>
     <Class AssemblyName="PersistentClasses" FullName="RelationTestClasses.CmpBin1OthpconTblGuidRightBase" TableName="CmpBin1OthpconTblGuidRightBase" ConnectionId="C0" TypeCode="-393253568">
       <Oid>
-        <OidColumn Name="ID" NetType="System.Guid,mscorlib" AllowDbNull="False" />
+        <OidColumn AutoIncremented="True" Name="ID" AllowDbNull="False" />
       </Oid>
       <Fields>
         <Field Name="dummy" AccessorName="Dummy">
@@ -9120,7 +9120,7 @@
     </Class>
     <Class AssemblyName="PersistentClasses" FullName="RelationTestClasses.CmpBin1OthpconTblGuidRightDerived" TableName="CmpBin1OthpconTblGuidRightDerived" ConnectionId="C0" TypeCode="-1152391858">
       <Oid>
-        <OidColumn Name="ID" NetType="System.Guid,mscorlib" AllowDbNull="False" />
+        <OidColumn AutoIncremented="True" Name="ID" AllowDbNull="False" />
       </Oid>
       <Fields>
         <Field Name="dummy">
@@ -9183,7 +9183,7 @@
     </Class>
     <Class AssemblyName="PersistentClasses" FullName="RelationTestClasses.CmpBin1OwnpabsNoTblGuidLeftBase" TableName="Unused" ConnectionId="C0">
       <Oid>
-        <OidColumn Name="Unused" NetType="System.Guid,mscorlib" AllowDbNull="False" />
+        <OidColumn AutoIncremented="True" Name="Unused" AllowDbNull="False" />
       </Oid>
       <Fields>
         <Field Name="dummy" AccessorName="Dummy">
@@ -9198,7 +9198,7 @@
     </Class>
     <Class AssemblyName="PersistentClasses" FullName="RelationTestClasses.CmpBin1OwnpabsNoTblGuidLeftDerived" TableName="CmpBin1OwnpabsNoTblGuidLeftDerived" ConnectionId="C0" TypeCode="186734845">
       <Oid>
-        <OidColumn Name="ID" NetType="System.Guid,mscorlib" AllowDbNull="False" />
+        <OidColumn AutoIncremented="True" Name="ID" AllowDbNull="False" />
       </Oid>
       <Fields>
         <Field Name="dummy">
@@ -9213,7 +9213,7 @@
     </Class>
     <Class AssemblyName="PersistentClasses" FullName="RelationTestClasses.CmpBin1OwnpabsNoTblGuidRight" TableName="CmpBin1OwnpabsNoTblGuidRight" ConnectionId="C0" TypeCode="733662275">
       <Oid>
-        <OidColumn Name="ID" NetType="System.Guid,mscorlib" AllowDbNull="False" />
+        <OidColumn AutoIncremented="True" Name="ID" AllowDbNull="False" />
       </Oid>
       <Fields>
         <Field Name="dummy" AccessorName="Dummy">
@@ -9300,7 +9300,7 @@
     </Class>
     <Class AssemblyName="PersistentClasses" FullName="RelationTestClasses.CmpBin1OwnpabsOthpabsTblGuidLeftBase" TableName="Unused" ConnectionId="C0">
       <Oid>
-        <OidColumn Name="Unused" NetType="System.Guid,mscorlib" AllowDbNull="False" />
+        <OidColumn AutoIncremented="True" Name="Unused" AllowDbNull="False" />
       </Oid>
       <Fields>
         <Field Name="dummy" AccessorName="Dummy">
@@ -9318,7 +9318,7 @@
     </Class>
     <Class AssemblyName="PersistentClasses" FullName="RelationTestClasses.CmpBin1OwnpabsOthpabsTblGuidLeftDerived" TableName="CmpBin1OwnpabsOthpabsTblGuidLeftDerived" ConnectionId="C0" TypeCode="250468263">
       <Oid>
-        <OidColumn Name="ID" NetType="System.Guid,mscorlib" AllowDbNull="False" />
+        <OidColumn AutoIncremented="True" Name="ID" AllowDbNull="False" />
       </Oid>
       <Fields>
         <Field Name="dummy">
@@ -9336,7 +9336,7 @@
     </Class>
     <Class AssemblyName="PersistentClasses" FullName="RelationTestClasses.CmpBin1OwnpabsOthpabsTblGuidRightBase" TableName="Unused" ConnectionId="C0">
       <Oid>
-        <OidColumn Name="Unused" NetType="System.Guid,mscorlib" AllowDbNull="False" />
+        <OidColumn AutoIncremented="True" Name="Unused" AllowDbNull="False" />
       </Oid>
       <Fields>
         <Field Name="dummy" AccessorName="Dummy">
@@ -9354,7 +9354,7 @@
     </Class>
     <Class AssemblyName="PersistentClasses" FullName="RelationTestClasses.CmpBin1OwnpabsOthpabsTblGuidRightDerived" TableName="CmpBin1OwnpabsOthpabsTblGuidRightDerived" ConnectionId="C0" TypeCode="-462227728">
       <Oid>
-        <OidColumn Name="ID" NetType="System.Guid,mscorlib" AllowDbNull="False" />
+        <OidColumn AutoIncremented="True" Name="ID" AllowDbNull="False" />
       </Oid>
       <Fields>
         <Field Name="dummy">
@@ -9426,7 +9426,7 @@
     </Class>
     <Class AssemblyName="PersistentClasses" FullName="RelationTestClasses.CmpBin1OwnpabsTblGuidLeftBase" TableName="Unused" ConnectionId="C0">
       <Oid>
-        <OidColumn Name="Unused" NetType="System.Guid,mscorlib" AllowDbNull="False" />
+        <OidColumn AutoIncremented="True" Name="Unused" AllowDbNull="False" />
       </Oid>
       <Fields>
         <Field Name="dummy" AccessorName="Dummy">
@@ -9444,7 +9444,7 @@
     </Class>
     <Class AssemblyName="PersistentClasses" FullName="RelationTestClasses.CmpBin1OwnpabsTblGuidLeftDerived" TableName="CmpBin1OwnpabsTblGuidLeftDerived" ConnectionId="C0" TypeCode="683869340">
       <Oid>
-        <OidColumn Name="ID" NetType="System.Guid,mscorlib" AllowDbNull="False" />
+        <OidColumn AutoIncremented="True" Name="ID" AllowDbNull="False" />
       </Oid>
       <Fields>
         <Field Name="dummy">
@@ -9462,7 +9462,7 @@
     </Class>
     <Class AssemblyName="PersistentClasses" FullName="RelationTestClasses.CmpBin1OwnpabsTblGuidRight" TableName="CmpBin1OwnpabsTblGuidRight" ConnectionId="C0" TypeCode="1618041634">
       <Oid>
-        <OidColumn Name="ID" NetType="System.Guid,mscorlib" AllowDbNull="False" />
+        <OidColumn AutoIncremented="True" Name="ID" AllowDbNull="False" />
       </Oid>
       <Fields>
         <Field Name="dummy" AccessorName="Dummy">
@@ -9525,7 +9525,7 @@
     </Class>
     <Class AssemblyName="PersistentClasses" FullName="RelationTestClasses.CmpBin1OwnpconNoTblGuidLeftBase" TableName="CmpBin1OwnpconNoTblGuidLeftBase" ConnectionId="C0" TypeCode="82864353">
       <Oid>
-        <OidColumn Name="ID" NetType="System.Guid,mscorlib" AllowDbNull="False" />
+        <OidColumn AutoIncremented="True" Name="ID" AllowDbNull="False" />
       </Oid>
       <Fields>
         <Field Name="dummy" AccessorName="Dummy">
@@ -9540,7 +9540,7 @@
     </Class>
     <Class AssemblyName="PersistentClasses" FullName="RelationTestClasses.CmpBin1OwnpconNoTblGuidLeftDerived" TableName="CmpBin1OwnpconNoTblGuidLeftDerived" ConnectionId="C0" TypeCode="894581261">
       <Oid>
-        <OidColumn Name="ID" NetType="System.Guid,mscorlib" AllowDbNull="False" />
+        <OidColumn AutoIncremented="True" Name="ID" AllowDbNull="False" />
       </Oid>
       <Fields>
         <Field Name="dummy">
@@ -9555,7 +9555,7 @@
     </Class>
     <Class AssemblyName="PersistentClasses" FullName="RelationTestClasses.CmpBin1OwnpconNoTblGuidRight" TableName="CmpBin1OwnpconNoTblGuidRight" ConnectionId="C0" TypeCode="-2144487085">
       <Oid>
-        <OidColumn Name="ID" NetType="System.Guid,mscorlib" AllowDbNull="False" />
+        <OidColumn AutoIncremented="True" Name="ID" AllowDbNull="False" />
       </Oid>
       <Fields>
         <Field Name="dummy" AccessorName="Dummy">
@@ -9642,7 +9642,7 @@
     </Class>
     <Class AssemblyName="PersistentClasses" FullName="RelationTestClasses.CmpBin1OwnpconOthpconTblGuidLeftBase" TableName="CmpBin1OwnpconOthpconTblGuidLeftBase" ConnectionId="C0" TypeCode="2100876167">
       <Oid>
-        <OidColumn Name="ID" NetType="System.Guid,mscorlib" AllowDbNull="False" />
+        <OidColumn AutoIncremented="True" Name="ID" AllowDbNull="False" />
       </Oid>
       <Fields>
         <Field Name="dummy" AccessorName="Dummy">
@@ -9660,7 +9660,7 @@
     </Class>
     <Class AssemblyName="PersistentClasses" FullName="RelationTestClasses.CmpBin1OwnpconOthpconTblGuidLeftDerived" TableName="CmpBin1OwnpconOthpconTblGuidLeftDerived" ConnectionId="C0" TypeCode="-1467677273">
       <Oid>
-        <OidColumn Name="ID" NetType="System.Guid,mscorlib" AllowDbNull="False" />
+        <OidColumn AutoIncremented="True" Name="ID" AllowDbNull="False" />
       </Oid>
       <Fields>
         <Field Name="dummy">
@@ -9678,7 +9678,7 @@
     </Class>
     <Class AssemblyName="PersistentClasses" FullName="RelationTestClasses.CmpBin1OwnpconOthpconTblGuidRightBase" TableName="CmpBin1OwnpconOthpconTblGuidRightBase" ConnectionId="C0" TypeCode="1713323230">
       <Oid>
-        <OidColumn Name="ID" NetType="System.Guid,mscorlib" AllowDbNull="False" />
+        <OidColumn AutoIncremented="True" Name="ID" AllowDbNull="False" />
       </Oid>
       <Fields>
         <Field Name="dummy" AccessorName="Dummy">
@@ -9696,7 +9696,7 @@
     </Class>
     <Class AssemblyName="PersistentClasses" FullName="RelationTestClasses.CmpBin1OwnpconOthpconTblGuidRightDerived" TableName="CmpBin1OwnpconOthpconTblGuidRightDerived" ConnectionId="C0" TypeCode="2109835504">
       <Oid>
-        <OidColumn Name="ID" NetType="System.Guid,mscorlib" AllowDbNull="False" />
+        <OidColumn AutoIncremented="True" Name="ID" AllowDbNull="False" />
       </Oid>
       <Fields>
         <Field Name="dummy">
@@ -9768,7 +9768,7 @@
     </Class>
     <Class AssemblyName="PersistentClasses" FullName="RelationTestClasses.CmpBin1OwnpconTblGuidLeftBase" TableName="CmpBin1OwnpconTblGuidLeftBase" ConnectionId="C0" TypeCode="491124130">
       <Oid>
-        <OidColumn Name="ID" NetType="System.Guid,mscorlib" AllowDbNull="False" />
+        <OidColumn AutoIncremented="True" Name="ID" AllowDbNull="False" />
       </Oid>
       <Fields>
         <Field Name="dummy" AccessorName="Dummy">
@@ -9786,7 +9786,7 @@
     </Class>
     <Class AssemblyName="PersistentClasses" FullName="RelationTestClasses.CmpBin1OwnpconTblGuidLeftDerived" TableName="CmpBin1OwnpconTblGuidLeftDerived" ConnectionId="C0" TypeCode="14215596">
       <Oid>
-        <OidColumn Name="ID" NetType="System.Guid,mscorlib" AllowDbNull="False" />
+        <OidColumn AutoIncremented="True" Name="ID" AllowDbNull="False" />
       </Oid>
       <Fields>
         <Field Name="dummy">
@@ -9804,7 +9804,7 @@
     </Class>
     <Class AssemblyName="PersistentClasses" FullName="RelationTestClasses.CmpBin1OwnpconTblGuidRight" TableName="CmpBin1OwnpconTblGuidRight" ConnectionId="C0" TypeCode="-472101838">
       <Oid>
-        <OidColumn Name="ID" NetType="System.Guid,mscorlib" AllowDbNull="False" />
+        <OidColumn AutoIncremented="True" Name="ID" AllowDbNull="False" />
       </Oid>
       <Fields>
         <Field Name="dummy" AccessorName="Dummy">
@@ -9858,7 +9858,7 @@
     </Class>
     <Class AssemblyName="PersistentClasses" FullName="RelationTestClasses.CmpBin1TblGuidLeft" TableName="CmpBin1TblGuidLeft" ConnectionId="C0" TypeCode="-2052739437">
       <Oid>
-        <OidColumn Name="ID" NetType="System.Guid,mscorlib" AllowDbNull="False" />
+        <OidColumn AutoIncremented="True" Name="ID" AllowDbNull="False" />
       </Oid>
       <Fields>
         <Field Name="dummy" AccessorName="Dummy">
@@ -9876,7 +9876,7 @@
     </Class>
     <Class AssemblyName="PersistentClasses" FullName="RelationTestClasses.CmpBin1TblGuidRight" TableName="CmpBin1TblGuidRight" ConnectionId="C0" TypeCode="795247888">
       <Oid>
-        <OidColumn Name="ID" NetType="System.Guid,mscorlib" AllowDbNull="False" />
+        <OidColumn AutoIncremented="True" Name="ID" AllowDbNull="False" />
       </Oid>
       <Fields>
         <Field Name="dummy" AccessorName="Dummy">
@@ -9948,7 +9948,7 @@
     </Class>
     <Class AssemblyName="PersistentClasses" FullName="RelationTestClasses.CmpBinnOthpabsTblGuidLeft" TableName="CmpBinnOthpabsTblGuidLeft" ConnectionId="C0" TypeCode="1575963649">
       <Oid>
-        <OidColumn Name="ID" NetType="System.Guid,mscorlib" AllowDbNull="False" />
+        <OidColumn AutoIncremented="True" Name="ID" AllowDbNull="False" />
       </Oid>
       <Fields>
         <Field Name="dummy" AccessorName="Dummy">
@@ -9966,7 +9966,7 @@
     </Class>
     <Class AssemblyName="PersistentClasses" FullName="RelationTestClasses.CmpBinnOthpabsTblGuidRightBase" TableName="Unused" ConnectionId="C0">
       <Oid>
-        <OidColumn Name="Unused" NetType="System.Guid,mscorlib" AllowDbNull="False" />
+        <OidColumn AutoIncremented="True" Name="Unused" AllowDbNull="False" />
       </Oid>
       <Fields>
         <Field Name="dummy" AccessorName="Dummy">
@@ -9984,7 +9984,7 @@
     </Class>
     <Class AssemblyName="PersistentClasses" FullName="RelationTestClasses.CmpBinnOthpabsTblGuidRightDerived" TableName="CmpBinnOthpabsTblGuidRightDerived" ConnectionId="C0" TypeCode="955917915">
       <Oid>
-        <OidColumn Name="ID" NetType="System.Guid,mscorlib" AllowDbNull="False" />
+        <OidColumn AutoIncremented="True" Name="ID" AllowDbNull="False" />
       </Oid>
       <Fields>
         <Field Name="dummy">
@@ -10056,7 +10056,7 @@
     </Class>
     <Class AssemblyName="PersistentClasses" FullName="RelationTestClasses.CmpBinnOthpconTblGuidLeft" TableName="CmpBinnOthpconTblGuidLeft" ConnectionId="C0" TypeCode="400161009">
       <Oid>
-        <OidColumn Name="ID" NetType="System.Guid,mscorlib" AllowDbNull="False" />
+        <OidColumn AutoIncremented="True" Name="ID" AllowDbNull="False" />
       </Oid>
       <Fields>
         <Field Name="dummy" AccessorName="Dummy">
@@ -10074,7 +10074,7 @@
     </Class>
     <Class AssemblyName="PersistentClasses" FullName="RelationTestClasses.CmpBinnOthpconTblGuidRightBase" TableName="CmpBinnOthpconTblGuidRightBase" ConnectionId="C0" TypeCode="-185698205">
       <Oid>
-        <OidColumn Name="ID" NetType="System.Guid,mscorlib" AllowDbNull="False" />
+        <OidColumn AutoIncremented="True" Name="ID" AllowDbNull="False" />
       </Oid>
       <Fields>
         <Field Name="dummy" AccessorName="Dummy">
@@ -10092,7 +10092,7 @@
     </Class>
     <Class AssemblyName="PersistentClasses" FullName="RelationTestClasses.CmpBinnOthpconTblGuidRightDerived" TableName="CmpBinnOthpconTblGuidRightDerived" ConnectionId="C0" TypeCode="1671488331">
       <Oid>
-        <OidColumn Name="ID" NetType="System.Guid,mscorlib" AllowDbNull="False" />
+        <OidColumn AutoIncremented="True" Name="ID" AllowDbNull="False" />
       </Oid>
       <Fields>
         <Field Name="dummy">
@@ -10182,7 +10182,7 @@
     </Class>
     <Class AssemblyName="PersistentClasses" FullName="RelationTestClasses.CmpBinnOwnpabsOthpabsTblGuidLeftBase" TableName="Unused" ConnectionId="C0">
       <Oid>
-        <OidColumn Name="Unused" NetType="System.Guid,mscorlib" AllowDbNull="False" />
+        <OidColumn AutoIncremented="True" Name="Unused" AllowDbNull="False" />
       </Oid>
       <Fields>
         <Field Name="dummy" AccessorName="Dummy">
@@ -10200,7 +10200,7 @@
     </Class>
     <Class AssemblyName="PersistentClasses" FullName="RelationTestClasses.CmpBinnOwnpabsOthpabsTblGuidLeftDerived" TableName="CmpBinnOwnpabsOthpabsTblGuidLeftDerived" ConnectionId="C0" TypeCode="190161892">
       <Oid>
-        <OidColumn Name="ID" NetType="System.Guid,mscorlib" AllowDbNull="False" />
+        <OidColumn AutoIncremented="True" Name="ID" AllowDbNull="False" />
       </Oid>
       <Fields>
         <Field Name="dummy">
@@ -10218,7 +10218,7 @@
     </Class>
     <Class AssemblyName="PersistentClasses" FullName="RelationTestClasses.CmpBinnOwnpabsOthpabsTblGuidRightBase" TableName="Unused" ConnectionId="C0">
       <Oid>
-        <OidColumn Name="Unused" NetType="System.Guid,mscorlib" AllowDbNull="False" />
+        <OidColumn AutoIncremented="True" Name="Unused" AllowDbNull="False" />
       </Oid>
       <Fields>
         <Field Name="dummy" AccessorName="Dummy">
@@ -10236,7 +10236,7 @@
     </Class>
     <Class AssemblyName="PersistentClasses" FullName="RelationTestClasses.CmpBinnOwnpabsOthpabsTblGuidRightDerived" TableName="CmpBinnOwnpabsOthpabsTblGuidRightDerived" ConnectionId="C0" TypeCode="1963242067">
       <Oid>
-        <OidColumn Name="ID" NetType="System.Guid,mscorlib" AllowDbNull="False" />
+        <OidColumn AutoIncremented="True" Name="ID" AllowDbNull="False" />
       </Oid>
       <Fields>
         <Field Name="dummy">
@@ -10308,7 +10308,7 @@
     </Class>
     <Class AssemblyName="PersistentClasses" FullName="RelationTestClasses.CmpBinnOwnpabsTblGuidLeftBase" TableName="Unused" ConnectionId="C0">
       <Oid>
-        <OidColumn Name="Unused" NetType="System.Guid,mscorlib" AllowDbNull="False" />
+        <OidColumn AutoIncremented="True" Name="Unused" AllowDbNull="False" />
       </Oid>
       <Fields>
         <Field Name="dummy" AccessorName="Dummy">
@@ -10326,7 +10326,7 @@
     </Class>
     <Class AssemblyName="PersistentClasses" FullName="RelationTestClasses.CmpBinnOwnpabsTblGuidLeftDerived" TableName="CmpBinnOwnpabsTblGuidLeftDerived" ConnectionId="C0" TypeCode="-1718889729">
       <Oid>
-        <OidColumn Name="ID" NetType="System.Guid,mscorlib" AllowDbNull="False" />
+        <OidColumn AutoIncremented="True" Name="ID" AllowDbNull="False" />
       </Oid>
       <Fields>
         <Field Name="dummy">
@@ -10344,7 +10344,7 @@
     </Class>
     <Class AssemblyName="PersistentClasses" FullName="RelationTestClasses.CmpBinnOwnpabsTblGuidRight" TableName="CmpBinnOwnpabsTblGuidRight" ConnectionId="C0" TypeCode="-1845399611">
       <Oid>
-        <OidColumn Name="ID" NetType="System.Guid,mscorlib" AllowDbNull="False" />
+        <OidColumn AutoIncremented="True" Name="ID" AllowDbNull="False" />
       </Oid>
       <Fields>
         <Field Name="dummy" AccessorName="Dummy">
@@ -10434,7 +10434,7 @@
     </Class>
     <Class AssemblyName="PersistentClasses" FullName="RelationTestClasses.CmpBinnOwnpconOthpconTblGuidLeftBase" TableName="CmpBinnOwnpconOthpconTblGuidLeftBase" ConnectionId="C0" TypeCode="-1503807382">
       <Oid>
-        <OidColumn Name="ID" NetType="System.Guid,mscorlib" AllowDbNull="False" />
+        <OidColumn AutoIncremented="True" Name="ID" AllowDbNull="False" />
       </Oid>
       <Fields>
         <Field Name="dummy" AccessorName="Dummy">
@@ -10452,7 +10452,7 @@
     </Class>
     <Class AssemblyName="PersistentClasses" FullName="RelationTestClasses.CmpBinnOwnpconOthpconTblGuidLeftDerived" TableName="CmpBinnOwnpconOthpconTblGuidLeftDerived" ConnectionId="C0" TypeCode="-1527983644">
       <Oid>
-        <OidColumn Name="ID" NetType="System.Guid,mscorlib" AllowDbNull="False" />
+        <OidColumn AutoIncremented="True" Name="ID" AllowDbNull="False" />
       </Oid>
       <Fields>
         <Field Name="dummy">
@@ -10470,7 +10470,7 @@
     </Class>
     <Class AssemblyName="PersistentClasses" FullName="RelationTestClasses.CmpBinnOwnpconOthpconTblGuidRightBase" TableName="CmpBinnOwnpconOthpconTblGuidRightBase" ConnectionId="C0" TypeCode="1637282907">
       <Oid>
-        <OidColumn Name="ID" NetType="System.Guid,mscorlib" AllowDbNull="False" />
+        <OidColumn AutoIncremented="True" Name="ID" AllowDbNull="False" />
       </Oid>
       <Fields>
         <Field Name="dummy" AccessorName="Dummy">
@@ -10488,7 +10488,7 @@
     </Class>
     <Class AssemblyName="PersistentClasses" FullName="RelationTestClasses.CmpBinnOwnpconOthpconTblGuidRightDerived" TableName="CmpBinnOwnpconOthpconTblGuidRightDerived" ConnectionId="C0" TypeCode="240338003">
       <Oid>
-        <OidColumn Name="ID" NetType="System.Guid,mscorlib" AllowDbNull="False" />
+        <OidColumn AutoIncremented="True" Name="ID" AllowDbNull="False" />
       </Oid>
       <Fields>
         <Field Name="dummy">
@@ -10560,7 +10560,7 @@
     </Class>
     <Class AssemblyName="PersistentClasses" FullName="RelationTestClasses.CmpBinnOwnpconTblGuidLeftBase" TableName="CmpBinnOwnpconTblGuidLeftBase" ConnectionId="C0" TypeCode="-887653857">
       <Oid>
-        <OidColumn Name="ID" NetType="System.Guid,mscorlib" AllowDbNull="False" />
+        <OidColumn AutoIncremented="True" Name="ID" AllowDbNull="False" />
       </Oid>
       <Fields>
         <Field Name="dummy" AccessorName="Dummy">
@@ -10578,7 +10578,7 @@
     </Class>
     <Class AssemblyName="PersistentClasses" FullName="RelationTestClasses.CmpBinnOwnpconTblGuidLeftDerived" TableName="CmpBinnOwnpconTblGuidLeftDerived" ConnectionId="C0" TypeCode="1906423823">
       <Oid>
-        <OidColumn Name="ID" NetType="System.Guid,mscorlib" AllowDbNull="False" />
+        <OidColumn AutoIncremented="True" Name="ID" AllowDbNull="False" />
       </Oid>
       <Fields>
         <Field Name="dummy">
@@ -10596,7 +10596,7 @@
     </Class>
     <Class AssemblyName="PersistentClasses" FullName="RelationTestClasses.CmpBinnOwnpconTblGuidRight" TableName="CmpBinnOwnpconTblGuidRight" ConnectionId="C0" TypeCode="359424213">
       <Oid>
-        <OidColumn Name="ID" NetType="System.Guid,mscorlib" AllowDbNull="False" />
+        <OidColumn AutoIncremented="True" Name="ID" AllowDbNull="False" />
       </Oid>
       <Fields>
         <Field Name="dummy" AccessorName="Dummy">
@@ -10650,7 +10650,7 @@
     </Class>
     <Class AssemblyName="PersistentClasses" FullName="RelationTestClasses.CmpBinnTblGuidLeft" TableName="CmpBinnTblGuidLeft" ConnectionId="C0" TypeCode="1526339126">
       <Oid>
-        <OidColumn Name="ID" NetType="System.Guid,mscorlib" AllowDbNull="False" />
+        <OidColumn AutoIncremented="True" Name="ID" AllowDbNull="False" />
       </Oid>
       <Fields>
         <Field Name="dummy" AccessorName="Dummy">
@@ -10668,7 +10668,7 @@
     </Class>
     <Class AssemblyName="PersistentClasses" FullName="RelationTestClasses.CmpBinnTblGuidRight" TableName="CmpBinnTblGuidRight" ConnectionId="C0" TypeCode="77533645">
       <Oid>
-        <OidColumn Name="ID" NetType="System.Guid,mscorlib" AllowDbNull="False" />
+        <OidColumn AutoIncremented="True" Name="ID" AllowDbNull="False" />
       </Oid>
       <Fields>
         <Field Name="dummy" AccessorName="Dummy">
@@ -10712,7 +10712,7 @@
     </Class>
     <Class AssemblyName="PersistentClasses" FullName="RelationTestClasses.CmpDir1NoTblGuidLeft" TableName="CmpDir1NoTblGuidLeft" ConnectionId="C0" TypeCode="156478936">
       <Oid>
-        <OidColumn Name="ID" NetType="System.Guid,mscorlib" AllowDbNull="False" />
+        <OidColumn AutoIncremented="True" Name="ID" AllowDbNull="False" />
       </Oid>
       <Fields>
         <Field Name="dummy" AccessorName="Dummy">
@@ -10727,7 +10727,7 @@
     </Class>
     <Class AssemblyName="PersistentClasses" FullName="RelationTestClasses.CmpDir1NoTblGuidRight" TableName="CmpDir1NoTblGuidRight" ConnectionId="C0" TypeCode="561540715">
       <Oid>
-        <OidColumn Name="ID" NetType="System.Guid,mscorlib" AllowDbNull="False" />
+        <OidColumn AutoIncremented="True" Name="ID" AllowDbNull="False" />
       </Oid>
       <Fields>
         <Field Name="dummy" AccessorName="Dummy">
@@ -10775,7 +10775,7 @@
     </Class>
     <Class AssemblyName="PersistentClasses" FullName="RelationTestClasses.CmpDir1OthpabsNoTblGuidLeft" TableName="CmpDir1OthpabsNoTblGuidLeft" ConnectionId="C0" TypeCode="-23999683">
       <Oid>
-        <OidColumn Name="ID" NetType="System.Guid,mscorlib" AllowDbNull="False" />
+        <OidColumn AutoIncremented="True" Name="ID" AllowDbNull="False" />
       </Oid>
       <Fields>
         <Field Name="dummy" AccessorName="Dummy">
@@ -10790,7 +10790,7 @@
     </Class>
     <Class AssemblyName="PersistentClasses" FullName="RelationTestClasses.CmpDir1OthpabsNoTblGuidRightBase" TableName="Unused" ConnectionId="C0">
       <Oid>
-        <OidColumn Name="Unused" NetType="System.Guid,mscorlib" AllowDbNull="False" />
+        <OidColumn AutoIncremented="True" Name="Unused" AllowDbNull="False" />
       </Oid>
       <Fields>
         <Field Name="dummy" AccessorName="Dummy">
@@ -10801,7 +10801,7 @@
     </Class>
     <Class AssemblyName="PersistentClasses" FullName="RelationTestClasses.CmpDir1OthpabsNoTblGuidRightDerived" TableName="CmpDir1OthpabsNoTblGuidRightDerived" ConnectionId="C0" TypeCode="-893933161">
       <Oid>
-        <OidColumn Name="ID" NetType="System.Guid,mscorlib" AllowDbNull="False" />
+        <OidColumn AutoIncremented="True" Name="ID" AllowDbNull="False" />
       </Oid>
       <Fields>
         <Field Name="dummy">
@@ -10852,7 +10852,7 @@
     </Class>
     <Class AssemblyName="PersistentClasses" FullName="RelationTestClasses.CmpDir1OthpabsTblGuidLeft" TableName="CmpDir1OthpabsTblGuidLeft" ConnectionId="C0" TypeCode="132698046">
       <Oid>
-        <OidColumn Name="ID" NetType="System.Guid,mscorlib" AllowDbNull="False" />
+        <OidColumn AutoIncremented="True" Name="ID" AllowDbNull="False" />
       </Oid>
       <Fields>
         <Field Name="dummy" AccessorName="Dummy">
@@ -10870,7 +10870,7 @@
     </Class>
     <Class AssemblyName="PersistentClasses" FullName="RelationTestClasses.CmpDir1OthpabsTblGuidRightBase" TableName="Unused" ConnectionId="C0">
       <Oid>
-        <OidColumn Name="Unused" NetType="System.Guid,mscorlib" AllowDbNull="False" />
+        <OidColumn AutoIncremented="True" Name="Unused" AllowDbNull="False" />
       </Oid>
       <Fields>
         <Field Name="dummy" AccessorName="Dummy">
@@ -10881,7 +10881,7 @@
     </Class>
     <Class AssemblyName="PersistentClasses" FullName="RelationTestClasses.CmpDir1OthpabsTblGuidRightDerived" TableName="CmpDir1OthpabsTblGuidRightDerived" ConnectionId="C0" TypeCode="1430691096">
       <Oid>
-        <OidColumn Name="ID" NetType="System.Guid,mscorlib" AllowDbNull="False" />
+        <OidColumn AutoIncremented="True" Name="ID" AllowDbNull="False" />
       </Oid>
       <Fields>
         <Field Name="dummy">
@@ -10929,7 +10929,7 @@
     </Class>
     <Class AssemblyName="PersistentClasses" FullName="RelationTestClasses.CmpDir1OthpconNoTblGuidLeft" TableName="CmpDir1OthpconNoTblGuidLeft" ConnectionId="C0" TypeCode="-393937875">
       <Oid>
-        <OidColumn Name="ID" NetType="System.Guid,mscorlib" AllowDbNull="False" />
+        <OidColumn AutoIncremented="True" Name="ID" AllowDbNull="False" />
       </Oid>
       <Fields>
         <Field Name="dummy" AccessorName="Dummy">
@@ -10944,7 +10944,7 @@
     </Class>
     <Class AssemblyName="PersistentClasses" FullName="RelationTestClasses.CmpDir1OthpconNoTblGuidRightBase" TableName="CmpDir1OthpconNoTblGuidRightBase" ConnectionId="C0" TypeCode="1544559271">
       <Oid>
-        <OidColumn Name="ID" NetType="System.Guid,mscorlib" AllowDbNull="False" />
+        <OidColumn AutoIncremented="True" Name="ID" AllowDbNull="False" />
       </Oid>
       <Fields>
         <Field Name="dummy" AccessorName="Dummy">
@@ -10955,7 +10955,7 @@
     </Class>
     <Class AssemblyName="PersistentClasses" FullName="RelationTestClasses.CmpDir1OthpconNoTblGuidRightDerived" TableName="CmpDir1OthpconNoTblGuidRightDerived" ConnectionId="C0" TypeCode="-425530745">
       <Oid>
-        <OidColumn Name="ID" NetType="System.Guid,mscorlib" AllowDbNull="False" />
+        <OidColumn AutoIncremented="True" Name="ID" AllowDbNull="False" />
       </Oid>
       <Fields>
         <Field Name="dummy">
@@ -11006,7 +11006,7 @@
     </Class>
     <Class AssemblyName="PersistentClasses" FullName="RelationTestClasses.CmpDir1OthpconTblGuidLeft" TableName="CmpDir1OthpconTblGuidLeft" ConnectionId="C0" TypeCode="-1043104594">
       <Oid>
-        <OidColumn Name="ID" NetType="System.Guid,mscorlib" AllowDbNull="False" />
+        <OidColumn AutoIncremented="True" Name="ID" AllowDbNull="False" />
       </Oid>
       <Fields>
         <Field Name="dummy" AccessorName="Dummy">
@@ -11024,7 +11024,7 @@
     </Class>
     <Class AssemblyName="PersistentClasses" FullName="RelationTestClasses.CmpDir1OthpconTblGuidRightBase" TableName="CmpDir1OthpconTblGuidRightBase" ConnectionId="C0" TypeCode="1811071686">
       <Oid>
-        <OidColumn Name="ID" NetType="System.Guid,mscorlib" AllowDbNull="False" />
+        <OidColumn AutoIncremented="True" Name="ID" AllowDbNull="False" />
       </Oid>
       <Fields>
         <Field Name="dummy" AccessorName="Dummy">
@@ -11035,7 +11035,7 @@
     </Class>
     <Class AssemblyName="PersistentClasses" FullName="RelationTestClasses.CmpDir1OthpconTblGuidRightDerived" TableName="CmpDir1OthpconTblGuidRightDerived" ConnectionId="C0" TypeCode="2146261512">
       <Oid>
-        <OidColumn Name="ID" NetType="System.Guid,mscorlib" AllowDbNull="False" />
+        <OidColumn AutoIncremented="True" Name="ID" AllowDbNull="False" />
       </Oid>
       <Fields>
         <Field Name="dummy">
@@ -11087,7 +11087,7 @@
     </Class>
     <Class AssemblyName="PersistentClasses" FullName="RelationTestClasses.CmpDir1OwnpabsNoTblGuidLeftBase" TableName="Unused" ConnectionId="C0">
       <Oid>
-        <OidColumn Name="Unused" NetType="System.Guid,mscorlib" AllowDbNull="False" />
+        <OidColumn AutoIncremented="True" Name="Unused" AllowDbNull="False" />
       </Oid>
       <Fields>
         <Field Name="dummy" AccessorName="Dummy">
@@ -11102,7 +11102,7 @@
     </Class>
     <Class AssemblyName="PersistentClasses" FullName="RelationTestClasses.CmpDir1OwnpabsNoTblGuidLeftDerived" TableName="CmpDir1OwnpabsNoTblGuidLeftDerived" ConnectionId="C0" TypeCode="-634225789">
       <Oid>
-        <OidColumn Name="ID" NetType="System.Guid,mscorlib" AllowDbNull="False" />
+        <OidColumn AutoIncremented="True" Name="ID" AllowDbNull="False" />
       </Oid>
       <Fields>
         <Field Name="dummy">
@@ -11117,7 +11117,7 @@
     </Class>
     <Class AssemblyName="PersistentClasses" FullName="RelationTestClasses.CmpDir1OwnpabsNoTblGuidRight" TableName="CmpDir1OwnpabsNoTblGuidRight" ConnectionId="C0" TypeCode="1558301513">
       <Oid>
-        <OidColumn Name="ID" NetType="System.Guid,mscorlib" AllowDbNull="False" />
+        <OidColumn AutoIncremented="True" Name="ID" AllowDbNull="False" />
       </Oid>
       <Fields>
         <Field Name="dummy" AccessorName="Dummy">
@@ -11180,7 +11180,7 @@
     </Class>
     <Class AssemblyName="PersistentClasses" FullName="RelationTestClasses.CmpDir1OwnpabsOthpabsNoTblGuidLeftBase" TableName="Unused" ConnectionId="C0">
       <Oid>
-        <OidColumn Name="Unused" NetType="System.Guid,mscorlib" AllowDbNull="False" />
+        <OidColumn AutoIncremented="True" Name="Unused" AllowDbNull="False" />
       </Oid>
       <Fields>
         <Field Name="dummy" AccessorName="Dummy">
@@ -11195,7 +11195,7 @@
     </Class>
     <Class AssemblyName="PersistentClasses" FullName="RelationTestClasses.CmpDir1OwnpabsOthpabsNoTblGuidLeftDerived" TableName="CmpDir1OwnpabsOthpabsNoTblGuidLeftDerived" ConnectionId="C0" TypeCode="-1517965310">
       <Oid>
-        <OidColumn Name="ID" NetType="System.Guid,mscorlib" AllowDbNull="False" />
+        <OidColumn AutoIncremented="True" Name="ID" AllowDbNull="False" />
       </Oid>
       <Fields>
         <Field Name="dummy">
@@ -11210,7 +11210,7 @@
     </Class>
     <Class AssemblyName="PersistentClasses" FullName="RelationTestClasses.CmpDir1OwnpabsOthpabsNoTblGuidRightBase" TableName="Unused" ConnectionId="C0">
       <Oid>
-        <OidColumn Name="Unused" NetType="System.Guid,mscorlib" AllowDbNull="False" />
+        <OidColumn AutoIncremented="True" Name="Unused" AllowDbNull="False" />
       </Oid>
       <Fields>
         <Field Name="dummy" AccessorName="Dummy">
@@ -11221,7 +11221,7 @@
     </Class>
     <Class AssemblyName="PersistentClasses" FullName="RelationTestClasses.CmpDir1OwnpabsOthpabsNoTblGuidRightDerived" TableName="CmpDir1OwnpabsOthpabsNoTblGuidRightDerived" ConnectionId="C0" TypeCode="550906357">
       <Oid>
-        <OidColumn Name="ID" NetType="System.Guid,mscorlib" AllowDbNull="False" />
+        <OidColumn AutoIncremented="True" Name="ID" AllowDbNull="False" />
       </Oid>
       <Fields>
         <Field Name="dummy">
@@ -11290,7 +11290,7 @@
     </Class>
     <Class AssemblyName="PersistentClasses" FullName="RelationTestClasses.CmpDir1OwnpabsOthpabsTblGuidLeftBase" TableName="Unused" ConnectionId="C0">
       <Oid>
-        <OidColumn Name="Unused" NetType="System.Guid,mscorlib" AllowDbNull="False" />
+        <OidColumn AutoIncremented="True" Name="Unused" AllowDbNull="False" />
       </Oid>
       <Fields>
         <Field Name="dummy" AccessorName="Dummy">
@@ -11308,7 +11308,7 @@
     </Class>
     <Class AssemblyName="PersistentClasses" FullName="RelationTestClasses.CmpDir1OwnpabsOthpabsTblGuidLeftDerived" TableName="CmpDir1OwnpabsOthpabsTblGuidLeftDerived" ConnectionId="C0" TypeCode="-336897823">
       <Oid>
-        <OidColumn Name="ID" NetType="System.Guid,mscorlib" AllowDbNull="False" />
+        <OidColumn AutoIncremented="True" Name="ID" AllowDbNull="False" />
       </Oid>
       <Fields>
         <Field Name="dummy">
@@ -11326,7 +11326,7 @@
     </Class>
     <Class AssemblyName="PersistentClasses" FullName="RelationTestClasses.CmpDir1OwnpabsOthpabsTblGuidRightBase" TableName="Unused" ConnectionId="C0">
       <Oid>
-        <OidColumn Name="Unused" NetType="System.Guid,mscorlib" AllowDbNull="False" />
+        <OidColumn AutoIncremented="True" Name="Unused" AllowDbNull="False" />
       </Oid>
       <Fields>
         <Field Name="dummy" AccessorName="Dummy">
@@ -11337,7 +11337,7 @@
     </Class>
     <Class AssemblyName="PersistentClasses" FullName="RelationTestClasses.CmpDir1OwnpabsOthpabsTblGuidRightDerived" TableName="CmpDir1OwnpabsOthpabsTblGuidRightDerived" ConnectionId="C0" TypeCode="-1490707210">
       <Oid>
-        <OidColumn Name="ID" NetType="System.Guid,mscorlib" AllowDbNull="False" />
+        <OidColumn AutoIncremented="True" Name="ID" AllowDbNull="False" />
       </Oid>
       <Fields>
         <Field Name="dummy">
@@ -11395,7 +11395,7 @@
     </Class>
     <Class AssemblyName="PersistentClasses" FullName="RelationTestClasses.CmpDir1OwnpabsTblGuidLeftBase" TableName="Unused" ConnectionId="C0">
       <Oid>
-        <OidColumn Name="Unused" NetType="System.Guid,mscorlib" AllowDbNull="False" />
+        <OidColumn AutoIncremented="True" Name="Unused" AllowDbNull="False" />
       </Oid>
       <Fields>
         <Field Name="dummy" AccessorName="Dummy">
@@ -11413,7 +11413,7 @@
     </Class>
     <Class AssemblyName="PersistentClasses" FullName="RelationTestClasses.CmpDir1OwnpabsTblGuidLeftDerived" TableName="CmpDir1OwnpabsTblGuidLeftDerived" ConnectionId="C0" TypeCode="1621561506">
       <Oid>
-        <OidColumn Name="ID" NetType="System.Guid,mscorlib" AllowDbNull="False" />
+        <OidColumn AutoIncremented="True" Name="ID" AllowDbNull="False" />
       </Oid>
       <Fields>
         <Field Name="dummy">
@@ -11431,7 +11431,7 @@
     </Class>
     <Class AssemblyName="PersistentClasses" FullName="RelationTestClasses.CmpDir1OwnpabsTblGuidRight" TableName="CmpDir1OwnpabsTblGuidRight" ConnectionId="C0" TypeCode="658006952">
       <Oid>
-        <OidColumn Name="ID" NetType="System.Guid,mscorlib" AllowDbNull="False" />
+        <OidColumn AutoIncremented="True" Name="ID" AllowDbNull="False" />
       </Oid>
       <Fields>
         <Field Name="dummy" AccessorName="Dummy">
@@ -11483,7 +11483,7 @@
     </Class>
     <Class AssemblyName="PersistentClasses" FullName="RelationTestClasses.CmpDir1OwnpconNoTblGuidLeftBase" TableName="CmpDir1OwnpconNoTblGuidLeftBase" ConnectionId="C0" TypeCode="-302529509">
       <Oid>
-        <OidColumn Name="ID" NetType="System.Guid,mscorlib" AllowDbNull="False" />
+        <OidColumn AutoIncremented="True" Name="ID" AllowDbNull="False" />
       </Oid>
       <Fields>
         <Field Name="dummy" AccessorName="Dummy">
@@ -11498,7 +11498,7 @@
     </Class>
     <Class AssemblyName="PersistentClasses" FullName="RelationTestClasses.CmpDir1OwnpconNoTblGuidLeftDerived" TableName="CmpDir1OwnpconNoTblGuidLeftDerived" ConnectionId="C0" TypeCode="73620627">
       <Oid>
-        <OidColumn Name="ID" NetType="System.Guid,mscorlib" AllowDbNull="False" />
+        <OidColumn AutoIncremented="True" Name="ID" AllowDbNull="False" />
       </Oid>
       <Fields>
         <Field Name="dummy">
@@ -11513,7 +11513,7 @@
     </Class>
     <Class AssemblyName="PersistentClasses" FullName="RelationTestClasses.CmpDir1OwnpconNoTblGuidRight" TableName="CmpDir1OwnpconNoTblGuidRight" ConnectionId="C0" TypeCode="-1319847847">
       <Oid>
-        <OidColumn Name="ID" NetType="System.Guid,mscorlib" AllowDbNull="False" />
+        <OidColumn AutoIncremented="True" Name="ID" AllowDbNull="False" />
       </Oid>
       <Fields>
         <Field Name="dummy" AccessorName="Dummy">
@@ -11576,7 +11576,7 @@
     </Class>
     <Class AssemblyName="PersistentClasses" FullName="RelationTestClasses.CmpDir1OwnpconOthpconNoTblGuidLeftBase" TableName="CmpDir1OwnpconOthpconNoTblGuidLeftBase" ConnectionId="C0" TypeCode="-122433268">
       <Oid>
-        <OidColumn Name="ID" NetType="System.Guid,mscorlib" AllowDbNull="False" />
+        <OidColumn AutoIncremented="True" Name="ID" AllowDbNull="False" />
       </Oid>
       <Fields>
         <Field Name="dummy" AccessorName="Dummy">
@@ -11591,7 +11591,7 @@
     </Class>
     <Class AssemblyName="PersistentClasses" FullName="RelationTestClasses.CmpDir1OwnpconOthpconNoTblGuidLeftDerived" TableName="CmpDir1OwnpconOthpconNoTblGuidLeftDerived" ConnectionId="C0" TypeCode="906583554">
       <Oid>
-        <OidColumn Name="ID" NetType="System.Guid,mscorlib" AllowDbNull="False" />
+        <OidColumn AutoIncremented="True" Name="ID" AllowDbNull="False" />
       </Oid>
       <Fields>
         <Field Name="dummy">
@@ -11606,7 +11606,7 @@
     </Class>
     <Class AssemblyName="PersistentClasses" FullName="RelationTestClasses.CmpDir1OwnpconOthpconNoTblGuidRightBase" TableName="CmpDir1OwnpconOthpconNoTblGuidRightBase" ConnectionId="C0" TypeCode="1510207481">
       <Oid>
-        <OidColumn Name="ID" NetType="System.Guid,mscorlib" AllowDbNull="False" />
+        <OidColumn AutoIncremented="True" Name="ID" AllowDbNull="False" />
       </Oid>
       <Fields>
         <Field Name="dummy" AccessorName="Dummy">
@@ -11617,7 +11617,7 @@
     </Class>
     <Class AssemblyName="PersistentClasses" FullName="RelationTestClasses.CmpDir1OwnpconOthpconNoTblGuidRightDerived" TableName="CmpDir1OwnpconOthpconNoTblGuidRightDerived" ConnectionId="C0" TypeCode="-1597490187">
       <Oid>
-        <OidColumn Name="ID" NetType="System.Guid,mscorlib" AllowDbNull="False" />
+        <OidColumn AutoIncremented="True" Name="ID" AllowDbNull="False" />
       </Oid>
       <Fields>
         <Field Name="dummy">
@@ -11686,7 +11686,7 @@
     </Class>
     <Class AssemblyName="PersistentClasses" FullName="RelationTestClasses.CmpDir1OwnpconOthpconTblGuidLeftBase" TableName="CmpDir1OwnpconOthpconTblGuidLeftBase" ConnectionId="C0" TypeCode="-863277939">
       <Oid>
-        <OidColumn Name="ID" NetType="System.Guid,mscorlib" AllowDbNull="False" />
+        <OidColumn AutoIncremented="True" Name="ID" AllowDbNull="False" />
       </Oid>
       <Fields>
         <Field Name="dummy" AccessorName="Dummy">
@@ -11704,7 +11704,7 @@
     </Class>
     <Class AssemblyName="PersistentClasses" FullName="RelationTestClasses.CmpDir1OwnpconOthpconTblGuidLeftDerived" TableName="CmpDir1OwnpconOthpconTblGuidLeftDerived" ConnectionId="C0" TypeCode="-2055043359">
       <Oid>
-        <OidColumn Name="ID" NetType="System.Guid,mscorlib" AllowDbNull="False" />
+        <OidColumn AutoIncremented="True" Name="ID" AllowDbNull="False" />
       </Oid>
       <Fields>
         <Field Name="dummy">
@@ -11722,7 +11722,7 @@
     </Class>
     <Class AssemblyName="PersistentClasses" FullName="RelationTestClasses.CmpDir1OwnpconOthpconTblGuidRightBase" TableName="CmpDir1OwnpconOthpconTblGuidRightBase" ConnectionId="C0" TypeCode="18859160">
       <Oid>
-        <OidColumn Name="ID" NetType="System.Guid,mscorlib" AllowDbNull="False" />
+        <OidColumn AutoIncremented="True" Name="ID" AllowDbNull="False" />
       </Oid>
       <Fields>
         <Field Name="dummy" AccessorName="Dummy">
@@ -11733,7 +11733,7 @@
     </Class>
     <Class AssemblyName="PersistentClasses" FullName="RelationTestClasses.CmpDir1OwnpconOthpconTblGuidRightDerived" TableName="CmpDir1OwnpconOthpconTblGuidRightDerived" ConnectionId="C0" TypeCode="1081356022">
       <Oid>
-        <OidColumn Name="ID" NetType="System.Guid,mscorlib" AllowDbNull="False" />
+        <OidColumn AutoIncremented="True" Name="ID" AllowDbNull="False" />
       </Oid>
       <Fields>
         <Field Name="dummy">
@@ -11791,7 +11791,7 @@
     </Class>
     <Class AssemblyName="PersistentClasses" FullName="RelationTestClasses.CmpDir1OwnpconTblGuidLeftBase" TableName="CmpDir1OwnpconTblGuidLeftBase" ConnectionId="C0" TypeCode="285136732">
       <Oid>
-        <OidColumn Name="ID" NetType="System.Guid,mscorlib" AllowDbNull="False" />
+        <OidColumn AutoIncremented="True" Name="ID" AllowDbNull="False" />
       </Oid>
       <Fields>
         <Field Name="dummy" AccessorName="Dummy">
@@ -11809,7 +11809,7 @@
     </Class>
     <Class AssemblyName="PersistentClasses" FullName="RelationTestClasses.CmpDir1OwnpconTblGuidLeftDerived" TableName="CmpDir1OwnpconTblGuidLeftDerived" ConnectionId="C0" TypeCode="951907762">
       <Oid>
-        <OidColumn Name="ID" NetType="System.Guid,mscorlib" AllowDbNull="False" />
+        <OidColumn AutoIncremented="True" Name="ID" AllowDbNull="False" />
       </Oid>
       <Fields>
         <Field Name="dummy">
@@ -11827,7 +11827,7 @@
     </Class>
     <Class AssemblyName="PersistentClasses" FullName="RelationTestClasses.CmpDir1OwnpconTblGuidRight" TableName="CmpDir1OwnpconTblGuidRight" ConnectionId="C0" TypeCode="-1432136520">
       <Oid>
-        <OidColumn Name="ID" NetType="System.Guid,mscorlib" AllowDbNull="False" />
+        <OidColumn AutoIncremented="True" Name="ID" AllowDbNull="False" />
       </Oid>
       <Fields>
         <Field Name="dummy" AccessorName="Dummy">
@@ -11867,7 +11867,7 @@
     </Class>
     <Class AssemblyName="PersistentClasses" FullName="RelationTestClasses.CmpDir1TblGuidLeft" TableName="CmpDir1TblGuidLeft" ConnectionId="C0" TypeCode="-211247847">
       <Oid>
-        <OidColumn Name="ID" NetType="System.Guid,mscorlib" AllowDbNull="False" />
+        <OidColumn AutoIncremented="True" Name="ID" AllowDbNull="False" />
       </Oid>
       <Fields>
         <Field Name="dummy" AccessorName="Dummy">
@@ -11885,7 +11885,7 @@
     </Class>
     <Class AssemblyName="PersistentClasses" FullName="RelationTestClasses.CmpDir1TblGuidRight" TableName="CmpDir1TblGuidRight" ConnectionId="C0" TypeCode="2046912330">
       <Oid>
-        <OidColumn Name="ID" NetType="System.Guid,mscorlib" AllowDbNull="False" />
+        <OidColumn AutoIncremented="True" Name="ID" AllowDbNull="False" />
       </Oid>
       <Fields>
         <Field Name="dummy" AccessorName="Dummy">
@@ -11922,7 +11922,7 @@
     </Class>
     <Class AssemblyName="PersistentClasses" FullName="RelationTestClasses.CmpDirnNoTblGuidLeft" TableName="CmpDirnNoTblGuidLeft" ConnectionId="C0" TypeCode="-617826117">
       <Oid>
-        <OidColumn Name="ID" NetType="System.Guid,mscorlib" AllowDbNull="False" />
+        <OidColumn AutoIncremented="True" Name="ID" AllowDbNull="False" />
       </Oid>
       <Fields>
         <Field Name="dummy" AccessorName="Dummy">
@@ -11937,7 +11937,7 @@
     </Class>
     <Class AssemblyName="PersistentClasses" FullName="RelationTestClasses.CmpDirnNoTblGuidRight" TableName="CmpDirnNoTblGuidRight" ConnectionId="C0" TypeCode="-1967079448">
       <Oid>
-        <OidColumn Name="ID" NetType="System.Guid,mscorlib" AllowDbNull="False" />
+        <OidColumn AutoIncremented="True" Name="ID" AllowDbNull="False" />
       </Oid>
       <Fields>
         <Field Name="dummy" AccessorName="Dummy">
@@ -11988,7 +11988,7 @@
     </Class>
     <Class AssemblyName="PersistentClasses" FullName="RelationTestClasses.CmpDirnOthpabsTblGuidLeft" TableName="CmpDirnOthpabsTblGuidLeft" ConnectionId="C0" TypeCode="159521467">
       <Oid>
-        <OidColumn Name="ID" NetType="System.Guid,mscorlib" AllowDbNull="False" />
+        <OidColumn AutoIncremented="True" Name="ID" AllowDbNull="False" />
       </Oid>
       <Fields>
         <Field Name="dummy" AccessorName="Dummy">
@@ -12006,7 +12006,7 @@
     </Class>
     <Class AssemblyName="PersistentClasses" FullName="RelationTestClasses.CmpDirnOthpabsTblGuidRightBase" TableName="Unused" ConnectionId="C0">
       <Oid>
-        <OidColumn Name="Unused" NetType="System.Guid,mscorlib" AllowDbNull="False" />
+        <OidColumn AutoIncremented="True" Name="Unused" AllowDbNull="False" />
       </Oid>
       <Fields>
         <Field Name="dummy" AccessorName="Dummy">
@@ -12017,7 +12017,7 @@
     </Class>
     <Class AssemblyName="PersistentClasses" FullName="RelationTestClasses.CmpDirnOthpabsTblGuidRightDerived" TableName="CmpDirnOthpabsTblGuidRightDerived" ConnectionId="C0" TypeCode="-40396011">
       <Oid>
-        <OidColumn Name="ID" NetType="System.Guid,mscorlib" AllowDbNull="False" />
+        <OidColumn AutoIncremented="True" Name="ID" AllowDbNull="False" />
       </Oid>
       <Fields>
         <Field Name="dummy">
@@ -12068,7 +12068,7 @@
     </Class>
     <Class AssemblyName="PersistentClasses" FullName="RelationTestClasses.CmpDirnOthpconTblGuidLeft" TableName="CmpDirnOthpconTblGuidLeft" ConnectionId="C0" TypeCode="-1016281173">
       <Oid>
-        <OidColumn Name="ID" NetType="System.Guid,mscorlib" AllowDbNull="False" />
+        <OidColumn AutoIncremented="True" Name="ID" AllowDbNull="False" />
       </Oid>
       <Fields>
         <Field Name="dummy" AccessorName="Dummy">
@@ -12086,7 +12086,7 @@
     </Class>
     <Class AssemblyName="PersistentClasses" FullName="RelationTestClasses.CmpDirnOthpconTblGuidRightBase" TableName="CmpDirnOthpconTblGuidRightBase" ConnectionId="C0" TypeCode="2018627049">
       <Oid>
-        <OidColumn Name="ID" NetType="System.Guid,mscorlib" AllowDbNull="False" />
+        <OidColumn AutoIncremented="True" Name="ID" AllowDbNull="False" />
       </Oid>
       <Fields>
         <Field Name="dummy" AccessorName="Dummy">
@@ -12097,7 +12097,7 @@
     </Class>
     <Class AssemblyName="PersistentClasses" FullName="RelationTestClasses.CmpDirnOthpconTblGuidRightDerived" TableName="CmpDirnOthpconTblGuidRightDerived" ConnectionId="C0" TypeCode="675174405">
       <Oid>
-        <OidColumn Name="ID" NetType="System.Guid,mscorlib" AllowDbNull="False" />
+        <OidColumn AutoIncremented="True" Name="ID" AllowDbNull="False" />
       </Oid>
       <Fields>
         <Field Name="dummy">
@@ -12149,7 +12149,7 @@
     </Class>
     <Class AssemblyName="PersistentClasses" FullName="RelationTestClasses.CmpDirnOwnpabsNoTblGuidLeftBase" TableName="Unused" ConnectionId="C0">
       <Oid>
-        <OidColumn Name="Unused" NetType="System.Guid,mscorlib" AllowDbNull="False" />
+        <OidColumn AutoIncremented="True" Name="Unused" AllowDbNull="False" />
       </Oid>
       <Fields>
         <Field Name="dummy" AccessorName="Dummy">
@@ -12164,7 +12164,7 @@
     </Class>
     <Class AssemblyName="PersistentClasses" FullName="RelationTestClasses.CmpDirnOwnpabsNoTblGuidLeftDerived" TableName="CmpDirnOwnpabsNoTblGuidLeftDerived" ConnectionId="C0" TypeCode="1006714150">
       <Oid>
-        <OidColumn Name="ID" NetType="System.Guid,mscorlib" AllowDbNull="False" />
+        <OidColumn AutoIncremented="True" Name="ID" AllowDbNull="False" />
       </Oid>
       <Fields>
         <Field Name="dummy">
@@ -12179,7 +12179,7 @@
     </Class>
     <Class AssemblyName="PersistentClasses" FullName="RelationTestClasses.CmpDirnOwnpabsNoTblGuidRight" TableName="CmpDirnOwnpabsNoTblGuidRight" ConnectionId="C0" TypeCode="1790919468">
       <Oid>
-        <OidColumn Name="ID" NetType="System.Guid,mscorlib" AllowDbNull="False" />
+        <OidColumn AutoIncremented="True" Name="ID" AllowDbNull="False" />
       </Oid>
       <Fields>
         <Field Name="dummy" AccessorName="Dummy">
@@ -12248,7 +12248,7 @@
     </Class>
     <Class AssemblyName="PersistentClasses" FullName="RelationTestClasses.CmpDirnOwnpabsOthpabsTblGuidLeftBase" TableName="Unused" ConnectionId="C0">
       <Oid>
-        <OidColumn Name="Unused" NetType="System.Guid,mscorlib" AllowDbNull="False" />
+        <OidColumn AutoIncremented="True" Name="Unused" AllowDbNull="False" />
       </Oid>
       <Fields>
         <Field Name="dummy" AccessorName="Dummy">
@@ -12266,7 +12266,7 @@
     </Class>
     <Class AssemblyName="PersistentClasses" FullName="RelationTestClasses.CmpDirnOwnpabsOthpabsTblGuidLeftDerived" TableName="CmpDirnOwnpabsOthpabsTblGuidLeftDerived" ConnectionId="C0" TypeCode="-397204194">
       <Oid>
-        <OidColumn Name="ID" NetType="System.Guid,mscorlib" AllowDbNull="False" />
+        <OidColumn AutoIncremented="True" Name="ID" AllowDbNull="False" />
       </Oid>
       <Fields>
         <Field Name="dummy">
@@ -12284,7 +12284,7 @@
     </Class>
     <Class AssemblyName="PersistentClasses" FullName="RelationTestClasses.CmpDirnOwnpabsOthpabsTblGuidRightBase" TableName="Unused" ConnectionId="C0">
       <Oid>
-        <OidColumn Name="Unused" NetType="System.Guid,mscorlib" AllowDbNull="False" />
+        <OidColumn AutoIncremented="True" Name="Unused" AllowDbNull="False" />
       </Oid>
       <Fields>
         <Field Name="dummy" AccessorName="Dummy">
@@ -12295,7 +12295,7 @@
     </Class>
     <Class AssemblyName="PersistentClasses" FullName="RelationTestClasses.CmpDirnOwnpabsOthpabsTblGuidRightDerived" TableName="CmpDirnOwnpabsOthpabsTblGuidRightDerived" ConnectionId="C0" TypeCode="934762585">
       <Oid>
-        <OidColumn Name="ID" NetType="System.Guid,mscorlib" AllowDbNull="False" />
+        <OidColumn AutoIncremented="True" Name="ID" AllowDbNull="False" />
       </Oid>
       <Fields>
         <Field Name="dummy">
@@ -12353,7 +12353,7 @@
     </Class>
     <Class AssemblyName="PersistentClasses" FullName="RelationTestClasses.CmpDirnOwnpabsTblGuidLeftBase" TableName="Unused" ConnectionId="C0">
       <Oid>
-        <OidColumn Name="Unused" NetType="System.Guid,mscorlib" AllowDbNull="False" />
+        <OidColumn AutoIncremented="True" Name="Unused" AllowDbNull="False" />
       </Oid>
       <Fields>
         <Field Name="dummy" AccessorName="Dummy">
@@ -12371,7 +12371,7 @@
     </Class>
     <Class AssemblyName="PersistentClasses" FullName="RelationTestClasses.CmpDirnOwnpabsTblGuidLeftDerived" TableName="CmpDirnOwnpabsTblGuidLeftDerived" ConnectionId="C0" TypeCode="-781197563">
       <Oid>
-        <OidColumn Name="ID" NetType="System.Guid,mscorlib" AllowDbNull="False" />
+        <OidColumn AutoIncremented="True" Name="ID" AllowDbNull="False" />
       </Oid>
       <Fields>
         <Field Name="dummy">
@@ -12389,7 +12389,7 @@
     </Class>
     <Class AssemblyName="PersistentClasses" FullName="RelationTestClasses.CmpDirnOwnpabsTblGuidRight" TableName="CmpDirnOwnpabsTblGuidRight" ConnectionId="C0" TypeCode="1489533003">
       <Oid>
-        <OidColumn Name="ID" NetType="System.Guid,mscorlib" AllowDbNull="False" />
+        <OidColumn AutoIncremented="True" Name="ID" AllowDbNull="False" />
       </Oid>
       <Fields>
         <Field Name="dummy" AccessorName="Dummy">
@@ -12441,7 +12441,7 @@
     </Class>
     <Class AssemblyName="PersistentClasses" FullName="RelationTestClasses.CmpDirnOwnpconNoTblGuidLeftBase" TableName="CmpDirnOwnpconNoTblGuidLeftBase" ConnectionId="C0" TypeCode="1836719448">
       <Oid>
-        <OidColumn Name="ID" NetType="System.Guid,mscorlib" AllowDbNull="False" />
+        <OidColumn AutoIncremented="True" Name="ID" AllowDbNull="False" />
       </Oid>
       <Fields>
         <Field Name="dummy" AccessorName="Dummy">
@@ -12456,7 +12456,7 @@
     </Class>
     <Class AssemblyName="PersistentClasses" FullName="RelationTestClasses.CmpDirnOwnpconNoTblGuidLeftDerived" TableName="CmpDirnOwnpconNoTblGuidLeftDerived" ConnectionId="C0" TypeCode="1714560566">
       <Oid>
-        <OidColumn Name="ID" NetType="System.Guid,mscorlib" AllowDbNull="False" />
+        <OidColumn AutoIncremented="True" Name="ID" AllowDbNull="False" />
       </Oid>
       <Fields>
         <Field Name="dummy">
@@ -12471,7 +12471,7 @@
     </Class>
     <Class AssemblyName="PersistentClasses" FullName="RelationTestClasses.CmpDirnOwnpconNoTblGuidRight" TableName="CmpDirnOwnpconNoTblGuidRight" ConnectionId="C0" TypeCode="-1087229892">
       <Oid>
-        <OidColumn Name="ID" NetType="System.Guid,mscorlib" AllowDbNull="False" />
+        <OidColumn AutoIncremented="True" Name="ID" AllowDbNull="False" />
       </Oid>
       <Fields>
         <Field Name="dummy" AccessorName="Dummy">
@@ -12540,7 +12540,7 @@
     </Class>
     <Class AssemblyName="PersistentClasses" FullName="RelationTestClasses.CmpDirnOwnpconOthpconTblGuidLeftBase" TableName="CmpDirnOwnpconOthpconTblGuidLeftBase" ConnectionId="C0" TypeCode="-172994192">
       <Oid>
-        <OidColumn Name="ID" NetType="System.Guid,mscorlib" AllowDbNull="False" />
+        <OidColumn AutoIncremented="True" Name="ID" AllowDbNull="False" />
       </Oid>
       <Fields>
         <Field Name="dummy" AccessorName="Dummy">
@@ -12558,7 +12558,7 @@
     </Class>
     <Class AssemblyName="PersistentClasses" FullName="RelationTestClasses.CmpDirnOwnpconOthpconTblGuidLeftDerived" TableName="CmpDirnOwnpconOthpconTblGuidLeftDerived" ConnectionId="C0" TypeCode="-2115349730">
       <Oid>
-        <OidColumn Name="ID" NetType="System.Guid,mscorlib" AllowDbNull="False" />
+        <OidColumn AutoIncremented="True" Name="ID" AllowDbNull="False" />
       </Oid>
       <Fields>
         <Field Name="dummy">
@@ -12576,7 +12576,7 @@
     </Class>
     <Class AssemblyName="PersistentClasses" FullName="RelationTestClasses.CmpDirnOwnpconOthpconTblGuidRightBase" TableName="CmpDirnOwnpconOthpconTblGuidRightBase" ConnectionId="C0" TypeCode="-57181163">
       <Oid>
-        <OidColumn Name="ID" NetType="System.Guid,mscorlib" AllowDbNull="False" />
+        <OidColumn AutoIncremented="True" Name="ID" AllowDbNull="False" />
       </Oid>
       <Fields>
         <Field Name="dummy" AccessorName="Dummy">
@@ -12587,7 +12587,7 @@
     </Class>
     <Class AssemblyName="PersistentClasses" FullName="RelationTestClasses.CmpDirnOwnpconOthpconTblGuidRightDerived" TableName="CmpDirnOwnpconOthpconTblGuidRightDerived" ConnectionId="C0" TypeCode="-788141479">
       <Oid>
-        <OidColumn Name="ID" NetType="System.Guid,mscorlib" AllowDbNull="False" />
+        <OidColumn AutoIncremented="True" Name="ID" AllowDbNull="False" />
       </Oid>
       <Fields>
         <Field Name="dummy">
@@ -12645,7 +12645,7 @@
     </Class>
     <Class AssemblyName="PersistentClasses" FullName="RelationTestClasses.CmpDirnOwnpconTblGuidLeftBase" TableName="CmpDirnOwnpconTblGuidLeftBase" ConnectionId="C0" TypeCode="-1093641255">
       <Oid>
-        <OidColumn Name="ID" NetType="System.Guid,mscorlib" AllowDbNull="False" />
+        <OidColumn AutoIncremented="True" Name="ID" AllowDbNull="False" />
       </Oid>
       <Fields>
         <Field Name="dummy" AccessorName="Dummy">
@@ -12663,7 +12663,7 @@
     </Class>
     <Class AssemblyName="PersistentClasses" FullName="RelationTestClasses.CmpDirnOwnpconTblGuidLeftDerived" TableName="CmpDirnOwnpconTblGuidLeftDerived" ConnectionId="C0" TypeCode="-1450851307">
       <Oid>
-        <OidColumn Name="ID" NetType="System.Guid,mscorlib" AllowDbNull="False" />
+        <OidColumn AutoIncremented="True" Name="ID" AllowDbNull="False" />
       </Oid>
       <Fields>
         <Field Name="dummy">
@@ -12681,7 +12681,7 @@
     </Class>
     <Class AssemblyName="PersistentClasses" FullName="RelationTestClasses.CmpDirnOwnpconTblGuidRight" TableName="CmpDirnOwnpconTblGuidRight" ConnectionId="C0" TypeCode="-600610469">
       <Oid>
-        <OidColumn Name="ID" NetType="System.Guid,mscorlib" AllowDbNull="False" />
+        <OidColumn AutoIncremented="True" Name="ID" AllowDbNull="False" />
       </Oid>
       <Fields>
         <Field Name="dummy" AccessorName="Dummy">
@@ -12721,7 +12721,7 @@
     </Class>
     <Class AssemblyName="PersistentClasses" FullName="RelationTestClasses.CmpDirnTblGuidLeft" TableName="CmpDirnTblGuidLeft" ConnectionId="C0" TypeCode="-927136580">
       <Oid>
-        <OidColumn Name="ID" NetType="System.Guid,mscorlib" AllowDbNull="False" />
+        <OidColumn AutoIncremented="True" Name="ID" AllowDbNull="False" />
       </Oid>
       <Fields>
         <Field Name="dummy" AccessorName="Dummy">
@@ -12739,7 +12739,7 @@
     </Class>
     <Class AssemblyName="PersistentClasses" FullName="RelationTestClasses.CmpDirnTblGuidRight" TableName="CmpDirnTblGuidRight" ConnectionId="C0" TypeCode="1329198087">
       <Oid>
-        <OidColumn Name="ID" NetType="System.Guid,mscorlib" AllowDbNull="False" />
+        <OidColumn AutoIncremented="True" Name="ID" AllowDbNull="False" />
       </Oid>
       <Fields>
         <Field Name="dummy" AccessorName="Dummy">

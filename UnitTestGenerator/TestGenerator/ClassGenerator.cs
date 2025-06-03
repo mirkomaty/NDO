@@ -43,7 +43,7 @@ namespace TestGenerator
 		public ClassGenerator( IEnumerable<RelInfo> relInfos )
 		{
 			this.relInfos = relInfos;
-			fileName = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"..\..\PersistentClasses\PersistentClasses.cs");
+			fileName = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"..\..\..\PersistentClasses\PersistentClasses.cs");
 		}
 
 		void AddRelationAccessor(Class ownBaseClass, Class otherBaseClass, RelInfo ri)

@@ -17,15 +17,13 @@
     <DatabaseOwner>
     </DatabaseOwner>
     <GenerateConstraints>False</GenerateConstraints>
-    <UseMsBuild>True</UseMsBuild>
     <DropExistingElements>True</DropExistingElements>
   </Options>
-  <ProjectDescription>
-    <BinPath>bin\Debug\PersistentClasses.dll</BinPath>
-    <ObjPath>obj\Debug\</ObjPath>
+  <ProjectDescription version="5.0">
+    <BinPath>bin\Debug\$(TargetFramework)\PersistentClasses.dll</BinPath>
+    <ObjPath>obj\Debug\$(TargetFramework)\</ObjPath>
     <AssemblyName />
     <Debug>True</Debug>
-    <IsWebProject>False</IsWebProject>
     <KeyFile />
     <References>
     </References>

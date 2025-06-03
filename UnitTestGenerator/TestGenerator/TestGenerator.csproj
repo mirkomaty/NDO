@@ -7,4 +7,13 @@
     <Nullable>disable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <PackageReference Include="NDO.Mapping" Version="5.0.0" />
+    <PackageReference Include="NDO.ProviderFactory" Version="5.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\CodeGenerator\CodeGenerator.csproj" />
+  </ItemGroup>
+
 </Project>

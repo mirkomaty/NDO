@@ -23,10 +23,10 @@
 using System;
 using System.Diagnostics;
 using System.Collections;
-using System.Text;
 using System.IO;
 using NDO.Mapping;
 using System.Linq;
+using NDO.ProviderFactory;
 
 namespace TestGenerator
 {
@@ -42,14 +42,14 @@ namespace TestGenerator
 		public MappingGenerator(ArrayList relInfos)
 		{
 			this.relInfos = relInfos;
-			fileName = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"..\..\PersistentClasses\NDOMapping.xml");
+			fileName = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"..\..\..\PersistentClasses\NDOMapping.xml");
 		}
 
 		void CheckRelation(Test test, RelInfo ri)
 		{
 			if (!ri.HasTable)
 				return;
-			NDO.Mapping.Class clMapping = mapping.FindClass("RelationTestClasses." + test.OwnClass.Name);
+			Class clMapping = mapping.FindClass("RelationTestClasses." + test.OwnClass.Name);
 			
 			if (clMapping == null)
 				return;
@@ -58,7 +58,7 @@ namespace TestGenerator
 			if (rel == null)
 				throw new Exception("Cant find relation 0 of" + test.OwnClass.Name);
 
-			NDO.Mapping.Class derivedMapping;
+			Class derivedMapping;
 			NDO.Mapping.Relation derivedRel = null;
 
 			if (ri.OwnPoly)
@@ -66,7 +66,7 @@ namespace TestGenerator
 				derivedMapping = mapping.FindClass("RelationTestClasses." + test.OwnDerivedClass.Name);
 				if (derivedMapping == null)
 					return;
-				derivedRel = (NDO.Mapping.Relation) derivedMapping.Relations.FirstOrDefault();
+				derivedRel = derivedMapping.Relations.FirstOrDefault();
 				if (rel == null)
 					throw new Exception("Cant find relation 0 of" + test.OwnDerivedClass.Name);
 			}
@@ -84,7 +84,7 @@ namespace TestGenerator
 					rel.ForeignKeyTypeColumnName = "TC" + test.OwnClass.Name;
 				else
 					rel.ForeignKeyTypeColumnName = null;
-				rel.MappingTable = new NDO.Mapping.MappingTable(rel);
+				rel.MappingTable = new MappingTable(rel);
 				rel.MappingTable.TableName = tableName;
                 fkColumn = rel.MappingTable.NewForeignKeyColumn();
 				fkColumn.Name = "ID" + test.OtherClass.Name;
@@ -107,10 +107,10 @@ namespace TestGenerator
 
 		public void Generate()
 		{
-			this.mapping = new NDO.Mapping.NDOMapping(fileName);
+			this.mapping = new NDOMapping(fileName, NDOProviderFactory.Instance);
 			foreach(RelInfo ri in relInfos)
 			{
-				Test test = new Test(ri);
+				Test test = new Test(ri, "RelationTestClasses");
 				CheckRelation(test, ri);
 				if (ri.IsBi)
 				{
