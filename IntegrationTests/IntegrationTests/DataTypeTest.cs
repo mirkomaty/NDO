@@ -33,7 +33,7 @@ using System.Linq;
 namespace NdoUnitTests
 {
 	[TestFixture] 
-	public class DataTypeTest
+	public class DataTypeTest : NDOTest
 	{
 		[SetUp]
 		public void Setup() 

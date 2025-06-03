@@ -21,13 +21,15 @@
     <GenerateConstraints>False</GenerateConstraints>
     <DropExistingElements>False</DropExistingElements>
   </Options>
-  <ProjectDescription version="5.0">
-    <BinPath>bin\Debug\$(TargetFramework)\IntegrationTests.dll</BinPath>
-    <ObjPath>obj\Debug\$(TargetFramework)\</ObjPath>
+  <ProjectDescription>
+    <BinPath>bin\Debug\net8.0\IntegrationTests.dll</BinPath>
+    <ObjPath>obj\Debug\net8.0\</ObjPath>
     <AssemblyName />
     <Debug>True</Debug>
     <KeyFile />
     <References>
+      <Reference AssemblyName="NDO" AssemblyPath="..\..\NDODLL\bin\Debug\netstandard2.0\NDO.dll" CheckThisDLL="False">
+      </Reference>
       <Reference AssemblyName="PureBusinessClasses" AssemblyPath="..\PureBusinessClasses\bin\Debug\net8.0\PureBusinessClasses.dll">
       </Reference>
     </References>

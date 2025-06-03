@@ -1,5 +1,5 @@
 ﻿//
-// Copyright (c) 2002-2016 Mirko Matytschak 
+// Copyright (c) 2002-2025 Mirko Matytschak 
 // (www.netdataobjects.de)
 //
 // Author: Mirko Matytschak
@@ -21,15 +21,9 @@
 
 
 using System;
-using System.Linq;
 using System.IO;
 using NDO;
 using NDO.Mapping;
-using Reisekosten.Personal;
-using System.Diagnostics;
-using System.Runtime.InteropServices;
-using System.Reflection;
-using System.Data.SqlClient;
 
 namespace NdoUnitTests
 {
@@ -63,7 +57,7 @@ namespace NdoUnitTests
 
 			pm.TransactionMode = transactionMode;
 			
-			Connection conn = (Connection)pm.NDOMapping.Connections.First();
+			//Connection conn = (Connection)pm.NDOMapping.Connections.First();
 #if ORACLE || POSTGRE
 			pm.IdGenerationEvent += new NDO.IdGenerationHandler(IdGenerator.OnIdGenerationEvent);
 			IdGenerator.ConnectionString = ((Connection)pm.NDOMapping.Connections.First()).Name;

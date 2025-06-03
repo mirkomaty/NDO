@@ -60,7 +60,6 @@ namespace NdoUnitTests
 		[TearDown]
 		public void TearDown()
 		{
-
 			pm.Abort();
 			IList mitarbeiterListe = pm.GetClassExtent( typeof( Mitarbeiter ), true );
 			pm.Delete( mitarbeiterListe );
@@ -69,9 +68,12 @@ namespace NdoUnitTests
 			IList adressListe = pm.GetClassExtent( typeof( Adresse ), true );
 			pm.Delete( adressListe );
 			pm.Save();
+		}
 
-			pm.Close();
-			pm = null;
+		[OneTimeTearDown]
+		public void OneTimeTearDown()
+		{
+			pm.Dispose();
 		}
 
 

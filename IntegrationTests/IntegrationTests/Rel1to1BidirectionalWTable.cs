@@ -64,15 +64,18 @@ namespace NdoUnitTests
 			IList sListe = pm.GetClassExtent( typeof( Signatur ), true );
 			pm.Delete( sListe );
 			pm.Save();
-			pm.Close();
-			pm = null;
 		}
 
+		public void OneTimeTearDown()
+		{
+            pm.Close();
+            pm = null;
+        }
 
 
-		#region Composition Tests
+        #region Composition Tests
 
-		[Test]
+        [Test]
 		public void CompTestCreateObjectsSave()
 		{
 			z.SGN = sgn;

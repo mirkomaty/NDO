@@ -28,6 +28,7 @@ using NDO;
 using Reisekosten;
 using Reisekosten.Personal;
 using NDO.Query;
+using NDO.Mapping;
 
 namespace NdoUnitTests
 {
@@ -339,11 +340,8 @@ namespace NdoUnitTests
 		private bool GetLoadState()
 		{
 			NDO.Mapping.Relation r = pm.NDOMapping.FindClass(typeof(Mitarbeiter)).FindRelation("dieReisen");
-			FieldInfo fi = typeof(NDO.Mapping.Relation).GetField("Ordinal", BindingFlags.NonPublic | BindingFlags.Instance);
-			Assert.That(fi != null);
-			object o = fi.GetValue(r);
-			Assert.That(o != null);
-			return ((IPersistenceCapable)m).NDOGetLoadState((int)o);
+			var lss = (ILoadStateSupport) r;
+			return ((IPersistenceCapable)m).NDOGetLoadState(lss.Ordinal);
 		}
 
 		private void SaveAndReload()

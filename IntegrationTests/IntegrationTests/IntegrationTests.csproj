@@ -10,7 +10,6 @@
     <PackageReference Include="Formfakten.TestLogger" Version="1.0.0" />
     <PackageReference Include="Microsoft.Extensions.Hosting" Version="9.0.5" />
     <PackageReference Include="Microsoft.NET.Test.SDK" Version="17.9.0" />
-    <PackageReference Include="ndo.dll" Version="5.0.0" />
     <PackageReference Include="NDO.JsonFormatter" Version="5.0.0" />
     <PackageReference Include="NDO.SqlServer" Version="5.0.0" />
     <PackageReference Include="NUnit" Version="4.1.0" />
@@ -18,6 +17,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\NDODLL\NDO.csproj" />
     <ProjectReference Include="..\PureBusinessClasses\PureBusinessClasses.csproj" />
   </ItemGroup>
 

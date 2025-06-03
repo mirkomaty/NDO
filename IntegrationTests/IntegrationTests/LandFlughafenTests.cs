@@ -35,7 +35,7 @@ namespace NdoUnitTests
 	/// Combined Tests of Land and Flughafen to test uniqueness of object ids.
 	/// </summary>
 	[TestFixture]
-	public class LandFlughafenTests
+	public class LandFlughafenTests : NDOTest
 	{
 		public LandFlughafenTests()
 		{
