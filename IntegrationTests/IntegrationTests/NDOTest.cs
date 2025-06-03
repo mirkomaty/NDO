@@ -1,8 +1,9 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using Formfakten.TestLogger;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using H = Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using NDO.Application;
+using H = Microsoft.Extensions.Hosting;
 
 namespace NdoUnitTests
 {
@@ -14,13 +15,12 @@ namespace NdoUnitTests
 			var builder = H.Host.CreateDefaultBuilder();
 			builder.ConfigureServices( services =>
 			{
-				//services.AddLogging( b =>
-				//{
-				//	b.ClearProviders();
-				//	b.AddConsole();
-				//} );
+				services.AddLogging( b =>
+				{
+					b.ClearProviders();
+					b.AddFormfaktenLogger();
+				} );
 
-				services.AddSingleton<ILoggerFactory, LoggerFactory>();
 				services.AddNdo( null, null );
 			} );
 

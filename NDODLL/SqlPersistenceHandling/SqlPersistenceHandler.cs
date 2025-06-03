@@ -94,7 +94,6 @@ namespace NDO.SqlPersistenceHandling
 		{
 			this.serviceProvider = serviceProvider;
 			this.logger = serviceProvider.GetRequiredService<ILogger<SqlPersistenceHandler>>();
-			this.loggerFactory = serviceProvider.GetRequiredService<ILoggerFactory>();
 		}
 
 		private void GenerateSelectCommand()

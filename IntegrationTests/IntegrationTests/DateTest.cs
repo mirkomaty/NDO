@@ -27,6 +27,7 @@ using NUnit.Framework;
 using NDO;
 using DateTest;
 using NDO.Query;
+using NDO.ProviderFactory;
 
 namespace NdoUnitTests
 {

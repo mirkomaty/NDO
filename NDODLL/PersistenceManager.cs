@@ -211,7 +211,7 @@ namespace NDO
         /// </summary>
         /// <param name="mapping">The cached mapping object</param>
         /// <param name="scopedServiceProvider">An IServiceProvider instance, which represents a scope (e.g. a request in an AspNet application)</param>
-        public PersistenceManager(NDOMapping mapping, IServiceProvider scopedServiceProvider) : base (mapping, scopedServiceProvider)
+        public PersistenceManager(NDOMapping mapping, IServiceProvider scopedServiceProvider = null) : base (mapping, scopedServiceProvider)
 		{
 		}
 

@@ -1,17 +1,15 @@
-﻿using NDO.Logging;
+﻿using Formfakten.TestLogger;
 using NUnit.Framework;
 using Reisekosten.Personal;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace NdoUnitTests
 {
     [TestFixture]
-    public class QueryCacheTests
+    public class QueryCacheTests : NDOTest
     {
+        public QueryCacheTests()
+        {
+		}
         void CreateObject()
         {
             var pm = PmFactory.NewPersistenceManager();
@@ -27,6 +25,7 @@ namespace NdoUnitTests
         {
             var pm = PmFactory.NewPersistenceManager();
             pm.Objects<Mitarbeiter>().DeleteDirectly();
+            Logger.ClearTestLogs();
         }
 
         [Test]
@@ -39,12 +38,10 @@ namespace NdoUnitTests
             var result = pm.Objects<Mitarbeiter>().ResultTable;
             Assert.That( result.Count == 1 );
             Assert.That( pm.QueryCache.Count, Is.EqualTo( 1 ) );
-            pm.VerboseMode = true;
-            var testAdapter = new TestLogAdapter();
-            pm.LogAdapter = testAdapter;
             result = pm.Objects<Mitarbeiter>().ResultTable;
             Assert.That( result.Count == 1 );
-            Assert.That( testAdapter.Text.Trim() == "Getting results from QueryCache" );
+            var logs = Logger.FindLogsWith( "Getting results from QueryCache" );
+            Assert.That( logs.Count > 0 );
         }
 
         [Test]
@@ -57,12 +54,10 @@ namespace NdoUnitTests
             var result = pm.Objects<Mitarbeiter>().ResultTable;
             Assert.That( result.Count == 1 );
             Assert.That( pm.QueryCache.Count, Is.EqualTo( 0 ) );
-            pm.VerboseMode = true;
-            var testAdapter = new TestLogAdapter();
-            pm.LogAdapter = testAdapter;
             result = pm.Objects<Mitarbeiter>().ResultTable;
             Assert.That( result.Count == 1 );
-            Assert.That( testAdapter.Text.IndexOf( "QueryCache" ) == -1 );
+			var logs = Logger.FindLogsWith( "QueryCache" );
+			Assert.That( logs.Count == 0 );
         }
 
         [Test]
@@ -75,13 +70,11 @@ namespace NdoUnitTests
             var result = pm.Objects<Mitarbeiter>().ResultTable;
             Assert.That( result.Count == 1 );
             Assert.That( pm.QueryCache.Count, Is.EqualTo( 1 ) );
-            pm.VerboseMode = true;
-            var testAdapter = new TestLogAdapter();
-            pm.LogAdapter = testAdapter;
             result = pm.Objects<Mitarbeiter>().Where(m=>m.Vorname == "Mirko").ResultTable;
             Assert.That( result.Count == 1 );
-            Assert.That( testAdapter.Text.IndexOf( "QueryCache" ) == -1 );
-        }
+			var logs = Logger.FindLogsWith( "QueryCache" );
+			Assert.That( logs.Count == 0 );
+		}
 
         [Test]
         public void TakeAndSkipDontUseTheSameCacheResult()
@@ -93,12 +86,10 @@ namespace NdoUnitTests
             var result = pm.Objects<Mitarbeiter>().OrderBy(m=>m.Nachname).Skip(0).Take(1).ResultTable;
             Assert.That( result.Count == 1 );
             Assert.That( pm.QueryCache.Count, Is.EqualTo( 1 ) );
-            pm.VerboseMode = true;
-            var testAdapter = new TestLogAdapter();
-            pm.LogAdapter = testAdapter;
             result = pm.Objects<Mitarbeiter>().OrderBy(m=>m.Nachname).Skip(0).Take(2).ResultTable;
             Assert.That( result.Count == 1 );
-            Assert.That( testAdapter.Text.IndexOf( "QueryCache" ) == -1 );
-        }
+			var logs = Logger.FindLogsWith( "QueryCache" );
+			Assert.That( logs.Count == 0 );
+		}
     }
 }

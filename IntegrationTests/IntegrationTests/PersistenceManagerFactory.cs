@@ -51,10 +51,12 @@ namespace NdoUnitTests
 			lock (lockObject)
 			{
 				if (_mapping != null)
+				{
 					pm = new PersistenceManager( _mapping );
+				}
 				else
 				{
-					pm = new PersistenceManager(path);
+					pm = new PersistenceManager( path );
 					_mapping = pm.NDOMapping;
 				}
 			}
@@ -62,7 +64,7 @@ namespace NdoUnitTests
 			pm.TransactionMode = transactionMode;
 			
 			Connection conn = (Connection)pm.NDOMapping.Connections.First();
-#if ORACLE || FIREBIRD || POSTGRE
+#if ORACLE || POSTGRE
 			pm.IdGenerationEvent += new NDO.IdGenerationHandler(IdGenerator.OnIdGenerationEvent);
 			IdGenerator.ConnectionString = ((Connection)pm.NDOMapping.Connections.First()).Name;
 #endif

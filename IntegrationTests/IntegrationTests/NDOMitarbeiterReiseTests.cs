@@ -110,19 +110,11 @@ namespace NdoUnitTests
 			Assert.That(NDOObjectState.Persistent ==  r.NDOObjectState, "2. Wrong state");
 		}
 
-		int GetOrdinal(Relation r)
+		bool IsLoaded(IPersistentObject po, Relation r)
 		{
-			var t = r.Parent.SystemType;
-			Type mcType = t.GetNestedType( "MetaClass", BindingFlags.NonPublic | BindingFlags.Public );
-			if (null == mcType)
-				throw new NDOException( 13, "Missing nested class 'MetaClass' for type '" + t.Name + "'; the type doesn't seem to be enhanced." );
-			var mc = (IMetaClass2)Activator.CreateInstance( mcType, t );
-			return mc.GetRelationOrdinal( r.FieldName );
-		}
-
-		bool IsLoaded(IPersistentObject pc, Relation r)
-		{
-			return ((IPersistenceCapable)pc).NDOLoadState.RelationLoadState[GetOrdinal( r )];
+			var pc = (IPersistenceCapable) po;
+			var lsSupport = (ILoadStateSupport)r;
+			return pc.NDOLoadState.RelationLoadState[lsSupport.Ordinal];
 		}
 
 		[Test]

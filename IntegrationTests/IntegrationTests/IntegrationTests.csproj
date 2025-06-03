@@ -7,6 +7,8 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Formfakten.TestLogger" Version="1.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Hosting" Version="9.0.5" />
     <PackageReference Include="Microsoft.NET.Test.SDK" Version="17.9.0" />
     <PackageReference Include="ndo.dll" Version="5.0.0" />
     <PackageReference Include="NDO.JsonFormatter" Version="5.0.0" />

@@ -31,6 +31,7 @@ using NDO.Mapping;
 using NDOObjectIdTestClasses;
 using NDOInterfaces;
 using NDO.Query;
+using NDO.ProviderFactory;
 
 namespace NdoUnitTests
 {
