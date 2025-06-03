@@ -84,7 +84,6 @@ namespace NdoUnitTests
 		public void CreateSave(PersistenceManager pm)
 		{
 			CreateProductAndOrder( pm );
-			var logger = (TestLogger)Host.Services.GetRequiredService<ILoggerFactory>().CreateLogger("Tests");
 			CreateOrderDetail();
 			pm.Save();
 			pm.UnloadCache();
@@ -92,7 +91,6 @@ namespace NdoUnitTests
 			Assert.That(1 ==  orders.Count );
 			Order o = (Order) orders[0];
 			Assert.That(1 ==  o.OrderDetails.Count() );
-			var text = logger.Text;
 			OrderDetail od = (OrderDetail) o.OrderDetails.First();
 			Assert.That(od.Product != null, "Product shouldn't be null");
 		}

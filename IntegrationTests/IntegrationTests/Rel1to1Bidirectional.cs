@@ -130,7 +130,6 @@ namespace NdoUnitTests
 		public void SimpleObjectSave()
 		{
 			var pm = PmFactory.NewPersistenceManager();
-			var logger = (TestLogger)Host.Services.GetRequiredService<ILoggerFactory>().CreateLogger("Test");
 			pm.MakePersistent( svn );
 			pm.Save();
 			pm.UnloadCache();
