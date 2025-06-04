@@ -279,7 +279,7 @@ namespace TestGenerator
 		{
 			Class cl = new Class( this.nameSpace, "PmFactory" );
 			string path = AppDomain.CurrentDomain.BaseDirectory;
-			path = Path.Combine( path, @"..\..\..\..\UnitTests\bin\Debug\NDOMapping.xml" );
+			path = Path.Combine( path, @"..\..\..\..\UnitTests\bin\Debug\net8.0\NDOMapping.xml" );
 			path = Path.GetFullPath( path );
 			cl.Statements.Add( "static PersistenceManager pm;" );
 			Function func = cl.NewFunction( "PersistenceManager", "NewPersistenceManager" );
