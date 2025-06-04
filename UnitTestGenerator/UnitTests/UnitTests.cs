@@ -43,7 +43,7 @@ public class PmFactory
 	{
 		if (pm == null)
 		{
-			pm = new PersistenceManager(@"C:\Projekte\NDO5\UnitTestGenerator\TestGenerator\bin\UnitTests\bin\Debug\NDOMapping.xml");
+			pm = new PersistenceManager(@"C:\Projekte\NDO5\UnitTestGenerator\UnitTests\bin\Debug\NDOMapping.xml");
 		}
 		else
 		{
