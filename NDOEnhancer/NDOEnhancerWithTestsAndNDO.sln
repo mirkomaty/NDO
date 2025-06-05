@@ -13,6 +13,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NDO.Mapping", "..\NDO.Mappi
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NDO.SchemaGenerator", "..\NDO.SchemaGenerator\NDO.SchemaGenerator\NDO.SchemaGenerator.csproj", "{2215C9A6-26A3-4F0E-BF46-F441A6D6787E}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ecma335Tests", "Ecma335Tests\Ecma335Tests.csproj", "{220E3B50-2422-0EE0-0ECD-75685BC49384}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -39,6 +41,10 @@ Global
 		{2215C9A6-26A3-4F0E-BF46-F441A6D6787E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2215C9A6-26A3-4F0E-BF46-F441A6D6787E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2215C9A6-26A3-4F0E-BF46-F441A6D6787E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{220E3B50-2422-0EE0-0ECD-75685BC49384}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{220E3B50-2422-0EE0-0ECD-75685BC49384}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{220E3B50-2422-0EE0-0ECD-75685BC49384}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{220E3B50-2422-0EE0-0ECD-75685BC49384}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
