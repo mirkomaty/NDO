@@ -159,7 +159,8 @@ namespace NDO.Mapping
 
 		private bool IsPersistentType(Type t)
 		{
-            return t.GetCustomAttributes(typeof(NDOPersistentAttribute), false).Length > 0;
+			var attrs = t.GetCustomAttributes();
+			return attrs.Any( a => a.GetType().Name == "NDOPersistentAttribute" );
 		}
 
 		private void AddFields(Type t)

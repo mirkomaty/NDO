@@ -26,7 +26,8 @@
     <RunAnalyzersDuringBuild>False</RunAnalyzersDuringBuild>
     <RunAnalyzersDuringLiveAnalysis>False</RunAnalyzersDuringLiveAnalysis>
     <PackageReadmeFile>readme.md</PackageReadmeFile>
-	  <IsPublishable>False</IsPublishable>
+    <IsPublishable>False</IsPublishable>
+    <Optimize>False</Optimize>
   </PropertyGroup>
   <ItemGroup>
 	  <PackageReference Include="NDOInterfaces" Version="5.0.0" />

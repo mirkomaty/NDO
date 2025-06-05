@@ -41,6 +41,7 @@
 		<PackProject Include="ndo.jsonformatter"></PackProject>
 		<PackProject Include="ndo.providerfactory"></PackProject>
 		<PackProject Include="ndo.schemagenerator"></PackProject>
+		<PackProject Include="ndo.build"></PackProject>
 	</ItemGroup>
 
 	<!--These are the projects using the classic .NET framework-->

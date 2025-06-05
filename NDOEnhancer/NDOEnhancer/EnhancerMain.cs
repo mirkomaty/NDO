@@ -105,7 +105,6 @@ namespace NDOEnhancer
 
 		public void InternalStart(string ndoProjFilePath, string targetFramework)
 		{
-			Console.WriteLine("Runtime: " + typeof(string).Assembly.FullName);			
 			ConfigurationOptions options;
 
 			if (!File.Exists(ndoProjFilePath))
@@ -151,6 +150,8 @@ namespace NDOEnhancer
 
 
 			Console.WriteLine( EnhDate.String, "NDO Enhancer", new AssemblyName( GetType().Assembly.FullName ).Version.ToString() );
+			if (verboseMode)
+				Console.WriteLine( $"Parameters: {ndoProjFilePath}, {targetFramework}" );
 
             if (options.EnableEnhancer)
 			    this.projectDescription.References.Add(projectDescription.AssemblyName, new NDOReference(projectDescription.AssemblyName, projectDescription.BinFile, true));
