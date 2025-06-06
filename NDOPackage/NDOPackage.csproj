@@ -130,7 +130,7 @@
     </Reference>
     <!-- Provider -->
     <Reference Include="MySqlConnectorUISupport">
-      <HintPath>..\Provider\MySqlConnectorProvider\MySqlConnectorUISupport\bin\Release\MySqlConnectorUISupport.dll</HintPath>
+      <HintPath>..\Provider\MySqlConnectorProvider\MySqlConnectorUISupport\bin\Release\net48\MySqlConnectorUISupport.dll</HintPath>
     </Reference>
     <Reference Include="NDO.MySqlConnector">
       <HintPath>..\Provider\MySqlConnectorProvider\NDO.MySqlConnector\bin\Release\netstandard2.0\NDO.MySqlConnector.dll</HintPath>
@@ -139,31 +139,31 @@
       <HintPath>..\Provider\MySqlNdoProvider\NDO.MySql\bin\$(Configuration)\netstandard2.0\NDO.MySql.dll</HintPath>
     </Reference>
     <Reference Include="MySqlUISupport">
-      <HintPath>..\Provider\MySqlNdoProvider\MySqlUISupport\bin\$(Configuration)\MySqlUISupport.dll</HintPath>
+      <HintPath>..\Provider\MySqlNdoProvider\MySqlUISupport\bin\$(Configuration)\net48\MySqlUISupport.dll</HintPath>
     </Reference>
     <Reference Include="NDO.Oracle">
       <HintPath>..\Provider\OracleProvider\NDO.Oracle\bin\$(Configuration)\netstandard2.0\NDO.Oracle.dll</HintPath>
     </Reference>
     <Reference Include="OracleUISupport">
-      <HintPath>..\Provider\OracleProvider\OracleUISupport\bin\$(Configuration)\OracleUISupport.dll</HintPath>
+      <HintPath>..\Provider\OracleProvider\OracleUISupport\bin\$(Configuration)\net48\OracleUISupport.dll</HintPath>
     </Reference>
     <Reference Include="NDO.Postgre">
       <HintPath>..\Provider\PostGresProvider\NDO.Postgre\bin\$(Configuration)\netstandard2.0\NDO.Postgre.dll</HintPath>
     </Reference>
     <Reference Include="PostGresUISupport">
-      <HintPath>..\Provider\PostGresProvider\PostGresUISupport\bin\$(Configuration)\PostGresUISupport.dll</HintPath>
+      <HintPath>..\Provider\PostGresProvider\PostGresUISupport\bin\$(Configuration)\net48\PostGresUISupport.dll</HintPath>
     </Reference>
     <Reference Include="NDO.Sqlite">
       <HintPath>..\Provider\SqliteProvider\NDO.Sqlite\bin\$(Configuration)\netstandard2.0\NDO.Sqlite.dll</HintPath>
     </Reference>
     <Reference Include="SqliteUISupport">
-      <HintPath>..\Provider\SqliteProvider\SqliteUISupport\bin\$(Configuration)\SqliteUISupport.dll</HintPath>
+      <HintPath>..\Provider\SqliteProvider\SqliteUISupport\bin\$(Configuration)\net48\SqliteUISupport.dll</HintPath>
     </Reference>
     <Reference Include="NDO.Sqlserver">
       <HintPath>..\Provider\SqlServerProvider\NDO.Sqlserver\bin\$(Configuration)\netstandard2.0\NDO.Sqlserver.dll</HintPath>
     </Reference>
     <Reference Include="SqlServerUISupport">
-      <HintPath>..\Provider\SqlServerProvider\SqlServerUISupport\bin\$(Configuration)\SqlServerUISupport.dll</HintPath>
+      <HintPath>..\Provider\SqlServerProvider\SqlServerUISupport\bin\$(Configuration)\net48\SqlServerUISupport.dll</HintPath>
     </Reference>
     <!-- End Provider -->
     <Reference Include="Mapping, Version=1.0.5490.31731, Culture=neutral, processorArchitecture=MSIL">
@@ -177,16 +177,16 @@
     <PackageReference Include="Community.VisualStudio.Toolkit.17" Version="17.0.330" ExcludeAssets="Runtime" />
     <PackageReference Include="Microsoft.VSSDK.BuildTools" Version="17.0.5232" />
     <PackageReference Include="mono.cecil">
-      <Version>0.11.4</Version>
+      <Version>0.11.6</Version>
     </PackageReference>
     <PackageReference Include="mysql.data">
-      <Version>8.3.0</Version>
+      <Version>9.3.0</Version>
     </PackageReference>
     <PackageReference Include="mysqlconnector">
-      <Version>2.3.7</Version>
+      <Version>2.4.0</Version>
     </PackageReference>
     <PackageReference Include="npgsql">
-      <Version>8.0.2</Version>
+      <Version>8.0.7</Version>
     </PackageReference>
     <PackageReference Include="NuGet.VisualStudio">
       <Version>17.1.0</Version>
@@ -195,10 +195,10 @@
       <Version>17.9.1</Version>
     </PackageReference>
     <PackageReference Include="System.Data.SqlClient">
-      <Version>4.8.6</Version>
+      <Version>4.9.0</Version>
     </PackageReference>
     <PackageReference Include="System.Data.Sqlite.Core.msil">
-      <Version>1.0.118</Version>
+      <Version>1.0.119</Version>
     </PackageReference>
   </ItemGroup>
   <ItemGroup>

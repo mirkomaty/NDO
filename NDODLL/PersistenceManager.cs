@@ -235,7 +235,6 @@ namespace NDO
 				{
 					if (Logger != null)
 						Logger.LogWarning( "Call to GetObjectContainer returns changed objects." );
-					System.Diagnostics.Trace.WriteLine("NDO warning: Call to GetObjectContainer returns changed objects.");
 				}
 			}
 
@@ -3499,8 +3498,8 @@ namespace NDO
 
 		internal void LogIfVerbose( string msg )
 		{
-			if (Logger != null && Logger.IsEnabled( LogLevel.Information ))
-				Logger.LogInformation( msg );
+			if (Logger != null && Logger.IsEnabled( LogLevel.Debug ))
+				Logger.LogDebug( msg );
 		}
 
 

@@ -778,7 +778,12 @@ namespace NDOVsPackage
 				if (!installerService.IsPackageInstalled( this.project, "ndo.dll" ))
 				{
 					var installer = componentModel.GetService<IVsPackageInstaller>();
-					installer.InstallPackage( null, this.project, "ndo.dll", (string)null, false );
+					// The newest version of NDO will be v5.x at the time, this package is released.
+					// NDO5 needs the NDO.build package in all use cases.
+					// If the enhancer is not to be used, uninstalling ndo.build is sufficient
+                    // because it will only be reinstalled if the NDO.dll package is missing.
+					installer.InstallPackage( null, this.project, "NDO.dll", (string)null, false );
+					installer.InstallPackage( null, this.project, "NDO.build", (string) null, false );
 				}
 			}
 			catch (Exception ex)

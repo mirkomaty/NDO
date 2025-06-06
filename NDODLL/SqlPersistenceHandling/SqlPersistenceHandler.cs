@@ -232,9 +232,9 @@ namespace NDO.SqlPersistenceHandling
 				{
 					object oidValue = reader.GetValue(0);
 					if ( oidValue == DBNull.Value )
-						this.logger.LogDebug( oidColumnName + " = DbNull" );
+						LogIfVerbose( oidColumnName + " = DbNull" );
 					else
-						this.logger.LogDebug( oidColumnName + " = " + oidValue );
+						LogIfVerbose( oidColumnName + " = " + oidValue );
 
 					row[oidColumnName] = oidValue;
 					if (unchanged)
@@ -530,7 +530,7 @@ namespace NDO.SqlPersistenceHandling
 
 		private void DumpBatch(string sql)
 		{
-			this.logger.LogDebug( "Batch: \r\n" + sql );
+			LogIfVerbose( "Batch: \r\n" + sql );
 		}
 
 		private void Dump(DataRow[] rows)
@@ -864,6 +864,11 @@ namespace NDO.SqlPersistenceHandling
 			}
 		}
 
+		void LogIfVerbose(string msg)
+		{
+			if (this.logger != null && this.logger.IsEnabled( LogLevel.Debug ))
+				this.logger.LogDebug( msg );
+		}
 
 		/// <summary>
 		/// Gets the current DataAdapter.

@@ -135,7 +135,8 @@ namespace NDO
 				if (sw != null)
 				{					
 					sw.Close();
-					this.logger.LogDebug( sw.ToString() );
+					if (this.logger != null && this.logger.IsEnabled( LogLevel.Debug ))
+						this.logger.LogDebug( sw.ToString() );
 				}
 			}
 		}
