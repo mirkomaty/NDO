@@ -5,8 +5,8 @@
 		<NDO_DIR>$([System.IO.Path]::GetFullPath('$(MSBuildProjectDirectory)\..'))</NDO_DIR>
 		<Version>5.0.0</Version>
 		<InterfacesVersion>5.0.0</InterfacesVersion>
-		<!-- This is identical to the NDO.Enhancer version -->
-		<NDOBuild-Version>5.0.0</NDOBuild-Version>
+		<!-- This should be identical to the NDO.Enhancer version -->
+		<NDOBuildVersion>5.0.0</NDOBuildVersion>
 		<!-- 
 			NDO generates packages which should be present in the package source
 			during the build process.
@@ -108,6 +108,7 @@
 
 	<Target Name="NDOBuild" AfterTargets="Build">
 		<Exec WorkingDirectory="$(NDO_DIR)\nuget" Condition="'$(Configuration)'=='Release'" Command="nuget.exe pack NDO.Build.nuspec" />
+		<Copy SourceFiles="$(NDO_DIR)\nuget\NDO.Build.$(NDOBuildVersion).nupkg" DestinationFolder="$(PackageSourceFolder)" />
 	</Target>
 
 
