@@ -33,21 +33,33 @@ using NDO.ProviderFactory;
 namespace NDO
 {
 	/// <summary>
-	/// Zusammenfassung für GenericDiffGenerator.
+	/// The SchemaTransitionGenerator class transforms an Xml description to SQL DDL statements for a concrete Database.
 	/// </summary>
-	internal class SchemaTransitionGenerator
+	public class SchemaTransitionGenerator
 	{
 		private readonly IProvider provider;
         private readonly ISqlGenerator concreteGenerator;
         private readonly NDOMapping mappings;
-		public SchemaTransitionGenerator( INDOProviderFactory providerFactory, string providerName, NDOMapping mappings ) 
+
+        /// <summary>
+        /// SchemaTransitionGenerator constructor
+        /// </summary>
+        /// <param name="providerFactory">Factory to get the concrete provider for the database.</param>
+        /// <param name="providerName">The name of the concrete provider.</param>
+        /// <param name="mappings">The mapping information of the current application.</param>
+        public SchemaTransitionGenerator( INDOProviderFactory providerFactory, string providerName, NDOMapping mappings ) 
 		{
 			this.provider = providerFactory[providerName];
 			this.concreteGenerator = providerFactory.Generators[providerName];
 			this.mappings = mappings;
 		}
 
-		public string Generate(XElement transElement)
+        /// <summary>
+        /// Transforms an Xml description to SQL DDL statements for a concrete Database.
+        /// </summary>
+        /// <param name="transElement"></param>
+        /// <returns></returns>
+        public string Generate(XElement transElement)
 		{
 			StringBuilder sb = new StringBuilder();
 			foreach(XElement actionElement in transElement.Elements())
@@ -56,15 +68,18 @@ namespace NDO
 				{
 					sb.Append( DropTable( actionElement ) );
 				}
-				else if (actionElement.Name=="CreateTable")
+				else if (actionElement.Name == "CreateTable")
 				{
 					sb.Append( CreateTable( actionElement ) );
 				}
-				else if (actionElement.Name=="AlterTable")
+				else if (actionElement.Name == "AlterTable")
 				{
 					sb.Append( ChangeTable( actionElement ) );
 				}
-
+				else if (actionElement.Name == "CreateIndex")
+				{
+					sb.Append( CreateIndex( actionElement ) );
+				}
 			}
 			return sb.ToString();
 		}
@@ -228,7 +243,62 @@ namespace NDO
 			return sb.ToString();
 		}
 
-		protected NDO.Mapping.Class FindClass(string tableName, NDOMapping mappings)
+		string CreateIndex(XElement actionElement)
+		{
+            //<CreateIndex name="xxx" unique="True|False" fulltext="True|False" onTable="TableName">
+            //  <Column name="xxx" desc="True|False">
+            //</CreateIndex>
+            StringBuilder sb = new StringBuilder();
+            IProvider provider = NDOProviderFactory.Instance[concreteGenerator.ProviderName];
+            if (provider == null)
+                throw new Exception( "Can't find NDO provider '" + concreteGenerator.ProviderName + "'." );
+
+            string tableName  = this.provider.GetQualifiedTableName( actionElement.Attribute( "onTable" ).Value );
+            string indexName = this.provider.GetQualifiedTableName( actionElement.Attribute( "name" ).Value );
+
+			sb.Append( "CREATE " );
+
+			// NDO doesn't check, if these keywords are supported by the database.
+			if (String.Compare( actionElement.Attribute( "unique" )?.Value, "true", true ) == 0)
+				sb.Append( "UNIQUE " );
+            if (String.Compare( actionElement.Attribute( "fulltext" )?.Value, "true", true ) == 0)
+                sb.Append( "FULLTEXT " );
+
+			sb.Append( "INDEX " );
+			sb.Append( indexName );
+			sb.Append( " ON " );
+			sb.Append( tableName );
+			sb.Append( " (" );
+
+			var columns = actionElement.Elements( "Column" ).ToList();
+
+			var lastIndex = columns.Count - 1;
+			for (int i = 0; i <= lastIndex; i++)
+			{
+				var columnElement = columns[i];
+				var columnName = provider.GetQuotedName( columnElement.Attribute( "name" )?.Value );
+				
+				if (columnName == null)
+					throw new Exception( "Column element of CreateIndex needs a name attribute" );
+
+				sb.Append( columnName );
+				
+				// NDO doesn't check, if DESC is supported by the database.
+				// We also assume, that ASC is the standard case, so we don't emit the ASC keyword.
+				var desc = String.Compare( columnElement.Attribute( "desc" )?.Value, "true", true ) == 0;
+				if (desc)
+					sb.Append( " DESC" );
+
+				if (i < lastIndex)
+					sb.Append( ", " );
+            }
+
+            sb.Append( ")" );
+
+            return sb.ToString();
+        }
+
+        protected NDO.Mapping.Class FindClass(string tableName, NDOMapping mappings)
 		{
 			Class result = null;
 			foreach(Class cl in mappings.Classes)
