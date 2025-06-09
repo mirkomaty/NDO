@@ -29,6 +29,8 @@ using NDO;
 using NDO.Mapping;
 using NDOInterfaces;
 using System.Reflection;
+using System.Text;
+using System.Security.Cryptography;
 
 namespace NDOEnhancer
 {
@@ -47,39 +49,41 @@ namespace NDOEnhancer
 			string diffFileName = filename.Replace(".ndo.sql", ".ndodiff." + mappings.SchemaVersion + ".xml");
             bool isNewDiffFile = !File.Exists(diffFileName);
 			XElement rootElement = null;
-			string newSchema = null;
             if (isNewDiffFile)
             {
 				rootElement = new XElement( "NdoSchemaTransitions" );
 				rootElement.Add( new XComment( "NDO accumulates all schema changes in this diff file. Note: If you change the mapping schema version, a new diff file will be created. You can change the mapping schema version in the NDO configuration dialog. Don't use the Mapping Tool to change the schema information, because it will be overwritten by the value set in the configuration. For automatic builds set the schema version value in the .ndoproj file." ) );
-				newSchema = mappings.SchemaVersion + ".1";
-				rootElement.Add( new XAttribute( "schemaVersion", newSchema ) );
             }
 			else
 			{
 				rootElement = XElement.Load( diffFileName );
-				string schemaVersion = rootElement.Attribute("schemaVersion").Value;
-				int p = schemaVersion.LastIndexOf( '.' );
-				int v = 1;
-				int.TryParse( schemaVersion.Substring( p + 1 ), out v );
-				if (p > -1)
-					newSchema = mappings.SchemaVersion + "." + (v + 1);
-				else
-					newSchema = mappings.SchemaVersion + ".1";
-
-				rootElement.Attribute( "schemaVersion" ).Value = newSchema;
 			}
 
-			XElement transElement = new XElement( "NdoSchemaTransition", new XAttribute( "schemaVersion", newSchema ) );
+			XElement transElement = new XElement( "NdoSchemaTransition" );
 			rootElement.Add( transElement );
 
 			if (GenerateInternal( dsSchema, dsBak, transElement ))
 			{
+				Guid g = MakeHash( transElement.ToString() );
+				transElement.SetAttributeValue( "id", g );
 				rootElement.Save( diffFileName );
 			}
 		}
 
-		bool GenerateInternal(System.Data.DataSet dsNewSchema, System.Data.DataSet dsOldSchema, XElement transElement)
+        public static Guid MakeHash( string input )
+        {
+            var buf = Encoding.UTF8.GetBytes(input);
+
+            using (var sha = SHA256.Create())
+            {
+                var hash = sha.ComputeHash( buf );
+				byte[] arr = new byte[16];
+				Array.Copy( hash, arr, 16 );
+				return new Guid( arr );
+            }
+        }
+
+        bool GenerateInternal(System.Data.DataSet dsNewSchema, System.Data.DataSet dsOldSchema, XElement transElement)
 		{
 			bool hasChanges = false;
 			foreach(DataTable dt in dsNewSchema.Tables)

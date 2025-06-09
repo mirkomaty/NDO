@@ -154,13 +154,6 @@ namespace NDO.MySqlConnectorProvider
 			return (((MySqlParameter)parameter).MySqlDbType).ToString();
 		}
 
-		private string GetDateExpression(System.DateTime dt)
-		{
-			//'9999-12-31 23:59:59'
-			return "'" + dt.ToString("yyyy-MM-dd HH:mm:ss") + "'";
-		}
-	
-
 		public override int GetDefaultLength(System.Type t)
 		{
             t = base.ConvertNullableType(t);
@@ -227,13 +220,6 @@ namespace NDO.MySqlConnectorProvider
 		public override string GetQuotedName(string plainName)
 		{
 			return "`" + plainName + "`";
-		}
-	
-		public override string GetSqlLiteral(object o)
-		{
-			if (o is DateTime)
-				return this.GetDateExpression((DateTime)o);
-			return base.GetSqlLiteral (o);
 		}
 		
 

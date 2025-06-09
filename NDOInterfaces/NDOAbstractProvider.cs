@@ -27,6 +27,7 @@ using System.Text;
 using System.Collections;
 using NDOInterfaces;
 using NDO;
+using System.Globalization;
 
 namespace NDOInterfaces
 {
@@ -182,9 +183,10 @@ namespace NDOInterfaces
 		{
 			if (o == null)
 				return "NULL";
-			if (o is string || o.GetType().IsSubclassOf(typeof(string)) || o is Guid)
+			if (o is string || o is Guid)
 				return "'" + o.ToString() + "'";
-			if (o is byte[])
+
+            if (o is byte[])
 			{
 				StringBuilder sb = new StringBuilder(((byte[])o).Length * 2 + 2);
 				sb.Append('\'');
@@ -195,7 +197,19 @@ namespace NDOInterfaces
 				sb.Append('\'');
 				return sb.ToString();
 			}
-			return o.ToString();
+
+            var ci = CultureInfo.InvariantCulture;
+
+            if (o is DateTime dt)
+                return "'" + dt.ToString( "yyyy-MM-dd HH:mm:ss" ) + "'";
+            if (o is double d)
+                return d.ToString( ci );
+            if (o is float f)
+                return f.ToString( ci );
+            if (o is decimal dc)
+                return dc.ToString( ci );
+
+            return o.ToString();
 		}
 
 

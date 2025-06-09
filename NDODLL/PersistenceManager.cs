@@ -1361,50 +1361,52 @@ namespace NDO
 			return new Version( v2 ).CompareTo( new Version( v1 ) );
 		}
 
-		string GetSchemaVersion(Connection ndoConn, string schemaName)
+		Guid[] GetSchemaIds(Connection ndoConn, string schemaName, IProvider provider)
 		{
-			IProvider provider = this.mappings.GetProvider( ndoConn );
-			string version = "0.0";  // Initial value
 			var connection = provider.NewConnection( ndoConn.Name );
-			using (var handler = GetSqlPassThroughHandler())
+			var resultList = new List<Guid>();
+
+            using (var handler = GetSqlPassThroughHandler())
 			{
 				string[] TableNames = provider.GetTableNames( connection );
-				if (TableNames.Any( t => String.Compare( t, "NDOSchemaVersion", true ) == 0 ))
+				if (TableNames.Any( t => String.Compare( t, "NDOSchemaIds", true ) == 0 ))
 				{
-					string sql = "SELECT Version from NDOSchemaVersion WHERE SchemaName ";
-					if (schemaName == null)
+					string sql = "SELECT Id from NDOSchemaIds WHERE SchemaName ";
+					if (String.IsNullOrEmpty(schemaName))
 						sql += "IS NULL;";
 					else
-						sql += "LIKE '" + schemaName + "'";
+						sql += $"LIKE '{schemaName}'";
+
 					using(IDataReader dr = handler.Execute(sql, true))
 					{
-						if (dr.Read())
-							version = dr.GetString( 0 );
+						while (dr.Read())
+							resultList.Add( dr.GetGuid( 0 ) );
 					}
 				}
 				else
 				{
 					SchemaTransitionGenerator schemaTransitionGenerator = new SchemaTransitionGenerator( ProviderFactory, ndoConn.Type, this.mappings );
-					string transition = @"<NdoSchemaTransition>
+					var gt = typeof(Guid);
+					var gtype = $"{gt.FullName},{ new AssemblyName( gt.Assembly.FullName ).Name }";
+                    var st = typeof(String);
+                    var stype = $"{st.FullName},{ new AssemblyName( st.Assembly.FullName ).Name }";
+                    var dt = typeof(DateTime);
+                    var dtype = $"{st.FullName},{ new AssemblyName( st.Assembly.FullName ).Name }";
+                    string transition = $@"<NdoSchemaTransition>
     <CreateTable name=""NDOSchemaVersion"">
-      <CreateColumn name=""SchemaName"" type=""System.String,mscorlib"" allowNull=""True"" />
-      <CreateColumn name=""Version"" type=""System.String,mscorlib"" size=""50"" />
+      <CreateColumn name=""SchemaName"" type=""{stype}"" allowNull=""True"" />
+      <CreateColumn name=""Id"" type=""{gtype}"" size=""36"" />
+      <CreateColumn name=""InsertTime"" type=""{dtype}"" size=""36"" />
     </CreateTable>
 </NdoSchemaTransition>";
 					XElement transitionElement = XElement.Parse(transition);
 
 					string sql = schemaTransitionGenerator.Generate( transitionElement );
 					handler.Execute(sql);
-					var colSchemaName = provider.GetQuotedName("SchemaName");
-					var colVersion = provider.GetQuotedName("Version");
-					var schemaVal = schemaName == null ? "NULL" : provider.GetSqlLiteral( schemaName );
-					sql = String.Format( $"INSERT INTO NDOSchemaVersion({colSchemaName},{colVersion}) VALUES({schemaVal},'0')" );
-					handler.Execute( sql );
-					handler.CommitTransaction();
 				}
 			}
 
-			return version;
+			return resultList.ToArray();
 		}
 
 		/// <summary>
@@ -1423,33 +1425,43 @@ namespace NDO
 			XElement transitionElements = XElement.Load( scriptFile );
 			if (transitionElements.Attribute( "schemaName" ) != null)
 				schemaName = transitionElements.Attribute( "schemaName" ).Value;
-			Version version = new Version( GetSchemaVersion( ndoConn, schemaName ) );
+
+            IProvider provider = this.mappings.GetProvider( ndoConn );
+            var installedIds = GetSchemaIds( ndoConn, schemaName, provider );
+			var newIds = new List<Guid>();
 			SchemaTransitionGenerator schemaTransitionGenerator = new SchemaTransitionGenerator( ProviderFactory, ndoConn.Type, this.mappings );
 			MemoryStream ms = new MemoryStream();
-			StreamWriter sw = new StreamWriter(ms, System.Text.Encoding.UTF8);
+			StreamWriter sw = new StreamWriter(ms, Encoding.UTF8);
 			bool hasChanges = false;
 
-			foreach (XElement transitionElement in transitionElements.Elements("NdoSchemaTransition").Where(e=>new Version(e.Attribute("schemaVersion").Value).CompareTo(version) > 0))
+			foreach (XElement transitionElement in transitionElements.Elements("NdoSchemaTransition"))
 			{
+				var id = transitionElement.Attribute("id")?.Value;
+				if (id == null)
+					continue;
+				var gid = new Guid(id);
+				if (installedIds.Contains( gid ))
+					continue;
 				hasChanges = true;
 				sw.Write( schemaTransitionGenerator.Generate( transitionElement ) );
+				newIds.Add( gid );
 			}
 
 			if (!hasChanges)
 				return new string[] { };
 
-			sw.Write( "UPDATE NDOSchemaVersion SET Version = '" );
-			sw.Write( transitionElements.Attribute( "schemaVersion" ).Value );
-			sw.Write( "' WHERE SchemaName " );
-			if (schemaName == null)
-				sw.WriteLine( "IS NULL;" );
-			else
-				sw.WriteLine( "LIKE '" + schemaName + "'" );			
+			// dtLiteral contains the leading and trailing quotes
+			var dtLiteral = provider.GetSqlLiteral( DateTime.Now );
+
+			foreach (var id in newIds)
+			{
+				sw.WriteLine( $"INSERT INTO NDOSchemaIds ('SchemaName','Id','InsertTime') VALUES ('{schemaName}','{id}',{dtLiteral});" );
+			}
 
 			sw.Flush();
 			ms.Position = 0L;
 
-			StreamReader sr = new StreamReader(ms, System.Text.Encoding.UTF8);
+			StreamReader sr = new StreamReader(ms, Encoding.UTF8);
 			string s = sr.ReadToEnd();
 			sr.Close();
 

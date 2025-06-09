@@ -202,13 +202,6 @@ namespace NDO.SqliteProvider
 			return result;
 		}
 
-		private string GetDateExpression(System.DateTime dt)
-		{
-			//'9999-12-31 23:59:59'
-			return "'" + dt.ToString("yyyy-MM-dd HH:mm:ss") + "." + dt.Millisecond + "'";
-		}
-	
-
 		public override int GetDefaultLength(System.Type t)
 		{
             t = base.ConvertNullableType(t);
@@ -282,13 +275,6 @@ namespace NDO.SqliteProvider
 			return "\"" + plainName + '"';
 		}
 	
-		public override string GetSqlLiteral(object o)
-		{
-			if (o is DateTime)
-				return this.GetDateExpression((DateTime)o);
-			return base.GetSqlLiteral (o);
-		}
-		
 
 		/// <summary>
 		/// Indicates whether the last automatically generated ID can be retrieved. 

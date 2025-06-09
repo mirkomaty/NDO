@@ -172,12 +172,6 @@ namespace NDO.PostGreProvider
 			throw new NDOException(27, "NDONpgsql.Provider.GetDbType: Typname " + typeName + " kann nicht in NpgsqlDbType konvertiert werden");
 		}
 
-		private string GetDateExpression(System.DateTime dt)
-		{
-			//'9999-12-31 23:59:59'
-			return "'" + dt.ToString("yyyy-MM-dd HH:mm:ss") + "'";
-		}
-	
 
 		public override int GetDefaultLength(System.Type t)
 		{
@@ -254,15 +248,7 @@ namespace NDO.PostGreProvider
 		public override string GetQuotedName(string plainName)
 		{
 			return "\"" + plainName + '"';
-		}
-	
-		public override string GetSqlLiteral(object o)
-		{
-			if (o is DateTime)
-				return this.GetDateExpression((DateTime)o);
-			return base.GetSqlLiteral (o);
-		}
-		
+		}		
 
 		/// <summary>
 		/// Indicates whether the last automatically generated ID can be retrieved. 

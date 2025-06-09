@@ -47,28 +47,6 @@ namespace SqlServerProvider
 		/// <summary>
 		/// See <see cref="IProvider"> IProvider interface </see>
 		/// </summary>
-		private string GetDateExpression( DateTime dt )
-		{
-			string dtstr = dt.ToString();
-			dtstr = dtstr.Replace( ".", "/" );
-			dtstr = dtstr.Replace( "-", "/" );
-			return "'" + dtstr + "'";
-		}
-
-		/// <summary>
-		/// See <see cref="IProvider"> IProvider interface </see>
-		/// </summary>
-		public override string GetSqlLiteral( object o )
-		{
-			if (o is DateTime)
-				return this.GetDateExpression( (DateTime)o );
-			return base.GetSqlLiteral( o );
-		}
-
-
-		/// <summary>
-		/// See <see cref="IProvider"> IProvider interface </see>
-		/// </summary>
 		public override System.Data.IDbConnection NewConnection( string connectionString )
 		{
 			return new SqlConnection( connectionString );

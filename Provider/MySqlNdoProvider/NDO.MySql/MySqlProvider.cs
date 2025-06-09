@@ -155,12 +155,6 @@ namespace NDO.MySqlProvider
 			return (((MySqlParameter)parameter).MySqlDbType).ToString();
 		}
 
-		private string GetDateExpression(System.DateTime dt)
-		{
-			//'9999-12-31 23:59:59'
-			return "'" + dt.ToString("yyyy-MM-dd HH:mm:ss") + "'";
-		}
-	
 
 		public override int GetDefaultLength(System.Type t)
 		{
@@ -229,15 +223,7 @@ namespace NDO.MySqlProvider
 		{
 			return "`" + plainName + "`";
 		}
-	
-		public override string GetSqlLiteral(object o)
-		{
-			if (o is DateTime)
-				return this.GetDateExpression((DateTime)o);
-			return base.GetSqlLiteral (o);
-		}
 		
-
 		/// <summary>
 		/// Indicates whether the last automatically generated ID can be retrieved. 
 		/// Returns true if a database provides automatically incremented IDs and its syntax has an expression 
