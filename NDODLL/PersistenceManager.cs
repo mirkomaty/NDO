@@ -1393,7 +1393,7 @@ namespace NDO
                     var dt = typeof(DateTime);
                     var dtype = $"{st.FullName},{ new AssemblyName( st.Assembly.FullName ).Name }";
                     string transition = $@"<NdoSchemaTransition>
-    <CreateTable name=""NDOSchemaVersion"">
+    <CreateTable name=""NDOSchemaIds"">
       <CreateColumn name=""SchemaName"" type=""{stype}"" allowNull=""True"" />
       <CreateColumn name=""Id"" type=""{gtype}"" size=""36"" />
       <CreateColumn name=""InsertTime"" type=""{dtype}"" size=""36"" />

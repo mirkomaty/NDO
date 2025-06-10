@@ -99,7 +99,9 @@ namespace NDO.Application
 		/// <returns>The IServiceProvider instance, passed as parameter.</returns>
 		public static IServiceProvider UseNdo( this IServiceProvider serviceProvider )
 		{
+			// Initializes the internal class NDOApplication of the ProviderFactory
 			serviceProvider.UseNdoProviderFactory();
+			// Initializes the internal class NDOApplication of NDO.dll.
 			NDOApplication.ServiceProvider = serviceProvider;
 			return serviceProvider;
 		}
