@@ -104,7 +104,7 @@ namespace NDO
 				sb.Append(alterString);
 				sb.Append(concreteGenerator.AddColumn());
 				sb.Append(' ');
-				sb.Append(CreateColumn(columnElement, GetClassForTable(rawTableName, this.mappings), this.provider, false));
+				sb.Append(CreateColumn(columnElement, FindClass(rawTableName, this.mappings), this.provider, false));
 				sb.Append(";\n");
 			}
 
@@ -120,7 +120,7 @@ namespace NDO
 				sb.Append(alterString);
 				sb.Append(concreteGenerator.AlterColumnType());
 				sb.Append(' ');
-				sb.Append(CreateColumn(columnElement, GetClassForTable(rawTableName, this.mappings), this.provider, false));
+				sb.Append(CreateColumn(columnElement, FindClass(rawTableName, this.mappings), this.provider, false));
 				sb.Append(";\n");
 			}
 
@@ -158,12 +158,23 @@ namespace NDO
 			return sb.ToString();
 		}
 
+		/// <summary>
+		/// Drops a table
+		/// </summary>
+		/// <param name="actionElement"></param>
+		/// <returns></returns>
 		protected string DropTable(XElement actionElement)
 		{
 			string tableName = this.provider .GetQualifiedTableName( actionElement.Attribute( "name" ).Value );
 			return concreteGenerator.DropTable( tableName );
 		}
 
+		/// <summary>
+		/// Creates a table
+		/// </summary>
+		/// <param name="actionElement"></param>
+		/// <returns></returns>
+		/// <exception cref="Exception"></exception>
 		protected string CreateTable(XElement actionElement)
 		{
 			StringBuilder sb = new StringBuilder();
@@ -298,7 +309,13 @@ namespace NDO
             return sb.ToString();
         }
 
-        protected NDO.Mapping.Class FindClass(string tableName, NDOMapping mappings)
+        /// <summary>
+		/// Finds a Class mapping object, if the mapped table name matches the given table name.
+		/// </summary>
+		/// <param name="tableName"></param>
+		/// <param name="mappings"></param>
+		/// <returns></returns>
+		protected Class FindClass(string tableName, NDOMapping mappings)
 		{
 			Class result = null;
 			foreach(Class cl in mappings.Classes)
@@ -339,6 +356,14 @@ namespace NDO
 			}
 		}
 
+		/// <summary>
+		/// Creates a column of an existing table
+		/// </summary>
+		/// <param name="columnElement"></param>
+		/// <param name="cl"></param>
+		/// <param name="provider"></param>
+		/// <param name="isPrimary"></param>
+		/// <returns></returns>
 		protected string CreateColumn(XElement columnElement, Class cl, IProvider provider, bool isPrimary)
 		{
 			string rawName = columnElement.Attribute( "name" ).Value;
@@ -458,6 +483,13 @@ namespace NDO
 			return sb.ToString();
 		}
 
+		/// <summary>
+		/// Generates SQL code for creating a PK Constraint
+		/// </summary>
+		/// <param name="primaryKeyColumns"></param>
+		/// <param name="tableName"></param>
+		/// <param name="provider"></param>
+		/// <returns></returns>
 		protected string CreatePrimaryKeyConstraint(List<XElement> primaryKeyColumns, string tableName, IProvider provider)
 		{
 			if (primaryKeyColumns.Count == 0)
@@ -468,6 +500,12 @@ namespace NDO
 			return concreteGenerator.CreatePrimaryKeyConstraint(pkColumns, constraintName, provider.GetQualifiedTableName(tableName)) + '\n';
 		}
 
+		/// <summary>
+		/// Finds a field mapping for the given column name
+		/// </summary>
+		/// <param name="columnName"></param>
+		/// <param name="cl"></param>
+		/// <returns></returns>
 		protected Field FindField (string columnName, Class cl)
 		{
 			Field result = null;
@@ -480,14 +518,6 @@ namespace NDO
 				}
 			}
 			return result;
-		}
-
-		protected Class GetClassForTable(string tableName, NDOMapping mapping)
-		{
-			foreach(Class cl in mapping.Classes)
-				if (cl.TableName == tableName)
-					return cl;
-			return null;
 		}
 	}
 }

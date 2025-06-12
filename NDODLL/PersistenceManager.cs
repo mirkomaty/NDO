@@ -55,12 +55,6 @@ namespace NDO
 	/// </summary>
 	public delegate void IdGenerationHandler(Type t, ObjectId oid);
     /// <summary>
-    /// Delegate type of an handler, which can be registered by the ServiceScopeEvent event of the PersistenceManager.
-    /// <see cref="NDO.PersistenceManagerBase.IdGenerationEvent"/>
-    /// </summary>
-    public delegate IServiceProvider ServiceScopeHandler( Type t, ObjectId oid );
-
-    /// <summary>
     /// Delegate type of an handler, which can be registered by the OnSaving event of the PersistenceManager.
     /// </summary>
     public delegate void OnSavingHandler(ICollection l);
