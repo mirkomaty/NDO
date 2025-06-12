@@ -152,6 +152,8 @@ namespace NDO.SqlPersistenceHandling
 			selectColumnList.AddRange( baseColumnList );
 			selectColumnList.AddRange( readOnlyColumns );
 
+			this.ReadOnlyColumns = readOnlyColumns;
+
 		}
 
 		/// <summary/>
@@ -164,6 +166,9 @@ namespace NDO.SqlPersistenceHandling
 		public string HollowFields => Result( this.hollowList, false, false );
 		/// <summary/>
 		public string HollowFieldsWithAlias => Result( this.hollowList, true, false );
+		/// <summary/>
+		public IEnumerable<string> ReadOnlyColumns { get; private set; } = new List<string>();
+
 
 		/// <summary/>
 		public string ParamList

@@ -72,6 +72,7 @@ namespace NDO.SqlPersistenceHandling
 		private string timeStampColumn = null;
         private Column typeNameColumn = null;
         private bool hasAutoincrementedColumn;
+		private bool needsReadAfterInsert;
         private OidColumn autoIncrementColumn;
         private Dictionary<string,MemberInfo> persistentFields;
 		private List<RelationFieldInfo> relationInfos;
@@ -178,18 +179,16 @@ namespace NDO.SqlPersistenceHandling
 			//{2} = NamedParamList mit @: @vorname, @nachname
 			//{3} = FieldList mit Id: id, vorname, nachname 
 			//{4} = Name der Id-Spalte
-			if (hasAutoincrementedColumn && provider.SupportsLastInsertedId && provider.SupportsInsertBatch)
+			if (needsReadAfterInsert && provider.SupportsLastInsertedId && provider.SupportsInsertBatch)
 			{
-				sql = "INSERT INTO {0} ({1}) VALUES ({2}); SELECT {3} FROM {0} WHERE ({4} = " + provider.GetLastInsertedId(this.tableName, this.autoIncrementColumn.Name) + ")";
-                sql = string.Format(sql, qualifiedTableName, this.fieldList, this.namedParamList, selectFieldList, this.autoIncrementColumn.Name);
+				sql = $"INSERT INTO {qualifiedTableName} ({this.fieldList}) VALUES ({this.namedParamList}); SELECT {selectFieldList} FROM {qualifiedTableName} WHERE ({this.autoIncrementColumn.Name} = {provider.GetLastInsertedId(this.tableName, this.autoIncrementColumn.Name)})";
 				this.insertCommand.UpdatedRowSource = UpdateRowSource.FirstReturnedRecord;
 			}
 			else
 			{
-				sql = "INSERT INTO {0} ({1}) VALUES ({2})";
-				sql = string.Format(sql, qualifiedTableName, this.fieldList, this.namedParamList);
+				sql = $"INSERT INTO {qualifiedTableName} ({this.fieldList}) VALUES ({this.namedParamList})";
 			}
-			if (hasAutoincrementedColumn && !provider.SupportsInsertBatch)
+			if (needsReadAfterInsert && !provider.SupportsInsertBatch)
 			{
 				if (provider.SupportsLastInsertedId)
 					provider.RegisterRowUpdateHandler(this);
@@ -209,7 +208,7 @@ namespace NDO.SqlPersistenceHandling
 			if (row.RowState == DataRowState.Deleted)
 				return;
 
-			if (!hasAutoincrementedColumn)
+			if (!needsReadAfterInsert)
 				return;
 			
 			string oidColumnName = this.autoIncrementColumn.Name;
@@ -243,6 +242,9 @@ namespace NDO.SqlPersistenceHandling
 				else
 					throw new NDOException(33, "Can't read autonumbered id from the database.");
 			}
+
+			// We need to read the NDOReadOnly columns here.
+			// We can test it with PostGres
 		}
 
 		private void GenerateUpdateCommand()
@@ -436,7 +438,8 @@ namespace NDO.SqlPersistenceHandling
 			// CheckTransaction is the place, where this happens.
 			this.conn = null;
 
-			var columnListGenerator = SqlColumnListGenerator.Get( classMapping );	
+			var columnListGenerator = SqlColumnListGenerator.Get( classMapping );
+			this.needsReadAfterInsert = hasAutoincrementedColumn || columnListGenerator.ReadOnlyColumns.Any();
 			this.hollowFields = columnListGenerator.HollowFields;
 			this.hollowFieldsWithAlias = columnListGenerator.HollowFieldsWithAlias;
 			this.namedParamList = columnListGenerator.ParamList;
