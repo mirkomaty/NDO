@@ -12,10 +12,13 @@ namespace NDO.PostGresUISupport
             var csef = new ConnectionStringEditorForm( connectionString );
             if (csef.ShowDialog() == DialogResult.Cancel)
                 return NdoDialogResult.Cancel;
-            connectionString = csef.ConnectionString;
+            connectionString = csef.ConnectionString.Replace( "User=", "User Id=" );
             return NdoDialogResult.OK;
         }
 
-        // For CreateDatabase we can use the standard implementation
+		public override string CreateDatabase( object necessaryData )
+		{
+			return base.CreateDatabase( necessaryData );
+		}
     }
 }

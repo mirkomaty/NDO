@@ -330,7 +330,7 @@ namespace NDO.PostGreProvider
 
 		public override string Name { get { return "Postgre"; }  }
 
-		public override bool SupportsInsertBatch => true;
+		public override bool SupportsInsertBatch => false;
 
 		public override bool SupportsNativeGuidType 
 		{ 

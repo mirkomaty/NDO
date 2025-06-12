@@ -95,8 +95,8 @@ namespace NDO.PostGreProvider
 
 		public override string AutoIncrementColumn(string columnName, Type dataType, string columnType, string width, bool isPrimary)
 		{
-			var primary = isPrimary ? " PRIMARY KEY" : String.Empty;
-			return columnName + " SERIAL" + primary;
+			// This always results in a primary key column.
+			return $"{columnName} {columnType} GENERATED ALWAYS AS IDENTITY";
 		}
 
 		public override bool HasSpecialAutoIncrementColumnFormat => true;
