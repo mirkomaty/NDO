@@ -95,14 +95,11 @@ namespace NDO.PostGreProvider
 
 		public override string AutoIncrementColumn(string columnName, Type dataType, string columnType, string width, bool isPrimary)
 		{
-			//return columnName + " serial NOT NULL";
-            return null;
+			var primary = isPrimary ? " PRIMARY KEY" : String.Empty;
+			return columnName + " SERIAL" + primary;
 		}
 
-		public override bool HasSpecialAutoIncrementColumnFormat
-		{
-			get { return false; }
-		}
+		public override bool HasSpecialAutoIncrementColumnFormat => true;
 
         public override PrimaryConstraintPlacement PrimaryConstraintPlacement
         {

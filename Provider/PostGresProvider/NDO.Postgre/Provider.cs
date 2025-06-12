@@ -248,17 +248,14 @@ namespace NDO.PostGreProvider
 		public override string GetQuotedName(string plainName)
 		{
 			return "\"" + plainName + '"';
-		}		
+		}
 
 		/// <summary>
 		/// Indicates whether the last automatically generated ID can be retrieved. 
 		/// Returns true if a database provides automatically incremented IDs and its syntax has an expression 
 		/// which retrieves the last generated ID; otherwise false.
 		/// </summary>
-		public override bool SupportsLastInsertedId 
-		{
-			get { return false; }
-		}
+		public override bool SupportsLastInsertedId => true;
 
 
 		/// <summary>
@@ -267,7 +264,7 @@ namespace NDO.PostGreProvider
 		/// </summary>
 		public override string GetLastInsertedId(string tableName, string columnName)
 		{
-            return null;
+            return $"(SELECT CURRVAL(pg_get_serial_sequence('{tableName}', '{columnName}')))";
 		}
 
 		/// <summary>
@@ -333,13 +330,7 @@ namespace NDO.PostGreProvider
 
 		public override string Name { get { return "Postgre"; }  }
 
-		public override bool SupportsInsertBatch
-		{
-			get
-			{
-				return true;
-			}
-		}
+		public override bool SupportsInsertBatch => true;
 
 		public override bool SupportsNativeGuidType 
 		{ 
