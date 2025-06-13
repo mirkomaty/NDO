@@ -1428,11 +1428,19 @@ namespace NDO
             var installedIds = GetSchemaIds( ndoConn, schemaName, provider );
 			var newIds = new List<Guid>();
 			SchemaTransitionGenerator schemaTransitionGenerator = new SchemaTransitionGenerator( ProviderFactory, ndoConn.Type, this.mappings );
-			MemoryStream ms = new MemoryStream();
-			StreamWriter sw = new StreamWriter(ms, Encoding.UTF8);
-			bool hasChanges = false;
 
-			foreach (XElement transitionElement in transitionElements.Elements("NdoSchemaTransition"))
+			// dtLiteral contains the leading and trailing quotes
+			var dtLiteral = provider.GetSqlLiteral( DateTime.Now );
+			var ndoSchemaIds = provider.GetQualifiedTableName("NDOSchemaIds");
+			var schName = provider.GetQuotedName("SchemaName");
+			var idCol = provider.GetQuotedName("Id");
+			var insertTime = provider.GetQuotedName("InsertTime");
+			var results = new List<string>();
+
+			// Each transitionElement gets it's own transaction.
+			// The insert into NDOSchemaIds is part of the transaction.
+			// If an error occurs, InternalPerformSchemaTransitions aborts the transaction.
+			foreach (XElement transitionElement in transitionElements.Elements( "NdoSchemaTransition" ))
 			{
 				var id = transitionElement.Attribute("id")?.Value;
 				if (id == null)
@@ -1440,34 +1448,17 @@ namespace NDO
 				var gid = new Guid(id);
 				if (installedIds.Contains( gid ))
 					continue;
-				hasChanges = true;
-				sw.WriteLine( schemaTransitionGenerator.Generate( transitionElement ) );
+
+				var sb = new StringBuilder();
+				sb.Append( schemaTransitionGenerator.Generate( transitionElement ) );
 				newIds.Add( gid );
+
+				sb.Append( $"INSERT INTO {ndoSchemaIds} ({schName},{idCol},{insertTime}) VALUES ('{schemaName}','{gid}',{dtLiteral});" );
+				
+				results.AddRange( InternalPerformSchemaTransitions( ndoConn, sb.ToString() ) );
 			}
 
-			if (!hasChanges)
-				return new string[] { };
-
-			// dtLiteral contains the leading and trailing quotes
-			var dtLiteral = provider.GetSqlLiteral( DateTime.Now );
-
-			var ndoSchemaIds = provider.GetQualifiedTableName("NDOSchemaIds");
-			var schName = provider.GetQuotedName("SchemaName");
-			var idCol = provider.GetQuotedName("Id");
-			var insertTime = provider.GetQuotedName("InsertTime");
-			foreach (var tid in newIds)
-			{
-				sw.WriteLine( $"INSERT INTO {ndoSchemaIds} ({schName},{idCol},{insertTime}) VALUES ('{schemaName}','{tid}',{dtLiteral});" );
-			}
-
-			sw.Flush();
-			ms.Position = 0L;
-
-			StreamReader sr = new StreamReader(ms, Encoding.UTF8);
-			string s = sr.ReadToEnd();
-			sr.Close();
-
-			return InternalPerformSchemaTransitions( ndoConn, s );
+			return results.ToArray();
 		}
 
 		private string[] InternalPerformSchemaTransitions( Connection ndoConn, string sql )
