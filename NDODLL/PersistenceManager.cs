@@ -1365,7 +1365,10 @@ namespace NDO
 				string[] TableNames = provider.GetTableNames( connection );
 				if (TableNames.Any( t => String.Compare( t, "NDOSchemaIds", true ) == 0 ))
 				{
-					string sql = "SELECT Id from NDOSchemaIds WHERE SchemaName ";
+					var schemaIds = provider.GetQualifiedTableName("NDOSchemaIds");
+					var sn = provider.GetQuotedName("SchemaName");
+					var id = provider.GetQuotedName("Id");
+					string sql = $"SELECT {id} from {schemaIds} WHERE {sn} ";
 					if (String.IsNullOrEmpty(schemaName))
 						sql += "IS NULL;";
 					else
@@ -1389,7 +1392,7 @@ namespace NDO
                     string transition = $@"<NdoSchemaTransition>
     <CreateTable name=""NDOSchemaIds"">
       <CreateColumn name=""SchemaName"" type=""{stype}"" allowNull=""True"" />
-      <CreateColumn name=""Id"" type=""{gtype}"" size=""36"" />
+      <CreateColumn name=""Id"" type=""{gtype}"" size=""36"" isPrimary=""True"" />
       <CreateColumn name=""InsertTime"" type=""{dtype}"" size=""36"" />
     </CreateTable>
 </NdoSchemaTransition>";
@@ -1398,6 +1401,7 @@ namespace NDO
 					string sql = schemaTransitionGenerator.Generate( transitionElement );
 					handler.Execute(sql);
 				}
+				handler.CommitTransaction();
 			}
 
 			return resultList.ToArray();
@@ -1437,7 +1441,7 @@ namespace NDO
 				if (installedIds.Contains( gid ))
 					continue;
 				hasChanges = true;
-				sw.Write( schemaTransitionGenerator.Generate( transitionElement ) );
+				sw.WriteLine( schemaTransitionGenerator.Generate( transitionElement ) );
 				newIds.Add( gid );
 			}
 
@@ -1447,9 +1451,13 @@ namespace NDO
 			// dtLiteral contains the leading and trailing quotes
 			var dtLiteral = provider.GetSqlLiteral( DateTime.Now );
 
-			foreach (var id in newIds)
+			var ndoSchemaIds = provider.GetQualifiedTableName("NDOSchemaIds");
+			var schName = provider.GetQuotedName("SchemaName");
+			var idCol = provider.GetQuotedName("Id");
+			var insertTime = provider.GetQuotedName("InsertTime");
+			foreach (var tid in newIds)
 			{
-				sw.WriteLine( $"INSERT INTO NDOSchemaIds ('SchemaName','Id','InsertTime') VALUES ('{schemaName}','{id}',{dtLiteral});" );
+				sw.WriteLine( $"INSERT INTO {ndoSchemaIds} ({schName},{idCol},{insertTime}) VALUES ('{schemaName}','{tid}',{dtLiteral});" );
 			}
 
 			sw.Flush();
@@ -1465,6 +1473,7 @@ namespace NDO
 		private string[] InternalPerformSchemaTransitions( Connection ndoConn, string sql )
 		{
 			string[] arr = sql.Split( ';' );
+
 			string last = arr[arr.Length - 1];
 			bool lastInvalid = (last == null || last.Trim() == string.Empty);
 			string[] result = new string[arr.Length - (lastInvalid ? 1 : 0)];
@@ -1472,25 +1481,31 @@ namespace NDO
 			string ok = "OK";
 			using (var handler = GetSqlPassThroughHandler())
 			{
+				handler.BeginTransaction();
+				var doCommit = true;
 				foreach (string statement in arr)
 				{
-					if (statement != null && statement.Trim() != string.Empty)
+					if (!String.IsNullOrWhiteSpace(statement))
 					{
 						try
 						{
-							handler.Execute( statement );
+							handler.Execute( statement.Trim() );
 							result[i] = ok;
 						}
 						catch (Exception ex)
 						{
 							result[i] = ex.Message;
+							doCommit = false;
 						}
 					}
 					i++;
 				}
-
-				handler.CommitTransaction();
+				if (doCommit)
+					handler.CommitTransaction();
+				else
+					AbortTransaction();
 			}
+
 			return result;
 		}
 		

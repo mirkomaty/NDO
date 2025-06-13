@@ -79,7 +79,7 @@ namespace NDO.PostGreProvider
 			else if (t == typeof(float))
 				return "real";
 			else if (t == typeof(Guid))
-				return "char";
+				return "varchar";
 			else if (t == typeof(Int16) || t == typeof(UInt16))
 				return "int2";
 			else if (t == typeof(Int32) || t == typeof(UInt32))

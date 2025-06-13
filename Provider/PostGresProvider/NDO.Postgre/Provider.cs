@@ -301,7 +301,7 @@ namespace NDO.PostGreProvider
             a.Fill(ds);
             DataTable dt = ds.Tables[0];
             ArrayList al = new ArrayList();
-            bool hasOwner = (owner != null || owner != "");
+            bool hasOwner = !String.IsNullOrWhiteSpace(owner);
             foreach (DataRow dr in dt.Rows)
             {
                 string sname = (string) dr["schemaname"];

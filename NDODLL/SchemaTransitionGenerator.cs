@@ -304,7 +304,7 @@ namespace NDO
 					sb.Append( ", " );
             }
 
-            sb.Append( ")" );
+            sb.Append( ");" );
 
             return sb.ToString();
         }
