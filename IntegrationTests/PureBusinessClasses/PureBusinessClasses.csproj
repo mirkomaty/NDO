@@ -11,7 +11,7 @@
 	</ItemGroup>
 
 	<Target Name="CustomAfterBuild" AfterTargets="Build" >
-		<Exec WorkingDirectory="bin\Debug\net8.0" Command="..\..\..\..\..\NDOEnhancer\NDOEnhancer\bin\debug\net8.0\NDOEnhancer ..\..\..\PureBusinessClasses.ndoproj $(TargetFramework)" />
+		<Exec WorkingDirectory="bin\Debug\net8.0" Command="..\..\..\..\..\NDOEnhancer\NDOEnhancer\bin\debug\net9.0\NDOEnhancer ..\..\..\PureBusinessClasses.ndoproj $(TargetFramework)" />
 		<Copy SourceFiles="obj\Debug\net8.0\ndotemp\PureBusinessClasses.dll" DestinationFolder="bin\Debug\net8.0" />
 	</Target>
 
