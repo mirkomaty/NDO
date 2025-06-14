@@ -225,7 +225,7 @@ namespace SimpleMappingTool
             allObjects.Nodes.Clear();
             try
             {
-                mapping = new NDOMapping( fileName );
+                mapping = new NDOMapping( fileName, null );
                 PrepareRelations();
             }
             catch (Exception ex)

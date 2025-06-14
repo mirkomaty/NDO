@@ -49,6 +49,13 @@ namespace SimpleMappingTool
 		/// </summary>
 		private System.ComponentModel.Container components = null;
 
+		static readonly string[] builtInTypes =
+		{
+			"System.Boolean", "System.Char", "System.SByte", "System.Byte", "System.Int16", "System.UInt16", "System.Int32", "System.UInt32", "System.Int64", "System.UInt64",
+			"System.Single", "System.Double", "System.Decimal", "System.DateTime", "System.String"
+		};
+
+
 		public string PropName
 		{
 			get { return this.txtName.Text; }
@@ -80,7 +87,7 @@ namespace SimpleMappingTool
 			//
 			InitializeComponent();
 			
-			this.cbTypes.DataSource = NDOProperty.BuiltInTypes;
+			this.cbTypes.DataSource = builtInTypes;
 		}
 
 		/// <summary>

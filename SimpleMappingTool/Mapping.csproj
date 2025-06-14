@@ -12,6 +12,6 @@
 	<ForceDesignerDpiUnaware>true</ForceDesignerDpiUnaware>
   </PropertyGroup>
   <ItemGroup>
-	  <PackageReference Include="NDO.dll" Version="5.0.0" />
+    <PackageReference Include="NDO.mapping" Version="5.0.0" />
   </ItemGroup>
 </Project>

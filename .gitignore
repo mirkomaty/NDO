@@ -33,3 +33,8 @@ SourceRevisionId.props
 /nuget/NDOEnhancer.deps.json
 /nuget/NDOEnhancer.runtimeconfig.json
 /BuiltPackages
+/NDOPackage/MappingTool/Mapping.deps.json
+/NDOPackage/MappingTool/Mapping.exe
+/NDOPackage/MappingTool/Mapping.pdb
+/NDOPackage/MappingTool/Mapping.runtimeconfig.json
+/SimpleMappingTool/Properties/launchSettings.json

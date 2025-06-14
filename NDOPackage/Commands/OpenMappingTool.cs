@@ -50,7 +50,7 @@ namespace NDOVsPackage.Commands
 				//					s += p.Name + " ";
 				//				MessageBox.Show(s);
 
-				string exeFile = Path.Combine( ApplicationObject.AssemblyPath, "Mapping.exe" );
+				string exeFile = Path.Combine( ApplicationObject.AssemblyPath, "MappingTool", "Mapping.exe" );
 				string mappingFile = project.MappingFilePath();
 				mappingFile = "\"" + mappingFile + '"';
 				string s = "-m:" + mappingFile;

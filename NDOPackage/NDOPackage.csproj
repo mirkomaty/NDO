@@ -112,6 +112,9 @@
     </VSCTCompile>
   </ItemGroup>
   <ItemGroup>
+    <Reference Include="NDO.Mapping">
+      <HintPath>..\NDO.Mapping\NDO.Mapping\bin\Release\netstandard2.0\NDO.Mapping.dll</HintPath>
+    </Reference>
     <Reference Include="NDOInterfaces">
       <HintPath>..\NDOInterfaces\bin\$(Configuration)\netstandard2.0\NDOInterfaces.dll</HintPath>
     </Reference>
@@ -166,11 +169,6 @@
       <HintPath>..\Provider\SqlServerProvider\SqlServerUISupport\bin\$(Configuration)\net4.8\SqlServerUISupport.dll</HintPath>
     </Reference>
     <!-- End Provider -->
-    <Reference Include="Mapping, Version=1.0.5490.31731, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\SimpleMappingTool\bin\Release\Mapping.exe</HintPath>
-      <Private>True</Private>
-    </Reference>
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Community.VisualStudio.VSCT" Version="16.0.29.6" PrivateAssets="all" />
@@ -213,12 +211,49 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Resources\Images.png" />
+    <Content Include="Resources\Images.png">
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="MappingTool\Mapping.deps.json">
+      <IncludeInVSIX>true</IncludeInVSIX>
+      <VsixSubPath>MappingTool</VsixSubPath>
+    </Content>
+    <Content Include="MappingTool\Mapping.dll">
+      <IncludeInVSIX>true</IncludeInVSIX>
+      <VsixSubPath>MappingTool</VsixSubPath>
+    </Content>
+    <Content Include="MappingTool\Mapping.exe">
+      <IncludeInVSIX>true</IncludeInVSIX>
+      <VsixSubPath>MappingTool</VsixSubPath>
+    </Content>
+    <Content Include="MappingTool\Mapping.pdb">
+      <IncludeInVSIX>true</IncludeInVSIX>
+      <VsixSubPath>MappingTool</VsixSubPath>
+    </Content>
+    <Content Include="MappingTool\Mapping.runtimeconfig.json">
+      <IncludeInVSIX>true</IncludeInVSIX>
+      <VsixSubPath>MappingTool</VsixSubPath>
+    </Content>
+    <Content Include="MappingTool\NDO.Mapping.dll">
+      <IncludeInVSIX>true</IncludeInVSIX>
+      <VsixSubPath>MappingTool</VsixSubPath>
+    </Content>
+    <Content Include="MappingTool\NDOInterfaces.dll">
+      <IncludeInVSIX>true</IncludeInVSIX>
+      <VsixSubPath>MappingTool</VsixSubPath>
+    </Content>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(VSToolsPath)\VSSDK\Microsoft.VsSDK.targets" Condition="'$(VSToolsPath)' != ''" />
   <Target Name="PrepareEnhDate" BeforeTargets="PrepareForBuild">
+    <MakeDir Directories="MappingTool" Condition="!Exists('MappingTool')" />
     <Exec Command="..\Tools\MakeEnhancerDate\bin\Release\net8.0\MakeEnhancerDate.exe &gt; EnhDate.cs" />
+  </Target>
+  <Target Name="CopyMappingTool" BeforeTargets="Build">
+    <ItemGroup>
+      <MappingSourceFiles Include="..\SimpleMappingTool\bin\Release\net8.0-windows\*.*" />
+    </ItemGroup>
+    <Copy SourceFiles="@(MappingSourceFiles)" DestinationFolder="MappingTool" />
   </Target>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
