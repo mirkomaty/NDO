@@ -1,48 +1,49 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <TargetFrameworks>net6.0;net8.0;netstandard2.0;netstandard2.1</TargetFrameworks>
-    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <GenerateDocumentationFile>true</GenerateDocumentationFile>
-    <IncludeSymbols>True</IncludeSymbols>
-    <PackageId>NDO.JsonFormatter</PackageId>
-    <Version>5.0.0.0</Version>
-    <Authors>Mirko Matytschak</Authors>
-    <Company>Mirko Matytschak</Company>
-    <Description>Json Formatter for serializing and deserializing ObjectContainers in NDO.</Description>
-    <Copyright>(c) 2002 - 2025, Mirko Matytschak, Velden, Germany</Copyright>
-    <PackageLicense>MIT</PackageLicense>
-    <PackageProjectUrl>https://www.netdataobjects.de</PackageProjectUrl>
-    <PackageTags>NDO .NET Data Objects Persistence JsonFormatter</PackageTags>
-    <PackageReleaseNotes>Works only with NDO &gt;= 5.0.0. For older NDO versions use package version 4.0.1.</PackageReleaseNotes>
-    <AssemblyVersion>5.0.0.0</AssemblyVersion>
-    <FileVersion>5.0.0.0</FileVersion>
-    <SignAssembly>true</SignAssembly>
-    <AssemblyOriginatorKeyFile>ndo_ent.snk</AssemblyOriginatorKeyFile>
-    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
-  </PropertyGroup>
+	<PropertyGroup>
+		<TargetFrameworks>net6.0;net8.0;netstandard2.0;netstandard2.1</TargetFrameworks>
+		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+		<GenerateDocumentationFile>true</GenerateDocumentationFile>
+		<IncludeSymbols>True</IncludeSymbols>
+		<PackageId>NDO.JsonFormatter</PackageId>
+		<Version>5.0.0.0</Version>
+		<Authors>Mirko Matytschak</Authors>
+		<Company>Mirko Matytschak</Company>
+		<Description>Json Formatter for serializing and deserializing ObjectContainers in NDO.</Description>
+		<Copyright>(c) 2002 - 2025, Mirko Matytschak, Velden, Germany</Copyright>
+		<PackageLicense>MIT</PackageLicense>
+		<PackageProjectUrl>https://www.netdataobjects.de</PackageProjectUrl>
+		<PackageTags>NDO .NET Data Objects Persistence JsonFormatter</PackageTags>
+		<PackageReleaseNotes>Works only with NDO &gt;= 5.0.0. For older NDO versions use package version 4.0.1.</PackageReleaseNotes>
+		<AssemblyVersion>5.0.0.0</AssemblyVersion>
+		<FileVersion>5.0.0.0</FileVersion>
+		<SignAssembly>true</SignAssembly>
+		<AssemblyOriginatorKeyFile>ndo_ent.snk</AssemblyOriginatorKeyFile>
+		<IncludeSymbols>True</IncludeSymbols>
+		<SymbolPackageFormat>snupkg</SymbolPackageFormat>
+	</PropertyGroup>
 
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <DefineConstants>TRACE;DEBUG;</DefineConstants>
-  </PropertyGroup>
+	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+		<DefineConstants>TRACE;DEBUG;</DefineConstants>
+	</PropertyGroup>
 
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
-    <DefineConstants>TRACE;RELEASE;</DefineConstants>
-  </PropertyGroup>
+	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+		<DefineConstants>TRACE;RELEASE;</DefineConstants>
+	</PropertyGroup>
 
-  <ItemGroup>
-    <Compile Remove="nuget\**" />
-    <EmbeddedResource Remove="nuget\**" />
-    <None Remove="nuget\**" />
-  </ItemGroup>
+	<ItemGroup>
+		<Compile Remove="nuget\**" />
+		<EmbeddedResource Remove="nuget\**" />
+		<None Remove="nuget\**" />
+	</ItemGroup>
 
-  <ItemGroup>
-    <None Remove="packages.config" />
-  </ItemGroup>
+	<ItemGroup>
+		<None Remove="packages.config" />
+	</ItemGroup>
 
-  <ItemGroup>
-    <PackageReference Include="ndo.dll" Version="5.0.0" />
-    <PackageReference Include="newtonsoft.json" Version="13.0.3" />
-  </ItemGroup>
-  
+	<ItemGroup>
+		<PackageReference Include="ndo.dll" Version="5.0.0" />
+		<PackageReference Include="newtonsoft.json" Version="13.0.3" />
+	</ItemGroup>
+
 </Project>
