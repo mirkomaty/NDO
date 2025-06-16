@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
 	<!-- You need to adjust these values, otherwise the build will not work -->
 	<PropertyGroup Label="Adjustable properties">
@@ -31,6 +32,7 @@
 	<ItemGroup>
 		<Tools Include="$(TOOLS_DIR)\MakeEnhancerDate\MakeEnhancerDate.csproj" />	
 		<Tools Include="$(TOOLS_DIR)\PatchNdoVersion\PatchNdoVersion.csproj" />	
+		<Tools Include="$(TOOLS_DIR)\AddMappingToVsix\AddMappingToVsix.csproj" />	
 	</ItemGroup>
 	
 	<!-- These are the names of packages beeing built for NDO -->

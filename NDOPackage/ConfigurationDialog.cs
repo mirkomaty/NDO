@@ -643,7 +643,7 @@ namespace NDOVsPackage
 
                 foreach (string s in NdoUIProviderFactory.Instance.Keys)
                 {
-                    this.cbSqlDialect.Items.Add(s);
+                    this.cbSqlDialect.Items.Add( s );
                     if (options.SQLScriptLanguage == s)
                         currentDialectIndex = i;
                     i++;
