@@ -20,15 +20,9 @@
 // DEALINGS IN THE SOFTWARE.
 
 
-using System;
-using System.Reflection;
-using System.IO;
-using System.Text.RegularExpressions;
-using System.Drawing;
-using System.Collections;
-using System.ComponentModel;
-using System.Windows.Forms;
 using NDO.Mapping;
+using System.ComponentModel;
+using System.Text.RegularExpressions;
 
 namespace SimpleMappingTool
 {
@@ -45,19 +39,37 @@ namespace SimpleMappingTool
         private ToolStripMenuItem menuSaveAs;
         private bool saveOnClose = false;
         private Splitter splitter1;
-        private PropertyGrid propertyGrid1;
         private TreeView allObjects;
         private ImageList imageList1;
-
-        NDOMapping? mapping = null;
+        private ComponentResourceManager resources;
+		private Panel panel1;
+		private PropertyGrid propertyGrid1;
+		NDOMapping? mapping = null;
 
 #pragma warning disable 8618
         public MainForm( string[] args )
         {
             try
             {
-                InitializeComponent();
-                ScanArgs( args );
+				this.resources = new ComponentResourceManager( typeof( MainForm ) );
+				InitializeComponent();
+				this.imageList1!.ImageStream = (ImageListStreamer) resources.GetObject( "imageList1.ImageStream" )!;
+				imageList1.Images.SetKeyName( 0, "" );
+				imageList1.Images.SetKeyName( 1, "" );
+				imageList1.Images.SetKeyName( 2, "" );
+				imageList1.Images.SetKeyName( 3, "" );
+				imageList1.Images.SetKeyName( 4, "" );
+				imageList1.Images.SetKeyName( 5, "" );
+				imageList1.Images.SetKeyName( 6, "" );
+				imageList1.Images.SetKeyName( 7, "" );
+				imageList1.Images.SetKeyName( 8, "" );
+				imageList1.Images.SetKeyName( 9, "" );
+				imageList1.Images.SetKeyName( 10, "" );
+				imageList1.Images.SetKeyName( 11, "" );
+				imageList1.Images.SetKeyName( 12, "" );
+				imageList1.Images.SetKeyName( 13, "" );
+				Icon = (Icon) resources.GetObject( "$this.Icon" )!;
+				ScanArgs( args );
                 Application.Idle += new EventHandler( OnIdle );
             }
             catch (Exception ex)
@@ -82,139 +94,136 @@ namespace SimpleMappingTool
             base.Dispose( disposing );
         }
 
-        #region Vom Windows Form-Designer generierter Code
-        /// <summary>
-        /// Erforderliche Methode für die Designerunterstützung. 
-        /// Der Inhalt der Methode darf nicht mit dem Code-Editor geändert werden.
-        /// </summary>
-        private void InitializeComponent()
-        {
-            components = new Container();
-            ComponentResourceManager resources = new ComponentResourceManager(typeof(MainForm));
-            allObjects = new TreeView();
-            imageList1 = new ImageList( components );
-            splitter1 = new Splitter();
-            propertyGrid1 = new PropertyGrid();
-            mainMenu = new MenuStrip();
-            fileToolStripMenuItem = new ToolStripMenuItem();
-            menuOpen = new ToolStripMenuItem();
-            menuSave = new ToolStripMenuItem();
-            menuSaveAs = new ToolStripMenuItem();
-            mainMenu.SuspendLayout();
-            SuspendLayout();
-            // 
-            // allObjects
-            // 
-            allObjects.Dock = DockStyle.Left;
-            allObjects.ImageIndex = 0;
-            allObjects.ImageList = imageList1;
-            allObjects.Location = new Point( 0, 24 );
-            allObjects.Name = "allObjects";
-            allObjects.SelectedImageIndex = 0;
-            allObjects.Size = new Size( 464, 408 );
-            allObjects.TabIndex = 0;
-            allObjects.AfterSelect +=  allObjects_AfterSelect ;
-            allObjects.MouseUp +=  allObjects_MouseUp ;
-            // 
-            // imageList1
-            // 
-            imageList1.ColorDepth = ColorDepth.Depth8Bit;
-            imageList1.ImageStream = (ImageListStreamer) resources.GetObject( "imageList1.ImageStream" )!;
-            imageList1.TransparentColor = Color.Transparent;
-            imageList1.Images.SetKeyName( 0, "" );
-            imageList1.Images.SetKeyName( 1, "" );
-            imageList1.Images.SetKeyName( 2, "" );
-            imageList1.Images.SetKeyName( 3, "" );
-            imageList1.Images.SetKeyName( 4, "" );
-            imageList1.Images.SetKeyName( 5, "" );
-            imageList1.Images.SetKeyName( 6, "" );
-            imageList1.Images.SetKeyName( 7, "" );
-            imageList1.Images.SetKeyName( 8, "" );
-            imageList1.Images.SetKeyName( 9, "" );
-            imageList1.Images.SetKeyName( 10, "" );
-            imageList1.Images.SetKeyName( 11, "" );
-            imageList1.Images.SetKeyName( 12, "" );
-            imageList1.Images.SetKeyName( 13, "" );
-            // 
-            // splitter1
-            // 
-            splitter1.Location = new Point( 464, 24 );
-            splitter1.Name = "splitter1";
-            splitter1.Size = new Size( 3, 408 );
-            splitter1.TabIndex = 1;
-            splitter1.TabStop = false;
-            // 
-            // propertyGrid1
-            // 
-            propertyGrid1.Dock = DockStyle.Fill;
-            propertyGrid1.LineColor = SystemColors.ScrollBar;
-            propertyGrid1.Location = new Point( 467, 24 );
-            propertyGrid1.Name = "propertyGrid1";
-            propertyGrid1.Size = new Size( 317, 408 );
-            propertyGrid1.TabIndex = 2;
-            // 
-            // mainMenu
-            // 
-            mainMenu.Items.AddRange( new ToolStripItem[] { fileToolStripMenuItem } );
-            mainMenu.Location = new Point( 0, 0 );
-            mainMenu.Name = "mainMenu";
-            mainMenu.Size = new Size( 784, 24 );
-            mainMenu.TabIndex = 0;
-            mainMenu.Text = "mainMenu";
-            // 
-            // fileToolStripMenuItem
-            // 
-            fileToolStripMenuItem.DropDownItems.AddRange( new ToolStripItem[] { menuOpen, menuSave, menuSaveAs } );
-            fileToolStripMenuItem.Name = "fileToolStripMenuItem";
-            fileToolStripMenuItem.Size = new Size( 37, 20 );
-            fileToolStripMenuItem.Text = "&File";
-            // 
-            // menuOpen
-            // 
-            menuOpen.Name = "menuOpen";
-            menuOpen.Size = new Size( 180, 22 );
-            menuOpen.Text = "&Open";
-            menuOpen.Click +=  menuOpen_Click ;
-            // 
-            // menuSave
-            // 
-            menuSave.Name = "menuSave";
-            menuSave.Size = new Size( 180, 22 );
-            menuSave.Text = "&Save";
-            menuSave.Click +=  menuSave_Click ;
-            // 
-            // menuSaveAs
-            // 
-            menuSaveAs.Name = "menuSaveAs";
-            menuSaveAs.Size = new Size( 180, 22 );
-            menuSaveAs.Text = "Save &as...";
-            menuSaveAs.Click +=  menuSaveAs_Click ;
-            // 
-            // MainForm
-            // 
-            AutoScaleBaseSize = new Size( 6, 16 );
-            ClientSize = new Size( 784, 432 );
-            Controls.Add( propertyGrid1 );
-            Controls.Add( splitter1 );
-            Controls.Add( allObjects );
-            Controls.Add( mainMenu );
-            Icon = (Icon) resources.GetObject( "$this.Icon" )!;
-            MainMenuStrip = mainMenu;
-            Name = "MainForm";
-            Text = "NDO Mapping Tool";
-            Closing +=  MainForm_Closing ;
-            Load +=  MainForm_Load ;
-            mainMenu.ResumeLayout( false );
-            mainMenu.PerformLayout();
-            ResumeLayout( false );
-            PerformLayout();
-        }
-        #endregion
+		#region Vom Windows Form-Designer generierter Code
+		/// <summary>
+		/// Erforderliche Methode für die Designerunterstützung. 
+		/// Der Inhalt der Methode darf nicht mit dem Code-Editor geändert werden.
+		/// </summary>
+		private void InitializeComponent()
+		{
+			components = new Container();
+			allObjects = new TreeView();
+			imageList1 = new ImageList( components );
+			splitter1 = new Splitter();
+			mainMenu = new MenuStrip();
+			fileToolStripMenuItem = new ToolStripMenuItem();
+			menuOpen = new ToolStripMenuItem();
+			menuSave = new ToolStripMenuItem();
+			menuSaveAs = new ToolStripMenuItem();
+			panel1 = new Panel();
+			propertyGrid1 = new PropertyGrid();
+			mainMenu.SuspendLayout();
+			panel1.SuspendLayout();
+			SuspendLayout();
+			// 
+			// allObjects
+			// 
+			allObjects.Dock = DockStyle.Left;
+			allObjects.ImageIndex = 0;
+			allObjects.ImageList = imageList1;
+			allObjects.Location = new Point( 0, 24 );
+			allObjects.Name = "allObjects";
+			allObjects.SelectedImageIndex = 0;
+			allObjects.Size = new Size( 464, 408 );
+			allObjects.TabIndex = 0;
+			allObjects.AfterSelect +=  allObjects_AfterSelect ;
+			allObjects.MouseUp +=  allObjects_MouseUp ;
+			// 
+			// imageList1
+			// 
+			imageList1.ColorDepth = ColorDepth.Depth8Bit;
+			imageList1.ImageSize = new Size( 16, 16 );
+			imageList1.TransparentColor = Color.Transparent;
+			// 
+			// splitter1
+			// 
+			splitter1.Location = new Point( 464, 24 );
+			splitter1.Name = "splitter1";
+			splitter1.Size = new Size( 3, 408 );
+			splitter1.TabIndex = 1;
+			splitter1.TabStop = false;
+			// 
+			// mainMenu
+			// 
+			mainMenu.Items.AddRange( new ToolStripItem[] { fileToolStripMenuItem } );
+			mainMenu.Location = new Point( 0, 0 );
+			mainMenu.Name = "mainMenu";
+			mainMenu.Size = new Size( 784, 24 );
+			mainMenu.TabIndex = 0;
+			mainMenu.Text = "mainMenu";
+			// 
+			// fileToolStripMenuItem
+			// 
+			fileToolStripMenuItem.DropDownItems.AddRange( new ToolStripItem[] { menuOpen, menuSave, menuSaveAs } );
+			fileToolStripMenuItem.Name = "fileToolStripMenuItem";
+			fileToolStripMenuItem.Size = new Size( 37, 20 );
+			fileToolStripMenuItem.Text = "&File";
+			// 
+			// menuOpen
+			// 
+			menuOpen.Name = "menuOpen";
+			menuOpen.Size = new Size( 121, 22 );
+			menuOpen.Text = "&Open";
+			menuOpen.Click +=  menuOpen_Click ;
+			// 
+			// menuSave
+			// 
+			menuSave.Name = "menuSave";
+			menuSave.Size = new Size( 121, 22 );
+			menuSave.Text = "&Save";
+			menuSave.Click +=  menuSave_Click ;
+			// 
+			// menuSaveAs
+			// 
+			menuSaveAs.Name = "menuSaveAs";
+			menuSaveAs.Size = new Size( 121, 22 );
+			menuSaveAs.Text = "Save &as...";
+			menuSaveAs.Click +=  menuSaveAs_Click ;
+			// 
+			// panel1
+			// 
+			panel1.Controls.Add( propertyGrid1 );
+			panel1.Dock = DockStyle.Fill;
+			panel1.Location = new Point( 467, 24 );
+			panel1.Name = "panel1";
+			panel1.Padding = new Padding( 0, 0, 3, 3 );
+			panel1.Size = new Size( 317, 408 );
+			panel1.TabIndex = 2;
+			// 
+			// propertyGrid1
+			// 
+			propertyGrid1.Dock = DockStyle.Fill;
+			propertyGrid1.LineColor = SystemColors.ScrollBar;
+			propertyGrid1.Location = new Point( 0, 0 );
+			propertyGrid1.Name = "propertyGrid1";
+			propertyGrid1.Size = new Size( 314, 405 );
+			propertyGrid1.TabIndex = 3;
+			// 
+			// MainForm
+			// 
+			AutoScaleBaseSize = new Size( 6, 16 );
+			ClientSize = new Size( 784, 432 );
+			Controls.Add( panel1 );
+			Controls.Add( splitter1 );
+			Controls.Add( allObjects );
+			Controls.Add( mainMenu );
+			MainMenuStrip = mainMenu;
+			Name = "MainForm";
+			Text = "NDO Mapping Tool";
+			Closing +=  MainForm_Closing ;
+			Load +=  MainForm_Load ;
+			mainMenu.ResumeLayout( false );
+			mainMenu.PerformLayout();
+			panel1.ResumeLayout( false );
+			ResumeLayout( false );
+			PerformLayout();
+		}
+		#endregion
 
-        /// <summary>
-        /// Der Haupteinstiegspunkt für die Anwendung.
-        /// </summary>
-        [STAThread]
+		/// <summary>
+		/// Der Haupteinstiegspunkt für die Anwendung.
+		/// </summary>
+		[STAThread]
         static void Main( string[] args )
         {
             Application.Run( new MainForm( args ) );
