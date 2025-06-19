@@ -115,8 +115,8 @@
     <Reference Include="NDO.Mapping">
       <HintPath>..\NDO.Mapping\NDO.Mapping\bin\Release\netstandard2.0\NDO.Mapping.dll</HintPath>
     </Reference>
-    <Reference Include="NDOInterfaces">
-      <HintPath>..\NDOInterfaces\bin\$(Configuration)\netstandard2.0\NDOInterfaces.dll</HintPath>
+    <Reference Include="NDOInterfaces, Version=5.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\NDOInterfaces\bin\Release\net48\NDOInterfaces.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Design" />
@@ -124,10 +124,6 @@
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
     <Reference Include="System.Xml.Linq" />
-    <Reference Include="NDO, Version=5.0.0.0, Culture=neutral, PublicKeyToken=37bfdffa92a0cd24, processorArchitecture=MSIL">
-      <SpecificVersion>false</SpecificVersion>
-      <HintPath>..\NDODLL\bin\$(Configuration)\netstandard2.0\NDO.dll</HintPath>
-    </Reference>
     <Reference Include="NDO.UISupport">
       <HintPath>..\UISupport\NDO.UISupport\bin\$(Configuration)\NDO.UISupport.dll</HintPath>
     </Reference>
@@ -200,17 +196,6 @@
     </PackageReference>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="ConfigurationDialog.resx">
-      <DependentUpon>ConfigurationDialog.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="PersistentClassDialog.resx">
-      <DependentUpon>PersistentClassDialog.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="RelationDialog.resx">
-      <DependentUpon>RelationDialog.cs</DependentUpon>
-    </EmbeddedResource>
-  </ItemGroup>
-  <ItemGroup>
     <Content Include="Resources\Images.png">
       <IncludeInVSIX>true</IncludeInVSIX>
     </Content>
@@ -234,13 +219,21 @@
       <IncludeInVSIX>true</IncludeInVSIX>
       <VsixSubPath>MappingTool</VsixSubPath>
     </Content>
-    <Content Include="MappingTool\NDO.Mapping.dll">
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="ConfigurationDialog.resx">
+      <DependentUpon>ConfigurationDialog.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="PersistentClassDialog.resx">
+      <DependentUpon>PersistentClassDialog.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="RelationDialog.resx">
+      <DependentUpon>RelationDialog.cs</DependentUpon>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Resources\Images.png">
       <IncludeInVSIX>true</IncludeInVSIX>
-      <VsixSubPath>MappingTool</VsixSubPath>
-    </Content>
-    <Content Include="MappingTool\NDOInterfaces.dll">
-      <IncludeInVSIX>true</IncludeInVSIX>
-      <VsixSubPath>MappingTool</VsixSubPath>
     </Content>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
@@ -248,12 +241,15 @@
   <Target Name="PrepareEnhDate" BeforeTargets="PrepareForBuild">
     <MakeDir Directories="MappingTool" Condition="!Exists('MappingTool')" />
     <Exec Command="..\Tools\MakeEnhancerDate\bin\Release\net8.0\MakeEnhancerDate.exe &gt; EnhDate.cs" />
+    <Copy SourceFiles="..\SimpleMappingTool\bin\Release\net8.0-windows\Mapping.deps.json" DestinationFolder="MappingTool" />
+    <Copy SourceFiles="..\SimpleMappingTool\bin\Release\net8.0-windows\Mapping.dll" DestinationFolder="MappingTool" />
+    <Copy SourceFiles="..\SimpleMappingTool\bin\Release\net8.0-windows\Mapping.exe" DestinationFolder="MappingTool" />
+    <Copy SourceFiles="..\SimpleMappingTool\bin\Release\net8.0-windows\Mapping.pdb" DestinationFolder="MappingTool" />
+    <Copy SourceFiles="..\SimpleMappingTool\bin\Release\net8.0-windows\Mapping.runtimeconfig.json" DestinationFolder="MappingTool" />
   </Target>
-  <Target Name="CopyMappingTool" BeforeTargets="Build">
-    <ItemGroup>
-      <MappingSourceFiles Include="..\SimpleMappingTool\bin\Release\net8.0-windows\*.*" />
-    </ItemGroup>
-    <Copy SourceFiles="@(MappingSourceFiles)" DestinationFolder="MappingTool" />
+  <Target Name="AddDlls" AfterTargets="Build">
+    <Message Text="Copy Dlls" Importance="high" />
+	<Exec Command="..\Tools\AddMappingToVsix\bin\Release\net8.0\AddMappingToVsix bin\Release\NDOPackage.vsix" />
   </Target>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

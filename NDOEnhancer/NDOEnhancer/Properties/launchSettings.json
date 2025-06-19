@@ -3,7 +3,7 @@
     "Profil \"1\"": {
       "commandName": "Executable",
       "executablePath": "C:\\Projekte\\NDO5\\NDOEnhancer\\NDOEnhancer\\bin\\Debug\\$(TargetFramework)\\NDOEnhancer.exe",
-      "commandLineArgs": "G:\\Projekte\\NDONullableTest\\Test\\Test.ndoproj net8.0"
+      "commandLineArgs": "C:\\Projekte\\NDO.GraphQL\\PersistentClasses\\PersistentClasses.ndoproj net8.0"
     }
   }
 }

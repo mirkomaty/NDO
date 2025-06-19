@@ -31,6 +31,7 @@
 	<ItemGroup>
 		<Tools Include="$(TOOLS_DIR)\MakeEnhancerDate\MakeEnhancerDate.csproj" />	
 		<Tools Include="$(TOOLS_DIR)\PatchNdoVersion\PatchNdoVersion.csproj" />	
+		<Tools Include="$(TOOLS_DIR)\AddMappingToVsix\AddMappingToVsix.csproj" />	
 	</ItemGroup>
 	
 	<!-- These are the names of packages beeing built for NDO -->
