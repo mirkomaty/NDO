@@ -239,14 +239,13 @@ namespace NDO.Mapping
 			this.myEmbeddedTypes = new List<string>();
 			AddFields(this.type);
 			Type t = this.type.BaseType;
-            int persCount = t.GetCustomAttributes(typeof(NDOPersistentAttribute), false).Length;
-			while (persCount > 0)
+            
+			while ( IsPersistentType( t ) )
 			{
 				AddFields(t);				
-				t = t.BaseType;
-                persCount = t.GetCustomAttributes(typeof(NDOPersistentAttribute), false).Length;
+				t = t.BaseType;                
 			}
-			// Jetzt stehen alle Felder in myFields
+			// Now all fields are in myFields
 
 			if (checkIfMappingsExist && !this.type.IsAbstract)
 			{
@@ -297,15 +296,12 @@ namespace NDO.Mapping
 			myRelations = new List<FieldInfo>();
 			AddRelations(this.type);
 			Type t = this.type.BaseType;
-            int persCount = t.GetCustomAttributes(typeof(NDOPersistentAttribute), false).Length;
-			while (persCount > 0)
+			while ( IsPersistentType( t ) )
 			{
-				if (t.GetCustomAttributes(typeof(NDOPersistentAttribute), false).Length > 0)
-					AddRelations(t);				
+				AddRelations(t);				
 				t = t.BaseType;
-                persCount = t.GetCustomAttributes(typeof(NDOPersistentAttribute), false).Length;
 			}
-			// Jetzt stehen alle Relations in myRelations
+			// Now all Relations are in myRelations
 
 			if (checkIfMappingsExist && !this.type.IsAbstract)
 			{

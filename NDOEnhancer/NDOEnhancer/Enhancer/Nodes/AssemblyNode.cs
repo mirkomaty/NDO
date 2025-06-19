@@ -104,8 +104,7 @@ namespace NDOEnhancer
 
 		private bool IsPersistentType(Type t)
 		{
-			return t.GetCustomAttribute( typeof( NDOPersistentAttribute ) ) != null;
-			//return t.GetCustomAttributes( false ).Any( ca => ca.GetType().Name == "NDOPersistentAttribute" );
+			return t.GetCustomAttributes( false ).Any( ca => ca.GetType().Name == "NDOPersistentAttribute" );
 		}
 
 

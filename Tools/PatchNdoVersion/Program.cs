@@ -19,9 +19,10 @@ namespace PatchNdoVersion
 			string? iVersion = null;
             string? eVersion = null;
             string? nVersion = null;
+            string? mVersion = null;
 
 
-            if (!File.Exists(projFile))
+			if (!File.Exists(projFile))
 			{
 				Console.WriteLine( $"File doesn't exist: '{projFile}'" );
 				return -3;
@@ -67,7 +68,19 @@ namespace PatchNdoVersion
                     if (!regex.Match( nVersion ).Success)
                         throw new Exception( "Parameter of -n must be a version string" );
                 }
-                
+
+				var m = Array.IndexOf(args, "-m");
+				if (m > 0)
+				{
+					if (args.Length < m + 2)
+						throw new Exception( "Option -m needs a parameter." );
+
+					mVersion = args[m + 1];
+
+					if (!regex.Match( mVersion ).Success)
+						throw new Exception( "Parameter of -m must be a version string" );
+				}
+
 				string ndoRootPath = AppDomain.CurrentDomain.BaseDirectory;
 
 				XDocument doc = XDocument.Load( projFile );
@@ -128,7 +141,24 @@ namespace PatchNdoVersion
                     }
                 }
 
-                if (changed)
+				if (mVersion != null)
+				{
+					var element = prElement.Elements("PackageReference").FirstOrDefault(el => el.Attribute("Include")?.Value.ToLower() == "ndo.mapping");
+					if (element != null)
+					{
+						if (element.Attribute( "Version" )?.Value != mVersion)
+						{
+							element.Attribute( "Version" )!.Value = mVersion;
+							changed = true;
+						}
+					}
+					else
+					{
+						throw new Exception( "Project needs a PackageReference to NDO.mapping" );
+					}
+				}
+
+				if (changed)
     				doc.Save(projFile);
 
 				return 0;

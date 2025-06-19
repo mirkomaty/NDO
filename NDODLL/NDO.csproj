@@ -8,7 +8,7 @@
 		<IncludeSymbols>True</IncludeSymbols>
 		<SymbolPackageFormat>snupkg</SymbolPackageFormat>
 		<PackageId>NDO.dll</PackageId>
-		<Version>5.0.0</Version>
+		<Version>5.0.1</Version>
 		<Authors>Mirko Matytschak</Authors>
 		<Company>Mirko Matytschak</Company>
 		<Description>Package to enable VS Solutions to compile and enhance persistent classes.</Description>
@@ -17,8 +17,8 @@
 		<PackageProjectUrl>https://www.netdataobjects.de</PackageProjectUrl>
 		<PackageTags>NDO .NET Data Objects Persistence</PackageTags>
 		<PackageReleaseNotes>NDO 5.0</PackageReleaseNotes>
-		<AssemblyVersion>5.0.0.0</AssemblyVersion>
-		<FileVersion>5.0.0.0</FileVersion>
+		<AssemblyVersion>5.0.1.0</AssemblyVersion>
+		<FileVersion>5.0.1.0</FileVersion>
 		<SignAssembly>true</SignAssembly>
 		<AssemblyOriginatorKeyFile>ndo_ent.snk</AssemblyOriginatorKeyFile>
 		<PackageReadmeFile>readme.md</PackageReadmeFile>

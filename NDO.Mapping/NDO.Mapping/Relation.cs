@@ -1,5 +1,5 @@
 ﻿//
-// Copyright (c) 2002-2024 Mirko Matytschak 
+// Copyright (c) 2002-2025 Mirko Matytschak 
 // (www.netdataobjects.de)
 //
 // Author: Mirko Matytschak
@@ -515,9 +515,16 @@ namespace NDO.Mapping
                 throw new NDOException(20, "Can't find field " + Parent.SystemType.Name + "." + FieldName);
 
             FieldType = fi.FieldType;
+            var assys = FieldType.Assembly.GetReferencedAssemblies();
 
-            System.Attribute a = System.Attribute.GetCustomAttribute(fi, typeof(NDORelationAttribute), false);
-            NDORelationAttribute ra = (NDORelationAttribute)a;
+            NDORelationAttribute ra = null;
+            var rax = fi.GetCustomAttributes(false).FirstOrDefault(ca => ca.GetType().Name == "NDORelationAttribute");
+            if (rax != null)
+            {
+                ra = rax as NDORelationAttribute;
+                if (ra == null)
+                    throw new Exception( "Cant load type NDORelationAttribute" );
+            };
 
             this.composition = ra != null && (ra.Info & RelationInfo.Composite) != 0;
 
@@ -525,7 +532,7 @@ namespace NDO.Mapping
             {
                 this.multiplicity = RelationMultiplicity.List;
             }
-            else if (fi.FieldType.GetCustomAttributes(typeof(NDOPersistentAttribute), false).Length > 0)
+            else if (fi.FieldType.GetCustomAttributes(false).Any(ca => ca.GetType().Name == "NDOPersistentAttribute"))
             {
                 this.multiplicity = RelationMultiplicity.Element;
             }
@@ -547,13 +554,15 @@ namespace NDO.Mapping
 
             if (this.multiplicity == RelationMultiplicity.List)
             {
-                if (ra == null)
-                    throw new NDOException(97, $"Can't determine relation type for relation {Parent.FullName}.{fi.Name}");
-
-                if (ra.RelationType == null && fi.FieldType.IsGenericType)
+                if (ra?.RelationType == null && fi.FieldType.IsGenericType)
                     this.referencedType = fi.FieldType.GetGenericArguments()[0];
                 else
-                    this.referencedType = ra.RelationType;
+                {
+					if (ra == null)
+						throw new NDOException( 97, $"Can't determine relation type for relation {Parent.FullName}.{fi.Name}" );
+					this.referencedType = ra.RelationType;
+                }
+
                 if (referencedType == null)
                     throw new NDOException(101, "Can't determine referenced type in relation " + this.Parent.FullName + "." + this.fieldName + ". Provide a type parameter for the [NDORelation] attribute.");
             }

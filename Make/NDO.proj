@@ -3,10 +3,10 @@
 	<!-- You need to adjust these values, otherwise the build will not work -->
 	<PropertyGroup Label="Adjustable properties">
 		<NDO_DIR>$([System.IO.Path]::GetFullPath('$(MSBuildProjectDirectory)\..'))</NDO_DIR>
-		<Version>5.0.0</Version>
+		<Version>5.0.1</Version>
 		<InterfacesVersion>5.0.0</InterfacesVersion>
 		<!-- This should be identical to the NDO.Enhancer version -->
-		<NDOBuildVersion>5.0.0</NDOBuildVersion>
+		<NDOBuildVersion>5.0.1</NDOBuildVersion>
 		<!-- 
 			NDO generates packages which should be present in the package source
 			during the build process.
@@ -84,7 +84,7 @@
 	</Target>
 
 	<Target Name="PatchNdoVersion" BeforeTargets="Build">
-		<Exec Command="$(PatchNdoVersion) &quot;$(NDO_DIR)\SimpleMappingTool\Mapping.csproj&quot; -n $(Version)" />
+		<Exec Command="$(PatchNdoVersion) &quot;$(NDO_DIR)\SimpleMappingTool\Mapping.csproj&quot; -m $(Version)" />
 
 		<Exec Command="$(PatchNdoVersion) &quot;$(NDO_DIR)\NDO.Mapping\NDO.Mapping\NDO.Mapping.csproj&quot; -i $(InterfacesVersion)" />
 		<Exec Command="$(PatchNdoVersion) &quot;$(NDO_DIR)\NDO.ProviderFactory\NDO.ProviderFactory\NDO.ProviderFactory.csproj&quot; -i $(InterfacesVersion)" />
