@@ -21,6 +21,7 @@
 
 
 using NDO.Mapping.Attributes;
+using NDO.Mapping.Serialization;
 using System;
 using System.Linq;
 using System.Collections.Generic;
@@ -523,7 +524,12 @@ namespace NDO.Mapping
             {
                 ra = rax as NDORelationAttribute;
                 if (ra == null)
-                    throw new Exception( "Cant load type NDORelationAttribute" );
+                {
+                    // The NDORelationAttribute is from an assembly with another version.
+                    // This can happen in the context of the NDOEnhancer.
+                    // Get the attribute with Serialization/Deserialization
+                    ra = rax.ConvertToNdoRelation();
+                }
             };
 
             this.composition = ra != null && (ra.Info & RelationInfo.Composite) != 0;

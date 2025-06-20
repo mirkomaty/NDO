@@ -30,10 +30,12 @@
     <Optimize>False</Optimize>
   </PropertyGroup>
   <ItemGroup>
+	  <PackageReference Include="Microsoft.CSharp" Version="4.7.0" />
 	  <PackageReference Include="NDOInterfaces" Version="5.0.0" />
       <PackageReference Include="PatchProductVersion" Version="1.0.3" Condition="'$(TargetFramework)'=='netstandard2.0'">
         <PrivateAssets>all</PrivateAssets>
       </PackageReference>
+      <PackageReference Include="System.Text.Json" Version="9.0.6" />
   </ItemGroup>
   <ItemGroup>
     <None Include="readme.md">
