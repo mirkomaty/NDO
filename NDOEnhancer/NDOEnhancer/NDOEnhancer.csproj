@@ -33,12 +33,12 @@
 	</Target>
 	
 	<Target Name="CopyProviders" AfterTargets="Build" Condition="'$(Configuration)'=='Debug'">
-		<Copy SourceFiles="..\..\Provider\MySqlConnectorProvider\NDO.MySqlConnector\bin\Release\$(TargetFramework)\NDO.MySqlConnector.dll" DestinationFolder="bin\Debug\$(TargetFramework)"/>
-		<Copy SourceFiles="..\..\Provider\MySqlNdoProvider\NDO.MySql\bin\Release\$(TargetFramework)\NDO.MySql.dll" DestinationFolder="bin\Debug\$(TargetFramework)"/>
-		<Copy SourceFiles="..\..\Provider\OracleProvider\NDO.Oracle\bin\Release\$(TargetFramework)\NDO.Oracle.dll" DestinationFolder="bin\Debug\$(TargetFramework)"/>
-		<Copy SourceFiles="..\..\Provider\PostGresProvider\NDO.Postgre\bin\Release\$(TargetFramework)\NDO.Postgre.dll" DestinationFolder="bin\Debug\$(TargetFramework)"/>
-		<Copy SourceFiles="..\..\Provider\SqliteProvider\NDO.Sqlite\bin\Release\$(TargetFramework)\NDO.Sqlite.dll" DestinationFolder="bin\Debug\$(TargetFramework)"/>
-		<Copy SourceFiles="..\..\Provider\SqlServerProvider\NDO.SqlServer\bin\Release\$(TargetFramework)\NDO.Sqlserver.dll" DestinationFolder="bin\Debug\$(TargetFramework)"/>
+		<Copy SourceFiles="..\..\Provider\MySqlConnectorProvider\NDO.MySqlConnector\bin\Release\net8.0\NDO.MySqlConnector.dll" DestinationFolder="bin\Debug\$(TargetFramework)"/>
+		<Copy SourceFiles="..\..\Provider\MySqlNdoProvider\NDO.MySql\bin\Release\net8.0\NDO.MySql.dll" DestinationFolder="bin\Debug\$(TargetFramework)"/>
+		<Copy SourceFiles="..\..\Provider\OracleProvider\NDO.Oracle\bin\Release\net8.0\NDO.Oracle.dll" DestinationFolder="bin\Debug\$(TargetFramework)"/>
+		<Copy SourceFiles="..\..\Provider\PostGresProvider\NDO.Postgre\bin\Release\net8.0\NDO.Postgre.dll" DestinationFolder="bin\Debug\$(TargetFramework)"/>
+		<Copy SourceFiles="..\..\Provider\SqliteProvider\NDO.Sqlite\bin\Release\net8.0\NDO.Sqlite.dll" DestinationFolder="bin\Debug\$(TargetFramework)"/>
+		<Copy SourceFiles="..\..\Provider\SqlServerProvider\NDO.SqlServer\bin\Release\net8.0\NDO.Sqlserver.dll" DestinationFolder="bin\Debug\$(TargetFramework)"/>
 	</Target>
 
   <ItemGroup>
