@@ -22,7 +22,7 @@
 
 using System;
 using System.Drawing;
-using System.Collections;
+using WinForms.FontSize;
 using System.ComponentModel;
 using System.Windows.Forms;
 
@@ -66,10 +66,12 @@ namespace NDOVsPackage
 			// Erforderlich für die Windows Form-Designerunterstützung
 			//
 			InitializeComponent();
-			this.chkUseGenerics.Checked = true;
+			// Calculate the new font size after InitializeComponent
+			var newFontSize = FontCalculator.Calculate(Screen.FromControl(this), Font.Size);
+			if (newFontSize > Font.Size)
+				Font = new Font( Font.FontFamily, newFontSize, FontStyle.Regular, GraphicsUnit.Point, 0 );
 
-			if (Screen.FromControl( this ).Bounds.Width >= 2600)
-				Font = new Font( "Segoe UI", 11f, FontStyle.Regular, GraphicsUnit.Point, 0 );
+			this.chkUseGenerics.Checked = true;			
 		}
 
 		public string FieldName

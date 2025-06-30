@@ -23,6 +23,7 @@
 using NDO.Mapping;
 using System.ComponentModel;
 using System.Text.RegularExpressions;
+using WinForms.FontSize;
 
 namespace SimpleMappingTool
 {
@@ -53,6 +54,10 @@ namespace SimpleMappingTool
             {
 				this.resources = new ComponentResourceManager( typeof( MainForm ) );
 				InitializeComponent();
+				// Calculate the new font size after InitializeComponent
+				var newFontSize = FontCalculator.Calculate(Screen.FromControl(this), Font.Size);
+                if (newFontSize > Font.Size)
+                    Font = new Font( Font.FontFamily, newFontSize, FontStyle.Regular, GraphicsUnit.Point, 0 );
 				this.imageList1!.ImageStream = (ImageListStreamer) resources.GetObject( "imageList1.ImageStream" )!;
 				imageList1.Images.SetKeyName( 0, "" );
 				imageList1.Images.SetKeyName( 1, "" );
@@ -201,7 +206,8 @@ namespace SimpleMappingTool
 			// 
 			// MainForm
 			// 
-			AutoScaleBaseSize = new Size( 6, 16 );
+			AutoScaleDimensions = new SizeF( 7F, 15F );
+			AutoScaleMode = AutoScaleMode.Font;
 			ClientSize = new Size( 784, 432 );
 			Controls.Add( panel1 );
 			Controls.Add( splitter1 );

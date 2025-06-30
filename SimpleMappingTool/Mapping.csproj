@@ -10,9 +10,10 @@
     <AssemblyVersion>5.0.1.0</AssemblyVersion>
     <FileVersion>5.0.1.0</FileVersion>
     <ForceDesignerDpiUnaware>true</ForceDesignerDpiUnaware>
-	<ApplicationHighDpiMode>SystemAware</ApplicationHighDpiMode>
+	<ApplicationHighDpiMode>PerMonitorV2</ApplicationHighDpiMode>
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="NDO.mapping" Version="5.0.1" />
+    <PackageReference Include="WinForms.FontSize" Version="1.0.0" />
   </ItemGroup>
 </Project>

@@ -25,6 +25,7 @@ using System.Drawing;
 using System.Collections;
 using System.ComponentModel;
 using System.Windows.Forms;
+using WinForms.FontSize;
 
 namespace NDOVsPackage
 {
@@ -57,8 +58,10 @@ namespace NDOVsPackage
 			//
 			InitializeComponent();
 
-			if (Screen.FromControl( this ).Bounds.Width >= 2600)
-				Font = new Font( "Segoe UI", 11f, FontStyle.Regular, GraphicsUnit.Point, 0 );
+			// Calculate the new font size after InitializeComponent
+			var newFontSize = FontCalculator.Calculate(Screen.FromControl(this), Font.Size);
+			if (newFontSize > Font.Size)
+				Font = new Font( Font.FontFamily, newFontSize, FontStyle.Regular, GraphicsUnit.Point, 0 );
 		}
 
 		/// <summary>
@@ -83,7 +86,7 @@ namespace NDOVsPackage
 		/// </summary>
 		private void InitializeComponent()
 		{
-			System.Resources.ResourceManager resources = new System.Resources.ResourceManager(typeof(PersistentClassDialog));
+			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(PersistentClassDialog));
 			this.txtClassName = new System.Windows.Forms.TextBox();
 			this.label1 = new System.Windows.Forms.Label();
 			this.btnCancel = new System.Windows.Forms.Button();
@@ -93,26 +96,25 @@ namespace NDOVsPackage
 			// 
 			// txtClassName
 			// 
-			this.txtClassName.Location = new System.Drawing.Point(16, 64);
+			this.txtClassName.Location = new System.Drawing.Point(13, 55);
 			this.txtClassName.Name = "txtClassName";
-			this.txtClassName.Size = new System.Drawing.Size(400, 22);
+			this.txtClassName.Size = new System.Drawing.Size(334, 20);
 			this.txtClassName.TabIndex = 0;
-			this.txtClassName.Text = "";
 			// 
 			// label1
 			// 
-			this.label1.Location = new System.Drawing.Point(16, 24);
+			this.label1.Location = new System.Drawing.Point(13, 21);
 			this.label1.Name = "label1";
-			this.label1.Size = new System.Drawing.Size(168, 24);
+			this.label1.Size = new System.Drawing.Size(140, 21);
 			this.label1.TabIndex = 1;
 			this.label1.Text = "Class Name";
 			// 
 			// btnCancel
 			// 
 			this.btnCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-			this.btnCancel.Location = new System.Drawing.Point(104, 152);
+			this.btnCancel.Location = new System.Drawing.Point(87, 132);
 			this.btnCancel.Name = "btnCancel";
-			this.btnCancel.Size = new System.Drawing.Size(144, 32);
+			this.btnCancel.Size = new System.Drawing.Size(120, 27);
 			this.btnCancel.TabIndex = 2;
 			this.btnCancel.Text = "Cancel";
 			this.btnCancel.Click += new System.EventHandler(this.btnCancel_Click);
@@ -120,28 +122,28 @@ namespace NDOVsPackage
 			// btnOK
 			// 
 			this.btnOK.DialogResult = System.Windows.Forms.DialogResult.OK;
-			this.btnOK.Location = new System.Drawing.Point(264, 152);
+			this.btnOK.Location = new System.Drawing.Point(220, 132);
 			this.btnOK.Name = "btnOK";
-			this.btnOK.Size = new System.Drawing.Size(144, 32);
+			this.btnOK.Size = new System.Drawing.Size(120, 27);
 			this.btnOK.TabIndex = 3;
 			this.btnOK.Text = "OK";
 			this.btnOK.Click += new System.EventHandler(this.btnOK_Click);
 			// 
 			// chkSerializable
 			// 
-			this.chkSerializable.Location = new System.Drawing.Point(16, 104);
+			this.chkSerializable.Location = new System.Drawing.Point(13, 90);
 			this.chkSerializable.Name = "chkSerializable";
-			this.chkSerializable.Size = new System.Drawing.Size(240, 24);
+			this.chkSerializable.Size = new System.Drawing.Size(200, 21);
 			this.chkSerializable.TabIndex = 4;
 			this.chkSerializable.Text = "Serializable";
 			// 
 			// PersistentClassDialog
 			// 
 			this.AcceptButton = this.btnOK;
-			this.AutoScaleBaseSize = new System.Drawing.Size(6, 15);
+			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = AutoScaleMode.Font;
 			this.CancelButton = this.btnCancel;
-			this.ClientSize = new System.Drawing.Size(440, 208);
+			this.ClientSize = new System.Drawing.Size(378, 183);
 			this.Controls.Add(this.chkSerializable);
 			this.Controls.Add(this.btnOK);
 			this.Controls.Add(this.btnCancel);
@@ -151,6 +153,7 @@ namespace NDOVsPackage
 			this.Name = "PersistentClassDialog";
 			this.Text = "Add Persistent Class";
 			this.ResumeLayout(false);
+			this.PerformLayout();
 
 		}
 		#endregion

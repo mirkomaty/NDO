@@ -31,6 +31,7 @@ using Microsoft.VisualStudio.ComponentModelHost;
 using NuGet.VisualStudio;
 using NDO.UISupport;
 using System.Drawing;
+using WinForms.FontSize;
 
 #pragma warning disable VSTHRD010 // Invoke single-threaded types on Main thread
 
@@ -93,8 +94,12 @@ namespace NDOVsPackage
 				this.projectDescription.BuildReferences();
 				this.projectDescription.FixDllState();
 				InitializeComponent();
-				if (Screen.FromControl( this ).Bounds.Width >= 2600)
-					Font = new Font( "Segoe UI", 11f, FontStyle.Regular, GraphicsUnit.Point, 0 );
+
+				// Calculate the new font size after InitializeComponent
+				var newFontSize = FontCalculator.Calculate(Screen.FromControl(this), Font.Size);
+				if (newFontSize > Font.Size)
+					Font = new Font( Font.FontFamily, newFontSize, FontStyle.Regular, GraphicsUnit.Point, 0 );
+
 				var lbAssemblies = (ListBox)this.chlbAssemblies;
 				this.references = projectDescription.References.Values.ToArray();
 				lbAssemblies.DataSource = this.references;
