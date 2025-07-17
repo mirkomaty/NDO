@@ -404,7 +404,8 @@ namespace NDO
 			isClosing = true;
 			this.ds.Dispose();
 			this.ds = null;
-			this.scope.Dispose();
+			if (this.scope != null)
+				this.scope.Dispose();
 			this.queryCache.Clear();
 		}
 
