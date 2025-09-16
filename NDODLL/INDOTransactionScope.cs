@@ -9,6 +9,12 @@ namespace NDO
 	public interface INDOTransactionScope : IDisposable
 	{
 		/// <summary>
+		/// This is called from NDO to provide the current pm to the transaction scope.
+		/// </summary>
+		/// <param name="pm"></param>
+		/// <returns></returns>
+		INDOTransactionScope Initialize( PersistenceManager pm );
+		/// <summary>
 		/// Sets the IsolationLevel of transactions started by the scope object
 		/// </summary>
 		IsolationLevel IsolationLevel { get; set; }

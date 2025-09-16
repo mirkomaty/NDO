@@ -12,16 +12,19 @@ namespace NDO.SqlPersistenceHandling
 {
 	class SqlQueryGenerator : IQueryGenerator
 	{
-		private readonly IMappingsAccessor mappingsAccessor;
 		private List<QueryInfo> subQueries = new List<QueryInfo>();
 		private Func<Dictionary<Relation, Class>, bool, Class, bool, object, string> selectPartCreator;
 		private object additionalSelectPartData = null;
-		private Mappings mappings;
+		private NDOMapping mappings;
 
-		public SqlQueryGenerator( IMappingsAccessor mappingsAccessor )
+		public SqlQueryGenerator()
 		{
-			this.mappingsAccessor = mappingsAccessor;
-			this.mappings = mappingsAccessor.Mappings;
+		}
+
+		public IQueryGenerator Initialize(NDOMapping mappings)
+		{
+			this.mappings = mappings;
+			return this;
 		}
 
 		/// <summary>
@@ -264,7 +267,7 @@ namespace NDO.SqlPersistenceHandling
 					relations.Add( rel );
 			}
 
-			new RelationContextGenerator( this.mappingsAccessor ).CreateContextForName( parentCls, prefetch, relations );
+			new RelationContextGenerator( this.mappings ).CreateContextForName( parentCls, prefetch, relations );
 
 			if (relations.Count == 0)
 				throw new NDOException( 76, $"Prefetch: Can't find relation mapping with name {prefetch} in class {parentCls.FullName}" );

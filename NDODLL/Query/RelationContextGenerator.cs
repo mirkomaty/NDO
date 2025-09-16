@@ -13,9 +13,9 @@ namespace NDO.Query
 		HashSet<Relation> allRelations;
 		List<Relation> relations;
 
-		public RelationContextGenerator(IMappingsAccessor mappingsAccessor)
+		public RelationContextGenerator( NDOMapping mappings )
 		{
-			this.mappings = mappingsAccessor.Mappings;
+			this.mappings = mappings;
 		}
 
 		/// <summary>

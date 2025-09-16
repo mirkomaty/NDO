@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
 <NDOMapping SchemaVersion="1.0">
   <Connections>
-    <Connection ID="C0" Name="Integrated Security=SSPI;Persist Security Info=False;Initial Catalog=NDOTest;Data Source=localhost" Type="SqlServer" />
+    <Connection ID="C0" Name="Integrated Security=SSPI;Persist Security Info=False;Initial Catalog=NDOTest;Data Source=localhost;TrustServerCertificate=True" Type="SqlServer" />
   </Connections>
   <Classes>
     <Class AssemblyName="PureBusinessClasses" FullName="AbstractBaseTestClasses.ABA" TableName="ABA" ConnectionId="C0" TypeCode="111219828">

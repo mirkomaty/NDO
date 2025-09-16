@@ -17,7 +17,7 @@ namespace NDO
 	public class NDODistributedTransactionScope : INDOTransactionScope
 	{
 		ST.TransactionScope innerScope;
-		private readonly PersistenceManager pm;
+		private PersistenceManager pm;
 
 		private Dictionary<string, IDbConnection> usedConnections = new Dictionary<string, IDbConnection>();
 
@@ -30,11 +30,10 @@ namespace NDO
 		/// Constructs an NDOTransactionScope object.
 		/// </summary>
 		/// <param name="pm"></param>
-		public NDODistributedTransactionScope( PersistenceManager pm )
+		public NDODistributedTransactionScope()
 		{
 			IsolationLevel = IsolationLevel.ReadCommitted;
 			TransactionMode = TransactionMode.Optimistic;
-			this.pm = pm;
 		}
 
 		///<inheritdoc/>
@@ -111,6 +110,13 @@ namespace NDO
 		public IDbTransaction GetTransaction( string id )
 		{
 			return null;
+		}
+
+		/// <inheritdoc/>
+		public INDOTransactionScope Initialize( PersistenceManager pm )
+		{
+			this.pm = pm;
+			return this;
 		}
 	}
 }

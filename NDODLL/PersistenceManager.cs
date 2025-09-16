@@ -91,7 +91,7 @@ namespace NDO
 		private TypeManager typeManager;
 		internal bool DeferredMode { get; private set; }
 		private INDOTransactionScope transactionScope;
-		internal INDOTransactionScope TransactionScope => transactionScope ?? (transactionScope = ServiceProvider.GetRequiredService<INDOTransactionScope>());		
+		internal INDOTransactionScope TransactionScope => transactionScope ?? (transactionScope = ServiceProvider.GetRequiredService<INDOTransactionScope>().Initialize(this));		
 
 		private OpenConnectionListener openConnectionListener;
 
@@ -160,8 +160,6 @@ namespace NDO
 		internal override void Init( Mappings mapping )
 		{
 			base.Init( mapping );
-
-			ServiceProvider.GetRequiredService<IPersistenceManagerAccessor>().PersistenceManager = this;
 
 			string dir = Path.GetDirectoryName( mapping.FileName );
 

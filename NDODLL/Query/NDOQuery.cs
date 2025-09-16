@@ -306,7 +306,7 @@ namespace NDO.Query
 					GenerateQueryContexts();
 
 				PrepareParameters();
-				IQueryGenerator queryGenerator = ServiceProvider.GetRequiredService<IQueryGenerator>();
+				IQueryGenerator queryGenerator = ServiceProvider.GetRequiredService<IQueryGenerator>().Initialize(this.mappings);
 				return queryGenerator.GenerateQueryStringForAllTypes( this.queryContextsForTypes, this.expressionTree, this.hollowResults, this.orderings, this.skip, this.take );
 			}
 		}
@@ -462,7 +462,7 @@ namespace NDO.Query
 		private object ExecuteAggregateQuery( QueryContextsEntry queryContextsEntry, string field, AggregateType aggregateType )
 		{
 			Type t = queryContextsEntry.Type;
-			IQueryGenerator queryGenerator = ServiceProvider.GetRequiredService<IQueryGenerator>();
+			IQueryGenerator queryGenerator = ServiceProvider.GetRequiredService<IQueryGenerator>().Initialize(this.mappings);
 			string generatedQuery = queryGenerator.GenerateAggregateQueryString( field, queryContextsEntry, this.expressionTree, this.queryContextsForTypes.Count > 1, aggregateType );
 
 			using (IPersistenceHandler persistenceHandler = this.pm.PersistenceHandlerManager.GetPersistenceHandler( t ))
@@ -528,7 +528,7 @@ namespace NDO.Query
 
 		private IList ExecuteSubQuery( Type t, QueryContextsEntry queryContextsEntry )
 		{
-			IQueryGenerator queryGenerator = ServiceProvider.GetRequiredService<IQueryGenerator>();
+			IQueryGenerator queryGenerator = ServiceProvider.GetRequiredService<IQueryGenerator>().Initialize(this.mappings);
 			bool hasBeenPrepared = PrepareParameters();
 			string generatedQuery;
 
@@ -592,7 +592,7 @@ namespace NDO.Query
 				this.pm.CheckTransaction( persistenceHandler, t );
 
 				bool hasBeenPrepared = PrepareParameters();
-				IQueryGenerator queryGenerator = ServiceProvider.GetRequiredService<IQueryGenerator>();
+				IQueryGenerator queryGenerator = ServiceProvider.GetRequiredService<IQueryGenerator>().Initialize(this.mappings);
 				string generatedQuery = queryGenerator.GenerateQueryString( queryContextsEntry, this.expressionTree, this.hollowResults, this.queryContextsForTypes.Count > 1, this.orderings, this.skip, this.take );
 
 				if (hasBeenPrepared)
@@ -702,7 +702,7 @@ namespace NDO.Query
 				}
 			}
 
-			var contextGenerator = ServiceProvider.GetRequiredService<RelationContextGenerator>();
+			var contextGenerator = new RelationContextGenerator(this.mappings);
 			this.queryContextsForTypes = new List<QueryContextsEntry>();
 			// usedTables now contains all assignable classes of our result type
 			foreach (var de in usedTables)

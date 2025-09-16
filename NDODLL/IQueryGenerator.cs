@@ -1,11 +1,9 @@
-﻿using NDO.Query;
+﻿using NDO.Mapping;
+using NDO.Query;
 using NDO.SqlPersistenceHandling;
 using NDOql.Expressions;
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace NDO
 {
@@ -15,6 +13,13 @@ namespace NDO
 	/// <remarks>You can inject an implementation of this class, if your system works with other languages other than Sql</remarks>
 	public interface IQueryGenerator
 	{
+		/// <summary>
+		/// This method is called from NDO to provide the mapping information
+		/// of the current PM.
+		/// </summary>
+		/// <param name="mappings"></param>
+		IQueryGenerator Initialize( NDOMapping mappings );
+
 		/// <summary>
 		/// Creates a query string, which can be passed to the IPersistenceHandler to fetch the results for a given concrete type.
 		/// </summary>

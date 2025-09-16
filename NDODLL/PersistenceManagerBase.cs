@@ -195,9 +195,6 @@ namespace NDO
 			Logger = NDOApplication.ServiceProvider.GetService<ILoggerFactory>()?.CreateLogger( GetType() );
 			this.mappings = mappings;
 
-			var scopedMappingsAccessor = ServiceProvider.GetRequiredService<IMappingsAccessor>();
-			scopedMappingsAccessor.Mappings = mappings;
-
 			this.ds = new NDODataSet( this.mappings, ProviderFactory );  // Each PersistenceManager instance must have it's own DataSet.
 		}
 
@@ -349,7 +346,7 @@ namespace NDO
 		{
 			get
 			{
-				return this.persistenceHandlerManager = ServiceProvider.GetRequiredService<IPersistenceHandlerManager>();
+				return this.persistenceHandlerManager = new NDOPersistenceHandlerManager(this.ServiceProvider, this.mappings);
 			}
 			set { this.persistenceHandlerManager = value; }
 		}

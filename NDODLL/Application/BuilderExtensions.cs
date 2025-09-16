@@ -60,12 +60,8 @@ namespace NDO.Application
 			// different PMs in one Request, which would share the
 			// scoped objects.
 			services.AddTransient<IPersistenceHandler, SqlPersistenceHandler>();
-			services.AddTransient<RelationContextGenerator>();
 			services.AddTransient<IQueryGenerator, SqlQueryGenerator>();
-			services.AddTransient<IPersistenceHandlerManager, NDOPersistenceHandlerManager>();
-			services.AddTransient<IMappingsAccessor, MappingsAccessor>();
 			services.AddTransient<INDOTransactionScope, NDOTransactionScope>();
-			services.AddTransient<IPersistenceManagerAccessor, PersistenceManagerAccessor>();
 		}
 
 		/// <summary>

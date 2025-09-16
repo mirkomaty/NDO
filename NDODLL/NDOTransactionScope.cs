@@ -1,5 +1,4 @@
-﻿using NDO.Mapping;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
@@ -8,11 +7,11 @@ using System.Text.RegularExpressions;
 namespace NDO
 {
 	/// <summary>
-	/// 
+	/// class NDOTransactionScope
 	/// </summary>
 	public class NDOTransactionScope : INDOTransactionScope
 	{
-		private readonly PersistenceManager pm;
+		private PersistenceManager pm;
 
 		private Dictionary<string, IDbConnection> usedConnections = new Dictionary<string, IDbConnection>();
 		private Dictionary<string, IDbTransaction> usedTransactions = new Dictionary<string, IDbTransaction>();
@@ -27,12 +26,10 @@ namespace NDO
 		/// <summary>
 		/// Constructs an NDOTransactionScope object.
 		/// </summary>
-		/// <param name="pmAccessor"></param>
-		public NDOTransactionScope( IPersistenceManagerAccessor pmAccessor )
+		public NDOTransactionScope()
 		{
 			IsolationLevel = IsolationLevel.ReadCommitted;
 			TransactionMode = TransactionMode.Optimistic;
-			this.pm = pmAccessor.PersistenceManager;
 		}
 
 		///<inheritdoc/>
@@ -149,6 +146,13 @@ namespace NDO
 			}
 
 			this.usedConnections.Clear();
+		}
+
+		/// <inheritdoc/>
+		public INDOTransactionScope Initialize( PersistenceManager pm )
+		{
+			this.pm = pm;
+			return this;
 		}
 	}
 
