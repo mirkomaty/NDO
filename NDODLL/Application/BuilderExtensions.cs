@@ -55,14 +55,17 @@ namespace NDO.Application
 			services.AddNdoProviderFactory( hostEnvironment, config );
 			NDOApplication.Configuration = config;
 			NDOApplication.HostEnvironment = hostEnvironment;
+			services.AddSingleton<IPersistenceHandlerPool, NDOPersistenceHandlerPool>();
+			// These services are all transient, because there can be
+			// different PMs in one Request, which would share the
+			// scoped objects.
 			services.AddTransient<IPersistenceHandler, SqlPersistenceHandler>();
 			services.AddTransient<RelationContextGenerator>();
 			services.AddTransient<IQueryGenerator, SqlQueryGenerator>();
-			services.AddScoped<IPersistenceHandlerManager, NDOPersistenceHandlerManager>();
-			services.AddSingleton<IPersistenceHandlerPool, NDOPersistenceHandlerPool>();
-			services.AddScoped<IMappingsAccessor, MappingsAccessor>();
+			services.AddTransient<IPersistenceHandlerManager, NDOPersistenceHandlerManager>();
+			services.AddTransient<IMappingsAccessor, MappingsAccessor>();
 			services.AddTransient<INDOTransactionScope, NDOTransactionScope>();
-			services.AddScoped<IPersistenceManagerAccessor, PersistenceManagerAccessor>();
+			services.AddTransient<IPersistenceManagerAccessor, PersistenceManagerAccessor>();
 		}
 
 		/// <summary>
