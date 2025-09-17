@@ -20,10 +20,17 @@ namespace NdoUnitTests
             pm.Save();
         }
 
+        [SetUp]
+        public void Setup()
+        {
+            EnableNdoDebugLogs = true;
+        }
+
         [TearDown]
         public void TearDown()
         {
-            var pm = PmFactory.NewPersistenceManager();
+			EnableNdoDebugLogs = false;
+			var pm = PmFactory.NewPersistenceManager();
             pm.Objects<Mitarbeiter>().DeleteDirectly();
             Logger.ClearTestLogs();
         }
