@@ -36,11 +36,13 @@ namespace NdoUnitTests
         public void Setup()
         {
             Logger.ClearTestLogs();
+            EnableNdoDebugLogs = true;
         }
 
         [TearDown]
         public void TearDown()
         {
+            EnableNdoDebugLogs = false;
             Logger.ClearTestLogs();
             var pm = PmFactory.NewPersistenceManager();
             NDOQuery<Mitarbeiter> q = new NDOQuery<Mitarbeiter>( pm );

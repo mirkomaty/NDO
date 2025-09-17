@@ -9,6 +9,7 @@ namespace NdoUnitTests
 {
 	public class NDOTest
 	{
+		public bool EnableNdoDebugLogs { get; set; }
 		public IHost Host { get; private set; }
 		public NDOTest()
 		{
@@ -18,7 +19,9 @@ namespace NdoUnitTests
 				services.AddLogging( b =>
 				{
 					b.ClearProviders();
-					b.AddFormfaktenLogger();
+					b.AddFormfaktenLogger()
+					.AddFilter( ( cat, l ) => 
+						EnableNdoDebugLogs && cat.StartsWith("NDO") ? l >= LogLevel.Debug : l >= LogLevel.Information );
 				} );
 
 				services.AddNdo( null, null );
