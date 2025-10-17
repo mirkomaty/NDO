@@ -1451,8 +1451,11 @@ namespace NDO
 				sb.Append( schemaTransitionGenerator.Generate( transitionElement ) );
 				newIds.Add( gid );
 
-				sb.Append( $"INSERT INTO {ndoSchemaIds} ({schName},{idCol},{insertTime}) VALUES ('{schemaName}','{gid}',{dtLiteral});" );
-				
+				if (schemaName != null)
+					sb.Append( $"INSERT INTO {ndoSchemaIds} ({schName},{idCol},{insertTime}) VALUES ('{schemaName}','{gid}',{dtLiteral});" );
+				else
+					sb.Append( $"INSERT INTO {ndoSchemaIds} ({schName},{idCol},{insertTime}) VALUES (NULL,'{gid}',{dtLiteral});" );
+
 				results.AddRange( InternalPerformSchemaTransitions( ndoConn, sb.ToString() ) );
 			}
 
