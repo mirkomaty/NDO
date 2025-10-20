@@ -1,4 +1,5 @@
-﻿using System;
+﻿using NDO.Mapping;
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
@@ -77,6 +78,8 @@ namespace NDO
 
 				IDbConnection conn = null;
 				usedConnections.TryGetValue( id, out conn );
+				if (conn == null)
+					throw new NDOException( 121, $"Can't commit. No open connection found for NDO Connection {id} ({conn.DisplayName()})" );
 				this.pm.LogIfVerbose( String.Format( "Committing transaction {0:X} at connection '{1}'", tx.GetHashCode(), conn.DisplayName() ) );
 			}
 
