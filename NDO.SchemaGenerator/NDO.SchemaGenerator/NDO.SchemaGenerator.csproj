@@ -9,7 +9,7 @@
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <IncludeSymbols>True</IncludeSymbols>
     <PackageId>NDO.SchemaGenerator</PackageId>
-    <Version>5.0.0</Version>
+    <Version>5.1.0</Version>
     <Authors>Mirko Matytschak</Authors>
     <Company>Mirko Matytschak</Company>
     <Description>Package to read and create NDO mapping files.</Description>
@@ -18,8 +18,8 @@
     <PackageProjectUrl>https://www.netdataobjects.de</PackageProjectUrl>
     <PackageTags>NDO .NET Data Objects schema generation</PackageTags>
     <PackageReleaseNotes>For NDO version 5.0</PackageReleaseNotes>
-    <AssemblyVersion>5.0.0.0</AssemblyVersion>
-    <FileVersion>5.0.0.0</FileVersion>
+    <AssemblyVersion>5.1.0.0</AssemblyVersion>
+    <FileVersion>5.1.0.0</FileVersion>
     <SignAssembly>true</SignAssembly>
     <AssemblyOriginatorKeyFile>..\..\NDODLL\ndo_ent.snk</AssemblyOriginatorKeyFile>
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
@@ -27,7 +27,7 @@
     <RunAnalyzersDuringLiveAnalysis>False</RunAnalyzersDuringLiveAnalysis>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="NDO.Mapping" Version="5.0.0" />
+    <PackageReference Include="NDO.Mapping" Version="5.1.0" />
     <PackageReference Include="PatchProductVersion" Version="1.0.3" Condition="'$(TargetFramework)'=='netstandard2.0'">
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
