@@ -26,7 +26,6 @@ using System.Data.Common;
 using Oracle.ManagedDataAccess.Client;
 using NDO;
 using System.Collections;
-using System.Text.RegularExpressions;
 using NDOInterfaces;
 
 #pragma warning disable 618
@@ -35,7 +34,6 @@ namespace OracleProvider
 {
 	/// <summary>
 	/// Sample adapter class to connect new ADO.NET Providers with NDO.
-	/// This Adapter is based on the Oracle Provider in .NET Framework 1.1
 	/// </summary>
 	public class Provider : NDOAbstractProvider
 	{
@@ -43,19 +41,19 @@ namespace OracleProvider
 		// which implement common interfaces in .NET:
 		// IDbConnection, IDbCommand, DbDataAdapter and the Parameter objects
 		#region Provide specialized type objects
-		public override System.Data.IDbConnection NewConnection(string connectionString) 
+		public override INdoDbConnection NewConnection(string connectionString) 
 		{
-			return new OracleConnection(connectionString);
+			return new NdoDbConnection( new OracleConnection(connectionString) );
 		}
 
-		public override System.Data.IDbCommand NewSqlCommand(System.Data.IDbConnection connection) 
+		public override IDbCommand NewSqlCommand(INdoDbConnection connection) 
 		{
 			OracleCommand command = new OracleCommand();
-			command.Connection = (OracleConnection)connection;
+			command.Connection = (OracleConnection)connection.InnerConnection;
 			return command;
 		}
 
-		public override DbDataAdapter NewDataAdapter(System.Data.IDbCommand select, System.Data.IDbCommand update, System.Data.IDbCommand insert, System.Data.IDbCommand delete) 
+		public override DbDataAdapter NewDataAdapter(IDbCommand select, IDbCommand update, IDbCommand insert, IDbCommand delete) 
 		{
 			OracleDataAdapter da = new OracleDataAdapter();
 			da.SelectCommand = (OracleCommand)select;
@@ -74,7 +72,7 @@ namespace OracleProvider
 			return new OracleCommandBuilder((OracleDataAdapter)dataAdapter);
 		}
 
-		public override IDataParameter AddParameter(System.Data.IDbCommand command, string parameterName, object dbType, int size, string columnName) 
+		public override IDataParameter AddParameter(IDbCommand command, string parameterName, object dbType, int size, string columnName) 
 		{
 			// Cast notwendig, damit der DbType richtig übersetzt wird
 			OracleCommand cmd = (OracleCommand) command;
@@ -248,7 +246,7 @@ namespace OracleProvider
 			return "\"" + plainName + "\"";
 		}
 	
-		public override string[] GetTableNames(IDbConnection conn, string owner)
+		public override string[] GetTableNames(INdoDbConnection conn, string owner)
 		{
 			bool wasOpen = true;
 			if (conn.State == ConnectionState.Closed)
@@ -256,7 +254,7 @@ namespace OracleProvider
 				conn.Open();
 				wasOpen = false;
 			}
-			OracleCommand cmd = new OracleCommand("SELECT TABLE_NAME FROM ALL_TABLES where OWNER LIKE '" + owner + "'", (OracleConnection) conn);
+			OracleCommand cmd = new OracleCommand("SELECT TABLE_NAME FROM ALL_TABLES where OWNER LIKE '" + owner + "'", (OracleConnection) conn.InnerConnection);
 			OracleDataReader dr = cmd.ExecuteReader();
 			IList result = new ArrayList();
 			while (dr.Read())

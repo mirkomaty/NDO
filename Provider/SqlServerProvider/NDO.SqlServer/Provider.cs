@@ -6,6 +6,7 @@ using System.Data.Common;
 using Microsoft.Data.SqlClient;
 using System.Text;
 using System.Text.RegularExpressions;
+using NDO.SqlServer;
 
 namespace SqlServerProvider
 {
@@ -47,25 +48,25 @@ namespace SqlServerProvider
 		/// <summary>
 		/// See <see cref="IProvider"> IProvider interface </see>
 		/// </summary>
-		public override System.Data.IDbConnection NewConnection( string connectionString )
+		public override INdoDbConnection NewConnection( string connectionString )
 		{
-			return new SqlConnection( connectionString );
+			return new NdoSqlConnection( new SqlConnection( connectionString ) );  // ClientConnectionId
 		}
 
 		/// <summary>
 		/// See <see cref="IProvider"> IProvider interface </see>
 		/// </summary>
-		public override System.Data.IDbCommand NewSqlCommand( System.Data.IDbConnection connection )
+		public override IDbCommand NewSqlCommand( INdoDbConnection connection )
 		{
 			SqlCommand command = new SqlCommand();
-			command.Connection = (SqlConnection)connection;
+			command.Connection = (SqlConnection)connection.InnerConnection;
 			return command;
 		}
 
 		/// <summary>
 		/// See <see cref="IProvider"> IProvider interface </see>
 		/// </summary>
-		public override DbDataAdapter NewDataAdapter( System.Data.IDbCommand select, System.Data.IDbCommand update, System.Data.IDbCommand insert, System.Data.IDbCommand delete )
+		public override DbDataAdapter NewDataAdapter( IDbCommand select, IDbCommand update, IDbCommand insert, IDbCommand delete )
 		{
 			SqlDataAdapter da = new SqlDataAdapter();
 			da.SelectCommand = (SqlCommand)select;
@@ -87,7 +88,7 @@ namespace SqlServerProvider
 		/// <summary>
 		/// See <see cref="IProvider"> IProvider interface </see>
 		/// </summary>
-		public override IDataParameter AddParameter( System.Data.IDbCommand command, string parameterName, object dbType, int size, string columnName )
+		public override IDataParameter AddParameter( IDbCommand command, string parameterName, object dbType, int size, string columnName )
 		{
 			return ((SqlCommand)command).Parameters.Add( new SqlParameter( parameterName, (SqlDbType)dbType, size > -1 ? size : 0, columnName ) );
 		}
@@ -270,11 +271,11 @@ namespace SqlServerProvider
 		/// <summary>
 		/// See <see cref="IProvider"> IProvider interface </see>
 		/// </summary>
-		public override string[] GetTableNames( IDbConnection conn, string owner )
+		public override string[] GetTableNames( INdoDbConnection conn, string owner )
 		{
 			List<string> result = new List<string>();
 			string sql = "SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_TYPE = 'BASE TABLE'";
-			SqlCommand cmd = new SqlCommand( sql, (SqlConnection)conn );
+			SqlCommand cmd = new SqlCommand( sql, (SqlConnection)conn.InnerConnection );
 			bool wasOpen = true;
 
 			if (conn.State == ConnectionState.Closed)

@@ -28,6 +28,7 @@ using System.Data.Common;
 using NDOInterfaces;
 using System.Collections;
 using MySqlConnector;
+using NDO.MySqlConnector;
 
 namespace NDO.MySqlConnectorProvider
 {
@@ -41,15 +42,15 @@ namespace NDO.MySqlConnectorProvider
 		// which implement common interfaces in .NET:
 		// IDbConnection, IDbCommand, DbDataAdapter and the Parameter objects
 		#region Provide specialized type objects
-		public override IDbConnection NewConnection(string connectionString) 
+		public override INdoDbConnection NewConnection(string connectionString) 
 		{
-			return new MySqlConnection(connectionString);
+			return new NdoMySqlConnectorConnection( new MySqlConnection(connectionString) );
 		}
 
-		public override IDbCommand NewSqlCommand(IDbConnection connection) 
+		public override IDbCommand NewSqlCommand(INdoDbConnection connection) 
 		{
 			MySqlCommand command = new MySqlCommand();
-			command.Connection = (MySqlConnection)connection;
+			command.Connection = (MySqlConnection)connection.InnerConnection;
 			return command;
 		}
 
@@ -270,9 +271,9 @@ namespace NDO.MySqlConnectorProvider
 		}
 
 			
-		public override string[] GetTableNames(IDbConnection conn, string owner)
+		public override string[] GetTableNames(INdoDbConnection conn, string owner)
 		{
-			MySqlCommand cmd = new MySqlCommand("show tables", (MySqlConnection) conn);
+			MySqlCommand cmd = new MySqlCommand("show tables", (MySqlConnection) conn.InnerConnection);
 			bool wasOpen = true;
 			if (conn.State == ConnectionState.Closed)
 			{

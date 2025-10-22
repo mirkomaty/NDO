@@ -3,7 +3,7 @@
 	<Import Project="SourceRevisionId.props" Condition="Exists('SourceRevisionId.props')" />
 	<PropertyGroup>
 		<TargetFrameworks>netstandard2.0;netstandard2.1;net6.0;net8.0;net9.0</TargetFrameworks>
-		<Version>5.0.0</Version>
+		<Version>5.1.0</Version>
 		<Authors>Mirko Matytschak</Authors>
 		<Company>Mirko Matytschak</Company>
 		<Product>.NET Data Objects (NDO)</Product>
@@ -15,29 +15,29 @@
 		<PackageId>ndo.postgre</PackageId>
 		<PackageReleaseNotes>Upgrade to NDO 5.0</PackageReleaseNotes>
 		<PackageLicenseExpression>MIT</PackageLicenseExpression>
-		<AssemblyVersion>5.0.0.0</AssemblyVersion>
-		<FileVersion>5.0.0.0</FileVersion>
+		<AssemblyVersion>5.1.0.0</AssemblyVersion>
+		<FileVersion>5.1.0.0</FileVersion>
 		<IncludeSymbols>True</IncludeSymbols>
 		<SymbolPackageFormat>snupkg</SymbolPackageFormat>
 	</PropertyGroup>
 	<ItemGroup>
-		<PackageReference Include="NDOInterfaces" Version="5.0.0" />
+		<PackageReference Include="NDOInterfaces" Version="5.1.0" />
 	</ItemGroup>
 	
 	<ItemGroup Condition="'$(TargetFramework)'=='net9.0'">
-		<PackageReference Include="npgsql" Version="9.0.3" />
+		<PackageReference Include="npgsql" Version="9.0.4" />
 	</ItemGroup>
 	<ItemGroup Condition="'$(TargetFramework)'=='net8.0'">
-		<PackageReference Include="npgsql" Version="9.0.3" />
+		<PackageReference Include="npgsql" Version="9.0.4" />
 	</ItemGroup>
 	<ItemGroup Condition="'$(TargetFramework)'=='net6.0'">
-		<PackageReference Include="npgsql" Version="9.0.3" />
+		<PackageReference Include="npgsql" Version="9.0.4" />
 	</ItemGroup>
 	<ItemGroup Condition="'$(TargetFramework)'=='netstandard2.0'">
-		<PackageReference Include="npgsql" Version="8.0.7" />
+		<PackageReference Include="npgsql" Version="8.0.8" />
 	</ItemGroup>
 	<ItemGroup Condition="'$(TargetFramework)'=='netstandard2.1'">
-		<PackageReference Include="npgsql" Version="8.0.7" />
+		<PackageReference Include="npgsql" Version="8.0.8" />
 	</ItemGroup>
 
 	<ItemGroup>

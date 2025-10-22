@@ -16,7 +16,7 @@
 		<Reference Include="..\..\..\UISupport\NDO.UISupport\bin\Release\NDO.UISupport.dll"></Reference>
 	</ItemGroup>
 	<ItemGroup>
-		<PackageReference Include="NDOInterfaces" Version="5.0.0" />
+		<PackageReference Include="NDOInterfaces" Version="5.1.0" />
 		<PackageReference Include="PatchProductVersion" Version="1.0.3" >
 			<PrivateAssets>all</PrivateAssets>
 		</PackageReference>

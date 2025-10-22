@@ -3,7 +3,7 @@
 	<Import Project="SourceRevisionId.props" Condition="Exists('SourceRevisionId.props')" />
 	<PropertyGroup>
 		<TargetFrameworks>netstandard2.0;netstandard2.1;net6.0;net8.0;net9.0</TargetFrameworks>
-		<Version>5.0.0</Version>
+		<Version>5.1.0</Version>
 		<Authors>Mirko Matytschak</Authors>
 		<Company>Mirko Matytschak</Company>
 		<Product>.NET Data Objects (NDO)</Product>
@@ -14,14 +14,14 @@
 		<PackageId>ndo.mysql</PackageId>
 		<PackageReleaseNotes>Upgrade for NDO 5.0</PackageReleaseNotes>
 		<PackageLicenseExpression>MIT</PackageLicenseExpression>
-		<AssemblyVersion>5.0.0.0</AssemblyVersion>
-		<FileVersion>5.0.0.0</FileVersion>
+		<AssemblyVersion>5.1.0.0</AssemblyVersion>
+		<FileVersion>5.1.0.0</FileVersion>
 		<PackageReadmeFile>readme.md</PackageReadmeFile>
 		<IncludeSymbols>True</IncludeSymbols>
 		<SymbolPackageFormat>snupkg</SymbolPackageFormat>
 	</PropertyGroup>
 	<ItemGroup>
-		<PackageReference Include="NDOInterfaces" Version="5.0.0" />
+		<PackageReference Include="NDOInterfaces" Version="5.1.0" />
 	</ItemGroup>
 	<ItemGroup>
 		<PackageReference Include="Mysql.data" Condition="'$(TargetFramework)'=='netstandard2.0'">

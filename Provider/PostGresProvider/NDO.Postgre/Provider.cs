@@ -20,15 +20,16 @@
 // DEALINGS IN THE SOFTWARE.
 
 
-using System;
-using System.Text;
-using System.Text.RegularExpressions;
-using System.Data;
-using System.Data.Common;
+using NDO.Postgre;
 using NDOInterfaces;
-using System.Collections;
 using Npgsql;
 using NpgsqlTypes;
+using System;
+using System.Collections;
+using System.Data;
+using System.Data.Common;
+using System.Text;
+using System.Text.RegularExpressions;
 
 namespace NDO.PostGreProvider
 {
@@ -42,19 +43,19 @@ namespace NDO.PostGreProvider
 		// which implement common interfaces in .NET:
 		// IDbConnection, IDbCommand, DbDataAdapter and the Parameter objects
 		#region Provide specialized type objects
-		public override System.Data.IDbConnection NewConnection(string connectionString) 
+		public override INdoDbConnection NewConnection(string connectionString) 
 		{
-			return new NpgsqlConnection(connectionString);
+			return new NdoNpgsqlConnection( new NpgsqlConnection(connectionString) );
 		}
 
-		public override System.Data.IDbCommand NewSqlCommand(System.Data.IDbConnection connection) 
+		public override IDbCommand NewSqlCommand(INdoDbConnection connection) 
 		{
 			NpgsqlCommand command = new NpgsqlCommand();
-			command.Connection = (NpgsqlConnection)connection;
+			command.Connection = (NpgsqlConnection)connection.InnerConnection;
 			return command;
 		}
 
-		public override DbDataAdapter NewDataAdapter(System.Data.IDbCommand select, System.Data.IDbCommand update, System.Data.IDbCommand insert, System.Data.IDbCommand delete) 
+		public override DbDataAdapter NewDataAdapter(IDbCommand select, IDbCommand update, IDbCommand insert, IDbCommand delete) 
 		{
 			NpgsqlDataAdapter da = new NpgsqlDataAdapter();
 			da.SelectCommand = (NpgsqlCommand)select;
@@ -73,7 +74,7 @@ namespace NDO.PostGreProvider
 		}
 
 
-		public override IDataParameter AddParameter(System.Data.IDbCommand command, string parameterName, object dbType, int size, string columnName) 
+		public override IDataParameter AddParameter(IDbCommand command, string parameterName, object dbType, int size, string columnName) 
 		{
 			return ((NpgsqlCommand)command).Parameters.Add(new NpgsqlParameter(parameterName, (NpgsqlDbType)dbType, size, columnName));			
 		}
@@ -294,9 +295,9 @@ namespace NDO.PostGreProvider
 		}
 
 			
-		public override string[] GetTableNames(IDbConnection conn, string owner)
+		public override string[] GetTableNames(INdoDbConnection conn, string owner)
 		{
-            NpgsqlDataAdapter a = new NpgsqlDataAdapter("Select * from pg_tables", (NpgsqlConnection)conn);
+            NpgsqlDataAdapter a = new NpgsqlDataAdapter("Select * from pg_tables", (NpgsqlConnection)conn.InnerConnection);
             DataSet ds = new DataSet();
             a.Fill(ds);
             DataTable dt = ds.Tables[0];

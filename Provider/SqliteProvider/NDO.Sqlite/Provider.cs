@@ -22,13 +22,10 @@
 
 using System;
 using System.Text;
-using System.Reflection;
 using System.Data;
 using System.Data.Common;
 using NDOInterfaces;
-
 using System.Data.SQLite;
-using System.IO;
 
 namespace System.Data.SQLite
 {
@@ -62,19 +59,19 @@ namespace NDO.SqliteProvider
 		// which implement common interfaces in .NET:
 		// IDbConnection, IDbCommand, DbDataAdapter and the Parameter objects
 		#region Provide specialized type objects
-		public override System.Data.IDbConnection NewConnection(string connectionString) 
+		public override INdoDbConnection NewConnection(string connectionString) 
 		{
-			return new SQLiteConnection(connectionString);
+			return new NdoDbConnection( new SQLiteConnection(connectionString) );
 		}
 
-		public override System.Data.IDbCommand NewSqlCommand(System.Data.IDbConnection connection) 
+		public override IDbCommand NewSqlCommand(INdoDbConnection connection) 
 		{
 			SQLiteCommand command = new SQLiteCommand();
-			command.Connection = (SQLiteConnection)connection;
+			command.Connection = (SQLiteConnection)connection.InnerConnection;
 			return command;
 		}
 
-		public override DbDataAdapter NewDataAdapter(System.Data.IDbCommand select, System.Data.IDbCommand update, System.Data.IDbCommand insert, System.Data.IDbCommand delete) 
+		public override DbDataAdapter NewDataAdapter(IDbCommand select, IDbCommand update, IDbCommand insert, IDbCommand delete) 
 		{
 			SQLiteDataAdapter da = new SQLiteDataAdapter();
 			da.SelectCommand = (SQLiteCommand)select;
@@ -323,9 +320,9 @@ namespace NDO.SqliteProvider
 		}
 
 			
-		public override string[] GetTableNames(IDbConnection conn, string owner)
+		public override string[] GetTableNames(INdoDbConnection conn, string owner)
 		{
-            SQLiteDataAdapter a = new SQLiteDataAdapter("SELECT name FROM sqlite_master WHERE type='table' ORDER BY name;", (SQLiteConnection)conn);
+            SQLiteDataAdapter a = new SQLiteDataAdapter("SELECT name FROM sqlite_master WHERE type='table' ORDER BY name;", (SQLiteConnection)conn.InnerConnection);
             DataSet ds = new DataSet();
             a.Fill(ds);
             DataTable dt = ds.Tables[0];
