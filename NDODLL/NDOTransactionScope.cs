@@ -131,7 +131,18 @@ namespace NDO
 			{
 				var tx = this.usedTransactions[key];
 				var id = tx.GetHashCode();
-				tx.Rollback();
+				try
+				{
+					// See https://github.com/dotnet/runtime/issues/95399
+					// We don't have any information about the state of the transaction.
+					// If it is completed, we will get an exception here.
+					// Given that in most cases it's possible to track the tx state outside of NDO,
+					// we are safe here in the most cases.
+					tx.Rollback();
+				}
+				catch
+				{
+				}
 				IDbConnection conn = null;
 				this.usedConnections.TryGetValue( key, out conn );
 				pm.LogIfVerbose( $"Rollback transaction {id.ToString( "X" )} at connection '{conn.DisplayName()}'" );
