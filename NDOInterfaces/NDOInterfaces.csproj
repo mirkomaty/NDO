@@ -20,6 +20,7 @@
     <RunAnalyzersDuringBuild>False</RunAnalyzersDuringBuild>
     <RunAnalyzersDuringLiveAnalysis>False</RunAnalyzersDuringLiveAnalysis>
     <FileVersion>5.1.0.0</FileVersion>
+    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="PatchProductVersion" Version="1.0.3" Condition="'$(TargetFramework)'=='netstandard2.0'">
@@ -33,6 +34,6 @@
     <DefineConstants>TRACE;RELEASE;NDO20;</DefineConstants>
   </PropertyGroup>
   <Target Name="PostBuild" AfterTargets="Pack">
-    <Exec Command="IF NOT EXIST ..\BuiltPackages md ..\BuiltPackages&#xD;&#xA;echo Copy package&#xD;&#xA;copy bin\$(Configuration)\NDOInterfaces*.nupkg ..\BuiltPackages /Y&#xD;&#xA;" />
+    <Exec Command="IF NOT EXIST ..\BuiltPackages md ..\BuiltPackages&#xD;&#xA;echo Copy package&#xD;&#xA;copy bin\$(Configuration)\NDOInterfaces*.nupkg ..\BuiltPackages /Y&#xD;&#xA;copy bin\$(Configuration)\NDOInterfaces*.snupkg ..\BuiltPackages /Y&#xD;&#xA;" />
   </Target>
 </Project>

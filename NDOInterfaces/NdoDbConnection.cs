@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Data.Common;
 using System.Text;
 using System.Threading;
 
@@ -10,7 +11,7 @@ namespace NDOInterfaces
 	/// Wrapper class for IDbConnection to add additional information.
 	/// </summary>
 	/// <remarks>This class contains a reusable generation of ConnectionIds.</remarks>
-	public class NdoDbConnection : INdoDbConnection
+	public class NdoDbConnection : DbConnection, INdoDbConnection
 	{
 		IDbConnection innerConnection;
 		public IDbConnection InnerConnection => innerConnection;
@@ -26,50 +27,65 @@ namespace NDOInterfaces
 		public virtual object ConnectionId => myConnectionId;
 
 		///<inheritdoc/>
-		public string ConnectionString { get => innerConnection.ConnectionString; set => innerConnection.ConnectionString = value; }
+		public override string ConnectionString { get => innerConnection.ConnectionString; set => innerConnection.ConnectionString = value; }
 		///<inheritdoc/>
-		public int ConnectionTimeout => innerConnection.ConnectionTimeout;
+		public override int ConnectionTimeout => innerConnection.ConnectionTimeout;
 		///<inheritdoc/>
-		public string Database => innerConnection.Database;
+		public override string Database => innerConnection.Database;
 		///<inheritdoc/>
-		public ConnectionState State => innerConnection.State;
+		public override ConnectionState State => innerConnection.State;
+
+		public override string DataSource => throw new NotImplementedException();
+
+		public override string ServerVersion => throw new NotImplementedException();
+
 		///<inheritdoc/>
-		public IDbTransaction BeginTransaction()
+		IDbTransaction IDbConnection.BeginTransaction()
 		{
 			return innerConnection.BeginTransaction();
 		}
 		///<inheritdoc/>
-		public IDbTransaction BeginTransaction( IsolationLevel il )
+		IDbTransaction IDbConnection.BeginTransaction( IsolationLevel il )
 		{
 			return innerConnection.BeginTransaction( il );
 		}
 		///<inheritdoc/>
-		public void ChangeDatabase( string databaseName )
+		public override void ChangeDatabase( string databaseName )
 		{
 			innerConnection.ChangeDatabase( databaseName );
 		}
 		///<inheritdoc/>
-		public void Close()
+		public override void Close()
 		{
 			innerConnection.Close();
 			this.myConnectionId = 0;
 		}
 		///<inheritdoc/>
-		public IDbCommand CreateCommand()
+		IDbCommand IDbConnection.CreateCommand()
 		{
 			return innerConnection.CreateCommand();
 		}
 		///<inheritdoc/>
-		public void Dispose()
+		void IDisposable.Dispose()
 		{
 			innerConnection.Dispose();
 			this.myConnectionId = 0;
 		}
 		///<inheritdoc/>
-		public void Open()
+		public override void Open()
 		{
 			innerConnection.Open();
 			this.myConnectionId = Interlocked.Increment( ref connectionId );
+		}
+
+		protected override DbTransaction BeginDbTransaction( IsolationLevel isolationLevel )
+		{
+			return (DbTransaction)innerConnection.BeginTransaction( isolationLevel );
+		}
+
+		protected override DbCommand CreateDbCommand()
+		{
+			return (DbCommand) innerConnection.CreateCommand();
 		}
 	}
 }

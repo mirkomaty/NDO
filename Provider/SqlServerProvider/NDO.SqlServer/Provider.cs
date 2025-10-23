@@ -59,7 +59,7 @@ namespace SqlServerProvider
 		public override IDbCommand NewSqlCommand( IDbConnection connection )
 		{
 			SqlCommand command = new SqlCommand();
-			command.Connection = (SqlConnection) ( (INdoDbConnection) connection ).InnerConnection;
+			command.Connection = (SqlConnection) ( (INdoDbConnection) connection )?.InnerConnection;
 			return command;
 		}
 

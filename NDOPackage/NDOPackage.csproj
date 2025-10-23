@@ -116,7 +116,7 @@
     <Reference Include="NDO.Mapping">
       <HintPath>..\NDO.Mapping\NDO.Mapping\bin\Release\netstandard2.0\NDO.Mapping.dll</HintPath>
     </Reference>
-    <Reference Include="NDOInterfaces, Version=5.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="NDOInterfaces, Version=5.1.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\NDOInterfaces\bin\Release\net48\NDOInterfaces.dll</HintPath>
     </Reference>
     <Reference Include="System" />
