@@ -39,14 +39,14 @@ namespace NDOInterfaces
 		/// </summary>
 		/// <param name="parameters">Connection string</param>
 		/// <returns>An ADO.NET connection object</returns>
-		INdoDbConnection NewConnection(string parameters);
+		IDbConnection NewConnection(string parameters);
 
 		/// <summary>
 		/// Factory method for new command objects. Commands will be assinged to the given connection.
 		/// </summary>
 		/// <param name="connection">The connection over which the command will be executed</param>
 		/// <returns>An ADO.NET command object</returns>
-		IDbCommand NewSqlCommand(INdoDbConnection connection);
+		IDbCommand NewSqlCommand(IDbConnection connection);
 
 		/// <summary>
 		/// Factory method for new data adapter objects.
@@ -215,7 +215,7 @@ namespace NDOInterfaces
 		/// </summary>
 		/// <param name="conn">The connection</param>
 		/// <returns>The table names</returns>
-		string[] GetTableNames (INdoDbConnection conn);
+		string[] GetTableNames (IDbConnection conn);
 
 		/// <summary>
 		/// Returns the name of all tables of a given connection
@@ -223,7 +223,7 @@ namespace NDOInterfaces
 		/// <param name="conn">The connection</param>
 		/// <param name="owner">Database owner name</param>
 		/// <returns>The table names</returns>
-		string[] GetTableNames (INdoDbConnection conn, string owner);
+		string[] GetTableNames (IDbConnection conn, string owner);
 
 		/// <summary>
 		/// Generates a DataSet with exactly the same structure elements as the database. 
@@ -233,7 +233,7 @@ namespace NDOInterfaces
 		/// <param name="conn">A valid connection object to be used to fetch the necessary data.</param>
 		/// <param name="owner">Fetches only tables of a specific owner space. If this parameter is null, all tables are fetched.</param>
 		/// <returns></returns>
-		DataSet GetDatabaseStructure (INdoDbConnection conn, string owner);		
+		DataSet GetDatabaseStructure (IDbConnection conn, string owner);		
 
 		/// <summary>
 		/// Gets the name of the provider. This name will be used as index for the ProviderFactory

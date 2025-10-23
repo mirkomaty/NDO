@@ -971,7 +971,8 @@ namespace NDO
 			if (handler.Connection != null && handler.Connection.State != ConnectionState.Open)
 			{
 				handler.Connection.Open();
-				LogIfVerbose( $"Opening connection {ndoConn.DisplayName}" );
+				var serverId = ((INdoDbConnection)handler.Connection).ConnectionId;
+				LogIfVerbose( $"Opening connection {serverId} = '{ndoConn.DisplayName}'" );
 			}
 		}
 

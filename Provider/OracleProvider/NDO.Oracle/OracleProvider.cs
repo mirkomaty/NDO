@@ -41,15 +41,15 @@ namespace OracleProvider
 		// which implement common interfaces in .NET:
 		// IDbConnection, IDbCommand, DbDataAdapter and the Parameter objects
 		#region Provide specialized type objects
-		public override INdoDbConnection NewConnection(string connectionString) 
+		public override IDbConnection NewConnection(string connectionString) 
 		{
 			return new NdoDbConnection( new OracleConnection(connectionString) );
 		}
 
-		public override IDbCommand NewSqlCommand(INdoDbConnection connection) 
+		public override IDbCommand NewSqlCommand(IDbConnection connection) 
 		{
 			OracleCommand command = new OracleCommand();
-			command.Connection = (OracleConnection)connection.InnerConnection;
+			command.Connection = (OracleConnection) ( (INdoDbConnection) connection ).InnerConnection;
 			return command;
 		}
 
@@ -246,7 +246,7 @@ namespace OracleProvider
 			return "\"" + plainName + "\"";
 		}
 	
-		public override string[] GetTableNames(INdoDbConnection conn, string owner)
+		public override string[] GetTableNames(IDbConnection conn, string owner)
 		{
 			bool wasOpen = true;
 			if (conn.State == ConnectionState.Closed)
@@ -254,7 +254,7 @@ namespace OracleProvider
 				conn.Open();
 				wasOpen = false;
 			}
-			OracleCommand cmd = new OracleCommand("SELECT TABLE_NAME FROM ALL_TABLES where OWNER LIKE '" + owner + "'", (OracleConnection) conn.InnerConnection);
+			OracleCommand cmd = new OracleCommand("SELECT TABLE_NAME FROM ALL_TABLES where OWNER LIKE '" + owner + "'", (OracleConnection) ( (INdoDbConnection) conn ).InnerConnection);
 			OracleDataReader dr = cmd.ExecuteReader();
 			IList result = new ArrayList();
 			while (dr.Read())

@@ -44,12 +44,12 @@ namespace NDOInterfaces
 		/// <summary>
 		/// See <see cref="IProvider">IProvider interface</see>.
 		/// </summary>
-		public abstract INdoDbConnection NewConnection(string parameters);
+		public abstract IDbConnection NewConnection(string parameters);
 
 		/// <summary>
 		/// See <see cref="IProvider">IProvider interface</see>.
 		/// </summary>
-		public abstract IDbCommand NewSqlCommand(INdoDbConnection connection);
+		public abstract IDbCommand NewSqlCommand(IDbConnection connection);
 
 		/// <summary>
 		/// See <see cref="IProvider">IProvider interface</see>.
@@ -264,7 +264,7 @@ namespace NDOInterfaces
 		/// <summary>
 		/// See <see cref="IProvider">IProvider interface</see>.
 		/// </summary>
-		public string[] GetTableNames (INdoDbConnection conn)
+		public string[] GetTableNames (IDbConnection conn)
 		{
 			return GetTableNames(conn, null);
 		}
@@ -272,7 +272,7 @@ namespace NDOInterfaces
 		/// <summary>
 		/// See <see cref="IProvider">IProvider interface</see>.
 		/// </summary>
-		public abstract string[] GetTableNames(INdoDbConnection conn, string owner);
+		public abstract string[] GetTableNames(IDbConnection conn, string owner);
 
 
 		/// <summary>
@@ -283,7 +283,7 @@ namespace NDOInterfaces
 		/// <remarks>
 		/// This implementation fetches only the tables and columns.
 		/// </remarks>
-		public virtual DataSet GetDatabaseStructure( INdoDbConnection conn, string ownerName )
+		public virtual DataSet GetDatabaseStructure( IDbConnection conn, string ownerName )
 		{
 			bool wasOpen = false;
 			if (conn.State == ConnectionState.Open)

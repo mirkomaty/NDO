@@ -1,4 +1,5 @@
 ﻿using NDO.Mapping;
+using NDOInterfaces;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -55,10 +56,11 @@ namespace NDO
 		private void OpenConnAndStartTransaction( string connId, IDbConnection conn )
 		{
 			conn.Open();
-			pm.LogIfVerbose( $"Opening connection {conn.DisplayName()}" );
+			var serverId = ((INdoDbConnection)conn).ConnectionId;
+			pm.LogIfVerbose( $"Opening connection {serverId} = '{conn.DisplayName()}'" );
 			var tx = conn.BeginTransaction(IsolationLevel);
 			usedTransactions.Add( connId, tx );
-			this.pm.LogIfVerbose( String.Format( "Starting transaction {0:X} at connection '{1}'", tx.GetHashCode(), conn.DisplayName() ) );
+			this.pm.LogIfVerbose( $"Starting transaction {tx.GetHashCode():X} at connection {serverId} = '{conn.DisplayName()}'" );
 		}
 
 		///<inheritdoc/>
@@ -80,7 +82,8 @@ namespace NDO
 				usedConnections.TryGetValue( id, out conn );
 				if (conn == null)
 					throw new NDOException( 121, $"Can't commit. No open connection found for NDO Connection {id} ({conn.DisplayName()})" );
-				this.pm.LogIfVerbose( String.Format( "Committing transaction {0:X} at connection '{1}'", tx.GetHashCode(), conn.DisplayName() ) );
+				var serverId = ((INdoDbConnection)conn).ConnectionId;
+				this.pm.LogIfVerbose( $"Committing transaction {tx.GetHashCode():X} at connection {serverId} = '{conn.DisplayName()}'" );
 			}
 
 			usedTransactions.Clear();
@@ -145,7 +148,10 @@ namespace NDO
 				}
 				IDbConnection conn = null;
 				this.usedConnections.TryGetValue( key, out conn );
-				pm.LogIfVerbose( $"Rollback transaction {id.ToString( "X" )} at connection '{conn.DisplayName()}'" );
+				{
+					var serverId = ((INdoDbConnection)conn).ConnectionId;
+					this.pm.LogIfVerbose( $"Rollback transaction {id.ToString( "X" )} at connection {serverId} = '{conn.DisplayName()}'" );
+				}
 			}
 
 			usedTransactions.Clear();
@@ -155,8 +161,9 @@ namespace NDO
 		{
 			foreach (var conn in this.usedConnections.Values.Where( c => c.State == ConnectionState.Open ))
 			{
+				var serverId = ((INdoDbConnection)conn).ConnectionId;
+				pm.LogIfVerbose( $"Closed connection {serverId} = '{conn.DisplayName()}'" );
 				conn.Close();
-				pm.LogIfVerbose( $"Closed connection {conn.DisplayName()}" );
 			}
 
 			this.usedConnections.Clear();

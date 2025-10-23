@@ -48,7 +48,7 @@ namespace SqlServerProvider
 		/// <summary>
 		/// See <see cref="IProvider"> IProvider interface </see>
 		/// </summary>
-		public override INdoDbConnection NewConnection( string connectionString )
+		public override IDbConnection NewConnection( string connectionString )
 		{
 			return new NdoSqlConnection( new SqlConnection( connectionString ) );  // ClientConnectionId
 		}
@@ -56,10 +56,10 @@ namespace SqlServerProvider
 		/// <summary>
 		/// See <see cref="IProvider"> IProvider interface </see>
 		/// </summary>
-		public override IDbCommand NewSqlCommand( INdoDbConnection connection )
+		public override IDbCommand NewSqlCommand( IDbConnection connection )
 		{
 			SqlCommand command = new SqlCommand();
-			command.Connection = (SqlConnection)connection.InnerConnection;
+			command.Connection = (SqlConnection) ( (INdoDbConnection) connection ).InnerConnection;
 			return command;
 		}
 
@@ -271,11 +271,11 @@ namespace SqlServerProvider
 		/// <summary>
 		/// See <see cref="IProvider"> IProvider interface </see>
 		/// </summary>
-		public override string[] GetTableNames( INdoDbConnection conn, string owner )
+		public override string[] GetTableNames( IDbConnection conn, string owner )
 		{
 			List<string> result = new List<string>();
 			string sql = "SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_TYPE = 'BASE TABLE'";
-			SqlCommand cmd = new SqlCommand( sql, (SqlConnection)conn.InnerConnection );
+			SqlCommand cmd = new SqlCommand( sql, (SqlConnection) ( (INdoDbConnection) conn ).InnerConnection );
 			bool wasOpen = true;
 
 			if (conn.State == ConnectionState.Closed)

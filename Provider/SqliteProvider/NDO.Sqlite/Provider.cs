@@ -20,12 +20,13 @@
 // DEALINGS IN THE SOFTWARE.
 
 
+using NDOInterfaces;
 using System;
-using System.Text;
+using System.Collections.ObjectModel;
 using System.Data;
 using System.Data.Common;
-using NDOInterfaces;
 using System.Data.SQLite;
+using System.Text;
 
 namespace System.Data.SQLite
 {
@@ -59,15 +60,15 @@ namespace NDO.SqliteProvider
 		// which implement common interfaces in .NET:
 		// IDbConnection, IDbCommand, DbDataAdapter and the Parameter objects
 		#region Provide specialized type objects
-		public override INdoDbConnection NewConnection(string connectionString) 
+		public override IDbConnection NewConnection(string connectionString) 
 		{
 			return new NdoDbConnection( new SQLiteConnection(connectionString) );
 		}
 
-		public override IDbCommand NewSqlCommand(INdoDbConnection connection) 
+		public override IDbCommand NewSqlCommand(IDbConnection connection) 
 		{
 			SQLiteCommand command = new SQLiteCommand();
-			command.Connection = (SQLiteConnection)connection.InnerConnection;
+			command.Connection = (SQLiteConnection) ( (INdoDbConnection) connection ).InnerConnection;
 			return command;
 		}
 
@@ -320,9 +321,9 @@ namespace NDO.SqliteProvider
 		}
 
 			
-		public override string[] GetTableNames(INdoDbConnection conn, string owner)
+		public override string[] GetTableNames(IDbConnection conn, string owner)
 		{
-            SQLiteDataAdapter a = new SQLiteDataAdapter("SELECT name FROM sqlite_master WHERE type='table' ORDER BY name;", (SQLiteConnection)conn.InnerConnection);
+            SQLiteDataAdapter a = new SQLiteDataAdapter("SELECT name FROM sqlite_master WHERE type='table' ORDER BY name;", (SQLiteConnection) ( (INdoDbConnection) conn ).InnerConnection);
             DataSet ds = new DataSet();
             a.Fill(ds);
             DataTable dt = ds.Tables[0];

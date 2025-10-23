@@ -26,6 +26,7 @@ using Npgsql;
 using NpgsqlTypes;
 using System;
 using System.Collections;
+using System.Collections.ObjectModel;
 using System.Data;
 using System.Data.Common;
 using System.Text;
@@ -43,15 +44,15 @@ namespace NDO.PostGreProvider
 		// which implement common interfaces in .NET:
 		// IDbConnection, IDbCommand, DbDataAdapter and the Parameter objects
 		#region Provide specialized type objects
-		public override INdoDbConnection NewConnection(string connectionString) 
+		public override IDbConnection NewConnection(string connectionString) 
 		{
 			return new NdoNpgsqlConnection( new NpgsqlConnection(connectionString) );
 		}
 
-		public override IDbCommand NewSqlCommand(INdoDbConnection connection) 
+		public override IDbCommand NewSqlCommand(IDbConnection connection) 
 		{
 			NpgsqlCommand command = new NpgsqlCommand();
-			command.Connection = (NpgsqlConnection)connection.InnerConnection;
+			command.Connection = (NpgsqlConnection) ( (INdoDbConnection) connection ).InnerConnection;
 			return command;
 		}
 
@@ -295,9 +296,9 @@ namespace NDO.PostGreProvider
 		}
 
 			
-		public override string[] GetTableNames(INdoDbConnection conn, string owner)
+		public override string[] GetTableNames(IDbConnection conn, string owner)
 		{
-            NpgsqlDataAdapter a = new NpgsqlDataAdapter("Select * from pg_tables", (NpgsqlConnection)conn.InnerConnection);
+            NpgsqlDataAdapter a = new NpgsqlDataAdapter( "Select * from pg_tables", (NpgsqlConnection) ( (INdoDbConnection) conn ).InnerConnection );
             DataSet ds = new DataSet();
             a.Fill(ds);
             DataTable dt = ds.Tables[0];
