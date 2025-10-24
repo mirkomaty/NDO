@@ -19,8 +19,6 @@
 // CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER 
 // DEALINGS IN THE SOFTWARE.
 
-
-using NDO.Postgre;
 using NDOInterfaces;
 using Npgsql;
 using NpgsqlTypes;
@@ -46,14 +44,19 @@ namespace NDO.PostGreProvider
 		#region Provide specialized type objects
 		public override IDbConnection NewConnection(string connectionString) 
 		{
-			return new NdoNpgsqlConnection( new NpgsqlConnection(connectionString) );
+			return new NpgsqlConnection(connectionString);
 		}
 
 		public override IDbCommand NewSqlCommand(IDbConnection connection) 
 		{
 			NpgsqlCommand command = new NpgsqlCommand();
-			command.Connection = (NpgsqlConnection) ( (INdoDbConnection) connection ).InnerConnection;
+			command.Connection = (NpgsqlConnection) connection;
 			return command;
+		}
+
+		public override object GetConnectionId( IDbConnection connection )
+		{
+			return ( (NpgsqlConnection) connection ).ProcessID;
 		}
 
 		public override DbDataAdapter NewDataAdapter(IDbCommand select, IDbCommand update, IDbCommand insert, IDbCommand delete) 
@@ -298,7 +301,7 @@ namespace NDO.PostGreProvider
 			
 		public override string[] GetTableNames(IDbConnection conn, string owner)
 		{
-            NpgsqlDataAdapter a = new NpgsqlDataAdapter( "Select * from pg_tables", (NpgsqlConnection) ( (INdoDbConnection) conn ).InnerConnection );
+            NpgsqlDataAdapter a = new NpgsqlDataAdapter( "Select * from pg_tables", (NpgsqlConnection) conn );
             DataSet ds = new DataSet();
             a.Fill(ds);
             DataTable dt = ds.Tables[0];

@@ -28,7 +28,6 @@ using System.Data.Common;
 using NDOInterfaces;
 using System.Collections;
 using MySqlConnector;
-using NDO.MySqlConnector;
 
 namespace NDO.MySqlConnectorProvider
 {
@@ -44,14 +43,19 @@ namespace NDO.MySqlConnectorProvider
 		#region Provide specialized type objects
 		public override IDbConnection NewConnection(string connectionString) 
 		{
-			return new NdoMySqlConnectorConnection( new MySqlConnection(connectionString) );
+			return new MySqlConnection(connectionString);
 		}
 
 		public override IDbCommand NewSqlCommand(IDbConnection connection) 
 		{
 			MySqlCommand command = new MySqlCommand();
-			command.Connection = (MySqlConnection)((INdoDbConnection)connection).InnerConnection;
+			command.Connection = (MySqlConnection)connection;
 			return command;
+		}
+
+		public override object GetConnectionId( IDbConnection connection )
+		{
+			return ( (MySqlConnection) connection ).ServerThread;
 		}
 
 		public override DbDataAdapter NewDataAdapter(IDbCommand select, IDbCommand update, IDbCommand insert, IDbCommand delete) 
@@ -273,7 +277,7 @@ namespace NDO.MySqlConnectorProvider
 			
 		public override string[] GetTableNames(IDbConnection conn, string owner)
 		{
-			MySqlCommand cmd = new MySqlCommand("show tables", (MySqlConnection)((INdoDbConnection)conn).InnerConnection);
+			MySqlCommand cmd = new MySqlCommand("show tables", (MySqlConnection)conn);
 			bool wasOpen = true;
 			if (conn.State == ConnectionState.Closed)
 			{

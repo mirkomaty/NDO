@@ -6,7 +6,6 @@ using System.Data.Common;
 using Microsoft.Data.SqlClient;
 using System.Text;
 using System.Text.RegularExpressions;
-using NDO.SqlServer;
 
 namespace SqlServerProvider
 {
@@ -50,7 +49,9 @@ namespace SqlServerProvider
 		/// </summary>
 		public override IDbConnection NewConnection( string connectionString )
 		{
-			return new NdoSqlConnection( new SqlConnection( connectionString ) );  // ClientConnectionId
+			var conn = new SqlConnection( connectionString );
+			conn.StateChange += ConnectionIdProvider.HandleStateChange;
+			return conn;
 		}
 
 		/// <summary>
@@ -59,8 +60,15 @@ namespace SqlServerProvider
 		public override IDbCommand NewSqlCommand( IDbConnection connection )
 		{
 			SqlCommand command = new SqlCommand();
-			command.Connection = (SqlConnection) ( (INdoDbConnection) connection )?.InnerConnection;
+			command.Connection = (SqlConnection) connection;
 			return command;
+		}
+
+		/// <inheritdoc/>
+		public override object GetConnectionId(IDbConnection connection)
+		{
+			// Since the ClientConnectionId is reused, we add an id, which differs after each Open() call.
+			return $"{ConnectionIdProvider.Get( connection )} - {((SqlConnection)connection).ClientConnectionId}";
 		}
 
 		/// <summary>
@@ -275,7 +283,7 @@ namespace SqlServerProvider
 		{
 			List<string> result = new List<string>();
 			string sql = "SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_TYPE = 'BASE TABLE'";
-			SqlCommand cmd = new SqlCommand( sql, (SqlConnection) ( (INdoDbConnection) conn ).InnerConnection );
+			SqlCommand cmd = new SqlCommand( sql, (SqlConnection) conn );
 			bool wasOpen = true;
 
 			if (conn.State == ConnectionState.Closed)

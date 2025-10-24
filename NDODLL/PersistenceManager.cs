@@ -950,7 +950,7 @@ namespace NDO
 			
 			if (handler.Connection == null)
 			{
-				handler.Connection = TransactionScope.GetConnection(ndoConn.ID, () =>
+				handler.Connection = TransactionScope.GetConnection(ndoConn, () =>
 				{
 					IProvider p = ndoConn.Parent.GetProvider( ndoConn );
 					string connStr = this.OnNewConnection( ndoConn );
@@ -967,11 +967,11 @@ namespace NDO
 				handler.Transaction = TransactionScope.GetTransaction( ndoConn.ID );
 			}
 
-			// During the tests, we work with a handler mock that always returns zero for the Connection property.
+			// There are tests with a handler mock that always returns zero for the Connection property.
 			if (handler.Connection != null && handler.Connection.State != ConnectionState.Open)
 			{
 				handler.Connection.Open();
-				var serverId = ((INdoDbConnection)handler.Connection).ConnectionId;
+				var serverId = ndoConn.Provider.GetConnectionId( handler.Connection );
 				LogIfVerbose( $"Opening connection {serverId} = '{ndoConn.DisplayName}'" );
 			}
 		}

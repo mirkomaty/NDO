@@ -20,6 +20,7 @@
 // DEALINGS IN THE SOFTWARE.
 
 
+using NDOInterfaces;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -113,6 +114,12 @@ namespace NDO.Mapping
         }
 
         /// <summary>
+        /// Gets the NDO Provider for this connection type
+        /// </summary>
+        [Browsable( false )]
+        public IProvider Provider => Parent.GetProvider( Type );
+
+        /// <summary>
         /// Gets the parent of the Connection object
         /// </summary>
         [Browsable(false)]
@@ -129,11 +136,6 @@ namespace NDO.Mapping
         {
             Parent.RemoveConnection(this);
         }
-
-        //private const string sqlString = "Provider=SQLOLEDB.1;";
-        //private const string oracleString1 = "Provider=MSDAORA.1;";
-        //private const string oracleString2 = "Provider=OraOLEDB.Oracle.1;";
-        //private const string jetString = "Provider=Microsoft.Jet.OLEDB";
 
         #endregion
 

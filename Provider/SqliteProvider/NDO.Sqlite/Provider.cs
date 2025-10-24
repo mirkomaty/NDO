@@ -62,13 +62,15 @@ namespace NDO.SqliteProvider
 		#region Provide specialized type objects
 		public override IDbConnection NewConnection(string connectionString) 
 		{
-			return new NdoDbConnection( new SQLiteConnection(connectionString) );
+			var conn = new SQLiteConnection(connectionString);
+			conn.StateChange += ConnectionIdProvider.HandleStateChange;
+			return conn;
 		}
 
 		public override IDbCommand NewSqlCommand(IDbConnection connection) 
 		{
 			SQLiteCommand command = new SQLiteCommand();
-			command.Connection = (SQLiteConnection) ( (INdoDbConnection) connection ).InnerConnection;
+			command.Connection = (SQLiteConnection) connection;
 			return command;
 		}
 
@@ -323,7 +325,7 @@ namespace NDO.SqliteProvider
 			
 		public override string[] GetTableNames(IDbConnection conn, string owner)
 		{
-            SQLiteDataAdapter a = new SQLiteDataAdapter("SELECT name FROM sqlite_master WHERE type='table' ORDER BY name;", (SQLiteConnection) ( (INdoDbConnection) conn ).InnerConnection);
+            SQLiteDataAdapter a = new SQLiteDataAdapter("SELECT name FROM sqlite_master WHERE type='table' ORDER BY name;", (SQLiteConnection) conn );
             DataSet ds = new DataSet();
             a.Fill(ds);
             DataTable dt = ds.Tables[0];

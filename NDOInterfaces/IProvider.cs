@@ -49,6 +49,11 @@ namespace NDOInterfaces
 		IDbCommand NewSqlCommand(IDbConnection connection);
 
 		/// <summary>
+		/// Gets a unique id of the current server connection. This requires the connection to be open.
+		/// </summary>
+		object GetConnectionId( IDbConnection connection );
+
+		/// <summary>
 		/// Factory method for new data adapter objects.
 		/// </summary>
 		/// <param name="select">Command object for the SELECT statement</param>

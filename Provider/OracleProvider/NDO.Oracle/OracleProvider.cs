@@ -43,13 +43,16 @@ namespace OracleProvider
 		#region Provide specialized type objects
 		public override IDbConnection NewConnection(string connectionString) 
 		{
-			return new NdoDbConnection( new OracleConnection(connectionString) );
+			var conn = new OracleConnection(connectionString);
+			// HandleStateChange is responsible for generating the ConnectionId.
+			conn.StateChange += ConnectionIdProvider.HandleStateChange;
+			return conn;
 		}
 
 		public override IDbCommand NewSqlCommand(IDbConnection connection) 
 		{
 			OracleCommand command = new OracleCommand();
-			command.Connection = (OracleConnection) ( (INdoDbConnection) connection ).InnerConnection;
+			command.Connection = (OracleConnection) connection;
 			return command;
 		}
 
@@ -254,7 +257,7 @@ namespace OracleProvider
 				conn.Open();
 				wasOpen = false;
 			}
-			OracleCommand cmd = new OracleCommand("SELECT TABLE_NAME FROM ALL_TABLES where OWNER LIKE '" + owner + "'", (OracleConnection) ( (INdoDbConnection) conn ).InnerConnection);
+			OracleCommand cmd = new OracleCommand("SELECT TABLE_NAME FROM ALL_TABLES where OWNER LIKE '" + owner + "'", (OracleConnection) conn );
 			OracleDataReader dr = cmd.ExecuteReader();
 			IList result = new ArrayList();
 			while (dr.Read())

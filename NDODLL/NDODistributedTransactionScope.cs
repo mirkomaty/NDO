@@ -68,8 +68,9 @@ namespace NDO
 		}
 
 		///<inheritdoc/>
-		public IDbConnection GetConnection( string id, Func<IDbConnection> factory )
+		public IDbConnection GetConnection( Connection ndoConnection, Func<IDbConnection> factory )
 		{
+			var id = ndoConnection.ID;
 			if (this.usedConnections.ContainsKey( id ))
 			{
 				return this.usedConnections[id];

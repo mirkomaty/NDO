@@ -1,4 +1,5 @@
-﻿using System;
+﻿using NDO.Mapping;
+using System;
 using System.Data;
 
 namespace NDO
@@ -37,10 +38,10 @@ namespace NDO
 		/// <summary>
 		/// Gets a connection from the cache, or creates one using the factory and puts it on the cache.
 		/// </summary>
-		/// <param name="id">Connection id of the NDO.Mapping.Connection object for which the IDbConnection is created.</param>
+		/// <param name="ndoConnection">The NDO.Mapping.Connection object for which the IDbConnection is created.</param>
 		/// <param name="factory">A lambda expression, which can create an IDbConnection object.</param>
 		/// <returns></returns>
-		IDbConnection GetConnection( string id, Func<IDbConnection> factory );
+		IDbConnection GetConnection( Connection ndoConnection, Func<IDbConnection> factory );
 
 		/// <summary>
 		/// Gets a transaction, if one exists for the given connection id.

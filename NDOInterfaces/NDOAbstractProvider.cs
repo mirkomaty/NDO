@@ -437,5 +437,11 @@ namespace NDOInterfaces
 		{
 			return parameter.DbType.ToString();
 		}
+
+		/// <inheritdoc/>
+		public virtual object GetConnectionId( IDbConnection connection )
+		{
+			return ConnectionIdProvider.Get( connection );
+		}
 	}
 }
