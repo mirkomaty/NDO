@@ -35,7 +35,7 @@ namespace NdoUnitTests
 		static object lockObject = new object();
 		static NDOMapping _mapping;
 
-		public static PersistenceManager NewPersistenceManager(TransactionMode transactionMode = TransactionMode.Optimistic)
+		public static PersistenceManager NewPersistenceManager(TransactionMode transactionMode = TransactionMode.Optimistic, IServiceProvider scopedSp = null)
 		{
 			var appPath = AppDomain.CurrentDomain.BaseDirectory;
 			string path = Path.Combine(appPath, "NDOMapping.xml");
@@ -46,11 +46,17 @@ namespace NdoUnitTests
 			{
 				if (_mapping != null)
 				{
-					pm = new PersistenceManager( _mapping );
+					if (scopedSp == null)
+						pm = new PersistenceManager( _mapping );
+					else
+						pm = new PersistenceManager( _mapping, scopedSp );
 				}
 				else
 				{
-					pm = new PersistenceManager( path );
+					if (scopedSp == null)
+						pm = new PersistenceManager( path );
+					else
+						pm = new PersistenceManager( path, scopedSp );
 					_mapping = pm.NDOMapping;
 				}
 			}

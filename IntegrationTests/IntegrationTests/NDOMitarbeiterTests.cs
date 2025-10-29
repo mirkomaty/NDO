@@ -32,6 +32,8 @@ using NDO;
 using Reisekosten.Personal;
 using NDO.Query;
 using NDO.Linq;
+using System.Threading.Tasks;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace NdoUnitTests
 {
@@ -145,7 +147,33 @@ namespace NdoUnitTests
 			m2.Vorname = "Mirko";
 		}
 
-        [Test]
+		[Test]
+		public void SecondPm()
+		{
+			var pm = PmFactory.NewPersistenceManager();
+			pm.MakePersistent( m );
+			pm.Save();
+			Task[] tasks = new Task[10];
+			Mitarbeiter m1;
+			for (int i = 0; i < 10; i++)
+			{
+				tasks[i] = Task.Run(()=>
+				{
+					using (var scope = Host.Services.CreateScope())
+					{
+						var scopedSp = scope.ServiceProvider;
+						using (var pm2 = PmFactory.NewPersistenceManager( TransactionMode.Optimistic, scopedSp ))
+						{
+							m1 = pm2.Objects<Mitarbeiter>().Single();
+						}
+					}
+				});
+			}
+			Task.WaitAll( tasks );
+			// Should not throw
+		}
+
+		[Test]
 		public void TestObjectCreationSaveChanged() 
 		{
 			var pm = PmFactory.NewPersistenceManager();

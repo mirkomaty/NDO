@@ -821,6 +821,8 @@ namespace NDO.SqlPersistenceHandling
 				handler.Initialize(ndoMapping, r);
 				mappingTableHandlers[r.FieldName] = handler;
 			}
+
+			handler.Connection = this.Connection;
 			return handler;
 		}
 
