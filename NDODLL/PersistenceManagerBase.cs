@@ -56,9 +56,13 @@ namespace NDO
 		/// Gets or sets the logger for the PersistenceManager instance
 		/// </summary>
 		protected ILogger Logger { get; set; }
-		private IPersistenceHandlerManager persistenceHandlerManager;
 		bool isClosing = false;
 		private INDOProviderFactory providerFactory;
+		private NDOPersistenceHandlerManager persistenceHandlerManager;
+		/// <summary>
+		/// Gets the PersistenceHandlerManager instance
+		/// </summary>
+		public NDOPersistenceHandlerManager PersistenceHandlerManager => persistenceHandlerManager;
 
 		/// <summary>
 		/// Provides the ProviderFactory to inherited persistence managers;
@@ -194,7 +198,7 @@ namespace NDO
 
 			Logger = NDOApplication.ServiceProvider.GetService<ILoggerFactory>()?.CreateLogger( GetType() );
 			this.mappings = mappings;
-
+			this.persistenceHandlerManager = new NDOPersistenceHandlerManager( this.ServiceProvider, this.mappings );
 			this.ds = new NDODataSet( this.mappings, ProviderFactory );  // Each PersistenceManager instance must have it's own DataSet.
 		}
 
@@ -338,19 +342,6 @@ namespace NDO
 				return this.scopedServiceProvider;
 			}
 		}
-
-		/// <summary>
-		/// Gets or sets an implementation of the PersistenceHandlerManager.
-		/// </summary>
-		public IPersistenceHandlerManager PersistenceHandlerManager
-		{
-			get
-			{
-				return this.persistenceHandlerManager = new NDOPersistenceHandlerManager(this.ServiceProvider, this.mappings);
-			}
-			set { this.persistenceHandlerManager = value; }
-		}
-
 		
 		/// <summary>
 		/// Gets the Mapping structure of the application as stored in NDOMapping.xml. 

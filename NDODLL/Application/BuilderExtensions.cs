@@ -55,7 +55,6 @@ namespace NDO.Application
 			services.AddNdoProviderFactory( hostEnvironment, config );
 			NDOApplication.Configuration = config;
 			NDOApplication.HostEnvironment = hostEnvironment;
-			services.AddSingleton<IPersistenceHandlerPool, NDOPersistenceHandlerPool>();
 			// These services are all transient, because there can be
 			// different PMs in one Request, which would share the
 			// scoped objects.
