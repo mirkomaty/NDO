@@ -383,6 +383,11 @@ namespace NDO
 		}
 
 		/// <summary>
+		/// Determine, if the pm has been closed before.
+		/// </summary>
+		public bool IsClosed => isClosing || this.ds == null;
+
+		/// <summary>
 		/// Closes the PersistenceManager and releases all resources.
 		/// </summary>
 		public virtual void Close()

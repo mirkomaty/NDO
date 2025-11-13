@@ -99,6 +99,9 @@ namespace NDO.Query
 		/// <param name="queryLanguage">Determines, if the query is a SQL pass-through query or a NDOql expression.</param>
 		public NDOQuery( PersistenceManager pm, string queryExpression, bool hollowResults, QueryLanguage queryLanguage )
 		{
+			if (pm.IsClosed)
+				throw new ObjectDisposedException( GetType().Name );
+
 			this.pm = pm;
 			if (pm == null)
 				throw new ArgumentException( "Parameter is null", "pm" );

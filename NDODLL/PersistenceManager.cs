@@ -548,6 +548,9 @@ namespace NDO
 		/// <param name="o">the transient object that should be made persistent</param>
 		public void MakePersistent(object o) 
 		{
+			if (IsClosed)
+				throw new ObjectDisposedException( GetType().Name );	
+
 			IPersistenceCapable pc = CheckPc(o);
 
 			//Debug.WriteLine("MakePersistent: " + pc.GetType().Name);
@@ -2340,7 +2343,10 @@ namespace NDO
 		/// </summary>
 		public virtual void Save(bool deferCommit = false) 
 		{
-			this.DeferredMode = deferCommit;
+            if (IsClosed)
+                throw new ObjectDisposedException(GetType().Name);
+
+            this.DeferredMode = deferCommit;
 			var htOnSaving = new HashSet<ObjectId>();
 			for(;;)
 			{
