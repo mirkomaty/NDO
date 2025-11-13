@@ -29,7 +29,6 @@ namespace NDO
 		/// <summary>
 		/// Constructs an NDOTransactionScope object.
 		/// </summary>
-		/// <param name="pm"></param>
 		public NDODistributedTransactionScope()
 		{
 			IsolationLevel = IsolationLevel.ReadCommitted;

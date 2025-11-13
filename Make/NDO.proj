@@ -3,7 +3,7 @@
 	<!-- You need to adjust these values, otherwise the build will not work -->
 	<PropertyGroup Label="Adjustable properties">
 		<NDO_DIR>$([System.IO.Path]::GetFullPath('$(MSBuildProjectDirectory)\..'))</NDO_DIR>
-		<Version>5.1.0</Version>
+		<Version>5.1.1</Version>
 		<InterfacesVersion>5.1.0</InterfacesVersion>
 		<!-- This should be identical to the NDO.Enhancer version -->
 		<NDOBuildVersion>5.1.0</NDOBuildVersion>
