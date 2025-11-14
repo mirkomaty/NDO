@@ -100,7 +100,7 @@ namespace NDO.Query
 		public NDOQuery( PersistenceManager pm, string queryExpression, bool hollowResults, QueryLanguage queryLanguage )
 		{
 			if (pm.IsClosed)
-				throw new ObjectDisposedException( GetType().Name );
+				throw new ObjectDisposedException( pm.GetType().Name );
 
 			this.pm = pm;
 			if (pm == null)
