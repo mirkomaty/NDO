@@ -13,7 +13,7 @@
     <ApplicationHighDpiMode>PerMonitorV2</ApplicationHighDpiMode>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="NDO.mapping" Version="5.1.0" />
+    <PackageReference Include="NDO.mapping" Version="5.1.1" />
     <PackageReference Include="WinForms.FontSize" Version="1.0.0" />
   </ItemGroup>
 </Project>

@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-using System.Text.Json;
-using System.Text.Json.Nodes;
 
 namespace NDO.Mapping.Serialization
 {
@@ -16,32 +14,48 @@ namespace NDO.Mapping.Serialization
 		/// </summary>
 		/// <param name="attr"></param>
 		/// <returns></returns>
+		/// <remarks>
+		/// We use a serialization mechanism which is independent from the runtime. 
+		/// System.Text.Json imports dependencies to certain runtime implementations.
+		/// </remarks>
 		public static string Serialize( this object attr )
 		{
 			if (attr.GetType().Name != "NDORelationAttribute")
 				throw new ArgumentException( "Wrong parameter type", "attr" );
-
-			var d = (dynamic)attr;
-			string rt = null;
-			if (d.RelationType != null)
-				rt = d.RelationType.FullName;
-			return JsonSerializer.Serialize( new { FullName = rt, d.Info, d.RelationName } );
+			Type t = attr.GetType();
+			Type rt = (Type)t.GetProperty("RelationType").GetValue(attr);
+			string rts = null;
+			if (rt != null)
+				rts = rt.FullName;
+            string ri = t.GetProperty("Info").GetValue(attr).ToString();
+			string rn = (string)t.GetProperty("RelationName").GetValue(attr);
+            return $@"{rts??"#null"}, {ri}, {rn??"#null"}";
 		}
 
-		/// <summary>
-		/// Converts an attribute object to the correct type
-		/// </summary>
-		/// <param name="attr"></param>
-		/// <returns></returns>
-		public static NDORelationAttribute ConvertToNdoRelation( this object attr )
+        /// <summary>
+        /// Converts an attribute object to the correct type
+        /// </summary>
+        /// <param name="attr"></param>
+        /// <returns></returns>
+        /// <remarks>
+        /// We use a serialization mechanism which is independent from the runtime. 
+        /// System.Text.Json imports dependencies to certain runtime implementations.
+        /// </remarks>
+        public static NDORelationAttribute ConvertToNdoRelation( this object attr )
 		{
-			var json = Serialize(attr);
-			var obj = JsonSerializer.Deserialize<JsonObject>(json);
-			var rt = (string)obj["FullName"];
+			var strAttr = Serialize(attr);
+			var arr = strAttr.Split(',');
+			var rt = arr[0];
+			if (rt == "#null")
+				rt = null;
 			Type relationType = null;
 			if (rt != null)
 				relationType = Type.GetType( rt );
-			return new NDORelationAttribute( relationType, (RelationInfo) (int) obj["Info"], (string) obj["RelationName"] );
+			Enum.TryParse<RelationInfo>(arr[1], out var ri);
+			var rn = arr[1];
+			if (rn == "#null")
+				rn = null;
+			return new NDORelationAttribute( relationType, ri, rn );
 		}
 	}
 }

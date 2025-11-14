@@ -6,7 +6,7 @@
 		<GenerateDocumentationFile>true</GenerateDocumentationFile>
 		<IncludeSymbols>True</IncludeSymbols>
 		<PackageId>NDO.JsonFormatter</PackageId>
-		<Version>5.1.0.0</Version>
+		<Version>5.1.1</Version>
 		<Authors>Mirko Matytschak</Authors>
 		<Company>Mirko Matytschak</Company>
 		<Description>Json Formatter for serializing and deserializing ObjectContainers in NDO.</Description>
@@ -15,8 +15,8 @@
 		<PackageProjectUrl>https://www.netdataobjects.de</PackageProjectUrl>
 		<PackageTags>NDO .NET Data Objects Persistence JsonFormatter</PackageTags>
 		<PackageReleaseNotes>Works only with NDO &gt;= 5.1.0. For older NDO versions use package version 4.0.1.</PackageReleaseNotes>
-		<AssemblyVersion>5.1.0.0</AssemblyVersion>
-		<FileVersion>5.1.0.0</FileVersion>
+		<AssemblyVersion>5.1.1.0</AssemblyVersion>
+		<FileVersion>5.1.1.0</FileVersion>
 		<SignAssembly>true</SignAssembly>
 		<AssemblyOriginatorKeyFile>ndo_ent.snk</AssemblyOriginatorKeyFile>
 		<IncludeSymbols>True</IncludeSymbols>
@@ -42,7 +42,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<PackageReference Include="ndo.dll" Version="5.1.0" />
+		<PackageReference Include="ndo.dll" Version="5.1.1" />
 		<PackageReference Include="newtonsoft.json" Version="13.0.3" />
 	</ItemGroup>
 
