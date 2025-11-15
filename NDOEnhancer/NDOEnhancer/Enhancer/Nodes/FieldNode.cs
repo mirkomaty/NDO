@@ -25,6 +25,7 @@ using System.Reflection;
 using NDO;
 using NDO.Mapping.Attributes;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace NDOEnhancer
 {
@@ -58,7 +59,11 @@ namespace NDOEnhancer
 			this.fieldType = isProperty ? ((PropertyInfo)mi).PropertyType : ((FieldInfo)mi).FieldType;
 			this.name = mi.Name;
 
-#warning	this.isOid should be set by the information provided by the class' attribute OidColumn(fieldName)
+			// If the class has an OidColumn attribute which sets the fieldName to the name of the 
+			// given field, the field is an oid field.
+			var oidc = (OidColumnAttribute) mi.DeclaringType.GetCustomAttributes().FirstOrDefault(a => a is OidColumnAttribute);
+			if (oidc != null && oidc.FieldName == mi.Name)
+				this.isOid = true;
 
 			this.dataType = new ReflectedType(this.fieldType).ILName;
 			if (!isProperty)

@@ -6,7 +6,7 @@
 		<Version>5.1.1</Version>
 		<InterfacesVersion>5.1.0</InterfacesVersion>
 		<!-- This should be identical to the NDO.Enhancer version -->
-		<NDOBuildVersion>5.1.0</NDOBuildVersion>
+		<NDOBuildVersion>5.1.1</NDOBuildVersion>
 		<!-- 
 			NDO generates packages which should be present in the package source
 			during the build process.
