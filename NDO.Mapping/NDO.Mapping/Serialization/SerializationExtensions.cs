@@ -29,7 +29,7 @@ namespace NDO.Mapping.Serialization
 				rts = rt.FullName;
             string ri = t.GetProperty("Info").GetValue(attr).ToString();
 			string rn = (string)t.GetProperty("RelationName").GetValue(attr);
-            return $@"{rts??"#null"}, {ri}, {rn??"#null"}";
+            return $@"{rts??"#null"},{ri},{rn??"#null"}";
 		}
 
         /// <summary>
@@ -52,7 +52,7 @@ namespace NDO.Mapping.Serialization
 			if (rt != null)
 				relationType = Type.GetType( rt );
 			Enum.TryParse<RelationInfo>(arr[1], out var ri);
-			var rn = arr[1];
+			var rn = arr[2];
 			if (rn == "#null")
 				rn = null;
 			return new NDORelationAttribute( relationType, ri, rn );
