@@ -2082,7 +2082,7 @@ namespace NDO
                             if (relType == null)
                             {
                                 throw new NDOException(75, String.Format(
-                                    "Can't resolve subclass type code {0} of type {1} - check, if your NDOTypes.xml exists.",
+                                    "Can't resolve subclass type code {0} of type {1} - check, if your mapping file is correct.",
                                     row[r.ForeignKeyTypeColumnName], r.ReferencedTypeName));
                             }
 	
