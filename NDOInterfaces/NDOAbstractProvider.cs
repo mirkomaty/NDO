@@ -1,5 +1,5 @@
 ﻿//
-// Copyright (c) 2002-2019 Mirko Matytschak 
+// Copyright (c) 2002-2024 Mirko Matytschak 
 // (www.netdataobjects.de)
 //
 // Author: Mirko Matytschak
@@ -27,6 +27,7 @@ using System.Text;
 using System.Collections;
 using NDOInterfaces;
 using NDO;
+using System.Globalization;
 
 namespace NDOInterfaces
 {
@@ -43,17 +44,17 @@ namespace NDOInterfaces
 		/// <summary>
 		/// See <see cref="IProvider">IProvider interface</see>.
 		/// </summary>
-		public abstract System.Data.IDbConnection NewConnection(string parameters);
+		public abstract IDbConnection NewConnection(string parameters);
 
 		/// <summary>
 		/// See <see cref="IProvider">IProvider interface</see>.
 		/// </summary>
-		public abstract System.Data.IDbCommand NewSqlCommand(System.Data.IDbConnection connection);
+		public abstract IDbCommand NewSqlCommand(IDbConnection connection);
 
 		/// <summary>
 		/// See <see cref="IProvider">IProvider interface</see>.
 		/// </summary>
-		public abstract System.Data.Common.DbDataAdapter NewDataAdapter(System.Data.IDbCommand select, System.Data.IDbCommand update, System.Data.IDbCommand insert, System.Data.IDbCommand delete);
+		public abstract System.Data.Common.DbDataAdapter NewDataAdapter(IDbCommand select, IDbCommand update, IDbCommand insert, IDbCommand delete);
 
 		/// <summary>
 		/// See <see cref="IProvider">IProvider interface</see>.
@@ -63,12 +64,12 @@ namespace NDOInterfaces
 		/// <summary>
 		/// See <see cref="IProvider">IProvider interface</see>.
 		/// </summary>
-		public abstract IDataParameter AddParameter(System.Data.IDbCommand command, string parameterName, object dbType, int size, string columnName);
+		public abstract IDataParameter AddParameter(IDbCommand command, string parameterName, object dbType, int size, string columnName);
 
 		/// <summary>
 		/// See <see cref="IProvider">IProvider interface</see>.
 		/// </summary>
-		public abstract IDataParameter AddParameter(System.Data.IDbCommand command, string parameterName, object dbType, int size, System.Data.ParameterDirection dir, bool isNullable, byte precision, byte scale, string srcColumn, System.Data.DataRowVersion srcVersion, object value);
+		public abstract IDataParameter AddParameter(IDbCommand command, string parameterName, object dbType, int size, System.Data.ParameterDirection dir, bool isNullable, byte precision, byte scale, string srcColumn, System.Data.DataRowVersion srcVersion, object value);
 		
 		/// <summary>
 		/// See <see cref="IProvider">IProvider interface</see>.
@@ -182,9 +183,10 @@ namespace NDOInterfaces
 		{
 			if (o == null)
 				return "NULL";
-			if (o is string || o.GetType().IsSubclassOf(typeof(string)) || o is Guid)
+			if (o is string || o is Guid)
 				return "'" + o.ToString() + "'";
-			if (o is byte[])
+
+            if (o is byte[])
 			{
 				StringBuilder sb = new StringBuilder(((byte[])o).Length * 2 + 2);
 				sb.Append('\'');
@@ -195,7 +197,19 @@ namespace NDOInterfaces
 				sb.Append('\'');
 				return sb.ToString();
 			}
-			return o.ToString();
+
+            var ci = CultureInfo.InvariantCulture;
+
+            if (o is DateTime dt)
+                return "'" + dt.ToString( "yyyy-MM-dd HH:mm:ss" ) + "'";
+            if (o is double d)
+                return d.ToString( ci );
+            if (o is float f)
+                return f.ToString( ci );
+            if (o is decimal dc)
+                return dc.ToString( ci );
+
+            return o.ToString();
 		}
 
 
@@ -370,7 +384,7 @@ namespace NDOInterfaces
 			string dbName = this.GetQuotedName(databaseName);
 			try
 			{
-				IDbConnection conn = this.NewConnection(connectionString);
+				var conn = this.NewConnection(connectionString);
 				IDbCommand cmd = this.NewSqlCommand(conn);
 				cmd.CommandText = "CREATE DATABASE " + dbName;
 				bool wasOpen = true;
@@ -422,6 +436,12 @@ namespace NDOInterfaces
 		public virtual string GetDbTypeString( IDbDataParameter parameter )
 		{
 			return parameter.DbType.ToString();
+		}
+
+		/// <inheritdoc/>
+		public virtual object GetConnectionId( IDbConnection connection )
+		{
+			return ConnectionIdProvider.Get( connection );
 		}
 	}
 }

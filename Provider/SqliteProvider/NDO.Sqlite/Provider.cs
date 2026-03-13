@@ -20,15 +20,13 @@
 // DEALINGS IN THE SOFTWARE.
 
 
+using NDOInterfaces;
 using System;
-using System.Text;
-using System.Reflection;
+using System.Collections.ObjectModel;
 using System.Data;
 using System.Data.Common;
-using NDOInterfaces;
-
 using System.Data.SQLite;
-using System.IO;
+using System.Text;
 
 namespace System.Data.SQLite
 {
@@ -62,19 +60,21 @@ namespace NDO.SqliteProvider
 		// which implement common interfaces in .NET:
 		// IDbConnection, IDbCommand, DbDataAdapter and the Parameter objects
 		#region Provide specialized type objects
-		public override System.Data.IDbConnection NewConnection(string connectionString) 
+		public override IDbConnection NewConnection(string connectionString) 
 		{
-			return new SQLiteConnection(connectionString);
+			var conn = new SQLiteConnection(connectionString);
+			conn.StateChange += ConnectionIdProvider.HandleStateChange;
+			return conn;
 		}
 
-		public override System.Data.IDbCommand NewSqlCommand(System.Data.IDbConnection connection) 
+		public override IDbCommand NewSqlCommand(IDbConnection connection) 
 		{
 			SQLiteCommand command = new SQLiteCommand();
-			command.Connection = (SQLiteConnection)connection;
+			command.Connection = (SQLiteConnection) connection;
 			return command;
 		}
 
-		public override DbDataAdapter NewDataAdapter(System.Data.IDbCommand select, System.Data.IDbCommand update, System.Data.IDbCommand insert, System.Data.IDbCommand delete) 
+		public override DbDataAdapter NewDataAdapter(IDbCommand select, IDbCommand update, IDbCommand insert, IDbCommand delete) 
 		{
 			SQLiteDataAdapter da = new SQLiteDataAdapter();
 			da.SelectCommand = (SQLiteCommand)select;
@@ -202,13 +202,6 @@ namespace NDO.SqliteProvider
 			return result;
 		}
 
-		private string GetDateExpression(System.DateTime dt)
-		{
-			//'9999-12-31 23:59:59'
-			return "'" + dt.ToString("yyyy-MM-dd HH:mm:ss") + "." + dt.Millisecond + "'";
-		}
-	
-
 		public override int GetDefaultLength(System.Type t)
 		{
             t = base.ConvertNullableType(t);
@@ -282,13 +275,6 @@ namespace NDO.SqliteProvider
 			return "\"" + plainName + '"';
 		}
 	
-		public override string GetSqlLiteral(object o)
-		{
-			if (o is DateTime)
-				return this.GetDateExpression((DateTime)o);
-			return base.GetSqlLiteral (o);
-		}
-		
 
 		/// <summary>
 		/// Indicates whether the last automatically generated ID can be retrieved. 
@@ -339,7 +325,7 @@ namespace NDO.SqliteProvider
 			
 		public override string[] GetTableNames(IDbConnection conn, string owner)
 		{
-            SQLiteDataAdapter a = new SQLiteDataAdapter("SELECT name FROM sqlite_master WHERE type='table' ORDER BY name;", (SQLiteConnection)conn);
+            SQLiteDataAdapter a = new SQLiteDataAdapter("SELECT name FROM sqlite_master WHERE type='table' ORDER BY name;", (SQLiteConnection) conn );
             DataSet ds = new DataSet();
             a.Fill(ds);
             DataTable dt = ds.Tables[0];

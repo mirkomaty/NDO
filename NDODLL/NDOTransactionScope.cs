@@ -1,39 +1,43 @@
-﻿using NDO.Logging;
-using NDO.Mapping;
+﻿using NDO.Mapping;
+using NDOInterfaces;
 using System;
 using System.Collections.Generic;
 using System.Data;
-using System.Data.Common;
 using System.Linq;
 using System.Text.RegularExpressions;
 
 namespace NDO
 {
+	class UsedConnectionsInfo
+	{
+		public IDbConnection Connection;
+		public IProvider Provider;
+	}
+
 	/// <summary>
-	/// 
+	/// class NDOTransactionScope
 	/// </summary>
 	public class NDOTransactionScope : INDOTransactionScope
 	{
-		private Dictionary<string, DbConnection> usedConnections = new Dictionary<string, DbConnection>();
-		private Dictionary<string, DbTransaction> usedTransactions = new Dictionary<string, DbTransaction>();
+		private PersistenceManager pm;
+
+		private Dictionary<string, UsedConnectionsInfo> usedConnections = new Dictionary<string, UsedConnectionsInfo>();
+		private Dictionary<string, IDbTransaction> usedTransactions = new Dictionary<string, IDbTransaction>();
 
 		///<inheritdoc/>
 		public IsolationLevel IsolationLevel { get; set; }
 		///<inheritdoc/>
 		public TransactionMode TransactionMode { get; set; }
 
-		bool isInTransaction;
-		private readonly ILogAdapter logger;
+		bool isInTransaction = false;
 
 		/// <summary>
 		/// Constructs an NDOTransactionScope object.
 		/// </summary>
-		/// <param name="logger"></param>
-		public NDOTransactionScope( ILogAdapter logger )
+		public NDOTransactionScope()
 		{
 			IsolationLevel = IsolationLevel.ReadCommitted;
 			TransactionMode = TransactionMode.Optimistic;
-			this.logger = logger;
 		}
 
 		///<inheritdoc/>
@@ -48,20 +52,24 @@ namespace NDO
 			{
 				foreach (var connId in this.usedConnections.Keys)
 				{
-					OpenConnAndStartTransaction( connId, this.usedConnections[connId] );
+					OpenConnAndStartTransaction( connId );
 				}
 			}
 
 			this.isInTransaction = true;
 		}
 
-		private void OpenConnAndStartTransaction( string connId, DbConnection conn )
+		private void OpenConnAndStartTransaction( string id )
 		{
+			var cinfo = this.usedConnections[id];
+			var provider = cinfo.Provider;
+			var conn = cinfo.Connection;
 			conn.Open();
-			this.logger.Debug( $"+ Opening connection {conn.DisplayName()}" );
+			var serverId = provider.GetConnectionId(conn);
+			pm.LogIfVerbose( $"Opening connection {serverId} = '{conn.DisplayName()}'" );
 			var tx = conn.BeginTransaction(IsolationLevel);
-			usedTransactions.Add( connId, tx );
-			this.logger.Debug( $"+ Starting transaction {tx.GetHashCode():X} at connection '{conn.DisplayName()}'" );
+			usedTransactions.Add( id, tx );
+			this.pm.LogIfVerbose( $"Starting transaction {tx.GetHashCode():X} at connection {serverId} = '{conn.DisplayName()}'" );
 		}
 
 		///<inheritdoc/>
@@ -79,38 +87,42 @@ namespace NDO
 				var tx = usedTransactions[id];
 				tx.Commit();
 
-				DbConnection conn = null;
-				usedConnections.TryGetValue( id, out conn );
-				this.logger.Debug( $"- Committing transaction {tx.GetHashCode():X} at connection '{conn.DisplayName()}'" );
+				usedConnections.TryGetValue( id, out var cinfo );
+				var conn = cinfo?.Connection;
+				if (conn == null)
+					throw new NDOException( 121, $"Can't commit. No open connection found for NDO Connection {id} ({conn.DisplayName()})" );
+				var serverId = cinfo.Provider.GetConnectionId(conn);
+				this.pm.LogIfVerbose( $"Committing transaction {tx.GetHashCode():X} at connection {serverId} = '{conn.DisplayName()}'" );
 			}
 
 			usedTransactions.Clear();
 		}
 
 		///<inheritdoc/>
-		public DbConnection GetConnection( string id, Func<DbConnection> factory )
+		public IDbConnection GetConnection( Connection ndoConnection, Func<IDbConnection> factory )
 		{
+			var id = ndoConnection.ID;
 			if (this.usedConnections.ContainsKey( id ))
 			{
-				return this.usedConnections[id];
+				return this.usedConnections[id].Connection;
 			}
 			else
 			{
 				var conn = factory();
-				this.usedConnections.Add( id, conn );
+				this.usedConnections.Add( id, new UsedConnectionsInfo { Connection = conn, Provider = ndoConnection.Provider } );
 				if (this.isInTransaction)
-					OpenConnAndStartTransaction( id, conn );
+					OpenConnAndStartTransaction( id );
 				return conn;
 			}
 		}
 
 
 		///<inheritdoc/>
-		public DbTransaction GetTransaction( string id )
+		public IDbTransaction GetTransaction( string id )
 		{
 			if (isInTransaction)
 			{
-				DbTransaction tx = null;
+				IDbTransaction tx = null;
 				this.usedTransactions.TryGetValue( id, out tx );
 				return tx;
 			}
@@ -132,10 +144,26 @@ namespace NDO
 			{
 				var tx = this.usedTransactions[key];
 				var id = tx.GetHashCode();
-				tx.Rollback();
-				DbConnection conn = null;
-				this.usedConnections.TryGetValue( key, out conn );
-				this.logger.Debug( $"- Rollback transaction {id.ToString( "X" )} at connection '{conn.DisplayName()}'" );
+				try
+				{
+					// See https://github.com/dotnet/runtime/issues/95399
+					// We don't have any information about the state of the transaction.
+					// If it is completed, we will get an exception here.
+					// Given that in most cases it's possible to track the tx state outside of NDO,
+					// we are safe here in the most cases.
+					tx.Rollback();
+				}
+				catch
+				{
+				}
+
+				if (this.usedConnections.TryGetValue( key, out var cinfo ))
+				{
+					var conn = cinfo.Connection;
+					var provider = cinfo.Provider;
+					var serverId = provider.GetConnectionId(conn);
+					this.pm.LogIfVerbose( $"Rollback transaction {id.ToString( "X" )} at connection {serverId} = '{conn.DisplayName()}'" );
+				}
 			}
 
 			usedTransactions.Clear();
@@ -143,22 +171,24 @@ namespace NDO
 
 		private void CloseConnections()
 		{
-			foreach (var conn in this.usedConnections.Values.Where( c => c.State == ConnectionState.Open ))
+			foreach (var cinfo in this.usedConnections.Values)
 			{
-				try
-				{
-					conn.Close();
-				}
-				catch (Exception ex)
-				{
-					this.logger.Error( ex.ToString() );
-					throw;
-				}
-
-				this.logger.Debug( $"- Closed connection {conn.DisplayName()}" );
+				var conn = cinfo.Connection;
+				if (conn.State != ConnectionState.Open)
+					continue;
+				var serverId = cinfo.Provider.GetConnectionId(conn);
+				pm.LogIfVerbose( $"Closed connection {serverId} = '{conn.DisplayName()}'" );
+				conn.Dispose();
 			}
 
 			this.usedConnections.Clear();
+		}
+
+		/// <inheritdoc/>
+		public INDOTransactionScope Initialize( PersistenceManager pm )
+		{
+			this.pm = pm;
+			return this;
 		}
 	}
 

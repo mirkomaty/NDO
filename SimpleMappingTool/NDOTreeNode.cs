@@ -33,13 +33,13 @@ namespace SimpleMappingTool
 	/// </summary>
 	internal class NDOTreeNode : TreeNode
 	{
-		protected object o;
-		public object Object
+		protected object? o;
+		public object? Object
 		{
 			get { return o; }
 			set { o = value; }
 		}
-		public NDOTreeNode(string s, object o) : base (s)
+		public NDOTreeNode(string s, object? o) : base (s)
 		{
 			this.o = o;
 			if (!(o is MappingNode)) // Base class of all NDO entities
@@ -48,22 +48,23 @@ namespace SimpleMappingTool
 				return;
 			foreach(DictionaryEntry de in ((MappingNode)o).Properties)
 			{
-				this.Nodes.Add(new PropertyNode(this, (Property)de.Value));
+				this.Nodes.Add(new PropertyNode(this, (Property?)de.Value));
 			}
 		}
 
-		public virtual ContextMenu GetContextMenu()
+		public virtual ContextMenuStrip GetContextMenu()
 		{
-			ContextMenu menu = new ContextMenu();
-			if (!(this is PropertyNode))
-				menu.MenuItems.Add(new MenuItem("Add Property", new EventHandler(AddProperty)));
-            menu.MenuItems.Add(new MenuItem("Delete item", new EventHandler(DeleteItem))); 
+			var menu = new ContextMenuStrip();
+			if (!( this is PropertyNode ))
+				menu.Items.Add( new ToolStripMenuItem( "Add Property", null, AddProperty ));
+            menu.Items.Add(new ToolStripMenuItem("Delete item", null, DeleteItem)); 
 			return menu;
 		}
 
-        protected virtual void DeleteItem(Object sender, EventArgs ea)
+        protected virtual void DeleteItem(object? sender, EventArgs ea)
         {
-            ((MappingNode)o).Remove();
+			if (o != null)
+				((MappingNode)o).Remove();
             this.Remove();
         }
 
@@ -71,13 +72,14 @@ namespace SimpleMappingTool
 		public void RemoveProperty(PropertyNode propNode)
 		{
 			this.Nodes.Remove(propNode);
-			((MappingNode)this.o).RemoveProperty(propNode.Text);
+			if (o != null)
+				((MappingNode)this.o).RemoveProperty(propNode.Text);
 		}
 
-		void AddProperty(object sender, EventArgs args)
+		void AddProperty(object? sender, EventArgs args)
 		{
 			AddPropertyDialog dlg = new AddPropertyDialog();
-			if (dlg.ShowDialog() == DialogResult.OK)
+			if (dlg.ShowDialog() == DialogResult.OK && this.o != null)
 			{
 				MappingNode mappingNode = (MappingNode)this.o;
 				Property prop = new Property(mappingNode, dlg.PropName, dlg.Type, dlg.Value);

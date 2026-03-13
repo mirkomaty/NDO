@@ -3,9 +3,9 @@
   <Options>
     <EnableAddIn>True</EnableAddIn>
     <EnableEnhancer>True</EnableEnhancer>
-    <VerboseMode>False</VerboseMode>
+    <VerboseMode>True</VerboseMode>
     <NewMapping>False</NewMapping>
-    <GenerateSQL>True</GenerateSQL>
+    <GenerateSQL>False</GenerateSQL>
     <DefaultConnection>
     </DefaultConnection>
     <TargetMappingFileName>NDOMapping.xml</TargetMappingFileName>
@@ -13,21 +13,18 @@
     <UseTimeStamps>False</UseTimeStamps>
     <Utf8Encoding>True</Utf8Encoding>
     <SQLScriptLanguage>SqlServer</SQLScriptLanguage>
-    <SchemaVersion>
-    </SchemaVersion>
+    <SchemaVersion>1.0</SchemaVersion>
     <IncludeTypecodes>False</IncludeTypecodes>
     <DatabaseOwner>
     </DatabaseOwner>
     <GenerateConstraints>False</GenerateConstraints>
-    <UseMsBuild>True</UseMsBuild>
     <DropExistingElements>True</DropExistingElements>
   </Options>
-  <ProjectDescription>
-    <BinPath>bin\Debug\PureBusinessClasses.dll</BinPath>
-    <ObjPath>obj\Debug\</ObjPath>
+  <ProjectDescription version="5.0">
+    <BinPath>bin\Debug\$(TargetFramework)\PureBusinessClasses.dll</BinPath>
+    <ObjPath>obj\Debug\$(TargetFramework)\</ObjPath>
     <AssemblyName />
     <Debug>True</Debug>
-    <IsWebProject>False</IsWebProject>
     <KeyFile />
     <References>
     </References>

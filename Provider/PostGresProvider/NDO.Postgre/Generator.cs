@@ -79,7 +79,7 @@ namespace NDO.PostGreProvider
 			else if (t == typeof(float))
 				return "real";
 			else if (t == typeof(Guid))
-				return "char";
+				return "varchar";
 			else if (t == typeof(Int16) || t == typeof(UInt16))
 				return "int2";
 			else if (t == typeof(Int32) || t == typeof(UInt32))
@@ -93,16 +93,13 @@ namespace NDO.PostGreProvider
 			throw new Exception("Can't resolve type " + t.FullName + " as storable.");
 		}
 
-		public override string AutoIncrementColumn(string columnName, Type dataType, string columnType, string width)
+		public override string AutoIncrementColumn(string columnName, Type dataType, string columnType, string width, bool isPrimary)
 		{
-			//return columnName + " serial NOT NULL";
-            return null;
+			// This always results in a primary key column.
+			return $"{columnName} {columnType} GENERATED ALWAYS AS IDENTITY";
 		}
 
-		public override bool HasSpecialAutoIncrementColumnFormat
-		{
-			get { return false; }
-		}
+		public override bool HasSpecialAutoIncrementColumnFormat => true;
 
         public override PrimaryConstraintPlacement PrimaryConstraintPlacement
         {

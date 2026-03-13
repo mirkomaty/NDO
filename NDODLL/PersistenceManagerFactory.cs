@@ -23,9 +23,7 @@
 using System;
 using System.Reflection;
 using System.Data;
-using System.Collections;
 using System.IO;
-using NDO.Logging;
 
 namespace NDO
 {
@@ -38,24 +36,11 @@ namespace NDO
 		private static bool hollowMode = false;
 		private static IdGenerationHandler idGenerationHandler = null;
 		private static TransactionMode transactionMode = TransactionMode.None;
-		private static bool verboseMode = false;		
-		private static Type persistenceHandlerType;
 		private static IsolationLevel isolationLevel = IsolationLevel.ReadCommitted;
 		private static CollisionHandler collisionHandler;
-		private static string logPath;
 		private static OpenConnectionListener openConnectionListener;
 		internal static Assembly CallingAssembly;
 		private static OnSavingHandler onSavingHandler;
-		private static ILogAdapter logAdapter;
-
-		/// <summary>
-		/// <see cref="NDO.PersistenceManagerBase.LogAdapter"/>
-		/// </summary>
-		public static ILogAdapter LogAdapter
-		{
-			get { return logAdapter; }
-			set { logAdapter = value; }
-		}
 
 		/// <summary>
 		/// <see cref="NDO.PersistenceManager.OnSavingEvent"/>
@@ -76,15 +61,6 @@ namespace NDO
 		}
 
 		/// <summary>
-		/// <see cref="NDO.PersistenceManagerBase.LogPath"/>
-		/// </summary>
-		public static string LogPath
-		{
-			get { return logPath; }
-			set { logPath = value; }
-		}
-
-		/// <summary>
 		/// <see cref="NDO.PersistenceManager.CollisionEvent"/>
 		/// </summary>
 		public static CollisionHandler CollisionHandler
@@ -94,25 +70,6 @@ namespace NDO
 		}
 
 		/// <summary>
-		/// <see cref="NDO.PersistenceManagerBase.PersistenceHandlerType"/>
-		/// </summary>
-		public static Type PersistenceHandlerType
-		{
-			get { return persistenceHandlerType; }
-			set { persistenceHandlerType = value; }
-		}
-
-		/// <summary>
-		/// <see cref="NDO.PersistenceManagerBase.VerboseMode"/>
-		/// </summary>
-		public static bool VerboseMode
-		{
-			get { return verboseMode; }
-			set { verboseMode = value; }
-		}
-
-
-		/// <summary>
 		/// <see cref="NDO.PersistenceManager.TransactionMode"/>
 		/// </summary>
 		public static TransactionMode TransactionMode
@@ -120,8 +77,6 @@ namespace NDO
 			get { return transactionMode; }
 			set { transactionMode = value; }
 		}
-
-
 		
 		/// <summary>
 		/// <see cref="NDO.PersistenceManager.IsolationLevel"/>
@@ -184,18 +139,10 @@ namespace NDO
 				pm.CollisionEvent += collisionHandler;
 			pm.IsolationLevel = isolationLevel;
 			pm.TransactionMode = transactionMode;
-			pm.VerboseMode = verboseMode;
-#pragma warning disable 618
-			if (persistenceHandlerType != null)
-				pm.PersistenceHandlerType = persistenceHandlerType;
-#pragma warning restore 618
-			pm.LogPath = logPath;
 			if (openConnectionListener != null)
 				pm.RegisterConnectionListener(openConnectionListener);
 			if (onSavingHandler != null)
 				pm.OnSavingEvent += onSavingHandler;
-			if (logAdapter != null)
-				pm.LogAdapter = logAdapter;
 			return pm;
 		}
 

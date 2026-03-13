@@ -1,9 +1,7 @@
-﻿using NDO.Logging;
-using NDO.Mapping;
+﻿using NDO.Mapping;
 using System;
 using System.Collections.Generic;
 using System.Data;
-using System.Data.Common;
 using System.Linq;
 using ST = System.Transactions;
 
@@ -19,10 +17,9 @@ namespace NDO
 	public class NDODistributedTransactionScope : INDOTransactionScope
 	{
 		ST.TransactionScope innerScope;
-		//private readonly PersistenceManager pm;
+		private PersistenceManager pm;
 
-		private Dictionary<string, DbConnection> usedConnections = new Dictionary<string, DbConnection>();
-		private readonly ILogAdapter logger;
+		private Dictionary<string, IDbConnection> usedConnections = new Dictionary<string, IDbConnection>();
 
 		///<inheritdoc/>
 		public IsolationLevel IsolationLevel { get; set; }
@@ -32,12 +29,10 @@ namespace NDO
 		/// <summary>
 		/// Constructs an NDOTransactionScope object.
 		/// </summary>
-		/// <param name="logger"></param>
-		public NDODistributedTransactionScope( ILogAdapter logger )
+		public NDODistributedTransactionScope()
 		{
 			IsolationLevel = IsolationLevel.ReadCommitted;
 			TransactionMode = TransactionMode.Optimistic;
-			this.logger = logger;
 		}
 
 		///<inheritdoc/>
@@ -52,7 +47,7 @@ namespace NDO
 			if (innerScope == null)
 			{
 				innerScope = new ST.TransactionScope( ST.TransactionScopeOption.Required, new ST.TransactionOptions() { IsolationLevel = (ST.IsolationLevel) Enum.Parse( typeof( ST.IsolationLevel ), this.IsolationLevel.ToString() ) } );
-				this.logger.Debug( "Creating a new TransactionScope" );
+				this.pm.LogIfVerbose( "Creating a new TransactionScope" );
 			}
 		}
 
@@ -61,7 +56,7 @@ namespace NDO
 		{
 			if (innerScope != null)
 			{
-				this.logger.Debug( "Completing the TransactionScope" );
+				this.pm.LogIfVerbose( "Completing the TransactionScope" );
 				innerScope.Complete();
 				innerScope.Dispose();
 			}
@@ -72,8 +67,9 @@ namespace NDO
 		}
 
 		///<inheritdoc/>
-		public DbConnection GetConnection( string id, Func<DbConnection> factory )
+		public IDbConnection GetConnection( Connection ndoConnection, Func<IDbConnection> factory )
 		{
+			var id = ndoConnection.ID;
 			if (this.usedConnections.ContainsKey( id ))
 			{
 				return this.usedConnections[id];
@@ -91,7 +87,7 @@ namespace NDO
 		{
 			if (innerScope != null)
 			{
-				this.logger.Debug( "Disposing the TransactionScope" );
+				this.pm.LogIfVerbose( "Disposing the TransactionScope" );
 				innerScope.Dispose();
 				innerScope = null;
 			}
@@ -104,16 +100,23 @@ namespace NDO
 			foreach (var conn in this.usedConnections.Values.Where( c => c.State == ConnectionState.Open ))
 			{
 				conn.Close();
-				this.logger.Debug( $"Closed connection {new Connection( null ) { Name = conn.ConnectionString }.DisplayName }" );
+				pm.LogIfVerbose( $"Closed connection {new Connection( null ) { Name = conn.ConnectionString }.DisplayName }" );
 			}
 
 			this.usedConnections.Clear();
 		}
 
 		///<inheritdoc/>
-		public DbTransaction GetTransaction( string id )
+		public IDbTransaction GetTransaction( string id )
 		{
 			return null;
+		}
+
+		/// <inheritdoc/>
+		public INDOTransactionScope Initialize( PersistenceManager pm )
+		{
+			this.pm = pm;
+			return this;
 		}
 	}
 }

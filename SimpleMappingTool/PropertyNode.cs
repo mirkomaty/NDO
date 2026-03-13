@@ -33,14 +33,14 @@ namespace SimpleMappingTool
 	internal class PropertyNode : NDOTreeNode
 	{
 		NDOTreeNode parent;
-		public PropertyNode(NDOTreeNode parent, Property prop) : base(prop.Name, prop)
+		public PropertyNode(NDOTreeNode parent, Property? prop) : base(prop?.Name??"--", prop)
 		{
 			this.parent = parent;
 			this.SelectedImageIndex = 14;
 			this.ImageIndex = 14;
 		}		
 
-		public Property Property
+		public Property? Property
 		{
 			get { return this.o as Property; }
 		}

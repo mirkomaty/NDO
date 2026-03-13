@@ -1,4 +1,5 @@
-﻿using NDO.Mapping;
+﻿using Microsoft.Extensions.DependencyInjection;
+using NDO.Mapping;
 using NDO.Query;
 using NDOql.Expressions;
 using System;
@@ -6,22 +7,24 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
-using NDO.Configuration;
 
 namespace NDO.SqlPersistenceHandling
 {
 	class SqlQueryGenerator : IQueryGenerator
 	{
-		private readonly INDOContainer configContainer;
 		private List<QueryInfo> subQueries = new List<QueryInfo>();
 		private Func<Dictionary<Relation, Class>, bool, Class, bool, object, string> selectPartCreator;
 		private object additionalSelectPartData = null;
-		private Mappings mappings;
+		private NDOMapping mappings;
 
-		public SqlQueryGenerator(INDOContainer configContainer)
+		public SqlQueryGenerator()
 		{
-			this.configContainer = configContainer;
-			this.mappings = this.configContainer.Resolve<Mappings>();
+		}
+
+		public IQueryGenerator Initialize(NDOMapping mappings)
+		{
+			this.mappings = mappings;
+			return this;
 		}
 
 		/// <summary>
@@ -154,12 +157,6 @@ namespace NDO.SqlPersistenceHandling
 			}
 		}
 
-		SqlColumnListGenerator CreateColumnListGenerator( Class cls )
-		{
-			var key = $"{nameof(SqlColumnListGenerator)}-{cls.FullName}";
-			return configContainer.ResolveOrRegisterType<SqlColumnListGenerator>( new ContainerControlledLifetimeManager(), key, new ParameterOverride( "cls", cls ) );
-		}
-
 		string ConstructQueryString( 
 			Type resultType, 
 			Dictionary<Relation, Class> relationContext, 
@@ -208,7 +205,7 @@ namespace NDO.SqlPersistenceHandling
 
 		private string CreateQuerySelectPart( Dictionary<Relation, Class> relationContext, bool hollow, Class cls, bool qualifyWithTableName, object additionalData )
 		{
-			var generator = CreateColumnListGenerator( cls );
+			var generator = SqlColumnListGenerator.Get( cls );
 
 			// We have to hack around a special behavior of SQLite, generating
 			// new columns with fully specified column names, if the query
@@ -243,9 +240,8 @@ namespace NDO.SqlPersistenceHandling
 
 			var provider = cls.Provider;
 			var colName = isStar ? "*" : column.GetQualifiedName();
-			//var tableName = qualifyWithTableName ? cls.GetQualifiedTableName() + "." : String.Empty;
 
-			return $"{aggregateType.ToString().ToUpper()} ({colName}) AS {provider.GetQuotedName( "AggrResult" )}";
+			return $"{aggregateType.ToString().ToUpper()}({colName}) AS {provider.GetQuotedName( "AggrResult" )}";
 		}
 
 		public string GenerateAggregateQueryString( string field, QueryContextsEntry queryContextsEntry, OqlExpression expressionTree, bool hasSubclassResultsets, AggregateType aggregateType )
@@ -278,7 +274,7 @@ namespace NDO.SqlPersistenceHandling
 
 			Class cls = mappings.FindClass( relations[relations.Count - 1].ReferencedTypeName );
 			var relationContext = new Dictionary<Relation, Class>();
-#warning Hier fehlt der INNER JOIN
+			//TODO: Note: This code is not complete. The INNER JOIN is missing here.
 			string columnList = CreateQuerySelectPart( relationContext, false, cls, true, null );
 			sb.Append( columnList );
 

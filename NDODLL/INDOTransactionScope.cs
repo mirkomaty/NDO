@@ -1,4 +1,5 @@
-﻿using System;
+﻿using NDO.Mapping;
+using System;
 using System.Data;
 using System.Data.Common;
 
@@ -9,6 +10,12 @@ namespace NDO
 	/// </summary>
 	public interface INDOTransactionScope : IDisposable
 	{
+		/// <summary>
+		/// This is called from NDO to provide the current pm to the transaction scope.
+		/// </summary>
+		/// <param name="pm"></param>
+		/// <returns></returns>
+		INDOTransactionScope Initialize( PersistenceManager pm );
 		/// <summary>
 		/// Sets the IsolationLevel of transactions started by the scope object
 		/// </summary>
@@ -32,7 +39,7 @@ namespace NDO
 		/// <summary>
 		/// Gets a connection from the cache, or creates one using the factory and puts it on the cache.
 		/// </summary>
-		/// <param name="id">Connection id of the NDO.Mapping.Connection object for which the IDbConnection is created.</param>
+		/// <param name="ndoConnection">The NDO.Mapping.Connection object for which the IDbConnection is created.</param>
 		/// <param name="factory">A lambda expression, which can create an IDbConnection object.</param>
 		/// <returns></returns>
 		DbConnection GetConnection( string id, Func<DbConnection> factory );

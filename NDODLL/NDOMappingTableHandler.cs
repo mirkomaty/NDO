@@ -19,12 +19,11 @@
 // CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER 
 // DEALINGS IN THE SOFTWARE.
 
-
 using System;
 using System.Data;
 using System.Data.Common;
+using Microsoft.Extensions.Logging;
 using NDO.Mapping;
-using NDO.Logging;
 using NDOInterfaces;
 using NDO.SqlPersistenceHandling;
 using System.Threading.Tasks;
@@ -49,10 +48,16 @@ namespace NDO
 		private DbConnection connection;
 		private DbTransaction transaction;
 		private IProvider provider;
+		private readonly ILogger logger;
+		private readonly ILoggerFactory loggerFactory;
 		private SqlSelectBehavior sqlSelectBehavior;
-		private SqlDumper sqlDumper;
 		private NDOMapping mappings;
-		private ILogAdapter logger;
+
+		public NDOMappingTableHandler(ILoggerFactory loggerFactory)
+		{
+			this.logger = loggerFactory.CreateLogger<NDOMappingTableHandler>();
+			this.loggerFactory = loggerFactory;
+		}
 
 		public void Initialize(NDOMapping mappings, Relation relation, ILogAdapter logger)
 		{
@@ -201,7 +206,7 @@ namespace NDO
 
 		private void Dump( DataRow[] rows, IDbCommand cmd, IEnumerable<string> batch )
 		{
-			this.sqlDumper.Dump( rows, cmd, batch );
+			new SqlDumper(this.loggerFactory, this.provider, insertCommand, selectCommand, null, deleteCommand).Dump(rows);
 		}
 
 

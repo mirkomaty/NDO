@@ -1,0 +1,72 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net10.0</TargetFramework>
+    <ImplicitUsings>disable</ImplicitUsings>
+    <Nullable>disable</Nullable>
+	<Version>6.0.0.0</Version>
+	<AssemblyVersion>6.0.0.0</AssemblyVersion>
+	<Authors>Mirko Matytschak</Authors>
+	<Company>Mirko Matytschak</Company>
+	<Product>NDOEnhancer</Product>
+	<PackageTags>NDO;NDOEnhancer;Persistence</PackageTags>
+	<ProduceReferenceAssembly>False</ProduceReferenceAssembly>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <IsPublishable>False</IsPublishable>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <IsPublishable>False</IsPublishable>
+  </PropertyGroup>
+
+  <Target Name="PrepareEnhDate" BeforeTargets="PrepareForBuild">
+    <Exec Command="..\..\Tools\MakeEnhancerDate\bin\Release\net8.0\MakeEnhancerDate.exe &gt; EnhDate.cs" />
+  </Target>
+
+	<Target Name="CopyILDasm" AfterTargets="PrepareForBuild">
+		<MakeDir Condition="!Exists('$(OutputPath)\runtimes\win-x64')" Directories="$(OutputPath)\runtimes\win-x64" />
+		<MakeDir Condition="!Exists('$(OutputPath)\runtimes\win-x64\native')" Directories="$(OutputPath)\runtimes\win-x64\native" />
+		<Exec Command="Copy ILDasm\ILDasm.exe.* $(OutputPath)\runtimes\win-x64\native" />
+	</Target>
+	
+	<Target Name="CopyProviders" AfterTargets="Build" Condition="'$(Configuration)'=='Debug'">
+		<Copy SourceFiles="..\..\Provider\MySqlConnectorProvider\NDO.MySqlConnector\bin\Release\net8.0\NDO.MySqlConnector.dll" DestinationFolder="bin\Debug\$(TargetFramework)"/>
+		<Copy SourceFiles="..\..\Provider\MySqlNdoProvider\NDO.MySql\bin\Release\net8.0\NDO.MySql.dll" DestinationFolder="bin\Debug\$(TargetFramework)"/>
+		<Copy SourceFiles="..\..\Provider\OracleProvider\NDO.Oracle\bin\Release\net8.0\NDO.Oracle.dll" DestinationFolder="bin\Debug\$(TargetFramework)"/>
+		<Copy SourceFiles="..\..\Provider\PostGresProvider\NDO.Postgre\bin\Release\net8.0\NDO.Postgre.dll" DestinationFolder="bin\Debug\$(TargetFramework)"/>
+		<Copy SourceFiles="..\..\Provider\SqliteProvider\NDO.Sqlite\bin\Release\net8.0\NDO.Sqlite.dll" DestinationFolder="bin\Debug\$(TargetFramework)"/>
+		<Copy SourceFiles="..\..\Provider\SqlServerProvider\NDO.SqlServer\bin\Release\net8.0\NDO.Sqlserver.dll" DestinationFolder="bin\Debug\$(TargetFramework)"/>
+	</Target>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="6.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Hosting" Version="6.0.0" />
+    <PackageReference Include="mono.cecil" Version="0.11.6" />
+    <PackageReference Include="NDO.ProviderFactory" Version="5.1.0" />
+    <PackageReference Include="NDOInterfaces" Version="5.1.0" />
+	<PackageReference Include="runtime.linux-x64.Microsoft.NETCore.ILAsm" Version="10.0.0" />
+	<PackageReference Include="runtime.linux-x64.Microsoft.NETCore.ILDAsm" Version="10.0.0" />
+	<PackageReference Include="runtime.win-x64.Microsoft.NETCore.ILAsm" Version="10.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\NDO.Mapping\NDO.Mapping\NDO.Mapping.csproj" />
+    <ProjectReference Include="..\..\NDO.SchemaGenerator\NDO.SchemaGenerator\NDO.SchemaGenerator.csproj" />
+    <ProjectReference Include="..\Ecma335\Ecma335.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="ILDasm\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="Readme.md">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
+  </ItemGroup>
+
+</Project>

@@ -1,5 +1,5 @@
 ﻿//
-// Copyright (c) 2002-2022 Mirko Matytschak 
+// Copyright (c) 2002-2023 Mirko Matytschak 
 // (www.netdataobjects.de)
 //
 // Author: Mirko Matytschak
@@ -20,12 +20,10 @@
 // DEALINGS IN THE SOFTWARE.
 
 
-using System;
 using System.IO;
 using System.Data;
-using NDO.Logging;
 using NDOInterfaces;
-using System.Collections.Generic;
+using Microsoft.Extensions.Logging;
 
 namespace NDO
 {
@@ -34,33 +32,88 @@ namespace NDO
 	/// </summary>
 	internal class SqlDumper
 	{
-		private readonly ILogAdapter logAdapter;
-		private readonly IProvider provider;
+		ILogger logger;
+		IDbCommand insertCommand;
+		IDbCommand selectCommand;
+		IDbCommand updateCommand;
+		IDbCommand deleteCommand;
+		IProvider provider;
 
-		public SqlDumper(ILogAdapter logAdapter, IProvider provider)
+		public SqlDumper(ILoggerFactory loggerFactopry, IProvider provider, IDbCommand insertCommand, IDbCommand selectCommand, IDbCommand updateCommand, IDbCommand deleteCommand)
 		{
-			this.logAdapter = logAdapter;
+			this.logger = loggerFactopry.CreateLogger<SqlDumper>();
 			this.provider = provider;
+			this.updateCommand = updateCommand;
+			this.insertCommand = insertCommand;
+			this.selectCommand = selectCommand;
+			this.deleteCommand = deleteCommand;
 		}
 
-		internal void Dump(DataRow[] rows, IDbCommand cmd, IEnumerable<string> batch)
+		internal void Dump(DataRow[] rows)
 		{
-			if (logAdapter == null)
+			if (logger == null)
 				return;
+
+			bool hasSelect = false;
+			bool hasInsert = false;
+			bool hasDelete = false;
+			bool hasUpdate = false;
+
+            if (rows == null || rows.Length == 0)
+            {
+                hasSelect = true;
+            }
+            else
+            {
+                for (int i = 0; i < rows.Length; i++)
+                {
+                    DataRow row = rows[i];
+                    if (row.RowState == System.Data.DataRowState.Added)
+                        hasInsert = true;
+                    if (row.RowState == System.Data.DataRowState.Modified)
+                        hasUpdate = true;
+                    if (row.RowState == System.Data.DataRowState.Deleted)
+                        hasDelete = true;
+                }
+            }
 
 			StringWriter sw = null;
 
 			try
 			{
 				sw = new StringWriter();
-				if (batch != null)
+				if (hasSelect)
 				{
-					sw.WriteLine( String.Join( ";\r\n", batch ) );
+					sw.WriteLine("Select Command:");
+					sw.WriteLine(this.selectCommand.CommandText);
+					DumpParameters(selectCommand, sw);
 				}
-				if (cmd != null)
+
+				if (hasInsert)
 				{
-					DumpParameters(cmd, sw);
+					sw.WriteLine("Insert Command:");
+					sw.WriteLine(this.insertCommand.CommandText);
+					DumpParameters(insertCommand, sw);			
 				}
+				if (hasDelete)
+				{
+					sw.WriteLine("Delete Command:");
+					sw.WriteLine(this.deleteCommand.CommandText);
+					DumpParameters(deleteCommand, sw);
+					sw.WriteLine(rows.Length.ToString() + " Zeilen zu löschen");
+				}
+				if (hasUpdate)
+				{
+					if (updateCommand != null)
+					{
+						sw.WriteLine("Update Command:");
+						sw.WriteLine(this.updateCommand.CommandText);
+						DumpParameters(updateCommand, sw);
+					}
+					else
+						sw.WriteLine("No Update Command");
+				}
+			
 				if (rows != null) 
 				{
                     for (int i = 0; i < rows.Length; i++)
@@ -82,7 +135,8 @@ namespace NDO
 				if (sw != null)
 				{					
 					sw.Close();
-					this.logAdapter.Debug(sw.ToString());
+					if (this.logger != null && this.logger.IsEnabled( LogLevel.Debug ))
+						this.logger.LogDebug( sw.ToString() );
 				}
 			}
 		}

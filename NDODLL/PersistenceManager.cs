@@ -1,5 +1,5 @@
 //
-// Copyright (c) 2002-2022 Mirko Matytschak 
+// Copyright (c) 2002-2024 Mirko Matytschak 
 // (www.netdataobjects.de)
 //
 // Author: Mirko Matytschak
@@ -38,6 +38,8 @@ using System.Globalization;
 using NDO.Linq;
 using NDO.Query;
 using NDO.ChangeLogging;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using System.Threading.Tasks;
 using System.Linq.Expressions;
 using System.Data.Common;
@@ -54,10 +56,10 @@ namespace NDO
 	/// <see cref="NDO.PersistenceManagerBase.IdGenerationEvent"/>
 	/// </summary>
 	public delegate void IdGenerationHandler(Type t, ObjectId oid);
-	/// <summary>
-	/// Delegate type of an handler, which can be registered by the OnSaving event of the PersistenceManager.
-	/// </summary>
-	public delegate void OnSavingHandler(ICollection l);
+    /// <summary>
+    /// Delegate type of an handler, which can be registered by the OnSaving event of the PersistenceManager.
+    /// </summary>
+    public delegate void OnSavingHandler(ICollection l);
 	/// <summary>
 	/// Delegate type for the OnSavedEvent.
 	/// </summary>
@@ -90,7 +92,7 @@ namespace NDO
 		private TypeManager typeManager;
 		internal bool DeferredMode { get; private set; }
 		private INDOTransactionScope transactionScope;
-		internal INDOTransactionScope TransactionScope => transactionScope ?? (transactionScope = ConfigContainer.Resolve<INDOTransactionScope>());		
+		internal INDOTransactionScope TransactionScope => transactionScope ?? (transactionScope = ServiceProvider.GetRequiredService<INDOTransactionScope>().Initialize(this));		
 
 		private OpenConnectionListener openConnectionListener;
 
@@ -143,7 +145,7 @@ namespace NDO
             catch (Exception ex)
             {
                 if (ex is NDOException)
-                    throw ex;
+                    throw;
                 throw new NDOException(30, "Persistence manager initialization error: " + ex.ToString());
             }
 
@@ -158,8 +160,6 @@ namespace NDO
 		/// <param name="mapping"></param>
 		internal override void Init( Mappings mapping )
 		{
-			ConfigContainer.RegisterType<INDOTransactionScope, NDOTransactionScope>();
-
 			base.Init( mapping );
 
 			string dir = Path.GetDirectoryName( mapping.FileName );
@@ -176,32 +176,35 @@ namespace NDO
 		/// <summary>
 		/// Standard Constructor.
 		/// </summary>
+		/// <param name="scopedServiceProvider">An IServiceProvider instance, which represents a scope (e.g. a request in an AspNet application)</param>
 		/// <remarks>
 		/// Searches for a mapping file in the application directory. 
 		/// The constructor tries to find a file with the same name as
 		/// the assembly, but with the extension .ndo.xml. If the file is not found the constructor tries to find a
 		/// file called AssemblyName.ndo.mapping in the application directory.
 		/// </remarks>
-		public PersistenceManager() : base()
+		public PersistenceManager( IServiceProvider scopedServiceProvider = null ) : base( scopedServiceProvider )
 		{
 		}
 
-		/// <summary>
-		/// Loads the mapping file from the specified location. This allows to use
-		/// different mapping files with different classes mapped in it.
-		/// </summary>
-		/// <param name="mappingFile">Path to the mapping file.</param>
-		/// <remarks>Only the Professional and Enterprise
-		/// Editions can handle more than one mapping file.</remarks>
-		public PersistenceManager(string mappingFile) : base (mappingFile)
+        /// <summary>
+        /// Loads the mapping file from the specified location. This allows to use
+        /// different mapping files with different classes mapped in it.
+        /// </summary>
+        /// <param name="mappingFile">Path to the mapping file.</param>
+        /// <param name="scopedServiceProvider">An IServiceProvider instance, which represents a scope (e.g. a request in an AspNet application)</param>
+        /// <remarks>Only the Professional and Enterprise
+        /// Editions can handle more than one mapping file.</remarks>
+        public PersistenceManager(string mappingFile, IServiceProvider scopedServiceProvider = null) : base (mappingFile, scopedServiceProvider)
 		{
 		}
 
-		/// <summary>
-		/// Constructs a PersistenceManager and reuses a cached NDOMapping.
-		/// </summary>
-		/// <param name="mapping">The cached mapping object</param>
-		public PersistenceManager(NDOMapping mapping) : base (mapping)
+        /// <summary>
+        /// Constructs a PersistenceManager and reuses a cached NDOMapping.
+        /// </summary>
+        /// <param name="mapping">The cached mapping object</param>
+        /// <param name="scopedServiceProvider">An IServiceProvider instance, which represents a scope (e.g. a request in an AspNet application)</param>
+        public PersistenceManager(NDOMapping mapping, IServiceProvider scopedServiceProvider = null) : base (mapping, scopedServiceProvider)
 		{
 		}
 
@@ -223,11 +226,11 @@ namespace NDO
 			{
 				if (pc.NDOObjectState == NDOObjectState.PersistentDirty)
 				{
-					if (this.VerboseMode)
-						this.LogAdapter.Warn("Call to GetObjectContainer returns changed objects.");
-					System.Diagnostics.Trace.WriteLine("NDO warning: Call to GetObjectContainer returns changed objects.");
+					if (Logger != null)
+						Logger.LogWarning( "Call to GetObjectContainer returns changed objects." );
 				}
 			}
+
 			ObjectContainer oc = new ObjectContainer();
 			oc.AddList(l);
 			return oc;
@@ -557,6 +560,9 @@ namespace NDO
 		/// <param name="o">the transient object that should be made persistent</param>
 		public void MakePersistent(object o) 
 		{
+			if (IsClosed)
+				throw new ObjectDisposedException( GetType().Name );	
+
 			IPersistenceCapable pc = CheckPc(o);
 
 			//Debug.WriteLine("MakePersistent: " + pc.GetType().Name);
@@ -951,7 +957,7 @@ namespace NDO
 			
 			if (handler.Connection == null)
 			{
-				handler.Connection = TransactionScope.GetConnection(ndoConn.ID, () =>
+				handler.Connection = TransactionScope.GetConnection(ndoConn, () =>
 				{
 					IProvider p = ndoConn.Parent.GetProvider( ndoConn );
 					string connStr = this.OnNewConnection( ndoConn );
@@ -968,11 +974,12 @@ namespace NDO
 				handler.Transaction = TransactionScope.GetTransaction( ndoConn.ID );
 			}
 
-			// During the tests, we work with a handler mock that always returns null for the Connection property.
+			// There are tests with a handler mock that always returns zero for the Connection property.
 			if (handler.Connection != null && handler.Connection.State != ConnectionState.Open)
 			{
 				handler.Connection.Open();
-				PmLogAdapter.Debug( $"+ Opening connection {ndoConn.DisplayName}" );
+				var serverId = ndoConn.Provider.GetConnectionId( handler.Connection );
+				LogIfVerbose( $"Opening connection {serverId} = '{ndoConn.DisplayName}'" );
 			}
 		}
 
@@ -1354,47 +1361,56 @@ namespace NDO
 			return new Version( v2 ).CompareTo( new Version( v1 ) );
 		}
 
-		string GetSchemaVersion(Connection ndoConn, string schemaName)
+		Guid[] GetSchemaIds(Connection ndoConn, string schemaName, IProvider provider)
 		{
-			IProvider provider = this.mappings.GetProvider( ndoConn );
-			string version = "0.0";  // Initial value
 			var connection = provider.NewConnection( ndoConn.Name );
-			using (var handler = GetSqlPassThroughHandler())
+			var resultList = new List<Guid>();
+
+            using (var handler = GetSqlPassThroughHandler())
 			{
 				string[] TableNames = provider.GetTableNames( connection );
-				if (TableNames.Any(t=>t=="NDOSchemaVersion"))
+				if (TableNames.Any( t => String.Compare( t, "NDOSchemaIds", true ) == 0 ))
 				{
-					string sql = "SELECT Version from NDOSchemaVersion WHERE SchemaName ";
-					if (schemaName == null)
+					var schemaIds = provider.GetQualifiedTableName("NDOSchemaIds");
+					var sn = provider.GetQuotedName("SchemaName");
+					var id = provider.GetQuotedName("Id");
+					string sql = $"SELECT {id} from {schemaIds} WHERE {sn} ";
+					if (String.IsNullOrEmpty(schemaName))
 						sql += "IS NULL;";
 					else
-						sql += "LIKE '" + schemaName + "'";
+						sql += $"LIKE '{schemaName}'";
+
 					using(IDataReader dr = handler.Execute(sql, true))
 					{
-						if (dr.Read())
-							version = dr.GetString( 0 );
+						while (dr.Read())
+							resultList.Add( dr.GetGuid( 0 ) );
 					}
 				}
 				else
 				{
-					SchemaTransitionGenerator schemaTransitionGenerator = new SchemaTransitionGenerator( NDOProviderFactory.Instance.Generators[ndoConn.Type], this.mappings );
-					string transition = @"<NdoSchemaTransition>
-    <CreateTable name=""NDOSchemaVersion"">
-      <CreateColumn name=""SchemaName"" type=""System.String,mscorlib"" allowNull=""True"" />
-      <CreateColumn name=""Version"" type=""System.String,mscorlib"" size=""50"" />
+					SchemaTransitionGenerator schemaTransitionGenerator = new SchemaTransitionGenerator( ProviderFactory, ndoConn.Type, this.mappings );
+					var gt = typeof(Guid);
+					var gtype = $"{gt.FullName},{ new AssemblyName( gt.Assembly.FullName ).Name }";
+                    var st = typeof(String);
+                    var stype = $"{st.FullName},{ new AssemblyName( st.Assembly.FullName ).Name }";
+                    var dt = typeof(DateTime);
+                    var dtype = $"{st.FullName},{ new AssemblyName( st.Assembly.FullName ).Name }";
+                    string transition = $@"<NdoSchemaTransition>
+    <CreateTable name=""NDOSchemaIds"">
+      <CreateColumn name=""SchemaName"" type=""{stype}"" allowNull=""True"" />
+      <CreateColumn name=""Id"" type=""{gtype}"" size=""36"" isPrimary=""True"" />
+      <CreateColumn name=""InsertTime"" type=""{dtype}"" size=""36"" />
     </CreateTable>
 </NdoSchemaTransition>";
 					XElement transitionElement = XElement.Parse(transition);
 
 					string sql = schemaTransitionGenerator.Generate( transitionElement );
 					handler.Execute(sql);
-					sql = String.Format( "INSERT INTO NDOSchemaVersion([SchemaName],[Version]) VALUES({0},'0')", schemaName == null ? "NULL" : provider.GetSqlLiteral( schemaName ) );
-					handler.Execute( sql );
-					handler.CommitTransaction();
 				}
+				handler.CommitTransaction();
 			}
 
-			return version;
+			return resultList.ToArray();
 		}
 
 		/// <summary>
@@ -1413,71 +1429,83 @@ namespace NDO
 			XElement transitionElements = XElement.Load( scriptFile );
 			if (transitionElements.Attribute( "schemaName" ) != null)
 				schemaName = transitionElements.Attribute( "schemaName" ).Value;
-			Version version = new Version( GetSchemaVersion( ndoConn, schemaName ) );
-			SchemaTransitionGenerator schemaTransitionGenerator = new SchemaTransitionGenerator( NDOProviderFactory.Instance.Generators[ndoConn.Type], this.mappings );
-			MemoryStream ms = new MemoryStream();
-			StreamWriter sw = new StreamWriter(ms, System.Text.Encoding.UTF8);
-			bool hasChanges = false;
 
-			foreach (XElement transitionElement in transitionElements.Elements("NdoSchemaTransition").Where(e=>new Version(e.Attribute("schemaVersion").Value).CompareTo(version) > 0))
+            IProvider provider = this.mappings.GetProvider( ndoConn );
+            var installedIds = GetSchemaIds( ndoConn, schemaName, provider );
+			var newIds = new List<Guid>();
+			SchemaTransitionGenerator schemaTransitionGenerator = new SchemaTransitionGenerator( ProviderFactory, ndoConn.Type, this.mappings );
+
+			// dtLiteral contains the leading and trailing quotes
+			var dtLiteral = provider.GetSqlLiteral( DateTime.Now );
+			var ndoSchemaIds = provider.GetQualifiedTableName("NDOSchemaIds");
+			var schName = provider.GetQuotedName("SchemaName");
+			var idCol = provider.GetQuotedName("Id");
+			var insertTime = provider.GetQuotedName("InsertTime");
+			var results = new List<string>();
+
+			// Each transitionElement gets it's own transaction.
+			// The insert into NDOSchemaIds is part of the transaction.
+			// If an error occurs, InternalPerformSchemaTransitions aborts the transaction.
+			foreach (XElement transitionElement in transitionElements.Elements( "NdoSchemaTransition" ))
 			{
-				hasChanges = true;
-				sw.Write( schemaTransitionGenerator.Generate( transitionElement ) );
+				var id = transitionElement.Attribute("id")?.Value;
+				if (id == null)
+					continue;
+				var gid = new Guid(id);
+				if (installedIds.Contains( gid ))
+					continue;
+
+				var sb = new StringBuilder();
+				sb.Append( schemaTransitionGenerator.Generate( transitionElement ) );
+				newIds.Add( gid );
+
+				if (schemaName != null)
+					sb.Append( $"INSERT INTO {ndoSchemaIds} ({schName},{idCol},{insertTime}) VALUES ('{schemaName}','{gid}',{dtLiteral});" );
+				else
+					sb.Append( $"INSERT INTO {ndoSchemaIds} ({schName},{idCol},{insertTime}) VALUES (NULL,'{gid}',{dtLiteral});" );
+
+				results.AddRange( InternalPerformSchemaTransitions( ndoConn, sb.ToString() ) );
 			}
 
-			if (!hasChanges)
-				return new string[] { };
-
-			sw.Write( "UPDATE NDOSchemaVersion SET Version = '" );
-			sw.Write( transitionElements.Attribute( "schemaVersion" ).Value );
-			sw.Write( "' WHERE SchemaName " );
-			if (schemaName == null)
-				sw.WriteLine( "IS NULL;" );
-			else
-				sw.WriteLine( "LIKE '" + schemaName + "'" );			
-
-			sw.Flush();
-			ms.Position = 0L;
-
-			StreamReader sr = new StreamReader(ms, System.Text.Encoding.UTF8);
-			string s = sr.ReadToEnd();
-			sr.Close();
-
-			return InternalPerformSchemaTransitions( ndoConn, s );
+			return results.ToArray();
 		}
 
 		private string[] InternalPerformSchemaTransitions( Connection ndoConn, string sql )
 		{
 			string[] arr = sql.Split( ';' );
+
 			string last = arr[arr.Length - 1];
 			bool lastInvalid = (last == null || last.Trim() == string.Empty);
 			string[] result = new string[arr.Length - (lastInvalid ? 1 : 0)];
-			IProvider provider = this.mappings.GetProvider( ndoConn );
-			//TransactionInfo ti = transactionTable[conn];
-			//IDbConnection cn = ti.Connection;
-			IDbConnection cn = provider.NewConnection( ndoConn.Name );
-			cn.Open();
-			IDbCommand cmd = provider.NewSqlCommand( cn );
 			int i = 0;
 			string ok = "OK";
-			foreach (string statement in arr)
+			using (var handler = GetSqlPassThroughHandler())
 			{
-				if (statement != null && statement.Trim() != string.Empty)
+				handler.BeginTransaction();
+				var doCommit = true;
+				foreach (string statement in arr)
 				{
-					try
+					if (!String.IsNullOrWhiteSpace(statement))
 					{
-						cmd.CommandText = statement;
-						cmd.ExecuteNonQuery();
-						result[i] = ok;
+						try
+						{
+							handler.Execute( statement.Trim() );
+							result[i] = ok;
+						}
+						catch (Exception ex)
+						{
+							result[i] = ex.Message;
+							doCommit = false;
+						}
 					}
-					catch (Exception ex)
-					{
-						result[i] = ex.Message;
-					}
+					i++;
 				}
-				i++;
+				if (doCommit)
+					handler.CommitTransaction();
+				else
+					AbortTransaction();
 			}
-			cn.Close();
+
 			return result;
 		}
 		
@@ -2103,7 +2131,7 @@ namespace NDO
                             if (relType == null)
                             {
                                 throw new NDOException(75, String.Format(
-                                    "Can't resolve subclass type code {0} of type {1} - check, if your NDOTypes.xml exists.",
+                                    "Can't resolve subclass type code {0} of type {1} - check, if your mapping file is correct.",
                                     row[r.ForeignKeyTypeColumnName], r.ReferencedTypeName));
                             }
 	
@@ -3395,7 +3423,7 @@ namespace NDO
 		/// <returns></returns>
 		public IPersistenceCapable CreateObject(Type t) 
 		{
-			return Metaclasses.GetClass( t ).CreateObject( this.ConfigContainer );
+			return (IPersistenceCapable) ActivatorUtilities.CreateInstance( ServiceProvider, t );
 		}
 
 		/// <summary>
@@ -3571,6 +3599,11 @@ namespace NDO
 			base.Close();
 		}
 
+		internal void LogIfVerbose( string msg )
+		{
+			if (Logger != null && Logger.IsEnabled( LogLevel.Debug ))
+				Logger.LogDebug( msg );
+		}
 
 		#endregion
 
@@ -3626,7 +3659,7 @@ namespace NDO
         /// <param name="row"></param>
 		void ReadLostForeignKeysFromRow(Class cl, IPersistenceCapable pc, DataRow row)
 		{
-			if (cl.FKColumnNames != null)
+			if (cl.FKColumnNames != null && pc.NDOLoadState != null)
 			{
                 //				Debug.WriteLine("GetLostForeignKeysFromRow " + pc.NDOObjectId.Dump());
 				KeyValueList kvl = new KeyValueList(cl.FKColumnNames.Count());
@@ -3706,8 +3739,7 @@ namespace NDO
 				IPersistenceCapable pc = cache.GetObject(id);                
 				if(pc == null) 
 				{
-                    var mc = Metaclasses.GetClass(concreteType);
-                    pc = mc.CreateObject( this.ConfigContainer );
+                    pc = CreateObject( concreteType );
                     pc.NDOObjectId = id;
 					pc.NDOStateManager = sm;
 					// If the object shouldn't be hollow, this will be overwritten later.

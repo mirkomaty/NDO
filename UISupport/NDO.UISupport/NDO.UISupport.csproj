@@ -9,7 +9,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>NDO.UISupport</RootNamespace>
     <AssemblyName>NDO.UISupport</AssemblyName>
-    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
   </PropertyGroup>
@@ -34,7 +34,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="NDOInterfaces">
-      <HintPath>..\..\NDOInterfaces\bin\$(Configuration)\net452\NDOInterfaces.dll</HintPath>
+      <HintPath>..\..\NDOInterfaces\bin\$(Configuration)\netstandard2.0\NDOInterfaces.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />

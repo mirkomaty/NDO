@@ -46,7 +46,7 @@ namespace SqlServerProvider
 			return ((SqlDbType)Provider.GetDbType( t )).ToString();
 		}
 
-		public override string AutoIncrementColumn( string columnName, Type dataType, string columnType, string width )
+		public override string AutoIncrementColumn( string columnName, Type dataType, string columnType, string width, bool isPrimary )
 		{
 			return columnName + " " + columnType + " " + width + " IDENTITY (1, 1) ";
 		}

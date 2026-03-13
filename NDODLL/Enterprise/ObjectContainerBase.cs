@@ -25,6 +25,7 @@ using System.IO;
 using System.Collections;
 using System.Xml.Serialization;
 using System.Runtime.Serialization;
+using NDOInterfaces;
 
 namespace NDO
 {
@@ -51,7 +52,7 @@ namespace NDO
         /// <summary>
         /// If the XmlSerializer or Remoting is used, set the formatter after creating the object container.
         /// </summary>
-        public IFormatter Formatter { get; set; }
+        public INdoFormatter Formatter { get; set; }
 
 		// Internal remark: The MarshalingString property should be the only
 		// public property or variable, which is not marked with [XmlIgnore] 
@@ -125,41 +126,19 @@ namespace NDO
 		/// The function determines, if the string is a base64 string. If that is the case,
 		/// the string will be decoded befor using the Formatter.
 		/// </remarks>
-		public virtual void Deserialize(string value, IFormatter formatter)
+		public virtual void Deserialize(string value, INdoFormatter formatter)
 		{
-			var binaryFormat = value.StartsWith( "AAEAAAD/////" );
 			MemoryStream ms = new MemoryStream();
-			if (binaryFormat)
-			{
-				byte[] bytes = Convert.FromBase64String(value);
-				ms.Write(bytes, 0, bytes.Length);
-				ms.Flush();
-			}
-			else
-			{
-				StreamWriter sw = new StreamWriter(ms);
-				sw.Write(value);
-				sw.Flush();
-			}
+			StreamWriter sw = new StreamWriter(ms);
+			sw.Write(value);
+			sw.Flush();
 			ms.Seek(0, SeekOrigin.Begin);
 			Deserialize(ms, formatter);
 			ms.Close();
 		}
 
-		bool BufEqual(byte[] buf1, byte[] buf2)
+		void Deserialize(Stream stream, INdoFormatter formatter)
 		{
-			if (buf1.Length != buf2.Length)
-				return false;
-			for(int i = 0; i < buf1.Length; i++)
-				if (buf1[i] != buf2[i])
-					return false;
-			return true;
-		}
-
-
-		void Deserialize(Stream stream, IFormatter formatter)
-		{
-            formatter.Binder = new NDODeserializationBinder();
 			object o = formatter.Deserialize(stream);
 			this.objects = (ArrayList) o;
 		}
@@ -172,7 +151,7 @@ namespace NDO
 		/// If binaryFormat is true, the results will be
 		/// converted into a Base64 string.
 		/// </remarks>
-		public virtual string Serialize(IFormatter formatter)
+		public virtual string Serialize(INdoFormatter formatter)
 		{
 			string s;
 			using ( MemoryStream ms = new MemoryStream() )
@@ -206,7 +185,7 @@ namespace NDO
 		/// </summary>
 		/// <param name="stream">A stream instance.</param>
 		/// <param name="formatter">A formatter used for serialization.</param>
-		public virtual void Serialize(Stream stream, IFormatter formatter)
+		public virtual void Serialize(Stream stream, INdoFormatter formatter)
 		{
 			InnerSerialize(stream, formatter);
 		}
@@ -216,7 +195,7 @@ namespace NDO
 		/// </summary>
 		/// <param name="stream"></param>
 		/// <param name="formatter">A formatter used for serialization.</param>
-		void InnerSerialize( Stream stream, IFormatter formatter )
+		void InnerSerialize( Stream stream, INdoFormatter formatter )
 		{
 			formatter.Serialize( stream, this.objects );
 			stream.Flush();

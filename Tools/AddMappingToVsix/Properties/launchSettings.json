@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "AddMappingToVsix": {
+      "commandName": "Project",
+      "commandLineArgs": "\"C:\\Projekte\\NDO5\\NDOPackage\\bin\\Release\\NDOPackage.vsix\""
+    }
+  }
+}

@@ -37,19 +37,28 @@
     <Reference Include="Microsoft.Build.Framework" />
     <Reference Include="Microsoft.Build.Utilities.v4.0" />
     <Reference Include="System" />
+    <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ConfigurationOptions.cs" />
     <Compile Include="ConsoleProcess.cs" />
     <Compile Include="CopyFile.cs" />
     <Compile Include="NDOEnhancer.cs" />
+    <Compile Include="ProjectDescription.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SetProperty.cs" />
+    <Compile Include="XmlHelper.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>
     </PostBuildEvent>
   </PropertyGroup>
+  <Target Name="BeforeBuild">
+    <Exec Command="Copy ..\..\NDOEnhancer\NDOEnhancer\Enhancer\ProjectDescription.cs ." />
+    <Exec Command="Copy ..\..\NDOEnhancer\NDOEnhancer\ConfigurationOptions.cs ." />
+    <Exec Command="Copy ..\..\NDOEnhancer\NDOEnhancer\XmlHelper.cs ." />
+  </Target>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

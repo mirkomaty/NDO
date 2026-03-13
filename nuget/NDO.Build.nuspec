@@ -1,0 +1,28 @@
+<?xml version="1.0"?>
+<package >
+  <metadata>
+    <id>NDO.Build</id>
+    <version>6.0.0.0</version>
+    <authors>Mirko Matytschak</authors>
+    <owners>Mirko Matytschak</owners>
+    <license type="file">license\license.txt</license>
+    <projectUrl>https://www.netdataobjects.de</projectUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>Package to enable VS Solutions to compile and enhance persistent classes</description>
+    <releaseNotes>Support for .NET 10</releaseNotes>
+    <copyright>Copyright 2016-2025 (c) Mirko Matytschak</copyright>
+    <tags>NDO .NET Data Objects Persistence</tags>
+    <dependencies>		
+    </dependencies>
+	<readme>readme.md</readme>
+  </metadata>
+	<files>
+		<file src="..\NDOEnhancer\NDOEnhancer\bin\release\net10.0\**" target="build" />
+
+		<file src="..\NDOEnhancer.BuildTask\NDOEnhancer.BuildTask\bin\Release\NDOEnhancer.BuildTask.dll" target="/build" />
+		<!--file src="..\NDOEnhancer\NDOEnhancer\ILDAsm\ILDasm.exe.*" target="\build\runtimes\win-x64\native" /-->
+		<file src="NDO.Build.targets" target="/build" />
+		<file src="license.txt" target="/license/license.txt" />
+		<file src="readme.md" target="" />		
+  </files>  
+</package>

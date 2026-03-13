@@ -37,8 +37,8 @@
 			<Menu guid="guidNDOPackageCmdSet" id="NDOToolbar" type="Toolbar">
 				<CommandFlag>DefaultDocked</CommandFlag>
 				<Strings>
-					<ButtonText>.NET Data Objects 4</ButtonText>
-					<CommandName>.NET Data Objects 4</CommandName>
+					<ButtonText>.NET Data Objects 5</ButtonText>
+					<CommandName>.NET Data Objects 5</CommandName>
 				</Strings>
 			</Menu>
 		</Menus>

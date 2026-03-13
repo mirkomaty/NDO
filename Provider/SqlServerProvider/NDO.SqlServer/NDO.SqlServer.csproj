@@ -1,26 +1,46 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
-
-  <PropertyGroup>
-    <TargetFrameworks>netstandard2.0;net452</TargetFrameworks>
-    <Version>4.0.3</Version>
-    <Authors>Mirko Matytschak</Authors>
-    <Company>Mirko Matytschak</Company>
-    <Product>.NET Data Objects (NDO)</Product>
-    <Copyright>Copyright (c) Mirko Matytschak, Velden, Germany</Copyright>
-    <PackageProjectUrl>https://www.netdataobjects.de</PackageProjectUrl>
-    <RepositoryUrl>https://github.com/mirkomaty/NDO</RepositoryUrl>
-    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <PackageId>ndo.sqlserver</PackageId>
-    <PackageLicenseExpression>MIT</PackageLicenseExpression>
-    <AssemblyVersion>4.0.3.0</AssemblyVersion>
-    <FileVersion>4.0.3.0</FileVersion>
-    <PackageReleaseNotes></PackageReleaseNotes>
-  </PropertyGroup>
-
-  <ItemGroup>
-    <PackageReference Include="NDOInterfaces" Version="4.0.1" />
-    <PackageReference Include="System.Data.Common" Version="4.3.0" Condition="'$(TargetFramwork)'=='netstandard2.0'" />
-    <PackageReference Include="System.Data.SqlClient" Version="4.6.0" />
-  </ItemGroup>
- 
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project Sdk="Microsoft.NET.Sdk">
+	<Import Project="SourceRevisionId.props" Condition="Exists('SourceRevisionId.props')" />
+	<PropertyGroup>
+		<TargetFrameworks>netstandard2.0;netstandard2.1;net6.0;net8.0;net9.0</TargetFrameworks>
+		<Version>5.1.0</Version>
+		<Authors>Mirko Matytschak</Authors>
+		<Company>Mirko Matytschak</Company>
+		<Product>.NET Data Objects (NDO)</Product>
+		<Copyright>Copyright (c) 2002-2024 Mirko Matytschak, Velden, Germany</Copyright>
+		<PackageProjectUrl>https://www.netdataobjects.de</PackageProjectUrl>
+		<RepositoryUrl>https://github.com/mirkomaty/NDO</RepositoryUrl>
+		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+		<PackageId>ndo.sqlserver</PackageId>
+		<PackageLicenseExpression>MIT</PackageLicenseExpression>
+		<AssemblyVersion>5.1.0.0</AssemblyVersion>
+		<FileVersion>5.1.0.0</FileVersion>
+		<PackageReleaseNotes></PackageReleaseNotes>
+		<IncludeSymbols>True</IncludeSymbols>
+		<SymbolPackageFormat>snupkg</SymbolPackageFormat>
+	</PropertyGroup>
+	<ItemGroup>
+		<PackageReference Include="NDOInterfaces" Version="5.1.0" />
+	</ItemGroup>
+	<ItemGroup Condition="'$(TargetFramework)'=='net8.0'">
+		<PackageReference Include="Microsoft.Data.SqlClient" Version="6.0.2" />
+	</ItemGroup>
+	<ItemGroup Condition="'$(TargetFramework)'=='net9.0'">
+		<PackageReference Include="Microsoft.Data.SqlClient" Version="6.0.2" />
+	</ItemGroup>
+	<ItemGroup Condition="'$(TargetFramework)'=='net6.0'">
+		<PackageReference Include="Microsoft.Data.SqlClient" Version="5.2.3" />
+	</ItemGroup>
+	<ItemGroup Condition="'$(TargetFramework)'=='netstandard2.0'">
+		<PackageReference Include="Microsoft.Data.SqlClient" Version="5.2.3" />
+	</ItemGroup>
+	<ItemGroup Condition="'$(TargetFramework)'=='netstandard2.1'">
+		<PackageReference Include="Microsoft.Data.SqlClient" Version="5.2.3" />
+	</ItemGroup>
+	<ItemGroup>
+		<None Include="readme.md">
+			<Pack>True</Pack>
+			<PackagePath>\</PackagePath>
+		</None>
+	</ItemGroup>
 </Project>

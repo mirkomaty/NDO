@@ -1,12 +1,14 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project Sdk="Microsoft.NET.Sdk">
-
+  <Import Project="SourceRevisionId.props" Condition="Exists('SourceRevisionId.props')" />
   <PropertyGroup>
-    <TargetFrameworks>netstandard2.0;net452</TargetFrameworks>
-    <AssemblyVersion>4.0.1.0</AssemblyVersion>
-    <Version>4.0.1</Version>
+    <TargetFrameworks>netstandard2.0;netstandard2.1;net6.0;net8.0;net48</TargetFrameworks>
+    <AssemblyVersion>5.1.0.0</AssemblyVersion>
+    <Version>5.1.0</Version>
+    <IncludeSymbols>True</IncludeSymbols>
     <Authors>Mirko Matytschak</Authors>
     <Description>Interfaces and base implementations for NDO.</Description>
-    <Copyright>Copyright (c) 2002-2020 Mirko Matytschak</Copyright>
+    <Copyright>Copyright (c) 2002-2025 Mirko Matytschak</Copyright>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageProjectUrl>https://www.netdatobjects.de</PackageProjectUrl>
     <RepositoryUrl>https://github.com/mirkomaty/NDO</RepositoryUrl>
@@ -14,19 +16,24 @@
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <SignAssembly>true</SignAssembly>
     <AssemblyOriginatorKeyFile>NDOInterfaces.snk</AssemblyOriginatorKeyFile>
-    <PackageReleaseNotes>Alter the ISqlGenerator interface to support CLOBs</PackageReleaseNotes>
+    <PackageReleaseNotes>Implement NDO as net x.0 assemblies</PackageReleaseNotes>
+    <RunAnalyzersDuringBuild>False</RunAnalyzersDuringBuild>
+    <RunAnalyzersDuringLiveAnalysis>False</RunAnalyzersDuringLiveAnalysis>
+    <FileVersion>5.1.0.0</FileVersion>
+    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
   </PropertyGroup>
-
+  <ItemGroup>
+    <PackageReference Include="PatchProductVersion" Version="1.0.3" Condition="'$(TargetFramework)'=='netstandard2.0'">
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
+  </ItemGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <DefineConstants>TRACE;DEBUG;NDO20;</DefineConstants>
   </PropertyGroup>
-
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
     <DefineConstants>TRACE;RELEASE;NDO20;</DefineConstants>
   </PropertyGroup>
-
   <Target Name="PostBuild" AfterTargets="Pack">
-    <Exec Command="IF NOT EXIST ..\Nuget-Packages md ..\Nuget-Packages&#xD;&#xA;echo Copy package&#xD;&#xA;copy bin\$(Configuration)\NDOInterfaces*.nupkg ..\Nuget-Packages /Y&#xD;&#xA;" />
-  </Target>  
-
+    <Exec Command="IF NOT EXIST ..\BuiltPackages md ..\BuiltPackages&#xD;&#xA;echo Copy package&#xD;&#xA;copy bin\$(Configuration)\NDOInterfaces*.nupkg ..\BuiltPackages /Y&#xD;&#xA;copy bin\$(Configuration)\NDOInterfaces*.snupkg ..\BuiltPackages /Y&#xD;&#xA;" />
+  </Target>
 </Project>

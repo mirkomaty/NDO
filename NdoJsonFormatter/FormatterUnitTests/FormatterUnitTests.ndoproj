@@ -6,7 +6,7 @@
     <VerboseMode>False</VerboseMode>
     <NewMapping>False</NewMapping>
     <GenerateSQL>True</GenerateSQL>
-    <DefaultConnection>Integrated Security=SSPI;Persist Security Info=False;Initial Catalog=NDOTest;Data Source=localhost</DefaultConnection>
+    <DefaultConnection>Integrated Security=SSPI;Persist Security Info=False;Initial Catalog=NDOTest;Data Source=localhost;TrustServerCertificate=True</DefaultConnection>
     <TargetMappingFileName>NDOMapping.xml</TargetMappingFileName>
     <GenerateChangeEvents>False</GenerateChangeEvents>
     <UseTimeStamps>False</UseTimeStamps>
@@ -17,20 +17,18 @@
     <DatabaseOwner>
     </DatabaseOwner>
     <GenerateConstraints>False</GenerateConstraints>
-    <UseMsBuild>True</UseMsBuild>
     <DropExistingElements>False</DropExistingElements>
   </Options>
-  <ProjectDescription>
-    <BinPath>bin\Debug\FormatterUnitTests.dll</BinPath>
-    <ObjPath>obj\Debug\</ObjPath>
+  <ProjectDescription version="5.0">
+    <BinPath>bin\Debug\$(TargetFramework)\FormatterUnitTests.dll</BinPath>
+    <ObjPath>obj\Debug\$(TargetFramework)\</ObjPath>
     <AssemblyName />
     <Debug>True</Debug>
-    <IsWebProject>False</IsWebProject>
     <KeyFile />
     <References>
-      <Reference AssemblyName="PureBusinessClasses" AssemblyPath="..\..\IntegrationTests\PureBusinessClasses\bin\Debug\PureBusinessClasses.dll">
+      <Reference AssemblyName="NDO.JsonFormatter" AssemblyPath="..\NdoJsonFormatter\bin\Debug\net6.0\NDO.JsonFormatter.dll" CheckThisDLL="False">
       </Reference>
-      <Reference AssemblyName="NDO.JsonFormatter" AssemblyPath="..\NdoJsonFormatter\bin\Debug\netstandard2.0\NDO.JsonFormatter.dll" CheckThisDLL="False">
+      <Reference AssemblyName="PureBusinessClasses" AssemblyPath="..\..\IntegrationTests\PureBusinessClasses\bin\Debug\net8.0\PureBusinessClasses.dll">
       </Reference>
     </References>
   </ProjectDescription>

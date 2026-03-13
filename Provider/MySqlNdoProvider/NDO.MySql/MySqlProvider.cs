@@ -28,7 +28,6 @@ using System.Data.Common;
 using NDOInterfaces;
 using System.Collections;
 using MySql.Data.MySqlClient;
-using MySql.Data.Types;
 
 namespace NDO.MySqlProvider
 {
@@ -42,19 +41,24 @@ namespace NDO.MySqlProvider
 		// which implement common interfaces in .NET:
 		// IDbConnection, IDbCommand, DbDataAdapter and the Parameter objects
 		#region Provide specialized type objects
-		public override System.Data.IDbConnection NewConnection(string connectionString) 
+		public override IDbConnection NewConnection(string connectionString) 
 		{
-			return new MySqlConnection(connectionString);
+			return new MySqlConnection( connectionString );
 		}
 
-		public override System.Data.IDbCommand NewSqlCommand(System.Data.IDbConnection connection) 
+		public override IDbCommand NewSqlCommand(IDbConnection connection) 
 		{
 			MySqlCommand command = new MySqlCommand();
-			command.Connection = (MySqlConnection)connection;
+			command.Connection = (MySqlConnection) connection;
 			return command;
 		}
 
-		public override DbDataAdapter NewDataAdapter(System.Data.IDbCommand select, System.Data.IDbCommand update, System.Data.IDbCommand insert, System.Data.IDbCommand delete) 
+		public override object GetConnectionId( IDbConnection connection )
+		{
+			return ( (MySqlConnection) connection ).ServerThread;
+		}
+
+		public override DbDataAdapter NewDataAdapter(IDbCommand select, IDbCommand update, IDbCommand insert, IDbCommand delete) 
 		{
 			MySqlDataAdapter da = new MySqlDataAdapter();
 			da.SelectCommand = (MySqlCommand)select;
@@ -73,14 +77,14 @@ namespace NDO.MySqlProvider
 		}
 
 
-		public override IDataParameter AddParameter(System.Data.IDbCommand command, string parameterName, object dbType, int size, string columnName) 
+		public override IDataParameter AddParameter(IDbCommand command, string parameterName, object dbType, int size, string columnName) 
 		{
-			return ((MySqlCommand)command).Parameters.Add(new MySqlParameter(parameterName, (MySql.Data.MySqlClient.MySqlDbType)dbType, size, columnName));			
+			return ((MySqlCommand)command).Parameters.Add(new MySqlParameter(parameterName, (MySqlDbType)dbType, size, columnName));			
 		}
 
 		public override IDataParameter AddParameter(IDbCommand command, string parameterName, object dbType, int size, ParameterDirection dir, bool isNullable, byte precision, byte scale, string srcColumn, DataRowVersion srcVersion, object value) 
 		{
-			return ((MySqlCommand)command).Parameters.Add(new MySqlParameter(parameterName, (MySql.Data.MySqlClient.MySqlDbType)dbType, size, dir, isNullable, precision, scale, srcColumn, srcVersion, value));
+			return ((MySqlCommand)command).Parameters.Add(new MySqlParameter(parameterName, (MySqlDbType)dbType, size, dir, isNullable, precision, scale, srcColumn, srcVersion, value));
 		}
 		#endregion
 
@@ -92,41 +96,41 @@ namespace NDO.MySqlProvider
 		{
             t = base.ConvertNullableType(t);
 			if ( t == typeof(bool) )
-				return MySql.Data.MySqlClient.MySqlDbType.Byte;
+				return MySqlDbType.Byte;
 			else if ( t == typeof(byte) )
-				return MySql.Data.MySqlClient.MySqlDbType.Byte;
+				return MySqlDbType.Byte;
 			else if ( t == typeof(sbyte) )
-				return MySql.Data.MySqlClient.MySqlDbType.Byte;
+				return MySqlDbType.Byte;
 			else if ( t == typeof(char) )
-				return MySql.Data.MySqlClient.MySqlDbType.Int16;
+				return MySqlDbType.Int16;
 			else if ( t == typeof(short))
-				return MySql.Data.MySqlClient.MySqlDbType.Int16;
+				return MySqlDbType.Int16;
 			else if ( t == typeof(ushort))
-				return MySql.Data.MySqlClient.MySqlDbType.Int16;
+				return MySqlDbType.Int16;
 			else if ( t == typeof(int))
-				return MySql.Data.MySqlClient.MySqlDbType.Int32;
+				return MySqlDbType.Int32;
 			else if ( t == typeof(uint))
-				return MySql.Data.MySqlClient.MySqlDbType.Int32;
+				return MySqlDbType.Int32;
 			else if ( t == typeof(long))
-				return MySql.Data.MySqlClient.MySqlDbType.Int64;
+				return MySqlDbType.Int64;
 			else if ( t == typeof(System.Guid))
-				return MySql.Data.MySqlClient.MySqlDbType.VarChar;
+				return MySqlDbType.VarChar;
 			else if ( t == typeof(ulong))
-				return MySql.Data.MySqlClient.MySqlDbType.Int64;
+				return MySqlDbType.Int64;
 			else if ( t == typeof(float))
-				return MySql.Data.MySqlClient.MySqlDbType.Float;
+				return MySqlDbType.Float;
 			else if ( t == typeof(double))
-				return MySql.Data.MySqlClient.MySqlDbType.Double;
+				return MySqlDbType.Double;
 			else if ( t == typeof(string))
-				return MySql.Data.MySqlClient.MySqlDbType.VarChar;
+				return MySqlDbType.VarChar;
 			else if ( t == typeof(byte[]))
-				return MySql.Data.MySqlClient.MySqlDbType.MediumBlob;
+				return MySqlDbType.MediumBlob;
 			else if ( t == typeof(decimal))
-				return MySql.Data.MySqlClient.MySqlDbType.Decimal;
+				return MySqlDbType.Decimal;
 			else if ( t == typeof(System.DateTime))
-				return MySql.Data.MySqlClient.MySqlDbType.DateTime;
+				return MySqlDbType.DateTime;
 			else if ( t.IsSubclassOf(typeof(System.Enum)))
-				return MySql.Data.MySqlClient.MySqlDbType.Int32;
+				return MySqlDbType.Int32;
 			else
 				throw new NDOException(27, "NDO.MySqlProvider.GetDbType: Typ " + t.Name + " kann nicht in MySql.Data.MySqlClient.MySqlDbType konvertiert werden");
 		}
@@ -137,54 +141,16 @@ namespace NDO.MySqlProvider
 		// ADO.NET provider and convert it to the respective enumeration type		
 		public override object GetDbType(string typeName) 
 		{
+			if (Enum.TryParse<MySqlDbType>( typeName, out var dbtype ))
+				return dbtype;
 			if (typeName == "BigInt")
-				return MySql.Data.MySqlClient.MySqlDbType.Int64;
-			if (typeName == "Blob")
-				return MySql.Data.MySqlClient.MySqlDbType.Blob;
-			if (typeName == "Byte")
-				return MySql.Data.MySqlClient.MySqlDbType.Byte;
-			if (typeName == "Date")
-				return MySql.Data.MySqlClient.MySqlDbType.Date;
+				return MySqlDbType.Int64;
 			if (typeName == "Datetime")
-				return MySql.Data.MySqlClient.MySqlDbType.DateTime;
-			if (typeName == "Decimal")
-				return MySql.Data.MySqlClient.MySqlDbType.Decimal;
-			if (typeName == "Double")
-				return MySql.Data.MySqlClient.MySqlDbType.Double;
-			if (typeName == "Enum")
-				return MySql.Data.MySqlClient.MySqlDbType.Enum;
-			if (typeName == "Float")
-				return MySql.Data.MySqlClient.MySqlDbType.Float;
-			if (typeName == "Int32")
-				return MySql.Data.MySqlClient.MySqlDbType.Int32;
-			if (typeName == "Int24")
-				return MySql.Data.MySqlClient.MySqlDbType.Int24;
+				return MySqlDbType.DateTime;
 			if (typeName == "Long")
-				return MySql.Data.MySqlClient.MySqlDbType.Int64;
-			if (typeName == "LongBlob")
-				return MySql.Data.MySqlClient.MySqlDbType.LongBlob;
+				return MySqlDbType.Int64;
 			if (typeName == "LongLong")
-				return MySql.Data.MySqlClient.MySqlDbType.Int64;
-			if (typeName == "MediumBlob")
-				return MySql.Data.MySqlClient.MySqlDbType.MediumBlob;
-			if (typeName == "Newdate")
-				return MySql.Data.MySqlClient.MySqlDbType.Newdate;
-			if (typeName == "Set")
-				return MySql.Data.MySqlClient.MySqlDbType.Set;
-			if (typeName == "Int16")
-				return MySql.Data.MySqlClient.MySqlDbType.Int16;
-			if (typeName == "String")
-				return MySql.Data.MySqlClient.MySqlDbType.String;
-			if (typeName == "Time")
-				return MySql.Data.MySqlClient.MySqlDbType.Time;
-			if (typeName == "Timestamp")
-				return MySql.Data.MySqlClient.MySqlDbType.Timestamp;
-			if (typeName == "TinyBlob")
-				return MySql.Data.MySqlClient.MySqlDbType.TinyBlob;
-			if (typeName == "VarChar")
-				return MySql.Data.MySqlClient.MySqlDbType.VarChar;
-			if (typeName == "Year")
-				return MySql.Data.MySqlClient.MySqlDbType.Year;			
+				return MySqlDbType.Int64;
 			throw new NDOException(27, "NDOMySql.Provider.GetDbType: Typname " + typeName + " kann nicht in MySql.Data.MySqlClient.MySqlDbType konvertiert werden");
 		}
 
@@ -193,12 +159,6 @@ namespace NDO.MySqlProvider
 			return (((MySqlParameter)parameter).MySqlDbType).ToString();
 		}
 
-		private string GetDateExpression(System.DateTime dt)
-		{
-			//'9999-12-31 23:59:59'
-			return "'" + dt.ToString("yyyy-MM-dd HH:mm:ss") + "'";
-		}
-	
 
 		public override int GetDefaultLength(System.Type t)
 		{
@@ -267,15 +227,7 @@ namespace NDO.MySqlProvider
 		{
 			return "`" + plainName + "`";
 		}
-	
-		public override string GetSqlLiteral(object o)
-		{
-			if (o is DateTime)
-				return this.GetDateExpression((DateTime)o);
-			return base.GetSqlLiteral (o);
-		}
 		
-
 		/// <summary>
 		/// Indicates whether the last automatically generated ID can be retrieved. 
 		/// Returns true if a database provides automatically incremented IDs and its syntax has an expression 
@@ -349,7 +301,7 @@ namespace NDO.MySqlProvider
 		{
 			get
 			{				
-				return Enum.GetNames(typeof(MySql.Data.MySqlClient.MySqlDbType));
+				return Enum.GetNames(typeof(MySqlDbType));
 			}
 		}
 

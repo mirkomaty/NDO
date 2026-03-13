@@ -1,5 +1,5 @@
 ﻿//
-// Copyright (c) 2002-2022 Mirko Matytschak 
+// Copyright (c) 2002-2026 Mirko Matytschak 
 // (www.netdataobjects.de)
 //
 // Author: Mirko Matytschak
@@ -21,6 +21,7 @@
 
 
 using System;
+using System.Data;
 using System.Data.Common;
 
 namespace NDO

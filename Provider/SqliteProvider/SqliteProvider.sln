@@ -1,10 +1,8 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.27703.2047
+# Visual Studio Version 17
+VisualStudioVersion = 17.14.36109.1 d17.14
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NDO.Sqlite", "NDO.Sqlite\NDO.Sqlite.csproj", "{273BB4ED-74C4-482F-ACE2-E1564ACBA210}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CheckCommandBuilder", "CheckCommandBuilder\CheckCommandBuilder.csproj", "{B3DB4428-BECB-4C23-8F18-B18B448BE24B}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SqliteUISupport", "SqliteUISupport\SqliteUISupport.csproj", "{B535296F-C854-462D-9619-589E939A840E}"
 EndProject
@@ -18,10 +16,6 @@ Global
 		{273BB4ED-74C4-482F-ACE2-E1564ACBA210}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{273BB4ED-74C4-482F-ACE2-E1564ACBA210}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{273BB4ED-74C4-482F-ACE2-E1564ACBA210}.Release|Any CPU.Build.0 = Release|Any CPU
-		{B3DB4428-BECB-4C23-8F18-B18B448BE24B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{B3DB4428-BECB-4C23-8F18-B18B448BE24B}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{B3DB4428-BECB-4C23-8F18-B18B448BE24B}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{B3DB4428-BECB-4C23-8F18-B18B448BE24B}.Release|Any CPU.Build.0 = Release|Any CPU
 		{B535296F-C854-462D-9619-589E939A840E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{B535296F-C854-462D-9619-589E939A840E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B535296F-C854-462D-9619-589E939A840E}.Release|Any CPU.ActiveCfg = Release|Any CPU

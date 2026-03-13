@@ -19,16 +19,16 @@
 // CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER 
 // DEALINGS IN THE SOFTWARE.
 
-
-using System;
-using System.Text;
-using System.Text.RegularExpressions;
-using System.Data;
-using System.Data.Common;
 using NDOInterfaces;
-using System.Collections;
 using Npgsql;
 using NpgsqlTypes;
+using System;
+using System.Collections;
+using System.Collections.ObjectModel;
+using System.Data;
+using System.Data.Common;
+using System.Text;
+using System.Text.RegularExpressions;
 
 namespace NDO.PostGreProvider
 {
@@ -42,19 +42,24 @@ namespace NDO.PostGreProvider
 		// which implement common interfaces in .NET:
 		// IDbConnection, IDbCommand, DbDataAdapter and the Parameter objects
 		#region Provide specialized type objects
-		public override System.Data.IDbConnection NewConnection(string connectionString) 
+		public override IDbConnection NewConnection(string connectionString) 
 		{
 			return new NpgsqlConnection(connectionString);
 		}
 
-		public override System.Data.IDbCommand NewSqlCommand(System.Data.IDbConnection connection) 
+		public override IDbCommand NewSqlCommand(IDbConnection connection) 
 		{
 			NpgsqlCommand command = new NpgsqlCommand();
-			command.Connection = (NpgsqlConnection)connection;
+			command.Connection = (NpgsqlConnection) connection;
 			return command;
 		}
 
-		public override DbDataAdapter NewDataAdapter(System.Data.IDbCommand select, System.Data.IDbCommand update, System.Data.IDbCommand insert, System.Data.IDbCommand delete) 
+		public override object GetConnectionId( IDbConnection connection )
+		{
+			return ( (NpgsqlConnection) connection ).ProcessID;
+		}
+
+		public override DbDataAdapter NewDataAdapter(IDbCommand select, IDbCommand update, IDbCommand insert, IDbCommand delete) 
 		{
 			NpgsqlDataAdapter da = new NpgsqlDataAdapter();
 			da.SelectCommand = (NpgsqlCommand)select;
@@ -73,7 +78,7 @@ namespace NDO.PostGreProvider
 		}
 
 
-		public override IDataParameter AddParameter(System.Data.IDbCommand command, string parameterName, object dbType, int size, string columnName) 
+		public override IDataParameter AddParameter(IDbCommand command, string parameterName, object dbType, int size, string columnName) 
 		{
 			return ((NpgsqlCommand)command).Parameters.Add(new NpgsqlParameter(parameterName, (NpgsqlDbType)dbType, size, columnName));			
 		}
@@ -172,12 +177,6 @@ namespace NDO.PostGreProvider
 			throw new NDOException(27, "NDONpgsql.Provider.GetDbType: Typname " + typeName + " kann nicht in NpgsqlDbType konvertiert werden");
 		}
 
-		private string GetDateExpression(System.DateTime dt)
-		{
-			//'9999-12-31 23:59:59'
-			return "'" + dt.ToString("yyyy-MM-dd HH:mm:ss") + "'";
-		}
-	
 
 		public override int GetDefaultLength(System.Type t)
 		{
@@ -255,24 +254,13 @@ namespace NDO.PostGreProvider
 		{
 			return "\"" + plainName + '"';
 		}
-	
-		public override string GetSqlLiteral(object o)
-		{
-			if (o is DateTime)
-				return this.GetDateExpression((DateTime)o);
-			return base.GetSqlLiteral (o);
-		}
-		
 
 		/// <summary>
 		/// Indicates whether the last automatically generated ID can be retrieved. 
 		/// Returns true if a database provides automatically incremented IDs and its syntax has an expression 
 		/// which retrieves the last generated ID; otherwise false.
 		/// </summary>
-		public override bool SupportsLastInsertedId 
-		{
-			get { return false; }
-		}
+		public override bool SupportsLastInsertedId => true;
 
 
 		/// <summary>
@@ -281,7 +269,7 @@ namespace NDO.PostGreProvider
 		/// </summary>
 		public override string GetLastInsertedId(string tableName, string columnName)
 		{
-            return null;
+            return $"(SELECT CURRVAL(pg_get_serial_sequence('{tableName}', '{columnName}')))";
 		}
 
 		/// <summary>
@@ -313,12 +301,12 @@ namespace NDO.PostGreProvider
 			
 		public override string[] GetTableNames(IDbConnection conn, string owner)
 		{
-            NpgsqlDataAdapter a = new NpgsqlDataAdapter("Select * from pg_tables", (NpgsqlConnection)conn);
+            NpgsqlDataAdapter a = new NpgsqlDataAdapter( "Select * from pg_tables", (NpgsqlConnection) conn );
             DataSet ds = new DataSet();
             a.Fill(ds);
             DataTable dt = ds.Tables[0];
             ArrayList al = new ArrayList();
-            bool hasOwner = (owner != null || owner != "");
+            bool hasOwner = !String.IsNullOrWhiteSpace(owner);
             foreach (DataRow dr in dt.Rows)
             {
                 string sname = (string) dr["schemaname"];
@@ -347,13 +335,7 @@ namespace NDO.PostGreProvider
 
 		public override string Name { get { return "Postgre"; }  }
 
-		public override bool SupportsInsertBatch
-		{
-			get
-			{
-				return true;
-			}
-		}
+		public override bool SupportsInsertBatch => false;
 
 		public override bool SupportsNativeGuidType 
 		{ 

@@ -3,3 +3,7 @@ Adjust the definitions in the beginning of ndo.proj.
 Then execute:
 
 msbuild ndo.proj
+
+If you need to debug the solution after cloning the repository:
+Build the NDOInterfaces package and copy it into a folder defined as package source in VS.
+Make a release build of MakeEnhancerDate. NDOEnhancer.csproj needs it.

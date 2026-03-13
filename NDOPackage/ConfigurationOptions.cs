@@ -1,5 +1,5 @@
 ﻿//
-// Copyright (c) 2002-2019 Mirko Matytschak 
+// Copyright (c) 2002-2024 Mirko Matytschak 
 // (www.netdataobjects.de)
 //
 // Author: Mirko Matytschak
@@ -20,6 +20,7 @@
 // DEALINGS IN THE SOFTWARE.
 
 
+using Microsoft.VisualStudio.Threading;
 using System;
 using System.IO;
 using System.Xml;
@@ -73,11 +74,11 @@ namespace NDOVsPackage
 		{
 			string oldFileName = this.fileName;  // just in case...
 			this.fileName = fileName;
-			Save(pd);
+            ThreadHelper.JoinableTaskFactory.Run( async () => await SaveAsync( pd ) );
 			this.fileName = oldFileName;
 		}
 
-        public void Save(ProjectDescription projectDescription)
+        public async Task SaveAsync(ProjectDescription projectDescription)
         {
             if (fileName != null)
             {
@@ -103,10 +104,9 @@ namespace NDOVsPackage
                 MakeNode("IncludeTypecodes", this.IncludeTypecodes, optionsNode);
                 MakeNode("DatabaseOwner", this.DatabaseOwner, optionsNode);
 				MakeNode("GenerateConstraints", this.GenerateConstraints, optionsNode);
-				MakeNode("UseMsBuild", this.UseMsBuild, optionsNode);
 				MakeNode("DropExistingElements", this.DropExistingElements, optionsNode);
 
-                projectDescription.ToXml(docNode);
+                await projectDescription.ToXmlAsync(docNode);
                 doc.Save(fileName);
             }
             else
@@ -166,7 +166,6 @@ namespace NDOVsPackage
             this.Utf8Encoding = (bool)XmlHelper.GetNode(node, pns + "Utf8Encoding", true);
 			this.DropExistingElements = (bool)XmlHelper.GetNode(node, pns + "DropExistingElements", true);
 			this.GenerateConstraints = (bool)XmlHelper.GetNode(node, pns + "GenerateConstraints", false);
-			this.UseMsBuild = (bool) XmlHelper.GetNode(node, pns + "UseMsBuild", false);
 		}
 
 
@@ -180,7 +179,6 @@ namespace NDOVsPackage
 		public bool GenerateSQL { get; set; }
 		public bool GenerateConstraints { get; set; }
 		public bool DropExistingElements { get; set; }
-		public bool UseMsBuild { get; set; }
 		public bool NewMapping { get; set; }
 		public string DefaultConnection { get; set; }
 		public string TargetMappingFileName { get; set; }

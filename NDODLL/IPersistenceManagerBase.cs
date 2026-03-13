@@ -21,8 +21,6 @@
 
 
 using System;
-using NDO.Logging;
-using System.Data;
 
 namespace NDO
 {
@@ -37,35 +35,6 @@ namespace NDO
 		/// The event will be fired if a new id is needed.
 		/// </summary>
 		event IdGenerationHandler IdGenerationEvent;
-
-		/// <summary>
-		/// Gets or sets the LogAdapter, where the logs are written to.
-		/// </summary>
-		ILogAdapter LogAdapter { get; set; }
-
-		/// <summary>
-		/// If set, the peristence manager writes a log of all SQL statements issued to the databases. 
-		/// By default a LogFileAdapter to the file SqlIOLog.txt will be used. The log medium can be
-		/// changed using the <see cref="NDO.PersistenceManagerBase.LogAdapter">LogAdapter property</see>.
-		/// </summary>
-		bool VerboseMode { set; get; }
-
-
-		/// <summary>
-		/// Gets or sets the directory, where NDO writes the sql log file to.
-		/// </summary>
-		string LogPath { get; set; }
-
-		/// <summary>
-		/// Deletes all logging entries, if the logger supports this function.
-		/// </summary>
-		void ClearLogfile();
-
-
-		/// <summary>
-		/// Gets or sets the type which is used to construct persistence handlers.
-		/// </summary>
-		Type PersistenceHandlerType { get; set; }
 
 		/// <summary>
 		/// Gets the Mapping structure of the application as stored in NDOMapping.xml. 

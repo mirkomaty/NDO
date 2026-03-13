@@ -26,6 +26,7 @@ using System.Collections;
 using System.Xml.Serialization;
 using System.Runtime.Serialization;
 using NDO.Mapping;
+using NDOInterfaces;
 
 namespace NDO
 {
@@ -78,7 +79,7 @@ namespace NDO
         /// </summary>
         /// <param name="formatter">The formatter used for serializing</param>
         /// <returns>The serialized string.</returns>
-        public override string Serialize(IFormatter formatter)
+        public override string Serialize(INdoFormatter formatter)
 		{
 			Iterate();
 			return base.Serialize(formatter);
@@ -99,7 +100,7 @@ namespace NDO
         /// <returns>The serialized string.</returns>
         /// <param name="stream">The stream to serialize to</param>
         /// <param name="formatter">The formatter used for serializing</param>
-        public override void Serialize( Stream stream, IFormatter formatter )
+        public override void Serialize( Stream stream, INdoFormatter formatter )
 		{
 			Iterate();
 			base.Serialize( stream, formatter );

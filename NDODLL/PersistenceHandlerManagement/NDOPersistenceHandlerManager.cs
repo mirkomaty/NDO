@@ -1,9 +1,8 @@
 ﻿using NDO.SqlPersistenceHandling;
 using System;
+using Microsoft.Extensions.DependencyInjection;
+using NDO.Mapping;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using NDO.Configuration;
 using NDO.Logging;
 
 namespace NDO
@@ -11,20 +10,21 @@ namespace NDO
 	/// <summary>
 	/// Default implementation of a PersistenceHandlerManager
 	/// </summary>
-	public class NDOPersistenceHandlerManager : IPersistenceHandlerManager
+	public class NDOPersistenceHandlerManager
 	{
-		private readonly INDOContainer configContainer;
-		private readonly IPersistenceHandlerPool persistenceHandlerPool;
+		private readonly IServiceProvider serviceProvider;
+		private readonly NDOMapping mappings;
+		private readonly Dictionary<Type, IPersistenceHandler> handlers = new Dictionary<Type, IPersistenceHandler>();
 
 		/// <summary>
-		/// 
+		/// Constructor
 		/// </summary>
-		/// <param name="configContainer"></param>
-		/// <param name="persistenceHandlerPool"></param>
-		public NDOPersistenceHandlerManager(INDOContainer configContainer, IPersistenceHandlerPool persistenceHandlerPool)
+		/// <param name="serviceProvider"></param>
+		/// <param name="mappings"></param>
+		public NDOPersistenceHandlerManager(IServiceProvider serviceProvider, NDOMapping mappings)
 		{
-			this.configContainer = configContainer;
-			this.persistenceHandlerPool = persistenceHandlerPool;
+			this.serviceProvider = serviceProvider;
+			this.mappings = mappings;
 		}
 		/// <summary>
 		/// Get a persistence handler for the given object.
@@ -41,7 +41,6 @@ namespace NDO
 			// Don't close the connection or transaction here
 			// because it might be used with other handlers.
 			handler.Connection = null;
-			this.persistenceHandlerPool.ReleaseHandler( t, handler );
 		}
 
 		/// <summary>
@@ -51,26 +50,26 @@ namespace NDO
 		/// <returns></returns>
 		public IPersistenceHandler GetPersistenceHandler( Type type )
 		{
+			// This code doesn't need to be thread safe because
+			// each thread needs another pm and therefore another PersistenceHandler instance.
 			if (type.IsGenericType)
 				type = type.GetGenericTypeDefinition();
-
-			IPersistenceHandler handler = persistenceHandlerPool.GetHandler( type, (t)=>
+			
+			if( !handlers.TryGetValue( type, out var handler ))
 			{
-				// 1. If a handler type is registered, use an instance of this handler
-				var newHandler = this.configContainer.Resolve<IPersistenceHandler>();
+				// If a handler type is registered, use an instance of this handler
+				handler = this.serviceProvider.GetService<IPersistenceHandler>();
 
-				// 2. try to use an NDOPersistenceHandler
-				if (newHandler == null)
-					newHandler = new SqlPersistenceHandler( this.configContainer );
+				// We shouldn't reach this code, since NDO registers the NdoPersistenceHandler
+				if (handler == null)
+					handler = new SqlPersistenceHandler( this.serviceProvider );
 
-				return newHandler;
-			});
+				handlers.Add( type, handler );
+			};
 
-			Mappings mappings = configContainer.Resolve<Mappings>();
-			var logger = configContainer.Resolve<ILogAdapter>();
 
 			// The dataSet will be used as template to create a DataTable for the query results.
-			handler.Initialize( mappings, type, ReleaseHandler, logger );
+			handler.Initialize( this.mappings, type, ReleaseHandler );
 
 			return handler;
 		}

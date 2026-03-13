@@ -20,13 +20,13 @@
 // DEALINGS IN THE SOFTWARE.
 
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using NDOInterfaces;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using NDO.Mapping;
+using NDOInterfaces;
+using System;
 using System.Data;
+using System.Transactions;
 using System.Data.Common;
 
 namespace NDO
@@ -37,11 +37,13 @@ namespace NDO
 		Connection connection;
 		TransactionMode oldTransactionMode;
 		bool forcedTransactionMode = false;
+		ILogger logger;
 
 		public SqlPassThroughHandler(PersistenceManager pm, Connection connection)
 		{
 			this.pm = pm;
 			this.connection = connection;
+			this.logger = pm.ServiceProvider.GetService<ILogger<SqlPassThroughHandler>>();
 		}
 
 		public void BeginTransaction()
@@ -75,12 +77,22 @@ namespace NDO
 		public IDataReader Execute( string command, bool returnReader = false, params object[] parameters )
 		{
 			this.pm.TransactionScope.CheckTransaction();
-			if (this.pm.VerboseMode && this.pm.LogAdapter != null)
-				this.pm.LogAdapter.Info( command );
+			this.logger.LogDebug( $"SqlPassThroughHandler: {command}" );
 
 			IProvider provider = this.pm.NDOMapping.GetProvider( this.connection );
 
-			var dbConnection = this.pm.TransactionScope.GetConnection(this.connection.ID, () => (DbConnection)provider.NewConnection(this.connection.Name) );
+			var ndoConn = this.connection;
+			// This code is identical to the code in PersistenceManager.
+			var dbConnection = this.pm.TransactionScope.GetConnection(ndoConn, () =>
+			{
+				IProvider p = ndoConn.Parent.GetProvider( ndoConn );
+				string connStr = this.pm.OnNewConnection( ndoConn );
+				var connection = p.NewConnection( connStr );
+				if (connection == null)
+					throw new NDOException( 119, $"Can't construct connection for {connStr}. The provider returns null." );
+				this.logger.LogDebug( $"Creating a connection object for '{ndoConn.DisplayName}'" );
+				return connection;
+			} );
 
 			IDbCommand cmd = provider.NewSqlCommand( dbConnection );
 			cmd.CommandText = command;

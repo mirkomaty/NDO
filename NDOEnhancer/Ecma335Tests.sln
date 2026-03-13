@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.9.34723.18
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Ecma335Tests", "Ecma335Tests\Ecma335Tests.csproj", "{98067408-D56B-47F3-B829-CBB454794828}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Ecma335", "Ecma335\Ecma335.csproj", "{8E515912-FB2E-45A6-BDDD-015A9133BDC9}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{98067408-D56B-47F3-B829-CBB454794828}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{98067408-D56B-47F3-B829-CBB454794828}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{98067408-D56B-47F3-B829-CBB454794828}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{98067408-D56B-47F3-B829-CBB454794828}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8E515912-FB2E-45A6-BDDD-015A9133BDC9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8E515912-FB2E-45A6-BDDD-015A9133BDC9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8E515912-FB2E-45A6-BDDD-015A9133BDC9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8E515912-FB2E-45A6-BDDD-015A9133BDC9}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {EAA386AA-C8E7-401A-AA24-D560060CA850}
+	EndGlobalSection
+EndGlobal

@@ -1,0 +1,9 @@
+There is an issue with the official .NET Core ILDasm packages like https://www.nuget.org/packages/runtime.win-x64.Microsoft.NETCore.ILDAsm/9.0.0-preview.3.24172.9. 
+They don't support generating line numbers for debugging purposes.
+The issue is discussed here: https://github.com/dotnet/runtime/issues/53822
+But it doesn't seem like this ticket will be resolved soon after hanging around for 3 years.
+In the meantime, we copy the version from the .NET Framework into the output directory.
+
+And don't forget to set
+<DebugMode>full</DebugMode>
+in your .csproj files.

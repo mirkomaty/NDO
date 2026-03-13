@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
-using System.Data.SqlClient;
+using Microsoft.Data.SqlClient;
 using System.Text;
 using System.Text.RegularExpressions;
 
@@ -47,47 +47,34 @@ namespace SqlServerProvider
 		/// <summary>
 		/// See <see cref="IProvider"> IProvider interface </see>
 		/// </summary>
-		private string GetDateExpression( DateTime dt )
+		public override IDbConnection NewConnection( string connectionString )
 		{
-			string dtstr = dt.ToString();
-			dtstr = dtstr.Replace( ".", "/" );
-			dtstr = dtstr.Replace( "-", "/" );
-			return "'" + dtstr + "'";
+			var conn = new SqlConnection( connectionString );
+			conn.StateChange += ConnectionIdProvider.HandleStateChange;
+			return conn;
 		}
 
 		/// <summary>
 		/// See <see cref="IProvider"> IProvider interface </see>
 		/// </summary>
-		public override string GetSqlLiteral( object o )
-		{
-			if (o is DateTime)
-				return this.GetDateExpression( (DateTime)o );
-			return base.GetSqlLiteral( o );
-		}
-
-
-		/// <summary>
-		/// See <see cref="IProvider"> IProvider interface </see>
-		/// </summary>
-		public override System.Data.IDbConnection NewConnection( string connectionString )
-		{
-			return new SqlConnection( connectionString );
-		}
-
-		/// <summary>
-		/// See <see cref="IProvider"> IProvider interface </see>
-		/// </summary>
-		public override System.Data.IDbCommand NewSqlCommand( System.Data.IDbConnection connection )
+		public override IDbCommand NewSqlCommand( IDbConnection connection )
 		{
 			SqlCommand command = new SqlCommand();
-			command.Connection = (SqlConnection)connection;
+			command.Connection = (SqlConnection) connection;
 			return command;
 		}
 
+		/// <inheritdoc/>
+		public override object GetConnectionId(IDbConnection connection)
+		{
+			// Since the ClientConnectionId is reused, we add an id, which differs after each Open() call.
+			return $"{ConnectionIdProvider.Get( connection )} - {((SqlConnection)connection).ClientConnectionId}";
+		}
+
 		/// <summary>
 		/// See <see cref="IProvider"> IProvider interface </see>
 		/// </summary>
-		public override DbDataAdapter NewDataAdapter( System.Data.IDbCommand select, System.Data.IDbCommand update, System.Data.IDbCommand insert, System.Data.IDbCommand delete )
+		public override DbDataAdapter NewDataAdapter( IDbCommand select, IDbCommand update, IDbCommand insert, IDbCommand delete )
 		{
 			SqlDataAdapter da = new SqlDataAdapter();
 			da.SelectCommand = (SqlCommand)select;
@@ -109,7 +96,7 @@ namespace SqlServerProvider
 		/// <summary>
 		/// See <see cref="IProvider"> IProvider interface </see>
 		/// </summary>
-		public override IDataParameter AddParameter( System.Data.IDbCommand command, string parameterName, object dbType, int size, string columnName )
+		public override IDataParameter AddParameter( IDbCommand command, string parameterName, object dbType, int size, string columnName )
 		{
 			return ((SqlCommand)command).Parameters.Add( new SqlParameter( parameterName, (SqlDbType)dbType, size > -1 ? size : 0, columnName ) );
 		}
@@ -296,7 +283,7 @@ namespace SqlServerProvider
 		{
 			List<string> result = new List<string>();
 			string sql = "SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_TYPE = 'BASE TABLE'";
-			SqlCommand cmd = new SqlCommand( sql, (SqlConnection)conn );
+			SqlCommand cmd = new SqlCommand( sql, (SqlConnection) conn );
 			bool wasOpen = true;
 
 			if (conn.State == ConnectionState.Closed)

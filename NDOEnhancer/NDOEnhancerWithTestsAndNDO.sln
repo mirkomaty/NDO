@@ -1,0 +1,55 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.3.32929.385
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NDOEnhancer", "NDOEnhancer\NDOEnhancer.csproj", "{3A0A82CF-F913-4701-B482-FF8709031777}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PersistentEnhancerTestClasses", "PersistentEnhancerTestClasses\PersistentEnhancerTestClasses.csproj", "{5A81EB39-2C94-4B91-8DA8-7C4C8E68D96D}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Ecma335", "Ecma335\Ecma335.csproj", "{3A53549B-AFDE-483E-87CB-9AD54BFF9A69}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NDO.Mapping", "..\NDO.Mapping\NDO.Mapping\NDO.Mapping.csproj", "{D863331B-D3B6-4DC6-8A0D-87CD0B9349E2}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NDO.SchemaGenerator", "..\NDO.SchemaGenerator\NDO.SchemaGenerator\NDO.SchemaGenerator.csproj", "{2215C9A6-26A3-4F0E-BF46-F441A6D6787E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ecma335Tests", "Ecma335Tests\Ecma335Tests.csproj", "{220E3B50-2422-0EE0-0ECD-75685BC49384}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{3A0A82CF-F913-4701-B482-FF8709031777}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3A0A82CF-F913-4701-B482-FF8709031777}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3A0A82CF-F913-4701-B482-FF8709031777}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3A0A82CF-F913-4701-B482-FF8709031777}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5A81EB39-2C94-4B91-8DA8-7C4C8E68D96D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5A81EB39-2C94-4B91-8DA8-7C4C8E68D96D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5A81EB39-2C94-4B91-8DA8-7C4C8E68D96D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5A81EB39-2C94-4B91-8DA8-7C4C8E68D96D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3A53549B-AFDE-483E-87CB-9AD54BFF9A69}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3A53549B-AFDE-483E-87CB-9AD54BFF9A69}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3A53549B-AFDE-483E-87CB-9AD54BFF9A69}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3A53549B-AFDE-483E-87CB-9AD54BFF9A69}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D863331B-D3B6-4DC6-8A0D-87CD0B9349E2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D863331B-D3B6-4DC6-8A0D-87CD0B9349E2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D863331B-D3B6-4DC6-8A0D-87CD0B9349E2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D863331B-D3B6-4DC6-8A0D-87CD0B9349E2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2215C9A6-26A3-4F0E-BF46-F441A6D6787E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2215C9A6-26A3-4F0E-BF46-F441A6D6787E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2215C9A6-26A3-4F0E-BF46-F441A6D6787E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2215C9A6-26A3-4F0E-BF46-F441A6D6787E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{220E3B50-2422-0EE0-0ECD-75685BC49384}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{220E3B50-2422-0EE0-0ECD-75685BC49384}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{220E3B50-2422-0EE0-0ECD-75685BC49384}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{220E3B50-2422-0EE0-0ECD-75685BC49384}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {617EBB60-447C-4257-8FC0-7419B323B540}
+	EndGlobalSection
+EndGlobal

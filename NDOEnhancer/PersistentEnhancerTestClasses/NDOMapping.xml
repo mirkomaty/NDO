@@ -1,0 +1,25 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<NDOMapping SchemaVersion="1.0">
+  <Connections>
+    <Connection ID="C0" Name="Substitute this string with your connection string" Type="" />
+  </Connections>
+  <Classes>
+    <Class AssemblyName="PersistentEnhancerTestClasses" FullName="PersistentEnhancerTestClasses.Person" TableName="Person" ConnectionId="C0" TypeCode="779086505">
+      <Oid>
+        <OidColumn AutoIncremented="True" Name="ID" AllowDbNull="False" />
+      </Oid>
+      <Fields>
+        <Field Name="firstName" AccessorName="FirstName">
+          <Column Name="FirstName" />
+        </Field>
+        <Field Name="id" AccessorName="Id">
+          <Column Name="Id1" />
+        </Field>
+        <Field Name="lastName" AccessorName="LastName">
+          <Column Name="LastName" />
+        </Field>
+      </Fields>
+      <Relations />
+    </Class>
+  </Classes>
+</NDOMapping>

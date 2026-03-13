@@ -8,7 +8,7 @@
     <OutputType>WinExe</OutputType>
     <RootNamespace>TestUIProviders</RootNamespace>
     <AssemblyName>TestUIProviders</AssemblyName>
-    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
   </PropertyGroup>
@@ -32,53 +32,41 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="FirebirdProvider">
-      <HintPath>..\..\Provider\FirebirdNdoProvider\FirebirdProvider\bin\Debug\net452\FirebirdProvider.dll</HintPath>
-    </Reference>
-    <Reference Include="FirebirdUISupport">
-      <HintPath>..\..\Provider\FirebirdNdoProvider\FirebirdUISupport\bin\Debug\FirebirdUISupport.dll</HintPath>
-    </Reference>
     <Reference Include="MySqlProvider">
-      <HintPath>..\..\Provider\MySqlNdoProvider\MySqlProvider\bin\Debug\net452\MySqlProvider.dll</HintPath>
+      <HintPath>..\..\Provider\MySqlNdoProvider\NDO.MySql\bin\Debug\netstandard2.0\MySqlProvider.dll</HintPath>
     </Reference>
     <Reference Include="MySqlUISupport">
       <HintPath>..\..\Provider\MySqlNdoProvider\MySqlUISupport\bin\Debug\MySqlUISupport.dll</HintPath>
     </Reference>
     <Reference Include="NDO">
-      <HintPath>..\..\NDODLL\bin\Debug\net452\NDO.dll</HintPath>
+      <HintPath>..\..\NDODLL\bin\Debug\netstandard2.0\NDO.dll</HintPath>
     </Reference>
     <Reference Include="NDO.UISupport">
       <HintPath>..\..\UISupport\NDO.UISupport\bin\Debug\NDO.UISupport.dll</HintPath>
     </Reference>
     <Reference Include="NDOInterfaces">
-      <HintPath>..\..\NDOInterfaces\bin\Debug\net452\NDOInterfaces.dll</HintPath>
+      <HintPath>..\..\NDOInterfaces\bin\Debug\netstandard2.0\NDOInterfaces.dll</HintPath>
     </Reference>
     <Reference Include="OracleProvider">
-      <HintPath>..\..\Provider\OracleProvider\OracleProvider\bin\Debug\net452\OracleProvider.dll</HintPath>
+      <HintPath>..\..\Provider\OracleProvider\OracleProvider\bin\Debug\netstandard2.0\OracleProvider.dll</HintPath>
     </Reference>
     <Reference Include="OracleUISupport">
       <HintPath>..\..\Provider\OracleProvider\OracleUISupport\bin\Debug\OracleUISupport.dll</HintPath>
     </Reference>
     <Reference Include="PostgreProvider">
-      <HintPath>..\..\Provider\PostGresProvider\PostgreProvider\bin\Debug\net452\PostgreProvider.dll</HintPath>
+      <HintPath>..\..\Provider\PostGresProvider\PostgreProvider\bin\Debug\netstandard2.0\PostgreProvider.dll</HintPath>
     </Reference>
     <Reference Include="PostGresUISupport">
       <HintPath>..\..\Provider\PostGresProvider\PostGresUISupport\bin\Debug\PostGresUISupport.dll</HintPath>
     </Reference>
-    <Reference Include="SqlCEProvider">
-      <HintPath>..\..\Provider\SqlCEProvider\SqlCEProvider\bin\Debug\net452\SqlCEProvider.dll</HintPath>
-    </Reference>
-    <Reference Include="SqlCeUISupport">
-      <HintPath>..\..\Provider\SqlCEProvider\SqlCeUISupport\bin\Debug\SqlCeUISupport.dll</HintPath>
-    </Reference>
     <Reference Include="SqliteProvider">
-      <HintPath>..\..\Provider\SqliteProvider\SqliteProvider\bin\Debug\net452\SqliteProvider.dll</HintPath>
+      <HintPath>..\..\Provider\SqliteProvider\SqliteProvider\bin\Debug\netstandard2.0\SqliteProvider.dll</HintPath>
     </Reference>
     <Reference Include="SqliteUISupport">
       <HintPath>..\..\Provider\SqliteProvider\SqliteUISupport\bin\Release\SqliteUISupport.dll</HintPath>
     </Reference>
     <Reference Include="SqlServerProvider">
-      <HintPath>..\..\Provider\SqlServerProvider\SqlServerProvider\bin\Debug\net452\SqlServerProvider.dll</HintPath>
+      <HintPath>..\..\Provider\SqlServerProvider\SqlServerProvider\bin\Debug\netstandard2.0\SqlServerProvider.dll</HintPath>
     </Reference>
     <Reference Include="SqlServerUISupport">
       <HintPath>..\..\Provider\SqlServerProvider\SqlServerUISupport\bin\Debug\SqlServerUISupport.dll</HintPath>

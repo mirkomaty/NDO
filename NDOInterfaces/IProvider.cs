@@ -1,5 +1,5 @@
 ﻿//
-// Copyright (c) 2002-2019 Mirko Matytschak 
+// Copyright (c) 2002-2024 Mirko Matytschak 
 // (www.netdataobjects.de)
 //
 // Author: Mirko Matytschak
@@ -47,6 +47,11 @@ namespace NDOInterfaces
 		/// <param name="connection">The connection over which the command will be executed</param>
 		/// <returns>An ADO.NET command object</returns>
 		IDbCommand NewSqlCommand(IDbConnection connection);
+
+		/// <summary>
+		/// Gets a unique id of the current server connection. This requires the connection to be open.
+		/// </summary>
+		object GetConnectionId( IDbConnection connection );
 
 		/// <summary>
 		/// Factory method for new data adapter objects.

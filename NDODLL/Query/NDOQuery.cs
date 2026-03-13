@@ -32,8 +32,10 @@ using NDOInterfaces;
 using System.Text.RegularExpressions;
 using NDO.Linq;
 using LE=System.Linq.Expressions;
-using NDO.Configuration;
 using NDO.SqlPersistenceHandling;
+using System.IO;
+using System.Security.Cryptography;
+using Microsoft.Extensions.DependencyInjection;
 using System.Threading.Tasks;
 
 namespace NDO.Query
@@ -66,6 +68,10 @@ namespace NDO.Query
 		private List<string> prefetches = new List<string>();
 		private int skip;
 		private int take;
+
+		internal bool UseQueryCache => this.pm.UseQueryCache;
+		internal Dictionary<string, object> QueryCache => this.pm.QueryCache;
+
 
 		/// <summary>
 		/// Constructs a NDOQuery object
@@ -115,6 +121,9 @@ namespace NDO.Query
 		/// <param name="queryLanguage">Determines, if the query is a SQL pass-through query or a NDOql expression.</param>
 		public NDOQuery( PersistenceManager pm, string queryExpression, bool hollowResults, QueryLanguage queryLanguage )
 		{
+			if (pm.IsClosed)
+				throw new ObjectDisposedException( pm.GetType().Name );
+
 			this.pm = pm;
 			if (pm == null)
 				throw new ArgumentException( "Parameter is null", "pm" );
@@ -223,6 +232,7 @@ namespace NDO.Query
 			{
 				this.pm.CheckTransaction( persistenceHandler, this.resultType );
 				await persistenceHandler.ExecuteBatchAsync( new string[] { sql }, this.parameters ).ConfigureAwait( false );
+				this.pm.CheckEndTransaction( true );
 			}
 		}
 
@@ -245,13 +255,82 @@ namespace NDO.Query
 			return sql;
 		}
 
+		private string GetSha()
+		{
+            MemoryStream ms = new MemoryStream();
+            var sw = new StreamWriter(ms);
+
+            sw.Write( typeof( T ).FullName );
+            sw.Write( '|' );
+            
+			foreach (var item in parameters)
+            {
+                if (item is byte[] bytes)
+                {
+                    foreach (var b in bytes)
+                    {
+                        sw.Write( b );
+                    }
+                    sw.Write( '|' );
+                }
+                else
+                {
+                    sw.Write( item );
+                    sw.Write( '|' );
+                }
+            }
+
+			foreach (var item in orderings)
+			{
+				sw.Write( item.FieldName );
+				sw.Write( item.IsAscending );
+                sw.Write( '|' );
+            }
+
+            foreach (var item in prefetches)
+            {
+                sw.Write( item );
+                sw.Write( '|' );
+            }
+
+			sw.Write( $"skip{this.skip}|" );
+            sw.Write( $"take{this.take}" );
+
+            sw.Flush();
+            ms.Seek( 0L, SeekOrigin.Begin );
+            var sr = new StreamReader(ms);
+            var q = (this.queryExpression ?? "") + '|' + sr.ReadToEnd();
+			var qbytes = Encoding.UTF8.GetBytes(q);
+			var sha = SHA256.Create();
+			var hash = sha.ComputeHash( qbytes );
+			return Convert.ToBase64String( hash );
+        }
+
 		/// <summary>
 		/// Executes the query and returns a list of result objects.
 		/// </summary>
 		/// <returns></returns>
 		public List<T> Execute()
 		{
-			return GetResultListAsync().GetAwaiter().GetResult();
+			string sha = null;
+			if (UseQueryCache)
+			{
+				sha = GetSha();
+				if (QueryCache.ContainsKey( sha ))
+				{
+					this.pm.LogIfVerbose( "Getting results from QueryCache" );
+					return (List<T>) QueryCache[sha];
+				}
+			}
+
+			var result = GetResultListAsync().GetAwaiter().GetResult();
+
+			if (UseQueryCache)
+			{
+				QueryCache[sha] = result;
+			}
+
+			return result;
 		}
 
 		/// <summary>
@@ -279,7 +358,7 @@ namespace NDO.Query
 					GenerateQueryContexts();
 
 				PrepareParameters();
-				IQueryGenerator queryGenerator = ConfigContainer.Resolve<IQueryGenerator>();
+				IQueryGenerator queryGenerator = ServiceProvider.GetRequiredService<IQueryGenerator>().Initialize(this.mappings);
 				return queryGenerator.GenerateQueryStringForAllTypes( this.queryContextsForTypes, this.expressionTree, this.hollowResults, this.orderings, this.skip, this.take );
 			}
 		}
@@ -288,8 +367,7 @@ namespace NDO.Query
 		{
 			List<T> result = new List<T>();
 
-			if (this.queryContextsForTypes == null)
-				GenerateQueryContexts();
+			GenerateQueryContexts();
 
 			// this.pm.CheckTransaction happens in ExecuteOrderedSubQuery or in ExecuteSubQuery
 
@@ -437,7 +515,7 @@ namespace NDO.Query
 		private async Task<object> ExecuteAggregateQueryAsync( QueryContextsEntry queryContextsEntry, string field, AggregateType aggregateType )
 		{
 			Type t = queryContextsEntry.Type;
-			IQueryGenerator queryGenerator = ConfigContainer.Resolve<IQueryGenerator>();
+			IQueryGenerator queryGenerator = ServiceProvider.GetRequiredService<IQueryGenerator>().Initialize(this.mappings);
 			string generatedQuery = queryGenerator.GenerateAggregateQueryString( field, queryContextsEntry, this.expressionTree, this.queryContextsForTypes.Count > 1, aggregateType );
 
 			using (IPersistenceHandler persistenceHandler = this.pm.PersistenceHandlerManager.GetPersistenceHandler( t ))
@@ -453,6 +531,17 @@ namespace NDO.Query
 					return null;
 
 				return ( l[0] )["AggrResult"];
+			}
+		}
+
+		private List<T> ExecuteSqlQuery()
+		{
+			Type t = this.resultType;
+			using (IPersistenceHandler persistenceHandler = this.pm.PersistenceHandlerManager.GetPersistenceHandler( t ))
+			{
+				this.pm.CheckTransaction( persistenceHandler, t );
+				DataTable table = persistenceHandler.PerformQuery( this.queryExpression, this.parameters, this.pm.DataSet );
+				return (List<T>) pm.DataTableToIList( t, table.Rows, this.hollowResults );
 			}
 		}
 
@@ -492,7 +581,7 @@ namespace NDO.Query
 
 		private async Task<IList> ExecuteSubQueryAsync( Type t, QueryContextsEntry queryContextsEntry )
 		{
-			IQueryGenerator queryGenerator = ConfigContainer.Resolve<IQueryGenerator>();
+			IQueryGenerator queryGenerator = ServiceProvider.GetRequiredService<IQueryGenerator>().Initialize(this.mappings);
 			bool hasBeenPrepared = PrepareParameters();
 			string generatedQuery;
 
@@ -552,7 +641,7 @@ namespace NDO.Query
 				this.pm.CheckTransaction( persistenceHandler, t );
 
 				bool hasBeenPrepared = PrepareParameters();
-				IQueryGenerator queryGenerator = ConfigContainer.Resolve<IQueryGenerator>();
+				IQueryGenerator queryGenerator = ServiceProvider.GetRequiredService<IQueryGenerator>().Initialize(this.mappings);
 				string generatedQuery = queryGenerator.GenerateQueryString( queryContextsEntry, this.expressionTree, this.hollowResults, this.queryContextsForTypes.Count > 1, this.orderings, this.skip, this.take );
 
 				if (hasBeenPrepared)
@@ -626,7 +715,7 @@ namespace NDO.Query
 		/// </remarks>
 		public async Task<T> ExecuteSingleAsync( bool throwIfResultCountIsWrong = false )
 		{
-			var resultList = await GetResultListAsync().ConfigureAwait(false);
+			var resultList = Execute(); //await GetResultListAsync().ConfigureAwait(false);
 			int count = resultList.Count;
 			if (count == 1 || ( !throwIfResultCountIsWrong && count > 0 ))
 			{
@@ -680,7 +769,7 @@ namespace NDO.Query
 				}
 			}
 
-			var contextGenerator = ConfigContainer.Resolve<RelationContextGenerator>( null, new ParameterOverride( this.pm.mappings ) );
+			var contextGenerator = new RelationContextGenerator(this.mappings);
 			this.queryContextsForTypes = new List<QueryContextsEntry>();
 			// usedTables now contains all assignable classes of our result type
 			foreach (var de in usedTables)
@@ -721,9 +810,9 @@ namespace NDO.Query
 			CreateQueryContextsForTypes();
 		}
 
-		INDOContainer ConfigContainer
+		IServiceProvider ServiceProvider
 		{
-			get { return this.pm.ConfigContainer; }
+			get { return this.pm.ServiceProvider; }
 		}
 
 		/// <summary>
