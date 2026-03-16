@@ -59,15 +59,14 @@ namespace NDO
 			this.loggerFactory = loggerFactory;
 		}
 
-		public void Initialize(NDOMapping mappings, Relation relation, ILogAdapter logger)
+		public void Initialize(NDOMapping mappings, Relation relation)
 		{
 			this.mappings = mappings;
 			this.relation = relation;
-			this.logger = logger;
 
 			Connection con = mappings.FindConnection(relation.MappingTable.ConnectionId);
 			this.provider = mappings.GetProvider( con );
-			this.sqlDumper = new SqlDumper( logger, this.provider );
+			this.sqlDumper = new SqlDumper( this.loggerFactory, this.provider );
 
 			// The connection object will be initialized in the pm, to 
 			// enable the callback for getting the real connection string.
