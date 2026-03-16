@@ -66,13 +66,12 @@ namespace NDO
 
 			Connection con = mappings.FindConnection(relation.MappingTable.ConnectionId);
 			this.provider = mappings.GetProvider( con );
-			this.sqlDumper = new SqlDumper( this.loggerFactory, this.provider );
 
 			// The connection object will be initialized in the pm, to 
 			// enable the callback for getting the real connection string.
 			// CheckTransaction is the place, where this happens.
 			this.connection = null;
-			this.sqlSelectBehavior = new SqlSelectBehavior( this.logger );
+			this.sqlSelectBehavior = new SqlSelectBehavior( this.loggerFactory );
 
 			GenerateSelectCommand();
 			GenerateInsertCommand();
