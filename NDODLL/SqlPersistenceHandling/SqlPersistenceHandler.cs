@@ -32,6 +32,7 @@ using NDO.Mapping;
 using NDOInterfaces;
 using NDO.Query;
 using System.Globalization;
+using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -477,6 +478,16 @@ namespace NDO.SqlPersistenceHandling
 		/// <param name="dt"></param>
 		public void Update(DataTable dt)
 		{
+			UpdateAsync(dt).ConfigureAwait(false).GetAwaiter().GetResult();
+		}
+
+		/// <summary>
+		/// Saves Changes to a DataTable
+		/// </summary>
+		/// <param name="dt"></param>
+		/// <returns>An awaitable Task object</returns>
+		public async Task UpdateAsync(DataTable dt)
+		{
 			DataRow[] rows = null;
 			try
 			{
@@ -487,10 +498,29 @@ namespace NDO.SqlPersistenceHandling
 				if (this.timeStampColumn != null)
 				{
 					Guid newTs = Guid.NewGuid();
-					foreach(DataRow r in rows)
+					foreach (DataRow r in rows)
 						r[timeStampColumn] = newTs;
 				}
-                dataAdapter.Update(rows);
+
+				var statements = new List<string>();
+				var parameterBatches = new List<IList>();
+
+				foreach (DataRow row in rows)
+				{
+					if (row.RowState == DataRowState.Added)
+					{
+						statements.Add(this.insertCommand.CommandText);
+						parameterBatches.Add(CreateRowParameters(this.insertCommand, row));
+					}
+					else
+					{
+						statements.Add(this.updateCommand.CommandText);
+						parameterBatches.Add(CreateRowParameters(this.updateCommand, row));
+					}
+				}
+
+				var results = await ExecuteBatchAsync(statements.ToArray(), parameterBatches).ConfigureAwait(false);
+				await ApplyInsertedRowResultsAsync(rows, results).ConfigureAwait(false);
 			}
 			catch (System.Data.DBConcurrencyException dbex)
 			{
@@ -516,17 +546,16 @@ namespace NDO.SqlPersistenceHandling
 					throw;
 				}
 			}
-            catch (System.Exception ex)
-            {
-                string text = "Exception of type " + ex.GetType().Name + " while updating or inserting data rows: " + ex.Message + "\n";
-                if ((ex.Message.IndexOf("Die Variable") > -1 && ex.Message.IndexOf("muss deklariert") > -1) || (ex.Message.IndexOf("Variable") > -1 && ex.Message.IndexOf("declared") > -1))
-                    text += "Check the field names in the mapping file.\n";
-                text += "Sql Update statement: " + updateCommand.CommandText + "\n";
-                text += "Sql Insert statement: " + insertCommand.CommandText;
-                throw new NDOException(37, text);
-            }
+			catch (System.Exception ex)
+			{
+				string text = "Exception of type " + ex.GetType().Name + " while updating or inserting data rows: " + ex.Message + "\n";
+				if ((ex.Message.IndexOf("Die Variable") > -1 && ex.Message.IndexOf("muss deklariert") > -1) || (ex.Message.IndexOf("Variable") > -1 && ex.Message.IndexOf("declared") > -1))
+					text += "Check the field names in the mapping file.\n";
+				text += "Sql Update statement: " + updateCommand.CommandText + "\n";
+				text += "Sql Insert statement: " + insertCommand.CommandText;
+				throw new NDOException(37, text);
+			}
 		}
-
 
 		private void DumpBatch(string sql)
 		{
@@ -551,12 +580,19 @@ namespace NDO.SqlPersistenceHandling
 		/// <param name="dt"></param>
         public void UpdateDeletedObjects(DataTable dt)
 		{
+			UpdateDeletedObjectsAsync(dt).ConfigureAwait(false).GetAwaiter().GetResult();
+		}
+
+		public async Task UpdateDeletedObjectsAsync(DataTable dt)
+		{
 			DataRow[] rows = Select(dt, DataViewRowState.Deleted);
 			if (rows.Length == 0) return;
 			Dump(rows);
 			try
 			{
-				dataAdapter.Update(rows);
+				var statements = rows.Select(r => this.deleteCommand.CommandText).ToArray();
+				var parameterBatches = rows.Select(r => CreateRowParameters(this.deleteCommand, r)).Cast<IList>().ToList();
+				await ExecuteBatchAsync(statements, parameterBatches).ConfigureAwait(false);
 			}
 			catch (System.Data.DBConcurrencyException dbex)
 			{
@@ -589,18 +625,29 @@ namespace NDO.SqlPersistenceHandling
 		/// </summary>
 		/// <param name="statements">Each element in the array is a sql statement.</param>
 		/// <param name="parameters">A list of parameters (see remarks).</param>
-		/// <returns>An List of Hashtables, containing the Name/Value pairs of the results.</returns>
+		/// <returns>An List of Dictionaries, containing the Name/Value pairs of the results.</returns>
 		/// <remarks>
-		/// For emty resultsets an empty Hashtable will be returned. 
+		/// For empty resultsets an empty Dictionary will be returned. 
 		/// If parameters is a NDOParameterCollection, the parameters in the collection are valid for 
 		/// all subqueries. If parameters is an ordinary IList, NDO expects to find a NDOParameterCollection 
 		/// for each subquery. If an element is null, no parameters are submitted for the given query.
 		/// </remarks>
 		public IList<Dictionary<string, object>> ExecuteBatch( string[] statements, IList parameters )
 		{
+			return ExecuteBatchAsync( statements, parameters ).ConfigureAwait(false).GetAwaiter().GetResult();
+		}
+
+		public async Task<IList<Dictionary<string, object>>> ExecuteBatchAsync( string[] statements, IList parameters )
+		{
+			// Ich habe hier Code entfernt, der von Copilot eingefügt wurde. Der Code hat in parameters überprüft, 
+			// ob die einzelnen Elemente ihrerseits ILists sind (Stichprobe für den ersten Parameter). Ist dies der Fall,
+			// Muss für jedes Statement aus dem Batch ein Parameter-Set erzeugt werden (CreateQueryParameters).
+			// Das wird von UpdateAsync() gebraucht.
+			// Es ist hier die Frage, ob die NDOParameterCollection wieder eingeführt werden sollte, oder ob es reicht, dass jedes
+			// Element der Liste einfach auch wieder eine Liste ist.
 			List<Dictionary<string, object>> result = new List<Dictionary<string, object>>();
 			bool closeIt = false;
-			IDataReader dr = null;
+			DbDataReader dr = null;
 			int i;
 			try
 			{
@@ -610,15 +657,17 @@ namespace NDO.SqlPersistenceHandling
 					this.conn.Open();
 				}
 				string sql = string.Empty;
+				IDbCommand cmd;
 
 				if (this.provider.SupportsBulkCommands)
 				{
-					IDbCommand cmd = this.provider.NewSqlCommand( conn );
+					cmd = this.provider.NewSqlCommand( conn );
 					sql = this.provider.GenerateBulkCommand( statements );
 					cmd.CommandText = sql;
 					if (parameters != null && parameters.Count > 0)
 					{
 						// Only the first command gets parameters
+						// Hier müssen ggf. die Parameter für die einzelnen Statements zusammengefasst werden.
 						for (i = 0; i < statements.Length; i++)
 						{
 							if (i == 0)
@@ -627,26 +676,31 @@ namespace NDO.SqlPersistenceHandling
 								CreateQueryParameters( null, null );
 						}
 					}
-
 					// cmd.CommandText can be changed in CreateQueryParameters
 					DumpBatch( cmd.CommandText );
 					if (this.transaction != null)
 						cmd.Transaction = this.transaction;
 
-					dr = cmd.ExecuteReader();
+					var dbCmd = cmd as DbCommand;
+					// Providers always return DbCommand objects, so this exception
+					// can't occur. We keep the IDbCommand return type, but this can be changed in the future
+					if (dbCmd == null)
+						throw new NotSupportedException("The command implementation does not support async execution.");
 
-					for (; ; )
+					dr = await dbCmd.ExecuteReaderAsync().ConfigureAwait(false);
+
+					for (; ;)
 					{
 						var dict = new Dictionary<string, object>();
-						while (dr.Read())
+						while (await dr.ReadAsync().ConfigureAwait(false))
 						{
 							for (i = 0; i < dr.FieldCount; i++)
 							{
-								dict.Add( dr.GetName( i ), dr.GetValue( i ) );
+								dict.Add(dr.GetName(i), dr.GetValue(i));
 							}
 						}
-						result.Add( dict );
-						if (!dr.NextResult())
+						result.Add(dict);
+						if (!await dr.NextResultAsync().ConfigureAwait(false))
 							break;
 					}
 
@@ -659,9 +713,10 @@ namespace NDO.SqlPersistenceHandling
 						string s = statements[i];
 						sql += s + ";\n"; // For DumpBatch only
 						var dict = new Dictionary<string, object>();
-						IDbCommand cmd = this.provider.NewSqlCommand( conn );
+						cmd = this.provider.NewSqlCommand( conn );
 
 						cmd.CommandText = s;
+						cmd.CommandType = GetCommandType(s);
 						if (parameters != null && parameters.Count > 0)
 						{
 							CreateQueryParameters( cmd, parameters );
@@ -670,9 +725,13 @@ namespace NDO.SqlPersistenceHandling
 						if (this.transaction != null)
 							cmd.Transaction = this.transaction;
 
-						dr = cmd.ExecuteReader();
+						var dbCmd = cmd as DbCommand;
+						if (dbCmd == null)
+							throw new NotSupportedException("The command implementation does not support async execution.");
 
-						while (dr.Read())
+						dr = await dbCmd.ExecuteReaderAsync().ConfigureAwait(false);
+
+						while (await dr.ReadAsync().ConfigureAwait(false))
 						{
 							for (int j = 0; j < dr.FieldCount; j++)
 							{
@@ -700,8 +759,17 @@ namespace NDO.SqlPersistenceHandling
 
 		private void CreateQueryParameters(IDbCommand command, IList parameters)
 		{
-			if (parameters == null || parameters.Count == 0)
+			if (command == null || parameters == null || parameters.Count == 0)
 				return;
+
+			if (parameters[0] is IDataParameter)
+			{
+				foreach (IDataParameter p in parameters)
+				{
+					command.Parameters.Add(CloneParameter(p, command));
+				}
+				return;
+			}
 
 			string sql = command.CommandText;
 
@@ -770,6 +838,124 @@ namespace NDO.SqlPersistenceHandling
 				par.Direction = ParameterDirection.Input;					
 			}
 		}
+		private static CommandType GetCommandType(string sql)
+		{
+			if (sql == null)
+				return CommandType.Text;
+			return sql.TrimStart().StartsWith("EXEC", StringComparison.InvariantCultureIgnoreCase) ? CommandType.StoredProcedure : CommandType.Text;
+		}
+
+		private IList CreateRowParameters(IDbCommand command, DataRow row)
+		{
+			List<IDataParameter> list = new List<IDataParameter>();
+			foreach (IDataParameter p in command.Parameters)
+			{
+				IDataParameter clone = CloneParameter(p, command);
+				clone.Value = GetRowParameterValue(row, clone);
+				list.Add(clone);
+			}
+			return list;
+		}
+
+		private IDataParameter CloneParameter(IDataParameter parameter, IDbCommand command)
+		{
+			IDataParameter clone = command.CreateParameter();
+			clone.ParameterName = parameter.ParameterName;
+			clone.DbType = parameter.DbType;
+			clone.Direction = parameter.Direction;
+			clone.SourceColumn = parameter.SourceColumn;
+			clone.SourceVersion = parameter.SourceVersion;
+			return clone;
+		}
+
+		private object GetRowParameterValue(DataRow row, IDataParameter parameter)
+		{
+			if (row == null || parameter == null)
+				return DBNull.Value;
+
+			object value = DBNull.Value;
+			string sourceColumn = parameter.SourceColumn;
+			DataRowVersion sourceVersion = parameter.SourceVersion;
+			if (sourceVersion == DataRowVersion.Default)
+			{
+				sourceVersion = row.RowState == DataRowState.Deleted ? DataRowVersion.Original : DataRowVersion.Current;
+			}
+			if (!string.IsNullOrEmpty(sourceColumn) && row.Table.Columns.Contains(sourceColumn))
+			{
+				try
+				{
+					value = row[sourceColumn, sourceVersion];
+				}
+				catch (ArgumentException)
+				{
+					value = row[sourceColumn];
+				}
+				if (value == null || value == DBNull.Value)
+					return DBNull.Value;
+			}
+			if (value is Guid g && g == Guid.Empty)
+				return DBNull.Value;
+			if (value is DateTime dt && dt == DateTime.MinValue)
+				return DBNull.Value;
+			return value;
+		}
+
+		private async Task ApplyInsertedRowResultsAsync(DataRow[] rows, IList<Dictionary<string, object>> results)
+		{
+			if (!this.hasAutoincrementedColumn || !this.provider.SupportsLastInsertedId)
+				return;
+
+			for (int i = 0; i < rows.Length; i++)
+			{
+				DataRow row = rows[i];
+				if (row.RowState != DataRowState.Added)
+					continue;
+
+				if (this.provider.SupportsInsertBatch)
+				{
+					if (i < results.Count)
+						SetRowValuesFromResult(row, results[i]);
+				}
+				else
+				{
+					var identityResults = await ExecuteBatchAsync(new[] { provider.GetLastInsertedId(this.tableName, this.autoIncrementColumn.Name) }, null).ConfigureAwait(false);
+					if (identityResults.Count > 0)
+						SetRowValuesFromResult(row, identityResults[0]);
+				}
+			}
+		}
+
+		private void SetRowValuesFromResult(DataRow row, IDictionary<string, object> result)
+		{
+			if (row == null || result == null || result.Count == 0)
+				return;
+
+			foreach (var kvp in result)
+			{
+				if (row.Table.Columns.Contains(kvp.Key))
+					row[kvp.Key] = kvp.Value ?? DBNull.Value;
+			}
+			if (row.RowState == DataRowState.Unchanged)
+				row.AcceptChanges();
+		}
+
+		private void FillDataTable(DataTable table, IList<Dictionary<string, object>> results)
+		{
+			if (table == null || results == null)
+				return;
+
+			foreach (var rowData in results)
+			{
+				DataRow newRow = table.NewRow();
+				foreach (var kvp in rowData)
+				{
+					if (!table.Columns.Contains(kvp.Key))
+						table.Columns.Add(kvp.Key, kvp.Value?.GetType() ?? typeof(object));
+					newRow[kvp.Key] = kvp.Value ?? DBNull.Value;
+				}
+				table.Rows.Add(newRow);
+			}
+		}
 
 		/// <summary>
 		/// Performs a query and returns a DataTable
@@ -780,32 +966,29 @@ namespace NDO.SqlPersistenceHandling
 		/// <returns></returns>
 		public DataTable PerformQuery( string sql, IList parameters, DataSet templateDataSet )
 		{
-			if (sql.Trim().StartsWith( "EXEC", StringComparison.InvariantCultureIgnoreCase ))
-				this.selectCommand.CommandType = CommandType.StoredProcedure;
-			else
-				this.selectCommand.CommandType = CommandType.Text;
+			return PerformQueryAsync(sql, parameters, templateDataSet).ConfigureAwait(false).GetAwaiter().GetResult();
+		}
 
+		public async Task<DataTable> PerformQueryAsync(string sql, IList parameters, DataSet templateDataSet)
+		{
 			DataTable table = GetTemplateTable(templateDataSet, this.tableName).Clone();
 
-			this.selectCommand.CommandText = sql;
+			try
+			{
+				var results = await ExecuteBatchAsync(new[] { sql }, parameters).ConfigureAwait(false);
+				FillDataTable(table, results);
+			}
+			catch (System.Exception ex)
+			{
+				string text = "Exception of type " + ex.GetType().Name + " while executing a Query: " + ex.Message + "\n";
+				text += "Sql Statement: " + sql + "\n";
+				throw new NDOException(40, text);
+			}
 
-			CreateQueryParameters(this.selectCommand, parameters);
-
-			Dump(null); // Dumps the Select Command
-
-            try
-            {
-				dataAdapter.Fill(table);
-            }
-            catch (System.Exception ex)
-            {
-                string text = "Exception of type " + ex.GetType().Name + " while executing a Query: " + ex.Message + "\n";
-                text += "Sql Statement: " + sql + "\n";
-                throw new NDOException(40, text);
-            }
-
-			return table;		
+			return table;
 		}
+
+
 
 		/// <summary>
 		/// Gets a Handler which can store data in relation tables
