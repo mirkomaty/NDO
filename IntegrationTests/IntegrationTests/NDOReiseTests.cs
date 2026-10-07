@@ -55,11 +55,11 @@ namespace NdoUnitTests
 			try
 			{
 				pm.Abort();
-				IList mitarbeiterListe = pm.GetClassExtent( typeof( Mitarbeiter ), false );
+				IList mitarbeiterListe = pm.NewQuery( typeof( Mitarbeiter ), null, false ).Execute();
 				//				Console.WriteLine("TearDown löscht " + mitarbeiterListe.Count + " Mitarbeiter");
 				pm.Delete( mitarbeiterListe );
 				pm.Save();
-				IList reiseListe = pm.GetClassExtent( typeof( Reise ), false );
+				IList reiseListe = pm.NewQuery( typeof( Reise ), null, false ).Execute();
 				//				Console.WriteLine("TearDown löscht " + reiseListe.Count + " Reisen");
 				pm.Delete( reiseListe );
 				pm.Save();
@@ -86,10 +86,10 @@ namespace NdoUnitTests
 		[Test]
 		public void EmptyDB()
 		{
-			IList reiseListe = pm.GetClassExtent( typeof( Reise ), true );
+			IList reiseListe = pm.NewQuery( typeof( Reise ), null, true ).Execute();
 			pm.Delete( reiseListe );
 			pm.Save();
-			IList mitarbeiterListe = pm.GetClassExtent( typeof( Mitarbeiter ), true );
+			IList mitarbeiterListe = pm.NewQuery( typeof( Mitarbeiter ), null, true ).Execute();
 			pm.Delete( mitarbeiterListe );
 			pm.Save();
 		}
@@ -232,11 +232,11 @@ namespace NdoUnitTests
 			}
 			pm.MakePersistent( m );
 
-			IList ReiseListe = pm.GetClassExtent( typeof( Reise ) );
+			IList ReiseListe = pm.NewQuery( typeof( Reise ), null, true ).Execute();
 			Assert.That(0 ==  ReiseListe.Count, "Current extent should be empty" );
 			pm.Save();
 
-			ReiseListe = pm.GetClassExtent( typeof( Reise ) );
+			ReiseListe = pm.NewQuery( typeof( Reise ), null, true ).Execute();
 			Assert.That(100 ==  ReiseListe.Count, "Number of read objects is wrong" );
 			// Check that all objects come from cache... 
 			foreach (Reise m1 in ReiseListe)
@@ -250,7 +250,7 @@ namespace NdoUnitTests
 			ReiseListe = null;
 			//pm.CleanupCache();
 			pm.UnloadCache();
-			ReiseListe = pm.GetClassExtent( typeof( Reise ) );
+			ReiseListe = pm.NewQuery( typeof( Reise ), null, true ).Execute();
 			Assert.That(100 ==  ReiseListe.Count, "Number of read objects is wrong" );
 			// Check that all objects are reloaded 
 			foreach (Reise m1 in ReiseListe)
@@ -279,7 +279,7 @@ namespace NdoUnitTests
 			pm.Save();
 			Assert.That(NDOObjectState.Transient ==  r.NDOObjectState, "Wrong state #5" );
 
-			IList l = pm.GetClassExtent( typeof( Reise ) );
+			IList l = pm.NewQuery( typeof( Reise ), null, true ).Execute();
 			Assert.That(0 ==  l.Count, "Number of read objects is wrong" );
 		}
 
@@ -291,10 +291,10 @@ namespace NdoUnitTests
 			pm.Save();
 			pm.Delete( r );
 			Assert.That(NDOObjectState.Deleted ==  r.NDOObjectState, "Wrong state #1" );
-			IList l = pm.GetClassExtent( typeof( Reise ) );
+			IList l = pm.NewQuery( typeof( Reise ), null, true ).Execute();
 			Assert.That(1 ==  l.Count, "Number of read objects is wrong" );
 			pm.Save();
-			l = pm.GetClassExtent( typeof( Reise ) );
+			l = pm.NewQuery( typeof( Reise ), null, true ).Execute();
 			Assert.That(0 ==  l.Count, "Number of read objects is wrong" );
 			pm.MakeHollow( m );  // Reread during TearDown will not load Reise anymore.
 		}
@@ -313,7 +313,7 @@ namespace NdoUnitTests
 			Assert.That("ADC" ==  r.Zweck, "Name shouldn't be changed" );
 			pm.Delete( r );
 			pm.Save();
-			IList l = pm.GetClassExtent( typeof( Reise ) );
+			IList l = pm.NewQuery( typeof( Reise ), null, true ).Execute();
 			Assert.That(0 ==  l.Count, "Number of read objects is wrong" );
 			pm.MakeHollow( m );  // Reread during TearDown will not load Reise anymore.
 		}

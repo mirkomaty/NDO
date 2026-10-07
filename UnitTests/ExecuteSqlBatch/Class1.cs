@@ -71,9 +71,9 @@ namespace ExecuteSqlBatch
 			string s = sr.ReadToEnd();
 			sr.Close();
 			string[] arr = s.Split(';');
-			IDbConnection cn = provider.NewConnection(conn.Name);
+			DbConnection cn = provider.NewConnection(conn.Name);
 			cn.Open();
-			IDbCommand cmd = provider.NewSqlCommand(cn);
+			DbCommand cmd = provider.NewSqlCommand(cn);
 			int result = 0;
 			foreach(string statement in arr)
 			{

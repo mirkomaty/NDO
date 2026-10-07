@@ -40,11 +40,11 @@ namespace NdoUnitTests
 		public void TearDown()
 		{
 			var pm = PmFactory.NewPersistenceManager();
-			IList l = pm.GetClassExtent(typeof(DfrAddress));
+			IList l = pm.NewQuery( typeof(DfrAddress), null, true ).Execute();
 			pm.Delete(l);
-			l = pm.GetClassExtent(typeof(DfrContact));
+			l = pm.NewQuery( typeof(DfrContact), null, true ).Execute();
 			pm.Delete(l);
-			l = pm.GetClassExtent(typeof(DfrAddressDescriptor));
+			l = pm.NewQuery( typeof(DfrAddressDescriptor), null, true ).Execute();
 			pm.Delete(l);
 			pm.Dispose();
 		}

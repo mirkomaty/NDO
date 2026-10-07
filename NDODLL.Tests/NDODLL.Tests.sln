@@ -11,6 +11,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "QueryTests", "QueryTests\Qu
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PureBusinessClasses", "..\IntegrationTests\PureBusinessClasses\PureBusinessClasses.csproj", "{9C4DA243-A0B6-40D6-8EE3-22F70DF7A631}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AsyncTests", "AsyncTests\AsyncTests.csproj", "{70D53D7B-C346-4FAD-82FA-FC3D798BA894}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -33,6 +35,10 @@ Global
 		{9C4DA243-A0B6-40D6-8EE3-22F70DF7A631}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9C4DA243-A0B6-40D6-8EE3-22F70DF7A631}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9C4DA243-A0B6-40D6-8EE3-22F70DF7A631}.Release|Any CPU.Build.0 = Release|Any CPU
+		{70D53D7B-C346-4FAD-82FA-FC3D798BA894}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{70D53D7B-C346-4FAD-82FA-FC3D798BA894}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{70D53D7B-C346-4FAD-82FA-FC3D798BA894}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{70D53D7B-C346-4FAD-82FA-FC3D798BA894}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

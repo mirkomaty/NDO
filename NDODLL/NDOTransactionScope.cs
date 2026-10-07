@@ -3,14 +3,17 @@ using NDOInterfaces;
 using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Data.Common;
 using System.Linq;
 using System.Text.RegularExpressions;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace NDO
 {
 	class UsedConnectionsInfo
 	{
-		public IDbConnection Connection;
+		public DbConnection Connection;
 		public IProvider Provider;
 	}
 
@@ -22,7 +25,7 @@ namespace NDO
 		private PersistenceManager pm;
 
 		private Dictionary<string, UsedConnectionsInfo> usedConnections = new Dictionary<string, UsedConnectionsInfo>();
-		private Dictionary<string, IDbTransaction> usedTransactions = new Dictionary<string, IDbTransaction>();
+		private Dictionary<string, DbTransaction> usedTransactions = new Dictionary<string, DbTransaction>();
 
 		///<inheritdoc/>
 		public IsolationLevel IsolationLevel { get; set; }
@@ -41,7 +44,7 @@ namespace NDO
 		}
 
 		///<inheritdoc/>
-		public void CheckTransaction()
+		public async Task CheckTransactionAsync( CancellationToken cancellationToken = default )
 		{
 			if (TransactionMode == TransactionMode.None)
 			{
@@ -52,40 +55,40 @@ namespace NDO
 			{
 				foreach (var connId in this.usedConnections.Keys)
 				{
-					OpenConnAndStartTransaction( connId );
+					await OpenConnAndStartTransactionAsync( connId, cancellationToken ).ConfigureAwait( false );
 				}
 			}
 
 			this.isInTransaction = true;
 		}
 
-		private void OpenConnAndStartTransaction( string id )
+		private async Task OpenConnAndStartTransactionAsync( string id, CancellationToken cancellationToken )
 		{
 			var cinfo = this.usedConnections[id];
 			var provider = cinfo.Provider;
 			var conn = cinfo.Connection;
-			conn.Open();
+			await conn.OpenAsync( cancellationToken ).ConfigureAwait( false );
 			var serverId = provider.GetConnectionId(conn);
 			pm.LogIfVerbose( $"Opening connection {serverId} = '{conn.DisplayName()}'" );
-			var tx = conn.BeginTransaction(IsolationLevel);
+			var tx = await conn.BeginTransactionAsync( IsolationLevel, cancellationToken ).ConfigureAwait( false );
 			usedTransactions.Add( id, tx );
 			this.pm.LogIfVerbose( $"Starting transaction {tx.GetHashCode():X} at connection {serverId} = '{conn.DisplayName()}'" );
 		}
 
 		///<inheritdoc/>
-		public void Complete()
+		public async Task CompleteAsync( CancellationToken cancellationToken = default )
 		{
-			CommitTransactions();
-			CloseConnections();
+			await CommitTransactionsAsync( cancellationToken ).ConfigureAwait( false );
+			await CloseConnectionsAsync().ConfigureAwait( false );
 			isInTransaction = false;
 		}
 
-		private void CommitTransactions()
+		private async Task CommitTransactionsAsync( CancellationToken cancellationToken )
 		{
 			foreach (var id in usedTransactions.Keys)
 			{
 				var tx = usedTransactions[id];
-				tx.Commit();
+				await tx.CommitAsync( cancellationToken ).ConfigureAwait( false );
 
 				usedConnections.TryGetValue( id, out var cinfo );
 				var conn = cinfo?.Connection;
@@ -99,7 +102,7 @@ namespace NDO
 		}
 
 		///<inheritdoc/>
-		public IDbConnection GetConnection( Connection ndoConnection, Func<IDbConnection> factory )
+		public async Task<DbConnection> GetConnectionAsync( Connection ndoConnection, Func<DbConnection> factory, CancellationToken cancellationToken = default )
 		{
 			var id = ndoConnection.ID;
 			if (this.usedConnections.ContainsKey( id ))
@@ -111,18 +114,18 @@ namespace NDO
 				var conn = factory();
 				this.usedConnections.Add( id, new UsedConnectionsInfo { Connection = conn, Provider = ndoConnection.Provider } );
 				if (this.isInTransaction)
-					OpenConnAndStartTransaction( id );
+					await OpenConnAndStartTransactionAsync( id, cancellationToken ).ConfigureAwait( false );
 				return conn;
 			}
 		}
 
 
 		///<inheritdoc/>
-		public IDbTransaction GetTransaction( string id )
+		public DbTransaction GetTransaction( string id )
 		{
 			if (isInTransaction)
 			{
-				IDbTransaction tx = null;
+				DbTransaction tx = null;
 				this.usedTransactions.TryGetValue( id, out tx );
 				return tx;
 			}
@@ -133,12 +136,18 @@ namespace NDO
 		///<inheritdoc/>
 		public void Dispose()
 		{
-			RollbackTransactions();
-			CloseConnections();
+			DisposeAsync().ConfigureAwait( false ).GetAwaiter().GetResult();
+		}
+
+		///<inheritdoc/>
+		public async ValueTask DisposeAsync()
+		{
+			await RollbackTransactionsAsync().ConfigureAwait( false );
+			await CloseConnectionsAsync().ConfigureAwait( false );
 			this.isInTransaction = false;
 		}
 
-		private void RollbackTransactions()
+		private async Task RollbackTransactionsAsync()
 		{
 			foreach (var key in usedTransactions.Keys)
 			{
@@ -151,7 +160,8 @@ namespace NDO
 					// If it is completed, we will get an exception here.
 					// Given that in most cases it's possible to track the tx state outside of NDO,
 					// we are safe here in the most cases.
-					tx.Rollback();
+					// A rollback must not be canceled, otherwise transactions and connections stay open.
+					await tx.RollbackAsync( CancellationToken.None ).ConfigureAwait( false );
 				}
 				catch
 				{
@@ -169,7 +179,7 @@ namespace NDO
 			usedTransactions.Clear();
 		}
 
-		private void CloseConnections()
+		private async Task CloseConnectionsAsync()
 		{
 			foreach (var cinfo in this.usedConnections.Values)
 			{
@@ -178,7 +188,7 @@ namespace NDO
 					continue;
 				var serverId = cinfo.Provider.GetConnectionId(conn);
 				pm.LogIfVerbose( $"Closed connection {serverId} = '{conn.DisplayName()}'" );
-				conn.Dispose();
+				await conn.DisposeAsync().ConfigureAwait( false );
 			}
 
 			this.usedConnections.Clear();

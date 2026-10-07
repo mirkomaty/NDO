@@ -60,7 +60,7 @@ namespace NdoUnitTests {
 				pm.TransactionMode = TransactionMode.None;
 
 				//pm.UnloadCache();
-				IList reiseliste = pm.GetClassExtent(typeof(Reise), true);
+				IList reiseliste = pm.NewQuery( typeof(Reise), null, true ).Execute();
 				pm.Delete( reiseliste );
 				pm.Save();
 				pm.UnloadCache();
@@ -720,7 +720,7 @@ namespace NdoUnitTests {
 				pm.MakePersistent( r );
 				pm.Save();
 				Assert.That( NDOObjectState.Persistent == r.NDOObjectState, "0: Reise should be persistent" );
-				IList liste = pm.GetClassExtent(typeof(Reise));
+				IList liste = pm.NewQuery( typeof(Reise), null, true ).Execute();
 				r = (Reise) liste[0];
 				Assert.That( 1 == liste.Count, "1: Number of Reise objects is wrong" );
 				Assert.That( NDOObjectState.Persistent == r.NDOObjectState, "1: Reise should be persistent" );
@@ -729,7 +729,7 @@ namespace NdoUnitTests {
 				Assert.That( NDOObjectState.Persistent == ( (Kostenpunkt) r.Kostenpunkte[0] ).NDOObjectState, "4.: Kostenpunkt should be hollow" );
 
 				pm.UnloadCache();
-				liste = pm.GetClassExtent( typeof( Reise ) );
+				liste = pm.NewQuery( typeof( Reise ), null, true ).Execute();
 				r = (Reise) liste[0];
 				Assert.That( NDOObjectState.Hollow == r.NDOObjectState, "5: Reise should be hollow" );
 				Assert.That( r.Kostenpunkte != null, "6. Relation is missing" );
@@ -737,7 +737,7 @@ namespace NdoUnitTests {
 				Assert.That( NDOObjectState.Hollow == ( (Kostenpunkt) r.Kostenpunkte[0] ).NDOObjectState, "8.: Kostenpunkt should be hollow" );
 
 				pm.UnloadCache();
-				liste = pm.GetClassExtent( typeof( Reise ), false );
+				liste = pm.NewQuery( typeof( Reise ), null, false ).Execute();
 				r = (Reise) liste[0];
 				Assert.That( NDOObjectState.Persistent == r.NDOObjectState, "9: Reise should be persistent" );
 				Assert.That( r.Kostenpunkte != null, "10. Relation is missing" );

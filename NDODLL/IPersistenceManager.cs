@@ -23,6 +23,8 @@
 using System;
 using System.Data;
 using System.Collections;
+using System.Threading;
+using System.Threading.Tasks;
 
 
 namespace NDO
@@ -38,7 +40,7 @@ namespace NDO
 	/// Common interface for the PersistenceManager classes. 
 	/// There are two implementations: PersistenceManager and TransactionalPersistenceManager (NDO Enterprise Edition only).
 	/// </summary>
-	public interface IPersistenceManager : IPersistenceManagerBase, IDisposable
+	public interface IPersistenceManager : IPersistenceManagerBase, IDisposable, IAsyncDisposable
 	{
 		/// <summary>
 		/// Registers a listener which will be notified, if a new connection is opened.
@@ -115,25 +117,15 @@ namespace NDO
 		IPersistenceCapable FindObject(ObjectId id);
 
 		/// <summary>
-		/// Gets all objects of a given class.
-		/// </summary>
-		/// <param name="t">the type of the class</param>
-		/// <returns>A list of all persistent objects of the given class. Subclasses will not be included in the result set.</returns>
-		IList GetClassExtent(Type t);
-
-		/// <summary>
-		/// Gets all objects of a given class.
-		/// </summary>
-		/// <param name="t">The type of the class.</param>
-		/// <param name="hollow">If true, return objects in hollow state instead of persistent state.</param>
-		/// <returns>A list of all persistent objects of the given class.</returns>
-		/// <remarks>Subclasses of the given type are not fetched.</remarks>
-		IList GetClassExtent(Type t, bool hollow);
-
-		/// <summary>
 		/// Refreshes all unlocked objects in the cache.
 		/// </summary>
 		void RefreshAll();
+
+		/// <summary>
+		/// Refreshes all unlocked objects in the cache asynchronously.
+		/// </summary>
+		/// <param name="cancellationToken">A token to cancel the operation</param>
+		Task RefreshAllAsync( CancellationToken cancellationToken = default );
 
 
 		/// <summary>
@@ -142,12 +134,26 @@ namespace NDO
 		/// <param name="list">An object list.</param>
 		void Refresh(IList list);
 
+		/// <summary>
+		/// Refreshes all objects in the given list asynchronously.
+		/// </summary>
+		/// <param name="list">An object list.</param>
+		/// <param name="cancellationToken">A token to cancel the operation</param>
+		Task RefreshAsync( IList list, CancellationToken cancellationToken = default );
+
 
 		/// <summary>
 		/// Reload an object from the database.
 		/// </summary>
 		/// <param name="pc">The object to be reloaded.</param>
 		void Refresh(object pc);
+
+		/// <summary>
+		/// Reload an object from the database asynchronously.
+		/// </summary>
+		/// <param name="pc">The object to be reloaded.</param>
+		/// <param name="cancellationToken">A token to cancel the operation</param>
+		Task RefreshAsync( object pc, CancellationToken cancellationToken = default );
 
 
 		/// <summary>
@@ -157,14 +163,31 @@ namespace NDO
 		void Save( bool deferCommit = false );
 
 		/// <summary>
+		/// Save all changes made to the objects asynchronously.
+		/// </summary>
+		/// <param name="deferCommit">Determines, if the commit should be immediately or if it should be deferred to a later call to Save().</param>
+		/// <param name="cancellationToken">A token to cancel the operation</param>
+		Task SaveAsync( bool deferCommit = false, CancellationToken cancellationToken = default );
+
+		/// <summary>
 		/// Discard all changes and restore the state of all objects.
 		/// </summary>
 		void Abort();
 
 		/// <summary>
+		/// Discard all changes and restore the state of all objects asynchronously.
+		/// </summary>
+		Task AbortAsync();
+
+		/// <summary>
 		/// Close the PersistenceManger.
 		/// </summary>
 		void Close();
+
+		/// <summary>
+		/// Close the PersistenceManger asynchronously.
+		/// </summary>
+		Task CloseAsync();
 
 		/// <summary>
 		/// Remove all unused entries from the cache.
@@ -234,6 +257,13 @@ namespace NDO
 		void LoadData(object pc);
 
 		/// <summary>
+		/// Loads all fields of an object asynchronously
+		/// </summary>
+		/// <param name="pc"></param>
+		/// <param name="cancellationToken">A token to cancel the operation</param>
+		Task LoadDataAsync( object pc, CancellationToken cancellationToken = default );
+
+		/// <summary>
 		/// Loads a certain field of an object
 		/// </summary>
 		/// <param name="pc"></param>
@@ -247,6 +277,15 @@ namespace NDO
 		/// <param name="fieldName"></param>
 		/// <param name="hollow"></param>
 		void LoadRelation(object pc, string fieldName, bool hollow);
+
+		/// <summary>
+		/// Loads related objects asynchronously
+		/// </summary>
+		/// <param name="pc"></param>
+		/// <param name="fieldName"></param>
+		/// <param name="hollow"></param>
+		/// <param name="cancellationToken">A token to cancel the operation</param>
+		Task LoadRelationAsync( object pc, string fieldName, bool hollow, CancellationToken cancellationToken = default );
 		
 		/// <summary>
 		/// Creates an ObjectId

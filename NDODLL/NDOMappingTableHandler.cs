@@ -22,9 +22,13 @@
 using System;
 using System.Data;
 using System.Data.Common;
+using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using NDO.Mapping;
 using NDOInterfaces;
+using NDO.SqlPersistenceHandling;
 
 namespace NDO
 {
@@ -34,12 +38,11 @@ namespace NDO
 	internal class NDOMappingTableHandler : IMappingTableHandler
 	{
 		private Relation relation;
-		private IDbCommand selectCommand;
-		private IDbCommand insertCommand;
-		//private IDbCommand updateCommand;
-		private IDbCommand deleteCommand;
-		private IDbConnection connection;
-		private DbDataAdapter dataAdapter;
+		private DbCommand selectCommand;
+		private DbCommand insertCommand;
+		private DbCommand deleteCommand;
+		private DbConnection connection;
+		private DbRowUpdater rowUpdater;
 		private IProvider provider;
 		private readonly ILogger logger;
 		private readonly ILoggerFactory loggerFactory;
@@ -68,7 +71,7 @@ namespace NDO
 			selectCommand = provider.NewSqlCommand(connection);
 			insertCommand = provider.NewSqlCommand(connection);
 			deleteCommand = provider.NewSqlCommand(connection);
-			dataAdapter = provider.NewDataAdapter(selectCommand, null, insertCommand, deleteCommand);
+			rowUpdater = new DbRowUpdater(insertCommand, null, deleteCommand);
 			this.relation = r;
 
 			//
@@ -186,7 +189,7 @@ namespace NDO
 		}
 
 		
-		public DataTable FindRelatedObjects(ObjectId oid, DataSet templateDataset) 
+		public async Task<DataTable> FindRelatedObjectsAsync( ObjectId oid, DataSet templateDataset, CancellationToken cancellationToken = default )
 		{
 			DataTable table = GetTableTemplate(templateDataset, relation.MappingTable.TableName).Clone();
             string sql = "SELECT * FROM " + provider.GetQualifiedTableName(relation.MappingTable.TableName) + " WHERE ";
@@ -221,11 +224,15 @@ namespace NDO
             try 
             {
 				Dump(null);
-				dataAdapter.Fill(table);
+				await DbDataTableFiller.FillAsync( selectCommand, table, cancellationToken ).ConfigureAwait( false );
             }
+			catch (OperationCanceledException)
+			{
+				throw;
+			}
             catch (System.Exception ex)
             {
-                string text = "Exception in dataAdapter.Fill: " + ex.Message + "\n";
+                string text = "Exception while reading the mapping table: " + ex.Message + "\n";
                 text += "Sql-Anweisung: " + selectCommand.CommandText + "\n";
                 throw new NDOException(25, text);
             }
@@ -233,7 +240,7 @@ namespace NDO
 			return table;		
 		}
 
-		public void Update(DataSet ds) 
+		public async Task UpdateAsync( DataSet ds, CancellationToken cancellationToken = default )
 		{
 			DataTable dt = ds.Tables[relation.MappingTable.TableName];
 			try 
@@ -245,12 +252,20 @@ namespace NDO
 				if (rows.Length > 0)
 				{
 					Dump(rows);
-					dataAdapter.Update(dt);
+					// Like DbDataAdapter.Update(DataTable) the rows are processed in the order of the table.
+					DataRow[] changedRows = dt.Rows.Cast<DataRow>()
+						.Where( r => r.RowState == DataRowState.Added || r.RowState == DataRowState.Modified || r.RowState == DataRowState.Deleted )
+						.ToArray();
+					await rowUpdater.UpdateAsync( changedRows, cancellationToken ).ConfigureAwait( false );
 				}
+			}
+			catch (OperationCanceledException)
+			{
+				throw;
 			}
 			catch (System.Exception ex) 
 			{
-				throw new NDOException(26, "Exception in dataAdapter.Update: " + ex.Message + "\n");
+				throw new NDOException(26, "Exception while updating the mapping table: " + ex.Message + "\n");
 			}
 		}
 
@@ -258,7 +273,7 @@ namespace NDO
 		{
 		}
 
-		public IDbConnection Connection
+		public DbConnection Connection
 		{
 			get { return this.selectCommand.Connection; }
 			set
@@ -269,7 +284,7 @@ namespace NDO
 			}
 		}
 	
-		public IDbTransaction Transaction
+		public DbTransaction Transaction
 		{
 			get { return this.selectCommand.Transaction; }
 			set

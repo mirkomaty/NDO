@@ -46,9 +46,9 @@ namespace NdoUnitTests
 		public void TearDown() 
 		{
 			pm.Abort();
-			IList peerListe = pm.GetClassExtent(typeof(Peer), false);
+			IList peerListe = pm.NewQuery( typeof(Peer), null, false ).Execute();
 			pm.Delete(peerListe);
-			IList trListe = pm.GetClassExtent(typeof(Track), false);
+			IList trListe = pm.NewQuery( typeof(Track), null, false ).Execute();
 			pm.Delete(trListe);
 			pm.Save();
 			pm.Close();

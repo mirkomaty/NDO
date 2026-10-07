@@ -59,9 +59,9 @@ namespace NdoUnitTests
 		public void TearDown()
 		{
 			var pm = PmFactory.NewPersistenceManager();
-			pm.Delete(pm.GetClassExtent(typeof(Order)));
+			pm.Delete(pm.NewQuery( typeof(Order), null, true ).Execute());
 			pm.Save();
-            pm.Delete(pm.GetClassExtent(typeof(Product)));
+            pm.Delete(pm.NewQuery( typeof(Product), null, true ).Execute());
 			pm.Save();
 		}
 
@@ -87,7 +87,7 @@ namespace NdoUnitTests
 			CreateOrderDetail();
 			pm.Save();
 			pm.UnloadCache();
-			IList orders = pm.GetClassExtent(typeof(Order));
+			IList orders = pm.NewQuery( typeof(Order), null, true ).Execute();
 			Assert.That(1 ==  orders.Count );
 			Order o = (Order) orders[0];
 			Assert.That(1 ==  o.OrderDetails.Count() );
@@ -248,9 +248,9 @@ namespace NdoUnitTests
 			pm.Delete(order);
 			pm.Save();
 			pm.UnloadCache();
-			IList l = pm.GetClassExtent(typeof(OrderDetail));
+			IList l = pm.NewQuery( typeof(OrderDetail), null, true ).Execute();
 			Assert.That(0 ==  l.Count, "Wrong count #1");
-			l = pm.GetClassExtent(typeof(Order));
+			l = pm.NewQuery( typeof(Order), null, true ).Execute();
 			Assert.That(0 ==  l.Count, "Wrong count #2");
 		}
 	}

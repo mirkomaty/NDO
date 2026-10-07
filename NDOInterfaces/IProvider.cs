@@ -39,37 +39,19 @@ namespace NDOInterfaces
 		/// </summary>
 		/// <param name="parameters">Connection string</param>
 		/// <returns>An ADO.NET connection object</returns>
-		IDbConnection NewConnection(string parameters);
+		DbConnection NewConnection(string parameters);
 
 		/// <summary>
 		/// Factory method for new command objects. Commands will be assinged to the given connection.
 		/// </summary>
 		/// <param name="connection">The connection over which the command will be executed</param>
 		/// <returns>An ADO.NET command object</returns>
-		IDbCommand NewSqlCommand(IDbConnection connection);
+		DbCommand NewSqlCommand(DbConnection connection);
 
 		/// <summary>
 		/// Gets a unique id of the current server connection. This requires the connection to be open.
 		/// </summary>
-		object GetConnectionId( IDbConnection connection );
-
-		/// <summary>
-		/// Factory method for new data adapter objects.
-		/// </summary>
-		/// <param name="select">Command object for the SELECT statement</param>
-		/// <param name="update">Command object for the UPDATE statement</param>
-		/// <param name="insert">Command object for the INSERT statement</param>
-		/// <param name="delete">Command object for the DELETE statement</param>
-		/// <returns>An ADO.NET data adapter</returns>
-		DbDataAdapter NewDataAdapter(IDbCommand select, IDbCommand update, IDbCommand insert, IDbCommand delete);
-
-		/// <summary>
-		/// Factory method for new command builder objects.
-		/// </summary>
-		/// <param name="dataAdapter">The data adapter, which contains the SELECT command, from which all other commands will be constructed.</param>
-		/// <returns>A newly constructed CommandBuilder object</returns>
-		/// <remarks>This function is not used by the framework. It is only used by the mapping tool.</remarks>
-		object NewCommandBuilder(DbDataAdapter dataAdapter);
+		object GetConnectionId( DbConnection connection );
 
 		/// <summary>
 		/// This is a generic wrapper for the AddParameter methods of specialized ADO.NET providers.
@@ -80,7 +62,7 @@ namespace NDOInterfaces
 		/// <param name="dbType">Parameter type code - value depends on the ADO.NET provider in use</param>
 		/// <param name="size">Parameter size. This value will be interpreted by the database.</param>
 		/// <param name="columnName">Name of the column, for which the command applies</param>
-		IDataParameter AddParameter(IDbCommand command, string parameterName, object dbType, int size, string columnName);
+		IDataParameter AddParameter(DbCommand command, string parameterName, object dbType, int size, string columnName);
 		/// <summary>
 		/// This is a generic wrapper for the AddParameter methods of specialized ADO.NET providers.
 		/// Adds parameters to a given command object. The parameter types depend on the ADO.NET provider in use.
@@ -96,7 +78,7 @@ namespace NDOInterfaces
 		/// <param name="srcColumn">The name of the source column that is mapped to the DataSet and used for loading or returning the Value.</param>
 		/// <param name="srcVersion">The DataRowVersion to use when loading Value.</param>
 		/// <param name="value">The value of the parameter.</param>
-		IDataParameter AddParameter(IDbCommand command, string parameterName, object dbType, int size, ParameterDirection dir, bool isNullable, byte precision, byte scale, string srcColumn, DataRowVersion srcVersion, object value);
+		IDataParameter AddParameter(DbCommand command, string parameterName, object dbType, int size, ParameterDirection dir, bool isNullable, byte precision, byte scale, string srcColumn, DataRowVersion srcVersion, object value);
 
 		/// <summary>
 		/// Maps a given System.Type to a type code which represents the type in the database.
@@ -220,7 +202,7 @@ namespace NDOInterfaces
 		/// </summary>
 		/// <param name="conn">The connection</param>
 		/// <returns>The table names</returns>
-		string[] GetTableNames (IDbConnection conn);
+		string[] GetTableNames (DbConnection conn);
 
 		/// <summary>
 		/// Returns the name of all tables of a given connection
@@ -228,7 +210,7 @@ namespace NDOInterfaces
 		/// <param name="conn">The connection</param>
 		/// <param name="owner">Database owner name</param>
 		/// <returns>The table names</returns>
-		string[] GetTableNames (IDbConnection conn, string owner);
+		string[] GetTableNames (DbConnection conn, string owner);
 
 		/// <summary>
 		/// Generates a DataSet with exactly the same structure elements as the database. 
@@ -238,7 +220,7 @@ namespace NDOInterfaces
 		/// <param name="conn">A valid connection object to be used to fetch the necessary data.</param>
 		/// <param name="owner">Fetches only tables of a specific owner space. If this parameter is null, all tables are fetched.</param>
 		/// <returns></returns>
-		DataSet GetDatabaseStructure (IDbConnection conn, string owner);		
+		DataSet GetDatabaseStructure (DbConnection conn, string owner);		
 
 		/// <summary>
 		/// Gets the name of the provider. This name will be used as index for the ProviderFactory
@@ -251,14 +233,6 @@ namespace NDOInterfaces
 		/// </summary>
 		bool SupportsInsertBatch { get; }
 
-
-		/// <summary>
-		/// This is needed, if a provider supports retrieving of the last autonumber id
-		/// but doesn't support insert batches. In the RowUpdateHandler NDO can execute a separate statement
-		/// to retrieve the id. The standard implementation in NDOAbstractProvider is empty.
-		/// </summary>
-		/// <param name="handler"></param>
-		void RegisterRowUpdateHandler(IRowUpdateListener handler);
 
 		/// <summary>
 		/// True if the Database has a native Guid datatype.

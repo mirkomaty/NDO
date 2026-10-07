@@ -22,6 +22,7 @@
 
 using System;
 using System.Data;
+using System.Data.Common;
 using System.Xml;
 using System.Windows.Forms;
 using ClassGenerator.AssemblyWizard;
@@ -78,7 +79,7 @@ namespace ClassGenerator
 						if ( provider == null )
 							throw new Exception( "Can't find NDO provider '" + this.connectionType + "'" );
 
-						IDbConnection conn = provider.NewConnection( this.connectionString );
+						DbConnection conn = provider.NewConnection( this.connectionString );
 						conn.Open();
 						try
 						{

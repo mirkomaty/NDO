@@ -50,7 +50,7 @@ namespace NdoUnitTests
 			if (null != pm)
 			{
 				pm.UnloadCache();
-				IList mitarbeiterListe = pm.GetClassExtent(typeof(Mitarbeiter), true);
+				IList mitarbeiterListe = pm.NewQuery( typeof(Mitarbeiter), null, true ).Execute();
 				// Normal geht das mit Accessoren nicht, weil sie Read Only sind
 				// aber hier spielts keine Rolle.
 				foreach(Mitarbeiter m in mitarbeiterListe)

@@ -59,7 +59,7 @@ namespace NdoUnitTests
 			var pm = PmFactory.NewPersistenceManager();
 			if ( null != pm )
 			{
-				IList mitarbeiterListe = pm.GetClassExtent( typeof( Mitarbeiter ), true );
+				IList mitarbeiterListe = pm.NewQuery( typeof( Mitarbeiter ), null, true ).Execute();
 				if ( mitarbeiterListe.Count > 0 )
 				{
 					pm.Delete( mitarbeiterListe );
@@ -98,7 +98,7 @@ namespace NdoUnitTests
 		public void EmptyDB() 
 		{
 			var pm = PmFactory.NewPersistenceManager();
-			IList mitarbeiterListe = pm.GetClassExtent(typeof(Mitarbeiter), true);
+			IList mitarbeiterListe = pm.NewQuery( typeof(Mitarbeiter), null, true ).Execute();
 			pm.Delete(mitarbeiterListe);
 			pm.Save();
 		}
@@ -310,11 +310,11 @@ namespace NdoUnitTests
 				mliste.Add(mm);
 			}
 
-			IList mitarbeiterListe = pm.GetClassExtent(typeof(Mitarbeiter));
+			IList mitarbeiterListe = pm.NewQuery( typeof(Mitarbeiter), null, true ).Execute();
 			Assert.That(0 ==  mitarbeiterListe.Count, "Current extent should be empty");
 			pm.Save();
 
-			mitarbeiterListe = pm.GetClassExtent(typeof(Mitarbeiter));
+			mitarbeiterListe = pm.NewQuery( typeof(Mitarbeiter), null, true ).Execute();
 			Assert.That(100 ==  mitarbeiterListe.Count, "Number of read objects is wrong");
 			// Check that all objects come from cache... 
 			foreach(Mitarbeiter m1 in mitarbeiterListe) 
@@ -328,7 +328,7 @@ namespace NdoUnitTests
 			mitarbeiterListe = null;
 			//pm.CleanupCache();
 			pm.UnloadCache();
-			mitarbeiterListe = pm.GetClassExtent(typeof(Mitarbeiter));
+			mitarbeiterListe = pm.NewQuery( typeof(Mitarbeiter), null, true ).Execute();
 			Assert.That(100 ==  mitarbeiterListe.Count, "Number of read objects is wrong");
 			// Check that all objects are reloaded 
 			foreach(Mitarbeiter m1 in mitarbeiterListe) 
@@ -454,7 +454,7 @@ namespace NdoUnitTests
 			pm.Save();
 			Assert.That(NDOObjectState.Transient ==  m.NDOObjectState, "Wrong state #5");
 
-			IList l = pm.GetClassExtent(typeof(Mitarbeiter));
+			IList l = pm.NewQuery( typeof(Mitarbeiter), null, true ).Execute();
 			Assert.That(0 ==  l.Count, "Number of read objects is wrong");
 		}
 
@@ -466,10 +466,10 @@ namespace NdoUnitTests
 			pm.Save();
 			pm.Delete(m);
 			Assert.That(NDOObjectState.Deleted ==  m.NDOObjectState, "Wrong state #1");
-			IList l = pm.GetClassExtent(typeof(Mitarbeiter));
+			IList l = pm.NewQuery( typeof(Mitarbeiter), null, true ).Execute();
 			Assert.That(1 ==  l.Count, "Number of read objects is wrong");
 			pm.Save();
-			l = pm.GetClassExtent(typeof(Mitarbeiter));
+			l = pm.NewQuery( typeof(Mitarbeiter), null, true ).Execute();
 			Assert.That(0 ==  l.Count, "Number of read objects is wrong");
 		}
 
@@ -487,7 +487,7 @@ namespace NdoUnitTests
 			Assert.That("Kocher" ==  m.Nachname, "Name shouldn't be changed");
 			pm.Delete(m);
 			pm.Save();
-			IList l = pm.GetClassExtent(typeof(Mitarbeiter));
+			IList l = pm.NewQuery( typeof(Mitarbeiter), null, true ).Execute();
 			Assert.That(0 ==  l.Count, "Number of read objects is wrong");
 		}
 

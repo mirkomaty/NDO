@@ -22,6 +22,7 @@
 
 using System;
 using System.Data;
+using System.Data.Common;
 using System.Text;
 using System.IO;
 using System.Diagnostics;
@@ -477,8 +478,8 @@ namespace ClassGenerator
                 generator.Provider = provider;
                 string columnString = CreateColumn(generator, provider, wiz.ColumnName, wiz.ColumnType, wiz.IsAutoNumbered);
                 string alter = "ALTER TABLE " + generator.AddColumn() + " " + columnString;
-                IDbConnection conn = provider.NewConnection(databaseNode.Database.ConnectionString);
-                IDbCommand cmd = provider.NewSqlCommand(conn);
+                DbConnection conn = provider.NewConnection(databaseNode.Database.ConnectionString);
+                DbCommand cmd = provider.NewSqlCommand(conn);
                 cmd.CommandText = alter;
                 MessageBox.Show(alter);
                 //cmd.ExecuteNonQuery();

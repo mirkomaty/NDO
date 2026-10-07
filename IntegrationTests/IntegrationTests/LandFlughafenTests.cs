@@ -57,9 +57,9 @@ namespace NdoUnitTests
 		public void TearDown() 
 		{
 			pm.Abort();
-			IList l = pm.GetClassExtent(typeof(Land));
+			IList l = pm.NewQuery( typeof(Land), null, true ).Execute();
 			pm.Delete(l);
-			l = pm.GetClassExtent(typeof(Flughafen));
+			l = pm.NewQuery( typeof(Flughafen), null, true ).Execute();
 			pm.Delete(l);
 			pm.Save();
 			pm.Close();
@@ -605,7 +605,7 @@ namespace NdoUnitTests
 			pm.MakePersistent(f);
 			l.AddFlughafen(f);
 			pm.Save();
-			IList liste = pm.GetClassExtent(typeof(Land));
+			IList liste = pm.NewQuery( typeof(Land), null, true ).Execute();
 			l = (Land)liste[0];
 			Assert.That(NDOObjectState.Persistent ==  l.NDOObjectState, "1: Land should be persistent");
 			Assert.That(l.Flughäfen != null, "2. Relation is missing");
@@ -613,7 +613,7 @@ namespace NdoUnitTests
 			Assert.That(NDOObjectState.Persistent ==  ((Flughafen)l.Flughäfen[0]).NDOObjectState, "4.: Flughafen should be hollow");
 
 			pm.UnloadCache();
-			liste = pm.GetClassExtent(typeof(Land));
+			liste = pm.NewQuery( typeof(Land), null, true ).Execute();
 			l = (Land)liste[0];
 			Assert.That(NDOObjectState.Hollow ==  l.NDOObjectState, "5: Land should be hollow");
 			Assert.That(l.Flughäfen != null, "6. Relation is missing");
@@ -621,7 +621,7 @@ namespace NdoUnitTests
 			Assert.That(NDOObjectState.Hollow ==  ((Flughafen)l.Flughäfen[0]).NDOObjectState, "8.: Flughafen should be hollow");
 
 			pm.UnloadCache();
-			liste = pm.GetClassExtent(typeof(Land), false);
+			liste = pm.NewQuery( typeof(Land), null, false ).Execute();
 			l = (Land)liste[0];
 			Assert.That(NDOObjectState.Persistent ==  l.NDOObjectState, "9: Land should be persistent");
 			Assert.That(l.Flughäfen != null, "10. Relation is missing");

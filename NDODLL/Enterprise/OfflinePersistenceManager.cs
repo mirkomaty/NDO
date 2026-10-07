@@ -21,6 +21,8 @@
 
 
 using System;
+using System.Threading;
+using System.Threading.Tasks;
 using System.Data;
 using System.Collections;
 using System.Collections.Generic;
@@ -73,7 +75,7 @@ namespace NDO
 		/// </summary>
 		/// <param name="t">Type of the objects, which are searched for.</param>
 		/// <returns></returns>
-		public override System.Collections.IList GetClassExtent(Type t)
+		public System.Collections.IList GetClassExtent(Type t)
 		{
 			var result = new List<IPersistenceCapable>();
 			foreach(var ce in cache.LockedObjects)
@@ -211,19 +213,7 @@ namespace NDO
 		/// The function is not implemented. 
 		/// A NotImplementedException will be thrown after calling that function.
 		/// </summary>
-		/// <param name="t"></param>
-		/// <param name="hollow"></param>
-		/// <returns></returns>
-		public override System.Collections.IList GetClassExtent(Type t, bool hollow)
-		{
-			throw new NotImplementedException("This function isn't supported in offline mode");
-		}
-
-		/// <summary>
-		/// The function is not implemented. 
-		/// A NotImplementedException will be thrown after calling that function.
-		/// </summary>
-		public override void AbortTransaction()
+		public override Task AbortTransactionAsync()
 		{
 			throw new NotImplementedException("This function isn't supported in offline mode");
 		}
@@ -289,7 +279,8 @@ namespace NDO
 		/// A NotImplementedException will be thrown after calling that function.
 		/// </summary>
 		/// <param name="pc"></param>
-		public override void LoadData(object pc)
+		/// <param name="cancellationToken"></param>
+		public override Task LoadDataAsync( object pc, CancellationToken cancellationToken = default )
 		{
 			throw new NotImplementedException("This function isn't supported in offline mode");
 		}
@@ -301,7 +292,8 @@ namespace NDO
 		/// <param name="pc"></param>
 		/// <param name="fieldName"></param>
 		/// <param name="hollow"></param>
-		public override void LoadRelation(object pc, string fieldName, bool hollow)
+		/// <param name="cancellationToken"></param>
+		public override Task LoadRelationAsync( object pc, string fieldName, bool hollow, CancellationToken cancellationToken = default )
 		{
 			throw new NotImplementedException("This function isn't supported in offline mode");
 		}
@@ -310,7 +302,8 @@ namespace NDO
 		/// The function is not implemented. 
 		/// A NotImplementedException will be thrown after calling that function.
 		/// </summary>
-		public override void RefreshAll()
+		/// <param name="cancellationToken"></param>
+		public override Task RefreshAllAsync( CancellationToken cancellationToken = default )
 		{
 			throw new NotImplementedException("This function isn't supported in offline mode");
 		}
@@ -320,7 +313,8 @@ namespace NDO
 		/// A NotImplementedException will be thrown after calling that function.
 		/// </summary>
 		/// <param name="list"></param>
-		public override void Refresh(IList list)
+		/// <param name="cancellationToken"></param>
+		public override Task RefreshAsync( IList list, CancellationToken cancellationToken = default )
 		{
 			throw new NotImplementedException("This function isn't supported in offline mode");
 		}
@@ -330,7 +324,8 @@ namespace NDO
 		/// A NotImplementedException will be thrown after calling that function.
 		/// </summary>
 		/// <param name="pc"></param>
-		public override void Refresh(object pc)
+		/// <param name="cancellationToken"></param>
+		public override Task RefreshAsync( object pc, CancellationToken cancellationToken = default )
 		{
 			throw new NotImplementedException("This function isn't supported in offline mode");
 		}
@@ -339,7 +334,9 @@ namespace NDO
 		/// The function is not implemented. 
 		/// A NotImplementedException will be thrown after calling that function.
 		/// </summary>
-		public override void Save(bool deferCommit = false)
+		/// <param name="deferCommit"></param>
+		/// <param name="cancellationToken"></param>
+		public override Task SaveAsync( bool deferCommit = false, CancellationToken cancellationToken = default )
 		{
 			throw new NotImplementedException("This function isn't supported in offline mode");
 		}
@@ -349,18 +346,6 @@ namespace NDO
 
 		#endregion
 
-		#region IDisposable Member
-
-
-		/// <summary>
-		/// Safely disposes the PersistenceManager.
-		/// </summary>
-		public override void Dispose()
-		{
-			this.Close();
-		}
-
-		#endregion
 	}
 }
 

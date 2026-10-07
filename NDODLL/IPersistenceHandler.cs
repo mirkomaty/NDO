@@ -24,11 +24,9 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Data;
-using System.Data.Common;
+using System.Threading;
+using System.Threading.Tasks;
 using NDO.Mapping;
-using NDO.SqlPersistenceHandling;
-using NDOInterfaces;
-using NDOql.Expressions;
 
 namespace NDO
 {
@@ -44,7 +42,7 @@ namespace NDO
 	/// The default implementation of this interface in NDO is the NDOPersistenceHandler class.
 	/// See also: <a href="Extensions.html">NDO extension interfaces</a>
 	/// </summary>
-	public interface IPersistenceHandler : IPersistenceHandlerBase, IRowUpdateListener
+	public interface IPersistenceHandler : IPersistenceHandlerBase
 	{
 		/// <summary>
 		/// Internal handler for concurrency situations
@@ -55,20 +53,23 @@ namespace NDO
 		/// Called by the NDO Framework. Write all changed rows back to DB
 		/// </summary>
 		/// <param name="dt">The data table containing the rows to be updated</param>
-		void Update(DataTable dt);
+		/// <param name="cancellationToken">A token to cancel the operation</param>
+		Task UpdateAsync( DataTable dt, CancellationToken cancellationToken = default );
 
 		/// <summary>
 		/// Called by the NDO Framework. Special Update function which processes only deleted rows. This is necessary, 
 		/// because deleted rows must be updated in reverse order as changed or created rows.
 		/// </summary>
 		/// <param name="dt">DataTable containing the rows to delete</param>
-		void UpdateDeletedObjects(DataTable dt);
+		/// <param name="cancellationToken">A token to cancel the operation</param>
+		Task UpdateDeletedObjectsAsync( DataTable dt, CancellationToken cancellationToken = default );
 
 		/// <summary>
 		/// Executes a batch of sql statements.
 		/// </summary>
 		/// <param name="statements">Each element in the array is a sql statement.</param>
 		/// <param name="parameters">A list of parameters (see remarks).</param>
+		/// <param name="cancellationToken">A token to cancel the operation</param>
 		/// <returns>An IList with Hashtables, containing the Name/Value pairs of the results.</returns>
 		/// <remarks>
 		/// For emty resultsets an empty Hashtable will be returned. 
@@ -76,7 +77,7 @@ namespace NDO
 		/// all subqueries. If parameters is an ordinary IList, NDO expects to find a NDOParameterCollection 
 		/// for each subquery. If an element is null, no parameters are submitted for the given query.
 		/// </remarks>
-		IList<Dictionary<string,object>> ExecuteBatch(string[] statements, IList parameters);
+		Task<IList<Dictionary<string,object>>> ExecuteBatchAsync( string[] statements, IList parameters, CancellationToken cancellationToken = default );
 
 		/// <summary>
 		/// Execute a SQL query.
@@ -84,8 +85,9 @@ namespace NDO
 		/// <param name="expression">SQL expression</param>
 		/// <param name="parameters">A collection of objects, corresponding to the query parameters.</param>
 		/// <param name="templateDataset">The DataSet from which the DataTable for the results is cloned</param>
+		/// <param name="cancellationToken">A token to cancel the operation</param>
 		/// <returns>A DataTable object, containing the query result.</returns>
-		DataTable PerformQuery( string expression, IList parameters, DataSet templateDataset );
+		Task<DataTable> PerformQueryAsync( string expression, IList parameters, DataSet templateDataset, CancellationToken cancellationToken = default );
 
 		/// <summary>
 		/// Gets a Handler which can store data in relation tables. The handler is an Implementation of IMappingTableHandler.

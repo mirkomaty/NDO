@@ -28,6 +28,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Data;
 using System.Data.Common;
+using System.Threading;
+using System.Threading.Tasks;
 using NDO.Mapping;
 using NDOInterfaces;
 using NDO.Query;
@@ -37,11 +39,6 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace NDO.SqlPersistenceHandling
 {
-	/// <summary>
-	/// Parameter type for the IProvider function RegisterRowUpdateHandler
-	/// </summary>
-	public delegate void RowUpdateHandler(DataRow row);
-
 	/// <summary>
 	/// Summary description for NDOPersistenceHandler.
 	/// </summary>
@@ -53,13 +50,13 @@ namespace NDO.SqlPersistenceHandling
 		/// </summary>
 		public event ConcurrencyErrorHandler ConcurrencyError;
 
-		private IDbCommand selectCommand;
-		private IDbCommand insertCommand;
-		private IDbCommand updateCommand;
-		private IDbCommand deleteCommand;
-		private IDbConnection conn;
-		private IDbTransaction transaction;
-		private DbDataAdapter dataAdapter;
+		private DbCommand selectCommand;
+		private DbCommand insertCommand;
+		private DbCommand updateCommand;
+		private DbCommand deleteCommand;
+		private DbConnection conn;
+		private DbTransaction transaction;
+		private DbRowUpdater rowUpdater;
 		private Class classMapping;
 		private string selectFieldList;
 		private string selectFieldListWithAlias;
@@ -189,22 +186,20 @@ namespace NDO.SqlPersistenceHandling
 				sql = "INSERT INTO {0} ({1}) VALUES ({2})";
 				sql = string.Format(sql, qualifiedTableName, this.fieldList, this.namedParamList);
 			}
-			if (hasAutoincrementedColumn && !provider.SupportsInsertBatch)
+			if (hasAutoincrementedColumn && !provider.SupportsInsertBatch && !provider.SupportsLastInsertedId)
 			{
-				if (provider.SupportsLastInsertedId)
-					provider.RegisterRowUpdateHandler(this);
-				else
-					throw new NDOException(32, "The provider of type " + provider.GetType().FullName + " doesn't support Autonumbered Ids. Use Self generated Ids instead.");
+				throw new NDOException(32, "The provider of type " + provider.GetType().FullName + " doesn't support Autonumbered Ids. Use Self generated Ids instead.");
 			}
 			this.insertCommand.CommandText = sql;
 			this.insertCommand.Connection = this.conn;
 		}
 
 		/// <summary>
-		/// Row update handler for providers that require Row Update Handling
+		/// Reads the autoincremented id of an inserted row, if the provider doesn't support insert batches.
 		/// </summary>
 		/// <param name="row"></param>
-		public void OnRowUpdate(DataRow row)
+		/// <param name="cancellationToken"></param>
+		private async Task ReadLastInsertedIdAsync( DataRow row, CancellationToken cancellationToken )
 		{
 			if (row.RowState == DataRowState.Deleted)
 				return;
@@ -221,14 +216,17 @@ namespace NDO.SqlPersistenceHandling
 			if (((int)row[oidColumnName]) > 0)
 				return;
 			bool unchanged = (row.RowState == DataRowState.Unchanged);
-			IDbCommand cmd = provider.NewSqlCommand(this.conn);
+			DbCommand cmd = provider.NewSqlCommand(this.conn);
+			if (this.transaction != null)
+				cmd.Transaction = this.transaction;
 
 			cmd.CommandText = provider.GetLastInsertedId(this.tableName, this.autoIncrementColumn.Name);
 			DumpBatch(cmd.CommandText);
 
-			using (IDataReader reader = cmd.ExecuteReader())
+			var reader = await cmd.ExecuteReaderAsync( cancellationToken ).ConfigureAwait( false );
+			await using (reader.ConfigureAwait( false ))
 			{
-				if (reader.Read())
+				if (await reader.ReadAsync( cancellationToken ).ConfigureAwait( false ))
 				{
 					object oidValue = reader.GetValue(0);
 					if ( oidValue == DBNull.Value )
@@ -453,7 +451,10 @@ namespace NDO.SqlPersistenceHandling
 			this.insertCommand = provider.NewSqlCommand(conn);
 			this.updateCommand = provider.NewSqlCommand(conn);
 			this.deleteCommand = provider.NewSqlCommand(conn);
-			this.dataAdapter = provider.NewDataAdapter(selectCommand, updateCommand, insertCommand, deleteCommand);
+			Func<DataRow, CancellationToken, Task> afterInsert = null;
+			if (this.hasAutoincrementedColumn && !provider.SupportsInsertBatch && provider.SupportsLastInsertedId)
+				afterInsert = ReadLastInsertedIdAsync;
+			this.rowUpdater = new DbRowUpdater( insertCommand, updateCommand, deleteCommand, afterInsert );
 			this.type = t;
 
 			CollectFields();	// Alle Feldinformationen landen in persistentField
@@ -475,7 +476,8 @@ namespace NDO.SqlPersistenceHandling
 		/// Saves Changes to a DataTable
 		/// </summary>
 		/// <param name="dt"></param>
-		public void Update(DataTable dt)
+		/// <param name="cancellationToken"></param>
+		public async Task UpdateAsync( DataTable dt, CancellationToken cancellationToken = default )
 		{
 			DataRow[] rows = null;
 			try
@@ -490,7 +492,7 @@ namespace NDO.SqlPersistenceHandling
 					foreach(DataRow r in rows)
 						r[timeStampColumn] = newTs;
 				}
-                dataAdapter.Update(rows);
+                await this.rowUpdater.UpdateAsync( rows, cancellationToken ).ConfigureAwait( false );
 			}
 			catch (System.Data.DBConcurrencyException dbex)
 			{
@@ -515,6 +517,10 @@ namespace NDO.SqlPersistenceHandling
 				{
 					throw;
 				}
+			}
+			catch (OperationCanceledException)
+			{
+				throw;
 			}
             catch (System.Exception ex)
             {
@@ -549,14 +555,15 @@ namespace NDO.SqlPersistenceHandling
 		/// Delets all rows of a DataTable marked as deleted
 		/// </summary>
 		/// <param name="dt"></param>
-        public void UpdateDeletedObjects(DataTable dt)
+		/// <param name="cancellationToken"></param>
+        public async Task UpdateDeletedObjectsAsync( DataTable dt, CancellationToken cancellationToken = default )
 		{
 			DataRow[] rows = Select(dt, DataViewRowState.Deleted);
 			if (rows.Length == 0) return;
 			Dump(rows);
 			try
 			{
-				dataAdapter.Update(rows);
+				await this.rowUpdater.UpdateAsync( rows, cancellationToken ).ConfigureAwait( false );
 			}
 			catch (System.Data.DBConcurrencyException dbex)
 			{
@@ -564,6 +571,10 @@ namespace NDO.SqlPersistenceHandling
 					ConcurrencyError(dbex);
 				else
 					throw;
+			}
+			catch (OperationCanceledException)
+			{
+				throw;
 			}
 			catch (System.Exception ex)
 			{
@@ -589,6 +600,7 @@ namespace NDO.SqlPersistenceHandling
 		/// </summary>
 		/// <param name="statements">Each element in the array is a sql statement.</param>
 		/// <param name="parameters">A list of parameters (see remarks).</param>
+		/// <param name="cancellationToken"></param>
 		/// <returns>An List of Hashtables, containing the Name/Value pairs of the results.</returns>
 		/// <remarks>
 		/// For emty resultsets an empty Hashtable will be returned. 
@@ -596,24 +608,24 @@ namespace NDO.SqlPersistenceHandling
 		/// all subqueries. If parameters is an ordinary IList, NDO expects to find a NDOParameterCollection 
 		/// for each subquery. If an element is null, no parameters are submitted for the given query.
 		/// </remarks>
-		public IList<Dictionary<string, object>> ExecuteBatch( string[] statements, IList parameters )
+		public async Task<IList<Dictionary<string, object>>> ExecuteBatchAsync( string[] statements, IList parameters, CancellationToken cancellationToken = default )
 		{
 			List<Dictionary<string, object>> result = new List<Dictionary<string, object>>();
 			bool closeIt = false;
-			IDataReader dr = null;
+			DbDataReader dr = null;
 			int i;
 			try
 			{
 				if (this.conn.State != ConnectionState.Open)
 				{
 					closeIt = true;
-					this.conn.Open();
+					await this.conn.OpenAsync( cancellationToken ).ConfigureAwait( false );
 				}
 				string sql = string.Empty;
 
 				if (this.provider.SupportsBulkCommands)
 				{
-					IDbCommand cmd = this.provider.NewSqlCommand( conn );
+					DbCommand cmd = this.provider.NewSqlCommand( conn );
 					sql = this.provider.GenerateBulkCommand( statements );
 					cmd.CommandText = sql;
 					if (parameters != null && parameters.Count > 0)
@@ -633,12 +645,12 @@ namespace NDO.SqlPersistenceHandling
 					if (this.transaction != null)
 						cmd.Transaction = this.transaction;
 
-					dr = cmd.ExecuteReader();
+					dr = await cmd.ExecuteReaderAsync( cancellationToken ).ConfigureAwait( false );
 
 					for (; ; )
 					{
 						var dict = new Dictionary<string, object>();
-						while (dr.Read())
+						while (await dr.ReadAsync( cancellationToken ).ConfigureAwait( false ))
 						{
 							for (i = 0; i < dr.FieldCount; i++)
 							{
@@ -646,11 +658,11 @@ namespace NDO.SqlPersistenceHandling
 							}
 						}
 						result.Add( dict );
-						if (!dr.NextResult())
+						if (!await dr.NextResultAsync( cancellationToken ).ConfigureAwait( false ))
 							break;
 					}
 
-					dr.Close();
+					await dr.CloseAsync().ConfigureAwait( false );
 				}
 				else
 				{
@@ -659,7 +671,7 @@ namespace NDO.SqlPersistenceHandling
 						string s = statements[i];
 						sql += s + ";\n"; // For DumpBatch only
 						var dict = new Dictionary<string, object>();
-						IDbCommand cmd = this.provider.NewSqlCommand( conn );
+						DbCommand cmd = this.provider.NewSqlCommand( conn );
 
 						cmd.CommandText = s;
 						if (parameters != null && parameters.Count > 0)
@@ -670,9 +682,9 @@ namespace NDO.SqlPersistenceHandling
 						if (this.transaction != null)
 							cmd.Transaction = this.transaction;
 
-						dr = cmd.ExecuteReader();
+						dr = await cmd.ExecuteReaderAsync( cancellationToken ).ConfigureAwait( false );
 
-						while (dr.Read())
+						while (await dr.ReadAsync( cancellationToken ).ConfigureAwait( false ))
 						{
 							for (int j = 0; j < dr.FieldCount; j++)
 							{
@@ -680,7 +692,7 @@ namespace NDO.SqlPersistenceHandling
 							}
 						}
 
-						dr.Close();
+						await dr.CloseAsync().ConfigureAwait( false );
 						result.Add( dict );
 					}
 
@@ -690,15 +702,15 @@ namespace NDO.SqlPersistenceHandling
 			finally
 			{
 				if (dr != null && !dr.IsClosed)
-					dr.Close();
+					await dr.CloseAsync().ConfigureAwait( false );
 				if (closeIt)
-					this.conn.Close();
+					await this.conn.CloseAsync().ConfigureAwait( false );
 			}
 
 			return result;
 		}
 
-		private void CreateQueryParameters(IDbCommand command, IList parameters)
+		private void CreateQueryParameters(DbCommand command, IList parameters)
 		{
 			if (parameters == null || parameters.Count == 0)
 				return;
@@ -777,8 +789,9 @@ namespace NDO.SqlPersistenceHandling
 		/// <param name="sql"></param>
 		/// <param name="parameters"></param>
 		/// <param name="templateDataSet"></param>
+		/// <param name="cancellationToken"></param>
 		/// <returns></returns>
-		public DataTable PerformQuery( string sql, IList parameters, DataSet templateDataSet )
+		public async Task<DataTable> PerformQueryAsync( string sql, IList parameters, DataSet templateDataSet, CancellationToken cancellationToken = default )
 		{
 			if (sql.Trim().StartsWith( "EXEC", StringComparison.InvariantCultureIgnoreCase ))
 				this.selectCommand.CommandType = CommandType.StoredProcedure;
@@ -795,8 +808,12 @@ namespace NDO.SqlPersistenceHandling
 
             try
             {
-				dataAdapter.Fill(table);
+				await DbDataTableFiller.FillAsync( this.selectCommand, table, cancellationToken ).ConfigureAwait( false );
             }
+			catch (OperationCanceledException)
+			{
+				throw;
+			}
             catch (System.Exception ex)
             {
                 string text = "Exception of type " + ex.GetType().Name + " while executing a Query: " + ex.Message + "\n";
@@ -837,7 +854,7 @@ namespace NDO.SqlPersistenceHandling
 		/// <summary>
 		/// Gets or sets the connection to be used for the handler
 		/// </summary>
-		public IDbConnection Connection
+		public DbConnection Connection
 		{
 			get { return this.conn; }
 			set
@@ -853,7 +870,7 @@ namespace NDO.SqlPersistenceHandling
 		/// <summary>
 		/// Gets or sets the connection to be used for the handler
 		/// </summary>
-		public IDbTransaction Transaction
+		public DbTransaction Transaction
 		{
 			get { return this.transaction; }
 			set
@@ -871,15 +888,6 @@ namespace NDO.SqlPersistenceHandling
 			if (this.logger != null && this.logger.IsEnabled( LogLevel.Debug ))
 				this.logger.LogDebug( msg );
 		}
-
-		/// <summary>
-		/// Gets the current DataAdapter.
-		/// </summary>
-		/// <remarks>
-		/// This is needed by RegisterRowUpdateHandler.
-		/// See the comment in SqlCeProvider.
-		/// </remarks>
-		public DbDataAdapter DataAdapter => this.dataAdapter;
 
 		#endregion
 	}

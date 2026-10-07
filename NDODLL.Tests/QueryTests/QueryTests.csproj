@@ -8,10 +8,9 @@
 	<ItemGroup>
 		<PackageReference Include="Microsoft.NET.Test.SDK" Version="17.9.0" />
 		<PackageReference Include="Moq" Version="4.20.70" />
-		<PackageReference Include="ndo.sqlserver" Version="5.0.0" />
+		<ProjectReference Include="..\..\Provider\SqlServerProvider\NDO.SqlServer\NDO.SqlServer.csproj" />
 		<PackageReference Include="NUnit" Version="4.1.0" />
 		<PackageReference Include="NUnit3TestAdapter" Version="4.5.0" />
-		<PackageReference Include="NDOInterfaces" Version="5.0.0" />
 		<PackageReference Include="Microsoft.Extensions.Hosting" Version="8.0.0" />
 	</ItemGroup>
 

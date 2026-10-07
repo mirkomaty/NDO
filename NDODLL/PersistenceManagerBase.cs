@@ -24,6 +24,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.IO;
 using System.Data;
+using System.Threading.Tasks;
 using NDOInterfaces;
 using NDO.Mapping;
 using NDO.Application;
@@ -387,14 +388,25 @@ namespace NDO
 		/// <summary>
 		/// Closes the PersistenceManager and releases all resources.
 		/// </summary>
-		public virtual void Close()
+		public void Close()
+		{
+			CloseAsync().ConfigureAwait( false ).GetAwaiter().GetResult();
+		}
+
+		/// <summary>
+		/// Closes the PersistenceManager and releases all resources asynchronously.
+		/// </summary>
+		/// <remarks>This is the method to override in derived classes. Call base.CloseAsync() in the overridden version.</remarks>
+		public virtual async Task CloseAsync()
 		{
 			if (isClosing)
 				return;
 			isClosing = true;
 			this.ds.Dispose();
 			this.ds = null;
-			if (this.scope != null)
+			if (this.scope is IAsyncDisposable asyncScope)
+				await asyncScope.DisposeAsync().ConfigureAwait( false );
+			else if (this.scope != null)
 				this.scope.Dispose();
 			this.queryCache.Clear();
 		}
@@ -402,7 +414,7 @@ namespace NDO
 		/// <summary>
 		/// IDisposable implementation.
 		/// </summary>
-		/// <remarks>Note: The derived classes don't need to override the Dispose methods, since Close() is virtual. Just override Close() and call base.Close() in the overridden version.</remarks>
+		/// <remarks>Note: The derived classes don't need to override the Dispose methods. Just override CloseAsync() and call base.CloseAsync() in the overridden version.</remarks>
 		/// <param name="disposing"></param>
 		protected virtual void Dispose(bool disposing)
 		{
@@ -413,9 +425,18 @@ namespace NDO
 		/// <summary>
 		/// Disposes any Resources which might be held by the PersistenceManager implementation.
 		/// </summary>
-		public virtual void Dispose()
+		public void Dispose()
 		{
 			Dispose( true );
+			GC.SuppressFinalize( this );
+		}
+
+		/// <summary>
+		/// Disposes any Resources which might be held by the PersistenceManager implementation asynchronously.
+		/// </summary>
+		public async ValueTask DisposeAsync()
+		{
+			await CloseAsync().ConfigureAwait( false );
 			GC.SuppressFinalize( this );
 		}
 

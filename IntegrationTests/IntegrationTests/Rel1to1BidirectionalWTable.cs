@@ -59,9 +59,9 @@ namespace NdoUnitTests
 		public void TearDown()
 		{
 			pm.Abort();
-			IList zertifikatListe = pm.GetClassExtent( typeof( Zertifikat ), true );
+			IList zertifikatListe = pm.NewQuery( typeof( Zertifikat ), null, true ).Execute();
 			pm.Delete( zertifikatListe );
-			IList sListe = pm.GetClassExtent( typeof( Signatur ), true );
+			IList sListe = pm.NewQuery( typeof( Signatur ), null, true ).Execute();
 			pm.Delete( sListe );
 			pm.Save();
 		}
@@ -503,7 +503,7 @@ namespace NdoUnitTests
 			z.SGN = sgn;
 			pm.MakePersistent( z );
 			pm.Save();
-			IList liste = pm.GetClassExtent( typeof( Zertifikat ) );
+			IList liste = pm.NewQuery( typeof( Zertifikat ), null, true ).Execute();
 			z = (Zertifikat)liste[0];
 			Assert.That(NDOObjectState.Persistent ==  z.NDOObjectState, "1: Zertifikat should be persistent" );
 			Assert.That(z.SGN != null, "2. Relation is missing" );
@@ -511,7 +511,7 @@ namespace NdoUnitTests
 			Assert.That(Object.ReferenceEquals(z, sgn.Owner), "2. Backlink wrong" );
 
 			pm.UnloadCache();
-			liste = pm.GetClassExtent( typeof( Zertifikat ) );
+			liste = pm.NewQuery( typeof( Zertifikat ), null, true ).Execute();
 			z = (Zertifikat)liste[0];
 			Assert.That(NDOObjectState.Hollow ==  z.NDOObjectState, "5: Zertifikat should be hollow" );
 			Assert.That(z.SGN != null, "6. Relation is missing" );
@@ -520,7 +520,7 @@ namespace NdoUnitTests
 			Assert.That(Object.ReferenceEquals(z, z.SGN.Owner), "8b. Zertifikat should match" );
 
 			pm.UnloadCache();
-			liste = pm.GetClassExtent( typeof( Zertifikat ), false );
+			liste = pm.NewQuery( typeof( Zertifikat ), null, false ).Execute();
 			z = (Zertifikat)liste[0];
 			Assert.That(NDOObjectState.Persistent ==  z.NDOObjectState, "9: Zertifikat should be persistent" );
 			Assert.That(z.SGN != null, "10. Relation is missing" );

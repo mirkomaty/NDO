@@ -35,7 +35,7 @@ namespace NdoUnitTests
 		{
 			var pm = PmFactory.NewPersistenceManager();
 			pm.TransactionMode = TransactionMode.None;
-			var mitarbeiterListe = pm.GetClassExtent( typeof( Mitarbeiter ), true );
+			var mitarbeiterListe = pm.NewQuery( typeof( Mitarbeiter ), null, true ).Execute();
 			pm.Delete( mitarbeiterListe );
 			pm.Save();
 			pm.UnloadCache();

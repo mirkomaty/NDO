@@ -31,6 +31,10 @@ using System.Reflection;
 using System.Text.RegularExpressions;
 using System.Linq;
 using System.Xml.Linq;
+using System.Data.Common;
+using System.Runtime.CompilerServices;
+using System.Threading;
+using System.Threading.Tasks;
 
 using NDO.Mapping;
 using NDOInterfaces;
@@ -933,27 +937,73 @@ namespace NDO
 
 		internal void CheckEndTransaction(bool doCommit)
 		{
+			CheckEndTransactionAsync( doCommit ).ConfigureAwait( false ).GetAwaiter().GetResult();
+		}
+
+		internal async Task CheckEndTransactionAsync( bool doCommit, CancellationToken cancellationToken = default )
+		{
 			if (doCommit)
 			{
-				TransactionScope.Complete();
+				await TransactionScope.CompleteAsync( cancellationToken ).ConfigureAwait( false );
 			}
 		}
 
-		internal void CheckTransaction(IPersistenceHandlerBase handler, Type t)
+		internal Task CheckTransactionAsync( IPersistenceHandlerBase handler, Type t, CancellationToken cancellationToken = default )
 		{
-			CheckTransaction(handler, this.GetClass(t).Connection);
+			return CheckTransactionAsync( handler, this.GetClass( t ).Connection, cancellationToken );
+		}
+
+		int activeOperation;
+		readonly AsyncLocal<bool> ownsOperation = new AsyncLocal<bool>();
+
+		/// <summary>
+		/// Marks the begin of an operation with database access. Detects concurrent usage of the PersistenceManager.
+		/// </summary>
+		/// <param name="caller">The name of the calling method</param>
+		/// <returns>An object, which marks the end of the operation if disposed.</returns>
+		/// <remarks>
+		/// Nested calls in the same logical flow (e.g. lazy loading in an OnSaving handler) are allowed.
+		/// The AsyncLocal flows with the ExecutionContext into all awaited calls, but not back to the caller of an async method.
+		/// So two concurrently started tasks don't share the ownership.
+		/// </remarks>
+		internal OperationGuard EnterOperation( [CallerMemberName] string caller = null )
+		{
+			if (this.ownsOperation.Value)
+				return default;  // Nested call in the same logical flow
+			if (Interlocked.CompareExchange( ref this.activeOperation, 1, 0 ) != 0)
+				throw new NDOException( 122, $"{caller}: The PersistenceManager is already in use by another operation. A PersistenceManager must not be used concurrently. Await each call before starting the next one." );
+			this.ownsOperation.Value = true;
+			return new OperationGuard( this );
+		}
+
+		internal readonly struct OperationGuard : IDisposable
+		{
+			readonly PersistenceManager pm;
+
+			public OperationGuard( PersistenceManager pm )
+			{
+				this.pm = pm;
+			}
+
+			public void Dispose()
+			{
+				if (this.pm == null)
+					return;  // Nested call: nothing to release
+				this.pm.ownsOperation.Value = false;
+				Volatile.Write( ref this.pm.activeOperation, 0 );
+			}
 		}
 
 		/// <summary>
 		/// Each and every database operation has to be preceded by a call to this function.
 		/// </summary>
-		internal void CheckTransaction( IPersistenceHandlerBase handler, Connection ndoConn )
+		internal async Task CheckTransactionAsync( IPersistenceHandlerBase handler, Connection ndoConn, CancellationToken cancellationToken = default )
 		{
-			TransactionScope.CheckTransaction();
+			await TransactionScope.CheckTransactionAsync( cancellationToken ).ConfigureAwait( false );
 			
 			if (handler.Connection == null)
 			{
-				handler.Connection = TransactionScope.GetConnection(ndoConn, () =>
+				handler.Connection = await TransactionScope.GetConnectionAsync(ndoConn, () =>
 				{
 					IProvider p = ndoConn.Parent.GetProvider( ndoConn );
 					string connStr = this.OnNewConnection( ndoConn );
@@ -962,7 +1012,7 @@ namespace NDO
 						throw new NDOException( 119, $"Can't construct connection for {connStr}. The provider returns null." );
 					LogIfVerbose( $"Creating a connection object for {ndoConn.DisplayName}" );
 					return connection;
-				} );
+				}, cancellationToken ).ConfigureAwait( false );
 			}
 
 			if (TransactionMode != TransactionMode.None)
@@ -973,7 +1023,7 @@ namespace NDO
 			// There are tests with a handler mock that always returns zero for the Connection property.
 			if (handler.Connection != null && handler.Connection.State != ConnectionState.Open)
 			{
-				handler.Connection.Open();
+				await handler.Connection.OpenAsync( cancellationToken ).ConfigureAwait( false );
 				var serverId = ndoConn.Provider.GetConnectionId( handler.Connection );
 				LogIfVerbose( $"Opening connection {serverId} = '{ndoConn.DisplayName}'" );
 			}
@@ -1605,7 +1655,28 @@ namespace NDO
 		/// <param name="o">The hollow object.</param>
 		/// <remarks>Note, that the relations won't be resolved with this function, with one Exception: 1:1 relations without mapping table will be resolved during LoadData. In all other cases, use <see cref="LoadRelation">LoadRelation</see>, to force resolving a relation.<seealso cref="NDOObjectState"/></remarks>
 #pragma warning restore 419
-		public virtual void LoadData( object o ) 
+		public void LoadData( object o ) 
+		{
+			LoadDataAsync( o ).ConfigureAwait( false ).GetAwaiter().GetResult();
+		}
+
+#pragma warning disable 419
+		/// <summary>
+		/// Load the data of a persistent object asynchronously. This forces the transition of the object state from hollow to persistent.
+		/// </summary>
+		/// <param name="o">The hollow object.</param>
+		/// <param name="cancellationToken">A token to cancel the operation</param>
+		/// <remarks>Note, that the relations won't be resolved with this function, with one Exception: 1:1 relations without mapping table will be resolved during LoadData. In all other cases, use <see cref="LoadRelationAsync(object, string, bool, CancellationToken)">LoadRelationAsync</see>, to force resolving a relation.<seealso cref="NDOObjectState"/></remarks>
+#pragma warning restore 419
+		public virtual async Task LoadDataAsync( object o, CancellationToken cancellationToken = default )
+		{
+			using (EnterOperation())
+			{
+				await LoadDataInternalAsync( o, cancellationToken ).ConfigureAwait( false );
+			}
+		}
+
+		async Task LoadDataInternalAsync( object o, CancellationToken cancellationToken )
 		{
 			IPersistenceCapable pc = CheckPc(o);
 			Debug.Assert(pc.NDOObjectState == NDOObjectState.Hollow, "Can only load hollow objects");
@@ -1616,7 +1687,7 @@ namespace NDO
             q = CreateOidQuery(pc, cl);
 			cache.UpdateCache(pc); // Make sure the object is in the cache
 
-			var objects = q.Execute();
+			var objects = await q.ExecuteAsync( cancellationToken ).ConfigureAwait( false );
 			var count = objects.Count;
 
 			if (count > 1)
@@ -1851,7 +1922,7 @@ namespace NDO
 		/// since they need a mapping table.
 		/// </summary>
 		/// <returns></returns>
-		IList QueryRelatedObjects(IPersistenceCapable pc, Relation r, IList l, bool hollow)
+		async Task<IList> QueryRelatedObjectsAsync( IPersistenceCapable pc, Relation r, IList l, bool hollow, CancellationToken cancellationToken )
 		{
 			// At this point of execution we know,
 			// that the target type is not polymorphic and is not 1:1.
@@ -1904,7 +1975,7 @@ namespace NDO
 
 			q.AllowSubclasses = false;  // Remember: polymorphic relations always have a mapping table
 
-			IList l2 = q.Execute();
+			IList l2 = await q.ExecuteAsync( cancellationToken ).ConfigureAwait( false );
 
 			foreach (object o in l2)
 				relatedObjects.Add( o );
@@ -1920,15 +1991,44 @@ namespace NDO
 		/// <param name="fieldName">The field name of the container or variable, which represents the relation.</param>
 		/// <param name="hollow">True, if the fetched objects should be hollow.</param>
 		/// <remarks>Note: 1:1 relations without mapping table will be resolved during the transition from the hollow to the persistent state. To force this transition, use the <see cref="LoadData">LoadData</see> function.<seealso cref="LoadData"/></remarks>
-		public virtual void LoadRelation(object o, string fieldName, bool hollow)
+		public void LoadRelation(object o, string fieldName, bool hollow)
 		{
-			IPersistenceCapable pc = CheckPc(o);
-			LoadRelationInternal(pc, fieldName, hollow);
+			LoadRelationAsync( o, fieldName, hollow ).ConfigureAwait( false ).GetAwaiter().GetResult();
+		}
+
+		/// <summary>
+		/// Resolves an relation asynchronously.
+		/// </summary>
+		/// <param name="o">The parent object.</param>
+		/// <param name="fieldName">The field name of the container or variable, which represents the relation.</param>
+		/// <param name="hollow">True, if the fetched objects should be hollow.</param>
+		/// <param name="cancellationToken">A token to cancel the operation</param>
+		/// <remarks>Note: 1:1 relations without mapping table will be resolved during the transition from the hollow to the persistent state. To force this transition, use the <see cref="LoadDataAsync">LoadDataAsync</see> function.<seealso cref="LoadDataAsync"/></remarks>
+		public virtual async Task LoadRelationAsync( object o, string fieldName, bool hollow, CancellationToken cancellationToken = default )
+		{
+			using (EnterOperation())
+			{
+				IPersistenceCapable pc = CheckPc(o);
+				await LoadRelationInternalAsync( pc, fieldName, hollow, cancellationToken ).ConfigureAwait( false );
+			}
 		}
 
 		
 
 		internal IList LoadRelation(IPersistenceCapable pc, Relation r, bool hollow)
+		{
+			return LoadRelationAsync( pc, r, hollow ).ConfigureAwait( false ).GetAwaiter().GetResult();
+		}
+
+		internal async Task<IList> LoadRelationAsync( IPersistenceCapable pc, Relation r, bool hollow, CancellationToken cancellationToken = default )
+		{
+			using (EnterOperation())
+			{
+				return await LoadRelationCoreAsync( pc, r, hollow, cancellationToken ).ConfigureAwait( false );
+			}
+		}
+
+		async Task<IList> LoadRelationCoreAsync( IPersistenceCapable pc, Relation r, bool hollow, CancellationToken cancellationToken )
 		{
 			IList result = null;
 
@@ -1936,7 +2036,7 @@ namespace NDO
 				return null;
 
 			if (pc.NDOObjectState == NDOObjectState.Hollow)
-				LoadData(pc);
+				await LoadDataAsync( pc, cancellationToken ).ConfigureAwait( false );
 
 			if(r.MappingTable == null) 
 			{
@@ -1947,7 +2047,7 @@ namespace NDO
 					IList l = mappings.GetRelationContainer(pc, r);
 					if(l != null)
 						l.Clear();
-					IList relatedObjects = QueryRelatedObjects(pc, r, l, hollow);
+					IList relatedObjects = await QueryRelatedObjectsAsync( pc, r, l, hollow, cancellationToken ).ConfigureAwait( false );
 					mappings.SetRelationContainer(pc, r, relatedObjects);
 					result = relatedObjects;
 				}
@@ -1958,8 +2058,8 @@ namespace NDO
 
 				using (IMappingTableHandler handler = PersistenceHandlerManager.GetPersistenceHandler( pc ).GetMappingTableHandler( r ))
 				{
-					CheckTransaction( handler, r.MappingTable.Connection );
-					dt = handler.FindRelatedObjects(pc.NDOObjectId, this.ds);
+					await CheckTransactionAsync( handler, r.MappingTable.Connection, cancellationToken ).ConfigureAwait( false );
+					dt = await handler.FindRelatedObjectsAsync( pc.NDOObjectId, this.ds, cancellationToken ).ConfigureAwait( false );
 				}
 
 				IList relatedObjects;
@@ -2023,6 +2123,11 @@ namespace NDO
 		/// <param name="hollow">Determines, if the related objects should be hollow.</param>
 		internal IList LoadRelationInternal(IPersistenceCapable pc, string relationName, bool hollow)
 		{
+			return LoadRelationInternalAsync( pc, relationName, hollow ).ConfigureAwait( false ).GetAwaiter().GetResult();
+		}
+
+		internal async Task<IList> LoadRelationInternalAsync( IPersistenceCapable pc, string relationName, bool hollow, CancellationToken cancellationToken = default )
+		{
 			if (pc.NDOObjectState == NDOObjectState.Created)
 				return null;
 			Class cl = GetClass(pc);
@@ -2035,7 +2140,7 @@ namespace NDO
 			if ( pc.NDOGetLoadState( r.Ordinal ) )
 				return null;
 
-			return LoadRelation(pc, r, hollow);
+			return await LoadRelationAsync( pc, r, hollow, cancellationToken ).ConfigureAwait( false );
 		}
 
 		/// <summary>
@@ -2277,26 +2382,27 @@ namespace NDO
 		/// </summary>
 		/// <param name="types">Types with changes.</param>
 		/// <param name="delete">True, if delete operations are to be performed.</param>
+		/// <param name="cancellationToken">A token to cancel the operation</param>
 		/// <remarks>
 		/// Delete and Insert/Update operations are to be separated to maintain the type order.
 		/// </remarks>
-		private void UpdateTypes(IList types, bool delete)
+		private async Task UpdateTypesAsync( IList types, bool delete, CancellationToken cancellationToken )
 		{
 			foreach(Type t in types) 
 			{
 				//Debug.WriteLine("Update Deleted Objects: "  + t.Name);
 				using (IPersistenceHandler handler = PersistenceHandlerManager.GetPersistenceHandler( t ))
 				{
-					CheckTransaction( handler, t );
+					await CheckTransactionAsync( handler, t, cancellationToken ).ConfigureAwait( false );
 					ConcurrencyErrorHandler ceh = new ConcurrencyErrorHandler(this.OnConcurrencyError);
 					handler.ConcurrencyError += ceh;
 					try
 					{
 						DataTable dt = GetTable(t);
 						if (delete)
-							handler.UpdateDeletedObjects( dt );
+							await handler.UpdateDeletedObjectsAsync( dt, cancellationToken ).ConfigureAwait( false );
 						else
-							handler.Update( dt );
+							await handler.UpdateAsync( dt, cancellationToken ).ConfigureAwait( false );
 					}
 					finally
 					{
@@ -2306,7 +2412,7 @@ namespace NDO
 			}
 		}
 
-        internal void UpdateCreatedMappingTableEntries()
+        internal async Task UpdateCreatedMappingTableEntriesAsync( CancellationToken cancellationToken )
         {
             foreach (MappingTableEntry e in createdMappingTableObjects)
             {
@@ -2316,12 +2422,12 @@ namespace NDO
             // Now update all mapping tables
             foreach (IMappingTableHandler handler in mappingHandler.Values)
             {
-				CheckTransaction( handler, handler.Relation.MappingTable.Connection );
-                handler.Update(ds);
+				await CheckTransactionAsync( handler, handler.Relation.MappingTable.Connection, cancellationToken ).ConfigureAwait( false );
+                await handler.UpdateAsync( ds, cancellationToken ).ConfigureAwait( false );
             }
         }
 
-        internal void UpdateDeletedMappingTableEntries()
+        internal async Task UpdateDeletedMappingTableEntriesAsync( CancellationToken cancellationToken )
         {
             foreach (MappingTableEntry e in createdMappingTableObjects)
             {
@@ -2331,8 +2437,8 @@ namespace NDO
             // Now update all mapping tables
             foreach (IMappingTableHandler handler in mappingHandler.Values)
             {
-				CheckTransaction( handler, handler.Relation.MappingTable.Connection );
-				handler.Update(ds);
+				await CheckTransactionAsync( handler, handler.Relation.MappingTable.Connection, cancellationToken ).ConfigureAwait( false );
+				await handler.UpdateAsync( ds, cancellationToken ).ConfigureAwait( false );
             }
         }
 
@@ -2341,7 +2447,30 @@ namespace NDO
 		/// When a newly created object is written to DB, the key might change. Therefore,
 		/// the id is updated and the object is removed and re-inserted into the cache.
 		/// </summary>
-		public virtual void Save(bool deferCommit = false) 
+		public void Save(bool deferCommit = false) 
+		{
+			SaveAsync( deferCommit ).ConfigureAwait( false ).GetAwaiter().GetResult();
+		}
+
+		/// <summary>
+		/// Save all changed object into the DataSet and update the DB asynchronously.
+		/// When a newly created object is written to DB, the key might change. Therefore,
+		/// the id is updated and the object is removed and re-inserted into the cache.
+		/// </summary>
+		/// <param name="deferCommit">Determines, if the commit of the transaction should be deferred.</param>
+		/// <param name="cancellationToken">A token to cancel the operation</param>
+		/// <remarks>
+		/// User callbacks like CollisionEvent and OnSavedEvent might be called on a thread pool thread.
+		/// </remarks>
+		public virtual async Task SaveAsync( bool deferCommit = false, CancellationToken cancellationToken = default )
+		{
+			using (EnterOperation())
+			{
+				await SaveInternalAsync( deferCommit, cancellationToken ).ConfigureAwait( false );
+			}
+		}
+
+		async Task SaveInternalAsync( bool deferCommit, CancellationToken cancellationToken )
 		{
             if (IsClosed)
                 throw new ObjectDisposedException(GetType().Name);
@@ -2443,7 +2572,7 @@ namespace NDO
 
             // Before we delete any db rows, we have to make sure, to delete mapping
             // table entries first, which might have relations to the db rows to be deleted
-            UpdateDeletedMappingTableEntries();
+            await UpdateDeletedMappingTableEntriesAsync( cancellationToken ).ConfigureAwait( false );
 
 			// Update DB
 			if (ds.HasChanges()) 
@@ -2469,12 +2598,12 @@ namespace NDO
 
 				// Delete records first
 
-				UpdateTypes(types, true);
+				await UpdateTypesAsync( types, true, cancellationToken ).ConfigureAwait( false );
 
 				// Now do all other updates in correct order.
 				types.Reverse();
 
-				UpdateTypes(types, false);
+				await UpdateTypesAsync( types, false, cancellationToken ).ConfigureAwait( false );
 				
 				ds.AcceptChanges();
 				if(createdDirectObjects.Count > 0)
@@ -2490,7 +2619,7 @@ namespace NDO
 						r[fakeColumnName] = o;
 					}
 
-					UpdateTypes(types, false);
+					await UpdateTypesAsync( types, false, cancellationToken ).ConfigureAwait( false );
 				}
 
 				// Because object id might have changed during DB insertion, re-register newly created objects in the cache.
@@ -2504,7 +2633,7 @@ namespace NDO
                 // Now update all mapping tables. Because of possible subclasses, there is no
                 // relation between keys in the dataset schema. Therefore, we can update mapping
                 // tables only after all other objects have been written to ensure correct foreign keys.
-                UpdateCreatedMappingTableEntries();
+                await UpdateCreatedMappingTableEntriesAsync( cancellationToken ).ConfigureAwait( false );
 
 				// The rows may contain now new Ids, which should be 
 				// stored in the lostRowInfo's before the rows get detached
@@ -2520,7 +2649,7 @@ namespace NDO
 				ds.AcceptChanges();
 			}
 
-			EndSave(!deferCommit);
+			await EndSaveAsync( !deferCommit, cancellationToken ).ConfigureAwait( false );
 
 			foreach(IPersistenceCapable pc in deletedObjects) 
 			{
@@ -2550,7 +2679,7 @@ namespace NDO
 			}
 		}
 
-		private void EndSave(bool forceCommit)
+		private async Task EndSaveAsync( bool forceCommit, CancellationToken cancellationToken )
 		{
 			foreach(Cache.Entry e in cache.LockedObjects)
 			{
@@ -2561,7 +2690,7 @@ namespace NDO
 
 			cache.UnlockAll();
 
-			CheckEndTransaction(forceCommit);
+			await CheckEndTransactionAsync( forceCommit, cancellationToken ).ConfigureAwait( false );
 		}
 
 		/// <summary>
@@ -2725,15 +2854,33 @@ namespace NDO
 		/// Aborts a pending transaction without restoring the object state.
 		/// </summary>
 		/// <remarks>Supports both local and EnterpriseService Transactions.</remarks>
-		public virtual void AbortTransaction()
+		public void AbortTransaction()
 		{
-			TransactionScope.Dispose();
+			AbortTransactionAsync().ConfigureAwait( false ).GetAwaiter().GetResult();
+		}
+
+		/// <summary>
+		/// Aborts a pending transaction asynchronously without restoring the object state.
+		/// </summary>
+		/// <remarks>The rollback can't be canceled, therefore there is no CancellationToken.</remarks>
+		public virtual async Task AbortTransactionAsync()
+		{
+			await TransactionScope.DisposeAsync().ConfigureAwait( false );
 		}
 
 		/// <summary>
 		/// Rejects all changes and restores the original object state. Added Objects will be made transient.
 		/// </summary>
-		public virtual void Abort() 
+		public void Abort() 
+		{
+			AbortAsync().ConfigureAwait( false ).GetAwaiter().GetResult();
+		}
+
+		/// <summary>
+		/// Rejects all changes and restores the original object state asynchronously. Added Objects will be made transient.
+		/// </summary>
+		/// <remarks>The rollback can't be canceled, therefore there is no CancellationToken.</remarks>
+		public virtual async Task AbortAsync()
 		{
 			// RejectChanges of the DS cannot be called because newly added rows would be deleted,
 			// and therefore, couldn't be restored. Instead we call RejectChanges() for each
@@ -2811,7 +2958,7 @@ namespace NDO
 			this.relationChanges.Clear();
 
 
-			AbortTransaction();
+			await AbortTransactionAsync().ConfigureAwait( false );
 		}
 
 
@@ -3470,7 +3617,25 @@ namespace NDO
 		/// Reload an object from the database.
 		/// </summary>
 		/// <param name="o">The object to be reloaded.</param>
-		public virtual void Refresh(object o) 
+		public void Refresh(object o) 
+		{
+			RefreshAsync( o ).ConfigureAwait( false ).GetAwaiter().GetResult();
+		}
+
+		/// <summary>
+		/// Reload an object from the database asynchronously.
+		/// </summary>
+		/// <param name="o">The object to be reloaded.</param>
+		/// <param name="cancellationToken">A token to cancel the operation</param>
+		public virtual async Task RefreshAsync( object o, CancellationToken cancellationToken = default )
+		{
+			using (EnterOperation())
+			{
+				await RefreshInternalAsync( o, cancellationToken ).ConfigureAwait( false );
+			}
+		}
+
+		async Task RefreshInternalAsync( object o, CancellationToken cancellationToken )
 		{
 			IPersistenceCapable pc = CheckPc(o);
 			if(pc.NDOObjectState == NDOObjectState.Transient || pc.NDOObjectState == NDOObjectState.Deleted) 
@@ -3482,38 +3647,61 @@ namespace NDO
 				return; // Cannot update objects in current transaction
 
 			MakeHollow(pc);
-			LoadData(pc);
+			await LoadDataAsync( pc, cancellationToken ).ConfigureAwait( false );
 		}
 
 		/// <summary>
 		/// Refresh a list of objects.
 		/// </summary>
 		/// <param name="list">The list of objects to be refreshed.</param>
-		public virtual void Refresh(IList list) 
+		public void Refresh(IList list) 
 		{
-			foreach (IPersistenceCapable pc in list)
-				Refresh(pc);						
+			RefreshAsync( list ).ConfigureAwait( false ).GetAwaiter().GetResult();
+		}
+
+		/// <summary>
+		/// Refresh a list of objects asynchronously.
+		/// </summary>
+		/// <param name="list">The list of objects to be refreshed.</param>
+		/// <param name="cancellationToken">A token to cancel the operation</param>
+		/// <remarks>The objects are refreshed sequentially.</remarks>
+		public virtual async Task RefreshAsync( IList list, CancellationToken cancellationToken = default )
+		{
+			using (EnterOperation())
+			{
+				foreach (IPersistenceCapable pc in list)
+					await RefreshAsync( (object) pc, cancellationToken ).ConfigureAwait( false );
+			}
 		}
 
 		/// <summary>
 		/// Refreshes all unlocked objects in the cache.
 		/// </summary>
-		public virtual void RefreshAll() 
+		public void RefreshAll() 
 		{
-			Refresh( cache.UnlockedObjects.ToList() );
+			RefreshAllAsync().ConfigureAwait( false ).GetAwaiter().GetResult();
+		}
+
+		/// <summary>
+		/// Refreshes all unlocked objects in the cache asynchronously.
+		/// </summary>
+		/// <param name="cancellationToken">A token to cancel the operation</param>
+		public virtual Task RefreshAllAsync( CancellationToken cancellationToken = default )
+		{
+			return RefreshAsync( cache.UnlockedObjects.ToList(), cancellationToken );
 		}
 
 		/// <summary>
 		/// Closes the PersistenceManager and releases all resources.
 		/// </summary>
-		public override void Close() 
+		public override async Task CloseAsync()
 		{
 			if (this.isClosing)
 				return;
 			this.isClosing = true;
-			TransactionScope.Dispose();
+			await TransactionScope.DisposeAsync().ConfigureAwait( false );
 			UnloadCache();
-			base.Close();
+			await base.CloseAsync().ConfigureAwait( false );
 		}
 
 		internal void LogIfVerbose( string msg )
@@ -3526,31 +3714,6 @@ namespace NDO
 		#endregion
 
 
-#region Class extent
-		/// <summary>
-		/// Gets all objects of a given class.
-		/// </summary>
-		/// <param name="t">the type of the class</param>
-		/// <returns>A list of all persistent objects of the given class. Subclasses will not be included in the result set.</returns>
-		public virtual IList GetClassExtent(Type t) 
-		{
-			return GetClassExtent(t, true);
-		}
-
-		/// <summary>
-		/// Gets all objects of a given class.
-		/// </summary>
-		/// <param name="t">The type of the class.</param>
-		/// <param name="hollow">If true, return objects in hollow state instead of persistent state.</param>
-		/// <returns>A list of all persistent objects of the given class.</returns>
-		/// <remarks>Subclasses of the given type are not fetched.</remarks>
-		public virtual IList GetClassExtent(Type t, bool hollow) 
-		{
-			IQuery q = NewQuery( t, null, hollow );
-			return q.Execute();
-		}
-
-#endregion
 
 #region Query engine
 

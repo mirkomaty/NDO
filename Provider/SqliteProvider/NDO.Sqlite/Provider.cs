@@ -58,42 +58,23 @@ namespace NDO.SqliteProvider
 
 		// The following methods provide objects of provider classes 
 		// which implement common interfaces in .NET:
-		// IDbConnection, IDbCommand, DbDataAdapter and the Parameter objects
+		// DbConnection, DbCommand and the Parameter objects
 		#region Provide specialized type objects
-		public override IDbConnection NewConnection(string connectionString) 
+		public override DbConnection NewConnection(string connectionString) 
 		{
 			var conn = new SQLiteConnection(connectionString);
 			conn.StateChange += ConnectionIdProvider.HandleStateChange;
 			return conn;
 		}
 
-		public override IDbCommand NewSqlCommand(IDbConnection connection) 
+		public override DbCommand NewSqlCommand(DbConnection connection) 
 		{
 			SQLiteCommand command = new SQLiteCommand();
 			command.Connection = (SQLiteConnection) connection;
 			return command;
 		}
 
-		public override DbDataAdapter NewDataAdapter(IDbCommand select, IDbCommand update, IDbCommand insert, IDbCommand delete) 
-		{
-			SQLiteDataAdapter da = new SQLiteDataAdapter();
-			da.SelectCommand = (SQLiteCommand)select;
-			da.UpdateCommand = (SQLiteCommand)update;
-			da.InsertCommand = (SQLiteCommand)insert;
-			da.DeleteCommand = (SQLiteCommand)delete;
-			return da;
-		}
-
-		/// <summary>
-		/// See <see cref="IProvider"> IProvider interface </see>
-		/// </summary>
-		public override object NewCommandBuilder(DbDataAdapter dataAdapter)
-		{
-			return new SQLiteCommandBuilder((SQLiteDataAdapter)dataAdapter);
-		}
-
-
-		public override IDataParameter AddParameter(IDbCommand command, string parameterName, object odbType, int size, string columnName) 
+		public override IDataParameter AddParameter(DbCommand command, string parameterName, object odbType, int size, string columnName) 
 		{
 			DbType dbType = GetDbTypeFromSqliteDbType( (SQLiteDbType) odbType );
 			SQLiteParameter result = new SQLiteParameter( parameterName, dbType, size, columnName );
@@ -101,7 +82,7 @@ namespace NDO.SqliteProvider
 			return result;
 		}
 
-		public override IDataParameter AddParameter(IDbCommand command, string parameterName, object odbType, int size, ParameterDirection dir, bool isNullable, byte precision, byte scale, string srcColumn, DataRowVersion srcVersion, object value) 
+		public override IDataParameter AddParameter(DbCommand command, string parameterName, object odbType, int size, ParameterDirection dir, bool isNullable, byte precision, byte scale, string srcColumn, DataRowVersion srcVersion, object value) 
 		{
 			DbType dbType = GetDbTypeFromSqliteDbType( (SQLiteDbType) odbType );
 			SQLiteParameter result = new SQLiteParameter( parameterName, dbType, size, dir, isNullable, precision, scale, srcColumn, srcVersion, value );
@@ -323,12 +304,25 @@ namespace NDO.SqliteProvider
 		}
 
 			
-		public override string[] GetTableNames(IDbConnection conn, string owner)
+		public override string[] GetTableNames(DbConnection conn, string owner)
 		{
-            SQLiteDataAdapter a = new SQLiteDataAdapter("SELECT name FROM sqlite_master WHERE type='table' ORDER BY name;", (SQLiteConnection) conn );
-            DataSet ds = new DataSet();
-            a.Fill(ds);
-            DataTable dt = ds.Tables[0];
+            DataTable dt = new DataTable();
+            bool wasOpen = conn.State == ConnectionState.Open;
+            if (!wasOpen)
+            	conn.Open();
+            try
+            {
+            	using (SQLiteCommand cmd = new SQLiteCommand( "SELECT name FROM sqlite_master WHERE type='table' ORDER BY name;", (SQLiteConnection) conn ))
+            	using (DbDataReader reader = cmd.ExecuteReader())
+            	{
+            		dt.Load( reader );
+            	}
+            }
+            finally
+            {
+            	if (!wasOpen)
+            		conn.Close();
+            }
 			string[] strresult = new string[dt.Rows.Count];
 
 			int i = 0;

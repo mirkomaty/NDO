@@ -26,6 +26,9 @@ using System.Collections.Generic;
 using System.Collections;
 using NDO.Query;
 using System.Linq.Expressions;
+using System.Runtime.CompilerServices;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace NDO.Linq
 {
@@ -62,6 +65,19 @@ namespace NDO.Linq
         {
 			return this.ResultTable.Select( selector ).ToList();
         }
+
+		/// <summary>
+		/// Executes the query asynchronously and projects the results using the selector
+		/// </summary>
+		/// <typeparam name="S"></typeparam>
+		/// <param name="selector"></param>
+		/// <param name="cancellationToken">A token to cancel the operation</param>
+		/// <returns></returns>
+		public async Task<List<S>> SelectAsync<S>( Func<T, S> selector, CancellationToken cancellationToken = default )
+		{
+			var result = await ToListAsync( cancellationToken ).ConfigureAwait( false );
+			return result.Select( selector ).ToList();
+		}
 
 		/// <summary>
 		/// Implements the Linq orderby statement
@@ -161,6 +177,15 @@ namespace NDO.Linq
 		}
 
 		/// <summary>
+		/// Executes the COUNT aggregate query for the given virtual table asynchronously.
+		/// </summary>
+		/// <param name="cancellationToken">A token to cancel the operation</param>
+		public async Task<int> CountAsync( CancellationToken cancellationToken = default )
+		{
+			return (int)(decimal) await Ndoquery.ExecuteAggregateAsync( "*", AggregateType.Count, cancellationToken ).ConfigureAwait( false );
+		}
+
+		/// <summary>
 		/// Executes the MAX aggregate query for the given virtual table.
 		/// </summary>
 		/// <typeparam name="TP"></typeparam>
@@ -169,6 +194,18 @@ namespace NDO.Linq
 		public TP Max<TP>( Expression<Func<T, TP>> fieldSelector )
 		{
 			return ExecuteAggregate(fieldSelector, AggregateType.Max );
+		}
+
+		/// <summary>
+		/// Executes the MAX aggregate query for the given virtual table asynchronously.
+		/// </summary>
+		/// <typeparam name="TP"></typeparam>
+		/// <param name="fieldSelector"></param>
+		/// <param name="cancellationToken">A token to cancel the operation</param>
+		/// <returns></returns>
+		public Task<TP> MaxAsync<TP>( Expression<Func<T, TP>> fieldSelector, CancellationToken cancellationToken = default )
+		{
+			return ExecuteAggregateAsync( fieldSelector, AggregateType.Max, cancellationToken );
 		}
 
 		/// <summary>
@@ -183,6 +220,18 @@ namespace NDO.Linq
 		}
 
 		/// <summary>
+		/// Executes the MIN aggregate query for the given virtual table asynchronously.
+		/// </summary>
+		/// <typeparam name="TP"></typeparam>
+		/// <param name="fieldSelector"></param>
+		/// <param name="cancellationToken">A token to cancel the operation</param>
+		/// <returns></returns>
+		public Task<TP> MinAsync<TP>( Expression<Func<T, TP>> fieldSelector, CancellationToken cancellationToken = default )
+		{
+			return ExecuteAggregateAsync( fieldSelector, AggregateType.Min, cancellationToken );
+		}
+
+		/// <summary>
 		/// Executes the MAX aggregate query for the given virtual table.
 		/// </summary>
 		/// <typeparam name="TP"></typeparam>
@@ -191,6 +240,18 @@ namespace NDO.Linq
 		public TP StandardDeviation<TP>( Expression<Func<T, TP>> fieldSelector )
 		{
 			return ExecuteAggregate( fieldSelector, AggregateType.StDev );
+		}
+
+		/// <summary>
+		/// Executes the STDEV aggregate query for the given virtual table asynchronously.
+		/// </summary>
+		/// <typeparam name="TP"></typeparam>
+		/// <param name="fieldSelector"></param>
+		/// <param name="cancellationToken">A token to cancel the operation</param>
+		/// <returns></returns>
+		public Task<TP> StandardDeviationAsync<TP>( Expression<Func<T, TP>> fieldSelector, CancellationToken cancellationToken = default )
+		{
+			return ExecuteAggregateAsync( fieldSelector, AggregateType.StDev, cancellationToken );
 		}
 
 		/// <summary>
@@ -205,6 +266,18 @@ namespace NDO.Linq
 		}
 
 		/// <summary>
+		/// Executes the AVG aggregate query for the given virtual table asynchronously.
+		/// </summary>
+		/// <typeparam name="TP"></typeparam>
+		/// <param name="fieldSelector"></param>
+		/// <param name="cancellationToken">A token to cancel the operation</param>
+		/// <returns></returns>
+		public Task<TP> AverageAsync<TP>( Expression<Func<T, TP>> fieldSelector, CancellationToken cancellationToken = default )
+		{
+			return ExecuteAggregateAsync( fieldSelector, AggregateType.Avg, cancellationToken );
+		}
+
+		/// <summary>
 		/// Executes the SUM aggregate query for the given virtual table.
 		/// </summary>
 		/// <typeparam name="TP"></typeparam>
@@ -216,6 +289,18 @@ namespace NDO.Linq
 		}
 
 		/// <summary>
+		/// Executes the SUM aggregate query for the given virtual table asynchronously.
+		/// </summary>
+		/// <typeparam name="TP"></typeparam>
+		/// <param name="fieldSelector"></param>
+		/// <param name="cancellationToken">A token to cancel the operation</param>
+		/// <returns></returns>
+		public Task<TP> SumAsync<TP>( Expression<Func<T, TP>> fieldSelector, CancellationToken cancellationToken = default )
+		{
+			return ExecuteAggregateAsync( fieldSelector, AggregateType.Sum, cancellationToken );
+		}
+
+		/// <summary>
 		/// Executes the VAR aggregate query for the given virtual table.
 		/// </summary>
 		/// <typeparam name="TP"></typeparam>
@@ -224,6 +309,18 @@ namespace NDO.Linq
 		public TP Variance<TP>( Expression<Func<T, TP>> fieldSelector )
 		{
 			return ExecuteAggregate( fieldSelector, AggregateType.Var );
+		}
+
+		/// <summary>
+		/// Executes the VAR aggregate query for the given virtual table asynchronously.
+		/// </summary>
+		/// <typeparam name="TP"></typeparam>
+		/// <param name="fieldSelector"></param>
+		/// <param name="cancellationToken">A token to cancel the operation</param>
+		/// <returns></returns>
+		public Task<TP> VarianceAsync<TP>( Expression<Func<T, TP>> fieldSelector, CancellationToken cancellationToken = default )
+		{
+			return ExecuteAggregateAsync( fieldSelector, AggregateType.Var, cancellationToken );
 		}
 
 		string GetField<TP>( Expression<Func<T, TP>> fieldSelector )
@@ -245,6 +342,11 @@ namespace NDO.Linq
 			return (TP)Ndoquery.ExecuteAggregate( GetField(fieldSelector), aggregateType );
 		}
 
+		async Task<TP> ExecuteAggregateAsync<TP>( Expression<Func<T, TP>> fieldSelector, AggregateType aggregateType, CancellationToken cancellationToken )
+		{
+			return (TP) await Ndoquery.ExecuteAggregateAsync( GetField( fieldSelector ), aggregateType, cancellationToken ).ConfigureAwait( false );
+		}
+
 		/// <summary>
 		/// Executes the Query and returns the result table
 		/// </summary>
@@ -255,6 +357,15 @@ namespace NDO.Linq
                 return Ndoquery.Execute();
             }
         }
+
+		/// <summary>
+		/// Executes the Query asynchronously and returns the result table
+		/// </summary>
+		/// <param name="cancellationToken">A token to cancel the operation</param>
+		public Task<List<T>> ToListAsync( CancellationToken cancellationToken = default )
+		{
+			return Ndoquery.ExecuteAsync( cancellationToken );
+		}
 
 		/// <summary>
 		/// Returns the prefetches.
@@ -319,6 +430,16 @@ namespace NDO.Linq
 		public void DeleteDirectly()
 		{
 			Ndoquery.DeleteDirectly();
+		}
+
+		/// <summary>
+		/// Deletes records directly without caring for composite relations.
+		/// </summary>
+		/// <param name="cancellationToken">A token to cancel the operation</param>
+		/// <remarks>See <see cref="DeleteDirectly"/>.</remarks>
+		public Task DeleteDirectlyAsync( CancellationToken cancellationToken = default )
+		{
+			return Ndoquery.DeleteDirectlyAsync( cancellationToken );
 		}
 
 		/// <summary>
@@ -403,6 +524,78 @@ namespace NDO.Linq
 		public T Single()
 		{
 			return Ndoquery.ExecuteSingle( true );
+		}
+
+		/// <summary>
+		/// Gets a single object with the query asynchronously
+		/// </summary>
+		/// <param name="cancellationToken">A token to cancel the operation</param>
+		/// <returns></returns>
+		public Task<T> FirstOrDefaultAsync( CancellationToken cancellationToken = default )
+		{
+			return Ndoquery.ExecuteSingleAsync( false, cancellationToken );
+		}
+
+		/// <summary>
+		/// Gets a single object with the query asynchronously
+		/// </summary>
+		/// <param name="cancellationToken">A token to cancel the operation</param>
+		/// <returns></returns>
+		public Task<T> SingleOrDefaultAsync( CancellationToken cancellationToken = default )
+		{
+			return FirstOrDefaultAsync( cancellationToken );
+		}
+
+		/// <summary>
+		/// Gets a single object with the query asynchronously
+		/// </summary>
+		/// <param name="cancellationToken">A token to cancel the operation</param>
+		/// <returns></returns>
+		/// <remarks>Throws a NDOException, if the query fetches an empty result set.</remarks>
+		public Task<T> FirstAsync( CancellationToken cancellationToken = default )
+		{
+			return Ndoquery.ExecuteSingleAsync( true, cancellationToken );
+		}
+
+		/// <summary>
+		/// Gets a single object with the query asynchronously
+		/// </summary>
+		/// <param name="cancellationToken">A token to cancel the operation</param>
+		/// <returns></returns>
+		/// <remarks>Throws a NDOException, if the query fetches an empty result set.</remarks>
+		public Task<T> SingleAsync( CancellationToken cancellationToken = default )
+		{
+			return Ndoquery.ExecuteSingleAsync( true, cancellationToken );
+		}
+
+		/// <summary>
+		/// Returns the results of the query as IAsyncEnumerable.
+		/// </summary>
+		/// <param name="cancellationToken">A token to cancel the operation</param>
+		/// <returns></returns>
+		/// <remarks>
+		/// The query will be executed completely with the first call of MoveNextAsync. The results are not streamed from the database.
+		/// VirtualTable doesn't implement IAsyncEnumerable directly, because Linq calls would get ambiguous between
+		/// the extension methods for IEnumerable and IAsyncEnumerable.
+		/// </remarks>
+		public async IAsyncEnumerable<T> AsAsyncEnumerable( [EnumeratorCancellation] CancellationToken cancellationToken = default )
+		{
+			List<T> result = await ToListAsync( cancellationToken ).ConfigureAwait( false );
+			foreach (T item in result)
+			{
+				cancellationToken.ThrowIfCancellationRequested();
+				yield return item;
+			}
+		}
+
+		/// <summary>
+		/// Gets an async enumerator, which allows to use VirtualTable with await foreach.
+		/// </summary>
+		/// <param name="cancellationToken">A token to cancel the operation</param>
+		/// <returns></returns>
+		public IAsyncEnumerator<T> GetAsyncEnumerator( CancellationToken cancellationToken = default )
+		{
+			return AsAsyncEnumerable( cancellationToken ).GetAsyncEnumerator( cancellationToken );
 		}
 
 		/// <summary>

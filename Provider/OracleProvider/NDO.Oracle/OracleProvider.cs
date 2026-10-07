@@ -39,9 +39,9 @@ namespace OracleProvider
 	{
 		// The following methods provide objects of provider classes 
 		// which implement common interfaces in .NET:
-		// IDbConnection, IDbCommand, DbDataAdapter and the Parameter objects
+		// DbConnection, DbCommand and the Parameter objects
 		#region Provide specialized type objects
-		public override IDbConnection NewConnection(string connectionString) 
+		public override DbConnection NewConnection(string connectionString) 
 		{
 			var conn = new OracleConnection(connectionString);
 			// HandleStateChange is responsible for generating the ConnectionId.
@@ -49,40 +49,21 @@ namespace OracleProvider
 			return conn;
 		}
 
-		public override IDbCommand NewSqlCommand(IDbConnection connection) 
+		public override DbCommand NewSqlCommand(DbConnection connection) 
 		{
 			OracleCommand command = new OracleCommand();
 			command.Connection = (OracleConnection) connection;
 			return command;
 		}
 
-		public override DbDataAdapter NewDataAdapter(IDbCommand select, IDbCommand update, IDbCommand insert, IDbCommand delete) 
-		{
-			OracleDataAdapter da = new OracleDataAdapter();
-			da.SelectCommand = (OracleCommand)select;
-			da.UpdateCommand = (OracleCommand)update;
-			da.InsertCommand = (OracleCommand)insert;
-			da.DeleteCommand = (OracleCommand)delete;
-			return da;
-		}
-
-		
-		/// <summary>
-		/// See <see cref="IProvider"> IProvider interface </see>
-		/// </summary>
-		public override object NewCommandBuilder(DbDataAdapter dataAdapter)
-		{
-			return new OracleCommandBuilder((OracleDataAdapter)dataAdapter);
-		}
-
-		public override IDataParameter AddParameter(IDbCommand command, string parameterName, object dbType, int size, string columnName) 
+		public override IDataParameter AddParameter(DbCommand command, string parameterName, object dbType, int size, string columnName) 
 		{
 			// Cast notwendig, damit der DbType richtig übersetzt wird
 			OracleCommand cmd = (OracleCommand) command;
 			return cmd.Parameters.Add(new OracleParameter(parameterName, (OracleDbType)dbType, size > -1 ? size : 0, columnName));			
 		}
 
-		public override IDataParameter AddParameter(IDbCommand command, string parameterName, object dbType, int size, ParameterDirection dir, bool isNullable, byte precision, byte scale, string srcColumn, DataRowVersion srcVersion, object value) 
+		public override IDataParameter AddParameter(DbCommand command, string parameterName, object dbType, int size, ParameterDirection dir, bool isNullable, byte precision, byte scale, string srcColumn, DataRowVersion srcVersion, object value) 
 		{
 			// Cast notwendig, damit der DbType richtig übersetzt wird
 			OracleCommand cmd = (OracleCommand) command;
@@ -249,7 +230,7 @@ namespace OracleProvider
 			return "\"" + plainName + "\"";
 		}
 	
-		public override string[] GetTableNames(IDbConnection conn, string owner)
+		public override string[] GetTableNames(DbConnection conn, string owner)
 		{
 			bool wasOpen = true;
 			if (conn.State == ConnectionState.Closed)

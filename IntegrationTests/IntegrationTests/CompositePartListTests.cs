@@ -43,9 +43,9 @@ namespace NdoUnitTests
         public void TearDown()
         {
             var pm = PmFactory.NewPersistenceManager();
-            pm.Delete(pm.GetClassExtent(typeof(SnmpDevice)));
+            pm.Delete(pm.NewQuery( typeof(SnmpDevice), null, true ).Execute());
             pm.Save();
-            pm.Delete(pm.GetClassExtent(typeof(Device)));
+            pm.Delete(pm.NewQuery( typeof(Device), null, true ).Execute());
             pm.Save();
 			pm.Dispose();
 		}

@@ -39,50 +39,31 @@ namespace NDO.MySqlProvider
 	{
 		// The following methods provide objects of provider classes 
 		// which implement common interfaces in .NET:
-		// IDbConnection, IDbCommand, DbDataAdapter and the Parameter objects
+		// DbConnection, DbCommand and the Parameter objects
 		#region Provide specialized type objects
-		public override IDbConnection NewConnection(string connectionString) 
+		public override DbConnection NewConnection(string connectionString) 
 		{
 			return new MySqlConnection( connectionString );
 		}
 
-		public override IDbCommand NewSqlCommand(IDbConnection connection) 
+		public override DbCommand NewSqlCommand(DbConnection connection) 
 		{
 			MySqlCommand command = new MySqlCommand();
 			command.Connection = (MySqlConnection) connection;
 			return command;
 		}
 
-		public override object GetConnectionId( IDbConnection connection )
+		public override object GetConnectionId( DbConnection connection )
 		{
 			return ( (MySqlConnection) connection ).ServerThread;
 		}
 
-		public override DbDataAdapter NewDataAdapter(IDbCommand select, IDbCommand update, IDbCommand insert, IDbCommand delete) 
-		{
-			MySqlDataAdapter da = new MySqlDataAdapter();
-			da.SelectCommand = (MySqlCommand)select;
-			da.UpdateCommand = (MySqlCommand)update;
-			da.InsertCommand = (MySqlCommand)insert;
-			da.DeleteCommand = (MySqlCommand)delete;
-			return da;
-		}
-
-		/// <summary>
-		/// See <see cref="IProvider"> IProvider interface </see>
-		/// </summary>
-		public override object NewCommandBuilder(DbDataAdapter dataAdapter)
-		{
-			return new MySqlCommandBuilder((MySqlDataAdapter)dataAdapter);
-		}
-
-
-		public override IDataParameter AddParameter(IDbCommand command, string parameterName, object dbType, int size, string columnName) 
+		public override IDataParameter AddParameter(DbCommand command, string parameterName, object dbType, int size, string columnName) 
 		{
 			return ((MySqlCommand)command).Parameters.Add(new MySqlParameter(parameterName, (MySqlDbType)dbType, size, columnName));			
 		}
 
-		public override IDataParameter AddParameter(IDbCommand command, string parameterName, object dbType, int size, ParameterDirection dir, bool isNullable, byte precision, byte scale, string srcColumn, DataRowVersion srcVersion, object value) 
+		public override IDataParameter AddParameter(DbCommand command, string parameterName, object dbType, int size, ParameterDirection dir, bool isNullable, byte precision, byte scale, string srcColumn, DataRowVersion srcVersion, object value) 
 		{
 			return ((MySqlCommand)command).Parameters.Add(new MySqlParameter(parameterName, (MySqlDbType)dbType, size, dir, isNullable, precision, scale, srcColumn, srcVersion, value));
 		}
@@ -275,7 +256,7 @@ namespace NDO.MySqlProvider
 		}
 
 			
-		public override string[] GetTableNames(IDbConnection conn, string owner)
+		public override string[] GetTableNames(DbConnection conn, string owner)
 		{
 			MySqlCommand cmd = new MySqlCommand("show tables", (MySqlConnection) conn);
 			bool wasOpen = true;

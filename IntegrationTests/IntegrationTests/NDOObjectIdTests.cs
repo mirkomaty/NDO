@@ -52,19 +52,19 @@ namespace NdoUnitTests
 		[TearDown]
 		public void TearDown()
 		{			
-			IList l = pm.GetClassExtent(typeof(ObjectOwner));
+			IList l = pm.NewQuery( typeof(ObjectOwner), null, true ).Execute();
 			pm.Delete(l);
 			pm.Save();
-			l = pm.GetClassExtent(typeof(NDOoidAndHandler));
+			l = pm.NewQuery( typeof(NDOoidAndHandler), null, true ).Execute();
 			pm.Delete(l);
 			pm.Save();
-			l = pm.GetClassExtent(typeof(HintOwner));
+			l = pm.NewQuery( typeof(HintOwner), null, true ).Execute();
 			pm.Delete(l);
 			pm.Save();
-			l = pm.GetClassExtent(typeof(ClassWithHint));
+			l = pm.NewQuery( typeof(ClassWithHint), null, true ).Execute();
 			pm.Delete(l);
 			pm.Save();
-			l = pm.GetClassExtent(typeof(DerivedGuid));
+			l = pm.NewQuery( typeof(DerivedGuid), null, true ).Execute();
 			pm.Delete(l);
 			pm.Save();
 			pm.Dispose();

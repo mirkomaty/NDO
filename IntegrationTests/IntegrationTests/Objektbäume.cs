@@ -47,7 +47,7 @@ namespace NdoUnitTests
 		{
 			if (null != pm)
 			{
-				IList mitarbeiterListe = pm.GetClassExtent(typeof(Mitarbeiter), true);
+				IList mitarbeiterListe = pm.NewQuery( typeof(Mitarbeiter), null, true ).Execute();
 				pm.Delete(mitarbeiterListe);
 				pm.Save();
 				pm.Close();				

@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Threading;
+using System.Threading.Tasks;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -124,10 +126,24 @@ namespace NDO.Query
 		/// Unsaved changes in your objects are not recognized.</remarks>
 		public object ExecuteAggregate<K>( LE.Expression<Func<T, K>> keySelector, AggregateType aggregateType )
 		{
+			return ExecuteAggregateAsync( keySelector, aggregateType ).ConfigureAwait( false ).GetAwaiter().GetResult();
+		}
+
+		/// <summary>
+		/// Execute an aggregation query asynchronously.
+		/// </summary>
+		/// <typeparam name="K"></typeparam>
+		/// <param name="keySelector">A Lambda expression which represents an accessor property of the field which shoule be aggregated.</param>
+		/// <param name="aggregateType">One of the <see cref="AggregateType">AggregateType</see> enum members.</param>
+		/// <param name="cancellationToken">A token to cancel the operation</param>
+		/// <returns>A single value, which represents the aggregate</returns>
+		/// <remarks>See <see cref="ExecuteAggregate{K}(LE.Expression{Func{T, K}}, AggregateType)"/>.</remarks>
+		public Task<object> ExecuteAggregateAsync<K>( LE.Expression<Func<T, K>> keySelector, AggregateType aggregateType, CancellationToken cancellationToken = default )
+		{
 			ExpressionTreeTransformer transformer =
 				new ExpressionTreeTransformer( keySelector );
 			string field = transformer.Transform();
-			return ExecuteAggregate( field, aggregateType );
+			return ExecuteAggregateAsync( field, aggregateType, cancellationToken );
 		}
 
 		/// <summary>
@@ -141,7 +157,19 @@ namespace NDO.Query
 		/// Unsaved changes in your objects are not recognized.</remarks>
 		public object ExecuteAggregate( AggregateType aggregateType )
 		{
-			return ExecuteAggregate( "*", aggregateType );
+			return ExecuteAggregateAsync( "*", aggregateType ).ConfigureAwait( false ).GetAwaiter().GetResult();
+		}
+
+		/// <summary>
+		/// Execute an aggregation query asynchronously.
+		/// </summary>
+		/// <param name="aggregateType">One of the <see cref="AggregateType">AggregateType</see> enum members.</param>
+		/// <param name="cancellationToken">A token to cancel the operation</param>
+		/// <returns>A single value, which represents the aggregate</returns>
+		/// <remarks>See <see cref="ExecuteAggregate(AggregateType)"/>.</remarks>
+		public Task<object> ExecuteAggregateAsync( AggregateType aggregateType, CancellationToken cancellationToken = default )
+		{
+			return ExecuteAggregateAsync( "*", aggregateType, cancellationToken );
 		}
 
 		/// <summary>
@@ -156,6 +184,27 @@ namespace NDO.Query
 		/// Unsaved changes in your objects are not recognized.</remarks>
 		public object ExecuteAggregate( string field, AggregateType aggregateType )
 		{
+			return ExecuteAggregateAsync( field, aggregateType ).ConfigureAwait( false ).GetAwaiter().GetResult();
+		}
+
+		/// <summary>
+		/// Execute an aggregation query asynchronously.
+		/// </summary>
+		/// <param name="field">The field, which should be aggregated</param>
+		/// <param name="aggregateType">One of the <see cref="AggregateType">AggregateType</see> enum members.</param>
+		/// <param name="cancellationToken">A token to cancel the operation</param>
+		/// <returns>A single value, which represents the aggregate</returns>
+		/// <remarks>See <see cref="ExecuteAggregate(string, AggregateType)"/>.</remarks>
+		public async Task<object> ExecuteAggregateAsync( string field, AggregateType aggregateType, CancellationToken cancellationToken = default )
+		{
+			using (this.pm.EnterOperation())
+			{
+				return await ExecuteAggregateInternalAsync( field, aggregateType, cancellationToken ).ConfigureAwait( false );
+			}
+		}
+
+		async Task<object> ExecuteAggregateInternalAsync( string field, AggregateType aggregateType, CancellationToken cancellationToken )
+		{
 			if (aggregateType == AggregateType.StDev || aggregateType == AggregateType.Var)
 				this.allowSubclasses = false;
 			if (this.queryContextsForTypes == null)
@@ -168,9 +217,9 @@ namespace NDO.Query
 			int i = 0;
 			foreach (var queryContextsEntry in this.queryContextsForTypes)
 			{
-				partResults[i++] = ExecuteAggregateQuery( queryContextsEntry, field, aggregateType );
+				partResults[i++] = await ExecuteAggregateQueryAsync( queryContextsEntry, field, aggregateType, cancellationToken ).ConfigureAwait( false );
 			}
-			this.pm.CheckEndTransaction( !this.pm.DeferredMode && this.pm.TransactionMode == TransactionMode.Optimistic );
+			await this.pm.CheckEndTransactionAsync( !this.pm.DeferredMode && this.pm.TransactionMode == TransactionMode.Optimistic, cancellationToken ).ConfigureAwait( false );
 			return func.ComputeResult( partResults );
 		}
 
@@ -180,13 +229,26 @@ namespace NDO.Query
 		/// <remarks>Only use this method if your class does not use composite relations and you are sure that this will not be the case in the future either. If you are unsure about this, you better use PersistenceManager.Delete().</remarks>
 		public void DeleteDirectly()
 		{
-			string sql = GetDirectDeleteQuery();
+			DeleteDirectlyAsync().ConfigureAwait( false ).GetAwaiter().GetResult();
+		}
 
-			using (IPersistenceHandler persistenceHandler = this.pm.PersistenceHandlerManager.GetPersistenceHandler( this.resultType ))
+		/// <summary>
+		/// Deletes records directly without caring for composite relations.
+		/// </summary>
+		/// <param name="cancellationToken">A token to cancel the operation</param>
+		/// <remarks>See <see cref="DeleteDirectly"/>.</remarks>
+		public async Task DeleteDirectlyAsync( CancellationToken cancellationToken = default )
+		{
+			using (this.pm.EnterOperation())
 			{
-				this.pm.CheckTransaction( persistenceHandler, this.resultType );
-				persistenceHandler.ExecuteBatch( new string[] { sql }, this.parameters );
-				this.pm.CheckEndTransaction( true );
+				string sql = GetDirectDeleteQuery();
+
+				using (IPersistenceHandler persistenceHandler = this.pm.PersistenceHandlerManager.GetPersistenceHandler( this.resultType ))
+				{
+					await this.pm.CheckTransactionAsync( persistenceHandler, this.resultType, cancellationToken ).ConfigureAwait( false );
+					await persistenceHandler.ExecuteBatchAsync( new string[] { sql }, this.parameters, cancellationToken ).ConfigureAwait( false );
+					await this.pm.CheckEndTransactionAsync( true, cancellationToken ).ConfigureAwait( false );
+				}
 			}
 
 			//using (var handler = this.pm.GetSqlPassThroughHandler())
@@ -272,6 +334,24 @@ namespace NDO.Query
 		/// <returns></returns>
 		public List<T> Execute()
 		{
+			return ExecuteAsync().ConfigureAwait( false ).GetAwaiter().GetResult();
+		}
+
+		/// <summary>
+		/// Executes the query asynchronously and returns a list of result objects.
+		/// </summary>
+		/// <param name="cancellationToken">A token to cancel the operation</param>
+		/// <returns></returns>
+		public async Task<List<T>> ExecuteAsync( CancellationToken cancellationToken = default )
+		{
+			using (this.pm.EnterOperation())
+			{
+				return await ExecuteInternalAsync( cancellationToken ).ConfigureAwait( false );
+			}
+		}
+
+		async Task<List<T>> ExecuteInternalAsync( CancellationToken cancellationToken )
+		{
 			string sha = null;
 			if (UseQueryCache)
 			{
@@ -283,7 +363,7 @@ namespace NDO.Query
 				}
 			}
 
-			var result = GetResultList();
+			var result = await GetResultListAsync( cancellationToken ).ConfigureAwait( false );
 
 			if (UseQueryCache)
 			{
@@ -314,7 +394,7 @@ namespace NDO.Query
 			}
 		}
 
-		private List<T> GetResultList()
+		private async Task<List<T>> GetResultListAsync( CancellationToken cancellationToken )
 		{
 			List<T> result = new List<T>();
 
@@ -324,21 +404,22 @@ namespace NDO.Query
 
 			if (this.queryContextsForTypes.Count > 1 && this.orderings.Count > 0)
 			{
-				result = QueryOrderedPolymorphicList();
+				result = await QueryOrderedPolymorphicListAsync( cancellationToken ).ConfigureAwait( false );
 			}
 			else
 			{
 				foreach (var queryContextsEntry in this.queryContextsForTypes)
 				{
-					foreach (var item in ExecuteSubQuery( queryContextsEntry ))
+					var subResult = await ExecuteSubQueryAsync( queryContextsEntry.Type, queryContextsEntry, cancellationToken ).ConfigureAwait( false );
+					foreach (var item in subResult)
 					{
-						result.Add( item );
+						result.Add( (T)item );
 					}
 				}
 			}
 
 			//GetPrefetches( result );
-			this.pm.CheckEndTransaction( !this.pm.DeferredMode && this.pm.TransactionMode == TransactionMode.Optimistic );
+			await this.pm.CheckEndTransactionAsync( !this.pm.DeferredMode && this.pm.TransactionMode == TransactionMode.Optimistic, cancellationToken ).ConfigureAwait( false );
 			if (!this.pm.GetClass( resultType ).Provider.SupportsFetchLimit)
 			{
 				List<T> fetchResult = new List<T>();
@@ -462,7 +543,7 @@ namespace NDO.Query
 		}
 #endif
 
-		private object ExecuteAggregateQuery( QueryContextsEntry queryContextsEntry, string field, AggregateType aggregateType )
+		private async Task<object> ExecuteAggregateQueryAsync( QueryContextsEntry queryContextsEntry, string field, AggregateType aggregateType, CancellationToken cancellationToken )
 		{
 			Type t = queryContextsEntry.Type;
 			IQueryGenerator queryGenerator = ServiceProvider.GetRequiredService<IQueryGenerator>().Initialize(this.mappings);
@@ -470,13 +551,13 @@ namespace NDO.Query
 
 			using (IPersistenceHandler persistenceHandler = this.pm.PersistenceHandlerManager.GetPersistenceHandler( t ))
 			{
-				this.pm.CheckTransaction( persistenceHandler, t );
+				await this.pm.CheckTransactionAsync( persistenceHandler, t, cancellationToken ).ConfigureAwait( false );
 
 				// Note, that we can't execute all subQueries in one batch, because
 				// the subqueries could be executed against different connections.
 				// TODO: This could be optimized, if we made clear whether the involved tables
 				// can be reached with the same connection.
-				var l = persistenceHandler.ExecuteBatch( new string[] { generatedQuery }, this.parameters );
+				var l = await persistenceHandler.ExecuteBatchAsync( new string[] { generatedQuery }, this.parameters, cancellationToken ).ConfigureAwait( false );
 				if (l.Count == 0)
 					return null;
 
@@ -484,13 +565,13 @@ namespace NDO.Query
 			}
 		}
 
-		private List<T> ExecuteSqlQuery()
+		private async Task<List<T>> ExecuteSqlQueryAsync( CancellationToken cancellationToken )
 		{
 			Type t = this.resultType;
 			using (IPersistenceHandler persistenceHandler = this.pm.PersistenceHandlerManager.GetPersistenceHandler( t ))
 			{
-				this.pm.CheckTransaction( persistenceHandler, t );
-				DataTable table = persistenceHandler.PerformQuery( this.queryExpression, this.parameters, this.pm.DataSet );
+				await this.pm.CheckTransactionAsync( persistenceHandler, t, cancellationToken ).ConfigureAwait( false );
+				DataTable table = await persistenceHandler.PerformQueryAsync( this.queryExpression, this.parameters, this.pm.DataSet, cancellationToken ).ConfigureAwait( false );
 				return (List<T>) pm.DataTableToIList( t, table.Rows, this.hollowResults );
 			}
 		}
@@ -529,7 +610,7 @@ namespace NDO.Query
 			}
 		}
 
-		private IList ExecuteSubQuery( Type t, QueryContextsEntry queryContextsEntry )
+		private async Task<IList> ExecuteSubQueryAsync( Type t, QueryContextsEntry queryContextsEntry, CancellationToken cancellationToken )
 		{
 			IQueryGenerator queryGenerator = ServiceProvider.GetRequiredService<IQueryGenerator>().Initialize(this.mappings);
 			bool hasBeenPrepared = PrepareParameters();
@@ -547,27 +628,18 @@ namespace NDO.Query
 
 			using (IPersistenceHandler persistenceHandler = this.pm.PersistenceHandlerManager.GetPersistenceHandler( t ))
 			{
-				this.pm.CheckTransaction( persistenceHandler, t );
+				await this.pm.CheckTransactionAsync( persistenceHandler, t, cancellationToken ).ConfigureAwait( false );
 
-				DataTable table = persistenceHandler.PerformQuery( generatedQuery, this.parameters, this.pm.DataSet );
+				DataTable table = await persistenceHandler.PerformQueryAsync( generatedQuery, this.parameters, this.pm.DataSet, cancellationToken ).ConfigureAwait( false );
 				return pm.DataTableToIList( t, table.Rows, this.hollowResults );
 			}
 		}
 
-		private IEnumerable<T> ExecuteSubQuery( QueryContextsEntry queryContextsEntry )
-		{
-			var subResult = ExecuteSubQuery( queryContextsEntry.Type, queryContextsEntry );
-			foreach (var item in subResult)
-			{
-				yield return (T)item;
-			}
-		}
-
-		private List<T> QueryOrderedPolymorphicList()
+		private async Task<List<T>> QueryOrderedPolymorphicListAsync( CancellationToken cancellationToken )
 		{
 			List<ObjectRowPair<T>> rowPairList = new List<ObjectRowPair<T>>();
 			foreach (var queryContextsEntry in this.queryContextsForTypes)
-				rowPairList.AddRange( ExecuteOrderedSubQuery( queryContextsEntry ) );
+				rowPairList.AddRange( await ExecuteOrderedSubQueryAsync( queryContextsEntry, cancellationToken ).ConfigureAwait( false ) );
 			rowPairList.Sort();
 			List<T> result = new List<T>( rowPairList.Count );
 			foreach (ObjectRowPair<T> orp in rowPairList)
@@ -575,7 +647,7 @@ namespace NDO.Query
 			return result;
 		}
 
-		private List<ObjectRowPair<T>> ExecuteOrderedSubQuery( QueryContextsEntry queryContextsEntry )
+		private async Task<List<ObjectRowPair<T>>> ExecuteOrderedSubQueryAsync( QueryContextsEntry queryContextsEntry, CancellationToken cancellationToken )
 		{
 			Type t = queryContextsEntry.Type;
 			Class resultSubClass = this.pm.GetClass( t );
@@ -592,7 +664,7 @@ namespace NDO.Query
 			DataTable table = null;
 			using (IPersistenceHandler persistenceHandler = this.pm.PersistenceHandlerManager.GetPersistenceHandler( t ))
 			{
-				this.pm.CheckTransaction( persistenceHandler, t );
+				await this.pm.CheckTransactionAsync( persistenceHandler, t, cancellationToken ).ConfigureAwait( false );
 
 				bool hasBeenPrepared = PrepareParameters();
 				IQueryGenerator queryGenerator = ServiceProvider.GetRequiredService<IQueryGenerator>().Initialize(this.mappings);
@@ -603,7 +675,7 @@ namespace NDO.Query
 					WriteBackParameters();
 				}
 
-				table = persistenceHandler.PerformQuery( generatedQuery, this.parameters, this.pm.DataSet );
+				table = await persistenceHandler.PerformQueryAsync( generatedQuery, this.parameters, this.pm.DataSet, cancellationToken ).ConfigureAwait( false );
 			}
 
 			DataRow[] rows = table.Select();
@@ -652,7 +724,22 @@ namespace NDO.Query
 		/// </remarks>
 		public T ExecuteSingle( bool throwIfResultCountIsWrong )
 		{
-			var resultList = Execute();
+			return ExecuteSingleAsync( throwIfResultCountIsWrong ).ConfigureAwait( false ).GetAwaiter().GetResult();
+		}
+
+		/// <summary>
+		/// Executes the query asynchronously and returns a single object.
+		/// </summary>
+		/// <param name="throwIfResultCountIsWrong"></param>
+		/// <param name="cancellationToken">A token to cancel the operation</param>
+		/// <returns>The fetched object or null, if the object wasn't found and throwIfResultCountIsWrong is false.</returns>
+		/// <remarks>
+		/// If throwIfResultCountIsWrong is true, an Exception will be throwed, if the result count isn't exactly 1. 
+		/// If throwIfResultCountIsWrong is false and the query has more than one result, the first of the results will be returned.
+		/// </remarks>
+		public async Task<T> ExecuteSingleAsync( bool throwIfResultCountIsWrong = false, CancellationToken cancellationToken = default )
+		{
+			var resultList = await ExecuteAsync( cancellationToken ).ConfigureAwait( false );
 			int count = resultList.Count;
 			if (count == 1 || (!throwIfResultCountIsWrong && count > 0))
 			{
@@ -832,6 +919,18 @@ namespace NDO.Query
 		{
 			return this.Execute();
 		}
+
+		async Task<System.Collections.IList> IQuery.ExecuteAsync( CancellationToken cancellationToken )
+		{
+			return await this.ExecuteAsync( cancellationToken ).ConfigureAwait( false );
+		}
+
+		async Task<IPersistenceCapable> IQuery.ExecuteSingleAsync( bool throwIfResultCountIsWrong, CancellationToken cancellationToken )
+		{
+			return (IPersistenceCapable) await this.ExecuteSingleAsync( throwIfResultCountIsWrong, cancellationToken ).ConfigureAwait( false );
+		}
+
+		Task<object> IQuery.ExecuteAggregateAsync( string field, AggregateType aggregateType, CancellationToken cancellationToken ) => ExecuteAggregateAsync( field, aggregateType, cancellationToken );
 
 		IPersistenceCapable IQuery.ExecuteSingle()
 		{

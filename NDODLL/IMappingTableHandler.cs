@@ -22,6 +22,8 @@
 
 using System;
 using System.Data;
+using System.Threading;
+using System.Threading.Tasks;
 using NDO.Mapping;
 
 namespace NDO
@@ -39,7 +41,8 @@ namespace NDO
 		/// in a relation table.
 		/// </summary>
 		/// <param name="ds">The DataSet to update. To extract the right table in your implementation, use <code>DataTable dt = ds.Tables[r.MappingTable.TableName];</code> where r is a NDO.Mapping.Relation.</param>
-		void Update(DataSet ds);
+		/// <param name="cancellationToken">A token to cancel the operation</param>
+		Task UpdateAsync( DataSet ds, CancellationToken cancellationToken = default );
 
 		/// <summary>
 		/// Called by the NDO Framework. Searches for all DataRows which represent objects contained in a specific relation.
@@ -47,8 +50,9 @@ namespace NDO
 		/// </summary>
 		/// <param name="id">ObjectId of the parent object.</param>
 		/// <param name="templateDataSet">The resulting table will be cloned from this DataSet</param>
+		/// <param name="cancellationToken">A token to cancel the operation</param>
 		/// <returns></returns>
-		DataTable FindRelatedObjects(ObjectId id, DataSet templateDataSet);
+		Task<DataTable> FindRelatedObjectsAsync( ObjectId id, DataSet templateDataSet, CancellationToken cancellationToken = default );
 
 		/// <summary>
 		/// Called by IPersistenceHandler implementations. Constructs a new handler in a polymorphic way.

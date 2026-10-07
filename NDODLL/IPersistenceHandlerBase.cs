@@ -21,7 +21,7 @@
 
 
 using System;
-using System.Data;
+using System.Data.Common;
 
 namespace NDO
 {
@@ -33,7 +33,7 @@ namespace NDO
 		/// <summary>
 		/// Called by the NDO Framework. Gets or sets the connection used in all commands. Allows the PersistenceManager to bring in an own open connection for use with transactions.
 		/// </summary>
-		IDbConnection Connection
+		DbConnection Connection
 		{
 			set; get;
 		}
@@ -44,7 +44,7 @@ namespace NDO
 		/// <remarks>
 		/// If the transaction object is null, nothing will be assigned.
 		/// </remarks>
-		IDbTransaction Transaction
+		DbTransaction Transaction
 		{
 			set; get;
 		}

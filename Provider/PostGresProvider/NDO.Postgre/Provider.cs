@@ -40,50 +40,31 @@ namespace NDO.PostGreProvider
 	{
 		// The following methods provide objects of provider classes 
 		// which implement common interfaces in .NET:
-		// IDbConnection, IDbCommand, DbDataAdapter and the Parameter objects
+		// DbConnection, DbCommand and the Parameter objects
 		#region Provide specialized type objects
-		public override IDbConnection NewConnection(string connectionString) 
+		public override DbConnection NewConnection(string connectionString) 
 		{
 			return new NpgsqlConnection(connectionString);
 		}
 
-		public override IDbCommand NewSqlCommand(IDbConnection connection) 
+		public override DbCommand NewSqlCommand(DbConnection connection) 
 		{
 			NpgsqlCommand command = new NpgsqlCommand();
 			command.Connection = (NpgsqlConnection) connection;
 			return command;
 		}
 
-		public override object GetConnectionId( IDbConnection connection )
+		public override object GetConnectionId( DbConnection connection )
 		{
 			return ( (NpgsqlConnection) connection ).ProcessID;
 		}
 
-		public override DbDataAdapter NewDataAdapter(IDbCommand select, IDbCommand update, IDbCommand insert, IDbCommand delete) 
-		{
-			NpgsqlDataAdapter da = new NpgsqlDataAdapter();
-			da.SelectCommand = (NpgsqlCommand)select;
-			da.UpdateCommand = (NpgsqlCommand)update;
-			da.InsertCommand = (NpgsqlCommand)insert;
-			da.DeleteCommand = (NpgsqlCommand)delete;
-			return da;
-		}
-
-		/// <summary>
-		/// See <see cref="IProvider"> IProvider interface </see>
-		/// </summary>
-		public override object NewCommandBuilder(DbDataAdapter dataAdapter)
-		{
-			return new NpgsqlCommandBuilder((NpgsqlDataAdapter)dataAdapter);
-		}
-
-
-		public override IDataParameter AddParameter(IDbCommand command, string parameterName, object dbType, int size, string columnName) 
+		public override IDataParameter AddParameter(DbCommand command, string parameterName, object dbType, int size, string columnName) 
 		{
 			return ((NpgsqlCommand)command).Parameters.Add(new NpgsqlParameter(parameterName, (NpgsqlDbType)dbType, size, columnName));			
 		}
 
-		public override IDataParameter AddParameter(IDbCommand command, string parameterName, object dbType, int size, ParameterDirection dir, bool isNullable, byte precision, byte scale, string srcColumn, DataRowVersion srcVersion, object value) 
+		public override IDataParameter AddParameter(DbCommand command, string parameterName, object dbType, int size, ParameterDirection dir, bool isNullable, byte precision, byte scale, string srcColumn, DataRowVersion srcVersion, object value) 
 		{
 			return ((NpgsqlCommand)command).Parameters.Add(new NpgsqlParameter(parameterName, (NpgsqlDbType)dbType, size, srcColumn, dir, isNullable, precision, scale, srcVersion, value));
 		}
@@ -299,12 +280,25 @@ namespace NDO.PostGreProvider
 		}
 
 			
-		public override string[] GetTableNames(IDbConnection conn, string owner)
+		public override string[] GetTableNames(DbConnection conn, string owner)
 		{
-            NpgsqlDataAdapter a = new NpgsqlDataAdapter( "Select * from pg_tables", (NpgsqlConnection) conn );
-            DataSet ds = new DataSet();
-            a.Fill(ds);
-            DataTable dt = ds.Tables[0];
+            DataTable dt = new DataTable();
+            bool wasOpen = conn.State == ConnectionState.Open;
+            if (!wasOpen)
+            	conn.Open();
+            try
+            {
+            	using (NpgsqlCommand cmd = new NpgsqlCommand( "Select * from pg_tables", (NpgsqlConnection) conn ))
+            	using (DbDataReader reader = cmd.ExecuteReader())
+            	{
+            		dt.Load( reader );
+            	}
+            }
+            finally
+            {
+            	if (!wasOpen)
+            		conn.Close();
+            }
             ArrayList al = new ArrayList();
             bool hasOwner = !String.IsNullOrWhiteSpace(owner);
             foreach (DataRow dr in dt.Rows)

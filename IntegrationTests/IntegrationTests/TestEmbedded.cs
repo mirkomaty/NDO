@@ -46,7 +46,7 @@ namespace NdoUnitTests
 		{
 			if (null != pm)
 			{
-				IList l = pm.GetClassExtent(typeof(ParentWithEmbedded), true);
+				IList l = pm.NewQuery( typeof(ParentWithEmbedded), null, true ).Execute();
 				pm.Delete(l);
 				pm.Save();
 				pm.Close();

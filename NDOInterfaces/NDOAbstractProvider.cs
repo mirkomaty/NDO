@@ -44,32 +44,22 @@ namespace NDOInterfaces
 		/// <summary>
 		/// See <see cref="IProvider">IProvider interface</see>.
 		/// </summary>
-		public abstract IDbConnection NewConnection(string parameters);
+		public abstract DbConnection NewConnection(string parameters);
 
 		/// <summary>
 		/// See <see cref="IProvider">IProvider interface</see>.
 		/// </summary>
-		public abstract IDbCommand NewSqlCommand(IDbConnection connection);
+		public abstract DbCommand NewSqlCommand(DbConnection connection);
 
 		/// <summary>
 		/// See <see cref="IProvider">IProvider interface</see>.
 		/// </summary>
-		public abstract System.Data.Common.DbDataAdapter NewDataAdapter(IDbCommand select, IDbCommand update, IDbCommand insert, IDbCommand delete);
+		public abstract IDataParameter AddParameter(DbCommand command, string parameterName, object dbType, int size, string columnName);
 
 		/// <summary>
 		/// See <see cref="IProvider">IProvider interface</see>.
 		/// </summary>
-		public abstract object NewCommandBuilder(System.Data.Common.DbDataAdapter dataAdapter);
-
-		/// <summary>
-		/// See <see cref="IProvider">IProvider interface</see>.
-		/// </summary>
-		public abstract IDataParameter AddParameter(IDbCommand command, string parameterName, object dbType, int size, string columnName);
-
-		/// <summary>
-		/// See <see cref="IProvider">IProvider interface</see>.
-		/// </summary>
-		public abstract IDataParameter AddParameter(IDbCommand command, string parameterName, object dbType, int size, System.Data.ParameterDirection dir, bool isNullable, byte precision, byte scale, string srcColumn, System.Data.DataRowVersion srcVersion, object value);
+		public abstract IDataParameter AddParameter(DbCommand command, string parameterName, object dbType, int size, System.Data.ParameterDirection dir, bool isNullable, byte precision, byte scale, string srcColumn, System.Data.DataRowVersion srcVersion, object value);
 		
 		/// <summary>
 		/// See <see cref="IProvider">IProvider interface</see>.
@@ -264,7 +254,7 @@ namespace NDOInterfaces
 		/// <summary>
 		/// See <see cref="IProvider">IProvider interface</see>.
 		/// </summary>
-		public string[] GetTableNames (IDbConnection conn)
+		public string[] GetTableNames (DbConnection conn)
 		{
 			return GetTableNames(conn, null);
 		}
@@ -272,7 +262,7 @@ namespace NDOInterfaces
 		/// <summary>
 		/// See <see cref="IProvider">IProvider interface</see>.
 		/// </summary>
-		public abstract string[] GetTableNames(IDbConnection conn, string owner);
+		public abstract string[] GetTableNames(DbConnection conn, string owner);
 
 
 		/// <summary>
@@ -283,38 +273,47 @@ namespace NDOInterfaces
 		/// <remarks>
 		/// This implementation fetches only the tables and columns.
 		/// </remarks>
-		public virtual DataSet GetDatabaseStructure( IDbConnection conn, string ownerName )
+		public virtual DataSet GetDatabaseStructure( DbConnection conn, string ownerName )
 		{
-			bool wasOpen = false;
-			if (conn.State == ConnectionState.Open)
-				wasOpen = true;
-			else
+			bool wasOpen = conn.State == ConnectionState.Open;
+			if (!wasOpen)
 				conn.Open();
 
 			DataSet ds = new DataSet();
-			foreach(string tableName in this.GetTableNames(conn, ownerName))
+			try
 			{
-				string sql;
-
-				if ( ownerName != null && ownerName.Trim() != "" )
+				foreach (string tableName in this.GetTableNames( conn, ownerName ))
 				{
-					sql = "SELECT * FROM " + this.GetQuotedName( ownerName ) + "." + this.GetQuotedName( tableName );
-				}
-				else
-				{
-					sql = "SELECT * FROM " + this.GetQuotedName( tableName );
-				}
+					string sql;
 
-				IDbCommand cmd = this.NewSqlCommand( conn );
-				cmd.CommandText = sql;
-				IDataAdapter da = this.NewDataAdapter( cmd, null, null, null );
+					if ( ownerName != null && ownerName.Trim() != "" )
+					{
+						sql = "SELECT * FROM " + this.GetQuotedName( ownerName ) + "." + this.GetQuotedName( tableName );
+					}
+					else
+					{
+						sql = "SELECT * FROM " + this.GetQuotedName( tableName );
+					}
 
-				da.FillSchema( ds, SchemaType.Source );
-				ds.Tables[ds.Tables.Count - 1].TableName = tableName;
+					DbCommand cmd = this.NewSqlCommand( conn );
+					cmd.CommandText = sql;
+
+					// DataTable.Load builds the schema from reader.GetSchemaTable() using the same
+					// schema mapping as DbDataAdapter.FillSchema. SchemaOnly delivers no rows.
+					DataTable dt = new DataTable( tableName );
+					using (DbDataReader reader = cmd.ExecuteReader( CommandBehavior.SchemaOnly | CommandBehavior.KeyInfo ))
+					{
+						dt.Load( reader );
+					}
+					ds.Tables.Add( dt );
+				}
+			}
+			finally
+			{
+				if (!wasOpen)
+					conn.Close();
 			}
 
-			if (!wasOpen)
-				conn.Close();
 			return ds;
 		}
 
@@ -330,13 +329,6 @@ namespace NDOInterfaces
 		public virtual bool SupportsInsertBatch
 		{
 			get { return false; }
-		}
-
-		/// <summary>
-		/// See <see cref="IProvider">IProvider interface</see>.
-		/// </summary>
-		public virtual void RegisterRowUpdateHandler(IRowUpdateListener handler)
-		{
 		}
 
 		/// <summary>
@@ -385,7 +377,7 @@ namespace NDOInterfaces
 			try
 			{
 				var conn = this.NewConnection(connectionString);
-				IDbCommand cmd = this.NewSqlCommand(conn);
+				DbCommand cmd = this.NewSqlCommand(conn);
 				cmd.CommandText = "CREATE DATABASE " + dbName;
 				bool wasOpen = true;
 				if (conn.State == ConnectionState.Closed)
@@ -439,7 +431,7 @@ namespace NDOInterfaces
 		}
 
 		/// <inheritdoc/>
-		public virtual object GetConnectionId( IDbConnection connection )
+		public virtual object GetConnectionId( DbConnection connection )
 		{
 			return ConnectionIdProvider.Get( connection );
 		}

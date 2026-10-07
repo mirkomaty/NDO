@@ -104,55 +104,6 @@ namespace ClassGenerator
 
 		void Init()
 		{
-#if DontUseDataSets
-			if ( !this.Database.IsXmlSchema )
-			{
-				IProvider provider = NDOProviderFactory.Instance[Database.ConnectionType];
-				IDbConnection conn = null;
-				try
-				{
-					conn = provider.NewConnection( Database.ConnectionString );
-				}
-				catch
-				{
-					conn = null;//MessageBox.Show("Can't open connection '" + Database.ConnectionString + '\'');
-				}
-				if ( conn == null ) // can be null out of several reasons
-				{
-					MessageBox.Show( "Can't open connection '" + Database.ConnectionString + '\'' );
-					return;
-				}
-				string[] tnames;
-				try
-				{
-					conn.Open();
-				}
-				catch ( Exception ex )
-				{
-					MessageBox.Show( "Can't open connection '" + Database.ConnectionString + "'.\n" + ex.Message );
-					return;
-				}
-				try
-				{
-					if ( Database.OwnerName != null && Database.OwnerName != string.Empty )
-						tnames = provider.GetTableNames( conn, Database.OwnerName );
-					else
-						tnames = provider.GetTableNames( conn );
-					foreach ( string s in tnames )
-					{
-						this.Nodes.Add( new TableNode( s, this, Database.OwnerName, conn, provider ) );
-					}
-				}
-				catch ( Exception ex )
-				{
-					MessageBox.Show( "Error while collecting database schema information: " + ex.Message );
-				}
-				if ( conn.State != ConnectionState.Closed )
-					conn.Close();
-			}
-			else
-			{
-#endif
 
                 List<TableNode> l = new List<TableNode>();
 				foreach ( DataTable dt in this.Database.DataSet.Tables )

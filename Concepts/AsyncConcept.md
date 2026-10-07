@@ -171,7 +171,8 @@ Folgen:
 | `INDOTransactionScope.GetTransaction` | `IDbTransaction` | `DbTransaction` |
 | `SqlPersistenceHandler`, `NDOMappingTableHandler` (Commands, Connection, Transaction) | `IDbCommand`, `IDbConnection`, `IDbTransaction` | `DbCommand`, `DbConnection`, `DbTransaction` |
 | `NDOTransactionScope` (`UsedConnectionsInfo.Connection`, `usedTransactions`), `NDODistributedTransactionScope` (`usedConnections`) | `IDbConnection`, `IDbTransaction` | `DbConnection`, `DbTransaction` |
-| `SqlPassThroughHandler`, `SqlDumper` | `IDbConnection`, `IDbCommand` | `DbConnection`, `DbCommand` |
+| `SqlPassThroughHandler` | `IDbConnection`, `IDbCommand` | `DbConnection`, `DbCommand` |
+| `SqlDumper` (nur Logging) | `IDbCommand` | bleibt `IDbCommand` (`DbCommand` ist zuweisbar, kein IO) |
 
 * `DbConnection.BeginTransactionAsync` liefert `ValueTask<DbTransaction>`; das Ergebnis wird direkt awaited
   (`await conn.BeginTransactionAsync( il, ct ).ConfigureAwait( false )`), nicht gespeichert.
@@ -375,10 +376,19 @@ Die synchronen Varianten `CheckTransaction`, `Complete`, `GetConnection` entfall
 * `Dispose()` (Rollback + Close) wird zu `DisposeAsync()` mit `RollbackAsync`/`DisposeAsync` der Connections;
   `Dispose()` bleibt als synchroner Wrapper. Aufrufer: `AbortTransaction`, `ISqlPassThroughHandler.Dispose`,
   `PersistenceManager.Close` – jeweils mit Async-Gegenstück (Details in 4.15).
-* `NDODistributedTransactionScope`: `System.Transactions.TransactionScope` **muss** mit
-  `TransactionScopeAsyncFlowOption.Enabled` erzeugt werden, sonst fließt die ambient Transaction nicht über `await`
-  hinweg bzw. es kommt zu `InvalidOperationException` beim Dispose auf einem anderen Thread.
-  Achtung: Der Scope muss auf demselben logischen Ausführungsfluss erzeugt und beendet werden.
+* `NDODistributedTransactionScope` verwendet **keinen** `System.Transactions.TransactionScope` mehr.
+  Auch mit `TransactionScopeAsyncFlowOption.Enabled` ist eine ambient Transaction, die *innerhalb* einer async-Methode
+  entsteht, nur in deren Unteraufrufen sichtbar: Beim Verlassen der Methode stellt die Runtime den `ExecutionContext`
+  des Aufrufers wieder her, `Transaction.Current` ist dort wieder `null`. Connections, die bei einem späteren
+  `CheckTransactionAsync` geöffnet werden, würden nicht mehr eingetragen, und `Dispose` aus einem anderen Kontext wirft.
+  Umsetzung stattdessen:
+  * Läuft der Aufrufer in einer ambient Transaction, tritt der Scope ihr per `Transaction.DependentClone(BlockCommitUntilComplete)`
+    bei (entspricht `TransactionScopeOption.Required`); `CompleteAsync` → `Complete()`, `DisposeAsync` → `Rollback()`.
+  * Sonst erzeugt er eine `CommittableTransaction`; `CompleteAsync` → `Commit()`, `DisposeAsync` → `Rollback()`.
+  * Jede vom Scope verwaltete Connection wird beim Öffnen (Event `StateChange`) per `DbConnection.EnlistTransaction`
+    eingetragen, sofern sie nicht schon automatisch in der ambient Transaction eingetragen ist. Das funktioniert
+    unabhängig vom `ExecutionContext`.
+  * `System.Transactions` hat keine Async-APIs; Commit und Rollback laufen synchron.
 
 ### 4.8 `PersistenceManager`
 
@@ -410,12 +420,15 @@ Interne Methoden werden asynchron, sichtbare Eintrittspunkte bekommen beide Vari
   `Task LoadRelationAsync(object pc, string fieldName, bool hollow, CancellationToken cancellationToken = default)`,
   `Task RefreshAsync(object pc, CancellationToken cancellationToken = default)`,
   `Task RefreshAsync(IList list, CancellationToken cancellationToken = default)`,
+  `Task RefreshAllAsync(CancellationToken cancellationToken = default)`,
   `Task AbortAsync()`,
-  `Task AbortTransactionAsync()`,
   `Task CloseAsync()` und leitet zusätzlich von `IAsyncDisposable` ab; `GetClassExtent` wird entfernt.
+  `AbortTransactionAsync()` gibt es nur in `PersistenceManager`, weil auch `AbortTransaction()` nicht Teil des Interfaces ist.
 * `OfflinePersistenceManager` überschreibt `SaveAsync`, `LoadDataAsync`, `LoadRelationAsync`, `RefreshAsync`,
   `AbortTransactionAsync` und – statt `Dispose()` – `CloseAsync` (nicht mehr die synchronen Methoden). Die synchronen Methoden sind künftig **nicht mehr `virtual`**, sonst gäbe es zwei
-  Überschreibpunkte mit unterschiedlichem Verhalten. Die Überschreibungen von `GetClassExtent` entfallen.
+  Überschreibpunkte mit unterschiedlichem Verhalten. Die Überschreibung `GetClassExtent(Type, bool)` entfällt;
+  `OfflinePersistenceManager.GetClassExtent(Type)` bleibt als eigene (nicht überschreibende) Methode erhalten, weil sie
+  ohne Datenbank die Objekte eines Typs aus dem Cache liefert.
 * `StateManager` (Lazy Loading) ruft unverändert die synchronen Methoden → intern sync-over-async.
 * Benutzer-Callbacks (`OnSavingEvent`, `IPersistenceNotifiable.OnSaving`, `CollisionEvent`, `OnSavedEvent`,
   `OpenConnectionListener`, `ObjectNotPresentEvent`) bleiben synchron. **Wichtig für die Doku:** Callbacks, die nach dem
@@ -874,8 +887,8 @@ Regeln:
   `AbortAsync()` keinen Token-Parameter (Ausnahme zu Grundprinzip 4).
 * `DisposeAsync`/`CloseAsync` laufen **nicht** durch den Guard (4.14), da `Dispose` nicht werfen soll. Den
   PersistenceManager zu schließen, während noch eine Operation läuft, ist ein Bedienfehler und wird so dokumentiert.
-* `NDODistributedTransactionScope.DisposeAsync`: `innerScope.Dispose()` muss im selben logischen Ausführungsfluss wie
-  das Erzeugen laufen; mit `TransactionScopeAsyncFlowOption.Enabled` (4.7) ist das bei `await using` gegeben.
+* `NDODistributedTransactionScope.DisposeAsync`: Rollback der `CommittableTransaction` bzw. der abhängigen Transaktion,
+  danach `CloseAsync` der Connections (4.7). Es gibt keine Bindung an den Ausführungsfluss mehr.
 * Empfohlene Nutzung in der Doku: `await using var pm = new PersistenceManager();` bzw.
   `await using (var handler = pm.GetSqlPassThroughHandler()) { ... }`.
 * Interne synchrone Aufrufer (`AbortTransaction` in `BuildDatabase`) bleiben synchron; in Async-Pfaden wird
@@ -923,7 +936,7 @@ Regeln:
 | Provider implementieren Async nur pseudo-asynchron (z. B. System.Data.SQLite) | Funktional unkritisch, nur kein Skalierungsgewinn |
 | Thread-Pool-Starvation durch sync-over-async in Lazy Loading unter Last | Doku: in Server-Anwendungen Async-API verwenden und Relationen vorab laden |
 | Callbacks laufen auf ThreadPool-Thread | Doku (siehe 4.8) |
-| `System.Transactions` ohne AsyncFlow | `TransactionScopeAsyncFlowOption.Enabled` (4.7) |
+| Ambient Transaction geht über `await` verloren | Explizite Eintragung der Connections statt `TransactionScope` (4.7) |
 | Handler-Pool und Instanz-Commands während `await` | Review des `NDOPersistenceHandlerManager`; Test mit mehreren PMs parallel |
 | Gleichzeitige Aufrufe auf demselben PM | Guard (4.14) mit `NDOException` |
 | Guard meldet fälschlich Parallelität bei legitimer Verschachtelung | `AsyncLocal`-Besitzmarke (4.14); Tests für Lazy Loading in `OnSaving`, `Refresh` und `LoadRelation` |
@@ -1032,3 +1045,52 @@ ohne Meldung übersprungen.
    `IProvider`-Member mit Connection-/Command-Parametern werden mit umgestellt. NDO.dll arbeitet intern durchgängig
    mit `DbConnection`/`DbCommand`/`DbTransaction` (4.1, 4.12.1).
 9. Kein `BuildDatabaseAsync`: `BuildDatabase` wird nur in kleinen Beispielprogrammen ohne Tasks genutzt und bleibt synchron.
+
+---
+
+## 10. Umsetzungsstand (Branch `main/v6.0`)
+
+Das Konzept ist umgesetzt. Abweichungen und Ergänzungen gegenüber den Abschnitten 1 bis 9:
+
+* **Projektreferenzen:** Die Laufzeitbibliotheken referenzierten sich gegenseitig als NuGet-Pakete
+  (`NDOInterfaces` 5.1.0, `NDO.Mapping` 5.1.1, `NDO.ProviderFactory` 5.2.0 (nicht veröffentlicht), `NDO.SchemaGenerator` 5.1.1).
+  Damit das geänderte `IProvider` überall wirkt, sind `NDO.dll`, `NDO.Mapping`, `NDO.ProviderFactory`,
+  `NDO.SchemaGenerator`, alle sechs Provider, der `NDOEnhancer`, `NDODLL.Tests` und `IntegrationTests` auf
+  `ProjectReference` umgestellt. Vor einem Release müssen die Pakete in passender Reihenfolge veröffentlicht und die
+  Referenzen ggf. zurückgestellt werden.
+* **Build unter Nicht-Windows:** `PatchProductVersion` ruft eine Windows-Exe auf; die Paketreferenz ist auf
+  `'$(OS)'=='Windows_NT'` beschränkt.
+* **`DbAsyncExtensions` entfällt** (4.1): Durch `DbConnection`/`DbCommand` in `IProvider` sind keine Casts nötig.
+* **Postgres und Autoincrement:** Der neue Pfad `ReadLastInsertedIdAsync` (Provider ohne Insert-Batch) führt
+  `IProvider.GetLastInsertedId(...)` als eigenständiges Statement aus. Postgres liefert
+  `(SELECT CURRVAL(...))`; ein geklammertes SELECT ist in PostgreSQL als Statement gültig. Gegen eine echte
+  Postgres-Datenbank ist das noch nicht getestet (siehe unten).
+* **Nebenbefund `GetResultList`** (4.9): unverändert gelassen, um das Verhalten nicht nebenbei zu ändern; weiterhin offen.
+
+Tests:
+
+* Neues Testprojekt `NDODLL.Tests/AsyncTests` (Assembly `NDO.AsyncTests`) mit einer temporären Sqlite-Datenbank,
+  deren Schema aus `pm.DataSet` des `PureBusinessClasses`-Mappings erzeugt wird: Insert mit Read-Back der Id,
+  Update, Delete, 1:n-Relation, polymorphe Mapping-Tabelle, Konkurrenzverletzung und `CollisionEvent`, Aggregate,
+  `VirtualTable<T>` inkl. `await foreach`, `DeleteDirectlyAsync`, Commit/Abort/`DisposeAsync` bei verzögertem Commit,
+  `RefreshAsync`, `ISqlPassThroughHandler.ExecuteAsync`, Abbruch per `CancellationToken`, Guard (parallele Nutzung,
+  erlaubte Verschachtelung, Freigabe nach Exception), parallele PersistenceManager.
+* `NoInsertBatchTests` prüft den Pfad ohne Insert-Batch mit einem von Sqlite abgeleiteten Test-Provider.
+* `DatabaseStructureTests` vergleicht `GetDatabaseStructure` mit `DbDataAdapter.FillSchema`: für Sqlite immer,
+  für die anderen Provider, wenn `NDO_SCHEMATEST_<PROVIDER>` einen Connection-String enthält (7, Punkt 9).
+* `QueryTests`: Mocks auf `PerformQueryAsync` umgestellt; nicht mehr kompilierender toter Code
+  (`IPersistenceHandlerManager`) entfernt.
+* `IntegrationTests`: `GetClassExtent(t[, hollow])` → `NewQuery(t, null, hollow).Execute()` (123 Aufrufe).
+
+Nicht verifiziert (keine Datenbanken in der Entwicklungsumgebung): SQL Server, Oracle, MySql, MySqlConnector,
+Postgres sowie `NDODistributedTransactionScope`. Die Schema-Äquivalenztests für diese Provider müssen vor dem Release
+mit echten Datenbanken laufen.
+
+Vorgefundene, nicht durch die Umstellung verursachte Probleme:
+
+* `PersistenceManager.CreateObject` verwendet `ActivatorUtilities.CreateInstance`. Das scheitert bei persistenten
+  Klassen mit mehr als einem öffentlichen Konstruktor (z. B. `Land`, `Email`, `TimeStampContainer` in
+  `PureBusinessClasses`) mit „Multiple constructors accepting all given argument types“, sobald solche Objekte aus der
+  Datenbank geladen werden.
+* `NdoDllUnitTests.TransitionTests`: 6 Tests erwarten SQL ohne abschließendes `;`.
+* `IntegrationTests` kompilieren nicht wegen `Logger.ClearTestLogs` (Paket `Formfakten.TestLogger` 1.0.0).

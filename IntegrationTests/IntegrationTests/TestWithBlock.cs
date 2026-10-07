@@ -42,7 +42,7 @@ namespace NdoUnitTests
 		public void TearDown() 
 		{
 			pm.Abort();
-			IList l = pm.GetClassExtent(typeof(ClassWithBlock));
+			IList l = pm.NewQuery( typeof(ClassWithBlock), null, true ).Execute();
 			pm.Delete(l);
 			pm.Save();
 			pm.Close();

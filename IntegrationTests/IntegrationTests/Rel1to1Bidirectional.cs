@@ -64,20 +64,20 @@ namespace NdoUnitTests
 		public void DeleteAll()
 		{
 			var pm = PmFactory.NewPersistenceManager();
-			IList mitarbeiterListe = pm.GetClassExtent( typeof( Mitarbeiter ), true );
+			IList mitarbeiterListe = pm.NewQuery( typeof( Mitarbeiter ), null, true ).Execute();
 			pm.Delete( mitarbeiterListe );
 			pm.Save();
 
 			// Delete unbound Soz.V. objects
-			IList sozListe = pm.GetClassExtent( typeof( Sozialversicherungsnummer ) );
+			IList sozListe = pm.NewQuery( typeof( Sozialversicherungsnummer ), null, true ).Execute();
 			pm.Delete( sozListe );
 			pm.Save();
 
-			IList eListe = pm.GetClassExtent( typeof( Email ) );
+			IList eListe = pm.NewQuery( typeof( Email ), null, true ).Execute();
 			pm.Delete( eListe );
 			pm.Save();
 
-			IList zListe = pm.GetClassExtent( typeof( Zertifikat ) );
+			IList zListe = pm.NewQuery( typeof( Zertifikat ), null, true ).Execute();
 			pm.Delete( zListe );
 			pm.Save();
 			pm.Close();
@@ -130,12 +130,12 @@ namespace NdoUnitTests
 				pm.MakePersistent( svn );
 				pm.Save();
 				pm.UnloadCache();
-				IList l = pm.GetClassExtent( typeof( Sozialversicherungsnummer ) );
+				IList l = pm.NewQuery( typeof( Sozialversicherungsnummer ), null, true ).Execute();
 				Assert.That( l.Count == 1, "Sozialversicherungsnummer sollte gespeichert sein" );
 				pm.Delete( l );
 				pm.Save();
 				pm.UnloadCache();
-				l = pm.GetClassExtent( typeof( Sozialversicherungsnummer ) );
+				l = pm.NewQuery( typeof( Sozialversicherungsnummer ), null, true ).Execute();
 				Assert.That( l.Count == 0, "Sozialversicherungsnummer sollte gelöscht sein" );
 			}
 		}
@@ -607,7 +607,7 @@ namespace NdoUnitTests
 				m.SVN = svn;
 				pm.MakePersistent( m );
 				pm.Save();
-				IList liste = pm.GetClassExtent( typeof( Mitarbeiter ) );
+				IList liste = pm.NewQuery( typeof( Mitarbeiter ), null, true ).Execute();
 				m = (Mitarbeiter) liste[0];
 				Assert.That( NDOObjectState.Persistent == m.NDOObjectState, "1: Mitarbeiter should be persistent" );
 				Assert.That( m.SVN != null, "2. Relation is missing" );
@@ -615,7 +615,7 @@ namespace NdoUnitTests
 				Assert.That( Object.ReferenceEquals( m, svn.Angestellter ), "2. Backlink wrong" );
 
 				pm.UnloadCache();
-				liste = pm.GetClassExtent( typeof( Mitarbeiter ) );
+				liste = pm.NewQuery( typeof( Mitarbeiter ), null, true ).Execute();
 				m = (Mitarbeiter) liste[0];
 				Assert.That( NDOObjectState.Hollow == m.NDOObjectState, "5: Mitarbeiter should be hollow" );
 				Assert.That( m.SVN != null, "6. Relation is missing" );
@@ -624,7 +624,7 @@ namespace NdoUnitTests
 				Assert.That( Object.ReferenceEquals( m, m.SVN.Angestellter ), "8b. Mitarbeiter should match" );
 
 				pm.UnloadCache();
-				liste = pm.GetClassExtent( typeof( Mitarbeiter ), false );
+				liste = pm.NewQuery( typeof( Mitarbeiter ), null, false ).Execute();
 				m = (Mitarbeiter) liste[0];
 				Assert.That( NDOObjectState.Persistent == m.NDOObjectState, "9: Mitarbeiter should be persistent" );
 				Assert.That( m.SVN != null, "10. Relation is missing" );
@@ -1160,7 +1160,7 @@ namespace NdoUnitTests
 				e.Schlüssel = z0;
 				pm.MakePersistent( e );
 				pm.Save();
-				IList liste = pm.GetClassExtent( typeof( Email ) );
+				IList liste = pm.NewQuery( typeof( Email ), null, true ).Execute();
 				e = (Email) liste[0];
 				Assert.That( NDOObjectState.Persistent == e.NDOObjectState, "1: Email should be persistent" );
 				Assert.That( e.Schlüssel != null, "2. Relation is missing" );
@@ -1168,7 +1168,7 @@ namespace NdoUnitTests
 				Assert.That( Object.ReferenceEquals( e, z0.Adresse ), "2. Backlink wrong" );
 
 				pm.UnloadCache();
-				liste = pm.GetClassExtent( typeof( Email ) );
+				liste = pm.NewQuery( typeof( Email ), null, true ).Execute();
 				e = (Email) liste[0];
 				Assert.That( NDOObjectState.Hollow == e.NDOObjectState, "5: Email should be hollow" );
 				Assert.That( e.Schlüssel != null, "6. Relation is missing" );
@@ -1177,7 +1177,7 @@ namespace NdoUnitTests
 				Assert.That( Object.ReferenceEquals( e, e.Schlüssel.Adresse ), "8b. Email should match" );
 
 				pm.UnloadCache();
-				liste = pm.GetClassExtent( typeof( Email ), false );
+				liste = pm.NewQuery( typeof( Email ), null, false ).Execute();
 				e = (Email) liste[0];
 				Assert.That( NDOObjectState.Persistent == e.NDOObjectState, "9: Email should be persistent" );
 				Assert.That( e.Schlüssel != null, "10. Relation is missing" );

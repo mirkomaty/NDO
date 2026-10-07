@@ -45,37 +45,37 @@ namespace NdoUnitTests
 		{
 			var pm = PmFactory.NewPersistenceManager();
 
-			IList l = pm.GetClassExtent(typeof(DataContainer), true);
+			IList l = pm.NewQuery( typeof(DataContainer), null, true ).Execute();
 			if (l.Count > 0)
 			{
 				pm.Delete( l );
 				pm.Save();
 			}
-			l = pm.GetClassExtent( typeof( DataContainerDerived ), true );
+			l = pm.NewQuery( typeof( DataContainerDerived ), null, true ).Execute();
 			if (l.Count > 0)
 			{
 				pm.Delete( l );
 				pm.Save();
 			}
-			l = pm.GetClassExtent( typeof( VtAndEtContainer ), true );
+			l = pm.NewQuery( typeof( VtAndEtContainer ), null, true ).Execute();
 			if (l.Count > 0)
 			{
 				pm.Delete( l );
 				pm.Save();
 			}
-			l = pm.GetClassExtent( typeof( VtAndEtContainerDerived ), true );
+			l = pm.NewQuery( typeof( VtAndEtContainerDerived ), null, true ).Execute();
 			if (l.Count > 0)
 			{
 				pm.Delete( l );
 				pm.Save();
 			}
-			l = pm.GetClassExtent( typeof( NullableDataContainer ), true );
+			l = pm.NewQuery( typeof( NullableDataContainer ), null, true ).Execute();
 			if (l.Count > 0)
 			{
 				pm.Delete( l );
 				pm.Save();
 			}
-			l = pm.GetClassExtent( typeof( NullableDataContainerDerived ), true );
+			l = pm.NewQuery( typeof( NullableDataContainerDerived ), null, true ).Execute();
 			if (l.Count > 0)
 			{
 				pm.Delete( l );
@@ -97,7 +97,7 @@ namespace NdoUnitTests
 			pm.MakePersistent(dc);
 			pm.Save();
 			pm.UnloadCache();
-			IList l = pm.GetClassExtent(typeof(DataContainer));
+			IList l = pm.NewQuery( typeof(DataContainer), null, true ).Execute();
 			Assert.That(1 ==  l.Count, "Ein Objekt sollte in der Liste sein");
 			dc = (DataContainer) l[0];
 			AssertDataContainer(dc);
@@ -192,7 +192,7 @@ namespace NdoUnitTests
 			pm.MakePersistent(dcd);
 			pm.Save();
 			pm.UnloadCache();
-			IList l = pm.GetClassExtent(typeof(DataContainerDerived));
+			IList l = pm.NewQuery( typeof(DataContainerDerived), null, true ).Execute();
 			Assert.That(1 ==  l.Count, "Ein Objekt sollte in der Liste sein");
 			dcd = (DataContainerDerived) l[0];
 			AssertDataContainer(dcd);
@@ -537,7 +537,7 @@ namespace NdoUnitTests
 			pm.MakePersistent(cont);
 			pm.Save();
 			pm.UnloadCache();
-			IList l = pm.GetClassExtent(typeof(VtAndEtContainer));
+			IList l = pm.NewQuery( typeof(VtAndEtContainer), null, true ).Execute();
 			Assert.That(1 ==  l.Count, "Anzahl Container stimmt nicht");
 			cont = (VtAndEtContainer) l[0];
 			AssertVtAndEtContainer(cont);		
@@ -553,7 +553,7 @@ namespace NdoUnitTests
 			pm.MakePersistent(cont);
 			pm.Save();
 			pm.UnloadCache();
-			IList l = pm.GetClassExtent(typeof(VtAndEtContainerDerived));
+			IList l = pm.NewQuery( typeof(VtAndEtContainerDerived), null, true ).Execute();
 			Assert.That(1 ==  l.Count, "Anzahl Container stimmt nicht");
 			cont = (VtAndEtContainerDerived) l[0];
 			AssertVtAndEtContainer(cont);		

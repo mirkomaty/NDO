@@ -1,0 +1,4 @@
+[*.cs]
+# Every await in NDO.dll must use ConfigureAwait(false), otherwise the synchronous wrappers
+# (XxxAsync().ConfigureAwait(false).GetAwaiter().GetResult()) can deadlock under a SynchronizationContext.
+dotnet_diagnostic.CA2007.severity = error

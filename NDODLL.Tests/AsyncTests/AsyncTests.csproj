@@ -1,0 +1,33 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+	<PropertyGroup>
+		<TargetFramework>net8.0</TargetFramework>
+		<ImplicitUsings>disable</ImplicitUsings>
+		<Nullable>disable</Nullable>
+		<!-- The name must start with "NDO.", so that the NDOProviderFactory finds the SqliteNoBatchProvider -->
+		<AssemblyName>NDO.AsyncTests</AssemblyName>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<PackageReference Include="Microsoft.NET.Test.SDK" Version="17.9.0" />
+		<PackageReference Include="NUnit" Version="4.1.0" />
+		<PackageReference Include="NUnit3TestAdapter" Version="4.5.0" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<ProjectReference Include="..\..\IntegrationTests\PureBusinessClasses\PureBusinessClasses.csproj" />
+		<ProjectReference Include="..\..\NDODLL\NDO.csproj" />
+		<ProjectReference Include="..\..\Provider\SqliteProvider\NDO.Sqlite\NDO.Sqlite.csproj" />
+		<!-- The other providers are needed for the schema equivalence tests, which run if a connection string is provided -->
+		<ProjectReference Include="..\..\Provider\SqlServerProvider\NDO.SqlServer\NDO.SqlServer.csproj" />
+		<ProjectReference Include="..\..\Provider\OracleProvider\NDO.Oracle\NDO.Oracle.csproj" />
+		<ProjectReference Include="..\..\Provider\MySqlNdoProvider\NDO.MySql\NDO.MySql.csproj" />
+		<ProjectReference Include="..\..\Provider\MySqlConnectorProvider\NDO.MySqlConnector\NDO.MySqlConnector.csproj" />
+		<ProjectReference Include="..\..\Provider\PostGresProvider\NDO.Postgre\NDO.Postgre.csproj" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<None Include="..\..\IntegrationTests\PureBusinessClasses\NDOMapping.xml" Link="PureBusinessClasses.NDOMapping.xml">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
+	</ItemGroup>
+</Project>

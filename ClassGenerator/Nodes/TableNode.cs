@@ -214,34 +214,6 @@ namespace ClassGenerator
             this.myObject = new Table(tableName, string.Empty, (string)dt.ExtendedProperties["summary"]);
 			this.Table.OnIsMappedChanged += new EventHandler(OnIsMappedChanged);
 
-#if DontUseDataSets
-			DataTable dt = null;
-
-			if ( !parent.Database.IsXmlSchema )
-			{
-				string sql;
-
-				if ( ownerName != null && ownerName.Trim() != "" )
-				{
-					sql = "SELECT * FROM " + provider.GetQuotedName( ownerName ) + "." + provider.GetQuotedName( tableName );
-				}
-				else
-				{
-					sql = "SELECT * FROM " + provider.GetQuotedName( tableName );
-				}
-
-				DataSet ds = new DataSet();
-				IDbCommand cmd = provider.NewSqlCommand( conn );
-				cmd.CommandText = sql;
-				IDataAdapter da = provider.NewDataAdapter( cmd, null, null, null );
-
-				da.FillSchema( ds, SchemaType.Source );
-				dt = ds.Tables[0];
-			}
-			else
-			{
-				dt = parent.Database.DataSet.Tables[tableName];
-#endif
 			if ( parent.Database.IsXmlSchema && dt.PrimaryKey.Length  == 0 )
 			{
 				string pkColumnName = GeneratePkName( dt );

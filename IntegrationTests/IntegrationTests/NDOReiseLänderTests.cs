@@ -58,7 +58,7 @@ namespace NdoUnitTests {
 				pm = PmFactory.NewPersistenceManager();
 				pm.TransactionMode = TransactionMode.None;
 
-				IList mitarbeiterListe = pm.GetClassExtent( typeof( Mitarbeiter ), false );
+				IList mitarbeiterListe = pm.NewQuery( typeof( Mitarbeiter ), null, false ).Execute();
 				pm.Delete( mitarbeiterListe );
 				pm.Save();
 				using (var handler = pm.GetSqlPassThroughHandler())
@@ -79,14 +79,14 @@ namespace NdoUnitTests {
 
 		[Test]
 		public void EmptyDB() {
-            IList mitarbeiterListe = pm.GetClassExtent(typeof(Mitarbeiter), false);
+            IList mitarbeiterListe = pm.NewQuery( typeof(Mitarbeiter), null, false ).Execute();
             pm.Delete(mitarbeiterListe);
             pm.Save();
             /*
-			IList reiseListe = pm.GetClassExtent(typeof(Reise), true);
+			IList reiseListe = pm.NewQuery( typeof(Reise), null, true ).Execute();
 			pm.Delete(reiseListe);
 			pm.Save();
-			IList mitarbeiterListe = pm.GetClassExtent(typeof(Mitarbeiter), true);
+			IList mitarbeiterListe = pm.NewQuery( typeof(Mitarbeiter), null, true ).Execute();
 			pm.Delete(mitarbeiterListe);
 			pm.Save();
              * */
@@ -220,9 +220,9 @@ namespace NdoUnitTests {
 //			Assert.That(NDOObjectState.Transient ==  ((IPersistenceCapable)de.DieReisen[0]).NDOObjectState, "Wrong object state");
 
 			//pm.MakeHollow(de);
-			IList l = pm.GetClassExtent(typeof(Reise), true);
+			IList l = pm.NewQuery( typeof(Reise), null, true ).Execute();
 			Assert.That(0 ==  l.Count, "l should be empty");
-			l = pm.GetClassExtent(typeof(Land), true);
+			l = pm.NewQuery( typeof(Land), null, true ).Execute();
 			foreach(Land land in l)
 			{
 				string z;

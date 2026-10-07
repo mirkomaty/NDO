@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading;
 using System.Collections.Generic;
 using NUnit.Framework;
 using NDO;
@@ -404,7 +405,7 @@ namespace QueryTests
 		{
 			IList generatedParameters = null;
 			Mock<IPersistenceHandler> handlerMock = new Mock<IPersistenceHandler>();
-			handlerMock.Setup( h => h.PerformQuery( It.IsAny<string>(), It.IsAny<IList>(), It.IsAny<DataSet>() ) ).Returns( new DataTable() ).Callback<string, IList, DataSet>( ( s, l, d ) => generatedParameters = l );
+			handlerMock.Setup( h => h.PerformQueryAsync( It.IsAny<string>(), It.IsAny<IList>(), It.IsAny<DataSet>(), It.IsAny<CancellationToken>() ) ).ReturnsAsync( new DataTable() ).Callback<string, IList, DataSet, CancellationToken>( ( s, l, d, ct ) => generatedParameters = l );
 
 			Build( serviceCollection => serviceCollection.AddSingleton( handlerMock.Object ) );
 
@@ -425,7 +426,7 @@ namespace QueryTests
 		{
 			IList generatedParameters = null;
 			Mock<IPersistenceHandler> handlerMock = new Mock<IPersistenceHandler>();
-			handlerMock.Setup( h => h.PerformQuery( It.IsAny<string>(), It.IsAny<IList>(), It.IsAny<DataSet>() ) ).Returns( new DataTable() ).Callback<string, IList, DataSet>( ( s, l, d ) => generatedParameters = l );
+			handlerMock.Setup( h => h.PerformQueryAsync( It.IsAny<string>(), It.IsAny<IList>(), It.IsAny<DataSet>(), It.IsAny<CancellationToken>() ) ).ReturnsAsync( new DataTable() ).Callback<string, IList, DataSet, CancellationToken>( ( s, l, d, ct ) => generatedParameters = l );
 			Build( serviceCollection => serviceCollection.AddSingleton( handlerMock.Object ) );
 
 			NDOQuery<OrderDetail> q = new NDOQuery<OrderDetail>( pm, "oid = {0}" );
@@ -443,10 +444,8 @@ namespace QueryTests
 		{
 			IList generatedParameters = null;
 			Mock<IPersistenceHandler> handlerMock = new Mock<IPersistenceHandler>();
-			handlerMock.Setup( h => h.PerformQuery( It.IsAny<string>(), It.IsAny<IList>(), It.IsAny<DataSet>() ) ).Returns( new DataTable() ).Callback<string, IList, DataSet>( ( s, l, d ) => generatedParameters = l );
+			handlerMock.Setup( h => h.PerformQueryAsync( It.IsAny<string>(), It.IsAny<IList>(), It.IsAny<DataSet>(), It.IsAny<CancellationToken>() ) ).ReturnsAsync( new DataTable() ).Callback<string, IList, DataSet, CancellationToken>( ( s, l, d, ct ) => generatedParameters = l );
 			var handler = handlerMock.Object;
-			Mock<IPersistenceHandlerManager> phManagerMock = new Mock<IPersistenceHandlerManager>();
-			phManagerMock.Setup( m => m.GetPersistenceHandler( It.IsAny<Type>() ) ).Returns( handler ).Callback<Type>( ( pc ) => { Console.WriteLine("Test"); });
 			Build( serviceCollection => serviceCollection.AddSingleton( handlerMock.Object ) );
 
 			NDOQuery<Mitarbeiter> q = new NDOQuery<Mitarbeiter>( pm, "oid = {0}" );
@@ -463,10 +462,8 @@ namespace QueryTests
 			IList generatedParameters = null;
 			string expression = null;
 			Mock<IPersistenceHandler> handlerMock = new Mock<IPersistenceHandler>();
-			handlerMock.Setup( h => h.PerformQuery( It.IsAny<string>(), It.IsAny<IList>(), It.IsAny<DataSet>() ) ).Returns( new DataTable() ).Callback<string, IList, DataSet>( ( s, l, d ) => { generatedParameters = l; expression = s; } );
+			handlerMock.Setup( h => h.PerformQueryAsync( It.IsAny<string>(), It.IsAny<IList>(), It.IsAny<DataSet>(), It.IsAny<CancellationToken>() ) ).ReturnsAsync( new DataTable() ).Callback<string, IList, DataSet, CancellationToken>( ( s, l, d, ct ) => { generatedParameters = l; expression = s; } );
 			var handler = handlerMock.Object;
-			Mock<IPersistenceHandlerManager> phManagerMock = new Mock<IPersistenceHandlerManager>();
-			phManagerMock.Setup( m => m.GetPersistenceHandler( It.IsAny<Type>() ) ).Returns( handler );
 			Build( serviceCollection => serviceCollection.AddSingleton( handlerMock.Object ) );
 
 			NDOQuery<Mitarbeiter> q = new NDOQuery<Mitarbeiter>( pm, "SELECT * FROM Mitarbeiter WHERE ID = {0}", false, QueryLanguage.Sql );
@@ -483,10 +480,8 @@ namespace QueryTests
 		{
 			IList generatedParameters = null;
 			Mock<IPersistenceHandler> handlerMock = new Mock<IPersistenceHandler>();
-			handlerMock.Setup( h => h.PerformQuery( It.IsAny<string>(), It.IsAny<IList>(), It.IsAny<DataSet>() ) ).Returns( new DataTable() ).Callback<string, IList, DataSet>( ( s, l, d ) => generatedParameters = l );
+			handlerMock.Setup( h => h.PerformQueryAsync( It.IsAny<string>(), It.IsAny<IList>(), It.IsAny<DataSet>(), It.IsAny<CancellationToken>() ) ).ReturnsAsync( new DataTable() ).Callback<string, IList, DataSet, CancellationToken>( ( s, l, d, ct ) => generatedParameters = l );
 			var handler = handlerMock.Object;
-			Mock<IPersistenceHandlerManager> phManagerMock = new Mock<IPersistenceHandlerManager>();
-			phManagerMock.Setup( m => m.GetPersistenceHandler( It.IsAny<Type>() ) ).Returns( handler ).Callback<Type>( ( pc ) => { Console.WriteLine( "Test" ); } );
 			Build( serviceCollection => serviceCollection.AddSingleton( handlerMock.Object ) );
 
 
@@ -504,10 +499,8 @@ namespace QueryTests
 		{
 			IList generatedParameters = null;
 			Mock<IPersistenceHandler> handlerMock = new Mock<IPersistenceHandler>();
-			handlerMock.Setup( h => h.PerformQuery( It.IsAny<string>(), It.IsAny<IList>(), It.IsAny<DataSet>() ) ).Returns( new DataTable() ).Callback<string, IList, DataSet>( ( s, l, d ) => generatedParameters = l );
+			handlerMock.Setup( h => h.PerformQueryAsync( It.IsAny<string>(), It.IsAny<IList>(), It.IsAny<DataSet>(), It.IsAny<CancellationToken>() ) ).ReturnsAsync( new DataTable() ).Callback<string, IList, DataSet, CancellationToken>( ( s, l, d, ct ) => generatedParameters = l );
 			var handler = handlerMock.Object;
-			Mock<IPersistenceHandlerManager> phManagerMock = new Mock<IPersistenceHandlerManager>();
-			phManagerMock.Setup( m => m.GetPersistenceHandler( It.IsAny<Type>() ) ).Returns( handler ).Callback<Type>( ( pc ) => { Console.WriteLine( "Test" ); } );
 			Build( serviceCollection => serviceCollection.AddSingleton( handlerMock.Object ) );
 
 			NDOQuery<Mitarbeiter> q = new NDOQuery<Mitarbeiter>( pm );

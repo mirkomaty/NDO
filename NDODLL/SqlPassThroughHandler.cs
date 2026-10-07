@@ -26,7 +26,9 @@ using NDO.Mapping;
 using NDOInterfaces;
 using System;
 using System.Data;
-using System.Transactions;
+using System.Data.Common;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace NDO
 {
@@ -47,18 +49,34 @@ namespace NDO
 
 		public void BeginTransaction()
 		{
-			this.forcedTransactionMode = true;
-			this.oldTransactionMode = this.pm.TransactionMode;
-			this.pm.TransactionMode = TransactionMode.Pessimistic;
-			this.pm.TransactionScope.CheckTransaction();
+			BeginTransactionAsync().ConfigureAwait( false ).GetAwaiter().GetResult();
+		}
+
+		public async Task BeginTransactionAsync( CancellationToken cancellationToken = default )
+		{
+			using (this.pm.EnterOperation())
+			{
+				this.forcedTransactionMode = true;
+				this.oldTransactionMode = this.pm.TransactionMode;
+				this.pm.TransactionMode = TransactionMode.Pessimistic;
+				await this.pm.TransactionScope.CheckTransactionAsync( cancellationToken ).ConfigureAwait( false );
+			}
 		}
 
 		public void CommitTransaction()
 		{
-			this.pm.TransactionScope.Complete();
-			if (this.forcedTransactionMode)
-				this.pm.TransactionMode = this.oldTransactionMode;
-			this.forcedTransactionMode = false;
+			CommitTransactionAsync().ConfigureAwait( false ).GetAwaiter().GetResult();
+		}
+
+		public async Task CommitTransactionAsync( CancellationToken cancellationToken = default )
+		{
+			using (this.pm.EnterOperation())
+			{
+				await this.pm.TransactionScope.CompleteAsync( cancellationToken ).ConfigureAwait( false );
+				if (this.forcedTransactionMode)
+					this.pm.TransactionMode = this.oldTransactionMode;
+				this.forcedTransactionMode = false;
+			}
 		}
 
 		/// <summary>
@@ -75,14 +93,34 @@ namespace NDO
 		/// </remarks>
 		public IDataReader Execute( string command, bool returnReader = false, params object[] parameters )
 		{
-			this.pm.TransactionScope.CheckTransaction();
+			return ExecuteAsync( command, returnReader, parameters, CancellationToken.None ).ConfigureAwait( false ).GetAwaiter().GetResult();
+		}
+
+		/// <inheritdoc/>
+		public Task<DbDataReader> ExecuteAsync( string command, bool returnReader = false, params object[] parameters )
+		{
+			return ExecuteAsync( command, returnReader, parameters, CancellationToken.None );
+		}
+
+		/// <inheritdoc/>
+		public async Task<DbDataReader> ExecuteAsync( string command, bool returnReader, object[] parameters, CancellationToken cancellationToken = default )
+		{
+			using (this.pm.EnterOperation())
+			{
+				return await ExecuteInternalAsync( command, returnReader, parameters, cancellationToken ).ConfigureAwait( false );
+			}
+		}
+
+		async Task<DbDataReader> ExecuteInternalAsync( string command, bool returnReader, object[] parameters, CancellationToken cancellationToken )
+		{
+			await this.pm.TransactionScope.CheckTransactionAsync( cancellationToken ).ConfigureAwait( false );
 			this.logger.LogDebug( $"SqlPassThroughHandler: {command}" );
 
 			IProvider provider = this.pm.NDOMapping.GetProvider( this.connection );
 
 			var ndoConn = this.connection;
 			// This code is identical to the code in PersistenceManager.
-			var dbConnection = this.pm.TransactionScope.GetConnection(ndoConn, () =>
+			var dbConnection = await this.pm.TransactionScope.GetConnectionAsync(ndoConn, () =>
 			{
 				IProvider p = ndoConn.Parent.GetProvider( ndoConn );
 				string connStr = this.pm.OnNewConnection( ndoConn );
@@ -91,16 +129,16 @@ namespace NDO
 					throw new NDOException( 119, $"Can't construct connection for {connStr}. The provider returns null." );
 				this.logger.LogDebug( $"Creating a connection object for '{ndoConn.DisplayName}'" );
 				return connection;
-			} );
+			}, cancellationToken ).ConfigureAwait( false );
 
-			IDbCommand cmd = provider.NewSqlCommand( dbConnection );
+			DbCommand cmd = provider.NewSqlCommand( dbConnection );
 			cmd.CommandText = command;
 			var tx = this.pm.TransactionScope.GetTransaction(this.connection.ID);
 			if (tx != null)
 				cmd.Transaction = tx;
 
 			int pcount = 0;
-			foreach (var par in parameters)
+			foreach (var par in parameters ?? Array.Empty<object>())
 			{
 				var dbpar = cmd.CreateParameter();
 				dbpar.ParameterName = $"@p{pcount++}";
@@ -109,12 +147,12 @@ namespace NDO
 			}
 
 			if (dbConnection.State == ConnectionState.Closed)
-				dbConnection.Open();
+				await dbConnection.OpenAsync( cancellationToken ).ConfigureAwait( false );
 
 			if (returnReader)
-				return cmd.ExecuteReader();
+				return await cmd.ExecuteReaderAsync( cancellationToken ).ConfigureAwait( false );
 
-			cmd.ExecuteNonQuery();
+			await cmd.ExecuteNonQueryAsync( cancellationToken ).ConfigureAwait( false );
 			return null;
 		}
 
@@ -128,7 +166,12 @@ namespace NDO
 
 		public void Dispose()
 		{
-			this.pm.TransactionScope.Dispose();
+			DisposeAsync().ConfigureAwait( false ).GetAwaiter().GetResult();
+		}
+
+		public async ValueTask DisposeAsync()
+		{
+			await this.pm.TransactionScope.DisposeAsync().ConfigureAwait( false );
 			if (this.forcedTransactionMode)
 			{
 				this.pm.TransactionMode = this.oldTransactionMode;

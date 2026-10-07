@@ -56,7 +56,7 @@ namespace NdoUnitTests
 				pm2 = PmFactory.NewPersistenceManager();
 			pm2.UnloadCache();
 			pm2.Delete( pm2.Objects<RowVersionClass>().ResultTable );
-			IList l = pm2.GetClassExtent(typeof(TimeStampContainer), false);
+			IList l = pm2.NewQuery( typeof(TimeStampContainer), null, false ).Execute();
 			if (l.Count > 0)
 			{
 				pm2.Delete(l);
@@ -74,9 +74,9 @@ namespace NdoUnitTests
 		[Test]
 		public void TestTimeStampsNoException()
 		{
-			IList l1 = pm1.GetClassExtent(typeof(TimeStampContainer));
+			IList l1 = pm1.NewQuery( typeof(TimeStampContainer), null, true ).Execute();
 			Assert.That(1 ==  l1.Count, "Count sollte 1 sein");
-			IList l2 = pm2.GetClassExtent(typeof(TimeStampContainer));
+			IList l2 = pm2.NewQuery( typeof(TimeStampContainer), null, true ).Execute();
 			Assert.That(1 ==  l2.Count, "Count sollte 1 sein");
 			TimeStampContainer tsc1 = (TimeStampContainer) l1[0];
 			TimeStampContainer tsc2 = (TimeStampContainer) l2[0];
@@ -98,7 +98,7 @@ namespace NdoUnitTests
 			pm1.Delete(tsc);
 			pm1.Save();
 			pm1.UnloadCache();
-			IList l = pm1.GetClassExtent(typeof(TimeStampContainer));
+			IList l = pm1.NewQuery( typeof(TimeStampContainer), null, true ).Execute();
 			Assert.That(0 ==  l.Count, "No object should be there");
 		}
 

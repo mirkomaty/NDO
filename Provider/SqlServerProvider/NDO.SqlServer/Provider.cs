@@ -47,7 +47,7 @@ namespace SqlServerProvider
 		/// <summary>
 		/// See <see cref="IProvider"> IProvider interface </see>
 		/// </summary>
-		public override IDbConnection NewConnection( string connectionString )
+		public override DbConnection NewConnection( string connectionString )
 		{
 			var conn = new SqlConnection( connectionString );
 			conn.StateChange += ConnectionIdProvider.HandleStateChange;
@@ -57,7 +57,7 @@ namespace SqlServerProvider
 		/// <summary>
 		/// See <see cref="IProvider"> IProvider interface </see>
 		/// </summary>
-		public override IDbCommand NewSqlCommand( IDbConnection connection )
+		public override DbCommand NewSqlCommand( DbConnection connection )
 		{
 			SqlCommand command = new SqlCommand();
 			command.Connection = (SqlConnection) connection;
@@ -65,7 +65,7 @@ namespace SqlServerProvider
 		}
 
 		/// <inheritdoc/>
-		public override object GetConnectionId(IDbConnection connection)
+		public override object GetConnectionId(DbConnection connection)
 		{
 			// Since the ClientConnectionId is reused, we add an id, which differs after each Open() call.
 			return $"{ConnectionIdProvider.Get( connection )} - {((SqlConnection)connection).ClientConnectionId}";
@@ -74,29 +74,7 @@ namespace SqlServerProvider
 		/// <summary>
 		/// See <see cref="IProvider"> IProvider interface </see>
 		/// </summary>
-		public override DbDataAdapter NewDataAdapter( IDbCommand select, IDbCommand update, IDbCommand insert, IDbCommand delete )
-		{
-			SqlDataAdapter da = new SqlDataAdapter();
-			da.SelectCommand = (SqlCommand)select;
-			da.UpdateCommand = (SqlCommand)update;
-			da.InsertCommand = (SqlCommand)insert;
-			da.DeleteCommand = (SqlCommand)delete;
-			return da;
-		}
-
-
-		/// <summary>
-		/// See <see cref="IProvider"> IProvider interface </see>
-		/// </summary>
-		public override object NewCommandBuilder( DbDataAdapter dataAdapter )
-		{
-			return new SqlCommandBuilder( (SqlDataAdapter)dataAdapter );
-		}
-
-		/// <summary>
-		/// See <see cref="IProvider"> IProvider interface </see>
-		/// </summary>
-		public override IDataParameter AddParameter( IDbCommand command, string parameterName, object dbType, int size, string columnName )
+		public override IDataParameter AddParameter( DbCommand command, string parameterName, object dbType, int size, string columnName )
 		{
 			return ((SqlCommand)command).Parameters.Add( new SqlParameter( parameterName, (SqlDbType)dbType, size > -1 ? size : 0, columnName ) );
 		}
@@ -104,7 +82,7 @@ namespace SqlServerProvider
 		/// <summary>
 		/// See <see cref="IProvider"> IProvider interface </see>
 		/// </summary>
-		public override IDataParameter AddParameter( IDbCommand command, string parameterName, object dbType, int size, ParameterDirection dir, bool isNullable, byte precision, byte scale, string srcColumn, DataRowVersion srcVersion, object value )
+		public override IDataParameter AddParameter( DbCommand command, string parameterName, object dbType, int size, ParameterDirection dir, bool isNullable, byte precision, byte scale, string srcColumn, DataRowVersion srcVersion, object value )
 		{
 			return ((SqlCommand)command).Parameters.Add( new SqlParameter( parameterName, (SqlDbType)dbType, size > -1 ? size : 0, dir, isNullable, precision, scale, srcColumn, srcVersion, value ) );
 		}
@@ -279,7 +257,7 @@ namespace SqlServerProvider
 		/// <summary>
 		/// See <see cref="IProvider"> IProvider interface </see>
 		/// </summary>
-		public override string[] GetTableNames( IDbConnection conn, string owner )
+		public override string[] GetTableNames( DbConnection conn, string owner )
 		{
 			List<string> result = new List<string>();
 			string sql = "SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_TYPE = 'BASE TABLE'";

@@ -44,9 +44,9 @@ namespace NdoUnitTests
 		[TearDown]
 		public void TearDown()
 		{			
-			IList l = pm.GetClassExtent(typeof(ABA));
+			IList l = pm.NewQuery( typeof(ABA), null, true ).Execute();
 			pm.Delete(l);
-			l = pm.GetClassExtent(typeof(ABB));
+			l = pm.NewQuery( typeof(ABB), null, true ).Execute();
 			pm.Delete(l);
 			pm.Dispose();
 		}
