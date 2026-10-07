@@ -5,14 +5,24 @@ using System.Linq;
 
 namespace NDO.ProviderFactory
 {
-	class NDOProviderPathFinder : IProviderPathFinder
+	/// <summary>
+	/// Provides Paths to search for NDO Provider dlls.
+	/// </summary>
+	public class NDOProviderPathFinder : IProviderPathFinder
 	{
+		/// <summary>
+		/// Constructs an NDOProviderPathFinder object
+		/// </summary>
 		public NDOProviderPathFinder() 
 		{
 		}
 
 		readonly string[] netVersions = { "net8.0", "net6.0", "netstandard2.0", "netstandard2.1" };
 
+		/// <summary>
+		/// Get all paths to search for NDO Provider dlls.
+		/// </summary>
+		/// <returns></returns>
 		public IEnumerable<string> GetPaths()
 		{
 			List<string>paths = new List<string>();

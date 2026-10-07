@@ -19,12 +19,13 @@
 // CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 // DEALINGS IN THE SOFTWARE.
 
-using System;
-using System.Collections.Generic;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using NDO.Query;
+using NDO.ProviderFactory;
 using NDO.SqlPersistenceHandling;
+using NDOInterfaces;
+using System;
+using System.Collections.Generic;
 
 namespace NDO.Application
 {
@@ -49,6 +50,8 @@ namespace NDO.Application
 			factories.Add( typeof( ILoggerFactory ), sp => NDOConsoleLoggerFactory.Instance );
 			factories.Add( typeof( IServiceProvider ), sp => sp );
 			factories.Add( typeof( IServiceScopeFactory ), sp => sp );
+			factories.Add( typeof( IProviderPathFinder ), sp => new NDOProviderPathFinder() );
+			factories.Add( typeof( INDOProviderFactory ), sp => NDOProviderFactory.Instance );
 		}
 
 		/// <inheritdoc/>
