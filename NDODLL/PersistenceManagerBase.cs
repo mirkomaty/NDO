@@ -193,9 +193,6 @@ namespace NDO
 		/// <param name="mappings"></param>
 		internal virtual void Init( Mappings mappings )
 		{
-			if (NDOApplication.ServiceProvider == null)
-				throw new Exception( "ServiceProvider is not initialized. Please setup a host environment. See BuilderExtensions.AddNdo and .UseNdo." );
-
 			Logger = NDOApplication.ServiceProvider.GetService<ILoggerFactory>()?.CreateLogger( GetType() );
 			this.mappings = mappings;
 			this.persistenceHandlerManager = new NDOPersistenceHandlerManager( this.ServiceProvider, this.mappings );

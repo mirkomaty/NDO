@@ -22,6 +22,7 @@
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 using System;
+using System.Threading;
 
 namespace NDO.Application
 {
@@ -29,6 +30,21 @@ namespace NDO.Application
 	{
 		public static IHostEnvironment HostEnvironment { get; set; }
 		public static IConfiguration Configuration { get; set; }
-		public static IServiceProvider ServiceProvider { get; set; }
+		private static IServiceProvider serviceProvider;
+
+		/// <summary>
+		/// Gets or sets the application wide IServiceProvider.
+		/// If UseNdo wasn't called, a minimal NDOServiceProvider is used.
+		/// </summary>
+		public static IServiceProvider ServiceProvider
+		{
+			get
+			{
+				if (serviceProvider == null)
+					Interlocked.CompareExchange( ref serviceProvider, new NDOServiceProvider(), null );
+				return serviceProvider;
+			}
+			set { serviceProvider = value; }
+		}
 	}
 }
