@@ -8,8 +8,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="NDO.Mapping" Version="5.0.0" />
-    <PackageReference Include="NDO.ProviderFactory" Version="5.0.0" />
+    <PackageReference Include="NDO.Mapping" Version="6.0.0" />
+    <PackageReference Include="NDO.ProviderFactory" Version="6.0.0" />
   </ItemGroup>
 
   <ItemGroup>

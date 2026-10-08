@@ -72,7 +72,4 @@
 	<ItemGroup>
 	  <None Include="readme.md" Pack="true" PackagePath="\" />
 	</ItemGroup>
-  <Target Name="PostBuild" AfterTargets="Pack">
-    <Exec Command="IF NOT EXIST ..\BuiltPackages md ..\BuiltPackages&#xD;&#xA;echo Copy package&#xD;&#xA;copy bin\$(Configuration)\NDO*.nupkg ..\BuiltPackages /Y&#xD;&#xA;" />
-  </Target>
 </Project>

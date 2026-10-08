@@ -2,7 +2,7 @@
 <package >
   <metadata>
     <id>NDO.Build</id>
-    <version>6.0.1.0</version>
+    <version>6.0.1</version>
     <authors>Mirko Matytschak</authors>
     <owners>Mirko Matytschak</owners>
     <license type="file">license\license.txt</license>

@@ -33,7 +33,4 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
     <DefineConstants>TRACE;RELEASE;NDO20;</DefineConstants>
   </PropertyGroup>
-  <Target Name="PostBuild" AfterTargets="Pack">
-    <Exec Command="IF NOT EXIST ..\BuiltPackages md ..\BuiltPackages&#xD;&#xA;echo Copy package&#xD;&#xA;copy bin\$(Configuration)\NDOInterfaces*.nupkg ..\BuiltPackages /Y&#xD;&#xA;copy bin\$(Configuration)\NDOInterfaces*.snupkg ..\BuiltPackages /Y&#xD;&#xA;" />
-  </Target>
 </Project>

@@ -1,9 +1,24 @@
-Adjust the definitions in the beginning of ndo.proj.
+The build is done by Make/build.cs, a C# file-based app (requires the .NET 10 SDK or later).
+Concept and details: Concepts/BuildProcess.md
 
-Then execute:
+To release a new version of a package:
 
-msbuild ndo.proj
+1. Enter the new version in Make/packages.json.
+   Dependent packages are bumped automatically.
+2. Check the plan:
+     dotnet run Make/build.cs --dry-run
+3. Patch, build and collect the packages in BuiltPackages:
+     dotnet run Make/build.cs
+   Add --test to run the test projects as well.
 
-If you need to debug the solution after cloning the repository:
-Build the NDOInterfaces package and copy it into a folder defined as package source in VS.
-Make a release build of MakeEnhancerDate. NDOEnhancer.csproj needs it.
+Other options:
+  --no-build           Patch versions and references only.
+  --all                Build all packages and all consumers.
+  --only <id>          Build only this package.
+  --rebuild <id>       Rebuild a package without a version change.
+  --no-consumers       Do not build test projects and tools.
+  --bump patch|minor   Propagation policy for dependent packages.
+  -c <config>          Configuration of the packages.
+
+BuiltPackages is configured as package source in nuget.config.
+NDOEnhancer.BuildTask (part of NDO.Build) needs a Visual Studio installation (MSBuild).

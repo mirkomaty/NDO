@@ -3,23 +3,36 @@
 ## 1. Context
 
 NDO ships as a set of NuGet packages. Other projects inside and outside this
-repository consume them. A complete build is currently described by the MSBuild
-script `Make/NDO.proj`. The resulting packages land in `BuiltPackages`.
-
-The packages evolve independently. When one package changes:
+repository consume them. The packages evolve independently. When one package changes:
 
 1. It needs a new version. That means `Version`, `AssemblyVersion` and `FileVersion` in its csproj.
 2. Every project that depends on it must reference the new version.
 3. Every dependent *package* must get a new version of its own.
 4. Steps 2 and 3 repeat for the dependents' dependents.
 
-The current tool, `Tools/PatchNdoVersion`, can't do this. It assumes one version
-for all packages NDO.dll depends on (`-i`, `-n`, `-m`, `-e` switches). It also
-only patches `PackageReference` versions; it never touches the package's own version.
+The repository contains two kinds of projects, and the build handles both:
+
+1. **Package projects (producers).** They produce the NDO packages
+   (NDOInterfaces, NDO.dll, the providers, NDO.Build, …).
+2. **Test projects (consumers).** They only consume the packages, through
+   `PackageReference` or `ProjectReference`. They are never packed. Tools that
+   consume packages (TestGenerator, SimpleMappingTool) are treated the same way.
+
+Until now, a complete build was described by the MSBuild script `Make/NDO.proj`,
+and versions were patched by `Tools/PatchNdoVersion`. That tool assumed one
+version for all packages NDO.dll depends on and never touched a package's own
+version. Both are replaced by the script described here.
+
+Out of scope:
+- **The VSIX** (`NDOPackage`) and the projects only it needs
+  (`UISupport/NDO.UISupport`, the provider `*UISupport` projects) are not built.
+  Their `PackageReference`s are still kept up to date.
+- **Pre-release versions** (`6.1.0-beta1`) are not supported. All versions are
+  `major.minor.patch`.
 
 ## 2. Current State
 
-### 2.1 Packages produced by the build
+### 2.1 Package projects
 
 | Package id | Project | Version | Assembly/FileVersion |
 |---|---|---|---|
@@ -30,18 +43,29 @@ only patches `PackageReference` versions; it never touches the package's own ver
 | NDO.dll | `NDODLL/NDO.csproj` | 6.0.0 | 6.0.0.0 |
 | NDO.JsonFormatter | `NdoJsonFormatter/NdoJsonFormatter/NDO.JsonFormatter.csproj` | 5.1.1 | 5.1.1.0 |
 | ndo.mysql, ndo.mysqlconnector, ndo.oracle, ndo.postgre, ndo.sqlite, ndo.sqlserver | `Provider/*/NDO.*/NDO.*.csproj` | 5.1.0 | 5.1.0.0 |
-| NDO.Build | `nuget/NDO.Build.nuspec` (packed with `nuget.exe`) | 6.0.1.0 | – |
+| NDO.Build | `nuget/NDO.Build.nuspec` (packed with `nuget.exe`) | **6.0.1.0** (4 parts) | – |
 
 Notes:
-- **Versions are scattered.** There is no `Directory.Build.props` or
-  `Directory.Packages.props`. Every version is hard-coded in its project file.
+- **Versions are scattered.** Every version is hard-coded in its project file.
 - **NDO.Build and NDOEnhancer are coupled.** NDO.Build packages the binaries of
   `NDOEnhancer/NDOEnhancer` (Version 6.0.1.0) and `NDOEnhancer.BuildTask`. The
-  NDOEnhancer version should equal the NDO.Build version.
+  NDOEnhancer version must equal the NDO.Build version.
 
-### 2.2 How dependencies are expressed
+### 2.2 Test projects
 
-There are two different mechanisms.
+| Project | Kind | NDO references |
+|---|---|---|
+| `IntegrationTests/IntegrationTests` | test | Package: `NDO.JsonFormatter` 5.1.0 · Project: NDO.dll, ndo.sqlserver, PureBusinessClasses |
+| `IntegrationTests/PureBusinessClasses` | library of IntegrationTests | Package: `ndo.dll` 5.1.1 |
+| `NdoJsonFormatter/FormatterUnitTests` | test | Package: `ndo.dll` 5.1.1, `ndo.sqlserver` 5.1.0 · Project: NDO.JsonFormatter |
+| `NDODLL.Tests/NdoDllUnitTests`, `QueryTests`, `AsyncTests` | test | Project: NDO.dll and providers |
+| `NDOEnhancer/Ecma335Tests` | test | Project: Ecma335 (no package) |
+| `UnitTestGenerator/UnitTests` (+ `PersistentClasses`) | test | Package: `NDO.dll`, `NDOInterfaces`, `NDO.SqlServer`, `NDO.Build` 5.0.0 |
+| `UnitTestGenerator/TestGenerator` | tool | Package: `NDO.Mapping`, `NDO.ProviderFactory` 5.0.0 |
+| `SimpleMappingTool/Mapping.csproj` | tool | Package: `NDO.mapping` 5.1.1 |
+| `NDOEnhancer/PersistentEnhancerTestClasses` | test classes | Package: `ndo.dll` 5.0.0 – targets net6.0/netstandard2.x, which NDO 6 no longer supports |
+
+### 2.3 How dependencies are expressed
 
 **ProjectReference (inside the core).** These references form the core graph:
 
@@ -51,7 +75,7 @@ NDOInterfaces
  ├── NDO.ProviderFactory ────────────────┤
  ├───────────────────────────────────────┴── NDO.dll
  ├── ndo.<provider> (6x)
- └── NDOEnhancer (also Mapping, ProviderFactory, SchemaGenerator, Ecma335)
+ └── NDOEnhancer (also Mapping, ProviderFactory, SchemaGenerator, Ecma335) ── NDO.Build
 ```
 
 `dotnet pack` turns a ProjectReference into a package dependency `>= <Version of
@@ -59,45 +83,28 @@ the referenced project>`. So **no reference needs to be edited** here. The
 dependent package only needs its own version bump, because its nuspec now
 points to a different dependency version.
 
-**PackageReference (outside the core).**
+**PackageReference (outside the core).** NDO.JsonFormatter, the test projects
+and tools of 2.2 and the provider UISupport projects (`NDOInterfaces` 5.1.0)
+use PackageReferences. Package ids are spelled with inconsistent casing
+(`ndo.dll`, `NDO.dll`, `NDO.mapping`), so all matching is case-insensitive.
 
-| Consumer | References |
-|---|---|
-| NDO.JsonFormatter | `ndo.dll` 5.1.1 |
-| SimpleMappingTool (`Mapping.csproj`) | `NDO.mapping` 5.1.1 |
-| Provider UISupport projects (5x) | `NDOInterfaces` 5.1.0 |
-| IntegrationTests | `NDO.JsonFormatter` 5.1.0 |
-| PureBusinessClasses | `ndo.dll` 5.1.1 |
-| FormatterUnitTests | `ndo.dll` 5.1.1, `ndo.sqlserver` 5.1.0 |
-| PersistentEnhancerTestClasses | `ndo.dll` 5.0.0 |
-| UnitTestGenerator/* | `NDO.dll`, `NDO.Build`, `NDO.SqlServer`, `NDO.Mapping`, `NDO.ProviderFactory`, `NDOInterfaces` 5.0.0 |
+### 2.4 Problems with the old build
 
-Package ids are spelled with inconsistent casing (`ndo.dll`, `NDO.dll`,
-`NDO.mapping`), so all matching must be case-insensitive.
-
-### 2.3 Problems with the current build
-
-- **The patch step is broken.** `Make/NDO.proj` calls `PatchNdoVersion -i` on
-  NDO.Mapping, NDO.ProviderFactory, the providers and NDOEnhancer. These projects
-  no longer have an `NDOInterfaces` PackageReference, so these steps fail.
-- **PatchNdoVersion is limited:**
-  - it only searches the first `ItemGroup` that contains a `PackageReference`;
-  - it reformats the file through `XDocument.Save`;
-  - it can't bump a project's own version.
-- **Copying to `BuiltPackages` is Windows-only and incomplete.** It is done by
-  per-project `PostBuild` targets using `cmd copy`. The providers and
-  NDO.JsonFormatter don't copy at all, and NDO.dll copies no `.snupkg`.
-- **Some projects can't be built with `dotnet build`:**
-  - `NDOPackage` is a VSIX project and needs the VSSDK targets of Visual Studio's MSBuild.
-  - `NDOEnhancer.BuildTask` is an old-style project with GAC references to
-    `Microsoft.Build.Utilities.v4.0`.
-  - `UISupport/NDO.UISupport` is old-style, and its HintPath points to a
-    `netstandard2.0` folder that no longer exists.
-- **The NuGet package source points to the wrong drive.** The user-level source
-  named `NDO` is `C:\Projekte\NDO\BuiltPackages`, but the repository lives on `D:`.
-  The repository has no `nuget.config` of its own.
-- **`Make/DebugBuild.cmd` is broken.** It references a `test.proj` and a
-  `nuget.config` that don't exist.
+- **The patch step was broken.** `Make/NDO.proj` called `PatchNdoVersion -i` on
+  projects that no longer have an `NDOInterfaces` PackageReference.
+- **PatchNdoVersion was limited:** it only searched the first `ItemGroup` with a
+  `PackageReference`, reformatted the file through `XDocument.Save`, and
+  couldn't bump a project's own version.
+- **Copying to `BuiltPackages` was Windows-only and incomplete.** Per-project
+  `PostBuild` targets used `cmd copy`. The providers and NDO.JsonFormatter
+  didn't copy at all, and NDO.dll copied no `.snupkg`.
+- **Some projects can't be built with `dotnet build`:** `NDOPackage` (VSIX),
+  `NDOEnhancer.BuildTask` (old-style, GAC references to
+  `Microsoft.Build.Utilities.v4.0`) and `UISupport/NDO.UISupport` (old-style).
+- **The NuGet package source pointed to the wrong place.** The user-level source
+  `NDO` is `C:\Projekte\NDO\BuiltPackages`, but the repository lives on `D:`.
+  That folder exists and contains stale packages, which could be restored
+  instead of fresh builds. The repository had no `nuget.config`.
 
 ## 3. Requirements
 
@@ -105,13 +112,18 @@ Package ids are spelled with inconsistent casing (`ndo.dll`, `NDO.dll`,
    package in one single file.
 2. **Producer patching.** The script sets `Version`, `AssemblyVersion` and
    `FileVersion` in that package's csproj, or the version in its nuspec.
-3. **Consumer patching.** Every `PackageReference` to a changed package is
-   updated in all csproj files.
+3. **Consumer patching.** Every `PackageReference` to an NDO package is set to
+   the version being built, in all csproj files: in package projects (like
+   NDO.JsonFormatter), test projects and tools.
 4. **Propagation.** Every package that depends on a changed package, directly
    or transitively, automatically gets a new version. Then steps 2 and 3 apply
    to it as well.
-5. **Building.** Compilation uses `dotnet build <csproj>`, in dependency order.
+5. **Building packages.** Package projects are built with `dotnet build <csproj>`,
+   in dependency order.
 6. **Collection.** All resulting `.nupkg` / `.snupkg` files end up in `BuiltPackages`.
+7. **Building and testing consumers.** After the packages, the test projects
+   that depend on a rebuilt package are built against the new packages.
+   On request they are also run with `dotnet test`.
 
 ## 4. Choice of Tool
 
@@ -126,193 +138,272 @@ what this script must do:
   this means inline tasks or a custom task assembly, which is effectively C#
   anyway, just harder to debug.
 - **Conditional state changes.** Rules like "bump the patch version of X only if
-  X itself was not bumped manually" lead to deeply nested conditions and
-  property functions.
+  X itself was not bumped manually" lead to deeply nested conditions.
 - **Editing XML in place.** `XmlPoke` rewrites the file and can't easily target
   attributes on specific items without reformatting.
 - **Diagnostics.** It's hard to produce a readable dry-run report.
 
-MSBuild stays the right tool *inside* each csproj: pack settings, copying,
-enhancer integration. It should no longer be the orchestrator.
+MSBuild stays the right tool *inside* each csproj. It is no longer the orchestrator.
 
 ### 4.2 Alternatives
 
 | Option | Pros | Cons |
 |---|---|---|
-| **MSBuild orchestration file** (status quo) | Already present; no new runtime | Weak at graph and conditional logic; painful XML patching; hard to debug |
-| **PowerShell 7 script** | Ubiquitous on Windows; good XML support via `[xml]`; easy process calls | Different language from the rest of the code base; no typed version handling; `[xml]` also reformats unless handled carefully; PS 5.1 vs. 7 differences |
-| **C# file-based app** (`dotnet run build.cs`, .NET 10+) | Same language as NDO and the existing tools; `XDocument`, `NuGet.Versioning`, `System.Text.Json` available; no `.csproj` needed (`#:package` directives); debuggable in VS/VS Code; cross-platform | Requires the .NET 10 SDK (already required by the net10.0/net11.0 targets) |
-| **Cake / NUKE** | Mature build DSLs in C#; built-in tasks for `dotnet build/pack`, NuGet, MSBuild via vswhere | Extra dependency and learning curve; NUKE adds a build project and bootstrap scripts; heavyweight for one repository |
-| **Central Package Management** (`Directory.Packages.props`) | All `PackageReference` versions in one file; consumer patching becomes a single-file edit | Only covers consumers, not the producers' own versions or propagation. It **complements** a script and doesn't replace it |
+| **MSBuild orchestration file** (old state) | No new runtime | Weak at graph and conditional logic; painful XML patching; hard to debug |
+| **PowerShell 7 script** | Good XML support; easy process calls | Different language from the code base; `[xml]` reformats unless handled carefully; PS 5.1 vs. 7 differences |
+| **C# file-based app** (`dotnet run build.cs`, .NET 10+) | Same language as NDO; `XDocument`, `System.Text.Json` available; no `.csproj` needed; debuggable; cross-platform | Requires the .NET 10 SDK (already required by the net10.0/net11.0 targets) |
+| **Cake / NUKE** | Mature build DSLs in C# | Extra dependency and learning curve; heavyweight for one repository |
+| **Central Package Management** (`Directory.Packages.props`) | All `PackageReference` versions in one file | Only covers consumers, not the producers' own versions or propagation. It **complements** a script and doesn't replace it |
 
-### 4.3 Recommendation
+### 4.3 Decision
 
-Use a **C# file-based app**: `Make/build.cs`, run with `dotnet run Make/build.cs`.
-It is the smallest step that covers every requirement:
+A **C# file-based app**: `Make/build.cs`, run with `dotnet run Make/build.cs`.
 
-- It is the same language as the code base and the existing tools
-  (PatchNdoVersion, MakeEnhancerDate, AddMappingToVsix), which it can replace.
-- It has typed version handling through `NuGet.Versioning`.
-- It needs no build project or bootstrapper. A single file is executed directly
-  by the SDK.
-- It is easy to provide a `--dry-run` mode with a clear report.
+- It is the same language as the code base and replaces PatchNdoVersion and `NDO.proj`.
+- It needs no build project, bootstrapper or package reference. Since
+  pre-release versions are not supported, a small `major.minor.patch` type is
+  enough; `NuGet.Versioning` is not needed.
+- It has a `--dry-run` mode with a clear report.
 
-Optional second step: introduce `Directory.Packages.props` for the
-*PackageReference* versions of NDO packages. Then the script only has to update
-that one file for the consumers.
-
-## 5. Recommended Design
+## 5. Design
 
 ### 5.1 Version manifest – the single source of truth
 
-`Make/packages.json` lists every package that the build produces. It is the
-**only** file the developer edits to release a new version.
+`Make/packages.json` lists every package that the build produces and every
+consumer the build compiles. It is the **only** file the developer edits to
+release a new version. Paths are relative to the repository root, except
+`packageSource`, which is relative to the manifest.
 
 ```json
 {
   "packageSource": "../BuiltPackages",
   "configuration": "Release",
   "propagation": "patch",
+  "exclude": [ "Tutorial", "ClassGenerator", "UnitTests" ],
+  "pinned": [ "NDOEnhancer/PersistentEnhancerTestClasses/PersistentEnhancerTestClasses.csproj" ],
   "packages": [
-    { "id": "NDOInterfaces",       "project": "NDOInterfaces/NDOInterfaces.csproj",                                  "version": "6.0.0" },
-    { "id": "NDO.Mapping",         "project": "NDO.Mapping/NDO.Mapping/NDO.Mapping.csproj",                          "version": "6.0.0" },
-    { "id": "NDO.ProviderFactory", "project": "NDO.ProviderFactory/NDO.ProviderFactory/NDO.ProviderFactory.csproj",  "version": "6.0.0" },
-    { "id": "NDO.SchemaGenerator", "project": "NDO.SchemaGenerator/NDO.SchemaGenerator/NDO.SchemaGenerator.csproj",  "version": "6.0.0" },
-    { "id": "NDO.dll",             "project": "NDODLL/NDO.csproj",                                                   "version": "6.0.0" },
-    { "id": "NDO.JsonFormatter",   "project": "NdoJsonFormatter/NdoJsonFormatter/NDO.JsonFormatter.csproj",          "version": "5.1.1" },
-    { "id": "ndo.sqlserver",       "project": "Provider/SqlServerProvider/NDO.SqlServer/NDO.SqlServer.csproj",       "version": "5.1.0" },
-    { "id": "NDO.Build",           "project": "nuget/NDO.Build.nuspec", "builder": "nuget",
+    { "id": "NDOInterfaces", "project": "NDOInterfaces/NDOInterfaces.csproj", "version": "6.0.0" },
+    { "id": "NDO.dll",       "project": "NDODLL/NDO.csproj",                  "version": "6.0.0" },
+    …
+    { "id": "NDO.Build", "project": "nuget/NDO.Build.nuspec", "builder": "nuget", "version": "6.0.1",
       "versionFollowers": [ "NDOEnhancer/NDOEnhancer/NDOEnhancer.csproj" ],
-      "buildFirst": [ "NDOEnhancer/NDOEnhancer/NDOEnhancer.csproj",
-                      { "project": "NDOEnhancer.BuildTask/NDOEnhancer.BuildTask/NDOEnhancer.BuildTask.csproj", "builder": "msbuild" } ],
-      "version": "6.0.1" }
+      "buildFirst": [
+        { "project": "Tools/MakeEnhancerDate/MakeEnhancerDate.csproj", "configuration": "Release" },
+        { "project": "NDOEnhancer/NDOEnhancer/NDOEnhancer.csproj", "configuration": "Release" },
+        { "project": "NDOEnhancer.BuildTask/NDOEnhancer.BuildTask/NDOEnhancer.BuildTask.csproj",
+          "builder": "msbuild", "configuration": "Release" } ] }
+  ],
+  "enhancer": "NDOEnhancer/NDOEnhancer/NDOEnhancer.csproj",
+  "consumersBuildFirst": [
+    { "project": "Tools/MakeEnhancerDate/MakeEnhancerDate.csproj", "configuration": "Release" },
+    { "project": "NDOEnhancer/NDOEnhancer/NDOEnhancer.csproj", "configuration": "Debug" }
+  ],
+  "consumers": [
+    { "project": "IntegrationTests/IntegrationTests/IntegrationTests.csproj", "test": true },
+    { "project": "SimpleMappingTool/Mapping.csproj" },
+    …
   ]
 }
 ```
 
-The other providers are listed in the same way. Dependencies are **not** listed
-in the manifest. They are derived from the project files, so they can never get
-out of sync with the real references.
-
-`versionFollowers` names projects that get the same version but are not packed
-themselves, like NDOEnhancer.
+- **`packages`** – the producers. Dependencies are **not** listed. They are
+  derived from the project files, so they can never get out of sync.
+  - `builder`: `dotnet` (default), `nuget` (nuspec packed with `nuget/NuGet.exe`)
+    or `msbuild` (Visual Studio's MSBuild, found via `vswhere`).
+  - `versionFollowers`: projects that get the same version but are not packed
+    themselves, like NDOEnhancer.
+  - `buildFirst`: projects built before the package. Their dependencies count
+    as dependencies of the package, so NDO.Build is bumped whenever a package
+    bundled with the enhancer changes.
+  - `configuration` (in `buildFirst` entries and consumers): overrides the global configuration.
+- **`consumers`** – the test projects and tools the build compiles.
+  `"test": true` marks projects that `--test` runs with `dotnet test`.
+  Only top-level projects are listed; libraries like PureBusinessClasses are
+  built through their ProjectReferences.
+- **`enhancer`** – the NDOEnhancer project. Its framework and every path to its
+  output are kept up to date (5.5).
+- **`consumersBuildFirst`** – projects built once before the first consumer.
+  The test projects run the enhancer from its Debug output, so the enhancer is
+  built here in Debug, while NDO.Build packs its Release output.
+- **`exclude`** – folders (relative to the root) that are not scanned. They
+  contain legacy projects with NDO 1.x–4.x GAC or HintPath references.
+- **`pinned`** – projects whose PackageReferences are never changed and that
+  don't take part in propagation. Used for projects that intentionally stay on
+  an old NDO version, like PersistentEnhancerTestClasses (net6.0/netstandard).
 
 ### 5.2 Dependency graph
 
-The script scans every `*.csproj` under the repository root and builds the graph:
+The script scans every `*.csproj` under the repository root, skipping `bin`,
+`obj`, `packages`, `.vs` and the `exclude` folders.
 
-- It skips `bin/`, `obj/`, `packages/` and an exclude list of legacy folders
-  such as `Tutorial`, `UnitTests` and `ClassGenerator`. These still use NDO 1.x–4.x
-  GAC or HintPath references.
-- A **producer** is a project listed in the manifest.
-- An **edge** `A → B` ("B depends on A") is created when:
-  - project B contains `<PackageReference Include="A">`, matched case-insensitively
-    against the manifest ids; or
-  - project B contains a `<ProjectReference>` whose resolved full path is the
-    producer project of A.
-- **Consumers** are all projects with an edge, whether or not they are packages
-  themselves. Tests and tools are consumers but not producers.
+- An **edge** "B depends on A" is created when:
+  - project B contains `<PackageReference Include="id">`, where `id` matches a
+    manifest id case-insensitively. A is that package's project; or
+  - project B contains a `<ProjectReference>` that resolves to project A.
+- Dependencies are followed transitively, also through projects that are no
+  packages (e.g. NDOEnhancer → Ecma335).
+- A package's dependencies are the packages reachable from its project, its
+  `buildFirst` projects and its `versionFollowers`.
+- A consumer's dependencies are the packages reachable from its project.
 
-The graph is checked for cycles and sorted topologically.
+The package graph is checked for cycles and sorted topologically.
 
 ### 5.3 Algorithm
 
 ```
-1. Load manifest; load graph (5.2).
+1. Load manifest; scan projects; build graph (5.2).
 
 2. Detect changes
-   changed = { p | manifest.version(p) != version in p's project file }
+   current(p) = version in p's project file / nuspec
+   changed    = { p | manifest.version(p) != current(p) }        (manual)
 
 3. Propagate
    for p in topological order:
-       if p not in changed and any dependency of p is in changed:
-           p.version = bump(current version of p, policy)  // e.g. 5.1.0 -> 5.1.1
-           changed += p
-   Write the propagated versions back into packages.json
-   (so the manifest is again the single source of truth).
+       if p not in changed and a dependency of p is in changed:
+           p.version = bump(current(p), policy)                   // 5.1.0 -> 5.1.1
+           changed += p                                           (propagated)
+   Write the propagated versions back into packages.json.
 
-4. Patch producers (for each p in changed)
+4. Patch producers (every package)
    csproj:  <Version>x.y.z</Version>
             <AssemblyVersion>x.y.z.0</AssemblyVersion>
             <FileVersion>x.y.z.0</FileVersion>
    nuspec:  <version>x.y.z</version>
    versionFollowers: same three properties.
+   For unchanged packages this only normalizes the format (e.g. NDO.Mapping's
+   3-part AssemblyVersion, NDO.Build's 4-part version).
 
-5. Patch consumers (for each project in the repository)
-   for each <PackageReference Include=id Version=v> with id in changed:
-       set Version to the new version
+5. Patch consumers (every scanned project except pinned ones)
+   for each <PackageReference Include=id Version=v> with id in the manifest:
+       if v != manifest version: set Version to the manifest version
+   This includes package projects that consume other NDO packages, like
+   NDO.JsonFormatter (ndo.dll). Every consumer always references the version
+   that is being built.
    ProjectReferences are left untouched (the version flows in at pack time).
 
-6. Print a report (always) – stop here with --dry-run or --no-build.
+5b. Patch the enhancer (5.5)
+   tfm = highest netX.Y in the TargetFramework(s) of all package projects
+   enhancer csproj:  <TargetFramework>tfm</TargetFramework>  (single framework)
+   every scanned csproj and every package nuspec:
+       NDOEnhancer\bin\<Debug|Release>\<any netX.Y>\…  ->  …\<tfm>\…
 
-7. Build changed packages in topological order (see 5.4).
+6. Print a report – stop here with --dry-run or --no-build.
 
-8. Collect *.nupkg / *.snupkg into packageSource.
+7. Build packages in topological order (5.4).
+   toBuild = changed
+           ∪ { p | step 5 updated a PackageReference in p's project }
+           ∪ { p | <packageSource>/<id>.<version>.nupkg does not exist }
+           ∪ --rebuild ids                       (--all: every package; --only: just these)
+
+8. Build consumers that depend on a package in toBuild (--all: every consumer).
+   Before the first consumer, build consumersBuildFirst (enhancer in Debug).
+   With --test, run `dotnet test` on those marked "test".
 ```
 
+The "nupkg does not exist" rule makes the script restartable: if a build fails
+after the files were patched, the next run detects no version change, but it
+still builds every package that hasn't reached `BuiltPackages` yet.
+
 Rules for patching:
-- **Keep formatting.** Edit the text in place with a regex limited to the found
-  element, or use `XDocument` with `LoadOptions.PreserveWhitespace` and save
-  without reformatting and with the original encoding/BOM. The diff of a project
-  file must show only the changed version lines.
-- **Normalize version formats.** Assembly and file versions always use 4 parts.
-  This also fixes the 3-part format in NDO.Mapping.
-- **Patch every occurrence.** If a property or reference appears in several
-  conditional `PropertyGroup`s or `ItemGroup`s, all occurrences are patched.
+- **Keep formatting.** The text is edited in place with regular expressions
+  limited to the found element. Encoding, BOM and line endings are preserved.
+  The diff of a project file shows only the changed version lines.
+- **Only properties are patched.** `<Version>` is only replaced inside a
+  `PropertyGroup`, never the `<Version>` child element of a `PackageReference`.
+  All occurrences are patched (also in conditional `PropertyGroup`s). Missing
+  `AssemblyVersion`/`FileVersion` properties are not added; the SDK derives them.
 - **Report unknown references.** If a reference uses a version range or a
   property (`Version="$(...)"`), the script reports it instead of guessing.
 
 ### 5.4 Building
 
-Each changed package is built as follows, in topological order:
+**Packages** are built in topological order:
 
 ```
-dotnet build <csproj> -c Release
+dotnet restore <csproj> --force
+dotnet build   <csproj> -c Release --no-restore
 ```
 
-`GeneratePackageOnBuild=true` is already set in all package projects, so
-`dotnet build` also produces the `.nupkg` / `.snupkg`. Consumers that are not
-packages, like tests, are only patched and not built. An optional `--all` switch
-builds them too.
+`GeneratePackageOnBuild=true` is set in all package projects, so the build also
+produces the `.nupkg` / `.snupkg`. The script then copies
+`bin/<Configuration>/<id>.<version>.nupkg` and `.snupkg` to `BuiltPackages`.
+The `cmd copy` `PostBuild` targets have been removed from the project files.
 
-**Restore.** `dotnet build` restores implicitly. The packages that the
-consumers need must be in a configured package source before their restore.
-That works because the topological order guarantees producers are built and
-collected first.
+**Restore.** The repository's `nuget.config` adds `BuiltPackages` as a package
+source and disables the stale user-level source `NDO`. Because producers are
+built and collected first (topological order), the packages are available when
+a dependent package or a consumer restores. `--force` makes restore re-evaluate
+even if the version in the project file didn't change.
 
-**NuGet cache.** If a package is rebuilt *without* a version change, the stale
-copy in `~/.nuget/packages/<id>/<version>` must be deleted first. Otherwise
-consumers keep restoring the old content. This replaces the `DeletePackages`
-target of `NDO.proj`.
+**NuGet cache.** Before a package is built, its entry
+`~/.nuget/packages/<id>/<version>` (or `%NUGET_PACKAGES%`) is deleted.
+Otherwise consumers would keep the old content if a package is rebuilt without
+a version change.
 
-**Collecting packages.** The script copies `bin/<Configuration>/<id>.<version>.nupkg`
-and `.snupkg` to `BuiltPackages`. The alternative is to set `PackageOutputPath`
-centrally in a `Directory.Build.props`. Either way, the `cmd copy` `PostBuild`
-targets can be removed from the project files.
+**Consumers** are built after all packages. First the `consumersBuildFirst`
+projects are built once (MakeEnhancerDate in Release, NDOEnhancer in Debug),
+then every consumer with
+
+```
+dotnet restore <csproj> --force
+dotnet build   <csproj> -c <configuration> --no-restore
+dotnet test    <csproj> -c <configuration> --no-build      (only with --test)
+```
+
+A failing package build stops the script, because its dependents can't be built.
+A failing consumer is reported, the remaining consumers are still built, and the
+exit code is non-zero.
 
 **Exceptions that can't use `dotnet build`:**
 
-| Project | Reason | Handling |
-|---|---|---|
-| `NDOPackage/NDOPackage.csproj` (VSIX) | Needs the VSSDK targets of Visual Studio | Build with Visual Studio's `MSBuild.exe`, found via `vswhere -latest -find MSBuild\**\Bin\MSBuild.exe`. Not part of the package build; only built with `--vsix` |
-| `NDOEnhancer.BuildTask` | Old-style project, GAC references to Microsoft.Build | Short term: MSBuild via vswhere (`"builder": "msbuild"`). Long term: convert it to an SDK-style project using `Microsoft.Build.Utilities.Core`, then use `dotnet build` |
-| `NDO.Build` (nuspec) | Not a project | First build NDOEnhancer and NDOEnhancer.BuildTask (`buildFirst`), then run `nuget/NuGet.exe pack NDO.Build.nuspec -Version <version> -OutputDirectory <packageSource>`. Long term: a pack-only SDK project (`NoBuild`, `IncludeBuildOutput=false`) so that `dotnet pack` is enough |
-| Tools (`MakeEnhancerDate`, `AddMappingToVsix`) | Prerequisites of NDOEnhancer and NDOPackage | Built with `dotnet build -c Release` before the first project that needs them |
+| Project | Handling |
+|---|---|
+| `NDOEnhancer.BuildTask` | `"builder": "msbuild"`: Visual Studio's `MSBuild.exe`, found via `vswhere -latest -find MSBuild\**\Bin\MSBuild.exe`. Long term: convert it to an SDK-style project with `Microsoft.Build.Utilities.Core` |
+| `NDO.Build` (nuspec) | `"builder": "nuget"`: first the `buildFirst` projects, then `nuget/NuGet.exe pack NDO.Build.nuspec -Version <version> -OutputDirectory <packageSource>` |
+| `Tools/MakeEnhancerDate` | Prerequisite of NDOEnhancer, listed in `buildFirst` of NDO.Build |
 
-### 5.5 Command line
+### 5.5 Enhancer
+
+Test projects enhance their persistent classes with an `<Exec>` task that calls
+the enhancer directly from its build output, e.g. in PureBusinessClasses:
+
+```xml
+<Exec WorkingDirectory="bin\Debug\net8.0"
+      Command="..\..\..\..\..\NDOEnhancer\NDOEnhancer\bin\debug\net11.0\NDOEnhancer ..\..\..\PureBusinessClasses.ndoproj $(TargetFramework)" />
+```
+
+Rules:
+- **Only the highest .NET version.** The enhancer targets exclusively the highest
+  `netX.Y` that any package project targets (currently net11.0). The script sets
+  `<TargetFramework>` in the enhancer project accordingly; a `TargetFrameworks`
+  list is replaced by that single framework.
+- **Paths follow the framework.** In every scanned csproj and every package
+  nuspec, the framework folder in a path `NDOEnhancer\bin\<Debug|Release>\<netX.Y>\`
+  is set to that version. This covers the `<Exec>` tasks of the test projects and
+  the `<file src=…>` of `NDO.Build.nuspec`.
+- **Release for the package, Debug for the tests.** NDO.Build builds the enhancer
+  in Release (`buildFirst`). Before the first consumer, the enhancer is built in
+  Debug (`consumersBuildFirst`), so the `<Exec>` tasks find a current Debug build.
+
+When a package project gets a new framework (e.g. net12.0), the next run moves
+the enhancer and all paths to it without further manual edits.
+
+### 5.6 Command line
 
 ```
 dotnet run Make/build.cs [options]
 
-  --dry-run          Show detected changes, propagated bumps and all file
-                     edits; change nothing.
-  --no-build         Patch versions and references only.
-  --only <id>        Build only this package (and nothing that depends on it).
-  --rebuild <id>     Rebuild a package without a version change
-                     (clears its NuGet cache entry).
-  --all              Also build consumers that are not packages (tests, tools).
-  --bump patch|minor Propagation policy for dependent packages (default: patch).
-  -c <config>        Configuration (default: Release).
+  --dry-run            Show detected changes, propagated bumps, all file edits
+                       and the build plan; change nothing.
+  --no-build           Patch versions and references only.
+  --all                Build all packages and all consumers.
+  --only <id>          Build only this package (repeatable); consumers that
+                       depend on it are built as well.
+  --rebuild <id>       Rebuild a package without a version change (repeatable).
+  --no-consumers       Don't build consumers.
+  --test               Run `dotnet test` on the built test projects.
+  --bump patch|minor   Propagation policy (default: "propagation" in the manifest).
+  -c <config>          Configuration of packages (default: manifest).
 ```
 
 Example session:
@@ -320,70 +411,81 @@ Example session:
 ```
 > # edit Make/packages.json: NDOInterfaces 6.0.0 -> 6.0.1
 > dotnet run Make/build.cs --dry-run
-Changed (manual):      NDOInterfaces          6.0.0 -> 6.0.1
-Changed (propagated):  NDO.Mapping            6.0.0 -> 6.0.1
-                       NDO.ProviderFactory    6.0.0 -> 6.0.1
-                       NDO.SchemaGenerator    6.0.0 -> 6.0.1
-                       NDO.dll                6.0.0 -> 6.0.1
-                       ndo.sqlserver          5.1.0 -> 5.1.1   (… other providers)
-                       NDO.JsonFormatter      5.1.1 -> 5.1.2
-Reference updates:     SimpleMappingTool/Mapping.csproj  NDO.mapping 5.1.1 -> 6.0.1
-                       Provider/.../SqlServerUISupport.csproj  NDOInterfaces 5.1.0 -> 6.0.1
-                       …
-Build order:           NDOInterfaces, NDO.Mapping, NDO.ProviderFactory, …
-> dotnet run Make/build.cs
+Version changes:
+  NDOInterfaces        6.0.0 -> 6.0.1   (manual)
+  NDO.Mapping          6.0.0 -> 6.0.1   (propagated)
+  NDO.ProviderFactory  6.0.0 -> 6.0.1   (propagated)
+  ndo.sqlserver        5.1.0 -> 5.1.1   (propagated)   … other providers
+  NDO.dll              6.0.0 -> 6.0.1   (propagated)
+  NDO.JsonFormatter    5.1.1 -> 5.1.2   (propagated)
+  NDO.Build            6.0.1 -> 6.0.2   (propagated)
+File edits:
+  NDOInterfaces/NDOInterfaces.csproj   Version 6.0.0 -> 6.0.1 …
+  SimpleMappingTool/Mapping.csproj     PackageReference NDO.mapping 5.1.1 -> 6.0.1
+  …
+Packages to build:  NDOInterfaces, NDO.Mapping, …
+Consumers to build: IntegrationTests/IntegrationTests/IntegrationTests.csproj, …
+> dotnet run Make/build.cs --test
 ```
 
-### 5.6 Propagation policy
+### 5.7 Propagation policy
 
 By default a dependent package gets a **patch** bump. If the developer has
 already raised a dependent's version in the manifest, for example to a new
 minor version for an API change, that manual version wins and the package is
 not bumped again.
 
-Note: with ProjectReferences, the dependency in the produced nuspec is a
-*minimum* version (`>= x`). Bumping the dependent is still necessary. It
-guarantees that the published dependent package is a new artifact that points
-to the new dependency, and that old consumers don't receive a changed package
-under an unchanged version.
+This applies to **all** dependents, including the **providers**: they depend on
+NDOInterfaces through a ProjectReference, so a change of NDOInterfaces bumps
+every provider.
+
+With ProjectReferences, the dependency in the produced nuspec is a *minimum*
+version (`>= x`). Bumping the dependent is still necessary. It guarantees that
+the published dependent package is a new artifact that points to the new
+dependency, and that old consumers don't receive a changed package under an
+unchanged version.
 
 ## 6. Migration Steps
 
-1. **Create the manifest.** Write `Make/packages.json` from the current project
-   versions (table 2.1).
-2. **Implement the script.** Write `Make/build.cs` with `--dry-run` first, and
-   verify the report against the current repository. A first run without manual
-   changes must report "nothing changed".
-3. **Unify version formats.** Use 4-part Assembly/FileVersion everywhere; this
-   is done automatically on the first patch.
-4. **Replace the copy targets.** Remove the `cmd copy` `PostBuild` targets, or
-   replace them with a central `PackageOutputPath`.
+1. **Create the manifest** `Make/packages.json` from the current project versions (2.1, 2.2). ✔
+2. **Implement the script** `Make/build.cs`. A first `--dry-run` without
+   manual changes reports no version changes, only format normalizations. ✔
+3. **Unify version formats.** 4-part Assembly/FileVersion, 3-part Version;
+   done automatically on the first patch run. ✔
+4. **Remove the copy targets.** The `cmd copy` `PostBuild` targets are gone;
+   the script collects the packages. ✔
 5. **Add a `nuget.config`** at the repository root with `BuiltPackages` as a
-   relative package source. This removes the dependency on the user-level
-   source (currently pointing to `C:\Projekte\NDO\BuiltPackages`).
-6. **Retire the old patch step.** Remove the `PatchNdoVersion` target and the
-   tool from `Make/NDO.proj`. Then keep `NDO.proj` only as a thin wrapper for
-   the VSIX build, or delete it.
-7. **Clean up legacy scripts.** Delete or fix `Make/DebugBuild.cmd`.
-8. **Optional: Central Package Management.** Introduce `Directory.Packages.props`
+   relative package source and the user-level source `NDO` disabled. ✔
+6. **Retire the old build.** `Make/NDO.proj` and `Tools/PatchNdoVersion` are deleted. ✔
+7. **Optional: Central Package Management.** Introduce `Directory.Packages.props`
    for the NDO package versions used by consumers.
-9. **Optional: modernize the remaining legacy projects.** Convert
-   `NDOEnhancer.BuildTask` and `UISupport/NDO.UISupport` to SDK-style so that
-   only the VSIX still needs Visual Studio's MSBuild.
+8. **Optional: modernize legacy projects.** Convert `NDOEnhancer.BuildTask` to
+   SDK-style so that the build needs no Visual Studio installation.
 
-## 7. Open Questions
+## 7. Decisions
 
-- **Test projects.** Should test projects (IntegrationTests, FormatterUnitTests,
-  PureBusinessClasses, UnitTestGenerator/*) always follow the newest package
-  versions, or keep pinned versions? Alternatively, should they switch to
-  ProjectReferences, as the NDODLL tests already do?
-- **Provider propagation.** Should providers be bumped when NDOInterfaces
-  changes? They depend on it through a ProjectReference, so the default policy
-  says yes.
-- **VSIX version.** Should the VSIX (`NDOPackage/source.extension.vsixmanifest`,
-  currently 5.0.0) be part of the manifest and follow NDO.dll or NDO.Build?
-- **Pre-release versions.** Is a pre-release suffix (`6.1.0-beta1`) needed?
-  `NuGet.Versioning` supports it, but Assembly/FileVersion then have to drop the suffix.
+- **Consumers always reference the version being built.** This applies to test
+  projects, tools and package projects that consume other NDO packages (e.g.
+  NDO.JsonFormatter → ndo.dll, and therefore FormatterUnitTests). Their
+  PackageReferences are set to the manifest version on every run. A package
+  whose references were updated is rebuilt. Existing ProjectReferences, as in
+  the NDODLL tests, stay; they always build against the current source. After
+  the packages, the build compiles the affected test projects and, with
+  `--test`, runs them. Projects that must stay on an old version are `pinned`.
+- **Provider propagation** takes place. Providers are bumped when NDOInterfaces changes (5.7).
+- **VSIX** is not part of the build (1).
+- **Pre-release versions** are not supported (1).
 
-Resume this session with:
-claude --resume f5170928-a07b-4b74-8448-44f4716daaa0
+## 8. Known Issues
+
+These consumers fail for reasons outside the build script:
+
+- `NDOEnhancer/PersistentEnhancerTestClasses` is multi-targeted. Its `<Exec>`
+  task runs `AfterTargets="Build"` in the outer build, where `$(TargetFramework)`
+  is empty, and the enhancer exits with code 3.
+- `UnitTestGenerator/UnitTests` uses the `NDO.Build` package. Its
+  `NDOEnhancer.BuildTask.dll` references `Microsoft.Build.Utilities.v4.0`, which
+  can't be loaded by `dotnet build` (.NET MSBuild). Projects using NDO.Build can
+  currently only be built with Visual Studio. Converting `NDOEnhancer.BuildTask`
+  to an SDK-style project with `Microsoft.Build.Utilities.Core` (migration step 8)
+  solves this for package consumers as well.

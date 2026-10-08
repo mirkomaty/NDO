@@ -1,0 +1,45 @@
+{
+  "packageSource": "../BuiltPackages",
+  "configuration": "Release",
+  "propagation": "patch",
+  "exclude": [ "Tutorial", "ClassGenerator", "UnitTests" ],
+  "pinned": [],
+  "packages": [
+    { "id": "NDOInterfaces",       "project": "NDOInterfaces/NDOInterfaces.csproj",                                  "version": "6.0.0" },
+    { "id": "NDO.Mapping",         "project": "NDO.Mapping/NDO.Mapping/NDO.Mapping.csproj",                          "version": "6.0.0" },
+    { "id": "NDO.ProviderFactory", "project": "NDO.ProviderFactory/NDO.ProviderFactory/NDO.ProviderFactory.csproj",  "version": "6.0.0" },
+    { "id": "NDO.SchemaGenerator", "project": "NDO.SchemaGenerator/NDO.SchemaGenerator/NDO.SchemaGenerator.csproj",  "version": "6.0.0" },
+    { "id": "NDO.dll",             "project": "NDODLL/NDO.csproj",                                                   "version": "6.0.0" },
+    { "id": "NDO.JsonFormatter",   "project": "NdoJsonFormatter/NdoJsonFormatter/NDO.JsonFormatter.csproj",          "version": "6.0.0" },
+    { "id": "ndo.mysql",           "project": "Provider/MySqlNdoProvider/NDO.MySql/NDO.MySql.csproj",                "version": "6.0.0" },
+    { "id": "ndo.mysqlconnector",  "project": "Provider/MySqlConnectorProvider/NDO.MySqlConnector/NDO.MySqlConnector.csproj", "version": "6.0.0" },
+    { "id": "ndo.oracle",          "project": "Provider/OracleProvider/NDO.Oracle/NDO.Oracle.csproj",                "version": "6.0.0" },
+    { "id": "ndo.postgre",         "project": "Provider/PostGresProvider/NDO.Postgre/NDO.Postgre.csproj",            "version": "6.0.0" },
+    { "id": "ndo.sqlite",          "project": "Provider/SqliteProvider/NDO.Sqlite/NDO.Sqlite.csproj",                "version": "6.0.0" },
+    { "id": "ndo.sqlserver",       "project": "Provider/SqlServerProvider/NDO.SqlServer/NDO.SqlServer.csproj",       "version": "6.0.0" },
+    { "id": "NDO.Build",           "project": "nuget/NDO.Build.nuspec", "builder": "nuget",                          "version": "6.0.1",
+      "versionFollowers": [ "NDOEnhancer/NDOEnhancer/NDOEnhancer.csproj" ],
+      "buildFirst": [
+        { "project": "Tools/MakeEnhancerDate/MakeEnhancerDate.csproj", "configuration": "Release" },
+        { "project": "NDOEnhancer/NDOEnhancer/NDOEnhancer.csproj", "configuration": "Release" },
+        { "project": "NDOEnhancer.BuildTask/NDOEnhancer.BuildTask/NDOEnhancer.BuildTask.csproj", "builder": "msbuild", "configuration": "Release" }
+      ] }
+  ],
+  "enhancer": "NDOEnhancer/NDOEnhancer/NDOEnhancer.csproj",
+  "consumersBuildFirst": [
+    { "project": "Tools/MakeEnhancerDate/MakeEnhancerDate.csproj", "configuration": "Release" },
+    { "project": "NDOEnhancer/NDOEnhancer/NDOEnhancer.csproj", "configuration": "Debug" }
+  ],
+  "consumers": [
+    { "project": "IntegrationTests/IntegrationTests/IntegrationTests.csproj",						"test": true, "configuration": "Debug" },
+    { "project": "NdoJsonFormatter/FormatterUnitTests/FormatterUnitTests.csproj", 					"test": true, "configuration": "Debug" },
+    { "project": "NDODLL.Tests/NdoDllUnitTests/NdoDllUnitTests.csproj",								"test": true, "configuration": "Debug" },
+    { "project": "NDODLL.Tests/QueryTests/QueryTests.csproj",										"test": true, "configuration": "Debug" },
+    { "project": "NDODLL.Tests/AsyncTests/AsyncTests.csproj",										"test": true, "configuration": "Debug" },
+    { "project": "NDOEnhancer/Ecma335Tests/Ecma335Tests.csproj",									"test": true, "configuration": "Debug" },
+    { "project": "UnitTestGenerator/UnitTests/UnitTests.csproj",									"test": true, "configuration": "Debug" },
+    { "project": "UnitTestGenerator/TestGenerator/TestGenerator.csproj" },
+    { "project": "SimpleMappingTool/Mapping.csproj" },
+	{ "project": "NDOEnhancer/PersistentEnhancerTestClasses/PersistentEnhancerTestClasses.csproj",	"test": true, "configuration": "Debug" }
+  ]
+}

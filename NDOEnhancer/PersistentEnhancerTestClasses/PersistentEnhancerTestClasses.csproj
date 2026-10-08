@@ -1,17 +1,17 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>net9.0;net6.0;net8.0;netstandard2.0;netstandard2.1</TargetFrameworks>
+    <TargetFrameworks>net11.0;net10.0;net8.0</TargetFrameworks>
     <ImplicitUsings>disable</ImplicitUsings>
     <Nullable>disable</Nullable>
   </PropertyGroup>
 
   <ItemGroup>	  
-    <PackageReference Include="ndo.dll" Version="5.0.0" />
+    <PackageReference Include="ndo.dll" Version="6.0.0" />
   </ItemGroup>
 
 	<Target Name="CustomAfterBuild" AfterTargets="Build" >
-		<Exec WorkingDirectory="bin\Debug\$(TargetFramework)" Command="..\..\..\..\NDOEnhancer\bin\debug\net9.0\NDOEnhancer ..\..\..\$(MSBuildProjectName).ndoproj $(TargetFramework)" />
+		<Exec WorkingDirectory="bin\Debug\$(TargetFramework)" Command="..\..\..\..\NDOEnhancer\bin\debug\net11.0\NDOEnhancer ..\..\..\$(MSBuildProjectName).ndoproj $(TargetFramework)" />
 		<Copy SourceFiles="obj\Debug\$(TargetFramework)\ndotemp\$(MSBuildProjectName).dll" DestinationFolder="bin\Debug\$(TargetFramework)" />
 	</Target>	
 	

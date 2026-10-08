@@ -10,8 +10,8 @@
     <IncludeSymbols>True</IncludeSymbols>
     <PackageId>NDO.Mapping</PackageId>
     <Version>6.0.0</Version>
-    <AssemblyVersion>6.0.0</AssemblyVersion>
-    <FileVersion>6.0.0</FileVersion>
+    <AssemblyVersion>6.0.0.0</AssemblyVersion>
+    <FileVersion>6.0.0.0</FileVersion>
     <Authors>Mirko Matytschak</Authors>
     <Company>Mirko Matytschak</Company>
     <Description>Package to read and create NDO mapping files.</Description>
@@ -41,7 +41,4 @@
       <PackagePath>\</PackagePath>
     </None>
   </ItemGroup>
-  <Target Name="PostBuild" AfterTargets="Pack">
-    <Exec Command="IF NOT EXIST ..\..\BuiltPackages md ..\..\BuiltPackages&#xD;&#xA;echo Copy package&#xD;&#xA;copy bin\$(Configuration)\NDO.Mapping.*.nupkg ..\..\BuiltPackages /Y&#xD;&#xA;copy bin\$(Configuration)\NDO.Mapping.*.snupkg ..\..\BuiltPackages /Y&#xD;&#xA;" />
-  </Target>  
 </Project>
