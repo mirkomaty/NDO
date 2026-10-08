@@ -60,10 +60,6 @@
 		<PackageReference Include="Microsoft.Extensions.Hosting.Abstractions" Version="10.0.0" />
 	</ItemGroup>
 	<ItemGroup>
-		<ProjectReference Include="..\NDOInterfaces\NDOInterfaces.csproj" />
-		<ProjectReference Include="..\NDO.ProviderFactory\NDO.ProviderFactory\NDO.ProviderFactory.csproj" />
-		<ProjectReference Include="..\NDO.SchemaGenerator\NDO.SchemaGenerator\NDO.SchemaGenerator.csproj" />
-		<ProjectReference Include="..\NDO.Mapping\NDO.Mapping\NDO.Mapping.csproj" />
 		<PackageReference Include="PatchProductVersion" Version="1.0.3" Condition="'$(TargetFramework)'=='net8.0' And '$(OS)'=='Windows_NT'">
 			<PrivateAssets>all</PrivateAssets>
 		</PackageReference>
