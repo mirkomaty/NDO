@@ -66,6 +66,28 @@ namespace NDO
 		public NDOPersistenceHandlerManager PersistenceHandlerManager => persistenceHandlerManager;
 
 		/// <summary>
+		/// Creates an NDOMapping instance to be used as parameter for PersistenceManager constructors.
+		/// </summary>
+		/// <param name="mappingFile"></param>
+		/// <param name="serviceProvider"></param>
+		/// <returns></returns>
+		/// <exception cref="ArgumentNullException"></exception>
+		/// <exception cref="Exception"></exception>
+		/// <remarks>
+		/// This can only be used in settings, where a host and a service provider for dependency injection exists.
+		/// You should call AddNdo while building the host to have an INDOProviderFactory instance available.
+		/// </remarks>
+		public static NDOMapping CreateNDOMapping(string mappingFile, IServiceProvider serviceProvider)
+		{
+			if (serviceProvider == null) 
+				throw new ArgumentNullException(nameof(serviceProvider));
+			var providerFactory = serviceProvider.GetService<INDOProviderFactory>();
+			if (providerFactory == null)
+				throw new Exception("Can't get an INDOProviderFactory instance");
+			return new Mappings(mappingFile, providerFactory);
+		}
+
+		/// <summary>
 		/// Provides the ProviderFactory to inherited persistence managers;
 		/// </summary>
 		protected INDOProviderFactory ProviderFactory
