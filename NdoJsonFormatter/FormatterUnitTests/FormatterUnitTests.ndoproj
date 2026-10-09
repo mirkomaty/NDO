@@ -28,7 +28,7 @@
     <References>
       <Reference AssemblyName="NDO.JsonFormatter" AssemblyPath="..\NdoJsonFormatter\bin\Debug\net6.0\NDO.JsonFormatter.dll" CheckThisDLL="False">
       </Reference>
-      <Reference AssemblyName="PureBusinessClasses" AssemblyPath="..\..\IntegrationTests\PureBusinessClasses\bin\Debug\net8.0\PureBusinessClasses.dll">
+      <Reference AssemblyName="PureBusinessClasses" AssemblyPath="..\..\IntegrationTests\PureBusinessClasses\bin\Debug\net10.0\PureBusinessClasses.dll">
       </Reference>
     </References>
   </ProjectDescription>

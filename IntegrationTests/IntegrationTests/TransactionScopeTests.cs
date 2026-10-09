@@ -43,12 +43,12 @@ namespace NdoUnitTests
 	{
 		public void Setup() 
 		{
-			Logger.ClearTestLogs();
+			Logger.ClearLogs();
 		}
 
 		public void TearDown() 
 		{
-			Logger.ClearTestLogs();
+			Logger.ClearLogs();
 			var pm = PmFactory.NewPersistenceManager();
 			NDOQuery<Mitarbeiter> q = new NDOQuery<Mitarbeiter>( pm );
 			pm.Delete( q.Execute() );

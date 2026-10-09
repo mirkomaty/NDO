@@ -20,7 +20,7 @@
 		<SymbolPackageFormat>snupkg</SymbolPackageFormat>
 	</PropertyGroup>
 	<ItemGroup>
-		<ProjectReference Include="..\..\..\NDOInterfaces\NDOInterfaces.csproj" />
+		<PackageReference Include="NDOInterfaces" Version="6.0.0" />
 	</ItemGroup>
 	<ItemGroup>
 		<PackageReference Include="Microsoft.Data.SqlClient" Version="6.0.2" />

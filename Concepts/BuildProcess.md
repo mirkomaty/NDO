@@ -67,26 +67,52 @@ Notes:
 
 ### 2.3 How dependencies are expressed
 
-**ProjectReference (inside the core).** These references form the core graph:
+**Package projects use PackageReferences.** A package project references
+another NDO package only through a `PackageReference`, never through a
+`ProjectReference`. Each package is built against a released version of its
+dependencies, which `Make/build.cs` produced before and collected in
+`BuiltPackages`. These references form the core graph:
 
 ```
 NDOInterfaces
  ├── NDO.Mapping ── NDO.SchemaGenerator ─┐
  ├── NDO.ProviderFactory ────────────────┤
- ├───────────────────────────────────────┴── NDO.dll
+ ├───────────────────────────────────────┴── NDO.dll ── NDO.JsonFormatter
  ├── ndo.<provider> (6x)
- └── NDOEnhancer (also Mapping, ProviderFactory, SchemaGenerator, Ecma335) ── NDO.Build
+ └── NDOEnhancer (also Mapping, ProviderFactory, SchemaGenerator) ── NDO.Build
 ```
 
-`dotnet pack` turns a ProjectReference into a package dependency `>= <Version of
-the referenced project>`. So **no reference needs to be edited** here. The
-dependent package only needs its own version bump, because its nuspec now
-points to a different dependency version.
+Projects that are no packages themselves (e.g. `NDOEnhancer/Ecma335`) are still
+referenced with a `ProjectReference`. NDOEnhancer counts as a package project,
+because its output is packed into NDO.Build.
 
-**PackageReference (outside the core).** NDO.JsonFormatter, the test projects
-and tools of 2.2 and the provider UISupport projects (`NDOInterfaces` 5.1.0)
-use PackageReferences. Package ids are spelled with inconsistent casing
+Because the version is written in the `PackageReference`, the script must
+patch these references whenever a dependency gets a new version (5.3, step 5).
+The dependent package also needs its own version bump, because its nuspec
+then points to a different dependency version.
+
+**Test projects and tools use ProjectReferences where possible.** The tests
+in `NDODLL.Tests` and `IntegrationTests` (with PureBusinessClasses) reference
+NDO.dll, NDO.JsonFormatter and the providers through `ProjectReference`s, so
+changes to that source take effect without a package build. Some test projects
+and tools (2.2) and the provider UISupport projects still use PackageReferences. Package ids are spelled with inconsistent casing
 (`ndo.dll`, `NDO.dll`, `NDO.mapping`), so all matching is case-insensitive.
+
+**Mixing both kinds of references.** A test project with a `ProjectReference`
+to NDO.dll gets the dependencies of NDO.dll (NDOInterfaces, NDO.Mapping, …)
+transitively as *packages* from `BuiltPackages`. If the test project
+also references the project of such a dependency (directly or through another
+project), NuGet resolves that id to the **project** and ignores the package
+with the same id. Two consequences:
+
+- A source change in NDOInterfaces reaches a test only if the test (directly or
+  transitively) has a `ProjectReference` to `NDOInterfaces.csproj`. Otherwise the
+  test sees the package version until the script has built a new package.
+- NDO.dll itself is always compiled against the *package* of NDOInterfaces.
+  A change in NDO.dll that needs a new API of NDOInterfaces can only be compiled
+  after NDOInterfaces was built as a package (`dotnet run Make/build.cs`).
+  The project version and the version in the `PackageReference` must be equal
+  (the script guarantees this); otherwise NuGet reports a downgrade (NU1605).
 
 ### 2.4 Problems with the old build
 
@@ -276,10 +302,11 @@ The package graph is checked for cycles and sorted topologically.
 5. Patch consumers (every scanned project except pinned ones)
    for each <PackageReference Include=id Version=v> with id in the manifest:
        if v != manifest version: set Version to the manifest version
-   This includes package projects that consume other NDO packages, like
-   NDO.JsonFormatter (ndo.dll). Every consumer always references the version
-   that is being built.
-   ProjectReferences are left untouched (the version flows in at pack time).
+   This includes all package projects, because they reference other NDO
+   packages only through PackageReferences (2.3), e.g. NDO.dll → NDOInterfaces.
+   Every consumer always references the version that is being built.
+   ProjectReferences of the test projects are left untouched; they always build
+   against the current source.
 
 5b. Patch the enhancer (5.5)
    tfm = highest netX.Y in the TargetFramework(s) of all package projects
@@ -330,10 +357,17 @@ produces the `.nupkg` / `.snupkg`. The script then copies
 The `cmd copy` `PostBuild` targets have been removed from the project files.
 
 **Restore.** The repository's `nuget.config` adds `BuiltPackages` as a package
-source and disables the stale user-level source `NDO`. Because producers are
-built and collected first (topological order), the packages are available when
-a dependent package or a consumer restores. `--force` makes restore re-evaluate
+source. Because producers are built and collected first (topological order),
+the packages are available when a dependent package or a consumer restores:
+NDOInterfaces is in `BuiltPackages` before NDO.Mapping restores, NDO.Mapping
+before NDO.SchemaGenerator, and so on. `--force` makes restore re-evaluate
 even if the version in the project file didn't change.
+
+**Fresh clone.** `BuiltPackages` is not under version control. In a fresh
+clone, a package project like NDO.dll can't be restored until its dependencies
+have been built. Run `dotnet run Make/build.cs` once (or
+`dotnet run Make/build.cs --all --no-consumers`) before building a solution in
+Visual Studio.
 
 **NuGet cache.** Before a package is built, its entry
 `~/.nuget/packages/<id>/<version>` (or `%NUGET_PACKAGES%`) is deleted.
@@ -388,6 +422,12 @@ Rules:
 When a package project gets a new framework (e.g. net12.0), the next run moves
 the enhancer and all paths to it without further manual edits.
 
+**Assembly resolution.** When the enhancer reflects the assembly of a test
+project, it resolves referenced assemblies (NDO.dll, …) first in the bin
+directory of that assembly, then in the NuGet package folder (via
+`project.assets.json`). The bin directory covers ProjectReferences, the package
+folder covers PackageReferences.
+
 ### 5.6 Command line
 
 ```
@@ -436,11 +476,11 @@ minor version for an API change, that manual version wins and the package is
 not bumped again.
 
 This applies to **all** dependents, including the **providers**: they depend on
-NDOInterfaces through a ProjectReference, so a change of NDOInterfaces bumps
+NDOInterfaces through a PackageReference, so a change of NDOInterfaces bumps
 every provider.
 
-With ProjectReferences, the dependency in the produced nuspec is a *minimum*
-version (`>= x`). Bumping the dependent is still necessary. It guarantees that
+The dependency in the produced nuspec is a *minimum* version (`>= x`).
+Bumping the dependent is still necessary. It guarantees that
 the published dependent package is a new artifact that points to the new
 dependency, and that old consumers don't receive a changed package under an
 unchanged version.
@@ -455,8 +495,12 @@ unchanged version.
 4. **Remove the copy targets.** The `cmd copy` `PostBuild` targets are gone;
    the script collects the packages. ✔
 5. **Add a `nuget.config`** at the repository root with `BuiltPackages` as a
-   relative package source and the user-level source `NDO` disabled. ✔
+   relative package source. The stale user-level source `NDO` has been removed
+   from the user's `NuGet.Config`. ✔
 6. **Retire the old build.** `Make/NDO.proj` and `Tools/PatchNdoVersion` are deleted. ✔
+6b. **PackageReferences between package projects.** The ProjectReferences
+   between the package projects (and from NDOEnhancer to the core packages) are
+   replaced by PackageReferences (2.3). ✔
 7. **Optional: Central Package Management.** Introduce `Directory.Packages.props`
    for the NDO package versions used by consumers.
 8. **Optional: modernize legacy projects.** Convert `NDOEnhancer.BuildTask` to
@@ -464,9 +508,14 @@ unchanged version.
 
 ## 7. Decisions
 
+- **Package projects reference each other through PackageReferences, test
+  projects preferably through ProjectReferences** (2.3). A package is built
+  against released versions of its dependencies; tests see source changes
+  immediately where they reference the projects.
 - **Consumers always reference the version being built.** This applies to test
   projects, tools and package projects that consume other NDO packages (e.g.
-  NDO.JsonFormatter → ndo.dll, and therefore FormatterUnitTests). Their
+  NDO.dll → NDOInterfaces, NDO.JsonFormatter → ndo.dll, and therefore
+  FormatterUnitTests). Their
   PackageReferences are set to the manifest version on every run. A package
   whose references were updated is rebuilt. Existing ProjectReferences, as in
   the NDODLL tests, stay; they always build against the current source. After
@@ -489,3 +538,6 @@ These consumers fail for reasons outside the build script:
   currently only be built with Visual Studio. Converting `NDOEnhancer.BuildTask`
   to an SDK-style project with `Microsoft.Build.Utilities.Core` (migration step 8)
   solves this for package consumers as well.
+- `IntegrationTests/IntegrationTests` calls `Logger.ClearTestLogs()`, which the
+  only published version of `Formfakten.TestLogger` (1.0.0) doesn't contain.
+  A newer TestLogger version is needed.

@@ -46,14 +46,14 @@ namespace NDO
 			object parent;
 			public object Parent
 			{
-				get { return parent; }
-				set { parent = value; }
+				get { return this.parent; }
+				set { this.parent = value; }
 			}
 			string field;
 			public string Field
 			{
-				get { return field; }
-				set { field = value; }
+				get { return this.field; }
+				set { this.field = value; }
 			}
 
 		}

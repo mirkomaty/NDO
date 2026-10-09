@@ -21,4 +21,6 @@ Other options:
   -c <config>          Configuration of the packages.
 
 BuiltPackages is configured as package source in nuget.config.
+Package projects reference each other through PackageReferences. In a fresh
+clone, run the script once before building a solution in Visual Studio.
 NDOEnhancer.BuildTask (part of NDO.Build) needs a Visual Studio installation (MSBuild).

@@ -30,7 +30,7 @@
     <Optimize>False</Optimize>
   </PropertyGroup>
   <ItemGroup>
-	  <ProjectReference Include="..\..\NDOInterfaces\NDOInterfaces.csproj" />
+	  <PackageReference Include="NDOInterfaces" Version="6.0.0" />
       <PackageReference Include="PatchProductVersion" Version="1.0.3" Condition="'$(TargetFramework)'=='net8.0' And '$(OS)'=='Windows_NT'">
         <PrivateAssets>all</PrivateAssets>
       </PackageReference>

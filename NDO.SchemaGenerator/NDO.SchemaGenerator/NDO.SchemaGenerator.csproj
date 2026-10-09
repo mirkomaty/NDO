@@ -27,7 +27,7 @@
     <RunAnalyzersDuringLiveAnalysis>False</RunAnalyzersDuringLiveAnalysis>
   </PropertyGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\NDO.Mapping\NDO.Mapping\NDO.Mapping.csproj" />
+    <PackageReference Include="NDO.Mapping" Version="6.0.0" />
     <PackageReference Include="PatchProductVersion" Version="1.0.3" Condition="'$(TargetFramework)'=='net8.0' And '$(OS)'=='Windows_NT'">
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>

@@ -233,6 +233,15 @@ namespace NDOEnhancer
 			if (assyName == null)
 				return null;
 
+			// Assemblies of ProjectReferences are copied to the bin directory
+			var binPath = Path.Combine( Path.GetDirectoryName( this.projectDescription.BinFile ), assyName + ".dll" );
+			if (File.Exists( binPath ))
+			{
+				if (verboseMode)
+					Console.WriteLine( "Location: " + binPath );
+				return Assembly.LoadFrom( binPath );
+			}
+
 			string path = GetPackageLibPath( assyName );
 
 			if (path == null)

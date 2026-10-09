@@ -8,7 +8,7 @@
 	</PropertyGroup>
 	
 	<ItemGroup>
-		<PackageReference Include="ndo.dll" Version="6.0.0" />
+		<ProjectReference Include="..\..\NDODLL\NDO.csproj" />
 	</ItemGroup>
 
 	<Target Name="CustomAfterBuild" AfterTargets="Build" >

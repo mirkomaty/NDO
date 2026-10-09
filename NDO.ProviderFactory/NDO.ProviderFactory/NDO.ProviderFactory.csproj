@@ -46,7 +46,7 @@
 		<PackageReference Include="Microsoft.Extensions.Hosting.Abstractions" Version="10.0.0" />
 	</ItemGroup>
 	<ItemGroup>
-		<ProjectReference Include="..\..\NDOInterfaces\NDOInterfaces.csproj" />
+		<PackageReference Include="NDOInterfaces" Version="6.0.0" />
 	</ItemGroup>
 
 

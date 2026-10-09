@@ -21,15 +21,15 @@
     <DropExistingElements>True</DropExistingElements>
   </Options>
   <ProjectDescription>
-    <BinPath>bin\Debug\net8.0\QueryTests.dll</BinPath>
-    <ObjPath>obj\Debug\net8.0\</ObjPath>
+    <BinPath>bin\Debug\net10.0\QueryTests.dll</BinPath>
+    <ObjPath>obj\Debug\net10.0\</ObjPath>
     <AssemblyName />
     <Debug>True</Debug>
     <KeyFile />
     <References>
       <Reference AssemblyName="NDO" AssemblyPath="..\..\NDODLL\bin\Debug\netstandard2.0\NDO.dll" CheckThisDLL="False">
       </Reference>
-      <Reference AssemblyName="PureBusinessClasses" AssemblyPath="..\..\IntegrationTests\PureBusinessClasses\bin\Debug\net8.0\PureBusinessClasses.dll">
+      <Reference AssemblyName="PureBusinessClasses" AssemblyPath="..\..\IntegrationTests\PureBusinessClasses\bin\Debug\net10.0\PureBusinessClasses.dll">
       </Reference>
     </References>
   </ProjectDescription>
