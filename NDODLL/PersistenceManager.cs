@@ -3501,6 +3501,20 @@ namespace NDO
 		}
 
 		/// <summary>
+		/// Finds an object in the object cache and loads the object from the database
+		/// in case of a cache miss.
+		/// </summary>
+		/// <param name="shortId"></param>
+		/// <returns>A persistent object</returns>
+		public async Task <IPersistenceCapable> GetObjectByShortIdAsync(string shortId)
+		{
+			var pc = FindObject(shortId);
+			if (pc.NDOObjectState == NDOObjectState.Hollow)
+				await LoadDataAsync( pc ).ConfigureAwait(false);
+			return pc;
+		}
+
+		/// <summary>
 		/// Gets the requested object. It first builds an ObjectId using the type and the 
 		/// key data. Then it uses FindObject to retrieve the object. No database access 
 		/// is performed.
