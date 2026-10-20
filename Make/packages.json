@@ -17,7 +17,7 @@
     { "id": "ndo.postgre",         "project": "Provider/PostGresProvider/NDO.Postgre/NDO.Postgre.csproj",            "version": "6.0.0" },
     { "id": "ndo.sqlite",          "project": "Provider/SqliteProvider/NDO.Sqlite/NDO.Sqlite.csproj",                "version": "6.0.0" },
     { "id": "ndo.sqlserver",       "project": "Provider/SqlServerProvider/NDO.SqlServer/NDO.SqlServer.csproj",       "version": "6.0.0" },
-    { "id": "NDO.Build",           "project": "nuget/NDO.Build.nuspec", "builder": "nuget",                          "version": "6.0.1",
+    { "id": "NDO.Build",           "project": "nuget/NDO.Build.nuspec", "builder": "nuget",                          "version": "6.1.0",
       "versionFollowers": [ "NDOEnhancer/NDOEnhancer/NDOEnhancer.csproj" ],
       "buildFirst": [
         { "project": "Tools/MakeEnhancerDate/MakeEnhancerDate.csproj", "configuration": "Release" },
