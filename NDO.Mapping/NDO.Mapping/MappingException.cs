@@ -38,5 +38,16 @@ namespace NDO.Mapping
         public MappingException( int val, string message ) : base( "Mapping error #" + val + ": " + message )
         {
         }
-    }
+
+        /// <summary>
+        /// Denotes internal errors
+        /// </summary>
+        /// <param name="val"></param>
+        /// <param name="message"></param>
+        /// <param name="innerException"></param>
+        public MappingException( int val, string message, Exception innerException ) : base( "Mapping error #" + val + ": " + message, innerException )
+		{
+		}
+
+	}
 }

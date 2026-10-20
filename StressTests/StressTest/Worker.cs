@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Data.Common;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -110,18 +111,60 @@ namespace StressTest
 
 		async Task RunIterationAsync( IterationState s, CancellationToken ct )
 		{
-			s.Step = "Create";
-			await CreateAsync( s, ct );
-			s.Step = "Read and change";
-			await ChangeAsync( s, ct );
-			s.Step = "Verify";
-			await VerifyAsync( s, ct );
-			s.Step = "Query";
-			await QueryAsync( ct );
-			s.Step = "Delete";
-			await DeleteAsync( s, ct );
-			s.Step = "Verify deletion";
-			await VerifyDeletionAsync( s, ct );
+			await RunStepAsync( s, "Create", () => CreateAsync( s, ct ), ct );
+			await RunStepAsync( s, "Read and change", () => ChangeAsync( s, ct ), ct );
+			await RunStepAsync( s, "Verify", () => VerifyAsync( s, ct ), ct );
+			await RunStepAsync( s, "Query", () => QueryAsync( ct ), ct );
+			await RunStepAsync( s, "Delete", () => DeleteOrderAsync( s, ct ), ct );
+			await RunStepAsync( s, "Delete", () => DeleteCustomerAsync( s, ct ), ct );
+			await RunStepAsync( s, "Verify deletion", () => VerifyDeletionAsync( s, ct ), ct );
+		}
+
+		/// <summary>
+		/// Runs a step and repeats it, if the database chose its transaction as deadlock victim.
+		/// </summary>
+		/// <remarks>
+		/// Deadlocks can't be avoided completely with databases which use locks. The database rolls back the
+		/// transaction of the victim, so the step can be repeated. Each step uses its own PersistenceManager
+		/// and changes the IterationState only after a successful save, so a repetition starts from scratch.
+		/// </remarks>
+		async Task RunStepAsync( IterationState s, string step, Func<Task> action, CancellationToken ct )
+		{
+			s.Step = step;
+			for (int attempt = 1; ; attempt++)
+			{
+				try
+				{
+					await action();
+					return;
+				}
+				catch (Exception ex) when (attempt <= this.options.DeadlockRetries && !ct.IsCancellationRequested && IsDeadlock( ex ))
+				{
+					this.statistics.DeadlockRetried( step );
+					// A random delay, so that the competing transactions don't collide again
+					await Task.Delay( this.random.Next( 10, 50 ) * attempt, ct );
+				}
+			}
+		}
+
+		/// <summary>
+		/// Checks, if an exception was caused by a deadlock.
+		/// </summary>
+		/// <remarks>
+		/// NDO wraps the exceptions of the ADO.NET providers in NDOExceptions. Versions up to 6.0.0 don't pass the original
+		/// exception as inner exception. Therefore the messages are checked as well. All supported databases mention "deadlock"
+		/// in their messages (SqlServer 1205, MySql 1213, Postgre 40P01). Sqlite doesn't have deadlocks.
+		/// </remarks>
+		static bool IsDeadlock( Exception ex )
+		{
+			for (Exception e = ex; e != null; e = e.InnerException)
+			{
+				if (e is DbException dbe && (dbe.SqlState == "40001" || dbe.SqlState == "40P01"))
+					return true;
+				if (e.Message.IndexOf( "deadlock", StringComparison.OrdinalIgnoreCase ) >= 0)
+					return true;
+			}
+			return false;
 		}
 
 		/// <summary>
@@ -288,10 +331,9 @@ namespace StressTest
 		}
 
 		/// <summary>
-		/// Deletes the order with PersistenceManager.Delete (the composite relation deletes the lines and the mapping table entries)
-		/// and the customer with VirtualTable.DeleteDirectlyAsync.
+		/// Deletes the order with PersistenceManager.Delete (the composite relation deletes the lines and the mapping table entries).
 		/// </summary>
-		async Task DeleteAsync( IterationState s, CancellationToken ct )
+		async Task DeleteOrderAsync( IterationState s, CancellationToken ct )
 		{
 			await using (var pm = this.db.NewPersistenceManager())
 			{
@@ -300,7 +342,13 @@ namespace StressTest
 				pm.Delete( order );
 				await this.statistics.MeasureAsync( "SaveAsync (delete)", () => pm.SaveAsync( false, ct ) );
 			}
+		}
 
+		/// <summary>
+		/// Deletes the customer with VirtualTable.DeleteDirectlyAsync.
+		/// </summary>
+		async Task DeleteCustomerAsync( IterationState s, CancellationToken ct )
+		{
 			await using (var pm = this.db.NewPersistenceManager())
 			{
 				string customerName = s.CustomerName;

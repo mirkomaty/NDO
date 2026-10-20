@@ -234,7 +234,7 @@ namespace NDO
             {
                 string text = "Exception while reading the mapping table: " + ex.Message + "\n";
                 text += "Sql-Anweisung: " + selectCommand.CommandText + "\n";
-                throw new NDOException(25, text);
+                throw new NDOException(25, text, ex);
             }
 
 			return table;		
@@ -265,7 +265,7 @@ namespace NDO
 			}
 			catch (System.Exception ex) 
 			{
-				throw new NDOException(26, "Exception while updating the mapping table: " + ex.Message + "\n");
+				throw new NDOException(26, "Exception while updating the mapping table: " + ex.Message + "\n", ex);
 			}
 		}
 

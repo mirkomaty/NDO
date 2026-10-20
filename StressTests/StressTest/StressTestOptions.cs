@@ -26,6 +26,10 @@ namespace StressTest
 		public bool RecreateSchema { get; set; } = true;
 		public bool DropSchemaAfterTest { get; set; }
 		public bool StopOnFirstError { get; set; }
+		/// <summary>
+		/// Number of retries of a step, if the database chose the transaction as deadlock victim. 0 turns off the retries.
+		/// </summary>
+		public int DeadlockRetries { get; set; } = 5;
 		public int MaxErrorsToPrint { get; set; } = 20;
 		public int ProgressIntervalSeconds { get; set; } = 5;
 
@@ -45,6 +49,8 @@ namespace StressTest
 			// Each order gets two tags, the update replaces one of them by a third tag
 			if (TagCount < 3)
 				throw new ArgumentException( "TagCount must be >= 3." );
+			if (DeadlockRetries < 0)
+				throw new ArgumentException( "DeadlockRetries must be >= 0." );
 		}
 
 		public override string ToString()
@@ -61,7 +67,8 @@ namespace StressTest
 			sb.AppendLine( $"Tags:              {TagCount}" );
 			sb.AppendLine( $"TransactionMode:   {TransactionMode}" );
 			sb.AppendLine( $"IsolationLevel:    {(IsolationLevel.HasValue ? IsolationLevel.ToString() : "NDO default")}" );
-			sb.Append(     $"Shared mapping:    {SharedMapping}" );
+			sb.AppendLine( $"Shared mapping:    {SharedMapping}" );
+			sb.Append(     $"Deadlock retries:  {DeadlockRetries}" );
 			return sb.ToString();
 		}
 

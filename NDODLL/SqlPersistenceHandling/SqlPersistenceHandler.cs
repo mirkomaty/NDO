@@ -529,7 +529,7 @@ namespace NDO.SqlPersistenceHandling
                     text += "Check the field names in the mapping file.\n";
                 text += "Sql Update statement: " + updateCommand.CommandText + "\n";
                 text += "Sql Insert statement: " + insertCommand.CommandText;
-                throw new NDOException(37, text);
+                throw new NDOException(37, text, ex);
             }
 		}
 
@@ -580,7 +580,7 @@ namespace NDO.SqlPersistenceHandling
 			{
 				string text = "Exception of type " + ex.GetType().Name + " while deleting data rows: " + ex.Message + "\n";
 				text += "Sql statement: " + deleteCommand.CommandText + "\n";
-				throw new NDOException(38, text);
+				throw new NDOException(38, text, ex);
 			}
 		}
 
@@ -818,7 +818,7 @@ namespace NDO.SqlPersistenceHandling
             {
                 string text = "Exception of type " + ex.GetType().Name + " while executing a Query: " + ex.Message + "\n";
                 text += "Sql Statement: " + sql + "\n";
-                throw new NDOException(40, text);
+                throw new NDOException(40, text, ex);
             }
 
 			return table;		

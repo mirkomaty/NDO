@@ -42,6 +42,7 @@ namespace StressTest
 
 		readonly ConcurrentDictionary<string, OperationStats> operations = new ConcurrentDictionary<string, OperationStats>();
 		readonly ConcurrentQueue<ErrorInfo> errors = new ConcurrentQueue<ErrorInfo>();
+		readonly ConcurrentDictionary<string, long> deadlockRetries = new ConcurrentDictionary<string, long>();
 		long successfulIterations;
 		long failedIterations;
 
@@ -55,6 +56,20 @@ namespace StressTest
 		{
 			Interlocked.Increment( ref this.failedIterations );
 			this.errors.Enqueue( error );
+		}
+
+		/// <summary>
+		/// Counts a retry of a step after a deadlock.
+		/// </summary>
+		public void DeadlockRetried( string step ) => this.deadlockRetries.AddOrUpdate( step, 1, ( _, n ) => n + 1 );
+
+		public string GetDeadlockReport()
+		{
+			var sb = new StringBuilder();
+			sb.AppendLine( $"Deadlock retries: {this.deadlockRetries.Values.Sum()}" );
+			foreach (var kvp in this.deadlockRetries.OrderBy( k => k.Key ))
+				sb.AppendLine( $"  {kvp.Value,6} x {kvp.Key}" );
+			return sb.ToString();
 		}
 
 		/// <summary>

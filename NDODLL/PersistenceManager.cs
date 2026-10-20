@@ -149,7 +149,7 @@ namespace NDO
             {
                 if (ex is NDOException)
                     throw;
-                throw new NDOException(30, "Persistence manager initialization error: " + ex.ToString());
+                throw new NDOException(30, "Persistence manager initialization error: " + ex.ToString(), ex);
             }
 
 		}
@@ -1141,7 +1141,7 @@ namespace NDO
 				{
 					string msg = "Error while writing the embedded object {0} of an object of type {1}. Check your mapping file.\n{2}";
 
-					throw new NDOException(68, string.Format(msg, s, pc.GetType().FullName, ex.Message));
+					throw new NDOException(68, string.Format(msg, s, pc.GetType().FullName, ex.Message), ex);
 				}
 
 			}
@@ -1163,7 +1163,7 @@ namespace NDO
 			catch (Exception ex)
 			{
 				throw new NDOException(69, "Error while writing to a field of an object of type " + pc.GetType().FullName + ". Check your mapping file.\n"
-					+ ex.Message);
+					+ ex.Message, ex);
 			}
 		}
 
@@ -1582,7 +1582,7 @@ namespace NDO
 			catch (Exception ex)
 			{
 				throw new NDOException(70, "Error while reading a field of an object of type " + pc.GetType().FullName + ". Check your mapping file.\n"
-					+ ex.Message);
+					+ ex.Message, ex);
 			}
 
             if (cl.TypeNameColumn != null)
@@ -1619,7 +1619,7 @@ namespace NDO
 				{
 					string msg = "Error while reading the embedded object {0} of an object of type {1}. Check your mapping file.\n{2}";
 
-					throw new NDOException(71, string.Format(msg, s, pc.GetType().FullName, ex.Message));
+					throw new NDOException(71, string.Format(msg, s, pc.GetType().FullName, ex.Message), ex);
 				}
 			}
 		}

@@ -43,7 +43,7 @@ namespace NDO
 			}
 			catch (Exception ex)
 			{
-				throw new NDOException(74, "Can't clone List of type " + t.FullName + ". " + ex.Message);
+				throw new NDOException(74, "Can't clone List of type " + t.FullName + ". " + ex.Message, ex);
 			}
 		}
 
@@ -62,7 +62,7 @@ namespace NDO
 			}
 			catch (Exception ex)
 			{
-				throw new NDOException(74, "Can't create List of type " + t.FullName + ". " + ex.Message);
+				throw new NDOException(74, "Can't create List of type " + t.FullName + ". " + ex.Message, ex);
 			}
 		}
 

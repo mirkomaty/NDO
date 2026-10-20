@@ -391,7 +391,7 @@ namespace NDOInterfaces
 			}
 			catch (Exception ex)
 			{
-				throw new NDOException(19, "Error while attempting to create a database: Exception Type: " + ex.GetType().Name + " Message: " + ex.Message);
+				throw new NDOException(19, "Error while attempting to create a database.", ex);
 			}
 
 			return string.Empty;

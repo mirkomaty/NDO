@@ -23,6 +23,7 @@ namespace StressTest
 	/// The mapping file of StressTestClasses contains a dummy connection. It is copied to a provider specific
 	/// mapping file, in which the connection type and connection string are replaced by the configured values.
 	/// The tables are generated with the ISqlGenerator of the provider from the DataSet, which NDO builds from the mapping.
+	/// In addition to the tables, indexes for the foreign keys and the search columns are created.
 	/// </remarks>
 	public class TestDatabase
 	{
@@ -143,7 +144,80 @@ namespace StressTest
 					foreach (string statement in CreateTableStatements( dt, pm.NDOMapping, provider, generator ))
 						await ExecuteAsync( statement, ct );
 				}
+
+				foreach (string statement in CreateIndexStatements( pm.DataSet, pm.NDOMapping, provider, generator ))
+					await ExecuteAsync( statement, ct );
 			}
+		}
+
+		/// <summary>
+		/// Generates indexes for the foreign key columns, the mapping tables and the columns used in the conditions of the workers.
+		/// </summary>
+		/// <remarks>
+		/// NDO doesn't create indexes. Without them the database has to scan the whole table for each update, delete
+		/// or query with a condition on such a column. With databases which use locks for ReadCommitted (e.g. SqlServer),
+		/// the scans of concurrent transactions block each other and cause many deadlocks.
+		/// </remarks>
+		static IEnumerable<string> CreateIndexStatements( DataSet ds, NDOMapping mapping, IProvider provider, ISqlGenerator generator )
+		{
+			var created = new HashSet<string>( StringComparer.OrdinalIgnoreCase );
+			var counters = new Dictionary<string, int>( StringComparer.OrdinalIgnoreCase );
+
+			foreach (var (tableName, columnNames) in IndexDefinitions( mapping ))
+			{
+				DataTable dt = ds.Tables[tableName];
+				if (dt == null || columnNames.Length == 0 || columnNames.Any( c => !dt.Columns.Contains( c ) ))
+					continue;
+				// The same columns can occur in both directions of a bidirectional relation
+				if (!created.Add( tableName + ":" + String.Join( ",", columnNames ) ))
+					continue;
+
+				// Short names, because some databases limit the length of identifiers
+				counters.TryGetValue( tableName, out int n );
+				counters[tableName] = ++n;
+				string indexName = provider.GetQuotedName( $"IX_{UnqualifiedName( tableName )}_{n}" );
+				yield return generator.CreateIndex( indexName, QualifiedTableName( provider, tableName ), columnNames.Select( c => dt.Columns[c] ).ToArray() );
+			}
+		}
+
+		static IEnumerable<(string TableName, string[] ColumnNames)> IndexDefinitions( NDOMapping mapping )
+		{
+			foreach (Class cl in mapping.Classes)
+			{
+				foreach (Relation r in cl.Relations)
+				{
+					var fkColumns = r.ForeignKeyColumns.Select( c => c.Name ).ToList();
+					if (r.ForeignKeyTypeColumnName != null)
+						fkColumns.Add( r.ForeignKeyTypeColumnName );
+
+					if (r.MappingTable != null)
+					{
+						var childColumns = r.MappingTable.ChildForeignKeyColumns.Select( c => c.Name ).ToList();
+						if (r.MappingTable.ChildForeignKeyTypeColumnName != null)
+							childColumns.Add( r.MappingTable.ChildForeignKeyTypeColumnName );
+						// Covers the access from the parent side and the deletion of single entries
+						yield return (r.MappingTable.TableName, fkColumns.Concat( childColumns ).ToArray());
+						// Access from the child side
+						yield return (r.MappingTable.TableName, childColumns.ToArray());
+					}
+					else if (r.Multiplicity == RelationMultiplicity.Element)
+					{
+						// The foreign key is in the table of the class
+						yield return (cl.TableName, fkColumns.ToArray());
+					}
+					else
+					{
+						// 1:n relation: the foreign key is in the table of the referenced class
+						Class refClass = mapping.FindClass( r.ReferencedTypeName );
+						if (refClass != null)
+							yield return (refClass.TableName, fkColumns.ToArray());
+					}
+				}
+			}
+
+			// Columns used in the conditions of the workers
+			yield return (mapping.FindClass( typeof( SalesOrder ) ).TableName, new[] { "OrderNumber" });
+			yield return (mapping.FindClass( typeof( Customer ) ).TableName, new[] { "Name" });
 		}
 
 		/// <summary>

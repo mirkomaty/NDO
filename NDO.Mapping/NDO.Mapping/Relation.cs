@@ -502,7 +502,7 @@ namespace NDO.Mapping
             Type t = Parent.SystemType;
 
             if (t == null)
-                throw new MappingException(1155, "Relation.InitFields");
+                throw new MappingException(1155, "Relation.InitFields: type not found");
 
             FieldInfo fi = null;
 
@@ -733,7 +733,7 @@ namespace NDO.Mapping
                 }
                 catch (Exception ex)
                 {
-                    throw new MappingException(1379, "Relation.ForeignRelation:" + ex.Message + " Status: " + status.ToString());
+                    throw new MappingException(1379, $"Relation.ForeignRelation failed. Status: {status}", ex);
                 }
             }
         }

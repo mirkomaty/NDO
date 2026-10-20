@@ -144,6 +144,7 @@ namespace StressTest
 			Console.WriteLine( $"Elapsed: {stopwatch.Elapsed}" );
 			Console.WriteLine( $"Iterations ok: {statistics.SuccessfulIterations}, failed: {statistics.FailedIterations}" );
 			Console.WriteLine( $"Iterations/s: {statistics.SuccessfulIterations / stopwatch.Elapsed.TotalSeconds:F1}" );
+			Console.Write( statistics.GetDeadlockReport() );
 			Console.WriteLine();
 			Console.WriteLine( statistics.GetOperationReport( stopwatch.Elapsed ) );
 
@@ -252,6 +253,7 @@ Options:
       --recreateSchema <bool>   Drop and create the tables before the test
       --dropSchema <bool>       Drop the tables after a successful test
       --stopOnFirstError <bool> Stop all workers after the first error
+      --deadlockRetries <n>     Retries of a step after a deadlock (0: no retries)
       --maxErrors <n>           Number of errors printed with stack trace
 
 Exit codes: 0 = success, 1 = errors, 2 = cancelled, 3 = configuration or setup error" );
