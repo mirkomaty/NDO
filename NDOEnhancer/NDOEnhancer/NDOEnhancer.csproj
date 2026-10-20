@@ -5,8 +5,8 @@
     <TargetFramework>net11.0</TargetFramework>
     <ImplicitUsings>disable</ImplicitUsings>
     <Nullable>disable</Nullable>
-	<Version>6.0.1</Version>
-	<AssemblyVersion>6.0.1.0</AssemblyVersion>
+	<Version>6.1.0</Version>
+	<AssemblyVersion>6.1.0.0</AssemblyVersion>
 	<Authors>Mirko Matytschak</Authors>
 	<Company>Mirko Matytschak</Company>
 	<Product>NDOEnhancer</Product>
@@ -23,7 +23,7 @@
   </PropertyGroup>
 
   <Target Name="PrepareEnhDate" BeforeTargets="PrepareForBuild">
-    <Exec Command="..\..\Tools\MakeEnhancerDate\bin\Release\net8.0\MakeEnhancerDate.exe &gt; EnhDate.cs" />
+    <Exec Command="..\..\Tools\MakeEnhancerDate\bin\Release\net10.0\MakeEnhancerDate.exe &gt; EnhDate.cs" />
   </Target>
 
 	<Target Name="CopyILDasm" AfterTargets="PrepareForBuild">

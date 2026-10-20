@@ -244,7 +244,7 @@
   <Import Project="$(VSToolsPath)\VSSDK\Microsoft.VsSDK.targets" Condition="'$(VSToolsPath)' != ''" />
   <Target Name="PrepareEnhDate" BeforeTargets="PrepareForBuild">
     <MakeDir Directories="MappingTool" Condition="!Exists('MappingTool')" />
-    <Exec Command="..\Tools\MakeEnhancerDate\bin\Release\net8.0\MakeEnhancerDate.exe &gt; EnhDate.cs" />
+    <Exec Command="..\Tools\MakeEnhancerDate\bin\Release\net10.0\MakeEnhancerDate.exe &gt; EnhDate.cs" />
     <Copy SourceFiles="..\SimpleMappingTool\bin\Release\net8.0-windows\Mapping.deps.json" DestinationFolder="MappingTool" />
     <Copy SourceFiles="..\SimpleMappingTool\bin\Release\net8.0-windows\Mapping.dll" DestinationFolder="MappingTool" />
     <Copy SourceFiles="..\SimpleMappingTool\bin\Release\net8.0-windows\Mapping.exe" DestinationFolder="MappingTool" />
