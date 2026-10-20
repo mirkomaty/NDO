@@ -1,0 +1,6 @@
+# Sqlite database of the stress test (created in the working directory)
+*.db
+*.db-shm
+*.db-wal
+# Local connection strings
+appsettings.local.json

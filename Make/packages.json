@@ -36,6 +36,7 @@
     { "project": "NDODLL.Tests/NdoDllUnitTests/NdoDllUnitTests.csproj",								"test": true, "configuration": "Debug" },
     { "project": "NDODLL.Tests/QueryTests/QueryTests.csproj",										"test": true, "configuration": "Debug" },
     { "project": "NDODLL.Tests/AsyncTests/AsyncTests.csproj",										"test": true, "configuration": "Debug" },
+    { "project": "StressTests/StressTest/StressTest.csproj",										"configuration": "Debug" },
     { "project": "NDOEnhancer/Ecma335Tests/Ecma335Tests.csproj",									"test": true, "configuration": "Debug" },
     { "project": "UnitTestGenerator/UnitTests/UnitTests.csproj",									"test": true, "configuration": "Debug" },
     { "project": "UnitTestGenerator/TestGenerator/TestGenerator.csproj" },

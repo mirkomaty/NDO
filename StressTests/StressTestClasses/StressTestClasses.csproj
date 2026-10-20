@@ -1,0 +1,21 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<TargetFramework>net10.0</TargetFramework>
+		<ImplicitUsings>disable</ImplicitUsings>
+		<Nullable>disable</Nullable>
+		<DebugType>full</DebugType>
+	</PropertyGroup>
+
+	<!-- Enhances the persistent classes and creates NDOMapping.xml in the project directory.
+	     The enhancer is always used from its Debug output (see Concepts/BuildProcess.md, 5.5). -->
+	<Target Name="CustomAfterBuild" AfterTargets="Build">
+		<!--Exec WorkingDirectory="bin\Debug\net10.0" Command="..\..\..\..\..\NDOEnhancer\NDOEnhancer\bin\Debug\net11.0\NDOEnhancer ..\..\..\StressTestClasses.ndoproj $(TargetFramework)" /-->
+		<!--Copy SourceFiles="obj\Debug\net10.0\ndotemp\StressTestClasses.dll" DestinationFolder="bin\Debug\net10.0" /-->
+	</Target>
+	<ItemGroup>
+	  <PackageReference Include="ndo.build" Version="6.0.0" />
+	  <PackageReference Include="ndo.dll" Version="6.0.0" />
+	</ItemGroup>
+
+</Project>

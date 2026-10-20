@@ -8,7 +8,7 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-		<PackageReference Include="NDO.Build" Version="6.0.1" />
+		<PackageReference Include="NDO.Build" Version="6.1.0" />
 		<PackageReference Include="NDO.dll" Version="6.0.0" />
 		<PackageReference Include="NDO.SqlServer" Version="6.0.0" />
 	</ItemGroup>

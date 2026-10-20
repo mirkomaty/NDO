@@ -1,0 +1,93 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<NDOMapping SchemaVersion="1.0">
+  <Connections>
+    <Connection ID="C0" Name="Substitute this string with your connection string" Type="" />
+  </Connections>
+  <Classes>
+    <Class AssemblyName="StressTestClasses" FullName="StressTestClasses.Customer" TableName="Customer" ConnectionId="C0" TypeCode="1121500331">
+      <Oid>
+        <OidColumn AutoIncremented="True" Name="ID" AllowDbNull="False" />
+      </Oid>
+      <Fields>
+        <Field Name="city" AccessorName="City">
+          <Column Name="City" />
+        </Field>
+        <Field Name="created" AccessorName="Created">
+          <Column Name="Created" />
+        </Field>
+        <Field Name="name" AccessorName="Name">
+          <Column Name="Name" />
+        </Field>
+        <Field Name="updateCount" AccessorName="UpdateCount">
+          <Column Name="UpdateCount" />
+        </Field>
+      </Fields>
+      <Relations />
+    </Class>
+    <Class AssemblyName="StressTestClasses" FullName="StressTestClasses.OrderLine" TableName="OrderLine" ConnectionId="C0" TypeCode="-1596608203">
+      <Oid>
+        <OidColumn AutoIncremented="True" Name="ID" AllowDbNull="False" />
+      </Oid>
+      <Fields>
+        <Field Name="price" AccessorName="Price">
+          <Column Name="Price" />
+        </Field>
+        <Field Name="product" AccessorName="Product">
+          <Column Name="Product" />
+        </Field>
+        <Field Name="quantity" AccessorName="Quantity">
+          <Column Name="Quantity" />
+        </Field>
+      </Fields>
+      <Relations>
+        <Relation FieldName="order" AccessorName="Order" ReferencedTypeName="StressTestClasses.SalesOrder" RelationName="">
+          <ForeignKeyColumn Name="IDSalesOrder" />
+        </Relation>
+      </Relations>
+    </Class>
+    <Class AssemblyName="StressTestClasses" FullName="StressTestClasses.SalesOrder" TableName="SalesOrder" ConnectionId="C0" TypeCode="-1285074129">
+      <Oid>
+        <OidColumn AutoIncremented="True" Name="ID" AllowDbNull="False" />
+      </Oid>
+      <Fields>
+        <Field Name="orderDate" AccessorName="OrderDate">
+          <Column Name="OrderDate" />
+        </Field>
+        <Field Name="orderNumber" AccessorName="OrderNumber">
+          <Column Name="OrderNumber" />
+        </Field>
+        <Field Name="status" AccessorName="Status">
+          <Column Name="Status" />
+        </Field>
+        <Field Name="total" AccessorName="Total">
+          <Column Name="Total" />
+        </Field>
+      </Fields>
+      <Relations>
+        <Relation FieldName="customer" AccessorName="Customer" ReferencedTypeName="StressTestClasses.Customer" RelationName="">
+          <ForeignKeyColumn Name="IDCustomer" />
+        </Relation>
+        <Relation FieldName="lines" AccessorName="Lines" ReferencedTypeName="StressTestClasses.OrderLine" RelationName="">
+          <ForeignKeyColumn Name="IDSalesOrder" />
+        </Relation>
+        <Relation FieldName="tags" AccessorName="Tags" ReferencedTypeName="StressTestClasses.Tag" RelationName="">
+          <ForeignKeyColumn Name="IDSalesOrder" />
+          <MappingTable TableName="relSalesOrderTag" ConnectionId="C0">
+            <ForeignKeyColumn Name="IDTag" />
+          </MappingTable>
+        </Relation>
+      </Relations>
+    </Class>
+    <Class AssemblyName="StressTestClasses" FullName="StressTestClasses.Tag" TableName="Tag" ConnectionId="C0" TypeCode="-945752403">
+      <Oid>
+        <OidColumn AutoIncremented="True" Name="ID" AllowDbNull="False" />
+      </Oid>
+      <Fields>
+        <Field Name="name" AccessorName="Name">
+          <Column Name="Name" />
+        </Field>
+      </Fields>
+      <Relations />
+    </Class>
+  </Classes>
+</NDOMapping>

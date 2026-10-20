@@ -1,0 +1,33 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<Enhancer>
+  <Options>
+    <EnableAddIn>True</EnableAddIn>
+    <EnableEnhancer>False</EnableEnhancer>
+    <VerboseMode>False</VerboseMode>
+    <NewMapping>False</NewMapping>
+    <GenerateSQL>True</GenerateSQL>
+    <DefaultConnection>Integrated Security=SSPI;Persist Security Info=False;Data Source=localhost;TrustServerCertificate=True;Initial Catalog=NDOStressTest</DefaultConnection>
+    <TargetMappingFileName>NDOMapping.xml</TargetMappingFileName>
+    <GenerateChangeEvents>False</GenerateChangeEvents>
+    <UseTimeStamps>False</UseTimeStamps>
+    <Utf8Encoding>True</Utf8Encoding>
+    <SQLScriptLanguage>SqlServer</SQLScriptLanguage>
+    <SchemaVersion>1.0</SchemaVersion>
+    <IncludeTypecodes>False</IncludeTypecodes>
+    <DatabaseOwner>
+    </DatabaseOwner>
+    <GenerateConstraints>False</GenerateConstraints>
+    <DropExistingElements>False</DropExistingElements>
+  </Options>
+  <ProjectDescription version="5.0">
+    <BinPath>bin\Debug\$(TargetFramework)\StressTest.dll</BinPath>
+    <ObjPath>obj\Debug\$(TargetFramework)\</ObjPath>
+    <AssemblyName />
+    <Debug>True</Debug>
+    <KeyFile />
+    <References>
+      <Reference AssemblyName="StressTestClasses" AssemblyPath="..\StressTestClasses\bin\Debug\net10.0\StressTestClasses.dll">
+      </Reference>
+    </References>
+  </ProjectDescription>
+</Enhancer>
