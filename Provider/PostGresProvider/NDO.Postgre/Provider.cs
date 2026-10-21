@@ -27,6 +27,7 @@ using System.Collections;
 using System.Collections.ObjectModel;
 using System.Data;
 using System.Data.Common;
+using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 
@@ -250,7 +251,10 @@ namespace NDO.PostGreProvider
 		/// </summary>
 		public override string GetLastInsertedId(string tableName, string columnName)
 		{
-            return $"(SELECT CURRVAL(pg_get_serial_sequence('{tableName}', '{columnName}')))";
+			// pg_get_serial_sequence treats the table name like an identifier in SQL code: Unquoted names are converted
+			// to lower case. The column name is used literally.
+			string quotedTableName = String.Join( ".", tableName.Split( '.' ).Select( GetQuotedName ) ).Replace( "'", "''" );
+			return $"(SELECT CURRVAL(pg_get_serial_sequence('{quotedTableName}', '{columnName.Replace( "'", "''" )}')))";
 		}
 
 		/// <summary>
