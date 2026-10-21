@@ -247,6 +247,40 @@ namespace NDOEnhancer
 			return sb.ToString();
 		}
 
+		/// <summary>
+		/// Creates the indexes of a table, see <see cref="IndexDefinition"/>.
+		/// </summary>
+		protected string CreateIndexes(DataTable dt)
+		{
+			StringBuilder sb = new StringBuilder();
+			foreach (IndexDefinition index in IndexDefinition.ForTable(dt, mappings))
+			{
+				string sql = concreteGenerator.CreateIndex(provider.GetQuotedName(index.Name), QualifiedTableName.Get(dt.TableName, provider), index.Columns, index.IsUnique);
+				if (!String.IsNullOrEmpty(sql))
+				{
+					sb.Append(sql);
+					sb.Append(";\n");
+				}
+			}
+			return sb.ToString();
+		}
+
+		/// <summary>
+		/// Turns a CREATE INDEX statement into a CREATE UNIQUE INDEX statement.
+		/// </summary>
+		/// <remarks>
+		/// ISqlGenerator.CreateIndex doesn't know unique indexes. Providers override CreateIndex only to shorten the
+		/// index name, so we change the statement they generate instead of extending the interface of all providers.
+		/// </remarks>
+		string MakeUnique(string sql, string indexName)
+		{
+			const string createIndex = "CREATE INDEX ";
+			if (sql.StartsWith(createIndex, StringComparison.OrdinalIgnoreCase))
+				return "CREATE UNIQUE INDEX " + sql.Substring(createIndex.Length);
+			messages.WriteLine("Warning: Can't create the index " + indexName + " as unique index, because the SQL generator for '" + provider.Name + "' uses an unknown syntax.");
+			return sql;
+		}
+
 		protected string CreatePrimaryKeyConstraint(DataColumn[] primaryKeyColumns, DataTable dt, IProvider provider)
 		{
 			if (primaryKeyColumns.Length == 0)

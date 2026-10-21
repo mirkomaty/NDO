@@ -192,8 +192,9 @@ namespace NDOInterfaces
 		/// <param name="indexName">Name of the index.</param>
 		/// <param name="tableName">Name of the owning table.</param>
 		/// <param name="indexColums">An array of DataColumn objects which denotes the columns to be indexed.</param>
+		/// <param name="isUnique">Determines, if the generated index should be unique.</param>
 		/// <returns></returns>
-		string CreateIndex(string indexName, string tableName, DataColumn[] indexColums);
+		string CreateIndex(string indexName, string tableName, DataColumn[] indexColums, bool isUnique);
 
 		/// <summary>
 		/// Creates the part of a Alter Table statement, which adds a column. NDO will add the type

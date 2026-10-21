@@ -38,14 +38,14 @@ namespace OracleProvider
         {
         }
 
-        public override string CreateIndex(string indexName, string tableName, DataColumn[] indexColums)
+        public override string CreateIndex(string indexName, string tableName, DataColumn[] indexColums, bool isUnique)
         {
             string indexName2 = indexName.Substring(1, indexName.Length - 2);
             uint hash = (uint)indexName2.GetHashCode();
             if (indexName2.Length > 30)
                 indexName2 = indexName2.Substring(0, 22) + hash.ToString("X");
 
-            return base.CreateIndex(Provider.GetQuotedName(indexName2), tableName, indexColums);
+            return base.CreateIndex(Provider.GetQuotedName(indexName2), tableName, indexColums, isUnique);
         }
 
 

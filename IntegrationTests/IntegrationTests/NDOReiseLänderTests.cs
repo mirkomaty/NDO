@@ -429,6 +429,100 @@ namespace NdoUnitTests {
             pm.Save();
         }
 
+		[Test]
+		public void AddingLandTwiceThrows()
+		{
+			CreateLänder();
+			r.LandHinzufügen(de);
+			var ex = Assert.Throws<NDOException>(() => r.LandHinzufügen(de));
+			Assert.That(123 == ex.ErrorNumber, "Wrong error number");
+			Assert.That(1 == r.Länder.Count, "#1 Number of Länder");
+			pm.Save();
+			pm.MakeHollow(r);
+			Assert.That(1 == r.Länder.Count, "#2 Number of Länder");
+		}
+
+		[Test]
+		public void AddingSavedLandTwiceThrows()
+		{
+			CreateLänder();
+			r.LandHinzufügen(de);
+			pm.Save();
+			pm.MakeHollow(r);
+			var ex = Assert.Throws<NDOException>(() => r.LandHinzufügen(de));
+			Assert.That(123 == ex.ErrorNumber, "Wrong error number");
+			Assert.That(1 == r.Länder.Count, "Number of Länder");
+		}
+
+		[Test]
+		public void AddingReiseFromOtherSideThrows()
+		{
+			CreateLänder();
+			r.LandHinzufügen(de);
+			// The relation management already added r to de.DieReisen
+			Assert.That(1 == de.DieReisen.Count, "Number of Reisen");
+			var ex = Assert.Throws<NDOException>(() => de.AddReise(r));
+			Assert.That(123 == ex.ErrorNumber, "Wrong error number");
+			pm.Save();
+			pm.MakeHollow(r);
+			Assert.That(1 == r.Länder.Count, "Number of Länder");
+		}
+
+		[Test]
+		public void AddAndRemoveSavedLandWritesNoEntry()
+		{
+			CreateLänder();
+			r.LandHinzufügen(de);
+			pm.Save();
+			r.LandHinzufügen(usa);
+			r.LandLöschen(usa);
+			pm.Save();
+			pm.MakeHollow(r);
+			Assert.That(1 == r.Länder.Count, "Number of Länder");
+			Assert.That(Object.ReferenceEquals(de, r.Länder[0]), "Land is wrong");
+		}
+
+		[Test]
+		public void RemoveFromOtherSideCancelsEntry()
+		{
+			CreateLänder();
+			r.LandHinzufügen(de);
+			pm.Save();
+			r.LandHinzufügen(usa);
+			usa.RemoveReise(r);
+			Assert.That(1 == r.Länder.Count, "#1 Number of Länder");
+			pm.Save();
+			pm.MakeHollow(r);
+			Assert.That(1 == r.Länder.Count, "#2 Number of Länder");
+			Assert.That(Object.ReferenceEquals(de, r.Länder[0]), "Land is wrong");
+		}
+
+		[Test]
+		public void RemoveAndAddSavedLandKeepsEntry()
+		{
+			CreateLänder();
+			r.LandHinzufügen(de);
+			pm.Save();
+			r.LandLöschen(de);
+			r.LandHinzufügen(de);
+			pm.Save();
+			pm.MakeHollow(r);
+			Assert.That(1 == r.Länder.Count, "Number of Länder");
+			Assert.That(Object.ReferenceEquals(de, r.Länder[0]), "Land is wrong");
+		}
+
+		[Test]
+		public void ReplaceLandWithItselfKeepsEntry()
+		{
+			CreateLänder();
+			r.LandHinzufügen(de);
+			pm.Save();
+			r.Länder[0] = de;
+			pm.Save();
+			pm.MakeHollow(r);
+			Assert.That(1 == r.Länder.Count, "Number of Länder");
+		}
+
 		private Reise CreateReise(string zweck) 
 		{
 			Reise r = new Reise();	

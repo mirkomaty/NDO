@@ -50,6 +50,7 @@ namespace NDOEnhancer
 				if (!dsOldSchema.Tables.Contains(dt.TableName))
 				{
 					stream.Write(CreateTable(dt));
+					stream.Write(CreateIndexes(dt));
 				}
 				else
 				{

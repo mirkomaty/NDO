@@ -115,41 +115,8 @@ namespace NDOEnhancer
                 }
 
             }
-#if noindex
 			foreach (DataTable dt in dsSchema.Tables)
-			for (int i = 0; i < dt.ParentRelations.Count; i++)
-			{
-				DataRelation dr = dt.ParentRelations[i];
-				string index = concreteGenerator.CreateIndex(provider.GetQuotedName("Ix" + dr.RelationName), QualifiedTableName.Get(dt.TableName, provider), dr.ChildColumns);
-				if (index != string.Empty)
-				{
-					stream.Write(index);
-					stream.WriteLine(";");
-				}
-			}
-			foreach(DataTable dt in dsSchema.Tables)
-			{
-				if (GetClassForTable(dt.TableName, mappings) == null) // mappingTable
-				{
-					int i = 1;
-					string tname = dt.TableName;
-					tname = tname.Substring(tname.IndexOf('.') + 1);
-					if (tname.StartsWith("rel"))
-						tname = tname.Substring(3);
-					tname = "Ix" + tname;
-					foreach(DataColumn dc in dt.Columns)
-					{
-						string index = concreteGenerator.CreateIndex(provider.GetQuotedName(tname + i.ToString()), QualifiedTableName.Get(dt.TableName, provider), new DataColumn[] {dc});
-						if (index != string.Empty)
-						{
-							stream.Write(index);
-							stream.WriteLine(";");
-							i++;
-						}
-					}
-				}
-			}
-#endif
+				stream.Write(CreateIndexes(dt));
 		}
 
 	}

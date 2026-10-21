@@ -694,6 +694,9 @@ namespace NDO
 
 			try
 			{
+				if (r.MappingTable != null)
+					CheckDuplicateMappingTableEntry(pc, r, relObj);
+
 				//TODO: We need a relation management, which is independent of
 				//the state management of an object. Currently the relation
 				//lists or elements are cached for restore, if an object is marked dirty.
@@ -790,7 +793,12 @@ namespace NDO
 				}
 				else 
 				{
-					createdMappingTableObjects.Add(new MappingTableEntry(pc, relObj, r));
+					// Adding an object, which was removed in the same transaction, cancels the deletion.
+					MappingTableEntry deleteEntry = FindMappingTableEntry(pc, r, relObj);
+					if (deleteEntry != null)
+						createdMappingTableObjects.Remove(deleteEntry);
+					else
+						createdMappingTableObjects.Add(new MappingTableEntry(pc, relObj, r));
 				}
 				if(r.Bidirectional)
 				{
@@ -3110,27 +3118,68 @@ namespace NDO
 		}
 
 
-		private void DeleteMappingTableEntry(IPersistenceCapable pc, Relation r, IPersistenceCapable child)
+		/// <summary>
+		/// Finds the pending entry, which inserts or deletes the row of the mapping table for the given objects.
+		/// </summary>
+		/// <remarks>
+		/// Both relations of a bidirectional n:m relation use the same mapping table.
+		/// So an entry created through the foreign relation describes the same row.
+		/// </remarks>
+		private MappingTableEntry FindMappingTableEntry(IPersistenceCapable pc, Relation r, IPersistenceCapable relObj)
 		{
-			MappingTableEntry mte = null;
 			foreach(MappingTableEntry e in createdMappingTableObjects) 
 			{
-				if(e.ParentObject.NDOObjectId == pc.NDOObjectId && e.RelatedObject.NDOObjectId == child.NDOObjectId && e.Relation == r) 
-				{
-					mte = e;
-					break;
-				}
+				if (e.Relation == r && e.ParentObject == pc && e.RelatedObject == relObj)
+					return e;
+				if (r.Bidirectional && e.Relation == r.ForeignRelation && e.ParentObject == relObj && e.RelatedObject == pc)
+					return e;
+			}
+			return null;
+		}
+
+		/// <summary>
+		/// Makes sure, that an object is added only once to a relation with a mapping table.
+		/// </summary>
+		/// <remarks>
+		/// The mapping table has a unique index on the columns of both sides. A second entry would fail while saving.
+		/// </remarks>
+		private void CheckDuplicateMappingTableEntry(IPersistenceCapable pc, Relation r, IPersistenceCapable relObj)
+		{
+			MappingTableEntry mte = FindMappingTableEntry(pc, r, relObj);
+			bool isDuplicate;
+			if (mte != null)
+			{
+				isDuplicate = !mte.DeleteEntry;
+			}
+			else
+			{
+				// The relation list contains the objects of the existing rows. If one of the objects is created,
+				// a row can't exist and the list might contain relObj already, because MakePersistent adds the objects of the list.
+				isDuplicate = r.Multiplicity == RelationMultiplicity.List
+					&& pc.NDOObjectState != NDOObjectState.Created
+					&& relObj.NDOObjectState != NDOObjectState.Created
+					&& pc.NDOGetLoadState(r.Ordinal)
+					&& mappings.GetRelationContainer(pc, r) is IList l
+					&& ObjectListManipulator.Contains(l, relObj);
 			}
 
-			if(pc.NDOObjectState == NDOObjectState.Created || child.NDOObjectState == NDOObjectState.Created) 
+			if (isDuplicate)
+				throw new NDOException(123, "The object " + relObj.NDOObjectId.Dump() + " is already part of the relation " + pc.GetType().FullName + "." + r.FieldName + " of the object " + pc.NDOObjectId.Dump() + ". An object can't be added twice to a relation with a mapping table.");
+		}
+
+		private void DeleteMappingTableEntry(IPersistenceCapable pc, Relation r, IPersistenceCapable child)
+		{
+			MappingTableEntry mte = FindMappingTableEntry(pc, r, child);
+
+			if (mte != null)
 			{
-				if (mte != null)
+				// Removing an object, which was added in the same transaction, cancels the insertion.
+				if (!mte.DeleteEntry)
 					createdMappingTableObjects.Remove(mte);
-			} 
-			else 
+			}
+			else if (pc.NDOObjectState != NDOObjectState.Created && child.NDOObjectState != NDOObjectState.Created)
 			{
-				if (mte == null)
-					createdMappingTableObjects.Add(new MappingTableEntry(pc, child, r, true));
+				createdMappingTableObjects.Add(new MappingTableEntry(pc, child, r, true));
 			}
 		}
 

@@ -32,7 +32,7 @@ namespace NdoUnitTests
 			EnableNdoDebugLogs = false;
 			var pm = PmFactory.NewPersistenceManager();
             pm.Objects<Mitarbeiter>().DeleteDirectly();
-            Logger.ClearLogs();
+            Logger.ClearTestLogs();
         }
 
         [Test]

@@ -91,6 +91,8 @@ namespace NDOEnhancer
 				if (!dsOldSchema.Tables.Contains(dt.TableName))
 				{
 					transElement.Add( CreateTable( dt ) );
+					foreach (IndexDefinition index in IndexDefinition.ForTable( dt, this.mappings ))
+						transElement.Add( CreateIndex( dt, index ) );
 					hasChanges = true;
 				}
 				else
@@ -176,6 +178,19 @@ namespace NDOEnhancer
 			}
 
 			return alterTableElement;			
+		}
+
+		/// <summary>
+		/// Creates a CreateIndex element, which can be processed by the SchemaTransitionGenerator.
+		/// </summary>
+		XElement CreateIndex( DataTable dt, IndexDefinition indexDefinition )
+		{
+			XElement createIndexElement = new XElement( "CreateIndex", new XAttribute( "name", indexDefinition.Name ), new XAttribute( "onTable", dt.TableName ) );
+			if (indexDefinition.IsUnique)
+				createIndexElement.Add( new XAttribute( "unique", "True" ) );
+			foreach (DataColumn dc in indexDefinition.Columns)
+				createIndexElement.Add( new XElement( "Column", new XAttribute( "name", dc.ColumnName ) ) );
+			return createIndexElement;
 		}
 
 		protected XElement CreateTable(DataTable dt)

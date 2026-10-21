@@ -250,16 +250,10 @@ namespace NDOInterfaces
 			sb.Append(")");
 		}
 
-		/// <summary>
-		/// See <see cref="ISqlGenerator">ISqlGenerator interface</see>.
-		/// </summary>
-		/// <param name="indexName"></param>
-		/// <param name="tableName"></param>
-		/// <param name="indexColums"></param>
-		/// <returns></returns>
-		public virtual string CreateIndex(string indexName, string tableName, DataColumn[] indexColums)
+		/// <inheritdoc/>
+		public virtual string CreateIndex(string indexName, string tableName, DataColumn[] indexColums, bool isUnique)
 		{
-			StringBuilder sb = new StringBuilder("CREATE INDEX ");
+			StringBuilder sb = new StringBuilder( isUnique ? "CREATE UNIQUE INDEX " : "CREATE INDEX ");
 			sb.Append(indexName);
 			sb.Append(" ON ");
 			sb.Append(tableName);

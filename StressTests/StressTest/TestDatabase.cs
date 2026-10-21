@@ -176,7 +176,7 @@ namespace StressTest
 				counters.TryGetValue( tableName, out int n );
 				counters[tableName] = ++n;
 				string indexName = provider.GetQuotedName( $"IX_{UnqualifiedName( tableName )}_{n}" );
-				yield return generator.CreateIndex( indexName, QualifiedTableName( provider, tableName ), columnNames.Select( c => dt.Columns[c] ).ToArray() );
+				yield return generator.CreateIndex( indexName, QualifiedTableName( provider, tableName ), columnNames.Select( c => dt.Columns[c] ).ToArray(), false );
 			}
 		}
 

@@ -13,7 +13,7 @@
 		<PackageReference Include="Microsoft.Extensions.Configuration.CommandLine" Version="10.0.0" />
 		<PackageReference Include="Microsoft.Extensions.Configuration.EnvironmentVariables" Version="10.0.0" />
 		<PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="10.0.0" />
-		<PackageReference Include="ndo.build" Version="6.0.0" />
+		<PackageReference Include="ndo.build" Version="6.1.0" />
 		<PackageReference Include="ndo.dll" Version="6.0.0" />
 		<PackageReference Include="NDO.Sqlite" Version="6.0.0" />
 		<PackageReference Include="NDO.SqlServer" Version="6.0.0" />
