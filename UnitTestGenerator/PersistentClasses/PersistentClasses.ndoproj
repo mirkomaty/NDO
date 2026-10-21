@@ -6,7 +6,7 @@
     <VerboseMode>False</VerboseMode>
     <NewMapping>True</NewMapping>
     <GenerateSQL>False</GenerateSQL>
-    <DefaultConnection>Integrated Security=SSPI;Persist Security Info=False;Initial Catalog=NDOTest;Data Source=localhost</DefaultConnection>
+    <DefaultConnection>Integrated Security=SSPI;Persist Security Info=False;Initial Catalog=NDOTest;Data Source=localhost;TrustServerCertificate=True</DefaultConnection>
     <TargetMappingFileName>NDOMapping.xml</TargetMappingFileName>
     <GenerateChangeEvents>False</GenerateChangeEvents>
     <UseTimeStamps>False</UseTimeStamps>
