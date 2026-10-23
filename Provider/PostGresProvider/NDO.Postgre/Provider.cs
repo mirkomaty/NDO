@@ -153,7 +153,7 @@ namespace NDO.PostGreProvider
             if (String.Compare(typeName, "timetz", true) == 0)
                 return NpgsqlDbType.Time;
             if (String.Compare(typeName, "timestamptz", true) == 0)
-                return NpgsqlDbType.Timestamp;
+                return NpgsqlDbType.TimestampTz;
             if (String.Compare(typeName, "varchar", true) == 0)
 				return NpgsqlDbType.Varchar;
 			throw new NDOException(27, "NDONpgsql.Provider.GetDbType: Typname " + typeName + " kann nicht in NpgsqlDbType konvertiert werden");

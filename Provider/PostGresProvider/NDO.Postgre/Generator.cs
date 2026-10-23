@@ -69,7 +69,7 @@ namespace NDO.PostGreProvider
             else if (t == typeof(Byte[]))
                 return "bytea";
             else if (t == typeof(DateTime))
-				return "date";
+				return "timestamp";
 			else if (t == typeof(decimal))
 				return "numeric";
 			else if (t == typeof(double))
