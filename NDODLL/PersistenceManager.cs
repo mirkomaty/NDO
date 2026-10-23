@@ -45,6 +45,8 @@ using NDO.Query;
 using NDO.ChangeLogging;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using System.Linq.Expressions;
+
 
 namespace NDO
 {
@@ -1991,6 +1993,40 @@ namespace NDO
 			return relatedObjects;
 		}
 
+		/// <summary>
+		/// Resolves a relation.
+		/// </summary>
+		/// <typeparam name="T">The type of the parent object</typeparam>
+		/// <param name="parentObject">The parent object</param>
+		/// <param name="expression">An expression like <c>_ => _.Name</c></param>
+		/// <param name="hollow">Determines, if the objects should be hollow. Default Value: false</param>
+		/// <param name="cancellationToken">A Task cancellation token.</param>
+		/// <returns></returns>
+		/// <exception cref="ArgumentNullException"></exception>
+		/// <exception cref="ArgumentException"></exception>
+		public virtual async Task LoadRelationAsync<T>( T parentObject, Expression<Func<T, object>> expression, bool hollow = false, CancellationToken cancellationToken = default )
+		{
+			if (expression == null)
+				throw new ArgumentNullException( nameof( expression ) );
+
+			Expression body = expression.Body;
+
+			// If the Property is a ValueType (e.g. int, bool) the Compiler 
+			// automatically inserts a 'Convert'-Operation (Boxing). This must be removed
+			if (body is UnaryExpression unaryExpression && unaryExpression.NodeType == ExpressionType.Convert)
+			{
+				body = unaryExpression.Operand;
+			}
+
+			// Is the expression a property or field?
+			if (body is MemberExpression memberExpression)
+			{
+				var memberName = memberExpression.Member.Name;
+				await LoadRelationAsync( parentObject, memberName, hollow, cancellationToken ).ConfigureAwait( false );
+			}
+
+			throw new ArgumentException( "Expression must be a property or field." );
+		}
 
 		/// <summary>
 		/// Resolves an relation. The loaded objects will be hollow.
