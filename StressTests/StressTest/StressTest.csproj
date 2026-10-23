@@ -17,17 +17,11 @@
 		<PackageReference Include="ndo.dll" Version="6.0.0" />
 		<PackageReference Include="NDO.Sqlite" Version="6.0.0" />
 		<PackageReference Include="NDO.SqlServer" Version="6.0.0" />
+		<PackageReference Include="NDO.Postgre" Version="6.0.0" />
 	</ItemGroup>
 
 	<ItemGroup>
 		<ProjectReference Include="..\StressTestClasses\StressTestClasses.csproj" />
-		<!-- All providers are referenced, so that the provider can be selected in the configuration without rebuilding.
-		     The NDOProviderFactory finds them in the output directory. -->
-		<!--ProjectReference Include="..\..\Provider\SqliteProvider\NDO.Sqlite\NDO.Sqlite.csproj" />
-		<ProjectReference Include="..\..\Provider\SqlServerProvider\NDO.SqlServer\NDO.SqlServer.csproj" />
-		<ProjectReference Include="..\..\Provider\MySqlNdoProvider\NDO.MySql\NDO.MySql.csproj" />
-		<ProjectReference Include="..\..\Provider\MySqlConnectorProvider\NDO.MySqlConnector\NDO.MySqlConnector.csproj" />
-		<ProjectReference Include="..\..\Provider\PostGresProvider\NDO.Postgre\NDO.Postgre.csproj" /-->
 	</ItemGroup>
 
 	<ItemGroup>

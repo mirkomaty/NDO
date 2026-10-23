@@ -111,7 +111,7 @@ namespace NDO.PostGreProvider
 			else if ( t == typeof(decimal))
 				return NpgsqlDbType.Numeric;
 			else if ( t == typeof(System.DateTime))
-				return NpgsqlDbType.Date;
+				return NpgsqlDbType.Timestamp;
 			else if ( t.IsSubclassOf(typeof(System.Enum)))
 				return NpgsqlDbType.Integer;
 			else
