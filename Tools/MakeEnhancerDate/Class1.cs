@@ -57,7 +57,10 @@ namespace MakeEnhancerDate
 				head = sr.ReadToEnd().Trim();
 			}
 
-			var refHeadPath = Path.Combine( gitDir, head!.Replace( "/", "\\" ) );
+			var refHeadPath = Path.Combine( gitDir, head );
+			if (Path.DirectorySeparatorChar == '\\')
+				refHeadPath = refHeadPath.Replace( "/", "\\" );
+
 			if (!File.Exists( refHeadPath ))
 				throw new Exception( "Ref head doesn't exist: " + refHeadPath );
 
