@@ -23,13 +23,14 @@
   </PropertyGroup>
 
   <Target Name="PrepareEnhDate" BeforeTargets="PrepareForBuild">
-    <Exec Command="dotnet ..\..\Tools\MakeEnhancerDate\bin\Release\net10.0\MakeEnhancerDate.dll &gt; EnhDate.cs" />
+    <Exec Command="dotnet ../../Tools/MakeEnhancerDate/bin/Release/net10.0/MakeEnhancerDate.dll &gt; EnhDate.cs" />
   </Target>
 
 	<Target Name="CopyILDasm" AfterTargets="PrepareForBuild">
 		<MakeDir Condition="!Exists('$(OutputPath)\runtimes\win-x64')" Directories="$(OutputPath)\runtimes\win-x64" />
 		<MakeDir Condition="!Exists('$(OutputPath)\runtimes\win-x64\native')" Directories="$(OutputPath)\runtimes\win-x64\native" />
-		<Exec Command="Copy ILDasm\ILDasm.exe.* $(OutputPath)\runtimes\win-x64\native" />
+		<Copy SourceFiles="ILDasm/ildasm.exe" DestinationFolder="$(OutputPath)/runtimes/win-x64/native" />
+		<Copy SourceFiles="ILDasm/ildasm.exe.config" DestinationFolder="$(OutputPath)/runtimes/win-x64/native" />
 	</Target>
 	
 	<Target Name="CopyProviders" AfterTargets="Build" Condition="'$(Configuration)'=='Debug'">
