@@ -1,13 +1,16 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
-    <NdoProjFullPath>$(MSBuildProjectDirectory)\$(ProjectName).ndoproj</NdoProjFullPath>
+    <NdoProjFullPath Condition="'$(NdoProjFullPath)' == ''">$(MSBuildProjectDirectory)/$(MSBuildProjectName).ndoproj</NdoProjFullPath>
+    <NdoEnhancerPath>$(MSBuildThisFileDirectory)NDOEnhancer.dll</NdoEnhancerPath>
   </PropertyGroup>
-  
-  <Target Name="NDOEnhancer" AfterTargets="Build">
-    <NDOEnhancer NdoProjectFile="$(NdoProjFullPath)" NdoPlatformTarget="$(Platform)" TargetFramework="$(TargetFramework)" />
+
+  <!-- The outer build of multi-targeting projects has no TargetFramework; the enhancer runs in the inner builds. -->
+  <Target Name="NDOEnhancer" AfterTargets="Build" Condition="'$(TargetFramework)' != ''">
+    <Error Condition="'$(Platform)' == 'x86'" Text="Platform x86 is not supported. Use NDO &lt;= 4." />
+    <Exec Command="dotnet &quot;$(NdoEnhancerPath)&quot; &quot;$(NdoProjFullPath)&quot; $(TargetFramework)"
+          WorkingDirectory="$(MSBuildProjectDirectory)"
+          CustomErrorRegularExpression="^Error:" />
   </Target>
-  
-  <UsingTask AssemblyFile="NDOEnhancer.BuildTask.dll" TaskName="NDO.BuildTask.NDOEnhancer" />
 
 </Project>

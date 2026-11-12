@@ -21,8 +21,7 @@
       "versionFollowers": [ "NDOEnhancer/NDOEnhancer/NDOEnhancer.csproj" ],
       "buildFirst": [
         { "project": "Tools/MakeEnhancerDate/MakeEnhancerDate.csproj", "configuration": "Release" },
-        { "project": "NDOEnhancer/NDOEnhancer/NDOEnhancer.csproj", "configuration": "Release" },
-        { "project": "NDOEnhancer.BuildTask/NDOEnhancer.BuildTask/NDOEnhancer.BuildTask.csproj", "builder": "msbuild", "configuration": "Release" }
+        { "project": "NDOEnhancer/NDOEnhancer/NDOEnhancer.csproj", "configuration": "Release" }
       ] }
   ],
   "enhancer": "NDOEnhancer/NDOEnhancer/NDOEnhancer.csproj",

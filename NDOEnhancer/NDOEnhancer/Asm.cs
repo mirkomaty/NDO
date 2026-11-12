@@ -64,17 +64,17 @@ namespace NDOEnhancer
 				throw new Exception("Assembling: File not found: " + ilFileName);
 
 			// Dll or Exe?
-			string libMode = "/" + Path.GetExtension(dllFileName).Substring(1).ToUpper();
-			string debugMode = debug ? " /DEBUG /PDB" : string.Empty;
-			string key = keyFileName != null ? " /KEY=\"" + keyFileName + '"' : string.Empty;
+			string libMode = "-" + Path.GetExtension(dllFileName).Substring(1).ToUpper();
+			string debugMode = debug ? " -DEBUG -PDB" : string.Empty;
+			string key = keyFileName != null ? " -KEY=\"" + keyFileName + '"' : string.Empty;
 
 			string parameters = 
 				libMode
 				+ debugMode
 				+ key
-				+ " /QUIET"
-                + " /NOLOGO"
-                + " /OUTFILE=\"" + dllFileName + "\""
+				+ " -QUIET"
+                + " -NOLOGO"
+                + " -OUTPUT=\"" + dllFileName + "\""
 				+ " \"" + ilFileName + "\"" ;
 
 			Execute(ilAsmPath, parameters/*, Path.GetDirectoryName(dllFileName)*/);

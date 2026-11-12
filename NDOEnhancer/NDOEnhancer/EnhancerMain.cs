@@ -24,6 +24,7 @@ using System;
 using System.IO;
 using System.Reflection;
 using System.Linq;
+using System.Text;
 //using NDO.Provider;
 using System.Globalization;
 using Microsoft.Extensions.DependencyInjection;
@@ -103,14 +104,56 @@ namespace NDOEnhancer
         }
 
 
+		/// <summary>
+		/// Creates a default .ndoproj file, if the project doesn't have one.
+		/// </summary>
+		void CreateNDOProjFile( string fileName, string targetFramework )
+		{
+			var binFile = Path.ChangeExtension( Path.GetFileName( fileName ), ".dll" );
+			string xml = $@"<?xml version=""1.0"" encoding=""UTF-8""?>
+<Enhancer>
+  <Options>
+    <EnableAddIn>True</EnableAddIn>
+    <EnableEnhancer>True</EnableEnhancer>
+    <VerboseMode>False</VerboseMode>
+    <NewMapping>False</NewMapping>
+    <GenerateSQL>False</GenerateSQL>
+    <DefaultConnection>
+    </DefaultConnection>
+    <TargetMappingFileName>NDOMapping.xml</TargetMappingFileName>
+    <GenerateChangeEvents>False</GenerateChangeEvents>
+    <UseTimeStamps>False</UseTimeStamps>
+    <Utf8Encoding>True</Utf8Encoding>
+    <SQLScriptLanguage>
+    </SQLScriptLanguage>
+    <SchemaVersion>
+    </SchemaVersion>
+    <IncludeTypecodes>False</IncludeTypecodes>
+    <DatabaseOwner>
+    </DatabaseOwner>
+    <GenerateConstraints>False</GenerateConstraints>
+    <DropExistingElements>False</DropExistingElements>
+  </Options>
+  <ProjectDescription>
+    <BinPath>bin/Debug/{targetFramework}/{binFile}</BinPath>
+    <ObjPath>obj/Debug/{targetFramework}</ObjPath>
+    <AssemblyName />
+    <Debug>True</Debug>
+    <KeyFile>
+    </KeyFile>
+    <References>
+    </References>
+  </ProjectDescription>
+</Enhancer>";
+			File.WriteAllText( fileName, xml, new UTF8Encoding( true ) );
+		}
+
 		public void InternalStart(string ndoProjFilePath, string targetFramework)
 		{
 			ConfigurationOptions options;
 
 			if (!File.Exists(ndoProjFilePath))
-			{
-				throw new Exception("Can't find file '" + ndoProjFilePath + "'");
-			}
+				CreateNDOProjFile( ndoProjFilePath, targetFramework );
 
 #if DEBUG
             Console.WriteLine( $"Loading Project Description from {ndoProjFilePath}..." );
@@ -177,6 +220,8 @@ namespace NDOEnhancer
 				bool objPathDifferent = String.Compare(objFile, this.projectDescription.BinFile, true) != 0;
 				if (File.Exists( enhObjFile ))
 				{
+					CopyFile( enhObjFile, this.projectDescription.BinFile );
+
 					if (objPathDifferent)
 						CopyFile( enhObjFile, objFile );
 

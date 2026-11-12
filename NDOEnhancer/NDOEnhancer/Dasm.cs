@@ -66,13 +66,13 @@ namespace NDOEnhancer
 			    messages.WriteLine("Disassembling: " + dllName + "->" + ilName);
 
 			ProcessStartInfo psi = new ProcessStartInfo( ilDasmPath, 
-				" /LINENUM"
+				" -LINENUM"
 #if !NETCOREAPP2_0 && !NET6_0_OR_GREATER
-				+ " /NOBAR"
+				+ " -NOBAR"
 #endif
-				+ " /UNICODE "
+				+ " -UNICODE "
 				+ '"' + dllName + '"'
-				+ @" /OUT=""" + ilName + '"');
+				+ @" -OUT=""" + ilName + '"');
 			psi.CreateNoWindow		   = true;
 			psi.UseShellExecute		   = false;
 			psi.WorkingDirectory	   = Path.GetDirectoryName(dllName);

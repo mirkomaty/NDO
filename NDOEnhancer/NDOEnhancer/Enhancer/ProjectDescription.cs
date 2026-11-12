@@ -93,6 +93,8 @@ namespace NDOEnhancer
 
 		string AbsolutePath(string path)
 		{
+			// .ndoproj files contain Windows paths
+			path = path.Replace( '\\', Path.DirectorySeparatorChar );
 			if (Path.IsPathRooted(path))
 				return Path.GetFullPath(path);
 			else
