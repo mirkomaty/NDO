@@ -41,7 +41,17 @@ namespace NDOEnhancer
 			{
 				if (this.verboseMode)
 					Console.WriteLine( $"ManagedLoadContext: Found: {localFile}" );
-				return LoadFromAssemblyPath( localFile );
+				using (MemoryStream ms = new MemoryStream())
+				{
+					using (var fs = File.OpenRead( localFile ))
+					{
+						fs.CopyTo( ms );
+						ms.Flush();
+					}
+
+					ms.Seek( 0L, SeekOrigin.Begin );
+					return LoadFromStream( ms );
+				}
 			}
 
 			return null;

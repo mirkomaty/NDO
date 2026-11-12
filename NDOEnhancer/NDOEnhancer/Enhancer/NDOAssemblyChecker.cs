@@ -36,7 +36,7 @@ namespace NDOEnhancer
 				Debug.WriteLine( "NDOAssemblyChecker: DLL doesn't exist: " + targetFileName );
 				return false;
 			}
-			var module = ModuleDefinition.ReadModule( targetFileName );
+			using var module = ModuleDefinition.ReadModule( targetFileName );
 			return module.Assembly.CustomAttributes.Any( a => a.AttributeType.Name == "NDOEnhancedAttribute" );
 		}
 
@@ -47,7 +47,7 @@ namespace NDOEnhancer
 				Debug.WriteLine( "NDOAssemblyChecker: DLL doesn't exist: " + targetFileName );
 				return String.Empty;
 			}
-			var module = ModuleDefinition.ReadModule( targetFileName );
+			using var module = ModuleDefinition.ReadModule( targetFileName );
 			return module.Assembly.FullName;
 		}
 	}

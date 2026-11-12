@@ -93,6 +93,24 @@ Sie sind nicht neu, nur jetzt sichtbar. Abschalten ließe sich das mit
 `IgnoreStandardErrorWarningFormat="true"` am `Exec`. Dann muss die Fehlererkennung allein über
 `CustomErrorRegularExpression` und den Exit-Code laufen.
 
+## Gesperrte DLL in `bin` unter Windows
+
+Unter Windows schlug das Kopieren nach `bin` fehl: `IOException: The process cannot access the file
+'...\bin\Debug\net10.0\X.dll' because it is being used by another process.`
+
+Die Datei sperrte der Enhancer selbst. `NDOAssemblyChecker.IsEnhanced` und `GetAssemblyName` öffnen
+die DLL mit `ModuleDefinition.ReadModule` (Mono.Cecil). Cecil hält dabei einen `FileStream` offen,
+bis das Modul disposed wird, und das geschah nie. Windows erlaubt dann kein Überschreiben.
+Beim BuildTask fiel das nicht auf, denn er kopierte erst, nachdem der Enhancer-Prozess beendet war.
+
+Lösung: Das Modul wird mit `using var` freigegeben, in `NDOEnhancer/NDOEnhancer/Enhancer/NDOAssemblyChecker.cs`
+und ebenso in `NDOPackage/NDOAssemblyChecker.cs`.
+
+Zusätzlich lädt `ManagedLoadContext` die DLL jetzt mit einem MemoryStream und `LoadFromStream`,
+statt mit `LoadFromAssemblyPath`. Sonst bliebe die Datei gemappt, bis der GC den collectible
+Kontext nach `Unload()` eingesammelt hat. `Assembly.Location` ist bei so geladenen Assemblies leer;
+der Enhancer wertet es nicht aus.
+
 ## Test
 
 Unter Linux mit .NET SDK 11.0.100:
