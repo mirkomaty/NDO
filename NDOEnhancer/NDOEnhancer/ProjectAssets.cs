@@ -72,8 +72,6 @@ namespace NDOEnhancer
 				return null;
 			var package = standard[packageKey].AsObject();
 			var compile = package["compile"].AsObject().First();
-			//Regex regex = new Regex(@"netstandard\d\.\d");
-			//relPath = regex.Replace( relPath, "net452" );
 			return GetRelativeCompilePath( root, packageKey, compile );
 		}
 
@@ -103,8 +101,6 @@ namespace NDOEnhancer
 			{
 				var package = standard[packageKey].AsObject();
 				var compile = package["compile"].AsObject().First();
-				//Regex regx = new Regex(@"netstandard\d\.\d");
-				//relPath = regx.Replace( relPath, "net452" );
 				return GetRelativeCompilePath( root, packageKey, compile );
 			} ).ToList();
 			return paths;
