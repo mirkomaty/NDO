@@ -49,6 +49,7 @@ namespace NDOEnhancer
 				throw new Exception( "Can't determine, if NDOEnhancer is running on Windows or Linux." );
 
 			this.ilAsmPath = path;
+			ConsoleProcess.EnsureExecutable( path );
 		}
 
 		public Asm(MessageAdapter messages, bool verboseMode) : base(verboseMode)

@@ -76,7 +76,8 @@ namespace NDOEnhancer
 		public ProjectDescription(string fileName, string targetFramework)
 		{
 			this.FileName = fileName;
-			this.projPath = Path.GetDirectoryName(fileName) + Path.DirectorySeparatorChar;
+			// GetFullPath: a file name without directory would result in the root directory "/"
+			this.projPath = Path.GetDirectoryName(Path.GetFullPath(fileName)) + Path.DirectorySeparatorChar;
 			XmlDocument doc = new XmlDocument();
 			try
 			{

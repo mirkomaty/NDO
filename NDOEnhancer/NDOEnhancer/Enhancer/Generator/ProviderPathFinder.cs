@@ -20,9 +20,13 @@ namespace NDOEnhancer
             List<string>paths = new List<string>();
 
             var nugetFolder = new NugetProps(this.projectDescription).DefaultNugetPackageFolder;
-            var assetPaths = new ProjectAssets(this.projectDescription).GetPackageDirectories(@"ndo\..+")
-                .Where(p=>p.IndexOf("/ndo.dll/", StringComparison.OrdinalIgnoreCase) == -1).
-                Select(p=>Path.GetDirectoryName(Path.Combine(nugetFolder, p)));
+            if (nugetFolder == null)
+                return paths;
+
+            // The NDO package itself is no provider. ProjectAssets handles the
+            // directory separators and the lower case package folders of NuGet.
+            var assetPaths = new ProjectAssets(this.projectDescription).GetPackageDirectories(@"ndo\..+", "ndo.dll")
+                .Select(p=>Path.GetDirectoryName(Path.Combine(nugetFolder, p)));
 
 			foreach (var assetPath in assetPaths)
 			{

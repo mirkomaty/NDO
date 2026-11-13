@@ -54,6 +54,27 @@ namespace NDOEnhancer
             this.verboseMode = verboseMode;
 		}
 
+		/// <summary>
+		/// NuGet doesn't always preserve the Unix file mode while extracting packages.
+		/// Make sure, the native tools (ilasm, ildasm) can be executed.
+		/// </summary>
+		public static void EnsureExecutable( string fileName )
+		{
+			if (OperatingSystem.IsWindows() || !File.Exists( fileName ))
+				return;
+			try
+			{
+				var mode = File.GetUnixFileMode( fileName );
+				const UnixFileMode exec = UnixFileMode.UserExecute | UnixFileMode.GroupExecute | UnixFileMode.OtherExecute;
+				if ((mode & UnixFileMode.UserExecute) == 0)
+					File.SetUnixFileMode( fileName, mode | exec );
+			}
+			catch (Exception ex)
+			{
+				Console.WriteLine( $"Warning: Can't set the executable flag of {fileName}: {ex.Message}" );
+			}
+		}
+
 		public int Execute(string exeFileName, string parameters)
 		{
 			return Execute(exeFileName, parameters, null);

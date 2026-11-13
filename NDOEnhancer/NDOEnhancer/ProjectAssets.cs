@@ -17,19 +17,50 @@ namespace NDOEnhancer
 			this.projectDescription = projectDescription;
 		}
 
-		public string GetPackageDir( string packageName )
+		JSON.Object LoadAssets()
 		{
 			var json = new JSON();
-			JSON.Object root;
 			var objPath = Path.Combine(this.projectDescription.ProjPath, "obj");
 			var assetsPath = Path.Combine( objPath, "project.assets.json" );
-			if (assetsPath == null)
+			if (!File.Exists( assetsPath ))
 			{
 				Console.WriteLine( $"Can't find assets file: {assetsPath}" );
 				return null;
 			}
 			using (TextReader tr = new StreamReader( assetsPath ))
-				root = json.Parse( tr ).Value.AsObject();
+				return json.Parse( tr ).Value.AsObject();
+		}
+
+		/// <summary>
+		/// Computes the path of a compile asset relative to the NuGet package folder.
+		/// </summary>
+		/// <remarks>
+		/// The keys in the targets section (e.g. "NDO.Mapping/6.0.0") contain the original casing
+		/// of the package id, but NuGet stores the packages in lower case folders
+		/// (e.g. "ndo.mapping/6.0.0"). On case sensitive file systems (Linux) we have to use
+		/// the folder name provided in the libraries section.
+		/// </remarks>
+		static string GetRelativeCompilePath( JSON.Object root, string packageKey, string compile )
+		{
+			string packagePath = null;
+			JSON.Object libraries = null;
+			JSON.Object library = null;
+			if (root.Get( "libraries", ref libraries ) && libraries.Get( packageKey, ref library ))
+				library.Get( "path", ref packagePath );
+			if (string.IsNullOrEmpty( packagePath ))
+				packagePath = packageKey.ToLowerInvariant();
+
+			var relPath = packagePath.TrimEnd( '/' ) + "/" + compile;
+			if (Path.DirectorySeparatorChar != '/')
+				relPath = relPath.Replace( '/', Path.DirectorySeparatorChar );
+			return relPath;
+		}
+
+		public string GetPackageDir( string packageName )
+		{
+			var root = LoadAssets();
+			if (root == null)
+				return null;
 
 			var targets = root["targets"].AsObject();
 			var standardKey = targets.FirstOrDefault(o => o.StartsWith( ".NETStandard,Version=" ) || o.StartsWith( ".NETCoreApp,Version=" ));
@@ -41,27 +72,21 @@ namespace NDOEnhancer
 				return null;
 			var package = standard[packageKey].AsObject();
 			var compile = package["compile"].AsObject().First();
-			var relPath = packageKey + "/" + compile;
-			if (Path.DirectorySeparatorChar != '/')
-				relPath = relPath.Replace( '/', Path.DirectorySeparatorChar );
 			//Regex regex = new Regex(@"netstandard\d\.\d");
 			//relPath = regex.Replace( relPath, "net452" );
-			return relPath;
+			return GetRelativeCompilePath( root, packageKey, compile );
 		}
 
-		public IEnumerable<string> GetPackageDirectories( string pattern )
+		/// <summary>
+		/// Gets the relative paths of the compile assets of all packages with ids matching the pattern.
+		/// </summary>
+		/// <param name="pattern">Regular expression for the package id. Package ids are case insensitive.</param>
+		/// <param name="excludedPackageIds">Package ids which should not be part of the result.</param>
+		public IEnumerable<string> GetPackageDirectories( string pattern, params string[] excludedPackageIds )
 		{
-			var json = new JSON();
-			JSON.Object root;
-			var objPath = Path.Combine(projectDescription.ProjPath, "obj");
-			var assetsPath = Path.Combine( objPath, "project.assets.json" );
-			if (assetsPath == null)
-			{
-				Console.WriteLine( $"Can't find assets file: {assetsPath}" );
+			var root = LoadAssets();
+			if (root == null)
 				return Enumerable.Empty<string>();
-			}
-			using (TextReader tr = new StreamReader( assetsPath ))
-				root = json.Parse( tr ).Value.AsObject();
 
 			var targets = root["targets"].AsObject();
 			var standardKey = targets.FirstOrDefault( o => o.StartsWith( ".NETStandard,Version=" ) || o.StartsWith( ".NETCoreApp,Version=" ) || o.StartsWith( "net" ) );
@@ -71,19 +96,17 @@ namespace NDOEnhancer
 				return Enumerable.Empty<string>();
 			}
 			var standard = targets[standardKey].AsObject();
-			Regex regex = new Regex(pattern + '/');
-			var packageKeys = standard.Where(o=>regex.Match(o).Success);
+			Regex regex = new Regex( "^" + pattern + '/', RegexOptions.IgnoreCase );
+			var packageKeys = standard.Where(o=>regex.Match(o).Success)
+				.Where(o=>!excludedPackageIds.Any(id=>o.StartsWith(id + '/', StringComparison.OrdinalIgnoreCase)));
 			var paths = packageKeys.Select(packageKey=>
 			{
 				var package = standard[packageKey].AsObject();
 				var compile = package["compile"].AsObject().First();
-				var relPath = packageKey + "/" + compile;
-				if (Path.DirectorySeparatorChar != '/')
-					relPath = relPath.Replace( '/', Path.DirectorySeparatorChar );
 				//Regex regx = new Regex(@"netstandard\d\.\d");
 				//relPath = regx.Replace( relPath, "net452" );
-				return relPath;
-			} );
+				return GetRelativeCompilePath( root, packageKey, compile );
+			} ).ToList();
 			return paths;
 		}
 	}

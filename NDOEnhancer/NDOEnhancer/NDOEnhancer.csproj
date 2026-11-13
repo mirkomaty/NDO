@@ -39,7 +39,7 @@
 		<Copy SourceFiles="..\..\Provider\OracleProvider\NDO.Oracle\bin\Release\net8.0\NDO.Oracle.dll" DestinationFolder="bin\Debug\$(TargetFramework)"/>
 		<Copy SourceFiles="..\..\Provider\PostGresProvider\NDO.Postgre\bin\Release\net8.0\NDO.Postgre.dll" DestinationFolder="bin\Debug\$(TargetFramework)"/>
 		<Copy SourceFiles="..\..\Provider\SqliteProvider\NDO.Sqlite\bin\Release\net8.0\NDO.Sqlite.dll" DestinationFolder="bin\Debug\$(TargetFramework)"/>
-		<Copy SourceFiles="..\..\Provider\SqlServerProvider\NDO.SqlServer\bin\Release\net8.0\NDO.Sqlserver.dll" DestinationFolder="bin\Debug\$(TargetFramework)"/>
+		<Copy SourceFiles="..\..\Provider\SqlServerProvider\NDO.SqlServer\bin\Release\net8.0\NDO.SqlServer.dll" DestinationFolder="bin\Debug\$(TargetFramework)"/>
 	</Target>
 
   <ItemGroup>

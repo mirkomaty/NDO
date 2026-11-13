@@ -1000,15 +1000,11 @@ namespace NDOEnhancer
 
 		private string CombinePath(string path, string file)
 		{
-			string p = path;
-			if (p.EndsWith("\\"))
-				p = p.Substring(0, p.Length - 1);
-			while (file.StartsWith(@"..\"))
-			{
-				p = Path.GetDirectoryName(p);
-				file = file.Substring(3);
-			}
-			return p + "\\" + file;
+			// Key file names in attributes may contain Windows separators
+			file = file.Replace( '\\', Path.DirectorySeparatorChar ).Replace( '/', Path.DirectorySeparatorChar );
+			if (Path.IsPathRooted( file ))
+				return Path.GetFullPath( file );
+			return Path.GetFullPath( Path.Combine( path, file ) );
 		}
 
 		/// <summary>
@@ -1179,11 +1175,7 @@ namespace NDOEnhancer
 								string s = (string) ai.ParamValues[0];
 								if (s != null && s != string.Empty)
 								{
-									string fn;
-									if (s.IndexOf(@":\") == -1)
-										fn = CombinePath(this.objPath, s);
-									else
-										fn = s;
+									string fn = CombinePath(this.objPath, s);
 									if (File.Exists(fn))
 										this.assemblyKeyFile = fn;
 									break;

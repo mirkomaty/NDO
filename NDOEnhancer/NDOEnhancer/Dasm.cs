@@ -49,6 +49,7 @@ namespace NDOEnhancer
 				throw new Exception( "Can't determine, if NDOEnhancer is running on Windows or Linux." );
 
 			this.ilDasmPath = path;
+			ConsoleProcess.EnsureExecutable( path );
 		}
 
 		public Dasm(MessageAdapter messages, bool verboseMode)
