@@ -682,10 +682,15 @@ class Build(Options options)
 
         if (p.Builder == "nuget")
         {
-            Exec(Path.Combine(root, "nuget", "NuGet.exe"), Path.GetDirectoryName(p.Project)!,
-                "pack", Path.GetFileName(p.Project), "-Version", p.Target.ToString(), "-OutputDirectory", packageSource);
+            // dotnet pack needs a project: <name>.Pack.csproj next to the nuspec refers to it
+            // via NuspecFile. The version is already patched into the nuspec (PatchProducers).
+            var dir = Path.GetDirectoryName(p.Project)!;
+            var packProject = Path.GetFileNameWithoutExtension(p.Project) + ".Pack.csproj";
+            if (!System.IO.File.Exists(Path.Combine(dir, packProject)))
+                throw new BuildException($"{Rel(Path.Combine(dir, packProject))} not found; it is needed to pack {Rel(p.Project)}.");
+            Exec("dotnet", dir, "pack", packProject, "-o", packageSource);
             if (!System.IO.File.Exists(Path.Combine(packageSource, $"{p.Id}.{p.Target}.nupkg")))
-                throw new BuildException($"nuget pack didn't produce {p.Id}.{p.Target}.nupkg.");
+                throw new BuildException($"dotnet pack didn't produce {p.Id}.{p.Target}.nupkg.");
             return;
         }
 

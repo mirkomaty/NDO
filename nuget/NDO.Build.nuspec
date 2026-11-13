@@ -17,7 +17,7 @@
 	<readme>readme.md</readme>
   </metadata>
 	<files>
-		<file src="..\NDOEnhancer\NDOEnhancer\bin\release\net11.0\**" target="build" />
+		<file src="..\NDOEnhancer\NDOEnhancer\bin\Release\net11.0\**" target="build" />
 
 		<!--file src="..\NDOEnhancer\NDOEnhancer\ILDAsm\ILDasm.exe.*" target="\build\runtimes\win-x64\native" /-->
 		<file src="NDO.Build.targets" target="/build" />

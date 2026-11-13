@@ -43,7 +43,7 @@ Out of scope:
 | NDO.dll | `NDODLL/NDO.csproj` | 6.0.0 | 6.0.0.0 |
 | NDO.JsonFormatter | `NdoJsonFormatter/NdoJsonFormatter/NDO.JsonFormatter.csproj` | 5.1.1 | 5.1.1.0 |
 | ndo.mysql, ndo.mysqlconnector, ndo.oracle, ndo.postgre, ndo.sqlite, ndo.sqlserver | `Provider/*/NDO.*/NDO.*.csproj` | 5.1.0 | 5.1.0.0 |
-| NDO.Build | `nuget/NDO.Build.nuspec` (packed with `nuget.exe`) | **6.0.1.0** (4 parts) | – |
+| NDO.Build | `nuget/NDO.Build.nuspec` (packed with `dotnet pack` via `nuget/NDO.Build.Pack.csproj`) | **6.0.1.0** (4 parts) | – |
 
 Notes:
 - **Versions are scattered.** Every version is hard-coded in its project file.
@@ -234,7 +234,7 @@ release a new version. Paths are relative to the repository root, except
 
 - **`packages`** – the producers. Dependencies are **not** listed. They are
   derived from the project files, so they can never get out of sync.
-  - `builder`: `dotnet` (default), `nuget` (nuspec packed with `nuget/NuGet.exe`)
+  - `builder`: `dotnet` (default), `nuget` (nuspec packed with `dotnet pack` via `<nuspec name>.Pack.csproj` next to the nuspec)
     or `msbuild` (Visual Studio's MSBuild, found via `vswhere`).
   - `versionFollowers`: projects that get the same version but are not packed
     themselves, like NDOEnhancer.
@@ -393,7 +393,7 @@ exit code is non-zero.
 | Project | Handling |
 |---|---|
 | `NDOEnhancer.BuildTask` | `"builder": "msbuild"`: Visual Studio's `MSBuild.exe`, found via `vswhere -latest -find MSBuild\**\Bin\MSBuild.exe`. Long term: convert it to an SDK-style project with `Microsoft.Build.Utilities.Core` |
-| `NDO.Build` (nuspec) | `"builder": "nuget"`: first the `buildFirst` projects, then `nuget/NuGet.exe pack NDO.Build.nuspec -Version <version> -OutputDirectory <packageSource>` |
+| `NDO.Build` (nuspec) | `"builder": "nuget"`: first the `buildFirst` projects, then `dotnet pack NDO.Build.Pack.csproj -o <packageSource>` in `nuget/` (the version is already patched into the nuspec) |
 | `Tools/MakeEnhancerDate` | Prerequisite of NDOEnhancer, listed in `buildFirst` of NDO.Build |
 
 ### 5.5 Enhancer

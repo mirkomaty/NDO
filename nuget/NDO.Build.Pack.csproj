@@ -1,0 +1,9 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <!-- Only used to pack NDO.Build.nuspec with "dotnet pack" (see Concept.md). -->
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <IncludeBuildOutput>false</IncludeBuildOutput>
+    <NoBuild>true</NoBuild>
+    <NuspecFile>NDO.Build.nuspec</NuspecFile>
+  </PropertyGroup>
+</Project>
