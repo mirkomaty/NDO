@@ -166,7 +166,7 @@ namespace NDOEnhancer
 				return;
 			if ( name.ToUpper() == "NDO" )
 				return;
-			if ( name.ToUpper() == "NDOInterfaces" )
+			if ( name.ToUpper() == "NDOINTERFACES" )
 				return;
 
 			if ( !references.ContainsKey( name ) )
