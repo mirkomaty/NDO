@@ -2,21 +2,21 @@
 
 This is the source code of .NET Data Objects (NDO). See: https://www.netdataobjects.de.
 
-The newest development happens in the master branch.
+The newest development happens in the main/vx.y branches, e.g. main/v6.0. The newest stable version is usually in the master branch.
 
 ## Build
 
-Checkout this repository. Make sure, you are in the master branch. Open a Visual Studio developer console and CD to the-path-of-the-repository\make directory.
+Checkout this repository. Make sure, you are in the master branch. CD to the-path-of-the-repository\Make directory.
 
 Enter 
-msbuild ndo.proj
+dotnet run build.cs --all --no-consumers
 
-This should build the whole development infrastructure, the NDO package (in the directory NDODLL/bin/release) and the .vsix extension. 
-Using the .vsix simplifies development with NDO significantly.
+This should build all packages and the .vsix extension. 
+Using the .vsix simplifies development with NDO significantly. You can download the newest version of the .vsix [from here](https://www.netdataobjects.de/media/NDOPackage-VS2022.vsix). 
 
 ## Build with VS
 
-If you need to debug the NDO.dll, open the NDO.sln in the directory /NDODLL. Recompile with DEBUG configuration. You can find the result in the bin/debug/net452 directory (or in netstandard2.0).
+No special preparations are required to debug NDO, as the symbols are available on the NuGet symbol server. Simply right-click on a function name—for example, `MakePersistent`—and select "Step into."
 
 ## Users Guide
 
