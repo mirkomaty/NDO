@@ -13,7 +13,7 @@
 		<PackageReference Include="NUnit3TestAdapter" Version="5.0.0" />
 		<PackageReference Include="NDO.dll" Version="6.0.0" />
 		<PackageReference Include="NDOInterfaces" Version="6.0.0" />
-		<PackageReference Include="NDO.SqlServer" Version="6.0.0" />
+		<PackageReference Include="NDO.SqlServer" Version="6.0.1" />
 		<PackageReference Include="Microsoft.Extensions.Hosting" Version="9.0.5" />
 	</ItemGroup>
 

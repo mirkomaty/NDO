@@ -16,7 +16,7 @@
 	<ItemGroup>
 	  <PackageReference Include="ndo.build" Version="6.1.0" />
 	  <PackageReference Include="ndo.dll" Version="6.0.0" />
-	  <PackageReference Include="ndo.sqlserver" Version="6.0.0" />
+	  <PackageReference Include="ndo.sqlserver" Version="6.0.1" />
 	</ItemGroup>
 
 </Project>

@@ -16,7 +16,7 @@
 		<PackageReference Include="ndo.build" Version="6.1.0" />
 		<PackageReference Include="ndo.dll" Version="6.0.0" />
 		<PackageReference Include="NDO.Sqlite" Version="6.0.0" />
-		<PackageReference Include="NDO.SqlServer" Version="6.0.0" />
+		<PackageReference Include="NDO.SqlServer" Version="6.0.1" />
 		<PackageReference Include="NDO.Postgre" Version="6.0.0" />
 	</ItemGroup>
 
